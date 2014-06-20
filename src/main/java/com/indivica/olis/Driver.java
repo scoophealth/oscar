@@ -53,6 +53,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.model.OscarLog;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.olis.OLISProtocolSocketFactory;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -111,7 +112,8 @@ public class Driver {
 				logItem.setContent("query");
 				logItem.setData(olisHL7String);
 
-				if (LoggedInInfo.loggedInInfo.get() != null && LoggedInInfo.loggedInInfo.get().loggedInProvider != null) logItem.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+				LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+				if (loggedInInfo.loggedInProvider != null) logItem.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 
 				logDao.persist(logItem);
 
@@ -151,7 +153,9 @@ public class Driver {
 			if (request != null) {
 				request.setAttribute("searchException", e);
 			}
-			notifyOlisError(e.getMessage());
+
+			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+			notifyOlisError(loggedInInfo.loggedInProvider, e.getMessage());
 			return "";
 		}
 	}
@@ -199,7 +203,9 @@ public class Driver {
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Couldn't read XML from OLIS response.", e);
-			notifyOlisError("Couldn't read XML from OLIS response." + "\n" + e);
+			
+			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+			notifyOlisError(loggedInInfo.loggedInProvider, "Couldn't read XML from OLIS response." + "\n" + e);
 		}
 	}
 
@@ -354,18 +360,17 @@ public class Driver {
 		return result;
 	}
 
-	private static void notifyOlisError(String errorMsg) {
+	private static void notifyOlisError(Provider provider, String errorMsg) {
 		HashSet<String> sendToProviderList = new HashSet<String>();
 
 		String providerNoTemp = "999998";
 		sendToProviderList.add(providerNoTemp);
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
+		if (provider != null) {
 			// manual prompts always send to admin
 			sendToProviderList.add(providerNoTemp);
 
-			providerNoTemp = loggedInInfo.loggedInProvider.getProviderNo();
+			providerNoTemp = provider.getProviderNo();
 			sendToProviderList.add(providerNoTemp);
 		}
 

@@ -120,13 +120,6 @@ public class BaseCaseManagementViewAction extends DispatchAction {
         return(Integer.parseInt(getProviderNo(request)));
     }
 
-	public String getProviderName(HttpServletRequest request){
-		String providerNo=getProviderNo(request);
-		if (providerNo==null)
-			return "";
-		return caseManagementMgr.getProviderName(providerNo);
-	}
-
 	protected String getImageFilename(String demoNo, HttpServletRequest request) {
 		ClientImage img = clientImageMgr.getClientImage(Integer.parseInt(demoNo));
 

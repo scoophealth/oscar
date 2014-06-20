@@ -58,6 +58,7 @@
 </logic:present>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 		com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) pageContext.findAttribute("bean");
@@ -106,7 +107,7 @@ if (heading != null){
             CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 
             if(showall) {
-            	prescriptDrugs = caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
+            	prescriptDrugs = caseManagementManager.getPrescriptions(loggedInInfo, patient.getDemographicNo(), showall);
             	Collections.sort(prescriptDrugs,new oscar.oscarRx.util.ShowAllSorter());
             }
             else {

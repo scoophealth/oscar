@@ -69,7 +69,7 @@ public class DefaultEncounterIssueAction extends DispatchAction {
 		return mapping.findForward("list");
 	}
 	
-	private boolean saveDefaultIssuesToDb(String issueIds) {
+	private boolean saveDefaultIssuesToDb(String providerNo, String issueIds) {
 		if (issueIds == null || issueIds.length() == 0) {
 			return false;
 		}
@@ -77,14 +77,14 @@ public class DefaultEncounterIssueAction extends DispatchAction {
 		if (issueDao == null) {
 			return false;
 		}
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		
 		DefaultIssue defaultIssue = issueDao.getLastestDefaultIssue();
 		if (defaultIssue == null) {
 			defaultIssue = new DefaultIssue();
 			defaultIssue.setAssignedtime(new Date());
 		}
 		defaultIssue.setUpdatetime(new Date());
-		defaultIssue.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		defaultIssue.setProviderNo(providerNo);
 		defaultIssue.setIssueIds(issueIds);
 		issueDao.saveDefaultIssue(defaultIssue);
 		return true;
@@ -132,7 +132,8 @@ public class DefaultEncounterIssueAction extends DispatchAction {
 		
 		LogAction.log("write", "assign default issues", strIds.toString(), request);
 		
-		saveDefaultIssuesToDb(strIds.toString());
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		saveDefaultIssuesToDb(loggedInInfo.loggedInProvider.getProviderNo(), strIds.toString());
 		
 		return list(mapping,form,request,response);
 	}

@@ -58,9 +58,8 @@ reverse="<%=true%>">
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
 	oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
-%>
 
-<%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	RxPharmacyData pharmacyData = new RxPharmacyData();
 	org.oscarehr.common.model.PharmacyInfo pharmacy;
 	pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
@@ -360,7 +359,7 @@ function load() {
 
 							<%
 								CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
-								List<Drug> prescriptDrugs=caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
+								List<Drug> prescriptDrugs=caseManagementManager.getPrescriptions(loggedInInfo, patient.getDemographicNo(), showall);
 
 								long now = System.currentTimeMillis();
 								long month = 1000L * 60L * 60L * 24L * 30L;

@@ -171,7 +171,6 @@
 		<property name="caseManagementIssueDAO" ref="CaseManagementIssueDAO" />
 		<property name="caseManagementCPPDAO" ref="CaseManagementCPPDAO" />
 		<property name="issueDAO" ref="IssueDAO" />
-		<property name="providerDAO" ref="providerDao" />
 		<property name="demographicDao" ref="demographicDao" />
 		<property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO" />
 		

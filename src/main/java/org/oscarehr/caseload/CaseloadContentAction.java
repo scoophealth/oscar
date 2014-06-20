@@ -130,6 +130,8 @@ public class CaseloadContentAction extends DispatchAction {
 			ActionForm actionForm,
 			HttpServletRequest request,
 			HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		String caseloadDx       = request.getParameter("clDx");
 		String caseloadProv     = request.getParameter("clProv");
 		String caseloadRoster   = request.getParameter("clRo");
@@ -160,7 +162,6 @@ public class CaseloadContentAction extends DispatchAction {
 		
 		if ("all".equals(caseloadProgram) && "all".equals(caseloadProv)){ // program and provider are all
 			
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 			Integer facilityId = loggedInInfo.currentFacility.getId();
 			
 			if (!StringUtils.isNullOrEmpty(caseloadDx) && !StringUtils.isNullOrEmpty(caseloadRoster)) {
@@ -192,7 +193,6 @@ public class CaseloadContentAction extends DispatchAction {
 		} else if ("all".equals(caseloadProgram)) { // program is all
 			// demographics from a specific provider
 			
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 			Integer facilityId = loggedInInfo.currentFacility.getId();
 			
 			if (!StringUtils.isNullOrEmpty(caseloadDx) && !StringUtils.isNullOrEmpty(caseloadRoster)) {

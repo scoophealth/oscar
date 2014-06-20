@@ -76,7 +76,7 @@ public class UpdateAction extends DispatchAction {
 	}
 	
 	public ActionForward addUpdateRequest(ActionMapping mapping, ActionForm form, HttpServletRequest request, 
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response) {
 		List<UpdateRequest> updates = getUpdateList(request);
 
 		UpdateForm updateForm = (UpdateForm) form;
@@ -97,14 +97,14 @@ public class UpdateAction extends DispatchAction {
     }
 	
 	public ActionForward cancel(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		clearUpdateList(request);
 		request.getSession().removeAttribute(SESSION_KEY_UPLOAD_DETAILS);
 		return mapping.findForward("cancel");
 	}
 	
 	public ActionForward sendUpdateRequest(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 				
 		List<UpdateRequest> updates = getUpdateList(request);
 		if (updates.isEmpty()) {

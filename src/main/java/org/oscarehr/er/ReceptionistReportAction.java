@@ -52,10 +52,8 @@ import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -118,6 +116,8 @@ public class ReceptionistReportAction extends DispatchAction {
 	 * 
 	 */
 	public ActionForward show_report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		String clientId = request.getParameter("id");
 		
 		Demographic client = clientManager.getClientByDemographicNo(clientId);
@@ -159,12 +159,10 @@ public class ReceptionistReportAction extends DispatchAction {
 		List<Drug> prescriptions = null;
 		boolean viewAll=true;
 
-		request.setAttribute("isIntegratorEnabled", LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled());			
-		prescriptions = caseManagementManager.getPrescriptions(Integer.valueOf(clientId), viewAll);
+		request.setAttribute("isIntegratorEnabled", loggedInInfo.currentFacility.isIntegratorEnabled());			
+		prescriptions = caseManagementManager.getPrescriptions(loggedInInfo, Integer.valueOf(clientId), viewAll);
 		
-		request.setAttribute("Prescriptions", prescriptions);
-
-		String providerNo = ((Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER)).getProviderNo();		    	
+		request.setAttribute("Prescriptions", prescriptions);		    	
     	
 		// Setup RX bean start
 		RxSessionBean bean = new RxSessionBean();

@@ -95,7 +95,7 @@ public class BillingInvoiceAction extends DispatchAction {
        return mapping.findForward(actionResult);
     }
     
-    public ActionForward sendEmail(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws IOException {
+    public ActionForward sendEmail(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         
         String invoiceNoStr = request.getParameter("invoiceNo");
         Integer invoiceNo = Integer.parseInt(invoiceNoStr);
@@ -111,7 +111,7 @@ public class BillingInvoiceAction extends DispatchAction {
         return mapping.findForward(actionResult);
     }
     
-    public ActionForward sendListEmail(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws IOException {
+    public ActionForward sendListEmail(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         
         String actionResult = "failure";       
         String[] invoiceNos = request.getParameterValues("invoiceAction");

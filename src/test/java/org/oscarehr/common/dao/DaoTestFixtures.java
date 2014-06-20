@@ -71,7 +71,13 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public abstract class DaoTestFixtures
 {
-
+	private LoggedInInfo loggedInInfo=LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
+	
+	public LoggedInInfo getLoggedInInfo()
+	{
+		return(loggedInInfo);
+	}
+	
 	public void beforeForInnoDB() throws Exception {
 		SchemaUtils.dropTable("IntegratorConsent","HnrDataValidation","ClientLink","IntegratorConsentComplexExitInterview",
 				"DigitalSignature","appointment","admission" ,"program","demographic");
@@ -80,7 +86,7 @@ public abstract class DaoTestFixtures
 	@BeforeClass
 	public static void classSetUp() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException
 	{
-		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
+		
 		
 		Logger.getRootLogger().setLevel(Level.WARN);
 		
