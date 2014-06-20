@@ -58,6 +58,9 @@ public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 	@Override
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO navBarDisplayDAO, MessageResources messages) {
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 		// set lefthand module heading and link
 		navBarDisplayDAO.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.NavBar.resolvedIssues"));
 		
@@ -73,7 +76,7 @@ public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 		int demographicId = Integer.parseInt(bean.getDemographicNo());
 		issues = caseManagementMgr.getIssues(demographicId);
 		String programId = (String) request.getSession().getAttribute("case_program_id");
-		issues = caseManagementMgr.filterIssues(issues, programId);
+		issues = caseManagementMgr.filterIssues(providerNo, issues, programId);
 	
 		List<CaseManagementIssue> issues_unr = new ArrayList<CaseManagementIssue>();
 		//only list resolved issues				
@@ -105,8 +108,6 @@ public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 		}
 
 		
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 			try {
 				

@@ -46,7 +46,6 @@ import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProgramQueueDao;
-import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
 import org.oscarehr.PMmodule.model.ProgramAccess;
@@ -129,7 +128,6 @@ public class CaseManagementManager {
 	private CaseManagementIssueDAO caseManagementIssueDAO;
 	private IssueDAO issueDAO;
 	private CaseManagementCPPDAO caseManagementCPPDAO;
-	private ProviderDao providerDAO;
 	private DemographicDao demographicDao;
 	private ProviderExtDao providerExtDao;
 	private RoleProgramAccessDAO roleProgramAccessDAO;
@@ -503,12 +501,12 @@ public class CaseManagementManager {
 	/**
 	 * This method gets all prescriptions including from integrated facilities. This method will also check to ensure the integrator is enabled for this facility before attemping to add remote drugs. If it's not enabled it will return only local drugs.
 	 */
-	public List<Drug> getPrescriptions(int demographicId, boolean all) {
+	public List<Drug> getPrescriptions(LoggedInInfo loggedInInfo, int demographicId, boolean all) {
 		List<Drug> results = null;
 
 		results = getPrescriptions(String.valueOf(demographicId), all);
 
-		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 			addIntegratorDrugs(results, all, demographicId);
 		}
 
@@ -953,12 +951,6 @@ public class CaseManagementManager {
 		return rt;
 	}
 
-	public String getProviderName(String providerNo) {
-		Provider pv = providerDAO.getProvider(providerNo);
-		if (pv != null) return pv.getFirstName() + " " + pv.getLastName();
-		return null;
-	}
-
 	public String getDemoName(String demoNo) {
 
 		Demographic dg = demographicDao.getClientByDemographicNo(new Integer(demoNo));
@@ -1064,8 +1056,7 @@ public class CaseManagementManager {
 	}
 
 
-	public List<CaseManagementNote> filterNotes(Collection<CaseManagementNote> notes, String programId) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	public List<CaseManagementNote> filterNotes(String providerNo, Collection<CaseManagementNote> notes, String programId) {
 
 		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
 		if (notes.isEmpty()) {
@@ -1074,7 +1065,7 @@ public class CaseManagementManager {
 
 		// Get Role - if no ProgramProvider record found, show no issues.
 		@SuppressWarnings("unchecked")
-		List ppList = programProviderDao.getProgramProviderByProviderProgramId(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
+		List ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
 			return new ArrayList<CaseManagementNote>();
 		}
@@ -1142,8 +1133,7 @@ public class CaseManagementManager {
 		return filteredNotes;
 	}
 
-	public List<EChartNoteEntry> filterNotes1(Collection<EChartNoteEntry> notes, String programId) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	public List<EChartNoteEntry> filterNotes1(String providerNo, Collection<EChartNoteEntry> notes, String programId) {
 
 		List<EChartNoteEntry> filteredNotes = new ArrayList<EChartNoteEntry>();
 
@@ -1153,7 +1143,7 @@ public class CaseManagementManager {
 
 		// Get Role - if no ProgramProvider record found, show no issues.
 		@SuppressWarnings("unchecked")
-		List ppList = programProviderDao.getProgramProviderByProviderProgramId(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
+		List ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
 			for(EChartNoteEntry note:notes) {
 				if(!note.getType().equals("local_note") && !note.getType().equals("remote_note"))
@@ -1240,12 +1230,11 @@ public class CaseManagementManager {
 		return filteredNotes;
 	}
 
-	public boolean hasRole(CachedDemographicNote cachedDemographicNote, String programId) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	public boolean hasRole(String providerNo, CachedDemographicNote cachedDemographicNote, String programId) {
 
 		// Get Role - if no ProgramProvider record found, show no issues.
 		@SuppressWarnings("unchecked")
-		List ppList = programProviderDao.getProgramProviderByProviderProgramId(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
+		List ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
 			return (false);
 		}
@@ -1377,8 +1366,7 @@ public class CaseManagementManager {
 	/**
 	 * Filters a list of CaseManagementIssue objects based on role.
 	 */
-	public List<CaseManagementIssue> filterIssues(List<CaseManagementIssue> issues, String programId) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	public List<CaseManagementIssue> filterIssues(String providerNo, List<CaseManagementIssue> issues, String programId) {
 
 		List<CaseManagementIssue> filteredIssues = new ArrayList<CaseManagementIssue>();
 
@@ -1387,7 +1375,7 @@ public class CaseManagementManager {
 		}
 
 		// Get Role - if no ProgramProvider record found, show no issues.
-		List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
+		List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
 			return new ArrayList<CaseManagementIssue>();
 		}
@@ -1662,10 +1650,6 @@ public class CaseManagementManager {
 
 	public void setDemographicDao(DemographicDao demographicDao) {
 		this.demographicDao = demographicDao;
-	}
-
-	public void setProviderDAO(ProviderDao providerDAO) {
-		this.providerDAO = providerDAO;
 	}
 
 	public void setCaseManagementTmpSaveDao(CaseManagementTmpSaveDao dao) {

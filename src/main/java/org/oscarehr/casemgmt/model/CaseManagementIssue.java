@@ -37,7 +37,6 @@ import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import com.quatro.model.security.Secrole;
@@ -223,14 +222,14 @@ public class CaseManagementIssue extends BaseObject {
 		this.program_id = program_id;
 	}
 
-	public boolean isWriteAccess(int programId)
+	public boolean isWriteAccess(String providerNo, int programId)
 	{
-		Boolean result = calculateWriteAccess(programId);
+		Boolean result = calculateWriteAccess(providerNo, programId);
 		return(result);
 	}
 
-	private boolean calculateWriteAccess(int programId) {
-	    List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), new Long(programId));
+	private boolean calculateWriteAccess(String providerNo, int programId) {
+	    List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
 	    if (ppList == null || ppList.isEmpty()) {
 	    	return(false);
 	    }

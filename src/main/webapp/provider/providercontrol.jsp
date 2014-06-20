@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -35,12 +36,13 @@
 
 <caisi:isModuleLoad moduleName="caisi">
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
     String isOscar = request.getParameter("infirmaryView_isOscar");
     if (session.getAttribute("infirmaryView_isOscar")==null) isOscar="false";
     if (isOscar!=null) session.setAttribute("infirmaryView_isOscar", isOscar);
     if(request.getParameter(SessionConstants.CURRENT_PROGRAM_ID) != null) {
     	session.setAttribute(SessionConstants.CURRENT_PROGRAM_ID,request.getParameter(SessionConstants.CURRENT_PROGRAM_ID));
-    	org.caisi.core.web.InfirmAction.updateCurrentProgram(request.getParameter(SessionConstants.CURRENT_PROGRAM_ID));
+    	org.caisi.core.web.InfirmAction.updateCurrentProgram(request.getParameter(SessionConstants.CURRENT_PROGRAM_ID), loggedInInfo.loggedInProvider.getProviderNo());
     }
     session.setAttribute("infirmaryView_OscarURL",request.getRequestURL());
 

@@ -53,7 +53,7 @@ public class UploadAction extends DispatchAction {
 	}
 	
 	public ActionForward cancelUpload(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		clearSession(request);
 		
 		saveMessages(request.getSession(), ActionUtils.addMessage("global.cancel"));

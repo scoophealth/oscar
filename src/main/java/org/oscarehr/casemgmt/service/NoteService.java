@@ -23,6 +23,8 @@
  */
 package org.oscarehr.casemgmt.service;
 
+import org.oscarehr.util.LoggedInInfo;
+
 /**
  * Defines contract for retrieving notes for a demographic record.
  */
@@ -36,6 +38,6 @@ public interface NoteService {
 	 * @return
 	 * 		Returns all notes satisfying the search criteria.
 	 */
-	NoteSelectionResult findNotes(NoteSelectionCriteria criteria);
+	NoteSelectionResult findNotes(LoggedInInfo loggedInInfo, NoteSelectionCriteria criteria);
 
 }

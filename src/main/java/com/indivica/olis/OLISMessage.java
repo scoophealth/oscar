@@ -9,6 +9,8 @@
 
 package com.indivica.olis;
 
+import org.oscarehr.common.model.Provider;
+
 import com.indivica.olis.queries.Query;
 import com.indivica.olis.segments.DSCSegment;
 import com.indivica.olis.segments.MSHSegment;
@@ -22,15 +24,21 @@ public class OLISMessage {
 	private SPRSegment sprSegment;
 	private DSCSegment dscSegment = null;
 	
+	private Provider provider;
+
+	public OLISMessage(Provider provider) {
+		this.provider = provider;
+	}
+
 	public OLISMessage(Query query) {
 		mshSegment = new MSHSegment(query.getQueryType());
-		zshSegment = new ZSHSegment();
+		zshSegment = new ZSHSegment(provider);
 		sprSegment = new SPRSegment(query.getQueryType(), query);
 	}
 	
 	public OLISMessage(Query query, String continuationPointer) {
 		mshSegment = new MSHSegment(query.getQueryType());
-		zshSegment = new ZSHSegment();
+		zshSegment = new ZSHSegment(provider);
 		sprSegment = new SPRSegment(query.getQueryType(), query);
 		dscSegment = new DSCSegment(continuationPointer);
 	}	

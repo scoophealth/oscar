@@ -58,7 +58,7 @@ public class InfirmAction extends DispatchAction
 	private AdmissionManager mgr = (AdmissionManager) SpringUtils.getBean("admissionManager");
 	
 
-	public static void updateCurrentProgram(String programId) {
+	public static void updateCurrentProgram(String programId, String providerNo) {
 		if(programId == null) {
 			return;
 		}
@@ -69,7 +69,7 @@ public class InfirmAction extends DispatchAction
 		}
 		logger.info("updating the current program to " + programId);
 		
-		bpm.setDefaultProgramId(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), Integer.parseInt(programId));
+		bpm.setDefaultProgramId(providerNo, Integer.parseInt(programId));
 	}
 	
 	public ActionForward showProgram(ActionMapping mapping, ActionForm form,
@@ -78,7 +78,7 @@ public class InfirmAction extends DispatchAction
 	{
 		logger.debug("====> inside showProgram action.");
 
-
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		HttpSession se = request.getSession();
 		se.setAttribute("infirmaryView_initflag", "true");
 		String providerNo=(String) se.getAttribute("user");		
@@ -89,7 +89,6 @@ public class InfirmAction extends DispatchAction
 
 		// facility filtering
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-        	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
             facilityId = loggedInInfo.currentFacility.getId();
         }
 
@@ -135,7 +134,7 @@ public class InfirmAction extends DispatchAction
 		
 		se.setAttribute(SessionConstants.CURRENT_PROGRAM_ID,String.valueOf(programId));
 
-		org.caisi.core.web.InfirmAction.updateCurrentProgram(String.valueOf(programId));
+		org.caisi.core.web.InfirmAction.updateCurrentProgram(String.valueOf(programId),loggedInInfo.loggedInProvider.getProviderNo());
 		 
 		if(programId != 0) {
 			se.setAttribute("case_program_id",String.valueOf(programId));

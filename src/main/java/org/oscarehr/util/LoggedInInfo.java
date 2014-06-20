@@ -34,7 +34,6 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
 
-
 /**
  * The loggedInProvider fields should only be used if this is a user based thread, i.e. a thread handling a user request.
  * If this is an internal system thread, those fields should be ignored and left null.
@@ -42,109 +41,129 @@ import org.oscarehr.common.model.Security;
  * It should signify where the code started for the most part, i.e. the thread class name,
  * or the jsp name, or web service name and method.
  */
-public final class LoggedInInfo
-{
-	private static final String LOGGED_IN_INFO_KEY=LoggedInInfo.class.getName()+".LOGGED_IN_INFO_KEY";
-	
-	private static Logger logger=MiscUtils.getLogger();
+public final class LoggedInInfo {
+	private static final String LOGGED_IN_INFO_KEY = LoggedInInfo.class.getName() + ".LOGGED_IN_INFO_KEY";
+
+	private static Logger logger = MiscUtils.getLogger();
 	public static final ThreadLocal<LoggedInInfo> loggedInInfo = new ThreadLocal<LoggedInInfo>();
 
-	public HttpSession session=null;
-	public Facility currentFacility=null;
-	public Provider loggedInProvider=null;
-	public String initiatingCode=null;
-	public Security loggedInSecurity=null;
-	public Locale locale=null;
-		
+	public HttpSession session = null;
+	public Facility currentFacility = null;
+	public Provider loggedInProvider = null;
+	public String initiatingCode = null;
+	public Security loggedInSecurity = null;
+	public Locale locale = null;
+
 	@Override
-    public String toString()
-	{
-		return(ReflectionToStringBuilder.toString(this));
+	public String toString() {
+		return (ReflectionToStringBuilder.toString(this));
 	}
-	
+
 	/**
 	 * This method is intended to be used by timer task or background threads to 
 	 * setup the thread local loggedInInfo. It should do basic checks to see if 
 	 * there's lingering data, then set the thread local internalThreadDescription 
 	 * to the name of the class that called this method, i.e. your thread class name.
 	 */
-	public static void setLoggedInInfoToCurrentClassAndMethod()
-	{
+	public static LoggedInInfo setLoggedInInfoToCurrentClassAndMethod() {
 		checkForLingeringData();
-		
+
 		// get caller
 		StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 
 		// create and set new thread local
 		LoggedInInfo x = new LoggedInInfo();
-		x.initiatingCode=ste[2].getClassName()+'.'+ste[2].getMethodName();
+		x.initiatingCode = ste[2].getClassName() + '.' + ste[2].getMethodName();
 		loggedInInfo.set(x);
+		return(x);
 	}
-	
-	protected static void checkForLingeringData()
-	{
+
+	protected static void checkForLingeringData() {
 		LoggedInInfo x = loggedInInfo.get();
-		if (x != null) logger.warn("Logged in info should be null on new requests but it wasn't. oldUser=" + x);				
+		if (x != null) logger.warn("Logged in info should be null on new requests but it wasn't. oldUser=" + x);
 	}
 
 	/**
 	 * This method should be used for browser requests / end user requests.
 	 */
-	public static void setLoggedInInfoIntoSession(HttpSession session, LoggedInInfo loggedInInfo)
-	{
+	public static void setLoggedInInfoIntoSession(HttpSession session, LoggedInInfo loggedInInfo) {
 		session.setAttribute(LOGGED_IN_INFO_KEY, loggedInInfo);
-		
+
 		// temporary until full threadLocal is removed
 		LoggedInInfo.loggedInInfo.set(loggedInInfo);
 	}
-	
+
 	/**
 	 * This method should be used for browser requests / end user requests.
 	 */
-	public static LoggedInInfo getLoggedInInfoFromSession(HttpSession session)
-	{
-		return((LoggedInInfo)session.getAttribute(LOGGED_IN_INFO_KEY));
+	public static LoggedInInfo getLoggedInInfoFromSession(HttpSession session) {
+		return ((LoggedInInfo) session.getAttribute(LOGGED_IN_INFO_KEY));
 	}
-	
+
 	/**
 	 * This method should be used for browser requests / end user requests.
 	 * This will pick out the session from the request object. It doesn't attempt
 	 * to get it from the requestAttributes.
 	 */
-	public static LoggedInInfo getLoggedInInfoFromSession(HttpServletRequest request)
-	{
-		return(getLoggedInInfoFromSession(request.getSession()));
+	public static LoggedInInfo getLoggedInInfoFromSession(HttpServletRequest request) {
+		return (getLoggedInInfoFromSession(request.getSession()));
 	}
-	
+
 	/**
 	 * This method should be used for web services.
 	 * This will be stored in the requestAttributes, not the session.
 	 */
-	public static void setLoggedInInfoIntoRequest(HttpServletRequest request, LoggedInInfo loggedInInfo)
-	{
+	public static void setLoggedInInfoIntoRequest(HttpServletRequest request, LoggedInInfo loggedInInfo) {
 		request.setAttribute(LOGGED_IN_INFO_KEY, loggedInInfo);
 
 		// temporary until full threadLocal is removed
 		LoggedInInfo.loggedInInfo.set(loggedInInfo);
 	}
-	
+
 	/**
 	 * This method should be used for web services.
 	 * This will be retrieved from the requestAttributes, not the session.
 	 */
-	public static LoggedInInfo getLoggedInInfoFromRequest(HttpServletRequest request)
-	{
-		return((LoggedInInfo)request.getAttribute(LOGGED_IN_INFO_KEY));
+	public static LoggedInInfo getLoggedInInfoFromRequest(HttpServletRequest request) {
+		return ((LoggedInInfo) request.getAttribute(LOGGED_IN_INFO_KEY));
 	}
-	
+
 	/**
 	 * This is used for logout only, should not be used at the end of a request. 
 	 */
-	public static void removeLoggedInInfoFromSession(HttpSession session)
-	{
+	public static void removeLoggedInInfoFromSession(HttpSession session) {
 		session.removeAttribute(LOGGED_IN_INFO_KEY);
-		
+
 		// temporary until full threadLocal is removed
 		LoggedInInfo.loggedInInfo.remove();
+	}
+
+	public HttpSession getSession() {
+		return (session);
+	}
+
+	public Facility getCurrentFacility() {
+		return (currentFacility);
+	}
+
+	public Provider getLoggedInProvider() {
+		return (loggedInProvider);
+	}
+
+	public String getInitiatingCode() {
+		return (initiatingCode);
+	}
+
+	public Security getLoggedInSecurity() {
+		return (loggedInSecurity);
+	}
+
+	public Locale getLocale() {
+		return (locale);
+	}
+
+	public String getLoggedInProviderNo()
+	{
+		return(getLoggedInProvider().getProviderNo());
 	}
 }

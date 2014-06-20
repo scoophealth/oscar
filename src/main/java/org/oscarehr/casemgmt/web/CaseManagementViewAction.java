@@ -253,6 +253,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	 */
 	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// response.setCharacterEncoding("UTF-8");
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		long start = System.currentTimeMillis();
 		long beginning = start;
 		long current = 0;
@@ -269,7 +271,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		HttpSession se = request.getSession();
 		if (se.getAttribute("userrole") == null) return mapping.findForward("expired");
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		String demoNo = getDemographicNo(request);
 
@@ -430,8 +431,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			List<Drug> prescriptions = null;
 			boolean viewAll = caseForm.getPrescipt_view().equals("all");
 			String demographicId = getDemographicNo(request);
-			request.setAttribute("isIntegratorEnabled", LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled());
-			prescriptions = caseManagementMgr.getPrescriptions(Integer.parseInt(demographicId), viewAll);
+			request.setAttribute("isIntegratorEnabled", loggedInInfo.currentFacility.isIntegratorEnabled());
+			prescriptions = caseManagementMgr.getPrescriptions(loggedInInfo, Integer.parseInt(demographicId), viewAll);
 
 			request.setAttribute("Prescriptions", prescriptions);
 
@@ -628,13 +629,13 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		long startTime = System.currentTimeMillis();
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
 		int demographicNo = Integer.parseInt(demoNo);
 		boolean hideInactiveIssues = Boolean.parseBoolean(caseForm.getHideActiveIssue());
 
 		ArrayList<CheckBoxBean> checkBoxBeanList = new ArrayList<CheckBoxBean>();
 		// addLocalIssues(checkBoxBeanList, demographicNo, hideInactiveIssues, null);
-		addLocalIssues(checkBoxBeanList, demographicNo, hideInactiveIssues, Integer.valueOf(programId));
+		addLocalIssues(providerNo, checkBoxBeanList, demographicNo, hideInactiveIssues, Integer.valueOf(programId));
 		addRemoteIssues(checkBoxBeanList, demographicNo, hideInactiveIssues);
 		addGroupIssues(checkBoxBeanList, demographicNo, hideInactiveIssues);
 
@@ -672,7 +673,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		Collection<CaseManagementNote> localNotes = caseManagementNoteDao.findNotesByDemographicAndIssueCode(demographicNo, checkedCodeList.toArray(new String[0]));
 		//show locked notes anyway: localNotes = manageLockedNotes(localNotes, true, this.getUnlockedNotesMap(request));
 		localNotes = manageLockedNotes(localNotes, false, this.getUnlockedNotesMap(request));
-		localNotes = caseManagementMgr.filterNotes(localNotes, programId);
+		localNotes = caseManagementMgr.filterNotes(loggedInInfo.loggedInProvider.getProviderNo(), localNotes, programId);
 
 		caseManagementMgr.getEditors(localNotes);
 
@@ -766,6 +767,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	 */
 	private void viewCurrentIssuesTab_newCmeNotes(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws Exception {
 		int demographicId = Integer.parseInt(demoNo);
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
 		long startTime;
 		startTime = System.currentTimeMillis();
@@ -800,7 +802,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		logger.debug("Filter Notes");
 
 		// filter notes based on role and program/provider mappings
-		notes = caseManagementMgr.filterNotes(notes, programId);
+		notes = caseManagementMgr.filterNotes(loggedInInfo.loggedInProvider.getProviderNo(), notes, programId);
 		logger.debug("FILTER NOTES " + (System.currentTimeMillis() - startTime));
 
 		// apply provider filter
@@ -873,7 +875,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	 */
 	private void viewCurrentIssuesTab_newCme(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws Exception {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
 		int demographicId = Integer.parseInt(demoNo);
 
 		long startTime;
@@ -890,7 +892,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		//List<CaseManagementIssue> issues = cmeIssueDao.getIssuesByDemographic(demoNo);
 		ArrayList<CheckBoxBean> checkBoxBeanList = new ArrayList<CheckBoxBean>();
 		// addLocalIssues(checkBoxBeanList, demographicNo, hideInactiveIssues, null);
-		addLocalIssues(checkBoxBeanList, demographicId, false, Integer.valueOf(programId));
+		addLocalIssues(providerNo, checkBoxBeanList, demographicId, false, Integer.valueOf(programId));
 		addRemoteIssues(checkBoxBeanList, demographicId, false);
 		addGroupIssues(checkBoxBeanList, demographicId, false);
 		sortIssues(checkBoxBeanList);
@@ -1066,7 +1068,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				// filter on issues to display
 				if (issueCodesToDisplay == null || hasIssueToBeDisplayed(cachedDemographicNote, issueCodesToDisplay)) {
 					// filter on role based access
-					if (caseManagementMgr.hasRole(cachedDemographicNote, programId)) {
+					if (caseManagementMgr.hasRole(loggedInInfo.getLoggedInProvider().getProviderNo(), cachedDemographicNote, programId)) {
 						notesToDisplay.add(new NoteDisplayIntegrator(cachedDemographicNote));
 					}
 				}
@@ -1238,7 +1240,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return (issueDisplay);
 	}
 
-	protected void addLocalIssues(ArrayList<CheckBoxBean> checkBoxBeanList, Integer demographicNo, boolean hideInactiveIssues, Integer programId) {
+	protected void addLocalIssues(String providerNo, ArrayList<CheckBoxBean> checkBoxBeanList, Integer demographicNo, boolean hideInactiveIssues, Integer programId) {
 		List<CaseManagementIssue> localIssues = caseManagementManager.getIssues(demographicNo, hideInactiveIssues ? false : null);
 
 		for (CaseManagementIssue cmi : localIssues) {
@@ -1246,7 +1248,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 			checkBoxBean.setIssue(cmi);
 
-			IssueDisplay issueDisplay = getIssueDisplay(programId, cmi);
+			IssueDisplay issueDisplay = getIssueDisplay(providerNo, programId, cmi);
 			checkBoxBean.setIssueDisplay(issueDisplay);
 
 			checkBoxBean.setUsed(caseManagementNoteDao.haveIssue(cmi.getIssue().getCode(), demographicNo));
@@ -1255,10 +1257,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 	}
 
-	protected IssueDisplay getIssueDisplay(Integer programId, CaseManagementIssue cmi) {
+	protected IssueDisplay getIssueDisplay(String providerNo, Integer programId, CaseManagementIssue cmi) {
 		IssueDisplay issueDisplay = new IssueDisplay();
 
-		if (programId != null) issueDisplay.writeAccess = cmi.isWriteAccess(programId);
+		if (programId != null) issueDisplay.writeAccess = cmi.isWriteAccess(providerNo, programId);
 
 		issueDisplay.acute = cmi.isAcute() ? "acute" : "chronic";
 		issueDisplay.certain = cmi.isCertain() ? "certain" : "uncertain";
@@ -1374,7 +1376,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			programId = "0";
 		}
 
-		notes = caseManagementMgr.filterNotes(notes, programId);
+		notes = caseManagementMgr.filterNotes(providerNo, notes, programId);
 		this.caseManagementMgr.getEditors(notes);
 
 		List<CaseManagementNoteExt> lcme = new ArrayList<CaseManagementNoteExt>();
@@ -1422,6 +1424,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	}
 
 	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 		String programId = (String) request.getSession().getAttribute("case_program_id");
 
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
@@ -1435,7 +1440,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		searchBean.setSearchText(caseForm.getSearchText());
 		List<CaseManagementNote> results = caseManagementMgr.search(searchBean);
 		Collection<CaseManagementNote> filtered1 = manageLockedNotes(results, false, this.getUnlockedNotesMap(request));
-		List<CaseManagementNote> filteredResults = caseManagementMgr.filterNotes(filtered1, programId);
+		List<CaseManagementNote> filteredResults = caseManagementMgr.filterNotes(providerNo, filtered1, programId);
 
 		List<CaseManagementNote> sortedResults = sortNotes_old(filteredResults, caseForm.getNote_sort());
 		request.setAttribute("search_results", sortedResults);
@@ -1905,6 +1910,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	public ActionForward viewNotesOpt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		// response.setCharacterEncoding("UTF-8");
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
 
 		HttpSession se = request.getSession();
@@ -1920,7 +1926,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String roles = (String) se.getAttribute("userrole");
 		if (OscarProperties.getInstance().isOscarLearning() && roles != null && roles.indexOf("moderator") != -1) {
 			logger.info("skipping domain check..provider is a moderator");
-		} else if (!caseManagementMgr.isClientInProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), demoNo)) {
+		} else if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.getLoggedInProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), demoNo)) {
 			return mapping.findForward("domain-error");
 		}
 		String programId = (String) request.getSession().getAttribute("case_program_id");
@@ -1968,7 +1974,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			logger.debug("SEARCHING FOR NOTES WITH CRITERIA: " + criteria);
 		}
 		
-		NoteSelectionResult result = noteService.findNotes(criteria);
+		NoteSelectionResult result = noteService.findNotes(loggedInInfo, criteria);
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug("FOUND: " + result);

@@ -90,7 +90,7 @@ public class DefaultNoteService implements NoteService {
 	private CaseManagementIssueNotesDao cmeIssueNotesDao;
 
 	@Override
-	public NoteSelectionResult findNotes(NoteSelectionCriteria criteria) {
+	public NoteSelectionResult findNotes(LoggedInInfo loggedInInfo, NoteSelectionCriteria criteria) {
 		logger.debug("LOOKING UP NOTES: " + criteria);
 
 		List<EChartNoteEntry> entries = new ArrayList<EChartNoteEntry>();
@@ -124,7 +124,7 @@ public class DefaultNoteService implements NoteService {
 		logger.debug("FETCHED " + notes.size() + " NOTE META IN " + (System.currentTimeMillis() - intTime) + "ms");
 		intTime = System.currentTimeMillis();
 
-		List<CachedDemographicNote> remoteNotesInfo = getRemoteNoteIds(demographicId);
+		List<CachedDemographicNote> remoteNotesInfo = getRemoteNoteIds(loggedInInfo, demographicId);
 		if (remoteNotesInfo != null) {
 			for (CachedDemographicNote note : remoteNotesInfo) {
 				EChartNoteEntry e = new EChartNoteEntry();
@@ -142,7 +142,7 @@ public class DefaultNoteService implements NoteService {
 		}
 		intTime = System.currentTimeMillis();
 
-		List<GroupNoteLink> groupNotesInfo = this.getGroupNoteIds(demographicId);
+		List<GroupNoteLink> groupNotesInfo = this.getGroupNoteIds(loggedInInfo, demographicId);
 		if (groupNotesInfo != null) {
 			for (GroupNoteLink note : groupNotesInfo) {
 				EChartNoteEntry e = new EChartNoteEntry();
@@ -242,7 +242,7 @@ public class DefaultNoteService implements NoteService {
 		String programId = criteria.getProgramId();
 
 		//apply CAISI permission filter - local notes
-		entries = caseManagementManager.filterNotes1(entries, programId);
+		entries = caseManagementManager.filterNotes1(loggedInInfo.getLoggedInProviderNo(), entries, programId);
 		logger.debug("FILTER NOTES (CAISI) " + (System.currentTimeMillis() - intTime) + "ms");
 		intTime = System.currentTimeMillis();
 
@@ -401,9 +401,7 @@ public class DefaultNoteService implements NoteService {
 		return null;
 	}
 
-	private List<CachedDemographicNote> getRemoteNoteIds(int demographicNo) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-
+	private List<CachedDemographicNote> getRemoteNoteIds(LoggedInInfo loggedInInfo, int demographicNo) {
 		if (loggedInInfo == null) {
 			return null;
 		}
@@ -436,9 +434,7 @@ public class DefaultNoteService implements NoteService {
 
 	}
 
-	private List<GroupNoteLink> getGroupNoteIds(int demographicNo) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-
+	private List<GroupNoteLink> getGroupNoteIds(LoggedInInfo loggedInInfo, int demographicNo) {
 		if (loggedInInfo == null || !loggedInInfo.currentFacility.isEnableGroupNotes()) {
 			return new ArrayList<GroupNoteLink>();
 		}

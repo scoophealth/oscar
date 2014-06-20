@@ -50,7 +50,7 @@ public class DefaultNoteServiceTest extends DaoTestFixtures {
 		c.setUserName("999998");
 		c.setProgramId("10016");
 		
-		NoteSelectionResult result = service.findNotes(c);
+		NoteSelectionResult result = service.findNotes(getLoggedInInfo(), c);
 		assertNotNull(result);
 	}
 }
