@@ -3,7 +3,7 @@
 	<groupId>org.oscarehr</groupId>
 	<artifactId>oscar</artifactId>
 	<packaging>war</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>14.0.0-SNAPSHOT</version>
 	<name>oscar</name>
 	<description>OSCAR McMaster is a web-based electronic medical record (EMR) system initially developed for academic primary care clinics. It has grown into a comprehensive EMR and billing system used by many doctor's offices and private medical clinics in Canada and other parts of the world. The name is derived from where it was created and an acronym; OSCAR stands for Open Source Clinical Application and Resource and McMaster refers to McMaster University, where it was developed. It enables the delivery of evidence resources at the point of care.</description>
 	<issueManagement>
@@ -1325,6 +1325,7 @@
 						<configuration>
 							<tasks>
 								<property name="build.compiler" value="extJavac" />
+								<property name='jspc_target' value="${project.name}-${project.version}" />
 								<ant antfile="jspc.xml" target="jspc" />
 							</tasks>
 						</configuration>
@@ -1339,7 +1340,7 @@
 						<configuration>
 							<tasks>
 								<copy todir="catalina_base/webapps/oscar">
-									<fileset dir="target/oscar-1.0-SNAPSHOT" />
+									<fileset dir="target/${project.name}-${project.version}" />
 								</copy>
 							</tasks>
 						</configuration>
