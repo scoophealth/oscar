@@ -54,7 +54,7 @@ public class LoggedInUserFilter implements javax.servlet.Filter {
 			// set new / current data
 			HttpServletRequest request = (HttpServletRequest) tmpRequest;
 			LoggedInInfo x = generateLoggedInInfoFromSession(request);
-			LoggedInInfo.loggedInInfo.set(x);
+			LoggedInInfo.setLoggedInInfoIntoSession(request.getSession(),x);
 
 			logger.debug("LoggedInUserFilter chainning");
 			chain.doFilter(tmpRequest, tmpResponse);

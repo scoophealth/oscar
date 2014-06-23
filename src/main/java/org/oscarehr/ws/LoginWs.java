@@ -62,7 +62,7 @@ public class LoginWs extends AbstractWs {
 
 		if (securities.size() > 0) security = securities.get(0);
 
-		if (WsUtils.checkAuthenticationAndSetLoggedInInfo(security, password)) {
+		if (WsUtils.checkAuthenticationAndSetLoggedInInfo(getHttpServletRequest(),security, password)) {
 			LoginResultTransfer result = new LoginResultTransfer();
 			result.setSecurityId(security.getSecurityNo());
 

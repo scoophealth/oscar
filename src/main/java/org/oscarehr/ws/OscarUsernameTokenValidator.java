@@ -25,6 +25,10 @@
 
 package org.oscarehr.ws;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.cxf.binding.soap.SoapMessage;
+import org.apache.cxf.transport.http.AbstractHTTPDestination;
 import org.apache.log4j.Logger;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.handler.RequestData;
@@ -55,7 +59,9 @@ public class OscarUsernameTokenValidator extends UsernameTokenValidator {
 			Security security = securityDao.find(securityUserId);
 			
 			// if it's all good just return
-			if (WsUtils.checkAuthenticationAndSetLoggedInInfo(security, usernameToken.getPassword())) return;
+			SoapMessage soapMessage = (SoapMessage) data.getMsgContext();
+			HttpServletRequest request = (HttpServletRequest) soapMessage.get(AbstractHTTPDestination.HTTP_REQUEST);
+			if (WsUtils.checkAuthenticationAndSetLoggedInInfo(request, security, usernameToken.getPassword())) return;
 		} catch (NumberFormatException e) {
 			logger.error("userIdString is not a number? usernameToken.getName()='" + usernameToken.getName() + '\'');
 		}
