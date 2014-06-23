@@ -25,6 +25,7 @@ package org.oscarehr.util;
 
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
@@ -43,6 +44,8 @@ import org.oscarehr.common.model.Security;
  */
 public final class LoggedInInfo
 {
+	private static final String LOGGED_IN_INFO_KEY=LoggedInInfo.class.getName()+".LOGGED_IN_INFO_KEY";
+	
 	private static Logger logger=MiscUtils.getLogger();
 	public static final ThreadLocal<LoggedInInfo> loggedInInfo = new ThreadLocal<LoggedInInfo>();
 
@@ -84,4 +87,64 @@ public final class LoggedInInfo
 		if (x != null) logger.warn("Logged in info should be null on new requests but it wasn't. oldUser=" + x);				
 	}
 
+	/**
+	 * This method should be used for browser requests / end user requests.
+	 */
+	public static void setLoggedInInfoIntoSession(HttpSession session, LoggedInInfo loggedInInfo)
+	{
+		session.setAttribute(LOGGED_IN_INFO_KEY, loggedInInfo);
+		
+		// temporary until full threadLocal is removed
+		LoggedInInfo.loggedInInfo.set(loggedInInfo);
+	}
+	
+	/**
+	 * This method should be used for browser requests / end user requests.
+	 */
+	public static LoggedInInfo getLoggedInInfoFromSession(HttpSession session)
+	{
+		return((LoggedInInfo)session.getAttribute(LOGGED_IN_INFO_KEY));
+	}
+	
+	/**
+	 * This method should be used for browser requests / end user requests.
+	 * This will pick out the session from the request object. It doesn't attempt
+	 * to get it from the requestAttributes.
+	 */
+	public static LoggedInInfo getLoggedInInfoFromSession(HttpServletRequest request)
+	{
+		return(getLoggedInInfoFromSession(request.getSession()));
+	}
+	
+	/**
+	 * This method should be used for web services.
+	 * This will be stored in the requestAttributes, not the session.
+	 */
+	public static void setLoggedInInfoIntoRequest(HttpServletRequest request, LoggedInInfo loggedInInfo)
+	{
+		request.setAttribute(LOGGED_IN_INFO_KEY, loggedInInfo);
+
+		// temporary until full threadLocal is removed
+		LoggedInInfo.loggedInInfo.set(loggedInInfo);
+	}
+	
+	/**
+	 * This method should be used for web services.
+	 * This will be retrieved from the requestAttributes, not the session.
+	 */
+	public static LoggedInInfo getLoggedInInfoFromRequest(HttpServletRequest request)
+	{
+		return((LoggedInInfo)request.getAttribute(LOGGED_IN_INFO_KEY));
+	}
+	
+	/**
+	 * This is used for logout only, should not be used at the end of a request. 
+	 */
+	public static void removeLoggedInInfoFromSession(HttpSession session)
+	{
+		session.removeAttribute(LOGGED_IN_INFO_KEY);
+		
+		// temporary until full threadLocal is removed
+		LoggedInInfo.loggedInInfo.remove();
+	}
 }

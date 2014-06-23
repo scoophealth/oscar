@@ -51,13 +51,18 @@ public abstract class AbstractWs
 	
 	protected Security getLoggedInSecurity()
 	{
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		return(loggedInInfo.loggedInSecurity);
 	}
 	
 	protected Provider getLoggedInProvider()
 	{
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		return(loggedInInfo.loggedInProvider);
+	}
+	
+	protected LoggedInInfo getLoggedInInfo()
+	{
+		return(LoggedInInfo.getLoggedInInfoFromRequest(getHttpServletRequest()));
 	}
 }

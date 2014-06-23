@@ -27,6 +27,8 @@ package org.oscarehr.ws;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Security;
 import org.oscarehr.util.LoggedInInfo;
@@ -44,7 +46,7 @@ public final class WsUtils
 	 * @param security can be null, it will return false for null. 
 	 * @param securityToken can be the SecurityId's password, or a valid securityToken.
 	 */
-	public static boolean checkAuthenticationAndSetLoggedInInfo(Security security, String securityToken)
+	public static boolean checkAuthenticationAndSetLoggedInInfo(HttpServletRequest request, Security security, String securityToken)
 	{
 		if (security != null)
 		{
@@ -58,7 +60,7 @@ public final class WsUtils
 					x.loggedInProvider = providerDao.getProvider(security.getProviderNo());
 				}
 				
-				LoggedInInfo.loggedInInfo.set(x);
+				LoggedInInfo.setLoggedInInfoIntoRequest(request, x);
 				return(true);
 			}
 		}
