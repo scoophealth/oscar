@@ -36,6 +36,8 @@ import org.oscarehr.provider.web.CppPreferencesUIBean;
 
 import oscar.OscarProperties;
 
+import java.util.Random;
+
 public class CustomInterfaceTag extends TagSupport {
 
 	Logger logger = MiscUtils.getLogger();
@@ -77,7 +79,8 @@ public class CustomInterfaceTag extends TagSupport {
 				out.println("<link rel=\"stylesheet\" href=\""+contextPath+"/js/custom/global.css\" type=\"text/css\">");
 				out.println("<script src=\""+contextPath+"/js/custom/"+customJs+"/global.js\"></script>");
 				if(getSection()!=null && getSection().length()>0) {
-					out.println("<script src=\""+contextPath+"/js/custom/"+customJs+"/"+getSection()+".js\"></script>");
+                    int randomNo = new Random().nextInt();
+					out.println("<script src=\""+contextPath+"/js/custom/"+customJs+"/"+getSection()+".js?no-cache="+randomNo+"\"></script>");
 				}
 			}catch(IOException e) {
 				logger.error("Error",e);
