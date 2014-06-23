@@ -208,7 +208,7 @@ function toggleSelectAll() {
             final String UNPRINTABLE_TITLE = "This file must be manually printed.";
             final String UNPRINTABLE_ALT = "Unprintable";
             
-            privatedocs = EDocUtil.listDocs("demographic", demoNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_DESCRIPTION, "active");
+            privatedocs = EDocUtil.listDocs("demographic", demoNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active");
             labData = new CommonLabResultData();
             labs = labData.populateLabResultsData("",demoNo, "", "","","U");
             Collections.sort(labs);       
@@ -225,6 +225,9 @@ function toggleSelectAll() {
                         value="" title="Select/un-select all documents."
                         style="margin: 0px; padding: 0px;"/> Select all  
             </li>
+            <% if(privatedocs.size() > 0){%>
+            	<h2>Documents</h2>
+            <%}%>
             <%
 	            EDoc curDoc;
 	            String url;      
@@ -302,7 +305,12 @@ function toggleSelectAll() {
 		                   </div>
 		                </li>
 	                <%                                           
-	                }	
+	                }
+	            	if(labs.size() > 0){
+	            	%>
+	            		<h2>Labs</h2>	
+	            	<%
+	            	}
 		                 
 	                LabResultData result;
 	                String labDisplayName;

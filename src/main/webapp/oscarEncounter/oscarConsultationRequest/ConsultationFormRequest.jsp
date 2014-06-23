@@ -671,8 +671,9 @@ function rs(n,u,w,h,x){
 }
 
 var DocPopup = null;
-function popup(location) {
-    DocPopup = window.open(location,"_blank","height=380,width=580");
+function popup(location,h,w) {
+	args="height="+h+",width="+w;
+    DocPopup = window.open(location,"_blank",args);
 
     if (DocPopup != null) {
         if (DocPopup.opener == null) {
@@ -1254,11 +1255,11 @@ function updateFaxButton() {
 								{
 									%>
 									<% if (OscarProperties.getInstance().isPropertyActive("consultation_indivica_attachment_enabled")) { %>
-									<a href="#" onclick="popup('<rewrite:reWrite jspPage="attachConsultation2.jsp"/>?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;">
+									<a href="#" onclick="popup('<rewrite:reWrite jspPage="attachConsultation2.jsp"/>?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>',690,1090);return false;">
 										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc" />
 									</a>
 									<% } else { %>
-									<a href="#" onclick="popup('<rewrite:reWrite jspPage="attachConsultation.jsp"/>?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;">
+									<a href="#" onclick="popup('<rewrite:reWrite jspPage="attachConsultation.jsp"/>?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>',380,580);return false;">
 										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc" />
 									</a>
 									<% }
