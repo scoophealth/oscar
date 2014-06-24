@@ -58,6 +58,7 @@ import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.renal.CkdScreener;
+import org.oscarehr.renal.ORNCkdScreeningReportThread;
 import org.oscarehr.renal.ORNPreImplementationReportThread;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -359,6 +360,19 @@ public class RenalAction extends DispatchAction {
 		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 		
 		ORNPreImplementationReportThread t = new ORNPreImplementationReportThread();
+		t.setProviderNo(providerNo);
+		t.start();
+		
+		
+		return null;
+		
+	}
+	
+	public ActionForward submitCkdScreeningReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+		
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+		
+		ORNCkdScreeningReportThread t = new ORNCkdScreeningReportThread();
 		t.setProviderNo(providerNo);
 		t.start();
 		
