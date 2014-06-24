@@ -23,8 +23,11 @@
  */
 package org.oscarehr.renal;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.oscarehr.common.model.Demographic;
 
+@XmlRootElement(name = "CkdScreeningReportItem")
 public class CKDReportContainer {
 	private Demographic demographic;
 	private String aboriginalStr;
