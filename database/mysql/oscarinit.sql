@@ -11646,3 +11646,11 @@ CREATE TABLE IF NOT EXISTS `sharing_exported_doc` (
   CONSTRAINT `fk_sharing_exported_doc_domain` FOREIGN KEY (`affinity_domain`) REFERENCES `sharing_affinity_domain` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 );
 /* Sharing Center Tables - end */
+
+create table ORNCkdScreeningReportLog (
+  id int(10) NOT NULL auto_increment,
+  providerNo varchar(10) not null,
+  reportData text not null,
+  lastUpdateDate datetime not null,
+  primary key(id)
+);
