@@ -26,7 +26,10 @@ package org.oscarehr.renal;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -40,6 +43,18 @@ public class CkdScreenerSchedulerJob extends TimerTask {
 		if(!OscarProperties.getInstance().getProperty("ORN_PILOT", "no").equalsIgnoreCase("yes")) {
 			return;
 		}
+		
+		Provider provider = new Provider();
+		provider.setProviderNo(OscarProperties.getInstance().getProperty("ORN_PILOT_USER", "999998"));
+		Security security = new Security();
+		security.setId(0);
+		
+		LoggedInInfo x = new LoggedInInfo();
+		x.loggedInProvider = provider;
+		x.loggedInSecurity = security;
+		LoggedInInfo.loggedInInfo.set(x);
+		
+		
 		try {
 			logger.info("starting renal background ckd screening job");
 			
@@ -52,6 +67,7 @@ public class CkdScreenerSchedulerJob extends TimerTask {
 			logger.error("Error",e);
 		} finally {
 			DbConnectionFilter.releaseAllThreadDbResources();
+			LoggedInInfo.loggedInInfo.set(null);
 		}
 	}
 
