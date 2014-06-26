@@ -175,7 +175,7 @@ public class EctValidation{
 
          boolean validation = true;
 
-         if(inputValue.split("/").length >1 && regExp.isEmpty()){
+         if(inputValue.split("/").length >1 && (regExp==null || regExp.isEmpty())){
                  // this field is not blood pressure, no need to validate
                  return validation;
          }
