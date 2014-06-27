@@ -346,7 +346,7 @@ public class DefaultNoteService implements NoteService {
 
 			for (EChartNoteEntry entry : slice) {
 				if (entry.getType().equals("local_note")) {
-					notesToDisplay.add(new NoteDisplayLocal(findNote((Long) entry.getId(), localNotes)));
+					notesToDisplay.add(new NoteDisplayLocal(loggedInInfo, findNote((Long) entry.getId(), localNotes)));
 				} else if (entry.getType().equals("remote_note")) {
 					notesToDisplay.add(new NoteDisplayIntegrator(findRemoteNote((CachedDemographicNoteCompositePk) entry.getId(), remoteNotes)));
 				} else if (entry.getType().equals("eform")) {
@@ -357,7 +357,7 @@ public class DefaultNoteService implements NoteService {
 					notesToDisplay.add(new NoteDisplayNonNote(findInvoice((Integer) entry.getId(), invoices)));
 				} else if (entry.getType().equals("group_note")) {
 					CaseManagementNote note = findNote(((Integer) entry.getId()).longValue(), groupNotes);
-					NoteDisplayLocal disp = new NoteDisplayLocal(note);
+					NoteDisplayLocal disp = new NoteDisplayLocal(loggedInInfo, note);
 					disp.setReadOnly(true);
 					disp.setGroupNote(true);
 					disp.setLocation(String.valueOf(note.getDemographic_no()));

@@ -18,6 +18,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
@@ -222,12 +223,13 @@ Colposcopy Total :
 </table>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
     Integer raHeaderNo = Integer.parseInt(raNo);
     
     BillingONPremiumDao bPremiumDao = (BillingONPremiumDao) SpringUtils.getBean("billingONPremiumDao");
     List<BillingONPremium> bPremiumList = bPremiumDao.getRAPremiumsByRaHeaderNo(raHeaderNo);
     if (bPremiumList.isEmpty()) {
-        bPremiumDao.parseAndSaveRAPremiums(raHeaderNo, request.getLocale());
+        bPremiumDao.parseAndSaveRAPremiums(loggedInInfo, raHeaderNo, request.getLocale());
         bPremiumList = bPremiumDao.getRAPremiumsByRaHeaderNo(raHeaderNo);
     }
     

@@ -148,8 +148,10 @@ public class NotePermissionsAction extends DispatchAction {
 
 		hashMap.put("noteId", noteId);
 
-		Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
-		String providerNo = provider.getProviderNo();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+		Provider provider = loggedInInfo.getLoggedInProvider();
+
 		if (canNoteBeModified(providerNo, noteId)) {
 			CaseManagementNote note = noteDao.getNote(Long.parseLong(noteId));
 
@@ -197,7 +199,8 @@ public class NotePermissionsAction extends DispatchAction {
 	}
 
 	public ActionForward getDefaultProgramAndRole(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		String demoNo = request.getParameter("demoNo");
 
 		ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
@@ -250,7 +253,9 @@ public class NotePermissionsAction extends DispatchAction {
 	}
 
 	public ActionForward visibleProgramsAndRoles(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 		String demoNo = request.getParameter("demoNo");
 		HashMap<Program, List<Secrole>> visibleMap = getAllProviderAccessibleRolesForDemo(providerNo, demoNo);
 

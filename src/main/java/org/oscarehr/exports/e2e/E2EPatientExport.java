@@ -55,7 +55,7 @@ import oscar.util.StringUtils;
  * @author Jeremy Ho
  */
 public class E2EPatientExport extends PatientExport {
-	//private String authorId = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+
 	private String authorId = null;
 	private String patientStatus = "";
 	private Demographic demographic = null;

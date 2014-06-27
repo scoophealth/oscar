@@ -85,7 +85,7 @@ public class BillingONPremiumDao extends AbstractDao<BillingONPremium>{
         return results;
     }
     
-    public void parseAndSaveRAPremiums(Integer raHeaderNo, Locale locale) {
+    public void parseAndSaveRAPremiums(LoggedInInfo loggedInInfo, Integer raHeaderNo, Locale locale) {
             
         String filepath =  OscarProperties.getInstance().getProperty("DOCUMENT_DIR").trim();
         RaHeaderDao raHeaderDao = (RaHeaderDao) SpringUtils.getBean("raHeaderDao");
@@ -167,7 +167,7 @@ public class BillingONPremiumDao extends AbstractDao<BillingONPremium>{
                                             premium.setAmountPay(amountPay);
 
                                             premium.setRAHeaderNo(raHeaderNo);
-                                            premium.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+                                            premium.setCreator(loggedInInfo.getLoggedInProviderNo());
                                             premium.setCreateDate(new java.util.Date());
                                             
                                             //now that all values are filled, we can persist the object to the DB

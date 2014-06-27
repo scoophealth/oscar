@@ -112,9 +112,11 @@ public class ContactAction extends DispatchAction {
 	}
 
 	public ActionForward saveManage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-    	int demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
+		int demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
     	int maxContact = Integer.parseInt(request.getParameter("contact_num"));
+
     	for(int x=1;x<=maxContact;x++) {
     		String id = request.getParameter("contact_"+x+".id");
     		if(id != null) {
@@ -147,8 +149,8 @@ public class ContactAction extends DispatchAction {
     			} else {
     				c.setEc("");
     			}
-    			c.setFacilityId(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
-    			c.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+    			c.setFacilityId(loggedInInfo.getCurrentFacility().getId());
+    			c.setCreator(loggedInInfo.getLoggedInProviderNo());
     			
     			if(request.getParameter("contact_"+x+".consentToContact").equals("1")) {
     				c.setConsentToContact(true);
@@ -188,7 +190,7 @@ public class ContactAction extends DispatchAction {
 		        			c.setCategory(DemographicContact.CATEGORY_PERSONAL);
 		        			c.setSdm("");
 		        			c.setEc("");
-		        			c.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		        			c.setCreator(loggedInInfo.getLoggedInProviderNo());
 		        			
 		        			if(c.getId() == null)
 		        				demographicContactDao.persist(c);
@@ -237,8 +239,8 @@ public class ContactAction extends DispatchAction {
     			}
     			c.setContactId(otherId);
     			c.setCategory(DemographicContact.CATEGORY_PROFESSIONAL);
-    			c.setFacilityId(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
-    			c.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+    			c.setFacilityId(loggedInInfo.getCurrentFacility().getId());
+    			c.setCreator(loggedInInfo.getLoggedInProviderNo());
     			
     			if(request.getParameter("procontact_"+x+".consentToContact").equals("1")) {
     				c.setConsentToContact(true);
