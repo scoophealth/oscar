@@ -59,7 +59,7 @@ public final class PrescriptionMedicationManager {
 	private static final String OSCAR_MEDICATION_DATA_TYPE = "MEDICATION";
 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
 
-	public static void sendPrescriptionsMedicationsToMyOscar(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) throws ClassCastException {
+	public static void sendPrescriptionsMedicationsToMyOscar(LoggedInInfo loggedInInfo, MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) throws ClassCastException {
 		// get last synced prescription info
 
 		// get the medications for the person which are changed since last sync
@@ -76,23 +76,23 @@ public final class PrescriptionMedicationManager {
 		SentToPHRTracking sentToPHRTracking = MyOscarMedicalDataManagerUtils.getExistingOrCreateInitialSentToPHRTracking(demographicId, OSCAR_PRESCRIPTION_DATA_TYPE, MyOscarLoggedInInfo.getMyOscarServerBaseUrl());
 		logger.debug("sendPrescriptionsMedicationsToMyOscar : demographicId=" + demographicId + ", lastSyncTime=" + sentToPHRTracking.getSentDatetime());
 
-		HashMap<Drug, Long> remoteMedicationIdMap = sendMedicationsToMyOscar(myOscarLoggedInInfo, demographicId, sentToPHRTracking);
-		sendPrescriptionsToMyOscar(myOscarLoggedInInfo, demographicId, sentToPHRTracking, remoteMedicationIdMap);
+		HashMap<Drug, Long> remoteMedicationIdMap = sendMedicationsToMyOscar(loggedInInfo,myOscarLoggedInInfo, demographicId, sentToPHRTracking);
+		sendPrescriptionsToMyOscar(loggedInInfo,myOscarLoggedInInfo, demographicId, sentToPHRTracking, remoteMedicationIdMap);
 
 		sentToPHRTracking.setSentDatetime(startSyncTime);
 		sentToPHRTrackingDao.merge(sentToPHRTracking);
 	}
 	
 
-	private static void sendPrescriptionsToMyOscar(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId, SentToPHRTracking sentToPHRTracking, HashMap<Drug, Long> remoteMedicationIdMap) {
+	private static void sendPrescriptionsToMyOscar(LoggedInInfo loggedInInfo, MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId, SentToPHRTracking sentToPHRTracking, HashMap<Drug, Long> remoteMedicationIdMap) {
 		PrescriptionDao prescriptionDao = (PrescriptionDao) SpringUtils.getBean("prescriptionDao");
 		List<Prescription> changedPrescriptions = prescriptionDao.findByDemographicIdUpdatedAfterDate(demographicId, sentToPHRTracking.getSentDatetime());
 		for (Prescription prescription : changedPrescriptions) {
 			logger.debug("sendPrescriptionsMedicationsToMyOscar : prescriptionId=" + prescription.getId());
 
 			try {
-				MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, prescription);
-				Long remotePrescriptionId = MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId(), true, true);
+				MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(loggedInInfo,myOscarLoggedInInfo, prescription);
+				Long remotePrescriptionId = MyOscarMedicalDataManagerUtils.addMedicalData(loggedInInfo.getLoggedInProviderNo(),myOscarLoggedInInfo, medicalDataTransfer, OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId(), true, true);
 				linkPrescriptionToMedications(myOscarLoggedInInfo, prescription, medicalDataTransfer.getOwningPersonId(), remotePrescriptionId, remoteMedicationIdMap);
 			} catch (Exception e) {
 				logger.error("Error", e);
@@ -112,7 +112,7 @@ public final class PrescriptionMedicationManager {
 		}
 	}
 
-	private static HashMap<Drug, Long> sendMedicationsToMyOscar(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId, SentToPHRTracking sentToPHRTracking) {
+	private static HashMap<Drug, Long> sendMedicationsToMyOscar(LoggedInInfo loggedInInfo, MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId, SentToPHRTracking sentToPHRTracking) {
 		DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
 		List<Drug> changedMedications = drugDao.findByDemographicIdUpdatedAfterDate(demographicId, sentToPHRTracking.getSentDatetime());
 		HashMap<Drug, Long> remoteIdMap = new HashMap<Drug, Long>();
@@ -120,14 +120,14 @@ public final class PrescriptionMedicationManager {
 			logger.debug("sendPrescriptionsMedicationsToMyOscar : drugId=" + drug.getId());
 
 			try {
-				MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, drug);
+				MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(loggedInInfo, myOscarLoggedInInfo, drug);
 				Long remoteMedicationId = null;
 				
 				// something really odd going on here, we're allowed to update prescriptions/medications? not sure why, we're also not tracking it locally and relying on an error from the server???
 				try {
-					remoteMedicationId = MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId(), false, true);
+					remoteMedicationId = MyOscarMedicalDataManagerUtils.addMedicalData(loggedInInfo.getLoggedInProviderNo(), myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId(), false, true);
 				} catch (Exception e) {
-					MyOscarMedicalDataManagerUtils.updateMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId());
+					MyOscarMedicalDataManagerUtils.updateMedicalData(loggedInInfo.getLoggedInProviderNo(), myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId());
 					remoteMedicationId=medicalDataTransfer.getId();
 				}
 
@@ -153,7 +153,7 @@ public final class PrescriptionMedicationManager {
 		return (doc);
 	}
 
-	private static MedicalDataTransfer4 toMedicalDataTransfer(MyOscarLoggedInInfo myOscarLoggedInInfo, Prescription prescription) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+	private static MedicalDataTransfer4 toMedicalDataTransfer(LoggedInInfo loggedInInfo,MyOscarLoggedInInfo myOscarLoggedInInfo, Prescription prescription) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
 		MedicalDataTransfer4 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer(myOscarLoggedInInfo, prescription.getDatePrescribed(), prescription.getProviderNo(), prescription.getDemographicId());
 		// don't ask me why but prescription are currently changeable in oscar, therefore, they're never completed.
 		medicalDataTransfer.setCompleted(false);
@@ -163,7 +163,6 @@ public final class PrescriptionMedicationManager {
 
 		medicalDataTransfer.setMedicalDataType(MedicalDataType.PRESCRIPTION.name());
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId()));
 
 		return (medicalDataTransfer);
@@ -260,7 +259,7 @@ public final class PrescriptionMedicationManager {
 		return (doc);
 	}
 
-	private static MedicalDataTransfer4 toMedicalDataTransfer(MyOscarLoggedInInfo myOscarLoggedInInfo, Drug drug) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+	private static MedicalDataTransfer4 toMedicalDataTransfer(LoggedInInfo loggedInInfo, MyOscarLoggedInInfo myOscarLoggedInInfo, Drug drug) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
 		MedicalDataTransfer4 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer(myOscarLoggedInInfo, drug.getRxDate(), drug.getProviderNo(), drug.getDemographicId());
 
 		Document doc = toXml(drug);
@@ -268,7 +267,6 @@ public final class PrescriptionMedicationManager {
 
 		medicalDataTransfer.setMedicalDataType(MedicalDataType.MEDICATION.name());
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), OSCAR_MEDICATION_DATA_TYPE, drug.getId()));
 
 		medicalDataTransfer.setActive(!drug.isArchived());

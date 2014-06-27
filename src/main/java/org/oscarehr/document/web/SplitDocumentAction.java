@@ -54,6 +54,9 @@ public class SplitDocumentAction extends DispatchAction {
 		String docNum = request.getParameter("document");
 		String[] commands = request.getParameterValues("page[]");
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 		Document doc = documentDao.getDocument(docNum);
 
 		String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
@@ -87,10 +90,9 @@ public class SplitDocumentAction extends DispatchAction {
 		//newPdf.save(docdownload + newFilename);
 
 		if (newPdf.getNumberOfPages() > 0) {
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
 
-			EDoc newDoc = new EDoc("","", newFilename, "", loggedInInfo.loggedInProvider.getProviderNo(), doc.getDoccreator(), "", 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1",0);
+			EDoc newDoc = new EDoc("","", newFilename, "", providerNo, doc.getDoccreator(), "", 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1",0);
 			newDoc.setDocPublic("0");
 			newDoc.setContentType("application/pdf");
 			newDoc.setNumberOfPages(newPdf.getNumberOfPages());
@@ -110,7 +112,7 @@ public class SplitDocumentAction extends DispatchAction {
 				providerInboxRoutingDao.addToProviderInbox(i.getProviderNo(), Integer.parseInt(newDocNo), "DOC");
 			}
 
-			providerInboxRoutingDao.addToProviderInbox(loggedInInfo.loggedInProvider.getProviderNo(), Integer.parseInt(newDocNo), "DOC");
+			providerInboxRoutingDao.addToProviderInbox(providerNo, Integer.parseInt(newDocNo), "DOC");
 
 			QueueDocumentLinkDao queueDocumentLinkDAO = (QueueDocumentLinkDao) ctx.getBean("queueDocumentLinkDAO");
 			Integer qid = 1;

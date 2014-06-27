@@ -52,7 +52,6 @@ import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.UnsupportedEncodingException_Exception;
 import org.oscarehr.phr.util.MyOscarUtils;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -61,7 +60,6 @@ public final class MyOscarMedicalDataManagerUtils {
 	
 	private static final RemoteDataLogDao remoteDataLogDao = (RemoteDataLogDao) SpringUtils.getBean("remoteDataLogDao");
 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
-	private static final LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 	private static final ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 	
 	
@@ -94,20 +92,20 @@ public final class MyOscarMedicalDataManagerUtils {
 		return(medicalDataTransfer);
 	}
 	
-	public static Long addMedicalData(MyOscarLoggedInInfo myOscarLoggedInInfo, MedicalDataTransfer4 medicalDataTransfer, String oscarDataType, Object localOscarObjectId, boolean completed, boolean active) throws NotAuthorisedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
+	public static Long addMedicalData(String providerNo, MyOscarLoggedInInfo myOscarLoggedInInfo, MedicalDataTransfer4 medicalDataTransfer, String oscarDataType, Object localOscarObjectId, boolean completed, boolean active) throws NotAuthorisedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
 		Long resultId=MedicalDataManager.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, completed, active);
 		logger.debug("addMedicalData success : resultId="+resultId);
 
-		addSendRemoteDataLog(oscarDataType, localOscarObjectId, medicalDataTransfer.getData());
+		addSendRemoteDataLog(providerNo, oscarDataType, localOscarObjectId, medicalDataTransfer.getData());
 		
 		return(resultId);
 	}
 	
-	public static void updateMedicalData(MyOscarLoggedInInfo myOscarLoggedInInfo, MedicalDataTransfer4 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception, ItemCompletedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
+	public static void updateMedicalData(String providerNo, MyOscarLoggedInInfo myOscarLoggedInInfo, MedicalDataTransfer4 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception, ItemCompletedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
 		MedicalDataManager.updateMedicalData(myOscarLoggedInInfo, medicalDataTransfer);
 		logger.debug("updateMedicalData success : objectId="+medicalDataTransfer.getId());
 
-		addSendRemoteDataLog(oscarDataType, localOscarObjectId, medicalDataTransfer.getData());
+		addSendRemoteDataLog(providerNo, oscarDataType, localOscarObjectId, medicalDataTransfer.getData());
 	}
 	
 	public static Long addMedicalDataRelationship(MyOscarLoggedInInfo myOscarLoggedInInfo, Long ownerId, Long primaryMedicalDataId, Long relatedMedicalDataId, String relationship) throws NoSuchItemException_Exception, NotAuthorisedException_Exception
@@ -134,9 +132,9 @@ public final class MyOscarMedicalDataManagerUtils {
 		return(facilityName + ':' + dataType + ':' + objectId);
 	}
 
-	private static void addSendRemoteDataLog(String oscarDataType, Object oscarObjectId, String dataContentsDescription) {
+	private static void addSendRemoteDataLog(String providerNo,String oscarDataType, Object oscarObjectId, String dataContentsDescription) {
 		RemoteDataLog remoteDataLog = new RemoteDataLog();
-		remoteDataLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		remoteDataLog.setProviderNo(providerNo);
 		remoteDataLog.setDocumentId(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), oscarDataType, oscarObjectId);
 		remoteDataLog.setAction(RemoteDataLog.Action.SEND);
 		remoteDataLog.setDocumentContents(dataContentsDescription);

@@ -90,9 +90,9 @@ public class SendDocToPhrAction extends Action {
 	private static void addOrUpdate(HttpServletRequest request, Demographic demo, ProviderData prov, EDoc eDoc) {
 		logger.debug("called addOrUpdate()");
 
-		try {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		try {
 
 			Document doc=XmlUtils.newDocument("BinaryDocument");
     		XmlUtils.appendChildToRoot(doc, "Filename", eDoc.getFileName());
@@ -117,7 +117,7 @@ public class SendDocToPhrAction extends Action {
 			medicalDataTransfer.setOriginalSourceId(loggedInInfo.currentFacility.getName()+":eDoc:"+eDoc.getDocId());
 			medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
 
-    		MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, "eDoc", eDoc.getDocId(), true, true);    		
+    		MyOscarMedicalDataManagerUtils.addMedicalData(loggedInInfo.getLoggedInProviderNo(), myOscarLoggedInInfo, medicalDataTransfer, "eDoc", eDoc.getDocId(), true, true);    		
 
     		// log the send
     		RemoteDataLog remoteDataLog=new RemoteDataLog();

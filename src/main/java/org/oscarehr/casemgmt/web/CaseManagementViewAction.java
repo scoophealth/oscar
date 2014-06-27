@@ -176,6 +176,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
+
 		HttpSession session = request.getSession();
 
 		if (session.getAttribute("userrole") != null) {
@@ -183,8 +186,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			CaseManagementCPP cpp = caseForm.getCpp();
 			cpp.setUpdate_date(new Date());
 
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-			caseManagementMgr.saveCPP(cpp, loggedInInfo.loggedInProvider.getProviderNo());
+			caseManagementMgr.saveCPP(cpp, providerNo);
 
 			// caseManagementMgr.saveEctWin(ectWin);
 		} else response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -195,13 +197,16 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	/* save CPP for patient */
 	public ActionForward patientCPPSave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("patientCPPSave");
+
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
+
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
 		CaseManagementCPP cpp = caseForm.getCpp();
 		cpp.setUpdate_date(new Date());
 		cpp.setDemographic_no(caseForm.getDemographicNo());
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		caseManagementMgr.saveCPP(cpp, loggedInInfo.loggedInProvider.getProviderNo());
+		caseManagementMgr.saveCPP(cpp, providerNo);
 		addMessage(request, "cpp.saved");
 
 		return view(mapping, form, request, response);
@@ -217,6 +222,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	public ActionForward viewNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// response.setCharacterEncoding("UTF-8");
 
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
+
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
 
 		logger.debug("Starting VIEW");
@@ -227,8 +235,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		HttpSession se = request.getSession();
 		if (se.getAttribute("userrole") == null) return mapping.findForward("expired");
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-
 		String demoNo = getDemographicNo(request);
 
 		logger.debug("is client in program");
@@ -237,7 +243,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String roles = (String) se.getAttribute("userrole");
 		if (OscarProperties.getInstance().isOscarLearning() && roles != null && roles.indexOf("moderator") != -1) {
 			logger.info("skipping domain check..provider is a moderator");
-		} else if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.loggedInProvider.getProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(loggedInInfo.loggedInProvider.getProviderNo(), demoNo)) {
+		} else if (!caseManagementMgr.isClientInProgramDomain(providerNo, demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(providerNo, demoNo)) {
 			return mapping.findForward("domain-error");
 		}
 		String programId = (String) request.getSession().getAttribute("case_program_id");
@@ -253,7 +259,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	 */
 	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// response.setCharacterEncoding("UTF-8");
-		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 
 		long start = System.currentTimeMillis();
 		long beginning = start;
@@ -270,7 +276,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 		HttpSession se = request.getSession();
 		if (se.getAttribute("userrole") == null) return mapping.findForward("expired");
-
 
 		String demoNo = getDemographicNo(request);
 
@@ -628,16 +633,17 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private void viewCurrentIssuesTab_oldCme(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws Exception {
 		long startTime = System.currentTimeMillis();
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo = loggedInInfo.getLoggedInProviderNo();
+
 		int demographicNo = Integer.parseInt(demoNo);
 		boolean hideInactiveIssues = Boolean.parseBoolean(caseForm.getHideActiveIssue());
 
 		ArrayList<CheckBoxBean> checkBoxBeanList = new ArrayList<CheckBoxBean>();
 		// addLocalIssues(checkBoxBeanList, demographicNo, hideInactiveIssues, null);
 		addLocalIssues(providerNo, checkBoxBeanList, demographicNo, hideInactiveIssues, Integer.valueOf(programId));
-		addRemoteIssues(checkBoxBeanList, demographicNo, hideInactiveIssues);
-		addGroupIssues(checkBoxBeanList, demographicNo, hideInactiveIssues);
+		addRemoteIssues(loggedInInfo, checkBoxBeanList, demographicNo, hideInactiveIssues);
+		addGroupIssues(loggedInInfo, checkBoxBeanList, demographicNo, hideInactiveIssues);
 
 		sortIssues(checkBoxBeanList);
 		request.setAttribute("Issues", checkBoxBeanList);
@@ -678,14 +684,14 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		caseManagementMgr.getEditors(localNotes);
 
 		for (CaseManagementNote noteTemp : localNotes)
-			notesToDisplay.add(new NoteDisplayLocal(noteTemp));
+			notesToDisplay.add(new NoteDisplayLocal(loggedInInfo, noteTemp));
 		logger.debug("FETCHED " + localNotes.size() + " NOTES in time : " + (System.currentTimeMillis() - startTime));
 
 		// deal with remote notes
 		startTime = System.currentTimeMillis();
-		List<Issue>issueList = issueDao.findIssueByCode(checkedCodeList.toArray(new String[0]));
-		addRemoteNotes(notesToDisplay, demographicNo, issueList, programId);
-		addGroupNotes(notesToDisplay, Integer.parseInt(demoNo), null);
+		List<Issue> issueList = issueDao.findIssueByCode(checkedCodeList.toArray(new String[0]));
+		addRemoteNotes(loggedInInfo, notesToDisplay, demographicNo, issueList, programId);
+		addGroupNotes(loggedInInfo, notesToDisplay, Integer.parseInt(demoNo), null);
 		logger.debug("Get remote notes. time=" + (System.currentTimeMillis() - startTime));
 
 		// not sure what everything else is after this
@@ -767,7 +773,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	 */
 	private void viewCurrentIssuesTab_newCmeNotes(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws Exception {
 		int demographicId = Integer.parseInt(demoNo);
-		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 
 		long startTime;
 		startTime = System.currentTimeMillis();
@@ -833,12 +839,12 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		ArrayList<NoteDisplay> notesToDisplay = new ArrayList<NoteDisplay>();
 		for (CaseManagementNote noteTemp : notes) {
-			notesToDisplay.add(new NoteDisplayLocal(noteTemp));
+			notesToDisplay.add(new NoteDisplayLocal(loggedInInfo, noteTemp));
 		}
 
 		if (request.getParameter("offset") == null || request.getParameter("offset").equalsIgnoreCase("0")) {
-			addRemoteNotes(notesToDisplay, demographicId, null, programId);
-			addGroupNotes(notesToDisplay, demographicId, null);
+			addRemoteNotes(loggedInInfo, notesToDisplay, demographicId, null, programId);
+			addGroupNotes(loggedInInfo, notesToDisplay, demographicId, null);
 
 			// add eforms to notes list as single line items
 			String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -874,8 +880,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	 * New CME
 	 */
 	private void viewCurrentIssuesTab_newCme(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws Exception {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo = loggedInInfo.getLoggedInProviderNo();
+
 		int demographicId = Integer.parseInt(demoNo);
 
 		long startTime;
@@ -893,12 +900,12 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		ArrayList<CheckBoxBean> checkBoxBeanList = new ArrayList<CheckBoxBean>();
 		// addLocalIssues(checkBoxBeanList, demographicNo, hideInactiveIssues, null);
 		addLocalIssues(providerNo, checkBoxBeanList, demographicId, false, Integer.valueOf(programId));
-		addRemoteIssues(checkBoxBeanList, demographicId, false);
-		addGroupIssues(checkBoxBeanList, demographicId, false);
+		addRemoteIssues(loggedInInfo, checkBoxBeanList, demographicId, false);
+		addGroupIssues(loggedInInfo, checkBoxBeanList, demographicId, false);
 		sortIssues(checkBoxBeanList);
 		request.setAttribute("cme_issues", checkBoxBeanList);
 
-        Set<Provider> providers = new HashSet<Provider>(caseManagementMgr.getAllEditors(demoNo));
+		Set<Provider> providers = new HashSet<Provider>(caseManagementMgr.getAllEditors(demoNo));
 		request.setAttribute("providers", providers);
 
 		List<Secrole> roles = roleMgr.getRoles();
@@ -1006,9 +1013,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return (false);
 	}
 
-	private void addGroupNotes(ArrayList<NoteDisplay> notesToDisplay, int demographicNo, ArrayList<String> issueCodesToDisplay) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		List<SecUserRole> roles = secUserRoleDao.getUserRoles(loggedInInfo.loggedInProvider.getProviderNo());
+	private void addGroupNotes(LoggedInInfo loggedInInfo, ArrayList<NoteDisplay> notesToDisplay, int demographicNo, ArrayList<String> issueCodesToDisplay) {
+
+		List<SecUserRole> roles = secUserRoleDao.getUserRoles(loggedInInfo.getLoggedInProviderNo());
 
 		if (!loggedInInfo.currentFacility.isEnableGroupNotes()) return;
 
@@ -1027,7 +1034,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					String originaldemo = note.getDemographic_no();
 
 					note.setDemographic_no(String.valueOf(demographicNo));
-					NoteDisplayLocal disp = new NoteDisplayLocal(note);
+					NoteDisplayLocal disp = new NoteDisplayLocal(loggedInInfo, note);
 					disp.setReadOnly(true);
 					disp.setGroupNote(true);
 					Demographic origDemographic = demographicDao.getDemographic(originaldemo);
@@ -1042,8 +1049,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	}
 
-	private void addRemoteNotes(ArrayList<NoteDisplay> notesToDisplay, int demographicNo, List<Issue> issueCodesToDisplay, String programId) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	private void addRemoteNotes(LoggedInInfo loggedInInfo, ArrayList<NoteDisplay> notesToDisplay, int demographicNo, List<Issue> issueCodesToDisplay, String programId) {
 
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
 		List<CachedDemographicNote> linkedNotes = null;
@@ -1061,7 +1067,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 
 		if (linkedNotes == null) return;
-		
+
 		for (CachedDemographicNote cachedDemographicNote : linkedNotes) {
 			try {
 
@@ -1082,24 +1088,19 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private boolean hasIssueToBeDisplayed(CachedDemographicNote cachedDemographicNote, List<Issue> issueCodesToDisplay) {
 		// no issue selected means display all
 		if (issueCodesToDisplay == null || issueCodesToDisplay.size() == 0) return (true);
-		
-				
+
 		for (NoteIssue noteIssue : cachedDemographicNote.getIssues()) {
-			for( Issue issue : issueCodesToDisplay ) {				
+			for (Issue issue : issueCodesToDisplay) {
 				logger.info("Comparing " + noteIssue.getIssueCode() + " type:" + noteIssue.getCodeType() + " TO " + issue.getCode() + " type:" + issue.getType());
-				if( Issue.CUSTOM_ISSUE.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.CUSTOM_ISSUE  && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode()) )  {
+				if (Issue.CUSTOM_ISSUE.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.CUSTOM_ISSUE && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode())) {
 					return true;
-				}
-				else if( Issue.SYSTEM.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.SYSTEM  && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode()) ){
+				} else if (Issue.SYSTEM.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.SYSTEM && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode())) {
 					return true;
-				}
-				else if( Issue.ICD_9.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.ICD_9  && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode()) ){
+				} else if (Issue.ICD_9.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.ICD_9 && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode())) {
 					return true;
-				}
-				else if( Issue.ICD_10.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.ICD_10  && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode()) ){
+				} else if (Issue.ICD_10.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.ICD_10 && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode())) {
 					return true;
-				}
-				else if( Issue.SNOMED.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.SNOMED  && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode()) ){
+				} else if (Issue.SNOMED.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.SNOMED && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode())) {
 					return true;
 				}
 			}
@@ -1111,8 +1112,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	/*
 	 * This does absolutely nothing
 	 */
-	protected void addGroupIssues(ArrayList<CheckBoxBean> checkBoxBeanList, int demographicNo, boolean hideInactiveIssues) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	protected void addGroupIssues(LoggedInInfo loggedInInfo, ArrayList<CheckBoxBean> checkBoxBeanList, int demographicNo, boolean hideInactiveIssues) {
 
 		if (!loggedInInfo.currentFacility.isEnableGroupNotes()) return;
 
@@ -1137,8 +1137,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 	}
 
-	protected void addRemoteIssues(ArrayList<CheckBoxBean> checkBoxBeanList, int demographicNo, boolean hideInactiveIssues) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	protected void addRemoteIssues(LoggedInInfo loggedInInfo, ArrayList<CheckBoxBean> checkBoxBeanList, int demographicNo, boolean hideInactiveIssues) {
 
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
 
@@ -1293,6 +1292,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	public ActionForward listNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("List Notes start");
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		String providerNo = getProviderNo(request);
 		String demoNo = getDemographicNo(request);
 		Collection<CaseManagementNote> notes = null;
@@ -1386,16 +1387,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 		request.setAttribute("NoteExts", lcme);
 		request.setAttribute("Notes", notes);
-		
-		ArrayList<NoteDisplay>remoteNotes = new ArrayList<NoteDisplay>();
-		ArrayList<String>issueCodes =  new ArrayList<String>(Arrays.asList(codes));
-		addRemoteNotes(remoteNotes, Integer.parseInt(demoNo), issues, programId);
-		
-		if( remoteNotes.size() > 0 ) {
+
+		ArrayList<NoteDisplay> remoteNotes = new ArrayList<NoteDisplay>();
+		ArrayList<String> issueCodes = new ArrayList<String>(Arrays.asList(codes));
+		addRemoteNotes(loggedInInfo,remoteNotes, Integer.parseInt(demoNo), issues, programId);
+
+		if (remoteNotes.size() > 0) {
 			request.setAttribute("remoteNotes", remoteNotes);
 		}
-		
-		
+
 		/*
 		 * oscar.OscarProperties p = oscar.OscarProperties.getInstance(); String noteSort = p.getProperty("CMESort", ""); if (noteSort.trim().equalsIgnoreCase("UP")) request.setAttribute("Notes", sortNotes(notes, "observation_date_asc")); else
 		 * request.setAttribute("Notes", sortNotes(notes, "observation_date_desc"));
@@ -1424,8 +1424,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	}
 
 	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-		String providerNo=loggedInInfo.getLoggedInProviderNo();
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
 
 		String programId = (String) request.getSession().getAttribute("case_program_id");
 
@@ -1590,6 +1590,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	}
 
 	public ActionForward run_macro(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		MacroDao macroDao = (MacroDao) SpringUtils.getBean("MacroDAO");
 		Macro macro = macroDao.find(Integer.parseInt(request.getParameter("id")));
 		logger.info("loaded macro " + macro.getLabel());
@@ -1603,7 +1605,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			f.setAppointmentNo(Integer.parseInt(request.getParameter("appointmentNo")));
 			f.setDate(new Date());
 			f.setDemographicNo(Integer.parseInt(request.getParameter("demographicNo")));
-			f.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider);
+			f.setProvider(loggedInInfo.getLoggedInProvider());
 			f.setTimeframe(followUpUnit);
 			f.setTimespan(followUpNo);
 			f.setType("followup");
@@ -1625,7 +1627,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				rec.setDate(new Date());
 				rec.setDemographicNo(Integer.parseInt(request.getParameter("demographicNo")));
 				rec.setEye(parts[1]);
-				rec.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+				rec.setProvider(loggedInInfo.getLoggedInProviderNo());
 				//rec.setStatus(null);
 				rec.setTestname(parts[0]);
 				rec.setUrgency(parts[2]);
@@ -1638,7 +1640,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	protected Map<Long, Boolean> getUnlockedNotesMap(HttpServletRequest request) {
 		@SuppressWarnings("unchecked")
-        Map<Long, Boolean> map = (Map<Long, Boolean>) request.getSession().getAttribute("unlockedNoteMap");
+		Map<Long, Boolean> map = (Map<Long, Boolean>) request.getSession().getAttribute("unlockedNoteMap");
 		if (map == null) {
 			map = new HashMap<Long, Boolean>();
 		}
@@ -1706,7 +1708,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	 */
 	protected Map<String, Issue> getCPPIssues(HttpServletRequest request, String providerNo) {
 		@SuppressWarnings("unchecked")
-        Map<String, Issue> issues = (HashMap<String, Issue>) request.getSession().getAttribute("CPPIssues");
+		Map<String, Issue> issues = (HashMap<String, Issue>) request.getSession().getAttribute("CPPIssues");
 		if (issues == null) {
 			String[] issueCodes = { "SocHistory", "MedHistory", "Concerns", "Reminders", "FamHistory", "RiskFactors" };
 			issues = new HashMap<String, Issue>();
@@ -1737,7 +1739,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-    public boolean hasPrivilege(String objectName, String roleName) {
+	public boolean hasPrivilege(String objectName, String roleName) {
 		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);
 		return OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
 	}
@@ -1762,8 +1764,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		if (noteDisplay.isCpp()) {
 			bgColour = "color:#FFFFFF;background-color:#" + getCppColour(noteDisplay) + ";";
-			if(noteDisplay.isTicklerNote()) {
-					bgColour = ticklerNoteColour;
+			if (noteDisplay.isTicklerNote()) {
+				bgColour = ticklerNoteColour;
 			}
 		} else if (noteDisplay.isDocument()) {
 			bgColour = documentColour;
@@ -1908,9 +1910,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return "";
 	}
 
-	public ActionForward viewNotesOpt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+	public ActionForward viewNotesOpt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		// response.setCharacterEncoding("UTF-8");
-		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
 
 		HttpSession se = request.getSession();
@@ -1926,7 +1928,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String roles = (String) se.getAttribute("userrole");
 		if (OscarProperties.getInstance().isOscarLearning() && roles != null && roles.indexOf("moderator") != -1) {
 			logger.info("skipping domain check..provider is a moderator");
-		} else if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.getLoggedInProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), demoNo)) {
+		} else if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.getLoggedInProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(loggedInInfo.getLoggedInProviderNo(), demoNo)) {
 			return mapping.findForward("domain-error");
 		}
 		String programId = (String) request.getSession().getAttribute("case_program_id");
@@ -1936,8 +1938,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if (request.getParameter("numToReturn") != null && request.getParameter("numToReturn").length() > 0) {
 			criteria.setMaxResults(ConversionUtils.fromIntString(request.getParameter("numToReturn")));
 		}
-		
-		String offset = request.getParameter("offset"); 
+
+		String offset = request.getParameter("offset");
 		if (offset != null && !offset.trim().equals("0")) {
 			// in case offset is configured, make sure it's set on the criteria...
 			criteria.setFirstResult(ConversionUtils.fromIntString(offset));
@@ -1973,16 +1975,16 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if (logger.isDebugEnabled()) {
 			logger.debug("SEARCHING FOR NOTES WITH CRITERIA: " + criteria);
 		}
-		
+
 		NoteSelectionResult result = noteService.findNotes(loggedInInfo, criteria);
-		
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("FOUND: " + result);
-			for(NoteDisplay nd : result.getNotes()) {
+			for (NoteDisplay nd : result.getNotes()) {
 				logger.debug("   " + nd.getClass().getSimpleName() + " " + nd.getNoteId() + " " + nd.getNote());
 			}
 		}
-		
+
 		if (result.isMoreNotes()) {
 			request.setAttribute("moreNotes", true);
 		}

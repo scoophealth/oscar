@@ -175,7 +175,7 @@ public class EaapsIntegrationTest extends DaoTestFixtures {
 		
 		for(String messageText : new String[] {CHART_NOTE_AND_MRP_NTE2AND3, HL7, JUST_CHART_NOTE_NTE2, JUST_MRP_NTE3, JUST_PDF_NTE1, PDF_AND_CHART_NOTE_NTE1AND2, PDF_AND_MRP_NTE1AND3 }) {
 			byte[] bytes = messageText.getBytes(); 
-			int statusCode = SendingUtils.send(bytes, url, publicOscarKey, publicServiceKey, "eaaps");
+			int statusCode = SendingUtils.send(null, bytes, url, publicOscarKey, publicServiceKey, "eaaps");
 			logger.info("Completed EAAPS call with status " + statusCode);
 			assertEquals(200, statusCode);
 		}
