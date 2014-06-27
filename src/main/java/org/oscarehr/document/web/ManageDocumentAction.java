@@ -364,7 +364,7 @@ public class ManageDocumentAction extends DispatchAction {
 		CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
 		cmnl.setTableName(CaseManagementNoteLink.DOCUMENT);
 		cmnl.setTableId(Long.parseLong(documentId));
-		cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
+		cmnl.setNoteId(cmn.getId());
 		EDocUtil.addCaseMgmtNoteLink(cmnl);
 	}
 
