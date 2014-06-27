@@ -447,7 +447,7 @@
 		        + URLEncoder.encode(demoFirst) + "&demographic_no="
 		        + demo_no + "&providerview=1&user_no="
 		        + user_no + "&apptProvider_no=none&appointment_date="
-		        + curYear +"-"+curMonth+"-"+curDay + "&start_time=0:00&bNewForm=1&status=t'</script>";
+		        + curYear +"-"+curMonth+"-"+curDay + "&start_time=0:00:00&bNewForm=1&status=t'</script>";
 		}
 	}
   }
