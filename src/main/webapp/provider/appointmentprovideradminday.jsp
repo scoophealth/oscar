@@ -1901,17 +1901,40 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
             <%
 			    if (as.getNextStatus() != null && !as.getNextStatus().equals("")) {
             %>
+			<!-- Short letters -->
             <a class="apptStatus" href=# onclick="refreshSameLoc('providercontrol.jsp?appointment_no=<%=appointment.getId()%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=as.getNextStatus()%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%><%=isWeekView?"&viewWeek=1":""%>');" title="<%=as.getTitle()%> " >
             <%
-				}
-			    if (as.getNextStatus() != null) {
-            %>
-            <img src="../images/<%=as.getImageName()%>" border="0" height="10" title="<%=as.getTitle()%>"></a>
+						}
+						if (as.getNextStatus() != null) {
+							if(OscarProperties.getInstance().getProperty("APPT_SHOW_SHORT_LETTERS", "false") != null 
+								&& OscarProperties.getInstance().getProperty("APPT_SHOW_SHORT_LETTERS", "false").equals("true")){
+						
+								String colour = as.getShortLetterColour();
+								if(colour == null){
+									colour = "#FFFFFF";
+								}			
+									
+					%>
+								<span 
+									class='short_letters' 
+									style='color:<%= colour%>;border:0;height:10'>
+											[<%=UtilMisc.htmlEscape(as.getShortLetters())%>]
+									</span>
+					<%	
+							}else{
+				    %>
+					
+				    			<img src="../images/<%=as.getImageName()%>" border="0" height="10" title="<%=as.getTitle()%>">
+					
             <%
+							}
                 } else {
 	                out.print("&nbsp;");
                 }
 
+			%>
+			</a>
+			<%
             if(urgency != null && urgency.equals("critical")) {
             %>
             	<img src="../images/warning-icon.png" border="0" width="14" height="14" title="Critical Appointment"/>

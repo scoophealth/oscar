@@ -8557,6 +8557,8 @@ CREATE TABLE `appointment_status` (
   `icon` char(30) NOT NULL default '''''',
   `active` int(1) NOT NULL default '1',
   `editable` int(1) NOT NULL default '0',
+  `short_letter_colour` INT(11) NULL COMMENT 'The colour of the short letters in the system', 
+  `short_letters` VARCHAR(5) NULL COMMENT 'The short letter representation of the appointment status',
   PRIMARY KEY  (`id`)
 );
 
