@@ -36,6 +36,7 @@ import org.oscarehr.common.model.AppointmentStatus;
 
 import oscar.appt.status.service.impl.AppointmentStatusMgrImpl;
 
+
 /**
  * Class ApptStatusData : set appt status and get the icon name and link
  * 2003-01-11
@@ -110,6 +111,28 @@ public final class ApptStatusData {
         else
             return getStr(aStatus, aBgColor);
     }
+
+	/**
+	 *  Pulls in the short letters which represent the appointment status.
+	 *  
+	 *	@Author Trimara Corp.
+	 *	@Return Short letters or null
+	 *
+	 **/
+	public String getShortLetters(){
+		return getStr("short_letters");
+	}
+
+	/**
+	 * Pulls in the colour for the short letters of the appointment.
+	 *
+	 * @Author Trimara Corp.
+	 * @Return An integer representing the hex code for the colour. Null if there is no colour.
+	 *
+	 **/
+	public String getShortLetterColour(){
+		return getStr("short_letter_colour");
+	}
 
     private String getStr(String[] str, String[] tar) {
         String rstr = null;
@@ -190,75 +213,94 @@ public final class ApptStatusData {
             strStatus = apptStatus;
         }
             
+	    int i = 0;
+	    while(i < apptStatuses.size()) {
+	    	AppointmentStatus s = apptStatuses.get(i); 
+	    	
+	        if (kind.equals("nextstatus")) {
+	            if (strStatus.equals("C")){
+	                i = 0;
+	                s = apptStatuses.get(i);
+	                
+	                rstr = s.getStatus();
+	                if (strOtherIcon.length()==1)
+	                    return rstr + strOtherIcon;
+	                else
+	                    return rstr;
+	            }
+	            
+	            if (strStatus.equals("B")){
+	                return "";
+	            }
+	            
+	            if (strStatus.equals(s.getStatus())){
+	                i++;
+	                s = apptStatuses.get(i);
+	                
+	                while (s.getActive() == 0 && i < apptStatuses.size()) {
+	                	i++;
+	                	s = apptStatuses.get(i);
+	                }
+	                
+	                rstr = s.getStatus();
+	                
+	                if (strOtherIcon.length()==1) {
+	                    return rstr + strOtherIcon;
+	                } else {
+	                    return rstr;
+	                }
+	            }
+	                 
+	        }
 
-    
-        int i = 0;
-        while(i < apptStatuses.size()) {
-        	AppointmentStatus s = apptStatuses.get(i); 
-        	
-            if (kind.equals("nextstatus")) {
-                if (strStatus.equals("C")){
-                    i = 0;
-                    s = apptStatuses.get(i);
-                    
-                    rstr = s.getStatus();
-                    if (strOtherIcon.length()==1)
-                        return rstr + strOtherIcon;
-                    else
-                        return rstr;
-                }
-                
-                if (strStatus.equals("B")){
-                    return "";
-                }
-                
-                if (strStatus.equals(s.getStatus())){
-                    i++;
-                    s = apptStatuses.get(i);
-                    
-                    while (s.getActive() == 0 && i < apptStatuses.size()) {
-                    	i++;
-                    	s = apptStatuses.get(i);
-                    }
-                    
-                    rstr = s.getStatus();
-                    
-                    if (strOtherIcon.length()==1) {
-                        return rstr + strOtherIcon;
-                    } else {
-                        return rstr;
-                    }
-                }
-                     
-            }
+	        if (kind.equals("desc")) {
+	            if (strStatus.equals(s.getStatus())){
+	                rstr = s.getDescription();
+	                if (strOtherIcon.length()==1)
+	                    return rstr + "/" + (strOtherIcon.equals("S")?"Signed":"Verified") ;
+	                else   
+	                    return rstr;
+	            }
+	        }
+	        
+	        if (kind.equals("icon")) {
+	            if (strStatus.equals(s.getStatus())){
+	                rstr = s.getIcon();
+	                if (strOtherIcon.length()==1)
+	                    return strOtherIcon + rstr;
+	                else
+	                    return rstr;
+	            }
+	        }
+			// get the short letters, they're just a string
+			if (kind.equals("short_letters")) {
+	            if (strStatus.equals(s.getStatus())){
+	                rstr = s.getShortLetters();
+	                return rstr;
+	            }
+			}
 
-            if (kind.equals("desc")) {
-                if (strStatus.equals(s.getStatus())){
-                    rstr = s.getDescription();
-                    if (strOtherIcon.length()==1)
-                        return rstr + "/" + (strOtherIcon.equals("S")?"Signed":"Verified") ;
-                    else   
-                        return rstr;
-                }
-            }
-            
-            if (kind.equals("icon")) {
-                if (strStatus.equals(s.getStatus())){
-                    rstr = s.getIcon();
-                    if (strOtherIcon.length()==1)
-                        return strOtherIcon + rstr;
-                    else
-                        return rstr;
-                }
-            }
+			// get the short letter colour.  It comes back as an int.
+			if (kind.equals("short_letter_colour")) {
+	            if (strStatus.equals(s.getStatus())){
+	                Integer colour = Integer.valueOf(s.getShortLetterColour());
+			
+					// return null if it's null
+	                if(colour == null){
+						return null;
+					}
 
-            if (kind.equals("color")) {
-                if (strStatus.equals(s.getStatus())){
-                    rstr = s.getColor();
-                    return rstr;
-                }
-            }
-            
+					// convert it to a hex number and add a hex code in front
+					return "#" + Integer.toHexString(colour).toUpperCase();
+			
+	            }
+			}
+			if (kind.equals("color")) {
+			    if (strStatus.equals(s.getStatus())){
+			        rstr = s.getColor();
+			        return rstr;
+			    }
+			} 
             i++;
         }
         

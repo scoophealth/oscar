@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -57,6 +58,12 @@ public class AppointmentStatus extends AbstractModel<Integer> {
 	private int active;
 	
 	private int editable;
+	
+	@Column(name="short_letters")
+	private String shortLetters;
+
+	@Column(name="short_letter_colour")
+	private String shortLetterColour;
 
 	public Integer getId() {
 		return id;
@@ -114,7 +121,23 @@ public class AppointmentStatus extends AbstractModel<Integer> {
 		this.editable = editable;
 	}
 	
-    @PostPersist
+    public String getShortLetters() {
+		return shortLetters;
+	}
+
+	public void setShortLetters(String shortLetters) {
+		this.shortLetters = shortLetters;
+	}
+
+	public String getShortLetterColour() {
+		return shortLetterColour;
+	}
+
+	public void setShortLetterColour(String shortLetterColour) {
+		this.shortLetterColour = shortLetterColour;
+	}
+
+	@PostPersist
     @PostUpdate
     public void on_jpa_update() {
     	AppointmentStatusMgrImpl.setCacheIsDirty(true);
