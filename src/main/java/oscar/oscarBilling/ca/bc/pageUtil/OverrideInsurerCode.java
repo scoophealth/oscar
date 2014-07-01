@@ -113,7 +113,8 @@ public class OverrideInsurerCode {
 			}
 			
 			if( billingType.equalsIgnoreCase(WORK_SAFE_BC) ) {				
-				oinInsurerCode = WORK_SAFE_BC;				
+				oinInsurerCode = WORK_SAFE_BC;
+				logger.info("This is a WCB billing");
 			}
 				
 		}
@@ -137,11 +138,13 @@ public class OverrideInsurerCode {
 		if(properties != null) {
 			
 			if(properties.containsKey("BC_MSP_OPTOUT_PROVIDER_NUMBER")) {	
-				optedOutProviderString = properties.getProperty("BC_MSP_OPTOUT_PROVIDER_NUMBER");				
+				optedOutProviderString = properties.getProperty("BC_MSP_OPTOUT_PROVIDER_NUMBER");
+				optedOutProviderString = optedOutProviderString.trim();
 			} 
 
 			if(optedOutProviderString != null){
-				// for range of numbers.
+				
+				// for range of provider numbers separated by a "-"
 				if(optedOutProviderString.contains("-")) {
 					
 					split = optedOutProviderString.split("-", 2);
@@ -162,10 +165,10 @@ public class OverrideInsurerCode {
 							optedOutProviders[i] = providerMin +1;
 						}
 					}
-					
-				} else if(optedOutProviderString.contains(",")) {
-					
-					// for specific list of numbers.
+				
+				// comma delimited list of provider numbers.
+				} else if(optedOutProviderString.contains(",")) { 
+
 					split = optedOutProviderString.split(",");
 					int size = split.length;
 					String number = null;
@@ -181,6 +184,10 @@ public class OverrideInsurerCode {
 							}
 						}
 					}
+				
+				// single provider number.
+				} else {					
+					optedOutProviders = new int[]{ Integer.parseInt(optedOutProviderString) };
 				}
 			}
 			

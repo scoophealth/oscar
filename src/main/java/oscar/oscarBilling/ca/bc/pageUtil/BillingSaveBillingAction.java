@@ -62,8 +62,7 @@ import oscar.service.OscarSuperManager;
 
 public class BillingSaveBillingAction extends Action {
 	
-	private static final int BC_PHN_CHAR_LENGTH = 11;
-	private static final int ALTERNATE_PHN_CHAR_LENGTH = 13;
+	private static final int BC_PHN_CHAR_LENGTH = 10;
 
     private static Logger log = MiscUtils.getLogger();
     AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
@@ -185,7 +184,8 @@ public class BillingSaveBillingAction extends Action {
             }
         }
 
-        if (bean.getBillingType().equals("WCB")) {
+        // not usefull
+        // if (bean.getBillingType().equals("WCB")) {
 
             // HOW TO DO THIS PART
             /* Need to link the id of a WCB for with a bill
@@ -201,10 +201,10 @@ public class BillingSaveBillingAction extends Action {
                 -Add a separate table ?       + data structure change + data migration + 2nd initial reacion
 
              */
-            MiscUtils.getLogger().debug("WCB BILL!!");
+           // MiscUtils.getLogger().debug("WCB BILL!!");
 
 
-        }
+        //}
 
 ////        ///}
         //////////////
@@ -329,12 +329,15 @@ public class BillingSaveBillingAction extends Action {
 
     private Billing getBillingObj(final oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean, final Date curDate, final char billingAccountStatus){
 
-        int apptNo = 0;
+    	int apptNo = 0;
+        String visitType = parseBillingVisitType(bean.getVisitType());
+
         try{
             apptNo = Integer.parseInt(bean.getApptNo());
-        }catch(Exception e){apptNo=0;}
-
-
+        }catch(Exception e){
+        	apptNo = 0;
+        }
+        
         Billing bill = new Billing();
         bill.setDemographicNo(Integer.parseInt(bean.getPatientNo()));
         bill.setProviderNo(bean.getBillingProvider());
@@ -347,7 +350,7 @@ public class BillingSaveBillingAction extends Action {
         bill.setStatus(""+billingAccountStatus);
         bill.setDob(bean.getPatientDoB());
         bill.setVisitDate(MyDateFormat.getSysDate(bean.getAdmissionDate()));
-        bill.setVisitType(bean.getVisitType());
+        bill.setVisitType(visitType);//bean.getVisitType());
         bill.setProviderOhipNo(bean.getBillingPracNo());
         bill.setApptProviderNo(bean.getApptProviderNo());
         bill.setCreator(bean.getCreator());
@@ -356,6 +359,7 @@ public class BillingSaveBillingAction extends Action {
     }
 
     private char getBillingAccountStatus(oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean){
+    	
         char billingAccountStatus = 'O';
         if (bean.getBillingType().equals("DONOTBILL")) {
             //bean.setBillingType("MSP"); //RESET this to MSP to get processed
@@ -436,60 +440,59 @@ public class BillingSaveBillingAction extends Action {
         Billingmaster billingMaster= new Billingmaster();
 
         // Added by Dennis Warren o/a Colcamex Resources 2013 - InsurerCode override for Opted-Out billing.        
-        boolean enableOinForm = false;
-        String[] split = null;
+        boolean enableOinForm = Boolean.FALSE;       
+        String oinRegistrationNo = "0000000000";       
         String providerNumber = bean.getBillingProvider().trim();
         String billingType = bean.getBillingType();
         String billingProvince = bean.getBillRegion().trim();
         String patientProvince = bean.getPatientHCType().trim();
         String patientPostal = bean.getPatientPostal();
-        String patientPhn = bean.getPatientPHN();
+        String patientPhn = bean.getPatientPHN();      		
+        String dependentNumber = "00";
         String oinInsurerCode = OverrideInsurerCode.getOinInsurerCode(providerNumber, billingType);
-        String visitType = bean.getVisitType();
+        //String visitType =  parseBillingVisitType(bean.getVisitType()); // will be used in the future.
         String anatomicalArea = "00";
         String newProgram = "00";
         String claimCode = "C02";
+      
+        // Overridden to ensure the strict rules from MSP that this number can only 
+        // be 00 or 66.  Hard coding because "doing it right" will cause a lot of changes.
+        if( ( bean.getDependent() != null ) && ( bean.getDependent().equalsIgnoreCase("66") ) ) {
+        	dependentNumber = bean.getDependent().trim();
+        }
         
         if(patientPostal != null) {
         	patientPostal = patientPostal.replaceAll("\\W", "");
-        }
-
-        if( visitType != null ) { 
-	        if( visitType.contains("\\|") ) {
-	        	split = visitType.split("\\|", 2);
-	        	if(split != null) {
-	        		visitType = split[0].trim();
-	        	}
-	        } else {
-	        	visitType = visitType.substring(0, 1); 
-	        }
-        }
+        }    
 
         if (billingType.equals("WCB")) {
         	int wcbId = Integer.parseInt(bean.getWcbId());    	
             if(wcbId > 0) {
             	billingMaster.setWcbId(wcbId);
             }
-        } 
+        }
+        
+        if(patientPhn != null) {
+        	patientPhn = patientPhn.trim();
+        }
+        
+        if( ( patientPhn == null ) || ( patientPhn.length() > BC_PHN_CHAR_LENGTH ) ) {
+        	patientPhn = "0000000000";
+        }
                
         billingMaster.setBillingNo(Integer.parseInt(billingid));
         billingMaster.setCreatedate(new Date());
         billingMaster.setBillingstatus(billingAccountStatus);
         billingMaster.setDemographicNo(Integer.parseInt(bean.getPatientNo()));
         billingMaster.setAppointmentNo(Integer.parseInt(bean.getApptNo()));
-        billingMaster.setClaimcode("C02");
+        billingMaster.setClaimcode(claimCode);
         billingMaster.setDatacenter(dataCenterId);
         billingMaster.setPayeeNo(bean.getBillingGroupNo());
         billingMaster.setPractitionerNo(bean.getBillingPracNo());
 
-        if( ( patientPhn != null ) && ( patientPhn.length() < BC_PHN_CHAR_LENGTH ) ) {
-        	billingMaster.setPhn(patientPhn);
-        } else {
-        	billingMaster.setPhn("0000000000");
-        }
-
+        billingMaster.setPhn(patientPhn);
         billingMaster.setNameVerify(bean.getPatientFirstName(),bean.getPatientLastName());
-        billingMaster.setDependentNum(bean.getDependent());
+        billingMaster.setDependentNum(dependentNumber);
         billingMaster.setBillingUnit(billingUnit); //"" + billItem.getUnit());
         billingMaster.setClarificationCode(bean.getVisitLocation().substring(0, 2));
 
@@ -532,23 +535,31 @@ public class BillingSaveBillingAction extends Action {
         // Institutional: IN, Opted-Out: PP and Work Safe: WC
         // Added by Dennis Warren o/a Colcamex Resources 2013 - InsurerCode override for Opted-Out billing.        
         if(oinInsurerCode != null) {        	 
-        	enableOinForm = true;
+        	enableOinForm = Boolean.TRUE;
         }
         
         if ( ! patientProvince.equalsIgnoreCase(billingProvince) ) {          	
         	oinInsurerCode = patientProvince;
-        	enableOinForm = true;
+        	enableOinForm = Boolean.TRUE;
         }
+        
+        log.info("Part 2 billing form enabled : " + enableOinForm );
         	
         if(enableOinForm) {
+ 
+        	// build oin registration number based on Teleplan rules. 
+        	// provincial claims are combinations of PHN and dependent code (00 or 66)
+        	if( ( ! oinInsurerCode.equalsIgnoreCase(OverrideInsurerCode.BC_INSTITUTIONAL_CLAIM) ) &&
+        			( patientPhn.startsWith("9") ) ) {
 
-            billingMaster.setOinInsurerCode(oinInsurerCode); 
-            if( ( patientPhn != null ) && ( patientPhn.length() < ALTERNATE_PHN_CHAR_LENGTH ) ) {
-            	billingMaster.setOinRegistrationNo(patientPhn);
-            } else {
-            	billingMaster.setOinRegistrationNo("0000000000");
-            }
-            
+            	oinRegistrationNo = patientPhn + dependentNumber;            		
+
+        	} else {
+        		oinRegistrationNo = patientPhn;
+        	}
+ 	            
+            billingMaster.setOinInsurerCode(oinInsurerCode);
+            billingMaster.setOinRegistrationNo(oinRegistrationNo);
             billingMaster.setOinBirthdate(convertDate8Char(bean.getPatientDoB()));
             billingMaster.setOinFirstName(bean.getPatientFirstName());
             billingMaster.setOinSecondName(" ");
@@ -566,7 +577,6 @@ public class BillingSaveBillingAction extends Action {
             billingMaster.setBirthDate("00000000");
 
         }
-        
         
 //        if (!bean.getPatientHCType().trim().equals(bean.getBillRegion().trim())) {
 //
@@ -589,7 +599,31 @@ public class BillingSaveBillingAction extends Action {
 //            billingMaster.setBirthDate("00000000");
 //
 //        }
+        
         log.debug("Bill "+billingMaster.getBillingCode()+" "+billingMaster.getBillAmount());
         return billingMaster;
+    }
+    
+    /**
+     * Splits off the visit type code from the beginning of a visit type 
+     * description. 
+     * @param visitType
+     * @return
+     */
+    private static String parseBillingVisitType(String visitType) {
+    	
+        String[] split = null;
+    	if( visitType != null ) { 
+	        if( visitType.contains("\\|") ) {
+	        	split = visitType.split("\\|", 2);
+	        	if(split != null) {
+	        		visitType = split[0].trim();
+	        	}
+	        } else {
+	        	visitType = visitType.substring(0, 1); 
+	        }
+        }
+    	
+    	return visitType;
     }
 }
