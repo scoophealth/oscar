@@ -107,8 +107,10 @@ function checkInput() {
 	  return true;
 	}
 }
+
 //-->
 </script>
+<script type="text/javascript" src="../share/javascript/picker.js"></script>
 </head>
 <body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()"
 	topmargin="0" leftmargin="0" rightmargin="0">
@@ -195,8 +197,8 @@ function checkInput() {
 			<tr bgcolor='ivory'>
 				<td><font color="red"><bean:message
 					key="schedule.scheduletemplatecodesetting.formColor" />:</font></td>
-				<td><input type="text" name="color" size="10" maxlength="10"
-					<%=bEdit?("value='"+dataBean.getProperty("color")+"'"):"value=''"%>>
+				<td><input type="text" name="color" id="color" size="10" maxlength="10"
+					<%=bEdit?("value='"+dataBean.getProperty("color")+"'"):"value=''"%>> <a href="javascript:TCP.popup(document.forms['addtemplatecode'].elements['color']);"><img width="15" height="13" border="0" src="../images/sel.gif"></a>
 				<bean:message
 					key="schedule.scheduletemplatecodesetting.msgColorExample" /></td>
 			</tr>
@@ -250,8 +252,7 @@ function checkInput() {
 			key="schedule.scheduletemplatecodesetting.msgColor" /><br>
                 &nbsp; <bean:message
 			key="schedule.scheduletemplatecodesetting.msgBookingLimit" /><br>
-		&nbsp; <bean:message
-			key="schedule.scheduletemplatecodesetting.msgColorLinks" />
+		
                     </p>
 		</td>
 	</tr>
