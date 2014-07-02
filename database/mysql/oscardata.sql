@@ -2693,3 +2693,7 @@ insert into documentDescriptionTemplate (doctype,description,descriptionShortcut
 insert into documentDescriptionTemplate (doctype,description,descriptionShortcut,provider_no) values ('radiology','MRI','MRI',NULL);
 insert into documentDescriptionTemplate (doctype,description,descriptionShortcut,provider_no) values ('radiology','CT-SCAN','Scan',NULL);
 insert into documentDescriptionTemplate (doctype,description,descriptionShortcut,provider_no) values ('radiology','X-Ray','XRay',NULL);
+
+insert into `secObjectName` (`objectName`) values('_rx.dispense');
+insert into `secObjPrivilege` values('doctor','_rx.dispense','x',0,'999998');
+

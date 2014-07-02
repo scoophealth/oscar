@@ -99,6 +99,7 @@ if (heading != null){
             <% } %>
             <th align="center"><bean:message key="SearchDrug.msgLocationPrescribed"/></th>
             <th align="center"><bean:message key="SearchDrug.msgHideCPP"/></th>
+             <th align="center"><bean:message key="SearchDrug.msgDispense"/></th>
              <th align="center"></th>
         </tr>
 
@@ -341,6 +342,18 @@ if (heading != null){
 				%>
 				<input type="checkbox" id="hidecpp_<%=prescriptIdInt%>" <%=checked%>/>
 			</td>
+			
+			<td align="center" valign="top">
+				<%
+					if(prescriptDrug.getDispenseInternal() != null && prescriptDrug.getDispenseInternal() == true) {
+						if(securityManager.hasWriteAccess("_rx.dispense",roleName$,true)) {		
+				%>
+					<a href="javascript:void(0)" onclick="javascript:popupWindow(720,700,'<%=request.getContextPath()%>/oscarRx/Dispense.do?method=view&id=<%=prescriptDrug.getId()%>','Dispense<%=prescriptIdInt %>'); return false;">Dispense</a>
+				<% 
+					} }
+				%>
+			</td>
+			
 			<td nowrap="nowrap" align="center" valign="top">
 				<%if(!(prescriptDrugs.get(prescriptDrugs.size()-1) == prescriptDrug)) {%>
 				<img border="0" src="<%=request.getContextPath()%>/images/icon_down_sort_arrow.png" onclick="moveDrugDown(<%=prescriptDrug.getId() %>,<%=prescriptDrugs.get(x+1).getId() %>,<%=prescriptDrug.getDemographicId()%>);return false;"/>

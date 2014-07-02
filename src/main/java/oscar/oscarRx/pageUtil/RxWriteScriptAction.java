@@ -821,6 +821,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 					boolean isOutsideProvider = false;
 					boolean isLongTerm = false;
 					boolean isPastMed = false;
+					boolean isDispenseInternal=false;
 					boolean isStartDateUnknown = false;
                                         boolean isNonAuthoritative = false;
                                         Date pickupDate;
@@ -931,6 +932,12 @@ public final class RxWriteScriptAction extends DispatchAction {
 							} else {
 								isPastMed = false;
 							}
+						} else if (elem.equals("dispenseInternal_" + num)) {
+							if (val.equals("on")) {
+								isDispenseInternal = true;
+							} else {
+								isDispenseInternal = false;
+							}
 						} else if (elem.equals("startDateUnknown_" + num)) {
 							if (val.equals("on")) {
 								isStartDateUnknown = true;
@@ -974,6 +981,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 						rx.setOutsideProviderOhip("");
 					}
 					rx.setPastMed(isPastMed);
+					rx.setDispenseInternal(isDispenseInternal);
 					rx.setStartDateUnknown(isStartDateUnknown);
 					rx.setLongTerm(isLongTerm);
                                         rx.setNonAuthoritative(isNonAuthoritative);

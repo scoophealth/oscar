@@ -101,6 +101,7 @@ if(listRxDrugs!=null){
         	 comment = "";
          }
          boolean pastMed            = rx.getPastMed();
+         boolean dispenseInternal = rx.getDispenseInternal();
          boolean startDateUnknown	= rx.getStartDateUnknown();
          boolean nonAuthoritative   = rx.isNonAuthoritative();
          String quantity            = rx.getQuantity();
@@ -207,7 +208,9 @@ if(listRxDrugs!=null){
        	  <bean:message key="WriteScript.msgPrescribedDispenseInterval"/>
        	  <input type="text" size="6" id="dispenseInterval_<%=rand%>" name="dispenseInterval_<%=rand%>" value="<%=dispenseInterval%>" />
        	  <br/>
-       
+		  <bean:message key="WriteScript.msgDispenseInternal"/>	
+		  <input type="checkbox" name="dispenseInternal_<%=rand%>" id="dispenseInternal_<%=rand%>" <%if(dispenseInternal) {%> checked="true" <%}%> />
+      	 <br/>
           <bean:message key="WriteScript.msgPrescribedByOutsideProvider"/>
           <input type="checkbox" id="ocheck_<%=rand%>" name="ocheck_<%=rand%>" onclick="$('otext_<%=rand%>').toggle();" <%if(isOutsideProvider){%> checked="true" <%}else{}%>/>
           <div id="otext_<%=rand%>" <%if(isOutsideProvider){%>style="display:table;padding:2px;"<%}else{%>style="display:none;padding:2px;"<%}%> >
@@ -352,6 +355,9 @@ if(listRxDrugs!=null){
        	  <bean:message key="WriteScript.msgPrescribedDispenseInterval"/>
        	  <input type="text" size="6" id="dispenseInterval_<%=rand%>" name="dispenseInterval_<%=rand%>" value="<%=dispenseInterval%>" />
        	  <br/>
+       	   <bean:message key="WriteScript.msgDispenseInternal"/>	
+		  <input type="checkbox" name="dispenseInternal_<%=rand%>" id="dispenseInternal_<%=rand%>" <%if(dispenseInternal) {%> checked="true" <%}%> />
+      	 <br/>
           <bean:message key="WriteScript.msgPrescribedByOutsideProvider"/>
           <input type="checkbox" id="ocheck_<%=rand%>" name="ocheck_<%=rand%>" onclick="$('otext_<%=rand%>').toggle();" <%if(isOutsideProvider){%> checked="true" <%}else{}%>/>
           <div id="otext_<%=rand%>" <%if(isOutsideProvider){%>style="display:table;padding:2px;"<%}else{%>style="display:none;padding:2px;"<%}%> >

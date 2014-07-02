@@ -157,6 +157,8 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdateDate;
+	
+	private Boolean dispenseInternal;
 
 	// ///
 	@Transient
@@ -236,6 +238,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		this.refillDuration = drug.getRefillDuration();
 		this.refillQuantity = drug.getRefillQuantity();
 		this.dispenseInterval = drug.getDispenseInterval();
+		this.dispenseInternal = drug.getDispenseInternal();
 	}
 
 	@PreUpdate
@@ -867,7 +870,17 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	public void setLastUpdateDate(Date lastUpdateDate) {
     	this.lastUpdateDate = lastUpdateDate;
     }
-		
+
+	public Boolean getDispenseInternal() {
+		return dispenseInternal;
+	}
+
+	public void setDispenseInternal(Boolean dispenseInternal) {
+		this.dispenseInternal = dispenseInternal;
+	}
+
+
+
 	//Sorts Ids in descending order
 	public static class ComparatorIdDesc implements Comparator<Drug> {
 		public int compare(Drug d1, Drug d2) {
