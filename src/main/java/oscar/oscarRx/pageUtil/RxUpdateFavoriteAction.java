@@ -121,6 +121,10 @@ public final class RxUpdateFavoriteAction extends DispatchAction {
             else
                 fav.setCustomInstr(false);
 
+            if(request.getParameter("dispenseInternal") != null && request.getParameter("dispenseInternal").length()>0) { 
+            	fav.setDispenseInternal(true);
+            }
+            
             fav.Save();
 
             return null;

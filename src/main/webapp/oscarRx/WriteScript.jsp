@@ -859,6 +859,7 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setSpecial(rx.getSpecial());
     thisForm.setLongTerm(rx.getLongTerm());
     thisForm.setPastMed(rx.getPastMed());
+    thisForm.setDispenseInternal(rx.getDispenseInternal());
     thisForm.setPatientComplianceY(rx.getPatientCompliance("Y"));
     thisForm.setPatientComplianceN(rx.getPatientCompliance("N"));
     thisForm.setAtcCode(rx.getAtcCode());
@@ -1258,6 +1259,7 @@ int i;
 			    <tr>
 				<td colspan=4>
 				    <bean:message key="WriteScript.msgLongTermMedication"/>:<html:checkbox property="longTerm" onchange="javascript:writeScriptDisplay();" />&nbsp;&nbsp;
+				    <bean:message key="WriteScript.msgDispenseInternal"/>:<html:checkbox property="dispenseInternal" onchange="javascript:writeScriptDisplay();" />&nbsp;&nbsp;
 				    <bean:message key="WriteScript.msgPastMedication"/>:<html:checkbox property="pastMed" onchange="javascript:writeScriptDisplay();" />&nbsp;&nbsp;
 				    <bean:message key="WriteScript.msgPatientCompliance"/>:
                                                 <bean:message key="WriteScript.msgYes"/><html:checkbox property="patientComplianceY" onchange="javascript:checkPatientCompliance('Y');" />

@@ -116,6 +116,7 @@ public class RxPrescriptionData {
 		prescription.setLongTerm(drug.isLongTerm());
 		prescription.setCustomNote(drug.isCustomNote());
 		prescription.setPastMed(drug.getPastMed());
+		prescription.setDispenseInternal(drug.getDispenseInternal());
 		prescription.setStartDateUnknown(drug.getStartDateUnknown());
 		prescription.setComment(drug.getComment());
 		if (drug.getPatientCompliance() == null) prescription.setPatientCompliance(null);
@@ -135,7 +136,7 @@ public class RxPrescriptionData {
 			logger.error("I strongly suspect something is wrong, either special is null or it appears to not contain anything useful. drugId=" + drugId + ", drug.special=" + prescription.getSpecial(), new IllegalStateException("Drug special is blank or invalid"));
 			logger.error("data from db is : " + drug.getSpecial());
 		}
-
+		prescription.setDispenseInternal(drug.getDispenseInternal());
 		return prescription;
 	}
 
@@ -213,6 +214,7 @@ public class RxPrescriptionData {
 		prescription.setLongTerm(rePrescribe.getLongTerm());
 		prescription.setCustomNote(rePrescribe.isCustomNote());
 		prescription.setPastMed(rePrescribe.getPastMed());
+		prescription.setDispenseInternal(rePrescribe.isDispenseInternal());
 		prescription.setPatientCompliance(rePrescribe.getPatientCompliance());
 		prescription.setOutsideProviderName(rePrescribe.getOutsideProviderName());
 		prescription.setOutsideProviderOhip(rePrescribe.getOutsideProviderOhip());
@@ -225,7 +227,7 @@ public class RxPrescriptionData {
 		if (rePrescribe.getRefillDuration() != null) prescription.setRefillDuration(rePrescribe.getRefillDuration());
 		if (rePrescribe.getRefillQuantity() != null) prescription.setRefillQuantity(rePrescribe.getRefillQuantity());
 		prescription.setDrugReferenceId(rePrescribe.getDrugId());
-
+		prescription.setDispenseInternal(rePrescribe.getDispenseInternal());
 		return prescription;
 	}
 
@@ -277,6 +279,7 @@ public class RxPrescriptionData {
 		p.setLongTerm(drug.getLongTerm());
 		p.setCustomNote(drug.isCustomNote());
 		p.setPastMed(drug.getPastMed());
+		p.setDispenseInternal(drug.getDispenseInternal());
 		p.setStartDateUnknown(drug.getStartDateUnknown());
 		p.setComment(drug.getComment());
 		if (drug.getPatientCompliance() == null) p.setPatientCompliance(null);
@@ -625,7 +628,8 @@ public class RxPrescriptionData {
 
 		private String drugFormList = "";
 		private String datesReprinted = "";
-
+		private boolean dispenseInternal = false;
+		
 		private List<String> policyViolations = new ArrayList<String>();
 
 		private int drugReferenceId;
@@ -1186,6 +1190,18 @@ public class RxPrescriptionData {
 			this.pastMed = pm;
 		}
 
+		public boolean getDispenseInternal() {
+			return isDispenseInternal();
+		}
+		
+		public boolean isDispenseInternal() {
+			return dispenseInternal;
+		}
+
+		public void setDispenseInternal(boolean dispenseInternal) {
+			this.dispenseInternal = dispenseInternal;
+		}
+
 		public Boolean getPatientCompliance() {
 			return this.patientCompliance;
 		}
@@ -1562,6 +1578,7 @@ public class RxPrescriptionData {
 			drug.setLongTerm(getLongTerm());
 			drug.setCustomNote(isCustomNote());
 			drug.setPastMed(getPastMed());
+			drug.setDispenseInternal(getDispenseInternal());
 			drug.setSpecialInstruction(getSpecialInstruction());
 			drug.setPatientCompliance(getPatientCompliance());
 			drug.setNonAuthoritative(isNonAuthoritative());
@@ -1575,11 +1592,13 @@ public class RxPrescriptionData {
 			drug.setPosition(position);
 			drug.setComment(getComment());
 			drug.setStartDateUnknown(getStartDateUnknown());
+			drug.setDispenseInternal(getDispenseInternal());
 		}
 
 		public boolean AddToFavorites(String providerNo, String favoriteName) {
 			Favorite fav = new Favorite(0, providerNo, favoriteName, this.getBrandName(), this.getGCN_SEQNO(), this.getCustomName(), this.getTakeMin(), this.getTakeMax(), this.getFrequencyCode(), this.getDuration(), this.getDurationUnit(), this.getQuantity(), this.getRepeat(), this.getNosubsInt(), this.getPrnInt(), this.getSpecial(), this.getGenericName(), this.getAtcCode(), this.getRegionalIdentifier(), this.getUnit(), this.getUnitName(), this.getMethod(), this.getRoute(), this.getDrugForm(),
 			        this.getCustomInstr(), this.getDosage());
+			fav.setDispenseInternal(this.getDispenseInternal());
 
 			return fav.Save();
 		}
@@ -1813,6 +1832,7 @@ public class RxPrescriptionData {
 		String route;
 		String drugForm;
 		String dosage;
+		Boolean dispenseInternal;
 
 		public Favorite(int favoriteId, String providerNo, String favoriteName, String BN, int GCN_SEQNO, String customName, float takeMin, float takeMax, String frequencyCode, String duration, String durationUnit, String quantity, int repeat, int nosubs, int prn, String special, String GN, String atc, String regionalIdentifier, String unit, String unitName, String method, String route, String drugForm, boolean customInstr, String dosage) {
 			this.favoriteId = favoriteId;
@@ -2032,6 +2052,15 @@ public class RxPrescriptionData {
 			this.customInstr = customInstr;
 		}
 
+		
+		public Boolean getDispenseInternal() {
+			return dispenseInternal;
+		}
+
+		public void setDispenseInternal(Boolean dispenseInternal) {
+			this.dispenseInternal = dispenseInternal;
+		}
+
 		public boolean Save() {
 			boolean b = false;
 
@@ -2246,7 +2275,7 @@ public class RxPrescriptionData {
 	public static boolean addToFavorites(String providerNo, String favoriteName, Drug drug) {
 		Favorite fav = new Favorite(0, providerNo, favoriteName, drug.getBrandName(), drug.getGcnSeqNo(), drug.getCustomName(), drug.getTakeMin(), drug.getTakeMax(), drug.getFreqCode(), drug.getDuration(), drug.getDurUnit(), drug.getQuantity(), drug.getRepeat(), drug.isNoSubs(), drug.isPrn(), drug.getSpecial(), drug.getGenericName(), drug.getAtc(), drug.getRegionalIdentifier(), drug.getUnit(), drug.getUnitName(), drug.getMethod(), drug.getRoute(), drug.getDrugForm(), drug.isCustomInstructions(),
 		        drug.getDosage());
-
+		fav.setDispenseInternal(drug.getDispenseInternal());
 		return fav.Save();
 	}
 

@@ -108,6 +108,8 @@ int i, j;
         var prn              = eval('get.fldPrn' + rowId).checked;
         var customInstr      = eval('get.customInstr' + rowId).checked;
         var special          = eval('get.fldSpecial' + rowId).value;
+        var dispenseInternal = eval('get.dispenseInternal'+rowId).value;
+        
         if(favoriteName==null || favoriteName.length < 1) {
             alert('Please enter a favorite name.');
             err = true;
@@ -135,7 +137,7 @@ int i, j;
 
         if(err == false) {
             var data="favoriteId="+favoriteId+"&favoriteName="+favoriteName+"&customName="+customName+"&takeMin="+takeMin+"&takeMax="+takeMax+"&frequencyCode="+frequencyCode+
-                "&duration="+duration+"&durationUnit="+durationUnit+"&quantity="+quantity+"&repeat="+repeat+"&nosubs="+nosubs+"&prn="+prn+"&customInstr="+customInstr+"&special="+special;
+                "&duration="+duration+"&durationUnit="+durationUnit+"&quantity="+quantity+"&repeat="+repeat+"&nosubs="+nosubs+"&prn="+prn+"&customInstr="+customInstr+"&special="+special+"&dispenseInternal="+dispenseInternal;
             var url="<c:out value="${ctx}"/>" + "/oscarRx/updateFavorite2.do?method=ajaxEditFavorite";
             new Ajax.Request(url,{method:'post',postBody:data,onSuccess:function(transport){
                     $("saveSuccess_"+rowId).show();
@@ -329,6 +331,13 @@ int i, j;
 						</table>
 						</td>
 					</tr>
+					
+					<tr <%= style %>>
+						<td colspan=7>
+							Dispense Internally:&nbsp;<input type="checkbox" name="dispenseInternal<%=i%>" <% if(f.getDispenseInternal() != null && f.getDispenseInternal().booleanValue()) { %> checked <%}%>>
+						</td>
+					</tr>
+			
 					<tr>
 						<td colspan=7 valign=center>
 						<hr width=100%>
