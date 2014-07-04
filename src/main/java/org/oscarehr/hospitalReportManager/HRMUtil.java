@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
@@ -27,6 +26,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocument;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.hospitalReportManager.model.HRMSubClass;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -49,14 +49,14 @@ public class HRMUtil {
 	}
 	
 	@SuppressWarnings("null")
-    public static ArrayList<HashMap<String, ? extends Object>> listHRMDocuments(String sortBy, String demographicNo){
+    public static ArrayList<HashMap<String, ? extends Object>> listHRMDocuments(LoggedInInfo loggedInInfo, String sortBy, String demographicNo){
 		ArrayList<HashMap<String, ? extends Object>> hrmdocslist = new ArrayList<HashMap<String, ?>>();
 		
 		List<HRMDocumentToDemographic> hrmDocResultsDemographic = hrmDocumentToDemographicDao.findByDemographicNo(demographicNo);
 		List<HRMDocument> hrmDocumentsAll = new LinkedList<HRMDocument>();
 		
 		HashMap<String,ArrayList<Integer>> duplicateLabIds=new HashMap<String, ArrayList<Integer>>();
-		HashMap<String,HRMDocument> docsToDisplay=filterDuplicates(hrmDocResultsDemographic, duplicateLabIds);
+		HashMap<String,HRMDocument> docsToDisplay=filterDuplicates(loggedInInfo, hrmDocResultsDemographic, duplicateLabIds);
 		
 		for (Map.Entry<String, HRMDocument> entry : docsToDisplay.entrySet()) {
 			String duplicateKey=entry.getKey();
@@ -67,7 +67,7 @@ public class HRMUtil {
 			List<HRMDocumentSubClass> subClassList = hrmDocumentSubClassDao.getSubClassesByDocumentId(hrmDocument.getId());
 			
 			
-			HRMReport report = HRMReportParser.parseReport(hrmDocument.getReportFile());
+			HRMReport report = HRMReportParser.parseReport(loggedInInfo, hrmDocument.getReportFile());
 			if (report.getFirstReportClass().equalsIgnoreCase("Diagnostic Imaging Report") || report.getFirstReportClass().equalsIgnoreCase("Cardio Respiratory Report")) {
 				// We'll only care about the first one, as long as there is at least one
 				if (subClassList != null && subClassList.size() > 0) {
@@ -121,7 +121,7 @@ public class HRMUtil {
 		
 	}
 	
-	 private static HashMap<String,HRMDocument> filterDuplicates(List<HRMDocumentToDemographic> hrmDocumentToDemographics, HashMap<String,ArrayList<Integer>> duplicateLabIds) {
+	 private static HashMap<String,HRMDocument> filterDuplicates(LoggedInInfo loggedInInfo, List<HRMDocumentToDemographic> hrmDocumentToDemographics, HashMap<String,ArrayList<Integer>> duplicateLabIds) {
 		 
 		HashMap<String,HRMDocument> docsToDisplay = new HashMap<String,HRMDocument>();
 		HashMap<String,HRMReport> labReports=new HashMap<String,HRMReport>();
@@ -133,7 +133,7 @@ public class HRMUtil {
 
 			for (HRMDocument hrmDocument : hrmDocuments)
 			{
-				HRMReport hrmReport = HRMReportParser.parseReport(hrmDocument.getReportFile());
+				HRMReport hrmReport = HRMReportParser.parseReport(loggedInInfo, hrmDocument.getReportFile());
 				if (hrmReport == null) continue;
 				hrmReport.setHrmDocumentId(hrmDocument.getId());
 				String duplicateKey=hrmReport.getSendingFacilityId()+':'+hrmReport.getSendingFacilityReportNo()+':'+hrmReport.getDeliverToUserId();

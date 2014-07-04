@@ -8,6 +8,7 @@
     and "gnu.org/licenses/gpl-2.0.html".
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.apache.commons.lang.StringUtils,oscar.log.*"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="java.util.Map"%>
@@ -28,6 +29,7 @@ Integer hrmReportId = (Integer) request.getAttribute("hrmReportId");
 HRMDocumentToDemographic demographicLink = (HRMDocumentToDemographic) request.getAttribute("demographicLink");
 List<HRMDocumentToProvider> providerLinkList = (List<HRMDocumentToProvider>) request.getAttribute("providerLinkList");
 
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 
 if(demographicLink != null){
@@ -261,7 +263,7 @@ function revokeSignOffHrm(reportId) {
 <div id="hrmReportContent">
 	<div id="hrmNotice">
 	This report was received from the Hospital Report Manager (HRM) at <%=(String) request.getAttribute("hrmReportTime") %>.
-	<% if (request.getAttribute("hrmDuplicateNum") != null && ((Integer) request.getAttribute("hrmDuplicateNum")) > 0) { %><br /><i>OSCAR has received <%=(Integer) request.getAttribute("hrmDuplicateNum") %> duplicates of this report.</i><% } %>
+	<% if (request.getAttribute("hrmDuplicateNum") != null && ((Integer) request.getAttribute("hrmDuplicateNum")) > 0) { %><br /><i>OSCAR has received <%=request.getAttribute("hrmDuplicateNum") %> duplicates of this report.</i><% } %>
 	<%
 	List<HRMDocument> allDocumentsWithRelationship = (List<HRMDocument>) request.getAttribute("allDocumentsWithRelationship");
 	if (allDocumentsWithRelationship != null && allDocumentsWithRelationship.size() >= 1) {
@@ -443,7 +445,7 @@ function revokeSignOffHrm(reportId) {
 				<input type="button" value="Print" onClick="window.print()" />
 				<input type="button" style="display: none;" value="Save" id="save<%=hrmReportId %>hrm" />
 				<% 
-				HRMDocumentToProvider hrmDocumentToProvider = HRMDisplayReportAction.getHRMDocumentFromCurrentProvider(hrmReportId);
+				HRMDocumentToProvider hrmDocumentToProvider = HRMDisplayReportAction.getHRMDocumentFromProvider(loggedInInfo.getLoggedInProviderNo(), hrmReportId);
 				if (hrmDocumentToProvider != null && hrmDocumentToProvider.getSignedOff() != null && hrmDocumentToProvider.getSignedOff() == 1) {
 				%>
 				<input type="button" id="signoff<%=hrmReportId %>" value="Revoke Sign-Off" onClick="revokeSignOffHrm('<%=hrmReportId %>')" />

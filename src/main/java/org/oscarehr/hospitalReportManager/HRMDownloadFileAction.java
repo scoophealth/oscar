@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DownloadAction;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.StringUtils;
@@ -53,6 +54,7 @@ public class HRMDownloadFileAction extends DownloadAction{
                                        HttpServletResponse response)
             throws Exception {
       
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
     	
     	String hash = request.getParameter("hash");
     	if(StringUtils.isNullOrEmpty(hash)) {
@@ -75,7 +77,7 @@ public class HRMDownloadFileAction extends DownloadAction{
     		throw new Exception("HRMDocument not found - " + ids.get(0));
     	}
     	
-    	HRMReport report = HRMReportParser.parseReport(hd.getReportFile());
+    	HRMReport report = HRMReportParser.parseReport(loggedInInfo, hd.getReportFile());
         
     	if(report == null) {
     		throw new Exception("Failed to parse HRMDocument with id " + hd.getId());

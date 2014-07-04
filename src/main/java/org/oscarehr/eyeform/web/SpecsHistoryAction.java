@@ -106,12 +106,14 @@ public class SpecsHistoryAction extends DispatchAction {
     }
 
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-    	DynaValidatorForm f = (DynaValidatorForm)form;
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
+		DynaValidatorForm f = (DynaValidatorForm)form;
     	EyeformSpecsHistory specs = (EyeformSpecsHistory)f.get("specs");
     	if(specs.getId()!=null && specs.getId()==0) {
     		specs.setId(null);
     	}
-    	specs.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+    	specs.setProvider(loggedInInfo.getLoggedInProviderNo());
 
     	if(request.getParameter("specs.id") != null && request.getParameter("specs.id").length()>0) {
     		specs.setId(Integer.parseInt(request.getParameter("specs.id")));

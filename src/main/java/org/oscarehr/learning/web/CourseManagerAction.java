@@ -76,13 +76,15 @@ public class CourseManagerAction extends DispatchAction {
 	public ActionForward createCourse(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
 		throws IOException
 	{
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		DynaActionForm courseForm = (DynaActionForm) form;
 		String name = (String)courseForm.get("name");
 		logger.info("creating course: " + name);
 
 		String result = "";
 
-		int facilityId = LoggedInInfo.loggedInInfo.get().currentFacility.getId();
+		int facilityId = loggedInInfo.currentFacility.getId();
 		try {
 			Program p = new Program();
 			p.setName(name);
@@ -113,8 +115,7 @@ public class CourseManagerAction extends DispatchAction {
 
 	}
 
-	public static List<Program> getCoursesByModerator() {
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+	public static List<Program> getCoursesByModerator(String providerNo) {
 		SecRoleDao roleDao = (SecRoleDao)SpringUtils.getBean("secRoleDao");
 		SecRole role = roleDao.findByName("moderator");
 

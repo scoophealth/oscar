@@ -106,37 +106,10 @@ public class PlanAction extends DispatchAction {
     }
 
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	/*
-       	DynaValidatorForm f = (DynaValidatorForm)form;
-    	EyeformFollowUp followUp = (FollowUp)f.get("followup");
-    	ProcedureBook proc = (ProcedureBook)f.get("proc");
-    	TestBookRecord test = (TestBookRecord)f.get("test");
 
-    	int appointmentNo = followUp.getAppointmentNo();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
-    	followUp.setId(null);
-    	proc.setId(null);
-    	test.setId(null);
-
-
-    	proc.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-    	proc.setAppointmentNo(appointmentNo);
-    	proc.setDemographicNo(followUp.getDemographicNo());
-    	test.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-    	test.setAppointmentNo(appointmentNo);
-    	test.setDemographicNo(followUp.getDemographicNo());
-
-
-    	if(followUp.getTimespan()>0)
-    		followUpDao.save(followUp);
-    	if(proc.getProcedureName().length()>0)
-    		procBookDao.save(proc);
-    	if(test.getTestname().length()>0) {
-    		testBookDao.save(test);
-    	}
-
-    	*/
-    	int demographicNo = Integer.parseInt(request.getParameter("followup.demographicNo"));
+		int demographicNo = Integer.parseInt(request.getParameter("followup.demographicNo"));
     	int appointmentNo = Integer.parseInt(request.getParameter("followup.appointmentNo"));
 
     	int maxFollowUp = Integer.parseInt(request.getParameter("followup_num"));
@@ -203,7 +176,7 @@ public class PlanAction extends DispatchAction {
     			proc.setProcedureName(request.getParameter("procedure_"+x+".procedureName"));
     			proc.setLocation(request.getParameter("procedure_"+x+".location"));
     			proc.setUrgency(request.getParameter("procedure_"+x+".urgency"));
-    			proc.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+    			proc.setProvider(loggedInInfo.getLoggedInProviderNo());
     			if(proc.getId() == null)
     				procBookDao.persist(proc);
     			else
@@ -240,7 +213,7 @@ public class PlanAction extends DispatchAction {
     			test.setTestname(request.getParameter("test_"+x+".testname"));
     			test.setUrgency(request.getParameter("test_"+x+".urgency"));
 
-    			test.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+    			test.setProvider(loggedInInfo.getLoggedInProviderNo());
     			if(test.getId() == null)
     				testBookDao.persist(test);
     			else

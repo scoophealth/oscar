@@ -15,6 +15,7 @@
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ page import="java.util.*"%>
@@ -53,7 +54,7 @@
 <body>
 <h4>Hospital Report Manager</h4>
 <% if (request.getParameter("fetch") != null && request.getParameter("fetch").equalsIgnoreCase("true"))
-		SFTPConnector.startAutoFetch();
+		SFTPConnector.startAutoFetch(loggedInInfo);
 %>
 <p>
 	HRM Status: <%=SFTPConnector.isFetchRunning() ? "Fetching data from HRM" : "Idle" %><br />
@@ -68,7 +69,7 @@
 </form>
 <%
 	HRMProviderConfidentialityStatementDao hrmProviderConfidentialityStatementDao = (HRMProviderConfidentialityStatementDao) SpringUtils.getBean("HRMProviderConfidentialityStatementDao");
-	String statement = hrmProviderConfidentialityStatementDao.getConfidentialityStatementForProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+	String statement = hrmProviderConfidentialityStatementDao.getConfidentialityStatementForProvider(loggedInInfo.getLoggedInProviderNo());
 %>
 <form action="<%=request.getContextPath() %>/hospitalReportManager/Statement.do" method="post">
 	<div class="control-group">

@@ -24,6 +24,7 @@
 package org.oscarehr.integration.nclass.clientRegistry;
 
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.nclass.ReferencedType;
 import org.oscarehr.integration.nclass.Storyboard;
 import org.oscarehr.integration.nclass.clientRegistry.model.Candidate;
@@ -44,7 +45,7 @@ public interface PersonRegistryQueryPlacer {
 	 * @return
 	 * 		Returns the list of matching registry entries.
 	 */
-	public Candidate findCandidate(Demographic demographic);
+	public Candidate findCandidate(Provider provider, Demographic demographic);
 
 	/**
 	 * Finds person details based on the client ID 

@@ -56,7 +56,8 @@ public class InboxService {
 	@Produces("application/json")
 	public InboxResponse getMyUnacknowlegedReports(@QueryParam("limit") int limit) {
 	
-		Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		Provider provider = loggedInInfo.getLoggedInProvider();
 	
 		InboxManagerQuery query = new InboxManagerQuery();
 		query.setProviderNo(provider.getProviderNo());
@@ -71,7 +72,7 @@ public class InboxService {
 		query.setPatientHIN("");
 		
 		
-		InboxManagerResponse response = inboxManager.getInboxResults(query);
+		InboxManagerResponse response = inboxManager.getInboxResults(loggedInInfo, query);
 		
 		List<LabResultData> labDocs = response.getLabdocs();
 		List<InboxTo1> responseItems = new ArrayList<InboxTo1>();

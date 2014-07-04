@@ -65,6 +65,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProviderInboxItem;
 import org.oscarehr.common.model.Queue;
 import org.oscarehr.common.model.QueueDocumentLink;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -264,6 +265,7 @@ public class DmsInboxManageAction extends DispatchAction {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
     public ActionForward prepareForContentPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		HttpSession session = request.getSession();
 		try {
 			if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
@@ -451,7 +453,7 @@ public class DmsInboxManageAction extends DispatchAction {
 
 		HRMResultsData hrmResult = new HRMResultsData();
 
-		Collection<LabResultData> hrmDocuments = hrmResult.populateHRMdocumentsResultsData(searchProviderNo, ackStatus, newestLab, oldestLab);
+		Collection<LabResultData> hrmDocuments = hrmResult.populateHRMdocumentsResultsData(loggedInInfo, searchProviderNo, ackStatus, newestLab, oldestLab);
 		if (oldestLab == null) {
 			for (LabResultData hrmDocument : hrmDocuments) {
 				if (oldestLab == null || (hrmDocument.getDateObj() != null && oldestLab.compareTo(hrmDocument.getDateObj()) > 0))

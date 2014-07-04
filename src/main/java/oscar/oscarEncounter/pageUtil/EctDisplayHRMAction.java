@@ -26,15 +26,16 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.hospitalReportManager.HRMReport;
 import org.oscarehr.hospitalReportManager.HRMReportParser;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.oscarehr.common.dao.OscarLogDao;
 
 import oscar.oscarLab.ca.on.HRMResultsData;
 import oscar.util.DateUtils;
@@ -50,7 +51,7 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 	private OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
 	
 	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
 		boolean a = true;
 		List v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.documents");
@@ -92,7 +93,7 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 			HashMap<String,ArrayList<Integer>> duplicateLabIds=new HashMap<String,ArrayList<Integer>>();
 			for (HRMDocument doc : allHrmDocsForDemo) {
 				// filter duplicate reports
-				HRMReport hrmReport = HRMReportParser.parseReport(doc.getReportFile());
+				HRMReport hrmReport = HRMReportParser.parseReport(loggedInInfo, doc.getReportFile());
 				if (hrmReport == null) continue;
 				hrmReport.setHrmDocumentId(doc.getId());
 				String duplicateKey=hrmReport.getSendingFacilityId()+':'+hrmReport.getSendingFacilityReportNo()+':'+hrmReport.getDeliverToUserId();

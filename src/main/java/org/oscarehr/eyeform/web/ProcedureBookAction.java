@@ -70,12 +70,14 @@ public class ProcedureBookAction extends DispatchAction {
     }
     
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {    	
-    	DynaValidatorForm f = (DynaValidatorForm)form;
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
+		DynaValidatorForm f = (DynaValidatorForm)form;
     	EyeformProcedureBook data = (EyeformProcedureBook)f.get("data");
     	if(data.getId()!=null && data.getId()==0) {
     		data.setId(null);
     	}
-    	data.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());	
+    	data.setProvider(loggedInInfo.getLoggedInProviderNo());	
     	procedureBookDao.save(data);
     	
     	return mapping.findForward("success");

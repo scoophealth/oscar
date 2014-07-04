@@ -197,7 +197,6 @@ public class EyeformAction extends DispatchAction {
 			   cppFromMeasurements=true;
 		   }
 
-		   Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
 		   ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 		   ConsultationRequestExtDao consultationRequestExtDao=(ConsultationRequestExtDao)SpringUtils.getBean("consultationRequestExtDao");
 		 
@@ -471,7 +470,6 @@ public class EyeformAction extends DispatchAction {
 
 	   public void doPrint(HttpServletRequest request, OutputStream os) throws IOException, DocumentException {
 			String ids[] = request.getParameter("apptNos").split(",");
-			String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 			String cpp = request.getParameter("cpp");
 			boolean cppFromMeasurements=false;
@@ -768,7 +766,8 @@ public class EyeformAction extends DispatchAction {
 				appNo = new Integer(appointmentNo);
 
 
-		   Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+		   LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		   Provider provider = loggedInInfo.getLoggedInProvider();
 		   Demographic demographic = demographicDao.getClientByDemographicNo(demographicNo);
 
 		   request.setAttribute("demographicNo", demoNo);
@@ -1569,12 +1568,14 @@ public class EyeformAction extends DispatchAction {
 		public ActionForward specialReqTickler(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 			log.debug("specialReqTickler");
 
+			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 			String demoNo = request.getParameter("demographicNo");
 			String docFlag = request.getParameter("docFlag");
 			String frontFlag = request.getParameter("frontFlag");
 			String providerNo = request.getParameter("providerNo");
 			String bsurl = request.getContextPath();
-			String user = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+			String user = loggedInInfo.getLoggedInProviderNo();
 			if ("true".equalsIgnoreCase(docFlag))
 				sendDocTickler("REQ", demoNo,user, bsurl);
 			if ("true".equalsIgnoreCase(frontFlag))

@@ -30,7 +30,6 @@ import org.marc.everest.datatypes.EntityNameUse;
 import org.marc.everest.datatypes.PN;
 import org.marc.everest.rmim.ca.r020403.coct_mt090102ca.Person;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.util.LoggedInInfo;
 //import org.marc.everest.formatters.xml.datatypes.r1.DatatypeFormatter;
 //import org.marc.everest.formatters.xml.datatypes.r1.R1FormatterCompatibilityMode;
 //import org.marc.everest.formatters.xml.its1.XmlIts1Formatter;
@@ -135,20 +134,12 @@ public abstract class GenericPlaceholder {
 	//	}
 	//    }
 
-	protected Person getProviderAsPerson() {
-		if (getProvider() == null) {
+	protected Person getProviderAsPerson(Provider provider) {
+		if (provider == null) {
 			return null;
 		}
 
-		return new Person(PN.fromEN(EN.createEN(EntityNameUse.Legal, new ENXP(getProvider().getFirstName(), EntityNamePartType.Given), new ENXP(getProvider().getLastName(), EntityNamePartType.Family))), null);
-	}
-
-	protected Provider getProvider() {
-		LoggedInInfo info = LoggedInInfo.loggedInInfo.get();
-		if (info == null) {
-			return null;
-		}
-		return info.loggedInProvider;
+		return new Person(PN.fromEN(EN.createEN(EntityNameUse.Legal, new ENXP(provider.getFirstName(), EntityNamePartType.Given), new ENXP(provider.getLastName(), EntityNamePartType.Family))), null);
 	}
 
 }
