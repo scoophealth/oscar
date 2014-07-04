@@ -138,10 +138,6 @@ public final class LoggedInInfo {
 		LoggedInInfo.loggedInInfo.remove();
 	}
 
-	public HttpSession getSession() {
-		return (session);
-	}
-
 	public Facility getCurrentFacility() {
 		return (currentFacility);
 	}

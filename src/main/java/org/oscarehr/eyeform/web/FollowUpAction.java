@@ -71,7 +71,7 @@ public class FollowUpAction extends DispatchAction {
     	if(data.getId()!=null && data.getId()==0) {
     		data.setId(null);
     	}
-    	//data.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());	
+	
     	dao.save(data);
     	
     	

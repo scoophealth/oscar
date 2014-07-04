@@ -42,6 +42,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToProvider;
 import org.oscarehr.hospitalReportManager.xsd.OmdCds;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.xml.sax.SAXException;
@@ -54,7 +55,7 @@ public class HRMReportParser {
 	private HRMReportParser() {}
 
 
-	public static HRMReport parseReport(String hrmReportFileLocation) {
+	public static HRMReport parseReport(LoggedInInfo loggedInInfo, String hrmReportFileLocation) {
 		OmdCds root = null;
 		
 		logger.info("Parsing the Report in the location:"+hrmReportFileLocation);
@@ -97,9 +98,9 @@ public class HRMReportParser {
 				// TODO Auto-generated catch block
 				logger.error("error",e);
 				if(e.getLinkedException() != null) {
-					SFTPConnector.notifyHrmError(e.getLinkedException().getMessage());
+					SFTPConnector.notifyHrmError(loggedInInfo, e.getLinkedException().getMessage());
 				} else {
-					SFTPConnector.notifyHrmError(e.getMessage());
+					SFTPConnector.notifyHrmError(loggedInInfo, e.getMessage());
 				}
 				
 			}
@@ -111,7 +112,7 @@ public class HRMReportParser {
 		return null;
 	}
 
-	public static void addReportToInbox(HRMReport report) {
+	public static void addReportToInbox(LoggedInInfo loggedInInfo, HRMReport report) {
 		
 		if(report == null) {
 			logger.info("addReportToInbox cannot continue, report parameter is null");
@@ -162,7 +163,7 @@ public class HRMReportParser {
 
 
 				HRMReportParser.routeReportToDemographic(report, document);
-				HRMReportParser.doSimilarReportCheck(report, document);
+				HRMReportParser.doSimilarReportCheck(loggedInInfo, report, document);
 				// Attempt a route to the provider listed in the report -- if they don't exist, note that in the record
 				Boolean routeSuccess = HRMReportParser.routeReportToProvider(report, document.getId());
 				if (!routeSuccess) {
@@ -230,7 +231,7 @@ public class HRMReportParser {
 		 
 		return true;
 	}
-	private static void doSimilarReportCheck(HRMReport report, HRMDocument mergedDocument) {
+	private static void doSimilarReportCheck(LoggedInInfo loggedInInfo, HRMReport report, HRMDocument mergedDocument) {
 		
 		if(report == null) {
 			logger.info("doSimilarReportCheck cannot continue, report parameter is null");
@@ -253,7 +254,7 @@ public class HRMReportParser {
 		}
 
 		// Load all the reports for this demographic into memory -- check by name only
-		List<HRMReport> thisDemoHrmReportList = HRMReportParser.loadAllReportsRoutedToDemographic(report.getLegalName());
+		List<HRMReport> thisDemoHrmReportList = HRMReportParser.loadAllReportsRoutedToDemographic(loggedInInfo, report.getLegalName());
 
 		for (HRMReport loadedReport : thisDemoHrmReportList) {
 			boolean hasSameReportContent = report.getFirstReportTextContent().equalsIgnoreCase(loadedReport.getFirstReportTextContent());
@@ -301,7 +302,7 @@ public class HRMReportParser {
 	}
 
 
-	private static List<HRMReport> loadAllReportsRoutedToDemographic(String legalName) {
+	private static List<HRMReport> loadAllReportsRoutedToDemographic(LoggedInInfo loggedInInfo, String legalName) {
 		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 		HRMDocumentToDemographicDao hrmDocumentToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
 		HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
@@ -315,7 +316,7 @@ public class HRMReportParser {
 			for (HRMDocumentToDemographic matchingHrmDocument : matchingHrmDocumentList) {
 				HRMDocument hrmDocument = hrmDocumentDao.find(Integer.parseInt(matchingHrmDocument.getHrmDocumentId()));
 
-				HRMReport hrmReport = HRMReportParser.parseReport(hrmDocument.getReportFile());
+				HRMReport hrmReport = HRMReportParser.parseReport(loggedInInfo, hrmDocument.getReportFile());
 				hrmReport.setHrmDocumentId(hrmDocument.getId());
 				hrmReport.setHrmParentDocumentId(hrmDocument.getParentReport());
 				allRoutedReports.add(hrmReport);

@@ -8,9 +8,12 @@
     and "gnu.org/licenses/gpl-2.0.html".
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.*, org.oscarehr.hospitalReportManager.*,org.oscarehr.hospitalReportManager.model.HRMCategory"%>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 	String demographic_no = request.getParameter("demographic_no");
 	String deepColor = "#CCCCFF", weakColor = "#EEEEFF";
 
@@ -122,11 +125,11 @@ function updateAjax() {
 						ArrayList<HashMap<String,? extends Object>> hrmdocs;
 						if (groupView.equals(""))
 						{
-							hrmdocs = HRMUtil.listHRMDocuments(orderBy, demographic_no);
+							hrmdocs = HRMUtil.listHRMDocuments(loggedInInfo,orderBy, demographic_no);
 						}
 						else
 						{
-							hrmdocs = HRMUtil.listHRMDocuments(orderBy, demographic_no);
+							hrmdocs = HRMUtil.listHRMDocuments(loggedInInfo,orderBy, demographic_no);
 						}
 						
 						for (int i = 0; i < hrmdocs.size(); i++)

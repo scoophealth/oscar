@@ -177,14 +177,15 @@ public class NoteAddonAction extends DispatchAction {
 		String recipient = request.getParameter("recip");
 		String demographicNo = request.getParameter("demographicNo");
 				
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		
 		Tickler t = new Tickler();
-		t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		t.setCreator(loggedInInfo.getLoggedInProviderNo());
 		t.setAssignee(providerDao.getProvider(recipient));
 		t.setDemographicNo(Integer.parseInt(demographicNo));
 		t.setMessage(text);
 		
-		t.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider);
+		t.setProvider(loggedInInfo.getLoggedInProvider());
 		t.setProgramId(Integer.valueOf((String)request.getSession().getAttribute("programId_oscarView")));
 		
 		t.setTaskAssignedTo(recipient);

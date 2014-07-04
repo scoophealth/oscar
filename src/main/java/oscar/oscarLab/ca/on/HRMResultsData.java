@@ -27,6 +27,7 @@ import org.oscarehr.hospitalReportManager.dao.HRMDocumentToProviderDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToProvider;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -41,7 +42,7 @@ public class HRMResultsData {
 	public HRMResultsData() {
 	}
 
-	public Collection<LabResultData> populateHRMdocumentsResultsData(String providerNo, String status, Date newestDate, Date oldestDate) {
+	public Collection<LabResultData> populateHRMdocumentsResultsData(LoggedInInfo loggedInInfo, String providerNo, String status, Date newestDate, Date oldestDate) {
 		if (providerNo == null || "".equals(providerNo)) {
 			providerNo = "%";
 		} else if (providerNo.equalsIgnoreCase("0")) {
@@ -81,7 +82,7 @@ public class HRMResultsData {
 
 			// check if patient is matched
 			List<HRMDocumentToDemographic> hrmDocResultsDemographic = hrmDocumentToDemographicDao.findByHrmDocumentId(hrmDocument.get(0).getId().toString());
-			HRMReport hrmReport = HRMReportParser.parseReport(hrmDocument.get(0).getReportFile());
+			HRMReport hrmReport = HRMReportParser.parseReport(loggedInInfo, hrmDocument.get(0).getReportFile());
 			if (hrmReport == null) continue;
 
 			hrmReport.setHrmDocumentId(id);

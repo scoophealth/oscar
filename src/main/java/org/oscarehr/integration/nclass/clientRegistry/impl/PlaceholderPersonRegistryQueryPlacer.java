@@ -57,6 +57,7 @@ import org.marc.everest.rmim.ca.r020403.vocabulary.ProcessingID;
 import org.marc.everest.rmim.ca.r020403.vocabulary.QueryRequestLimit;
 import org.marc.everest.rmim.ca.r020403.vocabulary.ResponseMode;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.nclass.clientRegistry.PersonRegistryQueryPlacer;
 import org.oscarehr.integration.nclass.clientRegistry.model.Candidate;
 import org.oscarehr.integration.nclass.clientRegistry.model.PersonDemographics;
@@ -68,8 +69,8 @@ public class PlaceholderPersonRegistryQueryPlacer extends BasePlacer implements 
 	private PlaceholderPersonRegistryQueryFulfiller placeholderPersonRegistryQueryFulfiller = new PlaceholderPersonRegistryQueryFulfiller();
 
 	@Override
-	public Candidate findCandidate(Demographic demographic) {
-		PRPA_IN101103CA findCandidates = toQuery(demographic);
+	public Candidate findCandidate(Provider provider, Demographic demographic) {
+		PRPA_IN101103CA findCandidates = toQuery(provider, demographic);
 		PRPA_IN101004CA foundCandidates = placeholderPersonRegistryQueryFulfiller.findCandidates(findCandidates);
 		Candidate result = fromResponse(foundCandidates);
 		return result;
@@ -111,7 +112,7 @@ public class PlaceholderPersonRegistryQueryPlacer extends BasePlacer implements 
 	 *            Demographic to create query for
 	 * @return Returns the new query
 	 */
-	private PRPA_IN101103CA toQuery(Demographic demographic) {
+	private PRPA_IN101103CA toQuery(Provider provider, Demographic demographic) {
 		PRPA_IN101103CA findCandidates = new PRPA_IN101103CA(new II(UUID.randomUUID()), // II.TOKEN in pCS
 		        TS.now(), ResponseMode.Immediate, PRPA_IN101103CA.defaultInteractionId(), PRPA_IN101103CA.defaultProfileId(), ProcessingID.Training, AcknowledgementCondition.Always);
 		
@@ -138,9 +139,9 @@ public class PlaceholderPersonRegistryQueryPlacer extends BasePlacer implements 
 		findCandidates.getControlActEvent().setEffectiveTime(TS.now());
 
 		// Add author data
-		if (getProvider() != null) {
+		if (provider != null) {
 			findCandidates.getControlActEvent().setAuthor(new Author(TS.now()));
-			findCandidates.getControlActEvent().getAuthor().setAuthorPerson(new AssignedEntity(SET.createSET(new II("1.2.3.4", "FS-39485")), getProviderAsPerson()));
+			findCandidates.getControlActEvent().getAuthor().setAuthorPerson(new AssignedEntity(SET.createSET(new II("1.2.3.4", "FS-39485")), getProviderAsPerson(provider)));
 		}
 
 		// Query control data

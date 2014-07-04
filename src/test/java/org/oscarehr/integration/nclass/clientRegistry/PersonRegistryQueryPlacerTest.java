@@ -45,7 +45,7 @@ public class PersonRegistryQueryPlacerTest {
 		demo.setLastName("Doe");
 		demo.setBirthDay(Calendar.getInstance());
 
-		Candidate candidate = placer.findCandidate(demo);
+		Candidate candidate = placer.findCandidate(null, demo);
 		assertNotNull(candidate);
 		assertNotNull(candidate.getFirst());
 		assertNotNull(candidate.getLast());
@@ -59,7 +59,7 @@ public class PersonRegistryQueryPlacerTest {
 		demo.setLastName("Doe");
 		demo.setBirthDay(Calendar.getInstance());
 
-		Candidate candidate = placer.findCandidate(demo);
+		Candidate candidate = placer.findCandidate(null, demo);
 		PersonDemographics personDemographics = placer.getPersonDemographics(candidate);
 		assertNotNull(personDemographics);
 	}

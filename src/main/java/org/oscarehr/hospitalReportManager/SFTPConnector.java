@@ -572,7 +572,7 @@ public class SFTPConnector {
 		return decrypt;
 	}
 
-	public static synchronized void startAutoFetch() {
+	public static synchronized void startAutoFetch(LoggedInInfo loggedInInfo) {
 
 		if (!isAutoFetchRunning) {
 			SFTPConnector.isAutoFetchRunning = true;
@@ -608,8 +608,8 @@ public class SFTPConnector {
 		
 								
 				for (String filePath : paths) {
-					HRMReport report = HRMReportParser.parseReport(filePath);
-					if (report != null) HRMReportParser.addReportToInbox(report);
+					HRMReport report = HRMReportParser.parseReport(loggedInInfo, filePath);
+					if (report != null) HRMReportParser.addReportToInbox(loggedInInfo, report);
 				}
 			
 
@@ -618,7 +618,7 @@ public class SFTPConnector {
 				doNotSentMsgForOuttage.clear();
 			} catch (Exception e) {
 				logger.error("Couldn't perform SFTP fetch for HRM - notifying user of failure", e);
-				notifyHrmError(e.getMessage());
+				notifyHrmError(loggedInInfo, e.getMessage());
 			}
 
 			SFTPConnector.isAutoFetchRunning = false;
@@ -628,13 +628,12 @@ public class SFTPConnector {
 	}
 	
 
-	protected static void notifyHrmError(String errorMsg) {
+	protected static void notifyHrmError(LoggedInInfo loggedInInfo, String errorMsg) {
 	    HashSet<String> sendToProviderList = new HashSet<String>();
 
     	String providerNoTemp="999998";
 	    if (!doNotSentMsgForOuttage.contains(providerNoTemp)) sendToProviderList.add(providerNoTemp);
 	    
-    	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	    if (loggedInInfo != null && loggedInInfo.loggedInProvider != null)
 	    {
 	    	// manual prompts always send to admin
@@ -666,9 +665,8 @@ public class SFTPConnector {
 	/**
 	 * adds the currently logged in user to the do not send anymore messages for this outtage list 
 	 */
-	public static void addMeToDoNotSendList()
+	public static void addMeToDoNotSendList(LoggedInInfo loggedInInfo)
 	{
-    	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	    if (loggedInInfo != null && loggedInInfo.loggedInProvider != null)
 	    {
 	    	doNotSentMsgForOuttage.add(loggedInInfo.loggedInProvider.getProviderNo());

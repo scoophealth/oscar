@@ -16,6 +16,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.pageUtil.LabUploadForm;
@@ -25,14 +26,16 @@ public class HRMUploadLabAction extends DispatchAction {
 
 	@Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
-        LabUploadForm frm = (LabUploadForm) form;
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
+		LabUploadForm frm = (LabUploadForm) form;
         FormFile importFile = frm.getImportFile();
         
         try {
 	        String filePath = Utilities.saveFile(importFile.getInputStream(), importFile.getFileName());
 	        
-	        HRMReport report = HRMReportParser.parseReport(filePath);
-	        if (report != null) HRMReportParser.addReportToInbox(report);
+	        HRMReport report = HRMReportParser.parseReport(loggedInInfo,filePath);
+	        if (report != null) HRMReportParser.addReportToInbox(loggedInInfo,report);
 	        
 	        request.setAttribute("success", true);
 	        

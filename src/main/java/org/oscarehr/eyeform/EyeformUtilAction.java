@@ -234,6 +234,8 @@ public class EyeformUtilAction extends DispatchAction {
 	public ActionForward getBillingArgs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 		OscarAppointmentDao appointmentDao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
 
@@ -273,7 +275,7 @@ public class EyeformUtilAction extends DispatchAction {
 			hashMap.put("appointment_date", appointment.getAppointmentDate().getTime());
 		}
 
-		hashMap.put("current_provider_no", LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		hashMap.put("current_provider_no", loggedInInfo.getLoggedInProviderNo());
 		hashMap.put("demo_mrp_provider_no", demographic.getProviderNo());
 
 

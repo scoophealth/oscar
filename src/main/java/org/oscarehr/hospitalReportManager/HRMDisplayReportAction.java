@@ -56,12 +56,14 @@ public class HRMDisplayReportAction extends DispatchAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String hrmDocumentId = request.getParameter("id");
 		
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		if (hrmDocumentId != null) {
                     HRMDocument document = hrmDocumentDao.findById(Integer.parseInt(hrmDocumentId)).get(0);
 
                     if (document != null) {
                         logger.debug("reading repotFile : "+document.getReportFile());
-                        HRMReport report = HRMReportParser.parseReport(document.getReportFile());
+                        HRMReport report = HRMReportParser.parseReport(loggedInInfo, document.getReportFile());
                         
                         request.setAttribute("hrmDocument", document);
 
@@ -81,8 +83,7 @@ public class HRMDisplayReportAction extends DispatchAction {
                             List<HRMDocumentSubClass> subClassList = hrmDocumentSubClassDao.getSubClassesByDocumentId(document.getId());
                             request.setAttribute("subClassList", subClassList);
 
-                            String loggedInProviderNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
-                            HRMDocumentToProvider thisProviderLink = hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNo(document.getId().toString(), loggedInProviderNo);
+                            HRMDocumentToProvider thisProviderLink = hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNo(document.getId().toString(), loggedInInfo.getLoggedInProviderNo());
                             request.setAttribute("thisProviderLink", thisProviderLink);
 
                             if (thisProviderLink != null) {
@@ -123,7 +124,7 @@ public class HRMDisplayReportAction extends DispatchAction {
                             request.setAttribute("hrmDocumentComments", documentComments);
 
 
-                            String confidentialityStatement = hrmProviderConfidentialityStatementDao.getConfidentialityStatementForProvider(loggedInProviderNo);
+                            String confidentialityStatement = hrmProviderConfidentialityStatementDao.getConfidentialityStatementForProvider(loggedInInfo.getLoggedInProviderNo());
                             request.setAttribute("confidentialityStatement", confidentialityStatement);
                             
                             String duplicateLabIdsString=StringUtils.trimToNull(request.getParameter("duplicateLabIds"));
@@ -151,10 +152,8 @@ public class HRMDisplayReportAction extends DispatchAction {
 		return mapping.findForward("display");
 	}
 	
-	
-	public static HRMDocumentToProvider getHRMDocumentFromCurrentProvider(Integer hrmDocumentId)
+	public static HRMDocumentToProvider getHRMDocumentFromProvider(String providerNo, Integer hrmDocumentId)
 	{
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		return(hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNo(hrmDocumentId.toString(), loggedInInfo.loggedInProvider.getProviderNo()));
+		return(hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNo(hrmDocumentId.toString(), providerNo));
 	}
 }

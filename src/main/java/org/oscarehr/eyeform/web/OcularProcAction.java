@@ -110,8 +110,10 @@ public class OcularProcAction extends DispatchAction {
     	DynaValidatorForm f = (DynaValidatorForm)form;
     	EyeformOcularProcedure procedure = (EyeformOcularProcedure)f.get("proc");
 
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
     	EyeformOcularProcedureDao dao = (EyeformOcularProcedureDao)SpringUtils.getBean("ocularProcDao");
-    	procedure.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		procedure.setProvider(loggedInInfo.getLoggedInProviderNo());
 
     	if(request.getParameter("proc.id") != null && request.getParameter("proc.id").length()>0) {
     		procedure.setId(Integer.parseInt(request.getParameter("proc.id")));

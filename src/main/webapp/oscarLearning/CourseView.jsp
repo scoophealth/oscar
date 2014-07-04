@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>
@@ -35,8 +36,9 @@
 
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	//get list of courses for the drop down
-	List<Program> courses = org.oscarehr.learning.web.CourseManagerAction.getCoursesByModerator();
+	List<Program> courses = org.oscarehr.learning.web.CourseManagerAction.getCoursesByModerator(loggedInInfo.getLoggedInProviderNo());
 %>
 <html:html locale="true">
 

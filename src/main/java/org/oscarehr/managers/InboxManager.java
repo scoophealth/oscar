@@ -74,9 +74,9 @@ public class InboxManager {
 	public static final String DOCUMENTS = "documents";
 	
 
-	public InboxManagerResponse getInboxResults(InboxManagerQuery query) {
+	public InboxManagerResponse getInboxResults(LoggedInInfo loggedInInfo, InboxManagerQuery query) {
 		CommonLabResultData comLab = new CommonLabResultData();
-		String providerNo =  LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+		String providerNo =  loggedInInfo.getLoggedInProviderNo();
 		String searchProviderNo = query.getSearchProviderNo();
 		String ackStatus = query.getStatus();
 		String demographicNo = query.getDemographicNo()!=null?query.getDemographicNo().toString():null;
@@ -225,7 +225,7 @@ public class InboxManager {
 
 		HRMResultsData hrmResult = new HRMResultsData();
 
-		Collection<LabResultData> hrmDocuments = hrmResult.populateHRMdocumentsResultsData(searchProviderNo, ackStatus, newestLab, oldestLab);
+		Collection<LabResultData> hrmDocuments = hrmResult.populateHRMdocumentsResultsData(loggedInInfo, searchProviderNo, ackStatus, newestLab, oldestLab);
 		if (oldestLab == null) {
 			for (LabResultData hrmDocument : hrmDocuments) {
 				if (oldestLab == null || (hrmDocument.getDateObj() != null && oldestLab.compareTo(hrmDocument.getDateObj()) > 0))

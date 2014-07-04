@@ -8,8 +8,10 @@
     and "gnu.org/licenses/gpl-2.0.html".
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.hospitalReportManager.SFTPConnector"%>
 <%
-	SFTPConnector.addMeToDoNotSendList();
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	SFTPConnector.addMeToDoNotSendList(loggedInInfo);
 	response.sendRedirect("hospitalReportManager.jsp");
 %>

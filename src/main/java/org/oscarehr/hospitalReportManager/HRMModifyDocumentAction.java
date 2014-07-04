@@ -103,7 +103,9 @@ public class HRMModifyDocumentAction extends DispatchAction {
 
 	public ActionForward signOff(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String reportId = request.getParameter("reportId");
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 
 		try {
 			String signedOff = request.getParameter("signedOff");
@@ -261,8 +263,9 @@ public class HRMModifyDocumentAction extends DispatchAction {
 
 	public ActionForward addComment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String documentId = request.getParameter("reportId");
-
 		String commentString = request.getParameter("comment");
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
 		try {
 			HRMDocumentComment comment = new HRMDocumentComment();
@@ -270,7 +273,7 @@ public class HRMModifyDocumentAction extends DispatchAction {
 			comment.setHrmDocumentId(Integer.parseInt(documentId));
 			comment.setComment(commentString);
 			comment.setCommentTime(new Date());
-			comment.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			comment.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 
 			hrmDocumentCommentDao.merge(comment);
 			request.setAttribute("success", true);
