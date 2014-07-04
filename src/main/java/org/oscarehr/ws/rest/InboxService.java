@@ -32,7 +32,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.inbox.InboxManagerQuery;
 import org.oscarehr.inbox.InboxManagerResponse;
 import org.oscarehr.managers.InboxManager;
@@ -46,7 +45,7 @@ import oscar.oscarLab.ca.on.LabResultData;
 
 @Path("/inbox")
 @Component("inboxService")
-public class InboxService {
+public class InboxService extends AbstractServiceImpl {
 
 	@Autowired
 	private InboxManager inboxManager;
@@ -56,12 +55,12 @@ public class InboxService {
 	@Produces("application/json")
 	public InboxResponse getMyUnacknowlegedReports(@QueryParam("limit") int limit) {
 	
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		Provider provider = loggedInInfo.getLoggedInProvider();
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 	
 		InboxManagerQuery query = new InboxManagerQuery();
-		query.setProviderNo(provider.getProviderNo());
-		query.setSearchProviderNo(provider.getProviderNo());
+		query.setProviderNo(providerNo);
+		query.setSearchProviderNo(providerNo);
 		query.setStatus("N");
 		query.setScannedDocStatus("I");
 		query.setPage(0);
