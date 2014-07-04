@@ -23,9 +23,13 @@
  */
 package org.oscarehr.ws.rest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 
+import org.apache.cxf.message.Message;
+import org.apache.cxf.phase.PhaseInterceptorChain;
+import org.apache.cxf.transport.http.AbstractHTTPDestination;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 
@@ -36,6 +40,13 @@ import org.oscarehr.util.LoggedInInfo;
 @Consumes({ "application/xml" })
 public abstract class AbstractServiceImpl {
 
+	protected HttpServletRequest getHttpServletRequest()
+	{
+		Message message = PhaseInterceptorChain.getCurrentMessage();
+	    HttpServletRequest request = (HttpServletRequest)message.get(AbstractHTTPDestination.HTTP_REQUEST);
+	    return(request);
+	}
+
 	/**
 	 * Gets current provider.
 	 * 
@@ -43,9 +54,8 @@ public abstract class AbstractServiceImpl {
 	 * 		Returns the provider authenticated for the current request processing. 
 	 */
 	protected Provider getCurrentProvider() {
-		LoggedInInfo info = getLoggedInInfo();
-		Provider provider = info.loggedInProvider;
-		return provider;
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
+		return (loggedInInfo.getLoggedInProvider());
 	}
 
 	/**
@@ -58,7 +68,7 @@ public abstract class AbstractServiceImpl {
 	 * 		IllegalStateException is thrown in case authentication info is not available 
 	 */
 	protected LoggedInInfo getLoggedInInfo() {
-		LoggedInInfo info = LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo info = LoggedInInfo.getLoggedInInfoFromRequest(getHttpServletRequest());
 		if (info == null) {
 			throw new IllegalStateException("Authentication info is not available.");
 		}
