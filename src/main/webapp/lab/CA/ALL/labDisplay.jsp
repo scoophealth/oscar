@@ -890,6 +890,23 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             </td>
                                         </tr>
                                         <% } %>
+                                        <% if (handler.getMsgType().equals("ALPHA")) { 
+                                        	AlphaHandler alpha=(AlphaHandler)handler;
+                                        	if (alpha.getVersion().equals("2.3")) {%>
+                                        <tr>
+                                        	<td>
+                                                <div class="FieldData">
+                                                    <strong>Remarks:</strong>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="FieldData" nowrap="nowrap">
+                                                   <%= alpha.getPIDComment() %>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <% }
+                                        	}%>
                                     </table>
                                 </td>
                             </tr>

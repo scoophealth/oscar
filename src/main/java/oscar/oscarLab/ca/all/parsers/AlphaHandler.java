@@ -45,7 +45,12 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
     
     
 
-    /** Creates a new instance of ICLHandler */
+    public String getVersion() {
+    	return version;
+    }
+
+
+	/** Creates a new instance of ICLHandler */
     public AlphaHandler(){
     }
 
@@ -276,10 +281,11 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
     public String getOBXReferenceRange(int i, int j){
         try{
         	if (version.equals("2.2")) {
-                return(getString(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getReferencesRange().getValue()));
-
+                //return(getString(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getReferencesRange().getValue()));
+        		return(getString(Terser.get(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),7,0,2,1)));
     	} else {
-            return(getString(msg23.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getReferencesRange().getValue()));
+            //return(getString(msg23.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getReferencesRange().getValue()));
+    		return(getString(Terser.get(msg23.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),7,0,2,1)));
 
     	}
         }catch(Exception e){
@@ -532,6 +538,20 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
             return("");
         }
     }
+    
+    public String getPIDComment() {
+    try {
+    	if (version.equals("2.2")) {
+    		return("");
+    	} else {
+    		return(getString(msg23.getRESPONSE().getPATIENT().getNTE().getComment(0).getValue()));
+    	}
+    }catch(Exception e){
+        logger.error("Could not return NTE of Patient", e);
+        return("");
+    }
+    }
+    
     
     public String getMsgType(){
         return("ALPHA");
