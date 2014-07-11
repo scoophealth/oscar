@@ -432,7 +432,7 @@ function fillSpecialistSelect( aSelectedService ){
         var i = 1;
 	var specs = (services[makeNbr].specialists);
 	for ( var specIndex = 0; specIndex < specs.length; ++specIndex ){
-	   aPit = specs[ specIndex ];
+		   aPit = specs[ specIndex ];	   	
            document.EctConsultationFormRequestForm.specialist.options[ i++ ] = new Option( aPit.specName , aPit.specNbr );
 	}
 
@@ -442,38 +442,43 @@ function fillSpecialistSelect( aSelectedService ){
 /////////////////////////////////////////////////////////////////////
 function fillSpecialistSelect1( makeNbr )
 {
-    //window.alert("im in");
-	//document.searchForm.mdnm.options.selectedIndex = 0;
-	document.EctConsultationFormRequestForm.specialist.options.length = 1;
-//    window.alert("before var");
-	var specs;
-	var t = new String("");
-	var tUpper = t.toUpperCase();
-	var x = tUpper.split(", ");
-	var j = 0;
-//    window.alert("after vars"+x);
-	specs = (services[makeNbr].specialists);
-//    window.alert("after selectedModels "+specNbr);
-	var i=0;
-	i++;
-        var notSet = true;
+	//document.EctConsultationFormRequestForm.specialist.options.length = 1;
+
+	var specs = (services[makeNbr].specialists);
+	var i=1;
+    var match = false;
+        
 	for ( var specIndex = 0; specIndex < specs.length; ++specIndex )
 	{
 		aPit = specs[specIndex];
-		document.EctConsultationFormRequestForm.specialist.options[i] = new Option(aPit.specName, aPit.specNbr );
-       // window.alert("in da loop");
 
-		/*if (aPit.specName.toUpperCase() == x[j]) {
-			document.EctConsultationFormRequestForm.specialist.options[i].selected = true;
-			j++;
-                        notSet = false;
-		}*/
+		if(aPit.specNbr=="<%=consultUtil.specialist%>"){
+			//look for matching specialist on spec list and make option selected
+			match=true;
+			document.EctConsultationFormRequestForm.specialist.options[i] = new Option(aPit.specName, aPit.specNbr,false ,true );
+		}else{
+			//add specialist on list as normal
+			document.EctConsultationFormRequestForm.specialist.options[i] = new Option(aPit.specName, aPit.specNbr );
+		}
+
 		i++;
 	}
-    //window.alert("im out");
-        if( notSet ) {
-            document.EctConsultationFormRequestForm.specialist.options[0].selected = true;
-        }
+
+	<%if(requestId!=null){ %>
+		if(!match){ 
+			//if no match then most likely doctor has been removed from specialty list so just add specialist
+			document.EctConsultationFormRequestForm.specialist.options[0] = new Option("<%=consultUtil.getSpecailistsName(consultUtil.specialist)%>", "<%=consultUtil.specialist%>",false ,true );
+
+			//don't display if no consultant was saved
+			<%if(!consultUtil.specialist.equals("null")){%>
+			document.getElementById("consult-disclaimer").style.display='inline';
+			<%}else{%>
+			//display so user knows why field is empty
+			document.EctConsultationFormRequestForm.specialist.options[0] = new Option("No Consultant Saved", "-1");
+			<%}%>
+		}
+	<%}%>
+
 }
 //-------------------------------------------------------------------
 
@@ -484,6 +489,7 @@ function setSpec(servNbr,specialNbr){
 //    //window.alert("got specs");
     var i=1;
     var NotSelected = true;
+ 
     for ( var specIndex = 0; specIndex < specs.length; ++specIndex ){
 //      //  window.alert("loop");
         aPit = specs[specIndex];
@@ -506,8 +512,10 @@ function setSpec(servNbr,specialNbr){
 /////////////////////////////////////////////////////////////////////
 //insert first option title into specialist drop down list select box
 function initSpec() {
-    var aSpecialist = services["-1"].specialists[0];
+	<%if(requestId==null){ %>
+	var aSpecialist = services["-1"].specialists[0];
     document.EctConsultationFormRequestForm.specialist.options[0] = new Option(aSpecialist.specNbr, aSpecialist.specId);
+    <%}%>
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -566,14 +574,29 @@ function onSelectSpecialist(SelectedSpec)	{
 		return;
 	}
 	var selectedService = document.EctConsultationFormRequestForm.service.value;  				// get the service that is selected now
-	var specs = (services[selectedService].specialists);					// get all the specs the offer this service
+	var specs = (services[selectedService].specialists); 			// get all the specs the offer this service
+    
+	// load the text fields with phone fax and address for past consult review even if spec has been removed from service list
+	<%if(requestId!=null && !consultUtil.specialist.equals("null")){ %>
+	form.phone.value = '<%=consultUtil.specPhone%>';
+	form.fax.value = '<%=consultUtil.specFax%>';					
+	form.address.value = '<%=consultUtil.specAddr %>';
+
+	//make sure this dislaimer is displayed
+	document.getElementById("consult-disclaimer").style.display='inline';
+	<%}%>
+	
+								
         for( var idx = 0; idx < specs.length; ++idx ) {
             aSpeci = specs[idx];									// get the specialist Object for the currently selected spec
             if( aSpeci.specNbr == SelectedSpec.value ) {
             	form.phone.value = (aSpeci.phoneNum);
             	form.fax.value = (aSpeci.specFax);					// load the text fields with phone fax and address
             	form.address.value = (aSpeci.specAddress);
-
+            	
+       			//since there is a match make sure the dislaimer is hidden
+       			document.getElementById("consult-disclaimer").style.display='none';
+        	
             	<%
         		if (props.isConsultationFaxEnabled()) {//
 				%>
@@ -594,7 +617,8 @@ function onSelectSpecialist(SelectedSpec)	{
 
             	break;
             }
-        }
+        }//spec loop
+	 
 	}
 
 //-----------------------------------------------------------------
@@ -1383,13 +1407,12 @@ function updateFaxButton() {
 								else
 								{
 									%>
-									<html:select property="specialist" size="1" onchange="onSelectSpecialist(this)">
-									<!-- <option value="-1">--- <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSelectSpec"/> ---</option>
-	                                        <option/>
-					    				<option/>
-						    			<option/>
-							    		<option/> -->
+									
+									<span id="consult-disclaimer" title="When consult was saved this was the saved consultant but is no longer on this specialist list." style="display:none;font-size:24px;">*</span> <html:select property="specialist" size="1" onchange="onSelectSpecialist(this)">
+									
 									</html:select>
+									
+									
 									<%
 								}
 							%>
@@ -1984,7 +2007,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 
 	        initMaster();
         	initService('<%=consultUtil.service%>');
-                initSpec();
+            initSpec();
             document.EctConsultationFormRequestForm.phone.value = ("");
         	document.EctConsultationFormRequestForm.fax.value = ("");
         	document.EctConsultationFormRequestForm.address.value = ("");
