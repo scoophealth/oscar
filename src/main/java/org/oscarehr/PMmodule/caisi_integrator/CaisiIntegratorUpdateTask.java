@@ -900,7 +900,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		cachedDemographicDocument.setDescription(eDoc.getDescription());
 
 		byte[] contents = EDocUtil.getFile(OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/' + eDoc.getFileName());
-
+		if(contents == null) {
+			logger.warn("Unable to send document - the file does not exist or can't be read!! " +  OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/' + eDoc.getFileName());
+			return;
+		}
 		demographicWs.addCachedDemographicDocumentAndContents(cachedDemographicDocument, contents);
 	}
 
