@@ -58,6 +58,7 @@ if (request.getAttribute("submitted") != null) {
    String formHtml = StringEscapeUtils.escapeHtml((String) curform.get("formHtml"));
 	if(formHtml==null){formHtml="";}	
 %>
+<!DOCTYPE html>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -67,16 +68,35 @@ if (request.getAttribute("submitted") != null) {
 .input-error{   
     border-color: rgba(229, 103, 23, 0.8) !important; 
     box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(229, 103, 23, 0.6) !important; 
-    outline: 0 none !important;
-    
+    outline: 0 none !important;  
 }
+
+#popupDisplay{display:inline-block;}
+#panelDisplay{display:none;}
 </style>
 
 <script type="text/javascript" language="JavaScript">
 function openLastSaved() {
     window.open('<%=request.getContextPath()%>/eform/efmshowform_data.jsp?fid=<%= curform.get("fid") %>', 'PreviewForm', 'toolbar=no, location=no, status=yes, menubar=no, scrollbars=yes, resizable=yes, width=700, height=600, left=300, top=100');   
 }
+
+//using this to check if page is being viewing in admin panel or in popup
+var elementExists = document.getElementById("dynamic-content");
+
+if (elementExists){
+document.getElementById("popupDisplay").style.display = 'none';
+document.getElementById("panelDisplay").style.display = 'inline';
+}else{
+document.write('<link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet" type="text/css">');
+}
+
+<% if ((request.getAttribute("success") != null) && (errors.size() == 0)) { %>
+if (elementExists==null){
+window.opener.location.href = '<%=request.getContextPath()%>/administration/?show=Forms';
+}
+<%}%>
 </script>
+
 </head>
 
 <body id="eformBody">
@@ -93,12 +113,12 @@ function openLastSaved() {
 
 <div class="well" style="position: relative;">
 		
-	<% if ((request.getAttribute("success") != null) && (errors.size() == 0)) { %>
-	<div class="alert alert-success">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <bean:message key="eform.edithtml.msgChangesSaved" />.
-    </div>
-	<% } %> 
+<% if ((request.getAttribute("success") != null) && (errors.size() == 0)) { %>
+<div class="alert alert-success">
+<button type="button" class="close" data-dismiss="alert">&times;</button>
+<bean:message key="eform.edithtml.msgChangesSaved" />.
+</div>
+<% } %> 
 	
 	<%String formNameMissing = errors.get("formNameMissing");
     if (errors.containsKey("formNameMissing")) { %>
@@ -129,7 +149,7 @@ function openLastSaved() {
 			 
 			<bean:message key="eform.uploadhtml.formName" />:
 			<br />
-			<input type="text" name="formName" value="<%= curform.get("formName") %>" <% if (errors.containsKey("formNameMissing") || (errors.containsKey("formNameExists"))) { %>	class="input-error" <% } %> size="30" /> 
+			<input type="text" name="formName" value="<%= curform.get("formName") %>" class="<% if (errors.containsKey("formNameMissing") || (errors.containsKey("formNameExists"))) { %> input-error <% } %>" size="30" /> 
 			<br />
 			
 			</div>
@@ -195,14 +215,17 @@ function openLastSaved() {
 			<textarea wrap="off" name="formHtml" style="" class="span12" rows="40"><%= formHtml%></textarea><br />
 
 <p>
+	<div id="panelDisplay">
 	<a href="<%=request.getContextPath()%>/eform/efmformmanager.jsp" class="btn contentLink">
 	 <i class="icon-circle-arrow-left"></i> Back to eForm Library<!--<bean:message key="eform.edithtml.msgBackToForms"/>-->
 	</a>
-
 	<input type="button" class="btn" value="<bean:message key="eform.edithtml.msgPreviewLast"/>" <% if (curform.get("fid") == null) {%> disabled	<%}%> name="previewlast" onclick="openLastSaved()"> 
-
-
 	<a href="<%=request.getContextPath()%>/eform/efmformmanageredit.jsp?fid=<%= curform.get("fid") %>" class="btn contentLink"> <bean:message key="eform.edithtml.cancelChanges"/></a>
+	</div>
+
+	<a href="#" class="btn" id="popupDisplay" onClick="window.close()"> 
+	 <i class="icon-circle-arrow-left"></i> Back to eForm Library<!--<bean:message key="eform.edithtml.msgBackToForms"/>-->
+	</a>
 
 	<input type="submit" class="btn btn-primary" value="<bean:message key="eform.edithtml.msgSave"/>" data-loading-text="Saving..." name="savebtn" id="savebtn"  > 
 
@@ -222,8 +245,9 @@ $("html, body").animate({ scrollTop: 0 }, "slow");
 return false;
 
 });
-
 </script>
+
 
 </body>
 </html:html>
+
