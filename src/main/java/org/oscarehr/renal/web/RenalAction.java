@@ -257,12 +257,13 @@ public class RenalAction extends DispatchAction {
 	}
 	
 	public ActionForward createLabReq(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws SQLException {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
 		
 		if(labReqVersion.equals("07")) {
 			FrmLabReq07Record lr = new FrmLabReq07Record();
 			Properties p = lr.getFormRecord(demographicNo, 0);		
-			p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			p = lr.getFormCustRecord(loggedInInfo.getCurrentFacility(), p, loggedInInfo.getLoggedInProviderNo());
 			p.setProperty("b_creatinine","checked=\"checked\"");	
 			p.setProperty("b_acRatioUrine","checked=\"checked\"");	
 			p.setProperty("b_urinalysis","checked=\"checked\"");	

@@ -44,6 +44,7 @@ import org.oscarehr.common.dao.DigitalSignatureDao;
 import org.oscarehr.common.model.DigitalSignature;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DigitalSignatureUtils;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
@@ -120,6 +121,8 @@ public final class ImageRenderingServlet extends HttpServlet {
 	private static final void renderIntegratorClient(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// this expects integratorFacilityId and caisiClientId as a parameter
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		// security check
 		HttpSession session = request.getSession();
 		Provider provider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
@@ -132,7 +135,7 @@ public final class ImageRenderingServlet extends HttpServlet {
 			// get image
 			Integer integratorFacilityId = Integer.parseInt(request.getParameter("integratorFacilityId"));
 			Integer caisiClientId = Integer.parseInt(request.getParameter("caisiDemographicId"));
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(integratorFacilityId, caisiClientId);
 
 			if (demographicTransfer != null && demographicTransfer.getPhoto() != null) {
@@ -149,6 +152,8 @@ public final class ImageRenderingServlet extends HttpServlet {
 	private static final void renderHnrClient(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// this expects linkingId as a parameter
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		// security check
 		HttpSession session = request.getSession();
 		Provider provider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
@@ -160,7 +165,7 @@ public final class ImageRenderingServlet extends HttpServlet {
 		try {
 			// get image
 			Integer linkingId = Integer.parseInt(request.getParameter("linkingId"));
-			org.oscarehr.hnr.ws.Client hnrClient = CaisiIntegratorManager.getHnrClient(linkingId);
+			org.oscarehr.hnr.ws.Client hnrClient = CaisiIntegratorManager.getHnrClient(loggedInInfo.getCurrentFacility(),linkingId);
 
 			if (hnrClient != null && hnrClient.getImage() != null) {
 				renderImage(response, hnrClient.getImage(), "jpeg");

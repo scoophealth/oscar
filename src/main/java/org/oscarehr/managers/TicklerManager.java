@@ -46,8 +46,8 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.CustomFilterDao;
-import org.oscarehr.common.dao.TicklerDao;
 import org.oscarehr.common.dao.TicklerCommentDao;
+import org.oscarehr.common.dao.TicklerDao;
 import org.oscarehr.common.dao.TicklerUpdateDao;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.CustomFilter;
@@ -55,7 +55,6 @@ import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerComment;
 import org.oscarehr.common.model.TicklerUpdate;
 import org.oscarehr.util.EmailUtilsOld;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.VelocityUtils;
@@ -417,14 +416,14 @@ public class TicklerManager {
 		updateStatus(tickler_id, provider, Tickler.STATUS.A);
 	}
 	
-	public void resolveTicklersBySubstring(List<String> demographicIds, String remString) {
+	public void resolveTicklersBySubstring(String providerNo, List<String> demographicIds, String remString) {
 		List<Integer> tmp = new ArrayList<Integer>();
 		for(String str:demographicIds) {
 			tmp.add(Integer.parseInt(str));
 		}
 		List<Tickler> ticklers = ticklerDao.findActiveByMessageForPatients(tmp,remString);
 		for(Tickler t:ticklers) {
-			deleteTickler(t.getId(),LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			deleteTickler(t.getId(),providerNo);
 		}
 	}
 	
@@ -539,8 +538,8 @@ public class TicklerManager {
     	  */
 
     	 
-    	  public void resolveTicklers(List<String> cdmPatientNos, String remString) {
-    		  resolveTicklersBySubstring(cdmPatientNos, remString);  
+    	  public void resolveTicklers(String providerNo, List<String> cdmPatientNos, String remString) {
+    		  resolveTicklersBySubstring(providerNo, cdmPatientNos, remString);  
     	  }
     	  
     	  public List<Tickler> listTicklers(Integer demographicNo, Date beginDate, Date endDate) {

@@ -41,13 +41,15 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
     if((bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean"))==null) {
         response.sendRedirect("error.jsp");
         return;
     }
     
-    Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
+    Facility facility = loggedInInfo.getCurrentFacility();
 
     String demoNo = bean.demographicNo;
     EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
@@ -145,17 +147,17 @@ if(privateConsentEnabled && newEctHeader_showPopup) {
 			boolean allSynced = true;
 			
 			try{
-				allSynced  = CaisiIntegratorManager.haveAllRemoteFacilitiesSyncedIn(secondsTillConsideredStale,false); 
-				CaisiIntegratorManager.setIntegratorOffline(false);	
+				allSynced  = CaisiIntegratorManager.haveAllRemoteFacilitiesSyncedIn(loggedInInfo.getCurrentFacility(), secondsTillConsideredStale,false); 
+				CaisiIntegratorManager.setIntegratorOffline(session, false);	
 			}catch(Exception remoteFacilityException){
 				MiscUtils.getLogger().error("Error checking Remote Facilities Sync status",remoteFacilityException);
-				CaisiIntegratorManager.checkForConnectionError(remoteFacilityException);
+				CaisiIntegratorManager.checkForConnectionError(session, remoteFacilityException);
 			}
 			if(secondsTillConsideredStale == -1){  
 				allSynced = true; 
 			}
 		%>
-			<%if (CaisiIntegratorManager.isIntegratorOffline()) {%>
+			<%if (CaisiIntegratorManager.isIntegratorOffline(session)) {%>
     			<div style="background: none repeat scroll 0% 0% red; color: white; font-weight: bold; padding-left: 10px; margin-bottom: 2px;"><bean:message key="oscarEncounter.integrator.NA"/></div>
     		<%}else if(!allSynced) {%>
     			<div style="background: none repeat scroll 0% 0% orange; color: white; font-weight: bold; padding-left: 10px; margin-bottom: 2px;"><bean:message key="oscarEncounter.integrator.outOfSync"/>

@@ -3104,7 +3104,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 
 		if (loggedInInfo.currentFacility.isIntegratorEnabled() && remoteNoteUUIDs.size() > 0) {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			List<CachedDemographicNote> remoteNotes = demographicWs.getLinkedCachedDemographicNotes(Integer.parseInt(demono));
 			for (CachedDemographicNote remoteNote : remoteNotes) {
 				for (String remoteUUID : remoteNoteUUIDs) {

@@ -59,6 +59,8 @@
 	</head>
 	<body>
 		<%
+			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		    Integer demographicId = Integer.valueOf(request.getParameter("demographic_no"));
 			Integer remoteFacilityId=Integer.valueOf(request.getParameter("remoteFacilityId"));
 			Integer remotePreventionId=Integer.valueOf(request.getParameter("remotePreventionId"));
@@ -69,15 +71,15 @@
 			CachedDemographicPrevention remotePrevention  = null;
 			
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline()){
-					remotePrevention = CaisiIntegratorManager.getDemographicWs().getCachedDemographicPreventionsByPreventionId(pk);
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+					remotePrevention = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getCachedDemographicPreventionsByPreventionId(pk);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 			}
 				
-			if(CaisiIntegratorManager.isIntegratorOffline()){
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
 				List<CachedDemographicPrevention> remotePreventions = IntegratorFallBackManager.getRemotePreventions(demographicId);
 				for(CachedDemographicPrevention prev:remotePreventions){
 					if ( prev.getFacilityPreventionPk().getIntegratorFacilityId() == remoteFacilityId && prev.getFacilityPreventionPk().getCaisiItemId() == remotePreventionId){
@@ -89,11 +91,11 @@
 		
 			
 			
-			CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
+			CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),remoteFacilityId);
 			FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 			providerPk.setIntegratorFacilityId(remotePrevention.getFacilityPreventionPk().getIntegratorFacilityId());
 			providerPk.setCaisiItemId(remotePrevention.getCaisiProviderId());
-			CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(providerPk);
+			CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(), providerPk);
 		%>
 		<table style="border-collapse:collapse">
 			<tr>

@@ -70,6 +70,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerLink;
 import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -895,25 +896,25 @@ public final class EDocUtil {
 		return doc;
 	}
 
-	public static ArrayList<EDoc> getRemoteDocuments(Integer demographicId) {
+	public static ArrayList<EDoc> getRemoteDocuments(LoggedInInfo loggedInInfo, Integer demographicId) {
 		ArrayList<EDoc> results = new ArrayList<EDoc>();
 
 		try {
 
 			List<CachedDemographicDocument> remoteDocuments = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline()) {
-					CaisiIntegratorManager.getDemographicWs();
-					remoteDocuments = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicDocuments(demographicId);
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+					CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+					remoteDocuments = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDocuments(demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 			}
 
-			if (CaisiIntegratorManager.isIntegratorOffline()) {
+			if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
 				MiscUtils.getLogger().debug("getting fall back documents for " + demographicId);
-				remoteDocuments = IntegratorFallBackManager.getRemoteDocuments(demographicId);
+				remoteDocuments = IntegratorFallBackManager.getRemoteDocuments(loggedInInfo,demographicId);
 			}
 
 			for (CachedDemographicDocument remoteDocument : remoteDocuments) {

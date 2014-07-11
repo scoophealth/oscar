@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
@@ -69,7 +70,7 @@ public class ChildImmunizationReport implements PreventionReport{
     }
 
 
-    public Hashtable<String,Object> runReport(ArrayList<ArrayList<String>> list,Date asofDate){
+    public Hashtable<String,Object> runReport(LoggedInInfo loggedInInfo, ArrayList<ArrayList<String>> list,Date asofDate){
         int inList = 0;
         double done= 0;
         ArrayList<PreventionReportDisplay> returnReport = new ArrayList<PreventionReportDisplay>();
@@ -83,15 +84,15 @@ public class ChildImmunizationReport implements PreventionReport{
 
 			// search prevention_date prevention_type deleted refused
 			ArrayList<Map<String, Object>> prevs1 = PreventionData.getPreventionData("DTap-IPV", demo);
-			PreventionData.addRemotePreventions(prevs1, demo,"DTap-IPV",null);
+			PreventionData.addRemotePreventions(loggedInInfo, prevs1, demo,"DTap-IPV",null);
 			ArrayList<Map<String, Object>> prevsDtapIPVHIB = PreventionData.getPreventionData("DTaP-IPV-Hib", demo);
-			PreventionData.addRemotePreventions(prevsDtapIPVHIB, demo,"DTaP-IPV-Hib",null);
+			PreventionData.addRemotePreventions(loggedInInfo, prevsDtapIPVHIB, demo,"DTaP-IPV-Hib",null);
 			ArrayList<Map<String, Object>> prevs2 = PreventionData.getPreventionData("Hib", demo);
-			PreventionData.addRemotePreventions(prevs2, demo,"Hib",null);
+			PreventionData.addRemotePreventions(loggedInInfo, prevs2, demo,"Hib",null);
 			ArrayList<Map<String, Object>> prevs4 = PreventionData.getPreventionData("MMR",demo);
-			PreventionData.addRemotePreventions(prevs4, demo,"MMR",null);
+			PreventionData.addRemotePreventions(loggedInInfo, prevs4, demo,"MMR",null);
 			prevs4.addAll(PreventionData.getPreventionData("MMRV", demo));
-			PreventionData.addRemotePreventions(prevs4, demo,"MMRV",null);
+			PreventionData.addRemotePreventions(loggedInInfo, prevs4, demo,"MMRV",null);
 
              //need to compile accurate dtap numbers
 			 Map<String, Object> hDtapIpv, hDtapIpvHib;

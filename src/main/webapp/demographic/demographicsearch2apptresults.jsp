@@ -57,6 +57,8 @@
 	if(session.getAttribute("user") == null)    response.sendRedirect("../logout.htm");
 	Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 	
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	
 	String curProvider_no = request.getParameter("provider_no");
 	    
 	String keyword = request.getParameter("keyword");
@@ -231,7 +233,6 @@ function searchAll() {
            TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"
            VALUE="<bean:message key="demographic.search.All"/>">
 <%
-	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	if (loggedInInfo.currentFacility.isIntegratorEnabled()){
 %>
     	<input type="checkbox" name="includeIntegratedResults" value="true"   <%="true".equals(request.getParameter("includeIntegratedResults"))?"checked":""%>/> <span style="font-size:small"><bean:message key="demographic.search.msgInclIntegratedResults"/></span>
@@ -477,7 +478,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 		   <tr style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
 			   onClick="document.forms[0].demographic_no.value=<%=demographicTransfer.getCaisiDemographicId()%>;addName('<%=demographicTransfer.getCaisiDemographicId()%>','<%=URLEncoder.encode(demographicTransfer.getLastName())%>','<%=URLEncoder.encode(demographicTransfer.getFirstName())%>','','<%=request.getParameter("messageId")%>','<%=demographicTransfer.getCaisiProviderId()%>','<%=demographicTransfer.getIntegratorFacilityId()%>')">
 			<td class="demoId" colspan="8">
-				<input type="submit" class="mbttn" name="demographic_no" value="Integrator <%=CaisiIntegratorManager.getRemoteFacility(demographicTransfer.getIntegratorFacilityId()).getName()%>:<%=demographicTransfer.getCaisiDemographicId()%>" />
+				<input type="submit" class="mbttn" name="demographic_no" value="Integrator <%=CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), demographicTransfer.getIntegratorFacilityId()).getName()%>:<%=demographicTransfer.getCaisiDemographicId()%>" />
             </td>
 			<td class="lastName"><%=Misc.toUpperLowerCase(demographicTransfer.getLastName())%></td>
 			<td class="firstName"><%=Misc.toUpperLowerCase(demographicTransfer.getFirstName())%></td>
@@ -501,7 +502,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
    		FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
    		providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
    		providerPk.setCaisiItemId(demographicTransfer.getCaisiProviderId());
-   		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(providerPk);
+   		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(), providerPk);
    		MiscUtils.getLogger().debug("Cached provider, pk="+providerPk.getIntegratorFacilityId()+","+providerPk.getCaisiItemId()+", cachedProvider="+cachedProvider);
    		
    		String providerName="";

@@ -34,26 +34,27 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 public class RemoteDrugAllergyHelper {
 	private static Logger logger = MiscUtils.getLogger();
 
-	public static ArrayList<String> getAtcCodesFromRemoteDrugs(Integer localDemographicId) {
+	public static ArrayList<String> getAtcCodesFromRemoteDrugs(LoggedInInfo loggedInInfo,Integer localDemographicId) {
 		ArrayList<String> atcCodes = new ArrayList<String>();
 
 		try {
 			List<CachedDemographicDrug> remoteDrugs  = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline()){
-				   remoteDrugs = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicDrugsByDemographicId(localDemographicId);
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				   remoteDrugs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDrugsByDemographicId(localDemographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 			}
 			
-			if(CaisiIntegratorManager.isIntegratorOffline()){
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
 			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(localDemographicId);	
 			}
 			
@@ -68,7 +69,7 @@ public class RemoteDrugAllergyHelper {
 		return (atcCodes);
 	}
 
-	public static ArrayList<Allergy> getRemoteAllergiesAsAllergyItems(Integer localDemographicId)
+	public static ArrayList<Allergy> getRemoteAllergiesAsAllergyItems(LoggedInInfo loggedInInfo,Integer localDemographicId)
 	{
 		ArrayList<Allergy> results = new ArrayList<Allergy>();
 
@@ -76,17 +77,17 @@ public class RemoteDrugAllergyHelper {
 			
 			List<CachedDemographicAllergy> remoteAllergies  = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline()){
-					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-					remoteAllergies = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicAllergies(localDemographicId);
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.currentFacility);
+					remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo.currentFacility).getLinkedCachedDemographicAllergies(localDemographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 			}
 				
-			if(CaisiIntegratorManager.isIntegratorOffline()){
-			   remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(localDemographicId);	
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			   remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(loggedInInfo, localDemographicId);	
 			} 
 			
 			for (CachedDemographicAllergy remoteAllergy : remoteAllergies) {

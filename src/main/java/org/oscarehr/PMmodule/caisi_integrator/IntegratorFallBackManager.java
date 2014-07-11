@@ -76,15 +76,14 @@ public class IntegratorFallBackManager {
 		return linkedNotes;
 	}
 
-	public static void saveLinkNotes(Integer demographicNo) {
+	public static void saveLinkNotes(LoggedInInfo loggedInInfo,Integer demographicNo) {
 		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			try {
 				String providerNo = null;
 				if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
 					providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 				}
-				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 				List<CachedDemographicNote> linkedNotes = Collections.unmodifiableList(demographicWs.getLinkedCachedDemographicNotes(demographicNo));
 				MiscUtils.getLogger().info("Saving remote copy for " + demographicNo + "  linkedNotes : " + linkedNotes.size());
 
@@ -103,12 +102,11 @@ public class IntegratorFallBackManager {
 		}
 	}
 
-	public static void saveRemoteForms(Integer demographicNo) {
+	public static void saveRemoteForms(LoggedInInfo loggedInInfo, Integer demographicNo) {
 		String[] tables = { "formLabReq07" };  //Need better way to do this
 		List<CachedDemographicForm> remoteForms = null;
 
 		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			String providerNo = null;
 
 			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
@@ -116,7 +114,7 @@ public class IntegratorFallBackManager {
 			}
 
 			for (String table : tables) {
-				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 				remoteForms = demographicWs.getLinkedCachedDemographicForms(demographicNo, table);
 				MiscUtils.getLogger().debug("Saving remote forms for " + demographicNo + "  forms : " + remoteForms.size() + " table " + table);
 				if (remoteForms.size() == 0) {
@@ -158,18 +156,17 @@ public class IntegratorFallBackManager {
 
 	
 	////TESTED ^^^^/////
-	public static void saveDemographicIssues(int demographicNo) {
+	public static void saveDemographicIssues(LoggedInInfo loggedInInfo,int demographicNo) {
 		List<CachedDemographicIssue> remoteIssues = null;
 
 		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			String providerNo = null;
 
 			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
 				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 			}
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			remoteIssues = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicNo);
 			MiscUtils.getLogger().debug("Saving remoteIssues for " + demographicNo + "  issues : " + remoteIssues.size());
 			if (remoteIssues.size() == 0) {
@@ -212,18 +209,17 @@ public class IntegratorFallBackManager {
 	
 	
 
-	public static void saveDemographicPreventions(int demographicNo) {
+	public static void saveDemographicPreventions(LoggedInInfo loggedInInfo,int demographicNo) {
 		List<CachedDemographicPrevention> remoteItems = null;
 
 		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			String providerNo = null;
 
 			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
 				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 			}
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			remoteItems = demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(demographicNo);
 			MiscUtils.getLogger().debug("Saving remote Preventions for " + demographicNo + "  issues : " + remoteItems.size());
 			if (remoteItems.size() == 0) {
@@ -264,18 +260,17 @@ public class IntegratorFallBackManager {
 	}
 	
 	
-	public static void saveDemographicDrugs(int demographicNo) {
+	public static void saveDemographicDrugs(LoggedInInfo loggedInInfo,int demographicNo) {
 		List<CachedDemographicDrug> remoteItems = null;
 
 		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			String providerNo = null;
 
 			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
 				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 			}
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			remoteItems = demographicWs.getLinkedCachedDemographicDrugsByDemographicId(demographicNo);
 			MiscUtils.getLogger().debug("Saving remote Drugs for " + demographicNo + "  issues : " + remoteItems.size());
 			if (remoteItems.size() == 0) {
@@ -314,18 +309,17 @@ public class IntegratorFallBackManager {
 		return linkedNotes;
 	}
 	
-	public static void saveAdmissions(int demographicNo) {
+	public static void saveAdmissions(LoggedInInfo loggedInInfo,int demographicNo) {
 		List<CachedAdmission> remoteItems = null;
 
 		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			String providerNo = null;
 
 			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
 				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 			}
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			remoteItems = demographicWs.getLinkedCachedAdmissionsByDemographicId(demographicNo);
 			MiscUtils.getLogger().debug("Saving remote Admissions for " + demographicNo + "  issues : " + remoteItems.size());
 			if (remoteItems.size() == 0) {
@@ -341,11 +335,10 @@ public class IntegratorFallBackManager {
 		}
 	}
 
-	public static List<CachedAdmission> getRemoteAdmissions(Integer demographicNo) {
+	public static List<CachedAdmission> getRemoteAdmissions(LoggedInInfo loggedInInfo,Integer demographicNo) {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedAdmission> linkedNotes = null;
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedAdmission[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
@@ -365,18 +358,17 @@ public class IntegratorFallBackManager {
 	}
 	
 	
-	public static void saveAppointments(int demographicNo) {
+	public static void saveAppointments(LoggedInInfo loggedInInfo,int demographicNo) {
 		List<CachedAppointment> remoteItems = null;
 
 		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			String providerNo = null;
 
 			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
 				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 			}
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			remoteItems = demographicWs.getLinkedCachedAppointments(demographicNo);
 			MiscUtils.getLogger().debug("Saving remote CachedAppointment for " + demographicNo + "  issues : " + remoteItems.size());
 			if (remoteItems.size() == 0) {
@@ -393,11 +385,10 @@ public class IntegratorFallBackManager {
 	}
 	
 	
-	public static List<CachedAppointment> getRemoteAppointments(Integer demographicNo) {
+	public static List<CachedAppointment> getRemoteAppointments(LoggedInInfo loggedInInfo, Integer demographicNo) {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedAppointment> linkedNotes = null;
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedAppointment[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
@@ -418,18 +409,17 @@ public class IntegratorFallBackManager {
 	
 	
 	
-	public static void saveAllergies(int demographicNo) {
+	public static void saveAllergies(LoggedInInfo loggedInInfo,int demographicNo) {
 		List<CachedDemographicAllergy> remoteItems = null;
 
 		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			String providerNo = null;
 
 			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
 				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 			}
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.currentFacility);
 			remoteItems = demographicWs.getLinkedCachedDemographicAllergies(demographicNo);
 			MiscUtils.getLogger().debug("Saving remote CachedDemographicAllergy for " + demographicNo + "  issues : " + remoteItems.size());
 			if (remoteItems.size() == 0) {
@@ -448,11 +438,10 @@ public class IntegratorFallBackManager {
 	
 	
 	
-	public static List<CachedDemographicAllergy> getRemoteAllergies(Integer demographicNo) {
+	public static List<CachedDemographicAllergy> getRemoteAllergies(LoggedInInfo loggedInInfo,Integer demographicNo) {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicAllergy> linkedNotes = null;
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicAllergy[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
@@ -472,18 +461,17 @@ public class IntegratorFallBackManager {
 	}
 	
 	
-	public static void saveDocuments(int demographicNo) {
+	public static void saveDocuments(LoggedInInfo loggedInInfo,int demographicNo) {
 		List<CachedDemographicDocument> remoteItems = null;
 
 		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			String providerNo = null;
 
 			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
 				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 			}
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			remoteItems = demographicWs.getLinkedCachedDemographicDocuments(demographicNo);
 			MiscUtils.getLogger().debug("Saving remote CachedDemographicAllergy for " + demographicNo + "  issues : " + remoteItems.size());
 			if (remoteItems.size() == 0) {
@@ -512,18 +500,16 @@ public class IntegratorFallBackManager {
 		return(String.valueOf(remotePk.getIntegratorFacilityId()) + ":" + remotePk.getCaisiItemId());
 	}
 	
-	public static Integer getDemographicNoFromRemoteDocument(FacilityIdIntegerCompositePk remotePk){	
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	public static Integer getDemographicNoFromRemoteDocument(LoggedInInfo loggedInInfo, FacilityIdIntegerCompositePk remotePk){	
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByType(loggedInInfo.currentFacility.getId(),CachedDemographicDocumentContents.class.getName()+"+"+getPK(remotePk));
 		return remoteIntegratedDataCopy.getDemographicNo();
 	}
 
 	
 	
-	public static CachedDemographicDocumentContents getRemoteDocument(FacilityIdIntegerCompositePk remotePk){
+	public static CachedDemographicDocumentContents getRemoteDocument(LoggedInInfo loggedInInfo,FacilityIdIntegerCompositePk remotePk){
 		CachedDemographicDocumentContents documentContents = null;
 		
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByType(loggedInInfo.currentFacility.getId(),CachedDemographicDocumentContents.class.getName()+"+"+getPK(remotePk));
 
 		try {
@@ -535,10 +521,9 @@ public class IntegratorFallBackManager {
 		return documentContents;
 	}
 	
-	public static CachedDemographicDocumentContents getRemoteDocument(Integer demographicNo,FacilityIdIntegerCompositePk remotePk){
+	public static CachedDemographicDocumentContents getRemoteDocument(LoggedInInfo loggedInInfo, Integer demographicNo,FacilityIdIntegerCompositePk remotePk){
 		CachedDemographicDocumentContents documentContents = null;
 		
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicDocumentContents.class.getName()+"+"+getPK(remotePk));
 
 		try {
@@ -551,11 +536,10 @@ public class IntegratorFallBackManager {
 	}
 	
 	
-	public static List<CachedDemographicDocument> getRemoteDocuments(Integer demographicNo) {
+	public static List<CachedDemographicDocument> getRemoteDocuments(LoggedInInfo loggedInInfo, Integer demographicNo) {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicDocument> linkedNotes = null;
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicDocument[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
@@ -577,18 +561,17 @@ public class IntegratorFallBackManager {
 	}
 	
 	
-	public static void saveLabResults(int demographicNo) {
+	public static void saveLabResults(LoggedInInfo loggedInInfo,int demographicNo) {
 		List<CachedDemographicLabResult> remoteItems = null;
 
 		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			String providerNo = null;
 
 			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
 				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 			}
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			remoteItems = demographicWs.getLinkedCachedDemographicLabResults(demographicNo);
 			MiscUtils.getLogger().debug("Saving remote CachedDemographicLabResult for " + demographicNo + "  issues : " + remoteItems.size());
 			if (remoteItems.size() == 0) {
@@ -604,11 +587,10 @@ public class IntegratorFallBackManager {
 		}
 	}
 	
-	public static List<CachedDemographicLabResult> getLabResults(Integer demographicNo) {
+	public static List<CachedDemographicLabResult> getLabResults(LoggedInInfo loggedInInfo, Integer demographicNo) {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicLabResult> linkedNotes = null;
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicLabResult[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
@@ -626,75 +608,5 @@ public class IntegratorFallBackManager {
 		}
 		return linkedNotes;
 	}
-	
-	
-	/*
-	private <T> List<T>  getGenericItems(Integer demographicNo, Class<T> clazz,Class<T>[] cla22){
-		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
-
-		List<T> linkedNotes = null;
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, cla22.class.getName());
-
-		if (remoteIntegratedDataCopy == null) {
-			return linkedNotes;
-		}
-
-		try {
-			T[] array = remoteIntegratedDataCopyDao.getObjectFrom(clazz[].class, remoteIntegratedDataCopy);
-			linkedNotes = new ArrayList<T>();
-			for (clazz cdn : array) {
-				linkedNotes.add(cdn);
-			}
-		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error Loading Notes for : " + demographicNo + " from local store ", e);
-		}
-		return linkedNotes;
-	}
-	*/
-
-
-	/*
-				
-				saveBillingItems(lastDataUpdated, facility, demographicService, demographicId);
-				benchTimer.tag("saveBillingItems");
-				*saveEforms(lastDataUpdated, facility, demographicService, demographicId);
-				benchTimer.tag("saveEforms");
-				
-				
-				
-				
-				saveMeasurements
-				
-	
-	 */
-	
-	/*public static void saveDxresearchs(int demographicNo) {
-	List<CachedDxresearch> remoteItems = null;
-
-	try {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		String providerNo = null;
-
-		if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
-			providerNo = loggedInInfo.loggedInProvider.getProviderNo();
-		}
-
-		DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-		remoteItems = demographicWs.getLinkedCachedAppointments(demographicNo);
-		MiscUtils.getLogger().debug("Saving remote CachedAppointment for " + demographicNo + "  issues : " + remoteItems.size());
-		if (remoteItems.size() == 0) {
-			return;
-		}
-
-		CachedAppointment[] array = remoteItems.toArray(new CachedAppointment[remoteItems.size()]);
-		MiscUtils.getLogger().info("logged in " + loggedInInfo + " " + demographicNo);
-		remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.currentFacility.getId());
-
-	} catch (Exception e) {
-		MiscUtils.getLogger().error("Error saving remote CachedAppointment for " + demographicNo, e);
-	}
-}
-*/
 
 }

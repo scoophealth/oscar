@@ -41,6 +41,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.learning.StudentImporter;
 import org.oscarehr.learning.StudentInfo;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import com.Ostermiller.util.ExcelCSVParser;
@@ -69,6 +70,9 @@ public class StudentImportAction extends DispatchAction {
 	throws  IOException
 	{
 		logger.info("upload student data");
+		
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
     	StudentImportBean f = (StudentImportBean)form;
     	FormFile formFile = f.getFile();
     	String[][] data = ExcelCSVParser.parse(new InputStreamReader(formFile.getInputStream()));
@@ -99,7 +103,7 @@ public class StudentImportAction extends DispatchAction {
     		logger.info("importing: " + lastName + "," + firstName + "," + login + "," + password + "," + pin +  "," + studentNumber);
     	}
 
-    	int recordsImported = StudentImporter.importStudentInfo(studentInfoList);
+    	int recordsImported = StudentImporter.importStudentInfo(loggedInInfo.getCurrentFacility().getId(), studentInfoList);
 
 
     	request.setAttribute("total_imported", recordsImported);

@@ -55,7 +55,7 @@ public class ManageConsentAction {
 		consent.setFacilityId(loggedInInfo.currentFacility.getId());
 		consent.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 
-		for (CachedFacility cachedFacility : CaisiIntegratorManager.getRemoteFacilities()) {
+		for (CachedFacility cachedFacility : CaisiIntegratorManager.getRemoteFacilities(loggedInInfo.getCurrentFacility())) {
 			consent.getConsentToShareData().put(cachedFacility.getIntegratorFacilityId(), true);
 		}
 	}
@@ -81,14 +81,12 @@ public class ManageConsentAction {
 	 */
 	public void storeAllConsents() throws IOException {
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-
 		DigitalSignature digitalSignature = DigitalSignatureUtils.storeDigitalSignatureFromTempFileToDB(loggedInInfo, signatureRequestId, clientId);
 		if (digitalSignature != null) consent.setDigitalSignatureId(digitalSignature.getId());
 
 		integratorConsentDao.persist(consent);
 		
-		CaisiIntegratorManager.pushConsent(consent);
+		CaisiIntegratorManager.pushConsent(loggedInInfo.getCurrentFacility(), consent);
 	}
 
 	public void setExcludeMentalHealthData(Boolean b) {

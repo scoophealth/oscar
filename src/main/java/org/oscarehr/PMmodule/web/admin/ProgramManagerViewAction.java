@@ -116,6 +116,8 @@ public class ProgramManagerViewAction extends DispatchAction {
 	@SuppressWarnings("unchecked")
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
 
         // find the program id
@@ -152,8 +154,8 @@ public class ProgramManagerViewAction extends DispatchAction {
         List<ProgramQueue> queue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId));
         request.setAttribute("queue", queue);
 
-		if (CaisiIntegratorManager.isEnableIntegratedReferrals()) {
-			request.setAttribute("remoteQueue", programManagerAction.getRemoteQueue(Integer.parseInt(programId)));
+		if (CaisiIntegratorManager.isEnableIntegratedReferrals(loggedInInfo.getCurrentFacility())) {
+			request.setAttribute("remoteQueue", programManagerAction.getRemoteQueue(loggedInInfo,Integer.parseInt(programId)));
 		}
 
         HashSet<Long> genderConflict = new HashSet<Long>();
@@ -323,10 +325,11 @@ public class ProgramManagerViewAction extends DispatchAction {
     }
 
 	public ActionForward remove_remote_queue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		Integer remoteReferralId = Integer.valueOf(request.getParameter("remoteReferralId"));
 
 		try {
-			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo.getCurrentFacility());
 			referralWs.removeReferral(remoteReferralId);
 		} catch (MalformedURLException e) {
 			logger.error("Unexpected error", e);

@@ -71,6 +71,8 @@
 <%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
 
 <%
+	LoggedInInfo loggedInInfo1=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 	TicklerManager ticklerManager= SpringUtils.getBean(TicklerManager.class);
 	DemographicStudyDao demographicStudyDao = SpringUtils.getBean(DemographicStudyDao.class);
 	StudyDao studyDao = SpringUtils.getBean(StudyDao.class);
@@ -1158,7 +1160,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
  <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
     <myoscar:indivoRegistered provider="<%=curUser_no%>">
 		<%
-			MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(LoggedInInfo.loggedInInfo.get(), false);
+			MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(loggedInInfo1, false);
 		%>
 	    <li>
 			<a HREF="#" ONCLICK ="popup('600', '1024','../phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')" title='<bean:message key="global.myoscar"/>'>
@@ -1307,8 +1309,8 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 
 <%
 	boolean anonymousEnabled = false;
-	if (LoggedInInfo.loggedInInfo.get().currentFacility != null) {
-		anonymousEnabled = LoggedInInfo.loggedInInfo.get().currentFacility.isEnableAnonymous();
+	if (loggedInInfo1.currentFacility != null) {
+		anonymousEnabled = loggedInInfo1.currentFacility.isEnableAnonymous();
 	}
 	if(anonymousEnabled) {
 %>
@@ -1318,8 +1320,8 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 %>
 <%
 	boolean epe = false;
-	if (LoggedInInfo.loggedInInfo.get().currentFacility != null) {
-		epe = LoggedInInfo.loggedInInfo.get().currentFacility.isEnablePhoneEncounter();
+	if (loggedInInfo1.currentFacility != null) {
+		epe = loggedInInfo1.currentFacility.isEnablePhoneEncounter();
 	}
 	if(epe) {
 %>
@@ -1736,7 +1738,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 			
 			
 			ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
-			ProgramProvider programProvider = programManager2.getCurrentProgramInDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			ProgramProvider programProvider = programManager2.getCurrentProgramInDomain(loggedInInfo1.loggedInProvider.getProviderNo());
             if(programProvider!=null && programProvider.getProgram() != null) {
             	programProvider.getProgram().getName();
             }
@@ -2017,7 +2019,7 @@ boolean propertyExists = PreventionManager.isCreated();
 if(disableStopSigns!=true){
 if( OscarProperties.getInstance().getProperty("SHOW_PREVENTION_STOP_SIGNS","false").equals("true") || propertyExists==true) {
 
-		String warning = prevMgr.getWarnings(String.valueOf(demographic_no));
+		String warning = prevMgr.getWarnings(loggedInInfo1, String.valueOf(demographic_no));
 		warning = PreventionManager.checkNames(warning);
 
 		String htmlWarning = "";

@@ -61,6 +61,8 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
 
 	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		boolean a = true;
 		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.measurements");
 		String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -214,8 +216,8 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
 			oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo);
 			oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean data;
 			Vector measureTypes = (Vector) hd.getMeasurementsDataVector();
-			if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
-				EctMeasurementsDataBeanHandler.addRemoteMeasurementsTypes(measureTypes,demo);
+			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+				EctMeasurementsDataBeanHandler.addRemoteMeasurementsTypes(loggedInInfo,measureTypes,demo);
 			}
 			
 			for (int idx = 0; idx < measureTypes.size(); ++idx) {
@@ -229,7 +231,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
 				hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo, data.getType());
 				Vector measures = (Vector) hd.getMeasurementsDataVector();
 				if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
-					EctMeasurementsDataBeanHandler.addRemoteMeasurements(measures,data.getType(),demo);
+					EctMeasurementsDataBeanHandler.addRemoteMeasurements(loggedInInfo,measures,data.getType(),demo);
 				}
 
 				if (measures.size() > 0) {

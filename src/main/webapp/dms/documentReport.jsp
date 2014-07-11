@@ -35,6 +35,7 @@
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty, org.springframework.web.context.support.WebApplicationContextUtils" %>
 <%
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
 String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -368,10 +369,9 @@ function popup1(height, width, url, windowName){
                 }
 
                 //--- get remote documents ---
-                LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
                 if (loggedInInfo.currentFacility.isIntegratorEnabled())
                 {
-                  List<EDoc> remoteDocuments=EDocUtil.getRemoteDocuments(Integer.parseInt(moduleid));
+                  List<EDoc> remoteDocuments=EDocUtil.getRemoteDocuments(loggedInInfo, Integer.parseInt(moduleid));
                   categories.add(remoteDocuments);
                     categoryKeys.add("Remote Documents");
                 }

@@ -31,6 +31,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.oscarehr.common.model.MessageList;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.MessagingManager;
 import org.oscarehr.ws.rest.conversion.MessagingConverter;
 import org.oscarehr.ws.rest.to.MessagingResponse;
@@ -39,7 +40,7 @@ import org.springframework.stereotype.Component;
 
 @Path("/messaging")
 @Component("messagingService")
-public class MessagingService {
+public class MessagingService extends AbstractServiceImpl {
 
 	@Autowired
 	private MessagingManager messagingManager; 
@@ -51,8 +52,8 @@ public class MessagingService {
 	@Path("/unread")
 	@Produces("application/json")
 	public MessagingResponse getMyUnreadMessages(@QueryParam("limit") int limit) {
-		
-		List<MessageList> msgs = messagingManager.getMyInboxMessages(0,limit);
+		Provider provider=getCurrentProvider();
+		List<MessageList> msgs = messagingManager.getMyInboxMessages(provider.getProviderNo(),0,limit);
 
 		MessagingResponse result = new MessagingResponse();
 		result.setTotal(msgs.size());
@@ -66,8 +67,9 @@ public class MessagingService {
 	@GET
 	@Path("/count")
 	public int getMyUnreadMessages(@QueryParam("demoAttachedOnly") boolean demoAttachedOnly) {
-		
-		int count = messagingManager.getMyInboxMessageCount(demoAttachedOnly);
+		Provider provider=getCurrentProvider();
+
+		int count = messagingManager.getMyInboxMessageCount(provider.getProviderNo(),demoAttachedOnly);
 		
 		return count;
 	}

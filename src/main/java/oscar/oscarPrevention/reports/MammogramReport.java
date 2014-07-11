@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
@@ -56,7 +57,7 @@ public class MammogramReport implements PreventionReport{
     public MammogramReport() {
     }
 
-    public Hashtable runReport(ArrayList<ArrayList<String>> list,Date asofDate){
+    public Hashtable runReport(LoggedInInfo loggedInInfo,ArrayList<ArrayList<String>> list,Date asofDate){
         int inList = 0;
         double done= 0,doneWithGrace = 0;
         ArrayList<PreventionReportDisplay> returnReport = new ArrayList<PreventionReportDisplay>();
@@ -67,7 +68,7 @@ public class MammogramReport implements PreventionReport{
 
              //search   prevention_date prevention_type  deleted   refused
              ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData("MAM",demo);
-             PreventionData.addRemotePreventions(prevs, demo,"MAM",null);
+             PreventionData.addRemotePreventions(loggedInInfo, prevs, demo,"MAM",null);
              ArrayList<Map<String,Object>> noFutureItems =  removeFutureItems(prevs, asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;

@@ -166,8 +166,10 @@ public class MeasurementDataAction extends DispatchAction {
 
 
 	public ActionForward saveValues(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+		
 		String demographicNo = request.getParameter("demographicNo");
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 		String strAppointmentNo = request.getParameter("appointmentNo");
 		int appointmentNo = Integer.parseInt(strAppointmentNo);
 

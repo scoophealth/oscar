@@ -55,6 +55,7 @@ import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.labs.LabIdAndType;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.XmlUtils;
@@ -610,23 +611,23 @@ public class CommonLabResultData {
 		}
 	}
 
-	public static ArrayList<LabResultData> getRemoteLabs(Integer demographicId) {
+	public static ArrayList<LabResultData> getRemoteLabs(LoggedInInfo loggedInInfo,Integer demographicId) {
 		ArrayList<LabResultData> results = new ArrayList<LabResultData>();
 
 		try {
 			List<CachedDemographicLabResult> labResults  = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline()){
-					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-					labResults = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicLabResults(demographicId);
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+					labResults = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicLabResults(demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 			}
 
-			if(CaisiIntegratorManager.isIntegratorOffline()){
-				labResults = IntegratorFallBackManager.getLabResults(demographicId);
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				labResults = IntegratorFallBackManager.getLabResults(loggedInInfo,demographicId);
 			}
 
 			for (CachedDemographicLabResult cachedDemographicLabResult : labResults) {

@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarPrevention;
 
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ import oscar.util.DateUtils;
 import oscar.util.UtilDateUtilities;
 
 public class PreventionData {
-	
+
 	private static Logger log = MiscUtils.getLogger();
 	private static PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
 	private static PreventionExtDao preventionExtDao = (PreventionExtDao) SpringUtils.getBean("preventionExtDao");
@@ -65,8 +64,7 @@ public class PreventionData {
 		// prevent instantiation
 	}
 
-	public static Integer insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType,
-			String refused, String nextDate, String neverWarn, ArrayList<Map<String,String>> list) {
+	public static Integer insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
 		Integer insertId = -1;
 		try {
 			Prevention prevention = new Prevention();
@@ -81,11 +79,11 @@ public class PreventionData {
 			else if (refused.trim().equals("2")) prevention.setIneligible(true);
 
 			preventionDao.persist(prevention);
-			if (prevention.getId()==null) return insertId;
+			if (prevention.getId() == null) return insertId;
 
 			insertId = prevention.getId();
 			for (int i = 0; i < list.size(); i++) {
-				Map<String,String> h = list.get(i);
+				Map<String, String> h = list.get(i);
 				for (Map.Entry<String, String> entry : h.entrySet()) {
 					if (entry.getKey() != null && entry.getValue() != null) {
 						addPreventionKeyValue("" + insertId, entry.getKey(), entry.getValue());
@@ -106,14 +104,13 @@ public class PreventionData {
 			preventionExt.setVal(val);
 
 			preventionExtDao.persist(preventionExt);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
 	}
 
-	public static Map<String,String> getPreventionKeyValues(String preventionId) {
-		Map<String,String> h = new HashMap<String,String>();
+	public static Map<String, String> getPreventionKeyValues(String preventionId) {
+		Map<String, String> h = new HashMap<String, String>();
 
 		try {
 			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionId(Integer.valueOf(preventionId));
@@ -148,33 +145,31 @@ public class PreventionData {
 		}
 	}
 
-	public static String getProviderName(Map<String,Object> hash) {
+	public static String getProviderName(Map<String, Object> hash) {
 		String name = "";
 		if (hash != null) {
-			String proNum =  (String) hash.get("provider_no");
+			String proNum = (String) hash.get("provider_no");
 			if (proNum == null || proNum.equals("-1")) {
 				name = (String) hash.get("provider_name");
-			}
-			else {
+			} else {
 				name = ProviderData.getProviderName(proNum);
 			}
 		}
 		return name;
 	}
 
-	public static void updatetPreventionData(String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused,
-			String nextDate, String neverWarn, ArrayList<Map<String,String>> list) {
+	public static void updatetPreventionData(String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
 		deletePreventionData(id);
 		insertPreventionData(creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list);
 	}
 
-	public static ArrayList<Map<String,Object>> getPreventionDataFromExt(String extKey, String extVal) {
-		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+	public static ArrayList<Map<String, Object>> getPreventionDataFromExt(String extKey, String extVal) {
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
 		try {
 			List<PreventionExt> preventionExts = preventionExtDao.findByKeyAndValue(extKey, extVal);
 			for (PreventionExt preventionExt : preventionExts) {
-				Map<String,Object> hash = getPreventionById(preventionDao.find(preventionExt.getPreventionId()).toString());
+				Map<String, Object> hash = getPreventionById(preventionDao.find(preventionExt.getPreventionId()).toString());
 				if (hash.get("deleted") != null && ((String) hash.get("deleted")).equals("0")) {
 					list.add(hash);
 				}
@@ -185,22 +180,21 @@ public class PreventionData {
 		return list;
 	}
 
-    /*
-     * Fetch one extended prevention key
-     * Requires prevention id and keyval to return
-     */
-    public static String getExtValue(String id, String keyval) {
-    	try {
-    		List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(Integer.valueOf(id), keyval);
-    		for (PreventionExt preventionExt : preventionExts) {
-    			return preventionExt.getVal();
-    		}
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        return "";
-    }
+	/*
+	 * Fetch one extended prevention key
+	 * Requires prevention id and keyval to return
+	 */
+	public static String getExtValue(String id, String keyval) {
+		try {
+			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(Integer.valueOf(id), keyval);
+			for (PreventionExt preventionExt : preventionExts) {
+				return preventionExt.getVal();
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return "";
+	}
 
 	// //////
 	/**
@@ -208,8 +202,8 @@ public class PreventionData {
 	 * Rh injection's product #, from 2006-12-12 to 2006-12-18
 	 *
 	 */
-	public static ArrayList<Map<String,Object>> getExtValues(String injectionType, Date startDate, Date endDate, String keyVal) {
-		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+	public static ArrayList<Map<String, Object>> getExtValues(String injectionType, Date startDate, Date endDate, String keyVal) {
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
 		List<Prevention> preventions = preventionDao.findByTypeAndDate(injectionType, startDate, endDate);
 		for (Prevention prevention : preventions) {
@@ -217,8 +211,8 @@ public class PreventionData {
 			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(prevention.getId(), keyVal);
 			try {
 				for (PreventionExt preventionExt : preventionExts) {
-					Map<String,Object> h = new HashMap<String,Object>();
-	                h.put("preventions_id", prevention.getId().toString());
+					Map<String, Object> h = new HashMap<String, Object>();
+					h.put("preventions_id", prevention.getId().toString());
 					h.put("demographic_no", prevention.getDemographicId().toString());
 					h.put("val", preventionExt.getVal());
 					h.put("prevention_date", prevention.getPreventionDate());
@@ -232,39 +226,38 @@ public class PreventionData {
 		return list;
 	}
 
-	public static Date getDemographicDateOfBirth(Integer demoNo)
-	{
-		DemographicDao demographicDao=SpringUtils.getBean(DemographicDao.class);
-		Demographic dd=demographicDao.getDemographicById(demoNo);
-		if (dd==null) return(null);
-		Calendar bday=dd.getBirthDay();
-		if (bday==null) return(null);
-		return(bday.getTime());
+	public static Date getDemographicDateOfBirth(Integer demoNo) {
+		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+		Demographic dd = demographicDao.getDemographicById(demoNo);
+		if (dd == null) return (null);
+		Calendar bday = dd.getBirthDay();
+		if (bday == null) return (null);
+		return (bday.getTime());
 	}
 
-	public static ArrayList<Map<String,Object>> getPreventionData(Integer demoNo) {
+	public static ArrayList<Map<String, Object>> getPreventionData(Integer demoNo) {
 		return getPreventionData(null, demoNo);
 	}
 
-	public static ArrayList<Map<String,Object>> getPreventionData(String preventionType, Integer demographicId) {
-		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+	public static ArrayList<Map<String, Object>> getPreventionData(String preventionType, Integer demographicId) {
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
 		try {
 			Date dob = getDemographicDateOfBirth(demographicId);
-			List<Prevention> preventions = preventionType==null ? preventionDao.findNotDeletedByDemographicId(demographicId) : preventionDao.findByTypeAndDemoNo(preventionType, demographicId);
+			List<Prevention> preventions = preventionType == null ? preventionDao.findNotDeletedByDemographicId(demographicId) : preventionDao.findByTypeAndDemoNo(preventionType, demographicId);
 			for (Prevention prevention : preventions) {
-				
+
 				/*
 				 * force case sensitive comparison of name; MySQL by default does case INsensitive
 				 * DTaP and dTap are considered the same by MySQL
 				 */
-				if( preventionType != null && !prevention.getPreventionType().equals(preventionType) ) {
+				if (preventionType != null && !prevention.getPreventionType().equals(preventionType)) {
 					continue;
 				}
-				
-				Map<String,Object> h = new HashMap<String,Object>();
+
+				Map<String, Object> h = new HashMap<String, Object>();
 				h.put("id", prevention.getId().toString());
-				h.put("refused", prevention.isRefused()?"1":prevention.isIneligible()?"2":"0");
+				h.put("refused", prevention.isRefused() ? "1" : prevention.isIneligible() ? "2" : "0");
 				h.put("type", prevention.getPreventionType());
 				h.put("provider_no", prevention.getProviderNo());
 				h.put("provider_name", ProviderData.getProviderName(prevention.getProviderNo()));
@@ -286,9 +279,9 @@ public class PreventionData {
 		return list;
 	}
 
-	public static ArrayList<HashMap<String,Object>> getLinkedRemotePreventionData(String preventionType, Integer localDemographicId) {
-		ArrayList<HashMap<String, Object>> allResults=RemotePreventionHelper.getLinkedPreventionDataMap(localDemographicId);
-		ArrayList<HashMap<String, Object>> filteredResults=new ArrayList<HashMap<String, Object>>();
+	public static ArrayList<HashMap<String, Object>> getLinkedRemotePreventionData(LoggedInInfo loggedInInfo, String preventionType, Integer localDemographicId) {
+		ArrayList<HashMap<String, Object>> allResults = RemotePreventionHelper.getLinkedPreventionDataMap(loggedInInfo, localDemographicId);
+		ArrayList<HashMap<String, Object>> filteredResults = new ArrayList<HashMap<String, Object>>();
 
 		for (HashMap<String, Object> temp : allResults) {
 			if (preventionType.equals(temp.get("type"))) {
@@ -296,7 +289,7 @@ public class PreventionData {
 			}
 		}
 
-		return(filteredResults);
+		return (filteredResults);
 	}
 
 	public static String getPreventionComment(String id) {
@@ -304,10 +297,10 @@ public class PreventionData {
 		String comment = null;
 
 		try {
-			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(Integer.valueOf(id),	"comments");
+			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(Integer.valueOf(id), "comments");
 			for (PreventionExt preventionExt : preventionExts) {
 				comment = preventionExt.getVal();
-				if (comment!=null && comment.trim().equals("")) comment = null;
+				if (comment != null && comment.trim().equals("")) comment = null;
 				break;
 			}
 		} catch (Exception e) {
@@ -315,68 +308,67 @@ public class PreventionData {
 		}
 		return comment;
 	}
-	
-	public static oscar.oscarPrevention.Prevention getLocalandRemotePreventions(Integer demographicId) {
+
+	public static oscar.oscarPrevention.Prevention getLocalandRemotePreventions(LoggedInInfo loggedInInfo, Integer demographicId) {
 		oscar.oscarPrevention.Prevention prevention = getPrevention(demographicId);
-		
-		List<CachedDemographicPrevention>cachedPreventions = getRemotePreventions(demographicId);
-		
-		if( cachedPreventions != null ) {
-			for( CachedDemographicPrevention cdp : cachedPreventions) {
+
+		List<CachedDemographicPrevention> cachedPreventions = getRemotePreventions(loggedInInfo, demographicId);
+
+		if (cachedPreventions != null) {
+			for (CachedDemographicPrevention cdp : cachedPreventions) {
 				PreventionItem pi = new PreventionItem(cdp);
 				prevention.addPreventionItem(pi);
 			}
 		}
-		
+
 		return prevention;
 	}
 
 	public static oscar.oscarPrevention.Prevention getPrevention(Integer demoNo) {
-		DemographicDao demographicDao=SpringUtils.getBean(DemographicDao.class);
-		Demographic dd=demographicDao.getDemographicById(demoNo);
+		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+		Demographic dd = demographicDao.getDemographicById(demoNo);
 
 		java.util.Date dob = null;
 		String sex = null;
-		if (dd!=null)
-		{
-			Calendar temp=dd.getBirthDay();
-			if (temp!=null) dob=temp.getTime();
-			sex=dd.getSex();
+		if (dd != null) {
+			Calendar temp = dd.getBirthDay();
+			if (temp != null) dob = temp.getTime();
+			sex = dd.getSex();
 		}
-		
+
 		oscar.oscarPrevention.Prevention p = new oscar.oscarPrevention.Prevention(sex, dob);
 
 		PreventionDao dao = SpringUtils.getBean(PreventionDao.class);
-		for(Prevention pp : dao.findActiveByDemoId(demoNo)) {		
-				PreventionItem pi = new PreventionItem(pp);
-				p.addPreventionItem(pi);
+		for (Prevention pp : dao.findActiveByDemoId(demoNo)) {
+			PreventionItem pi = new PreventionItem(pp);
+			p.addPreventionItem(pi);
 		}
 		return p;
 	}
 
-	private static List<CachedDemographicPrevention> getRemotePreventions(Integer demographicId) {
-		
-		List<CachedDemographicPrevention> remotePreventions  = null;
-		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
-			
+	private static List<CachedDemographicPrevention> getRemotePreventions(LoggedInInfo loggedInInfo, Integer demographicId) {
+
+		List<CachedDemographicPrevention> remotePreventions = null;
+		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
+
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline()){
-					remotePreventions = CaisiIntegratorManager.getLinkedPreventions(demographicId);
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+					remotePreventions = CaisiIntegratorManager.getLinkedPreventions(loggedInInfo, demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session, e);
 			}
-				
-			if(CaisiIntegratorManager.isIntegratorOffline()){
+
+			if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
 				remotePreventions = IntegratorFallBackManager.getRemotePreventions(demographicId);
-			} 
+			}
 		}
 		return (remotePreventions);
 	}
 
-	public static oscar.oscarPrevention.Prevention addRemotePreventions(oscar.oscarPrevention.Prevention prevention, Integer demographicId) {
-		List<CachedDemographicPrevention> remotePreventions = getRemotePreventions(demographicId);
+	public static oscar.oscarPrevention.Prevention addRemotePreventions(LoggedInInfo loggedInInfo, oscar.oscarPrevention.Prevention prevention, Integer demographicId) {
+		List<CachedDemographicPrevention> remotePreventions = getRemotePreventions(loggedInInfo, demographicId);
 
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
@@ -391,25 +383,24 @@ public class PreventionData {
 		return (prevention);
 	}
 
-	public static ArrayList<Map<String,Object>> addRemotePreventions(ArrayList<Map<String,Object>> preventions, Integer demographicId, String preventionType, Date demographicDateOfBirth) {
-		List<CachedDemographicPrevention> remotePreventions = getRemotePreventions(demographicId);
+	public static ArrayList<Map<String, Object>> addRemotePreventions(LoggedInInfo loggedInInfo, ArrayList<Map<String, Object>> preventions, Integer demographicId, String preventionType, Date demographicDateOfBirth) {
+		List<CachedDemographicPrevention> remotePreventions = getRemotePreventions(loggedInInfo, demographicId);
 
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
 				if (preventionType.equals(cachedDemographicPrevention.getPreventionType())) {
 
-					Map<String,Object> h = new HashMap<String,Object>();
+					Map<String, Object> h = new HashMap<String, Object>();
 					h.put("integratorFacilityId", cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
 					h.put("integratorPreventionId", cachedDemographicPrevention.getFacilityPreventionPk().getCaisiItemId());
-					String remoteFacilityName="N/A";
-					CachedFacility remoteFacility=null;
+					String remoteFacilityName = "N/A";
+					CachedFacility remoteFacility = null;
 					try {
-						remoteFacility = CaisiIntegratorManager.getRemoteFacility(cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
-					}
-					catch (Exception e) {
+						remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
+					} catch (Exception e) {
 						log.error("Error", e);
 					}
-					if (remoteFacility!=null) remoteFacilityName=remoteFacility.getName();
+					if (remoteFacility != null) remoteFacilityName = remoteFacility.getName();
 					h.put("remoteFacilityName", remoteFacilityName);
 					h.put("integratorDemographicId", cachedDemographicPrevention.getCaisiDemographicId());
 					h.put("type", cachedDemographicPrevention.getPreventionType());
@@ -421,9 +412,7 @@ public class PreventionData {
 					if (demographicDateOfBirth != null) {
 						String age = UtilDateUtilities.calcAgeAtDate(demographicDateOfBirth, DateUtils.toDate(cachedDemographicPrevention.getPreventionDate()));
 						h.put("age", age);
-					}
-					else
-					{
+					} else {
 						h.put("age", "N/A");
 					}
 
@@ -434,49 +423,43 @@ public class PreventionData {
 			Collections.sort(preventions, new PreventionsComparator());
 		}
 
-		return(preventions);
+		return (preventions);
 	}
 
-	public static class PreventionsComparator implements Comparator<Map<String,Object>>
-	{
-		public int compare(Map<String,Object> o1, Map<String,Object> o2) {
-			Comparable date1=(Comparable)o1.get("prevention_date_asDate");
-			Comparable date2=(Comparable)o2.get("prevention_date_asDate");
+	public static class PreventionsComparator implements Comparator<Map<String, Object>> {
+		public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+			Comparable date1 = (Comparable) o1.get("prevention_date_asDate");
+			Comparable date2 = (Comparable) o2.get("prevention_date_asDate");
 
-			if (date1!=null && date2!=null)
-			{
-				if (date1 instanceof Calendar)
-				{
-					date1=((Calendar)date1).getTime();
+			if (date1 != null && date2 != null) {
+				if (date1 instanceof Calendar) {
+					date1 = ((Calendar) date1).getTime();
 				}
 
-				if (date2 instanceof Calendar)
-				{
-					date2=((Calendar)date2).getTime();
+				if (date2 instanceof Calendar) {
+					date2 = ((Calendar) date2).getTime();
 				}
 
-				return(date1.compareTo(date2));
-			}
-			else
-			{
-				return(0);
+				return (date1.compareTo(date2));
+			} else {
+				return (0);
 			}
 		}
 	}
 
-	public static Map<String,Object> getPreventionById(String id) {
-		Map<String,Object> h = null;
+	public static Map<String, Object> getPreventionById(String id) {
+		Map<String, Object> h = null;
 
 		try {
 			Prevention prevention = preventionDao.find(Integer.valueOf(id));
-			if (prevention!=null) {
-				h = new HashMap<String,Object>();
+			if (prevention != null) {
+				h = new HashMap<String, Object>();
 				String providerName = ProviderData.getProviderName(prevention.getProviderNo());
 				String preventionDate = UtilDateUtilities.DateToString(prevention.getPreventionDate(), "yyyy-MM-dd");
 				String lastUpdateDate = UtilDateUtilities.DateToString(prevention.getLastUpdateDate(), "yyyy-MM-dd");
 				@SuppressWarnings("deprecation")
-                String creatorName = ProviderData.getProviderName(prevention.getCreatorProviderNo());
-				
+				String creatorName = ProviderData.getProviderName(prevention.getCreatorProviderNo());
+
 				addToHashIfNotNull(h, "id", prevention.getId().toString());
 				addToHashIfNotNull(h, "demographicNo", prevention.getDemographicId().toString());
 				addToHashIfNotNull(h, "provider_no", prevention.getProviderNo());
@@ -485,51 +468,51 @@ public class PreventionData {
 				addToHashIfNotNull(h, "preventionDate", preventionDate);
 				addToHashIfNotNull(h, "prevention_date_asDate", prevention.getPreventionDate());
 				addToHashIfNotNull(h, "preventionType", prevention.getPreventionType());
-				addToHashIfNotNull(h, "deleted", prevention.isDeleted()?"1":"0");
-				addToHashIfNotNull(h, "refused", prevention.isRefused()?"1":prevention.isIneligible()?"2":"0");
+				addToHashIfNotNull(h, "deleted", prevention.isDeleted() ? "1" : "0");
+				addToHashIfNotNull(h, "refused", prevention.isRefused() ? "1" : prevention.isIneligible() ? "2" : "0");
 				addToHashIfNotNull(h, "next_date", UtilDateUtilities.DateToString(prevention.getNextDate(), "yyyy-MM-dd"));
-				addToHashIfNotNull(h, "never", prevention.isNever()?"1":"0");
+				addToHashIfNotNull(h, "never", prevention.isNever() ? "1" : "0");
 				addToHashIfNotNull(h, "creator", prevention.getCreatorProviderNo());
-				
+
 				String summary = "Prevention " + prevention.getPreventionType() + " provided by " + providerName + " on " + preventionDate;
 				summary = summary + " entered by " + creatorName + " on " + lastUpdateDate;
-				Map<String,String> ext = getPreventionKeyValues(prevention.getId().toString());
-				
+				Map<String, String> ext = getPreventionKeyValues(prevention.getId().toString());
+
 				if (ext.containsKey("result")) { //This is a preventive Test
-					addToHashIfNotNull(h, "result",  ext.get("result"));
+					addToHashIfNotNull(h, "result", ext.get("result"));
 					summary += "\nResult: " + ext.get("result");
 					if (ext.containsKey("reason") && !ext.get("reason").equals("")) {
-						addToHashIfNotNull(h, "reason",  ext.get("reason"));
+						addToHashIfNotNull(h, "reason", ext.get("reason"));
 						summary += "\nReason: " + ext.get("reason");
 					}
 				} else { //This is an immunization
 					if (ext.containsKey("name") && !ext.get("name").equals("")) {
-						addToHashIfNotNull(h, "name",  ext.get("name"));
+						addToHashIfNotNull(h, "name", ext.get("name"));
 						summary += "\nName: " + ext.get("name");
 					}
 					if (ext.containsKey("location") && !ext.get("location").equals("")) {
-						addToHashIfNotNull(h, "location",  ext.get("location"));
+						addToHashIfNotNull(h, "location", ext.get("location"));
 						summary += "\nLocation: " + ext.get("location");
 					}
 					if (ext.containsKey("route") && !ext.get("route").equals("")) {
-						addToHashIfNotNull(h, "route",  ext.get("route"));
+						addToHashIfNotNull(h, "route", ext.get("route"));
 						summary += "\nRoute: " + ext.get("route");
 					}
 					if (ext.containsKey("dose") && !ext.get("dose").equals("")) {
-						addToHashIfNotNull(h, "dose",  ext.get("dose"));
+						addToHashIfNotNull(h, "dose", ext.get("dose"));
 						summary += "\nDose: " + ext.get("dose");
 					}
 					if (ext.containsKey("lot") && !ext.get("lot").equals("")) {
-						addToHashIfNotNull(h, "lot",  ext.get("lot"));
+						addToHashIfNotNull(h, "lot", ext.get("lot"));
 						summary += "\nLot: " + ext.get("lot");
 					}
 					if (ext.containsKey("manufacture") && !ext.get("manufacture").equals("")) {
-						addToHashIfNotNull(h, "manufacture",  ext.get("manufacture"));
+						addToHashIfNotNull(h, "manufacture", ext.get("manufacture"));
 						summary += "\nManufacturer: " + ext.get("manufacture");
 					}
 				}
 				if (ext.containsKey("comments") && !ext.get("comments").equals("")) {
-					addToHashIfNotNull(h, "comments",  ext.get("comments"));
+					addToHashIfNotNull(h, "comments", ext.get("comments"));
 					summary += "\nComments: " + ext.get("comments");
 				}
 				addToHashIfNotNull(h, "summary", summary);
@@ -537,20 +520,19 @@ public class PreventionData {
 				log.debug("id" + h.get("id"));
 
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
 		return h;
 	}
 
-	private static void addToHashIfNotNull(Map<String,Object> h, String key, String val) {
+	private static void addToHashIfNotNull(Map<String, Object> h, String key, String val) {
 		if (val != null && !val.equalsIgnoreCase("null")) {
 			h.put(key, val);
 		}
 	}
 
-	private static void addToHashIfNotNull(Map<String,Object> h, String key, Date val) {
+	private static void addToHashIfNotNull(Map<String, Object> h, String key, Date val) {
 		if (val != null) {
 			h.put(key, val);
 		}

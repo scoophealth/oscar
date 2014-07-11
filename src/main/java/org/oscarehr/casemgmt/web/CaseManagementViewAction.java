@@ -1054,15 +1054,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
 		List<CachedDemographicNote> linkedNotes = null;
 		try {
-			if (!CaisiIntegratorManager.isIntegratorOffline()) {
-				linkedNotes = CaisiIntegratorManager.getLinkedNotes(demographicNo);
+			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+				linkedNotes = CaisiIntegratorManager.getLinkedNotes(loggedInInfo, demographicNo);
 			}
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
-			CaisiIntegratorManager.checkForConnectionError(e);
+			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 		}
 
-		if (CaisiIntegratorManager.isIntegratorOffline()) {
+		if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
 			linkedNotes = IntegratorFallBackManager.getLinkedNotes(demographicNo);
 		}
 
@@ -1075,7 +1075,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				if (issueCodesToDisplay == null || hasIssueToBeDisplayed(cachedDemographicNote, issueCodesToDisplay)) {
 					// filter on role based access
 					if (caseManagementMgr.hasRole(loggedInInfo.getLoggedInProvider().getProviderNo(), cachedDemographicNote, programId)) {
-						notesToDisplay.add(new NoteDisplayIntegrator(cachedDemographicNote));
+						notesToDisplay.add(new NoteDisplayIntegrator(loggedInInfo, cachedDemographicNote));
 					}
 				}
 			} catch (Exception e) {
@@ -1145,16 +1145,16 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 			List<CachedDemographicIssue> remoteIssues = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline()) {
-					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 					remoteIssues = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicNo);
 				}
 			} catch (Exception e) {
 				logger.error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 			}
 
-			if (CaisiIntegratorManager.isIntegratorOffline()) {
+			if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
 				remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(demographicNo);
 			}
 
@@ -1162,8 +1162,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				try {
 					IssueDisplay issueDisplay = null;
 
-					if (!hideInactiveIssues) issueDisplay = getIssueToDisplay(cachedDemographicIssue);
-					else if (!cachedDemographicIssue.isResolved()) issueDisplay = getIssueToDisplay(cachedDemographicIssue);
+					if (!hideInactiveIssues) issueDisplay = getIssueToDisplay(loggedInInfo,cachedDemographicIssue);
+					else if (!cachedDemographicIssue.isResolved()) issueDisplay = getIssueToDisplay(loggedInInfo,cachedDemographicIssue);
 
 					if (issueDisplay != null) {
 						if (existsIssueWithSameAttributes(issueDisplay, checkBoxBeanList)) continue;
@@ -1203,7 +1203,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return (true);
 	}
 
-	private IssueDisplay getIssueToDisplay(CachedDemographicIssue cachedDemographicIssue) throws MalformedURLException {
+	private IssueDisplay getIssueToDisplay(LoggedInInfo loggedInInfo, CachedDemographicIssue cachedDemographicIssue) throws MalformedURLException {
 		IssueDisplay issueDisplay = new IssueDisplay();
 
 		issueDisplay.writeAccess = true;
@@ -1229,7 +1229,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 
 		Integer remoteFacilityId = cachedDemographicIssue.getFacilityDemographicIssuePk().getIntegratorFacilityId();
-		CachedFacility remoteFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
+		CachedFacility remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),remoteFacilityId);
 		if (remoteFacility != null) issueDisplay.location = "remote: " + remoteFacility.getName();
 		else issueDisplay.location = "remote: name unavailable";
 

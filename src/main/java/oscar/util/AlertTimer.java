@@ -73,7 +73,7 @@ public class AlertTimer {
         public void run() {
     		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
             try {
-                hlp.manageCDMTicklers(alertCodes);
+                hlp.manageCDMTicklers(null, alertCodes);
             }
             catch (ShutdownException e) {
             	logger.debug("AlertTimer noticed shutdown signaled.");

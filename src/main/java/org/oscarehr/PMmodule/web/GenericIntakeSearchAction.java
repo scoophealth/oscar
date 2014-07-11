@@ -135,13 +135,15 @@ public class GenericIntakeSearchAction extends DispatchAction {
 	}
 
 	public ActionForward searchFromRemoteAdmit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		try {
 			Integer remoteReferralId = Integer.parseInt(request.getParameter("remoteReferralId"));
 
-			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo.getCurrentFacility());
 			Referral remoteReferral = referralWs.getReferral(remoteReferralId);
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(), remoteReferral.getSourceCaisiDemographicId());
 
 			GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
@@ -198,8 +200,10 @@ public class GenericIntakeSearchAction extends DispatchAction {
 	}
 
 	private void createRemoteList(HttpServletRequest request, GenericIntakeSearchFormBean intakeSearchBean) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 
 			MatchingDemographicParameters parameters = new MatchingDemographicParameters();
 			parameters.setMaxEntriesToReturn(10);
@@ -233,7 +237,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 			List<MatchingDemographicTransferScore> integratedMatches = demographicWs.getMatchingDemographics(parameters);
 			request.setAttribute("remoteMatches", integratedMatches);
 
-			List<CachedFacility> allFacilities = CaisiIntegratorManager.getRemoteFacilities();
+			List<CachedFacility> allFacilities = CaisiIntegratorManager.getRemoteFacilities(loggedInInfo.getCurrentFacility());
 			HashMap<Integer, String> facilitiesNameMap = new HashMap<Integer, String>();
 			for (CachedFacility cachedFacility : allFacilities)
 				facilitiesNameMap.put(cachedFacility.getIntegratorFacilityId(), cachedFacility.getName());
@@ -271,11 +275,13 @@ public class GenericIntakeSearchAction extends DispatchAction {
 	 * This method is run from at least 2 locations, 1 is from "new client" and a remote client is found. 2 is from admitting remote referrals.
 	 */
 	public ActionForward copyRemote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		try {
 			int remoteFacilityId = Integer.parseInt(request.getParameter("remoteFacilityId"));
 			int remoteDemographicId = Integer.parseInt(request.getParameter("remoteDemographicId"));
 
-			Demographic demographic=CaisiIntegratorManager.makeUnpersistedDemographicObjectFromRemoteEntry(remoteFacilityId, remoteDemographicId);
+			Demographic demographic=CaisiIntegratorManager.makeUnpersistedDemographicObjectFromRemoteEntry(loggedInInfo.getCurrentFacility(), remoteFacilityId, remoteDemographicId);
 						
 			
 			String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -283,7 +289,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 		    	clientManager.saveClient(demographic);
 		    	request.setAttribute("demographicNo", new Long(demographic.getDemographicNo()));
 		    	String providerNo = ((Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER)).getProviderNo();		    	
-		    	this.erClerklinkRemoteDemographic(remoteFacilityId, remoteDemographicId, providerNo, demographic);
+		    	this.erClerklinkRemoteDemographic(loggedInInfo, remoteFacilityId, remoteDemographicId, providerNo, demographic);
 		    	return mapping.findForward("clientEdit");
 		    }
 		    
@@ -332,10 +338,12 @@ public class GenericIntakeSearchAction extends DispatchAction {
 	}
 
 	private void addDestinationProgramId(HttpServletRequest request, StringBuilder parameters) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		String remoteReferralId = StringUtils.trimToNull(request.getParameter("remoteReferralId"));
 		if (remoteReferralId != null) {
 			try {
-				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
+				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo.getCurrentFacility());
 				Referral remoteReferral = referralWs.getReferral(Integer.parseInt(remoteReferralId));
 				parameters.append("&destinationProgramId=");
 				parameters.append(remoteReferral.getDestinationCaisiProgramId());
@@ -374,10 +382,10 @@ public class GenericIntakeSearchAction extends DispatchAction {
 		return genders;
 	}
 	
-	private void erClerklinkRemoteDemographic(int remoteFacilityId, int remoteDemographicId, String providerNo, Demographic client) {
+	private void erClerklinkRemoteDemographic(LoggedInInfo loggedInInfo, int remoteFacilityId, int remoteDemographicId, String providerNo, Demographic client) {
 		
 		try {			
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 
 			// link the clients
 			demographicWs.linkDemographics(providerNo, client.getDemographicNo(), remoteFacilityId, remoteDemographicId);
