@@ -33,7 +33,6 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.ReportConfigDao;
 import org.oscarehr.common.model.ReportConfig;
 import org.oscarehr.util.SpringUtils;
@@ -44,7 +43,7 @@ import oscar.login.DBHelp;
  * @author yilee18 
  */
 public class RptReportConfigData {
-    private static final Logger _logger = Logger.getLogger(RptReportConfigData.class);
+
     private static ReportConfigDao dao = SpringUtils.getBean(ReportConfigDao.class);
     
     int report_id;

@@ -34,7 +34,6 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.MessagingManager;
 import org.oscarehr.managers.ProgramManager2;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.conversion.ProgramProviderConverter;
 import org.oscarehr.ws.rest.to.NavbarResponse;
 import org.oscarehr.ws.rest.to.model.MenuTo1;
@@ -43,7 +42,7 @@ import org.oscarehr.ws.rest.to.model.ProgramProviderTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Path("/persona")
-public class PersonaService {
+public class PersonaService extends AbstractServiceImpl {
 
 	
 	@Autowired
@@ -57,7 +56,7 @@ public class PersonaService {
 	@Path("/navbar")
 	@Produces("application/json")
 	public NavbarResponse getMyNavbar() {
-		Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+		Provider provider = getCurrentProvider();
 		
 		NavbarResponse result = new NavbarResponse();
 		
@@ -82,8 +81,9 @@ public class PersonaService {
 		}
 		
 		/* counts */
-		int messageCount = messsagingManager.getMyInboxMessageCount(false);
-		int ptMessageCount = messsagingManager.getMyInboxMessageCount(true);
+		
+		int messageCount = messsagingManager.getMyInboxMessageCount(provider.getProviderNo(), false);
+		int ptMessageCount = messsagingManager.getMyInboxMessageCount(provider.getProviderNo(),true);
 		result.setUnreadMessagesCount(messageCount);
 		result.setUnreadPatientMessagesCount(ptMessageCount);
 		

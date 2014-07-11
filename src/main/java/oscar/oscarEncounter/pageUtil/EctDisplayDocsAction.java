@@ -55,6 +55,8 @@ public class EctDisplayDocsAction extends EctDisplayAction {
 
 	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
     
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
     	boolean a = true;
     	Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.documents");
     	String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -103,10 +105,10 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     		Date date;
     
     		// --- add remote documents ---
-    		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+    		
     		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
     			try {
-    				ArrayList<EDoc> remoteDocuments = EDocUtil.getRemoteDocuments(Integer.parseInt(bean.demographicNo));
+    				ArrayList<EDoc> remoteDocuments = EDocUtil.getRemoteDocuments(loggedInInfo, Integer.parseInt(bean.demographicNo));
     				docList.addAll(remoteDocuments);
     			} catch (Exception e) {
     				logger.error("error getting remote documents", e);

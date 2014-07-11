@@ -40,6 +40,7 @@
 	String.prototype.trim = function() { return this.replace(/^\s+|\s+$|\n$/g, ''); };
 </script>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	
 	ManageConsent manageConsent=new ManageConsent(currentDemographicId);
@@ -105,7 +106,7 @@
 					Check to indicate which agencies to exclude from consent :
 					<br />
 					<%
-						Collection<CachedFacility> facilitiesToDisplay=manageConsent.getAllFacilitiesToDisplay();
+						Collection<CachedFacility> facilitiesToDisplay=manageConsent.getAllFacilitiesToDisplay(loggedInInfo);
 					
 						if (facilitiesToDisplay!=null)
 						{

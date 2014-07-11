@@ -248,14 +248,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	public void run() {
 		numberOfTimesRun++;
 		
-
-		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
-		
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo=LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 		logger.debug("CaisiIntegratorUpdateTask starting #" + numberOfTimesRun+"  running as "+loggedInInfo.loggedInProvider);
 
 		try {
-			pushAllFacilities();
+			pushAllFacilities(loggedInInfo);
 		} catch (ShutdownException e) {
 			logger.debug("CaisiIntegratorUpdateTask received shutdown notice.");
 		} catch (Exception e) {
@@ -268,14 +265,14 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	public void pushAllFacilities() throws ShutdownException {
+	public void pushAllFacilities(LoggedInInfo loggedInInfo) throws ShutdownException {
 		List<Facility> facilities = facilityDao.findAll(true);
 
 		for (Facility facility : facilities) {
 			try {
 				if (facility.isIntegratorEnabled()) {
 					pushAllDataForOneFacility(facility);
-					findChangedRecordsFromIntegrator(facility);
+					findChangedRecordsFromIntegrator(loggedInInfo, facility);
 				}
 			} catch (WebServiceException e) {
 				if (CxfClientUtilsOld.isConnectionException(e)) {
@@ -295,9 +292,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushAllDataForOneFacility(Facility facility) throws IOException, ShutdownException {
 		logger.info("Start pushing data for facility : " + facility.getId() + " : " + facility.getName());
 
-		// set working facility
-		LoggedInInfo.loggedInInfo.get().currentFacility = facility;
-
 		// check all parameters are present
 		String integratorBaseUrl = facility.getIntegratorUrl();
 		String user = facility.getIntegratorUser();
@@ -308,7 +302,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			return;
 		}
 
-		FacilityWs service = CaisiIntegratorManager.getFacilityWs();
+		FacilityWs service = CaisiIntegratorManager.getFacilityWs(facility);
 		CachedFacility cachedFacility = service.getMyFacility();
 
 		// start at the beginning of time so by default everything is pushed
@@ -333,10 +327,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// in theory sync should only send changed data, but currently due to
 		// the lack of proper data models, we don't have a reliable timestamp on when things change so we just push everything, highly inefficient but it works until we fix the
 		// data model. The last update date is available though as per above...
-		pushFacility(lastDataUpdated);
+		pushFacility(facility, lastDataUpdated);
 		pushProviders(lastDataUpdated, facility);
 		pushPrograms(lastDataUpdated, facility);
-		pushAllDemographics(lastDataUpdated,cachedFacility,programs);
+		pushAllDemographics(facility, lastDataUpdated,cachedFacility,programs);
 		
 		// all things updated successfully
 		service.updateMyFacilityLastUpdateDate(DateUtils.toCalendar(currentUpdateDate));
@@ -344,16 +338,14 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		logger.info("Finished pushing data for facility : " + facility.getId() + " : " + facility.getName());
 	}
 
-	private void pushFacility(Date lastDataUpdated) throws MalformedURLException {
-		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
-
+	private void pushFacility(Facility facility, Date lastDataUpdated) throws MalformedURLException {
 		if (facility.getLastUpdated().after(lastDataUpdated)) {
 			logger.debug("pushing facility record");
 
 			CachedFacility cachedFacility = new CachedFacility();
 			BeanUtils.copyProperties(facility, cachedFacility);
 
-			FacilityWs service = CaisiIntegratorManager.getFacilityWs();
+			FacilityWs service = CaisiIntegratorManager.getFacilityWs(facility);
 			service.setMyFacility(cachedFacility);
 		} else {
 			logger.debug("skipping facility record, not updated since last push");
@@ -463,9 +455,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private List<Integer> getDemographicIdsToPush(Date lastDataUpdated, List<Program> programs) {
-		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
-
+	private List<Integer> getDemographicIdsToPush(Facility facility, Date lastDataUpdated, List<Program> programs) {
 		//Properties p = OscarProperties.getInstance();
 		UserProperty fullPushProp = userPropertyDao.getProp(UserProperty.INTEGRATOR_FULL_PUSH+facility.getId());
 		
@@ -533,12 +523,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushAllDemographics(Date lastDataUpdated, CachedFacility cachedFacility, List<Program> programs) throws MalformedURLException, ShutdownException {
-		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
+	private void pushAllDemographics(Facility facility,Date lastDataUpdated, CachedFacility cachedFacility, List<Program> programs) throws MalformedURLException, ShutdownException {
+		List<Integer> demographicIds = getDemographicIdsToPush(facility,lastDataUpdated, programs);
 
-		List<Integer> demographicIds = getDemographicIdsToPush(lastDataUpdated, programs);
-
-		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs();
+		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs(facility);
 		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
 		List<String> providerIdsInFacility = providerDao.getProviderIds(facility.getId());
 
@@ -1597,14 +1585,14 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	2) demographicWs.getDemographicsPushedAfterDate : 
 		which is a raw listing of the direct records which have changed, i.e. (facilityId, oscarDemographicId).
 	*/	
-	private void findChangedRecordsFromIntegrator(Facility facility) throws MalformedURLException {//throws IOException, ShutdownException {
+	private void findChangedRecordsFromIntegrator(LoggedInInfo loggedInInfo, Facility facility) throws MalformedURLException {//throws IOException, ShutdownException {
 		logger.info("Start fetch data for facility : " + facility.getId() + " : " + facility.getName());
 		boolean integratorLocalStore = OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE","yes");
 		if(!integratorLocalStore){
 			logger.info("local store not enabled");
 			return;
 		}
-		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs();
+		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs(facility);
 		
 		
 		Calendar nextTime = Calendar.getInstance();
@@ -1634,28 +1622,28 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			if (demographicExt != null && demographicExt.getValue().equals("1")){
 				demographicFetchCount++;
 				BenchmarkTimer benchTimer = new BenchmarkTimer("fetch and save for facilityId:" + facility.getId() + ", demographicId:" + demographicNo + "  " + demographicFetchCount + " of " + demographicNos.size());
-				IntegratorFallBackManager.saveLinkNotes(demographicNo);
+				IntegratorFallBackManager.saveLinkNotes(loggedInInfo,demographicNo);
 				benchTimer.tag("saveLinkedNotes");
-				IntegratorFallBackManager.saveRemoteForms(demographicNo);
+				IntegratorFallBackManager.saveRemoteForms(loggedInInfo,demographicNo);
 				benchTimer.tag("saveRemoteForms");
 				
 				
 				
-				IntegratorFallBackManager.saveDemographicIssues(demographicNo);
+				IntegratorFallBackManager.saveDemographicIssues(loggedInInfo,demographicNo);
 				benchTimer.tag("saveDemographicIssues");
-				IntegratorFallBackManager.saveDemographicPreventions(demographicNo);
+				IntegratorFallBackManager.saveDemographicPreventions(loggedInInfo,demographicNo);
 				benchTimer.tag("saveDemographicPreventions");
-				IntegratorFallBackManager.saveDemographicDrugs(demographicNo);
+				IntegratorFallBackManager.saveDemographicDrugs(loggedInInfo,demographicNo);
 				benchTimer.tag("saveDemographicDrugs");
-				IntegratorFallBackManager.saveAdmissions(demographicNo);
+				IntegratorFallBackManager.saveAdmissions(loggedInInfo,demographicNo);
 				benchTimer.tag("saveAdmissions");
-				IntegratorFallBackManager.saveAppointments(demographicNo);
+				IntegratorFallBackManager.saveAppointments(loggedInInfo,demographicNo);
 				benchTimer.tag("saveAppointments");
-				IntegratorFallBackManager.saveAllergies(demographicNo);
+				IntegratorFallBackManager.saveAllergies(loggedInInfo,demographicNo);
 				benchTimer.tag("saveAllergies");
-				IntegratorFallBackManager.saveDocuments(demographicNo);
+				IntegratorFallBackManager.saveDocuments(loggedInInfo,demographicNo);
 				benchTimer.tag("saveDocuments");
-				IntegratorFallBackManager.saveLabResults(demographicNo);
+				IntegratorFallBackManager.saveLabResults(loggedInInfo,demographicNo);
 				benchTimer.tag("saveLabResults");
  
 				//These don't exist

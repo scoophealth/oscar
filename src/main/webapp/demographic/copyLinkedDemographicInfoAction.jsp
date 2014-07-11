@@ -24,11 +24,13 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	Integer demographicId=Integer.parseInt(request.getParameter("demographicId"));
 
-	ConformanceTestHelper.copyLinkedDemographicsPropertiesToLocal(demographicId);
+	ConformanceTestHelper.copyLinkedDemographicsPropertiesToLocal(loggedInInfo, demographicId);
 	
 	response.sendRedirect("demographiccontrol.jsp?"+request.getQueryString());
 %>

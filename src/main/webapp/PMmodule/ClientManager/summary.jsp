@@ -49,7 +49,7 @@
 	ProgramProviderDAO ppd =(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
 	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
 	Demographic currentDemographic=(Demographic)request.getAttribute("client");
-	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 
 
@@ -302,7 +302,7 @@ function openSurvey() {
 
 							try
 							{
-								GetConsentTransfer remoteConsent=CaisiIntegratorManager.getConsentState(currentDemographic.getDemographicNo());
+								GetConsentTransfer remoteConsent=CaisiIntegratorManager.getConsentState(loggedInInfo.getCurrentFacility(), currentDemographic.getDemographicNo());
 
 								if (remoteConsent!=null)
 								{
@@ -312,7 +312,7 @@ function openSurvey() {
 									if (remoteConsent.getConsentState()==ConsentState.SOME) sb.append("Limited consent, ");
 									if (remoteConsent.getConsentState()==ConsentState.NONE) sb.append("No consent, ");
 
-									CachedFacility myFacility=CaisiIntegratorManager.getCurrentRemoteFacility();
+									CachedFacility myFacility=CaisiIntegratorManager.getCurrentRemoteFacility(loggedInInfo.getCurrentFacility());
 									if (myFacility.getIntegratorFacilityId().equals(remoteConsent.getIntegratorFacilityId()))
 									{
 										sb.append("set locally on ");

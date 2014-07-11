@@ -49,6 +49,8 @@ public final class EctSetupDisplayHistoryAction extends Action {
                                  HttpServletResponse response)
         throws Exception {
 
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
         request.getSession().setAttribute("EctSessionBean", bean);
         String type = request.getParameter("type");
@@ -59,9 +61,9 @@ public final class EctSetupDisplayHistoryAction extends Action {
             request.setAttribute("demographicNo",demo);
             if(type!=null){
                 hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo, type);
-                if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+                if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
                 	List<EctMeasurementsDataBean> measures = (List<EctMeasurementsDataBean>) hd.getMeasurementsDataVector ();
-                	oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler.addRemoteMeasurements(measures,type,demo);
+                	oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler.addRemoteMeasurements(loggedInInfo, measures,type,demo);
                 }
                 request.setAttribute("type", type);
             }            

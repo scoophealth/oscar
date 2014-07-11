@@ -48,22 +48,23 @@ public class PHRLogoutAction extends DispatchAction {
 	}
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 		HttpSession session = request.getSession();
 		MyOscarLoggedInInfo.setLoggedInInfo(session, null);
 
-		clearSavedMyOscarPassword();
+		clearSavedMyOscarPassword(providerNo);
 
 		String forwardTo = request.getParameter("forwardto");
 		ActionRedirect ar = new ActionRedirect(forwardTo);
 		return ar;
 	}
 
-	private void clearSavedMyOscarPassword() {
+	private void clearSavedMyOscarPassword(String providerNo) {
 		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-
 			ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
-			ProviderPreference providerPreference = providerPreferenceDao.find(loggedInInfo.loggedInProvider.getProviderNo());
+			ProviderPreference providerPreference = providerPreferenceDao.find(providerNo);
 			if (providerPreference.getEncryptedMyOscarPassword() != null) {
 				providerPreference.setEncryptedMyOscarPassword(null);
 				providerPreferenceDao.merge(providerPreference);

@@ -70,6 +70,7 @@
 %>
 
 <%
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
 AppointmentStatusDao appointmentStatusDao = SpringUtils.getBean(AppointmentStatusDao.class);
@@ -248,19 +249,19 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
   
   List<CachedAppointment> cachedAppointments = null;
   Boolean showRemote = request.getParameter("showRemote") == null ? true : Boolean.parseBoolean(request.getParameter("showRemote"));
-  if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled() && showRemote ){
+  if (loggedInInfo.currentFacility.isIntegratorEnabled() && showRemote ){
 		int demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
 		try {
-			if (!CaisiIntegratorManager.isIntegratorOffline()){
-				cachedAppointments = CaisiIntegratorManager.getDemographicWs().getLinkedCachedAppointments(demographicNo);
+			if (!CaisiIntegratorManager.isIntegratorOffline(session)){
+				cachedAppointments = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedAppointments(demographicNo);
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Unexpected error.", e);
-			CaisiIntegratorManager.checkForConnectionError(e);
+			CaisiIntegratorManager.checkForConnectionError(session,e);
 		}
 		
-		if(CaisiIntegratorManager.isIntegratorOffline()){
-			cachedAppointments = IntegratorFallBackManager.getRemoteAppointments(demographicNo);	
+		if(CaisiIntegratorManager.isIntegratorOffline(session)){
+			cachedAppointments = IntegratorFallBackManager.getRemoteAppointments(loggedInInfo, demographicNo);	
 		}	
   }
   
@@ -365,7 +366,7 @@ if (cachedAppointments != null) {
 		  FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 		  providerPk.setIntegratorFacilityId(a.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
 		  providerPk.setCaisiItemId(a.getCaisiProviderId());
-		  CachedProvider p = CaisiIntegratorManager.getProvider(providerPk);
+		  CachedProvider p = CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(), providerPk);
 		  AppointmentStatus as = appointmentStatusDao.findByStatus(a.getStatus());
 %>
 	<tr bgcolor="<%=bodd?weakColor:"white"%>">

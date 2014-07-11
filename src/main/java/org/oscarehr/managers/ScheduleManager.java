@@ -50,7 +50,6 @@ import org.oscarehr.common.model.ScheduleTemplate;
 import org.oscarehr.common.model.ScheduleTemplateCode;
 import org.oscarehr.common.model.ScheduleTemplatePrimaryKey;
 import org.oscarehr.common.model.Security;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -190,9 +189,7 @@ public class ScheduleManager {
 		return(appointmentTypes);
 	}
 
-	public void addAppointment(Appointment appointment) {
-	    LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		Security security=loggedInInfo.loggedInSecurity;
+	public void addAppointment(Security security, Appointment appointment) {
 	    appointment.setCreatorSecurityId(security.getSecurityNo());
 	    appointment.setCreator(security.getUserName());
 	    

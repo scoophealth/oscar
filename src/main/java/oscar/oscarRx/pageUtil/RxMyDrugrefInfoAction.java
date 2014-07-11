@@ -103,6 +103,9 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
 
     public ActionForward view(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)  {
         MiscUtils.getLogger().debug("in view RxMyDrugrefInfoAction");
+        
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
         try{
 
         long start = System.currentTimeMillis();
@@ -157,10 +160,9 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
 
         log2.debug("Interaction, local drug atc codes : "+codes);
 
-        LoggedInInfo loggedInfo=LoggedInInfo.loggedInInfo.get();
-        if (loggedInfo.currentFacility.isIntegratorEnabled())
+        if (loggedInInfo.getCurrentFacility().isIntegratorEnabled())
         {
-        	ArrayList<String> remoteDrugAtcCodes=RemoteDrugAllergyHelper.getAtcCodesFromRemoteDrugs(bean.getDemographicNo());
+        	ArrayList<String> remoteDrugAtcCodes=RemoteDrugAllergyHelper.getAtcCodesFromRemoteDrugs(loggedInInfo, bean.getDemographicNo());
         	codes.addAll(remoteDrugAtcCodes);
             log2.debug("remote drug atc codes : "+remoteDrugAtcCodes);
         }

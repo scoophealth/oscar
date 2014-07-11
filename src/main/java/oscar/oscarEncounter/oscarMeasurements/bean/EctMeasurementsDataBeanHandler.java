@@ -205,15 +205,15 @@ public class EctMeasurementsDataBeanHandler {
         return data;
     }   
     
-    private static List<CachedMeasurement> getRemoteMeasurements(Integer demographicId){
+    private static List<CachedMeasurement> getRemoteMeasurements(LoggedInInfo loggedInInfo,Integer demographicId){
     	List<CachedMeasurement> remoteMeasurements = null;
     	try {
-			if (!CaisiIntegratorManager.isIntegratorOffline()){
-				remoteMeasurements = CaisiIntegratorManager.getLinkedMeasurements(demographicId);
+			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				remoteMeasurements = CaisiIntegratorManager.getLinkedMeasurements(loggedInInfo, demographicId);
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Unexpected error.", e);
-			CaisiIntegratorManager.checkForConnectionError(e);
+			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 		}
 
 		//if(CaisiIntegratorManager.isIntegratorOffline()){
@@ -222,11 +222,11 @@ public class EctMeasurementsDataBeanHandler {
     	return remoteMeasurements;
     }
     
-    public static void addRemoteMeasurements(List<EctMeasurementsDataBean> alist,String measure,Integer demographicId){
+    public static void addRemoteMeasurements(LoggedInInfo loggedInInfo, List<EctMeasurementsDataBean> alist,String measure,Integer demographicId){
     	List<CachedMeasurement> remotePreventions  = null;
-		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 			
-			remotePreventions = getRemoteMeasurements(demographicId);
+			remotePreventions = getRemoteMeasurements(loggedInInfo, demographicId);
 			 		
 			if(remotePreventions != null){	
 				for (CachedMeasurement cm: remotePreventions){
@@ -242,7 +242,7 @@ public class EctMeasurementsDataBeanHandler {
 						emdb.setDateEnteredAsDate(cm.getDateEntered().getTime());
 						String remoteFacility = "N/A";
 						try {
-							remoteFacility = CaisiIntegratorManager.getRemoteFacility(cm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()).getName();
+							remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),cm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()).getName();
 						}
 						catch (Exception e) {
 						 	MiscUtils.getLogger().error("Error", e);
@@ -257,12 +257,12 @@ public class EctMeasurementsDataBeanHandler {
     }
     
     
-    public static void addRemoteMeasurementsTypes(List<EctMeasurementsDataBean> alist,Integer demographicId){
+    public static void addRemoteMeasurementsTypes(LoggedInInfo loggedInInfo,List<EctMeasurementsDataBean> alist,Integer demographicId){
     	List<CachedMeasurement> remotePreventions  = null;
 
-		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 
-			remotePreventions = getRemoteMeasurements(demographicId);
+			remotePreventions = getRemoteMeasurements(loggedInInfo,demographicId);
 			if(remotePreventions != null){	
 				HashMap<String, String> map = new HashMap<String,String>();
 				for(EctMeasurementsDataBean mdb:alist){
@@ -286,7 +286,7 @@ public class EctMeasurementsDataBeanHandler {
 						emdb.setDateEnteredAsDate(cm.getDateEntered().getTime());
 						String remoteFacility = "N/A";
 						try {
-							remoteFacility = CaisiIntegratorManager.getRemoteFacility(cm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()).getName();
+							remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), cm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()).getName();
 						}
 						catch (Exception e) {
 						 	MiscUtils.getLogger().error("Error", e);

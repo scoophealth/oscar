@@ -53,7 +53,9 @@
 	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     String demographic$ = request.getParameter("demographic_no") ;
-
+    
+    LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     CountryCodeDao ccDAO =  (CountryCodeDao) ctx.getBean("countryCodeDao");
     UserPropertyDAO pref = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");                       
@@ -1037,7 +1039,7 @@ div.demographicWrapper {
 				<bean:message key="demographic.demographiceditdemographic.msgNextAppt"/>: <oscar:nextAppt demographicNo='<%=demographic.getDemographicNo().toString()%>' />
 				</span>
 
-				<%LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+				<%
 				if (loggedInInfo.currentFacility.isIntegratorEnabled()){%>
         		<jsp:include page="../admin/IntegratorStatus.jspf"></jsp:include>
         		<%}%>
@@ -3383,7 +3385,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 							if (ConformanceTestHelper.enableConformanceOnlyTestFeatures)
 							{
 								String styleBut = "";
-								if(ConformanceTestHelper.hasDifferentRemoteDemographics(Integer.parseInt(demographic$))){
+								if(ConformanceTestHelper.hasDifferentRemoteDemographics(loggedInInfo, Integer.parseInt(demographic$))){
                                                                        styleBut = " style=\"background-color:yellow\" ";
                                                                 }%>
 									<input type="button" value="Compare with Integrator" <%=styleBut%>  onclick="popup(425, 600, 'DiffRemoteDemographics.jsp?demographicId=<%=demographic$%>', 'RemoteDemoWindow')" />

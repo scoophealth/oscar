@@ -61,7 +61,7 @@ public final class ConformanceTestHelper {
 		try {
 			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
-			ProviderWs providerWs = CaisiIntegratorManager.getProviderWs();
+			ProviderWs providerWs = CaisiIntegratorManager.getProviderWs(loggedInInfo.getCurrentFacility());
 			List<ProviderCommunicationTransfer> followUps = providerWs.getProviderCommunications(loggedInInfo.loggedInProvider.getProviderNo(), "FOLLOWUP", true);
 
 			if (followUps == null) return;
@@ -81,7 +81,7 @@ public final class ConformanceTestHelper {
 				FacilityIdStringCompositePk senderProviderId=new FacilityIdStringCompositePk();
 				senderProviderId.setIntegratorFacilityId(providerCommunication.getSourceIntegratorFacilityId());
 				senderProviderId.setCaisiItemId(providerCommunication.getSourceProviderId());
-				CachedProvider senderProvider=CaisiIntegratorManager.getProvider(senderProviderId);
+				CachedProvider senderProvider=CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(), senderProviderId);
 				if (senderProvider!=null)
 				{
 					note="Sent by remote provider : "+senderProvider.getLastName()+", "+senderProvider.getFirstName()+"<br />--------------------<br />"+note;
@@ -96,9 +96,9 @@ public final class ConformanceTestHelper {
 		}
 	}
 
-	public static void copyLinkedDemographicsPropertiesToLocal(Integer localDemographicId) {
+	public static void copyLinkedDemographicsPropertiesToLocal(LoggedInInfo loggedInInfo, Integer localDemographicId) {
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			List<DemographicTransfer> directLinks=demographicWs.getDirectlyLinkedDemographicsByDemographicId(localDemographicId);
 			
 			logger.debug("found linked demographics size:"+directLinks.size());
@@ -123,10 +123,10 @@ public final class ConformanceTestHelper {
 		}
 	}
 
-	public static boolean hasDifferentRemoteDemographics(Integer localDemographicId) {
+	public static boolean hasDifferentRemoteDemographics(LoggedInInfo loggedInInfo, Integer localDemographicId) {
 		boolean ret = false;
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			List<DemographicTransfer> directLinks=demographicWs.getDirectlyLinkedDemographicsByDemographicId(localDemographicId);
 			
 			logger.debug("found linked demographics size:"+directLinks.size());

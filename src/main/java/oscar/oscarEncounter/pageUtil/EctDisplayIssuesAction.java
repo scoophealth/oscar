@@ -121,15 +121,15 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
 		
 				List<CachedDemographicIssue> remoteIssues  = null;
 				try {
-					if (!CaisiIntegratorManager.isIntegratorOffline()){
-					   remoteIssues = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicIssuesByDemographicId(demographicId);
+					if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+					   remoteIssues = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicIssuesByDemographicId(demographicId);
 					}
 				} catch (Exception e) {
 					MiscUtils.getLogger().error("Unexpected error.", e);
-					CaisiIntegratorManager.checkForConnectionError(e);
+					CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 				}
 				
-				if(CaisiIntegratorManager.isIntegratorOffline()){
+				if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
 				   remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(demographicId);	
 				}
 				

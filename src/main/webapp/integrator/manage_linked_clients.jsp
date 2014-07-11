@@ -22,6 +22,7 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageLinkedClients.LinkedDemographicHolder"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="java.util.ArrayList"%>
@@ -30,12 +31,13 @@
 <%@page import="org.oscarehr.PMmodule.web.ManageLinkedClients"%>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
 
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	
 	Demographic demographic=demographicDao.getDemographicById(currentDemographicId);
-	ArrayList<ManageLinkedClients.LinkedDemographicHolder> demographicsToDisplay=ManageLinkedClients.getDemographicsToDisplay(currentDemographicId);
+	ArrayList<ManageLinkedClients.LinkedDemographicHolder> demographicsToDisplay=ManageLinkedClients.getDemographicsToDisplay(loggedInInfo.getCurrentFacility(), currentDemographicId);
 %>
 
 <html>

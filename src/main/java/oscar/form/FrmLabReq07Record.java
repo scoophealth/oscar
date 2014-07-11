@@ -50,6 +50,7 @@ import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.LocaleUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -137,7 +138,7 @@ public class FrmLabReq07Record extends FrmRecord {
         return props;
     }
 
-    public Properties getFormCustRecord(Properties props, String provNo) throws SQLException {
+    public Properties getFormCustRecord(Facility facility, Properties props, String provNo) throws SQLException {
         String demoProvider = props.getProperty("demoProvider", "");
         String xmlSpecialtyCode = "<xml_p_specialty_code>";
         String xmlSpecialtyCode2 = "</xml_p_specialty_code>";
@@ -228,11 +229,11 @@ public class FrmLabReq07Record extends FrmRecord {
     		props.setProperty("practitionerNo", oscarProps.getProperty("lab_req_billing_no"));
     	}
     	
-    	if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+    	if (facility.isIntegratorEnabled()) {
     	//if patient was from integrator link up doc from other site
 	    	try{
 		    	Integer localDemographicId = Integer.parseInt(props.getProperty("demographic_no"));
-		    	DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+		    	DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(facility);
 		    	List<DemographicTransfer> directLinks=demographicWs.getDirectlyLinkedDemographicsByDemographicId(localDemographicId);
 		    		
 		    	if (directLinks.size()>0){
@@ -242,12 +243,12 @@ public class FrmLabReq07Record extends FrmRecord {
 		        	FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 		        	providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
 		        	providerPk.setCaisiItemId(demographicTransfer.getLastUpdateUser());
-		        	CachedProvider p = CaisiIntegratorManager.getProvider(providerPk);
+		        	CachedProvider p = CaisiIntegratorManager.getProvider(facility, providerPk);
 		        	if(p != null){
 			            props.setProperty("copyLname", p.getLastName());
 			            props.setProperty("copyFname", p.getFirstName());
 			    		
-			    		List<CachedProgram> cps = CaisiIntegratorManager.getAllPrograms();
+			    		List<CachedProgram> cps = CaisiIntegratorManager.getAllPrograms(facility);
 			    		for(CachedProgram cp:cps){
 			    			if(providerPk.getIntegratorFacilityId() == cp.getFacilityIdIntegerCompositePk().getIntegratorFacilityId() && "OSCAR".equals(cp.getName()) &&  cp.getAddress() != null){
 			    				props.setProperty("copyAddress", cp.getAddress());  
@@ -304,7 +305,7 @@ public class FrmLabReq07Record extends FrmRecord {
     }
 
 
-    public static Properties getRemoteRecordProperties(Integer remoteFacilityId, Integer formId,Integer demoNo) throws IOException
+    public static Properties getRemoteRecordProperties(LoggedInInfo loggedInInfo, Integer remoteFacilityId, Integer formId,Integer demoNo) throws IOException
     {
     	FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
     	pk.setIntegratorFacilityId(remoteFacilityId);
@@ -312,17 +313,17 @@ public class FrmLabReq07Record extends FrmRecord {
 
     	CachedDemographicForm form = null;
     	try {
-			if (!CaisiIntegratorManager.isIntegratorOffline()){
-				DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
+			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			    form=demographicWs.getCachedDemographicForm(pk);
 			}
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
-			CaisiIntegratorManager.checkForConnectionError(e);
+			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 		}
     	
     	
-		if(CaisiIntegratorManager.isIntegratorOffline()){
+		if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
 			Integer demographicNo = 0;
 			List<CachedDemographicForm> forms = IntegratorFallBackManager.getRemoteForms(demoNo, "formLabReq07");
 			for(CachedDemographicForm f:forms){

@@ -507,13 +507,13 @@ public class CaseManagementManager {
 		results = getPrescriptions(String.valueOf(demographicId), all);
 
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
-			addIntegratorDrugs(results, all, demographicId);
+			addIntegratorDrugs(loggedInInfo, results, all, demographicId);
 		}
 
 		return (results);
 	}
 
-	private void addIntegratorDrugs(List<Drug> prescriptions, boolean viewAll, int demographicId) {
+	private void addIntegratorDrugs(LoggedInInfo loggedInInfo,List<Drug> prescriptions, boolean viewAll, int demographicId) {
 
 		if (prescriptions == null) {
 			logger.warn("prescriptions passed in is null, it should never be null, empty list should be used if no entries for drugs.");
@@ -523,15 +523,15 @@ public class CaseManagementManager {
 		try {
 			List<CachedDemographicDrug> remoteDrugs  = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline()){
-				   remoteDrugs = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicDrugsByDemographicId(demographicId);
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				   remoteDrugs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDrugsByDemographicId(demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 			}
 
-			if(CaisiIntegratorManager.isIntegratorOffline()){
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
 			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(demographicId);
 			}
 
@@ -540,16 +540,16 @@ public class CaseManagementManager {
 
 			for (CachedDemographicDrug cachedDrug : remoteDrugs) {
 				if (viewAll) {
-					prescriptions.add(getPrescriptDrug(cachedDrug));
+					prescriptions.add(getPrescriptDrug(loggedInInfo, cachedDrug));
 				} else {
 					// if it's not view all, we need to only add the drug if it's not already there, or if it's a newer prescription
 					Drug pd = containsPrescriptDrug(prescriptions, cachedDrug.getRegionalIdentifier());
 					if (pd == null) {
-						prescriptions.add(getPrescriptDrug(cachedDrug));
+						prescriptions.add(getPrescriptDrug(loggedInInfo, cachedDrug));
 					} else {
 						if (pd.getRxDate().before(DateUtils.toDate(cachedDrug.getRxDate())) || (pd.getRxDate().equals(cachedDrug.getRxDate()) && pd.getCreateDate().before(DateUtils.toDate(cachedDrug.getCreateDate())))) {
 							prescriptions.remove(pd);
-							prescriptions.add(getPrescriptDrug(cachedDrug));
+							prescriptions.add(getPrescriptDrug(loggedInInfo, cachedDrug));
 						}
 					}
 				}
@@ -559,7 +559,7 @@ public class CaseManagementManager {
 		}
 	}
 
-	private Drug getPrescriptDrug(CachedDemographicDrug cachedDrug) throws MalformedURLException {
+	private Drug getPrescriptDrug(LoggedInInfo loggedInInfo,CachedDemographicDrug cachedDrug) throws MalformedURLException {
 		Drug pd = new Drug();
 
 		pd.setBrandName(cachedDrug.getBrandName());
@@ -576,7 +576,7 @@ public class CaseManagementManager {
 		int remoteFacilityId = cachedDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
 		pd.setRemoteFacilityId(remoteFacilityId);
 
-		CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
+		CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),remoteFacilityId);
 		pd.setRemoteFacilityName(cachedFacility.getName());
 
 		return (pd);

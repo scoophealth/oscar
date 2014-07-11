@@ -27,7 +27,7 @@ public class CDMReminderHlp {
   }
 
  
-  public void manageCDMTicklers(String[] alertCodes) throws Exception {
+  public void manageCDMTicklers(String providerNo, String[] alertCodes) throws Exception {
     //get all demographics with a problem that falls within CDM category
     TicklerCreator crt = new TicklerCreator();
     ServiceCodeValidationLogic lgc = new ServiceCodeValidationLogic();
@@ -37,7 +37,7 @@ public class CDMReminderHlp {
     final String remString = "SERVICE CODE";
     List cdmPatients = this.getCDMPatients(alertCodes);
     List cdmPatientNos = extractPatientNos(cdmPatients);
-    crt.resolveTicklers(cdmPatientNos, remString);
+    crt.resolveTicklers(providerNo, cdmPatientNos, remString);
 
     for (Iterator iter = cdmPatients.iterator(); iter.hasNext(); ) {
     	MiscUtilsOld.checkShutdownSignaled();

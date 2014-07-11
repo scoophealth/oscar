@@ -45,6 +45,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarPrevention.reports.PreventionReport;
@@ -66,6 +67,8 @@ public class PreventionReportAction extends Action {
 
    public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
 
+	   LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	   
        String setName = request.getParameter("patientSet");
        String prevention  = request.getParameter("prevention");
        Date asofDate = UtilDateUtilities.getDateFromString(request.getParameter("asofDate"),"yyyy-MM-dd");
@@ -88,7 +91,7 @@ public class PreventionReportAction extends Action {
        request.setAttribute("asDate",asofDate);
        PreventionReport report = PreventionReportFactory.getPreventionReport(prevention);
 
-       Hashtable h =report.runReport(list,asofDate);
+       Hashtable h =report.runReport(loggedInInfo, list,asofDate);
        request.setAttribute("up2date",h.get("up2date"));
        request.setAttribute("percent",h.get("percent"));
        request.setAttribute("percentWithGrace",h.get("percentWithGrace"));
