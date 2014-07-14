@@ -76,6 +76,8 @@ public class AddEFormAction extends Action {
 		logger.debug("==================SAVING ==============");
 		HttpSession se = request.getSession();
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		boolean fax = "true".equals(request.getParameter("faxEForm"));
 		boolean print = "true".equals(request.getParameter("print"));
 
@@ -143,7 +145,7 @@ public class AddEFormAction extends Action {
 						}
 
 						// Run the SQL query against the database
-						databaseApDao.executeUpdate(inSQL, currentAP.getApName(), Integer.parseInt(demographic_no), fid, request.getRemoteAddr());
+						databaseApDao.executeUpdate(loggedInInfo, inSQL, currentAP.getApName(), Integer.parseInt(demographic_no), fid, request.getRemoteAddr());
 					}
 				}
 			}

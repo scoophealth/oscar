@@ -412,7 +412,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			CaseManagementViewAction caseManagementViewAction = new CaseManagementViewAction();
 			ArrayList<CheckBoxBean> checkBoxBeanList = new ArrayList<CheckBoxBean>();
 			caseManagementViewAction.addLocalIssues(providerNo, checkBoxBeanList, demographicNo, false, programId);
-			caseManagementViewAction.addRemoteIssues(checkBoxBeanList, demographicNo, false);
+			caseManagementViewAction.addRemoteIssues(loggedInInfo, checkBoxBeanList, demographicNo, false);
 
 			caseManagementViewAction.sortIssuesByOrderId(checkBoxBeanList);
 			
@@ -433,8 +433,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			CaseManagementViewAction caseManagementViewAction = new CaseManagementViewAction();
 			ArrayList<CheckBoxBean> checkBoxBeanList = new ArrayList<CheckBoxBean>();
 			caseManagementViewAction.addLocalIssues(providerNo, checkBoxBeanList, demographicNo, false, programId);
-			caseManagementViewAction.addRemoteIssues(checkBoxBeanList, demographicNo, false);
-			caseManagementViewAction.addGroupIssues(checkBoxBeanList, demographicNo, false);
+			caseManagementViewAction.addRemoteIssues(loggedInInfo, checkBoxBeanList, demographicNo, false);
+			caseManagementViewAction.addGroupIssues(loggedInInfo, checkBoxBeanList, demographicNo, false);
 
 			checkedList = checkBoxBeanList.toArray(new CheckBoxBean[0]);
 

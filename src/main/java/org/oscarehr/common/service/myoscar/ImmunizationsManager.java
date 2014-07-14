@@ -58,7 +58,7 @@ public final class ImmunizationsManager {
 	
 	private static HashMap<String,String> preventionExtLabels = null; 
 
-	public static void sendImmunizationsToMyOscar(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException, NotAuthorisedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
+	public static void sendImmunizationsToMyOscar(LoggedInInfo loggedInInfo, MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException, NotAuthorisedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
 		// get last synced info
 
 		// get the items for the person which are changed since last sync
@@ -77,9 +77,9 @@ public final class ImmunizationsManager {
 			if (preventionExt.containsKey("result")) continue; //prevention tests are filtered out
 			
 			logger.debug("sendImmunizationsToMyOscar : preventionId=" + prevention.getId());
-			MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, prevention, preventionExt);
+			MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(loggedInInfo, myOscarLoggedInInfo, prevention, preventionExt);
 
-			MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_IMMUNIZATIONS_DATA_TYPE, prevention.getId(), true, true);
+			MyOscarMedicalDataManagerUtils.addMedicalData(loggedInInfo.getLoggedInProviderNo(), myOscarLoggedInInfo, medicalDataTransfer, OSCAR_IMMUNIZATIONS_DATA_TYPE, prevention.getId(), true, true);
 		}
 
 		sentToPHRTracking.setSentDatetime(startSyncTime);
@@ -124,7 +124,7 @@ public final class ImmunizationsManager {
 	}
 	
 
-	private static MedicalDataTransfer4 toMedicalDataTransfer(MyOscarLoggedInInfo myOscarLoggedInInfo, Prevention prevention, HashMap<String,String> preventionExt) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+	private static MedicalDataTransfer4 toMedicalDataTransfer(LoggedInInfo loggedInInfo, MyOscarLoggedInInfo myOscarLoggedInInfo, Prevention prevention, HashMap<String,String> preventionExt) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
 
 		String providerNo = prevention.getProviderNo();
 
@@ -137,7 +137,6 @@ public final class ImmunizationsManager {
 
 			medicalDataTransfer.setMedicalDataType(MedicalDataType.IMMUNISATION.name());
 
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), OSCAR_IMMUNIZATIONS_DATA_TYPE, prevention.getId()));
 
 			boolean active = true;

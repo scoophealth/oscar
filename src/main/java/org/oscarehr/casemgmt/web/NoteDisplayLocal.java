@@ -51,12 +51,11 @@ public class NoteDisplayLocal implements NoteDisplay {
 
 	private List<CaseManagementIssue> caseManagementIssues;
 
-	public NoteDisplayLocal(CaseManagementNote caseManagementNote) {
+	public NoteDisplayLocal(LoggedInInfo loggedInInfo, CaseManagementNote caseManagementNote) {
 		this.caseManagementNote = caseManagementNote;
 		this.caseManagementIssues=caseManagementIssueNotesDao.getNoteIssues(getNoteId());
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		if (loggedInInfo != null) editable = !caseManagementNote.isSigned() || (loggedInInfo.loggedInProvider.getProviderNo().equals(caseManagementNote.getProviderNo()) && !caseManagementNote.isLocked());
+		if (loggedInInfo != null) editable = !caseManagementNote.isSigned() || (loggedInInfo.getLoggedInProviderNo().equals(caseManagementNote.getProviderNo()) && !caseManagementNote.isLocked());
 
 		this.isCpp=calculateIsCpp();
 

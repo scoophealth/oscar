@@ -24,7 +24,7 @@ public class DatabaseAPDao {
 	@PersistenceContext
 	protected EntityManager entityManager = null;
 
-	public boolean executeUpdate(String sql, String apName, Integer demographicNo, String formId, String ip) {
+	public boolean executeUpdate(LoggedInInfo loggedInInfo, String sql, String apName, Integer demographicNo, String formId, String ip) {
 		Query query = entityManager.createNativeQuery(sql);
 		try {
 			OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
@@ -33,7 +33,7 @@ public class DatabaseAPDao {
 			logEntry.setContent("DatabaseAP");
 			logEntry.setContentId(formId);
 			logEntry.setDemographicId(demographicNo);
-			logEntry.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			logEntry.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 			logEntry.setAction("edit");
 			logEntry.setData("[apName=" + apName + "] " + sql);
 			logEntry.setIp(ip);

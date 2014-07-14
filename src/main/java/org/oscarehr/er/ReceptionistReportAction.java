@@ -152,7 +152,7 @@ public class ReceptionistReportAction extends DispatchAction {
 		request.setAttribute("issues",issues);
 		
 		ArrayList<IssueDisplay> issuesToDisplay = new ArrayList<IssueDisplay>();
-		this.addRemoteIssues(issuesToDisplay, Integer.parseInt(clientId), false);
+		this.addRemoteIssues(loggedInInfo, issuesToDisplay, Integer.parseInt(clientId), false);
 		request.setAttribute("remote_issues",issuesToDisplay);
 		
 				
@@ -182,8 +182,7 @@ public class ReceptionistReportAction extends DispatchAction {
 		return mapping.findForward("report");
 	}
 
-	private void addRemoteIssues(ArrayList<IssueDisplay> issuesToDisplay, int demographicNo, boolean resolved) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	private void addRemoteIssues(LoggedInInfo loggedInInfo, ArrayList<IssueDisplay> issuesToDisplay, int demographicNo, boolean resolved) {
 
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
 

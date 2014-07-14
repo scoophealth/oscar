@@ -51,7 +51,7 @@ public final class AllergiesManager {
 	private static final String OSCAR_ALLERGIES_DATA_TYPE = "ALLERGY";
 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
 
-	public static void sendAllergiesToMyOscar(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) throws ClassCastException {
+	public static void sendAllergiesToMyOscar(LoggedInInfo loggedInInfo, MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) throws ClassCastException {
 		// get last synced info
 
 		// get the items for the person which are changed since last sync
@@ -68,10 +68,10 @@ public final class AllergiesManager {
 			logger.debug("sendAllergiesToMyOscar : allergyId=" + allergy.getId());
 
 			try {
-				MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, allergy);
+				MedicalDataTransfer4 medicalDataTransfer = toMedicalDataTransfer(loggedInInfo, myOscarLoggedInInfo, allergy);
 
 				// don't ask me why but allergies are currently changeable in oscar, therefore, they're never completed.
-				MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_ALLERGIES_DATA_TYPE, allergy.getId(), false, true);
+				MyOscarMedicalDataManagerUtils.addMedicalData(loggedInInfo.getLoggedInProviderNo(),myOscarLoggedInInfo, medicalDataTransfer, OSCAR_ALLERGIES_DATA_TYPE, allergy.getId(), false, true);
 			} catch (Exception e) {
 				logger.error("Unexpected error", e);
 			}
@@ -152,13 +152,12 @@ public final class AllergiesManager {
 	/**
 	 * This method may return null for invalid allergy entries... we have some of those, specifically when no provider can be identified to be responsible for this send.
 	 */
-	private static MedicalDataTransfer4 toMedicalDataTransfer(MyOscarLoggedInInfo  myOscarLoggedInInfo, Allergy allergy) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+	private static MedicalDataTransfer4 toMedicalDataTransfer(LoggedInInfo loggedInInfo, MyOscarLoggedInInfo  myOscarLoggedInInfo, Allergy allergy) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
 
 		// okay big anomaly here, some records do not have providers numbers. This is really invalid data.
 		// Our attempt will be to check for a provider number, if none exists, we'll try to use the person who is sending - if it's a person
 		// otherwise... we can't do anything, we can't set this to null, it makes no sense from a thread, at least if its clicked by a person they have double checked it.
 		String providerNo = allergy.getProviderNo();
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		if (providerNo == null) {
 			if (loggedInInfo.loggedInProvider != null) // in case it's background thread.

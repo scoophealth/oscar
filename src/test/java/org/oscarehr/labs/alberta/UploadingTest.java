@@ -76,7 +76,7 @@ public class UploadingTest extends DaoTestFixtures {
 		for (int i = 0; i < TestLabs.ALL_LABS.length; i++) {
 			String messageText = TestLabs.ALL_LABS[i];
 			byte[] bytes = messageText.getBytes();
-			int statusCode = SendingUtils.send(bytes, url, publicOscarKey, publicServiceKey, "CLS");
+			int statusCode = SendingUtils.send(null, bytes, url, publicOscarKey, publicServiceKey, "CLS");
 			logger.info("Completed upload for " + TestLabs.LAB_NAMES[i] + " with status " + statusCode);
 			isSuccess &= statusCode == 200;
 			

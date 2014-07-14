@@ -54,7 +54,9 @@ public class PageMonitoringAction extends DispatchAction {
         String pageId = request.getParameter("pageId");
     	String sessionId = request.getSession().getId();
     	String ip = request.getRemoteAddr();
-        String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    	String providerNo=loggedInInfo.getLoggedInProviderNo();
         
         String cleanupExisting = request.getParameter("cleanupExisting");
         boolean cleanupPriorPageAccess = false;
@@ -137,7 +139,7 @@ public class PageMonitoringAction extends DispatchAction {
                             pm.setTimeout(timeout);
                             pm.setUpdateDate(new Date());
                             pm.setProviderNo(providerNo);
-                            pm.setProviderName(LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName());
+                            pm.setProviderName(loggedInInfo.getLoggedInProvider().getFormattedName());
                             pageMonitorDao.persist(pm);
                     } else {
                             monitorToUpdate.setTimeout(timeout);
@@ -157,7 +159,9 @@ public class PageMonitoringAction extends DispatchAction {
     public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         String pageName = request.getParameter("page");
         String pageId = request.getParameter("pageId");    	
-        String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        String providerNo=loggedInInfo.getLoggedInProviderNo();
         
         //User hit cancel, so they actively want to release their (potential) lock on the page
         pageMonitorDao.cancelPageIdForProvider(pageName, pageId, providerNo); 

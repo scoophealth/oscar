@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.common.service.myoscar.AllergiesManager"%>
 <%@page import="org.oscarehr.common.service.myoscar.ImmunizationsManager"%>
@@ -34,6 +35,8 @@
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 	String parentPage = request.getParameter("parentPage");
 
 	try
@@ -43,16 +46,16 @@
 		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
 		
 		if ("Allergies".equals(medicalDataType)) {
-			AllergiesManager.sendAllergiesToMyOscar(myOscarLoggedInInfo, demographicNo);
+			AllergiesManager.sendAllergiesToMyOscar(loggedInInfo, myOscarLoggedInInfo, demographicNo);
 		}
 		else if ("Immunizations".equals(medicalDataType)) {
-			ImmunizationsManager.sendImmunizationsToMyOscar(myOscarLoggedInInfo, demographicNo);
+			ImmunizationsManager.sendImmunizationsToMyOscar(loggedInInfo, myOscarLoggedInInfo, demographicNo);
 		}
 		else if ("Measurements".equals(medicalDataType)) {
-			MeasurementsManager.sendMeasurementsToMyOscar(myOscarLoggedInInfo, demographicNo);
+			MeasurementsManager.sendMeasurementsToMyOscar(loggedInInfo, myOscarLoggedInInfo, demographicNo);
 		}
 		else if ("Prescriptions".equals(medicalDataType)) {
-			PrescriptionMedicationManager.sendPrescriptionsMedicationsToMyOscar(myOscarLoggedInInfo, demographicNo);
+			PrescriptionMedicationManager.sendPrescriptionsMedicationsToMyOscar(loggedInInfo, myOscarLoggedInInfo, demographicNo);
 		}
 		else {
 			response.sendRedirect(parentPage);
