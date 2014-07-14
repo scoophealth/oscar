@@ -120,8 +120,10 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 
     public ActionForward send(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    	String providerNo=loggedInInfo.getLoggedInProviderNo();
+
     	Integer demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
-        String providerNo = (String) request.getSession().getAttribute("user");
         String module = request.getParameter("module");
 
         String labId = request.getParameter("labId");
@@ -210,17 +212,16 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 			medicalDataTransfer.setMedicalDataType(MedicalDataType.BINARY_DOCUMENT.name());
 			medicalDataTransfer.setObserverOfDataPersonId(myOscarLoggedInInfo.getLoggedInPersonId());
 
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 			medicalDataTransfer.setObserverOfDataPersonName(loggedInInfo.loggedInProvider.getFormattedName());
 			medicalDataTransfer.setOriginalSourceId(loggedInInfo.currentFacility.getName()+":eDoc:"+eDoc.getDocId());
 			medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
 						
-			Long medicalDataId=MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, "eDoc", eDoc.getDocId(), true, true);
+			Long medicalDataId=MyOscarMedicalDataManagerUtils.addMedicalData(providerNo, myOscarLoggedInInfo, medicalDataTransfer, "eDoc", eDoc.getDocId(), true, true);
 			
 			// log the send
 			RemoteDataLogDao remoteDataLogDao=(RemoteDataLogDao) SpringUtils.getBean("remoteDataLogDao");
 			RemoteDataLog remoteDataLog=new RemoteDataLog();
-			remoteDataLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+			remoteDataLog.setProviderNo(providerNo);
 			remoteDataLog.setDocumentId(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), "eDoc", eDoc.getDocId());
 			remoteDataLog.setAction(RemoteDataLog.Action.SEND);
 			remoteDataLog.setDocumentContents("id="+eDoc.getDocId()+", fileName="+eDoc.getFileName());

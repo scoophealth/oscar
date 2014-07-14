@@ -388,7 +388,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    consultationRequest.setStatus("2");
 
 	    REF_I12 refI12=RefI12.makeRefI12(clinic, consultationRequest);
-	    SendingUtils.send(refI12, professionalSpecialist);
+	    SendingUtils.send(loggedInInfo, refI12, professionalSpecialist);
 	    
 	    // save after the sending just in case the sending fails.
 	    consultationRequestDao.merge(consultationRequest);
@@ -409,7 +409,7 @@ public class EctConsultationFormRequestAction extends Action {
 	        observationData.binaryData=attachment.getFileBytes();
 
 	        ORU_R01 hl7Message=OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);        
-	        SendingUtils.send(hl7Message, professionalSpecialist);	    	
+	        SendingUtils.send(loggedInInfo, hl7Message, professionalSpecialist);	    	
 	    }
 	    
 	    //--- process all labs ---
@@ -429,7 +429,7 @@ public class EctConsultationFormRequestAction extends Action {
 
 	            
 	            ORU_R01 hl7Message=OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);        
-	            int statusCode=SendingUtils.send(hl7Message, professionalSpecialist);
+	            int statusCode=SendingUtils.send(loggedInInfo, hl7Message, professionalSpecialist);
 	            if (HttpServletResponse.SC_OK!=statusCode) throw(new ServletException("Error, received status code:"+statusCode));
             } catch (DocumentException e) {
 	            logger.error("Unexpected error.", e);

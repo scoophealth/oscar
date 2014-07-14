@@ -74,27 +74,26 @@ public final class SendingUtils {
 	private static final Logger logger = MiscUtils.getLogger();
 	private static final Integer CONNECTION_TIME_OUT = 10000;
 	
-	public static int send(AbstractMessage message, ProfessionalSpecialist professionalSpecialist) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception
+	public static int send(LoggedInInfo loggedInInfo, AbstractMessage message, ProfessionalSpecialist professionalSpecialist) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception
 	{
-		return(send(message, professionalSpecialist.geteDataUrl(), professionalSpecialist.geteDataOscarKey(), professionalSpecialist.geteDataServiceKey(), professionalSpecialist.geteDataServiceName()));
+		return(send(loggedInInfo,message, professionalSpecialist.geteDataUrl(), professionalSpecialist.geteDataOscarKey(), professionalSpecialist.geteDataServiceKey(), professionalSpecialist.geteDataServiceName()));
 	}
 	
-	public static int send(AbstractMessage message, String url, String publicOscarKeyString, String publicServiceKeyString, String serviceName) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeySpecException, HL7Exception {
+	public static int send(LoggedInInfo loggedInInfo, AbstractMessage message, String url, String publicOscarKeyString, String publicServiceKeyString, String serviceName) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeySpecException, HL7Exception {
 		PrivateKey publicServiceKey = getPublicServiceKey(publicServiceKeyString);
 		PublicKey publicOscarKey = getPublicOscarKey(publicOscarKeyString);
 
 		byte[] dataBytes=OscarToOscarUtils.pipeParser.encode(message).getBytes();
 		
-		return (send(dataBytes, url, publicOscarKey, publicServiceKey, serviceName));
+		return (send(loggedInInfo,dataBytes, url, publicOscarKey, publicServiceKey, serviceName));
 	}
 
-	public static int send(byte[] dataBytes, String url, PublicKey receiverOscarKey, PrivateKey publicServiceKey, String serviceName) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException {
+	public static int send(LoggedInInfo loggedInInfo, byte[] dataBytes, String url, PublicKey receiverOscarKey, PrivateKey publicServiceKey, String serviceName) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException {
 		byte[] signature = getSignature(dataBytes, publicServiceKey);
 		SecretKey senderSecretKey = createSecretKey();
 		byte[] encryptedBytes = encryptData(dataBytes, senderSecretKey);
 		byte[] encryptedSecretKey = encryptEncryptionKey(senderSecretKey, receiverOscarKey);
 
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		if (loggedInInfo != null) {
 			Provider provider = loggedInInfo.loggedInProvider;
 			LogAction.addLog(provider.getProviderNo(), SendingUtils.class.getSimpleName(), "HL7", new String(dataBytes, MiscUtils.DEFAULT_UTF8_ENCODING));
@@ -202,6 +201,6 @@ public final class SendingUtils {
 		PrivateKey publicServiceKey = getPublicServiceKey(publicServiceKeyString);
 		
 		byte[] bytes = "foo bar was here".getBytes(); 
-		send(bytes, url, publicOscarKey, publicServiceKey, "server1");
+		send(null, bytes, url, publicOscarKey, publicServiceKey, "server1");
 	}
 }

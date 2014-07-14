@@ -53,7 +53,8 @@ public class ProviderNotificationAction extends Action {
 	private UserDSMessagePrefsDao userDsMessagePrefsDao = SpringUtils.getBean(UserDSMessagePrefsDao.class);
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String providerNo = getProviderNo();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		String resourceId = request.getParameter("id");
 		String resourceType = request.getParameter("type");
 
@@ -92,14 +93,5 @@ public class ProviderNotificationAction extends Action {
 		return null;
 	}
 
-	private String getProviderNo() {
-		LoggedInInfo info = LoggedInInfo.loggedInInfo.get();
-		if (info == null) {
-			return null;
-		}
-		if (info.loggedInProvider == null) {
-			return null;
-		}
-		return info.loggedInProvider.getProviderNo();
-	}
+
 }

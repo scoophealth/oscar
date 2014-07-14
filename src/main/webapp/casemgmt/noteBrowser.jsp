@@ -23,6 +23,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.Hashtable"%>
 <%@page import="oscar.util.UtilDateUtilities"%>
 <%@page import="java.util.Collections"%>
@@ -52,6 +53,8 @@
     if (session.getAttribute("userrole") == null) {
         response.sendRedirect("../logout.jsp");
     }
+
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
     String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     String demographicID = request.getParameter("demographic_no");
@@ -501,7 +504,7 @@
                             <a
                                 href="#" onclick="LoadView('all')" ><%=view.equals("all") ? "<b>":""%>All<%=view.equals("all") ? "</b>":""%></a> <% for (int i3 = 0; i3 < doctypes.size(); i3++) {%>
                             | <a
-                                href="#" onclick="LoadView('<%=URLEncoder.encode((String) doctypes.get(i3),"UTF-8")%>')"><%=view.equals((String) doctypes.get(i3)) ? "<b>":""%><%=(String) doctypes.get(i3)%><%=view.equals((String) doctypes.get(i3)) ? "</b>":""%></a>
+                                href="#" onclick="LoadView('<%=URLEncoder.encode((String) doctypes.get(i3),"UTF-8")%>')"><%=view.equals(doctypes.get(i3)) ? "<b>":""%><%=(String) doctypes.get(i3)%><%=view.equals(doctypes.get(i3)) ? "</b>":""%></a>
                             <%}%> 
                         </fieldset>
                         <div id="docbuttons">
@@ -555,7 +558,7 @@
                
                                 ArrayList<NoteDisplay> notesToDisplay = new ArrayList<NoteDisplay>();
                                 for (CaseManagementNote noteTemp : notes)
-                                    notesToDisplay.add(new NoteDisplayLocal(noteTemp));
+                                    notesToDisplay.add(new NoteDisplayLocal(loggedInInfo, noteTemp));
                                 Collections.sort(notesToDisplay, NoteDisplay.noteObservationDateComparator);
                                 int noteSize = notes.size();
                                 int idx=0;

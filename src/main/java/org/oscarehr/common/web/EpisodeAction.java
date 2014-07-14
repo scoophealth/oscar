@@ -74,6 +74,8 @@ public class EpisodeAction extends DispatchAction {
 	}
 
 	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		DynaActionForm dform = (DynaActionForm)form;
 		Episode episode = (Episode)dform.get("episode");
 		Integer id = null;
@@ -87,7 +89,7 @@ public class EpisodeAction extends DispatchAction {
 			e = new Episode();
 		}
 		BeanUtils.copyProperties(episode, e, new String[]{"id","lastUpdateTime","lastUpdateUser"});
-		e.setLastUpdateUser(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		e.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
 		if(id != null && id.intValue()>0) {
 			episodeDao.merge(e);
 		} else {

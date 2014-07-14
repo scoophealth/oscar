@@ -84,7 +84,7 @@ public class OruR01UploadAction extends Action {
 	    	
 	        ORU_R01 hl7Message=OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);
 	        
-	        int statusCode=SendingUtils.send(hl7Message, professionalSpecialist);
+	        int statusCode=SendingUtils.send(loggedInInfo, hl7Message, professionalSpecialist);
 	        
 	        if (HttpServletResponse.SC_OK==statusCode) WebUtils.addInfoMessage(request.getSession(), "Data successfully send.");
 	        else throw(new ServletException("Error sending data. response code="+statusCode));
