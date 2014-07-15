@@ -633,7 +633,10 @@ public class MDSResultsData {
 
     public String justGetAccessionNumber(String s){
         String[] ss = s.split("-");
-        return ss[1];
+        if( ss.length > 1 )
+        	return ss[1];
+        else
+        	return ss[0];
     }
 
     public String findMDSAccessionNumber(String labId){
