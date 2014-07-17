@@ -275,7 +275,7 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 	<!-- Bootstrap core JavaScript
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="../js/jquery-1.9.1.min.js"></script>
+	<script src="../js/jquery-1.9.1.js"></script>
 	
 	<script src="../library/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 	<!-- script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script -->
@@ -301,8 +301,8 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 	<script src="record/summary/summaryController.js"></script>
 	<script src="record/forms/formsController.js"></script>
 	<script src="record/details/detailsController.js"></script>
-	<!-- script src="js/inboxController.js"></script>
-	
+	<script src="inbox/inboxController.js"></script>
+	<script src="consults/consultListController.js"></script>	
 	
 	<script src="js/providerViewController.js"></script>
 	<script src="js/reportController.js"></script>

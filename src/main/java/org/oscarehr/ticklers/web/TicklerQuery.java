@@ -23,7 +23,7 @@
  */
 package org.oscarehr.ticklers.web;
 
-import org.oscarehr.web.PaginationQuery;
+import org.oscarehr.common.PaginationQuery;
 
 public class TicklerQuery extends PaginationQuery {
 	private static final long serialVersionUID = 5994830654027801723L;
