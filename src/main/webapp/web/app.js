@@ -32,7 +32,17 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
   	      url: '/consults',
   	      templateUrl: 'consults/consultList.jsp',
             controller: 'ConsultListCtrl'
-  	    })                
+  	    })  
+  	    .state('billing', {
+  	      url: '/billing',
+  	      templateUrl: 'billing/billing_popup.jsp',
+            controller: 'BillingCtrl'
+  	    })  
+  	    .state('admin', {
+  	      url: '/admin',
+  	      templateUrl: 'admin/admin_popup.jsp',
+            controller: 'AdminCtrl'
+  	    })  
 	    .state('record', {
 	    	url: '/record/:demographicNo', 
             templateUrl: 'record/record.jsp',
@@ -120,14 +130,7 @@ oscarApp.config(['$routeProvider',
 		                    templateUrl: 'partials/consultList.jsp',
 		                    controller: 'ConsultListCtrl'
 	                    }).
-	                    when('/billing', {
-		                    templateUrl: 'partials/billing.jsp',
-		                    controller: 'BillingCtrl'
-	                    }).
-	                    when('/ticklers', {
-		                    templateUrl: 'partials/ticklerList.jsp',
-		                    controller: 'TicklerListCtrl'
-	                    }).
+	                    
 	                    when('/patient/:demographicNo', {
 		                    templateUrl: 'partials/patient/index.jsp',
 		                    controller: 'PatientCtrl'
@@ -148,10 +151,7 @@ oscarApp.config(['$routeProvider',
 		                    templateUrl: 'partials/help.jsp',
 		                    controller: 'HelpCtrl'
 	                    }).
-	                    when('/admin', {
-		                    templateUrl: 'partials/admin.jsp',
-		                    controller: 'AdminCtrl'
-	                    }).
+	                    
 	                    when('/search', {
 		                    templateUrl: 'partials/patientSearch.jsp',
 		                    controller: 'PatientSearchCtrl'
