@@ -23,6 +23,16 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 	      templateUrl: 'dashboard/dashboard.jsp',
           controller: 'DashboardCtrl'
 	    })
+	    .state('inbox', {
+	      url: '/inbox',
+	      templateUrl: 'inbox/inbox_popup.jsp',
+          controller: 'InboxCtrl'
+	    })
+        .state('consults', {
+  	      url: '/consults',
+  	      templateUrl: 'consults/consultList.jsp',
+            controller: 'ConsultListCtrl'
+  	    })                
 	    .state('record', {
 	    	url: '/record/:demographicNo', 
             templateUrl: 'record/record.jsp',
@@ -101,14 +111,7 @@ $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState,
     },
 oscarApp.config(['$routeProvider',
                     function($routeProvider) {
-                    	$routeProvider.when('/dashboard', {
-		                    templateUrl: 'partials/dashboard.jsp',
-		                    controller: 'DashboardCtrl'
-		                }).
-	                    when('/inbox', {
-		                    templateUrl: 'partials/inbox.html',
-		                    controller: 'InboxCtrl'
-	                    }).
+
 	                    when('/schedule', {
 		                    templateUrl: 'partials/schedule.jsp',
 		                    controller: 'ScheduleCtrl'
