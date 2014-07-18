@@ -325,7 +325,7 @@ public class FrmLabReq07Record extends FrmRecord {
     	
 		if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
 			Integer demographicNo = 0;
-			List<CachedDemographicForm> forms = IntegratorFallBackManager.getRemoteForms(demoNo, "formLabReq07");
+			List<CachedDemographicForm> forms = IntegratorFallBackManager.getRemoteForms(loggedInInfo, demoNo, "formLabReq07");
 			for(CachedDemographicForm f:forms){
 				if (f.getFacilityIdIntegerCompositePk().getCaisiItemId() == pk.getCaisiItemId() && f.getFacilityIdIntegerCompositePk().getIntegratorFacilityId() == pk.getIntegratorFacilityId()){
 					form = f;

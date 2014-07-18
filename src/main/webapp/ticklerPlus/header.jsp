@@ -24,6 +24,7 @@
 --%>
 <%-- Updated by Eugene Petruhin on 20 feb 2009 while fixing check_date() error --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
 <%@page import="java.util.Properties"%>
 <%@page import="oscar.OscarProperties"%>
@@ -42,9 +43,11 @@
     if(session.getAttribute("userrole") == null )  response.sendRedirect("logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
+   	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(session);
+   		 
 	if (ConformanceTestHelper.enableConformanceOnlyTestFeatures)
 	{
-		ConformanceTestHelper.populateLocalTicklerWithRemoteProviderMessageFollowUps();
+		ConformanceTestHelper.populateLocalTicklerWithRemoteProviderMessageFollowUps(loggedInInfo);
 	}
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_tasks"

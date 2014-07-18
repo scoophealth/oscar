@@ -111,10 +111,6 @@ import oscar.util.DateUtils;
 import com.quatro.model.security.Secrole;
 import com.quatro.service.security.RolesManager;
 
-/*
- * Updated by Eugene Petruhin on 24 dec 2008 while fixing #2459538
- * Updated by Eugene Petruhin on 09 jan 2009 while fixing #2482832 & #2494061
- */
 @Transactional
 public class CaseManagementManager {
 
@@ -532,7 +528,7 @@ public class CaseManagementManager {
 			}
 
 			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(demographicId);
+			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(loggedInInfo, demographicId);
 			}
 
 
@@ -1056,7 +1052,7 @@ public class CaseManagementManager {
 	}
 
 
-	public List<CaseManagementNote> filterNotes(String providerNo, Collection<CaseManagementNote> notes, String programId) {
+	public List<CaseManagementNote> filterNotes(LoggedInInfo loggedInInfo, String providerNo, Collection<CaseManagementNote> notes, String programId) {
 
 		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
 		if (notes.isEmpty()) {
@@ -1127,7 +1123,7 @@ public class CaseManagementManager {
 
 		// filter notes based on facility
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			filteredNotes = notesFacilityFiltering(filteredNotes);
+			filteredNotes = notesFacilityFiltering(loggedInInfo, filteredNotes);
 		}
 
 		return filteredNotes;
@@ -1366,7 +1362,7 @@ public class CaseManagementManager {
 	/**
 	 * Filters a list of CaseManagementIssue objects based on role.
 	 */
-	public List<CaseManagementIssue> filterIssues(String providerNo, List<CaseManagementIssue> issues, String programId) {
+	public List<CaseManagementIssue> filterIssues(LoggedInInfo loggedInInfo, String providerNo, List<CaseManagementIssue> issues, String programId) {
 
 		List<CaseManagementIssue> filteredIssues = new ArrayList<CaseManagementIssue>();
 
@@ -1448,24 +1444,24 @@ public class CaseManagementManager {
 
 		// filter issues based on facility
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			filteredIssues = issuesFacilityFiltering(filteredIssues);
+			filteredIssues = issuesFacilityFiltering(loggedInInfo, filteredIssues);
 		}
 
 		return filteredIssues;
 	}
 
-	private List<CaseManagementIssue> issuesFacilityFiltering(List<CaseManagementIssue> issues) {
+	private List<CaseManagementIssue> issuesFacilityFiltering(LoggedInInfo loggedInInfo, List<CaseManagementIssue> issues) {
 		ArrayList<CaseManagementIssue> results = new ArrayList<CaseManagementIssue>();
 
 		for (CaseManagementIssue caseManagementIssue : issues) {
 			Integer programId = caseManagementIssue.getProgram_id();
-			if (programManager.hasAccessBasedOnCurrentFacility(programId)) results.add(caseManagementIssue);
+			if (programManager.hasAccessBasedOnCurrentFacility(loggedInInfo, programId)) results.add(caseManagementIssue);
 		}
 
 		return results;
 	}
 
-	private List<CaseManagementNote> notesFacilityFiltering(List<CaseManagementNote> notes) {
+	private List<CaseManagementNote> notesFacilityFiltering(LoggedInInfo loggedInInfo, List<CaseManagementNote> notes) {
 
 		ArrayList<CaseManagementNote> results = new ArrayList<CaseManagementNote>();
 
@@ -1475,7 +1471,7 @@ public class CaseManagementManager {
 			if (programId == null || "".equals(programId)) {
 				results.add(caseManagementNote);
 			} else {
-				if (programManager.hasAccessBasedOnCurrentFacility(Integer.parseInt(programId))) results.add(caseManagementNote);
+				if (programManager.hasAccessBasedOnCurrentFacility(loggedInInfo, Integer.parseInt(programId))) results.add(caseManagementNote);
 			}
 		}
 

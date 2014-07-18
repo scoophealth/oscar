@@ -55,7 +55,7 @@ public class RemoteDrugAllergyHelper {
 			}
 			
 			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(localDemographicId);	
+			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(loggedInInfo, localDemographicId);	
 			}
 			
 			for (CachedDemographicDrug remoteDrug : remoteDrugs) {

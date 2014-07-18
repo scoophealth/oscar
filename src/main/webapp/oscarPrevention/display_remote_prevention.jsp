@@ -80,7 +80,7 @@
 			}
 				
 			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-				List<CachedDemographicPrevention> remotePreventions = IntegratorFallBackManager.getRemotePreventions(demographicId);
+				List<CachedDemographicPrevention> remotePreventions = IntegratorFallBackManager.getRemotePreventions(loggedInInfo, demographicId);
 				for(CachedDemographicPrevention prev:remotePreventions){
 					if ( prev.getFacilityPreventionPk().getIntegratorFacilityId() == remoteFacilityId && prev.getFacilityPreventionPk().getCaisiItemId() == remotePreventionId){
 						remotePrevention = prev;

@@ -80,7 +80,7 @@ public class AuthenticationOutWSS4JInterceptorForIntegrator extends WSS4JOutInte
 
 	public void handleMessage(SoapMessage message) throws Fault {
 		HttpServletRequest request = (HttpServletRequest) message.get(AbstractHTTPDestination.HTTP_REQUEST);
-		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromRequest(request);
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoForWebServices(request);
 		
 		addRequestionCaisiProviderNo(message, loggedInInfo.getLoggedInProviderNo());
 		super.handleMessage(message);

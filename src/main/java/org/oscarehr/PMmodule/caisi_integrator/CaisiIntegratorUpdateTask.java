@@ -271,7 +271,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		for (Facility facility : facilities) {
 			try {
 				if (facility.isIntegratorEnabled()) {
-					pushAllDataForOneFacility(facility);
+					pushAllDataForOneFacility(loggedInInfo, facility);
 					findChangedRecordsFromIntegrator(loggedInInfo, facility);
 				}
 			} catch (WebServiceException e) {
@@ -289,7 +289,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushAllDataForOneFacility(Facility facility) throws IOException, ShutdownException {
+	private void pushAllDataForOneFacility(LoggedInInfo loggedInInfo, Facility facility) throws IOException, ShutdownException {
 		logger.info("Start pushing data for facility : " + facility.getId() + " : " + facility.getName());
 
 		// check all parameters are present
@@ -330,7 +330,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		pushFacility(facility, lastDataUpdated);
 		pushProviders(lastDataUpdated, facility);
 		pushPrograms(lastDataUpdated, facility);
-		pushAllDemographics(facility, lastDataUpdated,cachedFacility,programs);
+		pushAllDemographics(loggedInInfo, facility, lastDataUpdated,cachedFacility,programs);
 		
 		// all things updated successfully
 		service.updateMyFacilityLastUpdateDate(DateUtils.toCalendar(currentUpdateDate));
@@ -523,7 +523,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushAllDemographics(Facility facility,Date lastDataUpdated, CachedFacility cachedFacility, List<Program> programs) throws MalformedURLException, ShutdownException {
+	private void pushAllDemographics(LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, CachedFacility cachedFacility, List<Program> programs) throws MalformedURLException, ShutdownException {
 		List<Integer> demographicIds = getDemographicIdsToPush(facility,lastDataUpdated, programs);
 
 		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs(facility);
@@ -567,7 +567,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				benchTimer.tag("pushEforms");
 				pushAllergies(lastDataUpdated, facility, demographicService, demographicId);
 				benchTimer.tag("pushAllergies");
-				pushDocuments(lastDataUpdated, facility, demographicService, demographicId);
+				pushDocuments(loggedInInfo, lastDataUpdated, facility, demographicService, demographicId);
 				benchTimer.tag("pushDocuments");
 				pushForms(lastDataUpdated, facility, demographicService, demographicId);
 				benchTimer.tag("pushForms");
@@ -836,12 +836,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		
 	}
 
-	private void pushDocuments(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException {
+	private void pushDocuments(LoggedInInfo loggedInInfo, Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing demographicDocuments facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		StringBuilder sentIds = new StringBuilder();
 
-		List<EDoc> privateDocs = EDocUtil.listDocsSince("demographic", demographicId.toString(), "all", EDocUtil.PRIVATE, EDocSort.OBSERVATIONDATE, "",lastDataUpdated);
+		List<EDoc> privateDocs = EDocUtil.listDocsSince(loggedInInfo, "demographic", demographicId.toString(), "all", EDocUtil.PRIVATE, EDocSort.OBSERVATIONDATE, "",lastDataUpdated);
 		int i=0;
 		for (EDoc eDoc : privateDocs) {
 			sendSingleDocument(demographicWs, eDoc, demographicId);

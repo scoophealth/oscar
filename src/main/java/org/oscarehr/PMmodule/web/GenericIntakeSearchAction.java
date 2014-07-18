@@ -170,8 +170,10 @@ public class GenericIntakeSearchAction extends DispatchAction {
 	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		// UCF
-		request.getSession().setAttribute("survey_list", surveyManager.getAllFormsForCurrentProviderAndCurrentFacility());
+		request.getSession().setAttribute("survey_list", surveyManager.getAllFormsForCurrentProviderAndCurrentFacility(loggedInInfo));
 
 		List<Demographic> localMatches = localSearch(intakeSearchBean);
 		intakeSearchBean.setLocalMatches(localMatches);
@@ -179,7 +181,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 		intakeSearchBean.setSearchPerformed(true);
 		request.setAttribute("genders", getGenders());
 
-		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 			createRemoteList(request, intakeSearchBean);
 		}
 

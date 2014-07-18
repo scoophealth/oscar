@@ -42,6 +42,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import com.lowagie.text.DocumentException;
@@ -59,10 +60,11 @@ public class EctConsultationFormRequestPrintAction extends Action {
     
     @Override
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
-        
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
         try {
             EctConsultationFormRequestPrintPdf pdf = new EctConsultationFormRequestPrintPdf(request, response);
-            pdf.printPdf();
+            pdf.printPdf(loggedInInfo);
         }catch(DocumentException de) {
             logger.error("DocumentException occured insided EctConsultationFormRequestPrintAction", de);
             request.setAttribute("printError", new Boolean(true));

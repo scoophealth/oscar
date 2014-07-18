@@ -95,7 +95,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     
     		StringBuilder javascript = new StringBuilder("<script type=\"text/javascript\">");
     		String js = "";
-    		ArrayList<EDoc> docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocSort.OBSERVATIONDATE, "active");
+    		ArrayList<EDoc> docList = EDocUtil.listDocs(loggedInInfo, "demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocSort.OBSERVATIONDATE, "active");
     		String dbFormat = "yyyy-MM-dd";
     		String serviceDateStr = "";
     		String key;

@@ -361,7 +361,7 @@ public class PreventionData {
 			}
 
 			if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
-				remotePreventions = IntegratorFallBackManager.getRemotePreventions(demographicId);
+				remotePreventions = IntegratorFallBackManager.getRemotePreventions(loggedInInfo, demographicId);
 			}
 		}
 		return (remotePreventions);

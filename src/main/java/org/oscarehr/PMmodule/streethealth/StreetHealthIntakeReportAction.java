@@ -388,7 +388,9 @@ public class StreetHealthIntakeReportAction extends DispatchAction {
 	}
 	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
-        String target = "success";   
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		String target = "success";   
         
         if(request.getParameter("action") != null && request.getParameter("action").equalsIgnoreCase("download")) {
         	target="download";
@@ -425,10 +427,7 @@ public class StreetHealthIntakeReportAction extends DispatchAction {
         //based on the start date, return the "cohorts".
         List<DateRange> dates = getDates(startDate);        
         request.setAttribute("dates",dates);
-    
-        //get current facility Id
-        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-              
+                  
         //for each cohort, extract the values from the intakes
         for(int x=0;x<dates.size();x++) {
         	DateRange dr = dates.get(x);       

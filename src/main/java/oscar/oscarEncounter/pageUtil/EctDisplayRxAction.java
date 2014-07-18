@@ -106,7 +106,7 @@ public class EctDisplayRxAction extends EctDisplayAction {
 				}
 				
 				if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-				   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(demographicId);	
+				   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(loggedInInfo, demographicId);	
 				}
 				
 				logger.debug("remote Drugs : "+remoteDrugs.size());
