@@ -63,6 +63,6 @@ public abstract class AbstractWs
 	
 	protected LoggedInInfo getLoggedInInfo()
 	{
-		return(LoggedInInfo.getLoggedInInfoFromRequest(getHttpServletRequest()));
+		return(LoggedInInfo.getLoggedInInfoForWebServices(getHttpServletRequest()));
 	}
 }

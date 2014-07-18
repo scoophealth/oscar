@@ -69,7 +69,7 @@ public final class RemotePreventionHelper {
 			}
 				
 			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-			   preventions = IntegratorFallBackManager.getRemotePreventions(localDemographicId);
+			   preventions = IntegratorFallBackManager.getRemotePreventions(loggedInInfo, localDemographicId);
 			} 
 		 
 			for (CachedDemographicPrevention prevention : preventions) {

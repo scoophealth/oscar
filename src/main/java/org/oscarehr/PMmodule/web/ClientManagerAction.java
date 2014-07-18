@@ -1526,8 +1526,8 @@ public class ClientManagerAction extends DispatchAction {
 
 		if (tabBean.getTab().equals("Summary")) {
 			/* survey module */
-			request.setAttribute("survey_list", surveyManager.getAllFormsForCurrentProviderAndCurrentFacility());
-			request.setAttribute("surveys", surveyManager.getFormsForCurrentProviderAndCurrentFacility(demographicNo));
+			request.setAttribute("survey_list", surveyManager.getAllFormsForCurrentProviderAndCurrentFacility(loggedInInfo));
+			request.setAttribute("surveys", surveyManager.getFormsForCurrentProviderAndCurrentFacility(loggedInInfo, demographicNo));
 
 			// request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
 			// only allow bed/service programs show up.(not external program)
@@ -1716,8 +1716,8 @@ public class ClientManagerAction extends DispatchAction {
 			request.setAttribute("generalIntakeNodes", genericIntakeManager.getIntakeNodesByType(3));
 
 			/* survey module */
-			request.setAttribute("survey_list", surveyManager.getAllFormsForCurrentProviderAndCurrentFacility());
-			request.setAttribute("surveys", surveyManager.getFormsForCurrentProviderAndCurrentFacility(demographicNo));
+			request.setAttribute("survey_list", surveyManager.getAllFormsForCurrentProviderAndCurrentFacility(loggedInInfo));
+			request.setAttribute("surveys", surveyManager.getFormsForCurrentProviderAndCurrentFacility(loggedInInfo, demographicNo));
 
 			/* consent forms */
 			int clientId = Integer.parseInt(demographicNo);

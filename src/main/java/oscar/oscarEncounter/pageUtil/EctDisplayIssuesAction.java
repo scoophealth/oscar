@@ -77,7 +77,7 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
 		int demographicId = Integer.parseInt(bean.getDemographicNo());
 		issues = caseManagementMgr.getIssues(demographicId);
 		String programId = (String) request.getSession().getAttribute("case_program_id");
-		issues = caseManagementMgr.filterIssues(providerNo, issues, programId);
+		issues = caseManagementMgr.filterIssues(loggedInInfo, providerNo, issues, programId);
 	
 		List<CaseManagementIssue> issues_unr = new ArrayList<CaseManagementIssue>();
 		//only list unresolved issues				
@@ -130,7 +130,7 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
 				}
 				
 				if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-				   remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(demographicId);	
+				   remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(loggedInInfo, demographicId);	
 				}
 				
 				

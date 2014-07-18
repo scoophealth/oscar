@@ -356,14 +356,14 @@ function popup1(height, width, url, windowName){
                 ArrayList privatedocs = new ArrayList();
 
                 MiscUtils.getLogger().debug("module="+module+", moduleid="+moduleid+", view="+view+", EDocUtil.PRIVATE="+EDocUtil.PRIVATE+", sort="+sort+", viewstatus="+viewstatus);
-                privatedocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PRIVATE, sort, viewstatus);
+                privatedocs = EDocUtil.listDocs(loggedInInfo, module, moduleid, view, EDocUtil.PRIVATE, sort, viewstatus);
                 MiscUtils.getLogger().debug("privatedocs:"+privatedocs.size());
 
                 categories.add(privatedocs);
                 categoryKeys.add(moduleName + "'s Private Documents");
                 if (module.equals("provider")) {
                     ArrayList publicdocs = new ArrayList();
-                    publicdocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PUBLIC, sort, viewstatus);
+                    publicdocs = EDocUtil.listDocs(loggedInInfo, module, moduleid, view, EDocUtil.PUBLIC, sort, viewstatus);
                     categories.add(publicdocs);
                     categoryKeys.add("Public Documents");
                 }

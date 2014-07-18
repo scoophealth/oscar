@@ -246,7 +246,7 @@ public class EctFormData {
 		
 		
 		if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-			remoteForms = IntegratorFallBackManager.getRemoteForms(demographicId,table);	
+			remoteForms = IntegratorFallBackManager.getRemoteForms(loggedInInfo, demographicId,table);	
 		}
 			
 		if (remoteForms == null) return (forms);

@@ -36,6 +36,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.OscarProperties;
 
@@ -49,7 +50,8 @@ public class ConsultationAttachDocsAction
       throws ServletException, IOException {    
 
         DynaActionForm frm = (DynaActionForm)form;
-
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        
         String requestId = frm.getString("requestId");
         String demoNo = frm.getString("demoNo");
         String provNo = frm.getString("providerNo");
@@ -58,7 +60,7 @@ public class ConsultationAttachDocsAction
 	        String[] arrDocs = frm.getStrings("attachedDocs");
 	                
 	        ConsultationAttachDocs Doc = new ConsultationAttachDocs(provNo,demoNo,requestId,arrDocs);
-	        Doc.attach();
+	        Doc.attach(loggedInInfo);
 	        
 	        ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,arrDocs);
 	        Lab.attach();
@@ -71,7 +73,7 @@ public class ConsultationAttachDocsAction
             if (docs == null) { docs = new String[] { }; }
             
             ConsultationAttachDocs Doc = new ConsultationAttachDocs(provNo,demoNo,requestId,docs);
-            Doc.attach();
+            Doc.attach(loggedInInfo);
             
             ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,labs);
             Lab.attach();

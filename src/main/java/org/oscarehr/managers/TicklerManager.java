@@ -55,6 +55,7 @@ import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerComment;
 import org.oscarehr.common.model.TicklerUpdate;
 import org.oscarehr.util.EmailUtilsOld;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.VelocityUtils;
@@ -114,13 +115,13 @@ public class TicklerManager {
     }
    
     
-    public List<Tickler> getTicklers(CustomFilter filter,String providerNo,String programId) {
+    public List<Tickler> getTicklers(LoggedInInfo loggedInInfo,CustomFilter filter,String providerNo,String programId) {
         List<Tickler> results = ticklerDao.getTicklers(filter);     
            
           
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {        	
         	//filter based on facility
-        	results = ticklerFacilityFiltering(results);
+        	results = ticklerFacilityFiltering(loggedInInfo,results);
         	
         	//filter based on caisi role access
             results = filterTicklersByAccess(results,providerNo,programId);
@@ -157,13 +158,13 @@ public class TicklerManager {
     }
     
     
-    protected List<Tickler> ticklerFacilityFiltering(List<Tickler> ticklers) {
+    protected List<Tickler> ticklerFacilityFiltering(LoggedInInfo loggedInInfo, List<Tickler> ticklers) {
         ArrayList<Tickler> results = new ArrayList<Tickler>();
 
         for (Tickler tickler : ticklers) {
             Integer programId = tickler.getProgramId();
             
-            if (programManager.hasAccessBasedOnCurrentFacility(programId)) {            	
+            if (programManager.hasAccessBasedOnCurrentFacility(loggedInInfo, programId)) {            	
             	results.add(tickler);
             }        
         }

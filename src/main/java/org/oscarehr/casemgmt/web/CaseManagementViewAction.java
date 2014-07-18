@@ -400,7 +400,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		// UCF
 		logger.debug("Fetch Survey List");
-		request.setAttribute("survey_list", surveyMgr.getAllFormsForCurrentProviderAndCurrentFacility());
+		request.setAttribute("survey_list", surveyMgr.getAllFormsForCurrentProviderAndCurrentFacility(loggedInInfo));
 		current = System.currentTimeMillis();
 		logger.debug("Fetch Survey List " + String.valueOf(current - start));
 
@@ -679,7 +679,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		Collection<CaseManagementNote> localNotes = caseManagementNoteDao.findNotesByDemographicAndIssueCode(demographicNo, checkedCodeList.toArray(new String[0]));
 		//show locked notes anyway: localNotes = manageLockedNotes(localNotes, true, this.getUnlockedNotesMap(request));
 		localNotes = manageLockedNotes(localNotes, false, this.getUnlockedNotesMap(request));
-		localNotes = caseManagementMgr.filterNotes(loggedInInfo.loggedInProvider.getProviderNo(), localNotes, programId);
+		localNotes = caseManagementMgr.filterNotes(loggedInInfo, loggedInInfo.loggedInProvider.getProviderNo(), localNotes, programId);
 
 		caseManagementMgr.getEditors(localNotes);
 
@@ -808,7 +808,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		logger.debug("Filter Notes");
 
 		// filter notes based on role and program/provider mappings
-		notes = caseManagementMgr.filterNotes(loggedInInfo.loggedInProvider.getProviderNo(), notes, programId);
+		notes = caseManagementMgr.filterNotes(loggedInInfo, loggedInInfo.loggedInProvider.getProviderNo(), notes, programId);
 		logger.debug("FILTER NOTES " + (System.currentTimeMillis() - startTime));
 
 		// apply provider filter
@@ -1063,7 +1063,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 
 		if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
-			linkedNotes = IntegratorFallBackManager.getLinkedNotes(demographicNo);
+			linkedNotes = IntegratorFallBackManager.getLinkedNotes(loggedInInfo, demographicNo);
 		}
 
 		if (linkedNotes == null) return;
@@ -1155,7 +1155,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			}
 
 			if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
-				remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(demographicNo);
+				remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(loggedInInfo, demographicNo);
 			}
 
 			for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
@@ -1377,7 +1377,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			programId = "0";
 		}
 
-		notes = caseManagementMgr.filterNotes(providerNo, notes, programId);
+		notes = caseManagementMgr.filterNotes(loggedInInfo, providerNo, notes, programId);
 		this.caseManagementMgr.getEditors(notes);
 
 		List<CaseManagementNoteExt> lcme = new ArrayList<CaseManagementNoteExt>();
@@ -1440,7 +1440,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		searchBean.setSearchText(caseForm.getSearchText());
 		List<CaseManagementNote> results = caseManagementMgr.search(searchBean);
 		Collection<CaseManagementNote> filtered1 = manageLockedNotes(results, false, this.getUnlockedNotesMap(request));
-		List<CaseManagementNote> filteredResults = caseManagementMgr.filterNotes(providerNo, filtered1, programId);
+		List<CaseManagementNote> filteredResults = caseManagementMgr.filterNotes(loggedInInfo, providerNo, filtered1, programId);
 
 		List<CaseManagementNote> sortedResults = sortNotes_old(filteredResults, caseForm.getNote_sort());
 		request.setAttribute("search_results", sortedResults);

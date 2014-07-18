@@ -57,10 +57,8 @@ public final class ConformanceTestHelper {
 	private static Logger logger = MiscUtils.getLogger();
 	public static boolean enableConformanceOnlyTestFeatures=Boolean.parseBoolean(OscarProperties.getInstance().getProperty("ENABLE_CONFORMANCE_ONLY_FEATURES"));
 	
-	public static void populateLocalTicklerWithRemoteProviderMessageFollowUps() {
+	public static void populateLocalTicklerWithRemoteProviderMessageFollowUps(LoggedInInfo loggedInInfo) {
 		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-
 			ProviderWs providerWs = CaisiIntegratorManager.getProviderWs(loggedInInfo.getCurrentFacility());
 			List<ProviderCommunicationTransfer> followUps = providerWs.getProviderCommunications(loggedInInfo.loggedInProvider.getProviderNo(), "FOLLOWUP", true);
 

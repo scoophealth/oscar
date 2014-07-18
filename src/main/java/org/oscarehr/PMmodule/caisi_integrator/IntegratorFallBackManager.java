@@ -53,11 +53,10 @@ public class IntegratorFallBackManager {
 	static RemoteIntegratedDataCopyDao remoteIntegratedDataCopyDao = SpringUtils.getBean(RemoteIntegratedDataCopyDao.class);
 	static DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 
-	public static List<CachedDemographicNote> getLinkedNotes(Integer demographicNo) {
+	public static List<CachedDemographicNote> getLinkedNotes(LoggedInInfo loggedInInfo, Integer demographicNo) {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicNote> linkedNotes = null;
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicNote[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
@@ -131,11 +130,10 @@ public class IntegratorFallBackManager {
 		}
 	}
 
-	public static List<CachedDemographicForm> getRemoteForms(Integer demographicNo, String table) {
+	public static List<CachedDemographicForm> getRemoteForms(LoggedInInfo loggedInInfo, Integer demographicNo, String table) {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicForm> linkedForms = null;
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicForm[].class.getName() + "+" + table);
 
 		if (remoteIntegratedDataCopy == null) {
@@ -184,11 +182,10 @@ public class IntegratorFallBackManager {
 	}
 	
 
-	public static List<CachedDemographicIssue> getRemoteDemographicIssues(Integer demographicNo) {
+	public static List<CachedDemographicIssue> getRemoteDemographicIssues(LoggedInInfo loggedInInfo, Integer demographicNo) {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicIssue> linkedNotes = null;
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicIssue[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
@@ -236,11 +233,10 @@ public class IntegratorFallBackManager {
 	}
 	
 	
-	public static List<CachedDemographicPrevention> getRemotePreventions(Integer demographicNo) {
+	public static List<CachedDemographicPrevention> getRemotePreventions(LoggedInInfo loggedInInfo, Integer demographicNo) {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicPrevention> linkedNotes = null;
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicPrevention[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
@@ -286,11 +282,10 @@ public class IntegratorFallBackManager {
 		}
 	}
 	
-	public static List<CachedDemographicDrug> getRemoteDrugs(Integer demographicNo) {
+	public static List<CachedDemographicDrug> getRemoteDrugs(LoggedInInfo loggedInInfo, Integer demographicNo) {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicDrug> linkedNotes = null;
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicDrug[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
