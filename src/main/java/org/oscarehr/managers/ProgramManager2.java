@@ -97,13 +97,13 @@ public class ProgramManager2 {
 	}
 	
 	public ProgramProvider getCurrentProgramInDomain(String providerNo) {
-		
+		ProgramProvider result = null;
 		int defProgramId = 0;
         List<ProviderDefaultProgram> rs = providerDefaultProgramDao.getProgramByProviderNo(providerNo);
         if(!rs.isEmpty()) {
     	   defProgramId = rs.get(0).getProgramId();
+    	   result =  programProviderDAO.getProgramProvider(providerNo, Long.valueOf(defProgramId));
         }
-        ProgramProvider result =  programProviderDAO.getProgramProvider(providerNo, Long.valueOf(defProgramId));
         
         if(result !=null) {
         	LogAction.addLogSynchronous("ProgramManager2.getCurrentProgramInDomain", "id returned=" + result.getId());
