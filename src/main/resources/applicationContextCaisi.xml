@@ -54,7 +54,7 @@
 	</bean>
 
 	<bean id="oscarSecurityManager" class="org.oscarehr.PMmodule.service.impl.OscarSecurityManagerImpl" autowire="byName" />
-	<bean id="formsManager" class="org.oscarehr.PMmodule.service.impl.FormsManagerImpl" autowire="byName" />
+	<bean id="formsManagerCaisi" class="org.oscarehr.PMmodule.service.impl.FormsManagerImpl" autowire="byName" />
 	<bean id="surveyUserManager" class="org.oscarehr.survey.service.impl.UserManagerOscar" autowire="byName" />
 	<bean id="populationReportManager" class="org.oscarehr.common.service.PopulationReportManager" autowire="byName">
 		<property name="issueDAO" ref="IssueDAO" />
