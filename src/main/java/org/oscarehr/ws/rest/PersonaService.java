@@ -75,6 +75,10 @@ public class PersonaService {
 		if(pp != null) {
 			ProgramProviderTo1 ppTo = ppConverter.getAsTransferObject(pp);
 			result.setCurrentProgram(ppTo);
+		} else {
+			if(result.getProgramDomain() != null && result.getProgramDomain().size()>0) {
+				result.setCurrentProgram(result.getProgramDomain().get(0));
+			}
 		}
 		
 		/* counts */
