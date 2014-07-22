@@ -99,7 +99,8 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal) {
 		if($scope.currenttab === undefined || $scope.currenttab === null) {
 			return false;
 		}
-		return temp === $scope.currenttab.id;
+		//return temp === $scope.currenttab.id;
+		return false;
 	}
 
 	$scope.isMoreActive = function(temp){
@@ -117,15 +118,12 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal) {
 		var beforeChangeTab = $scope.currentmoretab;
 		$scope.currentmoretab = $scope.moreMenuItems[temp];
 		$scope.currenttab = null;
-		//$location.path($scope.currentmoretab.url);
 	}
 
 	$scope.changeTab = function(temp){
 		console.log("changetab "+ temp);
 		$scope.currenttab = $scope.menuItems[temp];
 		$scope.currentmoretab=null;
-		$(".ui-dialog-content").dialog("close"); /* Added by Schedular team */
-		//$location.path($scope.currenttab.url);
 	}	 
 
 	$scope.getMoreTabClass = function(id){ 
