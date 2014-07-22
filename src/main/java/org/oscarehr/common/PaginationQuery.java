@@ -22,7 +22,7 @@
  * Ontario, Canada
  */
 
-package org.oscarehr.web;
+package org.oscarehr.common;
 
 import java.io.Serializable;
 import java.util.Date;
