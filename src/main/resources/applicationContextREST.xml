@@ -104,6 +104,7 @@
 		<jaxrs:providers>
 			<ref bean="jaxb"/>
 			<ref bean="jsonProvider"/>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/> 
 		</jaxrs:providers>
 
 		<jaxrs:features>
@@ -122,6 +123,7 @@
 			<bean class="org.oscarehr.ws.rest.RSSFeedService"  autowire="byName"/>
 			<bean class="org.oscarehr.ws.rest.PersonaService"  autowire="byName"/>
 			<bean class="org.oscarehr.ws.rest.FormsService"  autowire="byName"/>
+			<bean class="org.oscarehr.ws.rest.OscarJobService"  autowire="byName"/>
 		</jaxrs:serviceBeans>
 
 		<jaxrs:extensionMappings>
@@ -130,6 +132,8 @@
 		</jaxrs:extensionMappings>
 	</jaxrs:server>
 	
+
+
 	 <bean id="jsonProvider" class="org.apache.cxf.jaxrs.provider.json.JSONProvider">
 		 <property name="dropRootElement" value="true" />
 		<property name="serializeAsArray" value="true" />
