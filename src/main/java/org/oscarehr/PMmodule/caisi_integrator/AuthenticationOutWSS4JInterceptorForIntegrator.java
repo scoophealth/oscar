@@ -43,8 +43,6 @@ import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.handler.WSHandlerConstants;
-import org.apache.ws.security.util.Base64;
-import org.oscarehr.util.EncryptionUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -73,7 +71,7 @@ public class AuthenticationOutWSS4JInterceptorForIntegrator extends WSS4JOutInte
 		for (Callback callback : callbacks) {
 			if (callback instanceof WSPasswordCallback) {
 				WSPasswordCallback wsPasswordCallback = (WSPasswordCallback) callback;
-				wsPasswordCallback.setPassword(Base64.encode(EncryptionUtils.getSha1(password)));
+				wsPasswordCallback.setPassword(password);
 			}
 		}
 	}
