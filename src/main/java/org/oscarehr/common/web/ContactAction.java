@@ -52,6 +52,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.springframework.beans.BeanUtils;
 
 public class ContactAction extends DispatchAction {
 
@@ -342,11 +343,13 @@ public class ContactAction extends DispatchAction {
 		Contact contact = (Contact)dform.get("contact");
 		String id = request.getParameter("contact.id");
 		if(id != null && id.length()>0) {
-			contact.setId(Integer.valueOf(id));
+			Contact savedContact = contactDao.find(Integer.parseInt(id));
+			if(savedContact != null) {
+				BeanUtils.copyProperties(contact, savedContact, new String[]{"id"});
+				contactDao.merge(savedContact);
+			}
 		}
-		if(contact.getId() != null && contact.getId()>0) {
-			contactDao.merge(contact);
-		} else {
+		else {
 			contactDao.persist(contact);
 		}
 	   return mapping.findForward("cForm");
@@ -357,13 +360,17 @@ public class ContactAction extends DispatchAction {
 		ProfessionalContact contact = (ProfessionalContact)dform.get("pcontact");
 		String id = request.getParameter("pcontact.id");
 		if(id != null && id.length()>0) {
-			contact.setId(Integer.valueOf(id));
+			ProfessionalContact savedContact = proContactDao.find(Integer.parseInt(id));
+			if(savedContact != null) {
+				BeanUtils.copyProperties(contact, savedContact, new String[]{"id"});
+				proContactDao.merge(savedContact);
+			}
 		}
-		if(contact.getId() != null && contact.getId()>0) {
-			proContactDao.merge(contact);
-		} else {
+		else {
 			proContactDao.persist(contact);
 		}
+		
+		
 	   return mapping.findForward("pForm");
 	}
 
