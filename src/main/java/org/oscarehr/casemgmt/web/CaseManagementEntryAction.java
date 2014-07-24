@@ -1291,9 +1291,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 			// only update appt if there is one
 			if (sessionBean.appointmentNo != null && !(sessionBean.appointmentNo.equals("") || sessionBean.appointmentNo.equals("0"))) {
-				String apptStatus = updateApptStatus(sessionBean.status, "verify");
 				Appointment appointment = appointmentDao.find(Integer.parseInt(sessionBean.appointmentNo));
-				if (appointment != null) {
+				String currentStatusFromDb = appointment.getStatus();
+				if(appointment != null) {
+					String apptStatus = updateApptStatus(currentStatusFromDb, "verify");	
+				
 					appointmentArchiveDao.archiveAppointment(appointment);
 					appointment.setStatus(apptStatus);
 					appointment.setLastUpdateUser(providerNo);
@@ -1316,10 +1318,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 			// only update appt if there is one
 			if (sessionBean.appointmentNo != null && !(sessionBean.appointmentNo.equals("") || sessionBean.appointmentNo.equals("0"))) {
-				String apptStatus = updateApptStatus(sessionBean.status, "sign");
+				//get latest and sign it.
 				Appointment appointment = appointmentDao.find(Integer.parseInt(sessionBean.appointmentNo));
-				// don't process appointment if it's been already deleted
-				if (appointment != null) {
+				String currentStatusFromDb = appointment.getStatus();
+				if(appointment != null) {
+					String apptStatus = updateApptStatus(currentStatusFromDb, "sign");
+					
 					appointmentArchiveDao.archiveAppointment(appointment);
 					appointment.setStatus(apptStatus);
 					appointment.setLastUpdateUser(providerNo);
@@ -1329,6 +1333,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 						logger.info("Skip signStatus appointment : appointmentNo ["+sessionBean.appointmentNo+"] status ["+sessionBean.status+"]");
 					}
 					appointmentDao.merge(appointment);
+					
 				}
 			}
 		}
