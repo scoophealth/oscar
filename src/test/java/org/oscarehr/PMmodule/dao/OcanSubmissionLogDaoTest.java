@@ -34,7 +34,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
-import org.oscarehr.PMmodule.model.CriteriaTypeOption;
 import org.oscarehr.PMmodule.model.OcanSubmissionLog;
 import org.oscarehr.common.dao.DaoTestFixtures;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
