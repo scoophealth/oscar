@@ -147,7 +147,7 @@ function updTklrList() {
 }
 
 function search_demographic(nameEl, valueEl) {
-    var url = '../ticklerPlus/demographicSearch2.jsp?form=contactForm&elementName='+nameEl+'&elementId='+valueEl;
+    var url = '../ticklerPlus/demographicSearch2.jsp?outofdomain=false&form=contactForm&elementName='+nameEl+'&elementId='+valueEl;
     var popup = window.open(url,'demographic_search');
     demo_no_orig = document.contactForm.elements[valueEl].value;
     //check_demo_no = setInterval("if (demo_no_orig != document.contactForm.elements[valueEl].value) updTklrList()",100);
