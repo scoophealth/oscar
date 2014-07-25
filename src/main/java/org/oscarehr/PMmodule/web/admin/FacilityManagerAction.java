@@ -210,6 +210,7 @@ public class FacilityManagerAction extends DispatchAction {
 	}
 
 	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		FacilityManagerForm mform = (FacilityManagerForm) form;
 		Facility facility = mform.getFacility();
 
@@ -239,7 +240,6 @@ public class FacilityManagerAction extends DispatchAction {
 			if (facility.getId() == null || facility.getId() == 0) facilityDao.persist(facility);
 			else facilityDao.merge(facility);
 
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 			// if we just updated our current facility, refresh local cached data in the session / thread local variable
 			if (loggedInInfo.currentFacility.getId().intValue()==facility.getId().intValue())
 			{

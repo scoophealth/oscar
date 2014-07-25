@@ -38,6 +38,7 @@
 
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	String ocanType = request.getParameter("ocanType");
 	int prepopulate = 0;
@@ -52,12 +53,12 @@
 	if(ocanStaffFormId != 0) {
 		ocanStaffForm=OcanForm.getOcanStaffForm(Integer.valueOf(request.getParameter("ocanStaffFormId")));
 	}else {		
-		ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel,ocanType);		
+		ocanStaffForm=OcanForm.getOcanStaffForm(loggedInInfo.getCurrentFacility().getId(),currentDemographicId,prepopulationLevel,ocanType);		
 		
 		//If this is a new form, prepopulate referral from last completed assessment.
 		if(ocanStaffForm.getAssessmentId()==null) {
 			newForm = true;
-			OcanStaffForm lastCompletedForm = OcanForm.getLastCompletedOcanFormByOcanType(currentDemographicId,ocanType);
+			OcanStaffForm lastCompletedForm = OcanForm.getLastCompletedOcanFormByOcanType(loggedInInfo.getCurrentFacility().getId(),currentDemographicId,ocanType);
 			if(lastCompletedForm!=null) {
 				List<OcanStaffFormData> existingAnswers = OcanForm.getStaffAnswers(lastCompletedForm.getId(),"referrals_count",prepopulationLevel);
 				if(existingAnswers.size()>0)

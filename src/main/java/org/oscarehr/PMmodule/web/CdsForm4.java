@@ -46,7 +46,6 @@ import org.oscarehr.common.model.CdsClientFormData;
 import org.oscarehr.common.model.CdsFormOption;
 import org.oscarehr.common.model.CdsHospitalisationDays;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class CdsForm4 {
@@ -61,10 +60,8 @@ public class CdsForm4 {
 
 	private static final int MAX_DISPLAY_NAME_LENGTH = 60;
 
-	public static CdsClientForm getCdsClientFormByClientId(Integer clientId) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-
-		List<Admission> admissions=admissionDao.getCurrentAdmissionsByFacility(clientId, loggedInInfo.currentFacility.getId());
+	public static CdsClientForm getCdsClientFormByClientId(Integer facilityId, Integer clientId) {
+		List<Admission> admissions=admissionDao.getCurrentAdmissionsByFacility(clientId, facilityId);
 		
 		Admission admission=null;
 		// find service program
@@ -94,14 +91,14 @@ public class CdsForm4 {
 		
 		if (admission==null)
 		{
-			admissions=admissionDao.getAdmissionsByFacility(clientId, loggedInInfo.currentFacility.getId());
+			admissions=admissionDao.getAdmissionsByFacility(clientId, facilityId);
 			if (admissions.size()>0) admission=admissions.get(0);
 		}
 			
 		if (admission!=null)
 		{
 			// at this point we're in a program, try to find existing cds form.
-			List<CdsClientForm> cdsClientForms = cdsClientFormDao.findByFacilityClient(loggedInInfo.currentFacility.getId(), clientId);
+			List<CdsClientForm> cdsClientForms = cdsClientFormDao.findByFacilityClient(facilityId, clientId);
 	
 			for (CdsClientForm cdsClientForm : cdsClientForms)
 			{
@@ -124,10 +121,8 @@ public class CdsForm4 {
 		return (cdsClientForm);
 	}
 
-	public static List<Admission> getAdmissions(Integer clientId) {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-
-		return (admissionDao.getAdmissionsByFacility(clientId, loggedInInfo.currentFacility.getId()));
+	public static List<Admission> getAdmissions(Integer facilityId, Integer clientId) {
+		return (admissionDao.getAdmissionsByFacility(clientId, facilityId));
 	}
 
 	public static String getEscapedClientName(Integer clientId) {

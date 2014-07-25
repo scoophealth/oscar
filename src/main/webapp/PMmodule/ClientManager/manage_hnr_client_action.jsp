@@ -22,6 +22,7 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.ConnectException_Exception"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
@@ -36,6 +37,7 @@
 <%@page import="org.apache.commons.lang.StringUtils"%>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	Facility currentFacility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
 	Provider currentProvider = (Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
@@ -44,7 +46,7 @@
 	{
 		try
 		{
-			ManageHnrClientAction.copyLocalValidatedToHnr(currentDemographicId);
+			ManageHnrClientAction.copyLocalValidatedToHnr(loggedInInfo, currentDemographicId);
 		}
 		catch (ConnectException_Exception e)
 		{
@@ -53,19 +55,19 @@
 		catch (DuplicateHinExceptionException e)
 		{
 			WebUtils.addErrorMessage(session, "This HIN is already in use in the HNR, please link to that individual.");
-			ManageHnrClientAction.setHcInfoValidation(currentDemographicId, false);
+			ManageHnrClientAction.setHcInfoValidation(loggedInInfo, currentDemographicId, false);
 		}
 		catch (InvalidHinExceptionException e)
 		{
 			WebUtils.addErrorMessage(session, "This HIN you provided does not pass validation. Please check the HIN and it's Type.");
-			ManageHnrClientAction.setHcInfoValidation(currentDemographicId, false);
+			ManageHnrClientAction.setHcInfoValidation(loggedInInfo, currentDemographicId, false);
 		}
 	}
 	else if ("copyHnrToLocal".equals(request.getParameter("action")))
 	{
 		try
 		{
-			ManageHnrClientAction.copyHnrToLocal(currentDemographicId);
+			ManageHnrClientAction.copyHnrToLocal(loggedInInfo, currentDemographicId);
 		}
 		catch (ConnectException_Exception e)
 		{
@@ -74,27 +76,27 @@
 	}
 	else if ("validatePicture".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.setPictureValidation(currentDemographicId, true);
+		ManageHnrClientAction.setPictureValidation(loggedInInfo, currentDemographicId, true);
 	}
 	else if ("invalidatePicture".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.setPictureValidation(currentDemographicId, false);
+		ManageHnrClientAction.setPictureValidation(loggedInInfo, currentDemographicId, false);
 	}
 	else if ("validateHcInfo".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.setHcInfoValidation(currentDemographicId, true);
+		ManageHnrClientAction.setHcInfoValidation(loggedInInfo, currentDemographicId, true);
 	}
 	else if ("invalidateHcInfo".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.setHcInfoValidation(currentDemographicId, false);
+		ManageHnrClientAction.setHcInfoValidation(loggedInInfo,currentDemographicId, false);
 	}
 	else if ("validateOtherInfo".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.setOtherInfoValidation(currentDemographicId, true);
+		ManageHnrClientAction.setOtherInfoValidation(loggedInInfo,currentDemographicId, true);
 	}
 	else if ("invalidateOtherInfo".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.setOtherInfoValidation(currentDemographicId, false);
+		ManageHnrClientAction.setOtherInfoValidation(loggedInInfo,currentDemographicId, false);
 	}
 	else
 	{

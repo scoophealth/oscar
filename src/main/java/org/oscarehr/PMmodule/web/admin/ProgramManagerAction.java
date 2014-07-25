@@ -861,6 +861,7 @@ public class ProgramManagerAction extends DispatchAction {
 	
 	public ActionForward save_vacancy(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		DynaActionForm programForm = (DynaActionForm) form;
 		Program program = (Program) programForm.get("program");
 		
@@ -895,10 +896,10 @@ public class ProgramManagerAction extends DispatchAction {
 			vacancy.setDateClosed(dateClosedFormatted);
 			VacancyTemplateManager.saveVacancy(vacancy);
 
-			Facility f = LoggedInInfo.loggedInInfo.get().currentFacility;
+			Facility f = loggedInInfo.currentFacility;
 			if(f.getAssignNewVacancyTicklerProvider() != null && f.getAssignNewVacancyTicklerProvider().length()>0 
 				&& f.getAssignNewVacancyTicklerDemographic() != null && f.getAssignNewVacancyTicklerDemographic()> 0) {
-				createWaitlistNotificationTickler(f,vacancy);
+				createWaitlistNotificationTickler(f,vacancy,loggedInInfo.getLoggedInProviderNo());
 			}
 		} else {		
 			vacancy.setTemplateId(templateId);				
@@ -910,10 +911,10 @@ public class ProgramManagerAction extends DispatchAction {
 			vacancy.setDateClosed(dateClosedFormatted);
 			VacancyTemplateManager.saveVacancy(vacancy);	
 			
-			Facility f = LoggedInInfo.loggedInInfo.get().currentFacility;
+			Facility f = loggedInInfo.currentFacility;
 			if(f.getAssignNewVacancyTicklerProvider() != null && f.getAssignNewVacancyTicklerProvider().length()>0 
 				&& f.getAssignNewVacancyTicklerDemographic() != null && f.getAssignNewVacancyTicklerDemographic()> 0) {
-				createWaitlistNotificationTickler(f,vacancy);
+				createWaitlistNotificationTickler(f,vacancy,loggedInInfo.getLoggedInProviderNo());
 			}
 				
 			List<Criteria> criteriaList = VacancyTemplateManager.getRefinedCriteriasByTemplateId(templateId);
@@ -959,9 +960,9 @@ public class ProgramManagerAction extends DispatchAction {
 		
 	}
 	
-    private void createWaitlistWithdrawnNotificationTickler(Facility facility, Vacancy vacancy) {
+    private void createWaitlistWithdrawnNotificationTickler(Facility facility, Vacancy vacancy, String creatorProviderNo) {
         Tickler t = new Tickler();
-        t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+        t.setCreator(creatorProviderNo);
         t.setDemographicNo(facility.getVacancyWithdrawnTicklerDemographic());
         t.setMessage("vacancy=["+vacancy.getName()+"] withdrawn");      
         t.setProgramId(vacancy.getWlProgramId());
@@ -973,9 +974,9 @@ public class ProgramManagerAction extends DispatchAction {
     }
 
 	
-	private void createWaitlistNotificationTickler(Facility facility, Vacancy vacancy) {
+	private void createWaitlistNotificationTickler(Facility facility, Vacancy vacancy, String creatorProviderNo) {
 		Tickler t = new Tickler();
-		t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		t.setCreator(creatorProviderNo);
 		t.setDemographicNo(facility.getAssignNewVacancyTicklerDemographic());
 		t.setMessage("New vacancy=["+vacancy.getName()+"]");
 		t.setProgramId(vacancy.getWlProgramId());
@@ -1528,6 +1529,7 @@ public class ProgramManagerAction extends DispatchAction {
 
     
 	public ActionForward saveVacancyStatus(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String vacancyId = request.getParameter("vacancyId");
 		String status = request.getParameter("status");
 		boolean success=true;
@@ -1538,14 +1540,14 @@ public class ProgramManagerAction extends DispatchAction {
 		
 		if(vacancy != null) {
 			vacancy.setStatus(status);
-			vacancy.setStatusUpdateUser(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			vacancy.setStatusUpdateUser(loggedInInfo.getLoggedInProviderNo());
 			vacancy.setStatusUpdateDate(new Date());
 			vacancyDao.merge(vacancy);
 			
-            Facility f = LoggedInInfo.loggedInInfo.get().currentFacility;
+            Facility f = loggedInInfo.currentFacility;
             if(status.equals("Withdrawn") && f.getVacancyWithdrawnTicklerProvider() != null && f.getVacancyWithdrawnTicklerProvider().length()>0 
                     && f.getVacancyWithdrawnTicklerDemographic() != null && f.getVacancyWithdrawnTicklerDemographic()> 0) {
-                    createWaitlistWithdrawnNotificationTickler(f,vacancy);
+                    createWaitlistWithdrawnNotificationTickler(f,vacancy,loggedInInfo.getLoggedInProviderNo());
             }
             
 		} else {

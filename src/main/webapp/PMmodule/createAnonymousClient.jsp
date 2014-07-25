@@ -31,6 +31,7 @@
  
 -->
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	Demographic demographic = null;
 
 	String strProgramId = request.getParameter("programId");
@@ -43,7 +44,7 @@
 	if(programId == 0) {
 		//error has occured
 	} else {
-		demographic = org.oscarehr.PMmodule.web.CreateAnonymousClientAction.generateAnonymousClient(programId);
+		demographic = org.oscarehr.PMmodule.web.CreateAnonymousClientAction.generateAnonymousClient(loggedInInfo.getLoggedInProviderNo(), programId);
 	}
 	
 	Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;

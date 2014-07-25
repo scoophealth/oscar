@@ -46,9 +46,10 @@ public class ManageConsentAction {
 	private IntegratorConsent consent = new IntegratorConsent();
 	private String signatureRequestId = null;
 	private Integer clientId = null;
-	private LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	private LoggedInInfo loggedInInfo;
 
-	public ManageConsentAction(Integer clientId) throws MalformedURLException {
+	public ManageConsentAction(LoggedInInfo loggedInInfo,Integer clientId) throws MalformedURLException {
+		this.loggedInInfo=loggedInInfo;
 		this.clientId = clientId;
 
 		consent.setDemographicId(clientId);

@@ -71,11 +71,11 @@
 		"SC".equals(reasonForAssessment) || "REV".equals(reasonForAssessment) || 
 		"REK".equals(reasonForAssessment)) {
 		//Firstly must have an intial ocan
-		if(OcanForm.haveInitialAssessment(clientId)) { 
+		if(OcanForm.haveInitialAssessment(loggedInInfo.getCurrentFacility().getId(),clientId)) { 
 			out.print("ia_exists_true");
 		} else {
 	
-			if(OcanForm.haveReassessment(clientId)) {
+			if(OcanForm.haveReassessment(loggedInInfo.getCurrentFacility().getId(),clientId)) {
 				out.print("ia_exists_true");
 			} else {
 				out.print("ia_exists_false");

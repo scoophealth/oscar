@@ -102,7 +102,8 @@ public class StaffManagerAction extends DispatchAction {
     }
 
     public void setEditAttributes(HttpServletRequest request, Provider provider) {
-		request.setAttribute("id",provider.getProviderNo());
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    	request.setAttribute("id",provider.getProviderNo());
 		request.setAttribute("providerName",provider.getFormattedName());
 
 		/* programs the provider is already a staff member of */
@@ -118,7 +119,6 @@ public class StaffManagerAction extends DispatchAction {
 		}
 		request.setAttribute("programs",sortProgramProviders(pp));
 
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		List<Program> allPrograms = programManager.getCommunityPrograms(loggedInInfo.currentFacility.getId());
 		List<StaffEditProgramContainer> allProgramsInContainer = new ArrayList<StaffEditProgramContainer>();
 		for(Program p : allPrograms) {

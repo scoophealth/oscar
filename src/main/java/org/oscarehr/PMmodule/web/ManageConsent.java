@@ -50,7 +50,7 @@ public class ManageConsent {
 	private static IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 
-	private LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	private LoggedInInfo loggedInInfo;
 	private int clientId = -1;
 	/**
 	 * consentToView is null if editing consent, if viewing consent it should have the consent to view.
@@ -59,7 +59,8 @@ public class ManageConsent {
 	
 	private boolean integratorServerError=false;
 
-	public ManageConsent(int clientId) {
+	public ManageConsent(LoggedInInfo loggedInInfo, int clientId) {
+		this.loggedInInfo=loggedInInfo;
 		this.clientId = clientId;
 	}
 
