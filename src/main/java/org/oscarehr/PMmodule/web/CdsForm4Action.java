@@ -38,10 +38,8 @@ public class CdsForm4Action {
 	private static CdsClientFormDao cdsClientFormDao = (CdsClientFormDao) SpringUtils.getBean("cdsClientFormDao");
 	private static CdsClientFormDataDao cdsClientFormDataDao = (CdsClientFormDataDao) SpringUtils.getBean("cdsClientFormDataDao");
 
-	public static CdsClientForm createCdsClientForm(Integer admissionId, Integer clientId, Date initialContactDate, Date assessmentDate, boolean signed)
+	public static CdsClientForm createCdsClientForm(LoggedInInfo loggedInInfo, Integer admissionId, Integer clientId, Date initialContactDate, Date assessmentDate, boolean signed)
 	{
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		
 		CdsClientForm cdsClientForm=new CdsClientForm();
 		cdsClientForm.setAdmissionId(admissionId);
 		cdsClientForm.setCdsFormVersion("4");

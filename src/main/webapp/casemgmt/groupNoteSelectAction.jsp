@@ -33,6 +33,7 @@
 <%@page import="org.oscarehr.casemgmt.web.GroupNoteAction" %>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String demographicNo = request.getParameter("demographicNo");
 	String programId = (String) request.getSession().getAttribute("case_program_id");
 	
@@ -47,7 +48,7 @@
 		cform.setGroupNoteClientIds(ids);
 		cform.setGroupNoteTotalAnonymous(Integer.parseInt(totalAnonymous));
 		session.setAttribute(frmName,cform);		
-		GroupNoteAction.saveGroupNote(cform,programId);
+		GroupNoteAction.saveGroupNote(loggedInInfo, cform,programId);
 	}
 %>
 <html>

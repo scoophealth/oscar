@@ -22,6 +22,7 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.MiscUtils"%><%@page import="org.oscarehr.util.DigitalSignatureUtils"%>
 <%@page import="java.util.Enumeration"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageConsentAction"%>
@@ -32,8 +33,9 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	Integer currentDemographicId=new Integer(request.getParameter("demographicId"));
-	ManageConsentAction manageConsentAction=new ManageConsentAction(currentDemographicId);
+	ManageConsentAction manageConsentAction=new ManageConsentAction(loggedInInfo, currentDemographicId);
 	manageConsentAction.setSignatureRequestId(request.getParameter(DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY));
 	manageConsentAction.setExcludeMentalHealthData(WebUtils.isChecked(request, "excludeMentalHealth"));
 	manageConsentAction.setConsentStatus(request.getParameter("consentStatus"));

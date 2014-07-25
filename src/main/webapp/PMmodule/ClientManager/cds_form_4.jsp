@@ -22,11 +22,14 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.common.model.CdsClientForm"%>
 <%@page import="org.oscarehr.common.model.Admission"%>
 <%@page import="org.oscarehr.PMmodule.web.CdsForm4"%>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+   		 
 	// is only populated if it's an existing form, i.e. new one off existing form
 	Integer cdsFormId=null;
 
@@ -45,7 +48,7 @@
 	else
 	{
 		currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
-		cdsClientForm=CdsForm4.getCdsClientFormByClientId(currentDemographicId);
+		cdsClientForm=CdsForm4.getCdsClientFormByClientId(loggedInInfo.getCurrentFacility().getId(), currentDemographicId);
 	}
 	
 	boolean printOnly=request.getParameter("print")!=null;
@@ -69,7 +72,7 @@ CDS form (CDS-MH v4.05)
 			<td class="genericTableData">
 				<select name="admissionId">
 					<%
-						for (Admission admission : CdsForm4.getAdmissions(currentDemographicId))
+						for (Admission admission : CdsForm4.getAdmissions(loggedInInfo.getCurrentFacility().getId(), currentDemographicId))
 						{
 							String selected="";
 							

@@ -31,7 +31,6 @@ import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -50,19 +49,19 @@ public class CreateAnonymousClientAction {
 
 	private static Logger logger = MiscUtils.getLogger();
 	
-	public static Demographic generateAnonymousClient(int programId) {
+	public static Demographic generateAnonymousClient(String creatorProviderNo, int programId) {
 		logger.info("Create Anonymous Client!");
 		ClientManager clientManager = (ClientManager)SpringUtils.getBean("clientManager");
 		AdmissionManager admissionManager = (AdmissionManager)SpringUtils.getBean("admissionManager");
 		ProgramManager programManager = (ProgramManager)SpringUtils.getBean("programManager");
 		//create and save client record.
-		Demographic d = createDemographic();
+		Demographic d = createDemographic(creatorProviderNo);
 		clientManager.saveClient(d);
 
 		//admit client to program
 		Program externalProgram = programManager.getProgram(programId);
 		try {
-			admissionManager.processAdmission(d.getDemographicNo(), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), externalProgram, "anonymous discharge", "anonymous admission");
+			admissionManager.processAdmission(d.getDemographicNo(), creatorProviderNo, externalProgram, "anonymous discharge", "anonymous admission");
 		}catch(Exception e) {
 			logger.error("Error", e);
 			return d;
@@ -71,13 +70,13 @@ public class CreateAnonymousClientAction {
 		return d;
 	}
 
-    public static Demographic generatePEClient(int programId){
+    public static Demographic generatePEClient(String creatorProviderNo, int programId){
         logger.info("Create PE temporary Client!");
         ClientManager clientManager = (ClientManager)SpringUtils.getBean("clientManager");
         AdmissionManager admissionManager = (AdmissionManager)SpringUtils.getBean("admissionManager");
         ProgramManager programManager = (ProgramManager)SpringUtils.getBean("programManager");
         //create and save client record.
-        Demographic d = createDemographic();
+        Demographic d = createDemographic(creatorProviderNo);
         d.setFirstName("phone encounter");
         d.setYearOfBirth("1900");
         clientManager.saveClient(d);
@@ -85,7 +84,7 @@ public class CreateAnonymousClientAction {
         //admit client to program
         Program externalProgram = programManager.getProgram(programId);
         try {
-            admissionManager.processAdmission(d.getDemographicNo(), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), externalProgram, "anonymous discharge", "anonymous admission");
+            admissionManager.processAdmission(d.getDemographicNo(), creatorProviderNo, externalProgram, "anonymous discharge", "anonymous admission");
         }catch(Exception e) {
             logger.error("Error", e);
             return d;
@@ -94,7 +93,7 @@ public class CreateAnonymousClientAction {
         return d;
     }
 	
-	public static Demographic createDemographic() {
+	public static Demographic createDemographic(String creatorProviderNo) {
 		Demographic d = new Demographic();
 		d.setAnonymous("one-time-anonymous");
 		d.setYearOfBirth("1800");
@@ -104,7 +103,7 @@ public class CreateAnonymousClientAction {
 		d.setFirstName("Anonymous");
 		d.setLastName("["+new Date()+"]");
 		d.setPatientStatus("AC");
-		d.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		d.setProviderNo(creatorProviderNo);
 		d.setSex("M");
 		
 		return d;

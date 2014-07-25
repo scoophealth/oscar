@@ -39,6 +39,7 @@
 
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String currentProgramId = (String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	String ocanType = request.getParameter("ocanType");
@@ -285,9 +286,9 @@ function submitOcanForm() {
 						<select name="admissionId">
 						<option value=""> </option>
 					<%
-						for (Admission admission : OcanForm.getServiceAndBedProgramAdmissions(Integer.valueOf(currentDemographicId)) )
+						for (Admission admission : OcanForm.getServiceAndBedProgramAdmissions(loggedInInfo.getCurrentFacility().getId(),Integer.valueOf(currentDemographicId)) )
 						{	
-							OcanStaffForm existingCbiForm = OcanForm.findLatestCbiFormsByFacilityAdmissionId(Integer.valueOf(admission.getId().intValue()), null);
+							OcanStaffForm existingCbiForm = OcanForm.findLatestCbiFormsByFacilityAdmissionId(loggedInInfo.getCurrentFacility().getId(),admission.getId(), null);
 							if(existingCbiForm!=null)
 								continue;						
 								 

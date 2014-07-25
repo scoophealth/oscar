@@ -43,7 +43,7 @@
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	
-	ManageConsent manageConsent=new ManageConsent(currentDemographicId);
+	ManageConsent manageConsent=new ManageConsent(loggedInInfo,currentDemographicId);
 
 	String viewConsentId=request.getParameter("viewConsentId");
 	manageConsent.setViewConsentId(viewConsentId);

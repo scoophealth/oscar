@@ -175,7 +175,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 		// UCF
 		request.getSession().setAttribute("survey_list", surveyManager.getAllFormsForCurrentProviderAndCurrentFacility(loggedInInfo));
 
-		List<Demographic> localMatches = localSearch(intakeSearchBean);
+		List<Demographic> localMatches = localSearch(intakeSearchBean, loggedInInfo.getLoggedInProviderNo());
 		intakeSearchBean.setLocalMatches(localMatches);
 
 		intakeSearchBean.setSearchPerformed(true);
@@ -302,7 +302,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 		}
 	}
 
-	private List<Demographic> localSearch(GenericIntakeSearchFormBean intakeSearchBean) {
+	private List<Demographic> localSearch(GenericIntakeSearchFormBean intakeSearchBean, String providerNo) {
 		String strictSearch = OscarProperties.getInstance().getProperty("caisi.new_client.strict_search", "false");
 
 		ClientSearchFormBean clientSearchBean = new ClientSearchFormBean();
@@ -312,7 +312,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 		if(strictSearch.equalsIgnoreCase("true")) {
 			ProgramProviderDAO ppDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
 			clientSearchBean.setSearchOutsideDomain(false);
-			clientSearchBean.setProgramDomain(ppDao.getProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo()));
+			clientSearchBean.setProgramDomain(ppDao.getProgramDomain(providerNo));
 		} else {
 			clientSearchBean.setSearchOutsideDomain(true);
 		}

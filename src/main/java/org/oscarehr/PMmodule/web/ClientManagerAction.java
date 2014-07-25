@@ -182,6 +182,7 @@ public class ClientManagerAction extends DispatchAction {
 	}
 
 	public ActionForward admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		DynaActionForm clientForm = (DynaActionForm) form;
 
 		Admission admission = (Admission) clientForm.get("admission");
@@ -191,7 +192,7 @@ public class ClientManagerAction extends DispatchAction {
 		Program fullProgram = programManager.getProgram(String.valueOf(program.getId()));
 
 		try {
-			admissionManager.processAdmission(Integer.valueOf(demographicNo), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), fullProgram, admission.getDischargeNotes(), admission.getAdmissionNotes(), admission.isTemporaryAdmission());
+			admissionManager.processAdmission(Integer.valueOf(demographicNo), loggedInInfo.getLoggedInProviderNo(), fullProgram, admission.getDischargeNotes(), admission.getAdmissionNotes(), admission.isTemporaryAdmission());
 		} catch (ProgramFullException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", "Program is full."));
@@ -281,6 +282,8 @@ public class ClientManagerAction extends DispatchAction {
 	}
 
 	public ActionForward discharge_community(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		DynaActionForm clientForm = (DynaActionForm) form;
 
 		Admission admission = (Admission) clientForm.get("admission");
@@ -291,7 +294,7 @@ public class ClientManagerAction extends DispatchAction {
 		ActionMessages messages = new ActionMessages();
 
 		try {
-			admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), admission.getDischargeNotes(), admission.getRadioDischargeReason(), dependents, null);
+			admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), loggedInInfo.getLoggedInProviderNo(), admission.getDischargeNotes(), admission.getRadioDischargeReason(), dependents, null);
 			LogAction.log("write", "discharge", clientId, request);
 
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
@@ -634,6 +637,7 @@ public class ClientManagerAction extends DispatchAction {
 	}
 	
 	public ActionForward service_restrict(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		DynaActionForm clientForm = (DynaActionForm) form;
 		ProgramClientRestriction restriction = (ProgramClientRestriction) clientForm.get("serviceRestriction");
 		Integer days = (Integer) clientForm.get("serviceRestrictionLength");
@@ -644,7 +648,7 @@ public class ClientManagerAction extends DispatchAction {
 		restriction.setProgramId(p.getId());
 		restriction.setDemographicNo(Integer.valueOf(id));
 		restriction.setStartDate(new Date());
-		restriction.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		restriction.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(new Date());
 		cal.set(Calendar.HOUR, 23);
@@ -688,6 +692,7 @@ public class ClientManagerAction extends DispatchAction {
 	}
 
 	public ActionForward restrict_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		DynaActionForm clientForm = (DynaActionForm) form;
 		Program p = (Program) clientForm.get("program");
 		String id = request.getParameter("id");
@@ -697,7 +702,7 @@ public class ClientManagerAction extends DispatchAction {
 		p.setName(program.getName());
 
 		request.setAttribute("do_restrict", true);
-		request.setAttribute("can_restrict", caseManagementManager.hasAccessRight("Create service restriction", "access", LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), id, "" + p.getId()));
+		request.setAttribute("can_restrict", caseManagementManager.hasAccessRight("Create service restriction", "access", loggedInInfo.getLoggedInProviderNo(), id, "" + p.getId()));
 		request.setAttribute("program", program);
 
 		return mapping.findForward("edit");
@@ -706,8 +711,8 @@ public class ClientManagerAction extends DispatchAction {
 	public ActionForward terminate_early(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
 		int programClientRestrictionId = Integer.parseInt(request.getParameter("restrictionId"));
-		Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
-		clientRestrictionManager.terminateEarly(programClientRestrictionId, provider.getProviderNo());
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		clientRestrictionManager.terminateEarly(programClientRestrictionId, loggedInInfo.getLoggedInProviderNo());
 
 		return (edit(mapping, form, request, response));
 	}
@@ -715,10 +720,11 @@ public class ClientManagerAction extends DispatchAction {
 	public ActionForward override_restriction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;
 		ProgramClientRestriction restriction = (ProgramClientRestriction) clientForm.get("serviceRestriction");
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
 		ClientReferral referral = (ClientReferral) clientForm.get("referral");
 
-		if (isCancelled(request) || !caseManagementManager.hasAccessRight("Service restriction override on referral", "access", LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), "" + restriction.getDemographicNo(), "" + restriction.getProgramId())) {
+		if (isCancelled(request) || !caseManagementManager.hasAccessRight("Service restriction override on referral", "access", loggedInInfo.getLoggedInProviderNo(), "" + restriction.getDemographicNo(), "" + restriction.getProgramId())) {
 			clientForm.set("referral", new ClientReferral());
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.cancelled"));
@@ -794,7 +800,7 @@ public class ClientManagerAction extends DispatchAction {
 		bedDemographic.setReservationStart(today);
 		bedDemographic.setRoomId(Integer.valueOf(roomId));
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
 		Integer bedId = bedDemographic.getBedId();
 		Integer demographicNo = bedDemographic.getId().getDemographicNo();
@@ -1279,6 +1285,7 @@ public class ClientManagerAction extends DispatchAction {
 	}
 
 	public ActionForward submit_erconsent(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		DynaActionForm clientForm = (DynaActionForm) form;
 		ErConsentFormBean consentFormBean = (ErConsentFormBean) clientForm.get("erconsent");
 		boolean success = true;
@@ -1295,20 +1302,19 @@ public class ClientManagerAction extends DispatchAction {
 
 		request.getSession().setAttribute("er_consent_map", consentMap);
 
-		List<?> programDomain = providerManager.getProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		List<?> programDomain = providerManager.getProgramDomain(loggedInInfo.getLoggedInProviderNo());
 		if (programDomain.size() > 0) {
 			boolean doAdmit = true;
 			boolean doRefer = true;
 			ProgramProvider program = (ProgramProvider) programDomain.get(0);
 			// refer/admin client to service program associated with this user
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 			ClientReferral referral = new ClientReferral();
 			referral.setFacilityId(loggedInInfo.currentFacility.getId());
 			referral.setClientId(new Long(demographicNo));
 			referral.setNotes("ER Automated referral\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: " + consentFormBean.getConsentReason());
 			referral.setProgramId(program.getProgramId().longValue());
-			referral.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			referral.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 			referral.setReferralDate(new Date());
 			referral.setStatus(ClientReferral.STATUS_ACTIVE);
 
@@ -1342,7 +1348,7 @@ public class ClientManagerAction extends DispatchAction {
 			if (doAdmit) {
 				String admissionNotes = "ER Automated admission\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: " + consentFormBean.getConsentReason();
 				try {
-					admissionManager.processAdmission(Integer.valueOf(demographicNo), LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), programManager.getProgram(String.valueOf(program.getProgramId())), null, admissionNotes);
+					admissionManager.processAdmission(Integer.valueOf(demographicNo), loggedInInfo.getLoggedInProviderNo(), programManager.getProgram(String.valueOf(program.getProgramId())), null, admissionNotes);
 				} catch (Exception e) {
 					MiscUtils.getLogger().error("Error", e);
 					ActionMessages messages = new ActionMessages();

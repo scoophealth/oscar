@@ -30,6 +30,7 @@
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.List"%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));	
 	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
 	String ocanType = request.getParameter("ocanType");
@@ -51,11 +52,11 @@
 	if(ocanStaffFormId != 0) {
 		ocanStaffForm=OcanForm.getOcanStaffForm(Integer.valueOf(request.getParameter("ocanStaffFormId")));
 	}else {
-		ocanStaffForm = OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel,ocanType);		
+		ocanStaffForm = OcanForm.getOcanStaffForm(loggedInInfo.getCurrentFacility().getId(),currentDemographicId,prepopulationLevel,ocanType);		
 		
 		if(ocanStaffForm.getAssessmentId()==null) {
 		//prepopulate referral from last completed assessment.
-		OcanStaffForm lastCompletedForm = OcanForm.getLastCompletedOcanFormByOcanType(currentDemographicId, ocanType);
+		OcanStaffForm lastCompletedForm = OcanForm.getLastCompletedOcanFormByOcanType(loggedInInfo.getCurrentFacility().getId(),currentDemographicId, ocanType);
 		if(lastCompletedForm!=null) {
 			List<OcanStaffFormData> existingAnswers1 = OcanForm.getStaffAnswers(lastCompletedForm.getId(),referralNumber+"_summary_of_referral_optimal",prepopulationLevel);
 			if(existingAnswers1.size()>0)

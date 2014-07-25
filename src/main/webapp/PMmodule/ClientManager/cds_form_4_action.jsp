@@ -22,6 +22,7 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.Date"%>
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="org.oscarehr.common.model.CdsClientForm"%>
@@ -31,6 +32,8 @@
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+   		 
 	@SuppressWarnings("unchecked")
 	HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
 
@@ -66,7 +69,7 @@
 	boolean signed=WebUtils.isChecked(request, "signed");	
 	parameters.remove("signed");
 
-	CdsClientForm cdsClientForm=CdsForm4Action.createCdsClientForm(admissionId, clientId, initialContactDate, assessmentDate, signed);
+	CdsClientForm cdsClientForm=CdsForm4Action.createCdsClientForm(loggedInInfo, admissionId, clientId, initialContactDate, assessmentDate, signed);
 	
 	for (Map.Entry<String, String[]> entry : parameters.entrySet())
 	{

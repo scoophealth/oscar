@@ -157,7 +157,8 @@ public class GenericIntakeEditAction extends DispatchAction {
 		// end of change
 
 		String intakeType = request.getParameter(TYPE);
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 
 		Intake intake = null;
 		MiscUtils.getLogger().debug("INTAKE TYPE " + intakeType);
@@ -173,8 +174,6 @@ public class GenericIntakeEditAction extends DispatchAction {
 
 		MiscUtils.getLogger().debug("INTAKE IS NULL " + String.valueOf(intake == null));
 		List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
-		
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		
 		Integer defaultCommunityProgramId = null;
 		
@@ -225,7 +224,8 @@ public class GenericIntakeEditAction extends DispatchAction {
 	public ActionForward blank(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		Integer facilityId = loggedInInfo.currentFacility.getId();
 
 		// [ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
@@ -234,8 +234,6 @@ public class GenericIntakeEditAction extends DispatchAction {
 		// end of change
 
 		String intakeType = request.getParameter(TYPE);
-		//Integer clientId = getClientIdAsInteger(request);
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		Integer nodeId = null;
 		try {
@@ -308,7 +306,8 @@ public class GenericIntakeEditAction extends DispatchAction {
 	public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		Integer facilityId = loggedInInfo.currentFacility.getId();
 
 		// [ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
@@ -318,7 +317,6 @@ public class GenericIntakeEditAction extends DispatchAction {
 
 		String intakeType = request.getParameter(TYPE);
 		Integer clientId = getClientIdAsInteger(request);
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		Integer nodeId = null;
 		try {
@@ -400,11 +398,11 @@ public class GenericIntakeEditAction extends DispatchAction {
 	public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		Integer facilityId = loggedInInfo.currentFacility.getId();
 
 		String intakeType = request.getParameter(TYPE);
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 		Integer clientId = getClientIdAsInteger(request);
 		Integer intakeId = getIntakeId(request);
 

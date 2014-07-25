@@ -55,10 +55,8 @@ public class ManageHnrClientAction {
 	private static ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
 	private static HnrDataValidationDao hnrDataValidationDao = (HnrDataValidationDao) SpringUtils.getBean("hnrDataValidationDao");
 	
-	public static void copyHnrToLocal(Integer clientId) throws ConnectException_Exception {
+	public static void copyHnrToLocal(LoggedInInfo loggedInInfo,Integer clientId) throws ConnectException_Exception {
 		try {
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-			
 			logger.debug("copyHnrToLocal currentFacility=" + loggedInInfo.currentFacility.getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.loggedInProvider.getProviderNo() + ", client=" + clientId);
 
 			List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(loggedInInfo.currentFacility.getId(), clientId, true, ClientLink.Type.HNR);
@@ -111,10 +109,8 @@ public class ManageHnrClientAction {
 		}
 	}
 
-	public static void copyLocalValidatedToHnr(Integer clientId) throws DuplicateHinExceptionException, InvalidHinExceptionException, ConnectException_Exception {
+	public static void copyLocalValidatedToHnr(LoggedInInfo loggedInInfo, Integer clientId) throws DuplicateHinExceptionException, InvalidHinExceptionException, ConnectException_Exception {
 		try {
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-
 			logger.debug("copyLocalToHnr currentFacility=" +loggedInInfo.currentFacility.getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.loggedInProvider.getProviderNo() + ", client=" + clientId);
 
 			// there's 2 cases here
@@ -248,10 +244,8 @@ public class ManageHnrClientAction {
 		}
 	}
 
-	public static void setPictureValidation(Integer clientId, boolean valid) {
+	public static void setPictureValidation(LoggedInInfo loggedInInfo,Integer clientId, boolean valid) {
 		try {
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-
 			logger.debug("setPictureValidation currentFacility=" +loggedInInfo.currentFacility.getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.loggedInProvider.getProviderNo() + ", client=" + clientId + ", valid=" + valid);
 
 			ClientImage clientImage = clientImageDAO.getClientImage(clientId);
@@ -271,10 +265,8 @@ public class ManageHnrClientAction {
 		}
 	}
 
-	public static void setHcInfoValidation(Integer clientId, boolean valid) {
+	public static void setHcInfoValidation(LoggedInInfo loggedInInfo,Integer clientId, boolean valid) {
 		try {
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-
 			logger.debug("setHcInfoValidation currentFacility=" +loggedInInfo.currentFacility.getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.loggedInProvider.getProviderNo() + ", client=" + clientId + ", valid=" + valid);
 
 			Demographic demographic = demographicDao.getDemographicById(clientId);
@@ -294,10 +286,8 @@ public class ManageHnrClientAction {
 		}
 	}
 
-	public static void setOtherInfoValidation(Integer clientId, boolean valid) {
+	public static void setOtherInfoValidation(LoggedInInfo loggedInInfo, Integer clientId, boolean valid) {
 		try {
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-
 			logger.debug("setOtherInfoValidation currentFacility=" +loggedInInfo.currentFacility.getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.loggedInProvider.getProviderNo() + ", client=" + clientId + ", valid=" + valid);
 
 			Demographic demographic = demographicDao.getDemographicById(clientId);

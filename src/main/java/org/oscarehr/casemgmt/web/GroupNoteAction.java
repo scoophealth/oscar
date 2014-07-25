@@ -36,6 +36,7 @@ import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.GroupNoteLink;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -48,7 +49,7 @@ public class GroupNoteAction {
 	private static GroupNoteDao groupNoteDao = (GroupNoteDao)SpringUtils.getBean("groupNoteDao");
 	private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	
-	public static int saveGroupNote(CaseManagementEntryFormBean cform, String programId) {
+	public static int saveGroupNote(LoggedInInfo loggedInInfo, CaseManagementEntryFormBean cform, String programId) {
 		logger.info("saving group note");
 
 		String ids[] = cform.getGroupNoteClientIds();
@@ -83,7 +84,7 @@ public class GroupNoteAction {
 		
 		//create anonymous clients
 		for(int x=0;x<totalAnonymous;x++) {
-			Demographic d = CreateAnonymousClientAction.generateAnonymousClient(Integer.valueOf(programId));
+			Demographic d = CreateAnonymousClientAction.generateAnonymousClient(loggedInInfo.getLoggedInProviderNo(), Integer.valueOf(programId));
 			anonymousClients.add(d);
 		}
 		
