@@ -43,6 +43,7 @@ import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.LoginResultTransfer3;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.DeamonThreadFactory;
 import org.oscarehr.util.EncryptionUtils;
 import org.oscarehr.util.LoggedInInfo;
@@ -107,20 +108,22 @@ public final class MyOscarUtils {
 
 	public static void attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(final LoggedInInfo loggedInInfo, final boolean forceReLogin) {
 		if (!isMyOscarEnabled()) return;
-		
-		HttpSession session = loggedInInfo.session;
-		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
-		if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn()) return;
 
-		Runnable runnable=new Runnable()
-		{
+		HttpSession session = loggedInInfo.session;
+		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(session);
+		if (myOscarLoggedInInfo != null && myOscarLoggedInInfo.isLoggedIn()) return;
+
+		Runnable runnable = new Runnable() {
 			@Override
-			public void run()
-			{
-				attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(loggedInInfo, forceReLogin);
+			public void run() {
+				try {
+					attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(loggedInInfo, forceReLogin);
+				} finally {
+					DbConnectionFilter.releaseAllThreadDbResources();
+				}
 			}
 		};
-		
+
 		asyncAutoLoginThreadPool.submit(runnable);
 	}
 
