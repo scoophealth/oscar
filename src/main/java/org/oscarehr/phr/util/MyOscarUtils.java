@@ -161,15 +161,15 @@ public final class MyOscarUtils {
 			ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
 			ProviderPreference providerPreference = providerPreferenceDao.find(loggedInInfo.loggedInProvider.getProviderNo());
 
-			byte[] encryptedMyOscarPassword = providerPreference.getEncryptedMyOscarPassword();
-			if (encryptedMyOscarPassword == null) return;
-			
-			SecretKeySpec key = getDeterministicallyMangledPasswordSecretKeyFromSession(session);
-			byte[] decryptedMyOscarPasswordBytes = EncryptionUtils.decrypt(key, encryptedMyOscarPassword);
-			String decryptedMyOscarPasswordString = new String(decryptedMyOscarPasswordBytes, "UTF-8");
-
 			try
 			{
+				byte[] encryptedMyOscarPassword = providerPreference.getEncryptedMyOscarPassword();
+				if (encryptedMyOscarPassword == null) return;
+				
+				SecretKeySpec key = getDeterministicallyMangledPasswordSecretKeyFromSession(session);
+				byte[] decryptedMyOscarPasswordBytes = EncryptionUtils.decrypt(key, encryptedMyOscarPassword);
+				String decryptedMyOscarPasswordString = new String(decryptedMyOscarPasswordBytes, "UTF-8");
+
 				LoginResultTransfer3 loginResultTransfer=AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, decryptedMyOscarPasswordString);
 			
 				myOscarLoggedInInfo=new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), session.getId(), loggedInInfo.locale);
