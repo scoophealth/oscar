@@ -237,23 +237,21 @@
 	extensions.add(new DemographicExt(request.getParameter("paper_chart_archived_date_id"), proNo, demographicNo, "paper_chart_archived_date", request.getParameter("paper_chart_archived_date")));
 	extensions.add(new DemographicExt(request.getParameter("paper_chart_archived_program_id"), proNo, demographicNo, "paper_chart_archived_program", request.getParameter("paper_chart_archived_program")));
 	
-	for (DemographicExt extension : extensions) {
+	// customized key
+	if(oscarVariables.getProperty("demographicExt") != null) {
+	   String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
+	   for(int k=0; k<propDemoExt.length; k++) {
+                   extensions.add(new DemographicExt(request.getParameter(propDemoExt[k].replace(' ','_')+"_id"),proNo, demographicNo, propDemoExt[k].replace(' ','_'), request.getParameter(propDemoExt[k].replace(' ','_'))));
+	   }
+	}
+        
+        for (DemographicExt extension : extensions) {
 	    demographicExtDao.saveEntity(extension);
 	}
 	
 	// for the IBD clinic
 	OtherIdManager.saveIdDemographic(demographicNo, "meditech_id", request.getParameter("meditech_id"));
 	
-	// customized key
-	if(oscarVariables.getProperty("demographicExt") != null) {
-	   String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
-	   for(int k=0; k<propDemoExt.length; k++) {
-		   demographicExtDao.addKey(proNo,demographicNo,propDemoExt[k].replace(' ','_'),request.getParameter(propDemoExt[k].replace(' ','_')),request.getParameter(propDemoExt[k].replace(' ','_')+"Orig"));
-	   }
-	}
-
-
-
      // added check to see if patient has a bc health card and has a version code of 66, in this case you are aloud to have dup hin
      boolean hinDupCheckException = false;
      String hcType = request.getParameter("hc_type");
