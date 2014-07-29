@@ -93,21 +93,25 @@ public class EctDisplayMyOscarAction extends EctDisplayAction {
 		Dao.setRightURL(url);
 		Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
 
-		Map<MedicalDataType, List<Measurement>> mm = MeasurementsManager.getMeasurementsFromMyOscar(myOscarLoggedInInfo, demographic.getDemographicNo(), MED_DATA_TYPES);
-		String demoNo = demographic.getDemographicNo().toString();
-		for (MedicalDataType mdt : MED_DATA_TYPES) {
-			String title = toReadableName(mdt);
-			List<Measurement> measurements = mm.get(mdt);
-			if (measurements == null || measurements.isEmpty()) {
-				Dao.addItem(newItem(title, "black"));
-				continue;
+		try {
+			Map<MedicalDataType, List<Measurement>> mm = MeasurementsManager.getMeasurementsFromMyOscar(myOscarLoggedInInfo, demographic.getDemographicNo(), MED_DATA_TYPES);
+			String demoNo = demographic.getDemographicNo().toString();
+			for (MedicalDataType mdt : MED_DATA_TYPES) {
+				String title = toReadableName(mdt);
+				List<Measurement> measurements = mm.get(mdt);
+				if (measurements == null || measurements.isEmpty()) {
+					Dao.addItem(newItem(title, "black"));
+					continue;
+				}
+
+				Measurement latestMeasurement = getLatestMeasurement(measurements);
+				NavBarDisplayDAO.Item item = newItem(title, getPageName(request, mdt, demoNo), "blue");
+				item.setURLJavaScript(false);
+				item.setDate(latestMeasurement.getDateObserved());
+				Dao.addItem(item);
 			}
-						
-			Measurement latestMeasurement = getLatestMeasurement(measurements);
-			NavBarDisplayDAO.Item item = newItem(title, getPageName(request, mdt, demoNo), "blue");
-			item.setURLJavaScript(false);
-			item.setDate(latestMeasurement.getDateObserved());
-			Dao.addItem(item);
+		} catch (Exception e) {
+			logger.error("Unexpected error", e);
 		}
 
 		return true;

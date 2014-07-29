@@ -101,13 +101,7 @@ public final class MeasurementsManager {
 				logger.info("Loading MyOSCAR measurements for " + demoId);
 			}
 
-			Long myOscarDemoId = null;
-			try {
-				myOscarDemoId = MyOscarUtils.getMyOscarUserIdFromOscarDemographicId(myOscarLoggedInInfo, demoId);
-			} catch (Exception e) {
-				logger.error("Unable to translate demo id", e);
-				return null;
-			}
+			Long myOscarDemoId = MyOscarUtils.getMyOscarUserIdFromOscarDemographicId(myOscarLoggedInInfo, demoId);
 
 			Map<MedicalDataType, List<Measurement>> result = new HashMap<MedicalDataType, List<Measurement>>();
 			for (MedicalDataType type : types) {
