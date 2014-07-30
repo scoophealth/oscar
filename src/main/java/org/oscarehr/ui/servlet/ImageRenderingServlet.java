@@ -24,9 +24,11 @@
 package org.oscarehr.ui.servlet;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.SocketException;
 
 import javax.servlet.http.HttpServlet;
@@ -190,12 +192,31 @@ public final class ImageRenderingServlet extends HttpServlet {
 			if (clientImage != null && "jpg".equalsIgnoreCase(clientImage.getImage_type())) {
 				renderImage(response, clientImage.getImage_data(), "jpeg");
 				return;
+			} else {
+				renderImage(response, getDefaultImage(request), "jpeg");
 			}
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
 		}
 
 		response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	}
+	
+	private static byte[] getDefaultImage(HttpServletRequest request) {
+		String defaultClientImage = "/images/defaultG_img.jpg";
+
+        ByteArrayOutputStream bais = new ByteArrayOutputStream();
+        try {
+            InputStream is = request.getSession().getServletContext().getResourceAsStream(defaultClientImage);
+            byte[] byteChunk = new byte[1024];
+            int n;
+            while ( (n = is.read(byteChunk)) > 0 ) {
+            	bais.write(byteChunk, 0, n);
+        	}
+        } catch (IOException e) {
+        	logger.error("Error reading default image.", e);
+        }
+		return bais.toByteArray();
 	}
 
 	private void renderSignaturePreview(HttpServletRequest request, HttpServletResponse response) throws IOException {
