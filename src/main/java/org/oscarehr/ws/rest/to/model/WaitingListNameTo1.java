@@ -24,52 +24,64 @@
 package org.oscarehr.ws.rest.to.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement
-public class AddressTo1 implements Serializable {
+public class WaitingListNameTo1 implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String province;
-	private String postal;
-	private String city;
-	private String address;
+	private Integer id;
+	private String name;
+	private String groupNo;
+	private String providerNo;
+	private Date createDate;
+	private String isHistory;
 
-	public String getProvince() {
-		return province;
-	}
+	public Integer getId() {
+    	return id;
+    }
 
-	public void setProvince(String province) {
-		this.province = province;
-	}
+	public void setId(Integer id) {
+    	this.id = id;
+    }
 
-	public String getPostal() {
-		return postal;
-	}
+	public String getName() {
+    	return name;
+    }
 
-	public void setPostal(String postal) {
-		this.postal = postal;
-	}
+	public void setName(String name) {
+    	this.name = name;
+    }
 
-	public String getCity() {
-		return city;
-	}
+	public String getGroupNo() {
+    	return groupNo;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+	public void setGroupNo(String groupNo) {
+    	this.groupNo = groupNo;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+	public String getProviderNo() {
+    	return providerNo;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+	public void setProviderNo(String providerNo) {
+    	this.providerNo = providerNo;
+    }
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+	public Date getCreateDate() {
+    	return createDate;
+    }
+
+	public void setCreateDate(Date createDate) {
+    	this.createDate = createDate;
+    }
+
+	public String getIsHistory() {
+    	return isHistory;
+    }
+
+	public void setIsHistory(String isHistory) {
+    	this.isHistory = isHistory;
+    }
 }
