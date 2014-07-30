@@ -58,6 +58,12 @@ public class DemographicTo1 implements Serializable {
 	private String ver;
 
 	private Date dateOfBirth;
+	
+	private String dobYear;
+
+	private String dobMonth;
+
+	private String dobDay;
 
 	private String sex;
 
@@ -92,8 +98,6 @@ public class DemographicTo1 implements Serializable {
 	private String rosterTerminationReason;
 
 	private String links;
-
-	private List<DemographicExtTo1> extras = new ArrayList<DemographicExtTo1>();
 
 	private String alias;
 
@@ -130,6 +134,36 @@ public class DemographicTo1 implements Serializable {
 	private String countryOfOrigin;
 
 	private String newsletter;
+
+	private String nurse;
+	
+	private String resident;
+	
+	private String alert;
+	
+	private String midwife;
+	
+	private String notes;
+	
+	private Integer waitingListID;
+	
+	private String waitingListNote;
+	
+	private Date onWaitingListSinceDate;
+	
+	private List<DemographicContactFewTo1> demoContacts = new ArrayList<DemographicContactFewTo1>();
+
+	private List<DemographicContactFewTo1> demoContactPros = new ArrayList<DemographicContactFewTo1>();
+
+	private List<DemographicExtTo1> extras = new ArrayList<DemographicExtTo1>();
+
+	private List<ProviderTo1> doctors = new ArrayList<ProviderTo1>();
+	
+	private List<ProviderTo1> nurses = new ArrayList<ProviderTo1>();
+	
+	private List<ProviderTo1> midwives = new ArrayList<ProviderTo1>();
+	
+	private List<WaitingListNameTo1> waitingListNames = new ArrayList<WaitingListNameTo1>();
 
 	public Integer getDemographicNo() {
 		return demographicNo;
@@ -209,6 +243,30 @@ public class DemographicTo1 implements Serializable {
 
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public String getDobYear() {
+		return dobYear;
+	}
+
+	public void setDobYear(String dobYear) {
+		this.dobYear = dobYear;
+	}
+
+	public String getDobMonth() {
+		return dobMonth;
+	}
+
+	public void setDobMonth(String dobMonth) {
+		this.dobMonth = dobMonth;
+	}
+
+	public String getDobDay() {
+		return dobDay;
+	}
+
+	public void setDobDay(String dobDay) {
+		this.dobDay = dobDay;
 	}
 
 	public String getSex() {
@@ -345,14 +403,6 @@ public class DemographicTo1 implements Serializable {
 
 	public void setLinks(String links) {
 		this.links = links;
-	}
-
-	public List<DemographicExtTo1> getExtras() {
-		return extras;
-	}
-
-	public void setExtras(List<DemographicExtTo1> extras) {
-		this.extras = extras;
 	}
 
 	public String getAlias() {
@@ -513,5 +563,125 @@ public class DemographicTo1 implements Serializable {
 
 	public void setAlternativePhone(String alternativePhone) {
 		this.alternativePhone = alternativePhone;
+	}
+
+	public String getNurse() {
+		return nurse;
+	}
+	
+	public void setNurse(String nurse) {
+		this.nurse = nurse;
+	}
+	
+	public String getResident() {
+		return resident;
+	}
+	
+	public void setResident(String resident) {
+		this.resident = resident;
+	}
+	
+	public String getAlert() {
+		return alert;
+	}
+
+	public void setAlert(String alert) {
+		this.alert = alert;
+	}
+	
+	public String getMidwife() {
+		return midwife;
+	}
+	
+	public void setMidwife(String midwife) {
+		this.midwife = midwife;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+	
+	public Integer getWaitingListID() {
+		return waitingListID;
+	}
+	
+	public void setWaitingListID(Integer waitingListID) {
+		this.waitingListID = waitingListID;
+	}
+	
+	public String getWaitingListNote() {
+		return waitingListNote;
+	}
+	
+	public void setWaitingListNote(String note) {
+		this.waitingListNote = note;
+	}
+	
+	public Date getOnWaitingListSinceDate() {
+		return onWaitingListSinceDate;
+	}
+	
+	public void setOnWaitingListSinceDate(Date onWaitingListSinceDate) {
+		this.onWaitingListSinceDate = onWaitingListSinceDate;
+	}
+
+	public List<DemographicExtTo1> getExtras() {
+		return extras;
+	}
+
+	public void setExtras(List<DemographicExtTo1> extras) {
+		this.extras = extras;
+	}
+
+	public List<DemographicContactFewTo1> getDemoContacts() {
+		return demoContacts;
+	}
+
+	public void setDemoContacts(List<DemographicContactFewTo1> demoContacts) {
+		this.demoContacts = demoContacts;
+	}
+
+	public List<DemographicContactFewTo1> getDemoContactPros() {
+		return demoContactPros;
+	}
+
+	public void setDemoContactPros(List<DemographicContactFewTo1> demoContactPros) {
+		this.demoContactPros = demoContactPros;
+	}
+	
+	public List<ProviderTo1> getDoctors() {
+		return doctors;
+	}
+	
+	public void setDoctors(List<ProviderTo1> doctors) {
+		this.doctors = doctors;
+	}
+	
+	public List<ProviderTo1> getNurses() {
+		return nurses;
+	}
+	
+	public void setNurses(List<ProviderTo1> nurses) {
+		this.nurses = nurses;
+	}
+	
+	public List<ProviderTo1> getMidwives() {
+		return midwives;
+	}
+	
+	public void setMidwives(List<ProviderTo1> midwives) {
+		this.midwives = midwives;
+	}
+	
+	public List<WaitingListNameTo1> getWaitingListNames() {
+		return waitingListNames;
+	}
+	
+	public void setWaitingListNames(List<WaitingListNameTo1> waitingListNames) {
+		this.waitingListNames = waitingListNames;
 	}
 }

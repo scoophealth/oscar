@@ -31,6 +31,9 @@ public class ProviderTo1 implements Serializable {
     private static final long serialVersionUID = 1L;
     
 	private String providerNo;
+	private String lastName;
+	private String firstName;
+	private String name;
 	private String comments;
 	private String phone;
 	private String billingNo;
@@ -38,7 +41,6 @@ public class ProviderTo1 implements Serializable {
 	private AddressTo1 address = new AddressTo1();
 	private String team;
 	private boolean enabled;
-	private String lastName;
 	private String providerType;
 	private Sex1 sex;
 	private String ohipNo;
@@ -46,7 +48,6 @@ public class ProviderTo1 implements Serializable {
 	private Date dob;
 	private String hsoNo;
 	private String providerActivity;
-	private String firstName;
 	private String rmaNo;
 	private Date signedConfidentiality;
 	private String practitionerNo;
@@ -61,6 +62,30 @@ public class ProviderTo1 implements Serializable {
 
 	public void setProviderNo(String providerNo) {
 		this.providerNo = providerNo;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getComments() {
@@ -109,14 +134,6 @@ public class ProviderTo1 implements Serializable {
 
 	public void setTeam(String team) {
 		this.team = team;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
 	}
 
 	public String getProviderType() {
@@ -173,14 +190,6 @@ public class ProviderTo1 implements Serializable {
 
 	public void setProviderActivity(String providerActivity) {
 		this.providerActivity = providerActivity;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
 	}
 
 	public String getRmaNo() {
