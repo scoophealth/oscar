@@ -29,6 +29,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpSession;
 
@@ -150,38 +151,41 @@ public final class MyOscarUtils {
 	
 	public static void attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(LoggedInInfo loggedInInfo, boolean forceReLogin) {
 		HttpSession session = loggedInInfo.session;
+
+		ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
+		ProviderPreference providerPreference = providerPreferenceDao.find(loggedInInfo.loggedInProvider.getProviderNo());
+		String myOscarUserName = null;
 		
-		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
-		if (!forceReLogin && myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn()) return;
-		
+		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(session);
+		if (!forceReLogin && myOscarLoggedInInfo != null && myOscarLoggedInInfo.isLoggedIn()) return;
+
 		try {
-			String myOscarUserName=getMyOscarUserNameFromOscar(loggedInInfo.loggedInProvider.getProviderNo());
-			if (myOscarUserName==null) return;
+			myOscarUserName = getMyOscarUserNameFromOscar(loggedInInfo.loggedInProvider.getProviderNo());
+			if (myOscarUserName == null) return;
 
-			ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
-			ProviderPreference providerPreference = providerPreferenceDao.find(loggedInInfo.loggedInProvider.getProviderNo());
+			byte[] encryptedMyOscarPassword = providerPreference.getEncryptedMyOscarPassword();
+			if (encryptedMyOscarPassword == null) return;
 
-			try
-			{
-				byte[] encryptedMyOscarPassword = providerPreference.getEncryptedMyOscarPassword();
-				if (encryptedMyOscarPassword == null) return;
-				
-				SecretKeySpec key = getDeterministicallyMangledPasswordSecretKeyFromSession(session);
-				byte[] decryptedMyOscarPasswordBytes = EncryptionUtils.decrypt(key, encryptedMyOscarPassword);
-				String decryptedMyOscarPasswordString = new String(decryptedMyOscarPasswordBytes, "UTF-8");
+			SecretKeySpec key = getDeterministicallyMangledPasswordSecretKeyFromSession(session);
+			byte[] decryptedMyOscarPasswordBytes = EncryptionUtils.decrypt(key, encryptedMyOscarPassword);
+			String decryptedMyOscarPasswordString = new String(decryptedMyOscarPasswordBytes, "UTF-8");
 
-				LoginResultTransfer3 loginResultTransfer=AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, decryptedMyOscarPasswordString);
-			
-				myOscarLoggedInInfo=new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), session.getId(), loggedInInfo.locale);
-				MyOscarLoggedInInfo.setLoggedInInfo(session, myOscarLoggedInInfo);
-			}
-			catch (NotAuthorisedException_Exception e) {
-				logger.warn("Could not login to MyOscar, invalid credentials. myOscarUserName="+myOscarUserName);
-				
-				// login failed, remove myoscar saved password
-				providerPreference.setEncryptedMyOscarPassword(null);
-				providerPreferenceDao.merge(providerPreference);
-			}
+			LoginResultTransfer3 loginResultTransfer = AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, decryptedMyOscarPasswordString);
+
+			myOscarLoggedInInfo = new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), session.getId(), loggedInInfo.locale);
+			MyOscarLoggedInInfo.setLoggedInInfo(session, myOscarLoggedInInfo);
+		} catch (NotAuthorisedException_Exception e) {
+			logger.warn("Could not login to MyOscar, invalid credentials. chances are myoscar pw changed, myOscarUserName=" + myOscarUserName);
+
+			// login failed, remove myoscar saved password
+			providerPreference.setEncryptedMyOscarPassword(null);
+			providerPreferenceDao.merge(providerPreference);
+		} catch (BadPaddingException e) {
+			logger.debug("stored password no longer valid due to change in encryption keys");
+
+			// remove myoscar saved password
+			providerPreference.setEncryptedMyOscarPassword(null);
+			providerPreferenceDao.merge(providerPreference);
 		} catch (Throwable t) {
 			logger.error("Error attempting auto-myoscar login", t);
 		}
