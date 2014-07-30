@@ -388,14 +388,12 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 							 --%>
 						</div>
 
-						<c:if test="${sessionScope.passwordEnabled=='true'}">
-							<p style='background-color: #CCCCFF; display: none; margin: 0px;' id='notePasswd'>Password:&nbsp;<input type="password" name="caseNote.password" value="" />&nbsp;Confirmation:&nbsp;<input type='password' name='caseNote.passwordConfirm'/></p>
-						</c:if>
+						
 					<%
 		 		}
 				else //else display contents of note for viewing
 				{
-					if (note.isLocked())
+					if (false)
 					{
 					%>
 						<div id="txt<%=globalNoteId%>">
@@ -765,7 +763,7 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 		//so we store the ids here and list the event listeners at the end of this script
 		if (note.getNoteId()!=null && note.getNoteId() != savedId)
 		{
-			if (note.isLocked())
+			if (false)
 			{
 				lockedNotes.add(note.getNoteId());
 			}
@@ -800,12 +798,7 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 				<%@ include file="noteIssueList.jsp"%>
 			</div> <!-- end of div sig<%=savedId%> -->
 
-			<c:if test="${sessionScope.passwordEnabled=='true'}">
-				<p style='background-color: #CCCCFF; display: none; margin: 0px;' id='notePasswd'>Password:&nbsp;
-				<input type="password" name="caseNote.password" value="" />&nbsp;Confirmation:&nbsp;
-				<input type='password' name='caseNote.passwordConfirm'/>
-				</p>
-			</c:if>
+			
 		</div> <!-- end of div n<%=savedId%>  -->
 	</div> <!-- end of div nc<%=offset%><%=savedId%> -->
 	
