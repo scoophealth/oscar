@@ -61,6 +61,7 @@ public class ProviderConverter extends AbstractConverter<Provider, ProviderTo1> 
 		d.setHsoNo(t.getHsoNo());
 		d.setProviderActivity(t.getProviderActivity());
 		d.setFirstName(t.getFirstName());
+		d.setLastName(t.getLastName());
 		d.setRmaNo(t.getRmaNo());
 		d.setSignedConfidentiality(t.getSignedConfidentiality());
 		d.setPractitionerNo(t.getPractitionerNo());
@@ -99,6 +100,8 @@ public class ProviderConverter extends AbstractConverter<Provider, ProviderTo1> 
 		t.setHsoNo(d.getHsoNo());
 		t.setProviderActivity(d.getProviderActivity());
 		t.setFirstName(d.getFirstName());
+		t.setLastName(d.getLastName());
+		t.setName(d.getLastName() + ", " + d.getFirstName());
 		t.setRmaNo(d.getRmaNo());
 		t.setSignedConfidentiality(d.getSignedConfidentiality());
 		t.setPractitionerNo(d.getPractitionerNo());

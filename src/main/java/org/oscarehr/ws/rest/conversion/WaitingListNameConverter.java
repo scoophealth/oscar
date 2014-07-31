@@ -23,36 +23,38 @@
  */
 package org.oscarehr.ws.rest.conversion;
 
-import org.oscarehr.common.model.DemographicExt;
-import org.oscarehr.ws.rest.to.model.DemographicExtTo1;
+import org.oscarehr.common.model.WaitingListName;
+import org.oscarehr.ws.rest.to.model.WaitingListNameTo1;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DemographicExtConverter extends AbstractConverter<DemographicExt, DemographicExtTo1> {
+public class WaitingListNameConverter extends AbstractConverter<WaitingListName, WaitingListNameTo1> {
 
 	@Override
-	public DemographicExt getAsDomainObject(DemographicExtTo1 t) throws ConversionException {
-		DemographicExt d = new DemographicExt();
+	public WaitingListName getAsDomainObject(WaitingListNameTo1 t) throws ConversionException {
+		WaitingListName d = new WaitingListName();
 		
-		d.setDemographicNo(t.getDemographicNo());
+		d.setId(t.getId());
+		d.setName(t.getName());
+		d.setGroupNo(t.getGroupNo());
 		d.setProviderNo(t.getProviderNo());
-		d.setKey(t.getKey());
-		d.setValue(t.getValue());
-		d.setDateCreated(t.getDateCreated());
-		d.setHidden(t.isHidden());
+		d.setCreateDate(t.getCreateDate());
+		d.setIsHistory(t.getIsHistory());
+
 		return d;
 	}
 
 	@Override
-	public DemographicExtTo1 getAsTransferObject(DemographicExt d) throws ConversionException {
-		DemographicExtTo1 t = new DemographicExtTo1();
+	public WaitingListNameTo1 getAsTransferObject(WaitingListName d) throws ConversionException {
+		WaitingListNameTo1 t = new WaitingListNameTo1();
 		
-		t.setDemographicNo(d.getDemographicNo());
+		t.setId(d.getId());
+		t.setName(d.getName());
+		t.setGroupNo(d.getGroupNo());
 		t.setProviderNo(d.getProviderNo());
-		t.setKey(d.getKey());
-		t.setValue(d.getValue());
-		t.setDateCreated(d.getDateCreated());
-		t.setHidden(d.isHidden());
+		t.setCreateDate(d.getCreateDate());
+		t.setIsHistory(d.getIsHistory());
+
 		return t;
 	}
 

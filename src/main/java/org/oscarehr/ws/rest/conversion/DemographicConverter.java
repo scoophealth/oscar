@@ -26,14 +26,13 @@ package org.oscarehr.ws.rest.conversion;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.to.model.DemographicTo1;
-
-import oscar.util.ConversionUtils;
 
 public class DemographicConverter extends AbstractConverter<Demographic, DemographicTo1> {
 	
 	private static Logger logger = Logger.getLogger(DemographicConverter.class);
-
+	
 	private DemographicExtConverter demoExtConverter = new DemographicExtConverter();
 	private ProviderConverter providerConverter = new ProviderConverter();
 
@@ -56,9 +55,12 @@ public class DemographicConverter extends AbstractConverter<Demographic, Demogra
 		d.setProvince(t.getAddress().getProvince());
 		d.setVer(t.getVer());
 		d.setSex(t.getSex());
-		d.setDateOfBirth(ConversionUtils.toDateString(t.getDateOfBirth(), ConversionUtils.DATE_PATTERN_DAY));
-		d.setMonthOfBirth(ConversionUtils.toDateString(t.getDateOfBirth(), ConversionUtils.DATE_PATTERN_MONTH));
-		d.setYearOfBirth(ConversionUtils.toDateString(t.getDateOfBirth(), ConversionUtils.DATE_PATTERN_YEAR));
+		d.setDateOfBirth(t.getDobDay());
+		d.setMonthOfBirth(t.getDobMonth());
+		d.setYearOfBirth(t.getDobYear());
+//		d.setDateOfBirth(ConversionUtils.toDateString(t.getDateOfBirth(), ConversionUtils.DATE_PATTERN_DAY));
+//		d.setMonthOfBirth(ConversionUtils.toDateString(t.getDateOfBirth(), ConversionUtils.DATE_PATTERN_MONTH));
+//		d.setYearOfBirth(ConversionUtils.toDateString(t.getDateOfBirth(), ConversionUtils.DATE_PATTERN_YEAR));
 		d.setSexDesc(t.getSexDesc());
 		d.setDateJoined(t.getDateJoined());
 		d.setFamilyDoctor(t.getFamilyDoctor());
@@ -99,7 +101,13 @@ public class DemographicConverter extends AbstractConverter<Demographic, Demogra
 		DemographicExt[] exts = new DemographicExt[t.getExtras().size()];
 		for (int i = 0; i < t.getExtras().size(); i++) {
 			exts[i] = demoExtConverter.getAsDomainObject(t.getExtras().get(i));
+			
+			if (exts[i].getDemographicNo()==null) exts[i].setDemographicNo(d.getDemographicNo());
+			if (exts[i].getProviderNo()==null) {
+		    	exts[i].setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			}
 		}
+		d.setExtras(exts);
 
 		if (t.getProvider() != null) {
 			d.setProvider(providerConverter.getAsDomainObject(t.getProvider()));
@@ -129,6 +137,9 @@ public class DemographicConverter extends AbstractConverter<Demographic, Demogra
 		} catch (Exception e ) {
 			logger.warn("Unable to parse date: " + d.getBirthDayAsString());
 		}
+		t.setDobYear(d.getYearOfBirth());
+		t.setDobMonth(d.getMonthOfBirth());
+		t.setDobDay(d.getDateOfBirth());
 		t.setSexDesc(d.getSexDesc());
 		t.setDateJoined(d.getDateJoined());
 		t.setFamilyDoctor(d.getFamilyDoctor());
