@@ -35,6 +35,8 @@
 <%@page import="java.util.List"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 	@SuppressWarnings("unchecked")
 	HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
 
@@ -50,7 +52,7 @@
 	//String assessmentStatus = parameters.get("assessment_status")[0];
 	String ocanStaffFormId = parameters.get("ocanStaffFormId")[0];
 
-	OcanStaffForm ocanClientForm=OcanFormAction.createOcanStaffForm(ocanStaffFormId,clientId,signed);
+	OcanStaffForm ocanClientForm=OcanFormAction.createOcanStaffForm(loggedInInfo,ocanStaffFormId,clientId,signed);
 	ocanClientForm.setLastName(request.getParameter("lastName")==null?"":request.getParameter("lastName"));
 	ocanClientForm.setFirstName(request.getParameter("firstName")==null?"":request.getParameter("firstName"));	
 	
@@ -84,7 +86,6 @@
 	}catch(java.text.ParseException e){}
 	
 	ocanClientForm.setClientFormCreated(new Date());
-	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	ocanClientForm.setClientFormProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 	ocanClientForm.setClientFormProviderName(loggedInInfo.loggedInProvider.getFormattedName());		
 

@@ -65,10 +65,12 @@ public class ProviderInfoAction extends DispatchAction {
     }
 
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        String providerNo = null;
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
+		String providerNo = null;
         providerNo = (String)request.getSession().getAttribute("user");
         if(providerNo == null || "".equals(providerNo) ) {
-            providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+            providerNo = loggedInInfo.getLoggedInProviderNo();
         }
 
         request.setAttribute("provider", providerManager.getProvider(providerNo));

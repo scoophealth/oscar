@@ -35,6 +35,7 @@
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProgramDao"%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String[] programIds=request.getParameterValues("programIds");
     String[] functionalCentreIds=request.getParameterValues("functionalCentreIds");	
     
@@ -44,7 +45,6 @@
     	programIdsString.add(programId);
     }
     ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
-    LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
     if(functionalCentreIds!=null) {
 	    for(String functionalCentreId : functionalCentreIds) {
 	    	List<Program> programList = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentreId);
@@ -94,7 +94,7 @@
 	//    for each month...
 	//       print monthly data
 
-	PopulationReportUIBean populationReportUIBean = new PopulationReportUIBean();
+	PopulationReportUIBean populationReportUIBean = new PopulationReportUIBean(loggedInInfo);
 	populationReportUIBean.skipTotalRow=true;
 	
 	// print header

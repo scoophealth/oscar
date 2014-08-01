@@ -32,6 +32,7 @@
 <%@page import="org.oscarehr.common.model.FunctionalCentre"%>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String functionalCentreId=request.getParameter("functionalCentreId");
 	int programId=Integer.parseInt(request.getParameter("programId"));
 	String startDateString=request.getParameter("startDate");
@@ -56,7 +57,7 @@
 		// do nothing, bad input
 	}
 	
-	PopulationReportUIBean populationReportUIBean=new PopulationReportUIBean(functionalCentreId, programId, startDate, endDate);
+	PopulationReportUIBean populationReportUIBean=new PopulationReportUIBean(loggedInInfo,functionalCentreId, programId, startDate, endDate);
 	Program program=populationReportUIBean.getProgram();
 	FunctionalCentre functionalCentre=populationReportUIBean.getFunctionalCentre();
 	PopulationReportDataObjects.RoleDataGrid roleDataGrid=populationReportUIBean.getRoleDataGrid();

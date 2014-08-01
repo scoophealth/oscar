@@ -798,6 +798,9 @@ public class SurveyManagerAction extends AbstractSurveyAction {
     		return mapping.findForward("auth");
     	}
 		
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+	
 		DynaActionForm surveyForm = (DynaActionForm)form;
 		Survey survey = (Survey)surveyForm.get("survey");
 		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
@@ -818,7 +821,6 @@ public class SurveyManagerAction extends AbstractSurveyAction {
             survey.setDateCreated(new Date());
         }
     
-        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
         survey.setFacilityId(loggedInInfo.currentFacility.getId());
         
         survey.setUserId(Integer.valueOf((String)request.getSession().getAttribute("user")));

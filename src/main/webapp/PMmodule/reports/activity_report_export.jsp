@@ -35,6 +35,7 @@
 
 <%@page contentType="text/csv"%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String agencyName = oscar.OscarProperties.getInstance().getProperty("db_name","");
 	String startDateString = request.getParameter("startDate");
 	String endDateString = request.getParameter("endDate");
@@ -78,7 +79,7 @@
 	ProgressStatus progressStatus=new ProgressStatus();
 	session.setAttribute("progressStatus", progressStatus);
 	
-	PopulationReportUIBean populationReportUIBean = new PopulationReportUIBean();
+	PopulationReportUIBean populationReportUIBean = new PopulationReportUIBean(loggedInInfo);
 	populationReportUIBean.skipTotalRow=true;
 	
 	// print header

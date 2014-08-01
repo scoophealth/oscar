@@ -47,7 +47,8 @@ public class OlisPreferencesAction extends DispatchAction {
 	}
 	   
 	public ActionForward view(ActionMapping mapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();		
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		UserProperty prop = dao.getProp(providerNo, "olis_reportingLab");
 		if(prop != null)
 			request.setAttribute("reportingLaboratory", prop.getValue());
@@ -62,7 +63,8 @@ public class OlisPreferencesAction extends DispatchAction {
 	public ActionForward save(ActionMapping mapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
 		String reportingLab = request.getParameter("reportingLaboratory");
 		String excludeReportingLab = request.getParameter("excludeReportingLaboratory");
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		
 		if(reportingLab != null ) {
 			UserProperty prop = dao.getProp(providerNo, "olis_reportingLab");

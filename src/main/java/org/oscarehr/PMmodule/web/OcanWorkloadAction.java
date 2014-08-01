@@ -60,8 +60,9 @@ public class OcanWorkloadAction extends DispatchAction {
     }
 
 	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
-		Integer facilityId = LoggedInInfo.loggedInInfo.get().currentFacility.getId();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
+		Integer facilityId = loggedInInfo.currentFacility.getId();
 
 		List<OcanStaffForm> ocanForms = ocanStaffFormDao.findLatestOcanFormsByStaff(facilityId,providerNo);
 
@@ -105,6 +106,9 @@ public class OcanWorkloadAction extends DispatchAction {
 	 */
 	public ActionForward reassign(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		MiscUtils.getLogger().info("Reassigning OCAN Workload");
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		String assessmentId = request.getParameter("assessmentId");
 		String consumerId = request.getParameter("consumerId");
 		String newProviderNo = request.getParameter("reassign_new_provider");
@@ -115,7 +119,7 @@ public class OcanWorkloadAction extends DispatchAction {
 		//get the latest of each assessment for the client.
 		//update the providerNo, and persist as new form,
 		//same with data.
-		List<OcanStaffForm> ocans = ocanStaffFormDao.findLatestByConsumer(LoggedInInfo.loggedInInfo.get().currentFacility.getId(),Integer.valueOf(consumerId));
+		List<OcanStaffForm> ocans = ocanStaffFormDao.findLatestByConsumer(loggedInInfo.currentFacility.getId(),Integer.valueOf(consumerId));
 		for(OcanStaffForm ocan:ocans) {
 			List<OcanStaffFormData> ocanData = ocanStaffFormDataDao.findByForm(ocan.getId());
 

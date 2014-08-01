@@ -26,7 +26,9 @@
 package org.oscarehr.util;
 
 import java.io.IOException;
+import java.util.Random;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -35,8 +37,6 @@ import org.apache.log4j.Logger;
 import org.oscarehr.provider.web.CppPreferencesUIBean;
 
 import oscar.OscarProperties;
-
-import java.util.Random;
 
 public class CustomInterfaceTag extends TagSupport {
 
@@ -49,6 +49,9 @@ public class CustomInterfaceTag extends TagSupport {
 		OscarProperties props = OscarProperties.getInstance();
 		String customJs = props.getProperty("cme_js");
 		
+		HttpServletRequest request=(HttpServletRequest)pageContext.getRequest();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		if(name != null && name.length()>0) {
 			customJs = name;
 		}
@@ -58,7 +61,7 @@ public class CustomInterfaceTag extends TagSupport {
 		
 		if(customJs.equals("default") && getSection().equals("cme")) {
 			//check preferences
-			CppPreferencesUIBean bean = new CppPreferencesUIBean(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			CppPreferencesUIBean bean = new CppPreferencesUIBean(loggedInInfo.getLoggedInProviderNo());
 			bean.loadValues();
 			if(bean.getEnable()!=null&&bean.getEnable().equals("on")) {
 				logger.info("Use preference based echart");
