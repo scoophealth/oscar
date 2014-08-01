@@ -67,7 +67,7 @@ public class CkdScreenerSchedulerJob extends TimerTask {
 			logger.error("Error",e);
 		} finally {
 			DbConnectionFilter.releaseAllThreadDbResources();
-			LoggedInInfo.loggedInInfo.set(null);
+			LoggedInInfo.loggedInInfo.remove();
 		}
 	}
 

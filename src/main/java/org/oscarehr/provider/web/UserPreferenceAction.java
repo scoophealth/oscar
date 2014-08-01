@@ -127,7 +127,11 @@ public class UserPreferenceAction extends DispatchAction {
 	public ActionForward form(ActionMapping mapping,ActionForm actionForm, HttpServletRequest request,HttpServletResponse response) {
 		if(!inited) init();
 		Map<String,String> prefs = new HashMap<String,String>();
-		List<UserProperty> userProperties = userPropertyDao.getDemographicProperties(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
+		List<UserProperty> userProperties = userPropertyDao.getDemographicProperties(providerNo);
 		prefs.putAll(defaults);
 		prefs.putAll(siteDefaults);
 		for(UserProperty up:userProperties) {
@@ -138,6 +142,9 @@ public class UserPreferenceAction extends DispatchAction {
 	}
 	
 	public ActionForward saveGeneral(ActionMapping mapping,ActionForm actionForm, HttpServletRequest request,HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 		//Is there a password change?
 		if(!getParameter(request,"new_password").isEmpty()) {
 			try {
@@ -165,13 +172,13 @@ public class UserPreferenceAction extends DispatchAction {
 				value = sb.toString();				
 			}
 			
-			UserProperty up = userPropertyDao.getProp(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), key);
+			UserProperty up = userPropertyDao.getProp(providerNo, key);
 			if(up != null) {
 				up.setValue(value);
 				userPropertyDao.saveProp(up);
 			} else {
 				up = new UserProperty();
-				up.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+				up.setProviderNo(providerNo);
 				up.setName(key);
 				up.setValue(value);
 				userPropertyDao.saveProp(up);
@@ -183,6 +190,9 @@ public class UserPreferenceAction extends DispatchAction {
 	
 	
 	private void changePassword(HttpServletRequest request) throws Exception {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 		String currentPassword = getParameter(request,"current_password");
 		String newPassword = getParameter(request,"new_password");
 		
@@ -196,7 +206,7 @@ public class UserPreferenceAction extends DispatchAction {
 		String stroldpasswd = sbTemp.toString();
 	    	    
 		//get password from db
-		Security secRecord = securityDao.getByProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());		
+		Security secRecord = securityDao.getByProviderNo(providerNo);		
 		String strDBpasswd = secRecord.getPassword();
 		if (strDBpasswd.length()<20) {
 			sbTemp = new StringBuilder();		

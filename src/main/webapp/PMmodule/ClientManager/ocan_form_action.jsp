@@ -38,6 +38,7 @@
 <%@page import="org.oscarehr.util.MiscUtils"%>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	@SuppressWarnings("unchecked")
 	HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
 
@@ -94,7 +95,7 @@
 	String ocanStaffFormId = parameters.get("ocanStaffFormId")!=null ? parameters.get("ocanStaffFormId")[0] : "";
 	String consent = parameters.get("consent")!=null ? parameters.get("consent")[0] : "";
 	
-	OcanStaffForm ocanStaffForm=OcanFormAction.createOcanStaffForm(ocanStaffFormId, clientId, signed);
+	OcanStaffForm ocanStaffForm=OcanFormAction.createOcanStaffForm(loggedInInfo, ocanStaffFormId, clientId, signed);
 	
 	int prepopulate = 0;
 	prepopulate = Integer.parseInt(request.getParameter("prepopulate")==null?"0":request.getParameter("prepopulate"));
@@ -167,7 +168,6 @@
 	}catch(java.text.ParseException e){}
 	
 	ocanStaffForm.setCreated(new Date());
-	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	ocanStaffForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 	ocanStaffForm.setProviderName(loggedInInfo.loggedInProvider.getFormattedName());		
 	

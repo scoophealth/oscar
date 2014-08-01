@@ -64,7 +64,8 @@ public final class ContentRenderingServlet extends HttpServlet {
 	@Override
     public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
-			Content content = getContent(request);
+			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+			Content content = getContent(request,loggedInInfo);
 
 			if (content != null) {
 			    String download=request.getParameter("download");
@@ -91,12 +92,12 @@ public final class ContentRenderingServlet extends HttpServlet {
 		}
 	}
 
-	private Content getContent(HttpServletRequest request) {
+	private Content getContent(HttpServletRequest request,LoggedInInfo loggedInInfo) {
 		String source = request.getParameter("source");
 
 		try {
-			if (Source.oruR01.name().equals(source)) return (getOruR01Content(request));
-			if (Source.prescriptionQrCode.name().equals(source)) return (getPrescriptionQrCodeContent(request));
+			if (Source.oruR01.name().equals(source)) return (getOruR01Content(request,loggedInInfo));
+			if (Source.prescriptionQrCode.name().equals(source)) return (getPrescriptionQrCodeContent(request,loggedInInfo));
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
 		}
@@ -104,7 +105,7 @@ public final class ContentRenderingServlet extends HttpServlet {
 		return null;
 	}
 
-	private Content getOruR01Content(HttpServletRequest request) throws EncodingNotSupportedException, UnsupportedEncodingException, HL7Exception {
+	private Content getOruR01Content(HttpServletRequest request, LoggedInInfo loggedInInfo) throws EncodingNotSupportedException, UnsupportedEncodingException, HL7Exception {
 	    // for OruR01 we need segmentId.
 		String segmentId=request.getParameter("segmentId");
 	    
@@ -119,13 +120,12 @@ public final class ContentRenderingServlet extends HttpServlet {
 	    content.contentType=getServletContext().getMimeType(viewOruR01UIBean.getFilename());
 	    content.data=viewOruR01UIBean.getFileContents();
 	    
-	    LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	    LogAction.addLog(loggedInInfo.loggedInProvider.getProviderNo(), getClass().getSimpleName(), "getOruR01Content", "segmentId="+segmentId);
 	    
 	    return(content);
     }
 
-	private Content getPrescriptionQrCodeContent(HttpServletRequest request) {
+	private Content getPrescriptionQrCodeContent(HttpServletRequest request,LoggedInInfo loggedInInfo) {
 	    // for prescriptions we need prescriptionId.
 		int prescriptionId=Integer.parseInt(request.getParameter("prescriptionId"));
 	    
@@ -133,7 +133,6 @@ public final class ContentRenderingServlet extends HttpServlet {
 	    content.contentType=getServletContext().getMimeType("prescription_"+prescriptionId+"qr_code.png");
 	    content.data=PrescriptionQrCodeUIBean.getPrescriptionHl7QrCodeImage(prescriptionId);
 	    
-	    LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	    LogAction.addLog(loggedInInfo.loggedInProvider.getProviderNo(), getClass().getSimpleName(), "getPrescriptionQrCodeContent", "prescriptionId="+prescriptionId);
 	    
 	    return(content);

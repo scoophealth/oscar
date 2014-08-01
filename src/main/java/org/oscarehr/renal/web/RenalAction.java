@@ -271,7 +271,7 @@ public class RenalAction extends DispatchAction {
 		}else {
 			FrmLabReq10Record lr = new FrmLabReq10Record();
 			Properties p = lr.getFormRecord(demographicNo, 0);		
-			p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			p = lr.getFormCustRecord(p, loggedInInfo.getLoggedInProviderNo());
 			p.setProperty("b_creatinine","checked=\"checked\"");	
 			p.setProperty("b_acRatioUrine","checked=\"checked\"");	
 			p.setProperty("b_urinalysis","checked=\"checked\"");	
@@ -358,7 +358,8 @@ public class RenalAction extends DispatchAction {
 	
 	public ActionForward submitPreimplementationReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		
 		ORNPreImplementationReportThread t = new ORNPreImplementationReportThread();
 		t.setProviderNo(providerNo);
@@ -371,7 +372,8 @@ public class RenalAction extends DispatchAction {
 	
 	public ActionForward submitCkdScreeningReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		
 		ORNCkdScreeningReportThread t = new ORNCkdScreeningReportThread();
 		t.setProviderNo(providerNo);

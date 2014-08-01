@@ -71,14 +71,16 @@ public class PopulationReportUIBean {
 	private Program program = null;
 	public boolean skipTotalRow=false;
 	private FunctionalCentre functionalCentre = null;
-
-	public PopulationReportUIBean() {
-
+	private LoggedInInfo loggedInInfo;
+	
+	public PopulationReportUIBean(LoggedInInfo loggedInInfo) {
+		this.loggedInInfo=loggedInInfo;
 	}
 
-	public PopulationReportUIBean(String functionalCentreId, int programId, Date startDate, Date endDate) {
+	public PopulationReportUIBean(LoggedInInfo loggedInInfo,String functionalCentreId, int programId, Date startDate, Date endDate) {
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.loggedInInfo=loggedInInfo;
 		setProgramId(programId);
 		setFunctionalCentreId(functionalCentreId);
 	}
@@ -206,7 +208,6 @@ public class PopulationReportUIBean {
 		int rowTotalUniqueClients = 0;
 		
 		if(functionalCentre!=null) {
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 			List<Program> programList = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentre.getId());
 			for(Program p : programList) {
 				Map<Integer, Integer> counts1 = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(p.getId(), roleId, encounterType, startDate, endDate);

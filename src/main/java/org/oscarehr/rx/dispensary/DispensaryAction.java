@@ -140,12 +140,15 @@ public class DispensaryAction extends DispatchAction {
 	
 	public ActionForward saveEvent(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 		DrugDispensing dd = new DrugDispensing();
 		dd.setDateCreated(new Date());
 		dd.setDispensingProviderNo(request.getParameter("dispensedBy"));
 		dd.setDrugId(Integer.parseInt(request.getParameter("drugId")));
 		dd.setNotes(request.getParameter("notes"));
-		dd.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		dd.setProviderNo(providerNo);
 		dd.setPaidFor(true);
 		
 		String code = request.getParameter("product");
