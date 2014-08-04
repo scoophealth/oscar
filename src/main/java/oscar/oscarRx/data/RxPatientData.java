@@ -220,27 +220,26 @@ public class RxPatientData {
 			return allergy;
 		}
 
-		public org.oscarehr.common.model.Allergy[] getAllergies() {
+		public org.oscarehr.common.model.Allergy[] getAllergies(LoggedInInfo loggedInInfo) {
 			ArrayList<org.oscarehr.common.model.Allergy> results = new ArrayList<org.oscarehr.common.model.Allergy>();
                         Integer demographicNo = getDemographicNo();
 			List<org.oscarehr.common.model.Allergy> allergies = allergyDao.findAllergies(demographicNo);
 			results.addAll(allergies);
 
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 				try {	
 					List<CachedDemographicAllergy> remoteAllergies  = null;
 					try {
-						if (!CaisiIntegratorManager.isIntegratorOffline()){
-							remoteAllergies = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicAllergies(demographicNo);
+						if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+							remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(demographicNo);
 						}
 					} catch (Exception e) {
 						MiscUtils.getLogger().error("Unexpected error.", e);
-						CaisiIntegratorManager.checkForConnectionError(e);
+						CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 					}
 					
-					if(CaisiIntegratorManager.isIntegratorOffline()){
-						remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(demographicNo);	
+					if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+						remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(loggedInInfo,demographicNo);	
 					}
 
 					for (CachedDemographicAllergy remoteAllergy : remoteAllergies) {

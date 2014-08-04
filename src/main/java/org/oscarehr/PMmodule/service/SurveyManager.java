@@ -67,9 +67,7 @@ public class SurveyManager implements CustomReportDataSource {
 	@Autowired
 	private CaisiFormInstanceTmpSaveDao caisiFormInstanceTmpSaveDao ;
 	
-	public List getAllFormsForCurrentProviderAndCurrentFacility() {
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		
+	public List getAllFormsForCurrentProviderAndCurrentFacility(LoggedInInfo loggedInInfo) {
 		List<CaisiForm> allForms = caisiFormDao.findActiveByFacilityIdOrNull(loggedInInfo.currentFacility.getId());
 		List<CaisiForm> results = new ArrayList<CaisiForm>();
 		SurveySecurityDao securityDao = new SurveySecurityDao();
@@ -130,9 +128,7 @@ public class SurveyManager implements CustomReportDataSource {
 		return caisiFormInstanceDao.getLatestForm(Integer.valueOf(formId),Integer.valueOf(clientId));
 	}
 
-	public List getFormsForCurrentProviderAndCurrentFacility(String clientId){
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		
+	public List getFormsForCurrentProviderAndCurrentFacility(LoggedInInfo loggedInInfo, String clientId){		
 		List<CaisiFormInstance> forms = caisiFormInstanceDao.getForms(Integer.valueOf(clientId), loggedInInfo.currentFacility.getId());
 		List<CaisiFormInstance> results = new ArrayList<CaisiFormInstance>();
 		SurveySecurityDao securityDao = new SurveySecurityDao();

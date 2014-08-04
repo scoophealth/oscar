@@ -54,6 +54,8 @@
 	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
      Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 
+     LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+     
  	GregorianCalendar now=new GregorianCalendar();
  	int curYear = now.get(Calendar.YEAR);
  	int curMonth = (now.get(Calendar.MONTH)+1);
@@ -428,7 +430,7 @@
 		   		FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 		   		providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
 		   		providerPk.setCaisiItemId(demographicTransfer.getCaisiProviderId());
-		   		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(providerPk);
+		   		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(), providerPk);
 		   		MiscUtils.getLogger().debug("Cached provider, pk="+providerPk.getIntegratorFacilityId()+","+providerPk.getCaisiItemId()+", cachedProvider="+cachedProvider);
 		   		
 		   		String providerName="";

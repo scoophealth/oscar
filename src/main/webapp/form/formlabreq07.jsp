@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@ page
@@ -49,6 +50,7 @@
 </head>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String formClass = "LabReq07";
 	String formLink = "formlabreq07.jsp";
 
@@ -69,13 +71,13 @@
 		}
 		if(props == null) {
 	   		props = rec.getFormRecord(demoNo, formId);	        
-			props = ((FrmLabReq07Record) rec).getFormCustRecord(props, provNo);
+			props = ((FrmLabReq07Record) rec).getFormCustRecord(loggedInInfo.getCurrentFacility(), props, provNo);
 		}		
 	}
 	else // it's remote
 	{
 		MiscUtils.getLogger().debug("Getting remote form : "+remoteFacilityIdString+":"+formId);
-		props=FrmLabReq07Record.getRemoteRecordProperties(Integer.parseInt(remoteFacilityIdString), formId,demoNo);
+		props=FrmLabReq07Record.getRemoteRecordProperties(loggedInInfo, Integer.parseInt(remoteFacilityIdString), formId,demoNo);
 		FrmRecordHelp.convertBooleanToChecked(props);
 	}
 	

@@ -231,22 +231,22 @@ public class EctFormData {
 		table = StringUtils.trimToNull(table);
 		if (table == null) return (new ArrayList<PatientForm>());
 		
-		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
+		try {
 			if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return  (forms);
-			if(!CaisiIntegratorManager.isIntegratorOffline()){
-				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			if(!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 				remoteForms = demographicWs.getLinkedCachedDemographicForms(demographicId, table);
 			}
 		} catch (Exception e) {
-			logger.error("Error retriving remote forms :"+CaisiIntegratorManager.isIntegratorOffline(), e);
-			CaisiIntegratorManager.checkForConnectionError(e);
+			logger.error("Error retriving remote forms :"+CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session), e);
+			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 		}
 		
 		
-		if (CaisiIntegratorManager.isIntegratorOffline()){
-			remoteForms = IntegratorFallBackManager.getRemoteForms(demographicId,table);	
+		if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			remoteForms = IntegratorFallBackManager.getRemoteForms(loggedInInfo, demographicId,table);	
 		}
 			
 		if (remoteForms == null) return (forms);

@@ -44,6 +44,7 @@ import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityIdLabResultCompositePk;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.model.Hl7TextMessage;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.XmlUtils;
@@ -68,7 +69,7 @@ public class LabDisplayHelper {
 		return ("" + demographicId + ':' + segmentId + ':' + labType + ':' + labDateTime);
 	}
 
-	public static CachedDemographicLabResult getRemoteLab(Integer remoteFacilityId, String remoteLabKey,Integer demographicId)  {
+	public static CachedDemographicLabResult getRemoteLab(LoggedInInfo loggedInInfo,Integer remoteFacilityId, String remoteLabKey,Integer demographicId)  {
 		
 		FacilityIdLabResultCompositePk pk = new FacilityIdLabResultCompositePk();
 		pk.setIntegratorFacilityId(remoteFacilityId);
@@ -76,17 +77,17 @@ public class LabDisplayHelper {
 		CachedDemographicLabResult cachedDemographicLabResult = null;
 		
 		try {
-			if (!CaisiIntegratorManager.isIntegratorOffline()){
-				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 				cachedDemographicLabResult = demographicWs.getCachedDemographicLabResult(pk);
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Unexpected error.", e);
-			CaisiIntegratorManager.checkForConnectionError(e);
+			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 		}
 			
-		if(CaisiIntegratorManager.isIntegratorOffline()){
-			List<CachedDemographicLabResult> labResults = IntegratorFallBackManager.getLabResults(demographicId);
+		if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			List<CachedDemographicLabResult> labResults = IntegratorFallBackManager.getLabResults(loggedInInfo,demographicId);
 			for(CachedDemographicLabResult labResult:labResults){
 				if(labResult.getFacilityIdLabResultCompositePk().getIntegratorFacilityId() == pk.getIntegratorFacilityId() && 
 						labResult.getFacilityIdLabResultCompositePk().getLabResultId().equals(pk.getLabResultId()) ) {

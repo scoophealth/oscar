@@ -71,8 +71,8 @@ import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.exports.e2e.E2EVelocityTemplate;
 import org.oscarehr.exports.e2e.E2EPatientExport;
+import org.oscarehr.exports.e2e.E2EVelocityTemplate;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
@@ -82,12 +82,10 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.sharingcenter.DocumentType;
 import org.oscarehr.sharingcenter.dao.DemographicExportDao;
 import org.oscarehr.sharingcenter.model.DemographicExport;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
-
-
-
 
 import oscar.OscarProperties;
 import oscar.appt.ApptStatusData;
@@ -174,6 +172,8 @@ public class DemographicExportAction4 extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String strEditable = oscarProperties.getProperty("ENABLE_EDIT_APPT_STATUS");
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		DemographicExportForm defrm = (DemographicExportForm)form;
 		String demographicNo = defrm.getDemographicNo();
 		String setName = defrm.getPatientSet();
@@ -1500,7 +1500,7 @@ public class DemographicExportAction4 extends Action {
 
 			if (exReportsReceived) {
 				// REPORTS RECEIVED
-				ArrayList<EDoc> edoc_list = EDocUtil.listDemoDocs(demoNo);
+				ArrayList<EDoc> edoc_list = EDocUtil.listDemoDocs(loggedInInfo, demoNo);
 				String annotation = null;
 				for (int j=0; j<edoc_list.size(); j++) {
 					EDoc edoc = edoc_list.get(j);

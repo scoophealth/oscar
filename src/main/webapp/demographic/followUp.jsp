@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedProvider"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
@@ -34,9 +35,8 @@
 <%@ page import="org.oscarehr.casemgmt.model.*, org.oscarehr.common.dao.DemographicDao, org.oscarehr.util.SpringUtils, org.oscarehr.common.model.Demographic"%>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean"%>
 
-
-
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String demographicId = request.getParameter("demographicId");
 	String remoteFacilityId = request.getParameter("remoteFacilityId");
 	String remoteProviderId = request.getParameter("remoteProviderId");
@@ -80,7 +80,7 @@
 				FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 				providerPk.setIntegratorFacilityId(Integer.parseInt(remoteFacilityId));
 				providerPk.setCaisiItemId(remoteProviderId);
-				CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(providerPk);
+				CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(), providerPk);
 			%>
 			<%=cachedProvider.getLastName()+", "+cachedProvider.getFirstName()%>
   		</div>

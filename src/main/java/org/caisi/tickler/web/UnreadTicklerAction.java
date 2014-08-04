@@ -41,6 +41,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.login.LoginCheckLogin;
@@ -61,6 +62,8 @@ public class UnreadTicklerAction extends DispatchAction {
 	public ActionForward refresh(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 		
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		String providerNo = (String) request.getSession().getAttribute("user");
 		if(providerNo == null) {
 			return mapping.findForward("login");
@@ -79,7 +82,7 @@ public class UnreadTicklerAction extends DispatchAction {
         CustomFilter filter = new CustomFilter();
         filter.getAssignees().add(new Provider(prov.getProviderNo()));
         String programId = "";
-        Collection<Tickler> coll = ticklerManager.getTicklers(filter, prov.getProviderNo(), programId);
+        Collection<Tickler> coll = ticklerManager.getTicklers(loggedInInfo, filter, prov.getProviderNo(), programId);
         if(oldNum != -1 && (coll.size() > oldNum)) {
         	request.setAttribute("difference",new Integer(coll.size() - oldNum));
         }

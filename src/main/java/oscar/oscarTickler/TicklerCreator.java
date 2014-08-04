@@ -92,7 +92,7 @@ public class TicklerCreator {
    * @param cdmPatientNos Vector (strings)
    * @param remString String
    */
-  public void resolveTicklers(List<String> cdmPatientNos, String remString) {
-	  ticklerManager.resolveTicklers(cdmPatientNos, remString);  
+  public void resolveTicklers(String providerNo, List<String> cdmPatientNos, String remString) {
+	  ticklerManager.resolveTicklers(providerNo, cdmPatientNos, remString);  
   }
 }

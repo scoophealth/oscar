@@ -47,6 +47,7 @@ import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LocaleUtils;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -246,13 +247,13 @@ public class FrmLabReq10Record extends FrmRecord {
     }
 
 
-    public static Properties getRemoteRecordProperties(Integer remoteFacilityId, Integer formId) throws IOException
+    public static Properties getRemoteRecordProperties(LoggedInInfo loggedInInfo, Integer remoteFacilityId, Integer formId) throws IOException
     {
     	FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
     	pk.setIntegratorFacilityId(remoteFacilityId);
     	pk.setCaisiItemId(formId);
 
-    	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
+    	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
     	CachedDemographicForm form=demographicWs.getCachedDemographicForm(pk);
 
     	ByteArrayInputStream bais=new ByteArrayInputStream(form.getFormData().getBytes());

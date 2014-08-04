@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -98,10 +99,10 @@ public class ConsultationAttachDocs {
 		return demo;
 	}
 
-	public void attach() {
+	public void attach(LoggedInInfo loggedInInfo) {
 
 		//first we get a list of currently attached docs
-		ArrayList<EDoc> oldlist = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED);
+		ArrayList<EDoc> oldlist = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
 		ArrayList<String> newlist = new ArrayList<String>();
 		ArrayList<EDoc> keeplist = new ArrayList<EDoc>();
 		boolean alreadyAttached;

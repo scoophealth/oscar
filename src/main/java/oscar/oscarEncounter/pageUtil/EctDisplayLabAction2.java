@@ -61,6 +61,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
 		logger.debug("EctDisplayLabAction2");
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
 
 		boolean a = true;
@@ -75,9 +76,8 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 			ArrayList<LabResultData> labs = comLab.populateLabResultsData("", bean.demographicNo, "", "", "", "U");
 			logger.debug("local labs found : "+labs.size());
 
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
-				ArrayList<LabResultData> remoteResults = CommonLabResultData.getRemoteLabs(Integer.parseInt(bean.demographicNo));
+				ArrayList<LabResultData> remoteResults = CommonLabResultData.getRemoteLabs(loggedInInfo, Integer.parseInt(bean.demographicNo));
 				logger.debug("remote labs found : "+remoteResults.size());
 				labs.addAll(remoteResults);
 			}
@@ -139,7 +139,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 			logger.info("number of labs: " + labs.size());
 			for (int j = 0; j < labs.size(); j++) {
 				result = labs.get(j);
-                Date date = getServiceDate(result);
+                Date date = getServiceDate(loggedInInfo,result);
                 String formattedDate = DateUtils.getDate(date, "dd-MMM-yyyy", request.getLocale());
 				// String formattedDate = DateUtils.getDate(date);
 				func = new StringBuilder("popupPage(700,960,'");
@@ -206,9 +206,9 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 		}
 	}
 
-    public Date getServiceDate(LabResultData labData) {
+    public Date getServiceDate(LoggedInInfo loggedInInfo, LabResultData labData) {
         ServiceDateLoader loader = new ServiceDateLoader(labData);
-        Date resultDate = loader.determineResultDate();
+        Date resultDate = loader.determineResultDate(loggedInInfo);
         if (resultDate != null) {
             return resultDate;
         }
@@ -239,8 +239,8 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
          * 		not be determined
          *
          */
-        public Date determineResultDate() {
-            String serviceDate = getServiceDate();
+        public Date determineResultDate(LoggedInInfo loggedInInfo) {
+            String serviceDate = getServiceDate(loggedInInfo);
             if (serviceDate == null) {
                 return null;
             }
@@ -257,7 +257,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
             return result;
         }
 
-        private String getServiceDate() {
+        private String getServiceDate(LoggedInInfo loggedInInfo) {
             String segmentId = labData.getSegmentID();
             MessageHandler handler = null;
 
@@ -265,7 +265,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
                 if (!labData.isRemoteLab()) {
                     handler = getLocalHandler(segmentId);
                 } else {
-                    handler = getRemoteHandler(labData);
+                    handler = getRemoteHandler(loggedInInfo, labData);
                 }
             } catch (Exception e) {
                 logger.error("Unable to get handler for " + labData, e);
@@ -279,7 +279,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
             return serviceDate;
         }
 
-        public MessageHandler getRemoteHandler(LabResultData labData) {
+        public MessageHandler getRemoteHandler(LoggedInInfo loggedInInfo, LabResultData labData) {
             Integer labPatientId = null;
             try {
                 labPatientId = Integer.parseInt(labData.getLabPatientId());
@@ -289,7 +289,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
             }
 
             String remoteLabKey = LabDisplayHelper.makeLabKey(labPatientId, labData.getSegmentID(), labData.labType, labData.getDateTime());
-            CachedDemographicLabResult remoteLabResult=LabDisplayHelper.getRemoteLab(labData.getRemoteFacilityId(), remoteLabKey, labPatientId);
+            CachedDemographicLabResult remoteLabResult=LabDisplayHelper.getRemoteLab(loggedInInfo,labData.getRemoteFacilityId(), remoteLabKey, labPatientId);
             Document xmlData = null;
             try {
                 xmlData = LabDisplayHelper.getXmlDocument(remoteLabResult);

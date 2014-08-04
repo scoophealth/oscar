@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.LocaleUtils"%>    
@@ -64,7 +65,7 @@
 	
 	ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
 	List<Program> programList = programDao.getAllActivePrograms();
-
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	
 
    boolean readOnly = false;
@@ -90,7 +91,7 @@
 	else // it's remote
 	{
 		MiscUtils.getLogger().debug("Getting remote form : "+remoteFacilityIdString+":"+formId);
-		props=FrmLabReq10Record.getRemoteRecordProperties(Integer.parseInt(remoteFacilityIdString), formId);
+		props=FrmLabReq10Record.getRemoteRecordProperties(loggedInInfo, Integer.parseInt(remoteFacilityIdString), formId);
 		FrmRecordHelp.convertBooleanToChecked(props);
 	}
 	

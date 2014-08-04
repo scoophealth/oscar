@@ -466,9 +466,8 @@ public class VacancyTemplateManager {
 		
 	}
 	
-	public static Criteria createCriteria(String criteriaId)
+	public static Criteria createCriteria(LoggedInInfo loggedInInfo, String criteriaId)
 	{
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();		
 		Criteria c =new Criteria();
 		if( !(StringUtils.isBlank(criteriaId) || "0".equals(criteriaId))) {		
 			c = criteriaDAO.find(Integer.valueOf(criteriaId));

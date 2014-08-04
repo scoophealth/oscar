@@ -47,6 +47,7 @@ import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -96,7 +97,7 @@ public class EctConsultationFormRequestPrintPdf {
         this.response = response;
     }
 
-    public void printPdf() throws IOException, DocumentException{
+    public void printPdf(LoggedInInfo loggedInInfo) throws IOException, DocumentException{
 
         EctConsultationFormRequestUtil reqForm = new EctConsultationFormRequestUtil();
         reqForm.estRequestFromId((String) request.getAttribute("reqId"));
@@ -156,7 +157,7 @@ public class EctConsultationFormRequestPrintPdf {
         out.close();
 
         // combine the recently created pdf with any pdfs that were added to the consultation request form
-        combinePDFs(fileName);
+        combinePDFs(loggedInInfo, fileName);
 
     }
 
@@ -267,11 +268,11 @@ public class EctConsultationFormRequestPrintPdf {
 //        }
 //    }
 
-    private void combinePDFs(String currentFileName) throws IOException{
+    private void combinePDFs(LoggedInInfo loggedInInfo, String currentFileName) throws IOException{
 
         String demoNo = (String) request.getAttribute("demo");
         String reqId = (String) request.getAttribute("reqId");
-        ArrayList<EDoc> consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED);
+        ArrayList<EDoc> consultdocs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
         ArrayList<Object> pdfDocs = new ArrayList<Object>();
 
         // add recently created pdf to the list

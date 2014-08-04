@@ -25,6 +25,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="oscar.util.ConversionUtils"%>
 <%@page import="org.oscarehr.common.dao.PatientLabRoutingDao"%>
@@ -64,6 +65,7 @@
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProperties"%>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo"%>
 <%
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 oscar.OscarProperties props = oscar.OscarProperties.getInstance();
 String segmentID = request.getParameter("segmentID");
 String providerNo = request.getParameter("providerNo");
@@ -159,7 +161,7 @@ if (remoteFacilityIdString==null) // local lab
 }
 else // remote lab
 {
-	CachedDemographicLabResult remoteLabResult=LabDisplayHelper.getRemoteLab(Integer.parseInt(remoteFacilityIdString), remoteLabKey,Integer.parseInt(demographicID));
+	CachedDemographicLabResult remoteLabResult=LabDisplayHelper.getRemoteLab(loggedInInfo, Integer.parseInt(remoteFacilityIdString), remoteLabKey,Integer.parseInt(demographicID));
 	MiscUtils.getLogger().debug("retrieved remoteLab:"+ReflectionToStringBuilder.toString(remoteLabResult));
 	isLinkedToDemographic=true;
 
@@ -1177,7 +1179,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                    try {
                                    b1 = !handler.getOBXResultStatus(j, k).equals("DNS");
                                  	b2 = !obxName.equals("");
-                                   String currheader = (String) headers.get(i);
+                                   String currheader = headers.get(i);
                                    String obsHeader = handler.getObservationHeader(j,k);
                                    b3 = handler.getObservationHeader(j, k).equals(headers.get(i));
                                    fail = false;

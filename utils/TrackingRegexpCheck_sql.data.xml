@@ -267,7 +267,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:encountertemplate_name varchar(50) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:error_code char(2) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:favoritename varchar(50) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:filename varchar(12) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:first_name varchar(30) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:form_name varchar(30) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:form_table varchar(50) NOT NULL default '',</ViolationValue>
@@ -4307,7 +4306,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:femaleOther2c tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:fid int(8) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:file_name varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:filename varchar(12) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:fillerFieldOne char(60) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:firstName varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:first_name varchar(30) NOT NULL default '',</ViolationValue>

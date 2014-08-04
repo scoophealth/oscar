@@ -56,6 +56,8 @@ public class EctDisplayRxAction extends EctDisplayAction {
 
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
     	boolean a = true;
         Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.prescriptions");
         String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -89,23 +91,22 @@ public class EctDisplayRxAction extends EctDisplayAction {
         int demographicId=Integer.parseInt(bean.demographicNo);
         
 		// --- get integrator drugs ---
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 			try {
 				
 			
 				List<CachedDemographicDrug> remoteDrugs  = null;
 				try {
-					if (!CaisiIntegratorManager.isIntegratorOffline()){
-					   remoteDrugs = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicDrugsByDemographicId(demographicId);
+					if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+					   remoteDrugs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDrugsByDemographicId(demographicId);
 					}
 				} catch (Exception e) {
 					MiscUtils.getLogger().error("Unexpected error.", e);
-					CaisiIntegratorManager.checkForConnectionError(e);
+					CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session, e);
 				}
 				
-				if(CaisiIntegratorManager.isIntegratorOffline()){
-				   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(demographicId);	
+				if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(loggedInInfo, demographicId);	
 				}
 				
 				logger.debug("remote Drugs : "+remoteDrugs.size());

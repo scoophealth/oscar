@@ -119,7 +119,7 @@ public class ScheduleWs extends AbstractWs {
 	public Integer addAppointment(AppointmentTransfer appointmentTransfer) {
 		Appointment appointment = new Appointment();
 		appointmentTransfer.copyTo(appointment);
-		scheduleManager.addAppointment(appointment);
+		scheduleManager.addAppointment(getLoggedInSecurity(), appointment);
 		return (appointment.getId());
 	}
 

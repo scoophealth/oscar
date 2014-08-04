@@ -23,6 +23,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="java.util.*" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -45,6 +46,7 @@
 
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
     if (session.getValue("user") == null) {
         response.sendRedirect("../logout.jsp");
@@ -141,10 +143,10 @@
     }
    
     if (categoryKey.indexOf("Private") >= 0) {
-        docs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PRIVATE, sort, viewstatus);
+        docs = EDocUtil.listDocs(loggedInInfo, module, moduleid, view, EDocUtil.PRIVATE, sort, viewstatus);
 
     } else if (categoryKey.indexOf("Public") >= 0) {
-        docs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PUBLIC, sort, viewstatus);
+        docs = EDocUtil.listDocs(loggedInInfo, module, moduleid, view, EDocUtil.PUBLIC, sort, viewstatus);
 
     } else {%>
 Remote documents not supported
@@ -475,7 +477,7 @@ Remote documents not supported
                             <SELECT MULTIPLE SIZE=15 id="doclist" onchange="getDoc();" style="width: 400px" >
                                 <%
                                     for (int i2 = 0; i2 < docs.size(); i2++) {
-                                        EDoc cmicurdoc = (EDoc) docs.get(i2);
+                                        EDoc cmicurdoc = docs.get(i2);
                                 %>
                                 <option VALUE="<%=cmicurdoc.getDocId()%>-<%=cmicurdoc.getContentType()%>"><%=sortorder.equals("Content")?UtilDateUtilities.DateToString(cmicurdoc.getContentDateTime(),"yyyy-MM-dd"):cmicurdoc.getDateTimeStamp()%>&nbsp;&nbsp; <%=cmicurdoc.getObservationDate()%> [<%=cmicurdoc.getType()%>] <%=cmicurdoc.getDescription()%>
                                 </option> <%}%>

@@ -1983,16 +1983,16 @@
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:public Vector getPreventionData(String preventionType){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarPrevention/pageUtil/PreventionReportAction.java:Hashtable h =report.runReport(list,asofDate);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarPrevention/pageUtil/PreventionReportAction.java:Hashtable h =report.runReport(loggedInInfo, list,asofDate);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/pageUtil/PreventionReportAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java:Collection followupData = measurementDataHandler.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java:Hashtable&lt;String,Object&gt; h = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java:public Hashtable&lt;String,Object&gt; runReport(ArrayList&lt;ArrayList&lt;String&gt;&gt; list,Date asofDate){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java:public Hashtable&lt;String,Object&gt; runReport(LoggedInInfo loggedInInfo, ArrayList&lt;ArrayList&lt;String&gt;&gt; list,Date asofDate){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FOBTReport.java:Collection&lt;EctMeasurementsDataBean&gt; followupData = measurementDataHandler.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FOBTReport.java:Hashtable&lt;String,Object&gt; h = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FOBTReport.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FOBTReport.java:public Hashtable&lt;String,Object&gt; runReport(ArrayList&lt;ArrayList&lt;String&gt;&gt; list,Date asofDate){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FOBTReport.java:public Hashtable&lt;String,Object&gt; runReport(LoggedInInfo loggedInInfo,ArrayList&lt;ArrayList&lt;String&gt;&gt; list,Date asofDate){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FluReport.java:Collection&lt;EctMeasurementsDataBean&gt; fluFollowupData = measurementData.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FluReport.java:Collection&lt;EctMeasurementsDataBean&gt; followupData = measurementDataHandler.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FluReport.java:Hashtable&lt;String,Object&gt; h = new Hashtable&lt;String,Object&gt;();</ViolationValue>
@@ -2000,19 +2000,19 @@
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FluReport.java:boolean ineligible(ArrayList&lt;Hashtable&lt;String,String&gt;&gt; list){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FluReport.java:boolean ineligible(Hashtable&lt;String,String&gt; h){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FluReport.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FluReport.java:public Hashtable&lt;String,Object&gt; runReport(ArrayList&lt;ArrayList&lt;String&gt;&gt; list,Date asofDate){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FluReport.java:public Hashtable&lt;String,Object&gt; runReport(LoggedInInfo loggedInInfo, ArrayList&lt;ArrayList&lt;String&gt;&gt; list,Date asofDate){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FollowupManagement.java:Hashtable measure = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/FollowupManagement.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java:Collection&lt;EctMeasurementsDataBean&gt; followupData = measurementDataHandler.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java:Hashtable&lt;String,Object&gt; h = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java:public Hashtable runReport(ArrayList&lt;ArrayList&lt;String&gt;&gt; list,Date asofDate){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java:public Hashtable runReport(LoggedInInfo loggedInInfo,ArrayList&lt;ArrayList&lt;String&gt;&gt; list,Date asofDate){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/PapReport.java:Collection followupData = measurementDataHandler.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/PapReport.java:Hashtable&lt;String,Object&gt; h = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/PapReport.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/PapReport.java:public Hashtable runReport(ArrayList list,Date asofDate){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/PapReport.java:public Hashtable runReport(LoggedInInfo loggedInInfo,ArrayList list,Date asofDate){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/PreventionReport.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/PreventionReport.java:public Hashtable runReport(ArrayList&lt;ArrayList&lt;String&gt;&gt; list,Date asofDate);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/PreventionReport.java:public Hashtable runReport(LoggedInInfo loggedInInfo, ArrayList&lt;ArrayList&lt;String&gt;&gt; list,Date asofDate);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:Vector&lt;ProviderNameBean&gt; doctorNameVector = new Vector&lt;ProviderNameBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:Vector&lt;ProviderNameBean&gt; providerNameVector = new Vector&lt;ProviderNameBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:Vector&lt;ProviderNameBean&gt; thisGroupProviderVector = new Vector&lt;ProviderNameBean&gt;();</ViolationValue>

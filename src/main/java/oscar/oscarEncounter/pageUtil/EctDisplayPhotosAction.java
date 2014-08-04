@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.dms.EDoc;
@@ -51,6 +52,8 @@ public class EctDisplayPhotosAction extends EctDisplayAction {
 
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
+	 LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	 
 	 boolean a = true;
  	 ArrayList<Object> v = OscarRoleObjectPrivilege.getPrivilegePropAsArrayList("_newCasemgmt.documents");
      String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -93,7 +96,7 @@ public class EctDisplayPhotosAction extends EctDisplayAction {
 
     StringBuilder javascript = new StringBuilder("<script type=\"text/javascript\">");
     String js = new String();
-    ArrayList<EDoc> docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocSort.OBSERVATIONDATE, "active");
+    ArrayList<EDoc> docList = EDocUtil.listDocs(loggedInInfo, "demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocSort.OBSERVATIONDATE, "active");
     String dbFormat = "yyyy-MM-dd";
     String serviceDateStr = new String();
     String key;

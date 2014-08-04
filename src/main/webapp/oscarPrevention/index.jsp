@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.WebUtilsOld"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="oscar.OscarProperties"%>
@@ -40,7 +41,8 @@
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 
 <%
-
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+   		 
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
   String demographic_no = request.getParameter("demographic_no");
   DemographicData demoData = new DemographicData();
@@ -60,7 +62,7 @@
   Prevention p = PreventionData.getPrevention(Integer.valueOf(demographic_no));
 
   Integer demographicId=Integer.parseInt(demographic_no);
-  PreventionData.addRemotePreventions(p, demographicId);
+  PreventionData.addRemotePreventions(loggedInInfo, p, demographicId);
   Date demographicDateOfBirth=PreventionData.getDemographicDateOfBirth(Integer.valueOf(demographic_no));
   String demographicDob = oscar.util.UtilDateUtilities.DateToString(demographicDateOfBirth);
 
@@ -568,7 +570,7 @@ text-align:left;
                   		HashMap<String,String> h = prevList.get(i);
                         String prevName = h.get("name");
                         ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, Integer.valueOf(demographic_no));
-                        PreventionData.addRemotePreventions(alist, demographicId,prevName,demographicDateOfBirth);
+                        PreventionData.addRemotePreventions(loggedInInfo, alist, demographicId,prevName,demographicDateOfBirth);
                         boolean show = pdc.display(h, demographic_no,alist.size());
                         if(!show){
                             Map<String,Object> h2 = new HashMap<String,Object>();
@@ -706,7 +708,7 @@ text-align:left;
 		<%
             String prevType=h.get("name");
             ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, Integer.valueOf(demographic_no));
-            PreventionData.addRemotePreventions(alist, demographicId, prevType,demographicDateOfBirth);
+            PreventionData.addRemotePreventions(loggedInInfo, alist, demographicId, prevType,demographicDateOfBirth);
             String result;
             for (int k = 0; k < alist.size(); k++){
             	Map<String,Object> hdata = alist.get(k);
@@ -748,7 +750,7 @@ text-align:left;
 		   	 	HashMap<String,String> h = prevList.get(i);
 		        String prevName = h.get("name");
 		        ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, Integer.valueOf(demographic_no));
-		        PreventionData.addRemotePreventions(alist, demographicId, prevName,demographicDateOfBirth);
+		        PreventionData.addRemotePreventions(loggedInInfo, alist, demographicId, prevName,demographicDateOfBirth);
 		        if( alist.size() > 0 ) { %>
 		<input type="hidden" id="preventionHeader<%=i%>"
 			name="preventionHeader<%=i%>" value="<%=h.get("name")%>">

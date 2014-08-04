@@ -323,7 +323,7 @@ public class DefaultNoteService implements NoteService {
 			List<CachedDemographicNote> remoteNotes = new ArrayList<CachedDemographicNote>();
 			if (remoteNoteIds != null && remoteNoteIds.size() > 0) {
 				try {
-					remoteNotes = CaisiIntegratorManager.getLinkedNotes(remoteNoteIds);
+					remoteNotes = CaisiIntegratorManager.getLinkedNotes(loggedInInfo,remoteNoteIds);
 				} catch (MalformedURLException e) {
 					logger.error("Unable to load linked notes", e);
 				}
@@ -348,7 +348,7 @@ public class DefaultNoteService implements NoteService {
 				if (entry.getType().equals("local_note")) {
 					notesToDisplay.add(new NoteDisplayLocal(loggedInInfo, findNote((Long) entry.getId(), localNotes)));
 				} else if (entry.getType().equals("remote_note")) {
-					notesToDisplay.add(new NoteDisplayIntegrator(findRemoteNote((CachedDemographicNoteCompositePk) entry.getId(), remoteNotes)));
+					notesToDisplay.add(new NoteDisplayIntegrator(loggedInInfo, findRemoteNote((CachedDemographicNoteCompositePk) entry.getId(), remoteNotes)));
 				} else if (entry.getType().equals("eform")) {
 					notesToDisplay.add(new NoteDisplayNonNote(findEform((String) entry.getId(), eForms)));
 				} else if (entry.getType().equals("encounter_form")) {
@@ -412,16 +412,16 @@ public class DefaultNoteService implements NoteService {
 
 		List<CachedDemographicNote> linkedNotes = null;
 		try {
-			if (!CaisiIntegratorManager.isIntegratorOffline()) {
-				linkedNotes = CaisiIntegratorManager.getLinkedNotesMetaData(demographicNo);
+			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+				linkedNotes = CaisiIntegratorManager.getLinkedNotesMetaData(loggedInInfo, demographicNo);
 			}
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
 
-			CaisiIntegratorManager.checkForConnectionError(e);
+			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 		}
 
-		if (CaisiIntegratorManager.isIntegratorOffline()) {
+		if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
 			// TODO: No idea how this works
 			// linkedNotes = IntegratorFallBackManager.getLinkedNotes(demographicNo);
 		}

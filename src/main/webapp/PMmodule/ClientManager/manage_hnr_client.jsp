@@ -22,6 +22,7 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageHnrClient"%>
 <%@page import="org.oscarehr.common.model.Facility"%>
@@ -33,9 +34,10 @@
 <%@include file="/layouts/caisi_html_top2.jspf"%>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	
-	ManageHnrClient manageHnrClient=new ManageHnrClient(currentDemographicId);
+	ManageHnrClient manageHnrClient=new ManageHnrClient(loggedInInfo, currentDemographicId);
 	Demographic demographic=manageHnrClient.getDemographic();
 	org.oscarehr.hnr.ws.Client hnrClient=manageHnrClient.getHnrClient();
 %>

@@ -32,6 +32,7 @@ import java.util.List;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
 import org.apache.cxf.binding.soap.SoapHeader;
@@ -39,6 +40,7 @@ import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.helpers.DOMUtils;
 import org.apache.cxf.interceptor.Fault;
+import org.apache.cxf.transport.http.AbstractHTTPDestination;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSPasswordCallback;
@@ -77,16 +79,18 @@ public class AuthenticationOutWSS4JInterceptorForIntegrator extends WSS4JOutInte
 	}
 
 	public void handleMessage(SoapMessage message) throws Fault {
-		addRequestionCaisiProviderNo(message);
+		HttpServletRequest request = (HttpServletRequest) message.get(AbstractHTTPDestination.HTTP_REQUEST);
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoForWebServices(request);
+		
+		addRequestionCaisiProviderNo(message, loggedInInfo.getLoggedInProviderNo());
 		super.handleMessage(message);
 	}
 
-	private static void addRequestionCaisiProviderNo(SoapMessage message) {
+	private static void addRequestionCaisiProviderNo(SoapMessage message, String providerNo) {
 		List<Header> headers = message.getHeaders();
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		if (loggedInInfo.loggedInProvider != null) {
-			headers.add(createHeader(REQUESTING_CAISI_PROVIDER_NO_QNAME, REQUESTING_CAISI_PROVIDER_NO_KEY, loggedInInfo.loggedInProvider.getProviderNo()));
+		if (providerNo != null) {
+			headers.add(createHeader(REQUESTING_CAISI_PROVIDER_NO_QNAME, REQUESTING_CAISI_PROVIDER_NO_KEY, providerNo));
 		}
 	}
 

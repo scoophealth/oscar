@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -50,6 +51,7 @@
 <html:base />
 
 <%
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
 %>
 <logic:notPresent name="RxSessionBean" scope="session">
@@ -96,7 +98,7 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
 	Integer currentDemographicNo=rxBean.getDemographicNo();
 	String atc = request.getParameter("atc");
 
-        ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentDemographicNo, regionalIdentifier, cn,bn,atc);
+        ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(loggedInInfo, currentDemographicNo, regionalIdentifier, cn,bn,atc);
 
 	oscar.oscarRx.data.RxPatientData.Patient patient=oscar.oscarRx.data.RxPatientData.getPatient(currentDemographicNo);
 	String annotation_display=org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;

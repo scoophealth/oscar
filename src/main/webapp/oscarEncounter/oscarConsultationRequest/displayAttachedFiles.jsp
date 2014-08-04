@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page
 	import="java.util.ArrayList, oscar.dms.*, oscar.oscarLab.ca.on.*, oscar.util.StringUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
@@ -31,6 +32,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
   String demo = request.getParameter("demo") ;
   String requestId = request.getParameter("requestId");
 %>
@@ -38,7 +40,7 @@
 	style="background-color: white; padding-left: 20px; list-style-position: outside; list-style-type: lower-roman;">
 	<%
             ArrayList privatedocs = new ArrayList();
-            privatedocs = EDocUtil.listDocs(demo, requestId, EDocUtil.ATTACHED);
+            privatedocs = EDocUtil.listDocs(loggedInInfo, demo, requestId, EDocUtil.ATTACHED);
             EDoc curDoc;                                        
             for(int idx = 0; idx < privatedocs.size(); ++idx)
             {                    

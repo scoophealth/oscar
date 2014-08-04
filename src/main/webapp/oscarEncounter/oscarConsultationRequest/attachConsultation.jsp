@@ -25,6 +25,7 @@
 --%>
 
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationAttachDocs"%>
@@ -33,6 +34,8 @@
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.oscarehr.util.SessionConstants"%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+   		 
 	String user_no = (String) session.getAttribute("user");
 	String userfirstname = (String) session.getAttribute("userfirstname");
 	String userlastname = (String) session.getAttribute("userlastname");
@@ -251,7 +254,7 @@
 						style="width: 100%;" property="documents" multiple="1" size="10">
 						<%
 							ArrayList privatedocs = new ArrayList();
-							privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.UNATTACHED);
+							privatedocs = EDocUtil.listDocs(loggedInInfo, demoNo, requestId, EDocUtil.UNATTACHED);
 							EDoc curDoc;
 							for (int idx = 0; idx < privatedocs.size(); ++idx) {
 								curDoc = (EDoc) privatedocs.get(idx);
@@ -291,7 +294,7 @@
 						size="10">
 						<%
 							ArrayList privatedocs = new ArrayList();
-							privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.ATTACHED);
+							privatedocs = EDocUtil.listDocs(loggedInInfo, demoNo, requestId, EDocUtil.ATTACHED);
 							EDoc curDoc;
 							for (int idx = 0; idx < privatedocs.size(); ++idx) {
 								curDoc = (EDoc) privatedocs.get(idx);

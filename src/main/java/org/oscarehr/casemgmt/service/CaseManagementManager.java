@@ -111,10 +111,6 @@ import oscar.util.DateUtils;
 import com.quatro.model.security.Secrole;
 import com.quatro.service.security.RolesManager;
 
-/*
- * Updated by Eugene Petruhin on 24 dec 2008 while fixing #2459538
- * Updated by Eugene Petruhin on 09 jan 2009 while fixing #2482832 & #2494061
- */
 @Transactional
 public class CaseManagementManager {
 
@@ -507,13 +503,13 @@ public class CaseManagementManager {
 		results = getPrescriptions(String.valueOf(demographicId), all);
 
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
-			addIntegratorDrugs(results, all, demographicId);
+			addIntegratorDrugs(loggedInInfo, results, all, demographicId);
 		}
 
 		return (results);
 	}
 
-	private void addIntegratorDrugs(List<Drug> prescriptions, boolean viewAll, int demographicId) {
+	private void addIntegratorDrugs(LoggedInInfo loggedInInfo,List<Drug> prescriptions, boolean viewAll, int demographicId) {
 
 		if (prescriptions == null) {
 			logger.warn("prescriptions passed in is null, it should never be null, empty list should be used if no entries for drugs.");
@@ -523,16 +519,16 @@ public class CaseManagementManager {
 		try {
 			List<CachedDemographicDrug> remoteDrugs  = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline()){
-				   remoteDrugs = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicDrugsByDemographicId(demographicId);
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				   remoteDrugs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDrugsByDemographicId(demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 			}
 
-			if(CaisiIntegratorManager.isIntegratorOffline()){
-			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(demographicId);
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(loggedInInfo, demographicId);
 			}
 
 
@@ -540,16 +536,16 @@ public class CaseManagementManager {
 
 			for (CachedDemographicDrug cachedDrug : remoteDrugs) {
 				if (viewAll) {
-					prescriptions.add(getPrescriptDrug(cachedDrug));
+					prescriptions.add(getPrescriptDrug(loggedInInfo, cachedDrug));
 				} else {
 					// if it's not view all, we need to only add the drug if it's not already there, or if it's a newer prescription
 					Drug pd = containsPrescriptDrug(prescriptions, cachedDrug.getRegionalIdentifier());
 					if (pd == null) {
-						prescriptions.add(getPrescriptDrug(cachedDrug));
+						prescriptions.add(getPrescriptDrug(loggedInInfo, cachedDrug));
 					} else {
 						if (pd.getRxDate().before(DateUtils.toDate(cachedDrug.getRxDate())) || (pd.getRxDate().equals(cachedDrug.getRxDate()) && pd.getCreateDate().before(DateUtils.toDate(cachedDrug.getCreateDate())))) {
 							prescriptions.remove(pd);
-							prescriptions.add(getPrescriptDrug(cachedDrug));
+							prescriptions.add(getPrescriptDrug(loggedInInfo, cachedDrug));
 						}
 					}
 				}
@@ -559,7 +555,7 @@ public class CaseManagementManager {
 		}
 	}
 
-	private Drug getPrescriptDrug(CachedDemographicDrug cachedDrug) throws MalformedURLException {
+	private Drug getPrescriptDrug(LoggedInInfo loggedInInfo,CachedDemographicDrug cachedDrug) throws MalformedURLException {
 		Drug pd = new Drug();
 
 		pd.setBrandName(cachedDrug.getBrandName());
@@ -576,7 +572,7 @@ public class CaseManagementManager {
 		int remoteFacilityId = cachedDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
 		pd.setRemoteFacilityId(remoteFacilityId);
 
-		CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
+		CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),remoteFacilityId);
 		pd.setRemoteFacilityName(cachedFacility.getName());
 
 		return (pd);
@@ -1056,7 +1052,7 @@ public class CaseManagementManager {
 	}
 
 
-	public List<CaseManagementNote> filterNotes(String providerNo, Collection<CaseManagementNote> notes, String programId) {
+	public List<CaseManagementNote> filterNotes(LoggedInInfo loggedInInfo, String providerNo, Collection<CaseManagementNote> notes, String programId) {
 
 		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
 		if (notes.isEmpty()) {
@@ -1127,7 +1123,7 @@ public class CaseManagementManager {
 
 		// filter notes based on facility
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			filteredNotes = notesFacilityFiltering(filteredNotes);
+			filteredNotes = notesFacilityFiltering(loggedInInfo, filteredNotes);
 		}
 
 		return filteredNotes;
@@ -1366,7 +1362,7 @@ public class CaseManagementManager {
 	/**
 	 * Filters a list of CaseManagementIssue objects based on role.
 	 */
-	public List<CaseManagementIssue> filterIssues(String providerNo, List<CaseManagementIssue> issues, String programId) {
+	public List<CaseManagementIssue> filterIssues(LoggedInInfo loggedInInfo, String providerNo, List<CaseManagementIssue> issues, String programId) {
 
 		List<CaseManagementIssue> filteredIssues = new ArrayList<CaseManagementIssue>();
 
@@ -1448,24 +1444,24 @@ public class CaseManagementManager {
 
 		// filter issues based on facility
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			filteredIssues = issuesFacilityFiltering(filteredIssues);
+			filteredIssues = issuesFacilityFiltering(loggedInInfo, filteredIssues);
 		}
 
 		return filteredIssues;
 	}
 
-	private List<CaseManagementIssue> issuesFacilityFiltering(List<CaseManagementIssue> issues) {
+	private List<CaseManagementIssue> issuesFacilityFiltering(LoggedInInfo loggedInInfo, List<CaseManagementIssue> issues) {
 		ArrayList<CaseManagementIssue> results = new ArrayList<CaseManagementIssue>();
 
 		for (CaseManagementIssue caseManagementIssue : issues) {
 			Integer programId = caseManagementIssue.getProgram_id();
-			if (programManager.hasAccessBasedOnCurrentFacility(programId)) results.add(caseManagementIssue);
+			if (programManager.hasAccessBasedOnCurrentFacility(loggedInInfo, programId)) results.add(caseManagementIssue);
 		}
 
 		return results;
 	}
 
-	private List<CaseManagementNote> notesFacilityFiltering(List<CaseManagementNote> notes) {
+	private List<CaseManagementNote> notesFacilityFiltering(LoggedInInfo loggedInInfo, List<CaseManagementNote> notes) {
 
 		ArrayList<CaseManagementNote> results = new ArrayList<CaseManagementNote>();
 
@@ -1475,7 +1471,7 @@ public class CaseManagementManager {
 			if (programId == null || "".equals(programId)) {
 				results.add(caseManagementNote);
 			} else {
-				if (programManager.hasAccessBasedOnCurrentFacility(Integer.parseInt(programId))) results.add(caseManagementNote);
+				if (programManager.hasAccessBasedOnCurrentFacility(loggedInInfo, Integer.parseInt(programId))) results.add(caseManagementNote);
 			}
 		}
 

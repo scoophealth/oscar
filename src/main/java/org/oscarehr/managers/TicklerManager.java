@@ -46,8 +46,8 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.CustomFilterDao;
-import org.oscarehr.common.dao.TicklerDao;
 import org.oscarehr.common.dao.TicklerCommentDao;
+import org.oscarehr.common.dao.TicklerDao;
 import org.oscarehr.common.dao.TicklerUpdateDao;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.CustomFilter;
@@ -115,13 +115,13 @@ public class TicklerManager {
     }
    
     
-    public List<Tickler> getTicklers(CustomFilter filter,String providerNo,String programId) {
+    public List<Tickler> getTicklers(LoggedInInfo loggedInInfo,CustomFilter filter,String providerNo,String programId) {
         List<Tickler> results = ticklerDao.getTicklers(filter);     
            
           
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {        	
         	//filter based on facility
-        	results = ticklerFacilityFiltering(results);
+        	results = ticklerFacilityFiltering(loggedInInfo,results);
         	
         	//filter based on caisi role access
             results = filterTicklersByAccess(results,providerNo,programId);
@@ -158,13 +158,13 @@ public class TicklerManager {
     }
     
     
-    protected List<Tickler> ticklerFacilityFiltering(List<Tickler> ticklers) {
+    protected List<Tickler> ticklerFacilityFiltering(LoggedInInfo loggedInInfo, List<Tickler> ticklers) {
         ArrayList<Tickler> results = new ArrayList<Tickler>();
 
         for (Tickler tickler : ticklers) {
             Integer programId = tickler.getProgramId();
             
-            if (programManager.hasAccessBasedOnCurrentFacility(programId)) {            	
+            if (programManager.hasAccessBasedOnCurrentFacility(loggedInInfo, programId)) {            	
             	results.add(tickler);
             }        
         }
@@ -417,14 +417,14 @@ public class TicklerManager {
 		updateStatus(tickler_id, provider, Tickler.STATUS.A);
 	}
 	
-	public void resolveTicklersBySubstring(List<String> demographicIds, String remString) {
+	public void resolveTicklersBySubstring(String providerNo, List<String> demographicIds, String remString) {
 		List<Integer> tmp = new ArrayList<Integer>();
 		for(String str:demographicIds) {
 			tmp.add(Integer.parseInt(str));
 		}
 		List<Tickler> ticklers = ticklerDao.findActiveByMessageForPatients(tmp,remString);
 		for(Tickler t:ticklers) {
-			deleteTickler(t.getId(),LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			deleteTickler(t.getId(),providerNo);
 		}
 	}
 	
@@ -539,8 +539,8 @@ public class TicklerManager {
     	  */
 
     	 
-    	  public void resolveTicklers(List<String> cdmPatientNos, String remString) {
-    		  resolveTicklersBySubstring(cdmPatientNos, remString);  
+    	  public void resolveTicklers(String providerNo, List<String> cdmPatientNos, String remString) {
+    		  resolveTicklersBySubstring(providerNo, cdmPatientNos, remString);  
     	  }
     	  
     	  public List<Tickler> listTicklers(Integer demographicNo, Date beginDate, Date endDate) {

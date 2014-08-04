@@ -38,6 +38,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.collections.map.LRUMap;
 import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.model.Property;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -66,13 +67,13 @@ public class PreventionManager {
         pf = PreventionDS.getInstance();
     }
 
-    public synchronized String getWarnings(String demo) {
+    public synchronized String getWarnings(LoggedInInfo loggedInInfo, String demo) {
         String ret = (String)mShell.get(PREVS).get(demo);
        
         if( ret == null ) {
                 try {
 
-                	Prevention prev = PreventionData.getLocalandRemotePreventions(Integer.parseInt(demo));
+                	Prevention prev = PreventionData.getLocalandRemotePreventions(loggedInInfo, Integer.parseInt(demo));
                     pf.getMessages(prev);
                     
                     @SuppressWarnings("unchecked")

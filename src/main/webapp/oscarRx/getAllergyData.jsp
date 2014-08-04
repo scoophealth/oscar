@@ -31,6 +31,7 @@
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="java.util.*,net.sf.json.*,java.lang.reflect.*,java.io.*,org.apache.xmlrpc.*,oscar.oscarRx.util.*,oscar.oscarRx.data.*"  %>
 <%
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 String atcCode =  request.getParameter("atcCode");
 String id = request.getParameter("id");
 
@@ -38,12 +39,11 @@ String disabled = oscar.OscarProperties.getInstance().getProperty("rx3.disable_a
 if(disabled.equals("false")) {
 
 oscar.oscarRx.pageUtil.RxSessionBean rxSessionBean = (oscar.oscarRx.pageUtil.RxSessionBean) session.getAttribute("RxSessionBean");
-Allergy[] allergies = RxPatientData.getPatient(rxSessionBean.getDemographicNo()).getAllergies();
+Allergy[] allergies = RxPatientData.getPatient(rxSessionBean.getDemographicNo()).getAllergies(loggedInInfo);
 
-LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 	try {
-		ArrayList<Allergy> remoteAllergies=RemoteDrugAllergyHelper.getRemoteAllergiesAsAllergyItems(rxSessionBean.getDemographicNo());
+		ArrayList<Allergy> remoteAllergies=RemoteDrugAllergyHelper.getRemoteAllergiesAsAllergyItems(loggedInInfo,rxSessionBean.getDemographicNo());
 
 		// now merge the 2 lists
 		for (Allergy alleryTemp : allergies) remoteAllergies.add(alleryTemp);

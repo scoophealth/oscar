@@ -39,6 +39,7 @@ import org.oscarehr.caisi_integrator.ws.NoteIssue;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -55,27 +56,27 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	private String providerName="Unavailable";
 	private ArrayList<String> issueDescriptions=new ArrayList<String>();
 
-	public NoteDisplayIntegrator(CachedDemographicNote cachedDemographicNote)
+	public NoteDisplayIntegrator(LoggedInInfo loggedInInfo,CachedDemographicNote cachedDemographicNote)
 	{
 		this.cachedDemographicNote=cachedDemographicNote;
 
     	try {
     		// note location
-	        CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
+	        CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
 	        if (cachedFacility!=null) location="Integrated Facility : "+cachedFacility.getName();
 
 	        // program name
 	    	FacilityIdIntegerCompositePk programPk=new FacilityIdIntegerCompositePk();
 	    	programPk.setIntegratorFacilityId(cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
 	    	programPk.setCaisiItemId(cachedDemographicNote.getCaisiProgramId());
-	    	CachedProgram remoteProgram=CaisiIntegratorManager.getRemoteProgram(programPk);
+	    	CachedProgram remoteProgram=CaisiIntegratorManager.getRemoteProgram(loggedInInfo.getCurrentFacility(),programPk);
 	    	if (remoteProgram!=null) programName=remoteProgram.getName();
 
 	    	// provider name
 	    	FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 	    	providerPk.setIntegratorFacilityId(cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
 	    	providerPk.setCaisiItemId(cachedDemographicNote.getObservationCaisiProviderId());
-	    	CachedProvider remoteProvider=CaisiIntegratorManager.getProvider(providerPk);
+	    	CachedProvider remoteProvider=CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(),providerPk);
 	    	if (remoteProvider!=null) providerName=remoteProvider.getLastName()+", "+remoteProvider.getFirstName();
 
 	    	// issue descriptions
