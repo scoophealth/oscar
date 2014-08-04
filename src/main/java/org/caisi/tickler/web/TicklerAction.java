@@ -51,6 +51,7 @@ import org.oscarehr.common.model.EChart;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
@@ -126,6 +127,9 @@ public class TicklerAction extends DispatchAction {
     /* show all ticklers */
     public ActionForward filter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("filter");
+
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        
         DynaActionForm ticklerForm = (DynaActionForm) form;
         CustomFilter filter = (CustomFilter) ticklerForm.get("filter");
 
@@ -144,11 +148,11 @@ public class TicklerAction extends DispatchAction {
         String providerId = (String)request.getSession().getAttribute("user");
         String programId = "";
 
-        List<Program> programs=programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(true);
+        List<Program> programs=programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(loggedInInfo, true);
         request.setAttribute("programs", programs);
 
 
-        List<Tickler> ticklers = ticklerManager.getTicklers(filter,providerId, programId);
+        List<Tickler> ticklers = ticklerManager.getTicklers(loggedInInfo, filter,providerId, programId);
 
         List<CustomFilter> cf = ticklerManager.getCustomFilters(this.getProviderNo(request));
         // make my tickler filter
@@ -193,6 +197,9 @@ public class TicklerAction extends DispatchAction {
     /* show myticklers */
     public ActionForward my_tickler_filter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("my_tickler_filter");
+        
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        
         DynaActionForm ticklerForm = (DynaActionForm) form;
         CustomFilter filter = (CustomFilter) ticklerForm.get("filter");
         filter.setStartDate(null);
@@ -206,14 +213,14 @@ public class TicklerAction extends DispatchAction {
         filter.setProgramId(null);
         String providerId = (String)request.getSession().getAttribute("user");
         String programId = "";
-        List<Tickler> ticklers = ticklerManager.getTicklers(filter,providerId,programId);
+        List<Tickler> ticklers = ticklerManager.getTicklers(loggedInInfo, filter,providerId,programId);
         request.getSession().setAttribute("ticklers", ticklers);
         request.setAttribute("providers", providerMgr.getProviders());
         if( OscarProperties.getInstance().getBooleanProperty("clientdropbox","on") ) {
             request.setAttribute("demographics", demographicMgr.getDemographics());
         }
 
-		request.setAttribute("programs", programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(true));
+		request.setAttribute("programs", programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(loggedInInfo, true));
 
 		request.setAttribute("customFilters", ticklerManager.getCustomFilters(this.getProviderNo(request)));
         request.setAttribute("from", getFrom(request));

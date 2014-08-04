@@ -80,6 +80,9 @@ public class OLISSearchAction extends DispatchAction {
 	public static HashMap<String, Query> searchQueryMap = new HashMap<String, Query>();
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		String queryType = request.getParameter("queryType");
 		boolean redo = "true".equals(request.getParameter("redo"));
 		if (redo) {
@@ -97,8 +100,8 @@ public class OLISSearchAction extends DispatchAction {
 				logItem.setAction("OLIS search");
 				logItem.setContent("consent override");
 				logItem.setContentId("demographicNo=" + q.getDemographicNo() + ",givenby=" + blockedInfoIndividual);					
-				if (LoggedInInfo.loggedInInfo.get().loggedInProvider != null) {
-					logItem.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+				if (loggedInInfo.loggedInProvider != null) {
+					logItem.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 				}
 				else {
 					logItem.setProviderNo("-1");
@@ -370,8 +373,8 @@ public class OLISSearchAction extends DispatchAction {
 					logItem.setAction("OLIS search");
 					logItem.setContent("consent override");
 					logItem.setContentId("demographicNo=" + demographicNo + ",givenby=" + blockedInfoIndividual);					
-					if (LoggedInInfo.loggedInInfo.get().loggedInProvider != null)
-						logItem.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+					if (loggedInInfo.loggedInProvider != null)
+						logItem.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 					else
 						logItem.setProviderNo("-1");
 
@@ -460,8 +463,8 @@ public class OLISSearchAction extends DispatchAction {
 					logItem.setAction("OLIS search");
 					logItem.setContent("consent override");
 					logItem.setContentId("demographicNo=" + demographicNo + ",givenby=" + blockedInfoIndividual);					
-					if (LoggedInInfo.loggedInInfo.get().loggedInProvider != null)
-						logItem.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+					if (loggedInInfo.loggedInProvider != null)
+						logItem.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 					else
 						logItem.setProviderNo("-1");
 

@@ -66,12 +66,12 @@ public class ManageLinkedClientsAction {
 
 	public void saveLinkedIds(Facility facility, Provider provider, Integer demographicId) {
 		saveHnrLinkedIds(facility, provider, demographicId);
-		saveCaisiLinkedIds(provider, demographicId);
+		saveCaisiLinkedIds(facility,provider, demographicId);
 	}
 
-	private void saveCaisiLinkedIds(Provider provider, Integer demographicId) {
+	private void saveCaisiLinkedIds(Facility facility,Provider provider, Integer demographicId) {
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(facility);
 			List<DemographicTransfer> tempLinks = demographicWs.getDirectlyLinkedDemographicsByDemographicId(demographicId);
 			HashSet<FacilityDemographicPrimaryKey> currentLinks = new HashSet<FacilityDemographicPrimaryKey>();
 

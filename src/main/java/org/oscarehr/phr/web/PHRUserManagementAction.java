@@ -634,6 +634,9 @@ public class PHRUserManagementAction extends DispatchAction {
 			WebUtils.dumpParameters(request);
 		}
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 		String demoNo = request.getParameter("demoNo");
 		String myOscarUserName = request.getParameter("myOscarUserName");
 
@@ -645,7 +648,7 @@ public class PHRUserManagementAction extends DispatchAction {
 
 			AccountManager.createRelationship(myOscarLoggedInInfo, patientMyOscarUserId, myOscarLoggedInInfo.getLoggedInPersonId(), false, true, "PatientPrimaryCareProvider");
 
-			log.debug("Patient Provider relationship added or confirmed. providerNo=" + LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo() + ", patientDemoraphicNo=" + demoNo);
+			log.debug("Patient Provider relationship added or confirmed. providerNo=" + providerNo + ", patientDemoraphicNo=" + demoNo);
 			request.setAttribute("myOscarUserName", myOscarUserName);
 			request.setAttribute("demoNo", demoNo);
 		} catch (Exception e) {

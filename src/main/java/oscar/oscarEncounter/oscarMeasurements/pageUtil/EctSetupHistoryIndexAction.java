@@ -47,6 +47,8 @@ public final class EctSetupHistoryIndexAction extends Action {
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");
 		request.getSession().setAttribute("EctSessionBean", bean);
 
@@ -56,9 +58,9 @@ public final class EctSetupHistoryIndexAction extends Action {
 			request.getSession().setAttribute("EctSessionBean", bean);
 
 			oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo);
-			if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+			if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 				List<EctMeasurementsDataBean> measureTypes = (List<EctMeasurementsDataBean>) hd.getMeasurementsDataVector ();
-				oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler.addRemoteMeasurementsTypes(measureTypes,demo);
+				oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler.addRemoteMeasurementsTypes(loggedInInfo, measureTypes,demo);
 			}
 
 			HttpSession session = request.getSession();

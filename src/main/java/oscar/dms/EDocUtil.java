@@ -70,6 +70,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerLink;
 import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -328,7 +329,7 @@ public final class EDocUtil {
 	/**
 	 * Fetches all consult documents attached to specific consultation
 	 */
-	public static ArrayList<EDoc> listDocs(String demoNo, String consultationId, boolean attached) {
+	public static ArrayList<EDoc> listDocs(LoggedInInfo loggedInInfo, String demoNo, String consultationId, boolean attached) {
 		ArrayList<EDoc> resultDocs = new ArrayList<EDoc>();
 		ArrayList<EDoc> attachedDocs = new ArrayList<EDoc>();
 
@@ -395,14 +396,14 @@ public final class EDocUtil {
 		}
 
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			resultDocs = documentFacilityFiltering(resultDocs);
+			resultDocs = documentFacilityFiltering(loggedInInfo, resultDocs);
 		}
 
 		return resultDocs;
 	}
 
-	public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, EDocSort sort) {
-		return listDocs(module, moduleid, docType, publicDoc, sort, "active");
+	public static ArrayList<EDoc> listDocs(LoggedInInfo loggedInInfo, String module, String moduleid, String docType, String publicDoc, EDocSort sort) {
+		return listDocs(loggedInInfo, module, moduleid, docType, publicDoc, sort, "active");
 	}
 
 	public static EDoc getEDocFromDocId(String docId) {
@@ -456,7 +457,7 @@ public final class EDocUtil {
 		return resultDocs;
 	}
 
-	public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, EDocSort sort, String viewstatus) {
+	public static ArrayList<EDoc> listDocs(LoggedInInfo loggedInInfo, String module, String moduleid, String docType, String publicDoc, EDocSort sort, String viewstatus) {
 		
 		boolean includePublic = publicDoc.equals(PUBLIC);
 		boolean includeDeleted = viewstatus.equals("deleted");
@@ -471,13 +472,13 @@ public final class EDocUtil {
 		}
 
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			resultDocs = documentFacilityFiltering(resultDocs);
+			resultDocs = documentFacilityFiltering(loggedInInfo, resultDocs);
 		}
 
 		return resultDocs;
 	}
 
-	public static ArrayList<EDoc> listDocsSince(String module, String moduleid, String docType, String publicDoc, EDocSort sort, String viewstatus, Date since) {
+	public static ArrayList<EDoc> listDocsSince(LoggedInInfo loggedInInfo, String module, String moduleid, String docType, String publicDoc, EDocSort sort, String viewstatus, Date since) {
 		
 		boolean includePublic = publicDoc.equals(PUBLIC);
 		boolean includeDeleted = viewstatus.equals("deleted");
@@ -494,7 +495,7 @@ public final class EDocUtil {
 		}
 
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			resultDocs = documentFacilityFiltering(resultDocs);
+			resultDocs = documentFacilityFiltering(loggedInInfo, resultDocs);
 		}
 
 		return resultDocs;
@@ -570,18 +571,18 @@ public final class EDocUtil {
 		return list;
 	}
 
-	private static ArrayList<EDoc> documentFacilityFiltering(List<EDoc> eDocs) {
+	private static ArrayList<EDoc> documentFacilityFiltering(LoggedInInfo loggedInInfo, List<EDoc> eDocs) {
 		ArrayList<EDoc> results = new ArrayList<EDoc>();
 
 		for (EDoc eDoc : eDocs) {
 			Integer programId = eDoc.getProgramId();
-			if (programManager.hasAccessBasedOnCurrentFacility(programId)) results.add(eDoc);
+			if (programManager.hasAccessBasedOnCurrentFacility(loggedInInfo, programId)) results.add(eDoc);
 		}
 
 		return results;
 	}
 
-	public static ArrayList<EDoc> listDemoDocs(String moduleid) {
+	public static ArrayList<EDoc> listDemoDocs(LoggedInInfo loggedInInfo, String moduleid) {
 		DocumentDao dao = SpringUtils.getBean(DocumentDao.class);
 		ArrayList<EDoc> resultDocs = new ArrayList<EDoc>();
 		for (Object[] o : dao.findConstultDocsDocsAndProvidersByModule(Module.DEMOGRAPHIC, ConversionUtils.fromIntString(moduleid))) {
@@ -614,7 +615,7 @@ public final class EDocUtil {
 		}
 
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			resultDocs = documentFacilityFiltering(resultDocs);
+			resultDocs = documentFacilityFiltering(loggedInInfo, resultDocs);
 		}
 
 		return resultDocs;
@@ -895,25 +896,25 @@ public final class EDocUtil {
 		return doc;
 	}
 
-	public static ArrayList<EDoc> getRemoteDocuments(Integer demographicId) {
+	public static ArrayList<EDoc> getRemoteDocuments(LoggedInInfo loggedInInfo, Integer demographicId) {
 		ArrayList<EDoc> results = new ArrayList<EDoc>();
 
 		try {
 
 			List<CachedDemographicDocument> remoteDocuments = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline()) {
-					CaisiIntegratorManager.getDemographicWs();
-					remoteDocuments = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicDocuments(demographicId);
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+					CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+					remoteDocuments = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDocuments(demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 			}
 
-			if (CaisiIntegratorManager.isIntegratorOffline()) {
+			if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
 				MiscUtils.getLogger().debug("getting fall back documents for " + demographicId);
-				remoteDocuments = IntegratorFallBackManager.getRemoteDocuments(demographicId);
+				remoteDocuments = IntegratorFallBackManager.getRemoteDocuments(loggedInInfo,demographicId);
 			}
 
 			for (CachedDemographicDocument remoteDocument : remoteDocuments) {

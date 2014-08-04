@@ -34,6 +34,7 @@ import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.Referral;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.util.DateUtils;
@@ -67,7 +68,7 @@ public class ReferralHistoryDisplay {
 		external = clientReferral.getNotes();
 	}
 
-	public ReferralHistoryDisplay(Referral referral) {
+	public ReferralHistoryDisplay(Facility facility, Referral referral) {
 		isRemoteReferral = true;
 		id = referral.getReferralId();
 
@@ -76,7 +77,7 @@ public class ReferralHistoryDisplay {
 			programId.setIntegratorFacilityId(referral.getDestinationIntegratorFacilityId());
 			programId.setCaisiItemId(referral.getDestinationCaisiProgramId());
 
-			CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(programId);
+			CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(facility, programId);
 			destinationProgramName = cachedProgram.getName();
 			destinationProgramType = cachedProgram.getType();			
 		} catch (Exception e) {

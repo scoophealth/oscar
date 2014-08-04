@@ -2403,7 +2403,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		List<Issue> filteredSearchResults = new ArrayList<Issue>();
 
 		// remove issues which we already have - we don't want duplicates
-		List existingIssues = caseManagementMgr.filterIssues(loggedInInfo.loggedInProvider.getProviderNo(), caseManagementMgr.getIssues(Integer.parseInt(demono)), programId);
+		List existingIssues = caseManagementMgr.filterIssues(loggedInInfo, loggedInInfo.loggedInProvider.getProviderNo(), caseManagementMgr.getIssues(Integer.parseInt(demono)), programId);
 		Map existingIssuesMap = convertIssueListToMap(existingIssues);
 		for (Iterator<Issue> iter = searchResults.iterator(); iter.hasNext();) {
 			Issue issue = iter.next();
@@ -3104,7 +3104,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 
 		if (loggedInInfo.currentFacility.isIntegratorEnabled() && remoteNoteUUIDs.size() > 0) {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			List<CachedDemographicNote> remoteNotes = demographicWs.getLinkedCachedDemographicNotes(Integer.parseInt(demono));
 			for (CachedDemographicNote remoteNote : remoteNotes) {
 				for (String remoteUUID : remoteNoteUUIDs) {

@@ -58,7 +58,7 @@ public class FluReport implements PreventionReport {
     public FluReport() {
     }
 
-    public Hashtable<String,Object> runReport(ArrayList<ArrayList<String>> list,Date asofDate){
+    public Hashtable<String,Object> runReport(LoggedInInfo loggedInInfo, ArrayList<ArrayList<String>> list,Date asofDate){
         int inList = 0;
         double done= 0;
         ArrayList<PreventionReportDisplay> returnReport = new ArrayList<PreventionReportDisplay>();
@@ -72,12 +72,11 @@ public class FluReport implements PreventionReport {
              //search   prevention_date prevention_type  deleted   refused
 
              ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData("Flu",demo);
-             PreventionData.addRemotePreventions(prevs, demo,"Flu",null);
+             PreventionData.addRemotePreventions(loggedInInfo, prevs, demo,"Flu",null);
 
-             LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
              if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
             	 try {
-	                ArrayList<HashMap<String,Object>> remotePreventions=PreventionData.getLinkedRemotePreventionData("Flu", demo);
+	                ArrayList<HashMap<String,Object>> remotePreventions=PreventionData.getLinkedRemotePreventionData(loggedInInfo, "Flu", demo);
 	                prevs.addAll(remotePreventions);
 
 	                Collections.sort(prevs, new PreventionData.PreventionsComparator());

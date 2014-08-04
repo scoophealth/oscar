@@ -60,7 +60,7 @@ public final class WsUtils
 					x.loggedInProvider = providerDao.getProvider(security.getProviderNo());
 				}
 				
-				LoggedInInfo.setLoggedInInfoIntoRequest(request, x);
+				LoggedInInfo.setLoggedInInfoForWebServices(request, x);
 				return(true);
 			}
 		}

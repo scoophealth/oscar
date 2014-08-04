@@ -94,6 +94,7 @@ public class EctConsultationFormRequestAction extends Action {
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		EctConsultationFormRequestForm frm = (EctConsultationFormRequestForm) form;		
 
 		String appointmentHour = frm.getAppointmentHour();
@@ -133,7 +134,6 @@ public class EctConsultationFormRequestAction extends Action {
 
 			try {				
 								if (newSignature) {
-									LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 									DigitalSignature signature = DigitalSignatureUtils.storeDigitalSignatureFromTempFileToDB(loggedInInfo, signatureImg, Integer.parseInt(demographicNo));
 									if (signature != null) { signatureId = "" + signature.getId(); }
 								}
@@ -227,75 +227,74 @@ public class EctConsultationFormRequestAction extends Action {
 
 			try {				     
 				
-								if (newSignature) {
-									LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-									DigitalSignature signature = DigitalSignatureUtils.storeDigitalSignatureFromTempFileToDB(loggedInInfo, signatureImg, Integer.parseInt(demographicNo));
-									if (signature != null) {
-										signatureId = "" + signature.getId();
-									} else {
-										signatureId = signatureImg;
-									}
-								} else {
-									signatureId = signatureImg;
-								}
-								
-                                ConsultationRequest consult = consultationRequestDao.find(new Integer(requestId));
-                                Date date = DateUtils.parseDate(frm.getReferalDate(), format);
-                                consult.setReferralDate(date);
-                                consult.setServiceId(new Integer(frm.getService()));
+				if (newSignature) {
+					DigitalSignature signature = DigitalSignatureUtils.storeDigitalSignatureFromTempFileToDB(loggedInInfo, signatureImg, Integer.parseInt(demographicNo));
+					if (signature != null) {
+						signatureId = "" + signature.getId();
+					} else {
+						signatureId = signatureImg;
+					}
+				} else {
+					signatureId = signatureImg;
+				}
+				
+                ConsultationRequest consult = consultationRequestDao.find(new Integer(requestId));
+                Date date = DateUtils.parseDate(frm.getReferalDate(), format);
+                consult.setReferralDate(date);
+                consult.setServiceId(new Integer(frm.getService()));
 
-                                consult.setSignatureImg(signatureId);
-                                
-                                //We shouldn't change the referral provider just because someone updated and printed it! 
-                                //consult.setProviderNo(frm.getProviderNo());
-                                
-                        		consult.setLetterheadName(frm.getLetterheadName());
-                        		consult.setLetterheadAddress(frm.getLetterheadAddress());
-                        		consult.setLetterheadPhone(frm.getLetterheadPhone());
-                        		consult.setLetterheadFax(frm.getLetterheadFax());
-                                
-                                Integer specId = new Integer(frm.getSpecialist());
-                                ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(specId);
-                                consult.setProfessionalSpecialist(professionalSpecialist);
-                                if( frm.getAppointmentDate() != null && !frm.getAppointmentDate().equals("") ) {
-                                	date = DateUtils.parseDate(frm.getAppointmentDate(), format);
-                                	consult.setAppointmentDate(date);
-                                	date = DateUtils.setHours(date, new Integer(appointmentHour));
-                                	date = DateUtils.setMinutes(date, new Integer(frm.getAppointmentMinute()));
-                                	consult.setAppointmentTime(date);
-                                }
-                                consult.setReasonForReferral(frm.getReasonForConsultation());
-                                consult.setClinicalInfo(frm.getClinicalInformation());
-                                consult.setCurrentMeds(frm.getCurrentMedications());
-                                consult.setAllergies(frm.getAllergies());
-                                consult.setDemographicId(new Integer(frm.getDemographicNo()));
-                                consult.setStatus(frm.getStatus());
-                                consult.setStatusText(frm.getAppointmentNotes());
-                                consult.setSendTo(frm.getSendTo());
-                                consult.setConcurrentProblems(frm.getConcurrentProblems());
-                                consult.setUrgency(frm.getUrgency());
-                                consult.setSiteName(frm.getSiteName());
-                                 Boolean pWillBook = false;
-                                if( frm.getPatientWillBook() != null ) {
-                                    pWillBook = frm.getPatientWillBook().equals("1");
-                                }
-                                consult.setPatientWillBook(pWillBook);
+                consult.setSignatureImg(signatureId);
+                
+                //We shouldn't change the referral provider just because someone updated and printed it! 
+                //consult.setProviderNo(frm.getProviderNo());
+                
+        		consult.setLetterheadName(frm.getLetterheadName());
+        		consult.setLetterheadAddress(frm.getLetterheadAddress());
+        		consult.setLetterheadPhone(frm.getLetterheadPhone());
+        		consult.setLetterheadFax(frm.getLetterheadFax());
+                
+                Integer specId = new Integer(frm.getSpecialist());
+                ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(specId);
+                consult.setProfessionalSpecialist(professionalSpecialist);
+                if( frm.getAppointmentDate() != null && !frm.getAppointmentDate().equals("") ) {
+                	date = DateUtils.parseDate(frm.getAppointmentDate(), format);
+                	consult.setAppointmentDate(date);
+                	date = DateUtils.setHours(date, new Integer(appointmentHour));
+                	date = DateUtils.setMinutes(date, new Integer(frm.getAppointmentMinute()));
+                	consult.setAppointmentTime(date);
+                }
+                consult.setReasonForReferral(frm.getReasonForConsultation());
+                consult.setClinicalInfo(frm.getClinicalInformation());
+                consult.setCurrentMeds(frm.getCurrentMedications());
+                consult.setAllergies(frm.getAllergies());
+                consult.setDemographicId(new Integer(frm.getDemographicNo()));
+                consult.setStatus(frm.getStatus());
+                consult.setStatusText(frm.getAppointmentNotes());
+                consult.setSendTo(frm.getSendTo());
+                consult.setConcurrentProblems(frm.getConcurrentProblems());
+                consult.setUrgency(frm.getUrgency());
+                consult.setSiteName(frm.getSiteName());
+                 Boolean pWillBook = false;
+                if( frm.getPatientWillBook() != null ) {
+                    pWillBook = frm.getPatientWillBook().equals("1");
+                }
+                consult.setPatientWillBook(pWillBook);
 
-                                if( frm.getFollowUpDate() != null && !frm.getFollowUpDate().equals("") ) {
-                                    date = DateUtils.parseDate(frm.getFollowUpDate(), format);
-                                    consult.setFollowUpDate(date);
-                                }
-                                consultationRequestDao.merge(consult);
-                                
-                                consultationRequestExtDao.clear(Integer.parseInt(requestId));
-                                Enumeration e = request.getParameterNames();
-                                while(e.hasMoreElements()) {
-                                	String name = (String)e.nextElement();
-                                	if(name.startsWith("ext_")) {
-                                		String value = request.getParameter(name);
-                                		consultationRequestExtDao.persist(createExtEntry(requestId,name.substring(name.indexOf("_")+1),value));
-                                	}
-                                }
+                if( frm.getFollowUpDate() != null && !frm.getFollowUpDate().equals("") ) {
+                    date = DateUtils.parseDate(frm.getFollowUpDate(), format);
+                    consult.setFollowUpDate(date);
+                }
+                consultationRequestDao.merge(consult);
+                
+                consultationRequestExtDao.clear(Integer.parseInt(requestId));
+                Enumeration e = request.getParameterNames();
+                while(e.hasMoreElements()) {
+                	String name = (String)e.nextElement();
+                	if(name.startsWith("ext_")) {
+                		String value = request.getParameter(name);
+                		consultationRequestExtDao.persist(createExtEntry(requestId,name.substring(name.indexOf("_")+1),value));
+                	}
+                }
 			}
 
 			catch (ParseException e) {
@@ -344,7 +343,7 @@ public class EctConsultationFormRequestAction extends Action {
 			// upon success continue as normal with success message
 			// upon failure, go to consultation update page with message
 			try {
-	            doHl7Send(Integer.parseInt(requestId));
+	            doHl7Send(loggedInInfo, Integer.parseInt(requestId));
 	            WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESent");
             } catch (Exception e) {
             	logger.error("Error contacting remote server.", e);
@@ -371,7 +370,8 @@ public class EctConsultationFormRequestAction extends Action {
 		obj.setRequestId(Integer.parseInt(requestId));
 		return obj;
 	}
-	private void doHl7Send(Integer consultationRequestId) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception, ServletException {
+	
+	private void doHl7Send(LoggedInInfo loggedInInfo, Integer consultationRequestId) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception, ServletException {
 		
 	    ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
 	    ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
@@ -381,8 +381,6 @@ public class EctConsultationFormRequestAction extends Action {
 	    ConsultationRequest consultationRequest=consultationRequestDao.find(consultationRequestId);
 	    ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
 	    Clinic clinic=clinicDAO.getClinic();
-	    
-        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	    
 	    // set status now so the remote version shows this status
 	    consultationRequest.setStatus("2");
@@ -399,7 +397,7 @@ public class EctConsultationFormRequestAction extends Action {
     	Demographic demographic=demographicDao.getDemographicById(consultationRequest.getDemographicId());
 
     	//--- process all documents ---
-	    ArrayList<EDoc> attachments=EDocUtil.listDocs(demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), true);
+	    ArrayList<EDoc> attachments=EDocUtil.listDocs(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), true);
 	    for (EDoc attachment : attachments)
 	    {
 	        ObservationData observationData=new ObservationData();

@@ -103,8 +103,9 @@ public class PHRMessageAction extends DispatchAction {
 
 		clearSessionVariables(request);
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 		List docs = phrDocumentDAO.getDocumentsReceived("MESSAGE", providerNo);
 		ArrayList<PHRMessage> messages = null;
 //		List<PHRAction> actionsPendingApproval = phrActionDAO.getActionsByStatus(PHRAction.STATUS_APPROVAL_PENDING, providerNo);

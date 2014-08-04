@@ -58,6 +58,8 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 
 	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		boolean a = true;
 		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.allergies");
 		String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -94,22 +96,21 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 			}
 
 			// --- get integrator allergies ---
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+			if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 				try {
 					List<CachedDemographicAllergy> remoteAllergies  = null;
 					try {
-						if (!CaisiIntegratorManager.isIntegratorOffline()){
-							remoteAllergies = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicAllergies(demographicId);
+						if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+							remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(demographicId);
 							MiscUtils.getLogger().debug("remoteAllergies retrieved "+remoteAllergies.size());
 						}
 					} catch (Exception e) {
 						MiscUtils.getLogger().error("Unexpected error.", e);
-						CaisiIntegratorManager.checkForConnectionError(e);
+						CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 					}
 					
-					if(CaisiIntegratorManager.isIntegratorOffline()){
-						remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(demographicId);	
+					if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+						remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(loggedInInfo,demographicId);	
 						MiscUtils.getLogger().debug("fallBack Allergies retrieved "+remoteAllergies.size());
 					}
 

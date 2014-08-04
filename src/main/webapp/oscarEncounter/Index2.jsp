@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -38,6 +39,8 @@
     boolean bPrincipalControl = false;
     boolean bPrincipalDisplay = false;
 
+    LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    
     String eChart$ = "_eChart$"+demographic$;
 
 %>
@@ -186,7 +189,7 @@ if (request.getParameter("casetoEncounter")==null)
   String pAge = Integer.toString(dateConvert.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
-  String province = ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
+  String province = (oscarVariables.getProperty("billregion","")).trim().toUpperCase();
   Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes(provNo);
 
   MsgDemoMap msgDemoMap = new MsgDemoMap();
@@ -282,7 +285,7 @@ if (request.getParameter("casetoEncounter")==null)
    int TruncLen = 22;
    String ellipses = "...";
   for(int j=0; j<bean.templateNames.size(); j++) {
-     String encounterTmp = (String)bean.templateNames.get(j);
+     String encounterTmp = bean.templateNames.get(j);
      encounterTmp = StringUtils.maxLenString(encounterTmp, MaxLen, TruncLen, ellipses);
      encounterTmp = StringEscapeUtils.escapeJavaScript(encounterTmp);
    %>
@@ -1400,7 +1403,7 @@ function grabEnterGetTemplate(event){
 						<div class="presBox" id="allergyBox">
 						<ul>
 							<%
-								org.oscarehr.common.model.Allergy[] allergies =RxPatientData.getPatient(Integer.parseInt(demoNo)).getAllergies();
+								org.oscarehr.common.model.Allergy[] allergies =RxPatientData.getPatient(Integer.parseInt(demoNo)).getAllergies(loggedInInfo);
 
                                             for (int j=0; j<allergies.length; j++){%>
 							<li><a

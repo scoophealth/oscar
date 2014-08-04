@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
 if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 
@@ -39,6 +40,8 @@ if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 <%
 //preliminary JSP code
 
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+   		 
 // "Module" and "function" is the same thing (old dms module)
 String module = "demographic";
 String demoNo= request.getParameter("demographicNo");
@@ -147,7 +150,7 @@ function popup1(height, width, url, windowName){
 			onsubmit="return verifyChecks(this);">
 
 			<div class="documentLists"><%-- STUFF TO DISPLAY --%> <%
-                ArrayList consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED);
+                ArrayList consultdocs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
              %>
 			<div class="doclist">
 			<div class="headerline">

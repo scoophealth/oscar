@@ -29,10 +29,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 
+import org.oscarehr.util.LoggedInInfo;
+
 /**
  *
  * @author jay
  */
 public interface PreventionReport {
-    public Hashtable runReport(ArrayList<ArrayList<String>> list,Date asofDate);
+    public Hashtable runReport(LoggedInInfo loggedInInfo, ArrayList<ArrayList<String>> list,Date asofDate);
 }

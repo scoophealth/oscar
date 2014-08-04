@@ -380,9 +380,7 @@ public class ProgramManager {
         return programDomain;
     }
 
-    public List<Program> getProgramDomainInCurrentFacilityForCurrentProvider(boolean activeOnly) {
-    	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-
+    public List<Program> getProgramDomainInCurrentFacilityForCurrentProvider(LoggedInInfo loggedInInfo, boolean activeOnly) {
     	List<Program> programs = null;
 
     	if (activeOnly) programs=getActiveProgramDomain(loggedInInfo.loggedInProvider.getProviderNo());
@@ -480,9 +478,7 @@ public class ProgramManager {
     	this.vacancyTemplateDao = vacancyTemplateDao;
     }
 
-	public boolean hasAccessBasedOnCurrentFacility(Integer programId) {
-    	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-
+	public boolean hasAccessBasedOnCurrentFacility(LoggedInInfo loggedInInfo, Integer programId) {
     	// if no program restrictions are defined.
         if (programId == null) return(true);
 

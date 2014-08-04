@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%
   String curUser_no = (String) session.getAttribute("user");
@@ -54,6 +55,7 @@
 <%@page import="org.oscarehr.PMmodule.dao.ProgramDao" %>
 <%@page import="org.oscarehr.common.model.Facility" %>
 <%@page import="org.apache.commons.lang.StringUtils" %>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@page import="oscar.OscarProperties" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
@@ -66,6 +68,8 @@
 	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
     String privateConsentEnabledProperty = OscarProperties.getInstance().getProperty("privateConsentEnabled");
     boolean privateConsentEnabled = privateConsentEnabledProperty != null && privateConsentEnabledProperty.equals("true");
+    
+    LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
@@ -1255,8 +1259,8 @@ document.forms[1].r_doctor_ohip.value = refNo;
                                     <%
                                         GenericIntakeEditAction gieat = new GenericIntakeEditAction();
                                         gieat.setProgramManager(pm);
-                                        String _pvid =org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
-                                        Set<Program> pset = gieat.getActiveProviderProgramsInFacility(_pvid,org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.getRegistrationIntake());
+                                        String _pvid =loggedInInfo.getLoggedInProviderNo();
+                                        Set<Program> pset = gieat.getActiveProviderProgramsInFacility(loggedInInfo, _pvid,org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.getRegistrationIntake());
                                         List<Program> bedP = gieat.getBedPrograms(pset,_pvid);
                                         List<Program> commP = gieat.getCommunityPrograms();
                       	                Program oscarp = programDao.getProgramByName("OSCAR");

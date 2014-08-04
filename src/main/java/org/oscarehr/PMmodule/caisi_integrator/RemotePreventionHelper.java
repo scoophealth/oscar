@@ -38,6 +38,7 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.XmlUtils;
 import org.w3c.dom.Document;
@@ -50,7 +51,7 @@ import oscar.util.DateUtils;
 public final class RemotePreventionHelper {
 	private static Logger logger = MiscUtils.getLogger();
 
-	public static ArrayList<HashMap<String, Object>> getLinkedPreventionDataMap(Integer localDemographicId) {
+	public static ArrayList<HashMap<String, Object>> getLinkedPreventionDataMap(LoggedInInfo loggedInInfo, Integer localDemographicId) {
 		ArrayList<HashMap<String, Object>> results = new ArrayList<HashMap<String, Object>>();
 
 		try {
@@ -58,21 +59,21 @@ public final class RemotePreventionHelper {
 			
 			List<CachedDemographicPrevention> preventions  = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline()){
-				   DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				   DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 				   preventions = demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(localDemographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 			}
 				
-			if(CaisiIntegratorManager.isIntegratorOffline()){
-			   preventions = IntegratorFallBackManager.getRemotePreventions(localDemographicId);
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			   preventions = IntegratorFallBackManager.getRemotePreventions(loggedInInfo, localDemographicId);
 			} 
 		 
 			for (CachedDemographicPrevention prevention : preventions) {
-				results.add(getPreventionDataMap(prevention));
+				results.add(getPreventionDataMap(loggedInInfo, prevention));
 			}
 		} catch (Exception e) {
 			logger.error("Error getting remote Preventions", e);
@@ -81,7 +82,7 @@ public final class RemotePreventionHelper {
 		return (results);
 	}
 
-	public static HashMap<String, Object> getPreventionDataMap(CachedDemographicPrevention prevention) throws MalformedURLException {
+	public static HashMap<String, Object> getPreventionDataMap(LoggedInInfo loggedInInfo,CachedDemographicPrevention prevention) throws MalformedURLException {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 
 		result.put("id", prevention.getFacilityPreventionPk().getCaisiItemId().toString());
@@ -97,7 +98,7 @@ public final class RemotePreventionHelper {
 		FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 		providerPk.setIntegratorFacilityId(prevention.getFacilityPreventionPk().getIntegratorFacilityId());
 		providerPk.setCaisiItemId(prevention.getCaisiProviderId());
-		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(providerPk);
+		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(),providerPk);
 		if (cachedProvider!=null)
 		{
 			result.put("provider_name", cachedProvider.getLastName()+", "+cachedProvider.getFirstName());

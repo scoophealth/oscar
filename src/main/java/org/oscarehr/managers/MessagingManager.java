@@ -29,7 +29,6 @@ import org.oscarehr.common.dao.MessageListDao;
 import org.oscarehr.common.dao.MsgDemoMapDao;
 import org.oscarehr.common.model.MessageList;
 import org.oscarehr.common.model.MsgDemoMap;
-import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,11 +46,8 @@ public class MessagingManager {
 	private MsgDemoMapDao msgDemoMapDao;
 	
 	
-	public List<MessageList> getMyInboxMessages(int offset, int limit) {
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
-		
+	public List<MessageList> getMyInboxMessages(String providerNo, int offset, int limit) {		
 		List<MessageList> msgs = messageListDao.findMessageRangeByProviderNo(providerNo, offset, limit);
-		
 		 
 		for(MessageList msg:msgs) {
 	        	LogAction.addLogSynchronous("MessagingManager.getMyInboxMessages", "msglistid="+msg.getId());
@@ -60,9 +56,7 @@ public class MessagingManager {
 		return msgs;
 	}
 	
-	public int getMyInboxMessageCount(boolean onlyWithPatientAttached) {
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
-		
+	public int getMyInboxMessageCount(String providerNo, boolean onlyWithPatientAttached) {		
 		List<MessageList> msgs = messageListDao.findUnreadByProvider(providerNo);
 		
 		if(!onlyWithPatientAttached) {

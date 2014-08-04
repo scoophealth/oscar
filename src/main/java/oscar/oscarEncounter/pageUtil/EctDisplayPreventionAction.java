@@ -36,6 +36,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarPrevention.Prevention;
 import oscar.oscarPrevention.PreventionDS;
@@ -50,10 +51,10 @@ import oscar.util.StringUtils;
  */
 public class EctDisplayPreventionAction extends EctDisplayAction {
     private static final String cmd = "preventions";
-    private long startTime = System.currentTimeMillis();
 
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
     	boolean a = true;
     	Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.preventions");
         String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -105,7 +106,7 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
             String prevName = h.get("name");
             ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, Integer.valueOf(bean.demographicNo));
             Date demographicDateOfBirth=PreventionData.getDemographicDateOfBirth(Integer.valueOf(bean.demographicNo));
-            PreventionData.addRemotePreventions(alist, Integer.valueOf(bean.demographicNo),prevName,demographicDateOfBirth);
+            PreventionData.addRemotePreventions(loggedInInfo, alist, Integer.valueOf(bean.demographicNo),prevName,demographicDateOfBirth);
             boolean show = pdc.display(h, bean.demographicNo,alist.size());
             if( show ) {
                 if( alist.size() > 0 ) {

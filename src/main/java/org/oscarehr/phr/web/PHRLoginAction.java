@@ -60,7 +60,9 @@ public class PHRLoginAction extends DispatchAction
 	{
 		HttpSession session = request.getSession();
 
-		String providerNo = (String)session.getAttribute("user");
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 		String forwardTo = request.getParameter("forwardto");
 
 		ActionForward ar = new ActionForward(forwardTo);
@@ -90,7 +92,7 @@ public class PHRLoginAction extends DispatchAction
 				MyOscarLoggedInInfo.setLoggedInInfo(request.getSession(), myOscarLoggedInInfo);
 				
 				boolean saveMyOscarPassword=WebUtils.isChecked(request, "saveMyOscarPassword");
-				if (saveMyOscarPassword) saveMyOscarPassword(session, myoscarPassword);
+				if (saveMyOscarPassword) saveMyOscarPassword(session, providerNo, myoscarPassword);
 			}
 		}
 		catch (NotAuthorisedException_Exception e)
@@ -111,15 +113,13 @@ public class PHRLoginAction extends DispatchAction
 		return ar;
 	}
 
-	private void saveMyOscarPassword(HttpSession session, String myoscarPassword) {
+	private void saveMyOscarPassword(HttpSession session, String providerNo, String myoscarPassword) {
 		try {
 	        SecretKeySpec key=MyOscarUtils.getDeterministicallyMangledPasswordSecretKeyFromSession(session);
 	        byte[] encryptedMyOscarPassword=EncryptionUtils.encrypt(key, myoscarPassword.getBytes("UTF-8"));
 
-	        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-	        
 	        ProviderPreferenceDao providerPreferenceDao=(ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
-	        ProviderPreference providerPreference=providerPreferenceDao.find(loggedInInfo.loggedInProvider.getProviderNo());
+	        ProviderPreference providerPreference=providerPreferenceDao.find(providerNo);
 	        providerPreference.setEncryptedMyOscarPassword(encryptedMyOscarPassword);
 	        providerPreferenceDao.merge(providerPreference);
         } catch (Exception e) {

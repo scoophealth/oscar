@@ -529,10 +529,8 @@ public class AdmissionManager {
         this.roomDemographicManager = roomDemographicManager;
     }
 
-    public boolean isActiveInCurrentFacility(int demographicId)
+    public boolean isActiveInCurrentFacility(LoggedInInfo loggedInInfo, int demographicId)
     {
-        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-        
         List<Admission> results=getCurrentAdmissionsByFacility(demographicId, loggedInInfo.currentFacility.getId());
         if (results!=null && results.size()>0) return(true);
         

@@ -50,10 +50,10 @@
     
     ArrayList<LabResultData> labs = comLab.populateLabResultsData("",demographicNo, "", "","","U");
     
-    LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+    LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
     if (loggedInInfo.currentFacility.isIntegratorEnabled())
     {
-       ArrayList<LabResultData> remoteResults=CommonLabResultData.getRemoteLabs(Integer.parseInt(demographicNo));
+       ArrayList<LabResultData> remoteResults=CommonLabResultData.getRemoteLabs(loggedInInfo,Integer.parseInt(demographicNo));
        labs.addAll(remoteResults);
     }
     

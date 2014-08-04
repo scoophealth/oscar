@@ -29,11 +29,12 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.caisi_integrator.ws.CachedAdmission;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
+import org.oscarehr.common.model.Admission;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.util.DateUtils;
@@ -89,7 +90,7 @@ public class AdmissionForDisplay {
 		temporaryAdmission = String.valueOf(admission.isTemporaryAdmission());
 	}
 
-	public AdmissionForDisplay(CachedAdmission cachedAdmission) {
+	public AdmissionForDisplay(LoggedInInfo loggedInInfo, CachedAdmission cachedAdmission) {
 		isFromIntegrator = true;
 
 		FacilityIdIntegerCompositePk remoteProgramPk = new FacilityIdIntegerCompositePk();
@@ -97,7 +98,7 @@ public class AdmissionForDisplay {
 		remoteProgramPk.setIntegratorFacilityId(remoteFacilityId);
 		remoteProgramPk.setCaisiItemId(cachedAdmission.getCaisiProgramId());
 		try {
-			CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(remoteProgramPk);
+			CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo.getCurrentFacility(), remoteProgramPk);
 			programName = cachedProgram.getName();
 			programType = cachedProgram.getType();
 		} catch (Exception e) {
@@ -105,7 +106,7 @@ public class AdmissionForDisplay {
 		}
 
 		try {
-			CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
+			CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), remoteFacilityId);
 			facilityName = cachedFacility.getName();
 		} catch (Exception e) {
 			logger.error("Error retrieving integrator Facility.", e);

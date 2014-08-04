@@ -82,6 +82,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.sharingcenter.SharingCenterUtil;
 import org.oscarehr.sharingcenter.model.DemographicExport;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -769,6 +770,8 @@ public class ManageDocumentAction extends DispatchAction {
 
 	public ActionForward display(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		String temp = request.getParameter("remoteFacilityId");
 		Integer remoteFacilityId = null;
 		if (temp != null) remoteFacilityId = Integer.parseInt(temp);
@@ -822,24 +825,24 @@ public class ManageDocumentAction extends DispatchAction {
 			CachedDemographicDocumentContents remoteDocumentContents = null;
 
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline()){
-					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+				if (!CaisiIntegratorManager.isIntegratorOffline(request.getSession())){
+					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 					remoteDocument = demographicWs.getCachedDemographicDocument(remotePk);
 					remoteDocumentContents = demographicWs.getCachedDemographicDocumentContents(remotePk);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(e);
+				CaisiIntegratorManager.checkForConnectionError(request.getSession(),e);
 			}
 
-			if(CaisiIntegratorManager.isIntegratorOffline()){
-				Integer demographicId = IntegratorFallBackManager.getDemographicNoFromRemoteDocument(remotePk);
+			if(CaisiIntegratorManager.isIntegratorOffline(request.getSession())){
+				Integer demographicId = IntegratorFallBackManager.getDemographicNoFromRemoteDocument(loggedInInfo,remotePk);
 				MiscUtils.getLogger().debug("got demographic no from remote document "+demographicId);
-				List<CachedDemographicDocument> remoteDocuments = IntegratorFallBackManager.getRemoteDocuments(demographicId);
+				List<CachedDemographicDocument> remoteDocuments = IntegratorFallBackManager.getRemoteDocuments(loggedInInfo,demographicId);
 				for(CachedDemographicDocument demographicDocument: remoteDocuments){
 					if(demographicDocument.getFacilityIntegerPk().getIntegratorFacilityId() == remotePk.getIntegratorFacilityId() && demographicDocument.getFacilityIntegerPk().getCaisiItemId() == remotePk.getCaisiItemId() ){
 						remoteDocument = demographicDocument;
-						remoteDocumentContents = IntegratorFallBackManager.getRemoteDocument(demographicId, remotePk);
+						remoteDocumentContents = IntegratorFallBackManager.getRemoteDocument(loggedInInfo,demographicId, remotePk);
 						break;
 					}
 					MiscUtils.getLogger().error("End of the loop and didn't find the remoteDocument");

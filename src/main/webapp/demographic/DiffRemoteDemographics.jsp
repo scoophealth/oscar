@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page
 	import="org.oscarehr.common.dao.DemographicDao,org.oscarehr.caisi_integrator.ws.DemographicWs,org.oscarehr.util.SpringUtils,org.oscarehr.common.model.Demographic"%>
 <%@page
@@ -30,9 +31,9 @@
 <%@page
 	import="org.oscarehr.PMmodule.caisi_integrator.*,java.util.*,oscar.util.*"%>
 <%
-
-Integer localDemographicId = Integer.parseInt(request.getParameter("demographicId"));
-	DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	Integer localDemographicId = Integer.parseInt(request.getParameter("demographicId"));
+	DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 	List<DemographicTransfer> directLinks=demographicWs.getDirectlyLinkedDemographicsByDemographicId(localDemographicId);
 	DemographicTransfer demographicTransfer = null;	
 		
@@ -47,13 +48,13 @@ Integer localDemographicId = Integer.parseInt(request.getParameter("demographicI
 	FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 	providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
 	providerPk.setCaisiItemId(demographicTransfer.getLastUpdateUser());
-	CachedProvider p = CaisiIntegratorManager.getProvider(providerPk);
+	CachedProvider p = CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(), providerPk);
 	String remoteProvider = "Unknown"; // i18n
 	if(p != null){
 		remoteProvider = p.getFirstName() +" "+p.getLastName();
 	}
 	
-	List<Role> roles = CaisiIntegratorManager.getProviderWs().getProviderRoles(providerPk);
+	List<Role> roles = CaisiIntegratorManager.getProviderWs(loggedInInfo.getCurrentFacility()).getProviderRoles(providerPk);
 	StringBuilder remoteRoles = new StringBuilder();
 	boolean first = true;
 	for(Role role: roles){
@@ -121,9 +122,9 @@ Integer localDemographicId = Integer.parseInt(request.getParameter("demographicI
 						<td>Remote:
 						<% if(demographicTransfer!= null){ %>
 				
-							<%=CaisiIntegratorManager.getRemoteFacility(demographicTransfer.getIntegratorFacilityId()).getName()     %>
+							<%=CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), demographicTransfer.getIntegratorFacilityId()).getName()     %>
 							-
-							<%=CaisiIntegratorManager.getRemoteFacility(demographicTransfer.getIntegratorFacilityId()).getDescription()    %>
+							<%=CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), demographicTransfer.getIntegratorFacilityId()).getDescription()    %>
 							<br>
 							By: <%=remoteProvider %> -- Role : <%=remoteRoles.toString() %>
 						<%} %>

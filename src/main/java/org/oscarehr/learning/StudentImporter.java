@@ -42,7 +42,6 @@ import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.common.model.Security;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -61,7 +60,7 @@ public class StudentImporter {
 	static ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 	   
 	
-	public static int importStudentInfo(List<StudentInfo> dataList) {
+	public static int importStudentInfo(Integer currentFacilityId, List<StudentInfo> dataList) {
 		
 		//create provider record
 		DBPreparedHandler dbObj = new DBPreparedHandler();
@@ -143,12 +142,11 @@ public class StudentImporter {
 				
 				
 				//create student's "personal" program
-				int facilityId = LoggedInInfo.loggedInInfo.get().currentFacility.getId();
 				Program p = new Program();
 				try {					
 					p.setName("program"+providerNo);
 					p.setMaxAllowed(999);
-					p.setFacilityId(facilityId);
+					p.setFacilityId(currentFacilityId);
 					p.setSiteSpecificField("student");
 					p.setAddress("");
 					p.setAbstinenceSupport("");

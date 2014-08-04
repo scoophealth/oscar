@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
@@ -34,6 +35,8 @@
     String demographic$ = request.getParameter("demographicNo") ;
     boolean bPrincipalControl = false;
     boolean bPrincipalDisplay = false;
+    
+    LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart"
 	rights="r" reverse="<%=true%>">
@@ -1331,7 +1334,7 @@ function removeSaveFeedback()  {
 						<div class="presBox" id="allergyBox">
 						<ul>
 							<%
-								org.oscarehr.common.model.Allergy[] allergies = RxPatientData.getPatient(Integer.parseInt(demoNo)).getAllergies();
+								org.oscarehr.common.model.Allergy[] allergies = RxPatientData.getPatient(Integer.parseInt(demoNo)).getAllergies(loggedInInfo);
 
                                             for (int j=0; j<allergies.length; j++){%>
 							<li><a

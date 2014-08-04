@@ -97,8 +97,7 @@ public class CaisiIntegratorManager {
 	/** data put here should be segmented by the requesting provider as part of the cache key */
 	private static QueueCache<String, Object> segmentedDataCache=new QueueCache<String, Object>(4, 100, org.apache.commons.lang.time.DateUtils.MILLIS_PER_HOUR, null);
 	
-	public static void setIntegratorOffline(boolean status){
-		HttpSession session = LoggedInInfo.loggedInInfo.get().session;
+	public static void setIntegratorOffline(HttpSession session, boolean status){
 		if(status){
 		session.setAttribute(SessionConstants.INTEGRATOR_OFFLINE,true);
 		}else{
@@ -106,17 +105,16 @@ public class CaisiIntegratorManager {
 		}
 	}
 	
-	public static void checkForConnectionError(Throwable exception){
+	public static void checkForConnectionError(HttpSession session, Throwable exception){
 		Throwable rootException = ExceptionUtils.getRootCause(exception);
 		MiscUtils.getLogger().debug("Exception: "+exception.getClass().getName()+" --- "+rootException.getClass().getName());
 				
 		if (rootException instanceof java.net.ConnectException){
-			setIntegratorOffline(true);
+			setIntegratorOffline(session, true);
 		}
 	}
 	
-	public static boolean isIntegratorOffline(){
-		HttpSession session = LoggedInInfo.loggedInInfo.get().session;
+	public static boolean isIntegratorOffline(HttpSession session){
 		Object object = session.getAttribute(SessionConstants.INTEGRATOR_OFFLINE);
 		if (object != null){
 			return true;
@@ -124,8 +122,7 @@ public class CaisiIntegratorManager {
 		return false;
 	}
 	
-	public static boolean isEnableIntegratedReferrals() {
-		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
+	public static boolean isEnableIntegratedReferrals(Facility facility) {
 		return(facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals());
 	}
 
@@ -138,9 +135,7 @@ public class CaisiIntegratorManager {
 		return (new URL(facility.getIntegratorUrl() + '/' + servicePoint + "?wsdl"));
 	}
 
-	public static FacilityWs getFacilityWs() throws MalformedURLException {
-		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
-
+	public static FacilityWs getFacilityWs(Facility facility) throws MalformedURLException {
 		FacilityWsService service = new FacilityWsService(buildURL(facility, "FacilityService"));
 		FacilityWs port = service.getFacilityWsPort();
 
@@ -152,17 +147,17 @@ public class CaisiIntegratorManager {
 
 	
 
-	public static boolean haveAllRemoteFacilitiesSyncedIn(int seconds) throws MalformedURLException {
-		return haveAllRemoteFacilitiesSyncedIn(seconds,true);
+	public static boolean haveAllRemoteFacilitiesSyncedIn(Facility facility,int seconds) throws MalformedURLException {
+		return haveAllRemoteFacilitiesSyncedIn(facility, seconds,true);
 	}
     		
-	public static boolean haveAllRemoteFacilitiesSyncedIn(int seconds,boolean useCachedData) throws MalformedURLException {
+	public static boolean haveAllRemoteFacilitiesSyncedIn(Facility facility, int seconds,boolean useCachedData) throws MalformedURLException {
 		boolean synced = true;
 		Calendar timeConsideredStale = Calendar.getInstance();
 		
 		timeConsideredStale.add(Calendar.SECOND, -seconds);
 		
-		List<CachedFacility> remoteFacilities=  getRemoteFacilities(useCachedData);
+		List<CachedFacility> remoteFacilities=  getRemoteFacilities(facility, useCachedData);
 		for(CachedFacility remoteFacility : remoteFacilities){
 			Calendar lastDataUpdate = remoteFacility.getLastDataUpdate();
 			if( lastDataUpdate == null || timeConsideredStale.after(lastDataUpdate)){
@@ -172,18 +167,18 @@ public class CaisiIntegratorManager {
 		return synced;
 	}
 
-	public static List<CachedFacility> getRemoteFacilities() throws MalformedURLException {
-		return getRemoteFacilities(true);
+	public static List<CachedFacility> getRemoteFacilities(Facility facility) throws MalformedURLException {
+		return getRemoteFacilities(facility, true);
 	}
 	
-    public static List<CachedFacility> getRemoteFacilities(boolean useCachedData) throws MalformedURLException {
+    public static List<CachedFacility> getRemoteFacilities(Facility facility,boolean useCachedData) throws MalformedURLException {
     	
 		@SuppressWarnings("unchecked")
 		List<CachedFacility> results=(List<CachedFacility>) basicDataCache.get("ALL_FACILITIES");
     	    	
     	if (!useCachedData  || results==null)
     	{
-			FacilityWs facilityWs = getFacilityWs();
+			FacilityWs facilityWs = getFacilityWs(facility);
 			results = Collections.unmodifiableList(facilityWs.getAllFacility());
 			basicDataCache.put("ALL_FACILITIES", results);
     	}
@@ -192,17 +187,15 @@ public class CaisiIntegratorManager {
 	}	
     
 	
-   public static CachedFacility getRemoteFacility(int remoteFacilityId) throws MalformedURLException {
-		for (CachedFacility facility : getRemoteFacilities()) {
+   public static CachedFacility getRemoteFacility(Facility currentFacility,int remoteFacilityId) throws MalformedURLException {
+		for (CachedFacility facility : getRemoteFacilities(currentFacility)) {
 			if (facility.getIntegratorFacilityId().equals(remoteFacilityId)) return (facility);
 		}
 
 		return (null);
 	}
 
-	public static DemographicWs getDemographicWs() throws MalformedURLException {
-		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
-		
+	public static DemographicWs getDemographicWs(Facility facility) throws MalformedURLException {
 		DemographicWsService service = new DemographicWsService(buildURL(facility, "DemographicService"));
 		DemographicWs port = service.getDemographicWsPort();
 
@@ -210,10 +203,6 @@ public class CaisiIntegratorManager {
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
-	}
-
-	public static ProgramWs getProgramWs() throws MalformedURLException {
-		return(getProgramWs(LoggedInInfo.loggedInInfo.get().currentFacility));
 	}
 
 	public static ProgramWs getProgramWs(Facility facility) throws MalformedURLException {
@@ -226,14 +215,14 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-    public static List<CachedProgram> getAllPrograms() throws MalformedURLException
+    public static List<CachedProgram> getAllPrograms(Facility facility) throws MalformedURLException
 	{
     	@SuppressWarnings("unchecked")
 		List<CachedProgram> allPrograms=(List<CachedProgram>) basicDataCache.get("ALL_PROGRAMS");
 		
 		if (allPrograms==null)
 		{
-			allPrograms=Collections.unmodifiableList(getProgramWs().getAllPrograms());
+			allPrograms=Collections.unmodifiableList(getProgramWs(facility).getAllPrograms());
 			basicDataCache.put("ALL_PROGRAMS", allPrograms);
 		}
 		
@@ -244,18 +233,18 @@ public class CaisiIntegratorManager {
 	 * @param type should not be null
 	 * @return a list of cached programs matching the program type
 	 */
-	public static ArrayList<CachedProgram> getRemotePrograms(String type) throws MalformedURLException {
+	public static ArrayList<CachedProgram> getRemotePrograms(Facility facility, String type) throws MalformedURLException {
 		ArrayList<CachedProgram> results = new ArrayList<CachedProgram>();
 
-		for (CachedProgram cachedProgram : getAllPrograms()) {
+		for (CachedProgram cachedProgram : getAllPrograms(facility)) {
 			if (type.equals(cachedProgram.getType())) results.add(cachedProgram);
 		}
 
 		return (results);
 	}
 
-	public static CachedProgram getRemoteProgram(FacilityIdIntegerCompositePk remoteProgramPk) throws MalformedURLException {
-		List<CachedProgram> programs = getAllPrograms();
+	public static CachedProgram getRemoteProgram(Facility facility, FacilityIdIntegerCompositePk remoteProgramPk) throws MalformedURLException {
+		List<CachedProgram> programs = getAllPrograms(facility);
 
 		for (CachedProgram cachedProgram : programs) {
 			if (facilityIdIntegerPkEquals(cachedProgram.getFacilityIdIntegerCompositePk(), remoteProgramPk)) {
@@ -274,10 +263,10 @@ public class CaisiIntegratorManager {
 		}
 	}
 
-	public static List<CachedProgram> getRemoteProgramsAcceptingReferrals() throws MalformedURLException {
+	public static List<CachedProgram> getRemoteProgramsAcceptingReferrals(Facility facility) throws MalformedURLException {
 		List<CachedProgram> filteredResults = new ArrayList<CachedProgram>();
 
-		ProgramWs programWs = getProgramWs();
+		ProgramWs programWs = getProgramWs(facility);
 		List<CachedProgram> results = programWs.getAllProgramsAllowingIntegratedReferrals();
 		for (CachedProgram result : results) {
 			if (!result.getType().equals("community")) {
@@ -286,10 +275,6 @@ public class CaisiIntegratorManager {
 		}
 
 		return (results);
-	}
-
-	public static ProviderWs getProviderWs() throws MalformedURLException {
-		return (getProviderWs(LoggedInInfo.loggedInInfo.get().currentFacility));
 	}
 
 	public static ProviderWs getProviderWs(Facility facility) throws MalformedURLException {
@@ -302,14 +287,14 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-    public static List<CachedProvider> getAllProviders() throws MalformedURLException {
+    public static List<CachedProvider> getAllProviders(Facility facility) throws MalformedURLException {
 		
     	@SuppressWarnings("unchecked")
 		List<CachedProvider> results=(List<CachedProvider>) basicDataCache.get("ALL_PROVIDERS");
 
     	if (results==null)
     	{
-			ProviderWs providerWs = getProviderWs();
+			ProviderWs providerWs = getProviderWs(facility);
 			results = Collections.unmodifiableList(providerWs.getAllProviders());
 			basicDataCache.put("ALL_PROVIDERS", results);
     	}
@@ -317,8 +302,8 @@ public class CaisiIntegratorManager {
 		return (results);
 	}
 
-	public static CachedProvider getProvider(FacilityIdStringCompositePk remoteProviderPk) throws MalformedURLException {
-		List<CachedProvider> providers = getAllProviders();
+	public static CachedProvider getProvider(Facility facility, FacilityIdStringCompositePk remoteProviderPk) throws MalformedURLException {
+		List<CachedProvider> providers = getAllProviders(facility);
 
 		for (CachedProvider cachedProvider : providers) {
 			if (facilityProviderPrimaryKeyEquals(cachedProvider.getFacilityIdStringCompositePk(), remoteProviderPk)) {
@@ -337,9 +322,7 @@ public class CaisiIntegratorManager {
 		}
 	}
 
-	public static ReferralWs getReferralWs() throws MalformedURLException {
-		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
-
+	public static ReferralWs getReferralWs(Facility facility) throws MalformedURLException {
 		ReferralWsService service = new ReferralWsService(buildURL(facility, "ReferralService"));
 		ReferralWs port = service.getReferralWsPort();
 
@@ -349,9 +332,7 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public static HnrWs getHnrWs() throws MalformedURLException {
-		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
-
+	public static HnrWs getHnrWs(Facility facility) throws MalformedURLException {
 		HnrWsService service = new HnrWsService(buildURL(facility, "HnrService"));
 		HnrWs port = service.getHnrWsPort();
 
@@ -361,53 +342,53 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public static List<MatchingClientScore> searchHnrForMatchingClients(MatchingClientParameters matchingClientParameters) throws MalformedURLException, ConnectException_Exception {
-		HnrWs hnrWs = getHnrWs();
+	public static List<MatchingClientScore> searchHnrForMatchingClients(Facility facility, MatchingClientParameters matchingClientParameters) throws MalformedURLException, ConnectException_Exception {
+		HnrWs hnrWs = getHnrWs(facility);
 		List<MatchingClientScore> potentialMatches = hnrWs.getMatchingHnrClients(matchingClientParameters);
 		return (potentialMatches);
 	}
 
-	public static org.oscarehr.hnr.ws.Client getHnrClient(Integer linkingId) throws MalformedURLException, ConnectException_Exception {
-		HnrWs hnrWs = getHnrWs();
+	public static org.oscarehr.hnr.ws.Client getHnrClient(Facility facility, Integer linkingId) throws MalformedURLException, ConnectException_Exception {
+		HnrWs hnrWs = getHnrWs(facility);
 		org.oscarehr.hnr.ws.Client client = hnrWs.getHnrClient(linkingId);
 		return (client);
 	}
 
-	public static Integer setHnrClient(org.oscarehr.hnr.ws.Client hnrClient) throws MalformedURLException, DuplicateHinExceptionException, InvalidHinExceptionException, ConnectException_Exception {
-		HnrWs hnrWs = getHnrWs();
+	public static Integer setHnrClient(Facility facility, org.oscarehr.hnr.ws.Client hnrClient) throws MalformedURLException, DuplicateHinExceptionException, InvalidHinExceptionException, ConnectException_Exception {
+		HnrWs hnrWs = getHnrWs(facility);
 		return (hnrWs.setHnrClientData(hnrClient));
 	}
 
 	/**
 	 * You can not determine which facility "you are" from the facility listing. You must use this method to determine which facility you authenticated as.
 	 */
-	public static CachedFacility getCurrentRemoteFacility() throws MalformedURLException {
-		FacilityWs facilityWs = getFacilityWs();
+	public static CachedFacility getCurrentRemoteFacility(Facility facility) throws MalformedURLException {
+		FacilityWs facilityWs = getFacilityWs(facility);
 		CachedFacility cachedFacility = facilityWs.getMyFacility();
 		return (cachedFacility);
 	}
 
-	public static GetConsentTransfer getConsentState(Integer localDemographicId) throws MalformedURLException {
-		CachedFacility localIntegratorFacility=getCurrentRemoteFacility();
+	public static GetConsentTransfer getConsentState(Facility facility,Integer localDemographicId) throws MalformedURLException {
+		CachedFacility localIntegratorFacility=getCurrentRemoteFacility(facility);
 		
-		return (getConsentState(localIntegratorFacility.getIntegratorFacilityId(), localDemographicId));
+		return (getConsentState(facility, localIntegratorFacility.getIntegratorFacilityId(), localDemographicId));
 	}
 
-	public static GetConsentTransfer getConsentState(Integer integratorFacilityId, Integer caisiDemographicId) throws MalformedURLException {		
+	public static GetConsentTransfer getConsentState(Facility facility, Integer integratorFacilityId, Integer caisiDemographicId) throws MalformedURLException {		
 		FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
 		pk.setIntegratorFacilityId(integratorFacilityId);
 		pk.setCaisiItemId(caisiDemographicId);
 		
-		DemographicWs demographicWs = getDemographicWs();
+		DemographicWs demographicWs = getDemographicWs(facility);
 		GetConsentTransfer getConsentTransfer = demographicWs.getConsentState(pk);
 		return (getConsentTransfer);
 	}
 
-	public static void pushConsent(IntegratorConsent consent) throws MalformedURLException	{
+	public static void pushConsent(Facility facility, IntegratorConsent consent) throws MalformedURLException	{
 		if (consent.getClientConsentStatus()==ConsentStatus.GIVEN || consent.getClientConsentStatus()==ConsentStatus.REVOKED)
 		{
 			SetConsentTransfer consentTransfer=makeSetConsentTransfer(consent);				
-			getDemographicWs().setCachedDemographicConsent(consentTransfer);
+			getDemographicWs(facility).setCachedDemographicConsent(consentTransfer);
 		}
 	}
 
@@ -429,17 +410,16 @@ public class CaisiIntegratorManager {
 		return (consentTransfer);
 	}
 
-    public static List<CachedDemographicNote> getLinkedNotes(Integer demographicNo) throws MalformedURLException 
+    public static List<CachedDemographicNote> getLinkedNotes(LoggedInInfo loggedInInfo, Integer demographicNo) throws MalformedURLException 
     {
- 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		String sessionCacheKey="LINKED_NOTES:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getProviderNo()+":"+demographicNo;
+		String sessionCacheKey="LINKED_NOTES:"+loggedInInfo.getCurrentFacility().getId()+":"+loggedInInfo.loggedInProvider.getProviderNo()+":"+demographicNo;
 
 		@SuppressWarnings("unchecked")
 		List<CachedDemographicNote> linkedNotes=(List<CachedDemographicNote>) segmentedDataCache.get(sessionCacheKey);
 		
 		if (linkedNotes==null)
 		{
-			DemographicWs demographicWs = getDemographicWs();
+			DemographicWs demographicWs = getDemographicWs(loggedInInfo.getCurrentFacility());
 			linkedNotes = Collections.unmodifiableList(demographicWs.getLinkedCachedDemographicNotes(demographicNo));
 			segmentedDataCache.put(sessionCacheKey, linkedNotes);
 		}
@@ -449,16 +429,15 @@ public class CaisiIntegratorManager {
     
     
   
-      public static List<CachedDemographicPrevention> getLinkedPreventions(Integer demographicNo) throws MalformedURLException{
- 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		String sessionCacheKey="LINKED_PREVS:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getProviderNo()+":"+demographicNo;
+      public static List<CachedDemographicPrevention> getLinkedPreventions(LoggedInInfo loggedInInfo,Integer demographicNo) throws MalformedURLException{
+		String sessionCacheKey="LINKED_PREVS:"+loggedInInfo.getCurrentFacility().getId()+":"+loggedInInfo.loggedInProvider.getProviderNo()+":"+demographicNo;
 
 		@SuppressWarnings("unchecked")
 		List<CachedDemographicPrevention> remotePreventions=(List<CachedDemographicPrevention>) segmentedDataCache.get(sessionCacheKey);
 		
 		if (remotePreventions==null)
 		{
-			DemographicWs demographicWs = getDemographicWs();
+			DemographicWs demographicWs = getDemographicWs(loggedInInfo.getCurrentFacility());
 			remotePreventions = Collections.unmodifiableList(demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(demographicNo));
 			segmentedDataCache.put(sessionCacheKey, remotePreventions);
 		}
@@ -466,8 +445,7 @@ public class CaisiIntegratorManager {
 		return (remotePreventions);
 	} 
       
-      public static List<CachedMeasurement> getLinkedMeasurements(Integer demographicNo) throws MalformedURLException{
-   		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+      public static List<CachedMeasurement> getLinkedMeasurements(LoggedInInfo loggedInInfo,Integer demographicNo) throws MalformedURLException{
   		String sessionCacheKey="LINKED_MEASUREMENTS:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getProviderNo()+":"+demographicNo;
 
   		@SuppressWarnings("unchecked")
@@ -475,7 +453,7 @@ public class CaisiIntegratorManager {
   		
   		if (remoteMeasurements==null)
   		{
-  			DemographicWs demographicWs = getDemographicWs();
+  			DemographicWs demographicWs = getDemographicWs(loggedInInfo.getCurrentFacility());
   			remoteMeasurements = Collections.unmodifiableList(demographicWs.getLinkedCachedDemographicMeasurementByDemographicId(demographicNo));
   			segmentedDataCache.put(sessionCacheKey, remoteMeasurements);
   		}
@@ -484,9 +462,8 @@ public class CaisiIntegratorManager {
   	}   
       
   
-    public static List<CachedDemographicNote> getLinkedNotesMetaData(Integer demographicNo) throws MalformedURLException 
+    public static List<CachedDemographicNote> getLinkedNotesMetaData(LoggedInInfo loggedInInfo,Integer demographicNo) throws MalformedURLException 
     {
- 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		String sessionCacheKey="LINKED_NOTES_META:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getPractitionerNo()+":"+demographicNo;
 
 		@SuppressWarnings("unchecked")
@@ -494,7 +471,7 @@ public class CaisiIntegratorManager {
 		
 		if (linkedNotes==null)
 		{
-			DemographicWs demographicWs = getDemographicWs();
+			DemographicWs demographicWs = getDemographicWs(loggedInInfo.getCurrentFacility());
 			linkedNotes = Collections.unmodifiableList(demographicWs.getLinkedCachedDemographicNoteMetaData(demographicNo));
 			segmentedDataCache.put(sessionCacheKey, linkedNotes);
 		}
@@ -502,9 +479,8 @@ public class CaisiIntegratorManager {
 		return (linkedNotes);
 	}
     
-    public static List<CachedDemographicNote> getLinkedNotes(List<CachedDemographicNoteCompositePk> ids) throws MalformedURLException 
+    public static List<CachedDemographicNote> getLinkedNotes(LoggedInInfo loggedInInfo,List<CachedDemographicNoteCompositePk> ids) throws MalformedURLException 
     {
- 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		String sessionCacheKey="LINKED_NOTES_META:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getPractitionerNo()+":"+ids;
 
 		@SuppressWarnings("unchecked")
@@ -512,7 +488,7 @@ public class CaisiIntegratorManager {
 		
 		if (linkedNotes==null)
 		{
-			DemographicWs demographicWs = getDemographicWs();
+			DemographicWs demographicWs = getDemographicWs(loggedInInfo.getCurrentFacility());
 			linkedNotes = Collections.unmodifiableList(demographicWs.getLinkedCachedDemographicNotesByIds(ids));
 			segmentedDataCache.put(sessionCacheKey, linkedNotes);
 		}
@@ -524,9 +500,9 @@ public class CaisiIntegratorManager {
      * The purpose of this method is to retrieve a remote demographic record and populate it in a local demographic object. It is ready to be persisted.
      * We do not automatically persist it as there appears to be some code logic where a subsequent approval process may choose not to persist it.
      */
-    public static Demographic makeUnpersistedDemographicObjectFromRemoteEntry(int remoteFacilityId, int remoteDemographicId) throws MalformedURLException
+    public static Demographic makeUnpersistedDemographicObjectFromRemoteEntry(Facility facility, int remoteFacilityId, int remoteDemographicId) throws MalformedURLException
     {
-		DemographicWs demographicWs = getDemographicWs();
+		DemographicWs demographicWs = getDemographicWs(facility);
 		DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
 
 		Demographic demographic = new Demographic();

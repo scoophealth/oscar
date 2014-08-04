@@ -43,20 +43,21 @@
 <%
 	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
 	ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
-%>
-<%
-	int remoteFacilityId = Integer.parseInt(request.getParameter("remoteFacilityId"));
+
+   	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+   		 
+   	int remoteFacilityId = Integer.parseInt(request.getParameter("remoteFacilityId"));
 	int remoteDemographicId = Integer.parseInt(request.getParameter("demographic_no"));
 
 	//--- make new local demographic record ---
-	Demographic demographic=CaisiIntegratorManager.makeUnpersistedDemographicObjectFromRemoteEntry(remoteFacilityId, remoteDemographicId);
+	Demographic demographic=CaisiIntegratorManager.makeUnpersistedDemographicObjectFromRemoteEntry(loggedInInfo.getCurrentFacility(), remoteFacilityId, remoteDemographicId);
 	DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
 	demographicDao.saveClient(demographic);
 	Integer demoNoRightNow = demographic.getDemographicNo(); // temp use for debugging
 
 	//--- link the demographic on the integrator so associated data shows up ---
-	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
-	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+	
 	String providerNo=loggedInInfo.loggedInProvider.getProviderNo();
 	demographicWs.linkDemographics(providerNo, demographic.getDemographicNo(), remoteFacilityId, remoteDemographicId);
 

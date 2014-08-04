@@ -76,7 +76,7 @@ public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 		int demographicId = Integer.parseInt(bean.getDemographicNo());
 		issues = caseManagementMgr.getIssues(demographicId);
 		String programId = (String) request.getSession().getAttribute("case_program_id");
-		issues = caseManagementMgr.filterIssues(providerNo, issues, programId);
+		issues = caseManagementMgr.filterIssues(loggedInInfo, providerNo, issues, programId);
 	
 		List<CaseManagementIssue> issues_unr = new ArrayList<CaseManagementIssue>();
 		//only list resolved issues				
@@ -114,16 +114,16 @@ public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 		
 				List<CachedDemographicIssue> remoteIssues  = null;
 				try {
-					if (!CaisiIntegratorManager.isIntegratorOffline()){
-					   remoteIssues = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicIssuesByDemographicId(demographicId);
+					if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+					   remoteIssues = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicIssuesByDemographicId(demographicId);
 					}
 				} catch (Exception e) {
 					MiscUtils.getLogger().error("Unexpected error.", e);
-					CaisiIntegratorManager.checkForConnectionError(e);
+					CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 				}
 				
-				if(CaisiIntegratorManager.isIntegratorOffline()){
-				   remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(demographicId);	
+				if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				   remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(loggedInInfo, demographicId);	
 				}
 				
 				for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {

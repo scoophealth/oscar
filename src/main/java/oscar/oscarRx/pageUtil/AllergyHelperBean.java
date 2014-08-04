@@ -54,7 +54,7 @@ public final class AllergyHelperBean {
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
-			addIntegratorAllergies(demographicId, results, locale);
+			addIntegratorAllergies(loggedInInfo, demographicId, results, locale);
 		}
 
 		return (results);
@@ -86,20 +86,20 @@ public final class AllergyHelperBean {
 		}
 	}
 
-	private static void addIntegratorAllergies(Integer demographicId, ArrayList<AllergyDisplay> results, Locale locale) {
+	private static void addIntegratorAllergies(LoggedInInfo loggedInInfo, Integer demographicId, ArrayList<AllergyDisplay> results, Locale locale) {
 		try {
 			List<CachedDemographicAllergy> remoteAllergies  = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline()){
-					remoteAllergies = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicAllergies(demographicId);
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+					remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
 			}
 			
-			if(CaisiIntegratorManager.isIntegratorOffline()){
-				remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(demographicId);	
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(loggedInInfo,demographicId);	
 			}
 			
 

@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.io.Serializable"%>
 <%@page import="org.w3c.dom.Document"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult"%>
@@ -45,6 +46,8 @@ if (identifier == null) identifier = "NULL";
 
 String highlight = "#E0E0FF";
 
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 DemographicData dData = new DemographicData();
 org.oscarehr.common.model.Demographic demographic =  dData.getDemographic(demographicNo);
 
@@ -57,7 +60,7 @@ if (!(demographicNo == null || demographicNo.equals("null"))){
 	}
 	else
 	{
-		CachedDemographicLabResult remoteLab=LabDisplayHelper.getRemoteLab(Integer.parseInt(remoteFacilityIdString), remoteLabKey,Integer.parseInt(demographicNo));
+		CachedDemographicLabResult remoteLab=LabDisplayHelper.getRemoteLab(loggedInInfo, Integer.parseInt(remoteFacilityIdString), remoteLabKey,Integer.parseInt(demographicNo));
 		Document labContentsAsXml=LabDisplayHelper.getXmlDocument(remoteLab);
 		HashMap<String, ArrayList<Map<String, Serializable>>> mapOfTestValues=LabDisplayHelper.getMapOfTestValues(labContentsAsXml);
 		list=mapOfTestValues.get(identifier);

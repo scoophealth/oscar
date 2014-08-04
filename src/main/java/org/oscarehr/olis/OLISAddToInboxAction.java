@@ -42,6 +42,9 @@ public class OLISAddToInboxAction extends DispatchAction {
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+		
 		String uuidToAdd = request.getParameter("uuid");
 		String pFile = request.getParameter("file");
 		String pAck = request.getParameter("ack");
@@ -60,8 +63,7 @@ public class OLISAddToInboxAction extends DispatchAction {
 		InputStream is = null;
 		try {
 			is = new FileInputStream(fileLocation);
-			String provNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
-			int check = FileUploadCheck.addFile(file.getName(), is, provNo);
+			int check = FileUploadCheck.addFile(file.getName(), is, providerNo);
 
 			if (check != FileUploadCheck.UNSUCCESSFUL_SAVE) {
 				if (msgHandler.parse("OLIS_HL7", fileLocation, check, true) != null) {
@@ -70,12 +72,12 @@ public class OLISAddToInboxAction extends DispatchAction {
 						ArrayList<String[]> labsToFile = new ArrayList<String[]>();
 						String item[] = new String[] { String.valueOf(msgHandler.getLastSegmentId()), "HL7" };
 						labsToFile.add(item);
-						CommonLabResultData.fileLabs(labsToFile, provNo);
+						CommonLabResultData.fileLabs(labsToFile, providerNo);
 					}
 					if (doAck) {
 						String demographicID = getDemographicIdFromLab("HL7", msgHandler.getLastSegmentId());
 						LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ACK, LogConst.CON_HL7_LAB, "" + msgHandler.getLastSegmentId(), request.getRemoteAddr(), demographicID);
-						CommonLabResultData.updateReportStatus(msgHandler.getLastSegmentId(), provNo, 'A', "comment", "HL7");
+						CommonLabResultData.updateReportStatus(msgHandler.getLastSegmentId(), providerNo, 'A', "comment", "HL7");
 
 					}
 				} else {

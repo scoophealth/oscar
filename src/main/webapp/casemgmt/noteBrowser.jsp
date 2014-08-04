@@ -124,7 +124,7 @@
     	sort = EDocUtil.EDocSort.CONTENTDATE;
         sortorder="Content";
     }
-    docs = EDocUtil.listDocs(module, demographicID, view, EDocUtil.PRIVATE, sort, viewstatus);
+    docs = EDocUtil.listDocs(loggedInInfo, module, demographicID, view, EDocUtil.PRIVATE, sort, viewstatus);
     
 
 %>

@@ -187,13 +187,13 @@ public class ReceptionistReportAction extends DispatchAction {
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
 
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 			List<CachedDemographicIssue> remoteIssues = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicNo);
 
 			for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
 				try {
 					if (resolved == cachedDemographicIssue.isResolved()) {
-						issuesToDisplay.add(getIssueToDisplay(cachedDemographicIssue));
+						issuesToDisplay.add(getIssueToDisplay(loggedInInfo, cachedDemographicIssue));
 					}
 				} catch (Exception e) {
 					log.error("Unexpected error.", e);
@@ -204,7 +204,7 @@ public class ReceptionistReportAction extends DispatchAction {
 		}
 	}
 
-	private IssueDisplay getIssueToDisplay(CachedDemographicIssue cachedDemographicIssue) throws MalformedURLException {
+	private IssueDisplay getIssueToDisplay(LoggedInInfo loggedInInfo, CachedDemographicIssue cachedDemographicIssue) throws MalformedURLException {
 		IssueDisplay issueDisplay = new IssueDisplay();
 
 		issueDisplay.acute = cachedDemographicIssue.isAcute() ? "acute" : "chronic";
@@ -229,7 +229,7 @@ public class ReceptionistReportAction extends DispatchAction {
 		}
 
 		Integer remoteFacilityId = cachedDemographicIssue.getFacilityDemographicIssuePk().getIntegratorFacilityId();
-		CachedFacility remoteFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
+		CachedFacility remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),remoteFacilityId);
 		if (remoteFacility != null) issueDisplay.location = "remote: " + remoteFacility.getName();
 		else issueDisplay.location = "remote, name unavailable";
 

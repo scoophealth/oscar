@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%>
@@ -33,7 +34,8 @@
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
 <%
-	List<CachedFacility> facilities=CaisiIntegratorManager.getRemoteFacilities(false);
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	List<CachedFacility> facilities=CaisiIntegratorManager.getRemoteFacilities(loggedInInfo.getCurrentFacility(),false);
 
 	int secondsTillConsideredStale = -1;
 	try{

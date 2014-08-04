@@ -44,6 +44,7 @@ import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -113,7 +114,9 @@ public class CustomFilterAction extends DispatchAction {
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("edit");
-
+		
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		String id = request.getParameter("id");
 		if(id != null && !id.equals("")) {
 			CustomFilter filter = ticklerManager.getCustomFilterById(Integer.valueOf(id));
@@ -146,7 +149,7 @@ public class CustomFilterAction extends DispatchAction {
 		request.setAttribute("priorityList",CustomFilter.priorityList);
 		request.setAttribute("statusList",CustomFilter.statusList);
 
-		request.setAttribute("programs", programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(false));
+		request.setAttribute("programs", programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(loggedInInfo, false));
 		return mapping.findForward("customFilterForm");
 	}
 

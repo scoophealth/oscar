@@ -182,7 +182,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 			defaultCommunityProgramId = getOscarClinicDefaultCommunityProgramId(oscar.OscarProperties.getInstance().getProperty("oscarClinicDefaultProgram"));
 		}
 						
-		setBeanProperties(formBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency()
+		setBeanProperties(loggedInInfo,formBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency()
 				.areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), defaultCommunityProgramId, null, null, loggedInInfo.currentFacility.getId(), null,jsLocation, Agency.getLocalAgency().areCommunityProgramsVisible(intakeType), null);
 
 		request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, false);
@@ -284,12 +284,12 @@ public class GenericIntakeEditAction extends DispatchAction {
 		Demographic client = new Demographic();
 		
 
-		setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency()
+		setBeanProperties(loggedInInfo,formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency()
 				.areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), null,
 				null,null, facilityId, nodeId, jsLocation, Agency.getLocalAgency().areCommunityProgramsVisible(intakeType), null);
 
 		// UCF -- intake accessment : please don't remove the following lines
-		List allForms = surveyManager.getAllFormsForCurrentProviderAndCurrentFacility();
+		List allForms = surveyManager.getAllFormsForCurrentProviderAndCurrentFacility(loggedInInfo);
 		request.getSession().setAttribute("survey_list", allForms);
 
 		String oldBedProgramId = null;
@@ -370,12 +370,12 @@ public class GenericIntakeEditAction extends DispatchAction {
 		
 		
 
-		setBeanProperties(formBean, intake, getClient(clientId), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency()
+		setBeanProperties(loggedInInfo, formBean, intake, getClient(clientId), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency()
 				.areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), getCurrentBedProgramId(clientId),
 				getCurrentServiceProgramIds(clientId), getCurrentExternalProgramId(clientId), facilityId, nodeId, jsLocation, Agency.getLocalAgency().areCommunityProgramsVisible(intakeType), getCurrentCommunityProgramId(clientId));
 
 		// UCF -- intake accessment : please don't remove the following lines
-		List allForms = surveyManager.getAllFormsForCurrentProviderAndCurrentFacility();
+		List allForms = surveyManager.getAllFormsForCurrentProviderAndCurrentFacility(loggedInInfo);
 		request.getSession().setAttribute("survey_list", allForms);
 
 		String oldBedProgramId = String.valueOf(getCurrentBedProgramId(clientId));
@@ -429,19 +429,18 @@ public class GenericIntakeEditAction extends DispatchAction {
 		
 		
 		
-		setBeanProperties(formBean, intake, getClient(clientId), providerNo, false, false, false, null, null, null, facilityId,null,jsLocation, false, null);
+		setBeanProperties(loggedInInfo, formBean, intake, getClient(clientId), providerNo, false, false, false, null, null, null, facilityId,null,jsLocation, false, null);
 
 		return mapping.findForward(PRINT);
 	}
 
 	public ActionForward save_all(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response, String saveWhich) {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		Intake intake = formBean.getIntake();
 		String intakeType = intake.getType();
 		Demographic client = formBean.getClient();
-		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 		Integer nodeId = formBean.getNodeId();
 		Integer oldId = null;
 		String formattedAdmissionDate = request.getParameter("admissionDate");
@@ -526,12 +525,12 @@ public class GenericIntakeEditAction extends DispatchAction {
 						intake.setIntakeLocation(intakeLocationId);
 					}
 
-					intake.setFacilityId(loggedInInfo.currentFacility.getId());
+					intake.setFacilityId(loggedInInfo.getCurrentFacility().getId());
 
 					String admissionText = null;
 					String remoteReferralId = StringUtils.trimToNull(request.getParameter("remoteReferralId"));
 					if (remoteReferralId != null) {
-						admissionText = getAdmissionText(admissionText, remoteReferralId);
+						admissionText = getAdmissionText(loggedInInfo,admissionText, remoteReferralId);
 					}
 
 					admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedProgramId(), saveWhich, admissionText, admissionDate);
@@ -541,7 +540,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 						// doing this after the admit is about as transactional as this is going to get for now.
 						ReferralWs referralWs;
 						try {
-							referralWs = CaisiIntegratorManager.getReferralWs();
+							referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo.getCurrentFacility());
 							referralWs.removeReferral(Integer.parseInt(remoteReferralId));
 						}
 						catch (Exception e) {
@@ -605,7 +604,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 				List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
 				
 				
-				setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(
+				setBeanProperties(loggedInInfo,formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(
 						intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), getCurrentBedProgramId(client.getDemographicNo()),
 						getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()), loggedInInfo.currentFacility.getId(), nodeId, jsLocation, Agency.getLocalAgency().areCommunityProgramsVisible(intakeType), getCurrentCommunityProgramId(client.getDemographicNo()));
 
@@ -621,7 +620,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 					try {
 						int remoteFacilityId = Integer.parseInt(remoteFacilityIdStr);
 						int remoteDemographicId = Integer.parseInt(remoteDemographicIdStr);
-						DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+						DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
 
 						// link the clients
 						demographicWs.linkDemographics(providerNo, client.getDemographicNo(), remoteFacilityId, remoteDemographicId);
@@ -684,20 +683,20 @@ public class GenericIntakeEditAction extends DispatchAction {
 				}			
 	}
 
-	private String getAdmissionText(String admissionText, String remoteReferralId) {
+	private String getAdmissionText(LoggedInInfo loggedInInfo, String admissionText, String remoteReferralId) {
 		try {
-			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo.getCurrentFacility());
 			Referral remoteReferral = referralWs.getReferral(Integer.parseInt(remoteReferralId));
 			StringBuilder sb = new StringBuilder();
 
-			CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(remoteReferral.getSourceIntegratorFacilityId());
+			CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),remoteReferral.getSourceIntegratorFacilityId());
 			sb.append("Referred from : ");
 			sb.append(cachedFacility.getName());
 
 			FacilityIdStringCompositePk facilityProviderPrimaryKey = new FacilityIdStringCompositePk();
 			facilityProviderPrimaryKey.setIntegratorFacilityId(remoteReferral.getSourceIntegratorFacilityId());
 			facilityProviderPrimaryKey.setCaisiItemId(remoteReferral.getSourceCaisiProviderId());
-			CachedProvider cachedProvider = CaisiIntegratorManager.getProvider(facilityProviderPrimaryKey);
+			CachedProvider cachedProvider = CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(),facilityProviderPrimaryKey);
 			sb.append(" by ");
 			sb.append(cachedProvider.getLastName());
 			sb.append(", ");
@@ -1150,12 +1149,12 @@ public class GenericIntakeEditAction extends DispatchAction {
 		genericIntakeManager.saveUpdateIntake(intake);
 	}
 
-	public Set<Program> getActiveProviderProgramsInFacility(String providerNo, Integer facilityId) {
+	public Set<Program> getActiveProviderProgramsInFacility(LoggedInInfo loggedInInfo, String providerNo, Integer facilityId) {
 		Set<Program> programs = new HashSet<Program>();
 		Set<Program> programsInDomain = getActiveProviderPrograms(providerNo);
 		if (facilityId == null) return programs;
 
-		for (Program p : programManager.getProgramDomainInCurrentFacilityForCurrentProvider(false)) {
+		for (Program p : programManager.getProgramDomainInCurrentFacilityForCurrentProvider(loggedInInfo, false)) {
 			if (programsInDomain.contains(p)) {
 				programs.add(p);
 			}
@@ -1166,7 +1165,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 
 	// Bean
 
-	private void setBeanProperties(GenericIntakeEditFormBean formBean, Intake intake, Demographic client, String providerNo, boolean bedProgramsVisible,
+	private void setBeanProperties(LoggedInInfo loggedInInfo, GenericIntakeEditFormBean formBean, Intake intake, Demographic client, String providerNo, boolean bedProgramsVisible,
 			boolean serviceProgramsVisible, boolean externalProgramsVisible, Integer currentBedProgramId, SortedSet<Integer> currentServiceProgramIds,
 			Integer currentExternalProgramId, Integer facilityId, Integer nodeId, List<IntakeNodeJavascript> javascriptLocation, boolean communityProgramsVisible, Integer currentCommunityProgramId) {
 		formBean.setIntake(intake);
@@ -1175,7 +1174,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 		formBean.setJsLocation(javascriptLocation);
 		
 		if (bedProgramsVisible || communityProgramsVisible || serviceProgramsVisible || externalProgramsVisible) {
-			Set<Program> providerPrograms = getActiveProviderProgramsInFacility(providerNo, facilityId);
+			Set<Program> providerPrograms = getActiveProviderProgramsInFacility(loggedInInfo, providerNo, facilityId);
 
 			if (bedProgramsVisible) {
 				formBean.setBedPrograms(getBedPrograms(providerPrograms, providerNo));

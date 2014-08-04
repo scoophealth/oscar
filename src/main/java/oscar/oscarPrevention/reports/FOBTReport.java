@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
@@ -58,7 +59,7 @@ public class FOBTReport implements PreventionReport{
     public FOBTReport() {
     }
 
-    public Hashtable<String,Object> runReport(ArrayList<ArrayList<String>> list,Date asofDate){
+    public Hashtable<String,Object> runReport(LoggedInInfo loggedInInfo,ArrayList<ArrayList<String>> list,Date asofDate){
 
         int inList = 0;
         double done= 0,doneWithGrace = 0;
@@ -70,9 +71,9 @@ public class FOBTReport implements PreventionReport{
 
              //search   prevention_date prevention_type  deleted   refused
              ArrayList<Map<String,Object>> prevs = PreventionData.getPreventionData("FOBT",demo);
-             PreventionData.addRemotePreventions(prevs, demo,"FOBT",null);
+             PreventionData.addRemotePreventions(loggedInInfo,prevs, demo,"FOBT",null);
              ArrayList<Map<String,Object>> colonoscopys = PreventionData.getPreventionData("COLONOSCOPY",demo);
-             PreventionData.addRemotePreventions(colonoscopys, demo,"COLONOSCOPY",null);
+             PreventionData.addRemotePreventions(loggedInInfo,colonoscopys, demo,"COLONOSCOPY",null);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";

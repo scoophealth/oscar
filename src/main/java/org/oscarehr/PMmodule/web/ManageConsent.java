@@ -72,10 +72,10 @@ public class ManageConsent {
 		}
 	}
 
-	public Collection<CachedFacility> getAllFacilitiesToDisplay() {
+	public Collection<CachedFacility> getAllFacilitiesToDisplay(LoggedInInfo loggedInInfo) {
 		try {
 			if (previousConsentToView == null) return (getAllRemoteFacilities());
-			else return (getPreviousConsentFacilities());
+			else return (getPreviousConsentFacilities(loggedInInfo));
 		} catch (Exception e) {
 			integratorServerError=true;
 			logger.error("unexpected error", e);
@@ -83,11 +83,11 @@ public class ManageConsent {
 		}
 	}
 
-	private Collection<CachedFacility> getPreviousConsentFacilities() throws MalformedURLException {
+	private Collection<CachedFacility> getPreviousConsentFacilities(LoggedInInfo loggedInInfo) throws MalformedURLException {
 		ArrayList<CachedFacility> results = new ArrayList<CachedFacility>();
 
 		for (Integer remoteFacilityId : previousConsentToView.getConsentToShareData().keySet()) {
-			CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
+			CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), remoteFacilityId);
 			results.add(cachedFacility);
 		}
 
@@ -95,7 +95,7 @@ public class ManageConsent {
 	}
 
 	private Collection<CachedFacility> getAllRemoteFacilities() throws MalformedURLException {
-		List<CachedFacility> results = CaisiIntegratorManager.getRemoteFacilities();
+		List<CachedFacility> results = CaisiIntegratorManager.getRemoteFacilities(loggedInInfo.getCurrentFacility());
 		return (results);
 	}
 

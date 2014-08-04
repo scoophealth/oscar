@@ -8,6 +8,7 @@
     and "gnu.org/licenses/gpl-2.0.html".
     
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
 if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 String user_no = (String) session.getAttribute("user");
@@ -29,6 +30,8 @@ String userlastname = (String) session.getAttribute("userlastname");
 <%
 
 //preliminary JSP code
+
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
 // "Module" and "function" is the same thing (old dms module)
 String module = "demographic";
@@ -70,7 +73,7 @@ boolean onIPad = http_user_agent.indexOf("iPad") >= 0;
 CommonLabResultData labData = new CommonLabResultData();
 ArrayList<LabResultData> labs = labData.populateLabResultsData(demoNo, requestId, CommonLabResultData.ATTACHED);
 ArrayList<EDoc> privatedocs = new ArrayList<EDoc>();
-privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.ATTACHED);
+privatedocs = EDocUtil.listDocs(loggedInInfo, demoNo, requestId, EDocUtil.ATTACHED);
 String attachedDocs = "";
 if (requestId == null || requestId.equals("") || requestId.equals("null")) {
 	attachedDocs = "window.opener.document.EctConsultationFormRequestForm.documents.value";
@@ -208,7 +211,7 @@ function toggleSelectAll() {
             final String UNPRINTABLE_TITLE = "This file must be manually printed.";
             final String UNPRINTABLE_ALT = "Unprintable";
             
-            privatedocs = EDocUtil.listDocs("demographic", demoNo, null, EDocUtil.PRIVATE, EDocUtil.EDocSort.OBSERVATIONDATE);
+            privatedocs = EDocUtil.listDocs(loggedInInfo, "demographic", demoNo, null, EDocUtil.PRIVATE, EDocUtil.EDocSort.OBSERVATIONDATE);
             labData = new CommonLabResultData();
             labs = labData.populateLabResultsData("",demoNo, "", "","","U");
             Collections.sort(labs);       
