@@ -43,6 +43,7 @@ public class NoteSelectionCriteria {
 	private List<String> roles = new ArrayList<String>();
 	private List<String> providers = new ArrayList<String>();
 	private List<String> issues = new ArrayList<String>();
+	private boolean sliceFromEndOfList = true;  //historically this is the default
 
 	/**
 	 * Gets demographic id to obtains notes for.
@@ -234,6 +235,14 @@ public class NoteSelectionCriteria {
 	public void setFirstResult(int firstResult) {
 		this.firstResult = firstResult;
 	}
+
+	public boolean isSliceFromEndOfList() {
+	    return sliceFromEndOfList;
+    }
+
+	public void setSliceFromEndOfList(boolean sliceFromEndOfList) {
+	    this.sliceFromEndOfList = sliceFromEndOfList;
+    }
 
 	@Override
     public String toString() {
