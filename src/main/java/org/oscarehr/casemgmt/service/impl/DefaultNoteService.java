@@ -243,53 +243,34 @@ public class DefaultNoteService implements NoteService {
 
 		//apply CAISI permission filter - local notes
 		entries = caseManagementManager.filterNotes1(loggedInInfo.getLoggedInProviderNo(), entries, programId);
-		logger.debug("FILTER NOTES (CAISI) " + (System.currentTimeMillis() - intTime) + "ms");
+		logger.debug("FILTER NOTES (CAISI) " + (System.currentTimeMillis() - intTime) + "ms entries size "+entries.size());
 		intTime = System.currentTimeMillis();
 
 		//TODO: role based filter for eforms?
 
 		//apply provider filter
 		entries = applyProviderFilter(entries, criteria.getProviders());
-		logger.debug("FILTER NOTES PROVIDER " + (System.currentTimeMillis() - intTime) + "ms");
+		logger.debug("FILTER NOTES PROVIDER " + (System.currentTimeMillis() - intTime) + "ms entries size "+entries.size());
 		intTime = System.currentTimeMillis();
 
 		//apply role filter
 		entries = applyRoleFilter1(entries, criteria.getRoles());
-		logger.debug("FILTER NOTES ROLES " + (System.currentTimeMillis() - intTime) + "ms");
+		logger.debug("FILTER NOTES ROLES " + (System.currentTimeMillis() - intTime) + "ms entries size "+entries.size());
 		intTime = System.currentTimeMillis();
 
 		//apply issues filter
 		entries = applyIssueFilter1(entries, criteria.getIssues());
-		logger.debug("FILTER NOTES ISSUES " + (System.currentTimeMillis() - intTime) + "ms");
+		logger.debug("FILTER NOTES ISSUES " + (System.currentTimeMillis() - intTime) + "ms entries size "+entries.size());
 		intTime = System.currentTimeMillis();
 
-		List<EChartNoteEntry> slice = new ArrayList<EChartNoteEntry>();
-
-		int numToReturn = criteria.getMaxResults();
-
 		NoteSelectionResult result = new NoteSelectionResult();
-
-		int offset = criteria.getFirstResult();
-		if (offset <= 0) {
-			//this is the first fetch, we want the last items up to numToReturn
-			int endOfTheList = entries.size();
-			int startingPoint = endOfTheList - numToReturn;
-			if (startingPoint < 0) startingPoint = 0;
-			for (int x = startingPoint; x < endOfTheList; x++) {
-				slice.add(entries.get(x));
-			}
-		} else {
-			if (entries.size() >= offset) {
-				int endingPoint = entries.size() - offset;
-				int startingPoint = endingPoint - numToReturn;
-				if (startingPoint < 0) startingPoint = 0;
-				for (int x = startingPoint; x < endingPoint; x++) {
-					slice.add(entries.get(x));
-				}
-			}
-			result.setMoreNotes(true);
+		
+		List<EChartNoteEntry> slice = null;
+		if(criteria.isSliceFromEndOfList()){
+			slice = sliceFromEndOfList(criteria,entries,result);
+		}else{
+			slice = sliceFromStartOfList(criteria,entries,result);
 		}
-
 		logger.debug("CREATED SLICE OF SIZE  " + slice.size() + " IN " + (System.currentTimeMillis() - intTime) + "ms");
 		intTime = System.currentTimeMillis();
 
@@ -370,6 +351,62 @@ public class DefaultNoteService implements NoteService {
 		result.getNotes().addAll(notesToDisplay);
 		return result;
 	}
+	
+	private static List<EChartNoteEntry> sliceFromStartOfList(NoteSelectionCriteria criteria,List<EChartNoteEntry> entries,NoteSelectionResult result){
+		List<EChartNoteEntry> slice = new ArrayList<EChartNoteEntry>();
+		int numToReturn = criteria.getMaxResults();
+		int offset = criteria.getFirstResult();
+		int startingPoint = offset;
+		int endingPoint = offset+numToReturn;
+		
+		if(offset < 0){
+			startingPoint = 0;
+		}
+		
+		if(endingPoint > (entries.size())){
+			endingPoint = entries.size() ;
+		}
+		logger.error("number of entries "+entries.size()+" starting "+startingPoint+" endpoint "+endingPoint+" offset "+offset+" numToReturn "+numToReturn);
+		for (int x = startingPoint ; x < endingPoint; x++) {
+			slice.add(entries.get(x));
+		}
+		logger.error("slice "+slice.size() +" max size "+ criteria.getMaxResults());
+		if(slice.size() == criteria.getMaxResults() ){
+			result.setMoreNotes(true);
+		}
+		return slice;
+	}
+	
+	
+	private static List<EChartNoteEntry> sliceFromEndOfList(NoteSelectionCriteria criteria,List<EChartNoteEntry> entries,NoteSelectionResult result){
+		List<EChartNoteEntry> slice = new ArrayList<EChartNoteEntry>();
+		int numToReturn = criteria.getMaxResults();
+		int offset = criteria.getFirstResult();
+		
+		if (offset <= 0) {
+			//this is the first fetch, we want the last items up to numToReturn
+			int endOfTheList = entries.size();
+			int startingPoint = endOfTheList - numToReturn;
+			if (startingPoint < 0) startingPoint = 0;
+			for (int x = startingPoint; x < endOfTheList; x++) {
+				slice.add(entries.get(x));
+			}
+		} else {
+			if (entries.size() >= offset) {
+				int endingPoint = entries.size() - offset;
+				int startingPoint = endingPoint - numToReturn;
+				if (startingPoint < 0) startingPoint = 0;
+				for (int x = startingPoint; x < endingPoint; x++) {
+					slice.add(entries.get(x));
+				}
+			}
+			result.setMoreNotes(true);
+		}
+		return slice;
+	}
+
+	
+	
 
 	private BillingONCHeader1 findInvoice(Integer id, List<BillingONCHeader1> invoices) {
 		for (BillingONCHeader1 invoice : invoices) {
