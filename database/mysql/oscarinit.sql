@@ -692,7 +692,7 @@ CREATE TABLE drugs (
   comment varchar(255),
   start_date_unknown boolean,
   lastUpdateDate datetime not null,
-  dispenseInternal tinyint(1),
+  dispenseInternal tinyint(1) not null,
   PRIMARY KEY  (drugid)
 ) ;
 
