@@ -68,10 +68,11 @@ public class Contact extends AbstractModel<Integer> {
 	private String note;
 	boolean deleted=false;
 	
-	
+	/*
 	public void setId(Integer id) {
     	this.id = id;
     }
+    */
 
 	@Override
 	public Integer getId() {
