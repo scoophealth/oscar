@@ -303,16 +303,15 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 	<script src="record/details/detailsController.js"></script>
 	<script src="inbox/inboxController.js"></script>
 	<script src="consults/consultListController.js"></script>	
+	<script src="billing/billingController.js"></script>
+	<script src="admin/adminController.js"></script>
 	
 	<script src="js/providerViewController.js"></script>
 	<script src="js/reportController.js"></script>
 	<script src="js/scheduleController.js"></script>
 	
 	<script src="js/patientDetailController.js"></script>
-	<script src="js/billingController.js"></script>
-	<script src="js/ticklerController.js"></script>
-	<script src="js/consultListController.js"></script>
-	<script src="js/adminController.js"></script>
+
 	<script src="js/settingsController.js"></script>
 	<script src="js/supportController.js"></script>
 	<script src="js/helpController.js"></script>
