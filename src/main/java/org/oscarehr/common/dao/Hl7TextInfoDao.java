@@ -104,7 +104,7 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
     @SuppressWarnings("unchecked")
     public List<Object[]> getLabs(LabQuery labQuery) {
     	String hql = "FROM Hl7TextInfo ti, Hl7TextMessage tm WHERE "
-    			+ "tm.id = ti.id AND "
+    			+ "tm.id = ti.labNumber AND "
     			+ "ti.accessionNumber = ?1 AND "
     			+ "tm.type = ?2 AND "
     			+ "ti.firstName = ?3 AND "
