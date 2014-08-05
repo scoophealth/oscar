@@ -158,7 +158,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdateDate;
 	
-	private Boolean dispenseInternal;
+	private Boolean dispenseInternal = false;
 
 	// ///
 	@Transient
