@@ -46,6 +46,7 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.managers.ProgramManager2" %>
 <%@page import="org.oscarehr.PMmodule.model.Program" %>
+<%@page import="org.oscarehr.PMmodule.web.GenericIntakeEditAction" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -102,6 +103,9 @@
 <%@page import="org.oscarehr.common.model.Provider" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@page import="org.oscarehr.managers.DemographicManager" %>
+<%@page import="org.oscarehr.PMmodule.service.ProgramManager" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProgramDao" %>
+<%@page import="org.oscarehr.PMmodule.service.AdmissionManager" %>
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
@@ -135,6 +139,10 @@
 		response.sendRedirect("../logout.jsp");
 		return;
 	}
+
+	ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
+	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
+    
 
 	String curProvider_no = (String) session.getAttribute("user");
 	String demographic_no = request.getParameter("demographic_no") ;
@@ -966,6 +974,12 @@ div.demographicWrapper {
        Demographic demographic = demographicDao.getDemographic(demographic_no);
        List<DemographicArchive> archives = demographicArchiveDao.findByDemographicNo(Integer.parseInt(demographic_no));
        List<DemographicExtArchive> extArchives = demographicExtArchiveDao.getDemographicExtArchiveByDemoAndKey(Integer.parseInt(demographic_no), "demo_cell");
+       
+       AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);  
+     	Admission bedAdmission = admissionManager.getCurrentBedProgramAdmission(demographic.getDemographicNo());
+     	Admission communityAdmission = admissionManager.getCurrentCommunityProgramAdmission(demographic.getDemographicNo());
+     	List<Admission> serviceAdmissions = admissionManager.getCurrentServiceProgramAdmission(demographic.getDemographicNo());
+     	
 
 %>
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
@@ -2222,6 +2236,24 @@ if ( Dead.equals(PatStat) ) {%>
 
 
 						</div>
+						
+						
+						<div class="demographicSection" id="programs">
+						<h3>&nbsp;Programs</h3>
+						<ul>
+                         <li><span class="label">Bed:</span><span class="info"><%=bedAdmission != null?bedAdmission.getProgramName():"N/A" %></span></li>
+                         <%
+                         for(Admission adm:serviceAdmissions) {
+                        	 %>
+                        		 <li><span class="label">Service:</span><span class="info"><%=adm.getProgramName()%></span></li>
+                         
+                        	 <%
+                         }
+                         %>
+						</ul>
+                                                  
+						</div>
+						
 						</div>
 						</div>
 
@@ -3220,6 +3252,57 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									name="end_date_date" size="2" maxlength="2"
 									value="<%= endDay %>"></td>
 							</tr>
+							
+			<tr valign="top">
+			    <td colspan="4">
+			        <table border="1" width="100%">
+			            <tr bgcolor="#CCCCFF">
+			                <td colspan="2" >Program Admissions</td>
+			            </tr>
+			            <tr>
+			                <td>Residential Status<font color="red">:</font></td>
+			                <td>Service Programs</td>
+			            </tr>
+			            <tr>
+			                <td>
+                                <select id="rsid" name="rps">
+                                    <%
+                                        GenericIntakeEditAction gieat = new GenericIntakeEditAction();
+                                        gieat.setProgramManager(pm);
+                                     
+                                        
+                                        String _pvid =loggedInInfo.loggedInProvider.getProviderNo();
+                                        Set<Program> pset = gieat.getActiveProviderProgramsInFacility(loggedInInfo,_pvid,loggedInInfo.currentFacility.getId());
+                                        List<Program> bedP = gieat.getBedPrograms(pset,_pvid);
+                                        List<Program> commP = gieat.getCommunityPrograms();
+                      	                Program oscarp = programDao.getProgramByName("OSCAR");
+                      	                
+                      	                
+                                        for(Program _p:bedP){
+                                    %>
+                                        <option value="<%=_p.getId()%>" <%=isProgramSelected(bedAdmission, _p.getId()) %>><%=_p.getName()%></option>
+                                    <%
+                                        }
+                                        
+                                      %>
+                                </select>
+			                </td>
+			                <td>
+			                    <%
+			                        List<Program> servP = gieat.getServicePrograms(pset,_pvid);
+			                        for(Program _p:servP){
+			                    %>
+			                        <input type="checkbox" name="sp" value="<%=_p.getId()%>" <%=isProgramSelected(serviceAdmissions, _p.getId()) %> />
+			                        <%=_p.getName()%>
+			                        <br/>
+			                    <%}%>
+			                </td>
+			            </tr>
+			        </table>
+			    </td>
+			</tr>
+							
+							
 							<% // customized key
 if(oscarVariables.getProperty("demographicExt") != null) {
     boolean bExtForm = oscarVariables.getProperty("demographicExtForm") != null ? true : false;
@@ -3468,5 +3551,25 @@ jQuery(document).ready(function(){
 
 		return "";
 }
+
+%>
+
+<%!
+public String isProgramSelected(Admission admission, Integer programId) {
+	if(admission != null && admission.getProgramId() != null && admission.getProgramId().equals(programId)) {
+		return " selected=\"selected\" ";
+	}
+	
+	return "";
+}
+
+	public String isProgramSelected(List<Admission> admissions, Integer programId) {
+		for(Admission admission:admissions) {
+			if(admission.getProgramId() != null && admission.getProgramId().equals(programId)) {
+				return " checked=\"checked\" ";
+			}
+		}
+		return "";
+	}
 
 %>

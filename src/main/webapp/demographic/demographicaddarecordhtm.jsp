@@ -57,6 +57,7 @@
 <%@page import="org.apache.commons.lang.StringUtils" %>
 <%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@page import="oscar.OscarProperties" %>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
@@ -1259,23 +1260,18 @@ document.forms[1].r_doctor_ohip.value = refNo;
                                     <%
                                         GenericIntakeEditAction gieat = new GenericIntakeEditAction();
                                         gieat.setProgramManager(pm);
-                                        String _pvid =loggedInInfo.getLoggedInProviderNo();
-                                        Set<Program> pset = gieat.getActiveProviderProgramsInFacility(loggedInInfo, _pvid,org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.getRegistrationIntake());
+
+                                        String _pvid = loggedInInfo.loggedInProvider.getProviderNo();
+                                        Set<Program> pset = gieat.getActiveProviderProgramsInFacility(loggedInInfo,_pvid,loggedInInfo.currentFacility.getId());
                                         List<Program> bedP = gieat.getBedPrograms(pset,_pvid);
                                         List<Program> commP = gieat.getCommunityPrograms();
-                      	                Program oscarp = programDao.getProgramByName("OSCAR");
-                                    %>
-                                        <option value="<%=oscarp.getId()%>" selected>OSCAR</option>
-                                    <%
+                      	                
                                         for(Program _p:bedP){
                                     %>
-                                        <option value="<%=_p.getId()%>"><%=_p.getName()%></option>
+                                        <option value="<%=_p.getId()%>" <%=("OSCAR".equals(_p.getName())?" selected=\"selected\" ":"")%> ><%=_p.getName()%></option>
                                     <%
                                         }
-                                        for(Program _p:commP){
-                                    %>
-                                        <option value="<%=_p.getId()%>"><%=_p.getName()%></option>
-                                    <%}%>
+                                     %>
                                 </select>
 			                </td>
 			                <td>
