@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.dao.ConsultationRequestDao"%>
 <%@ page import="oscar.oscarEncounter.pageUtil.*,java.text.*,java.util.*"%>
 <%@ page import="java.sql.ResultSet"%>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty, org.springframework.web.context.support.WebApplicationContextUtils" %>
@@ -51,6 +52,27 @@
     List<String> mgrSite = new ArrayList<String>();
     
 	ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
+	
+	String strLimit =  request.getParameter("limit");
+	String strOffset = request.getParameter("offset");
+	
+	Integer limit = ConsultationRequestDao.DEFAULT_CONSULT_REQUEST_RESULTS_LIMIT;
+	Integer offset = 0;
+	
+	try {
+		offset = Integer.parseInt(strOffset);
+	} catch(NumberFormatException e) {
+		offset = 0;
+	}
+	
+	try {
+		limit = Integer.parseInt(strLimit);
+	} catch(NumberFormatException e) {
+		limit = 100;
+	}
+	
+	
+	
 
 %>
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false"> <%isSiteAccessPrivacy=true; %></security:oscarSec>
@@ -368,7 +390,7 @@ function setOrder(val){
                         <%                                                        
                             oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil theRequests;                            
                             theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil();                            
-                            theRequests.estConsultationVecByTeam(team,includeCompleted,startDate,endDate,orderby,desc,searchDate);                                                        
+                            theRequests.estConsultationVecByTeam(team,includeCompleted,startDate,endDate,orderby,desc,searchDate,offset,limit);                                                        
                             boolean overdue;                            
                             UserPropertyDAO pref = (UserPropertyDAO) WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext()).getBean("UserPropertyDAO");
                             String user = (String)session.getAttribute("user");
@@ -383,25 +405,25 @@ function setOrder(val){
                             for (int i = 0; i < theRequests.ids.size(); i++){
                              //multisites. skip record if not belong to same site/team
                              if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
-                             	if(providerMap.get((String) theRequests.providerNo.elementAt(i))== null)  continue;
+                             	if(providerMap.get(theRequests.providerNo.elementAt(i))== null)  continue;
                              }	
                             	
-                            String id      = (String) theRequests.ids.elementAt(i);
-                            String status  = (String) theRequests.status.elementAt(i);
-                            String patient = (String) theRequests.patient.elementAt(i);
-                            String provide = (String) theRequests.provider.elementAt(i);
-                            String service = (String) theRequests.service.elementAt(i);
-                            String date    = (String) theRequests.date.elementAt(i);
-                            String demo    = (String) theRequests.demographicNo.elementAt(i);
-                            String appt    = (String) theRequests.apptDate.elementAt(i);
-                            String patBook = (String) theRequests.patientWillBook.elementAt(i);
-                            String urgency = (String) theRequests.urgency.elementAt(i);
+                            String id      =  theRequests.ids.elementAt(i);
+                            String status  =  theRequests.status.elementAt(i);
+                            String patient =  theRequests.patient.elementAt(i);
+                            String provide =  theRequests.provider.elementAt(i);
+                            String service =  theRequests.service.elementAt(i);
+                            String date    =  theRequests.date.elementAt(i);
+                            String demo    =  theRequests.demographicNo.elementAt(i);
+                            String appt    =  theRequests.apptDate.elementAt(i);
+                            String patBook =  theRequests.patientWillBook.elementAt(i);
+                            String urgency =  theRequests.urgency.elementAt(i);
                             String sendTo = theRequests.teams.elementAt(i);
                             String specialist = theRequests.vSpecialist.elementAt(i);
                             String followUpDate = theRequests.followUpDate.elementAt(i);
                             String siteName = ""; 
                             if (bMultisites) {
-                            	siteName = (String) theRequests.siteName.elementAt(i);
+                            	siteName =  theRequests.siteName.elementAt(i);
                             }
                             if(status.equals("1") && dateGreaterThan(date, Calendar.WEEK_OF_YEAR, -1)){
                                 tickerList.add(demo);
@@ -512,6 +534,21 @@ function setOrder(val){
                     </td>
                 </tr>
                 </table>
+                
+          
+                	<%
+                	
+                	
+                	if(offset > 0) {
+                		String queryString = getNewQueryString(request.getQueryString(),offset-limit,limit);
+                		%><input type="button" value="Prev" onClick="location.href='<%=request.getContextPath()%>/oscarEncounter/IncomingConsultation.do?<%=queryString%>'"/><%
+                	}
+                	if(theRequests.ids.size() == limit) {
+                		String queryString = getNewQueryString(request.getQueryString(),offset+limit,limit);
+                		%><input type="button" value="Next" onClick="location.href='<%=request.getContextPath()%>/oscarEncounter/IncomingConsultation.do?<%=queryString%>'"/><%
+                	}
+                	%>
+               
             </td>
         </tr>
         <tr>
@@ -543,11 +580,35 @@ function setOrder(val){
 </html:html>
 <%!
 
+String getNewQueryString(String queryString,Integer offset, Integer limit) {
+	
+	String result = "";
+	List<String> resultParts = new ArrayList<String>();
+	
+	String[] parts = queryString.split("&");
+	for(String part:parts) {
+		
+		if(!part.startsWith("offset=") && !part.startsWith("limit=")) {
+			resultParts.add(part);
+		}
+	}
+	
+	resultParts.add("offset=" + (offset!=null?offset:0));
+	resultParts.add("limit=" + (limit != null?limit:ConsultationRequestDao.DEFAULT_CONSULT_REQUEST_RESULTS_LIMIT));
+	for(int x=0;x<resultParts.size();x++) {
+		if(x>0)
+			result += "&";
+		result += resultParts.get(x);
+	}
+	
+	return result;
+}
+
 boolean dateGreaterThan(String dateStr, int unit, int period){
     DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");    
     Date prevDate = null;
     try{
-       prevDate = (java.util.Date)formatter.parse(dateStr);
+       prevDate = formatter.parse(dateStr);
     }catch (Exception e){ 
     return false;
     }         
