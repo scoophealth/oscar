@@ -27,8 +27,11 @@
 <%@page import="org.w3c.dom.Document"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult"%>
 <%@page import="oscar.oscarLab.ca.all.web.LabDisplayHelper"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="oscar.oscarDemographic.data.DemographicData" %>
 <%@ page
-	import="java.util.*,oscar.oscarLab.ca.on.*,oscar.oscarDemographic.data.*"%>
+	import="java.util.*,oscar.oscarLab.ca.on.*"%>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -45,9 +48,20 @@ if (identifier == null) identifier = "NULL";
 
 String highlight = "#E0E0FF";
 
+DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 DemographicData dData = new DemographicData();
-org.oscarehr.common.model.Demographic demographic =  dData.getDemographic(demographicNo);
 
+Integer iDemographicNo = null;
+org.oscarehr.common.model.Demographic demographic =  null;
+
+try {
+	iDemographicNo = Integer.parseInt(demographicNo);
+} catch(NumberFormatException e) {
+	//ignore
+}
+if(iDemographicNo != null) {
+	demographic = demographicDao.getDemographicById(iDemographicNo);
+}
 ArrayList list = null;
 
 if (!(demographicNo == null || demographicNo.equals("null"))){
