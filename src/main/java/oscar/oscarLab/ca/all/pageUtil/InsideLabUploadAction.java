@@ -41,6 +41,7 @@ import java.io.InputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -64,21 +65,22 @@ public class InsideLabUploadAction extends Action {
         String proNo = (String) request.getSession().getAttribute("user");
         String outcome = "failure";
         
+        InputStream formFileIs=null;
+        InputStream localFileIs=null;
+        
         try{
-            InputStream is = importFile.getInputStream();
+            formFileIs = importFile.getInputStream();
             
             
             String type = request.getParameter("type");
             if (type.equals("OTHER"))
                 type = request.getParameter("otherType");
             
-            String filePath = Utilities.saveFile(is, filename);
-            is.close();
+            String filePath = Utilities.saveFile(formFileIs, filename);
             File file = new File(filePath);
             
-            is = new FileInputStream(filePath);
-            int checkFileUploadedSuccessfully = FileUploadCheck.addFile(file.getName(),is,proNo);            
-            is.close();
+            localFileIs = new FileInputStream(filePath);
+            int checkFileUploadedSuccessfully = FileUploadCheck.addFile(file.getName(),localFileIs,proNo);            
             
             if (checkFileUploadedSuccessfully != FileUploadCheck.UNSUCCESSFUL_SAVE){
                 logger.info("filePath"+filePath);
@@ -97,6 +99,10 @@ public class InsideLabUploadAction extends Action {
         }catch(Exception e){
             logger.error("Error: ",e);
             outcome = "exception";
+        }
+        finally {
+        	IOUtils.closeQuietly(formFileIs);
+        	IOUtils.closeQuietly(localFileIs);
         }
         
         request.setAttribute("outcome", outcome);
