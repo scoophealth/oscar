@@ -235,6 +235,12 @@ if (bMultisites) {
 	if(rbu != null) {
 		resourcebaseurl = rbu.getValue();
 	}
+	    
+    String resourcehelpHtml = ""; 
+    UserProperty rbuHtml = userPropertyDao.getProp("resource_helpHtml");
+    if(rbuHtml != null) {
+    	resourcehelpHtml = rbuHtml.getValue();
+    }
 
 	GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR); //curYear should be the real now date
@@ -321,9 +327,9 @@ if (bMultisites) {
 
 <title><bean:message
 	key="provider.appointmentprovideradminmonth.title" /></title>
-<link rel="stylesheet" href="../css/receptionistapptstyle.css"
-	type="text/css">
+<link rel="stylesheet" href="../css/receptionistapptstyle.css" type="text/css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<link rel="stylesheet" href="../css/helpdetails.css" type="text/css">
    <style type="text/css">    
         #navlist{
             margin: 0;
@@ -576,10 +582,26 @@ function refreshTabAlerts(id) {
 		
 		  <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../scratch/index.jsp','scratch')"><span id="oscar_scratch"></span></a>&nbsp;
 		  
-
-		  <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-		  <a href="#" onClick ="popupPage(600,750,'<%=resourcebaseurl%>')"><bean:message key="global.help"/></a> 
-		  </caisi:isModuleLoad>			
+			<%if(resourcehelpHtml==""){ %>
+				<a href="javascript:void(0)" onClick ="popupPage(600,750,'<%=resourcebaseurl%>')"><bean:message key="global.help"/></a>
+			<%}else{%>
+			<div id="help-link">
+				
+				    <a href="javascript:void(0)" onclick="document.getElementById('helpHtml').style.right='0px" onmouseover="document.getElementById('helpHtml').style.right='0px'"><bean:message key="global.help"/></a>
+			
+				<div id="helpHtml">
+				<div class="help-title">Help</div>
+				
+				<div class="help-body">
+				
+				<%=resourcehelpHtml%>
+				</div>
+				<a href="javascript:void(0)" class="help-close" onclick="document.getElementById('helpHtml').style.right='-280px'">(X)</a>
+					</div>
+			
+			</div>
+			<%}%>
+			
 			
 			| <a href="../logout.jsp"><bean:message key="provider.appointmentprovideradminmonth.btnlogOut" />  &nbsp;</a>
 

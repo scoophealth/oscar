@@ -23,85 +23,215 @@
     Ontario, Canada
 
 --%>
-
-<%
-
-%>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.UserProperty" %>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO" %>
-<%
-	UserPropertyDAO propertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
-%>
 
-<%
-  if(request.getParameter("submit_form")!=null && request.getParameter("submit_form").equals(" Save ") ) {
-
-	  UserProperty up = propertyDao.getProp("resource_baseurl");
-	  if(up != null) {
-		  propertyDao.delete(up);
-	  }
-	  up = propertyDao.getProp("resource");
-	  if(up != null) {
-		  propertyDao.delete(up);
-	  }
-
-	  propertyDao.saveProp("resource_baseurl", request.getParameter("resource_baseurl"));
-	  propertyDao.saveProp("resource_baseurl", request.getParameter("resource"));
-    out.println("<script language=\"JavaScript\"><!--");
-    out.println("self.close();");
-    out.println("//--></SCRIPT>");
-  }
-%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<html:html locale="true">
+
+<%
+	UserPropertyDAO propertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+    UserProperty upUrl = propertyDao.getProp("resource_baseurl");
+    UserProperty upHtml = propertyDao.getProp("resource_helphtml");
+    
+   	Properties oscarVariables = OscarProperties.getInstance();
+   	
+   	String checkedWebsite="";
+   	String checkedDetails="";
+   	
+   	//get value from property
+   	String resource_baseurl_value =  oscarVariables.getProperty("resource_base_url");
+   	String resource_helpHtml_value = "";
+   	
+   	if(upUrl != null) {
+   		//update with value from property table
+   		resource_baseurl_value=upUrl.getValue();
+   		checkedWebsite="checked";
+   	}else if(upHtml != null) {
+   		//update with value from property table
+   		resource_helpHtml_value=upHtml.getValue();
+   		checkedDetails="checked";
+   	}else{		  
+   		checkedWebsite="checked";
+   		checkedDetails=""; 
+   	}
+   	  
+  //delete if exists before saving
+  if(request.getParameter("websiteSave")!=null || request.getParameter("detailsSave")!=null){
+	  if(upUrl != null) {
+		  propertyDao.delete(upUrl);
+	  }
+	  
+	  if(upHtml != null) {
+		  propertyDao.delete(upHtml);
+	  } 
+  }
+  
+  //save
+  if(request.getParameter("websiteSave")!=null){
+	  propertyDao.saveProp("resource_baseurl", request.getParameter("resource_baseurl")); 
+	  checkedWebsite="checked";
+	  checkedDetails="";
+	  resource_helpHtml_value="";
+	  resource_baseurl_value = request.getParameter("resource_baseurl");
+  }else if(request.getParameter("detailsSave")!=null){
+	  propertyDao.saveProp("resource_helpHtml", request.getParameter("resource_helpHtml")); 
+	  checkedWebsite="";
+	  checkedDetails="checked";
+	  
+	  resource_helpHtml_value= request.getParameter("resource_helpHtml");
+  }
+  
+%>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="admin.resourcebaseurl.title" /></title>
-<LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
-<script language="JavaScript">
-<!--
-function setfocus() {
-  this.focus();
-  document.baseurl.resource_baseurl.focus();
-  document.baseurl.resource_baseurl.select();
+
+
+
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/css/bootstrap-wysihtml5.css">
+
+<style>
+.info{background-color:#d9edf7 ;}
+
+.alert-plain{
+  color: #333;
+  background-color: #f2f2f2;
+  border: 0;
 }
-//-->
-</script>
+</style>
 </head>
-<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
-	rightmargin="0">
-<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-	<tr BGCOLOR="#CCCCFF">
-		<th><bean:message key="admin.resourcebaseurl.msgTitle" /></th>
-	</tr>
-</table>
+<body>
 
-<table width="100%" border="0" cellspacing="0" cellpadding="2">
-	<form method="post" name="baseurl" action="resourcebaseurl.jsp">
-	<tr>
-		<td>&nbsp;</td>
-	</tr>
-	<tr bgcolor="#EEEEFF">
-		<td>
-		<p>&nbsp;<bean:message key="admin.resourcebaseurl.formBaseUrl" /></a><br>
-		&nbsp;<input type="text" name="resource_baseurl" value="" size='30'>
-		</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td align="center" bgcolor="#CCCCFF"><input type="hidden"
-			name="submit_form" value=' Save '> <input type="submit"
-			name="confirmButton"
-			value="<bean:message key="admin.resourcebaseurl.btnSave"/>">
-		</td>
-	</tr>
+<div class="container-fluid">
+
+<h3><bean:message key="admin.admin.btnBaseURLSetting" /></h3>
+
+ <%if(request.getParameter("websiteSave")!=null) {%>
+    <div class="alert alert-success">
+	<strong>Success!</strong> Help link has been saved.    
+    </div>  
+ <%}%>
+ 
+  <%if(request.getParameter("detailsSave")!=null) {%>
+    <div class="alert alert-success">
+	<strong>Success!</strong> Your new help details has been saved.    
+    </div>  
+ <%}%>
+
+<!-- Help Link - Website -->
+<div class="row well" id="websiteDiv" style="background-color:">
+	<div class="span1" style="background-color:">
+		<input type="radio" name="helpOption" class="helpOption" value="website" <%=checkedWebsite%>>
+	</div><!-- span2 -->
+	
+	<div class="span8" style="background-color:"> 
+		<form method="post" name="baseurl" id="websiteForm" action="resourcebaseurl.jsp" class="form-inline">
+		
+		<h4>Website</h4>
+		<!--<bean:message key="admin.resourcebaseurl.formBaseUrl" /><br>-->
+		<input type="text" name="resource_baseurl" style="width:100%;margin-bottom:10px" placeholder="<bean:message key="admin.resourcebaseurl.formBaseUrlExample" />" value="<%if(resource_baseurl_value!=null){ out.print(resource_baseurl_value);}%>">
+		<div class="span8">
+			<input type="submit" class="btn pull-right" name="websiteSave" id="websiteSave" value="<bean:message key="admin.resourcebaseurl.btnSave"/>">
+		</div>
+		
+		</form>
+	</div><!-- span8 -->
+</div>
+
+<h4 class="muted text-center"><em>~ or ~</em></h4>
+
+<!-- Help Link - Details -->
+<div class="row well" id="detailsDiv">
+	<div class="span1" style="background-color:">
+		<input type="radio" name="helpOption" class="helpOption" value="details" <%=checkedDetails%>>
+	</div><!-- span2 -->
+	
+	<div class="span8" style="background-color:"> 
+	<form method="post" name="baseurl" id="detailsForm" action="resourcebaseurl.jsp">
+	<h4>Details</h4>
+		<textarea class="textarea" name="resource_helpHtml" id="resource_helpHtml" placeholder="Enter text ..." style="width:100%;height:160px"><%if(resource_helpHtml_value!=null){ out.print(resource_helpHtml_value);}%></textarea>
+		<div class="span8" style="padding-left:0px;padding-right:0px;">
+			<div class="span6" id="chars"><div class='alert alert-plain'>Character Limit = 2000</div></div>
+			<input type="submit" class="btn pull-right" name="detailsSave" id="detailsSave"  value="<bean:message key="admin.resourcebaseurl.btnSave"/>">
+		</div>
 	</form>
-</table>
+	</div><!-- span8 -->
+</div>
 
+</div><!-- container fluid -->
+
+<script src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/wysihtml5-0.3.0.js"></script>
+<script src="<%=request.getContextPath() %>/js/bootstrap-wysihtml5.js"></script>
+
+<script>
+	$('.textarea').wysihtml5();
+
+	 editor.observe("load", function() {
+         editor.composer.element.addEventListener("keyup", function() {
+
+            char_count($(editor.composer.element).html().length); 
+        	 
+         });
+     });
+
+    function char_count(c){
+    	$("#chars").html(c);
+
+    	if(c>2000){
+    		$("#chars").html("<div class='alert'><strong>Warning!</strong> Character Limit = 2000. Character Count = " + c + "</div>");
+    		$("#detailsSave").prop("disabled", true);
+        }else{
+        	$("#chars").html("<div class='alert alert-success'><strong>Good!</strong> Character Limit = 2000. Character Count = " + c + "</div>");
+        	$("#detailsSave").prop("disabled", false);
+        }
+    }
+
+
+	helpOptionCheck();
+	 
+	$(".helpOption").click(function(){
+		helpOptionCheck();
+	});
+
+	function helpOptionCheck(){
+		if($("input[type='radio'].helpOption").is(':checked')) { 
+
+			option = $("input[type='radio'].helpOption:checked").val();
+
+			if(option=="website"){
+				$("#websiteForm :input").prop("disabled", false);
+				$("#detailsSave").prop("disabled", true);
+
+				$("#websiteDiv").addClass('info');
+				$("#detailsDiv").removeClass('info');
+
+				$("#websiteSave").addClass('btn-primary');
+				$("#detailsSave").removeClass('btn-primary');
+				
+				}else{
+					$("#websiteForm :input").prop("disabled", true);
+					$("#detailsSave").prop("disabled", false);
+
+					$("#websiteDiv").removeClass('info');
+					$("#detailsDiv").addClass('info');
+
+					$("#websiteSave").removeClass('btn-primary');
+					$("#detailsSave").addClass('btn-primary');
+			}
+		}
+	}	
+
+	
+	$( document ).ready(function() {	
+	   parent.parent.resizeIframe($('html').height());	
+	});
+</script>
 </body>
-</html:html>
+</html>
