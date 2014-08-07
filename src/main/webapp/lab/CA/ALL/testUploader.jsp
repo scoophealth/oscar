@@ -118,6 +118,7 @@ String outcome = (String) request.getAttribute("outcome");
 					<option value="OUL_R21">OUL_R21</option>
 					<option value="ORU_R01">ORU_R01</option>
 					<option value="BIOTEST">BioTest</option>
+					<option value="CLS">Calgary Lab Services (CLS)</option>
 					<option value="OTHER">Other</option>
 				</select>
 			<br />
