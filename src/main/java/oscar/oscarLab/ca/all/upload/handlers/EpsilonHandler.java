@@ -26,6 +26,7 @@ package oscar.oscarLab.ca.all.upload.handlers;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.upload.MessageUploader;
@@ -60,7 +61,7 @@ public class EpsilonHandler implements MessageHandler {
 	}
 	*/
 	@Override
-    public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
+    public String parse(LoggedInInfo loggedInInfo,String serviceName, String fileName, int fileId, String ipAddr) {
 		int i = 0;
 		try {
 

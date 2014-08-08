@@ -36,9 +36,8 @@ import org.oscarehr.util.LoggedInInfo;
 
 public final class DemographicSearchHelper {
 	
-	public static List<MatchingDemographicTransferScore> getIntegratedSearchResults(MatchingDemographicParameters matchingDemographicParameters) throws MalformedURLException
+	public static List<MatchingDemographicTransferScore> getIntegratedSearchResults(LoggedInInfo loggedInInfo, MatchingDemographicParameters matchingDemographicParameters) throws MalformedURLException
 	{
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return(null);
 		
 		DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());

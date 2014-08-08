@@ -43,10 +43,10 @@ public class OLISHL7Handler implements MessageHandler {
 		logger.info("NEW OLISHL7Handler UPLOAD HANDLER instance just instantiated. ");
 	}
 
-	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
-		return parse(serviceName,fileName,fileId, false);
+	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
+		return parse(loggedInInfo, serviceName,fileName,fileId, false);
 	}
-	public String parse(String serviceName, String fileName, int fileId, boolean routeToCurrentProvider) {		
+	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, boolean routeToCurrentProvider) {		
 		int i = 0;
 		String lastTimeStampAccessed = null;
 		RouteReportResults results = new RouteReportResults();
@@ -60,14 +60,13 @@ public class OLISHL7Handler implements MessageHandler {
 				
 				lastTimeStampAccessed = getLastUpdateInOLIS(msg) ;
 				
-				if(OLISUtils.isDuplicate(msg)) {
+				if(OLISUtils.isDuplicate(loggedInInfo, msg)) {
 					continue; 
 				}
 				MessageUploader.routeReport(serviceName,"OLIS_HL7", msg.replace("\\E\\", "\\SLASHHACK\\").replace("µ", "\\MUHACK\\").replace("\\H\\", "\\.H\\").replace("\\N\\", "\\.N\\"), fileId, results);
 				if (routeToCurrentProvider) {
-					String provNo =  LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 					ProviderLabRouting routing = new ProviderLabRouting();
-					routing.route(results.segmentId, provNo, DbConnectionFilter.getThreadLocalDbConnection(), "HL7");
+					routing.route(results.segmentId, loggedInInfo.getLoggedInProviderNo(), DbConnectionFilter.getThreadLocalDbConnection(), "HL7");
 					this.lastSegmentId = results.segmentId;
 				}
 			}

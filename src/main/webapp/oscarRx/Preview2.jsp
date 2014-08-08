@@ -48,11 +48,10 @@
 <%@page import="org.oscarehr.ui.servlet.ImageRenderingServlet"%>
 <!-- end -->
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	String providerNo=loggedInInfo.getLoggedInProviderNo();
 	String scriptid=request.getParameter("scriptId");
-%>
-
-<%
-String rx_enhance = OscarProperties.getInstance().getProperty("rx_enhance");
+	String rx_enhance = OscarProperties.getInstance().getProperty("rx_enhance");
 %>	
 
 <%@page import="org.oscarehr.web.PrescriptionQrCodeUIBean"%><html:html locale="true">
@@ -512,7 +511,7 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
 	                                                    <%
                                      					}
                                                     
-                                                    	if (PrescriptionQrCodeUIBean.isPrescriptionQrCodeEnabledForCurrentProvider())
+                                                    	if (PrescriptionQrCodeUIBean.isPrescriptionQrCodeEnabledForProvider(providerNo))
                                                     	{
                                                     	%>                                                    
 		                                                    <tr>

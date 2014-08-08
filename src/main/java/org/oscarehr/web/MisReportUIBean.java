@@ -87,12 +87,11 @@ public final class MisReportUIBean {
 	/**
 	 * End dates should be treated as inclusive.
 	 */
-	public MisReportUIBean(String functionalCentreId, GregorianCalendar startDate, GregorianCalendar endDate) {
+	public MisReportUIBean(LoggedInInfo loggedInInfo, String functionalCentreId, GregorianCalendar startDate, GregorianCalendar endDate) {
 
 		this.startDate =startDate; 
 		this.endDate=endDate;
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		FunctionalCentre functionalCentre = functionalCentreDao.find(functionalCentreId);
 		reportByDescription=StringEscapeUtils.escapeHtml(functionalCentre.getAccountId() + ", " + functionalCentre.getDescription());
 		selectedPrograms = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentreId);

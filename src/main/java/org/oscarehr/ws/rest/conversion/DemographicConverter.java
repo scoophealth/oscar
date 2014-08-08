@@ -40,7 +40,7 @@ public class DemographicConverter extends AbstractConverter<Demographic, Demogra
 	 * Converts TO, excluding provider and extras.
 	 */
 	@Override
-	public Demographic getAsDomainObject(DemographicTo1 t) throws ConversionException {
+	public Demographic getAsDomainObject(LoggedInInfo loggedInInfo,DemographicTo1 t) throws ConversionException {
 		Demographic d = new Demographic();
 		
 		d.setDemographicNo(t.getDemographicNo());
@@ -100,17 +100,17 @@ public class DemographicConverter extends AbstractConverter<Demographic, Demogra
 
 		DemographicExt[] exts = new DemographicExt[t.getExtras().size()];
 		for (int i = 0; i < t.getExtras().size(); i++) {
-			exts[i] = demoExtConverter.getAsDomainObject(t.getExtras().get(i));
+			exts[i] = demoExtConverter.getAsDomainObject(loggedInInfo,t.getExtras().get(i));
 			
 			if (exts[i].getDemographicNo()==null) exts[i].setDemographicNo(d.getDemographicNo());
 			if (exts[i].getProviderNo()==null) {
-		    	exts[i].setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		    	exts[i].setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 			}
 		}
 		d.setExtras(exts);
 
 		if (t.getProvider() != null) {
-			d.setProvider(providerConverter.getAsDomainObject(t.getProvider()));
+			d.setProvider(providerConverter.getAsDomainObject(loggedInInfo, t.getProvider()));
 		}
 
 		return d;

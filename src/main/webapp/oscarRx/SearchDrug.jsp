@@ -76,7 +76,7 @@ reverse="<%=true%>">
 	String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 	
 	//This checks if the provider has the ExternalPresriber feature enabled, if so then a link appear for the provider to access the ExternalPrescriber
-	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+	ProviderPreference providerPreference=ProviderPreferencesUIBean.getProviderPreference(loggedInInfo.getLoggedInProviderNo());
 	
 	boolean eRxEnabled= false;
 	String eRx_SSO_URL = null;

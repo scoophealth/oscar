@@ -22,6 +22,8 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.model.Facility"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="java.io.PrintWriter"%>
@@ -29,6 +31,9 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="org.oscarehr.web.OcanReportUIBean"%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	Facility facility=loggedInInfo.getCurrentFacility();
+   		 
 	int startYear = Integer.parseInt(request.getParameter("startYear"));
 	int startMonth = Integer.parseInt(request.getParameter("startMonth"));
 	int endYear = Integer.parseInt(request.getParameter("endYear"));
@@ -38,7 +43,7 @@
 	//response.setHeader("Content-Disposition", "attachment; filename="+OcanReportUIBean.getFilename(startYear,startMonth,1));
 	
 	//ByteArrayOutputStream sos = new ByteArrayOutputStream();
-	OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission(startYear, startMonth,endYear, endMonth, 1,ocanType));
+	OcanReportUIBean.sendSubmissionToIAR(facility,OcanReportUIBean.generateOCANSubmission(facility.getId(), startYear, startMonth,endYear, endMonth, 1,ocanType));
 	//String data = sos.toString();
 	
 //	OcanReportUIBean.writeIARExportData(data,response.getOutputStream());

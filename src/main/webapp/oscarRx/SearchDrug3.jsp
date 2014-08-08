@@ -112,6 +112,7 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
 </security:oscarSec>
 
 <%         
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
             String providerNo=bean.getProviderNo();
             //String reRxDrugId=request.getParameter("reRxDrugId");
             HashMap hm=(HashMap)session.getAttribute("profileViewSpec");
@@ -174,7 +175,7 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
                         String script_no = "";
                         
             //This checks if the provider has the ExternalPresriber feature enabled, if so then a link appear for the provider to access the ExternalPrescriber
-            ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+            ProviderPreference providerPreference=ProviderPreferencesUIBean.getProviderPreference(loggedInInfo.getLoggedInProviderNo());
             
             boolean eRxEnabled= false;
             String eRx_SSO_URL = null;

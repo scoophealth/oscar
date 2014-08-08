@@ -39,6 +39,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.model.Hl7TextInfo;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.OscarAuditLogger;
 import org.oscarehr.util.SpringUtils;
 
@@ -53,7 +54,7 @@ public class MDSHandler implements MessageHandler {
 	Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao)SpringUtils.getBean("hl7TextInfoDao");
 	
 
-	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
+	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
 
 		int i = 0;
 		RouteReportResults routeResults;
@@ -63,7 +64,7 @@ public class MDSHandler implements MessageHandler {
 			ArrayList<String> messages = Utilities.separateMessages(fileName);
 			for (i = 0; i < messages.size(); i++) {
 				String msg = messages.get(i);
-				if(isDuplicate(msg)) {
+				if(isDuplicate(loggedInInfo,msg)) {
 					continue;
 				}
 				routeResults = new RouteReportResults();
@@ -91,7 +92,7 @@ public class MDSHandler implements MessageHandler {
 
 	}
 
-	private boolean isDuplicate(String msg) {
+	private boolean isDuplicate(LoggedInInfo loggedInInfo,String msg) {
 		//OLIS requirements - need to see if this is a duplicate
 		oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler("MDS", msg);
 		//if final		
@@ -103,7 +104,7 @@ public class MDSHandler implements MessageHandler {
 			for(Hl7TextInfo dupResult:dupResults) {				
 				if(dupResult.getAccessionNumber().substring(5).equals(fullAcc)) {
 					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
-					OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
+					OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
 						return true;
 					//}
 				}

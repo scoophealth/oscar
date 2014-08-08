@@ -24,12 +24,13 @@
 package org.oscarehr.ws.rest.conversion;
 
 import org.oscarehr.common.model.DemographicMerged;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.to.model.DemographicMergedTo1;
 
 public class DemographicMergedConverter extends AbstractConverter<DemographicMerged, DemographicMergedTo1> {
 
 	@Override
-	public DemographicMerged getAsDomainObject(DemographicMergedTo1 t) throws ConversionException {
+	public DemographicMerged getAsDomainObject(LoggedInInfo loggedInInfo,DemographicMergedTo1 t) throws ConversionException {
 		DemographicMerged d = new DemographicMerged();
 		
 		d.setId(t.getId());
