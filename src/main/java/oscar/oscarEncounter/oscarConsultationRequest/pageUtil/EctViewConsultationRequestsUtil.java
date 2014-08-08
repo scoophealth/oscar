@@ -58,10 +58,10 @@ public class EctViewConsultationRequestsUtil {
       return estConsultationVecByTeam(team,showCompleted,null,null,null,null);
    }   
    public boolean estConsultationVecByTeam(String team,boolean showCompleted,Date startDate, Date endDate,String orderby,String desc) { 
-      return estConsultationVecByTeam(team,showCompleted,null,null,null,null,null);
+      return estConsultationVecByTeam(team,showCompleted,null,null,null,null,null,null,null);
    }  
             
-   public boolean estConsultationVecByTeam(String team,boolean showCompleted,Date startDate, Date endDate,String orderby,String desc,String searchDate) {       
+   public boolean estConsultationVecByTeam(String team,boolean showCompleted,Date startDate, Date endDate,String orderby,String desc,String searchDate, Integer offset, Integer limit) {       
       ids = new Vector<String>();
       status = new Vector<String>();
       patient = new Vector<String>();
@@ -92,7 +92,7 @@ public class EctViewConsultationRequestsUtil {
           Calendar cal = Calendar.getInstance();
           Date date1, date2;
           String providerId, providerName, specialistName;
-          List consultList = consultReqDao.getConsults(team, showCompleted, startDate, endDate, orderby, desc, searchDate);
+          List consultList = consultReqDao.getConsults(team, showCompleted, startDate, endDate, orderby, desc, searchDate, offset, limit);
 
           for( int idx = 0; idx < consultList.size(); ++idx ) {
               consult = (ConsultationRequest)consultList.get(idx);
