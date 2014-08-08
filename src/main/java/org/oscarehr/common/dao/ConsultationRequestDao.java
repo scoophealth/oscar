@@ -34,6 +34,8 @@ import org.oscarehr.common.model.ConsultationRequest;
 
 @SuppressWarnings("unchecked")
 public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
+	
+	public static final int DEFAULT_CONSULT_REQUEST_RESULTS_LIMIT = 100;
 
 	public ConsultationRequestDao() {
 		super(ConsultationRequest.class);
@@ -66,7 +68,7 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
         }
 
         
-        public List<ConsultationRequest> getConsults(String team, boolean showCompleted, Date startDate, Date endDate, String orderby, String desc, String searchDate) {
+        public List<ConsultationRequest> getConsults(String team, boolean showCompleted, Date startDate, Date endDate, String orderby, String desc, String searchDate, Integer offset, Integer limit) {
             StringBuilder sql = new StringBuilder("select cr from ConsultationRequest cr left outer join cr.professionalSpecialist specialist, ConsultationServices service, Demographic d left outer join d.provider p where d.DemographicNo = cr.demographicId and service.id = cr.serviceId ");
 
             if( !showCompleted ) {
@@ -119,7 +121,12 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
             }
 
             Query query = entityManager.createQuery(sql.toString());
-
+            query.setFirstResult(offset!=null?offset:0);
+            
+            //need to never send more than MAX_LIST_RETURN_SIZE
+            int myLimit = limit!=null?limit:DEFAULT_CONSULT_REQUEST_RESULTS_LIMIT;
+            query.setMaxResults(Math.min(myLimit, MAX_LIST_RETURN_SIZE));
+            
             return query.getResultList();
         }
 
