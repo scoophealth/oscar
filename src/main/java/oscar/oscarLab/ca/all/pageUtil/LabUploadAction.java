@@ -66,6 +66,7 @@ import org.oscarehr.common.dao.OscarKeyDao;
 import org.oscarehr.common.dao.PublicKeyDao;
 import org.oscarehr.common.model.OscarKey;
 import org.oscarehr.common.model.OtherId;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -81,6 +82,8 @@ public class LabUploadAction extends Action {
 
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		LabUploadForm frm = (LabUploadForm) form;
 		FormFile importFile = frm.getImportFile();
 
@@ -131,7 +134,7 @@ public class LabUploadAction extends Action {
 				try {
 					int check = FileUploadCheck.addFile(file.getName(), is, "0");
 					if (check != FileUploadCheck.UNSUCCESSFUL_SAVE) {
-						if ((audit = msgHandler.parse(service, filePath, check, request.getRemoteAddr())) != null) {
+						if ((audit = msgHandler.parse(loggedInInfo, service, filePath, check, request.getRemoteAddr())) != null) {
 							outcome = "uploaded";
 							httpCode = HttpServletResponse.SC_OK;
 						} else {

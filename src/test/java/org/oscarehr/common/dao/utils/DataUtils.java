@@ -37,6 +37,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.DaoTestFixtures;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.common.model.Demographic;
@@ -181,7 +182,7 @@ public class DataUtils {
 				
 				String savePath = getCanonicalPath(labId);
 				save(savePath, lab.getBytes());
-				String status = msgHandler.parse("", savePath, 99, "127.0.0.1");
+				String status = msgHandler.parse(DaoTestFixtures.getLoggedInInfo(),"", savePath, 99, "127.0.0.1");
 				if (logger.isInfoEnabled()) {
 					if ("success".equals(status)) {
 						logger.info("Added lab: " + labId);

@@ -25,6 +25,7 @@ package oscar.oscarLab.ca.all.pageUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -32,9 +33,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.model.PatientLabRouting;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.OscarAuditLogger;
 import org.oscarehr.util.SpringUtils;
+
 import oscar.log.LogConst;
 
 /**
@@ -50,7 +53,9 @@ public class UnlinkDemographicAction  extends Action {
     @Override
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
         
-        //set the demographicNo in the patientLabRouting table 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
+		//set the demographicNo in the patientLabRouting table 
         String reason = request.getParameter("reason");
         String labNoStr = request.getParameter("labNo");
         Integer labNo = Integer.parseInt(labNoStr);
@@ -60,7 +65,7 @@ public class UnlinkDemographicAction  extends Action {
         plr.setDemographicNo(PatientLabRoutingDao.UNMATCHED);
         plrDao.merge(plr);
         
-        OscarAuditLogger.getInstance().log(LogConst.UNLINK, LogConst.CON_HL7_LAB, String.valueOf(labNo), request.getRemoteAddr(), demoNo, reason);
+        OscarAuditLogger.getInstance().log(loggedInInfo, LogConst.UNLINK, LogConst.CON_HL7_LAB, String.valueOf(labNo), request.getRemoteAddr(), demoNo, reason);
         
         logger.debug("Unlinked lab with segmentID: " + labNo + " from eChart of Demographic " + demoNo);
         

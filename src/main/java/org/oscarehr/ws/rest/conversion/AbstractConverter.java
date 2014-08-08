@@ -26,6 +26,8 @@ package org.oscarehr.ws.rest.conversion;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.oscarehr.util.LoggedInInfo;
+
 /**
  * Base class for defining conversion between domain model objects and transfer objects 
  *
@@ -38,7 +40,7 @@ import java.util.List;
 public abstract class AbstractConverter<D, T> {
 
 	
-	public abstract D getAsDomainObject(T t) throws ConversionException;
+	public abstract D getAsDomainObject(LoggedInInfo loggedInInfo,T t) throws ConversionException;
 
 	
 	public abstract T getAsTransferObject(D d) throws ConversionException;

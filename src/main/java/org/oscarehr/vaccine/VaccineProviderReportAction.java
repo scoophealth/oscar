@@ -84,7 +84,7 @@ public class VaccineProviderReportAction extends DispatchAction {
 	public ActionForward show_report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String clientId = request.getParameter("id");
 			
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
         
 		Demographic client = clientManager.getClientByDemographicNo(clientId);
 		

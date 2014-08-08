@@ -24,6 +24,7 @@
 package org.oscarehr.ws.rest.conversion;
 
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.to.model.ProgramTo1;
 
 
@@ -32,7 +33,7 @@ public class ProgramConverter extends AbstractConverter<Program, ProgramTo1> {
 //		private static Logger logger = Logger.getLogger(ProgramConverter.class);
 
 		@Override
-		public Program getAsDomainObject(ProgramTo1 t) throws ConversionException {
+		public Program getAsDomainObject(LoggedInInfo loggedInInfo,ProgramTo1 t) throws ConversionException {
 			Program a = new Program();
 			a.setId(t.getId());
 			a.setName(t.getName());

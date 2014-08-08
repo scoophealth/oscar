@@ -96,7 +96,7 @@ public class PharmacyService extends AbstractServiceImpl {
 	@POST
 	@Path("/")
 	public PharmacyInfoTo1 addPharmacy(PharmacyInfoTo1 pharmacyInfo) {
-		return converter.getAsTransferObject(pharmacyInfoDao.saveEntity(converter.getAsDomainObject(pharmacyInfo)));
+		return converter.getAsTransferObject(pharmacyInfoDao.saveEntity(converter.getAsDomainObject(getLoggedInInfo(),pharmacyInfo)));
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class PharmacyService extends AbstractServiceImpl {
 	@PUT
 	@Path("/")
 	public PharmacyInfoTo1 updatePharmacy(PharmacyInfoTo1 pharmacyInfo) {
-		return converter.getAsTransferObject(pharmacyInfoDao.saveEntity(converter.getAsDomainObject(pharmacyInfo)));
+		return converter.getAsTransferObject(pharmacyInfoDao.saveEntity(converter.getAsDomainObject(getLoggedInInfo(),pharmacyInfo)));
 	}
 
 	/**

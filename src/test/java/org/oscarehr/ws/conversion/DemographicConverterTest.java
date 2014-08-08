@@ -55,7 +55,7 @@ public class DemographicConverterTest extends DaoTestFixtures {
 		demo.setExtras(new DemographicExt[] { demoExt });
 
 		DemographicTo1 demoTo = demoConverter.getAsTransferObject(demo);
-		Demographic demoCheck = demoConverter.getAsDomainObject(demoTo);
+		Demographic demoCheck = demoConverter.getAsDomainObject(getLoggedInInfo(),demoTo);
 
 		assertEquals(demo, demoCheck);
 	}

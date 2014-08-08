@@ -40,6 +40,7 @@ import org.oscarehr.common.dao.StudyDataDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicStudy;
 import org.oscarehr.common.model.StudyData;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.OscarAuditLogger;
 import org.oscarehr.util.SpringUtils;
 
@@ -71,6 +72,8 @@ public class EaapsExportAction extends Action {
 	private StudyDataDao studyDataDao = SpringUtils.getBean(StudyDataDao.class);
 	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		EaapsExportForm eaapsForm = (EaapsExportForm) form;
 		int studyId = eaapsForm.getStudyId();
 		List<DemographicStudy> studies = demoStudyDao.findByStudyNo(studyId);
@@ -167,7 +170,7 @@ public class EaapsExportAction extends Action {
 				}
 				
 				// finally log the update
-				auditLogger.log("eaaps export", "demographic", e.getDemographicId(), demographicData);
+				auditLogger.log(loggedInInfo, "eaaps export", "demographic", e.getDemographicId(), demographicData);
 				
 				if (logger.isInfoEnabled()) {
 					logger.info("Pushed " + e + " to eaaps server successfully.");

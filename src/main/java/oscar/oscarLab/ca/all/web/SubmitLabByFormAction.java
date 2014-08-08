@@ -58,6 +58,9 @@ public class SubmitLabByFormAction extends DispatchAction {
 	}
 
 	public ActionForward saveManage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 		logger.info("in save lab from form");
 		String labName = request.getParameter("labname");
 		String accession = request.getParameter("accession");
@@ -142,7 +145,6 @@ public class SubmitLabByFormAction extends DispatchAction {
     	logger.info(hl7);
 
     	//save file
-    	String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
     	String filename = "Lab"+providerNo+((int)(Math.random()*1000))+".hl7";
     	ByteArrayInputStream is = new ByteArrayInputStream(hl7.getBytes());
     	String filePath = Utilities.saveFile(is, filename);
@@ -162,7 +164,7 @@ public class SubmitLabByFormAction extends DispatchAction {
             if(msgHandler != null){
                logger.info("MESSAGE HANDLER "+msgHandler.getClass().getName());
             }
-            if((msgHandler.parse(getClass().getSimpleName(), filePath,checkFileUploadedSuccessfully,ipAddr)) != null)
+            if((msgHandler.parse(loggedInInfo, getClass().getSimpleName(), filePath,checkFileUploadedSuccessfully,ipAddr)) != null)
                 outcome = "success";
 
         }else{

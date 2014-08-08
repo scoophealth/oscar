@@ -39,23 +39,28 @@ public class OcanIarSubmissionTask extends TimerTask {
 		try {
 			logger.info("Running OCAN IAR Submission Task");
 			LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
+			Facility currentWorkingFacility=null;
 
 			FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
 			List<Facility> facilities = facilityDao.findAll(null);
+			
+			// odd, by having this for loop here it means we only submit the first facility which has ocan enabled? 
+			// sounds weird but I'm not going to change the behaviour right now...
 			for (Facility facility : facilities) {
 				if (!facility.isDisabled() && facility.isEnableOcanForms() && Integer.valueOf(facility.getOcanServiceOrgNumber()).intValue() != 0) {
 					LoggedInInfo.loggedInInfo.get().currentFacility = facility;
+					currentWorkingFacility=facility;
 					break;
 				}
 			}
 
-			int submissionId_full = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("FULL","all"));
+			int submissionId_full = OcanReportUIBean.sendSubmissionToIAR(currentWorkingFacility,OcanReportUIBean.generateOCANSubmission(currentWorkingFacility.getId(), "FULL","all"));
 			logger.info("FULL OCAN upload Completed: submissionId=" + submissionId_full);
 
-			int submissionId_self = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("SELF","all"));
+			int submissionId_self = OcanReportUIBean.sendSubmissionToIAR(currentWorkingFacility,OcanReportUIBean.generateOCANSubmission(currentWorkingFacility.getId(), "SELF","all"));
 			logger.info("SELF OCAN upload Completed: submissionId=" + submissionId_self);
 
-			int submissionId_core = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("CORE","all"));
+			int submissionId_core = OcanReportUIBean.sendSubmissionToIAR(currentWorkingFacility,OcanReportUIBean.generateOCANSubmission(currentWorkingFacility.getId(), "CORE","all"));
 			logger.info("CORE OCAN upload Completed: submissionId=" + submissionId_core);
 		} catch (Exception e) {
 			logger.error("Error", e);

@@ -31,18 +31,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import org.oscarehr.olis.dao.OLISProviderPreferencesDao;
-import org.oscarehr.olis.dao.OLISSystemPreferencesDao;
-import org.oscarehr.olis.model.OLISProviderPreferences;
-import org.oscarehr.olis.model.OLISSystemPreferences;
-import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
+import org.apache.http.impl.cookie.DateUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
-import org.apache.http.impl.cookie.DateUtils;
+import org.oscarehr.olis.dao.OLISProviderPreferencesDao;
+import org.oscarehr.olis.dao.OLISSystemPreferencesDao;
+import org.oscarehr.olis.model.OLISProviderPreferences;
+import org.oscarehr.olis.model.OLISSystemPreferences;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarLab.FileUploadCheck;
@@ -69,22 +70,22 @@ public class OLISPollingUtil {
 		super();
 	}
 	
-	public static void requestResults(){
+	public static void requestResults(LoggedInInfo loggedInInfo){
 		OLISSystemPreferences olisSystemPreferences = olisSystemPreferencesDao.getPreferences();
 		String defaultStartTime = oscar.Misc.getStr(olisSystemPreferences.getStartTime(), "").trim();
 	    String defaultEndTime = oscar.Misc.getStr(olisSystemPreferences.getEndTime(), "").trim();
 	    
-	    pollZ04Query(defaultStartTime,defaultEndTime);
+	    pollZ04Query(loggedInInfo, defaultStartTime,defaultEndTime);
 	    
 	    String facilityId = OscarProperties.getInstance().getProperty("olis_polling_facility"); //Most of the time this will default to null.
 	    if (facilityId !=null){
-	    	pollZ06Query(defaultStartTime,defaultEndTime,facilityId);
+	    	pollZ06Query(loggedInInfo, defaultStartTime,defaultEndTime,facilityId);
 	    }
 	    
 		
 	}
 	
-	private static void pollZ04Query(String defaultStartTime,String defaultEndTime){
+	private static void pollZ04Query(LoggedInInfo loggedInInfo, String defaultStartTime,String defaultEndTime){
 		//Z04Query providerQuery;
 		List<Provider> allProvidersList = providerDao.getActiveProviders();
 	    UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
@@ -135,7 +136,7 @@ public class OLISPollingUtil {
 					logger.error("response does not match, aborting "+response);
 					break;
 				}
-				String timeStampForNextStartDate= OLISPollingUtil.parseAndImportResponse(response);
+				String timeStampForNextStartDate= OLISPollingUtil.parseAndImportResponse(loggedInInfo, response);
 				logger.info("timeSlot "+timeStampForNextStartDate);
 				
 				if(timeStampForNextStartDate != null){
@@ -153,7 +154,7 @@ public class OLISPollingUtil {
 	    }
 	}
 	
-	private static void pollZ06Query(String defaultStartTime,String defaultEndTime,String facilityId){
+	private static void pollZ06Query(LoggedInInfo loggedInInfo, String defaultStartTime,String defaultEndTime,String facilityId){
 		try {
 			Z06Query facilityQuery = new Z06Query();
 			OLISProviderPreferences olisProviderPreferences = olisProviderPreferencesDao.findById("-1");
@@ -192,7 +193,7 @@ public class OLISPollingUtil {
 				return;
 			}
 	    	
-	    	String timeStampForNextStartDate= OLISPollingUtil.parseAndImportResponse(response);
+	    	String timeStampForNextStartDate= OLISPollingUtil.parseAndImportResponse(loggedInInfo, response);
 			
 			if(timeStampForNextStartDate != null){
 				olisProviderPreferences.setStartTime(timeStampForNextStartDate);
@@ -208,7 +209,7 @@ public class OLISPollingUtil {
 	    }
     }
 	
-	public static String parseAndImportResponse(String response) throws Exception {
+	public static String parseAndImportResponse(LoggedInInfo loggedInInfo, String response) throws Exception {
 		String timeStampForNextStartDate = null;
 		UUID uuid = UUID.randomUUID();
 		String originalFile = "olis_"+uuid.toString()+".response";
@@ -228,7 +229,7 @@ public class OLISPollingUtil {
 			InputStream is = new FileInputStream(fileLocation);
 			int check = FileUploadCheck.addFile(file.getName(), is, "0");
 			if (check != FileUploadCheck.UNSUCCESSFUL_SAVE) {
-				timeStampForNextStartDate = msgHandler.parse("OLIS_HL7",fileLocation, check,null);
+				timeStampForNextStartDate = msgHandler.parse(loggedInInfo, "OLIS_HL7",fileLocation, check,null);
 				
 				if (timeStampForNextStartDate != null) {
 					logger.info("Lab successfully added.");

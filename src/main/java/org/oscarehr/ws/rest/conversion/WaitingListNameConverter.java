@@ -24,6 +24,7 @@
 package org.oscarehr.ws.rest.conversion;
 
 import org.oscarehr.common.model.WaitingListName;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.to.model.WaitingListNameTo1;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +32,7 @@ import org.springframework.stereotype.Component;
 public class WaitingListNameConverter extends AbstractConverter<WaitingListName, WaitingListNameTo1> {
 
 	@Override
-	public WaitingListName getAsDomainObject(WaitingListNameTo1 t) throws ConversionException {
+	public WaitingListName getAsDomainObject(LoggedInInfo loggedInInfo,WaitingListNameTo1 t) throws ConversionException {
 		WaitingListName d = new WaitingListName();
 		
 		d.setId(t.getId());

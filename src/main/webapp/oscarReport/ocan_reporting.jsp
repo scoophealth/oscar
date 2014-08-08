@@ -23,6 +23,7 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.*"%>
 <%@page import="org.caisi.dao.*"%>
 <%@page import="org.caisi.model.*"%>
@@ -41,7 +42,8 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
 <%
-	List<Demographic> clients = OcanReportingBean.getOCANClients();
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	List<Demographic> clients = OcanReportingBean.getOCANClients(loggedInInfo.getCurrentFacility().getId());
 %>
 
 <html>

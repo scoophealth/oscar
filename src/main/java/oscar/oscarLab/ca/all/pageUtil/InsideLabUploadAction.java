@@ -48,6 +48,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarLab.FileUploadCheck;
 import oscar.oscarLab.ca.all.upload.HandlerClassFactory;
@@ -59,7 +60,9 @@ public class InsideLabUploadAction extends Action {
     
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
-        LabUploadForm frm = (LabUploadForm) form;
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
+    	LabUploadForm frm = (LabUploadForm) form;
         FormFile importFile = frm.getImportFile();
         String filename = importFile.getFileName();
         String proNo = (String) request.getSession().getAttribute("user");
@@ -89,7 +92,7 @@ public class InsideLabUploadAction extends Action {
                 if(msgHandler != null){
                    logger.info("MESSAGE HANDLER "+msgHandler.getClass().getName());
                 }
-                if((msgHandler.parse(getClass().getSimpleName(), filePath,checkFileUploadedSuccessfully, request.getRemoteAddr())) != null)
+                if((msgHandler.parse(loggedInInfo, getClass().getSimpleName(), filePath,checkFileUploadedSuccessfully, request.getRemoteAddr())) != null)
                     outcome = "success";
                 
             }else{

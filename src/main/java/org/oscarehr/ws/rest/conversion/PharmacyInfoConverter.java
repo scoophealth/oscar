@@ -24,12 +24,13 @@
 package org.oscarehr.ws.rest.conversion;
 
 import org.oscarehr.common.model.PharmacyInfo;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.to.model.PharmacyInfoTo1;
 
 public class PharmacyInfoConverter extends AbstractConverter<PharmacyInfo, PharmacyInfoTo1> {
 
 	@Override
-	public PharmacyInfo getAsDomainObject(PharmacyInfoTo1 t) throws ConversionException {
+	public PharmacyInfo getAsDomainObject(LoggedInInfo loggedInInfo,PharmacyInfoTo1 t) throws ConversionException {
 		PharmacyInfo d = new PharmacyInfo();
 		
 		d.setId(t.getId());

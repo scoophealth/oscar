@@ -71,9 +71,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public abstract class DaoTestFixtures
 {
-	private LoggedInInfo loggedInInfo=LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
+	private static LoggedInInfo loggedInInfo=LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 	
-	public LoggedInInfo getLoggedInInfo()
+	public static LoggedInInfo getLoggedInInfo()
 	{
 		return(loggedInInfo);
 	}

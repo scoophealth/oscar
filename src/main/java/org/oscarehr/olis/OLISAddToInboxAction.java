@@ -66,7 +66,7 @@ public class OLISAddToInboxAction extends DispatchAction {
 			int check = FileUploadCheck.addFile(file.getName(), is, providerNo);
 
 			if (check != FileUploadCheck.UNSUCCESSFUL_SAVE) {
-				if (msgHandler.parse("OLIS_HL7", fileLocation, check, true) != null) {
+				if (msgHandler.parse(loggedInInfo, "OLIS_HL7", fileLocation, check, true) != null) {
 					request.setAttribute("result", "Success");
 					if (doFile) {
 						ArrayList<String[]> labsToFile = new ArrayList<String[]>();

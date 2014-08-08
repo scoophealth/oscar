@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -56,7 +57,7 @@ public class DefaultHandler implements MessageHandler {
         return hl7Type;
     }
     
-    public String parse(String serviceName, String fileName,int fileId, String ipAddr){
+    public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName,int fileId, String ipAddr){
         Document xmlDoc = getXML(fileName);
         
         /*

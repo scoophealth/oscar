@@ -25,14 +25,18 @@
 package oscar.oscarLab.ca.all.upload.handlers;
 
 import com.lowagie.text.pdf.PdfReader;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.common.dao.QueueDocumentLinkDao;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
+
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -47,7 +51,7 @@ public class PDFHandler  implements MessageHandler{
     protected static Logger logger = Logger.getLogger(PDFHandler.class);
     
     @Override
-    public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
+    public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
 
         String providerNo = "-1";
         String filePath = fileName;              

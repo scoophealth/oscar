@@ -50,6 +50,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.common.model.StudyData;
 import org.oscarehr.common.model.UserDSMessagePrefs;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.dms.EDoc;
@@ -395,7 +396,7 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
     }
 
 
-	private String savePdfContent(EaapsMessageSupport message) throws HL7Exception {
+	private String savePdfContent(EaapsMessageSupport message) {
 		byte[] pdf = message.getPdf();
 		String fileName = message.getPdfFileName();
 		
@@ -413,7 +414,7 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 	}
 
 	@Override
-	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
+	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
 		String hl7content = null;
 		InputStream is = null;
 		try {
