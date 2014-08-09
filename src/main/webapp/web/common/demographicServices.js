@@ -59,7 +59,7 @@ angular.module("demographicServices", [])
         updateDemographic: function(demographic){
         	var deferred = $q.defer();
         	var demographicTo1 = {demographicTo1:demographic};
-        	$http.put(this.apiPath+'demographics/'+demographicNo,demographicTo1).success(function(data){
+        	$http.put(this.apiPath+'demographics',demographicTo1).success(function(data){
                 deferred.resolve(data.demographicTo1);
             }).error(function(){
           	  console.log("error fetching items")
