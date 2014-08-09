@@ -56,7 +56,18 @@ oscarApp.controller('RecordCtrl', function ($scope,$http,$location,$stateParams,
 	                 	 {id : 4,displayName : 'Rx'       ,path : 'partials/eform.jsp'}];
 	
 	//var transitionP = $state.transitionTo($scope.recordtabs2[0].path,$stateParams,{location:'replace',notify:true});
-	//console.log("transition ",transitionP);	
+	//console.log("transition ",transitionP);
+	
+	//calculate age
+	var now = new Date();
+	var dob = new Date(demo.dateOfBirth);
+	demo.age = now.getFullYear() - dob.getFullYear();
+	if (now.getMonth()<dob.getMonth()) {
+		demo.age--;
+	}
+	else if (now.getMonth()==dob.getMonth() && now.getDate()<dob.getDate()) {
+		demo.age--;
+	}
 	
 	$scope.changeTab = function(temp) {
 		console.log($scope.recordtabs2[temp].path);

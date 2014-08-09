@@ -26,8 +26,8 @@
 <div class="page-header" style="margin-top: 0px; margin-bottom: 0px;">
 		<h1 style="margin-top: 0px;" ng-cloak>
 			<b>{{demographic.lastName}}, {{demographic.firstName}}</b> ({{demographic.title}}) <small class="pull-right"> <i>Born:</i>
-				<b>{{demographic.dateOfBirth | date:'yyyy-MM-dd'}}</b> (<b>42y</b>) &nbsp;&nbsp; <i>Sex:</i> <b>{{demographic.sex}}</b>
-				<i> &nbsp;&nbsp; Hin:</i> <b>{{demographicNo}}</b> <span
+				<b>{{demographic.dobYear}}-{{demographic.dobMonth}}-{{demographic.dobDay}}</b> (<b>{{demographic.age}}y</b>) &nbsp;&nbsp; <i>Sex:</i> <b>{{demographic.sex}}</b>
+				<i> &nbsp;&nbsp; Hin:</i> <b>{{demographic.hin}}</b> <span
 				class="glyphicon glyphicon-new-window"></span>
 			</small>
 
