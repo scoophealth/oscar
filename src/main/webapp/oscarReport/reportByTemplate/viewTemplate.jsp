@@ -90,13 +90,11 @@
 		<div class="xmlBorderDiv"><pre wrap="on"
 			style="font-size: 11px;"><%=StringEscapeUtils.escapeHtml(xml)%></pre>
 		</div>
-		<a href="addEditTemplate.jsp?templateid=<%=templateid%>" class="link">Edit
-		Template</a>
-		<div class="noprint"
-			style="clear: left; float: left; margin-top: 15px;"><input
-			type="button" value="<-- Back"
-			onclick="javascript: history.go(-1);return false;"> <input
-			type="button" value="Print" onclick="javascript: window.print();">
+		
+		<div class="noprint" style="clear: left; float: left; margin-top: 15px;">
+			<input type="button" value="Back" onclick="javascript: history.go(-1);return false;"> 
+			<input type="button" value="Print" onclick="javascript: window.print();">
+			<input type="button" value="Edit Template" onclick="document.location='addEditTemplate.jsp?templateid=<%=templateid%>&opentext=1'">
 		</div>
 		</td>
 	</tr>
