@@ -30,12 +30,18 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.dao.DemographicArchiveDao;
+import org.oscarehr.common.dao.DemographicContactDao;
+import org.oscarehr.common.dao.DemographicCustArchiveDao;
+import org.oscarehr.common.dao.DemographicCustDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DemographicExtArchiveDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DemographicMergedDao;
 import org.oscarehr.common.dao.PHRVerificationDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Demographic.PatientStatus;
+import org.oscarehr.common.model.DemographicContact;
+import org.oscarehr.common.model.DemographicCust;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.DemographicMerged;
 import org.oscarehr.common.model.PHRVerification;
@@ -66,9 +72,17 @@ public class DemographicManager {
 	private DemographicDao demographicDao;
 	@Autowired
 	private DemographicExtDao demographicExtDao;
+	@Autowired
+	private DemographicCustDao demographicCustDao;
+	@Autowired
+	private DemographicContactDao demographicContactDao;
 	
 	@Autowired
 	private DemographicArchiveDao demographicArchiveDao;
+	@Autowired
+	private DemographicExtArchiveDao demographicExtArchiveDao;
+	@Autowired
+	private DemographicCustArchiveDao demographicCustArchiveDao;
 
 	@Autowired
 	private DemographicMergedDao demographicMergedDao;
@@ -140,6 +154,52 @@ public class DemographicManager {
 
 		return result;
 	}
+	
+	public DemographicCust getDemographicCust(Integer id) {
+		DemographicCust result = null;
+		result = demographicCustDao.find(id);
+		
+		//--- log action ---
+		if (result != null) {
+			LogAction.addLogSynchronous("DemographicManager.getDemographicCust", "id="+ id.toString());
+		}
+		return result;
+	}
+	
+	public void createUpdateDemographicCust(DemographicCust demoCust) {
+		if (demoCust!=null) {
+			//Archive previous demoCust
+			DemographicCust prevCust = demographicCustDao.find(demoCust.getId());
+			if (prevCust!=null) {
+				if (!(prevCust.getAlert().equals(demoCust.getAlert()) &&
+					  prevCust.getMidwife().equals(demoCust.getMidwife()) &&
+					  prevCust.getNurse().equals(demoCust.getNurse()) &&
+					  prevCust.getResident().equals(demoCust.getResident()) &&
+					  prevCust.getNotes().equals(demoCust.getNotes())))
+				{
+					demographicCustArchiveDao.archiveDemographicCust(prevCust);
+				}
+			}
+			
+			demographicCustDao.merge(demoCust);
+		}
+		
+		//--- log action ---
+		LogAction.addLogSynchronous("DemographicManager.createUpdateDemographicCust", "id="+ demoCust.getId());
+	}
+	
+	public List<DemographicContact> getDemographicContacts(Integer id) {
+		List<DemographicContact> result = null;
+		result = demographicContactDao.findActiveByDemographicNo(id);
+		
+		//--- log action ---
+		if (result != null) {
+			for(DemographicContact item:result) {
+				LogAction.addLogSynchronous("DemographicManager.getDemographicContacts", "id="+item.getId() + "(" + id.toString() +")");
+			}
+		}
+		return result;
+	}
 
 	public List<Demographic> getDemographicsByProvider(Provider provider) {
 		List<Demographic> result = demographicDao.getDemographicByProvider(provider.getProviderNo(), true);
@@ -164,7 +224,7 @@ public class DemographicManager {
 		
 		demographic.setPatientStatus(PatientStatus.AC.name());
 		demographicDao.save(demographic);
-
+		
 		if (demographic.getExtras() != null) {
 			for(DemographicExt ext : demographic.getExtras()) {
 				createExtension(ext);
@@ -184,9 +244,13 @@ public class DemographicManager {
 					+ ": " + demographic.getBirthDayAsString());
 		}
 		
+		//Archive previous demo
+		Demographic prevDemo = demographicDao.getDemographicById(demographic.getDemographicNo());
+		demographicArchiveDao.archiveRecord(prevDemo);
+		
+		//save current demo
 		demographicDao.save(demographic);
 		
-		// TODO What needs to be done with extras - delete first, then save?!?, or build another service? 
 		if (demographic.getExtras() != null) {
 			for(DemographicExt ext : demographic.getExtras()) {
 				LogAction.addLogSynchronous("DemographicManager.updateDemographic ext", "id=" + ext.getId() + "(" +  ext.toString() + ")");
@@ -207,10 +271,27 @@ public class DemographicManager {
 	}
 	
 	public void updateExtension(DemographicExt ext) {
+		archiveExtension(ext);
 		demographicExtDao.saveEntity(ext);
 		
 		//--- log action ---
 		LogAction.addLogSynchronous("DemographicManager.updateExtension", "id=" + ext.getId());
+	}
+	
+	public void archiveExtension(DemographicExt ext) {
+		if (ext!=null && ext.getId()!=null) {
+			DemographicExt prevExt = demographicExtDao.find(ext.getId());
+			if (!(ext.getKey().equals(prevExt.getKey()) && ext.getValue().equals(prevExt.getValue()))) {
+				demographicExtArchiveDao.archiveDemographicExt(prevExt);
+			}
+		}
+	}
+	
+	public void createUpdateDemographicContact(DemographicContact demoContact) {
+		demographicContactDao.merge(demoContact);
+		
+		//--- log action ---
+		LogAction.addLogSynchronous("DemographicManager.createUpdateDemographicContact", "id=" + demoContact.getId());
 	}
 
 	public void deleteDemographic(Demographic demographic) {
@@ -228,6 +309,7 @@ public class DemographicManager {
 	}
 
 	public void deleteExtension(DemographicExt ext) {
+		archiveExtension(ext);
 		demographicExtDao.removeDemographicExt(ext.getId());
 		
 		//--- log action ---

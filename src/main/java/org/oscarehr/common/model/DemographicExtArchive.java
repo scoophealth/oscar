@@ -24,15 +24,11 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -59,24 +55,19 @@ public class DemographicExtArchive extends AbstractModel<Integer> implements Ser
 	private java.util.Date dateCreated;
 	private boolean hidden;
 
-	@PrePersist
-	@PreUpdate
-	protected void prePersist() {
-		this.dateCreated = new Date();
-	}
-
 	// constructors
-	public DemographicExtArchive() {
-		// do nothing
-	}
+	public DemographicExtArchive() {}
 
-	public DemographicExtArchive(DemographicExt demographicExt) {
-		if (demographicExt == null) {
+	public DemographicExtArchive(DemographicExt de) {
+		if (de == null) {
 			throw new IllegalArgumentException();
 		}
-		this.demographicNo = demographicExt.getDemographicNo();
-		this.providerNo = demographicExt.getProviderNo();
-		this.key = demographicExt.getKey();
+		this.dateCreated = de.getDateCreated();
+		this.demographicNo = de.getDemographicNo();
+		this.providerNo = de.getProviderNo();
+		this.key = de.getKey();
+		this.value = de.getValue();
+		this.hidden = de.isHidden();
 	}
 
 	/**
