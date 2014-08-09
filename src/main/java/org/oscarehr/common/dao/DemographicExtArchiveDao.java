@@ -28,6 +28,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.DemographicExtArchive;
 import org.springframework.stereotype.Repository;
 
@@ -72,5 +73,11 @@ public class DemographicExtArchiveDao extends AbstractDao<DemographicExtArchive>
 		@SuppressWarnings("unchecked")
 		List<DemographicExtArchive> results = query.getResultList();
 		return results;
+	}
+	
+	public Integer archiveDemographicExt(DemographicExt de) {
+		DemographicExtArchive dea = new DemographicExtArchive(de);
+		persist(dea);
+		return dea.getId();
 	}
 }

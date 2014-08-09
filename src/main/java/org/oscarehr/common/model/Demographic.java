@@ -92,7 +92,6 @@ public class Demographic implements Serializable {
 	private String rosterTerminationReason;
 	private String links;
 	private DemographicExt[] extras;
-
 	private String alias;
 	private String previousAddress;
 	private String children;
