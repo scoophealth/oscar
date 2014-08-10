@@ -204,6 +204,7 @@ if (message != null){
 					<option value="Spire">Spire</option>
                                         <option value="PDFDOC">PDFDOC</option>
 					<option value="BIOTEST">BioTest</option>
+					<option value="CLS">Calgary Lab Service (CLS)</option>
 					<option value="OTHER">Other</option>
 				</select></td>
 			</tr>
