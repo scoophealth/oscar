@@ -64,6 +64,7 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 	private ORU_R01 msg;
 
 	private Terser terser;
+	
 
 	public void init(String hl7Body) throws HL7Exception {
 		Parser p = new PipeParser();
@@ -76,6 +77,9 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 		return "CLS";
 	}
 
+	/**
+	 * This is the OBR date. The MessageHandler architecture uses this to store in hl7TextInfo.obr_date
+	 */
 	public String getMsgDate() {
 		try {
 			return (formatDateTime(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue()));
@@ -370,11 +374,11 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 	}
 
 	public String getHomePhone() {
-		return get("/.PID-13-1");
+		return "";
 	}
 
 	public String getWorkPhone() {
-		return get("/.PID-14");
+		return "";
 	}
 
 	public String getPatientLocation() {
