@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -30,6 +31,9 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	String providerNo=loggedInInfo.getLoggedInProviderNo();
+
   String providername = request.getParameter("providername")!=null?request.getParameter("providername"):"";
   String year = request.getParameter("pyear")!=null?request.getParameter("pyear"):"2002";
   String month = request.getParameter("pmonth")!=null?request.getParameter("pmonth"):"5";
@@ -57,7 +61,7 @@
 
   String defaultServiceType = (String) session.getAttribute("default_servicetype");
   if( defaultServiceType == null ) {
-	ProviderPreference providerPreferenceInDb=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+	ProviderPreference providerPreferenceInDb=ProviderPreferencesUIBean.getProviderPreference(providerNo);
       if (providerPreferenceInDb!=null) {
         defaultServiceType = providerPreference.getDefaultServiceType();
       }

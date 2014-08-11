@@ -253,7 +253,7 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     int endHour=providerPreference2.getEndHour();
     int everyMin=providerPreference2.getEveryMin();
     String defaultServiceType = (String) session.getAttribute("default_servicetype");
-	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+	ProviderPreference providerPreference=ProviderPreferencesUIBean.getProviderPreference(loggedInInfo1.getLoggedInProviderNo());
     if( defaultServiceType == null && providerPreference!=null) {
     	defaultServiceType = providerPreference.getDefaultServiceType();
     }

@@ -33,6 +33,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 public class OcanIarSubmitAction extends DispatchAction {
@@ -40,9 +42,11 @@ public class OcanIarSubmitAction extends DispatchAction {
 	Logger logger = MiscUtils.getLogger();
 	
 	public ActionForward submit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		Facility facility=loggedInInfo.getCurrentFacility();
 		
 		String assessmentid=request.getParameter("account");
-		int submissionId_full = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("FULL",assessmentid ));
+		int submissionId_full = OcanReportUIBean.sendSubmissionToIAR(facility,OcanReportUIBean.generateOCANSubmission(facility.getId(),"FULL",assessmentid ));
 		
 		try {
 			response.getWriter().println(submissionId_full);
@@ -50,7 +54,7 @@ public class OcanIarSubmitAction extends DispatchAction {
 			logger.error("Error",e);
 		}
 		
-		int submissionId_self = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("SELF",assessmentid));
+		int submissionId_self = OcanReportUIBean.sendSubmissionToIAR(facility,OcanReportUIBean.generateOCANSubmission(facility.getId(),"SELF",assessmentid));
 		
 		try {
 			response.getWriter().println(submissionId_self);
@@ -58,7 +62,7 @@ public class OcanIarSubmitAction extends DispatchAction {
 			logger.error("Error:",e);
 		}
 		
-		int submissionId_core = OcanReportUIBean.sendSubmissionToIAR(OcanReportUIBean.generateOCANSubmission("CORE",assessmentid));
+		int submissionId_core = OcanReportUIBean.sendSubmissionToIAR(facility,OcanReportUIBean.generateOCANSubmission(facility.getId(),"CORE",assessmentid));
 		
 		try {
 			response.getWriter().println(submissionId_core);

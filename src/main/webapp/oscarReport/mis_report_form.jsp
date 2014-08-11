@@ -37,9 +37,9 @@
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");
 	ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
-	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	
 	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.currentFacility.getId());
 	List<Program> programs=programDao.getProgramsByFacilityId(loggedInInfo.currentFacility.getId());
@@ -199,7 +199,7 @@
 			if ("functionalCentre".equals(reportBy))
 			{
 				String functionalCentreId=request.getParameter("functionalCentreId");
-				misReportUIBean=new MisReportUIBean(functionalCentreId, startDate, actualEndDate);
+				misReportUIBean=new MisReportUIBean(loggedInInfo,functionalCentreId, startDate, actualEndDate);
 			}
 			else if ("programs".equals(reportBy))
 			{

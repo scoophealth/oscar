@@ -47,6 +47,7 @@
 	scope="session" />
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
   OscarProperties props = OscarProperties.getInstance();
 
@@ -173,7 +174,6 @@
 
    	apptMainBean.doCommand(request); //store request to a help class object Dict - function&params
 
-	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
    	//--- add integrator results ---
 
    	boolean searchIntegrator = false;
@@ -188,7 +188,7 @@
 		try{
 			matchingDemographicParameters.setMaxEntriesToReturn(15);
 			matchingDemographicParameters.setMinScore(7);
-			List<MatchingDemographicTransferScore> integratorSearchResults=DemographicSearchHelper.getIntegratedSearchResults(matchingDemographicParameters);
+			List<MatchingDemographicTransferScore> integratorSearchResults=DemographicSearchHelper.getIntegratedSearchResults(loggedInInfo, matchingDemographicParameters);
 
 			MiscUtils.getLogger().debug("Integrator search results : "+(integratorSearchResults==null?"null":String.valueOf(integratorSearchResults.size())));
 			request.setAttribute("integratorSearchResults", integratorSearchResults);

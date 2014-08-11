@@ -52,10 +52,10 @@ public final class EfmpatientformlistSendPhrAction {
 	public EfmpatientformlistSendPhrAction(HttpServletRequest request) {
 		localUri = getEformRequestUrl(request);
 
+		// this really doesn't look thread safe, although I have no proof of it so I'll just note it as such.
 		clientId = request.getParameter("clientId");
-
-		LoggedInInfo loggedInfo = LoggedInInfo.loggedInInfo.get();
-		providerNo = loggedInfo.loggedInProvider.getProviderNo();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		providerNo=loggedInInfo.getLoggedInProviderNo();
 
 		logger.debug(ReflectionToStringBuilder.toString(this));
 	}

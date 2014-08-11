@@ -23,6 +23,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="org.oscarehr.PMmodule.model.Program"%>
@@ -38,6 +39,7 @@
 <%@page import="org.oscarehr.web.Cds4ReportUIBean"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	ProviderManager2 providerManager = (ProviderManager2) SpringUtils.getBean("providerManager2");
 	ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 
@@ -66,7 +68,7 @@
 		}
 	}
 			
-	Cds4ReportUIBean cds4ReportUIBean=new Cds4ReportUIBean(functionalCentreId, startDate, endDateInclusive, providerIdList, programIds);
+	Cds4ReportUIBean cds4ReportUIBean=new Cds4ReportUIBean(loggedInInfo, functionalCentreId, startDate, endDateInclusive, providerIdList, programIds);
 	
 	List<CdsFormOption> cdsFormOptions=Cds4ReportUIBean.getCdsFormOptions();
 	

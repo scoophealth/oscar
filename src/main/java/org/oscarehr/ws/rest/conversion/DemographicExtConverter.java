@@ -24,6 +24,7 @@
 package org.oscarehr.ws.rest.conversion;
 
 import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.to.model.DemographicExtTo1;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +32,7 @@ import org.springframework.stereotype.Component;
 public class DemographicExtConverter extends AbstractConverter<DemographicExt, DemographicExtTo1> {
 
 	@Override
-	public DemographicExt getAsDomainObject(DemographicExtTo1 t) throws ConversionException {
+	public DemographicExt getAsDomainObject(LoggedInInfo loggedInInfo,DemographicExtTo1 t) throws ConversionException {
 		DemographicExt d = new DemographicExt();
 		
 		d.setDemographicNo(t.getDemographicNo());

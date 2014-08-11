@@ -38,12 +38,13 @@ import javax.xml.validation.SchemaFactory;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.model.Hl7TextInfo;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.OscarAuditLogger;
 import org.oscarehr.util.SpringUtils;
 import org.xml.sax.InputSource;
-import ca.ssha._2005.hial.Response;
 
+import ca.ssha._2005.hial.Response;
 import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.OLISHL7Handler;
@@ -88,13 +89,13 @@ public class OLISUtils {
 	
 	
 	
-	public static boolean isDuplicate(String msg) {
+	public static boolean isDuplicate(LoggedInInfo loggedInInfo, String msg) {
 		oscar.oscarLab.ca.all.parsers.OLISHL7Handler h = (oscar.oscarLab.ca.all.parsers.OLISHL7Handler) Factory.getHandler("OLIS_HL7", msg);
-		return isDuplicate(h,msg);
+		return isDuplicate(loggedInInfo, h,msg);
 	}
 	
 	
-	public static boolean isDuplicate(OLISHL7Handler h,String msg) {
+	public static boolean isDuplicate(LoggedInInfo loggedInInfo, OLISHL7Handler h,String msg) {
 		
 		String sendingFacility = h.getPlacerGroupNumber();//getPerformingFacilityNameOnly();
 		logger.debug("SENDING FACILITY: " +sendingFacility);
@@ -102,11 +103,11 @@ public class OLISUtils {
 		String hin = h.getHealthNum();
 
 	
-		return isDuplicate(sendingFacility,accessionNumber,msg,hin);
+		return isDuplicate(loggedInInfo, sendingFacility,accessionNumber,msg,hin);
 	}
 	
 	
-	public static boolean isDuplicate(String sendingFacility, String accessionNumber,String msg,String hin){
+	public static boolean isDuplicate(LoggedInInfo loggedInInfo, String sendingFacility, String accessionNumber,String msg,String hin){
 		logger.debug("Facility "+sendingFacility+" Accession # "+accessionNumber);
 
 		if(sendingFacility != null &&  sendingFacility.equals(CMLIndentifier)){ //.startsWith("CML")){ // CML HealthCare Inc.
@@ -121,7 +122,7 @@ public class OLISUtils {
 					//direct
 				if(dupResultAccessionNum.equals(accessionNumber.split("-")[0])) {
 						if(hin.equals(dupResult.getHealthNumber())) {
-							OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate CML lab skipped - accession " + accessionNumber + "\n" + msg);
+							OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate CML lab skipped - accession " + accessionNumber + "\n" + msg);
 							return true;
 						}
 				}
@@ -135,7 +136,7 @@ public class OLISUtils {
 				
 				if(dupResult.getAccessionNumber().equals(accessionNumber.substring(5))) {
 					if(hin.equals(dupResult.getHealthNumber())) {
-						OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate LifeLabs lab skipped - accession " + accessionNumber + "\n" + msg);
+						OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate LifeLabs lab skipped - accession " + accessionNumber + "\n" + msg);
 						return true;
 					}
 				}
@@ -152,7 +153,7 @@ public class OLISUtils {
 
 				if(dupResult.getAccessionNumber().equals(directAcc)) {
 					if(hin.equals(dupResult.getHealthNumber())) {
-						OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate GAMMA lab skipped - accession " + accessionNumber + "\n" + msg);
+						OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate GAMMA lab skipped - accession " + accessionNumber + "\n" + msg);
 						return true;
 					}
 				}
@@ -165,7 +166,7 @@ public class OLISUtils {
 				
 				if(dupResult.getAccessionNumber().equals(accessionNumber.substring(5))) {
 					if(hin.equals(dupResult.getHealthNumber())) {
-						OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate AlphaLabs lab skipped - accession " + accessionNumber + "\n" + msg);
+						OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate AlphaLabs lab skipped - accession " + accessionNumber + "\n" + msg);
 						return true;
 					}
 				}

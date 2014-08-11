@@ -39,16 +39,18 @@ import javax.xml.parsers.DocumentBuilderFactory;
 //*import ca.uhn.hl7v2.HL7Exception;
 //*import ca.uhn.hl7v2.model.Segment;
 
+
 //*import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.DynamicHapiLoaderUtils;
+import org.oscarehr.util.LoggedInInfo;
 //*import org.oscarehr.util.DbConnectionFilter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.NamedNodeMap;
-
 import org.w3c.dom.Node;
+
 import oscar.oscarLab.ca.all.parsers.DefaultGenericHandler;
 import oscar.oscarLab.ca.all.upload.MessageUploader;
 
@@ -111,7 +113,7 @@ public class IHAHandler extends DefaultGenericHandler implements MessageHandler 
     }
 
     @Override
-	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
+	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
         Document xmlDoc = getXML(fileName);
         Node          node;
         Element       element;

@@ -37,7 +37,6 @@ import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.dao.ProviderPreferenceDao;
 import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EncounterForm;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -51,7 +50,10 @@ public final class ProviderPreferencesUIBean {
 	private static final EncounterFormDao encounterFormDao = (EncounterFormDao) SpringUtils.getBean("encounterFormDao");
 
 	public static final ProviderPreference updateOrCreateProviderPreferences(HttpServletRequest request) {
-		ProviderPreference providerPreference = getLoggedInProviderPreference();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
+		ProviderPreference providerPreference = getProviderPreference(providerNo);
 
 		// update preferences based on request parameters
 		String temp;
@@ -174,14 +176,12 @@ public final class ProviderPreferencesUIBean {
 	 * Some day we'll fix this so preferences are created when providers are created, it was suppose to be that way
 	 * but something got missed somewhere.
 	 */
-	public static ProviderPreference getLoggedInProviderPreference() {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		Provider provider = loggedInInfo.loggedInProvider;
+	public static ProviderPreference getProviderPreference(String providerNo) {
 
-		ProviderPreference providerPreference = providerPreferenceDao.find(provider.getProviderNo());
+		ProviderPreference providerPreference = providerPreferenceDao.find(providerNo);
 		if (providerPreference == null) {
 			providerPreference = new ProviderPreference();
-			providerPreference.setProviderNo(provider.getProviderNo());
+			providerPreference.setProviderNo(providerNo);
 			providerPreferenceDao.persist(providerPreference);
 		}
 
@@ -200,13 +200,13 @@ public final class ProviderPreferencesUIBean {
 		return (results);
 	}
 
-	public static Collection<String> getCheckedEncounterFormNames() {
-		ProviderPreference providerPreference = getLoggedInProviderPreference();
+	public static Collection<String> getCheckedEncounterFormNames(String providerNo) {
+		ProviderPreference providerPreference = getProviderPreference(providerNo);
 		return (providerPreference.getAppointmentScreenForms());
 	}
 
-	public static Collection<Integer> getCheckedEFormIds() {
-		ProviderPreference providerPreference = getLoggedInProviderPreference();
+	public static Collection<Integer> getCheckedEFormIds(String providerNo) {
+		ProviderPreference providerPreference = getProviderPreference(providerNo);
 		return (providerPreference.getAppointmentScreenEForms());
 	}
 	
@@ -214,14 +214,14 @@ public final class ProviderPreferencesUIBean {
 		return providerPreferenceDao.find(providerNo);	
 	}
 
-	public static Collection<ProviderPreference.QuickLink> getQuickLinks() {
-		ProviderPreference providerPreference = getLoggedInProviderPreference();
+	public static Collection<ProviderPreference.QuickLink> getQuickLinks(String providerNo) {
+		ProviderPreference providerPreference = getProviderPreference(providerNo);
 
 		return (providerPreference.getAppointmentScreenQuickLinks());
 	}
 	
-	public static void addQuickLink(String name, String url) {
-		ProviderPreference providerPreference = getLoggedInProviderPreference();
+	public static void addQuickLink(String providerNo, String name, String url) {
+		ProviderPreference providerPreference = getProviderPreference(providerNo);
 
 		Collection<ProviderPreference.QuickLink> quickLinks=providerPreference.getAppointmentScreenQuickLinks();
 		
@@ -234,8 +234,8 @@ public final class ProviderPreferencesUIBean {
 		providerPreferenceDao.merge(providerPreference);
 	}
 
-	public static void removeQuickLink(String name) {
-		ProviderPreference providerPreference = getLoggedInProviderPreference();
+	public static void removeQuickLink(String providerNo, String name) {
+		ProviderPreference providerPreference = getProviderPreference(providerNo);
 
 		Collection<ProviderPreference.QuickLink> quickLinks=providerPreference.getAppointmentScreenQuickLinks();
 

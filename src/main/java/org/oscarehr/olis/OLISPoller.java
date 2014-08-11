@@ -31,6 +31,7 @@ import org.oscarehr.olis.dao.OLISProviderPreferencesDao;
 import org.oscarehr.olis.dao.OLISSystemPreferencesDao;
 import org.oscarehr.olis.model.OLISProviderPreferences;
 import org.oscarehr.olis.model.OLISSystemPreferences;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -58,7 +59,7 @@ public class OLISPoller {
 		super();
 	}
 
-	public static void startAutoFetch() {
+	public static void startAutoFetch(LoggedInInfo loggedInInfo) {
 	    OLISPoller olisPoller = new OLISPoller();
 		logger.info("===== OLIS FETCH INITIATED ...");
 
@@ -119,7 +120,7 @@ public class OLISPoller {
 				}
 				List<String> resultsList = olisPoller.parsePollResults(response);
 				if (resultsList.size() == 0) { continue; }
-				olisPoller.importResults(resultsList);
+				olisPoller.importResults(loggedInInfo, resultsList);
 				
 				Pattern p = Pattern.compile("@OBR\\.22\\^(\\d{14}-\\d{4})~");
 				Matcher matcher = p.matcher(response);
@@ -173,7 +174,7 @@ public class OLISPoller {
 			}
 			List<String> resultsList = olisPoller.parsePollResults(response);
 			if (resultsList.size() == 0) { return; }
-			olisPoller.importResults(resultsList);
+			olisPoller.importResults(loggedInInfo, resultsList);
 			
 			Pattern p = Pattern.compile("@OBR\\.22\\^(\\d{14}-\\d{4})~");
 			Matcher matcher = p.matcher(response);
@@ -224,7 +225,7 @@ public class OLISPoller {
 		return null;
 	}
 
-	private void importResults(List<String> resultList) {
+	private void importResults(LoggedInInfo loggedInInfo, List<String> resultList) {
 		for (String uuidToAdd: resultList) {
 	
 			String fileLocation = System.getProperty("java.io.tmpdir") + "/olis_" + uuidToAdd + ".response";
@@ -235,7 +236,7 @@ public class OLISPoller {
 				InputStream is = new FileInputStream(fileLocation);
 				int check = FileUploadCheck.addFile(file.getName(), is, "0");
 				if (check != FileUploadCheck.UNSUCCESSFUL_SAVE) {
-					if (msgHandler.parse("OLIS_HL7",fileLocation, check,null) != null) {
+					if (msgHandler.parse(loggedInInfo, "OLIS_HL7",fileLocation, check,null) != null) {
 						logger.info("Lab successfully added.");
 					} else {
 						logger.info("Error adding lab.");

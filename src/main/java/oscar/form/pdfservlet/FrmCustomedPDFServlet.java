@@ -53,6 +53,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.util.LocaleUtils;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.web.PrescriptionQrCodeUIBean;
 
@@ -411,6 +412,9 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
 	protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req, final ServletContext ctx) throws DocumentException {
 		logger.debug("***in generatePDFDocumentBytes2 FrmCustomedPDFServlet.java***");
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(req);
+		
 		// added by vic, hsfo
 		Enumeration<String> em = req.getParameterNames();
 		while (em.hasMoreElements()) {
@@ -595,7 +599,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			}
 
 			// render QrCode
-			if (PrescriptionQrCodeUIBean.isPrescriptionQrCodeEnabledForCurrentProvider())
+			if (PrescriptionQrCodeUIBean.isPrescriptionQrCodeEnabledForProvider(loggedInInfo.getLoggedInProviderNo()))
 			{
 				Integer scriptId=Integer.parseInt(req.getParameter("scriptId"));
 				byte[] qrCodeImage=PrescriptionQrCodeUIBean.getPrescriptionHl7QrCodeImage(scriptId);

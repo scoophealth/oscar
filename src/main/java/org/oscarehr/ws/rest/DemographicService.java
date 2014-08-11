@@ -252,7 +252,7 @@ public class DemographicService extends AbstractServiceImpl {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public DemographicTo1 createDemographicData(DemographicTo1 data) {
-		Demographic demographic = demoConverter.getAsDomainObject(data);
+		Demographic demographic = demoConverter.getAsDomainObject(getLoggedInInfo(),data);
 		demographicManager.createDemographic(demographic);
 	    return demoConverter.getAsTransferObject(demographic);
 	}
@@ -268,6 +268,7 @@ public class DemographicService extends AbstractServiceImpl {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public DemographicTo1 updateDemographicData(DemographicTo1 data) {
+
 		//update demographiccust
 		DemographicCust demoCust = demographicManager.getDemographicCust(data.getDemographicNo());
 		if (demoCust==null) {
@@ -281,7 +282,7 @@ public class DemographicService extends AbstractServiceImpl {
 		demoCust.setNotes(data.getNotes());
 		demographicManager.createUpdateDemographicCust(demoCust);
 		
-		Demographic demographic = demoConverter.getAsDomainObject(data);
+		Demographic demographic = demoConverter.getAsDomainObject(getLoggedInInfo(),data);
 	    demographicManager.updateDemographic(demographic);
 	    
 	    return demoConverter.getAsTransferObject(demographic);

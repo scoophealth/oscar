@@ -26,6 +26,7 @@ package org.oscarehr.ws.rest.conversion;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.TicklerDao;
 import org.oscarehr.common.model.Tickler;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.to.model.TicklerTo1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class TicklerConverter extends AbstractConverter<Tickler, TicklerTo1> {
 	
 	
 	@Override
-	public Tickler getAsDomainObject(TicklerTo1 t) throws ConversionException {
+	public Tickler getAsDomainObject(LoggedInInfo loggedInInfo,TicklerTo1 t) throws ConversionException {
 		Tickler d = new Tickler();
 		d.setCreator(t.getCreator());
 		d.setDemographicNo(t.getDemographicNo());

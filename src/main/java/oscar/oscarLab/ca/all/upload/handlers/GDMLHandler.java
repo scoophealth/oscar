@@ -39,6 +39,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.model.Hl7TextInfo;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.OscarAuditLogger;
 import org.oscarehr.util.SpringUtils;
 
@@ -53,7 +54,7 @@ public class GDMLHandler implements MessageHandler {
 	Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao)SpringUtils.getBean("hl7TextInfoDao");
 	
 
-	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
+	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
 
 		int i = 0;
 		RouteReportResults routeResults;
@@ -62,7 +63,7 @@ public class GDMLHandler implements MessageHandler {
 			for (i = 0; i < messages.size(); i++) {
 
 				String msg = messages.get(i);
-				if(isDuplicate(msg)) {
+				if(isDuplicate(loggedInInfo, msg)) {
 					return ("success");
 				}
 				
@@ -131,7 +132,7 @@ public class GDMLHandler implements MessageHandler {
 		}
 	}
 
-	private boolean isDuplicate(String msg) {
+	private boolean isDuplicate(LoggedInInfo loggedInInfo, String msg) {
 		//OLIS requirements - need to see if this is a duplicate
 		oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler("GDML", msg);
 		//if final		
@@ -146,13 +147,13 @@ public class GDMLHandler implements MessageHandler {
 			for(Hl7TextInfo dupResult:dupResults) {
 				if(dupResult.equals(fullAcc)) {
 					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
-					OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
+					OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
 					return true;
 					//}
 				}
 				if(dupResult.getAccessionNumber().length()>4 && dupResult.getAccessionNumber().substring(4).equals(acc)) {
 					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
-					OscarAuditLogger.getInstance().log("Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
+					OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
 					return true;
 					//}
 				}
