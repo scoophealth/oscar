@@ -223,6 +223,8 @@ public class RenalAction extends DispatchAction {
 	}
 	
 	public ActionForward generatePatientLetter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		String demographicNo = request.getParameter("demographic_no");
 		response.setContentType("text/html");
 		try {
@@ -250,7 +252,7 @@ public class RenalAction extends DispatchAction {
 		}catch(IOException e) {
 			MiscUtils.getLogger().error("Error",e);
 		} finally {
-			OscarAuditLogger.getInstance().log("create", "CkdPatientLetter", Integer.valueOf(demographicNo), "");
+			OscarAuditLogger.getInstance().log(loggedInInfo, "create", "CkdPatientLetter", Integer.valueOf(demographicNo), "");
 		}
         
 		return null;
@@ -278,12 +280,14 @@ public class RenalAction extends DispatchAction {
 			request.getSession().setAttribute("labReq10"+demographicNo,p);
 		}
 	
-		OscarAuditLogger.getInstance().log("create", "CkdLabReq", demographicNo, "");
+		OscarAuditLogger.getInstance().log(loggedInInfo, "create", "CkdLabReq", demographicNo, "");
 
 		return null;
 	}
 	
 	public ActionForward sendPatientLetterAsEmail(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		String demographicNo = request.getParameter("demographic_no");
 		String error = "";
 		boolean success=true;
@@ -342,8 +346,8 @@ public class RenalAction extends DispatchAction {
 				success=false;
 				error=e.getMessage();
 			} finally {
-				OscarAuditLogger.getInstance().log("create", "CkdPatientLetter", Integer.valueOf(demographicNo), "");
-				OscarAuditLogger.getInstance().log("email", "CkdPatientLetter", Integer.valueOf(demographicNo), "");
+				OscarAuditLogger.getInstance().log(loggedInInfo, "create", "CkdPatientLetter", Integer.valueOf(demographicNo), "");
+				OscarAuditLogger.getInstance().log(loggedInInfo, "email", "CkdPatientLetter", Integer.valueOf(demographicNo), "");
 			}
 		}
 		json.put("success", String.valueOf(success));

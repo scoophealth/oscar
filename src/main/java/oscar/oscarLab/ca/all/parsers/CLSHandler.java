@@ -35,6 +35,7 @@ import java.util.Date;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarLab.ca.all.upload.MessageUploader;
 import oscar.util.ConversionUtils;
@@ -635,7 +636,7 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 	}
 
 	@Override
-	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
+	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
 		String hl7content = null;
 		InputStream is = null;
 		try {

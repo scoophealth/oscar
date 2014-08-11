@@ -49,6 +49,7 @@ import org.oscarehr.common.model.ProviderStudy;
 import org.oscarehr.common.model.ProviderStudyPK;
 import org.oscarehr.common.model.Study;
 import org.oscarehr.common.model.StudyData;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.OscarAuditLogger;
 import org.oscarehr.util.SpringUtils;
@@ -61,7 +62,9 @@ public class ManageStudyAction extends DispatchAction {
 	
 	public ActionForward saveUpdateStudy(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) {
-		
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		StudyDao studyDao = (StudyDao)SpringUtils.getBean(StudyDao.class);
 		String studyId = request.getParameter("studyId");
 		
@@ -79,7 +82,7 @@ public class ManageStudyAction extends DispatchAction {
 			study.setTimestamp(new Date());
 			studyDao.persist(study);
 			
-			auditLogger.log("study", "create", "created study " + study.getId());
+			auditLogger.log(loggedInInfo, "study", "create", "created study " + study.getId());
 		}
 		else {			
 			Study study = studyDao.find(Integer.parseInt(studyId));
@@ -93,7 +96,7 @@ public class ManageStudyAction extends DispatchAction {
 			study.setTimestamp(new Date());
 			studyDao.merge(study);
 			
-			auditLogger.log("study", "update", "updated study " + study.getId());
+			auditLogger.log(loggedInInfo, "study", "update", "updated study " + study.getId());
 		}
 		
 		 String resultName = isNewStudy ? "create" : "update";
@@ -103,6 +106,8 @@ public class ManageStudyAction extends DispatchAction {
 	public ActionForward setStudyStatus(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) {
 		
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		StudyDao studyDao = (StudyDao)SpringUtils.getBean(StudyDao.class);
 		String studyId = request.getParameter("studyId");
 		String studyStatus = request.getParameter("studyStatus");
@@ -115,7 +120,7 @@ public class ManageStudyAction extends DispatchAction {
 			studyDao.merge(study);
 			
 			OscarAuditLogger auditLogger = OscarAuditLogger.getInstance();
-			auditLogger.log("study", "status", "changed status to " + study.getCurrent1());
+			auditLogger.log(loggedInInfo, "study", "status", "changed status to " + study.getCurrent1());
 		}
 		
 		return null;
@@ -124,6 +129,8 @@ public class ManageStudyAction extends DispatchAction {
 	public ActionForward AddToStudy(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) {
 		
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		String[] selectArray = (String[])request.getAttribute("selectArray");
 		if( !selectArray[0].equals("demographic_no") ) {
 			request.setAttribute("error", "You must select demographic_no");
@@ -153,7 +160,7 @@ public class ManageStudyAction extends DispatchAction {
 					demographicStudy.setTimestamp(new Date());
 					
 					demographicStudyDao.persist(demographicStudy);
-					auditLogger.log("study", "demographic", demographicStudyPK.getDemographicNo(), "added demographic to study #" + studyId);
+					auditLogger.log(loggedInInfo, "study", "demographic", demographicStudyPK.getDemographicNo(), "added demographic to study #" + studyId);
 				}
 			}
 		
@@ -163,7 +170,9 @@ public class ManageStudyAction extends DispatchAction {
 	
 	public ActionForward RemoveFromStudy(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) {
-		
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		String studyId = request.getParameter("studyId");
 		Integer studyIdAsInt = ConversionUtils.fromIntString(studyId);
 		String removeType = request.getParameter("submit");
@@ -190,7 +199,7 @@ public class ManageStudyAction extends DispatchAction {
 				if( demographicStudyDao.remove(demographicStudyPK) ) {
 				
 					studyDataDao.removeByDemoAndStudy(demoIdAsInt, studyIdAsInt);
-					auditLogger.log("study", "demographic", demoIdAsInt, "removed demographic from study #" + studyId);
+					auditLogger.log(loggedInInfo, "study", "demographic", demoIdAsInt, "removed demographic from study #" + studyId);
 				}
 			}			
 		}
@@ -205,7 +214,7 @@ public class ManageStudyAction extends DispatchAction {
 				providerStudyPK.setStudyNo(Integer.parseInt(studyId));
 				
 				providerStudyDao.remove(providerStudyPK);
-				auditLogger.log("study", "provider", "removed provider " + providerStudyPK.getProviderNo() +" from study # " + providerStudyPK.getStudyNo());
+				auditLogger.log(loggedInInfo, "study", "provider", "removed provider " + providerStudyPK.getProviderNo() +" from study # " + providerStudyPK.getStudyNo());
 			}			
 		}
 		

@@ -25,8 +25,9 @@
 --%>
 <%
  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
-  LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-  String providerNo=loggedInInfo.loggedInProvider.getProviderNo();
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	String providerNo=loggedInInfo.getLoggedInProviderNo();
+   			
 
   String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
@@ -213,7 +214,7 @@ function showHideERxPref() {
 </head>
 
 <%
-	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+	ProviderPreference providerPreference=ProviderPreferencesUIBean.getProviderPreference(providerNo);
 
 	if (providerPreference == null) {
 	    providerPreference = new ProviderPreference();
@@ -406,7 +407,7 @@ function showHideERxPref() {
 				</td>
 				<td class="preferenceValue">
 					<%
-	            		boolean checked=PrescriptionQrCodeUIBean.isPrescriptionQrCodeEnabledForCurrentProvider();
+	            		boolean checked=PrescriptionQrCodeUIBean.isPrescriptionQrCodeEnabledForProvider(providerNo);
 	            	%>
 	            	<input type="checkbox" name="prescriptionQrCodes" <%=checked?"checked=\"checked\"":""%> />
 	            </td>
@@ -429,7 +430,7 @@ function showHideERxPref() {
 					<div style="height:10em;border:solid grey 1px;overflow:auto;white-space:nowrap;width:45em">
 					<%
 						List<EncounterForm> encounterForms=ProviderPreferencesUIBean.getAllEncounterForms();
-						Collection<String> checkedEncounterFormNames=ProviderPreferencesUIBean.getCheckedEncounterFormNames();
+						Collection<String> checkedEncounterFormNames=ProviderPreferencesUIBean.getCheckedEncounterFormNames(providerNo);
 						for(EncounterForm encounterForm : encounterForms)
 						{
 							String nameEscaped=StringEscapeUtils.escapeHtml(encounterForm.getFormName());
@@ -451,7 +452,7 @@ function showHideERxPref() {
 					<div style="height:10em;border:solid grey 1px;overflow:auto;white-space:nowrap;width:45em">
 					<%
 						List<EForm> eforms=ProviderPreferencesUIBean.getAllEForms();
-						Collection<Integer> checkedEFormIds=ProviderPreferencesUIBean.getCheckedEFormIds();
+						Collection<Integer> checkedEFormIds=ProviderPreferencesUIBean.getCheckedEFormIds(providerNo);
 						for(EForm eform : eforms)
 						{
 							String checkedString=(checkedEFormIds.contains(eform.getId())?"checked=\"checked\"":"");
@@ -471,7 +472,7 @@ function showHideERxPref() {
 				<td class="preferenceValue">
 					<div style="height:10em;border:solid grey 1px;overflow:auto;white-space:nowrap;width:45em">
 					<%
-						Collection<ProviderPreference.QuickLink> quickLinks=ProviderPreferencesUIBean.getQuickLinks();
+						Collection<ProviderPreference.QuickLink> quickLinks=ProviderPreferencesUIBean.getQuickLinks(providerNo);
 						for(ProviderPreference.QuickLink quickLink : quickLinks)
 						{
 							%>

@@ -22,6 +22,7 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.*"%>
 <%@page import="org.caisi.dao.*"%>
 <%@page import="org.caisi.model.*"%>
@@ -38,11 +39,13 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 	String submissionId = request.getParameter("submissionId");
 	OcanSubmissionLog log = null;
 	
 	if(submissionId != null) {
-		log = OcanReportUIBean.getOcanSubmissionLog(submissionId);	
+		log = OcanReportUIBean.getOcanSubmissionLog(loggedInInfo.getCurrentFacility().getId(), submissionId);	
 	}
 	
 	java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");

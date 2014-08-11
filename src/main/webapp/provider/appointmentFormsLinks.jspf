@@ -4,6 +4,7 @@
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 
 <%
+	LoggedInInfo loggedInInfo3=LoggedInInfo.getLoggedInInfoFromSession(request);
 	if (providerPreference!=null)
 	{
 		Collection<String> formNames=providerPreference.getAppointmentScreenForms();
@@ -12,7 +13,7 @@
 		
 		for (String formNameTemp : formNamesList)
 		{
-			String trimmedEscapedLinkName=StringEscapeUtils.escapeHtml(AppointmentProviderAdminDayUIBean.getLengthLimitedLinkName(formNameTemp));
+			String trimmedEscapedLinkName=StringEscapeUtils.escapeHtml(AppointmentProviderAdminDayUIBean.getLengthLimitedLinkName(loggedInInfo3, formNameTemp));
 			String escapedLinkName=StringEscapeUtils.escapeHtml(formNameTemp);
 			%>
 				|<a href=# onClick='popupPage2("../form/forwardshortcutname.jsp?formname=<%=escapedLinkName%>&amp;demographic_no=<%=demographic_no%>&amp;appointmentNo=<%=appointment_no%>")' title='<%=escapedLinkName%>'><%=trimmedEscapedLinkName%></a>
@@ -23,7 +24,7 @@
 		for (Integer eFormIdTemp : eFormIds)
 		{
 			EForm eForm=AppointmentProviderAdminDayUIBean.getEForms(eFormIdTemp);
-			String trimmedEscapedLinkName=StringEscapeUtils.escapeHtml(AppointmentProviderAdminDayUIBean.getLengthLimitedLinkName(eForm.getFormName()));
+			String trimmedEscapedLinkName=StringEscapeUtils.escapeHtml(AppointmentProviderAdminDayUIBean.getLengthLimitedLinkName(loggedInInfo3, eForm.getFormName()));
 			String escapedLinkName=StringEscapeUtils.escapeHtml(eForm.getFormName());
 			%>
 				|<a href=# onClick='popupPage2("<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=eFormIdTemp%>&amp;demographic_no=<%=demographic_no%>&amp;appointment=<%=appointment_no%>")' title='<%=escapedLinkName%>'><%=trimmedEscapedLinkName%></a>
@@ -33,7 +34,7 @@
 		Collection<ProviderPreference.QuickLink> quickLinks=providerPreference.getAppointmentScreenQuickLinks();
 		for (ProviderPreference.QuickLink quickLink : quickLinks)
 		{
-			String trimmedEscapedLinkName=StringEscapeUtils.escapeHtml(AppointmentProviderAdminDayUIBean.getLengthLimitedLinkName(quickLink.getName()));
+			String trimmedEscapedLinkName=StringEscapeUtils.escapeHtml(AppointmentProviderAdminDayUIBean.getLengthLimitedLinkName(loggedInInfo3, quickLink.getName()));
 			
 			String escapedLinkUrl=quickLink.getUrl();
 			escapedLinkUrl=escapedLinkUrl.replaceAll("\\$\\{contextPath\\}", request.getContextPath());

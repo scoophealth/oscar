@@ -30,6 +30,7 @@ import java.io.File;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.upload.MessageUploader;
@@ -40,7 +41,7 @@ import ca.uhn.hl7v2.model.v26.message.ADT_A09;
 public class OscarToOscarHl7V2Handler implements MessageHandler {
 	private Logger logger = MiscUtils.getLogger();
 
-	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
+	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
 		
 		try {
 	        byte[] dataBytes=FileUtils.readFileToByteArray(new File(fileName));

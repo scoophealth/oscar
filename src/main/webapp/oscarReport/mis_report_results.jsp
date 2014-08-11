@@ -22,6 +22,7 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.List"%>
@@ -30,6 +31,8 @@
 <%@page import="org.oscarehr.web.MisReportUIBean.DataRow"%>
 <%@page import="java.util.GregorianCalendar"%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+   		 
 	int startYear = Integer.parseInt(request.getParameter("startYear"));
 	int startMonth = Integer.parseInt(request.getParameter("startMonth"));
 	int endYear = Integer.parseInt(request.getParameter("endYear"));
@@ -46,7 +49,7 @@
 	if ("functionalCentre".equals(reportBy))
 	{
 		String functionalCentreId=request.getParameter("functionalCentreId");
-		misReportUIBean=new MisReportUIBean(functionalCentreId, startDate, actualEndDate);
+		misReportUIBean=new MisReportUIBean(loggedInInfo, functionalCentreId, startDate, actualEndDate);
 	}
 	else if ("programs".equals(reportBy))
 	{

@@ -119,12 +119,14 @@ public final class Cds4ReportUIBean {
 	private GregorianCalendar endDateExclusive=new GregorianCalendar();
 	private HashSet<String> providerIdsToReportOn=null;
 	private HashSet<Integer> programIdsToReportOn=null;
+	private LoggedInInfo loggedInInfo=null;
 	
 	/**
 	 * End dates should be treated as inclusive.
 	 */
-	public Cds4ReportUIBean(String functionalCentreId, Date startDate, Date endDateInclusive, String[] providerIdList, HashSet<Integer> programIds) {
+	public Cds4ReportUIBean(LoggedInInfo loggedInInfo, String functionalCentreId, Date startDate, Date endDateInclusive, String[] providerIdList, HashSet<Integer> programIds) {
 
+		this.loggedInInfo=loggedInInfo;
 		this.startDate.setTime(startDate);
 		this.endDateExclusive.setTime(endDateInclusive);
 		this.endDateExclusive.add(GregorianCalendar.DAY_OF_YEAR, 1); // add 1 to make exclusive
@@ -169,7 +171,6 @@ public final class Cds4ReportUIBean {
 	private SingleMultiAdmissions getAdmissionsSortedSingleMulti() {
 		SingleMultiAdmissions singleMultiAdmissions = new SingleMultiAdmissions();
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		List<CdsClientForm> cdsForms = cdsClientFormDao.findSignedCdsForms(loggedInInfo.currentFacility.getId(), "4", startDate.getTime(), endDateExclusive.getTime());
 		logger.debug("valid cds form count, "+loggedInInfo.currentFacility.getId()+", 4, "+startDate.getTime()+", "+endDateExclusive.getTime()+", "+cdsForms.size());
 		
@@ -263,7 +264,6 @@ public final class Cds4ReportUIBean {
 		// put admissions into map so it's easier to retrieve by id.
 		HashMap<Integer, Admission> admissionMap = new HashMap<Integer, Admission>();
 
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		List<Program> programs=programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentre.getId());
 		
 		for (Program program : programs) {

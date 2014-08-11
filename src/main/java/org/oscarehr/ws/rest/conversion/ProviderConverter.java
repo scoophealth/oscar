@@ -25,6 +25,7 @@ package org.oscarehr.ws.rest.conversion;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.to.model.ProviderTo1;
 import org.oscarehr.ws.rest.to.model.Sex1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class ProviderConverter extends AbstractConverter<Provider, ProviderTo1> 
 	private ProviderDao dao;
 
 	@Override
-	public Provider getAsDomainObject(ProviderTo1 t) throws ConversionException {
+	public Provider getAsDomainObject(LoggedInInfo loggedInInfo,ProviderTo1 t) throws ConversionException {
 		Provider d = new Provider();
 		
 		d.setProviderNo(t.getProviderNo());

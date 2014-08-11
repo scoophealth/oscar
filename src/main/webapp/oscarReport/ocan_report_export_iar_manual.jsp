@@ -22,6 +22,7 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="java.io.PrintWriter"%>
@@ -30,10 +31,12 @@
 <%@page import="org.oscarehr.web.OcanReportUIBean"%>
 <%@page contentType="application/octet-stream"%>
 <%	
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 	response.setHeader("Content-Disposition", "attachment; filename=OCAN-IAR-"+formatter.format(new java.util.Date())  + ".xml");
 	
-	OcanReportUIBean.writeExportIar(response.getOutputStream(), request.getParameter("assessmentIds"));
+	OcanReportUIBean.writeExportIar(loggedInInfo.getCurrentFacility(),response.getOutputStream(), request.getParameter("assessmentIds"));
 	
 	response.getOutputStream().flush();
 %>
