@@ -1445,7 +1445,7 @@ INSERT INTO `room_type` VALUES (1, 'N/A', 1);
 INSERT INTO `bed_demographic_status` VALUES (1, 'N/A', 0, 1);
 
 -- SYSTEM PROVIDER
-insert into `provider` (`provider_no`, `last_name`, `first_name`, `provider_type`, `specialty`, `sex`, `status`) values (-1, 'system', 'system', 'system', 'system', 's', 1);
+insert into `provider` (`provider_no`, `last_name`, `first_name`, `provider_type`, `specialty`, `sex`, `status`,`lastUpdateDate`) values (-1, 'system', 'system', 'system', 'system', 's', 1,now());
 
 --
 -- Populate intake node labels
