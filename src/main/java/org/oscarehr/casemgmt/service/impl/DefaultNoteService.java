@@ -480,11 +480,11 @@ public class DefaultNoteService implements NoteService {
 	}
 
 	private List<EChartNoteEntry> applyProviderFilter(List<EChartNoteEntry> notes, List<String> providerNo) {
-		boolean filter = false;
+		boolean skipFilter = false;
 		List<EChartNoteEntry> filteredNotes = new ArrayList<EChartNoteEntry>();
 
-		if (providerNo != null && providerNo.contains("a")) {
-			filter = true;
+		if (providerNo != null && (providerNo.contains("a") || providerNo.isEmpty())) {
+			skipFilter = true;
 			Collections.sort(providerNo);
 		}
 
@@ -494,7 +494,7 @@ public class DefaultNoteService implements NoteService {
 				filteredNotes.add(note);
 				continue;
 			}
-			if (!filter) {
+			if (skipFilter) {
 				filteredNotes.add(note);
 			} else {
 				if (note.getProviderNo() == null) {
