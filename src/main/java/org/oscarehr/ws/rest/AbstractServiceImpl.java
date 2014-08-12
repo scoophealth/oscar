@@ -68,7 +68,7 @@ public abstract class AbstractServiceImpl {
 	 * 		IllegalStateException is thrown in case authentication info is not available 
 	 */
 	protected LoggedInInfo getLoggedInInfo() {
-		LoggedInInfo info = LoggedInInfo.getLoggedInInfoForWebServices(getHttpServletRequest());
+		LoggedInInfo info = LoggedInInfo.loggedInInfo.get();
 		if (info == null) {
 			throw new IllegalStateException("Authentication info is not available.");
 		}
