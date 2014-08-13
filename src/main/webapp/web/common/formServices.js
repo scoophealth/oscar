@@ -26,7 +26,7 @@
 angular.module("formServices", [])
 	.service("formService", function ($http,$q,$log) {
 		return {
-		apiPath:'/oscar/ws/rs/forms',
+		apiPath:'../ws/rs/forms',
 		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
         getAllFormsByHeading: function(demographicNo,heading){
