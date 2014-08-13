@@ -214,7 +214,7 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 	<div class="container-fluid" ng-controller="PatientListCtrl">
 		<div id="left_pane" class="col-md-2">
 		
-			<ul class="nav nav-tabs">			
+			<ul class="nav nav-tabs nav-justified">			
 				<li ng-repeat="item in tabItems" ng-class="{'active': isActive(item.id)}">
 					<a href="javascript:void(0);" ng-click="changeTab(item.id)" data-toggle="tab">{{item.label}}</a>
 				</li>
@@ -289,10 +289,15 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
  	
  	<script src="../library/ui-bootstrap-tpls-0.11.0.js"></script>
  	<script src="../library/pym.js"></script>
+ 	
+ 	<script src="../library/ng-infinite-scroll.min.js"></script>
+ 	
  
 	<!-- we'll combine/minify later -->
 	<script src="common/demographicServices.js"></script>
 	<script src="common/formServices.js"></script>
+	<script src="common/noteServices.js"></script>
+	<script src="common/providerServices.js"></script>
 	<script src="app.js"></script>
 	<script src="dashboard/dashboardController.js"></script>
 	<script src="common/navBarController.js"></script>
@@ -301,7 +306,7 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 	<script src="record/summary/summaryController.js"></script>
 	<script src="record/forms/formsController.js"></script>
 	<script src="record/details/detailsController.js"></script>
-	<script src="inbox/inboxController.js"></script>
+	<!-- script src="inbox/inboxController.js"></script>
 	<script src="consults/consultListController.js"></script>	
 	<script src="billing/billingController.js"></script>
 	<script src="admin/adminController.js"></script>
