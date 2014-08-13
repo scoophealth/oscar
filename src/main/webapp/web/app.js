@@ -1,14 +1,5 @@
-
-//var patientDetailServices = angular.module('patientDetailServices', ['ngResource']);
-/*     
-patientDetailServices.factory('PatientDetail', ['$resource', function($resource){
-	return $resource('../ws/rs/demographics/detail/:demographicNo', {}, {
-		query: {method:'GET', params:{demographicNo:'phones'}, isArray:true}
-	});
-}]);
-  */  
     
-var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices','formServices']);
+var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices','formServices','providerServices','noteServices','infinite-scroll']);
 
 
 oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
