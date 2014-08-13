@@ -26,7 +26,7 @@
 angular.module("demographicServices", [])
 	.service("demographicService", function ($http,$q,$log) {
 		return {
-		apiPath:'/oscar/ws/rs/',
+		apiPath:'../ws/rs/',
 		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
         getDemographic: function (demographicNo) {
