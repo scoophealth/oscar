@@ -124,6 +124,8 @@
 			<bean class="org.oscarehr.ws.rest.PersonaService"  autowire="byName"/>
 			<bean class="org.oscarehr.ws.rest.FormsService"  autowire="byName"/>
 			<bean class="org.oscarehr.ws.rest.OscarJobService"  autowire="byName"/>
+			<bean class="org.oscarehr.ws.rest.NotesService" autowire="byName" />
+			
 		</jaxrs:serviceBeans>
 
 		<jaxrs:extensionMappings>
