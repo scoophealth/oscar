@@ -1762,7 +1762,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 			
 			
 			ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
-			ProgramProvider programProvider = programManager2.getCurrentProgramInDomain(loggedInInfo1.loggedInProvider.getProviderNo());
+			ProgramProvider programProvider = programManager2.getCurrentProgramInDomain(loggedInInfo1,loggedInInfo1.loggedInProvider.getProviderNo());
             if(programProvider!=null && programProvider.getProgram() != null) {
             	programProvider.getProgram().getName();
             }
@@ -1841,7 +1841,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                   tickler_note="";
                   
                  
-                  for(Tickler t: ticklerManager.search_tickler(demographic_no,MyDateFormat.getSysDate(strDate))) {
+                  for(Tickler t: ticklerManager.search_tickler(loggedInInfo1, demographic_no,MyDateFormat.getSysDate(strDate))) {
                 	  tickler_no = t.getId().toString();
                       tickler_note = t.getMessage()==null?tickler_note:tickler_note + "\n" + t.getMessage();
                   }

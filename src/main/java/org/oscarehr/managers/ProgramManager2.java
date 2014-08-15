@@ -32,6 +32,7 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.dao.ProviderDefaultProgramDao;
 import org.oscarehr.common.model.ProviderDefaultProgram;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,53 +51,53 @@ public class ProgramManager2 {
 	private ProviderDefaultProgramDao providerDefaultProgramDao;
 	
 
-	public Program getProgram(Integer programId) {
+	public Program getProgram(LoggedInInfo loggedInInfo, Integer programId) {
 		Program result = programDao.getProgram(programId);
 
 		//--- log action ---
-		LogAction.addLogSynchronous("ProgramManager2.getPrograms" , "id:"+result.getId());
+		LogAction.addLogSynchronous(loggedInInfo, "ProgramManager2.getPrograms" , "id:"+result.getId());
 
 		return (result);
 	}
 
 
-	public List<Program> getAllPrograms() {
+	public List<Program> getAllPrograms(LoggedInInfo loggedInInfo) {
 		List<Program> results = programDao.findAll();
 
 		//--- log action ---
 		if (results.size()>0) {
 			String resultIds=Program.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("ProgramManager2.getAllPrograms", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "ProgramManager2.getAllPrograms", "ids returned=" + resultIds);
 		}
 
 		return (results);
 	}
 
-	public List<ProgramProvider> getAllProgramProviders() {
+	public List<ProgramProvider> getAllProgramProviders(LoggedInInfo loggedInInfo) {
 		List<ProgramProvider> results = programProviderDAO.getAllProgramProviders();
 
 		//--- log action ---
 		if (results.size()>0) {
 			String resultIds=ProgramProvider.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("ProgramManager2.getAllProgramProviders", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "ProgramManager2.getAllProgramProviders", "ids returned=" + resultIds);
 		}
 
 		return (results);
 	}
 	
-	public List<ProgramProvider> getProgramDomain(String providerNo) {
+	public List<ProgramProvider> getProgramDomain(LoggedInInfo loggedInInfo, String providerNo) {
 		List<ProgramProvider> results = programProviderDAO.getProgramProvidersByProvider(providerNo);
 		
 		//--- log action ---
 		if (results.size()>0) {
 			String resultIds=ProgramProvider.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("ProgramManager2.getProgramDomain", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "ProgramManager2.getProgramDomain", "ids returned=" + resultIds);
 		}
 		
 		return (results);
 	}
 	
-	public ProgramProvider getCurrentProgramInDomain(String providerNo) {
+	public ProgramProvider getCurrentProgramInDomain(LoggedInInfo loggedInInfo, String providerNo) {
 		ProgramProvider result = null;
 		int defProgramId = 0;
         List<ProviderDefaultProgram> rs = providerDefaultProgramDao.getProgramByProviderNo(providerNo);
@@ -106,7 +107,7 @@ public class ProgramManager2 {
         }
         
         if(result !=null) {
-        	LogAction.addLogSynchronous("ProgramManager2.getCurrentProgramInDomain", "id returned=" + result.getId());
+        	LogAction.addLogSynchronous(loggedInInfo, "ProgramManager2.getCurrentProgramInDomain", "id returned=" + result.getId());
         }
         
         return (result);

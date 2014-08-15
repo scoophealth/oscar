@@ -53,6 +53,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.WaitingList;
 import org.oscarehr.common.model.WaitingListName;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.conversion.DemographicContactFewConverter;
 import org.oscarehr.ws.rest.conversion.DemographicConverter;
 import org.oscarehr.ws.rest.conversion.ProviderConverter;
@@ -114,6 +115,8 @@ public class DemographicService extends AbstractServiceImpl {
 	 */
 	@GET
 	public OscarSearchResponse<DemographicTo1> getAllDemographics(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit) {
+
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		OscarSearchResponse<DemographicTo1> result = new OscarSearchResponse<DemographicTo1>();
 		
 		if (offset == null) {
@@ -125,9 +128,9 @@ public class DemographicService extends AbstractServiceImpl {
 		
 		result.setLimit(limit);
 		result.setOffset(offset);
-		result.setTotal(demographicManager.getActiveDemographicCount().intValue());
+		result.setTotal(demographicManager.getActiveDemographicCount(loggedInInfo).intValue());
 		
-		for(Demographic demo : demographicManager.getActiveDemographics(offset, limit)) {
+		for(Demographic demo : demographicManager.getActiveDemographics(loggedInInfo,offset, limit)) {
 			result.getContent().add(demoConverter.getAsTransferObject(demo));
 		}
 		
@@ -146,12 +149,14 @@ public class DemographicService extends AbstractServiceImpl {
 	@Path("/{dataId}")
 	@Produces({MediaType.APPLICATION_JSON , MediaType.APPLICATION_XML})
 	public DemographicTo1 getDemographicData(@PathParam("dataId") Integer id) {		
-		Demographic demo = demographicManager.getDemographic(id);
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		
+		Demographic demo = demographicManager.getDemographic(loggedInInfo,id);
 		if (demo == null) {
 			return null;
 		}
 		
-		List<DemographicExt> demoExts = demographicManager.getDemographicExts(id);
+		List<DemographicExt> demoExts = demographicManager.getDemographicExts(loggedInInfo,id);
 		if (demoExts!=null && !demoExts.isEmpty()) {
 			DemographicExt[] demoExtArray = demoExts.toArray(new DemographicExt[demoExts.size()]);
 			demo.setExtras(demoExtArray);
@@ -159,7 +164,7 @@ public class DemographicService extends AbstractServiceImpl {
 
 		DemographicTo1 result = demoConverter.getAsTransferObject(demo);
 		
-		DemographicCust demoCust = demographicManager.getDemographicCust(id);
+		DemographicCust demoCust = demographicManager.getDemographicCust(loggedInInfo,id);
 		if (demoCust!=null) {
 			result.setNurse(demoCust.getNurse());
 			result.setResident(demoCust.getResident());
@@ -208,7 +213,7 @@ public class DemographicService extends AbstractServiceImpl {
 			}
 		}
 		
-		List<DemographicContact> demoContacts = demographicManager.getDemographicContacts(id);
+		List<DemographicContact> demoContacts = demographicManager.getDemographicContacts(loggedInInfo,id);
 		if (demoContacts!=null) {
 			for (DemographicContact demoContact : demoContacts) {
 				Integer contactId = Integer.valueOf(demoContact.getContactId());
@@ -216,7 +221,7 @@ public class DemographicService extends AbstractServiceImpl {
 				
 				if (demoContact.getCategory().equals(DemographicContact.CATEGORY_PERSONAL)) {
 					if (demoContact.getType()==DemographicContact.TYPE_DEMOGRAPHIC) {
-						Demographic contactD = demographicManager.getDemographic(contactId);
+						Demographic contactD = demographicManager.getDemographic(loggedInInfo,contactId);
 						demoContactTo1 = demoContactFewConverter.getAsTransferObject(demoContact, contactD);
 					}
 					else if (demoContact.getType()==DemographicContact.TYPE_CONTACT) {
@@ -252,8 +257,10 @@ public class DemographicService extends AbstractServiceImpl {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public DemographicTo1 createDemographicData(DemographicTo1 data) {
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		
 		Demographic demographic = demoConverter.getAsDomainObject(getLoggedInInfo(),data);
-		demographicManager.createDemographic(demographic);
+		demographicManager.createDemographic(loggedInInfo,demographic);
 	    return demoConverter.getAsTransferObject(demographic);
 	}
 
@@ -268,9 +275,10 @@ public class DemographicService extends AbstractServiceImpl {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public DemographicTo1 updateDemographicData(DemographicTo1 data) {
-
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		
 		//update demographiccust
-		DemographicCust demoCust = demographicManager.getDemographicCust(data.getDemographicNo());
+		DemographicCust demoCust = demographicManager.getDemographicCust(loggedInInfo,data.getDemographicNo());
 		if (demoCust==null) {
 			demoCust = new DemographicCust();
 			demoCust.setId(data.getDemographicNo());
@@ -280,10 +288,10 @@ public class DemographicService extends AbstractServiceImpl {
 		demoCust.setAlert(data.getAlert());
 		demoCust.setMidwife(data.getMidwife());
 		demoCust.setNotes(data.getNotes());
-		demographicManager.createUpdateDemographicCust(demoCust);
+		demographicManager.createUpdateDemographicCust(loggedInInfo,demoCust);
 		
 		Demographic demographic = demoConverter.getAsDomainObject(getLoggedInInfo(),data);
-	    demographicManager.updateDemographic(demographic);
+	    demographicManager.updateDemographic(loggedInInfo,demographic);
 	    
 	    return demoConverter.getAsTransferObject(demographic);
 	}
@@ -299,13 +307,15 @@ public class DemographicService extends AbstractServiceImpl {
 	@DELETE
 	@Path("/{dataId}")
 	public DemographicTo1 deleteDemographicData(@PathParam("dataId") Integer id) {
-		Demographic demo = demographicManager.getDemographic(id);
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		
+		Demographic demo = demographicManager.getDemographic(loggedInInfo,id);
     	DemographicTo1 result = getDemographicData(id);
     	if (demo == null) {
     		throw new IllegalArgumentException("Unable to find demographic record with ID " + id);
     	}
     	
-		demographicManager.deleteDemographic(demo);
+		demographicManager.deleteDemographic(loggedInInfo,demo);
 	    return result;
 	}
 

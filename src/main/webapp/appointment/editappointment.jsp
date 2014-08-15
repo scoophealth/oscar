@@ -82,13 +82,14 @@
     ProviderManager providerManager = SpringUtils.getBean(ProviderManager.class);
 	ProgramManager programManager = SpringUtils.getBean(ProgramManager.class);
 	
-	String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
-	Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	String providerNo = loggedInInfo.getLoggedInProviderNo();
+	Facility facility = loggedInInfo.currentFacility;
 	
     List<Program> programs = programManager.getActiveProgramByFacility(providerNo, facility.getId());
 
     LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
-    LookupList reasonCodes = lookupListManager.findLookupListByName("reasonCode");
+    LookupList reasonCodes = lookupListManager.findLookupListByName(loggedInInfo, "reasonCode");
 
     ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
 

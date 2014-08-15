@@ -44,6 +44,7 @@ import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import com.lowagie.text.DocumentException;
@@ -60,6 +61,7 @@ public class EChartPrintAction extends DispatchAction {
 	}
 
 	public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String demographicNo = request.getParameter("demographicNo");
 		DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 		Demographic demographic = demographicDao.getClientByDemographicNo(Integer.parseInt(demographicNo));
@@ -93,7 +95,7 @@ public class EChartPrintAction extends DispatchAction {
 		printer.printRx(String.valueOf(demographic.getDemographicNo()));
 
 		printer.printPreventions();
-		printer.printTicklers();
+		printer.printTicklers(loggedInInfo);
 		printer.printDiseaseRegistry();
 
 		printer.printCurrentAdmissions();

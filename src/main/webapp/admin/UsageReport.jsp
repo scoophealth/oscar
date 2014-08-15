@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
@@ -52,6 +53,8 @@
 </div>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 	BillingONCHeader1Dao billingONCHeader1Dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 	String providerNo = request.getParameter("providerNo");
 
@@ -194,7 +197,7 @@ ProviderDao providerDao	                        = (ProviderDao)SpringUtils.getBe
             						 	customFilter.setProvider(providerNo);
             						 	customFilter.setStartDate(startDate);
             						 	customFilter.setEndDate(endDate);
-            						 	useOfRemindersAlerts += ticklerManager.getTicklers(customFilter).size();
+            						 	useOfRemindersAlerts += ticklerManager.getTicklers(loggedInInfo,customFilter).size();
 
 		int labs = providerInboxRoutingDao.howManyDocumentsLinkedWithAProvider(providerNo);
 %>

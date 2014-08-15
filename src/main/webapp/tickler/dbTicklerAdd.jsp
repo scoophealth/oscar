@@ -39,6 +39,7 @@
 
 <%
 	TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+   	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 
 <%
@@ -70,7 +71,7 @@ Tickler tickler = new Tickler();
     tickler.setServiceDate(UtilDateUtilities.StringToDate(docdate));
 
 
-   ticklerManager.addTickler(tickler);
+   ticklerManager.addTickler(loggedInInfo,tickler);
 
 
    if (docType != null && docId != null && !docType.trim().equals("") && !docId.trim().equals("") && !docId.equalsIgnoreCase("null") ){

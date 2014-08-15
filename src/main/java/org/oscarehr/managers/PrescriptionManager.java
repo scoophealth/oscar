@@ -30,6 +30,7 @@ import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.PrescriptionDao;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Prescription;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,11 +44,11 @@ public class PrescriptionManager {
 	@Autowired
 	private DrugDao drugDao;
 	
-	public Prescription getPrescription(Integer prescriptionId) {
+	public Prescription getPrescription(LoggedInInfo loggedInInfo, Integer prescriptionId) {
 		Prescription result = prescriptionDao.find(prescriptionId);
 
 		//--- log action ---
-		LogAction.addLogSynchronous("PrescriptionManager.getPrescription" , "id:"+result.getId());
+		LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescription" , "id:"+result.getId());
 
 		return (result);
 	}
@@ -56,33 +57,33 @@ public class PrescriptionManager {
 	/**
 	 * @deprecated 2014-05-20 remove after calling ws method is removed
 	 */
-	public List<Prescription> getPrescriptionsByIdStart(Integer startIdInclusive, int itemsToReturn) {
+	public List<Prescription> getPrescriptionsByIdStart(LoggedInInfo loggedInInfo, Integer startIdInclusive, int itemsToReturn) {
 		List<Prescription> results = prescriptionDao.findByIdStart(startIdInclusive, itemsToReturn);
 
 		//--- log action ---
 		if (results.size()>0) {
 			String resultIds=Prescription.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("PrescriptionManager.getPrescriptionsByIdStart", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionsByIdStart", "ids returned=" + resultIds);
 		}
 
 		return (results);
 	}
 
-	public List<Prescription> getPrescriptionUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+	public List<Prescription> getPrescriptionUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Prescription> results = prescriptionDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
 
-		LogAction.addLogSynchronous("PrescriptionManager.getPrescriptionUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
+		LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
 
 		return (results);
 	}
 
-	public List<Drug> getDrugsByScriptNo(Integer scriptNo, Boolean archived) {
+	public List<Drug> getDrugsByScriptNo(LoggedInInfo loggedInInfo, Integer scriptNo, Boolean archived) {
 		List<Drug> results = drugDao.findByScriptNo(scriptNo, archived);
 
 		//--- log action ---
 		if (results.size()>0) {
 			String resultIds=Drug.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("PrescriptionManager.getDrugsByScriptNo", "drug ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getDrugsByScriptNo", "drug ids returned=" + resultIds);
 		}
 
 		return (results);

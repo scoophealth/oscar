@@ -61,7 +61,7 @@ public class PersonaService extends AbstractServiceImpl {
 		NavbarResponse result = new NavbarResponse();
 		
 		/* program domain, current program */
-		List<ProgramProvider> ppList = programManager2.getProgramDomain(provider.getProviderNo());
+		List<ProgramProvider> ppList = programManager2.getProgramDomain(getLoggedInInfo(),provider.getProviderNo());
 		ProgramProviderConverter ppConverter = new ProgramProviderConverter();
 		List<ProgramProviderTo1> programDomain = new ArrayList<ProgramProviderTo1>();
 		
@@ -70,7 +70,7 @@ public class PersonaService extends AbstractServiceImpl {
 		}
 		result.setProgramDomain(programDomain);
 		
-		ProgramProvider pp = programManager2.getCurrentProgramInDomain(provider.getProviderNo());
+		ProgramProvider pp = programManager2.getCurrentProgramInDomain(getLoggedInInfo(),provider.getProviderNo());
 		if(pp != null) {
 			ProgramProviderTo1 ppTo = ppConverter.getAsTransferObject(pp);
 			result.setCurrentProgram(ppTo);

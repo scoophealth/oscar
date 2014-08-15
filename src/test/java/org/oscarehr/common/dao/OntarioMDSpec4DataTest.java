@@ -1219,7 +1219,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
         tickler.setProgramId(oscarProgramID);
         tickler.setServiceDate(lastWeek);
         tickler.setUpdateDate(lastWeek);
-        ticklerManager.addTickler(tickler);
+        ticklerManager.addTickler(getLoggedInInfo(),tickler);
 
         //TODO:  Overdue Referral: Geriatrician
 

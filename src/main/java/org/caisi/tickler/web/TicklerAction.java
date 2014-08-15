@@ -107,8 +107,10 @@ public class TicklerAction extends DispatchAction {
     /* show a tickler */
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         log.debug("view");
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        
         String tickler_id = request.getParameter("id");
-        Tickler tickler = ticklerManager.getTickler(tickler_id);
+        Tickler tickler = ticklerManager.getTickler(loggedInInfo,tickler_id);
         request.setAttribute("tickler", tickler);
         
         
@@ -248,12 +250,13 @@ public class TicklerAction extends DispatchAction {
     /* ningys-reassign a ticker */
     public ActionForward reassign(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("reassign");
-
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        
         String id = request.getParameter("id");
         String reassignee = request.getParameter("tickler.taskAssignedTo");
         log.debug("reassign by" + id);
 
-        ticklerManager.reassign(Integer.parseInt(id), getProviderNo(request), reassignee);
+        ticklerManager.reassign(loggedInInfo,Integer.parseInt(id), getProviderNo(request), reassignee);
 
         DynaActionForm ticklerForm = (DynaActionForm) form;
         ticklerForm.set("tickler", new Tickler());
@@ -264,10 +267,12 @@ public class TicklerAction extends DispatchAction {
     /* delete a tickler */
     public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("delete");
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
         String[] checks = request.getParameterValues("checkbox");
 
         for (int x = 0; x < checks.length; x++) {
-        	ticklerManager.deleteTickler(Integer.parseInt(checks[x]), getProviderNo(request));
+        	ticklerManager.deleteTickler(loggedInInfo, Integer.parseInt(checks[x]), getProviderNo(request));
         }
         return filter(mapping, form, request, response);
     }
@@ -275,12 +280,13 @@ public class TicklerAction extends DispatchAction {
     /* add a comment to a tickler */
     public ActionForward add_comment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("add_comment");
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
         String id = request.getParameter("id");
         String message = request.getParameter("comment");
         log.debug("add_comment:" + id + "," + message);
 
-        ticklerManager.addComment(Integer.parseInt(id), getProviderNo(request), message);
+        ticklerManager.addComment(loggedInInfo, Integer.parseInt(id), getProviderNo(request), message);
 
         return view(mapping, form, request, response);
     }
@@ -288,10 +294,12 @@ public class TicklerAction extends DispatchAction {
     /* complete a tickler */
     public ActionForward complete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         log.debug("complete");
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
         String[] checks = request.getParameterValues("checkbox");
 
         for (int x = 0; x < checks.length; x++) {
-        	ticklerManager.completeTickler(Integer.parseInt(checks[x]), getProviderNo(request));
+        	ticklerManager.completeTickler(loggedInInfo, Integer.parseInt(checks[x]), getProviderNo(request));
         }
         return filter(mapping, form, request, response);
     }
@@ -312,6 +320,8 @@ public class TicklerAction extends DispatchAction {
     /* save a tickler */
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         log.debug("save");
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        
         Provider user = providerMgr.getProvider(getProviderNo(request));
         DynaActionForm ticklerForm = (DynaActionForm) form;
         Tickler tickler = (Tickler) ticklerForm.get("tickler");
@@ -328,7 +338,7 @@ public class TicklerAction extends DispatchAction {
 
         tickler.setUpdateDate(new java.util.Date());
 
-        ticklerManager.addTickler(tickler);
+        ticklerManager.addTickler(loggedInInfo, tickler);
 
         String echart = request.getParameter("echart");
         if (echart != null && echart.equals("true")) {
@@ -426,18 +436,19 @@ public class TicklerAction extends DispatchAction {
     public ActionForward update_status(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         log.debug("update_status");
         char status = request.getParameter("status").charAt(0);
-
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        
         String id = request.getParameter("id");
 
         switch (status) {
             case 'A':
-                ticklerManager.activateTickler(Integer.parseInt(id), getProviderNo(request));
+                ticklerManager.activateTickler(loggedInInfo,Integer.parseInt(id), getProviderNo(request));
                 break;
             case 'C':
-            	ticklerManager.completeTickler(Integer.parseInt(id), getProviderNo(request));
+            	ticklerManager.completeTickler(loggedInInfo,Integer.parseInt(id), getProviderNo(request));
                 break;
             case 'D':
-            	ticklerManager.deleteTickler(Integer.parseInt(id), getProviderNo(request));
+            	ticklerManager.deleteTickler(loggedInInfo,Integer.parseInt(id), getProviderNo(request));
                 break;
         }
         return this.view(mapping, form, request, response);

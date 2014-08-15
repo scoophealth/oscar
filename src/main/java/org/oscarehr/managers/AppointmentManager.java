@@ -29,6 +29,7 @@ import java.util.List;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.AppointmentArchive;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +41,7 @@ public class AppointmentManager {
 	@Autowired
 	private OscarAppointmentDao appointmentDao;
 	
-	public List<Object> getAppointmentHistoryWithoutDeleted(Integer demographicNo, Integer offset, Integer limit) {
+	public List<Object> getAppointmentHistoryWithoutDeleted(LoggedInInfo loggedInInfo, Integer demographicNo, Integer offset, Integer limit) {
 		List<Object> result = new ArrayList<Object>();
 		StringBuilder ids = new StringBuilder();
 		
@@ -54,12 +55,12 @@ public class AppointmentManager {
 		//--- log action ---
 		if (result.size()>0) {
 		
-			LogAction.addLogSynchronous("AppointmentManager.getAppointmentHistoryWithDeleted", "ids returned=" + ids);
+			LogAction.addLogSynchronous(loggedInInfo, "AppointmentManager.getAppointmentHistoryWithDeleted", "ids returned=" + ids);
 		}
 		return result;
 	}
 	
-	public List<Object> getAppointmentHistoryWithDeleted(Integer demographicNo, Integer offset, Integer limit) {
+	public List<Object> getAppointmentHistoryWithDeleted(LoggedInInfo loggedInInfo,Integer demographicNo, Integer offset, Integer limit) {
 		List<Object> result = new ArrayList<Object>();
 		StringBuilder ids = new StringBuilder();
 		
@@ -82,7 +83,7 @@ public class AppointmentManager {
 		//--- log action ---
 		if (result.size()>0) {
 		
-			LogAction.addLogSynchronous("AppointmentManager.getAppointmentHistoryWithDeleted", "ids returned=" + ids);
+			LogAction.addLogSynchronous(loggedInInfo, "AppointmentManager.getAppointmentHistoryWithDeleted", "ids returned=" + ids);
 		}
 		return result;
 	}

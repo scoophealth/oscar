@@ -36,6 +36,7 @@ import org.apache.cxf.annotations.GZIP;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Prescription;
 import org.oscarehr.managers.PrescriptionManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.transfer_objects.DataIdTransfer;
 import org.oscarehr.ws.transfer_objects.PrescriptionTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +50,11 @@ public class PrescriptionWs extends AbstractWs {
 	private PrescriptionManager prescriptionManager;
 
 	public PrescriptionTransfer getPrescription(Integer prescriptionId) {
-		Prescription prescription = prescriptionManager.getPrescription(prescriptionId);
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		Prescription prescription = prescriptionManager.getPrescription(loggedInInfo,prescriptionId);
 
 		if (prescription != null) {
-			List<Drug> drugs = prescriptionManager.getDrugsByScriptNo(prescription.getId(), false);
+			List<Drug> drugs = prescriptionManager.getDrugsByScriptNo(loggedInInfo,prescription.getId(), false);
 			return (PrescriptionTransfer.toTransfer(prescription, drugs));
 		}
 
@@ -64,7 +66,7 @@ public class PrescriptionWs extends AbstractWs {
 	 * @deprecated 2014-05-20 use the method with lastUpdateDate instead
 	 */
 	public DataIdTransfer[] getPrescriptionDataIds(Integer startIdInclusive, int itemsToReturn) {
-		List<Prescription> prescriptions = prescriptionManager.getPrescriptionsByIdStart(startIdInclusive, itemsToReturn);
+		List<Prescription> prescriptions = prescriptionManager.getPrescriptionsByIdStart(getLoggedInInfo(),startIdInclusive, itemsToReturn);
 
 		DataIdTransfer[] results = new DataIdTransfer[prescriptions.size()];
 		for (int i = 0; i < prescriptions.size(); i++) {
@@ -90,13 +92,15 @@ public class PrescriptionWs extends AbstractWs {
 	}
 	
 	public PrescriptionTransfer[] getPrescriptionUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Prescription> prescriptions=prescriptionManager.getPrescriptionUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+
+		List<Prescription> prescriptions=prescriptionManager.getPrescriptionUpdatedAfterDate(loggedInInfo,updatedAfterThisDateInclusive, itemsToReturn);
 
 		ArrayList<PrescriptionTransfer> results=new ArrayList<PrescriptionTransfer>();
 		
 		for (Prescription prescription : prescriptions)
 		{
-			List<Drug> drugs = prescriptionManager.getDrugsByScriptNo(prescription.getId(), false);
+			List<Drug> drugs = prescriptionManager.getDrugsByScriptNo(loggedInInfo,prescription.getId(), false);
 			PrescriptionTransfer prescriptionTransfer=PrescriptionTransfer.toTransfer(prescription, drugs);
 			results.add(prescriptionTransfer);
 		}

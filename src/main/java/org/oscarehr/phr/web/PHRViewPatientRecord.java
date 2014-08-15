@@ -46,6 +46,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -81,6 +82,7 @@ public class PHRViewPatientRecord extends DispatchAction {
             return null;
         }
         
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
         MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
         
         if (myOscarLoggedInInfo == null || !myOscarLoggedInInfo.isLoggedIn()) {
@@ -90,7 +92,7 @@ public class PHRViewPatientRecord extends DispatchAction {
         	
         	//Check if patient has been verified
             DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class); 
-    	   	String verificationLevel = demographicManager.getPhrVerificationLevelByDemographicId(Integer.parseInt(demographicNo));
+    	   	String verificationLevel = demographicManager.getPhrVerificationLevelByDemographicId(loggedInInfo, Integer.parseInt(demographicNo));
     	   	int verifyLevel = 0;
     	   	try{
     	      verifyLevel = Integer.parseInt(verificationLevel.replace('+', ' ').trim());

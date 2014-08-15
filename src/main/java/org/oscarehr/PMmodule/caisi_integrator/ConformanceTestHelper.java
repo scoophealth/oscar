@@ -85,7 +85,7 @@ public final class ConformanceTestHelper {
 					note="Sent by remote provider : "+senderProvider.getLastName()+", "+senderProvider.getFirstName()+"<br />--------------------<br />"+note;
 				}
 				
-				t.createTickler(demographicId, providerCommunication.getDestinationProviderId(), note);
+				t.createTickler(loggedInInfo,demographicId, providerCommunication.getDestinationProviderId(), note);
 
 				providerWs.deactivateProviderCommunication(providerCommunication.getId());
 			}

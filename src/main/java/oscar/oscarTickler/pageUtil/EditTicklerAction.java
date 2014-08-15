@@ -59,6 +59,7 @@ public class EditTicklerAction extends DispatchAction{
     private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
     
     public ActionForward editTickler(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
         
         ActionMessages errors = this.getErrors(request);
         DynaValidatorForm editForm = (DynaValidatorForm)form;
@@ -82,7 +83,7 @@ public class EditTicklerAction extends DispatchAction{
             return mapping.findForward("failure");
         }
         
-        Tickler t = ticklerManager.getTickler(ticklerNo);
+        Tickler t = ticklerManager.getTickler(loggedInInfo,ticklerNo);
         
         if (t == null) {
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("tickler.ticklerEdit.arg.error"));
@@ -103,7 +104,7 @@ public class EditTicklerAction extends DispatchAction{
 
                
                 try {
-                	ticklerManager.sendNotification(t);     
+                	ticklerManager.sendNotification(loggedInInfo,t);     
 
                     //add tickler comment noting patient was emailed
                     TicklerComment tc = new TicklerComment();
@@ -217,7 +218,7 @@ public class EditTicklerAction extends DispatchAction{
         }
 
         if (isComment || isUpdate) {            
-            ticklerManager.updateTickler(t);
+            ticklerManager.updateTickler(loggedInInfo,t);
         }                                    
                 
         if (emailFailed) {

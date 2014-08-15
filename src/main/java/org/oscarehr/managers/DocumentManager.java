@@ -31,6 +31,7 @@ import org.oscarehr.common.dao.CtlDocumentDao;
 import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.model.CtlDocument;
 import org.oscarehr.common.model.Document;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,46 +49,46 @@ public class DocumentManager {
 	 * @param archived can be null for both deleted and non deleted items
 	 * @deprecated 2014-05-15 use the method with lastUpdateDate instead, remove as soon as calling ws method is removed.
 	 */
-	public List<Document> getDocumentsByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
+	public List<Document> getDocumentsByIdStart(LoggedInInfo loggedInInfo, Boolean archived, Integer startIdInclusive, int itemsToReturn) {
 		List<Document> results = documentDao.findByIdStart(archived, startIdInclusive, itemsToReturn);
 
 		//--- log action ---
 		if (results.size()>0) {
 			String resultIds=Document.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("DocumentManager.getDocumentsByIdStart", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getDocumentsByIdStart", "ids returned=" + resultIds);
 		}
 
 		return (results);
 	}
 	
-	public Document getDocument(Integer id)
+	public Document getDocument(LoggedInInfo loggedInInfo, Integer id)
 	{
 		Document result=documentDao.find(id);
 		
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous("DocumentManager.getDocument", "id=" + id);
+			LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getDocument", "id=" + id);
 		}
 
 		return(result);
 	}
 	
-	public CtlDocument getCtlDocumentByDocumentId(Integer documentId)
+	public CtlDocument getCtlDocumentByDocumentId(LoggedInInfo loggedInInfo, Integer documentId)
 	{
 		CtlDocument result=ctlDocumentDao.getCtrlDocument(documentId);
 		
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous("DocumentManager.getCtlDocumentByDocumentNoAndModule", "id=" + documentId);
+			LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getCtlDocumentByDocumentNoAndModule", "id=" + documentId);
 		}
 
 		return(result);
 	}
 	
-	public List<Document> getDocumentsUpdateAfterDate(Date updateAfterThisDateInclude, int itemsToReturn) {
+	public List<Document> getDocumentsUpdateAfterDate(LoggedInInfo loggedInInfo, Date updateAfterThisDateInclude, int itemsToReturn) {
 		List<Document> results = documentDao.findByUpdateDate(updateAfterThisDateInclude, itemsToReturn);
 
-		LogAction.addLogSynchronous("DocumentManager.getUpdateAfterDate", "updateAfterThisDateInclude=" + updateAfterThisDateInclude);
+		LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getUpdateAfterDate", "updateAfterThisDateInclude=" + updateAfterThisDateInclude);
 
 		return (results);
 	}

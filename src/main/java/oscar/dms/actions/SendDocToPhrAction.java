@@ -73,9 +73,10 @@ public class SendDocToPhrAction extends Action {
 
 			logger.debug("Preparing to send " + files.length + " files");
 
+
+			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 			Demographic demo = new DemographicData().getDemographic(demographicId);
-			LoggedInInfo loggedInfo=LoggedInInfo.loggedInInfo.get();
-			ProviderData prov = new ProviderData(loggedInfo.loggedInProvider.getProviderNo());
+			ProviderData prov = new ProviderData(loggedInInfo.getLoggedInProviderNo());
 
 			for (int idx = 0; idx < files.length; ++idx) {
 				logger.debug("sending file : "+files[idx]);

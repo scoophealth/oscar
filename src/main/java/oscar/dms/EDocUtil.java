@@ -967,7 +967,7 @@ public final class EDocUtil {
 		documentDao.merge(doc);
 	}
         
-	public static String getHtmlTicklers(String docId ) {
+	public static String getHtmlTicklers(LoggedInInfo loggedInInfo,String docId ) {
                                       
             Long table_id=Long.valueOf(docId);
             List<TicklerLink> linkList = ticklerLinkDao.getLinkByTableId("DOC",table_id );
@@ -977,7 +977,7 @@ public final class EDocUtil {
             if (linkList != null){
                 for(TicklerLink tl : linkList){
                     ticklerNo = tl.getTicklerNo();
-                    Tickler t = ticklerManager.getTickler(ticklerNo.intValue());
+                    Tickler t = ticklerManager.getTickler(loggedInInfo,ticklerNo.intValue());
                       if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {  
                         HtmlTickler+="<br><a href='#' onclick=\"window.open('../Tickler.do?method=view&id="+ticklerNo.toString()+"','viewtickler"+ticklerNo.toString()+"','height=700,width=600,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0');\" >"+t.getMessage()+"</a>";
                      } else

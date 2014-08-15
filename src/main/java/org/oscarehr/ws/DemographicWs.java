@@ -49,25 +49,25 @@ public class DemographicWs extends AbstractWs {
 	
 	public DemographicTransfer getDemographic(Integer demographicId)
 	{
-		Demographic demographic=demographicManager.getDemographic(demographicId);
+		Demographic demographic=demographicManager.getDemographic(getLoggedInInfo(),demographicId);
 		return(DemographicTransfer.toTransfer(demographic));
 	}
 
 	public DemographicTransfer getDemographicByMyOscarUserName(String myOscarUserName)
 	{
-		Demographic demographic=demographicManager.getDemographicByMyOscarUserName(myOscarUserName);
+		Demographic demographic=demographicManager.getDemographicByMyOscarUserName(getLoggedInInfo(),myOscarUserName);
 		return(DemographicTransfer.toTransfer(demographic));
 	}
 	
 	public DemographicTransfer[] searchDemographicByName(String searchString, int startIndex, int itemsToReturn)
 	{
-		List<Demographic> demographics=demographicManager.searchDemographicByName(searchString, startIndex, itemsToReturn);
+		List<Demographic> demographics=demographicManager.searchDemographicByName(getLoggedInInfo(),searchString, startIndex, itemsToReturn);
 		return(DemographicTransfer.toTransfers(demographics));
 	}
 	
 	public PhrVerificationTransfer getLatestPhrVerificationByDemographic(Integer demographicId)
 	{
-		PHRVerification phrVerification=demographicManager.getLatestPhrVerificationByDemographicId(demographicId);
+		PHRVerification phrVerification=demographicManager.getLatestPhrVerificationByDemographicId(getLoggedInInfo(),demographicId);
 		return(PhrVerificationTransfer.toTransfer(phrVerification));
 	}
 	
@@ -76,7 +76,7 @@ public class DemographicWs extends AbstractWs {
 	 */
 	public boolean isPhrVerifiedToSendMessages(Integer demographicId)
 	{
-		boolean result=demographicManager.isPhrVerifiedToSendMessages(demographicId);
+		boolean result=demographicManager.isPhrVerifiedToSendMessages(getLoggedInInfo(),demographicId);
 		return(result);
 	}
 
@@ -85,7 +85,7 @@ public class DemographicWs extends AbstractWs {
 	 */
 	public boolean isPhrVerifiedToSendMedicalData(Integer demographicId)
 	{
-		boolean result=demographicManager.isPhrVerifiedToSendMedicalData(demographicId);
+		boolean result=demographicManager.isPhrVerifiedToSendMedicalData(getLoggedInInfo(),demographicId);
 		return(result);		
 	}
 	
@@ -93,7 +93,7 @@ public class DemographicWs extends AbstractWs {
 	 * @see DemographicManager.searchDemographicsByAttributes for parameter details
 	 */
 	public DemographicTransfer[] searchDemographicsByAttributes(String hin, String firstName, String lastName, Gender gender, Calendar dateOfBirth, String city, String province, String phone, String email, String alias, int startIndex, int itemsToReturn) {
-		List<Demographic> demographics=demographicManager.searchDemographicsByAttributes(hin, firstName, lastName, gender, dateOfBirth, city, province, phone, email, alias, startIndex, itemsToReturn);
+		List<Demographic> demographics=demographicManager.searchDemographicsByAttributes(getLoggedInInfo(),hin, firstName, lastName, gender, dateOfBirth, city, province, phone, email, alias, startIndex, itemsToReturn);
 		return(DemographicTransfer.toTransfers(demographics));	
 	}
 }

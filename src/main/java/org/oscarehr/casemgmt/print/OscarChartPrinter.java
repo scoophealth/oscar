@@ -65,6 +65,7 @@ import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -654,10 +655,10 @@ public class OscarChartPrinter {
 
     }
 
-    public void printTicklers() throws DocumentException {
+    public void printTicklers(LoggedInInfo loggedInInfo) throws DocumentException {
     	CustomFilter filter = new CustomFilter();
     	filter.setDemographicNo(String.valueOf(demographic.getDemographicNo()));
-    	List<Tickler> ticklers = ticklerManager.getTicklers(filter);
+    	List<Tickler> ticklers = ticklerManager.getTicklers(loggedInInfo, filter);
 
     	if(ticklers.size()==0) {
     		return;

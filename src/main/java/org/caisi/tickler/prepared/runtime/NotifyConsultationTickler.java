@@ -45,6 +45,7 @@ import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class NotifyConsultationTickler extends AbstractPreparedTickler implements PreparedTickler {
@@ -67,7 +68,8 @@ public class NotifyConsultationTickler extends AbstractPreparedTickler implement
 	}
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		NotifyConsultationBean formBean = null;
 
 		String path = request.getSession().getServletContext().getRealPath("/");
@@ -114,7 +116,7 @@ public class NotifyConsultationTickler extends AbstractPreparedTickler implement
 
 			        + "<br/><br/><a target=\"consultation\" href=\"" + contextName + "/OscarWAR/oscarEncounter/ViewRequest.do?requestId=" + consultation.getId() + "\">Link to consultation</a>" + "<br/><a target=\"demographic\" href=\"" + contextName + "/demographic/demographiccontrol.jsp?displaymode=edit&demographic_no=" + formBean.getDemographic_no() + "&dboperation=search_detail\">Link to patient</a>");
 
-			ticklerMgr.addTickler(tickler);
+			ticklerMgr.addTickler(loggedInInfo, tickler);
 		}
 
 		return null;

@@ -80,7 +80,7 @@ public class NotesService extends AbstractServiceImpl {
 	@Consumes("application/json")
 	public NoteSelectionTo1 getNotesWithFilter(@PathParam("demographicNo") Integer demographicNo ,@DefaultValue("20") @QueryParam("numToReturn") Integer numToReturn,@DefaultValue("0") @QueryParam("offset") Integer offset,JSONObject jsonobject){
 		NoteSelectionTo1 returnResult = new NoteSelectionTo1();
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
 		logger.debug("The config "+jsonobject.toString());
 	
 		HttpSession se = loggedInInfo.session;
@@ -97,12 +97,12 @@ public class NotesService extends AbstractServiceImpl {
 		String roles = (String) se.getAttribute("userrole");
 		if (OscarProperties.getInstance().isOscarLearning() && roles != null && roles.indexOf("moderator") != -1) {
 			logger.info("skipping domain check..provider is a moderator");
-		} else if (!caseManagementMgr.isClientInProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), demoNo)) {
+		} else if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.getLoggedInProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(loggedInInfo.getLoggedInProviderNo(), demoNo)) {
 			logger.error("A domain error needs to be added to the returned result, remove this when fixed");
 			return returnResult;
 		}
 		
-		ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo.getLoggedInProvider().getProviderNo());
+		ProgramProvider pp = programManager2.getCurrentProgramInDomain(getLoggedInInfo(),loggedInInfo.getLoggedInProviderNo());
 		String programId = null;
 		
 		if(pp !=null && pp.getProgramId() != null){
