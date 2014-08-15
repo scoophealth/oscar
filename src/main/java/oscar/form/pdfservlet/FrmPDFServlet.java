@@ -88,7 +88,8 @@ public class FrmPDFServlet extends HttpServlet {
             java.io.IOException {
 
         ByteArrayOutputStream baosPDF = null;
-
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(req);
+        
         try {        	
             File tmpFile = null;
             
@@ -151,7 +152,7 @@ public class FrmPDFServlet extends HttpServlet {
                        sout.write(buffer,0,bytesRead);  
                 }  
             
-            LogAction.addLogSynchronous("FrmPDFServlet", "formID=" + req.getParameter("formId") + ",form_class=" + req.getParameter("form_class"));
+            LogAction.addLogSynchronous(loggedInInfo,"FrmPDFServlet", "formID=" + req.getParameter("formId") + ",form_class=" + req.getParameter("form_class"));
             
         } catch (DocumentException dex) {
             res.setContentType("text/html");
@@ -208,7 +209,10 @@ public class FrmPDFServlet extends HttpServlet {
      */
     protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req, final ServletContext ctx, ByteArrayOutputStream baosPDF, int multiple)
     throws DocumentException, java.io.IOException {
-        // added by vic, hsfo
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(req);
+
+    	// added by vic, hsfo
         if (HSFO_RX_DATA_KEY.equals(req.getParameter("__title")))
             return generateHsfoRxPDF(req);
 
@@ -323,7 +327,7 @@ public class FrmPDFServlet extends HttpServlet {
             int totalPages = 1;
             if(req.getParameter("multiple")!=null)
             	totalPages = Integer.parseInt(req.getParameter("multiple"));
-            String currentUser = LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName();
+            String currentUser = loggedInInfo.getLoggedInProvider().getFormattedName();
             String pg = suffix.length()==0||suffix.equals("0")?"0":suffix;                        
             String currentPage = String.valueOf(Integer.parseInt(pg)+1);
             

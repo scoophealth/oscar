@@ -1266,18 +1266,20 @@ public class EyeformAction extends DispatchAction {
 
 		public ActionForward specialRepTickler(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 			log.debug("specialRepTickler");
-
+			
+			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+			
 			String demoNo = request.getParameter("demographicNo");
 			String docFlag = request.getParameter("docFlag");
 			String bsurl = request.getContextPath();
 			if ("true".equalsIgnoreCase(docFlag))
-				sendDocTickler("REP", demoNo, (String) request.getSession().getAttribute("user"), bsurl);
+				sendDocTickler(loggedInInfo, "REP", demoNo, (String) request.getSession().getAttribute("user"), bsurl);
 
 			response.getWriter().println("alert('tickler sent');");
 			return null;
 		}
 
-		public void sendDocTickler(String flag, String demoNo, String providerNo, String bsurl) {
+		public void sendDocTickler(LoggedInInfo loggedInInfo, String flag, String demoNo, String providerNo, String bsurl) {
 			Tickler tkl = new Tickler();
 			Date now = new Date();
 
@@ -1302,10 +1304,10 @@ public class EyeformAction extends DispatchAction {
 			}
 			mes.append("</a>");
 			tkl.setMessage(mes.toString());
-			ticklerManager.addTickler(tkl);
+			ticklerManager.addTickler(loggedInInfo, tkl);
 		}
 
-		public void sendFrontTickler(String flag, String demoNo, String providerNo, String creator, String bsurl) {
+		public void sendFrontTickler(LoggedInInfo loggedInInfo, String flag, String demoNo, String providerNo, String creator, String bsurl) {
 			Tickler tkl = new Tickler();
 			tkl.setCreator(creator);
 			tkl.setDemographicNo(Integer.parseInt(demoNo));
@@ -1324,7 +1326,7 @@ public class EyeformAction extends DispatchAction {
 			}
 			mes.append("</a>");
 			tkl.setMessage(mes.toString());
-			ticklerManager.addTickler(tkl);
+			ticklerManager.addTickler(loggedInInfo, tkl);
 		}
 
 		public String wrap(String in,int len) {
@@ -1577,9 +1579,9 @@ public class EyeformAction extends DispatchAction {
 			String bsurl = request.getContextPath();
 			String user = loggedInInfo.getLoggedInProviderNo();
 			if ("true".equalsIgnoreCase(docFlag))
-				sendDocTickler("REQ", demoNo,user, bsurl);
+				sendDocTickler(loggedInInfo,"REQ", demoNo,user, bsurl);
 			if ("true".equalsIgnoreCase(frontFlag))
-				sendFrontTickler("REQ", demoNo, providerNo,user, bsurl);
+				sendFrontTickler(loggedInInfo,"REQ", demoNo, providerNo,user, bsurl);
 			response.getWriter().println("alert('tickler sent');");
 			return null;
 		}

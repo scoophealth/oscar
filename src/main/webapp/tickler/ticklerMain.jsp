@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
 <%@ page import="org.oscarehr.util.SpringUtils" %>
@@ -65,11 +66,11 @@
 
 <%
 	String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
-if(labReqVer.equals("")) {labReqVer="07";}
-%>
+	if(labReqVer.equals("")) {labReqVer="07";}
 
- <%
- 	String user_no;
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
+	String user_no;
      user_no = (String) session.getAttribute("user");
      int  nItems=0;
      String strLimit1="0";
@@ -107,15 +108,12 @@ if(labReqVer.equals("")) {labReqVer="07";}
      else {
    	  mrpview = request.getParameter("mrpview");
      }
- %>
 
-<%
-	Calendar now=Calendar.getInstance();
+     Calendar now=Calendar.getInstance();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
-%>
-<%
+
 	String ticklerview;
    if( request.getParameter("ticklerview") == null ) {
           ticklerview = "A";
@@ -750,85 +748,85 @@ function changeSite(sel) {
 
                             <%
                             	String dateBegin = xml_vdate;
-                                                                                                                String dateEnd = xml_appointment_date;
-                                                                                                                
-                                                                                                                String vGrantdate = "1980-01-07 00:00:00.0";
-                                                                                                                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.getLocale());
-
-                                                                                                                if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-                                                                                                                if (dateBegin.compareTo("") == 0) dateBegin="1950-01-01"; // any early start date should suffice for selecting since the beginning
-                                                                                                                                          
-                                                                                                                CustomFilter filter = new CustomFilter();
-                                                                                                                
-                                                                                                                filter.setStatus(ticklerview);
-                                                                                                                		
-                                                                                                                filter.setStartDateWeb(dateBegin);
-                                                                                                                filter.setEndDateWeb(dateEnd);
-                                                                                                                
-                                                                                                                if( !mrpview.isEmpty() && !mrpview.equals("all")) {
-                                                                                                                	filter.setMrp(mrpview);
-                                                                                                                }
-                                                                                                                
-                                                                                                                if (!providerview.isEmpty() && !providerview.equals("all")) {
-                                                                                                                    filter.setProvider(providerview);
-                                                                                                                }
-                                                                                                                
-                                                                                                                if (!assignedTo.isEmpty() && !assignedTo.equals("all")) {
-                                                                                                                    filter.setAssignee(assignedTo);
-                                                                                                                }
-                                                                                                                
-                                                                                                                
-
-                                                                                                                String colNames[] = new String[] {"last_name", "provider_last", "service_date", "update_date", "priority", "assignedLast", "status", "message"};
-                                                                                                                v = null;
-                                                                                                                String order = "service_date desc";
-                                                                                                                int col;
-                                                                                                                if( viewMap != null ) {
-                                                                                                                    v = viewMap.get("columnId");
-                                                                                                                    if( v != null ) {
-                                                                                                                       col = Integer.parseInt(v.getValue()) - 1;
-                                                                                                                       order = colNames[col] + " ";
-                                                                                                                       v = viewMap.get("sortOrder");
-                                                                                                                       if( v!= null ) {
-                                                                                                                           order += v.getValue();
-                                                                                                                       }
-                                                                                                                    }
-                                                                                                                }
-                                                                                                              // filter.setSort_order("desc");
-                                                                                                                                                                      
-                                                                                                                List<Tickler> ticklers = ticklerManager.getTicklers(filter);
-                                                                                                                
-                                                                                                                String rowColour = "lilac";
-
-                                                                                                                for (Tickler t : ticklers) {
-                                                                                                                    Demographic demo = t.getDemographic(); 
-                                                                                                                   
-                                                                                                                    vGrantdate = t.getServiceDate() + " 00:00:00.0";
-                                                                                                                    java.util.Date grantdate = dateFormat.parse(vGrantdate);
-                                                                                                                    java.util.Date toDate = new java.util.Date();
-                                                                                                                    long millisDifference = toDate.getTime() - grantdate.getTime();
-
-                                                                                                                    long ONE_DAY_IN_MS = (1000 * 60 * 60 * 24);                                                      
-                                                                                                                    long daysDifference = millisDifference / (ONE_DAY_IN_MS);
-
-                                                                                                                    String numDaysUntilWarn = OscarProperties.getInstance().getProperty("tickler_warn_period");
-                                                                                                                    long ticklerWarnDays = Long.parseLong(numDaysUntilWarn);
-                                                                                                                    boolean ignoreWarning = (ticklerWarnDays < 0);
-                                                                                                                    
-                                                                                                                    
-                                                                                                                    //Set the colour of the table cell 
-                                                                                                                    String warnColour = "";
-                                                                                                                    if (!ignoreWarning && (daysDifference >= ticklerWarnDays)){
-                                                                                                                        warnColour = "Red";
-                                                                                                                    }
-                                                                                                                    
-                                                                                                                    if (rowColour.equals("lilac")){
-                                                                                                                        rowColour = "white";
-                                                                                                                    }else {
-                                                                                                                        rowColour = "lilac";
-                                                                                                                    }
-                                                                                                                    
-                                                                                                                    String cellColour = rowColour + warnColour;
+								  String dateEnd = xml_appointment_date;
+								  
+								  String vGrantdate = "1980-01-07 00:00:00.0";
+								  DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.getLocale());
+								
+								  if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
+								  if (dateBegin.compareTo("") == 0) dateBegin="1950-01-01"; // any early start date should suffice for selecting since the beginning
+								                            
+								  CustomFilter filter = new CustomFilter();
+								  
+								  filter.setStatus(ticklerview);
+								  		
+								  filter.setStartDateWeb(dateBegin);
+								  filter.setEndDateWeb(dateEnd);
+								  
+								  if( !mrpview.isEmpty() && !mrpview.equals("all")) {
+								  	filter.setMrp(mrpview);
+								  }
+								  
+								  if (!providerview.isEmpty() && !providerview.equals("all")) {
+								      filter.setProvider(providerview);
+								  }
+								  
+								  if (!assignedTo.isEmpty() && !assignedTo.equals("all")) {
+								      filter.setAssignee(assignedTo);
+								  }
+								  
+								  
+								
+								  String colNames[] = new String[] {"last_name", "provider_last", "service_date", "update_date", "priority", "assignedLast", "status", "message"};
+								  v = null;
+								  String order = "service_date desc";
+								  int col;
+								  if( viewMap != null ) {
+								      v = viewMap.get("columnId");
+								      if( v != null ) {
+								         col = Integer.parseInt(v.getValue()) - 1;
+								         order = colNames[col] + " ";
+								         v = viewMap.get("sortOrder");
+								         if( v!= null ) {
+								             order += v.getValue();
+								         }
+								      }
+								  }
+								// filter.setSort_order("desc");
+								                                                        
+								  List<Tickler> ticklers = ticklerManager.getTicklers(loggedInInfo, filter);
+								  
+								  String rowColour = "lilac";
+								
+								  for (Tickler t : ticklers) {
+								      Demographic demo = t.getDemographic(); 
+								     
+								      vGrantdate = t.getServiceDate() + " 00:00:00.0";
+								      java.util.Date grantdate = dateFormat.parse(vGrantdate);
+								      java.util.Date toDate = new java.util.Date();
+								      long millisDifference = toDate.getTime() - grantdate.getTime();
+								
+								      long ONE_DAY_IN_MS = (1000 * 60 * 60 * 24);                                                      
+								      long daysDifference = millisDifference / (ONE_DAY_IN_MS);
+								
+								      String numDaysUntilWarn = OscarProperties.getInstance().getProperty("tickler_warn_period");
+								      long ticklerWarnDays = Long.parseLong(numDaysUntilWarn);
+								      boolean ignoreWarning = (ticklerWarnDays < 0);
+								      
+								      
+								      //Set the colour of the table cell 
+								      String warnColour = "";
+								      if (!ignoreWarning && (daysDifference >= ticklerWarnDays)){
+								          warnColour = "Red";
+								      }
+								      
+								      if (rowColour.equals("lilac")){
+								          rowColour = "white";
+								      }else {
+								          rowColour = "lilac";
+								      }
+								      
+								      String cellColour = rowColour + warnColour;
                             %>
 
                                 <tr >

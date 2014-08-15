@@ -31,6 +31,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -98,9 +99,12 @@ public class PHRVerificationTag extends TagSupport {
     public int doEndTag()        throws JspException    {
     	if(conditionMet){
     		try{
-    			JspWriter out = super.pageContext.getOut();         
+    			JspWriter out = super.pageContext.getOut();   
+    			HttpServletRequest request=(HttpServletRequest)pageContext.getRequest();
+    			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    			
     			DemographicManager demographicManager = (DemographicManager)SpringUtils.getBean("demographicManager"); 
-    			out.print("<sup>"+demographicManager.getPhrVerificationLevelByDemographicId(Integer.parseInt(demoNo))+"</sup></a>");
+    			out.print("<sup>"+demographicManager.getPhrVerificationLevelByDemographicId(loggedInInfo,Integer.parseInt(demoNo))+"</sup></a>");
     		}catch(Exception p) {
     			MiscUtils.getLogger().error("Error",p);
     		}

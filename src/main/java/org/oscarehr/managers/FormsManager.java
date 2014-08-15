@@ -31,6 +31,7 @@ import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
 import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EFormData;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,12 +70,12 @@ public class FormsManager {
 	 * 		Returns the list of all forms with the specified status.
 	 */
 	@SuppressWarnings("unchecked")
-	public List<EForm> findByStatus(boolean status, EFormSortOrder sortOrder) {
+	public List<EForm> findByStatus(LoggedInInfo loggedInInfo, boolean status, EFormSortOrder sortOrder) {
 		List<EForm> results = eformDao.findByStatus(status, sortOrder);
 		
 		if (results.size() > 0) {
 			String resultIds = EForm.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("FormsManager.findByStatus", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "FormsManager.findByStatus", "ids returned=" + resultIds);
 		}
 
 		return (results);
@@ -86,11 +87,11 @@ public class FormsManager {
      * @param groupName
      * @return list of EForms
      */
-    public List<EForm> getEfromInGroupByGroupName(String groupName){
+    public List<EForm> getEfromInGroupByGroupName(LoggedInInfo loggedInInfo, String groupName){
     	List<EForm> results = eformDao.getEfromInGroupByGroupName(groupName);
     	if (results.size() > 0) {
 			String resultIds = EForm.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("FormsManager.getEfromInGroupByGroupName", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "FormsManager.getEfromInGroupByGroupName", "ids returned=" + resultIds);
 		}
 
 		return (results);
@@ -102,11 +103,11 @@ public class FormsManager {
     }
     
     
-    public List<EFormData> findByDemographicId(Integer demographicId){
+    public List<EFormData> findByDemographicId(LoggedInInfo loggedInInfo, Integer demographicId){
     	List<EFormData> results = eFormDataDao.findByDemographicId(demographicId);
     	if (results.size() > 0) {
 			String resultIds = EForm.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("FormsManager.findByDemographicId", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "FormsManager.findByDemographicId", "ids returned=" + resultIds);
 		}
 
 		return (results);

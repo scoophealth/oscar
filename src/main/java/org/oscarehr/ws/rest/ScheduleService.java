@@ -38,6 +38,7 @@ import org.oscarehr.common.model.Appointment;
 import org.oscarehr.managers.AppointmentManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.ScheduleManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.web.PatientListApptBean;
 import org.oscarehr.web.PatientListApptItemBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ public class ScheduleService extends AbstractServiceImpl {
 	@Produces("application/json")
 	public PatientListApptBean getAppointmentsForDay(@PathParam("providerNo") String providerNo, @PathParam("date") String date) {
 		SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mm aa");
-		
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		PatientListApptBean response = new PatientListApptBean();
 		
 		try {
@@ -69,11 +70,11 @@ public class ScheduleService extends AbstractServiceImpl {
 			} else {
 				dateObj = DateUtils.parseIso8601Date(date);
 			}
-			List<Appointment> appts = scheduleManager.getDayAppointments(providerNo, dateObj);
+			List<Appointment> appts = scheduleManager.getDayAppointments(loggedInInfo,providerNo, dateObj);
 			for(Appointment appt:appts) {
 				PatientListApptItemBean item = new PatientListApptItemBean();
 				item.setDemographicNo(appt.getDemographicNo());
-				item.setName(demographicManager.getDemographicFormattedName(appt.getDemographicNo()));
+				item.setName(demographicManager.getDemographicFormattedName(loggedInInfo,appt.getDemographicNo()));
 				item.setStartTime(timeFormatter.format(appt.getStartTime()));
 				item.setReason(appt.getReason());
 				item.setStatus(appt.getStatus());

@@ -33,6 +33,7 @@ import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,46 +53,46 @@ public class PreventionManager {
 	/**
 	 * @deprecated 2014-05-20 remove after calling ws method is removed
 	 */
-	public List<Prevention> getPreventionsByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
+	public List<Prevention> getPreventionsByIdStart(LoggedInInfo loggedInInfo, Boolean archived, Integer startIdInclusive, int itemsToReturn) {
 		List<Prevention> results = preventionDao.findByIdStart(archived, startIdInclusive, itemsToReturn);
 
 		//--- log action ---
 		if (results.size()>0) {
 			String resultIds=Prevention.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("PreventionManager.getPreventionsByIdStart", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getPreventionsByIdStart", "ids returned=" + resultIds);
 		}
 
 		return (results);
 	}
 	
-	public List<Prevention> getUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+	public List<Prevention> getUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Prevention> results = preventionDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
 
-		LogAction.addLogSynchronous("PreventionManager.getUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
+		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
 
 		return (results);
 	}
 
-	public Prevention getPrevention(Integer id)
+	public Prevention getPrevention(LoggedInInfo loggedInInfo, Integer id)
 	{
 		Prevention result=preventionDao.find(id);
 		
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous("PreventionManager.getPrevention", "id=" + id);
+			LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getPrevention", "id=" + id);
 		}
 
 		return(result);
 	}
 
-	public List<PreventionExt> getPreventionExtByPrevention(Integer preventionId)
+	public List<PreventionExt> getPreventionExtByPrevention(LoggedInInfo loggedInInfo, Integer preventionId)
 	{
 		List<PreventionExt> results=preventionExtDao.findByPreventionId(preventionId);
 		
 		//--- log action ---
 		if (results.size()>0) {
 			String resultIds=PreventionExt.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("PreventionManager.getPreventionExtByPrevention", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getPreventionExtByPrevention", "ids returned=" + resultIds);
 		}
 
 		return(results);

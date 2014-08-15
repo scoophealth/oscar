@@ -29,6 +29,7 @@ import org.oscarehr.common.dao.LookupListDao;
 import org.oscarehr.common.dao.LookupListItemDao;
 import org.oscarehr.common.model.LookupList;
 import org.oscarehr.common.model.LookupListItem;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,54 +44,54 @@ public class LookupListManager {
 	private LookupListItemDao lookupListItemDao;
 	
 	
-	public List<LookupList> findAllActiveLookupLists() {
+	public List<LookupList> findAllActiveLookupLists(LoggedInInfo loggedInInfo) {
 		List<LookupList> results = lookupListDao.findAllActive();
 		
 		//--- log action ---
 		if (results.size()>0) {
 			String resultIds=LookupList.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("LookupListManager.findAllLookupLists", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "LookupListManager.findAllLookupLists", "ids returned=" + resultIds);
 		}
 
 		return (results);
 	}
 	
-	public LookupList findLookupListById(int id) {
+	public LookupList findLookupListById(LoggedInInfo loggedInInfo, int id) {
 		LookupList result = lookupListDao.find(id);
 		
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous("LookupListManager.findLookupListById", "id returned=" + result.getId());
+			LogAction.addLogSynchronous(loggedInInfo, "LookupListManager.findLookupListById", "id returned=" + result.getId());
 		}
 
 		return (result);
 		
 	}
 	
-	public LookupList findLookupListByName(String name) {
+	public LookupList findLookupListByName(LoggedInInfo loggedInInfo, String name) {
 		LookupList result = lookupListDao.findByName(name);
 		
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous("LookupListManager.findLookupListByName", "id returned=" + result.getId());
+			LogAction.addLogSynchronous(loggedInInfo, "LookupListManager.findLookupListByName", "id returned=" + result.getId());
 		}
 
 		return (result);
 		
 	}
 	
-	public LookupList addLookupList(LookupList lookupList) {
+	public LookupList addLookupList(LoggedInInfo loggedInInfo, LookupList lookupList) {
 		lookupListDao.persist(lookupList);
-		LogAction.addLogSynchronous("LookupListManager.addLookupList", "id=" + lookupList.getId());
+		LogAction.addLogSynchronous(loggedInInfo, "LookupListManager.addLookupList", "id=" + lookupList.getId());
 		
 
 		return (lookupList);
 		
 	}
 	
-	public LookupListItem addLookupListItem(LookupListItem lookupListItem) {
+	public LookupListItem addLookupListItem(LoggedInInfo loggedInInfo, LookupListItem lookupListItem) {
 		lookupListItemDao.persist(lookupListItem);
-		LogAction.addLogSynchronous("LookupListManager.addLookupListItem", "id=" + lookupListItem.getId());
+		LogAction.addLogSynchronous(loggedInInfo, "LookupListManager.addLookupListItem", "id=" + lookupListItem.getId());
 		
 
 		return (lookupListItem);

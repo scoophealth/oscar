@@ -25,11 +25,13 @@
 
 package oscar.oscarTickler.tld;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -46,9 +48,12 @@ public class TicklerTag extends TagSupport {
    }
 
    public int doStartTag() throws JspException    {
-	    if(providerNo!=null){
+		HttpServletRequest request=(HttpServletRequest)pageContext.getRequest();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
+		if(providerNo!=null){
 	    	TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
-	       numNewLabs = ticklerManager.getActiveTicklerCount(providerNo);
+	       numNewLabs = ticklerManager.getActiveTicklerCount(loggedInInfo, providerNo);
 	    }  
 	   
         try        {

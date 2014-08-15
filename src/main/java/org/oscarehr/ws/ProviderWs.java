@@ -52,14 +52,14 @@ public class ProviderWs extends AbstractWs {
 	}
 
 	public ProviderTransfer[] getProviders2(Boolean active) {
-		List<Provider> tempResults = providerManager.getProviders(active);
+		List<Provider> tempResults = providerManager.getProviders(getLoggedInInfo(),active);
 		ProviderTransfer[] results = ProviderTransfer.toTransfers(tempResults);
 		return (results);
 	}
 	
 	public ProviderPropertyTransfer[] getProviderProperties(String providerNo, String propertyName)
 	{
-		List<Property> tempResults=providerManager.getProviderProperties(providerNo, propertyName);
+		List<Property> tempResults=providerManager.getProviderProperties(getLoggedInInfo(),providerNo, propertyName);
 		ProviderPropertyTransfer[] results = ProviderPropertyTransfer.toTransfers(tempResults);
 		return (results);
 	}

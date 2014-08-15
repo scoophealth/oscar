@@ -596,7 +596,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 		return view(mapping, form, request, response);
 	}
 	
-	private void createWaitlistRejectionNotificationTickler(Facility facility, String clientId, Integer vacancyId, String creatorProviderNo) {
+	private void createWaitlistRejectionNotificationTickler(LoggedInInfo loggedInInfo, Facility facility, String clientId, Integer vacancyId, String creatorProviderNo) {
 		if(vacancyId == null)
 			return;
 		VacancyDao vacancyDao = SpringUtils.getBean(VacancyDao.class);
@@ -614,7 +614,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 		t.setTaskAssignedTo(facility.getAssignRejectedVacancyApplicant());
 		t.setUpdateDate(new Date());
 		
-		ticklerManager.addTickler(t);
+		ticklerManager.addTickler(loggedInInfo,t);
 	}
 
 	public ActionForward reject_from_queue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -643,7 +643,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 					vacancyId = referral.getVacancyId();
 				}
 			}
-			createWaitlistRejectionNotificationTickler(facility,clientId,vacancyId, loggedInInfo.getLoggedInProviderNo());
+			createWaitlistRejectionNotificationTickler(loggedInInfo, facility,clientId,vacancyId, loggedInInfo.getLoggedInProviderNo());
 		}
 		if (dependents != null) {
 			for (Integer l : dependents) {

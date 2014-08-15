@@ -29,6 +29,7 @@ import java.util.List;
 import org.oscarehr.common.PaginationQuery;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.ticklers.web.TicklerQuery;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,14 +54,14 @@ public class TicklerService {
      * @param paginationQuery
      * @return
      */
-	public List<Tickler> getTicklers(PaginationQuery paginationQuery) {
+	public List<Tickler> getTicklers(LoggedInInfo loggedInInfo, PaginationQuery paginationQuery) {
 		TicklerQuery query = (TicklerQuery) paginationQuery;
 
 		List<Tickler> results = TicklerDao.getTicklers(query);
 		//--- log action ---
 		if (results.size()>0) {
 			String resultIds=Tickler.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("TicklerService.getTicklers", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "TicklerService.getTicklers", "ids returned=" + resultIds);
 		}
 				
 		return results;

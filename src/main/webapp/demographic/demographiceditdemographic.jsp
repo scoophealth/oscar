@@ -197,7 +197,7 @@
 		}
 		if(prId != null) {
 			ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
-			Program p = programManager.getProgram(prId);
+			Program p = programManager.getProgram(loggedInInfo, prId);
 			if(p != null) {
 				currentProgram = p.getName();
 			}
@@ -1634,7 +1634,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                           for (int reCounter = 0; reCounter < relList.size(); reCounter++){
                                              HashMap relHash = (HashMap) relList.get(reCounter);
                                              String dNo = (String)relHash.get("demographicNo");
-                                             String workPhone = demographicManager.getDemographicWorkPhoneAndExtension(Integer.valueOf(dNo));
+                                             String workPhone = demographicManager.getDemographicWorkPhoneAndExtension(loggedInInfo, Integer.valueOf(dNo));
                                              String formattedWorkPhone = (workPhone != null && workPhone.length()>0)?"  W:"+workPhone:"";
                                              String sdb = relHash.get("subDecisionMaker") == null?"":((Boolean) relHash.get("subDecisionMaker")).booleanValue()?"<span title=\"SDM\" >/SDM</span>":"";
                                              String ec = relHash.get("emergencyContact") == null?"":((Boolean) relHash.get("emergencyContact")).booleanValue()?"<span title=\"Emergency Contact\">/EC</span>":"";

@@ -455,7 +455,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			CustomFilter cf = new CustomFilter();
 			cf.setDemographicNo(this.getDemographicNo(request));
 			cf.setStatus("A");
-			request.setAttribute("ticklers", ticklerManager.getTicklers(cf));
+			request.setAttribute("ticklers", ticklerManager.getTicklers(loggedInInfo, cf));
 		}
 
 		if (tab != null && tab.equalsIgnoreCase("Search")) {

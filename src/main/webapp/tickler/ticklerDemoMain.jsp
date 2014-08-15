@@ -24,6 +24,7 @@
 
 --%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String user_no = (String) session.getAttribute("user");
   int  nItems=0;
      String strLimit1="0";
@@ -533,7 +534,7 @@ function generateRenalLabReq(demographicNo) {
 				if (dateEnd.compareTo("") == 0) dateEnd = "8888-12-31";
 				if (dateBegin.compareTo("") == 0) dateBegin="1900-01-01";
 
-				List<Tickler> ticklers = ticklerManager.search_tickler_bydemo(request.getParameter("demoview")==null?null: Integer.parseInt(request.getParameter("demoview")),ticklerview,ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd));
+				List<Tickler> ticklers = ticklerManager.search_tickler_bydemo(loggedInInfo, request.getParameter("demoview")==null?null: Integer.parseInt(request.getParameter("demoview")),ticklerview,ConversionUtils.fromDateString(dateBegin),ConversionUtils.fromDateString(dateEnd));
 				String rowColour = "lilac";
 				for (Tickler t:ticklers) {
 				    Demographic d = demographicDao.getDemographicById(t.getDemographicNo());

@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.oscarehr.common.PaginationQuery;
 import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,14 +54,14 @@ public class ConsultationService {
      * @param paginationQuery
      * @return
      */
-	public List<ConsultationRequest> listConsultationRequests(PaginationQuery paginationQuery) {
+	public List<ConsultationRequest> listConsultationRequests(LoggedInInfo loggedInInfo,PaginationQuery paginationQuery) {
 		ConsultationQuery query = (ConsultationQuery) paginationQuery;
 
 		List<ConsultationRequest> results = consultationDao.listConsultationRequests(query);
 		//--- log action ---
 		if (results.size()>0) {
 			String resultIds=ConsultationRequest.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("ConsultationService.listConsultationRequests", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "ConsultationService.listConsultationRequests", "ids returned=" + resultIds);
 		}
 
 				

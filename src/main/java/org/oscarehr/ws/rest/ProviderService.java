@@ -43,14 +43,13 @@ import org.apache.cxf.rs.security.oauth.data.OAuthContext;
 import org.apache.cxf.security.SecurityContext;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.transfer_objects.ProviderTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Path("/providerService/")
 @Produces("application/xml")
-public class ProviderService {
+public class ProviderService extends AbstractServiceImpl {
 
 	@Autowired
 	ProviderDao providerDao;
@@ -104,7 +103,7 @@ public class ProviderService {
     @Path("/provider/me")
     @Produces("application/json")
     public String getLoggedInProvider() {
-    	Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+    	Provider provider = getLoggedInInfo().getLoggedInProvider();
     	
     	if(provider != null) {
     		JsonConfig config = new JsonConfig();

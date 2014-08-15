@@ -898,16 +898,16 @@ public class ManageDocumentAction extends DispatchAction {
 	}
      
         public void doViewDocumentInfo(HttpServletRequest request, PrintWriter out,boolean viewAnnotationAcknowledgementTicklerFlag, boolean viewDocumentDescriptionFlag) {
-
-                String doc_no = request.getParameter("doc_no");
-                Locale locale=request.getLocale();
+        	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+            String doc_no = request.getParameter("doc_no");
+            Locale locale=request.getLocale();
                 
-		String annotation= "",acknowledgement="",tickler="";
+            String annotation= "",acknowledgement="",tickler="";
                 if(doc_no!=null && doc_no.length()>0) { 
                     annotation=EDocUtil.getHtmlAnnotation(doc_no);
                     acknowledgement=EDocUtil.getHtmlAcknowledgement(locale,doc_no);
                     if(acknowledgement==null) {acknowledgement="";}
-                    tickler=EDocUtil.getHtmlTicklers(doc_no);
+                    tickler=EDocUtil.getHtmlTicklers(loggedInInfo, doc_no);
                 }
                 
                 out.println("<!DOCTYPE html><html><head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'></head><body>");

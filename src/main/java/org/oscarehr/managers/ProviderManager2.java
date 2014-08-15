@@ -30,6 +30,7 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.model.Property;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,34 +44,34 @@ public class ProviderManager2 {
 	@Autowired
 	private PropertyDao propertyDao;
 
-	public List<Provider> getProviders(Boolean active) {
+	public List<Provider> getProviders(LoggedInInfo loggedInInfo, Boolean active) {
 		List<Provider> results = null;
 
 		if (active == null) results = providerDao.getProviders();
 		else results = providerDao.getProviders(active);
 
 		//--- log action ---
-		LogAction.addLogSynchronous("ProviderManager.getProviders, active=" + active, null);
+		LogAction.addLogSynchronous(loggedInInfo, "ProviderManager.getProviders, active=" + active, null);
 
 		return (results);
 	}
 
-	public Provider getProvider(String providerNo) {
+	public Provider getProvider(LoggedInInfo loggedInInfo, String providerNo) {
 
 		Provider result = providerDao.getProvider(providerNo);
 
 		//--- log action ---
-		LogAction.addLogSynchronous("ProviderManager.getProvider, providerNo=" + providerNo, null);
+		LogAction.addLogSynchronous(loggedInInfo, "ProviderManager.getProvider, providerNo=" + providerNo, null);
 
 		return (result);
 	}
 	
-	public List<Property> getProviderProperties(String providerNo, String propertyName)
+	public List<Property> getProviderProperties(LoggedInInfo loggedInInfo, String providerNo, String propertyName)
 	{
 		List<Property> results=propertyDao.findByNameAndProvider(propertyName, providerNo);
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("ProviderManager.getProviderProperties, providerNo=" + providerNo+", propertyName="+propertyName, null);
+		LogAction.addLogSynchronous(loggedInInfo, "ProviderManager.getProviderProperties, providerNo=" + providerNo+", propertyName="+propertyName, null);
 		
 		return(results);
 	}

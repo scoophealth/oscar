@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -49,7 +50,8 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     private static final String cmd = "tickler";
 
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-
+	 LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	 
 	 boolean a = true;
  	Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.viewTickler");
      String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -86,7 +88,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     String dateEnd = "8888-12-31";
 
     TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
-    List<Tickler> ticklers = ticklerManager.findActiveByDemographicNo(Integer.parseInt(bean.demographicNo));
+    List<Tickler> ticklers = ticklerManager.findActiveByDemographicNo(loggedInInfo,Integer.parseInt(bean.demographicNo));
 
     Date serviceDate;
     Date today = new Date(System.currentTimeMillis());

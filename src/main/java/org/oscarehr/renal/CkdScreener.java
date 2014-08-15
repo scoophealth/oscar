@@ -46,6 +46,7 @@ import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarmcmaster.ckd.CKDConfig;
@@ -129,7 +130,7 @@ public class CkdScreener {
 		}
 	}
 	
-	public void screenPopulation() {
+	public void screenPopulation(LoggedInInfo loggedInInfo) {
 		logger.debug("beginning screening");
 		//TODO: only ones which havn't been screened, or don't have have active dx for screening
 		List<Integer> demographicNos = demographicDao.getActiveDemographicIds();
@@ -171,7 +172,7 @@ public class CkdScreener {
 				if(generateNotification) {
 					logger.debug("generating notification");
 					CkdNotificationManager notificationMgr = new CkdNotificationManager();
-					notificationMgr.doNotify(demographicNo,reasons);
+					notificationMgr.doNotify(loggedInInfo,demographicNo,reasons);
 				}
 			}
 			

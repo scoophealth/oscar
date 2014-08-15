@@ -42,6 +42,7 @@
 
 <%
 	TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+   	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 
 
@@ -71,7 +72,7 @@
     Tickler t = null;
     Demographic d = null;
     if (ticklerNo != null) {
-        t = ticklerManager.getTickler(ticklerNo);
+        t = ticklerManager.getTickler(loggedInInfo, ticklerNo);
         d = t.getDemographic();
     }
     else {
