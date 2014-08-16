@@ -36,6 +36,7 @@ import org.apache.cxf.annotations.GZIP;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.managers.PreventionManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.transfer_objects.DataIdTransfer;
 import org.oscarehr.ws.transfer_objects.PreventionTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +50,12 @@ public class PreventionWs extends AbstractWs {
 	private PreventionManager preventionManager;
 
 	public PreventionTransfer getPrevention(Integer preventionId) {
-		Prevention prevention = preventionManager.getPrevention(preventionId);
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		
+		Prevention prevention = preventionManager.getPrevention(loggedInInfo,preventionId);
 
 		if (prevention != null) {
-			List<PreventionExt> preventionExts = preventionManager.getPreventionExtByPrevention(prevention.getId());
+			List<PreventionExt> preventionExts = preventionManager.getPreventionExtByPrevention(loggedInInfo,prevention.getId());
 			return (PreventionTransfer.toTransfer(prevention, preventionExts));
 		}
 
@@ -60,12 +63,14 @@ public class PreventionWs extends AbstractWs {
 	}
 
 	public PreventionTransfer[] getPreventionsUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Prevention> preventions=preventionManager.getUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		
+		List<Prevention> preventions=preventionManager.getUpdatedAfterDate(loggedInInfo,updatedAfterThisDateInclusive, itemsToReturn);
 		ArrayList<PreventionTransfer> results=new ArrayList<PreventionTransfer>();
 		
 		for (Prevention prevention : preventions)
 		{
-			List<PreventionExt> preventionExts = preventionManager.getPreventionExtByPrevention(prevention.getId());
+			List<PreventionExt> preventionExts = preventionManager.getPreventionExtByPrevention(loggedInInfo,prevention.getId());
 			PreventionTransfer preventionTransfer=PreventionTransfer.toTransfer(prevention, preventionExts);
 			results.add(preventionTransfer);
 		}
@@ -78,10 +83,12 @@ public class PreventionWs extends AbstractWs {
 	 * @deprecated 2014-05-20 use getUpdatedAfterDate() instead
 	 */
 	public DataIdTransfer[] getPreventionDataIds(Boolean active, Integer startIdInclusive, int itemsToReturn) {
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		
 		Boolean archived = null;
 		if (active != null) archived = !active;
 
-		List<Prevention> preventions = preventionManager.getPreventionsByIdStart(archived, startIdInclusive, itemsToReturn);
+		List<Prevention> preventions = preventionManager.getPreventionsByIdStart(loggedInInfo, archived, startIdInclusive, itemsToReturn);
 
 		DataIdTransfer[] results = new DataIdTransfer[preventions.size()];
 		for (int i = 0; i < preventions.size(); i++) {

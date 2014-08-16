@@ -31,6 +31,7 @@ import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementMapDao;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementMap;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,32 +48,32 @@ public class MeasurementManager {
 	/**
 	 * @deprecated 2014-05-20 remove after calling ws is removed
 	 */
-	public List<Measurement> getMeasurementsByIdStart(Integer startIdInclusive, int itemsToReturn) {
+	public List<Measurement> getMeasurementsByIdStart(LoggedInInfo loggedInInfo, Integer startIdInclusive, int itemsToReturn) {
 		List<Measurement> results = measurementDao.findByIdStart(startIdInclusive, itemsToReturn);
 
 		//--- log action ---
 		if (results.size() > 0) {
 			String resultIds = Measurement.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("MeasurementManager.getMeasurementsByIdStart", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.getMeasurementsByIdStart", "ids returned=" + resultIds);
 		}
 
 		return (results);
 	}
 
-	public List<Measurement> getCreatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+	public List<Measurement> getCreatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Measurement> results = measurementDao.findByCreateDate(updatedAfterThisDateInclusive, itemsToReturn);
 
-		LogAction.addLogSynchronous("MeasurementManager.getCreatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
+		LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.getCreatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
 
 		return (results);
 	}
 
-	public Measurement getMeasurement(Integer id) {
+	public Measurement getMeasurement(LoggedInInfo loggedInInfo, Integer id) {
 		Measurement result = measurementDao.find(id);
 
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous("MeasurementManager.getMeasurement", "id=" + id);
+			LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.getMeasurement", "id=" + id);
 		}
 
 		return (result);
@@ -87,9 +88,9 @@ public class MeasurementManager {
 		return (results);
 	}
 
-	public Measurement addMeasurement(Measurement measurement) {
+	public Measurement addMeasurement(LoggedInInfo loggedInInfo, Measurement measurement) {
 		measurementDao.persist(measurement);
-		LogAction.addLogSynchronous("MeasurementManager.addMeasurement", "id=" + measurement.getId());
+		LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.addMeasurement", "id=" + measurement.getId());
 		return(measurement);
 	}
 }

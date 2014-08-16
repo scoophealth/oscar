@@ -34,7 +34,6 @@ import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.ticklers.service.TicklerService;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.conversion.TicklerConverter;
 import org.oscarehr.ws.rest.to.TicklerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,7 @@ import org.springframework.stereotype.Component;
 
 @Path("/tickler")
 @Component("ticklerWebService")
-public class TicklerWebService {
+public class TicklerWebService extends AbstractServiceImpl {
 	
 	@Autowired
 	private TicklerManager ticklerManager; 
@@ -57,10 +56,10 @@ public class TicklerWebService {
 	@Produces("application/json")
 	public TicklerResponse getMyTicklers(@QueryParam("limit") int limit) {
 		CustomFilter cf = new CustomFilter();
-		cf.setAssignee(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		cf.setAssignee(getLoggedInInfo().getLoggedInProviderNo());
 		cf.setStatus("A");
 		
-		List<Tickler> ticklers = ticklerManager.getTicklers(cf,0,limit);
+		List<Tickler> ticklers = ticklerManager.getTicklers(getLoggedInInfo(),cf,0,limit);
 
 		TicklerResponse result = new TicklerResponse();
 		result.setTotal(ticklers.size());

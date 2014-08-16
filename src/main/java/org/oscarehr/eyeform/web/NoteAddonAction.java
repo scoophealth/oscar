@@ -190,7 +190,7 @@ public class NoteAddonAction extends DispatchAction {
 		
 		t.setTaskAssignedTo(recipient);
 		
-		ticklerManager.addTickler(t);
+		ticklerManager.addTickler(loggedInInfo, t);
 		
 		
 		

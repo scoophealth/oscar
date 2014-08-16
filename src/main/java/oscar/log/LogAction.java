@@ -45,9 +45,8 @@ public class LogAction {
 	private static OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
 	private static ExecutorService executorService = Executors.newCachedThreadPool(new DeamonThreadFactory(LogAction.class.getSimpleName()+".executorService", Thread.MAX_PRIORITY));
 
-	public static void addLogSynchronous(String action, String data)
+	public static void addLogSynchronous(LoggedInInfo loggedInInfo, String action, String data)
 	{
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		OscarLog logEntry=new OscarLog();
 		if (loggedInInfo.loggedInSecurity!=null) logEntry.setSecurityId(loggedInInfo.loggedInSecurity.getSecurityNo());
 		if (loggedInInfo.loggedInProvider!=null) logEntry.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());

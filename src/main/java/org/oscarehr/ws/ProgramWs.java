@@ -46,7 +46,7 @@ public class ProgramWs extends AbstractWs {
 	private ProgramManager2 programManager;
 
 	public ProgramTransfer[] getAllPrograms() {
-		List<Program> tempResults = programManager.getAllPrograms();
+		List<Program> tempResults = programManager.getAllPrograms(getLoggedInInfo());
 
 		ProgramTransfer[] results = ProgramTransfer.toTransfers(tempResults);
 
@@ -55,7 +55,7 @@ public class ProgramWs extends AbstractWs {
 	
 	public ProgramProviderTransfer[] getAllProgramProviders()
 	{
-		List<ProgramProvider> tempResults = programManager.getAllProgramProviders();
+		List<ProgramProvider> tempResults = programManager.getAllProgramProviders(getLoggedInInfo());
 
 		ProgramProviderTransfer[] results = ProgramProviderTransfer.toTransfers(tempResults);
 

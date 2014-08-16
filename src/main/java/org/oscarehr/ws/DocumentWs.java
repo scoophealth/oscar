@@ -41,6 +41,7 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.common.model.CtlDocument;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.managers.DocumentManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.transfer_objects.DataIdTransfer;
 import org.oscarehr.ws.transfer_objects.DocumentTransfer;
@@ -61,8 +62,9 @@ public class DocumentWs extends AbstractWs {
 
 	public DocumentTransfer getDocument(Integer documentId) {
 		try {
-			Document document = documentManager.getDocument(documentId);
-			CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(documentId);
+			LoggedInInfo loggedInInfo=getLoggedInInfo();
+			Document document = documentManager.getDocument(loggedInInfo,documentId);
+			CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo,documentId);
 			return (DocumentTransfer.toTransfer(document, ctlDocument));
 		} catch (IOException e) {
 			logger.error("Unexpected error", e);
@@ -72,12 +74,14 @@ public class DocumentWs extends AbstractWs {
 
 	public DocumentTransfer[] getDocumentsUpdateAfterDate(Date updateAfterThisDateInclude, int itemsToReturn) {
 		try {
-			List<Document> documents = documentManager.getDocumentsUpdateAfterDate(updateAfterThisDateInclude, itemsToReturn);
+			LoggedInInfo loggedInInfo=getLoggedInInfo();
+
+			List<Document> documents = documentManager.getDocumentsUpdateAfterDate(loggedInInfo,updateAfterThisDateInclude, itemsToReturn);
 
 			ArrayList<DocumentTransfer> results = new ArrayList<DocumentTransfer>();
 
 			for (Document document : documents) {
-				CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(document.getId());
+				CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo,document.getId());
 				DocumentTransfer transfer = DocumentTransfer.toTransfer(document, ctlDocument);
 				results.add(transfer);
 			}
@@ -94,16 +98,17 @@ public class DocumentWs extends AbstractWs {
 	 * @deprecated 2014-05-15 use getDocumentsUpdateAfter() instead
 	 */
 	public DataIdTransfer[] getDocumentDataIds(Boolean active, Integer startIdInclusive, int itemsToReturn) {
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
 
 		Boolean archived = null;
 		if (active != null) archived = !active;
 
-		List<Document> documents = documentManager.getDocumentsByIdStart(archived, startIdInclusive, itemsToReturn);
+		List<Document> documents = documentManager.getDocumentsByIdStart(loggedInInfo,archived, startIdInclusive, itemsToReturn);
 
 		DataIdTransfer[] results = new DataIdTransfer[documents.size()];
 		for (int i = 0; i < documents.size(); i++) {
 			Document document = documents.get(i);
-			CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(document.getDocumentNo());
+			CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo,document.getDocumentNo());
 			results[i] = getDataIdTransfer(document, ctlDocument);
 		}
 

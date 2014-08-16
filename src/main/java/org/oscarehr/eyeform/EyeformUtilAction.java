@@ -71,7 +71,8 @@ public class EyeformUtilAction extends DispatchAction {
 
 
 	public ActionForward getTickler(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		Tickler t = ticklerManager.getTickler(Integer.parseInt(request.getParameter("tickler_no")));
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		Tickler t = ticklerManager.getTickler(loggedInInfo,Integer.parseInt(request.getParameter("tickler_no")));
 
 		HashMap<String, HashMap<String, Object>> hashMap = new HashMap<String, HashMap<String, Object>>();
 		HashMap<String, Object> ticklerMap = new HashMap<String, Object>();
@@ -202,6 +203,7 @@ public class EyeformUtilAction extends DispatchAction {
 	}
 
 	public ActionForward sendPlan(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 
 		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
@@ -222,7 +224,7 @@ public class EyeformUtilAction extends DispatchAction {
 
 		if (demographicNo != null && message != null && message.trim().length() > 0 && activeReceptionists != null) {
 			for (Provider p : activeReceptionists) {
-				tc.createTickler(demographicNo, p.getProviderNo(), message);
+				tc.createTickler(loggedInInfo, demographicNo, p.getProviderNo(), message);
 			}
 
 			hashMap.put("sentToReceptionists", activeReceptionists.size());

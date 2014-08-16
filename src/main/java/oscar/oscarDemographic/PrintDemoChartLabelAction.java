@@ -39,7 +39,9 @@ public class PrintDemoChartLabelAction extends OscarAction {
     }
 
     public ActionForward execute(ActionMapping actionMapping, ActionForm actionForm, HttpServletRequest request, HttpServletResponse response) {
-    	Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
+		Provider provider = loggedInInfo.getLoggedInProvider();
     	
     	Map<String,String> nameToFileMap = new HashMap<String,String>();
     	nameToFileMap.put("ChartLabel", "Chartlabel.xml");
@@ -67,9 +69,9 @@ public class PrintDemoChartLabelAction extends OscarAction {
         ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
   
         parameters.put("program", "N/A");
-        ProgramProvider pp = programManager2.getCurrentProgramInDomain(provider.getProviderNo());
+        ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo, provider.getProviderNo());
 		if(pp != null) {
-			Program program = programManager2.getProgram(pp.getProgramId().intValue());
+			Program program = programManager2.getProgram(loggedInInfo, pp.getProgramId().intValue());
 			if(program != null) {
 				 parameters.put("program", program.getName());
 			}
@@ -79,32 +81,32 @@ public class PrintDemoChartLabelAction extends OscarAction {
         InputStream ins = null;
       
         try {
-        	ins = new FileInputStream(System.getProperty("user.home") + File.separator + labelFile);
-        }
-        catch (FileNotFoundException ex1) {
-        	logger.warn(labelFile + " not found in user's home directory. Using default instead (classpath)",ex1);
-        }
-
-		if (ins == null) {
-			try { 
-				ins = getClass().getResourceAsStream("/oscar/oscarDemographic/" + labelFile);
-				logger.debug("loading from : /oscar/oscarDemographic/" + labelFile);
+	        try {
+	        	ins = new FileInputStream(System.getProperty("user.home") + File.separator + labelFile);
+	        }
+	        catch (FileNotFoundException ex1) {
+	        	logger.warn(labelFile + " not found in user's home directory. Using default instead (classpath)",ex1);
+	        }
+	
+			if (ins == null) {
+				try { 
+					ins = getClass().getResourceAsStream("/oscar/oscarDemographic/" + labelFile);
+					logger.debug("loading from : /oscar/oscarDemographic/" + labelFile);
+				}
+				catch (Exception ex1) {
+					MiscUtils.getLogger().error("Error", ex1);	
+				}
 			}
-			catch (Exception ex1) {
-				MiscUtils.getLogger().error("Error", ex1);	
-			}
-		}
-
-        try {
-            sos = response.getOutputStream();
-        } catch (IOException ex) {
-        	MiscUtils.getLogger().error("Error", ex);
-        }
-
-        response.setHeader("Content-disposition", getHeader(response).toString());
-        OscarDocumentCreator osc = new OscarDocumentCreator();
+	
+	        try {
+	            sos = response.getOutputStream();
+	        } catch (IOException ex) {
+	        	MiscUtils.getLogger().error("Error", ex);
+	        }
+	
+	        response.setHeader("Content-disposition", getHeader(response).toString());
+	        OscarDocumentCreator osc = new OscarDocumentCreator();
         
-        try {
             osc.fillDocumentStream(parameters, sos, "pdf", ins, DbConnectionFilter.getThreadLocalDbConnection());
         }
         catch (SQLException e) {

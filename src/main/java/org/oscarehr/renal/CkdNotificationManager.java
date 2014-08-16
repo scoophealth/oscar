@@ -33,6 +33,7 @@ import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -53,14 +54,14 @@ public class CkdNotificationManager {
 		
 	}
 	
-	public void doNotify(Integer demographicNo,List<String> reasons) {
+	public void doNotify(LoggedInInfo loggedInInfo,Integer demographicNo,List<String> reasons) {
 		String notificationScheme = OscarProperties.getInstance().getProperty("ckd_notification_scheme","dsa");
 		if(notificationScheme.equalsIgnoreCase("tickler") || notificationScheme.equalsIgnoreCase("all")) {
-			notifyByTickler(demographicNo,reasons);
+			notifyByTickler(loggedInInfo, demographicNo,reasons);
 		}
 	}
 	
-	public void notifyByTickler(Integer demographicNo, List<String> reasons) {
+	public void notifyByTickler(LoggedInInfo loggedInInfo,Integer demographicNo, List<String> reasons) {
 		Demographic d = demographicDao.getDemographicById(demographicNo);
 		
 		String receiver = OscarProperties.getInstance().getProperty("ckd_notification_receiver");
@@ -122,7 +123,7 @@ public class CkdNotificationManager {
 		 
 		 message += "<br/>Order Labs - <a title=\"Create Lab Requisition\" href=\"javascript:void(0);\" onclick=\"generateRenalLabReq("+d.getDemographicNo()+");return false;\">Lab Requisition</a><br/><br/>";
 		
-		tc.createTickler(demographicNo.toString(),"-1", message,receiver);
+		tc.createTickler(loggedInInfo, demographicNo.toString(),"-1", message,receiver);
 		
 		logger.debug("Sent tickler notification to " + receiver + " regarding " + demographicNo + ":" + message);
 	}

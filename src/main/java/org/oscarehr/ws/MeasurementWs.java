@@ -39,6 +39,7 @@ import org.oscarehr.common.model.MeasurementMap;
 import org.oscarehr.managers.MeasurementManager;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.ScheduleManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.transfer_objects.DataIdTransfer;
 import org.oscarehr.ws.transfer_objects.MeasurementMapTransfer;
 import org.oscarehr.ws.transfer_objects.MeasurementTransfer;
@@ -59,7 +60,7 @@ public class MeasurementWs extends AbstractWs {
 	private ProgramManager2 programManager;
 
 	public MeasurementTransfer getMeasurement(Integer measurementId) {
-		Measurement measurement = measurementManager.getMeasurement(measurementId);
+		Measurement measurement = measurementManager.getMeasurement(getLoggedInInfo(),measurementId);
 		return (MeasurementTransfer.toTransfer(measurement));
 	}
 
@@ -69,22 +70,22 @@ public class MeasurementWs extends AbstractWs {
 	 */
 	public DataIdTransfer[] getMeasurementDataIds(Integer startIdInclusive, int itemsToReturn) {
 
-		List<Measurement> measurements = measurementManager.getMeasurementsByIdStart(startIdInclusive, itemsToReturn);
+		List<Measurement> measurements = measurementManager.getMeasurementsByIdStart(getLoggedInInfo(),startIdInclusive, itemsToReturn);
 
 		DataIdTransfer[] results = new DataIdTransfer[measurements.size()];
 		for (int i = 0; i < measurements.size(); i++) {
-			results[i] = getDataIdTransfer(measurements.get(i));
+			results[i] = getDataIdTransfer(getLoggedInInfo(), measurements.get(i));
 		}
 
 		return (results);
 	}
 
 	public MeasurementTransfer[] getMeasurementsCreatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Measurement> results=measurementManager.getCreatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+		List<Measurement> results=measurementManager.getCreatedAfterDate(getLoggedInInfo(),updatedAfterThisDateInclusive, itemsToReturn);
 		return(MeasurementTransfer.toTransfers(results));
 	}
 
-	private DataIdTransfer getDataIdTransfer(Measurement measurement) {
+	private DataIdTransfer getDataIdTransfer(LoggedInInfo loggedInInfo, Measurement measurement) {
 		DataIdTransfer result = new DataIdTransfer();
 
 		Calendar cal = new GregorianCalendar();
@@ -97,12 +98,12 @@ public class MeasurementWs extends AbstractWs {
 		result.setOwnerDemographicId(measurement.getDemographicId());
 
 		if (measurement.getAppointmentNo() != null && measurement.getAppointmentNo() != 0) {
-			Appointment appointment = scheduleManager.getAppointment(measurement.getAppointmentNo());
+			Appointment appointment = scheduleManager.getAppointment(loggedInInfo, measurement.getAppointmentNo());
 			if (appointment != null) {
 				int programId = appointment.getProgramId();
 				result.setClinicId(programId);
 
-				Program program = programManager.getProgram(programId);
+				Program program = programManager.getProgram(getLoggedInInfo(),programId);
 				if (program != null) {
 					result.setFacilityId(program.getFacilityId());
 				}
@@ -123,7 +124,7 @@ public class MeasurementWs extends AbstractWs {
 	public Integer addMeasurement(MeasurementTransfer measurementTransfer) {
 		Measurement measurement = new Measurement();
 		measurementTransfer.copyTo(measurement);
-		measurementManager.addMeasurement(measurement);
+		measurementManager.addMeasurement(getLoggedInInfo(),measurement);
 		return (measurement.getId());
 	}
 }

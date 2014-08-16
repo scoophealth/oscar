@@ -29,6 +29,7 @@ import java.util.List;
 
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,34 +43,34 @@ public class AllergyManager {
 	/**
 	 * @deprecated 2014-05-15 remove as soon as WS is removed.
 	 */
-	public List<Allergy> getAllergiesByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
+	public List<Allergy> getAllergiesByIdStart(LoggedInInfo loggedInInfo, Boolean archived, Integer startIdInclusive, int itemsToReturn) {
 		List<Allergy> results = allergyDao.findAllergiesByIdStart(archived, startIdInclusive, itemsToReturn);
 
 		//--- log action ---
 		if (results.size()>0) {
 			String resultIds=Allergy.getIdsAsStringList(results);
-			LogAction.addLogSynchronous("AllergyManager.getAllergiesByIdStart", "ids returned=" + resultIds);
+			LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getAllergiesByIdStart", "ids returned=" + resultIds);
 		}
 
 		return (results);
 	}
 	
-	public Allergy getAllergy(Integer id)
+	public Allergy getAllergy(LoggedInInfo loggedInInfo, Integer id)
 	{
 		Allergy result=allergyDao.find(id);
 		
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous("AllergyManager.getAllergy", "id=" + id);
+			LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getAllergy", "id=" + id);
 		}
 
 		return(result);
 	}
 	
-	public List<Allergy> getUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+	public List<Allergy> getUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Allergy> results = allergyDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
 
-		LogAction.addLogSynchronous("AllergyManager.getUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
+		LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
 
 		return (results);
 	}

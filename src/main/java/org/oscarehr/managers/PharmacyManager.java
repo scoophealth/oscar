@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.oscarehr.common.dao.DemographicPharmacyDao;
 import org.oscarehr.common.model.DemographicPharmacy;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,31 +48,31 @@ public class PharmacyManager {
 	@Autowired
 	private DemographicPharmacyDao demographicPharmacyDao;
 
-	public List<DemographicPharmacy> getPharmacies(Integer demographicId) {
+	public List<DemographicPharmacy> getPharmacies(LoggedInInfo loggedInInfo, Integer demographicId) {
 		List<DemographicPharmacy> result =  demographicPharmacyDao.findAllByDemographicId(demographicId);
 		
 		if(result != null) {
 			for(DemographicPharmacy item:result) {
 		    	//--- log action ---
-				LogAction.addLogSynchronous("PharmacyManager.getPharmacies", "pharmacyId="+item.getPharmacyId());
+				LogAction.addLogSynchronous(loggedInInfo, "PharmacyManager.getPharmacies", "pharmacyId="+item.getPharmacyId());
 			}
 	    }
 	    
 	    return result;
 	}
 
-	public DemographicPharmacy addPharmacy(Integer demographicId, Integer pharmacyId) {
+	public DemographicPharmacy addPharmacy(LoggedInInfo loggedInInfo, Integer demographicId, Integer pharmacyId) {
 		DemographicPharmacy result =  demographicPharmacyDao.addPharmacyToDemographic(demographicId, pharmacyId);
 		
 		if(result != null) {
 	    	//--- log action ---
-			LogAction.addLogSynchronous("PharmacyManager.addPharmacy", "demographicNo="+demographicId+ ",pharmacyId="+pharmacyId);
+			LogAction.addLogSynchronous(loggedInInfo, "PharmacyManager.addPharmacy", "demographicNo="+demographicId+ ",pharmacyId="+pharmacyId);
 	    }
 	    
 	    return result;
 	}
 
-	public void removePharmacy(Integer demographicId, Integer pharmacyId) {
+	public void removePharmacy(LoggedInInfo loggedInInfo, Integer demographicId, Integer pharmacyId) {
 		DemographicPharmacy pharmacy = demographicPharmacyDao.find(pharmacyId);
 		if (pharmacy == null) {
 			throw new IllegalArgumentException("Unable to locate pharmacy association with id " + pharmacyId);
@@ -85,7 +86,7 @@ public class PharmacyManager {
 		demographicPharmacyDao.saveEntity(pharmacy);
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("PharmacyManager.removePharmacy", "demographicNo="+demographicId + ",pharmacyId="+pharmacyId);	
+		LogAction.addLogSynchronous(loggedInInfo, "PharmacyManager.removePharmacy", "demographicNo="+demographicId + ",pharmacyId="+pharmacyId);	
 	}
 
 }

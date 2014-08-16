@@ -55,7 +55,7 @@ import org.springframework.stereotype.Component;
 
 @Path("/jobs")
 @Component("oscarJobService")
-public class OscarJobService {
+public class OscarJobService extends AbstractServiceImpl {
 
 	Logger logger = MiscUtils.getLogger();
 	
@@ -99,7 +99,7 @@ public class OscarJobService {
 	@Path("/all")
 	@Produces("application/json")
 	public OscarJobResponse getAllJobs() {
-		List<OscarJob> results = oscarJobManager.getAllJobs();
+		List<OscarJob> results = oscarJobManager.getAllJobs(getLoggedInInfo());
 		
 		OscarJobResponse response = new OscarJobResponse();
 		for(OscarJob result:results) {
@@ -122,7 +122,7 @@ public class OscarJobService {
 	@Path("/job/{jobId}")
 	@Produces("application/json")
 	public OscarJobResponse getJob(@PathParam("jobId")  Integer jobId) {
-		OscarJob result = oscarJobManager.getJob(jobId);
+		OscarJob result = oscarJobManager.getJob(getLoggedInInfo(),jobId);
 		
 		OscarJobResponse response = new OscarJobResponse();
 		
@@ -154,7 +154,7 @@ public class OscarJobService {
 		
 		if(job.getId()>0) {
 			//edit
-			OscarJob savedJob = oscarJobManager.getJob(job.getId());
+			OscarJob savedJob = oscarJobManager.getJob(getLoggedInInfo(),job.getId());
 			savedJob.setName(job.getName());
 			savedJob.setDescription(job.getDescription());
 			savedJob.setEnabled(job.isEnabled());
@@ -162,11 +162,11 @@ public class OscarJobService {
 			savedJob.setOscarJobType(null);
 			savedJob.setProviderNo(job.getProviderNo());
 			
-			oscarJobManager.updateJob(savedJob);
+			oscarJobManager.updateJob(getLoggedInInfo(),savedJob);
 			result = savedJob;
 		} else  {
 			job.setId(null);
-			oscarJobManager.saveJob(job);
+			oscarJobManager.saveJob(getLoggedInInfo(),job);
 			result = job;
 		}
 		
@@ -250,10 +250,10 @@ public class OscarJobService {
 			}
 		}
 		
-		OscarJob job = oscarJobManager.getJob(jobId);
+		OscarJob job = oscarJobManager.getJob(getLoggedInInfo(),jobId);
 		if(job != null) {
 			job.setCronExpression(parts[0] + " " +parts[1] + " " +parts[2] + " " +parts[3] + " " +parts[4] + " "  + parts[5]);
-			oscarJobManager.updateJob(job);
+			oscarJobManager.updateJob(getLoggedInInfo(),job);
 			try {
 				OscarJobUtils.scheduleJob(job);
 			}catch(Exception e) {
@@ -278,7 +278,7 @@ public class OscarJobService {
 	@Path("/jobType/{jobTypeId}")
 	@Produces("application/json")
 	public OscarJobTypeResponse getJobType(@PathParam("jobTypeId")  Integer jobTypeId) {
-		OscarJobType result = oscarJobManager.getJobType(jobTypeId);
+		OscarJobType result = oscarJobManager.getJobType(getLoggedInInfo(),jobTypeId);
 		
 		OscarJobTypeResponse response = new OscarJobTypeResponse();
 		
@@ -306,17 +306,17 @@ public class OscarJobService {
 		
 		if(job.getId()>0) {
 			//edit
-			OscarJobType savedJob = oscarJobManager.getJobType(job.getId());
+			OscarJobType savedJob = oscarJobManager.getJobType(getLoggedInInfo(),job.getId());
 			savedJob.setName(job.getName());
 			savedJob.setDescription(job.getDescription());
 			savedJob.setClassName(job.getClassName());
 			savedJob.setEnabled(job.isEnabled());
 			
-			oscarJobManager.updateJobType(savedJob);
+			oscarJobManager.updateJobType(getLoggedInInfo(),savedJob);
 			result = savedJob;
 		} else  {
 			job.setId(null);
-			oscarJobManager.saveJobType(job);
+			oscarJobManager.saveJobType(getLoggedInInfo(),job);
 			result = job;
 		}
 		
@@ -327,11 +327,11 @@ public class OscarJobService {
 	@Path("/enableJob")
 	@Produces("application/json")
 	public OscarJobResponse enableJob(@QueryParam(value="jobId") Integer jobId) {
-		OscarJob job = oscarJobManager.getJob(jobId);
+		OscarJob job = oscarJobManager.getJob(getLoggedInInfo(),jobId);
 		if(job != null) {
 			job.setEnabled(true);
 		}
-		oscarJobManager.updateJob(job);
+		oscarJobManager.updateJob(getLoggedInInfo(),job);
 		try {
 			OscarJobUtils.scheduleJob(job);
 		}catch(Exception e) {
@@ -344,11 +344,11 @@ public class OscarJobService {
 	@Path("/disableJob")
 	@Produces("application/json")
 	public OscarJobResponse disableJob(@QueryParam(value="jobId") Integer jobId) {
-		OscarJob job = oscarJobManager.getJob(jobId);
+		OscarJob job = oscarJobManager.getJob(getLoggedInInfo(),jobId);
 		if(job != null) {
 			job.setEnabled(false);
 		}
-		oscarJobManager.updateJob(job);
+		oscarJobManager.updateJob(getLoggedInInfo(),job);
 		try {
 			OscarJobUtils.scheduleJob(job);
 		}catch(Exception e) {

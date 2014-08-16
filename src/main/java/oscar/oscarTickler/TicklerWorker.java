@@ -50,7 +50,7 @@ public class TicklerWorker extends Thread {
 	public String priority = TicklerData.NORMAL;
 
 	public void run() {
-		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
+		LoggedInInfo loggedInInfo=LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
 		Calendar calendar = GregorianCalendar.getInstance();
 		calendar.add(Calendar.DAY_OF_YEAR, -OLD_REFERRAL_CUTOFF_IN_DAYS);
@@ -63,7 +63,7 @@ public class TicklerWorker extends Thread {
 
 			ticklerMessage = DemographicNameAgeString.getInstance().getNameAgeString(Integer.valueOf(demo)) + " has an Consultation Request with a status of 'Nothing Done'. Referral Date was " + date;
 			if (!td.hasTickler(demo, provider, ticklerMessage)) {
-				td.addTickler(demo, ticklerMessage, status, UtilDateUtilities.getToday("yyyy-MM-dd"), "0", priority, provider);
+				td.addTickler(loggedInInfo, demo, ticklerMessage, status, UtilDateUtilities.getToday("yyyy-MM-dd"), "0", priority, provider);
 			}
 		}
 		/// check to see if tickler is needed

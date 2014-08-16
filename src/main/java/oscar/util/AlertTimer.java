@@ -71,9 +71,9 @@ public class AlertTimer {
      */
     class ReminderClass extends TimerTask {
         public void run() {
-    		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
+    		LoggedInInfo loggedInInfo=LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
             try {
-                hlp.manageCDMTicklers(null, alertCodes);
+                hlp.manageCDMTicklers(loggedInInfo, null, alertCodes);
             }
             catch (ShutdownException e) {
             	logger.debug("AlertTimer noticed shutdown signaled.");

@@ -39,6 +39,8 @@
   String curUser_no = (String) session.getAttribute("user");
   String userfirstname = (String) session.getAttribute("userfirstname");
   String userlastname = (String) session.getAttribute("userlastname");
+  
+  LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
   ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
   int everyMin=providerPreference.getEveryMin();
@@ -112,13 +114,13 @@
 	ProviderManager providerManager = SpringUtils.getBean(ProviderManager.class);
 	ProgramManager programManager = SpringUtils.getBean(ProgramManager.class);
 	
-	String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
-	Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
+	String providerNo = loggedInInfo.getLoggedInProviderNo();
+	Facility facility = loggedInInfo.currentFacility;
 	
     List<Program> programs = programManager.getActiveProgramByFacility(providerNo, facility.getId());
 
 	LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
-	LookupList reasonCodes = lookupListManager.findLookupListByName("reasonCode");
+	LookupList reasonCodes = lookupListManager.findLookupListByName(loggedInInfo, "reasonCode");
 
     int iPageSize=5;
 
@@ -963,7 +965,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 			<select name="location" >
                 <%
                 String sessionLocation = "";
-                ProgramProvider programProvider = programManager2.getCurrentProgramInDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+                ProgramProvider programProvider = programManager2.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
                 if(programProvider!=null && programProvider.getProgram() != null) {
                 	sessionLocation = programProvider.getProgram().getId().toString();
                 }

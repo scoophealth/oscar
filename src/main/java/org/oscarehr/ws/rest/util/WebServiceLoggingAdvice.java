@@ -34,7 +34,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.oscarehr.common.model.OscarLog;
-import org.oscarehr.util.LoggedInInfo;
 import org.springframework.stereotype.Component;
 
 import oscar.log.LogAction;
@@ -89,15 +88,7 @@ public class WebServiceLoggingAdvice {
 	private void logAccess(String action) {
 		OscarLog log = new OscarLog();
 		log.setAction(action);
-
-		LoggedInInfo info = LoggedInInfo.loggedInInfo.get();
-		if (info != null) {
-			if (info.loggedInProvider != null) {
-				log.setProviderNo(info.loggedInProvider.getProviderNo());
-			} else {
-				log.setProviderNo("N/A");
-			}
-		}
+		log.setProviderNo("N/A");
 		
 		Message currentMessage = PhaseInterceptorChain.getCurrentMessage();
 		

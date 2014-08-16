@@ -152,6 +152,8 @@ public class PHRMessageAction extends DispatchAction {
 	}
 
 	public ActionForward createMessage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		String demographicNo = request.getParameter("demographicNo");
 		String provNo = (String) request.getSession().getAttribute("user");
 		
@@ -163,7 +165,7 @@ public class PHRMessageAction extends DispatchAction {
 		
         //Check if patient has been verified
         DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class); 
-	   	String verificationLevel = demographicManager.getPhrVerificationLevelByDemographicId(Integer.parseInt(demographicNo));
+	   	String verificationLevel = demographicManager.getPhrVerificationLevelByDemographicId(loggedInInfo, Integer.parseInt(demographicNo));
 	   	int verifyLevel = 0;
 	   	try{
 	      verifyLevel = Integer.parseInt(verificationLevel.replace('+', ' ').trim());

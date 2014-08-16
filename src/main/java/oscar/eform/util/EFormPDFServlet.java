@@ -412,6 +412,7 @@ public class EFormPDFServlet extends HttpServlet {
     }
     
     private void getPrintPropValues(Properties props, HttpServletRequest req, String suffix) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(req);
         StringBuilder temp = new StringBuilder("");
         for (Enumeration<String> e = req.getParameterNames(); e.hasMoreElements();) {
             temp = new StringBuilder(e.nextElement().toString());
@@ -432,7 +433,7 @@ public class EFormPDFServlet extends HttpServlet {
         int totalPages = 1;
         if(req.getParameter("multiple")!=null)
         	totalPages = Integer.parseInt(req.getParameter("multiple"));
-        String currentUser = LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName();
+        String currentUser = loggedInInfo.getLoggedInProvider().getFormattedName();
         String pg = suffix.length()==0||suffix.equals("0")?"0":suffix;                        
         String currentPage = String.valueOf(Integer.parseInt(pg)+1);
         

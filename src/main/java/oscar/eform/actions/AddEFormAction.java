@@ -77,6 +77,7 @@ public class AddEFormAction extends Action {
 		HttpSession se = request.getSession();
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
 
 		boolean fax = "true".equals(request.getParameter("faxEForm"));
 		boolean print = "true".equals(request.getParameter("print"));
@@ -90,7 +91,6 @@ public class AddEFormAction extends Action {
 		String demographic_no = request.getParameter("efmdemographic_no");
 		String eform_link = request.getParameter("eform_link");
 		String subject = request.getParameter("subject");
-		String provider_no = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		boolean doDatabaseUpdate = false;
 
@@ -135,7 +135,7 @@ public class AddEFormAction extends Action {
 						String inSQL = currentAP.getApInSQL();
 
 						inSQL = DatabaseAP.parserReplace("demographic", demographic_no, inSQL);
-						inSQL = DatabaseAP.parserReplace("provider", provider_no, inSQL);
+						inSQL = DatabaseAP.parserReplace("provider", providerNo, inSQL);
 						inSQL = DatabaseAP.parserReplace("fid", fid, inSQL);
 
 						inSQL = DatabaseAP.parserReplace("value", request.getParameter(field), inSQL);
@@ -165,13 +165,13 @@ public class AddEFormAction extends Action {
 			
 		}
 
-		EForm curForm = new EForm(fid, demographic_no, provider_no);
+		EForm curForm = new EForm(fid, demographic_no, providerNo);
 
 		//add eform_link value from session attribute
 		ArrayList<String> openerNames = curForm.getOpenerNames();
 		ArrayList<String> openerValues = new ArrayList<String>();
 		for (String name : openerNames) {
-			String lnk = provider_no+"_"+demographic_no+"_"+fid+"_"+name;
+			String lnk = providerNo+"_"+demographic_no+"_"+fid+"_"+name;
 			String val = (String)se.getAttribute(lnk);
 			openerValues.add(val);
 			if (val!=null) se.removeAttribute(lnk);
@@ -228,7 +228,7 @@ public class AddEFormAction extends Action {
 
 			else {
 				//write template message to echart
-				String program_no = new EctProgram(se).getProgram(provider_no);
+				String program_no = new EctProgram(se).getProgram(providerNo);
 				String path = request.getRequestURL().toString();
 				String uri = request.getRequestURI();
 				path = path.substring(0, path.indexOf(uri));

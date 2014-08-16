@@ -150,7 +150,7 @@ public class PHRVerificationDaoTest extends DaoTestFixtures {
 		
 		String expectedResult = "+1";
 		DemographicManager demographicManager=(DemographicManager) SpringUtils.getBean("demographicManager");
-		String result = demographicManager.getPhrVerificationLevelByDemographicId(demographicNo1);
+		String result = demographicManager.getPhrVerificationLevelByDemographicId(getLoggedInInfo(),demographicNo1);
 		
 		assertEquals(expectedResult, result);
 	}

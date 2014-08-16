@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtilsOld;
 
 import oscar.oscarTickler.TicklerCreator;
@@ -27,7 +28,7 @@ public class CDMReminderHlp {
   }
 
  
-  public void manageCDMTicklers(String providerNo, String[] alertCodes) throws Exception {
+  public void manageCDMTicklers(LoggedInInfo loggedInInfo,String providerNo, String[] alertCodes) throws Exception {
     //get all demographics with a problem that falls within CDM category
     TicklerCreator crt = new TicklerCreator();
     ServiceCodeValidationLogic lgc = new ServiceCodeValidationLogic();
@@ -37,7 +38,7 @@ public class CDMReminderHlp {
     final String remString = "SERVICE CODE";
     List cdmPatients = this.getCDMPatients(alertCodes);
     List cdmPatientNos = extractPatientNos(cdmPatients);
-    crt.resolveTicklers(providerNo, cdmPatientNos, remString);
+    crt.resolveTicklers(loggedInInfo, providerNo, cdmPatientNos, remString);
 
     for (Iterator iter = cdmPatients.iterator(); iter.hasNext(); ) {
     	MiscUtilsOld.checkShutdownSignaled();
@@ -63,12 +64,12 @@ public class CDMReminderHlp {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yy");
             String newfmt = formatter.format(dateLastBilled);
             String message = remString + " " + cdmServiceCode + " - Last Billed On: " + newfmt;
-            crt.createTickler(demoNo, provNo, message);
+            crt.createTickler(loggedInInfo, demoNo, provNo, message);
           }
           else if (daysPast < 0) {
             String message =
                 remString + " " + cdmServiceCode + " - Never billed for this patient";
-            crt.createTickler(demoNo, provNo, message);
+            crt.createTickler(loggedInInfo, demoNo, provNo, message);
           }
         }
       }

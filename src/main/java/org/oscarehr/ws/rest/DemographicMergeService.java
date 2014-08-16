@@ -62,7 +62,7 @@ public class DemographicMergeService extends AbstractServiceImpl {
 	@Path("/{parentId}")
 	public OscarSearchResponse<DemographicMergedTo1> getMergedDemographicIds(@PathParam("parentId") Integer parentId) {
 		DemographicMergedConverter converter = new DemographicMergedConverter();
-		List<DemographicMerged> children = demographicManager.getMergedDemographics(parentId);
+		List<DemographicMerged> children = demographicManager.getMergedDemographics(getLoggedInInfo(),parentId);
 		OscarSearchResponse<DemographicMergedTo1> response = new OscarSearchResponse<DemographicMergedTo1>();
 		for (DemographicMerged dm : children) {
 			response.getContent().add(converter.getAsTransferObject(dm));
@@ -84,7 +84,7 @@ public class DemographicMergeService extends AbstractServiceImpl {
 	public void mergeDemographic(@QueryParam("parentId") Integer parentId, @QueryParam("childId") Integer childId) {
 		List<Integer> children = new ArrayList<Integer>();
 		children.add(childId);
-		demographicManager.mergeDemographics(parentId, children);
+		demographicManager.mergeDemographics(getLoggedInInfo(),parentId, children);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class DemographicMergeService extends AbstractServiceImpl {
 	public void unmergeDemographic(@QueryParam("parentId") Integer parentId, @QueryParam("childsId") Integer childId) {
 		List<Integer> children = new ArrayList<Integer>();
 		children.add(childId);
-		demographicManager.unmergeDemographics(parentId, children);
+		demographicManager.unmergeDemographics(getLoggedInInfo(),parentId, children);
 	}
 
 }

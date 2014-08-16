@@ -62,7 +62,7 @@ public class FormsService extends AbstractServiceImpl {
 	public FormListTo1 getFormsForHeading(@PathParam("demographicNo") Integer demographicNo ,@QueryParam("heading") String heading){
 		FormListTo1 formListTo1 = new FormListTo1();
 		if(heading.equals("Existing")){
-			List<EFormData> completedEforms = formsManager.findByDemographicId(demographicNo);
+			List<EFormData> completedEforms = formsManager.findByDemographicId(getLoggedInInfo(),demographicNo);
 			
 			for(EFormData eformData: completedEforms){	
 				int id = eformData.getId();
@@ -76,7 +76,7 @@ public class FormsService extends AbstractServiceImpl {
 			}
 			
 		}else{  // Only two options right now.  Need to change this anyways
-			List<EForm> eforms =  formsManager.findByStatus(true, null);  //This will have to change to accommodate forms too.
+			List<EForm> eforms =  formsManager.findByStatus(getLoggedInInfo(),true, null);  //This will have to change to accommodate forms too.
 			
 			for(EForm eform :eforms){
 				int formId = eform.getId();

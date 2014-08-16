@@ -59,7 +59,7 @@ public class CkdScreenerSchedulerJob extends TimerTask {
 			logger.info("starting renal background ckd screening job");
 			
 			CkdScreener screener = new CkdScreener();
-			screener.screenPopulation();
+			screener.screenPopulation(x);
 			
 			logger.info("done renal background ckd screening job");
 			

@@ -67,7 +67,7 @@ public class ScheduleWs extends AbstractWs {
 	 * @deprecated you should use the method with the useGMTTime option
 	 */
 	public AppointmentTransfer getAppointment(Integer appointmentId) {
-		Appointment appointment = scheduleManager.getAppointment(appointmentId);
+		Appointment appointment = scheduleManager.getAppointment(getLoggedInInfo(),appointmentId);
 		return (AppointmentTransfer.toTransfer(appointment, false));
 	}
 
@@ -75,7 +75,7 @@ public class ScheduleWs extends AbstractWs {
 	 * @deprecated you should use the method with the useGMTTime option
 	 */
 	public AppointmentTransfer[] getAppointmentsForProvider(String providerNo, Calendar date) {
-		List<Appointment> appointments = scheduleManager.getDayAppointments(providerNo, date);
+		List<Appointment> appointments = scheduleManager.getDayAppointments(getLoggedInInfo(),providerNo, date);
 		return (AppointmentTransfer.toTransfers(appointments, false));
 	}
 
@@ -83,22 +83,22 @@ public class ScheduleWs extends AbstractWs {
 	 * @deprecated you should use the method with the useGMTTime option
 	 */
 	public AppointmentTransfer[] getAppointmentsForPatient(Integer demographicId, int startIndex, int itemsToReturn) {
-		List<Appointment> appointments = scheduleManager.getAppointmentsForPatient(demographicId, startIndex, itemsToReturn);
+		List<Appointment> appointments = scheduleManager.getAppointmentsForPatient(getLoggedInInfo(),demographicId, startIndex, itemsToReturn);
 		return (AppointmentTransfer.toTransfers(appointments, false));
 	}
 
 	public AppointmentTransfer getAppointment2(Integer appointmentId, boolean useGMTTime) {
-		Appointment appointment = scheduleManager.getAppointment(appointmentId);
+		Appointment appointment = scheduleManager.getAppointment(getLoggedInInfo(),appointmentId);
 		return (AppointmentTransfer.toTransfer(appointment, useGMTTime));
 	}
 
 	public AppointmentTransfer[] getAppointmentsForProvider2(String providerNo, Calendar date, boolean useGMTTime) {
-		List<Appointment> appointments = scheduleManager.getDayAppointments(providerNo, date);
+		List<Appointment> appointments = scheduleManager.getDayAppointments(getLoggedInInfo(),providerNo, date);
 		return (AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 
 	public AppointmentTransfer[] getAppointmentsForPatient2(Integer demographicId, int startIndex, int itemsToReturn, boolean useGMTTime) {
-		List<Appointment> appointments = scheduleManager.getAppointmentsForPatient(demographicId, startIndex, itemsToReturn);
+		List<Appointment> appointments = scheduleManager.getAppointmentsForPatient(getLoggedInInfo(),demographicId, startIndex, itemsToReturn);
 		return (AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 	
@@ -119,37 +119,37 @@ public class ScheduleWs extends AbstractWs {
 	public Integer addAppointment(AppointmentTransfer appointmentTransfer) {
 		Appointment appointment = new Appointment();
 		appointmentTransfer.copyTo(appointment);
-		scheduleManager.addAppointment(getLoggedInSecurity(), appointment);
+		scheduleManager.addAppointment(getLoggedInInfo(),getLoggedInSecurity(), appointment);
 		return (appointment.getId());
 	}
 
 	public void updateAppointment(AppointmentTransfer appointmentTransfer) {
-		Appointment appointment = scheduleManager.getAppointment(appointmentTransfer.getId());
+		Appointment appointment = scheduleManager.getAppointment(getLoggedInInfo(),appointmentTransfer.getId());
 
 		appointmentTransfer.copyTo(appointment);
-		scheduleManager.updateAppointment(appointment);
+		scheduleManager.updateAppointment(getLoggedInInfo(),appointment);
 	}
 
 	/**
 	 * @deprecated you should use the method with the useGMTTime option
 	 */
 	public AppointmentTransfer[] getAppointmentsForDateRangeAndProvider(Date startTime, Date endTime, String providerNo) {
-		List<Appointment> appointments = scheduleManager.getAppointmentsForDateRangeAndProvider(startTime, endTime, providerNo);
+		List<Appointment> appointments = scheduleManager.getAppointmentsForDateRangeAndProvider(getLoggedInInfo(),startTime, endTime, providerNo);
 		return (AppointmentTransfer.toTransfers(appointments, false));
 	}
 
 	public AppointmentTransfer[] getAppointmentsForDateRangeAndProvider2(Date startTime, Date endTime, String providerNo, boolean useGMTTime) {
-		List<Appointment> appointments = scheduleManager.getAppointmentsForDateRangeAndProvider(startTime, endTime, providerNo);
+		List<Appointment> appointments = scheduleManager.getAppointmentsForDateRangeAndProvider(getLoggedInInfo(),startTime, endTime, providerNo);
 		return (AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 
 	public AppointmentTransfer[] getAppointmentsUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn, boolean useGMTTime) {
-		List<Appointment> appointments=scheduleManager.getAppointmentUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+		List<Appointment> appointments=scheduleManager.getAppointmentUpdatedAfterDate(getLoggedInInfo(),updatedAfterThisDateInclusive, itemsToReturn);
 		return(AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 
 	public AppointmentArchiveTransfer[] getAppointmentArchivesUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn, boolean useGMTTime) {
-		List<AppointmentArchive> appointments=scheduleManager.getAppointmentArchiveUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+		List<AppointmentArchive> appointments=scheduleManager.getAppointmentArchiveUpdatedAfterDate(getLoggedInInfo(),updatedAfterThisDateInclusive, itemsToReturn);
 		return(AppointmentArchiveTransfer.toTransfers(appointments, useGMTTime));
 	}
 
