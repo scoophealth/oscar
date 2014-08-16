@@ -42,6 +42,7 @@ import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Segment;
+import ca.uhn.hl7v2.model.v23.datatype.FT;
 import ca.uhn.hl7v2.model.v23.datatype.XCN;
 import ca.uhn.hl7v2.model.v23.message.ORU_R01;
 import ca.uhn.hl7v2.parser.Parser;
@@ -245,12 +246,27 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 	 */
 	public int getOBRCommentCount(int i) {
 		// OBR comments are not provided - comments are provided in NTE segment following OBX segment
-		return 0;
+		int count = 0;
+		try {
+			count = msg.getRESPONSE().getORDER_OBSERVATION(i).getNTEReps();
+		} catch(Exception e) {
+			return 0;
+		}
+				
+		return count;
 	}
 
 	public String getOBRComment(int i, int j) {
-		// OBR comments are not provided - comments are provided in NTE segment following OBX segment
-		return "";
+		try {
+			FT[] tmp = msg.getRESPONSE().getORDER_OBSERVATION(i).getNTE(j).getComment();
+			StringBuilder comment = new StringBuilder();
+			for(FT t:tmp) {
+				comment.append(t.getValue());
+			}
+			return comment.toString();
+		} catch (Exception e) {
+			return ("");
+		}
 	}
 
 	/**
