@@ -77,7 +77,7 @@
 	{
 		for (String providerId : providerIdList)
 		{
-			Provider provider=providerManager.getProvider(providerId);
+			Provider provider=providerManager.getProvider(loggedInInfo, providerId);
 			providerNamesList.append(provider.getFormattedName()+" ("+provider.getProviderNo()+"), ");
 		}
 	}

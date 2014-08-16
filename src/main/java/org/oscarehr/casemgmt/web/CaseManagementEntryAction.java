@@ -3375,7 +3375,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				t.setDemographicNo(Integer.parseInt(cform.getDemographicNo()));
 				t.setMessage(getMacroTicklerText(Integer.parseInt(cform.getAppointmentNo())));
 				t.setTaskAssignedTo(macro.getTicklerRecipient());
-				ticklerManager.addTickler(t);
+				ticklerManager.addTickler(loggedInInfo, t);
 			}
 
 			// billing

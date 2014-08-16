@@ -50,6 +50,7 @@ import org.oscarehr.common.model.ScheduleTemplate;
 import org.oscarehr.common.model.ScheduleTemplateCode;
 import org.oscarehr.common.model.ScheduleTemplatePrimaryKey;
 import org.oscarehr.common.model.Security;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -160,17 +161,17 @@ public class ScheduleManager {
 		return (dayWorkSchedule);
 	}
 
-	public List<Appointment> getDayAppointments(String providerNo, Date date) {
+	public List<Appointment> getDayAppointments(LoggedInInfo loggedInInfo,String providerNo, Date date) {
 		List<Appointment> appointments = oscarAppointmentDao.findByProviderAndDayandNotStatus(providerNo, date, AppointmentStatus.APPOINTMENT_STATUS_CANCELLED);
 
 		//--- log action ---
-		LogAction.addLogSynchronous("AppointmentManager.getDayAppointments", "appointments for providerNo=" + providerNo + ", appointments for date=" + date);
+		LogAction.addLogSynchronous(loggedInInfo,"AppointmentManager.getDayAppointments", "appointments for providerNo=" + providerNo + ", appointments for date=" + date);
 
 		return (appointments);
 	}
 	
-	public List<Appointment> getDayAppointments(String providerNo, Calendar date) {
-		return getDayAppointments(providerNo,date.getTime());
+	public List<Appointment> getDayAppointments(LoggedInInfo loggedInInfo,String providerNo, Calendar date) {
+		return getDayAppointments(loggedInInfo,providerNo,date.getTime());
 	}
 	
 	public List<ScheduleTemplateCode> getScheduleTemplateCodes()
@@ -189,40 +190,40 @@ public class ScheduleManager {
 		return(appointmentTypes);
 	}
 
-	public void addAppointment(Security security, Appointment appointment) {
+	public void addAppointment(LoggedInInfo loggedInInfo,Security security, Appointment appointment) {
 	    appointment.setCreatorSecurityId(security.getSecurityNo());
 	    appointment.setCreator(security.getUserName());
 	    
 	    oscarAppointmentDao.persist(appointment);
 	    	    
 		//--- log action ---
-    	LogAction.addLogSynchronous("AppointmentManager.addAppointment", appointment.toString());
+    	LogAction.addLogSynchronous(loggedInInfo,"AppointmentManager.addAppointment", appointment.toString());
     }
 
-	public List<Appointment> getAppointmentsForPatient(Integer demographicId, int startIndex, int itemsToReturn) {
+	public List<Appointment> getAppointmentsForPatient(LoggedInInfo loggedInInfo,Integer demographicId, int startIndex, int itemsToReturn) {
 		List<Appointment> results=oscarAppointmentDao.findByDemographicId(demographicId, startIndex, itemsToReturn);
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("AppointmentManager.getAppointmentsForPatient", "appointments for demographicId=" + demographicId + ", startIndex=" + startIndex + ", itemsToReturn=" + itemsToReturn);
+		LogAction.addLogSynchronous(loggedInInfo,"AppointmentManager.getAppointmentsForPatient", "appointments for demographicId=" + demographicId + ", startIndex=" + startIndex + ", itemsToReturn=" + itemsToReturn);
 
 		return(results);
     }
 
-	public Appointment getAppointment(Integer appointmentId) {
+	public Appointment getAppointment(LoggedInInfo loggedInInfo,Integer appointmentId) {
 		Appointment result=oscarAppointmentDao.find(appointmentId);
 		
 		//--- log action ---
 		if (result!=null)
 		{
-			LogAction.addLogSynchronous("AppointmentManager.getAppointment", "appointmentId=" + appointmentId);
+			LogAction.addLogSynchronous(loggedInInfo,"AppointmentManager.getAppointment", "appointmentId=" + appointmentId);
 		}
 		
 		return(result);
     }
 
-	public void updateAppointment(Appointment appointment) {
+	public void updateAppointment(LoggedInInfo loggedInInfo,Appointment appointment) {
 		//--- log action ---
-		LogAction.addLogSynchronous("AppointmentManager.updateAppointment", "appointmentId=" + appointment.getId());
+		LogAction.addLogSynchronous(loggedInInfo,"AppointmentManager.updateAppointment", "appointmentId=" + appointment.getId());
 	    
 		// generate archive object
 		oscarAppointmentDao.archiveAppointment(appointment.getId());
@@ -231,28 +232,28 @@ public class ScheduleManager {
 		oscarAppointmentDao.merge(appointment);
     }
     
-	public List<Appointment> getAppointmentsForDateRangeAndProvider(Date startTime, Date endTime, String providerNo) {
+	public List<Appointment> getAppointmentsForDateRangeAndProvider(LoggedInInfo loggedInInfo,Date startTime, Date endTime, String providerNo) {
 		List<Appointment> appointments = oscarAppointmentDao.findByDateRangeAndProvider(startTime, endTime, providerNo);
 
 		//--- log action ---
-		LogAction.addLogSynchronous("AppointmentManager.getAppointmentsForDateRangeAndProvider", "appointments for providerNo=" + providerNo + ", appointments for " + startTime + " to: " + endTime);
+		LogAction.addLogSynchronous(loggedInInfo,"AppointmentManager.getAppointmentsForDateRangeAndProvider", "appointments for providerNo=" + providerNo + ", appointments for " + startTime + " to: " + endTime);
 
 		return(appointments);
 	}
 	
 	
-	public List<Appointment> getAppointmentUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+	public List<Appointment> getAppointmentUpdatedAfterDate(LoggedInInfo loggedInInfo,Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Appointment> results = oscarAppointmentDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
 
-		LogAction.addLogSynchronous("ScheduleManager.getAppointmentUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
+		LogAction.addLogSynchronous(loggedInInfo,"ScheduleManager.getAppointmentUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
 
 		return (results);
 	}
 
-	public List<AppointmentArchive> getAppointmentArchiveUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+	public List<AppointmentArchive> getAppointmentArchiveUpdatedAfterDate(LoggedInInfo loggedInInfo,Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<AppointmentArchive> results = appointmentArchiveDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
 
-		LogAction.addLogSynchronous("ScheduleManager.getAppointmentArchiveUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
+		LogAction.addLogSynchronous(loggedInInfo,"ScheduleManager.getAppointmentArchiveUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
 
 		return (results);
 	}

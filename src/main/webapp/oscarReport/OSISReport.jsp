@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page
 	import="org.apache.commons.lang.StringUtils,org.apache.commons.lang.StringEscapeUtils,java.util.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarDB.*,java.sql.*,oscar.oscarDemographic.data.*,oscar.eform.*,org.oscarehr.common.model.Provider,org.oscarehr.managers.ProviderManager2,org.oscarehr.util.SpringUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -30,7 +31,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <%
-ProviderManager2 providerManager = (ProviderManager2) SpringUtils.getBean("providerManager2");
+	ProviderManager2 providerManager = (ProviderManager2) SpringUtils.getBean("providerManager2");
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 
 <jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
@@ -143,7 +145,7 @@ table.ele {
 		<%
 		// null for both active and inactive because the report might be for a provider
 		// who's just left the current reporting period
-		List<Provider> providers = providerManager.getProviders(null);
+		List<Provider> providers = providerManager.getProviders(loggedInInfo, null);
 
 		for(Provider provider: providers){
 			//skip (system,system)

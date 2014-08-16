@@ -49,7 +49,7 @@ public class AllergyWs extends AbstractWs {
 	
 	public AllergyTransfer getAllergy(Integer allergyId)
 	{
-		Allergy allergy=allergyManager.getAllergy(allergyId);
+		Allergy allergy=allergyManager.getAllergy(getLoggedInInfo(),allergyId);
 		return(AllergyTransfer.toTransfer(allergy));
 	}
 
@@ -62,7 +62,7 @@ public class AllergyWs extends AbstractWs {
 		Boolean archived=null;
 		if (active!=null) archived=!active;
 		
-		List<Allergy> allergies=allergyManager.getAllergiesByIdStart(archived, startIdInclusive, itemsToReturn);
+		List<Allergy> allergies=allergyManager.getAllergiesByIdStart(getLoggedInInfo(),archived, startIdInclusive, itemsToReturn);
 		
 		DataIdTransfer[] results=new DataIdTransfer[allergies.size()];
 		for (int i=0; i<allergies.size(); i++)
@@ -91,7 +91,7 @@ public class AllergyWs extends AbstractWs {
 	}
 	
 	public AllergyTransfer[] getAllergiesUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Allergy> allergies=allergyManager.getUpdatedAfterDate(updatedAfterThisDateInclusive, itemsToReturn);
+		List<Allergy> allergies=allergyManager.getUpdatedAfterDate(getLoggedInInfo(),updatedAfterThisDateInclusive, itemsToReturn);
 		return(AllergyTransfer.toTransfers(allergies));
 	}
 }

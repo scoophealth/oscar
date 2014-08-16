@@ -46,6 +46,7 @@ import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.DemographicMerged;
 import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,19 +92,19 @@ public class DemographicManager {
 	private PHRVerificationDao phrVerificationDao;
 	
 
-	public Demographic getDemographic(Integer demographicId) {
+	public Demographic getDemographic(LoggedInInfo loggedInInfo, Integer demographicId) {
 		Demographic result = demographicDao.getDemographicById(demographicId);
 
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous("DemographicManager.getDemographic", "demographicId=" + demographicId);
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getDemographic", "demographicId=" + demographicId);
 		}
 
 		return (result);
 	}
 	
-	public String getDemographicFormattedName(Integer demographicId) {
-		Demographic result = getDemographic(demographicId);
+	public String getDemographicFormattedName(LoggedInInfo loggedInInfo, Integer demographicId) {
+		Demographic result = getDemographic(loggedInInfo, demographicId);
 		String name = null;
 		if(result != null) {
 			name = result.getLastName() + "," + result.getFirstName();
@@ -112,18 +113,18 @@ public class DemographicManager {
 		return (name);
 	}
 
-	public Demographic getDemographicByMyOscarUserName(String myOscarUserName) {
+	public Demographic getDemographicByMyOscarUserName(LoggedInInfo loggedInInfo, String myOscarUserName) {
 		Demographic result = demographicDao.getDemographicByMyOscarUserName(myOscarUserName);
 
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous("DemographicManager.getDemographic", "demographicId=" + result.getDemographicNo());
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getDemographic", "demographicId=" + result.getDemographicNo());
 		}
 
 		return (result);
 	}
 
-	public List<Demographic> searchDemographicByName(String searchString, int startIndex, int itemsToReturn) {
+	public List<Demographic> searchDemographicByName(LoggedInInfo loggedInInfo, String searchString, int startIndex, int itemsToReturn) {
 		
 		List<Demographic> results = demographicDao.searchDemographicByNameString(searchString, startIndex, itemsToReturn);
 		
@@ -133,13 +134,13 @@ public class DemographicManager {
 		
 		//--- log action ---
 		for (Demographic demographic : results) {
-			LogAction.addLogSynchronous("DemographicManager.searchDemographicByName result", "demographicId=" + demographic.getDemographicNo());
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.searchDemographicByName result", "demographicId=" + demographic.getDemographicNo());
 		}
 
 		return (results);
 	}
 	
-	public List<DemographicExt> getDemographicExts(Integer id) {
+	public List<DemographicExt> getDemographicExts(LoggedInInfo loggedInInfo, Integer id) {
 		
 		List<DemographicExt> result = null;
 		
@@ -148,25 +149,25 @@ public class DemographicManager {
 		//--- log action ---
 		if (result != null) {
 			for(DemographicExt item:result) {
-				LogAction.addLogSynchronous("DemographicManager.getDemographicExts", "id="+item.getId() + "(" + id.toString() +")");
+				LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getDemographicExts", "id="+item.getId() + "(" + id.toString() +")");
 			}
 		}
 
 		return result;
 	}
 	
-	public DemographicCust getDemographicCust(Integer id) {
+	public DemographicCust getDemographicCust(LoggedInInfo loggedInInfo, Integer id) {
 		DemographicCust result = null;
 		result = demographicCustDao.find(id);
 		
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous("DemographicManager.getDemographicCust", "id="+ id.toString());
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getDemographicCust", "id="+ id.toString());
 		}
 		return result;
 	}
 	
-	public void createUpdateDemographicCust(DemographicCust demoCust) {
+	public void createUpdateDemographicCust(LoggedInInfo loggedInInfo, DemographicCust demoCust) {
 		if (demoCust!=null) {
 			//Archive previous demoCust
 			DemographicCust prevCust = demographicCustDao.find(demoCust.getId());
@@ -185,36 +186,36 @@ public class DemographicManager {
 		}
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("DemographicManager.createUpdateDemographicCust", "id="+ demoCust.getId());
+		LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.createUpdateDemographicCust", "id="+ demoCust.getId());
 	}
 	
-	public List<DemographicContact> getDemographicContacts(Integer id) {
+	public List<DemographicContact> getDemographicContacts(LoggedInInfo loggedInInfo, Integer id) {
 		List<DemographicContact> result = null;
 		result = demographicContactDao.findActiveByDemographicNo(id);
 		
 		//--- log action ---
 		if (result != null) {
 			for(DemographicContact item:result) {
-				LogAction.addLogSynchronous("DemographicManager.getDemographicContacts", "id="+item.getId() + "(" + id.toString() +")");
+				LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getDemographicContacts", "id="+item.getId() + "(" + id.toString() +")");
 			}
 		}
 		return result;
 	}
 
-	public List<Demographic> getDemographicsByProvider(Provider provider) {
+	public List<Demographic> getDemographicsByProvider(LoggedInInfo loggedInInfo, Provider provider) {
 		List<Demographic> result = demographicDao.getDemographicByProvider(provider.getProviderNo(), true);
 		
 		//--- log action ---
 		if (result != null) {
 			for (Demographic demographic : result) {
-				LogAction.addLogSynchronous("DemographicManager.getDemographicsByProvider result", "demographicId=" + demographic.getDemographicNo());
+				LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getDemographicsByProvider result", "demographicId=" + demographic.getDemographicNo());
 			}
 		}
 		
 		return result;
 	}
 
-	public void createDemographic(Demographic demographic) {
+	public void createDemographic(LoggedInInfo loggedInInfo, Demographic demographic) {
 		try {
 			demographic.getBirthDay();
 		} catch (Exception e) {
@@ -227,16 +228,16 @@ public class DemographicManager {
 		
 		if (demographic.getExtras() != null) {
 			for(DemographicExt ext : demographic.getExtras()) {
-				createExtension(ext);
+				createExtension(loggedInInfo, ext);
 			}
 		}
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("DemographicManager.createDemographic", "new id is =" + demographic.getDemographicNo());
+		LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.createDemographic", "new id is =" + demographic.getDemographicNo());
 		
 	}
 	
-	public void updateDemographic(Demographic demographic) {
+	public void updateDemographic(LoggedInInfo loggedInInfo, Demographic demographic) {
 		try {
 			demographic.getBirthDay();
 		} catch (Exception e) {
@@ -253,29 +254,29 @@ public class DemographicManager {
 		
 		if (demographic.getExtras() != null) {
 			for(DemographicExt ext : demographic.getExtras()) {
-				LogAction.addLogSynchronous("DemographicManager.updateDemographic ext", "id=" + ext.getId() + "(" +  ext.toString() + ")");
-				updateExtension(ext);
+				LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.updateDemographic ext", "id=" + ext.getId() + "(" +  ext.toString() + ")");
+				updateExtension(loggedInInfo, ext);
 			}
 		}
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("DemographicManager.updateDemographic", "demographicNo=" + demographic.getDemographicNo());
+		LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.updateDemographic", "demographicNo=" + demographic.getDemographicNo());
 				
 	}
 
-	public void createExtension(DemographicExt ext) {
+	public void createExtension(LoggedInInfo loggedInInfo, DemographicExt ext) {
 		demographicExtDao.saveEntity(ext);
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("DemographicManager.createExtension", "id=" + ext.getId());
+		LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.createExtension", "id=" + ext.getId());
 	}
 	
-	public void updateExtension(DemographicExt ext) {
+	public void updateExtension(LoggedInInfo loggedInInfo, DemographicExt ext) {
 		archiveExtension(ext);
 		demographicExtDao.saveEntity(ext);
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("DemographicManager.updateExtension", "id=" + ext.getId());
+		LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.updateExtension", "id=" + ext.getId());
 	}
 	
 	public void archiveExtension(DemographicExt ext) {
@@ -287,36 +288,36 @@ public class DemographicManager {
 		}
 	}
 	
-	public void createUpdateDemographicContact(DemographicContact demoContact) {
+	public void createUpdateDemographicContact(LoggedInInfo loggedInInfo, DemographicContact demoContact) {
 		demographicContactDao.merge(demoContact);
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("DemographicManager.createUpdateDemographicContact", "id=" + demoContact.getId());
+		LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.createUpdateDemographicContact", "id=" + demoContact.getId());
 	}
 
-	public void deleteDemographic(Demographic demographic) {
+	public void deleteDemographic(LoggedInInfo loggedInInfo, Demographic demographic) {
 		demographicArchiveDao.archiveRecord(demographic);
 		demographic.setPatientStatus(Demographic.PatientStatus.DE.name());
 		demographicDao.save(demographic);
 		
-		for(DemographicExt ext : getDemographicExts(demographic.getDemographicNo())) {
-			LogAction.addLogSynchronous("DemographicManager.deleteDemographic ext", "id=" + ext.getId() + "(" + ext.toString() +")");
-			deleteExtension(ext);
+		for(DemographicExt ext : getDemographicExts(loggedInInfo, demographic.getDemographicNo())) {
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.deleteDemographic ext", "id=" + ext.getId() + "(" + ext.toString() +")");
+			deleteExtension(loggedInInfo, ext);
 		}
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("DemographicManager.deleteDemographic", "demographicNo=" + demographic.getDemographicNo());
+		LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.deleteDemographic", "demographicNo=" + demographic.getDemographicNo());
 	}
 
-	public void deleteExtension(DemographicExt ext) {
+	public void deleteExtension(LoggedInInfo loggedInInfo, DemographicExt ext) {
 		archiveExtension(ext);
 		demographicExtDao.removeDemographicExt(ext.getId());
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("DemographicManager.removeDemographicExt", "id=" + ext.getId());
+		LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.removeDemographicExt", "id=" + ext.getId());
 	}
 
-	public void mergeDemographics(Integer parentId, List<Integer> children) {
+	public void mergeDemographics(LoggedInInfo loggedInInfo, Integer parentId, List<Integer> children) {
 		for (Integer child : children) {
 			DemographicMerged dm = new DemographicMerged();
 			dm.setDemographicNo(child);
@@ -324,12 +325,12 @@ public class DemographicManager {
 			demographicMergedDao.persist(dm);
 			
 			//--- log action ---
-			LogAction.addLogSynchronous("DemographicManager.mergeDemographics", "id=" + dm.getId());
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.mergeDemographics", "id=" + dm.getId());
 		}
 		
 	}
 
-	public void unmergeDemographics(Integer parentId, List<Integer> children) {
+	public void unmergeDemographics(LoggedInInfo loggedInInfo, Integer parentId, List<Integer> children) {
 		for (Integer childId : children) {
 			List<DemographicMerged> dms = demographicMergedDao.findByParentAndChildIds(parentId, childId);
 			if (dms.isEmpty()) {
@@ -340,29 +341,29 @@ public class DemographicManager {
 				demographicMergedDao.merge(dm);
 				
 				//--- log action ---
-				LogAction.addLogSynchronous("DemographicManager.unmergeDemographics", "id=" + dm.getId());
+				LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.unmergeDemographics", "id=" + dm.getId());
 			}
 		}
 	}
 
 
 
-	public Long getActiveDemographicCount() {
+	public Long getActiveDemographicCount(LoggedInInfo loggedInInfo) {
 		Long count =  demographicDao.getActiveDemographicCount();
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("DemographicManager.getActiveDemographicCount", "");
+		LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getActiveDemographicCount", "");
 		
 		return count;
 	}
 	
-	public List<Demographic> getActiveDemographics(int offset, int limit) {
+	public List<Demographic> getActiveDemographics(LoggedInInfo loggedInInfo, int offset, int limit) {
 	    List<Demographic>  result = demographicDao.getActiveDemographics(offset, limit);
 	    
 	    if(result != null) {
 	    	for(Demographic d:result) {
 		    	//--- log action ---
-				LogAction.addLogSynchronous("DemographicManager.getActiveDemographics result", "demographicNo="+d.getDemographicNo());
+				LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getActiveDemographics result", "demographicNo="+d.getDemographicNo());
 	    	}
 	    }
 	    
@@ -377,13 +378,13 @@ public class DemographicManager {
 	 * @return
 	 * 		Returns all merged demographic records for the specified parent id.
 	 */
-	public List<DemographicMerged> getMergedDemographics(Integer parentId) {
+	public List<DemographicMerged> getMergedDemographics(LoggedInInfo loggedInInfo, Integer parentId) {
 	    List<DemographicMerged> result = demographicMergedDao.findCurrentByMergedTo(parentId);
 	    
 	    if(result != null) {
 	    	for(DemographicMerged d:result) {
 		    	//--- log action ---
-				LogAction.addLogSynchronous("DemographicManager.getMergedDemogrpaphics result", "demographicNo="+d.getDemographicNo());
+				LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getMergedDemogrpaphics result", "demographicNo="+d.getDemographicNo());
 	    	}
 	    	
 	    }
@@ -392,21 +393,21 @@ public class DemographicManager {
     }
 
 	
-	public PHRVerification getLatestPhrVerificationByDemographicId(Integer demographicId)
+	public PHRVerification getLatestPhrVerificationByDemographicId(LoggedInInfo loggedInInfo, Integer demographicId)
 	{
 		PHRVerification result=phrVerificationDao.findLatestByDemographicId(demographicId);
 
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous("DemographicManager.getLatestPhrVerificationByDemographicId", "demographicId=" + demographicId);
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getLatestPhrVerificationByDemographicId", "demographicId=" + demographicId);
 		}
 		
 		return(result);
 	}
 	
-	public String getPhrVerificationLevelByDemographicId(Integer demographicId)
+	public String getPhrVerificationLevelByDemographicId(LoggedInInfo loggedInInfo, Integer demographicId)
 	{
-		PHRVerification phrVerification=getLatestPhrVerificationByDemographicId(demographicId);
+		PHRVerification phrVerification=getLatestPhrVerificationByDemographicId(loggedInInfo, demographicId);
 		
         if (phrVerification!=null){
         	String authLevel =phrVerification.getVerificationLevel();
@@ -426,9 +427,9 @@ public class DemographicManager {
 	/**
 	 * This method should only return true if the demographic passed in is "phr verified" to a sufficient level to allow a provider to send this phr account messages.
 	 */
-	public boolean isPhrVerifiedToSendMessages(Integer demographicId)
+	public boolean isPhrVerifiedToSendMessages(LoggedInInfo loggedInInfo, Integer demographicId)
 	{
-		String level=getPhrVerificationLevelByDemographicId(demographicId);
+		String level=getPhrVerificationLevelByDemographicId(loggedInInfo, demographicId);
 		// hard coded to 3 until some one tells me how to configure/check this
 		if (PHR_VERIFICATION_LEVEL_3.equals(level)) return(true);
 		else return(false);
@@ -437,9 +438,9 @@ public class DemographicManager {
 	/**
 	 * This method should only return true if the demographic passed in is "phr verified" to a sufficient level to allow a provider to send this phr account medicalData.
 	 */
-	public boolean isPhrVerifiedToSendMedicalData(Integer demographicId)
+	public boolean isPhrVerifiedToSendMedicalData(LoggedInInfo loggedInInfo, Integer demographicId)
 	{
-		String level=getPhrVerificationLevelByDemographicId(demographicId);
+		String level=getPhrVerificationLevelByDemographicId(loggedInInfo, demographicId);
 		// hard coded to 3 until some one tells me how to configure/check this
 		if (PHR_VERIFICATION_LEVEL_3.equals(level)) return(true);
 		else return(false);		
@@ -448,7 +449,7 @@ public class DemographicManager {
 	/**
 	 * @deprecated there should be a generic call for getDemographicExt(Integer demoId, String key) instead. Then the caller should assemble what it needs from the demographic and ext call itself.
 	 */
-	public String getDemographicWorkPhoneAndExtension(Integer demographicNo)
+	public String getDemographicWorkPhoneAndExtension(LoggedInInfo loggedInInfo, Integer demographicNo)
 	{
 		Demographic result=demographicDao.getDemographicById(demographicNo);
 		String workPhone = result.getPhone2();
@@ -462,7 +463,7 @@ public class DemographicManager {
 		//--- log action ---
 		if (result!=null)
 		{
-			LogAction.addLogSynchronous("DemographicManager.getDemographicWorkPhoneAndExtension", "demographicId="+result.getDemographicNo() + "result=" + workPhone);
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getDemographicWorkPhoneAndExtension", "demographicId="+result.getDemographicNo() + "result=" + workPhone);
 		}
 		
 		return(workPhone);
@@ -471,12 +472,12 @@ public class DemographicManager {
 	/**
 	 * @see DemographicDao.findByAttributes for parameter details
 	 */
-	public List<Demographic> searchDemographicsByAttributes(String hin, String firstName, String lastName, Gender gender, Calendar dateOfBirth, String city, String province, String phone, String email, String alias, int startIndex, int itemsToReturn) {
+	public List<Demographic> searchDemographicsByAttributes(LoggedInInfo loggedInInfo, String hin, String firstName, String lastName, Gender gender, Calendar dateOfBirth, String city, String province, String phone, String email, String alias, int startIndex, int itemsToReturn) {
 		List<Demographic> results=demographicDao.findByAttributes(hin, firstName, lastName, gender, dateOfBirth, city, province, phone, email, alias, startIndex, itemsToReturn);
 
 		// log all items read
 		for(Demographic d : results) {
-	    	LogAction.addLogSynchronous("DemographicManager.searchDemographicsByAttributes result", "demographicNo="+d.getDemographicNo());
+	    	LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.searchDemographicsByAttributes result", "demographicNo="+d.getDemographicNo());
     	}
 		
 		return(results);

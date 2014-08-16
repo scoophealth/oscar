@@ -29,6 +29,7 @@ import java.util.List;
 import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 
@@ -46,27 +47,27 @@ public class TicklerCreator {
    * @param provNo the provider no
    * @param message the tickler message
    */
-  public void createTickler(String demoNo, String provNo, String message) {
-    if (!ticklerExists(demoNo, message)) {
+  public void createTickler(LoggedInInfo loggedInInfo, String demoNo, String provNo, String message) {
+    if (!ticklerExists(loggedInInfo, demoNo, message)) {
     	Tickler t = new Tickler();
     	t.setDemographicNo(Integer.parseInt(demoNo));
     	t.setMessage(message);
     	t.setCreator(provNo);
     	t.setTaskAssignedTo(provNo);
-    	ticklerManager.addTickler(t);
+    	ticklerManager.addTickler(loggedInInfo, t);
     	
 
     }
   }
   
   
-  public void createTickler(String demoNo, String provNo, String message, String assignedTo) {
+  public void createTickler(LoggedInInfo loggedInInfo, String demoNo, String provNo, String message, String assignedTo) {
 	   Tickler t = new Tickler();
 	   t.setDemographicNo(Integer.parseInt(demoNo));
     	t.setMessage(message);
     	t.setCreator(provNo);
     	t.setTaskAssignedTo(assignedTo);
-    	ticklerManager.addTickler(t);
+    	ticklerManager.addTickler(loggedInInfo, t);
 	  }
   
  
@@ -77,12 +78,12 @@ public class TicklerCreator {
    * @param message String
    * @return boolean
    */
-  public boolean ticklerExists(String demoNo, String message) {
+  public boolean ticklerExists(LoggedInInfo loggedInInfo, String demoNo, String message) {
 	  CustomFilter filter = new CustomFilter();
 	  filter.setDemographicNo(demoNo);
 	  filter.setMessage(message);
 	  filter.setStatus("A");
-	  List<Tickler> ticklers = ticklerManager.getTicklers(filter);
+	  List<Tickler> ticklers = ticklerManager.getTicklers(loggedInInfo, filter);
 	  return !ticklers.isEmpty();
   }
 
@@ -92,7 +93,7 @@ public class TicklerCreator {
    * @param cdmPatientNos Vector (strings)
    * @param remString String
    */
-  public void resolveTicklers(String providerNo, List<String> cdmPatientNos, String remString) {
-	  ticklerManager.resolveTicklers(providerNo, cdmPatientNos, remString);  
+  public void resolveTicklers(LoggedInInfo loggedInInfo, String providerNo, List<String> cdmPatientNos, String remString) {
+	  ticklerManager.resolveTicklers(loggedInInfo, providerNo, cdmPatientNos, remString);  
   }
 }

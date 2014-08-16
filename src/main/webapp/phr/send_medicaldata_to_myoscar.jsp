@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.managers.DemographicManager"%>
 <%@page import="org.oscarehr.common.service.myoscar.MyOscarMedicalDataManagerUtils"%>
@@ -31,6 +32,7 @@
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	DemographicManager demographicManager=(DemographicManager)SpringUtils.getBean("demographicManager");
 
 	String medicalDataType = request.getParameter("medicalDataType");
@@ -44,7 +46,7 @@
 
 	try
 	{
-		String verificationLevel = demographicManager.getPhrVerificationLevelByDemographicId(Integer.parseInt(demographicNoString));
+		String verificationLevel = demographicManager.getPhrVerificationLevelByDemographicId(loggedInInfo, Integer.parseInt(demographicNoString));
 		
 		if ("+3".equals(verificationLevel)) {
 			response.sendRedirect(sendDataPath);

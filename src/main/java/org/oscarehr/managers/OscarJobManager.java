@@ -32,6 +32,7 @@ import org.oscarehr.common.dao.OscarJobTypeDao;
 import org.oscarehr.common.jobs.OscarJobUtils;
 import org.oscarehr.common.model.OscarJob;
 import org.oscarehr.common.model.OscarJobType;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,18 +50,18 @@ public class OscarJobManager {
 	private OscarJobTypeDao oscarJobTypeDao;
 	
 	
-	public void saveJob(OscarJob oscarJob) {
+	public void saveJob(LoggedInInfo loggedInInfo, OscarJob oscarJob) {
         oscarJobDao.persist(oscarJob);
      
         //--- log action ---
-		LogAction.addLogSynchronous("OscarJobManager.saveJob", "oscarJob.id="+oscarJob.getId());
+		LogAction.addLogSynchronous(loggedInInfo,"OscarJobManager.saveJob", "oscarJob.id="+oscarJob.getId());
     }
 	
-	public void updateJob(OscarJob oscarJob) {
+	public void updateJob(LoggedInInfo loggedInInfo, OscarJob oscarJob) {
         oscarJobDao.merge(oscarJob);
      
         //--- log action ---
-		LogAction.addLogSynchronous("OscarJobManager.updateJob", "oscarJob.id="+oscarJob.getId());
+		LogAction.addLogSynchronous(loggedInInfo,"OscarJobManager.updateJob", "oscarJob.id="+oscarJob.getId());
     }
 	
 	/*
@@ -83,51 +84,51 @@ public class OscarJobManager {
 	}
 	
 	
-	public List<OscarJob> getAllJobs() {
+	public List<OscarJob> getAllJobs(LoggedInInfo loggedInInfo) {
 		
 		List<OscarJob> jobs = oscarJobDao.findAll(0, OscarJobDao.MAX_LIST_RETURN_SIZE);
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("OscarJobManager.getAllJobs","");
+		LogAction.addLogSynchronous(loggedInInfo, "OscarJobManager.getAllJobs","");
 	
 		return jobs;
 	}
 	
-	public OscarJob getJob(Integer id) {
+	public OscarJob getJob(LoggedInInfo loggedInInfo, Integer id) {
 		
 		OscarJob job = oscarJobDao.find(id);
 		
 		if(job != null) {
 			//--- log action ---
-			LogAction.addLogSynchronous("OscarJobManager.getJob","id="+id);
+			LogAction.addLogSynchronous(loggedInInfo, "OscarJobManager.getJob","id="+id);
 		}
 	
 		return job;
 	}
 	
-	public OscarJobType getJobType(Integer id) {
+	public OscarJobType getJobType(LoggedInInfo loggedInInfo, Integer id) {
 		
 		OscarJobType jobType = oscarJobTypeDao.find(id);
 		
 		if(jobType != null) {
 			//--- log action ---
-			LogAction.addLogSynchronous("OscarJobManager.getJobType","id="+id);
+			LogAction.addLogSynchronous(loggedInInfo, "OscarJobManager.getJobType","id="+id);
 		}
 	
 		return jobType;
 	}
 	
-	public void saveJobType(OscarJobType oscarJob) {
+	public void saveJobType(LoggedInInfo loggedInInfo, OscarJobType oscarJob) {
         oscarJobTypeDao.persist(oscarJob);
      
         //--- log action ---
-		LogAction.addLogSynchronous("OscarJobManager.saveJobType", "oscarJobType.id="+oscarJob.getId());
+		LogAction.addLogSynchronous(loggedInInfo, "OscarJobManager.saveJobType", "oscarJobType.id="+oscarJob.getId());
     }
 	
-	public void updateJobType(OscarJobType oscarJob) {
+	public void updateJobType(LoggedInInfo loggedInInfo, OscarJobType oscarJob) {
         oscarJobTypeDao.merge(oscarJob);
      
         //--- log action ---
-		LogAction.addLogSynchronous("OscarJobManager.updateJobType", "oscarJobType.id="+oscarJob.getId());
+		LogAction.addLogSynchronous(loggedInInfo, "OscarJobManager.updateJobType", "oscarJobType.id="+oscarJob.getId());
     }
 }

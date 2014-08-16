@@ -53,7 +53,7 @@ public class MessagingService extends AbstractServiceImpl {
 	@Produces("application/json")
 	public MessagingResponse getMyUnreadMessages(@QueryParam("limit") int limit) {
 		Provider provider=getCurrentProvider();
-		List<MessageList> msgs = messagingManager.getMyInboxMessages(provider.getProviderNo(),0,limit);
+		List<MessageList> msgs = messagingManager.getMyInboxMessages(getLoggedInInfo(), provider.getProviderNo(),0,limit);
 
 		MessagingResponse result = new MessagingResponse();
 		result.setTotal(msgs.size());

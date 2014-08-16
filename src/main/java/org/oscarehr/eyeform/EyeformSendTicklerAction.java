@@ -20,6 +20,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarTickler.TicklerCreator;
 
@@ -27,6 +28,8 @@ import oscar.oscarTickler.TicklerCreator;
 public class EyeformSendTicklerAction extends DispatchAction {
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		String followUp = request.getParameter("followUp");
 		String procedure = request.getParameter("procedure");
 		String diagnostics = request.getParameter("diagnostics");
@@ -51,7 +54,7 @@ public class EyeformSendTicklerAction extends DispatchAction {
 			message += "Comment: " + (request.getParameter("followUp_comment") != null && request.getParameter("followUp_comment").trim().length() > 0 ? request.getParameter("followUp_comment") : "(none)");
 
 			hashMap.put("followUp", message);
-			tc.createTickler(demographicNo, toProviderNo, message);
+			tc.createTickler(loggedInInfo, demographicNo, toProviderNo, message);
 		}
 
 		if (procedure != null && procedure.trim().length() > 0) {
@@ -63,7 +66,7 @@ public class EyeformSendTicklerAction extends DispatchAction {
 			message += "Comment: " + (request.getParameter("procedure_comment") != null && request.getParameter("procedure_comment").trim().length() > 0 ? request.getParameter("procedure_comment") : "(none)");
 
 			hashMap.put("procedure", message);
-			tc.createTickler(demographicNo, toProviderNo, message);
+			tc.createTickler(loggedInInfo, demographicNo, toProviderNo, message);
 		}
 
 		if (diagnostics != null && diagnostics.trim().length() > 0) {
@@ -74,11 +77,11 @@ public class EyeformSendTicklerAction extends DispatchAction {
 			message += "Comment: " + (request.getParameter("diagnostics_comment") != null && request.getParameter("diagnostics_comment").trim().length() > 0 ? request.getParameter("diagnostics_comment") : "(none)");
 
 			hashMap.put("diagnostics", message);
-			tc.createTickler(demographicNo, toProviderNo, message);
+			tc.createTickler(loggedInInfo, demographicNo, toProviderNo, message);
 		}
 
 		if (toProviderNo != null && customMessage != null && customMessage.trim().length() > 0) {
-			tc.createTickler(demographicNo, toProviderNo, customMessage);
+			tc.createTickler(loggedInInfo, demographicNo, toProviderNo, customMessage);
 
 			hashMap.put("custom", customMessage);
 		}

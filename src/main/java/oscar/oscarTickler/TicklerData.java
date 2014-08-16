@@ -33,6 +33,7 @@ import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -57,11 +58,11 @@ public class TicklerData {
    public TicklerData() {
    }
    
-   public List<Tickler> listTickler(String demographic_no, String beginDate, String endDate) {
-	   return ticklerManager.listTicklers(Integer.parseInt(demographic_no), ConversionUtils.fromDateString(beginDate), ConversionUtils.fromDateString(endDate));
+   public List<Tickler> listTickler(LoggedInInfo loggedInInfo,String demographic_no, String beginDate, String endDate) {
+	   return ticklerManager.listTicklers(loggedInInfo,Integer.parseInt(demographic_no), ConversionUtils.fromDateString(beginDate), ConversionUtils.fromDateString(endDate));
    }
    
-   public void addTickler(String demographic_no,String message,String status,String service_date,String creator,String priority,String task_assigned_to){
+   public void addTickler(LoggedInInfo loggedInInfo,String demographic_no,String message,String status,String service_date,String creator,String priority,String task_assigned_to){
             
       String date = service_date;
       if ( date != null && !date.equals("now()")){          //Just a hack for now.
@@ -84,7 +85,7 @@ public class TicklerData {
 		t.setPriorityAsString(priority);
 		t.setTaskAssignedTo(task_assigned_to);
 		
-		ticklerManager.addTickler(t);
+		ticklerManager.addTickler(loggedInInfo,t);
    }
    
    public boolean hasTickler(String demographic,String task_assigned_to,String message){

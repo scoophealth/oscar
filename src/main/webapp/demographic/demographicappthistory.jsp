@@ -240,9 +240,9 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
   org.oscarehr.managers.AppointmentManager appointmentManager = SpringUtils.getBean(org.oscarehr.managers.AppointmentManager.class);
   
   if(!"true".equals(showDeleted)) {
-  	appointmentList = appointmentManager.getAppointmentHistoryWithoutDeleted(new Integer(demographic_no), iRSOffSet, iPageSize);
+  	appointmentList = appointmentManager.getAppointmentHistoryWithoutDeleted(loggedInInfo, new Integer(demographic_no), iRSOffSet, iPageSize);
   } else {
-	appointmentList = appointmentManager.getAppointmentHistoryWithDeleted(new Integer(demographic_no), iRSOffSet, iPageSize);
+	appointmentList = appointmentManager.getAppointmentHistoryWithDeleted(loggedInInfo, new Integer(demographic_no), iRSOffSet, iPageSize);
   }
   boolean bodd=false;
   int nItems=0;

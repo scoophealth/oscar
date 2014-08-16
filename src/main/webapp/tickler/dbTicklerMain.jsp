@@ -32,23 +32,19 @@
 <%@ page import="org.oscarehr.managers.TicklerManager" %>
 <%
 	TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
-%>
-<%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 	String[] param = new String[2];
 String[] temp = request.getParameterValues("checkbox");
 if (temp == null){
-%>
-<%
 	response.sendRedirect("ticklerMain.jsp");
-%>
-<%
 	}else{
 	
     for (int i=0; i<temp.length; i++){
         param[0] = request.getParameter("submit_form").substring(0,1);
         param[1] = temp[i];
 
-        Tickler t = ticklerManager.getTickler(Integer.parseInt(temp[i]));
+        Tickler t = ticklerManager.getTickler(loggedInInfo, Integer.parseInt(temp[i]));
         if(t != null) {
         	Tickler.STATUS status = Tickler.STATUS.A;
         	char tmp = request.getParameter("submit_form").toCharArray()[0];
@@ -58,7 +54,7 @@ if (temp == null){
         	if(tmp == 'D' || tmp == 'd') {
         		status = Tickler.STATUS.D;
         	}
-        	ticklerManager.updateStatus(t.getId(),LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),status);
+        	ticklerManager.updateStatus(loggedInInfo, t.getId(),loggedInInfo.getLoggedInProviderNo(),status);
         }
 
     }

@@ -29,6 +29,7 @@ import org.oscarehr.common.dao.MessageListDao;
 import org.oscarehr.common.dao.MsgDemoMapDao;
 import org.oscarehr.common.model.MessageList;
 import org.oscarehr.common.model.MsgDemoMap;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,11 +47,11 @@ public class MessagingManager {
 	private MsgDemoMapDao msgDemoMapDao;
 	
 	
-	public List<MessageList> getMyInboxMessages(String providerNo, int offset, int limit) {		
+	public List<MessageList> getMyInboxMessages(LoggedInInfo loggedInInfo, String providerNo, int offset, int limit) {		
 		List<MessageList> msgs = messageListDao.findMessageRangeByProviderNo(providerNo, offset, limit);
 		 
 		for(MessageList msg:msgs) {
-	        	LogAction.addLogSynchronous("MessagingManager.getMyInboxMessages", "msglistid="+msg.getId());
+	        	LogAction.addLogSynchronous(loggedInInfo, "MessagingManager.getMyInboxMessages", "msglistid="+msg.getId());
 		}
 		 
 		return msgs;

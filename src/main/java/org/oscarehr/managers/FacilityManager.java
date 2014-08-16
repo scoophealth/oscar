@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,24 +39,24 @@ public class FacilityManager {
 	@Autowired
 	private FacilityDao facilityDao;
 
-	public Facility getDefaultFacility() {
+	public Facility getDefaultFacility(LoggedInInfo loggedInInfo) {
 		List<Facility> results = facilityDao.findAll(true);
 		if (results.size() == 0) {
 			return (null);
 		} else {
 
 			//--- log action ---
-			LogAction.addLogSynchronous("FacilityManager.getDefaultFacility", null);
+			LogAction.addLogSynchronous(loggedInInfo,"FacilityManager.getDefaultFacility", null);
 
 			return (results.get(0));
 		}
 	}
 
-	public List<Facility> getAllFacilities(Boolean active) {
+	public List<Facility> getAllFacilities(LoggedInInfo loggedInInfo, Boolean active) {
 		List<Facility> results = facilityDao.findAll(active);
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("FacilityManager.getAllFacilities", null);
+		LogAction.addLogSynchronous(loggedInInfo,"FacilityManager.getAllFacilities", null);
 
 		return (results);
 	}

@@ -44,7 +44,7 @@
 	ProviderManager2 providerManager = (ProviderManager2) SpringUtils.getBean("providerManager2");
     ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 
-	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+    LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.currentFacility.getId());
 %>
 
@@ -161,7 +161,7 @@
 				<select name="providerIds" class="input-medium" multiple="multiple">
 					<%
 						// null for both active and inactive because the report might be for a provider who's just left in the current reporting period.
-						List<Provider> providers=providerManager.getProviders(null);
+						List<Provider> providers=providerManager.getProviders(loggedInInfo, null);
 
 						for (Provider provider : providers)
 						{
