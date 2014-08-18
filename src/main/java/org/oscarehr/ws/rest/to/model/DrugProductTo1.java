@@ -21,115 +21,74 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.common.model;
+package org.oscarehr.ws.rest.to.model;
 
-import java.text.SimpleDateFormat;
+import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name="drugProduct")
+public class DrugProductTo1 implements Serializable {
 
-@Entity
-public class DrugProduct extends AbstractModel<Integer> {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private static final long serialVersionUID = 1L;
+	 
 	private Integer id;
-
 	private String name;
 	private String code;
 	private Integer location;
-	
 	private String lotNumber;
 	private Integer dispensingEvent;
-	
-	@Temporal(TemporalType.DATE)
 	private Date expiryDate;
-	
-	//# of doses or tablets so that we can patch to a prescription
 	private int amount;
-	
-
-	public String getLotNumber() {
-		return lotNumber;
-	}
-
-	public void setLotNumber(String lotNumber) {
-		this.lotNumber = lotNumber;
-	}
-
-	public Date getExpiryDate() {
-		return expiryDate;
-	}
-
-	public void setExpiryDate(Date expiryDate) {
-		this.expiryDate = expiryDate;
-	}
-	
-	public Integer getDispensingEvent() {
-		return dispensingEvent;
-	}
-
-	public void setDispensingEvent(Integer dispensingEvent) {
-		this.dispensingEvent = dispensingEvent;
-	}
-
-	
-	
-	public int getAmount() {
-		return amount;
-	}
-
-	public void setAmount(int amount) {
-		this.amount = amount;
-	}
-
-	public String getExpiryDateAsString() {
-		if(getExpiryDate() != null) {
-			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-			return f.format(getExpiryDate());
-		}else {
-			return "";
-		}
-	}
-
 	public Integer getId() {
 		return id;
 	}
-
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	public String getCode() {
 		return code;
 	}
-
 	public void setCode(String code) {
 		this.code = code;
 	}
-
 	public Integer getLocation() {
 		return location;
 	}
-
 	public void setLocation(Integer location) {
 		this.location = location;
 	}
-	
+	public String getLotNumber() {
+		return lotNumber;
+	}
+	public void setLotNumber(String lotNumber) {
+		this.lotNumber = lotNumber;
+	}
+	public Integer getDispensingEvent() {
+		return dispensingEvent;
+	}
+	public void setDispensingEvent(Integer dispensingEvent) {
+		this.dispensingEvent = dispensingEvent;
+	}
+	public Date getExpiryDate() {
+		return expiryDate;
+	}
+	public void setExpiryDate(Date expiryDate) {
+		this.expiryDate = expiryDate;
+	}
+	public int getAmount() {
+		return amount;
+	}
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
 	
 	
 }
