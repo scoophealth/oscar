@@ -65,6 +65,7 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     @Transient public final static String OFFICIAL_FIRST_NAME="official_first_name";
     @Transient public final static String OFFICIAL_SECOND_NAME="official_second_name";
     @Transient public final static String OFFICIAL_LAST_NAME="official_last_name";
+    @Transient public final static String OFFICIAL_OLIS_IDTYPE="official_olis_idtype";
     
     
     //added to user properties with new interface

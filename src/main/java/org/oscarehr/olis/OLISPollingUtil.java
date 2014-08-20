@@ -128,7 +128,7 @@ public class OLISPollingUtil {
 				providerQuery.setStartEndTimestamp(obr22);
 	
 				// Setting HIC for Z04 Request
-				ZRP1 zrp1 = new ZRP1(provider.getPractitionerNo(), "MDL", "ON", "HL70347",officialLastName,officialfirstName,officialSecondName);
+				ZRP1 zrp1 = new ZRP1(provider.getPractitionerNo(), userPropertyDAO.getStringValue(provider.getProviderNo(),UserProperty.OFFICIAL_OLIS_IDTYPE), "ON", "HL70347",officialLastName,officialfirstName,officialSecondName);
 				providerQuery.setRequestingHic(zrp1);
 				String response = Driver.submitOLISQuery(null, providerQuery);
 				
