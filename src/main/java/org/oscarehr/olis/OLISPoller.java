@@ -109,7 +109,7 @@ public class OLISPoller {
 				providerQuery.setStartEndTimestamp(obr22);
 	
 				// Setting HIC for Z04 Request
-				ZRP1 zrp1 = new ZRP1(provider.getPractitionerNo(), "MDL", "ON", "HL70347", 
+				ZRP1 zrp1 = new ZRP1(provider.getPractitionerNo(), userPropertyDAO.getStringValue(provider.getProviderNo(),UserProperty.OFFICIAL_OLIS_IDTYPE), "ON", "HL70347", 
 						userPropertyDAO.getStringValue(provider.getProviderNo(),UserProperty.OFFICIAL_LAST_NAME), 
 						userPropertyDAO.getStringValue(provider.getProviderNo(),UserProperty.OFFICIAL_FIRST_NAME), 
 						userPropertyDAO.getStringValue(provider.getProviderNo(),UserProperty.OFFICIAL_SECOND_NAME));
