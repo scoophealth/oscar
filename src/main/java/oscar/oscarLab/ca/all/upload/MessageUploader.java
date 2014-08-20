@@ -478,7 +478,7 @@ public final class MessageUploader {
 			}
 
 			if(result != null) {
-				sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type,dateModified) values ('" + ((result != null && result.getDemographicNo()!=null)?result.getDemographicNo().toString():"0") + "', '" + labId + "','HL7',now())";
+				sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type,dateModified,created) values ('" + ((result != null && result.getDemographicNo()!=null)?result.getDemographicNo().toString():"0") + "', '" + labId + "','HL7',now(),now())";
 				PreparedStatement pstmt = conn.prepareStatement(sql);
 				pstmt.executeUpdate();
 				pstmt.close();
