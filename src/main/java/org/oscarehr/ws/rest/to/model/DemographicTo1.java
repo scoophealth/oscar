@@ -163,6 +163,8 @@ public class DemographicTo1 implements Serializable {
 	
 	private List<ProviderTo1> midwives = new ArrayList<ProviderTo1>();
 	
+	private List<ProfessionalSpecialistTo1> referralDoctors = new ArrayList<ProfessionalSpecialistTo1>();
+	
 	private List<WaitingListNameTo1> waitingListNames = new ArrayList<WaitingListNameTo1>();
 
 	public Integer getDemographicNo() {
@@ -675,6 +677,14 @@ public class DemographicTo1 implements Serializable {
 	
 	public void setMidwives(List<ProviderTo1> midwives) {
 		this.midwives = midwives;
+	}
+	
+	public List<ProfessionalSpecialistTo1> getReferralDoctors() {
+		return referralDoctors;
+	}
+	
+	public void setReferralDoctors(List<ProfessionalSpecialistTo1> referralDoctors) {
+		this.referralDoctors = referralDoctors;
 	}
 	
 	public List<WaitingListNameTo1> getWaitingListNames() {

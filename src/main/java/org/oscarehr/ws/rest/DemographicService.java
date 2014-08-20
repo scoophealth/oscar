@@ -56,6 +56,7 @@ import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.conversion.DemographicContactFewConverter;
 import org.oscarehr.ws.rest.conversion.DemographicConverter;
+import org.oscarehr.ws.rest.conversion.ProfessionalSpecialistConverter;
 import org.oscarehr.ws.rest.conversion.ProviderConverter;
 import org.oscarehr.ws.rest.conversion.WaitingListNameConverter;
 import org.oscarehr.ws.rest.to.OscarSearchResponse;
@@ -99,6 +100,7 @@ public class DemographicService extends AbstractServiceImpl {
 	private DemographicContactFewConverter demoContactFewConverter = new DemographicContactFewConverter();
 	private WaitingListNameConverter waitingListNameConverter = new WaitingListNameConverter();
 	private ProviderConverter providerConverter = new ProviderConverter();
+	private ProfessionalSpecialistConverter specialistConverter = new ProfessionalSpecialistConverter();
 	
 	
 	/**
@@ -186,6 +188,13 @@ public class DemographicService extends AbstractServiceImpl {
 			for (WaitingListName waitingListName : waitingListNames) {
 				WaitingListNameTo1 waitingListNameTo1 = waitingListNameConverter.getAsTransferObject(waitingListName);
 				result.getWaitingListNames().add(waitingListNameTo1);
+			}
+		}
+		
+		List<ProfessionalSpecialist> referralDocs = specialistDao.findAll();
+		if (referralDocs!=null) {
+			for (ProfessionalSpecialist referralDoc : referralDocs) {
+				result.getReferralDoctors().add(specialistConverter.getAsTransferObject(referralDoc));
 			}
 		}
 		
