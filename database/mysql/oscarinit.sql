@@ -7923,7 +7923,7 @@ create table hl7TextInfo(
 	last_name varchar(30),
 	first_name varchar(30),
 	report_status varchar(1) NOT NULL,
-	accessionNum varchar(20),
+	accessionNum varchar(255),
 	filler_order_num varchar(50),
 	sending_facility varchar(50),
 	label varchar(255),
