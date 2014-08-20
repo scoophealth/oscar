@@ -38,34 +38,34 @@ import javax.persistence.Transient;
 @Table(name="property")
 public class UserProperty extends AbstractModel<Integer> implements Serializable {
 
-    @Transient public final static String MYOSCAR_ID="MyOscarId";
-    @Transient public final static String STALE_NOTEDATE = "cme_note_date";
-    @Transient public final static String STALE_FORMAT = "cme_note_format";
-    @Transient public final static String MYDRUGREF_ID = "mydrugref_id";
-    @Transient public final static String ONTARIO_MD_USERNAME = "ontario_md_username";
-    @Transient public final static String ONTARIO_MD_PASSWORD = "ontario_md_password";
-    @Transient public final static String CONSULTATION_TIME_PERIOD_WARNING = "consultation_time_period_warning";
-    @Transient public final static String CONSULTATION_TEAM_WARNING = "consultation_team_warning";
-    @Transient public final static String WORKLOAD_MANAGEMENT = "workload_management";
-    @Transient public final static String CONSULTATION_REQ_PASTE_FMT = "consultation_req_paste_fmt";
-    @Transient public final static String RX_PAGE_SIZE = "rx_page_size";
-    @Transient public final static String RX_DEFAULT_QUANTITY = "rx_default_quantity";
-    @Transient public final static String RX_PROFILE_VIEW = "rx_profile_view";
-    @Transient public final static String RX_USE_RX3 = "rx_use_rx3";
-    @Transient public final static String USE_MYMEDS = "use_mymeds";
-    @Transient public final static String DMFLOW_SHEET_VIEW = "DMFlowsheet_view";
-    @Transient public final static String DOC_DEFAULT_QUEUE="doc_default_queue";
-    @Transient public final static String HC_TYPE= "HC_Type";
-    @Transient public final static String DEFAULT_SEX= "default_sex";
-    @Transient public final static String EFORM_REFER_FAX = "eform_refer_fax";
-    @Transient public final static String EFORM_FAVOURITE_GROUP = "favourite_eform_group";
-    @Transient public final static String RX_SHOW_PATIENT_DOB="rx_show_patient_dob";
-    @Transient public final static String PATIENT_NAME_LENGTH="patient_name_length";
+    public static final String MYOSCAR_ID="MyOscarId";
+    public static final String STALE_NOTEDATE = "cme_note_date";
+    public static final String STALE_FORMAT = "cme_note_format";
+    public static final String MYDRUGREF_ID = "mydrugref_id";
+    public static final String ONTARIO_MD_USERNAME = "ontario_md_username";
+    public static final String ONTARIO_MD_PASSWORD = "ontario_md_password";
+    public static final String CONSULTATION_TIME_PERIOD_WARNING = "consultation_time_period_warning";
+    public static final String CONSULTATION_TEAM_WARNING = "consultation_team_warning";
+    public static final String WORKLOAD_MANAGEMENT = "workload_management";
+    public static final String CONSULTATION_REQ_PASTE_FMT = "consultation_req_paste_fmt";
+    public static final String RX_PAGE_SIZE = "rx_page_size";
+    public static final String RX_DEFAULT_QUANTITY = "rx_default_quantity";
+    public static final String RX_PROFILE_VIEW = "rx_profile_view";
+    public static final String RX_USE_RX3 = "rx_use_rx3";
+    public static final String USE_MYMEDS = "use_mymeds";
+    public static final String DMFLOW_SHEET_VIEW = "DMFlowsheet_view";
+    public static final String DOC_DEFAULT_QUEUE="doc_default_queue";
+    public static final String HC_TYPE= "HC_Type";
+    public static final String DEFAULT_SEX= "default_sex";
+    public static final String EFORM_REFER_FAX = "eform_refer_fax";
+    public static final String EFORM_FAVOURITE_GROUP = "favourite_eform_group";
+    public static final String RX_SHOW_PATIENT_DOB="rx_show_patient_dob";
+    public static final String PATIENT_NAME_LENGTH="patient_name_length";
     
-    @Transient public final static String OFFICIAL_FIRST_NAME="official_first_name";
-    @Transient public final static String OFFICIAL_SECOND_NAME="official_second_name";
-    @Transient public final static String OFFICIAL_LAST_NAME="official_last_name";
-    @Transient public final static String OFFICIAL_OLIS_IDTYPE="official_olis_idtype";
+    public static final String OFFICIAL_FIRST_NAME="official_first_name";
+    public static final String OFFICIAL_SECOND_NAME="official_second_name";
+    public static final String OFFICIAL_LAST_NAME="official_last_name";
+    public static final String OFFICIAL_OLIS_IDTYPE="official_olis_idtype";
     
     
     //added to user properties with new interface
