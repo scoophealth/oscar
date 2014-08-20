@@ -35,6 +35,7 @@ public class DemographicExtConverter extends AbstractConverter<DemographicExt, D
 	public DemographicExt getAsDomainObject(LoggedInInfo loggedInInfo,DemographicExtTo1 t) throws ConversionException {
 		DemographicExt d = new DemographicExt();
 		
+		d.setId(t.getId());
 		d.setDemographicNo(t.getDemographicNo());
 		d.setProviderNo(t.getProviderNo());
 		d.setKey(t.getKey());
@@ -48,6 +49,7 @@ public class DemographicExtConverter extends AbstractConverter<DemographicExt, D
 	public DemographicExtTo1 getAsTransferObject(DemographicExt d) throws ConversionException {
 		DemographicExtTo1 t = new DemographicExtTo1();
 		
+		t.setId(d.getId());
 		t.setDemographicNo(d.getDemographicNo());
 		t.setProviderNo(d.getProviderNo());
 		t.setKey(d.getKey());

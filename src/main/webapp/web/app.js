@@ -38,7 +38,10 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 	    	url: '/record/:demographicNo', 
             templateUrl: 'record/record.jsp',
             controller: 'RecordCtrl',
-            resolve: { demo: function($stateParams, demographicService) {return demographicService.getDemographic($stateParams.demographicNo);} }
+            resolve: { 
+            	demo: function($stateParams, demographicService) { return demographicService.getDemographic($stateParams.demographicNo); },
+        		user: function(providerService) { return providerService.getMe(); }
+            }
         })
         .state('record.details', {
 	    	url: '^/record/:demographicNo/details', 
