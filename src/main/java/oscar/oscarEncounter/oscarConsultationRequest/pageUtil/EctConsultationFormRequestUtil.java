@@ -264,6 +264,12 @@ public class EctConsultationFormRequestUtil {
         return verdict;
     }
 
+    /**
+     * If given id is null or blank string, returns "-1"
+     * 
+     * @param id the specialist id (specId in professionalSpecialists table)
+     * @return the specialist's name, formatted
+     */
     public String getSpecailistsName(String id) {
     	if (id == null || id.trim().length() == 0) { return "-1"; }
         String retval = new String();

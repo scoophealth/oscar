@@ -270,31 +270,36 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		infoTable.addCell(setInfoCell(cell, getResource("msgService")));
 		infoTable.addCell(setDataCell(cell, reqFrm.getServiceName(reqFrm.service)));
 
+		boolean hasSpecialist = !((reqFrm.getSpecailistsName(reqFrm.specialist).equals("-1"))
+				|| (reqFrm.getSpecailistsName(reqFrm.specialist).equals(null))
+				|| (reqFrm.getSpecailistsName(reqFrm.specialist).equals("")));
+		
 		infoTable.addCell(setInfoCell(cell, getResource("msgConsultant")));
-		infoTable.addCell(setDataCell(cell, reqFrm.getSpecailistsName(reqFrm.specialist)));
-
-
-
-		infoTable.addCell(setInfoCell(cell, getResource("msgPhone")));
-		if ((reqFrm.getSpecailistsName(reqFrm.specialist).equals("-1"))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(null))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(""))) {
-			infoTable.addCell(setDataCell(cell, ""));
+		if (hasSpecialist) {
+			infoTable.addCell(setDataCell(cell, reqFrm.getSpecailistsName(reqFrm.specialist)));
 		} else {
-			infoTable.addCell(setDataCell(cell, reqFrm.specPhone));
+			infoTable.addCell(setDataCell(cell, ""));
 		}
 
+		infoTable.addCell(setInfoCell(cell, getResource("msgPhone")));
+		if (hasSpecialist) {
+			infoTable.addCell(setDataCell(cell, reqFrm.specPhone));
+		} else {
+			infoTable.addCell(setDataCell(cell, ""));
+		}
 
 		infoTable.addCell(setInfoCell(cell, getResource("msgFax")));
-		if ((reqFrm.getSpecailistsName(reqFrm.specialist).equals("-1"))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(null))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(""))) {
-			infoTable.addCell(setDataCell(cell, ""));
-		} else {
+		if (hasSpecialist) {
 			infoTable.addCell(setDataCell(cell, reqFrm.specFax));
+		} else {
+			infoTable.addCell(setDataCell(cell, ""));
 		}
 
 		infoTable.addCell(setInfoCell(cell, getResource("msgAddr")));
-		if ((reqFrm.getSpecailistsName(reqFrm.specialist).equals("-1"))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(null))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(""))) {
-			infoTable.addCell(setDataCell(cell, ""));
-		} else {
+		if (hasSpecialist) {
 			infoTable.addCell(setDataCell(cell, divy(reqFrm.specAddr)));
+		} else {
+			infoTable.addCell(setDataCell(cell, ""));
 		}
 
 		// The last cell in the table is extended to the maximum available height;
