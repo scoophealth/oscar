@@ -97,13 +97,8 @@ public class RptByExamplesFavoriteAction extends Action {
     public void write2Database(String providerNo, String favoriteName, String query){
         if (query!=null && query.compareTo("")!=0){
             try {
-                
-                
-                //StringEscapeUtils strEscUtils = new StringEscapeUtils();
-                                
-                //query = strEscUtils.escapeSql(query);
+            	favoriteName = StringEscapeUtils.escapeSql(favoriteName);
                 MiscUtils.getLogger().debug("Fav "+favoriteName+" query "+query);
-                
                 
                 String sql = "SELECT * from reportByExamplesFavorite WHERE providerNo = '"+providerNo+"' and name LIKE '" + favoriteName + "' OR query LIKE '" + query + "'";
                 ResultSet rs = DBHandler.GetSQL(sql);
