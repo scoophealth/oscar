@@ -587,7 +587,7 @@ function refreshTabAlerts(id) {
 			<%}else{%>
 			<div id="help-link">
 				
-				    <a href="javascript:void(0)" onclick="document.getElementById('helpHtml').style.right='0px" onmouseover="document.getElementById('helpHtml').style.right='0px'"><bean:message key="global.help"/></a>
+				    <a href="javascript:void(0)" onclick="document.getElementById('helpHtml').style.right='0px'"><bean:message key="global.help"/></a>
 			
 				<div id="helpHtml">
 				<div class="help-title">Help</div>

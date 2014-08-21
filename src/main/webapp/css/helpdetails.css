@@ -21,14 +21,13 @@ font-weight:normal !important;
     transition: right 0.5s ease-in-out;
 }
 
-
 #help-link{
 display:inline;
 }
 
-#help-link:hover  #helpHtml{
+/*#help-link:hover  #helpHtml{
     right: 0;
-}
+}*/
 
 .help-title{
 position: absolute; top: 0;width:100%; height:40px;background-color:#486ebd;color:#fff;font-size:24px;text-align:left;
@@ -38,12 +37,10 @@ position: absolute; top: 0;width:100%; height:40px;background-color:#486ebd;colo
 position: absolute; top: 44px;padding:10px; height:420px; width:90%; text-align:left;overflow-y:auto; overflow-x:hidden;
 }
 
-
 .help-close{
 position: absolute; top: 0; right:2px; color:#fff;font-size:18px;text-align:right;font-weight:100
 }
 
 .help-close:hover{
 color:#333;
-
 }
