@@ -1250,7 +1250,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 		<a href="javascript:void(0)" onClick ="popupPage(600,750,'<%=resourcebaseurl%>')"><bean:message key="global.help"/></a>
 	<%}else{%>
 <div id="help-link">
-	    <a href="javascript:void(0)" onclick="document.getElementById('helpHtml').style.right='0px" onmouseover="document.getElementById('helpHtml').style.right='0px'"><bean:message key="global.help"/></a>
+	    <a href="javascript:void(0)" onclick="document.getElementById('helpHtml').style.right='0px'"><bean:message key="global.help"/></a>
 	    
 		<div id="helpHtml">
 		<div class="help-title">Help</div>
