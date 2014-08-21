@@ -332,6 +332,9 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 
 		infoTable.addCell(setInfoCell(cell, getResource("msgBirth")));
 		infoTable.addCell(setDataCell(cell, reqFrm.patientDOB + " (y/m/d)"));
+		
+		infoTable.addCell(setInfoCell(cell, getResource("msgSex")));
+		infoTable.addCell(setDataCell(cell, reqFrm.patientSex));
 
 		infoTable.addCell(setInfoCell(cell, getResource("msgCard")));
 		infoTable.addCell(setDataCell(cell, String.format("(%s) %s %s", reqFrm.patientHealthCardType,
