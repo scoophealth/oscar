@@ -48,6 +48,7 @@ public final class dxSetupResearchAction extends Action {
                                  HttpServletResponse response)
         throws Exception {
             
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
         dxResearchCodingSystem codingSys = new dxResearchCodingSystem();        
         String demographicNo = request.getParameter("demographicNo");
         String providerNo = request.getParameter("providerNo");
@@ -58,7 +59,7 @@ public final class dxSetupResearchAction extends Action {
         dxQuickListItemsHandler quicklistItemsHd = null;
                 
         if(providerNo == null) {
-        	providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+        	providerNo = loggedInInfo.getLoggedInProviderNo();
         }
         if(selectedQuickList == null) {
         	selectedQuickList="";

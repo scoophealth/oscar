@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
@@ -37,7 +38,8 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
 	OscarProperties props = OscarProperties.getInstance();
-
+   	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+   		 
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
@@ -316,7 +318,7 @@ padding-right:6;
 							int intSOR;
 
 								Integer demographicId=bean.getDemographicNo();
-								List<AllergyDisplay> displayAllergies=AllergyHelperBean.getAllergiesToDisplay(demographicId, request.getLocale());
+								List<AllergyDisplay> displayAllergies=AllergyHelperBean.getAllergiesToDisplay(loggedInInfo, demographicId, request.getLocale());
 								for (AllergyDisplay displayAllergy : displayAllergies)
 								{
 

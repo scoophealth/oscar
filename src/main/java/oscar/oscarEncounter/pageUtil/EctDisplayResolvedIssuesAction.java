@@ -159,7 +159,6 @@ public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 		
 		
 		// add integrator issues
-		//LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 /*
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 			try {

@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="oscar.Misc"%>
 <%@page import="oscar.util.UtilMisc"%>
 <%@include file="/casemgmt/taglibs.jsp"%>
@@ -67,7 +68,8 @@
 <%
 try
 {
-	Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	Facility facility = loggedInInfo.getCurrentFacility();
 
     String pId = (String)session.getAttribute("case_program_id");
     if (pId == null) {

@@ -38,6 +38,7 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -148,7 +149,7 @@ public class FrmRourke2009Record extends FrmRecord {
     }
 ///////////////////////////////////
   
-    public Properties getGraph(int demographicNo, int existingID) {
+    public Properties getGraph(LoggedInInfo loggedInInfo, int demographicNo, int existingID) {
     	String formClass = "Growth0_36";
         Properties props = new Properties();
 
@@ -206,7 +207,7 @@ public class FrmRourke2009Record extends FrmRecord {
 
 				//now we add measurements from formGrowth0_36 form
 
-                EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(String.valueOf(demographicNo), "formGrowth0_36");
+                EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(loggedInInfo, String.valueOf(demographicNo), "formGrowth0_36");
                 if (pforms.length > 0) {
                 	EctFormData.PatientForm pfrm = pforms[0];
                 	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);

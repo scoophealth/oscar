@@ -70,7 +70,10 @@ public class BillingCorrectionAction extends DispatchAction{
         
     public ActionForward add3rdPartyPayment(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
         
-        String invoiceNo = request.getParameter("billing_no"); 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
+		String invoiceNo = request.getParameter("billing_no"); 
         
         BillingONCHeader1 bCh1 = bCh1Dao.find(Integer.parseInt(invoiceNo));
         
@@ -118,7 +121,7 @@ public class BillingCorrectionAction extends DispatchAction{
             }
             
             //Add new payment amount to third party bill
-            bPaymentDao.createPayment(bCh1, request.getLocale(), payType, paidAmt, payMethod,LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+            bPaymentDao.createPayment(bCh1, request.getLocale(), payType, paidAmt, payMethod,providerNo);
                                                            
             return mapping.findForward("success");            
         }
@@ -252,7 +255,10 @@ public class BillingCorrectionAction extends DispatchAction{
         
     private boolean updateBillingONCHeader1(BillingONCHeader1 bCh1, HttpServletRequest request) {
         
-        Locale locale = request.getLocale();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
+		Locale locale = request.getLocale();
         
         String status = request.getParameter("status").substring(0,1);
         
@@ -309,7 +315,7 @@ public class BillingCorrectionAction extends DispatchAction{
             bCh1.setComment(request.getParameter("comment"));           
             bCh1.setProviderOhipNo(provider.getOhipNo());
             bCh1.setProviderRmaNo(provider.getRmaNo());                        
-            bCh1.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+            bCh1.setCreator(providerNo);
             bCh1.setClinic(request.getParameter("site"));			
             bCh1.setProvince(request.getParameter("hc_type"));
             bCh1.setLocation(request.getParameter("xml_slicode"));                        
@@ -336,7 +342,7 @@ public class BillingCorrectionAction extends DispatchAction{
             }
 
             if (doReverse > 0) {
-                bPaymentDao.createPayment(bCh1, locale, BillingONPayment.REFUND, reversedFunds, "",LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());                                        
+                bPaymentDao.createPayment(bCh1, locale, BillingONPayment.REFUND, reversedFunds, "",providerNo);                                        
             }
         } else if (statusChangedToSettled && !mohPayProgram) {
             /*
@@ -358,7 +364,7 @@ public class BillingCorrectionAction extends DispatchAction{
             }
 
             if (doSettlePayment > 0) {
-                bPaymentDao.createPayment(bCh1, locale, BillingONPayment.PAYMENT, amtOutstanding, "",LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+                bPaymentDao.createPayment(bCh1, locale, BillingONPayment.PAYMENT, amtOutstanding, "",providerNo);
             }
         }
         

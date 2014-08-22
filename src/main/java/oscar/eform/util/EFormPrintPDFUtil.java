@@ -38,6 +38,7 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -52,7 +53,7 @@ public final class EFormPrintPDFUtil {
     
     private static DemographicDao demoDAO = (DemographicDao)SpringUtils.getBean(DemographicDao.class);
 
-    public static Properties getFrmRourkeGraph(Properties full_props) {
+    public static Properties getFrmRourkeGraph(LoggedInInfo loggedInInfo, Properties full_props) {
     	String graphType = full_props.getProperty("__graphType");
     	Integer demographicNo = Integer.valueOf(full_props.getProperty("demographic_no"));
     	
@@ -88,7 +89,7 @@ public final class EFormPrintPDFUtil {
         props.setProperty("c_Age", ageStr);
 
 		//now we add measurements from formGrowth0_36 form
-        addMeasurementsInFormGrowth0_36(props, demographicNo);
+        addMeasurementsInFormGrowth0_36(loggedInInfo, props, demographicNo);
 
         //now add measurements from Ht and Wt in measurements group
         addMeasurementsGroupHtWt(props, dob, demographicNo, graphType);
@@ -194,8 +195,8 @@ public final class EFormPrintPDFUtil {
         props.setProperty("__xDateScale_2", String.valueOf(Calendar.YEAR));
     }
 
-    private static void addMeasurementsInFormGrowth0_36(Properties props, Integer demographicNo) {
-        EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(String.valueOf(demographicNo), "formGrowth0_36");
+    private static void addMeasurementsInFormGrowth0_36(LoggedInInfo loggedInInfo, Properties props, Integer demographicNo) {
+        EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(loggedInInfo, String.valueOf(demographicNo), "formGrowth0_36");
         if (pforms.length > 0) {
         	EctFormData.PatientForm pfrm = pforms[0];
         	FrmRecord rec = (new FrmRecordFactory()).factory("Growth0_36");

@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -54,6 +55,8 @@ public final class RxRePrescribeAction extends DispatchAction {
 
 	public ActionForward reprint(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		oscar.oscarRx.pageUtil.RxSessionBean sessionBeanRX = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (sessionBeanRX == null) {
 			response.sendRedirect("error.html");
@@ -81,7 +84,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 
 		// save print date/time to prescription table
 		if (p != null) {
-			p.Print();
+			p.Print(loggedInInfo);
 		}
 
 		String comment = rxData.getScriptComment(script_no);
@@ -96,6 +99,8 @@ public final class RxRePrescribeAction extends DispatchAction {
 	}
 
 	public ActionForward reprint2(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
 		oscar.oscarRx.pageUtil.RxSessionBean sessionBeanRX = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (sessionBeanRX == null) {
@@ -122,7 +127,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 		// p("auditStr "+auditStr.toString());
 		// save print date/time
 		if (p != null) {
-			p.Print();
+			p.Print(loggedInInfo);
 		}
 
 		String comment = rxData.getScriptComment(script_no);

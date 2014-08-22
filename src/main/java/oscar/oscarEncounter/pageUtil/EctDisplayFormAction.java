@@ -42,11 +42,11 @@ import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.model.EncounterForm;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-
 import oscar.oscarEncounter.data.EctFormData;
 import oscar.oscarLab.LabRequestReportLink;
 import oscar.util.DateUtils;
@@ -62,7 +62,8 @@ public class EctDisplayFormAction extends EctDisplayAction {
 
 	@Override
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		String appointmentNo = bean.appointmentNo;
 		if(appointmentNo == null  && request.getSession().getAttribute("cur_appointment_no") != null) {
 			appointmentNo = (String)request.getSession().getAttribute("cur_appointment_no");
@@ -122,7 +123,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 					String table = encounterForm.getFormTable();
 					if (!table.equalsIgnoreCase("")) {
 						new EctFormData();
-						EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(bean.demographicNo, table);
+						EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(loggedInInfo, bean.demographicNo, table);
 						// if a form has been started for the patient, create a module item for it
 						if (pforms.length > 0) {	
 														
@@ -195,7 +196,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 							boolean dontAdd=false;
 							if(table.equals("formONAR")) {
 								//check to see if we have an enhanced one
-								EctFormData.PatientForm[] pf = EctFormData.getPatientFormsFromLocalAndRemote(bean.demographicNo, "formONAREnhanced");
+								EctFormData.PatientForm[] pf = EctFormData.getPatientFormsFromLocalAndRemote(loggedInInfo, bean.demographicNo, "formONAREnhanced");
 								if(pf.length>0) {
 									dontAdd=true;
 								}

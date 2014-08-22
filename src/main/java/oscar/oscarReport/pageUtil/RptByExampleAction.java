@@ -63,7 +63,8 @@ public class RptByExampleAction extends Action {
         if(request.getSession().getAttribute("user") == null)
             response.sendRedirect("../logout.htm");     
         
-        String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        String providerNo=loggedInInfo.getLoggedInProviderNo();
 
         SecUserRoleDao secUserRoleDao = SpringUtils.getBean(SecUserRoleDao.class);
         

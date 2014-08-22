@@ -23,12 +23,13 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page
 	import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*,java.util.*"%>
 <%
-	
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String provNo = request.getParameter("provider_no");
 	String demoNo = request.getParameter("demographic_no");
     String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF", tableTitle = "#99ccff";
@@ -118,7 +119,7 @@ function popupPageK(page) {
                     pforms = new EctFormData.PatientForm[0];
                 }
                 else {
-                    pforms = EctFormData.getPatientFormsFromLocalAndRemote(demoNo, table);
+                    pforms = EctFormData.getPatientFormsFromLocalAndRemote(loggedInInfo, demoNo, table);
                 }
 		int nItems = 0;
 

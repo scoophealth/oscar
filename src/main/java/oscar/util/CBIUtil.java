@@ -63,13 +63,13 @@ import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.OcanStaffFormDao;
+import org.oscarehr.common.dao.OcanStaffFormDataDao;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.OcanStaffForm;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
-import org.oscarehr.common.dao.OcanStaffFormDataDao;
+
 import oscar.OscarProperties;
 
 import com.cbi.ws.CBIService;
@@ -372,12 +372,11 @@ public class CBIUtil
 		return toBeSubmittedCbiForms;
 	}
 	
-	public OcanStaffForm getLatestCbiFormByDemographicNoAndProgramId(Integer demographicNo, Integer programId) {
+	public OcanStaffForm getLatestCbiFormByDemographicNoAndProgramId(Integer facilityId, Integer demographicNo, Integer programId) {
 		OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
 		AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 		Admission admission = admissionDao.getAdmission(programId, demographicNo);
 		Integer admissionId = Integer.valueOf(admission.getId().intValue());
-		Integer facilityId = LoggedInInfo.loggedInInfo.get().currentFacility.getId();
 		OcanStaffForm cbiForm = ocanStaffFormDao.findLatestCbiFormsByFacilityAdmissionId(facilityId, admissionId, null); //could be signed or unsigned
 		return cbiForm;				
 	}
@@ -412,11 +411,10 @@ public class CBIUtil
 		return ocanStaffForm;
 	}
 
-	public OcanStaffForm getCBIFormDataBySubmissionId(Integer submissionId)
+	public OcanStaffForm getCBIFormDataBySubmissionId(Integer facilityId, Integer submissionId)
 	{
 		OcanStaffForm ocanStaffForm = null;
 
-		Integer facilityId = LoggedInInfo.loggedInInfo.get().currentFacility.getId();
 		OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
 		List<OcanStaffForm> ocanStaffFormList = ocanStaffFormDao.findBySubmissionId(facilityId, submissionId);
 		if (ocanStaffFormList != null && ocanStaffFormList.size() > 0)

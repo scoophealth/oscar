@@ -24,11 +24,11 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.common.model.Admission"%>
 <%@page import="org.oscarehr.common.dao.AdmissionDao"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.model.OcanStaffForm"%>
-<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
 <%@page import="org.oscarehr.PMmodule.model.OcanSubmissionLog"%>
 <%@page import="java.util.List"%>
 <%@page import="oscar.util.CBIUtil"%>
@@ -42,7 +42,10 @@ CBIUtil cbiUtil = new CBIUtil();
 
 <%
 List<OcanSubmissionLog> submissionLogList = null;
-
+   		 
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+Integer currentFacilityId=loggedInInfo.getCurrentFacility().getId();
+ 			
 String dateStr = "";
 if(request.getParameter("date")!=null && request.getParameter("date").trim().length()>0)
 {
@@ -124,7 +127,7 @@ if(submissionLogList!=null)
 							if(ocanSubmissionLog!=null)
 							{
 								//get form record based on the submission id 
-								OcanStaffForm ocanStaffForm = cbiUtil.getCBIFormDataBySubmissionId(ocanSubmissionLog.getId());
+								OcanStaffForm ocanStaffForm = cbiUtil.getCBIFormDataBySubmissionId(currentFacilityId, ocanSubmissionLog.getId());
 								
 								if(ocanStaffForm!=null)
 								{									

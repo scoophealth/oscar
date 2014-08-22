@@ -49,6 +49,7 @@
  */
 -->
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -63,11 +64,13 @@
 <%@ page import="org.oscarehr.common.dao.MyGroupAccessRestrictionDao" %>
 <%@ page import="org.oscarehr.common.model.MyGroupAccessRestriction" %>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	MyGroupAccessRestrictionDao myGroupAccessRestrictionDao = SpringUtils.getBean(MyGroupAccessRestrictionDao.class);
-%>
-<%
+
     if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
 
@@ -86,19 +89,17 @@
     		myGroupAccessRestrictionDao.remove(m.getId());
     	}
     	if(providerNos != null) {    		    	
-	    	for(String providerNo:providerNos) {
-	    		MyGroupAccessRestriction mgra = myGroupAccessRestrictionDao.findByGroupNoAndProvider(chosen_group,providerNo);
+	    	for(String providerNoTemp : providerNos) {
+	    		MyGroupAccessRestriction mgra = myGroupAccessRestrictionDao.findByGroupNoAndProvider(chosen_group,providerNoTemp);
 	    		if(mgra != null) {
 	    			myGroupAccessRestrictionDao.remove(mgra.getId());
 	    		}
 	    		
 	   			mgra = new MyGroupAccessRestriction();
 	   			mgra.setMyGroupNo(chosen_group);
-	   			mgra.setProviderNo(providerNo);
-	   			mgra.setLastUpdateUser(org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+	   			mgra.setProviderNo(providerNoTemp);
+	   			mgra.setLastUpdateUser(providerNoTemp);
 	       		myGroupAccessRestrictionDao.persist(mgra);
-	   		
-	    		
 	    	}
     	}
     }

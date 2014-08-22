@@ -50,7 +50,6 @@ import org.oscarehr.common.model.OcanConnexOption;
 import org.oscarehr.common.model.OcanFormOption;
 import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.OcanStaffFormData;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class OcanForm {
@@ -328,7 +327,6 @@ public class OcanForm {
 	
 	public static List<Admission> getAdmissions(Integer facilityId, Integer clientId) {
 		return(admissionDao.getAdmissionsByFacility(clientId, facilityId));
-
 	}
 
 	public static String renderAsEstimatedAge(Integer ocanStaffFormId, String question, boolean required, String dob, int prepopulationLevel)
@@ -357,12 +355,6 @@ public class OcanForm {
 		if(required) {className="{validate: {required:true}}";}
 		return "<input type=\"text\" value=\"" + value + "\" id=\""+question+"\" name=\""+question+"\" onfocus=\"this.blur()\" readonly=\"readonly\" class=\""+className+"\"/> ";
 	}	
-	
-	public static List<Admission> getAdmissions(Integer clientId) {
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		
-		return(admissionDao.getAdmissionsByFacility(clientId, loggedInInfo.currentFacility.getId()));
-	}
 	
 	public static String getEscapedAdmissionSelectionDisplay(Admission admission)
 	{

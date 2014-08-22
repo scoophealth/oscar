@@ -64,7 +64,7 @@ public class OruR01UploadAction extends Action {
     	try {
 	        OruR01UploadForm oruR01UploadForm = (OruR01UploadForm) form;
 	        FormFile formFile=oruR01UploadForm.getUploadFile();
-	        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	        
 	        Demographic demographic=getDemographicObject(oruR01UploadForm); 
 	        

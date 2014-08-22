@@ -24,6 +24,7 @@
 
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="oscar.oscarLab.ca.all.pageUtil.SendOruR01UIBean"%>
 <%@page import="org.oscarehr.common.model.ProfessionalSpecialist"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
@@ -77,6 +78,7 @@ for pre-populating data.
 --%>
 <%
 	SendOruR01UIBean sendOruR01UIBean=new SendOruR01UIBean(request);
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 
 <form method="post" enctype="multipart/form-data" action="oruR01Upload.do" onsubmit="return checkRequiredFields()" class="well form-horizontal">
@@ -84,7 +86,7 @@ for pre-populating data.
 		<div class="control-group">
 			<label class="control-label">From Provider:</label>
 			<div class="controls">
-				<%=SendOruR01UIBean.getLoggedInProviderDisplayLine()%>
+				<%=SendOruR01UIBean.getLoggedInProviderDisplayLine(loggedInInfo)%>
 			</div>
 		</div>
 		<div class="control-group">
