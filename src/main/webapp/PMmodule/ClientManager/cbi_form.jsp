@@ -247,9 +247,10 @@ $('document').ready(function() {
 	var demographicId='<%=currentDemographicId%>';	
 	var ocanStaffFormId = '<%=ocanStaffFormId%>';
 	var programId = '<%=currentProgramId%>';
+	var view = '<%=view%>';
 	
 	if(document.getElementById("cbi_dates") == null) {
-		$.get('cbi_get_dates.jsp?ocanStaffFormId='+ocanStaffFormId+'&demographicId='+demographicId+'&admissionId=0&programId='+programId, function(data) {
+		$.get('cbi_get_dates.jsp?view='+view+'&ocanStaffFormId='+ocanStaffFormId+'&demographicId='+demographicId+'&admissionId=0&programId='+programId, function(data) {
 			$("#center_block_dates").append(data);					 
 			});				
 	}
@@ -267,13 +268,13 @@ function changeProgram(selectBox) {
 	var ocanStaffFormId = '<%=ocanStaffFormId%>';
 	
 	if(document.getElementById("admissionDate") == null) {	
-			$.get('cbi_get_dates.jsp?ocanStaffFormId='+ocanStaffFormId+'&demographicId='+demographicId+'&programId=0&admissionId='+selectBoxValue, function(data) {
+			$.get('cbi_get_dates.jsp?view='+view+'&ocanStaffFormId='+ocanStaffFormId+'&demographicId='+demographicId+'&programId=0&admissionId='+selectBoxValue, function(data) {
 				  $("#center_block_dates").append(data);					 
 				});														
 	} 
 	else if(document.getElementById("admissionDate") !=null ) {		
 		$("#cbi_dates").remove();
-		$.get('cbi_get_dates.jsp?ocanStaffFormId='+ocanStaffFormId+'&demographicId='+demographicId+'&programId=0&admissionId='+selectBoxValue, function(data) {
+		$.get('cbi_get_dates.jsp?view='+view+'&ocanStaffFormId='+ocanStaffFormId+'&demographicId='+demographicId+'&programId=0&admissionId='+selectBoxValue, function(data) {
 			  $("#center_block_dates").append(data);					 
 			});	
 	}
