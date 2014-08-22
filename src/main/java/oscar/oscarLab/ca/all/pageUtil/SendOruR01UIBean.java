@@ -176,8 +176,7 @@ public final class SendOruR01UIBean {
 		return(null);
 	}
 
-	public static String getLoggedInProviderDisplayLine() {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	public static String getLoggedInProviderDisplayLine(LoggedInInfo loggedInInfo) {
 		Provider provider = loggedInInfo.loggedInProvider;
 
 		StringBuilder sb = new StringBuilder();

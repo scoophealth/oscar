@@ -1471,10 +1471,10 @@ public class RxPrescriptionData {
 			return true;
 		}
 
-		public boolean Print() {
+		public boolean Print(LoggedInInfo loggedInInfo) {
 			PrescriptionDao dao = SpringUtils.getBean(PrescriptionDao.class);
 			org.oscarehr.common.model.Prescription p = dao.find(ConversionUtils.fromIntString(getScript_no()));
-			String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+			String providerNo = loggedInInfo.getLoggedInProviderNo();
 
 			if (p == null) return false;
 

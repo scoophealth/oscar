@@ -43,8 +43,8 @@
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
     String beanName = "casemgmt_oscar_bean" + (String) request.getAttribute("demographicNo");
 
-    pageContext.setAttribute("providerNo",request.getParameter("providerNo"), pageContext.PAGE_SCOPE);
-    pageContext.setAttribute("demographicNo",request.getParameter("demographicNo"), pageContext.PAGE_SCOPE);
+    pageContext.setAttribute("providerNo",request.getParameter("providerNo"), PageContext.PAGE_SCOPE);
+    pageContext.setAttribute("demographicNo",request.getParameter("demographicNo"), PageContext.PAGE_SCOPE);
     
     org.oscarehr.casemgmt.model.CaseManagementNoteExt cme = new org.oscarehr.casemgmt.model.CaseManagementNoteExt();
 
@@ -302,7 +302,8 @@ var Colour = {
 <!-- set size of window if customized in preferences -->
 <%
 	UserPropertyDAO uPropDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
-	String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	String providerNo=loggedInInfo.getLoggedInProviderNo();
 	UserProperty widthP = uPropDao.getProp(providerNo, "encounterWindowWidth");
 	UserProperty heightP = uPropDao.getProp(providerNo, "encounterWindowHeight");
 	UserProperty maximizeP = uPropDao.getProp(providerNo, "encounterWindowMaximize");
@@ -561,7 +562,7 @@ div.autocomplete ul li {
 
 <html:base />
 <title><bean:message key="oscarEncounter.Index.title" /> - <oscar:nameage
-		demographicNo="<%=(String) request.getParameter(\"demographicNo\")%>" /></title>
+		demographicNo="<%=request.getParameter(\"demographicNo\")%>" /></title>
 <script type="text/javascript">
     	ctx = "<c:out value="${ctx}"/>";
     	demographicNo = "<c:out value="${demographicNo}"/>";

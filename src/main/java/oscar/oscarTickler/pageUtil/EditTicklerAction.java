@@ -60,7 +60,8 @@ public class EditTicklerAction extends DispatchAction{
     
     public ActionForward editTickler(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-        
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+		
         ActionMessages errors = this.getErrors(request);
         DynaValidatorForm editForm = (DynaValidatorForm)form;
         
@@ -119,7 +120,7 @@ public class EditTicklerAction extends DispatchAction{
                     tc.setMessage(emailedMsg);
                     tc.setTicklerNo(ticklerNo);
                     tc.setUpdateDate(now);
-                    tc.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+                    tc.setProviderNo(providerNo);
 
                     t.getComments().add(tc);
                     isComment = true;
@@ -149,7 +150,7 @@ public class EditTicklerAction extends DispatchAction{
             tc.setMessage(newMessage);
             tc.setTicklerNo(ticklerNo);
             tc.setUpdateDate(now);
-            tc.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+            tc.setProviderNo(providerNo);
 
             t.getComments().add(tc);
             isComment = true;
@@ -177,7 +178,7 @@ public class EditTicklerAction extends DispatchAction{
         TicklerUpdate tu = new TicklerUpdate();
         tu.setId(t.getId());
         tu.setUpdateDate(now);            
-        tu.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+        tu.setProviderNo(providerNo);
 
         boolean isUpdate = false;                        
 
@@ -233,7 +234,10 @@ public class EditTicklerAction extends DispatchAction{
     
      public ActionForward updateTextSuggest(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
          
-         ActionMessages errors = this.getErrors(request);
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
+		ActionMessages errors = this.getErrors(request);
          DynaValidatorForm tsForm = (DynaValidatorForm)form;
          
          String[] activeText = (String[])tsForm.get("activeText");  
@@ -269,7 +273,7 @@ public class EditTicklerAction extends DispatchAction{
                  ts = new TicklerTextSuggest();
                  ts.setActive(true);
                  ts.setCreateDate(new Date());
-                 ts.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+                 ts.setCreator(providerNo);
                  ts.setSuggestedText(activeTextStr);
                  ticklerTextSuggestDao.persist(ts);
              } else {
@@ -295,7 +299,7 @@ public class EditTicklerAction extends DispatchAction{
                  ts = new TicklerTextSuggest();
                  ts.setActive(false);
                  ts.setCreateDate(new Date());
-                 ts.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+                 ts.setCreator(providerNo);
                  ts.setSuggestedText(inactiveTextStr); 
                  ticklerTextSuggestDao.persist(ts);
              } else {

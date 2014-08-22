@@ -121,7 +121,7 @@ public class CdsForm4 {
 		//and this CBI form should have same program (functional centre).
 		Integer programId = admission.getProgramId();
 		CBIUtil cbiUtil = new CBIUtil();
-		OcanStaffForm cbiForm = cbiUtil.getLatestCbiFormByDemographicNoAndProgramId(clientId, programId);		
+		OcanStaffForm cbiForm = cbiUtil.getLatestCbiFormByDemographicNoAndProgramId(facilityId, clientId, programId);		
 		if(cbiForm!=null) {
 			newForm.setInitialContactDate(cbiForm.getReferralDate());
 			newForm.setAssessmentDate(cbiForm.getAdmissionDate());

@@ -42,7 +42,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.util.UtilDateUtilities;
@@ -239,25 +238,6 @@ public class EctDisplayAction extends Action {
 	 */
 	public String getCmd() {
 		return "";
-	}
-
-	/**
-	 * Get currently logged in provider
-	 * 
-	 * @return
-	 * 		Returns the provider ID or null of the ID cannot be retrieved.
-	 */
-	protected String getProviderNo() {
-		LoggedInInfo info = LoggedInInfo.loggedInInfo.get();
-		if (info == null) {
-			return null;
-		}
-		
-		if (info.loggedInProvider == null) {
-			return null;
-		}
-			
-		return info.loggedInProvider.getProviderNo();
 	}
 
 	/**

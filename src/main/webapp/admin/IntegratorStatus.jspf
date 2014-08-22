@@ -31,8 +31,10 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/><%
-    
-    Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
+
+	LoggedInInfo loggedInInfo8876=LoggedInInfo.getLoggedInInfoFromSession(request);
+
+    Facility facility = loggedInInfo8876.getCurrentFacility();
 
 		if (facility.isIntegratorEnabled()){
 			int secondsTillConsideredStale = -1;

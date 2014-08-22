@@ -40,6 +40,8 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
+
 import oscar.eform.util.EFormPrintPDFUtil;
 
 public final class PrintPDFAction extends Action {
@@ -48,6 +50,7 @@ public final class PrintPDFAction extends Action {
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
         int newID = 0;
         String where = null;
 
@@ -63,7 +66,7 @@ public final class PrintPDFAction extends Action {
             //if we are graphing, we need to grab info from db and add it to request object
             if( request.getParameter("submit").equals("graph") )
             {
-            	props = EFormPrintPDFUtil.getFrmRourkeGraph(props);
+            	props = EFormPrintPDFUtil.getFrmRourkeGraph(loggedInInfo, props);
             	
             	for( Enumeration<?> e = props.propertyNames(); e.hasMoreElements(); ) {
             		String name = (String)e.nextElement();

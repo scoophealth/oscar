@@ -39,7 +39,8 @@
 <%@ page import="org.oscarehr.common.model.Provider" %>
 
 <%
-	Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	Provider provider = loggedInInfo.getLoggedInProvider();
 %>
 <html:html locale="true">
 <head>

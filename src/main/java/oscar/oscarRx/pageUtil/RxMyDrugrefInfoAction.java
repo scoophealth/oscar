@@ -187,11 +187,11 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
 
         //filter out based on significance by facility, provider, demographic
         int level = 0;
-        int orgLevel = LoggedInInfo.loggedInInfo.get().currentFacility.getRxInteractionWarningLevel();
+        int orgLevel = loggedInInfo.getCurrentFacility().getRxInteractionWarningLevel();
         level = orgLevel;
         MiscUtils.getLogger().debug("orgLevel="+orgLevel);
 
-        UserProperty uprop = propDAO.getProp(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), "rxInteractionWarningLevel");
+        UserProperty uprop = propDAO.getProp(loggedInInfo.getLoggedInProviderNo(), "rxInteractionWarningLevel");
         if(uprop!=null) {
         	if(uprop.getValue()!=null&&uprop.getValue().length()>0) {
         		int providerLevel = Integer.parseInt(uprop.getValue());

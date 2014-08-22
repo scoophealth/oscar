@@ -48,6 +48,7 @@
 <div style="width: 10%; float: right; text-align: center;">
 <h3 style="padding:0px; background-color:#<c:out value="${param.hc}"/>">
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
 	if(securityManager.hasWriteAccess("_" + request.getParameter("issue_code"),roleName$)) {
@@ -85,7 +86,7 @@
 		<li class="cpp" style="clear: both; whitespace: nowrap;">
 		<%}
                 //load up the prefs once
-                CppPreferencesUIBean prefsBean = new CppPreferencesUIBean(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+                CppPreferencesUIBean prefsBean = new CppPreferencesUIBean(loggedInInfo.getLoggedInProviderNo());
                 prefsBean.loadValues();
 				String addlData = CaseManagementViewAction.getCppAdditionalData(note.getId(),(String)request.getAttribute("cppIssue"),noteExts,prefsBean);
 				
@@ -101,7 +102,7 @@
                 //single line or 'normal' view.
                 boolean singleLine = Boolean.valueOf(oscar.OscarProperties.getInstance().getProperty("echart.cpp.single_line","false"));
                 UserPropertyDAO userPropertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
-                UserProperty prop = userPropertyDao.getProp(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),UserProperty.CPP_SINGLE_LINE);
+                UserProperty prop = userPropertyDao.getProp(loggedInInfo.getLoggedInProviderNo(),UserProperty.CPP_SINGLE_LINE);
                 if(prop != null) {
                 	singleLine = Boolean.valueOf((prop.getValue().equals("yes")?true:false));
                 }

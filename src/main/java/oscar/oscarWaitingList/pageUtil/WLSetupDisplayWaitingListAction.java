@@ -63,6 +63,8 @@ public final class WLSetupDisplayWaitingListAction extends Action {
     	
         log.debug("\n\nWLSetupDisplayWaitingListAction/execute(): just entering.");
         
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        
         String update = request.getParameter("update");
         String remove = request.getParameter("remove");//actually not used for now, may in future?
         
@@ -170,7 +172,7 @@ public final class WLSetupDisplayWaitingListAction extends Action {
         	phd.setThisGroupProviderVector(groupNo);
         	allProviders = phd.getThisGroupProviderVector();
         	if(allProviders.size()==0 && groupNo.equals(".default")) {
-        		Provider p = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+        		Provider p = loggedInInfo.getLoggedInProvider();
         		ProviderNameBean pNameBean = new ProviderNameBean(p.getFormattedName(),p.getProviderNo());
         		allProviders.add(pNameBean);
         	}

@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
 <%@ page import="oscar.oscarEncounter.data.EctFormData" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -31,6 +32,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
     String formClass = "Rourke2009";
     String formLink = "formrourke2009complete.jsp";
 
@@ -61,7 +63,7 @@
     String formTable = "formGrowth0_36";
     String formName = "Growth 0-36m";
     String growthChartURL = "";
-    EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(String.valueOf(demoNo), formTable);
+    EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(loggedInInfo, String.valueOf(demoNo), formTable);
     if (pforms.length > 0) {
     	EctFormData.PatientForm pfrm = pforms[0];
     	growthChartURL = request.getContextPath() + "/form/forwardshortcutname.jsp?formname=" + formName + "&demographic_no=" + demoNo + (pfrm.getRemoteFacilityId()!=null?"&remoteFacilityId="+pfrm.getRemoteFacilityId()+"&formId="+pfrm.getFormId():"");

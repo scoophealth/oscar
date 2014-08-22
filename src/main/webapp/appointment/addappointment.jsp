@@ -1148,7 +1148,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
                     String formName = ef.getFormName();
                     pageContext.setAttribute("formName", formName);
                     boolean formComplete = false;
-                    EctFormData.PatientForm[] ptForms = EctFormData.getPatientFormsFromLocalAndRemote(demoNo, formTblName);
+                    EctFormData.PatientForm[] ptForms = EctFormData.getPatientFormsFromLocalAndRemote(loggedInInfo, demoNo, formTblName);
 
                     if (ptForms.length > 0) {
                         formComplete = true;

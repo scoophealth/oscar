@@ -47,12 +47,11 @@ public final class AllergyHelperBean {
 	private static Logger logger = MiscUtils.getLogger();
 	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 
-	public static List<AllergyDisplay> getAllergiesToDisplay(Integer demographicId, Locale locale)  {
+	public static List<AllergyDisplay> getAllergiesToDisplay(LoggedInInfo loggedInInfo, Integer demographicId, Locale locale)  {
 		ArrayList<AllergyDisplay> results = new ArrayList<AllergyDisplay>();
 
 		addLocalAllergies(demographicId, results, locale);
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 			addIntegratorAllergies(loggedInInfo, demographicId, results, locale);
 		}

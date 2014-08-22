@@ -58,6 +58,7 @@ public class EctDisplayBillingAction extends EctDisplayAction {
     @SuppressWarnings("unchecked")
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
     	String appointmentNo = request.getParameter("appointment_no");
 
 
@@ -89,7 +90,7 @@ public class EctDisplayBillingAction extends EctDisplayAction {
                     String billform = OscarProperties.getInstance().getProperty("default_view");
                     SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
                     SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-                    Provider p = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+                    Provider p = loggedInInfo.getLoggedInProvider();
                     if(appt != null) {
                     	url = "popupPage(755,1200,'"+winName+"','../billing.do?billRegion=ON&billForm="+billform+"&hotclick=&appointment_no="+appointmentNo+"&demographic_name="+d.getFormattedName()+"&status="+appt.getStatus()+"&demographic_no="+bean.demographicNo+"&providerview="+p.getProviderNo()+"&user_no="+p.getProviderNo()+"&apptProvider_no="+appt.getProviderNo()+"&appointment_date="+dateFormatter.format(appt.getAppointmentDate())+"&start_time="+timeFormatter.format(appt.getStartTime())+"&bNewForm=1');return false;";
                     	Dao.setRightURL(url);

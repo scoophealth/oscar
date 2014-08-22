@@ -43,6 +43,7 @@ import org.oscarehr.common.dao.UserDSMessagePrefsDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.StudyData;
 import org.oscarehr.common.model.UserDSMessagePrefs;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -94,6 +95,8 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 			return true;
 		}
 		
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		EaapsHash hash = new EaapsHash(demographic);
 		StudyData studyData = studyDataDao.findSingleByContent(hash.getHash());
 		if (studyData == null) {
@@ -119,14 +122,14 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
         	return true;
         }
 		
-		configureMostResponsiblePhysicianFlag(patientData, demographic);
+		configureMostResponsiblePhysicianFlag(loggedInInfo, patientData, demographic);
 		request.getSession().setAttribute("eaapsInfo", patientData);		
 		if (logger.isDebugEnabled()) {
 			logger.debug("Loaded patient data: " + patientData);
 		}
 		
 		// ensure that notification is displayed for page load, if necessary  
-		boolean isNotificationRequired = isNotificationRequired(hash.getHash(), patientData);
+		boolean isNotificationRequired = isNotificationRequired(loggedInInfo, hash.getHash(), patientData);
 		if (isNotificationRequired) {
 			String linkUrl = patientData.isUrlProvided() ? patientData.getUrl() : "";
 			String js = "<script language=\"javascript\">displayEaapsWindow(\"" +  linkUrl + "\", \"" + hash.getHash() + "\", \"" + StringEscapeUtils.escapeJavaScript(patientData.getMessage()) + "\" );</script>";
@@ -155,16 +158,15 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 	 * @param demo
 	 * 		Demographic being loaded
 	 */
-	private void configureMostResponsiblePhysicianFlag(EaapsPatientData patientData, Demographic demo) {
+	private void configureMostResponsiblePhysicianFlag(LoggedInInfo loggedInInfo, EaapsPatientData patientData, Demographic demo) {
 		String urlString = patientData.getUrl();		
 		if (urlString == null || urlString.trim().isEmpty()) {
 			logger.debug("URL is not provided - exiting without replacing");
 			return;
 		}
 		
-	    String loggedInProviderNo = getProviderNo();
 	    String mrpProviderNo = demo.getProviderNo();
-	    boolean isMrpPhysicianLookingAtTheRecord = loggedInProviderNo.equals(mrpProviderNo);
+	    boolean isMrpPhysicianLookingAtTheRecord = loggedInInfo.getLoggedInProviderNo().equals(mrpProviderNo);
 	    
 	    StringBuilder buf = new StringBuilder(urlString);
 	    
@@ -174,12 +176,12 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 	    	buf.append("?");
 	    }
 	    buf.append("isMrp=").append(isMrpPhysicianLookingAtTheRecord);
-	    buf.append("&pNo=").append(loggedInProviderNo);
+	    buf.append("&pNo=").append(loggedInInfo.getLoggedInProviderNo());
 	    patientData.replaceUrl(buf.toString());
     }
 
-	private boolean isNotificationRequired(String hash, EaapsPatientData patientData) {
-		String providerNo = getProviderNo();
+	private boolean isNotificationRequired(LoggedInInfo loggedInInfo, String hash, EaapsPatientData patientData) {
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
 		String resourceId = hash;
 		List<UserDSMessagePrefs> prefs = userDsMessagePrefsDao.findMessages(providerNo, EAAPS, resourceId, false);
 	    // no pref's saved means that this notification hasn't been dismissed yet by this user 

@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page
 	import="org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean, org.oscarehr.common.model.Facility"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
@@ -35,6 +36,7 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />
 <%
+	LoggedInInfo loggedInInfo73557=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String noteIndex = "";
 	String encSelect = "encTypeSelect";
 	String demoNo = request.getParameter("demographicNo");
@@ -124,7 +126,7 @@
 </div>
 
 <%
-Facility currentFacility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
+Facility currentFacility = loggedInInfo73557.getCurrentFacility();
 String programId = (String)request.getSession().getAttribute("case_program_id");
 Program currentProgram = null;
 if (programId != null) {
@@ -196,7 +198,7 @@ if(currentFacility.isEnableEncounterTransportationTime() || (currentProgram != n
 		<html:option value="encounter without client"><bean:message key="oscarEncounter.noClientEnc.title"/></html:option>
 		
 		<%
-			if(org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.isEnableGroupNotes()) {
+			if(loggedInInfo73557.getCurrentFacility().isEnableGroupNotes()) {
 		%>
 		
 		<html:option value="group face to face encounter"><bean:message key="oscarEncounter.groupFaceEnc.title"/></html:option>

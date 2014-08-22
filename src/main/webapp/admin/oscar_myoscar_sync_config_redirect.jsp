@@ -33,7 +33,7 @@
 <%
 	String syncConfigUrl=StringUtils.trimToNull(OscarProperties.getInstance().getProperty("oscar_myoscar_sync_component_url"));
 	String oscarWsUrl=StringUtils.trimToNull(OscarProperties.getInstance().getProperty("ws_endpoint_url_base"));
-	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+   	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	
 	if (syncConfigUrl==null || oscarWsUrl==null)
 	{

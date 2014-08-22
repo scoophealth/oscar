@@ -967,7 +967,7 @@ if (bMultisites) { %>
             	String formName = ef.getFormName();
                 pageContext.setAttribute("formName", formName);
                 boolean formComplete = false;
-                EctFormData.PatientForm[] ptForms = EctFormData.getPatientFormsFromLocalAndRemote(demono, formTblName);
+                EctFormData.PatientForm[] ptForms = EctFormData.getPatientFormsFromLocalAndRemote(loggedInInfo,demono, formTblName);
 
                 if (ptForms.length > 0) {
                     formComplete = true;

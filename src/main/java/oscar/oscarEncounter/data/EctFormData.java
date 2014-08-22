@@ -225,14 +225,12 @@ public class EctFormData {
 		return (forms);
 	}
 
-	public static ArrayList<PatientForm> getRemotePatientForms(Integer demographicId, String formName, String table) {
+	public static ArrayList<PatientForm> getRemotePatientForms(LoggedInInfo loggedInInfo, Integer demographicId, String formName, String table) {
 		ArrayList<PatientForm> forms = new ArrayList<PatientForm>();
 		List<CachedDemographicForm> remoteForms = null;
 		table = StringUtils.trimToNull(table);
 		if (table == null) return (new ArrayList<PatientForm>());
 		
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-
 		try {
 			if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return  (forms);
 			if(!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
@@ -264,13 +262,12 @@ public class EctFormData {
 		return (getPatientFormsAsArrayList(demoNo, null, table).toArray(new PatientForm[0]));
 	}
 
-	public static PatientForm[] getPatientFormsFromLocalAndRemote(String demoNo, String table) {
+	public static PatientForm[] getPatientFormsFromLocalAndRemote(LoggedInInfo loggedInInfo, String demoNo, String table) {
 		ArrayList<PatientForm> results = getPatientFormsAsArrayList(demoNo, null, table);
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 			try {
-				ArrayList<PatientForm> remoteResults = getRemotePatientForms(Integer.parseInt(demoNo), null, table);
+				ArrayList<PatientForm> remoteResults = getRemotePatientForms(loggedInInfo, Integer.parseInt(demoNo), null, table);
 				results.addAll(remoteResults);
 			} catch( Exception e ) {
 				logger.error("Retrieving remote forms failed", e);

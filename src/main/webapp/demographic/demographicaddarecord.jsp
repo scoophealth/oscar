@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="java.sql.*, java.util.*, java.net.URLEncoder, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList, org.oscarehr.common.OtherIdManager" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.log.*"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
@@ -100,6 +101,8 @@
 </table>
 <form method="post" name="addappt">
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
         //If this is from adding appointment screen, then back to there
         String fromAppt = request.getParameter("fromAppt");
         String originalPage2 = request.getParameter("originalPage");
@@ -111,9 +114,7 @@
         String start_time2 = request.getParameter("start_time");
         String end_time2 = request.getParameter("end_time");
         String duration2 = request.getParameter("duration");
-%>
 
-<%
     String dem = null;
 	String year, month, day;
     String curUser_no = (String)session.getAttribute("user");
@@ -278,13 +279,13 @@
           gieat.setAdmissionManager(am);
           gieat.setProgramManager(pm);
           String bedP = request.getParameter("rps");
-          gieat.admitBedCommunityProgram(demographic.getDemographicNo(),org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),Integer.parseInt(bedP),"","",null);
+          gieat.admitBedCommunityProgram(demographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),Integer.parseInt(bedP),"","",null);
 
           String[] servP = request.getParameterValues("sp");
           if(servP!=null&&servP.length>0){
 	  Set<Integer> s = new HashSet<Integer>();
             for(String _s:servP) s.add(Integer.parseInt(_s));
-            gieat.admitServicePrograms(demographic.getDemographicNo(),org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),s,"",null);
+            gieat.admitServicePrograms(demographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),s,"",null);
           }
         
 
