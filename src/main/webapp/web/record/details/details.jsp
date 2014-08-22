@@ -24,46 +24,69 @@
 
 --%>
 <div class="col-lg-8">
-	<div class="alert alert-success" ng-show="page.saved">
-		<button class="close" type="button" ng-click="resetPageSaved()">×</button>
-		Changes Saved.
+	<div class="alert alert-success" ng-show="page.saving">
+		Saving...
 	</div>
 	<button type="button" class="btn btn-primary" ng-click="save()">Save</button>
 
 	<div class="btn-group">
-		<button type="button" class="btn btn-default">Print Label</button>
 		<div class="btn-group">
-			<button type="button" class="btn btn-default">Print PDF</button>
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				<span class="caret"></span> <span class="sr-only">Toggle Dropdown</span>
+				Print <span class="caret"></span>
 			</button>
-			<ul class="dropdown-menu" role="menu">
-				<li><a href="#">PDF Address</a></li>
-				<li class="divider"></li>
+			<ul class="dropdown-menu">
+				<li><a href="../report/GenerateEnvelopes.do?demos={{page.demo.demographicNo}}">PDF Envelope</a></li>
+				<li><a ng-click="printLabel('PDFLabel')">PDF Label</a></li>
+				<li><a ng-click="printLabel('PDFAddress')">PDF Address Label</a></li>
+				<li><a ng-click="printLabel('PDFChart')">PDF Chart Label</a></li>
+				<li><a ng-click="printLabel('PrintLabel')">Print Label</a></li>
+				<li><a ng-click="printLabel('ClientLab')">Client Lab Label</a></li>
 			</ul>
 		</div>
-	</div>
-	<div class="btn-group">
-
 		<div class="btn-group">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				Integrator <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
-				<li><a href="#">Compare with Integrator</a></li>
-				<li><a href="#">Update from Integrator</a></li>
-				<li><a href="#">Send Note Integrator</a></li>
+				<li><a ng-click="integratorDo('Compare')">Compare with Integrator</a></li>
+				<li><a ng-click="integratorDo('Update')">Update from Integrator</a></li>
+				<li><a ng-click="integratorDo('SendNote')">Send Note to Integrator</a></li>
 			</ul>
 		</div>
 		<div class="btn-group">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				More <span class="caret"></span>
+				Appointment <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
-				<li><a href="#">Export to CDS</a></li>
-				<li><a href="#">Export to CCD</a></li>
-				<li><a href="#">Export to XPHR</a></li>
+				<li><a ng-click="appointmentDo('ApptHistory')">Appointment History</a></li>
+				<li><a ng-click="appointmentDo('WaitingList')">Waiting List</a></li>
 			</ul>
+		</div>
+		<div class="btn-group">
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				Billing <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a ng-click="billingDo('BillingHistory')">Billing History</a></li>
+				<li><a ng-click="billingDo('CreateInvoice')">Create Invoice</a></li>
+				<li><a ng-click="billingDo('FluBilling')">Flu Billing</a></li>
+				<li><a ng-click="billingDo('HospitalBilling')">Hospital Billing</a></li>
+				<li><a ng-click="billingDo('AddBatchBilling')">Add Batch Billing</a></li>
+				<li><a ng-click="billingDo('AddINR')">Add INR</a></li>
+				<li><a ng-click="billingDo('BillINR')">Bill INR</a></li>
+			</ul>
+		</div>
+		<div class="btn-group">
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				Personal Health Record <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a href="#">Send Message to PHR</a></li>
+				<li><a href="#">View PHR Record</a></li>
+			</ul>
+		</div>
+		<div class="btn-group">
+			<button type="button" class="btn btn-default" ng-click="exportDemographic()">Export</button>
 		</div>
 	</div>
 
@@ -86,11 +109,11 @@
 			<legend>Demographic</legend>
 		</fieldset>
 		<div class="col-md-6">
-			<label>Last Name</label>
+			<label title="Required Field">Last Name <span style="color:red">*</span></label>
 			<input type="text" class="form-control" placeholder="Family Name" title="Family Name" ng-model="page.demo.lastName"/>
 		</div>
 		<div class="col-md-6">
-			<label>First Name</label>
+			<label title="Required Field">First Name <span style="color:red">*</span></label>
 			<input type="text" class="form-control" placeholder="First Name" title="First Name" ng-model="page.demo.firstName"/>
 		</div>
 		<div class="col-md-6">
@@ -112,7 +135,7 @@
 			</select>
 		</div>
 		<div class="col-md-6">
-			<label>Sex</label>
+			<label title="Required Field">Sex <span style="color:red">*</span></label>
 			<select class="form-control" title="Sex" ng-model="page.demo.sex">
 				<option value="M">Male</option>
 				<option value="F">Female</option>
@@ -122,11 +145,11 @@
 			</select>
 		</div>
 		<div class="col-md-6">
-			<label>Date of Birth</label>
+			<label title="Required Field">Date of Birth <span style="color:red">*</span></label>
 			<span style="white-space:nowrap">
-				<input type="text"placeholder="YYYY" title="Birthday Year" class="form-control" style="width: 65px;" ng-model="page.demo.dobYear" ng-change="checkDate('DobY')"/>
-				<input type="text" placeholder="MM" title="Birthday Month" class="form-control" style="width: 50px;" ng-model="page.demo.dobMonth" ng-change="checkDate('DobM')" ng-blur="formatDate('DobM')"/>
-				<input type="text" placeholder="DD" title="Birthday Day" class="form-control" style="width: 50px;" ng-model="page.demo.dobDay" ng-change="checkDate('DobD')" ng-blur="formatDate('DobD')"/>
+				<input type="text" placeholder="YYYY" title="Birthday Year" class="form-control" style="width: 65px;" ng-model="page.demo.dobYear" ng-change="checkDate('DobY')" ng-blur="formatDate('DobY')"/>
+				<input type="text" placeholder="MM" title="Birthday Month" class="form-control" style="width: 45px;" ng-model="page.demo.dobMonth" ng-change="checkDate('DobM')" ng-blur="formatDate('DobM')"/>
+				<input type="text" placeholder="DD" title="Birthday Day" class="form-control" style="width: 45px;" ng-model="page.demo.dobDay" ng-change="checkDate('DobD')" ng-blur="formatDate('DobD')"/>
 				({{page.demo.age}}y)
 			</span>
 		</div>
@@ -628,6 +651,11 @@
 			<label>McMaster PHR</label>
 			<input type="text" class="form-control" placeholder="McMaster PHR UserName" title="McMaster PHR UserName" ng-model="page.demo.myOscarUserName"/>
 		</div>
+		<div class="col-md-6"></div>
+		<div class="col-md-6">
+			<label/>
+			<button type="button" class="btn" style="padding-top: 0px; padding-bottom: 0px; font-size: small"> Register for McMaster PHR </button>
+		</div>
 		<div class="col-md-11">
 			<label>Country of Origin</label>
 			<select class="form-control" title="Country of Origin" ng-model="page.demo.countryOfOrigin" style="width:520px">
@@ -972,28 +1000,37 @@
 		</div>
 		<div class="col-md-6">
 			<label>Postal Code</label>
-			<input type="text" class="form-control" placeholder="Postal Code" title="Postal Code" ng-model="page.demo.address.postal"/>
+			<input type="text" class="form-control" placeholder="Postal Code" title="Postal Code" ng-model="page.demo.address.postal" ng-change="checkPostal()" ng-blur="isPostalComplete()"/>
 		</div>
 		<div class="col-md-6">
 			<label>Email</label>
 			<input type="text" class="form-control" placeholder="Email" title="Email" ng-model="page.demo.email"/>
 		</div>
 		<div class="col-md-6">
-			<label>Cell Phone</label>
-			<input type="text" class="form-control" placeholder="Cell Phone" title="Cell Phone" ng-model="page.extras.demo_cell.value"/>
+			<label style="background-color: {{page.cellPhonePreferredBg}}" title="{{page.cellPhonePreferred}}">
+				Cell Phone
+				<input type="checkbox" ng-model="page.preferredPhone" ng-change="setPreferredPhone()" ng-true-value="C" ng-disabled="isPhoneVoid(page.cellPhone)"/>
+			</label>
+			<input type="text" class="form-control" placeholder="Cell Phone" title="Cell Phone" ng-model="page.cellPhone" ng-change="checkPhone('C')"/>
 		</div>
 		<div class="col-md-6">
-			<label>Home Phone</label>
+			<label style="background-color: {{page.homePhonePreferredBg}}" title="{{page.homePhonePreferred}}">
+				Home Phone
+				<input type="checkbox" ng-model="page.preferredPhone" ng-change="setPreferredPhone()" ng-true-value="H" ng-disabled="isPhoneVoid(page.homePhone)"/>
+			</label>
 			<span style="white-space:nowrap">
-				<input type="text" class="form-control" placeholder="Home Phone" title="Home Phone" ng-model="page.demo.phone" style="width:130px"/>
-				<input type="text" class="form-control" placeholder="Ext" title="Home Phone Extension" ng-model="page.extras.hPhoneExt.value" style="width:65px"/>
+				<input type="text" class="form-control" placeholder="Home Phone" title="Home Phone" ng-model="page.homePhone" ng-change="checkPhone('H')" style="width:130px"/>
+				<input type="text" class="form-control" placeholder="Ext" title="Home Phone Extension" ng-model="page.extras.hPhoneExt.value" ng-change="checkPhone('HX')" style="width:65px"/>
 			</span>
 		</div>
 		<div class="col-md-6">
-			<label>Work Phone</label>
+			<label style="background-color: {{page.workPhonePreferredBg}}" title="{{page.workPhonePreferred}}">
+				Work Phone
+				<input type="checkbox" ng-model="page.preferredPhone" ng-change="setPreferredPhone()" ng-true-value="W" ng-disabled="isPhoneVoid(page.workPhone)"/>
+			</label>
 			<span style="white-space:nowrap">
-				<input type="text" class="form-control" placeholder="Work Phone" title="Work Phone" ng-model="page.demo.alternativePhone" style="width:130px"/>
-				<input type="text" class="form-control" placeholder="Ext" title="Work Phone Extension" ng-model="page.extras.wPhoneExt.value" style="width:65px"/>
+				<input type="text" class="form-control" placeholder="Work Phone" title="Work Phone" ng-model="page.workPhone" ng-change="checkPhone('W')" style="width:130px"/>
+				<input type="text" class="form-control" placeholder="Ext" title="Work Phone Extension" ng-model="page.extras.wPhoneExt.value" ng-change="checkPhone('WX')" style="width:65px"/>
 			</span>
 		</div>
 		<div class="col-md-11">
@@ -1024,6 +1061,7 @@
 		<div class="col-md-6">
 			<label>Health Card Type</label>
 			<select class="form-control" title="Health Card Type" ng-model="page.demo.hcType">
+				<option value="" >--</option>
 				<option value="AB" >AB-Alberta</option>
 				<option value="BC" >BC-British Columbia</option>
 				<option value="MB" >MB-Manitoba</option>
@@ -1100,7 +1138,7 @@
 		<div class="col-md-6">
 			<label>Effective Date</label>
 			<span style="white-space:nowrap">
-				<input type="text"placeholder="YYYY" title="Health Card Effective Date Year" class="form-control" style="width: 70px;" ng-model="page.hcEffDateYear" ng-change="checkDate('HedY')"/>
+				<input type="text" placeholder="YYYY" title="Health Card Effective Date Year" class="form-control" style="width: 70px;" ng-model="page.hcEffDateYear" ng-change="checkDate('HedY')"/>
 				<input type="text" placeholder="MM" title="Health Card Effective Date Month" class="form-control" style="width: 60px;" ng-model="page.hcEffDateMonth" ng-change="checkDate('HedM')" ng-blur="formatDate('HedM')"/>
 				<input type="text" placeholder="DD" title="Health Card Effective Date Day" class="form-control" style="width: 60px;" ng-model="page.hcEffDateDay" ng-change="checkDate('HedD')" ng-blur="formatDate('HedD')"/>
 			</span>
@@ -1108,7 +1146,7 @@
 		<div class="col-md-6">
 			<label>Renew Date</label>
 			<span style="white-space:nowrap">
-				<input type="text"placeholder="YYYY" title="Health Card Renew Date Year" class="form-control" style="width: 70px;" ng-model="page.hcRenewDateYear" ng-change="checkDate('HrdY')"/>
+				<input type="text" placeholder="YYYY" title="Health Card Renew Date Year" class="form-control" style="width: 70px;" ng-model="page.hcRenewDateYear" ng-change="checkDate('HrdY')"/>
 				<input type="text" placeholder="MM" title="Health Card Renew Date Month" class="form-control" style="width: 60px;" ng-model="page.hcRenewDateMonth" ng-change="checkDate('HrdM')" ng-blur="formatDate('HrdM')"/>
 				<input type="text" placeholder="DD" title="Health Card Renew Date Day" class="form-control" style="width: 60px;" ng-model="page.hcRenewDateDay" ng-change="checkDate('HrdD')" ng-blur="formatDate('HrdD')"/>
 			</span>
@@ -1121,19 +1159,27 @@
 		</fieldset>
 		<div class="col-md-6">
 			<label>MRP</label>
-			<select class="form-control" title="MRP" ng-model="page.demo.providerNo" ng-options="mrp.providerNo as mrp.name for mrp in page.demo.doctors"/>
+			<select class="form-control" title="MRP" ng-model="page.demo.providerNo" ng-options="mrp.providerNo as mrp.name for mrp in page.demo.doctors">
+				<option value="">--</option>
+			</select>
 		</div>
 		<div class="col-md-6">
 			<label>Nurse</label>
-			<select class="form-control" title="Nurse" ng-model="page.demo.nurse" ng-options="ns.providerNo as ns.name for ns in page.demo.nurses"/>
+			<select class="form-control" title="Nurse" ng-model="page.demo.nurse" ng-options="ns.providerNo as ns.name for ns in page.demo.nurses">
+				<option value="">--</option>
+			</select>
 		</div>
 		<div class="col-md-6">
 			<label>Midwife</label>
-			<select class="form-control" title="Midwife" ng-model="page.demo.midwife" ng-options="mw.providerNo as mw.name for mw in page.demo.midwives"/>
+			<select class="form-control" title="Midwife" ng-model="page.demo.midwife" ng-options="mw.providerNo as mw.name for mw in page.demo.midwives">
+				<option value="">--</option>
+			</select>
 		</div>
 		<div class="col-md-6">
 			<label>Resident</label>
-			<select class="form-control" title="Resident" ng-model="page.demo.resident" ng-options="res.providerNo as res.name for res in page.demo.doctors"/>
+			<select class="form-control" title="Resident" ng-model="page.demo.resident" ng-options="res.providerNo as res.name for res in page.demo.doctors">
+				<option value="">--</option>
+			</select>
 		</div>
 		<div class="col-md-6">
 			<label>Referral Doctor</label>
@@ -1142,7 +1188,12 @@
 		<div class="col-md-6">
 			<label>Referral Doctor #</label>
 			<input type="text" class="form-control" placeholder="Referral Doctor #" title="Referral Doctor #" ng-model="page.referralDocNo" style="width:125px"/>
-			<button type="button" class="btn" ng-click="searchReferralDoc()">Search</button>
+			<button type="button" class="btn" ng-click="showReferralDocList()">Search</button>
+			<div style="position: absolute; right: 25px; z-index: 1; background-color: white" ng-show="page.referralDocList">
+				<select class="form-control" title="Pick a referral doctor" size="7" ng-model="page.referralDocObj" ng-options="rfd.name for rfd in page.demo.referralDoctors" ng-click="fillReferralDoc()">
+					<option value="">--Pick a referral doctor--</option>
+				</select>
+			</div>
 		</div>
 		<div class="col-md-6">
 			<label>Roster Status</label>
@@ -1156,17 +1207,17 @@
 		<div class="col-md-6">
 			<label>Date Rostered</label>
 			<span style="white-space:nowrap">
-				<input type="text"placeholder="YYYY" title="Date Rostered Year" class="form-control" style="width: 70px;" ng-model="page.rosterDateYear" on-change="checkDate('RodY')"/>
-				<input type="text" placeholder="MM" title="Date Rostered Month" class="form-control" style="width: 60px;" ng-model="page.rosterDateMonth" on-change="checkDate('RodM')" on-blur="formatDate('RodM')"/>
-				<input type="text" placeholder="DD" title="Date Rostered Day" class="form-control" style="width: 60px;" ng-model="page.rosterDateDay" on-change="checkDate('RodD')" on-blur="formatDate('RodD')"/>
+				<input type="text" placeholder="YYYY" title="Date Rostered Year" class="form-control" style="width: 70px;" ng-model="page.rosterDateYear" ng-change="checkDate('RodY')"/>
+				<input type="text" placeholder="MM" title="Date Rostered Month" class="form-control" style="width: 60px;" ng-model="page.rosterDateMonth" ng-change="checkDate('RodM')" ng-blur="formatDate('RodM')"/>
+				<input type="text" placeholder="DD" title="Date Rostered Day" class="form-control" style="width: 60px;" ng-model="page.rosterDateDay" ng-change="checkDate('RodD')" ng-blur="formatDate('RodD')"/>
 			</span>
 		</div>
 		<div class="col-md-6" ng-show="isRosterTerminated()">
 			<label>Termination Date</label>
 			<span style="white-space:nowrap">
-				<input type="text"placeholder="YYYY" title="Roster Termination Date Year" class="form-control" style="width: 70px;" ng-model="page.rosterTerminationDateYear" on-change="checkDate('RtdY')"/>
-				<input type="text" placeholder="MM" title="Roster Termination Date Month" class="form-control" style="width: 60px;" ng-model="page.rosterTerminationDateMonth" on-change="checkDate('RtdM')" on-blur="formatDate('RtdM')"/>
-				<input type="text" placeholder="DD" title="Roster Termination Date Day" class="form-control" style="width: 60px;" ng-model="page.rosterTerminationDateDay" on-change="checkDate('RtdD')" on-blur="formatDate('RtdD')"/>
+				<input type="text" placeholder="YYYY" title="Roster Termination Date Year" class="form-control" style="width: 70px;" ng-model="page.rosterTerminationDateYear" ng-change="checkDate('RtdY')"/>
+				<input type="text" placeholder="MM" title="Roster Termination Date Month" class="form-control" style="width: 60px;" ng-model="page.rosterTerminationDateMonth" ng-change="checkDate('RtdM')" ng-blur="formatDate('RtdM')"/>
+				<input type="text" placeholder="DD" title="Roster Termination Date Day" class="form-control" style="width: 60px;" ng-model="page.rosterTerminationDateDay" ng-change="checkDate('RtdD')" ng-blur="formatDate('RtdD')"/>
 			</span>
 		</div>
 		<div class="col-md-11" ng-show="isRosterTerminated()">
@@ -1217,25 +1268,25 @@
 		<div class="col-md-6">
 			<label>Status Date</label>
 			<span style="white-space:nowrap">
-				<input type="text"placeholder="YYYY" title="Patient Status Date Year" class="form-control" style="width: 70px;" ng-model="page.patientStatusDateYear" on-change="checkDate('PsdY')"/>
-				<input type="text" placeholder="MM" title="Patient Status Date Month" class="form-control" style="width: 60px;" ng-model="page.patientStatusDateMonth" on-change="checkDate('PsdM')" on-blur="formatDate('PsdM')"/>
-				<input type="text" placeholder="DD" title="Patient Status Date Day" class="form-control" style="width: 60px;" ng-model="page.patientStatusDateDay" on-change="checkDate('PsdD')" on-blur="formatDate('PsdD')"/>
+				<input type="text" placeholder="YYYY" title="Patient Status Date Year" class="form-control" style="width: 70px;" ng-model="page.patientStatusDateYear" ng-change="checkDate('PsdY')"/>
+				<input type="text" placeholder="MM" title="Patient Status Date Month" class="form-control" style="width: 60px;" ng-model="page.patientStatusDateMonth" ng-change="checkDate('PsdM')" ng-blur="formatDate('PsdM')"/>
+				<input type="text" placeholder="DD" title="Patient Status Date Day" class="form-control" style="width: 60px;" ng-model="page.patientStatusDateDay" ng-change="checkDate('PsdD')" ng-blur="formatDate('PsdD')"/>
 			</span>
 		</div>
 		<div class="col-md-6">
 			<label>Date Joined</label>
 			<span style="white-space:nowrap">
-				<input type="text"placeholder="YYYY" title="Date Joined Year" class="form-control" style="width: 70px;" ng-model="page.dateJoinedYear" on-change="checkDate('JndY')"/>
-				<input type="text" placeholder="MM" title="Date Joined Month" class="form-control" style="width: 60px;" ng-model="page.dateJoinedMonth" on-change="checkDate('JndM')" on-blur="formatDate('JndM')"/>
-				<input type="text" placeholder="DD" title="Date Joined Day" class="form-control" style="width: 60px;" ng-model="page.dateJoinedDay" on-change="checkDate('JndD')" on-blur="formatDate('JndD')"/>
+				<input type="text" placeholder="YYYY" title="Date Joined Year" class="form-control" style="width: 70px;" ng-model="page.dateJoinedYear" ng-change="checkDate('JndY')"/>
+				<input type="text" placeholder="MM" title="Date Joined Month" class="form-control" style="width: 60px;" ng-model="page.dateJoinedMonth" ng-change="checkDate('JndM')" ng-blur="formatDate('JndM')"/>
+				<input type="text" placeholder="DD" title="Date Joined Day" class="form-control" style="width: 60px;" ng-model="page.dateJoinedDay" ng-change="checkDate('JndD')" ng-blur="formatDate('JndD')"/>
 			</span>
 		</div>
 		<div class="col-md-6">
 			<label>End Date</label>
 			<span style="white-space:nowrap">
-				<input type="text"placeholder="YYYY" title="End Date Year" class="form-control" style="width: 70px;" ng-model="page.endDateYear" on-change="checkDate('EddY')"/>
-				<input type="text" placeholder="MM" title="End Date Month" class="form-control" style="width: 60px;" ng-model="page.endDateMonth" on-change="checkDate('EddM')" on-blur="formatDate('EddM')"/>
-				<input type="text" placeholder="DD" title="End Date Day" class="form-control" style="width: 60px;" ng-model="page.endDateDay" on-change="checkDate('EddD')" on-blur="formatDate('EddD')"/>
+				<input type="text" placeholder="YYYY" title="End Date Year" class="form-control" style="width: 70px;" ng-model="page.endDateYear" ng-change="checkDate('EddY')"/>
+				<input type="text" placeholder="MM" title="End Date Month" class="form-control" style="width: 60px;" ng-model="page.endDateMonth" ng-change="checkDate('EddM')" ng-blur="formatDate('EddM')"/>
+				<input type="text" placeholder="DD" title="End Date Day" class="form-control" style="width: 60px;" ng-model="page.endDateDay" ng-change="checkDate('EddD')" ng-blur="formatDate('EddD')"/>
 			</span>
 		</div>
 		<div class="col-md-6">
@@ -1250,11 +1301,11 @@
 	
 	<div class="form-group row">
 		<fieldset>
-			<legend>Other Information</legend>
+			<legend>Additional Information</legend>
 		</fieldset>
 		<div class="col-md-6">
 			<label style="width:150px">Archived Paper Chart</label>
-			<select class="form-control" title="Archived Paper Chart" ng-model="page.extras.paper_chart_archived.value" style="width:170px">
+			<select class="form-control" title="Archived Paper Chart" ng-model="page.extras.paper_chart_archived.value" style="width:175px">
 				<option value="NO">No</option>
 				<option value="YES">Yes</option>
 			</select>
@@ -1262,21 +1313,23 @@
 		<div class="col-md-6">
 			<label>Archive Date</label>
 			<span style="white-space:nowrap">
-				<input type="text"placeholder="YYYY" title="Paper Chart Archive Date Year" class="form-control" style="width: 70px;" ng-model="page.paper_chart_archived_dateYear" on-change="checkDate('PcaY')"/>
-				<input type="text" placeholder="MM" title="Paper Chart Archive Date Month" class="form-control" style="width: 60px;" ng-model="page.paper_chart_archived_dateMonth" on-change="checkDate('PcaM')" on-blur="formatDate('PcaM')"/>
-				<input type="text" placeholder="DD" title="Paper Chart Archive Date Day" class="form-control" style="width: 60px;" ng-model="page.paper_chart_archived_dateDay" on-change="checkDate('PcaD')" on-blur="formatDate('PcaD')"/>
+				<input type="text" placeholder="YYYY" title="Paper Chart Archive Date Year" class="form-control" style="width: 70px;" ng-model="page.paper_chart_archived_dateYear" ng-change="checkDate('PcaY')"/>
+				<input type="text" placeholder="MM" title="Paper Chart Archive Date Month" class="form-control" style="width: 60px;" ng-model="page.paper_chart_archived_dateMonth" ng-change="checkDate('PcaM')" ng-blur="formatDate('PcaM')"/>
+				<input type="text" placeholder="DD" title="Paper Chart Archive Date Day" class="form-control" style="width: 60px;" ng-model="page.paper_chart_archived_dateDay" ng-change="checkDate('PcaD')" ng-blur="formatDate('PcaD')"/>
 			</span>
 		</div>
 		<div class="col-md-6">
 			<label>Waiting List</label>
-			<select class="form-control" title="Waiting List" ng-model="page.demo.waitingListID" ng-options="wln.id as wln.name for wln in page.demo.waitingListNames"/>
+			<select class="form-control" title="Waiting List" ng-model="page.demo.waitingListID" ng-options="wln.id as wln.name for wln in page.demo.waitingListNames">
+				<option value="">--</option>
+			</select>
 		</div>
 		<div class="col-md-6">
 			<label>Date of Request</label>
 			<span style="white-space:nowrap">
-				<input type="text"placeholder="YYYY" title="Date of Request Year" class="form-control" style="width: 70px;" ng-model="page.onWaitingListSinceYear" on-change="checkDate('OlsY')"/>
-				<input type="text" placeholder="MM" title="Date of Request Month" class="form-control" style="width: 60px;" ng-model="page.onWaitingListSinceMonth" on-change="checkDate('OlsM')" on-blur="formatDate('OlsM')"/>
-				<input type="text" placeholder="DD" title="Date of Request Day" class="form-control" style="width: 60px;" ng-model="page.onWaitingListSinceDay" on-change="checkDate('OlsD')" on-blur="formatDate('OlsD')"/>
+				<input type="text" placeholder="YYYY" title="Date of Request Year" class="form-control" style="width: 70px;" ng-model="page.onWaitingListSinceYear" ng-change="checkDate('OlsY')"/>
+				<input type="text" placeholder="MM" title="Date of Request Month" class="form-control" style="width: 60px;" ng-model="page.onWaitingListSinceMonth" ng-change="checkDate('OlsM')" ng-blur="formatDate('OlsM')"/>
+				<input type="text" placeholder="DD" title="Date of Request Day" class="form-control" style="width: 60px;" ng-model="page.onWaitingListSinceDay" ng-change="checkDate('OlsD')" ng-blur="formatDate('OlsD')"/>
 			</span>
 		</div>
 		<div class="col-md-11">
@@ -1295,6 +1348,24 @@
 			<label style="width:195px">U.S. Resident Consent Form</label>
 			<input type="text" class="form-control" placeholder="U.S. Resident Consent Form" title="U.S. Resident Consent Form" ng-model="page.extras.usSigned.value" style="width:130px"/>
 		</div>
+		<div class="col-md-11">
+			<label>Security Question</label>
+			<select class="form-control" title="Select a Security Question" ng-model="page.extras.securityQuestion1.value" style="width:520px">
+				<option>What was the name of your high school?</option>
+				<option>What is your spouse's maiden name?</option>
+				<option>What is the name of the street you grew up on?</option>
+				<option>In what city were you born?</option>
+				<option>What is the middle name of your oldest child?</option>
+				<option>What is your oldest cousin's first name?</option>
+				<option>What is your mother's middle name?</option>
+				<option>What is your grandmother's first name?</option>
+				<option>What year did you graduate from high school?</option>
+			</select>
+		</div>
+		<div class="col-md-11">
+			<label>Answer</label>
+			<input type="text" class="form-control" title="Answer to Security Question" ng-model="page.extras.securityAnswer1.value" style="width:520px"/>
+		</div>
 	</div>
 </div>
 <br/>
@@ -1306,7 +1377,7 @@
   		<strong>{{page.demo.lastName}}, {{page.demo.firstName}}</strong><br/>
   		{{page.demo.address.address}}<br/>
   		{{page.demo.address.city}}, {{page.province}} {{page.demo.address.postal}}<br/>
-  		<abbr title="Phone">P:</abbr> {{page.demo.phone}}
+  		<abbr title="Phone">P:</abbr> {{page.preferredPhoneNumber}}
 	</address>
 	<br/>
 </div>
