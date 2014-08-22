@@ -52,7 +52,7 @@ remove the password.</h5>
 	<table>
 		<tr>
 			<td class="fieldTitle">Password:</td>
-			<td class="fieldValue"><html:password property="password" /></td>
+			<td class="fieldValue"><input type="text" name="password" id="password" autocomplete="off" /></td>
 		</tr>
 		<tr>
 			<td class="fieldValue" colspan="2"><input type="button"

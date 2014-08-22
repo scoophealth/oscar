@@ -366,6 +366,9 @@ int maxId = 0;
 						<textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="soft" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><%=note.getNote() %></textarea>
 						<div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=globalNoteId%>"><%@ include file="noteIssueList.jsp"%></div>
 
+						<c:if test="${sessionScope.passwordEnabled=='true'}">
+							<p style='background-color: #CCCCFF; display: none; margin: 0px;' id='notePasswd'>Password:&nbsp;<input type="text" name="caseNote.password" value="" autocomplete="off" /></p>
+						</c:if>
 					<%
 		 		}
 				else //else display contents of note for viewing
@@ -755,6 +758,10 @@ int maxId = 0;
 		<div id="n<%=savedId%>" style="line-height: 1.1em;">
 			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="soft" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><%=cform.getCaseNote_note() %></textarea>
 			<div class="sig" id="sig<%=savedId%>"><%@ include file="noteIssueList.jsp"%></div>
+
+			<c:if test="${sessionScope.passwordEnabled=='true'}">
+				<p style='background-color: #CCCCFF; display: none; margin: 0px;' id='notePasswd'>Password:&nbsp;<input type="text" name="caseNote.password" value="" autocomplete="off" /></p>
+			</c:if>
 		</div>
 	</div>
 	<% if (OscarProperties.getInstance().getBooleanProperty("note_program_ui_enabled", "true")) { %>
