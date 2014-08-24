@@ -30,6 +30,7 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
 <%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%
@@ -2041,13 +2042,13 @@ if ( PatStat.equals(Dead) ) {%>
 								<b><bean:message
 									key="demographic.demographiceditdemographic.formLastName" />: </b></td>
 								<td align="left"><input type="text" name="last_name" <%=getDisabled("last_name")%>
-									size="30" value="<%=demographic.getLastName()%>"
+									size="30" value="<%=StringEscapeUtils.escapeHtml(demographic.getLastName())%>"
 									onBlur="upCaseCtrl(this)"></td>
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formFirstName" />:
 								</b></td>
 								<td align="left"><input type="text" name="first_name" <%=getDisabled("first_name")%>
-									size="30" value="<%=demographic.getFirstName()%>"
+									size="30" value="<%=StringEscapeUtils.escapeHtml(demographic.getFirstName())%>"
 									onBlur="upCaseCtrl(this)"></td>
 							</tr>
 							<tr>
