@@ -2279,13 +2279,13 @@ if ( Dead.equals(PatStat) ) {%>
 								<b><bean:message
 									key="demographic.demographiceditdemographic.formLastName" />: </b></td>
 								<td align="left"><input type="text" name="last_name" <%=getDisabled("last_name")%>
-									size="30" value="<%=demographic.getLastName()%>"
+									size="30" value="<%=StringEscapeUtils.escapeHtml(demographic.getLastName())%>"
 									onBlur="upCaseCtrl(this)"></td>
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formFirstName" />:
 								</b></td>
 								<td align="left"><input type="text" name="first_name" <%=getDisabled("first_name")%>
-									size="30" value="<%=demographic.getFirstName()%>"
+									size="30" value="<%=StringEscapeUtils.escapeHtml(demographic.getFirstName())%>"
 									onBlur="upCaseCtrl(this)"></td>
 							</tr>
 							<tr>
