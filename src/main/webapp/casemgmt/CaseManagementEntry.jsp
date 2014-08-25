@@ -519,7 +519,7 @@ if (pId==null) pId="";
 		<caisi:isModuleLoad moduleName="casemgmt.note.password.enabled">
 		<tr>
 			<td class="fieldTitle">Password:</td>
-			<td class="fieldValue"><html:password property="caseNote.password"/></td>
+			<td class="fieldValue"><input type="text" name="caseNote.password" id="caseNote.password" autocomplete="off"/></td>
 		</tr>
 		</caisi:isModuleLoad>
 		<tr>
