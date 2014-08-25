@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.drools.RuleBase;
 import org.drools.WorkingMemory;
@@ -66,8 +67,17 @@ public class PreventionDS {
         File file = new File(OscarProperties.getInstance().getProperty("PREVENTION_FILE"));
            if(file.isFile() || file.canRead()) {
                log.debug("Loading from file "+file.getName());
+               
                FileInputStream fis = new FileInputStream(file);
-               ruleBase = RuleBaseLoader.loadFromInputStream(fis);
+               try
+               {
+            	   ruleBase = RuleBaseLoader.loadFromInputStream(fis);
+               }
+               finally 
+               {
+            	   IOUtils.closeQuietly(fis);
+               }
+            	   
                fileFound = true;
            }
         }
