@@ -118,21 +118,47 @@ public class OcanForm {
 	
 	public static OcanStaffForm getCbiForm(Integer ocanStaffFormId, Integer clientId, int prepopulationLevel,String ocanType, Integer programId) {
 		//The demographic data should be populated each time when create or edit cbi form
-		OcanStaffForm cbiForm = null;
+		OcanStaffForm ocanStaffForm = null;
 		if(prepopulationLevel == OcanForm.PRE_POPULATION_LEVEL_DEMOGRAPHIC) {
-			cbiForm = getCbiInitForm(clientId, prepopulationLevel, ocanType, programId);
+			ocanStaffForm = ocanStaffFormDao.findOcanStaffFormById(ocanStaffFormId);
+			Demographic demographic=demographicDao.getDemographicById(clientId);		
+			ocanStaffForm.setLastName(demographic.getLastName());
+			ocanStaffForm.setFirstName(demographic.getFirstName());	
+			ocanStaffForm.setAddressLine1(demographic.getAddress()==null?"":demographic.getAddress());
+			ocanStaffForm.setCity(demographic.getCity()==null?"":demographic.getCity());
+			ocanStaffForm.setProvince(demographic.getProvince()==null?"":demographic.getProvince());
+			ocanStaffForm.setPostalCode(demographic.getPostal()==null?"":demographic.getPostal());
+			ocanStaffForm.setPhoneNumber(demographic.getPhone()==null?"":demographic.getPhone());
+			ocanStaffForm.setEmail(demographic.getEmail()==null?"":demographic.getEmail());
+			ocanStaffForm.setHcNumber(demographic.getHin()==null?"":demographic.getHin());
+			ocanStaffForm.setHcVersion(demographic.getVer()==null?"":demographic.getVer());
+			ocanStaffForm.setDateOfBirth(demographic.getFormattedDob());
+			ocanStaffForm.setClientDateOfBirth(demographic.getFormattedDob()==null?"":demographic.getFormattedDob());
+			ocanStaffForm.setGender(convertGender(demographic.getSex()==null?"":demographic.getSex()));
 			
-			OcanStaffForm ocanStaffForm = ocanStaffFormDao.findOcanStaffFormById(ocanStaffFormId);
-			cbiForm.setId(ocanStaffFormId);
-			cbiForm.setAddressLine2(ocanStaffForm.getAddressLine2());
-			cbiForm.setLastNameAtBirth(ocanStaffForm.getLastNameAtBirth());
-			cbiForm.setServiceInitDate(ocanStaffForm.getServiceInitDate());
-			
+			Calendar rightNow = Calendar.getInstance();
+			int year = rightNow.get(Calendar.YEAR);
+			int month = rightNow.get(Calendar.MONTH)+1;
+			int date = rightNow.get(Calendar.DATE);
+			if(demographic.getFormattedDob()!=null) {
+				String[] split_dob=demographic.getFormattedDob().split("-");
+				int year_dob=Integer.parseInt(split_dob[0]);
+				int month_dob = Integer.parseInt(split_dob[1]);
+				int date_dob = Integer.parseInt(split_dob[2]);
+				int age = year - year_dob;			
+				if(month < month_dob) {
+					age--;
+				} else if(month==month_dob){
+					if(date < date_dob)
+						age--;
+				}
+				ocanStaffForm.setEstimatedAge(String.valueOf(age));
+			}
 		} else {
-			cbiForm = getOcanStaffForm(ocanStaffFormId);
+			ocanStaffForm = getOcanStaffForm(ocanStaffFormId);
 		}
 		
-		return cbiForm;
+		return ocanStaffForm;
 	}
 	
 	public static OcanStaffForm getCbiInitForm(Integer clientId, int prepopulationLevel,String ocanType, Integer programId)
