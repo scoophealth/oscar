@@ -1058,8 +1058,8 @@
         <ViolationValue>/src/main/webapp/form/study/diabetetracker.jsp:ResultSet rsdemo = DBHandler.GetSQL("select * from formType2Diabetes where demographic_no= "+ demoNo +" order by formEdited desc, ID desc limit 0,1");</ViolationValue>
         <ViolationValue>/src/main/webapp/form/study/dm2ping.jsp:ResultSet rsdemo = oscar.oscarDB.DBHandler.GetSQL("select * from formType2Diabetes where demographic_no= "+demoNo +" order by formEdited desc, ID desc limit 0,1");</ViolationValue>
         <ViolationValue>/src/main/webapp/form/study/dmdata.jsp:ResultSet rsdemo = oscar.oscarDB.DBHandler.GetSQL("select * from formType2Diabetes where demographic_no= "+demoNo+" order by formEdited desc, ID desc limit 0,1");</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:&lt;%@ page import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportbilledvisit.jsp:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportbilledvisit.jsp:DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[2];</ViolationValue>
