@@ -288,17 +288,24 @@ if(showMenu==null && loadPage==null){
       <h5><bean:message key="admin.admin.unlockAcct"/></h5></a>
       </div>
       
-      <div class="well quick-links">
-	<a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/provideraddarecordhtm.jsp"><i class="icon-user icon-4x"></i>	
+     <div class="well quick-links">
+	    <a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/provideraddarecordhtm.jsp"><i class="icon-user icon-4x"></i>	
       
         <h5><bean:message key="admin.admin.btnAddProvider" /></h5></a>
       </div>
+            
+      <div class="well quick-links">	
+      	<a href="${ctx}/eform/efmformmanager.jsp" class="contentLink defaultForms"><i class="icon-file icon-4x"></i>
+      	
+      	<h5><bean:message key="eform.showmyform.msgManageEFrm"/></h5>
+		</a>
+      </div>
       
-      <div class="well quick-links">
+      <!-- <div class="well quick-links">
         <a href='javascript:void(0);' class="xlink" rel="${ctx}/lab/CA/ALL/testUploader.jsp" ><i class="icon-inbox icon-4x"></i>
       
         <h5><bean:message key="admin.admin.hl7LabUpload" /></h5></a>
-      </div>
+      </div>-->
       
       <div class="well quick-links">
         <a href="javascript:void(0);" class="xlink" rel="${ctx}/schedule/scheduletemplatesetting.jsp" title="<bean:message key="admin.admin.scheduleSettingTitle"/>"><i class="icon-calendar icon-4x"></i>
