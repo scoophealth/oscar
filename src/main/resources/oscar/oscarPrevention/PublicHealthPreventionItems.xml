@@ -1,0 +1,671 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : PreventionItems.xml
+    Created on : October 26, 2005, 3:06 PM
+    Author     : Jay Gallagher
+    Description:
+        Xml configuration used in the Prevention Module to set up the types of preventions available.
+
+
+*Passive Immunizing Agents* *Agents	Abbreviations*
+Botulism Antitoxin	BAtx
+Diphtheria Antitoxin	DAtx
+Immune Globulin	Ig
+Hepatitis B Immunoglobulin	HBIg
+Rabies Immunoglobulin	RabIg
+Respiratory Syncytial Virus Immunoglobulin	RSVIg
+Tetanus Immunoglobulin	TIg
+Varicella Immunoglobulin	VarIg
+
+
+-->
+<preventions>
+ 
+  	
+  		
+	<item 
+		resultDesc=""
+  		desc="DTaP=Diphtheria, Tetanus, Acellular Pertussis - pediatric"
+  		name="DTaP"
+  		healthCanadaType="DTaP"
+  		layout="injection" atc="" 
+  		showIfMinRecordNum="1"/>
+  		
+  		
+	<item 
+		resultDesc=""
+  		desc="DTaP-IPV-Hib-HB=Diphtheria, Tetanus, Acellular Pertussis, Inactivated Polio, Haemophilus influenzae type b, Hepatitis B - pediatric"
+  		name="DTaP-IPV-Hib-HB"
+  		healthCanadaType="DTaP-IPV-Hib-HB"
+  		layout="injection" atc="" 
+  		showIfMinRecordNum="1"/>
+  		
+	<item 
+		resultDesc=""
+  		desc="DTaP-IPV-HB=Diphtheria, Tetanus, Acellular Pertussis, Inactivated Polio, Hepatitis B - pediatric"
+  		name="DTaP-IPV-HB"
+  		healthCanadaType="DTaP-IPV-HB"
+  		layout="injection" atc="" 
+  		showIfMinRecordNum="1"/>
+  		
+	<item 
+		resultDesc=""
+  		desc="DTaP-Hib=Diphtheria, Tetanus, Acellular Pertussis, Haemophilus influenzae type b - pediatric"
+  		name="DTaP-Hib"
+  		healthCanadaType="DTaP-IPV-HB"
+  		layout="injection" atc="" 
+  		showIfMinRecordNum="1"/>
+  		
+	<item 
+		resultDesc=""
+  		desc="DT-IPV=Diphtheria, Tetanus, Polio - pediatric"
+  		name="DT-IPV"
+  		healthCanadaType="DT-IPV"
+  		layout="injection" atc="" 
+  		showIfMinRecordNum="1"/>
+
+	<item
+		resultDesc=""
+		desc="Tdap-IPV=diphtheria, tetanus and acellular pertussis for children 4 - 6 years of age; IPV=inactivated poliovirus; Adacel"
+		name="Tdap-IPV"		
+		layout="injection" atc="J07AJ52" minAge="4" maxAge="6"
+		showIfMinRecordNum="1" />
+  		
+	<item
+		resultDesc=""
+		desc="TdP-IPV-Hib=diphtheria, tetanus and acellular pertussis for children under 18 years of age; IPV=inactivated poliovirus; haemophilus influenzae type B for children under 5 years of age: combination given at 2, 4, 18 months and 4-6 years"
+		name="TdP-IPV-Hib"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html"
+		layout="injection" atc="J07CA06" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc="DTaP-IPV-Hib=diphtheria, tetanus and acellular pertussis for children under 18 years of age; IPV=inactivated poliovirus; Hib=haemophilus influenzae type B for children under 5 years of age: combination given at 2, 4, 18 months and 4-6 years "
+		name="DTaP-IPV-Hib"
+		healthCanadaType="DTaP-IPV-Hib"
+		link="http://www.phac-aspc.gc.ca/"
+		layout="injection" atc="J07CA06" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc="DIPHTHERIA-PERTUSSIS-POLIOMYELITIS-TETANUS (6 wks - 2 yrs)"
+		name="DTaP-HBV-IPV-Hib"
+		link="http://www.phac-aspc.gc.ca/"
+		layout="injection" atc="J07CA02" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc="DTaP=diphtheria, tetanus and acellular pertussis for children under 18 years of age; IPV=inactivated poliovirus"
+		name="DTaP-IPV"
+		healthCanadaType="DTaP-IPV"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#DTaPIPV"
+		layout="injection" atc="J07CA02" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+		
+ 	<item 
+		resultDesc=""
+ 		desc="Rot-1=Rotavirus Vaccine" 
+ 		name="Rot"
+        link="www.novaccine.com/pdffiles/Rotarix_new_package_insert.pdf"
+		layout="injection" atc="J07BH01" minAge="0" maxAge="2"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc="Hib=haemophilus influenzae type B for children under 5 years of age"
+		name="Hib"
+		healthCanadaType="Hib"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Hib"
+		layout="injection" atc="J07AG51" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="Pneumovax Pneumococcal-Polysaccharide - valent" 
+		name="Pneumovax" link="" layout="injection"
+		healthCanadaType="Pneu-P-23"
+		atc="J07AL02" showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="Pneu-C=pneumococcal 7-valent conjugate" name="Pneu-C" healthCanadaType="Pneu-C-7"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#PneuC"
+		layout="injection" atc="J07AL" minAge="0" maxAge="2"
+		showIfMinRecordNum="1" />
+		
+	<item
+		resultDesc=""
+		desc="MR=Measles, Rubella"
+		name="MR"
+		healthCanadaType="MR"
+		layout="injection" atc=""
+		showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="MMR=measles, mumps and rubella" name="MMR" healthCanadaType="MMR"
+		link="http://www.phac-aspc.gc.ca/publicat/cig-gci/p04-meas-roug-eng.php"
+		layout="injection" atc="J07BD52" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+		
+	<item 
+		resultDesc=""
+		desc="MMRV=measles, mumps, rubella, varicella" name="MMRV" healthCanadaType="MMRV"
+		link="http://www.phac-aspc.gc.ca/publicat/ccdr-rmtc/10vol36/acs-9/index-eng.php"
+		layout="injection" atc="J07BD54" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />		
+
+	<item
+		resultDesc=""
+		desc="Meningococcal - Polysaccharide"
+		name="Men-P-AC"
+		healthCanadaType="Men-P-AC"
+		layout="injection" atc=""
+		showIfMinRecordNum="1" />
+		
+	<item
+		resultDesc=""
+		desc="Meningococcal - Polysaccharide"
+		name="Men-P-ACWY"
+		healthCanadaType="Men-P-ACWY"
+		layout="injection" atc=""
+		showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="MenC-C=meningocococcal C conjugate" name="MenC-C" healthCanadaType="Men-C"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#MenC"
+		layout="injection" atc="J07AH07" minAge="0" maxAge="19"
+		showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="VZ=varicella zoster" name="VZ" healthCanadaType="Var"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Var"
+		layout="injection" atc="J07BK01" minAge="0" maxAge="2"
+		showIfMinRecordNum="1" />
+		
+	<item
+		resultDesc=""
+		desc="Tetanus"
+		name="T"
+		healthCanadaType="T"
+		layout="injection" atc=""
+		showIfMinRecordNum="1" />
+		
+	<item
+		resultDesc=""
+		desc="Tetanus, Diphtheria, Inactivated Polio - adult"
+		name="Td-IPV"
+		healthCanadaType="Td-IPV"
+		layout="injection" atc=""
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc="dTap=diphtheria, tatanus and acellular pertussis adult/adolescent formulation"
+		name="dTap" healthCanadaType="Tdap"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap"
+		layout="injection" atc="J07AJ52" minAge="0" maxAge="6"
+		showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="Td=tetanus and diphtheria adult type formulation"
+		name="Td" healthCanadaType="Td"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap"
+		layout="injection" atc="J07CA01" minAge="0" showIfMinRecordNum="1" />
+
+
+	<item 
+		resultDesc=""
+		desc="Flu=influenza vaccine" name="Flu" healthCanadaType="Inf"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Flu"
+		layout="injection" atc="J07BB01" minAge="0" />
+
+	<item
+		resultDesc=""
+		desc="Hepatitis A and Typhoid - Injection"
+		name="HA-Typh-I"
+		healthCanadaType="HA-Typh-I"
+		layout="injection" atc=""
+		showIfMinRecordNum="1" />
+		
+	<item
+		resultDesc=""
+		desc="Hepatitis B - Thimerosal free"
+		name="HBTmf"
+		healthCanadaType="HBTmf"
+		layout="injection" atc=""
+		showIfMinRecordNum="1" />
+	<item 
+		resultDesc=""
+		desc="Hep AB=Hepatitis AB" name="HepAB" link="" layout="injection" healthCanadaType="HAHB"
+		atc="J07BC20" showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc="Cholera - E.coli - Oral"
+		name="Chol-Ecol-O"
+		healthCanadaType="Chol-Ecol-O"
+		layout="injection" atc=""
+		showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="Dukoral" name="CHOLERA" link="" layout="injection" healthCanadaType="Chol-O"
+		atc="J07AE01" showIfMinRecordNum="1" />
+        
+
+	<item 	
+		resultDesc=""
+		desc="Rabies=Rabies" name="Rabies" link="" layout="injection" healthCanadaType="Rab"
+		atc="J07BG01" showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="Typhoid=Typhoid" name="Typhoid" link="" layout="injection" healthCanadaType="Typh-I"
+		atc="J07AP01" showIfMinRecordNum="1" />
+		
+		  		
+  	<item 
+		resultDesc=""
+  		desc="Typhoid - Oral"
+  		name="Typh-O"
+  		healthCanadaType="Typh-O"
+  		layout="injection" atc="" 
+  		showIfMinRecordNum="1"/>	
+
+	<item 
+		resultDesc=""
+		desc="TB=Tuberculosis" name="Tuberculosis" link="" layout="injection"
+		atc="J07AN01" showIfMinRecordNum="1" />
+
+	
+
+	<item 
+		resultDesc=""
+		desc="TdP" name="TdP" link="" layout="injection" atc="J07AJ52" 
+		showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="IPV" name="IPV" link="" layout="injection" atc="J07BF03"
+		showIfMinRecordNum="1" />
+		
+	<item 
+		resultDesc=""
+  		desc="BCG=Bacillus Calmette-Guérin"
+  		name="BCG"
+  		healthCanadaType="BCG"
+  		layout="injection" atc="" 
+  		showIfMinRecordNum="1"/>
+  		
+  	<item 
+		resultDesc=""
+  		desc="Yellow Fever"
+  		name="YF"
+  		healthCanadaType="YF"
+  		layout="injection" atc="" 
+  		showIfMinRecordNum="1"/>		
+  		
+  	<item 
+		resultDesc=""
+  		desc="Tickborne Encephalitis"
+  		name="TBE"
+  		healthCanadaType="TBE"
+  		layout="injection" atc="" 
+  		showIfMinRecordNum="1"/>		
+  			
+	<item
+		resultDesc=""
+		desc="Japanese Encephalitis"
+		name="JE"
+		healthCanadaType="JE"
+		layout="injection" atc=""
+		showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="Mammorgram" name="MAM" link="" layout="PAPMAM" minAge="50"
+		maxAge="70" sex="F" showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="PSA" name="PSA" link="" layout="PAPMAM" minAge="50"
+		maxAge="70" sex="M" showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="Fecal Occult Blood Test" name="FOBT" link="" layout="PAPMAM"
+		minAge="49" maxAge="80" showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="Colonoscopy" name="COLONOSCOPY" link="" layout="PAPMAM"
+		showIfMinRecordNum="1" />
+		
+		<!-- For eva.caisi.ca -->
+	<item
+		resultDesc=""
+		desc="HIV = all pregnant women, opt out routine screening of all adults"
+		name="HIV"
+	    link="http://www.cdc.gov/std/treatment/"
+	    layout="PAPMAM"
+	    minAge="13"
+	    maxAge="75"
+	    showIfMinRecordNum="1" />
+
+ 
+	<item
+		resultDesc=""
+		desc="HepB screen= Hepatitis B serology (hep B sAg + anti-HBc or anti-HBs) in those with multiple sex partners, MSM, and injection drug users"
+		name="Hep B screen"
+		link="http://www.cdc.gov/std/treatment/"
+		layout="PAPMAM"
+		minAge="15"
+		maxAge="24"
+		showIfMinRecordNum="1" />
+		
+	<item		
+		resultDesc=""
+		desc="VDRL = VDRL screening for syphillis; pregnant women at the first prenatal visit (and 3rd trimester and delivery high-risk groups), all sex workers, in correctional facilities, diagnosed with another STD, MSM with high-risk behaviors"
+		name="VDRL"
+		link="http://www.cdc.gov/std/treatment/"
+		layout="PAPMAM"
+		minAge="15"
+		maxAge="25"
+		showIfMinRecordNum="1" />
+		
+	<item
+		resultDesc=""
+		desc="Chlamydia = chlamydia urine PCR; sexually active women age 25 years or younger (including pregnant women), women older than 25 years with: new sex partner in prior 60 days, more than one sex partner, inconsistent condom use, unmarried, or history of STD; men: asymptomatic screening may or may not benefit "
+		name="chlamydia"
+		link="http://www.cdc.gov/std/treatment/"
+		layout="PAPMAM"
+		minAge="12"
+		maxAge="25"
+		showIfMinRecordNum="1" />
+		
+	<item
+		resultDesc=""
+		desc= "ghonorrhea = ghonorrhea urine PCR in men with symptoms or asymptomatic women: Sexually active younger than 25 years, pregnancy, inconsistent condom use, multiple partners, partner with multiple contacts, sexual contact with partner with culture-proven STD, repeated episodes of STD, Sex work or drug use"
+		name="ghonorrhea PCR"
+		link="http://www.cdc.gov/std/treatment/"
+		layout="PAPMAM"
+		minAge="12"
+		maxAge="25"
+		showIfMinRecordNum="1" />
+	<!-- eva.caisi.ca -->
+
+    <item 
+		resultDesc=""
+		desc="H1N1 Vaccination" name="H1N1" layout="h1n1"
+            minAge="0" atc="J07BB02" />
+
+	<item 
+		resultDesc=""
+		desc="Other Layout A" name="OtherA" link="" layout="injection"
+		showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="Other Layout B" name="OtherB" link="" layout="PAPMAM"
+		showIfMinRecordNum="1" />
+		
+	<item
+		resultDesc=""
+		desc= "Smoking history"
+		name="Smoking"		
+		layout="history"
+		minAge="13"		
+		showIfMinRecordNum="1" />
+	
+	<item
+		resultDesc=""
+		desc= "Bone Mineral Density"
+		name="BMD"		
+		layout="PAPMAM"
+		minAge="65"		
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc= "Periodic Health Visit"
+		name="PHV"		
+		layout="history"	
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="Bacterial Vaginosis"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="CT Culture Cervical"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="CT Culture Throat"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="CT Culture Rectal"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="CT Culture Urethral"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="CT NAAT Cervical"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="CT NAAT Urethral"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="CT NAAT Urine"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="GC Culture Cervical"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="GC Culture Throat"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="GC Culture Rectal"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="GC Culture Urethral"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="GC NAAT Cervical"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="GC NAAT Urethral"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="GC NAAT Urine"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="Hep A=Hepatitis A" name="HepA" link="" layout="injection" healthCanadaType="HA"
+		atc="J07BC02" showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="Hep B=Hepatitis B" name="HepB" healthCanadaType="HB"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#HepB"
+		layout="injection" atc="J07BC01" minAge="0" maxAge="1"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="Hep A Screen"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+		
+	<item
+		resultDesc=""
+		desc="HepC screen = Hep C Ab serology in contacts of multiple sex partners, traumatic anal intercourse with infected person, IVDU"
+		name="Hep C screen"
+		link="http://www.cdc.gov/std/treatment/"
+		layout="PAPMAM"
+		minAge="15"
+		maxAge="24"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="HSV viral swab"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="HIV Confirm Anon"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="HIV Confirm Nominal"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="HIV Serology Anon"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="HIV Serology Nominal"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc="Normal=Non-reactive, Abnormal=Reactive，Other=Invalid"
+		desc=""
+		name="HIV POC Nominal"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc="Normal=Non-reactive, Abnormal=Reactive，Other=Invalid"
+		desc=""
+		name="HIV POC Anon"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="Women ages of 9 and 26 years are recommended to receive human papillomavirus vaccine" 
+		name="HPV Vaccine"
+		healthCanadaType="HPV"
+		link="http://www.cdc.gov/std/treatment/" 
+		layout="injection" 
+		minAge="9"
+		maxAge="26" sex = "F"
+   		showIfMinRecordNum="1" />
+
+	<item 
+		resultDesc=""
+		desc="PAP=" name="PAP" link="" layout="PAPMAM" minAge="20"
+		maxAge="65" sex="F" showIfMinRecordNum="1" />
+		
+	<item
+		resultDesc="Normal=Positive, Abnormal=Negative"
+		desc=""
+		name="Pregnancy Test"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+		
+	<item
+		resultDesc=""
+		desc=""
+		name="Syphilis Serology"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+		
+	<item
+		resultDesc=""
+		desc=""
+		name="Trichomaniasis"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc=""
+		name="Yeast"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+		
+</preventions>
+

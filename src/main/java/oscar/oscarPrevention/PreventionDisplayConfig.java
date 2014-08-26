@@ -88,7 +88,11 @@ public class PreventionDisplayConfig {
 		try {
 			if (OscarProperties.getInstance().getProperty("PREVENTION_ITEMS") != null) {
 				String filename = OscarProperties.getInstance().getProperty("PREVENTION_ITEMS");
-				is = new FileInputStream(filename);
+				if(filename.startsWith("classpath:")) {
+					is = this.getClass().getClassLoader().getResourceAsStream(filename.substring(10));
+				} else {
+					is = new FileInputStream(filename);
+				}
 			}
 			else {
 				is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarPrevention/PreventionItems.xml");
@@ -141,7 +145,11 @@ public class PreventionDisplayConfig {
 		try {
 			if (OscarProperties.getInstance().getProperty("PREVENTION_CONFIG_SETS") != null) {
 				String filename = OscarProperties.getInstance().getProperty("PREVENTION_CONFIG_SETS");
-				is = new FileInputStream(filename);
+				if(filename.startsWith("classpath:")) {
+					is = this.getClass().getClassLoader().getResourceAsStream(filename.substring(10));
+				} else {
+					is = new FileInputStream(filename);
+				}
 			} else {
 				is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarPrevention/PreventionConfigSets.xml");
 			}

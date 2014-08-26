@@ -80,6 +80,12 @@ public class PreventionDS {
             	   
                fileFound = true;
            }
+
+        	if(!fileFound && preventionPath.startsWith("classpath:")) {
+        		 URL url = PreventionDS.class.getResource( preventionPath.substring(10));  
+                 log.debug("loading from URL "+url.getFile());            
+                 ruleBase = RuleBaseLoader.loadFromUrl( url );
+        	}
         }
         
         if (!fileFound){                  
