@@ -808,7 +808,9 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/updatedemographicprovider.jsp"><bean:message
 						key="admin.admin.btnUpdatePatientProvider" /></a></li>
-				   
+				   <li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/productDispensing/products.jsp"><bean:message
+						key="admin.admin.btnInventory" /></a></li>
 				   <% if (OscarProperties.getInstance().getProperty("NEW_CONTACTS_UI","false").equals("true")) { %>
 		            	<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/demographic/migrate_demographic_contacts.jsp"><bean:message key="admin.admin.migrate_contacts"/></a></li>
 		            <% } %>
