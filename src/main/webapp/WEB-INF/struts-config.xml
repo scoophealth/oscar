@@ -1278,6 +1278,16 @@
         	<forward name="failure" path="/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf" />
         </action>
 
+        <action
+        	path="/oscarEncounter/oscarMeasurements/TrackerSlimUpdate"
+        	name="trackerForm"
+        	scope="request"
+        	type="oscar.oscarEncounter.oscarMeasurements.pageUtil.FormUpdateAction">
+        	<forward name="success" path="/oscarEncounter/oscarMeasurements/HealthTrackerSlim.jspf?reload" />
+        	<forward name="reload" path="/oscarEncounter/oscarMeasurements/HealthTrackerSlim.jspf?reload" />
+        	<forward name="failure" path="/oscarEncounter/oscarMeasurements/HealthTrackerSlim.jspf" />
+        </action>
+
 		<action input="/oscarEncounter/oscarMeasurements/Measurements.jsp" name="EctMeasurementsForm" path="/oscarEncounter/Measurements" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctMeasurementsAction">
 			<forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessMeasurementsSubmission.jsp" />
 			<forward name="failure" path="/oscarEncounter/oscarMeasurements/Measurements.jsp" />

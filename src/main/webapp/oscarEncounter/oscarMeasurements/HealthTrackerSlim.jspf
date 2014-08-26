@@ -247,6 +247,7 @@ String date = UtilDateUtilities.getToday("yyyy-MM-dd");
     <script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery.sparkline.js"></script>     
         	    
 	<oscar:customInterface section="health_tracker"/>
+	
     <!-- Le styles -->
     <link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
     <link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet">
@@ -258,11 +259,10 @@ body {
    padding-bottom: 40px;
 }
 
-.navbar .nav > li > a {color:white;} 
 
 #tracker-bar{
    position:fixed;
-   top:40px;
+   top:0px;
    z-index:9;
    background-color:white;
    width:100%;
@@ -273,7 +273,7 @@ body {
 
 #main{
    position:relative;
-   top:44px;
+   top:4px;
 }
 
 .item{
@@ -336,14 +336,17 @@ div.preventionProcedure p {
 }
 
 #graphModal{
-   width:900px;
+  /* width:900px;
    height:500px;
-   margin-left: -450px;
+   margin-left: -450px;*/
 }
 
 #gFrame{
-   width:820px;
-   height:460px;
+   /*width:820px;
+   height:460px;*/
+   
+   width:600px;
+   height:400px;
 } 
 
 #panel{
@@ -413,6 +416,12 @@ filter:alpha(opacity=100); /* For IE8 and earlier */
 text-align:center;
 }
 
+
+.tracker-nav > li {margin-top:0px !important; padding-bottom:-20px !important;}
+
+
+
+
 .yes-no-options{display: inline;margin:0px;padding:0px}
 
 .save-all{
@@ -474,9 +483,16 @@ padding-left:8px;
 .print{display:block}
 }
 </style>
-		
+	
     <link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
-
+<style>
+/*iframe patch: This is needed since the bootstrap-responsive adds unwanted padding */
+  .navbar-fixed-top .navbar-inner,
+  .navbar-fixed-bottom .navbar-inner {
+    padding: 0px;
+  }
+</style>	
+	
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="<%=request.getContextPath() %>/js/html5.js"></script>
@@ -552,10 +568,10 @@ padding-left:8px;
         
       
       if (sdate && edate){
-            window.location = 'HealthTrackerPage.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>&sdate='+sdate+'&edate='+edate;
+            window.location = 'HealthTrackerSlim.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>&sdate='+sdate+'&edate='+edate;
             //console.log("two");
         }else{
-            window.location = 'HealthTrackerPage.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>';
+            window.location = 'HealthTrackerSlim.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>';
         }
 
     }
@@ -693,20 +709,15 @@ function fsPopup(width,height,url,window) {
   </head>
 
   <body id="HealthTracker">
-    
-
-<%@ include file="/share/templates/patient.jspf"%>
-
-<div id="tracker-bar" class="container-fluid navbar-inner DoNotPrint">
-
-   		<div class="span12" style="padding-left:0px;margin-left:0px">
-
-<a href="?demographic_no=<%=demographic_no%>&template=tracker" class="btn <%if(temp.equals("tracker")){ out.print("btn-primary active");} %>"><i class="icon-home icon-large"></i></a>
-
-
+ 
+ <div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		
+		<ul class="nav tracker-nav">
+   		<li class="<%if(temp.equals("tracker")){ out.print("active");} %>"><a href="?demographic_no=<%=demographic_no%>&template=tracker"><i class="icon-home" style=""></i></a></li>
 <%
 				boolean btnSelected=false;
-				String btnState = "btn";
+				String btnState = "";
 				String dxCodeQueryString="";
 				
 				ArrayList<String> diagnosed=new ArrayList<String>(); 
@@ -770,19 +781,16 @@ function fsPopup(width,height,url,window) {
 
      for(idx=0;idx<diagnosed.size();idx++)
      {
-    	 
-    	if(temp.equals(diagnosed.get(idx).toString())){fsSelected="btn-primary active";} 
+    	     	 
+    	if(temp.equals(diagnosed.get(idx).toString())){fsSelected="active";} 
     	
     	btnLabel=diagnosed.get(idx).toString().toUpperCase();
     	if(btnLabel.equals("DIAB2")){btnLabel="DIAB";}
     	
-      	out.print("<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+diagnosed.get(idx).toString()+"' class='btn "+fsSelected+"' title='Diagnosed' id='group-btn-"+diagnosed.get(idx)+"'>"+btnLabel+"</a> ");
+      	out.print("<li class='"+fsSelected+"'><a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+diagnosed.get(idx).toString()+"' title='Diagnosed' id='group-btn-"+diagnosed.get(idx)+"'>"+btnLabel+"</a><li>");
       	fsSelected="";
      }
-%>	
 
-
-<%
 	String undiagnosed="";
 	String unDxShow="";
      int iUndx=0;
@@ -796,9 +804,9 @@ function fsPopup(width,height,url,window) {
     		 
 
 if(btnLabel.equals("PHV")){ 
-if(temp.equals(flowsheetList.get(iUndx).toString())){ fsSelected="btn-primary active";} 
+if(temp.equals(flowsheetList.get(iUndx).toString())){ fsSelected="active";} 
 
-out.print(" <a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+fsSelected+"' title='no diagnosis needed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ");
+out.print("<li class='"+fsSelected+"'><a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"'  title='no diagnosis needed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a></li>");
 
 fsSelected="";
 }
@@ -806,13 +814,16 @@ fsSelected="";
  	    	 if(btnLabel.equals("DIAB2")){btnLabel="DIAB";}
  	    	
     		 if(temp.equals(flowsheetList.get(iUndx).toString()) && !temp.equals("phv") ){
-    			 fsSelected="btn-primary active";
-    			 unDxShow="<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+fsSelected+"' title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ";
+    			 fsSelected="active";
+    			 unDxShow="<li class='"+fsSelected+"'><a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"'  title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a></li>";
     		 } 
 
 
-if(!btnLabel.equals("PHV")){     		 
-    	    	undiagnosed = undiagnosed + "<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+fsSelected+"' title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ";
+if(!btnLabel.equals("PHV")){ 
+	
+	MeasurementFlowSheet findName = MeasurementTemplateFlowSheetConfig.getInstance().getFlowSheet(flowsheetList.get(iUndx).toString());
+	
+    	    	undiagnosed = undiagnosed + "<li class='"+fsSelected+"'><a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"'  title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+ findName.getDisplayName() +"</a></li>";
       			fsSelected="";
 }
       			
@@ -820,14 +831,39 @@ if(!btnLabel.equals("PHV")){
      }
      
 %>
-<span class="btn-divider" title="View undiagnosed flowsheets">| <%=unDxShow %></span>		
-			<a href="#" class="btn" id="MoreDx" title="View undiagnosed flowsheets"><i class="icon-chevron-sign-down icon-large"></i></a>
-		</div>
-</div>
-<div id="panel" class="well well-small">
-<!-- undiagnosed -->
-<%=undiagnosed %>
-</div>
+		<li class="divider-vertical" title="undiagnosed"></li>
+		
+		<!-- display selected undiagnosed flowsheet -->
+		<%=unDxShow %>
+
+		
+		
+		<li class="dropdown" title="undiagnosed">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+		
+		<i class="icon-chevron-sign-down"></i>
+		</a>
+			<ul class="dropdown-menu">		
+			<!-- undiagnosed -->
+			<%=undiagnosed %>
+			</ul>
+		</li>
+		</ul>
+		
+
+	</div><!-- navbar-inner -->
+</div><!-- navbar -->
+ 
+ 
+ <div class="container-fluid">
+ 
+ 
+ <div class="row-fluid">
+
+	 <div class="span10">
+	
+
+
 
 
    <div id="main" class="container-fluid">
@@ -1035,12 +1071,6 @@ if(!btnLabel.equals("PHV")){
 					<input type="button" class="btn" value="go" style="margin-bottom:10px" onclick="javascript: loadDifferentElements()"/>
                     </span>
                     
-                    
-                    
-                    
-                    
-                    
-                    
                     </span>
 		</security:oscarSec>
 <%} //isMeasurements %>
@@ -1070,7 +1100,7 @@ if(!btnLabel.equals("PHV")){
 <%}%>           		    
 		    
 <!-- start of form -->	
-<form id="trackerForm" name="trackerForm" action="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/TrackerUpdate.do">
+<form id="trackerForm" name="trackerForm" action="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/TrackerSlimUpdate.do">
 <fieldset>	
 
 <input type="hidden"  name="ycoord"
@@ -1090,9 +1120,9 @@ if(!btnLabel.equals("PHV")){
 	String[] addAllLink = new String[measurements.size()];
 	int mCount=0;
 	int iDate=0;
-
-	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
     EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();  
     long startTimeToLoopAndPrint = System.currentTimeMillis();
     for (String measure:measurements){
@@ -1116,8 +1146,8 @@ if(!btnLabel.equals("PHV")){
             String prevName = (String) h.get("name");
             ArrayList<EctMeasurementsDataBean> alist = mi.getMeasurementData(measure);
             if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {	
-                EctMeasurementsDataBeanHandler.addRemoteMeasurements(loggedInInfo, alist,measure,Integer.parseInt(demographic_no));
-             }
+               EctMeasurementsDataBeanHandler.addRemoteMeasurements(loggedInInfo, alist,measure,Integer.parseInt(demographic_no));
+            }
 	    String warningColour = "white";                
             if(mi.hasRecommendation(measure)){
                 warningColour = mFlowsheet.getRecommendationColour();
@@ -1272,8 +1302,8 @@ if(!btnLabel.equals("PHV")){
 <div class="well well-small" id="add-box-<%=measure%>" style="display:none;margin-bottom:1px;">
    <span title="If you would like this measurement to display in your progress note then you need to select this checkbox."><input type="checkbox" name="<%=name%>_note" id="<%=name%>_note" value="addtonote"> <small>add to progress note</small></span>  
    
-   <span class="pull-right">
-   <input type="text" class="input-xlarge" placeholder="Comment" id="<%=name%>_comments" name="<%=name%>_comments" > 
+   <span class="pull-right" style="width:400px">
+   <input type="text"  placeholder="Comment" id="<%=name%>_comments" name="<%=name%>_comments"  style="width:80%">
    <input class="btn" type="submit" style="margin-top:-10px;" name="submit" value="Save" id="save_<%=name%>"/> 
    </span>
 </div>
@@ -1538,251 +1568,6 @@ function createAddAll(d,t){
 </div>
 		    
 <div class="span4" id="right-side">
-  <div class="tabbable DoNotPrint">
-           <ul class="nav nav-tabs">
-             <li class="active"><a href="#tab1" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Medications'/></a></li>
-             <li><a href="#tab2" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Allergy'/></a></li>
-             <!-- hiding for now don't think we want this<li><a href="#tab3" data-toggle="tab"><bean:message key='oscarEncounter.reminders.title'/></a></li>-->
-             <li><a href="#tab4" data-toggle="tab"><bean:message key='oscarEncounter.warnings.title'/> <span class="badge"><%=warnings.size() %></span></a></li>
-             <li><a href="#tab5" data-toggle="tab">Recommendations <span class="badge"><%=recomendations.size() %></span></a></li>
-           </ul>
-           <div class="tab-content">
-               <div id="tab1" class="tab-pane active well well-small">
-                <p><strong><bean:message key="global.module" />:</strong> <a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarRx/choosePatient.do?providerNo=<%=providerNo%>&demographicNo=<%=demographic_no%>')" title="Go to the Medications module">Medications</a></p>
-				 <%if(medicationsResult.size()>=1){%>
-				
-									
-					<%=medicationsList%>
-					
-					
-				<%}else{%>
-					<bean:message key='healthtracker.noActiveMeds.warning' />
-				<%}%>
-
-               </div>
-               
-               <div id="tab2" class="tab-pane well well-small">
-               <p> <strong>Module:</strong> <a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarRx/showAllergy.do?demographicNo=<%=demographic_no%>')" title="Go to the Allergies module">Allergies</a></p>
-				   <%
-				List<Allergy> allergies = allergyDao.findActiveAllergiesOrderByDescription(Integer.parseInt(demographic_no));
-				String allergiesList="";
-				for(int x=0;x<allergies.size();x++) {
-					if(x!=0) {
-						allergiesList += ",<br/>";
-					}
-					Allergy allergy = allergies.get(x);
-					allergiesList += allergy.getDescription();
-				}
-				
-				
-				%>   
-
-				<%if(allergies.size()>=1){%>
-				
-				       <%=allergiesList%>
-				 <%}else{%>
-						No Allergies
-				<%}%>   
-               </div>
-               
-               <div id="tab3" class="tab-pane well well-small">
-					 <%
-					String remindersQuery = "intake_reminders";
-					List<Map<String,Object>> remindersResult = oscarSuperManager.find("providerDao", remindersQuery, demographicParam);
-					String remindersList = (!remindersResult.isEmpty() && remindersResult.get(0).get("note")!=null) ? remindersResult.get(0).get("note").toString() : "";
-					if (remindersResult.size() > 1) {
-						for (int i=1; i<remindersResult.size(); i++) {
-							remindersList += ",<br/>" + remindersResult.get(i).get("note").toString();
-						}
-					}
-
-					if (remindersResult.size() > 1) {
-					%>
-					       
-							<%=remindersList%> 
-					<%}else{%>
-					
-	
-								No Reminders
-					<%}%>   
-               </div>
-               
-               <div id="tab4" class="tab-pane well well-small">
-               <% if (warnings.size() > 0 || dsProblems) { %>
-      
-				
-				<%if (warnings.size() > 0){ //TODO: assess whether warnings needs it's own tab with a tally in tab title%>
-				<span style="font-size:12px;"><%=flowSheet%> Warnings: </span>
-				<ul >
-				<% for (String warn : warnings){ %>
-				<li style="color: red;"><%=warn%></li>
-				<%}%>
-				</ul>
-				<br>
-				<%}%>
-								
-				
-				<% if (dsProblems){ %>
-				<ul>
-				<li style="color: red;">Decision Support Had Errors Running.</li>
-				</ul>
-				<% }%>
-				
-				
-				<% }else{ %>
-				      
-					No Warnings
-				<%}%>
-               </div>
-
- <div id="tab5" class="tab-pane well well-small">
-               <% if (recomendations.size() > 0  || dsProblems) { %>
-      
-				
-				<%if (recomendations.size() > 0){ //TODO: assess whether recommendations needs it's own tab with a tally in tab title%> 
-				<span style="font-size:12px;"><%=flowSheet%> Recommendations: </span>
-				<ul>
-				<% for (String warn : recomendations ){%>
-				<li style="color: black;"><%=warn%></li>
-				<%}%>
-				</ul>
-				<br>
-				<%}%>
-				
-				
-				<% if (dsProblems){ %>
-				<ul>
-				<li style="color: red;">Decision Support Had Errors Running.</li>
-				</ul>
-				<% }%>
-				
-				
-				<% }else{ %>
-				      
-					No Recommendations
-				<%}%>
-               </div>
-               
-           </div>
-   </div>
- 
- <%
- if("yes".equalsIgnoreCase(ornPilot) || "true".equalsIgnoreCase(ornPilot)) {
- if(temp.toUpperCase().equals("DIAB2") || temp.toUpperCase().equals("CKD") || temp.toUpperCase().equals("RENAL")){
- %>
- <!-- renal  start-->
-   <div class="tabbable DoNotPrint">
-           <ul class="nav nav-tabs">
-             <li class="active"><a href="#ckd" data-toggle="tab" >Renal</a></li>
-           </ul>
-           <div class="tab-content">
-               <div id="ckd" class="tab-pane active well well-small">
-               <span class="label label-inverse" id="renal-next-steps">Next Steps</span><br>
-               <div id="renal_next_steps">
-               N/A
-               </div>
-               <br><br>
-               
-               <span class="label label-info" id="renal-resources">Resources</span><br>
-               
-               <a target='_blank' href="<%=request.getContextPath() %>/renal/csn_algorithm.pdf">CSN Algorithm Detection, Monitoring &amp; Referral of CKD</a><br>
-               <a target='_blank' href="<%=request.getContextPath() %>/renal/kfoc.pdf">Kidney Foundation of Canada</a><br>
-               
-               </div>
-           </div>
-    </div>    
- <!-- renal end -->       
-<%} }%> 
-
-
-  
-           <ul class="nav nav-tabs DoNotPrint">
-              <li class="active"><a href="#toolkit"><%=temp.toUpperCase() %> Toolkit</a></li>
-           </ul>
-               <div id="toolkit">   
-    
-    <div class="tabbable DoNotPrint">           
-    <ul class="nav nav-pills">
-    	<li class="active"><a href="#completed" data-toggle="tab" title="forms completed in the past"><bean:message key="global.completed" /></a></li>
-    	<li><a href="#templates" data-toggle="tab" title="new forms to be completed"><bean:message key="global.templates" /></a></li>
-    	
-    	
-    	<%if(temp.toUpperCase().equals("PHV")){ //temp for PHV TODO: make generic so the below links will be user added/managed %>
-    	<li><a href="#resources" data-toggle="tab" title="">Resources</a></li>
-		<%} %>
-    </ul>
-<%
-	String groupToView = temp.toLowerCase(); 
-	String user = (String) session.getAttribute("user");
-	String roleName = (String)session.getAttribute("userrole") + "," + user;
-	String orderBy = EFormUtil.DATE;
-
-%>
-    <div class="tab-content">
-		<div id="completed" class="tab-pane active">
-		<table class="table table-striped table-condensed table-hover">
-		<tr><td><strong>Name</strong></td><td><strong><bean:message key="eform.showmyform.btnSubject" /></strong></td><td><strong>Completed Date</strong></td></tr>   
-		<%
-								ArrayList<HashMap<String,? extends Object>> eFormsCompleted = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, groupToView, roleName);
-														
-								for (int i = 0; i < eFormsCompleted.size(); i++)
-								{
-									HashMap<String,? extends Object> curformCompleted = eFormsCompleted.get(i);
-							%>
-							
-								<tr>
-									<td><a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/eform/efmshowform_data.jsp?fdid=<%=curformCompleted.get("fdid")%>&appointment=', '<%="FormP" + i%>'); return false;"
-									TITLE="<bean:message key="eform.showmyform.msgViewFrm"/>"
-									onmouseover="window.status='<bean:message key="eform.showmyform.msgViewFrm"/>'; return true"><%=curformCompleted.get("formName")%></a>
-									</td>
-									<td><%=curformCompleted.get("formSubject")%></td>
-									<td><%=curformCompleted.get("formDate")%></td>
-								</tr>
-						
-							<%
-								}
-							%>  
-		</table> 
-		</div><!-- completed -->
-		
-		    <div id="templates" class="tab-pane">
-		<table class="table table-striped table-condensed table-hover">
-		<tr><td><strong>Name</strong></td><td><strong><bean:message key="eform.showmyform.btnSubject" /></strong></td></tr>              
-		 <%		
-		      ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms("form_name", EFormUtil.CURRENT, groupToView, roleName);
-		      if (eForms.size() > 0) {
-		        for (int i=0; i<eForms.size(); i++) {
-		        	HashMap<String, ? extends Object> curForm = eForms.get(i);
-		%>
-					<tr>
-		        	 <td><a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=curForm.get("fid")%>&demographic_no=<%=demographic_no%>')"><%=curForm.get("formName")%></a></td>
-		        	 <td><%=curForm.get("formSubject")%></td>
-					</tr>
-		        	
-		<%         }
-		        }
-		  
-		%>      
-		</table>
-		</div><!-- templates -->
-
-		<%if(temp.toUpperCase().equals("PHV")){%>
-		<div id="resources" class="tab-pane">
-		<ul>
-		<li><a href="http://www.sexualityandu.ca" target="_blank">www.sexualityandu.ca</a></li>
-		<li><a href="whttp://ww.myfavouritemedicine.com/videos" target="_blank">www.myfavouritemedicine.com/videos (23 and a half hours) </a></li>
-		<li><a href="http://www.hc-sc.gc.ca" target="_blank">www.hc-sc.gc.ca (canada food guide) </a></li>
-		<li><a href="http://www.heartandstroke.com" target="_blank">www.heartandstroke.com (health information) </a></li>
-		<li><a href="http://www.smokershelpline.ca" target="_blank">www.smokershelpline.ca</a></li>
-		</ul>
-		</div>
-		<%}%>
-</div><!-- inner tab content -->
-</div><!-- inner tabable -->    
-                           
-               </div>
-
-
 
  <%if(mFlowsheet.getTopHTMLStream().length()>1){ %>
  <!-- TopHTMLStream  start-->
@@ -1813,9 +1598,11 @@ function createAddAll(d,t){
 		<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&htracker" class="btn btn-large" value="<bean:message key="oscarencounter.templateflowsheet.print" />" title="<bean:message key="oscarencounter.templateflowsheet.print" /> Flowsheet"><i class="icon-print"></i> Print</a>
 					
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
+			<!-- 
 			<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
 			<a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&htracker" class="btn btn-large" title="Edit Flowsheet"><i class="icon-pencil"></i> Edit</a>   
 			</security:oscarSec>
+			-->
 					
 		    <input class="btn btn-primary btn-large" type="submit" name="submit" value="Save All" />
 		 </security:oscarSec>    
@@ -1827,6 +1614,12 @@ function createAddAll(d,t){
 
  <div id="scrollToTop"><a href="#HealthTracker"><i class="icon-circle-arrow-up icon-3x"></i></a></div>
  
+ 
+ 
+ 
+ 	 </div><!-- span10 main -->
+ </div><!-- row-fluid main -->
+ </div><!-- container-fluild -->
     
 	<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>	
 	<script src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
@@ -1842,9 +1635,19 @@ $(".preventionSection").hover(function(){
 $(function (){ 
 	$("[rel=popover]").popover({});  
 	$('[id^=dp-]').datepicker();
-});  
+});
+
+function resizeIframe()
+{      
+    parent.parent.document.getElementById('trackerSlim').style.height = "1000px";
+} 
 
 $(document).ready(function () {
+
+	//resizeIframe();
+	//alert("iframe3:" + $('html').height());
+	//parent.parent.resizeIframe($('html').height());
+	
 
 	//TODO:these will change generic so this function can be re-used
 	$("input:radio[name=SmokingStatus]").click(function() {
@@ -1887,13 +1690,13 @@ $(document).ready(function () {
 		var v=$(this).val();
 		
 		  if(v=="All"){
-	          window.location = 'HealthTrackerPage.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>';  
+	          window.location = 'HealthTrackerSlim.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>';  
 		  }else if (v=="outOfRange"){
-			  window.location = 'HealthTrackerPage.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>&show='+v;
+			  window.location = 'HealthTrackerSlim.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>&show='+v;
 		  }else if(v=="dateRange"){
 			  $("#date-filter").toggle();
 		  }else{
-			  window.location = 'HealthTrackerPage.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>&numEle='+v;
+			  window.location = 'HealthTrackerSlim.jspf?demographic_no=<%=demographic_no%>&template=<%=temp%>&numEle='+v;
 		  } 
     });    
     
@@ -1910,7 +1713,7 @@ $(document).ready(function () {
             method: 'POST',
             data: deletevalue,
             success: function(returnData){
-            	window.location = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf?ycoord="+ycoord+"&demographic_no=<%=demographic_no%>&template=<%=temp%>";
+            	window.location = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/HealthTrackerSlim.jspf?ycoord="+ycoord+"&demographic_no=<%=demographic_no%>&template=<%=temp%>";
             }
         });
 
@@ -2031,7 +1834,7 @@ $(document).ready(function () {
  
 	}else{
 		//build
-		var link = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/TrackerUpdate.do";
+		var link = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/TrackerSlimUpdate.do";
 		var qs1 = "ycoord="+ycoord+"&date="+date+"&demographic_no=<%=demographic_no%>&template=<%=temp%>";
 		var qs2 = typeDate+"="+typeDateVal+"&"+type+"="+value+"&"+typeComments+"="+typeCommentsVal+"&submit=Add";
 
@@ -2174,6 +1977,8 @@ $("#MoreDx").click(function(){
 
 </script>
 
+
+
   </body>
 </html>
 
@@ -2266,6 +2071,5 @@ $("#MoreDx").click(function(){
 		if (emdb.getRemoteFacility()!=null)	return("<br /><span style=\"color:#990000\">(At facility : "+emdb.getRemoteFacility()+")<span>");
 		else return("");
 	}
-       
+           
  %>
- 

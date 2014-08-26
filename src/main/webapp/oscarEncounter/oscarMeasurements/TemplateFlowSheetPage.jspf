@@ -642,6 +642,8 @@ div.recommendations li{
 	String[] addAllLink = new String[measurements.size()];
 	int mCount=0;
 
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	
     EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
     long startTimeToLoopAndPrint = System.currentTimeMillis();
     for (String measure:measurements){
@@ -666,9 +668,9 @@ div.recommendations li{
             }
             String prevName = (String) h.get("name");
             ArrayList<EctMeasurementsDataBean> alist = mi.getMeasurementData(measure);
-            if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
-               EctMeasurementsDataBeanHandler.addRemoteMeasurements(alist,measure,Integer.parseInt(demographic_no));
-            }
+            if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {	
+                EctMeasurementsDataBeanHandler.addRemoteMeasurements(loggedInInfo, alist,measure,Integer.parseInt(demographic_no));
+             }
             String extraColour = "";
             if(mi.hasRecommendation(measure)){
                 extraColour = "style=\"background-color: "+mFlowsheet.getRecommendationColour()+"\" ";
