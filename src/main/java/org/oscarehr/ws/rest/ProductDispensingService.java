@@ -36,10 +36,16 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import org.apache.http.impl.cookie.DateUtils;
 import org.oscarehr.common.model.DrugProduct;
+import org.oscarehr.common.model.ProductLocation;
 import org.oscarehr.managers.DrugDispensingManager;
 import org.oscarehr.managers.DrugProductManager;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.ws.rest.to.AbstractSearchResponse;
 import org.oscarehr.ws.rest.to.DrugProductResponse;
+import org.oscarehr.ws.rest.to.GenericRESTResponse;
+import org.oscarehr.ws.rest.to.ProductLocationResponse;
 import org.oscarehr.ws.rest.to.model.DrugProductTo1;
+import org.oscarehr.ws.rest.to.model.ProductLocationTo1;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -72,6 +78,17 @@ public class ProductDispensingService extends AbstractServiceImpl{
 		drugProduct.setLocation(Integer.parseInt(params.getFirst("product.location")));
 		drugProduct.setLotNumber(params.getFirst("product.lotNumber"));
 		drugProduct.setExpiryDate(DateUtils.parseDate(params.getFirst("product.expiryDate"),new String[]{"yyyy-MM-dd"}));
+		drugProduct.setAmount(Integer.parseInt(params.getFirst("product.amount")));
+		
+		
+		int totalToCreate = 1;
+		if(params.getFirst("productBulkTotal") != null) {
+			try {
+				totalToCreate = Integer.parseInt(params.getFirst("productBulkTotal"));
+			}catch(NumberFormatException e) {
+				MiscUtils.getLogger().error("invalid number to create, defaulting to 1");
+			}
+		}
 		
 		DrugProduct result = null;
 		
@@ -87,9 +104,11 @@ public class ProductDispensingService extends AbstractServiceImpl{
 			drugProductManager.updateDrugProduct(getLoggedInInfo(),savedDrugProduct);
 			result = savedDrugProduct;
 		} else  {
-			drugProduct.setId(null);
-			drugProductManager.saveDrugProduct(getLoggedInInfo(),drugProduct);
-			result = drugProduct;
+			for(int x=0;x<totalToCreate;x++) {
+				drugProduct.setId(null);
+				drugProductManager.saveDrugProduct(getLoggedInInfo(),drugProduct);
+				result = drugProduct;
+			}
 		}
 		
 		
@@ -111,8 +130,15 @@ public class ProductDispensingService extends AbstractServiceImpl{
 	@GET
 	@Path("/drugProducts")
 	@Produces("application/json")
-	public DrugProductResponse getAllDrugProducts(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit ) {
-		List<DrugProduct> results = drugProductManager.getAllDrugProducts(getLoggedInInfo(),offset,limit);
+	public DrugProductResponse getAllDrugProducts(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit, @QueryParam("limitByName") String limitByName) {
+		List<DrugProduct> results = null;
+		
+		if(limitByName == null || "".equals(limitByName)) {
+			results = drugProductManager.getAllDrugProducts(getLoggedInInfo(),offset,limit);
+		} else {
+			results = drugProductManager.getAllDrugProductsByName(getLoggedInInfo(),offset,limit,limitByName);
+		}
+		
 		DrugProductResponse response = new DrugProductResponse();
 		for(DrugProduct result:results) {
 			DrugProductTo1 to = new DrugProductTo1();
@@ -136,4 +162,46 @@ public class ProductDispensingService extends AbstractServiceImpl{
 		return response;
 	}
 	
+	@GET
+	@Path("/drugProducts/uniqueNames")
+	@Produces("application/json")
+	public AbstractSearchResponse<String> getUniqueDrugProductNames( ) {
+		List<String> results = drugProductManager.findUniqueDrugProductNames(getLoggedInInfo());
+		AbstractSearchResponse<String> response = new AbstractSearchResponse<String>();
+		for(String result:results) {
+			response.getContent().add(result);
+		}
+		return response;
+	}
+	
+	@GET
+	@Path("/deleteDrugProduct/{drugProductId}")
+	@Produces("application/json")
+	public GenericRESTResponse deleteDrugProduct(@PathParam("drugProductId") Integer drugProductId)  {
+		drugProductManager.deleteDrugProduct(getLoggedInInfo(), drugProductId);
+		
+		GenericRESTResponse response = new GenericRESTResponse();
+		response.setMessage("Product deleted");
+		
+		
+		return response;
+	}
+	
+	@GET
+	@Path("/productLocations")
+	@Produces("application/json")
+	public ProductLocationResponse listProductLocations()  {
+		List<ProductLocation> productLocations = drugProductManager.getProductLocations();
+		
+	
+		ProductLocationResponse response = new ProductLocationResponse();
+		
+		for(ProductLocation result:productLocations) {
+			ProductLocationTo1 to = new ProductLocationTo1();
+			BeanUtils.copyProperties(result, to);
+			response.getProductLocations().add(to);
+		}
+		
+		return response;
+	}
 }
