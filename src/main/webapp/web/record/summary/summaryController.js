@@ -187,5 +187,24 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
     	}
     	return firstL;
     };
+
+    $scope.getTrackerUrl = function(demographicNo) {
+    	
+    url = '../oscarEncounter/oscarMeasurements/HealthTrackerSlim.jspf?template=tracker&demographic_no='+ demographicNo;
+  	
+    return url;  
+    
+    };
     
 });
+
+//for demo will resolve 
+function resizeIframe(iframe) {
+	
+	var h = iframe.contentWindow.document.body.scrollHeight;
+	if(h>0){
+    iframe.height =  h + "px";
+    //alert("h > 0");
+	}
+    //alert("h" + h);
+  }
