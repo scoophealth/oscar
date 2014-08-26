@@ -59,6 +59,12 @@ String resourcebaseurl =  oscarVariables.getProperty("resource_base_url");
  	    if(rbu != null) {
  	    	resourcebaseurl = rbu.getValue();
  	    }
+ 	     	    
+ 	    String resourcehelpHtml = ""; 
+ 	    UserProperty rbuHtml = userPropertyDao.getProp("resource_helpHtml");
+ 	    if(rbuHtml != null) {
+ 	    	resourcehelpHtml = rbuHtml.getValue();
+ 	    }
     		
 GregorianCalendar cal = new GregorianCalendar();
 int curYear = cal.get(Calendar.YEAR);
@@ -76,6 +82,7 @@ int curDay = cal.get(Calendar.DAY_OF_MONTH);
 <link href="<%=request.getContextPath() %>/css/DT_bootstrap.css" rel="stylesheet" type="text/css">
 <link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/helpdetails.css" type="text/css">
 
 <style>
 body{background-color: #fff /*#f3f3f3*/;}
@@ -264,7 +271,28 @@ i[class*='icon-']:hover {color:#0088cc;}
 <!--<oscar:help keywords="admin" key="app.top1"/> --> 
 
 <div class="container-fluid">
-<div class="row-fluid hidden-print" style="text-align:right"><i class=" icon-question-sign"></i> <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="" onmouseover="window.status='';return true">Help</a> <i class=" icon-info-sign" style="margin-left:10px;"></i> <a href="javascript:void(0)"  onClick="window.open('<%=request.getContextPath()%>/oscarEncounter/About.jsp','About OSCAR','scrollbars=1,resizable=1,width=800,height=600,left=0,top=0')" ><bean:message key="global.about" /></a></div>
+<div class="row-fluid hidden-print" style="text-align:right">
+<i class=" icon-question-sign"></i> 
+	<%if(resourcehelpHtml==""){ %>
+		<a href="#" ONCLICK ="popupPage(600,750,'<%=resourcebaseurl%>');return false;" title="" onmouseover="window.status='';return true">Help</a> 
+	<%}else{%>
+<div id="help-link">
+	    <a href="javascript:void(0)" onclick="document.getElementById('helpHtml').style.right='0px'"><bean:message key="global.help"/></a>
+	    
+		<div id="helpHtml">
+		<div class="help-title">Help</div>
+		
+		<div class="help-body">
+		
+		<%=resourcehelpHtml%>
+		</div>
+		<a href="javascript:void(0)" class="help-close" onclick="document.getElementById('helpHtml').style.right='-280px'">(X)</a>
+		</div>
+
+</div>
+	<%}%>
+
+<i class=" icon-info-sign" style="margin-left:10px;"></i> <a href="javascript:void(0)"  onClick="window.open('<%=request.getContextPath()%>/oscarEncounter/About.jsp','About OSCAR','scrollbars=1,resizable=1,width=800,height=600,left=0,top=0')" ><bean:message key="global.about" /></a></div>
 
 <div class="row-fluid">
 
@@ -492,6 +520,18 @@ $(document).ready(function() {
 	// initialiaze toolstips
 	$('[rel=tooltip]').tooltip();
 });
+
+function popupPage(vheight,vwidth,varpage) {
+	var page = "" + varpage;
+	windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
+	var popup=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
+	if (popup != null) {
+	if (popup.opener == null) {
+	popup.opener = self;
+	}
+	popup.focus();
+	}
+	}
 
 </script>
 
