@@ -26,7 +26,9 @@ package org.oscarehr.managers;
 import java.util.List;
 
 import org.oscarehr.common.dao.DrugProductDao;
+import org.oscarehr.common.dao.ProductLocationDao;
 import org.oscarehr.common.model.DrugProduct;
+import org.oscarehr.common.model.ProductLocation;
 import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,9 @@ public class DrugProductManager {
 
 	@Autowired
 	private DrugProductDao drugProductDao;
+	
+	@Autowired
+	private ProductLocationDao productLocationDao;
 	
 	
 	public void saveDrugProduct(LoggedInInfo loggedInInfo, DrugProduct drugProduct) {
@@ -79,6 +84,18 @@ public class DrugProductManager {
 		return results;
 	}
 	
+	public List<DrugProduct> getAllDrugProductsByName(LoggedInInfo loggedInInfo, Integer offset, Integer limit, String productName) {
+		List<DrugProduct> results = drugProductDao.findByName(offset,limit,productName);
+		
+		//--- log action ---
+		if (results.size()>0) {
+			String resultIds=DrugProduct.getIdsAsStringList(results);
+			LogAction.addLogSynchronous(loggedInInfo,"DrugProductManager.getAllDrugProductsByName", "ids returned=" + resultIds);
+		}
+		
+		return results;
+	}
+	
 	public List<DrugProduct> getAllDrugProductsGroupedByCode(LoggedInInfo loggedInInfo, Integer offset, Integer limit) {
 		List<DrugProduct> results = drugProductDao.findAll(offset, limit);
 		
@@ -89,5 +106,28 @@ public class DrugProductManager {
 		}
 		
 		return results;
+	}
+	
+	public List<String> findUniqueDrugProductNames(LoggedInInfo loggedInInfo) {
+		List<String> results = drugProductDao.findUniqueDrugProductNames();
+		
+		//--- log action ---
+		if (results.size()>0) {
+			LogAction.addLogSynchronous(loggedInInfo,"DrugProductManager.getUniqueDrugProductNames","");
+		}
+		
+		return results;
+	}
+	
+	
+	public void deleteDrugProduct(LoggedInInfo loggedInInfo, Integer drugProductId) {
+		drugProductDao.remove(drugProductId);
+		
+		//--- log action ---
+		LogAction.addLogSynchronous(loggedInInfo,"DrugProductManager.deleteDrugProduct", "id="+drugProductId);	
+	}
+	
+	public List<ProductLocation> getProductLocations() {
+		return productLocationDao.findAll(0, ProductLocationDao.MAX_LIST_RETURN_SIZE);
 	}
 }

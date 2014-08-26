@@ -61,6 +61,19 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/DT_bootstrap.js"></script>   
 <script type="text/javascript" language="JavaScript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js"></script>
 
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all" href="../../share/calendar/calendar.css" title="win2k-cold-1" />
+<!-- main calendar program -->
+<script type="text/javascript" src="../../share/calendar/calendar.js"></script>
+<!-- language for the calendar -->
+<script type="text/javascript"
+        src="../../share/calendar/lang/calendar-en.js"></script>
+<!-- the following script defines the Calendar.setup helper function, which makes
+       adding a calendar a matter of 1 or 2 lines of code. -->
+<script type="text/javascript"
+        src="../../share/calendar/calendar-setup.js"></script>
+
+
 
 <style>
 .red{color:red}
@@ -68,27 +81,46 @@
 </style>
 
 <script>
+
+	function deleteProduct(productId) {
+		if(confirm("Are you sure you want to delete this?")) {
+			jQuery.getJSON("../../ws/rs/productDispensing/deleteDrugProduct/" + productId, {},
+			        function(xml) {
+						if(xml.message) {
+							clearProducts();
+							listProducts();
+						} else {
+			        		alert('error retrieving drug products');
+						}
+			        });
+		}
+	}
 	
-	function editJob(jobId) {
-		jQuery.getJSON("../ws/rs/jobs/job/"+jobId, {},
+	function editProduct(productId) {
+		jQuery.getJSON("../../ws/rs/productDispensing/drugProduct/"+productId, {},
         function(xml) {
-			if(xml.jobs) {
-				var job;
-				if(xml.jobs instanceof Array) {
-					job = xml.jobs[0];
+			if(xml.drugProduct) {
+				var drugProduct;
+				if(xml.drugProduct instanceof Array) {
+					drugProduct = xml.drugProduct[0];
 				} else {
-					job = xml.jobs;
+					drugProduct = xml.drugProduct;
 				}
 				
-				$('#jobName').val(job.name);
-				$('#jobType').val(job.oscarJobTypeId);
-				$('#jobDescription').val(job.description);
-				$('#jobEnabled').prop('checked',job.enabled);
-				$('#jobProvider').val(job.providerNo);
-				$('#jobId').val(job.id);
+					
+				$('#productName').val(drugProduct.name);
+				$('#productCode').val(drugProduct.code);
+				$('#productLocation').val(drugProduct.location);
+				$('#productLot').val(drugProduct.lotNumber);
+				$('#productExpiryDate').val(drugProduct.expiryDate);
+				$('#productAmount').val(drugProduct.amount);
+				$('#productId').val(drugProduct.id);
+				$('#totalEntriesToCreateGroup').hide();
+				$('#new-product').dialog('open');
+				
 			}
         });
-		$('#new-product').dialog('open');
+	
 	}
 	
 	function addNewProduct() {	
@@ -97,7 +129,10 @@
 		$('#productLocation').val('');
 		$('#productLot').val('');
 		$('#productExpiryDate').val('');
+		$('#productAmount').val('1');
 		$('#productId').val('0');
+		$('#productBulkTotal').val('1');
+		$('#totalEntriesToCreateGroup').show();
 		$('#new-product').dialog('open');
 	}
 	
@@ -105,8 +140,21 @@
 		$("#productTable tbody tr").remove();
 	}
 	
+
+
+	function dateToYMD(date) {
+	    var d = date.getDate();
+	    var m = date.getMonth() + 1;
+	    var y = date.getFullYear();
+	    return '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+	}
+
+
+	
 	function listProducts() {
-		jQuery.getJSON("../../ws/rs/productDispensing/drugProducts?offset=0&limit=20", {},
+		var productNameFilterValue = $('#productNameFilter').val();
+		
+		jQuery.getJSON("../../ws/rs/productDispensing/drugProducts?offset=0&limit=20&limitByName="+productNameFilterValue, {},
         function(xml) {
 			if(xml.drugProduct) {
 				var arr = new Array();
@@ -120,13 +168,19 @@
 				for(var i=0;i<arr.length;i++) {
 					var drugProduct = arr[i];
 				
+					var expDate = drugProduct.expiryDate;
+					if(expDate.length > 9) {
+						expDate = expDate.substring(0,10);
+					}
+					
 					var html = '<tr>';
+					html += '<td><a href="javascript:void(0)" onclick="editProduct('+drugProduct.id+')">Edit</a>&nbsp;|&nbsp;<a href="javascript:void(0)" onclick="deleteProduct('+drugProduct.id+')">Delete</a></td>';
 					html += '<td>'+drugProduct.name+'</td>';
 					html += '<td>'+drugProduct.code+'</td>';
 					html += '<td>'+drugProduct.lotNumber+'</td>';
-					html += '<td>'+drugProduct.expiryDate+'</td>';
+					html += '<td>'+expDate+'</td>';
 					html += '<td>'+drugProduct.amount+'</td>';
-					html += '<td>'+drugProduct.id+'</td>';
+					//html += '<td>'+drugProduct.id+'</td>';
 					
 					html += '</tr>';
 				
@@ -140,13 +194,62 @@
 	}
 	
 
+	function updateProductLocations() {
+		jQuery.getJSON("../../ws/rs/productDispensing/productLocations", {},
+		        function(xml) {
+					if(xml.productLocations) {
+						var arr = new Array();
+						if(xml.productLocations instanceof Array) {
+							arr = xml.productLocations;
+						} else {
+							arr[0] =xml.productLocations;
+						}
+						
+						for(var i=0;i<arr.length;i++) {
+							$('#productLocation').append($('<option>', {
+							    value: arr[i].id,
+							    text: arr[i].name
+							}));
+						}
+					}
+		        });
+			
+	}
+	
+	function updateProductNames() {
+		jQuery.getJSON("../../ws/rs/productDispensing/drugProducts/uniqueNames", {},
+		        function(xml) {
+					if(xml.content) {
+						var arr = new Array();
+						if(xml.content instanceof Array) {
+							arr = xml.content;
+						} else {
+							arr[0] =xml.content;
+						}
+						
+						for(var i=0;i<arr.length;i++) {
+							$('#productNameFilter').append($('<option>', {
+							    value: arr[i],
+							    text: arr[i]
+							}));
+						}
+					}
+		        });
+	}
 	
 	$(document).ready(function(){
 		listProducts();
+		updateProductLocations();
+		updateProductNames();
+
+		$('#productNameFilter').bind('change',function(){
+			clearProducts();
+			listProducts();
+		});
 		
 		$( "#new-product" ).dialog({
 			autoOpen: false,
-			height: 560,
+			height: 600,
 			width: 620,
 			modal: true,
 			buttons: {
@@ -169,6 +272,8 @@
 				
 			}
 		});
+		
+	
 
 	});
 	
@@ -187,16 +292,24 @@
 
 <body vlink="#0000FF" class="BodyStyle">
 <h4>Manage Drug Products</h4>
- 
+
+<div> 
+<select name="productNameFilter" id="productNameFilter">
+	<option value=""></option>
+</select>
+<span id="productFilterMessage"></span>
+</div>
+
 <table id="productTable" name="productTable" class="table table-bordered table-striped table-hover table-condensed">
 	<thead>
 		<tr>
+			<th></th>
 			<th>Name</th>
 			<th>Code</th>
 			<th>Lot#</th>
 			<th>Expiry Date</th>
 			<th>Amount</th>
-			<th>Id</th>
+		<!-- 	<th>Id</th> -->
 		</tr>
 	</thead>
 	<tbody>
@@ -229,7 +342,7 @@
 				<label class="control-label" for="productLocation">Location:</label>
 				<div class="controls">
 					<select name="product.location" id="productLocation">
-						<option value="1">1</option>
+						
 					</select>
 				</div>
 			</div>
@@ -245,13 +358,31 @@
 				<label class="control-label" for="productExpiryDate">Expiry Date:</label>
 				<div class="controls">
 					<input type="text" name="product.expiryDate" id="productExpiryDate" value=""/>
+					<img src="../../images/cal.gif" id="xml_vdate_cal" />
 				</div>
 			</div>
 			
+			<div class="control-group">
+				<label class="control-label" for="productAmount">Amount:</label>
+				<div class="controls">
+					<input type="text" name="product.amount" id="productAmount" value=""/>
+				</div>
+			</div>
 			
+			<div class="control-group" id="totalEntriesToCreateGroup">
+				<label class="control-label" for="productExpiryDate">Total Entries to create:</label>
+				<div class="controls">
+					<input type="text" name="productBulkTotal" id="productBulkTotal" value="1"/>
+				</div>
+			</div>
 		</fieldset>
 	</form>
 </div>
+
+<script type="text/javascript">
+Calendar.setup( { inputField : "productExpiryDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_vdate_cal", singleClick : true, step : 1 } );
+</script>
+
 
 
 </body>

@@ -74,6 +74,14 @@ public class DrugProductDao extends AbstractDao<DrugProduct>{
 		return results;
 	}
 	
+	public List<String> findUniqueDrugProductNames() {
+		Query query = entityManager.createQuery("SELECT distinct x.name FROM DrugProduct x");
+		
+		@SuppressWarnings("unchecked")
+	        List<String> results = query.getResultList();
+		return results;
+	}
+	
 	public int getAvailableCount(String lotNumber, Date expiryDate, int amount) {
 		Query query = entityManager.createQuery("SELECT count(*)  FROM DrugProduct x  where x.dispensingEvent is null and x.lotNumber = ?1 and x.expiryDate = ?2 and x.amount = ?3");
 		query.setParameter(1, lotNumber);
@@ -123,6 +131,17 @@ public class DrugProductDao extends AbstractDao<DrugProduct>{
 		Query query = entityManager.createQuery("SELECT x FROM DrugProduct x where x.dispensingEvent = ?1");
 		query.setParameter(1, id);
 		
+		@SuppressWarnings("unchecked")
+        List<DrugProduct> results = query.getResultList();
+        return results;
+
+	}
+	
+	public List<DrugProduct> findByName(int offset, int limit, String name) {
+		Query query = entityManager.createQuery("SELECT x FROM DrugProduct x where x.name = ?1");
+		query.setParameter(1,name);
+		query.setFirstResult(offset);
+		query.setMaxResults(limit);
 		@SuppressWarnings("unchecked")
         List<DrugProduct> results = query.getResultList();
         return results;
