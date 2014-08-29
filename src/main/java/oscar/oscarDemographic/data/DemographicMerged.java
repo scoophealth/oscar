@@ -131,18 +131,26 @@ public class DemographicMerged {
     }
 
     public String getHead(String demographic_no) throws SQLException{
+    	Integer result = getHead(Integer.parseInt(demographic_no));
+    	if(result != null) {
+    		return result.toString();
+    	}
+    	return null;
+    }
+    
+    public Integer getHead(Integer demographic_no) throws SQLException{
 
         Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
         ResultSet rs;
-        String head = null;
+        Integer head = null;
 
         String sql = "select merged_to from demographic_merged where demographic_no = ? and deleted = 0";
         PreparedStatement pstmt = conn.prepareStatement(sql);
 
-        pstmt.setInt(1, Integer.parseInt(demographic_no));
+        pstmt.setInt(1, demographic_no);
         rs = pstmt.executeQuery();
         if(rs.next())
-            head = oscar.Misc.getString(rs, "merged_to");
+            head = rs.getInt("merged_to");
 
         pstmt.close();
         if (head != null)

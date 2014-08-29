@@ -60,6 +60,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import oscar.oscarDemographic.data.DemographicMerged;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.HHSEmrDownloadHandler;
@@ -70,6 +71,9 @@ import oscar.util.UtilDateUtilities;
 public final class MessageUploader {
 
 	private static final Logger logger = MiscUtils.getLogger();
+	
+	private static DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	
 
 	private MessageUploader() {
 		// there's no reason to instantiate a class with no fields.
@@ -452,7 +456,23 @@ public final class MessageUploader {
 			} else {
 				Hl7textResultsData.populateMeasurementsTable("" + labId, result.getDemographicNo().toString());
 			}
-
+			
+			//is this part of a merged record , and not the head?
+			if(result != null) {
+				DemographicMerged dm = new DemographicMerged();
+				Integer headDemo = dm.getHead(result.getDemographicNo());
+				if(headDemo != null && headDemo.intValue() != result.getDemographicNo()) {
+					Demographic demoTmp = demographicDao.getDemographicById(headDemo);
+					if(demoTmp != null) {
+						result.setDemographicNo(demoTmp.getDemographicNo());
+						result.setProviderNo(demoTmp.getProviderNo());
+					} else {
+						logger.info("Unable to load the head record of this patient record. (" + result.getDemographicNo()  + ")");
+						result = null;
+					}
+				}
+			}
+			
 			if(result != null) {
 				sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type,created) values ('" + ((result != null && result.getDemographicNo()!=null)?result.getDemographicNo().toString():"0") + "', '" + labId + "','HL7',now())";
 				PreparedStatement pstmt = conn.prepareStatement(sql);
