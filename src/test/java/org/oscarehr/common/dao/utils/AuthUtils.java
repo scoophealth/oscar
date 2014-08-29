@@ -36,7 +36,7 @@ import oscar.util.ConversionUtils;
 
 public class AuthUtils {
 
-	public static void initLoginContext() {
+	public static LoggedInInfo initLoginContext() {
 		HttpSession session = null;
 		Facility currentFacility = new Facility("Test Facility", "Test Facility Desription");
 		Provider loggedInProvider = new Provider("-1", "Test Provider Last Name", "String Provider Type", "M", "Speciality", "T");
@@ -61,7 +61,7 @@ public class AuthUtils {
 		info.locale = locale;
 		info.session = session;
 
-		LoggedInInfo.loggedInInfo.set(info);
+		return(info);
 	}
 
 }

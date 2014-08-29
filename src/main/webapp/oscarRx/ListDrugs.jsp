@@ -59,19 +59,20 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-		String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
-		com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
-        oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) pageContext.findAttribute("bean");
-        boolean showall = false;
-        if (request.getParameter("show") != null) {
-            if (request.getParameter("show").equals("all")) {
-                showall = true;
-            }
-        }
-
-        boolean integratorEnabled = LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled();
-        String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
-        String heading = request.getParameter("heading");
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
+	com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
+	oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) pageContext.findAttribute("bean");
+	boolean showall = false;
+	if (request.getParameter("show") != null) {
+	    if (request.getParameter("show").equals("all")) {
+	        showall = true;
+	    }
+	}
+	
+	boolean integratorEnabled = loggedInInfo.currentFacility.isIntegratorEnabled();
+	String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
+	String heading = request.getParameter("heading");
+	
 if (heading != null){
 %>
 <h4 style="margin-bottom:1px;margin-top:3px;"><%=heading%></h4>

@@ -32,7 +32,8 @@
 	
 	String reasonForAssessment = request.getParameter("reasonForAssessment1");	
 	Integer clientId = Integer.valueOf(request.getParameter("demographicId1"));
-	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 		
 	//When can we make Initial OCAN
 	/* We can make reassessment without having initial ocan, so comment out the following coding lines.

@@ -49,6 +49,7 @@
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao"%>
 <%
 	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 
 <html:html locale="true">
@@ -375,7 +376,7 @@ function resizeFrame(height) {
 <%
 String signatureRequestId = "";
 String imageUrl = "";
-signatureRequestId = DigitalSignatureUtils.generateSignatureRequestId(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+signatureRequestId = DigitalSignatureUtils.generateSignatureRequestId(loggedInInfo.loggedInProvider.getProviderNo());
 imageUrl = request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
 %>
 <script type="text/javascript">

@@ -23,7 +23,8 @@
  */
 package org.oscarehr.research.eaaps;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Date;
 import java.util.List;
@@ -36,7 +37,6 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.MessageTblDao;
 import org.oscarehr.common.dao.StudyDao;
 import org.oscarehr.common.dao.StudyDataDao;
-import org.oscarehr.common.dao.utils.AuthUtils;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.MessageTbl;
@@ -57,7 +57,6 @@ public class EaapsHandlerTest extends DaoTestFixtures {
 	@BeforeClass
 	public static void init() throws Exception {
 		SchemaUtils.restoreAllTables();
-		AuthUtils.initLoginContext();
 	}
 	
 	private String getHash(Demographic demo) {

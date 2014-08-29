@@ -34,7 +34,7 @@
   String parentAjaxId = request.getParameter("parentAjaxId");
   String appointment = request.getParameter("appointment");
   
-  LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+  LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>  
 
 <%@ page import = "java.util.*, java.sql.*, oscar.eform.*"%>

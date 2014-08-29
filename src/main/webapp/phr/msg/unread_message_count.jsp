@@ -29,6 +29,8 @@
 <%@page import="org.oscarehr.myoscar.client.ws_manager.MessageManager"%>
 <%
 	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 	if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn())
 	{
 		try
@@ -45,7 +47,7 @@
 		catch (Exception e)
 		{
 			// we'll force a re-login if this ever fails for any reason what so ever.
-			MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(LoggedInInfo.loggedInInfo.get(), true);
+			MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(loggedInInfo, true);
 		}
 	}
 %>

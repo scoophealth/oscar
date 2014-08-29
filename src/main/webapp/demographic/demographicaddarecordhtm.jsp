@@ -1337,7 +1337,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 			        <div>
 <%
 //    Integer fid = ((Facility)session.getAttribute("currentFacility")).getRegistrationIntake();
-    Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
+    Facility facility = loggedInInfo.currentFacility;
     Integer fid = null;
     if(facility!=null) fid = facility.getRegistrationIntake();
     if(fid==null||fid<0){
@@ -1415,17 +1415,6 @@ jQuery(document).ready(function(){
 }
 %>
 </script>
-<%
-//    Integer fid = ((Facility)session.getAttribute("currentFacility")).getRegistrationIntake();
-//    Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
-//    Integer fid = null;
-//    if(facility!=null) fid = facility.getRegistrationIntake();
-//    if(fid==null||fid<0){
-//        List<EForm> eforms = eformDao.getEfromInGroupByGroupName("Registration Intake");
-//        if(eforms!=null&&eforms.size()==1) fid=eforms.get(0).getId();
-//    }
-//    if(fid!=null&&fid>=0){
-%>
 <!--<iframe src="../eform/efmshowform_data.jsp?fid=<%=fid%>" width="100%" height="100%"></iframe>-->
 <%//}%>
 </body>
