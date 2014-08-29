@@ -24,6 +24,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.olis.OLISResultsAction;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.Hl7textResultsData;
@@ -46,6 +47,9 @@ public class PrintOLISLabsAction extends Action{
         
     	try {
 	    	String segmentID = request.getParameter("segmentID");
+	    	String resultUuid = request.getParameter("uuid");
+	    	
+	    	
 	    	int obr = Integer.valueOf(request.getParameter("obr"));
 	    	int obx = Integer.valueOf(request.getParameter("obx"));
 	    	
@@ -54,9 +58,18 @@ public class PrintOLISLabsAction extends Action{
 	    		segmentID = multiLabId.split(",")[multiLabId.split(",").length - 1];
 	    	}
 		    	
-	    	OLISHL7Handler handler = (OLISHL7Handler) Factory.getHandler(segmentID);
-
-	    	handler.processEncapsulatedData(request, response, obr, obx);
+	    	OLISHL7Handler handler = null;
+	    	
+	    	if(resultUuid != null && !"".equals(resultUuid)) {
+	    		handler = OLISResultsAction.searchResultsMap.get(resultUuid);
+		    	
+	    	} else {
+	    		handler = (OLISHL7Handler) Factory.getHandler(segmentID);
+	    	}
+	    	
+	    	if(handler != null) {
+	    		handler.processEncapsulatedData(request, response, obr, obx);
+	    	}
     	}
     	catch (Exception e) {
     		MiscUtils.getLogger().error("error",e);
