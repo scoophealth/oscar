@@ -253,7 +253,7 @@ public class FrmLabReq10Record extends FrmRecord {
     	pk.setIntegratorFacilityId(remoteFacilityId);
     	pk.setCaisiItemId(formId);
 
-    	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+    	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
     	CachedDemographicForm form=demographicWs.getCachedDemographicForm(pk);
 
     	ByteArrayInputStream bais=new ByteArrayInputStream(form.getFormData().getBytes());

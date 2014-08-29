@@ -113,7 +113,7 @@ public final class LoggedInInfo {
 	 * This method should be used for web services.
 	 * This will be stored in the requestAttributes, not the session.
 	 */
-	public static void setLoggedInInfoForWebServices(HttpServletRequest request, LoggedInInfo loggedInInfo) {
+	public static void setLoggedInInfoIntoRequest(HttpServletRequest request, LoggedInInfo loggedInInfo) {
 		request.setAttribute(LOGGED_IN_INFO_KEY, loggedInInfo);
 
 		// temporary until full threadLocal is removed
@@ -124,7 +124,7 @@ public final class LoggedInInfo {
 	 * This method should be used for web services.
 	 * This will be retrieved from the requestAttributes, not the session.
 	 */
-	public static LoggedInInfo getLoggedInInfoForWebServices(HttpServletRequest request) {
+	public static LoggedInInfo getLoggedInInfoFromRequest(HttpServletRequest request) {
 		return ((LoggedInInfo) request.getAttribute(LOGGED_IN_INFO_KEY));
 	}
 

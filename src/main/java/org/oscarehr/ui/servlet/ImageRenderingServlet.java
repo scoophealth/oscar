@@ -137,7 +137,7 @@ public final class ImageRenderingServlet extends HttpServlet {
 			// get image
 			Integer integratorFacilityId = Integer.parseInt(request.getParameter("integratorFacilityId"));
 			Integer caisiClientId = Integer.parseInt(request.getParameter("caisiDemographicId"));
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 			DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(integratorFacilityId, caisiClientId);
 
 			if (demographicTransfer != null && demographicTransfer.getPhoto() != null) {
@@ -167,7 +167,7 @@ public final class ImageRenderingServlet extends HttpServlet {
 		try {
 			// get image
 			Integer linkingId = Integer.parseInt(request.getParameter("linkingId"));
-			org.oscarehr.hnr.ws.Client hnrClient = CaisiIntegratorManager.getHnrClient(loggedInInfo.getCurrentFacility(),linkingId);
+			org.oscarehr.hnr.ws.Client hnrClient = CaisiIntegratorManager.getHnrClient(loggedInInfo, loggedInInfo.getCurrentFacility(),linkingId);
 
 			if (hnrClient != null && hnrClient.getImage() != null) {
 				renderImage(response, hnrClient.getImage(), "jpeg");

@@ -80,7 +80,7 @@
 				FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 				providerPk.setIntegratorFacilityId(Integer.parseInt(remoteFacilityId));
 				providerPk.setCaisiItemId(remoteProviderId);
-				CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(), providerPk);
+				CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInInfo, loggedInInfo.getCurrentFacility(), providerPk);
 			%>
 			<%=cachedProvider.getLastName()+", "+cachedProvider.getFirstName()%>
   		</div>

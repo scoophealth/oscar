@@ -33,7 +33,7 @@
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	Integer localDemographicId = Integer.parseInt(request.getParameter("demographicId"));
-	DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+	DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 	List<DemographicTransfer> directLinks=demographicWs.getDirectlyLinkedDemographicsByDemographicId(localDemographicId);
 	DemographicTransfer demographicTransfer = null;	
 		
@@ -48,13 +48,13 @@
 	FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 	providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
 	providerPk.setCaisiItemId(demographicTransfer.getLastUpdateUser());
-	CachedProvider p = CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(), providerPk);
+	CachedProvider p = CaisiIntegratorManager.getProvider(loggedInInfo, loggedInInfo.getCurrentFacility(), providerPk);
 	String remoteProvider = "Unknown"; // i18n
 	if(p != null){
 		remoteProvider = p.getFirstName() +" "+p.getLastName();
 	}
 	
-	List<Role> roles = CaisiIntegratorManager.getProviderWs(loggedInInfo.getCurrentFacility()).getProviderRoles(providerPk);
+	List<Role> roles = CaisiIntegratorManager.getProviderWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getProviderRoles(providerPk);
 	StringBuilder remoteRoles = new StringBuilder();
 	boolean first = true;
 	for(Role role: roles){
@@ -122,9 +122,9 @@
 						<td>Remote:
 						<% if(demographicTransfer!= null){ %>
 				
-							<%=CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), demographicTransfer.getIntegratorFacilityId()).getName()     %>
+							<%=CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), demographicTransfer.getIntegratorFacilityId()).getName()     %>
 							-
-							<%=CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), demographicTransfer.getIntegratorFacilityId()).getDescription()    %>
+							<%=CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), demographicTransfer.getIntegratorFacilityId()).getDescription()    %>
 							<br>
 							By: <%=remoteProvider %> -- Role : <%=remoteRoles.toString() %>
 						<%} %>

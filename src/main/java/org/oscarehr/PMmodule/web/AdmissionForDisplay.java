@@ -98,7 +98,7 @@ public class AdmissionForDisplay {
 		remoteProgramPk.setIntegratorFacilityId(remoteFacilityId);
 		remoteProgramPk.setCaisiItemId(cachedAdmission.getCaisiProgramId());
 		try {
-			CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo.getCurrentFacility(), remoteProgramPk);
+			CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo, loggedInInfo.getCurrentFacility(), remoteProgramPk);
 			programName = cachedProgram.getName();
 			programType = cachedProgram.getType();
 		} catch (Exception e) {
@@ -106,7 +106,7 @@ public class AdmissionForDisplay {
 		}
 
 		try {
-			CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), remoteFacilityId);
+			CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), remoteFacilityId);
 			facilityName = cachedFacility.getName();
 		} catch (Exception e) {
 			logger.error("Error retrieving integrator Facility.", e);

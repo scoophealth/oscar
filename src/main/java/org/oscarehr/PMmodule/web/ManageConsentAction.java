@@ -56,7 +56,7 @@ public class ManageConsentAction {
 		consent.setFacilityId(loggedInInfo.currentFacility.getId());
 		consent.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 
-		for (CachedFacility cachedFacility : CaisiIntegratorManager.getRemoteFacilities(loggedInInfo.getCurrentFacility())) {
+		for (CachedFacility cachedFacility : CaisiIntegratorManager.getRemoteFacilities(loggedInInfo, loggedInInfo.getCurrentFacility())) {
 			consent.getConsentToShareData().put(cachedFacility.getIntegratorFacilityId(), true);
 		}
 	}
@@ -87,7 +87,7 @@ public class ManageConsentAction {
 
 		integratorConsentDao.persist(consent);
 		
-		CaisiIntegratorManager.pushConsent(loggedInInfo.getCurrentFacility(), consent);
+		CaisiIntegratorManager.pushConsent(loggedInInfo, loggedInInfo.getCurrentFacility(), consent);
 	}
 
 	public void setExcludeMentalHealthData(Boolean b) {

@@ -234,7 +234,7 @@ public class EctFormData {
 		try {
 			if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return  (forms);
 			if(!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 				remoteForms = demographicWs.getLinkedCachedDemographicForms(demographicId, table);
 			}
 		} catch (Exception e) {
