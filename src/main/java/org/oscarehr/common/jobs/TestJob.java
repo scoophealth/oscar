@@ -25,7 +25,6 @@ package org.oscarehr.common.jobs;
 
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 public class TestJob implements OscarRunnable {
@@ -35,14 +34,7 @@ public class TestJob implements OscarRunnable {
 	
 	@Override
 	public void run() {
-		LoggedInInfo x = new LoggedInInfo();
-		x.loggedInProvider = provider;
-		x.loggedInSecurity = security;
-		LoggedInInfo.loggedInInfo.set(x);
-		
-		MiscUtils.getLogger().info("I am a job running as " + LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName());
-		
-		LoggedInInfo.loggedInInfo.set(null);
+		MiscUtils.getLogger().info("I am a job running as " + provider.getFormattedName());
 	}
 	
 	public void setLoggedInProvider(Provider provider) {

@@ -71,7 +71,7 @@ public class AlertTimer {
      */
     class ReminderClass extends TimerTask {
         public void run() {
-    		LoggedInInfo loggedInInfo=LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
+    		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod();
             try {
                 hlp.manageCDMTicklers(loggedInInfo, null, alertCodes);
             }
@@ -82,7 +82,6 @@ public class AlertTimer {
                 logger.error("unexpected error", e);
             }
             finally {
-        		LoggedInInfo.loggedInInfo.remove();
                 DbConnectionFilter.releaseAllThreadDbResources();
             }
         }
