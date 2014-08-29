@@ -44,8 +44,8 @@ if(session.getValue("user") == null)
    reqFrm.estRequestFromId(requestId);
    ClinicData clinic = new ClinicData();
 
-   String strPhones = clinic.getClinicDelimPhone();
-   String strFaxes  = clinic.getClinicDelimFax();
+   String strPhones = clinic.getClinicDelimPhone() == null ? "" : clinic.getClinicDelimPhone();
+   String strFaxes  = clinic.getClinicDelimFax() == null ? "" : clinic.getClinicDelimFax();
    Vector vecPhones = new Vector();
    Vector vecFaxes  = new Vector();
    StringTokenizer st = new StringTokenizer(strPhones,"|");

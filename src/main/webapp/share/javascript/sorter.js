@@ -1,3 +1,13 @@
+function popup(vheight,vwidth,varpage,windowname) {
+	if(!windowname)
+		windowname="helpwindow";
+
+	var page = varpage;
+	windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+	var win=window.open(varpage, windowname, windowprops);
+}
+
+
 (function ($) {
 // VERTICALLY ALIGN FUNCTION
 $.fn.vAlign = function() {
@@ -229,33 +239,30 @@ $(document).ready(function() {
 		$("#builder").empty();
 		
 		var docnum = $("#document_no").attr('value');
+		var queueId = $("#queueID").attr('value');
+		var demoName = $("#demoName").attr('value');
 		
 		$("#tool_savecontinue span").html("Wait...");
 		
-		$.ajax({ url: '../dms/SplitDocument.do?method=split&document=' + docnum + '&' + serialized,
-			dataType: "text",
-			success: function(data) {
-				$("#tool_savecontinue span").html("Save &amp; Continue");
-				opener.refreshView();				
+		$.getJSON('../dms/SplitDocument.do?method=split&document=' + docnum + '&' + serialized + '&queueID=' + queueId,			
+				function(data) {
+					$("#tool_savecontinue span").html("Save &amp; Continue");
+					popup(screen.height,screen.width,"../dms/showDocument.jsp?segmentID="+data["newDocNum"] + '&demoName=' + encodeURIComponent(demoName) + "&inWindow=true", "assignDoc");			
 				return false;
 			}
-		});
+		);
 	});
 	
 	$("#tool_done").click(function(e) {
-		$("#builder").children().each(function() {
-			var num = $(this).find("span").html();
-			var rotate = $(this).find("div").attr("rotate");
-			$(this).attr("id", "page_" + num + "," + rotate);
-		});
 		
-		$("#builder").sortable();
-		var serialized = $("#builder").sortable('serialize');
-		$("#builder").sortable("destroy");
+		if( confirm("Are you sure want to exit?")) {
 		
-		var docnum = $("#document_no").attr('value');
+			var docnum = $("#document_no").attr('value');
+			
+			opener.refreshAndFile(docnum);
+			window.close();
+		}
 		
-		window.location = '../dms/SplitDocument.do?method=split&document=' + docnum + '&' + serialized;
 	});
 	
 	$(".jog-control").find(">:first-child").click(function(e) {

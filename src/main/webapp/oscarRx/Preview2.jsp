@@ -80,6 +80,7 @@
 
 <link rel="stylesheet" type="text/css" href="styles.css">
 <script type="text/javascript" language="Javascript">
+	
 
     function onPrint2(method) {
 
@@ -223,10 +224,10 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                                     <c:when test="${empty infirmaryView_programAddress}">
                                                <%
                                                 	UserProperty phoneProp = userPropertyDAO.getProp(provider.getProviderNo(),"rxPhone");
-                                                	UserProperty faxProp = userPropertyDAO.getProp(provider.getProviderNo(),"faxnumber");
+                                                	
                                                 
                                                 	String finalPhone = provider.getClinicPhone();
-                                                	String finalFax = provider.getClinicFax();
+                                                	
                                                 	//if(providerPhone != null) {
                                                 	//	finalPhone = providerPhone;
                                                 	//}
@@ -234,9 +235,7 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                                 		finalPhone = phoneProp.getValue();
                                                 	}
                                                 	
-                                                	if(faxProp != null && faxProp.getValue().length()>0) {                                                		
-                                                		finalFax = faxProp.getValue();
-                                                	}
+                                                	
                                                 	
                                                 	request.setAttribute("phone",finalPhone);
                                                 
@@ -245,8 +244,8 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                                                     value="<%= StringEscapeUtils.escapeHtml(clinicTitle.replaceAll("(<br>)","\\\n")) %>" />
                                                             <input type="hidden" name="clinicPhone"
                                                                     value="<%= StringEscapeUtils.escapeHtml(finalPhone) %>" />
-                                                            <input type="hidden" name="clinicFax"
-                                                                    value="<%= StringEscapeUtils.escapeHtml(finalFax) %>" />
+                                                            <input type="hidden" id="finalFax" name="clinicFax"
+                                                                    value="" />
                                                     </c:when>
                                                     <c:otherwise>
                                                <%
@@ -274,8 +273,8 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                                                     value="<c:out value="${infirmaryView_programAddress}"/>" />
                                                             <input type="hidden" name="clinicPhone"
                                                                     value="<%=finalPhone%>" />
-                                                            <input type="hidden" name="clinicFax"
-                                                                    value="<%=finalFax%>" />
+                                                            <input type="hidden" id="finalFax" name="clinicFax"
+                                                                    value="" />
                                                     </c:otherwise>
                                             </c:choose> 
                                             
@@ -462,6 +461,7 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
 																	<img id="signature" style="width:300px; height:60px" src="<%=startimageUrl%>" alt="digital_signature" />
 				 													<input type="hidden" name="imgFile" id="imgFile" value="" />
 																	<script type="text/javascript">
+																		
 																		var POLL_TIME=2500;
 																		var counter=0;
 

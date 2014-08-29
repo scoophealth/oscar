@@ -25,14 +25,13 @@
 
 package oscar.form.pdfservlet;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -50,15 +49,21 @@ import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.FaxConfigDao;
+import org.oscarehr.common.dao.FaxJobDao;
+import org.oscarehr.common.model.FaxConfig;
+import org.oscarehr.common.model.FaxJob;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.util.LocaleUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.web.PrescriptionQrCodeUIBean;
 
 import oscar.OscarProperties;
 
+import com.itextpdf.text.pdf.PdfReader;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
@@ -97,18 +102,44 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 					writer.println("<script>alert('Error: No fax number found!');window.close();</script>");
 				} else {
 		                	// write to file
-		                	String pdfFile = System.getProperty("java.io.tmpdir")+"/prescription_"+req.getParameter("pdfId")+".pdf";
+		                	String pdfFile = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") +"/prescription_"+req.getParameter("pdfId")+".pdf";
 		                	FileOutputStream fos = new FileOutputStream(pdfFile);
 		                	baosPDF.writeTo(fos);
 		                	fos.close();
 
-			                String txtFile = System.getProperty("java.io.tmpdir")+"/prescription_"+req.getParameter("pdfId")+".txt";
-			                FileWriter fstream = new FileWriter(txtFile);
-		                	BufferedWriter out = new BufferedWriter(fstream);
-		                	out.write(faxNo);
-		                	out.close();
+			                String faxNumber = req.getParameter("clinicFax");
+			                FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);
+			                FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);
+			                List<FaxConfig> faxConfigs = faxConfigDao.findAll(null, null);
+			                FaxJob faxJob;
+			                boolean validFaxNumber = false;
+			                
+			                for( FaxConfig faxConfig : faxConfigs ) {
+			                	
+			                	if( faxConfig.getFaxNumber().equals(faxNumber) ) {
+			                		
+			                		PdfReader pdfReader = new PdfReader(pdfFile);
+			                		
+			                		faxJob = new FaxJob();
+			                		faxJob.setDestination(faxNo);
+			                		faxJob.setFax_line(faxNumber);
+			                		faxJob.setFile_name(pdfFile);
+			                		faxJob.setUser(faxConfig.getFaxUser());
+			                		faxJob.setNumPages(pdfReader.getNumberOfPages());
+			                		faxJob.setStamp(new Date());
+			                		faxJob.setStatus(FaxJob.STATUS.SENT);
+			                		
+			                		faxJobDao.persist(faxJob);
+			                		validFaxNumber = true;
+			                		break;
+			                		
+			                	}
+			                }
+			                
+			        if( validFaxNumber ) {
 
-					writer.println("<script>alert('Fax sent to: " + req.getParameter("pharmaName") + " (" + req.getParameter("pharmaFax") + ")');window.close();</script>");
+			        	writer.println("<script>alert('Fax sent to: " + req.getParameter("pharmaName") + " (" + req.getParameter("pharmaFax") + ")');window.close();</script>");
+			        }
 				}
 			} else {
 				StringBuilder sbFilename = new StringBuilder();

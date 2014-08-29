@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="oscar.dms.*,java.util.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -59,9 +60,11 @@
             String searchProviderNo = request.getParameter("searchProviderNo");
             String status = request.getParameter("status");
             String inQueue=request.getParameter("inQueue");
+            
             boolean inQueueB=false;
-            if(inQueue!=null && inQueue.equals("true"))
+            if(inQueue!=null) {
                 inQueueB=true;
+            }
 
             String creator = (String) session.getAttribute("user");
             ArrayList doctypes = EDocUtil.getActiveDocTypes("demographic");
@@ -210,9 +213,9 @@
         }
 
 
-        function split(id) {
-        	var loc = "<%= request.getContextPath()%>/oscarMDS/Split.jsp?document=" + id;
-        	popupStart(1100, 1100, loc, "Splitter");
+        function split(id,demoName) {
+        	var loc = "<%= request.getContextPath()%>/oscarMDS/Split.jsp?document=" + id + "&queueID=<%=inQueue%>" + "&demoName=" + demoName;
+        	popupStart(1400, 1400, loc, "Splitter");
         }
 
         var _in_window = <%=( "true".equals(request.getParameter("inWindow")) ? "true" : "false" )%>;
@@ -322,7 +325,7 @@
                                             %>
                                         </oscar:oscarPropertiesCheck>
                                         <div style="<%=updatableContent==true?"":"visibility: hidden"%>">
-                                            <input onclick="split('<%=docId%>')" type="button" value="<bean:message key="inboxmanager.document.split" />" />
+                                            <input onclick="split('<%=docId%>','<%=StringEscapeUtils.escapeJavaScript(demoName) %>')" type="button" value="<bean:message key="inboxmanager.document.split" />" />
                                             <input id="rotate180btn_<%=docId %>" onclick="rotate180('<%=docId %>')" type="button" value="<bean:message key="inboxmanager.document.rotate180" />" />
                                             <input id="rotate90btn_<%=docId %>" onclick="rotate90('<%=docId %>')" type="button" value="<bean:message key="inboxmanager.document.rotate90" />" />
                                             <% if (numOfPage > 1) { %><input id="removeFirstPagebtn_<%=docId %>" onclick="removeFirstPage('<%=docId %>')" type="button" value="<bean:message key="inboxmanager.document.removeFirstPage" />" /><% } %>

@@ -64,7 +64,7 @@ public class ConsultationAttachDocsAction
 	        
 	        ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,arrDocs);
 	        Lab.attach();
-	        return null;
+	        return mapping.findForward("success");
         }
         else { 
         	String[] labs = request.getParameterValues("labNo");

@@ -33,8 +33,9 @@
 <html>
     <head>
                 <title>Documents In Queues</title>
-<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/oscarMDSIndex.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
+<!-- script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/oscarMDSIndex.js"></script-->
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/prototype.js"></script>
    <!-- main calendar program -->
 <script type="text/javascript" src="../share/calendar/calendar.js"></script>
@@ -61,10 +62,125 @@
         <script type="text/javascript" src="../js/demographicProviderAutocomplete.js"></script>
         
 <script type="text/javascript">
+
+var contextpath = "<%=request.getContextPath()%>";
+
+function removeReport(labid) {
+	return true;
+}
+
+function refreshView() {
+	resetCurrentFirstDocLab();
+	showDocInQueue(queueID);
+}
+
+function refreshAndFile(docId) {
+	forceFileDoc(docId);	
+}
+
+function addDocToList(provNo, provName, docId) {
+	var bdoc = document.createElement('a');
+	bdoc.setAttribute("onclick", "removeProv(this);");
+	bdoc.setAttribute("style", "cursor: pointer;");
+	bdoc.appendChild(document.createTextNode(" -remove- "));
+	//oscarLog("--");
+	var adoc = document.createElement('div');
+	adoc.appendChild(document.createTextNode(provName));
+	//oscarLog("--==");
+	var idoc = document.createElement('input');
+	idoc.setAttribute("type", "hidden");
+	idoc.setAttribute("name", "flagproviders");
+	idoc.setAttribute("value", provNo);
+
+	adoc.appendChild(idoc);
+
+	adoc.appendChild(bdoc);
+	var providerList = $('providerList' + docId);
+	providerList.appendChild(adoc);
+}
+
+
+function showPDF(docid,cp) {
+
+    var height=700;
+    if(getHeight()>750) {
+        height=getHeight()-50;
+    }
+
+    var width=700;
+    if(getWidth()>1350)
+    {
+        width=getWidth()-650;
+    }
+
+    var url=cp+'/dms/ManageDocument.do?method=display&doc_no='+docid+'&rand='+Math.random()+'#view=fitV&page=1';
+
+    document.getElementById('docDispPDF_'+docid).innerHTML='<object width="'+(width)+'" height="'+(height)+'" type="application/pdf" data="'+url+'" id="docPDF_'+docid+'"></object>';
+}
+
+function removeFirstPage(id) {
+	jQuery("#removeFirstPagebtn_" + id).attr('disabled', 'disabled');
+        var displayDocumentAs=$('displayDocumentAs_'+id).value;
+
+	new Ajax.Request(contextpath + "/dms/SplitDocument.do", {method: 'post', parameters: "method=removeFirstPage&document=" + id, onSuccess: function(data) {
+		jQuery("#removeFirstPagebtn_" + id).removeAttr('disabled');
+                if(displayDocumentAs=="PDF") {
+                    showPDF(id,contextpath);
+                } else {
+                    jQuery("#docImg_" + id).attr('src', contextpath + "/dms/ManageDocument.do?method=viewDocPage&doc_no=" + id + "&curPage=1&rand=" + (new Date().getTime()));
+                }
+		var numPages = parseInt(jQuery("#numPages_" + id).text())-1;
+		jQuery("#numPages_" + id).text("" + numPages);
+
+
+
+		if (numPages <= 1) {
+			jQuery("#numPages_" + id).removeClass("multiPage");
+			jQuery("#removeFirstPagebtn_" + id).remove();
+		}
+
+	}});
+}
+
+
+
+function rotate180(id) {
+	jQuery("#rotate180btn_" + id).attr('disabled', 'disabled');
+        var displayDocumentAs=$('displayDocumentAs_'+id).value;
+
+	new Ajax.Request(contextpath + "/dms/SplitDocument.do", {method: 'post', parameters: "method=rotate180&document=" + id, onSuccess: function(data) {
+		jQuery("#rotate180btn_" + id).removeAttr('disabled');
+                if(displayDocumentAs=="PDF") {
+                    showPDF(id,contextpath);
+                } else {
+                    jQuery("#docImg_" + id).attr('src', contextpath + "/dms/ManageDocument.do?method=viewDocPage&doc_no=" + id + "&curPage=1&rand=" + (new Date().getTime()));
+                }
+	}});
+}
+
+function rotate90(id) {
+	jQuery("#rotate90btn_" + id).attr('disabled', 'disabled');
+        var displayDocumentAs=$('displayDocumentAs_'+id).value;
+
+	new Ajax.Request(contextpath + "/dms/SplitDocument.do", {method: 'post', parameters: "method=rotate90&document=" + id, onSuccess: function(data) {
+		jQuery("#rotate90btn_" + id).removeAttr('disabled');
+                if(displayDocumentAs=="PDF") {
+                    showPDF(id,contextpath);
+                } else {
+                    jQuery("#docImg_" + id).attr('src', contextpath + "/dms/ManageDocument.do?method=viewDocPage&doc_no=" + id + "&curPage=1&rand=" + (new Date().getTime()));
+                }
+	}});
+}
+
+function split(id,demoName) {
+	var loc = "<%= request.getContextPath()%>/oscarMDS/Split.jsp?document=" + id + "&queueID=" + queueID + "&demoName=" + demoName;
+	popupStart(1400, 1400, loc, "Splitter");
+}
+
 var nowChildId;
 var nowDocLabIds=new Array();
 var nowMultiple=1;
-
+var queueID;
 
 function showDocInQueue(qid){
     $('docs').innerHTML='';
@@ -76,6 +192,7 @@ function showDocInQueue(qid){
          var docid=docs[i];
          nowDocLabIds.push(docid);
     }
+    queueID = qid;
     showFirstTime();
 }
 function updateLabDemoStatus(labno){
@@ -543,7 +660,7 @@ function showFirstTime(){//show first five doc labs
                         var patientId=getPatientIdFromDocLabId(id);
                         var patientName=getPatientNameFromPatientId(patientId);
                         if(i==0){if(current_first_doclab==0) current_first_doclab=id;}
-                        showDocLab(nowChildId,id,providerNo,searchProviderNo,ackStatus,patientName);
+                        showDocLab(nowChildId,id,providerNo,searchProviderNo,ackStatus,patientName,queueID);
                     }
                 }
             }
@@ -561,7 +678,7 @@ function bufferAndShow(){//show 5 if scroll down to a certain extend relative to
                         var ackStatus=getAckStatusFromDocLabId(id);
                         var patientId=getPatientIdFromDocLabId(id);
                         var patientName=getPatientNameFromPatientId(patientId);
-                        showDocLab(nowChildId,id,providerNo,searchProviderNo,ackStatus,patientName);
+                        showDocLab(nowChildId,id,providerNo,searchProviderNo,ackStatus,patientName,queueID);
                     }
                 }
             }
@@ -613,9 +730,7 @@ function f_filterResults(n_win, n_docel, n_body) {
                                         //oscarLog('url='+url);
                                         var data="segmentID="+docNo+"&providerNo="+providerNo+"&searchProviderNo="+searchProviderNo+"&status="+status+"&demoName="+demoName;
                                         if(inQueue)
-                                            data+="&inQueue=true";
-                                        else
-                                            data+="&inQueue=false";
+                                            data+="&inQueue=" + inQueue;
                                        // oscarLog('url='+url+'+-+ \n data='+data+"----div:"+div);
                                         new Ajax.Updater(div,url,{method:'get',parameters:data,insertion:Insertion.Bottom,evalScripts:true,onSuccess:function(transport){
                                                 focusFirstDocLab();
@@ -1871,12 +1986,33 @@ function addDocToPatient(doclabid,patientId){//if doc is previously not assigned
                                                                 var data='method=fileLabAjax&flaggedLabId='+docId+'&labType='+type;
                                                                 new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
                                                                         Effect.Fade('labdoc_'+docId);
-                                                                        updateDocLabData(docId);
+                                                                        updateDocLabData(docId,true);
+                                                                        removeDocFromQueue(doclabid);
                                                                 }});
                                                         }
                                                     }
                                                }
                                             }
+                                       }
+                                       
+                                       function forceFileDoc(docId){
+                                           if(docId){
+                                                docId=docId.replace(/\s/,'');
+                                                if(docId.length>0){
+	                                       
+	                                                var type='DOC';
+	                                                if(type){
+	                                                    var url='../oscarMDS/FileLabs.do';
+	                                                   var data='method=fileLabAjax&flaggedLabId='+docId+'&labType='+type;
+	                                                   new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
+	                                                           Effect.Fade('labdoc_'+docId);
+	                                                           updateDocLabData(docId,true);
+	                                                           removeDocFromQueue(doclabid);
+	                                                   }});
+	                                           }
+	                                       	}
+                                         }
+                                            
                                        }
                                        function showPatientPreview(pid,providerNo,searchProviderNo,ackStatus){
                                            var labdocsArr=getLabDocFromPatientId(pid);
@@ -2090,7 +2226,7 @@ List<String> abnormals=(List<String>)request.getAttribute("abnormals");
                            var patientIds=initPatientIds('<%=patientIdStr%>');
                         var queueDocNos=initHashtblWithList('<%=queueDocNos%>');
                         var providerNo='<%=providerNo%>';
-                        console.log(queueDocNos);
+                        
                         var searchProviderNo='<%=searchProviderNo%>';
  /*console.log(typeDocLab);
  console.log(docType);

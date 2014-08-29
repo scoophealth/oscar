@@ -71,7 +71,7 @@ function finishPage(secs){
 				<td><bean:message
 					key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgConsReq" />
 				<%
-                            String type = (String) request.getAttribute("transType");
+                            String type = request.getParameter("transType") == null ? (String) request.getAttribute("transType") : request.getParameter("transType");
                             if (type.equals("1")){ %> <bean:message
 					key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgUpdated" />
 				<% }else if (type.equals("2")){ %> <bean:message

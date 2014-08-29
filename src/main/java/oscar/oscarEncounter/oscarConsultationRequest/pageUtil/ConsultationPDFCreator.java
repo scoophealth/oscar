@@ -70,7 +70,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 	public ConsultationPDFCreator(HttpServletRequest request, OutputStream os) {
 		this.os = os;
 	    reqFrm = new EctConsultationFormRequestUtil ();
-	    reqFrm.estRequestFromId((String)request.getAttribute("reqId"));
+	    reqFrm.estRequestFromId( request.getParameter("reqId") == null ? (String)request.getAttribute("reqId") : request.getParameter("reqId"));
 	    props = OscarProperties.getInstance();
 	    clinic = new ClinicData();
 		oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());

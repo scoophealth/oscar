@@ -25,6 +25,14 @@
 /************init global data methods*****************/
 var oldestLab = null;
 
+function  updateDocStatusInQueue(docid){//change status of queue document link row to I=inactive
+    //console.log('in updateDocStatusInQueue, docid '+docid);
+          var url="../dms/inboxManage.do",data="docid="+docid+"&method=updateDocStatusInQueue";
+          new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){}});
+
+
+}
+
 function saveNext(docid) {
 	updateDocumentAndNext('forms_'+docid);
 }
@@ -357,7 +365,7 @@ function removeFirstPage(id) {
 
 function split(id) {
         	var loc = contextpath+"/oscarMDS/Split.jsp?document=" + id;
-        	popupStart(1100, 1100, loc, "Splitter");
+        	popupStart(1400, 1400, loc, "Splitter");
         }
         
 function hideTopBtn(){
@@ -1572,8 +1580,8 @@ function updateDocumentAndNext(eleId){//save doc info
 						$('saved'+num).value='true';
 						$("msgBtn_"+num).onclick = function() { popup(700,960,'/oscar/oscarMessenger/SendDemoMessage.do?demographic_no='+patientId,'msg'); };
 						//Hide document						
-						Effect.BlindUp('labdoc_'+num);
-
+						Effect.BlindUp('labdoc_'+num);											
+						updateDocStatusInQueue(num);
 						var success= updateGlobalDataAndSideNav(num,patientId);
 						if(success){
 						
@@ -1581,6 +1589,7 @@ function updateDocumentAndNext(eleId){//save doc info
 							if(success){
 								//disable demo input
 								$('autocompletedemo'+num).disabled=true;
+								
 								
 								//console.log('updated by save');
 								//console.log(patientDocs);
@@ -1608,12 +1617,15 @@ function updateDocument(eleId){//save doc info
 			$("saveSucessMsg_"+num).show();
 			$('saved'+num).value='true';
 			$("msgBtn_"+num).onclick = function() { popup(700,960,'/oscar/oscarMessenger/SendDemoMessage.do?demographic_no='+patientId,'msg'); };
+			updateDocStatusInQueue(num);
 			var success= updateGlobalDataAndSideNav(num,patientId);
+			
 			if(success){
 				success=updatePatientDocLabNav(num,patientId);
 				if(success){
 					//disable demo input
 					$('autocompletedemo'+num).disabled=true;
+					
 					//console.log('updated by save');
 					//console.log(patientDocs);
 				}
@@ -1639,6 +1651,7 @@ function updateStatus(formid){//acknowledge
 
 				if(doclabid){
 					Effect.BlindUp('labdoc_'+doclabid);
+					updateDocStatusInQueue(doclabid);
 					//updateDocLabData(doclabid);
 				}
 
@@ -1672,6 +1685,7 @@ function fileDoc(docId){
 					var url='../oscarMDS/FileLabs.do';
 					var data='method=fileLabAjax&flaggedLabId='+docId+'&labType='+type;
 					new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
+						updateDocStatusInQueue(docId);
 						if (docId) {
 							Effect.Fade('labdoc_'+docId);
 						}

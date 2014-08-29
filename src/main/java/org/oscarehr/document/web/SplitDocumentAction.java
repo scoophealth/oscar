@@ -8,13 +8,18 @@
  */
 package org.oscarehr.document.web;
 
-import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
+
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -35,6 +40,7 @@ import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.ProviderInboxItem;
 import org.oscarehr.common.model.ProviderLabRoutingModel;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -50,9 +56,10 @@ public class SplitDocumentAction extends DispatchAction {
 	private DocumentDao documentDao = SpringUtils.getBean(DocumentDao.class);
 	
 
-	public ActionForward split(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward split(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String docNum = request.getParameter("document");
 		String[] commands = request.getParameterValues("page[]");
+		String queueId = request.getParameter("queueID");
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo=loggedInInfo.getLoggedInProviderNo();
@@ -60,16 +67,21 @@ public class SplitDocumentAction extends DispatchAction {
 		Document doc = documentDao.getDocument(docNum);
 
 		String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
-		new File(docdownload);
 
 		String newFilename = doc.getDocfilename();
 
-		FileInputStream input = new FileInputStream(docdownload + doc.getDocfilename());
+		FileInputStream input = null;
+		PDDocument pdf = null;
+		PDDocument newPdf = null;
+		
+		try {
+		
+		input = new FileInputStream(docdownload + doc.getDocfilename());
 		PDFParser parser = new PDFParser(input);
 		parser.parse();
-		PDDocument pdf = parser.getPDDocument();
+		pdf = parser.getPDDocument();
 
-		PDDocument newPdf = new PDDocument();
+		newPdf = new PDDocument();
 
 		List pages = pdf.getDocumentCatalog().getAllPages();
 
@@ -92,7 +104,7 @@ public class SplitDocumentAction extends DispatchAction {
 		if (newPdf.getNumberOfPages() > 0) {
 
 
-			EDoc newDoc = new EDoc("","", newFilename, "", providerNo, doc.getDoccreator(), "", 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1",0);
+			EDoc newDoc = new EDoc("","", newFilename, "", providerNo, doc.getDoccreator(), "", 'A', DateFormatUtils.format(new Date(), "yyyy-MM-dd"), "", "", "demographic", "-1",0);
 			newDoc.setDocPublic("0");
 			newDoc.setContentType("application/pdf");
 			newDoc.setNumberOfPages(newPdf.getNumberOfPages());
@@ -115,9 +127,9 @@ public class SplitDocumentAction extends DispatchAction {
 			providerInboxRoutingDao.addToProviderInbox(providerNo, Integer.parseInt(newDocNo), "DOC");
 
 			QueueDocumentLinkDao queueDocumentLinkDAO = (QueueDocumentLinkDao) ctx.getBean("queueDocumentLinkDAO");
-			Integer qid = 1;
+			Integer qid = queueId == null ? 1 : Integer.parseInt(queueId);
 			Integer did= Integer.parseInt(newDocNo.trim());
-			queueDocumentLinkDAO.addToQueueDocumentLink(qid,did);
+			queueDocumentLinkDAO.addActiveQueueDocumentLink(qid, did);
 
 			ProviderLabRoutingDao providerLabRoutingDao = (ProviderLabRoutingDao) SpringUtils.getBean("providerLabRoutingDao");
 
@@ -151,12 +163,35 @@ public class SplitDocumentAction extends DispatchAction {
 				newCtlDocument.setStatus(result3.getStatus());
 				documentDao.persist(newCtlDocument);
 			}
+			
+			if( result.isEmpty() || result2.isEmpty() ) {
+				String json = "{newDocNum:" + newDocNo + "}";
+				JSONObject jsonObject = JSONObject.fromObject(json);
+				response.setContentType("application/json");
+				PrintWriter printWriter = response.getWriter();
+				printWriter.print(jsonObject);
+				printWriter.flush();
+				return null;
+								
+			}
 
 
 		}
-
-		pdf.close();
-		input.close();
+		
+		}catch( Exception e) {
+			MiscUtils.getLogger().error(e.getMessage(),e);
+			return null;
+		}
+		finally {
+			try {
+				
+				if( pdf != null)  pdf.close();
+				if( input != null ) input.close();
+				
+			}catch(IOException e ) {
+				//do nothing
+			}
+		}
 
 		return mapping.findForward("success");
 	}

@@ -318,7 +318,7 @@ public class Hl7textResultsData {
 			lbData.labPatientId = ConversionUtils.toIntString(c.getDocumentNo());
 			attachedLabs.add(lbData);
 		}
-
+MiscUtils.getLogger().info("ATTACHED LAB " + attachedLabs.size());
 		LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
 		LabResultData.CompareId c = lbData.getComparatorId();
 		Hl7TextInfoDao hlDao = SpringUtils.getBean(Hl7TextInfoDao.class);
@@ -327,13 +327,13 @@ public class Hl7textResultsData {
 			PatientLabRouting p = (PatientLabRouting) o[1];
 
 			lbData.segmentID = ConversionUtils.toIntString(i.getLabNumber());
-			lbData.labPatientId = p.getId().toString();
+			lbData.labPatientId = ConversionUtils.toIntString(p.getLabNo());
 			lbData.dateTime = i.getObrDate();
 			lbData.discipline = i.getDiscipline();
 			lbData.accessionNumber = i.getAccessionNumber();
 			lbData.finalResultsCount = i.getFinalResultCount();
 			lbData.label = i.getLabel();
-
+MiscUtils.getLogger().info("SEARCHING FOR " + lbData.getLabPatientId());
 			if (attached && Collections.binarySearch(attachedLabs, lbData, c) >= 0) labResults.add(lbData);
 			else if (!attached && Collections.binarySearch(attachedLabs, lbData, c) < 0) labResults.add(lbData);
 

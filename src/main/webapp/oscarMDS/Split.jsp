@@ -16,6 +16,7 @@
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 <%@page import="oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
 <%@page import="org.oscarehr.common.dao.DocumentDao" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 
 <html>
 <head>
@@ -48,6 +49,8 @@
 <ul id="picker">
 <%
 String documentId = request.getParameter("document");
+String queueID = request.getParameter("queueID");
+String demoName = request.getParameter("demoName");
 DocumentDao docdao = SpringUtils.getBean(DocumentDao.class);
 org.oscarehr.common.model.Document thisDocument = docdao.getDocument(documentId);
 
@@ -62,5 +65,7 @@ for (int i = 1; i <= thisDocument.getNumberofpages(); i++) {
 </div>
 
 <input type="hidden" id="document_no" value="<%=documentId %>" />
+<input type="hidden" id="queueID" value="<%=queueID %>" />
+<input type="hidden" id="demoName" value="<%=StringEscapeUtils.escapeJavaScript(demoName)%>"/>
 </body>
 </html>
