@@ -112,7 +112,6 @@ public class ManageDocumentAction extends DispatchAction {
 	private DocumentDao documentDao = SpringUtils.getBean(DocumentDao.class);
 	private CtlDocumentDao ctlDocumentDao = SpringUtils.getBean(CtlDocumentDao.class);
 	private ProviderInboxRoutingDao providerInboxRoutingDAO = SpringUtils.getBean(ProviderInboxRoutingDao.class);
-
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
@@ -177,6 +176,7 @@ public class ManageDocumentAction extends DispatchAction {
 			documentDao.merge(d);
 		}
 
+		
 		try {
 
 			CtlDocument ctlDocument = ctlDocumentDao.getCtrlDocument(Integer.parseInt(documentId));
@@ -242,8 +242,7 @@ public class ManageDocumentAction extends DispatchAction {
 		}
 
 		return null;
-	}
-
+	}	
 
 	public ActionForward documentUpdate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
@@ -306,6 +305,8 @@ public class ManageDocumentAction extends DispatchAction {
 		if (ret != null && !ret.equals("")) {
 			// response.getOutputStream().print(ret);
 		}
+				
+		
 		String providerNo = request.getParameter("providerNo");
 		String searchProviderNo = request.getParameter("searchProviderNo");
 		String ackStatus = request.getParameter("status");

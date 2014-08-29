@@ -23,13 +23,22 @@
     Ontario, Canada
 
 --%>
-<%@page import="oscar.oscarRx.data.RxPrescriptionData" %>
-<%
-String scriptNo = request.getParameter("scriptNo");
-String comment  = request.getParameter("comment");
-if ( !"null".equalsIgnoreCase(scriptNo) && scriptNo != null && comment != null && !"null".equalsIgnoreCase(comment) ){
-   RxPrescriptionData rxData = new RxPrescriptionData();
-   rxData.setScriptComment( scriptNo, comment);
-}
+<%@ page import="org.oscarehr.common.dao.FaxJobDao, org.oscarehr.common.model.FaxJob"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="java.util.List" %>
 
+<ul>
+
+<%
+	FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);
+	String Id = request.getParameter("jobId");
+	FaxJob faxJob = faxJobDao.find(Integer.parseInt(Id));
+
+	for( int idx = 1; idx <= faxJob.getNumPages(); ++idx ) {
 %>
+		<li><img src="<%=request.getContextPath() + "/admin/ManageFaxes.do?method=viewFax&jobId=" + faxJob.getId() + "&curPage=" + idx %>" ondblclick="_zoom(this)"/></li>
+<%
+	}
+%>
+
+</ul>

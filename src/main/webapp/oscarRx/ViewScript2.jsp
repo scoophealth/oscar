@@ -47,6 +47,7 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.model.Appointment"%>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao"%>
+<%@ page import="org.oscarehr.common.dao.FaxConfigDao, org.oscarehr.common.model.FaxConfig" %>
 <%
 	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
@@ -392,6 +393,8 @@ function refreshImage()
 
 function sendFax()
 {
+	var faxNumber = document.getElementById('faxNumber');
+	frames['preview'].document.getElementById('finalFax').value = faxNumber.options[faxNumber.selectedIndex].value;
 	frames['preview'].document.getElementById('pdfId').value='<%=signatureRequestId%>';	
 	frames['preview'].onPrint2('oscarRxFax');
 	frames['preview'].document.FrmForm.submit();	
@@ -622,11 +625,28 @@ function toggleView(form) {
 							class="ControlPushButton" style="width: 150px"
 							onClick="javascript:printPaste2Parent(true);" /></span></td>
 					</tr>
-					<% if (OscarProperties.getInstance().isRxFaxEnabled()) { %>
+					<% if (OscarProperties.getInstance().isRxFaxEnabled()) {
+					    	FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);
+					    	List<FaxConfig> faxConfigs = faxConfigDao.findAll(null, null);
+					    
+					    %>
 					<tr>                            
                             <td><span><input type=button value="Fax & Paste into EMR"
                                     class="ControlPushButton" id="faxButton" style="width: 150px"
-                                    onClick="printPaste2Parent(false);sendFax();" disabled/></span></td>
+                                    onClick="printPaste2Parent(false);sendFax();" disabled/></span>
+                                    
+                                 <span>
+                                 	<select id="faxNumber" name="faxNumber">
+                                 	<%
+                                 		for( FaxConfig faxConfig : faxConfigs ) {
+                                 	%>
+                                 			<option value="<%=faxConfig.getFaxNumber()%>"><%=faxConfig.getFaxUser()%></option>
+                                 	<%	    
+                                 		}                                 	
+                                 	%>
+                                 	</select>
+                                 </span>
+                           </td>
                     </tr>
                     <% } %>
 					<tr>

@@ -1,0 +1,66 @@
+<%@ page import="org.oscarehr.common.model.FaxJob" %>
+<%@ page import="java.util.List" %>
+<%@ page import="org.apache.commons.lang.time.DateFormatUtils"%>
+
+
+<table class="table-condensed table-bordered small" id="content">
+	<thead>
+		<tr>
+			<th class="small">Type</th>
+			<th class="small">Team</th>
+			<th class="small">Status</th>
+			<th class="small">Date</th>
+			<th class="small">Action</th>
+		</tr>
+	</thead>
+	<tbody>
+<%
+	List<FaxJob> faxJobs = (List<FaxJob>)request.getAttribute("faxes");
+	String type;
+	int count = 0;
+	for( FaxJob faxJob : faxJobs ) {
+	    
+	    type = "";
+	    
+	    if( faxJob.getFile_name().indexOf("Consult") > -1 ) {
+			type = "CONSULT";
+	    }
+	    else if( faxJob.getFile_name().indexOf("prescription") > -1 ) {
+			type = "PRESCRIPTION";
+	    }
+	    else if( faxJob.getFile_name().indexOf("fax") > -1 ) {
+			type = "RECEIVED FAX";
+	    }
+    
+	    
+%>
+		<tr>
+			<td class="small"><%=type%></td>
+			<td class="small"><%=faxJob.getUser()%></td>
+			<td id="status<%=count%>" class="small"><%=faxJob.getStatus()%></td>
+			<td class="small"><%=DateFormatUtils.format(faxJob.getStamp(), "yyyy-MM-dd HH:mm:ss")%></td>
+			<td class="small"><a href="#top" onclick="view(<%=faxJob.getId()%>)">View</a>&nbsp;
+<%
+			if( !faxJob.getStatus().equals(FaxJob.STATUS.RECEIVED) ) {			    
+			    
+			    if( faxJob.getStatus().equals(FaxJob.STATUS.ERROR) || faxJob.getStatus().equals(FaxJob.STATUS.COMPLETE)) {
+%>			    
+				<a href="javascript:void()" onclick="resend(<%=faxJob.getId()%>,'<%=faxJob.getDestination()%>','status<%=count%>')">Resend</a>&nbsp;
+<%
+				}
+				else if( faxJob.getStatus().equals(FaxJob.STATUS.SENT)  || faxJob.getStatus().equals(FaxJob.STATUS.WAITING)) {
+%>
+				<a href="javascript:void()" onclick="cancel(<%=faxJob.getId()%>,'status<%=count%>')">Cancel</a>&nbsp;				
+<%
+				}
+			}
+%>
+		</tr>
+		
+<%
+		++count;
+	}
+%>
+	</tbody>
+
+</table>

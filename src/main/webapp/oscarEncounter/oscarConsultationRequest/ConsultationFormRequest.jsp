@@ -58,6 +58,7 @@
 <%@page import="org.oscarehr.util.MiscUtils, org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager, org.oscarehr.caisi_integrator.ws.CachedDemographicNote"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProgramDao, org.oscarehr.PMmodule.model.Program" %>
 <%@page import="oscar.oscarDemographic.data.DemographicData, oscar.oscarRx.data.RxProviderData, oscar.oscarRx.data.RxProviderData.Provider, oscar.oscarClinic.ClinicData"%>
+<%@ page import="org.oscarehr.common.dao.FaxConfigDao, org.oscarehr.common.model.FaxConfig" %>
 
 <jsp:useBean id="displayServiceUtil" scope="request" class="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDisplayServiceUtil" />
 
@@ -313,9 +314,9 @@ function disableDateFields(){
 
 function setDisabledDateFields(form, disabled)
 {
-	form.appointmentYear.disabled = disabled;
-	form.appointmentMonth.disabled = disabled;
-	form.appointmentDay.disabled = disabled;
+	//form.appointmentYear.disabled = disabled;
+	//form.appointmentMonth.disabled = disabled;
+	//form.appointmentDay.disabled = disabled;
 	form.appointmentHour.disabled = disabled;
 	form.appointmentMinute.disabled = disabled;
 	form.appointmentPm.disabled = disabled;
@@ -968,7 +969,7 @@ function switchProvider(value) {
 		document.getElementById("letterheadPhone").value = "<%=clinic.getClinicPhone().trim() %>";
 		document.getElementById("letterheadPhoneSpan").innerHTML = "<%=clinic.getClinicPhone().trim() %>";
 		document.getElementById("letterheadFax").value = "<%=clinic.getClinicFax().trim() %>";
-		document.getElementById("letterheadFaxSpan").innerHTML = "<%=clinic.getClinicFax().trim() %>";
+		// document.getElementById("letterheadFaxSpan").innerHTML = "<%=clinic.getClinicFax().trim() %>";
 	} else {
 		if (typeof providerData["prov_" + value] != "undefined")
 			value = "prov_" + value;
@@ -979,7 +980,7 @@ function switchProvider(value) {
 		document.getElementById("letterheadPhone").value = providerData[value]['phone'];
 		document.getElementById("letterheadPhoneSpan").innerHTML = providerData[value]['phone'];
 		document.getElementById("letterheadFax").value = providerData[value]['fax'];
-		document.getElementById("letterheadFaxSpan").innerHTML = providerData[value]['fax'];
+		//document.getElementById("letterheadFaxSpan").innerHTML = providerData[value]['fax'];
 	}
 }
 </script>
@@ -1726,18 +1727,22 @@ function updateFaxButton() {
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.letterheadFax" />:
 							</td>
 							<td align="right" class="tite3">
-								<% if (consultUtil.letterheadFax != null) {
+							   <%								
+									FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);
+									List<FaxConfig> faxConfigs = faxConfigDao.findAll(null, null);
 								%>
-									<input type="hidden" name="letterheadFax" id="letterheadFax" value="<%=StringEscapeUtils.escapeHtml(consultUtil.letterheadFax) %>"/>
 									<span id="letterheadFaxSpan">
-										<%=consultUtil.letterheadFax%>
-									</span>
-								<% } else { %>
-								<input type="hidden" name="letterheadFax" id="letterheadFax" value="<%=StringEscapeUtils.escapeHtml(clinic.getClinicFax()) %>" />
-								<span id="letterheadFaxSpan">
-									<%=clinic.getClinicFax() %>
+										<select name="letterheadFax">
+								<%
+									for( FaxConfig faxConfig : faxConfigs ) {
+								%>
+										<option value="<%=faxConfig.getFaxNumber()%>" <%=faxConfig.getFaxNumber().equalsIgnoreCase(consultUtil.letterheadFax) ? "selected" : ""%>><%=faxConfig.getFaxUser()%></option>								
+								<%	    
+									}								
+								%>
+									</select>
 								</span>
-							<% } %>
+							
 							</td>
 						</tr>
 					</table>

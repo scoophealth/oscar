@@ -47,10 +47,12 @@ import org.oscarehr.common.dao.LabPatientPhysicianInfoDao;
 import org.oscarehr.common.dao.MdsMSHDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.dao.ProviderLabRoutingDao;
+import org.oscarehr.common.dao.QueueDocumentLinkDao;
 import org.oscarehr.common.model.CtlDocument;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderLabRoutingModel;
+import org.oscarehr.common.model.QueueDocumentLink;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.labs.LabIdAndType;
@@ -84,6 +86,7 @@ public class CommonLabResultData {
 	
 	private static PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
 	private static ProviderLabRoutingDao providerLabRoutingDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+	private static QueueDocumentLinkDao queueDocumentLinkDao = SpringUtils.getBean(QueueDocumentLinkDao.class);
 	
 	
 	public CommonLabResultData() {
@@ -526,13 +529,24 @@ public class CommonLabResultData {
 				String[] labArray = labs.split(",");
 				for (int j = 0; j < labArray.length; j++) {
 					updateReportStatus(Integer.parseInt(labArray[j]), provider, 'F', "", labType);
+					removeFromQueue(Integer.parseInt(labArray[j]));
 				}
 
 			} else {
 				updateReportStatus(Integer.parseInt(lab), provider, 'F', "", labType);
+				removeFromQueue(Integer.parseInt(lab));
 			}
 		}
 		return true;
+	}
+	
+	
+	private static void removeFromQueue(Integer lab_no) {
+		List<QueueDocumentLink> queues = queueDocumentLinkDao.getQueueFromDocument(lab_no);
+		
+		for( QueueDocumentLink queue : queues ) {
+			queueDocumentLinkDao.remove(queue.getId());
+		}
 	}
 
 	// //

@@ -44,6 +44,7 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.FaxClientLogDao;
 import org.oscarehr.common.dao.OscarCommLocationsDao;
 import org.oscarehr.common.model.FaxClientLog;
+import org.oscarehr.common.model.FaxJob;
 import org.oscarehr.common.model.OscarCommLocations;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -73,6 +74,9 @@ public class EctConsultationFaxAction extends Action {
       }
 
       OscarProperties props = OscarProperties.getInstance();
+      
+      FaxJob faxJob = new FaxJob();
+     
 
       FaxClientLog faxClientLog = new FaxClientLog();
       faxClientLog.setProviderNo(curUser_no);

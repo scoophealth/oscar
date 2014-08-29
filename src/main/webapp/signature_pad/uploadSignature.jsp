@@ -79,8 +79,8 @@
 		
 		boolean saveToDB = "true".equals(request.getParameter("saveToDB")); 
 		if (saveToDB) {
-			Integer demo; 
 			
+			Integer demo; 
 			try {
 				demo = Integer.parseInt(request.getParameter("demographicNo"));
 			}

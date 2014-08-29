@@ -39,7 +39,7 @@ public class DigitalSignatureUtils {
 	public static final String SIGNATURE_REQUEST_ID_KEY = "signatureRequestId";
 
 	public static String generateSignatureRequestId(String providerNo) {
-		return (providerNo + "_" + System.currentTimeMillis());
+		return (providerNo + System.currentTimeMillis());
 	}
 
 	public static String getTempFilePath(String signatureRequestId) {

@@ -1123,7 +1123,7 @@
 			<forward name="printpdf" path="/oscarEncounter/oscarConsultationRequest/printPdf.do" />
 			<forward name="printIndivica" path="/oscarEncounter/oscarConsultationRequest/printPdf2.do" />
 			<forward name="fax" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormFax.jsp" />
-			<forward name="faxIndivica" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormFax.do" />
+			<forward name="faxIndivica" path="/fax/CoverPage.jsp" />
 		</action>
 		<action input="/oscarEncounter/oscarconsultationRequest/ConsultationFormRequest.jsp" path="/oscarEncounter/oscarConsultationRequest/printPdf" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestPrintAction">
 			<forward name="error" path="/oscarEncounter/ViewRequest.do?error=error" />
@@ -1516,6 +1516,13 @@
 			<forward name="error" path="/provider/providerFaxErr.jsp" />
 			<forward name="eject" path="/index.jsp" />
 		</action>
+		<action input="/admin/configureFax.jsp" path="/admin/ManageFax" scope="request" parameter="method" type="org.oscarehr.fax.admin.ConfigureFaxAction">
+			<forward name="completed" path="/admin/manageFax.jsp"/>			
+		</action>
+		<action input="/admin/manageFaxes.jsp" path="/admin/ManageFaxes" scope="request" parameter="method" validate="false" type="org.oscarehr.fax.admin.ManageFaxes">
+			<forward name="faxstatus" path="/admin/faxStatusResults.jspf" />			
+		</action>
+		
 		<action input="/provider/providerColourPicker.jsp" name="setProviderColour" path="/setProviderColour" scope="request" type="oscar.oscarProvider.pageUtil.ProEditColourAction">
 			<forward name="success" path="/provider/providerColourPicker.jsp" />
 			<forward name="error" path="/provider/providerColourErr.jsp" />
@@ -2467,7 +2474,7 @@
 		<action path="/admin/faxStatus" scope="request" parameter="method" validate="false" type="oscar.util.FaxStatusAction">
 			<forward name="success" path="/admin/faxStatus.jsp" />
 		</action>
-
+		
 		<action path="/admin/oscarStatus" scope="request" parameter="method" validate="false" type="oscar.util.OscarStatusAction">
 			<forward name="success" path="/admin/oscarStatus.jsp" />
 		</action>

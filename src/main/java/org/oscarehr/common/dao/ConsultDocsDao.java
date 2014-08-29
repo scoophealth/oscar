@@ -53,7 +53,7 @@ public class ConsultDocsDao extends AbstractDao<ConsultDocs>{
 
 	public List<Object[]> findByConsultationIdAndType(Integer consultationId, String docType) {
 		String sql = "FROM ConsultDocs cd, PatientLabRouting plr " +
-				"WHERE plr.id = cd.documentNo " +
+				"WHERE plr.labNo = cd.documentNo " +
 				"AND cd.requestId = :consultationId " +
 				"AND cd.docType = :docType " +
 				"AND cd.deleted IS NULL " +
@@ -66,7 +66,7 @@ public class ConsultDocsDao extends AbstractDao<ConsultDocs>{
 
     public List<Object[]> findDocs(Integer cid) {
 		String sql = "FROM ConsultDocs c, PatientLabRouting p " +
-				"WHERE p.id = c.documentNo " +
+				"WHERE p.labNo = c.documentNo " +
 				"AND c.requestId = :cid " +
 				"AND c.docType = 'L' " +
 				"AND c.deleted IS NULL " +
