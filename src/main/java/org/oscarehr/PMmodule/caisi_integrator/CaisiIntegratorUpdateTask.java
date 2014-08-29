@@ -248,7 +248,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	public void run() {
 		numberOfTimesRun++;
 		
-		LoggedInInfo loggedInInfo=LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod();
 		logger.debug("CaisiIntegratorUpdateTask starting #" + numberOfTimesRun+"  running as "+loggedInInfo.loggedInProvider);
 
 		try {
@@ -258,7 +258,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		} catch (Exception e) {
 			logger.error("unexpected error occurred", e);
 		} finally {
-			LoggedInInfo.loggedInInfo.remove();
 			DbConnectionFilter.releaseAllThreadDbResources();
 
 			logger.debug("CaisiIntegratorUpdateTask finished #" + numberOfTimesRun);

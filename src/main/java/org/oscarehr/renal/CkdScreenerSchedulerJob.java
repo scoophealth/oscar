@@ -52,7 +52,6 @@ public class CkdScreenerSchedulerJob extends TimerTask {
 		LoggedInInfo x = new LoggedInInfo();
 		x.loggedInProvider = provider;
 		x.loggedInSecurity = security;
-		LoggedInInfo.loggedInInfo.set(x);
 		
 		
 		try {
@@ -67,7 +66,6 @@ public class CkdScreenerSchedulerJob extends TimerTask {
 			logger.error("Error",e);
 		} finally {
 			DbConnectionFilter.releaseAllThreadDbResources();
-			LoggedInInfo.loggedInInfo.remove();
 		}
 	}
 

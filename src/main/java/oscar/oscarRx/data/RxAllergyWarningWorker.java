@@ -27,7 +27,6 @@ package oscar.oscarRx.data;
 
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarRx.pageUtil.RxSessionBean;
@@ -55,8 +54,6 @@ public class RxAllergyWarningWorker extends Thread {
     public void run() {
         MiscUtils.getLogger().debug("STARTING THREAD - RxAllergyWarningWorker ");
 
-		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
-
         long start = System.currentTimeMillis();
 
         Allergy[] allergyWarnings = null;
@@ -78,7 +75,6 @@ public class RxAllergyWarningWorker extends Thread {
             MiscUtils.getLogger().error("Error", e);
         }
         finally {
-    		LoggedInInfo.loggedInInfo.remove();
             DbConnectionFilter.releaseAllThreadDbResources();
         }
         long end = System.currentTimeMillis() - start;

@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
@@ -44,9 +43,6 @@ import org.oscarehr.common.model.Security;
 public final class LoggedInInfo {
 	private static final String LOGGED_IN_INFO_KEY = LoggedInInfo.class.getName() + ".LOGGED_IN_INFO_KEY";
 
-	private static Logger logger = MiscUtils.getLogger();
-	public static final ThreadLocal<LoggedInInfo> loggedInInfo = new ThreadLocal<LoggedInInfo>();
-
 	public HttpSession session = null;
 	public Facility currentFacility = null;
 	public Provider loggedInProvider = null;
@@ -54,6 +50,20 @@ public final class LoggedInInfo {
 	public Security loggedInSecurity = null;
 	public Locale locale = null;
 
+	public LoggedInInfo()
+	{
+		// do nothing
+	}
+	
+	public LoggedInInfo(HttpSession session, Facility currentFacility,Provider loggedInProvider,Security loggedInSecurity,Locale locale)
+	{
+		this.session=session;
+		this.currentFacility=currentFacility;
+		this.loggedInProvider=loggedInProvider;
+		this.loggedInSecurity=loggedInSecurity;
+		this.locale=locale;
+	}
+	
 	@Override
 	public String toString() {
 		return (ReflectionToStringBuilder.toString(this));
@@ -65,22 +75,14 @@ public final class LoggedInInfo {
 	 * there's lingering data, then set the thread local internalThreadDescription 
 	 * to the name of the class that called this method, i.e. your thread class name.
 	 */
-	public static LoggedInInfo setLoggedInInfoToCurrentClassAndMethod() {
-		checkForLingeringData();
-
+	public static LoggedInInfo getLoggedInInfoAsCurrentClassAndMethod() {
 		// get caller
 		StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 
 		// create and set new thread local
 		LoggedInInfo x = new LoggedInInfo();
 		x.initiatingCode = ste[2].getClassName() + '.' + ste[2].getMethodName();
-		loggedInInfo.set(x);
 		return(x);
-	}
-
-	protected static void checkForLingeringData() {
-		LoggedInInfo x = loggedInInfo.get();
-		if (x != null) logger.warn("Logged in info should be null on new requests but it wasn't. oldUser=" + x);
 	}
 
 	/**
@@ -88,9 +90,6 @@ public final class LoggedInInfo {
 	 */
 	public static void setLoggedInInfoIntoSession(HttpSession session, LoggedInInfo loggedInInfo) {
 		session.setAttribute(LOGGED_IN_INFO_KEY, loggedInInfo);
-
-		// temporary until full threadLocal is removed
-		LoggedInInfo.loggedInInfo.set(loggedInInfo);
 	}
 
 	/**
@@ -115,9 +114,6 @@ public final class LoggedInInfo {
 	 */
 	public static void setLoggedInInfoIntoRequest(HttpServletRequest request, LoggedInInfo loggedInInfo) {
 		request.setAttribute(LOGGED_IN_INFO_KEY, loggedInInfo);
-
-		// temporary until full threadLocal is removed
-		LoggedInInfo.loggedInInfo.set(loggedInInfo);
 	}
 
 	/**
@@ -133,9 +129,6 @@ public final class LoggedInInfo {
 	 */
 	public static void removeLoggedInInfoFromSession(HttpSession session) {
 		session.removeAttribute(LOGGED_IN_INFO_KEY);
-
-		// temporary until full threadLocal is removed
-		LoggedInInfo.loggedInInfo.remove();
 	}
 
 	public Facility getCurrentFacility() {
@@ -156,6 +149,34 @@ public final class LoggedInInfo {
 
 	public Locale getLocale() {
 		return (locale);
+	}
+
+	protected HttpSession getSession() {
+		return (session);
+	}
+
+	protected void setSession(HttpSession session) {
+		this.session = session;
+	}
+
+	protected void setCurrentFacility(Facility currentFacility) {
+		this.currentFacility = currentFacility;
+	}
+
+	protected void setLoggedInProvider(Provider loggedInProvider) {
+		this.loggedInProvider = loggedInProvider;
+	}
+
+	protected void setInitiatingCode(String initiatingCode) {
+		this.initiatingCode = initiatingCode;
+	}
+
+	protected void setLoggedInSecurity(Security loggedInSecurity) {
+		this.loggedInSecurity = loggedInSecurity;
+	}
+
+	protected void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 
 	public String getLoggedInProviderNo()
