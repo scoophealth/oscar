@@ -28,6 +28,7 @@
 
 <%-- Updated by Eugene Petruhin on 30 dec 2008 while fixing #2456688 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ include file="/taglibs.jsp" %>
 <%@ page import="org.oscarehr.PMmodule.model.Intake" %>
 <%@ page import="org.oscarehr.PMmodule.model.IntakeNodeJavascript" %>
@@ -42,6 +43,8 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page import="org.oscarehr.util.SessionConstants" %>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
     GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
     Intake intake = intakeEditForm.getIntake();
     String clientId = String.valueOf(intake.getClientId());
@@ -333,8 +336,8 @@
 <input type="hidden" name="remoteFacilityId" value="<%=StringUtils.trimToEmpty(request.getParameter("remoteFacilityId"))%>" />
 <input type="hidden" name="remoteDemographicId" value="<%=StringUtils.trimToEmpty(request.getParameter("remoteDemographicId"))%>" />
 <input type="hidden" name="skip_validate" id="skip_validate" value="false"/>
-<input type="hidden" id="facility_name" name="facility_name" value="<%=org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.getName()%>"/>
-<input type="hidden" id="ocan_service_org_number" name="ocan_service_org_number" value="<%=org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.getOcanServiceOrgNumber()%>"/>
+<input type="hidden" id="facility_name" name="facility_name" value="<%=loggedInInfo.currentFacility.getName()%>"/>
+<input type="hidden" id="ocan_service_org_number" name="ocan_service_org_number" value="<%=loggedInInfo.currentFacility.getOcanServiceOrgNumber()%>"/>
 
 <!--  If this is from adding appointment screen, save the intake and go back to there -->       
 <input  type="hidden" name="fromAppt" value="<%=request.getParameter("fromAppt")%>">

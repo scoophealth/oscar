@@ -32,6 +32,8 @@
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+
+    LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 
 <%@page import="java.util.*"%>
@@ -115,8 +117,7 @@ div#demo
 								endDateStr = dateFormatter.format(episode.getEndDate());
 							}
 							Integer formId = org.oscarehr.common.dao.PregnancyFormsDao.getLatestFormIdByPregnancy(episode.getId());
-							String url = request.getContextPath() + "/form/formonarenhancedpg1.jsp?demographic_no="+episode.getDemographicNo()+"&formId="+formId+"&provNo=" +
-								LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+							String url = request.getContextPath() + "/form/formonarenhancedpg1.jsp?demographic_no="+episode.getDemographicNo()+"&formId="+formId+"&provNo=" + loggedInInfo.loggedInProvider.getProviderNo();
 					%>
 					<tr class="gradeB">
 						<td>

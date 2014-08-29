@@ -48,7 +48,6 @@ public class OcanIarSubmissionTask extends TimerTask {
 			// sounds weird but I'm not going to change the behaviour right now...
 			for (Facility facility : facilities) {
 				if (!facility.isDisabled() && facility.isEnableOcanForms() && Integer.valueOf(facility.getOcanServiceOrgNumber()).intValue() != 0) {
-					LoggedInInfo.loggedInInfo.get().currentFacility = facility;
 					currentWorkingFacility=facility;
 					break;
 				}

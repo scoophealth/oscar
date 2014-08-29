@@ -62,8 +62,8 @@
 <%@ page import="oscar.util.UtilDateUtilities" %>
 
 <%
-LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+String providerNo=loggedInInfo.getLoggedInProviderNo();
 String providerName = loggedInInfo.loggedInProvider.getFormattedName();
 
 MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
@@ -71,8 +71,7 @@ MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(sess
 request.setAttribute("forwardto", request.getRequestURI());
 
 //set the "sent" tab to red if there are authorization errors on send
-PHRActionDAO phrActionDAO = (PHRActionDAO) WebApplicationContextUtils.getWebApplicationContext(
-        		pageContext.getServletContext()).getBean("phrActionDAO");
+PHRActionDAO phrActionDAO = (PHRActionDAO) WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext()).getBean("phrActionDAO");
 
 //some phrAction static constants
 pageContext.setAttribute("STATUS_OTHER_ERROR", PHRAction.STATUS_OTHER_ERROR);

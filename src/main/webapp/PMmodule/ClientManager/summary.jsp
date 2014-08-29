@@ -290,7 +290,7 @@ function openSurvey() {
 		</td>
 	</tr>
 	<%
-		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled())
+		if (loggedInInfo.currentFacility.isIntegratorEnabled())
 		{
 			%>
 				<tr>
@@ -576,7 +576,7 @@ function openSurvey() {
 			</tr>
 		<%
 
-		if (LoggedInInfo.loggedInInfo.get().currentFacility.isEnableOcanForms() && programEnableOcan )
+		if (loggedInInfo.currentFacility.isEnableOcanForms() && programEnableOcan )
 		{
 	%>
 	<tr>
@@ -704,7 +704,7 @@ function openSurvey() {
 	
 	
 	<%
-	if (LoggedInInfo.loggedInInfo.get().currentFacility.isEnableCbiForm())
+	if (loggedInInfo.currentFacility.isEnableCbiForm())
 	{
 		List<OcanStaffForm> allLatestCbiForms=(List<OcanStaffForm>)request.getAttribute("allLatestCbiForms");
 		if (allLatestCbiForms!=null && allLatestCbiForms.size()>0)

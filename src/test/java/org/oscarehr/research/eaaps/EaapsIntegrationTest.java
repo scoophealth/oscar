@@ -33,7 +33,6 @@ import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oscarehr.common.dao.DaoTestFixtures;
-import org.oscarehr.common.dao.utils.AuthUtils;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
 import org.oscarehr.common.model.Demographic;
@@ -143,7 +142,6 @@ public class EaapsIntegrationTest extends DaoTestFixtures {
 	@BeforeClass
 	public static void init() throws Exception {
 		SchemaUtils.restoreAllTables();
-		AuthUtils.initLoginContext();
 	}
 	
 	@Test

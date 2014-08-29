@@ -36,7 +36,9 @@
 
 
 <%
-	String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	String providerNo=loggedInInfo.getLoggedInProviderNo();
+
 	Measurement m = new Measurement();
 	m.setComments("");
 	m.setDataField("Yes");

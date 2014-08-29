@@ -23,9 +23,11 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
 //Initialize some variables
-String userName = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName();
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+String userName = loggedInInfo.loggedInProvider.getFormattedName();
 session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 %>
 
