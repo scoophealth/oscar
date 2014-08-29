@@ -138,7 +138,7 @@ public class FrmLabReq07Record extends FrmRecord {
         return props;
     }
 
-    public Properties getFormCustRecord(Facility facility, Properties props, String provNo) throws SQLException {
+    public Properties getFormCustRecord(LoggedInInfo loggedInInfo, Facility facility, Properties props, String provNo) throws SQLException {
         String demoProvider = props.getProperty("demoProvider", "");
         String xmlSpecialtyCode = "<xml_p_specialty_code>";
         String xmlSpecialtyCode2 = "</xml_p_specialty_code>";
@@ -233,7 +233,7 @@ public class FrmLabReq07Record extends FrmRecord {
     	//if patient was from integrator link up doc from other site
 	    	try{
 		    	Integer localDemographicId = Integer.parseInt(props.getProperty("demographic_no"));
-		    	DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(facility);
+		    	DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, facility);
 		    	List<DemographicTransfer> directLinks=demographicWs.getDirectlyLinkedDemographicsByDemographicId(localDemographicId);
 		    		
 		    	if (directLinks.size()>0){
@@ -243,12 +243,12 @@ public class FrmLabReq07Record extends FrmRecord {
 		        	FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 		        	providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
 		        	providerPk.setCaisiItemId(demographicTransfer.getLastUpdateUser());
-		        	CachedProvider p = CaisiIntegratorManager.getProvider(facility, providerPk);
+		        	CachedProvider p = CaisiIntegratorManager.getProvider(loggedInInfo, facility, providerPk);
 		        	if(p != null){
 			            props.setProperty("copyLname", p.getLastName());
 			            props.setProperty("copyFname", p.getFirstName());
 			    		
-			    		List<CachedProgram> cps = CaisiIntegratorManager.getAllPrograms(facility);
+			    		List<CachedProgram> cps = CaisiIntegratorManager.getAllPrograms(loggedInInfo, facility);
 			    		for(CachedProgram cp:cps){
 			    			if(providerPk.getIntegratorFacilityId() == cp.getFacilityIdIntegerCompositePk().getIntegratorFacilityId() && "OSCAR".equals(cp.getName()) &&  cp.getAddress() != null){
 			    				props.setProperty("copyAddress", cp.getAddress());  
@@ -314,7 +314,7 @@ public class FrmLabReq07Record extends FrmRecord {
     	CachedDemographicForm form = null;
     	try {
 			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-				DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+				DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 			    form=demographicWs.getCachedDemographicForm(pk);
 			}
 		} catch (Exception e) {

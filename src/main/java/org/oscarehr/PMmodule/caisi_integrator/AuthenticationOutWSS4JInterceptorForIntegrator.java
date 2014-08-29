@@ -32,7 +32,6 @@ import java.util.List;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
 import org.apache.cxf.binding.soap.SoapHeader;
@@ -40,12 +39,10 @@ import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.helpers.DOMUtils;
 import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.transport.http.AbstractHTTPDestination;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.handler.WSHandlerConstants;
-import org.oscarehr.util.LoggedInInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -54,9 +51,11 @@ public class AuthenticationOutWSS4JInterceptorForIntegrator extends WSS4JOutInte
 	private static QName REQUESTING_CAISI_PROVIDER_NO_QNAME = new QName("http://oscarehr.org/caisi", REQUESTING_CAISI_PROVIDER_NO_KEY, "caisi");
 
 	private String password = null;
+	private String oscarProviderNo=null;
 
-	public AuthenticationOutWSS4JInterceptorForIntegrator(String user, String password) {
+	public AuthenticationOutWSS4JInterceptorForIntegrator(String user, String password, String oscarProviderNo) {
 		this.password = password;
+		this.oscarProviderNo=oscarProviderNo;
 
 		HashMap<String, Object> properties = new HashMap<String, Object>();
 		properties.put(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);
@@ -78,15 +77,12 @@ public class AuthenticationOutWSS4JInterceptorForIntegrator extends WSS4JOutInte
 		}
 	}
 
-	public void handleMessage(SoapMessage message) throws Fault {
-		HttpServletRequest request = (HttpServletRequest) message.get(AbstractHTTPDestination.HTTP_REQUEST);
-		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoForWebServices(request);
-		
-		addRequestionCaisiProviderNo(message, loggedInInfo.getLoggedInProviderNo());
+	public void handleMessage(SoapMessage message) throws Fault {		
+		addRequestingCaisiProviderNo(message, oscarProviderNo);
 		super.handleMessage(message);
 	}
 
-	private static void addRequestionCaisiProviderNo(SoapMessage message, String providerNo) {
+	private static void addRequestingCaisiProviderNo(SoapMessage message, String providerNo) {
 		List<Header> headers = message.getHeaders();
 
 		if (providerNo != null) {

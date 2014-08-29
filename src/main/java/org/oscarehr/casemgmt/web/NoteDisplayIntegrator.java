@@ -62,21 +62,21 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 
     	try {
     		// note location
-	        CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
+	        CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(),cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
 	        if (cachedFacility!=null) location="Integrated Facility : "+cachedFacility.getName();
 
 	        // program name
 	    	FacilityIdIntegerCompositePk programPk=new FacilityIdIntegerCompositePk();
 	    	programPk.setIntegratorFacilityId(cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
 	    	programPk.setCaisiItemId(cachedDemographicNote.getCaisiProgramId());
-	    	CachedProgram remoteProgram=CaisiIntegratorManager.getRemoteProgram(loggedInInfo.getCurrentFacility(),programPk);
+	    	CachedProgram remoteProgram=CaisiIntegratorManager.getRemoteProgram(loggedInInfo, loggedInInfo.getCurrentFacility(),programPk);
 	    	if (remoteProgram!=null) programName=remoteProgram.getName();
 
 	    	// provider name
 	    	FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 	    	providerPk.setIntegratorFacilityId(cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
 	    	providerPk.setCaisiItemId(cachedDemographicNote.getObservationCaisiProviderId());
-	    	CachedProvider remoteProvider=CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(),providerPk);
+	    	CachedProvider remoteProvider=CaisiIntegratorManager.getProvider(loggedInInfo, loggedInInfo.getCurrentFacility(),providerPk);
 	    	if (remoteProvider!=null) providerName=remoteProvider.getLastName()+", "+remoteProvider.getFirstName();
 
 	    	// issue descriptions

@@ -48,7 +48,7 @@
 			boolean allSynced = true;
 			
 			try{
-				allSynced  = CaisiIntegratorManager.haveAllRemoteFacilitiesSyncedIn(secondsTillConsideredStale,true); 
+				allSynced  = CaisiIntegratorManager.haveAllRemoteFacilitiesSyncedIn(loggedInInfo8876, secondsTillConsideredStale,true); 
 			}catch(Exception remoteFacilityException){
 				MiscUtils.getLogger().error("Error checking Remote Facilities Sync status",remoteFacilityException);
 				CaisiIntegratorManager.checkForConnectionError(remoteFacilityException);

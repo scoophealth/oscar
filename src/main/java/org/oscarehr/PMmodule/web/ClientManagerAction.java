@@ -469,7 +469,7 @@ public class ClientManagerAction extends DispatchAction {
 				integratorReferral.setSourceCaisiDemographicId(clientId);
 				integratorReferral.setSourceCaisiProviderId(loggedInInfo.loggedInProvider.getProviderNo());
 
-				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo.getCurrentFacility());
+				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 				referralWs.makeReferral(integratorReferral);
 
 				// save local copy
@@ -480,13 +480,13 @@ public class ClientManagerAction extends DispatchAction {
 				remoteReferral.setReasonForReferral(referral.getNotes());
 				remoteReferral.setReferalDate(new GregorianCalendar());
 
-				CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),remoteFacilityId);
+				CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(),remoteFacilityId);
 				remoteReferral.setReferredToFacilityName(cachedFacility.getName());
 
 				FacilityIdIntegerCompositePk remoteProgramCompositeKey = new FacilityIdIntegerCompositePk();
 				remoteProgramCompositeKey.setIntegratorFacilityId(remoteFacilityId);
 				remoteProgramCompositeKey.setCaisiItemId(remoteProgramId);
-				CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo.getCurrentFacility(),remoteProgramCompositeKey);
+				CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo, loggedInInfo.getCurrentFacility(),remoteProgramCompositeKey);
 				remoteReferral.setReferredToProgramName(cachedProgram.getName());
 
 				remoteReferral.setReferringProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
@@ -572,7 +572,7 @@ public class ClientManagerAction extends DispatchAction {
 				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
 				pk.setIntegratorFacilityId(Integer.parseInt(r.getRemoteFacilityId()));
 				pk.setCaisiItemId(Integer.parseInt(r.getRemoteProgramId()));
-				CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo.getCurrentFacility(),pk);
+				CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo, loggedInInfo.getCurrentFacility(),pk);
 
 				p.setName(cachedProgram.getName());
 
@@ -616,7 +616,7 @@ public class ClientManagerAction extends DispatchAction {
 				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
 				pk.setIntegratorFacilityId(Integer.parseInt(r.getRemoteFacilityId()));
 				pk.setCaisiItemId(Integer.parseInt(r.getRemoteProgramId()));
-				CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo.getCurrentFacility(),pk);
+				CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo, loggedInInfo.getCurrentFacility(),pk);
 
 				p.setName(cachedProgram.getName());
 
@@ -1183,7 +1183,7 @@ public class ClientManagerAction extends DispatchAction {
 
 		if (CaisiIntegratorManager.isEnableIntegratedReferrals(loggedInInfo.getCurrentFacility())) {
 			try {
-				List<CachedProgram> results = CaisiIntegratorManager.getRemoteProgramsAcceptingReferrals(loggedInInfo.getCurrentFacility());
+				List<CachedProgram> results = CaisiIntegratorManager.getRemoteProgramsAcceptingReferrals(loggedInInfo, loggedInInfo.getCurrentFacility());
 
 				filterResultsByCriteria(results, criteria);
 
@@ -1785,9 +1785,9 @@ public class ClientManagerAction extends DispatchAction {
 					results.addAll(remoteReferralsFromDB);
 
 					// get remote Data
-					ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo.getCurrentFacility());
+					ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 
-					Integer currentRemoteFacilityId = CaisiIntegratorManager.getCurrentRemoteFacility(loggedInInfo.getCurrentFacility()).getIntegratorFacilityId();
+					Integer currentRemoteFacilityId = CaisiIntegratorManager.getCurrentRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility()).getIntegratorFacilityId();
 					List<Referral> referrals = referralWs.getLinkedReferrals(Integer.parseInt(demographicNo));
 
 					if (referrals != null) {
@@ -1795,13 +1795,13 @@ public class ClientManagerAction extends DispatchAction {
 							if (currentRemoteFacilityId.equals(remoteReferral.getSourceIntegratorFacilityId())) continue;
 
 							RemoteReferral temp = new RemoteReferral();
-							CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),remoteReferral.getDestinationIntegratorFacilityId());
+							CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(),remoteReferral.getDestinationIntegratorFacilityId());
 							temp.setReferredToFacilityName(cachedFacility.getName());
 
 							FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
 							pk.setIntegratorFacilityId(remoteReferral.getDestinationIntegratorFacilityId());
 							pk.setCaisiItemId(remoteReferral.getDestinationCaisiProgramId());
-							CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo.getCurrentFacility(),pk);
+							CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo, loggedInInfo.getCurrentFacility(),pk);
 							temp.setReferredToProgramName(cachedProgram.getName());
 
 							temp.setReferalDate(remoteReferral.getReferralDate());
@@ -1968,7 +1968,7 @@ public class ClientManagerAction extends DispatchAction {
 				List<CachedAdmission> cachedAdmissions  = null;
 				try {
 					if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-						cachedAdmissions = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedAdmissionsByDemographicId(demographicId);
+						cachedAdmissions = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedAdmissionsByDemographicId(demographicId);
 					}
 				} catch (Exception e) {
 					MiscUtils.getLogger().error("Unexpected error.", e);
@@ -2008,7 +2008,7 @@ public class ClientManagerAction extends DispatchAction {
 		
 		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 			try {
-				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo.getCurrentFacility());
+				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 
 				List<Referral> tempRemoteReferrals = referralWs.getLinkedReferrals(demographicNo);
 				for (Referral referral : tempRemoteReferrals)
@@ -2031,11 +2031,11 @@ public class ClientManagerAction extends DispatchAction {
 
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 			try {
-				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo.getCurrentFacility());
+				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 
 				List<Referral> tempRemoteReferrals = referralWs.getLinkedReferrals(demographicNo);
 				for (Referral referral : tempRemoteReferrals)
-					allResults.add(new ReferralHistoryDisplay(loggedInInfo.getCurrentFacility(),referral));
+					allResults.add(new ReferralHistoryDisplay(loggedInInfo, loggedInInfo.getCurrentFacility(),referral));
 
 				Collections.sort(allResults, ReferralHistoryDisplay.REFERRAL_DATE_COMPARATOR);
 			} catch (Exception e) {

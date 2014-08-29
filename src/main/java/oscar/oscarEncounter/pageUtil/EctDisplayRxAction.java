@@ -98,7 +98,7 @@ public class EctDisplayRxAction extends EctDisplayAction {
 				List<CachedDemographicDrug> remoteDrugs  = null;
 				try {
 					if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-					   remoteDrugs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDrugsByDemographicId(demographicId);
+					   remoteDrugs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDrugsByDemographicId(demographicId);
 					}
 				} catch (Exception e) {
 					MiscUtils.getLogger().error("Unexpected error.", e);

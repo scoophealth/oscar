@@ -904,8 +904,8 @@ public final class EDocUtil {
 			List<CachedDemographicDocument> remoteDocuments = null;
 			try {
 				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
-					CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
-					remoteDocuments = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDocuments(demographicId);
+					CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
+					remoteDocuments = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDocuments(demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);

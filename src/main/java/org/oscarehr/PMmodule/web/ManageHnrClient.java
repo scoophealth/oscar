@@ -73,7 +73,7 @@ public class ManageHnrClient {
 
 		if (loggedInInfo.currentFacility.isEnableHealthNumberRegistry() && loggedInInfo.currentFacility.isIntegratorEnabled() && clientLink != null) {
 			try {
-				hnrClient = CaisiIntegratorManager.getHnrClient(loggedInInfo.getCurrentFacility(), clientLink.getRemoteLinkId());
+				hnrClient = CaisiIntegratorManager.getHnrClient(loggedInInfo, loggedInInfo.getCurrentFacility(), clientLink.getRemoteLinkId());
 			} catch (ConnectException_Exception e) {
 				logger.error("Error Connecting to HNR server", e);
 			} catch (Exception e) {
@@ -213,7 +213,7 @@ public class ManageHnrClient {
 	
 	private boolean hasConsented() {
 		try {
-	        GetConsentTransfer consent=CaisiIntegratorManager.getConsentState(loggedInInfo.getCurrentFacility(), demographic.getDemographicNo());
+	        GetConsentTransfer consent=CaisiIntegratorManager.getConsentState(loggedInInfo, loggedInInfo.getCurrentFacility(), demographic.getDemographicNo());
 	        return(consent!=null && consent.getConsentState()==ConsentState.ALL);
         } catch (Exception e) {
         	logger.debug("Exception getting consent state.", e);

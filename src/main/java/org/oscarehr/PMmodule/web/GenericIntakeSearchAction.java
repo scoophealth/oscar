@@ -140,10 +140,10 @@ public class GenericIntakeSearchAction extends DispatchAction {
 		try {
 			Integer remoteReferralId = Integer.parseInt(request.getParameter("remoteReferralId"));
 
-			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo.getCurrentFacility());
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 			Referral remoteReferral = referralWs.getReferral(remoteReferralId);
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 			DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(), remoteReferral.getSourceCaisiDemographicId());
 
 			GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
@@ -205,7 +205,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 
 			MatchingDemographicParameters parameters = new MatchingDemographicParameters();
 			parameters.setMaxEntriesToReturn(10);
@@ -239,7 +239,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 			List<MatchingDemographicTransferScore> integratedMatches = demographicWs.getMatchingDemographics(parameters);
 			request.setAttribute("remoteMatches", integratedMatches);
 
-			List<CachedFacility> allFacilities = CaisiIntegratorManager.getRemoteFacilities(loggedInInfo.getCurrentFacility());
+			List<CachedFacility> allFacilities = CaisiIntegratorManager.getRemoteFacilities(loggedInInfo, loggedInInfo.getCurrentFacility());
 			HashMap<Integer, String> facilitiesNameMap = new HashMap<Integer, String>();
 			for (CachedFacility cachedFacility : allFacilities)
 				facilitiesNameMap.put(cachedFacility.getIntegratorFacilityId(), cachedFacility.getName());
@@ -283,7 +283,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 			int remoteFacilityId = Integer.parseInt(request.getParameter("remoteFacilityId"));
 			int remoteDemographicId = Integer.parseInt(request.getParameter("remoteDemographicId"));
 
-			Demographic demographic=CaisiIntegratorManager.makeUnpersistedDemographicObjectFromRemoteEntry(loggedInInfo.getCurrentFacility(), remoteFacilityId, remoteDemographicId);
+			Demographic demographic=CaisiIntegratorManager.makeUnpersistedDemographicObjectFromRemoteEntry(loggedInInfo, loggedInInfo.getCurrentFacility(), remoteFacilityId, remoteDemographicId);
 						
 			
 			String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -345,7 +345,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 		String remoteReferralId = StringUtils.trimToNull(request.getParameter("remoteReferralId"));
 		if (remoteReferralId != null) {
 			try {
-				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo.getCurrentFacility());
+				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 				Referral remoteReferral = referralWs.getReferral(Integer.parseInt(remoteReferralId));
 				parameters.append("&destinationProgramId=");
 				parameters.append(remoteReferral.getDestinationCaisiProgramId());
@@ -387,7 +387,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 	private void erClerklinkRemoteDemographic(LoggedInInfo loggedInInfo, int remoteFacilityId, int remoteDemographicId, String providerNo, Demographic client) {
 		
 		try {			
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 
 			// link the clients
 			demographicWs.linkDemographics(providerNo, client.getDemographicNo(), remoteFacilityId, remoteDemographicId);
