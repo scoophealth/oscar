@@ -126,14 +126,14 @@
 
  <Numerator id ="20to64Young" name="20 to 64" type="SQL"  description="Number of patient in the denom 20 to 64">
     select * from demographic d where   d.demographic_no = '${demographic_no}'  and  
-    DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d') &gt;= DATE_SUB(now(),INTERVAL 20 Year)
-    and DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d') &lt;= DATE_SUB(now(),INTERVAL 64 Year)
+    DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d') &lt;= DATE_SUB(now(),INTERVAL 20 Year)
+    and DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d') &gt;= DATE_SUB(now(),INTERVAL 64 Year)
     
  </Numerator>
 
  <Numerator id ="65Older" name="65 and older" type="SQL"  description="Number of patients in the denom 65 and older">
     select * from demographic d where   demographic_no = '${demographic_no}'  and  
-DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d') &gt;= DATE_SUB(now(),INTERVAL 65 Year)
+DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d') &lt;= DATE_SUB(now(),INTERVAL 65 Year)
  </Numerator>
  
  <Numerator id ="mam12m" name="Mammogram in past 12m" type="SQL"  description="Number of patients in the denom that have a mam test in the last 12 months">
