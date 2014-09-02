@@ -24,8 +24,9 @@
 
 --%>
 <%@ page import="org.oscarehr.common.dao.FaxConfigDao, org.oscarehr.common.model.FaxConfig, org.oscarehr.common.model.FaxJob, org.oscarehr.common.dao.FaxJobDao" %>
+<%@ page import="org.oscarehr.common.dao.ProviderDataDao, org.oscarehr.common.model.ProviderData" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
-<%@ page import="java.util.List" %>
+<%@ page import="java.util.List, java.util.Collections" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -180,7 +181,25 @@
 <input type="hidden" name="method" value="fetchFaxStatus"/>
 <div class="row-center">
 
-	<select class="span3" name="team">
+	<select class="span2" name="oscarUser">
+		<option value="-1">Provider</option>
+		
+<%
+	ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
+	List<ProviderData> providerDataList = providerDataDao.findAll(false);
+	Collections.sort(providerDataList, ProviderData.LastNameComparator);
+	
+	for( ProviderData providerData : providerDataList ) {
+%>
+		<option value="<%=providerData.getId()%>"><%=providerData.getLastName() + ", " + providerData.getFirstName()%></option>
+	
+<%
+	}
+%>
+	</select>
+
+
+	<select class="span2" name="team">
 		<option value="-1">Team</option>
 <%
 	FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);
@@ -194,7 +213,7 @@
 %>
 	</select>
 
-	<select class="span3" name="status">
+	<select class="span2" name="status">
 		<option value="-1">Status</option>
 	
 <%
@@ -219,9 +238,9 @@
 </div>
 </form>
 <hr>
-<div class="span6" id="results">
+<div class="span7" id="results">
 </div>
-<div class="span6" id="preview">
+<div class="span5" id="preview">
 </div>
 </body>
 </html>

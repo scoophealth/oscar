@@ -336,6 +336,11 @@ public class ManageFaxes extends DispatchAction {
 		String teamStr = request.getParameter("team");
 		String dateBeginStr = request.getParameter("dateBegin");
 		String dateEndStr = request.getParameter("dateEnd");
+		String provider_no = request.getParameter("oscarUser");
+		
+		if( provider_no.equalsIgnoreCase("-1") ) {
+			provider_no = null;
+		}
 		
 		if( statusStr.equalsIgnoreCase("-1") ) {
 			statusStr = null;
@@ -365,7 +370,7 @@ public class ManageFaxes extends DispatchAction {
 		
 		FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);
 		
-		List<FaxJob> faxJobList = faxJobDao.getFaxStatusByTeamDateStatus(statusStr, teamStr, dateBegin, dateEnd);
+		List<FaxJob> faxJobList = faxJobDao.getFaxStatusByTeamDateStatus(provider_no, statusStr, teamStr, dateBegin, dateEnd);
 		
 		request.setAttribute("faxes", faxJobList);
 		
