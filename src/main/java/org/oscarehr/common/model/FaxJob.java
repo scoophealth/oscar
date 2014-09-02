@@ -111,6 +111,8 @@ public class FaxJob extends AbstractModel<Integer> implements Comparable<FaxJob>
     
     private Long jobId;
     
+    private String oscarUser;
+    
     /**
      * @return the id
      */
@@ -254,6 +256,20 @@ public class FaxJob extends AbstractModel<Integer> implements Comparable<FaxJob>
 		}
 		
 		return stamp.compareTo(arg0.getStamp());
+    }
+
+	/**
+	 * @return the oscarUser
+	 */
+    public String getOscarUser() {
+	    return oscarUser;
+    }
+
+	/**
+	 * @param oscarUser the oscarUser to set
+	 */
+    public void setOscarUser(String oscarUser) {
+	    this.oscarUser = oscarUser;
     }
     
     

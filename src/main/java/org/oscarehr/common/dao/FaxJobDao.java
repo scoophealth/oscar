@@ -40,11 +40,11 @@ public class FaxJobDao extends AbstractDao<FaxJob> {
     }
     
     @SuppressWarnings("unchecked")
-    public List<FaxJob> getFaxStatusByTeamDateStatus(String status, String team, Date beginDate, Date endDate) {
+    public List<FaxJob> getFaxStatusByTeamDateStatus(String provider_no, String status, String team, Date beginDate, Date endDate) {
     	
     	StringBuilder sql = new StringBuilder("select job from FaxJob job ");
     	
-    	if( status != null || team != null || beginDate != null || endDate != null  ) {
+    	if( status != null || team != null || beginDate != null || endDate != null || provider_no != null ) {
     		sql.append("where");
     	}
     	
@@ -80,7 +80,17 @@ public class FaxJobDao extends AbstractDao<FaxJob> {
     			sql.append(" and job.stamp <= :endDate");
     		}
     		else {
+    			firstclause = true;
     			sql.append(" job.stamp <= :endDate");
+    		}
+    	}
+    	
+    	if( provider_no != null ) {
+    		if( firstclause ) {
+    			sql.append(" and job.oscarUser = '" + provider_no + "'");
+    		}
+    		else {
+    			sql.append(" job.oscarUser = '" + provider_no + "'");
     		}
     	}
     	

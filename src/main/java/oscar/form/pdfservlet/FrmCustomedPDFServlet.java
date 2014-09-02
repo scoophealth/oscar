@@ -111,6 +111,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			                FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);
 			                FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);
 			                List<FaxConfig> faxConfigs = faxConfigDao.findAll(null, null);
+			                String provider_no = LoggedInInfo.getLoggedInInfoFromSession(req).getLoggedInProviderNo();
 			                FaxJob faxJob;
 			                boolean validFaxNumber = false;
 			                
@@ -128,6 +129,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			                		faxJob.setNumPages(pdfReader.getNumberOfPages());
 			                		faxJob.setStamp(new Date());
 			                		faxJob.setStatus(FaxJob.STATUS.SENT);
+			                		faxJob.setOscarUser(provider_no);
 			                		
 			                		faxJobDao.persist(faxJob);
 			                		validFaxNumber = true;

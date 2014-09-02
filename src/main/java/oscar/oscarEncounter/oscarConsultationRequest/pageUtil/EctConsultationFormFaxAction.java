@@ -73,8 +73,7 @@ public class EctConsultationFormFaxAction extends Action {
 		ByteOutputStream bos;
 		CommonLabResultData consultLabs = new CommonLabResultData();
 		ArrayList<InputStream> streams = new ArrayList<InputStream>();
-
-		String provider_no = loggedInInfo.getLoggedInProvider().getProviderNo();
+		String provider_no = loggedInInfo.getLoggedInProviderNo();		
 
 		ArrayList<LabResultData> labs = consultLabs.populateLabResultsData(demoNo, reqId, CommonLabResultData.ATTACHED);
 		String error = "";
@@ -198,6 +197,7 @@ public class EctConsultationFormFaxAction extends Action {
 		    		faxJob.setNumPages(numPages);
 		    		faxJob.setFax_line(faxNumber);
 		    		faxJob.setStamp(new Date());
+		    		faxJob.setOscarUser(provider_no);
 				    
 				    for( FaxConfig faxConfig : faxConfigs ) {
 				    	
