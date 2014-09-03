@@ -195,7 +195,7 @@ function check() {
 											<td><bean:write name='measurementType'
 												property='lastData' /></td>
 											<td><bean:write name='measurementType'
-												property='lastDateEntered' /></td>
+												property='lastDateObserved' /></td>
 											<td><bean:write name='measurementType'
 												property='lastComments' /></td>
 											<td><img src="img/history.gif"
