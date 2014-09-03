@@ -73,8 +73,8 @@ public class MDSHandler implements MessageHandler {
     		return;
     	}
 
-
     	try {
+    	
 	        msg=DynamicHapiLoaderUtils.parseMdsMsg(hl7Body.replace( "\n", "\r\n"));
 	        terser = DynamicHapiLoaderUtils.getMdsTerser(msg);
 
@@ -130,7 +130,7 @@ public class MDSHandler implements MessageHandler {
 	        }
 	         */
         } catch (Exception e) {
-        	logger.error("Unexpected error", e);
+        	throw new HL7Exception(e);
         }
     }
 
