@@ -68,7 +68,6 @@ import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
@@ -76,7 +75,6 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.billing.CA.dao.GstControlDao;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
-import org.oscarehr.casemgmt.common.EChartNoteEntry;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
@@ -101,12 +99,10 @@ import org.oscarehr.common.dao.CasemgmtNoteLockDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ProviderDefaultProgramDao;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.CaseManagementTmpSave;
 import org.oscarehr.common.model.CasemgmtNoteLock;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.DxAssociation;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderDefaultProgram;
@@ -134,7 +130,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import oscar.OscarProperties;
 import oscar.appt.ApptStatusData;
-import oscar.dms.EDocUtil;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarBilling.ca.on.pageUtil.BillingSavePrep;
@@ -367,7 +362,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				note.setHistory(note.getNote());
 
 				caseManagementMgr.saveNoteSimple(note);
-				addNewNoteLink(Long.parseLong(nId));
+				caseManagementMgr.addNewNoteLink(Long.parseLong(nId));
 			}
 
 		}
@@ -379,6 +374,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				session.setAttribute("newNote", "true");
 				session.setAttribute("issueStatusChanged", "false");
 				note = this.makeNewNote(providerNo, demono, request);				
+			}else{
+				session.setAttribute("newNote", "false"); // should be able to get getLatSaved from the manager now
 			}
 		}
 		current = System.currentTimeMillis();
@@ -799,7 +796,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 
 		caseManagementMgr.saveNote(cpp, note, providerNo, null, null, null);
-		addNewNoteLink(note.getId());
+		caseManagementMgr.addNewNoteLink(note.getId());
 
 
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
@@ -1144,7 +1141,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 		cpp = copyNote2cpp(cpp, note);
 		String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
-		addNewNoteLink(note.getId());
+		caseManagementMgr.addNewNoteLink(note.getId());
 		logger.debug("Saved note " + savedStr);
 		caseManagementMgr.saveCPP(cpp, providerNo);
 		/* remember the str written into echart */
@@ -1234,7 +1231,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	private long noteSave(CaseManagementEntryFormBean cform, HttpServletRequest request) throws Exception {
-		
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo=loggedInInfo.getLoggedInProviderNo();
 
@@ -1266,20 +1262,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			logger.error("Lock not found for " + demo + " provider " + providerNo + " IP " + request.getRemoteAddr(), e);
 			return -1L;
 		}
-				
-		WebApplicationContext ctx = getSpringContext();
-		ProgramManager programManager = (ProgramManager) ctx.getBean("programManager");
-		AdmissionManager admissionManager = (AdmissionManager) ctx.getBean("admissionManager");		
+		
 		CaseManagementNote note = sessionFrm.getCaseNote();
-		Long old_note_id = note.getId(); // saved for use with annotation	
-		// we don't want to save empty notes!
-
 		String noteTxt = cform.getCaseNote_note();
 		noteTxt = org.apache.commons.lang.StringUtils.trimToNull(noteTxt);
 		if (noteTxt == null || noteTxt.equals("")) return -1L;
 
 		note.setNote(noteTxt);
-
 		
 		Provider provider = loggedInInfo.loggedInProvider;
 		String userName = provider != null ? provider.getFullName() : "";
@@ -1289,9 +1278,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			cpp = new CaseManagementCPP();
 			cpp.setDemographic_no(demo);
 		}
-
-		boolean inCaisi = OscarProperties.getInstance().isCaisiLoaded();
-
 		String lastSavedNoteString = (String) session.getAttribute("lastSavedNoteString");
 
 		// bug fix - encounter type was not being updated.
@@ -1347,9 +1333,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		note.setProviderNo(providerNo);
 		if (provider != null) note.setProvider(provider);
 
-		String role = null;
-		String team = null;
-
 		// if this is an update, don't overwrite the program id
 		if (note.getProgram_no() == null || note.getProgram_no().equals("") || "0".equals(note.getProgram_no()) ) {
 			String programId = (String) session.getAttribute("case_program_id");
@@ -1360,30 +1343,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			}
 			note.setProgram_no(programId);
 		}
-
-		try {
-			role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(), note.getProgram_no())).getRole().getId());
-		} catch (Throwable e) {
-			role = "0";
-		}
-		/*
-		 * if(session.getAttribute("archiveView")!="true") note.setReporter_caisi_role(role); else note.setReporter_caisi_role("1");
-		 */
-		note.setReporter_caisi_role(role);
-
-		try {
-			Admission admission = admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()));
-			if (admission != null) {
-				team = String.valueOf(admission.getTeamId());
-			} else {
-				team = "0";
-			}
-		} catch (Throwable e) {
-			logger.error("Error", e);
-			team = "0";
-		}
-		note.setReporter_program_team(team);
-
+		
 		/* get the checked issue save into note */
 		// this goes into the database casemgmt_issue table
 		List<CaseManagementIssue> issuelist = new ArrayList<CaseManagementIssue>();
@@ -1434,102 +1394,26 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				note.setNote(noteString + issueString);
 			}
 		}
-
-		/* save all issue changes for demographic */
-		caseManagementMgr.saveAndUpdateCaseIssues(issuelist);
-		if (inCaisi) cpp.setOngoingConcerns(ongoing);
-
+		//Ongoing 
+		
 		// update appointment and add verify message to note if verified
 		String strBeanName = "casemgmt_oscar_bean" + demo;
 		EctSessionBean sessionBean = (EctSessionBean) session.getAttribute(strBeanName);
-		String verify = request.getParameter("verify");
-		OscarAppointmentDao appointmentDao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
-
-		Date now = new Date();
-		String roleName = caseManagementMgr.getRoleName(providerNo, note.getProgram_no());
-
-		if (verify != null && verify.equalsIgnoreCase("on")) {
-			String message = caseManagementMgr.getSignature(providerNo, userName, roleName, request.getLocale(), caseManagementMgr.SIGNATURE_VERIFY);
-
-			String n = note.getNote() + "\n" + message;
-			note.setNote(n);
-
-			// only update appt if there is one
-			if (sessionBean.appointmentNo != null && !(sessionBean.appointmentNo.equals("") || sessionBean.appointmentNo.equals("0"))) {
-				String apptStatus = updateApptStatus(sessionBean.status, "verify");
-				Appointment appointment = appointmentDao.find(Integer.parseInt(sessionBean.appointmentNo));
-				// don't process appointment if it's been deleted
-				if (appointment != null) {
-					appointmentArchiveDao.archiveAppointment(appointment);
-					appointment.setStatus(apptStatus);
-					appointment.setLastUpdateUser(providerNo);
-					appointmentDao.merge(appointment);
-				}
-			}
-
-		} else if (note.isSigned()) {
-			String message = caseManagementMgr.getSignature(providerNo, userName, roleName, request.getLocale(), caseManagementMgr.SIGNATURE_SIGNED);
-
-			String n = note.getNote() + "\n" + message;
-			note.setNote(n);
-
-			// only update appt if there is one
-			if (sessionBean.appointmentNo != null && !(sessionBean.appointmentNo.equals("") || sessionBean.appointmentNo.equals("0"))) {
-				String apptStatus = updateApptStatus(sessionBean.status, "sign");
-				Appointment appointment = appointmentDao.find(Integer.parseInt(sessionBean.appointmentNo));
-				if (appointment != null) {
-					appointmentArchiveDao.archiveAppointment(appointment);
-					appointment.setStatus(apptStatus);
-					appointment.setLastUpdateUser(providerNo);
-					appointmentDao.merge(appointment);
-				}
-			}
+		String verifyStr = request.getParameter("verify");
+		boolean verify = false;
+		if (verifyStr != null && verifyStr.equalsIgnoreCase("on")) {
+			verify = true;
 		}
-
-		// PLACEHOLDER FOR DX CHECK
-		/*
-		 * If an issue is checked, new , and certain - we want to check dx associations. if found in dx associations. we want to make an entry into dx.
-		 */
-		if (note.isSigned()) {
-			for (CaseManagementIssue cmIssue : issueset) {
-				if (cmIssue.isCertain()) {
-					DxAssociation assoc = dxDao.findAssociation(cmIssue.getIssue().getType(), cmIssue.getIssue().getCode());
-					if (assoc != null) {
-						// we found a match. Let's add them to registry
-						this.caseManagementMgr.saveToDx(getDemographicNo(request), assoc.getDxCode(), assoc.getDxCodeType(), true);
-
-					}
-				}
-			}
-		}
-
-		/*
-		 * if provider is a doctor or nurse,get all major and resolved medical issue for demograhhic and append them to CPP medical history
-		 */
-		if (inCaisi) {
-			/* get access right */
-			List<AccessType> accessRight = caseManagementMgr.getAccessRight(providerNo, getDemographicNo(request), (String) session.getAttribute("case_program_id"));
-			setCPPMedicalHistory(cpp, providerNo, accessRight);
-			cpp.setUpdate_date(now);
-			caseManagementMgr.saveCPP(cpp, providerNo);
-		}
-
+		
 		// update password
 		String passwd = cform.getCaseNote().getPassword();
 		if (passwd != null && passwd.trim().length() > 0) {
 			note.setPassword(passwd);
 			note.setLocked(true);
 		}
-
-		int revision;
-
-		if (note.getRevision() != null) {
-			revision = Integer.parseInt(note.getRevision());
-			++revision;
-		} else revision = 1;
-
-		note.setRevision(String.valueOf(revision));
-
+		
+		Date now = new Date();
+		
 		String observationDate = cform.getObservation_date();
 		ResourceBundle props = ResourceBundle.getBundle("oscarResources", request.getLocale());
 		if (observationDate != null && !observationDate.equals("")) {
@@ -1542,13 +1426,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		} else if (note.getObservation_date() == null) {
 			note.setObservation_date(now);
 		}
-
+		
 		note.setUpdate_date(now);
-		boolean newNote = false;
-		if (note.getCreate_date() == null) {
-			note.setCreate_date(now);
-			newNote = true;
-		}
+		
 
 		// Checks whether the user can set the program via the UI - if so, make sure that they can't screw it up if they do
 		if (OscarProperties.getInstance().getBooleanProperty("note_program_ui_enabled", "true")) {
@@ -1563,19 +1443,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 					note.setReporter_caisi_role(noteRoleId);
 				}
 			} else {
-				throw new Exception("Missing role id or program number. [roleId=" + noteRoleId + ", programNo=" + noteProgramNo + "]");
+						throw new Exception("Missing role id or program number. [roleId=" + noteRoleId + ", programNo=" + noteProgramNo + "]");
 			}
 		}
 
 		if (sessionBean.appointmentNo != null && sessionBean.appointmentNo.length() > 0) {
 			note.setAppointmentNo(Integer.parseInt(sessionBean.appointmentNo));
 		}
+		
+		/* Save annotation */
 
-		/* save note including add signature */
-		String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
-		addNewNoteLink(note.getId());
-		/* remember the str written into echart */
-		session.setAttribute("lastSavedNoteString", savedStr);
+		String attrib_name = request.getParameter("annotation_attribname");
+		CaseManagementNote annotationNote = (CaseManagementNote) session.getAttribute(attrib_name);
+
+		//String ongoing = null; // figure out this
+		note = caseManagementMgr.saveCaseManagementNote(note,issuelist, cpp, ongoing,verify, request.getLocale(),now,annotationNote,userName,(String) session.getAttribute("user"),request.getRemoteAddr(), lastSavedNoteString) ;
+		
+		
 		caseManagementMgr.getEditors(note);
 		cform.setCaseNote(note);
 		
@@ -1583,81 +1467,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		casemgmtNoteLockSession.setNoteId(note.getId());
 		logger.info("UPDATING NOTE ID in LOCK");
 		casemgmtNoteLockDao.merge(casemgmtNoteLockSession);
-		
 		session.setAttribute("casemgmtNoteLock"+demo, casemgmtNoteLockSession);	
 		
+		session.removeAttribute(attrib_name);
 
-		try {
-			this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
-		} catch (Throwable e) {
-			logger.warn("warn", e);
-		}
-
-		/* Save annotation */
-
-		String attrib_name = request.getParameter("annotation_attribname");
-		CaseManagementNote cmn = (CaseManagementNote) session.getAttribute(attrib_name);
-		if (cmn != null) {
-			// new annotation created and got it in session attribute
-
-			caseManagementMgr.saveNoteSimple(cmn);
-			CaseManagementNoteLink cml = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cmn.getId());
-			caseManagementMgr.saveNoteLink(cml);
-			LogAction.addLog(providerNo, LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(cmn.getId()), request.getRemoteAddr(), demo, cmn.getNote());
-			session.removeAttribute(attrib_name);
-
-		}
-		if (old_note_id != null) {
-			// Not a new note, look for old annotation
-
-			CaseManagementNoteLink cml_anno = null;
-			CaseManagementNoteLink cml_dump = null;
-			List<CaseManagementNoteLink> cmll = caseManagementMgr.getLinkByTableIdDesc(CaseManagementNoteLink.CASEMGMTNOTE, old_note_id);
-			for (CaseManagementNoteLink link : cmll) {
-				CaseManagementNote cmmn = caseManagementMgr.getNote(link.getNoteId().toString());
-				if (cmmn == null) continue;
-
-				if (cmmn.getNote().startsWith("imported.cms4.2011.06")) {
-					if (cml_dump == null) cml_dump = link;
-				} else {
-					if (cml_anno == null) cml_anno = link;
-				}
-				if (cml_anno != null && cml_dump != null) break;
-			}
-
-			if (cml_anno != null) {// old annotation exists - create new link
-				CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cml_anno.getNoteId());
-				caseManagementMgr.saveNoteLink(cml_n);
-			}
-			if (cml_dump != null) {// old dump exists - create new link
-				CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cml_dump.getNoteId());
-				caseManagementMgr.saveNoteLink(cml_n);
-			}
-		}
-
-		String logAction;
-		if (newNote) {
-			logAction = LogConst.ADD;
-		} else {
-			logAction = LogConst.UPDATE;
-		}
-		LogAction.addLog((String) session.getAttribute("user"), logAction, LogConst.CON_CME_NOTE, "" + Long.valueOf(note.getId()).intValue(), request.getRemoteAddr(), demo, note.getAuditString());
-
+		
 		return note.getId();
 	}
 	
 	
-
-	private String updateApptStatus(String status, String type) {
-		oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
-		as.setApptStatus(status);
-
-		if (type.equalsIgnoreCase("sign")) status = as.signStatus();
-		if (type.equalsIgnoreCase("verify")) status = as.verifyStatus();
-
-		return status;
-	}
-
 	private String saveCheckedIssues_oldCme(HttpServletRequest request, String demo, List<CaseManagementIssue> issuelist, CheckBoxBean[] checkedlist, Set<CaseManagementIssue> issueset, Set noteSet, String ongoing) {
 
 		int demographicNo = Integer.parseInt(demo);
@@ -2028,7 +1846,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		this.caseManagementMgr.getEditors(note);
 
 		if (prevNoteId != null) {
-			addNewNoteLink(prevNoteId);
+			caseManagementMgr.addNewNoteLink(prevNoteId);
 		}
 
 		try {
@@ -2069,44 +1887,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		 */
 	}
 
-	// add new note link if note is document or rx note
-	private void addNewNoteLink(Long noteId) {
-		CaseManagementNote cmn = caseManagementMgr.getNote(noteId.toString());
-		List<CaseManagementNote> cmnList = caseManagementMgr.getNotesByUUID(cmn.getUuid());
-		Long firstNoteId;
-		Long lastNoteId;
-		List<Long> noteIdList = new ArrayList<Long>();
-		for (CaseManagementNote note : cmnList) {
-			noteIdList.add(note.getId());
-		}
-		if (noteIdList.size() > 0) {
-			Collections.sort(noteIdList);
-			firstNoteId = noteIdList.get(0);
-			lastNoteId = noteIdList.get(noteIdList.size() - 1);
-			if (firstNoteId != lastNoteId) {
-				CaseManagementNote firstNote = caseManagementMgr.getNote(firstNoteId.toString());
-				if (firstNote.isDocumentNote()) {
-					Long tableId = EDocUtil.getTableIdFromNoteId(firstNote.getId());
-					CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
-					cmnl.setNoteId(lastNoteId);
-					cmnl.setTableName(CaseManagementNoteLink.DOCUMENT);
-					cmnl.setTableId(tableId);
-					caseManagementMgr.saveNoteLink(cmnl);
-				} else if (firstNote.isRxAnnotation()) {
-
-					CaseManagementNoteLink latestLink = caseManagementMgr.getLatestLinkByNote(firstNote.getId());
-
-					CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
-					cmnl.setNoteId(lastNoteId);
-					cmnl.setTableName(CaseManagementNoteLink.DRUGS);
-					cmnl.setTableId(latestLink.getTableId());
-					caseManagementMgr.saveNoteLink(cmnl);
-					// EDocUtil.addCaseMgmtNoteLink(cmnl);
-				}
-			}
-		}
-	}
-	
 	private void releaseNoteLock(String providerNo, Integer demographicNo, Long noteId) {		
 		logger.info("REMOVING LOCK FOR PROVIDER " + providerNo + " DEMO " + demographicNo + " NOTE ID " + noteId);
 		casemgmtNoteLockDao.remove(providerNo, demographicNo, noteId);
@@ -3528,7 +3308,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		sb.append(TestBookAction.getTicklerText(appointmentNo));
 		return sb.toString();
 	}
-
+	
 	/**
 	 * gets all the notes
 	 * if we have a key, and the note is locked, consider it
@@ -3542,57 +3322,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public CaseManagementNote getLastSaved(HttpServletRequest request, String demono, String providerNo) {
 		HttpSession session = request.getSession();
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-		//CaseManagementNote note = null;
-		List<EChartNoteEntry> entries = new ArrayList<EChartNoteEntry>();
-
-		//Gets some of the note data, no relationships, not the note/history..just enough
-		List<Map<String,Object>> notes = this.caseManagementNoteDao.getUnsignedRawNoteInfoMapByDemographic(demono);
-		Map<String,Object> filteredNotes = new LinkedHashMap<String,Object>();
-
-		//This gets rid of old revisions (better than left join on a computed subset of itself
-		for(Map<String,Object> note:notes) {
-			if(filteredNotes.get(note.get("uuid"))!=null)
-				continue;
-			filteredNotes.put((String)note.get("uuid"),true);
-			EChartNoteEntry e = new EChartNoteEntry();
-			e.setId(note.get("id"));
-			e.setDate((Date)note.get("observation_date"));
-			e.setProviderNo((String)note.get("providerNo"));
-			e.setProgramId(ConversionUtils.fromIntString(note.get("program_no")));
-			e.setRole((String)note.get("reporter_caisi_role"));
-			e.setType("local_note");
-			entries.add(e);
-
-		}
-
-		// UserProperty prop = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
-		//notes = caseManagementMgr.getNotes(demono);
-		//notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
-
 		String programId = (String) session.getAttribute("case_program_id");
-
-		if (programId == null || programId.length() == 0) {
-			programId = "0";
-		}
-
-		entries = caseManagementMgr.filterNotes1(loggedInInfo.loggedInProvider.getProviderNo(), entries, programId);
-
-		Collections.sort(entries,EChartNoteEntry.getDateComparatorDesc());
-
 		Map unlockedNotesMap = this.getUnlockedNotesMap(request);
-		for(EChartNoteEntry entry:entries) {
-			CaseManagementNote n = caseManagementMgr.getNote(String.valueOf(entry.getId()));
-			if(n.isLocked() && unlockedNotesMap.get(entry.getId()) != null ) {
-				n.setLocked(false);
-			}
-			if(n.getProviderNo().equals(providerNo)) {
-				session.setAttribute("newNote", "false");
-				return n;
-			}
-		}
-
-		return null;
+		return caseManagementMgr.getLastSaved(programId,demono, providerNo,unlockedNotesMap) ;
 	}
+	
 
 	protected Map getUnlockedNotesMap(HttpServletRequest request) {
 		Map<Long, Boolean> map = (Map<Long, Boolean>) request.getSession().getAttribute("unlockedNoteMap");
