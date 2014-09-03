@@ -78,7 +78,7 @@
 								key="oscarEncounter.form.msgSelectedForms" /></th>
 						</tr>
 						<td><html:select multiple="true" property="selectedAddTypes"
-							size="10" style="width:150">
+							size="10" style="width:200">
 							<html:options collection="formHiddenVector" property="formName"
 								labelProperty="formName" />
 						</html:select></td>
@@ -97,7 +97,7 @@
 						</table>
 						</td>
 						<td><html:select multiple="true"
-							property="selectedDeleteTypes" size="10" style="width:150">
+							property="selectedDeleteTypes" size="10" style="width:200">
 							<html:options collection="formShownVector" property="formName"
 								labelProperty="formName" />
 						</html:select></td>
