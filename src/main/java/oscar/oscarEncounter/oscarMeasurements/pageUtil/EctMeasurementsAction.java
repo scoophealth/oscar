@@ -293,6 +293,7 @@ public class EctMeasurementsAction extends Action {
                     String css = (String) frm.getValue("css");
                     request.setAttribute("groupName", groupName);
                     request.setAttribute("css", css);
+                    request.setAttribute("demographicNo", demographicNo);
                     return (new ActionForward(mapping.getInput()));
                 }
                
