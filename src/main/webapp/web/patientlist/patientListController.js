@@ -23,7 +23,7 @@
     Ontario, Canada
 
 */
-oscarApp.controller('PatientListCtrl', function ($scope,$http,$resource) {
+oscarApp.controller('PatientListCtrl', function ($scope,$http,$resource,$state) {
 	
 	$scope.tabItems = [
 	             	{"id":0,"label":"Appts.","url":"../ws/rs/schedule/999998/day/today"},
@@ -45,6 +45,13 @@ oscarApp.controller('PatientListCtrl', function ($scope,$http,$resource) {
 	        return "default";
 		 }
 	 
+	 }
+	 $scope.goToRecord = function(patient){
+		 var params = {demographicNo:patient.demographicNo};
+		 if(angular.isDefined(patient.appointmentNo)){
+			 params.appointmentNo = patient.appointmentNo;
+		 }
+		 $state.go('record.summary',params);
 	 }
 
 //for filter box

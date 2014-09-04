@@ -77,6 +77,7 @@ public class ScheduleService extends AbstractServiceImpl {
 				item.setStartTime(timeFormatter.format(appt.getStartTime()));
 				item.setReason(appt.getReason());
 				item.setStatus(appt.getStatus());
+				item.setAppointmentNo(appt.getId());
 				response.getPatients().add(item);
 			}
 		}catch(ParseException e) {
