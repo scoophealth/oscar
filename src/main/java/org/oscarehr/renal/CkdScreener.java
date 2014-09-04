@@ -369,7 +369,8 @@ public class CkdScreener {
 		boolean labs=false;
 		//labs over a year
 		List<Measurement> measures = measurementDao.findByType(demographicNo, "EGFR");
-		if(measures == null || measures.size() == 0 || measures.get(0).getDateObserved().before(cal.getTime())) {
+		if(measures == null || measures.size() == 0 || 
+				(measures != null && measures.get(0) != null && measures.get(0).getDateObserved()!= null && measures.get(0).getDateObserved().before(cal.getTime()))) {
 			MiscUtils.getLogger().info("Missing EGFR lab");
 			//we  don't have
 			labs=true;
