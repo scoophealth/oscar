@@ -128,8 +128,8 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 							<span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu" role="menu">
-							
-							<li ng-repeat="item in demographicSearchDropDownItems"><a href="{{item.url}}">{{item.label}}</a></li>
+							<li><a ng-click="newDemographic('sm')">New Patient</a></li>
+							<%-- <li ng-repeat="item in demographicSearchDropDownItems"><a href="{{item.url}}">{{item.label}}</a></li> --%>
 						</ul>
 						<button type="button" class="btn btn-default" ui-sref="dashboard">
 							<span class="glyphicon glyphicon-home"></span>
@@ -300,6 +300,7 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 	<script src="common/formServices.js"></script>
 	<script src="common/noteServices.js"></script>
 	<script src="common/providerServices.js"></script>
+	<script src="common/patientDetailStatusServices.js"></script>
 	<script src="app.js"></script>
 	<script src="dashboard/dashboardController.js"></script>
 	<script src="common/navBarController.js"></script>

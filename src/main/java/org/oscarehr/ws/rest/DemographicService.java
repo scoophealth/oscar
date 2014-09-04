@@ -265,6 +265,7 @@ public class DemographicService extends AbstractServiceImpl {
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces({MediaType.APPLICATION_JSON , MediaType.APPLICATION_XML})
 	public DemographicTo1 createDemographicData(DemographicTo1 data) {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		

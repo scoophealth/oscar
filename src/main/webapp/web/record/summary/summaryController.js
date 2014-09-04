@@ -23,14 +23,13 @@
     Ontario, Canada
 
 */
-oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$stateParams,$state,$filter,noteService,providerService) {
+oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$stateParams,$state,$filter,user,noteService) {
 	console.log("in summary Ctrl ",$stateParams);
 	
 	$scope.page = {};
 	$scope.page.columnOne = {};
 	$scope.page.columnOne.modules = {};
 	$scope.page.notes = {};
-    $scope.page.myProviderRecord = {};	
     $scope.index = 0;
     $scope.page.notes = {};
     $scope.page.notes.notelist = [];
@@ -73,7 +72,7 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
    	// How do we handle showing what filter has been selected???
    	$scope.changeNoteFilter = function(){
 	   $scope.index = 0;
-	   $scope.page.noteFilter.filterProviders = [$scope.page.myProviderRecord.providerNo]; //<- need to fix this!
+	   $scope.page.noteFilter.filterProviders = [user.providerNo]; //<- need to fix this?
 	   $scope.page.notes.notelist = [];
 	   $scope.page.currentFilter = 'Just My Notes';
 	   $scope.addMoreItems();
@@ -88,18 +87,6 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
 	   
    	}
    
-
-   	$scope.getMyProviderRecord = function(){
-   		providerService.getMe().then(function(data){
-   			$scope.page.myProviderRecord = data;
-   		},
-		function(errorMessage){
- 	       console.log("getprovider :"+errorMessage);
- 	       $scope.error=errorMessage;
-  		}
-     );
-   	}
-   	$scope.getMyProviderRecord();
    	
    	//Note display functions
     $scope.addMoreItems = function(){

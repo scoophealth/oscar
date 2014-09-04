@@ -24,7 +24,7 @@
 
 */
 
-oscarApp.controller('RecordCtrl', function ($scope,$http,$location,$stateParams,demographicService,demo,$state) {
+oscarApp.controller('RecordCtrl', function ($scope,$http,$location,$stateParams,$state,demo) {
 	
 	console.log("in patient Ctrl ",demo);
 	
@@ -58,17 +58,6 @@ oscarApp.controller('RecordCtrl', function ($scope,$http,$location,$stateParams,
 	//var transitionP = $state.transitionTo($scope.recordtabs2[0].path,$stateParams,{location:'replace',notify:true});
 	//console.log("transition ",transitionP);
 	
-	//calculate age
-	var now = new Date();
-	var dob = new Date(demo.dateOfBirth);
-	demo.age = now.getFullYear() - dob.getFullYear();
-	if (now.getMonth()<dob.getMonth()) {
-		demo.age--;
-	}
-	else if (now.getMonth()==dob.getMonth() && now.getDate()<dob.getDate()) {
-		demo.age--;
-	}
-	
 	$scope.changeTab = function(temp) {
 		console.log($scope.recordtabs2[temp].path);
 		$scope.currenttab2 = $scope.recordtabs2[temp];
@@ -88,7 +77,8 @@ oscarApp.controller('RecordCtrl', function ($scope,$http,$location,$stateParams,
 	console.log('RecordCtrlEnd',$state);
 });
 
-
+/*
 oscarApp.controller('PatientDetailCtrl', function ($scope,$http,$location,$stateParams,demographicService,demo,$state) {
 	console.log("in patientDetail Ctrl");
 });
+*/
