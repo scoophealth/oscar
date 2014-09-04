@@ -43,7 +43,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 }
 
 function demographicSearch() {
-	var search_param = document.forms[0].lastNameParam.value;
+	var search_param =$('#nameForlooksOnly').val();
 	var url = '../../../demographic/demographicsearch2reportresults.jsp';
 	url += '?originalpage='+escape('../billing/CA/ON/endYearStatement.do?demosearch=true');
 	url += '&search_mode=search_name';
