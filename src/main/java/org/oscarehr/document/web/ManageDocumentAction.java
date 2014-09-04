@@ -826,7 +826,7 @@ public class ManageDocumentAction extends DispatchAction {
 
 			try {
 				if (!CaisiIntegratorManager.isIntegratorOffline(request.getSession())){
-					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 					remoteDocument = demographicWs.getCachedDemographicDocument(remotePk);
 					remoteDocumentContents = demographicWs.getCachedDemographicDocumentContents(remotePk);
 				}

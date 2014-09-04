@@ -71,7 +71,7 @@
 		}
 		if(props == null) {
 	   		props = rec.getFormRecord(demoNo, formId);	        
-			props = ((FrmLabReq07Record) rec).getFormCustRecord(loggedInInfo.getCurrentFacility(), props, provNo);
+			props = ((FrmLabReq07Record) rec).getFormCustRecord(loggedInInfo, loggedInInfo.getCurrentFacility(), props, provNo);
 		}		
 	}
 	else // it's remote

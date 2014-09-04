@@ -199,7 +199,7 @@ if (!Array.prototype.indexOf)
 			<c:set var="integratorFacilityId" value="${program.facilityIdIntegerCompositePk.integratorFacilityId}" scope="request" />
 			<%
 				Integer integratorFacilityId=(Integer)request.getAttribute("integratorFacilityId");
-				CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),integratorFacilityId);
+				CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(),integratorFacilityId);
 			%>
 			<%=cachedFacility.getName()%>
 		</display:column>

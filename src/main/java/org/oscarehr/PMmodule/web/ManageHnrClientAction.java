@@ -64,7 +64,7 @@ public class ManageHnrClientAction {
 			// it might be 0 if some one unlinked the client at the same time you are looking at this screen.
 			if (clientLinks.size() > 0) {
 				ClientLink clientLink = clientLinks.get(0);
-				org.oscarehr.hnr.ws.Client hnrClient = CaisiIntegratorManager.getHnrClient(loggedInInfo.getCurrentFacility(),clientLink.getRemoteLinkId());
+				org.oscarehr.hnr.ws.Client hnrClient = CaisiIntegratorManager.getHnrClient(loggedInInfo, loggedInInfo.getCurrentFacility(),clientLink.getRemoteLinkId());
 
 				Demographic demographic = demographicDao.getDemographicById(clientId);
 
@@ -126,7 +126,7 @@ public class ManageHnrClientAction {
 			// try to retrieve existing linked client to update
 			if (clientLinks.size() >= 1) {
 				clientLink = clientLinks.get(0);
-				hnrClient = CaisiIntegratorManager.getHnrClient(loggedInInfo.getCurrentFacility(), clientLink.getRemoteLinkId());
+				hnrClient = CaisiIntegratorManager.getHnrClient(loggedInInfo, loggedInInfo.getCurrentFacility(), clientLink.getRemoteLinkId());
 			}
 
 			// can be null if there's no existing link or if the data on the hnr has been revoked of consent
@@ -203,7 +203,7 @@ public class ManageHnrClientAction {
 //					hnrClient.setHiddenChangeDate(integratorConsent.getCreatedDate());
 //				}
 				// new hacked consent which is actually wrong but may produced "expected" results
-				GetConsentTransfer remoteConsent=CaisiIntegratorManager.getConsentState(loggedInInfo.getCurrentFacility(), clientId);
+				GetConsentTransfer remoteConsent=CaisiIntegratorManager.getConsentState(loggedInInfo, loggedInInfo.getCurrentFacility(), clientId);
 				if (remoteConsent!=null)
 				{
 					if (remoteConsent.getConsentState()==ConsentState.ALL)
@@ -216,7 +216,7 @@ public class ManageHnrClientAction {
 				
 				// save the client
 				hnrClient.setUpdatedBy("faciliy: " + loggedInInfo.currentFacility.getName() + ", provider:" + loggedInInfo.loggedInProvider.getFormattedName());
-				Integer linkingId = CaisiIntegratorManager.setHnrClient(loggedInInfo.getCurrentFacility(), hnrClient);
+				Integer linkingId = CaisiIntegratorManager.setHnrClient(loggedInInfo, loggedInInfo.getCurrentFacility(), hnrClient);
 
 				// if the hnr client is new / not previously linked, save the new link
 				// in theory this can lead to multiple links if 2 people run this method

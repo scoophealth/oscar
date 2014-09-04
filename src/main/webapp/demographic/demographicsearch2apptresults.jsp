@@ -478,7 +478,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 		   <tr style="background-color: <%=bgColor%>" onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
 			   onClick="document.forms[0].demographic_no.value=<%=demographicTransfer.getCaisiDemographicId()%>;addName('<%=demographicTransfer.getCaisiDemographicId()%>','<%=URLEncoder.encode(demographicTransfer.getLastName())%>','<%=URLEncoder.encode(demographicTransfer.getFirstName())%>','','<%=request.getParameter("messageId")%>','<%=demographicTransfer.getCaisiProviderId()%>','<%=demographicTransfer.getIntegratorFacilityId()%>')">
 			<td class="demoId" colspan="8">
-				<input type="submit" class="mbttn" name="demographic_no" value="Integrator <%=CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), demographicTransfer.getIntegratorFacilityId()).getName()%>:<%=demographicTransfer.getCaisiDemographicId()%>" />
+				<input type="submit" class="mbttn" name="demographic_no" value="Integrator <%=CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), demographicTransfer.getIntegratorFacilityId()).getName()%>:<%=demographicTransfer.getCaisiDemographicId()%>" />
             </td>
 			<td class="lastName"><%=Misc.toUpperLowerCase(demographicTransfer.getLastName())%></td>
 			<td class="firstName"><%=Misc.toUpperLowerCase(demographicTransfer.getFirstName())%></td>
@@ -502,7 +502,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
    		FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
    		providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
    		providerPk.setCaisiItemId(demographicTransfer.getCaisiProviderId());
-   		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(), providerPk);
+   		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInInfo, loggedInInfo.getCurrentFacility(), providerPk);
    		MiscUtils.getLogger().debug("Cached provider, pk="+providerPk.getIntegratorFacilityId()+","+providerPk.getCaisiItemId()+", cachedProvider="+cachedProvider);
    		
    		String providerName="";

@@ -242,7 +242,7 @@ public class EctMeasurementsDataBeanHandler {
 						emdb.setDateEnteredAsDate(cm.getDateEntered().getTime());
 						String remoteFacility = "N/A";
 						try {
-							remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),cm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()).getName();
+							remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(),cm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()).getName();
 						}
 						catch (Exception e) {
 						 	MiscUtils.getLogger().error("Error", e);
@@ -286,7 +286,7 @@ public class EctMeasurementsDataBeanHandler {
 						emdb.setDateEnteredAsDate(cm.getDateEntered().getTime());
 						String remoteFacility = "N/A";
 						try {
-							remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), cm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()).getName();
+							remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), cm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()).getName();
 						}
 						catch (Exception e) {
 						 	MiscUtils.getLogger().error("Error", e);

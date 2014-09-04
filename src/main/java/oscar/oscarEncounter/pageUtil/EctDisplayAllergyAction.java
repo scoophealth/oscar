@@ -101,7 +101,7 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 					List<CachedDemographicAllergy> remoteAllergies  = null;
 					try {
 						if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-							remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(demographicId);
+							remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(demographicId);
 							MiscUtils.getLogger().debug("remoteAllergies retrieved "+remoteAllergies.size());
 						}
 					} catch (Exception e) {

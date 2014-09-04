@@ -329,7 +329,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 		Integer remoteReferralId = Integer.valueOf(request.getParameter("remoteReferralId"));
 
 		try {
-			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo.getCurrentFacility());
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 			referralWs.removeReferral(remoteReferralId);
 		} catch (MalformedURLException e) {
 			logger.error("Unexpected error", e);

@@ -75,7 +75,8 @@ public class AuthenticationInWSS4JInterceptor extends WSS4JInInterceptor impleme
 			super.handleMessage(message);
 
 			// if it gets here that means it succeeded
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromRequest(request);
+			
 			OscarLog oscarLog=new OscarLog();
 			oscarLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 			oscarLog.setAction("WS_LOGIN_SUCCESS");

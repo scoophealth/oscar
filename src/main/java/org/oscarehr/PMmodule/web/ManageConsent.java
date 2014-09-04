@@ -88,7 +88,7 @@ public class ManageConsent {
 		ArrayList<CachedFacility> results = new ArrayList<CachedFacility>();
 
 		for (Integer remoteFacilityId : previousConsentToView.getConsentToShareData().keySet()) {
-			CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), remoteFacilityId);
+			CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), remoteFacilityId);
 			results.add(cachedFacility);
 		}
 
@@ -96,7 +96,7 @@ public class ManageConsent {
 	}
 
 	private Collection<CachedFacility> getAllRemoteFacilities() throws MalformedURLException {
-		List<CachedFacility> results = CaisiIntegratorManager.getRemoteFacilities(loggedInInfo.getCurrentFacility());
+		List<CachedFacility> results = CaisiIntegratorManager.getRemoteFacilities(loggedInInfo, loggedInInfo.getCurrentFacility());
 		return (results);
 	}
 

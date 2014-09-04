@@ -35,7 +35,7 @@
 
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-	List<CachedFacility> facilities=CaisiIntegratorManager.getRemoteFacilities(loggedInInfo.getCurrentFacility(),false);
+	List<CachedFacility> facilities=CaisiIntegratorManager.getRemoteFacilities(loggedInInfo, loggedInInfo.getCurrentFacility(),false);
 
 	int secondsTillConsideredStale = -1;
 	try{

@@ -78,7 +78,7 @@ public class LabDisplayHelper {
 		
 		try {
 			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 				cachedDemographicLabResult = demographicWs.getCachedDemographicLabResult(pk);
 			}
 		} catch (Exception e) {

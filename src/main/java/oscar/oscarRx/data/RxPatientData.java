@@ -231,7 +231,7 @@ public class RxPatientData {
 					List<CachedDemographicAllergy> remoteAllergies  = null;
 					try {
 						if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-							remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(demographicNo);
+							remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(demographicNo);
 						}
 					} catch (Exception e) {
 						MiscUtils.getLogger().error("Unexpected error.", e);
