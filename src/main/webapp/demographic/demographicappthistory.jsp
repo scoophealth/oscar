@@ -253,7 +253,7 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 		int demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
 		try {
 			if (!CaisiIntegratorManager.isIntegratorOffline(session)){
-				cachedAppointments = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedAppointments(demographicNo);
+				cachedAppointments = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedAppointments(demographicNo);
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Unexpected error.", e);
@@ -366,7 +366,7 @@ if (cachedAppointments != null) {
 		  FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 		  providerPk.setIntegratorFacilityId(a.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
 		  providerPk.setCaisiItemId(a.getCaisiProviderId());
-		  CachedProvider p = CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(), providerPk);
+		  CachedProvider p = CaisiIntegratorManager.getProvider(loggedInInfo, loggedInInfo.getCurrentFacility(), providerPk);
 		  AppointmentStatus as = appointmentStatusDao.findByStatus(a.getStatus());
 %>
 	<tr bgcolor="<%=bodd?weakColor:"white"%>">

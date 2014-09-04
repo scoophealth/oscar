@@ -90,7 +90,7 @@ public final class AllergyHelperBean {
 			List<CachedDemographicAllergy> remoteAllergies  = null;
 			try {
 				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-					remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(demographicId);
+					remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);

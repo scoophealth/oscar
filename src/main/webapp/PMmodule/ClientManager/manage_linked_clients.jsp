@@ -38,7 +38,7 @@
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	
 	Demographic demographic=demographicDao.getDemographicById(currentDemographicId);
-	ArrayList<ManageLinkedClients.LinkedDemographicHolder> demographicsToDisplay=ManageLinkedClients.getDemographicsToDisplay(loggedInInfo.getCurrentFacility(), currentDemographicId);
+	ArrayList<ManageLinkedClients.LinkedDemographicHolder> demographicsToDisplay=ManageLinkedClients.getDemographicsToDisplay(loggedInInfo, loggedInInfo.getCurrentFacility(), currentDemographicId);
 %>
 
 <h3>Manage Linked Clients</h3>

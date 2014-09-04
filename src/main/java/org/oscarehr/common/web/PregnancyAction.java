@@ -241,7 +241,7 @@ public class PregnancyAction extends DispatchAction {
 		if(labReqVersion.equals("07")) {
 			FrmLabReq07Record lr = new FrmLabReq07Record();
 			Properties p = lr.getFormRecord(demographicNo, 0);		
-			p = lr.getFormCustRecord(loggedInInfo.getCurrentFacility(),p, providerNo);
+			p = lr.getFormCustRecord(loggedInInfo,loggedInInfo.getCurrentFacility(),p, providerNo);
 			if(penicillin != null && penicillin.equals("checked")) {
 				p.setProperty("o_otherTests1","Vaginal Anal GBS w/ sensitivities");
 				p.setProperty("o_otherTests2", "pt allergic to penicillin");
@@ -276,7 +276,7 @@ public class PregnancyAction extends DispatchAction {
 		if(labReqVersion.equals("07")) {
 			FrmLabReq07Record lr = new FrmLabReq07Record();
 			Properties p = lr.getFormRecord(demographicNo, 0);
-			p = lr.getFormCustRecord(loggedInInfo.getCurrentFacility(),p, providerNo);
+			p = lr.getFormCustRecord(loggedInInfo,loggedInInfo.getCurrentFacility(),p, providerNo);
 			
 			if(ferritin != null && ferritin.equals("checked")) {
 				p.setProperty("b_ferritin","checked=\"checked\"");			
@@ -542,7 +542,7 @@ Repeat antibody screen
 		if(labReqVersion.equals("07")) {
 			FrmLabReq07Record lr = new FrmLabReq07Record();
 			Properties p = lr.getFormRecord(demographicNo, 0);
-			p = lr.getFormCustRecord(loggedInInfo.getCurrentFacility(),p, providerNo);
+			p = lr.getFormCustRecord(loggedInInfo,loggedInInfo.getCurrentFacility(),p, providerNo);
 			
 			if(hb != null && hb.equals("checked")) {
 				p.setProperty("h_cbc","checked=\"checked\"");			
@@ -591,7 +591,7 @@ Repeat antibody screen
 		if(labReqVersion.equals("07")) {
 			FrmLabReq07Record lr = new FrmLabReq07Record();
 			Properties p = lr.getFormRecord(demographicNo, 0);
-			p = lr.getFormCustRecord(loggedInInfo.getCurrentFacility(),p, providerNo);
+			p = lr.getFormCustRecord(loggedInInfo,loggedInInfo.getCurrentFacility(),p, providerNo);
 					
 			if(glucose != null && glucose.equals("checked")) {
 				p.setProperty("o_otherTests1","2 Hr 75gm GLUCOSE Screen");

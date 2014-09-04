@@ -430,7 +430,7 @@
 		   		FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 		   		providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
 		   		providerPk.setCaisiItemId(demographicTransfer.getCaisiProviderId());
-		   		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(), providerPk);
+		   		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInInfo, loggedInInfo.getCurrentFacility(), providerPk);
 		   		MiscUtils.getLogger().debug("Cached provider, pk="+providerPk.getIntegratorFacilityId()+","+providerPk.getCaisiItemId()+", cachedProvider="+cachedProvider);
 		   		
 		   		String providerName="";

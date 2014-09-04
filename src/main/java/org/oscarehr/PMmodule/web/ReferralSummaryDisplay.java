@@ -72,12 +72,12 @@ public class ReferralSummaryDisplay {
 	}
 
 	public ReferralSummaryDisplay(LoggedInInfo loggedInInfo, Referral referral) throws MalformedURLException {
-		CachedFacility cachedDestinationFacility=CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), referral.getDestinationIntegratorFacilityId());
+		CachedFacility cachedDestinationFacility=CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), referral.getDestinationIntegratorFacilityId());
 		
 		FacilityIdIntegerCompositePk remoteProgramPk = new FacilityIdIntegerCompositePk();
 		remoteProgramPk.setIntegratorFacilityId(referral.getDestinationIntegratorFacilityId());
 		remoteProgramPk.setCaisiItemId(referral.getDestinationCaisiProgramId());
-		CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo.getCurrentFacility(), remoteProgramPk);
+		CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo, loggedInInfo.getCurrentFacility(), remoteProgramPk);
 		
 		programName = cachedDestinationFacility.getName()+" / "+cachedProgram.getName();
 		programType = cachedProgram.getType();
@@ -91,8 +91,8 @@ public class ReferralSummaryDisplay {
 		FacilityIdStringCompositePk remoteProviderPk = new FacilityIdStringCompositePk();
 		remoteProviderPk.setIntegratorFacilityId(referral.getSourceIntegratorFacilityId());
 		remoteProviderPk.setCaisiItemId(referral.getSourceCaisiProviderId());
-		CachedProvider cachedProvider = CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(), remoteProviderPk);
-		CachedFacility cachedSourceFacility=CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), referral.getSourceIntegratorFacilityId());
+		CachedProvider cachedProvider = CaisiIntegratorManager.getProvider(loggedInInfo, loggedInInfo.getCurrentFacility(), remoteProviderPk);
+		CachedFacility cachedSourceFacility=CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), referral.getSourceIntegratorFacilityId());
 		referringProvider = cachedProvider.getLastName()+", "+cachedProvider.getFirstName()+" / "+cachedSourceFacility.getName();
 	}
 

@@ -546,7 +546,7 @@ public class CaseManagementManager {
 			List<CachedDemographicDrug> remoteDrugs  = null;
 			try {
 				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-				   remoteDrugs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDrugsByDemographicId(demographicId);
+				   remoteDrugs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDrugsByDemographicId(demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
@@ -598,7 +598,7 @@ public class CaseManagementManager {
 		int remoteFacilityId = cachedDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
 		pd.setRemoteFacilityId(remoteFacilityId);
 
-		CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(),remoteFacilityId);
+		CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(),remoteFacilityId);
 		pd.setRemoteFacilityName(cachedFacility.getName());
 
 		return (pd);

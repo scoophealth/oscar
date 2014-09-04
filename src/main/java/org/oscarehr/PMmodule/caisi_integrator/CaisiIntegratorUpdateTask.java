@@ -302,7 +302,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			return;
 		}
 
-		FacilityWs service = CaisiIntegratorManager.getFacilityWs(facility);
+		FacilityWs service = CaisiIntegratorManager.getFacilityWs(loggedInInfo, facility);
 		CachedFacility cachedFacility = service.getMyFacility();
 
 		// start at the beginning of time so by default everything is pushed
@@ -345,7 +345,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			CachedFacility cachedFacility = new CachedFacility();
 			BeanUtils.copyProperties(facility, cachedFacility);
 
-			FacilityWs service = CaisiIntegratorManager.getFacilityWs(facility);
+			FacilityWs service = CaisiIntegratorManager.getFacilityWs(null, facility);
 			service.setMyFacility(cachedFacility);
 		} else {
 			logger.debug("skipping facility record, not updated since last push");
@@ -358,7 +358,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		List<Integer> programIds = programDao.getRecordsAddedAndUpdatedSinceTime(facility.getId(),lastDataUpdated);
 		
 		ArrayList<CachedProgram> cachedPrograms = new ArrayList<CachedProgram>();
-		ProgramWs service = CaisiIntegratorManager.getProgramWs(facility);
+		ProgramWs service = CaisiIntegratorManager.getProgramWs(null, facility);
 		
 		for (Integer programId : programIds) {
 			Program program = programDao.getProgram(programId);
@@ -403,7 +403,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	private void pushProviders(Date lastDataUpdated, Facility facility) throws MalformedURLException, ShutdownException {
-		ProviderWs service = CaisiIntegratorManager.getProviderWs(facility);
+		ProviderWs service = CaisiIntegratorManager.getProviderWs(null, facility);
 
 		List<String> providerIds = providerDao.getRecordsAddedAndUpdatedSinceTime(lastDataUpdated);
 		providerIds.addAll(secUserRoleDao.getRecordsAddedAndUpdatedSinceTime(lastDataUpdated));
@@ -526,7 +526,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushAllDemographics(LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, CachedFacility cachedFacility, List<Program> programs) throws MalformedURLException, ShutdownException {
 		List<Integer> demographicIds = getDemographicIdsToPush(facility,lastDataUpdated, programs);
 
-		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs(facility);
+		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs(null, facility);
 		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
 		List<String> providerIdsInFacility = providerDao.getProviderIds(facility.getId());
 
@@ -1592,7 +1592,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			logger.info("local store not enabled");
 			return;
 		}
-		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs(facility);
+		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs(loggedInInfo, facility);
 		
 		
 		Calendar nextTime = Calendar.getInstance();

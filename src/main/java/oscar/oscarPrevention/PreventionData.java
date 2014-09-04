@@ -396,7 +396,7 @@ public class PreventionData {
 					String remoteFacilityName = "N/A";
 					CachedFacility remoteFacility = null;
 					try {
-						remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
+						remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
 					} catch (Exception e) {
 						log.error("Error", e);
 					}

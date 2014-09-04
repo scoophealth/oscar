@@ -36,12 +36,12 @@
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String demographicId=request.getParameter("demographicId");
 
-	List<CachedProvider> providers=CaisiIntegratorManager.getAllProviders(loggedInInfo.getCurrentFacility());
+	List<CachedProvider> providers=CaisiIntegratorManager.getAllProviders(loggedInInfo, loggedInInfo.getCurrentFacility());
 
 	for (CachedProvider cachedProvider : providers)
 	{
 		%>
-			<a href="followUp.jsp?demographicId=<%=demographicId%>&remoteFacilityId=<%=cachedProvider.getFacilityIdStringCompositePk().getIntegratorFacilityId()%>&remoteProviderId=<%=cachedProvider.getFacilityIdStringCompositePk().getCaisiItemId()%>" ><%=CaisiIntegratorManager.getRemoteFacility(loggedInInfo.getCurrentFacility(), cachedProvider.getFacilityIdStringCompositePk().getIntegratorFacilityId()).getName()%> : <%=cachedProvider.getLastName()+", "+cachedProvider.getFirstName()%></a>
+			<a href="followUp.jsp?demographicId=<%=demographicId%>&remoteFacilityId=<%=cachedProvider.getFacilityIdStringCompositePk().getIntegratorFacilityId()%>&remoteProviderId=<%=cachedProvider.getFacilityIdStringCompositePk().getCaisiItemId()%>" ><%=CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), cachedProvider.getFacilityIdStringCompositePk().getIntegratorFacilityId()).getName()%> : <%=cachedProvider.getLastName()+", "+cachedProvider.getFirstName()%></a>
 			<br />
 		<%
 	}

@@ -60,7 +60,7 @@ public final class RemotePreventionHelper {
 			List<CachedDemographicPrevention> preventions  = null;
 			try {
 				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-				   DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo.getCurrentFacility());
+				   DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 				   preventions = demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(localDemographicId);
 				}
 			} catch (Exception e) {
@@ -98,7 +98,7 @@ public final class RemotePreventionHelper {
 		FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 		providerPk.setIntegratorFacilityId(prevention.getFacilityPreventionPk().getIntegratorFacilityId());
 		providerPk.setCaisiItemId(prevention.getCaisiProviderId());
-		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInInfo.getCurrentFacility(),providerPk);
+		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInInfo, loggedInInfo.getCurrentFacility(),providerPk);
 		if (cachedProvider!=null)
 		{
 			result.put("provider_name", cachedProvider.getLastName()+", "+cachedProvider.getFirstName());

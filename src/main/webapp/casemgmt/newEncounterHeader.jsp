@@ -147,7 +147,7 @@ if(privateConsentEnabled && newEctHeader_showPopup) {
 			boolean allSynced = true;
 			
 			try{
-				allSynced  = CaisiIntegratorManager.haveAllRemoteFacilitiesSyncedIn(loggedInInfo.getCurrentFacility(), secondsTillConsideredStale,false); 
+				allSynced  = CaisiIntegratorManager.haveAllRemoteFacilitiesSyncedIn(loggedInInfo, loggedInInfo.getCurrentFacility(), secondsTillConsideredStale,false); 
 				CaisiIntegratorManager.setIntegratorOffline(session, false);	
 			}catch(Exception remoteFacilityException){
 				MiscUtils.getLogger().error("Error checking Remote Facilities Sync status",remoteFacilityException);

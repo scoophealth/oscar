@@ -302,7 +302,7 @@ function openSurvey() {
 
 							try
 							{
-								GetConsentTransfer remoteConsent=CaisiIntegratorManager.getConsentState(loggedInInfo.getCurrentFacility(), currentDemographic.getDemographicNo());
+								GetConsentTransfer remoteConsent=CaisiIntegratorManager.getConsentState(loggedInInfo, loggedInInfo.getCurrentFacility(), currentDemographic.getDemographicNo());
 
 								if (remoteConsent!=null)
 								{
@@ -312,7 +312,7 @@ function openSurvey() {
 									if (remoteConsent.getConsentState()==ConsentState.SOME) sb.append("Limited consent, ");
 									if (remoteConsent.getConsentState()==ConsentState.NONE) sb.append("No consent, ");
 
-									CachedFacility myFacility=CaisiIntegratorManager.getCurrentRemoteFacility(loggedInInfo.getCurrentFacility());
+									CachedFacility myFacility=CaisiIntegratorManager.getCurrentRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility());
 									if (myFacility.getIntegratorFacilityId().equals(remoteConsent.getIntegratorFacilityId()))
 									{
 										sb.append("set locally on ");
