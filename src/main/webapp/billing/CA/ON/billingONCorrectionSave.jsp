@@ -30,9 +30,14 @@
 				response.sendRedirect("../../../logout.jsp");
 			}
 
+			String billingNo = request.getParameter("xml_billing_no");
+			String error = null;
+			
+			if(billingNo != null && !billingNo.equals("")) {
+			
 			//String user_no = (String) session.getAttribute("user");
 			BillingCorrectionPrep bObj = new BillingCorrectionPrep();
-			List lObj = bObj.getBillingClaimHeaderObj(request.getParameter("xml_billing_no"));
+			List lObj = bObj.getBillingClaimHeaderObj(billingNo);
 			BillingClaimHeader1Data ch1Obj = (BillingClaimHeader1Data) lObj.get(0);
 			boolean bs = bObj.updateBillingClaimHeader(ch1Obj, request);
 
@@ -42,17 +47,27 @@
 				bs = bObj.updateBillingItem(lObj, request);
 			}
 			
+			} else {
+				error = "No xml_billing_no parameter passed. Update failed";
+			}
+			
 		%>
 <p>
-<h1>Successful Updation of a billing Record.</h1>
+<%if(error == null) { %>
+<h1>Successful Update of a billing Record.</h1>
+<%} else { %>
+<h1 style="color:red"><%=error %></h1>
+<%} %>
 </p>
 <% if(request.getParameter("submit").equals("Submit&Correct Another")) { %>
 <center><input type='button' name='back'
 	value='Correct Another'
 	onclick='window.location.href="billingONCorrection.jsp?billing_no="' />
 </center>
-<%} else { %>
+<%} else {
+if(error == null) {	
+%>
 <script LANGUAGE="JavaScript">
 	self.close();
 </script>
-<%} %>
+<%} }%>
