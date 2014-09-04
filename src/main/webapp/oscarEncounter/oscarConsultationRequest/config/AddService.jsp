@@ -45,6 +45,18 @@ function BackToOscar()
 {
        window.close();
 }
+
+function checkServiceName()
+{
+        var service = document.forms[0].service;
+        if (service.value.trim()=="")
+        {
+                alert("<bean:message key="oscarEncounter.oscarConsultationRequest.config.AddService.serviceNameEmpty"/>");
+                service.focus();
+                return false;
+        }
+        else return true;
+}
 </script>
 
 <link rel="stylesheet" type="text/css" href="../../encounterStyles.css">
@@ -93,7 +105,7 @@ function BackToOscar()
 				<td>
 
 				<table>
-					<html:form action="/oscarEncounter/AddService">
+					<html:form action="/oscarEncounter/AddService" onsubmit="return checkServiceName();">
 						<tr>
 							<td><bean:message
 								key="oscarEncounter.oscarConsultationRequest.config.AddService.service" />
