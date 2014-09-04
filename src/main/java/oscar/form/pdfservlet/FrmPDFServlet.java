@@ -203,7 +203,7 @@ public class FrmPDFServlet extends HttpServlet {
      *Prepare to be bored!
      */
     protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req, final ServletContext ctx, ByteArrayOutputStream baosPDF, int multiple)
-    throws DocumentException, java.io.IOException {
+    throws DocumentException {
         // added by vic, hsfo
         if (HSFO_RX_DATA_KEY.equals(req.getParameter("__title")))
             return generateHsfoRxPDF(req);
@@ -291,9 +291,22 @@ public class FrmPDFServlet extends HttpServlet {
             String tempValue = null;
 
             //load from DB
-            int demoNo = Integer.parseInt(req.getParameter("demographic_no"));
-            int formId = Integer.parseInt(req.getParameter("formId"));
+            
+            String strDemoNo = req.getParameter("demographic_no");
+            String strFormId = req.getParameter("formId");           
             String formClass=req.getParameter("form_class");
+ 
+            int demoNo, formId;
+            
+            try {
+            	demoNo = Integer.parseInt(strDemoNo);
+            	formId = Integer.parseInt(strFormId);
+            }catch(NumberFormatException e) {
+            	MiscUtils.getLogger().error("error parsing parameters",e);
+            	return null;
+            }
+            
+            
             FrmRecord record = (new FrmRecordFactory()).factory(formClass);
             java.util.Properties props = new Properties();
             try {
@@ -767,6 +780,9 @@ public class FrmPDFServlet extends HttpServlet {
         } catch (DocumentException dex) {
             baosPDF.reset();
             throw dex;
+        } catch (Throwable ex) {
+            baosPDF.reset();
+            MiscUtils.getLogger().error("error",ex);
         } finally {
             if (document.isOpen())
                 document.close();
@@ -812,5 +828,4 @@ public class FrmPDFServlet extends HttpServlet {
         String propFilename = propPath.substring(propPath.lastIndexOf("/") + 1);
         return propFilename;
     }
-
 }

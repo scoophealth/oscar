@@ -91,7 +91,7 @@ temp = "";
             //popupFixedPage(650,850,'../provider/notice.htm');
             temp=document.forms[0].action;         
             document.forms[0].action = "<rewrite:reWrite jspPage="formname.do?__title=MentalHealthForm1&__cfgfile=mentalHealthForm1Print&__cfgfile=mentalHealthForm1Print_2&__cfgfile=mentalHealthForm1Print_3&__template=mentalHealthForm1"/>";
-            document.forms[0].submit.value="printall"; 
+            document.forms[0].submit.value="printAll"; 
             document.forms[0].target="_self";
         //}
         //return ret;
@@ -292,7 +292,7 @@ var maxYear=3100;
 	<input type="hidden" name="provNo"
 		value="<%= request.getParameter("provNo") %>" />
 	<input type="hidden" name="submit" value="exit" />
-
+	<input type="hidden" name="formId" value="<%=formId%>" />
 	<table class="Head" class="hidePrint">
 		<tr>
 			<td nowrap="true">
