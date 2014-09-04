@@ -600,7 +600,7 @@ public class InboxResultsDao {
 	    sql.addScalar("last_name", Hibernate.STRING);
 	    sql.addScalar("first_name", Hibernate.STRING);
 	    sql.addScalar("hin", Hibernate.STRING);
-	    sql.addScalar("sex", Hibernate.CHARACTER);
+	    sql.addScalar("sex", Hibernate.STRING);
 	    sql.addScalar("module_id", Hibernate.INTEGER);
 	    sql.addScalar("observationdate", Hibernate.DATE);
 	    
