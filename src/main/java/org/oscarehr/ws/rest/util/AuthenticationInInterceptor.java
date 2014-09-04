@@ -45,12 +45,13 @@ public class AuthenticationInInterceptor extends AbstractPhaseInterceptor<Messag
 		super(Phase.PRE_INVOKE);
 	}
 
-	private LoggedInInfo getLoggedInInfo() {
-		return LoggedInInfo.loggedInInfo.get();
+	private LoggedInInfo getLoggedInInfo(Message message) {
+		HttpServletRequest request = (HttpServletRequest) message.get(AbstractHTTPDestination.HTTP_REQUEST);
+		return LoggedInInfo.getLoggedInInfoFromSession(request);
 	}
 
 	@Override
-	public void handleMessage(Message message) throws Fault {		
+	public void handleMessage(Message message) throws Fault {
 		// allows WADL requests for unauthenticated users
 		String messageQueryString = String.valueOf(message.get(Message.QUERY_STRING));
 		boolean isServiceRequest = "_wadl".equalsIgnoreCase(messageQueryString);
@@ -58,7 +59,7 @@ public class AuthenticationInInterceptor extends AbstractPhaseInterceptor<Messag
 			return;
 		}
 
-		LoggedInInfo info = getLoggedInInfo();
+		LoggedInInfo info = getLoggedInInfo(message);
 		boolean isAuthenticated = info != null && (info.loggedInProvider != null || info.loggedInSecurity != null);
 		if (isAuthenticated) {
 			return;
@@ -81,7 +82,7 @@ public class AuthenticationInInterceptor extends AbstractPhaseInterceptor<Messag
 			oscarLog.setContent(request.getRequestURL().toString());
 			oscarLog.setData(request.getParameterMap().toString());
 		}
-		
+
 		LogAction.addLogSynchronous(oscarLog);
-    }
+	}
 }
