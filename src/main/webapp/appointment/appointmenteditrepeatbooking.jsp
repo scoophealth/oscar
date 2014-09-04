@@ -38,12 +38,15 @@
 <%@page import="org.oscarehr.common.model.Appointment" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="java.text.SimpleDateFormat" %>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%
 	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 	SimpleDateFormat dayFormatter = new SimpleDateFormat("yyyy-MM-dd");
 	SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	String loggedInProviderNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 %>
 <%!
   GregorianCalendar addDateByYMD(GregorianCalendar cal, String unit, int n) {
@@ -198,7 +201,7 @@
                         param[6]=request.getParameter("location");
                         param[7]=request.getParameter("resources");
                         param[8]=createdDateTime;
-                        param[9]=userName;
+                        param[9]=loggedInProviderNo;
                         param[10]=request.getParameter("urgency");
  	        for(int k=0; k<paramE.length; k++) param[k+11] = paramE[k];
 
