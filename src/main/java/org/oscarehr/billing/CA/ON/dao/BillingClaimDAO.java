@@ -248,7 +248,7 @@ public class BillingClaimDAO extends AbstractDao<BillingClaimHeader1> {
         for( String code : codes ) {
             billingservice = billServiceDAO.searchBillingCode(code, "ON", serviceDate);
 
-            if( !billingservice.getPercentage().equalsIgnoreCase("")) {
+            if( billingservice.getPercentage() != null && !billingservice.getPercentage().equalsIgnoreCase("")) {
                 //billingPerc = billingservice
                 aPercentCodes.add(billingservice);
 
