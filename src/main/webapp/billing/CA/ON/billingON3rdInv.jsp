@@ -55,6 +55,7 @@
     if (invoiceNo != null) 
         bCh1 = bCh1Dao.find(invoiceNo);
     
+    
     String billTo = ""; 
     String remitTo = "";
     BigDecimal totalOwed = new BigDecimal("0.00");
@@ -227,7 +228,9 @@
                  <% if (props.hasProperty("invoice_due_date")) {
                         Integer numDaysTilDue = Integer.parseInt(props.getProperty("invoice_due_date", "0")); 
                         Date serviceDate = null;
-                        serviceDate = bCh1.getBillingDate();
+                        if(bCh1 != null) {
+                        	serviceDate = bCh1.getBillingDate();
+                        }
                   %>
                     <b><bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.dueDate"/>:</b><%=dueDateStr%>
                  <% }%>
@@ -249,14 +252,14 @@
 <oscar:customInterface section="billingInvoice"/>
 <table width="100%" border="0">
 	<tr>
-            <td id="ptName">Patient: <%=bCh1.getDemographicName() %></td>
-            <td id="ptDemoNo"> (<%=bCh1.getDemographicNo() %>)</td>
-            <td id="ptGender"><%=bCh1.getSex().equals("1")? "Male":"Female" %></td>
-            <td id="ptDOB"> DOB: <%=bCh1.getDob() %></td>
+            <td id="ptName">Patient: <%=(bCh1 != null)?bCh1.getDemographicName():"N/A" %></td>
+            <td id="ptDemoNo"> (<%=(bCh1 != null)?bCh1.getDemographicNo():"N/A" %>)</td>
+            <td id="ptGender"><%=(bCh1 != null)?(bCh1.getSex().equals("1")? "Male":"Female"):"N/A" %></td>
+            <td id="ptDOB"> DOB: <%=(bCh1 != null)?bCh1.getDob():"N/A" %></td>
         </tr>
         <tr>    
 		<td id="ptHin">
-                   Insurance No: <%=demo.getHin()%>
+                   Insurance No: <%=(demo!=null)?demo.getHin():"N/A"%>
                 </td>
             </tr>
         </table>
