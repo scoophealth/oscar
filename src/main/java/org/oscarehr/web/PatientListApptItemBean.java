@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class PatientListApptItemBean implements Serializable {
 	private Integer demographicNo;
+	private Integer appointmentNo;
 	private String name;
 	private String status;
 	private String startTime;
@@ -64,5 +65,11 @@ public class PatientListApptItemBean implements Serializable {
 	}
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+	public Integer getAppointmentNo() {
+		return appointmentNo;
+	}
+	public void setAppointmentNo(Integer appointmentNo) {
+		this.appointmentNo = appointmentNo;
 	}
 }
