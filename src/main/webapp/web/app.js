@@ -46,7 +46,7 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
             controller: 'DetailsCtrl'
         })
         .state('record.summary', {
-	    	url: '^/record/:demographicNo/summary', 
+	    	url: '^/record/:demographicNo/summary?appointmentNo', 
             templateUrl: 'record/summary/summary.jsp',
             controller: 'SummaryCtrl'
         })
