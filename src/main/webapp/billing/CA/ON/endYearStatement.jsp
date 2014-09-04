@@ -70,6 +70,15 @@ function calToday(field) {
 	varDate = calDate.getDate()>9? calDate.getDate(): ("0"+calDate.getDate());
 	field.value = calDate.getFullYear() + '/' + (varMonth) + '/' + varDate;
 }
+
+function validateFields() {
+	if($('#nameForlooksOnly').val() == '') {
+		alert('Please select a valid patient for this report.');
+		return false;
+	}
+	return true;
+	
+}
 //-->
 
 
@@ -126,7 +135,7 @@ name=request.getParameter("firstNameParam")+" "+request.getParameter("lastNamePa
 		</div>
 		
 		<div class="span10">
-		<input class="btn" type="submit" name="search" value="Create Statement"> 
+		<input class="btn" type="submit" name="search" value="Create Statement" onclick="return validateFields();"> 
 
 		<input class="btn" type="submit" name="pdf" value="Print PDF" <logic:empty name="result">disabled="disabled"</logic:empty> >
 		</div>
