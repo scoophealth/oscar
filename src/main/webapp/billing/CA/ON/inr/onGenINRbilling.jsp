@@ -199,6 +199,8 @@
 
 		%>
 <script LANGUAGE="JavaScript">
-      self.close();
+      //self.close();
      // self.opener.refresh();
+     location.href='reportINR.jsp?provider_no=all';
+     
 </script>
