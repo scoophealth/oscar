@@ -25,6 +25,7 @@ package org.oscarehr.util;
 
 import java.util.List;
 import java.util.TimerTask;
+
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
@@ -38,7 +39,6 @@ public class OcanIarSubmissionTask extends TimerTask {
 	public void run() {
 		try {
 			logger.info("Running OCAN IAR Submission Task");
-			LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 			Facility currentWorkingFacility=null;
 
 			FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");

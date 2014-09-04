@@ -4,7 +4,7 @@
 
 1. On the main schedule screen (appointmentprovideradminday.jsp), the first screen after login, the jsp executes this code by default if MyOscar is enabled:
 
-	`MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(LoggedInInfo.loggedInInfo.get());`
+	`MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(loggedInInfo);`
 
 
 2. This method fires off a thread to login, executing this code:
