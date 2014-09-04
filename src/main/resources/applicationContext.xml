@@ -53,6 +53,12 @@
 	<bean id="CaseManagementNoteLinkDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO" autowire="byName" />
 	<bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.CaseManagementCPPDAO" autowire="byName" />
 	
+	
+	
+	<bean id="AppointmentArchiveDao" class="org.oscarehr.common.dao.AppointmentArchiveDao" autowire="byName" />
+	<bean id="DxDao" class="org.oscarehr.common.dao.DxDao" autowire="byName" />
+	<bean id="CasemgmtNoteLockDao" class="org.oscarehr.common.dao.CasemgmtNoteLockDao" autowire="byName" />
+	
 	<bean id="AllergyDao" class="org.oscarehr.common.dao.AllergyMergedDemographicDao" autowire="byName" />
 	<bean id="allergyDao" class="org.oscarehr.common.dao.AllergyMergedDemographicDao" autowire="byName" />
 	
@@ -186,6 +192,9 @@
 		<property name="programAccessDAO" ref="programAccessDAO" />
 		<property name="eChartDao" ref="eChartDao"/>
 		<property name="encounterWindowDao" ref="encounterWindowDao"/>
+		
+		<property name="appointmentArchiveDao" ref="AppointmentArchiveDao" />
+		<property name="dxDao" ref="DxDao" />
 	</bean>
 
 	<bean id="ClientImageManager" class="org.oscarehr.casemgmt.service.ClientImageManager" autowire="byName" />
