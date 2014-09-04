@@ -27,9 +27,11 @@ import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -75,23 +77,28 @@ import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.ProviderExt;
 import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.AppointmentArchiveDao;
 import org.oscarehr.common.dao.CaseManagementTmpSaveDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.dao.DxDao;
 import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.EChartDao;
 import org.oscarehr.common.dao.EncounterWindowDao;
 import org.oscarehr.common.dao.HashAuditDao;
 import org.oscarehr.common.dao.MessageTblDao;
 import org.oscarehr.common.dao.MsgDemoMapDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ProviderExtDao;
 import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.CaseManagementTmpSave;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.DxAssociation;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.EncounterWindow;
 import org.oscarehr.common.model.HashAudit;
@@ -105,6 +112,10 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import oscar.OscarProperties;
+import oscar.dms.EDocUtil;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
+//import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.util.ConversionUtils;
 import oscar.util.DateUtils;
 
@@ -137,13 +148,28 @@ public class CaseManagementManager {
 	private ProgramAccessDAO programAccessDAO;
 	private SecRoleDao secRoleDao;
 	private ProgramQueueDao programQueueDao;
-
+	
+	private AppointmentArchiveDao appointmentArchiveDao;
+	private DxDao dxDao;
+	
+	
 	private boolean enabled;
 
 	private static final Logger logger = MiscUtils.getLogger();
 
 	private EChartDao eChartDao = null;
 	private EncounterWindowDao encounterWindowDao;
+	
+	
+	public void setAppointmentArchiveDao(AppointmentArchiveDao appointmentArchiveDao) {
+		this.appointmentArchiveDao = appointmentArchiveDao;
+	}
+	
+	public void setDxDao(DxDao dxDao) {
+		this.dxDao = dxDao;
+	}
+	
+	
 	
 	public CaseManagementIssue getIssueByIssueCode(String demo, String issue_code) {
 		return this.caseManagementIssueDAO.getIssuebyIssueCode(demo, issue_code);
@@ -1799,4 +1825,368 @@ public class CaseManagementManager {
 	}
 	
 	
+	
+	/**
+	 * gets all the notes
+	 * if we have a key, and the note is locked, consider it
+	 * caisi - filter notes
+	 * grab the last one, where i am provider, and it's not signed
+	 *
+	 * @param request
+	 * @param demono
+	 * @param providerNo
+	 */
+	public CaseManagementNote getLastSaved(String programId, String demono, String providerNo,Map unlockedNotesMap) {
+		//CaseManagementNote note = null;
+		List<EChartNoteEntry> entries = new ArrayList<EChartNoteEntry>();
+
+		//Gets some of the note data, no relationships, not the note/history..just enough
+		List<Map<String,Object>> notes = caseManagementNoteDAO.getUnsignedRawNoteInfoMapByDemographic(demono);
+		Map<String,Object> filteredNotes = new LinkedHashMap<String,Object>();
+
+		//This gets rid of old revisions (better than left join on a computed subset of itself
+		for(Map<String,Object> note:notes) {
+			if(filteredNotes.get(note.get("uuid"))!=null)
+				continue;
+			filteredNotes.put((String)note.get("uuid"),true);
+			EChartNoteEntry e = new EChartNoteEntry();
+			e.setId(note.get("id"));
+			e.setDate((Date)note.get("observation_date"));
+			e.setProviderNo((String)note.get("providerNo"));
+			e.setProgramId(ConversionUtils.fromIntString(note.get("program_no")));
+			e.setRole((String)note.get("reporter_caisi_role"));
+			e.setType("local_note");
+			entries.add(e);
+
+		}
+
+		// UserProperty prop = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
+		//notes = caseManagementMgr.getNotes(demono);
+		//notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
+
+		
+		if (programId == null || programId.length() == 0) {
+			programId = "0";
+		}
+
+		entries = filterNotes1(providerNo, entries, programId);
+
+		Collections.sort(entries,EChartNoteEntry.getDateComparatorDesc());
+
+		
+		for(EChartNoteEntry entry:entries) {
+			CaseManagementNote n = getNote(String.valueOf(entry.getId()));
+			if(n.isLocked() && unlockedNotesMap.get(entry.getId()) != null ) {
+				n.setLocked(false);
+			}
+			if(n.getProviderNo().equals(providerNo)) {
+				return n;
+			}
+		}
+
+		return null;
+	}
+	
+	
+	public CaseManagementNote makeNewNote(String providerNo,String demographicNo,String  encType,String appointmentNo,Locale locale){
+		CaseManagementNote note = new CaseManagementNote();
+		note.setProviderNo(providerNo);
+		note.setDemographic_no(demographicNo);
+		
+		if (!OscarProperties.getInstance().isPropertyActive("encounter.empty_new_note")) {
+			OscarAppointmentDao appointmentDao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
+			String encounterText = "";
+			try{
+				Appointment appointment = appointmentDao.find(Integer.parseInt(appointmentNo));
+				encounterText = "[" + oscar.util.UtilDateUtilities.DateToString(appointment.getAppointmentDate(), "dd-MMM-yyyy", locale) + " .: " + appointment.getReason() + "] \n";
+			}catch(Exception e){
+				logger.error("error parsing appointmentNo",e);
+			}
+		
+			note.setNote(encounterText);
+			
+		} else {
+			note.setNote("");
+		}
+		
+		if (encType == null || encType.equals("")) {
+			note.setEncounter_type("");
+		} else {
+			note.setEncounter_type(encType);
+		}
+		
+		return note;
+	
+	}
+	
+	
+	
+//Move this out of here.
+private String updateApptStatus(String status, String type) {
+	oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
+	as.setApptStatus(status);
+
+	if (type.equalsIgnoreCase("sign")) status = as.signStatus();
+	if (type.equalsIgnoreCase("verify")) status = as.verifyStatus();
+
+	return status;
+}
+
+//add new note link if note is document or rx note
+	public void addNewNoteLink(Long noteId) {
+		CaseManagementNote cmn = getNote(noteId.toString());
+		List<CaseManagementNote> cmnList = getNotesByUUID(cmn.getUuid());
+		Long firstNoteId;
+		Long lastNoteId;
+		List<Long> noteIdList = new ArrayList<Long>();
+		for (CaseManagementNote note : cmnList) {
+			noteIdList.add(note.getId());
+		}
+		if (noteIdList.size() > 0) {
+			Collections.sort(noteIdList);
+			firstNoteId = noteIdList.get(0);
+			lastNoteId = noteIdList.get(noteIdList.size() - 1);
+			if (firstNoteId != lastNoteId) {
+				CaseManagementNote firstNote = getNote(firstNoteId.toString());
+				if (firstNote.isDocumentNote()) {
+					Long tableId = EDocUtil.getTableIdFromNoteId(firstNote.getId());
+					CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
+					cmnl.setNoteId(lastNoteId);
+					cmnl.setTableName(CaseManagementNoteLink.DOCUMENT);
+					cmnl.setTableId(tableId);
+					saveNoteLink(cmnl);
+				} else if (firstNote.isRxAnnotation()) {
+
+					CaseManagementNoteLink latestLink = getLatestLinkByNote(firstNote.getId());
+
+					CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
+					cmnl.setNoteId(lastNoteId);
+					cmnl.setTableName(CaseManagementNoteLink.DRUGS);
+					cmnl.setTableId(latestLink.getTableId());
+					saveNoteLink(cmnl);
+					// EDocUtil.addCaseMgmtNoteLink(cmnl);
+				}
+			}
+		}
+	}
+	
+	
+	public CaseManagementNote saveCaseManagementNote(CaseManagementNote note,List<CaseManagementIssue> issuelist,CaseManagementCPP cpp,String ongoing,boolean verify,Locale locale,Date now,CaseManagementNote annotationNote,String userName,String user,String remoteAddr,String lastSavedNoteString) throws Exception {
+		ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
+		AdmissionManager admissionManager = (AdmissionManager) SpringUtils.getBean("admissionManager");	
+		
+
+		Long old_note_id = note.getId(); // saved for use with annotation
+
+		boolean inCaisi = OscarProperties.getInstance().isCaisiLoaded();
+
+		String role = null;
+		String team = null;
+
+		boolean newNote = false;
+		if (note.getCreate_date() == null) {
+			note.setCreate_date(now);
+			newNote = true;
+		}
+
+		try {
+			role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(), note.getProgram_no())).getRole().getId());
+		} catch (Throwable e) {
+			role = "0";
+		}
+		/*
+		 * if(session.getAttribute("archiveView")!="true") note.setReporter_caisi_role(role); else note.setReporter_caisi_role("1");
+		 */
+		note.setReporter_caisi_role(role);
+
+		try {
+			Admission admission = admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()));
+			if (admission != null) {
+				team = String.valueOf(admission.getTeamId());
+			} else {
+				team = "0";
+			}
+		} catch (Throwable e) {
+			logger.error("Error", e);
+			team = "0";
+		}
+		note.setReporter_program_team(team);
+
+		/* save all issue changes for demographic */
+		saveAndUpdateCaseIssues(issuelist);
+		if (inCaisi) cpp.setOngoingConcerns(ongoing);  // << Check on this one???
+
+
+		OscarAppointmentDao appointmentDao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
+		
+		
+		String roleName = getRoleName(note.getProviderNo(), note.getProgram_no());
+		
+		Appointment appointment = null;
+		try{
+			appointment = appointmentDao.find(note.getAppointmentNo());
+		}catch(Exception e){
+			logger.debug("Appointment number error",e);
+		}
+		
+		if (verify) {
+			String message = getSignature(note.getProviderNo(), userName, roleName, locale, SIGNATURE_VERIFY);
+
+			String n = note.getNote() + "\n" + message;
+			note.setNote(n);
+
+			// only update appt if there is one
+			if (appointment != null) {
+				appointment.setStatus(updateApptStatus(appointment.getStatus(), "verify"));
+			}
+
+		} else if (note.isSigned()) {
+			String message = getSignature(note.getProviderNo(), userName, roleName, locale, SIGNATURE_SIGNED);
+
+			String n = note.getNote() + "\n" + message;
+			note.setNote(n);
+
+			// only update appt if there is one
+			if (appointment != null ) {
+				appointment.setStatus(updateApptStatus(appointment.getStatus(), "sign"));
+			}
+		}
+		
+		
+		if (appointment != null) {
+			appointmentArchiveDao.archiveAppointment(appointment);
+			appointment.setLastUpdateUser(note.getProviderNo());
+			appointmentDao.merge(appointment);
+		}
+		
+		// PLACEHOLDER FOR DX CHECK
+		/*
+		 * If an issue is checked, new , and certain - we want to check dx associations. if found in dx associations. we want to make an entry into dx.
+		 */
+		if (note.isSigned()) {
+			for (CaseManagementIssue cmIssue : note.getIssues()) {
+				if (cmIssue.isCertain()) {
+					DxAssociation assoc = dxDao.findAssociation(cmIssue.getIssue().getType(), cmIssue.getIssue().getCode());
+					if (assoc != null) {
+						// we found a match. Let's add them to registry
+						this.saveToDx(note.getDemographic_no(), assoc.getDxCode(), assoc.getDxCodeType(), true);
+
+					}
+				}
+			}
+		}
+
+		/*
+		 * if provider is a doctor or nurse,get all major and resolved medical issue for demograhhic and append them to CPP medical history
+		 */
+		if (inCaisi) {
+			/* get access right */
+			List<AccessType> accessRight = getAccessRight(note.getProviderNo(), note.getDemographic_no(), note.getProgram_no());
+			setCPPMedicalHistory(cpp, note.getProviderNo(), accessRight);
+			cpp.setUpdate_date(now);
+			saveCPP(cpp, note.getProviderNo());
+		}
+		
+		int revision;
+
+		if (note.getRevision() != null) {
+			revision = Integer.parseInt(note.getRevision());
+			++revision;
+		} else revision = 1;
+
+		note.setRevision(String.valueOf(revision));
+		
+		/* save note including add signature */
+		String savedStr = saveNote(cpp, note, note.getProviderNo(), userName, lastSavedNoteString, roleName);
+		addNewNoteLink(note.getId());
+
+		try {
+			this.deleteTmpSave(note.getProviderNo(), note.getDemographic_no(), note.getProgram_no());
+		} catch (Throwable e) {
+			logger.warn("warn", e);
+		}
+
+		
+		
+		if (annotationNote != null) {
+			// new annotation created and got it in session attribute
+
+			saveNoteSimple(annotationNote);
+			CaseManagementNoteLink cml = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), annotationNote.getId());
+			saveNoteLink(cml);
+			LogAction.addLog(annotationNote.getDemographic_no(), LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(annotationNote.getId()), remoteAddr, annotationNote.getDemographic_no(), annotationNote.getNote());
+			
+		}
+		
+		
+		if (old_note_id != null) {
+			// Not a new note, look for old annotation
+
+			CaseManagementNoteLink cml_anno = null;
+			CaseManagementNoteLink cml_dump = null;
+			List<CaseManagementNoteLink> cmll = getLinkByTableIdDesc(CaseManagementNoteLink.CASEMGMTNOTE, old_note_id);
+			for (CaseManagementNoteLink link : cmll) {
+				CaseManagementNote cmmn = getNote(link.getNoteId().toString());
+				if (cmmn == null) continue;
+
+				if (cmmn.getNote().startsWith("imported.cms4.2011.06")) {
+					if (cml_dump == null) cml_dump = link;
+				} else {
+					if (cml_anno == null) cml_anno = link;
+				}
+				if (cml_anno != null && cml_dump != null) break;
+			}
+
+			if (cml_anno != null) {// old annotation exists - create new link
+				CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cml_anno.getNoteId());
+				saveNoteLink(cml_n);
+			}
+			if (cml_dump != null) {// old dump exists - create new link
+				CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cml_dump.getNoteId());
+				saveNoteLink(cml_n);
+			}
+		}
+
+		String logAction;
+		if (newNote) {
+			logAction = LogConst.ADD;
+		} else {
+			logAction = LogConst.UPDATE;
+		}
+		LogAction.addLog(user, logAction, LogConst.CON_CME_NOTE, "" + Long.valueOf(note.getId()).intValue(), remoteAddr, note.getDemographic_no(), note.getAuditString());
+		
+		return note;
+	}
+	
+	public void setCPPMedicalHistory(CaseManagementCPP cpp, String providerNo,List accessRight)	{
+
+		if (greaterEqualLevel(3, providerNo))	{
+			String mHis = cpp.getMedicalHistory();
+			if(mHis!=null) {
+				mHis = mHis.replaceAll("\r\n", "\n");
+				mHis = mHis.replaceAll("\r", "\n");
+			}
+			List<CaseManagementIssue> allIssues = getIssues(Integer.parseInt(cpp.getDemographic_no()));
+
+			Iterator<CaseManagementIssue> itr = allIssues.iterator();
+			while (itr.hasNext()) {
+				CaseManagementIssue cis = itr.next();
+				String issustring = cis.getIssue().getDescription();
+				if (cis.isMajor() && cis.isResolved()) {
+					if (mHis!=null && mHis.indexOf(issustring) < 0)
+						mHis = mHis + issustring + ";\n";
+				} else {
+
+					if (mHis!=null && mHis.indexOf(issustring) >= 0)
+						mHis = mHis.replaceAll(issustring + ";\n", "");
+				}
+			}
+			if(mHis!=null) {
+				mHis = mHis.replaceAll("\r\n", "\n");
+				mHis = mHis.replaceAll("\r", "\n");
+			}
+			cpp.setMedicalHistory(mHis);
+		}
+	}
+
 }
