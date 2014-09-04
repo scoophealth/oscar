@@ -289,6 +289,7 @@ var maxYear=3100;
 	<input type="hidden" name="provNo"
 		value="<%= request.getParameter("provNo") %>" />
 	<input type="hidden" name="submit" value="exit" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
 
 	<table class="Head" class="hidePrint">
 		<tr>
