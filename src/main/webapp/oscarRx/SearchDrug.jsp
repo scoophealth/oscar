@@ -346,7 +346,7 @@ function load() {
 								<th align="center" width="100px"><b><bean:message key="SearchDrug.msgDelete"/></b></th>
 								<th align="center" width="20px">&nbsp;</th>
 								<%
-									boolean integratorEnabled=LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled();
+									boolean integratorEnabled=loggedInInfo.currentFacility.isIntegratorEnabled();
 
 									if (integratorEnabled)
 									{

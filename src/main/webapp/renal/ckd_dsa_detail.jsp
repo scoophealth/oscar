@@ -44,8 +44,8 @@
 	MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	DxresearchDAO dxResearchDao = (DxresearchDAO)SpringUtils.getBean("DxresearchDAO");
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-%>
-<%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
 	pageContext.setAttribute("demographic_no", request.getParameter("demographic_no"));
 	String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
 	if(labReqVer.equals("")) {labReqVer="07";}
@@ -127,8 +127,8 @@ Dxresearch screeningDx = null;
 		}
 		
 		if(screeningDx != null) {
-			message += "Screening complete - <a href=\"javascript:void(0)\" onClick=\"popupPage(580,900,'../oscarResearch/oscarDxResearch/dxResearchUpdate.do?status=C&did="+screeningDx.getId()+"&demographicNo="+Integer.parseInt(demographicNo)+"&providerNo="+LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo()+"');\">Click Here</a>.<br/>";
-			message += "Screening not appropriate - <a href=\"javascript:void(0)\" onClick=\"popupPage(580,900,'../oscarResearch/oscarDxResearch/dxResearchUpdate.do?status=D&did="+screeningDx.getId()+"&demographicNo="+Integer.parseInt(demographicNo)+"&providerNo="+LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo()+"');\">Click Here</a>.<br/>";
+			message += "Screening complete - <a href=\"javascript:void(0)\" onClick=\"popupPage(580,900,'../oscarResearch/oscarDxResearch/dxResearchUpdate.do?status=C&did="+screeningDx.getId()+"&demographicNo="+Integer.parseInt(demographicNo)+"&providerNo="+loggedInInfo.loggedInProvider.getProviderNo()+"');\">Click Here</a>.<br/>";
+			message += "Screening not appropriate - <a href=\"javascript:void(0)\" onClick=\"popupPage(580,900,'../oscarResearch/oscarDxResearch/dxResearchUpdate.do?status=D&did="+screeningDx.getId()+"&demographicNo="+Integer.parseInt(demographicNo)+"&providerNo="+loggedInInfo.loggedInProvider.getProviderNo()+"');\">Click Here</a>.<br/>";
 		}
 		
 		dxs = dxResearchDao.findByDemographicNoResearchCodeAndCodingSystem(Integer.parseInt(demographicNo), "585", "icd9");

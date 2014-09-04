@@ -63,7 +63,7 @@
 	if (selected_site != null) {
 		session.setAttribute("site_selected", (selected_site.equals("none") ? null : selected_site) );	    
 	}
-	LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String curUser_providerno = loggedInInfo.loggedInProvider.getProviderNo();
 	String ticklerforproviderno = request.getParameter("ticklerforproviderno");
 	UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");

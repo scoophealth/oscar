@@ -21,6 +21,7 @@
 
 	<% 
 	if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	%>
 
 
@@ -317,7 +318,7 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 </tr>
 <%
 	UserPropertyDAO upDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
-	String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+	String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 	UserProperty repLabProp = upDao.getProp(providerNo,"olis_reportingLab");
 	UserProperty exRepLabProp = upDao.getProp(providerNo,"olis_exreportingLab");
 	

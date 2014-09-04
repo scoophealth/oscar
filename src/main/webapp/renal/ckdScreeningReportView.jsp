@@ -46,18 +46,15 @@
 
 <%
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
-
+	
 	List<CKDReportContainer> ckds = null;
 	
-	 String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
-	 if(labReqVer.equals("")) {labReqVer="07";}
-%>
+	String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
+	if(labReqVer.equals("")) {labReqVer="07";}
+	
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	Provider provider = loggedInInfo.loggedInProvider;
 
-<%
-	Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
-%>
-
-<%
 	CkdScreeningReportContainer r = null;
 
 	java.text.DecimalFormat df = new java.text.DecimalFormat("0.00");

@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.Map" %>
 <%@ page import="org.oscarehr.provider.web.UserPreferenceAction" %>
@@ -32,6 +33,7 @@
 <%
 	@SuppressWarnings("unchecked")
 	Map<String,String> prefs = (Map<String,String>)request.getAttribute("prefs");
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 
 <html>
@@ -157,7 +159,7 @@ function dxScriptAttach(name2) {
 		<div style="background-color:#CCCCFF;text-align:center;font-weight:bold;">
 			<bean:message key="provider.pref.title" />		
 			<span style="float:right;clear:right;text-align:right;font-weight:normal;font-size:10pt;margin-right:4px">
-			<%=org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName() %>
+			<%=loggedInInfo.loggedInProvider.getFormattedName() %>
 			</span>
 		</div>
 		<br/>

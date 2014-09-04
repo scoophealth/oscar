@@ -31,7 +31,7 @@
 <%
 	String signatureId = "";
 	try {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String filename = DigitalSignatureUtils
 				.getTempFilePath(request
 						.getParameter(DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY));

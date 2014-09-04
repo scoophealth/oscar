@@ -28,6 +28,7 @@
 
 <%-- Updated by Eugene Petruhin on 05 feb 2009 while fixing #2493970 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.*"%>
 <%@ page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
@@ -40,6 +41,8 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%
+	LoggedInInfo loggedInInfo987=LoggedInInfo.getLoggedInInfoFromSession(request);
+
     long loadPage = System.currentTimeMillis();
     if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
     String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -195,7 +198,7 @@
 		</caisi:isModuleLoad>
 		</span></div>
                 <%                
-                if (org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility!=null && org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.isEnableOcanForms() && programEnableOcan)
+                if (loggedInInfo987.currentFacility!=null && loggedInInfo987.currentFacility.isEnableOcanForms() && programEnableOcan)
                 {
                 %>
                         <div>

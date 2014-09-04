@@ -63,12 +63,12 @@
 
 <html:html locale="true">
 
-<%
-displayServiceUtil.estSpecialist();
-%>
 <%! boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
+
 <%
-	
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
+	displayServiceUtil.estSpecialist();	
 
 	//multi-site support
 	String appNo = request.getParameter("appNo");
@@ -95,10 +95,7 @@ displayServiceUtil.estSpecialist();
 			defaultSiteName = siteDao.getSiteNameByAppointmentNo(appNo);
 		}
 	}
-%>
 
-
-<%
 	String demo = request.getParameter("de");
 		String requestId = request.getParameter("requestId");
 		// segmentId is != null when viewing a remote consultation request from an hl7 source
@@ -988,7 +985,7 @@ function switchProvider(value) {
 </script>
 <script type="text/javascript">
 <%
-String signatureRequestId=DigitalSignatureUtils.generateSignatureRequestId(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+String signatureRequestId=DigitalSignatureUtils.generateSignatureRequestId(loggedInInfo.loggedInProvider.getProviderNo());
 String imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
 String storedImgUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_stored.name()+"&digitalSignatureId=";
 %>

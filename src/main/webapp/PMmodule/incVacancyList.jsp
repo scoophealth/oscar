@@ -42,6 +42,7 @@
 <%@ include file="/taglibs.jsp"%>
 <%
 	String role = (String)session.getAttribute("userrole");
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
 	WaitListService s = new WaitListService();
 	List<VacancyDisplayBO> listVac = s.listVacanciesForAllWaitListPrograms();
@@ -51,7 +52,7 @@
     if(role.indexOf("Waitlist Agency Operator") != -1) {		
 		ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
 		List<Integer> pids = new ArrayList<Integer>();
-		for(ProgramProvider pp:programProviderDao.getActiveProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo())) {
+		for(ProgramProvider pp:programProviderDao.getActiveProgramDomain(loggedInInfo.loggedInProvider.getProviderNo())) {
 			pids.add(pp.getProgramId().intValue());
 		}
 		for(VacancyDisplayBO v: listVac) {
@@ -65,15 +66,15 @@
     	filteredListVac.addAll(listVac);
     }
    */ 
-   int displayAllVacancies = LoggedInInfo.loggedInInfo.get().currentFacility.getDisplayAllVacancies();
+   int displayAllVacancies = loggedInInfo.currentFacility.getDisplayAllVacancies();
    //1 means display all vacancies in db, 0 means only display the vacancies associated with program domain.
    if(displayAllVacancies == 1) { //display all vacancies
 	   filteredListVac.addAll(listVac);
    } else { //display the vacancies in program domain .
-	   Integer facilityId = LoggedInInfo.loggedInInfo.get().currentFacility.getId();
+	   Integer facilityId = loggedInInfo.currentFacility.getId();
 	   ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
 		List<Integer> pids = new ArrayList<Integer>();
-		for(ProgramProvider pp:programProviderDao.getActiveProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo())) {
+		for(ProgramProvider pp:programProviderDao.getActiveProgramDomain(loggedInInfo.loggedInProvider.getProviderNo())) {
 			pids.add(pp.getProgramId().intValue());
 		}
 		for(VacancyDisplayBO v: listVac) {

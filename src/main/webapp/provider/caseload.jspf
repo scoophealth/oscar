@@ -34,7 +34,7 @@
 	int caseloadCurDay = caseloadCal.get(Calendar.DAY_OF_MONTH);
 
 	String caseloadCurUser_no = (String) session.getAttribute("user");
-	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	Integer facilityId = loggedInInfo.currentFacility.getId();
 
 %>
