@@ -268,8 +268,6 @@ public final class LoginAction extends DispatchAction {
             	}
             }
             session = request.getSession(); // Create a new session for this user
-            LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-            loggedInInfo.session=session;
 
             logger.debug("Assigned new session for: " + strAuth[0] + " : " + strAuth[3] + " : " + strAuth[4]);
             LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "", ip);
@@ -374,7 +372,7 @@ public final class LoginAction extends DispatchAction {
             session.setAttribute(SessionConstants.LOGGED_IN_PROVIDER, provider);
             session.setAttribute(SessionConstants.LOGGED_IN_SECURITY, cl.getSecurity());
 
-		    loggedInInfo = LoggedInUserFilter.generateLoggedInInfoFromSession(request);
+            LoggedInInfo loggedInInfo = LoggedInUserFilter.generateLoggedInInfoFromSession(request);
 		    MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(loggedInInfo, true);
             
             List<Integer> facilityIds = providerDao.getFacilityIds(provider.getProviderNo());

@@ -50,7 +50,7 @@ public class TicklerWorker extends Thread {
 	public String priority = TicklerData.NORMAL;
 
 	public void run() {
-		LoggedInInfo loggedInInfo=LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod();
 
 		Calendar calendar = GregorianCalendar.getInstance();
 		calendar.add(Calendar.DAY_OF_YEAR, -OLD_REFERRAL_CUTOFF_IN_DAYS);

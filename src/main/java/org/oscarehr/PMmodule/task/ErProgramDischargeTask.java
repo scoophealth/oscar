@@ -37,7 +37,6 @@ import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.MiscUtilsOld;
 import org.oscarehr.util.ShutdownException;
@@ -67,7 +66,6 @@ public class ErProgramDischargeTask extends TimerTask {
     }
 
     public void run() {
-		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
 		try {
             log.debug("running ErProgramDischargeTask");
@@ -135,7 +133,6 @@ public class ErProgramDischargeTask extends TimerTask {
         	log.debug("ErProgramDischargeTask noticed shutdown hook.");
         }
         finally {
-    		LoggedInInfo.loggedInInfo.remove();
             DbConnectionFilter.releaseAllThreadDbResources();
         }
     }

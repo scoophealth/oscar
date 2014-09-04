@@ -48,19 +48,13 @@ public class LoggedInUserFilter implements javax.servlet.Filter {
 	public void doFilter(ServletRequest tmpRequest, ServletResponse tmpResponse, FilterChain chain) throws IOException, ServletException {
 		logger.debug("Entering LoggedInUserFilter.doFilter()");
 
-		try {
-			LoggedInInfo.checkForLingeringData();
+		// set new / current data
+		HttpServletRequest request = (HttpServletRequest) tmpRequest;
+		LoggedInInfo x = generateLoggedInInfoFromSession(request);
+		LoggedInInfo.setLoggedInInfoIntoSession(request.getSession(),x);
 
-			// set new / current data
-			HttpServletRequest request = (HttpServletRequest) tmpRequest;
-			LoggedInInfo x = generateLoggedInInfoFromSession(request);
-			LoggedInInfo.setLoggedInInfoIntoSession(request.getSession(),x);
-
-			logger.debug("LoggedInUserFilter chainning");
-			chain.doFilter(tmpRequest, tmpResponse);
-		} finally {
-			LoggedInInfo.loggedInInfo.remove();
-		}
+		logger.debug("LoggedInUserFilter chainning");
+		chain.doFilter(tmpRequest, tmpResponse);
 	}
 
 	public void destroy() {
