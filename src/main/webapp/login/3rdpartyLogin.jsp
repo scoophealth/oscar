@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.apache.cxf.rs.security.oauth.data.OAuthAuthorizationData" %>
 <%@page import="org.apache.cxf.rs.security.oauth.data.OAuthPermission" %>
 
@@ -33,7 +34,7 @@
 	}
 	
 	OAuthAuthorizationData oauthData = (OAuthAuthorizationData)request.getAttribute("oauthauthorizationdata");
-
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 
 <!DOCTYPE html>
@@ -111,7 +112,7 @@
             			$('#login_div').hide();
             			$('#scope_div').show();
             			$('#loggedin_div').show();
-            			$('#providerName').html('<%if(loggedIn) {out.print(org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName());}%>');
+            			$('#providerName').html('<%if(loggedIn) {out.print(loggedInInfo.loggedInProvider.getFormattedName());}%>');
             		} else {
             			$('#login_div').show();
             			$('#scope_div').hide();

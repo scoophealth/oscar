@@ -48,6 +48,7 @@
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));
     int provNo = Integer.parseInt((String) session.getAttribute("user"));
+    LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
     
     ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
     DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
@@ -257,7 +258,7 @@
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
-						<td>Dr. <%=LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName() %></td>
+						<td>Dr. <%=loggedInInfo.loggedInProvider.getFormattedName() %></td>
 					</tr>
 				</table>
 		 </td>

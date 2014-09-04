@@ -45,7 +45,8 @@
 	OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao)SpringUtils.getBean("ocanStaffFormDataDao");
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	List<Provider> providers = providerDao.getActiveProviders();
-	Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	Provider provider = loggedInInfo.loggedInProvider;
 %>
 <html:html locale="true">
 <head>

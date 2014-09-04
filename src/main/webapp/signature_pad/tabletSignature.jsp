@@ -32,9 +32,10 @@ is hosted in an IFrame and that the IFrame's parent window implements signatureH
 
 </head>
 <%
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 String requestIdKey = request.getParameter(DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY);
 if (requestIdKey == null) {
-	requestIdKey = DigitalSignatureUtils.generateSignatureRequestId(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+	requestIdKey = DigitalSignatureUtils.generateSignatureRequestId(loggedInInfo.loggedInProvider.getProviderNo());
 }
 String imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+requestIdKey;
 String storedImageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_stored.name()+"&digitalSignatureId=";

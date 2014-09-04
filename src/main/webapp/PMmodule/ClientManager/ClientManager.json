@@ -12,7 +12,8 @@
 <%@page import="org.oscarehr.PMmodule.model.ClientReferral"%>
 
 <%
-	String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	String providerNo=loggedInInfo.getLoggedInProviderNo();
 	AdmissionDao admissionDao = SpringUtils.getBean(AdmissionDao.class);
 	ProgramProviderDAO programProviderDao = (ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
 	ClientReferralDAO referralDao = (ClientReferralDAO)SpringUtils.getBean("clientReferralDAO");

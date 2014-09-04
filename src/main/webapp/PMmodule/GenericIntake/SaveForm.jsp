@@ -24,11 +24,14 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.sql.*,oscar.oscarDB.*"%>
 <%@page
 	import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*"%>
 <%@ include file="/taglibs.jsp"%>
 <%
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
     WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
     String published = request.getParameter("published");
@@ -40,7 +43,7 @@
     IntakeNode itn = (IntakeNode) session.getAttribute("intakeNode");
     Integer frmVersion = (Integer) session.getAttribute("form_version");
     //String publisher = session.getAttribute("publisher").toString();
-    String publisher = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName();
+    String publisher = loggedInInfo.loggedInProvider.getFormattedName();
     String frmLabel = itn.getLabelStr();
     
     saveNodeLabels(itn, genericIntakeManager);

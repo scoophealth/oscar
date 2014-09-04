@@ -55,7 +55,6 @@ public class UploadingTest extends DaoTestFixtures {
 	@BeforeClass
 	public static void init() throws Exception {
 		SchemaUtils.restoreAllTables();
-		AuthUtils.initLoginContext();
 		logger.info("Initialized successfully");
 	}
 	

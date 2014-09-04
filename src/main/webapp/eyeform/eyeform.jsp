@@ -14,7 +14,8 @@
 <%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic, org.oscarehr.PMmodule.dao.ProviderDao, org.oscarehr.util.LoggedInInfo, org.oscarehr.util.SpringUtils, oscar.OscarProperties, org.oscarehr.common.dao.OscarAppointmentDao, org.oscarehr.common.model.Appointment, org.oscarehr.util.MiscUtils, oscar.SxmlMisc, org.oscarehr.common.dao.ProfessionalSpecialistDao"  %>
 
 <%
-String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+String providerNo=loggedInInfo.getLoggedInProviderNo();
 OscarProperties properties = OscarProperties.getInstance();
 
 // This is here because the "case_program_id" session attribute is only set during the echart open routine.

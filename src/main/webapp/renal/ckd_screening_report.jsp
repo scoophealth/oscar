@@ -46,12 +46,11 @@
 	CkdScreenerReportHandler report = new CkdScreenerReportHandler();
 	List<CKDReportContainer> ckds = report.generateReport();
 
-	 String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
-	 if(labReqVer.equals("")) {labReqVer="07";}
-%>
+	String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
+	if(labReqVer.equals("")) {labReqVer="07";}
 
-<%
-	Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	Provider provider = loggedInInfo.loggedInProvider;
 %>
 <html:html locale="true">
 <head>
