@@ -29,7 +29,7 @@
   String user_no = (String) session.getAttribute("user");
 %>
 <%@ page import="java.util.*, java.sql.*, java.io.*, oscar.*"
-	errorPage="errorpage.jsp"%>
+	errorPage="../../errorpage.jsp"%>
 <% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 
 <html>
@@ -51,10 +51,9 @@ function onExit() {
 	topmargin="0" leftmargin="1" rightmargin="1">
 <form name="checklistedit" action="checklistedit.jsp" method="POST">
 <%
-  char sep = oscarVariables.getProperty("file_separator").toCharArray()[0];
   String str = null;
   if(request.getParameter("submit")!=null && request.getParameter("submit").compareTo(" Save ")==0) {
-    FileWriter inf = new FileWriter(".."+sep+"webapps"+sep+oscarVariables.getProperty("project_home")+sep+"decision"+sep+"annualreview"+sep+"desannualreviewplannerriskchecklist.xml");
+    FileWriter inf = new FileWriter(session.getServletContext().getRealPath("/decision/annualreview/desannualreviewplannerriskchecklist.xml"));
     str = request.getParameter("checklist");
 	str = SxmlMisc.replaceString(str," & "," &amp; ");
   	str = SxmlMisc.replaceString(str," > "," &gt; ");
@@ -80,7 +79,7 @@ function onExit() {
 			name="checklist" cols="100" rows="32" style="width: 100%">
 <%
 //		try {
-			File file = new File(".."+sep+"webapps"+sep+oscarVariables.getProperty("project_home")+sep+"decision"+sep+"annualreview"+sep+"desannualreviewplannerriskchecklist.xml");
+			File file = new File(session.getServletContext().getRealPath("/decision/annualreview/desannualreviewplannerriskchecklist.xml"));
 			if(!file.isFile() || !file.canRead()) {
 				throw new IOException();
 			}
