@@ -572,7 +572,10 @@ function resetAll(){
 	document.getElementById('AddStamp').disabled=false; 
 	document.getElementById('AddSignatureBox2').disabled=false;
 	//document.getElementById('DefaultCheckmark').checked = false;
-	document.getElementById('includePdfPrintControl').checked = false;
+	<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_print_enabled")) { %>
+		document.getElementById('includePdfPrintControl').checked = false;
+	<%}%>
+	
 	<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_fax_enabled")) { %>
 		document.getElementById('includeFaxControl').checked = false;
 	<% } %>
@@ -2877,8 +2880,9 @@ onclick="SetSwitchOn('Stamp');document.getElementById('AddStamp').disabled=true;
 	<input name="includePdfPrintControl" id="includePdfPrintControl" type="checkBox">
 <bean:message key="eFormGenerator.includePDFprint"/>
 </p>
-<% } %>
 </div>
+<% } %>
+
 </div>
 <hr>
 <span class='h2'>8. <bean:message key="eFormGenerator.generate"/></span><a onclick="show('Section8');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section8');"><bean:message key="eFormGenerator.collapse"/></a>
