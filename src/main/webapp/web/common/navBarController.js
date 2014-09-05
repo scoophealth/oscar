@@ -170,20 +170,19 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal) {
 	
 	$scope.newDemographic = function(size){
 		console.log("modal?");
-		//$('#myModal').modal({remote:'modaldemo.html',show:true});
+		//$('#myModal').modal({remote:'modaldemo.jsp',show:true});
 		
 		var modalInstance = $modal.open({
-		      templateUrl: 'modaldemo.html',
+		      templateUrl: 'modaldemo.jsp',
 		      controller: NewPatientCtrl,
 		      size: size
 		    });
 		
 		modalInstance.result.then(function (selectedItem) {
 		      console.log(selectedItem);
-		      console.log(selectedItem.demographicNo);
-		      console.log('/#/patient/'+selectedItem.demographicNo);
+		      console.log('patient #: '+selectedItem.demographicNo);
 		      console.log($location.path());
-		      $location.path('/patient/'+selectedItem.demographicNo);
+		      $location.path('/record/'+selectedItem.demographicNo+'/details');
 		      console.log($location.path());
 		    }, function () {
 		      console.log('Modal dismissed at: ' + new Date());
