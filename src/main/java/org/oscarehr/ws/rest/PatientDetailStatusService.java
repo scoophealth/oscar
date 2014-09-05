@@ -31,6 +31,9 @@ import javax.ws.rs.core.MediaType;
 
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.integration.mchcv.HCValidationFactory;
+import org.oscarehr.integration.mchcv.HCValidationResult;
+import org.oscarehr.integration.mchcv.HCValidator;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -108,5 +111,21 @@ public class PatientDetailStatusService extends AbstractServiceImpl {
 		status.setHospitalView(oscarProperties.getProperty("hospital_view", status.getDefaultView()));
 		
 		return status;
+	}
+	
+	@GET
+	@Path("/validateHC")
+	@Produces({MediaType.APPLICATION_JSON})
+	public HCValidationResult validateHC(@QueryParam("hin") String healthCardNumber, @QueryParam("ver") String versionCode) {
+		HCValidator validator = HCValidationFactory.getHCValidator();
+		
+		HCValidationResult result = null;
+		try {
+			result = validator.validate(healthCardNumber,versionCode);
+		}
+		catch (Exception ex) {
+			MiscUtils.getLogger().error("Error doing HCValidation", ex);
+		}
+		return result;
 	}
 }

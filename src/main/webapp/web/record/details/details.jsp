@@ -664,7 +664,7 @@
 		<div class="col-md-6"></div>
 		<div class="col-md-6">
 			<label/>
-			<button type="button" class="btn" style="padding-top: 0px; padding-bottom: 0px; font-size: small" ng-click="macPHRDo('Register')" ng-show="page.demo.myOscarUserName==null || page.demo.myOscarUserName==''"> Register for McMaster PHR </button>
+			<button type="button" class="btn" style="padding-top: 0px; padding-bottom: 0px; font-size: small" ng-click="macPHRDo('Register')" ng-show="page.demo.myOscarUserName==null || page.demo.myOscarUserName==''">Register for McMaster PHR</button>
 		</div>
 		<div class="col-md-11">
 			<label>Country of Origin</label>
@@ -1062,10 +1062,16 @@
 			<legend>Health Insurance</legend>
 		</fieldset>
 		<div class="col-md-6">
-			<label>HIN #</label>
+			<label>
+				HIN #
+				<span ng-show="page.status.HCValidation=='valid'" title="HIN Valid" style="font-size:large; color:#009900">&#10004;</span>
+				<span ng-show="page.status.HCValidation=='invalid'" title="HIN Invalid" style="font-size:large; color:red">&#10008;</span>
+				<span ng-show="page.status.HCValidation=='n/a'" title="Health Card Validation not ready" style="font-size:large; color:#ff5500">?</span>
+				<button class="btn" title="Validate HIN #" ng-click="validateHC()" ng-hide="page.demo.hin==null || page.demo.hin==''" style="padding: 0px 5px; font-size: small">Validate</button>
+			</label>
 			<span style="white-space:nowrap">
-				<input type="text" class="form-control" placeholder="HIN #" title="HIN #" ng-model="page.demo.hin" style="width:140px; background-color:{{page.color.hin}}"/>
-				<input type="text" class="form-control" placeholder="Ver" title="HIN Version" ng-model="page.demo.ver" style="width:55px; background-color:{{page.color.ver}}"/>
+				<input type="text" class="form-control form-control-details" placeholder="HIN #" title="HIN #" ng-model="page.demo.hin" ng-change="checkHin()" style="width:140px; background-color:{{page.color.hin}}"/>
+				<input type="text" class="form-control form-control-details" placeholder="Ver" title="HIN Version" ng-model="page.demo.ver" ng-change="checkHinVer()" style="width:55px; background-color:{{page.color.ver}}"/>
 			</span>
 		</div>
 		<div class="col-md-6">
