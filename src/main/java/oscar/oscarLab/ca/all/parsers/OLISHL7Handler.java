@@ -839,8 +839,7 @@ public class OLISHL7Handler implements MessageHandler {
 		Parser p = new PipeParser();
 
 		p.setValidationContext(new NoValidation());
-		// force parsing as a generic message by changing the message structure
-		hl7Body = hl7Body.replaceAll("R01", "");
+		
 		msg = p.parse(hl7Body.replaceAll("\n", "\r\n"));
 		headers = new ArrayList<String>();
 		terser = new Terser(msg);
