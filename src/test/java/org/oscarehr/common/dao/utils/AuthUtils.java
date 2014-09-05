@@ -56,12 +56,12 @@ public class AuthUtils {
 		LoggedInInfo info = new LoggedInInfo();
 		info.currentFacility = currentFacility;
 		info.loggedInProvider = loggedInProvider;
-		info.initiatingCode = initiatingCode;
-		info.loggedInSecurity = security;
-		info.locale = locale;
+		info.setInitiatingCode(initiatingCode);
+		info.setLoggedInSecurity(security);
+		info.setLocale(locale);
 		info.session = session;
 
-		return(info);
+		return (info);
 	}
 
 }

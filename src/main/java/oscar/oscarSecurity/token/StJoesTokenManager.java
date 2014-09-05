@@ -47,6 +47,7 @@ import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.SecurityTokenDao;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.common.model.SecurityToken;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -171,12 +172,13 @@ public class StJoesTokenManager extends SecurityTokenManager {
         Facility facility=facilityDao.find(facilityId);
         httpRequest.getSession().setAttribute("currentFacility", facility);
 
-        LoggedInInfo x=new LoggedInInfo();
-		x.currentFacility=(Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
-		x.loggedInProvider=(Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
-		x.initiatingCode=httpRequest.getRequestURI();
-		x.locale=httpRequest.getLocale();
-		LoggedInInfo.setLoggedInInfoIntoSession(session, x);
+        LoggedInInfo loggedInInfo=new LoggedInInfo();
+		loggedInInfo.currentFacility=(Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
+		loggedInInfo.loggedInProvider=(Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+		loggedInInfo.setLoggedInSecurity((Security) session.getAttribute(SessionConstants.LOGGED_IN_SECURITY));
+		loggedInInfo.setInitiatingCode(httpRequest.getRequestURI());
+		loggedInInfo.setLocale(httpRequest.getLocale());
+		LoggedInInfo.setLoggedInInfoIntoSession(session, loggedInInfo);
 		
 		return true;
 	}

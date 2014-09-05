@@ -34,7 +34,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
 
 /**
- * The loggedInProvider fields should only be used if this is a user based thread, i.e. a thread handling a user request.
+ * The Provider fields should only be used if this is a user based thread, i.e. a thread handling a user request.
  * If this is an internal system thread, those fields should be ignored and left null.
  * The initiatingCode field can be used for both internal threads as well as user requests.
  * It should signify where the code started for the most part, i.e. the thread class name,
@@ -46,9 +46,9 @@ public final class LoggedInInfo {
 	public HttpSession session = null;
 	public Facility currentFacility = null;
 	public Provider loggedInProvider = null;
-	public String initiatingCode = null;
-	public Security loggedInSecurity = null;
-	public Locale locale = null;
+	private String initiatingCode = null;
+	private Security loggedInSecurity = null;
+	private Locale locale = null;
 
 	public LoggedInInfo()
 	{
@@ -151,31 +151,31 @@ public final class LoggedInInfo {
 		return (locale);
 	}
 
-	protected HttpSession getSession() {
+	public HttpSession getSession() {
 		return (session);
 	}
 
-	protected void setSession(HttpSession session) {
+	public void setSession(HttpSession session) {
 		this.session = session;
 	}
 
-	protected void setCurrentFacility(Facility currentFacility) {
+	public void setCurrentFacility(Facility currentFacility) {
 		this.currentFacility = currentFacility;
 	}
 
-	protected void setLoggedInProvider(Provider loggedInProvider) {
+	public void setLoggedInProvider(Provider loggedInProvider) {
 		this.loggedInProvider = loggedInProvider;
 	}
 
-	protected void setInitiatingCode(String initiatingCode) {
+	public void setInitiatingCode(String initiatingCode) {
 		this.initiatingCode = initiatingCode;
 	}
 
-	protected void setLoggedInSecurity(Security loggedInSecurity) {
+	public void setLoggedInSecurity(Security loggedInSecurity) {
 		this.loggedInSecurity = loggedInSecurity;
 	}
 
-	protected void setLocale(Locale locale) {
+	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
 

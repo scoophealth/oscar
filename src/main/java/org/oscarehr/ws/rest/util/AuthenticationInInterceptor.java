@@ -60,7 +60,7 @@ public class AuthenticationInInterceptor extends AbstractPhaseInterceptor<Messag
 		}
 
 		LoggedInInfo info = getLoggedInInfo(message);
-		boolean isAuthenticated = info != null && (info.loggedInProvider != null || info.loggedInSecurity != null);
+		boolean isAuthenticated = info != null && (info.loggedInProvider != null || info.getLoggedInSecurity() != null);
 		if (isAuthenticated) {
 			return;
 		}

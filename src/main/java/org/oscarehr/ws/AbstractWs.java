@@ -52,7 +52,7 @@ public abstract class AbstractWs
 	protected Security getLoggedInSecurity()
 	{
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
-		return(loggedInInfo.loggedInSecurity);
+		return(loggedInInfo.getLoggedInSecurity());
 	}
 	
 	protected Provider getLoggedInProvider()
