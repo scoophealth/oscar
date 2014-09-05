@@ -159,7 +159,7 @@ function dxScriptAttach(name2) {
 		<div style="background-color:#CCCCFF;text-align:center;font-weight:bold;">
 			<bean:message key="provider.pref.title" />		
 			<span style="float:right;clear:right;text-align:right;font-weight:normal;font-size:10pt;margin-right:4px">
-			<%=loggedInInfo.loggedInProvider.getFormattedName() %>
+			<%=loggedInInfo.getLoggedInProvider().getFormattedName() %>
 			</span>
 		</div>
 		<br/>

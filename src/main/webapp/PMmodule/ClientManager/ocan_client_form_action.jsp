@@ -86,8 +86,8 @@
 	}catch(java.text.ParseException e){}
 	
 	ocanClientForm.setClientFormCreated(new Date());
-	ocanClientForm.setClientFormProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
-	ocanClientForm.setClientFormProviderName(loggedInInfo.loggedInProvider.getFormattedName());		
+	ocanClientForm.setClientFormProviderNo(loggedInInfo.getLoggedInProviderNo());
+	ocanClientForm.setClientFormProviderName(loggedInInfo.getLoggedInProvider().getFormattedName());		
 
 	OcanFormAction.saveOcanStaffForm(ocanClientForm);
 	

@@ -190,7 +190,7 @@ public class OcanReportingAction extends DispatchAction {
 		//bean which will feed our generator
 		OcanIndividualNeedsOverTimeBean bean = new OcanIndividualNeedsOverTimeBean();
 		bean.setConsumerName(demographicDao.getClientByDemographicNo(Integer.parseInt(clientId)).getFormattedName());
-		bean.setStaffName(loggedInInfo.loggedInProvider.getFormattedName());
+		bean.setStaffName(loggedInInfo.getLoggedInProvider().getFormattedName());
 		bean.setReportDate(new Date());
 		bean.setShowUnmetNeeds(needsUnmet!=null);
 		bean.setShowMetNeeds(needsMet!=null);
@@ -366,7 +366,7 @@ public class OcanReportingAction extends DispatchAction {
 		NeedRatingOverTimeReportGenerator reportGen = new NeedRatingOverTimeReportGenerator();
 
 		reportGen.setConsumerName(demographicDao.getClientByDemographicNo(Integer.parseInt(clientId)).getFormattedName());
-		reportGen.setStaffName(loggedInInfo.loggedInProvider.getFormattedName());
+		reportGen.setStaffName(loggedInInfo.getLoggedInProvider().getFormattedName());
 		reportGen.setReportDate(new Date());
 
 		//get need rating for each domain selected, and add them up.
@@ -700,7 +700,7 @@ public class OcanReportingAction extends DispatchAction {
 		SummaryOfActionsAndCommentsReportGenerator reportGen = new SummaryOfActionsAndCommentsReportGenerator();
 		reportGen.setReportBean(reportBean);
 		reportGen.setConsumerName(demographicDao.getClientByDemographicNo(Integer.parseInt(clientId)).getFormattedName());
-		reportGen.setStaffName(loggedInInfo.loggedInProvider.getFormattedName());
+		reportGen.setStaffName(loggedInInfo.getLoggedInProvider().getFormattedName());
 		reportGen.setReportDate(new Date());
 		reportGen.setIncludeComments(includeComments);
 

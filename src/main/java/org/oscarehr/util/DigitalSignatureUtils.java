@@ -67,7 +67,7 @@ public class DigitalSignatureUtils {
 				digitalSignature.setDateSigned(new Date());
 				digitalSignature.setDemographicId(demographicId);
 				digitalSignature.setFacilityId(loggedInInfo.getCurrentFacility().getId());
-				digitalSignature.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+				digitalSignature.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 				digitalSignature.setSignatureImage(image);
 
 				DigitalSignatureDao digitalSignatureDao = (DigitalSignatureDao) SpringUtils.getBean("digitalSignatureDao");

@@ -47,7 +47,7 @@
 		demographic = org.oscarehr.PMmodule.web.CreateAnonymousClientAction.generatePEClient(loggedInInfo.getLoggedInProviderNo(),programId);
 	}
 
-	Provider provider = loggedInInfo.loggedInProvider;
+	Provider provider = loggedInInfo.getLoggedInProvider();
 	java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 	String curDate = sdf.format(new java.util.Date());
 	java.text.SimpleDateFormat sdf2 = new java.text.SimpleDateFormat("kk:mm");

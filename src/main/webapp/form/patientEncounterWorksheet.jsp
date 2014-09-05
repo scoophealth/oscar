@@ -258,7 +258,7 @@
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
-						<td>Dr. <%=loggedInInfo.loggedInProvider.getFormattedName() %></td>
+						<td>Dr. <%=loggedInInfo.getLoggedInProvider().getFormattedName() %></td>
 					</tr>
 				</table>
 		 </td>

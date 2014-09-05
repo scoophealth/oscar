@@ -40,30 +40,29 @@ public class CkdScreenerSchedulerJob extends TimerTask {
 
 	@Override
 	public void run() {
-		if(!OscarProperties.getInstance().getProperty("ORN_PILOT", "no").equalsIgnoreCase("yes")) {
+		if (!OscarProperties.getInstance().getProperty("ORN_PILOT", "no").equalsIgnoreCase("yes")) {
 			return;
 		}
-		
+
 		Provider provider = new Provider();
 		provider.setProviderNo(OscarProperties.getInstance().getProperty("ORN_PILOT_USER", "999998"));
 		Security security = new Security();
 		security.setId(0);
-		
+
 		LoggedInInfo loggedInInfo = new LoggedInInfo();
-		loggedInInfo.loggedInProvider = provider;
+		loggedInInfo.setLoggedInProvider(provider);
 		loggedInInfo.setLoggedInSecurity(security);
-		
-		
+
 		try {
 			logger.info("starting renal background ckd screening job");
-			
+
 			CkdScreener screener = new CkdScreener();
 			screener.screenPopulation(loggedInInfo);
-			
+
 			logger.info("done renal background ckd screening job");
-			
-		}catch(Throwable e ) {
-			logger.error("Error",e);
+
+		} catch (Throwable e) {
+			logger.error("Error", e);
 		} finally {
 			DbConnectionFilter.releaseAllThreadDbResources();
 		}

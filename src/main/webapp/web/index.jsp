@@ -27,7 +27,7 @@
 <%
 //Initialize some variables
 LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-String userName = loggedInInfo.loggedInProvider.getFormattedName();
+String userName = loggedInInfo.getLoggedInProvider().getFormattedName();
 session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 %>
 

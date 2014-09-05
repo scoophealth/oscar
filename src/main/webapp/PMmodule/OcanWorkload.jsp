@@ -46,7 +46,7 @@
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	List<Provider> providers = providerDao.getActiveProviders();
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-	Provider provider = loggedInInfo.loggedInProvider;
+	Provider provider = loggedInInfo.getLoggedInProvider();
 %>
 <html:html locale="true">
 <head>

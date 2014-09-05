@@ -43,7 +43,7 @@
     IntakeNode itn = (IntakeNode) session.getAttribute("intakeNode");
     Integer frmVersion = (Integer) session.getAttribute("form_version");
     //String publisher = session.getAttribute("publisher").toString();
-    String publisher = loggedInInfo.loggedInProvider.getFormattedName();
+    String publisher = loggedInInfo.getLoggedInProvider().getFormattedName();
     String frmLabel = itn.getLabelStr();
     
     saveNodeLabels(itn, genericIntakeManager);

@@ -134,7 +134,7 @@ public class InfirmAction extends DispatchAction
 		
 		se.setAttribute(SessionConstants.CURRENT_PROGRAM_ID,String.valueOf(programId));
 
-		org.caisi.core.web.InfirmAction.updateCurrentProgram(String.valueOf(programId),loggedInInfo.loggedInProvider.getProviderNo());
+		org.caisi.core.web.InfirmAction.updateCurrentProgram(String.valueOf(programId),loggedInInfo.getLoggedInProviderNo());
 		 
 		if(programId != 0) {
 			se.setAttribute("case_program_id",String.valueOf(programId));

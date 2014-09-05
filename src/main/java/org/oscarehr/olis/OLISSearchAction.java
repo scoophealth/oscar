@@ -100,7 +100,7 @@ public class OLISSearchAction extends DispatchAction {
 				logItem.setAction("OLIS search");
 				logItem.setContent("consent override");
 				logItem.setContentId("demographicNo=" + q.getDemographicNo() + ",givenby=" + blockedInfoIndividual);					
-				if (loggedInInfo.loggedInProvider != null) {
+				if (loggedInInfo.getLoggedInProvider() != null) {
 					logItem.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 				}
 				else {
@@ -373,7 +373,7 @@ public class OLISSearchAction extends DispatchAction {
 					logItem.setAction("OLIS search");
 					logItem.setContent("consent override");
 					logItem.setContentId("demographicNo=" + demographicNo + ",givenby=" + blockedInfoIndividual);					
-					if (loggedInInfo.loggedInProvider != null)
+					if (loggedInInfo.getLoggedInProvider() != null)
 						logItem.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 					else
 						logItem.setProviderNo("-1");
@@ -463,7 +463,7 @@ public class OLISSearchAction extends DispatchAction {
 					logItem.setAction("OLIS search");
 					logItem.setContent("consent override");
 					logItem.setContentId("demographicNo=" + demographicNo + ",givenby=" + blockedInfoIndividual);					
-					if (loggedInInfo.loggedInProvider != null)
+					if (loggedInInfo.getLoggedInProvider() != null)
 						logItem.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 					else
 						logItem.setProviderNo("-1");

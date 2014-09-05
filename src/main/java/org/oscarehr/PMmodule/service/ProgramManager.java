@@ -383,8 +383,8 @@ public class ProgramManager {
     public List<Program> getProgramDomainInCurrentFacilityForCurrentProvider(LoggedInInfo loggedInInfo, boolean activeOnly) {
     	List<Program> programs = null;
 
-    	if (activeOnly) programs=getActiveProgramDomain(loggedInInfo.loggedInProvider.getProviderNo());
-    	else programs=getProgramDomain(loggedInInfo.loggedInProvider.getProviderNo());
+    	if (activeOnly) programs=getActiveProgramDomain(loggedInInfo.getLoggedInProviderNo());
+    	else programs=getProgramDomain(loggedInInfo.getLoggedInProviderNo());
 
     	List<Program> results = new ArrayList<Program>();
     	for(Program program : programs) {

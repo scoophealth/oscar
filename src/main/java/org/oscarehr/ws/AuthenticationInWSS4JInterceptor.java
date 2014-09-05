@@ -78,7 +78,7 @@ public class AuthenticationInWSS4JInterceptor extends WSS4JInInterceptor impleme
 			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromRequest(request);
 			
 			OscarLog oscarLog=new OscarLog();
-			oscarLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+			oscarLog.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 			oscarLog.setAction("WS_LOGIN_SUCCESS");
 			oscarLog.setIp(ip);
 			LogAction.addLogSynchronous(oscarLog);

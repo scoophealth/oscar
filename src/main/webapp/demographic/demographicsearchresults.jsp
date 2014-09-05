@@ -349,7 +349,7 @@
 	if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1) {
 		CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
 		List<Demographic> tmpDemoList = new ArrayList<Demographic>();
-		String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
 		List<org.oscarehr.PMmodule.model.ProgramProvider> programProviders = caseManagementManager.getProgramProviders(providerNo);
 		
 		if(demoList != null && request.getParameter("outofdomain")!=null && !request.getParameter("outofdomain").equals("true") ) {

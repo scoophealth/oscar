@@ -654,7 +654,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String strNote = request.getParameter("value");
 		String appointmentNo = request.getParameter("appointment_no");
-		String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
 		String noteId = request.getParameter("noteId");
 		String demographicNo = request.getParameter("demographic_no");
 		String issueCode = request.getParameter("issue_id");
@@ -724,7 +724,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			note.setNote(strNote);
 
 		note.setProviderNo(providerNo);
-		note.setProvider(loggedInInfo.loggedInProvider);
+		note.setProvider(loggedInInfo.getLoggedInProvider());
 
 		if (request.getParameter("sign") != null && request.getParameter("sign").equalsIgnoreCase("true")) {
 			note.setSigning_provider_no(providerNo);
@@ -1270,7 +1270,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		note.setNote(noteTxt);
 		
-		Provider provider = loggedInInfo.loggedInProvider;
+		Provider provider = loggedInInfo.getLoggedInProvider();
 		String userName = provider != null ? provider.getFullName() : "";
 
 		CaseManagementCPP cpp = this.caseManagementMgr.getCPP(demo);
@@ -2115,7 +2115,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		// get current providerNo
 		// String providerNo = request.getParameter("amp;providerNo");
-		String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
 
 		// get the issue list have search string
 		String search = request.getParameter("issueSearch");
@@ -2183,7 +2183,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		List<Issue> filteredSearchResults = new ArrayList<Issue>();
 
 		// remove issues which we already have - we don't want duplicates
-		List existingIssues = caseManagementMgr.filterIssues(loggedInInfo, loggedInInfo.loggedInProvider.getProviderNo(), caseManagementMgr.getIssues(Integer.parseInt(demono)), programId);
+		List existingIssues = caseManagementMgr.filterIssues(loggedInInfo, loggedInInfo.getLoggedInProviderNo(), caseManagementMgr.getIssues(Integer.parseInt(demono)), programId);
 		Map existingIssuesMap = convertIssueListToMap(existingIssues);
 		for (Iterator<Issue> iter = searchResults.iterator(); iter.hasNext();) {
 			Issue issue = iter.next();
@@ -3001,7 +3001,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				MessageHandler handler = Factory.getHandler(segmentId);
 				String fileName2 = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "//" + handler.getPatientName().replaceAll("\\s", "_") + "_" + handler.getMsgDate() + "_LabReport.pdf";
 				OutputStream os2 = new FileOutputStream(fileName2);
-				LabPDFCreator pdfCreator = new LabPDFCreator(os2, segmentId, loggedInInfo.loggedInProvider.getProviderNo());
+				LabPDFCreator pdfCreator = new LabPDFCreator(os2, segmentId, loggedInInfo.getLoggedInProviderNo());
 				pdfCreator.printPdf();
 				pdfDocs.add(fileName2);
 			}
@@ -3118,7 +3118,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				f.setAppointmentNo(Integer.parseInt(cform.getAppointmentNo()));
 				f.setDate(new Date());
 				f.setDemographicNo(Integer.parseInt(cform.getDemographicNo()));
-				f.setProvider(loggedInInfo.loggedInProvider);
+				f.setProvider(loggedInInfo.getLoggedInProvider());
 				f.setTimeframe(followUpUnit);
 				f.setTimespan(followUpNo);
 				f.setType("followup");
@@ -3140,7 +3140,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 					rec.setDate(new Date());
 					rec.setDemographicNo(Integer.parseInt(cform.getDemographicNo()));
 					rec.setEye(parts[1]);
-					rec.setProvider(loggedInInfo.loggedInProvider.getProviderNo());
+					rec.setProvider(loggedInInfo.getLoggedInProviderNo());
 					// rec.setStatus(null);
 					rec.setTestname(parts[0]);
 					rec.setUrgency(parts[2]);
@@ -3151,7 +3151,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			// send tickler
 			if (macro.getTicklerRecipient() != null && macro.getTicklerRecipient().length() > 0) {
 				Tickler t = new Tickler();
-				t.setCreator(loggedInInfo.loggedInProvider.getPractitionerNo());
+				t.setCreator(loggedInInfo.getLoggedInProvider().getPractitionerNo());
 				t.setDemographicNo(Integer.parseInt(cform.getDemographicNo()));
 				t.setMessage(getMacroTicklerText(Integer.parseInt(cform.getAppointmentNo())));
 				t.setTaskAssignedTo(macro.getTicklerRecipient());
@@ -3163,7 +3163,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				GstControlDao gstControlDao = (GstControlDao) SpringUtils.getBean("gstControlDao");
 				BillingServiceDao billingServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
 				DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-				Provider provider = loggedInInfo.loggedInProvider;
+				Provider provider = loggedInInfo.getLoggedInProvider();
 				OscarAppointmentDao apptDao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
 
 				Appointment appt = null;
@@ -3257,7 +3257,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				mockReq.addParameter("xml_vdate", cform.getAppointmentDate());
 				mockReq.addParameter("apptProvider_no", appt == null ? "" : appt.getProviderNo());
 				mockReq.addParameter("xml_provider", provider.getProviderNo() + "|" + provider.getOhipNo());
-				mockReq.getSession().setAttribute("user", loggedInInfo.loggedInProvider.getProviderNo());
+				mockReq.getSession().setAttribute("user", loggedInInfo.getLoggedInProviderNo());
 
 				BillingSavePrep bObj = new BillingSavePrep();
 				boolean ret = bObj.addABillingRecord(bObj.getBillingClaimObj(mockReq));
@@ -3544,7 +3544,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String strNote = request.getParameter("value");
 		Date creationDate = new Date();
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-		Provider loggedInProvider = loggedInInfo.loggedInProvider;
+		Provider loggedInProvider = loggedInInfo.getLoggedInProvider();
 		String demographicNo = request.getParameter("demographicNo");
 		String ticklerNo = request.getParameter("ticklerNo");
 		String noteId = request.getParameter("noteId");

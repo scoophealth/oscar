@@ -57,7 +57,7 @@ public class ManageHnrClientAction {
 	
 	public static void copyHnrToLocal(LoggedInInfo loggedInInfo,Integer clientId) throws ConnectException_Exception {
 		try {
-			logger.debug("copyHnrToLocal currentFacility=" + loggedInInfo.getCurrentFacility().getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.loggedInProvider.getProviderNo() + ", client=" + clientId);
+			logger.debug("copyHnrToLocal currentFacility=" + loggedInInfo.getCurrentFacility().getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.getLoggedInProviderNo() + ", client=" + clientId);
 
 			List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(loggedInInfo.getCurrentFacility().getId(), clientId, true, ClientLink.Type.HNR);
 
@@ -111,7 +111,7 @@ public class ManageHnrClientAction {
 
 	public static void copyLocalValidatedToHnr(LoggedInInfo loggedInInfo, Integer clientId) throws DuplicateHinExceptionException, InvalidHinExceptionException, ConnectException_Exception {
 		try {
-			logger.debug("copyLocalToHnr currentFacility=" +loggedInInfo.getCurrentFacility().getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.loggedInProvider.getProviderNo() + ", client=" + clientId);
+			logger.debug("copyLocalToHnr currentFacility=" +loggedInInfo.getCurrentFacility().getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.getLoggedInProviderNo() + ", client=" + clientId);
 
 			// there's 2 cases here
 			// 1) there's a linked client at which point update the linked client on the hnr
@@ -215,7 +215,7 @@ public class ManageHnrClientAction {
 				
 				
 				// save the client
-				hnrClient.setUpdatedBy("faciliy: " + loggedInInfo.getCurrentFacility().getName() + ", provider:" + loggedInInfo.loggedInProvider.getFormattedName());
+				hnrClient.setUpdatedBy("faciliy: " + loggedInInfo.getCurrentFacility().getName() + ", provider:" + loggedInInfo.getLoggedInProvider().getFormattedName());
 				Integer linkingId = CaisiIntegratorManager.setHnrClient(loggedInInfo, loggedInInfo.getCurrentFacility(), hnrClient);
 
 				// if the hnr client is new / not previously linked, save the new link
@@ -227,7 +227,7 @@ public class ManageHnrClientAction {
 					clientLink.setFacilityId(loggedInInfo.getCurrentFacility().getId());
 					clientLink.setClientId(clientId);
 					clientLink.setLinkDate(new Date());
-					clientLink.setLinkProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+					clientLink.setLinkProviderNo(loggedInInfo.getLoggedInProviderNo());
 					clientLink.setLinkType(ClientLink.Type.HNR);
 					clientLink.setRemoteLinkId(linkingId);
 					clientLinkDao.persist(clientLink);
@@ -246,7 +246,7 @@ public class ManageHnrClientAction {
 
 	public static void setPictureValidation(LoggedInInfo loggedInInfo,Integer clientId, boolean valid) {
 		try {
-			logger.debug("setPictureValidation currentFacility=" +loggedInInfo.getCurrentFacility().getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.loggedInProvider.getProviderNo() + ", client=" + clientId + ", valid=" + valid);
+			logger.debug("setPictureValidation currentFacility=" +loggedInInfo.getCurrentFacility().getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.getLoggedInProviderNo() + ", client=" + clientId + ", valid=" + valid);
 
 			ClientImage clientImage = clientImageDAO.getClientImage(clientId);
 			if (!HnrDataValidation.isImageValidated(clientImage)) throw (new IllegalStateException("Attempt to validate an image that doesn't exist, button should have been disabled. clientId=" + clientId));
@@ -258,7 +258,7 @@ public class ManageHnrClientAction {
 			hnrDataValidation.setValid(valid);
 			hnrDataValidation.setValidationCrc(clientImage.getImage_data());
 			hnrDataValidation.setValidationType(HnrDataValidation.Type.PICTURE);
-			hnrDataValidation.setValidatorProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+			hnrDataValidation.setValidatorProviderNo(loggedInInfo.getLoggedInProviderNo());
 			hnrDataValidationDao.persist(hnrDataValidation);
 		} catch (Exception e) {
 			logger.error("Unexpected Error.", e);
@@ -267,7 +267,7 @@ public class ManageHnrClientAction {
 
 	public static void setHcInfoValidation(LoggedInInfo loggedInInfo,Integer clientId, boolean valid) {
 		try {
-			logger.debug("setHcInfoValidation currentFacility=" +loggedInInfo.getCurrentFacility().getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.loggedInProvider.getProviderNo() + ", client=" + clientId + ", valid=" + valid);
+			logger.debug("setHcInfoValidation currentFacility=" +loggedInInfo.getCurrentFacility().getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.getLoggedInProviderNo() + ", client=" + clientId + ", valid=" + valid);
 
 			Demographic demographic = demographicDao.getDemographicById(clientId);
 			if (!HnrDataValidation.isHcInfoValidateable(demographic)) throw (new IllegalStateException("Attempt to validate a clients hc info that is not validateable, button should have been disabled. clientId=" + clientId));
@@ -279,7 +279,7 @@ public class ManageHnrClientAction {
 			hnrDataValidation.setValid(valid);
 			hnrDataValidation.setValidationCrc(HnrDataValidation.getHcInfoValidationBytes(demographic));
 			hnrDataValidation.setValidationType(HnrDataValidation.Type.HC_INFO);
-			hnrDataValidation.setValidatorProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+			hnrDataValidation.setValidatorProviderNo(loggedInInfo.getLoggedInProviderNo());
 			hnrDataValidationDao.persist(hnrDataValidation);
 		} catch (Exception e) {
 			logger.error("Unexpected Error.", e);
@@ -288,7 +288,7 @@ public class ManageHnrClientAction {
 
 	public static void setOtherInfoValidation(LoggedInInfo loggedInInfo, Integer clientId, boolean valid) {
 		try {
-			logger.debug("setOtherInfoValidation currentFacility=" +loggedInInfo.getCurrentFacility().getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.loggedInProvider.getProviderNo() + ", client=" + clientId + ", valid=" + valid);
+			logger.debug("setOtherInfoValidation currentFacility=" +loggedInInfo.getCurrentFacility().getId() + ", loggedInInfo.loggedInProvider=" + loggedInInfo.getLoggedInProviderNo() + ", client=" + clientId + ", valid=" + valid);
 
 			Demographic demographic = demographicDao.getDemographicById(clientId);
 			if (!HnrDataValidation.isOtherInfoValidateable(demographic)) throw (new IllegalStateException("Attempt to validate a clients other info that is not validateable, button should have been disabled. clientId=" + clientId));
@@ -300,7 +300,7 @@ public class ManageHnrClientAction {
 			hnrDataValidation.setValid(valid);
 			hnrDataValidation.setValidationCrc(HnrDataValidation.getOtherInfoValidationBytes(demographic));
 			hnrDataValidation.setValidationType(HnrDataValidation.Type.OTHER);
-			hnrDataValidation.setValidatorProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+			hnrDataValidation.setValidatorProviderNo(loggedInInfo.getLoggedInProviderNo());
 			hnrDataValidationDao.persist(hnrDataValidation);
 		} catch (Exception e) {
 			logger.error("Unexpected Error.", e);

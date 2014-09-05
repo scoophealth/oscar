@@ -153,14 +153,14 @@ public final class MyOscarUtils {
 		HttpSession session = loggedInInfo.getSession();
 
 		ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
-		ProviderPreference providerPreference = providerPreferenceDao.find(loggedInInfo.loggedInProvider.getProviderNo());
+		ProviderPreference providerPreference = providerPreferenceDao.find(loggedInInfo.getLoggedInProviderNo());
 		String myOscarUserName = null;
 		
 		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(session);
 		if (!forceReLogin && myOscarLoggedInInfo != null && myOscarLoggedInInfo.isLoggedIn()) return;
 
 		try {
-			myOscarUserName = getMyOscarUserNameFromOscar(loggedInInfo.loggedInProvider.getProviderNo());
+			myOscarUserName = getMyOscarUserNameFromOscar(loggedInInfo.getLoggedInProviderNo());
 			if (myOscarUserName == null) return;
 
 			byte[] encryptedMyOscarPassword = providerPreference.getEncryptedMyOscarPassword();

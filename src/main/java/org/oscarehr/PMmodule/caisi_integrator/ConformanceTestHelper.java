@@ -57,7 +57,7 @@ public final class ConformanceTestHelper {
 	public static void populateLocalTicklerWithRemoteProviderMessageFollowUps(LoggedInInfo loggedInInfo) {
 		try {
 			ProviderWs providerWs = CaisiIntegratorManager.getProviderWs(loggedInInfo, loggedInInfo.getCurrentFacility());
-			List<ProviderCommunicationTransfer> followUps = providerWs.getProviderCommunications(loggedInInfo.loggedInProvider.getProviderNo(), "FOLLOWUP", true);
+			List<ProviderCommunicationTransfer> followUps = providerWs.getProviderCommunications(loggedInInfo.getLoggedInProviderNo(), "FOLLOWUP", true);
 
 			if (followUps == null) return;
 

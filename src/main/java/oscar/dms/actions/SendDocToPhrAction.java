@@ -114,7 +114,7 @@ public class SendDocToPhrAction extends Action {
 			medicalDataTransfer.setDateOfData(dateOfData);
 			medicalDataTransfer.setMedicalDataType(MedicalDataType.BINARY_DOCUMENT.name());
 			medicalDataTransfer.setObserverOfDataPersonId(myOscarLoggedInInfo.getLoggedInPersonId());
-			medicalDataTransfer.setObserverOfDataPersonName(loggedInInfo.loggedInProvider.getFormattedName());
+			medicalDataTransfer.setObserverOfDataPersonName(loggedInInfo.getLoggedInProvider().getFormattedName());
 			medicalDataTransfer.setOriginalSourceId(loggedInInfo.getCurrentFacility().getName()+":eDoc:"+eDoc.getDocId());
 			medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
 
@@ -122,7 +122,7 @@ public class SendDocToPhrAction extends Action {
 
     		// log the send
     		RemoteDataLog remoteDataLog=new RemoteDataLog();
-    		remoteDataLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+    		remoteDataLog.setProviderNo(loggedInInfo.getLoggedInProviderNo());
     		remoteDataLog.setDocumentId(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), "eDoc", eDoc.getDocId());
     		remoteDataLog.setAction(RemoteDataLog.Action.SEND);
     		remoteDataLog.setDocumentContents("id="+eDoc.getDocId()+", fileName="+eDoc.getFileName());

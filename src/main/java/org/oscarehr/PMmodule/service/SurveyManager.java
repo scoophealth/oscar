@@ -76,7 +76,7 @@ public class SurveyManager implements CustomReportDataSource {
 			//String name = form.getDescription().toLowerCase().replaceAll(" ","_");
 			String name = form.getDescription();
 			
-			if(securityDao.checkPrivilege(name,loggedInInfo.loggedInProvider.getProviderNo())) {
+			if(securityDao.checkPrivilege(name,loggedInInfo.getLoggedInProviderNo())) {
 				results.add(form);
 			}
 			
@@ -136,7 +136,7 @@ public class SurveyManager implements CustomReportDataSource {
 		for(CaisiFormInstance form:forms) {
 			String name = form.getDescription();
 			
-			if(securityDao.checkPrivilege(name,loggedInInfo.loggedInProvider.getProviderNo())) {
+			if(securityDao.checkPrivilege(name,loggedInInfo.getLoggedInProviderNo())) {
 				results.add(form);
 			}
 		}

@@ -133,7 +133,7 @@ public class DefaultEncounterIssueAction extends DispatchAction {
 		LogAction.log("write", "assign default issues", strIds.toString(), request);
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-		saveDefaultIssuesToDb(loggedInInfo.loggedInProvider.getProviderNo(), strIds.toString());
+		saveDefaultIssuesToDb(loggedInInfo.getLoggedInProviderNo(), strIds.toString());
 		
 		return list(mapping,form,request,response);
 	}

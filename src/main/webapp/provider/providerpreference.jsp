@@ -328,7 +328,7 @@ function showHideERxPref() {
 						<%
 								String ticklerforproviderNo = request.getParameter("tklerproviderno");
 								if (ticklerforproviderNo == null) {
-									ticklerforproviderNo = loggedInInfo.loggedInProvider.getProviderNo();
+									ticklerforproviderNo = loggedInInfo.getLoggedInProviderNo();
 								}
 								ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 								List<Provider> listProvider = new ArrayList<Provider>();

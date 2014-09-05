@@ -127,8 +127,8 @@ Dxresearch screeningDx = null;
 		}
 		
 		if(screeningDx != null) {
-			message += "Screening complete - <a href=\"javascript:void(0)\" onClick=\"popupPage(580,900,'../oscarResearch/oscarDxResearch/dxResearchUpdate.do?status=C&did="+screeningDx.getId()+"&demographicNo="+Integer.parseInt(demographicNo)+"&providerNo="+loggedInInfo.loggedInProvider.getProviderNo()+"');\">Click Here</a>.<br/>";
-			message += "Screening not appropriate - <a href=\"javascript:void(0)\" onClick=\"popupPage(580,900,'../oscarResearch/oscarDxResearch/dxResearchUpdate.do?status=D&did="+screeningDx.getId()+"&demographicNo="+Integer.parseInt(demographicNo)+"&providerNo="+loggedInInfo.loggedInProvider.getProviderNo()+"');\">Click Here</a>.<br/>";
+			message += "Screening complete - <a href=\"javascript:void(0)\" onClick=\"popupPage(580,900,'../oscarResearch/oscarDxResearch/dxResearchUpdate.do?status=C&did="+screeningDx.getId()+"&demographicNo="+Integer.parseInt(demographicNo)+"&providerNo="+loggedInInfo.getLoggedInProviderNo()+"');\">Click Here</a>.<br/>";
+			message += "Screening not appropriate - <a href=\"javascript:void(0)\" onClick=\"popupPage(580,900,'../oscarResearch/oscarDxResearch/dxResearchUpdate.do?status=D&did="+screeningDx.getId()+"&demographicNo="+Integer.parseInt(demographicNo)+"&providerNo="+loggedInInfo.getLoggedInProviderNo()+"');\">Click Here</a>.<br/>";
 		}
 		
 		dxs = dxResearchDao.findByDemographicNoResearchCodeAndCodingSystem(Integer.parseInt(demographicNo), "585", "icd9");

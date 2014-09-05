@@ -421,7 +421,7 @@ public class ClientManagerAction extends DispatchAction {
             Program p = programManager.getProgram(programId);
 			referral.setClientId((long) clientId);
 			referral.setProgramId((long) programId);
-			referral.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+			referral.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 
 			referral.setFacilityId(loggedInInfo.getCurrentFacility().getId());
 
@@ -467,7 +467,7 @@ public class ClientManagerAction extends DispatchAction {
 				integratorReferral.setPresentingProblem(referral.getPresentProblems());
 				integratorReferral.setReasonForReferral(referral.getNotes());
 				integratorReferral.setSourceCaisiDemographicId(clientId);
-				integratorReferral.setSourceCaisiProviderId(loggedInInfo.loggedInProvider.getProviderNo());
+				integratorReferral.setSourceCaisiProviderId(loggedInInfo.getLoggedInProviderNo());
 
 				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 				referralWs.makeReferral(integratorReferral);
@@ -489,7 +489,7 @@ public class ClientManagerAction extends DispatchAction {
 				CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(loggedInInfo, loggedInInfo.getCurrentFacility(),remoteProgramCompositeKey);
 				remoteReferral.setReferredToProgramName(cachedProgram.getName());
 
-				remoteReferral.setReferringProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+				remoteReferral.setReferringProviderNo(loggedInInfo.getLoggedInProviderNo());
 				remoteReferralDao.persist(remoteReferral);
 			} catch (Exception e) {
 				WebUtils.addErrorMessage(request.getSession(), "Error processing referral : " + e.getMessage());

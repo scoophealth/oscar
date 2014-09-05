@@ -51,7 +51,7 @@ public class OcanFormAction {
 		ocanStaffForm.setOcanFormVersion("1.2");		
 		ocanStaffForm.setClientId(clientId);
 		ocanStaffForm.setFacilityId(loggedInInfo.getCurrentFacility().getId());
-		ocanStaffForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		ocanStaffForm.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 		ocanStaffForm.setSigned(signed);
 		
 		return(ocanStaffForm);
@@ -113,15 +113,15 @@ public class OcanFormAction {
 		ocanClientForm.setOcanFormVersion("1.2");		
 		ocanClientForm.setClientId(clientId);
 		ocanClientForm.setFacilityId(loggedInInfo.getCurrentFacility().getId());
-		ocanClientForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		ocanClientForm.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 		
 		
 		return(ocanClientForm);
 	}
 	
 	public static void saveOcanClientForm(LoggedInInfo loggedInInfo, OcanClientForm ocanClientForm) {
-		ocanClientForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
-		ocanClientForm.setProviderName(loggedInInfo.loggedInProvider.getFormattedName());
+		ocanClientForm.setProviderNo(loggedInInfo.getLoggedInProviderNo());
+		ocanClientForm.setProviderName(loggedInInfo.getLoggedInProvider().getFormattedName());
 		
 		ocanClientFormDao.persist(ocanClientForm);
 	}

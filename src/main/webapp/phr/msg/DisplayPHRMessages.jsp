@@ -64,7 +64,7 @@
 <%
 LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 String providerNo=loggedInInfo.getLoggedInProviderNo();
-String providerName = loggedInInfo.loggedInProvider.getFormattedName();
+String providerName = loggedInInfo.getLoggedInProvider().getFormattedName();
 
 MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
 

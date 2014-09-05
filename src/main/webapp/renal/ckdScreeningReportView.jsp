@@ -53,7 +53,7 @@
 	if(labReqVer.equals("")) {labReqVer="07";}
 	
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-	Provider provider = loggedInInfo.loggedInProvider;
+	Provider provider = loggedInInfo.getLoggedInProvider();
 
 	CkdScreeningReportContainer r = null;
 

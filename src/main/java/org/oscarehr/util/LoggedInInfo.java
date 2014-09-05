@@ -45,7 +45,7 @@ public final class LoggedInInfo {
 
 	private HttpSession session = null;
 	private Facility currentFacility = null;
-	public Provider loggedInProvider = null;
+	private Provider loggedInProvider = null;
 	private String initiatingCode = null;
 	private Security loggedInSecurity = null;
 	private Locale locale = null;

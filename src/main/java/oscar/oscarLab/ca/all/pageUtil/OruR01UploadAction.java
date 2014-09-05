@@ -74,7 +74,7 @@ public class OruR01UploadAction extends Action {
 	        observationData.binaryDataFileName=formFile.getFileName();
 	        observationData.binaryData=formFile.getFileData();
 	        
-	    	Provider sendingProvider=loggedInInfo.loggedInProvider;
+	    	Provider sendingProvider=loggedInInfo.getLoggedInProvider();
 
 	    	ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
 	    	ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(oruR01UploadForm.getProfessionalSpecialistId());

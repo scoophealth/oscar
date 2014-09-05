@@ -318,7 +318,7 @@ List<OLISRequestNomenclature> requestNomenclatureList = requestDao.findAll();
 </tr>
 <%
 	UserPropertyDAO upDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
-	String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+	String providerNo = loggedInInfo.getLoggedInProviderNo();
 	UserProperty repLabProp = upDao.getProp(providerNo,"olis_reportingLab");
 	UserProperty exRepLabProp = upDao.getProp(providerNo,"olis_exreportingLab");
 	

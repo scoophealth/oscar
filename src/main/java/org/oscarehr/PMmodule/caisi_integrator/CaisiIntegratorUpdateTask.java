@@ -249,7 +249,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		numberOfTimesRun++;
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod();
-		logger.debug("CaisiIntegratorUpdateTask starting #" + numberOfTimesRun+"  running as "+loggedInInfo.loggedInProvider);
+		logger.debug("CaisiIntegratorUpdateTask starting #" + numberOfTimesRun+"  running as "+loggedInInfo.getLoggedInProvider());
 
 		try {
 			pushAllFacilities(loggedInInfo);

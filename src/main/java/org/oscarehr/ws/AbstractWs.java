@@ -58,7 +58,7 @@ public abstract class AbstractWs
 	protected Provider getLoggedInProvider()
 	{
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
-		return(loggedInInfo.loggedInProvider);
+		return(loggedInInfo.getLoggedInProvider());
 	}
 	
 	protected LoggedInInfo getLoggedInInfo()

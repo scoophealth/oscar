@@ -113,7 +113,7 @@ public class Driver {
 				logItem.setData(olisHL7String);
 
 				LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-				if (loggedInInfo.loggedInProvider != null) logItem.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+				if (loggedInInfo.getLoggedInProvider() != null) logItem.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 
 				logDao.persist(logItem);
 
@@ -155,7 +155,7 @@ public class Driver {
 			}
 
 			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-			notifyOlisError(loggedInInfo.loggedInProvider, e.getMessage());
+			notifyOlisError(loggedInInfo.getLoggedInProvider(), e.getMessage());
 			return "";
 		}
 	}
@@ -205,7 +205,7 @@ public class Driver {
 			MiscUtils.getLogger().error("Couldn't read XML from OLIS response.", e);
 			
 			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-			notifyOlisError(loggedInInfo.loggedInProvider, "Couldn't read XML from OLIS response." + "\n" + e);
+			notifyOlisError(loggedInInfo.getLoggedInProvider(), "Couldn't read XML from OLIS response." + "\n" + e);
 		}
 	}
 

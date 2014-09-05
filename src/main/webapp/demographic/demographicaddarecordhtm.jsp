@@ -1261,7 +1261,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
                                         GenericIntakeEditAction gieat = new GenericIntakeEditAction();
                                         gieat.setProgramManager(pm);
 
-                                        String _pvid = loggedInInfo.loggedInProvider.getProviderNo();
+                                        String _pvid = loggedInInfo.getLoggedInProviderNo();
                                         Set<Program> pset = gieat.getActiveProviderProgramsInFacility(loggedInInfo,_pvid,loggedInInfo.getCurrentFacility().getId());
                                         List<Program> bedP = gieat.getBedPrograms(pset,_pvid);
                                         List<Program> commP = gieat.getCommunityPrograms();
