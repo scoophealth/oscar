@@ -44,17 +44,19 @@ public class SimpleHCValidator implements HCValidator {
     }
     
     private boolean isValid(String hcNumber, String versionCode) {
-        if ("on".equals(versionCode)) {
-
-            if (hcNumber == null) {
-                return false;
-            }
-            if (hcNumber.length() != 10) {
-                return false;
-            }
-            if (!StringUtils.isNumeric(hcNumber)) {
-                return false;
-            }
+        if (hcNumber == null) {
+            return false;
+        }
+        if (hcNumber.length() != 10) {
+            return false;
+        }
+        if (!StringUtils.isNumeric(hcNumber)) {
+            return false;
+        }
+        if (versionCode!=null) {
+        	if (versionCode.length()>2 || !StringUtils.isAlpha(versionCode)) {
+        		return false;
+        	}
         }
         return true;        
     }

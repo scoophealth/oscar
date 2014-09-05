@@ -422,6 +422,31 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			}
 		}
 	}
+
+	//HCValidation
+	$scope.validateHC = function(){
+		if (demo.hin==null || demo.hin=="") return;
+		patientDetailStatusService.validateHC(demo.hin,demo.ver).then(function(data){
+			if (data.valid==null) $scope.page.status.HCValidation = "n/a";
+			else $scope.page.status.HCValidation = data.valid ? "valid" : "invalid";
+		});
+	}
+	
+	//stop input when maxLength reached
+	var hin0 = demo.hin;
+	var ver0 = demo.ver;
+	$scope.checkHin = function() {
+		if (demo.hin.length>10) demo.hin = hin0;
+		if (notNumber(demo.hin)) demo.hin = hin0;
+		hin0 = demo.hin;
+		$scope.page.status.HCValidation = null;
+	}
+	$scope.checkHinVer = function() {
+		if (demo.ver.length>2) demo.ver = ver0;
+		if (!(/^[a-zA-Z()]*$/.test(demo.ver))) demo.ver = ver0;
+		demo.ver = demo.ver.toUpperCase();
+		ver0 = demo.ver;
+	}
 	
 	//manage date entries
 	$scope.checkDate = function(id) {

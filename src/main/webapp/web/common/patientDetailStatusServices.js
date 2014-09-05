@@ -40,6 +40,18 @@ angular.module("patientDetailStatusServices", [])
 				deferred.reject("An error occured while fetching items");
 			});
 			return deferred.promise;
+		},
+		
+		validateHC: function(healthCardNumber, versionCode){
+			var deferred = $q.defer();
+			$http.get(this.apiPath+"/validateHC?hin="+healthCardNumber+"&ver="+versionCode,this.configHeaders).success(function(data){
+				console.log(data);
+				deferred.resolve(data);
+			}).error(function(){
+				console.log("error fetching Integrator status")
+				deferred.reject("An error occured while fetching items");
+			});
+			return deferred.promise;
 		}
 	};
 });
