@@ -69,7 +69,7 @@
 	    }
 	}
 	
-	boolean integratorEnabled = loggedInInfo.currentFacility.isIntegratorEnabled();
+	boolean integratorEnabled = loggedInInfo.getCurrentFacility().isIntegratorEnabled();
 	String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 	String heading = request.getParameter("heading");
 	

@@ -57,7 +57,7 @@ public class IntegratorFallBackManager {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicNote> linkedNotes = null;
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicNote[].class.getName());
+		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.getCurrentFacility().getId(), demographicNo, CachedDemographicNote[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
 			return linkedNotes;
@@ -91,7 +91,7 @@ public class IntegratorFallBackManager {
 				}
 				CachedDemographicNote[] array = linkedNotes.toArray(new CachedDemographicNote[linkedNotes.size()]);
 
-				remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.currentFacility.getId());
+				remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.getCurrentFacility().getId());
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Error saving remote notes for " + demographicNo, e);
 			}
@@ -123,7 +123,7 @@ public class IntegratorFallBackManager {
 				CachedDemographicForm[] array = remoteForms.toArray(new CachedDemographicForm[remoteForms.size()]);
 				MiscUtils.getLogger().info("logged in " + loggedInInfo + " " + table + " " + demographicNo);
 
-				remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.currentFacility.getId(), table);
+				remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.getCurrentFacility().getId(), table);
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error saving remote forms for " + demographicNo, e);
@@ -134,7 +134,7 @@ public class IntegratorFallBackManager {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicForm> linkedForms = null;
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicForm[].class.getName() + "+" + table);
+		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.getCurrentFacility().getId(), demographicNo, CachedDemographicForm[].class.getName() + "+" + table);
 
 		if (remoteIntegratedDataCopy == null) {
 			return linkedForms;
@@ -174,7 +174,7 @@ public class IntegratorFallBackManager {
 			CachedDemographicIssue[] array = remoteIssues.toArray(new CachedDemographicIssue[remoteIssues.size()]);
 			MiscUtils.getLogger().info("logged in " + loggedInInfo + " " + demographicNo);
 
-			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.currentFacility.getId());
+			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.getCurrentFacility().getId());
 
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error saving remote forms for " + demographicNo, e);
@@ -186,7 +186,7 @@ public class IntegratorFallBackManager {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicIssue> linkedNotes = null;
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicIssue[].class.getName());
+		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.getCurrentFacility().getId(), demographicNo, CachedDemographicIssue[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
 			return linkedNotes;
@@ -225,7 +225,7 @@ public class IntegratorFallBackManager {
 
 			CachedDemographicPrevention[] array = remoteItems.toArray(new CachedDemographicPrevention[remoteItems.size()]);
 			MiscUtils.getLogger().info("logged in " + loggedInInfo + " " + demographicNo);
-			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.currentFacility.getId());
+			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.getCurrentFacility().getId());
 
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error saving remote forms for " + demographicNo, e);
@@ -237,7 +237,7 @@ public class IntegratorFallBackManager {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicPrevention> linkedNotes = null;
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicPrevention[].class.getName());
+		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.getCurrentFacility().getId(), demographicNo, CachedDemographicPrevention[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
 			return linkedNotes;
@@ -275,7 +275,7 @@ public class IntegratorFallBackManager {
 
 			CachedDemographicDrug[] array = remoteItems.toArray(new CachedDemographicDrug[remoteItems.size()]);
 			MiscUtils.getLogger().info("logged in " + loggedInInfo + " " + demographicNo);
-			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.currentFacility.getId());
+			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.getCurrentFacility().getId());
 
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error saving remote forms for " + demographicNo, e);
@@ -286,7 +286,7 @@ public class IntegratorFallBackManager {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicDrug> linkedNotes = null;
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicDrug[].class.getName());
+		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.getCurrentFacility().getId(), demographicNo, CachedDemographicDrug[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
 			return linkedNotes;
@@ -323,7 +323,7 @@ public class IntegratorFallBackManager {
 
 			CachedAdmission[] array = remoteItems.toArray(new CachedAdmission[remoteItems.size()]);
 			MiscUtils.getLogger().info("logged in " + loggedInInfo + " " + demographicNo);
-			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.currentFacility.getId());
+			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.getCurrentFacility().getId());
 
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error saving remote forms for " + demographicNo, e);
@@ -334,7 +334,7 @@ public class IntegratorFallBackManager {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedAdmission> linkedNotes = null;
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedAdmission[].class.getName());
+		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.getCurrentFacility().getId(), demographicNo, CachedAdmission[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
 			return linkedNotes;
@@ -372,7 +372,7 @@ public class IntegratorFallBackManager {
 
 			CachedAppointment[] array = remoteItems.toArray(new CachedAppointment[remoteItems.size()]);
 			MiscUtils.getLogger().info("logged in " + loggedInInfo + " " + demographicNo);
-			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.currentFacility.getId());
+			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.getCurrentFacility().getId());
 
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error saving remote CachedAppointment for " + demographicNo, e);
@@ -384,7 +384,7 @@ public class IntegratorFallBackManager {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedAppointment> linkedNotes = null;
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedAppointment[].class.getName());
+		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.getCurrentFacility().getId(), demographicNo, CachedAppointment[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
 			return linkedNotes;
@@ -414,7 +414,7 @@ public class IntegratorFallBackManager {
 				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
 			}
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.currentFacility);
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 			remoteItems = demographicWs.getLinkedCachedDemographicAllergies(demographicNo);
 			MiscUtils.getLogger().debug("Saving remote CachedDemographicAllergy for " + demographicNo + "  issues : " + remoteItems.size());
 			if (remoteItems.size() == 0) {
@@ -423,7 +423,7 @@ public class IntegratorFallBackManager {
 
 			CachedDemographicAllergy[] array = remoteItems.toArray(new CachedDemographicAllergy[remoteItems.size()]);
 			MiscUtils.getLogger().info("logged in " + loggedInInfo + " " + demographicNo);
-			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.currentFacility.getId());
+			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.getCurrentFacility().getId());
 
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error saving remote CachedDemographicAllergy for " + demographicNo, e);
@@ -437,7 +437,7 @@ public class IntegratorFallBackManager {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicAllergy> linkedNotes = null;
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicAllergy[].class.getName());
+		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.getCurrentFacility().getId(), demographicNo, CachedDemographicAllergy[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
 			return linkedNotes;
@@ -475,13 +475,13 @@ public class IntegratorFallBackManager {
 
 			CachedDemographicDocument[] array = remoteItems.toArray(new CachedDemographicDocument[remoteItems.size()]);
 			MiscUtils.getLogger().info("logged in " + loggedInInfo + " " + demographicNo);
-			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.currentFacility.getId());
+			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.getCurrentFacility().getId());
 			
 			for(CachedDemographicDocument document:array){
 				FacilityIdIntegerCompositePk remotePk = document.getFacilityIntegerPk();
 				CachedDemographicDocumentContents remoteDocumentContents = demographicWs.getCachedDemographicDocumentContents(remotePk);
 				MiscUtils.getLogger().debug("what is remotePK "+getPK(remotePk));
-				remoteIntegratedDataCopyDao.save(demographicNo, remoteDocumentContents, providerNo, loggedInInfo.currentFacility.getId(),getPK(remotePk));
+				remoteIntegratedDataCopyDao.save(demographicNo, remoteDocumentContents, providerNo, loggedInInfo.getCurrentFacility().getId(),getPK(remotePk));
 				
 			}
 			
@@ -496,7 +496,7 @@ public class IntegratorFallBackManager {
 	}
 	
 	public static Integer getDemographicNoFromRemoteDocument(LoggedInInfo loggedInInfo, FacilityIdIntegerCompositePk remotePk){	
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByType(loggedInInfo.currentFacility.getId(),CachedDemographicDocumentContents.class.getName()+"+"+getPK(remotePk));
+		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByType(loggedInInfo.getCurrentFacility().getId(),CachedDemographicDocumentContents.class.getName()+"+"+getPK(remotePk));
 		return remoteIntegratedDataCopy.getDemographicNo();
 	}
 
@@ -505,7 +505,7 @@ public class IntegratorFallBackManager {
 	public static CachedDemographicDocumentContents getRemoteDocument(LoggedInInfo loggedInInfo,FacilityIdIntegerCompositePk remotePk){
 		CachedDemographicDocumentContents documentContents = null;
 		
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByType(loggedInInfo.currentFacility.getId(),CachedDemographicDocumentContents.class.getName()+"+"+getPK(remotePk));
+		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByType(loggedInInfo.getCurrentFacility().getId(),CachedDemographicDocumentContents.class.getName()+"+"+getPK(remotePk));
 
 		try {
 			documentContents = remoteIntegratedDataCopyDao.getObjectFrom(CachedDemographicDocumentContents.class, remoteIntegratedDataCopy);
@@ -519,7 +519,7 @@ public class IntegratorFallBackManager {
 	public static CachedDemographicDocumentContents getRemoteDocument(LoggedInInfo loggedInInfo, Integer demographicNo,FacilityIdIntegerCompositePk remotePk){
 		CachedDemographicDocumentContents documentContents = null;
 		
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicDocumentContents.class.getName()+"+"+getPK(remotePk));
+		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.getCurrentFacility().getId(), demographicNo, CachedDemographicDocumentContents.class.getName()+"+"+getPK(remotePk));
 
 		try {
 			documentContents = remoteIntegratedDataCopyDao.getObjectFrom(CachedDemographicDocumentContents.class, remoteIntegratedDataCopy);
@@ -535,7 +535,7 @@ public class IntegratorFallBackManager {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicDocument> linkedNotes = null;
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicDocument[].class.getName());
+		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.getCurrentFacility().getId(), demographicNo, CachedDemographicDocument[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
 			MiscUtils.getLogger().debug("remoteIntegratedDataCopy was null");
@@ -575,7 +575,7 @@ public class IntegratorFallBackManager {
 
 			CachedDemographicLabResult[] array = remoteItems.toArray(new CachedDemographicLabResult[remoteItems.size()]);
 			MiscUtils.getLogger().info("logged in " + loggedInInfo + " " + demographicNo);
-			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.currentFacility.getId());
+			remoteIntegratedDataCopyDao.save(demographicNo, array, providerNo, loggedInInfo.getCurrentFacility().getId());
 
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error saving remote CachedDemographicLabResult for " + demographicNo, e);
@@ -586,7 +586,7 @@ public class IntegratorFallBackManager {
 		if (!OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE", "yes")) return null;
 
 		List<CachedDemographicLabResult> linkedNotes = null;
-		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.currentFacility.getId(), demographicNo, CachedDemographicLabResult[].class.getName());
+		RemoteIntegratedDataCopy remoteIntegratedDataCopy = remoteIntegratedDataCopyDao.findByDemoType(loggedInInfo.getCurrentFacility().getId(), demographicNo, CachedDemographicLabResult[].class.getName());
 
 		if (remoteIntegratedDataCopy == null) {
 			return linkedNotes;

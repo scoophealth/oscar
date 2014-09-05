@@ -51,7 +51,7 @@
     ProviderManager2 providerManager = (ProviderManager2) SpringUtils.getBean("providerManager2");
     ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.currentFacility.getId());
+	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.getCurrentFacility().getId());
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>

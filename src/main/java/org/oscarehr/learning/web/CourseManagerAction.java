@@ -84,7 +84,7 @@ public class CourseManagerAction extends DispatchAction {
 
 		String result = "";
 
-		int facilityId = loggedInInfo.currentFacility.getId();
+		int facilityId = loggedInInfo.getCurrentFacility().getId();
 		try {
 			Program p = new Program();
 			p.setName(name);

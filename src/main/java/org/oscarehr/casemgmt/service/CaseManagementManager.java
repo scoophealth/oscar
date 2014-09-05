@@ -528,7 +528,7 @@ public class CaseManagementManager {
 
 		results = getPrescriptions(String.valueOf(demographicId), all);
 
-		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 			addIntegratorDrugs(loggedInInfo, results, all, demographicId);
 		}
 
@@ -545,15 +545,15 @@ public class CaseManagementManager {
 		try {
 			List<CachedDemographicDrug> remoteDrugs  = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 				   remoteDrugs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDrugsByDemographicId(demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 			}
 
-			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(loggedInInfo, demographicId);
 			}
 

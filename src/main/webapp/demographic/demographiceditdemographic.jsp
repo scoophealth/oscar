@@ -1054,7 +1054,7 @@ div.demographicWrapper {
 				</span>
 
 				<%
-				if (loggedInInfo.currentFacility.isIntegratorEnabled()){%>
+				if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()){%>
         		<jsp:include page="../admin/IntegratorStatus.jspf"></jsp:include>
         		<%}%>
 				
@@ -1296,7 +1296,7 @@ if(wLReadonly.equals("")){
                         </tr>
                         
            <%
-           	if(loggedInInfo.currentFacility.isIntegratorEnabled()) {
+           	if(loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
            %>             
            <tr>
                <td> <a href="#" onclick="popup(500,500,'../integrator/manage_linked_clients.jsp?demographicId=<%=demographic.getDemographicNo()%>', 'manage_linked_clients'); return false;">Integrator Linking</a>
@@ -1630,7 +1630,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 						<bean:message key="demographic.demographiceditdemographic.msgAddRelation"/><!--i18n--></a></b></h3>
 						<ul>
 							<%DemographicRelationship demoRelation = new DemographicRelationship();
-                                          List relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographic.getDemographicNo().toString(), loggedInInfo.currentFacility.getId());
+                                          List relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographic.getDemographicNo().toString(), loggedInInfo.getCurrentFacility().getId());
                                           for (int reCounter = 0; reCounter < relList.size(); reCounter++){
                                              HashMap relHash = (HashMap) relList.get(reCounter);
                                              String dNo = (String)relHash.get("demographicNo");
@@ -3284,7 +3284,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                      
                                         
                                         String _pvid =loggedInInfo.loggedInProvider.getProviderNo();
-                                        Set<Program> pset = gieat.getActiveProviderProgramsInFacility(loggedInInfo,_pvid,loggedInInfo.currentFacility.getId());
+                                        Set<Program> pset = gieat.getActiveProviderProgramsInFacility(loggedInInfo,_pvid,loggedInInfo.getCurrentFacility().getId());
                                         List<Program> bedP = gieat.getBedPrograms(pset,_pvid);
                                         List<Program> commP = gieat.getCommunityPrograms();
                       	                Program oscarp = programDao.getProgramByName("OSCAR");

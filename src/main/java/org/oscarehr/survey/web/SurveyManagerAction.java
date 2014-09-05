@@ -821,7 +821,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
             survey.setDateCreated(new Date());
         }
     
-        survey.setFacilityId(loggedInInfo.currentFacility.getId());
+        survey.setFacilityId(loggedInInfo.getCurrentFacility().getId());
         
         survey.setUserId(Integer.valueOf((String)request.getSession().getAttribute("user")));
         

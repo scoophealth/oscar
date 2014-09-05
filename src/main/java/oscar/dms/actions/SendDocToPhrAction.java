@@ -115,7 +115,7 @@ public class SendDocToPhrAction extends Action {
 			medicalDataTransfer.setMedicalDataType(MedicalDataType.BINARY_DOCUMENT.name());
 			medicalDataTransfer.setObserverOfDataPersonId(myOscarLoggedInInfo.getLoggedInPersonId());
 			medicalDataTransfer.setObserverOfDataPersonName(loggedInInfo.loggedInProvider.getFormattedName());
-			medicalDataTransfer.setOriginalSourceId(loggedInInfo.currentFacility.getName()+":eDoc:"+eDoc.getDocId());
+			medicalDataTransfer.setOriginalSourceId(loggedInInfo.getCurrentFacility().getName()+":eDoc:"+eDoc.getDocId());
 			medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
 
     		MyOscarMedicalDataManagerUtils.addMedicalData(loggedInInfo.getLoggedInProviderNo(), myOscarLoggedInInfo, medicalDataTransfer, "eDoc", eDoc.getDocId(), true, true);    		

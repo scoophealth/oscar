@@ -50,7 +50,7 @@ public class OcanFormAction {
 		ocanStaffForm.setAdmissionId(admissionId);
 		ocanStaffForm.setOcanFormVersion("1.2");		
 		ocanStaffForm.setClientId(clientId);
-		ocanStaffForm.setFacilityId(loggedInInfo.currentFacility.getId());
+		ocanStaffForm.setFacilityId(loggedInInfo.getCurrentFacility().getId());
 		ocanStaffForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 		ocanStaffForm.setSigned(signed);
 		
@@ -66,7 +66,7 @@ public class OcanFormAction {
 			ocanStaffForm.setAssessmentId(ocanStaffForm.getId());
 			ocanStaffForm.setOcanFormVersion("1.2");		
 			ocanStaffForm.setClientId(clientId);
-			ocanStaffForm.setFacilityId(loggedInInfo.currentFacility.getId());			
+			ocanStaffForm.setFacilityId(loggedInInfo.getCurrentFacility().getId());			
 			ocanStaffForm.setSigned(signed);
 		} else {
 			ocanStaffForm = OcanForm.getOcanStaffForm(Integer.valueOf(ocanStaffFormId));
@@ -112,7 +112,7 @@ public class OcanFormAction {
 		OcanClientForm ocanClientForm=new OcanClientForm();		
 		ocanClientForm.setOcanFormVersion("1.2");		
 		ocanClientForm.setClientId(clientId);
-		ocanClientForm.setFacilityId(loggedInInfo.currentFacility.getId());
+		ocanClientForm.setFacilityId(loggedInInfo.getCurrentFacility().getId());
 		ocanClientForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 		
 		

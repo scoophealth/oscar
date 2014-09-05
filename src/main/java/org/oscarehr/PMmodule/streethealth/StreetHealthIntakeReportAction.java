@@ -431,7 +431,7 @@ public class StreetHealthIntakeReportAction extends DispatchAction {
         //for each cohort, extract the values from the intakes
         for(int x=0;x<dates.size();x++) {
         	DateRange dr = dates.get(x);       
-        	List cohort = mgr.getCohort(dr.getStartDate(), dr.getEndDate(), loggedInInfo.currentFacility.getId());
+        	List cohort = mgr.getCohort(dr.getStartDate(), dr.getEndDate(), loggedInInfo.getCurrentFacility().getId());
         	if (cohort != null) {          
         		getCohortCount(results,cohort,x);
             }

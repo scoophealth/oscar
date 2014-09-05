@@ -59,16 +59,16 @@ public final class RemotePreventionHelper {
 			
 			List<CachedDemographicPrevention> preventions  = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 				   DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 				   preventions = demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(localDemographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 			}
 				
-			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 			   preventions = IntegratorFallBackManager.getRemotePreventions(loggedInInfo, localDemographicId);
 			} 
 		 

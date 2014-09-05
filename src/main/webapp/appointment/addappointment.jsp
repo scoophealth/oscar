@@ -115,7 +115,7 @@
 	ProgramManager programManager = SpringUtils.getBean(ProgramManager.class);
 	
 	String providerNo = loggedInInfo.getLoggedInProviderNo();
-	Facility facility = loggedInInfo.currentFacility;
+	Facility facility = loggedInInfo.getCurrentFacility();
 	
     List<Program> programs = programManager.getActiveProgramByFacility(providerNo, facility.getId());
 

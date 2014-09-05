@@ -218,7 +218,7 @@ function openSurvey() {
 				<c:out value="${client.hin}" />&nbsp;<c:out value="${client.ver}" />&nbsp;(<c:out value="${client.hcType}" />)
 				<%
 					// show the button even if integrator is disabled, this is to allow people to validate local data with integrator disabled.
-					if (loggedInInfo.currentFacility.isEnableHealthNumberRegistry())
+					if (loggedInInfo.getCurrentFacility().isEnableHealthNumberRegistry())
 					{
 						%>
 							<input type="button" value="Manage Health Number Registry" onclick="document.location='ClientManager/manage_hnr_client.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
@@ -290,7 +290,7 @@ function openSurvey() {
 		</td>
 	</tr>
 	<%
-		if (loggedInInfo.currentFacility.isIntegratorEnabled())
+		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled())
 		{
 			%>
 				<tr>
@@ -576,7 +576,7 @@ function openSurvey() {
 			</tr>
 		<%
 
-		if (loggedInInfo.currentFacility.isEnableOcanForms() && programEnableOcan )
+		if (loggedInInfo.getCurrentFacility().isEnableOcanForms() && programEnableOcan )
 		{
 	%>
 	<tr>
@@ -704,7 +704,7 @@ function openSurvey() {
 	
 	
 	<%
-	if (loggedInInfo.currentFacility.isEnableCbiForm())
+	if (loggedInInfo.getCurrentFacility().isEnableCbiForm())
 	{
 		List<OcanStaffForm> allLatestCbiForms=(List<OcanStaffForm>)request.getAttribute("allLatestCbiForms");
 		if (allLatestCbiForms!=null && allLatestCbiForms.size()>0)

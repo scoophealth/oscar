@@ -531,7 +531,7 @@ public class AdmissionManager {
 
     public boolean isActiveInCurrentFacility(LoggedInInfo loggedInInfo, int demographicId)
     {
-        List<Admission> results=getCurrentAdmissionsByFacility(demographicId, loggedInInfo.currentFacility.getId());
+        List<Admission> results=getCurrentAdmissionsByFacility(demographicId, loggedInInfo.getCurrentFacility().getId());
         if (results!=null && results.size()>0) return(true);
         
         return(false);

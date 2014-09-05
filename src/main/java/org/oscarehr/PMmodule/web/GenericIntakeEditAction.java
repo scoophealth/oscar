@@ -182,7 +182,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 		}
 						
 		setBeanProperties(loggedInInfo,formBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency()
-				.areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), defaultCommunityProgramId, null, null, loggedInInfo.currentFacility.getId(), null,jsLocation, Agency.getLocalAgency().areCommunityProgramsVisible(intakeType), null);
+				.areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), defaultCommunityProgramId, null, null, loggedInInfo.getCurrentFacility().getId(), null,jsLocation, Agency.getLocalAgency().areCommunityProgramsVisible(intakeType), null);
 
 		request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, false);
 
@@ -226,7 +226,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo=loggedInInfo.getLoggedInProviderNo();
-		Integer facilityId = loggedInInfo.currentFacility.getId();
+		Integer facilityId = loggedInInfo.getCurrentFacility().getId();
 
 		// [ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
 		List genders = GenericIntakeSearchAction.getGenders();
@@ -308,7 +308,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo=loggedInInfo.getLoggedInProviderNo();
-		Integer facilityId = loggedInInfo.currentFacility.getId();
+		Integer facilityId = loggedInInfo.getCurrentFacility().getId();
 
 		// [ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
 		List genders = GenericIntakeSearchAction.getGenders();
@@ -400,7 +400,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo=loggedInInfo.getLoggedInProviderNo();
-		Integer facilityId = loggedInInfo.currentFacility.getId();
+		Integer facilityId = loggedInInfo.getCurrentFacility().getId();
 
 		String intakeType = request.getParameter(TYPE);
 		Integer clientId = getClientIdAsInteger(request);
@@ -604,7 +604,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 				
 				setBeanProperties(loggedInInfo,formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(
 						intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), getCurrentBedProgramId(client.getDemographicNo()),
-						getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()), loggedInInfo.currentFacility.getId(), nodeId, jsLocation, Agency.getLocalAgency().areCommunityProgramsVisible(intakeType), getCurrentCommunityProgramId(client.getDemographicNo()));
+						getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()), loggedInInfo.getCurrentFacility().getId(), nodeId, jsLocation, Agency.getLocalAgency().areCommunityProgramsVisible(intakeType), getCurrentCommunityProgramId(client.getDemographicNo()));
 
 				String oldBedProgramId = String.valueOf(getCurrentBedProgramId(client.getDemographicNo()));
 				request.getSession().setAttribute("intakeCurrentBedId", oldBedProgramId);

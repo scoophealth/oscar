@@ -173,7 +173,7 @@ public class StJoesTokenManager extends SecurityTokenManager {
         httpRequest.getSession().setAttribute("currentFacility", facility);
 
         LoggedInInfo loggedInInfo=new LoggedInInfo();
-		loggedInInfo.currentFacility=(Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
+		loggedInInfo.setCurrentFacility((Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY));
 		loggedInInfo.loggedInProvider=(Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 		loggedInInfo.setLoggedInSecurity((Security) session.getAttribute(SessionConstants.LOGGED_IN_SECURITY));
 		loggedInInfo.setInitiatingCode(httpRequest.getRequestURI());

@@ -137,7 +137,7 @@ public final class ImmunizationsManager {
 
 			medicalDataTransfer.setMedicalDataType(MedicalDataType.IMMUNISATION.name());
 
-			medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), OSCAR_IMMUNIZATIONS_DATA_TYPE, prevention.getId()));
+			medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.getCurrentFacility().getName(), OSCAR_IMMUNIZATIONS_DATA_TYPE, prevention.getId()));
 
 			boolean active = true;
 			if (prevention.isDeleted()) active = false;

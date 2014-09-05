@@ -54,12 +54,12 @@ public class AuthUtils {
 		Locale locale = Locale.getDefault();
 
 		LoggedInInfo info = new LoggedInInfo();
-		info.currentFacility = currentFacility;
-		info.loggedInProvider = loggedInProvider;
+		info.setCurrentFacility(currentFacility);
+		info.setLoggedInProvider(loggedInProvider);
 		info.setInitiatingCode(initiatingCode);
 		info.setLoggedInSecurity(security);
 		info.setLocale(locale);
-		info.session = session;
+		info.setSession(session);
 
 		return (info);
 	}

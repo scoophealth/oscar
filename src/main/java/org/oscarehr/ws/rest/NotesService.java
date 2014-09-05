@@ -83,7 +83,7 @@ public class NotesService extends AbstractServiceImpl {
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
 		logger.debug("The config "+jsonobject.toString());
 	
-		HttpSession se = loggedInInfo.session;
+		HttpSession se = loggedInInfo.getSession();
 		if (se.getAttribute("userrole") == null) {
 			logger.error("An Error needs to be added to the returned result, remove this when fixed");
 			return returnResult;

@@ -336,8 +336,8 @@
 <input type="hidden" name="remoteFacilityId" value="<%=StringUtils.trimToEmpty(request.getParameter("remoteFacilityId"))%>" />
 <input type="hidden" name="remoteDemographicId" value="<%=StringUtils.trimToEmpty(request.getParameter("remoteDemographicId"))%>" />
 <input type="hidden" name="skip_validate" id="skip_validate" value="false"/>
-<input type="hidden" id="facility_name" name="facility_name" value="<%=loggedInInfo.currentFacility.getName()%>"/>
-<input type="hidden" id="ocan_service_org_number" name="ocan_service_org_number" value="<%=loggedInInfo.currentFacility.getOcanServiceOrgNumber()%>"/>
+<input type="hidden" id="facility_name" name="facility_name" value="<%=loggedInInfo.getCurrentFacility().getName()%>"/>
+<input type="hidden" id="ocan_service_org_number" name="ocan_service_org_number" value="<%=loggedInInfo.getCurrentFacility().getOcanServiceOrgNumber()%>"/>
 
 <!--  If this is from adding appointment screen, save the intake and go back to there -->       
 <input  type="hidden" name="fromAppt" value="<%=request.getParameter("fromAppt")%>">

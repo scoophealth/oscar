@@ -68,10 +68,10 @@ public class ManageHnrClient {
 		// we're only dealing with 1 hnr entry even if there's multiple because there should
 		// only be 1, a minor issue about some of this code not being atomic makes multiple
 		// entries theoretically possible though in reality it should never happen.
-		List<ClientLink> temp = clientLinkDao.findByFacilityIdClientIdType(loggedInInfo.currentFacility.getId(), demographicId, true, ClientLink.Type.HNR);
+		List<ClientLink> temp = clientLinkDao.findByFacilityIdClientIdType(loggedInInfo.getCurrentFacility().getId(), demographicId, true, ClientLink.Type.HNR);
 		if (temp.size() > 0) clientLink = temp.get(0);
 
-		if (loggedInInfo.currentFacility.isEnableHealthNumberRegistry() && loggedInInfo.currentFacility.isIntegratorEnabled() && clientLink != null) {
+		if (loggedInInfo.getCurrentFacility().isEnableHealthNumberRegistry() && loggedInInfo.getCurrentFacility().isIntegratorEnabled() && clientLink != null) {
 			try {
 				hnrClient = CaisiIntegratorManager.getHnrClient(loggedInInfo, loggedInInfo.getCurrentFacility(), clientLink.getRemoteLinkId());
 			} catch (ConnectException_Exception e) {
@@ -81,13 +81,13 @@ public class ManageHnrClient {
 			}
 		}
 
-		HnrDataValidation tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(loggedInInfo.currentFacility.getId(), demographicId, HnrDataValidation.Type.PICTURE);
+		HnrDataValidation tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(loggedInInfo.getCurrentFacility().getId(), demographicId, HnrDataValidation.Type.PICTURE);
 		pictureValidated = (tempValidation != null && tempValidation.isValidAndMatchingCrc(clientImage.getImage_data()));
 
-		tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(loggedInInfo.currentFacility.getId(), demographicId, HnrDataValidation.Type.HC_INFO);
+		tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(loggedInInfo.getCurrentFacility().getId(), demographicId, HnrDataValidation.Type.HC_INFO);
 		hcInfoValidated = (tempValidation != null && tempValidation.isValidAndMatchingCrc(HnrDataValidation.getHcInfoValidationBytes(demographic)));
 
-		tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(loggedInInfo.currentFacility.getId(), demographicId, HnrDataValidation.Type.OTHER);
+		tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(loggedInInfo.getCurrentFacility().getId(), demographicId, HnrDataValidation.Type.OTHER);
 		otherValidated = (tempValidation != null && tempValidation.isValidAndMatchingCrc(HnrDataValidation.getOtherInfoValidationBytes(demographic)));
 	}
 

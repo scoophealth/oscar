@@ -896,7 +896,7 @@ public class ProgramManagerAction extends DispatchAction {
 			vacancy.setDateClosed(dateClosedFormatted);
 			VacancyTemplateManager.saveVacancy(vacancy);
 
-			Facility f = loggedInInfo.currentFacility;
+			Facility f = loggedInInfo.getCurrentFacility();
 			if(f.getAssignNewVacancyTicklerProvider() != null && f.getAssignNewVacancyTicklerProvider().length()>0 
 				&& f.getAssignNewVacancyTicklerDemographic() != null && f.getAssignNewVacancyTicklerDemographic()> 0) {
 				createWaitlistNotificationTickler(loggedInInfo,f,vacancy,loggedInInfo.getLoggedInProviderNo());
@@ -911,7 +911,7 @@ public class ProgramManagerAction extends DispatchAction {
 			vacancy.setDateClosed(dateClosedFormatted);
 			VacancyTemplateManager.saveVacancy(vacancy);	
 			
-			Facility f = loggedInInfo.currentFacility;
+			Facility f = loggedInInfo.getCurrentFacility();
 			if(f.getAssignNewVacancyTicklerProvider() != null && f.getAssignNewVacancyTicklerProvider().length()>0 
 				&& f.getAssignNewVacancyTicklerDemographic() != null && f.getAssignNewVacancyTicklerDemographic()> 0) {
 				createWaitlistNotificationTickler(loggedInInfo,f,vacancy,loggedInInfo.getLoggedInProviderNo());
@@ -1544,7 +1544,7 @@ public class ProgramManagerAction extends DispatchAction {
 			vacancy.setStatusUpdateDate(new Date());
 			vacancyDao.merge(vacancy);
 			
-            Facility f = loggedInInfo.currentFacility;
+            Facility f = loggedInInfo.getCurrentFacility();
             if(status.equals("Withdrawn") && f.getVacancyWithdrawnTicklerProvider() != null && f.getVacancyWithdrawnTicklerProvider().length()>0 
                     && f.getVacancyWithdrawnTicklerDemographic() != null && f.getVacancyWithdrawnTicklerDemographic()> 0) {
                     createWaitlistWithdrawnNotificationTickler(loggedInInfo,f,vacancy,loggedInInfo.getLoggedInProviderNo());

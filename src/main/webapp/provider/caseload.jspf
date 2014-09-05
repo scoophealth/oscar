@@ -35,7 +35,7 @@
 
 	String caseloadCurUser_no = (String) session.getAttribute("user");
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-	Integer facilityId = loggedInInfo.currentFacility.getId();
+	Integer facilityId = loggedInInfo.getCurrentFacility().getId();
 
 %>
 <tr><td colspan="3">

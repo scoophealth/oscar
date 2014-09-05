@@ -38,7 +38,7 @@ public final class DemographicSearchHelper {
 	
 	public static List<MatchingDemographicTransferScore> getIntegratedSearchResults(LoggedInInfo loggedInInfo, MatchingDemographicParameters matchingDemographicParameters) throws MalformedURLException
 	{
-		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return(null);
+		if (!loggedInInfo.getCurrentFacility().isIntegratorEnabled()) return(null);
 		
 		DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 		demographicWs.getMatchingDemographics(matchingDemographicParameters);

@@ -41,8 +41,8 @@
 	FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");
 	ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 	
-	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.currentFacility.getId());
-	List<Program> programs=programDao.getProgramsByFacilityId(loggedInInfo.currentFacility.getId());
+	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.getCurrentFacility().getId());
+	List<Program> programs=programDao.getProgramsByFacilityId(loggedInInfo.getCurrentFacility().getId());
 %>
 
 <%@ include file="/taglibs.jsp"%>

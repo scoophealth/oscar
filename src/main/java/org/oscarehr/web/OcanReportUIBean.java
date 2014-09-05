@@ -625,7 +625,7 @@ public class OcanReportUIBean implements CallbackHandler {
 
 			//check for a clientform
 			//merge clientform with staffform, so remove the following code.
-			//OcanClientForm clientForm = ocanClientFormDao.findLatestSignedOcanForm(loggedInInfo.currentFacility.getId(),staffForm.getClientId(), "1.2", getStartDate(year,month), getEndDate(year,month));
+			//OcanClientForm clientForm = ocanClientFormDao.findLatestSignedOcanForm(loggedInInfo.getCurrentFacility().getId(),staffForm.getClientId(), "1.2", getStartDate(year,month), getEndDate(year,month));
 			//List<OcanClientFormData> clientFormData = null;
 			//if(clientForm != null) {
 			//	clientFormData = ocanClientFormDataDao.findByForm(clientForm.getId());
@@ -676,7 +676,7 @@ public class OcanReportUIBean implements CallbackHandler {
 				oos.close();
 
 
-				OcanClientForm clientForm = ocanClientFormDao.findLatestSignedOcanForm(loggedInInfo.currentFacility.getId(),ocanStaffForm.getClientId(), "1.2", getStartDate(year,month), getEndDate(year,month));
+				OcanClientForm clientForm = ocanClientFormDao.findLatestSignedOcanForm(loggedInInfo.getCurrentFacility().getId(),ocanStaffForm.getClientId(), "1.2", getStartDate(year,month), getEndDate(year,month));
 				List<OcanClientFormData> clientFormData = null;
 				if(clientForm != null) {
 					clientFormData = ocanClientFormDataDao.findByForm(clientForm.getId());

@@ -43,8 +43,8 @@ import org.oscarehr.common.model.Security;
 public final class LoggedInInfo {
 	private static final String LOGGED_IN_INFO_KEY = LoggedInInfo.class.getName() + ".LOGGED_IN_INFO_KEY";
 
-	public HttpSession session = null;
-	public Facility currentFacility = null;
+	private HttpSession session = null;
+	private Facility currentFacility = null;
 	public Provider loggedInProvider = null;
 	private String initiatingCode = null;
 	private Security loggedInSecurity = null;

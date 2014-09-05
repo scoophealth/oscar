@@ -903,16 +903,16 @@ public final class EDocUtil {
 
 			List<CachedDemographicDocument> remoteDocuments = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())) {
 					CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 					remoteDocuments = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDocuments(demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 			}
 
-			if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+			if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())) {
 				MiscUtils.getLogger().debug("getting fall back documents for " + demographicId);
 				remoteDocuments = IntegratorFallBackManager.getRemoteDocuments(loggedInInfo,demographicId);
 			}

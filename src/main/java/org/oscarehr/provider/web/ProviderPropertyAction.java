@@ -1931,7 +1931,7 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 
     public ActionForward viewIntegratorProperties(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-    	Facility facility = loggedInInfo.currentFacility;
+    	Facility facility = loggedInInfo.getCurrentFacility();
         UserProperty[] integratorProperties = new UserProperty[20];
         integratorProperties[0] = this.userPropertyDAO.getProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_SYNC);
         integratorProperties[1] = this.userPropertyDAO.getProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_ADMISSIONS);
@@ -1960,7 +1960,7 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 
     public ActionForward saveIntegratorProperties(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-    	Facility facility = loggedInInfo.currentFacility;
+    	Facility facility = loggedInInfo.getCurrentFacility();
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_ADMISSIONS, request.getParameter("integrator_demographic_admissions"));
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_ALLERGIES, request.getParameter("integrator_demographic_allergies"));
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_APPOINTMENTS, request.getParameter("integrator_demographic_appointments"));

@@ -1262,7 +1262,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
                                         gieat.setProgramManager(pm);
 
                                         String _pvid = loggedInInfo.loggedInProvider.getProviderNo();
-                                        Set<Program> pset = gieat.getActiveProviderProgramsInFacility(loggedInInfo,_pvid,loggedInInfo.currentFacility.getId());
+                                        Set<Program> pset = gieat.getActiveProviderProgramsInFacility(loggedInInfo,_pvid,loggedInInfo.getCurrentFacility().getId());
                                         List<Program> bedP = gieat.getBedPrograms(pset,_pvid);
                                         List<Program> commP = gieat.getCommunityPrograms();
                       	                
@@ -1337,7 +1337,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 			        <div>
 <%
 //    Integer fid = ((Facility)session.getAttribute("currentFacility")).getRegistrationIntake();
-    Facility facility = loggedInInfo.currentFacility;
+    Facility facility = loggedInInfo.getCurrentFacility();
     Integer fid = null;
     if(facility!=null) fid = facility.getRegistrationIntake();
     if(fid==null||fid<0){

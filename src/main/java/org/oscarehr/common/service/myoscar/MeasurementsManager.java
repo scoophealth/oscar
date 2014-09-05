@@ -251,7 +251,7 @@ public final class MeasurementsManager {
 
 		medicalDataTransfer.setMedicalDataType(MedicalDataType.HEIGHT_AND_WEIGHT.name());
 
-		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), OSCAR_MEASUREMENTS_DATA_TYPE, hw.getCompositeId()));
+		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.getCurrentFacility().getName(), OSCAR_MEASUREMENTS_DATA_TYPE, hw.getCompositeId()));
 
 		return (medicalDataTransfer);
 	}
@@ -321,7 +321,7 @@ public final class MeasurementsManager {
 
 		medicalDataTransfer.setMedicalDataType(MedicalDataType.BLOOD_PRESSURE.name());
 
-		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), OSCAR_MEASUREMENTS_DATA_TYPE, measurement.getId()));
+		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.getCurrentFacility().getName(), OSCAR_MEASUREMENTS_DATA_TYPE, measurement.getId()));
 
 		return (medicalDataTransfer);
 	}
@@ -360,7 +360,7 @@ public final class MeasurementsManager {
 
 		medicalDataTransfer.setMedicalDataType(MedicalDataType.GLUCOSE_A_1_C.name());
 
-		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), OSCAR_MEASUREMENTS_DATA_TYPE, measurement.getId()));
+		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.getCurrentFacility().getName(), OSCAR_MEASUREMENTS_DATA_TYPE, measurement.getId()));
 
 		return (medicalDataTransfer);
 	}
@@ -396,7 +396,7 @@ public final class MeasurementsManager {
 
 		medicalDataTransfer.setMedicalDataType(MedicalDataType.OTHER_HEALTH_TRACKER_CATEGORY.name() + '.' + ohtCategory.getId());
 
-		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), OSCAR_MEASUREMENTS_DATA_TYPE, measurement.getId()));
+		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.getCurrentFacility().getName(), OSCAR_MEASUREMENTS_DATA_TYPE, measurement.getId()));
 
 		return (medicalDataTransfer);
 	}

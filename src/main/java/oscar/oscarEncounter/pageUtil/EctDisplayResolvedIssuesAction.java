@@ -108,21 +108,21 @@ public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 		}
 
 		
-		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 			try {
 				
 		
 				List<CachedDemographicIssue> remoteIssues  = null;
 				try {
-					if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+					if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 					   remoteIssues = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicIssuesByDemographicId(demographicId);
 					}
 				} catch (Exception e) {
 					MiscUtils.getLogger().error("Unexpected error.", e);
-					CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+					CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 				}
 				
-				if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 				   remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(loggedInInfo, demographicId);	
 				}
 				
@@ -160,7 +160,7 @@ public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 		
 		// add integrator issues
 /*
-		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 			try {
 				List<CachedDemographicNote> remoteNotes=CaisiIntegratorManager.getLinkedNotes(demographicId);
 				

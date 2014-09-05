@@ -102,7 +102,7 @@ public class ManageConsent {
 
 	public boolean displayAsCheckedExcludeFacility(int remoteFacilityId) {
 		if (previousConsentToView == null) {
-			IntegratorConsent result = integratorConsentDao.findLatestByFacilityDemographic(loggedInInfo.currentFacility.getId(), clientId);
+			IntegratorConsent result = integratorConsentDao.findLatestByFacilityDemographic(loggedInInfo.getCurrentFacility().getId(), clientId);
 			if (result != null) {
 				Boolean checked = result.getConsentToShareData().get(remoteFacilityId);
 				if (checked == null) return (false);
@@ -117,7 +117,7 @@ public class ManageConsent {
 
 	public boolean displayAsCheckedExcludeMentalHealthData() {
 		if (previousConsentToView == null) {
-			IntegratorConsent result = integratorConsentDao.findLatestByFacilityDemographic(loggedInInfo.currentFacility.getId(), clientId);
+			IntegratorConsent result = integratorConsentDao.findLatestByFacilityDemographic(loggedInInfo.getCurrentFacility().getId(), clientId);
 			if (result != null) {
 				return (result.isExcludeMentalHealthData());
 			}
@@ -129,7 +129,7 @@ public class ManageConsent {
 	}
 
 	public boolean useDigitalSignatures() {
-		return (loggedInInfo.currentFacility.isEnableDigitalSignatures());
+		return (loggedInInfo.getCurrentFacility().isEnableDigitalSignatures());
 	}
 
 	public Integer getPreviousConsentDigitalSignatureId() {

@@ -159,7 +159,7 @@ public class ReceptionistReportAction extends DispatchAction {
 		List<Drug> prescriptions = null;
 		boolean viewAll=true;
 
-		request.setAttribute("isIntegratorEnabled", loggedInInfo.currentFacility.isIntegratorEnabled());			
+		request.setAttribute("isIntegratorEnabled", loggedInInfo.getCurrentFacility().isIntegratorEnabled());			
 		prescriptions = caseManagementManager.getPrescriptions(loggedInInfo, Integer.valueOf(clientId), viewAll);
 		
 		request.setAttribute("Prescriptions", prescriptions);		    	
@@ -184,7 +184,7 @@ public class ReceptionistReportAction extends DispatchAction {
 
 	private void addRemoteIssues(LoggedInInfo loggedInInfo, ArrayList<IssueDisplay> issuesToDisplay, int demographicNo, boolean resolved) {
 
-		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
+		if (!loggedInInfo.getCurrentFacility().isIntegratorEnabled()) return;
 
 		try {
 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());

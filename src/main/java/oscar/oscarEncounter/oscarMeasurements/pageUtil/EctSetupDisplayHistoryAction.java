@@ -61,7 +61,7 @@ public final class EctSetupDisplayHistoryAction extends Action {
             request.setAttribute("demographicNo",demo);
             if(type!=null){
                 hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo, type);
-                if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+                if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
                 	List<EctMeasurementsDataBean> measures = (List<EctMeasurementsDataBean>) hd.getMeasurementsDataVector ();
                 	oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler.addRemoteMeasurements(loggedInInfo, measures,type,demo);
                 }

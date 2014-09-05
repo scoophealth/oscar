@@ -208,12 +208,12 @@ public class EctMeasurementsDataBeanHandler {
     private static List<CachedMeasurement> getRemoteMeasurements(LoggedInInfo loggedInInfo,Integer demographicId){
     	List<CachedMeasurement> remoteMeasurements = null;
     	try {
-			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 				remoteMeasurements = CaisiIntegratorManager.getLinkedMeasurements(loggedInInfo, demographicId);
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Unexpected error.", e);
-			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 		}
 
 		//if(CaisiIntegratorManager.isIntegratorOffline()){

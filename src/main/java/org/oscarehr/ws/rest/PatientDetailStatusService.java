@@ -58,9 +58,9 @@ public class PatientDetailStatusService extends AbstractServiceImpl {
 		PatientDetailStatusTo1 status = new PatientDetailStatusTo1();
 		
 		//Integrator status
-		status.setIntegratorEnabled(getLoggedInInfo().currentFacility.isIntegratorEnabled());
+		status.setIntegratorEnabled(getLoggedInInfo().getCurrentFacility().isIntegratorEnabled());
 		if (status.isIntegratorEnabled()) {
-			status.setIntegratorOffline(CaisiIntegratorManager.isIntegratorOffline(getLoggedInInfo().session));
+			status.setIntegratorOffline(CaisiIntegratorManager.isIntegratorOffline(getLoggedInInfo().getSession()));
 			
 			int secondsTillConsideredStale = -1;
 			try{
@@ -72,10 +72,10 @@ public class PatientDetailStatusService extends AbstractServiceImpl {
 			
 			boolean allSynced = true;
 			try{
-				allSynced  = CaisiIntegratorManager.haveAllRemoteFacilitiesSyncedIn(getLoggedInInfo(), getLoggedInInfo().currentFacility, secondsTillConsideredStale); 
+				allSynced  = CaisiIntegratorManager.haveAllRemoteFacilitiesSyncedIn(getLoggedInInfo(), getLoggedInInfo().getCurrentFacility(), secondsTillConsideredStale); 
 			}catch(Exception remoteFacilityException){
 				MiscUtils.getLogger().error("Error checking Remote Facilities Sync status",remoteFacilityException);
-				CaisiIntegratorManager.checkForConnectionError(getLoggedInInfo().session,remoteFacilityException);
+				CaisiIntegratorManager.checkForConnectionError(getLoggedInInfo().getSession(),remoteFacilityException);
 			}
 			
 			if(secondsTillConsideredStale == -1){  
@@ -85,7 +85,7 @@ public class PatientDetailStatusService extends AbstractServiceImpl {
 		}
 		
 		//McMaster PHR status
-		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(getLoggedInInfo().session);
+		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(getLoggedInInfo().getSession());
 		if (myOscarLoggedInInfo!=null) {
 			status.setMacPHRLoggedIn(myOscarLoggedInInfo.isLoggedIn());
 		}

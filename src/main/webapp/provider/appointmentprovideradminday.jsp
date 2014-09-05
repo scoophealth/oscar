@@ -1334,8 +1334,8 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 
 <%
 	boolean anonymousEnabled = false;
-	if (loggedInInfo1.currentFacility != null) {
-		anonymousEnabled = loggedInInfo1.currentFacility.isEnableAnonymous();
+	if (loggedInInfo1.getCurrentFacility() != null) {
+		anonymousEnabled = loggedInInfo1.getCurrentFacility().isEnableAnonymous();
 	}
 	if(anonymousEnabled) {
 %>
@@ -1345,8 +1345,8 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 %>
 <%
 	boolean epe = false;
-	if (loggedInInfo1.currentFacility != null) {
-		epe = loggedInInfo1.currentFacility.isEnablePhoneEncounter();
+	if (loggedInInfo1.getCurrentFacility() != null) {
+		epe = loggedInInfo1.getCurrentFacility().isEnablePhoneEncounter();
 	}
 	if(epe) {
 %>
@@ -1763,7 +1763,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 			
 			
 			ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
-			ProgramProvider programProvider = programManager2.getCurrentProgramInDomain(loggedInInfo1,loggedInInfo1.loggedInProvider.getProviderNo());
+			ProgramProvider programProvider = programManager2.getCurrentProgramInDomain(loggedInInfo1,loggedInInfo1.getLoggedInProviderNo());
             if(programProvider!=null && programProvider.getProgram() != null) {
             	programProvider.getProgram().getName();
             }

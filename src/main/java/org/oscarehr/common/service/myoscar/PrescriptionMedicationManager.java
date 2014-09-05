@@ -163,7 +163,7 @@ public final class PrescriptionMedicationManager {
 
 		medicalDataTransfer.setMedicalDataType(MedicalDataType.PRESCRIPTION.name());
 
-		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId()));
+		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.getCurrentFacility().getName(), OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId()));
 
 		return (medicalDataTransfer);
 	}
@@ -267,7 +267,7 @@ public final class PrescriptionMedicationManager {
 
 		medicalDataTransfer.setMedicalDataType(MedicalDataType.MEDICATION.name());
 
-		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.currentFacility.getName(), OSCAR_MEDICATION_DATA_TYPE, drug.getId()));
+		medicalDataTransfer.setOriginalSourceId(MyOscarMedicalDataManagerUtils.generateSourceId(loggedInInfo.getCurrentFacility().getName(), OSCAR_MEDICATION_DATA_TYPE, drug.getId()));
 
 		medicalDataTransfer.setActive(!drug.isArchived());
 

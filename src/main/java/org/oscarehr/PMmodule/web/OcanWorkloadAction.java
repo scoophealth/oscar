@@ -62,7 +62,7 @@ public class OcanWorkloadAction extends DispatchAction {
 	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo = loggedInInfo.getLoggedInProviderNo();
-		Integer facilityId = loggedInInfo.currentFacility.getId();
+		Integer facilityId = loggedInInfo.getCurrentFacility().getId();
 
 		List<OcanStaffForm> ocanForms = ocanStaffFormDao.findLatestOcanFormsByStaff(facilityId,providerNo);
 
@@ -119,7 +119,7 @@ public class OcanWorkloadAction extends DispatchAction {
 		//get the latest of each assessment for the client.
 		//update the providerNo, and persist as new form,
 		//same with data.
-		List<OcanStaffForm> ocans = ocanStaffFormDao.findLatestByConsumer(loggedInInfo.currentFacility.getId(),Integer.valueOf(consumerId));
+		List<OcanStaffForm> ocans = ocanStaffFormDao.findLatestByConsumer(loggedInInfo.getCurrentFacility().getId(),Integer.valueOf(consumerId));
 		for(OcanStaffForm ocan:ocans) {
 			List<OcanStaffFormData> ocanData = ocanStaffFormDataDao.findByForm(ocan.getId());
 

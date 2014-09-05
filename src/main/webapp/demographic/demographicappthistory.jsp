@@ -249,7 +249,7 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
   
   List<CachedAppointment> cachedAppointments = null;
   Boolean showRemote = request.getParameter("showRemote") == null ? true : Boolean.parseBoolean(request.getParameter("showRemote"));
-  if (loggedInInfo.currentFacility.isIntegratorEnabled() && showRemote ){
+  if (loggedInInfo.getCurrentFacility().isIntegratorEnabled() && showRemote ){
 		int demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
 		try {
 			if (!CaisiIntegratorManager.isIntegratorOffline(session)){

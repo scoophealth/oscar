@@ -91,21 +91,21 @@ public class EctDisplayRxAction extends EctDisplayAction {
         int demographicId=Integer.parseInt(bean.demographicNo);
         
 		// --- get integrator drugs ---
-		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 			try {
 				
 			
 				List<CachedDemographicDrug> remoteDrugs  = null;
 				try {
-					if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+					if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 					   remoteDrugs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDrugsByDemographicId(demographicId);
 					}
 				} catch (Exception e) {
 					MiscUtils.getLogger().error("Unexpected error.", e);
-					CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session, e);
+					CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(), e);
 				}
 				
-				if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 				   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(loggedInInfo, demographicId);	
 				}
 				

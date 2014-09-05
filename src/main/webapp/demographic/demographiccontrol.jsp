@@ -183,7 +183,7 @@
    	MiscUtils.getLogger().debug("search Integrator: "+searchIntegrator);
 
 
-	if (searchIntegrator && matchingDemographicParameters!=null && loggedInInfo.currentFacility.isIntegratorEnabled())
+	if (searchIntegrator && matchingDemographicParameters!=null && loggedInInfo.getCurrentFacility().isIntegratorEnabled())
 	{
 		try{
 			matchingDemographicParameters.setMaxEntriesToReturn(15);
