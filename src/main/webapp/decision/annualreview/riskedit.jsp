@@ -55,12 +55,17 @@ function onExit() {
   String str = null;
   if(request.getParameter("submit")!=null && request.getParameter("submit").compareTo(" Save ")==0) {
     FileWriter inf = new FileWriter(".."+sep+"webapps"+sep+oscarVariables.getProperty("project_home")+sep+"decision"+sep+"annualreview"+sep+"desannualreviewplannerrisk.xml");
-    str = request.getParameter("checklist");
-	  str = SxmlMisc.replaceString(str," & "," &amp; ");
-  	str = SxmlMisc.replaceString(str," > "," &gt; ");
-  	str = SxmlMisc.replaceString(str," < "," &lt; ");
-    inf.write(str);
-    inf.close();
+    try {
+	    str = request.getParameter("checklist");
+		str = SxmlMisc.replaceString(str," & "," &amp; ");
+	  	str = SxmlMisc.replaceString(str," > "," &gt; ");
+	  	str = SxmlMisc.replaceString(str," < "," &lt; ");
+	    inf.write(str);
+	    inf.flush();
+    }
+    finally {
+    	inf.close();
+    }
   }			
 %>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -85,17 +90,21 @@ function onExit() {
 				throw new IOException();
 			}
 			RandomAccessFile raf = new RandomAccessFile(file, "r");
-			String aline=""; //, temp="";
-			while (true) {
-				aline = raf.readLine(); 
-				if(aline!=null){
-//					aline="<pre>" + aline + "</pre>"  ;
-                    out.println(aline);
-				}else {
-					break;
+			try {
+				String aline=""; //, temp="";
+				while (true) {
+					aline = raf.readLine(); 
+					if(aline!=null){
+	//					aline="<pre>" + aline + "</pre>"  ;
+	                    out.println(aline);
+					}else {
+						break;
+					}
 				}
 			}
-			raf.close();
+			finally {
+				raf.close();
+			}
 //		} catch(IOException e) {}
 %>
 </textarea> </font></td>
