@@ -52,7 +52,7 @@
     if(role.indexOf("Waitlist Agency Operator") != -1) {		
 		ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
 		List<Integer> pids = new ArrayList<Integer>();
-		for(ProgramProvider pp:programProviderDao.getActiveProgramDomain(loggedInInfo.loggedInProvider.getProviderNo())) {
+		for(ProgramProvider pp:programProviderDao.getActiveProgramDomain(loggedInInfo.getLoggedInProviderNo())) {
 			pids.add(pp.getProgramId().intValue());
 		}
 		for(VacancyDisplayBO v: listVac) {
@@ -74,7 +74,7 @@
 	   Integer facilityId = loggedInInfo.getCurrentFacility().getId();
 	   ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
 		List<Integer> pids = new ArrayList<Integer>();
-		for(ProgramProvider pp:programProviderDao.getActiveProgramDomain(loggedInInfo.loggedInProvider.getProviderNo())) {
+		for(ProgramProvider pp:programProviderDao.getActiveProgramDomain(loggedInInfo.getLoggedInProviderNo())) {
 			pids.add(pp.getProgramId().intValue());
 		}
 		for(VacancyDisplayBO v: listVac) {

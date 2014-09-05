@@ -414,7 +414,7 @@ public class CaisiIntegratorManager {
 
     public static List<CachedDemographicNote> getLinkedNotes(LoggedInInfo loggedInInfo, Integer demographicNo) throws MalformedURLException 
     {
-		String sessionCacheKey="LINKED_NOTES:"+loggedInInfo.getCurrentFacility().getId()+":"+loggedInInfo.loggedInProvider.getProviderNo()+":"+demographicNo;
+		String sessionCacheKey="LINKED_NOTES:"+loggedInInfo.getCurrentFacility().getId()+":"+loggedInInfo.getLoggedInProviderNo()+":"+demographicNo;
 
 		@SuppressWarnings("unchecked")
 		List<CachedDemographicNote> linkedNotes=(List<CachedDemographicNote>) segmentedDataCache.get(sessionCacheKey);
@@ -432,7 +432,7 @@ public class CaisiIntegratorManager {
     
   
       public static List<CachedDemographicPrevention> getLinkedPreventions(LoggedInInfo loggedInInfo,Integer demographicNo) throws MalformedURLException{
-		String sessionCacheKey="LINKED_PREVS:"+loggedInInfo.getCurrentFacility().getId()+":"+loggedInInfo.loggedInProvider.getProviderNo()+":"+demographicNo;
+		String sessionCacheKey="LINKED_PREVS:"+loggedInInfo.getCurrentFacility().getId()+":"+loggedInInfo.getLoggedInProviderNo()+":"+demographicNo;
 
 		@SuppressWarnings("unchecked")
 		List<CachedDemographicPrevention> remotePreventions=(List<CachedDemographicPrevention>) segmentedDataCache.get(sessionCacheKey);
@@ -448,7 +448,7 @@ public class CaisiIntegratorManager {
 	} 
       
       public static List<CachedMeasurement> getLinkedMeasurements(LoggedInInfo loggedInInfo,Integer demographicNo) throws MalformedURLException{
-  		String sessionCacheKey="LINKED_MEASUREMENTS:"+loggedInInfo.getCurrentFacility().getId()+":"+loggedInInfo.loggedInProvider.getProviderNo()+":"+demographicNo;
+  		String sessionCacheKey="LINKED_MEASUREMENTS:"+loggedInInfo.getCurrentFacility().getId()+":"+loggedInInfo.getLoggedInProviderNo()+":"+demographicNo;
 
   		@SuppressWarnings("unchecked")
   		List<CachedMeasurement> remoteMeasurements=(List<CachedMeasurement>) segmentedDataCache.get(sessionCacheKey);
@@ -466,7 +466,7 @@ public class CaisiIntegratorManager {
   
     public static List<CachedDemographicNote> getLinkedNotesMetaData(LoggedInInfo loggedInInfo,Integer demographicNo) throws MalformedURLException 
     {
-		String sessionCacheKey="LINKED_NOTES_META:"+loggedInInfo.getCurrentFacility().getId()+":"+loggedInInfo.loggedInProvider.getPractitionerNo()+":"+demographicNo;
+		String sessionCacheKey="LINKED_NOTES_META:"+loggedInInfo.getCurrentFacility().getId()+":"+loggedInInfo.getLoggedInProvider().getPractitionerNo()+":"+demographicNo;
 
 		@SuppressWarnings("unchecked")
 		List<CachedDemographicNote> linkedNotes=(List<CachedDemographicNote>) segmentedDataCache.get(sessionCacheKey);
@@ -483,7 +483,7 @@ public class CaisiIntegratorManager {
     
     public static List<CachedDemographicNote> getLinkedNotes(LoggedInInfo loggedInInfo,List<CachedDemographicNoteCompositePk> ids) throws MalformedURLException 
     {
-		String sessionCacheKey="LINKED_NOTES_META:"+loggedInInfo.getCurrentFacility().getId()+":"+loggedInInfo.loggedInProvider.getPractitionerNo()+":"+ids;
+		String sessionCacheKey="LINKED_NOTES_META:"+loggedInInfo.getCurrentFacility().getId()+":"+loggedInInfo.getLoggedInProvider().getPractitionerNo()+":"+ids;
 
 		@SuppressWarnings("unchecked")
 		List<CachedDemographicNote> linkedNotes=(List<CachedDemographicNote>) segmentedDataCache.get(sessionCacheKey);

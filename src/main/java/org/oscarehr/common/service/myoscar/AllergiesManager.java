@@ -160,9 +160,9 @@ public final class AllergiesManager {
 		String providerNo = allergy.getProviderNo();
 
 		if (providerNo == null) {
-			if (loggedInInfo.loggedInProvider != null) // in case it's background thread.
+			if (loggedInInfo.getLoggedInProvider() != null) // in case it's background thread.
 			{
-				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+				providerNo = loggedInInfo.getLoggedInProviderNo();
 			}
 		}
 

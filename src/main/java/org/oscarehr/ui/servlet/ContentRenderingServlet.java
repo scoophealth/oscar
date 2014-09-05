@@ -120,7 +120,7 @@ public final class ContentRenderingServlet extends HttpServlet {
 	    content.contentType=getServletContext().getMimeType(viewOruR01UIBean.getFilename());
 	    content.data=viewOruR01UIBean.getFileContents();
 	    
-	    LogAction.addLog(loggedInInfo.loggedInProvider.getProviderNo(), getClass().getSimpleName(), "getOruR01Content", "segmentId="+segmentId);
+	    LogAction.addLog(loggedInInfo.getLoggedInProviderNo(), getClass().getSimpleName(), "getOruR01Content", "segmentId="+segmentId);
 	    
 	    return(content);
     }
@@ -133,7 +133,7 @@ public final class ContentRenderingServlet extends HttpServlet {
 	    content.contentType=getServletContext().getMimeType("prescription_"+prescriptionId+"qr_code.png");
 	    content.data=PrescriptionQrCodeUIBean.getPrescriptionHl7QrCodeImage(prescriptionId);
 	    
-	    LogAction.addLog(loggedInInfo.loggedInProvider.getProviderNo(), getClass().getSimpleName(), "getPrescriptionQrCodeContent", "prescriptionId="+prescriptionId);
+	    LogAction.addLog(loggedInInfo.getLoggedInProviderNo(), getClass().getSimpleName(), "getPrescriptionQrCodeContent", "prescriptionId="+prescriptionId);
 	    
 	    return(content);
     }

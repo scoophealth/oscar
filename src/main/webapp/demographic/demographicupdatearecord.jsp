@@ -349,7 +349,7 @@
    	 }
     }
     
-    String _pvid = loggedInInfo.loggedInProvider.getProviderNo();
+    String _pvid = loggedInInfo.getLoggedInProviderNo();
     Set<Program> pset = gieat.getActiveProviderProgramsInFacility(loggedInInfo,_pvid,loggedInInfo.getCurrentFacility().getId());
     List<Program> allServiceProgramsShown = gieat.getServicePrograms(pset,_pvid);
     for(Program p:allServiceProgramsShown) {

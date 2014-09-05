@@ -49,7 +49,7 @@ public class LogAction {
 	{
 		OscarLog logEntry=new OscarLog();
 		if (loggedInInfo.getLoggedInSecurity()!=null) logEntry.setSecurityId(loggedInInfo.getLoggedInSecurity().getSecurityNo());
-		if (loggedInInfo.loggedInProvider!=null) logEntry.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		if (loggedInInfo.getLoggedInProvider()!=null) logEntry.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 		logEntry.setAction(action);
 		logEntry.setData(data);
 		LogAction.addLogSynchronous(logEntry);		

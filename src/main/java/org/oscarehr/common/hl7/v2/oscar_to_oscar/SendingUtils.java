@@ -95,7 +95,7 @@ public final class SendingUtils {
 		byte[] encryptedSecretKey = encryptEncryptionKey(senderSecretKey, receiverOscarKey);
 
 		if (loggedInInfo != null) {
-			Provider provider = loggedInInfo.loggedInProvider;
+			Provider provider = loggedInInfo.getLoggedInProvider();
 			LogAction.addLog(provider.getProviderNo(), SendingUtils.class.getSimpleName(), "HL7", new String(dataBytes, MiscUtils.DEFAULT_UTF8_ENCODING));
 		} else {
 			throw new IllegalStateException("Unable to post data outside authentication context. Please make sure LoggedInInfo is configured to contain non-null provider.");

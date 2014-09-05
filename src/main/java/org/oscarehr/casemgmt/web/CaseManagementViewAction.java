@@ -285,7 +285,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String roles = (String) se.getAttribute("userrole");
 		if (OscarProperties.getInstance().isOscarLearning() && roles != null && roles.indexOf("moderator") != -1) {
 			logger.info("skipping domain check..provider is a moderator");
-		} else if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.loggedInProvider.getProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(loggedInInfo.loggedInProvider.getProviderNo(), demoNo)) {
+		} else if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.getLoggedInProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(loggedInInfo.getLoggedInProviderNo(), demoNo)) {
 			return mapping.findForward("domain-error");
 		}
 
@@ -319,7 +319,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		// check to see if there is an unsaved note
 		// if there is see if casemanagemententry has already handled it
 		// if it has, disregard unsaved note; if it has not then set attribute
-		CaseManagementTmpSave tmpsavenote = this.caseManagementMgr.restoreTmpSave(loggedInInfo.loggedInProvider.getProviderNo(), demoNo, programId);
+		CaseManagementTmpSave tmpsavenote = this.caseManagementMgr.restoreTmpSave(loggedInInfo.getLoggedInProviderNo(), demoNo, programId);
 		if (tmpsavenote != null) {
 			String restoring = (String) se.getAttribute("restoring");
 			if (restoring == null) request.setAttribute("can_restore", new Boolean(true));
@@ -387,7 +387,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			se.setAttribute("casemgmt_msgBeans", this.caseManagementMgr.getMsgBeans(new Integer(demoNo)));
 
 			// readonly access to define creat a new note button in jsp.
-			se.setAttribute("readonly", new Boolean(this.caseManagementMgr.hasAccessRight("note-read-only", "access", loggedInInfo.loggedInProvider.getProviderNo(), demoNo, (String) se.getAttribute("case_program_id"))));
+			se.setAttribute("readonly", new Boolean(this.caseManagementMgr.hasAccessRight("note-read-only", "access", loggedInInfo.getLoggedInProviderNo(), demoNo, (String) se.getAttribute("case_program_id"))));
 
 		}
 		/* Dx */
@@ -443,7 +443,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 			// Setup RX bean start
 			RxSessionBean bean = new RxSessionBean();
-			bean.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+			bean.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 			bean.setDemographicNo(Integer.parseInt(demoNo));
 			request.getSession().setAttribute("RxSessionBean", bean);
 			// set up RX end
@@ -679,7 +679,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		Collection<CaseManagementNote> localNotes = caseManagementNoteDao.findNotesByDemographicAndIssueCode(demographicNo, checkedCodeList.toArray(new String[0]));
 		//show locked notes anyway: localNotes = manageLockedNotes(localNotes, true, this.getUnlockedNotesMap(request));
 		localNotes = manageLockedNotes(localNotes, false, this.getUnlockedNotesMap(request));
-		localNotes = caseManagementMgr.filterNotes(loggedInInfo, loggedInInfo.loggedInProvider.getProviderNo(), localNotes, programId);
+		localNotes = caseManagementMgr.filterNotes(loggedInInfo, loggedInInfo.getLoggedInProviderNo(), localNotes, programId);
 
 		caseManagementMgr.getEditors(localNotes);
 
@@ -808,7 +808,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		logger.debug("Filter Notes");
 
 		// filter notes based on role and program/provider mappings
-		notes = caseManagementMgr.filterNotes(loggedInInfo, loggedInInfo.loggedInProvider.getProviderNo(), notes, programId);
+		notes = caseManagementMgr.filterNotes(loggedInInfo, loggedInInfo.getLoggedInProviderNo(), notes, programId);
 		logger.debug("FILTER NOTES " + (System.currentTimeMillis() - startTime));
 
 		// apply provider filter

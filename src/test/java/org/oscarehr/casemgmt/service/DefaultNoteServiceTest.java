@@ -107,13 +107,13 @@ public class DefaultNoteServiceTest extends DaoTestFixtures {
 
 		String demographicNo = "1";
 		String programId = "10016";
-		Provider provider = loggedInInfo.loggedInProvider;
-		String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+		Provider provider = loggedInInfo.getLoggedInProvider();
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
 
 		//Add this provider to the program
 		ProgramProvider pp = new ProgramProvider();
 		pp.setProgramId((long) 10016);
-		pp.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		pp.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 		pp.setRoleId((long) 1);
 		programProviderDao.saveProgramProvider(pp);
 

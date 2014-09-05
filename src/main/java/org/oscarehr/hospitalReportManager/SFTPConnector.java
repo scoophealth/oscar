@@ -634,12 +634,12 @@ public class SFTPConnector {
     	String providerNoTemp="999998";
 	    if (!doNotSentMsgForOuttage.contains(providerNoTemp)) sendToProviderList.add(providerNoTemp);
 	    
-	    if (loggedInInfo != null && loggedInInfo.loggedInProvider != null)
+	    if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null)
 	    {
 	    	// manual prompts always send to admin
 	    	sendToProviderList.add(providerNoTemp);
 	    	
-	    	providerNoTemp=loggedInInfo.loggedInProvider.getProviderNo();
+	    	providerNoTemp=loggedInInfo.getLoggedInProviderNo();
 		    if (!doNotSentMsgForOuttage.contains(providerNoTemp)) sendToProviderList.add(providerNoTemp);
 	    }
 
@@ -667,9 +667,9 @@ public class SFTPConnector {
 	 */
 	public static void addMeToDoNotSendList(LoggedInInfo loggedInInfo)
 	{
-	    if (loggedInInfo != null && loggedInInfo.loggedInProvider != null)
+	    if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null)
 	    {
-	    	doNotSentMsgForOuttage.add(loggedInInfo.loggedInProvider.getProviderNo());
+	    	doNotSentMsgForOuttage.add(loggedInInfo.getLoggedInProviderNo());
 	    }
 	}
 }

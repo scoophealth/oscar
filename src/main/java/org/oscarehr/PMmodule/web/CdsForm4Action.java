@@ -45,7 +45,7 @@ public class CdsForm4Action {
 		cdsClientForm.setCdsFormVersion("4");
 		cdsClientForm.setClientId(clientId);
 		cdsClientForm.setFacilityId(loggedInInfo.getCurrentFacility().getId());
-		cdsClientForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		cdsClientForm.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 		cdsClientForm.setInitialContactDate(initialContactDate);
 		cdsClientForm.setAssessmentDate(assessmentDate);
 		cdsClientForm.setSigned(signed);

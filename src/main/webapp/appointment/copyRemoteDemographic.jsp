@@ -58,7 +58,7 @@
 	//--- link the demographic on the integrator so associated data shows up ---
 	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 	
-	String providerNo=loggedInInfo.loggedInProvider.getProviderNo();
+	String providerNo=loggedInInfo.getLoggedInProviderNo();
 	demographicWs.linkDemographics(providerNo, demographic.getDemographicNo(), remoteFacilityId, remoteDemographicId);
 
 

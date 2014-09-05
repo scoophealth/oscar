@@ -64,7 +64,7 @@
 		session.setAttribute("site_selected", (selected_site.equals("none") ? null : selected_site) );	    
 	}
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-	String curUser_providerno = loggedInInfo.loggedInProvider.getProviderNo();
+	String curUser_providerno = loggedInInfo.getLoggedInProviderNo();
 	String ticklerforproviderno = request.getParameter("ticklerforproviderno");
 	UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 	UserProperty prop = propDao.getProp(curUser_providerno, UserProperty.PROVIDER_FOR_TICKLER_WARNING);

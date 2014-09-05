@@ -112,7 +112,7 @@
             			$('#login_div').hide();
             			$('#scope_div').show();
             			$('#loggedin_div').show();
-            			$('#providerName').html('<%if(loggedIn) {out.print(loggedInInfo.loggedInProvider.getFormattedName());}%>');
+            			$('#providerName').html('<%if(loggedIn) {out.print(loggedInInfo.getLoggedInProvider().getFormattedName());}%>');
             		} else {
             			$('#login_div').show();
             			$('#scope_div').hide();

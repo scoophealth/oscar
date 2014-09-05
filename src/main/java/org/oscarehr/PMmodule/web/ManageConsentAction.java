@@ -54,7 +54,7 @@ public class ManageConsentAction {
 
 		consent.setDemographicId(clientId);
 		consent.setFacilityId(loggedInInfo.getCurrentFacility().getId());
-		consent.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		consent.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 
 		for (CachedFacility cachedFacility : CaisiIntegratorManager.getRemoteFacilities(loggedInInfo, loggedInInfo.getCurrentFacility())) {
 			consent.getConsentToShareData().put(cachedFacility.getIntegratorFacilityId(), true);

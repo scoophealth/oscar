@@ -54,13 +54,13 @@ public final class WsUtils
 			
 			if (checkToken(security, securityToken) || security.checkPassword(securityToken))
 			{
-				LoggedInInfo x = new LoggedInInfo();
-				x.setLoggedInSecurity ( security);
+				LoggedInInfo loggedInInfo = new LoggedInInfo();
+				loggedInInfo.setLoggedInSecurity ( security);
 				if (security.getProviderNo() != null) {
-					x.loggedInProvider = providerDao.getProvider(security.getProviderNo());
+					loggedInInfo.setLoggedInProvider(providerDao.getProvider(security.getProviderNo()));
 				}
 				
-				LoggedInInfo.setLoggedInInfoIntoRequest(request, x);
+				LoggedInInfo.setLoggedInInfoIntoRequest(request, loggedInInfo);
 				return(true);
 			}
 		}

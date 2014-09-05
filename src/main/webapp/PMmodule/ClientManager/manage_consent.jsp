@@ -177,7 +177,7 @@
 	<%
 		if (manageConsent.useDigitalSignatures())
 		{
-			signatureRequestId=DigitalSignatureUtils.generateSignatureRequestId(loggedInInfo.loggedInProvider.getProviderNo());
+			signatureRequestId=DigitalSignatureUtils.generateSignatureRequestId(loggedInInfo.getLoggedInProviderNo());
 			
 			String imageUrl=null;
 			String statusUrl=null;

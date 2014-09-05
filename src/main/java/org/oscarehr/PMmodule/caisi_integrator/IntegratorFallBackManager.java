@@ -79,8 +79,8 @@ public class IntegratorFallBackManager {
 		try {
 			try {
 				String providerNo = null;
-				if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
-					providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+				if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+					providerNo = loggedInInfo.getLoggedInProviderNo();
 				}
 				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 				List<CachedDemographicNote> linkedNotes = Collections.unmodifiableList(demographicWs.getLinkedCachedDemographicNotes(demographicNo));
@@ -108,8 +108,8 @@ public class IntegratorFallBackManager {
 		try {
 			String providerNo = null;
 
-			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
-				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				providerNo = loggedInInfo.getLoggedInProviderNo();
 			}
 
 			for (String table : tables) {
@@ -160,8 +160,8 @@ public class IntegratorFallBackManager {
 		try {
 			String providerNo = null;
 
-			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
-				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				providerNo = loggedInInfo.getLoggedInProviderNo();
 			}
 
 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
@@ -212,8 +212,8 @@ public class IntegratorFallBackManager {
 		try {
 			String providerNo = null;
 
-			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
-				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				providerNo = loggedInInfo.getLoggedInProviderNo();
 			}
 
 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
@@ -262,8 +262,8 @@ public class IntegratorFallBackManager {
 		try {
 			String providerNo = null;
 
-			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
-				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				providerNo = loggedInInfo.getLoggedInProviderNo();
 			}
 
 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
@@ -310,8 +310,8 @@ public class IntegratorFallBackManager {
 		try {
 			String providerNo = null;
 
-			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
-				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				providerNo = loggedInInfo.getLoggedInProviderNo();
 			}
 
 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
@@ -359,8 +359,8 @@ public class IntegratorFallBackManager {
 		try {
 			String providerNo = null;
 
-			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
-				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				providerNo = loggedInInfo.getLoggedInProviderNo();
 			}
 
 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
@@ -410,8 +410,8 @@ public class IntegratorFallBackManager {
 		try {
 			String providerNo = null;
 
-			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
-				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				providerNo = loggedInInfo.getLoggedInProviderNo();
 			}
 
 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
@@ -462,8 +462,8 @@ public class IntegratorFallBackManager {
 		try {
 			String providerNo = null;
 
-			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
-				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				providerNo = loggedInInfo.getLoggedInProviderNo();
 			}
 
 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
@@ -562,8 +562,8 @@ public class IntegratorFallBackManager {
 		try {
 			String providerNo = null;
 
-			if (loggedInInfo != null && loggedInInfo.loggedInProvider != null) {
-				providerNo = loggedInInfo.loggedInProvider.getProviderNo();
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				providerNo = loggedInInfo.getLoggedInProviderNo();
 			}
 
 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());

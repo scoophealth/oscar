@@ -42,7 +42,7 @@
     if (isOscar!=null) session.setAttribute("infirmaryView_isOscar", isOscar);
     if(request.getParameter(SessionConstants.CURRENT_PROGRAM_ID) != null) {
     	session.setAttribute(SessionConstants.CURRENT_PROGRAM_ID,request.getParameter(SessionConstants.CURRENT_PROGRAM_ID));
-    	org.caisi.core.web.InfirmAction.updateCurrentProgram(request.getParameter(SessionConstants.CURRENT_PROGRAM_ID), loggedInInfo.loggedInProvider.getProviderNo());
+    	org.caisi.core.web.InfirmAction.updateCurrentProgram(request.getParameter(SessionConstants.CURRENT_PROGRAM_ID), loggedInInfo.getLoggedInProviderNo());
     }
     session.setAttribute("infirmaryView_OscarURL",request.getRequestURL());
 

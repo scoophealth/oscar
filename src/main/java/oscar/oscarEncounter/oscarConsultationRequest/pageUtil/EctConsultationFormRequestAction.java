@@ -401,7 +401,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    consultationRequestDao.merge(consultationRequest);
 	    
 	    //--- send attachments ---
-    	Provider sendingProvider=loggedInInfo.loggedInProvider;
+    	Provider sendingProvider=loggedInInfo.getLoggedInProvider();
     	DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
     	Demographic demographic=demographicDao.getDemographicById(consultationRequest.getDemographicId());
 

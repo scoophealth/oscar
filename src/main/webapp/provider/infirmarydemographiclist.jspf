@@ -5,7 +5,7 @@
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	session.setAttribute("case_program_id", session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID));
-	org.caisi.core.web.InfirmAction.updateCurrentProgram((String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID),loggedInInfo.loggedInProvider.getProviderNo());
+	org.caisi.core.web.InfirmAction.updateCurrentProgram((String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID),loggedInInfo.getLoggedInProviderNo());
 	java.util.Date todayDate=new java.util.Date();
 	todayDate.setHours(23);
 	todayDate.setMinutes(59);
