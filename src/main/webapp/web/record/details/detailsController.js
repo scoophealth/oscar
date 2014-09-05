@@ -23,16 +23,47 @@
     Ontario, Canada
 
 */
-oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams,$state,demographicService,demo,user) {
+oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams,$state,demographicService,patientDetailStatusService,demo,user) {
 	console.log("details ctrl ", $stateParams, $state, demo);
-
 	$scope.page = {};
 	$scope.page.demo = demo;
 	$scope.page.extras = {};
+	$scope.page.status = {};
+	$scope.page.color = {};
+	$scope.page.msg = {};
+	
+	
+	patientDetailStatusService.getStatus(demo.demographicNo).then(function(data){
+		$scope.page.status.macPHRLoggedIn = data.macPHRLoggedIn;
+		$scope.page.status.macPHRIdsSet = data.macPHRIdsSet;
+		$scope.page.status.macPHRVerificationLevel = data.macPHRVerificationLevel;
+		
+		$scope.page.status.integratorEnabled = data.integratorEnabled;
+		$scope.page.status.integratorOffline = data.integratorOffline;
+		$scope.page.status.integratorAllSynced = data.integratorAllSynced;
+		
+		$scope.page.status.conformanceFeaturesEnabled = data.conformanceFeaturesEnabled;
+		$scope.page.status.workflowEnhance = data.workflowEnhance;
+		$scope.page.status.billregion = data.billregion;
+		$scope.page.status.defaultView = data.defaultView;
+		$scope.page.status.hospitalView = data.hospitalView;
+		
+		if (data.integratorEnabled) {
+			if (data.integratorOffline) {
+				$scope.page.color.integratorStatus = "#ff5500";
+				$scope.page.msg.integratorStatus = "NOTE: Integrator is not available at this time";
+			}
+			else if (!data.integratorAllSynced) {
+				$scope.page.color.integratorStatus = "#ff5500";
+				$scope.page.msg.integratorStatus = "NOTE: Integrated Community is not synced";
+			}
+		}
+	});
+	
+	var now = new Date();
 	
 	//calculate age
 	$scope.calculateAge = function(){
-		var now = new Date();
 		demo.age = now.getFullYear() - demo.dobYear;
 		if (now.getMonth()<demo.dobMonth-1) demo.age--;
 		else if (now.getMonth()==demo.dobMonth-1 && now.getDate()<demo.dobDay) demo.age--;
@@ -153,6 +184,8 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		$scope.page.paper_chart_archived_dateDay = pad0(datePart["day"]);
 	}
 	
+	var colorAttn = "#ffff99";
+	
 	//show phone numbers with preferred check
 	$scope.page.cellPhone = getPhoneNum($scope.page.extras.demo_cell.value);
 	$scope.page.homePhone = getPhoneNum(demo.phone);
@@ -160,28 +193,27 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	
 	var defPhTitle = "Check to set preferred contact number";
 	var prefPhTitle = "Preferred contact number";
-	var prefPhColr = "#ffff99";
 	
-	$scope.page.cellPhonePreferred = defPhTitle;
-	$scope.page.homePhonePreferred = defPhTitle;
-	$scope.page.workPhonePreferred = defPhTitle;
+	$scope.page.msg.cellPhonePreferred = defPhTitle;
+	$scope.page.msg.homePhonePreferred = defPhTitle;
+	$scope.page.msg.workPhonePreferred = defPhTitle;
 	if (isPreferredPhone($scope.page.extras.demo_cell.value)) {
 		$scope.page.preferredPhoneNumber = $scope.page.cellPhone;
 		$scope.page.preferredPhone = "C";
-		$scope.page.cellPhonePreferred = prefPhTitle;
-		$scope.page.cellPhonePreferredBg = prefPhColr;
+		$scope.page.msg.cellPhonePreferred = prefPhTitle;
+		$scope.page.color.cellPhonePreferred = colorAttn;
 	}
 	else if (isPreferredPhone(demo.phone)) {
 		$scope.page.preferredPhoneNumber = $scope.page.homePhone;
 		$scope.page.preferredPhone = "H";
-		$scope.page.homePhonePreferred = prefPhTitle;
-		$scope.page.homePhonePreferredBg = prefPhColr;
+		$scope.page.msg.homePhonePreferred = prefPhTitle;
+		$scope.page.color.homePhonePreferred = colorAttn;
 	}
 	else if (isPreferredPhone(demo.alternativePhone)) {
 		$scope.page.preferredPhoneNumber = $scope.page.workPhone;
 		$scope.page.preferredPhone = "W";
-		$scope.page.workPhonePreferred = prefPhTitle;
-		$scope.page.workPhonePreferredBg = prefPhColr;
+		$scope.page.msg.workPhonePreferred = prefPhTitle;
+		$scope.page.color.workPhonePreferred = colorAttn;
 	}
 	else {
 		$scope.page.preferredPhoneNumber = $scope.page.homePhone;
@@ -234,6 +266,163 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	//----------------------//
 	// on-screen operations //
 	//----------------------//
+	//set ready for swipe card
+	$scope.setSwipeReady = function(status){
+		if (status=="off") {
+			$scope.page.readyForSwipe = "";
+			$scope.page.msg.swipecard = "Click for Card Swipe";
+		}
+		else if (status=="done") {
+			$scope.page.readyForSwipe = "btn-primary";
+			$scope.page.msg.swipecard = "Done Health Card Swipe";
+		}
+		else {
+			$("#swipecard").focus();
+			$scope.page.readyForSwipe = "btn-success";
+			$scope.page.msg.swipecard = "Ready for Card Swipe";
+			$scope.page.swipecard = "";
+		}
+	}
+	$scope.setSwipeReady();
+
+	//Health card verification
+	var hcParts = {};
+	$scope.healthCardHandler = function(keycode){
+	    if (keycode==13) { //carriage-return
+	    	var swipeCardData = $scope.page.swipecard;
+	    	$scope.page.swipecard = "";
+	    	
+	    	if (swipeCardData.substring(0,3)=="%E?") { //swipe card error
+	    		alert("Error reading card");
+	    	} else {
+	    		if (swipeCardData.substring(2,8)=="610054") { //Ontario
+	    			hcParts["issuer"] = "ON";
+	    			hcParts["hin"] = swipeCardData.substring(8, 18);
+	    			
+	    			var namePos = swipeCardData.indexOf("^") + 1;
+	    			var endNamePos = swipeCardData.indexOf("^", namePos);
+	    			hcParts["fullName"] = swipeCardData.substring(namePos, endNamePos);
+	    			hcParts["lastName"] = hcParts["fullName"].split("/")[0];
+	    			hcParts["firstName"] = hcParts["fullName"].split("/")[1].trim();
+	    			
+	    			hcParts["sex"] = swipeCardData.substring(endNamePos + 8, endNamePos + 9);
+	    			hcParts["dob"] = swipeCardData.substring(endNamePos + 9, endNamePos + 17);
+	    			hcParts["hinExp"] = swipeCardData.substring(endNamePos + 1, endNamePos + 5) + hcParts["dob"].substring(6,8);
+	    			hcParts["hinVer"] = swipeCardData.substring(endNamePos + 17, endNamePos + 19);
+	    			hcParts["firstNameShort"] = swipeCardData.substring(endNamePos + 19, endNamePos + 24);
+	    			hcParts["issueDate"] = swipeCardData.substring(endNamePos + 24, endNamePos + 30);
+	    			hcParts["lang"] = swipeCardData.substring(endNamePos + 30, endNamePos + 32);
+	    			
+	    			if (notNumber(hcParts["hin"])) {
+	    				hcParts["hin"] = null;
+	    			}
+	    			if (notNumber(hcParts["dob"])) {
+	    				hcParts["dob"] = null;
+	    				hcParts["hinExp"] = null;
+	    			}
+	    			if (notNumber(hcParts["hinExp"])) {
+	    				hcParts["hinExp"] = null;
+	    			}
+	    			if (notNumber(hcParts["issueDate"])) {
+	    				hcParts["issueDate"] = null;
+	    			}
+	    			
+    				$scope.setSwipeReady("done");
+    				$scope.healthCardUpdateDemographics();
+	    		} else {
+	    			alert("Not Ontario Health Card");
+	    		}
+	    	}
+	    }
+	};
+	
+	$scope.healthCardUpdateDemographics = function(){
+		if (demo.hcType!=hcParts["issuer"]) {
+			demo.hcType = hcParts["issuer"];
+			$scope.page.color.hcType = colorAttn;
+		}
+		if (demo.lastName!=hcParts["lastName"]) {
+			demo.lastName = hcParts["lastName"];
+			$scope.page.color.lastName = colorAttn;
+		}
+		if (demo.firstName!=hcParts["firstName"]) {
+			demo.firstName = hcParts["firstName"];
+			$scope.page.color.firstName = colorAttn;
+		}
+		if (hcParts["hin"]!=null && demo.hin!=hcParts["hin"]) {
+			demo.hin = hcParts["hin"];
+			$scope.page.color.hin = colorAttn;
+		}
+		if (demo.ver!=hcParts["hinVer"]) {
+			demo.ver = hcParts["hinVer"];
+			$scope.page.color.ver = colorAttn;
+		}
+		var hcSex = hcParts["sex"]==1 ? "M" : (hcParts["sex"]==2 ? "F" : null);
+		if (hcSex!=null && demo.sex!=hcSex) {
+			demo.sex = hcSex;
+			$scope.page.color.sex = colorAttn;
+		}
+		var dateParts = {};
+		if (hcParts["dob"]!=null) {
+			dateParts["year"] = hcParts["dob"].substring(0,4);
+			dateParts["month"] = hcParts["dob"].substring(4,6);
+			dateParts["day"] = hcParts["dob"].substring(6);
+			if (demo.dobYear!=dateParts["year"]) {
+				demo.dobYear = dateParts["year"];
+				$scope.page.color.dobYear = colorAttn;
+			}
+			if (demo.dobMonth!=dateParts["month"]) {
+				demo.dobMonth = dateParts["month"];
+				$scope.page.color.dobMonth = colorAttn;
+			}
+			if (demo.dobDay!=dateParts["day"]) {
+				demo.dobDay = dateParts["day"];
+				$scope.page.color.dobDay = colorAttn;
+			}
+		}
+		if (hcParts["issueDate"]!=null) {
+			dateParts["year"] = "20" + hcParts["issueDate"].substring(0,2);
+			dateParts["month"] = hcParts["issueDate"].substring(2,4);
+			dateParts["day"] = hcParts["issueDate"].substring(4);
+			if ($scope.page.hcEffDateYear!=dateParts["year"]) {
+				$scope.page.hcEffDateYear = dateParts["year"];
+				$scope.page.color.hcEffDateYear = colorAttn;
+			}
+			if ($scope.page.hcEffDateMonth!=dateParts["month"]) {
+				$scope.page.hcEffDateMonth = dateParts["month"];
+				$scope.page.color.hcEffDateMonth = colorAttn;
+			}
+			if ($scope.page.hcEffDateDay!=dateParts["day"]) {
+				$scope.page.hcEffDateDay = dateParts["day"];
+				$scope.page.color.hcEffDateDay = colorAttn;
+			}
+		}
+		if (hcParts["hinExp"]!=null) {
+			dateParts["year"] = "20" + hcParts["hinExp"].substring(0,2);
+			dateParts["month"] = hcParts["hinExp"].substring(2,4);
+			dateParts["day"] = hcParts["hinExp"].substring(4);
+			if ($scope.page.hcRenewDateYear!=dateParts["year"]) {
+				$scope.page.hcRenewDateYear = dateParts["year"];
+				$scope.page.color.hcRenewDateYear = colorAttn;
+			}
+			if ($scope.page.hcRenewDateMonth!=dateParts["month"]) {
+				$scope.page.hcRenewDateMonth = dateParts["month"];
+				$scope.page.color.hcRenewDateMonth = colorAttn;
+			}
+			if ($scope.page.hcRenewDateDay!=dateParts["day"]) {
+				$scope.page.hcRenewDateDay = dateParts["day"];
+				$scope.page.color.hcRenewDateDay = colorAttn;
+			}
+			var hinExpDate = new Date(dateParts["year"], dateParts["month"]-1, dateParts["day"]);
+			if (now>hinExpDate) {
+				alert("This health card has expired!");
+				$scope.page.color.hcRenewDateYear = colorAttn;
+				$scope.page.color.hcRenewDateMonth = colorAttn;
+				$scope.page.color.hcRenewDateDay = colorAttn;
+			}
+		}
+	}
+	
 	//manage date entries
 	$scope.checkDate = function(id) {
 		if (id=="DobY") demo.dobYear = checkYear(demo.dobYear);
@@ -294,7 +483,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	}
 	
 	//check postal code (Canada provinces only)
-	var postal0 = demo.address.postal; 
+	var postal0 = demo.address.postal;
 	$scope.checkPostal = function(){
 		if (demo.address.province==null || demo.address.province=="OT" || demo.address.province.indexOf("US")==0)
 			return;
@@ -314,7 +503,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	$scope.isPostalComplete = function(){
 		var province = demo.address.province;
 		if (province!=null && province!="OT" && province.indexOf("US")!=0) {
-			if ($scope.invalidPostal() || demo.address.postal.length!=7) {
+			if (($scope.invalidPostal() || demo.address.postal.length!=7) && demo.address.postal!="") {
 				alert("Invalid/Incomplete Postal Code");
 				return false;
 			}
@@ -393,27 +582,27 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	
 	//set preferred contact phone number
 	$scope.setPreferredPhone = function(){
-		$scope.page.cellPhonePreferred = defPhTitle;
-		$scope.page.cellPhonePreferredBg = "";
-		$scope.page.homePhonePreferred = defPhTitle;
-		$scope.page.homePhonePreferredBg = "";
-		$scope.page.workPhonePreferred = defPhTitle;
-		$scope.page.workPhonePreferredBg = "";
+		$scope.page.msg.cellPhonePreferred = defPhTitle;
+		$scope.page.color.cellPhonePreferred = "";
+		$scope.page.msg.homePhonePreferred = defPhTitle;
+		$scope.page.color.homePhonePreferred = "";
+		$scope.page.msg.workPhonePreferred = defPhTitle;
+		$scope.page.color.workPhonePreferred = "";
 		
 		if ($scope.page.preferredPhone=="C") {
 			$scope.page.preferredPhoneNumber = $scope.page.cellPhone;
-			$scope.page.cellPhonePreferred = prefPhTitle;
-			$scope.page.cellPhonePreferredBg = prefPhColr;
+			$scope.page.msg.cellPhonePreferred = prefPhTitle;
+			$scope.page.color.cellPhonePreferred = colorAttn;
 		}
 		else if ($scope.page.preferredPhone=="H") {
 			$scope.page.preferredPhoneNumber = $scope.page.homePhone;
-			$scope.page.homePhonePreferred = prefPhTitle;
-			$scope.page.homePhonePreferredBg = prefPhColr;
+			$scope.page.msg.homePhonePreferred = prefPhTitle;
+			$scope.page.color.homePhonePreferred = colorAttn;
 		}
 		else if ($scope.page.preferredPhone=="W") {
 			$scope.page.preferredPhoneNumber = $scope.page.workPhone;
-			$scope.page.workPhonePreferred = prefPhTitle;
-			$scope.page.workPhonePreferredBg = prefPhColr;
+			$scope.page.msg.workPhonePreferred = prefPhTitle;
+			$scope.page.color.workPhonePreferred = colorAttn;
 		}
 	}
 	
@@ -448,16 +637,40 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	//integrator buttons
 	$scope.integratorDo = function(func){
 		var url = null;
-		if (func=="Compare") url="../demographic/DiffRemoteDemographics.jsp?demographicId="+demo.demographicNo;
+		if (func=="ViewCommunity") url="../admin/viewIntegratedCommunity.jsp";
+		else if (func=="Linking") url="../integrator/manage_linked_clients.jsp?demographicId="+demo.demographicNo;
+		else if (func=="Compare") url="../demographic/DiffRemoteDemographics.jsp?demographicId="+demo.demographicNo;
 		else if (func=="Update") url="../demographic/copyLinkedDemographicInfoAction.jsp?displaymode=edit&dboperation=search_detail&demographicId="+demo.demographicNo+"&demographic_no="+demo.demographicNo;
 		else if (func=="SendNote") url="../demographic/followUpSelection.jsp?demographicId="+demo.demographicNo;
 		window.open(url, "Integrator", "width=960, height=700");
 	}
 	
+	//MacPHR buttons
+	$scope.macPHRDo = function(func){
+		var url = null;
+		if (func=="Register") {
+			if (!$scope.page.status.macPHRLoggedIn) {
+				alert("Please login to MyOscar first");
+				return;
+			}
+			url="../phr/indivo/RegisterIndivo.jsp?demographicNo="+demo.demographicNo;
+		}
+		else if (func=="SendMessage") {
+			url="../phr/PhrMessage.do?method=createMessage&providerNo="+user.providerNo+"&demographicNo="+demo.demographicNo;
+		}
+		else if (func=="ViewRecord") {
+			url="../demographic/viewPhrRecord.do?demographic_no="+demo.demographicNo;
+		}
+		else if (func=="Verification") {
+			url="../phr/PHRVerification.jsp?demographic_no="+demo.demographicNo;
+		}
+		window.open(url, "MacPHR", "width=960, height=700");
+	}
+	
 	//appointment buttons
 	$scope.appointmentDo = function(func){
 		var url = null;
-		if (func=="ApptHistory") url="../demographic/demographiccontrol.jsp?displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25&orderby=appttime&demographic_no="+demo.demographicNo+"&last_name="+demo.lastName+"&first_name="+demo.firstName;
+		if (func=="ApptHistory") url="../demographic/demographiccontrol.jsp?displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25&orderby=appttime&demographic_no="+demo.demographicNo+"&last_name="+encodeURI(demo.lastName)+"&first_name="+encodeURI(demo.firstName);
 		else if (func=="WaitingList") url="../oscarWaitingList/SetupDisplayPatientWaitingList.do?demographic_no="+demo.demographicNo;
 		window.open(url, "Appointment", "width=960, height=700");
 	}
@@ -465,14 +678,37 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	//billing buttons
 	$scope.billingDo = function(func){
 		var url = null;
-		if (func=="BillingHistory") url="../billing/CA/ON/billinghistory.jsp?displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10&orderby=appointment_date&demographic_no="+demo.demographicNo+"&last_name="+demo.lastName+"&first_name="+demo.firstName;
-		/*
-		else if (func=="CreateInvoice") url=""+demo.demographicNo;
-		else if (func=="HospitalBilling") url=""+demo.demographicNo;
-		else if (func=="AddBatchBilling") url=""+demo.demographicNo;
-		else if (func=="AddINR") url=""+demo.demographicNo;
-		*/
-		else if (func=="BillINR") url="../billing/CA/ON/inr/reportINR.jsp?provider_no="+user.providerNo;
+		if (func=="BillingHistory") {
+			$scope.page.billingHistoryLabel = "Invoice List";
+			if ($scope.page.status.billregion=="CLINICAID") {
+				url="../billing.do?billRegion=CLINICAID&action=invoice_reports";
+			}
+			else if ($scope.page.status.billregion=="ON") {
+				$scope.page.billingHistoryLabel = "Billing History";
+				url="../billing/CA/ON/billinghistory.jsp?demographic_no="+demo.demographicNo+"&last_name="+encodeURI(demo.lastName)+"&first_name="+encodeURI(demo.firstName)+"&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10";
+			}
+			else {
+				url="../billing/CA/BC/billStatus.jsp?lastName="+encodeURI(demo.lastName)+"&firstName="+encodeURI(demo.firstName)+"&filterPatient=true&demographicNo="+demo.demographicNo;
+			}
+		}
+		else if (func=="CreateInvoice") {
+			url="../billing.do?billRegion="+$scope.page.status.billregion+"&billForm="+$scope.page.status.defaultView+"&hotclick=&appointment_no=0&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&demographic_no="+demo.demographicNo+"&providerview="+demo.providerNo+"&user_no="+user.providerNo+"&apptProvider_no=none&appointment_date="+now.getFullYear+"-"+(now.getMonth()+1)+"-"+now.getDate()+"&start_time=00:00:00&bNewForm=1&status=t";
+		}
+		else if (func=="FluBilling") {
+			url="../billing/CA/ON/specialtyBilling/fluBilling/addFluBilling.jsp?function=demographic&functionid="+demo.demographicNo+"&creator="+user.providerNo+"&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&hin="+demo.hin+demo.ver+"&demo_sex="+demo.sex+"&demo_hctype="+demo.hcType+"&rd="+encodeURI($scope.page.referralDoc)+"&rdohip="+$scope.page.referralDocNo+"&dob="+demo.dobYear+demo.dobMonth+demo.dobDay+"&mrp="+demo.providerNo;
+		}
+		else if (func=="HospitalBilling") {
+			url="../billing/CA/ON/billingShortcutPg1.jsp?billRegion="+$scope.page.status.billregion+"&billForm="+encodeURI($scope.page.status.hospitalView)+"&hotclick=&appointment_no=0&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&demographic_no="+demo.demographicNo+"&providerview="+demo.providerNo+"&user_no="+user.providerNo+"&apptProvider_no=none&appointment_date="+now.getFullYear+"-"+(now.getMonth()+1)+"-"+now.getDate()+"&start_time=00:00:00&bNewForm=1&status=t";
+		}
+		else if (func=="AddBatchBilling") {
+			url="../billing/CA/ON/addBatchBilling.jsp?demographic_no="+demo.demographicNo+"&creator="+user.providerNo+"&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&hin="+demo.hin+demo.ver+"&dob="+demo.dobYear+demo.dobMonth+demo.dobDay;
+		}
+		else if (func=="AddINR") {
+			url="../billing/CA/ON/inr/addINRbilling.jsp?function=demographic&functionid="+demo.demographicNo+"&creator="+user.providerNo+"&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&hin="+demo.hin+demo.ver+"&dob="+demo.dobYear+demo.dobMonth+demo.dobDay;
+		}
+		else if (func=="BillINR") {
+			url="../billing/CA/ON/inr/reportINR.jsp?provider_no="+user.providerNo;
+		}
 		window.open(url, "Billing", "width=960, height=700");
 	}
 	
@@ -482,7 +718,6 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		window.open(url, "DemographicExport", "width=960, height=700");
 	}
 	
-
 	
 	//-----------------//
 	// save operations //
@@ -503,7 +738,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		}
 
 		//check postal code complete
-		if (!isPostalComplete()) return;
+		if (!$scope.isPostalComplete()) return;
 		
 		//check dates
 		demo.dateOfBirth = buildDate(demo.dobYear, demo.dobMonth, demo.dobDay);
@@ -664,8 +899,8 @@ function getDateParts(dateDB) {
 }
 
 function buildDate(year, month, day) {
-	if (dateComplete(year, month, day)) return year + "-" + month + "-" + day;
 	if (dateEmpty(year, month, day)) return "";
+	if (dateValid(year, month, day)) return year + "-" + month + "-" + day;
 	return null;
 }
 
@@ -774,6 +1009,7 @@ function invalidPhoneNumber(phone) {
 }
 
 function isPreferredPhone(phone) {
+	phone = String(phone);
 	if (phone!=null && phone!="") {
 		if (phone.charAt(phone.length-1)=="*") return true;
 	}
