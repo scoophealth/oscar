@@ -443,22 +443,22 @@ public class DefaultNoteService implements NoteService {
 			return null;
 		}
 
-		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) {
+		if (!loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 			return null;
 		}
 
 		List<CachedDemographicNote> linkedNotes = null;
 		try {
-			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())) {
 				linkedNotes = CaisiIntegratorManager.getLinkedNotesMetaData(loggedInInfo, demographicNo);
 			}
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
 
-			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 		}
 
-		if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+		if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())) {
 			// TODO: No idea how this works
 			// linkedNotes = IntegratorFallBackManager.getLinkedNotes(demographicNo);
 		}
@@ -472,7 +472,7 @@ public class DefaultNoteService implements NoteService {
 	}
 
 	private List<GroupNoteLink> getGroupNoteIds(LoggedInInfo loggedInInfo, int demographicNo) {
-		if (loggedInInfo == null || !loggedInInfo.currentFacility.isEnableGroupNotes()) {
+		if (loggedInInfo == null || !loggedInInfo.getCurrentFacility().isEnableGroupNotes()) {
 			return new ArrayList<GroupNoteLink>();
 		}
 

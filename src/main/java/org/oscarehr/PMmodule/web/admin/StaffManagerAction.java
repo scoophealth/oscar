@@ -119,7 +119,7 @@ public class StaffManagerAction extends DispatchAction {
 		}
 		request.setAttribute("programs",sortProgramProviders(pp));
 
-		List<Program> allPrograms = programManager.getCommunityPrograms(loggedInInfo.currentFacility.getId());
+		List<Program> allPrograms = programManager.getCommunityPrograms(loggedInInfo.getCurrentFacility().getId());
 		List<StaffEditProgramContainer> allProgramsInContainer = new ArrayList<StaffEditProgramContainer>();
 		for(Program p : allPrograms) {
 			StaffEditProgramContainer container = new StaffEditProgramContainer(p,programManager.getProgramTeams(String.valueOf(p.getId())));

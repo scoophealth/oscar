@@ -76,7 +76,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 			ArrayList<LabResultData> labs = comLab.populateLabResultsData("", bean.demographicNo, "", "", "", "U");
 			logger.debug("local labs found : "+labs.size());
 
-			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+			if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 				ArrayList<LabResultData> remoteResults = CommonLabResultData.getRemoteLabs(loggedInInfo, Integer.parseInt(bean.demographicNo));
 				logger.debug("remote labs found : "+remoteResults.size());
 				labs.addAll(remoteResults);

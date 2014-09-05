@@ -55,7 +55,7 @@ public class DigitalSignatureUtils {
 	public static DigitalSignature storeDigitalSignatureFromTempFileToDB(LoggedInInfo loggedInInfo, String signatureRequestId, int demographicId) {
 		DigitalSignature digitalSignature = null;
 
-		if (loggedInInfo.currentFacility.isEnableDigitalSignatures()) {
+		if (loggedInInfo.getCurrentFacility().isEnableDigitalSignatures()) {
 			FileInputStream fileInputStream = null;
 			try {
 				String filename = DigitalSignatureUtils.getTempFilePath(signatureRequestId);
@@ -66,7 +66,7 @@ public class DigitalSignatureUtils {
 				digitalSignature = new DigitalSignature();
 				digitalSignature.setDateSigned(new Date());
 				digitalSignature.setDemographicId(demographicId);
-				digitalSignature.setFacilityId(loggedInInfo.currentFacility.getId());
+				digitalSignature.setFacilityId(loggedInInfo.getCurrentFacility().getId());
 				digitalSignature.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 				digitalSignature.setSignatureImage(image);
 

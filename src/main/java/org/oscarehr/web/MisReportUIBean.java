@@ -94,7 +94,7 @@ public final class MisReportUIBean {
 
 		FunctionalCentre functionalCentre = functionalCentreDao.find(functionalCentreId);
 		reportByDescription=StringEscapeUtils.escapeHtml(functionalCentre.getAccountId() + ", " + functionalCentre.getDescription());
-		selectedPrograms = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentreId);
+		selectedPrograms = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.getCurrentFacility().getId(), functionalCentreId);
 		
 		populateAdmissions();
 		generateDataRows();

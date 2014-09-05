@@ -68,7 +68,7 @@ public class SurveyManager implements CustomReportDataSource {
 	private CaisiFormInstanceTmpSaveDao caisiFormInstanceTmpSaveDao ;
 	
 	public List getAllFormsForCurrentProviderAndCurrentFacility(LoggedInInfo loggedInInfo) {
-		List<CaisiForm> allForms = caisiFormDao.findActiveByFacilityIdOrNull(loggedInInfo.currentFacility.getId());
+		List<CaisiForm> allForms = caisiFormDao.findActiveByFacilityIdOrNull(loggedInInfo.getCurrentFacility().getId());
 		List<CaisiForm> results = new ArrayList<CaisiForm>();
 		SurveySecurityDao securityDao = new SurveySecurityDao();
 		//filter out the ones due to security
@@ -129,7 +129,7 @@ public class SurveyManager implements CustomReportDataSource {
 	}
 
 	public List getFormsForCurrentProviderAndCurrentFacility(LoggedInInfo loggedInInfo, String clientId){		
-		List<CaisiFormInstance> forms = caisiFormInstanceDao.getForms(Integer.valueOf(clientId), loggedInInfo.currentFacility.getId());
+		List<CaisiFormInstance> forms = caisiFormInstanceDao.getForms(Integer.valueOf(clientId), loggedInInfo.getCurrentFacility().getId());
 		List<CaisiFormInstance> results = new ArrayList<CaisiFormInstance>();
 		SurveySecurityDao securityDao = new SurveySecurityDao();
 		

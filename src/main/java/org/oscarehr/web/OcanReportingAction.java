@@ -96,7 +96,7 @@ public class OcanReportingAction extends DispatchAction {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-		Integer facilityId = loggedInInfo.currentFacility.getId();
+		Integer facilityId = loggedInInfo.getCurrentFacility().getId();
 		List<OcanStaffForm> staffForms = ocanStaffFormDao.findLatestSignedOcanForms(facilityId,Integer.parseInt(strClientId));
 		Collections.reverse(staffForms);
 

@@ -631,16 +631,16 @@ public class CommonLabResultData {
 		try {
 			List<CachedDemographicLabResult> labResults  = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 					labResults = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicLabResults(demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 			}
 
-			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 				labResults = IntegratorFallBackManager.getLabResults(loggedInInfo,demographicId);
 			}
 

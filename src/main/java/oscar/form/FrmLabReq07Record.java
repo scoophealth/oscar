@@ -313,17 +313,17 @@ public class FrmLabReq07Record extends FrmRecord {
 
     	CachedDemographicForm form = null;
     	try {
-			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 				DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 			    form=demographicWs.getCachedDemographicForm(pk);
 			}
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
-			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 		}
     	
     	
-		if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+		if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 			Integer demographicNo = 0;
 			List<CachedDemographicForm> forms = IntegratorFallBackManager.getRemoteForms(loggedInInfo, demoNo, "formLabReq07");
 			for(CachedDemographicForm f:forms){

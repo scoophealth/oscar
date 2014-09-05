@@ -226,19 +226,19 @@ public class RxPatientData {
 			List<org.oscarehr.common.model.Allergy> allergies = allergyDao.findAllergies(demographicNo);
 			results.addAll(allergies);
 
-			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+			if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 				try {	
 					List<CachedDemographicAllergy> remoteAllergies  = null;
 					try {
-						if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+						if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 							remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(demographicNo);
 						}
 					} catch (Exception e) {
 						MiscUtils.getLogger().error("Unexpected error.", e);
-						CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+						CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 					}
 					
-					if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+					if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 						remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(loggedInInfo,demographicNo);	
 					}
 

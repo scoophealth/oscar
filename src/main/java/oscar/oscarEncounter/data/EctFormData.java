@@ -232,18 +232,18 @@ public class EctFormData {
 		if (table == null) return (new ArrayList<PatientForm>());
 		
 		try {
-			if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return  (forms);
-			if(!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			if (!loggedInInfo.getCurrentFacility().isIntegratorEnabled()) return  (forms);
+			if(!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 				remoteForms = demographicWs.getLinkedCachedDemographicForms(demographicId, table);
 			}
 		} catch (Exception e) {
-			logger.error("Error retriving remote forms :"+CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session), e);
-			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+			logger.error("Error retriving remote forms :"+CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession()), e);
+			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 		}
 		
 		
-		if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+		if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 			remoteForms = IntegratorFallBackManager.getRemoteForms(loggedInInfo, demographicId,table);	
 		}
 			
@@ -265,7 +265,7 @@ public class EctFormData {
 	public static PatientForm[] getPatientFormsFromLocalAndRemote(LoggedInInfo loggedInInfo, String demoNo, String table) {
 		ArrayList<PatientForm> results = getPatientFormsAsArrayList(demoNo, null, table);
 
-		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 			try {
 				ArrayList<PatientForm> remoteResults = getRemotePatientForms(loggedInInfo, Integer.parseInt(demoNo), null, table);
 				results.addAll(remoteResults);

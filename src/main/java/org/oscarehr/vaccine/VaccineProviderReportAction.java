@@ -107,7 +107,7 @@ public class VaccineProviderReportAction extends DispatchAction {
 		//List allergies = this.caseManagementManager.getAllergies(clientId);
 		//request.setAttribute("allergies",allergies);
 		
-		Intake quickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.parseInt(clientId), loggedInInfo.currentFacility.getId());
+		Intake quickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.parseInt(clientId), loggedInInfo.getCurrentFacility().getId());
 		Map<String,String> answerMap = quickIntake.getAnswerKeyValues();
 		String allergies = answerMap.get("Allergies");
 		request.setAttribute("allergies", allergies);

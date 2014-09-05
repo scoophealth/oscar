@@ -84,7 +84,7 @@
 	
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String providerNo = loggedInInfo.getLoggedInProviderNo();
-	Facility facility = loggedInInfo.currentFacility;
+	Facility facility = loggedInInfo.getCurrentFacility();
 	
     List<Program> programs = programManager.getActiveProgramByFacility(providerNo, facility.getId());
 

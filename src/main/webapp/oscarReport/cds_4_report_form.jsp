@@ -45,7 +45,7 @@
     ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 
     LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.currentFacility.getId());
+	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.getCurrentFacility().getId());
 %>
 
 <div class="page-header">
@@ -186,7 +186,7 @@
 			<div class="controls">
 				<select name="programIds" class="input-medium" multiple="multiple">
 					<%
-						List<Program> programs=programManager.getPrograms(loggedInInfo.currentFacility.getId());
+						List<Program> programs=programManager.getPrograms(loggedInInfo.getCurrentFacility().getId());
 					
 						for (Program program : programs)
 						{

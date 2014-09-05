@@ -352,15 +352,15 @@ public class PreventionData {
 		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())) {
 					remotePreventions = CaisiIntegratorManager.getLinkedPreventions(loggedInInfo, demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session, e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(), e);
 			}
 
-			if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+			if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())) {
 				remotePreventions = IntegratorFallBackManager.getRemotePreventions(loggedInInfo, demographicId);
 			}
 		}

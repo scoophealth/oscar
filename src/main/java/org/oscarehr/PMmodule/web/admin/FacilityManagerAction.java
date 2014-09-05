@@ -241,10 +241,10 @@ public class FacilityManagerAction extends DispatchAction {
 			else facilityDao.merge(facility);
 
 			// if we just updated our current facility, refresh local cached data in the session / thread local variable
-			if (loggedInInfo.currentFacility.getId().intValue()==facility.getId().intValue())
+			if (loggedInInfo.getCurrentFacility().getId().intValue()==facility.getId().intValue())
 			{
 				request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
-				loggedInInfo.currentFacility=facility;
+				loggedInInfo.setCurrentFacility(facility);
 			}
 			
 			ActionMessages messages = new ActionMessages();

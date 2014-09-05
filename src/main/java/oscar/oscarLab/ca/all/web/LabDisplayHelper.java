@@ -77,16 +77,16 @@ public class LabDisplayHelper {
 		CachedDemographicLabResult cachedDemographicLabResult = null;
 		
 		try {
-			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 				cachedDemographicLabResult = demographicWs.getCachedDemographicLabResult(pk);
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Unexpected error.", e);
-			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 		}
 			
-		if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+		if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 			List<CachedDemographicLabResult> labResults = IntegratorFallBackManager.getLabResults(loggedInInfo,demographicId);
 			for(CachedDemographicLabResult labResult:labResults){
 				if(labResult.getFacilityIdLabResultCompositePk().getIntegratorFacilityId() == pk.getIntegratorFacilityId() && 

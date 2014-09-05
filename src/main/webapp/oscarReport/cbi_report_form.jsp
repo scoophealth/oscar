@@ -49,7 +49,7 @@ FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getB
 ProviderManager2 providerManager = (ProviderManager2) SpringUtils.getBean("providerManager2");
 ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 
-List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.currentFacility.getId());
+List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.getCurrentFacility().getId());
 %>
 
 <%@include file="/layouts/html_top.jspf"%>
@@ -208,7 +208,7 @@ List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility
 					<select multiple="multiple" name="programIds">
 						<option value=""></option>
 					<%
-						List<Program> programs=programManager.getPrograms(loggedInInfo.currentFacility.getId());
+						List<Program> programs=programManager.getPrograms(loggedInInfo.getCurrentFacility().getId());
 					
 						for (Program program : programs)
 						{

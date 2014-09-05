@@ -71,15 +71,15 @@
 			CachedDemographicPrevention remotePrevention  = null;
 			
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 					remotePrevention = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getCachedDemographicPreventionsByPreventionId(pk);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 			}
 				
-			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 				List<CachedDemographicPrevention> remotePreventions = IntegratorFallBackManager.getRemotePreventions(loggedInInfo, demographicId);
 				for(CachedDemographicPrevention prev:remotePreventions){
 					if ( prev.getFacilityPreventionPk().getIntegratorFacilityId() == remoteFacilityId && prev.getFacilityPreventionPk().getCaisiItemId() == remotePreventionId){

@@ -58,7 +58,7 @@ ProgramManager programManager = SpringUtils.getBean(ProgramManager.class);
 
 LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
-Facility facility = loggedInInfo.currentFacility;
+Facility facility = loggedInInfo.getCurrentFacility();
 
 //List<Program> programs = programManager.getActiveProgramByFacility(providerNo, facility.getId());
 InfirmBedProgramManager bpm = (InfirmBedProgramManager) SpringUtils.getBean("infirmBedProgramManager");

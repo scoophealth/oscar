@@ -233,12 +233,12 @@ function searchAll() {
            TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"
            VALUE="<bean:message key="demographic.search.All"/>">
 <%
-	if (loggedInInfo.currentFacility.isIntegratorEnabled()){
+	if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()){
 %>
     	<input type="checkbox" name="includeIntegratedResults" value="true"   <%="true".equals(request.getParameter("includeIntegratedResults"))?"checked":""%>/> <span style="font-size:small"><bean:message key="demographic.search.msgInclIntegratedResults"/></span>
 <%	} %>
    </li>
-<% if (loggedInInfo.currentFacility.isIntegratorEnabled()){%>
+<% if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()){%>
         <li>
         	<jsp:include page="../admin/IntegratorStatus.jspf"></jsp:include>
         </li>

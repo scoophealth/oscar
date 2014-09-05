@@ -66,12 +66,12 @@
     	filteredListVac.addAll(listVac);
     }
    */ 
-   int displayAllVacancies = loggedInInfo.currentFacility.getDisplayAllVacancies();
+   int displayAllVacancies = loggedInInfo.getCurrentFacility().getDisplayAllVacancies();
    //1 means display all vacancies in db, 0 means only display the vacancies associated with program domain.
    if(displayAllVacancies == 1) { //display all vacancies
 	   filteredListVac.addAll(listVac);
    } else { //display the vacancies in program domain .
-	   Integer facilityId = loggedInInfo.currentFacility.getId();
+	   Integer facilityId = loggedInInfo.getCurrentFacility().getId();
 	   ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
 		List<Integer> pids = new ArrayList<Integer>();
 		for(ProgramProvider pp:programProviderDao.getActiveProgramDomain(loggedInInfo.loggedInProvider.getProviderNo())) {

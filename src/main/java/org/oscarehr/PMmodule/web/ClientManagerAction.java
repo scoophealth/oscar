@@ -423,7 +423,7 @@ public class ClientManagerAction extends DispatchAction {
 			referral.setProgramId((long) programId);
 			referral.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 
-			referral.setFacilityId(loggedInInfo.currentFacility.getId());
+			referral.setFacilityId(loggedInInfo.getCurrentFacility().getId());
 
 			referral.setReferralDate(new Date());
 			referral.setProgramType(p.getType());
@@ -474,7 +474,7 @@ public class ClientManagerAction extends DispatchAction {
 
 				// save local copy
 				RemoteReferral remoteReferral = new RemoteReferral();
-				remoteReferral.setFacilityId(loggedInInfo.currentFacility.getId());
+				remoteReferral.setFacilityId(loggedInInfo.getCurrentFacility().getId());
 				remoteReferral.setDemographicId(clientId);
 				remoteReferral.setPresentingProblem(referral.getPresentProblems());
 				remoteReferral.setReasonForReferral(referral.getNotes());
@@ -843,7 +843,7 @@ public class ClientManagerAction extends DispatchAction {
 
 		} else {// check whether client is familyHead or independent client
 			// create roomDemographic from bedDemographic
-			roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(demographicNo, loggedInInfo.currentFacility.getId());
+			roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(demographicNo, loggedInInfo.getCurrentFacility().getId());
 			if (roomDemographic == null) {// demographicNo (familyHead or independent) has no record in 'room_demographic'
 				roomDemographic = RoomDemographic.create(demographicNo, bedDemographic.getProviderNo());
 			}
@@ -1007,7 +1007,7 @@ public class ClientManagerAction extends DispatchAction {
 						roomDemographicManager.saveRoomDemographic(roomDemographic);
 
 						if (isBedSelected) {
-							BedDemographic bdHeadDelete = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo(), loggedInInfo.currentFacility.getId());
+							BedDemographic bdHeadDelete = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo(), loggedInInfo.getCurrentFacility().getId());
 							if (bdHeadDelete != null) {
 								bedDemographicManager.deleteBedDemographic(bdHeadDelete);
 							}
@@ -1027,13 +1027,13 @@ public class ClientManagerAction extends DispatchAction {
 							clientId = new Integer(dependentList.get(i).getClientId().intValue());
 
 							if (clientId != null) {
-								roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(clientId, loggedInInfo.currentFacility.getId());
+								roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(clientId, loggedInInfo.getCurrentFacility().getId());
 								bedDemographic.getId().setDemographicNo(clientId); // change to dependent member
 
 								// assigning both room & bed (different ones) for all dependents
 								if (isBedSelected && correctedAvailableBedIdList.size() >= dependentList.size()) {
 
-									BedDemographic bdDependent = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo(), loggedInInfo.currentFacility.getId());
+									BedDemographic bdDependent = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo(), loggedInInfo.getCurrentFacility().getId());
 									bedDemographic.getId().setBedId(correctedAvailableBedIdList.get(i));
 
 									if (roomDemographic == null) {
@@ -1310,7 +1310,7 @@ public class ClientManagerAction extends DispatchAction {
 			// refer/admin client to service program associated with this user
 
 			ClientReferral referral = new ClientReferral();
-			referral.setFacilityId(loggedInInfo.currentFacility.getId());
+			referral.setFacilityId(loggedInInfo.getCurrentFacility().getId());
 			referral.setClientId(new Long(demographicNo));
 			referral.setNotes("ER Automated referral\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: " + consentFormBean.getConsentReason());
 			referral.setProgramId(program.getProgramId().longValue());
@@ -1340,7 +1340,7 @@ public class ClientManagerAction extends DispatchAction {
 			}
 			if (doRefer) {
 				if (referral.getFacilityId() == null) {
-					referral.setFacilityId(loggedInInfo.currentFacility.getId());
+					referral.setFacilityId(loggedInInfo.getCurrentFacility().getId());
 				}
 				clientManager.saveClientReferral(referral);
 			}
@@ -1487,7 +1487,7 @@ public class ClientManagerAction extends DispatchAction {
 		String providerNo=loggedInInfo.getLoggedInProviderNo();
 
 		DynaActionForm clientForm = (DynaActionForm) form;
-		Integer facilityId = loggedInInfo.currentFacility.getId();
+		Integer facilityId = loggedInInfo.getCurrentFacility().getId();
 		ClientManagerFormBean tabBean = (ClientManagerFormBean) clientForm.get("view");
 		Integer demographicId = Integer.valueOf(demographicNo);
 
@@ -1962,20 +1962,20 @@ public class ClientManagerAction extends DispatchAction {
     }
 	
 	private void addRemoteAdmissions(LoggedInInfo loggedInInfo, ArrayList<AdmissionForDisplay> admissionsForDisplay, Integer demographicId) {
-		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 
 			try {
 				List<CachedAdmission> cachedAdmissions  = null;
 				try {
-					if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+					if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 						cachedAdmissions = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedAdmissionsByDemographicId(demographicId);
 					}
 				} catch (Exception e) {
 					MiscUtils.getLogger().error("Unexpected error.", e);
-					CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session, e);
+					CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(), e);
 				}
 				
-				if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 					cachedAdmissions = IntegratorFallBackManager.getRemoteAdmissions(loggedInInfo,demographicId);	
 				}
 
@@ -2029,7 +2029,7 @@ public class ClientManagerAction extends DispatchAction {
 		for (ClientReferral clientReferral : clientManager.getReferralsByFacility(demographicNo, facilityId))
 			allResults.add(new ReferralHistoryDisplay(clientReferral));
 
-		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 			try {
 				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 

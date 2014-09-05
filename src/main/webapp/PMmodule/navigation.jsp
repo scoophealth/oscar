@@ -198,7 +198,7 @@
 		</caisi:isModuleLoad>
 		</span></div>
                 <%                
-                if (loggedInInfo987.currentFacility!=null && loggedInInfo987.currentFacility.isEnableOcanForms() && programEnableOcan)
+                if (loggedInInfo987.getCurrentFacility()!=null && loggedInInfo987.getCurrentFacility().isEnableOcanForms() && programEnableOcan)
                 {
                 %>
                         <div>

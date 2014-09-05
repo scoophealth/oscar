@@ -216,7 +216,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
 			oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo);
 			oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean data;
 			Vector measureTypes = (Vector) hd.getMeasurementsDataVector();
-			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+			if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 				EctMeasurementsDataBeanHandler.addRemoteMeasurementsTypes(loggedInInfo,measureTypes,demo);
 			}
 			

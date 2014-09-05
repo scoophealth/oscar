@@ -46,15 +46,15 @@ public class RemoteDrugAllergyHelper {
 		try {
 			List<CachedDemographicDrug> remoteDrugs  = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 				   remoteDrugs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDrugsByDemographicId(localDemographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 			}
 			
-			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(loggedInInfo, localDemographicId);	
 			}
 			
@@ -77,16 +77,16 @@ public class RemoteDrugAllergyHelper {
 			
 			List<CachedDemographicAllergy> remoteAllergies  = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
-					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.currentFacility);
-					remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.currentFacility).getLinkedCachedDemographicAllergies(localDemographicId);
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
+					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
+					remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(localDemographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 			}
 				
-			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 			   remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(loggedInInfo, localDemographicId);	
 			} 
 			

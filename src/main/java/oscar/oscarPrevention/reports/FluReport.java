@@ -74,7 +74,7 @@ public class FluReport implements PreventionReport {
              ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData("Flu",demo);
              PreventionData.addRemotePreventions(loggedInInfo, prevs, demo,"Flu",null);
 
-             if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+             if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
             	 try {
 	                ArrayList<HashMap<String,Object>> remotePreventions=PreventionData.getLinkedRemotePreventionData(loggedInInfo, "Flu", demo);
 	                prevs.addAll(remotePreventions);

@@ -436,7 +436,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			List<Drug> prescriptions = null;
 			boolean viewAll = caseForm.getPrescipt_view().equals("all");
 			String demographicId = getDemographicNo(request);
-			request.setAttribute("isIntegratorEnabled", loggedInInfo.currentFacility.isIntegratorEnabled());
+			request.setAttribute("isIntegratorEnabled", loggedInInfo.getCurrentFacility().isIntegratorEnabled());
 			prescriptions = caseManagementMgr.getPrescriptions(loggedInInfo, Integer.parseInt(demographicId), viewAll);
 
 			request.setAttribute("Prescriptions", prescriptions);
@@ -1017,7 +1017,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		List<SecUserRole> roles = secUserRoleDao.getUserRoles(loggedInInfo.getLoggedInProviderNo());
 
-		if (!loggedInInfo.currentFacility.isEnableGroupNotes()) return;
+		if (!loggedInInfo.getCurrentFacility().isEnableGroupNotes()) return;
 
 		List<GroupNoteLink> noteLinks = groupNoteDao.findLinksByDemographic(demographicNo);
 		for (GroupNoteLink noteLink : noteLinks) {
@@ -1051,18 +1051,18 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	private void addRemoteNotes(LoggedInInfo loggedInInfo, ArrayList<NoteDisplay> notesToDisplay, int demographicNo, List<Issue> issueCodesToDisplay, String programId) {
 
-		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
+		if (!loggedInInfo.getCurrentFacility().isIntegratorEnabled()) return;
 		List<CachedDemographicNote> linkedNotes = null;
 		try {
-			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+			if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())) {
 				linkedNotes = CaisiIntegratorManager.getLinkedNotes(loggedInInfo, demographicNo);
 			}
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
-			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+			CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 		}
 
-		if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+		if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())) {
 			linkedNotes = IntegratorFallBackManager.getLinkedNotes(loggedInInfo, demographicNo);
 		}
 
@@ -1114,7 +1114,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	 */
 	protected void addGroupIssues(LoggedInInfo loggedInInfo, ArrayList<CheckBoxBean> checkBoxBeanList, int demographicNo, boolean hideInactiveIssues) {
 
-		if (!loggedInInfo.currentFacility.isEnableGroupNotes()) return;
+		if (!loggedInInfo.getCurrentFacility().isEnableGroupNotes()) return;
 
 		try {
 			// get all the issues for which we have group notes for
@@ -1139,22 +1139,22 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	protected void addRemoteIssues(LoggedInInfo loggedInInfo, ArrayList<CheckBoxBean> checkBoxBeanList, int demographicNo, boolean hideInactiveIssues) {
 
-		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
+		if (!loggedInInfo.getCurrentFacility().isIntegratorEnabled()) return;
 
 		try {
 
 			List<CachedDemographicIssue> remoteIssues = null;
 			try {
-				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())) {
 					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 					remoteIssues = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicNo);
 				}
 			} catch (Exception e) {
 				logger.error("Unexpected error.", e);
-				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 			}
 
-			if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)) {
+			if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())) {
 				remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(loggedInInfo, demographicNo);
 			}
 

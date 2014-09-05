@@ -171,8 +171,8 @@ public final class Cds4ReportUIBean {
 	private SingleMultiAdmissions getAdmissionsSortedSingleMulti() {
 		SingleMultiAdmissions singleMultiAdmissions = new SingleMultiAdmissions();
 
-		List<CdsClientForm> cdsForms = cdsClientFormDao.findSignedCdsForms(loggedInInfo.currentFacility.getId(), "4", startDate.getTime(), endDateExclusive.getTime());
-		logger.debug("valid cds form count, "+loggedInInfo.currentFacility.getId()+", 4, "+startDate.getTime()+", "+endDateExclusive.getTime()+", "+cdsForms.size());
+		List<CdsClientForm> cdsForms = cdsClientFormDao.findSignedCdsForms(loggedInInfo.getCurrentFacility().getId(), "4", startDate.getTime(), endDateExclusive.getTime());
+		logger.debug("valid cds form count, "+loggedInInfo.getCurrentFacility().getId()+", 4, "+startDate.getTime()+", "+endDateExclusive.getTime()+", "+cdsForms.size());
 		
 		// sort into single and multiple admissions
 		for (CdsClientForm form : cdsForms) {
@@ -264,7 +264,7 @@ public final class Cds4ReportUIBean {
 		// put admissions into map so it's easier to retrieve by id.
 		HashMap<Integer, Admission> admissionMap = new HashMap<Integer, Admission>();
 
-		List<Program> programs=programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentre.getId());
+		List<Program> programs=programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.getCurrentFacility().getId(), functionalCentre.getId());
 		
 		for (Program program : programs) {
 			if (programIdsToReportOn!=null && !programIdsToReportOn.contains(program.getId())) continue;

@@ -369,7 +369,7 @@ function popup1(height, width, url, windowName){
                 }
 
                 //--- get remote documents ---
-                if (loggedInInfo.currentFacility.isIntegratorEnabled())
+                if (loggedInInfo.getCurrentFacility().isIntegratorEnabled())
                 {
                   List<EDoc> remoteDocuments=EDocUtil.getRemoteDocuments(loggedInInfo, Integer.parseInt(moduleid));
                   categories.add(remoteDocuments);

@@ -162,7 +162,7 @@ public class CaseloadContentAction extends DispatchAction {
 		
 		if ("all".equals(caseloadProgram) && "all".equals(caseloadProv)){ // program and provider are all
 			
-			Integer facilityId = loggedInInfo.currentFacility.getId();
+			Integer facilityId = loggedInInfo.getCurrentFacility().getId();
 			
 			if (!StringUtils.isNullOrEmpty(caseloadDx) && !StringUtils.isNullOrEmpty(caseloadRoster)) {
 				// filter on dx and roster status
@@ -193,7 +193,7 @@ public class CaseloadContentAction extends DispatchAction {
 		} else if ("all".equals(caseloadProgram)) { // program is all
 			// demographics from a specific provider
 			
-			Integer facilityId = loggedInInfo.currentFacility.getId();
+			Integer facilityId = loggedInInfo.getCurrentFacility().getId();
 			
 			if (!StringUtils.isNullOrEmpty(caseloadDx) && !StringUtils.isNullOrEmpty(caseloadRoster)) {
 				// filter on dx

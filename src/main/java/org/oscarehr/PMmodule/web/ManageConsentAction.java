@@ -53,7 +53,7 @@ public class ManageConsentAction {
 		this.clientId = clientId;
 
 		consent.setDemographicId(clientId);
-		consent.setFacilityId(loggedInInfo.currentFacility.getId());
+		consent.setFacilityId(loggedInInfo.getCurrentFacility().getId());
 		consent.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 
 		for (CachedFacility cachedFacility : CaisiIntegratorManager.getRemoteFacilities(loggedInInfo, loggedInInfo.getCurrentFacility())) {

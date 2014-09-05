@@ -89,7 +89,7 @@ public class InfirmAction extends DispatchAction
 
 		// facility filtering
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-            facilityId = loggedInInfo.currentFacility.getId();
+            facilityId = loggedInInfo.getCurrentFacility().getId();
         }
 
         List<LabelValueBean> programBeans = bpm.getProgramBeans(providerNo, facilityId);

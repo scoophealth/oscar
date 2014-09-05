@@ -208,7 +208,7 @@ public class PopulationReportUIBean {
 		int rowTotalUniqueClients = 0;
 		
 		if(functionalCentre!=null) {
-			List<Program> programList = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentre.getId());
+			List<Program> programList = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.getCurrentFacility().getId(), functionalCentre.getId());
 			for(Program p : programList) {
 				Map<Integer, Integer> counts1 = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(p.getId(), roleId, encounterType, startDate, endDate);
 							

@@ -106,7 +106,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     
     		// --- add remote documents ---
     		
-    		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+    		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
     			try {
     				ArrayList<EDoc> remoteDocuments = EDocUtil.getRemoteDocuments(loggedInInfo, Integer.parseInt(bean.demographicNo));
     				docList.addAll(remoteDocuments);

@@ -388,7 +388,7 @@ public class ProgramManager {
 
     	List<Program> results = new ArrayList<Program>();
     	for(Program program : programs) {
-    		if(program.getFacilityId()==loggedInInfo.currentFacility.getId().intValue()) {
+    		if(program.getFacilityId()==loggedInInfo.getCurrentFacility().getId().intValue()) {
     			results.add(program);
     		}
     	}
@@ -485,7 +485,7 @@ public class ProgramManager {
         // check the providers facilities against the programs facilities
         Program program = getProgram(programId);
         if(program!=null) {
-        	return(program.getFacilityId() == loggedInInfo.currentFacility.getId().intValue());
+        	return(program.getFacilityId() == loggedInInfo.getCurrentFacility().getId().intValue());
         } else {
         	return false;
         }

@@ -88,7 +88,7 @@
 					// this needs to be checked against the running facility, not the viewing facility
 					// because the running facility is the one who will contact the integrator to see the facility list.
 					LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-					if (loggedInInfo.currentFacility.isIntegratorEnabled())
+					if (loggedInInfo.getCurrentFacility().isIntegratorEnabled())
 					{
 						%>
 						&nbsp;

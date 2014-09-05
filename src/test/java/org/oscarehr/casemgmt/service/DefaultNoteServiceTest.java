@@ -72,7 +72,7 @@ public class DefaultNoteServiceTest extends DaoTestFixtures {
 		c.setProgramId("10016");
 
 		LoggedInInfo loggedInInfo = AuthUtils.initLoginContext();
-		loggedInInfo.currentFacility.setIntegratorEnabled(false);
+		loggedInInfo.getCurrentFacility().setIntegratorEnabled(false);
 
 		NoteSelectionResult result = service.findNotes(loggedInInfo, c);
 		assertNotNull(result);
@@ -103,7 +103,7 @@ public class DefaultNoteServiceTest extends DaoTestFixtures {
 	public void testNoteReturnOrder() {
 
 		LoggedInInfo loggedInInfo = AuthUtils.initLoginContext();
-		loggedInInfo.currentFacility.setIntegratorEnabled(false);
+		loggedInInfo.getCurrentFacility().setIntegratorEnabled(false);
 
 		String demographicNo = "1";
 		String programId = "10016";

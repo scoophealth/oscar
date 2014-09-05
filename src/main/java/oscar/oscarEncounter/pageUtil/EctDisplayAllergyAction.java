@@ -100,16 +100,16 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 				try {
 					List<CachedDemographicAllergy> remoteAllergies  = null;
 					try {
-						if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+						if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 							remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(demographicId);
 							MiscUtils.getLogger().debug("remoteAllergies retrieved "+remoteAllergies.size());
 						}
 					} catch (Exception e) {
 						MiscUtils.getLogger().error("Unexpected error.", e);
-						CaisiIntegratorManager.checkForConnectionError(loggedInInfo.session,e);
+						CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
 					}
 					
-					if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.session)){
+					if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 						remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(loggedInInfo,demographicId);	
 						MiscUtils.getLogger().debug("fallBack Allergies retrieved "+remoteAllergies.size());
 					}

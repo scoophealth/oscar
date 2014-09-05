@@ -110,7 +110,7 @@ public final class MyOscarUtils {
 	public static void attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(final LoggedInInfo loggedInInfo, final boolean forceReLogin) {
 		if (!isMyOscarEnabled()) return;
 
-		HttpSession session = loggedInInfo.session;
+		HttpSession session = loggedInInfo.getSession();
 		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(session);
 		if (myOscarLoggedInInfo != null && myOscarLoggedInInfo.isLoggedIn()) return;
 
@@ -150,7 +150,7 @@ public final class MyOscarUtils {
 	}
 	
 	public static void attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(LoggedInInfo loggedInInfo, boolean forceReLogin) {
-		HttpSession session = loggedInInfo.session;
+		HttpSession session = loggedInInfo.getSession();
 
 		ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
 		ProviderPreference providerPreference = providerPreferenceDao.find(loggedInInfo.loggedInProvider.getProviderNo());

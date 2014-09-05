@@ -634,7 +634,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 
 		//TODO: WL notification
 		ClientReferralDAO clientReferralDao = SpringUtils.getBean(ClientReferralDAO.class);
-		Facility facility = loggedInInfo.currentFacility;
+		Facility facility = loggedInInfo.getCurrentFacility();
 		if(facility.getAssignRejectedVacancyApplicant() != null && facility.getAssignRejectedVacancyApplicant().length()>0) {
 			Integer vacancyId = null;
 			if(queue!=null) {
@@ -739,7 +739,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 							for (int k = 0; familyList != null && k < familyList.size(); k++) {
 								bedDemographic.getId().setDemographicNo(familyList.get(k));
 
-								BedDemographic dependentBD = bedDemographicManager.getBedDemographicByDemographic(familyList.get(k), loggedInInfo.currentFacility.getId());
+								BedDemographic dependentBD = bedDemographicManager.getBedDemographicByDemographic(familyList.get(k), loggedInInfo.getCurrentFacility().getId());
 
 								if (dependentBD != null) {
 									bedDemographic.getId().setBedId(dependentBD.getId().getBedId());
@@ -898,8 +898,8 @@ public class ProgramManagerViewAction extends DispatchAction {
 
 
 
-			RoomDemographic roomDemographic1 = roomDemographicManager.getRoomDemographicByDemographic(client1, loggedInInfo.currentFacility.getId());
-			RoomDemographic roomDemographic2 = roomDemographicManager.getRoomDemographicByDemographic(client2, loggedInInfo.currentFacility.getId());
+			RoomDemographic roomDemographic1 = roomDemographicManager.getRoomDemographicByDemographic(client1, loggedInInfo.getCurrentFacility().getId());
+			RoomDemographic roomDemographic2 = roomDemographicManager.getRoomDemographicByDemographic(client2, loggedInInfo.getCurrentFacility().getId());
 
 			if (roomDemographic1 == null || roomDemographic2 == null) {
 				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.check.error"));

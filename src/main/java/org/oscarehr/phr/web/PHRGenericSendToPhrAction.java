@@ -213,7 +213,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 			medicalDataTransfer.setObserverOfDataPersonId(myOscarLoggedInInfo.getLoggedInPersonId());
 
 			medicalDataTransfer.setObserverOfDataPersonName(loggedInInfo.loggedInProvider.getFormattedName());
-			medicalDataTransfer.setOriginalSourceId(loggedInInfo.currentFacility.getName()+":eDoc:"+eDoc.getDocId());
+			medicalDataTransfer.setOriginalSourceId(loggedInInfo.getCurrentFacility().getName()+":eDoc:"+eDoc.getDocId());
 			medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
 						
 			Long medicalDataId=MyOscarMedicalDataManagerUtils.addMedicalData(providerNo, myOscarLoggedInInfo, medicalDataTransfer, "eDoc", eDoc.getDocId(), true, true);
