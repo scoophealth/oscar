@@ -28,7 +28,7 @@
 		Saving...
 	</div>
 	
-	<button type="button" class="btn btn-primary" ng-click="save()">Save</button>
+	<button type="button" class="btn" ng-click="save()" ng-disabled="page.status.dataChanged<1">Save</button>
 	<div class="btn-group">
 		<div class="btn-group">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -120,11 +120,11 @@
 		</fieldset>
 		<div class="col-md-6">
 			<label title="Required Field">Last Name <span style="color:red">*</span></label>
-			<input type="text" class="form-control form-control-details" placeholder="Family Name" title="Family Name" ng-model="page.demo.lastName" style="background-color:{{page.color.lastName}}"/>
+			<input type="text" class="form-control form-control-details" placeholder="Family Name" title="Family Name" ng-model="page.demo.lastName" ng-change="formatLastName()" style="background-color:{{page.color.lastName}}"/>
 		</div>
 		<div class="col-md-6">
 			<label title="Required Field">First Name <span style="color:red">*</span></label>
-			<input type="text" class="form-control form-control-details" placeholder="First Name" title="First Name" ng-model="page.demo.firstName" style="background-color:{{page.color.firstName}}"/>
+			<input type="text" class="form-control form-control-details" placeholder="First Name" title="First Name" ng-model="page.demo.firstName" ng-change="formatFirstName()" style="background-color:{{page.color.firstName}}"/>
 		</div>
 		<div class="col-md-6">
 			<label title="Required Field">Date of Birth <span style="color:red">*</span></label>
@@ -1411,7 +1411,6 @@
 		<textarea ng-model="page.notes" class="form-control form-control-details" style="height:55px; width:100%;"></textarea>
 	</fieldset>
 	<br/>
-	
 	<fieldset>
 		<legend>
 			Contacts
