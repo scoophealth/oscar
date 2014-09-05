@@ -55,7 +55,7 @@ public final class WsUtils
 			if (checkToken(security, securityToken) || security.checkPassword(securityToken))
 			{
 				LoggedInInfo x = new LoggedInInfo();
-				x.loggedInSecurity = security;
+				x.setLoggedInSecurity ( security);
 				if (security.getProviderNo() != null) {
 					x.loggedInProvider = providerDao.getProvider(security.getProviderNo());
 				}

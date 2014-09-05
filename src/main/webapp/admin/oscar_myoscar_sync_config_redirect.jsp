@@ -52,11 +52,11 @@
 	else sb.append('&');
 	
 	sb.append("userName=");
-	String temp=loggedInInfo.loggedInSecurity.getUserName();
+	String temp=loggedInInfo.getLoggedInSecurity().getUserName();
 	sb.append(URLEncoder.encode(temp, "UTF-8"));
 	
 	sb.append("&password=");
-	temp=loggedInInfo.loggedInSecurity.getPassword();
+	temp=loggedInInfo.getLoggedInSecurity().getPassword();
 	sb.append(URLEncoder.encode(temp, "UTF-8"));
 	
 	sb.append("&oscarWsUrl=");

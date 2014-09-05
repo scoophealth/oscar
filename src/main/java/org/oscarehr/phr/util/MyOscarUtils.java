@@ -172,7 +172,7 @@ public final class MyOscarUtils {
 
 			LoginResultTransfer3 loginResultTransfer = AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, decryptedMyOscarPasswordString);
 
-			myOscarLoggedInInfo = new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), session.getId(), loggedInInfo.locale);
+			myOscarLoggedInInfo = new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), session.getId(), loggedInInfo.getLocale());
 			MyOscarLoggedInInfo.setLoggedInInfo(session, myOscarLoggedInInfo);
 		} catch (NotAuthorisedException_Exception e) {
 			logger.warn("Could not login to MyOscar, invalid credentials. chances are myoscar pw changed, myOscarUserName=" + myOscarUserName);

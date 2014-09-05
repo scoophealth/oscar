@@ -49,16 +49,16 @@ public class CkdScreenerSchedulerJob extends TimerTask {
 		Security security = new Security();
 		security.setId(0);
 		
-		LoggedInInfo x = new LoggedInInfo();
-		x.loggedInProvider = provider;
-		x.loggedInSecurity = security;
+		LoggedInInfo loggedInInfo = new LoggedInInfo();
+		loggedInInfo.loggedInProvider = provider;
+		loggedInInfo.setLoggedInSecurity(security);
 		
 		
 		try {
 			logger.info("starting renal background ckd screening job");
 			
 			CkdScreener screener = new CkdScreener();
-			screener.screenPopulation(x);
+			screener.screenPopulation(loggedInInfo);
 			
 			logger.info("done renal background ckd screening job");
 			
