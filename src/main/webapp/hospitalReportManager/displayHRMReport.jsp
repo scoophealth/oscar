@@ -89,6 +89,10 @@ if(demographicLink != null){
 	vertical-align: top;
 }
 
+#hrmHeader {
+    display: none;
+}
+
 #hrmNotice {
 	border-bottom: 1px solid black;
 	padding-bottom: 15px;
@@ -123,6 +127,9 @@ if(demographicLink != null){
 	.boxButton {
 	  display: none;
     }
+	#hrmHeader {
+	  display: block;
+	}
 }
 </style>
 
@@ -261,6 +268,12 @@ function revokeSignOffHrm(reportId) {
 <%  return;
    } %>
 <div id="hrmReportContent">
+	<div id="hrmHeader"><b>Demographic Info:</b><br />
+			<%=hrmReport.getLegalName() %> <br />	287
+			<%=hrmReport.getHCN() %> &nbsp; <%=hrmReport.getHCNVersion() %> &nbsp; <%=hrmReport.getGender() %><br />
+	       <b>DOB:</b><%=hrmReport.getDateOfBirthAsString() %>
+	</div>
+	<br />
 	<div id="hrmNotice">
 	This report was received from the Hospital Report Manager (HRM) at <%=(String) request.getAttribute("hrmReportTime") %>.
 	<% if (request.getAttribute("hrmDuplicateNum") != null && ((Integer) request.getAttribute("hrmDuplicateNum")) > 0) { %><br /><i>OSCAR has received <%=request.getAttribute("hrmDuplicateNum") %> duplicates of this report.</i><% } %>
