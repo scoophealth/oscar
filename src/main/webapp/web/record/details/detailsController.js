@@ -32,6 +32,18 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	$scope.page.color = {};
 	$scope.page.msg = {};
 	
+	$scope.page.status.dataChanged = -1;
+	$scope.$watchCollection("page.demo", function(){
+		$scope.page.status.dataChanged++;
+	});
+	
+	$scope.$on("$stateChangeStart", function(event){
+		if ($scope.page.status.dataChanged>0) {
+			var discardChange = confirm("You may have unsaved data. Are you sure to leave?");
+			if (!discardChange) event.preventDefault();
+		}
+	});
+	
 	
 	patientDetailStatusService.getStatus(demo.demographicNo).then(function(data){
 		$scope.page.status.macPHRLoggedIn = data.macPHRLoggedIn;
@@ -59,16 +71,6 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			}
 		}
 	});
-	
-	var now = new Date();
-	
-	//calculate age
-	$scope.calculateAge = function(){
-		demo.age = now.getFullYear() - demo.dobYear;
-		if (now.getMonth()<demo.dobMonth-1) demo.age--;
-		else if (now.getMonth()==demo.dobMonth-1 && now.getDate()<demo.dobDay) demo.age--;
-	}
-	$scope.calculateAge();
 
 	//show notes
 	if (demo.notes!=null) {
@@ -266,6 +268,25 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	//----------------------//
 	// on-screen operations //
 	//----------------------//
+	//format lastname, firstname
+	$scope.formatLastName = function(){
+		demo.lastName = demo.lastName.toUpperCase();
+	}
+	$scope.formatFirstName = function(){
+		demo.firstName = demo.firstName.toUpperCase();
+	}
+	$scope.formatLastName(); //done on page load
+	$scope.formatFirstName(); //done on page load
+	
+	//calculate age
+	var now = new Date();
+	$scope.calculateAge = function(){
+		demo.age = now.getFullYear() - demo.dobYear;
+		if (now.getMonth()<demo.dobMonth-1) demo.age--;
+		else if (now.getMonth()==demo.dobMonth-1 && now.getDate()<demo.dobDay) demo.age--;
+	}
+	$scope.calculateAge(); //done on page load
+	
 	//set ready for swipe card
 	$scope.setSwipeReady = function(status){
 		if (status=="off") {
@@ -283,7 +304,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			$scope.page.swipecard = "";
 		}
 	}
-	$scope.setSwipeReady();
+	$scope.setSwipeReady(); //done on page load
 
 	//Health card verification
 	var hcParts = {};
@@ -313,9 +334,6 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	    			hcParts["issueDate"] = swipeCardData.substring(endNamePos + 24, endNamePos + 30);
 	    			hcParts["lang"] = swipeCardData.substring(endNamePos + 30, endNamePos + 32);
 	    			
-	    			if (notNumber(hcParts["hin"])) {
-	    				hcParts["hin"] = null;
-	    			}
 	    			if (notNumber(hcParts["dob"])) {
 	    				hcParts["dob"] = null;
 	    				hcParts["hinExp"] = null;
@@ -349,7 +367,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			demo.firstName = hcParts["firstName"];
 			$scope.page.color.firstName = colorAttn;
 		}
-		if (hcParts["hin"]!=null && demo.hin!=hcParts["hin"]) {
+		if (isNumber(hcParts["hin"]) && demo.hin!=hcParts["hin"]) {
 			demo.hin = hcParts["hin"];
 			$scope.page.color.hin = colorAttn;
 		}
@@ -506,6 +524,9 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		else if (id=="OlsM") $scope.page.onWaitingListSinceMonth = pad0($scope.page.onWaitingListSinceMonth);
 		else if (id=="OlsD") $scope.page.onWaitingListSinceDay = pad0($scope.page.onWaitingListSinceDay);
 	}
+	$scope.formatDate("DobM"); //done on page load
+	$scope.formatDate("DobD"); //done on page load
+	
 	
 	//check postal code (Canada provinces only)
 	var postal0 = demo.address.postal;
@@ -1010,13 +1031,17 @@ function pad0(s) {
 	return s;
 }
 
-function notNumber(s) {
+function isNumber(s) {
 	if (s!=null && s!="") {
 		for (var i=0; i<s.length; i++) {
-			if (notDigit(s.charAt(i))) return true;
+			if (notDigit(s.charAt(i))) return false;
 		}
 	}
-	return false;
+	return true;
+}
+
+function notNumber(s) {
+	return (!isNumber(s));
 }
 
 function notDigit(n) { //n: 1-digit
