@@ -28,23 +28,12 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	$scope.page = {};
 	$scope.page.demo = demo;
 	$scope.page.extras = {};
+	
 	$scope.page.status = {};
 	$scope.page.color = {};
 	$scope.page.msg = {};
 	
-	$scope.page.status.dataChanged = -1;
-	$scope.$watchCollection("page.demo", function(){
-		$scope.page.status.dataChanged++;
-	});
-	
-	$scope.$on("$stateChangeStart", function(event){
-		if ($scope.page.status.dataChanged>0) {
-			var discardChange = confirm("You may have unsaved data. Are you sure to leave?");
-			if (!discardChange) event.preventDefault();
-		}
-	});
-	
-	
+	//get patient detail status
 	patientDetailStatusService.getStatus(demo.demographicNo).then(function(data){
 		$scope.page.status.macPHRLoggedIn = data.macPHRLoggedIn;
 		$scope.page.status.macPHRIdsSet = data.macPHRIdsSet;
@@ -268,6 +257,20 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	//----------------------//
 	// on-screen operations //
 	//----------------------//
+	//monitor data changed
+	$scope.page.status.dataChanged = -1;
+	$scope.$watchCollection("page.demo", function(){
+		$scope.page.status.dataChanged++;
+	});
+	
+	//remind user of unsaved data
+	$scope.$on("$stateChangeStart", function(event){
+		if ($scope.page.status.dataChanged>0) {
+			var discardChange = confirm("You may have unsaved data. Are you sure to leave?");
+			if (!discardChange) event.preventDefault();
+		}
+	});
+
 	//format lastname, firstname
 	$scope.formatLastName = function(){
 		demo.lastName = demo.lastName.toUpperCase();
@@ -444,6 +447,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	//HCValidation
 	$scope.validateHC = function(){
 		if (demo.hin==null || demo.hin=="") return;
+		if (demo.ver==null) demo.ver = "";
 		patientDetailStatusService.validateHC(demo.hin,demo.ver).then(function(data){
 			if (data.valid==null) $scope.page.status.HCValidation = "n/a";
 			else $scope.page.status.HCValidation = data.valid ? "valid" : "invalid";
