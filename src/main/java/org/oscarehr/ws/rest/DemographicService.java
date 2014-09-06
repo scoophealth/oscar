@@ -288,17 +288,19 @@ public class DemographicService extends AbstractServiceImpl {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		
 		//update demographiccust
-		DemographicCust demoCust = demographicManager.getDemographicCust(loggedInInfo,data.getDemographicNo());
-		if (demoCust==null) {
-			demoCust = new DemographicCust();
-			demoCust.setId(data.getDemographicNo());
+		if (data.getNurse()!=null || data.getResident()!=null || data.getAlert()!=null || data.getMidwife()!=null || data.getNotes()!=null) {
+			DemographicCust demoCust = demographicManager.getDemographicCust(loggedInInfo,data.getDemographicNo());
+			if (demoCust==null) {
+				demoCust = new DemographicCust();
+				demoCust.setId(data.getDemographicNo());
+			}
+			demoCust.setNurse(data.getNurse());
+			demoCust.setResident(data.getResident());
+			demoCust.setAlert(data.getAlert());
+			demoCust.setMidwife(data.getMidwife());
+			demoCust.setNotes(data.getNotes());
+			demographicManager.createUpdateDemographicCust(loggedInInfo,demoCust);
 		}
-		demoCust.setNurse(data.getNurse());
-		demoCust.setResident(data.getResident());
-		demoCust.setAlert(data.getAlert());
-		demoCust.setMidwife(data.getMidwife());
-		demoCust.setNotes(data.getNotes());
-		demographicManager.createUpdateDemographicCust(loggedInInfo,demoCust);
 		
 		Demographic demographic = demoConverter.getAsDomainObject(getLoggedInInfo(),data);
 	    demographicManager.updateDemographic(loggedInInfo,demographic);

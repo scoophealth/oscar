@@ -52,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import oscar.log.LogAction;
+import oscar.util.StringUtils;
 
 /**
  * Will provide access to demographic data, as well as closely related data such as 
@@ -172,11 +173,11 @@ public class DemographicManager {
 			//Archive previous demoCust
 			DemographicCust prevCust = demographicCustDao.find(demoCust.getId());
 			if (prevCust!=null) {
-				if (!(prevCust.getAlert().equals(demoCust.getAlert()) &&
-					  prevCust.getMidwife().equals(demoCust.getMidwife()) &&
-					  prevCust.getNurse().equals(demoCust.getNurse()) &&
-					  prevCust.getResident().equals(demoCust.getResident()) &&
-					  prevCust.getNotes().equals(demoCust.getNotes())))
+				if (!(StringUtils.nullSafeEquals(prevCust.getAlert(), demoCust.getAlert()) &&
+					  StringUtils.nullSafeEquals(prevCust.getMidwife(), demoCust.getMidwife()) &&
+					  StringUtils.nullSafeEquals(prevCust.getNurse(), demoCust.getNurse()) &&
+					  StringUtils.nullSafeEquals(prevCust.getResident(), demoCust.getResident()) &&
+					  StringUtils.nullSafeEquals(prevCust.getNotes(), demoCust.getNotes())))
 				{
 					demographicCustArchiveDao.archiveDemographicCust(prevCust);
 				}
