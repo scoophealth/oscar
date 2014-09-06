@@ -64,7 +64,12 @@ String module="";
 String htQueryString = "";
 if(request.getParameter("htracker")!=null){
 	module="htracker";
-	htQueryString="&"+module;
+	htQueryString="&"+module;	
+}
+
+if(request.getParameter("htracker")!=null && request.getParameter("htracker").equals("slim")){
+	module="slim";
+	htQueryString=htQueryString+"=slim";
 }
 
 
@@ -92,26 +97,9 @@ FlowSheetItem fsi =mFlowsheet.getFlowSheetItem(measurement);
   <script src="<%=request.getContextPath() %>/js/html5.js"></script>
 <![endif]-->
 
-<!-- Fav and touch icons -->
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
-<link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
-                <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
-                               <link rel="shortcut icon" href="ico/favicon.png">
 
 
 <style type="text/css">
-
-.main-container{
-position:absolute;
-top:60px;
-}
-.help-about{
-position:absolute;
-top:50px;
-right:10px;
-}
-
 #scrollToTop{
 Position:fixed;
 display:none;
@@ -134,17 +122,21 @@ display:inline-block;
 
 <body id="updateFlowsheetBody">
 
-<%if(request.getParameter("demographic")==null){ %>
+<%
+if(request.getParameter("htracker")==null || ( request.getParameter("htracker")!=null && !request.getParameter("htracker").equals("slim")) ){
+
+if(request.getParameter("demographic")==null){ %>
 <div class="well well-small"></div>
 <%}else{ %>
-
 <%@ include file="/share/templates/patient.jspf"%>
-<%} %>
-<!-- help and about -->
-<div class="help-about"> <i class="icon-question-sign"></i> <oscar:help keywords="flowsheet" key="app.top1"/>  <i class="icon-info-sign" style="margin-left:10px;"></i> <a id="about-oscar" ><bean:message key="global.about" /></a></div>
+<div style="height:60px;"></div>
+<%} 
+}
+%>
 
-<div class="span10 main-container">
+<div class="container" id="container-main">
 
+<div class="span8">
 <h3 style="display:inline">Update Measurement</h3> <em>for <strong><%=flowsheet%></strong> flowsheet </em>
 
 <form action="FlowSheetCustomAction.do">
@@ -426,6 +418,7 @@ display:inline-block;
                 
             </fieldset>
            </form>
+           </div>
     </div>
 
 <div id="scrollToTop"><a href="#updateFlowsheetBody"><i class="icon-arrow-up"></i>Top</a></div>
@@ -439,6 +432,8 @@ display:inline-block;
 
 <script>
 $(document).ready(function () {
+	var h = $(document).height();
+	parent.parent.document.getElementById('trackerSlim').style.height = h+"px";
 	
 	$(document).scroll(function () {
 	    var y = $(this).scrollTop();

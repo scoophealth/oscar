@@ -52,6 +52,11 @@
     	htQueryString="&"+module;	
     }
     
+    if(request.getParameter("htracker")!=null && request.getParameter("htracker").equals("slim")){
+    	module="slim";
+    	htQueryString=htQueryString+"=slim";
+    }
+    
     String temp = "";
     if(request.getParameter("flowsheet") != null){
     	temp = request.getParameter("flowsheet");
@@ -110,18 +115,17 @@
                                    
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/css/DT_bootstrap.css">
 
+<%
+if( request.getParameter("htracker")!=null && request.getParameter("htracker").equals("slim") ){
+%>
 <style type="text/css">
-
-.main-container{
-position:absolute;
-top:60px;
+#container-main{
+width:720px !important;
 }
+</style>
+<%}%>
 
-.help-about{
-position:absolute;
-top:50px;
-right:10px;
-}
+<style type="text/css">
 
 .table tbody tr:hover td, .table tbody tr:hover th {
     background-color: #FFFFAA;
@@ -152,7 +156,6 @@ bottom:30px;
 right:15px;
 }
 
-#about-oscar:hover{cursor: hand; cursor: pointer;}
 
 .select-measurement{
 font-size:16px;
@@ -166,6 +169,18 @@ width:100px !important;
 .rule-text{
 width:100px !important;
 }
+
+.list-title {
+   padding-top:10px;
+   padding-right: 12px;
+}
+
+#myTab{
+margin-top:10px;
+}
+.measurement-select{
+width:450px;
+}
 </style>
 
 <style type="text/css" media="print">
@@ -178,34 +193,46 @@ width:100px !important;
 
 <body id="editFlowsheetBody">
 
-<%if(request.getParameter("demographic")==null){ %>
+<%
+if(request.getParameter("htracker")==null || ( request.getParameter("htracker")!=null && !request.getParameter("htracker").equals("slim")) ){
+	
+if(request.getParameter("demographic")==null){ %>
 <div class="well well-small"></div>
-<%}else{ %>
-
+<%}else{%>
 <%@ include file="/share/templates/patient.jspf"%>
-<%} %>
+<div style="height:60px;"></div>
+<%} 
 
-<!-- help and about -->
-<div class="help-about"> <i class="icon-question-sign"></i> <oscar:help keywords="flowsheet" key="app.top1"/>  <i class="icon-info-sign" style="margin-left:10px;"></i> <a id="about-oscar" ><bean:message key="global.about" /></a></div>
+}
+%>
 
-<div class="container-fluid main-container">
+<div class="container" id="container-main">
+
 <div class="row-fluid">
 
-<%if (demographic!=null) {
-	if(request.getParameter("htracker")!=null){%> 
-	<a href="../HealthTrackerPage.jspf?demographic_no=<%=demographic%>&template=<%=flowsheet%>" class="back" title="go back to <%=flowsheet%>"><< Health Tracker</a> <br/>
-	<%}else{%>
-	<a href="../TemplateFlowSheet.jsp?demographic_no=<%=demographic%>&template=<%=flowsheet%>" class="back" title="go back to <%=flowsheet%>"><< Flowsheets</a> <br/>
-	<%
-	}
+<h4 style="display:inline;">
+
+<%if(demographic!=null){
+
+String flowsheetPath = "";
+
+if( request.getParameter("htracker")!=null && request.getParameter("htracker").equals("slim") ){
+	flowsheetPath = "HealthTrackerSlim.jspf";
+}else if ( request.getParameter("htracker")!=null ){
+	flowsheetPath = "HealthTrackerPage.jspf";
+}else{
+	flowsheetPath = "TemplateFlowSheet.jsp";
 }%>
 
-<h3 style="display:inline;">Edit Flowsheet: <span style="font-weight:normal"><%=flowsheet.toUpperCase()%></span> </h3>
+<a href="../<%=flowsheetPath%>?demographic_no=<%=demographic%>&template=<%=flowsheet%>" class="btn btn-small" title="go back to <%=flowsheet%> flowsheet"><i class="icon-backward"></i></a>
 
+<%}%> 
+
+Flowsheet: <span style="font-weight:normal"><%=flowsheet.toUpperCase()%></span>
+</h4>
 		  <span class="mode-toggle">
 		            <% if (demographic!=null) { %>
-		             <i>for</i> Patient <%=demo.getLastName()%>, <%=demo.getFirstName()%>
-
+		             Patient 
 					<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
 						| <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>">All Patients</a> 
 					</security:oscarSec>
@@ -214,32 +241,40 @@ width:100px !important;
 		               <i>for</i> All Patients
 		            <%}%>
 		  </span>
-</div>
+</div><!-- row -->
+
+<div class="row-fluid">
+		<div class="span12">
+		
+		<ul class="nav nav-tabs" id="myTab">
+		<li class="list-title">Measurements:</li>
+		<li class="active"><a href="#home" data-toggle="tab">All</a></li>
+		<li><a href="#custom" data-toggle="tab">Custom</a></li>
+		<li><a href="#add" data-toggle="tab"><i class="icon-plus-sign"></i> Add</a></li>
+		</ul>
 
 	<%if (demographic!=null) { %>
 		<div class="alert alert-info">
-		<button type="button" class="close" data-dismiss="alert">&times;</button>
-			Any changes made to this flowsheet will be applied to this patient, for you only.
+			Any changes made to this flowsheet will be applied to this patient <strong><%=demo.getLastName()%>, <%=demo.getFirstName()%></strong> for you only.
 		</div>
 	 <%}else{%>
 		<div class="alert">
-		<button type="button" class="close" data-dismiss="alert">&times;</button>
 			Any changes made to this flowsheet will be applied to all of <u>your</u> patients.
 		</div>
 	 <%}%>
-	<div class="row-fluid">
-
-		<div class="span8">
+ 
+<div class="tab-content">
+	<div class="tab-pane active" id="home">
 
 		<!-- Flowsheet Measurement List -->
 		<table class="table table-striped table-bordered table-condensed" id="measurementTbl">
 		<thead>
 		<tr>
-		<th style="width:80px"></th>
-		<th style="width:80px">Position</th>
-		<th style="width:120px">Measurement</th>
-		<th style="width:140px">Display Name</th>
-		<th style="width:500px">Guideline</th>
+		<th style="min-width:60px;max-width:80px;"></th>
+		<th style="min-width:60px;max-width:80px;">Position</th>
+		<th style="min-width:100px;max-width:120px">Measurement</th>
+		<th style="min-width:100px;max-width:140px">Display Name</th>
+		<th style="min-width:200px;max-width:500px">Guideline</th>
 		</tr>
 		</thead>
 		
@@ -269,8 +304,7 @@ width:100px !important;
 		                <td title="<%=mstring%>"><%=mFlowsheet.getFlowSheetItem(mstring).getDisplayName()%></td>
 		                <td title="<%=mstring%>"><%=mFlowsheet.getFlowSheetItem(mstring).getGuideline()%></td>
 						</tr>
-		
-		            
+				            
 		            <%	
 				counter++;
 		                }
@@ -279,7 +313,11 @@ width:100px !important;
 		            %>
 		 </tbody>    
 		</table><!-- Flowsheet Measurement List END-->
-		</div>
+		
+		
+	</div><!-- main tab -->
+	
+	<div class="tab-pane" id="custom">
 		
 		<div class="span4">
 		<!--right sidebar-->
@@ -347,40 +385,17 @@ width:100px !important;
 		    </tbody>
 		    </table><!-- Custom List END-->		
 		    <%} %>
-			</div>
+			</div><!-- well -->
 			
-		</div>
-	</div>
-</div>
-            
+		 </div><!-- span4 -->
+		
+	</div><!-- custom tab -->
+	
+	<!-- ADD NEW MEAS -->
+<div class="tab-pane" id="add">
 
-<!-- ABOUT Modal -->
-<div id="aboutModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true" style="width:800px;margin-left:-400px">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-<h3 id="aboutModalLabel">About OSCAR</h3>
-</div>
-<div class="modal-body" id="aboutBody">
-<!-- loading jsp with jquery -->          
-</div>
-<div class="modal-footer">
 
-<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="<bean:message key='global.close' />">
- 
-</div>
-</div><!--ABOUT modal end -->  
-  
-
-<!--ADD NEW MEAS Modal -->
-<form name="FlowSheetCustomActionForm" id="FlowSheetCustomActionForm" action="FlowSheetCustomAction.do" method="post">
-<div id="addModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-<h3 id="addModalLabel">Add Measurement</h3>
-</div>
-<div class="modal-body">
-<!-- Add measurement type -->
-<div>
+<form name="FlowSheetCustomActionForm" id="FlowSheetCustomActionForm" class="well" action="FlowSheetCustomAction.do" method="post">
 		    <%if(request.getParameter("htracker")!=null){ %>
 		    <input type="hidden" name="htracker" value="<%=module%>">
 		    <%}%>   
@@ -390,28 +405,26 @@ width:100px !important;
                     <input type="hidden" name="demographic" value="<%=demographic%>"/>
             <%}%>
           
-		<div id="measurement-details">		
-		<h4>Add Measurement</h4>
-		<table>
-		<tr>                
-		<td>Select A Measurment: </td> <td><select name="measurement" class="measurement-select">
-		
+	
+		<h4>Select a Measurment</h4>
+		<select name="measurement" class="measurement-select">
                 	<option value="0">choose:</option>
                     <% for (EctMeasurementTypesBean measurementTypes : vec){ %>
                     <option value="<%=measurementTypes.getType()%>" ><%=measurementTypes.getTypeDisplayName()%> (<%=measurementTypes.getType()%>) </option>
                     <% } %>
-                </select></td>
-		</tr>
-
+        </select>
+		
+	    <h4>Customize Measurment</h4>
+		<table>
 		<tr><td>Display Name:</td><td><input type="text" name="display_name" id="display_name" required/></td></tr>
-                <tr><td>Guideline:    </td><td><input type="text" name="guideline"    /></td></tr>
+                <tr><td>Guideline:    </td><td><input type="text" name="guideline" /></td></tr>
                 <tr><td>Graphable:</td><td> <select name="graphable"   >
                     <option  value="yes" >YES</option>
                     <option  value="no">NO</option>
                 </select></td></tr>
-                <tr><td>Value Name:</td><td><input type="text" name="value_name"       /></td></tr>
+                <tr><td>Value Name:</td><td><input type="text" name="value_name" id="value_name" /></td></tr>
 		</table>
-                </div>
+                
                 
                 <div>
                 
@@ -462,19 +475,29 @@ width:100px !important;
 		<%} %>
 			<option value="0" selected>Last</option>
 		</select>
-                </div>
+        </div>
 
-        
-    </div> <!-- Add measurement type END-->       
-</div>
-<div class="modal-footer">
-
-<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="<bean:message key='global.close' />">
-<input type="submit" class="btn btn-primary" value="Save" />
+       <legend></legend>
+       
+	   <input type="submit" class="btn btn-large btn-primary" value="Save" />
  
-</div>
-</div><!-- ADD NEW MEAS modal end -->
-</form>     
+</form>  
+
+  
+</div><!-- add pane -->
+	
+	
+	</div><!-- tab-content -->
+
+		
+	</div><!-- row -->
+	
+</div><!-- container -->
+            
+
+
+
+
 
 <div id="scrollToTop"><a href="#editFlowsheetBody"><i class="icon-arrow-up"></i>Top</a></div>
 
@@ -494,10 +517,19 @@ $(function (){
 	$("[rel=popover]").popover({});  
 }); 
 
-$(document).ready(function () {
 
+$(document).ready(function () {
+	$('html, body', window.parent.document).animate({scrollTop:0}, 'slow');
+	
+$(".measurement-select").change(function(){
+	$("#display_name").val($(".measurement-select").val());
+	$("#value_name").val($(".measurement-select").val());
+	
+});
+	
 <%if(request.getParameter("add")!=null){%>
-$('#addModal').modal('show');
+//$('#addModal').modal('show');
+$('#myTab a[href="#add"]').tab('show');
 <%}%>
 	
 	$(document).scroll(function () {
@@ -509,13 +541,7 @@ $('#addModal').modal('show');
 	    }
 	});
 	
-	//this needs work
-	$("#about-oscar").click(function(){
-		$('#aboutModal').modal('show');		
-		$('#aboutBody').load('<%=request.getContextPath() %>/oscarEncounter/About.jsp');
-	});
-
-	$('<a href="#" class="btn" id="add-new" title="Add Measurement" style="margin-left:15px"><i class="icon-plus"></i> Add</a>').appendTo('div.dataTables_filter label');	
+	//$('<a href="#" class="btn" id="add-new" title="Add Measurement" style="margin-left:15px"><i class="icon-plus"></i> Add</a>').appendTo('div.dataTables_filter label');	
 
 	$("#add-new").click(function(){
 		$('#addModal').modal('show');		
@@ -537,12 +563,14 @@ $('#addModal').modal('show');
 
 $('#measurementTbl').dataTable({
 	"aaSorting" : [ [ 1, "asc" ] ],
-
+	"iDisplayLength": 25,
 	"aoColumnDefs": [{ //remove sorting from batch column
 	                  bSortable: false,
 	                  aTargets: [ 0 ]
 	               }]
 });
+
+
 </script>
 
 </body>
