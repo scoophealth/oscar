@@ -1444,7 +1444,7 @@ if(!btnLabel.equals("PHV")){
 <p align="center">
 <span rel="popover" data-container="body" data-html="true" data-content='Entered by: <%=hdata.get("provider_name")%>'  data-trigger="hover">
 <font size="3">
-<%if( result.equals("pending") && refused(hdata.get("refused")).equals("Completed") ){ %>
+<%if( result!=null && result.equals("pending") && refused(hdata.get("refused")).equals("Completed") ){ %>
 Pending 
 <%}else{%>
 <%=refused(hdata.get("refused"))%>

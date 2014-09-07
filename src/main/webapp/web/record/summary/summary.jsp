@@ -70,9 +70,9 @@
 			  	scrolling="No" 
 			  	frameborder="0" 
 			  	ng-src="{{getTrackerUrl(demographicNo)}}" 
-			  	width="720px" 
-			  	height="2000px" 
+			  	width="720px"
 			  	onload="resizeIframe(this)"
+				style="min-height:820px"
 			  ></iframe>
 			  </div>
 
