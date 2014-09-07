@@ -425,10 +425,10 @@ text-align:center;
 .yes-no-options{display: inline;margin:0px;padding:0px}
 
 .save-all{
-z-index:999;
+/*z-index:999;
 position:fixed;
 bottom:0px;
-left:10px;
+left:10px;*/
 
     width: 625px;
     height:50px;
@@ -437,14 +437,14 @@ left:10px;
     padding:8px;
     text-align:right;
     
-opacity:0.4;
+/*opacity:0.4;
 filter:alpha(opacity=40); /* For IE8 and earlier */
 }
 
-.save-all:hover{
+/*.save-all:hover{
 opacity:1.0;
 filter:alpha(opacity=100); /* For IE8 and earlier */
-}
+}*/
 
 
 #dxAlert ul {
@@ -857,15 +857,10 @@ if(!btnLabel.equals("PHV")){
  
  <div class="container-fluid">
  
- 
  <div class="row-fluid">
 
 	 <div class="span10">
 	
-
-
-
-
    <div id="main" class="container-fluid">
    <div class="row-fluid">
   
@@ -1085,14 +1080,14 @@ if(!btnLabel.equals("PHV")){
 <%if(!isMeasurements && !temp.equals("tracker")){ out.print("No measurements! "); 	
 		%>	
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">	
-		To add measurements go to <a href='adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&htracker' title='Edit Flowsheet'>Edit Flowsheet</a>.	
+		To add measurements go to <a href='adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&htracker=slim' title='Edit Flowsheet'>Edit Flowsheet</a>.	
 		</security:oscarSec>	
 <%}else if(!isMeasurements && temp.equals("tracker")){%>            		    
 
 <div class="well" id="health-tracker-add">
 <p class="lead muted">It looks like you are not tracking any measurements! </p>
 
-<a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&add&htracker" class="btn btn-large"><i class="icon-plus-sign icon-large"></i> Add Measurements</a>
+<a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&add&htracker=slim" class="btn btn-large"><i class="icon-plus-sign icon-large"></i> Add Measurements</a>
 
 </div>
 
@@ -1474,7 +1469,7 @@ if(!btnLabel.equals("PHV")){
 <p align="center">
 <span rel="popover" data-container="body" data-html="true" data-content='Entered by: <%=hdata.get("provider_name")%>'  data-trigger="hover">
 <font size="3">
-<%if( result.equals("pending") && refused(hdata.get("refused")).equals("Completed") ){ %>
+<%if( result!=null && result.equals("pending") && refused(hdata.get("refused")).equals("Completed") ){ %>
 Pending 
 <%}else{%>
 <%=refused(hdata.get("refused"))%>
@@ -1564,30 +1559,8 @@ function createAddAll(d,t){
      
 </div>
 <%}%>		    
-
-</div>
-		    
-<div class="span4" id="right-side">
-
- <%if(mFlowsheet.getTopHTMLStream().length()>1){ %>
- <!-- TopHTMLStream  start-->
-   <div class="tabbable DoNotPrint">
-           <ul class="nav nav-tabs">
-              <li class="active"><a href="#TopHTMLStream" data-toggle="tab">Other</a></li>
-           </ul>
-               <div id="TopHTMLStream" class="tab-pane active well well-small">
-               
-               <span class="label label-info" id="TopHTMLStream-resources">Resources</span><br>
-                  <%=mFlowsheet.getTopHTMLStream() %>            
-               </div>
-   </div>   
- <!-- TopHTMLStream end -->       
-<%} %> 
-
- 
     
-		    </div><!-- end span6 -->
-		    
+		    </div>
 	    </div>
     </div>
 
@@ -1598,12 +1571,10 @@ function createAddAll(d,t){
 		<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&htracker" class="btn btn-large" value="<bean:message key="oscarencounter.templateflowsheet.print" />" title="<bean:message key="oscarencounter.templateflowsheet.print" /> Flowsheet"><i class="icon-print"></i> Print</a>
 					
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-			<!-- 
 			<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
-			<a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&htracker" class="btn btn-large" title="Edit Flowsheet"><i class="icon-pencil"></i> Edit</a>   
+			<a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&htracker=slim" class="btn btn-large" title="Edit Flowsheet"><i class="icon-pencil"></i> Edit</a>   
 			</security:oscarSec>
-			-->
-					
+			
 		    <input class="btn btn-primary btn-large" type="submit" name="submit" value="Save All" />
 		 </security:oscarSec>    
 </div>
@@ -1637,17 +1608,11 @@ $(function (){
 	$('[id^=dp-]').datepicker();
 });
 
-function resizeIframe()
-{      
-    parent.parent.document.getElementById('trackerSlim').style.height = "1000px";
-} 
 
 $(document).ready(function () {
 
-	//resizeIframe();
-	//alert("iframe3:" + $('html').height());
-	//parent.parent.resizeIframe($('html').height());
-	
+	var h = $(document).height();
+	parent.parent.document.getElementById('trackerSlim').style.height = h+"px";
 
 	//TODO:these will change generic so this function can be re-used
 	$("input:radio[name=SmokingStatus]").click(function() {
@@ -1775,20 +1740,12 @@ $(document).ready(function () {
     	if(error){
     		$(this).addClass('input-error');
     		$(this).removeClass('input-success');
-
-    		//TODO: when able to save individual measurments 
-    		 //$('#save_'+id).attr('disabled','disabled');
     		return false;
     		
         	}else{
 
            			$(this).removeClass('input-error');
                 	$(this).addClass('input-success');
-
-            	////TODO: when able to save individual measurments 
-            	//$('#save_'+id).removeAttr('disabled');
-
-            	
             	}
 
     }); 
@@ -1830,27 +1787,13 @@ $(document).ready(function () {
 			}else{
 				$("#options-"+type).addClass(' options-error');	
 			}
-	   //alert("input type: "+inputType+" empty" + type + " date:" + typeDate + " comment:" + typeComments + " scrollcords:" + ycoord + " hiddenDate: " + date);
- 
 	}else{
 		//build
 		var link = "<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/TrackerSlimUpdate.do";
 		var qs1 = "ycoord="+ycoord+"&date="+date+"&demographic_no=<%=demographic_no%>&template=<%=temp%>";
 		var qs2 = typeDate+"="+typeDateVal+"&"+type+"="+value+"&"+typeComments+"="+typeCommentsVal+"&submit=Add";
 
-		$('#'+type).removeClass(' input-error').addClass(' input-success');
-		
-		//TODO: post single measurments instead of passing complete form
-	 	//alert("input type: "+inputType+" not empty" + type + link+qs1+qs2);
-		/*
-        $.ajax({
-            url: link,
-            method: 'POST',
-            data: qs1 + qs2,
-            success: function(returnData){
-            	window.location.reload();
-            }//do something on failure
-        });*/ 
+		$('#'+type).removeClass(' input-error').addClass(' input-success'); 
 	}
 	 
 	});
