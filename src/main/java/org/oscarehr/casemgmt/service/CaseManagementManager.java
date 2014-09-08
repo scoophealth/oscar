@@ -1899,6 +1899,7 @@ public class CaseManagementManager {
 			try{
 				Appointment appointment = appointmentDao.find(Integer.parseInt(appointmentNo));
 				encounterText = "[" + oscar.util.UtilDateUtilities.DateToString(appointment.getAppointmentDate(), "dd-MMM-yyyy", locale) + " .: " + appointment.getReason() + "] \n";
+				note.setAppointmentNo(Integer.parseInt(appointmentNo));
 			}catch(Exception e){
 				logger.error("error parsing appointmentNo",e);
 			}
@@ -2023,11 +2024,14 @@ private String updateApptStatus(String status, String type) {
 		String roleName = getRoleName(note.getProviderNo(), note.getProgram_no());
 		
 		Appointment appointment = null;
+		
 		try{
 			appointment = appointmentDao.find(note.getAppointmentNo());
 		}catch(Exception e){
 			logger.debug("Appointment number error",e);
 		}
+		logger.debug("note.getAppointmentNo() "+note.getAppointmentNo()+" --- "+appointment);
+		
 		
 		if (verify) {
 			String message = getSignature(note.getProviderNo(), userName, roleName, locale, SIGNATURE_VERIFY);

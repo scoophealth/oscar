@@ -57,6 +57,11 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	private boolean isEncounterForm = false;
 	private boolean isInvoice = false;
 	private String linkInfo;
+	
+	@Override
+    public Integer getAppointmentNo() {
+		return null;
+	}
 
 	public NoteDisplayNonNote(Map<String, ? extends Object> eform) {
 		try {
