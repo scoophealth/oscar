@@ -154,8 +154,10 @@
 	
 	function listProducts() {
 		var productNameFilterValue = $('#productNameFilter').val();
+		var productLotFilterValue = $('#productLotFilter').val();
 		
-		jQuery.getJSON("../../ws/rs/productDispensing/drugProducts?offset=0&limit=20&limitByName="+productNameFilterValue, {},
+		
+		jQuery.getJSON("../../ws/rs/productDispensing/drugProducts?offset=0&limit=20&limitByName="+productNameFilterValue + "&limitByLot=" + productLotFilterValue, {},
         function(xml) {
 			if(xml.drugProduct) {
 				var arr = new Array();
@@ -238,12 +240,40 @@
 		        });
 	}
 	
+	function updateProductLots() {
+		$('#productLotFilter').html("<option value=''></option>");
+		jQuery.getJSON("../../ws/rs/productDispensing/drugProducts/uniqueLots?name=" + $('#productNameFilter').val(), {},
+		        function(xml) {
+					if(xml.content) {
+						var arr = new Array();
+						if(xml.content instanceof Array) {
+							arr = xml.content;
+						} else {
+							arr[0] =xml.content;
+						}
+						
+						for(var i=0;i<arr.length;i++) {
+							$('#productLotFilter').append($('<option>', {
+							    value: arr[i],
+							    text: arr[i]
+							}));
+						}
+					}
+		        });
+	}
+	
 	$(document).ready(function(){
 		listProducts();
 		updateProductLocations();
 		updateProductNames();
 
 		$('#productNameFilter').bind('change',function(){
+			clearProducts();
+			updateProductLots();
+			listProducts();
+		});
+		
+		$('#productLotFilter').bind('change',function(){
 			clearProducts();
 			listProducts();
 		});
@@ -296,6 +326,10 @@
 
 <div> 
 <select name="productNameFilter" id="productNameFilter">
+	<option value=""></option>
+</select>
+&nbsp;
+<select name="productLotFilter" id="productLotFilter">
 	<option value=""></option>
 </select>
 <span id="productFilterMessage"></span>
