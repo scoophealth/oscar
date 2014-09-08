@@ -148,5 +148,45 @@ public class DrugProductDao extends AbstractDao<DrugProduct>{
 
 	}
 	
+	public List<DrugProduct> findAll(int offset, int limit) {
+		Query query = entityManager.createQuery("SELECT x FROM DrugProduct x");
+		query.setFirstResult(offset);
+		query.setMaxResults(limit);
+		@SuppressWarnings("unchecked")
+        List<DrugProduct> results = query.getResultList();
+        return results;
+
+	}
+	
+	public List<DrugProduct> findByNameAndLot(int offset, int limit, String name, String lotNumber) {
+		
+		if(name == null || "".equals(name)) {
+			return findAll(offset,limit);
+		}
+		String sqlAppend = "";
+		if(lotNumber != null && !"".equals(lotNumber)) {
+			sqlAppend = " AND x.lotNumber = ?2";
+		}
+		Query query = entityManager.createQuery("SELECT x FROM DrugProduct x where x.name = ?1" + sqlAppend);
+		query.setParameter(1,name);
+		if(!"".equals(sqlAppend)) {
+			query.setParameter(2, lotNumber);
+		}
+		query.setFirstResult(offset);
+		query.setMaxResults(limit);
+		@SuppressWarnings("unchecked")
+        List<DrugProduct> results = query.getResultList();
+        return results;
+
+	}
+	
+	public List<String> findUniqueDrugProductLotsByName(String productName) {
+		Query query = entityManager.createQuery("select distinct(x.lotNumber) from DrugProduct x where x.name = ?1");
+		query.setParameter(1,productName);
+		
+		@SuppressWarnings("unchecked")
+        List<String> results = query.getResultList();
+        return results;
+	}
 	
 }
