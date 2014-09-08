@@ -40,18 +40,18 @@
 		<band height="60" splitType="Stretch">
 			<textField>
 				<reportElement x="17" y="15" width="330" height="14"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{last_name} + "," + $F{first_name} + ";" + $F{demographic_no}]]></textFieldExpression>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA["<b>Last Name:</b>" + $F{last_name} + ";<b>First Name:</b>" + $F{first_name} + ";<b>ID#:</b>" + $F{demographic_no}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="17" y="30" width="330" height="14"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{hin} + " " + $F{ver} + ";"  +$F{date_of_birth} + "/" + $F{month_of_birth} + "/" + $F{year_of_birth} + ";" + $F{sex} + ";" + (new java.lang.Integer(  ($V{nowyear}.intValue()) -($V{useryear}.intValue()) )).toString()]]></textFieldExpression>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA["<b>HIN:</b>" + $F{hin} + " " + $F{ver} + ";<b>DOB (yyyy/mm/dd):</b>"  +$F{date_of_birth} + "/" + $F{month_of_birth} + "/" + $F{year_of_birth} + ";<b>Gender/Sex:</b>" + $F{sex} + ";<b>Age:</b>" + (new java.lang.Integer(  ($V{nowyear}.intValue()) -($V{useryear}.intValue()) )).toString()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="17" y="45" width="330" height="14"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date()) + ";" + $P{program} ]]></textFieldExpression>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA["<b>Collection Date:</b>" + new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date()) + ";<b>Clinic:</b>" + $P{program} ]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
