@@ -29,6 +29,8 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+
 @XmlRootElement(name="encounterNote")
 public class NoteTo1 implements Serializable{
 	
@@ -56,6 +58,7 @@ public class NoteTo1 implements Serializable{
 	private boolean isInvoice;
 	private boolean isTicklerNote;
 	private String encounterType;
+	private Integer appointmentNo;
 
 	private ArrayList<String> editorNames;
 	private ArrayList<String> issueDescriptions;
@@ -297,6 +300,7 @@ public class NoteTo1 implements Serializable{
 		return encounterTime;
 	}
 
+	
 	public void setEncounterTime(String encounterTime) {
 		this.encounterTime = encounterTime;
 	}
@@ -321,4 +325,17 @@ public class NoteTo1 implements Serializable{
 	    this.isEditable = isEditable;
     } 
 
+	public Integer getAppointmentNo() {
+		return appointmentNo;
+	}
+
+	public void setAppointmentNo(Integer appointmentNo) {
+		this.appointmentNo = appointmentNo;
+	}
+
+	@Override
+	public String toString() {
+		return (ReflectionToStringBuilder.toString(this));
+	}
+	
 }
