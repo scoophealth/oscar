@@ -130,14 +130,10 @@ public class ProductDispensingService extends AbstractServiceImpl{
 	@GET
 	@Path("/drugProducts")
 	@Produces("application/json")
-	public DrugProductResponse getAllDrugProducts(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit, @QueryParam("limitByName") String limitByName) {
+	public DrugProductResponse getAllDrugProducts(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit, @QueryParam("limitByName") String limitByName,@QueryParam("limitByLot") String limitByLot) {
 		List<DrugProduct> results = null;
 		
-		if(limitByName == null || "".equals(limitByName)) {
-			results = drugProductManager.getAllDrugProducts(getLoggedInInfo(),offset,limit);
-		} else {
-			results = drugProductManager.getAllDrugProductsByName(getLoggedInInfo(),offset,limit,limitByName);
-		}
+		results = drugProductManager.getAllDrugProductsByNameAndLot(getLoggedInInfo(),offset,limit,limitByName, limitByLot);
 		
 		DrugProductResponse response = new DrugProductResponse();
 		for(DrugProduct result:results) {
@@ -167,6 +163,19 @@ public class ProductDispensingService extends AbstractServiceImpl{
 	@Produces("application/json")
 	public AbstractSearchResponse<String> getUniqueDrugProductNames( ) {
 		List<String> results = drugProductManager.findUniqueDrugProductNames(getLoggedInInfo());
+		AbstractSearchResponse<String> response = new AbstractSearchResponse<String>();
+		for(String result:results) {
+			response.getContent().add(result);
+		}
+		return response;
+	}
+	
+	@GET
+	@Path("/drugProducts/uniqueLots")
+	@Produces("application/json")
+	public AbstractSearchResponse<String> getUniqueDrugProducLotsByName(@QueryParam("name") String name ) {
+		
+		List<String> results = drugProductManager.findUniqueDrugProductLotsByName(getLoggedInInfo(),name);
 		AbstractSearchResponse<String> response = new AbstractSearchResponse<String>();
 		for(String result:results) {
 			response.getContent().add(result);

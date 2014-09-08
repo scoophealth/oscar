@@ -23,6 +23,7 @@
  */
 package org.oscarehr.managers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.oscarehr.common.dao.DrugProductDao;
@@ -96,6 +97,18 @@ public class DrugProductManager {
 		return results;
 	}
 	
+	public List<DrugProduct> getAllDrugProductsByNameAndLot(LoggedInInfo loggedInInfo, Integer offset, Integer limit, String productName, String lotNumber) {
+		List<DrugProduct> results = drugProductDao.findByNameAndLot(offset,limit,productName, lotNumber);
+		
+		//--- log action ---
+		if (results.size()>0) {
+			String resultIds=DrugProduct.getIdsAsStringList(results);
+			LogAction.addLogSynchronous(loggedInInfo,"DrugProductManager.getAllDrugProductsByName", "ids returned=" + resultIds);
+		}
+		
+		return results;
+	}
+	
 	public List<DrugProduct> getAllDrugProductsGroupedByCode(LoggedInInfo loggedInInfo, Integer offset, Integer limit) {
 		List<DrugProduct> results = drugProductDao.findAll(offset, limit);
 		
@@ -110,6 +123,20 @@ public class DrugProductManager {
 	
 	public List<String> findUniqueDrugProductNames(LoggedInInfo loggedInInfo) {
 		List<String> results = drugProductDao.findUniqueDrugProductNames();
+		
+		//--- log action ---
+		if (results.size()>0) {
+			LogAction.addLogSynchronous(loggedInInfo,"DrugProductManager.getUniqueDrugProductNames","");
+		}
+		
+		return results;
+	}
+	
+	public List<String> findUniqueDrugProductLotsByName(LoggedInInfo loggedInInfo, String productName) {
+		if(productName == null || "".equals(productName)) {
+			return new ArrayList<String>();
+		}
+		List<String> results = drugProductDao.findUniqueDrugProductLotsByName(productName);
 		
 		//--- log action ---
 		if (results.size()>0) {
