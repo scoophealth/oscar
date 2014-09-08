@@ -204,4 +204,14 @@ public class ProductDispensingService extends AbstractServiceImpl{
 		
 		return response;
 	}
+	
+	@GET
+	@Path("/status/{drugId}")
+	@Produces("application/json")
+	public GenericRESTResponse getDispensingStatus(@PathParam("drugId") Integer drugId)  {
+		GenericRESTResponse response = new GenericRESTResponse();
+		response.setMessage(drugDispensingManager.getStatus(drugId));
+		
+		return response;
+	}
 }
