@@ -56,8 +56,24 @@ public class ScheduleService extends AbstractServiceImpl {
 	private DemographicManager demographicManager;
 	
 	@GET
+	@Path("/day/{date}")
+	@Produces("application/json")
+	public PatientListApptBean getAppointmentsForDay(@PathParam("date") String date) {
+		String providerNo = this.getCurrentProvider().getProviderNo();
+		return getAppointmentsForDay(providerNo,date);
+	}
+	
+	@GET
 	@Path("/{providerNo}/day/{date}")
 	@Produces("application/json")
+	/**
+	 * Will substitute "me" to your logged in provider no, and "today" to doday's date.
+	 * eg /schedule/me/day/today
+	 * 
+	 * @param providerNo
+	 * @param date
+	 * @return
+	 */
 	public PatientListApptBean getAppointmentsForDay(@PathParam("providerNo") String providerNo, @PathParam("date") String date) {
 		SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mm aa");
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
@@ -70,6 +86,11 @@ public class ScheduleService extends AbstractServiceImpl {
 			} else {
 				dateObj = DateUtils.parseIso8601Date(date);
 			}
+			
+			if("".equals(providerNo)) {
+				providerNo = loggedInInfo.getLoggedInProviderNo();
+			}
+			
 			List<Appointment> appts = scheduleManager.getDayAppointments(loggedInInfo,providerNo, dateObj);
 			for(Appointment appt:appts) {
 				PatientListApptItemBean item = new PatientListApptItemBean();
