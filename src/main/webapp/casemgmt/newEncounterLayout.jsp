@@ -51,6 +51,8 @@
     String frmName = "caseManagementEntryForm" + request.getParameter("demographicNo");
 	CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute(frmName);
 
+    String encTimeMandatoryValue = OscarProperties.getInstance().getProperty("ENCOUNTER_TIME_MANDATORY","false");
+
 %>
 
 <html:html locale="true">
@@ -594,6 +596,10 @@ div.autocomplete ul li {
         encMinError = "<bean:message key="oscarEncounter.encounterMinuteError.msg"/>";
         assignIssueError = "<bean:message key="oscarEncounter.assignIssueError.msg"/>";
         assignObservationDateError = "<bean:message key="oscarEncounter.assignObservationDateError.msg"/>";
+      
+        encTimeMandatoryMsg = "<bean:message key="oscarEncounter.encounterTimeMandatory.msg"/>";
+	encTimeMandatory = <%=encTimeMandatoryValue%>;
+
         assignEncTypeError = "<bean:message key="oscarEncounter.assignEncTypeError.msg"/>";
         savingNoteError = "<bean:message key="oscarEncounter.savingNoteError.msg"/>";
         changeIssueMsg = "<bean:message key="oscarEncounter.change.title"/>";
