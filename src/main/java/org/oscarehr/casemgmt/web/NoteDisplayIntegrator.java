@@ -56,6 +56,12 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	private String providerName="Unavailable";
 	private ArrayList<String> issueDescriptions=new ArrayList<String>();
 
+	@Override
+    public Integer getAppointmentNo() {
+		return null;
+    }
+	
+	
 	public NoteDisplayIntegrator(LoggedInInfo loggedInInfo,CachedDemographicNote cachedDemographicNote)
 	{
 		this.cachedDemographicNote=cachedDemographicNote;

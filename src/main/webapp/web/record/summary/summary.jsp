@@ -57,8 +57,9 @@
 								    <li><a href="#">print</a></li> <li><a href="#">annotate</a></li><li><a href="#">set Encounter Date</a></li><li><a href="#">set Encounter Type</a></li>
 								  </ul>
 								</div --%>{{note.observationDate | date : 'dd-MMM-yyyy'}} {{firstLine(note)}}</dt>
-			    				<dd ng-repeat-end  ng-show="showNote(note)"><pre style="margin-bottom:0px;" ng-show="showNote(note)"  style="">{{note.note}}</pre>
-			    					<h6 style="margin-top:1px;margin-bottom:0px;">Editors: <small>{{note.editorNames}}</small> <span class="pull-right">Encounter Date: <small>{{note.observationDate | date: 'medium'}}</small> Rev: <small>{{note.revision}}</small></span></h6>
+			    				<dd ng-repeat-end  ng-show="showNote(note)"><pre ng-class="isNoteBeingEdited(note)" style="margin-bottom:0px;" ng-show="showNote(note)"  ng-dblclick="editNote(note)">{{note.note}}</pre>
+			    					<h6 style="margin-top:1px;margin-bottom:0px;">Editors: <small>{{note.editorNames}}</small> <span class="pull-right">Encounter Date: <small>{{note.observationDate | date: 'medium'}}</small> Rev: <small ng-click="openRevisionHistory(note)" >{{note.revision}}</small></span></h6>
+
 			    					<h6 style="margin-top:0px;">Assigned Issues: <small>{{note.issueDescriptions}}</small> <span class="pull-right">Enc Type: <small>{{note.encounterType}}</small></span></h6>
 			    				</dd>					
 			    		</dl>
@@ -70,16 +71,15 @@
 			  	scrolling="No" 
 			  	frameborder="0" 
 			  	ng-src="{{getTrackerUrl(demographicNo)}}" 
-			  	width="720px"
+			  	width="100%"
 			  	onload="resizeIframe(this)"
 				style="min-height:820px"
 			  ></iframe>
 			  </div>
 
-		</div><!-- tab content -->
+		</div><!-- tab content -->  
 	
      </div><!-- middleSpace -->
-
 
 
 

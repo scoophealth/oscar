@@ -58,9 +58,18 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
 	   }
 
    	}
+   	
+   	
+   	$scope.openRevisionHistory = function(note){
+   		console.log("jhistory",note);
+		var rnd = Math.round(Math.random() * 1000);
+		win = "win" + rnd;
+		var url = "../CaseManagementEntry.do?method=notehistory&noteId=" + note.noteId;
+		window.open(url,win,"scrollbars=yes, location=no, width=647, height=600","");   			
+   	}
    
    	$scope.isCurrentStatus = function(stat){
-	   console.log("stat",stat);
+	   //console.log("stat",stat);
 	   if(stat == $scope.page.currentFilter){
 		   return "active";
 	   }else{
@@ -120,7 +129,47 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
     	
     };
     
-    $scope.addMoreItems();
+    //$scope.addMoreItems();
+    
+    $scope.editNote = function(note){
+    	$rootScope.$emit('loadNoteForEdit',note);
+    }
+    
+    $scope.page.currentEditNote = {};
+    
+    $scope.isNoteBeingEdited = function(note){
+    	
+    	if(note.uuid == $scope.page.currentEditNote.uuid ){
+    		return "noteInEdit";
+    	}
+    	
+    	return ""
+    }
+    
+    $rootScope.$on('currentlyEditingNote',function(event,data) {
+    	$scope.page.currentEditNote = data;
+    });
+    
+    
+    $rootScope.$on('noteSaved', function(event,data) {
+    	console.log('new data coming in',data);
+    	var noteFound = false;
+    	for (var notecount = 0; notecount < $scope.page.notes.notelist.length; notecount++) {
+    		if(data.uuid == $scope.page.notes.notelist[notecount].uuid){
+    			console.log('uuid '+data.uuid+' notecount '+notecount,data,$scope.page.notes.notelist[notecount]);
+    			$scope.page.notes.notelist[notecount] = data;
+    			noteFound = true;
+    			break;
+    		}
+    	}
+    	
+    	if(noteFound == false){
+    		$scope.page.notes.notelist.unshift(data);
+    	}
+    	$scope.index =  $scope.page.notes.notelist.length ;
+	 });
+    
+    
         
     //Note display functions   
     $scope.setColor = function(note){
@@ -168,7 +217,7 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
     	var firstL = note.note.trim().split('\n')[0];
     	var dateStr = $filter('date')(note.observationDate, 'dd-MMM-yyyy');
     	dateStr = "["+dateStr;
-    	console.log(firstL + " --"+dateStr+"-- " + firstL.indexOf(dateStr));
+    	//console.log(firstL + " --"+dateStr+"-- " + firstL.indexOf(dateStr));
     	if(firstL.indexOf(dateStr) == 0 ){
     		firstL = firstL.substring(dateStr.length);
     	}
@@ -183,8 +232,6 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
     
     };
     
-});
-
 //for demo will resolve 
 function resizeIframe(iframe) {
 	
@@ -195,3 +242,5 @@ function resizeIframe(iframe) {
 	}
     //alert("h" + h);
   }
+    
+});

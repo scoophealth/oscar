@@ -50,7 +50,9 @@ oscarApp.controller('PatientListCtrl', function ($scope,$http,$resource,$state) 
 		 var params = {demographicNo:patient.demographicNo};
 		 if(angular.isDefined(patient.appointmentNo)){
 			 params.appointmentNo = patient.appointmentNo;
+			 params.encType = "face to face encounter with client";
 		 }
+		 console.log("params",params);
 		 $state.go('record.summary',params);
 	 }
 
