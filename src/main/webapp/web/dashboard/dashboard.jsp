@@ -36,38 +36,43 @@
 <div class="col-md-9" ng-controller="DashboardCtrl">
 
 
-<p class="lead">You have {{ticklers.length}} active tickler assigned to you</p>
+<p class="lead">You have {{(ticklers.length>0) && ticklers.length || "no"}} active tickler{{(ticklers.length>1) && "s" || ""}}{{(ticklers.length==0) && "s" || ""}}{{(ticklers==null) && "s" || ""}} assigned to you.</p>
 
-<table class="table table-condensed  table-hover" >
-	<tr>
-		<th class="flag-column"></th>
-		<th>Demographic Name</th>
-		<th>Due</th>
-		<th>Message</th>
-	</tr>
-	
-	<tr ng-repeat="item in ticklers" ng-hide="$index >= 5">
-		<td><span ng-if="item.priority == 'High'" class="glyphicon glyphicon-flag" style="color:red"></span></td>
-		<td>{{item.demographicName}}</td>
-		<td>{{item.serviceDate | date:'yyyy-MM-dd'}}</td>
-		<td>{{item.message}}</td>
-	</tr>
-	<tfoot>
-    <tr ng-if="ticklers.length > 5">
-      <td colspan="6">
-		 <span class="label label-success">See More Ticklers</span> 
-      </td>
-    </tr>
-  </tfoot>
-	
-</table>
+<div ng-if="ticklers.length>0">
+	<table class="table table-condensed  table-hover" >
+		<tr>
+			<th class="flag-column"></th>
+			<th>Demographic Name</th>
+			<th>Due</th>
+			<th>Message</th>
+		</tr>
+		
+		<tr ng-repeat="item in ticklers" ng-hide="$index >= 5">
+			<td>
+				<span ng-if="isTicklerExpiredOrHighPriority(item)" class="glyphicon glyphicon-flag" style="color:red"></span>
+			</td>
+			<td>{{item.demographicName}}</td>
+			<td>{{item.serviceDate | date:'yyyy-MM-dd'}}</td>
+			<td>{{item.message}}</td>
+		</tr>
+		<tfoot>
+	    <tr ng-if="ticklers.length > 5">
+	      <td colspan="6">
+			 <span class="label label-success">See More Ticklers</span> 
+	      </td>
+	    </tr>
+	  </tfoot>
+		
+	</table>
+</div>
+
+<br/>
 
 
+<p class="lead">You have {{(messages.length>0) && messages.length || "no"}}  new message{{(messages.length>1) && "s" || ""}}{{(messages.length==0) && "s" || ""}}{{(messages == null) && "s" || ""}}.</p>
 
 
-<p class="lead">You have {{messages.length}} new messages</p>
-
-
+<div ng-if="messages.length">
 <table class="table table-condensed  table-hover" >
     <tr>
     <!-- 	<th class="flag-column"></th> -->
@@ -94,6 +99,7 @@
   </tfoot>
  
 </table>
+</div>
 
 <!-- 
 <p class="lead">You have 0 new messages from patients</p>
@@ -129,8 +135,13 @@
 
 -->
 
-<p class="lead">You have report(s) which are not yet acknowledged</p>
+<br/>
 
+
+<p class="lead">You have {{(inbox.length>0) && inbox.length || "no"}} report{{(inbox.length>1) && "s" || ""}}{{(inbox.length==0) && "s" || ""}}{{(inbox==null) && "s" || ""}} which are not yet acknowledged.</p>
+
+
+<div ng-if="inbox.length">
 <table class="table table-condensed  table-hover" >
     <tr>
     	<th class="flag-column"></th>
@@ -158,7 +169,7 @@
     </tr>
   </tfoot>
 </table>
-
+</div>
 
 </div>
 

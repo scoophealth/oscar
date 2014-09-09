@@ -146,9 +146,15 @@ public class CustomFilter extends AbstractModel<Integer> {
 
     
 	public CustomFilter() {
+		this(false);
+	}
+	
+	public CustomFilter(boolean noEndDate) {
 		setStatus("A");
 		setPriority("Normal");
-		setEndDate(new Date());		
+		if(!noEndDate) {
+			setEndDate(new Date());
+		}
 		providers = new HashSet<Provider>();
 		assignees = new HashSet<Provider>();
 		setSort_order("asc");	
