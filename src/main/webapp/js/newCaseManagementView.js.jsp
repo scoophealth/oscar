@@ -2329,6 +2329,8 @@ var assignIssueError;
 var savingNoteError;
 var encTimeError;
 var encMinError;
+var encTimeMandatoryMsg;
+var encTimeMandatory;
 function ajaxSaveNote(div,noteId,noteTxt) {
 
     if( $("observationDate") != null && $("observationDate").value.length > 0 && !validDate() ) {
@@ -2375,6 +2377,19 @@ function ajaxSaveNote(div,noteId,noteTxt) {
 				alert(encMinError);
 				return false;
 			}
+		
+		
+			if( parseInt(document.getElementById("minuteOfEncTransportationTime").value) ==0 &&
+				parseInt(document.getElementById("hourOfEncTransportationTime").value) ==0 &&
+				parseInt(document.getElementById("minuteOfEncounterTime").value) == 0 &&
+				parseInt(document.getElementById("hourOfEncounterTime").value) == 0 ) {
+		   
+		   		if(encTimeMandatory) {
+		    			alert(encTimeMandatoryMsg);
+		    			return false;
+				}
+		   	}
+		
 		}
     }
 
@@ -2470,6 +2485,18 @@ function saveNoteAjax(method, chain) {
 				alert(encMinError);
 				return false;
 			}
+		 
+		
+			if( parseInt(document.getElementById("minuteOfEncTransportationTime").value) ==0 &&
+			parseInt(document.getElementById("hourOfEncTransportationTime").value) ==0 &&
+			parseInt(document.getElementById("minuteOfEncounterTime").value) == 0 &&
+			parseInt(document.getElementById("hourOfEncounterTime").value) == 0 ) {
+		   
+		   		if(encTimeMandatory) {
+		    			alert(encTimeMandatoryMsg);
+		    			return false;
+		   		}
+			}
 		}
     }
     document.forms["caseManagementEntryForm"].method.value = method;
@@ -2559,7 +2586,7 @@ function savePage(method, chain) {
         	alert(assignEncTypeError);
         	return false;
         }
- 		if(document.getElementById("hourOfEncTransportationTime") != null) {
+ 	if(document.getElementById("hourOfEncTransportationTime") != null) {
 	        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
 	         isNaN(document.getElementById("minuteOfEncTransportationTime").value) ||
 	         isNaN(document.getElementById("hourOfEncounterTime").value) ||
@@ -2567,7 +2594,17 @@ function savePage(method, chain) {
 	        	alert(encTimeError);
 	        	return false;
 	        }
-	    }
+		   if( parseInt(document.getElementById("minuteOfEncTransportationTime").value) ==0 &&
+			parseInt(document.getElementById("hourOfEncTransportationTime").value) ==0 &&
+			parseInt(document.getElementById("minuteOfEncounterTime").value) == 0 &&
+			parseInt(document.getElementById("hourOfEncounterTime").value) == 0 ) {
+		   
+		   		if(encTimeMandatory) {
+		    		alert(encTimeMandatoryMsg);
+		    		return false;
+		   		}	
+		   	}	
+		}
 
 
     }
