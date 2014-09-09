@@ -70,24 +70,24 @@
     	</div>
     	<div id="noteInput" class="center-block well col-md-4 col-md-offset-3" ng-show="hideNote">
 			<div class="col-xs-4">
-			    <input type="text" class="form-control" placeholder="Type Command">
+			    <input type="text" class="form-control" placeholder="Type Command" data-ng-disabled="true">
 		    </div>
 			<div class="col-xs-3 text-center" style="padding:0px;line-height:1;font-size:14px;" ng-click="toggleNote();"  >
 			<span class="glyphicon glyphicon-chevron-down"></span><span class="glyphicon glyphicon-chevron-down"></span><span class="glyphicon glyphicon-chevron-down"></span>
 			
 			</div>
 			<div class="col-xs-4 " >
-			    <input type="text" class="form-control" placeholder="Search">
+			    <input type="text" class="form-control" placeholder="Search" data-ng-disabled="true">
 			</div>
     		
     		
-    		<textarea class="form-control input-lg col-lg-4" rows="6">[22-Jan-2014:F/up Cholesterol]</textarea>
+    		<textarea class="form-control input-lg col-lg-4" rows="6" ng-model="page.encounterNote.note"></textarea>
 			<div class="pull-left"><input type="text" class="form-control" placeholder="Assign Issue"></div>
     		<div class="btn-group btn-group-sm pull-right">
     		
-			  <button type="button" class="btn btn-default">Save</button>
-			  <button type="button" class="btn btn-default">Sign & Save</button>
-			  <button type="button" class="btn btn-default">Sign, Save & Bill</button>
+			  <button type="button" class="btn btn-default" ng-click="saveNote()" id="saveButton"  data-ng-disabled="page.encounterNote.isSigned" >Save</button>
+			  <button type="button" class="btn btn-default" ng-click="saveSignNote()">Sign & Save</button>
+			  <button type="button" class="btn btn-default" data-ng-disabled="true">Sign, Save & Bill</button>
 			</div>
     		
     	</div>

@@ -24,13 +24,15 @@
 
 */
 
-oscarApp.controller('RecordCtrl', function ($scope,$http,$location,$stateParams,$state,demo) {
+oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,$state,noteService,$timeout) {
 	
 	console.log("in patient Ctrl ",demo);
+	console.log("in RecordCtrl state params ",$stateParams,$location.search());
 	
 	$scope.demographicNo = $stateParams.demographicNo;
 	$scope.demographic= demo;
-
+	$scope.page = {};
+	
 	/*
 	$scope.recordtabs2 = [ 
 	 {id : 0,name : 'Master',url : 'partials/master.html'},
@@ -65,6 +67,46 @@ oscarApp.controller('RecordCtrl', function ($scope,$http,$location,$stateParams,
 		
 	}
 	
+	$scope.$on('$destroy', function(){
+		console.log("save the last note!!",$scope.page.encounterNote,noteDirty);
+		if(noteDirty){
+			noteService.tmpSave($stateParams.demographicNo,$scope.page.encounterNote);
+		}
+		
+	});
+	
+	//////AutoSave
+	var saveIntervalSeconds = 2;
+
+	var timeout = null;
+	var saveUpdates = function() {
+	    console.log("save",$scope.page.encounterNote);
+	    noteService.tmpSave($stateParams.demographicNo,$scope.page.encounterNote); 
+	};
+	var skipTmpSave = false;
+	var noteDirty = false;
+	
+	var delayTmpSave = function(newVal, oldVal) {
+		console.log("whats the val ",(newVal != oldVal));
+		if(!skipTmpSave){
+		    if (newVal != oldVal) {
+		    	noteDirty = true;
+		      if (timeout) {
+		        $timeout.cancel(timeout);
+		      }
+		      timeout = $timeout(saveUpdates, saveIntervalSeconds * 1000);
+		    }else{
+		    	noteDirty= false;
+		    }
+		}
+		skipTmpSave = false; // only skip once
+	  };
+	$scope.$watch('page.encounterNote.note', delayTmpSave);
+	
+	//////
+	
+	
+	
 	$scope.isTabActive = function(tab){
 		//console.log('current state '+$state.current.name.substring(0,tab.path.length)+" -- "+($state.current.name.substring(0,tab.path.length) == tab.path),$state.current.name,tab);
 		//console.log('ddd '+$state.current.name.length+"  eee "+tab.path.length);
@@ -74,11 +116,70 @@ oscarApp.controller('RecordCtrl', function ($scope,$http,$location,$stateParams,
 		}
 	}
 	
+	
+	// Note Input Logic
+	$scope.toggleNote = function() {
+		if ($scope.hideNote == true) {
+			$scope.hideNote = false;
+		} else {
+			$scope.hideNote = true;
+		}
+	};
+
+	$scope.hideNote = false;
+	
+	$scope.saveNote = function(){
+		console.log("This is the note"+$scope.page.encounterNote);
+		$scope.page.encounterNote.observationDate = new Date(); 
+		noteService.saveNote($stateParams.demographicNo,$scope.page.encounterNote).then(function(data) {
+			$rootScope.$emit('noteSaved',data);
+			skipTmpSave = true;
+			$scope.page.encounterNote = data;
+			console.debug('whats the index',data);
+			if($scope.page.encounterNote.isSigned){
+				$scope.hideNote = false;
+				$scope.getCurrentNote(false);
+			}
+	    });
+	};
+	
+	$scope.saveSignNote = function(){
+		$scope.page.encounterNote.isSigned = true;
+		$scope.saveNote() ;
+	}
+	
 	console.log('RecordCtrlEnd',$state);
+	
+	$scope.page.currentNoteConfig = {};
+
+
+	$scope.getCurrentNote = function(showNoteAfterLoadingFlag) {
+		noteService.getCurrentNote($stateParams.demographicNo,$location.search()).then(function(data) {
+			$scope.page.encounterNote = data;
+			console.log($scope.page.encounterNote );
+			//$scope.hideNote = true;
+			$scope.hideNote = showNoteAfterLoadingFlag;
+			$rootScope.$emit('currentlyEditingNote',$scope.page.encounterNote);
+	    });
+	};
+	
+	$scope.getCurrentNote(true);
+	
+	
+	
+	 $scope.editNote = function(note){
+	    	$rootScope.$emit('',note);
+	    }
+	    
+	    
+	 $rootScope.$on('loadNoteForEdit', function(event,data) {
+	    	console.log('loadNoteForEdit ',data);
+	    	$scope.page.encounterNote = data;
+	    	//Need to check if note has been saved yet.
+	    	$scope.hideNote = true;
+	    	$rootScope.$emit('currentlyEditingNote',$scope.page.encounterNote);
+	 });
+
+	
 });
 
-/*
-oscarApp.controller('PatientDetailCtrl', function ($scope,$http,$location,$stateParams,demographicService,demo,$state) {
-	console.log("in patientDetail Ctrl");
-});
-*/

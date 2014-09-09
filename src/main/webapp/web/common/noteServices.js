@@ -40,6 +40,45 @@ angular.module("noteServices", [])
            });
     
          return deferred.promise;
+       },
+       saveNote: function(demographicNo,notea){
+       	var deferred = $q.defer();
+       	var noteToSave = { encounterNote: notea };
+       	console.log("sending to server ",noteToSave);
+       	 $http.post(this.apiPath+'/'+demographicNo+'/save',noteToSave).success(function(data){
+           	console.log("returned from /save",data);
+           	deferred.resolve(data);
+           }).error(function(){
+           	console.log("error saving notes")
+           	deferred.reject("An error occured while fetching items");
+           });
+    
+         return deferred.promise;
+       },
+       getCurrentNote: function(demographicNo,config){
+    	   var deferred = $q.defer();
+          	 $http.post(this.apiPath+'/'+demographicNo+'/getCurrentNote',config).success(function(data){
+              	console.log("returned from /getCurrentNote",data);
+              	deferred.resolve(data);
+              }).error(function(){
+              	console.log("error getting current note");
+              	deferred.reject("An error occured while fetching items");
+              });
+            return deferred.promise;
+       },
+       tmpSave: function(demographicNo,notea){
+          	var deferred = $q.defer();
+           	var noteToSave = { encounterNote: notea };
+           	console.log("sending to server ",noteToSave);
+           	 $http.post(this.apiPath+'/'+demographicNo+'/tmpSave',noteToSave).success(function(data){
+               	console.log("returned from /tmpSave",data);
+               	deferred.resolve(data);
+               }).error(function(){
+               	console.log("error tmp saving")
+               	deferred.reject("An error occured while fetching items");
+               });
+        
+             return deferred.promise;
        }
     };
 });
