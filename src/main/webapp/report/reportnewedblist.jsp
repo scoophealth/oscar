@@ -139,7 +139,10 @@ function loadPage() {
         cal.add(Calendar.YEAR, 1);
         paramI[1]=sdf.format(cal.getTime());
         
-        arMaxId.setProperty(""+formsDao.select_maxformar_id2(paramI[0],paramI[1]),"1");
+        
+        for( Integer obj :formsDao.select_maxformar_id2(paramI[0],paramI[1]) ) {        
+        	arMaxId.setProperty(obj.toString(),"1");
+        }
       	
         
         Properties demoProp = new Properties();
@@ -170,11 +173,15 @@ function loadPage() {
         	String gravida= (String)result[5];
         	String term= (String)result[6];
         	String phone = (String)result[7];
-        	String prov = ((Integer)result[8]).toString();
+        	String prov = (String)result[8];
         	
         	
-        if (!arMaxId.containsKey(""+id) ) continue;
-        if (demoProp.containsKey(demographicNo) ) continue;
+        if (!arMaxId.containsKey(""+id) ) {            
+            continue;
+        }
+        if (demoProp.containsKey(demographicNo) ) {            
+            continue;
+        }
         else demoProp.setProperty(""+demographicNo, "1");
         
         // filter the "IN" patient from the list.
