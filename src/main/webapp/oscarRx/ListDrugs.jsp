@@ -45,6 +45,7 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.LoggedInInfo,org.oscarehr.common.dao.DrugReasonDao,org.oscarehr.common.model.DrugReason"%>
 <%@page import="java.util.ArrayList,oscar.util.*,java.util.*,org.oscarehr.common.model.Drug,org.oscarehr.common.dao.*"%>
+<%@page import="org.oscarehr.managers.DrugDispensingManager" %>
 <bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 <logic:notPresent name="RxSessionBean" scope="session">
     <logic:redirect href="error.html" />
@@ -118,7 +119,7 @@ if (heading != null){
 
             DrugReasonDao drugReasonDao  = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
 			
-            
+            DrugDispensingManager drugDispensingManager = SpringUtils.getBean(DrugDispensingManager.class);
             List<String> reRxDrugList=bean.getReRxDrugIdList();
 
 
@@ -126,7 +127,7 @@ if (heading != null){
             long month = 1000L * 60L * 60L * 24L * 30L;
 			for (int x=0;x<prescriptDrugs.size();x++) {
 				Drug prescriptDrug = prescriptDrugs.get(x);
-                boolean isPrevAnnotation=false;
+				boolean isPrevAnnotation=false;
                 String styleColor = "";
                 //test for previous note
                 HttpSession se = request.getSession();
@@ -346,10 +347,12 @@ if (heading != null){
 			
 			<td align="center" valign="top">
 				<%
-					if(prescriptDrug.getDispenseInternal() != null && prescriptDrug.getDispenseInternal() == true) {
-						if(securityManager.hasWriteAccess("_rx.dispense",roleName$,true)) {		
+					if(prescriptDrug.getDispenseInternal() != null && prescriptDrug.getDispenseInternal() == true ) {
+						if(securityManager.hasWriteAccess("_rx.dispense",roleName$,true)) {	
+							String dispensingStatus = drugDispensingManager.getStatus(prescriptDrug.getId());
+				               
 				%>
-					<a href="javascript:void(0)" onclick="javascript:popupWindow(720,700,'<%=request.getContextPath()%>/oscarRx/Dispense.do?method=view&id=<%=prescriptDrug.getId()%>','Dispense<%=prescriptIdInt %>'); return false;">Dispense</a>
+					<a href="javascript:void(0)" onclick="javascript:popupWindow(720,700,'<%=request.getContextPath()%>/oscarRx/Dispense.do?method=view&id=<%=prescriptDrug.getId()%>','Dispense<%=prescriptIdInt %>'); return false;">Dispense (<%=dispensingStatus%>)</a>
 				<% 
 					} }
 				%>
