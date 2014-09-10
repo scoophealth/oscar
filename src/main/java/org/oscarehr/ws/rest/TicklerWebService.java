@@ -55,7 +55,7 @@ public class TicklerWebService extends AbstractServiceImpl {
 	@Path("/mine")
 	@Produces("application/json")
 	public TicklerResponse getMyTicklers(@QueryParam("limit") int limit) {
-		CustomFilter cf = new CustomFilter();
+		CustomFilter cf = new CustomFilter(true);
 		cf.setAssignee(getLoggedInInfo().getLoggedInProviderNo());
 		cf.setStatus("A");
 		
