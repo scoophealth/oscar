@@ -305,6 +305,7 @@ pre.noteInEdit {
 	<script src="common/noteServices.js"></script>
 	<script src="common/providerServices.js"></script>
 	<script src="common/patientDetailStatusServices.js"></script>
+	<script src="common/uxServices.js"></script>
 	<script src="app.js"></script>
 	<script src="dashboard/dashboardController.js"></script>
 	<script src="common/navBarController.js"></script>
