@@ -23,7 +23,7 @@
     Ontario, Canada
 
 --%>
-<a ng-repeat="patient in patients | startFrom:currentPage*pageSize | limitTo:pageSize | filter:query" class="list-group-item " ng-click="goToRecord(patient)" ng-class="getAppointmentStyle(patient)" class="default">
+<a ng-repeat="patient in patients | offset:currentPage*pageSize | limitTo:pageSize | filter:query" class="list-group-item " ng-click="goToRecord(patient)" ng-class="getAppointmentStyle(patient)" class="default">
 	<!-- 
 	<span ng-if="patient.status.length>0 && patient.status != 't'" class="badge">{{patient.status}}</span>
 	-->
