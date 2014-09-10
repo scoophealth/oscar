@@ -54,6 +54,13 @@ oscarApp.controller('DashboardCtrl', function ($scope,$http) {
 	    }
 
 	}).success(function(response){
+		
+		if(response.tickler == null) {
+			return;
+		}
+		
+		
+		
 		if (response.tickler instanceof Array) {
 			$scope.ticklers = response.tickler;
 		} else {
@@ -61,6 +68,7 @@ oscarApp.controller('DashboardCtrl', function ($scope,$http) {
 			arr[0] = response.tickler;
 			$scope.ticklers = arr;
 		}
+		
 		
 	}).error(function(error){
 	    $scope.error = error;
@@ -77,6 +85,10 @@ oscarApp.controller('DashboardCtrl', function ($scope,$http) {
 	    }
 
 	}).success(function(response){
+		if(response.message == null) {
+			return;
+		}
+		
 		if (response.message instanceof Array) {
 			$scope.messages = response.message;
 		} else {
@@ -99,6 +111,10 @@ oscarApp.controller('DashboardCtrl', function ($scope,$http) {
 	    }
 
 	}).success(function(response){
+		
+		if(response.inbox == null) {
+			return;
+		}
 		if (response.inbox instanceof Array) {
 			$scope.inbox = response.inbox;
 		} else {
@@ -121,6 +137,10 @@ oscarApp.controller('DashboardCtrl', function ($scope,$http) {
 	    }
 
 	}).success(function(response){
+		if(response.item == null) {
+			return;
+		}
+		
 		if (response.item instanceof Array) {
 			$scope.k2afeed = response.item;
 		} else {
@@ -133,5 +153,18 @@ oscarApp.controller('DashboardCtrl', function ($scope,$http) {
 	    $scope.error = error;
 	});	
 	
+	$scope.isTicklerExpiredOrHighPriority = function(tickler) {
+		var ticklerDate = Date.parse(tickler.serviceDate);
+		var now = new Date();
+		var result = false;
+		if(ticklerDate < now) {
+			result=true;
+		}
+		if(tickler.priority == 'High') {
+			result=true;
+		}
+			
+		return result;
+	}
 	
 });
