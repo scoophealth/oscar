@@ -23,7 +23,7 @@
     Ontario, Canada
 
 */
-oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$stateParams,$state,$filter,user,noteService) {
+oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$stateParams,$state,$filter,user,noteService,summaryService) {
 	console.log("in summary Ctrl ",$stateParams);
 	
 	$scope.page = {};
@@ -243,4 +243,59 @@ function resizeIframe(iframe) {
     //alert("h" + h);
   }
     
+
+////Left side list // PULL OUT FOR COMMIT
+
+function getLeftItems(){
+	summaryService.left($stateParams.demographicNo).then(function(data){
+		  console.log("left",data);
+		  //console.log($scope.page.columnOne);
+		  //console.log($scope.page.columnOne.modules);
+	      $scope.page.columnOne.modules = data;
+	      fillItems($scope.page.columnOne.modules);
+    	},
+    	function(errorMessage){
+	       console.log("left"+errorMessage);
+	       $scope.error=errorMessage;
+    	}
+	);
+};
+
+getLeftItems();
+
+$scope.gotoState = function(item){
+	console.log(item);
+	$state.transitionTo(item.action,{demographicNo:$stateParams.demographicNo, type: item.type ,id: item.id},{location:'replace',notify:true});
+};
+
+	function fillItems(itemsToFill){
+		for (var i = 0; i < itemsToFill.length; i++) {
+			console.log(itemsToFill[i].summaryCode);
+		 
+			summaryService.getFullSummary($stateParams.demographicNo,itemsToFill[i].summaryCode).then(function(data){
+				console.log("FullSummary returned ",data);
+		 		for (var j = 0; j < $scope.page.columnOne.modules.length; j++) {
+		 			//console.log($scope.page.columnOne.modules[j].summaryCode,data.summaryCode);
+		 			if($scope.page.columnOne.modules[j].summaryCode == data.summaryCode){
+		 				console.log("match on "+$scope.page.columnOne.modules[j].summaryCode ,data);
+		 				if(data.summaryItem instanceof Array){
+		 				$scope.page.columnOne.modules[j].summaryItem = data.summaryItem;
+		 				}else{
+		 					$scope.page.columnOne.modules[j].summaryItem = [data.summaryItem];
+		 				}
+		 			}
+		 			//if($scope.page.columnOne.modules[j] == 
+		 		}
+			 
+				},
+				function(errorMessage){
+					console.log("fillItems"+errorMessage); 
+				}
+				 
+			);
+		}
+	}
+////TO HERE
+
+
 });
