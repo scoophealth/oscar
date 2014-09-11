@@ -40,7 +40,7 @@ CDA Header
   <templateId root="2.16.840.1.113883.3.1818.10.7.1"/>
   <!-- Conforms to the BC PITO EMR Conversion Document specification -->
   <templateId root="2.16.840.1.113883.3.1818.10.1.1"/>
-  <id root="$randDocGUID"/>
+  <id extension="$demographic.demographicNo" root="$randDocGUID"/>
   <code code="11503-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" codeSystemVersion="2.44" displayName="Medical Records">
     <originalText representation="TXT" mediaType="text/plain"/>
   </code>
