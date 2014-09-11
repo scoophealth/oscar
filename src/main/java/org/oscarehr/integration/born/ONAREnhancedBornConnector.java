@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlOptions;
 import org.oscarehr.common.dao.BornTransmissionLogDao;
 import org.oscarehr.common.model.BornTransmissionLog;
@@ -49,6 +51,8 @@ import oscar.OscarProperties;
 
 public class ONAREnhancedBornConnector {
 
+	Logger logger = MiscUtils.getLogger();
+	
 	public ONAREnhancedBornConnector() {
 		
 	}
@@ -74,18 +78,30 @@ public class ONAREnhancedBornConnector {
 		}
 	}
 	
-	public String getFileSuffix() throws Exception {
-		Connection conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
+	public String getFileSuffix()  {
+		Connection conn=null;
+		Statement st=null;
 		int num = 0;
 		try {
-			Statement st = conn.createStatement();
+			conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
+			
+			st = conn.createStatement();
 			String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 			ResultSet rs = st.executeQuery("select count(*) as count from BornTransmissionLog where submitDateTime >= '" + today + " 00:00:00' and submitDateTime <= '" + today + " 23:59:59'");
 			if(rs.next()) {
 				num = rs.getInt("count");
 			}
+		}catch(Exception e) {
+			MiscUtils.getLogger().error("Error",e);
 		}finally {
-			//conn.close();
+			if(st != null)
+				try {
+					st.close();
+				}catch(SQLException e){}
+			if(conn != null)
+				try {
+					conn.close();
+				}catch(SQLException e){}
 		}
 		num++;
 		String tmp = String.valueOf(num);
@@ -94,27 +110,15 @@ public class ONAREnhancedBornConnector {
 	}
 	
 	public String updateBorn() throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		String dt = sdf.format(new Date());				
-		String filename =  "/BORN_"+OscarProperties.getInstance().getProperty("born_orgid", "")+"_AR_" + OscarProperties.getInstance().getProperty("born_env", "T") + "_"+dt+"_"+getFileSuffix()+".xml";
+		String filename = generateFilename();
 		
 		Connection conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery("select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId,c_postal from (select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId,c_postal from formONAREnhanced where c_finalEDB!='' AND c_finalEDB IS NOT NULL ORDER BY formEdited DESC) AS x  GROUP BY demographic_no");
 		
 		ONAREnhancedFormToXML xml = new ONAREnhancedFormToXML();
-		HashMap<String,String> suggestedPrefixes = new HashMap<String,String>();
-		suggestedPrefixes.put("http://www.oscarmcmaster.org/AR2005", "");
-		suggestedPrefixes.put("http://www.w3.org/2001/XMLSchema-instance","xsi");
-		XmlOptions opts = new XmlOptions();
-		opts.setSaveSuggestedPrefixes(suggestedPrefixes);
-		opts.setSavePrettyPrint();
-		opts.setSaveNoXmlDecl();
-		opts.setUseDefaultNamespace();
-		Map<String,String> implicitNamespaces = new HashMap<String,String>();
-		implicitNamespaces.put("","http://www.oscarmcmaster.org/AR2005");
-		opts.setSaveImplicitNamespaces(implicitNamespaces);
-		opts.setSaveNamespacesFirst();
+		XmlOptions opts = getXmlOptions();
+		
 		String tmpPath = System.getProperty("java.io.tmpdir");
 		int total = 0;		
 		OutputStream os = null;
@@ -208,5 +212,82 @@ public class ONAREnhancedBornConnector {
 		conn.close();
 		
 		return filename;
+	}
+	
+	public XmlOptions getXmlOptions() {
+		HashMap<String,String> suggestedPrefixes = new HashMap<String,String>();
+		suggestedPrefixes.put("http://www.oscarmcmaster.org/AR2005", "");
+		suggestedPrefixes.put("http://www.w3.org/2001/XMLSchema-instance","xsi");
+		XmlOptions opts = new XmlOptions();
+		opts.setSaveSuggestedPrefixes(suggestedPrefixes);
+		opts.setSavePrettyPrint();
+		opts.setSaveNoXmlDecl();
+		opts.setUseDefaultNamespace();
+		Map<String,String> implicitNamespaces = new HashMap<String,String>();
+		implicitNamespaces.put("","http://www.oscarmcmaster.org/AR2005");
+		opts.setSaveImplicitNamespaces(implicitNamespaces);
+		opts.setSaveNamespacesFirst();
+		return opts;
+	}
+	
+	private String generateFilename() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String dt = sdf.format(new Date());				
+		String filename =  "/BORN_"+OscarProperties.getInstance().getProperty("born_orgid", "")+"_AR_" + OscarProperties.getInstance().getProperty("born_env", "T") + "_"+dt+"_"+getFileSuffix()+".xml";
+		return filename;
+	}
+	
+	public List<Map<String,Object>> getMetadata() throws Exception {
+		List<Map<String,Object>> results = new ArrayList<Map<String,Object>>();
+		
+		Connection conn=null;
+		Statement st=null;
+		
+		try {
+			
+			conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
+			st = conn.createStatement();
+			ResultSet rs = st.executeQuery("select provider_no,demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId,c_postal from (select provider_no,demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId,c_postal from formONAREnhanced where c_finalEDB!='' AND c_finalEDB IS NOT NULL ORDER BY formEdited DESC) AS x  GROUP BY demographic_no");
+			while(rs.next()) {
+				try {
+					int demographicNo = rs.getInt("demographic_no");
+					int id = rs.getInt("id");
+					boolean sent = rs.getBoolean("sent_to_born");
+					int episodeId = rs.getInt("episodeId");
+					String postalCode = rs.getString("c_postal");
+					String providerNo = rs.getString("provider_no");
+					Date formEdited = rs.getDate("formEdited");
+					
+					if(postalCode == null || postalCode.length() == 0) {
+						continue;
+					}
+					if(!sent) {
+						Map<String,Object> r = new HashMap<String,Object>();
+						
+						r.put("demographicNo", demographicNo);
+						r.put("id",id);
+						r.put("sent",sent);
+						r.put("episodeId",episodeId);
+						r.put("providerNo",providerNo);
+						r.put("formEdited", formEdited);
+						
+						results.add(r);
+					}
+				}catch(Exception e) {
+					MiscUtils.getLogger().warn("Unable to add record",e);
+				}			
+			}
+			
+		} finally {
+			if(st != null)
+				try {
+					st.close();
+				}catch(SQLException e){}
+			if(conn != null)
+				try {
+					conn.close();
+				}catch(SQLException e){}
+		}
+		return results;
 	}
 }
