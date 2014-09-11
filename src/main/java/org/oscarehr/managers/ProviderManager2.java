@@ -24,6 +24,7 @@
 
 package org.oscarehr.managers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -65,7 +66,16 @@ public class ProviderManager2 {
 
 		return (result);
 	}
-	
+
+	public List<Provider> getProvidersByIds(LoggedInInfo loggedInInfo, List<String> ids) {
+		List<Provider> results = new ArrayList<Provider>();
+		for(String id:ids) {
+			results.add(getProvider(loggedInInfo, id));
+			LogAction.addLogSynchronous(loggedInInfo, "ProviderManager.getProviders, providerNo=" + id, null);
+		}
+		return results;
+	}
+
 	public List<Property> getProviderProperties(LoggedInInfo loggedInInfo, String providerNo, String propertyName)
 	{
 		List<Property> results=propertyDao.findByNameAndProvider(propertyName, providerNo);

@@ -146,6 +146,35 @@ public class ONAREnhancedFormToXML {
 		}
 		return false;
 	}
+	
+	public FrmRecord addXmlToStream2(Writer os, XmlOptions opts, String providerNo,String demographicNo, int formId, int episodeId) throws Exception {
+		this.demographicNo = demographicNo;
+		this.providerNo = providerNo;
+		this.formId = formId;
+		this.episodeId = episodeId;	    
+	    FrmRecord rec = (new FrmRecordFactory()).factory("ONAREnhanced");
+	    props = rec.getFormRecord(Integer.parseInt(demographicNo), formId);	    
+		//ARRecord arRecord = ARRecord.Factory.newInstance();
+		ARRecordDocument arRecordDoc = ARRecordDocument.Factory.newInstance();
+		ARRecord arRecord = arRecordDoc.addNewARRecord();
+		AR1 ar1 = arRecord.addNewAR1();
+		populateAr1(ar1,providerNo);
+		AR2 ar2 = arRecord.addNewAR2();
+		populateAr2(ar2);		
+		XmlOptions m_validationOptions = new XmlOptions();		
+		ArrayList validationErrors = new ArrayList();
+		m_validationOptions.setErrorListener(validationErrors);
+		if(arRecordDoc.validate(m_validationOptions)) {
+			arRecordDoc.save(os,opts);
+			return rec;
+		} else {
+			MiscUtils.getLogger().warn("form failed validation:"+formId);
+			for(Object o:validationErrors) {
+				MiscUtils.getLogger().warn(o);
+			}
+		}
+		return null;
+	}
 
 	void populateAr1(AR1 ar1, String providerNo)  {
 		ar1.setDemographicNo(Integer.parseInt(demographicNo));

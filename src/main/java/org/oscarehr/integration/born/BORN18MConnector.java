@@ -28,8 +28,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,7 +67,73 @@ public class BORN18MConnector {
 	
 	private final OscarProperties oscarProperties = OscarProperties.getInstance();
 	private final String filenameStart = "BORN_" + oscarProperties.getProperty("born18m_orgcode", "") + "_18MEWBV_" + oscarProperties.getProperty("born18m_env", "T");
+
+	public List<Integer> getDemographicIdsOfUnsentRecords()  {		
+		List<Integer> results = new ArrayList<Integer>();
+    	String rourkeFormName = oscarProperties.getProperty("born18m_eform_rourke", "Rourke Baby Record");
+    	String nddsFormName = oscarProperties.getProperty("born18m_eform_ndds", "Nipissing District Developmental Screen");
+    	String rpt18mFormName = oscarProperties.getProperty("born18m_eform_report18m", "Summary Report: 18-month Well Baby Visit");
+    	
+		EForm rourkeForm = eformDao.findByName(rourkeFormName);
+		EForm nddsForm = eformDao.findByName(nddsFormName);
+		EForm rpt18mForm = eformDao.findByName(rpt18mFormName);
+
+		List<Integer> rourkeFormDemoList = new ArrayList<Integer>();
+		List<Integer> nddsFormDemoList = new ArrayList<Integer>();
+		List<Integer> rpt18mFormDemoList = new ArrayList<Integer>();
+		
+		if (rourkeForm==null) logger.error(rourkeFormName+" form not found!");
+		else buildDemoNos(rourkeForm, rourkeFormDemoList);
+		if (nddsForm==null) logger.error(nddsFormName+" form not found!");
+		else buildDemoNos(nddsForm, nddsFormDemoList);
+		if (rpt18mForm==null) logger.error(rpt18mFormName+" form not found!");
+		else buildDemoNos(rpt18mForm, rpt18mFormDemoList);
+    	
+		HashMap<Integer,Integer> rourkeFormDemoFdids = new HashMap<Integer,Integer>();
+		HashMap<Integer,Integer> nddsFormDemoFdids = new HashMap<Integer,Integer>();
+		HashMap<Integer,Integer> rpt18mFormDemoFdids = new HashMap<Integer,Integer>();
+		
+		for (Integer demoNo : rourkeFormDemoList) {
+			Integer fdid = checkRourkeDone(rourkeFormName, demoNo);
+			if (fdid!=null) rourkeFormDemoFdids.put(demoNo, fdid);
+			if(!results.contains(demoNo))
+				results.add(demoNo);
+		}
+		for (Integer demoNo : nddsFormDemoList) {
+			Integer fdid = checkNddsDone(nddsFormName, demoNo);
+			if (fdid!=null) nddsFormDemoFdids.put(demoNo, fdid);
+			if(!results.contains(demoNo))
+				results.add(demoNo);
+		}
+		for (Integer demoNo : rpt18mFormDemoList) {
+			Integer fdid = checkReport18mDone(rpt18mFormName, demoNo);
+			if (fdid!=null) rpt18mFormDemoFdids.put(demoNo, fdid);
+			if(!results.contains(demoNo))
+				results.add(demoNo);
+		}
+		
+		return results;
+	}
 	
+	
+	public String getXmlForDemographic(Integer demoNo) {
+	   	String rourkeFormName = oscarProperties.getProperty("born18m_eform_rourke", "Rourke Baby Record");
+    	String nddsFormName = oscarProperties.getProperty("born18m_eform_ndds", "Nipissing District Developmental Screen");
+    	String rpt18mFormName = oscarProperties.getProperty("born18m_eform_report18m", "Summary Report: 18-month Well Baby Visit");
+    	
+		Integer rourkeFdid = checkRourkeDone(rourkeFormName, demoNo);
+		Integer nddsFdid = checkNddsDone(nddsFormName, demoNo);
+		Integer report18mFdid = checkReport18mDone(rpt18mFormName, demoNo);
+		
+		byte[] born18mXml = generateXml(demoNo, rourkeFdid, nddsFdid, report18mFdid);
+		String decoded = null;
+		try {
+			decoded = new String(born18mXml, "UTF-8");
+		}catch(UnsupportedEncodingException e) {
+			logger.error("error",e);
+		}
+		return decoded;
+	}
 	
 	public void updateBorn() {
     	String rourkeFormName = oscarProperties.getProperty("born18m_eform_rourke", "Rourke Baby Record");
@@ -209,6 +277,69 @@ public class BORN18MConnector {
 		}
 		
 		return fdid;
+	}
+	
+	public List<String> getAuthors(Integer demoNo) {
+		List<String> results = new ArrayList<String>();
+		
+		String rourkeFormName = oscarProperties.getProperty("born18m_eform_rourke", "Rourke Baby Record");
+    	String nddsFormName = oscarProperties.getProperty("born18m_eform_ndds", "Nipissing District Developmental Screen");
+    	String rpt18mFormName = oscarProperties.getProperty("born18m_eform_report18m", "Summary Report: 18-month Well Baby Visit");
+    	
+		Integer rourkeFdid = checkRourkeDone(rourkeFormName, demoNo);
+		Integer nddsFdid = checkNddsDone(nddsFormName, demoNo);
+		Integer report18mFdid = checkReport18mDone(rpt18mFormName, demoNo);
+		
+		EFormValueDao eformValueDao = SpringUtils.getBean(EFormValueDao.class);
+		EFormDataDao eformDataDao = SpringUtils.getBean(EFormDataDao.class);
+		
+		EFormValue rourkeProvider = eformValueDao.findByFormDataIdAndKey(rourkeFdid, "efmprovider_no");
+		EFormValue nddsProvider = eformValueDao.findByFormDataIdAndKey(nddsFdid, "efmprovider_no");
+		EFormValue report18mProvider = eformValueDao.findByFormDataIdAndKey(report18mFdid, "efmprovider_no");
+		
+		if(rourkeProvider != null) {
+			results.add(rourkeProvider.getVarValue());
+		}
+		if(nddsProvider != null) {
+			results.add(nddsProvider.getVarValue());
+		}
+		if(report18mProvider != null) {
+			results.add(report18mProvider.getVarValue());
+		}
+		return results;	
+	}
+	
+	/**
+	 * Only goes to formDate level, not time.
+	 * 
+	 * @param demoNo
+	 * @return
+	 */
+	public Date getLatestDateForTrio(Integer demoNo) {
+		String rourkeFormName = oscarProperties.getProperty("born18m_eform_rourke", "Rourke Baby Record");
+    	String nddsFormName = oscarProperties.getProperty("born18m_eform_ndds", "Nipissing District Developmental Screen");
+    	String rpt18mFormName = oscarProperties.getProperty("born18m_eform_report18m", "Summary Report: 18-month Well Baby Visit");
+    	
+		Integer rourkeFdid = checkRourkeDone(rourkeFormName, demoNo);
+		Integer nddsFdid = checkNddsDone(nddsFormName, demoNo);
+		Integer report18mFdid = checkReport18mDone(rpt18mFormName, demoNo);
+		
+		EFormDataDao eformDataDao = SpringUtils.getBean(EFormDataDao.class);
+		
+		
+		List<EFormData> forms = eformDataDao.findByFdids(Arrays.asList(new Integer[]{rourkeFdid,nddsFdid,report18mFdid}));
+		Date latestDate = null;
+		for(EFormData form:forms) {
+			if(latestDate ==null) {
+				latestDate = form.getFormDate();
+				continue;
+			}
+			if(latestDate.before(form.getFormDate())) {
+				latestDate = form.getFormDate();
+			}
+		}
+		
+		return latestDate;	
 	}
 	
 	private byte[] generateXml(Integer demographicNo, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid) {
