@@ -24,7 +24,9 @@
 package org.oscarehr.ws.rest.to.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -65,7 +67,18 @@ public class TicklerTo1 implements Serializable {
 	//private Set<TicklerComment> comments = new HashSet<TicklerComment>();
 	
 	private String demographicName;
+	  
+	private String creatorName;
+	   
+	private String taskAssignedToName;
+	   
+	private String statusName;
+	   
+	private List<TicklerLinkTo1> ticklerLinks = new ArrayList<TicklerLinkTo1>();
 	
+	private List<TicklerUpdateTo1> ticklerUpdates = new ArrayList<TicklerUpdateTo1>();
+	
+	private List<TicklerCommentTo1> ticklerComments = new ArrayList<TicklerCommentTo1>();
 	
 	public Integer getId() {
 		return id;
@@ -154,23 +167,53 @@ public class TicklerTo1 implements Serializable {
 	public void setDemographicName(String demographicName) {
 		this.demographicName = demographicName;
 	}
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+
+	public String getTaskAssignedToName() {
+		return taskAssignedToName;
+	}
+
+	public void setTaskAssignedToName(String taskAssignedToName) {
+		this.taskAssignedToName = taskAssignedToName;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public List<TicklerLinkTo1> getTicklerLinks() {
+		return ticklerLinks;
+	}
+
+	public void setTicklerLinks(List<TicklerLinkTo1> ticklerLinks) {
+		this.ticklerLinks = ticklerLinks;
+	}
+
+	public List<TicklerUpdateTo1> getTicklerUpdates() {
+		return ticklerUpdates;
+	}
+
+	public void setTicklerUpdates(List<TicklerUpdateTo1> ticklerUpdates) {
+		this.ticklerUpdates = ticklerUpdates;
+	}
+
+	public List<TicklerCommentTo1> getTicklerComments() {
+		return ticklerComments;
+	}
+
+	public void setTicklerComments(List<TicklerCommentTo1> ticklerComments) {
+		this.ticklerComments = ticklerComments;
+	}
 	
-	
-/*
-	public Set<TicklerUpdate> getUpdates() {
-		return updates;
-	}
-
-	public void setUpdates(Set<TicklerUpdate> updates) {
-		this.updates = updates;
-	}
-
-	public Set<TicklerComment> getComments() {
-		return comments;
-	}
-
-	public void setComments(Set<TicklerComment> comments) {
-		this.comments = comments;
-	}
-*/
 }

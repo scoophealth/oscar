@@ -28,18 +28,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
-
-
-
-
-
-
 import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -52,22 +46,34 @@ import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
+import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.service.NoteSelectionCriteria;
 import org.oscarehr.casemgmt.service.NoteSelectionResult;
 import org.oscarehr.casemgmt.service.NoteService;
+import org.oscarehr.casemgmt.web.CaseManagementEntryAction;
 import org.oscarehr.casemgmt.web.NoteDisplay;
 import org.oscarehr.casemgmt.web.NoteDisplayLocal;
 import org.oscarehr.common.model.CaseManagementTmpSave;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.EncounterUtil;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
+import org.oscarehr.ws.rest.to.GenericRESTResponse;
+import org.oscarehr.ws.rest.to.TicklerNoteResponse;
 import org.oscarehr.ws.rest.to.model.NoteSelectionTo1;
 import org.oscarehr.ws.rest.to.model.NoteTo1;
+import org.oscarehr.ws.rest.to.model.TicklerNoteTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -92,6 +98,16 @@ public class NotesService extends AbstractServiceImpl {
 	
 	@Autowired
 	private CaseManagementManager caseManagementMgr;
+	
+	@Autowired
+	private ProviderManager providerMgr;
+	
+	@Autowired
+	private IssueDAO issueDao;
+	
+	@Autowired
+	private SecurityInfoManager securityInfoManager;
+	
 	
 	
 	@POST
@@ -821,5 +837,159 @@ public class NotesService extends AbstractServiceImpl {
 	}
 	
 
+	@GET
+	@Path("/ticklerGetNote/{ticklerNo}")
+	@Produces("application/json")
+	//{"ticklerNote":{"editor":"oscardoc, doctor","note":"note 2","noteId":6,"observationDate":"2014-09-13T13:18:41-04:00","revision":2}}
+	public TicklerNoteResponse ticklerGetNote(@PathParam("ticklerNo") Integer ticklerNo ){
+
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "r")) {
+			throw new RuntimeException("Access Denied");
+		}
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_eChart", "r")) {
+			throw new RuntimeException("Access Denied");
+		}
+		
+		TicklerNoteResponse response = new TicklerNoteResponse();
+		CaseManagementNoteLink link = caseManagementMgr.getLatestLinkByTableId(CaseManagementNoteLink.TICKLER, Long.valueOf(ticklerNo));
+		
+		if(link != null) {
+			Long noteId = link.getNoteId();
+			
+			CaseManagementNote note = caseManagementMgr.getNote(noteId.toString());
+			
+			if(note != null) {
+				TicklerNoteTo1 tNote = new TicklerNoteTo1();
+				tNote.setNoteId(note.getId().intValue());
+				tNote.setNote(note.getNote());
+				tNote.setRevision(note.getRevision());
+				tNote.setObservationDate(note.getObservation_date());
+				tNote.setEditor(providerMgr.getProvider(note.getProviderNo()).getFormattedName());
+				response.setTicklerNote(tNote);
+			}
+		}
+		return response;
+	}
+	
+	@POST
+	@Path("/ticklerSaveNote")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse ticklerSaveNote(JSONObject json){
+		
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "w")) {
+			throw new RuntimeException("Access Denied");
+		}
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_eChart", "w")) {
+			throw new RuntimeException("Access Denied");
+		}
+
+		logger.info("The config "+json.toString());
+		
+		String strNote = json.getString("note");
+		Integer noteId = json.getInt("noteId");
+		
+		logger.info("want to save note id " + noteId + " with value " + strNote);
+		
+		JSONObject tickler = json.getJSONObject("tickler");
+		Integer ticklerId = tickler.getInt("id");
+		Integer demographicNo = tickler.getInt("demographicNo");
+		
+		logger.info("tickler id " + ticklerId + ", demographicNo " + demographicNo);
+		
+		Date creationDate = new Date();
+		LoggedInInfo loggedInInfo=this.getLoggedInInfo();
+		Provider loggedInProvider = loggedInInfo.getLoggedInProvider();
+		
+		
+		String revision = "1";
+		String history = strNote;
+		String uuid = null;
+		
+		if(noteId != null  && noteId.intValue()>0) {
+			CaseManagementNote existingNote = caseManagementMgr.getNote(String.valueOf(noteId));
+			
+			revision = String.valueOf(Integer.valueOf(existingNote.getRevision()).intValue() + 1);
+			history = strNote + "\n" + existingNote.getHistory();
+			uuid = existingNote.getUuid();
+		}
+		
+		CaseManagementNote cmn = new CaseManagementNote();
+		cmn.setAppointmentNo(0);
+		cmn.setArchived(false);
+		cmn.setCreate_date(creationDate);
+		cmn.setDemographic_no(String.valueOf(demographicNo));
+		cmn.setEncounter_type(EncounterUtil.EncounterType.FACE_TO_FACE_WITH_CLIENT.getOldDbValue());
+		cmn.setNote(strNote);
+		cmn.setObservation_date(creationDate);
+		
+		cmn.setProviderNo(loggedInProvider.getProviderNo());
+		cmn.setRevision(revision);
+		cmn.setSigned(true);
+		cmn.setSigning_provider_no(loggedInProvider.getProviderNo());
+		cmn.setUpdate_date(creationDate);
+		cmn.setHistory(history);
+		//just doing this because the other code does it.
+		cmn.setReporter_program_team("null");
+		cmn.setUuid(uuid);
+		
+		
+		ProgramProvider pp = programManager2.getCurrentProgramInDomain(getLoggedInInfo(),getLoggedInInfo().getLoggedInProviderNo());
+		if(pp != null) {
+			cmn.setProgram_no(String.valueOf(pp.getProgramId()));
+		} else {
+			List<ProgramProvider> ppList = programManager2.getProgramDomain(getLoggedInInfo(),getLoggedInInfo().getLoggedInProviderNo());
+			if(ppList != null && ppList.size()>0) {
+				cmn.setProgram_no(String.valueOf(ppList.get(0).getProgramId()));
+			}
+			
+		}
+		
+		//weird place for it , but for now.
+		CaseManagementEntryAction.determineNoteRole(cmn,loggedInProvider.getProviderNo(),String.valueOf(demographicNo));
+		
+		caseManagementMgr.saveNoteSimple(cmn);
+
+		logger.info("note id is " + cmn.getId());
+		
+		
+		//save link, so we know what tickler this note is linked to
+		CaseManagementNoteLink link = new CaseManagementNoteLink();
+		link.setNoteId(cmn.getId());
+		link.setTableId(ticklerId.longValue());
+		link.setTableName(CaseManagementNoteLink.TICKLER);
+		
+		CaseManagementNoteLinkDAO caseManagementNoteLinkDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
+		caseManagementNoteLinkDao.save(link);
+		
+		
+		
+		Issue issue = this.issueDao.findIssueByTypeAndCode("system", "TicklerNote");
+		if(issue == null) {
+			logger.warn("missing TicklerNote issue, please run all database updates");
+			return null;
+		}
+		//save issue..this will make it a "cpp looking" issue in the eChart
+		CaseManagementIssue cmi = new CaseManagementIssue();
+		cmi.setAcute(false);
+		cmi.setCertain(false);
+		cmi.setDemographic_no(String.valueOf(demographicNo));
+		cmi.setIssue_id(issue.getId());
+		cmi.setMajor(false);
+		cmi.setProgram_id(Integer.parseInt(cmn.getProgram_no()));
+		cmi.setResolved(false);
+		cmi.setType(issue.getRole());
+		cmi.setUpdate_date(creationDate);
+		
+		caseManagementMgr.saveCaseIssue(cmi);
+		
+		cmn.getIssues().add(cmi);
+		
+		caseManagementMgr.updateNote(cmn);
+
+		 
+		
+		return new GenericRESTResponse();
+	}
 
 }

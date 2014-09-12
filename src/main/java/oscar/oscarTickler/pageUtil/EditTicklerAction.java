@@ -176,7 +176,7 @@ public class EditTicklerAction extends DispatchAction{
         }
 
         TicklerUpdate tu = new TicklerUpdate();
-        tu.setId(t.getId());
+        tu.setTicklerNo(t.getId());
         tu.setUpdateDate(now);            
         tu.setProviderNo(providerNo);
 

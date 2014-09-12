@@ -99,6 +99,9 @@ public class TicklerManager {
 	@Autowired
 	private CustomFilterDao customFilterDao;
 	
+
+	
+	
 	
     public void addTickler(LoggedInInfo loggedInInfo, Tickler tickler) {
         ticklerDao.persist(tickler);
@@ -108,6 +111,16 @@ public class TicklerManager {
     }
     
     public void updateTickler(LoggedInInfo loggedInInfo, Tickler tickler) {
+    	for(TicklerUpdate tu:tickler.getUpdates()) {
+    		if(tu.getId() == null || tu.getId().intValue() == 0) {
+    			ticklerUpdateDao.persist(tu);
+    		}
+    	}
+    	for(TicklerComment tc:tickler.getComments()) {
+    			if(tc.getId() == null || tc.getId().intValue() == 0) {
+    				ticklerCommentDao.persist(tc);
+    		}
+    	}
         ticklerDao.merge(tickler);
      
         //--- log action ---
@@ -156,7 +169,6 @@ public class TicklerManager {
         
         return(results);
     }
-    
     
     protected List<Tickler> ticklerFacilityFiltering(LoggedInInfo loggedInInfo, List<Tickler> ticklers) {
         ArrayList<Tickler> results = new ArrayList<Tickler>();

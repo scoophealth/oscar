@@ -54,6 +54,7 @@
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
 <%@ page import="org.oscarehr.common.model.MeasurementMap, org.oscarehr.common.dao.MeasurementMapDao" %>
+<%@ page import="org.apache.commons.lang.StringUtils" %>
 <%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.common.dao.Hl7TextMessageDao, org.oscarehr.common.model.Hl7TextMessage,org.oscarehr.common.dao.Hl7TextInfoDao,org.oscarehr.common.model.Hl7TextInfo"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%@	page import="javax.swing.text.rtf.RTFEditorKit"%>
@@ -68,13 +69,20 @@
 LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 oscar.OscarProperties props = oscar.OscarProperties.getInstance();
 String segmentID = request.getParameter("segmentID");
-String providerNo = request.getParameter("providerNo");
-String searchProviderNo = request.getParameter("searchProviderNo");
+String providerNo =request.getParameter("providerNo");
+String searchProviderNo = StringUtils.trimToEmpty(request.getParameter("searchProviderNo"));
 String patientMatched = request.getParameter("patientMatched");
 String remoteFacilityIdString = request.getParameter("remoteFacilityId");
 String remoteLabKey = request.getParameter("remoteLabKey");
 String demographicID = request.getParameter("demographicId");
 String showAllstr = request.getParameter("all");
+
+
+if(providerNo == null) {
+	providerNo = loggedInInfo.getLoggedInProviderNo();
+}
+
+
 UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_COMMENT);
 boolean skipComment = false;

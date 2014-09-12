@@ -24,13 +24,13 @@
 package org.oscarehr.common.dao;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Query;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
@@ -152,7 +152,7 @@ public class TicklerDao extends AbstractDao<Tickler>{
 	
 	@SuppressWarnings("unchecked")
 	public List<Tickler> getTicklers(CustomFilter filter, int offset, int limit) {
-		String sql = "select t FROM Tickler t where t.serviceDate >= ? and t.serviceDate <= ? ";
+		String sql = "select t";
 		ArrayList<Object> paramList = new ArrayList<Object>();
 		sql = getTicklerQueryString(sql, paramList, filter);
 		
@@ -167,26 +167,24 @@ public class TicklerDao extends AbstractDao<Tickler>{
 		return results;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
+	/**
+	 * @Deprecated
+	 * 
+	 * Get Ticklers.
+	 * 
+	 * Warning..this will limit you to TicklerDao.MAX_LIST_RETURN_SIZE
+	 * @param filter
+	 * @return
+	 */
 	public List<Tickler> getTicklers(CustomFilter filter) {
-		String sql = "select t FROM Tickler t where t.serviceDate >= ? and t.serviceDate <= ? ";
-		ArrayList<Object> paramList = new ArrayList<Object>();
-		sql = getTicklerQueryString(sql, paramList, filter);
-		
-		Query query = entityManager.createQuery(sql);
-		for(int x=0;x<paramList.size();x++) {
-			query.setParameter(x+1, paramList.get(x));
-		}
-		
-		List<Tickler> results = query.getResultList();
-		
-		return results;
+		return getTicklers(filter,0,TicklerDao.MAX_LIST_RETURN_SIZE);
 	}
 
 
 	public int getNumTicklers(CustomFilter filter) {
 		List<Object> paramList = new ArrayList<Object>();
-		String sql = "select count(t) FROM Tickler t where t.serviceDate >= ? and t.serviceDate <= ? ";
+		String sql = "select count(t)";
 		sql = getTicklerQueryString(sql, paramList, filter);
 		
 		Query query = entityManager.createQuery(sql);
@@ -199,10 +197,17 @@ public class TicklerDao extends AbstractDao<Tickler>{
 		return result.intValue();
 	}
 	
-	private String getTicklerQueryString(String query, List<Object> paramList, CustomFilter filter) {
+	/**
+	 * selectQuery is in the form of "SELECT t"  
+	 * @param selectQuery
+	 * @param paramList
+	 * @param filter
+	 * @return
+	 */
+	private String getTicklerQueryString(String selectQuery, List<Object> paramList, CustomFilter filter) {
 		String tickler_date_order = filter.getSort_order();
         
-		
+		String query = selectQuery + " FROM Tickler t WHERE 1=1 ";
 		boolean includeMRPClause = true;
 		boolean includeProviderClause = true;
 		boolean includeAssigneeClause = true;
@@ -211,14 +216,17 @@ public class TicklerDao extends AbstractDao<Tickler>{
 		boolean includeDemographicClause = true;
 		boolean includeProgramClause = true;
 		boolean includeMessage = true;
-			
+		boolean includePriorityClause = true;
+		boolean includeServiceStartDateClause = false;
+		boolean includeServiceEndDateClause = false;
 		 
-		if (filter.getStartDateWeb() == null || filter.getStartDateWeb().length() == 0) {
-			filter.setStartDateWeb("1900-01-01");
+		if(filter.getStartDate() != null) {
+			includeServiceStartDateClause=true;
 		}
-		if (filter.getEndDateWeb() == null || filter.getEndDateWeb().length() == 0) {
-			filter.setEndDateWeb("8888-12-31");
+		if(filter.getEndDate() != null) {
+			includeServiceEndDateClause=true;
 		}
+		
 		if (filter.getProgramId() == null || "".equals(filter.getProgramId()) || filter.getProgramId().equals("All Programs")) {
 			includeProgramClause = false;
 		}
@@ -237,6 +245,9 @@ public class TicklerDao extends AbstractDao<Tickler>{
 		if (filter.getStatus().equals("") || filter.getStatus().equals("Z")) {
 			includeStatusClause = false;
 		}
+		if (filter.getPriority() == null || "".equals(filter.getPriority()) ) {
+			includePriorityClause = false;
+		}
 		if (filter.getMrp() == null || filter.getMrp().equals("All Providers") || filter.getMrp().equals("")) {
 			includeMRPClause = false;
 		}
@@ -244,11 +255,26 @@ public class TicklerDao extends AbstractDao<Tickler>{
         	includeMessage = false;
         }
 
-		paramList.add(filter.getStartDate());
-		paramList.add(new Date(filter.getEndDate().getTime() + DateUtils.MILLIS_PER_DAY));
-
 		if (includeMRPClause) {
-			query = "select t FROM Tickler t, Demographic d where t.serviceDate >= ? and t.serviceDate <= ? and d.DemographicNo = cast(t.demographicNo as integer) and d.ProviderNo = '" + filter.getMrp() + "'";
+			query = "select t FROM Tickler t, Demographic d where d.DemographicNo = cast(t.demographicNo as integer) and d.ProviderNo = '" + filter.getMrp() + "'";
+		}
+		
+		if (includeServiceStartDateClause) {
+			query = query + " and t.serviceDate >= ?";
+			paramList.add(filter.getStartDate());
+		}
+		
+		if (includeServiceEndDateClause) {
+			query = query + " and t.serviceDate <= ?";
+			
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(filter.getEndDate());
+			
+			cal.set(Calendar.HOUR_OF_DAY, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			
+			paramList.add(new Date(cal.getTime().getTime()));
 		}
 
 		//TODO: IN clause
@@ -290,6 +316,11 @@ public class TicklerDao extends AbstractDao<Tickler>{
 			paramList.add(convertStatus(filter.getStatus()));
 		}
 		
+		if (includePriorityClause) {
+			query = query + " and t.priority = ?";
+			paramList.add(convertPriority(filter.getPriority()));
+		}
+		
 		if (includeClientClause) {
 			query = query + " and t.demographicNo = ?";
 			paramList.add(Integer.parseInt(filter.getClient()));
@@ -314,6 +345,15 @@ public class TicklerDao extends AbstractDao<Tickler>{
 			result = Tickler.STATUS.C;
 		if(status != null && status.startsWith("D"))
 			result = Tickler.STATUS.D;
+		return result;
+	}
+	
+	private Tickler.PRIORITY convertPriority(String priority) {
+		Tickler.PRIORITY result = Tickler.PRIORITY.Normal;
+		if(priority != null && priority.equals("High"))
+			result = Tickler.PRIORITY.High;
+		if(priority != null && priority.equals("Low"))
+			result = Tickler.PRIORITY.Low;
 		return result;
 	}
 }

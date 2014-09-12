@@ -23,12 +23,23 @@
  */
 package org.oscarehr.ws.rest.conversion;
 
+import java.util.List;
+
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.TicklerDao;
+import org.oscarehr.common.dao.TicklerLinkDao;
 import org.oscarehr.common.model.Tickler;
+import org.oscarehr.common.model.Tickler.STATUS;
+import org.oscarehr.common.model.TicklerComment;
+import org.oscarehr.common.model.TicklerLink;
+import org.oscarehr.common.model.TicklerUpdate;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.ws.rest.to.model.TicklerCommentTo1;
 import org.oscarehr.ws.rest.to.model.TicklerTo1;
+import org.oscarehr.ws.rest.to.model.TicklerUpdateTo1;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +50,9 @@ public class TicklerConverter extends AbstractConverter<Tickler, TicklerTo1> {
 	@Autowired
 	private TicklerDao dao;
 	
+	private boolean includeLinks;
+	private boolean includeComments;
+	private boolean includeUpdates;
 	
 	@Override
 	public Tickler getAsDomainObject(LoggedInInfo loggedInInfo,TicklerTo1 t) throws ConversionException {
@@ -59,6 +73,10 @@ public class TicklerConverter extends AbstractConverter<Tickler, TicklerTo1> {
 
 	@Override
 	public TicklerTo1 getAsTransferObject(Tickler t) throws ConversionException {
+		ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+		TicklerLinkDao ticklerLinkDao = SpringUtils.getBean(TicklerLinkDao.class);
+		
 		TicklerTo1 d = new TicklerTo1();
 		
 		d.setCreator(t.getCreator());
@@ -73,9 +91,76 @@ public class TicklerConverter extends AbstractConverter<Tickler, TicklerTo1> {
 		d.setUpdateDate(t.getUpdateDate());
 		
 		//want responses to include patient name - be nice to have this configurable by a parameter map.
-		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+		
 		d.setDemographicName(demographicDao.getDemographicById(t.getDemographicNo()).getFormattedName());
+		
+		d.setTaskAssignedToName(providerDao.getProviderName(t.getTaskAssignedTo()));
+		d.setCreatorName(providerDao.getProviderName(t.getCreator()));
+		
+		if(d.getStatus() == STATUS.A) {
+			d.setStatusName("Active");
+		}
+		if(d.getStatus() == STATUS.C) {
+			d.setStatusName("Completed");
+		}
+		if(d.getStatus() == STATUS.D) {
+			d.setStatusName("Deleted");
+		}
+		
+		if(includeLinks) {
+			List<TicklerLink> links = ticklerLinkDao.getLinkByTickler(d.getId()); 
+			TicklerLinkConverter tlc = new TicklerLinkConverter();
+			d.setTicklerLinks(tlc.getAllAsTransferObjects(links));
+		}
+		
+		if(includeComments) {
+			for(TicklerComment tc : t.getComments()) {
+				TicklerCommentTo1 tct = new TicklerCommentTo1();
+				tct.setMessage(tc.getMessage());
+				tct.setProviderNo(tc.getProviderNo());
+				tct.setUpdateDate(tc.getUpdateDate());
+				tct.setProviderName(tc.getProvider()!=null?tc.getProvider().getFormattedName():"N/A");
+				d.getTicklerComments().add(tct);
+			}
+		}
+		
+		if(includeUpdates) {
+			for(TicklerUpdate tu : t.getUpdates()) {
+				TicklerUpdateTo1 tut = new TicklerUpdateTo1();
+				BeanUtils.copyProperties(tu, tut, new String[]{"id","provider"});
+				tut.setProviderName(tu.getProvider()!=null?tu.getProvider().getFormattedName():"N/A");
+				
+				d.getTicklerUpdates().add(tut);
+			}
+		}
+		
 		return d;
 	}
 
+	public boolean isIncludeLinks() {
+		return includeLinks;
+	}
+
+	public void setIncludeLinks(boolean includeLinks) {
+		this.includeLinks = includeLinks;
+	}
+
+	public boolean isIncludeComments() {
+		return includeComments;
+	}
+
+	public void setIncludeComments(boolean includeComments) {
+		this.includeComments = includeComments;
+	}
+
+	public boolean isIncludeUpdates() {
+		return includeUpdates;
+	}
+
+	public void setIncludeUpdates(boolean includeUpdates) {
+		this.includeUpdates = includeUpdates;
+	}
+
+	
+	
 }

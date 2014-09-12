@@ -95,7 +95,7 @@
     int curMonth = (now.get(Calendar.MONTH)+1);
 %>
 
-<html:html>
+<html:html locale="true">
     <head>
         <style type="text/css">
             td,th{

@@ -559,4 +559,55 @@ public class ProviderDao extends HibernateDaoSupport {
 			
 			return providers;
 		}
+		
+		@SuppressWarnings("unchecked")
+		public List<Provider> searchProviderByNamesString(String searchString, int startIndex, int itemsToReturn) {
+			String sqlCommand = "select x from Provider x";
+			if (searchString != null)  {
+				if(searchString.indexOf(",") != -1 &&  searchString.split(",").length>1 && searchString.split(",")[1].length()>0) {
+					sqlCommand = sqlCommand + " where x.LastName like :ln AND x.FirstName like :fn";
+				} else {
+					sqlCommand = sqlCommand + " where x.LastName like :ln";
+				}
+				
+			}
+
+			Session session = this.getSession();
+			try {
+				Query q = session.createQuery(sqlCommand);
+				if (searchString != null) {
+					q.setParameter("ln", "%" + searchString.split(",")[0] + "%");
+					if(searchString.indexOf(",") != -1 && searchString.split(",").length>1 && searchString.split(",")[1].length()>0) {
+						q.setParameter("fn", "%" +  searchString.split(",")[1] + "%");
+						
+					} 
+				}
+				q.setFirstResult(startIndex);
+				q.setMaxResults(itemsToReturn);
+				return (q.list());
+			} finally {
+				this.releaseSession(session);
+			}
+		}
+		
+		@SuppressWarnings("unchecked")
+		public List<Provider> search(boolean active, int startIndex, int itemsToReturn) {
+			String sqlCommand = "select x from Provider x ";
+			
+			if(active) {
+				sqlCommand += "WHERE x.Status='1'";
+			}
+			
+
+			Session session = this.getSession();
+			try {
+				Query q = session.createQuery(sqlCommand);
+				
+				q.setFirstResult(startIndex);
+				q.setMaxResults(itemsToReturn);
+				return (q.list());
+			} finally {
+				this.releaseSession(session);
+			}
+		}
 }
