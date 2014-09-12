@@ -25,10 +25,13 @@ package org.oscarehr.ws.rest;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -43,16 +46,25 @@ import org.apache.cxf.rs.security.oauth.data.OAuthContext;
 import org.apache.cxf.security.SecurityContext;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.ProviderManager2;
+import org.oscarehr.ws.rest.conversion.ProviderConverter;
+import org.oscarehr.ws.rest.to.AbstractSearchResponse;
+import org.oscarehr.ws.rest.to.model.ProviderTo1;
 import org.oscarehr.ws.transfer_objects.ProviderTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
+@Component("ProviderService")
 @Path("/providerService/")
 @Produces("application/xml")
 public class ProviderService extends AbstractServiceImpl {
 
 	@Autowired
 	ProviderDao providerDao;
+	
+	@Autowired
+	ProviderManager2 providerManager; 
 	
 	protected SecurityContext getSecurityContext() {
 		Message m = PhaseInterceptorChain.getCurrentMessage();
@@ -71,6 +83,7 @@ public class ProviderService extends AbstractServiceImpl {
 
     @GET
     @Path("/providers")
+    @Deprecated
     public org.oscarehr.ws.rest.to.OscarSearchResponse<ProviderTransfer> getProviders() {
     	org.oscarehr.ws.rest.to.OscarSearchResponse<ProviderTransfer> lst = new 
     			org.oscarehr.ws.rest.to.OscarSearchResponse<ProviderTransfer>();
@@ -126,4 +139,25 @@ public class ProviderService extends AbstractServiceImpl {
     public Response getBadRequest() {
         return Response.status(Status.BAD_REQUEST).build();
     }
+	
+	@POST
+	@Path("/providers/search")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public AbstractSearchResponse<ProviderTo1> search(JSONObject json,@QueryParam("startIndex") Integer startIndex,@QueryParam("itemsToReturn") Integer itemsToReturn ) {
+		AbstractSearchResponse<ProviderTo1> response = new AbstractSearchResponse<ProviderTo1>();
+		
+		int startIndexVal = startIndex==null?0:startIndex.intValue();
+		int itemsToReturnVal = itemsToReturn==null?5000:startIndex.intValue();
+		boolean active = Boolean.valueOf(json.getString("active"));
+		
+		List<Provider> results = providerManager.search(getLoggedInInfo(),active,startIndexVal, itemsToReturnVal);
+		
+		
+		ProviderConverter converter = new ProviderConverter();
+		response.setContent(converter.getAllAsTransferObjects(results));
+		response.setTotal(response.getContent().size());
+		
+		return response;
+	}
 }

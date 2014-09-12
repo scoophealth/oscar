@@ -1,5 +1,5 @@
     
-var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices','patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll','uxServices']);
+var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices','securityServices','patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll','uxServices','ngTable','oscarFilters']);
 
 
 oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
@@ -33,6 +33,11 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
   	      url: '/admin',
   	      templateUrl: 'admin/admin_popup.jsp',
             controller: 'AdminCtrl'
+  	    })  
+  	    .state('ticklers', {
+  	      url: '/ticklers',
+  	      templateUrl: 'tickler/ticklerList.jsp',
+            controller: 'TicklerListCtrl'
   	    })  
 	    .state('record', {
 	    	url: '/record/:demographicNo', 

@@ -53,6 +53,10 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 <link href="css/navbar-demo-search.css" rel="stylesheet">
 <link href="css/patient-list.css" rel="stylesheet">
 
+<link href="../library/ng-table/ng-table.css" rel="stylesheet">
+
+<link href="../library/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet">
+
 <style>
 /*styles temporary, when design complete styles will be moved to css above*/
 .hand-hover{cursor: pointer; cursor: hand;}
@@ -298,15 +302,19 @@ pre.noteInEdit {
  	
  	<script src="../library/ng-infinite-scroll.min.js"></script>
  	
- 
+ 	<script src="../library/ng-table/ng-table.js"></script>
+
 	<!-- we'll combine/minify later -->
 	<script src="common/demographicServices.js"></script>
+	<script src="common/securityServices.js"></script>
 	<script src="common/formServices.js"></script>
 	<script src="common/noteServices.js"></script>
 	<script src="common/providerServices.js"></script>
 	<script src="common/patientDetailStatusServices.js"></script>
 	<script src="common/uxServices.js"></script>
+	<script src="filters.js"></script>
 	<script src="app.js"></script>
+	
 	<script src="dashboard/dashboardController.js"></script>
 	<script src="common/navBarController.js"></script>
 	<script src="patientlist/patientListController.js"></script>
@@ -314,6 +322,8 @@ pre.noteInEdit {
 	<script src="record/summary/summaryController.js"></script>
 	<script src="record/forms/formsController.js"></script>
 	<script src="record/details/detailsController.js"></script>
+	
+	<script src="tickler/ticklerController.js"></script>
 	<!-- script src="inbox/inboxController.js"></script>
 	<script src="consults/consultListController.js"></script>	
 	<script src="billing/billingController.js"></script>
@@ -380,8 +390,7 @@ $(document).ready(function(){
 		       	engine: Hogan
 		}).on('typeahead:selected', function (obj, datum) {
 		    console.log('chose demographic ' + datum.id);
-		    window.location.href='#/patient/'+datum.id;
-		 //   $("#myinfo").html("You chose " + datum.name + " with demographic id " + datum.id);
+		    window.location.href='#/record/'+datum.id + "/summary";
 	});
 	
 });

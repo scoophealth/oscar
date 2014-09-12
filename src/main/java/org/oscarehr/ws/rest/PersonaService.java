@@ -34,8 +34,12 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.MessagingManager;
 import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.ws.rest.conversion.ProgramProviderConverter;
+import org.oscarehr.ws.rest.conversion.SecobjprivilegeConverter;
+import org.oscarehr.ws.rest.conversion.SecuserroleConverter;
 import org.oscarehr.ws.rest.to.NavbarResponse;
+import org.oscarehr.ws.rest.to.PersonaRightsResponse;
 import org.oscarehr.ws.rest.to.model.MenuTo1;
 import org.oscarehr.ws.rest.to.model.NavBarMenuTo1;
 import org.oscarehr.ws.rest.to.model.ProgramProviderTo1;
@@ -49,8 +53,26 @@ public class PersonaService extends AbstractServiceImpl {
 	private ProgramManager2 programManager2;
 	
 	@Autowired
-	private MessagingManager messsagingManager;
+	private MessagingManager messagingManager;
 	
+	@Autowired
+	private SecurityInfoManager securityInfoManager;
+	
+	
+	@GET
+	@Path("/rights")
+	@Produces("application/json")
+	public PersonaRightsResponse getMyRights() {
+		PersonaRightsResponse response = new PersonaRightsResponse();
+
+		SecuserroleConverter converter = new SecuserroleConverter();
+		response.setRoles(converter.getAllAsTransferObjects(securityInfoManager.getRoles(getLoggedInInfo())));
+		
+		SecobjprivilegeConverter converter2 = new SecobjprivilegeConverter();
+		response.setPrivileges(converter2.getAllAsTransferObjects(securityInfoManager.getSecurityObjects(getLoggedInInfo())));
+			
+		return response;
+	}
 	
 	@GET
 	@Path("/navbar")
@@ -82,8 +104,8 @@ public class PersonaService extends AbstractServiceImpl {
 		
 		/* counts */
 		
-		int messageCount = messsagingManager.getMyInboxMessageCount(provider.getProviderNo(), false);
-		int ptMessageCount = messsagingManager.getMyInboxMessageCount(provider.getProviderNo(),true);
+		int messageCount = messagingManager.getMyInboxMessageCount(provider.getProviderNo(), false);
+		int ptMessageCount = messagingManager.getMyInboxMessageCount(provider.getProviderNo(),true);
 		result.setUnreadMessagesCount(messageCount);
 		result.setUnreadPatientMessagesCount(ptMessageCount);
 		

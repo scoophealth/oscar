@@ -29,6 +29,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -178,4 +179,26 @@ public class SecobjprivilegeDao extends HibernateDaoSupport {
 		}
 		return results;
     }
+    
+    public List<Secobjprivilege> getByRoles(List<String> roles) {    	
+		String queryString = "from Secobjprivilege obj where obj.roleusergroup IN (:roles)";
+		List<Secobjprivilege> results = new ArrayList<Secobjprivilege>();
+		
+		
+		Session session = this.getSession();
+		try {
+			Query q = session.createQuery(queryString);
+			
+			
+			q.setParameterList("roles", roles);
+
+			results = q.list();
+		} finally {
+			this.releaseSession(session);
+		}
+		
+		return results;
+    }
 }
+
+

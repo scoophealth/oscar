@@ -3666,7 +3666,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		return null;
 	}
 	
-	private boolean determineNoteRole(CaseManagementNote note, String providerNo, String demographicNo) {
+	public static boolean determineNoteRole(CaseManagementNote note, String providerNo, String demographicNo) {
 		// Determines what program & role to assign the note to
 		ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
 		ProviderDefaultProgramDao defaultProgramDao = (ProviderDefaultProgramDao) SpringUtils.getBean("providerDefaultProgramDao");

@@ -27,11 +27,13 @@ package org.oscarehr.managers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.model.Property;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,9 @@ import oscar.log.LogAction;
 
 @Service
 public class ProviderManager2 {
+	private static Logger logger=MiscUtils.getLogger();
+	
+	
 	@Autowired
 	private ProviderDao providerDao;
 
@@ -84,5 +89,40 @@ public class ProviderManager2 {
 		LogAction.addLogSynchronous(loggedInInfo, "ProviderManager.getProviderProperties, providerNo=" + providerNo+", propertyName="+propertyName, null);
 		
 		return(results);
+	}
+	
+	/*
+	 * Format is LastName[,FirstName]
+	 */
+	public List<Provider> searchProviderByNames(LoggedInInfo loggedInInfo, String searchString, int startIndex, int itemsToReturn) {
+		
+		List<Provider> results = providerDao.searchProviderByNamesString(searchString, startIndex, itemsToReturn);
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("searchProviderByNames, searchString="+searchString+", result.size="+results.size());
+		}
+		
+		//--- log action ---
+		for (Provider provider : results) {
+			LogAction.addLogSynchronous(loggedInInfo, "ProviderManager.searchProviderByNames result", "provideRNo=" + provider.getProviderNo());
+		}
+
+		return (results);
+	}
+	
+	public List<Provider> search(LoggedInInfo loggedInInfo, boolean active, int startIndex, int itemsToReturn) {
+		
+		List<Provider> results = providerDao.search(active, startIndex, itemsToReturn);
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("search, active="+active+", result.size="+results.size());
+		}
+		
+		//--- log action --- this seems useless
+		for (Provider provider : results) {
+			LogAction.addLogSynchronous(loggedInInfo, "ProviderManager.search result", "providerNo=" + provider.getProviderNo());
+		}
+
+		return (results);
 	}
 }

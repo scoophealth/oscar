@@ -1,0 +1,28 @@
+<div class="modal-header">
+    <h4>Tickler Comments</h4>
+</div>  
+<div class="modal-body">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Provider</th>
+				<th>Update Date</th>
+				<th>Comment</th>
+			</tr>
+		</thead>
+		<tr ng-repeat="c in tickler.ticklerComments | orderBy:'updateDate':true">
+			<td>{{c.providerName}}</td>
+			<td>{{c.updateDate | date: 'yyyy-MM-dd HH:mm'}}</td>
+			<td>{{c.message}}</td>
+		</tr>
+	</table>
+
+</div>
+<div class="modal-footer">
+    <button class="btn" ng-click="close()">Close</button>
+</div>
+
+
+
+
+
