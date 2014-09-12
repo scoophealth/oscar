@@ -80,10 +80,10 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 	@Override
 	public void run() {
 		LoggedInInfo x = new LoggedInInfo();
-		x.loggedInProvider = provider;
-		x.loggedInSecurity = security;
+		x.setLoggedInProvider(provider);
+		x.setLoggedInSecurity(security);
 			
-		logger.info("BORN EHealth integration job started and running as " + x.loggedInProvider.getFormattedName());
+		logger.info("BORN EHealth integration job started and running as " + x.getLoggedInProvider().getFormattedName());
 		
 		//CDA per patient.
 		ONAREnhancedBornConnector arConnector = new ONAREnhancedBornConnector();
