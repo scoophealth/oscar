@@ -23,17 +23,17 @@
     Ontario, Canada
 
 */
-oscarApp.controller('PatientListCtrl', function ($scope,$http,$resource,$state) {
+oscarApp.controller('PatientListCtrl', function ($scope,$http,$resource,$state,providerService) {
 	
 	$scope.tabItems = [
-	             	{"id":0,"label":"Appts.","url":"../ws/rs/schedule/999998/day/today"},
-	             	{"id":1,"label":"CaseLoad","url":"json/patientList2.json"}
-	];
-	
-	$scope.moreTabItems = [
-					{"id":0,"label":"My Residents"},
-					{"id":1,"label":"Customize"}
-	];
+      	             	{"id":0,"label":"Appts.","url":"../ws/rs/schedule/day/today"},
+      	             	{"id":1,"label":"CaseLoad","url":"json/patientList2.json"}
+    ];
+      	
+    $scope.moreTabItems = [
+      					{"id":0,"label":"My Residents"},
+      					{"id":1,"label":"Customize"}
+    ];
 	
 	 $scope.getAppointmentStyle = function(patient){ 
 		 if (patient.status === "H") {
