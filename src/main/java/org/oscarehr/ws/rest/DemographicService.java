@@ -62,9 +62,12 @@ import org.oscarehr.ws.rest.conversion.WaitingListNameConverter;
 import org.oscarehr.ws.rest.to.OscarSearchResponse;
 import org.oscarehr.ws.rest.to.model.DemographicContactFewTo1;
 import org.oscarehr.ws.rest.to.model.DemographicTo1;
+import org.oscarehr.ws.rest.to.model.StatusValueTo1;
 import org.oscarehr.ws.rest.to.model.WaitingListNameTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import oscar.oscarWaitingList.util.WLWaitingListUtil;
 
 
 /**
@@ -186,6 +189,8 @@ public class DemographicService extends AbstractServiceImpl {
 		List<WaitingListName> waitingListNames = waitingListNameDao.findAll(null, null);
 		if (waitingListNames!=null) {
 			for (WaitingListName waitingListName : waitingListNames) {
+				if (waitingListName.getIsHistory().equals("Y")) continue;
+				
 				WaitingListNameTo1 waitingListNameTo1 = waitingListNameConverter.getAsTransferObject(waitingListName);
 				result.getWaitingListNames().add(waitingListNameTo1);
 			}
@@ -232,6 +237,10 @@ public class DemographicService extends AbstractServiceImpl {
 					if (demoContact.getType()==DemographicContact.TYPE_DEMOGRAPHIC) {
 						Demographic contactD = demographicManager.getDemographic(loggedInInfo,contactId);
 						demoContactTo1 = demoContactFewConverter.getAsTransferObject(demoContact, contactD);
+						if (demoContactTo1.getPhone()==null || demoContactTo1.getPhone().equals("")) {
+							DemographicExt ext = demographicManager.getDemographicExt(loggedInInfo, id, "demo_cell");
+							if (ext!=null) demoContactTo1.setPhone(ext.getValue());
+						}
 					}
 					else if (demoContact.getType()==DemographicContact.TYPE_CONTACT) {
 						Contact contactC = contactDao.find(contactId);
@@ -250,6 +259,21 @@ public class DemographicService extends AbstractServiceImpl {
 					}
 					result.getDemoContactPros().add(demoContactTo1);
 				}
+			}
+		}
+		
+		List<String> patientStatusList = demographicManager.getPatientStatusList();
+		List<String> rosterStatusList = demographicManager.getRosterStatusList();
+		if (patientStatusList!=null) {
+			for (String ps : patientStatusList) {
+				StatusValueTo1 value = new StatusValueTo1(ps);
+				result.getPatientStatusList().add(value);
+			}
+		}
+		if (rosterStatusList!=null) {
+			for (String rs : rosterStatusList) {
+				StatusValueTo1 value = new StatusValueTo1(rs);
+				result.getRosterStatusList().add(value);
 			}
 		}
 		return result;
@@ -300,6 +324,11 @@ public class DemographicService extends AbstractServiceImpl {
 			demoCust.setMidwife(data.getMidwife());
 			demoCust.setNotes(data.getNotes());
 			demographicManager.createUpdateDemographicCust(loggedInInfo,demoCust);
+		}
+		
+		//update waitingList
+		if (data.getWaitingListID()!=null) {
+			WLWaitingListUtil.updateWaitingListRecord(data.getWaitingListID().toString(), data.getWaitingListNote(), data.getDemographicNo().toString(), null);
 		}
 		
 		Demographic demographic = demoConverter.getAsDomainObject(getLoggedInInfo(),data);

@@ -36,137 +36,76 @@ public class DemographicTo1 implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer demographicNo; // fields
-
 	private AddressTo1 address = new AddressTo1();
-
 	private String phone;
-
 	private String alternativePhone;
-
 	private String patientStatus;
-
 	private Date patientStatusDate;
-
 	private String rosterStatus;
-
 	private String providerNo;
-
 	private String myOscarUserName;
-
 	private String hin;
-
 	private String ver;
-
 	private Date dateOfBirth;
-	
 	private String dobYear;
-
 	private String dobMonth;
-
 	private String dobDay;
-
 	private String sex;
-
 	private String sexDesc;
-
 	private Date dateJoined;
-
 	private String familyDoctor;
-
 	private String firstName;
-
 	private String lastName;
-
 	private Date hcRenewDate;
-
 	private String pcnIndicator;
-
 	private Date endDate;
-
 	private String hcType;
-
 	private String chartNo;
-
 	private String email;
-
 	private Date effDate;
-
 	private Date rosterDate;
-
 	private Date rosterTerminationDate;
-
 	private String rosterTerminationReason;
-
 	private String links;
-
 	private String alias;
-
 	private AddressTo1 previousAddress = new AddressTo1();
-
 	private String children;
-
 	private String sourceOfIncome;
-
 	private String citizenship;
-
 	private String sin;
-
 	private String anonymous;
-
 	private String spokenLanguage;
-
 	private int activeCount;
-
 	private int hsAlertCount;
-
 	private String displayName;
-
 	private ProviderTo1 provider;
-
 	private String lastUpdateUser;
-
 	private Date lastUpdateDate;
-
 	private String title;
-
 	private String officialLanguage;
-
 	private String countryOfOrigin;
-
 	private String newsletter;
-
 	private String nurse;
-	
 	private String resident;
-	
 	private String alert;
-	
 	private String midwife;
-	
 	private String notes;
-	
 	private Integer waitingListID;
-	
 	private String waitingListNote;
-	
 	private Date onWaitingListSinceDate;
 	
 	private List<DemographicContactFewTo1> demoContacts = new ArrayList<DemographicContactFewTo1>();
-
 	private List<DemographicContactFewTo1> demoContactPros = new ArrayList<DemographicContactFewTo1>();
-
 	private List<DemographicExtTo1> extras = new ArrayList<DemographicExtTo1>();
-
 	private List<ProviderTo1> doctors = new ArrayList<ProviderTo1>();
-	
 	private List<ProviderTo1> nurses = new ArrayList<ProviderTo1>();
-	
 	private List<ProviderTo1> midwives = new ArrayList<ProviderTo1>();
-	
 	private List<ProfessionalSpecialistTo1> referralDoctors = new ArrayList<ProfessionalSpecialistTo1>();
-	
 	private List<WaitingListNameTo1> waitingListNames = new ArrayList<WaitingListNameTo1>();
-
+	private List<StatusValueTo1> patientStatusList = new ArrayList<StatusValueTo1>();
+	private List<StatusValueTo1> rosterStatusList = new ArrayList<StatusValueTo1>();
+	
+	
 	public Integer getDemographicNo() {
 		return demographicNo;
 	}
@@ -693,5 +632,21 @@ public class DemographicTo1 implements Serializable {
 	
 	public void setWaitingListNames(List<WaitingListNameTo1> waitingListNames) {
 		this.waitingListNames = waitingListNames;
+	}
+	
+	public List<StatusValueTo1> getPatientStatusList() {
+		return patientStatusList;
+	}
+	
+	public void setPatientStatusList(List<StatusValueTo1> patientStatusList) {
+		this.patientStatusList = patientStatusList;
+	}
+	
+	public List<StatusValueTo1> getRosterStatusList() {
+		return rosterStatusList;
+	}
+	
+	public void setRosterStatusList(List<StatusValueTo1> rosterStatusList) {
+		this.rosterStatusList = rosterStatusList;
 	}
 }

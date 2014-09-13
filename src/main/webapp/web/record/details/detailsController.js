@@ -25,47 +25,48 @@
 */
 oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams,$state,demographicService,patientDetailStatusService,demo,user) {
 	console.log("details ctrl ", $stateParams, $state, demo);
-	$scope.page = {};
-	$scope.page.demo = demo;
-	$scope.page.extras = {};
 	
-	$scope.page.status = {};
-	$scope.page.color = {};
-	$scope.page.msg = {};
+	var page = {};
+	$scope.page = page;
+	$scope.page.demo = demo;
+	
 	
 	//get patient detail status
 	patientDetailStatusService.getStatus(demo.demographicNo).then(function(data){
-		$scope.page.status.macPHRLoggedIn = data.macPHRLoggedIn;
-		$scope.page.status.macPHRIdsSet = data.macPHRIdsSet;
-		$scope.page.status.macPHRVerificationLevel = data.macPHRVerificationLevel;
+		page.macPHRLoggedIn = data.macPHRLoggedIn;
+		page.macPHRIdsSet = data.macPHRIdsSet;
+		page.macPHRVerificationLevel = data.macPHRVerificationLevel;
 		
-		$scope.page.status.integratorEnabled = data.integratorEnabled;
-		$scope.page.status.integratorOffline = data.integratorOffline;
-		$scope.page.status.integratorAllSynced = data.integratorAllSynced;
+		page.integratorEnabled = data.integratorEnabled;
+		page.integratorOffline = data.integratorOffline;
+		page.integratorAllSynced = data.integratorAllSynced;
 		
-		$scope.page.status.conformanceFeaturesEnabled = data.conformanceFeaturesEnabled;
-		$scope.page.status.workflowEnhance = data.workflowEnhance;
-		$scope.page.status.billregion = data.billregion;
-		$scope.page.status.defaultView = data.defaultView;
-		$scope.page.status.hospitalView = data.hospitalView;
+		page.conformanceFeaturesEnabled = data.conformanceFeaturesEnabled;
+		page.workflowEnhance = data.workflowEnhance;
+		page.billregion = data.billregion;
+		page.defaultView = data.defaultView;
+		page.hospitalView = data.hospitalView;
 		
-		if (data.integratorEnabled) {
-			if (data.integratorOffline) {
-				$scope.page.color.integratorStatus = "#ff5500";
-				$scope.page.msg.integratorStatus = "NOTE: Integrator is not available at this time";
+		if (page.integratorEnabled) {
+			if (page.integratorOffline) {
+				page.integratorStatusColor = "#ff5500";
+				page.integratorStatusMsg = "NOTE: Integrator is not available at this time";
 			}
-			else if (!data.integratorAllSynced) {
-				$scope.page.color.integratorStatus = "#ff5500";
-				$scope.page.msg.integratorStatus = "NOTE: Integrated Community is not synced";
+			else if (!page.integratorAllSynced) {
+				page.integratorStatusColor = "#ff5500";
+				page.integratorStatusMsg = "NOTE: Integrated Community is not synced";
 			}
 		}
+		
+		page.billingHistoryLabel = "Invoice List";
+		if (page.billregion=="ON") page.billingHistoryLabel = "Billing History";
 	});
 
 	//show notes
 	if (demo.notes!=null) {
 		var pageNotes = demo.notes.substring("<unotes>".length);
 		pageNotes = pageNotes.substring(0, pageNotes.length-("</unotes>".length));
-		$scope.page.notes = pageNotes;
+		page.notes = pageNotes;
 	}
 	
 	//show referral doctor
@@ -73,27 +74,27 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		var referralDoc = demo.familyDoctor;
 		var begin = referralDoc.indexOf("<rdohip>") + "<rdohip>".length;
 		var end = referralDoc.indexOf("</rdohip>");
-		if (end>begin && end>=0 && begin>=0) $scope.page.referralDocNo = referralDoc.substring(begin, end);
+		if (end>begin && end>=0 && begin>=0) page.referralDocNo = referralDoc.substring(begin, end);
 		
 		begin = referralDoc.indexOf("<rd>") + "<rd>".length;
 		end = referralDoc.indexOf("</rd>");
-		if (end>begin && end>=0 && begin>=0) $scope.page.referralDoc = referralDoc.substring(begin, end);
-	} 
-
-	//initialize page.extras
-	$scope.page.extras.demo_cell = {};
-	$scope.page.extras.aboriginal = {};
-	$scope.page.extras.hPhoneExt = {};
-	$scope.page.extras.wPhoneExt = {};
-	$scope.page.extras.cytolNum = {};
-	$scope.page.extras.phoneComment = {};
-	$scope.page.extras.paper_chart_archived = {};
-	$scope.page.extras.paper_chart_archived_date = {};
-	$scope.page.extras.usSigned = {};
-	$scope.page.extras.privacyConsent = {};
-	$scope.page.extras.informedConsent = {};
-	$scope.page.extras.securityQuestion1 = {};
-	$scope.page.extras.securityAnswer1 = {};
+		if (end>begin && end>=0 && begin>=0) page.referralDoc = referralDoc.substring(begin, end);
+	}
+	
+	//initialize "extras" in page
+	page.demoCell = {};
+	page.aboriginal = {};
+	page.hPhoneExt = {};
+	page.wPhoneExt = {};
+	page.cytolNum = {};
+	page.phoneComment = {};
+	page.paperChartArchived = {};
+	page.paperChartArchivedDate = {};
+	page.usSigned = {};
+	page.privacyConsent = {};
+	page.informedConsent = {};
+	page.securityQuestion1 = {};
+	page.securityAnswer1 = {};
 	
 	//show extras
 	if (demo.extras!=null) {
@@ -103,119 +104,119 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			demo.extras.push(tmp);
 		}
 		for (var i=0; i<demo.extras.length; i++) {
-			if (demo.extras[i].key=="demo_cell") $scope.page.extras.demo_cell = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="aboriginal") $scope.page.extras.aboriginal = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="hPhoneExt") $scope.page.extras.hPhoneExt = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="wPhoneExt") $scope.page.extras.wPhoneExt = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="cytolNum") $scope.page.extras.cytolNum = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="phoneComment") $scope.page.extras.phoneComment = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="paper_chart_archived") $scope.page.extras.paper_chart_archived = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="paper_chart_archived_date") $scope.page.extras.paper_chart_archived_date = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="usSigned") $scope.page.extras.usSigned = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="privacyConsent") $scope.page.extras.privacyConsent = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="informedConsent") $scope.page.extras.informedConsent = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="securityQuestion1") $scope.page.extras.securityQuestion1 = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="securityAnswer1") $scope.page.extras.securityAnswer1 = copyDemoExt(demo.extras[i]);
+			if (demo.extras[i].key=="demo_cell") page.demoCell = copyDemoExt(demo.extras[i]);
+			else if (demo.extras[i].key=="aboriginal") page.aboriginal = copyDemoExt(demo.extras[i]);
+			else if (demo.extras[i].key=="hPhoneExt") page.hPhoneExt = copyDemoExt(demo.extras[i]);
+			else if (demo.extras[i].key=="wPhoneExt") page.wPhoneExt = copyDemoExt(demo.extras[i]);
+			else if (demo.extras[i].key=="cytolNum") page.cytolNum = copyDemoExt(demo.extras[i]);
+			else if (demo.extras[i].key=="phoneComment") page.phoneComment = copyDemoExt(demo.extras[i]);
+			else if (demo.extras[i].key=="paper_chart_archived") page.paperChartArchived = copyDemoExt(demo.extras[i]);
+			else if (demo.extras[i].key=="paper_chart_archived_date") page.paperChartArchivedDate = copyDemoExt(demo.extras[i]);
+			else if (demo.extras[i].key=="usSigned") page.usSigned = copyDemoExt(demo.extras[i]);
+			else if (demo.extras[i].key=="privacyConsent") page.privacyConsent = copyDemoExt(demo.extras[i]);
+			else if (demo.extras[i].key=="informedConsent") page.informedConsent = copyDemoExt(demo.extras[i]);
+			else if (demo.extras[i].key=="securityQuestion1") page.securityQuestion1 = copyDemoExt(demo.extras[i]);
+			else if (demo.extras[i].key=="securityAnswer1") page.securityAnswer1 = copyDemoExt(demo.extras[i]);
 		}
 	}
 	
 	//show dates
 	var datePart = getDateParts(demo.endDate);
 	if (datePart!=null) {
-		$scope.page.endDateYear = datePart["year"];
-		$scope.page.endDateMonth = pad0(datePart["month"]);
-		$scope.page.endDateDay = pad0(datePart["day"]);
+		page.endDateYear = datePart["year"];
+		page.endDateMonth = pad0(datePart["month"]);
+		page.endDateDay = pad0(datePart["day"]);
 	}
 	datePart = getDateParts(demo.effDate);
 	if (datePart!=null) {
-		$scope.page.hcEffDateYear = datePart["year"];
-		$scope.page.hcEffDateMonth = pad0(datePart["month"]);
-		$scope.page.hcEffDateDay = pad0(datePart["day"]);
+		page.hcEffDateYear = datePart["year"];
+		page.hcEffDateMonth = pad0(datePart["month"]);
+		page.hcEffDateDay = pad0(datePart["day"]);
 	}
 	datePart = getDateParts(demo.hcRenewDate);
 	if (datePart!=null) {
-		$scope.page.hcRenewDateYear = datePart["year"];
-		$scope.page.hcRenewDateMonth = pad0(datePart["month"]);
-		$scope.page.hcRenewDateDay = pad0(datePart["day"]);
+		page.hcRenewDateYear = datePart["year"];
+		page.hcRenewDateMonth = pad0(datePart["month"]);
+		page.hcRenewDateDay = pad0(datePart["day"]);
 	}
 	datePart = getDateParts(demo.rosterDate);
 	if (datePart!=null) {
-		$scope.page.rosterDateYear = datePart["year"];
-		$scope.page.rosterDateMonth = pad0(datePart["month"]);
-		$scope.page.rosterDateDay = pad0(datePart["day"]);
+		page.rosterDateYear = datePart["year"];
+		page.rosterDateMonth = pad0(datePart["month"]);
+		page.rosterDateDay = pad0(datePart["day"]);
 	}
 	datePart = getDateParts(demo.rosterTerminationDate);
 	if (datePart!=null) {
-		$scope.page.rosterTerminationDateYear = datePart["year"];
-		$scope.page.rosterTerminationDateMonth = pad0(datePart["month"]);
-		$scope.page.rosterTerminationDateDay = pad0(datePart["day"]);
+		page.rosterTerminationDateYear = datePart["year"];
+		page.rosterTerminationDateMonth = pad0(datePart["month"]);
+		page.rosterTerminationDateDay = pad0(datePart["day"]);
 	}
 	datePart = getDateParts(demo.patientStatusDate);
 	if (datePart!=null) {
-		$scope.page.patientStatusDateYear = datePart["year"];
-		$scope.page.patientStatusDateMonth = pad0(datePart["month"]);
-		$scope.page.patientStatusDateDay = pad0(datePart["day"]);
+		page.patientStatusDateYear = datePart["year"];
+		page.patientStatusDateMonth = pad0(datePart["month"]);
+		page.patientStatusDateDay = pad0(datePart["day"]);
 	}
 	datePart = getDateParts(demo.dateJoined);
 	if (datePart!=null) {
-		$scope.page.dateJoinedYear = datePart["year"];
-		$scope.page.dateJoinedMonth = pad0(datePart["month"]);
-		$scope.page.dateJoinedDay = pad0(datePart["day"]);
+		page.dateJoinedYear = datePart["year"];
+		page.dateJoinedMonth = pad0(datePart["month"]);
+		page.dateJoinedDay = pad0(datePart["day"]);
 	}
 	datePart = getDateParts(demo.onWaitingListSinceDate);
 	if (datePart!=null) {
-		$scope.page.onWaitingListSinceYear = datePart["year"];
-		$scope.page.onWaitingListSinceMonth = pad0(datePart["month"]);
-		$scope.page.onWaitingListSinceDay = pad0(datePart["day"]);
+		page.onWaitingListSinceYear = datePart["year"];
+		page.onWaitingListSinceMonth = pad0(datePart["month"]);
+		page.onWaitingListSinceDay = pad0(datePart["day"]);
 	}
-	datePart = getDateParts($scope.page.extras.paper_chart_archived_date.value);
+	datePart = getDateParts(page.paperChartArchivedDate.value);
 	if (datePart!=null) {
-		$scope.page.paper_chart_archived_dateYear = datePart["year"];
-		$scope.page.paper_chart_archived_dateMonth = pad0(datePart["month"]);
-		$scope.page.paper_chart_archived_dateDay = pad0(datePart["day"]);
+		page.paperChartArchivedDateYear = datePart["year"];
+		page.paperChartArchivedDateMonth = pad0(datePart["month"]);
+		page.paperChartArchivedDateDay = pad0(datePart["day"]);
 	}
 	
 	var colorAttn = "#ffff99";
 	
 	//show phone numbers with preferred check
-	$scope.page.cellPhone = getPhoneNum($scope.page.extras.demo_cell.value);
-	$scope.page.homePhone = getPhoneNum(demo.phone);
-	$scope.page.workPhone = getPhoneNum(demo.alternativePhone);
+	page.cellPhone = getPhoneNum(page.demoCell.value);
+	page.homePhone = getPhoneNum(demo.phone);
+	page.workPhone = getPhoneNum(demo.alternativePhone);
 	
 	var defPhTitle = "Check to set preferred contact number";
 	var prefPhTitle = "Preferred contact number";
 	
-	$scope.page.msg.cellPhonePreferred = defPhTitle;
-	$scope.page.msg.homePhonePreferred = defPhTitle;
-	$scope.page.msg.workPhonePreferred = defPhTitle;
-	if (isPreferredPhone($scope.page.extras.demo_cell.value)) {
-		$scope.page.preferredPhoneNumber = $scope.page.cellPhone;
-		$scope.page.preferredPhone = "C";
-		$scope.page.msg.cellPhonePreferred = prefPhTitle;
-		$scope.page.color.cellPhonePreferred = colorAttn;
+	page.cellPhonePreferredMsg = defPhTitle;
+	page.homePhonePreferredMsg = defPhTitle;
+	page.workPhonePreferredMsg = defPhTitle;
+	if (isPreferredPhone(page.demoCell.value)) {
+		page.preferredPhone = "C";
+		page.preferredPhoneNumber = page.cellPhone;
+		page.cellPhonePreferredMsg = prefPhTitle;
+		page.cellPhonePreferredColor = colorAttn;
 	}
 	else if (isPreferredPhone(demo.phone)) {
-		$scope.page.preferredPhoneNumber = $scope.page.homePhone;
-		$scope.page.preferredPhone = "H";
-		$scope.page.msg.homePhonePreferred = prefPhTitle;
-		$scope.page.color.homePhonePreferred = colorAttn;
+		page.preferredPhone = "H";
+		page.preferredPhoneNumber = page.homePhone;
+		page.homePhonePreferredMsg = prefPhTitle;
+		page.homePhonePreferredColor = colorAttn;
 	}
 	else if (isPreferredPhone(demo.alternativePhone)) {
-		$scope.page.preferredPhoneNumber = $scope.page.workPhone;
-		$scope.page.preferredPhone = "W";
-		$scope.page.msg.workPhonePreferred = prefPhTitle;
-		$scope.page.color.workPhonePreferred = colorAttn;
+		page.preferredPhone = "W";
+		page.preferredPhoneNumber = page.workPhone;
+		page.workPhonePreferredMsg = prefPhTitle;
+		page.workPhonePreferredColor = colorAttn;
 	}
 	else {
-		$scope.page.preferredPhoneNumber = $scope.page.homePhone;
+		page.preferredPhoneNumber = page.homePhone;
 	}
 	
 	//show demoContacts/demoContactPros
 	if (demo.demoContacts!=null) {
-		demo.demoContacts = demoContactToArray(demo.demoContacts);
+		demo.demoContacts = demoContactShow(demo.demoContacts);
 	}
 	if (demo.demoContactPros!=null) {
-		demo.demoContactPros = demoContactToArray(demo.demoContactPros);
+		demo.demoContactPros = demoContactShow(demo.demoContactPros);
 	}
 
 	//show doctors/nurses/midwives
@@ -229,13 +230,20 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		demo.midwives = providerToArray(demo.midwives);
 	}
 	
-	//show referralDoc names
+	//show referralDoc specialties & names
 	if (demo.referralDoctors!=null) {
 		if (demo.referralDoctors.id!=null) { //only 1 entry, convert to array
 			var tmp = {};
 			tmp.name = demo.referralDoctors.name;
 			tmp.referralNo = demo.referralDoctors.referralNo;
+			tmp.specialtyType = demo.referralDoctors.specialtyType;
 			demo.referralDoctors = [tmp];
+		}
+	}
+	for (var i=0; i<demo.referralDoctors.length; i++) {
+		demo.referralDoctors[i].label = demo.referralDoctors[i].name;
+		if (demo.referralDoctors[i].specialtyType!=null && demo.referralDoctors[i].specialtyType!="") {
+			demo.referralDoctors[i].label += " ["+demo.referralDoctors[i].specialtyType+"]";
 		}
 	}
 	
@@ -253,21 +261,40 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		}
 	}
 	
+	//show patientStatusList & rosterStatusList values
+	demo.patientStatusList = statusValueToArray(demo.patientStatusList);
+	demo.patientStatusList.unshift({"value":"FI", "label":"FI - Fired"});
+	demo.patientStatusList.unshift({"value":"MO", "label":"MO - Moved"});
+	demo.patientStatusList.unshift({"value":"DE", "label":"DE - Deceased"});
+	demo.patientStatusList.unshift({"value":"IN", "label":"IN - Inactive"});
+	demo.patientStatusList.unshift({"value":"AC", "label":"AC - Active"});
+	
+	demo.rosterStatusList = statusValueToArray(demo.rosterStatusList);
+	demo.rosterStatusList.unshift({"value":"FS", "label":"FS - fee for service"});
+	demo.rosterStatusList.unshift({"value":"TE", "label":"TE - terminated"});
+	demo.rosterStatusList.unshift({"value":"NR", "label":"NR - not rostered"});
+	demo.rosterStatusList.unshift({"value":"RO", "label":"RO - rostered"});
+	
 
 	//----------------------//
 	// on-screen operations //
 	//----------------------//
 	//monitor data changed
-	$scope.page.status.dataChanged = -1;
-	$scope.$watchCollection("page.demo", function(){
-		$scope.page.status.dataChanged++;
+	page.dataChanged = -2;
+	$scope.$watch(function(){
+		return $("#pd1").html()+$("#pd2").html();
+	}, function(){
+		page.dataChanged++;
 	});
+	$scope.needToSave = function(){
+		if (page.dataChanged>0) return "btn-primary";
+	}
 	
 	//remind user of unsaved data
 	$scope.$on("$stateChangeStart", function(event){
-		if ($scope.page.status.dataChanged>0) {
-			var discardChange = confirm("You may have unsaved data. Are you sure to leave?");
-			if (!discardChange) event.preventDefault();
+		if (page.dataChanged>0) {
+			var discard = confirm("You may have unsaved data. Are you sure to leave?");
+			if (!discard) event.preventDefault();
 		}
 	});
 
@@ -293,18 +320,18 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	//set ready for swipe card
 	$scope.setSwipeReady = function(status){
 		if (status=="off") {
-			$scope.page.readyForSwipe = "";
-			$scope.page.msg.swipecard = "Click for Card Swipe";
+			page.readyForSwipe = "";
+			page.swipecardMsg = "Click for Card Swipe";
 		}
 		else if (status=="done") {
-			$scope.page.readyForSwipe = "btn-primary";
-			$scope.page.msg.swipecard = "Done Health Card Swipe";
+			page.readyForSwipe = "btn-primary";
+			page.swipecardMsg = "Done Health Card Swipe";
 		}
 		else {
 			$("#swipecard").focus();
-			$scope.page.readyForSwipe = "btn-success";
-			$scope.page.msg.swipecard = "Ready for Card Swipe";
-			$scope.page.swipecard = "";
+			page.readyForSwipe = "btn-success";
+			page.swipecardMsg = "Ready for Card Swipe";
+			page.swipecard = "";
 		}
 	}
 	$scope.setSwipeReady(); //done on page load
@@ -313,8 +340,8 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	var hcParts = {};
 	$scope.healthCardHandler = function(keycode){
 	    if (keycode==13) { //carriage-return
-	    	var swipeCardData = $scope.page.swipecard;
-	    	$scope.page.swipecard = "";
+	    	var swipeCardData = page.swipecard;
+	    	page.swipecard = "";
 	    	
 	    	if (swipeCardData.substring(0,3)=="%E?") { //swipe card error
 	    		alert("Error reading card");
@@ -360,28 +387,28 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	$scope.healthCardUpdateDemographics = function(){
 		if (demo.hcType!=hcParts["issuer"]) {
 			demo.hcType = hcParts["issuer"];
-			$scope.page.color.hcType = colorAttn;
+			page.hcTypeColor = colorAttn;
 		}
 		if (demo.lastName!=hcParts["lastName"]) {
 			demo.lastName = hcParts["lastName"];
-			$scope.page.color.lastName = colorAttn;
+			page.lastNameColor = colorAttn;
 		}
 		if (demo.firstName!=hcParts["firstName"]) {
 			demo.firstName = hcParts["firstName"];
-			$scope.page.color.firstName = colorAttn;
+			page.firstNameColor = colorAttn;
 		}
 		if (isNumber(hcParts["hin"]) && demo.hin!=hcParts["hin"]) {
 			demo.hin = hcParts["hin"];
-			$scope.page.color.hin = colorAttn;
+			page.hinColor = colorAttn;
 		}
 		if (demo.ver!=hcParts["hinVer"]) {
 			demo.ver = hcParts["hinVer"];
-			$scope.page.color.ver = colorAttn;
+			page.verColor = colorAttn;
 		}
 		var hcSex = hcParts["sex"]==1 ? "M" : (hcParts["sex"]==2 ? "F" : null);
 		if (hcSex!=null && demo.sex!=hcSex) {
 			demo.sex = hcSex;
-			$scope.page.color.sex = colorAttn;
+			page.sexColor = colorAttn;
 		}
 		var dateParts = {};
 		if (hcParts["dob"]!=null) {
@@ -390,56 +417,56 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			dateParts["day"] = hcParts["dob"].substring(6);
 			if (demo.dobYear!=dateParts["year"]) {
 				demo.dobYear = dateParts["year"];
-				$scope.page.color.dobYear = colorAttn;
+				page.dobYearColor = colorAttn;
 			}
 			if (demo.dobMonth!=dateParts["month"]) {
 				demo.dobMonth = dateParts["month"];
-				$scope.page.color.dobMonth = colorAttn;
+				page.dobMonthColor = colorAttn;
 			}
 			if (demo.dobDay!=dateParts["day"]) {
 				demo.dobDay = dateParts["day"];
-				$scope.page.color.dobDay = colorAttn;
+				page.dobDayColor = colorAttn;
 			}
 		}
 		if (hcParts["issueDate"]!=null) {
 			dateParts["year"] = "20" + hcParts["issueDate"].substring(0,2);
 			dateParts["month"] = hcParts["issueDate"].substring(2,4);
 			dateParts["day"] = hcParts["issueDate"].substring(4);
-			if ($scope.page.hcEffDateYear!=dateParts["year"]) {
-				$scope.page.hcEffDateYear = dateParts["year"];
-				$scope.page.color.hcEffDateYear = colorAttn;
+			if (page.hcEffDateYear!=dateParts["year"]) {
+				page.hcEffDateYear = dateParts["year"];
+				page.hcEffDateYearColor = colorAttn;
 			}
-			if ($scope.page.hcEffDateMonth!=dateParts["month"]) {
-				$scope.page.hcEffDateMonth = dateParts["month"];
-				$scope.page.color.hcEffDateMonth = colorAttn;
+			if (page.hcEffDateMonth!=dateParts["month"]) {
+				page.hcEffDateMonth = dateParts["month"];
+				page.hcEffDateMonthColor = colorAttn;
 			}
-			if ($scope.page.hcEffDateDay!=dateParts["day"]) {
-				$scope.page.hcEffDateDay = dateParts["day"];
-				$scope.page.color.hcEffDateDay = colorAttn;
+			if (page.hcEffDateDay!=dateParts["day"]) {
+				page.hcEffDateDay = dateParts["day"];
+				page.hcEffDateDayColor = colorAttn;
 			}
 		}
 		if (hcParts["hinExp"]!=null) {
 			dateParts["year"] = "20" + hcParts["hinExp"].substring(0,2);
 			dateParts["month"] = hcParts["hinExp"].substring(2,4);
 			dateParts["day"] = hcParts["hinExp"].substring(4);
-			if ($scope.page.hcRenewDateYear!=dateParts["year"]) {
-				$scope.page.hcRenewDateYear = dateParts["year"];
-				$scope.page.color.hcRenewDateYear = colorAttn;
+			if (page.hcRenewDateYear!=dateParts["year"]) {
+				page.hcRenewDateYear = dateParts["year"];
+				page.hcRenewDateYearColor = colorAttn;
 			}
-			if ($scope.page.hcRenewDateMonth!=dateParts["month"]) {
-				$scope.page.hcRenewDateMonth = dateParts["month"];
-				$scope.page.color.hcRenewDateMonth = colorAttn;
+			if (page.hcRenewDateMonth!=dateParts["month"]) {
+				page.hcRenewDateMonth = dateParts["month"];
+				page.hcRenewDateMonthColor = colorAttn;
 			}
-			if ($scope.page.hcRenewDateDay!=dateParts["day"]) {
-				$scope.page.hcRenewDateDay = dateParts["day"];
-				$scope.page.color.hcRenewDateDay = colorAttn;
+			if (page.hcRenewDateDay!=dateParts["day"]) {
+				page.hcRenewDateDay = dateParts["day"];
+				page.hcRenewDateDayColor = colorAttn;
 			}
 			var hinExpDate = new Date(dateParts["year"], dateParts["month"]-1, dateParts["day"]);
 			if (now>hinExpDate) {
 				alert("This health card has expired!");
-				$scope.page.color.hcRenewDateYear = colorAttn;
-				$scope.page.color.hcRenewDateMonth = colorAttn;
-				$scope.page.color.hcRenewDateDay = colorAttn;
+				page.hcRenewDateYearColor = colorAttn;
+				page.hcRenewDateMonthColor = colorAttn;
+				page.hcRenewDateDayColor = colorAttn;
 			}
 		}
 	}
@@ -449,88 +476,106 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		if (demo.hin==null || demo.hin=="") return;
 		if (demo.ver==null) demo.ver = "";
 		patientDetailStatusService.validateHC(demo.hin,demo.ver).then(function(data){
-			if (data.valid==null) $scope.page.status.HCValidation = "n/a";
-			else $scope.page.status.HCValidation = data.valid ? "valid" : "invalid";
+			if (data.valid==null) page.HCValidation = "n/a";
+			else page.HCValidation = data.valid ? "valid" : "invalid";
 		});
 	}
 	
-	//stop input when maxLength reached
+	//manage hin/hinVer entries
 	var hin0 = demo.hin;
 	var ver0 = demo.ver;
-	$scope.checkHin = function() {
-		if (demo.hin.length>10) demo.hin = hin0;
-		if (notNumber(demo.hin)) demo.hin = hin0;
+	$scope.checkHin = function(){
+		if (demo.hcType=="ON") {
+			if (demo.hin.length>10) demo.hin = hin0;
+			if (notNumber(demo.hin)) demo.hin = hin0;
+		}
 		hin0 = demo.hin;
-		$scope.page.status.HCValidation = null;
+		page.HCValidation = null;
 	}
-	$scope.checkHinVer = function() {
-		if (demo.ver.length>2) demo.ver = ver0;
-		if (!(/^[a-zA-Z()]*$/.test(demo.ver))) demo.ver = ver0;
-		demo.ver = demo.ver.toUpperCase();
+	$scope.checkHinVer = function(){
+		if (demo.hcType=="ON") {
+			if (demo.ver.length>2) demo.ver = ver0;
+			if (!(/^[a-zA-Z()]*$/.test(demo.ver))) demo.ver = ver0;
+			demo.ver = demo.ver.toUpperCase();
+		}
 		ver0 = demo.ver;
 	}
 	
 	//manage date entries
-	$scope.checkDate = function(id) {
+	$scope.checkDate = function(id){
 		if (id=="DobY") demo.dobYear = checkYear(demo.dobYear);
 		else if (id=="DobM") demo.dobMonth = checkMonth(demo.dobMonth);
 		else if (id=="DobD") demo.dobDay = checkDay(demo.dobDay, demo.dobMonth, demo.dobYear);
-		else if (id=="HedY") $scope.page.hcEffDateYear = checkYear($scope.page.hcEffDateYear);
-		else if (id=="HedM") $scope.page.hcEffDateMonth = checkMonth($scope.page.hcEffDateMonth);
-		else if (id=="HedD") $scope.page.hcEffDateDay = checkDay($scope.page.hcEffDateDay, $scope.page.hcEffDateMonth, $scope.page.hcEffDateYear);
-		else if (id=="HrdY") $scope.page.hcRenewDateYear = checkYear($scope.page.hcRenewDateYear);
-		else if (id=="HrdM") $scope.page.hcRenewDateMonth = checkMonth($scope.page.hcRenewDateMonth);
-		else if (id=="HrdD") $scope.page.hcRenewDateDay = checkDay($scope.page.hcRenewDateDay, $scope.page.hcRenewDateMonth, $scope.page.hcRenewDateYear);
-		else if (id=="RodY") $scope.page.rosterDateYear = checkYear($scope.page.rosterDateYear);
-		else if (id=="RodM") $scope.page.rosterDateMonth = checkMonth($scope.page.rosterDateMonth);
-		else if (id=="RodD") $scope.page.rosterDateDay = checkDay($scope.page.rosterDateDay, $scope.page.rosterDateMonth, $scope.page.rosterDateYear);
-		else if (id=="RtdY") $scope.page.rosterTerminationDateYear = checkYear($scope.page.rosterTerminationDateYear);
-		else if (id=="RtdM") $scope.page.rosterTerminationDateMonth = checkMonth($scope.page.rosterTerminationDateMonth);
-		else if (id=="RtdD") $scope.page.rosterTerminationDateDay = checkDay($scope.page.rosterTerminationDateDay, $scope.page.rosterTerminationDateMonth, $scope.page.rosterTerminationDateYear);
-		else if (id=="PsdY") $scope.page.patientStatusDateYear = checkYear($scope.page.patientStatusDateYear);
-		else if (id=="PsdM") $scope.page.patientStatusDateMonth = checkMonth($scope.page.patientStatusDateMonth);
-		else if (id=="PsdD") $scope.page.patientStatusDateDay = checkDay($scope.page.patientStatusDateDay, $scope.page.patientStatusDateMonth, $scope.page.patientStatusDateYear);
-		else if (id=="JndY") $scope.page.dateJoinedYear = checkYear($scope.page.dateJoinedYear);
-		else if (id=="JndM") $scope.page.dateJoinedMonth = checkMonth($scope.page.dateJoinedMonth);
-		else if (id=="JndD") $scope.page.dateJoinedDay = checkDay($scope.page.dateJoinedDay, $scope.page.dateJoinedMonth, $scope.page.dateJoinedYear);
-		else if (id=="EddY") $scope.page.endDateYear = checkYear($scope.page.endDateYear);
-		else if (id=="EddM") $scope.page.endDateMonth = checkMonth($scope.page.endDateMonth);
-		else if (id=="EddD") $scope.page.endDateDay = checkDay($scope.page.endDateDay, $scope.page.endDateMonth, $scope.page.endDateYear);
-		else if (id=="PcaY") $scope.page.paper_chart_archived_dateYear = checkYear($scope.page.paper_chart_archived_dateYear);
-		else if (id=="PcaM") $scope.page.paper_chart_archived_dateMonth = checkMonth($scope.page.paper_chart_archived_dateMonth);
-		else if (id=="PcaD") $scope.page.paper_chart_archived_dateDay = checkDay($scope.page.paper_chart_archived_dateDay, $scope.page.paper_chart_archived_dateMonth, $scope.page.paper_chart_archived_dateYear);
-		else if (id=="OlsY") $scope.page.onWaitingListSinceYear = checkYear($scope.page.onWaitingListSinceYear);
-		else if (id=="OlsM") $scope.page.onWaitingListSinceMonth = checkMonth($scope.page.onWaitingListSinceMonth);
-		else if (id=="OlsD") $scope.page.onWaitingListSinceDay = checkDay($scope.page.onWaitingListSinceDay, $scope.page.onWaitingListSinceMonth, $scope.page.onWaitingListSinceYear);
+		else if (id=="HedY") page.hcEffDateYear = checkYear(page.hcEffDateYear);
+		else if (id=="HedM") page.hcEffDateMonth = checkMonth(page.hcEffDateMonth);
+		else if (id=="HedD") page.hcEffDateDay = checkDay(page.hcEffDateDay, page.hcEffDateMonth, page.hcEffDateYear);
+		else if (id=="HrdY") page.hcRenewDateYear = checkYear(page.hcRenewDateYear);
+		else if (id=="HrdM") page.hcRenewDateMonth = checkMonth(page.hcRenewDateMonth);
+		else if (id=="HrdD") page.hcRenewDateDay = checkDay(page.hcRenewDateDay, page.hcRenewDateMonth, page.hcRenewDateYear);
+		else if (id=="RodY") page.rosterDateYear = checkYear(page.rosterDateYear);
+		else if (id=="RodM") page.rosterDateMonth = checkMonth(page.rosterDateMonth);
+		else if (id=="RodD") page.rosterDateDay = checkDay(page.rosterDateDay, page.rosterDateMonth, page.rosterDateYear);
+		else if (id=="RtdY") page.rosterTerminationDateYear = checkYear(page.rosterTerminationDateYear);
+		else if (id=="RtdM") page.rosterTerminationDateMonth = checkMonth(page.rosterTerminationDateMonth);
+		else if (id=="RtdD") page.rosterTerminationDateDay = checkDay(page.rosterTerminationDateDay, page.rosterTerminationDateMonth, page.rosterTerminationDateYear);
+		else if (id=="PsdY") page.patientStatusDateYear = checkYear(page.patientStatusDateYear);
+		else if (id=="PsdM") page.patientStatusDateMonth = checkMonth(page.patientStatusDateMonth);
+		else if (id=="PsdD") page.patientStatusDateDay = checkDay(page.patientStatusDateDay, page.patientStatusDateMonth, page.patientStatusDateYear);
+		else if (id=="JndY") page.dateJoinedYear = checkYear(page.dateJoinedYear);
+		else if (id=="JndM") page.dateJoinedMonth = checkMonth(page.dateJoinedMonth);
+		else if (id=="JndD") page.dateJoinedDay = checkDay(page.dateJoinedDay, page.dateJoinedMonth, page.dateJoinedYear);
+		else if (id=="EddY") page.endDateYear = checkYear(page.endDateYear);
+		else if (id=="EddM") page.endDateMonth = checkMonth(page.endDateMonth);
+		else if (id=="EddD") page.endDateDay = checkDay(page.endDateDay, page.endDateMonth, page.endDateYear);
+		else if (id=="PcaY") page.paperChartArchivedDateYear = checkYear(page.paperChartArchivedDateYear);
+		else if (id=="PcaM") page.paperChartArchivedDateMonth = checkMonth(page.paperChartArchivedDateMonth);
+		else if (id=="PcaD") page.paperChartArchivedDateDay = checkDay(page.paperChartArchivedDateDay, page.paperChartArchivedDateMonth, page.paperChartArchivedDateYear);
+		else if (id=="OlsY") page.onWaitingListSinceYear = checkYear(page.onWaitingListSinceYear);
+		else if (id=="OlsM") page.onWaitingListSinceMonth = checkMonth(page.onWaitingListSinceMonth);
+		else if (id=="OlsD") page.onWaitingListSinceDay = checkDay(page.onWaitingListSinceDay, page.onWaitingListSinceMonth, page.onWaitingListSinceYear);
 	}
 	
-	$scope.formatDate = function(id) {
+	$scope.formatDate = function(id){
 		if (id=="DobY" || id=="DobM" || id=="DobD") $scope.calculateAge();
 		
 		if (id=="DobM") demo.dobMonth = pad0(demo.dobMonth);
 		else if (id=="DobD") demo.dobDay = pad0(demo.dobDay);
-		else if (id=="HedM") $scope.page.hcEffDateMonth = pad0($scope.page.hcEffDateMonth);
-		else if (id=="HedD") $scope.page.hcEffDateDay = pad0($scope.page.hcEffDateDay);
-		else if (id=="HrdM") $scope.page.hcRenewDateMonth = pad0($scope.page.hcRenewDateMonth);
-		else if (id=="HrdD") $scope.page.hcRenewDateDay = pad0($scope.page.hcRenewDateDay);
-		else if (id=="RodM") $scope.page.rosterDateMonth = pad0($scope.page.rosterDateMonth);
-		else if (id=="RodD") $scope.page.rosterDateDay = pad0($scope.page.rosterDateDay);
-		else if (id=="RtdM") $scope.page.rosterTerminationDateMonth = pad0($scope.page.rosterTerminationDateMonth);
-		else if (id=="RtdD") $scope.page.rosterTerminationDateDay = pad0($scope.page.rosterTerminationDateDay);
-		else if (id=="PsdM") $scope.page.patientStatusDateMonth = pad0($scope.page.patientStatusDateMonth);
-		else if (id=="PsdD") $scope.page.patientStatusDateDay = pad0($scope.page.patientStatusDateDay);
-		else if (id=="JndM") $scope.page.dateJoinedMonth = pad0($scope.page.dateJoinedMonth);
-		else if (id=="JndD") $scope.page.dateJoinedDay = pad0($scope.page.dateJoinedDay);
-		else if (id=="EddM") $scope.page.endDateMonth = pad0($scope.page.endDateMonth);
-		else if (id=="EddD") $scope.page.endDateDay = pad0($scope.page.endDateDay);
-		else if (id=="PcaM") $scope.page.paper_chart_archived_dateMonth = pad0($scope.page.paper_chart_archived_dateMonth);
-		else if (id=="PcaD") $scope.page.paper_chart_archived_dateDay = pad0($scope.page.paper_chart_archived_dateDay);
-		else if (id=="OlsM") $scope.page.onWaitingListSinceMonth = pad0($scope.page.onWaitingListSinceMonth);
-		else if (id=="OlsD") $scope.page.onWaitingListSinceDay = pad0($scope.page.onWaitingListSinceDay);
+		else if (id=="HedM") page.hcEffDateMonth = pad0(page.hcEffDateMonth);
+		else if (id=="HedD") page.hcEffDateDay = pad0(page.hcEffDateDay);
+		else if (id=="HrdM") page.hcRenewDateMonth = pad0(page.hcRenewDateMonth);
+		else if (id=="HrdD") page.hcRenewDateDay = pad0(page.hcRenewDateDay);
+		else if (id=="RodM") page.rosterDateMonth = pad0(page.rosterDateMonth);
+		else if (id=="RodD") page.rosterDateDay = pad0(page.rosterDateDay);
+		else if (id=="RtdM") page.rosterTerminationDateMonth = pad0(page.rosterTerminationDateMonth);
+		else if (id=="RtdD") page.rosterTerminationDateDay = pad0(page.rosterTerminationDateDay);
+		else if (id=="PsdM") page.patientStatusDateMonth = pad0(page.patientStatusDateMonth);
+		else if (id=="PsdD") page.patientStatusDateDay = pad0(page.patientStatusDateDay);
+		else if (id=="JndM") page.dateJoinedMonth = pad0(page.dateJoinedMonth);
+		else if (id=="JndD") page.dateJoinedDay = pad0(page.dateJoinedDay);
+		else if (id=="EddM") page.endDateMonth = pad0(page.endDateMonth);
+		else if (id=="EddD") page.endDateDay = pad0(page.endDateDay);
+		else if (id=="PcaM") page.paperChartArchivedDateMonth = pad0(page.paperChartArchivedDateMonth);
+		else if (id=="PcaD") page.paperChartArchivedDateDay = pad0(page.paperChartArchivedDateDay);
+		else if (id=="OlsM") page.onWaitingListSinceMonth = pad0(page.onWaitingListSinceMonth);
+		else if (id=="OlsD") page.onWaitingListSinceDay = pad0(page.onWaitingListSinceDay);
 	}
 	$scope.formatDate("DobM"); //done on page load
 	$scope.formatDate("DobD"); //done on page load
 	
+	//check Patient Status if endDate is entered
+	$scope.checkPatientStatus = function(){
+		if (demo.patientStatus=="AC") {
+			if (!dateEmpty(page.endDateYear, page.endDateMonth, page.endDateDay)) {
+				if (dateValid(page.endDateYear, page.endDateMonth, page.endDateDay)) {
+					var endDate = new Date(page.endDateYear, (page.endDateMonth-1), page.endDateDay);
+					if (now > endDate) {
+						alert("Patient Status cannot be Active after End Date.");
+						return false;
+					}
+				}
+			}
+		}
+	}
 	
 	//check postal code (Canada provinces only)
 	var postal0 = demo.address.postal;
@@ -585,74 +630,99 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	$scope.isRosterTerminated = function(){
 		return (demo.rosterStatus=="TE");
 	}
-	
 	$scope.showReferralDocList = function(){
-		$scope.page.referralDocList = !$scope.page.referralDocList;
+		page.showReferralDocList = !page.showReferralDocList;
+	}
+	$scope.showAddNewRosterStatus = function(){
+		page.showAddNewRosterStatus = !page.showAddNewRosterStatus;
+		page.newRosterStatus = null;
+	}
+	$scope.showAddNewPatientStatus = function(){
+		page.showAddNewPatientStatus = !page.showAddNewPatientStatus;
+		page.newPatientStatus = null;
 	}
 	
 	//fill referral doc from list
 	$scope.fillReferralDoc = function(){
-		if ($scope.page.referralDocObj!=null) {
-			$scope.page.referralDocNo = $scope.page.referralDocObj.referralNo;
-			$scope.page.referralDoc = $scope.page.referralDocObj.name;
+		if (page.referralDocObj!=null) {
+			page.referralDocNo = page.referralDocObj.referralNo;
+			page.referralDoc = page.referralDocObj.name;
 		}
-		$scope.page.referralDocList = false;
+		page.showReferralDocList = false;
+	}
+	
+	//add new Roster Status
+	$scope.addNewRosterStatus = function(){
+		if (page.newRosterStatus!=null && page.newRosterStatus!="") {
+			demo.rosterStatusList.push({"value":page.newRosterStatus, "label":page.newRosterStatus});
+			demo.rosterStatus = page.newRosterStatus;
+		}
+		$scope.showAddNewRosterStatus();
+	}
+	
+	//add new Patient Status
+	$scope.addNewPatientStatus = function(){
+		if (page.newPatientStatus!=null && page.newPatientStatus!="") {
+			demo.patientStatusList.push({"value":page.newPatientStatus, "label":page.newPatientStatus});
+			demo.patientStatus = page.newPatientStatus;
+		}
+		$scope.showAddNewPatientStatus();
 	}
 	
 	//check phone numbers
 	var phoneNum = {};
-	phoneNum["C"] = $scope.page.cellPhone;
-	phoneNum["H"] = $scope.page.homePhone;
-	phoneNum["W"] = $scope.page.workPhone;
-	phoneNum["HX"] = $scope.page.extras.hPhoneExt.value;
-	phoneNum["WX"] = $scope.page.extras.wPhoneExt.value;
+	phoneNum["C"] = page.cellPhone;
+	phoneNum["H"] = page.homePhone;
+	phoneNum["W"] = page.workPhone;
+	phoneNum["HX"] = page.hPhoneExt.value;
+	phoneNum["WX"] = page.wPhoneExt.value;
 	
 	$scope.checkPhone = function(type){
 		if (type=="C") {
-			if (invalidPhoneNumber($scope.page.cellPhone)) $scope.page.cellPhone = phoneNum["C"];
-			else phoneNum["C"] = $scope.page.cellPhone;
+			if (invalidPhoneNumber(page.cellPhone)) page.cellPhone = phoneNum["C"];
+			else phoneNum["C"] = page.cellPhone;
 		}
 		else if (type=="H") {
-			if (invalidPhoneNumber($scope.page.homePhone)) $scope.page.homePhone = phoneNum["H"];
-			else phoneNum["H"] = $scope.page.homePhone;
+			if (invalidPhoneNumber(page.homePhone)) page.homePhone = phoneNum["H"];
+			else phoneNum["H"] = page.homePhone;
 		}
 		else if (type=="W") {
-			if (invalidPhoneNumber($scope.page.workPhone)) $scope.page.workPhone = phoneNum["W"];
-			else phoneNum["W"] = $scope.page.workPhone;
+			if (invalidPhoneNumber(page.workPhone)) page.workPhone = phoneNum["W"];
+			else phoneNum["W"] = page.workPhone;
 		}
 		else if (type=="HX") {
-			if (notNumber($scope.page.extras.hPhoneExt.value)) $scope.page.extras.hPhoneExt.value = phoneNum["HX"];
-			else phoneNum["HX"] = $scope.page.extras.hPhoneExt.value;
+			if (notNumber(page.hPhoneExt.value)) page.hPhoneExt.value = phoneNum["HX"];
+			else phoneNum["HX"] = page.hPhoneExt.value;
 		}
 		else if (type=="WX") {
-			if (notNumber($scope.page.extras.wPhoneExt.value)) $scope.page.extras.wPhoneExt.value = phoneNum["WX"];
-			else phoneNum["WX"] = $scope.page.extras.wPhoneExt.value;
+			if (notNumber(page.wPhoneExt.value)) page.wPhoneExt.value = phoneNum["WX"];
+			else phoneNum["WX"] = page.wPhoneExt.value;
 		}
 	}
 	
 	//set preferred contact phone number
 	$scope.setPreferredPhone = function(){
-		$scope.page.msg.cellPhonePreferred = defPhTitle;
-		$scope.page.color.cellPhonePreferred = "";
-		$scope.page.msg.homePhonePreferred = defPhTitle;
-		$scope.page.color.homePhonePreferred = "";
-		$scope.page.msg.workPhonePreferred = defPhTitle;
-		$scope.page.color.workPhonePreferred = "";
+		page.cellPhonePreferredMsg = defPhTitle;
+		page.cellPhonePreferredColor = "";
+		page.homePhonePreferredMsg = defPhTitle;
+		page.homePhonePreferredColor = "";
+		page.workPhonePreferredMsg = defPhTitle;
+		page.workPhonePreferredColor = "";
 		
-		if ($scope.page.preferredPhone=="C") {
-			$scope.page.preferredPhoneNumber = $scope.page.cellPhone;
-			$scope.page.msg.cellPhonePreferred = prefPhTitle;
-			$scope.page.color.cellPhonePreferred = colorAttn;
+		if (page.preferredPhone=="C") {
+			page.preferredPhoneNumber = page.cellPhone;
+			page.cellPhonePreferredMsg = prefPhTitle;
+			page.cellPhonePreferredColor = colorAttn;
 		}
-		else if ($scope.page.preferredPhone=="H") {
-			$scope.page.preferredPhoneNumber = $scope.page.homePhone;
-			$scope.page.msg.homePhonePreferred = prefPhTitle;
-			$scope.page.color.homePhonePreferred = colorAttn;
+		else if (page.preferredPhone=="H") {
+			page.preferredPhoneNumber = page.homePhone;
+			page.homePhonePreferredMsg = prefPhTitle;
+			page.homePhonePreferredColor = colorAttn;
 		}
-		else if ($scope.page.preferredPhone=="W") {
-			$scope.page.preferredPhoneNumber = $scope.page.workPhone;
-			$scope.page.msg.workPhonePreferred = prefPhTitle;
-			$scope.page.color.workPhonePreferred = colorAttn;
+		else if (page.preferredPhone=="W") {
+			page.preferredPhoneNumber = page.workPhone;
+			page.workPhonePreferredMsg = prefPhTitle;
+			page.workPhonePreferredColor = colorAttn;
 		}
 	}
 	
@@ -669,8 +739,14 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	
 	//manage contacts
 	$scope.manageContacts = function(){
-		var url="../demographic/Contact.do?method=manage&demographic_no="+demo.demographicNo;
-		window.open(url, "ManageContacts", "width=960, height=700");
+		var discard = true;
+		if (page.dataChanged>0) {
+			discard = confirm("You may have unsaved data. Are you sure to leave?");
+		}
+		if (discard) {
+			var url="../demographic/Contact.do?method=manage&demographic_no="+demo.demographicNo;
+			window.open(url, "ManageContacts", "width=960, height=700");
+		}
 	}
 	
 	//print buttons
@@ -699,7 +775,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	$scope.macPHRDo = function(func){
 		var url = null;
 		if (func=="Register") {
-			if (!$scope.page.status.macPHRLoggedIn) {
+			if (!page.macPHRLoggedIn) {
 				alert("Please login to MyOscar first");
 				return;
 			}
@@ -729,26 +805,24 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	$scope.billingDo = function(func){
 		var url = null;
 		if (func=="BillingHistory") {
-			$scope.page.billingHistoryLabel = "Invoice List";
-			if ($scope.page.status.billregion=="CLINICAID") {
+			if (page.billregion=="CLINICAID") {
 				url="../billing.do?billRegion=CLINICAID&action=invoice_reports";
 			}
-			else if ($scope.page.status.billregion=="ON") {
-				$scope.page.billingHistoryLabel = "Billing History";
+			else if (page.billregion=="ON") {
 				url="../billing/CA/ON/billinghistory.jsp?demographic_no="+demo.demographicNo+"&last_name="+encodeURI(demo.lastName)+"&first_name="+encodeURI(demo.firstName)+"&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10";
 			}
 			else {
-				url="../billing/CA/BC/billStatus.jsp?lastName="+encodeURI(demo.lastName)+"&firstName="+encodeURI(demo.firstName)+"&filterPatient=true&demographicNo="+demo.demographicNo;
+				url="../billing/CA/BC/billpage.jsp?lastName="+encodeURI(demo.lastName)+"&firstName="+encodeURI(demo.firstName)+"&filterPatient=true&demographicNo="+demo.demographicNo;
 			}
 		}
 		else if (func=="CreateInvoice") {
-			url="../billing.do?billRegion="+$scope.page.status.billregion+"&billForm="+$scope.page.status.defaultView+"&hotclick=&appointment_no=0&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&demographic_no="+demo.demographicNo+"&providerview="+demo.providerNo+"&user_no="+user.providerNo+"&apptProvider_no=none&appointment_date="+now.getFullYear+"-"+(now.getMonth()+1)+"-"+now.getDate()+"&start_time=00:00:00&bNewForm=1&status=t";
+			url="../billing.do?billRegion="+page.billregion+"&billForm="+page.defaultView+"&hotclick=&appointment_no=0&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&demographic_no="+demo.demographicNo+"&providerview="+demo.providerNo+"&user_no="+user.providerNo+"&apptProvider_no=none&appointment_date="+now.getFullYear+"-"+(now.getMonth()+1)+"-"+now.getDate()+"&start_time=00:00:00&bNewForm=1&status=t";
 		}
 		else if (func=="FluBilling") {
-			url="../billing/CA/ON/specialtyBilling/fluBilling/addFluBilling.jsp?function=demographic&functionid="+demo.demographicNo+"&creator="+user.providerNo+"&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&hin="+demo.hin+demo.ver+"&demo_sex="+demo.sex+"&demo_hctype="+demo.hcType+"&rd="+encodeURI($scope.page.referralDoc)+"&rdohip="+$scope.page.referralDocNo+"&dob="+demo.dobYear+demo.dobMonth+demo.dobDay+"&mrp="+demo.providerNo;
+			url="../billing/CA/ON/specialtyBilling/fluBilling/addFluBilling.jsp?function=demographic&functionid="+demo.demographicNo+"&creator="+user.providerNo+"&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&hin="+demo.hin+demo.ver+"&demo_sex="+demo.sex+"&demo_hctype="+demo.hcType+"&rd="+encodeURI(page.referralDoc)+"&rdohip="+page.referralDocNo+"&dob="+demo.dobYear+demo.dobMonth+demo.dobDay+"&mrp="+demo.providerNo;
 		}
 		else if (func=="HospitalBilling") {
-			url="../billing/CA/ON/billingShortcutPg1.jsp?billRegion="+$scope.page.status.billregion+"&billForm="+encodeURI($scope.page.status.hospitalView)+"&hotclick=&appointment_no=0&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&demographic_no="+demo.demographicNo+"&providerview="+demo.providerNo+"&user_no="+user.providerNo+"&apptProvider_no=none&appointment_date="+now.getFullYear+"-"+(now.getMonth()+1)+"-"+now.getDate()+"&start_time=00:00:00&bNewForm=1&status=t";
+			url="../billing/CA/ON/billingShortcutPg1.jsp?billRegion="+page.billregion+"&billForm="+encodeURI(page.hospitalView)+"&hotclick=&appointment_no=0&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&demographic_no="+demo.demographicNo+"&providerview="+demo.providerNo+"&user_no="+user.providerNo+"&apptProvider_no=none&appointment_date="+now.getFullYear+"-"+(now.getMonth()+1)+"-"+now.getDate()+"&start_time=00:00:00&bNewForm=1&status=t";
 		}
 		else if (func=="AddBatchBilling") {
 			url="../billing/CA/ON/addBatchBilling.jsp?demographic_no="+demo.demographicNo+"&creator="+user.providerNo+"&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&hin="+demo.hin+demo.ver+"&dob="+demo.dobYear+demo.dobMonth+demo.dobDay;
@@ -786,6 +860,9 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		else if (dateEmpty(demo.dobYear, demo.dobMonth, demo.dobDay)) {
 			alert("Date of Birth is required"); return;
 		}
+		
+		//check patient status and end date
+		if ($scope.checkPatientStatus()) return;
 
 		//check postal code complete
 		if (!$scope.isPostalComplete()) return;
@@ -795,129 +872,129 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		if (demo.dateOfBirth==null) {
 			alert("Invalid Date of Birth"); return;
 		}
-		demo.effDate = buildDate($scope.page.hcEffDateYear, $scope.page.hcEffDateMonth, $scope.page.hcEffDateDay);
+		demo.effDate = buildDate(page.hcEffDateYear, page.hcEffDateMonth, page.hcEffDateDay);
 		if (demo.effDate==null) {
 			alert("Invalid Health Card Effective Date"); return;
 		}
-		demo.hcRenewDate = buildDate($scope.page.hcRenewDateYear, $scope.page.hcRenewDateMonth, $scope.page.hcRenewDateDay);
+		demo.hcRenewDate = buildDate(page.hcRenewDateYear, page.hcRenewDateMonth, page.hcRenewDateDay);
 		if (demo.hcRenewDate==null) {
 			alert("Invalid Health Card Renew Date"); return;
 		}
-		demo.rosterDate = buildDate($scope.page.rosterDateYear, $scope.page.rosterDateMonth, $scope.page.rosterDateDay);
+		demo.rosterDate = buildDate(page.rosterDateYear, page.rosterDateMonth, page.rosterDateDay);
 		if (demo.rosterDate==null) {
 			alert("Invalid Date Rostered"); return;
 		}
-		demo.rosterTerminationDate = buildDate($scope.page.rosterTerminationDateYear, $scope.page.rosterTerminationDateMonth, $scope.page.rosterTerminationDateDay);
+		demo.rosterTerminationDate = buildDate(page.rosterTerminationDateYear, page.rosterTerminationDateMonth, page.rosterTerminationDateDay);
 		if (demo.rosterTerminationDate==null) {
 			alert("Invalid Roster Termination Date"); return;
 		}
-		demo.patientStatusDate = buildDate($scope.page.patientStatusDateYear, $scope.page.patientStatusDateMonth, $scope.page.patientStatusDateDay);
+		demo.patientStatusDate = buildDate(page.patientStatusDateYear, page.patientStatusDateMonth, page.patientStatusDateDay);
 		if (demo.patientStatusDate==null) {
 			alert("Invalid Patient Status Date"); return;
 		}
-		demo.dateJoined = buildDate($scope.page.dateJoinedYear, $scope.page.dateJoinedMonth, $scope.page.dateJoinedDay);
+		demo.dateJoined = buildDate(page.dateJoinedYear, page.dateJoinedMonth, page.dateJoinedDay);
 		if (demo.dateJoined==null) {
 			alert("Invalid Date Joined"); return;
 		}
-		demo.endDate = buildDate($scope.page.endDateYear, $scope.page.endDateMonth, $scope.page.endDateDay);
+		demo.endDate = buildDate(page.endDateYear, page.endDateMonth, page.endDateDay);
 		if (demo.endDate==null) {
 			alert("Invalid End Date"); return;
 		}
-		demo.onWaitingListSinceDate = buildDate($scope.page.onWaitingListSinceYear, $scope.page.onWaitingListSinceMonth, $scope.page.onWaitingListSinceDay);
+		demo.onWaitingListSinceDate = buildDate(page.onWaitingListSinceYear, page.onWaitingListSinceMonth, page.onWaitingListSinceDay);
 		if (demo.onWaitingListSinceDate==null) {
 			alert("Invalid Date Of Request (Waiting List)"); return;
 		}
-		$scope.page.extras.paper_chart_archived_date.value = buildDate($scope.page.paper_chart_archived_dateYear, $scope.page.paper_chart_archived_dateMonth, $scope.page.paper_chart_archived_dateDay);
-		if ($scope.page.extras.paper_chart_archived_date.value==null) {
+		page.paperChartArchivedDate.value = buildDate(page.paperChartArchivedDateYear, page.paperChartArchivedDateMonth, page.paperChartArchivedDateDay);
+		if (page.paperChartArchivedDate.value==null) {
 			alert("Invalid Paper Chart Archive Date"); return;
 		}
 		
 		
 		//save notes
-		if ($scope.page.notes!=null) {
-			demo.notes = "<unotes>" + $scope.page.notes + "</unotes>";
+		if (page.notes!=null) {
+			demo.notes = "<unotes>" + page.notes + "</unotes>";
 		}
 		
 		//save referral doctor
 		demo.familyDoctor = "<rdohip>";
-		if ($scope.page.referralDocNo!=null && $scope.page.referralDocNo!="") {
-			demo.familyDoctor += $scope.page.referralDocNo;
+		if (page.referralDocNo!=null && page.referralDocNo!="") {
+			demo.familyDoctor += page.referralDocNo;
 		}
 		demo.familyDoctor += "</rdohip><rd>";
-		if ($scope.page.referralDoc!=null && $scope.page.referralDoc!="") {
-			demo.familyDoctor += $scope.page.referralDoc;
+		if (page.referralDoc!=null && page.referralDoc!="") {
+			demo.familyDoctor += page.referralDoc;
 		}
 		demo.familyDoctor += "</rd>";
 
 		//save phone numbers
-		$scope.page.extras.demo_cell.value = $scope.page.cellPhone;
-		demo.phone = $scope.page.homePhone;
-		demo.alternativePhone = $scope.page.workPhone;
+		page.demoCell.value = page.cellPhone;
+		demo.phone = page.homePhone;
+		demo.alternativePhone = page.workPhone;
 		
-		if ($scope.page.preferredPhone=="C") $scope.page.extras.demo_cell.value += "*";
-		else if ($scope.page.preferredPhone=="H") demo.phone += "*";
-		else if ($scope.page.preferredPhone=="W") demo.alternativePhone += "*";
+		if (page.preferredPhone=="C") page.demoCell.value += "*";
+		else if (page.preferredPhone=="H") demo.phone += "*";
+		else if (page.preferredPhone=="W") demo.alternativePhone += "*";
 		
 		//save extras
 		demo.extras = [];
-		if ($scope.page.extras.demo_cell.value!=null) {
-			if ($scope.page.extras.demo_cell.key==null) $scope.page.extras.demo_cell.key = "demo_cell";
-			demo.extras.push(copyDemoExt($scope.page.extras.demo_cell));
+		if (page.demoCell.value!=null) {
+			if (page.demoCell.key==null) page.demoCell.key = "demo_cell";
+			demo.extras.push(copyDemoExt(page.demoCell));
 		}
-		if ($scope.page.extras.aboriginal.value!=null) {
-			if ($scope.page.extras.aboriginal.key==null) $scope.page.extras.aboriginal.key = "aboriginal";
-			demo.extras.push(copyDemoExt($scope.page.extras.aboriginal));
+		if (page.aboriginal.value!=null) {
+			if (page.aboriginal.key==null) page.aboriginal.key = "aboriginal";
+			demo.extras.push(copyDemoExt(page.aboriginal));
 		}
-		if ($scope.page.extras.hPhoneExt.value!=null) {
-			if ($scope.page.extras.hPhoneExt.key==null) $scope.page.extras.hPhoneExt.key = "hPhoneExt";
-			demo.extras.push(copyDemoExt($scope.page.extras.hPhoneExt));
+		if (page.hPhoneExt.value!=null) {
+			if (page.hPhoneExt.key==null) page.hPhoneExt.key = "hPhoneExt";
+			demo.extras.push(copyDemoExt(page.hPhoneExt));
 		}
-		if ($scope.page.extras.wPhoneExt.value!=null) {
-			if ($scope.page.extras.wPhoneExt.key==null) $scope.page.extras.wPhoneExt.key = "wPhoneExt";
-			demo.extras.push(copyDemoExt($scope.page.extras.wPhoneExt));
+		if (page.wPhoneExt.value!=null) {
+			if (page.wPhoneExt.key==null) page.wPhoneExt.key = "wPhoneExt";
+			demo.extras.push(copyDemoExt(page.wPhoneExt));
 		}
-		if ($scope.page.extras.cytolNum.value!=null) {
-			if ($scope.page.extras.cytolNum.key==null) $scope.page.extras.cytolNum.key = "cytolNum";
-			demo.extras.push(copyDemoExt($scope.page.extras.cytolNum));
+		if (page.cytolNum.value!=null) {
+			if (page.cytolNum.key==null) page.cytolNum.key = "cytolNum";
+			demo.extras.push(copyDemoExt(page.cytolNum));
 		}
-		if ($scope.page.extras.phoneComment.value!=null) {
-			if ($scope.page.extras.phoneComment.key==null) $scope.page.extras.phoneComment.key = "phoneComment";
-			demo.extras.push(copyDemoExt($scope.page.extras.phoneComment));
+		if (page.phoneComment.value!=null) {
+			if (page.phoneComment.key==null) page.phoneComment.key = "phoneComment";
+			demo.extras.push(copyDemoExt(page.phoneComment));
 		}
-		if ($scope.page.extras.paper_chart_archived.value!=null) {
-			if ($scope.page.extras.paper_chart_archived.key==null) $scope.page.extras.paper_chart_archived.key = "paper_chart_archived";
-			demo.extras.push(copyDemoExt($scope.page.extras.paper_chart_archived));
+		if (page.paperChartArchived.value!=null) {
+			if (page.paperChartArchived.key==null) page.paperChartArchived.key = "paper_chart_archived";
+			demo.extras.push(copyDemoExt(page.paperChartArchived));
 		}
-		if ($scope.page.extras.paper_chart_archived_date.value!=null) {
-			if ($scope.page.extras.paper_chart_archived_date.key==null) $scope.page.extras.paper_chart_archived_date.key = "paper_chart_archived_date";
-			demo.extras.push(copyDemoExt($scope.page.extras.paper_chart_archived_date));
+		if (page.paperChartArchivedDate.value!=null) {
+			if (page.paperChartArchivedDate.key==null) page.paperChartArchivedDate.key = "paper_chart_archived_date";
+			demo.extras.push(copyDemoExt(page.paperChartArchivedDate));
 		}
-		if ($scope.page.extras.usSigned.value!=null) {
-			if ($scope.page.extras.usSigned.key==null) $scope.page.extras.usSigned.key = "usSigned";
-			demo.extras.push(copyDemoExt($scope.page.extras.usSigned));
+		if (page.usSigned.value!=null) {
+			if (page.usSigned.key==null) page.usSigned.key = "usSigned";
+			demo.extras.push(copyDemoExt(page.usSigned));
 		}
-		if ($scope.page.extras.privacyConsent.value!=null) {
-			if ($scope.page.extras.privacyConsent.key==null) $scope.page.extras.privacyConsent.key = "privacyConsent";
-			demo.extras.push(copyDemoExt($scope.page.extras.privacyConsent));
+		if (page.privacyConsent.value!=null) {
+			if (page.privacyConsent.key==null) page.privacyConsent.key = "privacyConsent";
+			demo.extras.push(copyDemoExt(page.privacyConsent));
 		}
-		if ($scope.page.extras.informedConsent.value!=null) {
-			if ($scope.page.extras.informedConsent.key==null) $scope.page.extras.informedConsent.key = "informedConsent";
-			demo.extras.push(copyDemoExt($scope.page.extras.informedConsent));
+		if (page.informedConsent.value!=null) {
+			if (page.informedConsent.key==null) page.informedConsent.key = "informedConsent";
+			demo.extras.push(copyDemoExt(page.informedConsent));
 		}
-		if ($scope.page.extras.securityQuestion1.value!=null) {
-			if ($scope.page.extras.securityQuestion1.key==null) $scope.page.extras.securityQuestion1.key = "securityQuestion1";
-			demo.extras.push(copyDemoExt($scope.page.extras.securityQuestion1));
+		if (page.securityQuestion1.value!=null) {
+			if (page.securityQuestion1.key==null) page.securityQuestion1.key = "securityQuestion1";
+			demo.extras.push(copyDemoExt(page.securityQuestion1));
 		}
-		if ($scope.page.extras.securityAnswer1.value!=null) {
-			if ($scope.page.extras.securityAnswer1.key==null) $scope.page.extras.securityAnswer1.key = "securityAnswer1";
-			demo.extras.push(copyDemoExt($scope.page.extras.securityAnswer1));
+		if (page.securityAnswer1.value!=null) {
+			if (page.securityAnswer1.key==null) page.securityAnswer1.key = "securityAnswer1";
+			demo.extras.push(copyDemoExt(page.securityAnswer1));
 		}
 		
 		//save to database
 		demographicService.updateDemographic(demo);
 		
 		//show Saving... message and refresh screen
-		$scope.page.saving = true;
+		page.saving = true;
 		location.reload();
 	}
 });
@@ -1027,7 +1104,7 @@ function dateEmpty(year, month, day) {
 }
 
 function pad0(s) {
-	if (s!="") {
+	if (s!=null && s!="") {
 		s = parseInt(s).toString();
 		if (s.length<2) s = "0"+s;
 		if (s==0) s = "";
@@ -1077,7 +1154,8 @@ function getPhoneNum(phone) {
 	return phone;
 }
 
-function demoContactToArray(demoContact) {
+function demoContactShow(demoContact) {
+	var contactShow = demoContact;
 	if (demoContact.role!=null) { //only 1 entry
 		var tmp = {};
 		tmp.role = demoContact.role;
@@ -1087,9 +1165,21 @@ function demoContactToArray(demoContact) {
 		tmp.lastName = demoContact.lastName;
 		tmp.firstName = demoContact.firstName;
 		tmp.phone = demoContact.phone;
-		return [tmp];
+		contactShow = [tmp];
 	}
-	return demoContact;
+	for (var i=0; i<contactShow.length; i++) {
+		if (contactShow[i].sdm==true) contactShow[i].role += " /sdm";
+		if (contactShow[i].ec==true) contactShow[i].role += " /ec";
+		if (contactShow[i].role==null || contactShow[i].role=="") contactShow[i].role = "-";
+		
+		if (contactShow[i].phone==null || contactShow[i].phone=="") {
+			contactShow[i].phone = "-";
+		}
+		else if (contactShow[i].phone.charAt(contactShow[i].phone.length-1)=="*") {
+			contactShow[i].phone = contactShow[i].phone.substring(0, contactShow[i].phone.length-1);
+		}
+	}
+	return contactShow;
 }
 
 function providerToArray(provider) {
@@ -1102,4 +1192,17 @@ function providerToArray(provider) {
 		return [tmp];
 	}
 	return provider;
+}
+
+function statusValueToArray(statusValue) {
+	if (statusValue==null) {
+		statusValue = [];
+	}
+	else if (statusValue.value!=null) { //only 1 entry
+		var tmp = {};
+		tmp.value = statusValue.value;
+		tmp.label = statusValue.value;
+		return [tmp];
+	}
+	return statusValue;
 }
