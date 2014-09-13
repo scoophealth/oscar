@@ -503,4 +503,72 @@ public class DemographicManager {
 	public List<String> getRosterStatusList() {
 		return demographicDao.getRosterStatuses();
 	}
+
+	/*
+	 * Format is LastName[,FirstName]
+	 */
+	public List<Demographic> searchDemographicByNames(LoggedInInfo loggedInInfo, String searchString, int startIndex, int itemsToReturn) {
+		
+		List<Demographic> results = demographicDao.searchDemographicByNamesString(searchString, startIndex, itemsToReturn);
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("searchDemographicByName, searchString="+searchString+", result.size="+results.size());
+		}
+		
+		//--- log action ---
+		for (Demographic demographic : results) {
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.searchDemographicByName result", "demographicId=" + demographic.getDemographicNo());
+		}
+
+		return (results);
+	}
+	
+	/**
+	 * Format is addr:term
+	 * 
+	 * @param searchString
+	 * @param startIndex
+	 * @param itemsToReturn
+	 * @return
+	 */
+	public List<Demographic> searchDemographicByAddress(LoggedInInfo loggedInInfo, String searchString, int startIndex, int itemsToReturn) {
+		
+		List<Demographic> results = demographicDao.searchDemographicByAddressString(searchString, startIndex, itemsToReturn);
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("searchDemographicByAddress, searchString="+searchString+", result.size="+results.size());
+		}
+		
+		//--- log action ---
+		for (Demographic demographic : results) {
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.searchDemographicByAddress result", "demographicId=" + demographic.getDemographicNo());
+		}
+
+		return (results);
+	}
+	
+	/**
+	 * Format is chartNo:term
+	 * 
+	 * @param searchString
+	 * @param startIndex
+	 * @param itemsToReturn
+	 * @return
+	 */
+	public List<Demographic> searchDemographicByChartNo(LoggedInInfo loggedInInfo, String searchString, int startIndex, int itemsToReturn) {
+		
+		List<Demographic> results = demographicDao.searchDemographicByChartNo(searchString, startIndex, itemsToReturn);
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("searchDemographicByChartNo, searchString="+searchString+", result.size="+results.size());
+		}
+		
+		//--- log action ---
+		for (Demographic demographic : results) {
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.searchDemographicByChartNo result", "demographicId=" + demographic.getDemographicNo());
+		}
+
+		return (results);
+	}
+	
 }

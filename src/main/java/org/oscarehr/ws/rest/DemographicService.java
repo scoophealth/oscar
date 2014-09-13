@@ -23,6 +23,7 @@
  */
 package org.oscarehr.ws.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -36,6 +37,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.SecUserRole;
@@ -61,6 +63,8 @@ import org.oscarehr.ws.rest.conversion.ProviderConverter;
 import org.oscarehr.ws.rest.conversion.WaitingListNameConverter;
 import org.oscarehr.ws.rest.to.OscarSearchResponse;
 import org.oscarehr.ws.rest.to.model.DemographicContactFewTo1;
+import org.oscarehr.ws.rest.to.model.DemographicSearchResultItem;
+import org.oscarehr.ws.rest.to.model.DemographicSearchResults;
 import org.oscarehr.ws.rest.to.model.DemographicTo1;
 import org.oscarehr.ws.rest.to.model.StatusValueTo1;
 import org.oscarehr.ws.rest.to.model.WaitingListNameTo1;
@@ -68,6 +72,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import oscar.oscarWaitingList.util.WLWaitingListUtil;
+import oscar.util.StringUtils;
 
 
 /**
@@ -360,4 +365,51 @@ public class DemographicService extends AbstractServiceImpl {
 	    return result;
 	}
 
+	/**
+	 * Search demographics - used by navigation of OSCAR webapp
+	 * 
+	 * Currently supports LastName[,FirstName] and address searches.
+	 * 
+	 * @param id
+	 * 		Id of the demographic to get data for 
+	 * @return
+	 * 		Returns data for the demographic provided 
+	 */
+	@GET
+	@Path("/search")
+	@Produces("application/json")
+	public DemographicSearchResults search(@QueryParam("query") String query) {		
+		
+		long start = System.currentTimeMillis();
+		List<Demographic> demo = new ArrayList<Demographic>();
+		
+		if(query.startsWith("addr:")) {
+			demo = demographicManager.searchDemographicByAddress(getLoggedInInfo(), query, 0, 10);
+		} else if(query.startsWith("chartNo:")) {
+			demo = demographicManager.searchDemographicByChartNo(getLoggedInInfo(), query, 0, 10);
+		} else {
+			demo = demographicManager.searchDemographicByNames(getLoggedInInfo(), query, 0, 10);
+		}
+		if (demo == null) {
+			return null;
+		}
+		long execTime = System.currentTimeMillis() - start;
+		
+		DemographicSearchResults results = new DemographicSearchResults();
+		results.setTime(execTime);
+		for(Demographic d:demo) {
+			DemographicSearchResultItem item = new DemographicSearchResultItem();
+			item.setId(d.getDemographicNo());
+			item.setName(d.getFormattedName());
+			if(StringUtils.filled(d.getHin()))
+				item.setHin(d.getHin() + (StringUtils.filled(d.getVer()) ?" " + d.getVer():""));
+			if(d.getBirthDay().getTime() != null) {
+				item.setDob(d.getBirthDay().getTime());
+				item.setDobString(DateFormatUtils.ISO_DATE_FORMAT.format(d.getBirthDay().getTime()));
+			}
+			results.getItems().add(item);
+		}
+		
+		return results;
+	}
 }
