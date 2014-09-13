@@ -1945,4 +1945,121 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
     public List<Integer> getDemographicIdsAddedSince(Date value) {	
     	return this.getHibernateTemplate().find("select d.DemographicNo from Demographic d where d.lastUpdateDate >?", value);
     }
+    
+	/**
+	 * This method is written for the top nav quick search. It basically expects the search string to be
+	 * Last Name [, First Name]
+	 * 
+	 * @param searchString
+	 * @param startIndex
+	 * @param itemsToReturn
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Demographic> searchDemographicByNamesString(String searchString, int startIndex, int itemsToReturn) {
+		String sqlCommand = "select x from Demographic x";
+		if (searchString != null)  {
+			if(searchString.indexOf(",") != -1 &&  searchString.split(",").length>1 && searchString.split(",")[1].length()>0) {
+				sqlCommand = sqlCommand + " where x.LastName like :ln AND x.FirstName like :fn";
+			} else {
+				sqlCommand = sqlCommand + " where x.LastName like :ln";
+			}
+			
+		}
+
+		Session session = this.getSession();
+		try {
+			Query q = session.createQuery(sqlCommand);
+			if (searchString != null) {
+				q.setParameter("ln", "%" + searchString.split(",")[0] + "%");
+				if(searchString.indexOf(",") != -1 && searchString.split(",").length>1 && searchString.split(",")[1].length()>0) {
+					q.setParameter("fn", "%" +  searchString.split(",")[1] + "%");
+					
+				} 
+			}
+			q.setFirstResult(startIndex);
+			setLimit(q,itemsToReturn);
+			return (q.list());
+		} finally {
+			this.releaseSession(session);
+		}
+	}
+	
+	/**
+	 * Searches by address...expects the format
+	 * addr: term
+	 * 
+	 * @param searchString
+	 * @param startIndex
+	 * @param itemsToReturn
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Demographic> searchDemographicByAddressString(String searchString, int startIndex, int itemsToReturn) {
+		if(searchString!=null && searchString.startsWith("addr:")) {
+			searchString = searchString.substring("addr:".length());
+		}
+		if(searchString.length() == 0)
+			return new ArrayList<Demographic>();
+		
+		String sqlCommand = "select x from Demographic x";
+		if (searchString != null) sqlCommand = sqlCommand + " where x.Address like :addr OR x.City like :city OR x.Postal like :postal";
+
+		Session session = this.getSession();
+		try {
+			Query q = session.createQuery(sqlCommand);
+			if (searchString != null) {
+				q.setParameter("addr",  "%" + searchString + "%");
+				q.setParameter("city",  "%" + searchString + "%");
+				q.setParameter("postal",  "%" + searchString + "%");
+			}
+			q.setFirstResult(startIndex);
+			setLimit(q,itemsToReturn);
+			return (q.list());
+		} finally {
+			this.releaseSession(session);
+		}
+	}
+	
+	/**
+	 * Searches by chartNo...expects the format
+	 * chartNo: term
+	 * 
+	 * @param searchString
+	 * @param startIndex
+	 * @param itemsToReturn
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Demographic> searchDemographicByChartNo(String searchString, int startIndex, int itemsToReturn) {
+		if(searchString!=null && searchString.startsWith("chartNo:")) {
+			searchString = searchString.substring("chartNo:".length());
+		}
+		if(searchString.length() == 0)
+			return new ArrayList<Demographic>();
+		
+		String sqlCommand = "select x from Demographic x";
+		if (searchString != null) sqlCommand = sqlCommand + " where x.ChartNo like :chartNo";
+
+		Session session = this.getSession();
+		try {
+			Query q = session.createQuery(sqlCommand);
+			if (searchString != null) {
+				q.setParameter("chartNo", searchString + "%");
+			}
+			q.setFirstResult(startIndex);
+			setLimit(q,itemsToReturn);
+			return (q.list());
+		} finally {
+			this.releaseSession(session);
+		}
+	}
+
+	protected final void setLimit(Query query, int itemsToReturn)
+	{
+		if (itemsToReturn > MAX_SELECT_SIZE) throw(new IllegalArgumentException("Requested too large of a result list size : " + itemsToReturn));
+
+		query.setMaxResults(itemsToReturn);
+	}
+	
 }

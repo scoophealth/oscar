@@ -346,12 +346,8 @@ pre.noteInEdit {
 	<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 
 <script>
-<%--
+
 $(document).ready(function(){
-	$("#nav_search").bind('click',function(){
-		 $("#myinfo").html("Patient Search Results");
-	});
-	
 	
 	$('#demographicQuickSearch').typeahead({
 		name: 'patients',
@@ -394,7 +390,7 @@ $(document).ready(function(){
 	});
 	
 });
---%>
+
 </script>
 </body>
 </html>
