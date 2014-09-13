@@ -107,7 +107,11 @@ public class WLWaitingListUtil {
 		wl.setDemographicNo(ConversionUtils.fromIntString(demographicNo));
 		wl.setNote(waitingListNote);
 		wl.setPosition(pos);
-		wl.setOnListSince(ConversionUtils.fromDateString(onListSince));
+		if (onListSince == null || onListSince.length() <= 0) {
+			wl.setOnListSince(new Date());
+		} else {
+			wl.setOnListSince(ConversionUtils.fromDateString(onListSince));
+		}
 		wl.setHistory(false);
 
 		dao.saveEntity(wl);

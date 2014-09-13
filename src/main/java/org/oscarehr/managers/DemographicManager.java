@@ -157,6 +157,18 @@ public class DemographicManager {
 		return result;
 	}
 	
+	public DemographicExt getDemographicExt(LoggedInInfo loggedInInfo, Integer demographicNo, String key) {
+		
+		DemographicExt result = null;
+		result = demographicExtDao.getDemographicExt(demographicNo, key);
+		
+		//--- log action ---
+		if (result != null) {
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getDemographicExt(demographicNo, key)", "id="+result.getId() + "(" + demographicNo +")");
+		}
+		return result;
+	}
+	
 	public DemographicCust getDemographicCust(LoggedInInfo loggedInInfo, Integer id) {
 		DemographicCust result = null;
 		result = demographicCustDao.find(id);
@@ -482,5 +494,13 @@ public class DemographicManager {
     	}
 		
 		return(results);
+	}
+	
+	public List<String> getPatientStatusList() {
+		return demographicDao.search_ptstatus();
+	}
+	
+	public List<String> getRosterStatusList() {
+		return demographicDao.getRosterStatuses();
 	}
 }

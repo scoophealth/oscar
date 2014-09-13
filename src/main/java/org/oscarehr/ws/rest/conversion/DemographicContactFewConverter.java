@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DemographicContactFewConverter {
-
+	
 	public DemographicContactFewTo1 getAsTransferObject(DemographicContact d, Object obj) throws ConversionException {
 		DemographicContactFewTo1 t = new DemographicContactFewTo1();
 		
@@ -46,8 +46,17 @@ public class DemographicContactFewConverter {
 			Demographic demographic = (Demographic) obj;
 			t.setFirstName(demographic.getFirstName());
 			t.setLastName(demographic.getLastName());
-			if (demographic.getPhone()!=null) t.setPhone(demographic.getPhone());
-			else if (demographic.getPhone2()!=null) t.setPhone(demographic.getPhone2());
+			
+			if (isPreferredPhone(demographic.getPhone())) {
+				t.setPhone(demographic.getPhone());
+			}
+			else if (isPreferredPhone(demographic.getPhone2())) {
+				t.setPhone(demographic.getPhone2());
+			}
+			else {
+				if (demographic.getPhone()!=null) t.setPhone(demographic.getPhone());
+				else if (demographic.getPhone2()!=null) t.setPhone(demographic.getPhone2());
+			}
 		}
 		else if (d.getType()==DemographicContact.TYPE_PROVIDER) {
 			Provider provider = (Provider) obj;
@@ -72,4 +81,12 @@ public class DemographicContactFewConverter {
 		return t;
 	}
 
+	private boolean isPreferredPhone(String phone) {
+		if (phone!=null) {
+			if (phone.length()>0) {
+				if (phone.charAt(phone.length()-1)=='*') return true;
+			}
+		}
+		return false;
+	}
 }
