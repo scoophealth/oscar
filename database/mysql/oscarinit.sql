@@ -11763,3 +11763,16 @@ CREATE TABLE `faxes` (
   KEY `faxstatus` (`status`)
 ); 
 
+CREATE TABLE `fax_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `url` varchar(255),
+  `siteUser` varchar(255),
+  `passwd` varchar(255),
+  `faxUser` varchar(255),
+  `faxPasswd` varchar(255),
+  `queue` varchar(255),
+  `active` tinyint(1),
+  `faxNumber` varchar(10),
+  PRIMARY KEY (`id`)
+);
+
