@@ -35,11 +35,18 @@
 			type = "RECEIVED FAX";
 	    }
     
-	    ProviderData providerData = providerDataDao.find(faxJob.getOscarUser());
+	    String providerName = "N/A";
+	    String oscarUser = faxJob.getOscarUser();
+	    if( oscarUser != null ) {
+			    
+	    	ProviderData providerData = providerDataDao.find(faxJob.getOscarUser());
+	    	providerName = providerData.getLastName() + ", " + providerData.getFirstName();
+	    	
+	    }
 %>
 		<tr>
 			<td class="small"><%=type%></td>
-			<td class="small"><%=providerData.getLastName() + ", " + providerData.getFirstName()%></td>
+			<td class="small"><%=providerName%></td>
 			<td class="small"><%=faxJob.getUser()%></td>
 			<td id="status<%=count%>" class="small"><%=faxJob.getStatus()%></td>
 			<td class="small"><%=DateFormatUtils.format(faxJob.getStamp(), "yyyy-MM-dd HH:mm:ss")%></td>

@@ -125,6 +125,7 @@ public class FaxJob extends AbstractModel<Integer> implements Comparable<FaxJob>
     public void setId(Integer id) {
         this.id = id;
     }
+    
     /**
      * @return the file_namne
      */

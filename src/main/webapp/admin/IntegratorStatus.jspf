@@ -48,16 +48,16 @@
 			boolean allSynced = true;
 			
 			try{
-				allSynced  = CaisiIntegratorManager.haveAllRemoteFacilitiesSyncedIn(loggedInInfo8876, secondsTillConsideredStale,true); 
+				allSynced  = CaisiIntegratorManager.haveAllRemoteFacilitiesSyncedIn(loggedInInfo8876, facility, secondsTillConsideredStale); 
 			}catch(Exception remoteFacilityException){
 				MiscUtils.getLogger().error("Error checking Remote Facilities Sync status",remoteFacilityException);
-				CaisiIntegratorManager.checkForConnectionError(remoteFacilityException);
+				CaisiIntegratorManager.checkForConnectionError(request.getSession(), remoteFacilityException);
 			}
 			if(secondsTillConsideredStale == -1){  
 				allSynced = true; 
-			}
+			}	
 		%>
-			<%if (CaisiIntegratorManager.isIntegratorOffline()) {%>
+			<%if (CaisiIntegratorManager.isIntegratorOffline(request.getSession())) {%>
     			<div style="background: none repeat scroll 0% 0% red; color: white; font-weight: bold; padding-left: 10px; margin-bottom: 2px;"><bean:message key="oscarEncounter.integrator.NA"/></div>
     		<%}else if(!allSynced) {%>
     			<div style="background: none repeat scroll 0% 0% orange; color: white; font-weight: bold; padding-left: 10px; margin-bottom: 2px;"><bean:message key="oscarEncounter.integrator.outOfSync"/>
