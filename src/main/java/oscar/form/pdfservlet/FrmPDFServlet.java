@@ -31,6 +31,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
@@ -139,18 +140,23 @@ public class FrmPDFServlet extends HttpServlet {
             
             
             ServletOutputStream sout = res.getOutputStream();  
-            FileInputStream fis = new FileInputStream(tmpFile);  
-            byte[] buffer = new byte[64000];  
-            int bytesRead = 0;  
-                                
-            while(true)  
+            FileInputStream fis = new FileInputStream(tmpFile);
+            try {
+	            byte[] buffer = new byte[64000];  
+	            int bytesRead = 0;  
+	                                
+	            while(true)  
                 {  
                        bytesRead = fis.read(buffer);  
                        if (bytesRead == -1)  
                               break;  
                                     
                        sout.write(buffer,0,bytesRead);  
-                }  
+                }
+            }
+            finally {
+            	fis.close();
+            }
             
             LogAction.addLogSynchronous(loggedInInfo,"FrmPDFServlet", "formID=" + req.getParameter("formId") + ",form_class=" + req.getParameter("form_class"));
             
@@ -176,15 +182,19 @@ public class FrmPDFServlet extends HttpServlet {
         .getAttribute(HSFO_RX_DATA_KEY);
 
         JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(rx.getOutlines());
-        InputStream is = Thread.currentThread().getContextClassLoader()
-        .getResourceAsStream("/oscar/form/prop/Hsfo_Rx.jasper");
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("/oscar/form/prop/Hsfo_Rx.jasper");
+       
         try {
             JasperRunManager.runReportToPdfStream(is, baos, rx.getParams(), ds);
         } catch (JRException e) {
             throw new RuntimeException(e);
         }
+        finally {
+        	IOUtils.closeQuietly(is);
+        }
+        
         return baos;
     }
 
@@ -431,20 +441,28 @@ public class FrmPDFServlet extends HttpServlet {
             //String propFilename = "../../OscarDocument/" + getProjectName() + "/form/" + template;
             String propFilename = oscar.OscarProperties.getInstance().getProperty("pdfFORMDIR", "") + "/" + template;
             PdfReader reader = null;
-            try {
-                reader = new PdfReader(propFilename);
-                log.info("Found template at " + propFilename);
-            } catch (Exception dex) {
-                log.debug("change path to inside oscar from :" + propFilename);
-                reader = new PdfReader("/oscar/form/prop/" + template);
-                log.debug("Found template at /oscar/form/prop/" + template);
+            float height;
+            int n;
+            try
+            {
+	            try {
+	                reader = new PdfReader(propFilename);
+	                log.info("Found template at " + propFilename);
+	            } catch (Exception dex) {
+	                log.debug("change path to inside oscar from :" + propFilename);
+	                reader = new PdfReader("/oscar/form/prop/" + template);
+	                log.debug("Found template at /oscar/form/prop/" + template);
+	            }
+	
+	            // retrieve the total number of pages
+	            n = reader.getNumberOfPages();
+	            // retrieve the size of the first page
+	            Rectangle pSize = reader.getPageSize(1);
+	            height = pSize.getHeight();
             }
-
-            // retrieve the total number of pages
-            int n = reader.getNumberOfPages();
-            // retrieve the size of the first page
-            Rectangle pSize = reader.getPageSize(1);
-            float height = pSize.getHeight();
+            finally {
+            	reader.close();
+            }
 
             PdfContentByte cb = writer.getDirectContent();
             ColumnText ct = new ColumnText(cb);
@@ -793,19 +811,29 @@ public class FrmPDFServlet extends HttpServlet {
         try {
             log.debug("1Looking for the prop file! " + propFilename);
             InputStream is = new FileInputStream(propFilename); //getServletContext().getResourceAsStream(propFilename);
-            if (is != null) {
-                log.debug("2Found the prop file! " + cfgFilename);
-                ret.load(is);
-                is.close();
+            try {
+	            if (is != null) {
+	                log.debug("2Found the prop file! " + cfgFilename);
+	                ret.load(is);
+	                is.close();
+	            }
+            }
+            finally {
+            	is.close();
             }
         } catch (Exception e) {
             try {
                 String propPath = "/WEB-INF/classes/oscar/form/prop/";
                 InputStream is = getServletContext().getResourceAsStream(propPath + cfgFilename);
-                if (is != null) {
-                    log.debug("found prop file " + propPath + cfgFilename);
-                    ret.load(is);
-                    is.close();
+                try {
+	                if (is != null) {
+	                    log.debug("found prop file " + propPath + cfgFilename);
+	                    ret.load(is);
+	                    is.close();
+	                }
+                }
+                finally {
+                	is.close();
                 }
             } catch (Exception ee) {
                 log.warn("Can't find the prop file! " + cfgFilename);
