@@ -31,6 +31,7 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.DrugProduct;
 import org.oscarehr.rx.dispensary.LotBean;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -160,23 +161,69 @@ public class DrugProductDao extends AbstractDao<DrugProduct>{
 	
 	public List<DrugProduct> findByNameAndLot(int offset, int limit, String name, String lotNumber) {
 		
-		if(name == null || "".equals(name)) {
-			return findAll(offset,limit);
+		String sqlStart = "from DrugProduct x where 1=1";
+		String sql = "";
+		List<Object> params = new ArrayList<Object>();
+		int index = 1;
+		
+		if(name != null && !"".equals(name)) {
+			sql += " and x.name = ?"+index;
+			params.add(name);
+			index++;
 		}
-		String sqlAppend = "";
 		if(lotNumber != null && !"".equals(lotNumber)) {
-			sqlAppend = " AND x.lotNumber = ?2";
+			sql += " and x.lotNumber = ?"+index;
+			params.add(lotNumber);
+			index++;
 		}
-		Query query = entityManager.createQuery("SELECT x FROM DrugProduct x where x.name = ?1" + sqlAppend);
-		query.setParameter(1,name);
-		if(!"".equals(sqlAppend)) {
-			query.setParameter(2, lotNumber);
+		
+		Integer result = null;
+		
+		Query query = entityManager.createQuery(sqlStart + sql);
+		for(int x=0;x<params.size();x++) {
+			query.setParameter(x+1, params.get(x));
 		}
 		query.setFirstResult(offset);
 		query.setMaxResults(limit);
 		@SuppressWarnings("unchecked")
         List<DrugProduct> results = query.getResultList();
         return results;
+
+	}
+	
+	public Integer findByNameAndLotCount(String name, String lotNumber) {
+		
+		String sqlStart = "select count(x) from DrugProduct x where 1=1";
+		String sql = "";
+		List<Object> params = new ArrayList<Object>();
+		int index = 1;
+		
+		if(name != null && !"".equals(name)) {
+			sql += " and x.name = ?"+index;
+			params.add(name);
+			index++;
+		}
+		if(lotNumber != null && !"".equals(lotNumber)) {
+			sql += " and x.lotNumber = ?"+index;
+			params.add(lotNumber);
+			index++;
+		}
+		
+		Integer result = null;
+		
+		Query query = entityManager.createQuery(sqlStart + sql);
+		for(int x=0;x<params.size();x++) {
+			query.setParameter(x+1, params.get(x));
+		}
+		
+		try {
+			result = ((Long)query.getSingleResult()).intValue();
+		}catch(Exception e) {
+			MiscUtils.getLogger().error("Error",e);
+			
+		}
+		
+		return result;
 
 	}
 	

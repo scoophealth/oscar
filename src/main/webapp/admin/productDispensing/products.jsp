@@ -37,10 +37,11 @@
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.apache.commons.lang.StringUtils"%>
 
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-	Provider provider = loggedInInfo.getLoggedInProvider();
+	Provider provider = loggedInInfo.getLoggedInProvider();	
 %>
 <html:html locale="true">
 <head>
@@ -62,20 +63,11 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/DT_bootstrap.js"></script>   
 <script type="text/javascript" language="JavaScript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js"></script>
 
-<!-- calendar stylesheet -->
-<link rel="stylesheet" type="text/css" media="all" href="../../share/calendar/calendar.css" title="win2k-cold-1" />
-<!-- main calendar program -->
-<script type="text/javascript" src="../../share/calendar/calendar.js"></script>
-<!-- language for the calendar -->
-<script type="text/javascript"
-        src="../../share/calendar/lang/calendar-en.js"></script>
-<!-- the following script defines the Calendar.setup helper function, which makes
-       adding a calendar a matter of 1 or 2 lines of code. -->
-<script type="text/javascript"
-        src="../../share/calendar/calendar-setup.js"></script>
 
+<link href="<%=request.getContextPath() %>/library/bootstrap2-datepicker/datepicker3.css" rel="stylesheet">
 
-
+<script src="<%=request.getContextPath() %>/library/bootstrap2-datepicker/bootstrap-datepicker.js"></script>
+ 
 <style>
 .red{color:red}
 
@@ -83,15 +75,30 @@
 
 <script>
 
+	var currentPage = 1;
+	var pageSize = 10;
+	
+	$(document).ready(function(){
+		$(".help-inline").hide();
+	});
+	
+	
+	function updatePageSize() {
+		pageSize = $("#selPageSize").val();
+		currentPage = 1;
+		
+		console.log('updating page size to ' + pageSize);
+		updatePage();
+	}
+	
 	function deleteProduct(productId) {
 		if(confirm("Are you sure you want to delete this?")) {
 			jQuery.getJSON("../../ws/rs/productDispensing/deleteDrugProduct/" + productId, {},
 			        function(xml) {
 						if(xml.message) {
-							clearProducts();
-							listProducts();
+							updatePage();
 						} else {
-			        		alert('error retrieving drug products');
+			        		alert('error deleting drug products');
 						}
 			        });
 		}
@@ -137,9 +144,6 @@
 		$('#new-product').dialog('open');
 	}
 	
-	function clearProducts() {
-		$("#productTable tbody tr").remove();
-	}
 	
 
 
@@ -156,9 +160,22 @@
 		var productNameFilterValue = $('#productNameFilter').val();
 		var productLotFilterValue = $('#productLotFilter').val();
 		
+		console.log('listing products - current page is ' + currentPage + ', page size is ' + pageSize + ', name=' + productNameFilterValue + ',lot='+productLotFilterValue);
 		
-		jQuery.getJSON("../../ws/rs/productDispensing/drugProducts?offset=0&limit=20&limitByName="+productNameFilterValue + "&limitByLot=" + productLotFilterValue, {},
+		var startIndex = ((currentPage-1) * pageSize)
+		startIndex = (startIndex<0)?0:startIndex; //just in case
+		
+		console.log('start index is ' + startIndex);
+		
+		jQuery.getJSON("../../ws/rs/productDispensing/drugProducts?offset="+startIndex+"&limit="+pageSize+"&limitByName="+productNameFilterValue + "&limitByLot=" + productLotFilterValue, {},
         function(xml) {
+			$("#productTable tbody tr").remove();
+			
+			var total = xml.total;
+			
+			console.log(xml.toSource());
+			$("#productFilterMessage").empty();
+			
 			if(xml.drugProduct) {
 				var arr = new Array();
 				if(xml.drugProduct instanceof Array) {
@@ -188,16 +205,32 @@
 					html += '</tr>';
 				
 					jQuery('#productTable tbody').append(html);
+				
 					
 				}
+				
+				//pagination here
+				// $('button').prop('disabled', true);
+				//$('#btnPrevPage').
+				
+				//next page..add condition for full last page
+				
+				$('#btnPrevPage').prop('disabled', startIndex==0);
+				$('#btnNextPage').prop('disabled', arr.length < pageSize);
+				
+				$("#productFilterMessage").append("<b>Showing Results:</b>&nbsp;" + (startIndex+1) + "-" + (startIndex+arr.length)  + " of " + total);
+				
 			} else {
         		alert('error retrieving drug products');
 			}
+			
+			
+				
         });
 	}
 	
 
-	function updateProductLocations() {
+	function setProductLocations() {
 		jQuery.getJSON("../../ws/rs/productDispensing/productLocations", {},
 		        function(xml) {
 					if(xml.productLocations) {
@@ -230,12 +263,20 @@
 							arr[0] =xml.content;
 						}
 						
+						var currentVal = $("#productNameFilter").val();
+						$("#productNameFilter").empty();
+						$("#productNameFilter").append('<option value=""></option>');
+						
 						for(var i=0;i<arr.length;i++) {
 							$('#productNameFilter').append($('<option>', {
 							    value: arr[i],
 							    text: arr[i]
 							}));
 						}
+						$("#productNameFilter").val(currentVal);
+						
+						updateProductLots();
+						
 					}
 		        });
 	}
@@ -252,52 +293,72 @@
 							arr[0] =xml.content;
 						}
 						
+						var currentVal = $("#productLotFilter").val();
+						
+						$("#productLotFilter").empty();
+						$("#productLotFilter").append('<option value=""></option>');
+						
 						for(var i=0;i<arr.length;i++) {
 							$('#productLotFilter').append($('<option>', {
 							    value: arr[i],
 							    text: arr[i]
 							}));
 						}
+						$("#productLotFilter").val(currentVal);
+						
 					}
 		        });
 	}
 	
-	$(document).ready(function(){
-		listProducts();
-		updateProductLocations();
+	function updatePage() {
 		updateProductNames();
+		listProducts();
+	}
+	
+	function loadPreviousResults() {
+		currentPage--;
+		updatePage();
+	}
+	
+	function loadNextResults() {
+		currentPage++;
+		updatePage();
+	}
+	
+	$(document).ready(function(){
+		setProductLocations();
+		
+		updatePage();
 
 		$('#productNameFilter').bind('change',function(){
-			clearProducts();
-			updateProductLots();
-			listProducts();
+			currentPage=1;
+			updatePage();
 		});
 		
 		$('#productLotFilter').bind('change',function(){
-			clearProducts();
-			listProducts();
+			currentPage=1;
+			updatePage();
 		});
 		
 		$( "#new-product" ).dialog({
 			autoOpen: false,
-			height: 600,
-			width: 620,
+			height: 450,
+			width: 800,
 			modal: true,
 			buttons: {
-				"Save Product": function() {	
+				"Save Product": {class:"btn btn-primary", text:"Save", click: function() {	
 					if(validateSaveProduct()) {
 						$.post('../../ws/rs/productDispensing/saveDrugProduct',$('#productForm').serialize(),
 								function(data){
-									clearProducts();
-									listProducts();
+									updatePage();
 								 });
 						$( this ).dialog( "close" );	
 					}
 					
-				},
-				Cancel: function() {
+				} },
+				Cancel: { class:"btn", text:"Cancel", click:function() {
 					$( this ).dialog( "close" );
-				}
+				} }
 			},
 			close: function() {
 				
@@ -308,14 +369,55 @@
 
 	});
 	
-	function validateSaveProduct() {
-		var errorMsg = '';
-		
-		if(errorMsg.length>0) {
-			alert(errorMsg);
-			return false;
+	function toggleFormFieldErrorDisplay(name,hasError) {
+		if(hasError) {
+			$("#"+name+"Group").addClass("error");
+			$("#"+name+"Group .help-inline").show();
+			hasErrors=true;
+		} else {
+			$("#"+name+"Group").removeClass("error");
+			$("#"+name+"Group .help-inline").hide();
 		}
-		return true;
+	}
+	
+
+	function validateSaveProduct() {
+		
+		var hasErrors = false;
+		
+		if($("#productName").val() == '') {
+			toggleFormFieldErrorDisplay('productName',true);
+			hasErrors=true;
+		} else {
+			toggleFormFieldErrorDisplay('productName',false);
+		}
+		if($("#productCode").val() == '') {
+			toggleFormFieldErrorDisplay('productCode',true);
+			hasErrors=true;
+		} else {
+			toggleFormFieldErrorDisplay('productCode',false);
+		}
+		if($("#productLot").val() == '') {
+			toggleFormFieldErrorDisplay('productLot',true);
+			hasErrors=true;
+		} else {
+			toggleFormFieldErrorDisplay('productLot',false);
+		}
+		if($("#productExpiryDate").val() == '') {
+			toggleFormFieldErrorDisplay('productExpiryDate',true);
+			hasErrors=true;
+		} else {
+			toggleFormFieldErrorDisplay('productExpiryDate',false);
+		}
+		if($("#productAmount").val() == '') {
+			toggleFormFieldErrorDisplay('productAmount',true);
+			hasErrors=true;
+		} else {
+			toggleFormFieldErrorDisplay('productAmount',false);
+		}
+		
+		
+		return !hasErrors;
 		
 	}
 </script>
@@ -351,29 +453,85 @@
 	</tbody>
 </table>
 
-<input type="button" class="btn btn-primary" value="Add New" onClick="addNewProduct()"/>	
 
+<div id="paginationControls">
+	<button class="btn" id="btnPrevPage" onClick="loadPreviousResults();" >Prev</button>
+	<button class="btn" id="btnNextPage" onClick="loadNextResults()" >Next</button>
+	&nbsp;&nbsp;&nbsp;
+	<select id="selPageSize" onChange="updatePageSize()">
+		<option value="10">10</option>
+		<option value="25">25</option>
+		<option value="50">50</option>
+		<option value="100">100</option>
+	</select>
+	&nbsp;&nbsp;&nbsp;
+	<input type="button" class="btn btn-primary" value="Add New" onClick="addNewProduct()"/>	
+	
+</div>
 
 <div id="new-product" title="OSCAR Drug Product Editor">
 	<p class="validateTips"></p>
 	
 	<form id="productForm">
 		<input type="hidden" name="product.id" id="productId" value="0"/>
-		<fieldset>
-			<div class="control-group">
-				<label class="control-label" for="productName">Name:*</label>
+			
+<div>
+	<div class="controls controls-row">
+			<div class="control-group span3" id="productNameGroup">
+				<label class="control-label" for="productName">Name:</label>
 				<div class="controls">
 					<input type="text" name="product.name" id="productName" value=""/>
+					<span class="help-inline">Required</span>
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="productCode">Code:*</label>
+			<div class="control-group span3" id="productCodeGroup">
+				<label class="control-label" for="productCode">Code:</label>
 				<div class="controls">
 					<input type="text" name="product.code" id="productCode" value=""/>
+					<span class="help-inline">Required</span>
 				</div>
 			</div>
 			
-			<div class="control-group">
+	</div>
+<div class="controls controls-row">
+			
+			<div class="control-group span3" id="productLotGroup">
+				<label class="control-label" for="productLot">Lot:</label>
+				<div class="controls">
+					<input type="text" name="product.lotNumber" id="productLot" value=""/>
+					<span class="help-inline">Required</span>
+				</div>
+			</div>
+			
+			<div class="control-group span3" id="productExpiryDateGroup">
+				<label class="control-label" for="productExpiryDate">Expiry Date:</label>
+				<div class="controls">
+					<input type="text" name="product.expiryDate" id="productExpiryDate" value=""/>
+					<span class="help-inline">Required</span>
+				</div>
+			</div>
+			
+</div>
+<div class="controls controls-row">
+			<div class="control-group span3" id="productAmountGroup">
+				<label class="control-label" for="productAmount">Amount:</label>
+				<div class="controls">
+					<input type="text" name="product.amount" id="productAmount" value=""/>
+					<span class="help-inline">Required (number)</span>
+				</div>
+			</div>
+			
+			<div class="control-group span3" id="totalEntriesToCreateGroup">
+				<label class="control-label" for="productExpiryDate">Total Entries to create:</label>
+				<div class="controls">
+					<input type="text" name="productBulkTotal" id="productBulkTotal" value="1"/>
+				</div>
+			</div>
+			
+</div>
+
+<div class="controls controls-rw">
+			<div class="control-group span3">
 				<label class="control-label" for="productLocation">Location:</label>
 				<div class="controls">
 					<select name="product.location" id="productLocation">
@@ -381,41 +539,24 @@
 					</select>
 				</div>
 			</div>
-			
-			<div class="control-group">
-				<label class="control-label" for="productLot">Lot:</label>
-				<div class="controls">
-					<input type="text" name="product.lotNumber" id="productLot" value=""/>
-				</div>
-			</div>
-			
-			<div class="control-group">
-				<label class="control-label" for="productExpiryDate">Expiry Date:</label>
-				<div class="controls">
-					<input type="text" name="product.expiryDate" id="productExpiryDate" value=""/>
-					<img src="../../images/cal.gif" id="xml_vdate_cal" />
-				</div>
-			</div>
-			
-			<div class="control-group">
-				<label class="control-label" for="productAmount">Amount:</label>
-				<div class="controls">
-					<input type="text" name="product.amount" id="productAmount" value=""/>
-				</div>
-			</div>
-			
-			<div class="control-group" id="totalEntriesToCreateGroup">
-				<label class="control-label" for="productExpiryDate">Total Entries to create:</label>
-				<div class="controls">
-					<input type="text" name="productBulkTotal" id="productBulkTotal" value="1"/>
-				</div>
-			</div>
-		</fieldset>
+
+</div>
+
+</div>
+
 	</form>
 </div>
 
 <script type="text/javascript">
-Calendar.setup( { inputField : "productExpiryDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_vdate_cal", singleClick : true, step : 1 } );
+
+$('#productExpiryDate').datepicker({
+        format: "yyyy/mm/dd",
+        startDate: "2012-01-01",
+        endDate: "2015-01-01",
+        todayBtn: "linked",
+        autoclose: true,
+        todayHighlight: true
+    });
 </script>
 
 
