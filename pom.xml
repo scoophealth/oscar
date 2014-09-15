@@ -1247,6 +1247,7 @@
 
             <exclude>src/main/java/org/apache/xml/security/encryption/XMLCipher.java</exclude>
             <exclude>src/main/java/org/apache/xml/security/encryption/DocumentSerializer.java</exclude>
+			<exclude>src/main/webapp/library/bootstrap2-datepicker/**</exclude>
                 </excludes>
 		<strictCheck>true</strictCheck>
             </configuration>

@@ -109,6 +109,15 @@ public class DrugProductManager {
 		return results;
 	}
 	
+	public Integer getAllDrugProductsByNameAndLotCount(LoggedInInfo loggedInInfo, String productName, String lotNumber) {
+		Integer result = drugProductDao.findByNameAndLotCount(productName, lotNumber);
+		
+		LogAction.addLogSynchronous(loggedInInfo,"DrugProductManager.getAllDrugProductsByNameAndLotCount","");
+		
+		
+		return result;
+	}
+	
 	public List<DrugProduct> getAllDrugProductsGroupedByCode(LoggedInInfo loggedInInfo, Integer offset, Integer limit) {
 		List<DrugProduct> results = drugProductDao.findAll(offset, limit);
 		

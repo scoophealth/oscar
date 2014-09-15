@@ -133,6 +133,7 @@ public class ProductDispensingService extends AbstractServiceImpl{
 	public DrugProductResponse getAllDrugProducts(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit, @QueryParam("limitByName") String limitByName,@QueryParam("limitByLot") String limitByLot) {
 		List<DrugProduct> results = null;
 		
+		int count = drugProductManager.getAllDrugProductsByNameAndLotCount(getLoggedInInfo(),limitByName,limitByLot);
 		results = drugProductManager.getAllDrugProductsByNameAndLot(getLoggedInInfo(),offset,limit,limitByName, limitByLot);
 		
 		DrugProductResponse response = new DrugProductResponse();
@@ -141,6 +142,7 @@ public class ProductDispensingService extends AbstractServiceImpl{
 			BeanUtils.copyProperties(result, to);
 			response.getContent().add(to);
 		}
+		response.setTotal(count);
 		return response;
 	}
 	
