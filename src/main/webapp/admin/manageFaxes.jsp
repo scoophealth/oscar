@@ -37,13 +37,15 @@
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" type="text/css">
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css" type="text/css">
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" type="text/css">
-<link rel="stylesheet" href="<%=request.getContextPath() %>/share/css/jquery-ui.css" type="text/css">
+<link rel="stylesheet" href="<%=request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css" type="text/css">
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
 
 <script type="text/javascript">
-	$( function() {
+	
+	
+	$(document).ready(function() {
 		$("#dateBegin").datepicker();
 		$("#dateBegin").datepicker("option","showAnim","blind");
 		$("#dateBegin").datepicker("option","dateFormat","yy-mm-dd");
@@ -52,9 +54,6 @@
 		$("#dateEnd").datepicker("option","showAnim","blind");
 		$("#dateEnd").datepicker("option","dateFormat","yy-mm-dd");
 		
-	});
-	
-	$(document).ready(function() {
 		$( "#reportForm" ).submit(function( event ) {
 			// Stop form from submitting normally
 			event.preventDefault();
