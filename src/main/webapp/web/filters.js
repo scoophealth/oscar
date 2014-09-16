@@ -18,3 +18,20 @@ angular.module('oscarFilters', []).filter('ticklerLink', function() {
     return input;
   };
 });
+
+angular.module('oscarFilters', []).filter('age', function() {
+	  return function(input) {
+		  if(input != null && input.years != null) {
+			 var result = "";
+			 
+			 if(input.years < 1 && input.months < 1) {
+				 return input.days + "d"
+			 }
+			 if(input.years < 2) {
+				 return input.months + "m";
+			 }
+			 return input.years + " y"
+		  }
+	    return "";
+	  };
+	});
