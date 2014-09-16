@@ -40,6 +40,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.oscarehr.common.dao.FaxConfigDao;
 import org.oscarehr.common.dao.FaxJobDao;
 import org.oscarehr.common.model.FaxConfig;
@@ -87,7 +88,9 @@ public class FaxStatusUpdater {
 	                	String content = EntityUtils.toString(httpEntity);
 	                	
 	                	jsonObject = JSONObject.fromObject(content);
-	                	faxJobUpdated = (FaxJob) JSONObject.toBean(jsonObject, FaxJob.class);
+	                	ObjectMapper mapper = new ObjectMapper();
+	                	faxJobUpdated = mapper.readValue(jsonObject.toString(), FaxJob.class);
+	                	//faxJobUpdated = (FaxJob) JSONObject.toBean(jsonObject, FaxJob.class);
 	                	
 	                	faxJob.setStatus(faxJobUpdated.getStatus());
 	                	log.info("UPDATED FAX JOB ID " + faxJob.getJobId() + " WITH STATUS " + faxJob.getStatus());
