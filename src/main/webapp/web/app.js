@@ -29,6 +29,11 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
   	      templateUrl: 'billing/billing_popup.jsp',
             controller: 'BillingCtrl'
   	    })  
+  	    .state('schedule', {
+  	      url: '/schedule',
+  	      templateUrl: 'schedule/classic.jsp',
+            controller: 'ScheduleCtrl'
+  	    })  
   	    .state('admin', {
   	      url: '/admin',
   	      templateUrl: 'admin/admin_popup.jsp',
