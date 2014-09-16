@@ -17,9 +17,8 @@ angular.module('oscarFilters', []).filter('ticklerLink', function() {
 	  }
     return input;
   };
-});
-
-angular.module('oscarFilters', []).filter('age', function() {
+}).
+filter('age', function() {
 	  return function(input) {
 		  if(input != null && input.years != null) {
 			 var result = "";

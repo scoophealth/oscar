@@ -324,14 +324,16 @@ pre.noteInEdit {
 	<script src="record/details/detailsController.js"></script>
 	
 	<script src="tickler/ticklerController.js"></script>
-	<!-- script src="inbox/inboxController.js"></script>
-	<script src="consults/consultListController.js"></script>	
-	<script src="billing/billingController.js"></script>
+	<script src="schedule/scheduleController.js"></script>
 	<script src="admin/adminController.js"></script>
+	<script src="billing/billingController.js"></script>
+	<script src="consults/consultListController.js"></script>	
+	<script src="inbox/inboxController.js"></script>
+	
+	<!-- 
 	
 	<script src="js/providerViewController.js"></script>
 	<script src="js/reportController.js"></script>
-	<script src="js/scheduleController.js"></script>
 	
 	<script src="js/patientDetailController.js"></script>
 
