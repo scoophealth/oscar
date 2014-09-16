@@ -181,6 +181,11 @@ public final class LoggedInInfo {
 
 	public String getLoggedInProviderNo()
 	{
-		return(getLoggedInProvider().getProviderNo());
+		Provider p = getLoggedInProvider();
+		if( p != null ) {
+			return(p.getProviderNo());
+		}
+		
+		return null;
 	}
 }

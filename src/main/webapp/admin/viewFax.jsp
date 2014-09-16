@@ -27,7 +27,7 @@
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="java.util.List" %>
 
-<ul>
+<ul style="list-style:none;">
 
 <%
 	FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);
