@@ -167,4 +167,16 @@ oscarApp.controller('DashboardCtrl', function ($scope,$http) {
 		return result;
 	}
 	
+	$scope.isTicklerHighPriority = function(tickler) {
+		var ticklerDate = Date.parse(tickler.serviceDate);
+		var now = new Date();
+		var result = false;
+		
+		if(tickler.priority == 'High') {
+			result=true;
+		}
+			
+		return result;
+	}
+	
 });

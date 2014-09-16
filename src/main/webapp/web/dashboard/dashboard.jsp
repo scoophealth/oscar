@@ -49,7 +49,7 @@
 		
 		<tr ng-repeat="item in ticklers" ng-hide="$index >= 5">
 			<td>
-				<span ng-if="isTicklerExpiredOrHighPriority(item)" class="glyphicon glyphicon-flag" style="color:red"></span>
+				<span ng-if="isTicklerHighPriority(item)" class="glyphicon glyphicon-flag" style="color:red"></span>
 			</td>
 			<td>{{item.demographicName}}</td>
 			<td>{{item.serviceDate | date:'yyyy-MM-dd'}}</td>
@@ -58,7 +58,7 @@
 		<tfoot>
 	    <tr ng-if="ticklers.length > 5">
 	      <td colspan="6">
-			 <span class="label label-success">See More Ticklers</span> 
+			 <span class="label label-success" onClick="location.href='#/ticklers'">See More Ticklers</span> 
 	      </td>
 	    </tr>
 	  </tfoot>

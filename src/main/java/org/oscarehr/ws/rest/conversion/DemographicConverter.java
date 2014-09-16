@@ -26,7 +26,9 @@ package org.oscarehr.ws.rest.conversion;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.util.AgeCalculator;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.ws.rest.to.model.AgeTo1;
 import org.oscarehr.ws.rest.to.model.DemographicTo1;
 
 public class DemographicConverter extends AbstractConverter<Demographic, DemographicTo1> {
@@ -185,8 +187,11 @@ public class DemographicConverter extends AbstractConverter<Demographic, Demogra
 		if (d.getProvider() != null) {
 			t.setProvider(providerConverter.getAsTransferObject(d.getProvider()));
 		}
+		
+		t.setAge(new AgeTo1(AgeCalculator.calculateAge(d.getBirthDay())));
 
 		return t;
 	}
 
+	
 }
