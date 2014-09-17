@@ -43,7 +43,7 @@ import org.oscarehr.managers.FormsManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 //import org.oscarehr.ws.rest.to.model.FormTo1;
-//import org.oscarehr.ws.rest.to.model.MenuItem;
+import org.oscarehr.ws.rest.to.model.MenuItemTo1;
 import org.oscarehr.ws.rest.to.model.SummaryTo1;
 import org.oscarehr.ws.rest.to.model.SummaryItemTo1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,22 +78,29 @@ public class RecordUxService extends AbstractServiceImpl {
 	 {id : 13,name : 'Billing',url : 'partials/billing.jsp'}
 	 ];
 	...
+	**/
 	
 	@GET
-	@Path("/recordMenu")
+	@Path("/{demographicNo}/recordMenu")
 	@Produces("application/json")
-	public MenuItem[] getRecordMenu(@QueryParam(value="demo") String demographic){
-		logger.error("getRecordMenu getting called for demo "+demographic);
+	public MenuItemTo1[] getRecordMenu(@PathParam("demographicNo") Integer demographicNo){
+		logger.error("getRecordMenu getting called for demo "+demographicNo);
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
-		MenuItem[] menulist = new MenuItem[5];
-		menulist[0] = new MenuItem(0, "Master", "partials/master.html");
-		menulist[1] = new MenuItem(1, "Summary", "partials/summary.html");
-		menulist[2] = new MenuItem(2, "Rx", "partials/rx.jsp");
-		menulist[3] = new MenuItem(3, "Forms", "partials/formview.html");
-		menulist[4] = new MenuItem(4, "Labs/Docs", "partials/labview.html");
+		MenuItemTo1[] menulist = new MenuItemTo1[5];
+		
+/*
+     	 {id : 2,displayName : 'Forms'    ,path : 'record.forms'},
+     	 {id : 3,displayName : 'Labs/Docs',path : 'partials/eform.jsp'},
+     	 {id : 4,displayName : 'Rx'       ,path : 'partials/eform.jsp'}];
+	*/	
+		menulist[0] = MenuItemTo1.generateStateMenuItem(0, "Details", "record.details");
+		menulist[1] = MenuItemTo1.generateStateMenuItem(1, "Summary", "record.summary");
+		menulist[2] = MenuItemTo1.generateStateMenuItem(3, "Forms", "record.forms");
+		menulist[3] = MenuItemTo1.generateStateMenuItem(4, "Labs/Docs", "record.labsdocs");
+		menulist[4] = new MenuItemTo1(2, "Rx", "../oscarRx/choosePatient.do?demographicNo="+demographicNo);
 		return menulist;
 	}
-	**/  
+	  
 	
 	@GET
 	@Path("/{demographicNo}/summary/{summaryName}") //@Path("/leftsideSummary")
@@ -123,6 +130,7 @@ public class RecordUxService extends AbstractServiceImpl {
 	public SummaryTo1 getFullSummmary(@PathParam("demographicNo") Integer demographicNo,@PathParam(value="summaryCode") String summaryCode){
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
 		SummaryTo1 summary = null;
+		
 		
 		
 		if("ongoingconcerns".equals(summaryCode)){
