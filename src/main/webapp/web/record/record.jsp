@@ -53,7 +53,7 @@
 			style="padding-left: 0px;">
 			<ul class="nav navbar-nav" id="myTabs">
 				<li ng-repeat="tab in recordtabs2" ng-class="isTabActive(tab)">
-				<a ng-click="changeTab(tab.id)" >{{tab.displayName}}</a>
+				<a ng-click="changeTab(tab)" >{{tab.label}}</a>
 				</li>
 			</ul>
 		</div>
