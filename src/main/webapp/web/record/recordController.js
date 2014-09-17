@@ -24,7 +24,7 @@
 
 */
 
-oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,$state,noteService,$timeout) {
+oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,$state,noteService,$timeout,uxService) {
 	
 	console.log("in patient Ctrl ",demo);
 	console.log("in RecordCtrl state params ",$stateParams,$location.search());
@@ -50,20 +50,49 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	 {id : 12,name : 'Labs/Docs',url : 'partials/labview.html'},
 	 {id : 13,name : 'Billing',url : 'partials/billing.jsp'}	
 	*/
-	$scope.recordtabs2 = [ 
+	$scope.recordtabs2 = [];
+	/*
 	                 	 {id : 0,displayName : 'Details'  ,path : 'record.details'},
 	                 	 {id : 1,displayName : 'Summary'  ,path : 'record.summary'},
 	                 	 {id : 2,displayName : 'Forms'    ,path : 'record.forms'},
 	                 	 {id : 3,displayName : 'Labs/Docs',path : 'partials/eform.jsp'},
 	                 	 {id : 4,displayName : 'Rx'       ,path : 'partials/eform.jsp'}];
+	*/
+	
+	$scope.fillMenu = function(){
+		uxService.menu($stateParams.demographicNo).then(function(data){
+			$scope.recordtabs2 = data;
+		});
+	}
+	
+	$scope.fillMenu();
 	
 	//var transitionP = $state.transitionTo($scope.recordtabs2[0].path,$stateParams,{location:'replace',notify:true});
 	//console.log("transition ",transitionP);
 	
 	$scope.changeTab = function(temp) {
-		console.log($scope.recordtabs2[temp].path);
-		$scope.currenttab2 = $scope.recordtabs2[temp];
-		$state.go($scope.recordtabs2[temp].path);
+		$scope.currenttab2 = $scope.recordtabs2[temp.id];
+		
+		if(angular.isDefined(temp.state)){
+			$state.go(temp.state);
+		}else if(angular.isDefined(temp.url)){
+			var rnd = Math.round(Math.random() * 1000);
+			win = "win" + rnd;
+			window.open(temp.url,win,"scrollbars=yes, location=no, width=1000, height=600","");   
+		}
+		//console.log($scope.recordtabs2[temp].path);
+		
+		
+	}
+	
+	$scope.isTabActive = function(tab){
+		//console.log('current state '+$state.current.name.substring(0,tab.path.length)+" -- "+($state.current.name.substring(0,tab.path.length) == tab.path),$state.current.name,tab);
+		//console.log('ddd '+$state.current.name.length+"  eee "+tab.path.length);
+		//if($state.current.name.length < tab.path.length) return "";
+	
+		if($state.current.name.substring(0,tab.state.length) == tab.state){
+			return "active";
+		}
 		
 	}
 	
@@ -107,16 +136,8 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	
 	
 	
-	$scope.isTabActive = function(tab){
-		//console.log('current state '+$state.current.name.substring(0,tab.path.length)+" -- "+($state.current.name.substring(0,tab.path.length) == tab.path),$state.current.name,tab);
-		//console.log('ddd '+$state.current.name.length+"  eee "+tab.path.length);
-		//if($state.current.name.length < tab.path.length) return "";
-		if($state.current.name.substring(0,tab.path.length) == tab.path){
-			return "active";
-		}
-	}
 	
-	
+		
 	// Note Input Logic
 	$scope.toggleNote = function() {
 		if ($scope.hideNote == true) {
@@ -127,7 +148,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	};
 
 	$scope.hideNote = false;
-	
+		
 	$scope.saveNote = function(){
 		console.log("This is the note"+$scope.page.encounterNote);
 		$scope.page.encounterNote.observationDate = new Date(); 

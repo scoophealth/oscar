@@ -55,4 +55,23 @@ angular.module("uxServices", [])
         	
         }
     };
+}).service("uxService", function($http,$q,$log){
+   return {
+	 apiPath:'../ws/rs/recordUX',
+     menu: function (demographicNo) {
+     	//
+         console.log("Debug: calling left");
+         var deferred = $q.defer();
+         $http.get(this.apiPath+'/'+demographicNo+'/recordMenu').success(function(data){
+           console.log(data);
+           deferred.resolve(data);
+       }).error(function(){
+     	  console.log("error fetching items")
+         deferred.reject("An error occured while fetching items");
+       });
+  
+       return deferred.promise;
+         
+     }
+   };
 });
