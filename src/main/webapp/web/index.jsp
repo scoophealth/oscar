@@ -126,10 +126,10 @@ pre.noteInEdit {
 			<div class="navbar-collapse collapse">
 				<form class="navbar-form navbar-left form-search" role="search">
 					<div class="form-group">
-						<input type="text" class="form-control search-query" placeholder="Search Patients" id="demographicQuickSearch" autocomplete="off">
+						<input type="text" class="form-control search-query" placeholder="Search Patients" id="demographicQuickSearch" autocomplete="off" value="">
 					</div>
 					<div class="btn-group">
-						<button type="button" class="btn btn-default" tabindex="-1"> <!--  ng-click="goToPatientSearch() -->
+						<button type="button" class="btn btn-default" tabindex="-1" ng-click="transition('search')" onMouseOut="this.blur();"> 
 							<span class="glyphicon glyphicon-search"></span>
 						</button>
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
@@ -139,7 +139,7 @@ pre.noteInEdit {
 							<li><a ng-click="newDemographic('sm')">New Patient</a></li>
 							<%-- <li ng-repeat="item in demographicSearchDropDownItems"><a href="{{item.url}}">{{item.label}}</a></li> --%>
 						</ul>
-						<button type="button" class="btn btn-default" ui-sref="dashboard">
+						<button type="button" class="btn btn-default" ui-sref="dashboard" onMouseOut="this.blur();">
 							<span class="glyphicon glyphicon-home"></span>
 						</button>
 					</div>
@@ -329,6 +329,7 @@ pre.noteInEdit {
 	<script src="billing/billingController.js"></script>
 	<script src="consults/consultListController.js"></script>	
 	<script src="inbox/inboxController.js"></script>
+	<script src="patientsearch/patientSearchController.js"></script>
 	
 	<!-- 
 	
@@ -351,46 +352,70 @@ pre.noteInEdit {
 
 $(document).ready(function(){
 	
+	
 	$('#demographicQuickSearch').typeahead({
 		name: 'patients',
 		valueKey:'name',
-		limit: 10,
+		limit: 11,
 		
 		remote: {
-	        url: '../ws/rs/demographics/search?query=%QUERY',
+	        url: '../ws/rs/demographics/quickSearch?query=%QUERY',
 	        cache:false,
 	        //I needed to override this to handle the differences in the JSON when it's a single result as opposed to multiple.
 	        filter: function (parsedResponse) {
-	        	var maxResults = 10;
 	            retval = [];
-	            if(parsedResponse.items instanceof Array) {
-	            	for (var i = 0;  i < parsedResponse.items.length;  i++) {
-	            		if(i > maxResults) {
-	            			reval.push({'more':'true','numResults':parsedResponse.items.length});
-	            		} else {
-	            			retval.push(parsedResponse.items[i]);
+	            if(parsedResponse.content instanceof Array) {
+	            	for (var i = 0;  i < parsedResponse.content.length;  i++) {
+	            		var tmp = parsedResponse.content[i];
+	            		if(tmp.hin != null && tmp.hin == '') {
+	            			tmp.hin = null;
 	            		}
+	            		if(tmp.formattedDOB != null && tmp.formattedDOB == '') {
+	            			tmp.formattedDOB = null;
+	            		}
+	            		
+	            		tmp.name = tmp.lastName + "," + tmp.firstName;
+	            		tmp.blah = "";
+	            		retval.push(tmp);
 	                 }
 	            } else {
-	            	retval.push(parsedResponse.items);
+	            	retval.push(parsedResponse.content);
 	            }
+	            
+	            console.log("total:"+parsedResponse.total);
+	            
+	            if(parsedResponse.total > 10) {
+	            	console.log('show more results');
+	            	retval.push({name:"More Results",hin:parsedResponse.total+" total","demographicNo":-1,"more":true});
+	            }
+	            
+	            //console.log(retval.toSource());
 	            return retval;
 	        }
 	    },
 	    
-		//TODO:change this to an anonymous function which loads the template from somewhere else
-		//that way we can inject the type formatting we want with results
 		template: [
 		        '<p class="demo-quick-name">{{name}}</p>',
-		        '{{#hin}}<p class="demo-quick-hin">&nbsp;"{{hin}}"</p>{{/hin}}',
-		       	'{{#dob}}<p class="demo-quick-dob">&nbsp;{{dobString}}</p>{{/dob}}'
+		        '{{#hin}}<p class="demo-quick-hin">&nbsp;<em>{{hin}}</em></p>{{/hin}}',
+		       	'{{#dob}}<p class="demo-quick-dob">&nbsp;{{formattedDOB}}</p>{{/dob}}'
 		 ].join(''),
 		       	engine: Hogan
 		}).on('typeahead:selected', function (obj, datum) {
-		    console.log('chose demographic ' + datum.id);
-		    window.location.href='#/record/'+datum.id + "/summary";
+			$('input#demographicQuickSearch').on('blur',function(event){$("#demographicQuickSearch").val("");});
+			
+			
+			//$("#demographicQuickSearch").val("");
+			
+			
+			var scope = angular.element($("#demographicQuickSearch")).scope();
+						
+			if(datum.more != null && datum.more == true) {
+				scope.transition('search');
+			} else {
+				scope.loadRecord(datum.demographicNo);
+			}
+			
 	});
-	
 });
 
 </script>

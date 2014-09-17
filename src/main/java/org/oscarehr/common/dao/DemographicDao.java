@@ -27,6 +27,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,6 +45,7 @@ import javax.persistence.PersistenceException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.tools.ant.util.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -55,9 +57,11 @@ import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.ResultTransformer;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
+import org.oscarehr.caisi_integrator.ws.MatchingDemographicParameters;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Admission;
@@ -66,7 +70,12 @@ import org.oscarehr.event.DemographicCreateEvent;
 import org.oscarehr.event.DemographicUpdateEvent;
 import org.oscarehr.integration.hl7.generators.HL7A04Generator;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.ws.rest.to.model.DemographicSearchRequest;
+import org.oscarehr.ws.rest.to.model.DemographicSearchRequest.SEARCHMODE;
+import org.oscarehr.ws.rest.to.model.DemographicSearchRequest.SORTMODE;
+import org.oscarehr.ws.rest.to.model.DemographicSearchResult;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -1946,120 +1955,222 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
     	return this.getHibernateTemplate().find("select d.DemographicNo from Demographic d where d.lastUpdateDate >?", value);
     }
     
-	/**
-	 * This method is written for the top nav quick search. It basically expects the search string to be
-	 * Last Name [, First Name]
-	 * 
-	 * @param searchString
-	 * @param startIndex
-	 * @param itemsToReturn
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Demographic> searchDemographicByNamesString(String searchString, int startIndex, int itemsToReturn) {
-		String sqlCommand = "select x from Demographic x";
-		if (searchString != null)  {
-			if(searchString.indexOf(",") != -1 &&  searchString.split(",").length>1 && searchString.split(",")[1].length()>0) {
-				sqlCommand = sqlCommand + " where x.LastName like :ln AND x.FirstName like :fn";
-			} else {
-				sqlCommand = sqlCommand + " where x.LastName like :ln";
-			}
-			
-		}
-
-		Session session = this.getSession();
-		try {
-			Query q = session.createQuery(sqlCommand);
-			if (searchString != null) {
-				q.setParameter("ln", "%" + searchString.split(",")[0] + "%");
-				if(searchString.indexOf(",") != -1 && searchString.split(",").length>1 && searchString.split(",")[1].length()>0) {
-					q.setParameter("fn", "%" +  searchString.split(",")[1] + "%");
-					
-				} 
-			}
-			q.setFirstResult(startIndex);
-			setLimit(q,itemsToReturn);
-			return (q.list());
-		} finally {
-			this.releaseSession(session);
-		}
-	}
-	
-	/**
-	 * Searches by address...expects the format
-	 * addr: term
-	 * 
-	 * @param searchString
-	 * @param startIndex
-	 * @param itemsToReturn
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Demographic> searchDemographicByAddressString(String searchString, int startIndex, int itemsToReturn) {
-		if(searchString!=null && searchString.startsWith("addr:")) {
-			searchString = searchString.substring("addr:".length());
-		}
-		if(searchString.length() == 0)
-			return new ArrayList<Demographic>();
-		
-		String sqlCommand = "select x from Demographic x";
-		if (searchString != null) sqlCommand = sqlCommand + " where x.Address like :addr OR x.City like :city OR x.Postal like :postal";
-
-		Session session = this.getSession();
-		try {
-			Query q = session.createQuery(sqlCommand);
-			if (searchString != null) {
-				q.setParameter("addr",  "%" + searchString + "%");
-				q.setParameter("city",  "%" + searchString + "%");
-				q.setParameter("postal",  "%" + searchString + "%");
-			}
-			q.setFirstResult(startIndex);
-			setLimit(q,itemsToReturn);
-			return (q.list());
-		} finally {
-			this.releaseSession(session);
-		}
-	}
-	
-	/**
-	 * Searches by chartNo...expects the format
-	 * chartNo: term
-	 * 
-	 * @param searchString
-	 * @param startIndex
-	 * @param itemsToReturn
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Demographic> searchDemographicByChartNo(String searchString, int startIndex, int itemsToReturn) {
-		if(searchString!=null && searchString.startsWith("chartNo:")) {
-			searchString = searchString.substring("chartNo:".length());
-		}
-		if(searchString.length() == 0)
-			return new ArrayList<Demographic>();
-		
-		String sqlCommand = "select x from Demographic x";
-		if (searchString != null) sqlCommand = sqlCommand + " where x.ChartNo like :chartNo";
-
-		Session session = this.getSession();
-		try {
-			Query q = session.createQuery(sqlCommand);
-			if (searchString != null) {
-				q.setParameter("chartNo", searchString + "%");
-			}
-			q.setFirstResult(startIndex);
-			setLimit(q,itemsToReturn);
-			return (q.list());
-		} finally {
-			this.releaseSession(session);
-		}
-	}
 
 	protected final void setLimit(Query query, int itemsToReturn)
 	{
 		if (itemsToReturn > MAX_SELECT_SIZE) throw(new IllegalArgumentException("Requested too large of a result list size : " + itemsToReturn));
 
 		query.setMaxResults(itemsToReturn);
+	}
+	
+	protected final void setLimit(SQLQuery query, int itemsToReturn)
+	{
+		if (itemsToReturn > MAX_SELECT_SIZE) throw(new IllegalArgumentException("Requested too large of a result list size : " + itemsToReturn));
+
+		query.setMaxResults(itemsToReturn);
+	}
+	
+	public Integer searchPatientCount(LoggedInInfo loggedInInfo, DemographicSearchRequest searchRequest) {
+		Map<String,Object> params = new HashMap<String,Object>();
+		
+		String demographicQuery = generateDemographicSearchQuery(loggedInInfo,searchRequest,params, "count(*)");
+		 
+		MiscUtils.getLogger().warn(demographicQuery);
+		
+		Session session = getSession();
+		try {
+			SQLQuery sqlQuery = session.createSQLQuery(demographicQuery);
+			for(String key:params.keySet()) {
+				sqlQuery.setParameter(key, params.get(key));
+				MiscUtils.getLogger().warn(key +"="+params.get(key));
+			}
+			Integer result = ((BigInteger)sqlQuery.uniqueResult()).intValue();
+			return result;
+		} finally {
+			this.releaseSession(session);
+		}
+	}
+	
+	public List<DemographicSearchResult> searchPatients(LoggedInInfo loggedInInfo, DemographicSearchRequest searchRequest, int startIndex, int itemsToReturn) {
+		Map<String,Object> params = new HashMap<String,Object>();
+		
+		String demographicQuery = generateDemographicSearchQuery(loggedInInfo,searchRequest, params,
+				"d.demographic_no, d.last_name, d.first_name, d.chart_no, d.sex, d.provider_no, d.roster_status," +
+				" d.patient_status, d.phone, d.year_of_birth,d.month_of_birth,d.date_of_birth,p.last_name as providerLastName,p.first_name as providerFirstName,d.hin");
+		 
+		Session session = getSession();
+		try {
+			SQLQuery sqlQuery = session.createSQLQuery(demographicQuery);
+			
+			for(String key:params.keySet()) {
+				sqlQuery.setParameter(key, params.get(key));
+			}
+			
+			sqlQuery.setFirstResult(startIndex);
+			sqlQuery.setResultTransformer(new ResultTransformer() {
+				SimpleDateFormat sdf = new SimpleDateFormat(DateUtils.ISO8601_DATE_PATTERN);
+				
+				
+				@Override
+				public Object transformTuple(Object[] tuple, String[] aliases) {
+					Integer demographicNo = (Integer) tuple[0];
+				    String lastName = (String) tuple[1];
+				    String firstName = (String) tuple[2];
+				    String chartNo = (String)tuple[3];
+				    String sex = String.valueOf(tuple[4]);
+				    String providerNo = (String)tuple[5];
+				    String rosterStatus = (String)tuple[6];
+				    String patientStatus = (String)tuple[7];
+				    String phone = (String)tuple[8];
+				    
+				    Date dob = null;
+					try {
+						dob = sdf.parse((String)tuple[9] + "-" + (String)tuple[10] + "-" + (String)tuple[11]);
+					} catch(ParseException e) {
+						logger.warn("Demographic " + demographicNo + " has a bad DOB ",e);
+					}
+					
+					String providerLastName = (String)tuple[12];
+					String providerFirstName = (String)tuple[13];
+					
+					String hin = (String)tuple[14];
+						    
+				    DemographicSearchResult result =  
+				    		new DemographicSearchResult(demographicNo, lastName, firstName, chartNo, sex, providerNo, rosterStatus, 
+				    				patientStatus, phone, dob, providerLastName, providerFirstName,hin);
+				    return result;
+				}
+				
+				@Override
+				public List transformList(List collection) {
+					
+					return collection;
+				}
+			});
+			setLimit(sqlQuery, itemsToReturn);
+			
+			return sqlQuery.list();
+		} finally {
+			this.releaseSession(session);
+		}
+	}
+	
+	private String generateDemographicSearchQuery(LoggedInInfo loggedInInfo, DemographicSearchRequest searchRequest, Map<String,Object> params, String select) {
+		OscarProperties props = OscarProperties.getInstance();  
+		MatchingDemographicParameters matchingDemographicParameters=null;
+		
+		params.put("keyword", searchRequest.getKeyword());
+	
+		String fieldname="";  
+		String regularexp = "regexp";
+	  
+		if(searchRequest.getKeyword().indexOf("*")!=-1 || searchRequest.getKeyword().indexOf("%")!=-1) {
+			regularexp="like";
+		}
+    
+		if(searchRequest.getMode() == SEARCHMODE.Address) {
+			fieldname="d.address";
+		}
+		if(searchRequest.getMode() == SEARCHMODE.Phone) {
+			fieldname="d.phone";
+		}
+		
+		if(searchRequest.getMode() == SEARCHMODE.HIN) {
+			fieldname="d.hin";
+			matchingDemographicParameters=new MatchingDemographicParameters();
+		    matchingDemographicParameters.setHin(searchRequest.getKeyword());	    
+		}
+		if(searchRequest.getMode() == SEARCHMODE.DOB) {
+			fieldname="d.year_of_birth = :year and d.month_of_birth = :month and d.date_of_birth ";
+
+	    	try
+	    	{
+	    		String year=searchRequest.getKeyword().substring(0, 4);
+	    		String month=searchRequest.getKeyword().substring(5, 7);
+	    		String day=searchRequest.getKeyword().substring(8);
+	    		
+	    		params.put("year", year);
+	    		params.put("month", month);
+	    		params.put("keyword", day);
+
+		    	GregorianCalendar cal=new GregorianCalendar(Integer.parseInt(year), Integer.parseInt(month)-1, Integer.parseInt(day));
+		    	matchingDemographicParameters=new MatchingDemographicParameters();
+		    	matchingDemographicParameters.setBirthDate(cal);
+	    	}
+	    	catch (Exception e){
+	    		// this is okay, person imputed a bad date, we'll ignore for now
+	    		matchingDemographicParameters=null;
+	    	}
+		}
+		if(searchRequest.getMode() == SEARCHMODE.ChartNo) {
+			fieldname="d.chart_no";
+		}
+		if(searchRequest.getMode() == SEARCHMODE.HIN) {
+			fieldname="d.hin";
+		}
+		    
+		if(searchRequest.getMode() == SEARCHMODE.Name) {
+		  	matchingDemographicParameters=new MatchingDemographicParameters();
+		  	String[] lastfirst = searchRequest.getKeyword().split(",");
+
+	        if (lastfirst.length > 1) {
+	            matchingDemographicParameters.setLastName(lastfirst[0].trim());
+	            matchingDemographicParameters.setFirstName(lastfirst[1].trim());
+	        }else{
+	            matchingDemographicParameters.setLastName(lastfirst[0].trim());
+	        }
+
+	    	if(searchRequest.getKeyword().indexOf(",")==-1) {
+	    		fieldname="lower(d.last_name)";
+	    	} else if(searchRequest.getKeyword().trim().indexOf(",")==(searchRequest.getKeyword().trim().length()-1))  {
+	    		fieldname="lower(d.first_name)";
+	    		params.put("keyword", searchRequest.getKeyword().substring(0, searchRequest.getKeyword().length()-1));
+	    	} else {
+	    		params.put("extraKeyword", searchRequest.getKeyword().split(",")[0]);
+	    		params.put("keyword", searchRequest.getKeyword().split(",")[1]);
+	    		fieldname="lower(d.last_name) "+regularexp+" :extraKeyword"+" and lower(d.first_name) ";
+	    		}
+			}
+		
+		String ptstatusexp="";
+		   
+		if(searchRequest.isActive()) {	
+			ptstatusexp=" and d.patient_status not in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
+		  }else {
+			  ptstatusexp=" and d.patient_status in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
+		  }
+		 
+		  String domainRestriction="";
+		  if(!searchRequest.isOutOfDomain()) {
+			  domainRestriction = "and d.demographic_no in (select client_id from admission where admission_status='current' and program_id in (select program_id from program_provider where provider_no='"+loggedInInfo.getLoggedInProviderNo()+"')) ";
+		  }
+		  
+		  String orderBy = "d.last_name,d.first_name";
+		  String orderDir = searchRequest.getSortDir().toString();
+		  if(SORTMODE.Address.equals(searchRequest.getSortMode())) {
+			  orderBy = "d.address " + orderDir;
+		  } else if(SORTMODE.ChartNo.equals(searchRequest.getSortMode())) {
+			  orderBy = "d.chart_no " + orderDir;
+		  } else if(SORTMODE.DemographicNo.equals(searchRequest.getSortMode())) {
+			  orderBy = "d.demographic_no " + orderDir;
+		  } else if(SORTMODE.DOB.equals(searchRequest.getSortMode())) {
+			  orderBy = "year_of_birth "+ orderDir+",month_of_birth "+ orderDir+",date_of_birth "+ orderDir;
+		  } else if(SORTMODE.Name.equals(searchRequest.getSortMode())) {
+			  orderBy =  "d.last_name "+ orderDir+",d.first_name " + orderDir;
+		  } else if(SORTMODE.Phone.equals(searchRequest.getSortMode())) {
+			  orderBy =  "d.phone " + orderDir;
+		  } else if(SORTMODE.ProviderName.equals(searchRequest.getSortMode())) {
+			  orderBy =  "p.last_name "+ orderDir+",p.first_name " + orderDir;
+		  }  else if(SORTMODE.PS.equals(searchRequest.getSortMode())) {
+			  orderBy =  "d.patient_status "+ orderDir;
+		  } else if(SORTMODE.RS.equals(searchRequest.getSortMode())) {
+			  orderBy =  "d.roster_status "+ orderDir;
+		  } else if(SORTMODE.Sex.equals(searchRequest.getSortMode())) {
+			  orderBy =  "d.sex "+ orderDir;
+		  }
+
+		  orderBy = " ORDER BY " + orderBy;
+		  return "select " + select + " from demographic d left join provider p on d.provider_no = p.provider_no where "+fieldname+" "+regularexp+" :keyword "+ptstatusexp+domainRestriction+orderBy ;
 	}
 	
 }

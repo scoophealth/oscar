@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -58,6 +59,7 @@ import org.oscarehr.caisi_integrator.ws.GetConsentTransfer;
 import org.oscarehr.caisi_integrator.ws.HnrWs;
 import org.oscarehr.caisi_integrator.ws.HnrWsService;
 import org.oscarehr.caisi_integrator.ws.InvalidHinExceptionException;
+import org.oscarehr.caisi_integrator.ws.MatchingDemographicParameters;
 import org.oscarehr.caisi_integrator.ws.ProgramWs;
 import org.oscarehr.caisi_integrator.ws.ProgramWsService;
 import org.oscarehr.caisi_integrator.ws.ProviderWs;
@@ -76,6 +78,8 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.QueueCache;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.ws.rest.to.model.DemographicSearchRequest;
+import org.oscarehr.ws.rest.to.model.DemographicSearchRequest.SEARCHMODE;
 
 /**
  * This class is a manager for integration related functionality. <br />
@@ -540,5 +544,45 @@ public class CaisiIntegratorManager {
 		if (demographicTransfer.getStreetAddress()!=null) demographic.setAddress(demographicTransfer.getStreetAddress());
 		if (demographicTransfer.getPhone1()!=null) demographic.setPhone(demographicTransfer.getPhone1());
 		if (demographicTransfer.getPhone2()!=null) demographic.setPhone2(demographicTransfer.getPhone2());
+    }
+    
+    public static MatchingDemographicParameters getMatchingDemographicParameters(LoggedInInfo loggedInInfo, DemographicSearchRequest searchRequest) {
+		MatchingDemographicParameters matchingDemographicParameters=null;
+		
+		
+		if(searchRequest.getMode() == SEARCHMODE.HIN) {
+			matchingDemographicParameters=new MatchingDemographicParameters();
+		    matchingDemographicParameters.setHin(searchRequest.getKeyword());	    
+		}
+		if(searchRequest.getMode() == SEARCHMODE.DOB) {
+			try
+	    	{
+	    		String year=searchRequest.getKeyword().substring(0, 4);
+	    		String month=searchRequest.getKeyword().substring(5, 7);
+	    		String day=searchRequest.getKeyword().substring(8);
+
+		    	GregorianCalendar cal=new GregorianCalendar(Integer.parseInt(year), Integer.parseInt(month)-1, Integer.parseInt(day));
+		    	matchingDemographicParameters=new MatchingDemographicParameters();
+		    	matchingDemographicParameters.setBirthDate(cal);
+	    	}
+	    	catch (Exception e){
+	    		matchingDemographicParameters=null;
+	    	}
+		}
+				    
+		if(searchRequest.getMode() == SEARCHMODE.Name) {
+		  	matchingDemographicParameters=new MatchingDemographicParameters();
+		  	String[] lastfirst = searchRequest.getKeyword().split(",");
+
+	        if (lastfirst.length > 1) {
+	            matchingDemographicParameters.setLastName(lastfirst[0].trim());
+	            matchingDemographicParameters.setFirstName(lastfirst[1].trim());
+	        }else{
+	            matchingDemographicParameters.setLastName(lastfirst[0].trim());
+	        }	
+			
+		}
+		
+		return matchingDemographicParameters;
     }
 }

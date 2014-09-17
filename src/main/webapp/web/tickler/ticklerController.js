@@ -1,7 +1,6 @@
 oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngTableParams, securityService, $modal, $http) {
     var ticklerAPI = $resource('../ws/rs/tickler/ticklers');
-    
-   
+       
     //active provider lists for drop downs
     $scope.providers = new Array();
   
@@ -27,6 +26,7 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
      securityService.getRightsAsPromise().then(function(result){
     	 $scope.rights = result;
     	 $scope.ticklerWriteAccess = $scope.hasRight('_tickler','w');
+    	 $scope.ticklerReadAccess = $scope.hasRight('_tickler','r');     	
      },function(reason){
     	 alert(reason);
      });

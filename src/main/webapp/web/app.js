@@ -44,6 +44,11 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
   	      templateUrl: 'tickler/ticklerList.jsp',
             controller: 'TicklerListCtrl'
   	    })  
+  	    .state('search', {
+  	      url: '/search',
+  	      templateUrl: 'patientsearch/patientSearch.jsp',
+            controller: 'PatientSearchCtrl'
+  	    })  
 	    .state('record', {
 	    	url: '/record/:demographicNo', 
             templateUrl: 'record/record.jsp',
@@ -209,6 +214,9 @@ oscarApp.run( function($rootScope, $location) {
 
 oscarApp.filter('offset', function() {
 	  return function(input, start) {
+		 if(input == null) {
+			 return 0;
+		 }
 	    start = parseInt(start, 10);
 	    return input.slice(start);
 	  };

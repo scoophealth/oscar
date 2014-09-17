@@ -24,6 +24,9 @@
 
 --%>
 
+<div ng-show="ticklerReadAccess" >
+ 	
+
 <form name="searchForm" id="searchForm">
     
 <div class="row">
@@ -147,8 +150,17 @@
                           
 </table> 
 
+
 <!-- 
 <pre>{{search}}</pre>
 <pre>{{lastResponse}}</pre>
 -->
+
+</div>
+
+
+
+<div ng-show="ticklerReadAccess != null && ticklerReadAccess == false" >
+ 	<h3 class="text-danger"><span class="glyphicon glyphicon-warning-sign"></span>You don't have access to view ticklers</h3>
+</div>
 
