@@ -36,7 +36,18 @@ public class MenuItemTo1 implements Serializable {
     private String label;
     private String extra;
     private String url;
+    private String state;
     
+    
+    public MenuItemTo1(){
+    	
+    }
+    
+    public MenuItemTo1(Integer id, String label, String url){
+    	this.id = id;
+    	this.label = label;
+    	this.url = url;
+    }
     
 	public Integer getId() {
 		return id;
@@ -63,6 +74,20 @@ public class MenuItemTo1 implements Serializable {
 		this.url = url;
 	}
     
-    
+    public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public static MenuItemTo1 generateStateMenuItem(Integer id,String label, String state){
+    	MenuItemTo1 ret = new MenuItemTo1();
+    	ret.id = id;
+    	ret.label = label;
+    	ret.state = state;
+    	return ret;
+    }
 
 }
