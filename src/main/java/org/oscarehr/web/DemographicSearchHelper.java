@@ -41,7 +41,6 @@ public final class DemographicSearchHelper {
 		if (!loggedInInfo.getCurrentFacility().isIntegratorEnabled()) return(null);
 		
 		DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
-		demographicWs.getMatchingDemographics(matchingDemographicParameters);
 		
 		List<MatchingDemographicTransferScore> integratedMatches = demographicWs.getMatchingDemographics(matchingDemographicParameters);
 		return(integratedMatches);

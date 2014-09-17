@@ -91,34 +91,38 @@
 	admission.setClientStatusId(null);
     admissionDao.saveAdmission(admission);
 
+    StringBuilder redirect=new StringBuilder();
+	
+    if(request.getParameter("originalPage") != null) {
 
-	StringBuilder redirect=new StringBuilder();
-	redirect.append(request.getParameter("originalPage"));
-	redirect.append("?");
-
-	redirect.append("demographic_no=");
-	redirect.append(demographic.getDemographicNo());
-
-	redirect.append("&doctor_no=");
-	redirect.append(request.getParameter("provider_no"));
-
-	@SuppressWarnings("unchecked")
-	Enumeration<String> e = request.getParameterNames();
-	while (e.hasMoreElements()) {
-		String key = e.nextElement();
-
-		if (key.equals("demographic_no") || key.equals("doctor_no") || key.equals("originalPage"))
-		{
-			// ignore these parameters
+		redirect.append(request.getParameter("originalPage"));
+		redirect.append("?");
+	
+		redirect.append("demographic_no=");
+		redirect.append(demographic.getDemographicNo());
+	
+		redirect.append("&doctor_no=");
+		redirect.append(request.getParameter("provider_no"));
+	
+		@SuppressWarnings("unchecked")
+		Enumeration<String> e = request.getParameterNames();
+		while (e.hasMoreElements()) {
+			String key = e.nextElement();
+	
+			if (key.equals("demographic_no") || key.equals("doctor_no") || key.equals("originalPage"))
+			{
+				// ignore these parameters
+			}
+			else
+			{
+				redirect.append("&");
+				redirect.append(key);
+				redirect.append("=");
+				redirect.append(URLEncoder.encode(request.getParameter(key)));
+			}
 		}
-		else
-		{
-			redirect.append("&");
-			redirect.append(key);
-			redirect.append("=");
-			redirect.append(URLEncoder.encode(request.getParameter(key)));
-		}
-	}
-
+    } else {
+    	redirect.append("../close.html");
+    }
 	response.sendRedirect(redirect.toString());
 %>

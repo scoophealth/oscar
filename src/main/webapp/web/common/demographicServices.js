@@ -68,6 +68,28 @@ angular.module("demographicServices", [])
        
             return deferred.promise;
         	
+        },
+        search: function(search,startIndex,itemsToReturn){
+        	var deferred = $q.defer();
+        	$http.post(this.apiPath+'demographics/search?startIndex='+startIndex + "&itemsToReturn="+itemsToReturn,search).success(function(data){
+        		deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching items")
+              deferred.reject("An error occured while fetching items");
+            });
+       
+            return deferred.promise;
+        },
+        searchIntegrator: function(search,itemsToReturn){
+        	var deferred = $q.defer();
+        	$http.post(this.apiPath+'demographics/searchIntegrator?itemsToReturn='+itemsToReturn,search).success(function(data){
+        		deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching integrator items")
+              deferred.reject("An error occured while fetching items");
+            });
+       
+            return deferred.promise;
         }
     };
 });

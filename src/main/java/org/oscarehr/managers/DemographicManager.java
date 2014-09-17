@@ -48,6 +48,8 @@ import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.ws.rest.to.model.DemographicSearchRequest;
+import org.oscarehr.ws.rest.to.model.DemographicSearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -503,72 +505,21 @@ public class DemographicManager {
 	public List<String> getRosterStatusList() {
 		return demographicDao.getRosterStatuses();
 	}
-
-	/*
-	 * Format is LastName[,FirstName]
-	 */
-	public List<Demographic> searchDemographicByNames(LoggedInInfo loggedInInfo, String searchString, int startIndex, int itemsToReturn) {
+	
+	
+	public List<DemographicSearchResult> searchPatients(LoggedInInfo loggedInInfo, DemographicSearchRequest searchRequest, int startIndex, int itemsToReturn) {
+		List<DemographicSearchResult> results =  demographicDao.searchPatients(loggedInInfo, searchRequest, startIndex, itemsToReturn);
 		
-		List<Demographic> results = demographicDao.searchDemographicByNamesString(searchString, startIndex, itemsToReturn);
-		
-		if(logger.isDebugEnabled()) {
-			logger.debug("searchDemographicByName, searchString="+searchString+", result.size="+results.size());
+		for (DemographicSearchResult demographic : results) {
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.searchPatients result", "demographicId=" + demographic.getDemographicNo());
 		}
 		
-		//--- log action ---
-		for (Demographic demographic : results) {
-			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.searchDemographicByName result", "demographicId=" + demographic.getDemographicNo());
-		}
-
-		return (results);
+		return results;
 	}
 	
-	/**
-	 * Format is addr:term
-	 * 
-	 * @param searchString
-	 * @param startIndex
-	 * @param itemsToReturn
-	 * @return
-	 */
-	public List<Demographic> searchDemographicByAddress(LoggedInInfo loggedInInfo, String searchString, int startIndex, int itemsToReturn) {
-		
-		List<Demographic> results = demographicDao.searchDemographicByAddressString(searchString, startIndex, itemsToReturn);
-		
-		if(logger.isDebugEnabled()) {
-			logger.debug("searchDemographicByAddress, searchString="+searchString+", result.size="+results.size());
-		}
-		
-		//--- log action ---
-		for (Demographic demographic : results) {
-			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.searchDemographicByAddress result", "demographicId=" + demographic.getDemographicNo());
-		}
-
-		return (results);
+	public int searchPatientsCount(LoggedInInfo loggedInInfo, DemographicSearchRequest searchRequest) {
+		return demographicDao.searchPatientCount(loggedInInfo, searchRequest);
 	}
 	
-	/**
-	 * Format is chartNo:term
-	 * 
-	 * @param searchString
-	 * @param startIndex
-	 * @param itemsToReturn
-	 * @return
-	 */
-	public List<Demographic> searchDemographicByChartNo(LoggedInInfo loggedInInfo, String searchString, int startIndex, int itemsToReturn) {
-		
-		List<Demographic> results = demographicDao.searchDemographicByChartNo(searchString, startIndex, itemsToReturn);
-		
-		if(logger.isDebugEnabled()) {
-			logger.debug("searchDemographicByChartNo, searchString="+searchString+", result.size="+results.size());
-		}
-		
-		//--- log action ---
-		for (Demographic demographic : results) {
-			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.searchDemographicByChartNo result", "demographicId=" + demographic.getDemographicNo());
-		}
 
-		return (results);
-	}
-	
 }

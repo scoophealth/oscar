@@ -23,8 +23,7 @@
     Ontario, Canada
 
 */
-oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal) {
-	
+oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $state) {
 	$http({
 	    url: '../ws/rs/persona/navbar',
 	    dataType: 'json',
@@ -88,11 +87,13 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal) {
 		});	
 	}
 	
-	
+	  $scope.loadRecord = function(demographicNo) {
+	 		 $state.go('record.details', {demographicNo:demographicNo, hideNote:true});
+	     }
 	
 	//to help ng-clicks on buttons
-	$scope.go = function ( path ) {
-		$location.path( path );
+	$scope.transition = function ( state ) {
+		$state.go( state );
 	};
 	
 	$scope.isActive = function(temp){
@@ -134,18 +135,11 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal) {
 	}
 	
 	$scope.goHome = function() {
-		console.log("goHome called");
-		$scope.currenttab = null;
-		$scope.currentmoretab = null;
-		$window.location.href="index.jsp#/dashboard";
-		$window.location.reload();
+		$state.go('dashboard');
 	}
 	
 	$scope.goToPatientSearch = function() {
-		$scope.currenttab = null;
-		$scope.currentmoretab = null;
-		$window.location.href="index.jsp#/search";
-		$window.location.reload();
+		$state.go('search');
 	}
 	
 	$scope.changeProgram = function(temp){
@@ -192,8 +186,6 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal) {
 		
 		console.log($('#myModal'));
 	}
-	
-	
 });
 
 
@@ -244,5 +236,5 @@ function NewPatientCtrl($scope,$http,$modal,demographicService,$modalInstance){
   	 $scope.cancel = function () {
   	    $modalInstance.dismiss('cancel');
   	 };
-  	
+  
 }

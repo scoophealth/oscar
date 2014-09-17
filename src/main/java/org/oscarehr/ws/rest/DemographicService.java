@@ -25,6 +25,8 @@ package org.oscarehr.ws.rest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -37,10 +39,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.commons.lang.time.DateFormatUtils;
+import net.sf.json.JSONObject;
+
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.SecUserRole;
+import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
+import org.oscarehr.caisi_integrator.ws.MatchingDemographicParameters;
+import org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore;
 import org.oscarehr.common.dao.ContactDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.dao.WaitingListDao;
@@ -55,16 +62,23 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.WaitingList;
 import org.oscarehr.common.model.WaitingListName;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.web.DemographicSearchHelper;
 import org.oscarehr.ws.rest.conversion.DemographicContactFewConverter;
 import org.oscarehr.ws.rest.conversion.DemographicConverter;
 import org.oscarehr.ws.rest.conversion.ProfessionalSpecialistConverter;
 import org.oscarehr.ws.rest.conversion.ProviderConverter;
 import org.oscarehr.ws.rest.conversion.WaitingListNameConverter;
+import org.oscarehr.ws.rest.to.AbstractSearchResponse;
 import org.oscarehr.ws.rest.to.OscarSearchResponse;
 import org.oscarehr.ws.rest.to.model.DemographicContactFewTo1;
-import org.oscarehr.ws.rest.to.model.DemographicSearchResultItem;
-import org.oscarehr.ws.rest.to.model.DemographicSearchResults;
+import org.oscarehr.ws.rest.to.model.DemographicSearchRequest;
+import org.oscarehr.ws.rest.to.model.DemographicSearchRequest.SEARCHMODE;
+import org.oscarehr.ws.rest.to.model.DemographicSearchRequest.SORTDIR;
+import org.oscarehr.ws.rest.to.model.DemographicSearchRequest.SORTMODE;
+import org.oscarehr.ws.rest.to.model.DemographicSearchResult;
 import org.oscarehr.ws.rest.to.model.DemographicTo1;
 import org.oscarehr.ws.rest.to.model.StatusValueTo1;
 import org.oscarehr.ws.rest.to.model.WaitingListNameTo1;
@@ -72,7 +86,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import oscar.oscarWaitingList.util.WLWaitingListUtil;
-import oscar.util.StringUtils;
 
 
 /**
@@ -103,6 +116,10 @@ public class DemographicService extends AbstractServiceImpl {
 	
 	@Autowired
 	private ProfessionalSpecialistDao specialistDao;
+	
+	@Autowired
+	private SecurityInfoManager securityInfoManager;
+	
 	
 	private DemographicConverter demoConverter = new DemographicConverter();
 	private DemographicContactFewConverter demoContactFewConverter = new DemographicContactFewConverter();
@@ -376,40 +393,187 @@ public class DemographicService extends AbstractServiceImpl {
 	 * 		Returns data for the demographic provided 
 	 */
 	@GET
+	@Path("/quickSearch")
+	@Produces("application/json")
+	public AbstractSearchResponse<DemographicSearchResult> search(@QueryParam("query") String query) {		
+
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_demographic", "r")) {
+				throw new RuntimeException("Access Denied");
+		}
+		
+		AbstractSearchResponse<DemographicSearchResult> response = new AbstractSearchResponse<DemographicSearchResult>();
+		
+		List<DemographicSearchResult> results = new ArrayList<DemographicSearchResult>();
+		
+		if(query == null ) {
+			return response;
+		}
+		
+		DemographicSearchRequest req = new DemographicSearchRequest();
+		req.setActive(true);
+		req.setIntegrator(false); //this should be configurable by persona
+		req.setOutOfDomain(true); //need to revisit this too 
+		
+
+		if(query.startsWith("addr:")) {
+			req.setMode(SEARCHMODE.Address);
+			req.setKeyword(query.substring("addr:".length()));
+		} else if(query.startsWith("chartNo:")) {
+			req.setMode(SEARCHMODE.ChartNo);
+			req.setKeyword(query.substring("chartNo:".length()));
+		} else {
+			req.setMode(SEARCHMODE.Name);
+			req.setKeyword(query);
+		}
+		
+				
+		int count = demographicManager.searchPatientsCount(getLoggedInInfo(),req);
+
+		if(count>0) {
+			results = demographicManager.searchPatients(getLoggedInInfo(),req, 0, 10);
+			response.setContent(results);
+			response.setTotal(count);
+			
+		}
+		
+		
+		return response;
+	}
+	
+	@POST
 	@Path("/search")
 	@Produces("application/json")
-	public DemographicSearchResults search(@QueryParam("query") String query) {		
+	@Consumes("application/json")
+	public AbstractSearchResponse<DemographicSearchResult> search(JSONObject json,@QueryParam("startIndex") Integer startIndex,@QueryParam("itemsToReturn") Integer itemsToReturn ) {
+		AbstractSearchResponse<DemographicSearchResult> response = new AbstractSearchResponse<DemographicSearchResult>();
 		
-		long start = System.currentTimeMillis();
-		List<Demographic> demo = new ArrayList<Demographic>();
-		
-		if(query.startsWith("addr:")) {
-			demo = demographicManager.searchDemographicByAddress(getLoggedInInfo(), query, 0, 10);
-		} else if(query.startsWith("chartNo:")) {
-			demo = demographicManager.searchDemographicByChartNo(getLoggedInInfo(), query, 0, 10);
-		} else {
-			demo = demographicManager.searchDemographicByNames(getLoggedInInfo(), query, 0, 10);
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_demographic", "r")) {
+			throw new RuntimeException("Access Denied");
 		}
-		if (demo == null) {
-			return null;
-		}
-		long execTime = System.currentTimeMillis() - start;
 		
-		DemographicSearchResults results = new DemographicSearchResults();
-		results.setTime(execTime);
-		for(Demographic d:demo) {
-			DemographicSearchResultItem item = new DemographicSearchResultItem();
-			item.setId(d.getDemographicNo());
-			item.setName(d.getFormattedName());
-			if(StringUtils.filled(d.getHin()))
-				item.setHin(d.getHin() + (StringUtils.filled(d.getVer()) ?" " + d.getVer():""));
-			if(d.getBirthDay().getTime() != null) {
-				item.setDob(d.getBirthDay().getTime());
-				item.setDobString(DateFormatUtils.ISO_DATE_FORMAT.format(d.getBirthDay().getTime()));
+		List<DemographicSearchResult> results = new ArrayList<DemographicSearchResult>();
+		
+		if(json.getString("term").length() >= 1) {
+				
+			int count = demographicManager.searchPatientsCount(getLoggedInInfo(), convertFromJSON(json));
+
+			if(count>0) {
+				results = demographicManager.searchPatients(getLoggedInInfo(), convertFromJSON(json), startIndex, itemsToReturn);
+				response.setContent(results);
+				response.setTotal(count);
 			}
-			results.getItems().add(item);
 		}
 		
-		return results;
+		return response;
+	}
+	
+	@POST
+	@Path("/searchIntegrator")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public AbstractSearchResponse<DemographicSearchResult> searchIntegrator(JSONObject json, @QueryParam("itemsToReturn") Integer itemsToReturn ) {
+		AbstractSearchResponse<DemographicSearchResult> response = new AbstractSearchResponse<DemographicSearchResult>();
+		
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_demographic", "r")) {
+			throw new RuntimeException("Access Denied");
+		}
+		
+		List<DemographicSearchResult> results = new ArrayList<DemographicSearchResult>();
+		
+		if(json.getString("term").length() >= 1) {
+			
+			MatchingDemographicParameters matches = CaisiIntegratorManager.getMatchingDemographicParameters(getLoggedInInfo(), convertFromJSON(json));
+			List<MatchingDemographicTransferScore> integratorSearchResults = null;
+			try {			
+				matches.setMaxEntriesToReturn(itemsToReturn);
+				matches.setMinScore(7); 
+				integratorSearchResults = DemographicSearchHelper.getIntegratedSearchResults(getLoggedInInfo(), matches);
+				MiscUtils.getLogger().info("Integrator search results : "+(integratorSearchResults==null?"null":String.valueOf(integratorSearchResults.size())));
+			}catch(Exception e){
+				MiscUtils.getLogger().error("error searching integrator", e);
+			}
+			
+			if(integratorSearchResults != null) {
+				 for (MatchingDemographicTransferScore matchingDemographicTransferScore : integratorSearchResults) {
+					if( isLocal(matchingDemographicTransferScore)) { 	
+						MiscUtils.getLogger().warn("ignoring remote demographic since we already have them locally");
+						 continue;     
+					}
+					 if(matchingDemographicTransferScore.getDemographicTransfer() != null) {
+						 DemographicTransfer obj = matchingDemographicTransferScore.getDemographicTransfer();
+						 DemographicSearchResult item = new DemographicSearchResult();
+						 item.setLastName(obj.getLastName());
+						 item.setFirstName(obj.getFirstName());
+						 item.setSex(obj.getGender().toString());
+						 item.setDob(obj.getBirthDate().getTime());
+						 item.setRemoteFacilityId(obj.getIntegratorFacilityId());
+						 item.setDemographicNo(obj.getCaisiDemographicId());
+						 results.add(item);
+					 }
+					 
+				 }
+				 
+			}
+			
+		}
+		
+		 response.setContent(results);	
+		 response.setTotal((response.getContent()!=null)?response.getContent().size():0);
+		
+		return response;
+	}
+	
+	private DemographicSearchRequest convertFromJSON(JSONObject json) {
+		if(json ==null)return null;
+		
+		String searchType = json.getString("type");
+				
+		DemographicSearchRequest req = new DemographicSearchRequest();
+		
+		req.setMode(SEARCHMODE.valueOf(searchType));
+		if(req.getMode() == null) {
+			req.setMode(SEARCHMODE.Name);
+		}
+		
+		req.setKeyword(json.getString("term"));
+		req.setActive(Boolean.valueOf(json.getString("active")));
+		req.setIntegrator(Boolean.valueOf(json.getString("integrator")));
+		req.setOutOfDomain(Boolean.valueOf(json.getString("outofdomain")));
+		
+		Pattern namePtrn = Pattern.compile("sorting\\[(\\w+)\\]");
+		
+		JSONObject params = json.getJSONObject("params");
+		if(params != null) {
+			for(Object key:params.keySet()) {
+				Matcher nameMtchr = namePtrn.matcher((String)key);
+				if (nameMtchr.find()) {
+				   String var = nameMtchr.group(1);
+				   req.setSortMode(SORTMODE.valueOf(var));
+				   req.setSortDir(SORTDIR.valueOf(params.getString((String)key)));
+				}
+			}
+		}
+		return req;
+	}
+	
+	private boolean isLocal(MatchingDemographicTransferScore matchingDemographicTransferScore) {
+	    String hin = matchingDemographicTransferScore.getDemographicTransfer().getHin(); 
+	    
+	    if(hin != null && !hin.isEmpty()) {
+		    DemographicSearchRequest dsr = new DemographicSearchRequest();
+		    dsr.setActive(true);
+		    dsr.setKeyword(hin);
+		    dsr.setMode(SEARCHMODE.HIN);
+		    dsr.setOutOfDomain(true);
+		    dsr.setSortMode(SORTMODE.Name);
+		    dsr.setSortDir(SORTDIR.asc);
+
+		    if(demographicManager.searchPatientsCount(getLoggedInInfo(), dsr) > 0) {
+		    	return true;
+		    }
+	    }
+
+	    return false;
+	    
 	}
 }

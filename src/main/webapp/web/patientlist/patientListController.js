@@ -129,7 +129,10 @@ $scope.changeTab = function(temp){
 
 		$scope.currentmoretab=null;
 	  	
-	  	$scope.nPages=Math.ceil($scope.patients.length/$scope.pageSize);
+		$scope.nPages = 1;
+		if($scope.patients != null) {
+			$scope.nPages=Math.ceil($scope.patients.length/$scope.pageSize);
+		} 
 	  	
 	}).error(function(error){
 	    $scope.error = error;

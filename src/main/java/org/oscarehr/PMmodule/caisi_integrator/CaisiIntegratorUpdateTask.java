@@ -135,6 +135,7 @@ import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementMap;
@@ -249,6 +250,19 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		numberOfTimesRun++;
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod();
+	
+		Provider p = providerDao.getProvider(OscarProperties.getInstance().getProperty("INTEGRATOR_USER", "-1"));
+		Security security = new Security();
+		security.setSecurityNo(0);
+		
+		loggedInInfo.setLoggedInProvider(p);
+		loggedInInfo.setLoggedInSecurity(security);
+		
+		if(p == null) {
+			logger.warn("INTEGRATOR_USER doesn't exist..please check properties file");
+			return;
+		}
+		
 		logger.debug("CaisiIntegratorUpdateTask starting #" + numberOfTimesRun+"  running as "+loggedInInfo.getLoggedInProvider());
 
 		try {
