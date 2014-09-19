@@ -132,26 +132,33 @@ public class PersonaService extends AbstractServiceImpl {
 		navBarMenu.setPatientSearchMenu(patientSearchMenu);
 		
 		MenuTo1 menu = new MenuTo1()
-				.add(0,"Inbox",null,"#/inbox")
-				.add(1,"Consultations",null,"#/consults")
-				.add(2,"Billing",null,"#/billing")
-				.add(3,"Tickler",null,"#/ticklers")
-				.add(4,"Schedule",null,"#/schedule")
+				.addWithState(0,"Inbox",null,"inbox")
+				.addWithState(1,"Consults",null,"consults")
+				.addWithState(2,"Billing",null,"billing")
+				.addWithState(3,"Tickler",null,"ticklers")
+				.addWithState(4,"Schedule",null,"schedule")
 				//.add(0,"K2A",null,"#/k2a")
-				.add(5,"Admin",null,"#/admin");
+				.addWithState(5,"Admin",null,"admin");
 		navBarMenu.setMenu(menu);
-		
+	/*	
 		MenuTo1 moreMenu = new MenuTo1()
-		.add(0,"Reports",null,"#/report")
+		.add(0,"Reports",null,"reports")
 		.add(1,"Caseload",null,"#/caseload")
 		.add(2,"Resources",null,"#/resources")
 		.add(3,"Documents",null,"#/documents");
 		navBarMenu.setMoreMenu(moreMenu);
+		*/
+		MenuTo1 moreMenu2 = new MenuTo1()
+		.addWithState(0,"Reports",null,"reports")
+	//	.add(1,"Caseload",null,"#/caseload")
+	//	.add(2,"Resources",null,"#/resources")
+		.addWithState(1,"Documents",null,"documents");
+		navBarMenu.setMoreMenu(moreMenu2);
 		
 		MenuTo1 userMenu = new MenuTo1()
-		.add(0,"Settings",null,"#/settings")
-		.add(1,"Support",null,"#/support")
-		.add(2,"Help",null,"#/help");
+		.addWithState(0,"Settings",null,"settings")
+		.addWithState(1,"Support",null,"support")
+		.addWithState(2,"Help",null,"help");
 		navBarMenu.setUserMenu(userMenu);
 		
 		result.setMenus(navBarMenu);

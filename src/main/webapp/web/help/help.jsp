@@ -24,7 +24,5 @@
 
 --%>
 <h2 class="text-center">OSCAR Help</h2>
-<p></p>
-<p>
-This is where you come for links to helpful places.
-</p>
+
+<p class="bg-info"><a href="javascript:void()" onClick="window.open('http://oscarmanual.org/14','manual','width=600,height=600');return false;"><span class="glyphicon glyphicon-book"></span>OSCAR 14 Manual</a></p>

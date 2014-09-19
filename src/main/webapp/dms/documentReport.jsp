@@ -118,12 +118,8 @@ if(module.equals("demographic")) {
   moduleName = EDocUtil.getProviderName(moduleid);
 }
 
-String curUser = "";
-if (request.getParameter("curUser") != null) {
-    curUser = request.getParameter("curUser");
-} else if (request.getAttribute("curUser") != null) {
-    curUser = (String) request.getAttribute("curUser");
-}
+
+String curUser = LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo();
 
 //sorting
 EDocUtil.EDocSort sort = EDocUtil.EDocSort.OBSERVATIONDATE;

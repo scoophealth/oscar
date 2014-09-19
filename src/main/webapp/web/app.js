@@ -48,7 +48,32 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
   	      url: '/search',
   	      templateUrl: 'patientsearch/patientSearch.jsp',
             controller: 'PatientSearchCtrl'
-  	    })  
+  	    }) 
+  	    .state('reports', {
+  	      url: '/reports',
+  	      templateUrl: 'report/reports_classic.jsp',
+            controller: 'ReportsCtrl'
+  	    }) 
+  	    .state('documents', {
+  	      url: '/documents',
+  	      templateUrl: 'document/documents_classic.jsp',
+            controller: 'DocumentsCtrl'
+  	    })
+  	    .state('settings', {
+  	      url: '/settings',
+  	      templateUrl: 'settings/settings.jsp',
+            controller: 'SettingsCtrl'
+  	    })
+  	    .state('support', {
+  	      url: '/support',
+  	      templateUrl: 'help/support.jsp',
+            controller: 'SupportCtrl'
+  	    })
+  	    .state('help', {
+  	      url: '/help',
+  	      templateUrl: 'help/help.jsp',
+            controller: 'HelpCtrl'
+  	    }) 
 	    .state('record', {
 	    	url: '/record/:demographicNo', 
             templateUrl: 'record/record.jsp',
@@ -131,23 +156,6 @@ $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState,
 oscarApp.config(['$routeProvider',
                     function($routeProvider) {
 
-	                    when('/schedule', {
-		                    templateUrl: 'partials/schedule.jsp',
-		                    controller: 'ScheduleCtrl'
-	                    }).
-	                    when('/consults', {
-		                    templateUrl: 'partials/consultList.jsp',
-		                    controller: 'ConsultListCtrl'
-	                    }).
-	                    
-	                    when('/patient/:demographicNo', {
-		                    templateUrl: 'partials/patient/index.jsp',
-		                    controller: 'PatientCtrl'
-	                    }).
-	                    when('/report', {
-		                    templateUrl: 'partials/report.html',
-		                    controller: 'ReportCtrl'
-	                    }).
 	                    when('/settings', {
 		                    templateUrl: 'partials/settings-classic.jsp',
 		                    controller: 'SettingsCtrl'
@@ -161,14 +169,6 @@ oscarApp.config(['$routeProvider',
 		                    controller: 'HelpCtrl'
 	                    }).
 	                    
-	                    when('/search', {
-		                    templateUrl: 'partials/patientSearch.jsp',
-		                    controller: 'PatientSearchCtrl'
-	                    }).
-	                    when('/searchResults', {
-		                    templateUrl: 'partials/patientSearchResults.jsp',
-		                    controller: 'PatientSearchCtrl'
-	                    }).
 	                    when('/messenger', {
 		                    templateUrl: 'partials/messenger.jsp',
 		                    controller: 'MessengerCtrl'
@@ -181,9 +181,7 @@ oscarApp.config(['$routeProvider',
 		                    templateUrl: 'partials/eform2.jsp',
 		                    controller: 'EformFull2Ctrl'
 	                    }).
-	                    otherwise({
-	                    	redirectTo: '/dashboard'
-	                    });
+	                   
                     }
 ]);
 */

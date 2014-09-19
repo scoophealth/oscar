@@ -23,6 +23,9 @@
     Ontario, Canada
 
 --%>
-<h2 class="text-center">OSCAR Support</h2>
+<p class="info">
+	Document Panel is popped-out..ensure you do not have a popup blocker running.
+</p>
 
-<p class="bg-info"><a href="javascript:void()" onClick="window.open('http://oscarmanual.org/14','manual','width=600,height=600');return false;"><span class="glyphicon glyphicon-book"></span>OSCAR 14 Manual</a></p>
+<p><a ng-click="transition('dashboard')">Go to your dashboard</a></p>
+

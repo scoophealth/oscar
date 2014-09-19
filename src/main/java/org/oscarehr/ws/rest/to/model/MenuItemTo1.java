@@ -49,6 +49,13 @@ public class MenuItemTo1 implements Serializable {
     	this.url = url;
     }
     
+    public MenuItemTo1 initWithState(Integer id, String label, String state){
+    	this.id = id;
+    	this.label = label;
+    	this.state = state;
+    	return this;
+    }
+    
 	public Integer getId() {
 		return id;
 	}

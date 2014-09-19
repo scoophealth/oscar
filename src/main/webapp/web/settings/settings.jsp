@@ -23,6 +23,17 @@
     Ontario, Canada
 
 --%>
-<h2 class="text-center">OSCAR Support</h2>
+<h1>Personalize OSCAR</h1>
 
-<p class="bg-info"><a href="javascript:void()" onClick="window.open('http://oscarmanual.org/14','manual','width=600,height=600');return false;"><span class="glyphicon glyphicon-book"></span>OSCAR 14 Manual</a></p>
+
+<p class="bg-info">
+<h4><span class="glyphicon glyphicon-warning sign"></span>This module is currently under development.</h4>
+</p>
+
+<p class="bg-danger">
+<button type="button" class="btn btn-default btn-lg" onClick="window.open('../provider/providerpreference.jsp?provider_no=999998','prefs','width=715,height=680,scrollbars=yes')">
+  <span class="glyphicon glyphicon-cog"></span> Open classic settings
+</button>
+</p>
+
+

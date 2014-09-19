@@ -32,7 +32,12 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	$scope.demographicNo = $stateParams.demographicNo;
 	$scope.demographic= demo;
 	$scope.page = {};
+	$scope.hideNote = false;
 	
+	//this doesn't actually work, hideNote is note showing up in the $stateParams
+	if($stateParams.hideNote != null) {
+		$scope.hideNote = $stateParams.hideNote;
+	}
 	/*
 	$scope.recordtabs2 = [ 
 	 {id : 0,name : 'Master',url : 'partials/master.html'},
@@ -147,7 +152,6 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 		}
 	};
 
-	$scope.hideNote = false;
 		
 	$scope.saveNote = function(){
 		console.log("This is the note"+$scope.page.encounterNote);

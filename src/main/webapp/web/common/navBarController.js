@@ -23,7 +23,25 @@
     Ontario, Canada
 
 */
-oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $state) {
+oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $state,providerService) {
+	
+	/*
+	 //Going to need this at some point, and remove the scriptlet in index.jsp
+	providerService.getMe().then(function(result){
+		$scope.me = result;
+	    },function(reason){
+	   	 alert("unable to get my info..can't load page");
+	});
+	*/
+	
+	$scope.openClassicMessenger = function() {
+		window.open('../oscarMessenger/DisplayMessages.do','edocView','height=700,width=1024');
+	}
+	
+	$scope.isActive = function (state) { 
+        return $state.is(state);
+    };
+	
 	$http({
 	    url: '../ws/rs/persona/navbar',
 	    dataType: 'json',
@@ -95,44 +113,6 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 	$scope.transition = function ( state ) {
 		$state.go( state );
 	};
-	
-	$scope.isActive = function(temp){
-		if($scope.currenttab === undefined || $scope.currenttab === null) {
-			return false;
-		}
-		//return temp === $scope.currenttab.id;
-		return false;
-	}
-
-	$scope.isMoreActive = function(temp){
-		if($scope.currenttab === undefined || $scope.currenttab === null) {
-			return false;
-		}
-		if($scope.currentmoretab=== null) {
-			return false;
-		}
-		return temp === $scope.currentmoretab.id;
-	}
-
-	$scope.changeMoreTab = function(temp){
-		console.log('changeMoreTab');
-		var beforeChangeTab = $scope.currentmoretab;
-		$scope.currentmoretab = $scope.moreMenuItems[temp];
-		$scope.currenttab = null;
-	}
-
-	$scope.changeTab = function(temp){
-		console.log("changetab "+ temp);
-		$scope.currenttab = $scope.menuItems[temp];
-		$scope.currentmoretab=null;
-	}	 
-
-	$scope.getMoreTabClass = function(id){ 
-		if($scope.currentmoretab != null && id == $scope.currentmoretab.id) {
-			return "more-tab-highlight";
-		}
-		return "";
-	}
 	
 	$scope.goHome = function() {
 		$state.go('dashboard');

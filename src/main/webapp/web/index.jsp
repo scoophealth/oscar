@@ -121,7 +121,7 @@ pre.noteInEdit {
 				</button>
 				
 				<!-- link back to 'classic' view -->
-				<a  href="../provider/providercontrol.jsp"><img src="../images/Logo.png" height="40px" title="Go to OSCAR Classic UI" border="0" style="padding-top:10px"/></a>
+				<a  href="../provider/providercontrol.jsp"><img src="../images/Logo2.png" height="40px" title="Go to OSCAR Classic UI" border="0" style="padding-top:10px"/></a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<form class="navbar-form navbar-left form-search" role="search">
@@ -146,19 +146,40 @@ pre.noteInEdit {
 
 				</form>
 				
-				<ul class="nav navbar-nav">
-					<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.id)}">
-						<a href="{{item.url}}" ng-click="changeTab(item.id)" data-toggle="tab" >{{item.label}}
+				<ul class="nav navbar-nav visible-lg hidden-md hidden-sm hidden-xs">
+					<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state) }">
+						<a ng-click="transition(item.state)" data-toggle="tab" >{{item.label}}
 							<span ng-if="item.extra.length>0">({{item.extra}})</span>
 						</a>
 					</li>
 					
 					
 					<li class="dropdown"><a href="void()" class="dropdown-toggle"
-						data-toggle="dropdown">More<b class="caret"></b></a>
+						>More<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li ng-repeat="item in moreMenuItems">
-								<a href="{{item.url}}" ng-class="getMoreTabClass(item.id)" ng-click="changeMoreTab(item.id)">{{item.label}}
+								<a ng-class="{'more-tab-highlight': isActive(item.state) }" ng-click="transition(item.state)">{{item.label}}
+								<span ng-if="item.extra.length>0" class="badge">{{item.extra}}</span></a>
+							</li>
+						</ul>
+					</li>
+						
+						
+				</ul>
+				
+				<ul class="nav navbar-nav hidden-lg visible-md visible-sm visible-xs">
+					
+					<li class="dropdown"><a href="void()" class="dropdown-toggle"
+						>Modules<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+						<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state) }">
+						<a ng-click="transition(item.state)" data-toggle="tab" >{{item.label}}
+							<span ng-if="item.extra.length>0">({{item.extra}})</span>
+						</a>
+					</li>
+						<li class="divider"></li>
+							<li ng-repeat="item in moreMenuItems">
+								<a ng-class="{'active': isActive(item.state) }" ng-click="transition(item.state)">{{item.label}}
 								<span ng-if="item.extra.length>0" class="badge">{{item.extra}}</span></a>
 							</li>
 						</ul>
@@ -172,7 +193,7 @@ pre.noteInEdit {
 					<a href="javascript: function myFunction() {return false; }" onClick="popup(700,1024,'../scratch/index.jsp','scratch')" title="Scratchpad"><span class="glyphicon glyphicon-edit"></span></a>
 					&nbsp;&nbsp;
 					
-					<a href="#/messenger" title="OSCAR Mail">
+					<a ng-click="openClassicMessenger()" title="OSCAR Mail" class="hand-hover">
 						<span  class="glyphicon glyphicon-envelope"></span> 
 					</a>
 						
@@ -182,9 +203,9 @@ pre.noteInEdit {
 					
 					&nbsp; &nbsp;
 						
-					<!-- span class="glyphicon glyphicon-globe"></span -->
+					
 					<span class="dropdown">
-					<span class="dropdown-toggle hand-hover" data-toggle="dropdown"><u>{{currentProgram.name}}</u></span>
+					<span class="dropdown-toggle hand-hover"><span class="glyphicon glyphicon-globe"></span></span>
 					<ul class="dropdown-menu" role="menu">
                     	<li ng-repeat="item in programDomain">
                         	<a href="#" ng-click="changeProgram(item.program.id)">
@@ -197,10 +218,14 @@ pre.noteInEdit {
 				 	
 				 	</span>
 					&nbsp;
-				<!-- span class="glyphicon glyphicon-user"></span  -->	
-				<span class="dropdown-toggle hand-hover" data-toggle="dropdown"><u><%=userName %></u></span>
+					
+					
+					
+				<span class="dropdown-toggle hand-hover" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><u><%=loggedInInfo.getLoggedInProvider().getFirstName() %></u></span>
 					<ul class="dropdown-menu" role="menu">
-					<li ng-repeat="item in userMenuItems"><a href="{{item.url}}">{{item.label}}</a></li>
+					<li ng-repeat="item in userMenuItems">
+						<a ng-click="transition(item.state)" ng-class="{'more-tab-highlight': isActive(item.state) }" >{{item.label}}</a>
+					</li>
 				  </ul>
 				  
 				<!-- div class="btn-group pull-right" style="padding-left:10px"  -->
@@ -331,20 +356,19 @@ pre.noteInEdit {
 	<script src="inbox/inboxController.js"></script>
 	<script src="patientsearch/patientSearchController.js"></script>
 	
+	<script src="report/reportsController.js"></script>
+	<script src="document/documentsController.js"></script>
+	<script src="settings/settingsController.js"></script>
+	<script src="help/supportController.js"></script>
+	<script src="help/helpController.js"></script>
+	
 	<!-- 
 	
 	<script src="js/providerViewController.js"></script>
-	<script src="js/reportController.js"></script>
 	
 	<script src="js/patientDetailController.js"></script>
 
-	<script src="js/settingsController.js"></script>
-	<script src="js/supportController.js"></script>
-	<script src="js/helpController.js"></script>
-	<script src="js/patientSearchController.js"></script>
-	<script src="js/messengerController.js"></script  -->
-	
-	
+	<script src="js/messengerController.js"></script  -->	
 	
 	<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 
@@ -402,11 +426,7 @@ $(document).ready(function(){
 		       	engine: Hogan
 		}).on('typeahead:selected', function (obj, datum) {
 			$('input#demographicQuickSearch').on('blur',function(event){$("#demographicQuickSearch").val("");});
-			
-			
-			//$("#demographicQuickSearch").val("");
-			
-			
+
 			var scope = angular.element($("#demographicQuickSearch")).scope();
 						
 			if(datum.more != null && datum.more == true) {

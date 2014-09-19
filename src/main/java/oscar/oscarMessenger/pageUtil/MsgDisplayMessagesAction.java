@@ -53,7 +53,7 @@ public class MsgDisplayMessagesAction extends Action {
 		//Initialize forward location
 		String findForward = "success";
 
-		if (request.getParameter("providerNo") != null & request.getParameter("userName") != null) {
+		if (request.getParameter("providerNo") != null && request.getParameter("userName") != null) {
 
 			bean = new oscar.oscarMessenger.pageUtil.MsgSessionBean();
 			bean.setProviderNo(request.getParameter("providerNo"));
