@@ -220,7 +220,7 @@ function showHideERxPref() {
 	    providerPreference = new ProviderPreference();
 	}
 	
-	String startHour = request.getParameter("start_hour")!=null?request.getParameter("start_hour"):providerPreference.getStartHour().toString();
+	String startHour = request.getParameter("start_hour")!=null?request.getParameter("start_hour"):providerPreference.getStartHour().toString();	
 	String endHour = request.getParameter("end_hour")!=null?request.getParameter("end_hour"):providerPreference.getEndHour().toString();
 	String everyMin = request.getParameter("every_min")!=null?request.getParameter("every_min"):providerPreference.getEveryMin().toString();
 	String myGroupNo = request.getParameter("mygroup_no")!=null?request.getParameter("mygroup_no"):providerPreference.getMyGroupNo();
@@ -245,7 +245,7 @@ function showHideERxPref() {
 					<span class="preferenceUnits">(0-23)</span>
 				</td>
 				<td class="preferenceValue">
-					<INPUT TYPE="TEXT" NAME="start_hour" VALUE='<%=request.getParameter("start_hour")%>' size="2" maxlength="2">
+					<INPUT TYPE="TEXT" NAME="start_hour" VALUE='<%=startHour%>' size="2" maxlength="2">
 				</td>
 			</tr>
 			<tr>
@@ -254,7 +254,7 @@ function showHideERxPref() {
 					<span class="preferenceUnits">(0-23)</span>
 				</td>
 				<td class="preferenceValue">
-					<INPUT TYPE="TEXT" NAME="end_hour" VALUE='<%=request.getParameter("end_hour")%>' size="2" maxlength="2">
+					<INPUT TYPE="TEXT" NAME="end_hour" VALUE='<%=endHour%>' size="2" maxlength="2">
 				</td>
 			</tr>
 			<tr>
@@ -263,7 +263,7 @@ function showHideERxPref() {
 					<span class="preferenceUnits"><bean:message key="provider.preference.min" /></span>
 				</td>
 				<td class="preferenceValue">
-					<INPUT TYPE="TEXT" NAME="every_min" VALUE='<%=request.getParameter("every_min")%>' size="2" maxlength="2">
+					<INPUT TYPE="TEXT" NAME="every_min" VALUE='<%=everyMin%>' size="2" maxlength="2">
 				</td>
 			</tr>
 			<tr>
@@ -271,7 +271,7 @@ function showHideERxPref() {
 					<bean:message key="provider.preference.formGroupNo" />
 				</td>
 				<td class="preferenceValue">
-					<INPUT TYPE="TEXT" NAME="mygroup_no" VALUE='<%=request.getParameter("mygroup_no")%>' size="12" maxlength="10">
+					<INPUT TYPE="TEXT" NAME="mygroup_no" VALUE='<%=myGroupNo%>' size="12" maxlength="10">
 					<input type="button" value="<bean:message key="provider.providerpreference.viewedit" />" onClick="popupPage(360,680,'providerdisplaymygroup.jsp' );return false;" />
 				</td>
 			</tr>
@@ -286,7 +286,7 @@ function showHideERxPref() {
 							String myCheck1 = "";
 							String myCheck2 = "";
 							String myValue ="";
-							if("enabled".equals(request.getParameter("new_tickler_warning_window"))) {
+							if("enabled".equals(newTicklerWarningWindow)) {
 								myCheck1 = "checked";
 								myCheck2 = "unchecked";
 							}
@@ -326,7 +326,7 @@ function showHideERxPref() {
 					<td class="preferenceValue">
 						<select id="ticklerforprovider" name="ticklerforproviderno">
 						<%
-								String ticklerforproviderNo = request.getParameter("tklerproviderno");
+								String ticklerforproviderNo = ticklerProviderNo;
 								if (ticklerforproviderNo == null) {
 									ticklerforproviderNo = loggedInInfo.getLoggedInProviderNo();
 								}
@@ -358,7 +358,7 @@ function showHideERxPref() {
 						<%
 							String myCheck3 = "";
 							String myCheck4 = "";
-							if("enabled".equals(request.getParameter("default_pmm"))) {
+							if("enabled".equals(defaultPMM)) {
 								myCheck3 = "checked";
 								myCheck4 = "unchecked";
 							}
@@ -381,7 +381,7 @@ function showHideERxPref() {
 
 		             <%  String myCheck5 = "";
 		                 String myCheck6 = "";
-		                 String value1 = request.getParameter("caisiBillingPreferenceNotDelete");
+		                 String value1 = caisiBillingNotDelete;
 		                  if(value1!=null && value1.equals("1"))
 		                  { 	myCheck5 = "checked";
 		                        myCheck6 = "unchecked";}

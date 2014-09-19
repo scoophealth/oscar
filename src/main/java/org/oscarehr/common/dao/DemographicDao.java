@@ -2146,7 +2146,11 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		  }
 		  
 		  String orderBy = "d.last_name,d.first_name";
-		  String orderDir = searchRequest.getSortDir().toString();
+		  
+		  String orderDir = "asc";
+		  if(searchRequest.getSortDir() != null) {
+			  orderDir = searchRequest.getSortDir().toString();
+		  }
 		  if(SORTMODE.Address.equals(searchRequest.getSortMode())) {
 			  orderBy = "d.address " + orderDir;
 		  } else if(SORTMODE.ChartNo.equals(searchRequest.getSortMode())) {
