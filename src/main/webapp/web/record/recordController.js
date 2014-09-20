@@ -95,7 +95,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 		//console.log('ddd '+$state.current.name.length+"  eee "+tab.path.length);
 		//if($state.current.name.length < tab.path.length) return "";
 	
-		if($state.current.name.substring(0,tab.state.length) == tab.state){
+		if(tab.state != null && ($state.current.name.substring(0,tab.state.length) == tab.state)){
 			return "active";
 		}
 		
