@@ -109,4 +109,25 @@ public class OscarLogDao extends AbstractDao<OscarLog> {
 
 		return(results);
 	}
+
+	/**
+	 * 
+	 * @param providerNo
+	 * @param startPosition
+	 * @param itemsToReturn
+	 * @return List of Object array [demographicId (Integer), lastDateViewed Date]
+	 */
+	public List<Object[]> getRecentDemographicsViewedByProvider(String providerNo, int startPosition, int itemsToReturn) {
+		String sqlCommand="select l.demographicId,MAX(l.created) as dt from "+modelClass.getSimpleName()+" l where l.providerNo = ?1 and l.demographicId is not null and l.demographicId != '-1' group by l.demographicId order by MAX(l.created) desc";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, providerNo);
+		query.setFirstResult(startPosition);
+		setLimit(query,itemsToReturn);
+
+		@SuppressWarnings("unchecked")
+		List<Object[]> results=query.getResultList();
+		
+		return(results);
+	}
 }
