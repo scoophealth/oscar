@@ -4,51 +4,56 @@ oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, 
 	$scope.search = {type:'Name',term:"",active:true,integrator:false,outofdomain:true};
 	
 	$scope.lastResponse = '';
-	
-    securityService.getRightsAsPromise().then(function(result){
-    	$scope.rights = result;
-    	$scope.demographicReadAccess = $scope.hasRight('_demographic','r');
-    	$scope.hasNoDemographicReadAccess = !$scope.hasRight('_demographic','r');
-    	$scope.demographicWriteAccess = $scope.hasRight('_demographic','w');
+
+   securityService.hasRights({items:[{objectName:'_demographic',privilege:'w'},{objectName:'_demographic',privilege:'r'}]}).then(function(result){
+    	if(result.content != null && result.content.length == 2) {
+    		 $scope.demographicWriteAccess = result.content[0];
+        	 $scope.demographicReadAccess = result.content[1];
+        	 
+        	 if($scope.demographicReadAccess) {
+	        	 $scope.tableParams = new ngTableParams({
+	        	        page: 1,            // show first page
+	        	        count: 10,
+	        	        sorting: {
+	        	            Name: 'asc'     // initial sorting
+	        	        }
+	        	    }, {
+	        	        total: $scope.data.length,           // length of data
+	        	        getData: function($defer, params) {
+	        	        	$scope.integratorResults = null;
+	        	        	var count = params.url().count;
+	        	        	var page = params.url().page;
+	        	        	
+	        	        	$scope.search.params = params.url();
+	        	    
+	        	        	demographicService.search($scope.search,((page-1)*count),count).then(function(result){
+	        	        		 params.total(result.total);
+	        	                 $defer.resolve(result.content);
+	        	                 $scope.lastResponse = result.content;
+	        	        	},function(reason){
+	        	        	 alert("demo-service:"+reason);
+	        	        	});
+	        	        	
+	        	        	if($scope.search.integrator == true) {
+	        		        	//Note - I put in this arbitrary maximum
+	        		        	demographicService.searchIntegrator($scope.search,100).then(function(result){
+	        		       		 	$scope.integratorResults = result;
+	        			       	},function(reason){
+	        			       	 alert("remote-demo-service:"+reason);
+	        			       	});
+	        	        	}
+	        	        }
+	        	    });
+        	 }
+    	} else {
+    		alert('failed to load rights');
+    	}
     },function(reason){
-   	 alert(reason);
-    });
-    
+    	alert(reason);
+    });	
+	
    
-    
-	$scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        count: 10,
-        sorting: {
-            Name: 'asc'     // initial sorting
-        }
-    }, {
-        total: $scope.data.length,           // length of data
-        getData: function($defer, params) {
-        	$scope.integratorResults = null;
-        	var count = params.url().count;
-        	var page = params.url().page;
-        	
-        	$scope.search.params = params.url();
-    
-        	demographicService.search($scope.search,((page-1)*count),count).then(function(result){
-        		 params.total(result.total);
-                 $defer.resolve(result.content);
-                 $scope.lastResponse = result.content;
-        	},function(reason){
-        	 alert("demo-service:"+reason);
-        	});
-        	
-        	if($scope.search.integrator == true) {
-	        	//Note - I put in this arbitrary maximum
-	        	demographicService.searchIntegrator($scope.search,100).then(function(result){
-	       		 	$scope.integratorResults = result;
-		       	},function(reason){
-		       	 alert("remote-demo-service:"+reason);
-		       	});
-        	}
-        }
-    });
+	
     
     $scope.doSearch = function() {
     	$scope.tableParams.reload();
@@ -67,29 +72,6 @@ oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, 
     $scope.loadRecord = function(demographicNo) {
 		 $state.go('record.details', {demographicNo:demographicNo, hideNote:true});
     }
-    
-    $scope.hasRight = function(name,privilege) {
-    	for(var x=0;x<$scope.rights.privileges.length;x++) {
-    		var item = $scope.rights.privileges[x];
-    		if(item.objectName == name) { 
-    			
-    			if(privilege == 'r' && (item.privilege == 'r' || item.privilege == 'w' || item.privilege == 'x')) {
-    				return true;
-    			}
-    			if(privilege == 'w' && (item.privilege == 'w' || item.privilege == 'x')) {
-    				return true;
-    			}
-    			if(privilege == 'u' && (item.privilege == 'u' || item.privilege == 'x')) {
-    				return true;
-    			}
-    			if(privilege == 'd' && (item.privilege == 'd' || item.privilege == 'x')) {
-    				return true;
-    			}
-    		}
-    	}
-    	return false;
-    }
-
     
     $scope.showIntegratorResults = function () {
     	var result = ($scope.integratorResults != null && $scope.integratorResults.total > 0 ) ? $scope.integratorResults.content : [];
