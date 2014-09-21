@@ -26,10 +26,15 @@ package org.oscarehr.ws.rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.model.Provider;
@@ -39,6 +44,7 @@ import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.ws.rest.conversion.ProgramProviderConverter;
 import org.oscarehr.ws.rest.conversion.SecobjprivilegeConverter;
 import org.oscarehr.ws.rest.conversion.SecuserroleConverter;
+import org.oscarehr.ws.rest.to.AbstractSearchResponse;
 import org.oscarehr.ws.rest.to.NavbarResponse;
 import org.oscarehr.ws.rest.to.PersonaRightsResponse;
 import org.oscarehr.ws.rest.to.PrimitiveResponseWrapper;
@@ -82,6 +88,29 @@ public class PersonaService extends AbstractServiceImpl {
 	public PrimitiveResponseWrapper<Boolean> hasRight(@QueryParam("objectName") String objectName, @QueryParam("privilege") String privilege, @QueryParam("demographicNo") String demographicNo) {
 		PrimitiveResponseWrapper<Boolean> response = new PrimitiveResponseWrapper<Boolean>();
 		response.setValue(securityInfoManager.hasPrivilege(getLoggedInInfo(), objectName, privilege, demographicNo));
+		
+		return response;
+	}
+	
+	@POST
+	@Path("/hasRights")
+	@Consumes("application/json")
+	@Produces("application/json")
+	public AbstractSearchResponse<Boolean> hasRights(JSONObject json) {
+		AbstractSearchResponse<Boolean> response = new AbstractSearchResponse<Boolean>();
+		
+		JSONArray ja = json.getJSONArray("items");
+		for(int x=0;x<ja.size();x++) {
+			JSONObject o = (JSONObject)ja.get(x);
+			String objectName = o.getString("objectName");
+			String privilege = o.getString("privilege");
+			Integer demographicNo = null;
+			if(o.has("demographicNo")) {
+				demographicNo = o.getInt("demographicNo");
+			}
+			response.getContent().add(securityInfoManager.hasPrivilege(getLoggedInInfo(), objectName, privilege, (demographicNo!=null)?demographicNo.toString():null));
+		}
+		response.setTotal(response.getContent().size());
 		
 		return response;
 	}

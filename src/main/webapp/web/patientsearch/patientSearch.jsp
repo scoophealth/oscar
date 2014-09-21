@@ -129,6 +129,6 @@ input.checkStyle{
 </div>
 
 
-<div ng-show="hasNoDemographicReadAccess" >
+<div ng-show="demographicReadAccess != null && !demographicReadAccess" >
  	<h3 class="text-danger"><span class="glyphicon glyphicon-warning-sign"></span>You don't have access to search for patients</h3>
 </div>
