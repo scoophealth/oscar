@@ -29,7 +29,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.integration.mchcv.HCValidationFactory;
 import org.oscarehr.integration.mchcv.HCValidationResult;
@@ -49,7 +51,13 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
 public class PatientDetailStatusService extends AbstractServiceImpl {
 	@Autowired
 	private DemographicManager demographicManager;
-	OscarProperties oscarProperties = OscarProperties.getInstance();
+	
+	@Autowired
+	private SecUserRoleDao secUserRoleDao;
+	
+	private OscarProperties oscarProperties = OscarProperties.getInstance();
+	private Logger logger = MiscUtils.getLogger();
+	
 	
 	@GET
 	@Path("/getStatus")
@@ -66,7 +74,7 @@ public class PatientDetailStatusService extends AbstractServiceImpl {
 			try{
 				secondsTillConsideredStale = Integer.parseInt(oscarProperties.getProperty("seconds_till_considered_stale"));
 			}catch(Exception e){
-				MiscUtils.getLogger().error("OSCAR Property: seconds_till_considered_stale did not parse to an int",e);
+				logger.error("OSCAR Property: seconds_till_considered_stale did not parse to an int",e);
 				secondsTillConsideredStale = -1;
 			}
 			
@@ -74,7 +82,7 @@ public class PatientDetailStatusService extends AbstractServiceImpl {
 			try{
 				allSynced  = CaisiIntegratorManager.haveAllRemoteFacilitiesSyncedIn(getLoggedInInfo(), getLoggedInInfo().getCurrentFacility(), secondsTillConsideredStale); 
 			}catch(Exception remoteFacilityException){
-				MiscUtils.getLogger().error("Error checking Remote Facilities Sync status",remoteFacilityException);
+				logger.error("Error checking Remote Facilities Sync status",remoteFacilityException);
 				CaisiIntegratorManager.checkForConnectionError(getLoggedInInfo().getSession(),remoteFacilityException);
 			}
 			
@@ -91,7 +99,7 @@ public class PatientDetailStatusService extends AbstractServiceImpl {
 		}
 		
 		if (ProviderMyOscarIdData.idIsSet(getLoggedInInfo().getLoggedInProviderNo())) {
-		    if( demographicNo!=null ) {
+		    if( demographicNo>0 ) {
 		    	Demographic demo = new DemographicData().getDemographic(demographicNo.toString()); 
 		    	String myOscarUserName = demo.getMyOscarUserName();
 		    	if(myOscarUserName!=null && !myOscarUserName.equals("")) {
@@ -124,7 +132,7 @@ public class PatientDetailStatusService extends AbstractServiceImpl {
 			result = validator.validate(healthCardNumber,versionCode);
 		}
 		catch (Exception ex) {
-			MiscUtils.getLogger().error("Error doing HCValidation", ex);
+			logger.error("Error doing HCValidation", ex);
 		}
 		return result;
 	}

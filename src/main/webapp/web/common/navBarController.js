@@ -181,15 +181,13 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 		    }, function () {
 		      console.log('Modal dismissed at: ' + new Date());
 		    });
-		 
-
 		
 		console.log($('#myModal'));
 	}
 });
 
 
-function NewPatientCtrl($scope,$http,$modal,demographicService,$modalInstance){
+function NewPatientCtrl($scope,$http,$modal,$modalInstance,demographicService,patientDetailStatusService){
 	//
 	console.log("newpatient called");
 	$scope.demographic = {};
@@ -229,6 +227,11 @@ function NewPatientCtrl($scope,$http,$modal,demographicService,$modalInstance){
 		
 	}
   	
+	//get access right for creating new patient
+	securityService.hasRight("_demographic", "w", demo.demographicNo).then(function(data){
+		$scope.hasRight = data.value;
+	});
+  	
   	$scope.ok = function () {
   	    $modalInstance.close($scope.selected.item);
   	  };
@@ -236,5 +239,4 @@ function NewPatientCtrl($scope,$http,$modal,demographicService,$modalInstance){
   	 $scope.cancel = function () {
   	    $modalInstance.dismiss('cancel');
   	 };
-  
 }

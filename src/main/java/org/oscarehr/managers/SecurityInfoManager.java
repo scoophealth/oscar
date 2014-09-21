@@ -25,11 +25,15 @@ package org.oscarehr.managers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
-import org.oscarehr.common.dao.SecRoleDao;
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import oscar.util.OscarRoleObjectPrivilege;
 
 import com.quatro.dao.security.SecobjprivilegeDao;
 import com.quatro.dao.security.SecuserroleDao;
@@ -38,9 +42,6 @@ import com.quatro.model.security.Secuserrole;
 
 @Service
 public class SecurityInfoManager {
-
-	@Autowired 
-	private SecRoleDao roleDao;
 	
 	@Autowired
 	private SecuserroleDao secUserRoleDao;
@@ -82,48 +83,64 @@ public class SecurityInfoManager {
 	 * 
 	 * Loop through all the rights, if we find one that can evaluate to true , we exit..else we keep checking
 	 * 
-	 * if r then an entry with r | w | x  is required
+	 * if r then an entry with r | u |w | x  is required
+	 * if u then an entry with u | w | x is required
 	 * if w then an entry with w | x is required
-	 * if u then an entry with u | x is required
 	 * if d then an entry with d | x is required
+	 * 
+	 * Privileges priority is taken care of by OscarRoleObjectPrivilege.checkPrivilege()
+	 *
+	 * If patient-specific privileges are present, it takes priority over the general privileges.
+	 * For checking non-patient-specific object privileges, call with demographicNo==null.
 	 * 
 	 * @param loggedInInfo
 	 * @param objectName
 	 * @param privilege
-	 * @return
+	 * @param demographicNo
+	 * @return boolean
 	 */
-	public boolean hasPrivilege(LoggedInInfo loggedInInfo, String objectName, String privilege) {
-		
-		List<String> roleNames = new ArrayList<String>();
-		for(Secuserrole role:getRoles(loggedInInfo)) {
-			roleNames.add(role.getRoleName());
-		}
-		roleNames.add(loggedInInfo.getLoggedInProviderNo());
-		
-		
-		List<Secobjprivilege> results = secobjprivilegeDao.getByObjectNameAndRoles(objectName, roleNames);
-		
-		for(Secobjprivilege result:results) {
+	public boolean hasPrivilege(LoggedInInfo loggedInInfo, String objectName, String privilege, String demographicNo) {
+		try {
+			List<String> roleNameLs = new ArrayList<String>();
+			for(Secuserrole role:getRoles(loggedInInfo)) {
+				roleNameLs.add(role.getRoleName());
+			}
+			roleNameLs.add(loggedInInfo.getLoggedInProviderNo());
+			String roleNames = StringUtils.join(roleNameLs, ",");
 			
-			if("r".equals(privilege) && 
-					("r".equals(result.getPrivilege_code()) || "w".equals(result.getPrivilege_code()) || "x".equals(result.getPrivilege_code())) ) {
+			boolean noMatchingRoleToSpecificPatient = true;
+			List v = null;
+			if (demographicNo!=null) {
+				v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName+"$"+demographicNo);
+				List<String> roleInObj = (List<String>)v.get(1);
+				
+				for (String objRole : roleInObj) {
+					if (roleNames.toLowerCase().contains(objRole.toLowerCase().trim())) {
+						noMatchingRoleToSpecificPatient = false;
+						break;
+					}
+				}
+			}
+			if (noMatchingRoleToSpecificPatient) v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);
+			
+			if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "x")) {
 				return true;
 			}
-			if("w".equals(privilege) && 
-					("w".equals(result.getPrivilege_code()) || "x".equals(result.getPrivilege_code()) ) ) {
-				return true;
+			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "w")) {
+				return ("ruw".contains(privilege));
 			}
-			if("u".equals(privilege) && 
-					("u".equals(result.getPrivilege_code()) || "x".equals(result.getPrivilege_code()) ) ) {
-				return true;
+			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "u")) {
+				return ("ru".contains(privilege));
 			}
-			if("d".equals(privilege) && 
-					("d".equals(result.getPrivilege_code()) || "x".equals(result.getPrivilege_code()) ) ) {
-				return true;
+			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "r")) {
+				return ("r".contains(privilege));
 			}
+			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "d")) {
+				return ("d".contains(privilege));
+			}
+		} catch (Exception ex) {
+			MiscUtils.getLogger().error("Error checking privileges", ex);
 		}
-		
 		return false;
 	}
-	
 }

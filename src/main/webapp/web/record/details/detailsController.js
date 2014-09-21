@@ -23,13 +23,20 @@
     Ontario, Canada
 
 */
-oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams,$state,demographicService,patientDetailStatusService,demo,user) {
+oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams,$state,demographicService,patientDetailStatusService,securityService,demo,user) {
 	console.log("details ctrl ", $stateParams, $state, demo);
 	
 	var page = {};
 	$scope.page = page;
 	$scope.page.demo = demo;
-	
+
+	//get access rights
+	securityService.hasRight("_demographic", "r", demo.demographicNo).then(function(data){
+		page.canRead = data.value;
+	});
+	securityService.hasRight("_demographic", "u", demo.demographicNo).then(function(data){
+		page.cannotChange = !data.value;
+	});
 	
 	//get patient detail status
 	patientDetailStatusService.getStatus(demo.demographicNo).then(function(data){
@@ -239,11 +246,11 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			tmp.specialtyType = demo.referralDoctors.specialtyType;
 			demo.referralDoctors = [tmp];
 		}
-	}
-	for (var i=0; i<demo.referralDoctors.length; i++) {
-		demo.referralDoctors[i].label = demo.referralDoctors[i].name;
-		if (demo.referralDoctors[i].specialtyType!=null && demo.referralDoctors[i].specialtyType!="") {
-			demo.referralDoctors[i].label += " ["+demo.referralDoctors[i].specialtyType+"]";
+		for (var i=0; i<demo.referralDoctors.length; i++) {
+			demo.referralDoctors[i].label = demo.referralDoctors[i].name;
+			if (demo.referralDoctors[i].specialtyType!=null && demo.referralDoctors[i].specialtyType!="") {
+				demo.referralDoctors[i].label += " ["+demo.referralDoctors[i].specialtyType+"]";
+			}
 		}
 	}
 	
@@ -285,6 +292,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		return $("#pd1").html()+$("#pd2").html();
 	}, function(){
 		page.dataChanged++;
+		if (page.cannotChange) page.dataChanged = 0; //do not monitor data change if user only has read-access
 	});
 	$scope.needToSave = function(){
 		if (page.dataChanged>0) return "btn-primary";
@@ -297,6 +305,15 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			if (!discard) event.preventDefault();
 		}
 	});
+	
+	//disable click and keypress if user only has read-access
+	$scope.checkAction = function(event){
+		if (page.cannotChange) {
+			event.preventDefault();
+			event.stopPropagation();
+			$scope.setSwipeReady();
+		}
+	}
 
 	//format lastname, firstname
 	$scope.formatLastName = function(){
