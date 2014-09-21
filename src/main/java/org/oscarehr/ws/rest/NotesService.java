@@ -843,10 +843,10 @@ public class NotesService extends AbstractServiceImpl {
 	//{"ticklerNote":{"editor":"oscardoc, doctor","note":"note 2","noteId":6,"observationDate":"2014-09-13T13:18:41-04:00","revision":2}}
 	public TicklerNoteResponse ticklerGetNote(@PathParam("ticklerNo") Integer ticklerNo ){
 
-		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "r")) {
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "r", null)) {
 			throw new RuntimeException("Access Denied");
 		}
-		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_eChart", "r")) {
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_eChart", "r", null)) {
 			throw new RuntimeException("Access Denied");
 		}
 		
@@ -877,10 +877,10 @@ public class NotesService extends AbstractServiceImpl {
 	@Consumes("application/json")
 	public GenericRESTResponse ticklerSaveNote(JSONObject json){
 		
-		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "w")) {
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "w", null)) {
 			throw new RuntimeException("Access Denied");
 		}
-		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_eChart", "w")) {
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_eChart", "w", null)) {
 			throw new RuntimeException("Access Denied");
 		}
 

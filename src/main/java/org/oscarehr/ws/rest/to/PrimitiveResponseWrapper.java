@@ -25,8 +25,6 @@ package org.oscarehr.ws.rest.to;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlAnyElement;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "response")
@@ -43,8 +41,6 @@ public class PrimitiveResponseWrapper<T> implements Serializable {
 		setValue(value);
 	}
 
-	@XmlElement
-	@XmlAnyElement(lax = true)
 	public T getValue() {
 		return value;
 	}

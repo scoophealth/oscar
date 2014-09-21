@@ -29,6 +29,7 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.model.Provider;
@@ -40,6 +41,7 @@ import org.oscarehr.ws.rest.conversion.SecobjprivilegeConverter;
 import org.oscarehr.ws.rest.conversion.SecuserroleConverter;
 import org.oscarehr.ws.rest.to.NavbarResponse;
 import org.oscarehr.ws.rest.to.PersonaRightsResponse;
+import org.oscarehr.ws.rest.to.PrimitiveResponseWrapper;
 import org.oscarehr.ws.rest.to.model.MenuTo1;
 import org.oscarehr.ws.rest.to.model.NavBarMenuTo1;
 import org.oscarehr.ws.rest.to.model.ProgramProviderTo1;
@@ -71,6 +73,16 @@ public class PersonaService extends AbstractServiceImpl {
 		SecobjprivilegeConverter converter2 = new SecobjprivilegeConverter();
 		response.setPrivileges(converter2.getAllAsTransferObjects(securityInfoManager.getSecurityObjects(getLoggedInInfo())));
 			
+		return response;
+	}
+	
+	@GET
+	@Path("/hasRight")
+	@Produces("application/json")
+	public PrimitiveResponseWrapper<Boolean> hasRight(@QueryParam("objectName") String objectName, @QueryParam("privilege") String privilege, @QueryParam("demographicNo") String demographicNo) {
+		PrimitiveResponseWrapper<Boolean> response = new PrimitiveResponseWrapper<Boolean>();
+		response.setValue(securityInfoManager.hasPrivilege(getLoggedInInfo(), objectName, privilege, demographicNo));
+		
 		return response;
 	}
 	

@@ -68,7 +68,7 @@ public class TicklerWebService extends AbstractServiceImpl {
 	@Produces("application/json")
 	public TicklerResponse getMyTicklers(@QueryParam("limit") int limit) {
 		
-		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "r")) {
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "r", null)) {
 			throw new RuntimeException("Access Denied");
 		}
 		
@@ -91,7 +91,7 @@ public class TicklerWebService extends AbstractServiceImpl {
 	@Produces("application/json")
 	public TicklerResponse getTicklerList() {
 		
-		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "r")) {
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "r", null)) {
 			throw new RuntimeException("Access Denied");
 		}
 	
@@ -183,7 +183,7 @@ public class TicklerWebService extends AbstractServiceImpl {
 	public GenericRESTResponse completeTicklers(JSONObject json){
 		GenericRESTResponse response = new GenericRESTResponse();
 		
-		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "u")) {
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "u", null)) {
 			throw new RuntimeException("Access Denied");
 		}
 		
@@ -207,7 +207,7 @@ public class TicklerWebService extends AbstractServiceImpl {
 	public GenericRESTResponse deleteTicklers(JSONObject json){
 		GenericRESTResponse response = new GenericRESTResponse();
 		
-		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "u")) {
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "u", null)) {
 			throw new RuntimeException("Access Denied");
 		}
 		

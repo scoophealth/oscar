@@ -23,50 +23,55 @@
     Ontario, Canada
 
 --%>
-	<!-- div class="modal-content"  -->
-		<div class="modal-body">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title">Add New Record</h3>
+		</div>
+
+		<div class="modal-body" ng-hide="hasRight">
+			You have no right to create new patient!
+		</div>		
+		<div class="modal-body" ng-show="hasRight">
 		<button style="margin-top: -10px;" type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()"></button>
-		<h3>Add New Record</h3>
 			<form class="form-horizontal" role="form" name="newDemographic">
 			  <div class="form-group">
-			    <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+			    <label for="lastName" class="col-sm-2 control-label">Name</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="inputEmail3" placeholder="Last Name" name="lastName" ng-model="demographic.lastName" required>
+			      <input type="text" class="form-control" id="lastName" placeholder="Last Name" name="lastName" ng-model="demographic.lastName" required>
 			    </div>
 			  </div>
 			  <div class="form-group">
-			    <label for="inputPassword3" class="col-sm-2 control-label"></label>
+			    <label class="col-sm-2 control-label"></label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="inputPassword3" placeholder="First Name" ng-model="demographic.firstName" required>
+			      <input type="text" class="form-control" placeholder="First Name" ng-model="demographic.firstName" required>
 			    </div>
 			  </div>
 			  <div class="form-group">
-			    <label for="inputPassword3" class="col-sm-2 control-label">Birth</label>
+			    <label for="birthYear" class="col-sm-2 control-label">Birth</label>
 			    <div class="col-sm-2">
-			      <input type="text" class="form-control" id="inputPassword3" placeholder="Year" ng-model="demographic.dobYear" required>
+			      <input type="text" class="form-control" id="birthYear" placeholder="Year" ng-model="demographic.dobYear" required>
 			    </div>
 			    <div class="col-sm-2">
-			      <input type="text" class="form-control" id="inputPassword3" placeholder="Month" ng-model="demographic.dobMonth" required>
+			      <input type="text" class="form-control" placeholder="Month" ng-model="demographic.dobMonth" required>
 			    </div>
 			    <div class="col-sm-2">
-			      <input type="text" class="form-control" id="inputPassword3" placeholder="Day" ng-model="demographic.dobDay" required>
+			      <input type="text" class="form-control" placeholder="Day" ng-model="demographic.dobDay" required>
 			    </div>
 			
 			  </div> 
 			  <div class="form-group">
-			    <label for="inputPassword3" class="col-sm-2 control-label">Sex</label>
+			    <label class="col-sm-2 control-label">Sex</label>
 			    <div class="col-sm-5">
-			      <select class="form-control" ng-model="demographic.sex" required>
-			  		<option value="M">Male</option>
-			  		<option value="F">Female</option>
-				  </select>
+			    	<input type="checkbox" ng-model="demographic.sex" ng-true-value="M"/> Male
+			    	<br/>
+			    	<input type="checkbox" ng-model="demographic.sex" ng-true-value="F"/> Female
 			    </div>
 			  </div> 
 			</form>
-
-
 		</div>
+		
 		<div class="modal-footer">
-			<button ng-click="saver(newDemographic)" type="button" class="btn btn-primary">Add New Record</button>
+			<button ng-show="hasRight" ng-click="saver(newDemographic)" type="button" class="btn btn-primary">Add New Record</button>
+			<button ng-hide="hasRight" ng-click="cancel()" type="button" class="btn">Close</button>
 		</div>
-	<!-- /div  -->
+	</div>

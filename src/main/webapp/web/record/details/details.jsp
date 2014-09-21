@@ -23,6 +23,26 @@
     Ontario, Canada
 
 --%>
+
+<style>
+	label {
+		width: 125px;
+	}
+	.form-control-details {
+		display: inline;
+		width: 200px;
+	}
+	#photo {
+		height: 150px;
+		width: auto;
+		cursor: pointer;
+	}
+</style>
+
+<div class="col-lg-12" ng-hide="page.canRead">
+	You have no right to access the data!
+</div>
+<div ng-show="page.canRead">
 <div class="col-lg-8">
 	<div class="alert alert-success" ng-show="page.saving">
 		Saving...
@@ -100,21 +120,7 @@
 	</button>
 	<input type="text" id="swipecard" title="Click for Card Swipe" ng-model="page.swipecard" ng-show="page.workflowEnhance" ng-focus="setSwipeReady()" ng-blur="setSwipeReady('off')" ng-keypress="healthCardHandler($event.keyCode)" style="width:0px; border:none"/>
 
-	<style>
-		label {
-			width: 125px;
-		}
-		.form-control-details {
-			display: inline;
-			width: 200px;
-		}
-		#photo {
-			height: 150px;
-			width: auto;
-			cursor: pointer;
-		}
-	</style>
-	<div id="pd1">
+	<div id="pd1" ng-click="checkAction($event)" ng-keypress="checkAction($event)">
 	<div class="form-group row">
 		<fieldset>
 			<legend>Demographic</legend>
@@ -1391,54 +1397,55 @@
 
 <div class="col-lg-4">
 	<div class="clearfix">
-	<img class="pull-left" id="photo" title="Click to upload photo" ng-click="launchPhoto()" src="<%=request.getContextPath() %>/imageRenderingServlet?source=local_client&clientId={{page.demo.demographicNo}}"/>
-	<div class="pull-left" style="margin-left:5px;">
-		<address>
-	  		<strong>{{page.demo.lastName}}, {{page.demo.firstName}}</strong><br/>
-	  		{{page.demo.address.address}}<br/>
-	  		{{page.demo.address.city}}, {{page.demo.address.province}} {{page.demo.address.postal}}<br/>
-	  		<abbr title="Phone">P:</abbr> {{page.preferredPhoneNumber}}
-		</address>
-		<a ng-click="macPHRDo('Verification')" ng-show="page.macPHRIdsSet">MyOSCAR{{page.macPHRVerificationLevel}}</a>
+	<img class="pull-left" id="photo" title="Click to upload photo" ng-click="launchPhoto()" ng-src="../imageRenderingServlet?source=local_client&clientId={{page.demo.demographicNo}}"/>
+		<div class="pull-left" style="margin-left:5px;">
+			<address>
+	  			<strong>{{page.demo.lastName}}, {{page.demo.firstName}}</strong><br/>
+		  		{{page.demo.address.address}}<br/>
+		  		{{page.demo.address.city}}, {{page.demo.address.province}} {{page.demo.address.postal}}<br/>
+	  			<abbr title="Phone">P:</abbr> {{page.preferredPhoneNumber}}
+			</address>
+			<a ng-click="macPHRDo('Verification')" ng-show="page.macPHRIdsSet">MyOSCAR{{page.macPHRVerificationLevel}}</a>
+		</div>
+	</div>
+	<br/>
+	<div>
+		<div id="pd2" ng-click="checkAction($event)" ng-keypress="checkAction($event)">
+		<fieldset>
+			<legend>Alerts</legend>
+			<textarea ng-model="page.demo.alert" class="form-control form-control-details" style="height:55px; width:100%; color:red;"></textarea>
+		</fieldset>
+		<br/>
+		<fieldset>
+			<legend>Notes</legend>
+			<textarea ng-model="page.notes" class="form-control form-control-details" style="height:55px; width:100%;"></textarea>
+		</fieldset>
+		</div>
+		<br/>
+		<fieldset>
+			<legend>
+				Contacts
+				<button type="button" class="btn" ng-click="manageContacts()">Manage</button>
+			</legend>
+			<div class="form-group" ng-repeat="dc in page.demo.demoContacts">
+				<div class="col-md-12" style="font-weight:bold">{{dc.role}}</div>
+				<div class="col-md-7" style="white-space:nowrap">{{dc.lastName}}, {{dc.firstName}}</div>
+				<div class="col-md-5">{{dc.phone}}</div>
+			</div>
+		</fieldset>
+		<br/>
+		<fieldset>
+			<legend>
+				Professional Contacts
+				<button type="button" class="btn" ng-click="manageContacts()">Manage</button>
+			</legend>
+			<div class="form-group" ng-repeat="dc in page.demo.demoContactPros">
+				<div class="col-md-12" style="font-weight:bold">{{dc.role}}</div>
+				<div class="col-md-7" style="white-space:nowrap">{{dc.lastName}}, {{dc.firstName}}</div>
+				<div class="col-md-5">{{dc.phone}}</div>
+			</div>
+		</fieldset>
 	</div>
 </div>
 <br/>
-<div>
-	<div id="pd2">
-	<fieldset>
-		<legend>Alerts</legend>
-		<textarea ng-model="page.demo.alert" class="form-control form-control-details" style="height:55px; width:100%; color:red;"></textarea>
-	</fieldset>
-	<br/>
-	<fieldset>
-		<legend>Notes</legend>
-		<textarea ng-model="page.notes" class="form-control form-control-details" style="height:55px; width:100%;"></textarea>
-	</fieldset>
-	</div>
-	<br/>
-	<fieldset>
-		<legend>
-			Contacts
-			<button type="button" class="btn" ng-click="manageContacts()">Manage</button>
-		</legend>
-		<div class="form-group" ng-repeat="dc in page.demo.demoContacts">
-			<div class="col-md-12" style="font-weight:bold">{{dc.role}}</div>
-			<div class="col-md-7" style="white-space:nowrap">{{dc.lastName}}, {{dc.firstName}}</div>
-			<div class="col-md-5">{{dc.phone}}</div>
-		</div>
-	</fieldset>
-	<br/>
-	<fieldset>
-		<legend>
-			Professional Contacts
-			<button type="button" class="btn" ng-click="manageContacts()">Manage</button>
-		</legend>
-		<div class="form-group" ng-repeat="dc in page.demo.demoContactPros">
-			<div class="col-md-12" style="font-weight:bold">{{dc.role}}</div>
-			<div class="col-md-7" style="white-space:nowrap">{{dc.lastName}}, {{dc.firstName}}</div>
-			<div class="col-md-5">{{dc.phone}}</div>
-		</div>
-	</fieldset>
-	</div>
 </div>
-<br/>

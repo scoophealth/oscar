@@ -42,20 +42,19 @@ angular.module("securityServices", [])
      
           return deferred.promise;
             
-        }
-		,
-		getRights: function () {
-			$http.get(this.apiPath+'persona/rights',this.configHeadersWithCache).success(function(data){
+        },
+        
+        hasRight: function (objectName, privilege, demographicNo) {
+            var deferred = $q.defer();
+            $http.get(this.apiPath+'persona/hasRight?objectName='+objectName+'&privilege='+privilege+'&demographicNo='+demographicNo,this.configHeadersWithCache).success(function(data){
             	console.log(data);
-            	alert('data='+data);
-            	return  data;
+            	deferred.resolve(data);
             }).error(function(){
-            	console.log("error fetching rights");
-            	alert('error');
-            	return {};
+            	console.log("error fetching rights")
+            	deferred.reject("An error occured while fetching items");
             });
-				
-            return {};
+     
+          return deferred.promise;
         }
     };
 });

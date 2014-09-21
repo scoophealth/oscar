@@ -397,7 +397,7 @@ public class DemographicService extends AbstractServiceImpl {
 	@Produces("application/json")
 	public AbstractSearchResponse<DemographicSearchResult> search(@QueryParam("query") String query) {		
 
-		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_demographic", "r")) {
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_demographic", "r", null)) {
 				throw new RuntimeException("Access Denied");
 		}
 		
@@ -447,7 +447,7 @@ public class DemographicService extends AbstractServiceImpl {
 	public AbstractSearchResponse<DemographicSearchResult> search(JSONObject json,@QueryParam("startIndex") Integer startIndex,@QueryParam("itemsToReturn") Integer itemsToReturn ) {
 		AbstractSearchResponse<DemographicSearchResult> response = new AbstractSearchResponse<DemographicSearchResult>();
 		
-		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_demographic", "r")) {
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_demographic", "r", null)) {
 			throw new RuntimeException("Access Denied");
 		}
 		
@@ -474,7 +474,7 @@ public class DemographicService extends AbstractServiceImpl {
 	public AbstractSearchResponse<DemographicSearchResult> searchIntegrator(JSONObject json, @QueryParam("itemsToReturn") Integer itemsToReturn ) {
 		AbstractSearchResponse<DemographicSearchResult> response = new AbstractSearchResponse<DemographicSearchResult>();
 		
-		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_demographic", "r")) {
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_demographic", "r", null)) {
 			throw new RuntimeException("Access Denied");
 		}
 		
