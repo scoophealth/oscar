@@ -26,8 +26,8 @@
 oscarApp.controller('PatientListCtrl', function ($scope,$http,$resource,$state,providerService) {
 	
 	$scope.tabItems = [
-      	             	{"id":0,"label":"Appts.","url":"../ws/rs/schedule/day/today"},
-      	             	{"id":1,"label":"CaseLoad","url":"json/patientList2.json"}
+      	             	{"id":0,"label":"Appts.","url":"../ws/rs/schedule/day/today","template":"patientlist/patientList1.jsp",httpType:'GET'},
+      	             	{"id":1,"label":"Recent","url":"../ws/rs/providerService/getRecentDemographicsViewed?startIndex=0&itemsToReturn=100","template":"patientlist/recent.jsp",httpType:'GET'}
     ];
       	
     $scope.moreTabItems = [
@@ -104,18 +104,20 @@ $scope.changeMoreTab = function(temp){
 }
 
 $scope.changeTab = function(temp){
+	console.log('change tab - ' + temp);
+	
 	$scope.currenttab = $scope.tabItems[temp];
 	//I want the patient list to change, and the template to get loaded $scope.patients
 	$http({
 	url: $scope.currenttab.url,	
 	dataType: 'json',		
-	method: 'GET',		
+	method: $scope.currenttab.httpType,		
 	headers: {		
 	"Content-Type": "application/json"		
 	}		
 	}).success(function(response){
 
-		$scope.template = response.template;
+		$scope.template = $scope.tabItems[temp].template;
 	  	
 		if (response.patients instanceof Array) {
 			$scope.patients = response.patients;
