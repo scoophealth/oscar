@@ -405,7 +405,7 @@ function validateLotNumbers() {
 								<th>Quantity</th>
 								<th>Dispensed By</th>
 								<th>Recorded By</th>
-								<th>Details</th>
+								<th>LOT/Expiry Dates (s)</th>
 								<th>Notes</th>
 							</tr>
 						</thead>
