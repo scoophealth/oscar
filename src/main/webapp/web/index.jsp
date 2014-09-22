@@ -331,6 +331,7 @@ pre.noteInEdit {
 
 	<!-- we'll combine/minify later -->
 	<script src="common/demographicServices.js"></script>
+	<script src="common/scheduleServices.js"></script>
 	<script src="common/securityServices.js"></script>
 	<script src="common/formServices.js"></script>
 	<script src="common/noteServices.js"></script>

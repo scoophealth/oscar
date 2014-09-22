@@ -1,4 +1,4 @@
-<%--
+/*
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
     This software is published under the GPL GNU General Public License.
@@ -22,16 +22,25 @@
     Hamilton
     Ontario, Canada
 
---%>
-<div ng-controller="PatientListAppointmentListCtrl">
-<a ng-repeat="patient in patients | offset:currentPage*pageSize | limitTo:pageSize | filter:query"
-	class="list-group-item default" ng-click="goToRecord(patient)"  ng-style="getAppointmentStyle(patient)">
-	<!-- 
-	<span ng-if="patient.status.length>0 && patient.status != 't'" class="badge">{{patient.status}}</span>
-	-->
-	<h4 class="list-group-item-heading">{{patient.name}}</h4>
-	<h4 class="list-group-item-heading pull-right">{{patient.startTime}}</h4>
-	<p class="list-group-item-text">Reason: {{patient.reason}}  </p>
-</a>
-
-</div>
+*/
+angular.module("scheduleServices", [])
+	.service("scheduleService", function ($http,$q,$log) {
+		return {
+		apiPath:'../ws/rs/',
+		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
+		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
+        getStatuses: function (demographicNo) {
+            var deferred = $q.defer();
+            $http.get(this.apiPath+'schedule/statuses',this.configHeadersWithCache).success(function(data){
+            	console.log(data);
+            	deferred.resolve(data);
+            }).error(function(){
+            	console.log("error fetching demographic")
+            	deferred.reject("An error occured while fetching items");
+            });
+     
+          return deferred.promise;
+            
+        }
+    };
+});
