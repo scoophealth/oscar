@@ -560,19 +560,25 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
   		params.put("remarks", request.getParameter("remarks"));
   		
   		pageContext.setAttribute("apptParamsName", params);
-%> 
-	<caisi:isModuleLoad moduleName="caisi" reverse="true">
+  		
+  		if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1 &&
+                OscarProperties.getInstance().getProperty("caisi.search.workflow","false").equals("true")) {
+
+%>
+                <html:link action="/PMmodule/GenericIntake/Edit.do?method=create&type=quick&fromAppt=1" name="apptParamsName">
+                <bean:message key="demographic.search.btnCreateNew" /></html:link>
+ <%
+        } else {
+%>
 	<bean:message key="demographic.search.noResultsWereFound" />
-    <div class="createNew">
+  <div class="createNew">
 		<a href="../demographic/demographicaddarecordhtm.jsp?fromAppt=1&originalPage=<%=request.getParameter("originalPage")%>&search_mode=<%=request.getParameter("search_mode")%>&keyword=<%=request.getParameter("keyword")%>&notes=<%=request.getParameter("notes")%>&appointment_date=<%=request.getParameter("appointment_date")%>&year=<%=request.getParameter("year")%>&month=<%=request.getParameter("month")%>&day=<%=request.getParameter("day")%>&start_time=<%=request.getParameter("start_time")%>&end_time=<%=request.getParameter("end_time")%>&duration=<%=request.getParameter("duration")%>&bFirstDisp=false&provider_no=<%=request.getParameter("provider_no")%>&notes=<%=request.getParameter("notes")%>&reason=<%=request.getParameter("reason")%>&location=<%=request.getParameter("location")%>&resources=<%=request.getParameter("resources")%>&type=<%=request.getParameter("type")%>&style=<%=request.getParameter("style")%>&billing=<%=request.getParameter("billing")%>&status=<%=request.getParameter("status")%>&createdatetime=<%=request.getParameter("createdatetime")%>&creator=<%=request.getParameter("creator")%>&remarks=<%=request.getParameter("remarks")%>">
 		<bean:message key="demographic.search.btnCreateNew" /></a>
     </div>    
-    </caisi:isModuleLoad> 
-    
- 	<caisi:isModuleLoad moduleName="caisi" reverse="false">
-  		<html:link action="/PMmodule/GenericIntake/Edit.do?method=create&type=quick&fromAppt=1" name="apptParamsName">
-   		<bean:message key="demographic.search.btnCreateNew" /></html:link>
-	</caisi:isModuleLoad> 
+<%
+        }
+%>	
+
 
 <%
 	}
