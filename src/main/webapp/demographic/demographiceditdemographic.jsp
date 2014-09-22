@@ -2589,10 +2589,12 @@ if ( PatStat.equals(Dead) ) {%>
 									  List<ProfessionalSpecialist> specialists = professionalSpecialistDao.findAll();
                                       for(ProfessionalSpecialist specialist : specialists) {
                                     	  prop = new Properties();
-                                          prop.setProperty("referral_no", specialist.getReferralNo());
-                                          prop.setProperty("last_name", specialist.getLastName());
-                                          prop.setProperty("first_name", specialist.getFirstName());
-                                          vecRef.add(prop);
+                                    	  if (specialist != null && specialist.getReferralNo() != null && ! specialist.getReferralNo().equals("")) {
+	                                          prop.setProperty("referral_no", specialist.getReferralNo());
+	                                          prop.setProperty("last_name", specialist.getLastName());
+	                                          prop.setProperty("first_name", specialist.getFirstName());
+	                                          vecRef.add(prop);
+                                    	  }
                                       }
 
                                   %> <select name="r_doctor" <%=getDisabled("r_doctor")%>
