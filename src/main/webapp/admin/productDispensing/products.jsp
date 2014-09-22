@@ -550,9 +550,7 @@
 <script type="text/javascript">
 
 $('#productExpiryDate').datepicker({
-        format: "yyyy/mm/dd",
-        startDate: "2012-01-01",
-        endDate: "2015-01-01",
+        format: "yyyy-mm-dd",
         todayBtn: "linked",
         autoclose: true,
         todayHighlight: true
