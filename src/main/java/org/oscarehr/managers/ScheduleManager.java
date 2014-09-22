@@ -34,6 +34,7 @@ import java.util.TreeMap;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.AppointmentArchiveDao;
+import org.oscarehr.common.dao.AppointmentStatusDao;
 import org.oscarehr.common.dao.AppointmentTypeDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ScheduleDateDao;
@@ -83,6 +84,10 @@ public class ScheduleManager {
 
 	@Autowired
 	private AppointmentTypeDao appointmentTypeDao;
+	
+	@Autowired
+	private AppointmentStatusDao appointmentStatusDao;
+	
 
 	/*Right now the date object passed is converted to a local time.  
 	*
@@ -254,6 +259,14 @@ public class ScheduleManager {
 		List<AppointmentArchive> results = appointmentArchiveDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
 
 		LogAction.addLogSynchronous(loggedInInfo,"ScheduleManager.getAppointmentArchiveUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
+
+		return (results);
+	}
+	
+	public List<AppointmentStatus> getAppointmentStatuses(LoggedInInfo loggedInInfo) {
+		List<AppointmentStatus> results = appointmentStatusDao.findAll(0, 100);
+
+		LogAction.addLogSynchronous(loggedInInfo,"ScheduleManager.getAppointmentStatuses", null);
 
 		return (results);
 	}
