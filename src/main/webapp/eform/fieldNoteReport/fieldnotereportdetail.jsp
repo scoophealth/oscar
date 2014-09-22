@@ -154,7 +154,7 @@
 	}
 %>
             <tr>
-                    <td>BS tutorial</td>
+                    <td>MHBS tutorial</td>
                     <td>:</td>
                     <td><%= FieldNoteManager.countItem(residentFieldNoteValues, "location", "BS tutorial") %></td>
             </tr>
