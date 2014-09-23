@@ -106,6 +106,10 @@ pre.noteInEdit {
 	outline: 0 none;
 }
 
+img.navbarlogo {
+	height: 40px;
+	padding-top:10px;
+}
 </style>
 
 </head>
@@ -113,7 +117,7 @@ pre.noteInEdit {
 <body>
 
 	<!-- Fixed navbar -->
-	<div class="navbar navbar-default navbar-fixed-top" ng-controller="NavBarCtrl" ng-cloak>
+	<div class="navbar navbar-default navbar-fixed-top" ng-controller="NavBarCtrl" ng-show="me != null" ng-cloak>
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -121,30 +125,36 @@ pre.noteInEdit {
 				</button>
 				
 				<!-- link back to 'classic' view -->
-				<a  href="../provider/providercontrol.jsp"><img src="../images/Logo2.png" height="40px" title="Go to OSCAR Classic UI" border="0" style="padding-top:10px"/></a>
+				<a  href="../provider/providercontrol.jsp"><img class="navbarlogo" src="../images/Logo2.png" title="Go to OSCAR Classic UI" border="0" /></a>
 			</div>
 			<div class="navbar-collapse collapse">
-				<form class="navbar-form navbar-left form-search" role="search">
-					<div class="form-group">
-						<input type="text" class="form-control search-query" placeholder="Search Patients" id="demographicQuickSearch" autocomplete="off" value="">
-					</div>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default" tabindex="-1" ng-click="transition('search')" onMouseOut="this.blur();"> 
-							<span class="glyphicon glyphicon-search"></span>
-						</button>
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a ng-click="newDemographic('sm')">New Patient</a></li>
-							<%-- <li ng-repeat="item in demographicSearchDropDownItems"><a href="{{item.url}}">{{item.label}}</a></li> --%>
-						</ul>
-						<button type="button" class="btn btn-default" ui-sref="dashboard" onMouseOut="this.blur();">
-							<span class="glyphicon glyphicon-home"></span>
-						</button>
-					</div>
-
-				</form>
+			
+				
+					
+					<form class="navbar-form navbar-left form-search" role="search">
+					
+						<div class="form-group"  ng-show="searchRights === true">
+							<input type="text" class="form-control search-query" placeholder="Search Patients" id="demographicQuickSearch" autocomplete="off" value="">
+						</div>
+						
+						<div class="btn-group">
+							<button type="button"  ng-show="searchRights === true" class="btn btn-default" tabindex="-1" ui-sref="search" onMouseOut="this.blur();"  ng-show="searchRights === true"> 
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" role="menu">
+								<li><a ng-click="newDemographic('sm')" ng-show="newDemographicRights === true">New Patient</a></li>
+								<%-- <li ng-repeat="item in demographicSearchDropDownItems"><a href="{{item.url}}">{{item.label}}</a></li> --%>
+							</ul>
+							<button type="button" class="btn btn-default" ui-sref="dashboard" onMouseOut="this.blur();">
+								<span class="glyphicon glyphicon-home"></span>
+							</button>
+						</div>
+					</form>
+				
+				
 				
 				<ul class="nav navbar-nav visible-lg hidden-md hidden-sm hidden-xs">
 					<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state) }">
@@ -154,8 +164,7 @@ pre.noteInEdit {
 					</li>
 					
 					
-					<li class="dropdown"><a href="void()" class="dropdown-toggle"
-						>More<b class="caret"></b></a>
+					<li class="dropdown"><a class="dropdown-toggle">More<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li ng-repeat="item in moreMenuItems">
 								<a ng-class="{'more-tab-highlight': isActive(item.state) }" ng-click="transition(item.state)">{{item.label}}
@@ -163,14 +172,11 @@ pre.noteInEdit {
 							</li>
 						</ul>
 					</li>
-						
-						
 				</ul>
 				
 				<ul class="nav navbar-nav hidden-lg visible-md visible-sm visible-xs">
 					
-					<li class="dropdown"><a href="void()" class="dropdown-toggle"
-						>Modules<b class="caret"></b></a>
+					<li class="dropdown"><a href="void()" class="dropdown-toggle">Modules<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 						<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state) }">
 						<a ng-click="transition(item.state)" data-toggle="tab" >{{item.label}}
@@ -183,24 +189,23 @@ pre.noteInEdit {
 								<span ng-if="item.extra.length>0" class="badge">{{item.extra}}</span></a>
 							</li>
 						</ul>
-					</li>
-						
-						
+					</li>		
 				</ul>
 				
 				
 				<div class="navbar-text pull-right" style="line-height:20px">
-					<a href="javascript: function myFunction() {return false; }" onClick="popup(700,1024,'../scratch/index.jsp','scratch')" title="Scratchpad"><span class="glyphicon glyphicon-edit"></span></a>
+					<a onClick="popup(700,1024,'../scratch/index.jsp','scratch')" title="Scratchpad">
+					 	<span class="glyphicon glyphicon-edit"></span></a>
 					&nbsp;&nbsp;
 					
-					<a ng-click="openClassicMessenger()" title="OSCAR Mail" class="hand-hover">
-						<span  class="glyphicon glyphicon-envelope"></span> 
-					</a>
-						
-					<span title="New OSCAR messages (demographic)">{{unreadMessagesCount}}</span> |
-					<span title="Total new OSCAR Messages">{{unreadMessagesCount}}</span> |
-					<span title="New messages from patients">-</span> 
-					
+					<span ng-show="messageRights === true">
+						<a ng-click="openClassicMessenger()" title="OSCAR Mail" class="hand-hover">
+							<span  class="glyphicon glyphicon-envelope"></span> 
+						</a>
+						<span title="New OSCAR messages (demographic)">{{unreadMessagesCount}}</span> |
+						<span title="Total new OSCAR Messages">{{unreadMessagesCount}}</span> |
+						<span title="New messages from patients">-</span> 
+					</span>
 					&nbsp; &nbsp;
 						
 					
@@ -215,25 +220,22 @@ pre.noteInEdit {
 					    	</a>
 					    </li>
 				 	</ul>
-				 	
 				 	</span>
 					&nbsp;
 					
 					
 					
-				<span class="dropdown-toggle hand-hover" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><u><%=loggedInInfo.getLoggedInProvider().getFirstName() %></u></span>
+				<span class="dropdown-toggle hand-hover" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><u>{{me.firstName}}</u></span>
 					<ul class="dropdown-menu" role="menu">
 					<li ng-repeat="item in userMenuItems">
 						<a ng-click="transition(item.state)" ng-class="{'more-tab-highlight': isActive(item.state) }" >{{item.label}}</a>
 					</li>
 				  </ul>
-				  
-				<!-- div class="btn-group pull-right" style="padding-left:10px"  -->
+				 
 					<a  href="../logout.jsp" title="Logout" style="padding-left:10px;">
 						<span class="glyphicon glyphicon-off"></span>
 					</a>
-				<!--  /div --> <!-- btn-group -->
-				
+
 						
 				</div>
 			</div>

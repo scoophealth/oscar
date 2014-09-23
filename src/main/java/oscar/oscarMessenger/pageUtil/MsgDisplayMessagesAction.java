@@ -36,6 +36,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.MessageListDao;
 import org.oscarehr.common.model.MessageList;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.ProviderManager2;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -61,6 +64,16 @@ public class MsgDisplayMessagesAction extends Action {
 			request.getSession().setAttribute("msgSessionBean", bean);
 
 		}//if
+		else if(request.getParameter("providerNo") != null && request.getParameter("userName") == null) {
+			ProviderManager2 providerManager = SpringUtils.getBean(ProviderManager2.class);
+			Provider p = providerManager.getProvider(LoggedInInfo.getLoggedInInfoFromSession(request), request.getParameter("providerNo"));
+			if(p != null) {
+				bean = new oscar.oscarMessenger.pageUtil.MsgSessionBean();
+				bean.setProviderNo(request.getParameter("providerNo"));
+				bean.setUserName(p.getFirstName() + " " + p.getLastName());
+				request.getSession().setAttribute("msgSessionBean", bean);
+			}
+		}
 		else {
 			bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean) request.getSession().getAttribute("msgSessionBean");
 		}//else
