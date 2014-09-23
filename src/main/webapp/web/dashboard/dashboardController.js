@@ -24,8 +24,6 @@
 
 */
 oscarApp.controller('DashboardCtrl', function ($scope,$http) {
-	console.log("Dashboard Ctrl");
-	
 	
 	//header
 	$scope.displayDate= new Date();

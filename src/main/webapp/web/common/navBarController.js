@@ -23,24 +23,31 @@
     Ontario, Canada
 
 */
-oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $state,providerService) {
+
+
+oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $state,providerService, securityService) {
 	
-	/*
-	 //Going to need this at some point, and remove the scriptlet in index.jsp
+	
 	providerService.getMe().then(function(result){
-		$scope.me = result;
-	    },function(reason){
-	   	 alert("unable to get my info..can't load page");
+			$scope.me = result;
+		    },function(reason){
+		   	 alert("unable to get my info..can't load page");
 	});
-	*/
+		
 	
-	$scope.openClassicMessenger = function() {
-		window.open('../oscarMessenger/DisplayMessages.do','edocView','height=700,width=1024');
-	}
+    securityService.hasRights({items:[{objectName:'_search',privilege:'r'},
+                                      {objectName:'_demographic',privilege:'w'},
+                                      {objectName:'_msg',privilege:'r'}]
+    }).then(function(result){
+    	console.log(result.toSource());
+    	if(result.content != null) {
+    		 $scope.searchRights = result.content[0];
+    		 $scope.newDemographicRights = result.content[1];
+    		 $scope.messageRights = result.content[2];
+    	}
+    });
+  
 	
-	$scope.isActive = function (state) { 
-        return $state.is(state);
-    };
 	
 	$http({
 	    url: '../ws/rs/persona/navbar',
@@ -122,6 +129,12 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 		$state.go('search');
 	}
 	
+	$scope.openClassicMessenger = function() {
+		if($scope.me != null) {
+			window.open('../oscarMessenger/DisplayMessages.do?providerNo='+$scope.me.providerNo,'msgs','height=700,width=1024');
+		}
+	}	
+	
 	$scope.changeProgram = function(temp){
 		
 		$http({
@@ -164,6 +177,11 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 		
 		console.log($('#myModal'));
 	}
+	
+	$scope.isActive = function (state) { 
+		return $state.is(state);
+	};
+		
 });
 
 
