@@ -24,7 +24,7 @@
 
 */
 
-oscarApp.controller('PatientListCtrl', function ($scope,$http,$resource,$state,providerService, Navigation) {
+oscarApp.controller('PatientListCtrl', function ($scope,$http,$resource,$state,providerService, Navigation, scheduleService) {
 	
 	$scope.sidebar = Navigation;
 	
@@ -37,17 +37,7 @@ oscarApp.controller('PatientListCtrl', function ($scope,$http,$resource,$state,p
       					{"id":0,"label":"Patient Sets","url":"../ws/rs/reporting/demographicSets/patientList",template:"patientlist/demographicSets.html",httpType:'POST'}
     ];
 	
-	 $scope.getAppointmentStyle = function(patient){ 
-		 if (patient.status === "H") {
-	        return "success";
-		 } else if (patient.status === "P") { 
-			return "danger";
-		 } else {
-			 
-	        return "default";
-		 }
-	 
-	 }
+  
 	 $scope.goToRecord = function(patient){
 		 var params = {demographicNo:patient.demographicNo};
 		 if(angular.isDefined(patient.appointmentNo)){
@@ -94,6 +84,7 @@ $scope.changeMoreTab = function(temp,filter){
 	        "Content-Type": "application/json"
 	    }
 	}).success(function(response){
+		$scope.currentPage = 0;
 		
 		$scope.template = $scope.moreTabItems[temp].template;
 		
@@ -139,7 +130,8 @@ $scope.changeTab = function(temp,filter){
 			"Content-Type": "application/json"		
 		}		
 	}).success(function(response){
-
+		$scope.currentPage = 0;
+		
 		$scope.template = $scope.tabItems[temp].template;
 	  	
 		if (response.patients instanceof Array) {
@@ -204,6 +196,29 @@ oscarApp.controller('PatientListDemographicSetCtrl', function($scope, Navigation
 	      }).error(function (data, status, headers, config) {
 	          alert('Failed to get sets lists.');
 	      });
+
+});
+
+oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigation,$http, scheduleService,$q) {	
+	 
+	scheduleService.getStatuses().then(function(data){
+		$scope.statuses = data.content;
+	},function(reason){
+		alert(reason);
+	});
+
+	//TODO:this gets called alot..should switch to a dictionary.
+	 $scope.getAppointmentStyle = function(patient){ 
+		 if($scope.statuses != null) {
+			for(var i=0;i<$scope.statuses.length;i++) {
+				 if($scope.statuses[i].status == patient.status) {
+	    			return {'background-color':$scope.statuses[i].color};
+	    		 }
+	    	 }
+		}
+		 
+		 return {};	 
+	 }
 
 });
 

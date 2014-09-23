@@ -35,12 +35,16 @@ import javax.ws.rs.Produces;
 
 import org.apache.tools.ant.util.DateUtils;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.AppointmentStatus;
 import org.oscarehr.managers.AppointmentManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.ScheduleManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.web.PatientListApptBean;
 import org.oscarehr.web.PatientListApptItemBean;
+import org.oscarehr.ws.rest.conversion.AppointmentStatusConverter;
+import org.oscarehr.ws.rest.to.AbstractSearchResponse;
+import org.oscarehr.ws.rest.to.model.AppointmentStatusTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -105,6 +109,21 @@ public class ScheduleService extends AbstractServiceImpl {
 		}catch(ParseException e) {
 			throw new RuntimeException("Invalid Date sent, use yyyy-MM-dd format");
 		}
+		return response;
+	}
+	
+	@GET
+	@Path("/statuses")
+	@Produces("application/json")
+	public AbstractSearchResponse<AppointmentStatusTo1> getAppointmentStatuses() {
+		AbstractSearchResponse<AppointmentStatusTo1> response = new AbstractSearchResponse<AppointmentStatusTo1>();
+		
+		List<AppointmentStatus> results =  scheduleManager.getAppointmentStatuses(getLoggedInInfo());
+		AppointmentStatusConverter converter = new AppointmentStatusConverter();
+		
+		response.setContent(converter.getAllAsTransferObjects(results));
+		response.setTotal(results.size());
+		
 		return response;
 	}
 	
