@@ -1,69 +1,70 @@
 oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngTableParams, securityService, $modal, $http) {
     var ticklerAPI = $resource('../ws/rs/tickler/ticklers');
-       
-    //active provider lists for drop downs
-    $scope.providers = new Array();
-  
+         
     $scope.lastResponse = "";
-
-    $scope.ticklerWriteAccess=false;
-
-
-    $http(
-			{
-        url: '../ws/rs/providerService/providers/search',
-        method: "POST",
-        data: JSON.stringify({"active":true}),
-        headers: {'Content-Type': 'application/json'}
-      }).success(function (data, status, headers, config) {
-    	  $scope.providers = data.content;
-        }).error(function (data, status, headers, config) {
-          alert('Failed to get provider lists.');
-        });
     
-
-  
-     securityService.getRightsAsPromise().then(function(result){
-    	 $scope.rights = result;
-    	 $scope.ticklerWriteAccess = $scope.hasRight('_tickler','w');
-    	 $scope.ticklerReadAccess = $scope.hasRight('_tickler','r');     	
-     },function(reason){
-    	 alert(reason);
-     });
-   
-    
-   
-    
-    //object which represents all the filters, initialize status.
-    $scope.search = {status:'A'};
-    
-    
-    $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        count: 10
-    }, {
-        total: 0,           // length of data
-        getData: function($defer, params) {
-            // ajax request to api
-        	$scope.search.count = params.url().count;
-        	$scope.search.page = params.url().page;
-        	$scope.search.includeLinks='true';
-        	$scope.search.includeComments='true';
-        	//$scope.search.includeUpdates='true';
-        	
-        	ticklerAPI.get($scope.search, function(data) {
-                $timeout(function() {
-                	
-                    // update table params
-                    params.total(data.total);
-                    // set new data
-                    $defer.resolve(data.tickler);
-                    
-                    $scope.lastResponse = data.tickler;
-                }, 500);
-            });
-        }
+    securityService.hasRights({items:[{objectName:'_tickler',privilege:'w'},{objectName:'_tickler',privilege:'r'}]}).then(function(result){
+    	if(result.content != null && result.content.length == 2) {
+    		 $scope.ticklerWriteAccess = result.content[0];
+        	 $scope.ticklerReadAccess = result.content[1];
+        	 
+        	 if($scope.ticklerReadAccess) {
+ 
+        		  //active provider lists for drop downs
+        		 $scope.providers = new Array();
+        		 
+        		 $http(
+        					{
+        		        url: '../ws/rs/providerService/providers/search',
+        		        method: "POST",
+        		        data: JSON.stringify({"active":true}),
+        		        headers: {'Content-Type': 'application/json'}
+        		      }).success(function (data, status, headers, config) {
+        		    	  $scope.providers = data.content;
+        		        }).error(function (data, status, headers, config) {
+        		          alert('Failed to get provider lists.');
+        		        });
+        		 
+        		//object which represents all the filters, initialize status.
+        		    $scope.search = {status:'A'};
+        		    
+        		    
+        		    $scope.tableParams = new ngTableParams({
+        		        page: 1,            // show first page
+        		        count: 10
+        		    }, {
+        		        total: 0,           // length of data
+        		        getData: function($defer, params) {
+        		            // ajax request to api
+        		        	$scope.search.count = params.url().count;
+        		        	$scope.search.page = params.url().page;
+        		        	$scope.search.includeLinks='true';
+        		        	$scope.search.includeComments='true';
+        		        	//$scope.search.includeUpdates='true';
+        		        	
+        		        	ticklerAPI.get($scope.search, function(data) {
+        		                $timeout(function() {
+        		                	
+        		                    // update table params
+        		                    params.total(data.total);
+        		                    // set new data
+        		                    $defer.resolve(data.tickler);
+        		                    
+        		                    $scope.lastResponse = data.tickler;
+        		                }, 500);
+        		            });
+        		        }
+        		    });
+        	 }
+    	} else {
+    		alert('failed to load rights');
+    	}
+    },function(reason){
+    	alert(reason);
     });
+  
+
+    
     
     $scope.doSearch = function() {
     	$scope.tableParams.reload();
@@ -131,29 +132,6 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
             	alert('Failed to set ticklers to deleted.');
             });
        
-    }
-    
- 
-    $scope.hasRight = function(name,privilege) {
-    	for(var x=0;x<$scope.rights.privileges.length;x++) {
-    		var item = $scope.rights.privileges[x];
-    		if(item.objectName == name) { 
-    			
-    			if(privilege == 'r' && (item.privilege == 'r' || item.privilege == 'w' || item.privilege == 'x')) {
-    				return true;
-    			}
-    			if(privilege == 'w' && (item.privilege == 'w' || item.privilege == 'x')) {
-    				return true;
-    			}
-    			if(privilege == 'u' && (item.privilege == 'u' || item.privilege == 'x')) {
-    				return true;
-    			}
-    			if(privilege == 'd' && (item.privilege == 'd' || item.privilege == 'x')) {
-    				return true;
-    			}
-    		}
-    	}
-    	return false;
     }
     
     $scope.addTickler = function() {

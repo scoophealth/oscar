@@ -30,19 +30,7 @@ angular.module("securityServices", [])
 		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
 		
-        getRightsAsPromise: function () {
-            var deferred = $q.defer();
-            $http.get(this.apiPath+'persona/rights',this.configHeadersWithCache).success(function(data){
-            	console.log(data);
-            	deferred.resolve(data);
-            }).error(function(){
-            	console.log("error fetching rights")
-            	deferred.reject("An error occured while fetching items");
-            });
-     
-          return deferred.promise;
-            
-        },
+        
         
         hasRight: function (objectName, privilege, demographicNo) {
             var deferred = $q.defer();
@@ -51,9 +39,26 @@ angular.module("securityServices", [])
             	deferred.resolve(data);
             }).error(function(){
             	console.log("error fetching rights")
-            	deferred.reject("An error occured while fetching items");
+            	deferred.reject("An error occured while fetching access right");
             });
      
+          return deferred.promise;
+        },
+        
+        hasRights: function (listOfItems) {
+        	var deferred = $q.defer();
+            
+            $http({
+                url: this.apiPath+'persona/hasRights',
+                method: "POST",
+                data: JSON.stringify(listOfItems),
+                headers: {'Content-Type': 'application/json'}
+             }).success(function (data, status, headers, config) {
+            	 deferred.resolve(data);
+             }).error(function (data, status, headers, config) {
+            	 deferred.reject("An error occured while fetching access rights");
+             });
+
           return deferred.promise;
         }
     };

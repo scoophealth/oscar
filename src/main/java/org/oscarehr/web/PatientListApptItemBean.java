@@ -24,6 +24,7 @@
 package org.oscarehr.web;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -35,6 +36,7 @@ public class PatientListApptItemBean implements Serializable {
 	private String status;
 	private String startTime;
 	private String reason;
+	private Date date;
 	
 	public Integer getDemographicNo() {
 		return demographicNo;
@@ -72,4 +74,11 @@ public class PatientListApptItemBean implements Serializable {
 	public void setAppointmentNo(Integer appointmentNo) {
 		this.appointmentNo = appointmentNo;
 	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
 }

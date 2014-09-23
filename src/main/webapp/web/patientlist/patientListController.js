@@ -23,16 +23,18 @@
     Ontario, Canada
 
 */
-oscarApp.controller('PatientListCtrl', function ($scope,$http,$resource,$state,providerService) {
+
+oscarApp.controller('PatientListCtrl', function ($scope,$http,$resource,$state,providerService, Navigation) {
+	
+	$scope.sidebar = Navigation;
 	
 	$scope.tabItems = [
-      	             	{"id":0,"label":"Appts.","url":"../ws/rs/schedule/day/today"},
-      	             	{"id":1,"label":"CaseLoad","url":"json/patientList2.json"}
+      	             	{"id":0,"label":"Appts.","url":"../ws/rs/schedule/day/today","template":"patientlist/patientList1.jsp",httpType:'GET'},
+      	             	{"id":1,"label":"Recent","url":"../ws/rs/providerService/getRecentDemographicsViewed?startIndex=0&itemsToReturn=100","template":"patientlist/recent.jsp",httpType:'GET'}
     ];
       	
     $scope.moreTabItems = [
-      					{"id":0,"label":"My Residents"},
-      					{"id":1,"label":"Customize"}
+      					{"id":0,"label":"Patient Sets","url":"../ws/rs/reporting/demographicSets/patientList",template:"patientlist/demographicSets.html",httpType:'POST'}
     ];
 	
 	 $scope.getAppointmentStyle = function(patient){ 
@@ -74,23 +76,31 @@ $scope.isMoreActive = function(temp){
 	return temp === $scope.currentmoretab.id;
 }
 
-$scope.changeMoreTab = function(temp){
+$scope.changeMoreTab = function(temp,filter){
 	var beforeChangeTab = $scope.currentmoretab;
 	$scope.currentmoretab = $scope.moreTabItems[temp];
-	//I want the patient list to change, and the template to get loaded $scope.patients
+	
+	var d = undefined;
+	if($scope.currentmoretab.httpType == 'POST') {
+		d = filter!=null?JSON.stringify(filter):{}
+	}
+	
 	$http({
 	    url: $scope.currentmoretab.url,
 	    dataType: 'json',
-	    method: 'GET',
+	    data: d,
+	    method: $scope.currentmoretab.httpType,
 	    headers: {
 	        "Content-Type": "application/json"
 	    }
 	}).success(function(response){
-		$scope.template = response.template;
+		
+		$scope.template = $scope.moreTabItems[temp].template;
 		
 		if (response.patients instanceof Array) {
 			$scope.patients = response.patients;
 		} else if(response.patients == undefined) { 
+			$scope.patients = [];
 		} else {
 			var arr = new Array();
 			arr[0] = response.patients;
@@ -98,44 +108,62 @@ $scope.changeMoreTab = function(temp){
 		}
 		
 		$scope.currenttab=null;
+	  	
+		
+		$scope.nPages = 1;
+		if($scope.patients != null && $scope.patients.length>0) {
+			$scope.nPages=Math.ceil($scope.patients.length/$scope.pageSize);
+		} 
+	
+		 Navigation.load($scope.template);
+		 
 	}).error(function(error){
-	    $scope.error = error;
+	   alert('error loading tab '+ error);
 	});	
 }
 
-$scope.changeTab = function(temp){
+$scope.changeTab = function(temp,filter){
+	console.log('change tab - ' + temp);
 	$scope.currenttab = $scope.tabItems[temp];
-	//I want the patient list to change, and the template to get loaded $scope.patients
+	
+	var d = undefined;
+	if($scope.currenttab.httpType == 'POST') {
+		d = filter!=null?JSON.stringify(filter):{}
+	}
 	$http({
-	url: $scope.currenttab.url,	
-	dataType: 'json',		
-	method: 'GET',		
-	headers: {		
-	"Content-Type": "application/json"		
-	}		
+		url: $scope.currenttab.url,	
+		data: d,
+		dataType: 'json',		
+		method: $scope.currenttab.httpType,		
+		headers: {		
+			"Content-Type": "application/json"		
+		}		
 	}).success(function(response){
 
-		$scope.template = response.template;
+		$scope.template = $scope.tabItems[temp].template;
 	  	
 		if (response.patients instanceof Array) {
 			$scope.patients = response.patients;
 		} else if(response.patients == undefined) { 
+			$scope.patients = [];
 		} else {
 			var arr = new Array();
 			arr[0] = response.patients;
 			$scope.patients = arr;
 		}
 		
-
 		$scope.currentmoretab=null;
 	  	
 		$scope.nPages = 1;
-		if($scope.patients != null) {
+		if($scope.patients != null && $scope.patients.length>0) {
 			$scope.nPages=Math.ceil($scope.patients.length/$scope.pageSize);
 		} 
+		
+		Navigation.load($scope.template);
+			
 	  	
 	}).error(function(error){
-	    $scope.error = error;
+	    alert('error loading tab '+error);
 	});	
 }	 
 
@@ -153,7 +181,7 @@ $scope.getMoreTabClass = function(id){
 	$scope.patients = null;
 	
 	$scope.numberOfPages=function(){
-		if ($scope.patients == null) {
+		if ($scope.patients == null || $scope.patients.length == 0) {
 			return 1;
 		}
 		
@@ -163,8 +191,19 @@ $scope.getMoreTabClass = function(id){
 	for (var i=0; i<$scope.pageSize; i++) {
 		$scope.data.push("Item "+i);
 	}
+});
 
 
-	
+oscarApp.controller('PatientListDemographicSetCtrl', function($scope, Navigation,$http) {	
+	   $http({
+	        url: '../ws/rs/reporting/demographicSets/list',
+	        method: "GET",
+	        headers: {'Content-Type': 'application/json'}
+	      }).success(function (data, status, headers, config) {
+	    	  $scope.sets = data.content;
+	      }).error(function (data, status, headers, config) {
+	          alert('Failed to get sets lists.');
+	      });
 
 });
+
