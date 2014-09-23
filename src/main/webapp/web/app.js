@@ -219,3 +219,17 @@ oscarApp.filter('offset', function() {
 	    return input.slice(start);
 	  };
 	});
+
+
+
+//this is for the patient list control. Tells us which template to load
+oscarApp.factory('Navigation', function($rootScope) {
+  return {
+    location: '',
+    
+    load: function(msg) {
+      this.location = msg;
+    }
+  }
+});
+

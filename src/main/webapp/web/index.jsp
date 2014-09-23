@@ -251,16 +251,16 @@ pre.noteInEdit {
 		
 			<ul class="nav nav-tabs nav-justified">			
 				<li ng-repeat="item in tabItems" ng-class="{'active': isActive(item.id)}">
-					<a href="javascript:void(0);" ng-click="changeTab(item.id)" data-toggle="tab">{{item.label}}</a>
+					<a  ng-click="changeTab(item.id)" data-toggle="tab">{{item.label}}</a>
 				</li>
-				<!-- 
-				<li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">More<b class="caret"></b></a>
+				
+				<li class="dropdown" ng-class="{'active': currentmoretab != null}"><a class="dropdown-toggle" ><b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li ng-repeat="item in moreTabItems">
-							<a href="javascript:void(0);" ng-class="getMoreTabClass(item.id)" ng-click="changeMoreTab(item.id)">{{item.label}}<span ng-if="item.extra.length>0" class="badge">{{item.extra}}</span></a></li>
+							<a ng-class="getMoreTabClass(item.id)" ng-click="changeMoreTab(item.id)">{{item.label}}<span ng-if="item.extra.length>0" class="badge">{{item.extra}}</span></a></li>
 						</ul>
 				</li>
-				-->
+				
 			</ul>
 			<div class="list-group"  ng-cloak>
 			<!-- 
@@ -294,7 +294,7 @@ pre.noteInEdit {
 						<input type="text"  class="form-control" placeholder="Filter" ng-model="query"/>
 					</span>
 				</form>
-		<div ng-include="template"></div>
+		<div ng-include="sidebar.location"></div>
 		<span class="pull-right">{{currentPage+1}}/{{numberOfPages()}}</span>
 		</div>
 		</div>
