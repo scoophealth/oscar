@@ -125,9 +125,21 @@ public class RptDemographicQueryBuilder {
 				continue;
 			}
 			if (i == (select.length - 1)) {
-				stringBuffer.append(" d." + select[i] + " ");
+				
+				if(select[i].equalsIgnoreCase("ver")){
+					stringBuffer.append(" CAST(d." + select[i] + " as CHAR) ");
+				}else{
+					stringBuffer.append(" d." + select[i] + " ");
+				}
+				
 			} else {
-				stringBuffer.append(" d." + select[i] + ", ");
+				
+				
+				if(select[i].equalsIgnoreCase("ver")){
+					stringBuffer.append(" CAST(d." + select[i] + " as CHAR) " + ", ");
+				}else{
+					stringBuffer.append(" d." + select[i] + ", ");
+				}
 			}
 
 		}
