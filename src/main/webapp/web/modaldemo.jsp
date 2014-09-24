@@ -62,9 +62,9 @@
 			  <div class="form-group">
 			    <label class="col-sm-2 control-label">Sex</label>
 			    <div class="col-sm-5">
-			    	<input type="checkbox" ng-model="demographic.sex" ng-true-value="M"/> Male
+			    	<input type="radio" ng-model="demographic.sex" value="M" required/> Male
 			    	<br/>
-			    	<input type="checkbox" ng-model="demographic.sex" ng-true-value="F"/> Female
+			    	<input type="radio" ng-model="demographic.sex" value="F" required/> Female
 			    </div>
 			  </div> 
 			</form>

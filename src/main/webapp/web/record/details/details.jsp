@@ -1160,19 +1160,11 @@
 		</div>
 		<div class="col-md-6">
 			<label>Effective Date</label>
-			<span style="white-space:nowrap">
-				<input type="text" placeholder="YYYY" title="Health Card Effective Date Year" class="form-control form-control-details" ng-model="page.hcEffDateYear" ng-change="checkDate('HedY')" style="width:70px; background-color:{{page.hcEffDateYearColor}}"/>
-				<input type="text" placeholder="MM" title="Health Card Effective Date Month" class="form-control form-control-details" ng-model="page.hcEffDateMonth" ng-change="checkDate('HedM')" ng-blur="formatDate('HedM')" style="width:60px; background-color:{{page.hcEffDateMonthColor}}"/>
-				<input type="text" placeholder="DD" title="Health Card Effective Date Day" class="form-control form-control-details" ng-model="page.hcEffDateDay" ng-change="checkDate('HedD')" ng-blur="formatDate('HedD')" style="width:60px; background-color:{{page.hcEffDateDayColor}}"/>
-			</span>
+			<input id="effDate" ng-model="page.demo.effDate" type="text" class="form-control form-control-details" title="Health Card Effective Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.effDatePicker" ng-click="page.effDatePicker = true" placeholder="YYYY-MM-DD" style="background-color:{{page.effDateColor}}">
 		</div>
 		<div class="col-md-6">
 			<label>Renew Date</label>
-			<span style="white-space:nowrap">
-				<input type="text" placeholder="YYYY" title="Health Card Renew Date Year" class="form-control form-control-details" ng-model="page.hcRenewDateYear" ng-change="checkDate('HrdY')" style="width:70px; background-color:{{page.hcRenewDateYearColor}}"/>
-				<input type="text" placeholder="MM" title="Health Card Renew Date Month" class="form-control form-control-details" ng-model="page.hcRenewDateMonth" ng-change="checkDate('HrdM')" ng-blur="formatDate('HrdM')" style="width:60px; background-color:{{page.hcRenewDateMonthColor}}"/>
-				<input type="text" placeholder="DD" title="Health Card Renew Date Day" class="form-control form-control-details" ng-model="page.hcRenewDateDay" ng-change="checkDate('HrdD')" ng-blur="formatDate('HrdD')" style="width:60px; background-color:{{page.hcRenewDateDayColor}}"/>
-			</span>
+			<input id="hcRenewDate" ng-model="page.demo.hcRenewDate" type="text" class="form-control form-control-details" title="Health Card Renew Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.hcRenewDatePicker" ng-click="page.hcRenewDatePicker = true" placeholder="YYYY-MM-DD" style="background-color:{{page.hcRenewDateColor}}">
 		</div>
 	</div>
 	
@@ -1230,19 +1222,11 @@
 		</div>
 		<div class="col-md-6">
 			<label>Date Rostered</label>
-			<span style="white-space:nowrap">
-				<input type="text" placeholder="YYYY" title="Date Rostered Year" class="form-control form-control-details" style="width: 70px;" ng-model="page.rosterDateYear" ng-change="checkDate('RodY')"/>
-				<input type="text" placeholder="MM" title="Date Rostered Month" class="form-control form-control-details" style="width: 60px;" ng-model="page.rosterDateMonth" ng-change="checkDate('RodM')" ng-blur="formatDate('RodM')"/>
-				<input type="text" placeholder="DD" title="Date Rostered Day" class="form-control form-control-details" style="width: 60px;" ng-model="page.rosterDateDay" ng-change="checkDate('RodD')" ng-blur="formatDate('RodD')"/>
-			</span>
+			<input id="rosterDate" ng-model="page.demo.rosterDate" type="text" class="form-control form-control-details" title="Roster Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.rosterDatePicker" ng-click="page.rosterDatePicker = true" placeholder="YYYY-MM-DD">
 		</div>
 		<div class="col-md-6" ng-show="isRosterTerminated()">
 			<label>Termination Date</label>
-			<span style="white-space:nowrap">
-				<input type="text" placeholder="YYYY" title="Roster Termination Date Year" class="form-control form-control-details" style="width: 70px;" ng-model="page.rosterTerminationDateYear" ng-change="checkDate('RtdY')"/>
-				<input type="text" placeholder="MM" title="Roster Termination Date Month" class="form-control form-control-details" style="width: 60px;" ng-model="page.rosterTerminationDateMonth" ng-change="checkDate('RtdM')" ng-blur="formatDate('RtdM')"/>
-				<input type="text" placeholder="DD" title="Roster Termination Date Day" class="form-control form-control-details" style="width: 60px;" ng-model="page.rosterTerminationDateDay" ng-change="checkDate('RtdD')" ng-blur="formatDate('RtdD')"/>
-			</span>
+			<input id="rosterTerminationDate" ng-model="page.demo.rosterTerminationDate" type="text" class="form-control form-control-details" title="Roster Termination Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.rosterTerminationDatePicker" ng-click="page.rosterTerminationDatePicker = true" placeholder="YYYY-MM-DD">
 		</div>
 		<div class="col-md-11" ng-show="isRosterTerminated()">
 			<label>Reason</label>
@@ -1291,27 +1275,15 @@
 		</div>
 		<div class="col-md-6">
 			<label>Status Date</label>
-			<span style="white-space:nowrap">
-				<input type="text" placeholder="YYYY" title="Patient Status Date Year" class="form-control form-control-details" style="width: 70px;" ng-model="page.patientStatusDateYear" ng-change="checkDate('PsdY')"/>
-				<input type="text" placeholder="MM" title="Patient Status Date Month" class="form-control form-control-details" style="width: 60px;" ng-model="page.patientStatusDateMonth" ng-change="checkDate('PsdM')" ng-blur="formatDate('PsdM')"/>
-				<input type="text" placeholder="DD" title="Patient Status Date Day" class="form-control form-control-details" style="width: 60px;" ng-model="page.patientStatusDateDay" ng-change="checkDate('PsdD')" ng-blur="formatDate('PsdD')"/>
-			</span>
+			<input id="patientStatusDate" ng-model="page.demo.patientStatusDate" type="text" class="form-control form-control-details" title="Patient Status Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.patientStatusDatePicker" ng-click="page.patientStatusDatePicker = true" placeholder="YYYY-MM-DD">
 		</div>
 		<div class="col-md-6">
 			<label>Date Joined</label>
-			<span style="white-space:nowrap">
-				<input type="text" placeholder="YYYY" title="Date Joined Year" class="form-control form-control-details" style="width: 70px;" ng-model="page.dateJoinedYear" ng-change="checkDate('JndY')"/>
-				<input type="text" placeholder="MM" title="Date Joined Month" class="form-control form-control-details" style="width: 60px;" ng-model="page.dateJoinedMonth" ng-change="checkDate('JndM')" ng-blur="formatDate('JndM')"/>
-				<input type="text" placeholder="DD" title="Date Joined Day" class="form-control form-control-details" style="width: 60px;" ng-model="page.dateJoinedDay" ng-change="checkDate('JndD')" ng-blur="formatDate('JndD')"/>
-			</span>
+			<input id="dateJoined" ng-model="page.demo.dateJoined" type="text" class="form-control form-control-details" title="Date Joined" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.dateJoinedPicker" ng-click="page.dateJoinedPicker = true" placeholder="YYYY-MM-DD">
 		</div>
 		<div class="col-md-6">
 			<label>End Date</label>
-			<span style="white-space:nowrap">
-				<input type="text" placeholder="YYYY" title="End Date Year" class="form-control form-control-details" style="width: 70px;" ng-model="page.endDateYear" ng-change="checkDate('EddY')" ng-blur="checkPatientStatus()"/>
-				<input type="text" placeholder="MM" title="End Date Month" class="form-control form-control-details" style="width: 60px;" ng-model="page.endDateMonth" ng-change="checkDate('EddM')" ng-blur="formatDate('EddM');checkPatientStatus()"/>
-				<input type="text" placeholder="DD" title="End Date Day" class="form-control form-control-details" style="width: 60px;" ng-model="page.endDateDay" ng-change="checkDate('EddD')" ng-blur="formatDate('EddD');checkPatientStatus()"/>
-			</span>
+			<input id="endDate" ng-model="page.demo.endDate" type="text" class="form-control form-control-details" title="End Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.endDatePicker" ng-click="page.endDatePicker = true" placeholder="YYYY-MM-DD">
 		</div>
 		<div class="col-md-6">
 			<label>Chart Number</label>
@@ -1336,11 +1308,7 @@
 		</div>
 		<div class="col-md-6">
 			<label>Archive Date</label>
-			<span style="white-space:nowrap">
-				<input type="text" placeholder="YYYY" title="Paper Chart Archive Date Year" class="form-control form-control-details" style="width: 70px;" ng-model="page.paperChartArchivedDateYear" ng-change="checkDate('PcaY')"/>
-				<input type="text" placeholder="MM" title="Paper Chart Archive Date Month" class="form-control form-control-details" style="width: 60px;" ng-model="page.paperChartArchivedDateMonth" ng-change="checkDate('PcaM')" ng-blur="formatDate('PcaM')"/>
-				<input type="text" placeholder="DD" title="Paper Chart Archive Date Day" class="form-control form-control-details" style="width: 60px;" ng-model="page.paperChartArchivedDateDay" ng-change="checkDate('PcaD')" ng-blur="formatDate('PcaD')"/>
-			</span>
+			<input id="paperChartArchivedDate" ng-model="page.paperChartArchivedDate.value" type="text" class="form-control form-control-details" title="Paper Chart Archive Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.paperChartArchivedDatePicker" ng-click="page.paperChartArchivedDatePicker = true" placeholder="YYYY-MM-DD">
 		</div>
 		<div class="col-md-6">
 			<label>Waiting List</label>
@@ -1350,11 +1318,7 @@
 		</div>
 		<div class="col-md-6">
 			<label>Date of Request</label>
-			<span style="white-space:nowrap">
-				<input type="text" placeholder="YYYY" title="Date of Request Year" class="form-control form-control-details" style="width: 70px;" ng-model="page.onWaitingListSinceYear" ng-change="checkDate('OlsY')"/>
-				<input type="text" placeholder="MM" title="Date of Request Month" class="form-control form-control-details" style="width: 60px;" ng-model="page.onWaitingListSinceMonth" ng-change="checkDate('OlsM')" ng-blur="formatDate('OlsM')"/>
-				<input type="text" placeholder="DD" title="Date of Request Day" class="form-control form-control-details" style="width: 60px;" ng-model="page.onWaitingListSinceDay" ng-change="checkDate('OlsD')" ng-blur="formatDate('OlsD')"/>
-			</span>
+			<input id="onWaitingListSinceDate" ng-model="page.demo.onWaitingListSinceDate" type="text" class="form-control form-control-details" title="Date of Request" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.onWaitingListSinceDatePicker" ng-click="page.onWaitingListSinceDatePicker = true" placeholder="YYYY-MM-DD">
 		</div>
 		<div class="col-md-11">
 			<label>Waiting List Note</label>

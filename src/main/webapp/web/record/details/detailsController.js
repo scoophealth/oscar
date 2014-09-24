@@ -127,62 +127,6 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		}
 	}
 	
-	//show dates
-	var datePart = getDateParts(demo.endDate);
-	if (datePart!=null) {
-		page.endDateYear = datePart["year"];
-		page.endDateMonth = pad0(datePart["month"]);
-		page.endDateDay = pad0(datePart["day"]);
-	}
-	datePart = getDateParts(demo.effDate);
-	if (datePart!=null) {
-		page.hcEffDateYear = datePart["year"];
-		page.hcEffDateMonth = pad0(datePart["month"]);
-		page.hcEffDateDay = pad0(datePart["day"]);
-	}
-	datePart = getDateParts(demo.hcRenewDate);
-	if (datePart!=null) {
-		page.hcRenewDateYear = datePart["year"];
-		page.hcRenewDateMonth = pad0(datePart["month"]);
-		page.hcRenewDateDay = pad0(datePart["day"]);
-	}
-	datePart = getDateParts(demo.rosterDate);
-	if (datePart!=null) {
-		page.rosterDateYear = datePart["year"];
-		page.rosterDateMonth = pad0(datePart["month"]);
-		page.rosterDateDay = pad0(datePart["day"]);
-	}
-	datePart = getDateParts(demo.rosterTerminationDate);
-	if (datePart!=null) {
-		page.rosterTerminationDateYear = datePart["year"];
-		page.rosterTerminationDateMonth = pad0(datePart["month"]);
-		page.rosterTerminationDateDay = pad0(datePart["day"]);
-	}
-	datePart = getDateParts(demo.patientStatusDate);
-	if (datePart!=null) {
-		page.patientStatusDateYear = datePart["year"];
-		page.patientStatusDateMonth = pad0(datePart["month"]);
-		page.patientStatusDateDay = pad0(datePart["day"]);
-	}
-	datePart = getDateParts(demo.dateJoined);
-	if (datePart!=null) {
-		page.dateJoinedYear = datePart["year"];
-		page.dateJoinedMonth = pad0(datePart["month"]);
-		page.dateJoinedDay = pad0(datePart["day"]);
-	}
-	datePart = getDateParts(demo.onWaitingListSinceDate);
-	if (datePart!=null) {
-		page.onWaitingListSinceYear = datePart["year"];
-		page.onWaitingListSinceMonth = pad0(datePart["month"]);
-		page.onWaitingListSinceDay = pad0(datePart["day"]);
-	}
-	datePart = getDateParts(page.paperChartArchivedDate.value);
-	if (datePart!=null) {
-		page.paperChartArchivedDateYear = datePart["year"];
-		page.paperChartArchivedDateMonth = pad0(datePart["month"]);
-		page.paperChartArchivedDateDay = pad0(datePart["day"]);
-	}
-	
 	var colorAttn = "#ffff99";
 	
 	//show phone numbers with preferred check
@@ -446,44 +390,22 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			}
 		}
 		if (hcParts["issueDate"]!=null) {
-			dateParts["year"] = "20" + hcParts["issueDate"].substring(0,2);
-			dateParts["month"] = hcParts["issueDate"].substring(2,4);
-			dateParts["day"] = hcParts["issueDate"].substring(4);
-			if (page.hcEffDateYear!=dateParts["year"]) {
-				page.hcEffDateYear = dateParts["year"];
-				page.hcEffDateYearColor = colorAttn;
-			}
-			if (page.hcEffDateMonth!=dateParts["month"]) {
-				page.hcEffDateMonth = dateParts["month"];
-				page.hcEffDateMonthColor = colorAttn;
-			}
-			if (page.hcEffDateDay!=dateParts["day"]) {
-				page.hcEffDateDay = dateParts["day"];
-				page.hcEffDateDayColor = colorAttn;
+			var swipeDate = "20"+hcParts["issueDate"].substring(0,2)+"-"+hcParts["issueDate"].substring(2,4)+"-"+hcParts["issueDate"].substring(4);
+			if (demo.effDate!=swipeDate) {
+				demo.effDate = swipeDate;
+				page.effDateColor = colorAttn;
 			}
 		}
 		if (hcParts["hinExp"]!=null) {
-			dateParts["year"] = "20" + hcParts["hinExp"].substring(0,2);
-			dateParts["month"] = hcParts["hinExp"].substring(2,4);
-			dateParts["day"] = hcParts["hinExp"].substring(4);
-			if (page.hcRenewDateYear!=dateParts["year"]) {
-				page.hcRenewDateYear = dateParts["year"];
-				page.hcRenewDateYearColor = colorAttn;
+			var swipeDate = "20"+hcParts["hinExp"].substring(0,2)+"-"+hcParts["hinExp"].substring(2,4)+"-"+hcParts["hinExp"].substring(4);
+			if (demo.hcRenewDate!=swipeDate) {
+				demo.hcRenewDate = swipeDate;
+				page.hcRenewDateColor = colorAttn;
 			}
-			if (page.hcRenewDateMonth!=dateParts["month"]) {
-				page.hcRenewDateMonth = dateParts["month"];
-				page.hcRenewDateMonthColor = colorAttn;
-			}
-			if (page.hcRenewDateDay!=dateParts["day"]) {
-				page.hcRenewDateDay = dateParts["day"];
-				page.hcRenewDateDayColor = colorAttn;
-			}
-			var hinExpDate = new Date(dateParts["year"], dateParts["month"]-1, dateParts["day"]);
-			if (now>hinExpDate) {
+			var hinExpDate = buildDate("20"+hcParts["hinExp"].substring(0,2), hcParts["hinExp"].substring(2,4), hcParts["hinExp"].substring(4));
+			if (hinExpDate!=null && now>hinExpDate) {
 				alert("This health card has expired!");
-				page.hcRenewDateYearColor = colorAttn;
-				page.hcRenewDateMonthColor = colorAttn;
-				page.hcRenewDateDayColor = colorAttn;
+				page.hcRenewDateColor = colorAttn;
 			}
 		}
 	}
@@ -523,33 +445,6 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		if (id=="DobY") demo.dobYear = checkYear(demo.dobYear);
 		else if (id=="DobM") demo.dobMonth = checkMonth(demo.dobMonth);
 		else if (id=="DobD") demo.dobDay = checkDay(demo.dobDay, demo.dobMonth, demo.dobYear);
-		else if (id=="HedY") page.hcEffDateYear = checkYear(page.hcEffDateYear);
-		else if (id=="HedM") page.hcEffDateMonth = checkMonth(page.hcEffDateMonth);
-		else if (id=="HedD") page.hcEffDateDay = checkDay(page.hcEffDateDay, page.hcEffDateMonth, page.hcEffDateYear);
-		else if (id=="HrdY") page.hcRenewDateYear = checkYear(page.hcRenewDateYear);
-		else if (id=="HrdM") page.hcRenewDateMonth = checkMonth(page.hcRenewDateMonth);
-		else if (id=="HrdD") page.hcRenewDateDay = checkDay(page.hcRenewDateDay, page.hcRenewDateMonth, page.hcRenewDateYear);
-		else if (id=="RodY") page.rosterDateYear = checkYear(page.rosterDateYear);
-		else if (id=="RodM") page.rosterDateMonth = checkMonth(page.rosterDateMonth);
-		else if (id=="RodD") page.rosterDateDay = checkDay(page.rosterDateDay, page.rosterDateMonth, page.rosterDateYear);
-		else if (id=="RtdY") page.rosterTerminationDateYear = checkYear(page.rosterTerminationDateYear);
-		else if (id=="RtdM") page.rosterTerminationDateMonth = checkMonth(page.rosterTerminationDateMonth);
-		else if (id=="RtdD") page.rosterTerminationDateDay = checkDay(page.rosterTerminationDateDay, page.rosterTerminationDateMonth, page.rosterTerminationDateYear);
-		else if (id=="PsdY") page.patientStatusDateYear = checkYear(page.patientStatusDateYear);
-		else if (id=="PsdM") page.patientStatusDateMonth = checkMonth(page.patientStatusDateMonth);
-		else if (id=="PsdD") page.patientStatusDateDay = checkDay(page.patientStatusDateDay, page.patientStatusDateMonth, page.patientStatusDateYear);
-		else if (id=="JndY") page.dateJoinedYear = checkYear(page.dateJoinedYear);
-		else if (id=="JndM") page.dateJoinedMonth = checkMonth(page.dateJoinedMonth);
-		else if (id=="JndD") page.dateJoinedDay = checkDay(page.dateJoinedDay, page.dateJoinedMonth, page.dateJoinedYear);
-		else if (id=="EddY") page.endDateYear = checkYear(page.endDateYear);
-		else if (id=="EddM") page.endDateMonth = checkMonth(page.endDateMonth);
-		else if (id=="EddD") page.endDateDay = checkDay(page.endDateDay, page.endDateMonth, page.endDateYear);
-		else if (id=="PcaY") page.paperChartArchivedDateYear = checkYear(page.paperChartArchivedDateYear);
-		else if (id=="PcaM") page.paperChartArchivedDateMonth = checkMonth(page.paperChartArchivedDateMonth);
-		else if (id=="PcaD") page.paperChartArchivedDateDay = checkDay(page.paperChartArchivedDateDay, page.paperChartArchivedDateMonth, page.paperChartArchivedDateYear);
-		else if (id=="OlsY") page.onWaitingListSinceYear = checkYear(page.onWaitingListSinceYear);
-		else if (id=="OlsM") page.onWaitingListSinceMonth = checkMonth(page.onWaitingListSinceMonth);
-		else if (id=="OlsD") page.onWaitingListSinceDay = checkDay(page.onWaitingListSinceDay, page.onWaitingListSinceMonth, page.onWaitingListSinceYear);
 	}
 	
 	$scope.formatDate = function(id){
@@ -557,24 +452,6 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		
 		if (id=="DobM") demo.dobMonth = pad0(demo.dobMonth);
 		else if (id=="DobD") demo.dobDay = pad0(demo.dobDay);
-		else if (id=="HedM") page.hcEffDateMonth = pad0(page.hcEffDateMonth);
-		else if (id=="HedD") page.hcEffDateDay = pad0(page.hcEffDateDay);
-		else if (id=="HrdM") page.hcRenewDateMonth = pad0(page.hcRenewDateMonth);
-		else if (id=="HrdD") page.hcRenewDateDay = pad0(page.hcRenewDateDay);
-		else if (id=="RodM") page.rosterDateMonth = pad0(page.rosterDateMonth);
-		else if (id=="RodD") page.rosterDateDay = pad0(page.rosterDateDay);
-		else if (id=="RtdM") page.rosterTerminationDateMonth = pad0(page.rosterTerminationDateMonth);
-		else if (id=="RtdD") page.rosterTerminationDateDay = pad0(page.rosterTerminationDateDay);
-		else if (id=="PsdM") page.patientStatusDateMonth = pad0(page.patientStatusDateMonth);
-		else if (id=="PsdD") page.patientStatusDateDay = pad0(page.patientStatusDateDay);
-		else if (id=="JndM") page.dateJoinedMonth = pad0(page.dateJoinedMonth);
-		else if (id=="JndD") page.dateJoinedDay = pad0(page.dateJoinedDay);
-		else if (id=="EddM") page.endDateMonth = pad0(page.endDateMonth);
-		else if (id=="EddD") page.endDateDay = pad0(page.endDateDay);
-		else if (id=="PcaM") page.paperChartArchivedDateMonth = pad0(page.paperChartArchivedDateMonth);
-		else if (id=="PcaD") page.paperChartArchivedDateDay = pad0(page.paperChartArchivedDateDay);
-		else if (id=="OlsM") page.onWaitingListSinceMonth = pad0(page.onWaitingListSinceMonth);
-		else if (id=="OlsD") page.onWaitingListSinceDay = pad0(page.onWaitingListSinceDay);
 	}
 	$scope.formatDate("DobM"); //done on page load
 	$scope.formatDate("DobD"); //done on page load
@@ -582,9 +459,10 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	//check Patient Status if endDate is entered
 	$scope.checkPatientStatus = function(){
 		if (demo.patientStatus=="AC") {
-			if (!dateEmpty(page.endDateYear, page.endDateMonth, page.endDateDay)) {
-				if (dateValid(page.endDateYear, page.endDateMonth, page.endDateDay)) {
-					var endDate = new Date(page.endDateYear, (page.endDateMonth-1), page.endDateDay);
+			if (demo.endDate!=null && demo.endDate!="") {
+				if (dateValid(demo.endDate)) {
+					var datePart = demo.endDate.split("-");
+					var endDate = new Date(datePart[0], datePart[1]-1, datePart[2]);
 					if (now > endDate) {
 						alert("Patient Status cannot be Active after End Date.");
 						return false;
@@ -884,48 +762,11 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		//check postal code complete
 		if (!$scope.isPostalComplete()) return;
 		
-		//check dates
+		//check date of birth
 		demo.dateOfBirth = buildDate(demo.dobYear, demo.dobMonth, demo.dobDay);
 		if (demo.dateOfBirth==null) {
 			alert("Invalid Date of Birth"); return;
 		}
-		demo.effDate = buildDate(page.hcEffDateYear, page.hcEffDateMonth, page.hcEffDateDay);
-		if (demo.effDate==null) {
-			alert("Invalid Health Card Effective Date"); return;
-		}
-		demo.hcRenewDate = buildDate(page.hcRenewDateYear, page.hcRenewDateMonth, page.hcRenewDateDay);
-		if (demo.hcRenewDate==null) {
-			alert("Invalid Health Card Renew Date"); return;
-		}
-		demo.rosterDate = buildDate(page.rosterDateYear, page.rosterDateMonth, page.rosterDateDay);
-		if (demo.rosterDate==null) {
-			alert("Invalid Date Rostered"); return;
-		}
-		demo.rosterTerminationDate = buildDate(page.rosterTerminationDateYear, page.rosterTerminationDateMonth, page.rosterTerminationDateDay);
-		if (demo.rosterTerminationDate==null) {
-			alert("Invalid Roster Termination Date"); return;
-		}
-		demo.patientStatusDate = buildDate(page.patientStatusDateYear, page.patientStatusDateMonth, page.patientStatusDateDay);
-		if (demo.patientStatusDate==null) {
-			alert("Invalid Patient Status Date"); return;
-		}
-		demo.dateJoined = buildDate(page.dateJoinedYear, page.dateJoinedMonth, page.dateJoinedDay);
-		if (demo.dateJoined==null) {
-			alert("Invalid Date Joined"); return;
-		}
-		demo.endDate = buildDate(page.endDateYear, page.endDateMonth, page.endDateDay);
-		if (demo.endDate==null) {
-			alert("Invalid End Date"); return;
-		}
-		demo.onWaitingListSinceDate = buildDate(page.onWaitingListSinceYear, page.onWaitingListSinceMonth, page.onWaitingListSinceDay);
-		if (demo.onWaitingListSinceDate==null) {
-			alert("Invalid Date Of Request (Waiting List)"); return;
-		}
-		page.paperChartArchivedDate.value = buildDate(page.paperChartArchivedDateYear, page.paperChartArchivedDateMonth, page.paperChartArchivedDateDay);
-		if (page.paperChartArchivedDate.value==null) {
-			alert("Invalid Paper Chart Archive Date"); return;
-		}
-		
 		
 		//save notes
 		if (page.notes!=null) {
@@ -1030,21 +871,9 @@ function copyDemoExt(ext1) {
 	return ext2;
 }
 
-function getDateParts(dateDB) {
-	if (dateDB!=null && dateDB!="") {
-		var date = new Date(dateDB);
-		var parts = {};
-		parts["year"] = date.getFullYear();
-		parts["month"] = date.getMonth() + 1;
-		parts["day"] = date.getDate();
-		return parts;
-	}
-	return null;
-}
-
 function buildDate(year, month, day) {
 	if (dateEmpty(year, month, day)) return "";
-	if (dateValid(year, month, day)) return year + "-" + month + "-" + day;
+	if (date3Valid(year, month, day)) return year + "-" + month + "-" + day;
 	return null;
 }
 
@@ -1092,15 +921,15 @@ function checkDay(day, month, year) {
 		else if (year==null) {
 			if (day>daysOfMonth[month-1]) day.substring(0,1);
 		}
-		else if (!dateValid(year, month, day)) {
+		else if (!date3Valid(year, month, day)) {
 			day = day.substring(0,1);
 		}
 	}
 	return day;
 }
 
-function dateValid(year, month, day) {
-	if (dateComplete(year, month, day)) {
+function date3Valid(year, month, day) {
+	if (year!=null && year!="" && month!=null && month!="" && day!=null && day!="") {
 		var maxDaysOfMonth = daysOfMonth[month-1];
 		if (month==2) {
 			if ((year%4==0 && year%100!=0) || year%400==0) {
@@ -1112,8 +941,20 @@ function dateValid(year, month, day) {
 	return dateEmpty(year, month, day);
 }
 
-function dateComplete(year, month, day) {
-	return (year!=null && year!="" && month!=null && month!="" && day!=null && day!="");
+function dateValid(dateStr) {
+	if (dateStr==null || dateStr=="") return true;
+	
+	var datePart = dateStr.toString().split("-");
+	if (datePart.length!=3) return false;
+	
+	var dateDate = new Date(datePart[0], datePart[1]-1, datePart[2]);
+	if (dateDate=="Invalid Date") return false;
+	
+	if (dateDate.getFullYear()!=datePart[0]) return false;
+	if (dateDate.getMonth()!=datePart[1]-1) return false;
+	if (dateDate.getDate()!=datePart[2]) return false;
+	
+	return true;
 }
 
 function dateEmpty(year, month, day) {

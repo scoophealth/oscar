@@ -185,27 +185,37 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 });
 
 
-function NewPatientCtrl($scope,$http,$modal,$modalInstance,demographicService,patientDetailStatusService){
+function NewPatientCtrl($scope,$http,$modal,$modalInstance,demographicService,securityService){
 	//
 	console.log("newpatient called");
 	$scope.demographic = {};
+  	
+	//get access right for creating new patient
+	securityService.hasRight("_demographic", "w").then(function(data){
+		$scope.hasRight = data.value;
+	});
 	
   	$scope.saver = function(ngModelContoller){
   		console.log($scope.demographic.lastName);
   		console.log($scope.demographic.firstName);
-  		console.log($scope.demographic.yearOfBirth);
-  		console.log($scope.demographic.monthOfBirth);
-  		console.log($scope.demographic.dayOfBirth);
+  		console.log($scope.demographic.dobYear);
+  		console.log($scope.demographic.dobMonth);
+  		console.log($scope.demographic.dobDay);
   		console.log($scope.demographic.sex);
-		//var demographic = {lastName:$scope.lastName,firstName:$scope.firstName,yearOfBirth:$scope.yearOfBirth,monthOfBirth:$scope.monthOfBirth};
   		
 		console.log($scope.demographic);
 		//demographicService
 		console.log(ngModelContoller.$valid);
 		console.log($scope);
 		if(ngModelContoller.$valid){
-			console.log("Save!!");
-			$scope.demographic.dateOfBirth = $scope.demographic.yearOfBirth+'-'+$scope.demographic.monthOfBirth+"-"+$scope.demographic.dayOfBirth;
+			console.log("Saving...");
+			
+			if (!isCorrectDate($scope.demographic.dobYear, $scope.demographic.dobMonth, $scope.demographic.dobDay)) {
+				alert("Incorrect Date of Birth!");
+				return;
+			}
+			
+			$scope.demographic.dateOfBirth = $scope.demographic.dobYear+'-'+$scope.demographic.dobMonth+"-"+$scope.demographic.dobDay;
 			$scope.demoRetVal = {};
 			demographicService.saveDemographic($scope.demographic).then(function(data){
 					console.log(data);
@@ -225,16 +235,23 @@ function NewPatientCtrl($scope,$http,$modal,$modalInstance,demographicService,pa
 		
 	}
   	
-	//get access right for creating new patient
-	securityService.hasRight("_demographic", "w", demo.demographicNo).then(function(data){
-		$scope.hasRight = data.value;
-	});
-  	
   	$scope.ok = function () {
-  	    $modalInstance.close($scope.selected.item);
-  	  };
+  		$modalInstance.close($scope.selected.item);
+  	};
 
-  	 $scope.cancel = function () {
-  	    $modalInstance.dismiss('cancel');
-  	 };
+  	$scope.cancel = function () {
+  		$modalInstance.dismiss('cancel');
+  	};
+}
+
+	
+function isCorrectDate(year, month, day) {
+	var d = new Date(year, month-1, day);
+	
+	if (d=="Invalid Date") return false;
+	if (d.getFullYear()!=year) return false;
+	if (d.getMonth()!=month-1) return false;
+	if (d.getDate()!=day) return false;
+	
+	return true;
 }
