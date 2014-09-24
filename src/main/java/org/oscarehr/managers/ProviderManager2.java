@@ -25,13 +25,21 @@
 package org.oscarehr.managers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.casemgmt.model.ProviderExt;
 import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.dao.ProviderExtDao;
+import org.oscarehr.common.dao.ProviderPreferenceDao;
 import org.oscarehr.common.model.Property;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.ProviderPreference;
+import org.oscarehr.common.model.ProviderPreference.QuickLink;
+import org.oscarehr.managers.model.ProviderSettings;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +57,13 @@ public class ProviderManager2 {
 
 	@Autowired
 	private PropertyDao propertyDao;
+	
+	@Autowired
+	private ProviderPreferenceDao providerPreferenceDao;
 
+	@Autowired
+	private ProviderExtDao providerExtDao;
+	
 	public List<Provider> getProviders(LoggedInInfo loggedInInfo, Boolean active) {
 		List<Provider> results = null;
 
@@ -124,5 +138,380 @@ public class ProviderManager2 {
 		}
 
 		return (results);
+	}
+	
+	public List<String> getActiveTeams(LoggedInInfo loggedInInfo) {
+		return providerDao.getActiveTeams();
+	}
+	
+	public ProviderSettings getProviderSettings(LoggedInInfo loggedInInfo, String providerNo) {
+		ProviderSettings settings = new ProviderSettings();
+	
+		ProviderPreference pp = providerPreferenceDao.find(providerNo);
+		if(pp == null ) {
+			pp = new ProviderPreference();
+		}
+		
+		ProviderExt providerExt = providerExtDao.find(providerNo);
+		if(providerExt == null) {
+			providerExt = new ProviderExt();
+		}
+		
+		Map<String,Property> map = new HashMap<String,Property>();
+		for(Property prop:propertyDao.findByProvider(providerNo)) {
+			map.put(prop.getName(), prop);
+		}
+		
+		if(map.get("rxAddress") != null) {
+			settings.setRxAddress(map.get("rxAddress").getValue());
+		}
+		if(map.get("rxCity") != null) {
+			settings.setRxCity(map.get("rxCity").getValue());
+		}
+		if(map.get("rxProvince") != null) {
+			settings.setRxProvince(map.get("rxProvince").getValue());
+		}
+		if(map.get("rxPostal") != null) {
+			settings.setRxPostal(map.get("rxPostal").getValue());
+		}
+		if(map.get("rxPhone") != null) {
+			settings.setRxPhone(map.get("rxPhone").getValue());
+		}
+		if(map.get("faxnumber") != null) {
+			settings.setFaxNumber(map.get("faxnumber").getValue());
+		}
+		
+		if(map.get("workload_management") != null) {
+			settings.setWorkloadManagement(map.get("workload_management").getValue());
+		}
+		
+		if(map.get("provider_for_tickler_warning") != null) {
+			settings.setTicklerWarningProvider(map.get("provider_for_tickler_warning").getValue());
+		}
+		
+		if(map.get("rx_use_rx3") != null) {
+			settings.setUseRx3("yes".equals(map.get("rx_use_rx3").getValue())?true:false);
+		}
+		
+		if(map.get("rx_show_patient_dob") != null) {
+			settings.setShowPatientDob("yes".equals(map.get("rx_show_patient_dob").getValue())?true:false);
+		}
+		
+		if(map.get("rx_default_quantity") != null) {
+			settings.setRxDefaultQuantity(map.get("rx_default_quantity").getValue());
+		}
+		if(map.get("rx_page_size") != null) {
+			settings.setRxPageSize(map.get("rx_page_size").getValue());
+		}
+		if(map.get("rxInteractionWarningLevel") != null) {
+			settings.setRxInteractionWarningLevel(map.get("rxInteractionWarningLevel").getValue());
+		}
+		if(map.get("HC_Type") != null) {
+			settings.setDefaultHcType(map.get("HC_Type").getValue());
+		}
+		if(map.get("default_sex") != null) {
+			settings.setDefaultSex(map.get("default_sex").getValue());
+		}
+		
+		if(map.get("consultation_time_period_warning") != null) {
+			settings.setConsultationTimePeriodWarning(map.get("consultation_time_period_warning").getValue());
+		}
+		if(map.get("consultation_team_warning") != null) {
+			settings.setConsultationTeamWarning(map.get("consultation_team_warning").getValue());
+		}
+		if(map.get("consultation_req_paste_fmt") != null) {
+			settings.setConsultationPasteFormat(map.get("consultation_req_paste_fmt").getValue());
+		}
+		
+		if(map.get("edoc_browser_in_document_report") != null) {
+			settings.setDocumentBrowserInDocumentReport("yes".equals(map.get("edoc_browser_in_document_report").getValue())?true:false);
+		}
+		if(map.get("edoc_browser_in_master_file") != null) {
+			settings.setDocumentBrowserInMasterFile("yes".equals(map.get("edoc_browser_in_master_file").getValue())?true:false);
+		}
+		
+		if(map.get("cpp_single_line") != null) {
+			settings.setCppSingleLine("yes".equals(map.get("cpp_single_line").getValue())?true:false);
+		}
+		
+		if(map.get("cme_note_date") != null) {
+			settings.setCmeNoteDate(map.get("cme_note_date").getValue());
+		}
+
+		if(map.get("cme_note_format") != null) {
+			settings.setCmeNoteFormat("yes".equals(map.get("cme_note_format").getValue())?true:false);
+		}
+		
+		if(map.get("quickChartsize") != null) {
+			settings.setQuickChartSize(map.get("quickChartsize").getValue());
+		}
+		
+		if(map.get("encounterWindowWidth") != null) {
+			settings.setEncounterWindowWidth(map.get("encounterWindowWidth").getValue());
+		}
+		if(map.get("encounterWindowHeight") != null) {
+			settings.setEncounterWindowHeight(map.get("encounterWindowHeight").getValue());
+		}
+		if(map.get("encounterWindowMaximize") != null) {
+			settings.setEncounterWindowMaximize("yes".equals(map.get("encounterWindowMaximize").getValue())?true:false);
+		}
+		if(map.get("favourite_eform_group") != null) {
+			settings.setFavoriteFormGroup(map.get("favourite_eform_group").getValue());
+		}
+		
+		if(map.get("lab_ack_comment") != null) {
+			settings.setDisableCommentOnAck("yes".equals(map.get("lab_ack_comment").getValue())?true:false);
+		}
+		
+		if(map.get("olis_reportingLab") != null) {
+			settings.setOlisDefaultReportingLab(map.get("olis_reportingLab").getValue());
+		}
+		if(map.get("olis_exreportingLab") != null) {
+			settings.setOlisDefaultExcludeReportingLab(map.get("olis_exreportingLab").getValue());
+		}
+		
+		if(map.get("mydrugref_id") != null) {
+			settings.setMyDrugRefId(map.get("mydrugref_id").getValue());
+		}
+		
+		if(map.get("cobalt") != null) {
+			settings.setUseCobaltOnLogin("yes".equals(map.get("cobalt").getValue())?true:false);
+		}
+		
+		if(map.get("use_mymeds") != null) {
+			settings.setUseMyMeds(Boolean.valueOf(map.get("use_mymeds").getValue()));
+		}
+		/*
+		if(settings.getFavoriteFormGroup()==null) {
+			settings.setFavoriteFormGroup("");
+		}
+		*/
+		
+		settings.setNewTicklerWarningWindow(pp.getNewTicklerWarningWindow());
+		
+		settings.setStartHour(pp.getStartHour());
+		settings.setEndHour(pp.getEndHour());
+		settings.setPeriod(pp.getEveryMin());
+		settings.setGroupNo(pp.getMyGroupNo());
+		settings.setAppointmentScreenLinkNameDisplayLength(pp.getAppointmentScreenLinkNameDisplayLength());
+		
+		if(pp.getAppointmentScreenForms() != null) {
+			settings.setAppointmentScreenForms(pp.getAppointmentScreenForms());
+		}
+		
+		if(pp.getAppointmentScreenEForms() != null) {
+			settings.setAppointmentScreenEforms(pp.getAppointmentScreenEForms());
+		}
+		
+		if(pp.getAppointmentScreenQuickLinks() != null) {
+			for(QuickLink ql:pp.getAppointmentScreenQuickLinks()) {
+				org.oscarehr.managers.model.QuickLink qt = new org.oscarehr.managers.model.QuickLink();
+				qt.setName(ql.getName());
+				qt.setUrl(ql.getUrl());
+				settings.getAppointmentScreenQuickLinks().add(qt);
+			}
+		}
+	
+		settings.setDefaultServiceType(pp.getDefaultServiceType());
+		settings.setDefaultDxCode(pp.getDefaultDxCode());
+		
+		settings.setDefaultDoNotDeleteBilling(pp.getDefaultDoNotDeleteBilling()==1?true:false);
+		
+		settings.setPrintQrCodeOnPrescription(pp.isPrintQrCodeOnPrescriptions());
+		settings.seteRxEnabled(pp.isERxEnabled());
+		settings.seteRxTrainingMode(pp.isERxTrainingMode());
+		settings.seteRxFacility(pp.getERxFacility());
+		settings.seteRxURL(pp.getERx_SSO_URL());
+		settings.seteRxUsername(pp.getERxUsername());
+		settings.seteRxPassword(pp.getERxPassword());
+		
+		settings.setDefaultPmm("enabled".equals(pp.getDefaultCaisiPmm()));
+		
+		//from ProviderExt
+		settings.setSignature(providerExt.getSignature());
+		
+		
+		return settings;
+	}
+	
+	private Property getMappedOrNewProperty(Map<String,Property> map, String key, String providerNo) {
+		if(map.get(key) != null) {
+			return map.get(key);
+		} else {
+			Property p = new Property();
+			p.setProviderNo(providerNo);
+			p.setName(key);
+			map.put(p.getName(), p);
+			
+			return p;
+		}
+	}
+	
+	public void updateProviderSettings(LoggedInInfo loggedInInfo, String providerNo, ProviderSettings settings) {
+		
+		ProviderPreference pp = providerPreferenceDao.find(providerNo);
+		if(pp == null ) {
+			pp = new ProviderPreference();
+		}
+		
+		ProviderExt providerExt = providerExtDao.find(providerNo);
+		if(providerExt == null) {
+			providerExt = new ProviderExt();
+		}
+		
+		List<Property> props = propertyDao.findByProvider(providerNo);
+		
+		pp.setNewTicklerWarningWindow(settings.getNewTicklerWarningWindow());
+		pp.setStartHour(settings.getStartHour());
+		pp.setEndHour(settings.getEndHour());
+		pp.setEveryMin(settings.getPeriod());
+		pp.setMyGroupNo(settings.getGroupNo());
+		pp.setAppointmentScreenLinkNameDisplayLength(settings.getAppointmentScreenLinkNameDisplayLength());
+		
+		pp.getAppointmentScreenForms().clear();
+		for(String formName : settings.getAppointmentScreenForms()) {
+			pp.getAppointmentScreenForms().add(formName);
+		}
+		
+		pp.getAppointmentScreenEForms().clear();
+		for(Integer eformId : settings.getAppointmentScreenEforms()) {
+			pp.getAppointmentScreenEForms().add(eformId);
+		}
+		
+		pp.getAppointmentScreenQuickLinks().clear();
+		for(org.oscarehr.managers.model.QuickLink ql : settings.getAppointmentScreenQuickLinks()) {
+			pp.getAppointmentScreenQuickLinks().add(new QuickLink(ql.getName(),ql.getUrl()));
+		}
+		
+		pp.setDefaultDxCode(settings.getDefaultDxCode());
+		pp.setDefaultServiceType(settings.getDefaultServiceType()==null||settings.getDefaultServiceType().isEmpty()?null:settings.getDefaultServiceType());
+		
+		pp.setDefaultDoNotDeleteBilling(settings.isDefaultDoNotDeleteBilling()?1:0);
+		
+		pp.setPrintQrCodeOnPrescriptions(settings.isPrintQrCodeOnPrescription());
+		pp.setERxEnabled(settings.iseRxEnabled());
+		
+		pp.setERxTrainingMode(settings.iseRxTrainingMode());
+		pp.setERxFacility(settings.geteRxFacility());
+		pp.setERx_SSO_URL(settings.geteRxURL());
+		pp.setERxUsername(settings.geteRxUsername());
+		pp.setERxPassword(settings.geteRxPassword());
+		
+		pp.setDefaultCaisiPmm(settings.isDefaultPmm()?"enabled":"disabled");
+		pp.setProviderNo(providerNo);
+		
+		
+		providerPreferenceDao.merge(pp);
+		
+		Map<String,Property> map = new HashMap<String,Property>();
+		for(Property prop:props) {
+			map.put(prop.getName(), prop);
+		}
+		
+		Property p = null;
+		
+		p = getMappedOrNewProperty(map, "rxAddress", providerNo);
+		p.setValue(settings.getRxAddress());
+		p = getMappedOrNewProperty(map, "rxCity", providerNo);
+		p.setValue(settings.getRxCity());
+		p = getMappedOrNewProperty(map, "rxProvince", providerNo);
+		p.setValue(settings.getRxProvince());
+		p = getMappedOrNewProperty(map, "rxPostal", providerNo);
+		p.setValue(settings.getRxPostal());
+		p = getMappedOrNewProperty(map, "rxPhone", providerNo);
+		p.setValue(settings.getRxPhone());
+		p = getMappedOrNewProperty(map, "faxnumber", providerNo);
+		p.setValue(settings.getFaxNumber());
+		p = getMappedOrNewProperty(map, "workload_management", providerNo);
+		p.setValue(settings.getWorkloadManagement());
+		p = getMappedOrNewProperty(map, "provider_for_tickler_warning", providerNo);
+		p.setValue(settings.getTicklerWarningProvider());
+		p = getMappedOrNewProperty(map, "rx_use_rx3", providerNo);
+		p.setValue(settings.isUseRx3()?"yes":"no");
+		p = getMappedOrNewProperty(map, "rx_show_patient_dob", providerNo);
+		p.setValue(settings.isShowPatientDob()?"yes":"no");
+		p = getMappedOrNewProperty(map, "rx_default_quantity", providerNo);
+		p.setValue(settings.getRxDefaultQuantity());
+		p = getMappedOrNewProperty(map, "rx_page_size", providerNo);
+		p.setValue(settings.getRxPageSize());
+		p = getMappedOrNewProperty(map, "rxInteractionWarningLevel", providerNo);
+		p.setValue(settings.getRxInteractionWarningLevel());
+		p = getMappedOrNewProperty(map, "HC_Type", providerNo);
+		p.setValue(settings.getDefaultHcType());
+		p = getMappedOrNewProperty(map, "default_sex", providerNo);
+		p.setValue(settings.getDefaultSex());
+		p = getMappedOrNewProperty(map, "consultation_time_period_warning", providerNo);
+		p.setValue(settings.getConsultationTimePeriodWarning());
+		p = getMappedOrNewProperty(map, "consultation_team_warning", providerNo);
+		p.setValue(settings.getConsultationTeamWarning());
+		p = getMappedOrNewProperty(map, "consultation_req_paste_fmt", providerNo);
+		p.setValue(settings.getConsultationPasteFormat());	
+		p = getMappedOrNewProperty(map, "edoc_browser_in_document_report", providerNo);
+		p.setValue(settings.isDocumentBrowserInDocumentReport()?"yes":"no");		
+		p = getMappedOrNewProperty(map, "edoc_browser_in_master_file", providerNo);
+		p.setValue(settings.isDocumentBrowserInMasterFile()?"yes":"no");
+		
+		p = getMappedOrNewProperty(map, "cpp_single_line", providerNo);
+		p.setValue(settings.isCppSingleLine()?"yes":"no");
+		p = getMappedOrNewProperty(map, "cme_note_date", providerNo);
+		p.setValue(settings.getCmeNoteDate());	
+		p = getMappedOrNewProperty(map, "cme_note_format", providerNo);
+		p.setValue(settings.isCmeNoteFormat()?"yes":"no");
+		p = getMappedOrNewProperty(map, "quickChartsize", providerNo);
+		p.setValue(settings.getQuickChartSize());	
+		p = getMappedOrNewProperty(map, "encounterWindowWidth", providerNo);
+		p.setValue(settings.getEncounterWindowWidth());	
+		p = getMappedOrNewProperty(map, "encounterWindowHeight", providerNo);
+		p.setValue(settings.getEncounterWindowHeight());	
+		p = getMappedOrNewProperty(map, "encounterWindowMaximize", providerNo);
+		p.setValue(settings.isEncounterWindowMaximize()?"yes":"no");
+		p = getMappedOrNewProperty(map, "favourite_eform_group", providerNo);
+		p.setValue(settings.getFavoriteFormGroup());
+		p = getMappedOrNewProperty(map, "lab_ack_comment", providerNo);
+		p.setValue(settings.isDisableCommentOnAck()?"yes":"no");
+		
+		
+		p = getMappedOrNewProperty(map, "olis_reportingLab", providerNo);
+		p.setValue(settings.getOlisDefaultReportingLab());	
+		p = getMappedOrNewProperty(map, "olis_exreportingLab", providerNo);
+		p.setValue(settings.getOlisDefaultExcludeReportingLab());	
+		p = getMappedOrNewProperty(map, "mydrugref_id", providerNo);
+		p.setValue(settings.getMyDrugRefId());	
+		p = getMappedOrNewProperty(map, "use_mymeds", providerNo);
+		p.setValue(String.valueOf(settings.isUseMyMeds()));
+		
+		p = getMappedOrNewProperty(map, "cobalt", providerNo);
+		p.setValue(settings.isUseCobaltOnLogin()?"yes":"no");
+	
+		if(map.get("rx_use_rx3") != null) {
+			settings.setUseRx3("yes".equals(map.get("rx_use_rx3").getValue())?true:false);
+		}
+		
+		if(map.get("rx_show_patient_dob") != null) {
+			settings.setShowPatientDob("yes".equals(map.get("rx_show_patient_dob").getValue())?true:false);
+		}
+		
+		if(map.get("rx_default_quantity") != null) {
+			settings.setRxDefaultQuantity(map.get("rx_default_quantity").getValue());
+		}
+		if(map.get("rx_page_size") != null) {
+			settings.setRxPageSize(map.get("rx_page_size").getValue());
+		}
+		if(map.get("rxInteractionWarningLevel") != null) {
+			settings.setRxInteractionWarningLevel(map.get("rxInteractionWarningLevel").getValue());
+		}
+		
+		for(String key:map.keySet()) {
+			Property prop = map.get(key);
+			if(prop.getValue() != null) {
+				propertyDao.merge(prop);
+			}
+		}
+		
+		providerExt.setProviderNo(providerNo);
+		providerExt.setSignature(settings.getSignature());
+		
+		providerExtDao.merge(providerExt);		
+				
 	}
 }
