@@ -845,7 +845,7 @@ body {
                                     <table border="0">
                                         <tr valign="top">
                                             <td style="width:320px;"><bean:message key="SearchDrug.drugSearchTextBox"  />
-                                                <html:text styleId="searchString" property="searchString" size="16" maxlength="16" onfocus="changeContainerHeight();" onblur="changeContainerHeight();" onclick="changeContainerHeight();" onkeydown="changeContainerHeight();" style="width:248px;\" autocomplete=\"off"  />
+                                                <html:text styleId="searchString" property="searchString" onfocus="changeContainerHeight();" onblur="changeContainerHeight();" onclick="changeContainerHeight();" onkeydown="changeContainerHeight();" style="width:248px;\" autocomplete=\"off"  />
                                                 <div id="autocomplete_choices" style="overflow:auto;width:600px"></div>
                                                 <span id="indicator1" style="display: none"> <!--img src="/images/spinner.gif" alt="Working..." --></span>
                                             </td>
