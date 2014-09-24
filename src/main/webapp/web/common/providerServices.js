@@ -40,6 +40,52 @@ angular.module("providerServices", [])
             });
      
           return deferred.promise;
+        },
+        searchProviders: function (filter) {
+        	var deferred = $q.defer();
+            
+            $http({
+                url: this.apiPath+'/providers/search',
+                method: "POST",
+                data: JSON.stringify(filter),
+                headers: {'Content-Type': 'application/json'}
+             }).success(function (data, status, headers, config) {
+            	 deferred.resolve(data.content);
+             }).error(function (data, status, headers, config) {
+            	 deferred.reject("An error occured while fetching provider list");
+             });
+
+          return deferred.promise;
+        },
+        getSettings: function () {
+        	var deferred = $q.defer();
+            
+            $http({
+                url: this.apiPath+'/settings/get',
+                method: "GET"
+             }).success(function (data, status, headers, config) {
+            	 deferred.resolve(data.content[0]);
+             }).error(function (data, status, headers, config) {
+            	 deferred.reject("An error occured while fetching provider settings");
+             });
+
+          return deferred.promise;
+        },
+        saveSettings: function (providerNo,settings) {
+        	var deferred = $q.defer();
+            
+            $http({
+                url: this.apiPath+'/settings/'+providerNo+'/save',
+                method: "POST",
+                data: JSON.stringify(settings),
+                headers: {'Content-Type': 'application/json'}
+             }).success(function (data, status, headers, config) {
+            	 deferred.resolve(data);
+             }).error(function (data, status, headers, config) {
+            	 deferred.reject("An error occured while saving settings");
+             });
+
+          return deferred.promise;
         }
     };
 });

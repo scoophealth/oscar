@@ -32,10 +32,16 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
 import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.FormsManager;
+import org.oscarehr.ws.rest.conversion.EFormConverter;
+import org.oscarehr.ws.rest.conversion.EncounterFormConverter;
+import org.oscarehr.ws.rest.to.AbstractSearchResponse;
+import org.oscarehr.ws.rest.to.model.EFormTo1;
+import org.oscarehr.ws.rest.to.model.EncounterFormTo1;
 import org.oscarehr.ws.rest.to.model.FormListTo1;
 import org.oscarehr.ws.rest.to.model.FormTo1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,4 +97,38 @@ public class FormsService extends AbstractServiceImpl {
 		return formListTo1;
 	}
 
+	@GET
+	@Path("/allEForms")
+	@Produces("application/json")
+	public AbstractSearchResponse<EFormTo1> getAllEFormNames(){
+		AbstractSearchResponse<EFormTo1> response = new AbstractSearchResponse<EFormTo1>();
+		response.setContent(new EFormConverter(true).getAllAsTransferObjects(formsManager.findByStatus(getLoggedInInfo(), true, EFormSortOrder.NAME)));
+		response.setTotal(response.getContent().size());
+		return response;
+		
+	}
+	
+	@GET
+	@Path("/allEncounterForms")
+	@Produces("application/json")
+	public AbstractSearchResponse<EncounterFormTo1> getAllFormNames(){
+		AbstractSearchResponse<EncounterFormTo1> response = new AbstractSearchResponse<EncounterFormTo1>();
+		response.setContent(new EncounterFormConverter().getAllAsTransferObjects(formsManager.getAllEncounterForms()));
+		response.setTotal(response.getContent().size());
+		return response;
+		
+	}
+	
+	@GET
+	@Path("/groupNames")
+	@Produces("application/json")
+	public AbstractSearchResponse<String> getGroupNames(){
+		AbstractSearchResponse<String> response = new AbstractSearchResponse<String>();
+
+		response.setContent(formsManager.getGroupNames());
+		response.setTotal(response.getContent().size());
+		return response;
+		
+	}
+	
 }
