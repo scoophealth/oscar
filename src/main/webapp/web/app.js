@@ -59,7 +59,6 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
   	      templateUrl: 'document/documents_classic.jsp',
             controller: 'DocumentsCtrl'
   	    })
-/*
   	    .state('settings', {
   	      url: '/settings',
   	      templateUrl: 'settings/settings.jsp',
@@ -70,10 +69,11 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
             	providerList: function(providerService) { return providerService.searchProviders({'active':true});},
             	loadedSettings: function(providerService) { return providerService.getSettings();},
             	encounterForms: function(formService) { return formService.getAllEncounterForms();},
-            	eforms: function(formService) { return formService.getAllEForms();}
+            	eforms: function(formService) { return formService.getAllEForms();},
+            	teams: function(providerService) { return providerService.getActiveTeams();},
+            	groupNames: function(formService) { return formService.getGroupNames();}
             }
   	    })
-*/  
 	    .state('support', {
   	      url: '/support',
   	      templateUrl: 'help/support.jsp',
