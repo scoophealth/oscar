@@ -86,6 +86,20 @@ angular.module("providerServices", [])
              });
 
           return deferred.promise;
+        },
+        getActiveTeams: function () {
+        	var deferred = $q.defer();
+            
+            $http({
+                url: this.apiPath+'/getActiveTeams',
+                method: "GET"
+             }).success(function (data, status, headers, config) {
+            	 deferred.resolve(data.content);
+             }).error(function (data, status, headers, config) {
+            	 deferred.reject("An error occured while fetching provider settings");
+             });
+
+          return deferred.promise;
         }
     };
 });

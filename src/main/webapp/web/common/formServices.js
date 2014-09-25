@@ -62,6 +62,18 @@ angular.module("formServices", [])
             });
      
           return deferred.promise;
+        },
+        getGroupNames: function(){
+        	var deferred = $q.defer();
+        	 $http.get(this.apiPath+'/groupNames',this.configHeaders).success(function(data){
+        		 console.log('got group names !' + data.toSource());
+            	deferred.resolve(data.content);
+            }).error(function(){
+            	console.log("error fetching eforms")
+            	deferred.reject("An error occured while fetching group names");
+            });
+     
+          return deferred.promise;
         }
     };
 });
