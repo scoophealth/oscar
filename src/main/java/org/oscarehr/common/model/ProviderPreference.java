@@ -51,6 +51,14 @@ public class ProviderPreference extends AbstractModel<String> implements Seriali
 	{
 		private String name;
 		private String url;
+		
+		public QuickLink() {
+			
+		}
+		public QuickLink(String name, String url) {
+			this.name = name;
+			this.url = url;
+		}
 		public String getName() {
         	return name;
         }
