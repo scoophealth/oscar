@@ -149,7 +149,7 @@ public class DemographicSearchResult {
 	}
 
 	public String getFormattedDOB() {
-		return sdf.format(getDob());
+		return getDob()!=null? sdf.format(getDob()):null;
 	}
 
 	public Integer getRemoteFacilityId() {
