@@ -23,6 +23,27 @@
     Ontario, Canada
 
 --%>
-<h2 class="text-center">OSCAR Support</h2>
+<style>
+.experimental {
+  color: #ffffff;
+  background-color: #da4f49;
+  *background-color: #bd362f;
+}
 
-<p class="bg-info"><a href="javascript:void()" onClick="window.open('http://oscarmanual.org/14','manual','width=600,height=600');return false;"><span class="glyphicon glyphicon-book"></span>OSCAR 14 Manual</a></p>
+</style>
+<h2>OSCAR Support&nbsp;<small class="experimental">In Development</small></h2>
+
+<h4>Version: <small>{{buildInfo.versionDisplayName}}  ({{buildInfo.version}})</small></h4>
+
+<p></p>
+
+<address>
+  <strong>{{ospInfo.name}}</strong><br>
+  <abbr title="Phone">P:</abbr> {{ospInfo.phone}}
+</address>
+
+<address>
+  <strong>{{ospInfo.contact}}</strong><br>
+  <a href="mailto:{{ospInfo.email}}">{{ospInfo.email}}</a><br/>
+   <a href={{ospInfo.url}}">{{ospInfo.url}}</a>
+</address>
