@@ -1,7 +1,9 @@
-oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngTableParams, securityService, $modal, $http) {
+oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngTableParams, securityService, $modal, $http, ticklerService, noteService, providers) {
     var ticklerAPI = $resource('../ws/rs/tickler/ticklers');
          
     $scope.lastResponse = "";
+    $scope.providers = providers;
+    
     
     securityService.hasRights({items:[{objectName:'_tickler',privilege:'w'},{objectName:'_tickler',privilege:'r'}]}).then(function(result){
     	if(result.content != null && result.content.length == 2) {
@@ -9,22 +11,7 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
         	 $scope.ticklerReadAccess = result.content[1];
         	 
         	 if($scope.ticklerReadAccess) {
- 
-        		  //active provider lists for drop downs
-        		 $scope.providers = new Array();
-        		 
-        		 $http(
-        					{
-        		        url: '../ws/rs/providerService/providers/search',
-        		        method: "POST",
-        		        data: JSON.stringify({"active":true}),
-        		        headers: {'Content-Type': 'application/json'}
-        		      }).success(function (data, status, headers, config) {
-        		    	  $scope.providers = data.content;
-        		        }).error(function (data, status, headers, config) {
-        		          alert('Failed to get provider lists.');
-        		        });
-        		 
+
         		//object which represents all the filters, initialize status.
         		    $scope.search = {status:'A'};
         		    
@@ -96,21 +83,12 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
             	selectedTicklers.push(item.id);
             }
         });
-        
-        $http(
-    			{
-            url: '../ws/rs/tickler/complete',
-            method: "POST",
-            data: JSON.stringify({"ticklers":selectedTicklers}),
-            headers: {'Content-Type': 'application/json'}
-          }).success(function (data, status, headers, config) {
-               // r$scope.users = data.users; // assign  $scope.persons here as promise is resolved here 
-        	  $scope.tableParams.reload();
-            }).error(function (data, status, headers, config) {
-              alert('Failed to set ticklers to complete.');
-            });
-        
-        
+  
+        ticklerService.setCompleted(selectedTicklers).then(function(data){
+        	$scope.tableParams.reload();
+        },function(reason){
+        	alert(reason);
+        });
     }
     $scope.deleteTicklers = function() {
     	var selectedTicklers = new Array();
@@ -120,18 +98,12 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
             }
         });
         
-        $http(
-    			{
-            url: '../ws/rs/tickler/delete',
-            method: "POST",
-            data: JSON.stringify({"ticklers":selectedTicklers}),
-            headers: {'Content-Type': 'application/json'}
-          }).success(function (data, status, headers, config) {
-               $scope.tableParams.reload();
-            }).error(function (data, status, headers, config) {
-            	alert('Failed to set ticklers to deleted.');
-            });
-       
+        ticklerService.setDeleted(selectedTicklers).then(function(data){
+        	$scope.tableParams.reload();
+        },function(reason){
+        	alert(reason);
+        });
+        
     }
     
     $scope.addTickler = function() {
@@ -145,8 +117,9 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
     }
     
     $scope.editNote2 = function (tickler) {
-        $http.get('../ws/rs/notes/ticklerGetNote/'+tickler.id).success(function(data) {
-        	if(data.ticklerNote != null) {
+    	
+    	noteService.getTicklerNote(tickler.id).then(function(data){
+    		if(data.ticklerNote != null) {
         		$scope.ticklerNote = data.ticklerNote;
         	} else {
         		$scope.ticklerNote = {"editor":"you","note":"","noteId":0,"observationDate":"now","revision":1};
@@ -164,9 +137,10 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
                     }
                 }
             });
-        }).error(function(data,status,headers,config){
-        	alert('Failed to complete operation.');
-        });
+    	},function(reason){
+    		alert(reason);
+    	});
+    	
     };
     
     $scope.showComments = function(tickler){
@@ -186,7 +160,7 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
 });
 
 
-oscarApp.controller('TicklerNoteController',function($scope, $modalInstance, ticklerNote, tickler, $http) {
+oscarApp.controller('TicklerNoteController',function($scope, $modalInstance, ticklerNote, tickler, $http, noteService) {
     $scope.ticklerNote = ticklerNote;
     $scope.originalNote = ticklerNote.note;
     $scope.tickler = tickler;
@@ -197,21 +171,12 @@ oscarApp.controller('TicklerNoteController',function($scope, $modalInstance, tic
     $scope.save = function () {
     	var updatedNote = $scope.ticklerNote.note;
     	$scope.ticklerNote.tickler = $scope.tickler;
-    	 
-    	$http(
-    			{
-            url: '../ws/rs/notes/ticklerSaveNote',
-            method: "POST",
-            data: JSON.stringify($scope.ticklerNote),
-            headers: {'Content-Type': 'application/json'}
-          }).success(function (data, status, headers, config) {
-               // $scope.users = data.users; // assign  $scope.persons here as promise is resolved here 
-            }).error(function (data, status, headers, config) {
-               alert('Failed to save note.');
-            });
-    
-
-        $modalInstance.close("Someone Saved Me");
+    	
+    	noteService.saveTicklerNote($scope.ticklerNote).then(function(data){
+    		 $modalInstance.close("Someone Saved Me");
+    	},function(reason){
+    		alert(reason);
+    	});
     };
 });
 

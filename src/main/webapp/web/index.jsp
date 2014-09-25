@@ -336,6 +336,7 @@ img.navbarlogo {
 	<script src="common/scheduleServices.js"></script>
 	<script src="common/securityServices.js"></script>
 	<script src="common/billingServices.js"></script>
+	<script src="common/ticklerServices.js"></script>
 	<script src="common/formServices.js"></script>
 	<script src="common/noteServices.js"></script>
 	<script src="common/providerServices.js"></script>
