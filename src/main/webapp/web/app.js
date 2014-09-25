@@ -1,5 +1,5 @@
     
-var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices','scheduleServices','billingServices','securityServices','patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll','uxServices','ngTable','oscarFilters']);
+var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices','ticklerServices','scheduleServices','billingServices','securityServices','patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll','uxServices','ngTable','oscarFilters']);
 
 
 oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
@@ -42,7 +42,10 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
   	    .state('ticklers', {
   	      url: '/ticklers',
   	      templateUrl: 'tickler/ticklerList.jsp',
-            controller: 'TicklerListCtrl'
+            controller: 'TicklerListCtrl',
+            resolve: { 
+            	providers: function(providerService) { return providerService.searchProviders({active:true}); },
+            }
   	    })  
   	    .state('search', {
   	      url: '/search',

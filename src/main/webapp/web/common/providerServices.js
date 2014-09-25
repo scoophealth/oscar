@@ -32,11 +32,11 @@ angular.module("providerServices", [])
         getMe: function(){
         	var deferred = $q.defer();
         	 $http.get(this.apiPath+'/provider/me',this.configHeaders).success(function(data){
-            	console.log(data);
+            	console.log("me "+data);
             	deferred.resolve(data);
             }).error(function(){
-            	console.log("error fetching forms")
-            	deferred.reject("An error occured while fetching items");
+            	console.log("error fetching myself")
+            	deferred.reject("An error occured while getting user data");
             });
      
           return deferred.promise;
@@ -96,7 +96,7 @@ angular.module("providerServices", [])
              }).success(function (data, status, headers, config) {
             	 deferred.resolve(data.content);
              }).error(function (data, status, headers, config) {
-            	 deferred.reject("An error occured while fetching provider settings");
+            	 deferred.reject("An error occured while fetching provider teams");
              });
 
           return deferred.promise;

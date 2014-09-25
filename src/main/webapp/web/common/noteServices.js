@@ -79,6 +79,30 @@ angular.module("noteServices", [])
                });
         
              return deferred.promise;
+       },
+       getTicklerNote: function (ticklerId) {
+           var deferred = $q.defer();
+           $http.get(this.apiPath + '/ticklerGetNote/'+ticklerId,this.configHeaders).success(function(data){
+           	deferred.resolve(data);
+           }).error(function(){
+           	deferred.reject("An error occured while fetching tickler note");
+           });
+    
+         return deferred.promise;
+       },
+       saveTicklerNote: function (ticklerNote) {
+       	var deferred = $q.defer();
+       	$http({
+               url: this.apiPath+'/ticklerSaveNote',
+               method: "POST",
+               data: JSON.stringify(ticklerNote),
+               headers: {'Content-Type': 'application/json'}
+             }).success(function (data, status, headers, config) {
+           	  deferred.resolve(data);
+               }).error(function (data, status, headers, config) {
+               	deferred.reject("An error occured while setting saving tickler note");
+               });
+          return deferred.promise;
        }
     };
 });
