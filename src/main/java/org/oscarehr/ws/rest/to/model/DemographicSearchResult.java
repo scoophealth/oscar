@@ -30,7 +30,7 @@ import org.apache.tools.ant.util.DateUtils;
 
 public class DemographicSearchResult {
 
-	private static SimpleDateFormat sdf = new SimpleDateFormat(DateUtils.ISO8601_DATE_PATTERN);
+	private SimpleDateFormat sdf = new SimpleDateFormat(DateUtils.ISO8601_DATE_PATTERN);
 	
 	private Integer demographicNo;
 	private String lastName;
