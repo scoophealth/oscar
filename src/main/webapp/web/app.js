@@ -1,5 +1,5 @@
     
-var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices','scheduleServices','securityServices','patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll','uxServices','ngTable','oscarFilters']);
+var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices','scheduleServices','billingServices','securityServices','patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll','uxServices','ngTable','oscarFilters']);
 
 
 oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
@@ -59,12 +59,22 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
   	      templateUrl: 'document/documents_classic.jsp',
             controller: 'DocumentsCtrl'
   	    })
+/*
   	    .state('settings', {
   	      url: '/settings',
   	      templateUrl: 'settings/settings.jsp',
-            controller: 'SettingsCtrl'
+            controller: 'SettingsCtrl',
+            resolve: { 
+            	user: function(providerService) { return providerService.getMe(); },
+            	billingServiceTypes: function(billingService) { return billingService.getUniqueServiceTypes(); },
+            	providerList: function(providerService) { return providerService.searchProviders({'active':true});},
+            	loadedSettings: function(providerService) { return providerService.getSettings();},
+            	encounterForms: function(formService) { return formService.getAllEncounterForms();},
+            	eforms: function(formService) { return formService.getAllEForms();}
+            }
   	    })
-  	    .state('support', {
+*/  
+	    .state('support', {
   	      url: '/support',
   	      templateUrl: 'help/support.jsp',
             controller: 'SupportCtrl'
@@ -233,3 +243,22 @@ oscarApp.factory('Navigation', function($rootScope) {
   }
 });
 
+
+/*
+
+angular.module('oscarProviderViewModule').directive('oscarSecurityShow', function ($animate, securityService) {
+	  return function(scope, element, attr) {
+		    scope.$watch(attr.oscarSecurityShow, function ngShowWatchAction(value){
+		    	//console.log('valuee='+value.toSource());
+		    	
+		    	if(value.objectName != null && value.privilege != null) {
+		    		//securityService.hasHigh(value.objectName,value.privilege,null);
+		    		console.log('gtg');
+		    	}
+		    	
+		      //set value to true to show, or else hide
+	    	  $animate[value ? 'removeClass' : 'addClass'](element, 'ng-hide');
+		    });
+	  };
+});
+*/

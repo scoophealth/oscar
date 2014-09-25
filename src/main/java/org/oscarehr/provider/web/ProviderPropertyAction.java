@@ -96,7 +96,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletResponse response) {
 
          DynaActionForm frm = (DynaActionForm)actionform;
-         String provider = request.getParameter("provider_no");
+         String provider = LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo();
          UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.STALE_NOTEDATE);
 
          if( prop == null ) {

@@ -23,14 +23,17 @@
  */
 package org.oscarehr.managers;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.oscarehr.common.dao.EFormDao;
+import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
 import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.dao.EFormGroupDao;
-import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
+import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EFormData;
+import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +56,9 @@ public class FormsManager {
 
 	@Autowired
 	private EFormDataDao eFormDataDao; 
+	
+	@Autowired
+	private EncounterFormDao encounterFormDao;
 
 	public static final String EFORM = "eform"; 
 	public static final String FORM = "form";
@@ -113,4 +119,10 @@ public class FormsManager {
 		return (results);
     	
     }
+    
+	public List<EncounterForm> getAllEncounterForms() {
+		List<EncounterForm> results = encounterFormDao.findAll();
+		Collections.sort(results, EncounterForm.FORM_NAME_COMPARATOR);
+		return (results);
+	}
 }

@@ -23,45 +23,24 @@
     Ontario, Canada
 
 */
-angular.module("formServices", [])
-	.service("formService", function ($http,$q,$log) {
+angular.module("billingServices", [])
+	.service("billingService", function ($http,$q,$log) {
 		return {
-		apiPath:'../ws/rs/forms',
+		apiPath:'../ws/rs/',
 		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
-        getAllFormsByHeading: function(demographicNo,heading){
-        	var deferred = $q.defer();
-        	 $http.get(this.apiPath+'/'+demographicNo+'/all?heading='+heading,this.configHeaders).success(function(data){
+        getUniqueServiceTypes: function () {
+            var deferred = $q.defer();
+            $http.get(this.apiPath+'billing/uniqueServiceTypes',this.configHeadersWithCache).success(function(data){
             	console.log(data);
-            	deferred.resolve(data);
-            }).error(function(){
-            	console.log("error fetching forms")
-            	deferred.reject("An error occured while fetching items");
-            });
-     
-          return deferred.promise;
-        },
-        getAllEncounterForms: function(){
-        	var deferred = $q.defer();
-        	 $http.get(this.apiPath+'/allEncounterForms',this.configHeaders).success(function(data){
             	deferred.resolve(data.content);
             }).error(function(){
-            	console.log("error fetching encounter")
-            	deferred.reject("An error occured while fetching encounter forms");
+            	console.log("error fetching billing service types")
+            	deferred.reject("An error occured while fetching billing service types");
             });
      
           return deferred.promise;
-        },
-        getAllEForms: function(){
-        	var deferred = $q.defer();
-        	 $http.get(this.apiPath+'/allEForms',this.configHeaders).success(function(data){
-            	deferred.resolve(data.content);
-            }).error(function(){
-            	console.log("error fetching eforms")
-            	deferred.reject("An error occured while fetching eforms");
-            });
-     
-          return deferred.promise;
+            
         }
     };
 });
