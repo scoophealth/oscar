@@ -87,7 +87,7 @@ public class ConsultationAttachLabs {
         for(int i = 0; i < docs.size(); ++i) {
             alreadyAttached = false;
             for(int j = 0; j < oldlist.size(); ++j) {
-                if( (oldlist.get(j)).labPatientId.equals(docs.get(i)) ) {
+                if( (oldlist.get(j)).segmentID.equals(docs.get(i)) ) {
                     alreadyAttached = true;
                     keeplist.add(oldlist.get(j));
                     break;
@@ -102,7 +102,7 @@ public class ConsultationAttachLabs {
             if( keeplist.contains(oldlist.get(i)))
                 continue;
 
-           detachLabConsult((oldlist.get(i)).labPatientId, reqId);
+           detachLabConsult((oldlist.get(i)).segmentID, reqId);
         }
 
         //now we can add association to new list
