@@ -103,7 +103,9 @@ public class ProgramManager2 {
         List<ProviderDefaultProgram> rs = providerDefaultProgramDao.getProgramByProviderNo(providerNo);
         if(!rs.isEmpty()) {
     	   defProgramId = rs.get(0).getProgramId();
-    	   result =  programProviderDAO.getProgramProvider(providerNo, Long.valueOf(defProgramId));
+    	   if(defProgramId >0) {
+    		   result =  programProviderDAO.getProgramProvider(providerNo, Long.valueOf(defProgramId));
+    	   }
         }
         
         if(result !=null) {

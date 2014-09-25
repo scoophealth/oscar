@@ -57,6 +57,20 @@ angular.module("ticklerServices", [])
                 	deferred.reject("An error occured while setting tickets to deleted status");
                 });
            return deferred.promise;
+        },
+        search: function (filter, startIndex,limit) {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/search?startIndex='+startIndex+'&limit='+limit,
+                method: "POST",
+                data: JSON.stringify(filter),
+                headers: {'Content-Type': 'application/json'}
+              }).success(function (data, status, headers, config) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers, config) {
+                	deferred.reject("An error occured while searching ticklers");
+                });
+           return deferred.promise;
         }
     };
 });

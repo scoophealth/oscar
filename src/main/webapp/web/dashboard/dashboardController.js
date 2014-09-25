@@ -23,133 +23,82 @@
     Ontario, Canada
 
 */
-oscarApp.controller('DashboardCtrl', function ($scope,$http) {
+oscarApp.controller('DashboardCtrl', function ($scope,$http,providerService,ticklerService,messageService, inboxService, k2aService) {
 	
-	//header
-	$scope.displayDate= new Date();
-	$http({
-	    url: '../ws/rs/providerService/provider/me.json',
-	    dataType: 'json',
-	    method: 'GET',
-	    headers: {
-	        "Content-Type": "application/json"
-	    }
+	//header	
+	$scope.displayDate= function() {return new Date();}
+	
+	providerService.getMe().then(function(data){
+		$scope.userFirstName = data.firstName;
+		
+		ticklerService.search({priority:'',status:'A',assignee:data.providerNo},0,6).then(function(response){
+			if(response.tickler == null) {
+				return;
+			}
+				
+			if (response.tickler instanceof Array) {
+				$scope.ticklers = response.tickler;
+			} else {
+				var arr = new Array();
+				arr[0] = response.tickler;
+				$scope.ticklers = arr;
+			}	
+		},function(reason){
+			alert(reason);
+		});
+		
+		messageService.getUnread(6).then(function(response){
+			if(response.message == null) {
+				return;
+			}
+			
+			if (response.message instanceof Array) {
+				$scope.messages = response.message;
+			} else {
+				var arr = new Array();
+				arr[0] = response.message;
+				$scope.messages = arr;
+			}			
+		},function(reason){
+			alert(reason);
+		});
+		
+		inboxService.getDashboardItems(20).then(function(response){
+			if(response.inbox == null) {
+				return;
+			}
+			if (response.inbox instanceof Array) {
+				$scope.inbox = response.inbox;
+			} else {
+				var arr = new Array();
+				arr[0] = response.inbox;
+				$scope.inbox = arr;
+			}			
+		},function(reason){
+			alert(reason);
+		});
+		
+		k2aService.getK2aFeed().then(function(response){
+			if(response.item == null) {
+				return;
+			}
+			
+			if (response.item instanceof Array) {
+				$scope.k2afeed = response.item;
+			} else {
+				var arr = new Array();
+				arr[0] = response.item;
+				$scope.k2afeed = arr;
+			}			
+		},function(reason){
+			alert(reason);
+		});
+		
+	},function(reason){
+		alert(reason);
+	});
 
-	}).success(function(response){
-		$scope.userFirstName = response.firstName;
-	}).error(function(error){
-	    $scope.error = error;
-	});	
 	
-	
-	//ticklers
-	$http({
-	    url: '../ws/rs/tickler/mine?limit=6',
-	    dataType: 'json',
-	    method: 'GET',
-	    headers: {
-	        "Content-Type": "application/json"
-	    }
-
-	}).success(function(response){
-		
-		if(response.tickler == null) {
-			return;
-		}
-		
-		
-		
-		if (response.tickler instanceof Array) {
-			$scope.ticklers = response.tickler;
-		} else {
-			var arr = new Array();
-			arr[0] = response.tickler;
-			$scope.ticklers = arr;
-		}
-		
-		
-	}).error(function(error){
-	    $scope.error = error;
-	});	
-	
-	
-	//oscar messages
-	$http({
-	    url: '../ws/rs/messaging/unread?limit=6',
-	    dataType: 'json',
-	    method: 'GET',
-	    headers: {
-	        "Content-Type": "application/json"
-	    }
-
-	}).success(function(response){
-		if(response.message == null) {
-			return;
-		}
-		
-		if (response.message instanceof Array) {
-			$scope.messages = response.message;
-		} else {
-			var arr = new Array();
-			arr[0] = response.message;
-			$scope.messages = arr;
-		}
-	}).error(function(error){
-	    $scope.error = error;
-	});	
-	
-	
-	//inbox
-	$http({
-	    url: '../ws/rs/inbox/mine?limit=20',
-	    dataType: 'json',
-	    method: 'GET',
-	    headers: {
-	        "Content-Type": "application/json"
-	    }
-
-	}).success(function(response){
-		
-		if(response.inbox == null) {
-			return;
-		}
-		if (response.inbox instanceof Array) {
-			$scope.inbox = response.inbox;
-		} else {
-			var arr = new Array();
-			arr[0] = response.inbox;
-			$scope.inbox = arr;
-		}
-
-	}).error(function(error){
-	    $scope.error = error;
-	});	
-	
-	//k2a
-	$http({
-	    url: '../ws/rs/rssproxy/rss?key=k2a',
-	    dataType: 'json',
-	    method: 'GET',
-	    headers: {
-	        "Content-Type": "application/json"
-	    }
-
-	}).success(function(response){
-		if(response.item == null) {
-			return;
-		}
-		
-		if (response.item instanceof Array) {
-			$scope.k2afeed = response.item;
-		} else {
-			var arr = new Array();
-			arr[0] = response.item;
-			$scope.k2afeed = arr;
-		}
-
-	}).error(function(error){
-	    $scope.error = error;
-	});	
 	
 	$scope.isTicklerExpiredOrHighPriority = function(tickler) {
 		var ticklerDate = Date.parse(tickler.serviceDate);
