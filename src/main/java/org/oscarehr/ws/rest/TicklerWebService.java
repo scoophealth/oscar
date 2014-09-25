@@ -63,6 +63,38 @@ public class TicklerWebService extends AbstractServiceImpl {
 	private SecurityInfoManager securityInfoManager;
 	
 
+	@POST
+	@Path("/search")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public TicklerResponse search(JSONObject json, @QueryParam("startIndex") int startIndex, @QueryParam("limit") int limit) {
+		
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "r", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		
+		CustomFilter cf = new CustomFilter(true);
+		
+		if(json.containsKey("status")) {
+			cf.setStatus(json.getString("status"));
+		}
+		if(json.containsKey("priority")) {
+			cf.setPriority(json.getString("priority"));
+		}
+		if(json.containsKey("assignee")) {
+			cf.setAssignee(json.getString("assignee"));
+		}
+		
+		List<Tickler> ticklers = ticklerManager.getTicklers(getLoggedInInfo(),cf,startIndex,limit);
+
+		TicklerResponse result = new TicklerResponse();
+		result.setTotal(ticklers.size());
+		result.getContent().addAll(ticklerConverter.getAllAsTransferObjects(ticklers)); 
+		
+		
+		return result;
+	}
+	
 	@GET
 	@Path("/mine")
 	@Produces("application/json")

@@ -1,5 +1,8 @@
     
-var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices','ticklerServices','scheduleServices','billingServices','securityServices','patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll','uxServices','ngTable','oscarFilters']);
+var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices',
+                                                          'ticklerServices','scheduleServices','billingServices','securityServices',
+                                                          'patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll',
+                                                          'uxServices','ngTable','oscarFilters','messageServices','inboxServices','k2aServices']);
 
 
 oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
@@ -13,6 +16,7 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 	      url: '/dashboard',
 	      templateUrl: 'dashboard/dashboard.jsp',
           controller: 'DashboardCtrl'
+         
 	    })
 	    .state('inbox', {
 	      url: '/inbox',

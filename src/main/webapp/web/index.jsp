@@ -342,6 +342,9 @@ img.navbarlogo {
 	<script src="common/providerServices.js"></script>
 	<script src="common/patientDetailStatusServices.js"></script>
 	<script src="common/uxServices.js"></script>
+	<script src="common/messageServices.js"></script>
+	<script src="common/inboxServices.js"></script>
+	<script src="common/k2aServices.js"></script>
 	<script src="filters.js"></script>
 	<script src="app.js"></script>
 	

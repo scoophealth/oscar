@@ -29,7 +29,7 @@
 }
 </style>
 
-<p class="lead">Welcome {{userFirstName}} <span class="pull-right">{{displayDate | date:'MMMM d, y'}}</span></p>
+<p class="lead">Welcome {{userFirstName}} <span class="pull-right">{{displayDate() | date:'MMMM d, y'}}</span></p>
 <hr>
 
 <div class="row">
