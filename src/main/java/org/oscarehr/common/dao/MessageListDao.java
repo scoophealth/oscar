@@ -95,8 +95,7 @@ public class MessageListDao extends AbstractDao<MessageList> {
     		query.setParameter("status", status);
     	}
 		query.setFirstResult(start);
-		query.setMaxResults(max);
-		
+		setLimit(query,max);
 		List<MessageList> result = query.getResultList();
 		
 		return result;
