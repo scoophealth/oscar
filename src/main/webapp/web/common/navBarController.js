@@ -25,13 +25,13 @@
 */
 
 
-oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $state,providerService, securityService) {
+oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $state,providerService, securityService, personaService) {
 	
 	
 	providerService.getMe().then(function(result){
-			$scope.me = result;
+				$scope.me = result;
 		    },function(reason){
-		   	 alert("unable to get my info..can't load page");
+		    	alert("unable to get my info..can't load page");
 	});
 		
 	
@@ -47,18 +47,8 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
     	}
     });
   
-	
-	
-	$http({
-	    url: '../ws/rs/persona/navbar',
-	    dataType: 'json',
-	    method: 'GET',
-	    headers: {
-	        "Content-Type": "application/json"
-	    }
-
-	}).success(function(response){
-		$scope.currentProgram = response.currentProgram.program;
+    personaService.getNavBar().then(function(response){
+    	$scope.currentProgram = response.currentProgram.program;
 		if (response.programDomain.program instanceof Array) {
 			$scope.programDomain = response.programDomain.program;
 		} else {
@@ -75,23 +65,15 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 		$scope.moreMenuItems = response.menus.moreMenu.items;
 		$scope.userMenuItems = response.menus.userMenu.items;
 
-	}).error(function(error){
-	    $scope.error = error;
-	});	
+    },function(reason){
+    	alert(reason);
+    });
 	
-	
+    
 	//reload the navbar at any time..not sure why i can't call this form the controller.
-	$scope.getNavbar = function () {
-		$http({
-		    url: '../ws/rs/persona/navbar',
-		    dataType: 'json',
-		    method: 'GET',
-		    headers: {
-		        "Content-Type": "application/json"
-		    }
-
-		}).success(function(response){
-			$scope.currentProgram = response.currentProgram.program;
+	getNavBar = function() {
+	    personaService.getNavBar().then(function(response){
+	    	$scope.currentProgram = response.currentProgram.program;
 			if (response.programDomain.program instanceof Array) {
 				$scope.programDomain = response.programDomain.program;
 			} else {
@@ -107,14 +89,15 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 			$scope.menuItems = response.menus.menu.items;
 			$scope.moreMenuItems = response.menus.moreMenu.items;
 			$scope.userMenuItems = response.menus.userMenu.items;
-		}).error(function(error){
-		    $scope.error = error;
-		});	
+
+	    },function(reason){
+	    	alert(reason);
+	    });
 	}
 	
-	  $scope.loadRecord = function(demographicNo) {
-	 		 $state.go('record.details', {demographicNo:demographicNo, hideNote:true});
-	     }
+	$scope.loadRecord = function(demographicNo) {
+		$state.go('record.details', {demographicNo:demographicNo, hideNote:true});
+	}
 	
 	//to help ng-clicks on buttons
 	$scope.transition = function ( state ) {
@@ -133,26 +116,6 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 		if($scope.me != null) {
 			window.open('../oscarMessenger/DisplayMessages.do?providerNo='+$scope.me.providerNo,'msgs','height=700,width=1024');
 		}
-	}	
-	
-	$scope.changeProgram = function(temp){
-		
-		$http({
-		    url: '../ws/rs/program/setDefaultProgramInDomain?programId='+temp,
-		    dataType: 'json',
-		    method: 'GET',
-		    headers: {
-		        "Content-Type": "application/json"
-		    }
-
-		}).success(function(response){
-			$scope.getNavbar();
-		}).error(function(error){
-		    $scope.error = error;
-		});	
-		
-		//TODO: need an action called or something to update the session variable on the class oscar ui
-		
 	}	 
 	
 	$scope.newDemographic = function(size){
@@ -181,6 +144,15 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 	$scope.isActive = function (state) { 
 		return $state.is(state);
 	};
+	
+    $scope.changeProgram = function(programId){
+    	personaService.setCurrentProgram(programId).then(function(response){
+    		this.getNavBar();
+    	},function(reason){
+    		alert(reason);
+    	});
+    }
+
 		
 });
 
