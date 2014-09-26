@@ -88,7 +88,13 @@ public class TicklerWebService extends AbstractServiceImpl {
 		List<Tickler> ticklers = ticklerManager.getTicklers(getLoggedInInfo(),cf,startIndex,limit);
 
 		TicklerResponse result = new TicklerResponse();
-		result.setTotal(ticklers.size());
+		
+		if(ticklers.size()==limit) {
+			result.setTotal(ticklerManager.getNumTicklers(getLoggedInInfo(), cf));
+		} else {
+			result.setTotal(ticklers.size());
+		}
+		
 		result.getContent().addAll(ticklerConverter.getAllAsTransferObjects(ticklers)); 
 		
 		

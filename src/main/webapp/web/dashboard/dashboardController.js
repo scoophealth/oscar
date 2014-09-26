@@ -33,6 +33,7 @@ oscarApp.controller('DashboardCtrl', function ($scope,$http,providerService,tick
 		$scope.me = data;
 		
 		ticklerService.search({priority:'',status:'A',assignee:data.providerNo},0,6).then(function(response){
+			$scope.totalTicklers = response.total;
 			if(response.tickler == null) {
 				return;
 			}
