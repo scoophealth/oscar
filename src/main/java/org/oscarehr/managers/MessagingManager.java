@@ -48,8 +48,13 @@ public class MessagingManager {
 	
 	
 	public List<MessageList> getMyInboxMessages(LoggedInInfo loggedInInfo, String providerNo, int offset, int limit) {		
-		List<MessageList> msgs = messageListDao.findMessageRangeByProviderNo(providerNo, offset, limit);
-		 
+		return getMyInboxMessages(loggedInInfo, providerNo, null, offset, limit);
+	}
+	
+	public List<MessageList> getMyInboxMessages(LoggedInInfo loggedInInfo, String providerNo, String status, int offset, int limit) {		
+		
+		List<MessageList> msgs = messageListDao.search(providerNo, status, offset, limit);
+		
 		for(MessageList msg:msgs) {
 	        	LogAction.addLogSynchronous(loggedInInfo, "MessagingManager.getMyInboxMessages", "msglistid="+msg.getId());
 		}
@@ -57,12 +62,21 @@ public class MessagingManager {
 		return msgs;
 	}
 	
-	public int getMyInboxMessageCount(String providerNo, boolean onlyWithPatientAttached) {		
-		List<MessageList> msgs = messageListDao.findUnreadByProvider(providerNo);
+	public Integer getMyInboxMessagesCount(LoggedInInfo loggedInInfo, String providerNo, String status) {
+		
+		Integer result = messageListDao.searchAndReturnTotal(providerNo, status);
+		 
+		return result;
+	}
+	
+	//TODO: refactor this into the search functions..have to relate the msgDemoMap table to the query to be able to add this filter
+	public int getMyInboxMessageCount(LoggedInInfo loggedInInfo, String providerNo, boolean onlyWithPatientAttached) {		
 		
 		if(!onlyWithPatientAttached) {
-			return msgs.size();
+			return getMyInboxMessagesCount(loggedInInfo, providerNo, MessageList.STATUS_NEW);
 		}
+		
+		List<MessageList> msgs = messageListDao.findUnreadByProvider(providerNo);
 		
 		int total = 0;
 		for(MessageList msg:msgs) {

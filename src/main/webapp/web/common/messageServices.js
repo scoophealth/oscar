@@ -33,7 +33,7 @@ angular.module("messageServices", [])
         getUnread: function (limit) {
         	var deferred = $q.defer();
         	$http({
-                url: this.apiPath+'/unread?limit='+limit,
+                url: this.apiPath+'/unread?startIndex=0&limit='+limit,
                 method: "GET",
                 headers: this.configHeaders,
               }).success(function (data) {

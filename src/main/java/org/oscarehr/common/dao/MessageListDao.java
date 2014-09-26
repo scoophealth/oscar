@@ -65,19 +65,67 @@ public class MessageListDao extends AbstractDao<MessageList> {
 		query.setParameter("status", status);
 		return query.getResultList();	    
     }
-	
-    public List<MessageList> findMessageRangeByProviderNo(String providerNo, int start, int max) {
-    	Query query = createQuery("mt", "mt.providerNo = :providerNo order by id desc");
-		query.setParameter("providerNo", providerNo);
-		query.setFirstResult(start);
-		query.setMaxResults(max);
-		List<MessageList> result = query.getResultList();
-		return result;
-	}
     
 	public List<MessageList> findUnreadByProvider(String providerNo) {
 		Query query = createQuery("ml", "ml.providerNo = :providerNo and ml.status ='new'");
 		query.setParameter("providerNo", providerNo);
 		return query.getResultList();
 	}
+	
+    public List<MessageList> search(String providerNo, String status, int start, int max) {
+    	
+    	StringBuilder sql = new StringBuilder();
+    	sql.append("select ml from MessageList ml, MessageTbl mt where ml.message = mt.id");
+    	
+    	if(providerNo != null && !providerNo.isEmpty()) {
+    		sql.append(" AND ml.providerNo= :providerNo ");
+    	}
+    	if(status != null && !status.isEmpty()) {
+    		sql.append(" AND ml.status = :status ");
+    	}
+     
+    	sql.append(" ORDER BY mt.date DESC, mt.time DESC");
+    	
+    	Query query = entityManager.createQuery(sql.toString());
+    	
+    	if(providerNo != null && !providerNo.isEmpty()) {
+    		query.setParameter("providerNo", providerNo);
+    	}
+    	if(status != null && !status.isEmpty()) {
+    		query.setParameter("status", status);
+    	}
+		query.setFirstResult(start);
+		query.setMaxResults(max);
+		
+		List<MessageList> result = query.getResultList();
+		
+		return result;
+	}
+    
+    public Integer searchAndReturnTotal(String providerNo, String status) {
+    	
+    	StringBuilder sql = new StringBuilder();
+    	sql.append("select count(ml) from MessageList ml, MessageTbl mt where ml.message = mt.id");
+    	
+    	if(providerNo != null && !providerNo.isEmpty()) {
+    		sql.append(" AND ml.providerNo= :providerNo ");
+    	}
+    	if(status != null && !status.isEmpty()) {
+    		sql.append(" AND ml.status = :status ");
+    	}
+     
+    	Query query = entityManager.createQuery(sql.toString());
+    	
+    	if(providerNo != null && !providerNo.isEmpty()) {
+    		query.setParameter("providerNo", providerNo);
+    	}
+    	if(status != null && !status.isEmpty()) {
+    		query.setParameter("status", status);
+    	}
+		
+		Integer result = ((Long)query.getSingleResult()).intValue();
+		
+		return result;
+	}
+    
 }

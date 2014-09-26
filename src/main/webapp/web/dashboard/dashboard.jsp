@@ -58,7 +58,7 @@
 		<tfoot>
 	    <tr ng-if="ticklers.length > 5">
 	      <td colspan="6">
-			 <span class="label label-success" onClick="location.href='#/ticklers'">See More Ticklers</span> 
+			 <span class="label label-success" ui-sref="ticklers">See More Ticklers</span> 
 	      </td>
 	    </tr>
 	  </tfoot>
@@ -69,10 +69,10 @@
 <br/>
 
 
-<p class="lead">You have {{(messages.length>0) && messages.length || "no"}}  new message{{(messages.length>1) && "s" || ""}}{{(messages.length==0) && "s" || ""}}{{(messages == null) && "s" || ""}}.</p>
+<p class="lead">You have {{(totalMessages > 0) && totalMessages || "no"}} new message{{(totalMessages != 1) && "s" || ""}}.</p>
 
 
-<div ng-if="messages.length">
+<div ng-if="totalMessages > 0">
 <table class="table table-condensed  table-hover" >
     <tr>
     <!-- 	<th class="flag-column"></th> -->
@@ -86,14 +86,14 @@
 	<!-- 	<td></td> -->
 		<td>{{item.fromName}}</td>
 		<td>{{item.subject}}</td>
-		<td>{{item.dateOfMessage | date:'yyyy-MM-dd HH:mm'}}</td>
+		<td>{{item.dateOfMessage}}</td>
 		<td ng-if="item.demographicNo">{{item.demographicName}}</td>
 		<td ng-if="!item.demographicNo"></td>
 	</tr>
 	<tfoot>
-    <tr ng-if="messages.length > 5">
+    <tr ng-if="totalMessages > 5">
       <td colspan="6">
-		 <span class="label label-success">See More Messages</span> 
+		 <span class="label label-success" ng-click="openClassicMessenger()">See More Messages</span> 
       </td>
     </tr>
   </tfoot>
