@@ -27,6 +27,9 @@
 .flag-column {
 	width:10px
 }
+.overdue {
+ background-color:pink
+}
 </style>
 
 <p class="lead">Welcome {{userFirstName}} <span class="pull-right">{{displayDate() | date:'MMMM d, y'}}</span></p>
@@ -36,9 +39,10 @@
 <div class="col-md-9" ng-controller="DashboardCtrl">
 
 
-<p class="lead">You have {{(ticklers.length>0) && ticklers.length || "no"}} active tickler{{(ticklers.length>1) && "s" || ""}}{{(ticklers.length==0) && "s" || ""}}{{(ticklers==null) && "s" || ""}} assigned to you.</p>
+<p class="lead">You have {{(totalTicklers > 0) && totalTicklers || "no"}} active tickler{{(totalTicklers != 1) && "s" || ""}}.</p>
 
-<div ng-if="ticklers.length>0">
+
+<div ng-if="totalTicklers>0">
 	<table class="table table-condensed  table-hover" >
 		<tr>
 			<th class="flag-column"></th>
@@ -47,7 +51,7 @@
 			<th>Message</th>
 		</tr>
 		
-		<tr ng-repeat="item in ticklers" ng-hide="$index >= 5">
+		<tr ng-repeat="item in ticklers" ng-hide="$index >= 5" >
 			<td>
 				<span ng-if="isTicklerHighPriority(item)" class="glyphicon glyphicon-flag" style="color:red"></span>
 			</td>
@@ -56,7 +60,7 @@
 			<td>{{item.message}}</td>
 		</tr>
 		<tfoot>
-	    <tr ng-if="ticklers.length > 5">
+	    <tr ng-if="totalTicklers > 5">
 	      <td colspan="6">
 			 <span class="label label-success" ui-sref="ticklers">See More Ticklers</span> 
 	      </td>
@@ -69,7 +73,7 @@
 <br/>
 
 
-<p class="lead">You have {{(totalMessages > 0) && totalMessages || "no"}} new message{{(totalMessages != 1) && "s" || ""}}.</p>
+<p class="lead">You have {{(totalMessages > 0) && totalMessages || "no"}} unread message{{(totalMessages != 1) && "s" || ""}}.</p>
 
 
 <div ng-if="totalMessages > 0">
@@ -153,7 +157,7 @@
     </tr>
               
     <tr ng-repeat="item in inbox" ng-hide="$index >= 5">
-  <td><span ng-if="item.priority != 'Routine'" class="glyphicon glyphicon-flag" style="color:red"></span></td>
+  <td><span ng-if="item.properity != null && item.priority != 'Routine'" class="glyphicon glyphicon-flag" style="color:red"></span></td>
 		  	
         <td >{{item.demographicName}}</td>
         <td>{{item.discipline}}</td>
@@ -164,7 +168,7 @@
     <tfoot>
     <tr ng-if="inbox.length > 5">
       <td colspan="6">
-		 <span class="label label-success">See More Inbox</span> 
+		 <span class="label label-success" ui-sref="inbox">See More Inbox</span> 
       </td>
     </tr>
   </tfoot>
