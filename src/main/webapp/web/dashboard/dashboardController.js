@@ -30,6 +30,7 @@ oscarApp.controller('DashboardCtrl', function ($scope,$http,providerService,tick
 	
 	providerService.getMe().then(function(data){
 		$scope.userFirstName = data.firstName;
+		$scope.me = data;
 		
 		ticklerService.search({priority:'',status:'A',assignee:data.providerNo},0,6).then(function(response){
 			if(response.tickler == null) {
@@ -48,6 +49,8 @@ oscarApp.controller('DashboardCtrl', function ($scope,$http,providerService,tick
 		});
 		
 		messageService.getUnread(6).then(function(response){
+			$scope.totalMessages = response.total;
+			
 			if(response.message == null) {
 				return;
 			}
@@ -125,5 +128,11 @@ oscarApp.controller('DashboardCtrl', function ($scope,$http,providerService,tick
 			
 		return result;
 	}
+	
+	$scope.openClassicMessenger = function() {
+		if($scope.me != null) {
+			window.open('../oscarMessenger/DisplayMessages.do?providerNo='+$scope.me.providerNo,'msgs','height=700,width=1024');
+		}
+	}	
 	
 });

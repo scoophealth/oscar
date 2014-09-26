@@ -145,8 +145,8 @@ public class PersonaService extends AbstractServiceImpl {
 		
 		/* counts */
 		
-		int messageCount = messagingManager.getMyInboxMessageCount(provider.getProviderNo(), false);
-		int ptMessageCount = messagingManager.getMyInboxMessageCount(provider.getProviderNo(),true);
+		int messageCount = messagingManager.getMyInboxMessageCount(getLoggedInInfo(),provider.getProviderNo(), false);
+		int ptMessageCount = messagingManager.getMyInboxMessageCount(getLoggedInInfo(),provider.getProviderNo(),true);
 		result.setUnreadMessagesCount(messageCount);
 		result.setUnreadPatientMessagesCount(ptMessageCount);
 		

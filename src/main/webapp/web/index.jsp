@@ -203,7 +203,7 @@ img.navbarlogo {
 							<span  class="glyphicon glyphicon-envelope"></span> 
 						</a>
 						<span title="New OSCAR messages (demographic)">{{unreadMessagesCount}}</span> |
-						<span title="Total new OSCAR Messages">{{unreadMessagesCount}}</span> |
+						<span title="Total new OSCAR Messages">{{unreadPatientMessagesCount}}</span> |
 						<span title="New messages from patients">-</span> 
 					</span>
 					&nbsp; &nbsp;

@@ -51,13 +51,18 @@ public class MessagingService extends AbstractServiceImpl {
 	@GET
 	@Path("/unread")
 	@Produces("application/json")
-	public MessagingResponse getMyUnreadMessages(@QueryParam("limit") int limit) {
+	public MessagingResponse getMyUnreadMessages(@QueryParam("startIndex") int startIndex, @QueryParam("limit") int limit) {
 		Provider provider=getCurrentProvider();
-		List<MessageList> msgs = messagingManager.getMyInboxMessages(getLoggedInInfo(), provider.getProviderNo(),0,limit);
-
+		List<MessageList> msgs = messagingManager.getMyInboxMessages(getLoggedInInfo(), provider.getProviderNo(),MessageList.STATUS_NEW,startIndex,limit);
+		
 		MessagingResponse result = new MessagingResponse();
-		result.setTotal(msgs.size());
 		result.getContent().addAll(messagingConverter.getAllAsTransferObjects(msgs)); 
+		
+		if(msgs.size()==limit) {
+			 result.setTotal(messagingManager.getMyInboxMessagesCount(getLoggedInInfo(), provider.getProviderNo(),MessageList.STATUS_NEW));
+		} else {
+			result.setTotal(msgs.size());
+		}
 		
 		
 		return result;
@@ -69,7 +74,7 @@ public class MessagingService extends AbstractServiceImpl {
 	public int getMyUnreadMessages(@QueryParam("demoAttachedOnly") boolean demoAttachedOnly) {
 		Provider provider=getCurrentProvider();
 
-		int count = messagingManager.getMyInboxMessageCount(provider.getProviderNo(),demoAttachedOnly);
+		int count = messagingManager.getMyInboxMessageCount(getLoggedInInfo(), provider.getProviderNo(),demoAttachedOnly);
 		
 		return count;
 	}

@@ -23,9 +23,9 @@
  */
 package org.oscarehr.ws.rest.conversion;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
-import org.apache.tools.ant.util.DateUtils;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.MessageTblDao;
 import org.oscarehr.common.dao.MsgDemoMapDao;
@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessagingConverter extends AbstractConverter<MessageList, MessageTo1> {
 
-	
+	 
 	//private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	private MessageTblDao messageTblDao;
 	
@@ -70,7 +70,11 @@ public class MessagingConverter extends AbstractConverter<MessageList, MessageTo
 		
 		MessageTo1 d = new MessageTo1();
 		d.setId(t.getId());
-		d.setDateOfMessage(DateUtils.format(msg.getDate(), "yyyy-MM-dd HH:mm"));
+		
+		
+		String strDate = (new SimpleDateFormat("yyyy-MM-dd")).format(msg.getDate()) + " " + (new SimpleDateFormat("HH:mm")).format(msg.getTime());
+
+		d.setDateOfMessage(strDate);
 		d.setFromName(msg.getSentBy());
 		d.setMessage(msg.getMessage());
 		d.setSubject(msg.getSubject());
