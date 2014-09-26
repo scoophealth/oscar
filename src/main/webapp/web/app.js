@@ -2,7 +2,7 @@
 var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices',
                                                           'ticklerServices','scheduleServices','billingServices','securityServices',
                                                           'patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll',
-                                                          'uxServices','ngTable','oscarFilters','messageServices','inboxServices','k2aServices']);
+                                                          'uxServices','ngTable','oscarFilters','messageServices','inboxServices','k2aServices', 'personaServices']);
 
 
 oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {

@@ -25,9 +25,6 @@
 --%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
-//Initialize some variables
-LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-String userName = loggedInInfo.getLoggedInProvider().getFormattedName();
 session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 %>
 
@@ -44,7 +41,6 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 <title>OSCAR</title>
 
 <link href="../library/bootstrap/3.0.0/css/bootstrap.css" rel="stylesheet">
-<!-- link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"   -->
 <link rel="stylesheet" href="css_up/jquery-ui.css">
 <link href="../css/font-awesome.css" rel="stylesheet">
 
@@ -213,7 +209,7 @@ img.navbarlogo {
 					<span class="dropdown-toggle hand-hover"><span class="glyphicon glyphicon-globe"></span></span>
 					<ul class="dropdown-menu" role="menu">
                     	<li ng-repeat="item in programDomain">
-                        	<a href="#" ng-click="changeProgram(item.program.id)">
+                        	<a ng-click="changeProgram(item.program.id)">
 					    		<span ng-if="item.program.id === currentProgram.id">&#10004;</span>
 					    		<span ng-if="item.program.id != currentProgram.id">&nbsp;&nbsp;</span>
 								{{item.program.name}}
@@ -345,6 +341,7 @@ img.navbarlogo {
 	<script src="common/messageServices.js"></script>
 	<script src="common/inboxServices.js"></script>
 	<script src="common/k2aServices.js"></script>
+	<script src="common/personaServices.js"></script>
 	<script src="filters.js"></script>
 	<script src="app.js"></script>
 	

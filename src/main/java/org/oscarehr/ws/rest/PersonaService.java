@@ -45,6 +45,7 @@ import org.oscarehr.ws.rest.conversion.ProgramProviderConverter;
 import org.oscarehr.ws.rest.conversion.SecobjprivilegeConverter;
 import org.oscarehr.ws.rest.conversion.SecuserroleConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
+import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.NavbarResponse;
 import org.oscarehr.ws.rest.to.PersonaRightsResponse;
 import org.oscarehr.ws.rest.to.PrimitiveResponseWrapper;
@@ -195,4 +196,10 @@ public class PersonaService extends AbstractServiceImpl {
 		return result;
 	}
 
+	@GET
+	@Path("/setDefaultProgramInDomain")
+	public GenericRESTResponse setDefaultProgram(@QueryParam("programId") Integer programId) {
+		programManager2.setCurrentProgramInDomain(getLoggedInInfo().getLoggedInProviderNo(), programId);
+		return new GenericRESTResponse();
+	}
 }
