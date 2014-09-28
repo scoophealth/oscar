@@ -1,6 +1,8 @@
 oscarApp.controller('SettingsCtrl', function ($scope,$http,$state, providerList, user, billingServiceTypes, 
 		loadedSettings, providerService, $modal, encounterForms,eforms, $filter,teams,groupNames) {
 
+	$scope.$emit('configureShowPatientList', false);
+	 
 	$scope.providerList = providerList;
 	$scope.user = user;
 	$scope.billingServiceTypes = billingServiceTypes;
