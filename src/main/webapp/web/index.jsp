@@ -110,7 +110,7 @@ img.navbarlogo {
 
 </head>
 
-<body>
+<body ng-controller="OscarCtrl">
 
 	<!-- Fixed navbar -->
 	<div class="navbar navbar-default navbar-fixed-top" ng-controller="NavBarCtrl" ng-show="me != null" ng-cloak>
@@ -244,8 +244,8 @@ img.navbarlogo {
 	 
 	 <!-- Start patient List template --> 
 
-	<div class="container-fluid" ng-controller="PatientListCtrl">
-		<div id="left_pane" class="col-md-2">
+	<div class="container-fluid" ng-controller="PatientListCtrl" >
+		<div id="left_pane" class="col-md-2" ng-if="showPatientList()">
 		
 			<ul class="nav nav-tabs nav-justified">			
 				<li ng-repeat="item in tabItems" ng-class="{'active': isActive(item.id)}">
@@ -300,7 +300,7 @@ img.navbarlogo {
 	
 	<!-- End patient List template -->
 		
-	<div id="right_pane" class="col-md-10" ui-view ng-cloak></div>
+	<div id="right_pane" ng-class="getRightClass('col-md')" ui-view ng-cloak></div>
 	
 	<!-- just for debugging -->
 	<p class="text-warning" id="myinfo"></p>
@@ -345,6 +345,7 @@ img.navbarlogo {
 	<script src="filters.js"></script>
 	<script src="app.js"></script>
 	
+	<script src="oscarController.js"></script>
 	<script src="dashboard/dashboardController.js"></script>
 	<script src="common/navBarController.js"></script>
 	<script src="patientlist/patientListController.js"></script>
