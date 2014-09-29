@@ -63,9 +63,14 @@
 <%@page import="org.oscarehr.common.dao.EncounterTemplateDao"%>
 <%@page import="org.oscarehr.casemgmt.web.CheckBoxBean"%>
 <%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
+<%@page import="org.oscarehr.managers.ProgramManager2" %>
+
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 <%
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
+
 String demoNo = request.getParameter("demographicNo");
 String privateConsentEnabledProperty = OscarProperties.getInstance().getProperty("privateConsentEnabled");
 boolean privateConsentEnabled = privateConsentEnabledProperty != null && privateConsentEnabledProperty.equals("true");
@@ -76,9 +81,22 @@ if(infoExt == null || !"yes".equalsIgnoreCase(infoExt.getValue())) {
 	showPopup=true;
 }
 
+ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+
+boolean showConsentsThisTime=false;
+String[] privateConsentPrograms = OscarProperties.getInstance().getProperty("privateConsentPrograms","").split(",");
+ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+if(pp != null) {
+	for(int x=0;x<privateConsentPrograms.length;x++) {
+		if(privateConsentPrograms[x].equals(pp.getProgramId().toString())) {
+			showConsentsThisTime=true;
+		}
+	}
+}
+
+
 try
 {
-	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	Facility facility = loggedInInfo.getCurrentFacility();
 
     String pId = (String)session.getAttribute("case_program_id");
@@ -349,7 +367,7 @@ try
 
 				<div style="display:inline-block; text-align: left;">
 					<%
-						if (privateConsentEnabled && showPopup) {
+						if (privateConsentEnabled && showPopup && showConsentsThisTime) {
 					%>				
 					<div id="informedConsentDiv" style="background-color: orange; padding: 5px; font-weight: bold;">
 						<input type="checkbox" value="ic" name="informedConsentCheck" id="informedConsentCheck" onClick="return doInformedConsent('<%=demoNo%>');"/>&nbsp;Please ensure that Informed Consent has been obtained!
