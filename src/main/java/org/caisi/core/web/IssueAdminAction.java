@@ -40,40 +40,25 @@ import org.caisi.service.IssueAdminManager;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 // use your IDE to handle imports
 public class IssueAdminAction extends DispatchAction {
     private static Logger log = MiscUtils.getLogger();
-    private IssueAdminManager mgr = null;
-   // private CaisiRoleManager caisiRoleMgr = null;
-    private SecRoleDao secRoleDao;
+    
+    private IssueAdminManager mgr = SpringUtils.getBean(IssueAdminManager.class);
+   
+    private SecRoleDao secRoleDao = SpringUtils.getBean(SecRoleDao.class);
 
-    public void setSecRoleDao(SecRoleDao secRoleDao) {
-    	this.secRoleDao = secRoleDao;
-    }
-
-    public void setIssueAdminManager(IssueAdminManager issueAdminManager) {
-        this.mgr = issueAdminManager;
-    }
-    /*
-    public void setCaisiRoleManager(CaisiRoleManager caisiRoleManager) {
-        this.caisiRoleMgr = caisiRoleManager;
-    }
-    */
-    public ActionForward cancel(ActionMapping mapping, ActionForm form,
-                                HttpServletRequest request,
-                                HttpServletResponse response)
-     {
+   
+    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         if (log.isDebugEnabled()) {
             log.debug("entering 'delete' method...");
         }
         return list(mapping, form, request, response);
     }
 
-    public ActionForward delete(ActionMapping mapping, ActionForm form,
-                                HttpServletRequest request,
-                                HttpServletResponse response)
-     {
+    public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         if (log.isDebugEnabled()) {
             log.debug("entering 'delete' method...");
         }
@@ -84,10 +69,8 @@ public class IssueAdminAction extends DispatchAction {
         saveMessages(request, messages);
         return list(mapping, form, request, response);
     }
-    public ActionForward edit(ActionMapping mapping, ActionForm form,
-                              HttpServletRequest request,
-                              HttpServletResponse response)
-     {
+   
+    public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         if (log.isDebugEnabled()) {
             log.debug("entering 'edit' method...");
         }
@@ -107,23 +90,24 @@ public class IssueAdminAction extends DispatchAction {
             issueAdminForm.set("issueAdmin", issueAdmin);
         }
         //request.setAttribute("caisiRoles", caisiRoleMgr.getRoles());
-	request.setAttribute("caisiRoles", secRoleDao.findAll());
+	
+        request.setAttribute("caisiRoles", secRoleDao.findAll());
         return mapping.findForward("edit");
     }
-    public ActionForward list(ActionMapping mapping, ActionForm form,
-                              HttpServletRequest request,
-                              HttpServletResponse response)
-     {
+
+    public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	return list(mapping,form,request,response);
+    }
+    
+    public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         if (log.isDebugEnabled()) {
             log.debug("entering 'list' method...");
         }
         request.setAttribute("issueAdmins", mgr.getIssueAdmins());
         return mapping.findForward("list");
     }
-    public ActionForward save(ActionMapping mapping, ActionForm form,
-                              HttpServletRequest request,
-                              HttpServletResponse response)
-     {
+   
+    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         if (log.isDebugEnabled()) {
             log.debug("entering 'save' method...");
         }
@@ -138,27 +122,26 @@ public class IssueAdminAction extends DispatchAction {
 
         DynaActionForm issueAdminForm = (DynaActionForm) form;
 
-	//issue code cannot be duplicated
-	String newCode = ((Issue)issueAdminForm.get("issueAdmin")).getCode();
-	String newId = String.valueOf(((Issue)issueAdminForm.get("issueAdmin")).getId());
-	List<Issue> issueAdmins = mgr.getIssueAdmins();
-	for(Iterator<Issue> it = issueAdmins.iterator(); it.hasNext();) {
-	    Issue issueAdmin = it.next();
-	    String existCode = issueAdmin.getCode();
-	    String existId = String.valueOf(issueAdmin.getId());
-	    if((existCode.equals(newCode)) && !(existId.equals(newId))) {
-		ActionMessages messages = new ActionMessages();
-		messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("issueAdmin.code.exist"));
-		saveErrors(request,messages);
+		//issue code cannot be duplicated
+		String newCode = ((Issue)issueAdminForm.get("issueAdmin")).getCode();
+		String newId = String.valueOf(((Issue)issueAdminForm.get("issueAdmin")).getId());
+		List<Issue> issueAdmins = mgr.getIssueAdmins();
+		for(Iterator<Issue> it = issueAdmins.iterator(); it.hasNext();) {
+		    Issue issueAdmin = it.next();
+		    String existCode = issueAdmin.getCode();
+		    String existId = String.valueOf(issueAdmin.getId());
+		    if((existCode.equals(newCode)) && !(existId.equals(newId))) {
+		    	ActionMessages messages = new ActionMessages();
+		    	messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("issueAdmin.code.exist"));
+		    	saveErrors(request,messages);
                 //request.setAttribute("caisiRoles", caisiRoleMgr.getRoles());
                 return mapping.findForward("edit");
-	    }
-	}
+		    }
+		}
 
         mgr.saveIssueAdmin((Issue)issueAdminForm.get("issueAdmin"));
         ActionMessages messages = new ActionMessages();
-        messages.add(ActionMessages.GLOBAL_MESSAGE,
-                     new ActionMessage("issueAdmin.saved"));
+        messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("issueAdmin.saved"));
         saveMessages(request, messages);
         return list(mapping, form, request, response);
     }
