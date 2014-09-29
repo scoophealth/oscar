@@ -34,7 +34,10 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	console.log("What is the state "+$state.params.type+" : "+angular.isUndefined($state.params.type)+" id "+$state.params.id,$state); // Use this to load the current form if the page is refreshed
 	
 	
-	$scope.page.formlists = [{id:0,label:'Existing'},{id:1,label:'Create New'}];  //Need to get this from the server.
+	
+	
+	
+	$scope.page.formlists = [{id:0,label:'Completed'},{id:1,label:'Library'}];  //Need to get this from the server.
 	
 	$scope.page.formlists.forEach(function (item, index) {
 		console.log('What is the item ',item);
@@ -47,6 +50,12 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	$scope.changeTo = function(listId){
 		$scope.page.currentlistId = listId;
 		console.log('set currentlist to '+listId);
+		if(listId == 0){
+			formService.getAllFormsByHeading($stateParams.demographicNo,'Completed').then(function(data) {
+		        console.debug('whats the index'+0,data);
+		        $scope.page.currentFormList[0] = data.list;
+		    });
+		}
 	}
 	
 	$scope.viewFormState = function(item){
@@ -56,13 +65,19 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 		}
 		
 		var url = '';
-		
+		console.log("item",item);
 		if(item.type == 'eform' && angular.isDefined(item.id)){
 			url = '../eform/efmshowform_data.jsp?fdid='+item.id;
 			$state.go('record.forms.existing',{demographicNo:$stateParams.demographicNo, type: 'eform' ,id:item.id});
 		}else if(item.type == 'eform'  && angular.isUndefined(item.id)){
 			url = '../eform/efmformadd_data.jsp?fid='+item.formId+'&demographic_no='+ $stateParams.demographicNo;
-			$state.go('record.forms.new',{demographicNo:$stateParams.demographicNo, type: 'eform' ,id:item.formId});
+			//$state.go('record.forms.new',{demographicNo:$stateParams.demographicNo, type: 'eform' ,id:item.formId});
+			
+			var rnd = Math.round(Math.random() * 1000);
+			win = "win" + rnd;
+			
+			window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");  
+			return;
 		}
 
 		$scope.page.currentForm = item;
