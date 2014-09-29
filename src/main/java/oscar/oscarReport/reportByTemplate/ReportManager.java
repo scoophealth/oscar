@@ -117,6 +117,10 @@ public class ReportManager {
 					if (paramdescription == null) return new ReportObjectGeneric(templateid, "Error: Param description not found on param '" + paramid + "'");
 					List<Element> choicesXml = param.getChildren("choice");
 					ArrayList<Choice> choices = new ArrayList<Choice>();
+					String priority = param.getAttributeValue("priority") != null? param.getAttributeValue("priority"): "query";
+					
+					
+					
 					String paramquery = param.getChildText("param-query"); //if retrieving choices from the DB
 					if (paramquery != null) {
 						for(Object[] o : dao.runNativeQuery(paramquery)) {							
@@ -136,14 +140,22 @@ public class ReportManager {
 							choices.add(curchoice);
 						}
 					}
+					List<Choice> tmp = new ArrayList<Choice>();
 					for (int i2 = 0; i2 < choicesXml.size(); i2++) {
 						Element choice = choicesXml.get(i2);
 						String choiceid = choice.getAttributeValue("id");
 						String choicetext = choice.getTextTrim();
 						if (choiceid == null) choiceid = choicetext;
 						Choice curchoice = new Choice(choiceid, choicetext);
-						choices.add(curchoice);
+						tmp.add(curchoice);
 					}
+					
+					if("choice".equals(priority)) {
+						choices.addAll(0, tmp);
+					} else {
+						choices.addAll(tmp);
+					}
+					
 					Parameter curparam = new Parameter(paramid, paramtype, paramdescription, choices);
 					params.add(curparam);
 				}

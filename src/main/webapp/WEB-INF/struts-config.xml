@@ -658,7 +658,7 @@
 			<forward name="list" path="/caisicore/FacilityMessageList.jsp" />
 			<forward name="edit" path="/caisicore/FacilityMessageForm.jsp" />
 		</action>
-		<action path="/issueAdmin" type="org.springframework.web.struts.DelegatingActionProxy" name="issueAdminForm" scope="request" parameter="method" validate="false">
+		<action path="/issueAdmin" type="org.caisi.core.web.IssueAdminAction" name="issueAdminForm" scope="request" parameter="method" validate="false">
 			<forward name="list" path="/caisicore/issueAdminList.jsp" />
 			<forward name="edit" path="/caisicore/issueAdminForm.jsp" />
 		</action>
