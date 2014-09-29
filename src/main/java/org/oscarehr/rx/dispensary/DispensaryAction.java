@@ -149,7 +149,7 @@ public class DispensaryAction extends DispatchAction {
 		dd.setDrugId(Integer.parseInt(request.getParameter("drugId")));
 		dd.setNotes(request.getParameter("notes"));
 		dd.setProviderNo(providerNo);
-		dd.setPaidFor(true);
+		dd.setPaidFor(false);
 		
 		String code = request.getParameter("product");
 		//if the drop down was read-only, we passed it as "productCode" instead.
