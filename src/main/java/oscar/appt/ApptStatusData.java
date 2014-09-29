@@ -30,6 +30,8 @@ package oscar.appt;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.oscarehr.common.model.AppointmentStatus;
@@ -103,6 +105,25 @@ public final class ApptStatusData {
             return getStr("desc");
         else
             return getStr(aStatus, aTitle);
+    }
+    
+    /**
+     * Converts the title which is the reference to the resource file to the actual value for this locale
+     * 
+     * @return
+     */
+    public String getTitleString(Locale locale) {
+    	ResourceBundle bundle = ResourceBundle.getBundle("oscarResources",locale);
+    	
+    	String value = "";
+    	if(bundle != null) {
+    		String keyName = getStr(aStatus, aTitle);
+    		if(keyName != null && !keyName.isEmpty()) {
+    			value = bundle.getString(keyName);
+    		}
+    	}
+    
+        return value;
     }
     
     public String getBgColor() {
