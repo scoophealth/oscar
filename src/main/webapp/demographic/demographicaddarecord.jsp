@@ -237,43 +237,6 @@
 
     demographicDao.save(demographic);
 
-         //propagate demographic to caisi admission table
-
-         //fetch programId associated with provider
-            //if none(0) then check for OSCAR program; if available set it as default
-          //  oscar.oscarEncounter.data.EctProgram ectProgram = new oscar.oscarEncounter.data.EctProgram(request.getSession());
-          //  String progId = ectProgram.getProgram(request.getParameter("staff"));
-          //  if( progId.equals("0") ) {
-          //  	Program p = programDao.getProgramByName("OSCAR");
-          //  	if(p != null) {
-          //  		progId = p.getId().toString();
-          //  	}
-          //  }
-          //  String admissionDate=null;
-
-    	//	String yearTmp = StringUtils.trimToNull(request.getParameter("date_joined_year"));
-    	//	String monthTmp = StringUtils.trimToNull(request.getParameter("date_joined_month"));
-    	//	String dayTmp = StringUtils.trimToNull(request.getParameter("date_joined_date"));
-    	//	if (yearTmp!=null && monthTmp!=null && dayTmp!=null) {
-    	//		admissionDate = yearTmp+"-"+monthTmp+"-"+dayTmp;
-    	//	} else {
-    	//		GregorianCalendar cal=new GregorianCalendar();
-    	//		admissionDate=""+cal.get(GregorianCalendar.YEAR)+'-'+(cal.get(GregorianCalendar.MONTH)+1)+'-'+cal.get(GregorianCalendar.DAY_OF_MONTH);
-    	//	}
-
-    	//	Admission admission = new Admission();
-    	//	admission.setClientId(demographic.getDemographicNo());
-    	//	admission.setProgramId(Integer.parseInt(progId));
-    	//	admission.setProviderNo(request.getParameter("staff"));
-    	//	admission.setAdmissionDate(MyDateFormat.getSysDate(admissionDate));
-    	//	admission.setAdmissionStatus("current");
-    	//
-    	//	admission.setTemporaryAdmission(false);
-    	//	admission.setAdmissionFromTransfer(false);
-    	//	admission.setDischargeFromTransfer(false);
-    	//	admission.setRadioDischargeReason("0");
-    	//
-          //  admissionDao.persist(admission);
 
           GenericIntakeEditAction gieat = new GenericIntakeEditAction();
           gieat.setAdmissionManager(am);
@@ -406,7 +369,13 @@
 
 <p>
 <h2><bean:message key="demographic.demographicaddarecord.msgSuccessful" /></h2>
-    <a href="demographiccontrol.jsp?demographic_no=<%=dem%>&displaymode=edit&dboperation=search_detail"><bean:message key="demographic.demographicaddarecord.goToRecord"/></a>
+
+<a href="demographiccontrol.jsp?demographic_no=<%=dem%>&displaymode=edit&dboperation=search_detail"><bean:message key="demographic.demographicaddarecord.goToRecord"/></a>
+
+<br/>
+
+<a href="../PMmodule/ClientManager.do?id=<%=dem%>"><bean:message key="demographic.demographicaddarecord.goToCaisiRecord"/></a>
+
 
 <p></p>
 <%@ include file="footer.jsp"%></center>
