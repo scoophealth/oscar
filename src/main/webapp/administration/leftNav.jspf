@@ -333,7 +333,7 @@ String curProvider_no = (String)session.getAttribute("user");
 								
 					<caisi:isModuleLoad moduleName="caisi">		
 						<li><a href="javascript:void(0);"
-						class="xlink" rel="/PMmodule/Reports/ProgramActivityReport" styleClass="contentLink"><bean:message key="admin.admin.activityRpt" /></a></li>
+						class="xlink" rel="${ctx}/PMmodule/Reports/ProgramActivityReport" styleClass="contentLink"><bean:message key="admin.admin.activityRpt" /></a></li>
 					</caisi:isModuleLoad>			
 								
 					<li><a href="${ctx}/oscarReport/patientlist.jsp"
@@ -490,21 +490,21 @@ String curProvider_no = (String)session.getAttribute("user");
 				<div class="accordion-inner">
 				<ul>
 					<li><a href="javascript:void(0);"
-						class="xlink" rel="/SystemMessage.do">
+						class="xlink" rel="${ctx}/SystemMessage.do">
 						<bean:message key="admin.admin.systemMessage" />
 					</a></li>
 					<li><a href="javascript:void(0);"
-						class="xlink" rel="/FacilityMessage.do?"><bean:message key="admin.admin.FacilitiesMsgs"/></a></li>
+						class="xlink" rel="${ctx}/FacilityMessage.do?"><bean:message key="admin.admin.FacilitiesMsgs"/></a></li>
 					<li><a href="javascript:void(0);"
-						class="xlink" rel="/issueAdmin.do?method=list">
+						class="xlink" rel="${ctx}/issueAdmin.do?method=list">
 						<bean:message key="admin.admin.issueEditor" />
 					</a></li>
 					<li><a href="javascript:void(0);"
-						class="xlink" rel="/SurveyManager.do">
+						class="xlink" rel="${ctx}/SurveyManager.do">
 						<bean:message key="admin.admin.surveyManager" />
 					</a></li>
 					<li><a href="javascript:void(0);"
-						class="xlink" rel="/DefaultEncounterIssue.do">
+						class="xlink" rel="${ctx}/DefaultEncounterIssue.do">
 						<bean:message key="admin.admin.defaultEncounterIssue" />
 					</a></li>
 				</ul>
@@ -525,31 +525,31 @@ String curProvider_no = (String)session.getAttribute("user");
 					<security:oscarSec roleName="<%=roleName$%>"
 						objectName="_admin.systemMessage" rights="r" reverse="<%=false%>">
 						<li><a href="javascript:void(0);"
-						class="xlink" rel="/SystemMessage.do">
+						class="xlink" rel="${ctx}/SystemMessage.do">
 							<bean:message key="admin.admin.systemMessage" />
 						</a></li>
 					</security:oscarSec>
 					<security:oscarSec roleName="<%=roleName$%>"
 						objectName="_admin.facilityMessage" rights="r" reverse="<%=false%>">
 						<li><a href="javascript:void(0);"
-						class="xlink" rel="/FacilityMessage.do?"><bean:message key="admin.admin.FacilitiesMsgs"/></a></li>
+						class="xlink" rel="${ctx}/FacilityMessage.do?"><bean:message key="admin.admin.FacilitiesMsgs"/></a></li>
 					</security:oscarSec>
 					<security:oscarSec roleName="<%=roleName$%>"
 						objectName="_admin.lookupFieldEditor" rights="r">
 						<li><a href="javascript:void(0);"
-						class="xlink" rel="/Lookup/LookupTableList.do"> <bean:message key="admin.admin.LookupFieldEditor"/></a></li>
+						class="xlink" rel="${ctx}/Lookup/LookupTableList.do"> <bean:message key="admin.admin.LookupFieldEditor"/></a></li>
 					</security:oscarSec>
 					<security:oscarSec roleName="<%=roleName$%>"
 						objectName="_admin.issueEditor" rights="r">
 						<li><a href="javascript:void(0);"
-						class="xlink" rel="/issueAdmin.do?method=list">
+						class="xlink" rel="${ctx}/issueAdmin.do?method=list">
 							<bean:message key="admin.admin.issueEditor" />
 						</a></li>
 					</security:oscarSec>
 					<security:oscarSec roleName="<%=roleName$%>"
 						objectName="_admin.userCreatedForms" rights="r">
 						<li><a href="javascript:void(0);"
-						class="xlink" rel="/SurveyManager.do">
+						class="xlink" rel="${ctx}/SurveyManager.do">
 							<bean:message key="admin.admin.surveyManager" />
 						</a></li>
 					</security:oscarSec>
