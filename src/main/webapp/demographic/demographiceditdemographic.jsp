@@ -47,6 +47,8 @@
 <%@page import="org.oscarehr.managers.ProgramManager2" %>
 <%@page import="org.oscarehr.PMmodule.model.Program" %>
 <%@page import="org.oscarehr.PMmodule.web.GenericIntakeEditAction" %>
+<%@page import="org.oscarehr.managers.ProgramManager2" %>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -117,6 +119,7 @@
 	List<Provider> midwifes = providerDao.getActiveProvidersByRole("midwife");
 	
 	DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+	ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
 %>
 
 <jsp:useBean id="providerBean" class="java.util.Properties"
@@ -170,6 +173,13 @@
 	List<String[]> arr = demographicExtDao.getListOfValuesForDemo(Integer.parseInt(demographic_no));
 	Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(Integer.parseInt(demographic_no));
 
+	
+	String usSigned = StringUtils.defaultString(apptMainBean.getString(demoExt.get("usSigned")));
+    String privacyConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("privacyConsent")), "");
+	String informedConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("informedConsent")), "");
+	
+	boolean showConsentsThisTime = false;
+	
     GregorianCalendar now=new GregorianCalendar();
     int curYear = now.get(Calendar.YEAR);
     int curMonth = (now.get(Calendar.MONTH)+1);
@@ -1806,15 +1816,27 @@ if ( Dead.equals(PatStat) ) {%>
 						</div>
 						
 						
+						<oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">
+						<%
+						
+						
+							String[] privateConsentPrograms = OscarProperties.getInstance().getProperty("privateConsentPrograms","").split(",");
+							ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+							if(pp != null) {
+								for(int x=0;x<privateConsentPrograms.length;x++) {
+									if(privateConsentPrograms[x].equals(pp.getProgramId().toString())) {
+										showConsentsThisTime=true;
+									}
+								}
+							}
+						
+							if(showConsentsThisTime) {
+						%>
 						<!--  consents -->
 						<div class="demographicSection" id="consent">
 						<h3>&nbsp;<bean:message
 							key="demographic.demographiceditdemographic.consent" /></h3>
-                              <%
-                          		   String usSigned = StringUtils.defaultString(apptMainBean.getString(demoExt.get("usSigned")));
-                        	       String privacyConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("privacyConsent")), "");
-								   String informedConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("informedConsent")), "");
-                              %>
+                             
 						 <ul>
 	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.privacyConsent"/>:</span>
 	                              <span class="info"><%=privacyConsent %></span>
@@ -1828,6 +1850,10 @@ if ( Dead.equals(PatStat) ) {%>
 	                       </ul>
 						
 						</div>
+						
+						<% } %>
+						
+						</oscar:oscarPropertiesCheck>
 						
 						<!-- end of consent -->
 
@@ -3102,8 +3128,11 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 							
 							<tr valign="top">
 								
-								
+											
 								<oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">
+								<%
+								if(showConsentsThisTime) {
+								%>
 								<td colspan="2">
 									<input type="hidden" name="usSignedOrig" value="<%=StringUtils.defaultString(apptMainBean.getString(demoExt.get("usSigned")))%>" />	
 	 								<input type="hidden" name="privacyConsentOrig" value="<%=privacyConsent%>" />
@@ -3119,6 +3148,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									    <input type="radio" name="usSigned" value="unsigned" <%=usSigned.equals("unsigned") ? "checked" : ""%>><b>U.S. Resident Consent Form NOT Signed</b>
 								    </div>
 								</td>
+								<% } %>
 								</oscar:oscarPropertiesCheck>
 						  	</tr>
                                                         
