@@ -1929,7 +1929,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 			    if (as.getNextStatus() != null && !as.getNextStatus().equals("")) {
             %>
 			<!-- Short letters -->
-            <a class="apptStatus" href=# onclick="refreshSameLoc('providercontrol.jsp?appointment_no=<%=appointment.getId()%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=as.getNextStatus()%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+URLEncoder.encode(request.getParameter("curProviderName"),"UTF-8") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%><%=isWeekView?"&viewWeek=1":""%>');" title="<%=as.getTitle()%> " >
+            <a class="apptStatus" href=# onclick="refreshSameLoc('providercontrol.jsp?appointment_no=<%=appointment.getId()%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=as.getNextStatus()%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+URLEncoder.encode(request.getParameter("curProviderName"),"UTF-8") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%><%=isWeekView?"&viewWeek=1":""%>');" title="<%=as.getTitleString(request.getLocale())%> " >
             <%
 						}
 						if (as.getNextStatus() != null) {
@@ -1951,7 +1951,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 							}else{
 				    %>
 					
-				    			<img src="../images/<%=as.getImageName()%>" border="0" height="10" title="<%=as.getTitle()%>">
+				    			<img src="../images/<%=as.getImageName()%>" border="0" height="10" title="<%=as.getTitleString(request.getLocale())%>">
 					
             <%
 							}
