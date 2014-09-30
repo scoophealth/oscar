@@ -294,22 +294,11 @@ ArrayList<String> recomendations = mi.getRecommendations();
 
 	</script>
 
-	<script LANGUAGE="JavaScript">
-	<%if (session.getAttribute("textOnEncounter")!=null) {%>
-	
-	if( opener.opener.document.forms["caseManagementEntryForm"] != undefined ){
-        opener.opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
-    }else if( opener.document.forms["caseManagementEntryForm"] != undefined ){
-        opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
-	}
-
-	<%
+	<%if (session.getAttribute("textOnEncounter")!=null) {
 			//clear so values don't repeat after added to note
 			session.setAttribute("textOnEncounter", null);
-	
 	}
 	%>	
-	</script>
 
 
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/share/css/jquery-ui-1.8.15.custom.draggable.slider.css" />

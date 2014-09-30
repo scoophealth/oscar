@@ -32,25 +32,54 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>close</title>
 <script LANGUAGE="JavaScript">
-    
-     if( opener.opener.document.forms["caseManagementEntryForm"] != undefined ){        
-        opener.opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
-     }else if( opener.document.forms["caseManagementEntryForm"] != undefined ){        
-        opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
-     }
-     //TODO:// add a section here that uses an ajax call to add a note.  Or should this check be made on the submitting (check to see if the form is defined) for and let the action add the note?
-  
-    
-    
+
+//get query strings for opener url to match on submitting form
+function getParameterByName(url, name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(url);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+<%if (session.getAttribute("textOnEncounter")!=null) {%>
+
+if(opener.opener!=null || opener!=null){
+	
+if( opener.opener.document.forms["caseManagementEntryForm"] != undefined){        
+				//from Templateflowsheet
+	    	    opener.opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
+				closeWin();
+}else if( opener.document.forms["caseManagementEntryForm"] != undefined){ 
+                
+        if( getParameterByName(opener.location.href, 'demographicNo')==<%=request.getParameter("demographic_no")%> ){ 
+				opener.pasteToEncounterNote('<%=session.getAttribute("textOnEncounter")%>');
+				closeWin();
+        }else{
+				//display error
+            	document.write("<h3>Sorry, there was an error so progress note will not be inserted into chart.</h3>");
+        }
+}         
+ 
+
+}else{
+		 //incase of unseen reason the above two conditions are not met then close window
+    	 self.close();
+}
+     
+<%}else{%>
+		closeWin();
+<%}%>
+
+//TODO:// add a section here that uses an ajax call to add a note.  Or should this check be made on the submitting (check to see if the form is defined) for and let the action add the note?
+
 function closeWin() {
-      
       self.close();
       self.opener.location.reload();      
 }
 </script>
 
 </head>
-<body onload="closeWin();">
+<body>
 
 </body>
 </html>

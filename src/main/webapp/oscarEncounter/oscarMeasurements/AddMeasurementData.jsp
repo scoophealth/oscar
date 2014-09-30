@@ -40,6 +40,10 @@
   String[] measurements = request.getParameterValues("measurement");
   String temp = request.getParameter("template");
 
+  //clearing any existing values
+  if (session.getAttribute("textOnEncounter")!=null) {
+		session.setAttribute("textOnEncounter", null);
+  }
 
 
   WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
