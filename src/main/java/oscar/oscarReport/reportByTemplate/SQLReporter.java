@@ -53,6 +53,11 @@ public class SQLReporter implements Reporter {
         String templateId = request.getParameter("templateId");
         ReportObject curReport = (new ReportManager()).getReportTemplateNoParam(templateId);
         Map parameterMap = request.getParameterMap();
+        
+        if(curReport.isSequence()) {
+        	return generateSequencedReport(request);
+        }
+        
         String sql = curReport.getPreparedSQL(parameterMap);
         if (sql == "" || sql == null) {
             request.setAttribute("errormsg", "Error: Cannot find all parameters for the query.  Check the template.");
@@ -60,7 +65,7 @@ public class SQLReporter implements Reporter {
             return false;
         }
         ResultSet rs = null;
-        String rsHtml = "An SQL querry error has occured";
+        String rsHtml = "An SQL query error has occured";
         String csv = "";
         try {
             
@@ -84,4 +89,50 @@ public class SQLReporter implements Reporter {
         
         return true;
     }
+    
+    public boolean generateSequencedReport( HttpServletRequest request) {
+        String templateId = request.getParameter("templateId");
+        ReportObject curReport = (new ReportManager()).getReportTemplateNoParam(templateId);
+        Map parameterMap = request.getParameterMap();
+        
+        int x=0;
+        String sql = null;
+        while((sql = curReport.getPreparedSQL(x, parameterMap)) != null) {
+        	if (sql == "") {
+                request.setAttribute("errormsg", "Error: Cannot find all parameters for the query.  Check the template.");
+                request.setAttribute("templateid", templateId);
+                return false;
+            }
+        	
+            ResultSet rs = null;
+            String rsHtml = "An SQL query error has occured";
+            String csv = "";
+            try {
+                
+                rs = DBHandler.GetSQL(sql);
+                rsHtml = RptResultStruct.getStructure2(rs);  //makes html from the result set
+                StringWriter swr = new StringWriter();
+                CSVPrinter csvp = new CSVPrinter(swr);
+                csvp.writeln(UtilMisc.getArrayFromResultSet(rs));
+                csv = swr.toString();
+                
+                //request.getSession().setAttribute("csv", csv);
+                request.setAttribute("csv-"+x, csv);
+                request.setAttribute("sql-"+x, sql);
+                request.setAttribute("resultsethtml-"+x, rsHtml);
+          
+                
+                
+             } catch (Exception sqe) {
+                MiscUtils.getLogger().error("Error", sqe);
+            }
+            x++;
+        }
+        
+       request.setAttribute("sequenceLength", x); 
+       request.setAttribute("reportobject", curReport);
+        
+        return true;
+    }
+    
 }
