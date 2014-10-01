@@ -131,8 +131,9 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
                 	logger.debug("Antenatal CDA Record for Patient ID:" + demographic  + "\n"+cdaForLogging+"\n");
                 }
                 
-				//Create the XDS record, and have it sent.
-                createXds(demographic.getDemographicNo(),cdaForLogging);
+		//Create the XDS record, and have it sent.
+				
+                //createXds(demographic.getDemographicNo(),cdaForLogging);
 			}
 			
 			/* EIGHTEEN MONTH SECTION */
@@ -169,8 +170,10 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 	                	logger.debug("18M CDA Record for Patient ID:" + d  + "\n"+cdaForLogging+"\n");
 	                }
 	                
-	                //Create and send XDS through sharing center
-	                createXds(d,cdaForLogging);
+	              //  createXds(d,cdaForLogging);
+	                
+	               
+	        		 
 				}
 			}
 			
@@ -192,7 +195,7 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 		props.setSetIdCodingSystem("2.1.8.1.1.4.4.3.5");
 		props.setSetIdValue("atn121");
 		
-		props.setOrganization("2.16.840.1.113883.19.5");
+		props.setOrganization("2.16.840.1.113883.3.239.23.269");
 		props.setOrganizationName("CLINICHMFP");
 		return props;
 	}
@@ -206,7 +209,8 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 		
 		AffinityDomainDao affDao = SpringUtils.getBean(AffinityDomainDao.class);
  		AffinityDomainDataObject network = null;
- 		network = affDao.getAffinityDomain(1);
+ 		
+ 		network = affDao.getAffinityDomain(3);
  		
  		DocumentMetaData document = new DocumentMetaData(); 
  		document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^&%s&ISO", provider.getProviderNo(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId())); 
@@ -254,10 +258,11 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
         document.setServiceTimeEnd(Calendar.getInstance());
         
         document.setAuthor(SharingCenterUtil.createAuthor(Integer.parseInt(provider.getProviderNo())));
-        document.setPatient(SharingCenterUtil.resolvePatient(demographicNo, network));
-
-
+         
+        document.setPatient(SharingCenterUtil.createPatientDemographic(demographicNo));
  		 
+        
+        logger.info(document.toString());
  		boolean submissionResult = SharingCenterUtil.submitSingleDocument(document, network);
  		
  		logger.info("XDS submissionResult = " + submissionResult);
