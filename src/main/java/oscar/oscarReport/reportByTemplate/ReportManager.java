@@ -83,6 +83,7 @@ public class ReportManager {
 		curReport.setTemplateId(templateid);
 		curReport.setTitle(templatetitle);
 		curReport.setDescription(templatedescription);
+		curReport.setSequence(rt.isSequence());
 
 		return curReport;
 	}
@@ -101,11 +102,14 @@ public class ReportManager {
 			String type = rt.getType() == null ? "" : rt.getType();
 			String paramXML = rt.getTemplateXml();
 			ArrayList<Parameter> params = new ArrayList<Parameter>();
+			boolean sequence = rt.isSequence();
+			
 			if (!paramXML.equals("")) {
 				paramXML = UtilXML.escapeXML(paramXML); //escapes anomalies such as "date >= {mydate}" the '>' character
 				SAXBuilder parser = new SAXBuilder();
 				Document doc = parser.build(new java.io.ByteArrayInputStream(paramXML.getBytes()));
 				Element root = doc.getRootElement();
+				
 				List<Element> paramsXml = root.getChildren("param");
 				for (int i = 0; i < paramsXml.size(); i++) {
 					Element param = paramsXml.get(i);
@@ -118,8 +122,6 @@ public class ReportManager {
 					List<Element> choicesXml = param.getChildren("choice");
 					ArrayList<Choice> choices = new ArrayList<Choice>();
 					String priority = param.getAttributeValue("priority") != null? param.getAttributeValue("priority"): "query";
-					
-					
 					
 					String paramquery = param.getChildText("param-query"); //if retrieving choices from the DB
 					if (paramquery != null) {
@@ -300,6 +302,14 @@ public class ReportManager {
 				if (type.equalsIgnoreCase(ReportFactory.SQL_TYPE) && (querysql == null || querysql.length() == 0)) return "Error: The sql query is missing in <report> tag";
 				//reading active switch
 				String active = report.getAttributeValue("active");
+				
+				boolean sequence;
+				try {
+					sequence = Boolean.valueOf(report.getAttributeValue("sequence"));
+				} catch (Exception e) {
+					sequence=false;
+				}
+				
 				int activeint;
 				try {
 					activeint = Integer.parseInt(active);
@@ -320,6 +330,7 @@ public class ReportManager {
 					r.setTemplateXml(templateXMLstr);
 					r.setActive(activeint);
 					r.setType(type);
+					r.setSequence(sequence);
 					dao.persist(r);
 				} else {
 					ReportTemplates r = dao.find(Integer.parseInt(templateId));
@@ -330,6 +341,7 @@ public class ReportManager {
 						r.setTemplateXml(templateXMLstr);
 						r.setActive(activeint);
 						r.setType(type);
+						r.setSequence(sequence);
 						dao.merge(r);
 					}
 
