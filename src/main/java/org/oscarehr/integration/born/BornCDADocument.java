@@ -33,6 +33,7 @@ import org.marc.everest.datatypes.ENXP;
 import org.marc.everest.datatypes.EntityNamePartType;
 import org.marc.everest.datatypes.EntityNameUse;
 import org.marc.everest.datatypes.II;
+import org.marc.everest.datatypes.ON;
 import org.marc.everest.datatypes.PN;
 import org.marc.everest.datatypes.PostalAddressUse;
 import org.marc.everest.datatypes.TEL;
@@ -41,8 +42,11 @@ import org.marc.everest.datatypes.generic.CE;
 import org.marc.everest.datatypes.generic.CS;
 import org.marc.everest.datatypes.generic.SET;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.AssignedAuthor;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.AssignedCustodian;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Author;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Component2;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Custodian;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.CustodianOrganization;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.NonXMLBody;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Organization;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Patient;
@@ -200,7 +204,11 @@ public class BornCDADocument extends Level1Document{
 		for(Provider provider:providers) {
 			AssignedAuthor aa = new AssignedAuthor();
 			
-			aa.setTypeId("2.16.8401.113883.3.239.31.36", provider.getOhipNo());
+			SET<II> authorIdSet = new SET<II>();
+			II authorId = new II("2.16.840.1.113883.3.239.36.1.1.3",provider.getOhipNo());
+			authorIdSet.add(authorId);
+			aa.setId(authorIdSet);
+			
 			
 			Person person = new Person();
 			SET<PN> nameSet2 = new SET<PN>();
@@ -225,6 +233,28 @@ public class BornCDADocument extends Level1Document{
 		}
 		getRoot().setAuthor(authorList);
 	
+		
+		Custodian custodian = new Custodian();
+		
+		AssignedCustodian assignedCustodian  = new AssignedCustodian();
+		ON custName = new ON();
+		ENXP enxp = new ENXP(props.getOrganizationName());
+		ArrayList<ENXP> enxpList = new ArrayList<ENXP>();
+		enxpList.add(enxp);
+		custName.setParts(enxpList);
+		
+		Organization org =new Organization();
+		II orgId = new II(props.getOrganization());
+		SET<II> orgIds = new SET<II>();
+		orgIds.add(orgId);
+		org.setId(orgIds);
+		CustodianOrganization custOrg = new CustodianOrganization(orgIds);
+		custOrg.setName(custName);
+		
+		assignedCustodian.setRepresentedCustodianOrganization(custOrg);
+		custodian.setAssignedCustodian(assignedCustodian);
+		getRoot().setCustodian(custodian);
+		
 		//TODO: Parents document info also related to updates. Will determine soon.
 		/*
 		ArrayList<RelatedDocument> relatedDocs = new ArrayList<RelatedDocument>();
