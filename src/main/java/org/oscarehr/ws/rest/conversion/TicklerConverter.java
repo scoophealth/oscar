@@ -25,7 +25,9 @@ package org.oscarehr.ws.rest.conversion;
 
 import java.util.List;
 
+import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.TicklerDao;
 import org.oscarehr.common.dao.TicklerLinkDao;
@@ -53,6 +55,8 @@ public class TicklerConverter extends AbstractConverter<Tickler, TicklerTo1> {
 	private boolean includeLinks;
 	private boolean includeComments;
 	private boolean includeUpdates;
+	private boolean includeProgram;
+	
 	
 	@Override
 	public Tickler getAsDomainObject(LoggedInInfo loggedInInfo,TicklerTo1 t) throws ConversionException {
@@ -76,6 +80,8 @@ public class TicklerConverter extends AbstractConverter<Tickler, TicklerTo1> {
 		ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 		TicklerLinkDao ticklerLinkDao = SpringUtils.getBean(TicklerLinkDao.class);
+		ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
+		
 		
 		TicklerTo1 d = new TicklerTo1();
 		
@@ -134,6 +140,14 @@ public class TicklerConverter extends AbstractConverter<Tickler, TicklerTo1> {
 			}
 		}
 		
+		if(includeProgram && t.getProgramId() != null) {
+			//TODO: this should go through the manager, but I have no LoggedInInfo. Going to have to change the interface and update all the implementors
+			Program p = programDao.getProgram(t.getProgramId());
+			if(p != null) {
+				d.setProgram(new ProgramConverter().getAsTransferObject(p));
+			}
+		}
+		
 		return d;
 	}
 
@@ -159,6 +173,14 @@ public class TicklerConverter extends AbstractConverter<Tickler, TicklerTo1> {
 
 	public void setIncludeUpdates(boolean includeUpdates) {
 		this.includeUpdates = includeUpdates;
+	}
+
+	public boolean isIncludeProgram() {
+		return includeProgram;
+	}
+
+	public void setIncludeProgram(boolean includeProgram) {
+		this.includeProgram = includeProgram;
 	}
 
 	

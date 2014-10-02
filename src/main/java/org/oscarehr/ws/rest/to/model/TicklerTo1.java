@@ -80,6 +80,9 @@ public class TicklerTo1 implements Serializable {
 	
 	private List<TicklerCommentTo1> ticklerComments = new ArrayList<TicklerCommentTo1>();
 	
+	private ProgramTo1 program;
+	
+	
 	public Integer getId() {
 		return id;
 	}
@@ -215,5 +218,14 @@ public class TicklerTo1 implements Serializable {
 	public void setTicklerComments(List<TicklerCommentTo1> ticklerComments) {
 		this.ticklerComments = ticklerComments;
 	}
+
+	public ProgramTo1 getProgram() {
+		return program;
+	}
+
+	public void setProgram(ProgramTo1 program) {
+		this.program = program;
+	}
+	
 	
 }

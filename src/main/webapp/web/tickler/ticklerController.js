@@ -1,4 +1,4 @@
-oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngTableParams, securityService, $modal, $http, ticklerService, noteService, providers) {
+oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngTableParams, securityService, $modal, $http, ticklerService, noteService, providers, providerService) {
     var ticklerAPI = $resource('../ws/rs/tickler/ticklers');
          
     $scope.lastResponse = "";
@@ -22,12 +22,14 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
         		    }, {
         		        total: 0,           // length of data
         		        getData: function($defer, params) {
-        		            // ajax request to api
+        		        	// ajax request to api
         		        	$scope.search.count = params.url().count;
         		        	$scope.search.page = params.url().page;
         		        	$scope.search.includeLinks='true';
         		        	$scope.search.includeComments='true';
-        		        	//$scope.search.includeUpdates='true';
+        		        	$scope.search.includeUpdates='true';
+        		        	$scope.search.includeProgram=true;
+        		        	
         		        	
         		        	ticklerAPI.get($scope.search, function(data) {
         		                $timeout(function() {
@@ -108,12 +110,59 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
     
     $scope.addTickler = function() {
     	var windowProps = "height=400,width=600,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
-    	window.open('../tickler/ticklerAdd.jsp','ticklerAdd',windowProps);
+    	//window.open('../tickler/ticklerAdd.jsp','ticklerAdd',windowProps);
+    	
+      	var modalInstance = $modal.open({
+        	templateUrl: 'tickler/ticklerAdd.jsp',
+            controller: 'TicklerAddController',
+            backdrop: false,
+            size: 'lg'
+        });
+        
+        modalInstance.result.then(function(data){
+        	console.log('data from modalInstance '+data);
+        	if(data != null && data == true) {
+        		$scope.tableParams.reload();
+        	}
+        },function(reason){
+        	alert(reason);
+        });
+        
+        
     }
     
-    $scope.editTickler = function(ticklerId) {
-    	var windowProps = "height=600,width=800,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
-    	window.open('../tickler/ticklerEdit.jsp?tickler_no='+ticklerId,'ticklerEdit',windowProps);
+    $scope.editTickler = function(tickler) {
+    	
+        var modalInstance = $modal.open({
+        	templateUrl: 'tickler/ticklerView.jsp',
+            controller: 'TicklerViewController',
+            backdrop: false,
+            size: 'lg',
+            resolve: {
+                tickler: function () {
+                	return tickler;
+                },
+                ticklerNote: function() {
+                	return noteService.getTicklerNote(tickler.id);
+                },
+                ticklerWriteAccess: function() {
+                	return  $scope.ticklerWriteAccess;
+                },
+                me: function() {
+                	return providerService.getMe();
+                }
+            }
+        });
+        
+        modalInstance.result.then(function(data){
+        	console.log('data from modalInstance '+data);
+        	if(data != null && data == true) {
+        		$scope.tableParams.reload();
+        	}
+        },function(reason){
+        	alert(reason);
+        });
+        
     }
     
     $scope.editNote2 = function (tickler) {
@@ -187,3 +236,4 @@ oscarApp.controller('TicklerCommentController',function($scope, $modalInstance, 
 	        $modalInstance.close("Someone Closed Me");
 	    };
 });
+

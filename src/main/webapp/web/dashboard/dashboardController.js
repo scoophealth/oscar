@@ -23,10 +23,37 @@
     Ontario, Canada
 
 */
-oscarApp.controller('DashboardCtrl', function ($scope,$http,providerService,ticklerService,messageService, inboxService, k2aService) {
+oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerService,messageService, inboxService, k2aService, $modal,noteService, securityService) {
 	
 	//header	
 	$scope.displayDate= function() {return new Date();}
+	
+	
+	securityService.hasRights({items:[{objectName:'_tickler',privilege:'w'},{objectName:'_tickler',privilege:'r'}]}).then(function(result){
+		if(result.content != null && result.content.length == 2) {
+			$scope.ticklerWriteAccess = result.content[0];
+			$scope.ticklerReadAccess = result.content[1];
+		}
+	});
+		
+	$scope.updateTicklerTable = function() {
+		ticklerService.search({priority:'',status:'A',assignee:$scope.me.providerNo},0,6).then(function(response){
+			$scope.totalTicklers = response.total;
+			if(response.tickler == null) {
+				return;
+			}
+				
+			if (response.tickler instanceof Array) {
+				$scope.ticklers = response.tickler;
+			} else {
+				var arr = new Array();
+				arr[0] = response.tickler;
+				$scope.ticklers = arr;
+			}	
+		},function(reason){
+			alert(reason);
+		});
+	}
 	
 	providerService.getMe().then(function(data){
 		$scope.userFirstName = data.firstName;
@@ -135,5 +162,37 @@ oscarApp.controller('DashboardCtrl', function ($scope,$http,providerService,tick
 			window.open('../oscarMessenger/DisplayMessages.do?providerNo='+$scope.me.providerNo,'msgs','height=700,width=1024');
 		}
 	}	
-	
+
+	$scope.viewTickler = function(tickler) {
+        var modalInstance = $modal.open({
+        	templateUrl: 'tickler/ticklerView.jsp',
+            controller: 'TicklerViewController',
+            backdrop: false,
+            size: 'lg',
+            resolve: {
+                tickler: function () {
+                	return tickler;
+                },
+                ticklerNote: function() {
+                	return noteService.getTicklerNote(tickler.id);
+                },
+                ticklerWriteAccess: function() {
+                	return  $scope.ticklerWriteAccess;
+                },
+                me: function() {
+                	return $scope.me;
+                }
+            }
+        });
+        
+        modalInstance.result.then(function(data){
+        	//console.log('data from modalInstance '+data);
+        	if(data != null && data == true) {
+        		$scope.updateTicklerTable();
+        	}
+        },function(reason){
+        	alert(reason);
+        });
+        
+	}
 });
