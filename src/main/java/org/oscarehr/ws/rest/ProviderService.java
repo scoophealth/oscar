@@ -168,7 +168,12 @@ public class ProviderService extends AbstractServiceImpl {
 		int itemsToReturnVal = itemsToReturn==null?5000:startIndex.intValue();
 		boolean active = Boolean.valueOf(json.getString("active"));
 		
-		List<Provider> results = providerManager.search(getLoggedInInfo(),active,startIndexVal, itemsToReturnVal);
+		String term = null;
+		if(json.containsKey("searchTerm")) {
+			term = json.getString("searchTerm");
+		}
+		
+		List<Provider> results = providerManager.search(getLoggedInInfo(),term, active,startIndexVal, itemsToReturnVal);
 		
 		
 		ProviderConverter converter = new ProviderConverter();

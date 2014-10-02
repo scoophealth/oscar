@@ -591,17 +591,26 @@ public class ProviderDao extends HibernateDaoSupport {
 		}
 		
 		@SuppressWarnings("unchecked")
-		public List<Provider> search(boolean active, int startIndex, int itemsToReturn) {
-			String sqlCommand = "select x from Provider x ";
+		public List<Provider> search(String term, boolean active, int startIndex, int itemsToReturn) {
+			String sqlCommand = "select x from Provider x WHERE x.Status = :status ";
 			
-			if(active) {
-				sqlCommand += "WHERE x.Status='1'";
+			
+			if(term != null && term.length()>0) {
+				sqlCommand += "AND (x.LastName like :term  OR x.FirstName like :term) ";
 			}
+			
+			sqlCommand += " ORDER BY x.LastName,x.FirstName";
+
 			
 
 			Session session = this.getSession();
 			try {
 				Query q = session.createQuery(sqlCommand);
+				
+				q.setString("status", active?"1":"0");
+				if(term != null && term.length()>0) {
+					q.setString("term", term + "%");
+				}
 				
 				q.setFirstResult(startIndex);
 				q.setMaxResults(itemsToReturn);
