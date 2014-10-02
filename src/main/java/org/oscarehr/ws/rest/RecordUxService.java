@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Collection;
+import java.util.Properties;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -48,6 +49,8 @@ import org.oscarehr.ws.rest.to.model.SummaryTo1;
 import org.oscarehr.ws.rest.to.model.SummaryItemTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import oscar.util.OscarRoleObjectPrivilege;
 
 @Path("/recordUX/")
 @Component("recordUxService")
@@ -83,24 +86,96 @@ public class RecordUxService extends AbstractServiceImpl {
 	@GET
 	@Path("/{demographicNo}/recordMenu")
 	@Produces("application/json")
-	public MenuItemTo1[] getRecordMenu(@PathParam("demographicNo") Integer demographicNo){
+	public List<MenuItemTo1> getRecordMenu(@PathParam("demographicNo") Integer demographicNo){
 		logger.error("getRecordMenu getting called for demo "+demographicNo);
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
-		MenuItemTo1[] menulist = new MenuItemTo1[5];
 		
-/*
-     	 {id : 2,displayName : 'Forms'    ,path : 'record.forms'},
-     	 {id : 3,displayName : 'Labs/Docs',path : 'partials/eform.jsp'},
-     	 {id : 4,displayName : 'Rx'       ,path : 'partials/eform.jsp'}];
-	*/	
-		menulist[0] = MenuItemTo1.generateStateMenuItem(0, "Details", "record.details");
-		menulist[1] = MenuItemTo1.generateStateMenuItem(1, "Summary", "record.summary");
-		menulist[2] = MenuItemTo1.generateStateMenuItem(3, "Forms", "record.forms");
-		menulist[3] = MenuItemTo1.generateStateMenuItem(4, "Labs/Docs", "record.labsdocs");
-		menulist[4] = new MenuItemTo1(2, "Rx", "../oscarRx/choosePatient.do?demographicNo="+demographicNo);
+		String roleName = null;
+		if(loggedInInfo != null && loggedInInfo.getSession() != null){
+			roleName = (String)loggedInInfo.getSession().getAttribute("userrole") + "," + (String) loggedInInfo.getSession().getAttribute("user");
+		}
+		
+		int idCounter = 0;
+		
+		List<MenuItemTo1> menulist = new ArrayList<MenuItemTo1>();
+
+		if(checkPermissions("_demographic", roleName)){	
+			menulist.add(MenuItemTo1.generateStateMenuItem(idCounter, "Details", "record.details"));
+		}
+		if(checkPermissions("_eChart", roleName)){
+			menulist.add(MenuItemTo1.generateStateMenuItem(idCounter++, "Summary", "record.summary"));
+		}
+		if(checkPermissions("_newCasemgmt.forms", roleName) || checkPermissions("_newCasemgmt.eForms", roleName) ){
+			menulist.add(MenuItemTo1.generateStateMenuItem(idCounter++, "Forms", "record.forms"));
+		}
+		if(checkPermissions("_newCasemgmt.documents", roleName) || checkPermissions("_newCasemgmt.labResult", roleName) ){
+			menulist.add(MenuItemTo1.generateStateMenuItem(idCounter++, "Labs/Docs", "record.labsdocs"));
+		}
+		if(checkPermissions("_newCasemgmt.prescriptions", roleName)){
+			menulist.add(new MenuItemTo1(idCounter++, "Rx", "../oscarRx/choosePatient.do?demographicNo="+demographicNo));
+		}
+		//more
+		MenuItemTo1 moreMenu = new MenuItemTo1(idCounter++, "More", null);
+		moreMenu.setDropdown(true);
+	
+		menulist.add(moreMenu);
+		
+		List<MenuItemTo1> morelist = new ArrayList<MenuItemTo1>();
+		
+		/*measurements,<a onclick="popupPage(600,1000,'measurements69','/oscar/oscarEncounter/oscarMeasurements/SetupHistoryIndex.do'); return false;" href="#">Measurements</a>
+		 <a onclick="popupPage(500,900,'episode69','/oscar/Episode.do?method=list&amp;demographicNo=69'); return false;" href="#">Episodes</a>
+		 <a onclick="popupPage(500,900,'pregnancy69','/oscar/Pregnancy.do?method=list&amp;demographicNo=69'); return false;" href="#">Pregnancies</a>
+		 */
+		
+		if(checkPermissions("_newCasemgmt.preventions", roleName)){
+			morelist.add(new MenuItemTo1(idCounter++, "Preventions", "../oscarPrevention/index.jsp?demographic_no="+demographicNo));
+		}
+		
+		if(checkPermissions("_newCasemgmt.viewTickler", roleName)){
+			if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()) {
+				morelist.add(new MenuItemTo1(idCounter++, "Tickler", "../Tickler.do?filter.demographicNo="+demographicNo));
+			}else {
+				morelist.add(new MenuItemTo1(idCounter++, "Tickler", "..//tickler/ticklerDemoMain.jsp?demoview="+demographicNo));
+			}
+		}
+		
+		if(checkPermissions("_newCasemgmt.DxRegistry", roleName)){
+			morelist.add(new MenuItemTo1(idCounter++, "Disease Registry", "../oscarResearch/oscarDxResearch/setupDxResearch.do?quickList=&demographicNo="+demographicNo));
+		}
+			
+		if(checkPermissions("_newCasemgmt.oscarMsg", roleName)){
+			morelist.add(new MenuItemTo1(idCounter++, "Messenger", "../oscarMessenger/DisplayDemographicMessages.do?orderby=date&boxType=3&demographic_no="+demographicNo));
+		}
+		// Requires EctSession bean 
+		//if(checkPermissions("_newCasemgmt.measurements", roleName)){
+		//	morelist.add(new MenuItemTo1(2, "Measurements", "../oscarEncounter/oscarMeasurements/SetupHistoryIndex.do?demographic_no="+demographicNo));
+		//}
+		
+		if(checkPermissions("_newCasemgmt.consultations", roleName)){
+			morelist.add(new MenuItemTo1(idCounter++, "Consultations", "..//oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de="+demographicNo));
+		}
+		moreMenu.setDropdownItems(morelist);
+		
 		return menulist;
+		/*
+		 * ADD A WAY TO CHECK IF THE USER HAS AUTHORIZATION to specific modules.
+		 * 		  
+	    | _newCasemgmt.allergies             
+		| _newCasemgmt.otherMeds             
+		| _newCasemgmt.riskFactors           
+		| _newCasemgmt.familyHistory         
+		| _newCasemgmt.decisionSupportAlerts 
+		| _newCasemgmt.medicalHistory        
+		| _newCasemgmt.calculators           
+		| _newCasemgmt.templates             
+		| _newCasemgmt.cpp                   
+		 */
 	}
-	  
+	 
+	private boolean checkPermissions(String objectKey,String roleName){
+		List v = OscarRoleObjectPrivilege.getPrivilegeProp(objectKey);
+		return OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (List) v.get(1));
+	}
 	
 	@GET
 	@Path("/{demographicNo}/summary/{summaryName}") //@Path("/leftsideSummary")

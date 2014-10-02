@@ -70,11 +70,12 @@ public class MsgDisplayDemographicMessagesAction extends Action {
             //Initialize forward location
             String findForward = "success";
 
-            if(request.getParameter("providerNo")!=null & request.getParameter("userName")!=null)
+            //if(request.getParameter("providerNo")!=null & request.getParameter("userName")!=null)
+            if(request.getSession().getAttribute("msgSessionBean") == null)
             {
 
                 bean = new oscar.oscarMessenger.pageUtil.MsgSessionBean();
-                bean.setProviderNo(request.getParameter("providerNo"));
+                bean.setProviderNo((String) request.getSession().getAttribute("user"));
                 bean.setUserName(request.getParameter("userName"));
                 bean.setDemographic_no(request.getParameter("demographic_no"));
 
