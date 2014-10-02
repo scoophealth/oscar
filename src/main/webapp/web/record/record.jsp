@@ -53,7 +53,13 @@
 			style="padding-left: 0px;">
 			<ul class="nav navbar-nav" id="myTabs">
 				<li ng-repeat="tab in recordtabs2" ng-class="isTabActive(tab)">
-				<a ng-click="changeTab(tab)" >{{tab.label}}</a>
+					<a  ng-if="!tab.dropdown" ng-click="changeTab(tab)" >{{tab.label}}</a>
+					<a  ng-if="tab.dropdown"  class="dropdown-toggle" data-toggle="dropdown">{{tab.label}}<span class="caret"></span></a>
+						<ul ng-if="tab.dropdown" class="dropdown-menu" role="menu">
+							<li ng-repeat="dropdownItem in tab.dropdownItems" >
+								<a  ng-click="changeTab(dropdownItem)" >{{dropdownItem.label}}</a>
+							</li>
+						</ul>
 				</li>
 			</ul>
 		</div>

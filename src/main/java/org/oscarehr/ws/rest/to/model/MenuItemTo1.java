@@ -24,6 +24,7 @@
 package org.oscarehr.ws.rest.to.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -37,6 +38,8 @@ public class MenuItemTo1 implements Serializable {
     private String extra;
     private String url;
     private String state;
+    private List<MenuItemTo1> dropdownItems;
+    private Boolean dropdown = false;
     
     
     public MenuItemTo1(){
@@ -95,6 +98,22 @@ public class MenuItemTo1 implements Serializable {
     	ret.label = label;
     	ret.state = state;
     	return ret;
+    }
+
+	public List<MenuItemTo1> getDropdownItems() {
+	    return dropdownItems;
+    }
+
+	public void setDropdownItems(List<MenuItemTo1> dropdownItems) {
+	    this.dropdownItems = dropdownItems;
+    }
+
+	public Boolean isDropdown() {
+	    return dropdown;
+    }
+
+	public void setDropdown(Boolean dropdown) {
+	    this.dropdown = dropdown;
     }
 
 }
