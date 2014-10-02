@@ -51,13 +51,13 @@
 			<th>Message</th>
 		</tr>
 		
-		<tr ng-repeat="item in ticklers" ng-hide="$index >= 5" >
+		<tr ng-repeat="item in ticklers" ng-hide="$index >= 5" ng-click="viewTickler(item)">
 			<td>
 				<span ng-if="isTicklerHighPriority(item)" class="glyphicon glyphicon-flag" style="color:red"></span>
 			</td>
 			<td>{{item.demographicName}}</td>
 			<td>{{item.serviceDate | date:'yyyy-MM-dd'}}</td>
-			<td>{{item.message}}</td>
+			<td>{{item.message  | cut:true:200 }}</td>
 		</tr>
 		<tfoot>
 	    <tr ng-if="totalTicklers > 5">

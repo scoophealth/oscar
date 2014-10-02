@@ -23,6 +23,7 @@
  */
 package org.oscarehr.ws.rest;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,15 +37,21 @@ import javax.ws.rs.QueryParam;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Tickler;
+import org.oscarehr.common.model.TicklerTextSuggest;
+import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.ticklers.service.TicklerService;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.rest.conversion.TicklerConverter;
+import org.oscarehr.ws.rest.conversion.TicklerTextSuggestConverter;
+import org.oscarehr.ws.rest.to.AbstractSearchResponse;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.TicklerResponse;
+import org.oscarehr.ws.rest.to.model.TicklerTextSuggestTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -61,6 +68,10 @@ public class TicklerWebService extends AbstractServiceImpl {
 	
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
+	
+	@Autowired
+	private ProgramManager2 programManager;
+	
 	
 
 	@POST
@@ -149,6 +160,8 @@ public class TicklerWebService extends AbstractServiceImpl {
 	    boolean includeLinks = Boolean.valueOf(req.getParameter("includeLinks"));
 	    boolean includeComments = Boolean.valueOf(req.getParameter("includeComments"));
 	    boolean includeUpdates = Boolean.valueOf(req.getParameter("includeUpdates"));
+	    boolean includeProgram = Boolean.valueOf(req.getParameter("includeProgram"));
+	    
 	    
 	    int count = Integer.parseInt(strCount);
 	    int page = Integer.parseInt(strPage);
@@ -208,6 +221,9 @@ public class TicklerWebService extends AbstractServiceImpl {
 		if(includeUpdates) {
 			ticklerConverter.setIncludeUpdates(true);
 		}
+		if(includeProgram) {
+			ticklerConverter.setIncludeProgram(true);
+		}
 		
 		result.getContent().addAll(ticklerConverter.getAllAsTransferObjects(ticklers)); 
 		
@@ -258,6 +274,100 @@ public class TicklerWebService extends AbstractServiceImpl {
 			ticklerManager.deleteTickler(getLoggedInInfo(), ticklerNo, getLoggedInInfo().getLoggedInProviderNo());
 		}
 		
+		return response;
+	}
+	
+	@POST
+	@Path("/update")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse updateTickler(JSONObject json){
+		GenericRESTResponse response = new GenericRESTResponse();
+		
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "u", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		
+		MiscUtils.getLogger().info(json.toString());
+		
+		Tickler tickler = ticklerManager.getTickler(getLoggedInInfo(), json.getInt("id"));
+		
+		if(tickler == null) {
+			throw new RuntimeException("Tickler not found");
+		}
+		
+		//TODO: verify it's good data associations
+		tickler.setTaskAssignedTo(json.getString("taskAssignedTo"));
+	
+		tickler.setStatusAsChar(json.getString("status").charAt(0));
+		
+		tickler.setPriorityAsString(json.getString("priority"));
+		
+		tickler.setMessage(json.getString("message"));
+		
+		//tickler.setUpdateDate(new Date());
+		
+		String dt = json.getString("serviceDate");
+		tickler.setServiceDate(javax.xml.bind.DatatypeConverter.parseDateTime(dt).getTime());
+		
+		ticklerManager.updateTickler(getLoggedInInfo(), tickler);
+		
+		
+		if(json.has("ticklerComments")) {
+			JSONArray arr = json.getJSONArray("ticklerComments");
+			for(int x=0;x<arr.size();x++) {
+				JSONObject c = (JSONObject)arr.get(x);
+				
+				if(c.has("newComment")) {
+					ticklerManager.addComment(getLoggedInInfo(), tickler.getId(), c.getString("providerNo"), c.getString("message"));
+				}
+			}
+		}
+		
+
+		return response;
+	}
+	
+	@GET
+	@Path("/textSuggestions")
+	@Produces("application/json")
+	public AbstractSearchResponse<TicklerTextSuggestTo1> getTextSuggestions() {
+		
+		AbstractSearchResponse<TicklerTextSuggestTo1> response = new AbstractSearchResponse<TicklerTextSuggestTo1>();
+		
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "r", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		List<TicklerTextSuggest> suggestions = ticklerManager.getActiveTextSuggestions(getLoggedInInfo());
+		
+		response.setContent(new TicklerTextSuggestConverter().getAllAsTransferObjects(suggestions));
+		response.setTotal(response.getContent().size());
+		
+		return response;
+	}
+	
+	@POST
+	@Path("/add")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse addTickler(Tickler tickler){
+		GenericRESTResponse response = new GenericRESTResponse();
+		
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+			
+		tickler.setUpdateDate(new Date());
+		tickler.setCreator(getLoggedInInfo().getLoggedInProviderNo());
+		
+		ProgramProvider pp = programManager.getCurrentProgramInDomain(getLoggedInInfo(),getLoggedInInfo().getLoggedInProviderNo());
+		
+		if(pp != null) {
+			tickler.setProgramId(pp.getProgramId().intValue());
+		}
+		
+		ticklerManager.addTickler(getLoggedInInfo(), tickler);
+
 		return response;
 	}
 }

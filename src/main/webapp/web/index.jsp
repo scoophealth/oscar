@@ -53,6 +53,7 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 
 <link href="../library/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet">
 
+
 <style>
 /*styles temporary, when design complete styles will be moved to css above*/
 .hand-hover{cursor: pointer; cursor: hand;}
@@ -326,6 +327,7 @@ img.navbarlogo {
  	<script src="../library/ng-infinite-scroll.min.js"></script>
  	
  	<script src="../library/ng-table/ng-table.js"></script>
+ 	
 
 	<!-- we'll combine/minify later -->
 	<script src="common/demographicServices.js"></script>
@@ -355,6 +357,9 @@ img.navbarlogo {
 	<script src="record/details/detailsController.js"></script>
 	
 	<script src="tickler/ticklerController.js"></script>
+	<script src="tickler/ticklerViewController.js"></script>
+	<script src="tickler/ticklerAddController.js"></script>
+	
 	<script src="schedule/scheduleController.js"></script>
 	<script src="admin/adminController.js"></script>
 	<script src="billing/billingController.js"></script>

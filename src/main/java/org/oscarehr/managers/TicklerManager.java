@@ -48,11 +48,13 @@ import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.CustomFilterDao;
 import org.oscarehr.common.dao.TicklerCommentDao;
 import org.oscarehr.common.dao.TicklerDao;
+import org.oscarehr.common.dao.TicklerTextSuggestDao;
 import org.oscarehr.common.dao.TicklerUpdateDao;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerComment;
+import org.oscarehr.common.model.TicklerTextSuggest;
 import org.oscarehr.common.model.TicklerUpdate;
 import org.oscarehr.util.EmailUtilsOld;
 import org.oscarehr.util.LoggedInInfo;
@@ -100,6 +102,9 @@ public class TicklerManager {
 	private CustomFilterDao customFilterDao;
 	
 
+	@Autowired
+	private TicklerTextSuggestDao ticklerTextSuggestDao;
+	
 	
 	
 	
@@ -597,5 +602,13 @@ public class TicklerManager {
     		  }
     		  
     		  return result;
+    	  }
+    	  
+    	  public List<TicklerTextSuggest> getActiveTextSuggestions(LoggedInInfo loggedInInfo) {
+    		  return this.ticklerTextSuggestDao.getActiveTicklerTextSuggests();
+    	  }
+    	  
+    	  public List<TicklerTextSuggest> getAllTextSuggestions(LoggedInInfo loggedInInfo, int offset, int itemsToReturn) {
+    		  return this.ticklerTextSuggestDao.findAll(offset,itemsToReturn);
     	  }
 }

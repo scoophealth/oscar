@@ -24,6 +24,19 @@
 
 --%>
 
+<!-- this CSS makes it so the modals don't have the vertical sliding animation. Not sure if I will keep this or how I will use this yet -->
+<style> 
+.modal.fade {
+  opacity: 1;
+}
+
+.modal.fade .modal-dialog, .modal.in .modal-dialog {
+  -webkit-transform: translate(0, 0);
+  -ms-transform: translate(0, 0);
+  transform: translate(0, 0);
+}
+</style>
+
 <div ng-show="ticklerReadAccess" >
  	
 
@@ -99,8 +112,10 @@
  			<input type="checkbox" ng-model="tickler.checked" >
  		</td>
     	<td ng-show="ticklerWriteAccess" >
-    		<a ng-click="editTickler(tickler.id)">Edit</a>
-    		
+    		<a ng-click="editTickler(tickler)">Edit</a> 		
+    	</td>
+    	<td ng-show="!ticklerWriteAccess" >
+    		<a ng-click="editTickler(tickler)">View</a> 		
     	</td>
 		<td data-title="'Demographic Name'">
               {{tickler.demographicName}}
@@ -124,7 +139,7 @@
               {{tickler.statusName}}
         </td>        
 		<td data-title="'Message'">
-		 {{tickler.message}}
+		 {{tickler.message | cut:true:50}}
 		 	<span ng-if="tickler.ticklerLinks != null">
 		 		<a target="lab" href="{{tickler.ticklerLinks | ticklerLink}}">ATT</a>
 		 	</span>

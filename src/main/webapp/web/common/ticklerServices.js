@@ -40,7 +40,7 @@ angular.module("ticklerServices", [])
               }).success(function (data, status, headers, config) {
             	  deferred.resolve(data);
                 }).error(function (data, status, headers, config) {
-                	deferred.reject("An error occured while setting tickets to completed status");
+                	deferred.reject("An error occured while setting ticklers to completed status");
                 });
            return deferred.promise;
         },
@@ -54,7 +54,7 @@ angular.module("ticklerServices", [])
               }).success(function (data, status, headers, config) {
             	  deferred.resolve(data);
                 }).error(function (data, status, headers, config) {
-                	deferred.reject("An error occured while setting tickets to deleted status");
+                	deferred.reject("An error occured while setting ticklers to deleted status");
                 });
            return deferred.promise;
         },
@@ -69,6 +69,45 @@ angular.module("ticklerServices", [])
             	  deferred.resolve(data);
                 }).error(function (data, status, headers, config) {
                 	deferred.reject("An error occured while searching ticklers");
+                });
+           return deferred.promise;
+        },
+        update: function (tickler) {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/update',
+                method: "POST",
+                data: JSON.stringify(tickler),
+                headers: {'Content-Type': 'application/json'}
+              }).success(function (data, status, headers, config) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers, config) {
+                	deferred.reject("An error occured while updating tickler");
+                });
+           return deferred.promise;
+        },getTextSuggestions: function () {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/textSuggestions',
+                method: "GET"
+              }).success(function (data, status, headers, config) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers, config) {
+                	deferred.reject("An error occured while getting tickler text suggestions");
+                });
+           return deferred.promise;
+        },
+        add: function (tickler) {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/add',
+                method: "POST",
+                data: JSON.stringify(tickler),
+                headers: {'Content-Type': 'application/json'}
+              }).success(function (data, status, headers, config) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers, config) {
+                	deferred.reject("An error occured while saving tickler");
                 });
            return deferred.promise;
         }
