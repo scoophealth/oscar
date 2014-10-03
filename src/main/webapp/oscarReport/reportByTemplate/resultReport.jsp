@@ -78,10 +78,29 @@ function clearSession(){
 		</td>
 	</tr>
 	<tr>
-		<%ReportObjectGeneric curreport = (ReportObjectGeneric) request.getAttribute("reportobject");
-            String sql = (String) request.getAttribute("sql");
-            String csv = (String) request.getAttribute("csv");
-            if (csv == null) csv = "";
+		<%
+		
+		ReportObjectGeneric curreport = (ReportObjectGeneric) request.getAttribute("reportobject");
+        
+		Integer sequenceLength = (Integer)request.getAttribute("sequenceLength");
+		
+		
+		List<String> sqlList = new ArrayList<String>();
+		List<String> htmlList = new ArrayList<String>();
+		List<String> csvList = new ArrayList<String>();
+		
+		if(curreport.isSequence()) {
+			for(int x=0;x<sequenceLength;x++) {
+				sqlList.add((String) request.getAttribute("sql-" + x));
+				htmlList.add((String) request.getAttribute("resultsethtml-" + x));
+				csvList.add((String) request.getAttribute("csv-" + x));
+			}
+		} else {
+			sqlList.add((String) request.getAttribute("sql"));
+			htmlList.add((String) request.getAttribute("resultsethtml"));
+			csvList.add((String) request.getAttribute("csv"));
+		}
+            
           %>
 		<td class="MainTableLeftColumn" valign="top" width="160px;"><jsp:include
 			page="listTemplates.jsp">
@@ -95,25 +114,50 @@ function clearSession(){
 			class="showhidequery" onclick="showHideItem('sqlDiv')">Hide/Show
 		Query</a>
 		<div class="sqlBorderDiv" id="sqlDiv" style="display: none;"><b>Query:</b><br />
-		<code style="font-size: 11px;"><%=org.apache.commons.lang.StringEscapeUtils.escapeHtml(sql)%></code>
+		<code style="font-size: 11px;">
+			<%
+			for(int x=0;x<sqlList.size();x++) {
+				out.println((x+1) + ")" + org.apache.commons.lang.StringEscapeUtils.escapeHtml(sqlList.get(x).trim()) + "<br/>");
+			}
+			%>
+		</code>
 		</div>
 		<div class="reportBorderDiv">
-		<%String rsHtml = (String) request.getAttribute("resultsethtml");
-                     out.println(rsHtml);
-                   %>
+		<%
+		
+			for(int x=0;x<htmlList.size();x++) {
+				 out.println(htmlList.get(x));
+				 out.println("<br/>");
+				 
+			}
+			
+        %>
 		</div>
 		<div class="noprint"
-			style="clear: left; float: left; margin-top: 15px;"><html:form
-			action="/oscarReport/reportByTemplate/generateOutFilesAction">
-			<input type="hidden" name="csv"
-				value="<%=StringEscapeUtils.escapeHtml(csv)%>">
+			style="clear: left; float: left; margin-top: 15px;">
+			
 			<input type="button" value="<-- Back"
 				onclick="javascript: history.go(-1);return false;">
 			<input type="button" value="Print"
 				onclick="javascript: window.print();">
+			<br/><br/>
+	
+	<%
+		for(int x=0;x<csvList.size();x++) {
+	%>			
+
+			<html:form
+			action="/oscarReport/reportByTemplate/generateOutFilesAction">
+			<label><%=(x+1) %></label>
+			<input type="hidden" name="csv"
+				value="<%=StringEscapeUtils.escapeHtml(csvList.get(x))%>">
+
 			<input type="submit" name="getCSV" value="Export to CSV">
 			<input type="submit" name="getXLS" value="Export to XLS">
-		</html:form></div>
+		</html:form>
+		
+	<% } %>	
+		</div>
 		</td>
 	</tr>
 	<tr class="MainTableBottomRow">
