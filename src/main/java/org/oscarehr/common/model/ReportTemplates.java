@@ -56,6 +56,8 @@ public class ReportTemplates extends AbstractModel<Integer> {
 	private int active;
 
 	private String type;
+	
+	private Boolean sequence;
 
 	public Integer getId() {
     	return id;
@@ -112,6 +114,14 @@ public class ReportTemplates extends AbstractModel<Integer> {
 	public void setType(String type) {
     	this.type = type;
     }
+
+	public Boolean isSequence() {
+		return (sequence!=null)?sequence:false;
+	}
+
+	public void setSequence(Boolean sequence) {
+		this.sequence = sequence;
+	}
 
 
 

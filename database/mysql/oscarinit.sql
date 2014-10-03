@@ -644,6 +644,7 @@ CREATE TABLE reportTemplates (
   templatexml text NOT NULL,
   active tinyint NOT NULL DEFAULT 1,
   `type` varchar(32) default null,
+  sequence tinyint(1),
   PRIMARY KEY (templateid)
 );
 

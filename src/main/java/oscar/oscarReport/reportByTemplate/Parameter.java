@@ -89,5 +89,5 @@ public class Parameter {
     public void setParamId(String paramId) {
         this.paramId = paramId;
     }
-    
+
 }
