@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarRx.data;
 
 import java.util.ArrayList;
@@ -46,10 +45,9 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-
 public class RxPatientData {
 	private static Logger logger = MiscUtils.getLogger();
-        private static final DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");	
+	private static final DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 
 	private RxPatientData() {
 		// prevent instantiation
@@ -59,26 +57,26 @@ public class RxPatientData {
 
 	public static Patient[] PatientSearch(String surname, String firstName) {
 
-            Patient[] arr = {};	
-            List<Patient> patients = new ArrayList<Patient>();
-            List<Demographic> demographics = demographicDao.searchDemographic(surname + "," + firstName);     
-            for (Demographic demographic : demographics) {
-                Patient p = new Patient(demographic);
-                patients.add(p);
-            }
-            return patients.toArray(arr);                
+		Patient[] arr = {};
+		List<Patient> patients = new ArrayList<Patient>();
+		List<Demographic> demographics = demographicDao.searchDemographic(surname + "," + firstName);
+		for (Demographic demographic : demographics) {
+			Patient p = new Patient(demographic);
+			patients.add(p);
+		}
+		return patients.toArray(arr);
 	}
 
 	/* Patient Information */
 
 	public static Patient getPatient(int demographicNo) {
-            Demographic demographic = demographicDao.getDemographicById(demographicNo);	
-            return new Patient(demographic);		
+		Demographic demographic = demographicDao.getDemographicById(demographicNo);
+		return new Patient(demographic);
 	}
 
-	public static Patient getPatient(String demographicNo) {	
-            Demographic demographic = demographicDao.getDemographicById(Integer.parseInt(demographicNo));
-            return new Patient(demographic);
+	public static Patient getPatient(String demographicNo) {
+		Demographic demographic = demographicDao.getDemographicById(Integer.parseInt(demographicNo));
+		return new Patient(demographic);
 	}
 
 	private static int calcAge(java.util.Date DOB) {
@@ -105,65 +103,55 @@ public class RxPatientData {
 		return age;
 	}
 
-	public static class Patient {		
-		private Demographic demographic = null;                
+	public static class Patient {
+		private Demographic demographic = null;
 		private static AllergyDao allergyDao = (AllergyDao) SpringUtils.getBean("allergyDao");
-		private PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");               
-                
-                public Patient (Demographic demographic) {
-                    this.demographic = demographic;
-                    
-                     if (demographic == null)
-                            MiscUtils.getLogger().warn("Demographic is not set!");
-                }
-                		
-                public Demographic getDemographic() {
-                    return this.demographic;
-                }
-                
+		private PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
+
+		public Patient(Demographic demographic) {
+			this.demographic = demographic;
+
+			if (demographic == null) MiscUtils.getLogger().warn("Demographic is not set!");
+		}
+
+		public Demographic getDemographic() {
+			return this.demographic;
+		}
+
 		public int getDemographicNo() {
-                    if (demographic != null) {
-			return demographic.getDemographicNo();
-                    }else {
-                        MiscUtils.getLogger().warn("DemographicNo is not set!");
-                        return -1;
-                    }
+			if (demographic != null) {
+				return demographic.getDemographicNo();
+			} else {
+				MiscUtils.getLogger().warn("DemographicNo is not set!");
+				return -1;
+			}
 		}
 
 		public String getSurname() {
-                    if (demographic != null)
-			return demographic.getLastName();
-                    else
-                        return "";
+			if (demographic != null) return demographic.getLastName();
+			else return "";
 		}
 
 		public String getFirstName() {
-                    if (demographic != null)
-			return demographic.getFirstName();
-                    else
-                        return "";
+			if (demographic != null) return demographic.getFirstName();
+			else return "";
 		}
 
 		public String getSex() {
-                    if (demographic != null)
-			return demographic.getSex();
-                    else
-                        return "";
+			if (demographic != null) return demographic.getSex();
+			else return "";
 		}
 
 		public String getHin() {
-                    if (demographic != null)
-			return demographic.getHin();
-                    else
-                        return "";
+			if (demographic != null) return demographic.getHin();
+			else return "";
 		}
 
 		public java.util.Date getDOB() {
-                    Date dob = null;
-                    if (demographic != null)
-                        dob=demographic.getBirthDay().getTime();
-			                    
-                        return dob;
+			Date dob = null;
+			if (demographic != null) dob = demographic.getBirthDay().getTime();
+
+			return dob;
 		}
 
 		public int getAge() {
@@ -171,47 +159,35 @@ public class RxPatientData {
 		}
 
 		public String getAddress() {
-			if (demographic != null)
-			return demographic.getAddress();
-                    else
-                        return "";
+			if (demographic != null) return demographic.getAddress();
+			else return "";
 		}
 
 		public String getCity() {
-                    if (demographic != null)
-			return demographic.getCity();
-                    else
-                        return "";
+			if (demographic != null) return demographic.getCity();
+			else return "";
 		}
 
 		public String getProvince() {
-                    if (demographic != null)
-			return demographic.getProvince();
-                    else
-                        return "";
+			if (demographic != null) return demographic.getProvince();
+			else return "";
 		}
 
 		public String getPostal() {
-                    if (demographic != null)
-			return demographic.getPostal();
-                    else
-                        return "";
+			if (demographic != null) return demographic.getPostal();
+			else return "";
 		}
 
 		public String getPhone() {
-                    if (demographic != null)
-			return demographic.getPhone();
-                    else
-                        return "";
+			if (demographic != null) return demographic.getPhone();
+			else return "";
 		}
 
-                public String getChartNo() {
-                    if (demographic != null)
-			return demographic.getChartNo();
-                    else
-                        return "";
-                }
-                
+		public String getChartNo() {
+			if (demographic != null) return demographic.getChartNo();
+			else return "";
+		}
+
 		public org.oscarehr.common.model.Allergy getAllergy(int id) {
 
 			// I know none of this method makes sense, but I'm only converting this to JPA right now, too much work to fix it all to make sense.
@@ -222,30 +198,29 @@ public class RxPatientData {
 
 		public org.oscarehr.common.model.Allergy[] getAllergies(LoggedInInfo loggedInInfo) {
 			ArrayList<org.oscarehr.common.model.Allergy> results = new ArrayList<org.oscarehr.common.model.Allergy>();
-                        Integer demographicNo = getDemographicNo();
+			Integer demographicNo = getDemographicNo();
 			List<org.oscarehr.common.model.Allergy> allergies = allergyDao.findAllergies(demographicNo);
 			results.addAll(allergies);
 
 			if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
-				try {	
-					List<CachedDemographicAllergy> remoteAllergies  = null;
+				try {
+					List<CachedDemographicAllergy> remoteAllergies = null;
 					try {
-						if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
+						if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())) {
 							remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(demographicNo);
 						}
 					} catch (Exception e) {
 						MiscUtils.getLogger().error("Unexpected error.", e);
-						CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
+						CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(), e);
 					}
-					
-					if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
-						remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(loggedInInfo,demographicNo);	
+
+					if (CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())) {
+						remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(loggedInInfo, demographicNo);
 					}
 
 					for (CachedDemographicAllergy remoteAllergy : remoteAllergies) {
 						Date date = null;
-						if (remoteAllergy.getEntryDate() != null)
-							date = remoteAllergy.getEntryDate().getTime();
+						if (remoteAllergy.getEntryDate() != null) date = remoteAllergy.getEntryDate().getTime();
 
 						org.oscarehr.common.model.Allergy a = new org.oscarehr.common.model.Allergy();
 						a.setDemographicNo(demographicNo);
@@ -260,8 +235,7 @@ public class RxPatientData {
 						a.setIntegratorResult(true);
 						a.setReaction(remoteAllergy.getReaction());
 
-						if (remoteAllergy.getStartDate() != null)
-							date = remoteAllergy.getStartDate().getTime();
+						if (remoteAllergy.getStartDate() != null) date = remoteAllergy.getStartDate().getTime();
 
 						a.setStartDate(date);
 						a.setAgeOfOnset(remoteAllergy.getAgeOfOnset());
@@ -283,7 +257,7 @@ public class RxPatientData {
 
 		public org.oscarehr.common.model.Allergy[] getActiveAllergies() {
 			List<org.oscarehr.common.model.Allergy> allergies = allergyDao.findActiveAllergies(getDemographicNo());
-			return  allergies.toArray(new org.oscarehr.common.model.Allergy[allergies.size()]);
+			return allergies.toArray(new org.oscarehr.common.model.Allergy[allergies.size()]);
 		}
 
 		public org.oscarehr.common.model.Allergy addAllergy(java.util.Date entryDate, org.oscarehr.common.model.Allergy allergy) {
@@ -295,23 +269,22 @@ public class RxPatientData {
 		}
 
 		private static boolean setAllergyArchive(int allergyId, boolean archive) {
-			org.oscarehr.common.model.Allergy allergy=allergyDao.find(allergyId);
-			if (allergy!=null)
-			{
+			org.oscarehr.common.model.Allergy allergy = allergyDao.find(allergyId);
+			if (allergy != null) {
 				allergy.setArchived(archive);
 				allergyDao.merge(allergy);
-				return(true);
+				return (true);
 			}
 
-			return(false);
+			return (false);
 		}
 
 		public boolean deleteAllergy(int allergyId) {
-			return(setAllergyArchive(allergyId, true));
+			return (setAllergyArchive(allergyId, true));
 		}
 
 		public boolean activateAllergy(int allergyId) {
-			return(setAllergyArchive(allergyId, false));
+			return (setAllergyArchive(allergyId, false));
 		}
 
 		public Diseases[] getDiseases() {
@@ -320,7 +293,7 @@ public class RxPatientData {
 			return diseases.toArray(new Diseases[diseases.size()]);
 		}
 
-		public Diseases addDisease(String ICD9, java.util.Date entryDate)  {
+		public Diseases addDisease(String ICD9, java.util.Date entryDate) {
 			DiseasesDao diseasesDao = SpringUtils.getBean(DiseasesDao.class);
 			Diseases disease = new Diseases();
 			disease.setDemographicNo(getDemographicNo());
@@ -341,7 +314,6 @@ public class RxPatientData {
 		public RxPrescriptionData.Prescription[] getPrescribedDrugScripts() {
 			return new RxPrescriptionData().getPrescriptionScriptsByPatient(this.getDemographicNo());
 		}
-
 
 	}
 
