@@ -60,7 +60,9 @@
 <%@ page import="org.oscarehr.managers.TicklerManager" %>
 <%@page import="org.oscarehr.managers.ProgramManager2"%>
 <%@page import="org.oscarehr.PMmodule.model.ProgramProvider"%>
-
+<%@page import="org.oscarehr.managers.LookupListManager" %>
+<%@page import="org.oscarehr.common.model.LookupList" %>
+<%@page import="org.oscarehr.common.model.LookupListItem" %>
 
 <!-- add by caisi -->
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
@@ -87,6 +89,14 @@
 	ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
 	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
 	DemographicCustDao demographicCustDao = SpringUtils.getBean(DemographicCustDao.class);
+	
+	LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
+	LookupList reasonCodes = lookupListManager.findLookupListByName(loggedInInfo1, "reasonCode");
+	Map<Integer,LookupListItem> reasonCodesMap = new  HashMap<Integer,LookupListItem>();
+	for(LookupListItem lli:reasonCodes.getItems()) {
+		reasonCodesMap.put(lli.getId(),lli);	
+	}
+    
 %>
 
 <%
@@ -1904,7 +1914,15 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                   String status = String.valueOf(appointment.getStatus()).trim();
           	      String sitename = String.valueOf(appointment.getLocation()).trim();
           	      String urgency = appointment.getUrgency();
+          	      String reasonCodeName = null;
+          	      if(appointment.getReasonCode() != null)    {  	   
+          	    	LookupListItem lli  = reasonCodesMap.get(appointment.getReasonCode()); 
+          	    	if(lli != null) {
+          	    		reasonCodeName = lli.getLabel();
+          	    	}
+          	      }
 
+          
           	  bFirstTimeRs=true;
 	    as.setApptStatus(status);
 
@@ -1995,8 +2013,10 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
     		
 <a href=# onClick ="popupPage(535,860,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.getId()%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
 <%=name%>
-<bean:message key="provider.appointmentProviderAdminDay.reason"/>: <%=UtilMisc.htmlEscape(reason)%>
-<bean:message key="provider.appointmentProviderAdminDay.notes"/>: <%=UtilMisc.htmlEscape(notes)%>" >
+<%=reasonCodeName!=null?"&nbsp; reason: " + reasonCodeName:""%>
+<%=reason!=null && !reason.isEmpty()?"&nbsp; reason: " + UtilMisc.htmlEscape(reason):""%>
+<bean:message key="provider.appointmentProviderAdminDay.notes"/>: <%=UtilMisc.htmlEscape(notes)%>
+" >
             .<%=(view==0&&numAvailProvider!=1)?(name.length()>len?name.substring(0,len).toUpperCase():name.toUpperCase()):name.toUpperCase()%>
             </font></a><!--Inline display of reason -->
       <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"><span class="reason"><bean:message key="provider.appointmentProviderAdminDay.Reason"/>:<%=UtilMisc.htmlEscape(reason)%></span></oscar:oscarPropertiesCheck></td>
@@ -2070,8 +2090,10 @@ if( iSm < 10 ) {
 start_time += iSm + ":00";
 %>
 <a class="apptLink" href=# onClick ="popupPage(535,860,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.getId()%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;"  <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"> title="<%=name%>
-&nbsp; reason: <%=UtilMisc.htmlEscape(reason)%>
-&nbsp; notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
+<%=reasonCodeName!=null?"&nbsp; reason: " + reasonCodeName:""%>
+<%=reason!=null && !reason.isEmpty()?"&nbsp; reason: " + UtilMisc.htmlEscape(reason):""%>
+&nbsp; notes: <%=UtilMisc.htmlEscape(notes)%>
+"</oscar:oscarPropertiesCheck>   ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
 <% if(len==lenLimitedL || view!=0 || numAvailProvider==1 ) {%>
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
