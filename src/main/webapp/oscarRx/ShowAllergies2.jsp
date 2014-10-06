@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.WebUtilsOld"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
@@ -330,13 +331,9 @@ padding-right:6;
 							String labelConfirmAction;
 							String strSOR;
 							int intSOR;
-							%>
-
-							<logic:iterate id="allergy"
-								type="org.oscarehr.common.model.Allergy"
-								name="patient" property="allergies">
-
-								<%
+							
+							for(org.oscarehr.common.model.Allergy allergy : patient.getAllergies(LoggedInInfo.getLoggedInInfoFromSession(request))) {
+						
 
 								String title = "";
 								if(allergy.getRegionalIdentifier() != null && !allergy.getRegionalIdentifier().trim().equalsIgnoreCase("null") && !allergy.getRegionalIdentifier().trim().equals("")){
@@ -432,8 +429,7 @@ padding-right:6;
 									</td>
 								</tr>
 								<% } %>
-							</logic:iterate>
-
+								<% } //end of iterate %>
 						</table>
 						</div>
 						<%=allergy_colour_codes%>
