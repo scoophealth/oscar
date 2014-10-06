@@ -26,14 +26,14 @@
 <%@ include file="/taglibs.jsp"%>
 
 <script>
-	function select_program(id) {
+	function select_program(id,admissionId) {
 		document.clientManagerForm.elements['program.id'].value = id;
 		document.clientManagerForm.elements['admission.id'].value = admissionId;
 		document.clientManagerForm.method.value = 'discharge_select_program';
 		document.clientManagerForm.submit();
 	}
 	
-	function select_program_community() {
+	function select_program_community(admissionId) {
 		var communityCtl = document.getElementById('community_id');
 		var id = communityCtl.options[communityCtl.selectedIndex].value;
 		document.clientManagerForm.elements['program.id'].value = id;
@@ -97,6 +97,7 @@
 		
 		var aDateString = date1.split('-') ;	
 		
+		
 		if(aDateString[1]=='01') aDateString[1]=1;
 		if(aDateString[1]=='02') aDateString[1]=2;
 		if(aDateString[1]=='03') aDateString[1]=3;
@@ -116,6 +117,7 @@
 		if(aDateString[2]=='07') aDateString[2]=7;
 		if(aDateString[2]=='08') aDateString[2]=8;
 		if(aDateString[2]=='09') aDateString[2]=9;	
+		
 		
 		var sDateString ;
 		if(date2 && typeof date2 != 'undefined') {
@@ -227,7 +229,7 @@ Community Program:&nbsp;
 	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 		<display:column sortable="false">
 			<input type="button" value="Discharge"
-				onclick="select_program('<c:out value="${admission.programId}"/>')" />
+				onclick="select_program('<c:out value="${admission.programId}"/>','<c:out value="${admission.id}"/>')" />
 		</display:column>
 	</caisi:isModuleLoad>
 
@@ -235,7 +237,7 @@ Community Program:&nbsp;
 		<c:if test="${sessionScope.performDischargeService=='true'}">
 			<display:column sortable="false">
 				<input type="button" value="Discharge"
-					onclick="select_program('<c:out value="${admission.programId}"/>')" />
+					onclick="select_program('<c:out value="${admission.programId}"/>','<c:out value="${admission.id}"/>')" />
 			</display:column>
 		</c:if>
 	</caisi:isModuleLoad>
@@ -266,7 +268,7 @@ Community Program:&nbsp;
 
 	<display:column sortable="false">
 		<input type="button" value="Discharge"
-			onclick="select_program('<c:out value="${admission.programId}"/>')" />
+			onclick="select_program('<c:out value="${admission.programId}"/>',,'<c:out value="${admission.id}"/>')" />
 	</display:column>
 	<display:column sortable="true" title="Program Name">
 		<c:out value="${admission.programName}" />
