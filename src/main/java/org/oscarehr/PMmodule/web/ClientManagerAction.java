@@ -55,7 +55,6 @@ import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
-import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.VacancyDao;
@@ -66,7 +65,6 @@ import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
 import org.oscarehr.PMmodule.exception.ClientAlreadyRestrictedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.HealthSafety;
 import org.oscarehr.PMmodule.model.Intake;
@@ -99,11 +97,13 @@ import org.oscarehr.caisi_integrator.ws.Gender;
 import org.oscarehr.caisi_integrator.ws.Referral;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.dao.RemoteReferralDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Bed;
 import org.oscarehr.common.model.BedDemographic;
 import org.oscarehr.common.model.CaisiFormInstance;
@@ -313,9 +313,15 @@ public class ClientManagerAction extends DispatchAction {
 
 	public ActionForward discharge_community_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
-
+		
 		setEditAttributes(form, request, id);
 
+		Admission admission = admissionDao.getCurrentBedProgramAdmission(programDao, Integer.parseInt(id));
+		if(admission != null) {
+			request.setAttribute("admissionDate",admission.getAdmissionDate("yyyy-MM-dd"));
+		}
+	
+		
 		request.setAttribute("do_discharge", new Boolean(true));
 		request.setAttribute("community_discharge", new Boolean(true));
 		return mapping.findForward("edit");
@@ -328,13 +334,22 @@ public class ClientManagerAction extends DispatchAction {
 
 	public ActionForward discharge_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
+		String admissionId = request.getParameter("admission.id");
+		
 		DynaActionForm clientForm = (DynaActionForm) form;
 		Program program = (Program) clientForm.get("program");
 		request.setAttribute("programId", String.valueOf(program.getId()));
 		setEditAttributes(form, request, id);
 
 		request.setAttribute("do_discharge", new Boolean(true));
-
+		
+		if(admissionId != null) {
+			Admission admission = admissionDao.find(Integer.parseInt(admissionId));
+			if(admission != null) {
+				request.setAttribute("admissionDate",admission.getAdmissionDate("yyyy-MM-dd"));
+			}
+		}
+		
 		return mapping.findForward("edit");
 	}
 
