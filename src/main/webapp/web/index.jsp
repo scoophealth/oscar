@@ -107,6 +107,12 @@ img.navbarlogo {
 	height: 40px;
 	padding-top:10px;
 }
+
+.navbar-form .input-group-btn,
+.navbar-form .input-group-addon {
+width: auto;
+}
+
 </style>
 
 </head>
@@ -124,43 +130,31 @@ img.navbarlogo {
 				<!-- link back to 'classic' view -->
 				<a  href="../provider/providercontrol.jsp"><img class="navbarlogo" src="../images/Logo2.png" title="Go to OSCAR Classic UI" border="0" /></a>
 			</div>
+			
+			 
 			<div class="navbar-collapse collapse">
 			
-				
-					
-					<form class="navbar-form navbar-left form-search" role="search">
-					
-						<div class="form-group"  ng-show="searchRights === true">
-							<input type="text" class="form-control search-query" placeholder="Search Patients" id="demographicQuickSearch" autocomplete="off" value="">
-						</div>
-						
-						<div class="btn-group">
-							<button type="button"  ng-show="searchRights === true" class="btn btn-default" tabindex="-1" ui-sref="search" onMouseOut="this.blur();"  ng-show="searchRights === true"> 
-								<span class="glyphicon glyphicon-search"></span>
-							</button>
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
-								<span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu" role="menu">
-								<li><a ng-click="newDemographic('sm')" ng-show="newDemographicRights === true">New Patient</a></li>
-								<%-- <li ng-repeat="item in demographicSearchDropDownItems"><a href="{{item.url}}">{{item.label}}</a></li> --%>
-							</ul>
-							<button type="button" class="btn btn-default" ui-sref="dashboard" onMouseOut="this.blur();">
-								<span class="glyphicon glyphicon-home"></span>
-							</button>
-						</div>
-					</form>
-				
-				
-				
+				<form class="navbar-form navbar-left" role="search">
+	 				<div class="form-group">
+		 				<div class="input-group">
+			 				<input type="text" class="form-control search-query" placeholder="Search Patients" id="demographicQuickSearch" autocomplete="off" value="">
+			 				<span class="input-group-addon btn-default hand-hover" ng-click="transition('search')"><span class="glyphicon glyphicon-search" ></span></span>
+			 				<span class="input-group-addon btn-default hand-hover"  ng-click="newDemographic('sm')" ><span class="glyphicon glyphicon-plus"></span></span>	 				
+						</div>						
+					</div>			
+				</form>
+			
+				<!-- large view -->
 				<ul class="nav navbar-nav visible-lg hidden-md hidden-sm hidden-xs">
+					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home" ui-sref="dashboard"></span></li>
+				
 					<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state) }">
 						<a ng-click="transition(item.state)" data-toggle="tab" >{{item.label}}
 							<span ng-if="item.extra.length>0">({{item.extra}})</span>
 						</a>
 					</li>
-					
-					
+				
+				
 					<li class="dropdown"><a class="dropdown-toggle">More<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li ng-repeat="item in moreMenuItems">
@@ -171,8 +165,8 @@ img.navbarlogo {
 					</li>
 				</ul>
 				
-				<ul class="nav navbar-nav hidden-lg visible-md visible-sm visible-xs">
-					
+				<!-- more condensed version -->
+				<ul class="nav navbar-nav hidden-lg visible-md visible-sm visible-xs">			
 					<li class="dropdown"><a href="void()" class="dropdown-toggle">Modules<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 						<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state) }">
@@ -192,9 +186,9 @@ img.navbarlogo {
 				
 				<div class="navbar-text pull-right" style="line-height:20px">
 					<a onClick="popup(700,1024,'../scratch/index.jsp','scratch')" title="Scratchpad">
-					 	<span class="glyphicon glyphicon-edit"></span></a>
+					 	<span class="glyphicon glyphicon-edit"></span>
+					 </a>
 					&nbsp;&nbsp;
-					
 					<span ng-show="messageRights === true">
 						<a ng-click="openClassicMessenger()" title="OSCAR Mail" class="hand-hover">
 							<span  class="glyphicon glyphicon-envelope"></span> 
@@ -204,36 +198,34 @@ img.navbarlogo {
 						<span title="New messages from patients">-</span> 
 					</span>
 					&nbsp; &nbsp;
-						
 					
 					<span class="dropdown">
-					<span class="dropdown-toggle hand-hover"><span class="glyphicon glyphicon-globe"></span></span>
-					<ul class="dropdown-menu" role="menu">
-                    	<li ng-repeat="item in programDomain">
-                        	<a ng-click="changeProgram(item.program.id)">
-					    		<span ng-if="item.program.id === currentProgram.id">&#10004;</span>
-					    		<span ng-if="item.program.id != currentProgram.id">&nbsp;&nbsp;</span>
-								{{item.program.name}}
-					    	</a>
-					    </li>
-				 	</ul>
+						<span class="dropdown-toggle hand-hover"><span class="glyphicon glyphicon-globe"></span></span>
+						<ul class="dropdown-menu" role="menu">
+	                    	<li ng-repeat="item in programDomain">
+	                        	<a ng-click="changeProgram(item.program.id)">
+						    		<span ng-if="item.program.id === currentProgram.id">&#10004;</span>
+						    		<span ng-if="item.program.id != currentProgram.id">&nbsp;&nbsp;</span>
+									{{item.program.name}}
+						    	</a>
+						    </li>
+					 	</ul>
 				 	</span>
+				 	
 					&nbsp;
 					
-					
-					
-				<span class="dropdown-toggle hand-hover" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><u>{{me.firstName}}</u></span>
+					<span class="dropdown-toggle hand-hover" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><u>{{me.firstName}}</u></span>
 					<ul class="dropdown-menu" role="menu">
-					<li ng-repeat="item in userMenuItems">
-						<a ng-click="transition(item.state)" ng-class="{'more-tab-highlight': isActive(item.state) }" >{{item.label}}</a>
-					</li>
-				  </ul>
-				 
-					<a  href="../logout.jsp" title="Logout" style="padding-left:10px;">
+						<li ng-repeat="item in userMenuItems">
+							<a ng-click="transition(item.state)" ng-class="{'more-tab-highlight': isActive(item.state) }" >{{item.label}}</a>
+						</li>
+				  	</ul>
+				  	
+					<a href="../logout.jsp" title="Logout" style="padding-left:10px;">
 						<span class="glyphicon glyphicon-off"></span>
 					</a>
 
-						
+
 				</div>
 			</div>
 			<!--/.nav-collapse -->
