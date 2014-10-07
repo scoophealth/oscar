@@ -989,7 +989,9 @@ div.demographicWrapper {
      	Admission bedAdmission = admissionManager.getCurrentBedProgramAdmission(demographic.getDemographicNo());
      	Admission communityAdmission = admissionManager.getCurrentCommunityProgramAdmission(demographic.getDemographicNo());
      	List<Admission> serviceAdmissions = admissionManager.getCurrentServiceProgramAdmission(demographic.getDemographicNo());
-     	
+     	if(serviceAdmissions == null) {
+     		serviceAdmissions = new ArrayList<Admission>();
+     	}
 
 %>
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
