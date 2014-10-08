@@ -325,6 +325,7 @@ width: auto;
 	<script src="common/demographicServices.js"></script>
 	<script src="common/scheduleServices.js"></script>
 	<script src="common/securityServices.js"></script>
+	<script src="common/staticDataServices.js"></script>
 	<script src="common/billingServices.js"></script>
 	<script src="common/ticklerServices.js"></script>
 	<script src="common/formServices.js"></script>
