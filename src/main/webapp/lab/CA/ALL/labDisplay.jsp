@@ -1442,17 +1442,30 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                 	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
                                                 	<%} %> </td><%}%>
                                            	<%
+                                           	String align = "right";
                                           	//for pathl7, if it is an SG/CDC result greater than 100 characters, left justify it
-                                           	if((handler.getOBXResult(j, k).length() > 100) && (isSGorCDC)){%>
-                                           		<td align="left"><%= handler.getOBXResult( j, k) %></td><%
-                                           	}else{%>
-                                           <td align="right"><%= handler.getOBXResult( j, k) %></td><%}%>
-
+                                           	if((handler.getOBXResult(j, k).length() > 100) && (isSGorCDC)){
+                                           		align="left";
+                                           	}%>
+                                           	
+                                           	<%
+                                           		//CLS textual results - use 4 columns.
+                                           		if(handler instanceof CLSHandler && "TX".equals(handler.getOBXValueType(j,k))) {
+                                           	%>
+                                           		<td align="left" colspan="4"><%= handler.getOBXResult( j, k) %></td>
+                                           	<%		
+                                           		} else {
+                                           	%>
+                                           	
+                                           <td align="<%=align%>"><%= handler.getOBXResult( j, k) %></td>
+                                          
                                            <td align="center">
                                                    <%= handler.getOBXAbnormalFlag(j, k)%>
                                            </td>
                                            <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
                                            <td align="left"><%=handler.getOBXUnits( j, k) %></td>
+                                           
+                                           <% } %>
                                            <td align="center"><%= handler.getTimeStamp(j, k) %></td>
                                            <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
                                       		<td align="center" valign="top">                                           <a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=demographicID%>&amp;other_id=<%=String.valueOf(j) + "-" + String.valueOf(k) %>','anwin','width=400,height=500');">
