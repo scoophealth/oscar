@@ -1,5 +1,6 @@
 #helpHtml{
 position: absolute;
+display:none;
 top:18px;
 right:-280px;
 z-index:999;
@@ -14,11 +15,11 @@ font-weight:normal !important;
 	   -moz-box-shadow: 0 8px 6px -6px black;
 	        box-shadow: 0 8px 6px -6px black;
 	        
-	-webkit-transition: right 0.5s ease-in-out;
+	/*-webkit-transition: right 0.5s ease-in-out;
     -moz-transition: right 0.5s ease-in-out;
     -o-transition: right 0.5s ease-in-out;
     -ms-transition: right 0.5s ease-in-out;
-    transition: right 0.5s ease-in-out;
+    transition: right 0.5s ease-in-out;*/
 }
 
 #help-link{
