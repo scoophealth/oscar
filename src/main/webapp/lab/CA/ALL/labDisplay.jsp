@@ -155,9 +155,26 @@ if (remoteFacilityIdString==null) // local lab
 	}
 	else {
 		multiLabId = Hl7textResultsData.getMatchingLabs(segmentID);
+		segmentIDs = multiLabId.split(",");
+		
+		List<String> segmentIdList = new ArrayList<String>();
 		handler = Factory.getHandler(segmentID);
 		handlers.add(handler);
-		segmentIDs = new String[] {segmentID};
+		segmentIdList.add(segmentID);
+		
+		//this is where it gets weird.
+		if("CLS".equals(handler.getMsgType())) {
+			for( int i = 0; i < segmentIDs.length; ++i) {
+				MessageHandler handler2 = Factory.getHandler(segmentIDs[i]);
+				if(!handler.getFillerOrderNumber().equals(handler2.getFillerOrderNumber())) {
+					handlers.add(handler2);
+					segmentIdList.add(segmentIDs[i]);
+				}
+			}
+			multiLabId = segmentID;
+		}
+		
+		segmentIDs = segmentIdList.toArray(new String[segmentIdList.size()]);
 		hl7 = Factory.getHL7Body(segmentID);
 		if (handler instanceof OLISHL7Handler) {
 			%>

@@ -33,6 +33,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
+import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementMapDao;
 import org.oscarehr.common.dao.MeasurementsDeletedDao;
@@ -267,9 +268,45 @@ public class Hl7textResultsData {
 
 	}
 
+	public static String getMatchingLabs_CLS(String lab_no) {
+		String ret = "";
+		Hl7TextInfo self = null;
+		
+		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
+		for (Object[] o : dao.findByLabIdViaMagic(ConversionUtils.fromIntString(lab_no))) {
+			Hl7TextInfo a = (Hl7TextInfo) o[0];
+			//Hl7TextInfo b = (Hl7TextInfo) o[1];
+
+			int labNo = a.getLabNumber();
+			if(lab_no.equals(String.valueOf(labNo))) {
+				self = a;
+			}
+			ret = ret + "," + labNo;
+		}
+		
+		//nothing but itself was found, but we have a special case for glucose tolerance tests
+		//they come in with different accessions but same filler order no.
+		if(self != null && ret.length()>0 && ret.substring(1).indexOf(",") == -1) {
+			ret = "";
+			for(Hl7TextInfo info : dao.findByFillerOrderNumber(self.getFillerOrderNum())) {
+				ret = ret + "," + info.getLabNumber();
+			}
+		}
+		
+		
+		if (ret.equals("")) return (lab_no);
+		else return (ret.substring(1));
+	}
+	
 	public static String getMatchingLabs(String lab_no) {
 		String ret = "";
 		int monthsBetween = 0;
+		
+		Hl7TextMessageDao msgDao = SpringUtils.getBean(Hl7TextMessageDao.class);
+		String type = msgDao.getLabType(Integer.parseInt(lab_no));
+		if("CLS".equals(type)) {
+			return getMatchingLabs_CLS(lab_no);
+		}
 
 		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
 		for (Object[] o : dao.findByLabIdViaMagic(ConversionUtils.fromIntString(lab_no))) {
@@ -277,7 +314,8 @@ public class Hl7textResultsData {
 			Hl7TextInfo b = (Hl7TextInfo) o[1];
 
 			int labNo = a.getLabNumber();
-
+			
+			
 			//Accession numbers may be recycled, accession
 			//numbers for a lab should have lab dates within less than 4
 			//months of each other even this is a large time span
