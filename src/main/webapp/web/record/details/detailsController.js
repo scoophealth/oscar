@@ -23,7 +23,7 @@
     Ontario, Canada
 
 */
-oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams,$state,demographicService,patientDetailStatusService,securityService,demo,user) {
+oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams,$state,demographicService,patientDetailStatusService,securityService,staticDataService,demo,user) {
 	console.log("details ctrl ", $stateParams, $state, demo);
 	
 	var page = {};
@@ -37,6 +37,16 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	securityService.hasRight("_demographic", "u", demo.demographicNo).then(function(data){
 		page.cannotChange = !data.value;
 	});
+	
+	//get static lists to be selected
+	page.genders = staticDataService.getGenders();
+	page.titles = staticDataService.getTitles();
+	page.provinces = staticDataService.getProvinces();
+	page.countries = staticDataService.getCountries();
+	page.engFre = staticDataService.getEngFre();
+	page.spokenlangs = staticDataService.getSpokenLanguages();
+	page.rosterTermReasons = staticDataService.getRosterTerminationReasons();
+	page.securityQuestions = staticDataService.getSecurityQuestions();
 	
 	//get patient detail status
 	patientDetailStatusService.getStatus(demo.demographicNo).then(function(data){
