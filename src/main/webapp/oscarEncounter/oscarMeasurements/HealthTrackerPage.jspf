@@ -25,43 +25,34 @@
 --%>
 <!DOCTYPE html>
 <%long startTime = System.currentTimeMillis();%>
-<%@ page import="oscar.oscarRx.data.RxPatientData"%>
-<%@ page import="oscar.oscarRx.util.*" %>
-<%@ page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
-<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.log.*"%>
-<%@ page import="org.springframework.web.context.WebApplicationContext,oscar.oscarResearch.oscarDxResearch.bean.*"%>
+
+<%@ page import="oscar.oscarDemographic.data.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
+<%@ page import="oscar.oscarResearch.oscarDxResearch.bean.*"%>
 <%@ page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
 <%@ page import="org.oscarehr.common.dao.FlowSheetDrugDao,org.oscarehr.common.dao.FlowSheetDxDao,org.oscarehr.common.model.FlowSheetDrug,org.oscarehr.util.MiscUtils"%>
 <%@ page import="org.oscarehr.caisi_integrator.ws.CachedMeasurement,org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager,org.oscarehr.util.LoggedInInfo" %>
-<%@ page import="oscar.util.UtilDateUtilities" %>
+<%@ page import="oscar.util.UtilDateUtilities,oscar.log.*" %>
 <%@ page import="oscar.OscarProperties"%>
 <%@ page import="org.oscarehr.common.model.Validations" %>
 
-<%@ page import="java.util.*,oscar.oscarReport.reportByTemplate.*"%>
+<%@ page import="oscar.oscarReport.reportByTemplate.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig" %>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet" %>
 <%@ page import="org.oscarehr.common.model.Flowsheet" %>
 <%@ page import="org.oscarehr.common.dao.FlowsheetDao" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 
-<%@ page import="org.oscarehr.common.dao.AllergyDao"%>
-<%@ page import="org.oscarehr.common.model.Allergy"%>
-
 <%@ page import="oscar.eform.data.*, oscar.eform.*"%>
 
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+
+<%@ page import="java.util.*,java.net.*" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-
-<!-- ADD MEAS -->
-<%@ page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
-<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@ page import="org.springframework.web.context.WebApplicationContext"%>
-<%@ page import="org.oscarehr.common.dao.*,org.oscarehr.common.model.FlowSheetCustomization"%>
 
 <%
 	if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
@@ -74,15 +65,11 @@
         
     String ornPilot = OscarProperties.getInstance().getProperty("ORN_PILOT", "no");
 	 
-//ADD MEAS
     String id = request.getParameter("id");
     String measurement = request.getParameter("measurement");
-    //String[] measurements = request.getParameterValues("measurement");
- 
     id = "0";
     measurement = "BP";
-    
- AllergyDao allergyDao = (AllergyDao)SpringUtils.getBean("allergyDao");
+
 %>
 <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
     <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
@@ -138,7 +125,6 @@
     ////Start
     MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
 
-
     MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp,custList);
 
     MeasurementInfo mi = new MeasurementInfo(demographic_no);
@@ -175,62 +161,7 @@
 
 String[] demographicParam = new String[1];
 demographicParam[0] = demographic_no;
-String medicationsQuery = "intake_medications";
-List<Map<String,Object>> medicationsResult = oscarSuperManager.find("providerDao", medicationsQuery, demographicParam);
-String medicationsList = "";
-if (!medicationsResult.isEmpty()) {
-	for (int i=0; i<medicationsResult.size(); i++) {
-		if (i != 0) {
-			medicationsList += ",<br/>";
-		}
 
-		if (medicationsResult.get(i).get("customName")!=null && !medicationsResult.get(i).get("customName").toString().equals("null")) {
-			medicationsList += medicationsResult.get(i).get("customName").toString();
-		} else if (Integer.parseInt(medicationsResult.get(i).get("GCN_SEQNO").toString())==0) {
-			medicationsList += "Unknown";
-		} else {
-			medicationsList += medicationsResult.get(i).get("BN").toString();
-		}
-
-		medicationsList += " " + RxUtil.FloatToString(Float.parseFloat(medicationsResult.get(i).get("takemin").toString()));
-		if (!medicationsResult.get(i).get("takemin").toString().equals(medicationsResult.get(i).get("takemax").toString())) {
-			medicationsList += "-" + RxUtil.FloatToString(Float.parseFloat(medicationsResult.get(i).get("takemax").toString()));
-		}
-
-		if (medicationsResult.get(i).get("freqcode")!=null) {
-			medicationsList += " " + medicationsResult.get(i).get("freqcode").toString();
-		}
-
-		if (medicationsResult.get(i).get("prn").toString().equals("1")) {
-			medicationsList += " PRN";
-		}
-
-		if (medicationsResult.get(i).get("duration") != null && !medicationsResult.get(i).get("duration").toString().equals("null")) {
-			medicationsList += " " + medicationsResult.get(i).get("duration").toString();
-			if (medicationsResult.get(i).get("durunit")!=null) {
-				if (medicationsResult.get(i).get("durunit").toString().equals("D")) {
-					medicationsList += " Day";
-				} else if (medicationsResult.get(i).get("durunit").toString().equals("W")) {
-					medicationsList += " Week";
-				} else if (medicationsResult.get(i).get("durunit").toString().equals("M")) {
-					medicationsList += " Month";
-				}
-			}
-		}
-
-		if (medicationsResult.get(i).get("duration")!=null && !medicationsResult.get(i).get("duration").toString().equals("null") && !medicationsResult.get(i).get("duration").toString().equals("") && Integer.parseInt(medicationsResult.get(i).get("duration").toString())>1) {
-			medicationsList += "s";
-		}
-
-		medicationsList += "  " + medicationsResult.get(i).get("quantity").toString() + " Qty  Repeats: ";
-
-		medicationsList += medicationsResult.get(i).get("repeat").toString();
-
-		if (medicationsResult.get(i).get("repeat").toString().equals("1")) {
-			medicationsList += " No subs";
-		}
-	}
-}
 
 String date = UtilDateUtilities.getToday("yyyy-MM-dd");
 %>
@@ -240,40 +171,61 @@ String date = UtilDateUtilities.getToday("yyyy-MM-dd");
     <meta charset="utf-8">
     <title>Health Tracker <oscar:nameage demographicNo="<%=demographic_no%>"/></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+	
 	<script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/Oscar.js"></script>
-	<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>        
+
+	<script src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>   
+	
+	<script>
+	//sparklines $.browser patch to use with jquery-1.9.1
+	(function(jQuery){jQuery.browser||"1.3.2"==jQuery.fn.jquery||(jQuery.extend({browser:{}}),jQuery.browser.init=function(){var b={};try{navigator.vendor?/Chrome/.test(navigator.userAgent)?(b.browser="Chrome",b.version=parseFloat(navigator.userAgent.split("Chrome/")[1].split("Safari")[0])):/Safari/.test(navigator.userAgent)?(b.browser="Safari",b.version=parseFloat(navigator.userAgent.split("Version/")[1].split("Safari")[0])):/Opera/.test(navigator.userAgent)&&(b.Opera="Safari",b.version=parseFloat(navigator.userAgent.split("Version/")[1])):
+	/Firefox/.test(navigator.userAgent)?(b.browser="mozilla",b.version=parseFloat(navigator.userAgent.split("Firefox/")[1])):(b.browser="MSIE",/MSIE/.test(navigator.userAgent)?b.version=parseFloat(navigator.userAgent.split("MSIE")[1]):b.version="edge")}catch(c){b=c}jQuery.browser[b.browser.toLowerCase()]=b.browser.toLowerCase();jQuery.browser.browser=b.browser;jQuery.browser.version=b.version;jQuery.browser.chrome="chrome"==jQuery.browser.browser.toLowerCase();jQuery.browser.safari="safari"==jQuery.browser.browser.toLowerCase();jQuery.browser.opera=
+	"opera"==jQuery.browser.browser.toLowerCase();jQuery.browser.msie="msie"==jQuery.browser.browser.toLowerCase();jQuery.browser.mozilla="mozilla"==jQuery.browser.browser.toLowerCase()},jQuery.browser.init())})(jQuery);
+	</script>
+	 
     <script type="text/javascript" src="<%=request.getContextPath() %>/share/javascript/jquery/jquery.sparkline.js"></script>     
         	    
 	<oscar:customInterface section="health_tracker"/>
-    <!-- Le styles -->
-    <link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
+ 
     <link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
+    <link class="include" rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/js/jqplot/jquery.jqplot.min.css" />
+
+    <!-- Bootstrap -->
+    <link href="<%=request.getContextPath() %>/library/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="<%=request.getContextPath() %>/library/bootstrap/3.0.0/assets/js/html5shiv.js"></script>
+      <script src="<%=request.getContextPath() %>/library/bootstrap/3.0.0/assets/js/respond.min.js"></script>
+    <![endif]-->
      
 <style type="text/css">
 body {
    padding-top: 60px;
-   padding-bottom: 40px;
 }
-
-.navbar .nav > li > a {color:white;} 
 
 #tracker-bar{
    position:fixed;
    top:40px;
    z-index:9;
-   background-color:white;
    width:100%;
    padding-top:8px;
    padding-left:15px;
-   padding-bottom:0px;
+   padding-bottom:4px;
 }
 
 #main{
    position:relative;
    top:44px;
+   max-width:1400px;
+}
+
+.carousel {padding:0px;margin:0px;}
+
+.carousel-control.left, .carousel-control.right {
+    background-image: none;
+    display:none;
+    font-size:38px;
 }
 
 .item{
@@ -283,12 +235,7 @@ body {
 
 div.preventionSection {
     position:relative;
-    width: 620px;
-    min-height:50px;
-    margin-top:5px;
-    border: thin solid #c6c6c6;
-    background: #fff;
-    padding:0px 0px 8px 0px;
+    min-width: 620px;
 }
 
 div.preventionSection:hover {
@@ -312,11 +259,9 @@ div.preventionProcedure p {
     padding: 1px 2px;
 }
 
-.carousel {padding:0px;margin:0px;}
-
-		
+	
 .mtype-graph-input{
-   min-height:34px;margin:0px;padding:0px;padding-left:4px;margin-bottom:1px;
+   background-color:#f5f5f5;margin:0px;padding:0px;padding-left:4px;margin-bottom:1px;
 }
 
 .mtype-display-name{
@@ -336,24 +281,16 @@ div.preventionProcedure p {
 }
 
 #graphModal{
-   width:900px;
+   /*width:900px;
    height:500px;
-   margin-left: -450px;
+   margin-left: -450px;*/
 }
 
 #gFrame{
-   width:820px;
-   height:460px;
-} 
-
-#panel{
-   position:absolute;
-   display:none;
-   top:80px;
+   /*width:820px;
+   height:460px;*/
    width:100%;
-   z-index:999;
-   background-color:#333;
-}
+} 
 
 .btn-divider{
    margin:0 6px 0 6px;
@@ -365,7 +302,7 @@ div.preventionProcedure p {
 }
 
 .input-wrapper{
-   float:right;display:inline;margin:0px;padding:0px;
+   float:right;display:inline;margin:0px;padding:0px; width: 310px;
 }
 
 .btn-underline{
@@ -395,6 +332,7 @@ text-decoration:none;
 color:#333;
 opacity:0.6;
 filter:alpha(opacity=60); /* For IE8 and earlier */
+font-size:40px;
 }
 
 #scrollToTop a:hover{
@@ -413,21 +351,23 @@ filter:alpha(opacity=100); /* For IE8 and earlier */
 text-align:center;
 }
 
-.yes-no-options{display: inline;margin:0px;padding:0px}
+.yes-no-options{display: inline-block;margin:0px;padding:0px;}
+
+#left-side{
+position:relative;
+}
 
 .save-all{
 z-index:999;
 position:fixed;
 bottom:0px;
-left:10px;
-
-    width: 625px;
-    height:50px;
-    border: thin solid #c6c6c6;
-    background: #fff;
-    padding:8px;
-    text-align:right;
-    
+width:34.5%;
+min-width: 620px;
+height:70px;
+border: thin solid #c6c6c6;
+background: #fff;
+padding:8px;
+text-align:right;
 opacity:0.4;
 filter:alpha(opacity=40); /* For IE8 and earlier */
 }
@@ -440,7 +380,8 @@ filter:alpha(opacity=100); /* For IE8 and earlier */
 
 #dxAlert ul {
 display: inline; 
-margin:0px;
+margin: 0px;
+padding:0px;
 }
 
 #dxAlert ul li { 
@@ -448,6 +389,22 @@ display: inline;
 padding-left:8px;
 }
 
+.date{
+width:140px;
+}
+
+/* boot 3 - new */
+.add-box{display:none;}
+
+.data-input-area{text-align:right;}
+
+div.panel-body{
+padding:0px;
+}
+
+.no-data{
+padding-left:10px;
+}
         
 .print{display:none;}
 
@@ -455,17 +412,18 @@ padding-left:8px;
 #tracker-bar{position:static}
 
 #graphModal{
-   width:750px;
+   /*width:750px;
    height:500px;
-   margin-left: -375px;
+   margin-left: -375px;*/
 }
 
 #gFrame{
-   width:700px;
-   height:390px;
+   /*width:700px;
+   height:390px;*/
+   width:100%;
 }
 
-@media (max-width: 768px) { 
+@media (max-width: 768px) {
 #tracker-bar{position:static;}
 }
 
@@ -474,23 +432,30 @@ padding-left:8px;
 .print{display:block}
 }
 </style>
-		
-    <link href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" rel="stylesheet">
+		                     
+    <script type="text/javascript">  
+    function bs_carousel_slid(event)
+    {
+      var id = event.data.id;
+      var $this = $(id);
+      //console.log(id);
 
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="<%=request.getContextPath() %>/js/html5.js"></script>
-    <![endif]-->
+      var m = id.replace('#myCarousel','');
+	  //console.log(m);
+            
+      if($(id + ' .carousel-inner .item:first').hasClass('active')) {
+    	  $("#prev_" + m).hide();
+      } else{
+    	  $("#prev_" + m).show();
+      }
 
-    <!-- Fav and touch icons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
-      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
-                    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
-                                   <link rel="shortcut icon" href="ico/favicon.png">
-                
-                        
-    <script type="text/javascript">
+      if($(id + ' .carousel-inner .item:last').hasClass('active')) {
+    	  $("#next_" + m).hide();
+      } else {
+    	  $("#next_" + m).show();
+      }
+    }
+     
         function getDemographicNo() {
                 return '<%=demographic_no%>';
         }
@@ -544,9 +509,6 @@ padding-left:8px;
 
     
    function loadDifferentElements(){
-       //console.log("hapy");
-       
-        
 	    var sdate = $('#flowsheetStartDate').val();
         var edate = $('#flowsheetEndDate').val();
         
@@ -571,7 +533,7 @@ padding-left:8px;
     	<%}%>
     }
     
-
+//TODO: Most likely this will be removed
 	function newSite(s,d) {
 		var url = "<%=request.getContextPath()%>/oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type="+s;
 		$("#graphModalLabel").html(d);
@@ -692,18 +654,14 @@ function fsPopup(width,height,url,window) {
 		
   </head>
 
-  <body id="HealthTracker">
-    
+<body id="HealthTracker">
 
 <%@ include file="/share/templates/patient.jspf"%>
 
-<div id="tracker-bar" class="container-fluid navbar-inner DoNotPrint">
+<div class="well" id="tracker-bar" class="DoNotPrint">
+   		<div class="col-lg-12" style="padding-left:0px;margin-left:0px">
 
-   		<div class="span12" style="padding-left:0px;margin-left:0px">
-
-<a href="?demographic_no=<%=demographic_no%>&template=tracker" class="btn <%if(temp.equals("tracker")){ out.print("btn-primary active");} %>"><i class="icon-home icon-large"></i></a>
-
-
+<a href="?demographic_no=<%=demographic_no%>&template=tracker" class="btn btn-default <%if(temp.equals("tracker")){ out.print("btn-primary active");} %>"><span class="glyphicon glyphicon-home "></span></a>
 <%
 				boolean btnSelected=false;
 				String btnState = "btn";
@@ -750,8 +708,7 @@ function fsPopup(width,height,url,window) {
 						flowsheetList.add(flowSheetGroups.getName());
 						
 						if(displayName.equals(flowSheet)){
-							//current flowsheet
-							
+							//current flowsheet							
 							try{	
 								dxCodeQueryString=flowSheetGroups.getDxTriggersQueryBuilder(demographic_no,providerNo);	
 							}catch(Exception e){	
@@ -766,12 +723,12 @@ function fsPopup(width,height,url,window) {
 
      int idx=0;
 	 String btnLabel="";
-	 String fsSelected="";
+	 String fsSelected="btn-default";
 
      for(idx=0;idx<diagnosed.size();idx++)
      {
     	 
-    	if(temp.equals(diagnosed.get(idx).toString())){fsSelected="btn-primary active";} 
+    	if(temp.equals(diagnosed.get(idx).toString())){fsSelected="btn-primary active";} else { fsSelected="btn-default";}
     	
     	btnLabel=diagnosed.get(idx).toString().toUpperCase();
     	if(btnLabel.equals("DIAB2")){btnLabel="DIAB";}
@@ -779,10 +736,7 @@ function fsPopup(width,height,url,window) {
       	out.print("<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+diagnosed.get(idx).toString()+"' class='btn "+fsSelected+"' title='Diagnosed' id='group-btn-"+diagnosed.get(idx)+"'>"+btnLabel+"</a> ");
       	fsSelected="";
      }
-%>	
 
-
-<%
 	String undiagnosed="";
 	String unDxShow="";
      int iUndx=0;
@@ -796,45 +750,58 @@ function fsPopup(width,height,url,window) {
     		 
 
 if(btnLabel.equals("PHV")){ 
-if(temp.equals(flowsheetList.get(iUndx).toString())){ fsSelected="btn-primary active";} 
+if(temp.equals(flowsheetList.get(iUndx).toString())){ fsSelected="btn-primary active";} else { fsSelected="btn-default";}
 
 out.print(" <a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+fsSelected+"' title='no diagnosis needed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ");
 
-fsSelected="";
+fsSelected="btn-default";
 }
 
- 	    	 if(btnLabel.equals("DIAB2")){btnLabel="DIAB";}
- 	    	
-    		 if(temp.equals(flowsheetList.get(iUndx).toString()) && !temp.equals("phv") ){
-    			 fsSelected="btn-primary active";
-    			 unDxShow="<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+fsSelected+"' title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ";
-    		 } 
+if(btnLabel.equals("DIAB2")){btnLabel="DIAB";}
+
+if(temp.equals(flowsheetList.get(iUndx).toString()) && !temp.equals("phv") ){
+	 fsSelected="active";
+	 //unDxShow="<li class='"+fsSelected+"'><a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"'  title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a></li>";
+	 unDxShow = btnLabel;
+} 
 
 
 if(!btnLabel.equals("PHV")){     		 
-    	    	undiagnosed = undiagnosed + "<a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"' class='btn "+fsSelected+"' title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+btnLabel+"</a> ";
-      			fsSelected="";
+	MeasurementFlowSheet findName = MeasurementTemplateFlowSheetConfig.getInstance().getFlowSheet(flowsheetList.get(iUndx).toString());
+	
+	undiagnosed = undiagnosed + "<li class='"+fsSelected+"'><a href='"+request.getRequestURI()+"?demographic_no="+demographic_no+"&template="+flowsheetList.get(iUndx).toString()+"'  title='Undiagnosed' id='group-btn-"+flowsheetList.get(iUndx)+"'>"+ findName.getDisplayName() +"</a></li>";
+	fsSelected="";
 }
       			
     	 }
      }
      
 %>
-<span class="btn-divider" title="View undiagnosed flowsheets">| <%=unDxShow %></span>		
-			<a href="#" class="btn" id="MoreDx" title="View undiagnosed flowsheets"><i class="icon-chevron-sign-down icon-large"></i></a>
+<span class="btn-divider" title="View undiagnosed flowsheets">| </span>			
+<%
+String primaryMore="";
+if(unDxShow!=""){  
+primaryMore="btn-primary";
+}
+%>			
+			<div class="btn-group">
+			  <button type="button" class="btn btn-default <%=primaryMore%> dropdown-toggle" data-toggle="dropdown" title="View undiagnosed flowsheets">
+			    <%=unDxShow%> <span class="glyphicon glyphicon-chevron-down "></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu">
+			  	<li class="dropdown-header">Undiagnosed</li>
+				<%=undiagnosed %>
+			  </ul>
+			</div>
 		</div>
 </div>
-<div id="panel" class="well well-small">
-<!-- undiagnosed -->
-<%=undiagnosed %>
-</div>
 
 
-   <div id="main" class="container-fluid">
+<div id="main" class="container">
    <div class="row-fluid">
   
    	<div class="row-fluid">
-   		<div class="span12">
+   		<div class="col-lg-12">
  
  <%if (!diagnosed.contains(temp) && !temp.equals("phv") && !temp.equals("tracker")){ %>  
  
@@ -844,30 +811,17 @@ if(!btnLabel.equals("PHV")){
     });
 </script> 
 
- 
-    <div id="dxAlert" class="alert">
+    <div id="dxAlert" class="alert alert-warning">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>Warning!</strong> 
- 	You are using the <b><%=flowSheet%></b> without a diagnosis. 	
- 	
+ 	You are using the <b><%=flowSheet%></b> without a diagnosis. 
 		<%if(dxCodeQueryString!=""){ %>	
-			To add a diagnosis use one of the available codes: 	
-			
-			<%	
-			out.print(dxCodeQueryString); 	
-				
-			%>	
-			or go to the <a href='javascript:void(0);' onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=<%=providerNo%>&quickList=', 'dxAdd'); return false;">Disease Registry</a>. 	
-			<%	
-			}else{	
-			%>	
+			To add a diagnosis use one of the available codes: <%=dxCodeQueryString%> or go to the <a href='javascript:void(0);' onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=<%=providerNo%>&quickList=', 'dxAdd'); return false;">Disease Registry</a>. 
+			<%}else{%>
 			Use the <a href='javascript:void(0);' onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=<%=providerNo%>&quickList=', 'dxAdd'); return false;">Disease Registry</a> to add a diagnosis.	
-			<%		
-			}	
-			%>
+		<%}%>
     </div>
- <%} %>
- 
+ <%}%>
  	
     <% //This is the server side error handling but hopefully we won't ever see this once I have the client side err handling done
     String displayError = "display:none;";
@@ -875,7 +829,7 @@ if(!btnLabel.equals("PHV")){
      displayError = "display:block;";
     } %>
     
-    <div class="alert alert-error" id="validation-alert" style="position:fixed;width:93%;z-index:999;<%=displayError%>">
+    <div class="alert alert-danger" id="validation-alert" style="position:fixed;width:93%;z-index:999;<%=displayError%>">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
 		
 		<% if(request.getAttribute("testOutput")!=null){ %>
@@ -884,90 +838,7 @@ if(!btnLabel.equals("PHV")){
 		<%}%>
 			
 	</div>
-	
    
-<!-- Modal -->
-<div id="unDxModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="unDxModalLabel" aria-hidden="true">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-<h3 id="unDxModalLabel">Warning!</h3>
-</div>
-<div class="modal-body" style="font-size:16px">
- 	<p>You are using the <b><%=flowSheet%></b> without a diagnosis. </p>	
- 	
-		<%if(dxCodeQueryString!=""){ %>	
-			To add a diagnosis use one of the available codes: 	
-			<%	
-			out.print(dxCodeQueryString); 	
-				
-			%>	
-			or go to the <a href='javascript:void(0);' onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=<%=providerNo%>&quickList=', 'dxAdd'); return false;">Disease Registry</a>. 	
-			<%	
-			}else{	
-			%>	
-			Use the <a href='javascript:void(0);' onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=<%=providerNo%>&quickList=', 'dxAdd'); return false;">Disease Registry</a> to add a diagnosis.	
-			<%		
-			}	
-			%>
-       
-</div>
-<div class="modal-footer">
-<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="<bean:message key="oscarencounter.healthtracker.skipdiagnosis" />">
-</div>
-</div>
-<!-- modal end --> 
-
-   		   		
-<!-- Modal -->
-<div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-<h3 id="myModalLabel"></h3>
-</div>
-<div class="modal-body" style="text-align:center">
-
-               <input type="hidden" name="value(numType)" value="<%=demographic_no%>"/>
-               <input type="hidden" name="template"  id="deleteTemplate" value="<%=temp%>"/>
-
-               <input type="hidden" name="id" id="deleteId" value=""/>
-               <input type="hidden" name="deleteCheckbox" id="deleteCheck" value=""/>
-               
-               <h1 id="deleteMeas"></h1>
-               <span id="deleteObsDate" style="font-size:18px"></span>
-               
-               <span id="deleteComment" style="font-size:18px"></span>
-               
-          
-</div>
-<div class="modal-footer">
-<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="Close">
-<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-<input type="button" class="btn btn-danger" name="delete" id="deleteButton" value="Delete" disabled> 
-</security:oscarSec>
-</div>
-</div>
-<!-- modal end -->
-
-<!-- Modal -->
-<div id="graphModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="graphModalLabel" aria-hidden="true">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-<h3 id="graphModalLabel">Graph</h3>
-</div>
-<div class="modal-body" style="text-align:center">
-
-<iframe id="gFrame" src="about:blank" frameborder="0" align="center" style="display:none;"></iframe>
-   
-
-          
-</div>
-<div class="modal-footer">
-<a class="btn " href="#" onclick="document.getElementById('gFrame').contentWindow.print();"><i class="icon-print"></i> Print</a>
-<input type="button" class="btn" data-dismiss="modal" aria-hidden="true" value="<bean:message key='global.close' />">
-</div>
-</div>
-<!-- modal end -->   
-
 <%if(!temp.equals("tracker")){%>
 <h4 style="display:inline;"><%=flowSheet%></h4>
 <%}else if(isMeasurements && temp.equals("tracker")){ 	%>
@@ -979,7 +850,7 @@ if(!btnLabel.equals("PHV")){
 				
 		<%if (recList.size() > 0){ %>
 		<span class="DoNotPrint" style="padding-left:10px;">
-		<i id="plus-overdue" class="icon-plus-sign"></i> <i id="minus-overdue" class="icon-minus-sign" style="display:none"></i>
+		<span id="plus-overdue" class="glyphicon glyphicon-plus-sign"></span> <span id="minus-overdue" class="glyphicon glyphicon-minus-sign" style="display:none"></span>
 		<a href="javascript:void(0)" id="add_overdue" TITLE="Add all overdue measurements">
 		<bean:message key="oscarencounter.templateflowsheet.addoverdue" /></a>
 		</span>
@@ -990,14 +861,14 @@ if(!btnLabel.equals("PHV")){
 		%>
 		
 		<span class="DoNotPrint" style="padding-left:10px;" id="add-renal">
-		<i id="plus-renal" class="icon-plus-sign"></i> <i id="minus-renal" class="icon-minus-sign" style="display:none"></i>
-		<a href="javascript:void(0)" id="add_renal" TITLE="Add Renal">
-		Add Renal</a>
+		<span id="plus-renal" class="glyphicon glyphicon-plus-sign"></span> <span id="minus-renal" class="glyphicon glyphicon-minus-sign" style="display:none"></span>
+		<a href="javascript:void(0)" id="add_renal" TITLE="Add Renal">Add Renal</a>
 		</span>
 	 	<%} }%>
 			
 		<span class="DoNotPrint">
 		<br>
+		<form class="form-inline">
 		<%
 		String numDisplay="0";
 		
@@ -1017,29 +888,25 @@ if(!btnLabel.equals("PHV")){
 	 	<option value="dateRange" <%if(request.getParameter("sdate")!=null){out.print("selected");} %>>Date Range</option>
 	 	</select>
 	 	
-		               		
-                    <!-- #Of Elements <input type="text" size="3" id="numEle"/>-->
 					<span id="date-filter" style="display:<%if(request.getParameter("sdate")!=null){out.print("inline-block");}else{out.print("none");} %>">
                     Start:
-					<div class="input-append date" id="dp-flowsheetStartDate" data-date="<%=date%>" data-date-format="yyyy-mm-dd">
-					<input style="width:90px" name="flowsheetStartDate" id="flowsheetStartDate" size="16" type="text" value="<%if(sdate!=null){out.print(request.getParameter("sdate"));}%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" readonly>
-							<span class="add-on"><i class="icon-calendar"></i></span>
-					</div>
-	 
-                    End:
-                    <div class="input-append date" id="dp-flowsheetEndDate" data-date="<%=date%>" data-date-format="yyyy-mm-dd">
-					<input  style="width:90px" name="flowsheetEndDate"  id="flowsheetEndDate" size="16" type="text" value="<%if(edate!=null){out.print(request.getParameter("edate"));}%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" readonly>
-							<span class="add-on"><i class="icon-calendar"></i></span>
-					</div>
-					
-					<input type="button" class="btn" value="go" style="margin-bottom:10px" onclick="javascript: loadDifferentElements()"/>
+					  <div class="form-group">
+					    <div class="input-group date">
+					      <input name="flowsheetStartDate" id="dp-flowsheetStartDate" type="text" class="form-control" data-date="<%=date%>" data-date-format="yyyy-mm-dd"  value="<%if(sdate!=null){out.print(request.getParameter("sdate"));}%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" readonly >
+					      <div class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></div>
+					    </div>
+					  </div>                    
+					    
+					    End:                
+					  <div class="form-group">
+					    <div class="input-group date">
+					      <input name="flowsheetEndDate"  id="dp-flowsheetEndDate"  type="text" class="form-control" data-date="<%=date%>" data-date-format="yyyy-mm-dd" value="<%if(edate!=null){out.print(request.getParameter("edate"));}%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" readonly >
+					      <div class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></div>
+					    </div>
+					   </div>
+					<input type="button" class="btn btn-default" value="go" onclick="javascript: loadDifferentElements()"/>
                     </span>
-                    
-                    
-                    
-                    
-                    
-                    
+            </form>        
                     
                     </span>
 		</security:oscarSec>
@@ -1049,28 +916,25 @@ if(!btnLabel.equals("PHV")){
    	</div>
    </div>
      
-	    <div class="row-fluid" style="margin-bottom:60px;">
-		    <div class="span6">
+	    <div class="row-fluid">
+		    <div class="col-lg-6" id="left-side">
 
-<%if(!isMeasurements && !temp.equals("tracker")){ out.print("No measurements! "); 	
-		%>	
+<%if(!isMeasurements && !temp.equals("tracker")){ out.print("No measurements! ");%>	
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">	
 		To add measurements go to <a href='adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&htracker' title='Edit Flowsheet'>Edit Flowsheet</a>.	
 		</security:oscarSec>	
 <%}else if(!isMeasurements && temp.equals("tracker")){%>            		    
 
 <div class="well" id="health-tracker-add">
-<p class="lead muted">It looks like you are not tracking any measurements! </p>
+<p class="lead muted">It looks like you are not tracking any measurements!</p>
 
-<a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&add&htracker" class="btn btn-large"><i class="icon-plus-sign icon-large"></i> Add Measurements</a>
+<a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&add&htracker" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-plus-sign "></span> Add Measurements</a>
 
 </div>
-
-
 <%}%>           		    
 		    
 <!-- start of form -->	
-<form id="trackerForm" name="trackerForm" action="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/TrackerUpdate.do">
+<form id="trackerForm" name="trackerForm" action="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/TrackerUpdate.do" class="form-inline" role="form" style="margin-bottom: 60px !important">
 <fieldset>	
 
 <input type="hidden"  name="ycoord"
@@ -1082,9 +946,8 @@ if(!btnLabel.equals("PHV")){
 />
 
 <input type="hidden" name="date" id="date" value="<%=date%>" size="10" > 
-               <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
-               <input type="hidden" name="template" value="<%=temp%>"/>
-
+<input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
+<input type="hidden" name="template" value="<%=temp%>"/>
 <%
 	//set add link array
 	String[] addAllLink = new String[measurements.size()];
@@ -1092,7 +955,7 @@ if(!btnLabel.equals("PHV")){
 	int iDate=0;
 
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-	
+
     EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();  
     long startTimeToLoopAndPrint = System.currentTimeMillis();
     for (String measure:measurements){
@@ -1106,7 +969,7 @@ if(!btnLabel.equals("PHV")){
 
         if (h2.get("measurement_type") != null ){
             Hashtable h = new Hashtable();
-            EctMeasurementTypesBean mtypeBean = mType.getMeasurementType(measure);//mFlowsheet.getMeasurementInfo(measure);
+            EctMeasurementTypesBean mtypeBean = mType.getMeasurementType(measure);
 			
             if(mtypeBean!=null) {
                 h.put("name",mtypeBean.getTypeDisplayName());
@@ -1132,267 +995,281 @@ if(!btnLabel.equals("PHV")){
             //graphable="no"
             //value_name="Answer"
             
-            
+          
+String name = h2.get("display_name").toString();
+name = name.replaceAll("\\W","");
+iDate++;
+
 %>
 
-<div class="preventionSection well-small" style="<%=hidden%>" id="wrap-<%=measure%>">
-   
-<!--mtype START-->
+<div class="panel panel-default" style="<%=hidden%>" id="wrap-<%=measure%>">
+  <div class="panel-heading">
+  <div class="row">
+   <div class="col-lg-5">
+    <span rel="popover" data-html="true" data-content="<%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover"><%=h2.get("display_name")%></span>
+    
+	<!--graphing start-->  
+	<span>         
+	<%if(h2.get("graphable") != null && ((String) h2.get("graphable")).equals("yes") && !name.equals("BP")){   %>
+	
+	<%if (alist != null && alist.size() > 1) {
+	boolean sep = false;
+	%>
+	   	<a class="graphClick" rel="<%=measure%>" data-name="<%=h2.get("display_name")%>"><span class="inlinesparkline" title="<%=measure%> Graph" values="
+	   	 <%=alist.get(alist.size()-1).getDataField()%>
+	   	 <%for (int x=alist.size()-2; x>=0; x--){%>
+	   	 ,
+	    	 <%if (alist.get(x).getDataField().equals("")) {%>
+	    	 null
+	    	 <%}else{%>
+	    	 <%=alist.get(x).getDataField()%>
+	    	 <%} %>
+	   	 <%}%>
+	   	 " ></span></a>
+	<%}%>
+	<%} else if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA"))){
+	
+	if (alist !=null && alist.size() > 0) {
+		if (alist.get(0).getDataField().equalsIgnoreCase("Yes")) { %>
+			<span class="checkmarksparkline" values="2,1,2,3"></span>
+		<%} else if (alist.get(0).getDataField().equalsIgnoreCase("No")) { %>
+			<span class="xsparkline"></span>
+		<%
+			}
+		}
+	} else if (name.equals("BP")) {
+		
+		if (alist != null && alist.size() > 1) {
+			List<String> first = new ArrayList<String>();
+			List<String> second = new ArrayList<String>();
+			for (int x=alist.size()-1; x>=0; x--){
+				if (alist.get(x) != null && alist.get(x).getDataField() != null && !alist.get(x).getDataField().equals("")) {
+					String[] parsed = alist.get(x).getDataField().split("/");
+					first.add(parsed[0]);
+					second.add(parsed[1]);
+				} else {
+					first.add("null");
+					second.add("null");
+				}
+			} %>
+		<a href="javascript:void(0)" class="graphClick" rel="<%=measure%>" data-name="<%=h2.get("display_name")%>"><span class="bpline" title="<%=measure%> Graph"></span></a>
+		<script type="text/javascript">
+			var first = new Array();
+			var second = new Array();
+	
+			<%for (int x = 0; x < first.size(); x++) {%>
+				first[<%=x%>] = "<%=first.get(x)%>";
+				second[<%=x%>] = "<%=second.get(x)%>";
+			<%}%>
+	
+			$('.bpline').sparkline(first,{width:"40px", height:"21px", type:"line", lineColor:"#00f", fillColor:"#cdf", spotRadius:"0", spotColor:"", chartRangeMin:"0", chartRangeMax:"200"});
+			$('.bpline').sparkline(second,{composite:"true", type:"line", lineColor:"#040", fillColor:"#7d7", spotRadius:"0", spotColor:"", chartRangeMin:"0", chartRangeMax:"200"});
+		</script>
+	<%}
+	}%>           
+	</span>
+	<!-- graphing end-->
 
-<div class="well well-small mtype-graph-input">
-
-<div class="mtype-display-name" rel="popover" data-html="true" data-content="<%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
-<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-<a href="javascript:void(0)" style="text-decoration:none;vertical-align:top" onclick="toggle_visibility('add-box-<%=measure%>')">
-</security:oscarSec>
-
-<%=h2.get("display_name")%> 
-
-<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-</a>
-</security:oscarSec>
-</div>
-
-<!--mtype end-->
-					<%
-					String name = h2.get("display_name").toString();
-					name = name.replaceAll("\\W","");
-					iDate++;
-					%>
-
-<!--graphing start-->  
-<span>         
-<%if(h2.get("graphable") != null && ((String) h2.get("graphable")).equals("yes") && !name.equals("BP")){   %>
-
-			            <%if (alist != null && alist.size() > 1) {
-			            boolean sep = false;
-			            %>
-			               	<a onclick = "newSite('<%=measure%>','<%=h2.get("display_name").toString()%>');"><span class="inlinesparkline" title="<%=measure%> Graph" values="
-			               	 <%=alist.get(alist.size()-1).getDataField()%>
-			               	 <%for (int x=alist.size()-2; x>=0; x--){
-			               	 %>
-			               	 ,
-				               	 <%if (alist.get(x).getDataField().equals("")) { %>
-				               	 null
-				               	 <%}else{ %>
-				               	 <%=alist.get(x).getDataField()%>
-				               	 <%} %>
-			               	 <%}%>
-			               	 " ></span></a>
-			            <%}%>
-		           <%} else if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA"))){
-		        	  
-		           		if (alist !=null && alist.size() > 0) {
-		           			if (alist.get(0).getDataField().equalsIgnoreCase("Yes")) { %>
-		           				<span class="checkmarksparkline" values="2,1,2,3"></span>
-		           			<%} else if (alist.get(0).getDataField().equalsIgnoreCase("No")) { %>
-		           				<span class="xsparkline"></span>
-		           			<%
-		           			}
-		           		}
-		           	} else if (name.equals("BP")) {
-		           		
-		           		if (alist != null && alist.size() > 1) {
-		           			List<String> first = new ArrayList<String>();
-		           			List<String> second = new ArrayList<String>();
-		           			for (int x=alist.size()-1; x>=0; x--){
-		           				if (alist.get(x) != null && alist.get(x).getDataField() != null && !alist.get(x).getDataField().equals("")) {
-			           				String[] parsed = alist.get(x).getDataField().split("/");
-			           				first.add(parsed[0]);
-			           				second.add(parsed[1]);
-		           				} else {
-		           					first.add("null");
-		           					second.add("null");
-		           				}
-		           			} %>
-		           			<a href="javascript:void(0)" onclick = "newSite('<%=measure%>','<%=h2.get("display_name").toString()%>');"><span class="bpline" title="<%=measure%> Graph"></span></a>
-		           			<script type="text/javascript">
-		           				var first = new Array();
-		           				var second = new Array();
-
-		           				<%for (int x = 0; x < first.size(); x++) {%>
-		           					first[<%=x%>] = "<%=first.get(x)%>";
-		           					second[<%=x%>] = "<%=second.get(x)%>";
-		           				<%}%>
-
-		           				$('.bpline').sparkline(first,{width:"40px", height:"21px", type:"line", lineColor:"#00f", fillColor:"#cdf", spotRadius:"0", spotColor:"", chartRangeMin:"0", chartRangeMax:"200"});
-		           				$('.bpline').sparkline(second,{composite:"true", type:"line", lineColor:"#040", fillColor:"#7d7", spotRadius:"0", spotColor:"", chartRangeMin:"0", chartRangeMax:"200"});
-		           			</script>
-		           		<%}
-		           	} %>           
-
-</span>
-<!-- graphing end-->
-
-<div class="input-wrapper">  
-     <div class="input-append date" id="dp-<%=iDate%>" data-date="<%=date%>" data-date-format="yyyy-mm-dd">
-				<input style="width:90px" name="<%=name%>_date" size="16" type="text" value="<%=date%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$">
-				<span class="add-on"><i class="icon-calendar"></i></span>
-	 </div>
-<%if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA") ||  mtypeBean.getValidationName().equals("Yes/No/X") )){%> 
-      <div id="options-<%=name%>" class="yes-no-options">                        
-                            <label class="radio inline">
-							<input type="radio" name="<%=name%>" id="<%=name%>-YES" value="Yes" onfocus="toggle_visibility('add-box-<%=measure%>')">
+   </div><!-- col-lg-5 -->
+   <div class="col-lg-7 data-input-area">
+     <div class="form-group" style="display:inline-block !important; margin:0px;padding:0px;"> 
+		<div class="input-group date">
+	      <input class="form-control" type="text" name="<%=name%>_date" id="dp-<%=iDate%>" data-date="<%=date%>" data-date-format="yyyy-mm-dd" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" value="<%=date%>">
+	      <div class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></div>
+	    </div>
+	</div>
+	
+	<div class="form-group" style="width:160px;text-align:right;display:inline-block !important; margin:0px;padding:0px;">
+	<%if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA") ||  mtypeBean.getValidationName().equals("Yes/No/X") )){%> 
+	     <div id="options-<%=name%>" class="yes-no-options">                        
+							<input type="radio" name="<%=name%>"  id="<%=name%>-YES" value="Yes" onfocus="toggle_visibility('add-box-<%=measure%>')">
 							Yes
-							</label>
-							<label class="radio inline">
 							<input type="radio" name="<%=name%>" id="<%=name%>-NO" value="No" onfocus="toggle_visibility('add-box-<%=measure%>')">
-							No
-							</label>  
-											
-     <%if( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No/NA")){%>                     
- 					                            
-							<label class="radio inline">
+							No		
+	    <%if( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No/NA")){%>                     
 							<input type="radio" name="<%=name%>" id="<%=name%>-NA" value="NA" onfocus="toggle_visibility('add-box-<%=measure%>')">
 							NA
-							</label>
 	<%}%>					 		  
-     </div> <!-- yes-no-options -->                      
-  <%}else if( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Review")){ %>
-							<label class="checkbox inline">
+	    </div> <!-- yes-no-options -->                      
+	 <%}else if( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Review")){ %>
+							<label class="checkbox checkbox-inline">
 							<input type="checkbox" name="<%=name%>" id="<%=name%>-REVIEWED" value="Reviewed" onfocus="toggle_visibility('add-box-<%=measure%>')">
 							Reviewed
 							</label>
-  <%}else{ %>
-  <input type="text" class="input-small" id="<%=name%>" name="<%=name%>"  onfocus="toggle_visibility('add-box-<%=measure%>')" title="<% if (name.equals("WarfarinWeeklyDose") || name.equals("Weightkg") || name.equals("Heightcm")){ %> Double click to convert<%}else if (name.equals("BP")) {%>00/00 or 000/00 <%}else{ %> <%=mtypeBean.getValidationName()%> <%}%>"
+	 <%}else{ %>
+	 <input type="text" class="form-control" id="<%=name%>" name="<%=name%>"  onfocus="toggle_visibility('add-box-<%=measure%>')" title="<% if (name.equals("WarfarinWeeklyDose") || name.equals("Weightkg") || name.equals("Heightcm")){ %> Double click to convert<%}else if (name.equals("BP")) {%>00/00 or 000/00 <%}else{ %> <%=mtypeBean.getValidationName()%> <%}%>"
 	                       	<% if ((name.equals("Weightkg") || name.equals("Heightcm")) ){ %> onchange="calcBMI();" onkeyup="calcBMI();"<%}%>
 	                       	<% if (name.equals("Weightkg")){ %> onDblClick="wtEnglish2Metric(this); calcBMI();"<%}%>
 	                       	<% if (name.equals("Heightcm")){ %> onDblClick="htEnglish2Metric(this); calcBMI();"<%}%>
 	                       	<% if (name.equals("BMI")){ %> onDblClick="calcBMI();"<%}%>
 	                       	<% if (name.equals("WarfarinWeeklyDose")){ %> onDblClick="calcWeeklyDose(this);"<%}%> placeholder="Enter Data" <%=getPattern(measure, mtypeBean.getMeasuringInstrc())%> autocomplete="off"> 
-  <%} %>
+	 <%} %>
+	 </div><!-- form group -->
   
+   </div><!-- col-lg-7 -->
+  </div> <!-- row -->
+ 
+   <div class="row add-box" id="add-box-<%=measure%>">
 
+   <div class="col-lg-5">
+    <span title="If you would like this measurement to display in your progress note then you need to select this checkbox."><input type="checkbox" name="<%=name%>_note" id="<%=name%>_note" value="addtonote"> <small>add to progress note</small></span>
+   </div><!-- col-lg-5 -->
+   <div class="col-lg-7 data-input-area">
+	<div class="form-group" style="display:inline-block !important; margin:0px;padding:0px;">
+	
+	<%if( temp.toUpperCase().equals("PHV") && !measure.equals("FUPP") ){%>
+	<input type="text" class="form-control" placeholder="Comment" id="<%=name%>_comments" name="<%=name%>_comments" style="display:inline; width:240px;">
+		<input class="btn btn-default" type="submit" name="submit" value="Save" id="save_<%=name%>"/> 
+	<%}else{%> 
+	<textarea class="form-control col-lg-6" id="<%=name%>_comments" name="<%=name%>_comments" style="display:inline; width:304px;" rows="4"></textarea>
+		<input class="btn btn-default btn-block" type="submit" name="submit" value="Save" id="save_<%=name%>" /> 
+	<%}%>
+	
 
-</div> <!-- input-wrapper -->
+	</div>
+   </div><!-- col-lg-7 -->
 
-</div><!-- mtype-graph-input -->
+  </div> <!-- row --> 
+  
+  </div><!-- panel-heading -->
+  <div class="panel-body preventionSection" rel="<%=measure%>">
+	<%if(mi.getWarning(measure)!=null){%>
+	<div class="alert alert-danger" style="margin-bottom: 0px;padding-top:6px;padding-bottom:6px;"> <button type="button" class="close" data-dismiss="alert">&times;</button><%=mi.getWarning(measure)%></div>
+	<%}
+	
+	    
+	   if(alist.size()>0){
+	%>
+	   <div id="myCarousel<%=measure%>" data-interval="false" data-wrap="false" class="carousel slide"> 
+	     <div class="carousel-inner">
+	   <%  
+	    int k = 0;
+	   	int setx = 0;
+	   	if(numElementsToShow>6){numElementsToShow=6;}
+	   	int num = numElementsToShow;
 
-<!-- hidden fields for form -->
-<div class="well well-small" id="add-box-<%=measure%>" style="display:none;margin-bottom:1px;">
-   <span title="If you would like this measurement to display in your progress note then you need to select this checkbox."><input type="checkbox" name="<%=name%>_note" id="<%=name%>_note" value="addtonote"> <small>add to progress note</small></span>  
-   
-   <span class="pull-right">
-   <input type="text" class="input-xlarge" placeholder="Comment" id="<%=name%>_comments" name="<%=name%>_comments" > 
-   <input class="btn" type="submit" style="margin-top:-10px;" name="submit" value="Save" id="save_<%=name%>"/> 
-   </span>
-</div>
-
-<%if(mi.getWarning(measure)!=null){%>
-<div class="alert alert-error" > <button type="button" class="close" data-dismiss="alert">&times;</button><%=mi.getWarning(measure)%></div>
-<%}%>
-
-    <div id="myCarousel<%=measure%>" class="carousel slide"> 
-      <div class="carousel-inner">
-    <%  int k = 0;
-    	int setx = 0;
-    	if(numElementsToShow>6){numElementsToShow=6;}
-    	int num = numElementsToShow;
-    	
-        for (EctMeasurementsDataBean mdb:alist){
-
-            mFlowsheet.runRulesForMeasurement(mdb);
-            Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);
-            hdata.put("age",mdb.getDataField());
-            hdata.put("prevention_date",UtilDateUtilities.DateToString(mdb.getDateObservedAsDate()));
-            hdata.put("id",""+mdb.getId());
-            String com = mdb.getComments();
-            boolean comb = false;
-            if (com != null && !com.trim().equals("")){
-                comments.add(com);
-                comb = true;
-            }else{
-                com ="";
-            }
-            String hider = "";
-
-            String indColour = "";
-            String indText = "";
-            if ( mdb.getIndicationColour() != null ){
-                indColour = "style=\"background-color:"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"\"";
-                if( mFlowsheet.getIndicatorColour(mdb.getIndicationColour()).equals("#9999FF")){ indText="LOW";}
-                if( mFlowsheet.getIndicatorColour(mdb.getIndicationColour()).equals("orange")){ indText="HIGH";}
-                indText="<font color='"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"' size='3'>"+indText+"</font>";
-            }
-   
+	       for (EctMeasurementsDataBean mdb:alist){
+	
+	           mFlowsheet.runRulesForMeasurement(mdb);
+	           Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);
+	           hdata.put("age",mdb.getDataField());
+	           hdata.put("prevention_date",UtilDateUtilities.DateToString(mdb.getDateObservedAsDate()));
+	           hdata.put("id",""+mdb.getId());
+	           String com = mdb.getComments();
+	           boolean comb = false;
+	           if (com != null && !com.trim().equals("")){
+	               comments.add(com);
+	               comb = true;
+	           }else{
+	               com ="";
+	           }
+	           String hider = "";
+	
+	           String indColour = "";
+	           String indText = "";
+	           if ( mdb.getIndicationColour() != null ){
+	               indColour = "style=\"background-color:"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"\"";
+	               if( mFlowsheet.getIndicatorColour(mdb.getIndicationColour()).equals("#9999FF")){ indText="LOW";}
+	               if( mFlowsheet.getIndicatorColour(mdb.getIndicationColour()).equals("orange")){ indText="HIGH";}
+	               indText="<font color='"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"' size='3'>"+indText+"</font>";
+	           }
+	  
 	//if(sdate != null && edate != null){
-    Date itDate = mdb.getDateObservedAsDate();
-            
+	   Date itDate = mdb.getDateObservedAsDate();
+	           
 	if ( (sdate != null && edate != null) && (itDate.before(sdate) || itDate.after(edate)) ){
-	                    //do nothing here
-
-    } else if (request.getParameter("show") !=null && request.getParameter("show").equals("outOfRange") && indColour.equals("")){
+	       //do nothing here
+	
+	   } else if (request.getParameter("show") !=null && request.getParameter("show").equals("outOfRange") && indColour.equals("")){
 			//do nothing 
 	}else{
-            
+	           
 	k++;
 	setx++;
-                
+	               
 	out.print("<!-- setx:"+ setx +" -->");
-    if(setx==1){ out.print("<div class='item active'>"); 
-    } else if(setx==num+1){
-    	setx=1;//start a new set
-    	out.print("<div class='item'>");  
-    }
-    
-    %>
-      
-    <div class="preventionProcedure" 
-    <%if(mdb.getRemoteFacility() == null){ %>
-    style="cursor: hand; cursor: pointer;"
-    href="#deleteModal" role="button" data-toggle="modal"
-    onclick="deleteMeasurement('<%=h2.get("display_name").toString()%>','Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>','<%=hdata.get("age")%>','<%=hdata.get("prevention_date")%>','<%=hdata.get("id")%>')" 
-    <%}%> >
+	   if(setx==1){ out.print("<div class='item active'>"); 
+	   } else if(setx==num+1){
+	   	setx=1;//start a new set
+	   	out.print("<div class='item'>");  
+	   }
+	   
+	   %>
+	     
+	   <div class="preventionProcedure"
+	   <%if(mdb.getRemoteFacility() == null){ %>
+	   style="cursor: hand; cursor: pointer;"
+	   href="#deleteModal" role="button" data-toggle="modal"
+	   onclick="deleteMeasurement('<%=h2.get("display_name").toString()%>','Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>','<%=hdata.get("age")%>','<%=hdata.get("prevention_date")%>','<%=hdata.get("id")%>')" 
+	   <%}%> >
 	<input type="hidden" id="<%=hdata.get("id")%>-comment-html" value="<%=com%>">
-
+	
 		<span rel="popover" data-container="body" data-html="true" data-content='Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%> <br> <small><%=getFromFacilityMsg(mdb) %></small>'  data-trigger="hover">     
-			<p style="line-height:90%;font-size:18px"><%=hdata.get("age")%></p>
+			<p style="line-height:90%;font-size:18px" class="plot-set-<%=measure%>" data-plot-date='<%=hdata.get("prevention_date")%>' data-plot='<%=hdata.get("age")%>'><%=hdata.get("age")%></p>
 			
 			<span style="line-height:60%;font-size:10px;"><%=hdata.get("prevention_date")%>&nbsp;
 			<i title="<%=mdb.getNumMonthSinceObserved()%> Months since last observed."><%=mdb.getNumMonthSinceObserved()%>M</i>
 			</span> 
 		</span>
+	
+	           <%if (comb) {%>
+	            <a rel="tooltip" title="<b>Comment by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%></b><br><%=com%>" data-placement="right" data-container="body" data-html="true" style="position:absolute;z-Index:4;padding-left:4px;"><span class="glyphicon glyphicon-comment" ></span></a>
+	           <%}%>
+	         
+	       <p width="16px" <%=indColour%> ></p>
+	       <%=indText%>
+	
+	   </div><!-- prevention procedure -->
+	   <%} %>
+	   
+	  <%if(setx==num){ out.print("</div> <!--item split -->");  } //splitting for carousel effect
+	 
+	  }
+	   	
+	if(setx<1){%>
+	<!-- still display if no items -->
+	<div class='item active'>
+		<div class="preventionProcedure">
+		
+		</div><!-- prevention procedure --> 
+	<%}%> 
+	
+	<%if(setx<num){ out.print("</div> <!--end of items-->"); }%>
+	      
+	<!-- </div><!-- carousel-inner -->
+	
+	<%if(k>num){ %>
+	   <a class="left carousel-control" href="#myCarousel<%=measure%>" data-slide="prev" id="prev_<%=measure%>" style="margin-left:-25px;"><span class="glyphicon glyphicon-arrow-left text-success"></a>
+	   <a class="right carousel-control" href="#myCarousel<%=measure%>" data-slide="next" id="next_<%=measure%>" style="margin-right:-25px;" title="Click to see more values"><span class="glyphicon glyphicon-arrow-right text-success"></span></a>
+	   
+<script>
+//<![CDATA]
+id = '#myCarousel<%=measure%>';
+$(id).on('slid.bs.carousel', { id: id }, bs_carousel_slid);
+$(document).ready(function(){ $(id).trigger('slid.bs.carousel'); });       
+//]]>
+</script>	   
+	<%}else{%> 
+	 <a class="carousel-control right" href="javascript:void(0);" style="margin-right:-25px;" title="All values are visible."><span class="glyphicon glyphicon-remove text-muted"></span></a>
+	<%} %>	
+	</div><!-- /.carousel inner -->
+	
 
-            <%if (comb) {%>
-             <a  rel="tooltip" title="<b>Comment by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%></b><br><%=com%>" data-placement="right" data-container="body" data-html="true" style="position:absolute;z-Index:4;padding-left:4px;"><i class="icon-comment" ></i></a>
-            <%}%>
-          
-        <p width="16px" <%=indColour%> ></p>
-        <%=indText%>
+	
+	</div><!-- myCarousel-->
+<%}else{ //end if alist.size() %>
+<p class="text-muted no-data">No Data</p>
+<%} %>
 
-    </div><!-- prevention procedure -->
-    <%} %>
-    
-   <%if(setx==num){ out.print("</div> <!--item split -->");  } //splitting for carousel effect%> 
+<!-- graphView -->
+
+  </div><!-- panel-body onclick="document.getElementById('graphView-<%=measure%>').style.display='none'"-->
   
-    <%}%>
-    
-<%if(setx==0){ out.print("<span style='color:#999;padding-left:20px;'>No Data</span>");  }%>
- 
-<%if(setx<1){%>
- <!-- still display if no items -->
-<div class='item active'>
-<div class="preventionProcedure">
-
-</div><!-- prevention procedure --> 
-<%}%> 
- 
-      <%if(setx<num){ out.print("</div> <!--end of items-->"); }%>
-      
-</div><!-- carousel-inner -->
-
-<%if(k>num){ %>
-    <a class="carousel-control left" href="#myCarousel<%=measure%>" data-slide="prev" id="prev_<%=measure%>" style="display:none;margin-left:-35px">&lsaquo;</a>
-    <a class="carousel-control right" href="#myCarousel<%=measure%>" data-slide="next" style="display:none;margin-right:-35px" title="Click to see more values">&rsaquo;</a>
-<%}else{%> 
-
-<a class="carousel-control right" href="#myCarousel<%=measure%>" data-slide="next" style="display:none;margin-right:-35px; background-color:#ccc" title="All values are visible.">&times;</a>
-<%} %>	
-
- 
-    </div><!-- /.carousel -->
-
-</div><!-- prevention section -->
+  <div class="panel-footer graphView-<%=measure%>" style="display:none;">
+  <button type="button" class="close pull-right closeGraph" rel="<%=measure%>">&times;</button>
+  <div id="chart-<%=measure%>" style="height:200px; width:560px;"></div>
+  </div><!-- footer  -->
+</div><!-- panel end -->
 <%
 	//creating add all link array
 	addAllLink[mCount]=measure;
@@ -1402,79 +1279,86 @@ if(!btnLabel.equals("PHV")){
     String prevType = (String) h2.get("prevention_type");
     long startPrevType = System.currentTimeMillis();
     ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, Integer.parseInt(demographic_no));
-%>
+%>	
 
-<div class="preventionSection well-small" style="<%=hidden%>">
-
-<!-- preventions type -->   
-<div class="well well-small mtype-graph-input">
-
-            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')" rel="popover" data-html="true" data-content="<%//=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%//=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
-                <span style="padding-left:5px;"><%=h2.get("display_name")%></span>
-            </a>
-            <button type="button" class="btn pull-right" value="Add" onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')"><i class="icon-plus"></i></button>
-           
-</div> <!-- div well -->
-    
-     <div id="myCarousel<%=measure%>" class="carousel slide">
-      <div class="carousel-inner"> 
-      <div class='item active'>
-    <%
-        out.flush();
-    	
-    	String result;   
-        for (int k = 0; k < alist.size(); k++){
-      	  	Map<String,Object> hdata = alist.get(k);
-            String com = PreventionData.getPreventionComment(""+hdata.get("id"));
-            
-            Map<String,String> hExt = PreventionData.getPreventionKeyValues((String)hdata.get("id"));
-            result = hExt.get("result");
-            
-            boolean comb = false;
-            if (com != null ){
-                comments.add(com);
-                comb = true;
-            }else{
-                com ="";
-            }
-    %>
-    
-    <div class="preventionProcedure"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
-
-<p align="center">
-<span rel="popover" data-container="body" data-html="true" data-content='Entered by: <%=hdata.get("provider_name")%>'  data-trigger="hover">
-<font size="3">
-<%if( result!=null && result.equals("pending") && refused(hdata.get("refused")).equals("Completed") ){ %>
-Pending 
-<%}else{%>
-<%=refused(hdata.get("refused"))%>
-<%}%>
-</font>
-
-<font size="1"><%=hdata.get("prevention_date")%></font>
-</span>
-           <%if (comb) {%>
-           
-           <a href="#" rel="tooltip" title="<strong>Comment by: <%=hdata.get("provider_name")%></strong> <br>  <%=com%>"  data-placement="right" data-container="body" data-html="true" style="position:absolute;z-Index:4;padding-left:4px;"> <i class="icon-comment"></i></a>
-           <%}%>
-	
-</p>
-
-<p width="16px" <%=r(hdata.get("refused"))%> ></p>
-<%if(result!=null && result.equals("abnormal")){%><font size="3" style="color:#b94a48"><%=result%></font><%}%>
-
-    </div> <!-- prevention procedure -->
-
-    <%}%>
-    
-    </div><!-- item -->
+<div class="panel panel-default" style="<%=hidden%>">
+  <div class="panel-heading">
+    <div class="row">
+   		<div class="col-lg-5">
+	   		<span rel="popover" data-html="true" data-content="<%=h2.get("guideline")%>" data-original-title="<%=h2.get("display_name")%>" data-trigger="hover">
+	                <%=h2.get("display_name")%>
+	        </span>
+   		</div><!-- col-lg-5 -->
+   		<div class="col-lg-7 data-input-area">
+   			<button type="button" class="btn btn-default" value="Add" onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')"><span class="glyphicon glyphicon-plus"></span></button>
+   		</div><!-- col-lg-7 -->
+   	</div>	
+  </div>
+  <div class="panel-body preventionSection">
   
-</div><!-- carousel-inner -->
-   
-    </div><!-- /.carousel -->
-    
-
-</div><!-- prevention section -->
+  <%if(alist.size()>0){ %>
+		<div id="myCarousel<%=measure%>" class="carousel slide">
+		  <div class="carousel-inner"> 
+		  <div class='item active'>
+		<%
+		    out.flush();
+			
+			String result; 
+			
+		    for (int k = 0; k < alist.size(); k++){
+		  	  	Map<String,Object> hdata = alist.get(k);
+		        String com = PreventionData.getPreventionComment(""+hdata.get("id"));
+		        
+		        Map<String,String> hExt = PreventionData.getPreventionKeyValues((String)hdata.get("id"));
+		        result = hExt.get("result");
+		        
+		        boolean comb = false;
+		        if (com != null ){
+		            comments.add(com);
+		            comb = true;
+		        }else{
+		            com ="";
+		        }
+		%>
+		
+		<div class="preventionProcedure"  onclick="javascript:fsPopup(465,635,'../../oscarPrevention/AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
+		
+		<p align="center">
+		<span rel="popover" data-container="body" data-html="true" data-content='Entered by: <%=hdata.get("provider_name")%>'  data-trigger="hover">
+		<font size="3">
+		<%if( result!=null && result.equals("pending") && refused(hdata.get("refused")).equals("Completed") ){ %>
+		Pending 
+		<%}else{%>
+		<%=refused(hdata.get("refused"))%>
+		<%}%>
+		</font>
+		
+		<font size="1"><%=hdata.get("prevention_date")%></font>
+		</span>
+		           <%if (comb) {%>
+		       
+		       <a href="#" rel="tooltip" title="<strong>Comment by: <%=hdata.get("provider_name")%></strong> <br>  <%=com%>"  data-placement="right" data-container="body" data-html="true" style="position:absolute;z-Index:4;padding-left:4px;"> <span class="glyphicon glyphicon-comment"></span></a>
+		       <%}%>
+		</p>
+		
+		<p width="16px" <%=r(hdata.get("refused"))%> ></p>
+		<%if(result!=null && result.equals("abnormal")){%><font size="3" style="color:#b94a48"><%=result%></font><%}%>
+		
+		</div> <!-- prevention procedure -->
+		
+		<%}%>
+		
+		</div><!-- item -->
+		  
+		</div><!-- carousel-inner -->
+		
+		</div><!-- /MyCarousel -->
+		<%}else{%>
+		<p class="text-muted no-data">No Data</p>
+		<%}%>
+  </div><!-- panel body -->
+</div><!-- panel -->
+<!-- end new meas containers--->
 <%
 	}
 
@@ -1498,173 +1382,27 @@ function createAddAll(d,t){
 }
 </script>
 
-<%
-    oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
-    oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
-
-    List<FlowSheetDrug> atcCodes = flowSheetDrugDao.getFlowSheetDrugs(temp,Integer.parseInt(demographic_no));
-    for(FlowSheetDrug fsd : atcCodes){
-            arr = prescriptData.getPrescriptionScriptsByPatientATC(Integer.parseInt(demographic_no),fsd.getAtcCode());
-
-%>
-
-<div class="preventionSection"  >
-    <div class="headPrevention">
-        <p title="fade=[on] header=[ddddd] body=[ddddddddsdfsdf]">
-            <!-- a href="javascript: function myFunction() {return false; }"  -->
-                <span title="dd" style="font-weight:bold;"><%=arr[0].getGenericName()%></span>
-            <!-- /a -->
-            &nbsp;
-            <br/>
-        </p>
-    </div>
-    <%
-        out.flush();
-        for (oscar.oscarRx.data.RxPrescriptionData.Prescription pres : arr){
-    %>
-    <div class="preventionProcedure"  onclick="javascript:fsPopup(465,635,'','addPreventionData')" >
-        <p <%=""/*r(hdata.get("refused"))*/%> title="fade=[on] header=[<%=""/*hdata.get("age")*/%> -- Date:<%=""/*hdata.get("prevention_date")*/%>] body=[<%=""/*com*/%>]" ><%=pres.getBrandName()%> <br/>
-            Date: <%=pres.getRxDate()%>
-            <%-- if (comb) {%>
-            <span class="footnote"><%=comments.size()%></span>
-            <%} --%>
-        </p>
-    </div>
-    <%}%> 
-     
-</div>
-<%}%>		    
-
-</div>
 		    
-<div class="span4" id="right-side">
-  <div class="tabbable DoNotPrint">
-           <ul class="nav nav-tabs">
-             <li class="active"><a href="#tab1" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Medications'/></a></li>
-             <li><a href="#tab2" data-toggle="tab"><bean:message key='oscarEncounter.NavBar.Allergy'/></a></li>
-             <!-- hiding for now don't think we want this<li><a href="#tab3" data-toggle="tab"><bean:message key='oscarEncounter.reminders.title'/></a></li>-->
-             <li><a href="#tab4" data-toggle="tab"><bean:message key='oscarEncounter.warnings.title'/> <span class="badge"><%=warnings.size() %></span></a></li>
-             <li><a href="#tab5" data-toggle="tab">Recommendations <span class="badge"><%=recomendations.size() %></span></a></li>
-           </ul>
-           <div class="tab-content">
-               <div id="tab1" class="tab-pane active well well-small">
-                <p><strong><bean:message key="global.module" />:</strong> <a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarRx/choosePatient.do?providerNo=<%=providerNo%>&demographicNo=<%=demographic_no%>')" title="Go to the Medications module">Medications</a></p>
-				 <%if(medicationsResult.size()>=1){%>
-				
-									
-					<%=medicationsList%>
+
+
+<%if(isMeasurements){ %>
+<div class="DoNotPrint save-all">
+	<!-- this will have to be visible to user -->
+			
+		<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&htracker" class="btn btn-default btn-lg" value="<bean:message key="oscarencounter.templateflowsheet.print" />" title="<bean:message key="oscarencounter.templateflowsheet.print" /> Flowsheet"><span class="glyphicon glyphicon-print"></span> Print</a>
 					
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
+			<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
+			<a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&htracker" class="btn btn-default btn-lg" title="Edit Flowsheet"><span class="glyphicon glyphicon-pencil"></span> Edit</a>   
+			</security:oscarSec>
 					
-				<%}else{%>
-					<bean:message key='healthtracker.noActiveMeds.warning' />
-				<%}%>
-
-               </div>
-               
-               <div id="tab2" class="tab-pane well well-small">
-               <p> <strong>Module:</strong> <a href="javascript:void(0);" onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarRx/showAllergy.do?demographicNo=<%=demographic_no%>')" title="Go to the Allergies module">Allergies</a></p>
-				   <%
-				List<Allergy> allergies = allergyDao.findActiveAllergiesOrderByDescription(Integer.parseInt(demographic_no));
-				String allergiesList="";
-				for(int x=0;x<allergies.size();x++) {
-					if(x!=0) {
-						allergiesList += ",<br/>";
-					}
-					Allergy allergy = allergies.get(x);
-					allergiesList += allergy.getDescription();
-				}
-				
-				
-				%>   
-
-				<%if(allergies.size()>=1){%>
-				
-				       <%=allergiesList%>
-				 <%}else{%>
-						No Allergies
-				<%}%>   
-               </div>
-               
-               <div id="tab3" class="tab-pane well well-small">
-					 <%
-					String remindersQuery = "intake_reminders";
-					List<Map<String,Object>> remindersResult = oscarSuperManager.find("providerDao", remindersQuery, demographicParam);
-					String remindersList = (!remindersResult.isEmpty() && remindersResult.get(0).get("note")!=null) ? remindersResult.get(0).get("note").toString() : "";
-					if (remindersResult.size() > 1) {
-						for (int i=1; i<remindersResult.size(); i++) {
-							remindersList += ",<br/>" + remindersResult.get(i).get("note").toString();
-						}
-					}
-
-					if (remindersResult.size() > 1) {
-					%>
-					       
-							<%=remindersList%> 
-					<%}else{%>
-					
-	
-								No Reminders
-					<%}%>   
-               </div>
-               
-               <div id="tab4" class="tab-pane well well-small">
-               <% if (warnings.size() > 0 || dsProblems) { %>
-      
-				
-				<%if (warnings.size() > 0){ //TODO: assess whether warnings needs it's own tab with a tally in tab title%>
-				<span style="font-size:12px;"><%=flowSheet%> Warnings: </span>
-				<ul >
-				<% for (String warn : warnings){ %>
-				<li style="color: red;"><%=warn%></li>
-				<%}%>
-				</ul>
-				<br>
-				<%}%>
-								
-				
-				<% if (dsProblems){ %>
-				<ul>
-				<li style="color: red;">Decision Support Had Errors Running.</li>
-				</ul>
-				<% }%>
-				
-				
-				<% }else{ %>
-				      
-					No Warnings
-				<%}%>
-               </div>
-
- <div id="tab5" class="tab-pane well well-small">
-               <% if (recomendations.size() > 0  || dsProblems) { %>
-      
-				
-				<%if (recomendations.size() > 0){ //TODO: assess whether recommendations needs it's own tab with a tally in tab title%> 
-				<span style="font-size:12px;"><%=flowSheet%> Recommendations: </span>
-				<ul>
-				<% for (String warn : recomendations ){%>
-				<li style="color: black;"><%=warn%></li>
-				<%}%>
-				</ul>
-				<br>
-				<%}%>
-				
-				
-				<% if (dsProblems){ %>
-				<ul>
-				<li style="color: red;">Decision Support Had Errors Running.</li>
-				</ul>
-				<% }%>
-				
-				
-				<% }else{ %>
-				      
-					No Recommendations
-				<%}%>
-               </div>
-               
-           </div>
-   </div>
+		    <input class="btn btn-primary btn-lg" type="submit" name="submit" value="Save All" />
+		 </security:oscarSec>    
+</div>
+<%}%>
+</div><!-- col-lg-6 -->
+		    
+<div class="col-lg-6 col-md-3 col-sm-12" id="right-side">
  
  <%
  if("yes".equalsIgnoreCase(ornPilot) || "true".equalsIgnoreCase(ornPilot)) {
@@ -1676,7 +1414,7 @@ function createAddAll(d,t){
              <li class="active"><a href="#ckd" data-toggle="tab" >Renal</a></li>
            </ul>
            <div class="tab-content">
-               <div id="ckd" class="tab-pane active well well-small">
+               <div id="ckd" class="tab-pane active well well-sm">
                <span class="label label-inverse" id="renal-next-steps">Next Steps</span><br>
                <div id="renal_next_steps">
                N/A
@@ -1694,10 +1432,8 @@ function createAddAll(d,t){
  <!-- renal end -->       
 <%} }%> 
 
-
-  
            <ul class="nav nav-tabs DoNotPrint">
-              <li class="active"><a href="#toolkit"><%=temp.toUpperCase() %> Toolkit</a></li>
+              <li class="active"><a href="#toolkit">Toolkit</a></li>
            </ul>
                <div id="toolkit">   
     
@@ -1782,15 +1518,13 @@ function createAddAll(d,t){
                            
                </div>
 
-
-
  <%if(mFlowsheet.getTopHTMLStream().length()>1){ %>
- <!-- TopHTMLStream  start-->
+ <!-- TopHTMLStream  start TODO: Do something better with this -->
    <div class="tabbable DoNotPrint">
            <ul class="nav nav-tabs">
               <li class="active"><a href="#TopHTMLStream" data-toggle="tab">Other</a></li>
            </ul>
-               <div id="TopHTMLStream" class="tab-pane active well well-small">
+               <div id="TopHTMLStream" class="tab-pane active well well-sm">
                
                <span class="label label-info" id="TopHTMLStream-resources">Resources</span><br>
                   <%=mFlowsheet.getTopHTMLStream() %>            
@@ -1799,52 +1533,181 @@ function createAddAll(d,t){
  <!-- TopHTMLStream end -->       
 <%} %> 
 
- 
-    
-		    </div><!-- end span6 -->
+		    </div>
 		    
 	    </div>
     </div>
 
-<%if(isMeasurements){ %>
-<div class="DoNotPrint save-all">
-	<!-- this will have to be visible to user -->
-			
-		<a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&htracker" class="btn btn-large" value="<bean:message key="oscarencounter.templateflowsheet.print" />" title="<bean:message key="oscarencounter.templateflowsheet.print" /> Flowsheet"><i class="icon-print"></i> Print</a>
-					
-		<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
-			<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
-			<a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>&htracker" class="btn btn-large" title="Edit Flowsheet"><i class="icon-pencil"></i> Edit</a>   
-			</security:oscarSec>
-					
-		    <input class="btn btn-primary btn-large" type="submit" name="submit" value="Save All" />
-		 </security:oscarSec>    
-</div>
-<%}%>
 <!-- end of form -->
 </fieldset>		    
 </form>
 
- <div id="scrollToTop"><a href="#HealthTracker"><i class="icon-circle-arrow-up icon-3x"></i></a></div>
+
+</div><!-- main -->
+
+ <div id="scrollToTop"><a href="#HealthTracker"><span class="glyphicon glyphicon-circle-arrow-up"></span></a></div>
+ 
+ 
+	<!-- Modal -->
+	<div class="modal fade" id="unDxModal" tabindex="-1" role="dialog" aria-labelledby="unDxModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header alert alert-warning">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 class="modal-title" id="unDxModalLabel">Warning!</h3>
+	      </div>
+	      <div class="modal-body" style="font-size:16px">
+ 	<p>You are using the <b><%=flowSheet%></b> without a diagnosis. </p>	
+ 	
+		<%if(dxCodeQueryString!=""){ %>	
+			To add a diagnosis use one of the available codes: 	
+			<%	
+			out.print(dxCodeQueryString); 	
+				
+			%>	
+			or go to the <a href='javascript:void(0);' onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=<%=providerNo%>&quickList=', 'dxAdd'); return false;">Disease Registry</a>. 	
+			<%	
+			}else{	
+			%>	
+			Use the <a href='javascript:void(0);' onclick="javascript:popup(700,900,'<%=request.getContextPath()%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=demographic_no%>&providerNo=<%=providerNo%>&quickList=', 'dxAdd'); return false;">Disease Registry</a> to add a diagnosis.	
+			<%		
+			}	
+			%>
+	      </div>
+	      <div class="modal-footer">
+			<input type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true" value="<bean:message key="oscarencounter.healthtracker.skipdiagnosis" />">
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+<!-- modal end --> 
+
+   		   		
+<!-- Modal -->
+<div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<h3 id="myModalLabel"></h3>
+</div>
+<div class="modal-body" style="text-align:center">
+
+               <input type="hidden" name="value(numType)" value="<%=demographic_no%>"/>
+               <input type="hidden" name="template"  id="deleteTemplate" value="<%=temp%>"/>
+
+               <input type="hidden" name="id" id="deleteId" value=""/>
+               <input type="hidden" name="deleteCheckbox" id="deleteCheck" value=""/>
+               
+               <h1 id="deleteMeas"></h1>
+               <span id="deleteObsDate" style="font-size:18px"></span>
+               
+               <span id="deleteComment" style="font-size:18px"></span>
+               
+          
+</div>
+<div class="modal-footer">
+<input type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true" value="Close">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
+<input type="button" class="btn btn-danger" name="delete" id="deleteButton" value="Delete" disabled> 
+</security:oscarSec>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+<!-- modal end -->
+
+<!-- Modal -->
+<div id="graphModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="graphModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<h3 id="graphModalLabel">Graph</h3>
+</div>
+<div class="modal-body" >
+
+<iframe id="gFrame" src="about:blank" frameborder="0" align="center" style="display:none;"></iframe>
+         
+</div>
+<div class="modal-footer">
+<a class="btn btn-default" href="#" onclick="document.getElementById('gFrame').contentWindow.print();"><span class="glyphicon glyphicon-print"></span> Print</a>
+<input type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true" value="<bean:message key='global.close' />">
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+<!-- modal end -->    
  
     
-	<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>	
-	<script src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+<script src="<%=request.getContextPath() %>/library/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+
+<!--jqplot js includes-->
+    <script class="include" type="text/javascript" src="<%=request.getContextPath() %>/js/jqplot/jquery.jqplot.min.js"></script>
+<!-- Additional plugins go here -->
+    <script class="include" language="javascript" type="text/javascript" src="<%=request.getContextPath() %>/js/jqplot/plugins/jqplot.highlighter.min.js"></script>
+    <script class="include" language="javascript" type="text/javascript" src="<%=request.getContextPath() %>/js/jqplot/jqplot.dateAxisRenderer.min.js"></script>
+
+
 
 <script>
-
 $(".preventionSection").hover(function(){
-	  $(".carousel-control",this).fadeIn("slow");
+	  $(".carousel-control",this).show();
+	   
+	  m = $(this).attr("rel")
+	  id = "#myCarousel" + m;
+	  
+      if($(id + ' .carousel-inner .item:first').hasClass('active')) {
+    	 
+    	  $("#prev_" + m).hide();
+    	  
+      } else if($(id + ' .carousel-inner .item:last').hasClass('active')) {
+    	  
+    	  $("#next_" + m).hide();
+       
+      } else {
+    	        
+      }
+	  
 	  },function(){
-	  $(".carousel-control",this).fadeOut("slow");
-	});
+	  $(".carousel-control",this).fadeOut();
+});
+
+
+
+
+
 
 $(function (){ 
 	$("[rel=popover]").popover({});  
 	$('[id^=dp-]').datepicker();
-});  
+}); 
 
 $(document).ready(function () {
+
+		if ( self !== top ) {
+		var h = $(document).height();
+		parent.parent.document.getElementById('trackerSlim').style.height = h+"px";
+				
+        $("#demoHeader").hide();
+        $("#tracker-bar").css({
+			top:"0px"
+        });
+
+        $("#main").css({
+			top:"20px",
+			margin:"0px",
+			padding:"0px"
+        });
+	}else{
+        // Execute on load
+        //checkWidth();
+        
+        // Bind event listener
+        //$(window).resize(checkWidth);
+	}
 
 	//TODO:these will change generic so this function can be re-used
 	$("input:radio[name=SmokingStatus]").click(function() {
@@ -2072,26 +1935,21 @@ $(document).ready(function () {
         var $window = $(window);
 
         // Function to handle changes to style classes based on window width
-        function checkWidth() {
+        /*function checkWidth() {
             if ($window.width() < 964) {
-                $('#right-side').removeClass('span6').addClass('span2 pull-right');
+                $('#right-side').removeClass('col-lg-6').addClass('col-lg-2 pull-right');
                 };
                 
             if ($window.width() < 1200) {
-                $('#right-side').removeClass('span6').addClass('span4 pull-right');
+                $('#right-side').removeClass('col-lg-6').addClass('col-lg-2 pull-right');
                 };
 
             if ($window.width() >= 1200) {
-                $('#right-side').removeClass('span4 pull-right').addClass('span6');
+                $('#right-side').removeClass('col-lg-4 pull-right').addClass('col-lg-6');
             }
     
-        }
+        }*/
 
-        // Execute on load
-        checkWidth();
-
-        // Bind event listener
-        $(window).resize(checkWidth);
 
  });
 
@@ -2105,6 +1963,16 @@ $('#deleteModal').on('hidden', function () {
 	$("#deleteComment").html("");
 });
 
+<%if(temp.toUpperCase().equals("PHV")){%>
+$("#AssessmentFollowupplans-REVIEWED").click(function(){
+	if ($('#AssessmentFollowupplans-REVIEWED').is(':checked')) {
+		$("#AssessmentFollowupplans_note").prop( 'checked', true );
+	}else{
+		$("#AssessmentFollowupplans_note").prop( 'checked', false );
+	}
+});
+<%}%>
+
 $("#expand_all").click(function(){
 	$("[id^=add-box-]").slideDown("slow"); 
 	$('#collapse-all').show();
@@ -2116,6 +1984,102 @@ $("#collapse_all").click(function(){
 		$('#collapse-all').hide();
 		$('#expand-all').show();
 });
+
+$('.closeGraph').click(function(){
+	var rel = $(this).attr("rel");
+	$('.graphView-' + rel).hide();
+});
+
+$(".graphClick").click(function(){
+	var rel = $(this).attr("rel");	
+	var name = $(this).attr("data-name");
+	$('.graphView-' + rel).show();
+
+	var data = [];
+	var data2 = []; //[['2014-02-27', 2.2], ['2014-03-30', 7.5], ['2014-07-30', 8], ['2014-12-30', 4]];
+	var i = 0;
+
+	if(rel=="BP"){
+		
+		$(".plot-set-" + rel).each(function() {
+			bp =  $(this).attr("data-plot");
+			splitBP = bp.split('/');
+			dataDate = $(this).attr("data-plot-date");
+			$.each(splitBP, function() {
+			  data[i] = [dataDate, parseFloat(splitBP[0])]; //systolic
+			  data2[i] = [dataDate, parseFloat(splitBP[1])]; //diastolic
+			});
+			  i++;      	  	
+		});
+	}else{
+		$(".plot-set-" + rel).each(function() {
+		  data[i] = [$(this).attr("data-plot-date"), parseFloat($(this).attr("data-plot"))];
+		  i++;      	  	
+	 	});
+
+	}
+	//alert(data.length);
+ 	
+	 /*var line1=[['23-May-08', 2], ['20-Jun-08', 7], ['25-Jul-08', 8], ['22-Aug-08', 4],
+    ['26-Sep-08', 2], ['24-Oct-08', 2], ['21-Nov-08', 4], ['26-Dec-08', 4],
+    ['23-Jan-09', 3], ['20-Feb-09', 3], ['20-Mar-09', 4], ['24-Apr-09', 5]];*/
+
+    
+var title1= name;
+var line1 = data;
+var line2 = data2;
+
+var lines;
+
+if(rel=="BP"){
+title1="Blood Pressure";	
+lines = [line1, line2];
+label1="Systolic";
+label2="Diastolic";
+}else{
+lines = [line1];
+label1=rel;
+label2="";
+}
+
+
+var plot1 = $.jqplot('chart-' + rel, lines,{
+    // Turns on animatino for all series in this plot.
+    animate: true,
+    // Will animate plot on calls to plot1.replot({resetAxes:true})
+    animateReplot: true,
+
+    title:title1,
+    legend: {
+        show: true
+    },
+    series: [
+             { label: label1 },
+             { label: label2 }
+     ],
+    axes:{
+      xaxis:{
+        renderer:$.jqplot.DateAxisRenderer,
+        tickOptions:{
+          formatString:"%b&nbsp;%#d&nbsp;%Y"
+        } 
+      },
+      yaxis:{
+        tickOptions:{
+          formatString:'%.2f'
+          }
+      }
+    },
+    highlighter: {
+      show: true,
+      sizeAdjust: 7.5
+    },
+    cursor: {
+      show: false
+    }
+});
+});
+
 
 $("#add_overdue").click(function(){
 	$('#plus-overdue').toggle();
@@ -2133,18 +2097,25 @@ $('.carousel').carousel({
     interval: false
     })
     
-
-
 function deleteMeasurement(type,enteredBy,value,date,id){   
+	$("#myModalLabel").html="";
+	$("#deleteMeas").html="";
+	$("#deleteObsDate").html="";
+	$("#deleteComment").html="";
 
-	document.getElementById('myModalLabel').innerHTML= type;
-    document.getElementById('deleteMeas').innerHTML = value;
-    document.getElementById('deleteObsDate').innerHTML = enteredBy + "<br>" + "Date: " + date;
+	$("#myModalLabel").html(type);
+	$("#deleteMeas").html(value);
+	$("#deleteObsDate").html(enteredBy + "<br>" + "Date: " + date);
+	
+	var comment = $("#"+id+"-comment-html").val();
 
-    $('#deleteModal').on('show', function () {
-    	var xcomment = $("#"+id+"-comment-html").val();
-    	$("#deleteComment").html("<hr>Comment: "+xcomment);
-    });
+	if (!comment.trim()) {
+		$("#deleteComment").html("");
+	}else{
+		$("#deleteComment").html("<br>" + "Comment: " + $("#"+id+"-comment-html").val());
+	}
+	
+
 	
     document.getElementById('deleteId').value=id;
     document.getElementById('deleteCheck').value=id;
@@ -2166,12 +2137,7 @@ $('[id^=group-btn-]')
     setTimeout(function () {
         btn.button('reset')
     }, 3000)
-})
-
-$("#MoreDx").click(function(){
-  $("#panel").slideToggle('fast');
 });
-
 </script>
 
   </body>
@@ -2265,7 +2231,5 @@ $("#MoreDx").click(function(){
     public String getFromFacilityMsg(EctMeasurementsDataBean emdb){
 		if (emdb.getRemoteFacility()!=null)	return("<br /><span style=\"color:#990000\">(At facility : "+emdb.getRemoteFacility()+")<span>");
 		else return("");
-	}
-       
+	}    
  %>
- 
