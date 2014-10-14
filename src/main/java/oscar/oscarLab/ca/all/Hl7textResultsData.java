@@ -271,6 +271,7 @@ public class Hl7textResultsData {
 	public static String getMatchingLabs_CLS(String lab_no) {
 		String ret = "";
 		Hl7TextInfo self = null;
+		List<Integer> idList = new ArrayList<Integer>();
 		
 		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
 		for (Object[] o : dao.findByLabIdViaMagic(ConversionUtils.fromIntString(lab_no))) {
@@ -282,6 +283,7 @@ public class Hl7textResultsData {
 				self = a;
 			}
 			ret = ret + "," + labNo;
+			idList.add(labNo);
 		}
 		
 		//nothing but itself was found, but we have a special case for glucose tolerance tests
@@ -290,12 +292,27 @@ public class Hl7textResultsData {
 			ret = "";
 			for(Hl7TextInfo info : dao.findByFillerOrderNumber(self.getFillerOrderNum())) {
 				ret = ret + "," + info.getLabNumber();
+				idList.add(info.getLabNumber());
 			}
 		}
 		
+		if(idList.isEmpty()) {
+			idList.add(Integer.parseInt(lab_no));
+		}
 		
-		if (ret.equals("")) return (lab_no);
-		else return (ret.substring(1));
+		Collections.sort(idList);
+		
+		StringBuilder sb = new StringBuilder();
+		for(Integer id:idList) {
+			if(sb.length() > 0) {
+				sb.append(",");
+			}
+			sb.append(String.valueOf(id));
+		}
+		
+		return sb.toString();
+	//	if (ret.equals("")) return (lab_no);
+	//	else return (ret.substring(1));
 	}
 	
 	public static String getMatchingLabs(String lab_no) {

@@ -1479,7 +1479,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                            	
                                            	<%
                                            		//CLS textual results - use 4 columns.
-                                           		if(handler instanceof CLSHandler && "TX".equals(handler.getOBXValueType(j,k))) {
+                                           		if(handler instanceof CLSHandler && ((oscar.oscarLab.ca.all.parsers.CLSHandler)handler).isUnstructured()) {
                                            	%>
                                            		<td align="left" colspan="4"><%= handler.getOBXResult( j, k) %></td>
                                            	<%		
