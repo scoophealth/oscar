@@ -1385,7 +1385,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                    				<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %>
                                    				
                                    				<%if(isLinkedToDemographic) { %>
-	                                        			<a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier='<%= URLEncoder.encode(handler.getOBXIdentifier(j, k),"UTF-8")%>')"><%=obxName %></a>
+	                                        			<a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k),"UTF-8")%>')"><%=obxName %></a>
                                    				
 	                                        		<% } else { %>
 	                                        		<%=obxName %>
@@ -1446,7 +1446,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                					<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %>
                                					
                                					<%if(isLinkedToDemographic) { %>
-	                                        			<a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName%></a>
+	                                        			<a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k),"UTF-8") %>')"><%=obxName%></a>
                                           		
 	                                        		<% } else { %>
 	                                        		<%=obxName %>
