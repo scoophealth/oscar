@@ -120,10 +120,9 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 	
 	$scope.newDemographic = function(size){
 		console.log("modal?");
-		//$('#myModal').modal({remote:'modaldemo.jsp',show:true});
 		
 		var modalInstance = $modal.open({
-		      templateUrl: 'modaldemo.jsp',
+		      templateUrl: 'newPatient.jsp',
 		      controller: NewPatientCtrl,
 		      size: size
 		    });
@@ -157,8 +156,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 });
 
 
-function NewPatientCtrl($scope,$http,$modal,$modalInstance,demographicService,securityService){
-	//
+function NewPatientCtrl($scope,$http,$modal,$modalInstance,demographicService,securityService,staticDataService){
 	console.log("newpatient called");
 	$scope.demographic = {};
   	
@@ -166,6 +164,9 @@ function NewPatientCtrl($scope,$http,$modal,$modalInstance,demographicService,se
 	securityService.hasRight("_demographic", "w").then(function(data){
 		$scope.hasRight = data.value;
 	});
+	
+	//get genders to be selected
+	$scope.genders = staticDataService.getGenders();
 	
   	$scope.saver = function(ngModelContoller){
   		console.log($scope.demographic.lastName);

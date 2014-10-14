@@ -62,9 +62,7 @@
 			  <div class="form-group">
 			    <label class="col-sm-2 control-label">Sex</label>
 			    <div class="col-sm-5">
-			    	<input type="radio" ng-model="demographic.sex" value="M" required/> Male
-			    	<br/>
-			    	<input type="radio" ng-model="demographic.sex" value="F" required/> Female
+					<select class="form-control form-control-details" title="Sex" ng-model="demographic.sex" ng-options="sexes.value as sexes.label for sexes in genders" required/>
 			    </div>
 			  </div> 
 			</form>
@@ -75,3 +73,4 @@
 			<button ng-hide="hasRight" ng-click="cancel()" type="button" class="btn">Close</button>
 		</div>
 	</div>
+ng
