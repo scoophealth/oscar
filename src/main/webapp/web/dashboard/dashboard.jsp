@@ -51,7 +51,7 @@
 			<th>Message</th>
 		</tr>
 		
-		<tr ng-repeat="item in ticklers" ng-hide="$index >= 5" ng-click="viewTickler(item)">
+		<tr ng-repeat="item in ticklers" ng-hide="$index >= 5" ng-click="viewTickler(item)" class="hand-hover">
 			<td>
 				<span ng-if="isTicklerHighPriority(item)" class="glyphicon glyphicon-flag" style="color:red"></span>
 			</td>
@@ -62,7 +62,7 @@
 		<tfoot>
 	    <tr ng-if="totalTicklers > 5">
 	      <td colspan="6">
-			 <span class="label label-success" ui-sref="ticklers">See More Ticklers</span> 
+			 <span class="label label-success hand-hover" ui-sref="ticklers">See More Ticklers</span> 
 	      </td>
 	    </tr>
 	  </tfoot>
@@ -86,7 +86,7 @@
         <th>Patient</th>
     </tr>
   
-  	<tr ng-repeat="item in messages" ng-hide="$index >= 5">
+  	<tr ng-repeat="item in messages" ng-hide="$index >= 5" ng-click="viewMessage(item)" class="hand-hover">
 	<!-- 	<td></td> -->
 		<td>{{item.fromName}}</td>
 		<td>{{item.subject}}</td>
@@ -97,7 +97,7 @@
 	<tfoot>
     <tr ng-if="totalMessages > 5">
       <td colspan="6">
-		 <span class="label label-success" ng-click="openClassicMessenger()">See More Messages</span> 
+		 <span class="label label-success hand-hover" ng-click="openClassicMessenger()">See More Messages</span> 
       </td>
     </tr>
   </tfoot>
@@ -168,7 +168,7 @@
     <tfoot>
     <tr ng-if="inbox.length > 5">
       <td colspan="6">
-		 <span class="label label-success" ui-sref="inbox">See More Inbox</span> 
+		 <span class="label label-success hand-hover" ui-sref="inbox">See More Inbox</span> 
       </td>
     </tr>
   </tfoot>
