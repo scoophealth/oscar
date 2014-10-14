@@ -29,6 +29,11 @@
 			<entry key="ws-security.ut.validator" value="org.oscarehr.ws.OscarUsernameTokenValidator" />
 		</cxf:properties>
 		
+		<!-- BORN XDS Soap Header Interceptor (Adds endpointID node to header) -->
+		<cxf:outInterceptors>
+			<bean id="bornSOAPHeaderInterceptor" class="org.oscarehr.integration.born.BornSOAPHeaderInterceptor" />
+		</cxf:outInterceptors>
+		
 		<!-- logging interceptors -->
 		<!-- 
 		<cxf:inInterceptors>

@@ -33,6 +33,7 @@ import org.marc.everest.datatypes.ENXP;
 import org.marc.everest.datatypes.EntityNamePartType;
 import org.marc.everest.datatypes.EntityNameUse;
 import org.marc.everest.datatypes.II;
+import org.marc.everest.datatypes.INT;
 import org.marc.everest.datatypes.ON;
 import org.marc.everest.datatypes.PN;
 import org.marc.everest.datatypes.PostalAddressUse;
@@ -126,9 +127,9 @@ public class BornCDADocument extends Level1Document{
 		
 		//<identifier that is common across all document revisions/versions>
 		//Shall be present if version is populated"
-		//getRoot().setSetId(props.getSetIdCodingSystem(), props.getSetIdValue());
-		//INT ver = new INT(2);
-		//getRoot().setVersionNumber(ver);
+		getRoot().setSetId(props.getSetIdCodingSystem(), props.getSetIdValue());
+		INT ver = new INT(1);
+		getRoot().setVersionNumber(ver);
 		
 		
 		getRoot().setConfidentialityCode(getBORNConfidentialityCode());
@@ -224,6 +225,9 @@ public class BornCDADocument extends Level1Document{
 			SET<II> orgIds = new SET<II>();
 			orgIds.add(orgId);
 			org.setId(orgIds);
+			SET<ON> onSet = new SET<ON>();
+			onSet.add(ON.createON(EntityNameUse.Legal,new ENXP(props.getOrganizationName())));
+			org.setName(onSet);
 			
 			aa.setRepresentedOrganization(org);
 			

@@ -48,6 +48,7 @@ import org.marc.everest.datatypes.AddressPartType;
 import org.marc.everest.datatypes.EntityNamePartType;
 import org.marc.everest.datatypes.EntityNameUse;
 import org.marc.everest.datatypes.PostalAddressUse;
+import org.marc.everest.datatypes.TEL;
 import org.marc.everest.datatypes.TelecommunicationsAddressUse;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.AdministrativeGender;
 import org.marc.shic.cda.datatypes.Code;
@@ -256,7 +257,7 @@ public class CDADocumentUtil {
     }
 
     private static CustodianTemplate setCustodianInfo(Clinic clinic) {
-        CustodianTemplate result = phrExtractDocument.setCustodian(OidUtil.getOid(OidType.CLINIC_OID), clinic.getClinicLocationCode(), clinic.getClinicName(), clinic.getClinicPhone());
+        CustodianTemplate result = phrExtractDocument.setCustodian(OidUtil.getOid(OidType.CLINIC_OID), clinic.getClinicLocationCode(), clinic.getClinicName(), new TEL(clinic.getClinicPhone(), TelecommunicationsAddressUse.Home));
         result.addAddress(PostalAddressUse.WorkPlace, clinic.getClinicAddress(), AddressPartType.AddressLine);
         result.addAddress(PostalAddressUse.WorkPlace, clinic.getClinicCity(), AddressPartType.City);
         result.addAddress(PostalAddressUse.WorkPlace, clinic.getClinicProvince(), AddressPartType.State);
