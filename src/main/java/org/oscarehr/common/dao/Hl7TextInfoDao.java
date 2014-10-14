@@ -388,4 +388,12 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 		return query.getResultList();
 		
     }
+	
+	public List<Hl7TextInfo> findByFillerOrderNumber(String fillerOrderNum) {
+	    String sql = "SELECT h FROM " + modelClass.getName() + " h WHERE h.fillerOrderNum = ?1 ORDER BY id";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, fillerOrderNum);
+		return query.getResultList();
+		
+    }
 }
