@@ -41,7 +41,6 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 <title>OSCAR</title>
 
 <link href="../library/bootstrap/3.0.0/css/bootstrap.css" rel="stylesheet">
-<link rel="stylesheet" href="css_up/jquery-ui.css">
 <link href="../css/font-awesome.css" rel="stylesheet">
 
 <!-- we'll combine/minify later -->
@@ -146,16 +145,16 @@ width: auto;
 			
 				<!-- large view -->
 				<ul class="nav navbar-nav visible-lg hidden-md hidden-sm hidden-xs">
-					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home" ui-sref="dashboard"></span></li>
+					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard"></span></li>
 				
-					<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state) }">
+					<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state), 'hand-hover':true }">
 						<a ng-click="transition(item.state)" data-toggle="tab" >{{item.label}}
 							<span ng-if="item.extra.length>0">({{item.extra}})</span>
 						</a>
 					</li>
 				
 				
-					<li class="dropdown"><a class="dropdown-toggle">More<b class="caret"></b></a>
+					<li class="dropdown" ><a class="dropdown-toggle">More<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li ng-repeat="item in moreMenuItems">
 								<a ng-class="{'more-tab-highlight': isActive(item.state) }" ng-click="transition(item.state)">{{item.label}}
@@ -166,8 +165,11 @@ width: auto;
 				</ul>
 				
 				<!-- more condensed version -->
-				<ul class="nav navbar-nav hidden-lg visible-md visible-sm visible-xs">			
-					<li class="dropdown"><a href="void()" class="dropdown-toggle">Modules<b class="caret"></b></a>
+				<ul class="nav navbar-nav hidden-lg visible-md visible-sm visible-xs">	
+					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard"></span></li>
+				
+						
+					<li class="dropdown" class="hand-hover" ><a href="void()" class="dropdown-toggle">Modules<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 						<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state) }">
 						<a ng-click="transition(item.state)" data-toggle="tab" >{{item.label}}
@@ -435,6 +437,7 @@ $(document).ready(function(){
 						
 			if(datum.more != null && datum.more == true) {
 				scope.transition('search');
+				//scope.transition('search',{'quickSearchTerm':$('input#demographicQuickSearch').val()});
 			} else {
 				scope.loadRecord(datum.demographicNo);
 			}
