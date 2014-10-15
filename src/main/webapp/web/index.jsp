@@ -412,13 +412,14 @@ $(document).ready(function(){
 	            }
 	            
 	            console.log("total:"+parsedResponse.total);
+	            var scope = angular.element($("#demographicQuickSearch")).scope();
+	            scope.setQuickSearchTerm("");
 	            
 	            if(parsedResponse.total > 10) {
-	            	console.log('show more results');
 	            	retval.push({name:"More Results",hin:parsedResponse.total+" total","demographicNo":-1,"more":true});
+	            	scope.setQuickSearchTerm(parsedResponse.query);
 	            }
 	            
-	            //console.log(retval.toSource());
 	            return retval;
 	        }
 	    },
@@ -435,8 +436,7 @@ $(document).ready(function(){
 			var scope = angular.element($("#demographicQuickSearch")).scope();
 						
 			if(datum.more != null && datum.more == true) {
-				scope.transition('search');
-				//scope.transition('search',{'quickSearchTerm':$('input#demographicQuickSearch').val()});
+				scope.switchToAdvancedView();
 			} else {
 				scope.loadRecord(datum.demographicNo);
 			}
