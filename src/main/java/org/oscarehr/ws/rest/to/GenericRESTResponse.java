@@ -36,6 +36,15 @@ public class GenericRESTResponse implements Serializable {
 	private boolean sucess = true;
 	
 	private String message;
+	
+	public GenericRESTResponse() {
+		
+	}
+	
+	public GenericRESTResponse(boolean success, String message) {
+		this.sucess = success;
+		this.message = message;
+	}
 
 	public boolean isSucess() {
 		return sucess;
