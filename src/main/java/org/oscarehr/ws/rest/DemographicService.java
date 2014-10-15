@@ -433,6 +433,7 @@ public class DemographicService extends AbstractServiceImpl {
 			results = demographicManager.searchPatients(getLoggedInInfo(),req, 0, 10);
 			response.setContent(results);
 			response.setTotal(count);
+			response.setQuery(query);
 			
 		}
 		

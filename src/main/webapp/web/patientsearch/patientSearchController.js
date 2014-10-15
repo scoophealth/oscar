@@ -1,5 +1,7 @@
-oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, ngTableParams, securityService, $modal, $http, demographicService, $state) {
+oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, ngTableParams, securityService, $modal, $http, demographicService, $state, $location) {
 
+	var quickSearchTerm = ($location.search()).term;
+	
 	//type and term for now
 	$scope.search = {type:'Name',term:"",active:true,integrator:false,outofdomain:true};
 	
@@ -44,6 +46,10 @@ oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, 
 	        	        	}
 	        	        }
 	        	    });
+	        	 if(quickSearchTerm != null) {
+	        		 $scope.search.term = quickSearchTerm;
+	        		 $scope.tableParams.reload();
+	        	 }
         	 }
     	} else {
     		alert('failed to load rights');
