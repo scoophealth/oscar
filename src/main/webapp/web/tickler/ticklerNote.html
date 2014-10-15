@@ -5,11 +5,12 @@
    	<form>
 		
 			<textarea style="width:100%;height:80%" ng-model="ticklerNote.note"></textarea>
-			Date: <span>{{ticklerNote.encounterDate}}</span> rev <a  target="note_history" href="../CaseManagementEntry.do?method=notehistory&noteId={{ticklerNote.noteId}}"><span>{{ticklerNote.revision}}</span></a><br>
+			<span ng-show="ticklerNote.revision>0">
+			Date: <span>{{ticklerNote.observationDate | date : 'yyyy-MM-dd'}}</span> rev <a  target="note_history" href="../CaseManagementEntry.do?method=notehistory&noteId={{ticklerNote.noteId}}"><span>{{ticklerNote.revision}}</span></a><br>
 			Editor: <span>{{ticklerNote.editor}}</span>
+			</span>
 	</form>
-	
-	
+
 </div>
 <div class="modal-footer">
     <button class="btn" ng-click="save()">Save</button>

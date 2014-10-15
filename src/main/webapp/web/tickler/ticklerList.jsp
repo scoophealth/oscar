@@ -112,10 +112,10 @@
  			<input type="checkbox" ng-model="tickler.checked" >
  		</td>
     	<td ng-show="ticklerWriteAccess" >
-    		<a ng-click="editTickler(tickler)">Edit</a> 		
+    		<a ng-click="editTickler(tickler)" class="hand-hover">Edit</a> 		
     	</td>
     	<td ng-show="!ticklerWriteAccess" >
-    		<a ng-click="editTickler(tickler)">View</a> 		
+    		<a ng-click="editTickler(tickler)" class="hand-hover">View</a> 		
     	</td>
 		<td data-title="'Demographic Name'">
               {{tickler.demographicName}}
@@ -148,7 +148,7 @@
 		 	</span>
         </td>      
         <td ng-show="ticklerWriteAccess" data-title="''">     
-    		<a ng-click="editNote2(tickler)"><img src="../images/notepad.gif" border="0"></a>
+    		<a ng-click="editNote2(tickler)" class="hand-hover"><img src="../images/notepad.gif" border="0"></a>
     	</td>  
     </tr>
   </tbody>

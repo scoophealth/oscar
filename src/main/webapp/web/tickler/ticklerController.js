@@ -171,7 +171,7 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
     		if(data.ticklerNote != null) {
         		$scope.ticklerNote = data.ticklerNote;
         	} else {
-        		$scope.ticklerNote = {"editor":"you","note":"","noteId":0,"observationDate":"now","revision":1};
+        		$scope.ticklerNote = {"editor":"you","note":"","noteId":0,"observationDate":"now","revision":0};
 
         	}
             var modalInstance = $modal.open({
