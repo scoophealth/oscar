@@ -162,6 +162,10 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 			window.open('../oscarMessenger/DisplayMessages.do?providerNo='+$scope.me.providerNo,'msgs','height=700,width=1024');
 		}
 	}	
+	
+	$scope.viewMessage = function(message) {
+		window.open('../oscarMessenger/ViewMessage.do?messageID='+message.id+'&boxType=0','msg'+message.id,'height=700,width=1024');
+	}
 
 	$scope.viewTickler = function(tickler) {
         var modalInstance = $modal.open({
