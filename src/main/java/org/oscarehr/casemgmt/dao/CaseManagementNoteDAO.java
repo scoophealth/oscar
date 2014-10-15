@@ -305,8 +305,8 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 					
 				List<CaseManagementNote> issueList = this.getHibernateTemplate().find(hql, new Object[] { id, demographic_no });
 				
-				hql = "select  max(cmn.id) from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? group by cmn.uuid order by max(cmn.id)";
-				List<Integer> currNoteList = this.getHibernateTemplate().find(hql, new Object[] { id, demographic_no });
+				hql = "select  max(cmn.id) from CaseManagementNote cmn where cmn.demographic_no = ? group by cmn.uuid order by max(cmn.id)";
+				List<Integer> currNoteList = this.getHibernateTemplate().find(hql, new Object[] { demographic_no });
 				
 				for(CaseManagementNote issueNote : issueList)
 				{
