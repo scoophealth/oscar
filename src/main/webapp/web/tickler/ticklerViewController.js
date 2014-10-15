@@ -189,5 +189,9 @@ oscarApp.controller('TicklerViewController',function($scope, $filter, $modalInst
     	
     }
     
+    $scope.printTickler = function() {
+    	window.open('../Tickler.do?method=print&id='+tickler.id);
+    	
+    }
     
 });
