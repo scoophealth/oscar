@@ -610,10 +610,10 @@ private Logger log=MiscUtils.getLogger();
 
         List<Object>params = new ArrayList<Object>();
         StringBuilder queryStr = new StringBuilder();
-        queryStr.append("select a from Admission a ");        
+        queryStr.append("select a from Admission a  where 1=1 ");        
 
         if (searchBean.getProviderNo() != null && searchBean.getProviderNo().length()>0) {
-        	queryStr.append("where a.providerNo = ? ");
+        	queryStr.append("and a.providerNo = ? ");
         	params.add(searchBean.getProviderNo());
         }
 
