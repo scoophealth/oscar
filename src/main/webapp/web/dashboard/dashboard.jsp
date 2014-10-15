@@ -44,13 +44,15 @@
 
 <div ng-if="totalTicklers>0">
 	<table class="table table-condensed  table-hover" >
+		<thead>
 		<tr>
 			<th class="flag-column"></th>
 			<th>Demographic Name</th>
 			<th>Due</th>
 			<th>Message</th>
 		</tr>
-		
+		</thead>
+		<tbody>
 		<tr ng-repeat="item in ticklers" ng-hide="$index >= 5" ng-click="viewTickler(item)" class="hand-hover">
 			<td>
 				<span ng-if="isTicklerHighPriority(item)" class="glyphicon glyphicon-flag" style="color:red"></span>
@@ -59,6 +61,7 @@
 			<td>{{item.serviceDate | date:'yyyy-MM-dd'}}</td>
 			<td>{{item.message  | cut:true:200 }}</td>
 		</tr>
+		</tbody>
 		<tfoot>
 	    <tr ng-if="totalTicklers > 5">
 	      <td colspan="6">
@@ -78,6 +81,7 @@
 
 <div ng-if="totalMessages > 0">
 <table class="table table-condensed  table-hover" >
+	<thead>
     <tr>
     <!-- 	<th class="flag-column"></th> -->
         <th>From</th>
@@ -85,7 +89,8 @@
         <th>Date</th>
         <th>Patient</th>
     </tr>
-  
+    </thead>
+  	<tbody>
   	<tr ng-repeat="item in messages" ng-hide="$index >= 5" ng-click="viewMessage(item)" class="hand-hover">
 	<!-- 	<td></td> -->
 		<td>{{item.fromName}}</td>
@@ -94,6 +99,7 @@
 		<td ng-if="item.demographicNo">{{item.demographicName}}</td>
 		<td ng-if="!item.demographicNo"></td>
 	</tr>
+	</tbody>
 	<tfoot>
     <tr ng-if="totalMessages > 5">
       <td colspan="6">
@@ -147,6 +153,7 @@
 
 <div ng-if="inbox.length">
 <table class="table table-condensed  table-hover" >
+	<thead>
     <tr>
     	<th class="flag-column"></th>
  	    <th>Patient</th>
@@ -155,7 +162,9 @@
         <th>Date</th>
         <th>Status</th>
     </tr>
+    </thead>
               
+     <tbody>
     <tr ng-repeat="item in inbox" ng-hide="$index >= 5">
   <td><span ng-if="item.properity != null && item.priority != 'Routine'" class="glyphicon glyphicon-flag" style="color:red"></span></td>
 		  	
@@ -165,6 +174,7 @@
         <td>{{item.dateReceived}}</td>
        	<td>{{item.status}}</td>
     </tr>
+    </tbody>
     <tfoot>
     <tr ng-if="inbox.length > 5">
       <td colspan="6">
