@@ -186,6 +186,7 @@
 	<button class="btn btn-danger" ng-click="deleteTickler()" ng-show="ticklerWriteAccess"><span class="glyphicon glyphicon-trash"></span>Delete</button>
 </div>
 	<button class="btn btn-primary" ng-click="saveChanges()" ng-show="ticklerWriteAccess">Save Changes</button>
+	<button class="btn btn-primary" ng-click="printTickler()">Print</button>
     <button class="btn btn-default" ng-click="close()">Close</button>
 </div>
 
