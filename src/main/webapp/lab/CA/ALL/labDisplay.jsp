@@ -162,7 +162,7 @@ if (remoteFacilityIdString==null) // local lab
 		handlers.add(handler);
 		segmentIdList.add(segmentID);
 		
-		//this is where it gets weird.
+		//this is where it gets weird. We want to show all messages with different filler order num but same accession in a single report
 		if("CLS".equals(handler.getMsgType())) {
 			for( int i = 0; i < segmentIDs.length; ++i) {
 				MessageHandler handler2 = Factory.getHandler(segmentIDs[i]);
@@ -171,10 +171,12 @@ if (remoteFacilityIdString==null) // local lab
 					segmentIdList.add(segmentIDs[i]);
 				}
 			}
-			multiLabId = segmentID;
+			if(handlers.size()>1) {
+				multiLabId = segmentID;
+			}
 		}
-		
 		segmentIDs = segmentIdList.toArray(new String[segmentIdList.size()]);
+		
 		hl7 = Factory.getHL7Body(segmentID);
 		if (handler instanceof OLISHL7Handler) {
 			%>
@@ -1180,7 +1182,17 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
                           	   <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formAnnotate"/></td>
                            </tr>
-                           <%}
+                           
+ 							<%if("CLS".equals(handler.getMsgType())) { %>
+ 							<%for (k=0; k < handler.getOBRCommentCount(j); k++){
+                                   %>
+                               <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
+                                   <td valign="top" align="left" colspan="8"><pre><%=handler.getOBRComment(j, k)%></pre></td>
+                               </tr>
+                              <%
+                                }//end for k=0
+ 							}//end of CLS check
+                           }
                            
                            for ( j=0; j < OBRCount; j++){
 
@@ -1525,7 +1537,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
 
                            //for ( j=0; j< OBRCount; j++){
-                           if (!handler.getMsgType().equals("PFHT")) {
+                           if (!handler.getMsgType().equals("PFHT") && !handler.getMsgType().equals("CLS")) {
                                if (headers.get(i).equals(handler.getObservationHeader(j, 0))) {
                                	 %>
                                <%for (k=0; k < handler.getOBRCommentCount(j); k++){
