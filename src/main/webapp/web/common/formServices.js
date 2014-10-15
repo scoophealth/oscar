@@ -66,7 +66,7 @@ angular.module("formServices", [])
         getGroupNames: function(){
         	var deferred = $q.defer();
         	 $http.get(this.apiPath+'/groupNames',this.configHeaders).success(function(data){
-        		 console.log('got group names !' + data.toSource());
+        		 //console.log('got group names !' + data.toSource());
             	deferred.resolve(data.content);
             }).error(function(){
             	console.log("error fetching eforms")
