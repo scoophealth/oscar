@@ -422,8 +422,19 @@ public class GDMLHandler implements MessageHandler {
             l--;
 
             int k = 0;
+
             String nextComment = Terser.get(obxSeg,5,k,1,1);
+            
             while(nextComment != null){
+
+            	//in case there are "&" in field, & = sub-component separator in HL7
+                int subIndex = 2;
+            	String nextCommentSub = Terser.get(obxSeg,5,k,1,subIndex);
+            	while(nextCommentSub != null){
+            		nextComment += "&" + nextCommentSub;
+            		nextCommentSub = Terser.get(obxSeg,5,k,1,++subIndex);
+            	}
+            	
                 comment = comment + nextComment.replaceAll("\\\\\\.br\\\\", "<br />");
                 k++;
                 nextComment = Terser.get(obxSeg,5,k,1,1);
