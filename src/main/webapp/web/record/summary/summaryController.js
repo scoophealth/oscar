@@ -348,7 +348,7 @@ function fillItems(itemsToFill){
 $scope.gotoState = function(item){
 	console.log(item);
 	
-	if(item.type == 'lab' || item.type == 'document' ){
+	if(item.type == 'lab' || item.type == 'document'  || item.type == 'rx' ){
 		var rnd = Math.round(Math.random() * 1000);
 		win = "win_item.type_" + rnd;
 		
