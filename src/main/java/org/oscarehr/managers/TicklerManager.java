@@ -35,6 +35,7 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.EmailException;
 import org.apache.velocity.VelocityContext;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
@@ -107,15 +108,35 @@ public class TicklerManager {
 	
 	
 	
+	public boolean validateTicklerIsValid(Tickler tickler) {
+		if(tickler == null)
+			return false;
+		if(StringUtils.isEmpty(tickler.getCreator()))
+			return false;
+		if(StringUtils.isEmpty(tickler.getTaskAssignedTo()))
+			return false;
+		if(tickler.getDemographicNo() == null || tickler.getDemographicNo().intValue() == 0)
+			return false;
+		return true;
+	}
 	
-    public void addTickler(LoggedInInfo loggedInInfo, Tickler tickler) {
-        ticklerDao.persist(tickler);
-     
-        //--- log action ---
+    public boolean addTickler(LoggedInInfo loggedInInfo, Tickler tickler) {
+    	if(!validateTicklerIsValid(tickler)) {
+    		return false;
+    	}
+    	
+    	ticklerDao.persist(tickler);
+	     
+	    //--- log action ---
 		LogAction.addLogSynchronous(loggedInInfo, "TicklerManager.addtickler", "ticklerId="+tickler.getId());
+		
+		return true;
     }
     
-    public void updateTickler(LoggedInInfo loggedInInfo, Tickler tickler) {
+    public boolean updateTickler(LoggedInInfo loggedInInfo, Tickler tickler) {
+    	if(!validateTicklerIsValid(tickler)) {
+    		return false;
+    	}
     	for(TicklerUpdate tu:tickler.getUpdates()) {
     		if(tu.getId() == null || tu.getId().intValue() == 0) {
     			ticklerUpdateDao.persist(tu);
@@ -130,6 +151,8 @@ public class TicklerManager {
      
         //--- log action ---
 		LogAction.addLogSynchronous(loggedInInfo, "TicklerManager.updatetickler", "ticklerId="+tickler.getId());
+		
+		return true;
     }
    
     

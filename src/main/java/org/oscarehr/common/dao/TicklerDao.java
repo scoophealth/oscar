@@ -256,7 +256,7 @@ public class TicklerDao extends AbstractDao<Tickler>{
         }
 
 		if (includeMRPClause) {
-			query = "select t FROM Tickler t, Demographic d where d.DemographicNo = cast(t.demographicNo as integer) and d.ProviderNo = '" + filter.getMrp() + "'";
+			query = selectQuery + " FROM Tickler t, Demographic d where d.DemographicNo = t.demographicNo and d.ProviderNo = '" + filter.getMrp() + "' ";
 		}
 		
 		if (includeServiceStartDateClause) {
