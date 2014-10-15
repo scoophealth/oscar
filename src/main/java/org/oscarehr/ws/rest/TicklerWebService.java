@@ -310,16 +310,18 @@ public class TicklerWebService extends AbstractServiceImpl {
 		String dt = json.getString("serviceDate");
 		tickler.setServiceDate(javax.xml.bind.DatatypeConverter.parseDateTime(dt).getTime());
 		
-		ticklerManager.updateTickler(getLoggedInInfo(), tickler);
+		response.setSucess(ticklerManager.updateTickler(getLoggedInInfo(), tickler));
 		
+		if(response.isSucess()) {
 		
-		if(json.has("ticklerComments")) {
-			JSONArray arr = json.getJSONArray("ticklerComments");
-			for(int x=0;x<arr.size();x++) {
-				JSONObject c = (JSONObject)arr.get(x);
-				
-				if(c.has("newComment")) {
-					ticklerManager.addComment(getLoggedInInfo(), tickler.getId(), c.getString("providerNo"), c.getString("message"));
+			if(json.has("ticklerComments")) {
+				JSONArray arr = json.getJSONArray("ticklerComments");
+				for(int x=0;x<arr.size();x++) {
+					JSONObject c = (JSONObject)arr.get(x);
+					
+					if(c.has("newComment")) {
+						ticklerManager.addComment(getLoggedInInfo(), tickler.getId(), c.getString("providerNo"), c.getString("message"));
+					}
 				}
 			}
 		}
@@ -366,7 +368,7 @@ public class TicklerWebService extends AbstractServiceImpl {
 			tickler.setProgramId(pp.getProgramId().intValue());
 		}
 		
-		ticklerManager.addTickler(getLoggedInInfo(), tickler);
+		response.setSucess(ticklerManager.addTickler(getLoggedInInfo(), tickler));
 
 		return response;
 	}
