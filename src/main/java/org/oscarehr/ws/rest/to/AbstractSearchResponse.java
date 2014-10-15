@@ -45,6 +45,9 @@ public class AbstractSearchResponse<T> implements Serializable {
 	private Date timestamp = new Date();
 
 	private List<T> content = new ArrayList<T>();
+	
+	private String query;
+	
 
 	@XmlAnyElement(lax = true)
 	public List<T> getContent() {
@@ -87,4 +90,13 @@ public class AbstractSearchResponse<T> implements Serializable {
 		this.total = total;
 	}
 
+	public String getQuery() {
+		return query;
+	}
+
+	public void setQuery(String query) {
+		this.query = query;
+	}
+
+	
 }

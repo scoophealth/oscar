@@ -25,7 +25,7 @@
 */
 
 
-oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $state,providerService, securityService, personaService) {
+oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $state,providerService, securityService, personaService, $rootScope) {
 	
 	
 	providerService.getMe().then(function(result){
@@ -101,7 +101,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 	
 	//to help ng-clicks on buttons
 	$scope.transition = function ( state ) {
-		$state.go( state );
+		$state.go(state);
 	};
 	
 	$scope.goHome = function() {
@@ -153,7 +153,19 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
     	});
     }
 
+    $scope.switchToAdvancedView = function() {
+    	$rootScope.$apply(function() {
+
+            $location.path("/search");
+            $location.search('term',$scope.quickSearchTerm);
+         
+          });
+    	
+    }
 		
+    $scope.setQuickSearchTerm = function(term) {
+    	$scope.quickSearchTerm = term;
+    }
 });
 
 
