@@ -21,6 +21,7 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 	    .state('inbox', {
 	      url: '/inbox',
 	      templateUrl: 'inbox/inbox_popup.jsp',
+	     // templateUrl: 'inbox/inbox.jsp',
           controller: 'InboxCtrl'
 	    })
         .state('consults', {
@@ -58,7 +59,8 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
   	    }) 
   	    .state('reports', {
   	      url: '/reports',
-  	      templateUrl: 'report/reports_classic.jsp',
+  	      templateUrl: 'report/reports.jsp',
+  	      //templateUrl: 'report/reports_classic.jsp',
             controller: 'ReportsCtrl'
   	    }) 
   	    .state('documents', {
@@ -249,7 +251,6 @@ oscarApp.factory('Navigation', function($rootScope) {
     }
   }
 });
-
 
 /*
 
