@@ -23,10 +23,20 @@
     Ontario, Canada
 
 --%>
+<form name="ticklerAddForm" novalidate>
+
 <div class="modal-header">
     <h4>Create a new Tickler</h4>
 </div>  
 <div class="modal-body">
+	<div class="row" ng-show="showErrors === true">
+		<div class="col-xs-12">
+			<ul>
+				<li class="text-danger" ng-repeat="error in errors">{{error}}</li>
+			</ul>
+		</div>
+	</div>
+
 	<div class="row">
 		<div class="col-xs-7">
 				<div class="form-group">
@@ -111,17 +121,16 @@
 	
 	<div class="row">
 		<div class="col-xs-12">
-				<textarea ng-model="tickler.message" class="form-control" rows="6"></textarea>
+				<textarea ng-model="tickler.message" class="form-control" rows="6" required></textarea>
 		</div>
 	</div>
-	
 
 </div>
 <div class="modal-footer">
     <button class="btn" ng-click="save()">Save</button>
     <button class="btn" ng-click="close()">Close</button>
 </div>
-
+</form>
 
 
 
