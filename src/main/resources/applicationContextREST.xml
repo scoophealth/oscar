@@ -132,6 +132,7 @@
 			<bean class="org.oscarehr.ws.rest.RecordUxService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.ReportingService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.BillingService" autowire="byName" />
+			<bean class="org.oscarehr.ws.rest.StatusService" autowire="byName" />
 		</jaxrs:serviceBeans>
 
 		<jaxrs:extensionMappings>
