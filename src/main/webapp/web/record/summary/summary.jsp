@@ -28,12 +28,12 @@
        		<legend style="margin-bottom:0px;">{{mod.displayName}}</legend>
         	<ul style="padding-left:12px;">
         	<%-- href="{{item.action}}" --%>
-        	<li ng-repeat="item in mod.summaryItem" ng-show="$index < mod.displaySize"  ><a ng-click="gotoState(item)" >{{item.displayName}}<small ng-show="item.type">({{item.type}})</small></a> <span class="pull-right">{{item.date}}</span></li> 
+        	<li ng-repeat="item in mod.summaryItem" ng-show="$index < mod.displaySize"  ><span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span><a ng-click="gotoState(item)" >{{item.displayName}}<small ng-show="item.classification">({{item.classification}})</small></a> </li> 
         	</ul>
        </fieldset>   
     </div>
     
-    <div class="col-lg-5" id="middleSpace">
+    <div class="col-lg-6" id="middleSpace">
         <ul class="nav nav-pills">
 		  <li ng-class="isCurrentStatus('none')"><a data-target="#all" ng-click="removeFilter(0)" data-toggle="tab">All</a></li>
 		  <li ng-class="isCurrentStatus('Just My Notes')"><a ng-click="changeNoteFilter('Just My Notes')" >Just My Notes</a></li>
@@ -82,20 +82,32 @@
      </div><!-- middleSpace -->
 
 
-
-
-	<%--div class="col-lg-4" id="rSpace">
-     		<ul ui-scroll-viewport style="height:800px;border:1px solid black;">
-				<li ui-scroll="note in datasource" buffer-size="30"> 
-				
-        			<dl >
-    					<dt ng-style="setColor(note)" >{{note.observationDate | date : 'dd-MMM-yyyy'}} {{firstLine(note)}} </dt>
-    					<dd><pre class="pre-scrollable" ng-show="showNote(note)">{{note.note}}</pre></dd>
-    					
-    				</dl>
-    				
-    			</li>
-    		</ul>
-    		
-    			
-	</div --%>
+	 <div class="col-lg-3">
+	 	<fieldset ng-repeat="mod in page.columnThree.modules">
+       		<legend style="margin-bottom:0px;">{{mod.displayName}}
+       			<div class="form-group">
+					<input type="text" class="form-control search-query" ng-model="incomingQ" placeholder="Search">
+				</div>
+			</legend>
+        	<ul style="padding-left:12px;">
+        	<%-- href="{{item.action}}" --%>
+        	<li ng-repeat="item in mod.summaryItem | filter:incomingQ" ng-show="$index < mod.displaySize"  ><span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span><a ng-click="gotoState(item)" >{{item.displayName}}<small ng-show="item.classification">({{item.classification}})</small></a> </li> 
+        	</ul>
+        	<a ng-click="expandlist(mod)" ng-show="showMoreDocuments(mod)" ><span ng-class="showMoreDocumentsSymbol(mod)"></span></a>
+       </fieldset>
+	 	
+	 <%-- 
+      	 <fieldset>
+        	<legend style="margin-bottom:0px;">Incoming 
+        		<div class="form-group">
+					<input type="text" class="form-control search-query" ng-model="incomingQ" placeholder="Search">
+				</div>
+			</legend>     		
+       		
+       		<h5 ng-repeat="item in documentlabs | filter:incomingQ" ng-show="$index < documentlabsSize" ><a ng-click="changeTab(12)" >{{item.desc}}<small>({{item.type}})</small></a><span class="pull-right">{{item.date}}</span></h5>
+        		<a ng-click="expandlist()" ng-show="showMoreDocuments()" ><span class="glyphicon glyphicon-chevron-down pull-right"></span></a>
+        		<a ng-click="expandlist()" ng-hide="showMoreDocuments()" ><span class="glyphicon glyphicon-chevron-up pull-right"></span></a>
+      	</fieldset>
+      
+      --%>`	
+	 </div>

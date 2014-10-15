@@ -29,6 +29,10 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
 	$scope.page = {};
 	$scope.page.columnOne = {};
 	$scope.page.columnOne.modules = {};
+	
+	$scope.page.columnThree = {};
+	$scope.page.columnThree.modules = {};
+	
 	$scope.page.notes = {};
     $scope.index = 0;
     $scope.page.notes = {};
@@ -244,14 +248,48 @@ function resizeIframe(iframe) {
   }
     
 
-////Left side list // PULL OUT FOR COMMIT
+
+
+$scope.expandlist = function(mod){
+	console.log(mod);
+	mod.displaySize = mod.summaryItem.length;
+	//$scope.documentlabsSize = $scope.documentlabs.length;
+}
+
+$scope.showMoreDocuments = function(mod){
+	console.log('showMoreDocuments',mod);
+	if(!angular.isDefined(mod.summaryItem)){
+		return false;
+	}
+	
+	if(mod.summaryItem.length == 0){
+		return false;
+	}
+	
+	
+	//if ( mod.displaySize < mod.summaryItem.length) {
+	//	return true;
+	//}
+	return true;
+	
+}
+$scope.showMoreDocumentsSymbol = function(mod){
+	if(!angular.isDefined(mod.summaryItem)){
+		return "";
+	}
+	console.log("mod symbol output ",mod.displaySize, mod.summaryItem.length,mod);
+	if ( mod.displaySize < mod.summaryItem.length) {
+		return "glyphicon glyphicon-chevron-down pull-right";
+	}else{
+		return "glyphicon glyphicon-chevron-up pull-right";	
+	}
+
+}
 
 function getLeftItems(){
-	summaryService.left($stateParams.demographicNo).then(function(data){
+	summaryService.getSummaryHeaders($stateParams.demographicNo,'left').then(function(data){
 		  console.log("left",data);
-		  //console.log($scope.page.columnOne);
-		  //console.log($scope.page.columnOne.modules);
-	      $scope.page.columnOne.modules = data;
+		  $scope.page.columnOne.modules = data;
 	      fillItems($scope.page.columnOne.modules);
     	},
     	function(errorMessage){
@@ -263,39 +301,66 @@ function getLeftItems(){
 
 getLeftItems();
 
-$scope.gotoState = function(item){
-	console.log(item);
-	$state.transitionTo(item.action,{demographicNo:$stateParams.demographicNo, type: item.type ,id: item.id},{location:'replace',notify:true});
+
+function getRightItems(){
+	summaryService.getSummaryHeaders($stateParams.demographicNo,'right').then(function(data){
+		  console.log("right",data);
+		  $scope.page.columnThree.modules = data;
+	      fillItems($scope.page.columnThree.modules);
+    	},
+    	function(errorMessage){
+	       console.log("left"+errorMessage);
+	       $scope.error=errorMessage;
+    	}
+	);
 };
 
-	function fillItems(itemsToFill){
-		for (var i = 0; i < itemsToFill.length; i++) {
-			console.log(itemsToFill[i].summaryCode);
-		 
-			summaryService.getFullSummary($stateParams.demographicNo,itemsToFill[i].summaryCode).then(function(data){
-				console.log("FullSummary returned ",data);
-		 		for (var j = 0; j < $scope.page.columnOne.modules.length; j++) {
-		 			//console.log($scope.page.columnOne.modules[j].summaryCode,data.summaryCode);
-		 			if($scope.page.columnOne.modules[j].summaryCode == data.summaryCode){
-		 				console.log("match on "+$scope.page.columnOne.modules[j].summaryCode ,data);
-		 				if(data.summaryItem instanceof Array){
-		 				$scope.page.columnOne.modules[j].summaryItem = data.summaryItem;
-		 				}else{
-		 					$scope.page.columnOne.modules[j].summaryItem = [data.summaryItem];
-		 				}
-		 			}
-		 			//if($scope.page.columnOne.modules[j] == 
-		 		}
-			 
-				},
-				function(errorMessage){
-					console.log("fillItems"+errorMessage); 
+getRightItems();
+
+var summaryLists = {};
+
+function fillItems(itemsToFill){
+	for (var i = 0; i < itemsToFill.length; i++) {
+		console.log(itemsToFill[i].summaryCode);
+		summaryLists[itemsToFill[i].summaryCode] = itemsToFill[i];
+	 
+		summaryService.getFullSummary($stateParams.demographicNo,itemsToFill[i].summaryCode).then(function(data){
+			console.log("FullSummary returned ",data);
+				if(angular.isDefined(data.summaryItem)){
+	 				if(data.summaryItem instanceof Array){
+	 					summaryLists[data.summaryCode].summaryItem = data.summaryItem;
+	 				}else{
+	 					summaryLists[data.summaryCode].summaryItem = [data.summaryItem];
+	 				}
 				}
-				 
-			);
-		}
+			},
+			function(errorMessage){
+				console.log("fillItems"+errorMessage); 
+			}
+			 
+		);
 	}
-////TO HERE
+}
+
+
+
+
+$scope.gotoState = function(item){
+	console.log(item);
+	
+	if(item.type == 'lab' || item.type == 'document' ){
+		var rnd = Math.round(Math.random() * 1000);
+		win = "win_item.type_" + rnd;
+		
+		window.open(item.action,win,"scrollbars=yes, location=no, width=900, height=600","");  
+		return;
+	}else{	
+		$state.transitionTo(item.action,{demographicNo:$stateParams.demographicNo, type: item.type ,id: item.id},{location:'replace',notify:true});
+	}
+
+};
+
+
 
 
 });

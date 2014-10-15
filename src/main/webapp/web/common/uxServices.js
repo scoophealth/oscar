@@ -27,11 +27,11 @@ angular.module("uxServices", [])
 	.service("summaryService", function ($http,$q,$log) {
 		return {
 		apiPath:'../ws/rs/recordUX',
-        left: function (demographicNo) {
+        getSummaryHeaders: function (demographicNo,key) {
         	//
             console.log("Debug: calling left");
             var deferred = $q.defer();
-            $http.get(this.apiPath+'/'+demographicNo+'/summary/left').success(function(data){
+            $http.get(this.apiPath+'/'+demographicNo+'/summary/'+key).success(function(data){
               console.log(data);
               deferred.resolve(data);
           }).error(function(){
