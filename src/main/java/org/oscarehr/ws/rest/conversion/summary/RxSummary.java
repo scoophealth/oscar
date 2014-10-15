@@ -96,7 +96,8 @@ public class RxSummary implements Summary{
             
             SummaryItemTo1 summaryItem = new SummaryItemTo1(drug.getId(),strTitle,"action","rx");
             summaryItem.setDate(drug.getRxDate());
-            
+            summaryItem.setAction("../oscarRx/choosePatient.do?demographicNo="+demographicNo);  // for now, open the Rx module if the user clicks on any meds.
+             
             list.add(summaryItem);
             count++;
         }	
