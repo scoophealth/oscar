@@ -98,13 +98,18 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 		
 		return this.getSingleResultOrNull(query);
 	}
+	
+	public List<EFormData> findByDemographicIdCurrent(Integer demographicId, Boolean current)
+	{
+		return findByDemographicIdCurrent(demographicId, current, 0, EFormDataDao.MAX_LIST_RETURN_SIZE);
+	}
 
     /**
      * @param demographicId can not be null
      * @param current can be null for both
      * @return list of EFormData
      */
-    public List<EFormData> findByDemographicIdCurrent(Integer demographicId, Boolean current)
+    public List<EFormData> findByDemographicIdCurrent(Integer demographicId, Boolean current, int startIndex, int numToReturn)
 	{
     	StringBuilder sb=new StringBuilder();
     	sb.append("select x from ");
@@ -120,6 +125,8 @@ public class EFormDataDao extends AbstractDao<EFormData> {
     		sb.append(counter);
     		counter++;
     	}
+    	
+    	sb.append(" order by x.formDate DESC, x.formTime DESC");
 
     	String sqlCommand=sb.toString();
 
@@ -127,6 +134,9 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, demographicId);
+		
+		query.setFirstResult(startIndex);
+		query.setMaxResults(numToReturn);
 
     	counter=2;
 
