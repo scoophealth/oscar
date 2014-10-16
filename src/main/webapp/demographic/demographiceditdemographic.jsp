@@ -552,10 +552,25 @@ function patientStatusDateValid(trueIfBlank) {
     return checkDate(yyyy,mm,dd,"<bean:message key="demographic.search.msgWrongPatientStatusDate"/>");
 }
 
+
+function checkSex() {
+	var sex = document.updatedelete.sex.value;
+	
+	if(sex.length == 0)
+	{
+		alert ("You must select a Gender.");
+		return(false);
+	}
+
+	return(true);
+}
+
+
 function checkTypeInEdit() {
   if ( !checkName() ) return false;
   if ( !checkDob() ) return false;
   if ( !checkHin() ) return false;
+  if ( !checkSex() ) return false;
   if ( !checkRosterStatus() ) return false;
   if ( !checkPatientStatus() ) return false;
   return(true);

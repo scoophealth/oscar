@@ -342,6 +342,20 @@ function checkHin() {
 	return(true);
 }
 
+
+function checkSex() {
+	var sex = document.adddemographic.sex.value;
+	
+	if(sex.length == 0)
+	{
+		alert ("You must select a Gender.");
+		return(false);
+	}
+
+	return(true);
+}
+
+
 function checkResidentStatus(){
     var rs = document.adddemographic.rsid.value;
     if(rs!="")return true;
@@ -397,14 +411,15 @@ function checkFormTypeIn() {
 	if ( !checkName() ) return false;
 	if ( !checkDob() ) return false;
 	if ( !checkHin() ) return false;
+	if ( !checkSex() ) return false;
 	if ( !checkResidentStatus() ) return false;
 	if ( !checkAllDate() ) return false;
 	return true;
 }
 
 function checkTitleSex(ttl) {
-    if (ttl=="MS" || ttl=="MISS" || ttl=="MRS" || ttl=="SR") document.adddemographic.sex.selectedIndex=1;
-	else if (ttl=="MR" || ttl=="MSSR") document.adddemographic.sex.selectedIndex=0;
+   // if (ttl=="MS" || ttl=="MISS" || ttl=="MRS" || ttl=="SR") document.adddemographic.sex.selectedIndex=1;
+	//else if (ttl=="MR" || ttl=="MSSR") document.adddemographic.sex.selectedIndex=0;
 }
 
 function removeAccents(s){
@@ -838,12 +853,22 @@ function autoFillHin(){
                                        sex = props.getProperty("defaultsex","");
                                    }
                                 %>
-                                <td id="gender" align="left"><select name="sex" id="sex">
-                                    <option value="M"  <%= sex.equals("M") ? " selected": "" %>><bean:message
-                                        key="demographic.demographicaddrecordhtm.formM" /></option>
-                                    <option value="F"  <%= sex.equals("F") ? " selected": "" %>><bean:message
-                                        key="demographic.demographicaddrecordhtm.formF" /></option>
-                                </select></td>
+                                <td id="gender" align="left">
+                                
+                                
+                                
+                                <select  name="sex" id="sex">
+			                        <option value=""></option>
+			                		<% for(org.oscarehr.common.Gender gn : org.oscarehr.common.Gender.values()){ %>
+			                        <option value=<%=gn.name()%> <%=((sex.toUpperCase().equals(gn.name())) ? "selected" : "") %>><%=gn.getText()%></option>
+			                        <% } %>
+			                        </select>
+			                        
+			                       
+                                </select>
+                                
+                                
+                                </td>
 			</tr>
 			<tr valign="top">
 				<td align="right" id="hinLbl"><b><bean:message
