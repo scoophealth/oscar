@@ -241,14 +241,10 @@ public class GDMLHandler implements MessageHandler {
 
         try{
             Segment obxSeg = (( obrSegMap.get(obrSegKeySet.get(i))).get(j));
-            String ident = getString(Terser.get(obxSeg, 3, 0, 1, 1 ));
-            String subIdent = Terser.get(obxSeg, 3, 0, 1, 2);
-
-            if (subIdent != null)
-                ident = ident+"&"+subIdent;
-
+            String ident = getString(getComponent(obxSeg, 3, 0, 1));
             logger.debug("returning obx identifier: "+ident);
             return(ident);
+            
         }catch(Exception e){
             logger.error("error returning obx identifier", e);
             return("");
@@ -288,7 +284,7 @@ public class GDMLHandler implements MessageHandler {
         String result = "";
         try{
 
-            result = getString(Terser.get((( obrSegMap.get(obrSegKeySet.get(i))).get(j)),5,0,1,1));
+            result = getString(getComponent((( obrSegMap.get(obrSegKeySet.get(i))).get(j)),5,0,1));
 
             // format the result
             if (result.endsWith("."))
@@ -309,7 +305,7 @@ public class GDMLHandler implements MessageHandler {
             // which will usually contain the units as well
 
             if (getOBXUnits(i, j).equals(""))
-                ret = getString(Terser.get(obxSeg,7,0,2,1));
+                ret = getString(getComponent(obxSeg,7,0,2));
 
             // may have to fall back to original reference range if the second
             // component is empty
@@ -348,7 +344,7 @@ public class GDMLHandler implements MessageHandler {
             // if there are no units specified check the formatted reference
             // range for the units
             if (ret.equals("")){
-                ret = getString(Terser.get(obxSeg,7,0,2,1));
+                ret = getString(getComponent(obxSeg,7,0,2));
 
                 // only display units from the formatted reference range if they
                 // have not already been displayed as the reference range
@@ -423,21 +419,13 @@ public class GDMLHandler implements MessageHandler {
 
             int k = 0;
 
-            String nextComment = Terser.get(obxSeg,5,k,1,1);
+            String nextComment = getComponent(obxSeg,5,k,1);
             
             while(nextComment != null){
 
-            	//in case there are "&" in field, & = sub-component separator in HL7
-                int subIndex = 2;
-            	String nextCommentSub = Terser.get(obxSeg,5,k,1,subIndex);
-            	while(nextCommentSub != null){
-            		nextComment += "&" + nextCommentSub;
-            		nextCommentSub = Terser.get(obxSeg,5,k,1,++subIndex);
-            	}
-            	
-                comment = comment + nextComment.replaceAll("\\\\\\.br\\\\", "<br />");
+                comment = comment + getString(nextComment).replaceAll("\\\\\\.br\\\\", "<br />");
                 k++;
-                nextComment = Terser.get(obxSeg,5,k,1,1);
+                nextComment = getComponent(obxSeg,5,k,1);
             }
 
         } catch (Exception e) {
@@ -476,14 +464,14 @@ public class GDMLHandler implements MessageHandler {
             k++;
 
             OBX obxSeg = ( obrSegMap.get(obrSegKeySet.get(i))).get(j);
-            comment = Terser.get(obxSeg,7,k,1,1);
+            comment = getComponent(obxSeg,7,k,1);
             if (comment == null)
-                comment = Terser.get(obxSeg,7,k,2,1);
+                comment = getComponent(obxSeg,7,k,2);
 
         }catch(Exception e){
             logger.error("Cannot return comment", e);
         }
-        return comment.replaceAll("\\\\\\.br\\\\", "<br />");
+        return getString(comment).replaceAll("\\\\\\.br\\\\", "<br />");
     }
 
 
@@ -797,21 +785,36 @@ public class GDMLHandler implements MessageHandler {
             return("");
         }
     }
- public String getFillerOrderNumber(){
-
-
+    
+    private String getComponent(Segment seg, int i, int j, int k) throws HL7Exception{
+    	//track "&" in field and process accordingly, & = sub-component separator in HL7
+    	String field = Terser.get(seg, i, j, k, 1);
+    	
+    	if (field!=null){
+            int subIndex = 2;
+        	String nextSub = Terser.get(seg, i, j, k, subIndex);
+        	
+        	while(nextSub != null){
+        		field += "&" + getString(nextSub);
+        		nextSub = Terser.get(seg, i, j, k, ++subIndex);
+        	}
+    	}
+    	return field;
+    }
+    
+    public String getFillerOrderNumber(){
 		return "";
 	}
 
     public String getEncounterId(){
     	return "";
     }
+
     public String getRadiologistInfo(){
 		return "";
 	}
 
     public String getNteForOBX(int i, int j){
-
     	return "";
     }
     public String getNteForPID(){
