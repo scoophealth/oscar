@@ -38,6 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -49,6 +50,7 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
+import oscar.oscarLab.ca.all.parsers.CLSHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.all.parsers.PATHL7Handler;
@@ -78,9 +80,11 @@ import com.lowagie.text.rtf.RtfWriter2;
 public class LabPDFCreator extends PdfPageEventHelper{
     private OutputStream os;
 
-    private boolean ackFlag = false;
+   // private boolean ackFlag = false;
     private boolean isUnstructuredDoc = false;
     private MessageHandler handler;
+    List<MessageHandler>handlers = new ArrayList<MessageHandler>();
+    
     private int versionNum;
     private String[] multiID;
     private String id;
@@ -89,7 +93,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
     private BaseFont bf;
     private Font font;
     private Font boldFont;
-    private Font redFont;
+   // private Font redFont;
     private String dateLabReceived;
 
 	public static byte[] getPdfBytes(String segmentId, String providerNo) throws IOException, DocumentException
@@ -130,7 +134,18 @@ public class LabPDFCreator extends PdfPageEventHelper{
             i++;
         }
         this.versionNum = i+1;
-
+        
+        
+        if("CLS".equals(handler.getMsgType())) {
+        	for( int x = 0; x < multiID.length; ++x) {
+				MessageHandler handler2 = Factory.getHandler(multiID[x]);
+				if(!handler.getFillerOrderNumber().equals(handler2.getFillerOrderNumber())) {
+					handlers.add(handler2);
+					//segmentIdList.add(segmentIDs[x]);
+				}
+			}
+        }
+ 
     } 
     //Creates an rtf file for viha rtf labs
     public void printRtf()throws IOException, DocumentException{
@@ -150,7 +165,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
         bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         font = new Font(bf, 11, Font.NORMAL);
         boldFont = new Font(bf, 12, Font.BOLD);
-        redFont = new Font(bf, 11, Font.NORMAL, Color.RED);
+     //   redFont = new Font(bf, 11, Font.NORMAL, Color.RED);
         
         //add the patient information
         addRtfPatientInfo();
@@ -188,7 +203,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
         bf = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         font = new Font(bf, 9, Font.NORMAL);
         boldFont = new Font(bf, 10, Font.BOLD);
-        redFont = new Font(bf, 9, Font.NORMAL, Color.RED);
+      //  redFont = new Font(bf, 9, Font.NORMAL, Color.RED);
 
         // add the header table containing the patient and lab info to the document
         createInfoTable();
@@ -196,8 +211,13 @@ public class LabPDFCreator extends PdfPageEventHelper{
         // add the tests and test info for each header
         ArrayList<String> headers = handler.getHeaders();
         for (int i=0; i < headers.size(); i++)
-            addLabCategory( headers.get(i));
+            addLabCategory( headers.get(i) ,null);
 
+        for(MessageHandler extraHandler:handlers) {
+        	ArrayList<String> extraHeaders = extraHandler.getHeaders();
+            for (int i=0; i < extraHeaders.size(); i++)
+                addLabCategory( extraHeaders.get(i) , extraHandler);
+        }
         // add end of report table
         PdfPTable table = new PdfPTable(1);
         table.setWidthPercentage(100);
@@ -223,10 +243,15 @@ public class LabPDFCreator extends PdfPageEventHelper{
 	 * Given the name of a lab category this method will add the category
 	 * header, the test result headers and the test results for that category.
 	 */
-	private void addLabCategory(String header) throws DocumentException {
+	private void addLabCategory(String header, MessageHandler extraHandler) throws DocumentException {
+		MessageHandler handler = (extraHandler!=null)?extraHandler:this.handler;
 		if(handler.getMsgType().equals("PATHL7")){
-			this.isUnstructuredDoc = ((PATHL7Handler) handler).unstructuredDocCheck(header);}
+			this.isUnstructuredDoc = ((PATHL7Handler) handler).unstructuredDocCheck(header);
+		}
 		
+		if(handler.getMsgType().equals("CLS")) {
+			this.isUnstructuredDoc  = ((CLSHandler) handler).isUnstructured();
+		}
 		float[] mainTableWidths;
 		if(isUnstructuredDoc){
 			mainTableWidths = new float[] { 5f, 12f, 3f};
@@ -560,7 +585,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 
 						// cell.setBackgroundColor(getHighlightColor(linenum));
 						linenum++;
-						cell.setPaddingLeft(100);
+						//cell.setPaddingLeft(100);
 						cell.setPhrase(new Phrase(handler.getOBRComment(j, k)
 								.replaceAll("<br\\s*/*>", "\n"), font));
 						table.addCell(cell);
@@ -597,6 +622,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
      *  getHighlightColor will return the background color of the current result
      *  line, this is determined by the line number
      */
+ /*
     private Color getHighlightColor(int linenum){
         Color ret = new Color(225,225,255);
         if ((linenum % 2) == 1)
@@ -604,7 +630,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 
         return ret;
     }
-
+*/
     /*
      *  createInfoTable creates and adds the table at the top of the document
      *  which contains the patient and lab information

@@ -680,4 +680,16 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 		return "success";
 	}
 
+	////this.isUnstructuredDoc = "TX".equals(handler.getOBXValueType(0,0));
+	public boolean isUnstructured() {
+		boolean result=true;
+		for(int j = 0; j<this.getOBRCount();j++) {
+			for(int k=0;k<this.getOBXCount(j);k++) {
+				if(!"TX".equals(getOBXValueType(j, k))) {
+					result=false;
+				}
+			}
+		}
+		return result;
+	}
 }
