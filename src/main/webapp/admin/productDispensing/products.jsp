@@ -173,7 +173,7 @@
 			
 			var total = xml.total;
 			
-			console.log(xml.toSource());
+		//	console.log(xml.toSource());
 			$("#productFilterMessage").empty();
 			
 			if(xml.drugProduct) {
@@ -282,6 +282,9 @@
 	}
 	
 	function updateProductLots() {
+		var currentVal = $("#productLotFilter").val();
+		
+		
 		$('#productLotFilter').html("<option value=''></option>");
 		jQuery.getJSON("../../ws/rs/productDispensing/drugProducts/uniqueLots?name=" + $('#productNameFilter').val(), {},
 		        function(xml) {
@@ -293,7 +296,7 @@
 							arr[0] =xml.content;
 						}
 						
-						var currentVal = $("#productLotFilter").val();
+						 $("#productLotFilter").val();
 						
 						$("#productLotFilter").empty();
 						$("#productLotFilter").append('<option value=""></option>');
