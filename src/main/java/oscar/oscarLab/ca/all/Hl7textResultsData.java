@@ -41,6 +41,7 @@ import org.oscarehr.common.dao.MeasurementsExtDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.Hl7TextInfo;
+import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementMap;
 import org.oscarehr.common.model.MeasurementType;
@@ -303,8 +304,8 @@ public class Hl7textResultsData {
 		int monthsBetween = 0;
 		
 		Hl7TextMessageDao msgDao = SpringUtils.getBean(Hl7TextMessageDao.class);
-		String type = msgDao.getLabType(Integer.parseInt(lab_no));
-		if("CLS".equals(type)) {
+		Hl7TextMessage hl7Msg = msgDao.find(Integer.parseInt(lab_no));
+		if(hl7Msg != null && "CLS".equals(hl7Msg.getType())) {
 			return getMatchingLabs_CLS(lab_no);
 		}
 
