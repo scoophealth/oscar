@@ -41,19 +41,19 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
 
 	public int getCountReferralsAfterCutOffDateAndNotCompleted(Date referralDateCutoff)
 	{
-		Query query = entityManager.createNativeQuery("select count(*) from " + modelClass.getSimpleName() + " where referalDate < ?1 and status != 4", Integer.class);
+		Query query = entityManager.createNativeQuery("select count(*) from consultationRequests where referalDate < ?1 and status != 4");
 		query.setParameter(1, referralDateCutoff);
 
-		return((Integer)query.getSingleResult());
+		return (((Number) query.getSingleResult()).intValue());
 	}
 
 	public int getCountReferralsAfterCutOffDateAndNotCompleted(Date referralDateCutoff,String sendto)
 	{
-		Query query = entityManager.createNativeQuery("select count(*) from " + modelClass.getSimpleName() + " where referalDate < ?1 and status != 4 and sendto = ?2", Integer.class);
+		Query query = entityManager.createNativeQuery("select count(*) from consultationRequests where referalDate < ?1 and status != 4 and sendto = ?2");
 		query.setParameter(1, referralDateCutoff);
 		query.setParameter(2, sendto);
 
-		return((Integer)query.getSingleResult());
+		return (((Number) query.getSingleResult()).intValue());
 	}
 
         public List<ConsultationRequest> getConsults(String demoNo) {

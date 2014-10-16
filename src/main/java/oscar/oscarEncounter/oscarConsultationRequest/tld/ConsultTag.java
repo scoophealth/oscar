@@ -91,8 +91,9 @@ public class ConsultTag extends TagSupport {
                        countback = countback * -1;
                        cal.add(Calendar.MONTH,countback );
                         
+               } else {
+            	   cal.add(Calendar.MONTH,countback );
                }
-               cal.add(Calendar.MONTH,countback );
                Date cutoffDate = cal.getTime();
                
                
