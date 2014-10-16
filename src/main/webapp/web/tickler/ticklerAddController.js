@@ -13,14 +13,39 @@ oscarApp.controller('TicklerAddController',function($scope, $modalInstance, demo
 	$scope.close = function () {
         $modalInstance.close(false);
     }
+	
+	$scope.validate = function() {
+		var t = $scope.tickler;
+		$scope.errors = [];
+		
+		if(t.demographic == null) {
+			$scope.errors.push('You must select a patient');
+		}
+		if(t.taskAssignedTo == null || t.taskAssignedTo.length == 0) {
+			$scope.errors.push('You must assign a provider');
+		}
+		if(t.message == null || t.message.length == 0) {
+			$scope.errors.push('Message is required');
+		}
+		if($scope.errors.length>0) {
+			return false;
+		}
+		return true;
+	}
     
     $scope.save = function () {
+    	$scope.showErrors=true;
+    	if(!$scope.validate()) {
+    		return;
+    	}
+    	
     	var t = {};
     	t.demographicNo = $scope.tickler.demographicNo;
     	t.taskAssignedTo = $scope.tickler.taskAssignedTo;
     	t.priority = $scope.tickler.priority;
     	t.status = 'A';
     	t.message = $scope.tickler.message;
+    	
     	
     	var givenDate = $scope.tickler.serviceDateDate;
     	var givenTime = $scope.tickler.serviceDateTime;
