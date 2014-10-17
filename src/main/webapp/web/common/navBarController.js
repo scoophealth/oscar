@@ -39,7 +39,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
                                       {objectName:'_demographic',privilege:'w'},
                                       {objectName:'_msg',privilege:'r'}]
     }).then(function(result){
-    	console.log(result.toSource());
+    	//console.log(result.toSource());
     	if(result.content != null) {
     		 $scope.searchRights = result.content[0];
     		 $scope.newDemographicRights = result.content[1];
