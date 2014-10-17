@@ -35,7 +35,7 @@ angular.module("scheduleServices", [])
             	console.log(data);
             	deferred.resolve(data);
             }).error(function(){
-            	console.log("error fetching demographic")
+            	console.log("error fetching demographic");
             	deferred.reject("An error occured while fetching items");
             });
      

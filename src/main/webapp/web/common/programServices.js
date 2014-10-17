@@ -23,20 +23,21 @@
     Ontario, Canada
 
 */
-angular.module("billingServices", [])
-	.service("billingService", function ($http,$q,$log) {
+angular.module("programServices", [])
+	.service("programService", function ($http,$q,$log) {
 		return {
 		apiPath:'../ws/rs/',
 		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
-        getUniqueServiceTypes: function () {
+		
+        getPrograms: function () {
             var deferred = $q.defer();
-            $http.get(this.apiPath+'billing/uniqueServiceTypes',this.configHeadersWithCache).success(function(data){
+            $http.get(this.apiPath+'program/programList',this.configHeadersWithCache).success(function(data){
             	console.log(data);
             	deferred.resolve(data.content);
             }).error(function(){
-            	console.log("error fetching billing service types");
-            	deferred.reject("An error occured while fetching billing service types");
+            	console.log("error fetching program list");
+            	deferred.reject("An error occured while fetching program list");
             });
      
           return deferred.promise;

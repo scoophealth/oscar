@@ -36,7 +36,7 @@ angular.module("patientDetailStatusServices", [])
 				console.log(data);
 				deferred.resolve(data);
 			}).error(function(){
-				console.log("error fetching Integrator status")
+				console.log("error fetching Integrator status");
 				deferred.reject("An error occured while fetching items");
 			});
 			return deferred.promise;
@@ -48,7 +48,7 @@ angular.module("patientDetailStatusServices", [])
 				console.log(data);
 				deferred.resolve(data);
 			}).error(function(){
-				console.log("error fetching Integrator status")
+				console.log("error fetching Integrator status");
 				deferred.reject("An error occured while fetching items");
 			});
 			return deferred.promise;

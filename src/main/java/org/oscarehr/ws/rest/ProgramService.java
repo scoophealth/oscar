@@ -24,6 +24,7 @@
 package org.oscarehr.ws.rest;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,12 +36,15 @@ import javax.ws.rs.QueryParam;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.tools.ant.util.DateUtils;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.ws.rest.conversion.AdmissionConverter;
+import org.oscarehr.ws.rest.conversion.ProgramConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
 import org.oscarehr.ws.rest.to.model.AdmissionTo1;
+import org.oscarehr.ws.rest.to.model.ProgramTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Path("/program")
@@ -98,4 +102,27 @@ public class ProgramService extends AbstractServiceImpl {
 		return response;
 	}
 	
+	@GET
+	@Path("/programList")
+	@Produces("application/json")
+	public AbstractSearchResponse<ProgramTo1> getProgramList() throws Exception {
+		AbstractSearchResponse<ProgramTo1> response = new  AbstractSearchResponse<ProgramTo1>();
+		
+		List<ProgramProvider> programProviders = programManager.getProgramDomain(getLoggedInInfo(), getLoggedInInfo().getLoggedInProviderNo());
+		if (programProviders!=null) {
+			List<ProgramTo1> listProgramTo1 = new ArrayList<ProgramTo1>();
+			ProgramConverter converter = new ProgramConverter();
+			
+			for (ProgramProvider pp : programProviders) {
+				Program program = programManager.getProgram(getLoggedInInfo(), pp.getProgramId().intValue());
+				if (program.getType().equals(Program.BED_TYPE)) {
+					listProgramTo1.add(converter.getAsTransferObject(getLoggedInInfo(), program));
+				}
+			}
+			response.setContent(listProgramTo1);
+			response.setTotal(listProgramTo1.size());
+		}
+		
+		return response;
+	}
 }

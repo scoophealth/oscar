@@ -38,7 +38,7 @@ angular.module("securityServices", [])
             	console.log(data);
             	deferred.resolve(data);
             }).error(function(){
-            	console.log("error fetching rights")
+            	console.log("error fetching rights");
             	deferred.reject("An error occured while fetching access right");
             });
      

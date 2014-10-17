@@ -63,7 +63,6 @@ import org.oscarehr.common.model.WaitingList;
 import org.oscarehr.common.model.WaitingListName;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.SecurityInfoManager;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.web.DemographicSearchHelper;
 import org.oscarehr.ws.rest.conversion.DemographicContactFewConverter;
@@ -142,8 +141,6 @@ public class DemographicService extends AbstractServiceImpl {
 	 */
 	@GET
 	public OscarSearchResponse<DemographicTo1> getAllDemographics(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit) {
-
-		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		OscarSearchResponse<DemographicTo1> result = new OscarSearchResponse<DemographicTo1>();
 		
 		if (offset == null) {
@@ -155,9 +152,9 @@ public class DemographicService extends AbstractServiceImpl {
 		
 		result.setLimit(limit);
 		result.setOffset(offset);
-		result.setTotal(demographicManager.getActiveDemographicCount(loggedInInfo).intValue());
+		result.setTotal(demographicManager.getActiveDemographicCount(getLoggedInInfo()).intValue());
 		
-		for(Demographic demo : demographicManager.getActiveDemographics(loggedInInfo,offset, limit)) {
+		for(Demographic demo : demographicManager.getActiveDemographics(getLoggedInInfo(), offset, limit)) {
 			result.getContent().add(demoConverter.getAsTransferObject(getLoggedInInfo(),demo));
 		}
 		
@@ -176,14 +173,12 @@ public class DemographicService extends AbstractServiceImpl {
 	@Path("/{dataId}")
 	@Produces({MediaType.APPLICATION_JSON , MediaType.APPLICATION_XML})
 	public DemographicTo1 getDemographicData(@PathParam("dataId") Integer id) {		
-		LoggedInInfo loggedInInfo=getLoggedInInfo();
-		
-		Demographic demo = demographicManager.getDemographic(loggedInInfo,id);
+		Demographic demo = demographicManager.getDemographic(getLoggedInInfo(),id);
 		if (demo == null) {
 			return null;
 		}
 		
-		List<DemographicExt> demoExts = demographicManager.getDemographicExts(loggedInInfo,id);
+		List<DemographicExt> demoExts = demographicManager.getDemographicExts(getLoggedInInfo(),id);
 		if (demoExts!=null && !demoExts.isEmpty()) {
 			DemographicExt[] demoExtArray = demoExts.toArray(new DemographicExt[demoExts.size()]);
 			demo.setExtras(demoExtArray);
@@ -191,7 +186,7 @@ public class DemographicService extends AbstractServiceImpl {
 
 		DemographicTo1 result = demoConverter.getAsTransferObject(getLoggedInInfo(),demo);
 		
-		DemographicCust demoCust = demographicManager.getDemographicCust(loggedInInfo,id);
+		DemographicCust demoCust = demographicManager.getDemographicCust(getLoggedInInfo(),id);
 		if (demoCust!=null) {
 			result.setNurse(demoCust.getNurse());
 			result.setResident(demoCust.getResident());
@@ -249,7 +244,7 @@ public class DemographicService extends AbstractServiceImpl {
 			}
 		}
 		
-		List<DemographicContact> demoContacts = demographicManager.getDemographicContacts(loggedInInfo,id);
+		List<DemographicContact> demoContacts = demographicManager.getDemographicContacts(getLoggedInInfo(),id);
 		if (demoContacts!=null) {
 			for (DemographicContact demoContact : demoContacts) {
 				Integer contactId = Integer.valueOf(demoContact.getContactId());
@@ -257,10 +252,10 @@ public class DemographicService extends AbstractServiceImpl {
 				
 				if (demoContact.getCategory().equals(DemographicContact.CATEGORY_PERSONAL)) {
 					if (demoContact.getType()==DemographicContact.TYPE_DEMOGRAPHIC) {
-						Demographic contactD = demographicManager.getDemographic(loggedInInfo,contactId);
+						Demographic contactD = demographicManager.getDemographic(getLoggedInInfo(),contactId);
 						demoContactTo1 = demoContactFewConverter.getAsTransferObject(demoContact, contactD);
 						if (demoContactTo1.getPhone()==null || demoContactTo1.getPhone().equals("")) {
-							DemographicExt ext = demographicManager.getDemographicExt(loggedInInfo, id, "demo_cell");
+							DemographicExt ext = demographicManager.getDemographicExt(getLoggedInInfo(), id, "demo_cell");
 							if (ext!=null) demoContactTo1.setPhone(ext.getValue());
 						}
 					}
@@ -313,11 +308,9 @@ public class DemographicService extends AbstractServiceImpl {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_JSON , MediaType.APPLICATION_XML})
 	public DemographicTo1 createDemographicData(DemographicTo1 data) {
-		LoggedInInfo loggedInInfo=getLoggedInInfo();
-		
-		Demographic demographic = demoConverter.getAsDomainObject(getLoggedInInfo(),data);
-		demographicManager.createDemographic(loggedInInfo,demographic);
-	    return demoConverter.getAsTransferObject(getLoggedInInfo(),demographic);
+		Demographic demographic = demoConverter.getAsDomainObject(getLoggedInInfo(), data);
+		demographicManager.createDemographic(getLoggedInInfo(), demographic, data.getAdmissionProgramId());
+	    return demoConverter.getAsTransferObject(getLoggedInInfo(), demographic);
 	}
 
 	/**
@@ -331,11 +324,9 @@ public class DemographicService extends AbstractServiceImpl {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public DemographicTo1 updateDemographicData(DemographicTo1 data) {
-		LoggedInInfo loggedInInfo=getLoggedInInfo();
-		
 		//update demographiccust
 		if (data.getNurse()!=null || data.getResident()!=null || data.getAlert()!=null || data.getMidwife()!=null || data.getNotes()!=null) {
-			DemographicCust demoCust = demographicManager.getDemographicCust(loggedInInfo,data.getDemographicNo());
+			DemographicCust demoCust = demographicManager.getDemographicCust(getLoggedInInfo(),data.getDemographicNo());
 			if (demoCust==null) {
 				demoCust = new DemographicCust();
 				demoCust.setId(data.getDemographicNo());
@@ -345,7 +336,7 @@ public class DemographicService extends AbstractServiceImpl {
 			demoCust.setAlert(data.getAlert());
 			demoCust.setMidwife(data.getMidwife());
 			demoCust.setNotes(data.getNotes());
-			demographicManager.createUpdateDemographicCust(loggedInInfo,demoCust);
+			demographicManager.createUpdateDemographicCust(getLoggedInInfo(),demoCust);
 		}
 		
 		//update waitingList
@@ -354,7 +345,7 @@ public class DemographicService extends AbstractServiceImpl {
 		}
 		
 		Demographic demographic = demoConverter.getAsDomainObject(getLoggedInInfo(),data);
-	    demographicManager.updateDemographic(loggedInInfo,demographic);
+	    demographicManager.updateDemographic(getLoggedInInfo(),demographic);
 	    
 	    return demoConverter.getAsTransferObject(getLoggedInInfo(),demographic);
 	}
@@ -370,15 +361,13 @@ public class DemographicService extends AbstractServiceImpl {
 	@DELETE
 	@Path("/{dataId}")
 	public DemographicTo1 deleteDemographicData(@PathParam("dataId") Integer id) {
-		LoggedInInfo loggedInInfo=getLoggedInInfo();
-		
-		Demographic demo = demographicManager.getDemographic(loggedInInfo,id);
+		Demographic demo = demographicManager.getDemographic(getLoggedInInfo(),id);
     	DemographicTo1 result = getDemographicData(id);
     	if (demo == null) {
     		throw new IllegalArgumentException("Unable to find demographic record with ID " + id);
     	}
     	
-		demographicManager.deleteDemographic(loggedInInfo,demo);
+		demographicManager.deleteDemographic(getLoggedInInfo(),demo);
 	    return result;
 	}
 

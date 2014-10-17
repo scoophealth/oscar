@@ -37,13 +37,13 @@
 			  <div class="form-group">
 			    <label for="lastName" class="col-sm-2 control-label">Name</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="lastName" placeholder="Last Name" name="lastName" ng-model="demographic.lastName" required>
+			      <input type="text" class="form-control" id="lastName" placeholder="Last Name" name="lastName" ng-model="demographic.lastName" ng-change="capName()" required>
 			    </div>
 			  </div>
 			  <div class="form-group">
 			    <label class="col-sm-2 control-label"></label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" placeholder="First Name" ng-model="demographic.firstName" required>
+			      <input type="text" class="form-control" placeholder="First Name" ng-model="demographic.firstName" ng-change="capName()" required>
 			    </div>
 			  </div>
 			  <div class="form-group">
@@ -65,6 +65,12 @@
 					<select class="form-control form-control-details" title="Sex" ng-model="demographic.sex" ng-options="sexes.value as sexes.label for sexes in genders" required/>
 			    </div>
 			  </div> 
+			  <div class="form-group" ng-show="programs.length>1">
+			    <label class="col-sm-2 control-label">Program</label>
+			    <div class="col-sm-5">
+					<select class="form-control form-control-details" title="Program" ng-model="demographic.admissionProgramId" ng-options="pg.id as pg.name for pg in programs" required/>
+			    </div>
+			  </div> 
 			</form>
 		</div>
 		
@@ -73,4 +79,3 @@
 			<button ng-hide="hasRight" ng-click="cancel()" type="button" class="btn">Close</button>
 		</div>
 	</div>
-ng

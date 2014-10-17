@@ -35,7 +35,7 @@ angular.module("noteServices", [])
            	console.log(data);
            	deferred.resolve(data);
            }).error(function(){
-           	console.log("error fetching forms")
+           	console.log("error fetching forms");
            	deferred.reject("An error occured while fetching items");
            });
     
@@ -49,7 +49,7 @@ angular.module("noteServices", [])
            	console.log("returned from /save",data);
            	deferred.resolve(data);
            }).error(function(){
-           	console.log("error saving notes")
+           	console.log("error saving notes");
            	deferred.reject("An error occured while fetching items");
            });
     
@@ -74,7 +74,7 @@ angular.module("noteServices", [])
                	console.log("returned from /tmpSave",data);
                	deferred.resolve(data);
                }).error(function(){
-               	console.log("error tmp saving")
+               	console.log("error tmp saving");
                	deferred.reject("An error occured while fetching items");
                });
         

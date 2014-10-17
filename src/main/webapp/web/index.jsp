@@ -337,6 +337,7 @@ width: auto;
 
 	<!-- we'll combine/minify later -->
 	<script src="common/demographicServices.js"></script>
+	<script src="common/programServices.js"></script>
 	<script src="common/scheduleServices.js"></script>
 	<script src="common/securityServices.js"></script>
 	<script src="common/staticDataServices.js"></script>

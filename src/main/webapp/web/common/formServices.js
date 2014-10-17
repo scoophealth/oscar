@@ -35,7 +35,7 @@ angular.module("formServices", [])
             	console.log(data);
             	deferred.resolve(data);
             }).error(function(){
-            	console.log("error fetching forms")
+            	console.log("error fetching forms");
             	deferred.reject("An error occured while fetching items");
             });
      
@@ -46,7 +46,7 @@ angular.module("formServices", [])
         	 $http.get(this.apiPath+'/allEncounterForms',this.configHeaders).success(function(data){
             	deferred.resolve(data.content);
             }).error(function(){
-            	console.log("error fetching encounter")
+            	console.log("error fetching encounter");
             	deferred.reject("An error occured while fetching encounter forms");
             });
      
@@ -57,7 +57,7 @@ angular.module("formServices", [])
         	 $http.get(this.apiPath+'/allEForms',this.configHeaders).success(function(data){
             	deferred.resolve(data.content);
             }).error(function(){
-            	console.log("error fetching eforms")
+            	console.log("error fetching eforms");
             	deferred.reject("An error occured while fetching eforms");
             });
      
@@ -69,7 +69,7 @@ angular.module("formServices", [])
         		 //console.log('got group names !' + data.toSource());
             	deferred.resolve(data.content);
             }).error(function(){
-            	console.log("error fetching eforms")
+            	console.log("error fetching eforms");
             	deferred.reject("An error occured while fetching group names");
             });
      
