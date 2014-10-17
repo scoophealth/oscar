@@ -369,7 +369,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 							// add the obrname if necessary
 							if (!obrFlag
 									&& !obrName.equals("")
-									&& !(obxName.contains(obrName) && obxCount < 2)) {
+									&& (!(obxName.contains(obrName) && obxCount < 2 && !isUnstructuredDoc))) {
 								// cell.setBackgroundColor(getHighlightColor(linenum));
 								linenum++;
 								cell.setPhrase(new Phrase(obrName, boldFont));
@@ -382,7 +382,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 
 							// add the obx results and info
 							Font lineFont = new Font(bf, 8, Font.NORMAL,
-									getTextColor(handler.getOBXAbnormalFlag(j,
+									getTextColor(handler,handler.getOBXAbnormalFlag(j,
 											k)));
 							// cell.setBackgroundColor(getHighlightColor(linenum));
 							linenum++;
@@ -607,12 +607,17 @@ public class LabPDFCreator extends PdfPageEventHelper{
      *  getTextColor will return the the color corresponding to the abnormal
      *  status of the result.
      */
-    private Color getTextColor(String abn){
+    private Color getTextColor(MessageHandler handler, String abn){
         Color ret = Color.BLACK;
         if ( abn != null && ( abn.equals("A") || abn.startsWith("H")) ){
             ret = Color.RED;
         }else if ( abn != null && abn.startsWith("L")){
             ret = Color.BLUE;
+        }
+        
+        if("CLS".equals(handler.getMsgType()) && abn.equals("C"))  {
+        	//critical
+        	ret = Color.RED;
         }
         return ret;
     }
