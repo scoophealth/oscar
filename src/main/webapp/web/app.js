@@ -125,6 +125,16 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
             templateUrl: 'record/forms/forms.jsp',
             controller: 'FormCtrl'
         })
+        .state('record.tickler', {
+	    	url: '^/record/:demographicNo/tickler', 
+            templateUrl: 'tickler/ticklerList.jsp',
+            controller: 'TicklerListCtrl',
+            resolve: { 
+            	providers: function(providerService) { return providerService.searchProviders({active:true}); },
+            }
+        })
+        
+       
         
 	    
 }]);

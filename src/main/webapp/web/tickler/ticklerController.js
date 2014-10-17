@@ -1,4 +1,4 @@
-oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngTableParams, securityService, $modal, $http, ticklerService, noteService, providers, providerService) {
+oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngTableParams, securityService, $modal, $http, ticklerService, noteService, providers, providerService,$stateParams) {
     var ticklerAPI = $resource('../ws/rs/tickler/ticklers');
          
     $scope.lastResponse = "";
@@ -30,6 +30,9 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
         		        	$scope.search.includeUpdates='true';
         		        	$scope.search.includeProgram=true;
         		        	
+        		        	if(angular.isDefined($stateParams.demographicNo)){
+        		        		$scope.search.demographicNo = $stateParams.demographicNo;
+        		        	}
         		        	
         		        	ticklerAPI.get($scope.search, function(data) {
         		                $timeout(function() {

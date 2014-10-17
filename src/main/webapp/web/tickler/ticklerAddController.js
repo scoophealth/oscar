@@ -1,4 +1,4 @@
-oscarApp.controller('TicklerAddController',function($scope, $modalInstance, demographicService, providerService, ticklerService, $filter) {
+oscarApp.controller('TicklerAddController',function($scope, $modalInstance, demographicService, providerService, ticklerService, $filter,$stateParams) {
     
 	$scope.tickler = {template:{id:1,name:''},serviceDateDate:new Date(),serviceDateTime:new Date(), suggestedTextId:0};
 	$scope.priorities = ['Low','Normal','High'];
@@ -74,7 +74,10 @@ oscarApp.controller('TicklerAddController',function($scope, $modalInstance, demo
     	
     }
     
-    
+    if(angular.isDefined($stateParams) && angular.isDefined($stateParams.demographicNo)){
+		$scope.tickler.demographicNo = $stateParams.demographicNo;
+		$scope.updateDemographicNo(null,$scope.tickler.demographicNo,null);
+	}
     
     $scope.searchProviders = function(val) {
     	var search = {searchTerm:val,active:true};
