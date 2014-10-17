@@ -50,6 +50,7 @@
 	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
 	Demographic currentDemographic=(Demographic)request.getAttribute("client");
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	boolean caisiSearchWorkflow = Boolean.valueOf(OscarProperties.getInstance().getProperty("caisi.search.workflow","true"));
 %>
 
 
@@ -533,10 +534,11 @@ function openSurvey() {
 			<%
 				if (!UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external))
 					{
+					if(caisiSearchWorkflow) {
 			%> <input type="button" value="Update"
 				onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" />&nbsp;
 			<%
-				}
+				} }
 			%> <input type="button" value="Print Preview"
 				onclick="printQuickIntake('<c:out value="${client.demographicNo}" />', '<c:out value="${mostRecentQuickIntake.id}"/>')" />
 			</td>
@@ -544,8 +546,14 @@ function openSurvey() {
 		<c:if test="${mostRecentQuickIntake == null}">
 			<td><span style="color: red">None found</span></td>
 			<td></td>
-			<td><input type="button" value="Create"
-				onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
+			<td>
+				<%
+					if(caisiSearchWorkflow) {
+				%>
+			<input type="button" value="Create"
+				onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" />
+				<% } %>
+				</td>
 		</c:if>
 	</tr>
 	<%
