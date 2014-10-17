@@ -25,10 +25,13 @@
 package org.oscarehr.managers;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.common.Gender;
+import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DemographicCustArchiveDao;
@@ -38,6 +41,7 @@ import org.oscarehr.common.dao.DemographicExtArchiveDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DemographicMergedDao;
 import org.oscarehr.common.dao.PHRVerificationDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Demographic.PatientStatus;
 import org.oscarehr.common.model.DemographicContact;
@@ -93,6 +97,11 @@ public class DemographicManager {
 
 	@Autowired
 	private PHRVerificationDao phrVerificationDao;
+	
+	@Autowired
+	private AdmissionDao admissionDao;
+	@Autowired
+	private ProgramDao programDao;
 	
 
 	public Demographic getDemographic(LoggedInInfo loggedInInfo, Integer demographicId) {
@@ -230,7 +239,7 @@ public class DemographicManager {
 		return result;
 	}
 
-	public void createDemographic(LoggedInInfo loggedInInfo, Demographic demographic) {
+	public void createDemographic(LoggedInInfo loggedInInfo, Demographic demographic, Integer admissionProgramId) {
 		try {
 			demographic.getBirthDay();
 		} catch (Exception e) {
@@ -240,6 +249,16 @@ public class DemographicManager {
 		
 		demographic.setPatientStatus(PatientStatus.AC.name());
 		demographicDao.save(demographic);
+		
+		Admission admission = new Admission();
+		admission.setClientId(demographic.getDemographicNo());
+		admission.setProgramId(admissionProgramId);
+		admission.setProviderNo(loggedInInfo.getLoggedInProviderNo());
+		admission.setAdmissionDate(new Date());
+		admission.setAdmissionStatus(Admission.STATUS_CURRENT);
+		admission.setAdmissionNotes("");
+		
+		admissionDao.saveAdmission(admission);
 		
 		if (demographic.getExtras() != null) {
 			for(DemographicExt ext : demographic.getExtras()) {

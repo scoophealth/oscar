@@ -35,7 +35,7 @@ angular.module("uxServices", [])
               console.log(data);
               deferred.resolve(data);
           }).error(function(){
-        	  console.log("error fetching items")
+        	  console.log("error fetching items");
             deferred.reject("An error occured while fetching items");
           });
      
@@ -47,7 +47,7 @@ angular.module("uxServices", [])
         	$http.get(this.apiPath+'/'+demographicNo+'/fullSummary/'+summaryCode).success(function(data){
                 deferred.resolve(data);
             }).error(function(){
-          	  console.log("error fetching items")
+          	  console.log("error fetching items");
               deferred.reject("An error occured while fetching items");
             });
        
@@ -66,7 +66,7 @@ angular.module("uxServices", [])
            console.log(data);
            deferred.resolve(data);
        }).error(function(){
-     	  console.log("error fetching items")
+     	  console.log("error fetching items");
          deferred.reject("An error occured while fetching items");
        });
   

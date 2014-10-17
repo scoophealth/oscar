@@ -29,6 +29,7 @@ angular.module("demographicServices", [])
 		apiPath:'../ws/rs/',
 		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
+		
         getDemographic: function (demographicNo) {
             //$log.error("2Debug: calling getDemographic");
             var deferred = $q.defer();
@@ -36,56 +37,61 @@ angular.module("demographicServices", [])
             	console.log(data);
             	deferred.resolve(data);
             }).error(function(){
-            	console.log("error fetching demographic")
+            	console.log("error fetching demographic");
             	deferred.reject("An error occured while fetching items");
             });
      
           return deferred.promise;
             
         },
+        
         saveDemographic: function (demographic) {
         	var deferred = $q.defer();
         	var demographicTo1 = {demographicTo1:demographic};
             $http.post(this.apiPath+'demographics',demographicTo1).success(function(data){
             	console.log(data);
-              deferred.resolve(data);
+            	deferred.resolve(data);
           }).error(function(){
-        	  console.log("error fetching items")
-            deferred.reject("An error occured while fetching items");
+        	  console.log("error fetching items");
+        	  deferred.reject("An error occured while fetching items");
           });
      
           return deferred.promise;
         },
+        
         updateDemographic: function(demographic){
         	var deferred = $q.defer();
         	var demographicTo1 = {demographicTo1:demographic};
         	$http.put(this.apiPath+'demographics',demographicTo1).success(function(data){
+            	console.log(data);
                 deferred.resolve(data.demographicTo1);
             }).error(function(){
-          	  console.log("error fetching items")
+          	  console.log("error fetching items");
               deferred.reject("An error occured while fetching items");
             });
        
             return deferred.promise;
         	
         },
+        
         search: function(search,startIndex,itemsToReturn){
         	var deferred = $q.defer();
         	$http.post(this.apiPath+'demographics/search?startIndex='+startIndex + "&itemsToReturn="+itemsToReturn,search).success(function(data){
         		deferred.resolve(data);
             }).error(function(){
-          	  console.log("error fetching items")
+          	  console.log("error fetching items");
               deferred.reject("An error occured while fetching items");
             });
        
             return deferred.promise;
         },
+        
         searchIntegrator: function(search,itemsToReturn){
         	var deferred = $q.defer();
         	$http.post(this.apiPath+'demographics/searchIntegrator?itemsToReturn='+itemsToReturn,search).success(function(data){
         		deferred.resolve(data);
             }).error(function(){
-          	  console.log("error fetching integrator items")
+          	  console.log("error fetching integrator items");
               deferred.reject("An error occured while fetching items");
             });
        

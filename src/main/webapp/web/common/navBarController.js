@@ -174,13 +174,19 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 });
 
 
-function NewPatientCtrl($scope,$http,$modal,$modalInstance,demographicService,securityService,staticDataService){
+function NewPatientCtrl($scope,$http,$modal,$modalInstance,demographicService,securityService,programService,staticDataService){
 	console.log("newpatient called");
 	$scope.demographic = {};
   	
 	//get access right for creating new patient
 	securityService.hasRight("_demographic", "w").then(function(data){
 		$scope.hasRight = data.value;
+	});
+	
+	//get programs to be selected
+	programService.getPrograms().then(function(data){
+		$scope.programs = data;
+		if ($scope.programs.length==1) $scope.demographic.admissionProgramId = $scope.programs[0].id;
 	});
 	
 	//get genders to be selected
@@ -208,6 +214,7 @@ function NewPatientCtrl($scope,$http,$modal,$modalInstance,demographicService,se
 			
 			$scope.demographic.dateOfBirth = $scope.demographic.dobYear+'-'+$scope.demographic.dobMonth+"-"+$scope.demographic.dobDay;
 			$scope.demoRetVal = {};
+			
 			demographicService.saveDemographic($scope.demographic).then(function(data){
 					console.log(data);
 					$scope.demoRetVal = data;
@@ -233,6 +240,15 @@ function NewPatientCtrl($scope,$http,$modal,$modalInstance,demographicService,se
   	$scope.cancel = function () {
   		$modalInstance.dismiss('cancel');
   	};
+  	
+  	$scope.capName = function () {
+  		if ($scope.demographic.lastName!=null) {
+  			$scope.demographic.lastName = $scope.demographic.lastName.toUpperCase();
+  		}
+  		if ($scope.demographic.firstName!=null) {
+  			$scope.demographic.firstName = $scope.demographic.firstName.toUpperCase();
+  		}
+  	}
 }
 
 	

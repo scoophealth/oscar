@@ -35,7 +35,7 @@ angular.module("providerServices", [])
             	console.log("me "+data);
             	deferred.resolve(data);
             }).error(function(){
-            	console.log("error fetching myself")
+            	console.log("error fetching myself");
             	deferred.reject("An error occured while getting user data");
             });
      
