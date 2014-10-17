@@ -95,6 +95,9 @@ public class TicklerWebService extends AbstractServiceImpl {
 		if(json.containsKey("assignee")) {
 			cf.setAssignee(json.getString("assignee"));
 		}
+		if(json.containsKey("demographicNo")){
+			cf.setDemographicNo(json.getString("demographicNo"));
+		}
 		
 		List<Tickler> ticklers = ticklerManager.getTicklers(getLoggedInInfo(),cf,startIndex,limit);
 
@@ -201,6 +204,10 @@ public class TicklerWebService extends AbstractServiceImpl {
 		
 		if(mrp != null && !"".equals(mrp)) {
 			cf.setMrp(mrp);
+		}
+		
+		if(req.getParameter("demographicNo") != null){
+			cf.setDemographicNo(req.getParameter("demographicNo"));
 		}
 		
 		TicklerResponse result = new TicklerResponse();

@@ -37,7 +37,7 @@
 }
 </style>
 
-<div ng-show="ticklerReadAccess" >
+<div ng-show="ticklerReadAccess" class="col-lg-12">
  	
 
 <form name="searchForm" id="searchForm">
@@ -175,7 +175,7 @@
 
 
 
-<div ng-show="ticklerReadAccess != null && ticklerReadAccess == false" >
+<div ng-show="ticklerReadAccess != null && ticklerReadAccess == false" class="col-lg-12">
  	<h3 class="text-danger"><span class="glyphicon glyphicon-warning-sign"></span>You don't have access to view ticklers</h3>
 </div>
 
