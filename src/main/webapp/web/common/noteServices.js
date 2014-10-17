@@ -82,7 +82,7 @@ angular.module("noteServices", [])
        },
        getTicklerNote: function (ticklerId) {
            var deferred = $q.defer();
-           $http.get(this.apiPath + '/ticklerGetNote/'+ticklerId,this.configHeaders).success(function(data){
+           $http.get(this.apiPath + '/ticklerGetNote/'+ticklerId,{headers: {"Content-Type": "application/json","Accept":"application/json"}}).success(function(data){
            	deferred.resolve(data);
            }).error(function(){
            	deferred.reject("An error occured while fetching tickler note");
