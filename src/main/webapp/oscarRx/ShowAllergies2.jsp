@@ -392,13 +392,13 @@ padding-right:6;
 								<tr bgcolor="<%=trColour%>">
 									<td><%=labelStatus%></td>
 									<td><%=entryDate==null ? "" : entryDate %></td>
-									<td <%=title%> ><bean:write name="allergy" property="description" /></td>
-									<td><bean:write name="allergy" property="typeDesc" /></td>
-									<td bgcolor="<%=sevColour%>"><bean:write name="allergy" property="severityOfReactionDesc" /></td>
-									<td><bean:write name="allergy" property="onSetOfReactionDesc" /></td>
-									<td><bean:write name="allergy" property="reaction" /></td>
+									<td <%=title%> ><%=allergy.getDescription() %></td>
+									<td><%=allergy.getTypeDesc() %></td>
+									<td bgcolor="<%=sevColour%>"><%=allergy.getSeverityOfReactionDesc() %></td>
+									<td><%=allergy.getOnSetOfReactionDesc() %></td>
+									<td><%=allergy.getReaction() %></td>
 									<td><%=startDate==null ? "" : startDate %></td>
-									<td><bean:write name="allergy" property="lifeStageDesc"/> </td>
+									<td><%=allergy.getLifeStageDesc() %></td>
 									<%
 										CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 										@SuppressWarnings("unchecked")
@@ -424,7 +424,7 @@ padding-right:6;
 									<%
 										if(!allergy.isIntegratorResult() && securityManager.hasDeleteAccess("_allergies",roleName$)) {
 									%>
-									<a href="deleteAllergy.do?ID=<%= String.valueOf(allergy.getAllergyId()) %>&demographicNo=<%=demoNo %>&action=<%=actionPath %>" onClick="return confirm('Are you sure you want to set the allergy <bean:write name="allergy" property="description" /> to <%=labelConfirmAction%>?');"><%=labelAction%></a>
+									<a href="deleteAllergy.do?ID=<%= String.valueOf(allergy.getAllergyId()) %>&demographicNo=<%=demoNo %>&action=<%=actionPath %>" onClick="return confirm('Are you sure you want to set the allergy <%=allergy.getDescription() %> to <%=labelConfirmAction%>?');"><%=labelAction%></a>
 									<% } %>
 									</td>
 								</tr>
