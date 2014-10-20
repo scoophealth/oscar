@@ -133,6 +133,17 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 		// this should never happen if we set max results to 1 :)
 		else throw (new NonUniqueResultException("SingleResult requested but result was not unique : " + results.size()));
 	}
+	
+	protected Long getCountResult(Query query) {
+		query.setMaxResults(1);
+
+		@SuppressWarnings("unchecked")
+		List<Long> results = query.getResultList();
+		if (results.size() == 1) return (results.get(0));
+		else if (results.size() == 0) return (null);
+		// this should never happen if we set max results to 1 :)
+		else throw (new NonUniqueResultException("SingleResult requested but result was not unique : " + results.size()));
+	}
 
 	public int getCountAll() {
 		// new JPA way of doing it, but our hibernate is too old or doesn't support primitives yet?

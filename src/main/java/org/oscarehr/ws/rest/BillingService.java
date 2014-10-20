@@ -47,9 +47,9 @@ public class BillingService extends AbstractServiceImpl {
 		AbstractSearchResponse<ServiceTypeTo> response = new AbstractSearchResponse<ServiceTypeTo>();
 		ServiceTypeConverter converter = new ServiceTypeConverter();
 		if(type == null) {
-			response.setContent(converter.getAllAsTransferObjects(billingManager.getUniqueServiceTypes(getLoggedInInfo())));	
+			response.setContent(converter.getAllAsTransferObjects(getLoggedInInfo(),billingManager.getUniqueServiceTypes(getLoggedInInfo())));	
 		} else {
-			response.setContent(converter.getAllAsTransferObjects(billingManager.getUniqueServiceTypes(getLoggedInInfo(),type)));
+			response.setContent(converter.getAllAsTransferObjects(getLoggedInInfo(),billingManager.getUniqueServiceTypes(getLoggedInInfo(),type)));
 		}
 		response.setTotal(response.getContent().size());
 		return response;

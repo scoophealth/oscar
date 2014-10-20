@@ -39,7 +39,7 @@ public class QuickLinkConverter extends AbstractConverter<QuickLink, QuickLinkTo
 	}
 
 	@Override
-	public QuickLinkTo1 getAsTransferObject(QuickLink d) throws ConversionException {
+	public QuickLinkTo1 getAsTransferObject(LoggedInInfo loggedInInfo,QuickLink d) throws ConversionException {
 		QuickLinkTo1 t = new QuickLinkTo1();
 		BeanUtils.copyProperties(d, t);
 		return t;

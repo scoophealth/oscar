@@ -56,7 +56,7 @@ public class MessagingService extends AbstractServiceImpl {
 		List<MessageList> msgs = messagingManager.getMyInboxMessages(getLoggedInInfo(), provider.getProviderNo(),MessageList.STATUS_NEW,startIndex,limit);
 		
 		MessagingResponse result = new MessagingResponse();
-		result.getContent().addAll(messagingConverter.getAllAsTransferObjects(msgs)); 
+		result.getContent().addAll(messagingConverter.getAllAsTransferObjects(getLoggedInInfo(),msgs)); 
 		
 		if(msgs.size()==limit) {
 			 result.setTotal(messagingManager.getMyInboxMessagesCount(getLoggedInInfo(), provider.getProviderNo(),MessageList.STATUS_NEW));

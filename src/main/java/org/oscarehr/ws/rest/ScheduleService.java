@@ -121,7 +121,7 @@ public class ScheduleService extends AbstractServiceImpl {
 		List<AppointmentStatus> results =  scheduleManager.getAppointmentStatuses(getLoggedInInfo());
 		AppointmentStatusConverter converter = new AppointmentStatusConverter();
 		
-		response.setContent(converter.getAllAsTransferObjects(results));
+		response.setContent(converter.getAllAsTransferObjects(getLoggedInInfo(),results));
 		response.setTotal(results.size());
 		
 		return response;

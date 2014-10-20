@@ -145,6 +145,8 @@ width: auto;
 			
 				<!-- large view -->
 				<ul class="nav navbar-nav visible-lg hidden-md hidden-sm hidden-xs">
+					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-chevron-right hand-hover" ng-show="showPtList === false" ng-click="showPatientList()"></span></li>
+				
 					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard"></span></li>
 				
 					<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state), 'hand-hover':true }">
@@ -166,6 +168,9 @@ width: auto;
 				
 				<!-- more condensed version -->
 				<ul class="nav navbar-nav hidden-lg visible-md visible-sm visible-xs">	
+					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-chevron-right hand-hover" ng-show="showPtList === false" ng-click="showPatientList()"></span></li>
+				
+				
 					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard"></span></li>
 				
 						
@@ -267,23 +272,30 @@ width: auto;
 			
 			<!-- <span class="pull-right">-->
 			
+			<button type="button" class="btn btn-default" ng-click="hidePatientList()">
+ 				 <span class="glyphicon glyphicon-chevron-left"></span> 
+			</button>
+			
+			
 			<!-- refreshing content simply by reloading tab -->
-			<button type="button" class="btn btn-default" ng-click="changeTab(currenttab.id)"> 
+			<button type="button" class="btn btn-default" ng-click="refresh()"> 
  				 <span class="glyphicon glyphicon-refresh"></span> 
 			</button>
 			
-			<button type="button" class="btn btn-default" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+			<button type="button" class="btn btn-default" ng-disabled="currentPage == 0" ng-click="changePage(currentPage-1)">
  				 <span class="glyphicon glyphicon-circle-arrow-up"></span> 
  		 
 			</button>
 			
-			<button type="button" class="btn btn-default" ng-disabled="currentPage == nPages-1"  ng-click="currentPage=currentPage+1">
+			<button type="button" class="btn btn-default" ng-disabled="currentPage == nPages-1"  ng-click="changePage(currentPage+1)">
  				 <span class="glyphicon glyphicon-circle-arrow-down"></span> 
 			</button>
 			
+			
+			
 			<!-- </span>-->
 				<form class="form-search" role="search">
-					<span class="form-group" class="twitter-typeahead">
+					<span ng-show="showFilter === true" class="form-group" class="twitter-typeahead">
 						<input type="text"  class="form-control" placeholder="Filter" ng-model="query"/>
 					</span>
 				</form>

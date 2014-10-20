@@ -818,5 +818,53 @@ private Logger log=MiscUtils.getLogger();
          
         return rs;
      }
+    
+	public List<Admission> findAdmissionsByProgramAndDate(Integer programNo, Date day, int startIndex, int numToReturn) {
+
+		String queryStr = "select a FROM Admission a WHERE a.programId=?1 and a.admissionDate <= ?2 and (a.dischargeDate >= ?3 or a.dischargeDate is null) ORDER BY a.admissionDate";
+
+		Query query = entityManager.createQuery(queryStr);
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(day);
+		cal.set(Calendar.HOUR_OF_DAY,23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		
+		
+		query.setParameter(1, programNo);
+		query.setParameter(2, cal.getTime());
+		query.setParameter(3, day);
+
+		query.setFirstResult(startIndex);
+		setLimit(query, numToReturn);
+
+		List<Admission> results = query.getResultList();
+
+		return results;
+	}
+
+	public Integer findAdmissionsByProgramAndDateAsCount(Integer programNo, Date day) {
+
+		String queryStr = "select count(a) FROM Admission a WHERE a.programId=?1 and a.admissionDate <= ?2 and (a.dischargeDate >= ?3 or a.dischargeDate is null) ORDER BY a.admissionDate";
+
+		Query query = entityManager.createQuery(queryStr);
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(day);
+		cal.set(Calendar.HOUR_OF_DAY,23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		
+		//2 = end of day
+		//3 = start of day so ok
+		query.setParameter(1, programNo);
+		query.setParameter(2, cal.getTime());
+		query.setParameter(3, day);
+
+		Long count = getCountResult(query);
+
+		return count.intValue();
+	}
 
 }

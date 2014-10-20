@@ -46,7 +46,7 @@ public class WaitingListNameConverter extends AbstractConverter<WaitingListName,
 	}
 
 	@Override
-	public WaitingListNameTo1 getAsTransferObject(WaitingListName d) throws ConversionException {
+	public WaitingListNameTo1 getAsTransferObject(LoggedInInfo loggedInInfo,WaitingListName d) throws ConversionException {
 		WaitingListNameTo1 t = new WaitingListNameTo1();
 		
 		t.setId(d.getId());

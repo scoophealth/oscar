@@ -41,7 +41,7 @@ public class ProgramConverter extends AbstractConverter<Program, ProgramTo1> {
 		}
 		
 		@Override
-		public ProgramTo1 getAsTransferObject(Program a) throws ConversionException {
+		public ProgramTo1 getAsTransferObject(LoggedInInfo loggedInInfo,Program a) throws ConversionException {
 			ProgramTo1 t = new ProgramTo1();
 			t.setId(a.getId());
 			t.setId(a.getId());

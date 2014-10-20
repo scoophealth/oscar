@@ -53,7 +53,7 @@ public class ProgramProviderConverter  extends AbstractConverter<ProgramProvider
 	}
 	
 	@Override
-	public ProgramProviderTo1 getAsTransferObject(ProgramProvider a) throws ConversionException {
+	public ProgramProviderTo1 getAsTransferObject(LoggedInInfo loggedInInfo,ProgramProvider a) throws ConversionException {
 		if(programDao == null) {
 			programDao = SpringUtils.getBean(ProgramDao.class);
 		}
@@ -63,7 +63,7 @@ public class ProgramProviderConverter  extends AbstractConverter<ProgramProvider
 		ProgramProviderTo1 t = new ProgramProviderTo1();
 		t.setId(a.getId().intValue());
 		t.setProgramId(a.getProgramId().intValue());
-		t.setProgram(new ProgramConverter().getAsTransferObject(programDao.getProgram(t.getProgramId())));
+		t.setProgram(new ProgramConverter().getAsTransferObject(loggedInInfo,programDao.getProgram(t.getProgramId())));
 		t.setProviderNo(a.getProviderNo());
 		t.setRoleId(a.getRoleId().intValue());
 		
