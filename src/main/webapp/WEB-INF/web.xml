@@ -179,6 +179,9 @@
 	<listener>
 		<listener-class>org.oscarehr.util.ContextStartupListener</listener-class>
 	</listener>
+	<listener>
+		<listener-class>org.oscarehr.web.OscarSessionListener</listener-class>
+	</listener>
 
 	<!-- CXF -->
 	<servlet>
