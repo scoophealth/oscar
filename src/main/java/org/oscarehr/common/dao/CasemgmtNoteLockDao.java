@@ -23,6 +23,8 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.CasemgmtNoteLock;
@@ -56,5 +58,15 @@ public class CasemgmtNoteLockDao extends AbstractDao<CasemgmtNoteLock> {
 		if( casemgmtNoteLock != null ) {
 			remove(casemgmtNoteLock);
 		}
+	}
+	
+	public List<CasemgmtNoteLock> findBySession(String sessionId) {
+		Query query = entityManager.createQuery("select lock from CasemgmtNoteLock lock where lock.sessionId = :sessionId");
+		
+		query.setParameter("sessionId", sessionId);
+		
+		List<CasemgmtNoteLock> results = query.getResultList();
+		
+		return results;
 	}
 }
