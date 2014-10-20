@@ -124,7 +124,7 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 
 	public boolean isOBXAbnormal(int i, int j) {
 		try {
-			return getOBXAbnormalFlag(i, j).equals("A");
+			return getOBXAbnormalFlag(i, j).equals("C") || getOBXAbnormalFlag(i, j).equals("H") || getOBXAbnormalFlag(i, j).equals("L");
 		} catch (Exception e) {
 			return false;
 		}
