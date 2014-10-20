@@ -39,7 +39,7 @@ public class EncounterFormConverter extends AbstractConverter<EncounterForm, Enc
 	}
 
 	@Override
-	public EncounterFormTo1 getAsTransferObject(EncounterForm d) throws ConversionException {
+	public EncounterFormTo1 getAsTransferObject(LoggedInInfo loggedInInfo,EncounterForm d) throws ConversionException {
 		EncounterFormTo1 t = new EncounterFormTo1();
 		BeanUtils.copyProperties(d, t);
 		return t;

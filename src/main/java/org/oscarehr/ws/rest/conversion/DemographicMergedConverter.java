@@ -43,7 +43,7 @@ public class DemographicMergedConverter extends AbstractConverter<DemographicMer
 	}
 
 	@Override
-	public DemographicMergedTo1 getAsTransferObject(DemographicMerged d) throws ConversionException {
+	public DemographicMergedTo1 getAsTransferObject(LoggedInInfo loggedInInfo,DemographicMerged d) throws ConversionException {
 		DemographicMergedTo1 t = new DemographicMergedTo1();
 		
 		t.setId(d.getId());

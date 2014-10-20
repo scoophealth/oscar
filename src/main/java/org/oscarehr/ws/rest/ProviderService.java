@@ -177,7 +177,7 @@ public class ProviderService extends AbstractServiceImpl {
 		
 		
 		ProviderConverter converter = new ProviderConverter();
-		response.setContent(converter.getAllAsTransferObjects(results));
+		response.setContent(converter.getAllAsTransferObjects(getLoggedInInfo(),results));
 		response.setTotal(response.getContent().size());
 		
 		return response;

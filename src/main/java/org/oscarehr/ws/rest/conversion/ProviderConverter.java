@@ -75,7 +75,7 @@ public class ProviderConverter extends AbstractConverter<Provider, ProviderTo1> 
 	}
 
 	@Override
-	public ProviderTo1 getAsTransferObject(Provider d) throws ConversionException {
+	public ProviderTo1 getAsTransferObject(LoggedInInfo loggedInInfo,Provider d) throws ConversionException {
 		ProviderTo1 t = new ProviderTo1();
 		
 		t.setProviderNo(d.getProviderNo());

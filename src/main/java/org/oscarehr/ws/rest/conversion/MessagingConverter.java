@@ -53,7 +53,7 @@ public class MessagingConverter extends AbstractConverter<MessageList, MessageTo
 	}
 
 	@Override
-	public MessageTo1 getAsTransferObject(MessageList t) throws ConversionException {
+	public MessageTo1 getAsTransferObject(LoggedInInfo loggedInInfo,MessageList t) throws ConversionException {
 		
 		messageTblDao = SpringUtils.getBean(MessageTblDao.class);
 		MessageTbl msg = messageTblDao.find((int)t.getMessage());

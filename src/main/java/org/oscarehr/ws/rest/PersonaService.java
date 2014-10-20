@@ -75,10 +75,10 @@ public class PersonaService extends AbstractServiceImpl {
 		PersonaRightsResponse response = new PersonaRightsResponse();
 
 		SecuserroleConverter converter = new SecuserroleConverter();
-		response.setRoles(converter.getAllAsTransferObjects(securityInfoManager.getRoles(getLoggedInInfo())));
+		response.setRoles(converter.getAllAsTransferObjects(getLoggedInInfo(),securityInfoManager.getRoles(getLoggedInInfo())));
 		
 		SecobjprivilegeConverter converter2 = new SecobjprivilegeConverter();
-		response.setPrivileges(converter2.getAllAsTransferObjects(securityInfoManager.getSecurityObjects(getLoggedInInfo())));
+		response.setPrivileges(converter2.getAllAsTransferObjects(getLoggedInInfo(),securityInfoManager.getSecurityObjects(getLoggedInInfo())));
 			
 		return response;
 	}
@@ -130,13 +130,13 @@ public class PersonaService extends AbstractServiceImpl {
 		List<ProgramProviderTo1> programDomain = new ArrayList<ProgramProviderTo1>();
 		
 		for(ProgramProvider pp:ppList) {
-			programDomain.add(ppConverter.getAsTransferObject(pp));
+			programDomain.add(ppConverter.getAsTransferObject(getLoggedInInfo(),pp));
 		}
 		result.setProgramDomain(programDomain);
 		
 		ProgramProvider pp = programManager2.getCurrentProgramInDomain(getLoggedInInfo(),provider.getProviderNo());
 		if(pp != null) {
-			ProgramProviderTo1 ppTo = ppConverter.getAsTransferObject(pp);
+			ProgramProviderTo1 ppTo = ppConverter.getAsTransferObject(getLoggedInInfo(),pp);
 			result.setCurrentProgram(ppTo);
 		} else {
 			if(result.getProgramDomain() != null && result.getProgramDomain().size()>0) {

@@ -109,7 +109,7 @@ public class TicklerWebService extends AbstractServiceImpl {
 			result.setTotal(ticklers.size());
 		}
 		
-		result.getContent().addAll(ticklerConverter.getAllAsTransferObjects(ticklers)); 
+		result.getContent().addAll(ticklerConverter.getAllAsTransferObjects(getLoggedInInfo(),ticklers)); 
 		
 		
 		return result;
@@ -132,7 +132,7 @@ public class TicklerWebService extends AbstractServiceImpl {
 
 		TicklerResponse result = new TicklerResponse();
 		result.setTotal(ticklers.size());
-		result.getContent().addAll(ticklerConverter.getAllAsTransferObjects(ticklers)); 
+		result.getContent().addAll(ticklerConverter.getAllAsTransferObjects(getLoggedInInfo(),ticklers)); 
 		
 		
 		return result;
@@ -232,7 +232,7 @@ public class TicklerWebService extends AbstractServiceImpl {
 			ticklerConverter.setIncludeProgram(true);
 		}
 		
-		result.getContent().addAll(ticklerConverter.getAllAsTransferObjects(ticklers)); 
+		result.getContent().addAll(ticklerConverter.getAllAsTransferObjects(getLoggedInInfo(),ticklers)); 
 		
 		return result;
 	}
@@ -349,7 +349,7 @@ public class TicklerWebService extends AbstractServiceImpl {
 		}
 		List<TicklerTextSuggest> suggestions = ticklerManager.getActiveTextSuggestions(getLoggedInInfo());
 		
-		response.setContent(new TicklerTextSuggestConverter().getAllAsTransferObjects(suggestions));
+		response.setContent(new TicklerTextSuggestConverter().getAllAsTransferObjects(getLoggedInInfo(),suggestions));
 		response.setTotal(response.getContent().size());
 		
 		return response;

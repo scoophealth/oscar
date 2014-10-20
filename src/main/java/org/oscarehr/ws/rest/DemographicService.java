@@ -158,7 +158,7 @@ public class DemographicService extends AbstractServiceImpl {
 		result.setTotal(demographicManager.getActiveDemographicCount(loggedInInfo).intValue());
 		
 		for(Demographic demo : demographicManager.getActiveDemographics(loggedInInfo,offset, limit)) {
-			result.getContent().add(demoConverter.getAsTransferObject(demo));
+			result.getContent().add(demoConverter.getAsTransferObject(getLoggedInInfo(),demo));
 		}
 		
 		return result;
@@ -189,7 +189,7 @@ public class DemographicService extends AbstractServiceImpl {
 			demo.setExtras(demoExtArray);
 		}
 
-		DemographicTo1 result = demoConverter.getAsTransferObject(demo);
+		DemographicTo1 result = demoConverter.getAsTransferObject(getLoggedInInfo(),demo);
 		
 		DemographicCust demoCust = demographicManager.getDemographicCust(loggedInInfo,id);
 		if (demoCust!=null) {
@@ -213,7 +213,7 @@ public class DemographicService extends AbstractServiceImpl {
 			for (WaitingListName waitingListName : waitingListNames) {
 				if (waitingListName.getIsHistory().equals("Y")) continue;
 				
-				WaitingListNameTo1 waitingListNameTo1 = waitingListNameConverter.getAsTransferObject(waitingListName);
+				WaitingListNameTo1 waitingListNameTo1 = waitingListNameConverter.getAsTransferObject(getLoggedInInfo(),waitingListName);
 				result.getWaitingListNames().add(waitingListNameTo1);
 			}
 		}
@@ -221,7 +221,7 @@ public class DemographicService extends AbstractServiceImpl {
 		List<ProfessionalSpecialist> referralDocs = specialistDao.findAll();
 		if (referralDocs!=null) {
 			for (ProfessionalSpecialist referralDoc : referralDocs) {
-				result.getReferralDoctors().add(specialistConverter.getAsTransferObject(referralDoc));
+				result.getReferralDoctors().add(specialistConverter.getAsTransferObject(getLoggedInInfo(),referralDoc));
 			}
 		}
 		
@@ -229,7 +229,7 @@ public class DemographicService extends AbstractServiceImpl {
 		if (doctorRoles!=null) {
 			for (SecUserRole doctor : doctorRoles) {
 				Provider provider = providerDao.getProvider(doctor.getProviderNo());
-				result.getDoctors().add(providerConverter.getAsTransferObject(provider));
+				result.getDoctors().add(providerConverter.getAsTransferObject(getLoggedInInfo(),provider));
 			}
 		}
 		
@@ -237,7 +237,7 @@ public class DemographicService extends AbstractServiceImpl {
 		if (nurseRoles!=null) {
 			for (SecUserRole nurse : nurseRoles) {
 				Provider provider = providerDao.getProvider(nurse.getProviderNo());
-				result.getNurses().add(providerConverter.getAsTransferObject(provider));
+				result.getNurses().add(providerConverter.getAsTransferObject(getLoggedInInfo(),provider));
 			}
 		}
 		
@@ -245,7 +245,7 @@ public class DemographicService extends AbstractServiceImpl {
 		if (midwifeRoles!=null) {
 			for (SecUserRole midwife : midwifeRoles) {
 				Provider provider = providerDao.getProvider(midwife.getProviderNo());
-				result.getMidwives().add(providerConverter.getAsTransferObject(provider));
+				result.getMidwives().add(providerConverter.getAsTransferObject(getLoggedInInfo(),provider));
 			}
 		}
 		
@@ -317,7 +317,7 @@ public class DemographicService extends AbstractServiceImpl {
 		
 		Demographic demographic = demoConverter.getAsDomainObject(getLoggedInInfo(),data);
 		demographicManager.createDemographic(loggedInInfo,demographic);
-	    return demoConverter.getAsTransferObject(demographic);
+	    return demoConverter.getAsTransferObject(getLoggedInInfo(),demographic);
 	}
 
 	/**
@@ -356,7 +356,7 @@ public class DemographicService extends AbstractServiceImpl {
 		Demographic demographic = demoConverter.getAsDomainObject(getLoggedInInfo(),data);
 	    demographicManager.updateDemographic(loggedInInfo,demographic);
 	    
-	    return demoConverter.getAsTransferObject(demographic);
+	    return demoConverter.getAsTransferObject(getLoggedInInfo(),demographic);
 	}
 
 	/**

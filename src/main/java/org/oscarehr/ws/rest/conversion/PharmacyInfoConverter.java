@@ -52,7 +52,7 @@ public class PharmacyInfoConverter extends AbstractConverter<PharmacyInfo, Pharm
 	}
 
 	@Override
-	public PharmacyInfoTo1 getAsTransferObject(PharmacyInfo d) throws ConversionException {
+	public PharmacyInfoTo1 getAsTransferObject(LoggedInInfo loggedInInfo,PharmacyInfo d) throws ConversionException {
 		PharmacyInfoTo1 t = new PharmacyInfoTo1();
 		
 		t.setId(d.getId());

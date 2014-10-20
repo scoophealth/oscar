@@ -57,7 +57,7 @@ public class ProfessionalSpecialistConverter extends AbstractConverter<Professio
 	}
 
 	@Override
-	public ProfessionalSpecialistTo1 getAsTransferObject(ProfessionalSpecialist d) throws ConversionException {
+	public ProfessionalSpecialistTo1 getAsTransferObject(LoggedInInfo loggedInInfo,ProfessionalSpecialist d) throws ConversionException {
 		ProfessionalSpecialistTo1 t = new ProfessionalSpecialistTo1();
 
 		t.setId(d.getId());

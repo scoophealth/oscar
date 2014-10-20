@@ -46,7 +46,7 @@ public class DemographicExtConverter extends AbstractConverter<DemographicExt, D
 	}
 
 	@Override
-	public DemographicExtTo1 getAsTransferObject(DemographicExt d) throws ConversionException {
+	public DemographicExtTo1 getAsTransferObject(LoggedInInfo loggedInInfo, DemographicExt d) throws ConversionException {
 		DemographicExtTo1 t = new DemographicExtTo1();
 		
 		t.setId(d.getId());
