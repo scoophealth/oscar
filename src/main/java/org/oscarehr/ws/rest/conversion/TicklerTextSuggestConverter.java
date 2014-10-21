@@ -38,7 +38,7 @@ public class TicklerTextSuggestConverter extends AbstractConverter<TicklerTextSu
 	}
 
 	@Override
-	public TicklerTextSuggestTo1 getAsTransferObject(TicklerTextSuggest d) throws ConversionException {
+	public TicklerTextSuggestTo1 getAsTransferObject(LoggedInInfo loggedInInfo,TicklerTextSuggest d) throws ConversionException {
 		TicklerTextSuggestTo1 t = new TicklerTextSuggestTo1();
 		BeanUtils.copyProperties(d, t);
 		return t;

@@ -65,7 +65,7 @@ public class DemographicMergeService extends AbstractServiceImpl {
 		List<DemographicMerged> children = demographicManager.getMergedDemographics(getLoggedInInfo(),parentId);
 		OscarSearchResponse<DemographicMergedTo1> response = new OscarSearchResponse<DemographicMergedTo1>();
 		for (DemographicMerged dm : children) {
-			response.getContent().add(converter.getAsTransferObject(dm));
+			response.getContent().add(converter.getAsTransferObject(getLoggedInInfo(),dm));
 		}
 		return response;
 	}

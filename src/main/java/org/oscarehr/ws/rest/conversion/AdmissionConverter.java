@@ -23,28 +23,54 @@
  */
 package org.oscarehr.ws.rest.conversion;
 
-import org.oscarehr.common.model.AppointmentStatus;
+import org.oscarehr.common.model.Admission;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.ws.rest.to.model.AppointmentStatusTo1;
+import org.oscarehr.util.SpringUtils;
+import org.oscarehr.ws.rest.to.model.AdmissionTo1;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
-
 @Component
-public class AppointmentStatusConverter extends AbstractConverter<AppointmentStatus, AppointmentStatusTo1> {
+public class AdmissionConverter extends AbstractConverter<Admission, AdmissionTo1> {
+
+	private boolean includeDemographic = false;
+	
+	private DemographicManager demographicManager;
+	
+	public AdmissionConverter includeDemographic(boolean val) {
+		includeDemographic = val;
+		return this;
+	}
 
 	@Override
-	public AppointmentStatus getAsDomainObject(LoggedInInfo loggedInInfo,AppointmentStatusTo1 t) throws ConversionException {
-		AppointmentStatus d = new AppointmentStatus();
-		BeanUtils.copyProperties(t, d);
+	public Admission getAsDomainObject(LoggedInInfo loggedInInfo,AdmissionTo1 t) throws ConversionException {
+		Admission d = new Admission();
+		
+		BeanUtils.copyProperties(t,d);
+		
 		return d;
 	}
-	
+
 	@Override
-	public AppointmentStatusTo1 getAsTransferObject(LoggedInInfo loggedInInfo,AppointmentStatus d) throws ConversionException {
-		AppointmentStatusTo1 t = new AppointmentStatusTo1();
+	public AdmissionTo1 getAsTransferObject(LoggedInInfo loggedInInfo,Admission d) throws ConversionException {
+		AdmissionTo1 t = new AdmissionTo1();
+		
 		BeanUtils.copyProperties(d, t);
+		
+		if(includeDemographic) {
+			if(demographicManager == null) {
+				demographicManager = SpringUtils.getBean(DemographicManager.class);
+			}
+			Demographic demo = demographicManager.getDemographic(loggedInInfo, d.getClientId());
+			if(demo != null) {
+				t.setDemographic(new DemographicConverter().getAsTransferObject(loggedInInfo,demo));
+			}
+		}
+	
 		return t;
 	}
-}
 	
+
+}

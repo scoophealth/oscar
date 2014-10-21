@@ -38,7 +38,7 @@ public class ProviderSettingsConverter extends AbstractConverter<ProviderSetting
 	}
 
 	@Override
-	public ProviderSettingsTo1 getAsTransferObject(ProviderSettings d) throws ConversionException {
+	public ProviderSettingsTo1 getAsTransferObject(LoggedInInfo loggedInInfo,ProviderSettings d) throws ConversionException {
 		ProviderSettingsTo1 t = new ProviderSettingsTo1();
 		BeanUtils.copyProperties(d, t);
 		return t;
