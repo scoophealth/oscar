@@ -24,7 +24,7 @@ Varicella Immunoglobulin	VarIg
  
   	
   		
-	<item 
+	<!--item 
 		resultDesc=""
   		desc="DTaP=Diphtheria, Tetanus, Acellular Pertussis - pediatric"
   		name="DTaP"
@@ -218,7 +218,7 @@ Varicella Immunoglobulin	VarIg
 		desc="Td=tetanus and diphtheria adult type formulation"
 		name="Td" healthCanadaType="Td"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap"
-		layout="injection" atc="J07CA01" minAge="0" showIfMinRecordNum="1" />
+		layout="injection" atc="J07CA01" minAge="0" showIfMinRecordNum="1" /-->
 
 
 	<item 
@@ -227,7 +227,7 @@ Varicella Immunoglobulin	VarIg
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Flu"
 		layout="injection" atc="J07BB01" minAge="0" />
 
-	<item
+	<!--item
 		resultDesc=""
 		desc="Hepatitis A and Typhoid - Injection"
 		name="HA-Typh-I"
@@ -347,10 +347,10 @@ Varicella Immunoglobulin	VarIg
 	<item 
 		resultDesc=""
 		desc="Colonoscopy" name="COLONOSCOPY" link="" layout="PAPMAM"
-		showIfMinRecordNum="1" />
+		showIfMinRecordNum="1" /-->
 		
 		<!-- For eva.caisi.ca -->
-	<item
+	<!--item
 		resultDesc=""
 		desc="HIV = all pregnant women, opt out routine screening of all adults"
 		name="HIV"
@@ -399,10 +399,10 @@ Varicella Immunoglobulin	VarIg
 		layout="PAPMAM"
 		minAge="12"
 		maxAge="25"
-		showIfMinRecordNum="1" />
+		showIfMinRecordNum="1" /-->
 	<!-- eva.caisi.ca -->
 
-    <item 
+    <!--item 
 		resultDesc=""
 		desc="H1N1 Vaccination" name="H1N1" layout="h1n1"
             minAge="0" atc="J07BB02" />
@@ -438,7 +438,7 @@ Varicella Immunoglobulin	VarIg
 		desc= "Periodic Health Visit"
 		name="PHV"		
 		layout="history"	
-		showIfMinRecordNum="1" />
+		showIfMinRecordNum="1" /-->
 
 	<item
 		resultDesc=""
