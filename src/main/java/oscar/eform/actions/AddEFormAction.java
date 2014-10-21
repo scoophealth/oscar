@@ -42,7 +42,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.common.dao.DatabaseAPDao;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.EFormDataDao;
@@ -120,7 +119,6 @@ public class AddEFormAction extends Action {
 			}
 
 			if (!validationError) {
-				DatabaseAPDao databaseApDao = (DatabaseAPDao) SpringUtils.getBean("databaseApDao");
 				for (String field : oscarUpdateFields) {
 					EFormLoader.getInstance();
 					DatabaseAP currentAP = EFormLoader.getAP(field);
@@ -134,12 +132,13 @@ public class AddEFormAction extends Action {
 
 						inSQL = DatabaseAP.parserReplace("value", request.getParameter(field), inSQL);
 
-						if(currentAP.getArchive() != null && currentAP.getArchive().equals("demographic")) {
-							demographicArchiveDao.archiveRecord(demographicDao.getDemographic(demographic_no));
-						}
+						//if(currentAP.getArchive() != null && currentAP.getArchive().equals("demographic")) {
+						//	demographicArchiveDao.archiveRecord(demographicDao.getDemographic(demographic_no));
+						//}
 
 						// Run the SQL query against the database
-						databaseApDao.executeUpdate(inSQL, currentAP.getApName(), Integer.parseInt(demographic_no), fid, request.getRemoteAddr());
+						//TODO: do this a different way.
+						MiscUtils.getLogger().error("Error",new Exception("EForm is using disabled functionality for updating fields..update not performed"));
 					}
 				}
 			}
