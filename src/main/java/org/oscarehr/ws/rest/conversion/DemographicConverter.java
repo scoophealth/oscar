@@ -119,7 +119,7 @@ public class DemographicConverter extends AbstractConverter<Demographic, Demogra
 	}
 
 	@Override
-	public DemographicTo1 getAsTransferObject(Demographic d) throws ConversionException {
+	public DemographicTo1 getAsTransferObject(LoggedInInfo loggedInInfo,Demographic d) throws ConversionException {
 		DemographicTo1 t = new DemographicTo1();
 		
 		t.setDemographicNo(d.getDemographicNo());
@@ -180,12 +180,12 @@ public class DemographicConverter extends AbstractConverter<Demographic, Demogra
 
 		if (d.getExtras() != null) {
 			for (DemographicExt ext : d.getExtras()) {
-				t.getExtras().add(demoExtConverter.getAsTransferObject(ext));
+				t.getExtras().add(demoExtConverter.getAsTransferObject(loggedInInfo,ext));
 			}
 		}
 
 		if (d.getProvider() != null) {
-			t.setProvider(providerConverter.getAsTransferObject(d.getProvider()));
+			t.setProvider(providerConverter.getAsTransferObject(loggedInInfo,d.getProvider()));
 		}
 		
 		t.setAge(new AgeTo1(AgeCalculator.calculateAge(d.getBirthDay())));

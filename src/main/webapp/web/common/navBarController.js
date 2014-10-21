@@ -165,6 +165,12 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
     $scope.setQuickSearchTerm = function(term) {
     	$scope.quickSearchTerm = term;
     }
+    
+    $scope.showPatientList = function() {
+    	$scope.$emit('configureShowPatientList', true);
+    }
+    
+    
 });
 
 

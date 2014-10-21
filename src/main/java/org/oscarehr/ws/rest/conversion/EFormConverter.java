@@ -56,7 +56,7 @@ public class EFormConverter  extends AbstractConverter<EForm, EFormTo1> {
 	}
 
 	@Override
-	public EFormTo1 getAsTransferObject(EForm d) throws ConversionException {
+	public EFormTo1 getAsTransferObject(LoggedInInfo loggedInInfo,EForm d) throws ConversionException {
 		EFormTo1 t = new EFormTo1();
 		String[] excludes = new String[]{};
 		if(excludeHtml) {

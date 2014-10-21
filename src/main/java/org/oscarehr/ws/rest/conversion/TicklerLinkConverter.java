@@ -40,7 +40,7 @@ public class TicklerLinkConverter extends AbstractConverter<TicklerLink, Tickler
 	}
 	
 	@Override
-	public TicklerLinkTo1 getAsTransferObject(TicklerLink d) throws ConversionException {
+	public TicklerLinkTo1 getAsTransferObject(LoggedInInfo loggedInInfo,TicklerLink d) throws ConversionException {
 		TicklerLinkTo1 t = new TicklerLinkTo1();
 		BeanUtils.copyProperties(d, t);
 		return t;

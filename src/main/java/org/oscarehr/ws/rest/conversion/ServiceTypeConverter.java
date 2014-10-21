@@ -38,7 +38,7 @@ public class ServiceTypeConverter extends AbstractConverter<ServiceType, Service
 	}
 
 	@Override
-	public ServiceTypeTo getAsTransferObject(ServiceType d) throws ConversionException {
+	public ServiceTypeTo getAsTransferObject(LoggedInInfo loggedInInfo,ServiceType d) throws ConversionException {
 		ServiceTypeTo t = new ServiceTypeTo();
 		BeanUtils.copyProperties(d, t);
 		return t;

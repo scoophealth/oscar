@@ -36,7 +36,7 @@ public class SecobjprivilegeConverter  extends AbstractConverter<Secobjprivilege
 	}
 	
 	@Override
-	public UserPrivilegeTo1 getAsTransferObject(Secobjprivilege d) throws ConversionException {
+	public UserPrivilegeTo1 getAsTransferObject(LoggedInInfo loggedInInfo,Secobjprivilege d) throws ConversionException {
 		UserPrivilegeTo1 t = new UserPrivilegeTo1();
 		t.setObjectName(d.getObjectname_code());
 		t.setPrivilege(d.getPrivilege_code());

@@ -67,7 +67,7 @@ public class PharmacyService extends AbstractServiceImpl {
 	@Path("/")
 	public OscarSearchResponse<PharmacyInfoTo1> getPharmacies(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit) {
 		OscarSearchResponse<PharmacyInfoTo1> result = new OscarSearchResponse<PharmacyInfoTo1>();
-		result.getContent().addAll(converter.getAllAsTransferObjects(pharmacyInfoDao.findAll(offset, limit))); 
+		result.getContent().addAll(converter.getAllAsTransferObjects(getLoggedInInfo(),pharmacyInfoDao.findAll(offset, limit))); 
 		return result;
 	}
 
@@ -82,7 +82,7 @@ public class PharmacyService extends AbstractServiceImpl {
 	@GET
 	@Path("/{pharmacyId}")
 	public PharmacyInfoTo1 getPharmacy(@PathParam("pharmacyId") Integer id) {
-		return converter.getAsTransferObject(pharmacyInfoDao.find(id));
+		return converter.getAsTransferObject(getLoggedInInfo(),pharmacyInfoDao.find(id));
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class PharmacyService extends AbstractServiceImpl {
 	@POST
 	@Path("/")
 	public PharmacyInfoTo1 addPharmacy(PharmacyInfoTo1 pharmacyInfo) {
-		return converter.getAsTransferObject(pharmacyInfoDao.saveEntity(converter.getAsDomainObject(getLoggedInInfo(),pharmacyInfo)));
+		return converter.getAsTransferObject(getLoggedInInfo(),pharmacyInfoDao.saveEntity(converter.getAsDomainObject(getLoggedInInfo(),pharmacyInfo)));
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class PharmacyService extends AbstractServiceImpl {
 	@PUT
 	@Path("/")
 	public PharmacyInfoTo1 updatePharmacy(PharmacyInfoTo1 pharmacyInfo) {
-		return converter.getAsTransferObject(pharmacyInfoDao.saveEntity(converter.getAsDomainObject(getLoggedInInfo(),pharmacyInfo)));
+		return converter.getAsTransferObject(getLoggedInInfo(),pharmacyInfoDao.saveEntity(converter.getAsDomainObject(getLoggedInInfo(),pharmacyInfo)));
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class PharmacyService extends AbstractServiceImpl {
 	public PharmacyInfoTo1 removePharmacy(@PathParam("pharmacyId") Integer id) {
 		PharmacyInfo pharmacyInfo = pharmacyInfoDao.find(id);
 		pharmacyInfo.setStatus("0");
-		return converter.getAsTransferObject(pharmacyInfoDao.saveEntity(pharmacyInfo));
+		return converter.getAsTransferObject(getLoggedInInfo(),pharmacyInfoDao.saveEntity(pharmacyInfo));
 	}
 
 }

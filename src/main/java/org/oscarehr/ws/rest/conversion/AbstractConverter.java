@@ -43,13 +43,13 @@ public abstract class AbstractConverter<D, T> {
 	public abstract D getAsDomainObject(LoggedInInfo loggedInInfo,T t) throws ConversionException;
 
 	
-	public abstract T getAsTransferObject(D d) throws ConversionException;
+	public abstract T getAsTransferObject(LoggedInInfo loggedInInfo, D d) throws ConversionException;
 		
 
-	public List<T> getAllAsTransferObjects(List<D> ds) throws ConversionException {
+	public List<T> getAllAsTransferObjects(LoggedInInfo loggedInInfo, List<D> ds) throws ConversionException {
 		List<T> result = new ArrayList<T>();
 		for(D d : ds) {
-			result.add(getAsTransferObject(d));
+			result.add(getAsTransferObject(loggedInInfo,d));
 		}
 		return result;
 	}

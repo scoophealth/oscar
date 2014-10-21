@@ -76,7 +76,7 @@ public class TicklerConverter extends AbstractConverter<Tickler, TicklerTo1> {
 	}
 
 	@Override
-	public TicklerTo1 getAsTransferObject(Tickler t) throws ConversionException {
+	public TicklerTo1 getAsTransferObject(LoggedInInfo loggedInInfo,Tickler t) throws ConversionException {
 		ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 		TicklerLinkDao ticklerLinkDao = SpringUtils.getBean(TicklerLinkDao.class);
@@ -116,7 +116,7 @@ public class TicklerConverter extends AbstractConverter<Tickler, TicklerTo1> {
 		if(includeLinks) {
 			List<TicklerLink> links = ticklerLinkDao.getLinkByTickler(d.getId()); 
 			TicklerLinkConverter tlc = new TicklerLinkConverter();
-			d.setTicklerLinks(tlc.getAllAsTransferObjects(links));
+			d.setTicklerLinks(tlc.getAllAsTransferObjects(loggedInInfo,links));
 		}
 		
 		if(includeComments) {
@@ -144,7 +144,7 @@ public class TicklerConverter extends AbstractConverter<Tickler, TicklerTo1> {
 			//TODO: this should go through the manager, but I have no LoggedInInfo. Going to have to change the interface and update all the implementors
 			Program p = programDao.getProgram(t.getProgramId());
 			if(p != null) {
-				d.setProgram(new ProgramConverter().getAsTransferObject(p));
+				d.setProgram(new ProgramConverter().getAsTransferObject(loggedInInfo,p));
 			}
 		}
 		

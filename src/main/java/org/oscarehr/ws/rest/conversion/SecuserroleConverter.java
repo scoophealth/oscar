@@ -38,7 +38,7 @@ public class SecuserroleConverter  extends AbstractConverter<Secuserrole, UserRo
 	}
 	
 	@Override
-	public UserRoleTo1 getAsTransferObject(Secuserrole d) throws ConversionException {
+	public UserRoleTo1 getAsTransferObject(LoggedInInfo loggedInInfo,Secuserrole d) throws ConversionException {
 		UserRoleTo1 t = new UserRoleTo1();
 		t.setRoleName(d.getRoleName());
 		return t;
