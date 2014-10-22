@@ -63,12 +63,21 @@ oscarApp.controller('TicklerViewController',function($scope, $filter, $modalInst
     
     
     $scope.updateServiceDateAndTime = function() {
-    	$scope.needsUpdate=true;   	
     	var dp = $scope.ticklerUpdate.serviceDate.split("-");
     	var tp = $scope.ticklerUpdate.serviceTime.split(":");
     	
-    	var d = new Date(dp[0],dp[1], dp[2], tp[0],tp[1], 0, 0); 
+    	if(dp.length != 3 || tp.length !=2 ) {
+    		alert('Invalid Date/time. Please use yyyy-MM-dd and HH:mm formats');
+    		return;
+    	}
     	
+    	var d = new Date(dp[0],parseInt(dp[1])-1, dp[2], tp[0],tp[1], 0, 0); 
+    		
+    	if(d == null || isNaN( d.getTime() )) {
+    		alert('Invalid Date/time. Please use yyyy-MM-dd and HH:mm formats');
+    		return;
+    	} 
+    	$scope.needsUpdate=true;
     	$scope.tickler.serviceDate = d;
     	$scope.showServiceDateAndTimeFormControl=false;
     }
