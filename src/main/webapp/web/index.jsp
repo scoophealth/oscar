@@ -364,6 +364,7 @@ width: auto;
 	<script src="record/forms/formsController.js"></script>
 	<script src="record/details/detailsController.js"></script>
 	<script src="record/phr/phrController.js"></script>
+	<script src="record/tracker/trackerController.js"></script>
 	
 	<script src="tickler/ticklerController.js"></script>
 	<script src="tickler/ticklerViewController.js"></script>
