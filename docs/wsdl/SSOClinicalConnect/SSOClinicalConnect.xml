@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<project name="build_client_stubs" default="build_client_stubs">
+	<property environment="env" />
+	<property name="PROJECT_NAME" value="SSOClinicalConnect" />
+	<property name="GENERATED_CLIENT_STUB_SOURCES" value="target/client_stubs" />
+	<property name="GENERATED_CLIENT_STUB_CLASSES" value="target/client_stubs_classes" />
+	<property name="GENERATED_JAR" value="target/${PROJECT_NAME}_client_stubs.jar" />
+	
+	<fileset id="lib_jars" dir="../../../target/oscar-1.0-SNAPSHOT/WEB-INF/lib">
+		<include name="*.jar" />
+	</fileset>
+
+	<target name="build_client_stubs">
+		<mkdir dir="${GENERATED_CLIENT_STUB_SOURCES}" />
+		<mkdir dir="${GENERATED_CLIENT_STUB_CLASSES}" />
+
+		<java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+			<classpath>
+				<fileset refid="lib_jars" />
+				<pathelement location="target/SSOClinicalConnect-SNAPSHOT/WEB-INF/classes"/>
+			</classpath>
+
+			<arg value="-verbose" />
+			<arg value="-client" />
+			<arg value="-b" />
+			<arg value="jaxb_binding_customisation.xml" />
+			<arg value="-d" />
+			<arg value="${GENERATED_CLIENT_STUB_SOURCES}" />
+			<arg value="https://clinicalconnect.ca/clinical/services/VmoService?wsdl" />
+		</java>
+		
+		<javac target="1.5" srcdir="${GENERATED_CLIENT_STUB_SOURCES}" destdir="${GENERATED_CLIENT_STUB_CLASSES}">
+			<classpath>
+				<fileset refid="lib_jars" />
+			</classpath>
+		</javac>
+
+		<jar destfile="${GENERATED_JAR}" basedir="${GENERATED_CLIENT_STUB_CLASSES}" />
+	</target>
+	
+	<target name="compile_client_stubs">
+		<javac srcdir="${GENERATED_CLIENT_STUB_SOURCES}" destdir="${GENERATED_CLIENT_STUB_CLASSES}">
+			<classpath>
+				<fileset refid="lib_jars" />
+			</classpath>
+		</javac>
+		
+		<jar destfile="${GENERATED_JAR}" basedir="${GENERATED_CLIENT_STUB_CLASSES}" />
+	</target>
+</project>
+

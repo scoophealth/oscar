@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<!-- 
+	WARNING!
+	You must make sure all jaxb binding customisations in a project are the same.
+	i.e. the binding customisation in the caisi integrator project is compiled into org.w3._2001.xmlschema.Adapter1.java in the client stubs.
+	the binding customisation in the myoscar project is compiled into org.w3._2001.xmlschema.Adapter1.java in the client stubs.
+	Therefore, any project which uses both client stubs, i.e. oscar, must make sure the 2 binding customisations they're getting (integrato & myoscar)
+	are identical or else only one will be used and the other set of client stubs may bomb out when it reads the wrong Adapter1.class.
+	Therefore, the binding customisations in the Integrator and MyOscar project must be identical.
+	
+	Note that this is not a restriction on other people. This is only a restriction on our client build script, anyone who wishes to not
+	have this binding customisation can just build their own clients from the wsdl's or alter this binding customisation.
+ -->
+
+<jxb:bindings version="1.0" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<jxb:bindings>
+		<jxb:globalBindings xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+			<jxb:javaType name="java.util.Calendar" xmlType="xs:dateTime" parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime" printMethod="javax.xml.bind.DatatypeConverter.printDateTime"/>
+			<jxb:serializable />	
+		</jxb:globalBindings>    
+	</jxb:bindings>
+</jxb:bindings>
