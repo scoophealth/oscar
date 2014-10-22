@@ -194,15 +194,16 @@ width:450px;
 <body id="editFlowsheetBody">
 
 <%
-if(request.getParameter("htracker")==null || ( request.getParameter("htracker")!=null && !request.getParameter("htracker").equals("slim")) ){
+if( request.getParameter("tracker")!=null && request.getParameter("tracker").equals("slim") ){ 
 	
+}else{
 if(request.getParameter("demographic")==null){ %>
-<div class="well well-small"></div>
+<div class="well well-small" id="demoHeader"></div>
 <%}else{%>
 <%@ include file="/share/templates/patient.jspf"%>
 <div style="height:60px;"></div>
-<%} 
-
+<%
+}
 }
 %>
 
@@ -214,17 +215,20 @@ if(request.getParameter("demographic")==null){ %>
 
 <%if(demographic!=null){
 
+String tracker = "";
+if( request.getParameter("tracker")!=null && request.getParameter("tracker").equals("slim") ){ 
+tracker="&tracker=slim";
+}
+
 String flowsheetPath = "";
 
-if( request.getParameter("htracker")!=null && request.getParameter("htracker").equals("slim") ){
-	flowsheetPath = "HealthTrackerSlim.jspf";
-}else if ( request.getParameter("htracker")!=null ){
+if ( request.getParameter("htracker")!=null ){
 	flowsheetPath = "HealthTrackerPage.jspf";
 }else{
 	flowsheetPath = "TemplateFlowSheet.jsp";
 }%>
 
-<a href="../<%=flowsheetPath%>?demographic_no=<%=demographic%>&template=<%=flowsheet%>" class="btn btn-small" title="go back to <%=flowsheet%> flowsheet"><i class="icon-backward"></i></a>
+<a href="../<%=flowsheetPath%>?demographic_no=<%=demographic%>&template=<%=flowsheet%><%=tracker%>" class="btn btn-small" title="go back to <%=flowsheet%> flowsheet"><i class="icon-backward"></i></a>
 
 <%}%> 
 
@@ -519,6 +523,16 @@ $(function (){
 
 
 $(document).ready(function () {
+
+		if ( self !== top ) {
+		var h = $(document).height();
+		parent.parent.document.getElementById('trackerSlim').style.height = h+"px";
+	
+        $("#demoHeader").hide();
+	}else{
+
+	}
+	
 	$('html, body', window.parent.document).animate({scrollTop:0}, 'slow');
 	
 $(".measurement-select").change(function(){
