@@ -32,13 +32,16 @@
 	}
 </style>
 
-<link rel="stylesheet" href="js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/js/jqplot/jquery.jqplot.min.css" />
+<link href="${pageContext.request.contextPath}/library/bootstrap/3.0.0/css/bootstrap.css" rel="stylesheet">
 
 <script src="${pageContext.request.contextPath}/js/jquery-1.9.1.js" language="javascript" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/js/jquery-ui-1.10.2.custom.min.js"  language="javascript" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/js/jqplot/jquery.jqplot.min.js" language="javascript" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/js/jqplot/jqplot.dateAxisRenderer.min.js" type="text/javascript" ></script>
+<script src="${pageContext.request.contextPath}/library/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script>var pymChild = {}; </script>
 
 <script language="javascript">
 <!--
@@ -48,7 +51,7 @@
 		jQuery("#from").datepicker({
 			 defaultDate: "+1w",
 			 changeMonth: true,
-			 numberOfMonths: 3,
+			 numberOfMonths: 2,
 			 dateFormat: "yy-mm-dd",
 			 onClose: function( selectedDate ) {
 			 	jQuery( "#to" ).datepicker( "option", "minDate", selectedDate );
@@ -58,7 +61,7 @@
 		jQuery("#to").datepicker({
 			defaultDate: "+1w",
 			 changeMonth: true,
-			 numberOfMonths: 3,
+			 numberOfMonths: 2,
 			 dateFormat: "yy-mm-dd",
 			 onClose: function( selectedDate ) {
 			 	jQuery( "#from" ).datepicker( "option", "maxDate", selectedDate );

@@ -36,6 +36,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -45,6 +47,8 @@ import org.oscarehr.ws.rest.to.model.MenuItemTo1;
 import org.oscarehr.ws.rest.to.model.SummaryTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
 
 
@@ -110,7 +114,22 @@ public class RecordUxService extends AbstractServiceImpl {
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.prescriptions", "r", null)) {
 			menulist.add(new MenuItemTo1(idCounter++, "Rx", "../oscarRx/choosePatient.do?demographicNo="+demographicNo));
 		}
-		//more
+		
+		//PHR
+		if( ProviderMyOscarIdData.idIsSet(loggedInInfo.getLoggedInProviderNo())) {
+			DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
+			Demographic demographic=demographicDao.getDemographic(""+demographicNo);
+			
+			if (demographic.getMyOscarUserName()==null ||demographic.getMyOscarUserName().equals("")) {		/*register link -myoscar (strikethrough) links to create account*/
+				menulist.add(new MenuItemTo1(idCounter++, "PHR", "../phr/indivo/RegisterIndivo.jsp?demographicNo="+demographicNo));
+			}else{
+				menulist.add(MenuItemTo1.generateStateMenuItem(idCounter++, "PHR", "record.phr"));
+				
+			}
+			
+		}
+		//END PHR
+		
 		MenuItemTo1 moreMenu = new MenuItemTo1(idCounter++, "More", null);
 		moreMenu.setDropdown(true);
 	

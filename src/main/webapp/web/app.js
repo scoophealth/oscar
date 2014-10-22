@@ -133,7 +133,11 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
             	providers: function(providerService) { return providerService.searchProviders({active:true}); },
             }
         })
-        
+        .state('record.phr', {
+	    	url: '^/record/:demographicNo/phr', 
+            templateUrl: 'record/phr/phr.jsp',
+            controller: 'PHRCtrl'
+        })
        
         
 	    
