@@ -47,26 +47,17 @@
 
 </head>
 
-<body vlink="#0000FF" class="BodyStyle">
-	<body class="mainbody" vlink="#0000FF">
-	<table class="MainTable" id="scrollNumber1" name="encounterTable"
-		style="margin: 0px;">
-		<tr class="topbar">
-			<td class="MainTableTopRowLeftColumn" width="60px">MyOSCAR Measurements</td>
-			<td class="MainTableTopRowRightColumn">
-				<table class="TopStatusBar">
-					<tr>
-						<td>Height and Weight</td>
-						<td style="text-align: right;"></td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
-
-	<h2 style="margin: 1em;">
+<body>
+	
+	<h2>
 		Height and Weight History
 	</h2>
+
+	<div>
+		<c:import url="filter.jsp">
+			<c:param name="sourcePage" value="height_and_weight" />
+		</c:import>
+	</div>
 
 	<div id="chart">
 	</div>
@@ -76,133 +67,119 @@
 			<h4>Measurements information is not available</h4>
 		</c:when>
 		<c:otherwise>
-			
-			<table>
-				<tr>
-					<th>Type</th>
-					<th>Measurement date</th>
-					<th>Data</th>
-					<th>Comments</th>
-				</tr>
-				
-			    <c:forEach var="m" items="${measurements.measurements}">
-				<tr>
-					<td>HW</td>
-					<td>
-						<fmt:formatDate value="${m.date}" dateStyle="short" />
-					</td>
-					<td>
-						<c:out value="${m}"></c:out>
-					</td>
-					<td>
-						<c:out value="${m.comments}"></c:out>
-					</td>
-				</tr>
-				</c:forEach>
-				
-			</table>
-			
-			<div>
-				<c:import url="filter.jsp">
-					<c:param name="sourcePage" value="height_and_weight" />
-				</c:import>
+		<div class="container-fluid" >
+			<div class="col-sm-5">
+				<h2>Statistics</h2>
+				<table class="table table-condensed">
+					<tr>
+						<td></td>
+						<th>Min</th>
+						<th>Max</th>
+						<th>Average</th>
+					</tr>
+					<tr>
+						<th>Height</th>
+						<td>
+							<c:choose>
+								<c:when test="${empty measurements.minima}">N/A</c:when>
+								<c:otherwise>
+										<c:out value="${measurements.minima['Height']}"></c:out>
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td>
+							<c:choose> 
+								<c:when test="${empty measurements.maxima}">N/A</c:when>
+								<c:otherwise>	
+									<c:out value="${measurements.maxima['Height']}"></c:out>	
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td>
+							<c:choose>
+								<c:when test="${empty measurements.average}">N/A</c:when> 
+								<c:otherwise>
+									<c:out value="${measurements.average['Height']}"></c:out>
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+					
+					<tr>
+						<th>Weight</th>
+						<td>
+							<c:choose>
+								<c:when test="${empty measurements.minima}">N/A</c:when>
+								<c:otherwise>
+										<c:out value="${measurements.minima['Weight']}"></c:out>
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td>
+							<c:choose> 
+								<c:when test="${empty measurements.maxima}">N/A</c:when>
+								<c:otherwise>	
+									<c:out value="${measurements.maxima['Weight']}"></c:out>	
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td>
+							<c:choose>
+								<c:when test="${empty measurements.average}">N/A</c:when> 
+								<c:otherwise>
+									<c:out value="${measurements.average['Weight']}"></c:out>
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+					
+				</table>
 			</div>
+			<div class="col-sm-7">
+				<h2>Log</h2>
+				<table>
+					<tr>
+						<th>Type</th>
+						<th>Measurement date</th>
+						<th>Data</th>
+						<th>Comments</th>
+					</tr>
+					
+				    <c:forEach var="m" items="${measurements.measurements}">
+					<tr>
+						<td>HW</td>
+						<td>
+							<fmt:formatDate value="${m.date}" dateStyle="short" />
+						</td>
+						<td>
+							<c:out value="${m}"></c:out>
+						</td>
+						<td>
+							<c:out value="${m.comments}"></c:out>
+						</td>
+					</tr>
+					</c:forEach>
+				</table>
+			</div>
+		</div>		
 
-			<h2 style="margin: 1em;">Statistics</h2>
-			
-			<table>
-				<c:choose>
-					<c:when test="${empty measurements.minima}">
-						<tr>
-							<td colspan="2">
-						 		<h4>Unable to determine minimum values</h4>
-						 	</td>
-						</tr>
-					</c:when>
-					<c:otherwise>
-						<tr>
-							<td>
-								Min height
-							</td>
-							<td>
-								<c:out value="${measurements.minima['Height']}"></c:out> <br/>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								Min weight
-							</td>
-							<td>
-								<c:out value="${measurements.minima['Weight']}"></c:out> <br/>
-							</td>
-						</tr>
-					</c:otherwise>
-				</c:choose>
-				
-				<c:choose>
-					<c:when test="${empty measurements.average}">
-						<tr>
-							<td colspan="2">
-						 		<h4>Unable to determine average values</h4>
-						 	</td>
-						</tr>
-					</c:when>
-					<c:otherwise>
-						<tr>
-							<td>
-								Avg height
-							</td>
-							<td>
-								<c:out value="${measurements.average['Height']}"></c:out> <br/>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								Avg weight
-							</td>
-							<td>
-								<c:out value="${measurements.average['Weight']}"></c:out> <br/>
-							</td>
-						</tr>
-					</c:otherwise>
-				</c:choose>
-				
-				<c:choose>
-					<c:when test="${empty measurements.maxima}">
-						<tr>
-							<td colspan="2">
-						 		<h4>Unable to determine maximum values</h4>
-						 	</td>
-						</tr>
-					</c:when>
-					<c:otherwise>
-						<tr>
-							<td>
-								Max height
-							</td>
-							<td>
-								<c:out value="${measurements.maxima['Height']}"></c:out> <br/>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								Max weight
-							</td>
-							<td>
-								<c:out value="${measurements.maxima['Weight']}"></c:out> <br/>
-							</td>
-						</tr>
-					</c:otherwise>
-				</c:choose>
-			</table>
 		</c:otherwise>
 	</c:choose>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
 	
-	
-	<button
-		style="margin: 1em 3em;" 
-		onclick="window.close()">Close</button>
 </body>
 
-
+<%
+String iframeResize = (String) session.getAttribute("useIframeResizing");
+if(iframeResize !=null && "true".equalsIgnoreCase(iframeResize)){ %>
+<script src="<%=request.getContextPath() %>/library/pym.js"></script>
+<script>
+    console.log('hi1');
+    pymChild = new pym.Child({ polling: 500 });
+</script>
+<%}%> 
 </html>

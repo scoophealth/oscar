@@ -85,6 +85,10 @@
 				}
 			}
 		});
-		
+		var height = document.getElementsByTagName('body')[0].offsetHeight.toString();
+		console.log('responsivechild ' + pymChild.id + ' '+ height);
+		console.log(pymChild);
+		        // Send the height to the parent.
+		        window.parent.postMessage('responsivechild ' + pymChild.id + ' '+ height, '*');
 	});
 </script>

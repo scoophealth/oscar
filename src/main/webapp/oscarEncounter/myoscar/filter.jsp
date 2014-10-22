@@ -30,11 +30,53 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
-<html:form action="${request.contextPath}/oscarEncounter/myoscar/measurements_${param.sourcePage}.do">
-	<html:hidden name="EctMyOscarFilterForm" property="type" value="${param.sourcePage}" />
+<script type="text/javascript">
+function setToFrom(dateFrom, dateTo){
+	document.getElementById('from').value = dateFrom;
+	document.getElementById('to').value = dateTo;
+	document.getElementById('tofromForm').submit();
+}
+</script>
+<%
+
+
+java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+java.util.Calendar cal =  java.util.Calendar.getInstance();
+java.util.Date now = cal.getTime();
+cal.add(java.util.Calendar.MONTH,-1);
+java.util.Date month1 = cal.getTime();
+cal.add(java.util.Calendar.MONTH,-2);
+java.util.Date month3 = cal.getTime();
+cal.add(java.util.Calendar.MONTH,-3);
+java.util.Date month6 = cal.getTime();
+cal.add(java.util.Calendar.MONTH,-6);
+java.util.Date month12 = cal.getTime();
+
+%>
+
+<a onclick="setToFrom('<%=sdf.format(month1)%>','<%=sdf.format(now)%>')"> Last 30 Days </a> - 
+<a onclick="setToFrom('<%=sdf.format(month3)%>','<%=sdf.format(now)%>')"> Last 3 Months </a> - 
+<a onclick="setToFrom('<%=sdf.format(month6)%>','<%=sdf.format(now)%>')"> Last 6 Months </a> -
+<a onclick="setToFrom('<%=sdf.format(month12)%>','<%=sdf.format(now)%>')"> Last 12 Months </a> -
+<a onclick="setToFrom('','')"> Clear </a> 
+
+<html:form action="${request.contextPath}/oscarEncounter/myoscar/measurements_${param.sourcePage}.do" styleId="tofromForm" styleClass="form-inline">
+  
+  <div class="form-group">
+  	<html:hidden name="EctMyOscarFilterForm" property="type" value="${param.sourcePage}" />
 	<html:hidden name="EctMyOscarFilterForm" property="demoNo" value="${param.demoNo}" />
-	From <html:text styleId="from" name="EctMyOscarFilterForm" property="from" value="${param.from}" /> 
-	to <html:text styleId="to" name="EctMyOscarFilterForm" property="to" value="${param.to}"/>
-	
-	<html:submit value="Filter" />
+	<div class="input-group">
+		<div class="input-group-addon">From</div>
+		<html:text styleId="from" name="EctMyOscarFilterForm" property="from" value="${param.from}" styleClass="form-control" />
+	</div> 
+  </div>
+  <div class="form-group">
+ 	<div class="input-group">
+	<div class="input-group-addon">To</div>
+	<html:text styleId="to" name="EctMyOscarFilterForm" property="to" value="${param.to}" styleClass="form-control"/>
+	</div>
+  </div>
+  <div class="form-group">
+	<html:submit value="Filter" styleClass="btn btn-default"/>
+  </div>
 </html:form>

@@ -67,8 +67,10 @@ public class EctMyOscarFilterAction extends Action {
 		
 		List<Measurement> measurementList = mm.get(filterForm.getMedicalDataType());
 		List<MyOscarMeasurement> moms = new ArrayList<MyOscarMeasurement>();
-		for(Measurement m : measurementList) {
-			moms.add(toMyOscarMeasurement(filterForm.getMedicalDataType(), m));
+		if(measurementList !=null){
+			for(Measurement m : measurementList) {
+				moms.add(toMyOscarMeasurement(filterForm.getMedicalDataType(), m));
+			}
 		}
 		Collections.sort(moms);
 		
