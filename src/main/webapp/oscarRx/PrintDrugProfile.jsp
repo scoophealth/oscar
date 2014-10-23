@@ -27,7 +27,8 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
-<%@ page import="oscar.oscarRx.data.*"%>
+<%@ page import="oscar.oscarRx.data.*, org.oscarehr.common.model.PharmacyInfo"%>
+<%@page import="java.util.List"%>
 <logic:notPresent name="RxSessionBean" scope="session">
 	<logic:redirect href="error.html" />
 </logic:notPresent>
@@ -46,12 +47,12 @@ String userlastname = (String) session.getAttribute("userlastname");
 %>
 
 <% RxPharmacyData pharmacyData = new RxPharmacyData();
-  org.oscarehr.common.model.PharmacyInfo pharmacy ;
-  pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
-  String prefPharmacy = "";
-  if (pharmacy != null){
-     prefPharmacy = pharmacy.getName();
-  }
+  
+List<PharmacyInfo>pharmacyList = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
+String prefPharmacy = "";
+if (pharmacyList != null && !pharmacyList.isEmpty()) {
+    prefPharmacy = pharmacyList.get(0).getName();
+}
 %>
 <html:html locale="true">
 <head>

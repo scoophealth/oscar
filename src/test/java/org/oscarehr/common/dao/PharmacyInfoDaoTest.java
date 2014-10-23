@@ -74,9 +74,10 @@ public class PharmacyInfoDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 
-		dao.deletePharmacy(entity.getId2());
+		dao.deletePharmacy(entity.getId());
 
-		assertEquals("0",dao.find(entity.getId()).getStatus());
+		Character status = PharmacyInfo.DELETED;
+		assertEquals(status,dao.find(entity.getId()).getStatus());
 	}
 
 	@Test
@@ -86,7 +87,7 @@ public class PharmacyInfoDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 
-		PharmacyInfo obj = dao.getPharmacy(entity.getId2());
+		PharmacyInfo obj = dao.getPharmacy(entity.getId());
 
 		assertEquals(obj.getId(),entity.getId());
 	}
@@ -108,20 +109,20 @@ public class PharmacyInfoDaoTest extends DaoTestFixtures {
 		int size = dao.getAllPharmacies().size();
 		PharmacyInfo entity = new PharmacyInfo();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
-		entity.setStatus("1");
+		entity.setStatus(PharmacyInfo.ACTIVE);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 		entity = new PharmacyInfo();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
-		entity.setStatus("1");
+		entity.setStatus(PharmacyInfo.ACTIVE);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 		entity = new PharmacyInfo();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
-		entity.setStatus("0");
+		entity.setStatus(PharmacyInfo.ACTIVE);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 
-		assertEquals(dao.getAllPharmacies().size(),size+2);
+		assertEquals(dao.getAllPharmacies().size(),size+3);
 	}
 }

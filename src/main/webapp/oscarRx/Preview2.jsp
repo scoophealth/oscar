@@ -156,11 +156,15 @@ String pharmaFax2 = "";
 String pharmaName = "";
 RxPharmacyData pharmacyData = new RxPharmacyData();
 PharmacyInfo pharmacy;
-pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
-if (pharmacy != null) {
-	pharmaFax = pharmacy.fax;
-	pharmaFax2 = "<bean:message key='RxPreview.msgFax'/>"+": " + pharmacy.fax;
-	pharmaName = pharmacy.getName();
+String pharmacyId = request.getParameter("pharmacyId");
+
+if (pharmacyId != null && !"null".equalsIgnoreCase(pharmacyId)) {
+    pharmacy = pharmacyData.getPharmacy(pharmacyId);
+    if( pharmacy != null ) {
+		pharmaFax = pharmacy.getFax();
+		pharmaFax2 = "<bean:message key='RxPreview.msgFax'/>"+": " + pharmacy.getFax();
+		pharmaName = pharmacy.getName();
+    }
 }
 
 String patientDOBStr=RxUtil.DateToString(patient.getDOB(), "MMM d, yyyy") ;

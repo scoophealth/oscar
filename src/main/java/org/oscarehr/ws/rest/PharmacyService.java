@@ -41,6 +41,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Defines service contract for create/read/update/delete operations on pharmacies.
+ * 
+ * TODO: switch DAOs to PharmacyManager
  */
 @Path("/pharmacies/")
 @Component("pharmacyService")
@@ -125,8 +127,9 @@ public class PharmacyService extends AbstractServiceImpl {
 	@Path("/{pharmacyId}")
 	public PharmacyInfoTo1 removePharmacy(@PathParam("pharmacyId") Integer id) {
 		PharmacyInfo pharmacyInfo = pharmacyInfoDao.find(id);
-		pharmacyInfo.setStatus("0");
+		pharmacyInfo.setStatus(PharmacyInfo.DELETED);
 		return converter.getAsTransferObject(getLoggedInInfo(),pharmacyInfoDao.saveEntity(pharmacyInfo));
+
 	}
 
 }
