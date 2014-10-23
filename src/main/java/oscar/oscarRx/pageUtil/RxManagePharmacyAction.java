@@ -33,11 +33,13 @@ package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.struts.action.ActionForm;
@@ -45,8 +47,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.model.PharmacyInfo;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 import oscar.oscarRx.data.RxPharmacyData;
 
 /**
@@ -75,6 +80,182 @@ public final class RxManagePharmacyAction extends DispatchAction {
            }
 
        return mapping.findForward("success");
+    }
+    
+ public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	
+	 
+	String retVal = "{\"success\":true}";
+    try {
+    	String pharmacyId = request.getParameter("pharmacyId");
+    	
+    	RxPharmacyData pharmacy = new RxPharmacyData();
+    	pharmacy.deletePharmacy(pharmacyId);
+    	
+    	LoggedInInfo loggedInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
+    	LogAction.addLog(loggedInfo.getLoggedInProviderNo(), LogConst.DELETE, LogConst.CON_PHARMACY, pharmacyId);
+    }
+    catch( Exception e) {
+    	MiscUtils.getLogger().error("CANNOT DELETE PHARMACY ",e);
+    	retVal = "{\"success\":false}";
+    }
+    
+    response.setContentType("text/x-json");
+    JSONObject jsonObject = JSONObject.fromObject(retVal);
+    jsonObject.write(response.getWriter());
+    
+    return null;
+ }
+    
+    public ActionForward unlink(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	
+    	try {
+    		String data = request.getParameter("preferedPharmacy");
+    		String demographicNo = request.getParameter("demographicNo");
+    		
+    		JSONObject jsonObject = JSONObject.fromObject(data);
+    	
+    		PharmacyInfo pharmacyInfo =  (PharmacyInfo) JSONObject.toBean(jsonObject, PharmacyInfo.class);
+    		
+    		RxPharmacyData pharmacy = new RxPharmacyData();
+    		
+    		pharmacy.unlinkPharmacy(String.valueOf(pharmacyInfo.getId()), demographicNo);
+    		
+    		response.setContentType("text/x-json");
+    		String retVal = "{\"id\":\"" + pharmacyInfo.getId() + "\"}";
+    		jsonObject = JSONObject.fromObject(retVal);
+    		jsonObject.write(response.getWriter());
+    	}
+    	catch( Exception e ) {
+    		MiscUtils.getLogger().error("CANNOT UNLINK PHARMACY",e);
+    	}
+    	
+    	return null;
+    }
+    
+    public ActionForward getPharmacyFromDemographic(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	
+    	String demographicNo = request.getParameter("demographicNo");
+    	
+    	RxPharmacyData pharmacyData = new RxPharmacyData();
+        List<PharmacyInfo> pharmacyList;
+        pharmacyList = pharmacyData.getPharmacyFromDemographic(demographicNo);
+        
+        JSONArray jsonObject = JSONArray.fromObject(pharmacyList);
+        response.setContentType("text/x-json");
+        jsonObject.write(response.getWriter());
+    	
+    	
+    	return null;
+    }
+    
+    public ActionForward setPreferred(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	RxPharmacyData pharmacy = new RxPharmacyData();
+    	
+    	try {
+    		PharmacyInfo pharmacyInfo = pharmacy.addPharmacyToDemographic(request.getParameter("pharmacyId"), request.getParameter("demographicNo"), request.getParameter("preferredOrder"));
+    		JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);
+    		response.setContentType("text/x-json");
+    		jsonObject.write(response.getWriter());
+    	}
+    	catch( Exception e ) {
+    		MiscUtils.getLogger().error("ERROR SETTING PREFERRED ORDER", e);
+    	}
+    	
+    	return null;
+    }
+    
+    public ActionForward add(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	RxPharmacyData pharmacy = new RxPharmacyData();
+    	
+    	String status = "{\"success\":true}";
+    	
+    	try {
+    		pharmacy.addPharmacy(request.getParameter("pharmacyName"), request.getParameter("pharmacyAddress"), request.getParameter("pharmacyCity"), 
+    			request.getParameter("pharmacyProvince"), request.getParameter("pharmacyPostalCode"), request.getParameter("pharmacyPhone1"), request.getParameter("pharmacyPhone2"), 
+    			request.getParameter("pharmacyFax"), request.getParameter("pharmacyEmail"), request.getParameter("pharmacyServiceLocationId"), request.getParameter("pharmacyNotes"));
+    	}
+    	catch( Exception e ) {
+    		MiscUtils.getLogger().error("Error Updating Pharmacy " + request.getParameter("pharmacyId"), e);
+    		status = "{\"success\":false}";    		
+    	}
+    	
+    	JSONObject jsonObject = JSONObject.fromObject(status);
+    	
+    	try {
+    		response.setContentType("text/x-json");
+    		jsonObject.write(response.getWriter());
+    	}
+    	catch( IOException e ) {
+    		MiscUtils.getLogger().error("Cannot write response", e);    		
+    	}
+    	
+    	return null;
+    }
+    
+    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	
+    	
+    	RxPharmacyData pharmacy = new RxPharmacyData();
+    	PharmacyInfo pharmacyInfo = new PharmacyInfo();
+    	pharmacyInfo.setId(Integer.parseInt(request.getParameter("pharmacyId")));
+    	pharmacyInfo.setName(request.getParameter("pharmacyName"));
+    	pharmacyInfo.setAddress(request.getParameter("pharmacyAddress"));
+    	pharmacyInfo.setCity(request.getParameter("pharmacyCity"));
+    	pharmacyInfo.setProvince(request.getParameter("pharmacyProvince"));
+    	pharmacyInfo.setPostalCode(request.getParameter("pharmacyPostalCode"));
+    	pharmacyInfo.setPhone1(request.getParameter("pharmacyPhone1"));
+    	pharmacyInfo.setPhone2(request.getParameter("pharmacyPhone2"));
+    	pharmacyInfo.setFax(request.getParameter("pharmacyFax"));
+    	pharmacyInfo.setEmail(request.getParameter("pharmacyEmail"));
+    	pharmacyInfo.setServiceLocationIdentifier(request.getParameter("pharmacyServiceLocationId"));
+    	pharmacyInfo.setNotes(request.getParameter("pharmacyNotes"));
+    	
+    	try {
+    		pharmacy.updatePharmacy(request.getParameter("pharmacyId"),request.getParameter("pharmacyName"), request.getParameter("pharmacyAddress"), request.getParameter("pharmacyCity"), 
+    			request.getParameter("pharmacyProvince"), request.getParameter("pharmacyPostalCode"), request.getParameter("pharmacyPhone1"), request.getParameter("pharmacyPhone2"), 
+    			request.getParameter("pharmacyFax"), request.getParameter("pharmacyEmail"), request.getParameter("pharmacyServiceLocationId"), request.getParameter("pharmacyNotes"));
+    	}
+    	catch( Exception e ) {
+    		MiscUtils.getLogger().error("Error Updating Pharmacy " + request.getParameter("pharmacyId"), e);
+    		return null;
+    	}
+    	
+    	try {
+    		
+    		JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);
+    		response.setContentType("text/x-json");
+    		jsonObject.write(response.getWriter());    		
+    		
+    	}
+    	catch( IOException e ) {
+    		MiscUtils.getLogger().error("Error writing response",e);
+    	}
+    	
+    	return null;
+    }
+    
+    public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	
+    	String searchStr = request.getParameter("term");    	
+    	
+    	RxPharmacyData pharmacy = new RxPharmacyData();
+    	
+    	List<PharmacyInfo>pharmacyList = pharmacy.searchPharmacy(searchStr);
+    	
+    	response.setContentType("text/x-json");
+    	JSONArray jsonArray = JSONArray.fromObject(pharmacyList);
+    	
+    	try {
+    		jsonArray.write(response.getWriter());
+    	}
+    	catch( IOException e ) {
+    		MiscUtils.getLogger().error("ERROR WRITING RESPONSE ",e);
+    	}
+    	
+    	return null;
+    	
     }
 
     public ActionForward getPharmacyInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {

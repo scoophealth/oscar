@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.model.PharmacyInfo"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -51,11 +52,11 @@ String userlastname = (String) session.getAttribute("userlastname");
 %>
 
 <% RxPharmacyData pharmacyData = new RxPharmacyData();
-            org.oscarehr.common.model.PharmacyInfo pharmacy;
-            pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
+            
+            List<PharmacyInfo>pharmacyList = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
             String prefPharmacy = "";
-            if (pharmacy != null) {
-                prefPharmacy = pharmacy.getName();
+            if (pharmacyList != null && !pharmacyList.isEmpty()) {
+                prefPharmacy = pharmacyList.get(0).getName();
             }
 %>
 <html:html locale="true">

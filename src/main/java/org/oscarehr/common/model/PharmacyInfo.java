@@ -35,18 +35,20 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="pharmacyInfo")
-public class PharmacyInfo extends AbstractModel<Integer> {
+public class PharmacyInfo extends AbstractModel<Integer> implements Comparable<PharmacyInfo> {
 
+	public static final Character ACTIVE = '1';
+	public static final Character DELETED = '0';
+
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="recordID")
 	private Integer id;
-
-	@Column(name="ID")
-	private int id2;
 
 	private String name;
 
@@ -59,21 +61,24 @@ public class PharmacyInfo extends AbstractModel<Integer> {
 	private String postalCode;
 
 	private String phone1;
-
+	
 	private String phone2;
 
-	public String fax;
+	private String fax;
 
 	private String email;
 
 	private String serviceLocationIdentifier;
 
 	private String notes;
+	
+	@Transient
+	private Integer preferredOrder;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date addDate;
 
-	private String status;
+	private Character status;
 
 	public Integer getId() {
     	return id;
@@ -81,14 +86,6 @@ public class PharmacyInfo extends AbstractModel<Integer> {
 
 	public void setId(Integer id) {
     	this.id = id;
-    }
-
-	public int getId2() {
-    	return id2;
-    }
-
-	public void setId2(int id2) {
-    	this.id2 = id2;
     }
 
 	public String getName() {
@@ -187,13 +184,37 @@ public class PharmacyInfo extends AbstractModel<Integer> {
     	this.addDate = addDate;
     }
 
-	public String getStatus() {
+	public Character getStatus() {
     	return status;
     }
 
-	public void setStatus(String status) {
+	public void setStatus(Character status) {
     	this.status = status;
     }
 
+	/**
+	 * @return the preferredOrder
+	 */
+	public Integer getPreferredOrder() {
+		return preferredOrder;
+	}
+
+	/**
+	 * @param preferredOrder the preferredOrder to set
+	 */
+	public void setPreferredOrder(Integer preferredOrder) {
+		this.preferredOrder = preferredOrder;
+	}
+
+	@Override
+    public int compareTo(PharmacyInfo o) {
+	    if( o == null ) {
+	    	return 1;
+	    }
+	    
+	    return this.getPreferredOrder().compareTo(o.getPreferredOrder());
+    }
+
+	
 
 }

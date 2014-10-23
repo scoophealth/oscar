@@ -40,6 +40,11 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="demographicPharmacy")
 public class DemographicPharmacy extends AbstractModel<Integer>{
+	
+	public static final String ACTIVE = "1";
+	
+	public static final String INACTIVE = "0";
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +57,8 @@ public class DemographicPharmacy extends AbstractModel<Integer>{
 	private int demographicNo;
 
 	private String status;
+	
+	private int preferredOrder;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date addDate;
@@ -100,6 +107,20 @@ public class DemographicPharmacy extends AbstractModel<Integer>{
 	public void beforePersist() {
 		addDate = new Date();
 	}
+
+	/**
+	 * @return the preferedOrder
+	 */
+    public int getPreferredOrder() {
+	    return preferredOrder;
+    }
+
+	/**
+	 * @param preferedOrder the preferedOrder to set
+	 */
+    public void setPreferredOrder(int preferedOrder) {
+	    this.preferredOrder = preferedOrder;
+    }
 
 
 }

@@ -7617,7 +7617,8 @@ create table demographicPharmacy (
    pharmacyID int(10),
    demographic_no int(10),
    status char(1) default '1',
-   addDate timestamp
+   addDate timestamp,
+   preferredOrder int(10)
 ) ;
 
 

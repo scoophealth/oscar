@@ -112,14 +112,14 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                             %>
 					<tr>
 						<td><a
-							href="LinkPharmacy.do?ID=<%=ph.getId2()%>&DemoId=<jsp:getProperty name="patient" property="demographicNo"/>"><%=ph.getName()%></a></td>
+							href="LinkPharmacy.do?ID=<%=ph.getId()%>&DemoId=<jsp:getProperty name="patient" property="demographicNo"/>"><%=ph.getName()%></a></td>
 						<td><%=ph.getAddress()%></td>
 						<td><%=ph.getCity()%></td>
 						<td><%=ph.getPhone1()%></td>
 						<td><%=ph.getFax()%></td>
-						<td><a href="ManagePharmacy.jsp?type=Edit&ID=<%=ph.getId2()%>"><bean:message
+						<td><a href="ManagePharmacy.jsp?type=Edit&ID=<%=ph.getId()%>"><bean:message
 							key="SelectPharmacy.editLink" /></a></td>
-						<td><a href="ManagePharmacy.jsp?type=Delete&ID=<%=ph.getId2()%>"><bean:message
+						<td><a href="ManagePharmacy.jsp?type=Delete&ID=<%=ph.getId()%>"><bean:message
 							key="SelectPharmacy.deleteLink" /></a></td>
 					</tr>
 					<% } %>
