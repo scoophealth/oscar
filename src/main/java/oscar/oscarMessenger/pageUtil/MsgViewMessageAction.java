@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.MessageListDao;
 import org.oscarehr.common.model.MessageList;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -59,7 +60,7 @@ public class MsgViewMessageAction extends Action {
         
 
         oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
-        String providerNo= null;
+        String providerNo= LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo();
         if(bean!=null)
             providerNo = bean.getProviderNo();
         else
