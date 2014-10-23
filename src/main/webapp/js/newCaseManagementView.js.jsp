@@ -170,7 +170,10 @@
             	datesChanged = true;
             }
             	
-            if (noteNotNull && notesChanged || datesChanged) {
+            var nId = document.forms['caseManagementEntryForm'].noteId.value;
+				
+            	
+            if ((noteNotNull && notesChanged) || (parseInt(nId) !=0 && datesChanged)) {
                 
                 //autoSave(false);
                 document.forms['caseManagementEntryForm'].sign.value='persist';
