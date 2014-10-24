@@ -100,6 +100,9 @@ function searchOutOfDomain() {
             <option value="search_chart_no" <%=searchMode.equals("search_chart_no")?"selected":""%>>
                 <bean:message key="demographic.zdemographicfulltitlesearch.formChart" />
             </option>
+            <option value="search_demographic_no" <%=searchMode.equals("search_demographic_no")?"selected":""%>>
+                <bean:message key="demographic.zdemographicfulltitlesearch.formDemographicNo" />
+            </option>
          </select>
     </li>
     <li>
