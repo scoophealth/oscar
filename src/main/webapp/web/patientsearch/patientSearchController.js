@@ -20,7 +20,6 @@ oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, 
 	        	            Name: 'asc'     // initial sorting
 	        	        }
 	        	    }, {
-	        	        total: $scope.data.length,           // length of data
 	        	        getData: function($defer, params) {
 	        	        	$scope.integratorResults = null;
 	        	        	var count = params.url().count;
