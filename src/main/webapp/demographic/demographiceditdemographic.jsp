@@ -2648,7 +2648,7 @@ if ( Dead.equals(PatStat) ) {%>
 			                	<td><select  name="sex" id="sex">
 			                        <option value=""></option>
 			                		<% for(Gender gn : Gender.values()){ %>
-			                        <option value=<%=gn.name()%> <%=((demographic.getSex().toUpperCase().equals(gn.name())) ? "selected" : "") %>><%=gn.getText()%></option>
+			                        <option value=<%=gn.name()%> <%=((demographic.getSex().toUpperCase().equals(gn.name())) ? " selected=\"selected\" " : "") %>><%=gn.getText()%></option>
 			                        <% } %>
 			                        </select>
 			                    </td>
