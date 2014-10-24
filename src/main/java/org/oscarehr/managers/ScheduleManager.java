@@ -265,6 +265,10 @@ public class ScheduleManager {
 	
 	public List<AppointmentStatus> getAppointmentStatuses(LoggedInInfo loggedInInfo) {
 		List<AppointmentStatus> results = appointmentStatusDao.findAll(0, 100);
+		
+		if(results.size() >= 100) {
+			logger.error("We reached a hard coded limit, why >100 statuses?");
+		}
 
 		LogAction.addLogSynchronous(loggedInInfo,"ScheduleManager.getAppointmentStatuses", null);
 
