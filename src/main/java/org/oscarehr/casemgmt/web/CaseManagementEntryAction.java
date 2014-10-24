@@ -93,7 +93,6 @@ import org.oscarehr.casemgmt.service.NoteService;
 import org.oscarehr.casemgmt.util.ExtPrint;
 import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
-import org.oscarehr.common.dao.AppointmentArchiveDao;
 import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.dao.CasemgmtNoteLockDao;
 import org.oscarehr.common.dao.DemographicDao;
@@ -161,7 +160,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	private CaseManagementIssueDAO caseManagementIssueDao = (CaseManagementIssueDAO) SpringUtils.getBean("caseManagementIssueDAO");
 	private CaseManagementNoteExtDAO caseManagementNoteExtDao = (CaseManagementNoteExtDAO) SpringUtils.getBean("CaseManagementNoteExtDAO");
 	private IssueDAO issueDao = (IssueDAO) SpringUtils.getBean("IssueDAO");
-	private AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	//private AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	private CasemgmtNoteLockDao casemgmtNoteLockDao = SpringUtils.getBean(CasemgmtNoteLockDao.class);
 	private NoteService noteService = SpringUtils.getBean(NoteService.class);
 	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);

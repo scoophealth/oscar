@@ -41,15 +41,17 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.DemographicCustDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DemographicCust;
+import org.oscarehr.util.AppointmentUtil;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.oscarehr.util.AppointmentUtil;
 
 import oscar.OscarProperties;
-import org.oscarehr.common.model.DemographicCust;
-import org.oscarehr.common.dao.DemographicCustDao;
 import oscar.oscarRx.data.RxProviderData;
 import oscar.oscarRx.data.RxProviderData.Provider;
 
@@ -59,6 +61,9 @@ import oscar.oscarRx.data.RxProviderData.Provider;
  */
 public class SearchDemographicAutoCompleteAction extends Action {
     
+	private CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
+	
+	
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws Exception{
         DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao"); 
         String searchStr = request.getParameter("demographicKeyword");
@@ -92,6 +97,20 @@ public class SearchDemographicAutoCompleteAction extends Action {
         else {
         	list = demographicDao.searchDemographic(searchStr);
         }
+        
+        //if caisi is on, we need to filter this list according to program domain.
+    	if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1) {
+    		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    		List<Demographic> tmpDemoList = new ArrayList<Demographic>();
+    		String providerNo = loggedInInfo.getLoggedInProviderNo();
+    		
+			for(Demographic demo:list) {
+				if(caseManagementManager.isClientInProgramDomain(providerNo, demo.getDemographicNo().toString())) {
+					tmpDemoList.add(demo);
+				}
+			}
+    		list = tmpDemoList;
+    	}
         
         List<HashMap<String, String>> secondList= new ArrayList<HashMap<String,String>>();
         for(Demographic demo :list){
