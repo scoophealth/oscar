@@ -344,6 +344,13 @@
 		}
 	}
 
+	if("search_demographic_no".equals(searchMode)) {
+		Demographic d = demographicDao.getDemographic(keyword);
+		if(d != null) {
+			demoList = new ArrayList<Demographic>();
+			demoList.add(d);
+		}
+	}
 	
 	//if caisi is on, we need to filter this list according to program domain.
 	if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1) {
