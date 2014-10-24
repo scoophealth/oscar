@@ -133,7 +133,7 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
                 
 		//Create the XDS record, and have it sent.
 				
-                //createXds(demographic.getDemographicNo(),cdaForLogging);
+            //    createXds(demographic.getDemographicNo(),cdaForLogging);
 			}
 			
 			/* EIGHTEEN MONTH SECTION */
@@ -189,14 +189,17 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 	 */
 	private BornHialProperties getBornHialProperties() {
 		BornHialProperties props = new BornHialProperties();
-		props.setIdCodingSystem("2.1.8.1.1.4.4.3.5");
+		ClinicInfoDao clinicInfoDao = SpringUtils.getBean(ClinicInfoDao.class);
+		ClinicInfoDataObject clinicInfo = clinicInfoDao.getClinic();
+		
+		props.setIdCodingSystem("2.1.8.1.1.4.4.3.5");  // clinicInfo.getOid() ?
 		props.setIdValue("abc-1234");
 		
-		props.setSetIdCodingSystem("2.1.8.1.1.4.4.3.5");
+		props.setSetIdCodingSystem("2.1.8.1.1.4.4.3.5"); // clinicInfo.getOid() ?
 		props.setSetIdValue("atn121");
 		
-		props.setOrganization("2.16.840.1.113883.3.239.23.269");
-		props.setOrganizationName("CLINICHMFP");
+		props.setOrganization(clinicInfo.getOid()); // Organization OID in the Administration > Clinic Info page
+		props.setOrganizationName(clinicInfo.getFacilityName());  // Clinic Name in the Administration > Clinic Info page
 		return props;
 	}
 	
