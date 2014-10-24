@@ -102,6 +102,11 @@
 		<priority value="WARN" />
 	</category>
 
+	<category name="org.oscarehr.integration.born">
+		<priority value="DEBUG" />
+	</category>
+
+
 	<!-- HAPI is logging an info message at error level which isn't an error, this will squelch it -->	
 	<category name="ca.uhn.hl7v2.model.v26.segment.UAC">
 		<priority value="FATAL" />
