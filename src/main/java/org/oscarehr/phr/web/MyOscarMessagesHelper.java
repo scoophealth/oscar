@@ -47,11 +47,15 @@ public final class MyOscarMessagesHelper {
 		int temp = currentStartIndex - MESSAGE_DISPLAY_SIZE;
 		return (Math.max(0, temp));
 	}
-
-	public static List<MessageTransfer3> getReceivedMessages(HttpSession session, Boolean active, int startIndex) throws NoSuchItemException_Exception, NotAuthorisedException_Exception {
-		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(session);
+	
+	public static List<MessageTransfer3> getReceivedMessages(MyOscarLoggedInInfo myOscarLoggedInInfo, Boolean active, int startIndex) throws NoSuchItemException_Exception, NotAuthorisedException_Exception {
 		List<MessageTransfer3> remoteMessages = MessageManager.getReceivedMessages(myOscarLoggedInInfo, myOscarLoggedInInfo.getLoggedInPersonId(), active, startIndex, MESSAGE_DISPLAY_SIZE);
 		return (remoteMessages);
+	}
+	
+	public static List<MessageTransfer3> getReceivedMessages(HttpSession session, Boolean active, int startIndex) throws NoSuchItemException_Exception, NotAuthorisedException_Exception {
+		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(session);
+		return getReceivedMessages(myOscarLoggedInInfo,active,startIndex);
 	}
 
 	public static List<MessageTransfer3> getSentMessages(HttpSession session, int startIndex) throws NoSuchItemException_Exception, NotAuthorisedException_Exception {
