@@ -61,8 +61,8 @@ public class PharmacyManager {
 	    return result;
 	}
 
-	public DemographicPharmacy addPharmacy(LoggedInInfo loggedInInfo, Integer demographicId, Integer pharmacyId) {
-		DemographicPharmacy result =  demographicPharmacyDao.addPharmacyToDemographic(demographicId, pharmacyId);
+	public DemographicPharmacy addPharmacy(LoggedInInfo loggedInInfo, Integer demographicId, Integer pharmacyId, Integer preferredOrder) {
+		DemographicPharmacy result =  demographicPharmacyDao.addPharmacyToDemographic(demographicId, pharmacyId, preferredOrder);
 		
 		if(result != null) {
 	    	//--- log action ---

@@ -62,6 +62,8 @@ import org.oscarehr.util.SpringUtils;
 import org.oscarehr.web.PrescriptionQrCodeUIBean;
 
 import oscar.OscarProperties;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 
 import com.itextpdf.text.pdf.PdfReader;
 import com.lowagie.text.Document;
@@ -139,8 +141,10 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			                }
 			                
 			        if( validFaxNumber ) {
-
+			        	
+			        	LogAction.addLog(provider_no, LogConst.SENT, LogConst.CON_FAX, "PRESCRIPTION " + pdfFile );
 			        	writer.println("<script>alert('Fax sent to: " + req.getParameter("pharmaName") + " (" + req.getParameter("pharmaFax") + ")');window.close();</script>");
+			        	
 			        }
 				}
 			} else {

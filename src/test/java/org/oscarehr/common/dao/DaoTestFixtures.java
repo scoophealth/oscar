@@ -151,7 +151,7 @@ public abstract class DaoTestFixtures
 				if(m.getParameterTypes().length == 0) {
 					//MiscUtils.getLogger().info("invoking " + m.getName());
 					try {
-						m.invoke(daoObject, new Object[]{});
+						m.invoke(daoObject);
 					}catch(Exception e) {
 						MiscUtils.getLogger().error("error",e);
 						fail(e.getMessage());

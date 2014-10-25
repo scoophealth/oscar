@@ -46,7 +46,7 @@
 		<if>
 			<equals arg1="${tomcat.lib.dir}" arg2="${catalina.home}/lib" />
 			<then>
-				<jasper uriroot="${jspc.expandedWarDir}" webXmlFragment="${jspc.generatedDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="true" />
+				<jasper uriroot="${jspc.expandedWarDir}" webXmlFragment="${jspc.generatedDir}/generated_web.xml" outputDir="${jspc.generatedDir}" failOnError="true" />
 			</then>
 			<else>
 				<jasper2 uriroot="${jspc.expandedWarDir}" webXmlFragment="${jspc.generatedDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="true" />

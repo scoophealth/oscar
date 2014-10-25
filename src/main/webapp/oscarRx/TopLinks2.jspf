@@ -1,3 +1,5 @@
+<%@page import="net.sf.json.JSONObject"%>
+<%@page import="org.oscarehr.common.model.PharmacyInfo"%>
 <%@ page import="oscar.oscarRx.data.*,oscar.oscarProvider.data.ProviderMyOscarIdData,oscar.oscarDemographic.data.DemographicData,oscar.OscarProperties,oscar.log.*"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%/*
@@ -46,11 +48,38 @@ if (rx_enhance!=null && rx_enhance.equals("true")) { %>
 		     <b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" />
                      <b>
                      <oscar:phrverification styleId="verificationLink" demographicNo="<%=Integer.toString(demoNo)%>"><bean:message key="phr.verification.link"/></oscar:phrverification> &nbsp;
-                     <a style="color:white; "href="SelectPharmacy2.jsp" onclick="return newWindow('SelectPharmacy2.jsp')"><bean:message key="SearchDrug.PreferedPharmacy"/></a>:</b> <a  style="color:white;" href="javascript: function myFunction() {return false; }" onClick="showpic('Layer1');" id="Calcs" ><%=prefPharmacy%></a>
+                     <a style="color:white; "href="SelectPharmacy2.jsp" onclick="return newWindow('SelectPharmacy2.jsp')"><bean:message key="SearchDrug.PreferedPharmacy"/></a>:</b> 
+                     <select id="Calcs" name="pharmacyId" onchange="populatePharmacy(this.options[this.selectedIndex].value);showpic('Layer1');"> 
+                    <%
+                    	if( pharmacyList != null ) {
+	        				for( PharmacyInfo pharmacyInfo : pharmacyList ) {
+	        					JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);    
+					%>
+								<option value='<%=jsonObject.toString().replaceAll("'", "\\'")%>'><%=pharmacyInfo.getName() + " " + pharmacyInfo.getCity()%></option>
+					<%
+	        				}
+	       		 		}
+					%>
+				
+                    </select>                     
+                    
 <%}else {%>					
 					<b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient" property="firstName" /> <jsp:getProperty name="patient" property="surname" />
 		     		<b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" />
-                    <b><a style="color:white; "href="SelectPharmacy2.jsp"><bean:message key="SearchDrug.PreferedPharmacy"/></a>:</b> <a  style="color:white;" href="javascript: function myFunction() {return false; }" onClick="showpic('Layer1');" id="Calcs" ><%=prefPharmacy%></a>
+                    <b><a style="color:white; "href="SelectPharmacy2.jsp"><bean:message key="SearchDrug.PreferedPharmacy"/></a>:</b>
+                    <select id="Calcs" name="pharmacyId" onchange="populatePharmacy(this.options[this.selectedIndex].value);showpic('Layer1');"> 
+                    <%
+                    	if( pharmacyList != null ) {
+	        				for( PharmacyInfo pharmacyInfo : pharmacyList ) {
+	        					JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);    
+					%>
+								<option value='<%=jsonObject.toString().replaceAll("'", "\\'")%>'><%=pharmacyInfo.getName() + " " + pharmacyInfo.getCity()%></option>
+					<%
+	        				}
+	       		 		}
+					%>
+                    </select>
+                    
 <%} %>
                   
                     </td>

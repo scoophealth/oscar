@@ -31,6 +31,8 @@
 
 package oscar.oscarRx.data;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.oscarehr.common.dao.DemographicPharmacyDao;
@@ -97,6 +99,13 @@ public class RxPharmacyData {
     * @param ID
     */
    public void deletePharmacy(String ID){
+	   
+	   List<DemographicPharmacy> demographicPharmacies = demographicPharmacyDao.findAllByPharmacyId(Integer.parseInt(ID));
+	   
+	   for( DemographicPharmacy demographicPharmacy : demographicPharmacies ) {
+		   demographicPharmacyDao.unlinkPharmacy(Integer.parseInt(ID), demographicPharmacy.getDemographicNo());
+	   }
+	   
 	   pharmacyInfoDao.deletePharmacy(Integer.parseInt(ID));
    }
 
@@ -133,8 +142,14 @@ public class RxPharmacyData {
     * @param pharmacyId Id of the pharmacy
     * @param demographicNo Patient demographic number
     */
-   public void addPharmacyToDemographic(String pharmacyId,String demographicNo){
-      demographicPharmacyDao.addPharmacyToDemographic(Integer.parseInt(pharmacyId), Integer.parseInt(demographicNo));
+   public PharmacyInfo addPharmacyToDemographic(String pharmacyId,String demographicNo, String preferredOrder){
+      demographicPharmacyDao.addPharmacyToDemographic(Integer.parseInt(pharmacyId), Integer.parseInt(demographicNo), Integer.parseInt(preferredOrder));
+      
+      PharmacyInfo pharmacyInfo = pharmacyInfoDao.find(Integer.parseInt(pharmacyId));
+      pharmacyInfo.setPreferredOrder(Integer.parseInt(preferredOrder));
+      
+      return pharmacyInfo;
+      
    }
 
 	/**
@@ -143,15 +158,42 @@ public class RxPharmacyData {
 	 *
 	 * @return Pharmacy data object
 	 */
-	public PharmacyInfo getPharmacyFromDemographic(String demographicNo) {
-		List<DemographicPharmacy> dp = demographicPharmacyDao.findByDemographicId(Integer.parseInt(demographicNo));
-		if (dp.isEmpty()) {
+	public List<PharmacyInfo> getPharmacyFromDemographic(String demographicNo) {
+		List<DemographicPharmacy> dpList = demographicPharmacyDao.findByDemographicId(Integer.parseInt(demographicNo));
+		if (dpList.isEmpty()) {
 			return null;
 		}
-		if (dp.size() > 1) {
-			MiscUtils.getLogger().warn("Loaded multiple pharmacies for " + demographicNo + " but returning info for the first one...");
-		}
 
-		return pharmacyInfoDao.getPharmacy(dp.get(0).getPharmacyId());
+		List<Integer> pharmacyIds = new ArrayList<Integer>(); 
+		for( DemographicPharmacy demoPharmacy : dpList ) {
+			pharmacyIds.add(demoPharmacy.getPharmacyId());
+			MiscUtils.getLogger().debug("ADDING ID " + demoPharmacy.getPharmacyId());
+		}
+		
+		List<PharmacyInfo> pharmacyInfos = pharmacyInfoDao.getPharmacies(pharmacyIds);
+		
+		for( DemographicPharmacy demographicPharmacy : dpList ) {
+			for( PharmacyInfo pharmacyInfo : pharmacyInfos ) {
+				if( demographicPharmacy.getPharmacyId() == pharmacyInfo.getId() ) {
+					pharmacyInfo.setPreferredOrder(demographicPharmacy.getPreferredOrder());
+					break;
+				}
+			}
+		}
+		
+		Collections.sort(pharmacyInfos);
+		return pharmacyInfos;
+	}
+	
+	public List<PharmacyInfo> searchPharmacy( String name ) {
+		
+		return pharmacyInfoDao.searchPharmacyName(name);
+		
+	}
+	
+	public void unlinkPharmacy( String pharmacyId, String demographicNo ) {
+		
+		demographicPharmacyDao.unlinkPharmacy(Integer.parseInt(pharmacyId), Integer.parseInt(demographicNo));
+		
 	}
 }
