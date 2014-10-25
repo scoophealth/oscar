@@ -33,8 +33,7 @@ public class PharmacyInfoConverter extends AbstractConverter<PharmacyInfo, Pharm
 	public PharmacyInfo getAsDomainObject(LoggedInInfo loggedInInfo,PharmacyInfoTo1 t) throws ConversionException {
 		PharmacyInfo d = new PharmacyInfo();
 		
-		d.setId(t.getId());
-		d.setId2(t.getId2());
+		d.setId(t.getId());		
 		d.setName(t.getName());
 		d.setAddress(t.getAddress().getAddress());
 		d.setCity(t.getAddress().getCity());
@@ -56,7 +55,6 @@ public class PharmacyInfoConverter extends AbstractConverter<PharmacyInfo, Pharm
 		PharmacyInfoTo1 t = new PharmacyInfoTo1();
 		
 		t.setId(d.getId());
-		t.setId2(d.getId2());
 		t.setName(d.getName());
 		t.getAddress().setAddress(d.getAddress());
 		t.getAddress().setCity(d.getCity());

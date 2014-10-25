@@ -171,16 +171,20 @@ if(bMultisites) {
     }
 }
 String comment = (String) request.getSession().getAttribute("comment");
+String pharmacyId = request.getParameter("pharmacyId");
 RxPharmacyData pharmacyData = new RxPharmacyData();
-PharmacyInfo pharmacy;
-pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
+PharmacyInfo pharmacy = null;
+
 String prefPharmacy = "";
 String prefPharmacyId="";
-if (pharmacy != null) {
-    prefPharmacy = pharmacy.getName().replace("'", "\\'");
-    prefPharmacyId=String.valueOf(pharmacy.getId2());
-    prefPharmacy=prefPharmacy.trim();
-    prefPharmacyId=prefPharmacyId.trim();
+if (pharmacyId != null && !"null".equalsIgnoreCase(pharmacyId)) {
+	pharmacy = pharmacyData.getPharmacy(pharmacyId);    
+	if( pharmacy != null ) {
+    	prefPharmacy = pharmacy.getName().replace("'", "\\'");
+    	prefPharmacyId=String.valueOf(pharmacy.getId());
+    	prefPharmacy=prefPharmacy.trim();
+    	prefPharmacyId=prefPharmacyId.trim();
+	}
 }
 
 String userAgent = request.getHeader("User-Agent");
@@ -412,7 +416,7 @@ var isSignatureDirty = false;
 var isSignatureSaved = false;
 function signatureHandler(e) {
 	<% if (OscarProperties.getInstance().isRxFaxEnabled()) { %>
-	var hasFaxNumber = <%= pharmacy != null && pharmacy.fax.trim().length() > 0 ? "true" : "false" %>;
+	var hasFaxNumber = <%= pharmacy != null && pharmacy.getFax().trim().length() > 0 ? "true" : "false" %>;
 	<% } %>
 	isSignatureDirty = e.isDirty;
 	isSignatureSaved = e.isSave;
@@ -509,7 +513,7 @@ function toggleView(form) {
 				<td width=420px>
 				<div class="DivContentPadding"><!-- src modified by vic, hsfo -->
 				<iframe id='preview' name='preview' width=420px height=1000px
-					src="<%= dx<0?"Preview2.jsp?scriptId="+request.getParameter("scriptId")+"&rePrint="+reprint:dx==7?"HsfoPreview.jsp?dxCode=7":"about:blank" %>"
+					src="<%= dx<0?"Preview2.jsp?scriptId="+request.getParameter("scriptId")+"&rePrint="+reprint+"&pharmacyId="+request.getParameter("pharmacyId"):dx==7?"HsfoPreview.jsp?dxCode=7":"about:blank" %>"
 					align=center border=0 frameborder=0></iframe></div>
 				</td>
 

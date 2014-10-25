@@ -23,15 +23,20 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="net.sf.json.JSONObject"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="oscar.oscarRx.data.*,java.util.*"%>
+<%@ page import="org.oscarehr.common.model.PharmacyInfo" %>
 <html:html locale="true">
 <head>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/prototype.js"/>"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js"/>"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+
+<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js">"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="SelectPharmacy.title" /></title>
 <html:base />
@@ -49,22 +54,319 @@
 
 <%
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
-
 %>
 
 <bean:define id="patient"
 	type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 
 <link rel="stylesheet" type="text/css" href="styles.css">
+
+<style type="text/css">
+
+.ui-autocomplete {
+	background-color: #CEF6CE;
+	border: 3px outset #2EFE2E;
+	width:300px;
+}
+
+.ui-menu-item:hover {
+		background-color:#426FD9;
+		color:#FFFFFF;
+}
+
+</style>
+
+<script type="text/javascript">
+
+$(function() {
+	 
+    $( "#autocompletepharmacy" ).autocomplete({
+      source: function( request, response ) {
+    	  $.ajax({
+    		  url: "<%= request.getContextPath() %>/oscarRx/managePharmacy.do?method=search",
+    		  type: "GET",
+    		  dataType: "json",
+    		  data: {
+    			  term: request.term    			  
+    		  },
+    		  contentType: "application/json",
+    		  success: function( data ) {
+    			  response($.map(data, function( item ) {
+    				  return {
+    					  label: item.name + " " + item.address + " " + item.city,
+    					  value: item.name,
+    					  pharmacy: item
+    				  }
+    			  }));
+    		  }
+    	  });
+      },
+      minLength: 2,  
+      focus: function( event, ui ) {
+    	  $( "#autocompletepharmacy" ).val( ui.item.value );
+          return false;
+      },
+      select: function(event, ui) {    	  
+    	  $('#pharmacyId').val(ui.item.pharmacy.id);
+    	  $('#pharmacyName').val(ui.item.pharmacy.name);
+    	  $('#pharmacyAddress').val(ui.item.pharmacy.address);
+    	  $('#pharmacyCity').val(ui.item.pharmacy.city);
+    	  $('#pharmacyProvince').val(ui.item.pharmacy.province);
+    	  $('#pharmacyPostalCode').val(ui.item.pharmacy.postalCode);
+    	  $('#pharmacyPhone1').val(ui.item.pharmacy.phone1);
+    	  $('#pharmacyPhone2').val(ui.item.pharmacy.phone2);
+    	  $('#pharmacyFax').val(ui.item.pharmacy.fax);
+    	  $('#pharmacyEmail').val(ui.item.pharmacy.email);
+    	  $('#pharmacyServiceLocationId').val(ui.item.pharmacy.serviceLocationIdentifier);
+    	  $('#pharmacyNotes').val(ui.item.pharmacy.notes);
+    	  return false;
+      }      
+    })
+  });
+  
+  function editPharmacy(data) {
+	  resetForm();
+	  var json = JSON.parse(data);
+	  
+	  $('#pharmacyId').val(json["id"]);
+	  $('#pharmacyName').val(json["name"]);
+	  $('#pharmacyAddress').val(json["address"]);
+	  $('#pharmacyCity').val(json["city"]);
+	  $('#pharmacyProvince').val(json["province"]);
+	  $('#pharmacyPostalCode').val(json["postalCode"]);
+	  $('#pharmacyPhone1').val(json["phone1"]);
+	  $('#pharmacyPhone2').val(json["phone2"]);
+	  $('#pharmacyFax').val(json["fax"]);
+	  $('#pharmacyServiceLocationId').val(json["serviceLocationIdentifier"]);
+	  $('#pharmacyNotes').val(json["notes"]);
+	  
+  }
+  
+  function resetForm() {
+	  $('#pharmacyId').val("");
+	  $('#pharmacyName').val("");
+	  $('#pharmacyAddress').val("");
+	  $('#pharmacyCity').val("");
+	  $('#pharmacyProvince').val("");
+	  $('#pharmacyPostalCode').val("");
+	  $('#pharmacyPhone1').val("");
+	  $('#pharmacyPhone2').val("");
+	  $('#pharmacyFax').val("");
+	  $('#pharmacyEmail').val("");
+	  $('#pharmacyServiceLocationId').val("");
+	  $('#pharmacyNotes').val("");
+	  
+	  return false;
+  }
+  
+  function savePharmacy() {
+	  	  
+	  var data = $("#pharmacyForm").serialize();
+	  $.post("<%=request.getContextPath() + "/oscarRx/managePharmacy.do?method=save"%>",
+		  data, function( data ) {
+	      	if( data.id ) {
+	      		
+	      		var select = $('#preferedPharmacy>option:selected');
+	      		var json = JSON.parse($(select).val());
+	      		if( data.id = json.id ) {	      			
+	      			$(select).val(JSON.stringify(data));
+	      		}
+	      	    alert("Record saved!");
+	      	    resetForm();
+	      	    
+	      	}
+	      	else {
+	      	    alert("There was a problem saving your record");
+	      	}
+	  },
+	  "json"	  
+	  );
+	  
+	  return false;
+  }
+  
+  function setPreferredPharmacy() {
+	  
+	  if( $('#preferredOrder>option:selected').val() == -1 ) {
+		  alert("You have not set the preference order for this pharmacy");
+		  return false;
+	  }
+	  
+	  if( $("#pharmacyId").val() == "" ) {
+		  alert("You must save or add the pharmacy first before setting it as a preferred pharmacy");
+		  return false;
+	  }
+	  	  
+	  if( $('#preferredOrder > option:selected').val() > $('#preferedPharmacy > option').length) {
+		  
+		  $('#preferredOrder').val($('#preferedPharmacy > option').length+1);
+		  
+	  }
+	  
+	  var data = $("#pharmacyForm").serialize();
+	  $.post("<%=request.getContextPath() + "/oscarRx/managePharmacy.do?method=setPreferred"%>",
+		  data, function( data ) {
+		  
+		  	if( data.id ) {
+			  
+		  		populatePreferredPharmacy();	
+		  		
+		  		setTimeout( function() {
+		  			$("#preferedPharmacy > option").each( function() {
+			  			
+			  			var val = JSON.parse($(this).val());
+			  			
+			  			if( val.id == data.id ) {
+			  				$(this).prop("selected",true);
+			  			}
+			  		});
+			  		
+		  			alert("Preferred Pharmacy set");	
+		  		}, 1000);
+			  	
+		  		
+	  			
+	  		}
+	  		else {
+	  			
+	  			alert("There was an error setting your preferred Pharmacy");
+	  			
+	  		}
+		},
+		"json"
+	);
+
+	return false;
+  }
+  
+  
+  function addPharmacy() {
+	  
+	  if( $("#pharmacyName").val() == "" ) {
+		  alert("Please fill in at least the name of a pharmacy");
+		  return false;
+	  } 
+	  
+	  if( $("#pharmacyId").val() != "" ) {
+		  var newPharmacy = confirm("Is this a new Pharmacy? If not click Save instead.");
+		  if( !newPharmacy ) {
+		  	return false;
+		  }
+		  else {
+			  $("pharmacyId").val("");
+		  }
+	  }
+	  
+	  var data = $("#pharmacyForm").serialize();
+	  
+	  $.post("<%=request.getContextPath() + "/oscarRx/managePharmacy.do?method=add"%>",
+			  data, function( data ) {
+		  		if( data.success ) {
+		  			alert("Pharmacy was added!");
+		  		}
+		  		else {
+		  			alert("There was an error saving your Pharmacy");
+		  		}
+	  		},
+	  		"json"
+	  	);
+	  
+	  return false;
+  }
+  
+  function unlinkPharmacy(data) {
+	  
+	  if( $('#preferedPharmacy > option').length == 0 ) {
+		  alert("There are no Pharmacies to unlink!");
+		  return false;
+	  }
+	  
+	  var data = $("#pharmacyForm").serialize();
+	  $.post("<%=request.getContextPath() + "/oscarRx/managePharmacy.do?method=unlink"%>",
+		  data, function( data ) {
+		  
+		  	if( data.id ) {
+			  
+		  		populatePreferredPharmacy();			  	
+			  	
+			  	alert("Pharmacy was successfully removed from the preferred pharmacy list");
+	  			
+	  		}
+	  		else {
+	  			
+	  			alert("There was an error setting your preferred Pharmacy");
+	  			
+	  		}
+		},
+		"json"
+	);
+
+	return false;
+	  
+  }
+  
+  function deletePharmacy(data) {
+	  
+	  if( $("#pharmacyId").val() == "" ) {
+		  alert("Please select a pharmacy to delete!");
+		  return false;
+	  }
+	  
+	  
+	  if( confirm("You are about to remove this pharmacy from EVERY patient's preferred list.  Are you sure you want to continue?")) {
+		  
+		  var data = $("#pharmacyForm").serialize();
+		  $.post("<%=request.getContextPath() + "/oscarRx/managePharmacy.do?method=delete"%>",
+				  data, function( data ) {
+				  
+				  	if( data.success ) {
+					  
+				  		populatePreferredPharmacy();			  	
+					  	
+					  	alert("Pharmacy was successfully removed from the pharmacy list");
+			  			resetForm();
+			  		}
+			  		else {
+			  			
+			  			alert("There was an error deleting the Pharmacy");
+			  			
+			  		}
+				},
+				"json"
+			);
+	  }
+	  
+	  return false;
+  }
+  
+  function populatePreferredPharmacy() {
+	  
+	  var demo = $("#demographicNo").val();
+	  	$.get("<%=request.getContextPath() + "/oscarRx/managePharmacy.do?method=getPharmacyFromDemographic&demographicNo="%>"+demo,
+	  			function( data ) {
+	  				$("#preferedPharmacy").find("option").remove();
+	  				
+	  				var json;
+	  				var preferredPharmacyInfo;
+	  				for( var idx = 0; idx < data.length; ++idx  ) {
+	  					preferredPharmacyInfo = data[idx];
+	  					json = JSON.stringify(preferredPharmacyInfo);
+	  					$("#preferedPharmacy").append($("<option></option>").val(json).text(preferredPharmacyInfo.name + " " + preferredPharmacyInfo.city));
+	  				}			
+	  	},
+	  	"json"
+	  	);
+  }
+
+</script>
 </head>
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
-
+<form id="pharmacyForm">
 <table border="0" cellpadding="0" cellspacing="0"
 	style="border-collapse: collapse" bordercolor="#111111" width="100%"
 	id="AutoNumber1" height="100%">
 	<%@ include file="TopLinks.jsp"%><!-- Row One included here-->
 	<tr>
-		<%@ include file="SideLinksNoEditFavorites2.jsp"%><!-- <td></td>Side Bar File --->
 		<td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%"
 			valign="top">
 		<table cellpadding="0" cellspacing="2"
@@ -85,49 +387,103 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 					property="firstName" /></div>
 				<br />
 				&nbsp; <bean:message key="SelectPharmacy.instructions" /></td>
-			</tr>
+			</tr>			
 			<tr>
 				<td>
-				<div class="DivContentSectionHead"><a
-					href="ManagePharmacy2.jsp?type=Add"><bean:message
-					key="SelectPharmacy.addLink" /></a></div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-				<% RxPharmacyData pharmacy = new RxPharmacyData();
-                         List<org.oscarehr.common.model.PharmacyInfo> pharList = pharmacy.getAllPharmacies();
-                       %>
+				
+				Search&nbsp;&nbsp;<input type="text" id="autocompletepharmacy"/>&nbsp;&nbsp;Preferred Pharmacies&nbsp;&nbsp;<select id="preferedPharmacy" name="preferedPharmacy"> 
+				<%
+					RxPharmacyData pharmacyData = new RxPharmacyData();
+			        List<PharmacyInfo> pharmacyList;
+			        pharmacyList = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
+			        if( pharmacyList != null ) {
+			        	for( PharmacyInfo pharmacyInfo : pharmacyList ) {
+			        		JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);    
+				%>
+							<option value='<%=jsonObject.toString().replaceAll("'", "\\'")%>'><%=pharmacyInfo.getName() + " " + pharmacyInfo.getCity()%></option>
+				<%
+			        	}
+			        }
+				%>
+				</select>
 
+				<input type="button" value="<bean:message key="SelectPharmacy.editLink" />" onclick="editPharmacy($('#preferedPharmacy>option:selected').val())"/>&nbsp;
+				<input type="button" value="Unlink" onclick="unlinkPharmacy($('#preferedPharmacy>option:selected').val())"/>
+				<input type="hidden" id="pharmacyId" name="pharmacyId"/>
+				<input type="hidden" id="demographicNo" name="demographicNo" value="<%=bean.getDemographicNo()%>"/>
                 <div style=" width:860px; height:460px; overflow:auto;">
 				<table>
 					<tr>
 						<td><bean:message key="SelectPharmacy.table.pharmacyName" /></td>
 						<td><bean:message key="SelectPharmacy.table.address" /></td>
-						<td><bean:message key="SelectPharmacy.table.city" /></td>
-						<td><bean:message key="SelectPharmacy.table.phone" /></td>
-						<td><bean:message key="SelectPharmacy.table.fax" /></td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
+						<td><bean:message key="SelectPharmacy.table.city" /></td>						
 					</tr>
-					<% for (int i = 0 ; i < pharList.size(); i++){
-                               org.oscarehr.common.model.PharmacyInfo ph = pharList.get(i);
-                            %>
 					<tr>
-						<td><a
-							href="LinkPharmacy2.do?ID=<%=ph.getId2()%>&DemoId=<jsp:getProperty name="patient" property="demographicNo"/>"><%=ph.getName()%></a></td>
-						<td><%=ph.getAddress()%></td>
-						<td><%=ph.getCity()%></td>
-						<td><%=ph.getPhone1()%></td>
-						<td><%=ph.getFax()%></td>
-						<td><a href="ManagePharmacy2.jsp?type=Edit&ID=<%=ph.getId2()%>"><bean:message
-							key="SelectPharmacy.editLink" /></a></td>
-						<td><a href="ManagePharmacy2.jsp?type=Delete&ID=<%=ph.getId2()%>"><bean:message
-							key="SelectPharmacy.deleteLink" /></a></td>
+						<td>
+						<input type="text" id="pharmacyName" name="pharmacyName"/>
+						
+						<!-- a
+							href="LinkPharmacy2.do?ID=&DemoId=<jsp:getProperty name="patient" property="demographicNo"/>"></a--></td>
+						<td><input type="text" id="pharmacyAddress" name="pharmacyAddress" size="32"/></td>
+						<td><input type="text" id="pharmacyCity" name="pharmacyCity" size="32"/></td>							
 					</tr>
-					<% } %>
+					<tr>
+						<td>Province</td>
+						<td colspan="2">Postal Code</td>
+					</tr>
+					<tr>
+						<td><input type="text" id="pharmacyProvince" name="pharmacyProvince" size="32"/></td>
+						<td colspan="2"><input type="text" id="pharmacyPostalCode" name="pharmacyPostalCode" size="12"/></td>
+					</tr>
+					<tr>
+						<td><bean:message key="SelectPharmacy.table.phone"/></td>
+						<td>Phone 2</td>
+						<td><bean:message key="SelectPharmacy.table.fax" /></td>
+					</tr>
+					<tr>											
+						<td><input type="text" id="pharmacyPhone1" name="pharmacyPhone1" size="12"/></td>
+						<td><input type="text" id="pharmacyPhone2" name="pharmacyPhone2" size="12"/></td>
+						<td><input type="text" id="pharmacyFax" name="pharmacyFax" size="12"/></td>
+					</tr>
+					<tr>
+						<td>Email</td>
+						<td><bean:message key="ManagePharmacy.txtfld.label.serviceLocationIdentifier" />
+					</tr>
+					<tr>
+						<td><input type="text" id="pharmacyEmail" name="pharmacyEmail" size="32"/></td>
+						<td colspan="2"><input type="text" id="pharmacyServiceLocationId" name="pharmacyServiceLocationId" size="32"/></td>
+					</tr>
+					<tr>
+						<td colspan="3">Notes</td>
+					</tr>
+					<tr>
+						<td colspan="3"><textarea id="pharmacyNotes" name="pharmacyNotes" cols="32" rows="5"></textarea></td>
+					</tr>
+					<tr>
+						<td>
+						
+						<input type="button" value="Save" onclick="return savePharmacy();"/>&nbsp;
+						<input type="button" value="<bean:message key="SelectPharmacy.addLink" />" onclick="return addPharmacy();"/><br/><br/>
+						<input type="button" value="Set Preferred Pharmacy" onclick="return setPreferredPharmacy();"/> &nbsp;<select id="preferredOrder" name="preferredOrder"><option value="-1">Set Priority</option>
+						<%
+							for( int idx = 1; idx <= 10; ++idx ) {
+						%>
+								<option value="<%=idx%>"><%=idx%></option>
+						<%							    
+							}
+						
+						%>
+						
+						</select>	
+							</td>
+						<td colspan="2">
+						<input type="button" value="Reset" onclick="return resetForm();"/>&nbsp;
+						<input type="button" value="<bean:message key="SelectPharmacy.deleteLink" />" onclick="return deletePharmacy($('#preferedPharmacy>option:selected').val())"/></td>
+					</tr>
+					
 				</table>
                 </div>
+                
 				</td>
 			</tr>
 
@@ -160,7 +516,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 			colspan="2"></td>
 	</tr>
 </table>
-
+</form>
 </body>
 
 </html:html>

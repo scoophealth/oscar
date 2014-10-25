@@ -27,6 +27,7 @@
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.common.dao.DrugDao"%>
 <%@page import="org.oscarehr.common.model.Drug"%>
+<%@ page import="org.oscarehr.common.model.PharmacyInfo"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
@@ -155,12 +156,8 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
             }
 
             RxPharmacyData pharmacyData = new RxPharmacyData();
-            org.oscarehr.common.model.PharmacyInfo pharmacy;
-            pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(demoNo));
-            String prefPharmacy = "";
-            if (pharmacy != null) {
-                prefPharmacy = pharmacy.getName();
-            }
+            List<PharmacyInfo> pharmacyList;
+            pharmacyList = pharmacyData.getPharmacyFromDemographic(Integer.toString(demoNo));                        
 
             String drugref_route = OscarProperties.getInstance().getProperty("drugref_route");
             if (drugref_route == null) {
@@ -676,6 +673,7 @@ function checkFav(){
             }});
    	 }
     }
+       
 </script>
 
                <style type="text/css" media="print">
@@ -1123,7 +1121,7 @@ body {
     </div>
 
 <%
-                        if (pharmacy != null) {
+                        if (pharmacyList != null) {
 %>
 <div id="Layer1" style="position: absolute; left: 1px; top: 1px; width: 350px; height: 311px; visibility: hidden; z-index: 1; background-color: white;"><!--  This should be changed to automagically fill if this changes often -->
 
@@ -1137,55 +1135,55 @@ body {
         <tr class="LightBG">
             <td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgName"/></td>
             <td class="wcblayerItem">&nbsp;</td>
-            <td><%=pharmacy.getName()%></td>
+            <td id="pharmacyName"></td>
         </tr>
 
         <tr class="LightBG">
             <td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgAddress"/></td>
             <td class="wcblayerItem">&nbsp;</td>
-            <td><%=pharmacy.getAddress()%></td>
+            <td id="pharmacyAddress"></td>
         </tr>
         <tr class="LightBG">
             <td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgCity"/></td>
             <td class="wcblayerItem">&nbsp;</td>
-            <td><%=pharmacy.getCity()%></td>
+            <td id="pharmacyCity"></td>
         </tr>
 
         <tr class="LightBG">
             <td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgProvince"/></td>
             <td class="wcblayerItem">&nbsp;</td>
-            <td><%=pharmacy.getProvince()%></td>
+            <td id="pharmacyProvince"></td>
         </tr>
         <tr class="LightBG">
             <td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgPostalCode"/> :</td>
             <td class="wcblayerItem">&nbsp;</td>
-            <td><%=pharmacy.getPostalCode()%></td>
+            <td id="pharmacyPostalCode"></td>
         </tr>
         <tr class="LightBG">
             <td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgPhone1"/> :</td>
             <td class="wcblayerItem">&nbsp;</td>
-            <td><%=pharmacy.getPhone1()%></td>
+            <td id="pharmacyPhone1"></td>
         </tr>
         <tr class="LightBG">
             <td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgPhone2"/> :</td>
             <td class="wcblayerItem">&nbsp;</td>
-            <td><%=pharmacy.getPhone2()%></td>
+            <td id="pharmacyPhone2"></td>
         </tr>
         <tr class="LightBG">
             <td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgFax"/> :</td>
             <td class="wcblayerItem">&nbsp;</td>
-            <td><%=pharmacy.getFax()%></td>
+            <td id="pharmacyFax"></td>
         </tr>
         <tr class="LightBG">
             <td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgEmail"/> :</td>
             <td class="wcblayerItem">&nbsp;</td>
-            <td><%=pharmacy.getEmail()%></td>
+            <td id="pharmacyEmail"></td>
         </tr>
         <tr class="LightBG">
             <td colspan="3" class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgNotes"/> :</td>
         </tr>
         <tr class="LightBG">
-            <td colspan="3"><%=pharmacy.getNotes()%></td>
+            <td id="pharmacyNotes" colspan="3"></td>
         </tr>
 
     </table>
@@ -1673,7 +1671,9 @@ function popForm2(scriptId){
                     h=h+(n-4)*100;
                 }
                 //oscarLog("h="+h+"--n="+n);
-                var url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp?scriptId="+scriptId;
+                var json = jQuery("#Calcs").val();
+                var pharmacy = JSON.parse(json);
+                var url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp?scriptId="+scriptId+"&pharmacyId="+pharmacy.id;
                 //oscarLog( "preview2 done");
                 myLightWindow.activateWindow({
                     href: url,

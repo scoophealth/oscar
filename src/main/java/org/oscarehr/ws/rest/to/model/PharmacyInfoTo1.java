@@ -34,7 +34,6 @@ public class PharmacyInfoTo1 implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
-	private int id2;
 	private String name;
 	private AddressTo1 address = new AddressTo1();
 	private String phone1;
@@ -44,7 +43,7 @@ public class PharmacyInfoTo1 implements Serializable {
 	private String serviceLocationIdentifier;
 	private String notes;
 	private Date addDate;
-	private String status;
+	private Character status;
 
 	public Integer getId() {
 		return id;
@@ -52,14 +51,6 @@ public class PharmacyInfoTo1 implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public int getId2() {
-		return id2;
-	}
-
-	public void setId2(int id2) {
-		this.id2 = id2;
 	}
 
 	public String getName() {
@@ -134,11 +125,11 @@ public class PharmacyInfoTo1 implements Serializable {
 		this.addDate = addDate;
 	}
 
-	public String getStatus() {
+	public Character getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Character status) {
 		this.status = status;
 	}
 }

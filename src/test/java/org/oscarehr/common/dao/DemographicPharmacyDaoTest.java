@@ -61,8 +61,8 @@ public class DemographicPharmacyDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
-	public void testDataMethods() {
-		dao.addPharmacyToDemographic(1, 100);
+	public void testDataMethods() {		
+		dao.addPharmacyToDemographic(1, 100, 1);
 		java.util.List<DemographicPharmacy> dps = dao.findByDemographicId(100);
 		assertFalse(dps.isEmpty());
 		assertEquals(1, dps.get(0).getPharmacyId());

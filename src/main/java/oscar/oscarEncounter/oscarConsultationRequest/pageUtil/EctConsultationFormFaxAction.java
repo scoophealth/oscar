@@ -39,6 +39,8 @@ import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
@@ -224,6 +226,7 @@ public class EctConsultationFormFaxAction extends Action {
 				    faxJobDao.persist(faxJob);
 				}
 
+				LogAction.addLog(provider_no, LogConst.SENT, LogConst.CON_FAX, "CONSULT "+ reqId);
 				request.setAttribute("faxSuccessful", true);
 				return mapping.findForward("success");
 			}

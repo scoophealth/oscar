@@ -61,12 +61,12 @@ reverse="<%=true%>">
 
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	RxPharmacyData pharmacyData = new RxPharmacyData();
-	org.oscarehr.common.model.PharmacyInfo pharmacy;
-	pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
+	List<PharmacyInfo>pharmacyList = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
 	String prefPharmacy = "";
-	if (pharmacy != null)
-	{
-		prefPharmacy = pharmacy.getName();
+	PharmacyInfo pharmacy = null;
+	if (pharmacyList != null && !pharmacyList.isEmpty()) {
+	    prefPharmacy = pharmacyList.get(0).getName();
+	    pharmacy = pharmacyList.get(0);
 	}
 
 	String drugref_route = OscarProperties.getInstance().getProperty("drugref_route");

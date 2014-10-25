@@ -49,6 +49,21 @@ function customWarning(){
     }
 }
 
+function populatePharmacy(data) {
+	
+	var json = JSON.parse(data);
+	
+	document.getElementById("pharmacyName").innerHTML = json["name"];
+    document.getElementById("pharmacyAddress").innerHTML = json["address"];
+    document.getElementById("pharmacyCity").innerHTML = json["city"];
+    document.getElementById("pharmacyPostalCode").innerHTML = json["postalCode"];
+    document.getElementById("pharmacyProvince").innerHTML = json["province"];
+    document.getElementById("pharmacyPhone1").innerHTML = json["phone1"];
+    document.getElementById("pharmacyPhone2").innerHTML = json["phone2"];
+    document.getElementById("pharmacyFax").innerHTML = json["fax"];
+    document.getElementById("pharmacyNotes").innerHTML = json["notes"];
+}
+
 function showpic(picture){
     if (document.getElementById){ // Netscape 6 and IE 5+
         var targetElement = document.getElementById(picture);
@@ -67,6 +82,7 @@ function showpic(picture){
             offsetLeft += document.body.leftMargin;
             offsetTop += document.body.topMargin;
         }
+        
         targetElement.style.left = offsetLeft +bal.offsetWidth;
         targetElement.style.top = offsetTop;
         targetElement.style.visibility = 'visible';
