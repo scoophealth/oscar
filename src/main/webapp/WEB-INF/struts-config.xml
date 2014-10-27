@@ -2179,7 +2179,7 @@
 			<forward name="IssueSearch" path="/casemgmt/IssueSearch.jsp" />
 			<forward name="NoDemoERR" path="/casemgmt/noDemo.jsp" />
 			<forward name="windowClose" path="/casemgmt/close.jsp" />
-			<forward name="windowCloseError" path="/casemgmt/closeWithError.html" />
+			<forward name="windowCloseError" path="/casemgmt/closeWithError.jsp" />
 			<forward name="historyview" path="/casemgmt/historyview.jsp" />
 			<forward name="showHistory" path="/casemgmt/showHistory.jsp" />
 			<forward name="issueAutoCompletion" path="/casemgmt/IssueList.jsp" />

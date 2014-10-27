@@ -1962,22 +1962,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		cform.setMethod("view");
 		String error = (String) request.getAttribute("DateError");
 		if (error != null) {
-
-			String varName = "newNote";
-			session.setAttribute(varName, false);
-			varName = "saveNote" + demoNo;
-			session.setAttribute(varName, new Boolean(true)); // tell CaseManagementView we have just saved note
-			ActionForward fwd = mapping.findForward("list");
-			StringBuilder path = new StringBuilder(fwd.getPath());
-
-			if (path.indexOf("?") == -1) path.append("?");
-			else path.append("&");
-
-			path.append("DateError=" + error);
-
-			ActionForward forward = new ActionForward();
-			forward.setPath(path.toString());
-			return forward;
+			return mapping.findForward("windowCloseError");
 		}
 
 		String toBill = request.getParameter("toBill");
