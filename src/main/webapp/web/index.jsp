@@ -24,6 +24,8 @@
 
 --%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+
 <%
 session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 %>
@@ -38,7 +40,7 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 <meta name="author" content="">
 <link rel="shortcut icon" href="../images/Oscar.ico">
 
-<title>OSCAR</title>
+<title><bean:message key="global.title" bundle="ui"/></title>
 
 <link href="../library/bootstrap/3.0.0/css/bootstrap.css" rel="stylesheet">
 <link href="../css/font-awesome.css" rel="stylesheet">
