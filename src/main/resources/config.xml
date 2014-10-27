@@ -11,20 +11,39 @@
 	</misc>
 	<myoscar_client>
 		<!-- Cache Settings, 3600000 ms is 1 hour -->
+		<!-- Cache Settings, 86400000 ms is 1 day -->
 		<account_manager_people_cache_size>256</account_manager_people_cache_size>
 		<account_manager_people_cache_time_ms>3600000</account_manager_people_cache_time_ms>
+		
+		<has_person_photo_cache_size>1024</has_person_photo_cache_size>
+		<has_person_photo_cache_time_ms>3600000</has_person_photo_cache_time_ms>
+		
+		<account_manager_people_cache_time_ms>3600000</account_manager_people_cache_time_ms>
+		<account_manager_people_cache_time_ms>3600000</account_manager_people_cache_time_ms>
+		
 		<account_manager_minimal_person_cache_size>5120</account_manager_minimal_person_cache_size>
-		<account_manager_minimal_person_cache_time_ms>86400000</account_manager_minimal_person_cache_time_ms>
-		<account_manager_can_read_person_cache_size>5120</account_manager_can_read_person_cache_size>
-		<account_manager_can_read_person_cache_time_ms>86400000</account_manager_can_read_person_cache_time_ms>
+		<account_manager_minimal_person_cache_time_ms>3600000</account_manager_minimal_person_cache_time_ms>
+		
+		<preference_cache_size>2048</preference_cache_size>
+		<preference_cache_time_ms>3600000</preference_cache_time_ms>
+		
+		<unread_message_cache_size>256</unread_message_cache_size>
+		<unread_message_cache_time_ms>300000</unread_message_cache_time_ms>
+		
+		<message_cache_size>1024</unread_message_cache_size>
+		<message_cache_time_ms>86400000</unread_message_cache_time_ms>
+
 		<medical_data_manager_data_cache_size>2048</medical_data_manager_data_cache_size>
 		<medical_data_manager_max_object_size_to_cache>5120</medical_data_manager_max_object_size_to_cache>
 		<medical_data_manager_cache_time_ms>3600000</medical_data_manager_cache_time_ms>
+		
+		<!-- deprecated -->
+
 		<message_manager_send_list_cache_size>128</message_manager_send_list_cache_size>
 		<message_manager_send_list_cache_time_ms>3600000</message_manager_send_list_cache_time_ms>
-		<unread_message_cache_size>256</unread_message_cache_size>
-		<unread_message_cache_time_ms>300000</unread_message_cache_time_ms>
 		<use_medical_data_servlet>false</use_medical_data_servlet>
+		<account_manager_can_read_person_cache_size>5120</account_manager_can_read_person_cache_size>
+		<account_manager_can_read_person_cache_time_ms>86400000</account_manager_can_read_person_cache_time_ms>
 		<remote_component_manager_cache_time_ms>300000</remote_component_manager_cache_time_ms>
 	</myoscar_client>
 </server>
