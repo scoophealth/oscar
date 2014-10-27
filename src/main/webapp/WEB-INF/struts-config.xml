@@ -2702,6 +2702,8 @@
 	<message-resources parameter="MessageResources_survey" key="survey" null="false" />
 	<message-resources parameter="MessageResources_casemgmt" key="casemgmt" null="false" />
 	<message-resources parameter="MessageResources_mcedt" key="mcedt" null="false" />
+	<message-resources parameter="uiResources" key="ui" null="false" />
+	
 	<plug-in className="org.apache.struts.tiles.TilesPlugin">
 		<!-- Path to XML definition file -->
 		<set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />
