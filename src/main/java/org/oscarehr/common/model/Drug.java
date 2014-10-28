@@ -24,6 +24,7 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -727,7 +728,13 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
     public boolean isExpired() {
 		if (endDate == null) return (false);
 
-		return ((new Date()).after(endDate));
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(endDate);
+		cal.set(Calendar.HOUR_OF_DAY,23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		
+		return ((new Date()).after(cal.getTime()));
 	}
 
 	public boolean equals(Object o) {
