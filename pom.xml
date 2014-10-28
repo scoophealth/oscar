@@ -910,6 +910,12 @@
 			<version>2013.07.22</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.oscarehr.myoscar_server</groupId>
+			<artifactId>myoscar_server_client_stubs2</artifactId>
+			<version>2014.10.24</version>
+		</dependency>
+
 		<!-- MARC-HI - Everest Framework -->
 		<dependency>
 			<groupId>org.marc.everest</groupId>
