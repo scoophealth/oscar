@@ -25,6 +25,7 @@ package org.oscarehr.ws.rest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -121,6 +122,7 @@ public class PersonaService extends AbstractServiceImpl {
 	@Produces("application/json")
 	public NavbarResponse getMyNavbar() {
 		Provider provider = getCurrentProvider();
+		ResourceBundle bundle = getResourceBundle();
 		
 		NavbarResponse result = new NavbarResponse();
 		
@@ -157,38 +159,34 @@ public class PersonaService extends AbstractServiceImpl {
 		 */
 		NavBarMenuTo1 navBarMenu = new NavBarMenuTo1();
 		
-		MenuTo1 patientSearchMenu = new MenuTo1().add(0,"New Patient",null,"#/newpatient")
-				.add(1,"Advanced Search",null,"#/search");
+		MenuTo1 patientSearchMenu = new MenuTo1().add(0,bundle.getString("navbar.menu.newPatient"),null,"#/newpatient")
+				.add(1,bundle.getString("navbar.menu.advancedSearch"),null,"#/search");
 		navBarMenu.setPatientSearchMenu(patientSearchMenu);
 		
 		MenuTo1 menu = new MenuTo1()
-				.addWithState(0,"Inbox",null,"inbox")
-				.addWithState(1,"Consults",null,"consults")
-				.addWithState(2,"Billing",null,"billing")
-				.addWithState(3,"Tickler",null,"ticklers")
-				.addWithState(4,"Schedule",null,"schedule")
+				.addWithState(0,bundle.getString("navbar.menu.inbox"),null,"inbox")
+				.addWithState(1,bundle.getString("navbar.menu.consults"),null,"consults")
+				.addWithState(2,bundle.getString("navbar.menu.billing"),null,"billing")
+				.addWithState(3,bundle.getString("navbar.menu.tickler"),null,"ticklers")
+				.addWithState(4,bundle.getString("navbar.menu.schedule"),null,"schedule")
 				//.add(0,"K2A",null,"#/k2a")
-				.addWithState(5,"Admin",null,"admin");
+				.addWithState(5,bundle.getString("navbar.menu.admin"),null,"admin");
 		navBarMenu.setMenu(menu);
 	/*	
 		MenuTo1 moreMenu = new MenuTo1()
-		.add(0,"Reports",null,"reports")
 		.add(1,"Caseload",null,"#/caseload")
 		.add(2,"Resources",null,"#/resources")
-		.add(3,"Documents",null,"#/documents");
 		navBarMenu.setMoreMenu(moreMenu);
 		*/
 		MenuTo1 moreMenu2 = new MenuTo1()
-		.addWithState(0,"Reports",null,"reports")
-	//	.add(1,"Caseload",null,"#/caseload")
-	//	.add(2,"Resources",null,"#/resources")
-		.addWithState(1,"Documents",null,"documents");
+		.addWithState(0,bundle.getString("navbar.menu.reports"),null,"reports")
+		.addWithState(1,bundle.getString("navbar.menu.documents"),null,"documents");
 		navBarMenu.setMoreMenu(moreMenu2);
 		
 		MenuTo1 userMenu = new MenuTo1()
-		.addWithState(0,"Settings",null,"settings")
-		.addWithState(1,"Support",null,"support")
-		.addWithState(2,"Help",null,"help");
+		.addWithState(0,bundle.getString("navbar.menu.settings"),null,"settings")
+		.addWithState(1,bundle.getString("navbar.menu.support"),null,"support")
+		.addWithState(2,bundle.getString("navbar.menu.help"),null,"help");
 		navBarMenu.setUserMenu(userMenu);
 		
 		result.setMenus(navBarMenu);

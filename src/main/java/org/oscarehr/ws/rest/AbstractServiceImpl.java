@@ -23,6 +23,9 @@
  */
 package org.oscarehr.ws.rest;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -45,6 +48,27 @@ public abstract class AbstractServiceImpl {
 		Message message = PhaseInterceptorChain.getCurrentMessage();
 	    HttpServletRequest request = (HttpServletRequest)message.get(AbstractHTTPDestination.HTTP_REQUEST);
 	    return(request);
+	}
+	
+	/**
+	 * Gets the client's locale
+	 * 
+	 * @return
+	 */
+	protected Locale getLocale()
+	{
+		return getHttpServletRequest().getLocale();
+	}
+	
+	/**
+	 * 
+	 * Get the UI resource bundle for locale specific messages
+	 * 
+	 * @return
+	 */
+	protected ResourceBundle getResourceBundle() 
+	{
+		return ResourceBundle.getBundle("uiResources", getLocale());
 	}
 
 	/**
