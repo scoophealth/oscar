@@ -1514,8 +1514,8 @@
 
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
-    <artifactId>native2ascii-maven-plugin</artifactId>
-    <version>1.0-alpha-1</version>
+    <artifactId>native2ascii-maven-plugin</artifactId>  
+    <version>1.0-beta-1</version>  
     <executions>
         <execution>
             <id>native2ascii-utf8-resources</id>
@@ -1526,7 +1526,7 @@
                 <dest>src/main/resources</dest>
                 <src>src/main/resources/native-bundles</src>
                 <encoding>UTF8</encoding>
-                <includes>uiResources_*.properties</includes>
+                <include>uiResources_*.properties</include>
             </configuration>
         </execution>
     </executions>
