@@ -48,6 +48,8 @@ import org.oscarehr.ws.rest.conversion.SecuserroleConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.NavbarResponse;
+import org.oscarehr.ws.rest.to.PatientList;
+import org.oscarehr.ws.rest.to.PersonaResponse;
 import org.oscarehr.ws.rest.to.PersonaRightsResponse;
 import org.oscarehr.ws.rest.to.PrimitiveResponseWrapper;
 import org.oscarehr.ws.rest.to.model.MenuTo1;
@@ -200,4 +202,23 @@ public class PersonaService extends AbstractServiceImpl {
 		programManager2.setCurrentProgramInDomain(getLoggedInInfo().getLoggedInProviderNo(), programId);
 		return new GenericRESTResponse();
 	}
+	
+	@GET
+	@Path("/patientLists")
+	@Produces("application/json")
+	public PersonaResponse getMyPatientLists() {
+		Provider provider = getCurrentProvider();
+		
+		PersonaResponse response = new PersonaResponse();
+
+		response.getPatientListTabItems().add(new PatientList(0,"Appts.","../ws/rs/schedule/day/today","patientlist/patientList1.jsp","GET"));
+		response.getPatientListTabItems().add(new PatientList(1,"Recent","../ws/rs/providerService/getRecentDemographicsViewed?startIndex=0&itemsToReturn=100","patientlist/recent.jsp","GET"));
+		
+		response.getPatientListMoreTabItems().add(new PatientList(0,"Patient Sets","../ws/rs/reporting/demographicSets/patientList","patientlist/demographicSets.html","POST"));
+		response.getPatientListMoreTabItems().add(new PatientList(1,"Caseload",null,"patientlist/program.jsp",null));
+		
+		return response;
+	}
+	
 }
+
