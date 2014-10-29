@@ -606,7 +606,7 @@
 		<dependency>
 			<groupId>ca.bornontario</groupId>
 			<artifactId>x18MEWBV</artifactId>
-			<version>1.6.3</version>
+			<version>1.8</version>
 		</dependency>
 
         <!-- FOR ORN Project - CKD config in XML format -->

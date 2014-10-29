@@ -784,22 +784,41 @@
 			<element name="Weight" type="tns:unsignedInt5" minOccurs="0"></element>
 			<element name="HeadCirc" type="tns:unsignedDecimal21" minOccurs="0"></element>
 			<element name="ParentalCaregiverConcerns" type="tns:string2500" minOccurs="0"></element>
+
+
 			<element name="NutritionBreastfeeding" type="tns:YesNoNotDiscussed" minOccurs="0"></element>
 			<element name="NutritionHomogenizedMilk" type="tns:YesNoNotDiscussed" minOccurs="0"></element>
 			<element name="NutritionAvoidSweetJuicesLiquids" type="tns:YesNoNotDiscussed" minOccurs="0"></element>
 			<element name="NutritionNoBottles" type="tns:YesNoNotDiscussed" minOccurs="0"></element>
+
+
 			<element name="EducationAdviceInjuryPrevCarSeat" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
 			<element name="EducationAdviceInjuryPrevBathSafety" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
 			<element name="EducationAdviceInjuryPrevChokingSafeToys" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+			<element name="EducationAdviceInjuryPrevFalls" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+			<element name="EducationAdviceInjuryPrevWeanFromPacifier" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+
+
 			<element name="EducationAdviceBehaviourDisciplineParentingSkills" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
 			<element name="EducationAdviceBehaviourParentChildInteraction" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+			<element name="EducationAdviceBehaviourHealthySleepHabits" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+
+
 			<element name="EducationAdviceFamilyParentalFatigueStress" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
 			<element name="EducationAdviceFamilyHighRiskChildren" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
-			<element name="EducationAdviceOtherSocializing" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+			<element name="EducationAdviceFamilyHealthyActiveLiving" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+			<element name="EducationAdviceFamilyEncourageReading" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+			<element name="EducationAdviceFamilySocializing" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+
+
+			<element name="EducationAdviceEnvironmentalHealthSecondHandSmoke" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+			<element name="EducationAdviceEnvironmentalHealthSerumLead" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+			<element name="EducationAdviceEnvironmentalHealthSunExposure" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+			<element name="EducationAdviceEnvironmentalHealthPesticideExposure" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+
 			<element name="EducationAdviceOtherDentalCare" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
 			<element name="EducationAdviceOtherToiletLearning" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
-			<element name="EducationAdviceOtherWeanFromPacifier" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
-			<element name="EducationAdviceOtherEncourageReading" type="tns:DiscussedConcernNotDiscussed" minOccurs="0"></element>
+
 			<element name="DevelopmentNDDSNotAttained18M01" type="tns:NDDSQuestionNum" minOccurs="0"></element>
 			<element name="DevelopmentNDDSNotAttained18M02" type="tns:NDDSQuestionNum" minOccurs="0"></element>
 			<element name="DevelopmentNDDSNotAttained18M03" type="tns:NDDSQuestionNum" minOccurs="0"></element>
@@ -842,6 +861,7 @@
 			<element name="ProblemsAndPlans" type="tns:ProblemsAndPlans" minOccurs="0" maxOccurs="unbounded"></element>
 			<element name="ProblemsAndPlansOther" type="tns:string2500" minOccurs="0"></element>
 			<element name="Signature18M" type="tns:string250" minOccurs="0"></element>
+			<element name="NeedForAddAssessmentNo" type="tns:YesNoUnknown" minOccurs="0"></element>
     	</sequence>
     </complexType>
 

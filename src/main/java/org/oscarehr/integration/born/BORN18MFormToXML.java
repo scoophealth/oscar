@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.apache.xmlbeans.XmlCalendar;
 import org.apache.xmlbeans.XmlOptions;
@@ -57,12 +59,16 @@ import oscar.oscarPrevention.PreventionDisplayConfig;
 import oscar.util.StringUtils;
 
 import oscar.OscarProperties;
-import oscar.util.UtilDateUtilities;
 
 import ca.bornontario.x18MEWBV.*;
 
 
 public class BORN18MFormToXML {
+	
+	private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd");
+	private SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
 	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	EFormValueDao eformValueDao = SpringUtils.getBean(EFormValueDao.class);
@@ -329,13 +335,16 @@ public class BORN18MFormToXML {
 			else if (name.equals("interestedinchildren_18m_x")) rbrm18.setDevelopmentSocialEmotionalInterestedInChildren(2);
 			else if (name.equals("behaviourmanageable_18m_o")) rbrm18.setDevelopmentSocialEmotionalManagableBehaviour(1);
 			else if (name.equals("behaviourmanageable_18m_x")) rbrm18.setDevelopmentSocialEmotionalManagableBehaviour(2);
-
 			else if (name.equals("disciplineparenting_18m_o")) rbrm18.setEducationAdviceBehaviourDisciplineParentingSkills(1);
 			else if (name.equals("disciplineparenting_18m_x")) rbrm18.setEducationAdviceBehaviourDisciplineParentingSkills(2);
+			else if (name.equals("sleephabits_18m_o")) rbrm18.setEducationAdviceBehaviourHealthySleepHabits(1);
+			else if (name.equals("sleephabits_18m_x")) rbrm18.setEducationAdviceBehaviourHealthySleepHabits(2);
 			else if (name.equals("pcinteraction_18m_o")) rbrm18.setEducationAdviceBehaviourParentChildInteraction(1);
 			else if (name.equals("pcinteraction_18m_x")) rbrm18.setEducationAdviceBehaviourParentChildInteraction(2);
 			else if (name.equals("highrisk_18m_o")) rbrm18.setEducationAdviceFamilyHighRiskChildren(1);
 			else if (name.equals("highrisk_18m_x")) rbrm18.setEducationAdviceFamilyHighRiskChildren(2);
+			else if (name.equals("familyActiveLiving_18m_o")) rbrm18.setEducationAdviceFamilyHealthyActiveLiving(1);
+			else if (name.equals("familyActiveLiving_18m_x")) rbrm18.setEducationAdviceFamilyHealthyActiveLiving(2);
 			else if (name.equals("depression_18m_o")) rbrm18.setEducationAdviceFamilyParentalFatigueStress(1);
 			else if (name.equals("depression_18m_x")) rbrm18.setEducationAdviceFamilyParentalFatigueStress(2);
 			else if (name.equals("bathsafety_18m_o")) rbrm18.setEducationAdviceInjuryPrevBathSafety(1);
@@ -344,17 +353,26 @@ public class BORN18MFormToXML {
 			else if (name.equals("carseat_18m_x")) rbrm18.setEducationAdviceInjuryPrevCarSeat(2);
 			else if (name.equals("choking_18m_o")) rbrm18.setEducationAdviceInjuryPrevChokingSafeToys(1);
 			else if (name.equals("choking_18m_x")) rbrm18.setEducationAdviceInjuryPrevChokingSafeToys(2);
+			else if (name.equals("falls_18m_o")) rbrm18.setEducationAdviceInjuryPrevFalls(1);
+			else if (name.equals("falls_18m_x")) rbrm18.setEducationAdviceInjuryPrevFalls(2);
+			else if (name.equals("weanpacifier_18m_o")) rbrm18.setEducationAdviceInjuryPrevWeanFromPacifier(1);
+			else if (name.equals("weanpacifier_18m_x")) rbrm18.setEducationAdviceInjuryPrevWeanFromPacifier(2);
 			else if (name.equals("dental_18m_o")) rbrm18.setEducationAdviceOtherDentalCare(1);
 			else if (name.equals("dental_18m_x")) rbrm18.setEducationAdviceOtherDentalCare(2);
-			else if (name.equals("reading_18m_o")) rbrm18.setEducationAdviceOtherEncourageReading(1);
-			else if (name.equals("reading_18m_x")) rbrm18.setEducationAdviceOtherEncourageReading(2);
-			else if (name.equals("socializing_18m_o")) rbrm18.setEducationAdviceOtherSocializing(1);
-			else if (name.equals("socializing_18m_x")) rbrm18.setEducationAdviceOtherSocializing(2);
+			else if (name.equals("reading_18m_o")) rbrm18.setEducationAdviceFamilyEncourageReading(1);
+			else if (name.equals("reading_18m_x")) rbrm18.setEducationAdviceFamilyEncourageReading(2);
+			else if (name.equals("socializing_18m_o")) rbrm18.setEducationAdviceFamilySocializing(1);
+			else if (name.equals("socializing_18m_x")) rbrm18.setEducationAdviceFamilySocializing(2);
 			else if (name.equals("toiletlearning_18m_o")) rbrm18.setEducationAdviceOtherToiletLearning(1);
 			else if (name.equals("toiletlearning_18m_x")) rbrm18.setEducationAdviceOtherToiletLearning(2);
-			else if (name.equals("weanpacifier_18m_o")) rbrm18.setEducationAdviceOtherWeanFromPacifier(1);
-			else if (name.equals("weanpacifier_18m_x")) rbrm18.setEducationAdviceOtherWeanFromPacifier(2);
-			
+			else if (name.equals("secondhandsmoke_18m_o")) rbrm18.setEducationAdviceEnvironmentalHealthSecondHandSmoke(1);
+			else if (name.equals("secondhandsmoke_18m_x")) rbrm18.setEducationAdviceEnvironmentalHealthSecondHandSmoke(2);
+			else if (name.equals("serumlead_18m_o")) rbrm18.setEducationAdviceEnvironmentalHealthSerumLead(1);
+			else if (name.equals("serumlead_18m_x")) rbrm18.setEducationAdviceEnvironmentalHealthSerumLead(2);
+			else if (name.equals("sunexposure_18m_o")) rbrm18.setEducationAdviceEnvironmentalHealthSunExposure(1);
+			else if (name.equals("sunexposure_18m_x")) rbrm18.setEducationAdviceEnvironmentalHealthSunExposure(2);
+			else if (name.equals("pesticide_18m_o")) rbrm18.setEducationAdviceEnvironmentalHealthPesticideExposure(1);
+			else if (name.equals("pesticide_18m_x")) rbrm18.setEducationAdviceEnvironmentalHealthPesticideExposure(2);
 			else if (name.equals("avoidsweetened_18m_o")) rbrm18.setNutritionAvoidSweetJuicesLiquids(1);
 			else if (name.equals("avoidsweetened_18m_x")) rbrm18.setNutritionAvoidSweetJuicesLiquids(2);
 			else if (name.equals("breastfeeding_18m_o")) rbrm18.setNutritionBreastfeeding(1);
@@ -363,7 +381,7 @@ public class BORN18MFormToXML {
 			else if (name.equals("formulafeeding_18m_x")) rbrm18.setNutritionHomogenizedMilk(2);
 			else if (name.equals("nobottle_18m_o")) rbrm18.setNutritionNoBottles(1);
 			else if (name.equals("nobottle_18m_x")) rbrm18.setNutritionNoBottles(2);
-			
+	
 			else if (name.equals("corneallightreflex_18m_o")) rbrm18.setPhysicalCornealLightReflex(1);
 			else if (name.equals("corneallightreflex_18m_x")) rbrm18.setPhysicalCornealLightReflex(2);
 			else if (name.equals("anteriorfontanelles_18m_o")) rbrm18.setPhysicalExamAnteriorFontanelles(1);
@@ -510,16 +528,22 @@ public class BORN18MFormToXML {
 	private Calendar formDateTimeToCal(Integer fdid) {
 		EFormData eformData = eformDataDao.find(fdid);
 		
-		String formDate = UtilDateUtilities.DateToString(eformData.getFormDate(), "yyyy-MM-dd");
-		String formTime = UtilDateUtilities.DateToString(eformData.getFormTime(), "HH:mm:ss");
-		Date formDateTime = UtilDateUtilities.StringToDate(formDate + " " + formTime, "yyyy-MM-dd HH:mm:ss");
+		String formDate = dateFormatter.format(eformData.getFormDate());
+		String formTime = timeFormatter.format(eformData.getFormTime());
+		String dateTime = formDate + " " + formTime;
+		Date formDateTime = null;
+        try {
+	        formDateTime = dateTimeFormatter.parse(dateTime);
+        } catch (ParseException e) {
+	
+        }
 		
 		return dateToCal(formDateTime);
 	}
 	
 	private Calendar dateToCal(Date inDate) {
-		String date = UtilDateUtilities.DateToString(inDate, "yyyy-MM-dd");
-		String time = UtilDateUtilities.DateToString(inDate, "HH:mm:ss");
+		String date = dateFormatter.format(inDate);
+		String time = timeFormatter.format(inDate);
 		try {
 			XmlCalendar x = new XmlCalendar(date+"T"+time);
 			return x;
@@ -530,7 +554,15 @@ public class BORN18MFormToXML {
     }
 	
 	private Date stringToDate(String date) {
-		return UtilDateUtilities.StringToDate(date, "yyyy-MM-dd");
+		
+		Date newDate = null;
+		try {
+	         newDate = dateFormatter.parse(date);
+        } catch (ParseException e) {
+	 
+        }
+		
+		return newDate;
 	}
 	
 	private BigDecimal stringToBigDecimal(String n) {
