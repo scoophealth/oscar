@@ -23,50 +23,51 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 	<div class="modal-content">
 		<div class="modal-header">
-			<h3 class="modal-title">Add New Record</h3>
+			<h3 class="modal-title"><bean:message key="modal.newPatient.title" bundle="ui"/></h3>
 		</div>
 
 		<div class="modal-body" ng-hide="hasRight">
-			You have no right to create new patient!
+			<bean:message key="modal.newPatient.noRights" bundle="ui"/>
 		</div>		
 		<div class="modal-body" ng-show="hasRight">
 		<button style="margin-top: -10px;" type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()"></button>
 			<form class="form-horizontal" role="form" name="newDemographic">
 			  <div class="form-group">
-			    <label for="lastName" class="col-sm-2 control-label">Name</label>
+			    <label for="lastName" class="col-sm-2 control-label"><bean:message key="modal.newPatient.name" bundle="ui"/></label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="lastName" placeholder="Last Name" name="lastName" ng-model="demographic.lastName" ng-change="capName()" required>
+			      <input type="text" class="form-control" id="lastName" placeholder="<bean:message key="modal.newPatient.lastName" bundle="ui"/>" name="lastName" ng-model="demographic.lastName" ng-change="capName()" required>
 			    </div>
 			  </div>
 			  <div class="form-group">
 			    <label class="col-sm-2 control-label"></label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" placeholder="First Name" ng-model="demographic.firstName" ng-change="capName()" required>
+			      <input type="text" class="form-control" placeholder="<bean:message key="modal.newPatient.firstName" bundle="ui"/>" ng-model="demographic.firstName" ng-change="capName()" required>
 			    </div>
 			  </div>
 			  <div class="form-group">
-			    <label for="birthYear" class="col-sm-2 control-label">Birth</label>
+			    <label for="birthYear" class="col-sm-2 control-label"><bean:message key="modal.newPatient.birth" bundle="ui"/></label>
 			    <div class="col-sm-2">
-			      <input type="text" class="form-control" id="birthYear" placeholder="Year" ng-model="demographic.dobYear" required>
+			      <input type="text" class="form-control" id="birthYear" placeholder="<bean:message key="modal.newPatient.year" bundle="ui"/>" ng-model="demographic.dobYear" required>
 			    </div>
 			    <div class="col-sm-2">
-			      <input type="text" class="form-control" placeholder="Month" ng-model="demographic.dobMonth" required>
+			      <input type="text" class="form-control" placeholder="<bean:message key="modal.newPatient.month" bundle="ui"/>" ng-model="demographic.dobMonth" required>
 			    </div>
 			    <div class="col-sm-2">
-			      <input type="text" class="form-control" placeholder="Day" ng-model="demographic.dobDay" required>
+			      <input type="text" class="form-control" placeholder="<bean:message key="modal.newPatient.day" bundle="ui"/>" ng-model="demographic.dobDay" required>
 			    </div>
 			
 			  </div> 
 			  <div class="form-group">
-			    <label class="col-sm-2 control-label">Sex</label>
+			    <label class="col-sm-2 control-label"><bean:message key="modal.newPatient.gender" bundle="ui"/></label>
 			    <div class="col-sm-5">
 					<select class="form-control form-control-details" title="Sex" ng-model="demographic.sex" ng-options="sexes.value as sexes.label for sexes in genders" required/>
 			    </div>
 			  </div> 
 			  <div class="form-group" ng-show="programs.length>1">
-			    <label class="col-sm-2 control-label">Program</label>
+			    <label class="col-sm-2 control-label"><bean:message key="modal.newPatient.program" bundle="ui"/></label>
 			    <div class="col-sm-5">
 					<select class="form-control form-control-details" title="Program" ng-model="demographic.admissionProgramId" ng-options="pg.id as pg.name for pg in programs" required/>
 			    </div>
@@ -75,7 +76,7 @@
 		</div>
 		
 		<div class="modal-footer">
-			<button ng-show="hasRight" ng-click="saver(newDemographic)" type="button" class="btn btn-primary">Add New Record</button>
-			<button ng-hide="hasRight" ng-click="cancel()" type="button" class="btn">Close</button>
+			<button ng-show="hasRight" ng-click="saver(newDemographic)" type="button" class="btn btn-primary"><bean:message key="modal.newPatient.submit" bundle="ui"/></button>
+			<button ng-hide="hasRight" ng-click="cancel()" type="button" class="btn"><bean:message key="modal.newPatient.close" bundle="ui"/></button>
 		</div>
 	</div>
