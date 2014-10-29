@@ -24,21 +24,10 @@
 
 */
 
-oscarApp.controller('PatientListCtrl', function ($scope,$http,$resource,$state,providerService, Navigation, scheduleService) {
+oscarApp.controller('PatientListCtrl', function ($scope,$http,$state,Navigation,personaService) {
 	
 	$scope.sidebar = Navigation;
 	
-	$scope.tabItems = [
-      	             	{"id":0,"label":"Appts.","url":"../ws/rs/schedule/day/today","template":"patientlist/patientList1.jsp",httpType:'GET'},
-      	             	{"id":1,"label":"Recent","url":"../ws/rs/providerService/getRecentDemographicsViewed?startIndex=0&itemsToReturn=100","template":"patientlist/recent.jsp",httpType:'GET'}
-    ];
-      	
-    $scope.moreTabItems = [
-      					{"id":0,"label":"Patient Sets","url":"../ws/rs/reporting/demographicSets/patientList",template:"patientlist/demographicSets.html",httpType:'POST'},
-      					{"id":1,"label":"Caseload","template":"patientlist/program.jsp"}
-    ];
-	
-
     $scope.showFilter=true;
 
 	
@@ -200,7 +189,6 @@ $scope.changeTab = function(temp,filter){
 		return "";
 	}
 
-	$scope.changeTab(0);
 	$scope.currentPage = 0;
 	$scope.pageSize = 8;
 	$scope.patients = null;
@@ -298,6 +286,14 @@ $scope.changeTab = function(temp,filter){
 		
 	}
 
+	personaService.getPatientLists().then(function(persona){
+		$scope.tabItems = persona.patientListTabItems;
+		$scope.moreTabItems = persona.patientListMoreTabItems;
+		$scope.changeTab(0);
+	},function(reason){
+		alert(reason);
+	});
+	
 	
 });
 
