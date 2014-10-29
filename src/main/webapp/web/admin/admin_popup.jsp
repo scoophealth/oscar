@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
 <script>
 function newWindow(url) {
@@ -31,9 +32,10 @@ function newWindow(url) {
     return false;
 }
 
-
 newWindow('<%=request.getContextPath()%>/administration/index.jsp');
 </script>
-<p class="info">Admin Panel is popped-out..ensure you do not have a popup blocker running.</p>
+<p class="info"><a href="javascript:void()" onClick="newWindow('<%=request.getContextPath()%>/administration/index.jsp');return false"><bean:message key="admin.panel" bundle="ui"/></a> <bean:message key="admin.popupMessage" bundle="ui"/></p>
 
-<p><a href="#/dashboard">Go to your dashboard</a></p>
+<p><a href="#/dashboard"><bean:message key="global.goToDashboard" bundle="ui"/></a></p>
+
+
