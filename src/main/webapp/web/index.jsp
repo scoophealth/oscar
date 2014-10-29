@@ -129,7 +129,7 @@ width: auto;
 				</button>
 				
 				<!-- link back to 'classic' view -->
-				<a  href="../provider/providercontrol.jsp"><img class="navbarlogo" src="../images/Logo2.png" title="Go to OSCAR Classic UI" border="0" /></a>
+				<a  href="../provider/providercontrol.jsp"><img class="navbarlogo" src="../images/Logo2.png" title="<bean:message key="global.goToClassic" bundle="ui"/>" border="0" /></a>
 			</div>
 			
 			 
@@ -138,18 +138,18 @@ width: auto;
 				<form class="navbar-form navbar-left" role="search">
 	 				<div class="form-group">
 		 				<div class="input-group">
-			 				<input type="text" class="form-control search-query" placeholder="Search Patients" id="demographicQuickSearch" autocomplete="off" value="">
-			 				<span class="input-group-addon btn-default hand-hover" ng-click="transition('search')"><span class="glyphicon glyphicon-search" ></span></span>
-			 				<span class="input-group-addon btn-default hand-hover"  ng-click="newDemographic('sm')" ><span class="glyphicon glyphicon-plus"></span></span>	 				
+			 				<input type="text" class="form-control search-query" placeholder="<bean:message key="navbar.searchPatients" bundle="ui"/>" id="demographicQuickSearch" autocomplete="off" value="">
+			 				<span class="input-group-addon btn-default hand-hover" ng-click="transition('search')" title="<bean:message key="navbar.searchPatients" bundle="ui"/>"><span class="glyphicon glyphicon-search" ></span></span>
+			 				<span class="input-group-addon btn-default hand-hover"  ng-click="newDemographic('sm')" title="<bean:message key="navbar.newPatient" bundle="ui"/>"><span class="glyphicon glyphicon-plus"></span></span>	 				
 						</div>						
 					</div>			
 				</form>
 			
 				<!-- large view -->
 				<ul class="nav navbar-nav visible-lg hidden-md hidden-sm hidden-xs">
-					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-chevron-right hand-hover" ng-show="showPtList === false" ng-click="showPatientList()"></span></li>
+					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-chevron-right hand-hover" ng-show="showPtList === false" ng-click="showPatientList()" title="<bean:message key="navbar.showPatientList" bundle="ui"/>"></span></li>
 				
-					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard"></span></li>
+					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard" title="<bean:message key="navbar.dashboard" bundle="ui"/>"></span></li>
 				
 					<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state), 'hand-hover':true }">
 						<a ng-click="transition(item.state)" data-toggle="tab" >{{item.label}}
@@ -158,7 +158,7 @@ width: auto;
 					</li>
 				
 				
-					<li class="dropdown" ><a class="dropdown-toggle">More<b class="caret"></b></a>
+					<li class="dropdown" ><a class="dropdown-toggle"><bean:message key="navbar.more" bundle="ui"/><b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li ng-repeat="item in moreMenuItems">
 								<a ng-class="{'more-tab-highlight': isActive(item.state) }" ng-click="transition(item.state)">{{item.label}}
@@ -170,13 +170,13 @@ width: auto;
 				
 				<!-- more condensed version -->
 				<ul class="nav navbar-nav hidden-lg visible-md visible-sm visible-xs">	
-					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-chevron-right hand-hover" ng-show="showPtList === false" ng-click="showPatientList()"></span></li>
+					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-chevron-right hand-hover" ng-show="showPtList === false" ng-click="showPatientList()" title="<bean:message key="navbar.showPatientList" bundle="ui"/>"></span></li>
 				
 				
-					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard"></span></li>
+					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard" title="<bean:message key="navbar.dashboard" bundle="ui"/>"></span></li>
 				
 						
-					<li class="dropdown" class="hand-hover" ><a href="void()" class="dropdown-toggle">Modules<b class="caret"></b></a>
+					<li class="dropdown" class="hand-hover" ><a href="void()" class="dropdown-toggle"><bean:message key="navbar.modules" bundle="ui"/><b class="caret"></b></a>
 						<ul class="dropdown-menu">
 						<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state) }">
 						<a ng-click="transition(item.state)" data-toggle="tab" >{{item.label}}
@@ -194,22 +194,22 @@ width: auto;
 				
 				
 				<div class="navbar-text pull-right" style="line-height:20px">
-					<a onClick="popup(700,1024,'../scratch/index.jsp','scratch')" title="Scratchpad">
+					<a onClick="popup(700,1024,'../scratch/index.jsp','scratch')" title="<bean:message key="navbar.scratchpad" bundle="ui"/>">
 					 	<span class="glyphicon glyphicon-edit"></span>
 					 </a>
 					&nbsp;&nbsp;
 					<span ng-show="messageRights === true">
-						<a ng-click="openClassicMessenger()" title="OSCAR Mail" class="hand-hover">
+						<a ng-click="openClassicMessenger()" title="<bean:message key="navbar.messenger" bundle="ui"/>" class="hand-hover">
 							<span  class="glyphicon glyphicon-envelope"></span> 
 						</a>
-						<span title="New OSCAR messages (demographic)">{{unreadMessagesCount}}</span> |
-						<span title="Total new OSCAR Messages">{{unreadPatientMessagesCount}}</span> |
-						<span title="New messages from patients">-</span> 
+						<span title="<bean:message key="navbar.newOscarDemoMessages" bundle="ui"/>">{{unreadMessagesCount}}</span> |
+						<span title="<bean:message key="navbar.newOscarMessages" bundle="ui"/>">{{unreadPatientMessagesCount}}</span> |
+						<span title="<bean:message key="navbar.newMyOscarMessages" bundle="ui"/>">-</span> 
 					</span>
 					&nbsp; &nbsp;
 					
 					<span class="dropdown">
-						<span class="dropdown-toggle hand-hover"><span class="glyphicon glyphicon-globe"></span></span>
+						<span class="dropdown-toggle hand-hover" title="<bean:message key="navbar.changeProgram" bundle="ui"/>"><span class="glyphicon glyphicon-globe"></span></span>
 						<ul class="dropdown-menu" role="menu">
 	                    	<li ng-repeat="item in programDomain">
 	                        	<a ng-click="changeProgram(item.program.id)">
@@ -223,14 +223,14 @@ width: auto;
 				 	
 					&nbsp;
 					
-					<span class="dropdown-toggle hand-hover" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><u>{{me.firstName}}</u></span>
+					<span class="dropdown-toggle hand-hover" data-toggle="dropdown" title="<bean:message key="navbar.user" bundle="ui"/>"><span class="glyphicon glyphicon-user"></span><u>{{me.firstName}}</u></span>
 					<ul class="dropdown-menu" role="menu">
 						<li ng-repeat="item in userMenuItems">
 							<a ng-click="transition(item.state)" ng-class="{'more-tab-highlight': isActive(item.state) }" >{{item.label}}</a>
 						</li>
 				  	</ul>
 				  	
-					<a href="../logout.jsp" title="Logout" style="padding-left:10px;">
+					<a href="../logout.jsp" title="<bean:message key="navbar.logout" bundle="ui"/>" style="padding-left:10px;">
 						<span class="glyphicon glyphicon-off"></span>
 					</a>
 
@@ -263,57 +263,40 @@ width: auto;
 				
 			</ul>
 			<div class="list-group"  ng-cloak>
-			<!-- 
-			<button type="button" class="btn btn-default">
- 				 <span class="glyphicon glyphicon-arrow-left"></span> 
-			</button>
-			<button type="button" class="btn btn-default">
- 				 <span class="glyphicon glyphicon-eject"></span> 
-			</button>
-			-->
 			
-			<!-- <span class="pull-right">-->
 			
-			<button type="button" class="btn btn-default" ng-click="hidePatientList()">
+			<button type="button" class="btn btn-default" ng-click="hidePatientList()" title="<bean:message key="patientList.hide" bundle="ui"/>">
  				 <span class="glyphicon glyphicon-chevron-left"></span> 
 			</button>
 			
-			
-			<!-- refreshing content simply by reloading tab -->
-			<button type="button" class="btn btn-default" ng-click="refresh()"> 
+			<button type="button" class="btn btn-default" ng-click="refresh()" title="<bean:message key="patientList.refresh" bundle="ui"/>"> 
  				 <span class="glyphicon glyphicon-refresh"></span> 
 			</button>
 			
-			<button type="button" class="btn btn-default" ng-disabled="currentPage == 0" ng-click="changePage(currentPage-1)">
+			<button type="button" class="btn btn-default" ng-disabled="currentPage == 0" ng-click="changePage(currentPage-1)" title="<bean:message key="patientList.pageUp" bundle="ui"/>">
  				 <span class="glyphicon glyphicon-circle-arrow-up"></span> 
- 		 
 			</button>
 			
-			<button type="button" class="btn btn-default" ng-disabled="currentPage == nPages-1"  ng-click="changePage(currentPage+1)">
+			<button type="button" class="btn btn-default" ng-disabled="currentPage == nPages-1"  ng-click="changePage(currentPage+1)" title="<bean:message key="patientList.pageDown" bundle="ui"/>">
  				 <span class="glyphicon glyphicon-circle-arrow-down"></span> 
 			</button>
 			
+			<form class="form-search" role="search">
+				<span ng-show="showFilter === true" class="form-group" class="twitter-typeahead">
+					<input type="text"  class="form-control" placeholder="<bean:message key="patientList.filter" bundle="ui"/>" ng-model="query"/>
+				</span>
+			</form>
+		
+			<div ng-include="sidebar.location"></div>
 			
-			
-			<!-- </span>-->
-				<form class="form-search" role="search">
-					<span ng-show="showFilter === true" class="form-group" class="twitter-typeahead">
-						<input type="text"  class="form-control" placeholder="Filter" ng-model="query"/>
-					</span>
-				</form>
-		<div ng-include="sidebar.location"></div>
-		<span class="pull-right">{{currentPage+1}}/{{numberOfPages()}}</span>
+			<span class="pull-right" title="<bean:message key="patientList.pagination" bundle="ui"/>">{{currentPage+1}}/{{numberOfPages()}}</span>
 		</div>
-		</div>
-	
-	
+	</div>
 	<!-- End patient List template -->
 		
 	<div id="right_pane" ng-class="getRightClass('col-md')" ui-view ng-cloak></div>
 	
-	<!-- just for debugging -->
-	<p class="text-warning" id="myinfo"></p>
-
+	
 	<!-- Bootstrap core JavaScript
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
@@ -388,9 +371,6 @@ width: auto;
 	<!-- 
 	
 	<script src="js/providerViewController.js"></script>
-	
-	<script src="js/patientDetailController.js"></script>
-
 	<script src="js/messengerController.js"></script  -->	
 	
 	<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
@@ -434,7 +414,7 @@ $(document).ready(function(){
 	            scope.setQuickSearchTerm("");
 	            
 	            if(parsedResponse.total > 10) {
-	            	retval.push({name:"More Results",hin:parsedResponse.total+" total","demographicNo":-1,"more":true});
+	            	retval.push({name:"<bean:message key="navbar.moreResults" bundle="ui"/>",hin:parsedResponse.total+" total","demographicNo":-1,"more":true});
 	            	scope.setQuickSearchTerm(parsedResponse.query);
 	            }
 	            
