@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%
 String prov= (oscar.OscarProperties.getInstance().getProperty("billregion","")).trim().toUpperCase();
 %>
@@ -37,6 +38,10 @@ function newWindow(url) {
 
 newWindow('<%=request.getContextPath()%>/billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport');
 </script>
-<p class="info">Billing Panel is popped-out..ensure you do not have a popup blocker running.</p>
+<p class="info">
+<a href="javascript:void()" onClick="newWindow('<%=request.getContextPath()%>/billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport');return false">
+<bean:message key="billing.panel" bundle="ui"/>
+</a>
+<bean:message key="billing.popupMessage" bundle="ui"/></p>
 
-<p><a href="#/dashboard">Go to your dashboard</a></p>
+<p><a href="#/dashboard"><bean:message key="global.goToDashboard" bundle="ui"/></a></p>
