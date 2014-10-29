@@ -28,6 +28,8 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 	//header	
 	$scope.displayDate= function() {return new Date();}
 	
+	$scope.me = null;
+	
 	
 	securityService.hasRights({items:[{objectName:'_tickler',privilege:'w'},{objectName:'_tickler',privilege:'r'}]}).then(function(result){
 		if(result.content != null && result.content.length == 2) {
@@ -36,7 +38,7 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 		}
 	});
 		
-	$scope.updateTicklerTable = function() {
+	$scope.updateTicklers = function() {
 		ticklerService.search({priority:'',status:'A',assignee:$scope.me.providerNo},0,6).then(function(response){
 			$scope.totalTicklers = response.total;
 			if(response.tickler == null) {
@@ -55,27 +57,7 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 		});
 	}
 	
-	providerService.getMe().then(function(data){
-		$scope.userFirstName = data.firstName;
-		$scope.me = data;
-		
-		ticklerService.search({priority:'',status:'A',assignee:data.providerNo},0,6).then(function(response){
-			$scope.totalTicklers = response.total;
-			if(response.tickler == null) {
-				return;
-			}
-				
-			if (response.tickler instanceof Array) {
-				$scope.ticklers = response.tickler;
-			} else {
-				var arr = new Array();
-				arr[0] = response.tickler;
-				$scope.ticklers = arr;
-			}	
-		},function(reason){
-			alert(reason);
-		});
-		
+	$scope.updateMessages = function() {
 		messageService.getUnread(6).then(function(response){
 			$scope.totalMessages = response.total;
 			
@@ -94,6 +76,9 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 			alert(reason);
 		});
 		
+	}
+	
+	$scope.updateReports = function() {
 		inboxService.getDashboardItems(20).then(function(response){
 			if(response.inbox == null) {
 				return;
@@ -108,7 +93,9 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 		},function(reason){
 			alert(reason);
 		});
-		
+	}
+	
+	$scope.updateFeed = function() {
 		k2aService.getK2aFeed().then(function(response){
 			if(response.item == null) {
 				return;
@@ -124,11 +111,25 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 		},function(reason){
 			alert(reason);
 		});
+	}
+	
+	$scope.updateDashboard = function() {
+		$scope.updateTicklers();
+		$scope.updateMessages();
+		$scope.updateReports();
+		$scope.updateFeed();
 		
-	},function(reason){
-		alert(reason);
-	});
-
+	}
+	
+	$scope.$watch(function() {
+		  return securityService.getUser();
+		}, function(newVal) {
+			$scope.me = newVal;
+			
+			if(newVal != null) {
+				$scope.updateDashboard();
+			}
+		}, true);
 	
 	
 	$scope.isTicklerExpiredOrHighPriority = function(tickler) {
@@ -192,7 +193,7 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
         modalInstance.result.then(function(data){
         	//console.log('data from modalInstance '+data);
         	if(data != null && data == true) {
-        		$scope.updateTicklerTable();
+        		$scope.updateTicklers();
         	}
         },function(reason){
         	alert(reason);
