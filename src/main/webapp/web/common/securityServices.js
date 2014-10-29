@@ -29,8 +29,15 @@ angular.module("securityServices", [])
 		apiPath:'../ws/rs/',
 		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
-		
+		user:null,
         
+		getUser: function() {
+			return this.user;
+		},
+		
+		setUser: function(u) {
+			this.user = u;
+		},
         
         hasRight: function (objectName, privilege, demographicNo) {
             var deferred = $q.defer();

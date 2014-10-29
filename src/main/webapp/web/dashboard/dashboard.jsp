@@ -32,7 +32,9 @@
 }
 </style>
 
-<p class="lead">Welcome {{userFirstName}} <span class="pull-right">{{displayDate() | date:'MMMM d, y'}}</span></p>
+<div ng-if="me != null">
+
+<p class="lead">Welcome {{me.firstName}} <span class="pull-right">{{displayDate() | date:'MMMM d, y'}}</span></p>
 <hr>
 
 <div class="row">
@@ -197,4 +199,6 @@
 
 
 </div>
+</div>
+
 </div>
