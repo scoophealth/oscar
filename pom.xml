@@ -1511,6 +1511,27 @@
                 <artifactId>maven-jetty-plugin</artifactId>
                 <version>6.1.26</version>
             </plugin>
+
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>native2ascii-maven-plugin</artifactId>
+    <version>1.0-alpha-1</version>
+    <executions>
+        <execution>
+            <id>native2ascii-utf8-resources</id>
+            <goals>
+                <goal>native2ascii</goal>
+            </goals>
+            <configuration>
+                <dest>src/main/resources</dest>
+                <src>src/main/resources/native-bundles</src>
+                <encoding>UTF8</encoding>
+                <includes>uiResources_*.properties</includes>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+
 <!--
             <plugin>
                 <groupId>org.apache.axis2</groupId>
