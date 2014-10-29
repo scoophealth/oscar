@@ -25,15 +25,17 @@
 */
 
 
-oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $state,providerService, securityService, personaService, $rootScope) {
+oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, securityService, personaService, $rootScope) {
+	
+
+	$scope.$watch(function() {
+		  return securityService.getUser();
+		}, function(newVal) {
+		  $scope.me = newVal;
+		}, true);
 	
 	
-	providerService.getMe().then(function(result){
-				$scope.me = result;
-		    },function(reason){
-		    	alert("unable to get my info..can't load page");
-	});
-		
+	
 	
     securityService.hasRights({items:[{objectName:'_search',privilege:'r'},
                                       {objectName:'_demographic',privilege:'w'},
@@ -174,7 +176,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$http,$location,$modal, $stat
 });
 
 
-function NewPatientCtrl($scope,$http,$modal,$modalInstance,demographicService,securityService,programService,staticDataService){
+function NewPatientCtrl($scope,$modal,$modalInstance,demographicService,securityService,programService,staticDataService){
 	console.log("newpatient called");
 	$scope.demographic = {};
   	
