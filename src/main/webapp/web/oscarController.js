@@ -1,6 +1,4 @@
-oscarApp.controller('OscarCtrl', function ($rootScope, $scope) {
-	
-	console.log('oscar ctrl created');
+oscarApp.controller('OscarCtrl', function ($rootScope, $scope, providerService,securityService) {
 	
 	
 	/* functionality to handle showing the patient list or not - state changes trigger reset to showPtList=true 
@@ -31,7 +29,12 @@ oscarApp.controller('OscarCtrl', function ($rootScope, $scope) {
 			    console.log('startChangeStart' + toState);
 			    $scope.showPtList=true;
 	});
-			
+	
+	providerService.getMe().then(function(data){
+		securityService.setUser(data);
+	},function(reason){
+		alert(reason);
+	});
 	 
 	 
 });
