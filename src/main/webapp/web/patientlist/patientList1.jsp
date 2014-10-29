@@ -25,7 +25,7 @@
 --%>
 <div ng-controller="PatientListAppointmentListCtrl">
 <a ng-repeat="patient in patients | offset:currentPage*pageSize | limitTo:pageSize | filter:query"
-	class="list-group-item default" ng-click="goToRecord(patient)"  ng-style="getAppointmentStyle(patient)">
+	class="list-group-item default hand-hover" ng-click="goToRecord(patient)"  ng-style="getAppointmentStyle(patient)">
 	<!-- 
 	<span ng-if="patient.status.length>0 && patient.status != 't'" class="badge">{{patient.status}}</span>
 	-->
