@@ -56,6 +56,7 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.PaginationUtils;
 import org.oscarehr.util.SpringUtils;
 
+@Deprecated
 public class ConsultationAction extends Action {
 
 	private ConsultationService consultationRequestService = SpringUtils.getBean(ConsultationService.class);

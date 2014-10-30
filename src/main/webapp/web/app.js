@@ -2,7 +2,8 @@
 var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices','programServices',
                                                           'ticklerServices','scheduleServices','billingServices','securityServices','staticDataServices',
                                                           'patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll',
-                                                          'uxServices','ngTable','oscarFilters','messageServices','inboxServices','k2aServices', 'personaServices']);
+                                                          'uxServices','ngTable','oscarFilters','messageServices','inboxServices','k2aServices', 'personaServices'
+                                                          ,'consultServices']);
 
 
 oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
@@ -23,12 +24,12 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 	      templateUrl: 'inbox/inbox_popup.jsp',
 	     // templateUrl: 'inbox/inbox.jsp',
           controller: 'InboxCtrl'
-	    })
-        .state('consults', {
+	    })    
+  	    .state('consults', {
   	      url: '/consults',
-  	      templateUrl: 'consults/consultList.jsp',
-            controller: 'ConsultListCtrl'
-  	    })  
+  	      templateUrl: 'consults/consultList2.jsp',
+            controller: 'ConsultListCtrl2'
+  	    }) 
   	    .state('billing', {
   	      url: '/billing',
   	      templateUrl: 'billing/billing_popup.jsp',
@@ -147,8 +148,8 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 	    
 }]);
 
-/* For debugging purposes
- 
+// For debugging purposes
+/*
 oscarApp.run( function($rootScope, $location) {
 	
 $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams){
@@ -175,6 +176,7 @@ $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState,
 
 });
 */
+
 	//We already have a limitTo filter built-in to angular,
 	//let's make a startFrom filter
 	oscarApp.filter('startFrom', function() {

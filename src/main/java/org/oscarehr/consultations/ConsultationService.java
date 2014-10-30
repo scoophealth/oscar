@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
 import oscar.log.LogAction;
 
 @Component
+@Deprecated
 public class ConsultationService {
 	@Autowired
 	private ConsultationDao consultationDao;
@@ -45,6 +46,7 @@ public class ConsultationService {
 	 * @param paginationQuery
 	 * @return
 	 */
+	@Deprecated
     public int getConsultationCount(PaginationQuery paginationQuery) {
 	    return this.consultationDao.getConsultationCount(paginationQuery);
     }
@@ -54,6 +56,7 @@ public class ConsultationService {
      * @param paginationQuery
      * @return
      */
+    @Deprecated
 	public List<ConsultationRequest> listConsultationRequests(LoggedInInfo loggedInInfo,PaginationQuery paginationQuery) {
 		ConsultationQuery query = (ConsultationQuery) paginationQuery;
 
