@@ -23,6 +23,8 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+
 <style>
 .flag-column {
 	width:10px
@@ -34,13 +36,13 @@
 
 <div ng-if="me != null">
 
-<p class="lead">Welcome {{me.firstName}} <span class="pull-right">{{displayDate() | date:'MMMM d, y'}}</span></p>
+<p class="lead"><bean:message key="dashboard.welcome" bundle="ui"/> {{me.firstName}} <span class="pull-right">{{displayDate() | date:'MMMM d, y'}}</span></p>
 <hr>
 
 <div class="row">
 <div class="col-md-9" ng-controller="DashboardCtrl">
 
-
+<!-- this is a bit of a problem for il18n -->
 <p class="lead">You have {{(totalTicklers > 0) && totalTicklers || "no"}} active tickler{{(totalTicklers != 1) && "s" || ""}}.</p>
 
 
@@ -49,9 +51,9 @@
 		<thead>
 		<tr>
 			<th class="flag-column"></th>
-			<th>Demographic Name</th>
-			<th>Due</th>
-			<th>Message</th>
+			<th><bean:message key="dashboard.tickler.header.demographicName" bundle="ui"/></th>
+			<th><bean:message key="dashboard.tickler.header.due" bundle="ui"/></th>
+			<th><bean:message key="dashboard.tickler.header.message" bundle="ui"/></th>
 		</tr>
 		</thead>
 		<tbody>
@@ -67,7 +69,7 @@
 		<tfoot>
 	    <tr ng-if="totalTicklers > 5">
 	      <td colspan="6">
-			 <span class="label label-success hand-hover" ui-sref="ticklers">See More Ticklers</span> 
+			 <span class="label label-success hand-hover" ui-sref="ticklers"><bean:message key="dashboard.tickler.more" bundle="ui"/></span> 
 	      </td>
 	    </tr>
 	  </tfoot>
@@ -78,6 +80,7 @@
 <br/>
 
 
+<!-- il18n problem here -->
 <p class="lead">You have {{(totalMessages > 0) && totalMessages || "no"}} unread message{{(totalMessages != 1) && "s" || ""}}.</p>
 
 
@@ -86,10 +89,10 @@
 	<thead>
     <tr>
     <!-- 	<th class="flag-column"></th> -->
-        <th>From</th>
-        <th>Subject</th>
-        <th>Date</th>
-        <th>Patient</th>
+        <th><bean:message key="dashboard.messages.header.from" bundle="ui"/></th>
+        <th><bean:message key="dashboard.messages.header.subject" bundle="ui"/></th>
+        <th><bean:message key="dashboard.messages.header.date" bundle="ui"/></th>
+        <th><bean:message key="dashboard.messages.header.patient" bundle="ui"/></th>
     </tr>
     </thead>
   	<tbody>
@@ -105,7 +108,7 @@
 	<tfoot>
     <tr ng-if="totalMessages > 5">
       <td colspan="6">
-		 <span class="label label-success hand-hover" ng-click="openClassicMessenger()">See More Messages</span> 
+		 <span class="label label-success hand-hover" ng-click="openClassicMessenger()"><bean:message key="dashboard.messages.more" bundle="ui"/></span> 
       </td>
     </tr>
   </tfoot>
@@ -150,6 +153,7 @@
 <br/>
 
 
+<!-- il18n problem here -->
 <p class="lead">You have {{(inbox.length>0) && inbox.length || "no"}} report{{(inbox.length>1) && "s" || ""}}{{(inbox.length==0) && "s" || ""}}{{(inbox==null) && "s" || ""}} which are not yet acknowledged.</p>
 
 
@@ -158,11 +162,11 @@
 	<thead>
     <tr>
     	<th class="flag-column"></th>
- 	    <th>Patient</th>
- 	    <th>Category</th>
+ 	    <th><bean:message key="dashboard.inbox.header.patient" bundle="ui"/></th>
+ 	    <th><bean:message key="dashboard.inbox.header.category" bundle="ui"/></th>
        <!--  <th>Source</th> -->
-        <th>Date</th>
-        <th>Status</th>
+        <th><bean:message key="dashboard.inbox.header.date" bundle="ui"/></th>
+        <th><bean:message key="dashboard.inbox.header.status" bundle="ui"/></th>
     </tr>
     </thead>
               
@@ -180,7 +184,7 @@
     <tfoot>
     <tr ng-if="inbox.length > 5">
       <td colspan="6">
-		 <span class="label label-success hand-hover" ui-sref="inbox">See More Inbox</span> 
+		 <span class="label label-success hand-hover" ui-sref="inbox"><bean:message key="dashboard.inbox.more" bundle="ui"/></span> 
       </td>
     </tr>
   </tfoot>
@@ -190,11 +194,11 @@
 </div>
 
 <div class="col-md-3">
-<p class="lead">K2A News</p>
+<p class="lead"><bean:message key="dashboard.k2a.header" bundle="ui"/></p>
 
 <blockquote class="pull-right" ng-repeat="item in k2afeed" ng-hide="$index >= 5">
   <p>{{item.title}}</p>
-  <small><a target="k2afeeditem" href="{{item.link}}">link</a></small>
+  <small><a target="k2afeeditem" href="{{item.link}}"><bean:message key="dashboard.k2a.link" bundle="ui"/></a></small>
 </blockquote>
 
 
