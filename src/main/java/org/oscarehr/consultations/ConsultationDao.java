@@ -31,9 +31,12 @@ import javax.persistence.Query;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.FastDateFormat;
 import org.oscarehr.common.PaginationQuery;
 import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.consultations.ConsultationSearchFilter.SORTMODE;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -52,6 +55,7 @@ public class ConsultationDao extends AbstractDao<ConsultationRequest> {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Deprecated
 	public List<ConsultationRequest> listConsultationRequests(ConsultationQuery consultationQuery) {
 		StringBuilder sql = this.generateQuery(consultationQuery,false);
 		Query query = entityManager.createQuery(sql.toString());
@@ -60,6 +64,7 @@ public class ConsultationDao extends AbstractDao<ConsultationRequest> {
 		return query.getResultList();
 	}
 
+	@Deprecated
 	private StringBuilder generateQuery(PaginationQuery paginationQuery, boolean selectCountOnly) {
 		ConsultationQuery consultationQuery = (ConsultationQuery) paginationQuery;
 		StringBuilder sql = new StringBuilder(
@@ -129,5 +134,105 @@ public class ConsultationDao extends AbstractDao<ConsultationRequest> {
 			}
 		}
 		return sql;
+	}
+	
+	
+	public int getConsultationCount2(ConsultationSearchFilter filter) {
+		String sql = getSearchQuery(filter,true);
+		MiscUtils.getLogger().info("sql="+sql);
+		Query query = entityManager.createQuery(sql);
+		Long count = this.getCountResult(query);
+		
+		
+		return count.intValue();
+	}
+
+	public List<Object[]> search(ConsultationSearchFilter filter) {
+		String sql = this.getSearchQuery(filter,false);
+		MiscUtils.getLogger().info("sql="+sql);
+		Query query = entityManager.createQuery(sql);
+		query.setFirstResult(filter.getStartIndex());
+		query.setMaxResults(filter.getNumToReturn());
+		return query.getResultList();
+	}
+	
+	private String getSearchQuery(ConsultationSearchFilter filter, boolean selectCountOnly) {
+		
+		StringBuilder sql = new StringBuilder(
+				"select "+ (selectCountOnly?"count(*)":"cr,specialist,cs,d,p") +
+				" from ConsultationRequest cr left outer join cr.professionalSpecialist specialist, ConsultationServices cs, Demographic d" + 
+				" left outer join d.provider p where d.DemographicNo = cr.demographicId and cs.id = cr.serviceId ");
+		
+		if (filter.getAppointmentStartDate() != null) {
+			sql.append("and cr.appointmentDate >=  '" + FastDateFormat.getInstance("yyyy-MM-dd").format(filter.getAppointmentStartDate()) + " 00:00:00' ");			
+		}
+		
+		if (filter.getAppointmentEndDate() != null) {
+			sql.append("and cr.appointmentDate <=  '" +  DateFormatUtils.ISO_DATE_FORMAT.format(filter.getAppointmentStartDate()) + " 23:59:59' ");			
+		}
+		
+		if (filter.getReferralStartDate() != null) {
+			sql.append("and cr.referralDate >=  '" + DateFormatUtils.ISO_DATE_FORMAT.format(filter.getReferralStartDate()) + "' ");			
+		}
+		
+		if (filter.getReferralEndDate() != null) {
+			sql.append("and cr.referralDate <=  '" + DateFormatUtils.ISO_DATE_FORMAT.format(filter.getReferralEndDate()) + " 23:59:59' ");			
+		}
+		
+		if (StringUtils.isNotBlank(filter.getStatus())) {
+			sql.append("and cr.status = '" + StringEscapeUtils.escapeSql(filter.getStatus()) + "' ");
+		} else {
+			sql.append("and cr.status != 4 ");
+		}
+		
+		if (StringUtils.isNotBlank(filter.getTeam())) {
+			sql.append("and cr.sendTo = '" + StringEscapeUtils.escapeSql(filter.getTeam()) + "' ");
+		}
+		
+		if (StringUtils.isNotBlank(filter.getUrgency())) {
+			sql.append("and cr.urgency = '" + StringEscapeUtils.escapeSql(filter.getUrgency()) + "' ");
+		}
+		
+		if (filter.getDemographicNo() != null && filter.getDemographicNo().intValue()>0) {
+			sql.append("and cr.demographicId = " +  StringEscapeUtils.escapeSql(filter.getDemographicNo().toString()) + " ");
+		}
+		
+		  
+		  String orderBy = "cr.referralDate";
+		  String orderDir = "desc";
+		  
+		  if(filter.getSortDir() != null) {
+			  orderDir = filter.getSortDir().toString();
+		  }
+		  
+		  
+		  if(SORTMODE.AppointmentDate.equals(filter.getSortMode())) {
+			  orderBy = "cr.appointmentDate " + orderDir + ",cr.appointmentTime " + orderDir;
+		  } else if(SORTMODE.Demographic.equals(filter.getSortMode())) {
+			  orderBy = "d.LastName " + orderDir + ",d.FirstName " + orderDir;
+		  } else if(SORTMODE.Service.equals(filter.getSortMode())) {
+			  orderBy = "cs.serviceDesc " + orderDir;
+		  } else if(SORTMODE.Consultant.equals(filter.getSortMode())) {
+			  orderBy = "specialist.lastName "+ orderDir + ",specialist.firstName " + orderDir;
+		  } else if(SORTMODE.Team.equals(filter.getSortMode())) {
+			  orderBy =  "cr.sendTo " + orderDir;
+		  } else if(SORTMODE.Status.equals(filter.getSortMode())) {
+			  orderBy =  "cr.status " + orderDir;
+		  } else if(SORTMODE.MRP.equals(filter.getSortMode())) {
+			  orderBy =  "p.LastName "+ orderDir+",p.FirstName " + orderDir;
+		  }  else if(SORTMODE.FollowUpDate.equals(filter.getSortMode())) {
+			  orderBy =  "cr.followUpDate "+ orderDir;
+		  } else if(SORTMODE.ReferralDate.equals(filter.getSortMode())) {
+			  orderBy =  "cr.referralDate "+ orderDir;
+		  } else if(SORTMODE.Urgency.equals(filter.getSortMode())) {
+			  orderBy =  "cr.urgency "+ orderDir;
+		  }
+
+		  orderBy = " ORDER BY " + orderBy;
+		  
+		
+		  sql.append(orderBy);
+		  
+		return sql.toString();
 	}
 }
