@@ -69,120 +69,116 @@ import org.oscarehr.util.SpringUtils;
 public class BORNEHealthIntegrationJob implements OscarRunnable {
 
 	private Logger logger = MiscUtils.getLogger();
-	
+
 	private Provider provider;
 	private Security security;
-	
+
 	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 	private ProviderManager2 providerManager = SpringUtils.getBean(ProviderManager2.class);
-	
-	
+
 	@Override
 	public void run() {
 		LoggedInInfo x = new LoggedInInfo();
 		x.setLoggedInProvider(provider);
 		x.setLoggedInSecurity(security);
-			
+
 		logger.info("BORN EHealth integration job started and running as " + x.getLoggedInProvider().getFormattedName());
-		
+
 		//CDA per patient.
 		ONAREnhancedBornConnector arConnector = new ONAREnhancedBornConnector();
 		BORN18MConnector eighteenMonthConnector = new BORN18MConnector();
-		
+
 		try {
 			//Check the AR connector first.
-			List<Map<String,Object>> arMetadata = arConnector.getMetadata();
-			for(Map<String,Object> metadata:arMetadata) {
+			List<Map<String, Object>> arMetadata = arConnector.getMetadata();
+			for (Map<String, Object> metadata : arMetadata) {
 				//load the meta-data for all the BORN AR Enhanced forms we are going to send.
 				ONAREnhancedFormToXML xml = new ONAREnhancedFormToXML();
 				XmlOptions opts = arConnector.getXmlOptions();
-				
+
 				StringWriter sw = new StringWriter();
 				PrintWriter pw = new PrintWriter(sw);
 				String result = null;
-				if(xml.addXmlToStream(pw,opts, null, String.valueOf(metadata.get("demographicNo")), (Integer)metadata.get("id"), (Integer)metadata.get("episodeId"))) {				
+				if (xml.addXmlToStream(pw, opts, null, String.valueOf(metadata.get("demographicNo")), (Integer) metadata.get("id"), (Integer) metadata.get("episodeId"))) {
 					result = sw.toString();
 				}
-				
-				if(logger.isDebugEnabled()) {
-					logger.debug("AR Record\n"+result);
+
+				if (logger.isDebugEnabled()) {
+					logger.debug("AR Record\n" + result);
 				}
-				
+
 				//load patient
-				Demographic demographic = demographicManager.getDemographic(x,(Integer)metadata.get("demographicNo"));
-				
+				Demographic demographic = demographicManager.getDemographic(x, (Integer) metadata.get("demographicNo"));
+
 				//load provider, and add to the author list.
-				Provider author = providerManager.getProvider(x,(String)metadata.get("providerNo"));
+				Provider author = providerManager.getProvider(x, (String) metadata.get("providerNo"));
 				List<Provider> authorList = new ArrayList<Provider>();
 				authorList.add(author);
-						
+
 				//Load the environment (still a bit in the works)
 				BornHialProperties props = getBornHialProperties();
-				
+
 				Calendar cal = Calendar.getInstance();
-				cal.setTime((Date)metadata.get("formEdited"));
-				
+				cal.setTime((Date) metadata.get("formEdited"));
+
 				//Create CDA Document, and set the XML data.
-				BornCDADocument bornCDA = new BornCDADocument(CDAStandard.CCD, BORNCDADocumentType.A1A2,demographic,authorList, props, cal);
-                bornCDA.setNonXmlBody(result.getBytes(),"text/plain");
-                String cdaForLogging = CdaUtils.toXmlString(bornCDA.getDocument(), true);
-                
-                if(logger.isDebugEnabled()) {
-                	logger.debug("Antenatal CDA Record for Patient ID:" + demographic  + "\n"+cdaForLogging+"\n");
-                }
-                
-		//Create the XDS record, and have it sent.
-				
-            //    createXds(demographic.getDemographicNo(),cdaForLogging);
+				BornCDADocument bornCDA = new BornCDADocument(CDAStandard.CCD, BORNCDADocumentType.A1A2, demographic, authorList, props, cal);
+				bornCDA.setNonXmlBody(result.getBytes(), "text/plain");
+				String cdaForLogging = CdaUtils.toXmlString(bornCDA.getDocument(), true);
+
+				if (logger.isDebugEnabled()) {
+					logger.debug("Antenatal CDA Record for Patient ID:" + demographic + "\n" + cdaForLogging + "\n");
+				}
+
+				//Create the XDS record, and have it sent.
+
+				boolean xdsResult = createXds(demographic.getDemographicNo(), cdaForLogging);
 			}
-			
+
 			/* EIGHTEEN MONTH SECTION */
-			
+
 			//We get list of patients that are candidates, from the patient, we have to create the CDA record.
 			List<Integer> eighteenMonthDemos = eighteenMonthConnector.getDemographicIdsOfUnsentRecords();
-			
-			for(Integer d:eighteenMonthDemos) {
+
+			for (Integer d : eighteenMonthDemos) {
 				String xml = eighteenMonthConnector.getXmlForDemographic(d);
-				if(xml != null) {
-					if(logger.isDebugEnabled()) {
-						logger.debug("Eighteen Month XML for Patient " + d + "\n" + xml);						
+				if (xml != null) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Eighteen Month XML for Patient " + d + "\n" + xml);
 					}
-					
+
 					//load patient
-					Demographic demographic = demographicManager.getDemographic(x,d);
-					
-					
+					Demographic demographic = demographicManager.getDemographic(x, d);
+
 					//we need the list of providers that made up the 3 records in the batch xml
 					List<String> providerIdList = eighteenMonthConnector.getAuthors(d);
-					List<Provider> providerList = providerManager.getProvidersByIds(x,providerIdList);
+					List<Provider> providerList = providerManager.getProvidersByIds(x, providerIdList);
 					Date effectiveDate = eighteenMonthConnector.getLatestDateForTrio(d);
-					
+
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(effectiveDate);
-					
+
 					//create CDA document
 					BornHialProperties props = getBornHialProperties();
-					BornCDADocument bornCDA = new BornCDADocument(CDAStandard.CCD,BORNCDADocumentType.EighteenMonth,demographic,providerList, props, cal);
-	                bornCDA.setNonXmlBody(xml.getBytes(),"text/plain");
-	                String cdaForLogging = CdaUtils.toXmlString(bornCDA.getDocument(), true);
-	                
-	                if(logger.isDebugEnabled()) {
-	                	logger.debug("18M CDA Record for Patient ID:" + d  + "\n"+cdaForLogging+"\n");
-	                }
-	                
-	              //  createXds(d,cdaForLogging);
-	                
-	               
-	        		 
+					BornCDADocument bornCDA = new BornCDADocument(CDAStandard.CCD, BORNCDADocumentType.EighteenMonth, demographic, providerList, props, cal);
+					bornCDA.setNonXmlBody(xml.getBytes(), "text/plain");
+					String cdaForLogging = CdaUtils.toXmlString(bornCDA.getDocument(), true);
+
+					if (logger.isDebugEnabled()) {
+						logger.debug("18M CDA Record for Patient ID:" + d + "\n" + cdaForLogging + "\n");
+					}
+
+					boolean xdsResult = createXds(d, cdaForLogging);
+
 				}
 			}
-			
-		}catch(Exception e) {
-			logger.error("Error",e);
-		}	
-		
+
+		} catch (Exception e) {
+			logger.error("Error", e);
+		}
+
 	}
-	
+
 	/**
 	 * TODO: Load this from somewhere.
 	 * @return
@@ -191,92 +187,91 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 		BornHialProperties props = new BornHialProperties();
 		ClinicInfoDao clinicInfoDao = SpringUtils.getBean(ClinicInfoDao.class);
 		ClinicInfoDataObject clinicInfo = clinicInfoDao.getClinic();
-		
-		props.setIdCodingSystem("2.1.8.1.1.4.4.3.5");  // clinicInfo.getOid() ?
+
+		props.setIdCodingSystem("2.1.8.1.1.4.4.3.5"); // clinicInfo.getOid() ?
 		props.setIdValue("abc-1234");
-		
+
 		props.setSetIdCodingSystem("2.1.8.1.1.4.4.3.5"); // clinicInfo.getOid() ?
 		props.setSetIdValue("atn121");
-		
+
 		props.setOrganization(clinicInfo.getOid()); // Organization OID in the Administration > Clinic Info page
-		props.setOrganizationName(clinicInfo.getFacilityName());  // Clinic Name in the Administration > Clinic Info page
+		props.setOrganizationName(clinicInfo.getFacilityName()); // Clinic Name in the Administration > Clinic Info page
 		return props;
 	}
-	
 
-	public void createXds(Integer demographicNo, String cdaXml) { 
+	public boolean createXds(Integer demographicNo, String cdaXml) {
 		ClinicInfoDao clinicInfoDao = SpringUtils.getBean(ClinicInfoDao.class);
 		ClinicInfoDataObject clinicData = clinicInfoDao.getClinic();
 		PolicyDefinitionDao policyDefinitionDao = SpringUtils.getBean(PolicyDefinitionDao.class);
 		SiteMappingDao siteMappingDao = SpringUtils.getBean(SiteMappingDao.class);
-		
+
 		AffinityDomainDao affDao = SpringUtils.getBean(AffinityDomainDao.class);
- 		AffinityDomainDataObject network = null;
- 		
- 		network = affDao.getAffinityDomain(3);
- 		
- 		DocumentMetaData document = new DocumentMetaData(); 
- 		document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^&%s&ISO", provider.getProviderNo(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId())); 
- 		document.addExtendedAttribute("authorInstitution", clinicData.getName());
+		AffinityDomainDataObject network = null;
 
- 		document.setContent(cdaXml.getBytes());
- 		
- 		document.setMimeType("text/xml");
- 		document.setTitle("title"); 
- 		document.setCreationTime(Calendar.getInstance());
- 		
- 		//document.setClassCode(eDocMapping.getClassCode().generateCodeValue());
- 		//document.setType(eDocMapping.getTypeCode().generateCodeValue());
- 		//document.setFormat(eDocMapping.getFormatCode().generateCodeValue());
- 		
- 		
- 		CodeValue cv = new CodeValue("code","codesystem","displayName","codeSystemName");
+		network = affDao.getAffinityDomain(3);
 
- 		document.setContentType(cv);
- 		
- 		Integer[] policies = {1};
- 		
- 		List<Integer> policyList = Arrays.asList(policies);
-        for (Integer policyId : policyList) {
-            PolicyDefinitionDataObject policy = policyDefinitionDao.getPolicyDefinition(policyId);
-            if (policy != null) {
-                document.addConfidentiality(new CodeValue(policy.getCode(), policy.getCodeSystem(), policy.getDisplayName()));
-            }
-        }
+		DocumentMetaData document = new DocumentMetaData();
+		document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^&%s&ISO", provider.getProviderNo(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId()));
+		document.addExtendedAttribute("authorInstitution", clinicData.getName());
 
-        SiteMapping siteMapping = siteMappingDao.findSiteMapping(network.getId());
-        if (siteMapping != null) {
-            if (siteMapping.getFacilityTypeCode() != null) {
-                document.setFacilityType(siteMapping.getFacilityTypeCode().generateCodeValue());
-            }
+		document.setContent(cdaXml.getBytes());
 
-            if (siteMapping.getPracticeSettingCode() != null) {
-                document.setPracticeSetting(siteMapping.getPracticeSettingCode().generateCodeValue());
-            }
-        }
+		document.setMimeType("text/xml");
+		document.setTitle("title");
+		document.setCreationTime(Calendar.getInstance());
 
-        document.setSourceId(clinicData.getOid());
+		//document.setClassCode(eDocMapping.getClassCode().generateCodeValue());
+		//document.setType(eDocMapping.getTypeCode().generateCodeValue());
+		//document.setFormat(eDocMapping.getFormatCode().generateCodeValue());
 
-        document.setServiceTimeStart(Calendar.getInstance());
-        document.setServiceTimeEnd(Calendar.getInstance());
-        
-        document.setAuthor(SharingCenterUtil.createAuthor(Integer.parseInt(provider.getProviderNo())));
-         
-        document.setPatient(SharingCenterUtil.createPatientDemographic(demographicNo));
- 		 
-        
-        logger.info(document.toString());
- 		boolean submissionResult = SharingCenterUtil.submitSingleDocument(document, network);
- 		
- 		logger.info("XDS submissionResult = " + submissionResult);
+		CodeValue cv = new CodeValue("code", "codesystem", "displayName", "codeSystemName");
+
+		document.setContentType(cv);
+
+		Integer[] policies = { 1 };
+
+		List<Integer> policyList = Arrays.asList(policies);
+		for (Integer policyId : policyList) {
+			PolicyDefinitionDataObject policy = policyDefinitionDao.getPolicyDefinition(policyId);
+			if (policy != null) {
+				document.addConfidentiality(new CodeValue(policy.getCode(), policy.getCodeSystem(), policy.getDisplayName()));
+			}
+		}
+
+		SiteMapping siteMapping = siteMappingDao.findSiteMapping(network.getId());
+		if (siteMapping != null) {
+			if (siteMapping.getFacilityTypeCode() != null) {
+				document.setFacilityType(siteMapping.getFacilityTypeCode().generateCodeValue());
+			}
+
+			if (siteMapping.getPracticeSettingCode() != null) {
+				document.setPracticeSetting(siteMapping.getPracticeSettingCode().generateCodeValue());
+			}
+		}
+
+		document.setSourceId(clinicData.getOid());
+
+		document.setServiceTimeStart(Calendar.getInstance());
+		document.setServiceTimeEnd(Calendar.getInstance());
+
+		document.setAuthor(SharingCenterUtil.createAuthor(Integer.parseInt(provider.getProviderNo())));
+
+		document.setPatient(SharingCenterUtil.createPatientDemographic(demographicNo));
+
+		logger.info(document.toString());
+		boolean submissionResult = SharingCenterUtil.submitSingleDocument(document, network);
+
+		logger.info("XDS submissionResult = " + submissionResult);
+		
+		return submissionResult;
 	}
-	
+
 	public void setLoggedInProvider(Provider provider) {
 		this.provider = provider;
 	}
+
 	public void setLoggedInSecurity(Security security) {
 		this.security = security;
 	}
-
 
 }
