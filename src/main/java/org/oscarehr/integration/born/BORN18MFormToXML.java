@@ -67,7 +67,7 @@ public class BORN18MFormToXML {
 	
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd");
 	private SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
-	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	
 	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
