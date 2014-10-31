@@ -54,6 +54,7 @@ import org.oscarehr.sharingcenter.model.AffinityDomainDataObject;
 import org.oscarehr.sharingcenter.model.ClinicInfoDataObject;
 import org.oscarehr.sharingcenter.model.PolicyDefinitionDataObject;
 import org.oscarehr.sharingcenter.model.SiteMapping;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -176,7 +177,9 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 		} catch (Exception e) {
 			logger.error("Error", e);
 		}
-
+		finally {
+			DbConnectionFilter.releaseAllThreadDbResources();
+		}
 	}
 
 	/**
