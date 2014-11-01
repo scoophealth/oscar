@@ -196,7 +196,18 @@ Varicella Immunoglobulin	VarIg
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Var"
 		layout="injection" atc="J07BK01" minAge="0" maxAge="2"
 		showIfMinRecordNum="1" />
-
+        
+       	<item 
+                resultDesc=""
+		desc="HZV=herpes zoster vaccine" 
+                name="HZV" 
+                healthCanadaType="HZV"
+		link="http://www.phac-aspc.gc.ca/naci-ccni/hzv-vcz-eng.php"
+		layout="injection" 
+                atc="J07BK02" 
+                minAge="50" 
+		showIfMinRecordNum="1" />
+        
 	<item 
 		resultDesc=""
 		desc="Hep B=Hepatitis B" name="HepB" healthCanadaType="HB"
