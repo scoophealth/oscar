@@ -221,13 +221,12 @@ function checkTypeIn() {
 
   String sql = "select demographic_no,first_name,last_name,roster_status,patient_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +orderby; // + " "+limit;  
   
-  if(request.getParameter("search_mode").equals("search_name")) {      
-      keyword=keyword+"%";
+  if(request.getParameter("search_mode").equals("search_name")) {
       if(keyword.indexOf(",")==-1){         
-         rs = db.queryResults(sql, keyword) ; //lastname
+         rs = db.queryResults(sql, keyword+"%") ; //lastname
       }
       else if(keyword.indexOf(",")==(keyword.length()-1)){         
-         rs = db.queryResults(sql, keyword.substring(0,(keyword.length()-1)));//lastname
+         rs = db.queryResults(sql, keyword.substring(0,(keyword.length()-1))+"%");//lastname
       }
       else { //lastname,firstname         
     		String[] param =new String[2];

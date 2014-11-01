@@ -31,6 +31,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessageInfo;
 import org.oscarehr.util.MiscUtils;
@@ -107,8 +108,8 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
     			+ "tm.id = ti.labNumber AND "
     			+ "ti.accessionNumber = ?1 AND "
     			+ "tm.type = ?2 AND "
-    			+ "ti.firstName = ?3 AND "
-    			+ "ti.lastName = ?4 AND "
+    			+ "(ti.firstName = ?3 OR (ti.firstName IS NULL AND ?3 IS NULL)) AND "
+    			+ "(ti.lastName = ?4 OR (ti.lastName IS NULL AND ?4 IS NULL)) AND "
     			+ "ti.healthNumber =?5 "
     			+ "ORDER BY ti.obrDate, ti.labNumber";   	
     	Query query = entityManager.createQuery(hql);
@@ -180,8 +181,8 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 			this();
 			this.type = type;
 			this.accessionNumber = accessionNumber;
-			this.firstName = firstName;
-			this.lastName = lastName;
+			this.firstName = StringUtils.trimToNull(firstName);
+			this.lastName = StringUtils.trimToNull(lastName);
 			this.hin = hin;
 		}
 
@@ -206,7 +207,7 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 		}
 
 		public void setFirstName(String firstName) {
-			this.firstName = firstName;
+			this.firstName = StringUtils.trimToNull(firstName);
 		}
 
 		public String getLastName() {
@@ -214,7 +215,7 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 		}
 
 		public void setLastName(String lastName) {
-			this.lastName = lastName;
+			this.lastName = StringUtils.trimToNull(lastName);
 		}
 
 		public String getHin() {
