@@ -73,6 +73,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import oscar.oscarDemographic.data.DemographicMerged;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.HHSEmrDownloadHandler;
@@ -91,6 +92,7 @@ public final class MessageUploader {
 	private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
 	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	private static FileUploadCheckDao fileUploadCheckDao = SpringUtils.getBean(FileUploadCheckDao.class);
+	private static DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 
 
 
@@ -472,6 +474,24 @@ public final class MessageUploader {
 
 		
 		try {
+			//did this link a merged patient? if so, we need to make sure we are the head record, or update
+			//result to be the head record.
+			if(result != null) {
+				DemographicMerged dm = new DemographicMerged();
+				Integer headDemo = dm.getHead(result.getDemographicNo());
+				if(headDemo != null && headDemo.intValue() != result.getDemographicNo()) {
+					Demographic demoTmp = demographicDao.getDemographicById(headDemo);
+					if(demoTmp != null) {
+						result.setDemographicNo(demoTmp.getDemographicNo());
+						result.setProviderNo(demoTmp.getProviderNo());
+					} else {
+						logger.info("Unable to load the head record of this patient record. (" + result.getDemographicNo()  + ")");
+						result = null;
+					}
+				}
+			}
+			
+			
 			if (result == null) {
 				logger.info("Could not find patient for lab: " + labId);
 			} else {
