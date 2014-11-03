@@ -118,15 +118,23 @@ public class DemographicMerged {
     	recycleBinDao.persist(rb);
 
     }
-
+    
     public String getHead(String demographic_no) {
-    	String head = null;
-
-    	List<org.oscarehr.common.model.DemographicMerged> dms = dao.findCurrentByDemographicNo(Integer.parseInt(demographic_no));
-    	for(org.oscarehr.common.model.DemographicMerged dm:dms) {
-    		head = (String.valueOf(dm.getMergedTo()));
+    	Integer result = getHead(Integer.parseInt(demographic_no));
+    	if(result != null) {
+    		return result.toString();
     	}
-    	
+    	return null;
+    }
+
+
+    public Integer getHead(Integer demographic_no)  {
+    	Integer head = null;
+
+    	List<org.oscarehr.common.model.DemographicMerged> dms = dao.findCurrentByDemographicNo(demographic_no);
+    	for(org.oscarehr.common.model.DemographicMerged dm:dms) {
+    		head = dm.getMergedTo();
+    	}
         
         if (head != null)
             head = getHead(head);
@@ -134,7 +142,6 @@ public class DemographicMerged {
             head = demographic_no;
 
         return head;
-
     }
 
     public ArrayList<String> getTail(String demographic_no) {
