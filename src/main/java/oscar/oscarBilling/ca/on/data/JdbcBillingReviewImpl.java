@@ -33,6 +33,7 @@ import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.BillingONExtDao;
 import org.oscarehr.common.dao.BillingONItemDao;
 import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.dao.ClinicLocationDao;
 import org.oscarehr.common.dao.CtlBillingServiceDao;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONExt;
@@ -46,6 +47,8 @@ import oscar.util.ConversionUtils;
 public class JdbcBillingReviewImpl {
 	private static final Logger _logger = Logger.getLogger(JdbcBillingReviewImpl.class);
 
+	private ClinicLocationDao clinicLocationDao = (ClinicLocationDao) SpringUtils.getBean("clinicLocationDao");
+	
 	public String getCodeFee(String val, String billReferalDate) {
 		String retval = null;
 		BillingServiceDao dao = SpringUtils.getBean(BillingServiceDao.class);
@@ -97,12 +100,12 @@ public class JdbcBillingReviewImpl {
 	}
 
 	// invoice report
-	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo) {
+	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, String visitLocation) {
 		List<BillingClaimHeader1Data> retval = new ArrayList<BillingClaimHeader1Data>();
 		BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 		BillingONExtDao extDao = SpringUtils.getBean(BillingONExtDao.class);
 		try {
-			for (BillingONCHeader1 h : dao.findByMagic(Arrays.asList(billType), statusType, providerNo, ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), ConversionUtils.fromIntString(demoNo))) {
+			for (BillingONCHeader1 h : dao.findByMagic(Arrays.asList(billType), statusType, providerNo, ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), ConversionUtils.fromIntString(demoNo),visitLocation)) {
 				BillingClaimHeader1Data ch1Obj = new BillingClaimHeader1Data();
 				ch1Obj.setId("" + h.getId());
 				ch1Obj.setDemographic_no("" + h.getDemographicNo());
@@ -130,7 +133,7 @@ public class JdbcBillingReviewImpl {
 	}
 
 	//invoice report
-	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, List<String> serviceCodes, String dx, String visitType) {
+	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, List<String> serviceCodes, String dx, String visitType, String visitLocation) {
 		List<BillingClaimHeader1Data> retval = new ArrayList<BillingClaimHeader1Data>();
 
 		try {
@@ -138,7 +141,7 @@ public class JdbcBillingReviewImpl {
 			String prevPaid = null;
 
 			BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
-			for (Object[] o : dao.findByMagic2(Arrays.asList(billType), statusType, providerNo, ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), ConversionUtils.fromIntString(demoNo), serviceCodes, dx, visitType)) {
+			for (Object[] o : dao.findByMagic2(Arrays.asList(billType), statusType, providerNo, ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), ConversionUtils.fromIntString(demoNo), serviceCodes, dx, visitType, visitLocation)) {
 				BillingONCHeader1 ch1 = (BillingONCHeader1) o[0];
 				BillingONItem bi = (BillingONItem) o[1];
 
@@ -167,6 +170,8 @@ public class JdbcBillingReviewImpl {
 				retval.add(ch1Obj);
 				prevId = ch1Obj.getId();
 				prevPaid = ch1.getPaid();
+				
+				ch1Obj.setFacilty_num(clinicLocationDao.searchVisitLocation(ch1.getFaciltyNum()));
 
 			}
 		} catch (Exception e) {
@@ -177,7 +182,7 @@ public class JdbcBillingReviewImpl {
 	}
 
 	// billing page
-	public List<Object> getBillingHist(String demoNo, int iPageSize, int iOffSet, DateRange dateRange) throws Exception {
+	public List<Object> getBillingHist(String demoNo, int iPageSize, int iOffSet, DateRange dateRange)  {
 		List<Object> retval = new ArrayList<Object>();
 		int iRow = 0;
 
@@ -275,7 +280,7 @@ public class JdbcBillingReviewImpl {
 	}
 
 	// billing edit page
-	public List<Object> getBillingByApptNo(String apptNo) throws Exception {
+	public List<Object> getBillingByApptNo(String apptNo)  {
 		List<Object> retval = new ArrayList<Object>();
 		
 		BillingClaimHeader1Data ch1Obj = null;
