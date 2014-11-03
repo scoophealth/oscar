@@ -19,6 +19,8 @@
 
 --%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="oscar.OscarProperties" %>
+
 <%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
 <%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.util.*,oscar.oscarBilling.ca.on.pageUtil.*,oscar.oscarBilling.ca.on.data.*,org.apache.struts.util.LabelValueBean" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -40,6 +42,10 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
     boolean isTeamBillingOnly=false;
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false; 
+    OscarProperties props = OscarProperties.getInstance();
+    
+    boolean hideName = Boolean.valueOf(props.getProperty("invoice_reports.print.hide_name","false"));
+    
 %>
 <security:oscarSec objectName="_team_billing_only" roleName="<%=roleName$ %>" rights="r" reverse="false">
 <% isTeamBillingOnly=true; %>
@@ -101,6 +107,8 @@ String filename = request.getParameter("demographicNo");
 String selectedSite = request.getParameter("site");
 String billingForm = request.getParameter("billing_form");
 
+String visitLocation = request.getParameter("xml_location");
+
 if ( statusType == null ) { statusType = "O"; } 
 if ( "_".equals(statusType) ) { demoNo = "";}
 if ( startDate == null ) { startDate = ""; } 
@@ -112,6 +120,7 @@ if ( dx == null ) { dx = "" ; }
 if ( visitType == null ) { visitType = "-" ; } 
 if ( serviceCode == null || serviceCode.equals("")) serviceCode = "%";
 if ( billingForm == null ) { billingForm = "-" ; }
+if ( visitLocation == null) { visitLocation = "";}
 
 List<String> pList = isTeamBillingOnly
 		? (new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"))
@@ -120,12 +129,12 @@ List<String> pList = isTeamBillingOnly
 BillingStatusPrep sObj = new BillingStatusPrep();
 List<BillingClaimHeader1Data> bList = null;
 if((serviceCode == null || billingForm == null) && dx.length()<2 && visitType.length()<2) {
-	bList = bSearch ? sObj.getBills(strBillType, statusType, providerNo, startDate, endDate, demoNo) : new ArrayList<BillingClaimHeader1Data>();
+	bList = bSearch ? sObj.getBills(strBillType, statusType, providerNo, startDate, endDate, demoNo, visitLocation) : new ArrayList<BillingClaimHeader1Data>();
 	//serviceCode = "-";
 	serviceCode = "%";
 } else {
 	serviceCode = (serviceCode == null || serviceCode.length()<2)? "%" : serviceCode; 
-	bList = bSearch ? sObj.getBills(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm) : new ArrayList<BillingClaimHeader1Data>();
+	bList = bSearch ? sObj.getBills(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm, visitLocation) : new ArrayList<BillingClaimHeader1Data>();
 }
 
 RAData raData = new RAData();
@@ -474,7 +483,6 @@ Visit Type:<br>
 
 </div>
 
-
 <div class="span5">		
 Billing Form:<br>
 <select name="billing_form" class="span5">
@@ -499,6 +507,31 @@ Billing Form:<br>
 </select>
 </div>
 </div><!-- row -->
+
+<div class="row">
+<div class="span5">		
+Visit Location:<br>
+<select name="xml_location" class="span5">
+ 												<% //
+		JdbcBillingPageUtil tdbObj = new JdbcBillingPageUtil();
+ 											    
+	    String billLocationNo="", billLocation="";
+	    List lLocation = tdbObj.getFacilty_num();
+	    for (int i = 0; i < lLocation.size(); i = i + 2) {
+		billLocationNo = (String) lLocation.get(i);
+		billLocation = (String) lLocation.get(i + 1);
+		String locationSelected = visitLocation.equals(billLocationNo)? " selected=\"selected\" ":"";
+%>
+	<option value="<%=billLocationNo%>" <%=locationSelected %>>
+	<%=billLocation%>
+	</option>
+	<%	    } %>
+												
+
+</select>
+</div>
+
+</div>
 
 <div class="row" >
 <div class="span10">
@@ -626,7 +659,8 @@ if(statusType.equals("_")) { %>
 		<tr> 
              <th>SERVICE DATE</th>
              <th>PATIENT</th>
-             <th>PATIENT NAME</th>
+             <th class="<%=hideName?"hidden-print":""%>">PATIENT NAME</th>
+             <th>LOCATION</th>
              <th title="Status">STAT</th>
              <th>SETTLED</th>
              <th title="Code Billed">CODE</th>
@@ -641,7 +675,7 @@ if(statusType.equals("_")) { %>
 		<% if (bMultisites) {%>
 			 <th>SITE</th>             
         <% }%>  
-            <th><a href="#" onClick="checkAll(document.invoiceForm.invoiceAction)"><bean:message key="billing.billingStatus.action"/></a></th>
+            <th class="hidden-print"><a href="#" onClick="checkAll(document.invoiceForm.invoiceAction)"><bean:message key="billing.billingStatus.action"/></a></th>
           </tr>
        </thead>
 
@@ -743,7 +777,8 @@ if(statusType.equals("_")) { %>
           <tr <%=color %>> 
              <td align="center"><%= ch1Obj.getBilling_date()%>  <%--=ch1Obj.getBilling_time()--%></td>  <!--SERVICE DATE-->
              <td align="center"><%=ch1Obj.getDemographic_no()%></td> <!--PATIENT-->
-             <td align="center"><a href=# onclick="popupPage(800,740,'../../../demographic/demographiccontrol.jsp?demographic_no=<%=ch1Obj.getDemographic_no()%>&displaymode=edit&dboperation=search_detail');return false;"><%= ch1Obj.getDemographic_name()%></a></td> 
+             <td align="center" class="<%=hideName?"hidden-print":""%>"><a href=# onclick="popupPage(800,740,'../../../demographic/demographiccontrol.jsp?demographic_no=<%=ch1Obj.getDemographic_no()%>&displaymode=edit&dboperation=search_detail');return false;"><%= ch1Obj.getDemographic_name()%></a></td> 
+             <td align="center"><%=ch1Obj.getFacilty_num()!=null?ch1Obj.getFacilty_num():"" %></td>
              <td align="center"><%=ch1Obj.getStatus()%></td> <!--STAT-->
              <td align="center"><%=settleDate%></td> <!--SETTLE DATE-->
              <td align="center"><%=getHtmlSpace(ch1Obj.getTransc_id())%></td><!--CODE-->
@@ -760,7 +795,7 @@ if(statusType.equals("_")) { %>
 				 	<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : siteShortName.get(ch1Obj.getClinic()))%>
 				 </td>     <!--SITE-->          
         	<% }%>   
-             <td align="center">
+             <td align="center" class="hidden-print">
                  <% if (newInvoice && b3rdParty) { %>
                  <input type="checkbox" name="invoiceAction" id="invoiceAction<%=invoiceNo%>" value="<%=invoiceNo%>"/>
                  <% }%>
@@ -771,7 +806,8 @@ if(statusType.equals("_")) { %>
           <tr class="warning"> 
              <td>Count:</td>  
              <td align="center"><%=patientCount%></td> 
-             <td align="center"><%=patientCount%></td> 
+             <td align="center" class="<%=hideName?"hidden-print":""%>">&nbsp;</td> 
+             <td>&nbsp;</td> <!--LOCATION-->
              <td>&nbsp;</td> <!--STAT-->
              <td>&nbsp;</td>
              <td>Total:</td><!--CODE-->
@@ -785,7 +821,7 @@ if(statusType.equals("_")) { %>
              <% if (bMultisites) {%>
 				 <td>&nbsp;</td><!--SITE-->          
         	<% }%>  
-             <td align="center"><a href="#" onClick="submitForm('print')"><bean:message key="billing.billingStatus.print"/></a> 
+             <td align="center" class="hidden-print"><a href="#" onClick="submitForm('print')"><bean:message key="billing.billingStatus.print"/></a> 
                                 <a href="#" onClick="submitForm('email')"><bean:message key="billing.billingStatus.email"/></a>
              </td>
           </tr>

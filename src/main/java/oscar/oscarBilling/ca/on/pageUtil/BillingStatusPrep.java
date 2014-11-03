@@ -21,23 +21,23 @@ package oscar.oscarBilling.ca.on.pageUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
 
 import oscar.oscarBilling.ca.on.data.BillingClaimHeader1Data;
 import oscar.oscarBilling.ca.on.data.JdbcBillingReviewImpl;
 
 public class BillingStatusPrep {
-	private static final Logger _logger = Logger.getLogger(BillingStatusPrep.class);
+	//private static final Logger _logger = Logger.getLogger(BillingStatusPrep.class);
 	private static final String ANY_PROVIDER = "all";
 	private static final String ANY_STATUS_TYPE = "%";
 	private static final String ANY_SERVICE_CODE = "%";
 	private static final String ANY_BILLING_FORM = "---";
+	public static final String ANY_VISIT_LOCATION = "0000";
 
 	// JdbcBillingRAImpl dbObj = new JdbcBillingRAImpl();
 
 	public List<BillingClaimHeader1Data> getBills(String[] billTypes, String statusType, String providerNo, String startDate, String endDate,
-			String demoNo) {
+			String demoNo, String visitLocation) {
 		JdbcBillingReviewImpl bObj = new JdbcBillingReviewImpl();
 		
 		billTypes = billTypes == null || billTypes.length == 0 ? null : billTypes;
@@ -46,12 +46,13 @@ public class BillingStatusPrep {
 		startDate = startDate == null || startDate.length() == 0 ? null : startDate;
 		endDate = endDate == null || endDate.length() == 0 ? null : endDate;
 		demoNo = demoNo == null || demoNo.length() == 0 ? null : demoNo;
+		visitLocation = visitLocation == null || visitLocation.length() == 0 || visitLocation.equals(ANY_VISIT_LOCATION) ? null : visitLocation;
 		
-		return bObj.getBill(billTypes, statusType, providerNo, startDate, endDate, demoNo);
+		return bObj.getBill(billTypes, statusType, providerNo, startDate, endDate, demoNo, visitLocation);
 	}
 
 	public List<BillingClaimHeader1Data> getBills(String[] billType, String statusType, String providerNo, String startDate, String endDate,
-			String demoNo, String serviceCodeParams, String dx, String visitType, String billingForm) {
+			String demoNo, String serviceCodeParams, String dx, String visitType, String billingForm, String visitLocation) {
 		JdbcBillingReviewImpl bObj = new JdbcBillingReviewImpl();
 		billType = billType == null || billType.length == 0 ? null : billType;
 		statusType = statusType == null || statusType.length() == 0 || statusType.equals(ANY_STATUS_TYPE) ? null : statusType;
@@ -64,16 +65,17 @@ public class BillingStatusPrep {
 		serviceCodeParams = serviceCodeParams == null || serviceCodeParams.length() == 0 || serviceCodeParams.equals(ANY_SERVICE_CODE) ? null : 
 			serviceCodeParams.toUpperCase();
 		billingForm = billingForm == null || billingForm.length() == 0 || billingForm.equals(ANY_BILLING_FORM) ? null : billingForm;
+		visitLocation = visitLocation == null || visitLocation.length() == 0 || visitLocation.equals(ANY_VISIT_LOCATION) ? null : visitLocation;
 
 		List<String> serviceCodeList = bObj.mergeServiceCodes(serviceCodeParams, billingForm);
-		List<BillingClaimHeader1Data> retval = bObj.getBill(billType, statusType, providerNo, startDate, endDate, demoNo, serviceCodeList, dx, visitType);
+		List<BillingClaimHeader1Data> retval = bObj.getBill(billType, statusType, providerNo, startDate, endDate, demoNo, serviceCodeList, dx, visitType, visitLocation);
 		return retval;
 	}
 
 	public List<BillingClaimHeader1Data> getBills(String billType[], String statusType, String providerNo, String startDate, String endDate,
 			String demoNo, String serviceCode, String dx, String visitType) {
 			return getBills(billType, statusType, providerNo, startDate, endDate,
-					demoNo, serviceCode, dx, visitType, null);
+					demoNo, serviceCode, dx, visitType, null, null);
 	}
 	public List<LabelValueBean> listBillingForms() {
 		JdbcBillingReviewImpl bObj = new JdbcBillingReviewImpl();

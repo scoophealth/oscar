@@ -55,6 +55,7 @@ import org.springframework.stereotype.Repository;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.on.data.BillingDataHlp;
+import oscar.oscarBilling.ca.on.pageUtil.BillingStatusPrep;
 import oscar.util.ParamAppender;
 /**
 *
@@ -594,14 +595,16 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		return query.getResultList();
     }
 
-	public List<BillingONCHeader1> findByMagic(List<String> payPrograms, String statusType, String providerNo, Date startDate, Date endDate, Integer demoNo) {
+	public List<BillingONCHeader1> findByMagic(List<String> payPrograms, String statusType, String providerNo, Date startDate, Date endDate, Integer demoNo, String visitLocation) {
 		ParamAppender app = getAppender("h");
 		app.and("h.payProgram in (:payPrograms)", "payPrograms", payPrograms);
 		app.and("h.status = :status", "status", statusType);
 		app.and("h.providerNo = :providerNo", "providerNo", providerNo);
 		app.and("h.billingDate >= :startDate", "startDate", startDate);
 		app.and("h.billingDate <= :endDate", "endDate", endDate);
-		
+		if(visitLocation != null) {
+			app.and("h.facilityNum = :facilityNum", "facilityNum", visitLocation);
+		}
 		if( demoNo != null ) {
 			app.and("h.demographicNo = :demographicNo", "demographicNo", demoNo);
 		}
@@ -626,7 +629,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return rs;
     }
 
-	public List<Object[]> findByMagic2(List<String> payPrograms, String statusType, String providerNo, Date startDate, Date endDate, Integer demoNo, List<String> serviceCodes, String dx, String visitType) {
+	public List<Object[]> findByMagic2(List<String> payPrograms, String statusType, String providerNo, Date startDate, Date endDate, Integer demoNo, List<String> serviceCodes, String dx, String visitType, String visitLocation) {
 		ParamAppender app = new ParamAppender("FROM BillingONCHeader1 ch1, BillingONItem bi");
 		app.and("ch1.id = bi.ch1Id");
 		app.and("bi.status != 'D'");
@@ -636,7 +639,9 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		app.and("ch1.providerNo = :providerNo", "providerNo", providerNo);
 		app.and("ch1.billingDate >= :startDate", "startDate", startDate);
 		app.and("ch1.billingDate <= :endDate", "endDate", endDate);
-		
+		if(visitLocation != null && !BillingStatusPrep.ANY_VISIT_LOCATION.equals(visitLocation)) {
+			app.and("ch1.faciltyNum = :facilityNum","facilityNum",visitLocation);
+		}
 		if( demoNo != null && demoNo > 0 ) {
 			app.and("ch1.demographicNo = :demographicNo", "demographicNo", demoNo);
 		}
