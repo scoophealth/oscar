@@ -125,13 +125,14 @@ function openNoteDialog(demographicNo, ticklerNo) {
 		async:false, 
 		dataType: 'json',
 		success:function(data) {
-			
-			jQuery("#tickler_note_noteId").val(data.noteId);
-			jQuery("#tickler_note").val(data.note);
-			jQuery("#tickler_note_revision").html(data.revision);
-			jQuery("#tickler_note_revision_url").attr('onclick','window.open(\'../CaseManagementEntry.do?method=notehistory&noteId='+data.noteId+'\');return false;');
-			jQuery("#tickler_note_editor").html(data.editor);
-			jQuery("#tickler_note_obsDate").html(data.obsDate);
+			if(data != null) {
+				jQuery("#tickler_note_noteId").val(data.noteId);
+				jQuery("#tickler_note").val(data.note);
+				jQuery("#tickler_note_revision").html(data.revision);
+				jQuery("#tickler_note_revision_url").attr('onclick','window.open(\'../CaseManagementEntry.do?method=notehistory&noteId='+data.noteId+'\');return false;');
+				jQuery("#tickler_note_editor").html(data.editor);
+				jQuery("#tickler_note_obsDate").html(data.obsDate);
+			}
 		},
 		error: function(jqXHR, textStatus, errorThrown ) {
 			alert(errorThrown);
