@@ -103,7 +103,7 @@ input.checkStyle{
         <td data-title="'DOB'" class="text-center" sortable="'DOB'">
               {{patient.dob| date: 'yyyy-MM-dd'}}
         </td>
-        <td data-title="'Doctor'" sortable="'providerName'">
+        <td data-title="'Doctor'" sortable="'ProviderName'">
               {{patient.providerName}}
         </td>
         <td data-title="'Roster Status'" class="text-center" sortable="'RS'">
