@@ -3597,19 +3597,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			logger.warn("missing TicklerNote issue, please run all database updates");
 			return null;
 		}
-		//save issue..this will make it a "cpp looking" issue in the eChart
-		CaseManagementIssue cmi = new CaseManagementIssue();
-		cmi.setAcute(false);
-		cmi.setCertain(false);
-		cmi.setDemographic_no(demographicNo);
-		cmi.setIssue_id(issue.getId());
-		cmi.setMajor(false);
-		cmi.setProgram_id(Integer.parseInt(cmn.getProgram_no()));
-		cmi.setResolved(false);
-		cmi.setType(issue.getRole());
-		cmi.setUpdate_date(creationDate);
-		
-		caseManagementIssueDao.saveIssue(cmi);
+
+               CaseManagementIssue cmi = caseManagementMgr.getIssueById(demographicNo.toString(), issue.getId().toString());
+                
+                if(cmi == null) {
+			//save issue..this will make it a "cpp looking" issue in the eChart
+			cmi = new CaseManagementIssue();
+			cmi.setAcute(false);
+			cmi.setCertain(false);
+			cmi.setDemographic_no(demographicNo);
+			cmi.setIssue_id(issue.getId());
+			cmi.setMajor(false);
+			cmi.setProgram_id(Integer.parseInt(cmn.getProgram_no()));
+			cmi.setResolved(false);
+			cmi.setType(issue.getRole());
+			cmi.setUpdate_date(creationDate);
+			caseManagementIssueDao.saveIssue(cmi);
+		}
 		
 		cmn.getIssues().add(cmi);
 		
