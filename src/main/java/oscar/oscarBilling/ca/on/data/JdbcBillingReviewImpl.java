@@ -19,9 +19,12 @@
 package oscar.oscarBilling.ca.on.data;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -99,8 +102,12 @@ public class JdbcBillingReviewImpl {
 		return retval;
 	}
 
-	// invoice report
 	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, String visitLocation) {
+		return getBillWithSorting(billType,statusType,providerNo,startDate,endDate,demoNo,visitLocation,null,null);
+	}
+	
+	// invoice report
+	public List<BillingClaimHeader1Data> getBillWithSorting(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, String visitLocation, String sortName, String sortOrder) {
 		List<BillingClaimHeader1Data> retval = new ArrayList<BillingClaimHeader1Data>();
 		BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 		BillingONExtDao extDao = SpringUtils.getBean(BillingONExtDao.class);
@@ -124,16 +131,81 @@ public class JdbcBillingReviewImpl {
 				for (BillingONExt b : extDao.findByBillingNoAndKey(h.getId(), "payDate")) {
 					ch1Obj.setSettle_date(b.getValue());
 				}
+				
+				ch1Obj.setFacilty_num(clinicLocationDao.searchVisitLocation(h.getFaciltyNum()));
+
 				retval.add(ch1Obj);
 			}
 		} catch (Exception e) {
 			_logger.error("error", e);
 		}
+		
+		applySort(retval,sortName,sortOrder);
 		return retval;
 	}
+	
+	private void applySort(List<BillingClaimHeader1Data> retval, String sortName, String sortOrder) {
+		if(sortOrder == null) {
+			sortOrder = "asc";
+		}
+		
+		if(sortName != null && "ServiceDate".equals(sortName)) {
+			Collections.sort(retval, SERVICE_DATE_COMPARATOR);
+		}
+		if(sortName != null && "DemographicNo".equals(sortName)) {
+			Collections.sort(retval, DEMOGRAPHIC_NO_COMPARATOR);
+		}
+		if(sortName != null && "VisitLocation".equals(sortName)) {
+			Collections.sort(retval, VISIT_LOCATION_COMPARATOR);
+		}
+		if(sortOrder.equals("desc")) {
+			Collections.reverse(retval);
+		}
+	}
+	
+	public static final Comparator<BillingClaimHeader1Data> SERVICE_DATE_COMPARATOR =new Comparator<BillingClaimHeader1Data>() {
+		public int compare(BillingClaimHeader1Data arg0, BillingClaimHeader1Data arg1) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date date0=null,date1=null;
+			try {
+				date0 = formatter.parse(arg0.getBilling_date());
+				date1 = formatter.parse(arg1.getBilling_date());
+			}catch(ParseException e) {
+				return 0;
+			}
+			return(date0.compareTo(date1));
+			
+		}
+	};
+	
+	public static final Comparator<BillingClaimHeader1Data> DEMOGRAPHIC_NO_COMPARATOR =new Comparator<BillingClaimHeader1Data>() {
+		public int compare(BillingClaimHeader1Data arg0, BillingClaimHeader1Data arg1) {
+			Integer d0,d1;
+			try {
+				d0 = Integer.parseInt(arg0.getDemographic_no());
+				d1 = Integer.parseInt(arg0.getDemographic_no());
+			}catch(Exception e) {
+				return 0;
+			}
+			return(d0.compareTo(d1));
+			
+		}
+	};
+	
+	public static final Comparator<BillingClaimHeader1Data> VISIT_LOCATION_COMPARATOR =new Comparator<BillingClaimHeader1Data>() {
+		public int compare(BillingClaimHeader1Data arg0, BillingClaimHeader1Data arg1) {
+			return arg0.getFacilty_num().compareTo(arg1.getFacilty_num());
+		}
+	};
+	
 
+	//invoice report	
+	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, List<String> serviceCodes, String dx, String visitType, String visitLocation) {	
+		return getBillWithSorting(billType,statusType,providerNo,startDate,endDate,demoNo,serviceCodes,dx,visitType,visitLocation,null,null);	
+	}
+	
 	//invoice report
-	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, List<String> serviceCodes, String dx, String visitType, String visitLocation) {
+	public List<BillingClaimHeader1Data> getBillWithSorting(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, List<String> serviceCodes, String dx, String visitType, String visitLocation, String sortName, String sortOrder) {
 		List<BillingClaimHeader1Data> retval = new ArrayList<BillingClaimHeader1Data>();
 
 		try {
@@ -178,6 +250,8 @@ public class JdbcBillingReviewImpl {
 			_logger.error("error", e);
 		}
 
+		applySort(retval,sortName,sortOrder);
+		
 		return retval;
 	}
 

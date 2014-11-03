@@ -109,6 +109,9 @@ String billingForm = request.getParameter("billing_form");
 
 String visitLocation = request.getParameter("xml_location");
 
+String sortName = request.getParameter("sortName");
+String sortOrder = request.getParameter("sortOrder");
+
 if ( statusType == null ) { statusType = "O"; } 
 if ( "_".equals(statusType) ) { demoNo = "";}
 if ( startDate == null ) { startDate = ""; } 
@@ -121,6 +124,8 @@ if ( visitType == null ) { visitType = "-" ; }
 if ( serviceCode == null || serviceCode.equals("")) serviceCode = "%";
 if ( billingForm == null ) { billingForm = "-" ; }
 if ( visitLocation == null) { visitLocation = "";}
+if ( sortName == null) { sortName = "ServiceDate";}
+if ( sortOrder == null) { sortOrder = "asc";}
 
 List<String> pList = isTeamBillingOnly
 		? (new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"))
@@ -134,7 +139,7 @@ if((serviceCode == null || billingForm == null) && dx.length()<2 && visitType.le
 	serviceCode = "%";
 } else {
 	serviceCode = (serviceCode == null || serviceCode.length()<2)? "%" : serviceCode; 
-	bList = bSearch ? sObj.getBills(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm, visitLocation) : new ArrayList<BillingClaimHeader1Data>();
+	bList = bSearch ? sObj.getBillsWithSorting(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm, visitLocation,sortName,sortOrder) : new ArrayList<BillingClaimHeader1Data>();
 }
 
 RAData raData = new RAData();
@@ -285,9 +290,36 @@ function checkAll(group) {
         group[i].checked = !isChecked;
     isChecked = !isChecked;
 }
+
+
+updateSort = function(name) {
+	var sortName =$("#sortName").val();
+	var sortOrder = $("#sortOrder").val();
+	
+	if(sortName != name) {
+		sortName = name;
+		sortOrder = 'asc';
+	} else {
+		if(sortOrder == 'asc') {
+			sortOrder = 'desc';
+		} else if(sortOrder == 'desc') {
+			sortOrder = 'asc';
+		} else {
+			//this shouldn't happen..but just in case
+			sortOrder='asc';
+		}
+	}
+	
+	$("#sortName").val(sortName);
+	$("#sortOrder").val(sortOrder);
+	
+	document.serviceform.submit();
+}
+
 </script>
 
 <style>
+
 table td,th{font-size:12px;}
 
 @media print {
@@ -311,6 +343,9 @@ table td,th{font-size:12px;}
 </div>
 
 <form name="serviceform" method="get" action="billingONStatus.jsp">
+
+<input type="hidden" id="sortName" name="sortName" value="<%=sortName%>"/>
+<input type="hidden" id="sortOrder" name="sortOrder" value="<%=sortOrder%>"/>
 
 <div class="row well well-small hidden-print">    
   
@@ -657,10 +692,10 @@ if(statusType.equals("_")) { %>
        <table class="table">
           <thead>
 		<tr> 
-             <th>SERVICE DATE</th>
-             <th>PATIENT</th>
+             <th><a href="javascript:void();" onClick="updateSort('ServiceDate');return false;">SERVICE DATE</a></th>
+             <th> <a href="javascript:void();" onClick="updateSort('DemographicNo');return false;">PATIENT</a></th>
              <th class="<%=hideName?"hidden-print":""%>">PATIENT NAME</th>
-             <th>LOCATION</th>
+             <th> <a href="javascript:void();" onClick="updateSort('VisitLocation');return false;">LOCATION</a></th>
              <th title="Status">STAT</th>
              <th>SETTLED</th>
              <th title="Code Billed">CODE</th>
@@ -670,7 +705,7 @@ if(statusType.equals("_")) { %>
              <th>DX</th>
              <!--th>DX1</th-->
              <th>TYPE</th>
-             <th>ACCOUNT</th>
+             <th>INVOICE #</th>
              <th>MESSAGES</th>
 		<% if (bMultisites) {%>
 			 <th>SITE</th>             
