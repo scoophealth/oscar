@@ -114,17 +114,17 @@
   if (rowsAffected ==1) {
 %>
 
-<h1>Successful Addition of a billing Record.</h1>
+<h1>Successful Deletion of a billing Record.</h1>
 
 <script LANGUAGE="JavaScript">
       self.close();
       self.opener.refresh();
 </script> <%
   
- }  else {
+  } else if(rowsAffected == 0 && billNo != null && !"null".equals(billNo)) {
 %>
 
-<h1>Sorry, addition has failed.</h1>
+<h1>Sorry, deletion has failed. </h1>
 
 <%  
   }
