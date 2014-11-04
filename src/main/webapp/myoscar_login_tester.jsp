@@ -23,6 +23,8 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.oscarehr.myoscar_server.myoscar_server_client_stubs2.MessageWs"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.myoscar_server.myoscar_server_client_stubs2.LoginResultTransfer3"%>
 <%@page import="org.oscarehr.myoscar_server.myoscar_server_client_stubs2.LoginWs"%>
@@ -40,22 +42,39 @@
 		</form>
 		<hr />
 		<%
-			String userName=request.getParameter("userName");
+			String userName=StringUtils.trimToNull(request.getParameter("userName"));
 			String password=request.getParameter("password");
-			LoginWs loginWs=MyOscarServerWebServicesManager.getLoginWs(MyOscarLoggedInInfo.getMyOscarServerBaseUrl());
-			try
+			
+			if (userName!=null)
 			{
-				LoginResultTransfer3 loginResult = loginWs.login4(userName, password);
-				%>
-					Login success : <%=loginResult.getPerson().getId()%>
-				<%
-			}
-			catch (Exception e)
-			{
-				%>
-					Login failed : <%=e.getMessage()%>
-				<%
-				MiscUtils.getLogger().error("Error logging into myoscar", e);
+				LoginWs loginWs=MyOscarServerWebServicesManager.getLoginWs(MyOscarLoggedInInfo.getMyOscarServerBaseUrl());
+				try
+				{
+					LoginResultTransfer3 loginResult = loginWs.login4(userName, password);
+					%>
+						Login success userId : <%=loginResult.getPerson().getId()%>
+						<br />
+					<%
+	
+					MyOscarLoggedInInfo myOscarLoggedInInfo=new MyOscarLoggedInInfo(loginResult.getPerson().getId(), loginResult.getSecurityTokenKey(), request.getSession().getId(), request.getLocale());
+					MyOscarLoggedInInfo.setLoggedInInfo(request.getSession(), myOscarLoggedInInfo);
+					
+				   	MessageWs messageWs = MyOscarServerWebServicesManager.getMessageWs(myOscarLoggedInInfo);
+				   	
+				   	// THIS LINE will bomb with incorrect cipher/bouncy castle provider 
+				   	int count=messageWs.getUnreadMessageCount(myOscarLoggedInInfo.getLoggedInPersonId());
+					%>
+						unread msg : <%=count%>
+					<%
+					
+				}
+				catch (Exception e)
+				{
+					%>
+						error : <%=e.getMessage()%>
+					<%
+					MiscUtils.getLogger().error("Error logging into myoscar", e);
+				}
 			}
 		%> 
 	</body>	
