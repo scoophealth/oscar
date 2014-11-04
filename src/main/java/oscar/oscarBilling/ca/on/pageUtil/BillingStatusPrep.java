@@ -36,6 +36,8 @@ public class BillingStatusPrep {
 
 	// JdbcBillingRAImpl dbObj = new JdbcBillingRAImpl();
 
+	
+	
 	public List<BillingClaimHeader1Data> getBills(String[] billTypes, String statusType, String providerNo, String startDate, String endDate,
 			String demoNo, String visitLocation) {
 		JdbcBillingReviewImpl bObj = new JdbcBillingReviewImpl();
@@ -51,8 +53,14 @@ public class BillingStatusPrep {
 		return bObj.getBill(billTypes, statusType, providerNo, startDate, endDate, demoNo, visitLocation);
 	}
 
+	
 	public List<BillingClaimHeader1Data> getBills(String[] billType, String statusType, String providerNo, String startDate, String endDate,
 			String demoNo, String serviceCodeParams, String dx, String visitType, String billingForm, String visitLocation) {
+		return getBillsWithSorting(billType,statusType,providerNo,startDate,endDate,demoNo,serviceCodeParams,dx,visitType,billingForm,visitLocation,null,null);
+	}
+	
+	public List<BillingClaimHeader1Data> getBillsWithSorting(String[] billType, String statusType, String providerNo, String startDate, String endDate,
+			String demoNo, String serviceCodeParams, String dx, String visitType, String billingForm, String visitLocation, String sortName, String sortOrder) {
 		JdbcBillingReviewImpl bObj = new JdbcBillingReviewImpl();
 		billType = billType == null || billType.length == 0 ? null : billType;
 		statusType = statusType == null || statusType.length() == 0 || statusType.equals(ANY_STATUS_TYPE) ? null : statusType;
@@ -68,15 +76,11 @@ public class BillingStatusPrep {
 		visitLocation = visitLocation == null || visitLocation.length() == 0 || visitLocation.equals(ANY_VISIT_LOCATION) ? null : visitLocation;
 
 		List<String> serviceCodeList = bObj.mergeServiceCodes(serviceCodeParams, billingForm);
-		List<BillingClaimHeader1Data> retval = bObj.getBill(billType, statusType, providerNo, startDate, endDate, demoNo, serviceCodeList, dx, visitType, visitLocation);
+		List<BillingClaimHeader1Data> retval = bObj.getBillWithSorting(billType, statusType, providerNo, startDate, endDate, demoNo, serviceCodeList, dx, visitType, visitLocation,sortName,sortOrder);
 		return retval;
 	}
 
-	public List<BillingClaimHeader1Data> getBills(String billType[], String statusType, String providerNo, String startDate, String endDate,
-			String demoNo, String serviceCode, String dx, String visitType) {
-			return getBills(billType, statusType, providerNo, startDate, endDate,
-					demoNo, serviceCode, dx, visitType, null, null);
-	}
+	
 	public List<LabelValueBean> listBillingForms() {
 		JdbcBillingReviewImpl bObj = new JdbcBillingReviewImpl();
         List<LabelValueBean> billingFormsList = bObj.listBillingForms();
