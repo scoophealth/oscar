@@ -26,7 +26,7 @@ package org.oscarehr.ws.rest.to.model;
 public class DemographicSearchRequest {
 	
 	public static enum SEARCHMODE {
-        Name, Phone, HIN, Address, DOB, ChartNo
+        Name, Phone, HIN, Address, DOB, ChartNo, DemographicNo
 	}
 	
 	public static enum SORTMODE {
