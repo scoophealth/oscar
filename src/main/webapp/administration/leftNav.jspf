@@ -380,10 +380,10 @@ String curProvider_no = (String)session.getAttribute("user");
 
 
 
-					<li>
+				<!-- <li>
 					<a href="javascript:void(0);" class="xlink" rel="${ctx}/renal/ckd_screening_report.jsp">CKD Screening Report</a>
 					</li>	
-
+-->
 					<li>
 					<a href="javascript:void(0);" class="xlink" rel="${ctx}/renal/ckdScreeningReportSubmit.jsp">CKD Screening Report (async)</a>
 					</li>	
