@@ -186,13 +186,13 @@ public class CkdScreener {
 		Demographic demographic = demographicDao.getDemographicById(demographicNo);
 		if(demographic != null && demographic.getProviderNo() != null && demographic.getProviderNo().length()>0) {
 			if(excludeMap.get(demographic.getProviderNo()) != null) {
-				logger.info("skipping " + demographicNo + " - provider has opted out");
+				logger.debug("skipping " + demographicNo + " - provider has opted out");
 				return false;
 			}
 		}
 		
 		if(hasActiveDxCode(demographicNo,"icd9","585"))  {
-			logger.info("skipping " + demographicNo + " - already dx'ed with Chronic Renal Failure");
+			logger.debug("skipping " + demographicNo + " - already dx'ed with Chronic Renal Failure");
 			return false;
 		}
 		
@@ -338,7 +338,7 @@ public class CkdScreener {
 				}
 				
 				if(note.getNote().matches(exp.toString())) {
-					MiscUtils.getLogger().info("match! - " + note.getNote());
+					MiscUtils.getLogger().debug("match! - " + note.getNote());
 					result=true;
 					
 				}
@@ -371,7 +371,7 @@ public class CkdScreener {
 		List<Measurement> measures = measurementDao.findByType(demographicNo, "EGFR");
 		if(measures == null || measures.size() == 0 || 
 				(measures != null && measures.get(0) != null && measures.get(0).getDateObserved()!= null && measures.get(0).getDateObserved().before(cal.getTime()))) {
-			MiscUtils.getLogger().info("Missing EGFR lab");
+			MiscUtils.getLogger().debug("Missing EGFR lab");
 			//we  don't have
 			labs=true;
 		}
