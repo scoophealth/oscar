@@ -455,7 +455,7 @@ function ts_resortTable(lnk,clid) {
     if (table.rows.length <= 1) return;
 
 
-    var itm = ts_getInnerText(table.rows[1].cells[column]);
+    var itm = ts_getInnerText(table.rows[1].cells[column]).trim();
     sortfn = ts_sort_caseinsensitive;
     if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d\d\d$/)) sortfn = ts_sort_date;
     if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d$/)) sortfn = ts_sort_date;
