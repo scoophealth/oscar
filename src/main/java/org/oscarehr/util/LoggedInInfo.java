@@ -23,6 +23,7 @@
 
 package org.oscarehr.util;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +41,7 @@ import org.oscarehr.common.model.Security;
  * It should signify where the code started for the most part, i.e. the thread class name,
  * or the jsp name, or web service name and method.
  */
-public final class LoggedInInfo {
+public final class LoggedInInfo implements Serializable {
 	private static final String LOGGED_IN_INFO_KEY = LoggedInInfo.class.getName() + ".LOGGED_IN_INFO_KEY";
 
 	private HttpSession session = null;
