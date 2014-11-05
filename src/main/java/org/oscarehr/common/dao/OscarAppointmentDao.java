@@ -221,7 +221,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	}
 	
 	public List<Appointment> findByProviderAndDayandNotStatus(String providerNo, Date date, String notThisStatus) {
-		String sql = "SELECT a FROM Appointment a WHERE a.providerNo=?1 and a.appointmentDate = ?2 and a.status != ?3";
+		String sql = "SELECT a FROM Appointment a WHERE a.providerNo=?1 and a.appointmentDate = ?2 and a.status != ?3 ORDER BY a.appointmentDate, a.startTime";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, providerNo);
 		query.setParameter(2, date);
