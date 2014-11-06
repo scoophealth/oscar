@@ -26,12 +26,12 @@
 <div ng-controller="PatientListProgramCtrl">
 
 <a ng-repeat="admission in admissions | filter:query" ng-click="goToRecord(admission.demographic)" class="list-group-item hand-hover" class="default">	
-	<h4 class="list-group-item-heading">{{admission.demographic.lastName}},{{admission.demographic.firstName}}</h4>
+	<h5 class="list-group-item-heading">{{admission.demographic.lastName}},{{admission.demographic.firstName}}</h5>
 	<p class="list-group-item-text">Since: {{admission.admissionDate | date: 'yyyy-MM-dd'}}  </p>
 </a>
 
 <a ng-if="admissions.length === 0" class="list-group-item hand-hover default">	
-	<h4 class="list-group-item-heading">No Patients are currently admitted to this program.</h4>
+	<h5 class="list-group-item-heading">No Patients are currently admitted to this program.</h5>
 </a>
 
 </div>
