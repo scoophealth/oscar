@@ -119,7 +119,7 @@ public class DemographicManager {
 		Demographic result = getDemographic(loggedInInfo, demographicId);
 		String name = null;
 		if(result != null) {
-			name = result.getLastName() + "," + result.getFirstName();
+			name = result.getLastName() + ", " + result.getFirstName();
 		}
 
 		return (name);
