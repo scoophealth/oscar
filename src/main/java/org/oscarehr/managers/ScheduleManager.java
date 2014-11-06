@@ -147,7 +147,7 @@ public class ScheduleManager {
 			
 			//make sure the appts returned are in local time. 
 			timeSlot.setTimeZone(Calendar.getInstance().getTimeZone());
-			DateUtils.truncate(timeSlot, Calendar.DAY_OF_MONTH);
+			timeSlot=DateUtils.truncate(timeSlot, Calendar.DAY_OF_MONTH);
 			TreeMap<Calendar, Character> allTimeSlots=dayWorkSchedule.getTimeSlots();
 			
 			for (int i=0; i<timecode.length(); i++)
