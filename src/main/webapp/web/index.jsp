@@ -114,6 +114,10 @@ img.navbarlogo {
 width: auto;
 }
 
+/*needed to fix the broken nav dropdown*/
+#left_pane{
+padding:8px;
+}
 </style>
 
 </head>
@@ -249,7 +253,7 @@ width: auto;
 	<div class="container-fluid" ng-controller="PatientListCtrl" >
 		<div id="left_pane" class="col-md-2" ng-if="showPatientList()">
 		
-			<ul class="nav nav-tabs nav-justified">			
+			<ul class="nav nav-tabs">			
 				<li ng-repeat="item in tabItems" ng-class="{'active': isActive(item.id)}" class="hand-hover">
 					<a  ng-click="changeTab(item.id)" data-toggle="tab">{{item.label}}</a>
 				</li>
