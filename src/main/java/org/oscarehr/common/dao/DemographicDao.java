@@ -27,7 +27,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +44,6 @@ import javax.persistence.PersistenceException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.tools.ant.util.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -57,11 +55,11 @@ import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.ResultTransformer;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.caisi_integrator.ws.MatchingDemographicParameters;
+import org.oscarehr.common.DemographicSearchResultTransformer;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Admission;
@@ -1996,7 +1994,8 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		
 		String demographicQuery = generateDemographicSearchQuery(loggedInInfo,searchRequest, params,
 				"d.demographic_no, d.last_name, d.first_name, d.chart_no, d.sex, d.provider_no, d.roster_status," +
-				" d.patient_status, d.phone, d.year_of_birth,d.month_of_birth,d.date_of_birth,p.last_name as providerLastName,p.first_name as providerFirstName,d.hin");
+				" d.patient_status, d.phone, d.year_of_birth,d.month_of_birth,d.date_of_birth,p.last_name as providerLastName," + 
+						"p.first_name as providerFirstName,d.hin,dm.merged_to");
 		 
 		Session session = getSession();
 		try {
@@ -2007,46 +2006,9 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 			}
 			
 			sqlQuery.setFirstResult(startIndex);
-			sqlQuery.setResultTransformer(new ResultTransformer() {
-				SimpleDateFormat sdf = new SimpleDateFormat(DateUtils.ISO8601_DATE_PATTERN);
-				
-				
-				@Override
-				public Object transformTuple(Object[] tuple, String[] aliases) {
-					Integer demographicNo = (Integer) tuple[0];
-				    String lastName = (String) tuple[1];
-				    String firstName = (String) tuple[2];
-				    String chartNo = (String)tuple[3];
-				    String sex = String.valueOf(tuple[4]);
-				    String providerNo = (String)tuple[5];
-				    String rosterStatus = (String)tuple[6];
-				    String patientStatus = (String)tuple[7];
-				    String phone = (String)tuple[8];
-				    
-				    Date dob = null;
-					try {
-						dob = sdf.parse((String)tuple[9] + "-" + (String)tuple[10] + "-" + (String)tuple[11]);
-					} catch(ParseException e) {
-						logger.warn("Demographic " + demographicNo + " has a bad DOB ",e);
-					}
-					
-					String providerLastName = (String)tuple[12];
-					String providerFirstName = (String)tuple[13];
-					
-					String hin = (String)tuple[14];
-						    
-				    DemographicSearchResult result =  
-				    		new DemographicSearchResult(demographicNo, lastName, firstName, chartNo, sex, providerNo, rosterStatus, 
-				    				patientStatus, phone, dob, providerLastName, providerFirstName,hin);
-				    return result;
-				}
-				
-				@Override
-				public List transformList(List collection) {
-					
-					return collection;
-				}
-			});
+			DemographicSearchResultTransformer transformer = new DemographicSearchResultTransformer();
+			transformer.setDemographicDao(this);
+			sqlQuery.setResultTransformer(transformer);
 			setLimit(sqlQuery, itemsToReturn);
 			
 			return sqlQuery.list();
@@ -2073,6 +2035,9 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		}
 		if(searchRequest.getMode() == SEARCHMODE.Phone) {
 			fieldname="d.phone";
+		}
+		if(searchRequest.getMode() == SEARCHMODE.DemographicNo) {
+			fieldname="d.demographic_no";
 		}
 		
 		if(searchRequest.getMode() == SEARCHMODE.HIN) {
@@ -2174,7 +2139,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		  }
 
 		  orderBy = " ORDER BY " + orderBy;
-		  return "select " + select + " from demographic d left join provider p on d.provider_no = p.provider_no where "+fieldname+" "+regularexp+" :keyword "+ptstatusexp+domainRestriction+orderBy ;
+		  return "select " + select + " from demographic d left join provider p on d.provider_no = p.provider_no left join demographic_merged dm on d.demographic_no = dm.demographic_no where "+fieldname+" "+regularexp+" :keyword "+ptstatusexp+domainRestriction+orderBy ;
 	}
 	
 }
