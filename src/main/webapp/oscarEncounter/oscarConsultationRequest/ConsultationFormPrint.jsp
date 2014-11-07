@@ -327,7 +327,7 @@
                 <input type=button value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrint"/>" onclick="javascript: PrintWindow();"/>
             </td>
             <td align="center">
-                <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrintAttached"/>" />
+                <input type="submit" style="width:130px" value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrintAttached"/>" />
             </td>
             <td align="center">
                 <input type=button value="<bean:message key="global.btnClose"/>" onclick="javascript: CloseWindow();"/>
@@ -761,12 +761,7 @@ for(ConsultationRequestExt ext:exts) {
                 </td>
             </tr>
             <%}%>
-            <tr>
-                <td class="subTitles">
-                    <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAssociated"/> : <%=reqFrm.getFamilyDoctor() %>
-                    &nbsp;<br>
-                </td>
-            </tr>
+
             <tr>
             <td class="subTitles">
                 <%-- A more permanent, but I will not say elegant, implemenation of this "Physician indicator by a new property and other language support. --%>
