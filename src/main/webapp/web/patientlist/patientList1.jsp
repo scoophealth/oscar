@@ -23,14 +23,14 @@
     Ontario, Canada
 
 --%>
-<div ng-controller="PatientListAppointmentListCtrl">
+<div ng-controller="PatientListAppointmentListCtrl" class="list-patients">
 <a ng-repeat="patient in patients | offset:currentPage*pageSize | limitTo:pageSize | filter:query"
 	class="list-group-item default hand-hover" ng-click="goToRecord(patient)"  ng-style="getAppointmentStyle(patient)">
 	<!-- 
 	<span ng-if="patient.status.length>0 && patient.status != 't'" class="badge">{{patient.status}}</span>
 	-->
-	<h4 class="list-group-item-heading">{{patient.name}}</h4>
-	<h4 class="list-group-item-heading pull-right">{{patient.startTime}}</h4>
+	<h5 class="list-group-item-heading">{{patient.name}}</h5>
+	<h5 class="list-group-item-heading pull-right">{{patient.startTime}}</h5>
 	<p class="list-group-item-text">Reason: {{patient.reason}}  </p>
 </a>
 
