@@ -27,9 +27,6 @@ import java.io.IOException;
 import java.util.List;
 
 import net.sf.json.JSONObject;
-import net.sf.json.util.EnumMorpher;
-import net.sf.json.util.JSONUtils;
-
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -68,8 +65,7 @@ public class FaxStatusUpdater {
 			faxConfig = faxConfigDao.getConfigByNumber(faxJob.getFax_line());
 			
 			if( faxConfig.isActive() ) {
-				
-				client = new DefaultHttpClient();				
+								
 				client.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(faxConfig.getSiteUser(), faxConfig.getPasswd()));
 				
 				HttpGet mGet = new HttpGet(faxConfig.getUrl() + "/" + faxJob.getJobId());
@@ -80,16 +76,15 @@ public class FaxStatusUpdater {
 				try {
 					HttpResponse response = client.execute(mGet);
 	                log.info("RESPONSE: " + response.getStatusLine().getStatusCode());
+	                mGet.releaseConnection();
 	                
 	                if( response.getStatusLine().getStatusCode() == HttpStatus.SC_OK ) {
-	                	JSONUtils.getMorpherRegistry().registerMorpher( new EnumMorpher( FaxJob.STATUS.class ) );
-	                	
+	                		                	
 	                	HttpEntity httpEntity = response.getEntity();
 	                	String content = EntityUtils.toString(httpEntity);
-	                	
-	                	jsonObject = JSONObject.fromObject(content);
+	                		                	
 	                	ObjectMapper mapper = new ObjectMapper();
-	                	faxJobUpdated = mapper.readValue(jsonObject.toString(), FaxJob.class);
+	                	faxJobUpdated = mapper.readValue(content, FaxJob.class);
 	                	//faxJobUpdated = (FaxJob) JSONObject.toBean(jsonObject, FaxJob.class);
 	                	
 	                	faxJob.setStatus(faxJobUpdated.getStatus());
