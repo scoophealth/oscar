@@ -270,7 +270,9 @@
 		String paramNameHin =new String();
 		paramNameHin=request.getParameter("hin").trim();
 		
-		List<Demographic> hinDemoList = demographicDao.searchDemographicByHIN(paramNameHin, 100, 0);
+		boolean outOfDomain = true;
+		
+		List<Demographic> hinDemoList = demographicDao.searchDemographicByHIN(paramNameHin, 100, 0, loggedInInfo.getLoggedInProviderNo(),outOfDomain);
 		for(Demographic hinDemo : hinDemoList) {
         
             if (!(hinDemo.getDemographicNo().toString().equals(request.getParameter("demographic_no")))) {

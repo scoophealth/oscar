@@ -177,7 +177,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 boolean toggleLine = false;
 int nItems=0;
 
-demoList = demographicDao.searchDemographicByNameAndNotStatus(keyword, statusList, limit, offset);
+demoList = demographicDao.searchDemographicByNameAndNotStatus(keyword, statusList, limit, offset, curProvider_no, true);
 int dSize = demoList.size();
 
 

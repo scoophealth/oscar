@@ -77,6 +77,16 @@
 
 	List<Demographic> demoList = null;  
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+	
+	String providerNo = loggedInInfo.getLoggedInProviderNo();
+	boolean outOfDomain = true;
+	if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1) {
+		outOfDomain=false;
+		if(request.getParameter("outofdomain")!=null && request.getParameter("outofdomain").equals("true")) {
+			outOfDomain=true;
+		}
+	}
+	
 %>
 
 <html>
@@ -346,83 +356,65 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 
 	if( "".equals(ptstatus) ) {
 		if(searchMode.equals("search_name")) {
-			demoList = demographicDao.searchDemographicByName(keyword, limit, offset);
+			demoList = demographicDao.searchDemographicByName(keyword, limit, offset,providerNo,outOfDomain);
 		}
 		else if(searchMode.equals("search_phone")) {
-			demoList = demographicDao.searchDemographicByPhone(keyword, limit, offset);
+			demoList = demographicDao.searchDemographicByPhone(keyword, limit, offset,providerNo,outOfDomain);
 		}
 		else if(searchMode.equals("search_dob")) {
-			demoList = demographicDao.searchDemographicByDOB(keyword, limit, offset);
+			demoList = demographicDao.searchDemographicByDOB(keyword, limit, offset,providerNo,outOfDomain);
 		}
 		else if(searchMode.equals("search_address")) {
-			demoList = demographicDao.searchDemographicByAddress(keyword, limit, offset);
+			demoList = demographicDao.searchDemographicByAddress(keyword, limit, offset,providerNo,outOfDomain);
 		}
 		else if(searchMode.equals("search_hin")) {
-			demoList = demographicDao.searchDemographicByHIN(keyword, limit, offset);
+			demoList = demographicDao.searchDemographicByHIN(keyword, limit, offset,providerNo,outOfDomain);
 		}
 		else if(searchMode.equals("search_chart_no")) {
-			demoList = demographicDao.findDemographicByChartNo(keyword, limit, offset);
+			demoList = demographicDao.findDemographicByChartNo(keyword, limit, offset,providerNo,outOfDomain);
 		}
 	}
 	else if( "active".equals(ptstatus) ) {
 	    if(searchMode.equals("search_name")) {
-			demoList = demographicDao.searchDemographicByNameAndNotStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.searchDemographicByNameAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 	    else if(searchMode.equals("search_phone")) {
-			demoList = demographicDao.searchDemographicByPhoneAndNotStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.searchDemographicByPhoneAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 		else if(searchMode.equals("search_dob")) {
-			demoList = demographicDao.searchDemographicByDOBAndNotStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.searchDemographicByDOBAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 		else if(searchMode.equals("search_address")) {
-			demoList = demographicDao.searchDemographicByAddressAndNotStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.searchDemographicByAddressAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 		else if(searchMode.equals("search_hin")) {
-			demoList = demographicDao.searchDemographicByHINAndNotStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.searchDemographicByHINAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 		else if(searchMode.equals("search_chart_no")) {
-			demoList = demographicDao.findDemographicByChartNoAndNotStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.findDemographicByChartNoAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 	}
 	else if( "inactive".equals(ptstatus) ) {
 	    if(searchMode.equals("search_name")) {
-			demoList = demographicDao.searchDemographicByNameAndStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.searchDemographicByNameAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 	    else if(searchMode.equals("search_phone")) {
-			demoList = demographicDao.searchDemographicByPhoneAndStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.searchDemographicByPhoneAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 		else if(searchMode.equals("search_dob")) {
-			demoList = demographicDao.searchDemographicByDOBAndStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.searchDemographicByDOBAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 		else if(searchMode.equals("search_address")) {
-			demoList = demographicDao.searchDemographicByAddressAndStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.searchDemographicByAddressAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 		else if(searchMode.equals("search_hin")) {
-			demoList = demographicDao.searchDemographicByHINAndStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.searchDemographicByHINAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 		else if(searchMode.equals("search_chart_no")) {
-			demoList = demographicDao.findDemographicByChartNoAndStatus(keyword, stati, limit, offset);
+			demoList = demographicDao.findDemographicByChartNoAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 	}
 	
-	//if caisi is on, we need to filter this list according to program domain.
-	if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1) {
-		CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
-		List<Demographic> tmpDemoList = new ArrayList<Demographic>();
-		String providerNo = loggedInInfo.getLoggedInProviderNo();
-		List<org.oscarehr.PMmodule.model.ProgramProvider> programProviders = caseManagementManager.getProgramProviders(providerNo);
-		
-		if(demoList != null && request.getParameter("outofdomain")!=null && !request.getParameter("outofdomain").equals("true") ) {
-			for(Demographic demo:demoList) {
-				List<org.oscarehr.common.model.Admission> allAdmissions = caseManagementManager.getAdmission(demo.getDemographicNo());
-				if(caseManagementManager.isClientInProgramDomain(providerNo, demo.getDemographicNo().toString())) {
-					tmpDemoList.add(demo);
-				}
-			}
-			demoList = tmpDemoList;
-		}
-	}
-
 	if(demoList == null) {
 	    //out.println("failed!!!");
 	} 
