@@ -46,4 +46,17 @@ public class BillingPaymentTypeDao extends AbstractDao<BillingPaymentType>{
 		List<BillingPaymentType> results = query.getResultList();
 		return results;
 	}
+    
+    public Integer findIdByName(String name) {
+		Query query = entityManager.createQuery("SELECT x.id FROM " + modelClass.getSimpleName() + " x WHERE x.paymentType = ?1");
+		query.setParameter(1, name);
+		query.setMaxResults(1);
+
+		@SuppressWarnings("unchecked")
+		List<Integer> results = query.getResultList();
+		if (results.size() == 1) return (results.get(0));
+		else if (results.size() == 0) return (null);
+	
+		return null;
+	}
 }

@@ -20,6 +20,8 @@
 --%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="oscar.OscarProperties" %>
+<%@page import="java.text.NumberFormat" %>
+<%@page import="java.text.DecimalFormat" %>
 
 <%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
 <%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.util.*,oscar.oscarBilling.ca.on.pageUtil.*,oscar.oscarBilling.ca.on.data.*,org.apache.struts.util.LabelValueBean" %>
@@ -147,6 +149,10 @@ RAData raData = new RAData();
 BigDecimal total = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP); 
 BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 BigDecimal adjTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+
+NumberFormat formatter = new DecimalFormat("#0.00");
+
 
 %>
 
@@ -707,6 +713,7 @@ if(statusType.equals("_")) { %>
              <th>TYPE</th>
              <th>INVOICE #</th>
              <th>MESSAGES</th>
+             <th>CASH/DEBIT</th>
 		<% if (bMultisites) {%>
 			 <th>SITE</th>             
         <% }%>  
@@ -721,6 +728,8 @@ if(statusType.equals("_")) { %>
        boolean nC = false;
        boolean newInvoice = true;
        
+       double totalCash=0;
+       double totalDebit=0;
        for (int i = 0 ; i < bList.size(); i++) { 
     	   BillingClaimHeader1Data ch1Obj = bList.get(i);
     	   
@@ -808,6 +817,12 @@ if(statusType.equals("_")) { %>
                    b3rdParty = true;
                }
 	      
+               String cash = formatter.format(ch1Obj.getCashTotal());
+			   String debit = formatter.format(ch1Obj.getDebitTotal());
+			   
+			   totalCash += ch1Obj.getCashTotal();
+			   totalDebit += ch1Obj.getDebitTotal();
+				
        %>       
           <tr <%=color %>> 
              <td align="center"><%= ch1Obj.getBilling_date()%>  <%--=ch1Obj.getBilling_time()--%></td>  <!--SERVICE DATE-->
@@ -825,6 +840,7 @@ if(statusType.equals("_")) { %>
              <td align="center"><%=payProgram%></td>
              <td align="center"><a href=#  onclick="popupPage(800,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');nav_colour_swap(this.id, <%=bList.size()%>);return false;"><%=ch1Obj.getId()%></a></td><!--ACCOUNT-->
              <td class="highlightBox"><a id="A<%=i%>" href=#  onclick="popupPage(800,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');nav_colour_swap(this.id, <%=bList.size()%>);return false;">Edit</a> <%=errorCode%></td><!--MESSAGES-->
+             <td align="center"><%=cash%>/<%=debit%></td>
              <% if (bMultisites) {%>
 				 <td "<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : "bgcolor='" + siteBgColor.get(ch1Obj.getClinic()) + "'")%>">
 				 	<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : siteShortName.get(ch1Obj.getClinic()))%>
@@ -853,6 +869,7 @@ if(statusType.equals("_")) { %>
              <td>&nbsp;</td><!--TYPE-->
              <td>&nbsp;</td><!--ACCOUNT-->
              <td>&nbsp;</td><!--MESSAGES-->
+             <td align="right"><%=formatter.format(totalCash)%>/<%=formatter.format(totalDebit) %></td>
              <% if (bMultisites) {%>
 				 <td>&nbsp;</td><!--SITE-->          
         	<% }%>  

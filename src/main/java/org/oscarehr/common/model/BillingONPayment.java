@@ -58,6 +58,9 @@ public class BillingONPayment extends AbstractModel<Integer> implements Serializ
 	@Temporal(TemporalType.TIMESTAMP)
         private Date payDate; 
         
+        @Column(name="payment_id", updatable=false, insertable=false)
+        private Integer paymentId;
+        
         @Override
 	public Integer getId() {
 		return id;
@@ -83,7 +86,20 @@ public class BillingONPayment extends AbstractModel<Integer> implements Serializ
             this.payDate = payDate;
         }
         
-        @PostPersist
+        
+        public Integer getPaymentId() {
+			return paymentId;
+		}
+
+		public void setPaymentId(Integer paymentId) {
+			this.paymentId = paymentId;
+		}
+		
+		public void setId(Integer id) {
+			this.id = id;
+		}
+
+		@PostPersist
         public void postPersist() {            
             for (BillingONExt bExt : this.billingONExtItems) {
                 bExt.setPaymentId(this.id);

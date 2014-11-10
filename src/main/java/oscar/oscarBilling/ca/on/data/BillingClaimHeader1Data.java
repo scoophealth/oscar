@@ -62,6 +62,10 @@ public class BillingClaimHeader1Data {
 	String creator;
 	String update_datetime;
 
+	
+	double cashTotal;
+	double debitTotal;
+	
 	public String getClinic() {
 		return clinic;
 	}
@@ -380,4 +384,21 @@ public class BillingClaimHeader1Data {
         this.settle_date = settle_date;
     }
 
+	public double getCashTotal() {
+		return cashTotal;
+	}
+
+	public void setCashTotal(double cashTotal) {
+		this.cashTotal = cashTotal;
+	}
+
+	public double getDebitTotal() {
+		return debitTotal;
+	}
+
+	public void setDebitTotal(double debitTotal) {
+		this.debitTotal = debitTotal;
+	}
+
+    
 }

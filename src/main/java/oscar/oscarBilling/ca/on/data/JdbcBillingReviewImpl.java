@@ -35,6 +35,8 @@ import org.oscarehr.billing.CA.ON.model.BillingPercLimit;
 import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.BillingONExtDao;
 import org.oscarehr.common.dao.BillingONItemDao;
+import org.oscarehr.common.dao.BillingONPaymentDao;
+import org.oscarehr.common.dao.BillingPaymentTypeDao;
 import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.dao.ClinicLocationDao;
 import org.oscarehr.common.dao.CtlBillingServiceDao;
@@ -201,7 +203,7 @@ public class JdbcBillingReviewImpl {
 
 	//invoice report	
 	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, List<String> serviceCodes, String dx, String visitType, String visitLocation) {	
-		return getBillWithSorting(billType,statusType,providerNo,startDate,endDate,demoNo,serviceCodes,dx,visitType,visitLocation,null,null);	
+		return getBillWithSorting(billType,statusType,providerNo,startDate,endDate,demoNo,serviceCodes,dx,visitType, visitLocation,null,null);	
 	}
 	
 	//invoice report
@@ -213,6 +215,13 @@ public class JdbcBillingReviewImpl {
 			String prevPaid = null;
 
 			BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+			BillingONPaymentDao billingOnPaymentDao = SpringUtils.getBean(BillingONPaymentDao.class);
+			BillingONExtDao billingOnExtDao = SpringUtils.getBean(BillingONExtDao.class);
+			BillingPaymentTypeDao billingPaymentTypeDao = SpringUtils.getBean(BillingPaymentTypeDao.class);
+			
+			Integer CASH_PAYMENT_ID = billingPaymentTypeDao.findIdByName("CASH");
+			Integer DEBIT_PAYMENT_ID = billingPaymentTypeDao.findIdByName("DEBIT");
+			
 			for (Object[] o : dao.findByMagic2(Arrays.asList(billType), statusType, providerNo, ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), ConversionUtils.fromIntString(demoNo), serviceCodes, dx, visitType, visitLocation)) {
 				BillingONCHeader1 ch1 = (BillingONCHeader1) o[0];
 				BillingONItem bi = (BillingONItem) o[1];
@@ -244,6 +253,34 @@ public class JdbcBillingReviewImpl {
 				prevPaid = ch1.getPaid();
 				
 				ch1Obj.setFacilty_num(clinicLocationDao.searchVisitLocation(ch1.getFaciltyNum()));
+				
+				double cashTotal = 0.00;
+				double debitTotal = 0.00;
+				
+				for(Integer paymentId:billingOnPaymentDao.find3rdPartyPayments(Integer.parseInt(ch1Obj.getId()))) {
+					//lets go through the exts, and pull out the ones.
+					String payment = null;
+					String payMethod=null;
+					for(BillingONExt ext: billingOnExtDao.findByBillingNoAndPaymentNo(Integer.parseInt(ch1Obj.getId()), paymentId)) {
+						if("payMethod".equals(ext.getKeyVal())) {
+							payMethod=ext.getValue();
+						}
+						if("payment".equals(ext.getKeyVal())) {
+							payment=ext.getValue();
+						}
+					}
+					if(CASH_PAYMENT_ID.toString().equals(payMethod)) {
+						cashTotal += Double.valueOf(payment);
+					}
+					if(DEBIT_PAYMENT_ID.toString().equals(payMethod)) {
+						debitTotal += Double.valueOf(payment);
+					}
+				}
+				
+				
+				ch1Obj.setCashTotal(cashTotal);
+				ch1Obj.setDebitTotal(debitTotal);
+				
 
 			}
 		} catch (Exception e) {
