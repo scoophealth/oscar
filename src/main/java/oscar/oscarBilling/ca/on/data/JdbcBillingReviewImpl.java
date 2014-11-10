@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.billing.CA.ON.dao.BillingPercLimitDao;
 import org.oscarehr.billing.CA.ON.model.BillingPercLimit;
 import org.oscarehr.common.dao.BillingONCHeader1Dao;
@@ -44,6 +45,7 @@ import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONExt;
 import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.common.model.BillingService;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DateRange;
 import org.oscarehr.util.SpringUtils;
 
@@ -218,6 +220,7 @@ public class JdbcBillingReviewImpl {
 			BillingONPaymentDao billingOnPaymentDao = SpringUtils.getBean(BillingONPaymentDao.class);
 			BillingONExtDao billingOnExtDao = SpringUtils.getBean(BillingONExtDao.class);
 			BillingPaymentTypeDao billingPaymentTypeDao = SpringUtils.getBean(BillingPaymentTypeDao.class);
+			ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 			
 			Integer CASH_PAYMENT_ID = billingPaymentTypeDao.findIdByName("CASH");
 			Integer DEBIT_PAYMENT_ID = billingPaymentTypeDao.findIdByName("DEBIT");
@@ -281,6 +284,10 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setCashTotal(cashTotal);
 				ch1Obj.setDebitTotal(debitTotal);
 				
+				Provider provider = providerDao.getProvider(ch1Obj.getProvider_no());
+				if(provider!=null) {
+					ch1Obj.setProviderName(provider.getFormattedName());
+				}
 
 			}
 		} catch (Exception e) {

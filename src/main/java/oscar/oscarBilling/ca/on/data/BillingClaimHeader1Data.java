@@ -65,6 +65,7 @@ public class BillingClaimHeader1Data {
 	
 	double cashTotal;
 	double debitTotal;
+	String providerName;
 	
 	public String getClinic() {
 		return clinic;
@@ -398,6 +399,22 @@ public class BillingClaimHeader1Data {
 
 	public void setDebitTotal(double debitTotal) {
 		this.debitTotal = debitTotal;
+	}
+
+	public String getProviderName() {
+		return providerName;
+	}
+
+	public void setProviderName(String providerName) {
+		this.providerName = providerName;
+	}
+
+	public String getProvider_no() {
+		return provider_no;
+	}
+
+	public void setProvider_no(String provider_no) {
+		this.provider_no = provider_no;
 	}
 
     

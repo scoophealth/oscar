@@ -714,6 +714,7 @@ if(statusType.equals("_")) { %>
              <th>INVOICE #</th>
              <th>MESSAGES</th>
              <th>CASH/DEBIT</th>
+              <th>Provider</th>
 		<% if (bMultisites) {%>
 			 <th>SITE</th>             
         <% }%>  
@@ -822,6 +823,8 @@ if(statusType.equals("_")) { %>
 			   
 			   totalCash += ch1Obj.getCashTotal();
 			   totalDebit += ch1Obj.getDebitTotal();
+			   
+			 
 				
        %>       
           <tr <%=color %>> 
@@ -841,6 +844,7 @@ if(statusType.equals("_")) { %>
              <td align="center"><a href=#  onclick="popupPage(800,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');nav_colour_swap(this.id, <%=bList.size()%>);return false;"><%=ch1Obj.getId()%></a></td><!--ACCOUNT-->
              <td class="highlightBox"><a id="A<%=i%>" href=#  onclick="popupPage(800,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');nav_colour_swap(this.id, <%=bList.size()%>);return false;">Edit</a> <%=errorCode%></td><!--MESSAGES-->
              <td align="center"><%=cash%>/<%=debit%></td>
+             <td align="center"><%=ch1Obj.getProviderName() %></td>
              <% if (bMultisites) {%>
 				 <td "<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : "bgcolor='" + siteBgColor.get(ch1Obj.getClinic()) + "'")%>">
 				 	<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : siteShortName.get(ch1Obj.getClinic()))%>
@@ -870,6 +874,7 @@ if(statusType.equals("_")) { %>
              <td>&nbsp;</td><!--ACCOUNT-->
              <td>&nbsp;</td><!--MESSAGES-->
              <td align="right"><%=formatter.format(totalCash)%>/<%=formatter.format(totalDebit) %></td>
+             <td>&nbsp;</td><!--PROVIDER-->
              <% if (bMultisites) {%>
 				 <td>&nbsp;</td><!--SITE-->          
         	<% }%>  
