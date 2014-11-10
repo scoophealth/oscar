@@ -79,7 +79,7 @@ if( outcome !=null){
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Demographic"%>
 <%@ page import="org.oscarehr.common.dao.DemographicDao" %>
-
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
 
 <%
 	List<Demographic> demoList = null;  //demographicDao.getDemographicByProvider( "55");
@@ -91,6 +91,17 @@ if( outcome !=null){
 	String searchMode = request.getParameter("search_mode");
 	if(searchMode == null)
 		searchMode = "search_name";
+	
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	String providerNo = loggedInInfo.getLoggedInProviderNo();
+	boolean outOfDomain = true;
+	if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1) {
+		outOfDomain=false;
+		if(request.getParameter("outofdomain")!=null && request.getParameter("outofdomain").equals("true")) {
+			outOfDomain=true;
+		}
+	}
+	
 %>
 
 <html>
@@ -209,35 +220,35 @@ Search:
 
 if(!mergedSearch) {
 	if(searchMode.equals("search_name")) {
-		demoList = demographicDao.searchDemographicByName(keyword, limit, offset);
+		demoList = demographicDao.searchDemographicByName(keyword, limit, offset, providerNo, outOfDomain);
 	}
 	else if(searchMode.equals("search_dob")) {
-		demoList = demographicDao.searchDemographicByDOB(keyword, limit, offset);
+		demoList = demographicDao.searchDemographicByDOB(keyword, limit, offset, providerNo, outOfDomain);
 	}
 	else if(searchMode.equals("search_phone")) {
-		demoList = demographicDao.searchDemographicByPhone(keyword, limit, offset);
+		demoList = demographicDao.searchDemographicByPhone(keyword, limit, offset, providerNo, outOfDomain);
 	}
 	else if(searchMode.equals("search_hin")) {
-		demoList = demographicDao.searchDemographicByHIN(keyword, limit, offset);
+		demoList = demographicDao.searchDemographicByHIN(keyword, limit, offset, providerNo, outOfDomain);
 	}
 	else if(searchMode.equals("search_address")) {
-		demoList = demographicDao.searchDemographicByAddress(keyword, limit, offset);
+		demoList = demographicDao.searchDemographicByAddress(keyword, limit, offset, providerNo, outOfDomain);
 	}
 } else {
 	if(searchMode.equals("search_name")) {
-		demoList = demographicDao.searchMergedDemographicByName(keyword, limit, offset);
+		demoList = demographicDao.searchMergedDemographicByName(keyword, limit, offset, providerNo, outOfDomain);
 	}
 	else if(searchMode.equals("search_dob")) {
-		demoList = demographicDao.searchMergedDemographicByDOB(keyword, limit, offset);
+		demoList = demographicDao.searchMergedDemographicByDOB(keyword, limit, offset, providerNo, outOfDomain);
 	}
 	else if(searchMode.equals("search_phone")) {
-		demoList = demographicDao.searchMergedDemographicByPhone(keyword, limit, offset);
+		demoList = demographicDao.searchMergedDemographicByPhone(keyword, limit, offset, providerNo, outOfDomain);
 	}
 	else if(searchMode.equals("search_hin")) {
-		demoList = demographicDao.searchMergedDemographicByHIN(keyword, limit, offset);
+		demoList = demographicDao.searchMergedDemographicByHIN(keyword, limit, offset, providerNo, outOfDomain);
 	}
 	else if(searchMode.equals("search_address")) {
-		demoList = demographicDao.searchMergedDemographicByAddress(keyword, limit, offset);
+		demoList = demographicDao.searchMergedDemographicByAddress(keyword, limit, offset, providerNo, outOfDomain);
 	}
 	
 }

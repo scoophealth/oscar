@@ -65,6 +65,13 @@ public class SearchDemographicAutoCompleteAction extends Action {
 	
 	
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    	String providerNo = LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo();
+    	
+    	boolean outOfDomain = false;
+    	if(request.getParameter("outofdomain")!=null && request.getParameter("outofdomain").equals("true")) {
+    		outOfDomain=true;
+    	}
+    	
         DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao"); 
         String searchStr = request.getParameter("demographicKeyword");
         
@@ -89,7 +96,7 @@ public class SearchDemographicAutoCompleteAction extends Action {
         List<Demographic> list = null;
 
         if (searchStr.length() == 8 && searchStr.matches("([0-9]*)")) {
-            list = demographicDao.searchDemographicByDOB(searchStr.substring(0,4)+"-"+searchStr.substring(4,6)+"-"+searchStr.substring(6,8), 100, 0);
+            list = demographicDao.searchDemographicByDOB(searchStr.substring(0,4)+"-"+searchStr.substring(4,6)+"-"+searchStr.substring(6,8), 100, 0,providerNo,outOfDomain);
         } 
         else if( activeOnly ) {
         	list = demographicDao.searchDemographicActive(searchStr);
@@ -98,19 +105,7 @@ public class SearchDemographicAutoCompleteAction extends Action {
         	list = demographicDao.searchDemographic(searchStr);
         }
         
-        //if caisi is on, we need to filter this list according to program domain.
-    	if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1) {
-    		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
-    		List<Demographic> tmpDemoList = new ArrayList<Demographic>();
-    		String providerNo = loggedInInfo.getLoggedInProviderNo();
-    		
-			for(Demographic demo:list) {
-				if(caseManagementManager.isClientInProgramDomain(providerNo, demo.getDemographicNo().toString())) {
-					tmpDemoList.add(demo);
-				}
-			}
-    		list = tmpDemoList;
-    	}
+        
         
         List<HashMap<String, String>> secondList= new ArrayList<HashMap<String,String>>();
         for(Demographic demo :list){
