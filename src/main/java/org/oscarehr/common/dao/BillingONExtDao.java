@@ -245,5 +245,18 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
 		q.setParameter("start", start);
 		q.setParameter("end", end);
 	    return q.getResultList();
-    }           
+    }
+    
+   public List<BillingONExt> findByBillingNoAndPaymentNo(int billingNo, int paymentId) {
+        
+        String sql = "select bExt from BillingONExt bExt where bExt.paymentId=? and bExt.billingNo=?";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter(1, paymentId);
+        query.setParameter(2, billingNo);       
+         
+        List<BillingONExt> results = query.getResultList();
+        
+        return results;
+    }
+    
 }
