@@ -28,6 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ page import="oscar.oscarRx.data.*,java.util.*"%>
 <%@ page import="org.oscarehr.common.model.PharmacyInfo" %>
 <html:html locale="true">
@@ -53,6 +54,8 @@
 </logic:present>
 
 <%
+if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
+String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 %>
 
@@ -461,10 +464,12 @@ $(function() {
 					</tr>
 					<tr>
 						<td>
-						
-						<input type="button" value="Save" onclick="return savePharmacy();"/>&nbsp;
-						<input type="button" value="<bean:message key="SelectPharmacy.addLink" />" onclick="return addPharmacy();"/><br/><br/>
-						<input type="button" value="Set Preferred Pharmacy" onclick="return setPreferredPharmacy();"/> &nbsp;<select id="preferredOrder" name="preferredOrder"><option value="-1">Set Priority</option>
+						<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
+							<input type="button" value="Save" onclick="return savePharmacy();"/>&nbsp;
+							<input type="button" value="<bean:message key="SelectPharmacy.addLink" />" onclick="return addPharmacy();"/><br/><br/>
+						</security:oscarSec>
+						<input type="button" value="Set Preferred Pharmacy" onclick="return setPreferredPharmacy();"/> &nbsp;
+						<select id="preferredOrder" name="preferredOrder">
 						<%
 							for( int idx = 1; idx <= 10; ++idx ) {
 						%>
@@ -478,7 +483,9 @@ $(function() {
 							</td>
 						<td colspan="2">
 						<input type="button" value="Reset" onclick="return resetForm();"/>&nbsp;
-						<input type="button" value="<bean:message key="SelectPharmacy.deleteLink" />" onclick="return deletePharmacy($('#preferedPharmacy>option:selected').val())"/></td>
+						<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
+							<input type="button" value="<bean:message key="SelectPharmacy.deleteLink" />" onclick="return deletePharmacy($('#preferedPharmacy>option:selected').val())"/></td>
+						</security:oscarSec>
 					</tr>
 					
 				</table>
@@ -493,7 +500,7 @@ $(function() {
                         String sBack="SearchDrug3.jsp";
                       %> <input type=button class="ControlPushButton"
 					onclick="javascript:window.location.href='<%=sBack%>';"
-					value="Back to Search Drug" /></td>
+					value="Back to Rx" /></td>
 			</tr>
 			<!----End new rows here-->
 			<tr height="100%">
