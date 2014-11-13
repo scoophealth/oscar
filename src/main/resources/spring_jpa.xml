@@ -50,7 +50,7 @@
 
 				<prop key="hibernate.cache.use_second_level_cache">false</prop>
 				<prop key="hibernate.cache.use_query_cache">false</prop>
-
+				<prop key="hibernate.jdbc.factory_class">net.bull.javamelody.HibernateBatcherFactory</prop>
 				<prop key="hibernate.max_fetch_depth">3</prop>
 			</props>
 		</property>
