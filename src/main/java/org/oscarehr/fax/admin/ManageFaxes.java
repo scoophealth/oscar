@@ -29,7 +29,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
@@ -350,10 +352,16 @@ public class ManageFaxes extends DispatchAction {
 			teamStr = null;
 		}
 		
+		Calendar calendar = GregorianCalendar.getInstance();
 		Date dateBegin=null, dateEnd = null;
 		String datePattern[] = new String[] {"yyyy-MM-dd"};
 		try {
 			dateBegin = DateUtils.parseDate(dateBeginStr, datePattern);
+			calendar.setTime(dateBegin);
+			calendar.set(Calendar.HOUR, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.MILLISECOND, 0);
+			dateBegin = calendar.getTime();
 		}
 		catch( ParseException e ) {
 			dateBegin = null;
@@ -362,6 +370,12 @@ public class ManageFaxes extends DispatchAction {
 		
 		try {
 			dateEnd = DateUtils.parseDate(dateEndStr, datePattern);
+			calendar.setTime(dateEnd);
+			calendar.set(Calendar.HOUR, 23);
+			calendar.set(Calendar.MINUTE, 59);
+			calendar.set(Calendar.MILLISECOND, 59);
+			dateEnd = calendar.getTime();
+
 		}
 		catch( ParseException e ) {
 			dateEnd = null;
