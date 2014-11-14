@@ -43,7 +43,6 @@ public class PharmacyInfo extends AbstractModel<Integer> implements Comparable<P
 
 	public static final Character ACTIVE = '1';
 	public static final Character DELETED = '0';
-
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -79,6 +78,9 @@ public class PharmacyInfo extends AbstractModel<Integer> implements Comparable<P
 	private Date addDate;
 
 	private Character status;
+	
+	@Transient
+	private Boolean persistent;
 
 	public Integer getId() {
     	return id;
@@ -214,6 +216,14 @@ public class PharmacyInfo extends AbstractModel<Integer> implements Comparable<P
 	    
 	    return this.getPreferredOrder().compareTo(o.getPreferredOrder());
     }
+
+
+	/**
+	 * @param persist the persist to set
+	 */
+	public void setPersistent(Boolean persistent) {
+		this.persistent = persistent;
+	}
 
 	
 

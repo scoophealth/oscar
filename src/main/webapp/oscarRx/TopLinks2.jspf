@@ -1,3 +1,5 @@
+<%@page import="java.io.StringWriter"%>
+<%@page import="org.codehaus.jackson.map.ObjectMapper"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="net.sf.json.JSONObject"%>
 <%@page import="org.oscarehr.common.model.PharmacyInfo"%>
@@ -53,8 +55,11 @@ if (rx_enhance!=null && rx_enhance.equals("true")) { %>
                      <select id="Calcs" name="pharmacyId" onchange="populatePharmacy(this.options[this.selectedIndex].value);showpic('Layer1');"> 
                     <%
                     	if( pharmacyList != null ) {
+                    	    ObjectMapper mapper = new ObjectMapper();
+                    	    StringWriter jsonObject;
 	        				for( PharmacyInfo pharmacyInfo : pharmacyList ) {
-	        					JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);   
+	        				    jsonObject = new StringWriter();
+	        					mapper.writeValue(jsonObject, pharmacyInfo);
 	        					
 	        						
 					%>
@@ -73,9 +78,14 @@ if (rx_enhance!=null && rx_enhance.equals("true")) { %>
                     <select id="Calcs" name="pharmacyId" onchange="populatePharmacy(this.options[this.selectedIndex].value);showpic('Layer1');"> 
                     <%
                     	if( pharmacyList != null ) {
+                    	    ObjectMapper mapper = new ObjectMapper();
+                    	    StringWriter jsonObject;
 	        				for( PharmacyInfo pharmacyInfo : pharmacyList ) {
-	        					JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);   
 	        					
+	        				    jsonObject = new StringWriter();
+	        					mapper.writeValue(jsonObject, pharmacyInfo);
+	        					
+	        						
 					%>
 								<option value='<%=jsonObject.toString().replaceAll("'", "")%>'><%=pharmacyInfo.getName() + " " + pharmacyInfo.getCity()%></option>
 					<%
