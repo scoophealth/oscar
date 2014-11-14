@@ -72,7 +72,7 @@ public final class PatientEndYearStatementForm extends ActionForm {
 		this.fromDateParam = fromDate;
 	}
     public Date getFromDate() {
-    	SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     	Date res = null;
  		   try {
 	     		if(fromDateParam != null && fromDateParam.length()>0) res = df.parse(fromDateParam);    		
@@ -89,7 +89,7 @@ public final class PatientEndYearStatementForm extends ActionForm {
 		this.toDateParam = toDate;
 	}
 	public Date getToDate() {
-    	SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     	Date res = null;
  		   try {
 	     		if(toDateParam != null && toDateParam.length()>0) res = df.parse(toDateParam);    		
@@ -102,7 +102,7 @@ public final class PatientEndYearStatementForm extends ActionForm {
 
 	public ActionErrors validate (ActionMapping mapping , HttpServletRequest request){
         ActionErrors errors = new ActionErrors();
-    	SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
  	   if(request.getParameter("search") != null) {
  		   if ((this.firstNameParam == null || this.firstNameParam.length()==0) &&
         		(this.lastNameParam == null || this.lastNameParam.length()==0)) {

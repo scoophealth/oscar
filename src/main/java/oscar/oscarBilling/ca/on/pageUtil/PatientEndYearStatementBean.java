@@ -23,7 +23,7 @@ import java.util.Date;
 public class PatientEndYearStatementBean {
 	private String patientName;
 	private String patientNo;
-	private String hin;
+        private String hin;
 	private String address;
 	private String phone;
 	private String invoiced = "0.00";
@@ -31,18 +31,22 @@ public class PatientEndYearStatementBean {
 	private String count = "0";
 	private Date fromDate;
 	private Date toDate;
-//	private String fromDateParam;
-//	private String todateParam;
+	private String fromDateParam;
+	private String todateParam;
 	
-	public PatientEndYearStatementBean(String patientName, String patientNo, String hin,
-			String address, String phone) {
+	public PatientEndYearStatementBean(String patientName, String patientNo, Integer patientId, String hin,
+			String address, String phone, Date fromDate, Date toDate, String fromDateParam, String toDateParam) {
 		super();
 		this.patientName = patientName;
 		this.patientNo = patientNo;
-		this.hin = hin;
+                this.hin = hin;
 		this.address = address;
 		this.phone = phone;
-	}
+                this.fromDate = fromDate;
+                this.toDate = toDate;
+                this.fromDateParam = fromDateParam;
+                this.todateParam = toDateParam;
+        }
 	
 	public String getPatientName() {
 		return patientName;
@@ -75,7 +79,7 @@ public class PatientEndYearStatementBean {
 
 	public void setPatientNo(String patientNo) {
 		this.patientNo = patientNo;
-	}
+        }
 
 	public String getInvoiced() {
 		return invoiced;
@@ -116,7 +120,7 @@ public class PatientEndYearStatementBean {
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
 	}
-/*
+
 	public String getFromDateParam() {
 		return fromDateParam;
 	}
@@ -132,5 +136,5 @@ public class PatientEndYearStatementBean {
 	public void setTodateParam(String todateParam) {
 		this.todateParam = todateParam;
 	}
-*/
+
 }
