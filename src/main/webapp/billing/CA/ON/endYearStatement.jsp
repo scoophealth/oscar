@@ -68,7 +68,7 @@ function calToday(field) {
 	varMonth = calDate.getMonth()+1;
 	varMonth = varMonth>9? varMonth : ("0"+varMonth);
 	varDate = calDate.getDate()>9? calDate.getDate(): ("0"+calDate.getDate());
-	field.value = calDate.getFullYear() + '/' + (varMonth) + '/' + varDate;
+	field.value = calDate.getFullYear() + '-' + (varMonth) + '-' + varDate;
 }
 
 function validateFields() {
@@ -119,7 +119,7 @@ name=request.getParameter("firstNameParam")+" "+request.getParameter("lastNamePa
 		<div class="span2">
 		<label>Start Date:</label>
 		<div class="input-append">
-			<input type="text" style="width:90px" name="toDateParam" id="toDateParam" value="<%= request.getAttribute("fromDateParam") != null ? request.getAttribute("fromDateParam") : "" %>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
+			<input type="text" style="width:90px" name="fromDateParam" id="fromDateParam" value="<%= request.getAttribute("fromDateParam") != null ? request.getAttribute("fromDateParam") : "" %>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
 			<span class="add-on"><i class="icon-calendar"></i></span>
 		</div>
 		</div>
@@ -129,7 +129,7 @@ name=request.getParameter("firstNameParam")+" "+request.getParameter("lastNamePa
 		<div class="span2">
 		<label>End Date:</label>
 		<div class="input-append">
-			<input type="text" style="width:90px" name="xml_appointment_date" id="xml_appointment_date" value="<%= request.getAttribute("fromDateParam") != null ? request.getAttribute("fromDateParam") : "" %>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
+			<input type="text" style="width:90px" name="toDateParam" id="toDateParam" value="<%= request.getAttribute("toDateParam") != null ? request.getAttribute("toDateParam") : "" %>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
 			<span class="add-on"><i class="icon-calendar"></i></span>
 		</div>
 		</div>
@@ -225,8 +225,8 @@ name=request.getParameter("firstNameParam")+" "+request.getParameter("lastNamePa
 </div><!--container-->
 </body>
 <script type="text/javascript">
-	var startDate = $("#toDateParam").datepicker({format : "yyyy-mm-dd"});
-	var endDate = $("#xml_appointment_date").datepicker({format : "yyyy-mm-dd"});
+	var startDate = $("#fromDateParam").datepicker({format : "yyyy-mm-dd"});
+	var endDate = $("#toDateParam").datepicker({format : "yyyy-mm-dd"});
 
 </script>
 </html>

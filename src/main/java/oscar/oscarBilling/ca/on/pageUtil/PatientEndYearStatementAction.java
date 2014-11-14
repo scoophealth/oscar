@@ -64,7 +64,7 @@ public class PatientEndYearStatementAction extends OscarAction {
 	   
 	   PatientEndYearStatementForm statement = (PatientEndYearStatementForm)form;
 	   List<PatientEndYearStatementInvoiceBean> result = null;
-	   PatientEndYearStatementBean summary = new PatientEndYearStatementBean("", "", "", "", "");
+	   PatientEndYearStatementBean summary = new PatientEndYearStatementBean("", "", 0, "", "", "", new Date(), new Date(), "","");
 	   ActionMessages errors = this.getErrors(request);
 
 	   if(request.getParameter("search") != null || request.getParameter("pdf") != null) {
@@ -101,7 +101,7 @@ public class PatientEndYearStatementAction extends OscarAction {
 			   }
 			   Demographic demographic = demographicList.get(0);
 			   summary.setPatientNo(demographic.getDemographicNo().toString());
-			   summary.setPatientName(demographic.getFormattedName());
+                           summary.setPatientName(demographic.getFormattedName());
 			   summary.setHin(demographic.getHin());
 			   summary.setAddress(demographic.getAddress()+" "+demographic.getCity()+" "+demographic.getProvince());
 			   summary.setPhone(demographic.getPhone()+" "+demographic.getPhone2());
@@ -152,7 +152,9 @@ public class PatientEndYearStatementAction extends OscarAction {
 				   summary.setInvoiced(Utility.toCurrency(totalInvoiced));
 				   summary.setPaid(Utility.toCurrency(totalPaid));
 				   summary.setCount(Integer.toString(invoiceCount));
-				   request.getSession().setAttribute("summary", summary);
+                                   summary.setFromDate(fromDate);
+                                   summary.setToDate(toDate);
+                                   request.getSession().setAttribute("summary", summary);
 			   } catch (Exception e) {
 				   _logger.error("error", e);
 				   
@@ -172,15 +174,15 @@ public class PatientEndYearStatementAction extends OscarAction {
 			   reportParams.put("hin", summary.getHin());
 			   reportParams.put("address", summary.getAddress());
 			   reportParams.put("phone", summary.getPhone());
-			   reportParams.put("fromDate", statement.getFromDate() != null ? df.format(statement.getFromDate()) : "");
-			   reportParams.put("toDate", statement.getToDate() != null ? df.format(statement.getToDate()) : "");
+			   reportParams.put("fromDate", statement.getFromDateParam());
+                           reportParams.put("toDate", statement.getToDateParam());
 			   reportParams.put("invoiceCount", summary.getCount());
 			   reportParams.put("totalInvoiced", summary.getInvoiced());
 			   reportParams.put("totalPaid", summary.getPaid());
-			   request.setAttribute("fromDateParam",statement.getFromDateParam());
-			   request.setAttribute("toDateParam",statement.getToDateParam());
+			   reportParams.put("fromDate", statement.getFromDateParam());
+                           reportParams.put("toDate", statement.getToDateParam());
 			   reportParams.put("SUBREPORT_DIR", "/oscar/oscarBilling/ca/on/reports/");
-			   
+                           
 			   ServletOutputStream outputStream = getServletOstream(response);
 
 			   //open corresponding Jasper Report Definition
@@ -188,7 +190,7 @@ public class PatientEndYearStatementAction extends OscarAction {
 
 			   //COnfigure Reponse Header
 			   cfgHeader(response, "end_year_statement_report.pdf", docFmt);
-			   //Fill document with report parameter data
+                           //Fill document with report parameter data
 			   Connection dbConn = null;
 			   try {
 				   dbConn = DbConnectionFilter.getThreadLocalDbConnection();
@@ -232,7 +234,7 @@ public class PatientEndYearStatementAction extends OscarAction {
 		   }
 		   Demographic demographic = demographicList.get(0);
 		   summary.setPatientNo(demographic.getChartNo());
-		   summary.setPatientName(demographic.getFormattedName());
+                   summary.setPatientName(demographic.getFormattedName());
 		   summary.setHin(demographic.getHin());
 		   summary.setAddress(demographic.getAddress()+" "+demographic.getCity()+" "+demographic.getProvince());
 		   summary.setPhone(demographic.getPhone()+" "+demographic.getPhone2());
