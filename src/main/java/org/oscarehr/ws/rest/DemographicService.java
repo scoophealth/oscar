@@ -84,6 +84,7 @@ import org.oscarehr.ws.rest.to.model.WaitingListNameTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import oscar.OscarProperties;
 import oscar.oscarWaitingList.util.WLWaitingListUtil;
 
 
@@ -401,7 +402,14 @@ public class DemographicService extends AbstractServiceImpl {
 		DemographicSearchRequest req = new DemographicSearchRequest();
 		req.setActive(true);
 		req.setIntegrator(false); //this should be configurable by persona
-		req.setOutOfDomain(true); //need to revisit this too 
+		
+		//caisi
+		boolean outOfDomain = true;
+		if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1) {
+			outOfDomain=false;
+		}
+		req.setOutOfDomain(outOfDomain);
+		
 		
 
 		if(query.startsWith("addr:")) {
@@ -441,14 +449,23 @@ public class DemographicService extends AbstractServiceImpl {
 			throw new RuntimeException("Access Denied");
 		}
 		
+		DemographicSearchRequest req = convertFromJSON(json);
+		//caisi
+		boolean outOfDomain = true;
+		if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1) {
+			outOfDomain=false;
+		}
+		req.setOutOfDomain(outOfDomain);
+				
+		
 		List<DemographicSearchResult> results = new ArrayList<DemographicSearchResult>();
 		
 		if(json.getString("term").length() >= 1) {
 				
-			int count = demographicManager.searchPatientsCount(getLoggedInInfo(), convertFromJSON(json));
+			int count = demographicManager.searchPatientsCount(getLoggedInInfo(), req);
 
 			if(count>0) {
-				results = demographicManager.searchPatients(getLoggedInInfo(), convertFromJSON(json), startIndex, itemsToReturn);
+				results = demographicManager.searchPatients(getLoggedInInfo(), req, startIndex, itemsToReturn);
 				response.setContent(results);
 				response.setTotal(count);
 			}
