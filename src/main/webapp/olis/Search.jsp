@@ -9,7 +9,7 @@
 
 --%>
 <%@page contentType="text/html"%>
-	<%@page import="java.util.*,oscar.oscarDB.DBHandler,java.sql.ResultSet, org.oscarehr.common.dao.DemographicDao, 
+	<%@page import="java.util.*,oscar.oscarDB.DBHandler,java.sql.ResultSet, 
 		org.oscarehr.common.model.Demographic, org.oscarehr.PMmodule.dao.ProviderDao, org.oscarehr.common.model.Provider,
 		org.oscarehr.olis.dao.OLISRequestNomenclatureDao, org.oscarehr.olis.dao.OLISResultNomenclatureDao,
 		org.oscarehr.olis.model.OLISRequestNomenclature, org.oscarehr.olis.model.OLISResultNomenclature, org.oscarehr.util.SpringUtils" %>
@@ -233,9 +233,6 @@
 <%
 ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 List<Provider> allProvidersList = providerDao.getActiveProviders(); 
-
-DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-List allDemographics = demographicDao.getDemographics();
 
 OLISResultNomenclatureDao resultDao = (OLISResultNomenclatureDao) SpringUtils.getBean("OLISResultNomenclatureDao");
 List<OLISResultNomenclature> resultNomenclatureList = resultDao.findAll();
