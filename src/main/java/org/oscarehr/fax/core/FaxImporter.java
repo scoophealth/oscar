@@ -26,11 +26,6 @@ package org.oscarehr.fax.core;
 import java.io.IOException;
 import java.util.List;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.util.EnumMorpher;
-import net.sf.json.util.JSONUtils;
-
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.http.HttpEntity;
@@ -43,6 +38,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.oscarehr.common.dao.FaxConfigDao;
 import org.oscarehr.common.dao.FaxJobDao;
 import org.oscarehr.common.dao.QueueDocumentLinkDao;
@@ -74,7 +71,7 @@ public class FaxImporter {
 		
 		for( FaxConfig faxConfig : faxConfigList ) {
 			if( faxConfig.isActive() ) {
-				client = new DefaultHttpClient();				
+								
 				client.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(faxConfig.getSiteUser(), faxConfig.getPasswd()));
 	
 				HttpGet mGet = new HttpGet(faxConfig.getUrl() + PATH + "/" + faxConfig.getFaxUser());
@@ -90,14 +87,12 @@ public class FaxImporter {
 	                	
 	                	HttpEntity httpEntity = response.getEntity();
 	                	String content = EntityUtils.toString(httpEntity);
-	                	
-	                	JSONArray jsonArray = JSONArray.fromObject(content);
-	                	
+	                
+	                	mGet.releaseConnection();
 	                	log.info("CONTENT: " + content);
-	                	JSONUtils.getMorpherRegistry().registerMorpher( new EnumMorpher( FaxJob.STATUS.class ) );
-
-	                	@SuppressWarnings("unchecked")
-	                    List<FaxJob> faxList =  (List<FaxJob>) JSONArray.toCollection(jsonArray, FaxJob.class);
+	                	ObjectMapper mapper = new ObjectMapper();
+	                	
+	                	List<FaxJob> faxList =  mapper.readValue(content, new TypeReference<List<FaxJob>>(){});
 	                	
 	                	FaxJob faxFile;
 	                	for( FaxJob receivedFax : faxList ) {
@@ -115,6 +110,7 @@ public class FaxImporter {
 	            } catch (IOException e) {
 	            	log.error("IO ERROR", e);
 	            }
+				
 			
 			}
 		}
@@ -136,11 +132,11 @@ public class FaxImporter {
         	
 				HttpEntity httpEntity = response.getEntity();
 				String content = EntityUtils.toString(httpEntity);
-        	
-				JSONUtils.getMorpherRegistry().registerMorpher( new EnumMorpher( FaxJob.STATUS.class ) );
-				JSONObject jsonObject = JSONObject.fromObject(content);
-				FaxJob downloadedFax = (FaxJob) JSONObject.toBean(jsonObject, FaxJob.class);
 				
+				ObjectMapper mapper = new ObjectMapper();
+				
+				FaxJob downloadedFax = mapper.readValue(content, FaxJob.class); 
+        		
 				return downloadedFax;
 			}
 			
@@ -150,6 +146,10 @@ public class FaxImporter {
           } catch (IOException e) {
           	log.error("IO ERROR", e);
           }
+		  finally {
+			  mGet.releaseConnection();
+		  }
+		
 
 		  return null;
 	}
@@ -161,6 +161,7 @@ public class FaxImporter {
 		mDelete.setHeader("passwd", faxConfig.getFaxPasswd());
 		
 		HttpResponse response = client.execute(mDelete);
+		mDelete.releaseConnection();
 	       
 		if( !(response.getStatusLine().getStatusCode() == HttpStatus.SC_NO_CONTENT) ) {
 			throw new ClientProtocolException("CANNOT DELETE " + fax.getFile_name());

@@ -27,6 +27,7 @@ package oscar.oscarEncounter.pageUtil;
 
 import java.net.URLEncoder;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -43,8 +44,8 @@ import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
 import org.w3c.dom.Document;
+
 import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.all.web.LabDisplayHelper;
@@ -249,10 +250,17 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 
         private Date parseServiceDate(String serviceDate) {
             Date result = null;
-            try {
-                result = DateUtils.parseDate(serviceDate, null);
-            } catch (ParseException e) {
-                logger.error("Unable to parse as date: " + serviceDate, e);
+            String dateFormat[] = new String[] {"yyyy-MM-dd", "dd-MMM-yyyy"};
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+            
+            for( int idx = 0; idx < dateFormat.length; ++idx) {
+            	try {
+            	
+            		simpleDateFormat.applyPattern(dateFormat[idx]);
+            		result = simpleDateFormat.parse(serviceDate);
+            	} catch (ParseException e) {
+                
+            	}
             }
             return result;
         }
