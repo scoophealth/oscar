@@ -81,7 +81,9 @@
 	String providerNo = loggedInInfo.getLoggedInProviderNo();
 	boolean outOfDomain = true;
 	if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1) {
-		outOfDomain=false;
+		if(!"true".equals(OscarProperties.getInstance().getProperty("pmm.client.search.outside.of.domain.enabled","true"))) {
+			outOfDomain=false;
+		}
 		if(request.getParameter("outofdomain")!=null && request.getParameter("outofdomain").equals("true")) {
 			outOfDomain=true;
 		}
