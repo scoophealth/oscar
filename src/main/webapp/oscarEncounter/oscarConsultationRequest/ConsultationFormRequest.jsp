@@ -1672,7 +1672,7 @@ function updateFaxButton() {
 								%>
 								<option value="<%=p.getProviderNo() %>" <%=(consultUtil.letterheadName != null && consultUtil.letterheadName.equalsIgnoreCase(p.getProviderNo()) ? "selected='selected'"  : p.getProviderNo().equalsIgnoreCase(providerNo) ? "selected='selected'"  : "") %>>
 
-									<%=p.getFirstName() %> <%=p.getSurname() %>
+									<%=p.getSurname() %>, <%=p.getFirstName() %>
 								</option>
 								<% }
 								}
