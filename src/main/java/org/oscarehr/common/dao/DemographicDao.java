@@ -2051,7 +2051,8 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		 
 		  String domainRestriction="";
 		  if(!searchRequest.isOutOfDomain()) {
-			  domainRestriction = "and d.demographic_no in (select client_id from admission where admission_status='current' and program_id in (select program_id from program_provider where provider_no='"+loggedInInfo.getLoggedInProviderNo()+"')) ";
+			  domainRestriction = " and d.demographic_no in ( select distinct a.client_id from program_provider pp,admission a WHERE pp.program_id=a.program_id AND pp.provider_no=:providerNo ) ";
+			  params.put("providerNo", loggedInInfo.getLoggedInProviderNo());
 		  }
 		  
 		  String orderBy = "d.last_name,d.first_name";
