@@ -111,7 +111,7 @@ if (heading != null){
 
             if(showall) {
             	prescriptDrugs = caseManagementManager.getPrescriptions(loggedInInfo, patient.getDemographicNo(), showall);
-            	Collections.sort(prescriptDrugs,new oscar.oscarRx.util.ShowAllSorter());
+            	//Collections.sort(prescriptDrugs,new oscar.oscarRx.util.ShowAllSorter());
             }
             else {
                 prescriptDrugs = caseManagementManager.getCurrentPrescriptions(patient.getDemographicNo());

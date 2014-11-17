@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="net.sf.json.JSONObject"%>
 <%@page import="org.oscarehr.common.model.PharmacyInfo"%>
 <%@ page import="oscar.oscarRx.data.*,oscar.oscarProvider.data.ProviderMyOscarIdData,oscar.oscarDemographic.data.DemographicData,oscar.OscarProperties,oscar.log.*"%>
@@ -53,9 +54,11 @@ if (rx_enhance!=null && rx_enhance.equals("true")) { %>
                     <%
                     	if( pharmacyList != null ) {
 	        				for( PharmacyInfo pharmacyInfo : pharmacyList ) {
-	        					JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);    
+	        					JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);   
+	        					
+	        						
 					%>
-								<option value='<%=jsonObject.toString().replaceAll("'", "\\'")%>'><%=pharmacyInfo.getName() + " " + pharmacyInfo.getCity()%></option>
+								<option value='<%=jsonObject.toString().replaceAll("'", "")%>'><%=pharmacyInfo.getName() + " " + pharmacyInfo.getCity()%></option>
 					<%
 	        				}
 	       		 		}
@@ -71,9 +74,10 @@ if (rx_enhance!=null && rx_enhance.equals("true")) { %>
                     <%
                     	if( pharmacyList != null ) {
 	        				for( PharmacyInfo pharmacyInfo : pharmacyList ) {
-	        					JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);    
+	        					JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);   
+	        					
 					%>
-								<option value='<%=jsonObject.toString().replaceAll("'", "\\'")%>'><%=pharmacyInfo.getName() + " " + pharmacyInfo.getCity()%></option>
+								<option value='<%=jsonObject.toString().replaceAll("'", "")%>'><%=pharmacyInfo.getName() + " " + pharmacyInfo.getCity()%></option>
 					<%
 	        				}
 	       		 		}

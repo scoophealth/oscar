@@ -1671,9 +1671,24 @@ function popForm2(scriptId){
                     h=h+(n-4)*100;
                 }
                 //oscarLog("h="+h+"--n="+n);
+                var url;
                 var json = jQuery("#Calcs").val();
-                var pharmacy = JSON.parse(json);
-                var url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp?scriptId="+scriptId+"&pharmacyId="+pharmacy.id;
+                //oscarLog(json);
+                if( json != null && json != "" ) {
+                	
+                	var pharmacy = JSON.parse(json);
+                    
+                    if( pharmacy != null ) {
+                    	url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp?scriptId="+scriptId+"&pharmacyId="+pharmacy.id;
+                    }
+                    else {
+                    	url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp?scriptId="+scriptId;
+                    }	
+                }
+                else {
+                	url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp?scriptId="+scriptId;
+                }
+                
                 //oscarLog( "preview2 done");
                 myLightWindow.activateWindow({
                     href: url,
@@ -2175,6 +2190,7 @@ function updateQty(element){
         new Ajax.Request(url,
         {method: 'post',postBody:data,asynchronous:false,
             onSuccess:function(transport){
+            	
                 callReplacementWebService("ListDrugs.jsp",'drugProfile');
                 popForm2(null);
                 resetReRxDrugList();
