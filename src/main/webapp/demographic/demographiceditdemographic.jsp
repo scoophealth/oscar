@@ -3327,6 +3327,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 			            <tr>
 			                <td>
                                 <select id="rsid" name="rps">
+                                	<option value=""></option>
                                     <%
                                         GenericIntakeEditAction gieat = new GenericIntakeEditAction();
                                         gieat.setProgramManager(pm);
@@ -3347,13 +3348,26 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                         
                                       %>
                                 </select>
+                                
 			                </td>
 			                <td>
 			                    <%
-			                        List<Program> servP = gieat.getServicePrograms(pset,_pvid);
+			                    	ProgramManager programManager = SpringUtils.getBean(ProgramManager.class);
+			                    	List<Program> servP = programManager.getServicePrograms();
+			                       
 			                        for(Program _p:servP){
+			                        	boolean readOnly=false;
+			                        	if(!pset.contains(_p)) {
+			                        		readOnly=true;
+			                        	}
+			                        	String selected = isProgramSelected(serviceAdmissions, _p.getId());
+			                        	
+			                        	if(readOnly && selected.length() == 0) {
+			                        		continue;
+			                        	}
+			                        	
 			                    %>
-			                        <input type="checkbox" name="sp" value="<%=_p.getId()%>" <%=isProgramSelected(serviceAdmissions, _p.getId()) %> />
+			                        <input type="checkbox" name="sp" value="<%=_p.getId()%>" <%=selected %> <%=(readOnly)?" disabled=\"disabled\" ":"" %> />
 			                        <%=_p.getName()%>
 			                        <br/>
 			                    <%}%>
