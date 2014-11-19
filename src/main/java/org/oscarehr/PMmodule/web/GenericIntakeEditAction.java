@@ -860,20 +860,15 @@ public class GenericIntakeEditAction extends DispatchAction {
 			Program program = (Program) o;
 
 			if (providerPrograms.contains(program)) {
-				if (OscarProperties.getInstance().isTorontoRFQ()) {
-					if (caseManagementManager.hasAccessRight("perform admissions", "access", providerNo, "", String.valueOf(program.getId()))) {
-						servicePrograms.add(program);
-					}
-				}
-				else {
-					servicePrograms.add(program);
-				}
+				servicePrograms.add(program);
 			}
 		}
 
 		return servicePrograms;
 	}
 
+
+	
 	private List<Program> getExternalPrograms(Set<Program> providerPrograms) {
 		List<Program> externalPrograms = new ArrayList<Program>();
 
