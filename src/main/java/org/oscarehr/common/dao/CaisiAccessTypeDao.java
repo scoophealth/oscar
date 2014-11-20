@@ -46,4 +46,19 @@ public class CaisiAccessTypeDao extends AbstractDao<CaisiAccessType>{
 	        return results;
 	    }
 	
+	   public CaisiAccessType findByName(String name) {
+	    	String sql = "select x from CaisiAccessType x WHERE x.name = ?1";
+	    	Query query = entityManager.createQuery(sql);
+	    	query.setParameter(1, name);
+	    	
+	        @SuppressWarnings("unchecked")
+	        List<CaisiAccessType> results = query.getResultList();
+	        
+	        if(results.size() == 0) {
+	        	return null;
+	        }
+	        
+	        return results.get(0);
+	    }
+	   
 }
