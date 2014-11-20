@@ -1973,6 +1973,11 @@
         <ViolationValue>/src/main/webapp/lab/CA/BC/viewreports.jsp:java.sql.ResultSet rs = DBHandler.GetSQL(select_lab_reports.replaceAll("@demo_no", demo_no));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/ON/CMLDisplay.jsp:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/webapp/labViewReport.jsp:rs = DBHandler.GetSQL("select lab_id,type from hl7TextMessage where lab_id = "	+ id);</ViolationValue>
+        <ViolationValue>/src/main/webapp/labViewReport.jsp:rs = DBHandler.GetSQL("select lab_no from hl7TextInfo where id != lab_no");</ViolationValue>
+        <ViolationValue>/src/main/webapp/labViewReport.jsp:rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/webapp/labViewReport.jsp:rs3 = DBHandler.GetSQL(" select id,lab_no from hl7TextInfo where accessionNum = '"+acc+"'");</ViolationValue>
+        <ViolationValue>/src/main/webapp/labViewReport.jsp:rs3 = DBHandler.GetSQL("select * from hl7TextInfo i where i.lab_no=" + badId);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/newEncounter.jsp:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
