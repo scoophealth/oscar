@@ -544,6 +544,17 @@
 		<form-bean name="episodeForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="episode" type="org.oscarehr.common.model.Episode"/>
 		</form-bean>
+		
+		<form-bean name="mcedtResourceForm" type="org.oscarehr.integration.mcedt.ResourceForm" />
+		
+		<form-bean name="mcedtUploadForm" type="org.oscarehr.integration.mcedt.UploadForm" />
+		
+		<form-bean name="mcedtUploadAddForm" type="org.oscarehr.integration.mcedt.UploadAddForm" />
+		
+		<form-bean name="mcedtInfoForm" type="org.oscarehr.integration.mcedt.InfoForm" />
+		
+		<form-bean name="mcedtUpdateForm" type="org.oscarehr.integration.mcedt.UpdateForm" />
+		
 	</form-beans>
 
 	<global-forwards>
@@ -2512,6 +2523,34 @@
 		</action>
 		<action path="/admin/GenerateTraceabilityReportAction" type="org.oscarehr.admin.traceability.GenerateTraceabilityReportAction">
 		</action>
+		
+		<action path="/mcedt/mcedt" type="org.oscarehr.integration.mcedt.ResourceAction" name="mcedtResourceForm" parameter="method">
+			<forward name="success" path="/mcedt/index.jsp" />
+		</action>
+		
+		
+		<action path="/mcedt/uploads" type="org.oscarehr.integration.mcedt.UploadAction" name="mcedtUploadForm" parameter="method">
+			<forward name="success" path="/mcedt/uploads.jsp" />
+			<forward name="addNew" path="/mcedt/addUpload.jsp" redirect="true" />
+			<forward name="cancel" path="/mcedt/mcedt.do" redirect="true" />
+			<forward name="done" path="/mcedt/mcedt.do" redirect="true" />
+		</action>
+		
+		<action path="/mcedt/addUpload" input="/mcedt/addUpload.jsp" type="org.oscarehr.integration.mcedt.UploadAddAction" name="mcedtUploadAddForm">
+			<forward name="success" path="/mcedt/uploads.do" redirect="true" />
+		</action>
+		
+		<action path="/mcedt/update" type="org.oscarehr.integration.mcedt.UpdateAction" name="mcedtUpdateForm" parameter="method">
+			<forward name="cancel" path="/mcedt/mcedt.do" redirect="true" />
+			<forward name="add" path="/mcedt/update.do" redirect="true" />
+			<forward name="success" path="/mcedt/mcedt.do" redirect="true" />
+			<forward name="initial" path="/mcedt/update.jsp"/>
+		</action>
+		
+		<action path="/mcedt/info" type="org.oscarehr.integration.mcedt.InfoAction" name="mcedtInfoForm">
+			<forward name="info" path="/mcedt/info.jsp" />
+		</action>
+		
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="25M" />
 	<message-resources parameter="oscarResources" null="false" />
@@ -2519,6 +2558,7 @@
 	<message-resources parameter="MessageResources_program" key="pmm" null="false" />
 	<message-resources parameter="MessageResources_survey" key="survey" null="false" />
 	<message-resources parameter="MessageResources_casemgmt" key="casemgmt" null="false" />
+	<message-resources parameter="MessageResources_mcedt" key="mcedt" null="false" />
 	<plug-in className="org.apache.struts.tiles.TilesPlugin">
 		<!-- Path to XML definition file -->
 		<set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />

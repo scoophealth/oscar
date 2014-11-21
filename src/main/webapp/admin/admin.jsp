@@ -535,6 +535,9 @@ div.logoutBox {
 					<a href='#'	onclick='popupPage(300,750,&quot;<html:rewrite page="/admin/clinicNbrManage.jsp"/>&quot;);return false;'>Manage Clinic NBR Codes</a>
 				</li>
 			<%}%>
+			<li>
+				<a href="#" onclick='popupPage(800,1000,&quot;<html:rewrite page="/mcedt/mcedt.do"/>&quot;);return false;'><bean:message key="admin.admin.mcedt"/></a>
+			</li>
 			<%
 				}
 			%>

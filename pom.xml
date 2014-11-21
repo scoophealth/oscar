@@ -807,6 +807,12 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+        <dependency>
+                <groupId>org.oscarehr.integration.ebs</groupId>
+                <artifactId>ebs-client</artifactId>
+                <version>0.0.2-SNAPSHOT</version>
+        </dependency>
+
 	</dependencies>
 
 	<build>
@@ -1028,7 +1034,8 @@
 			<exclude>src/main/java/oscar/form/pdfservlet/FrmPDFServlet.java</exclude>
 			<exclude>src/main/java/oscar/form/study/FrmStudyPING_DiabetesRecord.java</exclude>
 
-
+            <exclude>src/main/java/org/apache/xml/security/encryption/XMLCipher.java</exclude>
+            <exclude>src/main/java/org/apache/xml/security/encryption/DocumentSerializer.java</exclude>
                 </excludes>
 		<strictCheck>true</strictCheck>
             </configuration>

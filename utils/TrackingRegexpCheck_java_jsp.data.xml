@@ -4295,4 +4295,13 @@
         <ViolationValue>/src/main/webapp/schedule/scheduleholidaysetting.jsp:strHolidayName = new StringBuffer(aHScheduleHoliday.holiday_name) ;</ViolationValue>
         <ViolationValue>/src/main/webapp/scratch/index.jsp:Hashtable hashtable = scratchData.getLatest(user_no);</ViolationValue>
     </ViolationSet>
+    <ViolationSet>
+        <ViolationKey>.*\.(error|warn|debug|fatal)\s*\((e[0-9]*|ex[0-9]*|[a-zA-Z]+xception)\);</ViolationKey>
+        <ViolationValue>/src/main/java/org/apache/xml/security/encryption/XMLCipher.java:log.debug(e);</ViolationValue>
+    </ViolationSet>
+    <ViolationSet>
+        <ViolationKey>.*org.apache.commons.logging.Log.*</ViolationKey>
+        <ViolationValue>/src/main/java/org/apache/xml/security/encryption/XMLCipher.java:org.apache.commons.logging.LogFactory.getLog(XMLCipher.class);</ViolationValue>
+        <ViolationValue>/src/main/java/org/apache/xml/security/encryption/XMLCipher.java:private static org.apache.commons.logging.Log log =</ViolationValue>
+    </ViolationSet>
 </TrackingRegexpCheck>

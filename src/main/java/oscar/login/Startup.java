@@ -34,7 +34,10 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.integration.ebs.client.EdtClientBuilder;
 import org.oscarehr.util.MiscUtils;
+
+import oscar.OscarProperties;
 
 /**
  * This ContextListener is used to Initialize classes at startup - Initialize the DBConnection Pool.
@@ -167,6 +170,13 @@ public class Startup implements ServletContextListener {
 				checkAndSetProperty(baseDocumentDir, contextPath,"OMD_downloads","/hrm/sftp_downloads/");
 				
 
+			}
+
+			//load up wss4j props into the library
+			String prop = OscarProperties.getInstance().getProperty("mcedt.wss4j.properties");
+			if(prop != null) {
+				MiscUtils.getLogger().info("setting MCEDT keystore properties file to  " + prop);
+				EdtClientBuilder.setClientKeystoreFilename(prop);
 			}
 			
 			logger.debug("LAST LINE IN contextInitialized");

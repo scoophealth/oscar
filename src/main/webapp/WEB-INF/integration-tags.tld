@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.1" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
+    <tlib-version>1.0</tlib-version>
+    <short-name>i</short-name>
+    <uri>http://www.oscar-emr.com/tags/integration</uri>
+    <function>
+        <name>toDate</name>
+        <function-class>org.oscarehr.integration.mcedt.Functions</function-class>
+        <function-signature>java.util.Date toDate(javax.xml.datatype.XMLGregorianCalendar)</function-signature>
+    </function>
+    <function>
+        <name>toInt</name>
+        <function-class>org.oscarehr.integration.mcedt.Functions</function-class>
+        <function-signature>int toInt(java.math.BigInteger)</function-signature>
+    </function>
+</taglib>
