@@ -106,6 +106,9 @@ public class FaxSender {
 					catch(IOException e ) {
 						log.error("CANNOT FIND " + faxJob.getFile_name());
 					}
+					catch( Exception e ) {
+						log.error("PROBLEM COMMUNICATING WITH WEB SERVICE",e);
+					}
 				}
 				
 			}
