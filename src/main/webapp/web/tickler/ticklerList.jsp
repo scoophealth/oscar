@@ -23,7 +23,7 @@
     Ontario, Canada
 
 --%>
-
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <!-- this CSS makes it so the modals don't have the vertical sliding animation. Not sure if I will keep this or how I will use this yet -->
 <style> 
 .modal.fade {

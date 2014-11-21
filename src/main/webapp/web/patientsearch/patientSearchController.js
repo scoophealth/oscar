@@ -30,7 +30,7 @@ oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, 
 	        	        	demographicService.search($scope.search,((page-1)*count),count).then(function(result){
 	        	        		 params.total(result.total);
 	        	                 $defer.resolve(result.content);
-	        	                 $scope.lastResponse = result.content;
+	        	                 $scope.lastResponse = result.content;	        	                
 	        	        	},function(reason){
 	        	        	 alert("demo-service:"+reason);
 	        	        	});
@@ -82,7 +82,7 @@ oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, 
     	var result = ($scope.integratorResults != null && $scope.integratorResults.total > 0 ) ? $scope.integratorResults.content : [];
     	var total = ($scope.integratorResults != null) ? $scope.integratorResults.total : 0;
         var modalInstance = $modal.open({
-        	templateUrl: 'patientsearch/remotePatientResults.html',
+        	templateUrl: 'patientsearch/remotePatientResults.jsp',
             controller: 'RemotePatientResultsController',
             resolve: {
                 results: function () {

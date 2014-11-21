@@ -24,6 +24,8 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+
 <!-- this CSS makes it so the modals don't have the vertical sliding animation. Not sure if I will keep this or how I will use this yet -->
 <style>
 .modal.fade {
@@ -48,29 +50,29 @@
 					id="referralStartDate" name="referralStartDate"
 					class="form-control" datepicker-popup="yyyy-MM-dd"
 					datepicker-append-to-body="true" is-open="data.isOpen"
-					ng-click="data.isOpen = true" placeholder="Referral Start Date">
+					ng-click="data.isOpen = true" placeholder="<bean:message key="consult.list.referralStartDate" bundle="ui"/>">
 			</div>
 			<div class="col-xs-2">
 				<input ng-model="search.referralEndDate" type="text"
 					id="referralEndDate" name="referralEndDate" class="form-control"
 					datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true"
 					is-open="data2.isOpen" ng-click="data2.isOpen = true"
-					placeholder="Referral End Date">
+					placeholder="<bean:message key="consult.list.referralEndDate" bundle="ui"/>">
 			</div>
 			<div class="col-xs-2">
 				<select ng-model="search.status" name="status" id="status"
 					class="form-control">
-					<option value="">All Active</option>
-					<option value="1">Nothing</option>
-					<option value="2">Pending Specialist Callback</option>
-					<option value="3">Pending Patient Callback</option>
-					<option value="6">Preliminary</option>
-					<option value="4">Completed</option>
+					<option value=""><bean:message key="consult.list.status.all" bundle="ui"/></option>
+					<option value="1"><bean:message key="consult.list.status.nothing" bundle="ui"/></option>
+					<option value="2"><bean:message key="consult.list.status.pendingSpecialistCallback" bundle="ui"/></option>
+					<option value="3"><bean:message key="consult.list.status.pendingPatientCallback" bundle="ui"/></option>
+					<option value="6"><bean:message key="consult.list.status.preliminary" bundle="ui"/></option>
+					<option value="4"><bean:message key="consult.list.status.completed" bundle="ui"/></option>
 				</select>
 			</div>
 			<div class="col-xs-2">
 				<select ng-model="search.team" name="team" id="team"
-					class="form-control" ng-init="search.team='All Teams'" ng-options="t for t in teams">
+					class="form-control" ng-init="search.team='<bean:message key="consult.list.team.all" bundle="ui"/>'" ng-options="t for t in teams">
 				</select>
 			</div>
 		</div>
@@ -84,21 +86,21 @@
 					id="appointmentStartDate" name="appointmentStartDate"
 					class="form-control" datepicker-popup="yyyy-MM-dd"
 					datepicker-append-to-body="true" is-open="data3.isOpen"
-					ng-click="data3.isOpen = true" placeholder="Appointment Start Date">
+					ng-click="data3.isOpen = true" placeholder="<bean:message key="consult.list.appointmentStartDate" bundle="ui"/>">
 			</div>
 			<div class="col-xs-2">
 				<input ng-model="search.appointmentEndDate" type="text"
 					id="appointmentEndDate" name="appointmentEndDate"
 					class="form-control" datepicker-popup="yyyy-MM-dd"
 					datepicker-append-to-body="true" is-open="data4.isOpen"
-					ng-click="data4.isOpen = true" placeholder="Appointment End Date">
+					ng-click="data4.isOpen = true" placeholder="<bean:message key="consult.list.appointmentEndDate" bundle="ui"/>">
 			</div>
 			
 		<div class="col-xs-2">
 		 <div class="input-group">
    		   <div class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="removeDemographicAssignment()"></span></div>
       
-				 <input type="text" ng-model="consult.demographicName" placeholder="Patient" 
+				 <input type="text" ng-model="consult.demographicName" placeholder="<bean:message key="consult.list.patient" bundle="ui"/>" 
 				typeahead="pt.demographicNo as pt.name for pt in searchPatients($viewValue)" 
 				typeahead-on-select="updateDemographicNo($item, $model, $label)"
 				class="form-control">
@@ -112,8 +114,8 @@
 
 		<div class="row">
 			<div class="col-xs-2">
-				<button class="btn btn-primary" type="button" ng-click="doSearch()">Search</button>
-				<button class="btn btn-default" type="button" ng-click="clear()">Clear</button>
+				<button class="btn btn-primary" type="button" ng-click="doSearch()"><bean:message key="global.search" bundle="ui"/></button>
+				<button class="btn btn-default" type="button" ng-click="clear()"><bean:message key="global.clear" bundle="ui"/></button>
 			</div>
 		</div>
 	</form>
@@ -128,34 +130,33 @@
 				<td ng-show="consultWriteAccess"><input type="checkbox"
 					ng-model="consult.checked"></td>
 				<td ng-show="consultWriteAccess"><a
-					ng-click="editConsult(consult)" class="hand-hover">Edit</a></td>
-				<td data-title="'Patient'" class="text-center" sortable="'Demographic'">
+					ng-click="editConsult(consult)" class="hand-hover"><bean:message key="global.edit" bundle="ui"/></a></td>
+				<td data-title="'<bean:message key="consult.list.header.patient" bundle="ui"/>'" class="text-center" sortable="'Demographic'">
 					{{consult.demographic.formattedName}}</td>
-				<td data-title="'Service'" class="text-center" sortable="'Service'">{{consult.serviceName}}</td>
-				<td data-title="'Consultant'" class="text-center" sortable="'Consultant'">{{consult.consultant.formattedName}}</td>
-				<td data-title="'Team'" class="text-center" sortable="'Team'">{{consult.teamName}}</td>
-				<td data-title="'Status'" class="text-center" sortable="'Status'">{{consult.statusDescription}}</td>
-				<td data-title="'Priority'" class="text-center" sortable="'Urgency'">{{consult.urgencyDescription}}</td>
-				<td data-title="'MRP'" class="text-center" sortable="'MRP'">{{consult.mrp.formattedName}}</td>
+				<td data-title="'<bean:message key="consult.list.header.service" bundle="ui"/>'" class="text-center" sortable="'Service'">{{consult.serviceName}}</td>
+				<td data-title="'<bean:message key="consult.list.header.consultant" bundle="ui"/>'" class="text-center" sortable="'Consultant'">{{consult.consultant.formattedName}}</td>
+				<td data-title="'<bean:message key="consult.list.header.team" bundle="ui"/>'" class="text-center" sortable="'Team'">{{consult.teamName}}</td>
+				<td data-title="'<bean:message key="consult.list.header.status" bundle="ui"/>'" class="text-center" sortable="'Status'">{{consult.statusDescription}}</td>
+				<td data-title="'<bean:message key="consult.list.header.priority" bundle="ui"/>'" class="text-center" sortable="'Urgency'">{{consult.urgencyDescription}}</td>
+				<td data-title="'<bean:message key="consult.list.header.mrp" bundle="ui"/>'" class="text-center" sortable="'MRP'">{{consult.mrp.formattedName}}</td>
 
-				<td data-title="'Appointment Date'" class="text-center" sortable="'AppointmentDate'">
+				<td data-title="'<bean:message key="consult.list.header.appointmentDate" bundle="ui"/>'" class="text-center" sortable="'AppointmentDate'">
 					{{consult.appointmentDate | date: 'yyyy-MM-dd HH:mm'}}</td>
-				<td data-title="'Last Followup'" class="text-center" sortable="'FollowUpDate'">
+				<td data-title="'<bean:message key="consult.list.header.lastFollowUp" bundle="ui"/>'" class="text-center" sortable="'FollowUpDate'">
 					{{consult.lastFollowUp | date: 'yyyy-MM-dd'}}</td>
-				<td data-title="'Referral Date'" class="text-center" sortable="'ReferralDate'">
+				<td data-title="'<bean:message key="consult.list.header.referralDate" bundle="ui"/>'" class="text-center" sortable="'ReferralDate'">
 					{{consult.referralDate | date: 'yyyy-MM-dd'}}</td>
 			</tr>
 		</tbody>
 
 		<tfoot ng-show="consultWriteAccess">
 			<tr>
-				<td colspan="12" class="white"><a ng-click="checkAll()" class="hand-hover">Check
-						All</a> - <a ng-click="checkNone()" class="hand-hover">Check None</a> &nbsp; &nbsp;
+				<td colspan="12" class="white"><a ng-click="checkAll()" class="hand-hover"><bean:message key="consult.list.checkAll" bundle="ui"/></a> - <a ng-click="checkNone()" class="hand-hover"><bean:message key="consult.list.checkNone" bundle="ui"/></a> &nbsp; &nbsp;
 					&nbsp; &nbsp; &nbsp;
 					<button class="btn btn-default" name="button" type="button"
-						ng-click="addConsult()" ng-disabled="true">Actions&nbsp;<span class="caret"></span></button>
+						ng-click="addConsult()" ng-disabled="true"><bean:message key="consult.list.actions" bundle="ui"/>&nbsp;<span class="caret"></span></button>
 				<button class="btn btn-default" name="button" type="button"
-						ng-click="test()" ng-disabled="true">New Consultation Request</button>
+						ng-click="test()" ng-disabled="true"><bean:message key="consult.list.new" bundle="ui"/></button>
 								
 				</td>
 			</tr>
@@ -176,8 +177,7 @@
 <div ng-show="consultReadAccess != null && consultReadAccess == false"
 	class="col-lg-12">
 	<h3 class="text-danger">
-		<span class="glyphicon glyphicon-warning-sign"></span>You don't have
-		access to view consults
+		<span class="glyphicon glyphicon-warning-sign"></span><bean:message key="consult.list.access_denied" bundle="ui"/>
 	</h3>
 </div>
 
