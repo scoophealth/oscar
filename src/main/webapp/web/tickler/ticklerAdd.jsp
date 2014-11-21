@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <form name="ticklerAddForm" novalidate>
 
 <div class="modal-header">

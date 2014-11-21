@@ -24,12 +24,31 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<div class="modal-header">
+    <h4>Tickler Comments</h4>
+</div>  
+<div class="modal-body">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Provider</th>
+				<th>Update Date</th>
+				<th>Comment</th>
+			</tr>
+		</thead>
+		<tr ng-repeat="c in tickler.ticklerComments | orderBy:'updateDate':true">
+			<td>{{c.providerName}}</td>
+			<td>{{c.updateDate | date: 'yyyy-MM-dd HH:mm'}}</td>
+			<td>{{c.message}}</td>
+		</tr>
+	</table>
 
-<p class="info">
-	<a class="hand-hover" ng-click="openPopup()"><bean:message key="document.panel" bundle="ui"/></a>&nbsp;<bean:message key="document.popupMessage" bundle="ui"/>
-</p>
+</div>
+<div class="modal-footer">
+    <button class="btn" ng-click="close()">Close</button>
+</div>
 
-<p><a ui-sref="dashboard"><bean:message key="global.goToDashboard" bundle="ui"/></a></p>
+
 
 
 
