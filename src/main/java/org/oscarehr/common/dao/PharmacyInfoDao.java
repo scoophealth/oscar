@@ -127,14 +127,28 @@ public class PharmacyInfoDao extends AbstractDao<PharmacyInfo>{
      }
     
     @SuppressWarnings("unchecked")
-    public List<PharmacyInfo> searchPharmacyName(String name ) {
+    public List<PharmacyInfo> searchPharmacyByNameAddressCity(String name, String city ) {
     	
-    	String sql = "select x from PharmacyInfo x where x.status = :status and x.name like :name order by x.name, x.address";
+    	String sql = "select x from PharmacyInfo x where x.status = :status and (x.name like :name or x.address like :address) and x.city like :city order by x.name, x.address";
     	Query query = entityManager.createQuery(sql);
     	query.setParameter("status", PharmacyInfo.ACTIVE);
     	query.setParameter("name", "%"+name+"%");
+    	query.setParameter("address", "%"+name+"%");
+    	query.setParameter("city", "%"+city+"%");
     	
     	return query.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<String> searchPharmacyByCity(String city ) {
+    
+    	String sql = "select distinct x.city from PharmacyInfo x where x.status = :status and x.city like :city";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter("status", PharmacyInfo.ACTIVE);
+    	query.setParameter("city", "%"+city+"%");
+    	
+    	return query.getResultList();
+    	
     }
 
 }

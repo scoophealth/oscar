@@ -255,6 +255,27 @@ public final class RxManagePharmacyAction extends DispatchAction {
     	return null;
     	
     }
+    
+    public ActionForward searchCity(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	
+    	String searchStr = request.getParameter("term");    	
+    	
+    	RxPharmacyData pharmacy = new RxPharmacyData();
+    	
+    	response.setContentType("text/x-json");
+    	ObjectMapper mapper = new ObjectMapper();
+    	
+    	List<String> cityList = pharmacy.searchPharmacyCity(searchStr);
+    	
+    	try {    		
+    		mapper.writeValue(response.getWriter(), cityList);
+    	}
+    	catch( IOException e ) {
+    		MiscUtils.getLogger().error("ERROR WRITING RESPONSE ",e);
+    	}
+    	
+    	return null;
+    }
 
     public ActionForward getPharmacyInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String pharmacyId=request.getParameter("pharmacyId");

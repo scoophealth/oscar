@@ -185,9 +185,32 @@ public class RxPharmacyData {
 		return pharmacyInfos;
 	}
 	
-	public List<PharmacyInfo> searchPharmacy( String name ) {
+	public List<String> searchPharmacyCity( String searchTerm ) {
 		
-		return pharmacyInfoDao.searchPharmacyName(name);
+		return pharmacyInfoDao.searchPharmacyByCity(searchTerm);
+		
+	}
+	
+	public List<PharmacyInfo> searchPharmacy( String searchTerm ) {
+		
+		String[] terms;
+		String name = "", city = "";
+		
+		if( searchTerm.indexOf(",") > -1 ) {
+			terms = searchTerm.split(",",-1);
+			
+			switch(terms.length) {						
+			case 2:
+				city = terms[1];
+			case 1:
+				name = terms[0];
+			}
+		}
+		else {
+			name = searchTerm;
+		}
+		
+		return pharmacyInfoDao.searchPharmacyByNameAddressCity(name, city);
 		
 	}
 	
