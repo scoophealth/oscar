@@ -70,7 +70,66 @@ span.h4		{font-family: sans-serif; font-size: 12px; font-weight: normal; text-de
 p, li, span	{font-family: sans-serif; font-size: 12px; font-weight: normal;}
 a			{font-family: sans-serif; font-size: 12px; font-weight: normal; color: blue; cursor:pointer;}
 </style>
-
+<script type='text/javascript'>
+/**
+ * Enable nudging with arrow keys
+ * - Binds to arrow keys to nudge and resize fields
+ * - Shift as a modifier switches from move to resize mode
+ * - Alt as a modifier changes the step size from 1px to 10px
+ *
+ *
+ * Written By Charlie Livingston <charlie@litsolutions.ca>
+*/
+document.onkeydown = function(evt) {
+    evt = (evt) ? evt : ((window.event) ? event : null);
+	var myReturn;
+    if (evt) {
+		if (evt.altKey) {
+		  step = 10;
+		} else {
+		  step = 1;
+		}
+        switch (evt.keyCode) {
+            case 37:
+			    if (evt.shiftKey) {
+					changeInput('width', -step);
+				} else {
+					changeInput('left', step);
+				}
+				myReturn = false;
+                break;
+            case 38:
+			    if (evt.shiftKey) {
+					changeInput('height', -step);
+				} else {
+					changeInput('up', step);
+				}
+				myReturn = false;
+                break;
+            case 39:
+			    if (evt.shiftKey) {
+					changeInput('width', step);
+				} else {
+					changeInput('right', step);
+				}
+				myReturn = false;
+                break;
+            case 40:
+			    if (evt.shiftKey) {
+					changeInput('height', step);
+				} else {
+					changeInput('down', step);
+				}
+				myReturn = false;
+                break;
+			default:
+				myReturn = true;
+				break;
+         }
+    }
+	return myReturn;
+}
+</script>
 <script type="text/javascript">
 
 var BGWidth = 0;
@@ -2463,8 +2522,7 @@ show('classic');
 
 <form method="post" action="" name="FormName" id="FormName">
 
-<div name="Wizard" id="Wizard" class="DoNotPrint" style="position: absolute; leftoscar_image_path:750px; top: 0px; width: 500px;" >
-
+<div name="Wizard" id="Wizard" class="DoNotPrint" style="position: absolute; left:750px; top: 0px; width: 500px; padding:5px; height: 1010; overflow-y: scroll;" >
 
 <span class="h1"><bean:message key="eFormGenerator.title"/></span>
 	<a onclick="show('all');"><bean:message key="eFormGenerator.expandAll"/></a>/
