@@ -187,7 +187,7 @@ public class JdbcBillingReviewImpl {
 			Integer d0,d1;
 			try {
 				d0 = Integer.parseInt(arg0.getDemographic_no());
-				d1 = Integer.parseInt(arg0.getDemographic_no());
+				d1 = Integer.parseInt(arg1.getDemographic_no());
 			}catch(Exception e) {
 				return 0;
 			}
