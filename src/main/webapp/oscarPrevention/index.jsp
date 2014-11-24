@@ -612,7 +612,7 @@ text-align:left;
 		<div class="preventionProcedure" onclick="<%=onClickCode%>">
 		<!--this is setting the style <%=r(hdata.get("refused"),result)%>  -->
 		<p <%=r(hdata.get("refused"),result)%> >Age: <%=hdata.get("age")%> <%if(result!=null && result.equals("abnormal")){out.print("result:"+result);}%> <br />
-		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
+		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date_no_time")%>
 		<%if (hExt.get("comments") != null && (hExt.get("comments")).length()>0) {
                     if (oscar.OscarProperties.getInstance().getBooleanProperty("prevention_show_comments","yes")){%>
                     <div class="comments"><span><%=hExt.get("comments")%></span></div>
@@ -664,7 +664,7 @@ text-align:left;
 		<div class="preventionProcedure"
 			onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')">
 		<p <%=r(hdata.get("refused"), result)%>>Age: <%=hdata.get("age")%> <br />
-		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
+		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date_no_time")%>
 		<%if (hExt.get("comments") != null && (hExt.get("comments")).length()>0) {
                      if (oscar.OscarProperties.getInstance().getBooleanProperty("prevention_show_comments","yes")){ %>
                      <div class="comments"><span><%=hExt.get("comments")%></span></div>
@@ -722,7 +722,7 @@ text-align:left;
         %>
 		<div class="preventionProcedure" onclick="<%=onClickCode%>">
 		<p <%=r(hdata.get("refused"),result)%>>Age: <%=hdata.get("age")%> <br />
-		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
+		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date_no_time")%>
 		<%=getFromFacilityMsg(hdata)%></p>
 		</div>
 		<%}%>
@@ -770,7 +770,7 @@ text-align:left;
 			value="<%=hdata.get("age")%>">
 		<input type="hidden" id="preventProcedureDate<%=i%>-<%=k%>"
 			name="preventProcedureDate<%=i%>-<%=k%>"
-			value="<%=hdata.get("prevention_date")%>">
+			value="<%=hdata.get("prevention_date_no_time")%>">
                     <%  String comments = hExt.get("comments");
                         if (comments != null && !comments.isEmpty() && OscarProperties.getInstance().getBooleanProperty("prevention_show_comments","true")) {%>      
                 <input type="hidden" id="preventProcedureComments<%=i%>-<%=k%>"

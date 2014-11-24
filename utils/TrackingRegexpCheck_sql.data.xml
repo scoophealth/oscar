@@ -5507,7 +5507,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:presBoxSize int(10) NOT NULL default '30',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:prescribe_date date NOT NULL default '0001-01-01',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:prescribe_time time NOT NULL default '00:00:00',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:prevention_date date default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:prevention_date datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:prevention_id int(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:prevention_type varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:primaryLab varchar(5) default NULL,</ViolationValue>

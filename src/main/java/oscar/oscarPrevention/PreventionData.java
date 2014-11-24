@@ -70,7 +70,7 @@ public class PreventionData {
 			Prevention prevention = new Prevention();
 			prevention.setCreatorProviderNo(creator);
 			prevention.setDemographicId(Integer.valueOf(demoNo));
-			prevention.setPreventionDate(UtilDateUtilities.StringToDate(date, "yyyy-MM-dd"));
+			prevention.setPreventionDate(UtilDateUtilities.StringToDate(date, "yyyy-MM-dd HH:mm"));
 			prevention.setProviderNo(providerNo);
 			prevention.setPreventionType(preventionType);
 			prevention.setNextDate(UtilDateUtilities.StringToDate(nextDate, "yyyy-MM-dd"));
@@ -263,9 +263,10 @@ public class PreventionData {
 				h.put("provider_name", ProviderData.getProviderName(prevention.getProviderNo()));
 
 				Date pDate = prevention.getPreventionDate();
-				h.put("prevention_date", blankIfNull(UtilDateUtilities.DateToString(pDate, "yyyy-MM-dd")));
+				h.put("prevention_date", blankIfNull(UtilDateUtilities.DateToString(pDate, "yyyy-MM-dd HH:mm")));
 				h.put("prevention_date_asDate", pDate);
-
+				h.put("prevention_date_no_time", blankIfNull(UtilDateUtilities.DateToString(pDate, "yyyy-MM-dd")));
+				
 				String age = "N/A";
 				if (pDate != null) {
 					age = UtilDateUtilities.calcAgeAtDate(dob, pDate);
@@ -406,7 +407,7 @@ public class PreventionData {
 					h.put("type", cachedDemographicPrevention.getPreventionType());
 					h.put("provider_no", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
 					h.put("provider_name", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
-					h.put("prevention_date", DateFormatUtils.ISO_DATE_FORMAT.format(cachedDemographicPrevention.getPreventionDate()));
+					h.put("prevention_date", DateFormatUtils.ISO_DATE_FORMAT.format(cachedDemographicPrevention.getPreventionDate()) + " 00:00");
 					h.put("prevention_date_asDate", cachedDemographicPrevention.getPreventionDate());
 
 					if (demographicDateOfBirth != null) {
@@ -455,7 +456,7 @@ public class PreventionData {
 			if (prevention != null) {
 				h = new HashMap<String, Object>();
 				String providerName = ProviderData.getProviderName(prevention.getProviderNo());
-				String preventionDate = UtilDateUtilities.DateToString(prevention.getPreventionDate(), "yyyy-MM-dd");
+				String preventionDate = UtilDateUtilities.DateToString(prevention.getPreventionDate(), "yyyy-MM-dd HH:mm");
 				String lastUpdateDate = UtilDateUtilities.DateToString(prevention.getLastUpdateDate(), "yyyy-MM-dd");
 				@SuppressWarnings("deprecation")
 				String creatorName = ProviderData.getProviderName(prevention.getCreatorProviderNo());
