@@ -7647,7 +7647,7 @@ CREATE TABLE preventions (
   id int(10) NOT NULL auto_increment,
   demographic_no int(10) NOT NULL default '0',
   creation_date datetime default NULL,
-  prevention_date date default NULL,
+  prevention_date datetime default NULL,
   provider_no varchar(6) NOT NULL default '',
   provider_name varchar(255) default NULL,
   prevention_type varchar(20) default NULL,

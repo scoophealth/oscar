@@ -53,7 +53,7 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 	private Date creationDate = new Date();
 
 	@Column(name = "prevention_date")
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date preventionDate = null;
 
 	@Column(name = "provider_no")

@@ -49,7 +49,7 @@
   String providerName ="";
   String lot ="";
   String provider = (String) session.getValue("user");
-  String dateFmt = "yyyy-MM-dd";
+  String dateFmt = "yyyy-MM-dd HH:mm";
   String prevDate = UtilDateUtilities.getToday(dateFmt);
   String completed = "0";
   String nextDate = "";
@@ -451,7 +451,7 @@ function displayCloseWarning(){
                             <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
                          </div>
                          <div style="float:left;margin-left:30px;">
-                            <label for="prevDate" class="fields" >Date:</label>    <input readonly='readonly' type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
+                            <label for="prevDate" class="fields" >Date:</label>    <input readonly='readonly' type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="15" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
                                       <%for (int i=0; i < providers.size(); i++) {
@@ -686,7 +686,7 @@ function displayCloseWarning(){
         </tr>
     </table>
 <script type="text/javascript">
-Calendar.setup( { inputField : "prevDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
+Calendar.setup( { inputField : "prevDate", ifFormat : "%Y-%m-%d %H:%M", showsTime :true, button : "date", singleClick : true, step : 1 } );
 Calendar.setup( { inputField : "nextDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "nextDateCal", singleClick : true, step : 1 } );
 </script>
 </body>
