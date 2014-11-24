@@ -181,8 +181,17 @@ public class ManageDocumentAction extends DispatchAction {
 
 			CtlDocument ctlDocument = ctlDocumentDao.getCtrlDocument(Integer.parseInt(documentId));
 			if(ctlDocument != null) {
-				ctlDocument.getId().setModuleId(Integer.parseInt(demog));
-				ctlDocumentDao.merge(ctlDocument);
+				
+				CtlDocument matchedCtlDocument = new CtlDocument();
+				matchedCtlDocument.getId().setDocumentNo(ctlDocument.getId().getDocumentNo());
+				matchedCtlDocument.getId().setModule(ctlDocument.getId().getModule());
+				matchedCtlDocument.getId().setModuleId(Integer.parseInt(demog));
+				matchedCtlDocument.setStatus(ctlDocument.getStatus());
+				
+				ctlDocumentDao.persist(matchedCtlDocument);
+				
+				ctlDocumentDao.remove(ctlDocument.getId());
+				
 				// save a document created note
 				if (ctlDocument.isDemographicDocument()) {
 					// save note
