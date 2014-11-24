@@ -133,15 +133,18 @@ public class CategoryData {
 	public int getLabCountForUnmatched()
 			throws SQLException {
 		String sql;
-		sql = " SELECT HIGH_PRIORITY COUNT(1) as count "
-			+ " FROM patientLabRouting plr2, providerLabRouting plr  "
-			+ " WHERE plr.lab_no = plr2.lab_no "
-			+ (providerSearch ? " AND plr.provider_no = '"+searchProviderNo+"' " : "")
-			+ "   AND plr.lab_type = 'HL7' "
-			+ "   AND plr.status like '%"+status+"%' "
-			+ "   AND plr2.lab_type = 'HL7'"
-			+ "   AND plr2.demographic_no = '0' ";
+		              sql = " SELECT HIGH_PRIORITY COUNT(1) as count "
+				                       + " FROM patientLabRouting plr2, providerLabRouting plr  "
+				                       + " WHERE plr.lab_no = plr2.lab_no "
+				                       + (providerSearch ? " AND plr.provider_no = '"+searchProviderNo+"' " : "")
+				
+				                        + "   AND plr.lab_type = 'HL7' "
+				                        + "   AND plr.status like '%"+status+"%' "
+				                       + "   AND plr2.lab_type = 'HL7'"
+				                       + "   AND plr2.demographic_no = '0' ";
+				
 
+			
 		Connection c  = DbConnectionFilter.getThreadLocalDbConnection();
 		PreparedStatement ps = c.prepareStatement(sql);
 		ResultSet rs= ps.executeQuery(sql);
@@ -256,13 +259,18 @@ public class CategoryData {
         return (rs.next() ? rs.getInt("count") : 0);
 	}
 
+	/*
+	 * This will return the total documents found for this patients.
+	 * it will also add to the patients map (demographicNo, PatientInfo) with a document count for the patient.
+	 * 
+	 */
 	public int getDocumentCountForPatientSearch() throws SQLException {
 		PatientInfo info;
-		String sql = " SELECT HIGH_PRIORITY demographic_no, last_name, first_name, COUNT(1) as count "
+		String sql = " SELECT HIGH_PRIORITY demographic_no, last_name, first_name, COUNT( distinct cd.document_no) as count "
 					+ " FROM ctl_document cd, demographic d, providerLabRouting plr "
 					+ " WHERE   d.last_name like '%"+patientLastName+"%'  "
-					+ " 	AND d.first_name like '%"+patientFirstName+"%' "
 					+ " 	AND d.hin like '%"+patientHealthNumber+"%' "
+					+ " 	AND d.first_name like '%"+patientFirstName+"%' "
 					+ " 	AND cd.module_id = d.demographic_no "
 					+ " 	AND cd.document_no = plr.lab_no "
 					+ " 	AND plr.lab_type = 'DOC' "
@@ -282,21 +290,6 @@ public class CategoryData {
         return count;
 	}
 
-	public int getDocumentCountForDemographic(String demographicNo) throws SQLException {
-		String sql = " SELECT HIGH_PRIORITY demographic_no, last_name, first_name, COUNT(1) as count "
-					+ " FROM ctl_document cd, demographic d, providerLabRouting plr "
-					+ " WHERE   d.demographic_no = " + demographicNo
-					+ " 	AND cd.module_id = d.demographic_no "
-					+ " 	AND cd.document_no = plr.lab_no "
-					+ " 	AND plr.lab_type = 'DOC' "
-					+ " 	AND plr.status like '%"+status+"%' "
-					+ (providerSearch ? "AND plr.provider_no = '"+searchProviderNo+"' " : "")
-					+ " GROUP BY demographic_no ";
-		Connection c  = DbConnectionFilter.getThreadLocalDbConnection();
-		PreparedStatement ps = c.prepareStatement(sql);
-		ResultSet rs= ps.executeQuery(sql);
-        return (rs.next() ? rs.getInt("count") : 0);
-	}
 
 	public Long getCategoryHash() {
 		return Long.valueOf("" + (int)'A' + totalNumDocs)
