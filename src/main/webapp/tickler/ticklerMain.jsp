@@ -757,6 +757,7 @@ function changeSite(sel) {
 								  if (dateBegin.compareTo("") == 0) dateBegin="1950-01-01"; // any early start date should suffice for selecting since the beginning
 								                            
 								  CustomFilter filter = new CustomFilter();
+								  filter.setPriority(null);
 								  
 								  filter.setStatus(ticklerview);
 								  		
