@@ -30,7 +30,7 @@ Integer unmatchedDocs   = (Integer) request.getAttribute("unmatchedDocs");
 Integer unmatchedLabs   = (Integer) request.getAttribute("unmatchedLabs");
 Integer totalDocs		= (Integer) request.getAttribute("totalDocs");
 Integer totalLabs 		= (Integer) request.getAttribute("totalLabs");
-if (totalLabs!=null) { totalLabs = 0;}
+if (totalLabs==null) { totalLabs = 0;}
 Integer abnormalCount 	= (Integer) request.getAttribute("abnormalCount");
 Integer normalCount 	= (Integer) request.getAttribute("normalCount");
 Integer totalNumDocs    = (Integer) request.getAttribute("totalNumDocs");
@@ -474,7 +474,7 @@ boolean ajax = "true".equals(request.getParameter("ajax"));
                     <div style="height:600px; overflow:auto;">
                     <%
                     	//Enumeration en=patientIdNames.keys();
-                        if(totalNumDocs > 0){
+                        if((totalNumDocs) > 0){
                     %>
                         <div>
                         	<a id="totalAll" href="javascript:void(0);" onclick="un_bold(this);changeView(CATEGORY_ALL);">
@@ -484,14 +484,14 @@ boolean ajax = "true".equals(request.getParameter("ajax"));
 
     				<% }
 
-                       if(totalDocs>0){
+                       if((totalDocs)>0){
 					%>
 						<div>
 							<a id="totalDocs" href="javascript:void(0);" onclick="un_bold(this);changeView(CATEGORY_DOCUMENTS);"
 							   title="Documents">Documents (<span id="totalDocsNum"><%=totalDocs%></span>)
 						   </a>
 					   </div>
-                     <%} if(totalLabs>0){%>
+                     <%} if((totalLabs)>0){%>
                        <div>
                             <a id="totalHL7s" href="javascript:void(0);" onclick="un_bold(this);changeView(CATEGORY_HL7);" title="HL7">
                            		HL7 (<span id="totalHL7Num"><%=totalLabs%></span>)
@@ -499,7 +499,7 @@ boolean ajax = "true".equals(request.getParameter("ajax"));
                        </div>
 
 					<%}
-					  if(totalDocs>0||totalLabs>0){%><br><%}
+					  if(totalLabs>0){%><br><%}
 
 					%>
 					    <div>
