@@ -27,7 +27,7 @@
 <div class="modal-body">
 	<div class="row">
 		<div class="col-xs-12">
-			 <h4>Tickler re: <strong>{{tickler.demographicName}}</strong></h4>
+			 <h4><bean:message key="tickler.view.title" bundle="ui"/>: <strong>{{tickler.demographicName}}</strong></h4>
 		</div>
 	</div>
 	
@@ -37,7 +37,7 @@
 	
 	<div class="row">
 		<div class="col-xs-4">
-			<strong>Assigned to:</strong>
+			<strong><bean:message key="tickler.view.assignTo" bundle="ui"/>:</strong>
 		</div>
 		<div class="col-xs-6" ng-show="!showTaskAssignedToFormControl">
 			{{tickler.taskAssignedToName}} <span ng-show="ticklerWriteAccess" class="glyphicon glyphicon-pencil" ng-click="editTaskAssignedTo()"></span>
@@ -46,7 +46,7 @@
 		 <div class="form-group">
     <div class="input-group">
       <div class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="cancelTaskAssignedToUpdate()"></span></div>
-      <input type="text" ng-model="ticklerUpdate.taskAssignedToName" placeholder="Enter Last Name or First Name" 
+      <input type="text" ng-model="ticklerUpdate.taskAssignedToName" placeholder="<bean:message key="tickler.view.provider.placeholder" bundle="ui"/>" 
 				typeahead="pt.providerNo as pt.name for pt in searchProviders($viewValue)" 
 				typeahead-on-select="updateTaskAssignedTo($item, $model, $label)"
 				class="form-control input-sm">
@@ -58,7 +58,7 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-4">
-			<strong>Last Updated:</strong>
+			<strong><bean:message key="tickler.view.lastUpdated" bundle="ui"/>:</strong>
 		</div>
 		<div class="col-xs-4">
 			{{tickler.updateDate | date :'yyyy-MM-dd HH:mm'}}
@@ -74,33 +74,33 @@
   	<div class="col-xs-4">
   		<table class="table">
   			<tr>
-  				<td ng-show="!showServiceDateAndTimeFormControl"><strong>Service Date:</strong></td>
+  				<td ng-show="!showServiceDateAndTimeFormControl"><strong><bean:message key="tickler.view.serviceDate" bundle="ui"/>:</strong></td>
   				<td ng-show="!showServiceDateAndTimeFormControl">{{tickler.serviceDate |date: 'yyyy-MM-dd HH:mm'}}  <span ng-show="ticklerWriteAccess" class="glyphicon glyphicon-pencil" ng-click="editServiceDateAndTime()"></span></td>
 				<td ng-show="showServiceDateAndTimeFormControl" colspan="2">
 					 <input  ng-model="ticklerUpdate.serviceDate" type="text" class="form-control">
 					 <input  ng-model="ticklerUpdate.serviceTime" type="text" class="form-control">
-					 <button class="btn btn-primary" ng-click="updateServiceDateAndTime()" >Set</button>
-					 <button class="btn btn-default" ng-click="cancelServiceDateAndTimeUpdate()" >Cancel</button>
+					 <button class="btn btn-primary" ng-click="updateServiceDateAndTime()" ><bean:message key="tickler.view.date.set" bundle="ui"/></button>
+					 <button class="btn btn-default" ng-click="cancelServiceDateAndTimeUpdate()" ><bean:message key="global.cancel" bundle="ui"/></button>
 				</td>
   			</tr>
   			<tr>
-  				<td><strong>Created By:</strong></td>
+  				<td><strong><bean:message key="tickler.view.createdBy" bundle="ui"/>:</strong></td>
   				<td>{{tickler.creatorName}}</td>
   			</tr>
   			<tr>
-  				<td ng-show="!showPriorityFormControl"><strong>Priority:<strong> </td>
+  				<td ng-show="!showPriorityFormControl"><strong><bean:message key="tickler.view.priority" bundle="ui"/>:<strong> </td>
   				<td ng-show="!showPriorityFormControl">{{tickler.priority}}  <span ng-show="ticklerWriteAccess" class="glyphicon glyphicon-pencil" ng-click="editPriority()"></span></td>
   				<td ng-show="showPriorityFormControl" colspan="2">
   						 <div class="form-group">
     <div class="input-group">
       <div class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="cancelPriorityUpdate()"></span></div>
       
-  					 <input type="text" typeahead-on-select="updatePriority($item, $model, $label)" placeholder="Priority" ng-model="ticklerUpdate.priority" typeahead="p for p in priorities | filter:$viewValue" class="form-control">
+  					 <input type="text" typeahead-on-select="updatePriority($item, $model, $label)" placeholder="<bean:message key="tickler.view.priority" bundle="ui"/>" ng-model="ticklerUpdate.priority" typeahead="p for p in priorities | filter:$viewValue" class="form-control">
   					  </div></div>
   				</td>
   			</tr>
   			<tr>
-  				<td ng-show="!showStatusFormControl"><strong>Status:<strong> </td>
+  				<td ng-show="!showStatusFormControl"><strong><bean:message key="tickler.view.status" bundle="ui"/>:<strong> </td>
   				<td ng-show="!showStatusFormControl">{{tickler.statusName}}  <span ng-show="ticklerWriteAccess" class="glyphicon glyphicon-pencil" ng-click="editStatus()"></span></td>
   				<td ng-show="showStatusFormControl" colspan="2">
   				 <div class="form-group">
@@ -112,17 +112,17 @@
   				</td>
   			</tr>  			
   			<tr>
-  				<td><strong>Program:</strong></td>
+  				<td><strong><bean:message key="tickler.view.program" bundle="ui"/>:</strong></td>
   				<td>{{tickler.program != null && tickler.program.name || 'N/A'}}</td>
   			</tr>
   			<tr>
-  				<td><strong>Note:</strong></td>
+  				<td><strong><bean:message key="tickler.view.note" bundle="ui"/>:</strong></td>
   				<td>{{ticklerNote != null && 'Rev:'+ticklerNote.revision || 'N/A'}}</td>
   			</tr>
   			<tr>
-  				<td><strong>Lab:</strong></td>
-  				<td ng-if="tickler.ticklerLinks == null || tickler.ticklerLinks.length == 0">N/A</td>
-  				<td ng-if="tickler.ticklerLinks != null"><a target="lab" href="{{tickler.ticklerLinks | ticklerLink}}">ATT</a></td>
+  				<td><strong><bean:message key="tickler.view.lab" bundle="ui"/>:</strong></td>
+  				<td ng-if="tickler.ticklerLinks == null || tickler.ticklerLinks.length == 0"><bean:message key="tickler.view.lab.none" bundle="ui"/></td>
+  				<td ng-if="tickler.ticklerLinks != null"><a target="lab" href="{{tickler.ticklerLinks | ticklerLink}}"><bean:message key="tickler.view.lab.attachment" bundle="ui"/></a></td>
   				
   			</tr>
   		</table>
@@ -131,7 +131,7 @@
     
   <div class="row">
   	<div class="col-xs-12">
-  		<strong><span  ng-click="showComments = !showComments">Comments</span> ({{tickler.ticklerComments != null && tickler.ticklerComments.length || 0}}) <span class="glyphicon glyphicon-pencil" ng-show="ticklerWriteAccess" ng-click="addComment()"></span></strong>
+  		<strong><span  ng-click="showComments = !showComments"><bean:message key="tickler.view.comments" bundle="ui"/></span> ({{tickler.ticklerComments != null && tickler.ticklerComments.length || 0}}) <span class="glyphicon glyphicon-pencil" ng-show="ticklerWriteAccess" ng-click="addComment()"></span></strong>
 		<div ng-if="showComments">
 			
 	<div class="form-group" ng-show="showCommentFormControl">
@@ -157,7 +157,7 @@
   
     <div class="row">
   	<div class="col-xs-12">
-  		<strong ng-click="showUpdates = !showUpdates">Updates ({{tickler.ticklerUpdates != null && tickler.ticklerUpdates.length || 0}})</strong>
+  		<strong ng-click="showUpdates = !showUpdates"><bean:message key="tickler.view.updates" bundle="ui"/> ({{tickler.ticklerUpdates != null && tickler.ticklerUpdates.length || 0}})</strong>
   		<div ng-if="showUpdates">
   			<hr ng-if="tickler.ticklerUpdates == null || tickler.ticklerUpdates.length == 0"/>
 	  		<table ng-if="tickler.ticklerUpdates != null && tickler.ticklerUpdates.length > 0" class="table">
@@ -183,12 +183,12 @@
     
 -->
 	<div class="pull-left">
-	<button class="btn btn-warning" ng-click="completeTickler()" ng-show="ticklerWriteAccess">Complete</button>
-	<button class="btn btn-danger" ng-click="deleteTickler()" ng-show="ticklerWriteAccess"><span class="glyphicon glyphicon-trash"></span>Delete</button>
+	<button class="btn btn-warning" ng-click="completeTickler()" ng-show="ticklerWriteAccess"><bean:message key="tickler.view.complete" bundle="ui"/></button>
+	<button class="btn btn-danger" ng-click="deleteTickler()" ng-show="ticklerWriteAccess"><span class="glyphicon glyphicon-trash"></span><bean:message key="global.delete" bundle="ui"/></button>
 </div>
-	<button class="btn btn-primary" ng-click="saveChanges()" ng-show="ticklerWriteAccess">Save Changes</button>
-	<button class="btn btn-primary" ng-click="printTickler()">Print</button>
-    <button class="btn btn-default" ng-click="close()">Close</button>
+	<button class="btn btn-primary" ng-click="saveChanges()" ng-show="ticklerWriteAccess"><bean:message key="tickler.view.save" bundle="ui"/></button>
+	<button class="btn btn-primary" ng-click="printTickler()"><bean:message key="global.print" bundle="ui"/></button>
+    <button class="btn btn-default" ng-click="close()"><bean:message key="global.close" bundle="ui"/></button>
 </div>
 
 

@@ -44,25 +44,25 @@
     
 <div class="row">
   <div class="col-xs-2">
-    <input ng-model="search.serviceStartDate" type="text" id="serviceStartDate" name="serviceStartDate" class="form-control" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data.isOpen" ng-click="data.isOpen = true" placeholder="Service Start Date">
+    <input ng-model="search.serviceStartDate" type="text" id="serviceStartDate" name="serviceStartDate" class="form-control" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data.isOpen" ng-click="data.isOpen = true" placeholder="<bean:message key="tickler.list.serviceStartDate" bundle="ui"/>">
   </div>
    <div class="col-xs-2">
-    <input ng-model="search.serviceEndDate" type="text" id="serviceEndDate" name="serviceEndDate" class="form-control" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data2.isOpen" ng-click="data2.isOpen = true" placeholder="Service End Date">
+    <input ng-model="search.serviceEndDate" type="text" id="serviceEndDate" name="serviceEndDate" class="form-control" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data2.isOpen" ng-click="data2.isOpen = true" placeholder="<bean:message key="tickler.list.serviceEndDate" bundle="ui"/>">
   </div>
   <div class="col-xs-2">
 	  <select ng-model="search.status" name="status" id="status" class="form-control" >
-	 	<option value="">Status</option>
-	 	<option value="A">Active</option>
-	 	<option value="C">Completed</option>
-	 	<option value="D">Deleted</option>
+	 	<option value=""><bean:message key="tickler.list.status" bundle="ui"/></option>
+	 	<option value="A"><bean:message key="tickler.list.status.actice" bundle="ui"/></option>
+	 	<option value="C"><bean:message key="tickler.list.status.completed" bundle="ui"/></option>
+	 	<option value="D"><bean:message key="tickler.list.status.deleted" bundle="ui"/></option>
 	  </select>     
   </div>
   <div class="col-xs-2">
 	  <select ng-model="search.priority" name="priority" id="priority" class="form-control" ng-init="search.priority=''">
-	   	<option value="">Priority</option>
-	   	<option value="Normal">Normal</option>
-	   	<option value="High">High</option>
-	   	<option value="Low">Low</option>
+	   	<option value=""><bean:message key="tickler.list.priority" bundle="ui"/></option>
+	   	<option value="Normal"><bean:message key="tickler.list.priority.normal" bundle="ui"/></option>
+	   	<option value="High"><bean:message key="tickler.list.priority.high" bundle="ui"/></option>
+	   	<option value="Low"><bean:message key="tickler.list.priority.low" bundle="ui"/></option>
 	  </select>           
   </div> 
 </div>
@@ -74,19 +74,19 @@
   <div class="col-xs-2">
   <select ng-model="search.taskAssignedTo" name="taskAssignedTo" id="taskAssignedTo" class="form-control"
             	 	    ng-model="search.taskAssignedTo" data-ng-options="a.providerNo as a.name for a in providers" ng-init="search.taskAssignedTo=''">
-             	  	 <option value="">Assignee</option> 	
+             	  	 <option value=""><bean:message key="tickler.list.assignee" bundle="ui"/></option> 	
 					</select>
   </div>
    <div class="col-xs-2">
  <select ng-model="search.creator" name="creator" id="creator" class="form-control"
             	 	    ng-model="search.creator" data-ng-options="a.providerNo as a.name for a in providers" ng-init="search.creator=''">
-             	  	 <option value="">Creator</option> 	
+             	  	 <option value=""><bean:message key="tickler.list.creator" bundle="ui"/></option> 	
 					</select>
   </div>
   <div class="col-xs-2">
  					<select ng-model="search.mrp" name="mrp" id="mrp" class="form-control"
             	 	    ng-model="search.mrp" data-ng-options="a.providerNo as a.name for a in providers" ng-init="search.mrp=''">
-             	  	 <option value="">All MRPs</option> 	
+             	  	 <option value=""><bean:message key="tickler.list.allMRP" bundle="ui"/></option> 	
 					</select>
   </div>
   
@@ -96,8 +96,8 @@
 
 <div class="row">
   <div class="col-xs-2">
-<button class="btn btn-primary" type="button" ng-click="doSearch()" >Search</button>
-<button class="btn btn-default" type="button" ng-click="clear()" >Clear</button>
+<button class="btn btn-primary" type="button" ng-click="doSearch()" ><bean:message key="global.search" bundle="ui"/></button>
+<button class="btn btn-default" type="button" ng-click="clear()" ><bean:message key="global.clear" bundle="ui"/></button>
 </div>
 </div>        	
 </form>
@@ -112,33 +112,33 @@
  			<input type="checkbox" ng-model="tickler.checked" >
  		</td>
     	<td ng-show="ticklerWriteAccess" >
-    		<a ng-click="editTickler(tickler)" class="hand-hover">Edit</a> 		
+    		<a ng-click="editTickler(tickler)" class="hand-hover"><bean:message key="global.edit" bundle="ui"/></a> 		
     	</td>
     	<td ng-show="!ticklerWriteAccess" >
-    		<a ng-click="editTickler(tickler)" class="hand-hover">View</a> 		
+    		<a ng-click="editTickler(tickler)" class="hand-hover"><bean:message key="global.view" bundle="ui"/></a> 		
     	</td>
-		<td data-title="'Demographic Name'">
+		<td data-title="'<bean:message key="tickler.list.header.patientName" bundle="ui"/>'">
               {{tickler.demographicName}}
         </td>
-   	    <td data-title="'Creator'">
+   	    <td data-title="'<bean:message key="tickler.list.header.creator" bundle="ui"/>'">
               {{tickler.creatorName}}
   	    </td>
-  	    <td data-title="'Service Date'" class="text-center">
+  	    <td data-title="'<bean:message key="tickler.list.header.serviceDate" bundle="ui"/>'" class="text-center">
               {{tickler.serviceDate | date: 'yyyy-MM-dd'}}
 		</td>
-		<td data-title="'Creation Date'" class="text-center">
+		<td data-title="'<bean:message key="tickler.list.header.creationDate" bundle="ui"/>'" class="text-center">
               {{tickler.updateDate | date: 'yyyy-MM-dd HH:mm'}}
         </td>	
-		<td data-title="'Priority'" class="text-center">
+		<td data-title="'<bean:message key="tickler.list.header.priority" bundle="ui"/>'" class="text-center">
               {{tickler.priority}}
         </td>        
-		<td data-title="'Task Assigned To'">
+		<td data-title="'<bean:message key="tickler.list.header.taskAssignedTo" bundle="ui"/>'">
               {{tickler.taskAssignedToName}}
         </td>        
-		<td data-title="'Status'" class="text-center">
+		<td data-title="'<bean:message key="tickler.list.header.status" bundle="ui"/>'" class="text-center">
               {{tickler.statusName}}
         </td>        
-		<td data-title="'Message'">
+		<td data-title="'<bean:message key="tickler.list.header.message" bundle="ui"/>'">
 		 {{tickler.message | cut:true:50}}
 		 	<span ng-if="tickler.ticklerLinks != null">
 		 		<a target="lab" href="{{tickler.ticklerLinks | ticklerLink}}">ATT</a>
@@ -155,10 +155,10 @@
 
     <tfoot ng-show="ticklerWriteAccess">   
         <tr><td colspan="11" class="white">
-        	<a ng-click="checkAll()">Check All</a> - <a ng-click="checkNone()">Check None</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            <button class="btn btn-default" name="button" type="button" ng-click="addTickler()">Add Tickler</button>
-             <button class="btn btn-default" type="button" ng-click="completeTicklers()">Complete</button>
-             <button class="btn btn-default"  type="button" ng-click="deleteTicklers()">Delete</button>
+        	<a ng-click="checkAll()"><bean:message key="tickler.list.checkAll" bundle="ui"/></a> - <a ng-click="checkNone()"><bean:message key="tickler.list.checkNone" bundle="ui"/></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            <button class="btn btn-default" name="button" type="button" ng-click="addTickler()"><bean:message key="tickler.list.add" bundle="ui"/></button>
+             <button class="btn btn-default" type="button" ng-click="completeTicklers()"><bean:message key="tickler.list.complete" bundle="ui"/></button>
+             <button class="btn btn-default"  type="button" ng-click="deleteTicklers()"><bean:message key="tickler.list.delete" bundle="ui"/></button>
            </td>
        </tr>
    </tfoot>

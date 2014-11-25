@@ -25,22 +25,22 @@
 --%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <div class="modal-header">
-    <h4>Tickler Note</h4>
+    <h4><bean:message key="tickler.note.title" bundle="ui"/></h4>
 </div>  
 <div class="modal-body">
    	<form>
 		
 			<textarea style="width:100%;height:80%" ng-model="ticklerNote.note"></textarea>
 			<span ng-show="ticklerNote.revision>0">
-			Date: <span>{{ticklerNote.observationDate | date : 'yyyy-MM-dd'}}</span> rev <a  target="note_history" href="../CaseManagementEntry.do?method=notehistory&noteId={{ticklerNote.noteId}}"><span>{{ticklerNote.revision}}</span></a><br>
-			Editor: <span>{{ticklerNote.editor}}</span>
+			<bean:message key="tickler.note.date" bundle="ui"/>: <span>{{ticklerNote.observationDate | date : 'yyyy-MM-dd'}}</span> <bean:message key="tickler.note.revision" bundle="ui"/> <a  target="note_history" href="../CaseManagementEntry.do?method=notehistory&noteId={{ticklerNote.noteId}}"><span>{{ticklerNote.revision}}</span></a><br>
+			<bean:message key="tickler.note.editor" bundle="ui"/>: <span>{{ticklerNote.editor}}</span>
 			</span>
 	</form>
 
 </div>
 <div class="modal-footer">
-    <button class="btn" ng-click="save()">Save</button>
-    <button class="btn" ng-click="close()">Close</button>
+    <button class="btn" ng-click="save()"><bean:message key="global.save" bundle="ui"/></button>
+    <button class="btn" ng-click="close()"><bean:message key="global.close" bundle="ui"/></button>
 </div>
 
 
