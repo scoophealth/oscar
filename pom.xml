@@ -341,6 +341,16 @@
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext-rtf</artifactId>
 			<version>2.1.7</version>
+			<exclusions>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcprov-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk14</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- json -->
@@ -370,6 +380,16 @@
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 			<version>4.1.2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcprov-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk14</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
                 <dependency>
 			<groupId>net.sf.jasperreports</groupId>
@@ -787,14 +807,14 @@
 			<version>20111111</version>
 		</dependency>
 	        <dependency>
-                        <groupId>bouncycastle</groupId>
-                        <artifactId>bcmail-jdk15</artifactId>
-                        <version>140</version>
+                        <groupId>org.bouncycastle</groupId>
+                        <artifactId>bcmail-jdk15on</artifactId>
+                        <version>1.51</version>
                 </dependency>
                 <dependency>
-                        <groupId>bouncycastle</groupId>
-                        <artifactId>bcprov-jdk15</artifactId>
-                        <version>140</version>
+                        <groupId>org.bouncycastle</groupId>
+                        <artifactId>bcprov-jdk15on</artifactId>
+                        <version>1.51</version>
                 </dependency>
 
 		<!-- AXIS2 (for OLIS) -->
@@ -953,6 +973,12 @@
 			<groupId>org.marc.shic</groupId>
 			<artifactId>shic-core</artifactId>
 			<version>1.0.7</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk15</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.marc.shic</groupId>
@@ -1024,6 +1050,12 @@
                 <groupId>org.oscarehr.integration.ebs</groupId>
                 <artifactId>ebs-client</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
+                <exclusions>
+						<exclusion>
+							<groupId>org.bouncycastle</groupId>
+							<artifactId>bcprov-jdk16</artifactId>
+						</exclusion>
+                </exclusions>
         </dependency>
         <dependency>
                 <groupId>org.oscarehr.integration.ebs</groupId>
