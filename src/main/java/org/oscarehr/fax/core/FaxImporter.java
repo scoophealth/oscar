@@ -88,7 +88,7 @@ public class FaxImporter {
 	                	HttpEntity httpEntity = response.getEntity();
 	                	String content = EntityUtils.toString(httpEntity);
 	                
-	                	mGet.releaseConnection();
+	                	
 	                	log.info("CONTENT: " + content);
 	                	ObjectMapper mapper = new ObjectMapper();
 	                	
@@ -104,12 +104,20 @@ public class FaxImporter {
 	                	}
 	                	
 	                }
+	                
+	                mGet.releaseConnection();
 	            } catch (ClientProtocolException e) {
 	            	log.error("HTTP WS CLIENT ERROR", e);
 	            
 	            } catch (IOException e) {
 	            	log.error("IO ERROR", e);
-	            }
+	            	
+	            } catch( Exception e ) {
+	            	log.error("UNKNOWN ERROR ",e);
+	            }				
+				finally {
+					mGet.releaseConnection();
+				}
 				
 			
 			}
