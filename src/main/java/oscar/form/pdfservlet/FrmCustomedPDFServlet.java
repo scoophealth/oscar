@@ -104,8 +104,9 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 					writer.println("<script>alert('Error: No fax number found!');window.close();</script>");
 				} else {
 		                	// write to file
-		                	String pdfFile = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") +"/prescription_"+req.getParameter("pdfId")+".pdf";
-		                	FileOutputStream fos = new FileOutputStream(pdfFile);
+		                	String pdfFile = "prescription_"+req.getParameter("pdfId")+".pdf";
+		                	String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "/";
+		                	FileOutputStream fos = new FileOutputStream(path+pdfFile);
 		                	baosPDF.writeTo(fos);
 		                	fos.close();
 
@@ -121,7 +122,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			                	
 			                	if( faxConfig.getFaxNumber().equals(faxNumber) ) {
 			                		
-			                		PdfReader pdfReader = new PdfReader(pdfFile);
+			                		PdfReader pdfReader = new PdfReader(path+pdfFile);
 			                		
 			                		faxJob = new FaxJob();
 			                		faxJob.setDestination(faxNo);
@@ -404,7 +405,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 					Image img = Image.getInstance(this.imgPath);
 					// image, image_width, 0, 0, image_height, x, y
 					//         131, 55, 375, 75, 0
-					cb.addImage(img, 207, 0, 0, 40, 75f, endPara-30f);
+					cb.addImage(img, 157, 0, 0, 40, 150f, endPara-30f);
 				}
 
 				// Render doctor name

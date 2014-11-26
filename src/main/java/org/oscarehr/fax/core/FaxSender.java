@@ -43,6 +43,8 @@ import org.oscarehr.common.model.FaxJob;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
+
 public class FaxSender {
 	
 	private static String PATH = "/fax";
@@ -75,13 +77,25 @@ public class FaxSender {
 				
 				log.info("SENDING " + faxJobList.size() + " FAXES");
 				
+				String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "/";
+				String filename;
+				int separator;
+				
 				for( FaxJob faxJob : faxJobList ) {
 					try {
 						client.header("user", faxJob.getUser());
 						client.header("passwd", faxConfig.getFaxPasswd());
 						
 						ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
-						FileUtils.copyFile(new File(faxJob.getFile_name()), pdfStream);
+						
+						if( (separator = faxJob.getFile_name().lastIndexOf("/")) > -1 ) {
+							filename = faxJob.getFile_name().substring(separator+1);
+						}
+						else {
+							filename = faxJob.getFile_name();
+						}
+						
+						FileUtils.copyFile(new File(path+filename), pdfStream);
 						
 						String base64 = Base64Utility.encode(pdfStream.toByteArray());
 						faxJob.setDocument(base64);
