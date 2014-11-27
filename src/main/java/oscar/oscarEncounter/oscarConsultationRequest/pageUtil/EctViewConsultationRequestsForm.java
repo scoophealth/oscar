@@ -26,6 +26,7 @@
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import org.apache.struts.action.ActionForm;
+import org.oscarehr.common.dao.ConsultationRequestDao;
 
 public final class EctViewConsultationRequestsForm extends ActionForm {
    
@@ -148,6 +149,22 @@ public final class EctViewConsultationRequestsForm extends ActionForm {
       this.searchDate = searchDate;
    }
    
+	public Integer getOffset() {
+		return offset;
+	}
+	
+	public void setOffset(Integer offset) {
+		this.offset = offset;
+	}
+	
+	public Integer getLimit() {
+		return limit;
+	}
+	
+	public void setLimit(Integer limit) {
+		this.limit = limit;
+	}
+
    String sendTo;
    String currentTeam;
    
@@ -157,4 +174,6 @@ public final class EctViewConsultationRequestsForm extends ActionForm {
    String orderby;
    String desc;
    String searchDate = null;
+   Integer offset;
+   Integer limit = ConsultationRequestDao.DEFAULT_CONSULT_REQUEST_RESULTS_LIMIT;
 }
