@@ -130,31 +130,52 @@ public class HRMReport {
 	}
 
 	public String getAddressLine1() {
-		return demographics.getAddress().get(0).getStructured().getLine1();
+		if(demographics.getAddress() != null && !demographics.getAddress().isEmpty()) {
+			return demographics.getAddress().get(0).getStructured().getLine1();
+		}
+		return "";
 	}
 
 	public String getAddressLine2() {
-		return demographics.getAddress().get(0).getStructured().getLine2();
+		if(demographics.getAddress() != null && !demographics.getAddress().isEmpty()) {
+			return demographics.getAddress().get(0).getStructured().getLine2();
+		}
+		return "";
 	}
 
 	public String getAddressCity() {
-		return demographics.getAddress().get(0).getStructured().getCity();
+		if(demographics.getAddress() != null && !demographics.getAddress().isEmpty()) {
+			return demographics.getAddress().get(0).getStructured().getCity();
+		}
+		return "";
 	}
 
 	public String getCountrySubDivisionCode() {
-		return demographics.getAddress().get(0).getStructured().getCountrySubdivisionCode();
+		if(demographics.getAddress() != null && !demographics.getAddress().isEmpty()) {
+			return demographics.getAddress().get(0).getStructured().getCountrySubdivisionCode();
+		} 
+		return "";
 	}
 
 	public String getPostalCode() {
-		return demographics.getAddress().get(0).getStructured().getPostalZipCode().getPostalCode();
+		if(demographics.getAddress() != null && !demographics.getAddress().isEmpty()) {
+			return demographics.getAddress().get(0).getStructured().getPostalZipCode().getPostalCode();
+		}
+		return "";
 	}
 
 	public String getZipCode() {
-		return demographics.getAddress().get(0).getStructured().getPostalZipCode().getZipCode();
+		if(demographics.getAddress() != null && !demographics.getAddress().isEmpty()) {
+			return demographics.getAddress().get(0).getStructured().getPostalZipCode().getZipCode();
+		}
+		return "";
 	}
 
 	public String getPhoneNumber() {
-		return demographics.getPhoneNumber().get(0).getContent().get(0).getValue();
+		if(demographics.getAddress() != null && !demographics.getAddress().isEmpty()) {
+			return demographics.getPhoneNumber().get(0).getContent().get(0).getValue();
+		}
+		return "";
 	}
 
 	public String getEnrollmentStatus() {
