@@ -1,3 +1,8 @@
+.list-group-item-head{
+   padding-top:4px; 
+   padding-bottom:4px;
+}
+
 .list-group-item.danger {
    background-color: #f2dede;
    border-color: #ebccd1;
@@ -29,10 +34,43 @@
  }
  
  .more-tab-highlight {
-  background-color: #dff0d8;
-   border-color: #d6e9c6;
+	background-color: #dff0d8;
+	border-color: #d6e9c6;
  }
  
 .list-patients{
 	overflow:hidden;
+}
+
+.list-patient-date-select{
+	width:75px;
+	border:0px;
+	font-size:14px;
+	font-weight:bold;
+	padding:0px;
+}
+
+#listDate{
+	width:100%;
+	text-align:left;
+}
+
+.list-patient-date-cell{
+	text-align:center;
+}
+
+#listDate h6, #listDate a{
+	color:#333;
+	padding:0px;
+	margin:0px;
+	font-weight:bold
+}
+
+#listDate h6 a{
+	color:#727272;
+}
+
+#listDate a:hover, #listDate a:active, #listDate a:focus {
+	color:#000000;
+	text-decoration:none;
 }

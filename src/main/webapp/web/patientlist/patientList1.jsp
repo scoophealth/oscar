@@ -24,6 +24,33 @@
 
 --%>
 <div ng-controller="PatientListAppointmentListCtrl" class="list-patients">
+
+<div class="list-group-item list-group-item-head">
+	<table id="listDate">
+	<thead>
+	<tr>
+	<th>
+		<h6><a href="javascript:void(0)" ng-click="switchDay(-1)">
+		 <span class="glyphicon glyphicon-chevron-left"></span>
+		</a></h6>
+	</th>
+	<th class="list-patient-date-cell">
+		<span class="glyphicon glyphicon-calendar"></span>
+				
+		<a href="javascript:void(0)" ng-model="appointmentDate"  datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="appointmentDatePicker" datepicker-options="dateOptions" 
+		ng-change="changeApptDate()" ng-click="appointmentDatePicker = true" ng-required="true" bundle="ui" title="{{appointmentDate | date:'fullDate' }}">{{appointmentDate | date:'yyyy-MM-dd' }}</a>
+		
+	</th>
+	<th style="text-align:right" >
+		<h6><a href="javascript:void(0)" ng-click="switchDay(+1)">
+		 <span class="glyphicon glyphicon-chevron-right"></span>
+		</a></h6>
+	</th>
+	</tr>
+	</thead>
+	</table>
+</div>
+
 <a ng-repeat="patient in patients | offset:currentPage*pageSize | limitTo:pageSize | filter:query"
 	class="list-group-item default hand-hover" ng-click="goToRecord(patient)"  ng-style="getAppointmentStyle(patient)">
 	<!-- 
