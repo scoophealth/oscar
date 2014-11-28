@@ -38,7 +38,7 @@ import oscar.login.DBHelp;
 public class PregnancyFormsDao {
 
 	public static Integer getLatestFormIdByPregnancy(Integer episodeId) {
-		String sql = "SELECT id from formONAREnhanced WHERE episodeId="+episodeId+" ORDER BY formEdited DESC";                
+		String sql = "SELECT id from formONAREnhancedRecord WHERE episodeId="+episodeId+" ORDER BY formEdited DESC";                
         ResultSet rs = DBHelp.searchDBRecord(sql);
         try {
 	        if(rs.next()) {
@@ -53,7 +53,7 @@ public class PregnancyFormsDao {
 	}
 	
 	public static Integer getLatestFormIdByDemographicNo(Integer demographicNo) {
-		String sql = "SELECT id from formONAREnhanced WHERE demographic_no="+demographicNo+" ORDER BY formEdited DESC";                
+		String sql = "SELECT id from formONAREnhancedRecord WHERE demographic_no="+demographicNo+" ORDER BY formEdited DESC";                
         ResultSet rs = DBHelp.searchDBRecord(sql);
         try {
 	        if(rs.next()) {

@@ -426,7 +426,7 @@ INSERT INTO encounterForm VALUES ('Growth 0-36m', '../form/formGrowth0_36.jsp?de
 INSERT INTO encounterForm VALUES ('Letterhead', '../form/formConsultant.jsp?demographic_no=', 'formConsult', 0);
 INSERT INTO `encounterForm`(`form_name`,`form_value`,`form_table`,`hidden`) VALUES ('CHF','../form/formchf.jsp?demographic_no=','formchf',0);
 INSERT INTO `encounterForm`(`form_name`,`form_value`,`form_table`,`hidden`) VALUES ('Health Passport', '../form/formbchp.jsp?demographic_no=', 'formBCHP', 0);
-insert into encounterForm values ('ON AR Enhanced','../form/formonarenhanced.jsp?demographic_no=','formONAREnhanced',0);
+insert into encounterForm values ('ON AR Enhanced','../form/formonarenhanced.jsp?demographic_no=','formONAREnhancedRecord',0);
 INSERT INTO `encounterForm` (`form_name`, `form_value`, `form_table`, `hidden`) VALUES ('HMP Form','../form/HSFOForm2.do?demographic_no=','form_hsfo2_visit',1);
 INSERT INTO encounterForm VALUES ('Student Intake Hx','../form/formIntakeHx.jsp?demographic_no=','formIntakeHx', '0');
 insert into encounterForm (`form_name`, `form_value`, `form_table`, `hidden`) values('Patient Encounter Worksheet','../form/patientEncounterWorksheet.jsp?demographic_no=','',0);
