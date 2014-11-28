@@ -7636,7 +7636,7 @@ CREATE TABLE `log` (
   INDEX `content` (`content`),
   `contentId` varchar(80),
   INDEX `contentId` (`contentId`),
-  `ip` varchar(30),
+  `ip` varchar(64),
   `demographic_no` int(10),
   INDEX `demographic_no` (`demographic_no`),
   `data` text,
@@ -11267,7 +11267,7 @@ create table InstitutionDepartment (
 CREATE TABLE `casemgmt_note_lock` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `session_id` varchar(255),
-  `ip_address` varchar(15),
+  `ip_address` varchar(64),
   `provider_no` varchar(6),
   `note_id` int(10),
   `demographic_no` int(10),
