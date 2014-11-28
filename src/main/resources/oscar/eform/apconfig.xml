@@ -349,12 +349,12 @@
 <!-- Prenatal information -->
     <databaseap>
         <ap-name>onGTPAL</ap-name>
-        <ap-sql>SELECT  CONCAT('G',c_gravida,' T', c_term,' P' , c_prem,' A', c_abort ,' L', c_living) as onGTPAL FROM formONAREnhanced f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
+        <ap-sql>SELECT  CONCAT('G',c_gravida,' T', c_term,' P' , c_prem,' A', c_abort ,' L', c_living) as onGTPAL FROM formONAREnhancedRecord f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
         <ap-output>${onGTPAL}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>onEDB</ap-name>
-        <ap-sql>SELECT  c_finalEDB FROM formONAREnhanced f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
+        <ap-sql>SELECT  c_finalEDB FROM formONAREnhancedRecord f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
         <ap-output>${c_finalEDB}</ap-output>
     </databaseap>
     <databaseap>

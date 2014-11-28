@@ -114,7 +114,7 @@ public class FormsDao {
 	
 	@NativeSql("formONAREnhanced")
 	public List<Integer> select_maxformar_id2(String dateStart, String dateEnd) {
-		String sql = "select max(ID) from formONAREnhanced where c_finalEDB >= ? and c_finalEDB <= ? group by demographic_no";
+		String sql = "select max(ID) from formONAREnhancedRecord where c_finalEDB >= ? and c_finalEDB <= ? group by demographic_no";
 		Query query = entityManager.createNativeQuery(sql);
 		query.setParameter(1, dateStart);
 		query.setParameter(2, dateEnd);
