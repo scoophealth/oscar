@@ -178,7 +178,7 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
 
         	}
             var modalInstance = $modal.open({
-            	templateUrl: 'tickler/ticklerNote.html',
+            	templateUrl: 'tickler/ticklerNote.jsp',
                 controller: 'TicklerNoteController',
                 resolve: {
                     ticklerNote: function () {
@@ -198,7 +198,7 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
     $scope.showComments = function(tickler){
     	$scope.tickler = tickler;
         var modalInstance = $modal.open({
-        	templateUrl: 'tickler/ticklerComments.html',
+        	templateUrl: 'tickler/ticklerComments.jsp',
             controller: 'TicklerCommentController',
             resolve: {
                 tickler: function () {

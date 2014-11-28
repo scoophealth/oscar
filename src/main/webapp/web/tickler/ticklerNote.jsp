@@ -24,12 +24,26 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<div class="modal-header">
+    <h4>Tickler Note</h4>
+</div>  
+<div class="modal-body">
+   	<form>
+		
+			<textarea style="width:100%;height:80%" ng-model="ticklerNote.note"></textarea>
+			<span ng-show="ticklerNote.revision>0">
+			Date: <span>{{ticklerNote.observationDate | date : 'yyyy-MM-dd'}}</span> rev <a  target="note_history" href="../CaseManagementEntry.do?method=notehistory&noteId={{ticklerNote.noteId}}"><span>{{ticklerNote.revision}}</span></a><br>
+			Editor: <span>{{ticklerNote.editor}}</span>
+			</span>
+	</form>
 
-<p class="info">
-	<a class="hand-hover" ng-click="openPopup()"><bean:message key="document.panel" bundle="ui"/></a>&nbsp;<bean:message key="document.popupMessage" bundle="ui"/>
-</p>
+</div>
+<div class="modal-footer">
+    <button class="btn" ng-click="save()">Save</button>
+    <button class="btn" ng-click="close()">Close</button>
+</div>
 
-<p><a ui-sref="dashboard"><bean:message key="global.goToDashboard" bundle="ui"/></a></p>
+
 
 
 
