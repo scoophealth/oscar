@@ -138,5 +138,17 @@
   <measurement type="A1C" typeDesc="A1C" typeDisplayName="A1C" measuringInstrc="">
     <validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />    
   </measurement>
+  
+              <item measurement_type="OPAE" display_name="Opioid Adverse Effects" guideline="" graphable="no" value_name="Opioid Adverse Effects" />
+              <item measurement_type="OPAB" display_name="Opioid Aberrant Behaviour?" guideline="" graphable="no" value_name="Opioid Aberrant Behaviour" />
+              <item measurement_type="OPUS" display_name="Opioid Urine Drug Screen?" guideline="" graphable="no" value_name="Opioid Urine Drug Screen" />
+
+            <item measurement_type="DMOE" display_name="Daily Morphine Equivalent" guideline="200mg watchful dose" graphable="yes" value_name="Daily Morphine Equivalent"  >
+            <ruleset>
+            <rule indicationColor="HIGH">
+                <condition type="getDataAsDouble"  value="&gt; 200"/>
+            </rule>
+            </ruleset>
+			</item>         
     
 </flowsheet>
