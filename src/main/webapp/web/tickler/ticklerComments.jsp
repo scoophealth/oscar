@@ -25,15 +25,15 @@
 --%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <div class="modal-header">
-    <h4>Tickler Comments</h4>
+    <h4><bean:message key="tickler.comments.title" bundle="ui"/></h4>
 </div>  
 <div class="modal-body">
 	<table class="table">
 		<thead>
 			<tr>
-				<th>Provider</th>
-				<th>Update Date</th>
-				<th>Comment</th>
+				<th><bean:message key="tickler.comments.provider" bundle="ui"/></th>
+				<th><bean:message key="tickler.comments.updateDate" bundle="ui"/></th>
+				<th><bean:message key="tickler.comments.comment" bundle="ui"/></th>
 			</tr>
 		</thead>
 		<tr ng-repeat="c in tickler.ticklerComments | orderBy:'updateDate':true">
@@ -45,7 +45,7 @@
 
 </div>
 <div class="modal-footer">
-    <button class="btn" ng-click="close()">Close</button>
+    <button class="btn" ng-click="close()"><bean:message key="global.close" bundle="ui"/></button>
 </div>
 
 
