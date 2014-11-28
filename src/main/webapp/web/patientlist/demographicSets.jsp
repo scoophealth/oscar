@@ -25,11 +25,16 @@
 --%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
-<p class="info">
-	<a class="hand-hover" ng-click="openPopup()"><bean:message key="document.panel" bundle="ui"/></a>&nbsp;<bean:message key="document.popupMessage" bundle="ui"/>
-</p>
+<div ng-controller="PatientListDemographicSetCtrl">
+<form class="form-horizontal">
+<select ng-model="filter.name" class="form-control" ng-change="changeMoreTab(currentmoretab.id,filter)" ng-init="filter.name=''">
+	<option value=""><bean:message key="patientList.demographicSets.select" bundle="ui"/></option>
+	<option ng-repeat="s in sets" value="{{s}}">{{s}}</option> 
+</select>
+</form>
 
-<p><a ui-sref="dashboard"><bean:message key="global.goToDashboard" bundle="ui"/></a></p>
-
-
+<a ng-repeat="patient in patients | filter:query" ng-click="goToRecord(patient)" class="list-group-item " class="default">	
+	<h5 class="list-group-item-heading">{{patient.name}}</h5>
+</a>
+</div>
 

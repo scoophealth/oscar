@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <div class="modal-body">
 	<div class="row">
 		<div class="col-xs-12">

@@ -216,7 +216,7 @@ public class PersonaService extends AbstractServiceImpl {
 		response.getPatientListTabItems().add(new PatientList(0,bundle.getString("patientList.tab.appts"),"../ws/rs/schedule/day/today","patientlist/patientList1.jsp","GET"));
 		response.getPatientListTabItems().add(new PatientList(1,bundle.getString("patientList.tab.recent"),"../ws/rs/providerService/getRecentDemographicsViewed?startIndex=0&itemsToReturn=100","patientlist/recent.jsp","GET"));
 		
-		response.getPatientListMoreTabItems().add(new PatientList(0,bundle.getString("patientList.tab.patientSets"),"../ws/rs/reporting/demographicSets/patientList","patientlist/demographicSets.html","POST"));
+		response.getPatientListMoreTabItems().add(new PatientList(0,bundle.getString("patientList.tab.patientSets"),"../ws/rs/reporting/demographicSets/patientList","patientlist/demographicSets.jsp","POST"));
 		response.getPatientListMoreTabItems().add(new PatientList(1,bundle.getString("patientList.tab.caseload"),null,"patientlist/program.jsp",null));
 		
 		return response;

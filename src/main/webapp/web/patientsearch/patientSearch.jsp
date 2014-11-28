@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
 <style>
 input.checkStyle{
@@ -35,18 +36,18 @@ input.checkStyle{
 <div ng-show="demographicReadAccess" >
  			
  		
-<h2>Patient Search</h2>
+<h2><bean:message key="patientsearch.title" bundle="ui"/></h2>
 <div class="row">
 <div class="col-xs-6">
 <form role="form" class="form-inline">  
       <div class="form-group">
         <select ng-model="search.type" ng-change="clearButMaintainSearchType()" style="width:auto;" class="form-control selectWidth" ng-init="search.type='Name'">
-          <option value="Name">Name</option>
-          <option value="Phone">Phone</option>
-          <option value="DOB">Date of Birth</option>
-          <option value="Address">Address</option>
-          <option value="HIN">HIN</option>
-          <option value="ChartNo">Chart No</option>
+          <option value="Name"><bean:message key="patientsearch.type.name" bundle="ui"/></option>
+          <option value="Phone"><bean:message key="patientsearch.type.phone" bundle="ui"/></option>
+          <option value="DOB"><bean:message key="patientsearch.type.dob" bundle="ui"/></option>
+          <option value="Address"><bean:message key="patientsearch.type.address" bundle="ui"/></option>
+          <option value="HIN"><bean:message key="patientsearch.type.hin" bundle="ui"/></option>
+          <option value="ChartNo"><bean:message key="patientsearch.type.chartNo" bundle="ui"/></option>
         </select>
             <div class="btn-group">
     <a class="btn dropdown-toggle" data-toggle="dropdown">
@@ -55,28 +56,28 @@ input.checkStyle{
     </a>
     <ul class="dropdown-menu">
     <li>
-    	<input ng-model="search.active" type="checkbox" class="checkStyle" ng-init="search.active=true"/>&nbsp;Show Active Only
+    	<input ng-model="search.active" type="checkbox" class="checkStyle" ng-init="search.active=true"/>&nbsp;<bean:message key="patientsearch.showActiveOnly" bundle="ui"/>
     	
     </li>
     <li>
-    	<input ng-model="search.integrator" ng-init="search.integrator=false" type="checkbox" class="checkStyle"/>&nbsp;Include Integrator	
+    	<input ng-model="search.integrator" ng-init="search.integrator=false" type="checkbox" class="checkStyle"/>&nbsp;<bean:message key="patientsearch.includeIntegrator" bundle="ui"/>	
     </li>
     <li>
-    	<input ng-model="search.outofdomain" ng-init="search.outofdomain=true" type="checkbox" class="checkStyle"/>&nbsp;Out of Domain	
+    	<input ng-model="search.outofdomain" ng-init="search.outofdomain=true" type="checkbox" class="checkStyle"/>&nbsp;<bean:message key="patientsearch.outOfDomain" bundle="ui"/>	
     </li>
     
     </ul>
     </div>
     
         <input ng-model="search.term" type="text" class="form-control" style="width:auto" placeholder="Search Term" ng-init="search.term=''"/>
-        <button class="btn btn-primary" ng-click="doSearch()">Search</button>
-        <button class="btn" ng-click="doClear()">Clear</button>  
+        <button class="btn btn-primary" ng-click="doSearch()"><bean:message key="global.search" bundle="ui"/></button>
+        <button class="btn" ng-click="doClear()"><bean:message key="global.clear" bundle="ui"/></button>  
         
       </div>
 </form>
 </div>
 <div class="col-xs-6">
-        <button class="btn btn-warning" ng-show="integratorResults != null && integratorResults.total > 0" ng-click="showIntegratorResults()"><span class="glyphicon glyphicon-exclamation-sign"></span>You have remote matches!</button>        
+        <button class="btn btn-warning" ng-show="integratorResults != null && integratorResults.total > 0" ng-click="showIntegratorResults()"><span class="glyphicon glyphicon-exclamation-sign"></span><bean:message key="patientsearch.remoteMatches" bundle="ui"/></button>        
 </div>
 </div>  
                   
@@ -88,31 +89,31 @@ input.checkStyle{
     <tr ng-repeat="patient in $data" ng-mouseover="patient.$selected=true" ng-mouseout="patient.$selected=false"
     	 ng-class="{'active': patient.$selected}"  ng-click="loadRecord(patient.demographicNo)">
  		
-		<td data-title="'ID'" sortable="'DemographicNo'">
+		<td data-title="'<bean:message key="patientsearch.header.id" bundle="ui"/>'" sortable="'DemographicNo'">
               {{patient.demographicNo}}
         </td>
-        <td data-title="'Patient Name'" sortable="'Name'">
+        <td data-title="'<bean:message key="patientsearch.header.name" bundle="ui"/>'" sortable="'Name'">
               {{patient.lastName}}, {{patient.firstName}}
         </td>
-        <td data-title="'Chart #'" sortable="'ChartNo'">
+        <td data-title="'<bean:message key="patientsearch.header.chartNo" bundle="ui"/>'" sortable="'ChartNo'">
               {{patient.chartNo}}
         </td>
-        <td data-title="'Gender'" class="text-center" sortable="'Sex'">
+        <td data-title="'<bean:message key="patientsearch.header.gender" bundle="ui"/>'" class="text-center" sortable="'Sex'">
               {{patient.sex}}
         </td>
-        <td data-title="'DOB'" class="text-center" sortable="'DOB'">
+        <td data-title="'<bean:message key="patientsearch.header.dob" bundle="ui"/>'" class="text-center" sortable="'DOB'">
               {{patient.dob| date: 'yyyy-MM-dd'}}
         </td>
-        <td data-title="'Doctor'" sortable="'ProviderName'">
+        <td data-title="'<bean:message key="patientsearch.header.doctor" bundle="ui"/>'" sortable="'ProviderName'">
               {{patient.providerName}}
         </td>
-        <td data-title="'Roster Status'" class="text-center" sortable="'RS'">
+        <td data-title="'<bean:message key="patientsearch.header.rosterStatus" bundle="ui"/>'" class="text-center" sortable="'RS'">
               {{patient.rosterStatus}}
         </td>
-        <td data-title="'Patient Status'" class="text-center" sortable="'PS'">
+        <td data-title="'<bean:message key="patientsearch.header.patientStatus" bundle="ui"/>'" class="text-center" sortable="'PS'">
               {{patient.patientStatus}}
         </td>	
-        <td data-title="'Phone'" sortable="'Phone'">
+        <td data-title="'<bean:message key="patientsearch.header.phone" bundle="ui"/>'" sortable="'Phone'">
               {{patient.phone}}
         </td>
     </tr>
@@ -130,5 +131,5 @@ input.checkStyle{
 
 
 <div ng-show="demographicReadAccess != null && !demographicReadAccess" >
- 	<h3 class="text-danger"><span class="glyphicon glyphicon-warning-sign"></span>You don't have access to search for patients</h3>
+ 	<h3 class="text-danger"><span class="glyphicon glyphicon-warning-sign"></span><bean:message key="patientsearch.access_denied" bundle="ui"/></h3>
 </div>
