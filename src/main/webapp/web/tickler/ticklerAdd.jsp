@@ -27,7 +27,7 @@
 <form name="ticklerAddForm" novalidate>
 
 <div class="modal-header">
-    <h4>Create a new Tickler</h4>
+    <h4><bean:message key="tickler.add.title" bundle="ui"/></h4>
 </div>  
 <div class="modal-body">
 	<div class="row" ng-show="showErrors === true">
@@ -42,7 +42,7 @@
 		<div class="col-xs-7">
 				<div class="form-group">
 				  <label>Patient:</label>
-				 <input type="text" ng-model="tickler.demographicName" placeholder="Patient" 
+				 <input type="text" ng-model="tickler.demographicName" placeholder="<bean:message key="tickler.add.patient" bundle="ui"/>" 
 				typeahead="pt.demographicNo as pt.name for pt in searchPatients($viewValue)" 
 				typeahead-on-select="updateDemographicNo($item, $model, $label)"
 				class="form-control">
@@ -69,7 +69,7 @@
 		<div class="col-xs-7">
 				<div class="form-group">
 				  <label>Assign to:</label>
-				 <input type="text" ng-model="tickler.taskAssignedToName" placeholder="Provider" 
+				 <input type="text" ng-model="tickler.taskAssignedToName" placeholder="<bean:message key="tickler.add.provider" bundle="ui"/>" 
 				typeahead="pt.providerNo as pt.name for pt in searchProviders($viewValue)" 
 				typeahead-on-select="updateProviderNo($item, $model, $label)"
 				class="form-control">
@@ -80,7 +80,7 @@
 		
 		<div class="col-xs-5">
 		<div class="form-group">
-				  <label>Priority:</label>
+				  <label><bean:message key="tickler.add.priority" bundle="ui"/>:</label>
 				  <select ng-model="tickler.priority" ng-init="tickler.priority='Normal'" ng-options="p for p in priorities" class="form-control">
 				  </select>
 				</div>
@@ -91,14 +91,14 @@
 
 	<div class="row" ng-hide="showServiceDateEditor === true" ng-click="showServiceDateEditor=true">
 		<div class="col-xs-6">
-			<strong>Service Date:</strong> {{tickler.serviceDateDate | date : 'yyyy-MM-dd'}} {{tickler.serviceDateTime | date : 'HH:mm'}}
+			<strong><bean:message key="tickler.add.serviceDate" bundle="ui"/>:</strong> {{tickler.serviceDateDate | date : 'yyyy-MM-dd'}} {{tickler.serviceDateTime | date : 'HH:mm'}}
 			<br/><br/>
 		</div>
 	</div>
 	
 	<div class="row" ng-show="showServiceDateEditor === true">
 		<div class="col-xs-6">
-			<strong ng-click="showServiceDateEditor=false">Service Date:</strong>
+			<strong ng-click="showServiceDateEditor=false"><bean:message key="tickler.add.serviceDate" bundle="ui"/>:</strong>
 			<datepicker ng-model="tickler.serviceDateDate" show-weeks="true" class="well well-sm"></datepicker>
 			
 		</div>
@@ -113,7 +113,7 @@
 	<div class="row">
 		<div class="col-xs-12">
 				<div class="form-group">
-				  <label>Templates:</label>
+				  <label><bean:message key="tickler.add.templates" bundle="ui"/>:</label>
 				  <select ng-model="tickler.suggestedTextId" ng-change="setSuggestedText()" ng-options="a.id as a.suggestedText for a in textSuggestions" class="form-control">
 				  </select>
 				</div>
@@ -128,8 +128,8 @@
 
 </div>
 <div class="modal-footer">
-    <button class="btn" ng-click="save()">Save</button>
-    <button class="btn" ng-click="close()">Close</button>
+    <button class="btn" ng-click="save()"><bean:message key="global.save" bundle="ui"/></button>
+    <button class="btn" ng-click="close()"><bean:message key="global.close" bundle="ui"/></button>
 </div>
 </form>
 
