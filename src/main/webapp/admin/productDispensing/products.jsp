@@ -159,15 +159,16 @@
 	function listProducts() {
 		var productNameFilterValue = $('#productNameFilter').val();
 		var productLotFilterValue = $('#productLotFilter').val();
+		var productLocationFilterValue = $('#productLocationFilter').val();
 		
-		console.log('listing products - current page is ' + currentPage + ', page size is ' + pageSize + ', name=' + productNameFilterValue + ',lot='+productLotFilterValue);
+		console.log('listing products - current page is ' + currentPage + ', page size is ' + pageSize + ', name=' + productNameFilterValue + ',lot='+productLotFilterValue+',location='+productLocationFilterValue);
 		
 		var startIndex = ((currentPage-1) * pageSize)
 		startIndex = (startIndex<0)?0:startIndex; //just in case
 		
 		console.log('start index is ' + startIndex);
 		
-		jQuery.getJSON("../../ws/rs/productDispensing/drugProducts?offset="+startIndex+"&limit="+pageSize+"&limitByName="+productNameFilterValue + "&limitByLot=" + productLotFilterValue, {},
+		jQuery.getJSON("../../ws/rs/productDispensing/drugProducts?offset="+startIndex+"&limit="+pageSize+"&limitByName="+productNameFilterValue + "&limitByLot=" + productLotFilterValue + "&limitByLocation=" + productLocationFilterValue, {},
         function(xml) {
 			$("#productTable tbody tr").remove();
 			
@@ -246,6 +247,10 @@
 							    value: arr[i].id,
 							    text: arr[i].name
 							}));
+							$('#productLocationFilter').append($('<option>', {
+							    value: arr[i].id,
+							    text: arr[i].name
+							}));
 						}
 					}
 		        });
@@ -301,7 +306,7 @@
 						$("#productLotFilter").empty();
 						$("#productLotFilter").append('<option value=""></option>');
 						
-						for(var i=0;i<arr.length;i++) {
+							for(var i=0;i<arr.length;i++) {
 							$('#productLotFilter').append($('<option>', {
 							    value: arr[i],
 							    text: arr[i]
@@ -312,6 +317,8 @@
 					}
 		        });
 	}
+	
+	
 	
 	function updatePage() {
 		updateProductNames();
@@ -339,6 +346,11 @@
 		});
 		
 		$('#productLotFilter').bind('change',function(){
+			currentPage=1;
+			updatePage();
+		});
+		
+		$('#productLocationFilter').bind('change',function(){
 			currentPage=1;
 			updatePage();
 		});
@@ -435,6 +447,10 @@
 </select>
 &nbsp;
 <select name="productLotFilter" id="productLotFilter">
+	<option value=""></option>
+</select>
+&nbsp;
+<select name="productLocationFilter" id="productLocationFilter">
 	<option value=""></option>
 </select>
 <span id="productFilterMessage"></span>
