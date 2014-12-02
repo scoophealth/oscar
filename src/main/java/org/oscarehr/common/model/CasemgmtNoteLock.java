@@ -51,7 +51,7 @@ public class CasemgmtNoteLock extends AbstractModel<Long> implements Serializabl
 	@Column(unique=true, nullable=false)
 	private Long id;
 
-	@Column(name="ip_address", length=15)
+	@Column(name="ip_address", length=64)
 	private String ipAddress;
 
 	@Column(name="note_id")
