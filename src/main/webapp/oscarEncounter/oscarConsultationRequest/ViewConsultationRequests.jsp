@@ -243,6 +243,16 @@ function setOrder(val){
   }    
   document.forms[0].submit();
 }
+
+function gotoPage(next) {
+	var frm = document.forms[0];
+	
+	frm.limit.value = <%=limit%>;
+	if (next) frm.offset.value = <%=offset+limit%>;
+	else frm.offset.value = <%=offset-limit%>;
+	
+	frm.submit();
+}
 </script>
 
 
@@ -323,6 +333,8 @@ function setOrder(val){
                             <html:hidden property="currentTeam"/>
                             <html:hidden property="orderby"/>
                             <html:hidden property="desc"/>
+                            <html:hidden property="offset"/>
+                            <html:hidden property="limit"/>
                             </div>
                         </html:form>
                     </td>
@@ -537,15 +549,13 @@ function setOrder(val){
                 
           
                 	<%
-                	
-                	
                 	if(offset > 0) {
-                		String queryString = getNewQueryString(request.getQueryString(),offset-limit,limit);
-                		%><input type="button" value="Prev" onClick="location.href='<%=request.getContextPath()%>/oscarEncounter/IncomingConsultation.do?<%=queryString%>'"/><%
+//                		String queryString = getNewQueryString(request.getQueryString(),offset-limit,limit);
+                		%><input type="button" value="Prev" onClick="gotoPage(false);"/><%
                 	}
                 	if(theRequests.ids.size() == limit) {
-                		String queryString = getNewQueryString(request.getQueryString(),offset+limit,limit);
-                		%><input type="button" value="Next" onClick="location.href='<%=request.getContextPath()%>/oscarEncounter/IncomingConsultation.do?<%=queryString%>'"/><%
+//                		String queryString = getNewQueryString(request.getQueryString(),offset+limit,limit);
+	               		%><input type="button" value="Next" onClick="gotoPage(true);"/><%
                 	}
                 	%>
                
@@ -579,7 +589,7 @@ function setOrder(val){
 
 </html:html>
 <%!
-
+/*
 String getNewQueryString(String queryString,Integer offset, Integer limit) {
 	
 	String result = "";
@@ -603,6 +613,7 @@ String getNewQueryString(String queryString,Integer offset, Integer limit) {
 	
 	return result;
 }
+*/
 
 boolean dateGreaterThan(String dateStr, int unit, int period){
     DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");    
