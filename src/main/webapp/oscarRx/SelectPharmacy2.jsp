@@ -245,10 +245,12 @@ $(function() {
 			  data, function( data ) {
 		      	if( data.id ) {
 		      		
-		      		var select = $('#preferedPharmacy>option:selected');
-		      		var json = JSON.parse($(select).val());
-		      		if( data.id = json.id ) {	      			
-		      			$(select).val(JSON.stringify(data));
+		      		if( $('#preferedPharmacy option').length > 0 ) {
+		      			var select = $('#preferedPharmacy>option:selected');
+		      			var json = JSON.parse($(select).val());
+		      			if( data.id = json.id ) {	      			
+		      				$(select).val(JSON.stringify(data));
+		      			}
 		      		}
 		      	    alert("Record saved!");
 		      	    resetForm();
@@ -562,8 +564,9 @@ $(function() {
 						<td colspan="2">
 						<input type="button" value="Reset" onclick="return resetForm();"/>&nbsp;
 						<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
-							<input type="button" value="<bean:message key="SelectPharmacy.deleteLink" />" onclick="return deletePharmacy($('#preferedPharmacy>option:selected').val())"/></td>
+<!-- 							<input type="button" value="<bean:message key="SelectPharmacy.deleteLink" />" onclick="return deletePharmacy($('#preferedPharmacy>option:selected').val())"/> -->
 						</security:oscarSec>
+						</td>
 					</tr>
 					
 				</table>
