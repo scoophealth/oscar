@@ -227,6 +227,8 @@ public class ONAREnhancedBornConnector {
 		implicitNamespaces.put("","http://www.oscarmcmaster.org/AR2005");
 		opts.setSaveImplicitNamespaces(implicitNamespaces);
 		opts.setSaveNamespacesFirst();
+		opts.setCharacterEncoding("UTF-16");
+		
 		return opts;
 	}
 	
