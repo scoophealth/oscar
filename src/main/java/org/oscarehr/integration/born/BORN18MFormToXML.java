@@ -52,14 +52,14 @@ import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.sharingcenter.dao.ClinicInfoDao;
+import org.oscarehr.sharingcenter.model.ClinicInfoDataObject;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarPrevention.PreventionDisplayConfig;
 import oscar.util.StringUtils;
-
 import oscar.OscarProperties;
-
 import ca.bornontario.x18MEWBV.*;
 
 
@@ -84,13 +84,17 @@ public class BORN18MFormToXML {
 	}
 	
 	public boolean addXmlToStream(Writer os, XmlOptions opts, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid) throws IOException {
+		return addXmlToStream(os,opts,rourkeFdid,nddsFdid, report18mFdid,false);
+	}
+	
+	public boolean addXmlToStream(Writer os, XmlOptions opts, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid, boolean useClinicInfoForOrganizationId) throws IOException {
 		if (rourkeFdid==null && nddsFdid==null && report18mFdid==null) return false;
 	    
 		BORN18MEWBVBatchDocument bornBatchDocument = ca.bornontario.x18MEWBV.BORN18MEWBVBatchDocument.Factory.newInstance();
 		BORN18MEWBVBatch bornBatch = bornBatchDocument.addNewBORN18MEWBVBatch();
 		PatientInfo patientInfo = bornBatch.addNewPatientInfo();
 
-		propulatePatientInfo(patientInfo, rourkeFdid);
+		propulatePatientInfo(patientInfo, rourkeFdid, useClinicInfoForOrganizationId);
 		if (nddsFdid!=null) propulateNdds(patientInfo.addNewNDDS(), nddsFdid);
 		if (rourkeFdid!=null) propulateRourke(patientInfo.addNewRBR(), rourkeFdid);
 		if (report18mFdid!=null) propulateM18Markers(patientInfo.addNewM18MARKERS(), report18mFdid);
@@ -109,13 +113,20 @@ public class BORN18MFormToXML {
 		return true;
 	}
 	
-	private void propulatePatientInfo(PatientInfo patientInfo, Integer rourkeFdid) {
+	private void propulatePatientInfo(PatientInfo patientInfo, Integer rourkeFdid, boolean useClinicInfoForOrganizationId) {
 		if (rourkeFdid!=null) propulatePatientInfoFromRourke(patientInfo, rourkeFdid);
 		else patientInfo.setBirthWeight(0); //Birth weight is mandatory
 		
 		propulatePatientInfoFromDemographic(patientInfo);
 		propulatePatientInfoFromPatientChart(patientInfo);
+		
 		patientInfo.setOrganizationID(OscarProperties.getInstance().getProperty("born18m_orgcode"));
+	
+		if(useClinicInfoForOrganizationId) {
+			ClinicInfoDao clinicInfoDao = SpringUtils.getBean(ClinicInfoDao.class);
+			ClinicInfoDataObject clinicInfo = clinicInfoDao.getClinic();
+			patientInfo.setOrganizationID(clinicInfo.getFacilityName());
+		} 
 	}
 	
 	private void propulatePatientInfoFromRourke(PatientInfo patientInfo, Integer rourkeFdid) {
@@ -276,6 +287,8 @@ public class BORN18MFormToXML {
 		ndds.setNDDSQ17(nddsQ.get(nddsQkey[16]));
 		
 		ndds.setLastUpdateDateTime(formDateTimeToCal(fdid));
+		ndds.setSetID(fdid);
+		ndds.setVersionID(1);
 	}
 	
 	private void propulateRourke(RBR rourke, Integer fdid) {
@@ -285,6 +298,10 @@ public class BORN18MFormToXML {
 		propulateRourkeFromNDDS(rbrm18);
 		propulateRourkeFromImmunization(rourke);
 		rourke.setLastUpdateDate(formDateTimeToCal(fdid));
+		
+		rourke.setSetID(fdid);
+		rourke.setVersionID(1);
+		
 	}
 	
 	private void propulateRourkeFromRourke18m(RBRM18 rbrm18, Integer fdid) {
@@ -407,6 +424,7 @@ public class BORN18MFormToXML {
 				}
 			}
 			else if (name.equals("subject")) rbrm18.setSignature18M(value);
+			
 		}
 	}
 	
@@ -523,6 +541,8 @@ public class BORN18MFormToXML {
 		}
 		
 		m18Markers.setLastUpdateDateTime(formDateTimeToCal(fdid));
+		m18Markers.setSetID(fdid);
+		m18Markers.setVersionID(1);
 	}
 	
 	private Calendar formDateTimeToCal(Integer fdid) {
@@ -542,7 +562,7 @@ public class BORN18MFormToXML {
 	}
 	
 	private Calendar dateToCal(Date inDate) {
-		String date = dateFormatter.format(inDate);
+		String date =  new SimpleDateFormat("yyyy-MM-dd").format(inDate);
 		String time = timeFormatter.format(inDate);
 		try {
 			XmlCalendar x = new XmlCalendar(date+"T"+time);
