@@ -115,6 +115,18 @@ public class BORN18MConnector {
 		return results;
 	}
 	
+	public String getIDForCDA(Integer demoNo) {
+		String rourkeFormName = oscarProperties.getProperty("born18m_eform_rourke", "Rourke Baby Record");
+    	String nddsFormName = oscarProperties.getProperty("born18m_eform_ndds", "Nipissing District Developmental Screen");
+    	String rpt18mFormName = oscarProperties.getProperty("born18m_eform_report18m", "Summary Report: 18-month Well Baby Visit");
+    	
+		Integer rourkeFdid = checkRourkeDone(rourkeFormName, demoNo);
+		Integer nddsFdid = checkNddsDone(nddsFormName, demoNo);
+		Integer report18mFdid = checkReport18mDone(rpt18mFormName, demoNo);
+		
+		
+		return ((rourkeFdid!=null)?rourkeFdid:0) + "-" + ((nddsFdid!=null)?nddsFdid:0) +  "-" + ((report18mFdid!=null)?report18mFdid:0);
+	}
 	
 	public String getXmlForDemographic(Integer demoNo) {
 	   	String rourkeFormName = oscarProperties.getProperty("born18m_eform_rourke", "Rourke Baby Record");
@@ -125,7 +137,7 @@ public class BORN18MConnector {
 		Integer nddsFdid = checkNddsDone(nddsFormName, demoNo);
 		Integer report18mFdid = checkReport18mDone(rpt18mFormName, demoNo);
 		
-		byte[] born18mXml = generateXml(demoNo, rourkeFdid, nddsFdid, report18mFdid);
+		byte[] born18mXml = generateXml(demoNo, rourkeFdid, nddsFdid, report18mFdid, true);
 		String decoded = null;
 		try {
 			decoded = new String(born18mXml, "UTF-8");
@@ -192,7 +204,7 @@ public class BORN18MConnector {
 
 	
 	private void uploadToBorn(Integer demographicNo, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid) {
-		byte[] born18mXml = generateXml(demographicNo, rourkeFdid, nddsFdid, report18mFdid);
+		byte[] born18mXml = generateXml(demographicNo, rourkeFdid, nddsFdid, report18mFdid,false);
 		if (born18mXml == null) return;
 		
 		BornTransmissionLog log = prepareLog();
@@ -342,7 +354,7 @@ public class BORN18MConnector {
 		return latestDate;	
 	}
 	
-	private byte[] generateXml(Integer demographicNo, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid) {
+	private byte[] generateXml(Integer demographicNo, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid, boolean useClinicInfoForOrganizationId) {
 		HashMap<String,String> suggestedPrefixes = new HashMap<String,String>();
 		suggestedPrefixes.put("http://www.w3.org/2001/XMLSchema-instance","xsi");
 		XmlOptions opts = new XmlOptions();
@@ -359,8 +371,8 @@ public class BORN18MConnector {
 		try {
 			os = new ByteArrayOutputStream();
 			pw = new PrintWriter(os, true);
-			pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-			xmlCreated = xml.addXmlToStream(pw, opts, rourkeFdid, nddsFdid, report18mFdid);
+			//pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+			xmlCreated = xml.addXmlToStream(pw, opts, rourkeFdid, nddsFdid, report18mFdid, useClinicInfoForOrganizationId);
 			
 			pw.close();
 			if (xmlCreated) return os.toByteArray();

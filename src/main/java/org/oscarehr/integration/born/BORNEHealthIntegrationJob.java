@@ -100,9 +100,16 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 				StringWriter sw = new StringWriter();
 				PrintWriter pw = new PrintWriter(sw);
 				String result = null;
+				sw.append("<ARRecordSet xmlns=\"http://www.oscarmcmaster.org/AR2005\">");
 				if (xml.addXmlToStream(pw, opts, null, String.valueOf(metadata.get("demographicNo")), (Integer) metadata.get("id"), (Integer) metadata.get("episodeId"))) {
+					sw.append("</ARRecordSet>");
 					result = sw.toString();
+				} else {
+					result = null;
 				}
+				
+				
+				
 
 				if (logger.isDebugEnabled()) {
 					logger.debug("AR Record\n" + result);
@@ -123,7 +130,9 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 				cal.setTime((Date) metadata.get("formEdited"));
 
 				//Create CDA Document, and set the XML data.
-				BornCDADocument bornCDA = new BornCDADocument(CDAStandard.CCD, BORNCDADocumentType.A1A2, demographic, authorList, props, cal);
+			
+				BornCDADocument bornCDA = new BornCDADocument(CDAStandard.CCD, BORNCDADocumentType.A1A2, demographic, authorList, props, cal, String.valueOf(metadata.get("id")));
+				
 				bornCDA.setNonXmlBody(result.getBytes(), "text/plain");
 				String cdaForLogging = CdaUtils.toXmlString(bornCDA.getDocument(), true);
 
@@ -161,7 +170,7 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 
 					//create CDA document
 					BornHialProperties props = getBornHialProperties();
-					BornCDADocument bornCDA = new BornCDADocument(CDAStandard.CCD, BORNCDADocumentType.EighteenMonth, demographic, providerList, props, cal);
+					BornCDADocument bornCDA = new BornCDADocument(CDAStandard.CCD, BORNCDADocumentType.EighteenMonth, demographic, providerList, props, cal, eighteenMonthConnector.getIDForCDA(d));
 					bornCDA.setNonXmlBody(xml.getBytes(), "text/plain");
 					String cdaForLogging = CdaUtils.toXmlString(bornCDA.getDocument(), true);
 
