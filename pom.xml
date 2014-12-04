@@ -347,8 +347,16 @@
 					<artifactId>bcprov-jdk14</artifactId>
 				</exclusion>
 				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcmail-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
 					<groupId>org.bouncycastle</groupId>
 					<artifactId>bcprov-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bctsp-jdk14</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -386,12 +394,20 @@
 					<artifactId>bcprov-jdk14</artifactId>
 				</exclusion>
 				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcmail-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
 					<groupId>org.bouncycastle</groupId>
 					<artifactId>bcprov-jdk14</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bctsp-jdk14</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
-                <dependency>
+        <dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports-fonts</artifactId>
 			<version>4.0.0</version>
