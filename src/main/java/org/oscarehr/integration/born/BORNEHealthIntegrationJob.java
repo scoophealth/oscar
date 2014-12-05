@@ -218,8 +218,16 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 		AffinityDomainDao affDao = SpringUtils.getBean(AffinityDomainDao.class);
 		AffinityDomainDataObject network = null;
 
-		network = affDao.getAffinityDomain(3);
-
+		for(AffinityDomainDataObject obj: affDao.getAllAffinityDomains()) {
+			if("BORN".equals(obj.getName())) {
+				network = obj;
+			}
+		}
+		if(network == null) {
+			logger.warn("Cannot send via XDS since the BORN affinity domain not found");
+			return false;
+		}
+		
 		DocumentMetaData document = new DocumentMetaData();
 		document.addExtendedAttribute("legalAuthenticator", String.format("%s^%s^%s^^%s^^^^&%s&ISO", provider.getProviderNo(), provider.getLastName(), provider.getFirstName(), provider.getTitle(), clinicData.getUniversalId()));
 		document.addExtendedAttribute("authorInstitution", clinicData.getName());
