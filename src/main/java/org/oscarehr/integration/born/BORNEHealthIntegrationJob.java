@@ -105,10 +105,8 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 					sw.append("</ARRecordSet>");
 					result = sw.toString();
 				} else {
-					result = null;
+					continue;
 				}
-				
-				
 				
 
 				if (logger.isDebugEnabled()) {
