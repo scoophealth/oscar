@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
 
+import org.apache.cxf.common.util.StringUtils;
 import org.apache.xmlbeans.XmlOptions;
 import org.oscarehr.util.MiscUtils;
 import org.oscarmcmaster.ar2005.AR1;
@@ -125,6 +126,11 @@ public class ONAREnhancedFormToXML {
 		this.episodeId = episodeId;	    
 	    FrmRecord rec = (new FrmRecordFactory()).factory("ONAREnhanced");
 	    props = rec.getFormRecord(Integer.parseInt(demographicNo), formId);	    
+	    
+	    if(StringUtils.isEmpty(props.getProperty("pg1_formDate")) || StringUtils.isEmpty(props.getProperty("pg2_formDate"))) {
+	    	MiscUtils.getLogger().warn("skipping form since the signature dates are not both set");
+	    	return true;
+	    }
 		//ARRecord arRecord = ARRecord.Factory.newInstance();
 		ARRecordDocument arRecordDoc = ARRecordDocument.Factory.newInstance();
 		ARRecord arRecord = arRecordDoc.addNewARRecord();
@@ -179,6 +185,8 @@ public class ONAREnhancedFormToXML {
 	void populateAr1(AR1 ar1, String providerNo)  {
 		ar1.setDemographicNo(Integer.parseInt(demographicNo));
 		ar1.setProviderNo(props.getProperty("provider_no"));
+		//TODO: hardcoded for now
+		ar1.setVersionID(1);
 		Calendar formCreatedDate = Calendar.getInstance();
 		try {
 			formCreatedDate.setTime(dateFormatter2.parse(props.getProperty("formCreated")));

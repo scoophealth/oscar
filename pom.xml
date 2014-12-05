@@ -624,7 +624,7 @@
 		<dependency>
 			<groupId>org.oscarehr.ar2005</groupId>
 			<artifactId>ar2005</artifactId>
-			<version>0.12-DRAFT</version>
+			<version>1.2</version>
 		</dependency>
 
 		<!-- FOR BORN18MWBV Project - Rourke, NDDS, 18M Summary in XML format -->

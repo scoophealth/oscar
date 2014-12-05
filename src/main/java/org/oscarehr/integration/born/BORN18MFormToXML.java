@@ -173,7 +173,7 @@ public class BORN18MFormToXML {
 		else if ("F".equals(demographic.getSex())) patientInfo.setGender(Gender.F);
 		else patientInfo.setGender(Gender.U);
 		
-		if (StringUtils.filled(demographic.getChartNo())) patientInfo.setChartNumber(demographic.getChartNo());
+		if (StringUtils.filled(demographic.getChartNo())) patientInfo.setChartNumber(String.valueOf(demographic.getDemographicNo()));
 		else patientInfo.setChartNumber("0");
 		
 		if (StringUtils.filled(demographic.getHin())) patientInfo.setHealthCardNum(demographic.getHin());
@@ -288,6 +288,7 @@ public class BORN18MFormToXML {
 		
 		ndds.setLastUpdateDateTime(formDateTimeToCal(fdid));
 		ndds.setSetID(fdid);
+		//TODO: hardcoded for now
 		ndds.setVersionID(1);
 	}
 	
@@ -300,6 +301,7 @@ public class BORN18MFormToXML {
 		rourke.setLastUpdateDate(formDateTimeToCal(fdid));
 		
 		rourke.setSetID(fdid);
+		//TODO: hardcoded for now
 		rourke.setVersionID(1);
 		
 	}
@@ -542,6 +544,7 @@ public class BORN18MFormToXML {
 		
 		m18Markers.setLastUpdateDateTime(formDateTimeToCal(fdid));
 		m18Markers.setSetID(fdid);
+		//TODO: hardcoded for now
 		m18Markers.setVersionID(1);
 	}
 	
