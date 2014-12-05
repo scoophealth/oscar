@@ -185,8 +185,7 @@ public class ONAREnhancedFormToXML {
 	void populateAr1(AR1 ar1, String providerNo)  {
 		ar1.setDemographicNo(Integer.parseInt(demographicNo));
 		ar1.setProviderNo(props.getProperty("provider_no"));
-		//TODO: hardcoded for now
-		ar1.setVersionID(1);
+		ar1.setVersionID(formId);
 		Calendar formCreatedDate = Calendar.getInstance();
 		try {
 			formCreatedDate.setTime(dateFormatter2.parse(props.getProperty("formCreated")));
