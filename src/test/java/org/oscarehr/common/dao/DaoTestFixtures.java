@@ -71,6 +71,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public abstract class DaoTestFixtures
 {
+	private static Logger logger=MiscUtils.getLogger();
+	
 	private static LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod();
 	
 	public static LoggedInInfo getLoggedInInfo()
@@ -92,13 +94,13 @@ public abstract class DaoTestFixtures
 		
 		long start = System.currentTimeMillis();
 		if(!SchemaUtils.inited) {
-			MiscUtils.getLogger().info("dropAndRecreateDatabase");
+			logger.info("dropAndRecreateDatabase");
 			SchemaUtils.dropAndRecreateDatabase();
 		}
 		long end = System.currentTimeMillis();
 		long secsTaken = (end-start)/1000;
 		if(secsTaken > 30) {
-			MiscUtils.getLogger().info("Setting up db took " + secsTaken + " seconds.");
+			logger.info("Setting up db took " + secsTaken + " seconds.");
 		}
 
 		start = System.currentTimeMillis();
@@ -116,7 +118,7 @@ public abstract class DaoTestFixtures
 		}
 		end = System.currentTimeMillis();
 		secsTaken = (end-start)/1000;
-		MiscUtils.getLogger().info("Setting up spring took " + secsTaken + " seconds.");
+		logger.info("Setting up spring took " + secsTaken + " seconds.");
 
 	}
 	
@@ -140,7 +142,7 @@ public abstract class DaoTestFixtures
 			}
 			
 			if(daoObject == null) {
-				MiscUtils.getLogger().warn("Unable to find dao field of type " + clazz.getName());
+				logger.warn("Unable to find dao field of type " + clazz.getName());
 				return;
 			}
 			
@@ -149,11 +151,11 @@ public abstract class DaoTestFixtures
 					continue;
 				}
 				if(m.getParameterTypes().length == 0) {
-					//MiscUtils.getLogger().info("invoking " + m.getName());
+					//logger.info("invoking " + m.getName());
 					try {
 						m.invoke(daoObject);
 					}catch(Exception e) {
-						MiscUtils.getLogger().error("error",e);
+						logger.error("error",e);
 						fail(e.getMessage());
 					}
 				} else {
@@ -166,7 +168,7 @@ public abstract class DaoTestFixtures
 								&& !(c == Long.class) && !(c == long.class)
 								&& !(c == Double.class) && !(c == double.class)
 								&& !(c == Float.class) && !(c == float.class)) {
-							MiscUtils.getLogger().info("can't handle " + c);
+							logger.info("can't handle " + c);
 							invoke=false;
 							break;
 						}
@@ -193,22 +195,22 @@ public abstract class DaoTestFixtures
 						}
 					}
 					if(invoke) {
-						//MiscUtils.getLogger().info("invoking " + m.getName());
+						//logger.info("invoking " + m.getName());
 						try {
 							m.invoke(daoObject, params);
 						}catch(Exception e) {
-							MiscUtils.getLogger().error("error on method " + m.getName(),e);
+							logger.error("error on method " + m.getName(),e);
 							fail("error on method " + m.getName() + "(" + Arrays.toString(m.getParameterTypes()) + ") with exception message " + e.getMessage());
 						}
 					} else {
-						MiscUtils.getLogger().info("skipping " + m.getName());
+						logger.info("skipping " + m.getName());
 					}
 				}
 			}
 		} catch(ClassNotFoundException e) {
-			MiscUtils.getLogger().warn("Unable to find class of type " + daoClassName);
+			logger.warn("Unable to find class of type " + daoClassName);
 		} catch(Exception e) {
-			MiscUtils.getLogger().error("error",e);
+			logger.error("error in class : "+daoClassName,e);
 		}
 	}
 
