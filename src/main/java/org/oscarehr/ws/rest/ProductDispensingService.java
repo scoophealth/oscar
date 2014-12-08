@@ -130,11 +130,12 @@ public class ProductDispensingService extends AbstractServiceImpl{
 	@GET
 	@Path("/drugProducts")
 	@Produces("application/json")
-	public DrugProductResponse getAllDrugProducts(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit, @QueryParam("limitByName") String limitByName,@QueryParam("limitByLot") String limitByLot) {
+	public DrugProductResponse getAllDrugProducts(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit,
+			@QueryParam("limitByName") String limitByName,@QueryParam("limitByLot") String limitByLot,@QueryParam("limitByLocation") String limitByLocation) {
 		List<DrugProduct> results = null;
 		
-		int count = drugProductManager.getAllDrugProductsByNameAndLotCount(getLoggedInInfo(),limitByName,limitByLot);
-		results = drugProductManager.getAllDrugProductsByNameAndLot(getLoggedInInfo(),offset,limit,limitByName, limitByLot);
+		int count = drugProductManager.getAllDrugProductsByNameAndLotCount(getLoggedInInfo(),limitByName,limitByLot,(limitByLocation!=null && limitByLocation.length()>0)?Integer.valueOf(limitByLocation):null);
+		results = drugProductManager.getAllDrugProductsByNameAndLot(getLoggedInInfo(),offset,limit,limitByName, limitByLot, (limitByLocation!=null && limitByLocation.length()>0)?Integer.valueOf(limitByLocation):null);
 		
 		DrugProductResponse response = new DrugProductResponse();
 		for(DrugProduct result:results) {

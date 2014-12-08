@@ -31,7 +31,6 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.DrugProduct;
 import org.oscarehr.rx.dispensary.LotBean;
-import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -159,7 +158,7 @@ public class DrugProductDao extends AbstractDao<DrugProduct>{
 
 	}
 	
-	public List<DrugProduct> findByNameAndLot(int offset, int limit, String name, String lotNumber) {
+	public List<DrugProduct> findByNameAndLot(int offset, int limit, String name, String lotNumber, Integer location) {
 		
 		String sqlStart = "from DrugProduct x where 1=1";
 		String sql = "";
@@ -177,6 +176,12 @@ public class DrugProductDao extends AbstractDao<DrugProduct>{
 			index++;
 		}
 		
+		if(location != null && location.intValue()>0) {
+			sql += " and x.location = ?"+index;
+			params.add(location);
+			index++;
+		}
+		
 		Integer result = null;
 		
 		Query query = entityManager.createQuery(sqlStart + sql);
@@ -191,7 +196,7 @@ public class DrugProductDao extends AbstractDao<DrugProduct>{
 
 	}
 	
-	public Integer findByNameAndLotCount(String name, String lotNumber) {
+	public Integer findByNameAndLotCount(String name, String lotNumber, Integer location) {
 		
 		String sqlStart = "select count(x) from DrugProduct x where 1=1";
 		String sql = "";
@@ -209,6 +214,12 @@ public class DrugProductDao extends AbstractDao<DrugProduct>{
 			index++;
 		}
 		
+		if(location != null && location.intValue()>0) {
+			sql += " and x.location = ?"+index;
+			params.add(location);
+			index++;
+		}
+		
 		Integer result = null;
 		
 		Query query = entityManager.createQuery(sqlStart + sql);
@@ -216,12 +227,8 @@ public class DrugProductDao extends AbstractDao<DrugProduct>{
 			query.setParameter(x+1, params.get(x));
 		}
 		
-		try {
-			result = ((Long)query.getSingleResult()).intValue();
-		}catch(Exception e) {
-			MiscUtils.getLogger().error("Error",e);
-			
-		}
+		result = this.getCountResult(query).intValue();
+		
 		
 		return result;
 
