@@ -174,37 +174,47 @@ public class ManageFaxes extends DispatchAction {
 		
 		if( faxConfig.isActive() ) {
 			
-			if( faxJob.getJobId() != null ) {								
+			if( faxJob.getStatus() == FaxJob.STATUS.SENT) {
+				faxJob.setStatus(FaxJob.STATUS.CANCELLED);
+				faxJobDao.merge(faxJob);
+				result = "{success:true}";
+				
+			}
 			
-				client.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(faxConfig.getSiteUser(), faxConfig.getPasswd()));
+			if( faxJob.getJobId() != null ) {	
 				
-				HttpPut mPut = new HttpPut(faxConfig.getUrl() + "/fax/" + faxJob.getJobId());
-				mPut.setHeader("accept", "application/json");
-				mPut.setHeader("user", faxConfig.getFaxUser());
-				mPut.setHeader("passwd", faxConfig.getFaxPasswd());					
-				
-				try {
-					HttpResponse httpResponse = client.execute(mPut);	                
-	                
-	                if( httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK ) {
-	                	
-	                	HttpEntity httpEntity = httpResponse.getEntity();
-	                	result = EntityUtils.toString(httpEntity);
-	                	
-	                	faxJob.setStatus(FaxJob.STATUS.CANCELLED);
-	                	faxJobDao.merge(faxJob);
-	                }
-	                
-				}
-				catch( ClientProtocolException e ) {
+				if( faxJob.getStatus() == FaxJob.STATUS.WAITING ) {
+			
+					client.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(faxConfig.getSiteUser(), faxConfig.getPasswd()));
 					
-					log.error("PROBLEM COMM WITH WEB SERVICE");
-								
-				}catch (IOException e) {
-		        
-					log.error("PROBLEM COMM WITH WEB SERVICE");
-				
-	            }
+					HttpPut mPut = new HttpPut(faxConfig.getUrl() + "/fax/" + faxJob.getJobId());
+					mPut.setHeader("accept", "application/json");
+					mPut.setHeader("user", faxConfig.getFaxUser());
+					mPut.setHeader("passwd", faxConfig.getFaxPasswd());					
+					
+					try {
+						HttpResponse httpResponse = client.execute(mPut);	                
+		                
+		                if( httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK ) {
+		                	
+		                	HttpEntity httpEntity = httpResponse.getEntity();
+		                	result = EntityUtils.toString(httpEntity);
+		                	
+		                	faxJob.setStatus(FaxJob.STATUS.CANCELLED);
+		                	faxJobDao.merge(faxJob);
+		                }
+		                
+					}
+					catch( ClientProtocolException e ) {
+						
+						log.error("PROBLEM COMM WITH WEB SERVICE");
+									
+					}catch (IOException e) {
+			        
+						log.error("PROBLEM COMM WITH WEB SERVICE");
+					
+		            }
+				}
 			}
 		}					
 			
