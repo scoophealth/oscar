@@ -26,6 +26,7 @@
 package org.oscarehr.common.web;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,7 +42,6 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DemographicCustDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
@@ -61,8 +61,7 @@ import oscar.oscarRx.data.RxProviderData.Provider;
  */
 public class SearchDemographicAutoCompleteAction extends Action {
     
-	private CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
-	
+
 	
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws Exception{
     	String providerNo = LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo();
@@ -99,10 +98,21 @@ public class SearchDemographicAutoCompleteAction extends Action {
             list = demographicDao.searchDemographicByDOB(searchStr.substring(0,4)+"-"+searchStr.substring(4,6)+"-"+searchStr.substring(6,8), 100, 0,providerNo,outOfDomain);
         } 
         else if( activeOnly ) {
-        	list = demographicDao.searchDemographicActive(searchStr);
+        	OscarProperties props = OscarProperties.getInstance();
+        	String pstatus = props.getProperty("inactive_statuses", "IN, DE, IC, ID, MO, FI");
+            pstatus = pstatus.replaceAll("'","").replaceAll("\\s", "");
+            List<String>stati = Arrays.asList(pstatus.split(","));
+
+        	list = demographicDao.searchDemographicByNameAndNotStatus(searchStr, stati, 100, 0, providerNo, outOfDomain);
+        	if(list.size() == 100) {
+        		MiscUtils.getLogger().warn("More results exists than returned");
+        	}
         }
         else {
-        	list = demographicDao.searchDemographic(searchStr);
+        	list = demographicDao.searchDemographicByName(searchStr, 100, 0, providerNo, outOfDomain);
+        	if(list.size() == 100) {
+        		MiscUtils.getLogger().warn("More results exists than returned");
+        	}
         }
         
         
