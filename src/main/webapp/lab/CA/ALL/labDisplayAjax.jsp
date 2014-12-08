@@ -835,7 +835,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                      boolean b2 = !obxName.equals(""), b3=handler.getObservationHeader(j, k).equals(headers.get(i));
                                     if (handler.getMsgType().equals("EPSILON")) {
                                     	b2=true; b3=true;
-                                    } else if(handler.getMsgType().equals("PFHT")) {
+                                    } else if(handler.getMsgType().equals("PFHT") || handler.getMsgType().equals("HHSEMR")) {
                                     	b2=true;
                                     }
                                     if ( !handler.getOBXResultStatus(j, k).equals("DNS") && b2 && b3){ // <<--  DNS only needed for MDS messages

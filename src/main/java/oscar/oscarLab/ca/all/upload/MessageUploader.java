@@ -113,15 +113,19 @@ public final class MessageUploader {
 			String obrDate = h.getMsgDate();
 
 			if(h instanceof HHSEmrDownloadHandler) {
-            	String chartNo = ((HHSEmrDownloadHandler)h).getPatientIdByType("MR");
-            	if(chartNo != null) {
-            		//let's get the hin
-            		DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-            		List<Demographic> clients = demographicDao.getClientsByChartNo(chartNo);
-            		if(clients!=null && clients.size()>0) {
-            			hin = clients.get(0).getHin();
-            		}
-            	}
+                try{
+                    String chartNo = ((HHSEmrDownloadHandler)h).getPatientIdByType("MR");
+                    if(chartNo != null) {
+                        //let's get the hin
+                        DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+                        List<Demographic> clients = demographicDao.getClientsByChartNo(chartNo);
+                        if(clients!=null && clients.size()>0) {
+                            hin = clients.get(0).getHin();
+                        }
+                    }
+                }catch(Exception e){
+                    logger.error("HHS ERROR",e);
+                }
             }
             
             // get actual ohip numbers based on doctor first and last name for spire lab
