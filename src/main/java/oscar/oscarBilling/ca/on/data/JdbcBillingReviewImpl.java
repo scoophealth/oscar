@@ -106,17 +106,17 @@ public class JdbcBillingReviewImpl {
 		return retval;
 	}
 
-	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, String visitLocation) {
-		return getBillWithSorting(billType,statusType,providerNo,startDate,endDate,demoNo,visitLocation,null,null);
+	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, String visitLocation, String paymentStartDate, String paymentEndDate) {
+		return getBillWithSorting(billType,statusType,providerNo,startDate,endDate,demoNo,visitLocation,null,null, paymentStartDate,paymentEndDate);
 	}
 	
 	// invoice report
-	public List<BillingClaimHeader1Data> getBillWithSorting(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, String visitLocation, String sortName, String sortOrder) {
+	public List<BillingClaimHeader1Data> getBillWithSorting(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, String visitLocation, String sortName, String sortOrder,  String paymentStartDate, String paymentEndDate) {
 		List<BillingClaimHeader1Data> retval = new ArrayList<BillingClaimHeader1Data>();
 		BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 		BillingONExtDao extDao = SpringUtils.getBean(BillingONExtDao.class);
 		try {
-			for (BillingONCHeader1 h : dao.findByMagic(Arrays.asList(billType), statusType, providerNo, ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), ConversionUtils.fromIntString(demoNo),visitLocation)) {
+			for (BillingONCHeader1 h : dao.findByMagic(Arrays.asList(billType), statusType, providerNo, ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), ConversionUtils.fromIntString(demoNo),visitLocation, ConversionUtils.fromDateString(paymentStartDate), ConversionUtils.fromDateString(paymentEndDate))) {
 				BillingClaimHeader1Data ch1Obj = new BillingClaimHeader1Data();
 				ch1Obj.setId("" + h.getId());
 				ch1Obj.setDemographic_no("" + h.getDemographicNo());
@@ -204,12 +204,12 @@ public class JdbcBillingReviewImpl {
 	
 
 	//invoice report	
-	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, List<String> serviceCodes, String dx, String visitType, String visitLocation) {	
-		return getBillWithSorting(billType,statusType,providerNo,startDate,endDate,demoNo,serviceCodes,dx,visitType, visitLocation,null,null);	
+	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, List<String> serviceCodes, String dx, String visitType, String visitLocation, String paymentStartDate, String paymentEndDate) {	
+		return getBillWithSorting(billType,statusType,providerNo,startDate,endDate,demoNo,serviceCodes,dx,visitType, visitLocation,null,null,paymentStartDate,paymentEndDate);	
 	}
 	
 	//invoice report
-	public List<BillingClaimHeader1Data> getBillWithSorting(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, List<String> serviceCodes, String dx, String visitType, String visitLocation, String sortName, String sortOrder) {
+	public List<BillingClaimHeader1Data> getBillWithSorting(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, List<String> serviceCodes, String dx, String visitType, String visitLocation, String sortName, String sortOrder, String paymentStartDate, String paymentEndDate) {
 		List<BillingClaimHeader1Data> retval = new ArrayList<BillingClaimHeader1Data>();
 
 		try {
@@ -225,7 +225,7 @@ public class JdbcBillingReviewImpl {
 			Integer CASH_PAYMENT_ID = billingPaymentTypeDao.findIdByName("CASH");
 			Integer DEBIT_PAYMENT_ID = billingPaymentTypeDao.findIdByName("DEBIT");
 			
-			for (Object[] o : dao.findByMagic2(Arrays.asList(billType), statusType, providerNo, ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), ConversionUtils.fromIntString(demoNo), serviceCodes, dx, visitType, visitLocation)) {
+			for (Object[] o : dao.findByMagic2(Arrays.asList(billType), statusType, providerNo, ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), ConversionUtils.fromIntString(demoNo), serviceCodes, dx, visitType, visitLocation, ConversionUtils.fromDateString(paymentStartDate),  ConversionUtils.fromDateString(paymentEndDate))) {
 				BillingONCHeader1 ch1 = (BillingONCHeader1) o[0];
 				BillingONItem bi = (BillingONItem) o[1];
 
@@ -259,6 +259,8 @@ public class JdbcBillingReviewImpl {
 				
 				double cashTotal = 0.00;
 				double debitTotal = 0.00;
+
+				ch1Obj.setNumItems(Integer.parseInt(bi.getServiceCount()));
 				
 				for(Integer paymentId:billingOnPaymentDao.find3rdPartyPayments(Integer.parseInt(ch1Obj.getId()))) {
 					//lets go through the exts, and pull out the ones.

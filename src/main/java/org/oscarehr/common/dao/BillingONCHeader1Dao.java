@@ -595,8 +595,9 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		return query.getResultList();
     }
 
-	public List<BillingONCHeader1> findByMagic(List<String> payPrograms, String statusType, String providerNo, Date startDate, Date endDate, Integer demoNo, String visitLocation) {
-		ParamAppender app = getAppender("h");
+	public List<BillingONCHeader1> findByMagic(List<String> payPrograms, String statusType, String providerNo, Date startDate, Date endDate, Integer demoNo, String visitLocation, Date paymentStartDate, Date paymentEndDate) {
+		ParamAppender app = new ParamAppender("FROM BillingONCHeader1 h, BillingONPayment bp ");
+		app.and("h.id = bp.billingNo");
 		app.and("h.payProgram in (:payPrograms)", "payPrograms", payPrograms);
 		app.and("h.status = :status", "status", statusType);
 		app.and("h.providerNo = :providerNo", "providerNo", providerNo);
@@ -608,9 +609,22 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		if( demoNo != null ) {
 			app.and("h.demographicNo = :demographicNo", "demographicNo", demoNo);
 		}
+		if(paymentStartDate != null) {
+			app.and("bp.payDate >= :paymentStartDate", "paymentStartDate", paymentStartDate);
+		} 
+		if(paymentEndDate != null) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(paymentEndDate);
+			cal.add(Calendar.DAY_OF_MONTH,1);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			app.and("bp.payDate < :paymentEndDate", "paymentEndDate", cal.getTime());
+		}
+		
         app.addOrder("h.billingDate, h.billingTime");
         
-		Query query = entityManager.createQuery(app.toString());
+       Query query = entityManager.createQuery(app.toString());
 		app.setParams(query);
 		return query.getResultList();
 	}
@@ -629,9 +643,10 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return rs;
     }
 
-	public List<Object[]> findByMagic2(List<String> payPrograms, String statusType, String providerNo, Date startDate, Date endDate, Integer demoNo, List<String> serviceCodes, String dx, String visitType, String visitLocation) {
-		ParamAppender app = new ParamAppender("FROM BillingONCHeader1 ch1, BillingONItem bi");
+	public List<Object[]> findByMagic2(List<String> payPrograms, String statusType, String providerNo, Date startDate, Date endDate, Integer demoNo, List<String> serviceCodes, String dx, String visitType, String visitLocation, Date paymentStartDate, Date paymentEndDate ) {
+		ParamAppender app = new ParamAppender("FROM BillingONCHeader1 ch1, BillingONItem bi, BillingONPayment bp ");
 		app.and("ch1.id = bi.ch1Id");
+		app.and("ch1.id = bp.billingNo");
 		app.and("bi.status != 'D'");
 		
 		app.and("ch1.payProgram in (:payPrograms)", "payPrograms", payPrograms);
@@ -639,6 +654,20 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		app.and("ch1.providerNo = :providerNo", "providerNo", providerNo);
 		app.and("ch1.billingDate >= :startDate", "startDate", startDate);
 		app.and("ch1.billingDate <= :endDate", "endDate", endDate);
+		
+		if(paymentStartDate != null) {
+			app.and("bp.payDate >= :paymentStartDate", "paymentStartDate", paymentStartDate);
+		} 
+		if(paymentEndDate != null) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(paymentEndDate);
+			cal.add(Calendar.DAY_OF_MONTH,1);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			app.and("bp.payDate < :paymentEndDate", "paymentEndDate", cal.getTime());
+		}
+		
 		if(visitLocation != null && !BillingStatusPrep.ANY_VISIT_LOCATION.equals(visitLocation)) {
 			app.and("ch1.faciltyNum = :facilityNum","facilityNum",visitLocation);
 		}
