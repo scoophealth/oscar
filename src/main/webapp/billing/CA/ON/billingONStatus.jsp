@@ -114,6 +114,9 @@ String visitLocation = request.getParameter("xml_location");
 String sortName = request.getParameter("sortName");
 String sortOrder = request.getParameter("sortOrder");
 
+String paymentStartDate  = request.getParameter("paymentStartDate"); 
+String paymentEndDate    = request.getParameter("paymentEndDate");
+
 if ( statusType == null ) { statusType = "O"; } 
 if ( "_".equals(statusType) ) { demoNo = "";}
 if ( startDate == null ) { startDate = ""; } 
@@ -128,6 +131,8 @@ if ( billingForm == null ) { billingForm = "-" ; }
 if ( visitLocation == null) { visitLocation = "";}
 if ( sortName == null) { sortName = "ServiceDate";}
 if ( sortOrder == null) { sortOrder = "asc";}
+if ( paymentStartDate == null ) { paymentStartDate = ""; } 
+if ( paymentEndDate == null ) { paymentEndDate = ""; } 
 
 List<String> pList = isTeamBillingOnly
 		? (new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"))
@@ -136,12 +141,12 @@ List<String> pList = isTeamBillingOnly
 BillingStatusPrep sObj = new BillingStatusPrep();
 List<BillingClaimHeader1Data> bList = null;
 if((serviceCode == null || billingForm == null) && dx.length()<2 && visitType.length()<2) {
-	bList = bSearch ? sObj.getBills(strBillType, statusType, providerNo, startDate, endDate, demoNo, visitLocation) : new ArrayList<BillingClaimHeader1Data>();
+	bList = bSearch ? sObj.getBills(strBillType, statusType, providerNo, startDate, endDate, demoNo, visitLocation,paymentStartDate, paymentEndDate) : new ArrayList<BillingClaimHeader1Data>();
 	//serviceCode = "-";
 	serviceCode = "%";
 } else {
 	serviceCode = (serviceCode == null || serviceCode.length()<2)? "%" : serviceCode; 
-	bList = bSearch ? sObj.getBillsWithSorting(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm, visitLocation,sortName,sortOrder) : new ArrayList<BillingClaimHeader1Data>();
+	bList = bSearch ? sObj.getBillsWithSorting(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType, billingForm, visitLocation,sortName,sortOrder,paymentStartDate, paymentEndDate) : new ArrayList<BillingClaimHeader1Data>();
 }
 
 RAData raData = new RAData();
@@ -571,7 +576,23 @@ Visit Location:<br>
 
 </select>
 </div>
+<div class="span7">
+	<div class="span2">		
+	Payment Start:
+		<div class="input-append">
+			<input type="text" name="paymentStartDate" id="paymentStartDate" style="width:90px" value="<%=paymentStartDate%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
+			<span class="add-on"><i class="icon-calendar"></i></span>
+		</div>
+	</div>
+	<div class="span2">		
+	Payment End:
+		<div class="input-append">
+			<input type="text" name="paymentEndDate" id="paymentEndDate" style="width:90px" value="<%=paymentEndDate%>" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" autocomplete="off" />
+			<span class="add-on"><i class="icon-calendar"></i></span>
+		</div>
+	</div>
 
+</div>
 </div>
 
 <div class="row" >
@@ -713,7 +734,9 @@ if(statusType.equals("_")) { %>
              <th>TYPE</th>
              <th>INVOICE #</th>
              <th>MESSAGES</th>
-             <th>CASH/DEBIT</th>
+             <th>CASH</th>
+             <th>DEBIT</th>
+             <th>Quantity</th>
               <th>Provider</th>
 		<% if (bMultisites) {%>
 			 <th>SITE</th>             
@@ -731,6 +754,7 @@ if(statusType.equals("_")) { %>
        
        double totalCash=0;
        double totalDebit=0;
+       
        for (int i = 0 ; i < bList.size(); i++) { 
     	   BillingClaimHeader1Data ch1Obj = bList.get(i);
     	   
@@ -774,6 +798,9 @@ if(statusType.equals("_")) { %>
 	       if(ch1Obj.getPay_program().matches("PAT|OCF|ODS|CPP|STD|IFH")) {
 	    	   amountPaid = ch1Obj.getPaid();
 	       }
+	       
+	       int qty = ch1Obj.getNumItems();
+	       
     	   amountPaid = (amountPaid==null||amountPaid.equals("")||amountPaid.equals("null"))? "0.00" : amountPaid;
 	       
 	       BigDecimal bTemp;
@@ -824,7 +851,7 @@ if(statusType.equals("_")) { %>
 			   totalCash += ch1Obj.getCashTotal();
 			   totalDebit += ch1Obj.getDebitTotal();
 			   
-			 
+			
 				
        %>       
           <tr <%=color %>> 
@@ -843,7 +870,9 @@ if(statusType.equals("_")) { %>
              <td align="center"><%=payProgram%></td>
              <td align="center"><a href=#  onclick="popupPage(800,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');nav_colour_swap(this.id, <%=bList.size()%>);return false;"><%=ch1Obj.getId()%></a></td><!--ACCOUNT-->
              <td class="highlightBox"><a id="A<%=i%>" href=#  onclick="popupPage(800,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');nav_colour_swap(this.id, <%=bList.size()%>);return false;">Edit</a> <%=errorCode%></td><!--MESSAGES-->
-             <td align="center"><%=cash%>/<%=debit%></td>
+             <td align="center">$<%=cash%></td>
+             <td align="center">$<%=debit%></td>
+             <td align="center"><%=qty %></td>
              <td align="center"><%=ch1Obj.getProviderName() %></td>
              <% if (bMultisites) {%>
 				 <td "<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : "bgcolor='" + siteBgColor.get(ch1Obj.getClinic()) + "'")%>">
@@ -873,7 +902,9 @@ if(statusType.equals("_")) { %>
              <td>&nbsp;</td><!--TYPE-->
              <td>&nbsp;</td><!--ACCOUNT-->
              <td>&nbsp;</td><!--MESSAGES-->
-             <td align="right"><%=formatter.format(totalCash)%>/<%=formatter.format(totalDebit) %></td>
+             <td align="center">$<%=formatter.format(totalCash)%></td>
+             <td align="center">$<%=formatter.format(totalDebit) %></td>
+             <td align="center">&nbsp;</td>
              <td>&nbsp;</td><!--PROVIDER-->
              <% if (bMultisites) {%>
 				 <td>&nbsp;</td><!--SITE-->          
@@ -890,6 +921,9 @@ if(statusType.equals("_")) { %>
     <script language='javascript'>
 	    var startDate = $("#xml_vdate").datepicker({format : "yyyy-mm-dd"});
 		var endDate = $("#xml_appointment_date").datepicker({format : "yyyy-mm-dd"});
+		
+		var paymentStartDate = $("#paymentStartDate").datepicker({format : "yyyy-mm-dd"});
+		var paymentEndDate = $("#paymentEndDate").datepicker({format : "yyyy-mm-dd"});
    </script>
     </table>
     </form>
