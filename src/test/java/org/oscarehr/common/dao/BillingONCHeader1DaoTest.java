@@ -47,7 +47,7 @@ public class BillingONCHeader1DaoTest extends DaoTestFixtures {
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("billing_on_cheader1", "billing_on_item", "gstControl", "billingservice", "provider", 
 				"demographic", "lst_gender", "admission", "demographic_merged", "program", 
-				"health_safety", "provider", "providersite", "site", "program_team","log", "Facility");
+				"health_safety", "provider", "providersite", "site", "program_team","log", "Facility","billing_on_payment");
 	}
 
 	@Test
@@ -93,13 +93,13 @@ public class BillingONCHeader1DaoTest extends DaoTestFixtures {
 
     @Test
     public void testFindByMagic() {
-	    assertNotNull(dao.findByMagic(Arrays.asList(new String[] {"PP"}), "STS_TY", "PROV_NO", new Date(), new Date(), 100,null));
+	    assertNotNull(dao.findByMagic(Arrays.asList(new String[] {"PP"}), "STS_TY", "PROV_NO", new Date(), new Date(), 100,null,null,null));
     }
     
     @Test
     public void testFindByMagic2() {
 	    assertNotNull(dao.findByMagic2(Arrays.asList(new String[] {"PP"}), "STS_TY", "PROV_NO", 
-	    		new Date(), new Date(), 100, Arrays.asList(new String[] {"SVN_CODE"}), "DX", "VIS_TYPE",null));
+	    		new Date(), new Date(), 100, Arrays.asList(new String[] {"SVN_CODE"}), "DX", "VIS_TYPE",null,null,null));
     }
     
     @Test
