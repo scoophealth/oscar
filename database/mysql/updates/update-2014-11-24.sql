@@ -1,2 +1,2 @@
-alter table prevention modify prevention_date datetime ;
+alter table preventions modify prevention_date datetime ;
 
