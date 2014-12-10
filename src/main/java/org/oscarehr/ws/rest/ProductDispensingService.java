@@ -36,14 +36,17 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import org.apache.http.impl.cookie.DateUtils;
 import org.oscarehr.common.model.DrugProduct;
+import org.oscarehr.common.model.DrugProductTemplate;
 import org.oscarehr.common.model.ProductLocation;
 import org.oscarehr.managers.DrugDispensingManager;
 import org.oscarehr.managers.DrugProductManager;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
 import org.oscarehr.ws.rest.to.DrugProductResponse;
+import org.oscarehr.ws.rest.to.DrugProductTemplateResponse;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.ProductLocationResponse;
+import org.oscarehr.ws.rest.to.model.DrugProductTemplateTo1;
 import org.oscarehr.ws.rest.to.model.DrugProductTo1;
 import org.oscarehr.ws.rest.to.model.ProductLocationTo1;
 import org.springframework.beans.BeanUtils;
@@ -223,6 +226,24 @@ public class ProductDispensingService extends AbstractServiceImpl{
 	public GenericRESTResponse getDispensingStatus(@PathParam("drugId") Integer drugId)  {
 		GenericRESTResponse response = new GenericRESTResponse();
 		response.setMessage(drugDispensingManager.getStatus(drugId));
+		
+		return response;
+	}
+	
+	@GET
+	@Path("/drugProductTemplates")
+	@Produces("application/json")
+	public DrugProductTemplateResponse listProductTemplates()  {
+		List<DrugProductTemplate> templates = drugProductManager.getDrugProductTemplates();
+		
+	
+		DrugProductTemplateResponse response = new DrugProductTemplateResponse();
+		
+		for(DrugProductTemplate result:templates) {
+			DrugProductTemplateTo1 to = new DrugProductTemplateTo1();
+			BeanUtils.copyProperties(result, to);
+			response.getTemplates().add(to);
+		}
 		
 		return response;
 	}
