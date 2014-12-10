@@ -27,8 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.oscarehr.common.dao.DrugProductDao;
+import org.oscarehr.common.dao.DrugProductTemplateDao;
 import org.oscarehr.common.dao.ProductLocationDao;
 import org.oscarehr.common.model.DrugProduct;
+import org.oscarehr.common.model.DrugProductTemplate;
 import org.oscarehr.common.model.ProductLocation;
 import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,9 @@ public class DrugProductManager {
 	
 	@Autowired
 	private ProductLocationDao productLocationDao;
+	
+	@Autowired
+	private DrugProductTemplateDao drugProductTemplateDao;
 	
 	
 	public void saveDrugProduct(LoggedInInfo loggedInInfo, DrugProduct drugProduct) {
@@ -165,5 +170,9 @@ public class DrugProductManager {
 	
 	public List<ProductLocation> getProductLocations() {
 		return productLocationDao.findAll(0, ProductLocationDao.MAX_LIST_RETURN_SIZE);
+	}
+	
+	public List<DrugProductTemplate> getDrugProductTemplates() {
+		return drugProductTemplateDao.findAll(0, DrugProductTemplateDao.MAX_LIST_RETURN_SIZE);
 	}
 }

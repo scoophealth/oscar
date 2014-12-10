@@ -78,6 +78,9 @@
 	var currentPage = 1;
 	var pageSize = 10;
 	
+	var templates = new Array();
+	
+	
 	$(document).ready(function(){
 		$(".help-inline").hide();
 	});
@@ -126,6 +129,8 @@
 				$('#totalEntriesToCreateGroup').hide();
 				$('#new-product').dialog('open');
 				
+				fetchCurrentNamesAndCodes();
+				
 			}
         });
 	
@@ -142,11 +147,52 @@
 		$('#productBulkTotal').val('1');
 		$('#totalEntriesToCreateGroup').show();
 		$('#new-product').dialog('open');
+		
+		fetchCurrentNamesAndCodes();
 	}
 	
 	
 
+	function fetchCurrentNamesAndCodes() {
+		jQuery.getJSON("../../ws/rs/productDispensing/drugProductTemplates", {},
+		        function(xml) {
+					$("#productNameTemplate option").remove();
+					if(xml.templates) {	
+						templates = xml.templates;
+						$("#productNameTemplate").append("<option value=\"\"></option>");
+						for(var x=0;x<xml.templates.length;x++) {
+							console.log(xml.templates[x].toSource());
+							$("#productNameTemplate").append("<option value=\""+xml.templates[x].name+"\">"+xml.templates[x].name+"</option>");
+							
+						}
+					}
+		        });
+	}
 
+	function copyNameFromTemplate() {
+		var name = $("#productNameTemplate").val();
+		if(name == '') {
+			$("#productName").val('');
+			$("#productCode").val('');
+			$("#productAmount").val('');
+			$("#productName").attr("disabled", false);
+			$("#productCode").attr("disabled", false);
+			$("#productAmount").attr("disabled", false);
+		} else {
+			for(var x=0;x<templates.length;x++) {
+				if(name === templates[x].name) {
+					$("#productName").val(templates[x].name);
+					$("#productCode").val(templates[x].code);
+					$("#productAmount").val(templates[x].amount);
+					
+					$("#productName").attr("disabled", true);
+					$("#productCode").attr("disabled", true);
+					$("#productAmount").attr("disabled", true);
+				}
+			}
+		}
+	}
+	
 	function dateToYMD(date) {
 	    var d = date.getDate();
 	    var m = date.getMonth() + 1;
@@ -495,6 +541,16 @@
 		<input type="hidden" name="product.id" id="productId" value="0"/>
 			
 <div>
+	<div class="controls controls-row">
+		<div class="control-group span6" id="productNameTemplateGroup">
+				<label class="control-label" for="productNameTemplate">Choose Existing:</label>
+				<div class="controls">
+					<select id="productNameTemplate" name="productNameTemplate" onChange="copyNameFromTemplate()">
+						<option></option>
+					</select>
+				</div>
+			</div>
+	</div>
 	<div class="controls controls-row">
 			<div class="control-group span3" id="productNameGroup">
 				<label class="control-label" for="productName">Name:</label>
