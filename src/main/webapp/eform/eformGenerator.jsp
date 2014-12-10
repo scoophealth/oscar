@@ -2863,8 +2863,8 @@ onclick="SetSwitchOn('Stamp');document.getElementById('AddStamp').disabled=true;
 		<td>
 			<span><bean:message key="eFormGenerator.tuningUpButton"/></span><br>
 			<input type="button" value='<bean:message key="eFormGenerator.tuningAlignButton"/>' style="width:100px;" onclick="alignInput('top');"><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningShiftButton"/>' style="width:100px;" onclick="changeInput('up',10);"><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningNudgeButton"/>' style="width:100px;" onclick="changeInput('up',1);">
+			<input type="button" value='<bean:message key="eFormGenerator.tuningShiftButton"/> [alt]↑' style="width:100px;" onclick="changeInput('up',10);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningNudgeButton"/> ↑' style="width:100px;" onclick="changeInput('up',1);">
 		</td>
 		<td style="background-color:#dddddd;">
 			<input type="button" value='<bean:message key="eFormGenerator.tuningDeleteButton"/>' Style="width:100px;" onclick="deleteInput();">
@@ -2890,20 +2890,20 @@ onclick="SetSwitchOn('Stamp');document.getElementById('AddStamp').disabled=true;
 	<tr>
 		<td style="background-color:#dddddd;">
 			<span><bean:message key="eFormGenerator.tuningWidth"/></span><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningIncreaseButton"/>' style="width:75px;" onclick="changeInput('width',1);"><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningDecreaseButton"/>' style="width:75px;" onclick="changeInput('width',-1);">
+			<input type="button" value='<bean:message key="eFormGenerator.tuningIncreaseButton"/> ⇑+→' style="width:120px;" onclick="changeInput('width',1);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningDecreaseButton"/> ⇑+←' style="width:120px;" onclick="changeInput('width',-1);">
 		</td>
 		<td>
 
-			<input type="button" value='<bean:message key="eFormGenerator.tuningNudgeButton"/>' style="width:100px;" onclick="changeInput('down',1);"><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningShiftButton"/>' style="width:100px;" onclick="changeInput('down',10);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningNudgeButton"/> ↓' style="width:100px;" onclick="changeInput('down',1);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningShiftButton"/> [alt]↓' style="width:100px;" onclick="changeInput('down',10);"><br>
 			<input type="button" value='<bean:message key="eFormGenerator.tuningAlignButton"/>' style="width:100px;" onclick="alignInput('bottom');"><br>
 			<span><bean:message key="eFormGenerator.tuningDown"/></span>
 			</td>
 		<td style="background-color:#dddddd;">
 			<span><bean:message key="eFormGenerator.tuningHeight"/></span><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningIncreaseButton"/>' style="width:75px;" onclick="changeInput('height',1);"><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningDecreaseButton"/>' style="width:75px;" onclick="changeInput('height',-1);">
+			<input type="button" value='<bean:message key="eFormGenerator.tuningIncreaseButton"/> ⇑+↓' style="width:120px;" onclick="changeInput('height',1);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningDecreaseButton"/> ⇑+↑' style="width:120px;" onclick="changeInput('height',-1);">
 		</td>
 	</tr>
 </table>
