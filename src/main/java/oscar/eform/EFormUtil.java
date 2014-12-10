@@ -49,6 +49,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
@@ -71,9 +72,10 @@ import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.PreventionManager;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
 
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
@@ -86,6 +88,8 @@ import oscar.oscarMessenger.data.MsgMessageData;
 import oscar.util.ConversionUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.UtilDateUtilities;
+
+import com.quatro.model.security.Secobjprivilege;
 
 public class EFormUtil {
 	private static final Logger logger = MiscUtils.getLogger();
@@ -227,6 +231,51 @@ public class EFormUtil {
 		return fileList;
 	}
 
+	public static ArrayList<HashMap<String, ? extends Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String userRoles, int offset, int itemsToReturn) {
+
+		Boolean current = null;
+		if (deleted.equals("deleted")) current = false;
+		else if (deleted.equals("current")) current = true;
+		
+		List<EFormData> allEformDatas = eFormDataDao.findByDemographicIdCurrent(Integer.parseInt(demographic_no), current, offset, itemsToReturn,sortBy);
+
+	//	if (NAME.equals(sortBy)) Collections.sort(allEformDatas, EFormData.FORM_NAME_COMPARATOR);
+	//	else if (SUBJECT.equals(sortBy)) Collections.sort(allEformDatas, EFormData.FORM_SUBJECT_COMPARATOR);
+	//	else Collections.sort(allEformDatas, EFormData.FORM_DATE_COMPARATOR);
+
+		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
+		try {
+			for (EFormData eFormData : allEformDatas) {
+				// filter eform by role type
+				String tempRole = StringUtils.trimToNull(eFormData.getRoleType());
+				if (userRoles != null && tempRole != null) {
+					// ojectName: "_admin,_admin.eform"
+					// roleName: "doctor,admin"
+					String objectName = "_eform." + tempRole;
+					Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);
+					if (!OscarRoleObjectPrivilege.checkPrivilege(userRoles, (Properties) v.get(0), (Vector) v.get(1))) {
+						continue;
+					}
+				}
+				HashMap<String, Object> curht = new HashMap<String, Object>();
+				curht.put("fdid", eFormData.getId().toString());
+				curht.put("fid", eFormData.getFormId().toString());
+				curht.put("formName", eFormData.getFormName());
+				curht.put("formSubject", eFormData.getSubject());
+				curht.put("formDate", eFormData.getFormDate().toString());
+				curht.put("formTime", eFormData.getFormTime().toString());
+				curht.put("formDateAsDate", eFormData.getFormDate());
+				curht.put("roleType", eFormData.getRoleType());
+				curht.put("providerNo", eFormData.getProviderNo());
+				results.add(curht);
+			}
+		} catch (Exception sqe) {
+			logger.error("Error", sqe);
+		}
+		return (results);
+	}
+	
+	@Deprecated
 	public static ArrayList<HashMap<String, ? extends Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String userRoles) {
 
 		Boolean current = null;
@@ -697,6 +746,42 @@ public class EFormUtil {
 		return (results);
 	}
 
+	public static ArrayList<HashMap<String, ? extends Object>> listPatientEForms(LoggedInInfo loggedInInfo, String sortBy, String deleted, String demographic_no, String groupName, int offset, int numToReturn) {		
+		SecurityInfoManager secInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+		List<String> privs = new ArrayList<String>();
+		for(Secobjprivilege p: secInfoManager.getSecurityObjects(loggedInInfo)) {
+			if(p.getObjectname_code().startsWith("_eform.")) {
+				privs.add(p.getObjectname_code());
+			}
+		}
+		
+		Boolean current = true;
+		if(deleted.equals("deleted")) {
+			current=false;
+		} else if(deleted.equals("all")) {
+			current=null;
+		}
+		
+		
+		List<EFormData> results1 = eFormDataDao.findInGroups(current, Integer.valueOf(demographic_no), groupName, sortBy, offset, numToReturn, privs);
+		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
+		
+		for(EFormData x:results1) {
+			HashMap<String, String> curht = new HashMap<String, String>();
+			curht.put("fdid", String.valueOf(x.getFormId()));
+			curht.put("fid", x.getId().toString());
+			curht.put("formName",x.getFormName());
+			curht.put("formSubject", x.getSubject());
+			curht.put("formDate",DateFormatUtils.ISO_DATE_FORMAT.format(x.getFormDate()));
+			curht.put("formTime",DateFormatUtils.ISO_TIME_NO_T_FORMAT.format(x.getFormTime()));
+			curht.put("roleType", x.getRoleType());
+			results.add(curht);
+		}
+		
+		return (results);
+	}
+	
+	@Deprecated
 	public static ArrayList<HashMap<String, ? extends Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String groupName, String userRoles) {
 		// sends back a list of forms added to the patient
 		String sql = "";
