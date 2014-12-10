@@ -237,8 +237,17 @@ public abstract class PatientExport {
 	 * @return True if active, false if not
 	 */
 	public boolean isActiveDrug(Date rhs) {
-		if(currentDate.after(rhs)) return false;
-		else return true;
+		boolean result = false;
+		try {
+			if(currentDate.after(rhs)) {
+				result = false;
+			} else {
+				result = true;
+			}
+		} catch (NullPointerException e) {
+			log.warn("isActiveDrug - endDate is null");
+		}
+		return result;
 	}
 
 	/**
