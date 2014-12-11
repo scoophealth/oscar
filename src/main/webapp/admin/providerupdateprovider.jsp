@@ -362,6 +362,19 @@ for (int i=0; i<sites.size(); i++) {
 			<td align="right"><bean:message key="admin.provider.formOfficialLastName" />:</td>
 			<td><input type="text" name="officialLastName" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_LAST_NAME))%>" maxlength="10"></td>
 		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formOfficialOlisIdentifierType" />:</td>
+			<td><select name="officialOlisIdtype">
+					<option value=""><bean:message key="admin.provider.formOfficialOlisIdentifierType.option.notset" /></option>
+					<option value="MDL"><bean:message key="admin.provider.formOfficialOlisIdentifierType.option.mdl" /></option> 
+					<option value="DDSL"><bean:message key="admin.provider.formOfficialOlisIdentifierType.option.ddsl" /></option>
+					<option value="NPL"><bean:message key="admin.provider.formOfficialOlisIdentifierType.option.npl" /></option>
+					<option value="ML"><bean:message key="admin.provider.formOfficialOlisIdentifierType.option.ml" /></option>
+				</select> 
+			</td>
+		</tr>
+		
+		
 		
 		
 		<% if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
