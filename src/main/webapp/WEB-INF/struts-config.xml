@@ -762,6 +762,7 @@
 			<forward name="failure" path="/oscarEncounter/error.jsp" />
 			<forward name="success" path="/oscarEncounter/Index.jsp" />
 			<forward name="success2" path="/oscarEncounter/Index2.jsp" />
+			<forward name="domain-error" path="/casemgmt/domain-error.jsp" />
 		</action>
 
 		<action name="FrmForm" path="/dms/inboxManage" scope="request"  parameter="method" type="org.springframework.web.struts.DelegatingActionProxy">

@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.pageUtil;
 
 import java.io.IOException;
@@ -84,16 +83,25 @@ public class EctIncomingEncounterAction extends Action {
 
 	private static Logger log = MiscUtils.getLogger();
 	private CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO) SpringUtils.getBean("caseManagementNoteDAO");
+	private CaseManagementManager caseManagementMgr = SpringUtils.getBean(CaseManagementManager.class);
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		String demoNo = request.getParameter("demographicNo");
+
+		if(!"true".equals(OscarProperties.getInstance().getProperty("program_domain.show_echart", "false"))) {
+			if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.getLoggedInProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(loggedInInfo.getLoggedInProviderNo(), demoNo)) {
+				return mapping.findForward("domain-error");
+			}
+		}
 		
+
 		EctSessionBean bean = new EctSessionBean();
 		String appointmentNo = null;
 
-		if(request.getSession().getAttribute("cur_appointment_no") != null) {
-			appointmentNo = (String)request.getSession().getAttribute("cur_appointment_no");
+		if (request.getSession().getAttribute("cur_appointment_no") != null) {
+			appointmentNo = (String) request.getSession().getAttribute("cur_appointment_no");
 		}
 
 		if (request.getParameter("appointmentList") != null) {
@@ -145,14 +153,14 @@ public class EctIncomingEncounterAction extends Action {
 			if (bean.providerNo == null) {
 				bean.providerNo = (String) request.getSession().getAttribute("user");
 			}
-			
+
 			bean.demographicNo = request.getParameter("demographicNo");
 			bean.appointmentNo = request.getParameter("appointmentNo");
 			//use this one.
-			if(bean.appointmentNo != null && !bean.appointmentNo.equalsIgnoreCase("null") && !"".equals(bean.appointmentNo) && appointmentNo != null ) {
+			if (bean.appointmentNo != null && !bean.appointmentNo.equalsIgnoreCase("null") && !"".equals(bean.appointmentNo) && appointmentNo != null) {
 				bean.appointmentNo = appointmentNo;
 			}
-			
+
 			bean.curProviderNo = request.getParameter("curProviderNo");
 			Provider provider = loggedInInfo.getLoggedInProvider();
 			if (bean.curProviderNo == null || bean.curProviderNo.trim().length() == 0) bean.curProviderNo = provider.getProviderNo();
@@ -266,7 +274,7 @@ public class EctIncomingEncounterAction extends Action {
 		List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, new Long(wlProgramId));
 		ProgramProvider pp = ppList.get(0);
 		Secrole role = pp.getRole();
-		
+
 		// get program accesses... program allows either all roles or not all roles (does this mean no roles?)
 		ProgramAccessDAO programAccessDAO = (ProgramAccessDAO) SpringUtils.getBean("programAccessDAO");
 		List<ProgramAccess> paList = programAccessDAO.getAccessListByProgramId(new Long(wlProgramId));
@@ -278,11 +286,11 @@ public class EctIncomingEncounterAction extends Action {
 
 		// get all roles
 		CaseManagementManager cmm = new CaseManagementManager();
-		SecroleDao secroleDao = (SecroleDao)SpringUtils.getBean("secroleDao");
+		SecroleDao secroleDao = (SecroleDao) SpringUtils.getBean("secroleDao");
 		List<Secrole> allRoles = secroleDao.getRoles();
 
-		RoleProgramAccessDAO roleProgramAccessDAO = (RoleProgramAccessDAO)SpringUtils.getBean("RoleProgramAccessDAO");
-		
+		RoleProgramAccessDAO roleProgramAccessDAO = (RoleProgramAccessDAO) SpringUtils.getBean("RoleProgramAccessDAO");
+
 		List<Secrole> allowableSearchRoles = new ArrayList<Secrole>();
 		for (Iterator<Secrole> iter = allRoles.iterator(); iter.hasNext();) {
 			Secrole r = iter.next();
