@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.web;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +31,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DemographicArchiveDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtArchiveDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicExtArchive;
 import org.oscarehr.util.SpringUtils;
@@ -48,6 +52,8 @@ import org.oscarehr.util.SpringUtils;
  */
 public class DemographicAction extends DispatchAction  {
 
+	
+	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	private DemographicArchiveDao demographicArchiveDao = SpringUtils.getBean(DemographicArchiveDao.class);
 	private DemographicExtArchiveDao demographicExtArchiveDao = SpringUtils.getBean(DemographicExtArchiveDao.class);
 	
@@ -120,4 +126,29 @@ public class DemographicAction extends DispatchAction  {
 	}
 	
 
+	public ActionForward checkForDuplicates(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+		String yearOfBirth = request.getParameter("yearOfBirth");
+		String monthOfBirth = request.getParameter("monthOfBirth");
+		String dayOfBirth = request.getParameter("dayOfBirth");
+		
+		List<Demographic> duplicateList = demographicDao.getDemographicWithLastFirstDOBExact(lastName,firstName,
+				yearOfBirth,monthOfBirth,dayOfBirth);
+		
+		JSONObject result = new JSONObject();
+		result.put("hasDuplicates", false);
+		if(duplicateList.size()>0) {
+			result.put("hasDuplicates", true);
+		}
+		
+        try {
+            JSONObject json = JSONObject.fromObject(result);
+            json.write(response.getWriter());
+        }catch (IOException e) {        
+        	log.error(e.getMessage(), e);
+        }
+        
+        return null;
+	}
 }
