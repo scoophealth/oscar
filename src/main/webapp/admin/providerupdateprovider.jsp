@@ -341,14 +341,14 @@ for (int i=0; i<sites.size(); i++) {
 		%>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formOfficialFirstName" />:</td>
-			<td><input type="text" name="officialFirstName" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_FIRST_NAME))%>" maxlength="10"></td>
+			<td><input type="text" name="officialFirstName" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_FIRST_NAME))%>" maxlength="255"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formOfficialSecondName" />:</td>
-			<td><input type="text" name="officialSecondName" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_SECOND_NAME))%>" maxlength="10"></td>
+			<td><input type="text" name="officialSecondName" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_SECOND_NAME))%>" maxlength="255"></td>
 		</tr><tr>
 			<td align="right"><bean:message key="admin.provider.formOfficialLastName" />:</td>
-			<td><input type="text" name="officialLastName" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_LAST_NAME))%>" maxlength="10"></td>
+			<td><input type="text" name="officialLastName" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_LAST_NAME))%>" maxlength="255"></td>
 		</tr>
 
 
