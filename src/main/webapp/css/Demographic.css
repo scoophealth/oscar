@@ -1,0 +1,44 @@
+body {
+	margin: 10px;
+	font-size: Normal;
+	font-family: Verdana, Tahoma, Arial, sans-serif;
+}
+
+table {
+	border:#CCCCFF thin solid;
+	padding:3pt;
+		font-size: x-small;
+}
+
+table:first-child td {
+	padding-left:3pt ;
+	border:none;
+}
+
+table td.RowTop, div.title, table th.subject {
+	font-size:small;
+}
+
+#countryOfOrigin, td#spokenCell select {
+	width: 75%;
+}
+
+table tr#rowWithLastName td{
+	width:2.5%;
+}
+
+form[name='titlesearch'] {
+	margin:6pt 0;
+}
+
+form[name='titlesearch'] div.title, form[name='titlesearch'] div.createNew {
+	padding-left: 7pt;
+	padding-top:3pt;
+	padding-bottom:0;
+	font-size: small;
+	
+}
+
+form[name='titlesearch'] li {
+	font-size: small;
+}
