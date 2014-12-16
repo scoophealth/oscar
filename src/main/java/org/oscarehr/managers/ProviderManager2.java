@@ -514,4 +514,12 @@ public class ProviderManager2 {
 		providerExtDao.merge(providerExt);		
 				
 	}
+	
+	public void updateProvider(LoggedInInfo loggedInInfo, Provider provider) {
+		providerDao.updateProvider(provider);
+		
+		//--- log action ---
+		LogAction.addLogSynchronous(loggedInInfo, "ProviderManager.updateProvider, providerNo=" + provider.getProviderNo(), null);
+
+	}
 }
