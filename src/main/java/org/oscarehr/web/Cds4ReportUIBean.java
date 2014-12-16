@@ -278,8 +278,24 @@ public final class Cds4ReportUIBean {
 				{
 					admissionMap.put(admission.getId().intValue(), admission);
 					logger.debug("valid cds admission, id="+admission.getId());
+				} else  {
+					//get latest CDS for this patient
+					
+					CdsClientForm form = cdsClientFormDao.findLatestByFacilityClient(loggedInInfo.getCurrentFacility().getId(), admission.getClientId());
+					
+					if(!form.getProviderNo().equals(admission.getProviderNo())) {
+						//we know the provider who did the latest one isn't the one that did the admission, and this gets missed in the report.
+						//lets add the admission in this case of a staff change...if the provider is in our list
+						
+						if (providerIdsToReportOn!=null && providerIdsToReportOn.contains(admission.getProviderNo())) {
+							admissionMap.put(admission.getId().intValue(), admission);
+						}
+						
+					}
 				}
 			}
+			
+			//go through each admission, if latest version is a different provider (in our provider select ist, we want to add the admission to the map)
 		}
 
 		return admissionMap;
