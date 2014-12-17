@@ -1357,13 +1357,13 @@ public class OLISHL7Handler implements MessageHandler {
 				response.setContentType("image/gif");
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + getAccessionNum().replaceAll("\\s", "_") + "_" + obr + "-" + obx + "_Image.gif\"");
 			} else if (subtype.equals("RTF")) {
-				response.setContentType("application/gif");
+				response.setContentType("application/rtf");
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + getAccessionNum().replaceAll("\\s", "_") + "_" + obr + "-" + obx + "_Document.rtf\"");
 			} else if (subtype.equals("HTML")) {
 				response.setContentType("text/html");
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + getAccessionNum().replaceAll("\\s", "_") + "_" + obr + "-" + obx + "_Document.html\"");
-			} else if (subtype.equals("RTF")) {
-				response.setContentType("text/plain");
+			} else if (subtype.equals("XML")) {
+				response.setContentType("text/xml");
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + getAccessionNum().replaceAll("\\s", "_") + "_" + obr + "-" + obx + "_Document.xml\"");
 			}
 
