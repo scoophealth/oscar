@@ -429,20 +429,28 @@ public class LookupDao extends HibernateDaoSupport {
 				break;
 			case 10:
 				fdv.setVal(codeValue.getBuf3());
+				break;
 			case 11:
 				fdv.setVal(codeValue.getBuf4());
+				break;
 			case 12:
 				fdv.setVal(codeValue.getBuf5());
+				break;
 			case 13:
 				fdv.setVal(codeValue.getBuf6());
+				break;
 			case 14:
 				fdv.setVal(codeValue.getBuf7());
+				break;
 			case 15:
 				fdv.setVal(codeValue.getBuf8());
+				break;
 			case 16:
 				fdv.setVal(codeValue.getBuf9());
+				break;
 			case 17:
 				fdv.setVal(codeValue.getCodecsv());
+				break;
 			}
 		}
 		if (isNew)
