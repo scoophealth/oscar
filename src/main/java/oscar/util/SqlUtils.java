@@ -199,8 +199,10 @@ public class SqlUtils {
 					break;
 				case FieldTypes.BLOB:
 					ps.setNull(col, java.sql.Types.BLOB);
+					break;
 				case FieldTypes.DISKBLOB:
 					ps.setNull(col, java.sql.Types.CHAR);
+					break;
 				default:
 					ps.setNull(col, java.sql.Types.OTHER);
 				}
