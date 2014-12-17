@@ -278,7 +278,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 
 
 		infoTable.addCell(setInfoCell(cell, getResource("msgPhone")));
-		if ((reqFrm.getSpecailistsName(reqFrm.specialist).equals("-1"))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(null))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(""))) {
+		if ((reqFrm.getSpecailistsName(reqFrm.specialist) == null) ||(reqFrm.getSpecailistsName(reqFrm.specialist).equals("-1"))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(""))) {
 			infoTable.addCell(setDataCell(cell, ""));
 		} else {
 			infoTable.addCell(setDataCell(cell, reqFrm.specPhone));
@@ -286,14 +286,14 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 
 
 		infoTable.addCell(setInfoCell(cell, getResource("msgFax")));
-		if ((reqFrm.getSpecailistsName(reqFrm.specialist).equals("-1"))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(null))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(""))) {
+		if ((reqFrm.getSpecailistsName(reqFrm.specialist) == null) || (reqFrm.getSpecailistsName(reqFrm.specialist).equals("-1"))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(""))) {
 			infoTable.addCell(setDataCell(cell, ""));
 		} else {
 			infoTable.addCell(setDataCell(cell, reqFrm.specFax));
 		}
 
 		infoTable.addCell(setInfoCell(cell, getResource("msgAddr")));
-		if ((reqFrm.getSpecailistsName(reqFrm.specialist).equals("-1"))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(null))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(""))) {
+		if ((reqFrm.getSpecailistsName(reqFrm.specialist) == null)||(reqFrm.getSpecailistsName(reqFrm.specialist).equals("-1"))||(reqFrm.getSpecailistsName(reqFrm.specialist).equals(""))) {
 			infoTable.addCell(setDataCell(cell, ""));
 		} else {
 			infoTable.addCell(setDataCell(cell, divy(reqFrm.specAddr)));
