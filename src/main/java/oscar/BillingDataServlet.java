@@ -88,7 +88,7 @@ public class BillingDataServlet extends HttpServlet implements java.io.Serializa
         response.sendRedirect(getServletConfig().getInitParameter("result_page"));
       }
 
-      catch (Throwable theException)
+      catch (Exception theException)
       {
     	  MiscUtils.getLogger().error("Error", theException);
       }

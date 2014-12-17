@@ -235,7 +235,7 @@ public class EctConsultationFaxAction extends Action {
             faxClientLog.setEndTime(new Date());
             faxDao.merge(faxClientLog);
          }
-      } catch(Throwable e) {
+      } catch(Exception e) {
          MiscUtils.getLogger().error("Error", e);
       }
       MiscUtils.getLogger().debug("Client Has Finished Running");

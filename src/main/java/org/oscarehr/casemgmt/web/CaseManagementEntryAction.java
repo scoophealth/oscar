@@ -644,7 +644,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public void resetTemp(String providerNo, String demoNo, String programId) {
 		try {
 			this.caseManagementMgr.deleteTmpSave(providerNo, demoNo, programId);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.warn("Warning", e);
 		}
 	}
@@ -918,7 +918,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		try {
 			role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(), note.getProgram_no())).getRole().getId());
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("Error", e);
 			role = "0";
 		}
@@ -927,7 +927,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		try {
 			team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()))).getTeamId());
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("Error", e);
 			team = "0";
 		}
@@ -1761,7 +1761,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String role = null;
 		try {
 			role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(), note.getProgram_no())).getRole().getId());
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("Error", e);
 			role = "0";
 		}
@@ -1771,7 +1771,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String team = null;
 		try {
 			team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()))).getTeamId());
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("Error", e);
 			team = "0";
 		}
@@ -1850,7 +1850,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		try {
 			this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.warn("Warning", e);
 		}
 
@@ -2041,7 +2041,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		try {
 			logger.debug("CANCEL P:" + providerNo + " D:" + demo + " PROG:" + programNo);
 			this.caseManagementMgr.deleteTmpSave(providerNo, demo, programNo);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.warn("Warning", e);
 		}
 
@@ -2741,7 +2741,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		try {
 			caseManagementMgr.deleteTmpSave(providerNo, demographicNo, programId);
 			caseManagementMgr.tmpSave(providerNo, demographicNo, programId, noteId, note);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.warn("AutoSave Error: " + e);
 		}
 
