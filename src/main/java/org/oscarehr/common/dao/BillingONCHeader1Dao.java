@@ -644,9 +644,15 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     }
 
 	public List<Object[]> findByMagic2(List<String> payPrograms, String statusType, String providerNo, Date startDate, Date endDate, Integer demoNo, List<String> serviceCodes, String dx, String visitType, String visitLocation, Date paymentStartDate, Date paymentEndDate ) {
-		ParamAppender app = new ParamAppender("FROM BillingONCHeader1 ch1, BillingONItem bi, BillingONPayment bp ");
+		String base = "FROM BillingONCHeader1 ch1, BillingONItem bi";
+		if(paymentStartDate != null || paymentEndDate != null) {
+			base += ", BillingONPayment bp ";
+		}
+		ParamAppender app = new ParamAppender(base);
 		app.and("ch1.id = bi.ch1Id");
-		app.and("ch1.id = bp.billingNo");
+		if(paymentStartDate != null || paymentEndDate != null) {
+			app.and("ch1.id = bp.billingNo");
+		}
 		app.and("bi.status != 'D'");
 		
 		app.and("ch1.payProgram in (:payPrograms)", "payPrograms", payPrograms);
