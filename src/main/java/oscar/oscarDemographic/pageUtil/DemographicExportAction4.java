@@ -428,7 +428,7 @@ public class DemographicExportAction4 extends Action {
 
 			String dob = StringUtils.noNull(DemographicData.getDob(demographic,"-"));
 			demo.setDateOfBirth(Util.calDate(dob));
-			if (UtilDateUtilities.StringToDate(dob)==null) {
+			if ("".equals(dob)) {
 				exportError.add("Error! No Date Of Birth for Patient "+demoNo);
 			} else if (UtilDateUtilities.StringToDate(dob)==null) {
 				exportError.add("Not exporting invalid Date of Birth for Patient "+demoNo);
