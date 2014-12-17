@@ -254,7 +254,7 @@ public class Driver {
 		X509Certificate cert = null;
 		PrivateKey priv = null;
 		KeyStore keystore = null;
-		String pwd = "changeit";
+		String pwd = OscarProperties.getInstance().getProperty("olis_ssl_keystore_password","changeit");
 		String result = null;
 		try {
 			Security.addProvider(new BouncyCastleProvider());
