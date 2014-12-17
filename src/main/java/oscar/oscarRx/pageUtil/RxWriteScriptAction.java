@@ -885,8 +885,6 @@ public final class RxWriteScriptAction extends DispatchAction {
                                                 	rx.setDispenseInterval(Integer.parseInt(val));
 						} else if (elem.equals("lastRefillDate_" + num)) {
 							rx.setLastRefillDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
-						} else if (elem.equals("outsideProviderName_" + num)) {
-							rx.setOutsideProviderName(val);
 						} else if (elem.equals("rxDate_" + num)) {
 							if ((val == null) || (val.equals(""))) {
 								rx.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
