@@ -1324,7 +1324,9 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 
 <logic:notEqual name="infirmaryView_isOscar" value="false">
 | <% if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) { %>
- <span style="color:#333"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></span>
+ <!-- <span style="color:#333"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></span> -->
+ <u><a href=# onClick = "review('0')" title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.schedView"/></a></u>
+ 
 <%}else{%>
 	<u><a href=# onClick = "review('1')" title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></a></u>
 <%}%>
