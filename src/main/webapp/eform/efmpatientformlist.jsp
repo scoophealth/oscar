@@ -28,6 +28,7 @@
 <%@page import="org.oscarehr.sharingcenter.dao.AffinityDomainDao"%>
 <%@page import="org.oscarehr.sharingcenter.model.AffinityDomainDataObject"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 
 <%@page import="java.util.*,oscar.eform.*"%>
 <%@page import="org.oscarehr.web.eform.EfmPatientFormList"%>
@@ -62,7 +63,48 @@
 	// get all installed affinity domains
 	AffinityDomainDao affDao = SpringUtils.getBean(AffinityDomainDao.class);
 	List<AffinityDomainDataObject> affinityDomains = affDao.getAllAffinityDomains();
+	
+	int pageNo = 1;
+	int pageSize = 25;
+	
+	String strPage = request.getParameter("page");
+	if(strPage != null) {
+		try {
+			pageNo = Integer.parseInt(strPage);
+		}catch(Exception e) {
+			pageNo=1;
+		}
+	}
+	String strPageSize = request.getParameter("pageSize");
+	if(strPageSize != null) {
+		try {
+			pageSize = Integer.parseInt(strPageSize);
+		}catch(Exception e) {
+			pageSize=25;
+		}
+	}
 
+	//probably just want to merge these 2 methods, and add the group restriction when necessary.
+	ArrayList<HashMap<String,? extends Object>> eForms;
+	if (groupView.equals(""))
+	{
+		eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, roleName$, pageSize*(pageNo-1), pageSize);
+	}
+	else
+	{
+		eForms = EFormUtil.listPatientEForms(LoggedInInfo.getLoggedInInfoFromSession(request),orderBy, EFormUtil.CURRENT, demographic_no, groupView, pageSize*(pageNo-1), pageSize);
+	}
+	
+	boolean hasMore = eForms.size() == pageSize;
+
+	String reloadUrl = "efmpatientformlist.jsp?" + request.getQueryString();
+	if(reloadUrl.indexOf("page=") != -1) {
+		reloadUrl = reloadUrl.replaceFirst("(?<=[?&;])page=.*?($|[&;])","");
+		reloadUrl = reloadUrl.replaceFirst("(?<=[?&;])pageSize=.*?($|[&;])","");
+	}
+	if(reloadUrl.endsWith("&")) {
+		reloadUrl = reloadUrl.substring(0,reloadUrl.length()-1);
+	}
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -109,7 +151,39 @@
                             return false;
                         }
 		});
+
+	//setup pagination
+	<%
+		if(pageNo == 1) {
+	%>
+		 $("#prev").attr("disabled", true);
+	<%}
+	if(!hasMore ) {
+	%>
+	 $("#next").attr("disabled", true);
+<%}%>	
+	
+     $("#pageSize").val('<%=pageSize%>');
+
+     $("#prev").bind('click',function(event){
+    	 var page = $("#pageEl").val();
+    	 var prevPage = parseInt(page) - 1;    	
+    	 if(prevPage < 1) {return false;}
+    	 location.href='<%=reloadUrl%>' + '&page=' + prevPage + '&pageSize=' + $("#pageSize").val();
+     });
+		
+     $("#next").bind('click',function(event){
+    	 var page = $("#pageEl").val();
+    	 var nextPage = parseInt(page) + 1;    	 
+    	 location.href='<%=reloadUrl%>' + '&page=' + nextPage + '&pageSize=' + $("#pageSize").val();
+     });
+     
+     $("#pageSize").bind('change',function(event){
+    	 location.href='<%=reloadUrl%>' + '&page=1&pageSize=' + $("#pageSize").val();
+     });
+     
 	});
+	
 </script>
 	
 <script type="text/javascript" language="javascript">
@@ -141,6 +215,8 @@ function updateAjax() {
     }
 
 }
+
+
 </script>
 <script type="text/javascript" language="JavaScript"
 	src="../share/javascript/Oscar.js"></script>
@@ -194,6 +270,7 @@ function updateAjax() {
 
 			<form id="sendToPhrForm" action="efmpatientformlistSendPhrAction.jsp">
 				<input type="hidden" name="clientId" value="<%=demographic_no%>" />
+				<input type="hidden" name="page" id="pageEl" value="<%=pageNo%>" />
 				<table class="elements" width="100%">
 					<tr bgcolor=<%=deepColor%>>
 						<%
@@ -218,15 +295,7 @@ function updateAjax() {
 						<th><bean:message key="eform.showmyform.msgAction" /></th>
 					</tr>
 					<%
-						ArrayList<HashMap<String,? extends Object>> eForms;
-						if (groupView.equals(""))
-						{
-							eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, roleName$);
-						}
-						else
-						{
-							eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, groupView, roleName$);
-						}
+						
 						
 						for (int i = 0; i < eForms.size(); i++)
 						{
@@ -288,6 +357,16 @@ function updateAjax() {
 					</div>
 				<% } %>
 			
+			<br/>
+			
+			<button id="prev" onclick="return false;">Previous Page</button>
+			<button id="next" onclick="return false;">Next Page</button>
+			&nbsp;
+			<select name="pageSize" id="pageSize">
+				<option value="25">25</option>
+				<option value="50">50</option>
+				<option value="100">100</option>
+			</select>
 			</form>
 		
 		</td>

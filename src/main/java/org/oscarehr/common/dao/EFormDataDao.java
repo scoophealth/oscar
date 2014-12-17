@@ -45,6 +45,9 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 	public EFormDataDao() {
 		super(EFormData.class);
 	}
+	
+	public static final String SORT_NAME = "form_name";
+	public static final String SORT_SUBJECT = "subject";
 
     public List<EFormData> findByDemographicId(Integer demographicId)
 	{
@@ -109,7 +112,11 @@ public class EFormDataDao extends AbstractDao<EFormData> {
      * @param current can be null for both
      * @return list of EFormData
      */
-    public List<EFormData> findByDemographicIdCurrent(Integer demographicId, Boolean current, int startIndex, int numToReturn)
+	 public List<EFormData> findByDemographicIdCurrent(Integer demographicId, Boolean current, int startIndex, int numToReturn) {
+		 return findByDemographicIdCurrent(demographicId,current,startIndex,numToReturn,null);
+	}
+	 
+    public List<EFormData> findByDemographicIdCurrent(Integer demographicId, Boolean current, int startIndex, int numToReturn, String sortBy)
 	{
     	StringBuilder sb=new StringBuilder();
     	sb.append("select x from ");
@@ -126,7 +133,20 @@ public class EFormDataDao extends AbstractDao<EFormData> {
     		counter++;
     	}
     	
-    	sb.append(" order by x.formDate DESC, x.formTime DESC");
+    	sb.append(" order by ");
+    	
+    	if(sortBy != null) {
+    		if (SORT_NAME.equals(sortBy)) 
+    			sb.append(" x.formName");
+    		else if (SORT_SUBJECT.equals(sortBy))
+    			sb.append(" x.subject");
+    		else
+    			sb.append(" x.formDate DESC, x.formTime DESC");
+    	}
+    	
+    	if(sortBy == null) {
+    		sb.append(" x.formDate DESC, x.formTime DESC");
+    	}
 
     	String sqlCommand=sb.toString();
 
@@ -365,4 +385,45 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 		return(results);
 	}
 
+    public List<EFormData> findInGroups(Boolean status, int demographicNo, String groupName, String sortBy, int offset, int numToReturn, List<String> eformPerms) {
+		StringBuilder sb = new StringBuilder("SELECT e FROM EFormData e, EFormGroup g WHERE e.demographicId = :demographicNo AND e.patientIndependent = false AND e.formId = g.formId AND g.groupName = :groupName");
+		
+		if(status != null) {
+			sb.append(" AND e.current = :status");
+		}
+		
+		//get list of _eform.???? permissions the caller has
+		if(eformPerms != null && eformPerms.size()>0) {
+			 sb.append(" AND (e.roleType in (:perms) OR e.roleType IS NULL OR e.roleType = '' OR e.roleType = 'null')");
+		}
+		
+		sb.append(" ORDER BY ");
+		
+		if(sortBy != null) {
+    		if (SORT_NAME.equals(sortBy)) 
+    			sb.append(" e.formName");
+    		else if (SORT_SUBJECT.equals(sortBy))
+    			sb.append(" e.subject");
+    		else
+    			sb.append(" e.formDate DESC, e.formTime DESC");
+    	} else {
+    		sb.append(" e.formDate DESC, e.formTime DESC");
+    	}
+
+		
+		Query query = entityManager.createQuery(sb.toString());
+		query.setParameter("demographicNo", demographicNo);
+		query.setParameter("groupName", groupName);
+		if(status != null) {
+			query.setParameter("status", status);
+		}
+		if(eformPerms != null && eformPerms.size()>0) { 
+			query.setParameter("perms", eformPerms);
+		}
+		query.setFirstResult(offset);
+		
+		this.setLimit(query, numToReturn);
+		
+		return query.getResultList();
+	}    
 }
