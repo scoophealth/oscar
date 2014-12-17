@@ -57,6 +57,7 @@
 	<tr class="title">
 		<td></td>
 		<td>Facility Name</td>
+		<td>Program Name</td>
 		<td>Creation Date</td>
 		<td>Expiry Date</td>
 		<td>Message</td>
@@ -80,6 +81,7 @@
 				href="FacilityMessage.do?method=edit&id=<c:out value="${msg.id}"/>"><img
 				border="0" src="images/edit.jpg" /></a></td>
 			<td><c:out value="${msg.facilityName}" /></td>
+			<td><c:out value="${msg.programName}" /></td>
 			<td><c:out value="${msg.formattedCreationDate}" /></td>
 			<td><c:out value="${msg.formattedExpiryDate}" /></td>
 			<td><c:out value="${msg.message}" /></td>

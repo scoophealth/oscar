@@ -42,6 +42,7 @@ public class FacilityMessageManager {
 	
 	public void saveFacilityMessage(FacilityMessage msg) {
 		if(msg.getId() == null || msg.getId().intValue() == 0) {
+			msg.setId(null);
 			facilityMessageDao.persist(msg);
 		} else {
 			facilityMessageDao.merge(msg);
@@ -64,5 +65,19 @@ public class FacilityMessageManager {
         		return null;
         	}
 		return facilityMessageDao.getMessagesByFacilityIdOrNull(facilityId);
+	}
+	
+	public List<FacilityMessage> getMessagesByFacilityIdAndProgramId(Integer facilityId, Integer programId) {
+		if (facilityId == null || facilityId.intValue() == 0) {           
+        		return null;
+        	}
+		return facilityMessageDao.getMessagesByFacilityIdAndProgramId(facilityId,programId);
+	}
+	
+	public List<FacilityMessage> getMessagesByFacilityIdOrNullAndProgramIdOrNull(Integer facilityId, Integer programId) {
+		if (facilityId == null || facilityId.intValue() == 0) {           
+        		return null;
+        	}
+		return facilityMessageDao.getMessagesByFacilityIdOrNullAndProgramIdOrNull(facilityId,programId);
 	}
 }
