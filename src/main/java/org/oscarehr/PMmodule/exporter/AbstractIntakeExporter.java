@@ -94,7 +94,7 @@ public abstract class AbstractIntakeExporter {
 				clients = genericIntakeManager.getIntakeClientsByFacilityId(facilityId);
 			}
 
-		} catch(Throwable t) {
+		} catch(Exception t) {
 			throw new ExportException(t);
 		}
 	}
@@ -102,7 +102,7 @@ public abstract class AbstractIntakeExporter {
 	private void getIntakeForClient(Integer clientId) throws ExportException {
 		try {
 			intake = genericIntakeManager.getMostRecentQuickIntake(clientId, facilityId);
-		} catch(Throwable t) {
+		} catch(Exception t) {
 			throw new ExportException(t);
 		}
 	}

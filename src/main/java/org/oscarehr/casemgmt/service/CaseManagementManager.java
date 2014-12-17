@@ -1992,7 +1992,7 @@ private String updateApptStatus(String status, String type) {
 
 		try {
 			role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(), note.getProgram_no())).getRole().getId());
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			role = "0";
 		}
 		/*
@@ -2007,7 +2007,7 @@ private String updateApptStatus(String status, String type) {
 			} else {
 				team = "0";
 			}
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("Error", e);
 			team = "0";
 		}
@@ -2106,7 +2106,7 @@ private String updateApptStatus(String status, String type) {
 
 		try {
 			this.deleteTmpSave(note.getProviderNo(), note.getDemographic_no(), note.getProgram_no());
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.warn("warn", e);
 		}
 
