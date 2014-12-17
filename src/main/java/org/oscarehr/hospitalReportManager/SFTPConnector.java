@@ -182,7 +182,7 @@ public class SFTPConnector {
 
 	public static String getDownloadsDirectory() {
 		String dd = downloadsDirectory;
-		if (dd.equals("")||dd.equals(null)){
+		if (dd == null || dd.equals("")){
 			dd = "webapps/OscarDocument/hrm/sftp_downloads/";
 			return dd;
 
