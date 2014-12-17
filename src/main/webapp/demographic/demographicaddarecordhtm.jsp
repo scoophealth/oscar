@@ -461,6 +461,40 @@ function autoFillHin(){
       hin.value = hin.value;
    }
 }
+				
+
+function ignoreDuplicates() {
+		//do the check
+		var lastName = jQuery("#last_name").val();
+		var firstName = jQuery("#first_name").val();
+		var yearOfBirth = jQuery("#year_of_birth").val();
+		var monthOfBirth = jQuery("#month_of_birth").val();
+		var dayOfBirth = jQuery("#date_of_birth").val();
+		
+	jQuery.ajax({
+			url:"../demographicSupport.do?method=checkForDuplicates&lastName="+lastName+"&firstName="+firstName+"&yearOfBirth="+yearOfBirth+"&monthOfBirth="+monthOfBirth+"&dayOfBirth="+dayOfBirth,
+			success:function(data){
+				if(data.hasDuplicates != null) {
+					if(data.hasDuplicates) {
+						if(confirm('There are other patients in this system with the same name and date of birth. Are you sure you want to create this new patient record?')) {
+							//submit the form
+							jQuery("#adddemographic").submit();
+						}
+					} else {
+						//submit the form
+						jQuery("#adddemographic").submit();
+					}
+				} else {
+					//submit the form
+					jQuery("#adddemographic").submit();
+				}
+			},
+			dataType:'json'
+	});
+		
+		
+	return false;
+}
 
 </script>
 </head>
@@ -486,7 +520,7 @@ function autoFillHin(){
 	<% } %>
 </td></tr>
 <tr><td>
-<form method="post" id="adddemographic" name="adddemographic" action="demographicaddarecord.jsp" onsubmit="return checkFormTypeIn()">
+<form method="post" id="adddemographic" name="adddemographic" action="demographicaddarecord.jsp" onsubmit="return checkFormTypeIn() && ignoreDuplicates()">
 <input type="hidden" name="fromAppt" value="<%=request.getParameter("fromAppt")%>">
 <input type="hidden" name="originalPage" value="<%=request.getParameter("originalPage")%>">
 <input type="hidden" name="bFirstDisp" value="<%=request.getParameter("bFirstDisp")%>">
@@ -509,6 +543,7 @@ function autoFillHin(){
 <input type="hidden" name="createdatetime" value="<%=request.getParameter("createdatetime")%>">
 <input type="hidden" name="creator" value="<%=request.getParameter("creator")%>">
 <input type="hidden" name="remarks" value="<%=request.getParameter("remarks")%>">
+
 
 <table id="addDemographicTbl" border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#EEEEFF">
 

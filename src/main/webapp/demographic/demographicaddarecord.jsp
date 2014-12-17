@@ -194,16 +194,7 @@
 	demographic.setLastUpdateDate(new java.util.Date());
 	demographic.setPatientStatusDate(new java.util.Date());
 	
-	List<Demographic> duplicateList = demographicDao.getDemographicWithLastFirstDOBExact(demographic.getLastName(),demographic.getFirstName(),
-			demographic.getYearOfBirth(),demographic.getMonthOfBirth(),demographic.getDateOfBirth());
 	
-	if(duplicateList.size()>0) {
-%>
-		***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedRecord" /></font>***<br><br>
-		<a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack" /></b></a>
-<% 
-		return; 
-	}
 	
 	StringBuilder bufChart = null, bufName = null, bufNo = null, bufDoctorNo = null;
     // add checking hin duplicated record, if there is a HIN number
