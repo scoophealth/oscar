@@ -63,7 +63,7 @@ public class PathNetController {
       MiscUtils.getLogger().debug("Running PathNet Client...");
       if(args.length != 1) {
          logger.info("Usage: PathNet Client pathOfPropertiesFile");
-         System.exit(1);
+        return;
       }
 
       logger.info("    propertiesFile:  " + args[0]);
@@ -72,7 +72,7 @@ public class PathNetController {
          init(args[0]);
       }catch(Exception e){
     	  logger.error("ERROR: Initializing DB : "+e.getMessage(), e);
-         System.exit(1);
+        return;
       }
       try {
       OscarProperties.getInstance().readFromFile(args[0]);
@@ -122,7 +122,7 @@ public class PathNetController {
             connection.Close();
          }else{
         	 logger.error("Error connecting to pathnet");
-            System.exit(1);
+            return;
          }
 
    }
