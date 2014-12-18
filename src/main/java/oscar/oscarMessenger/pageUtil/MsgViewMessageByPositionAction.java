@@ -81,7 +81,7 @@ public class MsgViewMessageByPositionAction extends Action {
 			actionforward.addParameter("from", "encounter");
 			actionforward.addParameter("demographic_no", demographic_no);
 			actionforward.addParameter("messagePostion", messagePosition);
-		}catch(Throwable e) {
+		}catch(Exception e) {
 			MiscUtils.getLogger().error("error",e);
 		}
 		

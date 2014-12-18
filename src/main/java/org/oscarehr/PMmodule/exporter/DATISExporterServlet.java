@@ -114,7 +114,7 @@ public class DATISExporterServlet extends HttpServlet {
 				response.getOutputStream().write(buf);
 			}
 
-		} catch(Throwable t) {
+		} catch(Exception t) {
 			log.error("Error", t);
 			try {
 				response.getWriter().print("An Error Occured during DATIS Export operation. Please check server log for details.");

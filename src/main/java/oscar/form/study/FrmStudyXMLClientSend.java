@@ -173,7 +173,7 @@ public class FrmStudyXMLClientSend {
 			SOAPMessage reply = connection.call(message, endPoint);
 
 			connection.close();
-		} catch (Throwable e)	{
+		} catch (Exception e)	{
 			MiscUtils.getLogger().error("Error", e);
 		}
 	}

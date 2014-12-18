@@ -316,7 +316,7 @@ public class ScatterPlotChartServlet extends HttpServlet {
 					ServletEncoderHelper.encodeJPEG13(scatterPlotAxisChart, 1.0f, httpServletResponse);
 				}
 			}
-		} catch (Throwable t) {
+		} catch (Exception t) {
 			MiscUtils.getLogger().error("Error", t);
 		}
 
