@@ -56,6 +56,11 @@ public class Demographic implements Serializable {
 	public static final String ANONYMOUS = "ANONYMOUS";
 	public static final String UNIQUE_ANONYMOUS = "UNIQUE_ANONYMOUS";
 	
+	private final static Pattern FD_LAST_NAME = Pattern.compile(".*<rd>([^,]*),.*</rd>.*");
+	private final static Pattern FD_FIRST_NAME = Pattern.compile(".*<rd>[^,]*,(.*)</rd>.*");
+	private final static Pattern FD_OHIP = Pattern.compile("<rdohip>(.*)</rdohip>.*");
+	
+	
 	private int hashCode = Integer.MIN_VALUE;// primary key
 	private Integer demographicNo;// fields
 	private String phone;
@@ -499,6 +504,9 @@ public class Demographic implements Serializable {
 	 * Return the value associated with the column: family_doctor
 	 */
 	public String getFamilyDoctor() {
+		if(StringUtils.isBlank(familyDoctor)) {
+			this.familyDoctor = "";
+		}
 		return familyDoctor;
 	}
 
@@ -515,42 +523,39 @@ public class Demographic implements Serializable {
 	 * Return the last name as parsed from column: family_doctor
 	 */
 	public String getFamilyDoctorLastName() {
-		Pattern p = Pattern.compile(".*<rd>([^,]*),.*</rd>.*");
-		Matcher m = p.matcher(familyDoctor);
 
-		if(!m.matches())
-		{
-			return "";
+		Matcher m = FD_LAST_NAME.matcher(getFamilyDoctor());
+
+		if( m.find() ) {
+			return m.group(1);
 		}
-		return m.group(1);
+		return ""; 
 	}
 
 	/**
 	 * Return the first name as parsed from column: family_doctor
 	 */
 	public String getFamilyDoctorFirstName() {
-		Pattern p = Pattern.compile(".*<rd>[^,]*,(.*)</rd>.*");
-		Matcher m = p.matcher(familyDoctor);
+		Matcher m = FD_FIRST_NAME.matcher(getFamilyDoctor());
 
-		if(!m.matches())
-		{
-			return "";
+		if( m.find()) {
+			return m.group(1);
 		}
-		return m.group(1);
+		return "";
 	}
 
 	/**
 	 * Return the doctor number as parsed from column: family_doctor
 	 */
 	public String getFamilyDoctorNumber() {
-		Pattern p = Pattern.compile("<rdohip>(.*)</rdohip>.*");
-		Matcher m = p.matcher(familyDoctor);
 
-		if(!m.matches())
-		{
-			return "";
+		Matcher m = FD_OHIP.matcher(getFamilyDoctor());
+
+		if( m.find() ) {
+			return m.group(1);
 		}
-		return m.group(1);
+		
+		return "";
 	}
 
 	/**
