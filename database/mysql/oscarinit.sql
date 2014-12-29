@@ -6803,9 +6803,9 @@ CREATE TABLE providerLabRouting (
   lab_type char(3) default 'MDS',
   id int(10) NOT NULL auto_increment,
   PRIMARY KEY  (`id`),
-  KEY `labno_index`(`lab_no`)
+  KEY `labno_index`(`lab_no`),
+  KEY `provider_lab_status_index` ( `provider_no` ( 3 ) , `status`)
 ) ;
-
 
 --
 -- Table structure for table quickList
