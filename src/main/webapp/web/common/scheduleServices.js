@@ -41,6 +41,19 @@ angular.module("scheduleServices", [])
      
           return deferred.promise;
             
-        }
+        },
+        getAppointments: function (day){
+	        deferred = $q.defer();	
+	        $http.get(this.apiPath+'schedule/day/'+day).success(function(data){	
+	        	console.log(data);
+	        	deferred.resolve(data);
+	        }).error(function(){
+	        	console.log("error getting appointments");
+	        	deferred.reject("An error occured while getting appointments");
+	        });
+	        
+	        return deferred.promise;
+		}
+		
     };
 });
