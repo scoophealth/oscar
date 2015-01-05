@@ -135,7 +135,8 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 	            javascript.append(js);                
 	            url += "return false;";
 	            item.setURL(url);
-	            String strTitle = StringUtils.maxLenString(eFormData.getFormName(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+	            String strTitle = StringUtils.maxLenString(eFormData.getFormName() + ": " + eFormData.getSubject(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+
 	            item.setTitle(strTitle);  
 	            item.setDate(eFormData.getFormDate());
 	            Dao.addItem(item);
