@@ -332,12 +332,14 @@ public class AddEditDocumentAction extends DispatchAction {
 				cmn.setLocked(false);
 				cmn.setHistory(strNote);
 				cmn.setPosition(0);
-				cmm.saveNoteSimple(cmn);
+				
+				Long note_id = cmm.saveNoteSimpleReturnID(cmn);
+				 
 				// Add a noteLink to casemgmt_note_link
 				CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
 				cmnl.setTableName(CaseManagementNoteLink.DOCUMENT);
 				cmnl.setTableId(Long.parseLong(EDocUtil.getLastDocumentNo()));
-				cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
+				cmnl.setNoteId(note_id);
 
 				EDocUtil.addCaseMgmtNoteLink(cmnl);
 			}
