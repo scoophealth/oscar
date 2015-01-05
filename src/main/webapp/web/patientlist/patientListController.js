@@ -227,7 +227,7 @@ $scope.changeTab = function(temp,filter){
 		$scope.showFilter = data;
 	});
 
-	
+
 	$scope.process = function(tab) {
 		if(tab.url != null) {
 			
@@ -294,7 +294,7 @@ $scope.changeTab = function(temp,filter){
 		alert(reason);
 	});
 	
-	
+
 });
 
 
@@ -311,7 +311,7 @@ oscarApp.controller('PatientListDemographicSetCtrl', function($scope, Navigation
 
 });
 
-oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigation,$http, scheduleService,$q) {	
+oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigation,$http, scheduleService,$q,$filter) {	
 	 
 	scheduleService.getStatuses().then(function(data){
 		$scope.statuses = data.content;
@@ -331,6 +331,96 @@ oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigatio
 		 
 		 return {};	 
 	 }
+	 
+	
+     $scope.today = function() {
+	    $scope.appointmentDate = new Date();
+	  };
+	  
+	  $scope.today();
+
+	  $scope.clear = function () {
+	    $scope.appointmentDate = null;
+	  };
+	  
+	  $scope.open = function($event) {
+		    $event.preventDefault();
+		    $event.stopPropagation();
+		    $scope.opened = true;
+	  };
+	  
+	  Date.prototype.AddDays = function(noOfDays) {
+		    this.setTime(this.getTime() + (noOfDays * (1000 * 60 * 60 * 24)));
+		    return this;
+		}
+
+	  $scope.switchDay = function (n) {
+		    var dateNew = $scope.appointmentDate;
+	        dateNew.AddDays(n);
+	        
+	        $scope.appointmentDate = dateNew; 
+	               
+	        var formattedDate = $filter('date')(dateNew,'yyyy-MM-dd');	        
+	        
+	        $scope.changeApptList(formattedDate);
+	        
+	        
+	  };
+	  
+	$scope.changeApptDate = function(){
+		var formattedDate = $filter('date')($scope.appointmentDate,'yyyy-MM-dd');
+		$scope.changeApptList(formattedDate);
+	};
+	
+	$scope.changeApptList = function(day){
+		
+		temp = 0;
+		
+		$scope.currenttab = $scope.tabItems[temp];
+		$scope.showFilter=true;
+		
+		if($scope.currenttab.url != null) {
+						
+		    $scope.appointments = null;
+		    scheduleService.getAppointments(day).then(function(response){
+		    	$scope.appointments = response.patients;
+
+		    	$scope.currentPage = 0;
+				
+				$scope.template = $scope.tabItems[temp].template;
+			  	
+				if (response.patients instanceof Array) {
+					$scope.patients = response.patients;
+				} else if(response.patients == undefined) { 
+					$scope.patients = [];
+				} else {
+					var arr = new Array();
+					arr[0] = response.patients;
+					$scope.patients = arr;
+				}
+				
+				$scope.currentmoretab=null;
+			  	
+				$scope.nPages = 1;
+				if($scope.patients != null && $scope.patients.length>0) {
+					$scope.nPages=Math.ceil($scope.patients.length/$scope.pageSize);
+				} 
+				
+				Navigation.load($scope.template);
+
+		    },function(reason){
+		    	alert(reason);
+		    });
+			
+		} else {
+			$scope.template = $scope.tabItems[temp].template;
+			$scope.currentPage = 0;
+			$scope.currentmoretab=null;
+			$scope.nPages = 1;
+			Navigation.load($scope.template);
+			 
+		}
+	}
 
 });
 
