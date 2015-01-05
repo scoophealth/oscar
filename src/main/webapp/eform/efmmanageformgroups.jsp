@@ -220,7 +220,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 	</tr>
 	<%
   if (!groupView.equals("")) {
-      ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, groupView);
+      ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, groupView,null);
       if (eForms.size() > 0) {
         for (int i=0; i<eForms.size(); i++) {
         	HashMap<String, ? extends Object> curForm = eForms.get(i);
