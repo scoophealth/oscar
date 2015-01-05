@@ -1244,6 +1244,7 @@ CREATE TABLE `facility_message` (
   `expiry_date` datetime NOT NULL default '1900-01-01 00:00:00',
   `facility_id` int,
   `facility_name` varchar(32),
+  `programId` int,
   PRIMARY KEY  (`id`)
 );
 

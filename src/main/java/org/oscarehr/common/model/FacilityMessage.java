@@ -32,9 +32,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="facility_message")
@@ -60,7 +63,11 @@ public class FacilityMessage extends AbstractModel<Integer> {
 	
 	@Column(name="facility_name",length=32,nullable=true)
 	private String facilityName;
+	
+	private Integer programId;
 
+	@Transient
+	private String programName;
 	
 	public FacilityMessage() {
 		setCreationDate(new Date());
@@ -206,5 +213,29 @@ public class FacilityMessage extends AbstractModel<Integer> {
 			return true;
 		}
 		return false;
+	}
+
+	public Integer getProgramId() {
+		return programId;
+	}
+
+	public void setProgramId(Integer programId) {
+		this.programId = programId;
+	}
+
+	public String getProgramName() {
+		return programName;
+	}
+
+	public void setProgramName(String programName) {
+		this.programName = programName;
+	}
+	
+	@PrePersist
+	@PreUpdate
+	protected void jpa_prePersistAndUpdate() {
+		if(getProgramId() != null && getProgramId().intValue() == 0) {
+			setProgramId(null);
+		}
 	}
 }
