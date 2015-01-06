@@ -810,7 +810,7 @@
         <dependency>
                 <groupId>org.oscarehr.integration.ebs</groupId>
                 <artifactId>ebs-client</artifactId>
-                <version>0.0.2-SNAPSHOT</version>
+                <version>0.0.5</version>
         </dependency>
 
 	</dependencies>

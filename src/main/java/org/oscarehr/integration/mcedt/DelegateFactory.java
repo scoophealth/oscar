@@ -46,7 +46,7 @@ class DelegateFactory {
 		config.setServiceUrl(props.getProperty("mcedt.service.url"));
 		config.setConformanceKey(props.getProperty("mcedt.service.conformanceKey"));
 		config.setServiceId(props.getProperty("mcedt.service.id"));
-
+		config.setMtomEnabled(true);
 		EdtClientBuilder builder = new EdtClientBuilder(config);
 		EDTDelegate result = builder.build(EDTDelegate.class);
 		if (logger.isInfoEnabled()) {
