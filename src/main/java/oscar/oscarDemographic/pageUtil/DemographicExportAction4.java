@@ -61,6 +61,7 @@ import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PartialDateDao;
@@ -68,6 +69,7 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
+import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Provider;
@@ -95,7 +97,6 @@ import oscar.oscarClinic.ClinicData;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicRelationship;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
-import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
@@ -142,7 +143,8 @@ public class DemographicExportAction4 extends Action {
 	private static final HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
 	private static final HRMDocumentCommentDao hrmDocCommentDao = (HRMDocumentCommentDao) SpringUtils.getBean("HRMDocumentCommentDao");
 	private static final CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
-	private static final Hl7TextMessageDao hl7TxtMsgDao = (Hl7TextMessageDao)SpringUtils.getBean("hl7TextMessageDao");
+	private static final Hl7TextInfoDao hl7TxtInfoDao = (Hl7TextInfoDao)SpringUtils.getBean("hl7TextInfoDao");
+	private static final Hl7TextMessageDao hl7TxtMssgDao = (Hl7TextMessageDao)SpringUtils.getBean("hl7TextMessageDao");
 	private static final DemographicExtDao demographicExtDao = (DemographicExtDao) SpringUtils.getBean("demographicExtDao");
 	private static final String PATIENTID = "Patient";
 	private static final String ALERT = "Alert";
@@ -1396,6 +1398,60 @@ public class DemographicExportAction4 extends Action {
 
 			if (exLaboratoryResults) {
 				// LABORATORY RESULTS
+				
+				//get lab readings from hl7 tables
+				List<Object[]> infos = hl7TxtInfoDao.findByDemographicId(Integer.valueOf(demoNo));
+				for (Object[] info : infos) {
+					Hl7TextInfo hl7TxtInfo = (Hl7TextInfo)info[0];
+					Hl7TextMessage hl7TextMessage = hl7TxtMssgDao.find(hl7TxtInfo.getLabNumber());
+					if (hl7TextMessage==null) continue;
+					
+					String hl7Body = new String(Base64.decodeBase64(hl7TextMessage.getBase64EncodedeMessage()));
+					if (!StringUtils.filled(hl7Body)) continue;
+					
+					MessageHandler h = Factory.getHandler(hl7TextMessage.getType(), hl7Body);
+					if (h==null) continue;
+					
+					for (int i=0; i<h.getOBRCount(); i++) {
+						for (int j=0; j<h.getOBXCount(i); j++) {
+							String result = h.getOBXResult(i, j);
+							String comments = null;
+							for (int k=0; k<h.getOBXCommentCount(i, j); k++) {
+								comments = Util.addLine(comments, h.getOBXComment(i, j, k));
+							}
+							
+							if (StringUtils.filled(result) || StringUtils.filled(comments)) {
+								HashMap<String,String> labMeaValues = new HashMap<String,String>();
+								
+								labMeaValues.put("identifier", h.getOBXIdentifier(i, j));
+								labMeaValues.put("name", h.getOBXName(i, j));
+								labMeaValues.put("labname", h.getPatientLocation());
+								labMeaValues.put("datetime", h.getTimeStamp(i, j));
+								labMeaValues.put("abnormal", h.getOBXAbnormalFlag(i, j));
+								labMeaValues.put("unit", h.getOBXUnits(i, j));
+								labMeaValues.put("accession", h.getAccessionNum());
+								labMeaValues.put("range", h.getOBXReferenceRange(i, j));
+								labMeaValues.put("request_datetime", h.getRequestDate(i));
+								labMeaValues.put("olis_status", h.getOBXResultStatus(i, j));
+								labMeaValues.put("lab_no", String.valueOf(hl7TxtInfo.getLabNumber()));
+								labMeaValues.put("other_id", i+"-"+j);
+								
+								if (StringUtils.filled(result)) {
+									labMeaValues.put("measureData", result);
+									labMeaValues.put("comments", comments);
+								} else {
+									labMeaValues.put("measureData", comments);
+								}
+								
+								LaboratoryResults labResults2 = patientRec.addNewLaboratoryResults();
+								exportLabResult(labMeaValues, labResults2, demoNo);
+							}
+						}
+					}
+				}
+				
+				/*
+				//get lab readings from measurements table
 				List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demoNo);
 				for (LabMeasurements labMea : labMeaList) {
 					LaboratoryResults labResults = patientRec.addNewLaboratoryResults();
@@ -1403,7 +1459,7 @@ public class DemographicExportAction4 extends Action {
 					
 					String lab_no = labMea.getExtVal("lab_no");
 					if (StringUtils.filled(lab_no)) {
-						Hl7TextMessage hl7TextMessage = hl7TxtMsgDao.find(Integer.valueOf(lab_no));
+						Hl7TextMessage hl7TextMessage = hl7TxtMssgDao.find(Integer.valueOf(lab_no));
 						String hl7Body = new String(Base64.decodeBase64(hl7TextMessage.getBase64EncodedeMessage()));
 						MessageHandler h = Factory.getHandler(hl7TextMessage.getType(), hl7Body);
 						for (int i=0; i<h.getOBRCount(); i++) {
@@ -1439,6 +1495,7 @@ public class DemographicExportAction4 extends Action {
 						}
 					}
 				}
+				*/
 			}
 
 			if (exAppointments) {
@@ -1551,8 +1608,9 @@ public class DemographicExportAction4 extends Action {
 						if (StringUtils.filled(docSubClass)) {
 							rpr.setSubClass(docSubClass);
 						}
-						String observationDate = edoc.getObservationDate();
-						if (UtilDateUtilities.StringToDate(observationDate)!=null) {
+						String obsDateStr = edoc.getObservationDate();
+						Date observationDate = UtilDateUtilities.StringToDate(obsDateStr, "yyyy/MM/dd");
+						if (observationDate!=null) {
 							rpr.addNewEventDateTime().setFullDate(Util.calDate(observationDate));
 						} else {
 							exportError.add("Not exporting invalid Event Date (Reports) for Patient "+demoNo+" ("+(j+1)+")");
@@ -1804,7 +1862,11 @@ public class DemographicExportAction4 extends Action {
 						if (meas.getDateObserved()==null) {
 							exportError.add("Error! No Date for Smoking Packs (id="+meas.getId()+") for Patient "+demoNo);
 						}
-						smokp.setPerDay(new BigDecimal(meas.getDataField()));
+						try {
+							smokp.setPerDay(new BigDecimal(meas.getDataField()));
+						} catch (Exception e) {
+							exportError.add("Error! Smoking Packs data null/invalid (id="+meas.getId()+") for Patient "+demoNo);
+						}
 						addOneEntry(CAREELEMENTS);
 					} else if (meas.getType().equals("SKST")) { //Smoking Status
 						cdsDt.SmokingStatus smoks = careElm.addNewSmokingStatus();
@@ -1931,7 +1993,7 @@ public class DemographicExportAction4 extends Action {
 						if (meas.getDateObserved()==null) {
 							exportError.add("Error! No Date for Hypoglycemic Episodes (id="+meas.getId()+") for Patient "+demoNo);
 						}
-						he.setNumOfReportedEpisodes(new BigInteger(meas.getDataField()));
+						he.setNumOfReportedEpisodes(new BigInteger(meas.getDataField().trim()));
 						addOneEntry(CAREELEMENTS);
 					}
 				}
@@ -2568,6 +2630,7 @@ public class DemographicExportAction4 extends Action {
 		return extensionTooLong;
 	}
 
+	/*
 	private void exportLabResult(LabMeasurements labMea, LaboratoryResults labResults, String demoNo) {
 		HashMap<String,String> labMeaValues = new HashMap<String,String>();
 		
@@ -2591,6 +2654,7 @@ public class DemographicExportAction4 extends Action {
 		
 		exportLabResult(labMeaValues, labResults, demoNo);
 	}
+	*/
 	
 	private void exportLabResult(HashMap<String,String> labMea, LaboratoryResults labResults, String demoNo) {
 
