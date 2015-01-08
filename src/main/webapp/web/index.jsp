@@ -44,6 +44,8 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 
 <link href="../library/bootstrap/3.0.0/css/bootstrap.css" rel="stylesheet">
 <link href="../css/font-awesome.css" rel="stylesheet">
+<link href="../css/loading-bar.css" rel="stylesheet">
+
 
 <!-- we'll combine/minify later -->
 <link href="css/navbar-fixed-top.css" rel="stylesheet">
@@ -322,6 +324,7 @@ padding:8px;
  	<script src="../library/ng-infinite-scroll.min.js"></script>
  	
  	<script src="../library/ng-table/ng-table.js"></script>
+ 	<script src="../js/loading-bar.js"></script>
  	
 
 	<!-- we'll combine/minify later -->
