@@ -45,7 +45,7 @@ public class FaxJob extends AbstractModel<Integer> implements Comparable<FaxJob>
 	
 	public enum STATUS {
 		
-		RECEIVED,SENT,COMPLETE,ERROR,WAITING,CANCELLED;				
+		RECEIVED,SENT,COMPLETE,ERROR,WAITING,CANCELLED,RESOLVED;				
 				
 	};
 	

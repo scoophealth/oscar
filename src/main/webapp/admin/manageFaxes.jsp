@@ -169,6 +169,30 @@
 		return false;
 	}
 	
+	function complete(id, status ) {
+		
+		var answer = confirm("Are you sure you want to mark this fax as completed?");
+		
+		if( answer == null ) {			
+			return false;
+		}
+		
+		var url = $("#reportForm").attr("action");
+		var data = "method=SetCompleted&jobId="+id;
+
+		$.ajax({
+			url: url,
+			method: 'POST',
+			data: data,			
+			success: function(data){
+				
+				$('#'+status).text("RESOLVED");
+				
+			}});
+		
+		return false;
+	}
+	
 </script>
 
 </head>
