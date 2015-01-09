@@ -360,10 +360,9 @@ public class LabPDFCreator extends PdfPageEventHelper{
 						// ensure that the result is a real result
 						if ((!handler.getOBXResultStatus(j, k).equals("DNS")
 								&& !obxName.equals("")
-								&& handler.getObservationHeader(j, k).equals(
-										header)) || 
-								(handler.getMsgType().equals("EPSILON") && handler.getOBXIdentifier(j,k).equals(header) && !obxName.equals("")) 
-								|| (handler.getMsgType().equals("PFHT") && !obxName.equals("") && handler.getObservationHeader(j,k).equals(header))) { // <<-- DNS only needed for
+								&& header.equals(handler.getObservationHeader(j, k))) || 
+								(handler.getMsgType().equals("EPSILON") && header.equals(handler.getOBXIdentifier(j,k)) && !obxName.equals("")) 
+								|| (handler.getMsgType().equals("PFHT") && !obxName.equals("") && header.equals(handler.getObservationHeader(j,k)))) { // <<-- DNS only needed for
 													// MDS messages
 							String obrName = handler.getOBRName(j);
 							// add the obrname if necessary
@@ -498,7 +497,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 							}
 						}
 						// if (DNS)
-						} else if ((handler.getMsgType().equals("EPSILON") && handler.getOBXIdentifier(j,k).equals(header) && obxName.equals("")) || (handler.getMsgType().equals("PFHT") && obxName.equals("")&& handler.getObservationHeader(j,k).equals(header))){
+						} else if ((handler.getMsgType().equals("EPSILON") && header.equals(handler.getOBXIdentifier(j,k)) && obxName.equals("")) || (handler.getMsgType().equals("PFHT") && obxName.equals("")&& header.equals(handler.getObservationHeader(j,k)))){
 							// cell.setBackgroundColor(getHighlightColor(linenum));
 							linenum++;
 							cell.setPaddingLeft(100);

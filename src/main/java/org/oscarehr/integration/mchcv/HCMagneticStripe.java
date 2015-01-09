@@ -23,8 +23,6 @@
  */
 package org.oscarehr.integration.mchcv;
 
-import java.util.Calendar;
-
 public class HCMagneticStripe {
 
     private String healthNumber;
@@ -46,9 +44,12 @@ public class HCMagneticStripe {
         if ((stripe == null) || (stripe.isEmpty())) {
             throw new RuntimeException("Card number is null");
         }
-
-        if (stripe.length() != 79) {
-            throw new RuntimeException("Card number must contains 79 characters");
+        
+        String[] tmp = stripe.split(";",-1);
+        stripe = tmp[0];
+        
+        if (stripe.length() < 78 || stripe.length() > 79 ) {
+            throw new RuntimeException("Card number must contain 78 or 79 characters");
         }
 
         healthNumber = stripe.substring(8, 18);
@@ -58,14 +59,9 @@ public class HCMagneticStripe {
 
         birthDate = stripe.substring(54, 62);
 
-        expiryDate = stripe.substring(46, 50);
-        Calendar c = Calendar.getInstance();
-        Integer year = Integer.parseInt(expiryDate.substring(0, 2));
-        if (year > 30) {
-            expiryDate = "19" + expiryDate;
-        } else {
-            expiryDate = "20" + expiryDate;
-        }
+        expiryDate = stripe.substring(46, 50);                       
+        expiryDate = "20" + expiryDate;
+        
         expiryDate = expiryDate + birthDate.substring(6, 8);
 
         sex = stripe.substring(53, 54);
@@ -77,13 +73,9 @@ public class HCMagneticStripe {
 
         cardVersion = stripe.substring(62, 64);
 
-        issueDate = stripe.substring(69, 75);
-        year = Integer.parseInt(issueDate.substring(0, 2));
-        if (year > 30) {
-            issueDate = "19" + issueDate;
-        } else {
-            issueDate = "20" + issueDate;
-        }
+        issueDate = stripe.substring(69, 75);        
+        issueDate = "20" + issueDate;
+        
     }
 
     public String getHealthNumber() {

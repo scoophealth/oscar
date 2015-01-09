@@ -113,6 +113,10 @@ public class FaxJob extends AbstractModel<Integer> implements Comparable<FaxJob>
     
     private String oscarUser;
     
+    private String statusString;
+    
+    private Integer demographicNo;
+    
     /**
      * @return the id
      */
@@ -272,6 +276,34 @@ public class FaxJob extends AbstractModel<Integer> implements Comparable<FaxJob>
     public void setOscarUser(String oscarUser) {
 	    this.oscarUser = oscarUser;
     }
+
+	/**
+	 * @return the statusString
+	 */
+    public String getStatusString() {
+	    return statusString;
+    }
+
+	/**
+	 * @param statusString the statusString to set
+	 */
+    public void setStatusString(String statusString) {
+	    this.statusString = statusString;
+    }
+
+	/**
+	 * @return the demographic_no
+	 */
+	public Integer getDemographicNo() {
+		return demographicNo;
+	}
+
+	/**
+	 * @param demographic_no the demographic_no to set
+	 */
+	public void setDemographicNo(Integer demographic_no) {
+		this.demographicNo = demographic_no;
+	}
     
     
 

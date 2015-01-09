@@ -26,7 +26,6 @@ package org.oscarehr.fax.core;
 import java.io.IOException;
 import java.util.List;
 
-import net.sf.json.JSONObject;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -56,7 +55,6 @@ public class FaxStatusUpdater {
 		List<FaxJob> faxJobList = faxJobDao.getInprogressFaxesByJobId();
 		FaxConfig faxConfig;
 		DefaultHttpClient client = new DefaultHttpClient();
-		JSONObject jsonObject;
 		FaxJob faxJobUpdated;
 		
 		log.info("CHECKING STATUS OF " + faxJobList.size() + " FAXES");
@@ -64,7 +62,10 @@ public class FaxStatusUpdater {
 		for( FaxJob faxJob : faxJobList ) {
 			faxConfig = faxConfigDao.getConfigByNumber(faxJob.getFax_line());
 			
-			if( faxConfig.isActive() ) {
+			if( faxConfig == null ) {
+				log.error("Could not find faxConfig.  Has the fax number changed?");
+			}			
+			else if( faxConfig.isActive() ) {
 								
 				client.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(faxConfig.getSiteUser(), faxConfig.getPasswd()));
 				
@@ -88,6 +89,8 @@ public class FaxStatusUpdater {
 	                	//faxJobUpdated = (FaxJob) JSONObject.toBean(jsonObject, FaxJob.class);
 	                	
 	                	faxJob.setStatus(faxJobUpdated.getStatus());
+	                	faxJob.setStatusString(faxJobUpdated.getStatusString());
+	                	
 	                	log.info("UPDATED FAX JOB ID " + faxJob.getJobId() + " WITH STATUS " + faxJob.getStatus());
 	                	faxJobDao.merge(faxJob);
 	                	
@@ -106,6 +109,7 @@ public class FaxStatusUpdater {
 	            }								
 				
 			}
+			
 		}
 	}
 	

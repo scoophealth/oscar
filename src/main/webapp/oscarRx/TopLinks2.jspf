@@ -74,7 +74,7 @@ if (rx_enhance!=null && rx_enhance.equals("true")) { %>
 <%}else {%>					
 					<b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient" property="firstName" /> <jsp:getProperty name="patient" property="surname" />
 		     		<b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" />
-                    <b><a style="color:white; "href="SelectPharmacy2.jsp"><bean:message key="SearchDrug.PreferedPharmacy"/></a>:</b>
+                    <b><a style="color:white; "href="SelectPharmacy2.jsp">Preferred Pharmacy</a>:</b>
                     <select id="Calcs" name="pharmacyId" onchange="populatePharmacy(this.options[this.selectedIndex].value);showpic('Layer1');"> 
                     <%
                     	if( pharmacyList != null ) {

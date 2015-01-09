@@ -10579,6 +10579,7 @@ CREATE TABLE `faxes` (
   `user` varchar(255),
   `jobId` int(11),
   `oscarUser` varchar(6),
+  `demographicNo` int(11),
   PRIMARY KEY (`id`),
   KEY `faxline` (`faxline`),
   KEY `faxstatus` (`status`)
@@ -11795,5 +11796,3 @@ create table DrugProductTemplate (
         amount int not null,
         primary key (id)
 );
-
-
