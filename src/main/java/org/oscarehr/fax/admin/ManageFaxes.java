@@ -174,7 +174,7 @@ public class ManageFaxes extends DispatchAction {
 		
 		if( faxConfig.isActive() ) {
 			
-			if( faxJob.getStatus() == FaxJob.STATUS.SENT) {
+			if( faxJob.getStatus().equals(FaxJob.STATUS.SENT)) {
 				faxJob.setStatus(FaxJob.STATUS.CANCELLED);
 				faxJobDao.merge(faxJob);
 				result = "{success:true}";
@@ -183,7 +183,7 @@ public class ManageFaxes extends DispatchAction {
 			
 			if( faxJob.getJobId() != null ) {	
 				
-				if( faxJob.getStatus() == FaxJob.STATUS.WAITING ) {
+				if( faxJob.getStatus().equals(FaxJob.STATUS.WAITING)) {
 			
 					client.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(faxConfig.getSiteUser(), faxConfig.getPasswd()));
 					
@@ -349,6 +349,7 @@ public class ManageFaxes extends DispatchAction {
 		String dateBeginStr = request.getParameter("dateBegin");
 		String dateEndStr = request.getParameter("dateEnd");
 		String provider_no = request.getParameter("oscarUser");
+		String demographic_no = request.getParameter("demographic_no");
 		
 		if( provider_no.equalsIgnoreCase("-1") ) {
 			provider_no = null;
@@ -360,6 +361,10 @@ public class ManageFaxes extends DispatchAction {
 		
 		if( teamStr.equalsIgnoreCase("-1") ) {
 			teamStr = null;
+		}
+		
+		if( "null".equalsIgnoreCase(demographic_no) || "".equals(demographic_no) ) {
+			demographic_no = null;
 		}
 		
 		Calendar calendar = GregorianCalendar.getInstance();
@@ -394,7 +399,7 @@ public class ManageFaxes extends DispatchAction {
 		
 		FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);
 		
-		List<FaxJob> faxJobList = faxJobDao.getFaxStatusByTeamDateStatus(provider_no, statusStr, teamStr, dateBegin, dateEnd);
+		List<FaxJob> faxJobList = faxJobDao.getFaxStatusByDateDemographicProviderStatusTeam(demographic_no, provider_no, statusStr, teamStr, dateBegin, dateEnd);
 		
 		request.setAttribute("faxes", faxJobList);
 		

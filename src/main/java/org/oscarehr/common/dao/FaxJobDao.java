@@ -40,19 +40,30 @@ public class FaxJobDao extends AbstractDao<FaxJob> {
     }
     
     @SuppressWarnings("unchecked")
-    public List<FaxJob> getFaxStatusByTeamDateStatus(String provider_no, String status, String team, Date beginDate, Date endDate) {
+    public List<FaxJob> getFaxStatusByDateDemographicProviderStatusTeam(String demographic_no, String provider_no, String status, String team, Date beginDate, Date endDate) {
     	
     	StringBuilder sql = new StringBuilder("select job from FaxJob job ");
     	
-    	if( status != null || team != null || beginDate != null || endDate != null || provider_no != null ) {
+    	if( demographic_no != null || status != null || team != null || beginDate != null || endDate != null || provider_no != null ) {
     		sql.append("where");
     	}
     	
     	boolean firstclause = false;
     	
-    	if( status != null) {
+    	if( demographic_no != null ) {
     		firstclause = true;
-    		sql.append(" job.status = :status");
+    		sql.append(" job.demographic_no = :demo");
+    	}
+    	
+    	if( status != null) {
+    		if( firstclause ) {
+    			sql.append(" and job.status = :status");
+    		}
+    		else {
+    			firstclause = true;
+    			sql.append(" job.status = :status");
+    		}
+    		
     	}
     	
     	if( team != null ) {
@@ -106,6 +117,10 @@ public class FaxJobDao extends AbstractDao<FaxJob> {
     	
     	if( status != null ) {
     		query.setParameter("status", FaxJob.STATUS.valueOf(status));
+    	}
+    	
+    	if( demographic_no != null ) {
+    		query.setParameter("demo", Integer.parseInt(demographic_no));
     	}
     	
     	List<FaxJob> faxJobList =  query.getResultList();

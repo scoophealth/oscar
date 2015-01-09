@@ -180,6 +180,7 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
 %>
 <html:form action="/form/formname" styleId="preview2Form">
 
+	<input type="hidden" name="demographic_no" value="<%=bean.getDemographicNo()%>"/>
     <p id="pharmInfo" style="float:right;">
     </p>
     <table>

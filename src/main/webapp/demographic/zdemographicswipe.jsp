@@ -37,15 +37,28 @@
         <link rel="stylesheet" href="../web.css" />
         <script language="JavaScript">
             <!--
+            
+            function verifyInput() {
+            	var input = document.forms[0].magneticStripe.value;
+            	var tracks = input.split(";");
+            	track1 = tracks[0];
+            	
+            	if( track1.length == 78 || track1.length == 79 ) {
+            		return true;
+            	}
+            	
+            	alert("I didn't get that.  Try scanning again");
+            	document.forms[0].magneticStripe.value = "";
+            	return false;
+            }
+            
             function setfocus() {
-                this.focus();
-                document.swipecard.card_no.focus();
-                document.swipecard.card_no.select();
+            	document.forms[0].magneticStripe.focus();
             }
             //-->
         </script>
     </head>
-    <body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+    <body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0" onload="setfocus()">
 
         <table border="0" cellspacing="0" cellpadding="0" width="100%">
             <tr bgcolor="#486ebd">
@@ -55,7 +68,7 @@
             </tr>
         </table>
 
-        <html:form action="/demographic/ValidateSwipeCard">
+        <html:form action="/demographic/ValidateSwipeCard" onsubmit="return verifyInput();">
 
             <div class="container">
 
@@ -64,7 +77,7 @@
                         Swipe card
                     </p>
                     <p class="span">
-                        <html:text property="magneticStripe" />
+                        <html:text property="magneticStripe" size="79"/>
                     </p>
                 </p>
 

@@ -39,6 +39,14 @@
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" type="text/css">
 <link rel="stylesheet" href="<%=request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css" type="text/css">
 
+<style>  
+	label {    
+		display: inline-block;    
+		width: 5em;  
+		}  
+</style>
+
+
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
 
@@ -46,6 +54,26 @@
 	
 	
 	$(document).ready(function() {
+		$( document ).tooltip();
+		
+		var url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?jqueryJSON=true&activeOnly=true";
+		
+		$("#autocompletedemo").autocomplete( {
+			source: url,
+			minLength: 2,
+			
+			focus: function( event, ui ) {
+				$("#autocompletedemo").val( ui.item.label );
+				return false;
+			},
+			select: function( event, ui ) {
+				$("#autocompletedemo").val( ui.item.label );
+				$("#demographic_no").val( ui.item.value );
+				return false;
+			}
+		});
+		
+		
 		$("#dateBegin").datepicker();
 		$("#dateBegin").datepicker("option","showAnim","blind");
 		$("#dateBegin").datepicker("option","dateFormat","yy-mm-dd");
@@ -65,6 +93,7 @@
 			
 			post.done(function( resultdata ) {				
 				$("#results").empty().append(resultdata);
+				$("#preview").empty();
 			});
 			
 			return false;
@@ -189,6 +218,14 @@
 				$('#'+status).text("RESOLVED");
 				
 			}});
+	}
+
+	function resetForm() {
+		$("#demographic_no").val( "" );
+		$("#reportForm").trigger("reset");	
+		$("#preview").empty();
+		$("#results").empty();
+
 		
 		return false;
 	}
@@ -203,7 +240,18 @@
 <form id="reportForm" action="<%=request.getContextPath()%>/admin/ManageFaxes.do">
 <input type="hidden" name="method" value="fetchFaxStatus"/>
 <div class="row-center">
+	
+		<span class="span6"> From:&nbsp;<input class="span5" type="text"  id="dateBegin" name="dateBegin" value=""/></span>
+	
+		<span class="span6"> To:&nbsp;<input class="span5" type="text" id="dateEnd" name="dateEnd" value=""/></span><p>
+	
+	
+</div>
+<div class="row-center">
+	<span class="span6">Demographic&nbsp;<input type="text" class="span4" id="autocompletedemo"></span>
+	<input type="hidden" id="demographic_no" name="demographic_no" value="">
 
+	<div class="span4">
 	<select class="span2" name="oscarUser">
 		<option value="-1">Provider</option>
 		
@@ -220,8 +268,7 @@
 	}
 %>
 	</select>
-
-
+	&nbsp;&nbsp;
 	<select class="span2" name="team">
 		<option value="-1">Team</option>
 <%
@@ -235,7 +282,9 @@
 	}
 %>
 	</select>
-
+	</div>
+	&nbsp;&nbsp;
+	<div class="span2">
 	<select class="span2" name="status">
 		<option value="-1">Status</option>
 	
@@ -247,23 +296,17 @@
 	}
 %>
 	</select>
+	</div>
 	
-	<span class="span3"> From:<input class="span2" type="text"  id="dateBegin" name="dateBegin" value=""/></span>
-	
-	<span class="span3"> To:<input class="span2" type="text" id="dateEnd" name="dateEnd" value=""/></span>
-	
-
-
-
 </div>
-<div class="text-center">
-	<input type="submit" value="Fetch Faxes"/>
+<div class="text-center span12">
+	<input type="submit" value="Fetch Faxes"/>&nbsp;&nbsp;<input type="button" value="Reset" onclick="return resetForm();"/>
 </div>
 </form>
 <hr>
-<div class="span7" id="results">
+<div class="span8" id="results">
 </div>
-<div class="span5" id="preview">
+<div class="span4" id="preview">
 </div>
 </body>
 </html>

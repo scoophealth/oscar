@@ -574,6 +574,7 @@ boolean ajax = "true".equals(request.getParameter("ajax"));
 
                   	</dl>
                   	</div>
+                  	
 <%  } //end else
 	if (!ajax) {
 %>

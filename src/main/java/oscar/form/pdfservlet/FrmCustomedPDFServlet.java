@@ -109,8 +109,9 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		                	FileOutputStream fos = new FileOutputStream(path+pdfFile);
 		                	baosPDF.writeTo(fos);
 		                	fos.close();
-
+		                	
 			                String faxNumber = req.getParameter("clinicFax");
+			                String demo = req.getParameter("demographic_no");
 			                FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);
 			                FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);
 			                List<FaxConfig> faxConfigs = faxConfigDao.findAll(null, null);
@@ -133,6 +134,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			                		faxJob.setStamp(new Date());
 			                		faxJob.setStatus(FaxJob.STATUS.SENT);
 			                		faxJob.setOscarUser(provider_no);
+			                		faxJob.setDemographicNo(Integer.parseInt(demo));
 			                		
 			                		faxJobDao.persist(faxJob);
 			                		validFaxNumber = true;

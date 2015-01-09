@@ -202,6 +202,7 @@ public class EctConsultationFormFaxAction extends Action {
 		    		faxJob.setFax_line(faxNumber);
 		    		faxJob.setStamp(new Date());
 		    		faxJob.setOscarUser(provider_no);
+		    		faxJob.setDemographicNo(Integer.parseInt(demoNo));
 				    
 				    for( FaxConfig faxConfig : faxConfigs ) {
 				    	

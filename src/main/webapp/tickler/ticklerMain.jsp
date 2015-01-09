@@ -763,6 +763,7 @@ function changeSite(sel) {
 								  		
 								  filter.setStartDateWeb(dateBegin);
 								  filter.setEndDateWeb(dateEnd);
+								  filter.setPriority(null);
 								  
 								  if( !mrpview.isEmpty() && !mrpview.equals("all")) {
 								  	filter.setMrp(mrpview);

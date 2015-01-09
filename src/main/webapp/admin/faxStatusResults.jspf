@@ -1,4 +1,4 @@
-<%@ page import="org.oscarehr.common.model.FaxJob, org.oscarehr.common.dao.ProviderDataDao, org.oscarehr.common.model.ProviderData" %>
+<%@ page import="org.oscarehr.common.model.FaxJob, org.oscarehr.common.dao.ProviderDataDao, org.oscarehr.common.model.ProviderData, org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="java.util.List" %>
 <%@ page import="org.apache.commons.lang.time.DateFormatUtils"%>
@@ -9,6 +9,7 @@
 		<tr>
 			<th class="small">Type</th>
 			<th class="small">User</th>
+			<th class="small">Patient</th>
 			<th class="small">Team</th>
 			<th class="small">Status</th>
 			<th class="small">Date</th>
@@ -18,6 +19,7 @@
 	<tbody>
 <%
 	ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	List<FaxJob> faxJobs = (List<FaxJob>)request.getAttribute("faxes");
 	String type;
 	int count = 0;
@@ -36,19 +38,27 @@
 	    }
     
 	    String providerName = "N/A";
+	    String demographicName = "N/A";
 	    String oscarUser = faxJob.getOscarUser();
 	    if( oscarUser != null ) {
 			    
 	    	ProviderData providerData = providerDataDao.find(faxJob.getOscarUser());
 	    	providerName = providerData.getLastName() + ", " + providerData.getFirstName();
-	    	
+	    		
+	    }
+	    
+	    if( faxJob.getDemographic_no() != null ) {
+			
+			Demographic demographic = demographicDao.getDemographic(String.valueOf(faxJob.getDemographic_no()));
+			demographicName = demographic.getDisplayName();
 	    }
 %>
 		<tr>
 			<td class="small"><%=type%></td>
 			<td class="small"><%=providerName%></td>
+			<td class="small"><%=demographicName%></td>
 			<td class="small"><%=faxJob.getUser()%></td>
-			<td id="status<%=count%>" class="small"><%=faxJob.getStatus()%></td>
+			<td id="status<%=count%>" class="small" <%=faxJob.getStatusString() != null ? "title='" + faxJob.getStatusString() + "'" : ""%>><%=faxJob.getStatus()%></td>
 			<td class="small"><%=DateFormatUtils.format(faxJob.getStamp(), "yyyy-MM-dd HH:mm:ss")%></td>
 			<td class="small"><a href="#top" onclick="view(<%=faxJob.getId()%>)">View</a>&nbsp;
 <%

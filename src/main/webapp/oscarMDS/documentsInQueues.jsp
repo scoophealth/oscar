@@ -65,6 +65,38 @@
 
 var contextpath = "<%=request.getContextPath()%>";
 
+function removeLink(docType, docId, providerNo, e) {
+	var url = "../dms/ManageDocument.do";
+	var data = 'method=removeLinkFromDocument&docType=' + docType + '&docId=' + docId + '&providerNo=' + providerNo;
+	new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
+		refreshView();
+	}});
+
+	//e.parentNode.remove(e);
+}
+
+function forwardDocument(docId) {
+	var frm = "#reassignForm_" + docId;
+	var query = jQuery(frm).serialize();
+	
+	jQuery.ajax({
+		type: "POST",
+		url:  "<%= request.getContextPath()%>/oscarMDS/ReportReassign.do",
+		data: query,
+		success: function (data) {    				
+			refreshView();				    				
+		},
+		error: function(jqXHR, err, exception) {
+			alert("Error " + jqXHR.status + " " + err);
+		}
+	});
+}
+
+function renderCalendar(id,inputFieldId){
+    Calendar.setup({ inputField : inputFieldId, ifFormat : "%Y-%m-%d", showsTime :false, button : id });
+    
+}
+
 function removeReport(labid) {
 	return true;
 }
