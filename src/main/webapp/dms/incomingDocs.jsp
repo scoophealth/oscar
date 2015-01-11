@@ -23,7 +23,7 @@
 
 --%>
     
-    
+  
 <%@page import="org.oscarehr.common.model.UserProperty"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO"%>
@@ -435,7 +435,7 @@
                 } 
                 else {
                     var url='<c:out value="${ctx}"/>/dms/ManageDocument.do?method=displayIncomingDocs'
-                        +'&pdfDir='+pdfDir+'&queueId='+queueId+'&pdfName='+pdfName;
+                        +'&pdfDir='+encodeURIComponent(pdfDir)+'&queueId='+queueId+'&pdfName='+encodeURIComponent(pdfName);
                     popupPage(700,960,url);
                 }
             }
@@ -489,7 +489,7 @@
                 if(getHeight()>750) {
                     height=getHeight()-50;
                 }
-                
+
                 var width=800;
                 if(getWidth()>1250)
                 {
@@ -506,12 +506,12 @@
                     
                     if(document.PdfInfoForm.imageType.value=="Pdf") {
                         url='<%=request.getContextPath()%>'+'/dms/ManageDocument.do?method=viewIncomingDocPageAsPdf'
-                            +'&curPage='+pn+'&pdfDir='+pdfDir+'&queueId='+queueId+'&pdfName='+pdfName+"#view=fitV";
+                            +'&curPage='+pn+'&pdfDir='+encodeURIComponent(pdfDir)+'&queueId='+queueId+'&pdfName='+encodeURIComponent(pdfName)+"#view=fitV";
                     }
                     else
                     {
                         url='<%=request.getContextPath()%>'+'/dms/ManageDocument.do?method=viewIncomingDocPageAsImage'
-                            +'&curPage='+pn+'&pdfDir='+pdfDir+'&queueId='+queueId+'&pdfName='+pdfName;
+                            +'&curPage='+pn+'&pdfDir='+encodeURIComponent(pdfDir)+'&queueId='+queueId+'&pdfName='+encodeURIComponent(pdfName);
                     }
                     document.getElementById('docdisp').innerHTML = '<iframe	src="' +url +'"  width="'+(width)+'" height="'+(height)+'" ></iframe>';
                 }    
