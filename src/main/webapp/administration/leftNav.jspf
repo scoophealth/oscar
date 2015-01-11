@@ -584,7 +584,9 @@ String curProvider_no = (String)session.getAttribute("user");
 				
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/displayDocumentCategories.jsp"><bean:message key="admin.admin.DocumentCategories"/></a></li>
-		
+                                                
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/displayDocumentDescriptionTemplate.jsp?setDefault=true"><bean:message key="admin.admin.DocumentDescriptionTemplate"/></a></li>		
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/ManageClinic.do"><bean:message key="admin.admin.clinicAdmin"/></a></li>
 					<%
