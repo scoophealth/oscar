@@ -1917,6 +1917,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 							<td class="tite4" width="10%">  Providers: </td>
 							<td class="tite3" width="20%">
 								<select id="otherFaxSelect">
+									<option value="">Select additional fax recipients</option>
 								<%
 								String rdName = "";
 								String rdFaxNo = "";

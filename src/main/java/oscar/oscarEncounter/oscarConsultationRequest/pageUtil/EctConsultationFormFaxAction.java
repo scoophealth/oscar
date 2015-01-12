@@ -171,7 +171,9 @@ public class EctConsultationFormFaxAction extends Action {
 				
 				// Writing consultation request to disk as a pdf.
 				String faxPath = path;
-				String faxPdf = String.format("%s%s%s.pdf", faxPath, File.separator, "Consult_" + reqId + System.currentTimeMillis());
+				String filename = "Consult_" + reqId + System.currentTimeMillis() + ".pdf";
+				String faxPdf = String.format("%s%s%s", faxPath, File.separator, filename);
+				
 				FileOutputStream fos = new FileOutputStream(faxPdf);				
 				ConcatPDF.concat(alist, fos);				
 				fos.close();
@@ -195,7 +197,7 @@ public class EctConsultationFormFaxAction extends Action {
 				    
 				    faxJob = new FaxJob();
 		    		faxJob.setDestination(faxNo);
-		    		faxJob.setFile_name(faxPdf);
+		    		faxJob.setFile_name(filename);
 		    		faxJob.setNumPages(numPages);
 		    		faxJob.setFax_line(faxNumber);
 		    		faxJob.setStamp(new Date());
