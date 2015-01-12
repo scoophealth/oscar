@@ -39,13 +39,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.oscarehr.common.model.PharmacyInfo;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -114,9 +114,9 @@ public final class RxManagePharmacyAction extends DispatchAction {
     		String data = request.getParameter("preferedPharmacy");
     		String demographicNo = request.getParameter("demographicNo");
     		
-    		JSONObject jsonObject = JSONObject.fromObject(data);
+    		ObjectMapper mapper = new ObjectMapper();       		
     	
-    		PharmacyInfo pharmacyInfo =  (PharmacyInfo) JSONObject.toBean(jsonObject, PharmacyInfo.class);
+    		PharmacyInfo pharmacyInfo =  mapper.readValue(data, PharmacyInfo.class);
     		
     		RxPharmacyData pharmacy = new RxPharmacyData();
     		
@@ -124,7 +124,7 @@ public final class RxManagePharmacyAction extends DispatchAction {
     		
     		response.setContentType("text/x-json");
     		String retVal = "{\"id\":\"" + pharmacyInfo.getId() + "\"}";
-    		jsonObject = JSONObject.fromObject(retVal);
+    		JSONObject jsonObject = JSONObject.fromObject(retVal);
     		jsonObject.write(response.getWriter());
     	}
     	catch( Exception e ) {
@@ -142,11 +142,10 @@ public final class RxManagePharmacyAction extends DispatchAction {
         List<PharmacyInfo> pharmacyList;
         pharmacyList = pharmacyData.getPharmacyFromDemographic(demographicNo);
         
-        JSONArray jsonObject = JSONArray.fromObject(pharmacyList);
         response.setContentType("text/x-json");
-        jsonObject.write(response.getWriter());
-    	
-    	
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(response.getWriter(), pharmacyList);
+        
     	return null;
     }
     
@@ -155,9 +154,9 @@ public final class RxManagePharmacyAction extends DispatchAction {
     	
     	try {
     		PharmacyInfo pharmacyInfo = pharmacy.addPharmacyToDemographic(request.getParameter("pharmacyId"), request.getParameter("demographicNo"), request.getParameter("preferredOrder"));
-    		JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);
+    		ObjectMapper mapper = new ObjectMapper();
     		response.setContentType("text/x-json");
-    		jsonObject.write(response.getWriter());
+    		mapper.writeValue(response.getWriter(), pharmacyInfo);
     	}
     	catch( Exception e ) {
     		MiscUtils.getLogger().error("ERROR SETTING PREFERRED ORDER", e);
@@ -223,10 +222,9 @@ public final class RxManagePharmacyAction extends DispatchAction {
     	}
     	
     	try {
-    		
-    		JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);
     		response.setContentType("text/x-json");
-    		jsonObject.write(response.getWriter());    		
+    		ObjectMapper mapper = new ObjectMapper();
+    		mapper.writeValue(response.getWriter(), pharmacyInfo);    		
     		
     	}
     	catch( IOException e ) {
@@ -245,10 +243,10 @@ public final class RxManagePharmacyAction extends DispatchAction {
     	List<PharmacyInfo>pharmacyList = pharmacy.searchPharmacy(searchStr);
     	
     	response.setContentType("text/x-json");
-    	JSONArray jsonArray = JSONArray.fromObject(pharmacyList);
+    	ObjectMapper mapper = new ObjectMapper();
     	
     	try {
-    		jsonArray.write(response.getWriter());
+    		mapper.writeValue(response.getWriter(), pharmacyList);
     	}
     	catch( IOException e ) {
     		MiscUtils.getLogger().error("ERROR WRITING RESPONSE ",e);
