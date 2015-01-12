@@ -86,12 +86,20 @@ $(function() {
 	 
     $( "#autocompletepharmacy" ).autocomplete({
       source: function( request, response ) {
+    	  
+    	  var city = $("#autocompletepharmacyCity").val();
+    	  var searchTerm = request.term;
+    	  
+    	  if( city != null && city != "") {
+    		searchTerm += "," + city;  
+    	  }
+    	  
     	  $.ajax({
     		  url: "<%= request.getContextPath() %>/oscarRx/managePharmacy.do?method=search",
     		  type: "GET",
     		  dataType: "json",
     		  data: {
-    			  term: request.term    			  
+    			  term: searchTerm   			  
     		  },
     		  contentType: "application/json",
     		  success: function( data ) {
@@ -125,8 +133,68 @@ $(function() {
     	  $('#pharmacyNotes').val(ui.item.pharmacy.notes);
     	  return false;
       }      
-    })
+    });
+    
+    $( "#autocompletepharmacyCity" ).autocomplete({
+        source: function( request, response ) {
+        	
+      	  $.ajax({
+      		  url: "<%= request.getContextPath() %>/oscarRx/managePharmacy.do?method=searchCity",
+      		  type: "GET",
+      		  dataType: "json",
+      		  data: {
+      			  term: request.term    			  
+      		  },
+      		  contentType: "application/json",
+      		  success: function( data ) {
+      			  response($.map(data, function( item ) {
+      				  
+      				  return {
+      					  label: item,
+      					  value: item      					  
+      				  }
+      			  }));
+      		  }
+      	  });
+        },
+        minLength: 2,  
+        focus: function( event, ui ) {
+      	  $( "#autocompletepharmacyCity" ).val( ui.item.value );
+            return false;
+        },
+        select: function(event, ui) {    	  
+      	  return false;
+        }      
+      });
+    
+    var length = $('#preferedPharmacy>option').length;
+    
+    if(  length > 0 ) {
+    	    
+    	var select = $('#preferedPharmacy>option:selected');
+		editPharmacy($(select).val());
+		
+    }
+    
   });
+  
+  function isFaxNumberCorrect() {
+	  
+	  var faxNumber = $("#pharmacyFax").val().trim();
+	  var isCorrect = faxNumber.match(/^1?\s?\(?[0-9]{3}\)?[\-\s]?[0-9]{3}[\-\s]?[0-9]{4}$/);
+  	
+	  if( !isCorrect  ) {
+	  		
+	  	alert("Please enter the fax number in the format 9051234567");
+	  	setTimeout( function() {
+	  			$("#pharmacyFax").focus();	
+	  	},1);
+	  		
+ 	  }
+	  
+	  return isCorrect;
+  	
+  }
   
   function editPharmacy(data) {
 	  resetForm();
@@ -164,27 +232,38 @@ $(function() {
   }
   
   function savePharmacy() {
+	  
+	  if( !isFaxNumberCorrect() ) {
+		  return false;
+	  }
+	  
+	  
+	  if( $("#pharmacyId").val() != null && $("#pharmacyId").val() != "" ) {
 	  	  
-	  var data = $("#pharmacyForm").serialize();
-	  $.post("<%=request.getContextPath() + "/oscarRx/managePharmacy.do?method=save"%>",
-		  data, function( data ) {
-	      	if( data.id ) {
-	      		
-	      		var select = $('#preferedPharmacy>option:selected');
-	      		var json = JSON.parse($(select).val());
-	      		if( data.id = json.id ) {	      			
-	      			$(select).val(JSON.stringify(data));
-	      		}
-	      	    alert("Record saved!");
-	      	    resetForm();
-	      	    
-	      	}
-	      	else {
-	      	    alert("There was a problem saving your record");
-	      	}
-	  },
-	  "json"	  
-	  );
+		  var data = $("#pharmacyForm").serialize();
+		  $.post("<%=request.getContextPath() + "/oscarRx/managePharmacy.do?method=save"%>",
+			  data, function( data ) {
+		      	if( data.id ) {
+		      		
+		      		var select = $('#preferedPharmacy>option:selected');
+		      		var json = JSON.parse($(select).val());
+		      		if( data.id = json.id ) {	      			
+		      			$(select).val(JSON.stringify(data));
+		      		}
+		      	    alert("Record saved!");
+		      	    resetForm();
+		      	    
+		      	}
+		      	else {
+		      	    alert("There was a problem saving your record");
+		      	}
+		  },
+		  "json"	  
+		  );
+	  }
+	  else {
+		  addPharmacy();
+	  }
 	  
 	  return false;
   }
@@ -251,22 +330,13 @@ $(function() {
 		  return false;
 	  } 
 	  
-	  if( $("#pharmacyId").val() != "" ) {
-		  var newPharmacy = confirm("Is this a new Pharmacy? If not click Save instead.");
-		  if( !newPharmacy ) {
-		  	return false;
-		  }
-		  else {
-			  $("pharmacyId").val("");
-		  }
-	  }
-	  
 	  var data = $("#pharmacyForm").serialize();
 	  
 	  $.post("<%=request.getContextPath() + "/oscarRx/managePharmacy.do?method=add"%>",
 			  data, function( data ) {
 		  		if( data.success ) {
 		  			alert("Pharmacy was added!");
+		  			resetForm();
 		  		}
 		  		else {
 		  			alert("There was an error saving your Pharmacy");
@@ -395,9 +465,11 @@ $(function() {
 				&nbsp; <bean:message key="SelectPharmacy.instructions" /></td>
 			</tr>			
 			<tr>
-				<td>
+				<td>				
+				Search Pharmacy&nbsp;&nbsp;<input type="text" id="autocompletepharmacy"/>&nbsp;&nbsp;
+				Narrow Search By City&nbsp;&nbsp;<input type="text" id="autocompletepharmacyCity"/> 
 				
-				Search&nbsp;&nbsp;<input type="text" id="autocompletepharmacy"/>&nbsp;&nbsp;Preferred Pharmacies&nbsp;&nbsp;<select id="preferedPharmacy" name="preferedPharmacy"> 
+				Preferred Pharmacies&nbsp;&nbsp;<select id="preferedPharmacy" name="preferedPharmacy">
 				<%
 					RxPharmacyData pharmacyData = new RxPharmacyData();
 			        List<PharmacyInfo> pharmacyList;
@@ -472,7 +544,7 @@ $(function() {
 						<td>
 						<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
 							<input type="button" value="Save" onclick="return savePharmacy();"/>&nbsp;
-							<input type="button" value="<bean:message key="SelectPharmacy.addLink" />" onclick="return addPharmacy();"/><br/><br/>
+							<br/><br/>
 						</security:oscarSec>
 						<input type="button" value="Set Preferred Pharmacy" onclick="return setPreferredPharmacy();"/> &nbsp;
 						<select id="preferredOrder" name="preferredOrder">
