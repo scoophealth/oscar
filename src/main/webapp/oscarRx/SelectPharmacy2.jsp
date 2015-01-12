@@ -23,8 +23,9 @@
     Ontario, Canada
 
 --%>
+<%@page import="java.io.StringWriter"%>
+<%@page import="org.codehaus.jackson.map.ObjectMapper"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@page import="net.sf.json.JSONObject"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -284,10 +285,11 @@ $(function() {
 		  return false;
 	  }
 	  
+	  
 	  var data = $("#pharmacyForm").serialize();
 	  $.post("<%=request.getContextPath() + "/oscarRx/managePharmacy.do?method=unlink"%>",
 		  data, function( data ) {
-		  
+		  	
 		  	if( data.id ) {
 			  
 		  		populatePreferredPharmacy();			  	
@@ -303,6 +305,7 @@ $(function() {
 		},
 		"json"
 	);
+	  
 
 	return false;
 	  
@@ -400,10 +403,13 @@ $(function() {
 			        List<PharmacyInfo> pharmacyList;
 			        pharmacyList = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
 			        if( pharmacyList != null ) {
+			            ObjectMapper mapper = new ObjectMapper();
+			            StringWriter jsonObject;
 			        	for( PharmacyInfo pharmacyInfo : pharmacyList ) {
-			        		JSONObject jsonObject = JSONObject.fromObject(pharmacyInfo);    
+			        		jsonObject = new StringWriter();
+			        		mapper.writeValue(jsonObject, pharmacyInfo);
 				%>
-							<option value='<%=jsonObject.toString().replaceAll("'", "\\'")%>'><%=pharmacyInfo.getName() + " " + pharmacyInfo.getCity()%></option>
+							<option value='<%=jsonObject.toString().replaceAll("'", "")%>'><%=pharmacyInfo.getName() + " " + pharmacyInfo.getCity()%></option>
 				<%
 			        	}
 			        }
