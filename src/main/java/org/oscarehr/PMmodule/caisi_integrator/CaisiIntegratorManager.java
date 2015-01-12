@@ -113,7 +113,7 @@ public class CaisiIntegratorManager {
 		Throwable rootException = ExceptionUtils.getRootCause(exception);
 		MiscUtils.getLogger().debug("Exception: "+exception.getClass().getName()+" --- "+rootException.getClass().getName());
 				
-		if (rootException instanceof java.net.ConnectException){
+		if (rootException instanceof java.net.ConnectException || rootException instanceof java.net.SocketTimeoutException){
 			setIntegratorOffline(session, true);
 		}
 	}
