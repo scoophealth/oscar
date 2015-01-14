@@ -23,13 +23,16 @@
     Ontario, Canada
 
 */
-oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerService,messageService, inboxService, k2aService, $modal,noteService, securityService) {
+oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerService,messageService, inboxService, k2aService, $modal,noteService, securityService, personaService) {
 	
 	//header	
 	$scope.displayDate= function() {return new Date();}
 	
 	$scope.me = null;
 	
+	personaService.getDashboardPreferences().then(function(data){
+		$scope.prefs = data.dashboardPreferences;
+	});
 	
 	securityService.hasRights({items:[{objectName:'_tickler',privilege:'w'},{objectName:'_tickler',privilege:'r'}]}).then(function(result){
 		if(result.content != null && result.content.length == 2) {
@@ -39,7 +42,8 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 	});
 		
 	$scope.updateTicklers = function() {
-		ticklerService.search({priority:'',status:'A',assignee:$scope.me.providerNo},0,6).then(function(response){
+		//consider the option to have overdue only or not
+		ticklerService.search({priority:'',status:'A',assignee:$scope.me.providerNo,overdueOnly:'property'},0,6).then(function(response){
 			$scope.totalTicklers = response.total;
 			if(response.tickler == null) {
 				return;
@@ -200,4 +204,51 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
         });
         
 	}
+	
+	$scope.configureTicklers = function() {
+        var modalInstance = $modal.open({
+        	templateUrl: 'tickler/configureDashboard.jsp',
+            controller: 'TicklerConfigureController',
+            backdrop: false,
+            size: 'lg',
+            resolve: {
+            	prefs: function() {
+                	return personaService.getDashboardPreferences();
+                }
+            }
+        });
+        
+        modalInstance.result.then(function(data){
+        	if(data == true ) {
+        		$scope.updateTicklers();
+        		personaService.getDashboardPreferences().then(function(data){
+    				$scope.prefs = data.dashboardPreferences;
+    			});
+        	}
+        },function(reason){
+        	alert(reason);
+        });
+        
+	}
+});
+
+
+oscarApp.controller('TicklerConfigureController',function($scope,$modalInstance,personaService,prefs) {
+	
+	$scope.prefs = prefs.dashboardPreferences;
+	
+	   $scope.close = function () {
+		   $modalInstance.close(false);		
+	    }
+	    $scope.save = function () {
+	    	
+	    	personaService.updateDashboardPreferences($scope.prefs).then(function(data){
+    			$modalInstance.close(true);
+    			
+    			
+    		}, function(reason){
+    			$modalInstance.close(false);
+    		});
+	    	
+	    }
 });
