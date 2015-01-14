@@ -28,7 +28,6 @@ import java.util.List;
 import org.oscarehr.common.dao.MessageListDao;
 import org.oscarehr.common.dao.MsgDemoMapDao;
 import org.oscarehr.common.model.MessageList;
-import org.oscarehr.common.model.MsgDemoMap;
 import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,24 +68,14 @@ public class MessagingManager {
 		return result;
 	}
 	
-	//TODO: refactor this into the search functions..have to relate the msgDemoMap table to the query to be able to add this filter
 	public int getMyInboxMessageCount(LoggedInInfo loggedInInfo, String providerNo, boolean onlyWithPatientAttached) {		
 		
 		if(!onlyWithPatientAttached) {
 			return getMyInboxMessagesCount(loggedInInfo, providerNo, MessageList.STATUS_NEW);
+		} else {
+			return messageListDao.findUnreadByProviderAndAttachedCount(providerNo);
 		}
 		
-		List<MessageList> msgs = messageListDao.findUnreadByProvider(providerNo);
-		
-		int total = 0;
-		for(MessageList msg:msgs) {
-			List<MsgDemoMap> demos = msgDemoMapDao.findByMessageId((int)msg.getMessage());
-			if(demos != null && demos.size()>0) {
-				total++;
-			}
-		}
-		
-		return total;
 	}
 
 }
