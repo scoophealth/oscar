@@ -68,6 +68,34 @@ angular.module("personaServices", [])
                 	deferred.reject("An error occured while setting current");
                 });
            return deferred.promise;
+        },
+        getDashboardPreferences: function () {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/preferences',
+                method: "POST",
+                data: {type:'dashboard'},
+                headers: this.configHeaders,
+              }).success(function (data) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers) {
+                	deferred.reject("An error occured while getting preferences from persona");
+                });
+           return deferred.promise;
+        },
+        updateDashboardPreferences: function (prefs) {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/updatePreferences',
+                method: "POST",
+                data: JSON.stringify(prefs),
+                headers: {'Content-Type': 'application/json'}
+              }).success(function (data, status, headers, config) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers, config) {
+                	deferred.reject("An error occured while updating preferences");
+                });
+           return deferred.promise;
         }
     };
 });

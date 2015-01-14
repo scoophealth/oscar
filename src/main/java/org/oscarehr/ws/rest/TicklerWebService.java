@@ -38,6 +38,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerTextSuggest;
@@ -46,6 +47,7 @@ import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.ticklers.service.TicklerService;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.conversion.TicklerConverter;
 import org.oscarehr.ws.rest.conversion.TicklerTextSuggestConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
@@ -98,6 +100,27 @@ public class TicklerWebService extends AbstractServiceImpl {
 		if(json.containsKey("demographicNo")){
 			cf.setDemographicNo(json.getString("demographicNo"));
 		}
+		
+		//this will need refactor...needs a manager layer and some useful methods.
+		//basically if overdueOnly='property', I check Persona for what to return, this
+		//avoids cliend needing to know their preferences and passing them back.
+		if(json.containsKey("overdueOnly") && "property".equals(json.getString("overdueOnly"))) {
+			UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+			String strVal = propDao.getStringValue(getCurrentProvider().getProviderNo(), "dashboard.expiredTicklersOnly");
+			if(strVal != null && "true".equalsIgnoreCase(strVal) ) {
+				cf.setEndDate(new Date());
+			}
+			if(strVal != null && "false".equalsIgnoreCase(strVal) ) {
+				cf.setEndDate(null);
+			}
+			
+			if(strVal == null ) {
+				cf.setEndDate(new Date());
+			}
+			
+		}
+		
+		
 		
 		List<Tickler> ticklers = ticklerManager.getTicklers(getLoggedInInfo(),cf,startIndex,limit);
 
