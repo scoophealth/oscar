@@ -233,6 +233,10 @@ $(function() {
   
   function savePharmacy() {
 	  
+	  if( !confirm("You are about to edit/add a pharmacy to the database.  Is this what you want?\nSelect set Preferred Pharmacy to add pharmacy to the patient.")) {
+		  return false;
+	  }
+	  
 	  if( !isFaxNumberCorrect() ) {
 		  return false;
 	  }
