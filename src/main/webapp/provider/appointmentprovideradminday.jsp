@@ -2107,6 +2107,8 @@ start_time += iSm + ":00";
 
 <!-- doctor code block 3 -->
 <% if(bShowEncounterLink && !isWeekView) { %>
+<% if (oscar.OscarProperties.getInstance().isPropertyActive("SINGLE_PAGE_CHART")) { %>
+|<a  href="../web/#/record/<%=demographic_no %>/summary?appointmentNo=<%=appointment.getId() %>&encType=face%20to%20face%20encounter%20with%20client"><bean:message key="provider.appointmentProviderAdminDay.btnE"/>2</a><%}%>
 <% String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+appointment.getId()+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(reason)+"&encType="+URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime=" + start_time + "&status="+status + "&apptProvider_no=" + curProvider_no[nProvider] + "&providerview=" + curProvider_no[nProvider];%>
 <a href=# class="encounterBtn" onClick="popupWithApptNo(710, 1024,'<%=eURL%>','encounter',<%=appointment.getId()%>);return false;" title="<bean:message key="global.encounter"/>">
             |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
