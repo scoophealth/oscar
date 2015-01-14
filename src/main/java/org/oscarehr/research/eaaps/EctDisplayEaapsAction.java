@@ -38,10 +38,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.StudyDataDao;
 import org.oscarehr.common.dao.UserDSMessagePrefsDao;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.StudyData;
 import org.oscarehr.common.model.UserDSMessagePrefs;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
@@ -67,6 +67,8 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 	private StudyDataDao studyDataDao = SpringUtils.getBean(StudyDataDao.class);
 	
 	private UserDSMessagePrefsDao userDsMessagePrefsDao = SpringUtils.getBean(UserDSMessagePrefsDao.class);
+	
+	private DxresearchDAO dxresearchDAO = SpringUtils.getBean(DxresearchDAO.class);
 	
 	public EctDisplayEaapsAction() {
 		OscarProperties props = OscarProperties.getInstance();
@@ -96,10 +98,8 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 		}
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-		
 		EaapsHash hash = new EaapsHash(demographic);
-		StudyData studyData = studyDataDao.findSingleByContent(hash.getHash());
-		if (studyData == null) {
+		if(!dxresearchDAO.activeEntryExists(demographic.getDemographicNo(), "icd9", "493")){
 			if (logger.isDebugEnabled()) {
 				logger.debug("Demographic " + demographic + " is not entered for a study");
 			}
