@@ -48,7 +48,7 @@
 
 //-->
 </SCRIPT>
-<script src="<c:out value="../js/jquery.js"/>"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
 <script>
 	jQuery.noConflict();
 </script>
