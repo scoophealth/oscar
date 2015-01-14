@@ -41,6 +41,13 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 		}
 	});
 		
+	$scope.openInbox = function() {
+		 newwindow=window.open('../dms/inboxManage.do?method=prepareForIndexPage','inbox','height=700,width=1000');
+		 if (window.focus) {
+			 newwindow.focus();
+		 }	
+	}
+	
 	$scope.updateTicklers = function() {
 		//consider the option to have overdue only or not
 		ticklerService.search({priority:'',status:'A',assignee:$scope.me.providerNo,overdueOnly:'property'},0,6).then(function(response){
