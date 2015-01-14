@@ -47,7 +47,7 @@
 <p class="lead">You have {{(inbox.length>0) && inbox.length || "no"}} report{{(inbox.length>1) && "s" || ""}}{{(inbox.length==0) && "s" || ""}}{{(inbox==null) && "s" || ""}} which are not yet acknowledged.</p>
 
 
-<div ng-if="inbox.length > 5">
+<div ng-if="inbox.length > 0">
 <table class="table table-condensed  table-hover" >
 	<thead>
     <tr>
@@ -61,7 +61,7 @@
     </thead>
               
      <tbody>
-    <tr ng-repeat="item in inbox" ng-hide="$index >= 5">
+    <tr ng-repeat="item in inbox" ng-hide="$index >= 5" ng-click="openInbox()" >
   <td><span ng-if="item.properity != null && item.priority != 'Routine'" class="glyphicon glyphicon-flag" style="color:red"></span></td>
 		  	
         <td >{{item.demographicName}}</td>
