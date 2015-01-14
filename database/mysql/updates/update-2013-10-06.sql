@@ -31,7 +31,7 @@ update labPatientPhysicianInfo set lastUpdateDate = now() where lastUpdateDate i
 alter table patientLabRouting add created datetime not null;
 update patientLabRouting set created = now() where created is null;
 
---indexes
+-- indexes
 create index admission_ikey on admission(client_id,program_id,lastUpdateDate);
 create index program_ikey on program(facilityId,lastUpdateDate);
 create index provider_ikey on provider(lastUpdateDate);
