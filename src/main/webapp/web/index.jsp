@@ -157,18 +157,12 @@ padding:8px;
 				
 					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard" title="<bean:message key="navbar.dashboard" bundle="ui"/>"></span></li>
 				
-					<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state), 'hand-hover':true }">
-						<a ng-click="transition(item.state)" data-toggle="tab" >{{item.label}}
-							<span ng-if="item.extra.length>0">({{item.extra}})</span>
-						</a>
-					</li>
-				
-				
-					<li class="dropdown" ><a class="dropdown-toggle"><bean:message key="navbar.more" bundle="ui"/><b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li ng-repeat="item in moreMenuItems">
-								<a ng-class="{'more-tab-highlight': isActive(item.state) }" ng-click="transition(item.state)">{{item.label}}
-								<span ng-if="item.extra.length>0" class="badge">{{item.extra}}</span></a>
+					<li ng-repeat="item in menuItems" ng-class="isActive(item)">
+						<a  ng-if="!item.dropdown" ng-click="transition(item)" >{{item.label}}</a>
+						<a  ng-if="item.dropdown"  class="dropdown-toggle" data-toggle="dropdown">{{item.label}}<span class="caret"></span></a>
+						<ul ng-if="item.dropdown" class="dropdown-menu" role="menu">
+							<li ng-repeat="dropdownItem in item.dropdownItems" >
+								<a  ng-click="transition(dropdownItem)" >{{dropdownItem.label}}</a>
 							</li>
 						</ul>
 					</li>
