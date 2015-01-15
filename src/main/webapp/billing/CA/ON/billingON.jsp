@@ -1241,8 +1241,11 @@ function toggleDiv(selectedBillForm, selectedBillFormName,billType)
       %>
       <script>
 var _providers = [];
-<%	for (int i=0; i<sites.size(); i++) { %>
-	_providers["<%= sites.get(i).getName() %>"]="<% Iterator<Provider> iter = sites.get(i).getProviders().iterator();
+<%	for (int i=0; i<sites.size(); i++) {   
+	Set<Provider> siteProviders = sites.get(i).getProviders();
+	List<Provider>  siteProvidersList = new ArrayList<Provider> (siteProviders);
+	Collections.sort(siteProvidersList,(new Provider()).ComparatorName());%>
+	_providers["<%= sites.get(i).getName() %>"]="<% Iterator<Provider> iter = siteProvidersList.iterator();
 	while (iter.hasNext()) {
 		Provider p=iter.next();
 		if ("1".equals(p.getStatus()) && StringUtils.isNotBlank(p.getOhipNo())) {
