@@ -52,6 +52,7 @@ import org.oscarehr.ws.rest.to.PatientList;
 import org.oscarehr.ws.rest.to.PersonaResponse;
 import org.oscarehr.ws.rest.to.PersonaRightsResponse;
 import org.oscarehr.ws.rest.to.PrimitiveResponseWrapper;
+import org.oscarehr.ws.rest.to.model.MenuItemTo1;
 import org.oscarehr.ws.rest.to.model.MenuTo1;
 import org.oscarehr.ws.rest.to.model.NavBarMenuTo1;
 import org.oscarehr.ws.rest.to.model.ProgramProviderTo1;
@@ -165,26 +166,28 @@ public class PersonaService extends AbstractServiceImpl {
 				.add(1,bundle.getString("navbar.menu.advancedSearch"),null,"#/search");
 		navBarMenu.setPatientSearchMenu(patientSearchMenu);
 		
-		MenuTo1 menu = new MenuTo1()
-				.addWithState(0,bundle.getString("navbar.menu.inbox"),null,"inbox")
-				.addWithState(1,bundle.getString("navbar.menu.consults"),null,"consults")
-				.addWithState(2,bundle.getString("navbar.menu.billing"),null,"billing")
-				.addWithState(3,bundle.getString("navbar.menu.tickler"),null,"ticklers")
-				.addWithState(4,bundle.getString("navbar.menu.schedule"),null,"schedule")
-				//.add(0,"K2A",null,"#/k2a")
-				.addWithState(5,bundle.getString("navbar.menu.admin"),null,"admin");
-		navBarMenu.setMenu(menu);
-	/*	
-		MenuTo1 moreMenu = new MenuTo1()
-		.add(1,"Caseload",null,"#/caseload")
-		.add(2,"Resources",null,"#/resources")
-		navBarMenu.setMoreMenu(moreMenu);
-		*/
-		MenuTo1 moreMenu2 = new MenuTo1()
-		.addWithState(0,bundle.getString("navbar.menu.reports"),null,"reports")
-		.addWithState(1,bundle.getString("navbar.menu.documents"),null,"documents");
-		navBarMenu.setMoreMenu(moreMenu2);
+		int idCounter = 0;
 		
+		MenuTo1 menu = new MenuTo1()
+		        .add(idCounter++,bundle.getString("navbar.menu.schedule"),null,"../provider/providercontrol.jsp")
+				.addWithState(idCounter++,bundle.getString("navbar.menu.inbox"),null,"inbox")
+				.addWithState(idCounter++,bundle.getString("navbar.menu.consults"),null,"consults")
+				.addWithState(idCounter++,bundle.getString("navbar.menu.billing"),null,"billing")
+				.addWithState(idCounter++,bundle.getString("navbar.menu.tickler"),null,"ticklers")
+				
+				//.add(0,"K2A",null,"#/k2a")
+				.addWithState(idCounter++,bundle.getString("navbar.menu.admin"),null,"admin");
+
+		MenuItemTo1 moreMenu = new MenuItemTo1(idCounter++, bundle.getString("navbar.menu.more"), null);
+		moreMenu.setDropdown(true);
+		
+		MenuTo1 moreMenuList = new MenuTo1()
+		.addWithState(idCounter++,bundle.getString("navbar.menu.reports"),null,"reports")
+		.addWithState(idCounter++,bundle.getString("navbar.menu.documents"),null,"documents");
+		moreMenu.setDropdownItems(moreMenuList.getItems());
+		menu.getItems().add(moreMenu);
+		navBarMenu.setMenu(menu);
+	
 		MenuTo1 userMenu = new MenuTo1()
 		.addWithState(0,bundle.getString("navbar.menu.settings"),null,"settings")
 		.addWithState(1,bundle.getString("navbar.menu.support"),null,"support")
