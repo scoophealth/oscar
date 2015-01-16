@@ -43,6 +43,13 @@ public class EncounterFormDao extends AbstractDao<EncounterForm> {
 		List<EncounterForm> results = query.getResultList();
 		return results;
 	}
+		
+	@SuppressWarnings("unchecked")
+	public List<EncounterForm> findAllNotHidden() {
+		Query query = entityManager.createQuery("SELECT x FROM " + modelClass.getSimpleName() + " x where x.displayOrder!=0");
+		List<EncounterForm> results = query.getResultList();
+		return results;
+	}
 	
     public List<EncounterForm> findByFormName(String formName)
 	{
@@ -65,4 +72,5 @@ public class EncounterFormDao extends AbstractDao<EncounterForm> {
  		
  		return(results);
  	}
+        
 }
