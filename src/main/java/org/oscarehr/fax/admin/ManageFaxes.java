@@ -400,4 +400,16 @@ public class ManageFaxes extends DispatchAction {
 		
 		return mapping.findForward("faxstatus");
 	}
+	
+	public ActionForward SetCompleted(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		
+		String id = request.getParameter("jobId");		
+		FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);		
+		
+		FaxJob faxJob = faxJobDao.find(Integer.parseInt(id));		
+		faxJob.setStatus(FaxJob.STATUS.RESOLVED);		
+		faxJobDao.merge(faxJob);
+		
+		return null;
+	}
 }
