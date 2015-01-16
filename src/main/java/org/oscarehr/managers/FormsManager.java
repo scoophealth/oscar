@@ -23,9 +23,10 @@
  */
 package org.oscarehr.managers;
 
+
+
 import java.util.Collections;
 import java.util.List;
-
 import org.oscarehr.common.dao.EFormDao;
 import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
 import org.oscarehr.common.dao.EFormDataDao;
@@ -37,8 +38,8 @@ import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import oscar.log.LogAction;
+
 /**
  * 
  * This class will change soon to incorporate dealing with forms
@@ -75,7 +76,7 @@ public class FormsManager {
 	 * @return
 	 * 		Returns the list of all forms with the specified status.
 	 */
-	@SuppressWarnings("unchecked")
+
 	public List<EForm> findByStatus(LoggedInInfo loggedInInfo, boolean status, EFormSortOrder sortOrder) {
 		List<EForm> results = eformDao.findByStatus(status, sortOrder);
 		
@@ -125,4 +126,11 @@ public class FormsManager {
 		Collections.sort(results, EncounterForm.FORM_NAME_COMPARATOR);
 		return (results);
 	}
+	
+	public List<EncounterForm> getSelectedEncounterForms() {
+		List<EncounterForm> results = encounterFormDao.findAllNotHidden();
+		Collections.sort(results, EncounterForm.FORM_NAME_COMPARATOR);
+		return (results);
+	}
+	
 }
