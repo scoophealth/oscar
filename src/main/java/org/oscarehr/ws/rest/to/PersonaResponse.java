@@ -38,6 +38,10 @@ public class PersonaResponse implements Serializable {
 	
 	private List<PatientList> patientListMoreTabItems = new ArrayList<PatientList>();
 
+	
+	private DashboardPreferences dashboardPreferences;
+	
+	
 	public List<PatientList> getPatientListTabItems() {
 		return patientListTabItems;
 	}
@@ -53,7 +57,13 @@ public class PersonaResponse implements Serializable {
 	public void setPatientListMoreTabItems(List<PatientList> patientListMoreTabItems) {
 		this.patientListMoreTabItems = patientListMoreTabItems;
 	}
-	
-	
-	
+
+	public DashboardPreferences getDashboardPreferences() {
+		return dashboardPreferences;
+	}
+
+	public void setDashboardPreferences(DashboardPreferences dashboardPreferences) {
+		this.dashboardPreferences = dashboardPreferences;
+	}
+
 }
