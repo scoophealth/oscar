@@ -42,39 +42,43 @@
 <div class="row">
 <div class="col-md-9" ng-controller="DashboardCtrl">
 
-<!-- this is a bit of a problem for il18n -->
-<p class="lead">You have {{(totalTicklers > 0) && totalTicklers || "no"}} active tickler{{(totalTicklers != 1) && "s" || ""}}.</p>
+
+<!-- il18n problem here -->
+<p class="lead">You have {{(inbox.length>0) && inbox.length || "no"}} report{{(inbox.length>1) && "s" || ""}}{{(inbox.length==0) && "s" || ""}}{{(inbox==null) && "s" || ""}} which are not yet acknowledged.</p>
 
 
-<div ng-if="totalTicklers>0">
-	<table class="table table-condensed  table-hover" >
-		<thead>
-		<tr>
-			<th class="flag-column"></th>
-			<th><bean:message key="dashboard.tickler.header.demographicName" bundle="ui"/></th>
-			<th><bean:message key="dashboard.tickler.header.due" bundle="ui"/></th>
-			<th><bean:message key="dashboard.tickler.header.message" bundle="ui"/></th>
-		</tr>
-		</thead>
-		<tbody>
-		<tr ng-repeat="item in ticklers" ng-hide="$index >= 5" ng-click="viewTickler(item)" class="hand-hover">
-			<td>
-				<span ng-if="isTicklerHighPriority(item)" class="glyphicon glyphicon-flag" style="color:red"></span>
-			</td>
-			<td>{{item.demographicName}}</td>
-			<td>{{item.serviceDate | date:'yyyy-MM-dd'}}</td>
-			<td>{{item.message  | cut:true:200 }}</td>
-		</tr>
-		</tbody>
-		<tfoot>
-	    <tr ng-if="totalTicklers > 5">
-	      <td colspan="6">
-			 <span class="label label-success hand-hover" ui-sref="ticklers"><bean:message key="dashboard.tickler.more" bundle="ui"/></span> 
-	      </td>
-	    </tr>
-	  </tfoot>
-		
-	</table>
+<div ng-if="inbox.length > 5">
+<table class="table table-condensed  table-hover" >
+	<thead>
+    <tr>
+    	<th class="flag-column"></th>
+ 	    <th><bean:message key="dashboard.inbox.header.patient" bundle="ui"/></th>
+ 	    <th><bean:message key="dashboard.inbox.header.category" bundle="ui"/></th>
+       <!--  <th>Source</th> -->
+        <th><bean:message key="dashboard.inbox.header.date" bundle="ui"/></th>
+        <th><bean:message key="dashboard.inbox.header.status" bundle="ui"/></th>
+    </tr>
+    </thead>
+              
+     <tbody>
+    <tr ng-repeat="item in inbox" ng-hide="$index >= 5">
+  <td><span ng-if="item.properity != null && item.priority != 'Routine'" class="glyphicon glyphicon-flag" style="color:red"></span></td>
+		  	
+        <td >{{item.demographicName}}</td>
+        <td>{{item.discipline}}</td>
+       <!--  <td>{{item.source}}</td> -->
+        <td>{{item.dateReceived}}</td>
+       	<td>{{item.status}}</td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr ng-if="inbox.length > 5">
+      <td colspan="6">
+		 <span class="label label-success hand-hover" ui-sref="inbox"><bean:message key="dashboard.inbox.more" bundle="ui"/></span> 
+      </td>
+    </tr>
+  </tfoot>
+</table>
 </div>
 
 <br/>
@@ -116,6 +120,7 @@
 </table>
 </div>
 
+<br/>
 <!-- 
 <p class="lead">You have 0 new messages from patients</p>
 
@@ -150,45 +155,42 @@
 
 -->
 
-<br/>
 
+<!-- this is a bit of a problem for il18n -->
+<p class="lead">You have {{(totalTicklers > 0) && totalTicklers || "no"}} active tickler{{(totalTicklers != 1) && "s" || ""}}. <span style="color:red" ng-if="prefs.expiredTicklersOnly == true">(Overdue)</span></p>
 
-<!-- il18n problem here -->
-<p class="lead">You have {{(inbox.length>0) && inbox.length || "no"}} report{{(inbox.length>1) && "s" || ""}}{{(inbox.length==0) && "s" || ""}}{{(inbox==null) && "s" || ""}} which are not yet acknowledged.</p>
-
-
-<div ng-if="inbox.length">
-<table class="table table-condensed  table-hover" >
-	<thead>
-    <tr>
-    	<th class="flag-column"></th>
- 	    <th><bean:message key="dashboard.inbox.header.patient" bundle="ui"/></th>
- 	    <th><bean:message key="dashboard.inbox.header.category" bundle="ui"/></th>
-       <!--  <th>Source</th> -->
-        <th><bean:message key="dashboard.inbox.header.date" bundle="ui"/></th>
-        <th><bean:message key="dashboard.inbox.header.status" bundle="ui"/></th>
-    </tr>
-    </thead>
-              
-     <tbody>
-    <tr ng-repeat="item in inbox" ng-hide="$index >= 5">
-  <td><span ng-if="item.properity != null && item.priority != 'Routine'" class="glyphicon glyphicon-flag" style="color:red"></span></td>
-		  	
-        <td >{{item.demographicName}}</td>
-        <td>{{item.discipline}}</td>
-       <!--  <td>{{item.source}}</td> -->
-        <td>{{item.dateReceived}}</td>
-       	<td>{{item.status}}</td>
-    </tr>
-    </tbody>
-    <tfoot>
-    <tr ng-if="inbox.length > 5">
-      <td colspan="6">
-		 <span class="label label-success hand-hover" ui-sref="inbox"><bean:message key="dashboard.inbox.more" bundle="ui"/></span> 
-      </td>
-    </tr>
-  </tfoot>
-</table>
+<div ng-if="totalTicklers>0">
+	<table class="table table-condensed  table-hover" >
+		<thead>
+		<tr>
+			<th class="flag-column">
+			<span class="glyphicon glyphicon-cog hand-hover" ng-click="configureTicklers()"></span>
+			</th>
+			<th><bean:message key="dashboard.tickler.header.demographicName" bundle="ui"/></th>
+			<th><bean:message key="dashboard.tickler.header.due" bundle="ui"/></th>
+			<th><bean:message key="dashboard.tickler.header.message" bundle="ui"/></th>
+			
+		</tr>
+		</thead>
+		<tbody>
+		<tr ng-repeat="item in ticklers" ng-hide="$index >= 5" ng-click="viewTickler(item)" class="hand-hover">
+			<td>
+				<span ng-if="isTicklerHighPriority(item)" class="glyphicon glyphicon-flag" style="color:red"></span>
+			</td>
+			<td>{{item.demographicName}}</td>
+			<td>{{item.serviceDate | date:'yyyy-MM-dd'}}</td>
+			<td>{{item.message  | cut:true:200 }}</td>
+		</tr>
+		</tbody>
+		<tfoot>
+	    <tr ng-if="totalTicklers > 5">
+	      <td colspan="6">
+			 <span class="label label-success hand-hover" ui-sref="ticklers"><bean:message key="dashboard.tickler.more" bundle="ui"/></span> 
+	      </td>
+	    </tr>
+	  </tfoot>
+		
+	</table>
 </div>
 
 </div>

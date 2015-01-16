@@ -38,14 +38,18 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.managers.MessagingManager;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.conversion.ProgramProviderConverter;
 import org.oscarehr.ws.rest.conversion.SecobjprivilegeConverter;
 import org.oscarehr.ws.rest.conversion.SecuserroleConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
+import org.oscarehr.ws.rest.to.DashboardPreferences;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.NavbarResponse;
 import org.oscarehr.ws.rest.to.PatientList;
@@ -222,5 +226,81 @@ public class PersonaService extends AbstractServiceImpl {
 		return response;
 	}
 	
+	/**
+	 * This will be a REST based way to get access to groups of preferences. It's not fully implemented yet
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	@POST
+	@Path("/preferences")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public PersonaResponse getPreferences(JSONObject obj) {
+		Provider provider = getCurrentProvider();
+		
+		//not yet used..need a way to just load specific groups of properties.
+		String type = obj.getString("type");
+		
+		PersonaResponse response = new PersonaResponse();
+		DashboardPreferences prefs = new DashboardPreferences();
+		
+		//this needs to be more structured after the alpha. Create a manager a way to load with defaults
+		UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+		String strVal = propDao.getStringValue(provider.getProviderNo(), "dashboard.expiredTicklersOnly");
+		if(strVal == null) {
+			prefs.setExpiredTicklersOnly(true);
+		}
+		else if(strVal != null && "true".equalsIgnoreCase(strVal)) {
+			prefs.setExpiredTicklersOnly(true);
+		}
+		
+		response.setDashboardPreferences(prefs);
+
+		return response;
+	}
+	
+	@POST
+	@Path("/updatePreferences")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse updatePreferences(JSONObject json){
+		Provider provider = getCurrentProvider();
+		GenericRESTResponse response = new GenericRESTResponse();
+		
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_pref", "u", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		
+		Boolean value = null;
+		
+		if(json.has("expiredTicklersOnly")) {
+			value = json.getBoolean("expiredTicklersOnly");
+		}
+		
+		if(value != null) {
+
+			UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+			UserProperty prop = propDao.getProp(provider.getProviderNo(), "dashboard.expiredTicklersOnly");
+			if(prop != null) {
+				prop.setValue(String.valueOf(value));
+			} else {
+				prop = new UserProperty();
+				prop.setName("dashboard.expiredTicklersOnly");
+				prop.setProviderNo(provider.getProviderNo());
+				prop.setValue(String.valueOf(value));
+			}
+			
+			propDao.saveProp(prop);
+			
+			response.setSucess(true);
+		} else {
+			response.setSucess(false);
+		}
+		
+		
+		return response;
+	
+	}
 }
 
