@@ -52,6 +52,28 @@ angular.module("formServices", [])
      
           return deferred.promise;
         },
+        getSelectedEncounterForms: function(){
+        	var deferred = $q.defer();
+        	 $http.get(this.apiPath+'/selectedEncounterForms',this.configHeaders).success(function(data){
+            	deferred.resolve(data.content);
+            }).error(function(){
+            	console.log("error fetching selected encounter");
+            	deferred.reject("An error occured while fetching selected encounter forms");
+            });
+     
+          return deferred.promise;
+        },
+        getCompletedEncounterForms: function(demographicNo){
+        	var deferred = $q.defer();
+        	 $http.get(this.apiPath+'/'+demographicNo+'/completedEncounterForms',this.configHeaders).success(function(data){
+            	deferred.resolve(data);
+            }).error(function(){
+            	console.log("error fetching completed encounter forms");
+            	deferred.reject("An error occured while fetching completed encounter forms");
+            });
+     
+          return deferred.promise;
+        },        
         getAllEForms: function(){
         	var deferred = $q.defer();
         	 $http.get(this.apiPath+'/allEForms',this.configHeaders).success(function(data){

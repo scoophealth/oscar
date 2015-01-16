@@ -23,8 +23,11 @@
     Ontario, Canada
 
 */
-oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,demographicService,demo,$state,formService) {
+oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,demographicService,demo,$state,formService, user) {
 	console.log("form ctrl ",$stateParams,$state);
+	
+	$scope.demographicNo = $stateParams.demographicNo;
+	$scope.providerNo = user.providerNo;
 	
 	$scope.page = {};
 	$scope.page.currentFormList = [];
@@ -46,6 +49,20 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	        $scope.page.currentFormList[index] = data.list;
 	    });
 	});
+	
+
+	$scope.page.encounterFormlist = [];
+	
+	
+	formService.getCompletedEncounterForms($stateParams.demographicNo).then(function(data) {
+		$scope.page.encounterFormlist[0] = data.list;
+		//console.log("completed list as is:" + JSON.stringify($scope.page.encounterFormlist[0]) );
+	});
+	
+	formService.getSelectedEncounterForms().then(function(data) {
+		$scope.page.encounterFormlist[1] = data;	
+	});
+		
 	
 	$scope.changeTo = function(listId){
 		$scope.page.currentlistId = listId;
@@ -78,6 +95,15 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 			
 			window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");  
 			return;
+		}else if(item.type == 'form'){
+			//force to popup for now
+			url = '../form/forwardshortcutname.jsp?formname='+item.name+'&demographic_no='+ $stateParams.demographicNo+'&formId='+item.formId;
+						
+			var rnd = Math.round(Math.random() * 1000);
+			win = "win" + rnd;
+			
+			window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");  
+			return;
 		}
 
 		$scope.page.currentForm = item;
@@ -87,6 +113,17 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 		
 	}
 	
+	//using this temp until I sort it out in the above function
+	$scope.viewFormNewWin = function(url){
+		
+		url = url + $stateParams.demographicNo + "&formId=0&provNo=" + user.providerNo + "&parentAjaxId=forms";
+		
+		var rnd = Math.round(Math.random() * 1000);
+		win = "win" + rnd;
+		
+		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");  
+		return;
+	}
 	
 	
 	/*
