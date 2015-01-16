@@ -102,8 +102,13 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 	}
 	
 	//to help ng-clicks on buttons
-	$scope.transition = function ( state ) {
-		$state.go(state);
+	$scope.transition = function (item) {
+		if(angular.isDefined(item) && angular.isDefined(item.state)){
+			$state.go(item.state);
+		}else if(angular.isDefined(item) && angular.isDefined(item.url)){
+			window.location = item.url;   
+		}
+	
 	};
 	
 	$scope.goHome = function() {
@@ -142,8 +147,11 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 		console.log($('#myModal'));
 	}
 	
-	$scope.isActive = function (state) { 
-		return $state.is(state);
+	$scope.isActive = function (item) {
+		if(angular.isDefined(item) && angular.isDefined(item.state)){
+			return $state.is(item.state);
+		}
+		return false;
 	};
 	
     $scope.changeProgram = function(programId){
