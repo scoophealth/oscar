@@ -23,6 +23,9 @@
  */
 package org.oscarehr.ws.rest;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -33,9 +36,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
 import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EFormData;
+import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.FormsManager;
 import org.oscarehr.ws.rest.conversion.EFormConverter;
@@ -47,6 +52,8 @@ import org.oscarehr.ws.rest.to.model.FormListTo1;
 import org.oscarehr.ws.rest.to.model.FormTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import oscar.oscarEncounter.data.EctFormData;
 
 
 /**
@@ -119,6 +126,60 @@ public class FormsService extends AbstractServiceImpl {
 		response.setTotal(response.getContent().size());
 		return response;
 		
+	}
+	
+	@GET
+	@Path("/selectedEncounterForms")
+	@Produces("application/json")
+	public AbstractSearchResponse<EncounterFormTo1> getSelectedFormNames(){
+		AbstractSearchResponse<EncounterFormTo1> response = new AbstractSearchResponse<EncounterFormTo1>();
+		response.setContent(new EncounterFormConverter().getAllAsTransferObjects(getLoggedInInfo(),formsManager.getSelectedEncounterForms()));
+		response.setTotal(response.getContent().size());
+		return response;
+		
+	}
+	
+		
+	@GET
+	@Path("/{demographicNo}/completedEncounterForms")
+	@Produces("application/json")
+	public FormListTo1 getCompletedFormNames(@PathParam("demographicNo") String demographicNo){
+		FormListTo1 formListTo1 = new FormListTo1();
+
+		List<EncounterForm> encounterForms = formsManager.getAllEncounterForms();
+		Collections.sort(encounterForms, EncounterForm.BC_FIRST_COMPARATOR);
+
+		for (EncounterForm encounterForm : encounterForms) {
+			String table = StringUtils.trimToNull(encounterForm.getFormTable());
+			if (table != null) {
+			
+				EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(getLoggedInInfo(), demographicNo, table);
+				int formId = 0;
+				String name = encounterForm.getFormName();
+				
+				if (pforms.length > 0) {
+				
+					EctFormData.PatientForm pfrm = pforms[0];
+					formId = Integer.parseInt(pfrm.getFormId());
+					Date date;
+					
+					//d-MMM-y
+					DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+					String dateStr = pfrm.getCreated();
+					try {
+						date = formatter.parse(dateStr);
+					} catch (ParseException ex) {
+						date = null;
+					}
+                                   
+					formListTo1.add(FormTo1.create(null, Integer.parseInt(demographicNo), formId, FormsManager.FORM, name, null, null, date, false ));
+
+				}
+
+			}
+		}
+		
+		return formListTo1;
 	}
 	
 	@GET
