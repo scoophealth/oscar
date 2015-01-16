@@ -36,6 +36,7 @@ public class NoteTo1 implements Serializable{
 	
 	private Integer noteId;
 	private Boolean isSigned;
+	private Boolean isVerified;
 	private Boolean isEditable;
 	private Date observationDate;
 	private String revision;
@@ -337,5 +338,13 @@ public class NoteTo1 implements Serializable{
 	public String toString() {
 		return (ReflectionToStringBuilder.toString(this));
 	}
+
+	public Boolean getIsVerified() {
+	    return isVerified;
+    }
+
+	public void setIsVerified(Boolean isVerified) {
+	    this.isVerified = isVerified;
+    }
 	
 }

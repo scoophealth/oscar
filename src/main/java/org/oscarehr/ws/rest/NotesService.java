@@ -429,14 +429,13 @@ public class NotesService extends AbstractServiceImpl {
 		}
 		*/
 		
-		boolean verify = false;
 		// update appointment and add verify message to note if verified
-		/*
-				String verifyStr = request.getParameter("verify");
-				if (verifyStr != null && verifyStr.equalsIgnoreCase("on")) {
-					verify = true;
-				}
-		*/	
+		boolean verify = false;
+		if(note.getIsVerified()){
+			verify = true;
+		}
+		
+		
 		// update password
 		/*
 		String passwd = cform.getCaseNote().getPassword();
