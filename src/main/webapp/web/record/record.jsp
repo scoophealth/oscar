@@ -93,6 +93,8 @@
     		
 			  <button type="button" class="btn btn-default" ng-click="saveNote()" id="saveButton"  data-ng-disabled="page.encounterNote.isSigned" >Save</button>
 			  <button type="button" class="btn btn-default" ng-click="saveSignNote()">Sign & Save</button>
+			  <button type="button" class="btn btn-default" ng-click="saveSignVerifyNote()">Verify & Sign</button>
+			  
 			  <button type="button" class="btn btn-default" data-ng-disabled="true">Sign, Save & Bill</button>
 			</div>
     		

@@ -177,6 +177,12 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 		$scope.saveNote() ;
 	}
 	
+	$scope.saveSignVerifyNote = function(){
+		$scope.page.encounterNote.isVerified = true;
+		$scope.page.encounterNote.isSigned = true;
+		$scope.saveNote() ;
+	}
+	
 	console.log('RecordCtrlEnd',$state);
 	
 	$scope.page.currentNoteConfig = {};
