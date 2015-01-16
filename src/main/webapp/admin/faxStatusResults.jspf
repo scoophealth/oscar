@@ -58,6 +58,12 @@
 %>			    
 				<a href="javascript:void()" onclick="resend(<%=faxJob.getId()%>,'<%=faxJob.getDestination()%>','status<%=count%>')">Resend</a>&nbsp;
 <%
+					if( faxJob.getStatus().equals(FaxJob.STATUS.ERROR) ) {
+%>
+					<a href="javascript:void()" onclick="complete(<%=faxJob.getId()%>,'status<%=count%>')">Mark&nbsp;Complete</a>
+
+<%					    
+					}
 				}
 				else if( faxJob.getStatus().equals(FaxJob.STATUS.SENT)  || faxJob.getStatus().equals(FaxJob.STATUS.WAITING)) {
 %>
