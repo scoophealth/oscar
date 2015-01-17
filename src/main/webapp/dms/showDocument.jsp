@@ -32,13 +32,19 @@
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ page import="oscar.OscarProperties,oscar.log.*"%>
+<%@ page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="oscar.util.ConversionUtils" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.util.SpringUtils"%><%
 
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
             ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
             UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
-            
+            OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
+            ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+               
             String providerNo = request.getParameter("providerNo");
             UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_COMMENT);                        
             boolean skipComment = false;
@@ -272,6 +278,8 @@
                                                         <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
                                                         <input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="handleDocSave('<%=docId%>','addTickler')"/>
                                                         <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popup(360, 680, '<%= request.getContextPath() %>/oscarMDS/SearchPatient.do?labType=DOC&segmentID=<%= docId %>&name=<%=java.net.URLEncoder.encode(demoName)%>', 'encounter')">
+                                                        <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popup(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?demographic_no=<%=demographicID%>&displaymode=edit&dboperation=search_detail','master')">
+                                                        <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popup(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?demographic_no=<%=demographicID%>&orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25','ApptHist')">
                                                         <% }
                                                         %>                                                                                                                
                             </form>        	            
@@ -483,6 +491,45 @@
                           <%--  <input id="test1Regex_<%=docId%>" type="text"/><input id="test2Regex_<%=docId%>" type="text"/>
                             <a href="javascript:void(0);" onclick="testShowDoc();">click</a>--%>
                             <legend><span class="FieldData"><i><bean:message key="inboxmanager.document.NextAppointmentMsg"/> <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span></legend>
+                            <%
+                                int iPageSize = 5;
+                                Provider prov;
+                                boolean HighlightUserAppt = false;
+                                if (!demographicID.equals("-1")) {
+                                    
+                                    List<Appointment> appointmentList = appointmentDao.getAppointmentHistory(Integer.parseInt(demographicID), 0, iPageSize);
+                                    if (appointmentList != null && appointmentList.size() > 0) {
+                            %>
+                                
+                            <table bgcolor="#c0c0c0" align="center" valign="top">
+                                <tr bgcolor="#ccccff">
+                                    <th colspan="4"><bean:message key="appointment.addappointment.msgOverview" /></th>
+                                </tr>
+                                <tr bgcolor="#ccccff">
+                                    <th><bean:message key="Appointment.formDate" /></th>
+                                    <th><bean:message key="Appointment.formStartTime" /></th>
+                                    <th ><bean:message key="appointment.addappointment.msgProvider" /></th>
+                                    <th><bean:message key="appointment.addappointment.msgComments" /></th>
+                                </tr>
+                                <%
+                                    for (Appointment a : appointmentList) {
+                                        prov = providerDao.getProvider(a.getProviderNo());
+                                        HighlightUserAppt = false;
+                                        if (creator.equals(a.getProviderNo())) {
+                                            HighlightUserAppt = true;
+                                        }
+                                %>
+                                <tr bgcolor="<%=HighlightUserAppt == false ? "#FFFFFF" : "#CCFFCC"%>">
+                                    <td ><%=ConversionUtils.toDateString(a.getAppointmentDate())%></td>
+                                    <td ><%=ConversionUtils.toTimeString(a.getStartTime())%></td>
+                                    <td ><%=prov.getFormattedName()%></td>
+                                    <td ><% if (a.getStatus() == null) {%>"" <% } else if (a.getStatus().equals("N")) {%><bean:message key="oscar.appt.ApptStatusData.msgNoShow" /><% } else if (a.getStatus().equals("C")) {%><bean:message key="oscar.appt.ApptStatusData.msgCanceled" /> <%}%>
+                                    </td>
+                                </tr>
+                                <%}%>
+                            </table>
+                            <%}
+                                    }%>
                             <form name="reassignForm_<%=docId%>" id="reassignForm_<%=docId%>">
                                 <input type="hidden" name="flaggedLabs" value="<%= docId%>" />
                                 <input type="hidden" name="selectedProviders" value="" />                                
