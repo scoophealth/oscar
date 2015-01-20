@@ -153,6 +153,11 @@ public class ScheduleWs extends AbstractWs {
 		return(AppointmentArchiveTransfer.toTransfers(appointments, useGMTTime));
 	}
 
+	public AppointmentTransfer[] getAppointmentsByProgramProviderPatientDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn, boolean useGMTTime) {
+		List<Appointment> appointments = scheduleManager.getAppointmentsByProgramProviderPatientDate(getLoggedInInfo(),programId, providerNo, demographicId, updatedAfterThisDate, itemsToReturn);
+		return (AppointmentTransfer.toTransfers(appointments, useGMTTime));
+	}
+	
 	/**
 	 * This method is a helper method to help people code and test their clients against time zone differences.
 	 * We will not support revisioning for this method, if / when we want to change this, we will.
