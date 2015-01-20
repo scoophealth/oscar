@@ -94,4 +94,9 @@ public class AllergyWs extends AbstractWs {
 		List<Allergy> allergies=allergyManager.getUpdatedAfterDate(getLoggedInInfo(),updatedAfterThisDateInclusive, itemsToReturn);
 		return(AllergyTransfer.toTransfers(allergies));
 	}
+
+	public AllergyTransfer[] getAllergiesByProgramProviderPatientDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn) {
+		List<Allergy> allergies=allergyManager.getAllergiesByProgramProviderPatientDate(getLoggedInInfo(),programId,providerNo,demographicId,updatedAfterThisDate,itemsToReturn);
+		return(AllergyTransfer.toTransfers(allergies));
+	}
 }
