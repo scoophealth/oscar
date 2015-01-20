@@ -188,12 +188,14 @@ public class Driver {
 					String errorString = "";
 					errorString += "ERROR " + error.getNumber() + " (" + error.getSeverity() + ") : " + error.getMessage();
 					MiscUtils.getLogger().debug(errorString);
-
-					ArrayOfString details = error.getDetails();
-					List<String> detailList = details.getString();
-					for (String detail : detailList) {
-						errorString += "\n" + detail;
-					}
+                                        
+                                        ArrayOfString details = error.getDetails();
+                                        if (details != null) {
+                                            List<String> detailList = details.getString();
+                                            for (String detail : detailList) {
+                                                    errorString += "\n" + detail;
+                                            }
+                                        }
 
 					errorStringList.add(errorString);
 				}
@@ -246,7 +248,7 @@ public class Driver {
 		X509Certificate cert = null;
 		PrivateKey priv = null;
 		KeyStore keystore = null;
-		String pwd = "changeit";
+		String pwd = OscarProperties.getInstance().getProperty("olis_ssl_keystore_password","changeit");
 		String result = null;
 		try {
 			Security.addProvider(new BouncyCastleProvider());
