@@ -24,6 +24,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -125,6 +126,23 @@ public class AllergyDao extends AbstractDao<Allergy> {
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, updatedAfterThisDateInclusive);
+		setLimit(query, itemsToReturn);
+		
+		@SuppressWarnings("unchecked")
+		List<Allergy> results = query.getResultList();
+		return (results);
+	}
+
+	/**
+	 * @return results ordered by lastUpdateDate asc
+	 */
+	public List<Allergy> findByDemographicProviderDate(Integer demographicId, String providerNo, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 and x.providerNo=?2 and x.lastUpdateDate>=?3 order by x.lastUpdateDate";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		query.setParameter(2, providerNo);
+		query.setParameter(3, updatedAfterThisDateInclusive);
 		setLimit(query, itemsToReturn);
 		
 		@SuppressWarnings("unchecked")
