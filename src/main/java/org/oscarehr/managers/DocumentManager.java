@@ -24,6 +24,7 @@
 
 package org.oscarehr.managers;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -89,6 +90,14 @@ public class DocumentManager {
 		List<Document> results = documentDao.findByUpdateDate(updateAfterThisDateInclude, itemsToReturn);
 
 		LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getUpdateAfterDate", "updateAfterThisDateInclude=" + updateAfterThisDateInclude);
+
+		return (results);
+	}
+
+	public List<Document> getDocumentsByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Document> results = documentDao.findByProgramProviderDemographicUpdateDate(programId, providerNo, demographicId, updatedAfterThisDateInclusive, itemsToReturn);
+
+		LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getDocumentsByProgramProviderDemographicDate", "programId=" + programId+", providerNo="+providerNo+", demographicId="+demographicId+", updatedAfterThisDateInclusive="+updatedAfterThisDateInclusive.getTime());
 
 		return (results);
 	}
