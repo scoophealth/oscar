@@ -27,14 +27,15 @@ package org.oscarehr.ws.rest.conversion.summary;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
-
 import org.oscarehr.ws.rest.to.model.SummaryItemTo1;
 import org.oscarehr.ws.rest.to.model.SummaryTo1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +106,16 @@ public class IssueNoteSummary implements Summary {
 		int count = 0;
 		for(CaseManagementNote note:notes){
 			logger.debug("adding "+note.getNote()+" for issues "+issueIds);
-			list.add(new SummaryItemTo1(count, note.getNote(),"action","notes_"+issueIds.toString()));
+			Set<CaseManagementIssue> issueSet = note.getIssues();
+			StringBuilder issueString = new StringBuilder();
+			for (CaseManagementIssue s : issueSet) {
+			    issueString.append(s.getIssue().getCode());
+			}
+			SummaryItemTo1 summaryItem = new SummaryItemTo1(count, note.getNote(),"action","notes_"+issueString.toString());
+			summaryItem.setDate(note.getObservation_date());
+			summaryItem.setEditor(note.getProviderName());
+			
+			list.add(summaryItem);
 			count++;
 		}
 	}

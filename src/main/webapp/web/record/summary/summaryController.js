@@ -23,7 +23,7 @@
     Ontario, Canada
 
 */
-oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$stateParams,$state,$filter,user,noteService,summaryService) {
+oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$stateParams,$state,$filter,$modal,user,noteService,summaryService) {
 	console.log("in summary Ctrl ",$stateParams);
 	
 	$scope.page = {};
@@ -343,9 +343,31 @@ function fillItems(itemsToFill){
 }
 
 
+editGroupedNotes = function(size,mod){
+
+	var modalInstance = $modal.open({
+	      templateUrl: 'record/summary/groupNotes.jsp',
+	      controller: GroupNotesCtrl,
+	      size: size,
+	      resolve: {
+	          mod: function () {
+	            return mod;
+	          }
+	        }
+	    });
+	
+	modalInstance.result.then(function (selectedItem) {
+	      console.log(selectedItem);
+	      
+	    }, function () {
+	      console.log('Modal dismissed at: ' + new Date());
+	    });
+	
+	console.log($('#myModal'));
+}
 
 
-$scope.gotoState = function(item){
+$scope.gotoState = function(item,mod){
 	console.log(item);
 	
 	if(item.type == 'lab' || item.type == 'document'  || item.type == 'rx' ){
@@ -354,6 +376,8 @@ $scope.gotoState = function(item){
 		
 		window.open(item.action,win,"scrollbars=yes, location=no, width=900, height=600","");  
 		return;
+	}else if(item.action == 'action'){
+		editGroupedNotes('lg',mod);
 	}else{	
 		$state.transitionTo(item.action,{demographicNo:$stateParams.demographicNo, type: item.type ,id: item.id},{location:'replace',notify:true});
 	}
@@ -363,4 +387,24 @@ $scope.gotoState = function(item){
 
 
 
+
+
+
 });
+
+
+GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod){
+	console.log("Group notes",mod);
+	$scope.page = {};
+	$scope.page.title = mod.displayName;
+	$scope.page.items = mod.summaryItem;
+	console.log("items",$scope.page.items);
+	
+	
+	$scope.cancel = function () {
+  		$modalInstance.dismiss('cancel');
+  	};
+	
+};
+
+
