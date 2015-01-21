@@ -136,7 +136,7 @@ public class AllergyDao extends AbstractDao<Allergy> {
 	/**
 	 * @return results ordered by lastUpdateDate asc
 	 */
-	public List<Allergy> findByDemographicProviderDate(Integer demographicId, String providerNo, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+	public List<Allergy> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
 		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 and x.providerNo=?2 and x.lastUpdateDate>=?3 order by x.lastUpdateDate";
 
 		Query query = entityManager.createQuery(sqlCommand);
