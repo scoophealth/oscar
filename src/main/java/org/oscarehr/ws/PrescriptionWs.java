@@ -24,7 +24,6 @@
 
 package org.oscarehr.ws;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -93,19 +92,14 @@ public class PrescriptionWs extends AbstractWs {
 	
 	public PrescriptionTransfer[] getPrescriptionUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
-
 		List<Prescription> prescriptions=prescriptionManager.getPrescriptionUpdatedAfterDate(loggedInInfo,updatedAfterThisDateInclusive, itemsToReturn);
+		return(PrescriptionTransfer.getTransfers(loggedInInfo, prescriptions));
+	}
 
-		ArrayList<PrescriptionTransfer> results=new ArrayList<PrescriptionTransfer>();
-		
-		for (Prescription prescription : prescriptions)
-		{
-			List<Drug> drugs = prescriptionManager.getDrugsByScriptNo(loggedInInfo,prescription.getId(), false);
-			PrescriptionTransfer prescriptionTransfer=PrescriptionTransfer.toTransfer(prescription, drugs);
-			results.add(prescriptionTransfer);
-		}
-		
-		return(results.toArray(new PrescriptionTransfer[0]));
+	public PrescriptionTransfer[] getPrescriptionsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		List<Prescription> prescriptions=prescriptionManager.getPrescriptionsByProgramProviderDemographicDate(loggedInInfo,programId,providerNo,demographicId,updatedAfterThisDateInclusive, itemsToReturn);
+		return(PrescriptionTransfer.getTransfers(loggedInInfo, prescriptions));
 	}
 
 }
