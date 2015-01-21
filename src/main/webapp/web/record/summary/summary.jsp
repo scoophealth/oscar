@@ -28,7 +28,7 @@
        		<legend style="margin-bottom:0px;">{{mod.displayName}}</legend>
         	<ul style="padding-left:12px;">
         	<%-- href="{{item.action}}" --%>
-        	<li ng-repeat="item in mod.summaryItem" ng-show="$index < mod.displaySize"  ><span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span><a ng-click="gotoState(item)" >{{item.displayName}}<small ng-show="item.classification">({{item.classification}})</small></a> </li> 
+        	<li ng-repeat="item in mod.summaryItem" ng-show="$index < mod.displaySize"  ><span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span><a ng-click="gotoState(item,mod)" >{{item.displayName}}<small ng-show="item.classification">({{item.classification}})</small></a> </li> 
         	</ul>
        </fieldset>   
     </div>

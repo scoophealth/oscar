@@ -58,6 +58,7 @@ public class SummaryItemTo1 {
 	String action;
 	Date date;
 	String classification;
+	String editor;
 	boolean abnormalFlag;
 
 	
@@ -125,6 +126,14 @@ public class SummaryItemTo1 {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getEditor() {
+		return editor;
+	}
+
+	public void setEditor(String editor) {
+		this.editor = editor;
 	}
 	
 	
