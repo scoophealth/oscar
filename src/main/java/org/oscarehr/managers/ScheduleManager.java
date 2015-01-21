@@ -206,7 +206,7 @@ public class ScheduleManager {
 	}
 
 	public List<Appointment> getAppointmentsByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Appointment> results = oscarAppointmentDao.findByProgramDemographicProviderDate(programId, demographicId, providerNo, updatedAfterThisDateInclusive, itemsToReturn);
+		List<Appointment> results = oscarAppointmentDao.findByProgramProviderDemographicDate(programId, providerNo, demographicId, updatedAfterThisDateInclusive, itemsToReturn);
 
 		//--- log action ---
 		LogAction.addLogSynchronous(loggedInInfo, "AppointmentManager.getAppointmentsByProgramProviderPatientDate", "appointments for programId="+programId+", providerNo="+providerNo+", demographicId=" + demographicId + ", updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive.getTime() + ", itemsToReturn=" + itemsToReturn);
