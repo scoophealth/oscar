@@ -195,10 +195,12 @@ public class Driver {
 					MiscUtils.getLogger().debug(errorString);
 
 					ArrayOfString details = error.getDetails();
-					List<String> detailList = details.getString();
-					for (String detail : detailList) {
-						errorString += "\n" + detail;
-					}
+                                        if (details != null) {
+                                            List<String> detailList = details.getString();
+                                            for (String detail : detailList) {
+                                                    errorString += "\n" + detail;
+                                            }
+                                        }
 
 					errorStringList.add(errorString);
 				}
