@@ -553,12 +553,13 @@ public class SharingCenterUtil {
         }
         // Pass the folder ids to parameter.
         XdsAssociationUuid folderIds = new XdsAssociationUuid(rawFolderIds);
-        AssociationMetaData[] folderAssociations;
+        AssociationMetaData[] folderAssociations = null;
 
         try {
             folderAssociations = storedQuery.getAssociations(folderIds);
         } catch (CommunicationsException e) {
-            throw e;
+            // proceed with no associations
+            folderAssociations = new AssociationMetaData[0];
         }
         // Loop through the associations.
         for (AssociationMetaData folderAssociation : folderAssociations) {
