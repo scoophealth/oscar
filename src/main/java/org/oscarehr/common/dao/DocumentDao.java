@@ -28,6 +28,7 @@ package org.oscarehr.common.dao;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -136,7 +137,7 @@ public class DocumentDao extends AbstractDao<Document> {
 		return query.getResultList();
     }
 
-	public List<Object[]> findCtlDocsAndDocsByModuleCreatorResponsibleAndDates(Module module, String doccreator, String responsible, Date from, Date to, boolean unmatchedDemographics) {
+	public List<Object[]> findCtlDocsAndDocsByModuleCreatorResponsibleAndDates(Module module, String providerNo, String responsible, Date from, Date to, boolean unmatchedDemographics) {
 		String sql = "FROM Document d, CtlDocument c " +
 				"WHERE c.documentNo = d.documentNo " +
 				"AND c.module= :module " +
@@ -149,7 +150,7 @@ public class DocumentDao extends AbstractDao<Document> {
 		}
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("module", module.getName());
-		query.setParameter("doccreator", doccreator);
+		query.setParameter("doccreator", providerNo);
 		query.setParameter("responsible", responsible);
 		query.setParameter("from", from);
 		query.setParameter("to", to);
@@ -357,6 +358,24 @@ public class DocumentDao extends AbstractDao<Document> {
         return documents;
     }
     
+	/**
+	 * @return results ordered by updatedatetime
+	 */
+    public List<Document> findByProgramProviderDemographicUpdateDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+    	String sql = "select d from "+modelClass.getSimpleName()+"d, CtlDocument c where c.id.documentNo=d.documentNo and c.id.module='demographic' AND c.id.moduleId = :demographicId and d.programId=:programId and d.doccreator=:providerNo and d.updatedatetime>=:updatedatetime order by d.updatedatetime";
+    	
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter("demographicId", demographicId);
+    	query.setParameter("programId", programId);
+    	query.setParameter("providerNo", providerNo);
+    	query.setParameter("updatedatetime", updatedAfterThisDateInclusive);
+    	setLimit(query, itemsToReturn);
+
+        @SuppressWarnings("unchecked")
+        List<Document> documents = query.getResultList();
+        return documents;
+    }
+
     //for integrator
 	public List<Integer> findDemographicIdsSince(Date since) {
 		
