@@ -95,8 +95,8 @@ public class AllergyWs extends AbstractWs {
 		return(AllergyTransfer.toTransfers(allergies));
 	}
 
-	public AllergyTransfer[] getAllergiesByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn) {
-		List<Allergy> allergies=allergyManager.getAllergiesByProgramProviderDemographicDate(getLoggedInInfo(),programId,providerNo,demographicId,updatedAfterThisDate,itemsToReturn);
+	public AllergyTransfer[] getAllergiesByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Allergy> allergies=allergyManager.getAllergiesByProgramProviderDemographicDate(getLoggedInInfo(),programId,providerNo,demographicId,updatedAfterThisDateInclusive,itemsToReturn);
 		return(AllergyTransfer.toTransfers(allergies));
 	}
 }
