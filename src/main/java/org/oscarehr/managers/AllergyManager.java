@@ -41,31 +41,15 @@ public class AllergyManager {
 	@Autowired
 	private AllergyDao allergyDao;
 
-	/**
-	 * @deprecated 2014-05-15 remove as soon as WS is removed.
-	 */
-	public List<Allergy> getAllergiesByIdStart(LoggedInInfo loggedInInfo, Boolean archived, Integer startIdInclusive, int itemsToReturn) {
-		List<Allergy> results = allergyDao.findAllergiesByIdStart(archived, startIdInclusive, itemsToReturn);
+	public Allergy getAllergy(LoggedInInfo loggedInInfo, Integer id) {
+		Allergy result = allergyDao.find(id);
 
-		//--- log action ---
-		if (results.size()>0) {
-			String resultIds=Allergy.getIdsAsStringList(results);
-			LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getAllergiesByIdStart", "ids returned=" + resultIds);
-		}
-
-		return (results);
-	}
-	
-	public Allergy getAllergy(LoggedInInfo loggedInInfo, Integer id)
-	{
-		Allergy result=allergyDao.find(id);
-		
 		//--- log action ---
 		if (result != null) {
 			LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getAllergy", "id=" + id);
 		}
 
-		return(result);
+		return (result);
 	}
 	
 	public List<Allergy> getActiveAllergies(LoggedInInfo loggedInInfo, Integer demographicNo) {
@@ -94,7 +78,7 @@ public class AllergyManager {
 	public List<Allergy> getAllergiesByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Allergy> results = allergyDao.findByProviderDemographicLastUpdateDate(providerNo, demographicId, updatedAfterThisDateInclusive, itemsToReturn);
 
-		LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getUpdatedAfterDate", "programId=" + programId+", providerNo="+providerNo+", demographicId="+demographicId+", updatedAfterThisDateInclusive="+updatedAfterThisDateInclusive.getTime());
+		LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getUpdatedAfterDate", "programId=" + programId + ", providerNo=" + providerNo + ", demographicId=" + demographicId + ", updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive.getTime());
 
 		return (results);
 	}

@@ -320,30 +320,6 @@ public class DocumentDao extends AbstractDao<Document> {
 	}
     
 	/**
-	 * This method will return a list of items starting from the provided ID.
-	 * It is an efficient method for iterating through all items (more efficient than using a startIndex).
-	 * 
-	 * @param archived can be null for all deleted and non-deleted items 
-	 * 
-	 * @deprecated 2014-05-15 remove as soon as manager method calling this is removed, use findByLastUpdated instead.
-	 */
-    public List<Document> findByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
-    	String sql = "select x from "+modelClass.getSimpleName()+" x where x.id>=?1 ";
-    	if (archived!=null)	sql=sql+"and x.status=?2 ";
-    	sql=sql+"order by x.id";
-    	
-    	Query query = entityManager.createQuery(sql);
-    	query.setParameter(1, startIdInclusive);
-    	if (archived!=null)	query.setParameter(2, archived?Document.STATUS_DELETED:Document.STATUS_ACTIVE);
-    	
-    	setLimit(query, itemsToReturn);
-
-        @SuppressWarnings("unchecked")
-        List<Document> documents = query.getResultList();
-        return documents;
-    }
-    
-	/**
 	 * @return results ordered by updatedatetime
 	 */
     public List<Document> findByUpdateDate(Date updateAfterThisDateInclusive, int itemsToReturn) {

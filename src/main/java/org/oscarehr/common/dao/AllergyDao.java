@@ -37,30 +37,6 @@ public class AllergyDao extends AbstractDao<Allergy> {
 	public AllergyDao() {
 		super(Allergy.class);
 	}
-
-	/**
-	 * This method will return a list of allergies starting from the provided ID.
-	 * It is an efficient method for iterating through all Allergies (more efficient than using a startIndex).
-	 *
-	 * @param archived can be null for all deleted and non-deleted items
-	 * 
-	 * @deprecated 2014-05-15 remove as soon as calling manager method is removed.
-	 */
-    public List<Allergy> findAllergiesByIdStart(Boolean archived, Integer startIdInclusive, int itemsToReturn) {
-    	String sql = "select x from "+modelClass.getSimpleName()+" x where x.id>=?1 ";
-    	if (archived!=null)	sql=sql+"and x.archived=?2 ";
-    	sql=sql+"order by x.id";
-    	
-    	Query query = entityManager.createQuery(sql);
-    	query.setParameter(1, startIdInclusive);
-    	if (archived!=null)	query.setParameter(2, archived);
-    	
-    	setLimit(query, itemsToReturn);
-
-        @SuppressWarnings("unchecked")
-        List<Allergy> allergies = query.getResultList();
-        return allergies;
-    }
     
     public List<Allergy> findAllergies(Integer demographic_no) {
     	String sql = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 order by x.archived,x.severityOfReaction desc";
