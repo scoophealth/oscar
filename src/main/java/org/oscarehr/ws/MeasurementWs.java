@@ -26,21 +26,16 @@ package org.oscarehr.ws;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
-import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementMap;
 import org.oscarehr.managers.MeasurementManager;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.ScheduleManager;
-import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.ws.transfer_objects.DataIdTransfer;
 import org.oscarehr.ws.transfer_objects.MeasurementMapTransfer;
 import org.oscarehr.ws.transfer_objects.MeasurementTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,57 +55,13 @@ public class MeasurementWs extends AbstractWs {
 	private ProgramManager2 programManager;
 
 	public MeasurementTransfer getMeasurement(Integer measurementId) {
-		Measurement measurement = measurementManager.getMeasurement(getLoggedInInfo(),measurementId);
+		Measurement measurement = measurementManager.getMeasurement(getLoggedInInfo(), measurementId);
 		return (MeasurementTransfer.toTransfer(measurement));
 	}
 
-	/**
-	 * Get a list of DataIdTransfer objects for measurements starting with the passed in Id.
-	 * @deprecated 2014-05-20 use getCreatedAfterDate instead
-	 */
-	public DataIdTransfer[] getMeasurementDataIds(Integer startIdInclusive, int itemsToReturn) {
-
-		List<Measurement> measurements = measurementManager.getMeasurementsByIdStart(getLoggedInInfo(),startIdInclusive, itemsToReturn);
-
-		DataIdTransfer[] results = new DataIdTransfer[measurements.size()];
-		for (int i = 0; i < measurements.size(); i++) {
-			results[i] = getDataIdTransfer(getLoggedInInfo(), measurements.get(i));
-		}
-
-		return (results);
-	}
-
 	public MeasurementTransfer[] getMeasurementsCreatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Measurement> results=measurementManager.getCreatedAfterDate(getLoggedInInfo(),updatedAfterThisDateInclusive, itemsToReturn);
-		return(MeasurementTransfer.toTransfers(results));
-	}
-
-	private DataIdTransfer getDataIdTransfer(LoggedInInfo loggedInInfo, Measurement measurement) {
-		DataIdTransfer result = new DataIdTransfer();
-
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(measurement.getCreateDate());
-		result.setCreateDate(cal);
-
-		result.setCreatorProviderId(measurement.getProviderNo());
-		result.setDataId(measurement.getId().toString());
-		result.setDataType(Measurement.class.getSimpleName());
-		result.setOwnerDemographicId(measurement.getDemographicId());
-
-		if (measurement.getAppointmentNo() != null && measurement.getAppointmentNo() != 0) {
-			Appointment appointment = scheduleManager.getAppointment(loggedInInfo, measurement.getAppointmentNo());
-			if (appointment != null) {
-				int programId = appointment.getProgramId();
-				result.setClinicId(programId);
-
-				Program program = programManager.getProgram(getLoggedInInfo(),programId);
-				if (program != null) {
-					result.setFacilityId(program.getFacilityId());
-				}
-			}
-		}
-
-		return (result);
+		List<Measurement> results = measurementManager.getCreatedAfterDate(getLoggedInInfo(), updatedAfterThisDateInclusive, itemsToReturn);
+		return (MeasurementTransfer.toTransfers(results));
 	}
 
 	public MeasurementMapTransfer[] getMeasurementMaps() {
@@ -124,13 +75,13 @@ public class MeasurementWs extends AbstractWs {
 	public Integer addMeasurement(MeasurementTransfer measurementTransfer) {
 		Measurement measurement = new Measurement();
 		measurementTransfer.copyTo(measurement);
-		measurementManager.addMeasurement(getLoggedInInfo(),measurement);
+		measurementManager.addMeasurement(getLoggedInInfo(), measurement);
 		return (measurement.getId());
 	}
-	
-	public MeasurementTransfer[] getMeasurementsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn) {
-		List<Measurement> measurements=measurementManager.getMeasurementsByProgramProviderDemographicDate(getLoggedInInfo(),programId,providerNo,demographicId,updatedAfterThisDate,itemsToReturn);
-		return(MeasurementTransfer.toTransfers(measurements));
+
+	public MeasurementTransfer[] getMeasurementsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Measurement> measurements = measurementManager.getMeasurementsByProgramProviderDemographicDate(getLoggedInInfo(), programId, providerNo, demographicId, updatedAfterThisDateInclusive, itemsToReturn);
+		return (MeasurementTransfer.toTransfers(measurements));
 	}
 
 }

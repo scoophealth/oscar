@@ -46,22 +46,6 @@ public class DocumentManager {
 	@Autowired
 	private CtlDocumentDao ctlDocumentDao;
 	
-	/**
-	 * @param archived can be null for both deleted and non deleted items
-	 * @deprecated 2014-05-15 use the method with lastUpdateDate instead, remove as soon as calling ws method is removed.
-	 */
-	public List<Document> getDocumentsByIdStart(LoggedInInfo loggedInInfo, Boolean archived, Integer startIdInclusive, int itemsToReturn) {
-		List<Document> results = documentDao.findByIdStart(archived, startIdInclusive, itemsToReturn);
-
-		//--- log action ---
-		if (results.size()>0) {
-			String resultIds=Document.getIdsAsStringList(results);
-			LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getDocumentsByIdStart", "ids returned=" + resultIds);
-		}
-
-		return (results);
-	}
-	
 	public Document getDocument(LoggedInInfo loggedInInfo, Integer id)
 	{
 		Document result=documentDao.find(id);
