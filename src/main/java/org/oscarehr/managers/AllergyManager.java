@@ -24,6 +24,7 @@
 
 package org.oscarehr.managers;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -69,6 +70,18 @@ public class AllergyManager {
 	
 	public List<Allergy> getUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Allergy> results = allergyDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
+
+		LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
+
+		return (results);
+	}
+
+	/**
+	 * At this time, not all criteria maybe available in oscar but the method signature is what is "should" be
+	 * and hopefully can be refactored as data becomes available.
+	 */
+	public List<Allergy> getAllergiesByProgramProviderPatientDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Allergy> results = allergyDao.findByDemographicProviderDate(demographicId, providerNo, updatedAfterThisDateInclusive, itemsToReturn);
 
 		LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
 
