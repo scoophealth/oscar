@@ -127,4 +127,10 @@ public class MeasurementWs extends AbstractWs {
 		measurementManager.addMeasurement(getLoggedInInfo(),measurement);
 		return (measurement.getId());
 	}
+	
+	public MeasurementTransfer[] getMeasurementsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn) {
+		List<Measurement> measurements=measurementManager.getMeasurementsByProgramProviderDemographicDate(getLoggedInInfo(),programId,providerNo,demographicId,updatedAfterThisDate,itemsToReturn);
+		return(MeasurementTransfer.toTransfers(measurements));
+	}
+
 }

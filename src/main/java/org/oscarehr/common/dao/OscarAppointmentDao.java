@@ -698,7 +698,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return results;
 	}
 	
-    public List<Appointment> findByProgramDemographicProviderDate(Integer programId, Integer demographicId, String providerNo, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+    public List<Appointment> findByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
 		Query query = entityManager.createQuery("select x from Appointment x where x.programId=?1 and x.demographicNo=?2 and x.providerNo=?3 and x.updateDateTime>=?4 order by x.updateDateTime");
 		query.setParameter(1, programId);
 		query.setParameter(2, demographicId);
