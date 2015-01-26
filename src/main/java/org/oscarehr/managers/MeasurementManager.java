@@ -24,6 +24,7 @@
 
 package org.oscarehr.managers;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -93,4 +94,19 @@ public class MeasurementManager {
 		LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.addMeasurement", "id=" + measurement.getId());
 		return(measurement);
 	}
+
+	/**
+	 * ProgramId is not available in oscar right now but the method signature is correct for when it is available.
+	 */
+	public List<Measurement> getMeasurementsByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn) {
+		List<Measurement> results = measurementDao.findByProviderDemographicLastUpdateDate(providerNo, demographicId, updatedAfterThisDate, itemsToReturn);
+
+		//--- log action ---
+		if (results.size() > 0) {
+			String resultIds = Measurement.getIdsAsStringList(results);
+			LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.getMeasurementsByIdStart", "ids returned=" + resultIds);
+		}
+
+		return (results);
+    }
 }
