@@ -25,6 +25,7 @@
 package org.oscarehr.managers;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -126,4 +127,15 @@ public class PreventionManager {
 			}
 		}
 	}
+
+	/**
+	 * programId is ignored for now as oscar doesn't support it yet.
+	 */
+	public List<Prevention> getPreventionsByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Prevention> results = preventionDao.findByProviderDemographicLastUpdateDate(providerNo, demographicId,updatedAfterThisDateInclusive, itemsToReturn);
+
+		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getUpdatedAfterDate", "programId=" + programId+", providerNo="+providerNo+", demographicId="+demographicId+", updatedAfterThisDateInclusive="+updatedAfterThisDateInclusive.getTime());
+
+		return (results);
+    }
 }

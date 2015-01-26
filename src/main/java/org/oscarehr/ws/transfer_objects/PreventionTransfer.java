@@ -24,12 +24,16 @@
 
 package org.oscarehr.ws.transfer_objects;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
+import org.oscarehr.managers.PreventionManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 public final class PreventionTransfer {
 
@@ -178,6 +182,21 @@ public final class PreventionTransfer {
 		return (preventionTransfer);
 	}
 
+	public static PreventionTransfer[] getTransfers(LoggedInInfo loggedInInfo, List<Prevention> preventions)
+	{
+		ArrayList<PreventionTransfer> results=new ArrayList<PreventionTransfer>();
+		PreventionManager preventionManager=SpringUtils.getBean(PreventionManager.class);
+		
+		for (Prevention prevention : preventions)
+		{
+			List<PreventionExt> preventionExts = preventionManager.getPreventionExtByPrevention(loggedInInfo,prevention.getId());
+			PreventionTransfer preventionTransfer=PreventionTransfer.toTransfer(prevention, preventionExts);
+			results.add(preventionTransfer);
+		}
+		
+		return(results.toArray(new PreventionTransfer[0]));
+	}
+	
 	@Override
 	public String toString() {
 		return (ReflectionToStringBuilder.toString(this));

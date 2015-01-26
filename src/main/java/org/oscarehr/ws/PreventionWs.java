@@ -24,7 +24,6 @@
 
 package org.oscarehr.ws;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -64,18 +63,8 @@ public class PreventionWs extends AbstractWs {
 
 	public PreventionTransfer[] getPreventionsUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
-		
 		List<Prevention> preventions=preventionManager.getUpdatedAfterDate(loggedInInfo,updatedAfterThisDateInclusive, itemsToReturn);
-		ArrayList<PreventionTransfer> results=new ArrayList<PreventionTransfer>();
-		
-		for (Prevention prevention : preventions)
-		{
-			List<PreventionExt> preventionExts = preventionManager.getPreventionExtByPrevention(loggedInInfo,prevention.getId());
-			PreventionTransfer preventionTransfer=PreventionTransfer.toTransfer(prevention, preventionExts);
-			results.add(preventionTransfer);
-		}
-		
-		return(results.toArray(new PreventionTransfer[0]));
+		return(PreventionTransfer.getTransfers(loggedInInfo, preventions));
 	}
 	
 	/**
@@ -112,4 +101,11 @@ public class PreventionWs extends AbstractWs {
 
 		return (result);
 	}
+	
+	public PreventionTransfer[] getPreventionsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		List<Prevention> preventions=preventionManager.getPreventionsByProgramProviderDemographicDate(getLoggedInInfo(),programId,providerNo,demographicId,updatedAfterThisDateInclusive,itemsToReturn);
+		return(PreventionTransfer.getTransfers(loggedInInfo,preventions));
+	}
+
 }
