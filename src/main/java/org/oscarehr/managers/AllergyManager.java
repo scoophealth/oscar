@@ -80,10 +80,10 @@ public class AllergyManager {
 	 * At this time, not all criteria maybe available in oscar but the method signature is what is "should" be
 	 * and hopefully can be refactored as data becomes available.
 	 */
-	public List<Allergy> getAllergiesByProgramProviderPatientDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+	public List<Allergy> getAllergiesByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Allergy> results = allergyDao.findByDemographicProviderDate(demographicId, providerNo, updatedAfterThisDateInclusive, itemsToReturn);
 
-		LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
+		LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getUpdatedAfterDate", "programId=" + programId+", providerNo="+providerNo+", demographicId="+demographicId+", updatedAfterThisDateInclusive="+updatedAfterThisDateInclusive.getTime());
 
 		return (results);
 	}

@@ -62,9 +62,9 @@ public class DocumentWs extends AbstractWs {
 
 	public DocumentTransfer getDocument(Integer documentId) {
 		try {
-			LoggedInInfo loggedInInfo=getLoggedInInfo();
-			Document document = documentManager.getDocument(loggedInInfo,documentId);
-			CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo,documentId);
+			LoggedInInfo loggedInInfo = getLoggedInInfo();
+			Document document = documentManager.getDocument(loggedInInfo, documentId);
+			CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo, documentId);
 			return (DocumentTransfer.toTransfer(document, ctlDocument));
 		} catch (IOException e) {
 			logger.error("Unexpected error", e);
@@ -74,14 +74,14 @@ public class DocumentWs extends AbstractWs {
 
 	public DocumentTransfer[] getDocumentsUpdateAfterDate(Date updateAfterThisDateInclude, int itemsToReturn) {
 		try {
-			LoggedInInfo loggedInInfo=getLoggedInInfo();
+			LoggedInInfo loggedInInfo = getLoggedInInfo();
 
-			List<Document> documents = documentManager.getDocumentsUpdateAfterDate(loggedInInfo,updateAfterThisDateInclude, itemsToReturn);
+			List<Document> documents = documentManager.getDocumentsUpdateAfterDate(loggedInInfo, updateAfterThisDateInclude, itemsToReturn);
 
 			ArrayList<DocumentTransfer> results = new ArrayList<DocumentTransfer>();
 
 			for (Document document : documents) {
-				CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo,document.getId());
+				CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo, document.getId());
 				DocumentTransfer transfer = DocumentTransfer.toTransfer(document, ctlDocument);
 				results.add(transfer);
 			}
@@ -98,17 +98,17 @@ public class DocumentWs extends AbstractWs {
 	 * @deprecated 2014-05-15 use getDocumentsUpdateAfter() instead
 	 */
 	public DataIdTransfer[] getDocumentDataIds(Boolean active, Integer startIdInclusive, int itemsToReturn) {
-		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
 
 		Boolean archived = null;
 		if (active != null) archived = !active;
 
-		List<Document> documents = documentManager.getDocumentsByIdStart(loggedInInfo,archived, startIdInclusive, itemsToReturn);
+		List<Document> documents = documentManager.getDocumentsByIdStart(loggedInInfo, archived, startIdInclusive, itemsToReturn);
 
 		DataIdTransfer[] results = new DataIdTransfer[documents.size()];
 		for (int i = 0; i < documents.size(); i++) {
 			Document document = documents.get(i);
-			CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo,document.getDocumentNo());
+			CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo, document.getDocumentNo());
 			results[i] = getDataIdTransfer(document, ctlDocument);
 		}
 
@@ -143,4 +143,26 @@ public class DocumentWs extends AbstractWs {
 
 		return (result);
 	}
+
+	public DocumentTransfer[] getDocumentsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn) {
+
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
+
+		List<Document> documents = documentManager.getDocumentsByProgramProviderDemographicDate(loggedInInfo, programId, providerNo, demographicId, updatedAfterThisDate, itemsToReturn);
+
+		ArrayList<DocumentTransfer> results = new ArrayList<DocumentTransfer>();
+
+		for (Document document : documents) {
+			try {
+				CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo, document.getId());
+				DocumentTransfer transfer = DocumentTransfer.toTransfer(document, ctlDocument);
+				results.add(transfer);
+			} catch (IOException e) {
+				logger.error("Unexpected error", e);
+			}
+		}
+
+		return (results.toArray(new DocumentTransfer[0]));
+	}
+
 }

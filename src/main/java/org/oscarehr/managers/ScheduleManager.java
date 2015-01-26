@@ -205,7 +205,7 @@ public class ScheduleManager {
 		return (results);
 	}
 
-	public List<Appointment> getAppointmentsByProgramProviderPatientDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+	public List<Appointment> getAppointmentsByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Appointment> results = oscarAppointmentDao.findByProgramDemographicProviderDate(programId, demographicId, providerNo, updatedAfterThisDateInclusive, itemsToReturn);
 
 		//--- log action ---

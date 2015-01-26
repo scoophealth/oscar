@@ -153,8 +153,8 @@ public class ScheduleWs extends AbstractWs {
 		return(AppointmentArchiveTransfer.toTransfers(appointments, useGMTTime));
 	}
 
-	public AppointmentTransfer[] getAppointmentsByProgramProviderPatientDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn, boolean useGMTTime) {
-		List<Appointment> appointments = scheduleManager.getAppointmentsByProgramProviderPatientDate(getLoggedInInfo(),programId, providerNo, demographicId, updatedAfterThisDate, itemsToReturn);
+	public AppointmentTransfer[] getAppointmentsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn, boolean useGMTTime) {
+		List<Appointment> appointments = scheduleManager.getAppointmentsByProgramProviderDemographicDate(getLoggedInInfo(),programId, providerNo, demographicId, updatedAfterThisDate, itemsToReturn);
 		return (AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 	
