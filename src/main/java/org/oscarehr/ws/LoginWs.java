@@ -66,9 +66,8 @@ public class LoginWs extends AbstractWs {
 			LoginResultTransfer result = new LoginResultTransfer();
 			result.setSecurityId(security.getSecurityNo());
 
-			// we haven't sorted out the token framework so we'll just return the encrypted pw for now
-			// this should be replaced once we have a token framework in place
-			result.setSecurityTokenKey(security.getPassword());
+			String securityToken=WsUtils.generateSecurityToken(security);
+			result.setSecurityTokenKey(securityToken);
 
 			return (result);
 		}
