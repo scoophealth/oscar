@@ -53,6 +53,7 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.SecUserRole;
+import org.oscarehr.PMmodule.web.forms.IntegratorPausedException;
 import org.oscarehr.caisi_integrator.ws.CachedAdmission;
 import org.oscarehr.caisi_integrator.ws.CachedAppointment;
 import org.oscarehr.caisi_integrator.ws.CachedBillingOnItem;
@@ -135,16 +136,18 @@ import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.IntegratorConsent;
-import org.oscarehr.common.model.Security;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
+import org.oscarehr.common.model.IntegratorProgress;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementMap;
 import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.labs.LabIdAndType;
+import org.oscarehr.managers.IntegratorPushManager;
 import org.oscarehr.util.BenchmarkTimer;
 import org.oscarehr.util.CxfClientUtilsOld;
 import org.oscarehr.util.DbConnectionFilter;
@@ -208,7 +211,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private MeasurementDao measurementDao = (MeasurementDao) SpringUtils.getBean("measurementDao");
 	private AllergyDao allergyDao = (AllergyDao) SpringUtils.getBean("allergyDao");
 	private PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
-	
+	private IntegratorPushManager integratorPushManager = SpringUtils.getBean(IntegratorPushManager.class);
 
 	private UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
 
@@ -247,6 +250,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	@Override
 	public void run() {
+		
+		if(isPushDisabled()) {
+			logger.warn("skipping push to integrator because it's been disabled from the admin ui (Property table - DisableIntegratorPushes");
+			return;	
+		}
+		
 		numberOfTimesRun++;
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod();
@@ -302,7 +311,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushAllDataForOneFacility(LoggedInInfo loggedInInfo, Facility facility) throws IOException, ShutdownException {
+	private void pushAllDataForOneFacility(LoggedInInfo loggedInInfo, Facility facility) throws IOException, ShutdownException, IntegratorPausedException {
 		logger.info("Start pushing data for facility : " + facility.getId() + " : " + facility.getName());
 
 		// check all parameters are present
@@ -467,20 +476,40 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			throttleAndChecks();
 		}
 	}
-
-	private List<Integer> getDemographicIdsToPush(Facility facility, Date lastDataUpdated, List<Program> programs) {
-		//Properties p = OscarProperties.getInstance();
+	
+	private boolean isFullPush(Facility facility) {
 		UserProperty fullPushProp = userPropertyDao.getProp(UserProperty.INTEGRATOR_FULL_PUSH+facility.getId());
 		
 		if (OscarProperties.getInstance().isPropertyActive("INTEGRATOR_FORCE_FULL")) {
 			fullPushProp.setValue("1");
 		}
 		
+		if (fullPushProp != null && fullPushProp.getValue().equals("1")) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	//all facilities
+	private boolean isPushDisabled() {
+		UserProperty prop = userPropertyDao.getProp(IntegratorPushManager.DISABLE_INTEGRATOR_PUSH_PROP);
+		
+		if(prop != null && "true".equals(prop.getValue())) {
+			return true;
+		}
+		return false;
+	}
+
+	private List<Integer> getDemographicIdsToPush(Facility facility, Date lastDataUpdated, List<Program> programs) {
+		
 		List<Integer> fullFacilitydemographicIds  = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
 		
 		
-		if (fullPushProp != null && fullPushProp.getValue().equals("1")) {
+		if (isFullPush(facility)) {
 			logger.info("Integrator pushing ALL demographics");
+			
+			
 			return fullFacilitydemographicIds;
 		} else {
 			logger.info("Integrator pushing only changed demographics");
@@ -527,8 +556,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	                }
 	        }
 			
-			if(fullPushProp != null &&  fullPushProp.getValue().equals("1")){
-			   userPropertyDao.saveProp(UserProperty.INTEGRATOR_FULL_PUSH+facility.getId(), "0");
+	        if(isFullPush(facility)){
+				   userPropertyDao.saveProp(UserProperty.INTEGRATOR_FULL_PUSH+facility.getId(), "0");
 			}
 			
 			return(new ArrayList<Integer>(uniqueDemographicIdsWithSomethingNew));
@@ -536,9 +565,25 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushAllDemographics(LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, CachedFacility cachedFacility, List<Program> programs) throws MalformedURLException, ShutdownException {
+	private void pushAllDemographics(LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, CachedFacility cachedFacility, List<Program> programs) throws MalformedURLException, ShutdownException, IntegratorPausedException {
 		List<Integer> demographicIds = getDemographicIdsToPush(facility,lastDataUpdated, programs);
 
+		//populate the DB with the information about this run. Update as we go along.
+		//When complete, then set some status to show that the job is done.
+		IntegratorProgress ip = null;
+		if (isFullPush(facility)) {
+			if((ip=integratorPushManager.getCurrentlyRunning()) != null) {
+				//continue a previously running one
+				demographicIds = integratorPushManager.findOutstandingDemographicNos(ip);
+			} else {
+				//insert demographic ids into the progress tables, and mark job
+				ip = integratorPushManager.createNewPush(demographicIds);
+				if(ip != null) {
+					logger.info("marked start of full push by creating " + ip);
+				}
+			}
+		} 
+		
 		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs(null, facility);
 		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
 		List<String> providerIdsInFacility = providerDao.getProviderIds(facility.getId());
@@ -546,6 +591,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		long startTime = System.currentTimeMillis();
 		int demographicPushCount = 0;
 		for (Integer demographicId : demographicIds) {
+			//if someone set the pause flag, we can leave the job.
+			UserProperty up = userPropertyDao.getProp(IntegratorPushManager.INTEGRATOR_PAUSE_FULL_PUSH);
+			if(up != null && "true".equals(up.getValue())) {
+				throw new IntegratorPausedException("needed to exit as there was a pause detected");
+			}
+			
 			demographicPushCount++;
 			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId + "  " + demographicPushCount + " of " + demographicIds.size());
 			BenchmarkTimer benchTimer = new BenchmarkTimer("pushing demo facilityId:" + facility.getId() + ", demographicId:" + demographicId + "  " + demographicPushCount + " of " + demographicIds.size());
@@ -587,6 +638,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushLabResults(lastDataUpdated, facility, demographicService, demographicId);
 				benchTimer.tag("pushLabResults");
 
+				if(ip != null) {
+					integratorPushManager.updateItem(ip,demographicId);
+				}
+				
 				logger.debug(benchTimer.report());
 
 				DbConnectionFilter.releaseAllThreadDbResources();
@@ -600,8 +655,16 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				throw (e);
 			} catch (Exception e) {
 				logger.error("Unexpected error.", e);
+				//not so sure about this yet. We don't want to end up in a loop where an exception is being thrown
+				//so we just keep retrying..this way a new job gets created.
+				//integratorPushManager.setError(ip,e);
 			}
 		}
+		
+		if(ip != null) {
+			integratorPushManager.completePush(ip,true);
+		}
+		
 		logger.debug("Total pushAllDemographics :" + (System.currentTimeMillis() - startTime));
 	}
 
