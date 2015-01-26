@@ -25,14 +25,22 @@
 package org.oscarehr.ws.transfer_objects;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.log4j.Logger;
 import org.oscarehr.common.model.CtlDocument;
 import org.oscarehr.common.model.Document;
+import org.oscarehr.managers.DocumentManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.BeanUtils;
 
 public final class DocumentTransfer {
+	private static Logger logger = MiscUtils.getLogger();
 
 	private Integer documentNo;
 	private String doctype;
@@ -55,11 +63,11 @@ public final class DocumentTransfer {
 	private Date reviewdatetime;
 	private Integer numberofpages;
 	private Integer appointmentNo;
-	
+
 	private String ctlModule;
 	private Integer ctlModuleId;
 	private String ctlStatus;
-	
+
 	private byte[] fileContents;
 
 	public Integer getDocumentNo() {
@@ -230,8 +238,6 @@ public final class DocumentTransfer {
 		this.appointmentNo = appointmentNo;
 	}
 
-
-
 	public String getCtlModule() {
 		return (ctlModule);
 	}
@@ -273,17 +279,34 @@ public final class DocumentTransfer {
 		DocumentTransfer documentTransfer = new DocumentTransfer();
 
 		BeanUtils.copyProperties(document, documentTransfer);
-		
-		if (ctlDocument!=null)
-		{
+
+		if (ctlDocument != null) {
 			documentTransfer.setCtlModule(ctlDocument.getId().getModule());
 			documentTransfer.setCtlModuleId(ctlDocument.getId().getModuleId());
 			documentTransfer.setCtlStatus(ctlDocument.getStatus());
 		}
-		
+
 		documentTransfer.setFileContents(document.getDocumentFileContentsAsBytes());
 
 		return (documentTransfer);
+	}
+
+	public static DocumentTransfer[] getTransfers(LoggedInInfo loggedInInfo, List<Document> documents) {
+		DocumentManager documentManager = SpringUtils.getBean(DocumentManager.class);
+
+		ArrayList<DocumentTransfer> results = new ArrayList<DocumentTransfer>();
+
+		for (Document document : documents) {
+			try {
+				CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo, document.getId());
+				DocumentTransfer transfer = DocumentTransfer.toTransfer(document, ctlDocument);
+				results.add(transfer);
+			} catch (IOException e) {
+				logger.error("Unexpected error", e);
+			}
+		}
+
+		return (results.toArray(new DocumentTransfer[0]));
 	}
 
 	@Override

@@ -24,12 +24,16 @@
 
 package org.oscarehr.ws.transfer_objects;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Prescription;
+import org.oscarehr.managers.PrescriptionManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.BeanUtils;
 
 public final class PrescriptionTransfer {
@@ -45,7 +49,7 @@ public final class PrescriptionTransfer {
 	private Date lastUpdateDate;
 
 	private DrugTransfer[] drugs;
-	
+
 	public Integer getId() {
 		return (id);
 	}
@@ -135,10 +139,25 @@ public final class PrescriptionTransfer {
 
 		PrescriptionTransfer prescriptionTransfer = new PrescriptionTransfer();
 		BeanUtils.copyProperties(prescription, prescriptionTransfer);
-		
+
 		prescriptionTransfer.setDrugs(DrugTransfer.toTransfers(drugs));
 
 		return (prescriptionTransfer);
+	}
+
+	public static PrescriptionTransfer[] getTransfers(LoggedInInfo loggedInInfo, List<Prescription> prescriptions) {
+		PrescriptionManager prescriptionManager = SpringUtils.getBean(PrescriptionManager.class);
+
+		ArrayList<PrescriptionTransfer> results = new ArrayList<PrescriptionTransfer>();
+
+		for (Prescription prescription : prescriptions) {
+			List<Drug> drugs = prescriptionManager.getDrugsByScriptNo(loggedInInfo, prescription.getId(), false);
+			PrescriptionTransfer prescriptionTransfer = PrescriptionTransfer.toTransfer(prescription, drugs);
+			results.add(prescriptionTransfer);
+		}
+
+		return (results.toArray(new PrescriptionTransfer[0]));
+
 	}
 
 	@Override

@@ -25,7 +25,6 @@
 package org.oscarehr.ws;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -73,24 +72,9 @@ public class DocumentWs extends AbstractWs {
 	}
 
 	public DocumentTransfer[] getDocumentsUpdateAfterDate(Date updateAfterThisDateInclude, int itemsToReturn) {
-		try {
 			LoggedInInfo loggedInInfo = getLoggedInInfo();
-
 			List<Document> documents = documentManager.getDocumentsUpdateAfterDate(loggedInInfo, updateAfterThisDateInclude, itemsToReturn);
-
-			ArrayList<DocumentTransfer> results = new ArrayList<DocumentTransfer>();
-
-			for (Document document : documents) {
-				CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo, document.getId());
-				DocumentTransfer transfer = DocumentTransfer.toTransfer(document, ctlDocument);
-				results.add(transfer);
-			}
-
-			return (results.toArray(new DocumentTransfer[0]));
-		} catch (IOException e) {
-			logger.error("Unexpected error", e);
-			throw (new WebServiceException(e));
-		}
+			return(DocumentTransfer.getTransfers(loggedInInfo, documents));
 	}
 
 	/**
@@ -145,24 +129,8 @@ public class DocumentWs extends AbstractWs {
 	}
 
 	public DocumentTransfer[] getDocumentsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn) {
-
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
-
 		List<Document> documents = documentManager.getDocumentsByProgramProviderDemographicDate(loggedInInfo, programId, providerNo, demographicId, updatedAfterThisDate, itemsToReturn);
-
-		ArrayList<DocumentTransfer> results = new ArrayList<DocumentTransfer>();
-
-		for (Document document : documents) {
-			try {
-				CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo, document.getId());
-				DocumentTransfer transfer = DocumentTransfer.toTransfer(document, ctlDocument);
-				results.add(transfer);
-			} catch (IOException e) {
-				logger.error("Unexpected error", e);
-			}
-		}
-
-		return (results.toArray(new DocumentTransfer[0]));
+		return(DocumentTransfer.getTransfers(loggedInInfo, documents));
 	}
-
 }
