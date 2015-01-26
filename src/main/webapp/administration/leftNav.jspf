@@ -845,6 +845,31 @@ String curProvider_no = (String)session.getAttribute("user");
 	</security:oscarSec>
 <!-- #Data Management END-->
 
+
+
+<!-- #Hamilton Public Health -->
+<oscar:oscarPropertiesCheck property="admin.hph" value="true">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseThirteen">
+				Hamilton Public Health
+				<i class="icon-chevron-right"></i>
+				</a>
+				</div>
+				<div id="collapseThirteen" class="accordion-body collapse">
+				<div class="accordion-inner">
+				<ul>
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/hamiltonPublicHealth/setProviderAvailability.jsp">
+						<bean:message key="admin.admin.setProviderAvailabilities" />
+					</a></li>
+				</ul>
+				</div>
+				</div>
+	</security:oscarSec>
+</oscar:oscarPropertiesCheck>
+<!-- #Hamilton Public Health END-->
+
 <!-- #SHARING CENTER -->
 <oscar:oscarPropertiesCheck property="sharingcenter.enabled" value="true">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.sharingcenter" rights="r" reverse="<%=false%>">
