@@ -22,6 +22,7 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -107,6 +108,20 @@ public class PreventionDao extends AbstractDao<Prevention> {
 		return (results);
 	}
 	
+	public List<Prevention> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicId=:demographicId and x.providerNo=:providerNo and x.lastUpdateDate>=:lastUpdateDate order by x.lastUpdateDate";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter("demographicId", demographicId);
+		query.setParameter("providerNo", providerNo);
+		query.setParameter("lastUpdateDate", updatedAfterThisDateInclusive);
+		setLimit(query, itemsToReturn);
+		
+		@SuppressWarnings("unchecked")
+		List<Prevention> results = query.getResultList();
+		return (results);
+	}
+
 	public List<Prevention> findNotDeletedByDemographicIdAfterDatetime(Integer demographicId, Date dateTime) {
 		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and lastUpdateDate> ?2");
 		query.setParameter(1, demographicId);
