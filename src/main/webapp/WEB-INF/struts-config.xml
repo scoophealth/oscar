@@ -2692,7 +2692,9 @@
       </action>
 		     
 		<action path="/DemographicExtService" type="org.oscarehr.common.web.DemographicExtServiceAction" parameter="method" scope="request">
-		
+		</action>
+
+		<action path="/integrator/IntegratorPush" type="org.oscarehr.common.web.IntegratorPushAction" parameter="method">
 		</action>
 		
 	</action-mappings>
