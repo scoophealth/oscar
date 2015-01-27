@@ -157,11 +157,11 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     			
     			if (inboxflag) {
     				String path = oscar.util.plugin.IsPropertiesOn.getProperty("DOCUMENT_DIR");
-    				url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/mod/docmgmtComp/FillARForm.do?method=showInboxDocDetails&path=" + path + "&demoNo=" + bean.demographicNo + "&name=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "'); return false;";
+    				url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/mod/docmgmtComp/FillARForm.do?method=showInboxDocDetails&path=" + path + "&demoNo=" + bean.demographicNo + "&name=" + StringEscapeUtils.escapeHtml(dispFilename) + "'); return false;";
     				isURLjavaScript = true;
     			}
     			else if( curDoc.getRemoteFacilityId()==null && curDoc.isPDF() ) {
-    				url = "popupPage(window.screen.width,window.screen.height,'" + hash + "','" + request.getContextPath() + "/dms/MultiPageDocDisplay.jsp?segmentID=" + dispDocNo + "&providerNo=" + user + "&searchProviderNo=" + user + "&status=A&demoName=" + StringEscapeUtils.escapeJavaScript(bean.getPatientLastName() + ", " + bean.getPatientFirstName()) + "'); return false;";
+    				url = "popupPage(window.screen.width,window.screen.height,'" + hash + "','" + request.getContextPath() + "/dms/MultiPageDocDisplay.jsp?segmentID=" + dispDocNo + "&providerNo=" + user + "&searchProviderNo=" + user + "&status=A&demoName=" + StringEscapeUtils.escapeHtml(bean.getPatientLastName() + ", " + bean.getPatientFirstName()) + "'); return false;";
     				isURLjavaScript = true;
     			}
     			else {
