@@ -8777,7 +8777,7 @@ CREATE TABLE `site` (
   `status` tinyint(4) NOT NULL default '0',
   `providerId_from` int null,
   `providerId_to` int null,
-  `siteLogoId` int,
+  `siteLogoId` int ,
   `siteUrl` varchar(50),
   PRIMARY KEY  (`site_id`),
   UNIQUE KEY `unique_name` (`name`),
@@ -8953,7 +8953,7 @@ CREATE TABLE `EyeformFollowUp` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `appointment_no` int(11)  ,
   `demographic_no` int(11) ,
-  `timespan` int(11) ,
+  `timespan` varchar(6),
   `timeframe` varchar(25) ,
   `followup_provider` varchar(100) ,
   `date` timestamp ,
@@ -9052,6 +9052,7 @@ CREATE TABLE `EyeformSpecsHistory` (
   `updateTime` datetime ,
   `status` varchar(2) ,
   `appointmentNo` int(11) ,
+   `note` varchar(254),
   PRIMARY KEY (`id`)
 );
 
@@ -9121,6 +9122,10 @@ create table EyeformConsultationReport (
  plan text,
  urgency varchar(100),
  patientWillBook integer,
+ contactId varchar(100),
+ contact_type int(10),
+ otherReferralId int(11),
+ siteId int(11),
  primary key(id)
 );
 

@@ -162,7 +162,7 @@ public class SiteDao extends AbstractDao<Site> {
 						" inner join provider p on p.provider_no = g.provider_no and p.status = 1 " +
 						" inner join providersite ps on ps.provider_no = g.provider_no " +
 						" inner join site s on s.site_id = ps.site_id " +
-						" where  s.name = :sitename ");
+						" where  s.name like :sitename ");
 		query.setParameter("sitename",location);
 
 		@SuppressWarnings("unchecked")
@@ -177,9 +177,9 @@ public class SiteDao extends AbstractDao<Site> {
 		Query query = entityManager.createNativeQuery(
 					"select distinct p.provider_no	" +
 					" from provider p " +
-					" inner join providersite ps on ps.provider_no = p.provider_no " +
+					" inner join providersite ps on ps.provider_no = p.provider_no and p.status = 1" +
 					" inner join site s on s.site_id = ps.site_id " +
-					" where  s.name = :sitename ") ;
+					" where  s.name like :sitename ") ;
 
 		query.setParameter("sitename", location);
 

@@ -26,6 +26,7 @@
 package org.oscarehr.eyeform.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -77,22 +78,28 @@ public class NoteAddonAction extends DispatchAction {
 		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 		DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 		
-		List<EyeformFollowUp> followUps = followUpDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+		List<EyeformFollowUp> followUps = followUpDao.getByAppointmentNo((appointmentNo!=null && !appointmentNo.equalsIgnoreCase("null") )? Integer.parseInt(appointmentNo) : 0);
 		for(EyeformFollowUp fu:followUps) {
-			fu.setProvider(providerDao.getProvider(fu.getFollowupProvider()));
+			if(fu.getFollowupProvider()!=null && fu.getFollowupProvider().length() >0)
+				fu.setProvider(providerDao.getProvider(fu.getFollowupProvider()));
 			fu.setDemographic(demographicDao.getDemographic(String.valueOf(fu.getDemographicNo())));			
 		}		
 		request.setAttribute("followUps",followUps);
 		
-		List<EyeformTestBook> testBookRecords = testDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+		List<EyeformTestBook> testBookRecords = new ArrayList<EyeformTestBook>();
+		List<EyeformProcedureBook> procedures = new ArrayList<EyeformProcedureBook>();
+		EyeForm eyeform = new EyeForm();
+		
+		if(appointmentNo!=null && !"null".equalsIgnoreCase(appointmentNo)) {
+			testBookRecords = testDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+			procedures = procedureBookDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+			eyeform = eyeformDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+		}
 		request.setAttribute("testBookRecords",testBookRecords);
 		
-		List<EyeformProcedureBook> procedures = procedureBookDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
 		request.setAttribute("procedures",procedures);
 		
-		EyeForm eyeform = eyeformDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
 		request.setAttribute("eyeform", eyeform);
-		
 		
 		return mapping.findForward("current_note");
 	}
@@ -182,15 +189,21 @@ public class NoteAddonAction extends DispatchAction {
 		Tickler t = new Tickler();
 		t.setCreator(loggedInInfo.getLoggedInProviderNo());
 		t.setAssignee(providerDao.getProvider(recipient));
-		t.setDemographicNo(Integer.parseInt(demographicNo));
+		//t.setDemographic(demographic)
+		t.setDemographicNo(Integer.valueOf(demographicNo));
 		t.setMessage(text);
-		
+		t.setPriorityAsString("Normal");
 		t.setProvider(loggedInInfo.getLoggedInProvider());
+		//t.setProgram(program);
 		t.setProgramId(Integer.valueOf((String)request.getSession().getAttribute("programId_oscarView")));
-		
+		t.setServiceDate(new Date());
+		t.setStatusAsChar('A');
 		t.setTaskAssignedTo(recipient);
+		t.setUpdateDate(new Date());
 		
-		ticklerManager.addTickler(loggedInInfo, t);
+		TicklerManager ticklerMgr = (TicklerManager)SpringUtils.getBean("ticklerManagerT");
+		ticklerMgr.addTickler(loggedInInfo, t);
+		
 		
 		
 		

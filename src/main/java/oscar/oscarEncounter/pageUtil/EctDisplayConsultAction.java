@@ -60,7 +60,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
        } else {
             //set lefthand module heading and link
             String winName = "Consultation" + bean.demographicNo;
-            String url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=" + bean.demographicNo + "')";            
+            String url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=" + bean.demographicNo + "&appNo=" + appointmentNo + "')";            
             Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Consult"));
             Dao.setLeftURL(url);
             
@@ -117,7 +117,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
                     serviceDateStr = "Error";
                     date = null;
                 }
-                url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/ViewRequest.do?de=" + bean.demographicNo + "&requestId=" + theRequests.ids.get(idx) + "'); return false;";
+                url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/ViewRequest.do?de=" + bean.demographicNo + "&requestId=" + theRequests.ids.get(idx) + "&appNo=" + appointmentNo + "'); return false;";
                 
                 item.setLinkTitle(service + " " + serviceDateStr);
                 service = StringUtils.maxLenString(service, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
@@ -126,6 +126,10 @@ public class EctDisplayConsultAction extends EctDisplayAction {
                 item.setDate(date);
                 Dao.addItem(item);
             } 
+            
+            //Display consultation requests order by by date
+			Dao.setInternalDateSort(false);
+			Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
             
             return true;
          }

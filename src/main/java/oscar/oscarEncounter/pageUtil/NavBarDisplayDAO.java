@@ -58,6 +58,8 @@ public class NavBarDisplayDAO {
 	private String headingColour = null;
 	private String reloadUrl = null;
 	private String divId = null;
+	//Sort the items explicitly.. previously some default sort was applied in LeftNavBarDisplay.jsp.. if true then it will not use that sorting
+	private boolean internalDateSort = true;
 
 	/** Creates a new instance of NavBarDisplayDAO */
 	public NavBarDisplayDAO() {
@@ -421,6 +423,16 @@ public class NavBarDisplayDAO {
 	 public void setReloadUrl(String reloadUrl) {
 		 this.reloadUrl = reloadUrl;
 	 }
+
+	public boolean isInternalDateSort()
+	{
+		return internalDateSort;
+	}
+
+	public void setInternalDateSort(boolean internalDateSort)
+	{
+		this.internalDateSort = internalDateSort;
+	}
 
 	/**
 	 * @return the divId

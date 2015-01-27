@@ -1610,7 +1610,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			f.setDemographicNo(Integer.parseInt(request.getParameter("demographicNo")));
 			f.setProvider(loggedInInfo.getLoggedInProvider());
 			f.setTimeframe(followUpUnit);
-			f.setTimespan(followUpNo);
+			f.setTimespan(String.valueOf(followUpNo));
 			f.setType("followup");
 			f.setUrgency("routine");
 			f.setFollowupProvider(followUpDr);

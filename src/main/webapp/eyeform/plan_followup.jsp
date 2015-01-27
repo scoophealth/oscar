@@ -30,7 +30,7 @@
 <%
 	String id = request.getParameter("id");
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-	request.setAttribute("providers",providerDao.getActiveProviders());
+	request.setAttribute("providers",providerDao.getActiveProvidersByType("doctor"));
 %>
 
 <div id="followup_<%=id%>">
@@ -55,7 +55,7 @@
 				
 	            	&nbsp;
 	            			           
-		             <input type="text" name="followup_<%=id%>.timespan" id="followup_<%=id%>.timespan" size="4"/>		             
+		             <input type="text" name="followup_<%=id%>.timespan" id="followup_<%=id%>.timespan" size="4" maxlength="6"/>		             
 		             <select name="followup_<%=id%>.timeframe" id="followup_<%=id%>.timeframe" >
 		             	<option value="days">days</option>
 		            	<option value="weeks">weeks</option>

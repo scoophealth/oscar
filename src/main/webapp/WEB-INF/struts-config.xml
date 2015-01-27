@@ -515,6 +515,7 @@
 		<form-bean name="eyeForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="followup" type="org.oscarehr.eyeform.model.EyeformFollowUp" />
 			<form-property name="cp" type="org.oscarehr.eyeform.model.EyeformConsultationReport" />
+			<form-property name="isRefOnline" type="java.lang.String" />
 		</form-bean>
                 <form-bean name="PatientEndYearStatementForm" type="oscar.oscarBilling.ca.on.pageUtil.PatientEndYearStatementForm" />
 
@@ -2273,6 +2274,12 @@
 		<action path="/eyeform/SpecsHistory" type="org.oscarehr.eyeform.web.SpecsHistoryAction" parameter="method" scope="request" validate="false" input="/eyeform/specs_history.jsp" name="specsHistoryForm">
 			<forward name="form" path="/eyeform/specs_history.jsp" />
 			<forward name="list" path="/eyeform/specs_history_list.jsp" />
+			<forward name="success" path="/eyeform/hxsuccess.jsp" />
+		</action>
+		
+		
+		<action path="/eyeform/hxHistory" type="org.oscarehr.eyeform.web.SpecsNoteAction" parameter="method" scope="request" validate="false" input="/eyeform/specs_history.jsp" name="specsHistoryForm">
+			
 			<forward name="success" path="/eyeform/success.jsp" />
 		</action>
 
@@ -2314,6 +2321,7 @@
 			<forward name="conReport" path="/eyeform/conreplyGen.jsp" />
 			<forward name="printReport" path="/eyeform/conreportprint.jsp"/>
 			<forward name="success" path="/eyeform/success.jsp" />
+			<forward name="faxWS" path="/oscarEncounter/oscarConsultationRequest/ConsultationFaxComfirmation.jsp" />
 		</action>
 
 		<action path="/eyeform/ConsultationReportList" type="org.oscarehr.eyeform.web.ConReportListAction" parameter="method" scope="request" validate="false" input="/eyeform/conreportlist.jsp" name="consultationReportForm">

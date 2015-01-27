@@ -90,7 +90,8 @@ public class FollowUpAction extends DispatchAction {
     	for(EyeformFollowUp f:followUps) {
     		Provider p = providerDao.getProvider(f.getFollowupProvider());
     		sb.append(f.getType());
-    		if(f.getTimespan() > 0) {
+//    		if(f.getTimespan() > 0) {
+    		if(!f.getTimespan().equals("0") || !f.getTimespan().equals("")){
     			sb.append(" ").append(f.getTimespan()).append(" ").append(f.getTimeframe());
     		}
     		sb.append(" Dr. ").append(p.getFormattedName()).append(" ").append(f.getUrgency());
@@ -127,7 +128,8 @@ public class FollowUpAction extends DispatchAction {
     			type="consult:";
     		}
     		sb.append(type);
-    		if(f.getTimespan() > 0) {
+//    		if(f.getTimespan() > 0) {
+    		if(!f.getTimespan().equals("0") || !f.getTimespan().equals("")){
     			sb.append(" ").append(f.getTimespan()).append(" ").append(f.getTimeframe());
     		}
     		sb.append(" Dr. ").append(p.getFormattedName());
