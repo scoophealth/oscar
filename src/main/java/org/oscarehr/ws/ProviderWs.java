@@ -32,6 +32,7 @@ import org.apache.cxf.annotations.GZIP;
 import org.oscarehr.common.model.Property;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.ProviderManager2;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.transfer_objects.ProviderPropertyTransfer;
 import org.oscarehr.ws.transfer_objects.ProviderTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,12 @@ import org.springframework.stereotype.Component;
 public class ProviderWs extends AbstractWs {
 	@Autowired
 	private ProviderManager2 providerManager;
+
+	public ProviderTransfer getLoggedInProviderTransfer()
+	{
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		return(ProviderTransfer.toTransfer(loggedInInfo.getLoggedInProvider()));
+	}
 
 	/**
 	 * @deprecated 2013-03-27 parameter should have been an object to allow nulls
