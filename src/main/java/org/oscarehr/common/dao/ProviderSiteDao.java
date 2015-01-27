@@ -50,6 +50,16 @@ public class ProviderSiteDao extends AbstractDao<ProviderSite>{
         return results;
     }
 	
+	public List<ProviderSite> findBySiteId(Integer siteId) {
+		String sql = "select x from ProviderSite x where x.id.siteId=?";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1,siteId);
+
+        @SuppressWarnings("unchecked")
+        List<ProviderSite> results = query.getResultList();
+        return results;
+	}
+	
 	public List<Provider> findActiveProvidersWithSites(String provider_no) { 
 		String sql = "FROM Provider p where p.Status = '1' AND p.OhipNo != '' " +
 						"AND EXISTS( " +
@@ -74,13 +84,4 @@ public class ProviderSiteDao extends AbstractDao<ProviderSite>{
         	return results;
     }
 		
-	public List<ProviderSite> findBySiteId(Integer siteId) {
-		String sql = "select x from ProviderSite x where x.id.siteId=?";
-    	Query query = entityManager.createQuery(sql);
-    	query.setParameter(1,siteId);
-
-        @SuppressWarnings("unchecked")
-        List<ProviderSite> results = query.getResultList();
-        return results;
-	}
 }

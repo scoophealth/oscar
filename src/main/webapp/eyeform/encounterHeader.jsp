@@ -46,6 +46,8 @@ if(!authed) {
 %>
 
 
+<%@page import="oscar.OscarProperties"%>
+<%@page import="org.oscarehr.common.model.Appointment"%>
 <%
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
     if((bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean"))==null) {
@@ -103,11 +105,9 @@ if(!authed) {
 	String apptNo = request.getParameter("appointmentNo");
 	String reason = new String();
 	if(apptNo != null && apptNo.length()>0) {
-		org.oscarehr.common.dao.OscarAppointmentDao appointmentDao = org.oscarehr.util.SpringUtils.getBean(org.oscarehr.common.dao.OscarAppointmentDao.class);
-		org.oscarehr.common.model.Appointment a = appointmentDao.find(Integer.parseInt(apptNo));
-		if(a != null) {
-			reason = a.getReason();
-		}
+		org.oscarehr.common.dao.OscarAppointmentDao appointmentDao = (org.oscarehr.common.dao.OscarAppointmentDao)org.oscarehr.util.SpringUtils.getBean("oscarAppointmentDao");
+		Appointment appt = appointmentDao.find(Integer.valueOf(apptNo));
+		reason = appt.getReason();		
 	}
     %>
 
@@ -119,8 +119,19 @@ if(!authed) {
             String url = "/demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&amp;displaymode=edit&amp;dboperation=search_detail";
         %>
         <span style="font-weight:bold;">
-        	<a href="#" onClick="popupPage(700,1000,'<%=winName%>','<c:out value="${ctx}"/><%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a> <%=bean.patientSex%> <%=bean.patientAge%>
+        	<a href="#" onClick="popupPage(700,1000,'<%=winName%>','<c:out value="${ctx}"/><%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a> <%=bean.patientSex%> <%=bean.patientAge%> DOB: <%=bean.yearOfBirth%>-<%=bean.monthOfBirth%>-<%=bean.dateOfBirth%>
        	</span>  
+	<%
+		if(OscarProperties.getInstance().getBooleanProperty("SHOW_ROSTER_STATUS_ON_ECHART_AND_SCHEDULER","yes")){
+			String roster_status = "";
+			roster_status = pd.getRosterStatus();
+			if(null != roster_status && roster_status.contains("RO")){
+	%>
+	<%=pd.getRosterStatus()%>:&nbsp;
+	<%
+		}
+	}
+	%>
 	<bean:message key="oscarEncounter.Index.msgMRP"/>:&nbsp;<span style="font-weight:bold;"><%=famDocName%> <%=famDocSurname%></span> 
 	REF:&nbsp;<span style="font-weight:bold;"><%=rd%></span>  
  	REASON:&nbsp;<span style="font-weight:bold;"><%=reason%></span>

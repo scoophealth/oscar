@@ -95,6 +95,18 @@ public class EyeformConsultationReportDao extends AbstractDao<EyeformConsultatio
 			params.put(pos, queryBean.getDemographicNo());
 		}
 		
+		if(queryBean.getSiteId()!=null && queryBean.getSiteId().intValue() > 0) {
+			if(pos == 0) {
+				sql += "WHERE ";
+				pos++;
+			} else {
+				sql += " AND ";
+				pos++;
+			}
+			sql += "x.siteId = ?";
+			params.put(pos, queryBean.getSiteId());
+		}
+		
 		if(startDate != null) {
 			if(pos == 0) {
 				sql += "WHERE ";

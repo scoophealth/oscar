@@ -57,7 +57,7 @@ public class EyeformFollowUp extends AbstractModel<Integer> {
 	
 	@Column(name="demographic_no")
 	private int demographicNo;	
-	private int timespan;
+	private String timespan;
 	private String timeframe;
 	@Column(name="followup_provider")
 	private String followupProvider;
@@ -106,10 +106,10 @@ public class EyeformFollowUp extends AbstractModel<Integer> {
 	public void setDemographic(Demographic demographic) {
 		this.demographic = demographic;
 	}
-	public int getTimespan() {
+	public String getTimespan() {
 		return timespan;
 	}
-	public void setTimespan(int timespan) {
+	public void setTimespan(String timespan) {
 		this.timespan = timespan;
 	}
 	public String getTimeframe() {

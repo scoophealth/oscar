@@ -44,7 +44,7 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.eyeform.dao.MacroDao;
 import org.oscarehr.eyeform.model.Macro;
-import org.oscarehr.util.MiscUtils;
+
 import org.oscarehr.util.SpringUtils;
 
 
@@ -120,29 +120,24 @@ public class MacroAction extends DispatchAction {
 			String serviceDate = sf.format(new Date());
 
 			for (String code : bcs) {
-				try {
-					if (StringUtils.isBlank(code))
+				if (StringUtils.isBlank(code))
+					continue;
+				String[] atts = code.split("\\|");
+				Object[] price = billingServiceDao.getUnitPrice(atts[0], serviceDate);
+				if (price == null) {
+					errors.append("<br/>Invalid billing code or format: " + code);
+				}
+				boolean requiresSli = billingServiceDao.codeRequiresSLI(atts[0]);
+				if(requiresSli&& atts.length != 3) {
+					errors.append("<br/>SLI code required for billing code: " + code);
+					continue;
+				}
+				if(requiresSli) {
+					String sli = atts[2];
+					if(!isValidSli(sli)) {
+						errors.append("<br/>invalid SLI code for billing code: " + code);
 						continue;
-					String[] atts = code.split("\\|");
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-					Object[] price = billingServiceDao.getUnitPrice(atts[0], sdf.parse(serviceDate));
-					if (price == null) {
-						errors.append("<br/>Invalid billing code or format: " + code);
 					}
-					boolean requiresSli = billingServiceDao.codeRequiresSLI(atts[0]);
-					if(requiresSli&& atts.length != 3) {
-						errors.append("<br/>SLI code required for billing code: " + code);
-						continue;
-					}
-					if(requiresSli) {
-						String sli = atts[2];
-						if(!isValidSli(sli)) {
-							errors.append("<br/>invalid SLI code for billing code: " + code);
-							continue;
-						}
-					}
-				}catch(Exception e) {
-					MiscUtils.getLogger().warn("warning",e);
 				}
 			}
 		}

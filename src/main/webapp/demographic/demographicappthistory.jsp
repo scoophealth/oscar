@@ -168,6 +168,25 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 		location.href=ctx+"/eyeform/Eyeform.do?method=print&apptNos="+ids+"&cpp="+cpp;                
 	}
 	
+	function printVisit_eyeform2()
+	{
+		var cpp = '';
+		var sels = document.getElementsByName('sel');
+		var ids = "";	
+		for(var x=0;x<sels.length;x++) {
+			if(sels[x].checked) {
+				if(ids.length>0)
+					ids+= ",";
+				ids += sels[x].value;
+			}
+		}	
+		if(ids=="") {
+			alert("Please select the appointments.");
+			return false;
+		}
+		location.href=ctx+"/eyeform/Eyeform.do?method=print&from_cme_js=true&apptNos="+ids+"&cpp="+cpp;
+	}
+	
 	function selectAllCheckboxes() {
 		jQuery("input[name='sel']").each(function(){
 			jQuery(this).attr('checked',true);

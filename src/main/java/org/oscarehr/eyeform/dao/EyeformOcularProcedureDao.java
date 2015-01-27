@@ -106,4 +106,21 @@ public class EyeformOcularProcedureDao extends AbstractDao<EyeformOcularProcedur
 	    return(results);		
 	}
 	
+	/**
+	 * get ocular procedures for only supplied appointment
+	 * @param demographicNo
+	 * @param appointmentNo
+	 * @return
+	 */
+	public List<EyeformOcularProcedure> getAllCurrent(int demographicNo, int appointmentNo) {
+		String sql="select x from "+modelClass.getSimpleName()+" x where x.demographicNo = ? and x.appointmentNo=?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, demographicNo);	    
+		query.setParameter(2, appointmentNo);
+	    
+		@SuppressWarnings("unchecked")
+	    List<EyeformOcularProcedure> results=query.getResultList();
+	    return(results);		
+	}
+	
 }
