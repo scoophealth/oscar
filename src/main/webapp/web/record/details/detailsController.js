@@ -1069,7 +1069,7 @@ function statusValueToArray(statusValue) {
 	else if (statusValue.value!=null) { //only 1 entry
 		var tmp = {};
 		tmp.value = statusValue.value;
-		tmp.label = statusValue.value;
+		tmp.label = statusValue.label;
 		return [tmp];
 	}
 	return statusValue;

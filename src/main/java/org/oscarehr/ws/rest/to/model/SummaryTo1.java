@@ -58,12 +58,25 @@ title: "Ongoing Concerns",displaySize: 5,
 
 @XmlRootElement(name = "summary")
 public class SummaryTo1 {
-	Integer id;
 	
+	//summary codes
+	public static final String ASSESSMENTS_CODE = "assessments";
+	public static final String DECISIONSUPPORT_CODE = "dssupport"; 
+	public static final String FAMILYHISTORY_CODE = "famhx";
+	public static final String INCOMING_CODE = "incoming";
+	public static final String MEDICALHISTORY_CODE = "medhx"; 
+	public static final String MEDICATIONS_CODE = "meds";  
+	public static final String ONGOINGCONCERNS_CODE = "ongoingconcerns";
+	public static final String REMINDERS_CODE = "reminders";
+	public static final String SOCIALFAMILYHISTORY_CODE = "socfamhx";
+	public static final String SOCIALHISTORY_CODE = "sochx";
+	public static final String OTHERMEDS_CODE = "othermeds";
+	
+	
+	Integer id;
 	String displayName;
 	String summaryCode;
 	String displaySize = "5";
-    
 	List<SummaryItemTo1> summaryItem = new ArrayList<SummaryItemTo1>();
 	
 	public SummaryTo1(){

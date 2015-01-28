@@ -29,6 +29,7 @@ angular.module("consultServices", [])
 		apiPath:'../ws/rs/consults/',
 		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
+
 		search: function(search){
         	var deferred = $q.defer();
         	$http.post(this.apiPath+'search',search).success(function(data){
@@ -36,6 +37,44 @@ angular.module("consultServices", [])
             }).error(function(){
           	  console.log("error fetching items");
               deferred.reject("An error occured while searching consults");
+            });
+       
+            return deferred.promise;
+        },
+        
+		getDetail: function(requestId, demographicId){
+        	var deferred = $q.defer();
+        	$http.get(this.apiPath+'getDetail?requestId='+requestId+'&demographicId='+demographicId).success(function(data){
+        		deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching items");
+              deferred.reject("An error occured while getting consult detail (requestId="+requestId+")");
+            });
+       
+            return deferred.promise;
+        },
+        
+        getAttachments: function(requestId, demographicId){
+        	var deferred = $q.defer();
+        	$http.get(this.apiPath+'getAttachments?requestId='+requestId+'&demographicId='+demographicId).success(function(data){
+        		deferred.resolve(data);
+        	}).error(function(){
+            	  console.log("error fetching items");
+                  deferred.reject("An error occured while getting consult attachments (requestId="+requestId+")");
+        	});
+        	
+        	return deferred.promise;
+        },
+        
+        save: function(consultDetail){
+        	var deferred = $q.defer();
+        	var consultationDetailTo1 = {consultationDetailTo1:consultDetail};
+        	$http.post(this.apiPath, consultationDetailTo1).success(function(data){
+            	console.log(data);
+                deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching items");
+              deferred.reject("An error occured while fetching items");
             });
        
             return deferred.promise;

@@ -67,7 +67,7 @@ public class DecisionSupportSummary implements Summary{
 	
 	public SummaryTo1 getSummary(LoggedInInfo loggedInInfo,Integer demographicNo,String summaryCode){
 		
-		SummaryTo1 summary = new SummaryTo1("Descion Support",0,"dssuport");
+		SummaryTo1 summary = new SummaryTo1("Descion Support",0,SummaryTo1.DECISIONSUPPORT_CODE);
 		
 		List<SummaryItemTo1> list = summary.getSummaryItem();
 		int count = 0; 

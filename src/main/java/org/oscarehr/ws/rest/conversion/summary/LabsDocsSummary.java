@@ -57,7 +57,7 @@ public class LabsDocsSummary implements Summary {
 	
 	public  SummaryTo1 getSummary(LoggedInInfo loggedInInfo,Integer demographicNo,String summaryCode){
 		
-		SummaryTo1 summary = new SummaryTo1("Incoming",0,"incoming");
+		SummaryTo1 summary = new SummaryTo1("Incoming",0,SummaryTo1.INCOMING_CODE);
 		
 		List<SummaryItemTo1> list = summary.getSummaryItem();
 		int count = 0;

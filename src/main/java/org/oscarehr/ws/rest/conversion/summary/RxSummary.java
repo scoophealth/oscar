@@ -25,12 +25,10 @@ package org.oscarehr.ws.rest.conversion.summary;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Drug;
 
 import org.oscarehr.managers.PrescriptionManager;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.MiscUtils;
 //import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.to.model.SummaryItemTo1;
 import org.oscarehr.ws.rest.to.model.SummaryTo1;
@@ -44,8 +42,6 @@ import oscar.util.StringUtils;
 
 @Component
 public class RxSummary implements Summary{
-	private static Logger logger = MiscUtils.getLogger();
-	
 	@Autowired
 	PrescriptionManager rxManager;
 	
@@ -57,7 +53,7 @@ public class RxSummary implements Summary{
 	
 	public SummaryTo1 getSummary(LoggedInInfo loggedInInfo,Integer demographicNo,String summaryCode){
 		
-		SummaryTo1 summary = new SummaryTo1("Meds",0,"meds");
+		SummaryTo1 summary = new SummaryTo1("Meds",0,SummaryTo1.MEDICATIONS_CODE);
 		
 		List<SummaryItemTo1> list = summary.getSummaryItem();
 		int count = 0;

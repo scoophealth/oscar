@@ -68,6 +68,17 @@ public class AllergyManager {
 		return(result);
 	}
 	
+	public List<Allergy> getActiveAllergies(LoggedInInfo loggedInInfo, Integer demographicNo) {
+		List<Allergy> results = allergyDao.findActiveAllergiesOrderByDescription(demographicNo);
+		
+		//--- log action ---
+		if (results!=null && results.size()>0) {
+			LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getActiveAllergies", "demographicNo=" + demographicNo);
+		}
+
+		return(results);
+	}
+	
 	public List<Allergy> getUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Allergy> results = allergyDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
 

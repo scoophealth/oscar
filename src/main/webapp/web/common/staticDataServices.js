@@ -912,6 +912,32 @@ angular.module("staticDataServices", [])
 				questions.push({"value":"What is your grandmother's first name?", "label":"What is your grandmother's first name?"});
 				questions.push({"value":"What year did you graduate from high school?", "label":"What year did you graduate from high school?"});
 				return questions;
+			},
+
+			getConsultRequestUrgencies: function() {
+				var urgencies = [];
+				urgencies.push({value:1, name:"Urgent"});
+				urgencies.push({value:2, name:"Non-Urgent"});
+				urgencies.push({value:3, name:"Return"});
+				return urgencies;
+			},
+			
+			getConsultRequestStatuses: function() {
+				var statuses = [];
+				statuses.push({value:1, name:"Nothing"});
+				statuses.push({value:2, name:"Pending Specialist Callback"});
+				statuses.push({value:3, name:"Pending Patient Callback"});
+				statuses.push({value:4, name:"Completed"});
+				statuses.push({value:5, name:"Cancelled"});
+				return statuses;
+			},
+			
+			getHours: function() {
+				return ["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"];
+			},
+			
+			getMinutes: function() {
+				return ["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"];
 			}
 		};
 });

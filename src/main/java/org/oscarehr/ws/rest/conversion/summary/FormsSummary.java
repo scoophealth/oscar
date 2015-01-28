@@ -48,7 +48,7 @@ public class FormsSummary implements Summary{
     	
 	public SummaryTo1 getSummary(LoggedInInfo loggedInInfo,Integer demographicNo,String summaryCode){
 		
-		SummaryTo1 summary = new SummaryTo1("Assessments",0,"assessments");
+		SummaryTo1 summary = new SummaryTo1("Assessments",0,SummaryTo1.ASSESSMENTS_CODE);
 		
 		List<SummaryItemTo1> list = summary.getSummaryItem();
 		int count = 0;

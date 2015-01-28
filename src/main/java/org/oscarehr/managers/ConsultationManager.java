@@ -28,6 +28,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.oscarehr.common.dao.ConsultationServiceDao;
+import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ConsultationServices;
 import org.oscarehr.common.model.Demographic;
@@ -48,6 +50,12 @@ public class ConsultationManager {
 	@Autowired
 	ConsultationDao consultationDao;
 	
+	@Autowired
+	ConsultationServiceDao serviceDao;
+	
+	@Autowired
+	ProfessionalSpecialistDao professionalSpecialistDao;
+	
 	public List<ConsultationSearchResult> search(LoggedInInfo loggedInInfo, ConsultationSearchFilter filter) {
 		 List<ConsultationSearchResult> r = new  ArrayList<ConsultationSearchResult>();
 		List<Object[]> result = consultationDao.search(filter);
@@ -63,6 +71,37 @@ public class ConsultationManager {
 	public int getConsultationCount(ConsultationSearchFilter filter) {
 		return consultationDao.getConsultationCount2(filter);
 	}
+	
+	public ConsultationRequest getRequest(LoggedInInfo loggedInInfo, Integer id) {
+		ConsultationRequest request = consultationDao.find(id);
+		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getRequest", "id="+request.getId());
+		
+		return request;
+	}
+	
+	public List<ConsultationServices> getConsultationServices() {
+		return serviceDao.findActive();
+	}
+	
+	public ProfessionalSpecialist getProfessionalSpecialist(Integer id) {
+		return professionalSpecialistDao.find(id);
+	}
+	
+	public void saveConsultationRequest(LoggedInInfo loggedInInfo, ConsultationRequest request) {
+		if (request.getId()==null) { //new consultation request
+			ProfessionalSpecialist specialist = request.getProfessionalSpecialist();
+			request.setProfessionalSpecialist(null);
+			consultationDao.persist(request);
+			
+			request.setProfessionalSpecialist(specialist);
+			consultationDao.merge(request);
+		} else {
+			consultationDao.merge(request);
+		}
+		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.saveConsultationRequest", "id="+request.getId());
+	}
+	
+	
 	
 	private ConsultationSearchResult convertToResult(Object[] items) {
 		ConsultationSearchResult result = new ConsultationSearchResult();

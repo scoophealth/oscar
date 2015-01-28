@@ -1,9 +1,9 @@
-    
+
 var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResource','ui.bootstrap','demographicServices','programServices',
-                                                          'ticklerServices','scheduleServices','billingServices','securityServices','staticDataServices',
-                                                          'patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll',
-                                                          'uxServices','ngTable','oscarFilters','messageServices','inboxServices','k2aServices', 'personaServices'
-                                                          ,'consultServices','angular-loading-bar']);
+														  'ticklerServices','scheduleServices','billingServices','securityServices','staticDataServices',
+														  'patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll',
+														  'uxServices','ngTable','oscarFilters','messageServices','inboxServices','k2aServices', 'personaServices'
+														  ,'consultServices','angular-loading-bar']);
 
 
 oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
@@ -13,139 +13,156 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 	  //
 	  // Now set up the states
 	  $stateProvider
-	    .state('dashboard', {
-	      url: '/dashboard',
-	      templateUrl: 'dashboard/dashboard.jsp',
-          controller: 'DashboardCtrl'
-         
-	    })
-	    .state('inbox', {
-	      url: '/inbox',
-	      templateUrl: 'inbox/inbox_popup.jsp',
-	     // templateUrl: 'inbox/inbox.jsp',
-          controller: 'InboxCtrl'
-	    })    
-  	    .state('consults', {
-  	      url: '/consults',
-  	      templateUrl: 'consults/consultList2.jsp',
-            controller: 'ConsultListCtrl2'
-  	    }) 
-  	    .state('billing', {
-  	      url: '/billing',
-  	      templateUrl: 'billing/billing_popup.jsp',
-            controller: 'BillingCtrl'
-  	    })  
-  	    .state('schedule', {
-  	      url: '/schedule',
-  	      templateUrl: 'schedule/classic.jsp',
-            controller: 'ScheduleCtrl'
-  	    })  
-  	    .state('admin', {
-  	      url: '/admin',
-  	      templateUrl: 'admin/admin_popup.jsp',
-            controller: 'AdminCtrl'
-  	    })  
-  	    .state('ticklers', {
-  	      url: '/ticklers',
-  	      templateUrl: 'tickler/ticklerList.jsp',
-            controller: 'TicklerListCtrl',
-            resolve: { 
-            	providers: function(providerService) { return providerService.searchProviders({active:true}); },
-            }
-  	    })  
-  	    .state('search', {
-  	      url: '/search',
-  	      templateUrl: 'patientsearch/patientSearch.jsp',
-            controller: 'PatientSearchCtrl'
-  	    }) 
-  	    .state('reports', {
-  	      url: '/reports',
-  	      templateUrl: 'report/reports.jsp',
-  	      //templateUrl: 'report/reports_classic.jsp',
-            controller: 'ReportsCtrl'
-  	    }) 
-  	    .state('documents', {
-  	      url: '/documents',
-  	      templateUrl: 'document/documents_classic.jsp',
-            controller: 'DocumentsCtrl'
-  	    })
-  	    .state('settings', {
-  	      url: '/settings',
-  	      templateUrl: 'settings/settings.jsp',
-            controller: 'SettingsCtrl',
-            resolve: { 
-            	user: function(providerService) { return providerService.getMe(); },
-            	billingServiceTypes: function(billingService) { return billingService.getUniqueServiceTypes(); },
-            	providerList: function(providerService) { return providerService.searchProviders({'active':true});},
-            	loadedSettings: function(providerService) { return providerService.getSettings();},
-            	encounterForms: function(formService) { return formService.getAllEncounterForms();},
-            	eforms: function(formService) { return formService.getAllEForms();},
-            	teams: function(providerService) { return providerService.getActiveTeams();},
-            	groupNames: function(formService) { return formService.getGroupNames();}
-            }
-  	    })
-	    .state('support', {
-  	      url: '/support',
-  	      templateUrl: 'help/support.jsp',
-            controller: 'SupportCtrl'
-  	    })
-  	    .state('help', {
-  	      url: '/help',
-  	      templateUrl: 'help/help.jsp',
-            controller: 'HelpCtrl'
-  	    }) 
-	    .state('record', {
-	    	url: '/record/:demographicNo', 
-            templateUrl: 'record/record.jsp',
-            controller: 'RecordCtrl',
-            resolve: { 
-            	demo: function($stateParams, demographicService) { return demographicService.getDemographic($stateParams.demographicNo); },
-        		user: function(providerService) { return providerService.getMe(); }
-            }
-        })
-        .state('record.details', {
-	    	url: '^/record/:demographicNo/details', 
-            templateUrl: 'record/details/details.jsp',
-            controller: 'DetailsCtrl'
-        })
-        .state('record.summary', {
-	    	url: '^/record/:demographicNo/summary?appointmentNo&encType', 
-            templateUrl: 'record/summary/summary.jsp',
-            controller: 'SummaryCtrl'
-        })
-        .state('record.forms', {
-	    	url: '^/record/:demographicNo/forms', 
-            templateUrl: 'record/forms/forms.jsp',
-            controller: 'FormCtrl'
-        }).state('record.forms.new', {
-	    	url: '^/record/:demographicNo/forms/:type/:id', 
-            templateUrl: 'record/forms/forms.jsp',
-            controller: 'FormCtrl'
-        }).state('record.forms.existing', {
-	    	url: '^/record/:demographicNo/forms/:type/id/:id', 
-            templateUrl: 'record/forms/forms.jsp',
-            controller: 'FormCtrl'
-        })
-        .state('record.tickler', {
-	    	url: '^/record/:demographicNo/tickler', 
-            templateUrl: 'tickler/ticklerList.jsp',
-            controller: 'TicklerListCtrl',
-            resolve: { 
-            	providers: function(providerService) { return providerService.searchProviders({active:true}); },
-            }
-        }).state('record.tracker', {
-	    	url: '^/record/:demographicNo/tracker', 
-            templateUrl: 'record/tracker/tracker.jsp',
-            controller: 'TrackerCtrl'
-        })
-        .state('record.phr', {
-	    	url: '^/record/:demographicNo/phr', 
-            templateUrl: 'record/phr/phr.jsp',
-            controller: 'PHRCtrl'
-        })
-       
-        
-	    
+		.state('dashboard', {
+		  url: '/dashboard',
+		  templateUrl: 'dashboard/dashboard.jsp',
+		  controller: 'DashboardCtrl'
+		})
+		.state('inbox', {
+		  url: '/inbox',
+		  templateUrl: 'inbox/inbox_popup.jsp',
+		 // templateUrl: 'inbox/inbox.jsp',
+		  controller: 'InboxCtrl'
+		})
+  		.state('consults', {
+  			url: '/consults?demographicId',
+  			templateUrl: 'consults/consultList2.jsp',
+  			controller: 'ConsultListCtrl2'
+		})
+		.state('consult', {
+			url: '/consults/:requestId',
+			templateUrl: 'consults/consultDetail.jsp',
+			controller: 'ConsultDetailCtrl',
+			resolve: {
+				consult: function($stateParams, consultService) { return consultService.getDetail($stateParams.requestId, 0); },
+				user: function(providerService) { return providerService.getMe(); }
+			}
+		})
+		.state('newConsult', {
+			url: '/record/:demographicNo/newConsult',
+			templateUrl: 'consults/consultDetail.jsp',
+			controller: 'ConsultDetailCtrl',
+			resolve: {
+				consult: function($stateParams, consultService) { return consultService.getDetail(0, $stateParams.demographicNo); },
+				user: function(providerService) { return providerService.getMe(); }
+			}
+		})
+  		.state('billing', {
+  		  url: '/billing',
+  		  templateUrl: 'billing/billing_popup.jsp',
+			controller: 'BillingCtrl'
+  		})
+  		.state('schedule', {
+  		  url: '/schedule',
+  		  templateUrl: 'schedule/classic.jsp',
+			controller: 'ScheduleCtrl'
+  		})
+  		.state('admin', {
+  		  url: '/admin',
+  		  templateUrl: 'admin/admin_popup.jsp',
+			controller: 'AdminCtrl'
+  		})
+  		.state('ticklers', {
+  		  url: '/ticklers',
+  		  templateUrl: 'tickler/ticklerList.jsp',
+			controller: 'TicklerListCtrl',
+			resolve: { 
+				providers: function(providerService) { return providerService.searchProviders({active:true}); },
+			}
+  		})
+  		.state('search', {
+  		  url: '/search',
+  		  templateUrl: 'patientsearch/patientSearch.jsp',
+			controller: 'PatientSearchCtrl'
+  		}) 
+  		.state('reports', {
+  		  url: '/reports',
+  		  templateUrl: 'report/reports.jsp',
+  		  //templateUrl: 'report/reports_classic.jsp',
+			controller: 'ReportsCtrl'
+  		}) 
+  		.state('documents', {
+  		  url: '/documents',
+  		  templateUrl: 'document/documents_classic.jsp',
+			controller: 'DocumentsCtrl'
+  		})
+  		.state('settings', {
+  		  url: '/settings',
+  		  templateUrl: 'settings/settings.jsp',
+			controller: 'SettingsCtrl',
+			resolve: { 
+				user: function(providerService) { return providerService.getMe(); },
+				billingServiceTypes: function(billingService) { return billingService.getUniqueServiceTypes(); },
+				providerList: function(providerService) { return providerService.searchProviders({'active':true});},
+				loadedSettings: function(providerService) { return providerService.getSettings();},
+				encounterForms: function(formService) { return formService.getAllEncounterForms();},
+				eforms: function(formService) { return formService.getAllEForms();},
+				teams: function(providerService) { return providerService.getActiveTeams();},
+				groupNames: function(formService) { return formService.getGroupNames();}
+			}
+  		})
+		.state('support', {
+  		  url: '/support',
+  		  templateUrl: 'help/support.jsp',
+			controller: 'SupportCtrl'
+  		})
+  		.state('help', {
+  		  url: '/help',
+  		  templateUrl: 'help/help.jsp',
+			controller: 'HelpCtrl'
+  		}) 
+		.state('record', {
+			url: '/record/:demographicNo', 
+			templateUrl: 'record/record.jsp',
+			controller: 'RecordCtrl',
+			resolve: { 
+				demo: function($stateParams, demographicService) { return demographicService.getDemographic($stateParams.demographicNo); },
+				user: function(providerService) { return providerService.getMe(); }
+			}
+		})
+		.state('record.details', {
+			url: '^/record/:demographicNo/details', 
+			templateUrl: 'record/details/details.jsp',
+			controller: 'DetailsCtrl'
+		})
+		.state('record.summary', {
+			url: '^/record/:demographicNo/summary?appointmentNo&encType', 
+			templateUrl: 'record/summary/summary.jsp',
+			controller: 'SummaryCtrl'
+		})
+		.state('record.forms', {
+			url: '^/record/:demographicNo/forms', 
+			templateUrl: 'record/forms/forms.jsp',
+			controller: 'FormCtrl'
+		}).state('record.forms.new', {
+			url: '^/record/:demographicNo/forms/:type/:id', 
+			templateUrl: 'record/forms/forms.jsp',
+			controller: 'FormCtrl'
+		}).state('record.forms.existing', {
+			url: '^/record/:demographicNo/forms/:type/id/:id', 
+			templateUrl: 'record/forms/forms.jsp',
+			controller: 'FormCtrl'
+		})
+		.state('record.tickler', {
+			url: '^/record/:demographicNo/tickler', 
+			templateUrl: 'tickler/ticklerList.jsp',
+			controller: 'TicklerListCtrl',
+			resolve: { 
+				providers: function(providerService) { return providerService.searchProviders({active:true}); }
+			}
+		}).state('record.tracker', {
+			url: '^/record/:demographicNo/tracker', 
+			templateUrl: 'record/tracker/tracker.jsp',
+			controller: 'TrackerCtrl'
+		})
+		.state('record.phr', {
+			url: '^/record/:demographicNo/phr', 
+			templateUrl: 'record/phr/phr.jsp',
+			controller: 'PHRCtrl'
+		})
+	   
+		
+		
 }]);
 
 // For debugging purposes
@@ -181,47 +198,47 @@ $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState,
 	//let's make a startFrom filter
 	oscarApp.filter('startFrom', function() {
 	  return function(input, start) {
-	      start = +start; //parse to int
-	      // return input.slice(start);
-	      return input;
+		  start = +start; //parse to int
+		  // return input.slice(start);
+		  return input;
 	  }
 	});
 
 /*
  
  user: function($stateParams, UserService) {
-      return UserService.find($stateParams.id);
-    },
+	  return UserService.find($stateParams.id);
+	},
 oscarApp.config(['$routeProvider',
-                    function($routeProvider) {
+					function($routeProvider) {
 
-	                    when('/settings', {
-		                    templateUrl: 'partials/settings-classic.jsp',
-		                    controller: 'SettingsCtrl'
-	                    }).
-	                    when('/support', {
-		                    templateUrl: 'partials/support.jsp',
-		                    controller: 'SupportCtrl'
-	                    }).
-	                    when('/help', {
-		                    templateUrl: 'partials/help.jsp',
-		                    controller: 'HelpCtrl'
-	                    }).
-	                    
-	                    when('/messenger', {
-		                    templateUrl: 'partials/messenger.jsp',
-		                    controller: 'MessengerCtrl'
-	                    }).
-	                    when('/eform', {
-		                    templateUrl: 'partials/eform.jsp',
-		                    controller: 'EformFullCtrl'
-	                    }).
-	                    when('/eform2', {
-		                    templateUrl: 'partials/eform2.jsp',
-		                    controller: 'EformFull2Ctrl'
-	                    }).
-	                   
-                    }
+						when('/settings', {
+							templateUrl: 'partials/settings-classic.jsp',
+							controller: 'SettingsCtrl'
+						}).
+						when('/support', {
+							templateUrl: 'partials/support.jsp',
+							controller: 'SupportCtrl'
+						}).
+						when('/help', {
+							templateUrl: 'partials/help.jsp',
+							controller: 'HelpCtrl'
+						}).
+						
+						when('/messenger', {
+							templateUrl: 'partials/messenger.jsp',
+							controller: 'MessengerCtrl'
+						}).
+						when('/eform', {
+							templateUrl: 'partials/eform.jsp',
+							controller: 'EformFullCtrl'
+						}).
+						when('/eform2', {
+							templateUrl: 'partials/eform2.jsp',
+							controller: 'EformFull2Ctrl'
+						}).
+					   
+					}
 ]);
 */
 
@@ -254,8 +271,8 @@ oscarApp.filter('offset', function() {
 		 if(input == null) {
 			 return 0;
 		 }
-	    start = parseInt(start, 10);
-	    return input.slice(start);
+		start = parseInt(start, 10);
+		return input.slice(start);
 	  };
 	});
 
@@ -264,11 +281,11 @@ oscarApp.filter('offset', function() {
 //this is for the patient list control. Tells us which template to load
 oscarApp.factory('Navigation', function($rootScope) {
   return {
-    location: '',
-    
-    load: function(msg) {
-      this.location = msg;
-    }
+	location: '',
+	
+	load: function(msg) {
+	  this.location = msg;
+	}
   }
 });
 
@@ -276,17 +293,17 @@ oscarApp.factory('Navigation', function($rootScope) {
 
 angular.module('oscarProviderViewModule').directive('oscarSecurityShow', function ($animate, securityService) {
 	  return function(scope, element, attr) {
-		    scope.$watch(attr.oscarSecurityShow, function ngShowWatchAction(value){
-		    	//console.log('valuee='+value.toSource());
-		    	
-		    	if(value.objectName != null && value.privilege != null) {
-		    		//securityService.hasHigh(value.objectName,value.privilege,null);
-		    		console.log('gtg');
-		    	}
-		    	
-		      //set value to true to show, or else hide
-	    	  $animate[value ? 'removeClass' : 'addClass'](element, 'ng-hide');
-		    });
+			scope.$watch(attr.oscarSecurityShow, function ngShowWatchAction(value){
+				//console.log('valuee='+value.toSource());
+				
+				if(value.objectName != null && value.privilege != null) {
+					//securityService.hasHigh(value.objectName,value.privilege,null);
+					console.log('gtg');
+				}
+				
+			  //set value to true to show, or else hide
+			  $animate[value ? 'removeClass' : 'addClass'](element, 'ng-hide');
+			});
 	  };
 });
 */
