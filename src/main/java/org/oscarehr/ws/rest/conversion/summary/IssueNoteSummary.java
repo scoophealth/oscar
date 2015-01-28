@@ -59,25 +59,25 @@ public class IssueNoteSummary implements Summary {
 		SummaryTo1 summary = null;
 		String[] issueIds = null;
 		if("ongoingconcerns".equals(summaryCode)){
-			summary = new SummaryTo1("Ongoing Concerns",0,"ongoingconcerns");
+			summary = new SummaryTo1("Ongoing Concerns",0,SummaryTo1.ONGOINGCONCERNS_CODE);
 			issueIds = new String[] {"Concerns"};
 		}else if("medhx".equals(summaryCode)){
-			summary = new SummaryTo1("Medical History",1,"medhx");
+			summary = new SummaryTo1("Medical History",1,SummaryTo1.MEDICALHISTORY_CODE);
 			issueIds = new String[] {"MedHistory"};
 		}else if("socfamhx".equals(summaryCode)){
-			summary = new SummaryTo1("Social/Family History",2,"socfamhx");
-			issueIds = new String[] {"SocHistory","FamHistory"};		
+			summary = new SummaryTo1("Social/Family History",2,SummaryTo1.SOCIALFAMILYHISTORY_CODE);
+			issueIds = new String[] {"SocHistory","FamHistory"};
 		}else if("reminders".equals(summaryCode)){
-			summary = new SummaryTo1("Reminders",4,"reminders");
+			summary = new SummaryTo1("Reminders",4,SummaryTo1.REMINDERS_CODE);
 			issueIds = new String[] {"Reminders"}; 
 		}else if("othermeds".equals(summaryCode)){
-			summary = new SummaryTo1("Other Meds",6,"othermeds");
+			summary = new SummaryTo1("Other Meds",6,SummaryTo1.OTHERMEDS_CODE);
 			issueIds = new String[] {"OMeds"};
 		}else if("sochx".equals(summaryCode)){
-			summary = new SummaryTo1("Social History",2,"sochx");
+			summary = new SummaryTo1("Social History",2,SummaryTo1.SOCIALHISTORY_CODE);
 			issueIds = new String[] {"SocHistory"};
 		}else if("famhx".equals(summaryCode)){
-			summary = new SummaryTo1("Family History",3,"famhx");
+			summary = new SummaryTo1("Family History",3,SummaryTo1.FAMILYHISTORY_CODE);
 			issueIds = new String[] {"FamHistory"};
 		}
 	

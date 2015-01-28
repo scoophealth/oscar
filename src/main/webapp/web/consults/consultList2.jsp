@@ -113,9 +113,12 @@
 		<div style="height: 5px"></div>
 
 		<div class="row">
-			<div class="col-xs-2">
+			<div class="col-xs-12">
 				<button class="btn btn-primary" type="button" ng-click="doSearch()"><bean:message key="global.search" bundle="ui"/></button>
 				<button class="btn btn-default" type="button" ng-click="clear()"><bean:message key="global.clear" bundle="ui"/></button>
+				<button class="btn btn-success" type="button" ng-click="addConsult()" ng-disabled="search.demographicNo==null">
+					<bean:message key="consult.list.new" bundle="ui"/>
+				</button>
 			</div>
 		</div>
 	</form>
@@ -151,13 +154,8 @@
 
 		<tfoot ng-show="consultWriteAccess">
 			<tr>
-				<td colspan="12" class="white"><a ng-click="checkAll()" class="hand-hover"><bean:message key="consult.list.checkAll" bundle="ui"/></a> - <a ng-click="checkNone()" class="hand-hover"><bean:message key="consult.list.checkNone" bundle="ui"/></a> &nbsp; &nbsp;
-					&nbsp; &nbsp; &nbsp;
-					<button class="btn btn-default" name="button" type="button"
-						ng-click="addConsult()" ng-disabled="true"><bean:message key="consult.list.actions" bundle="ui"/>&nbsp;<span class="caret"></span></button>
-				<button class="btn btn-default" name="button" type="button"
-						ng-click="test()" ng-disabled="true"><bean:message key="consult.list.new" bundle="ui"/></button>
-								
+				<td colspan="12" class="white">
+					<a ng-click="checkAll()" class="hand-hover"><bean:message key="consult.list.checkAll" bundle="ui"/></a> - <a ng-click="checkNone()" class="hand-hover"><bean:message key="consult.list.checkNone" bundle="ui"/></a>								
 				</td>
 			</tr>
 		</tfoot>

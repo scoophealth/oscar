@@ -52,11 +52,11 @@ public class MenuItemTo1 implements Serializable {
     	this.url = url;
     }
     
-    public MenuItemTo1 initWithState(Integer id, String label, String state){
+    public MenuItemTo1(Integer id, String label, String state, String extra){
     	this.id = id;
     	this.label = label;
     	this.state = state;
-    	return this;
+    	this.extra = extra;
     }
     
 	public Integer getId() {

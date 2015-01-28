@@ -34,6 +34,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
@@ -162,7 +163,7 @@ public class RecordUxService extends AbstractServiceImpl {
 		//}
 		
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.consultations", "r", null)) {
-			morelist.add(new MenuItemTo1(idCounter++, "Consultations", "..//oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de="+demographicNo));
+			morelist.add(new MenuItemTo1(idCounter++, "Consultations", "consults", demographicNo.toString()));
 		}
 		
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.documents", "r", null)) {
@@ -203,41 +204,41 @@ public class RecordUxService extends AbstractServiceImpl {
 		if("right".equals(summaryName )){
 			summaryList = new ArrayList<SummaryTo1>();
 			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.documents", "r", null) || securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.labResult", "r", null) ) {
-				summaryList.add(new SummaryTo1("Incoming",count++,"incoming"));
+				summaryList.add(new SummaryTo1("Incoming",count++,SummaryTo1.INCOMING_CODE));
 			}
 			
 			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.decisionSupportAlerts", "r", null)) {
-				summaryList.add(new SummaryTo1("Decision Support",count++,"dssupport")); 
+				summaryList.add(new SummaryTo1("Decision Support",count++,SummaryTo1.DECISIONSUPPORT_CODE)); 
 			}
 		}else if("left".equals(summaryName )){
 			summaryList = new ArrayList<SummaryTo1>();
 			
-			summaryList.add(new SummaryTo1("Ongoing Concerns",count++,"ongoingconcerns"));
+			summaryList.add(new SummaryTo1("Ongoing Concerns",count++,SummaryTo1.ONGOINGCONCERNS_CODE));
 			
 			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.medicalHistory", "r", null)) {
-				summaryList.add(new SummaryTo1("Medical History",count++,"medhx")); 
+				summaryList.add(new SummaryTo1("Medical History",count++,SummaryTo1.MEDICALHISTORY_CODE)); 
 			}
 			
 			//summaryList[2] = new SummaryTo1("Social/Family History",2,"socfamhx");
-			summaryList.add(new SummaryTo1("Social History",count++,"sochx"));
+			summaryList.add(new SummaryTo1("Social History",count++,SummaryTo1.SOCIALHISTORY_CODE));
 			
 			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.familyHistory", "r", null)) {
-				summaryList.add(new SummaryTo1("Family History",count++,"famhx"));
+				summaryList.add(new SummaryTo1("Family History",count++,SummaryTo1.FAMILYHISTORY_CODE));
 			}
 	
-			summaryList.add(new SummaryTo1("Reminders",count++,"reminders"));
+			summaryList.add(new SummaryTo1("Reminders",count++,SummaryTo1.REMINDERS_CODE));
 			
 			
 			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.prescriptions", "r", null)) {
-				summaryList.add(new SummaryTo1("Medications",count++,"meds"));  
+				summaryList.add(new SummaryTo1("Medications",count++,SummaryTo1.MEDICATIONS_CODE));  
 			}
 			
 			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.otherMeds", "r", null)) {
-				summaryList.add(new SummaryTo1("Other Meds",count++,"othermeds"));
+				summaryList.add(new SummaryTo1("Other Meds",count++,SummaryTo1.OTHERMEDS_CODE));
 			}
 			
 			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.forms", "r", null) || securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.eforms", "r", null)) {
-				summaryList.add(new SummaryTo1("Assessments",count++,"assessments"));
+				summaryList.add(new SummaryTo1("Assessments",count++,SummaryTo1.ASSESSMENTS_CODE));
 			}
 			//summaryList[9] = new SummaryTo1("Outgoing",7,"outgoing");
 		}
@@ -281,4 +282,38 @@ public class RecordUxService extends AbstractServiceImpl {
 	}
 	
 	
+	@GET
+	@Path("/{demographicNo}/getFamilyHistory")
+	@Produces(MediaType.APPLICATION_JSON)
+	public SummaryTo1 getFamilyHistory(@PathParam("demographicNo") Integer demographicNo) {
+		return getFullSummmary(demographicNo, SummaryTo1.FAMILYHISTORY_CODE);
+	}
+	
+	@GET
+	@Path("/{demographicNo}/getMedicalHistory")
+	@Produces(MediaType.APPLICATION_JSON)
+	public SummaryTo1 getMedicalHistory(@PathParam("demographicNo") Integer demographicNo) {
+		return getFullSummmary(demographicNo, SummaryTo1.MEDICALHISTORY_CODE);
+	}
+	
+	@GET
+	@Path("/{demographicNo}/getOngoingConcerns")
+	@Produces(MediaType.APPLICATION_JSON)
+	public SummaryTo1 getOngoingConcerns(@PathParam("demographicNo") Integer demographicNo) {
+		return getFullSummmary(demographicNo, SummaryTo1.ONGOINGCONCERNS_CODE);
+	}
+	
+	@GET
+	@Path("/{demographicNo}/getOtherMeds")
+	@Produces(MediaType.APPLICATION_JSON)
+	public SummaryTo1 getOtherMeds(@PathParam("demographicNo") Integer demographicNo) {
+		return getFullSummmary(demographicNo, SummaryTo1.OTHERMEDS_CODE);
+	}
+	
+	@GET
+	@Path("/{demographicNo}/getReminders")
+	@Produces(MediaType.APPLICATION_JSON)
+	public SummaryTo1 getReminders(@PathParam("demographicNo") Integer demographicNo) {
+		return getFullSummmary(demographicNo, SummaryTo1.REMINDERS_CODE);
+	}
 }

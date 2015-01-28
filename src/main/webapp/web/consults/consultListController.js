@@ -1,4 +1,4 @@
-oscarApp.controller('ConsultListCtrl2', function ($scope,$timeout,ngTableParams, consultService, providerService, demographicService) {
+oscarApp.controller('ConsultListCtrl2', function ($scope, $timeout, $location, ngTableParams, consultService, providerService, demographicService) {
 	$scope.consultReadAccess=true;
 	$scope.consultWriteAccess=true;
 	$scope.lastResponse = "";
@@ -24,20 +24,29 @@ oscarApp.controller('ConsultListCtrl2', function ($scope,$timeout,ngTableParams,
     		return resp;
     	});
     }
+
+    //get parameter "demographicId"
+    var demographicId = $location.search().demographicId;
     
     $scope.updateDemographicNo = function(item, model, label) {
-    	
     	demographicService.getDemographic(model).then(function(data){
     		$scope.search.demographicNo=data.demographicNo;
+    		
+    		if ($scope.consult==null) $scope.consult = {};
     		$scope.consult.demographicName = data.lastName + "," + data.firstName;
+    		
+    		//Refresh screen with search results if "demographicId" is passed
+    		if (demographicId!=null) $scope.doSearch();
     	});
-    	
     }
+    
+    //Show patient referral history if "demographicId" is passed
+    if (demographicId!=null) $scope.updateDemographicNo(null, demographicId);
     
 
 
 	$scope.addConsult = function() {
-		
+		$location.path("/record/"+$scope.search.demographicNo+"/newConsult");
 	}
 	
     $scope.checkAll = function() {
@@ -53,8 +62,11 @@ oscarApp.controller('ConsultListCtrl2', function ($scope,$timeout,ngTableParams,
     }
     
 	$scope.editConsult = function(consult) {
+		/*
 		windowprops = "height=700,width=960,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
 		var popup=window.open('../oscarEncounter/ViewRequest.do?requestId='+consult.id, "oscarConsultationRequest", windowprops);
+		*/
+		$location.path("/consults/"+consult.id);
 	}
 	
 	$scope.doSearch = function() {

@@ -53,7 +53,57 @@ angular.module("uxServices", [])
        
             return deferred.promise;
         	
-        }
+        },
+        getFamilyHistory: function(demographicNo){
+        	var deferred = $q.defer();
+        	$http.get(this.apiPath+'/'+demographicNo+'/getFamilyHistory').success(function(data){
+                deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching items");
+              deferred.reject("An error occured while fetching items");
+            });
+            return deferred.promise;
+        },
+        getMedicalHistory: function(demographicNo){
+        	var deferred = $q.defer();
+        	$http.get(this.apiPath+'/'+demographicNo+'/getMedicalHistory').success(function(data){
+                deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching items");
+              deferred.reject("An error occured while fetching items");
+            });
+            return deferred.promise;
+        },
+    	getOngoingConcerns: function(demographicNo){
+        	var deferred = $q.defer();
+        	$http.get(this.apiPath+'/'+demographicNo+'/getOngoingConcerns').success(function(data){
+                deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching items");
+              deferred.reject("An error occured while fetching items");
+            });
+            return deferred.promise;
+    	},
+    	getOtherMeds: function(demographicNo){
+        	var deferred = $q.defer();
+        	$http.get(this.apiPath+'/'+demographicNo+'/getOtherMeds').success(function(data){
+                deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching items");
+              deferred.reject("An error occured while fetching items");
+            });
+            return deferred.promise;
+    	},
+    	getReminders: function(demographicNo){
+        	var deferred = $q.defer();
+        	$http.get(this.apiPath+'/'+demographicNo+'/getReminders').success(function(data){
+                deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching items");
+              deferred.reject("An error occured while fetching items");
+            });
+            return deferred.promise;
+    	}
     };
 }).service("uxService", function($http,$q,$log){
    return {
