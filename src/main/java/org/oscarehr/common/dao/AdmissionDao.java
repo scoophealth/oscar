@@ -283,6 +283,29 @@ private Logger log=MiscUtils.getLogger();
         return rs;
     }
     
+    /**
+     * This method has no pagination because we're only returning the ID's which take pretty much no memory.
+     */
+    public List<Integer> getAdmittedDemographicIdByProgramAndProvider(Integer programId, String providerNo) {
+               
+        StringBuilder sqlCommand = new StringBuilder("select distinct(a.clientId) FROM Admission a WHERE a.providerNo=?");
+        if (programId!=null) sqlCommand.append(" and a.programId=?");
+
+        Query query = entityManager.createQuery(sqlCommand.toString());
+        query.setParameter(1, providerNo);
+        if (programId!=null) query.setParameter(2, programId);
+
+        // hibernate hack due to being way too old to support primitive return objects
+        List<Integer> results = new ArrayList<Integer>();
+        
+        for (Object o : query.getResultList())
+        {
+        	results.add(((Number) o).intValue());
+        }
+        
+        return results;
+    }
+    
     public List<Admission> getCurrentAdmissions(Integer demographicNo) {
         if (demographicNo == null || demographicNo <= 0) {
             throw new IllegalArgumentException();
