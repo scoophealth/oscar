@@ -8,7 +8,7 @@
 	<queryString>
 		<![CDATA[select d.demographic_no, d.last_name, d.chart_no, d.first_name, CONCAT(d.address,' ') as address, CONCAT(d.city,' ') as city,
 	                      CONCAT(d.province, ' ') as province, CONCAT(d.postal,' ') as postal,
-	                      d.phone, d.phone2, d.year_of_birth, d.month_of_birth, d.date_of_birth,
+	                      d.phone, d.phone2, d.year_of_birth, d.month_of_birth, d.date_of_birth, (DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth), '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth), '00-%m-%d'))) AS age,
 	                      CONCAT(d.hin,' ') as hin, CONCAT(d.ver,' ') as ver,
 	                      d.sex, CONCAT(p.last_name, CONCAT(', ',p.first_name)) as doc_name
 	                      from demographic d left outer join provider p on d.provider_no = p.provider_no where demographic_no =$P{demo}]]>
@@ -26,6 +26,7 @@
 	<field name="year_of_birth" class="java.lang.String"/>
 	<field name="month_of_birth" class="java.lang.String"/>
 	<field name="date_of_birth" class="java.lang.String"/>
+	<field name="age" class="java.lang.String"/>
 	<field name="hin" class="java.lang.String"/>
 	<field name="ver" class="java.lang.String"/>
 	<field name="sex" class="java.lang.String"/>
@@ -48,7 +49,7 @@
 			<textField>
 				<reportElement x="10" y="20" width="330" height="20" stretchType="RelativeToBandHeight"/>
 				<textElement markup="html"/>
-				<textFieldExpression><![CDATA["<b>HIN:</b>" + $F{hin} + " " + $F{ver} + ";<b>DOB (yyyy/mm/dd):</b>"  +$F{year_of_birth} + "/" + $F{month_of_birth} + "/" + $F{date_of_birth} + ";<b>Age:</b>" + (new java.lang.Integer(  ($V{nowyear}.intValue()) -($V{useryear}.intValue()) )).toString()]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<b>HIN:</b>" + $F{hin} + " " + $F{ver} + ";<b>DOB (yyyy/mm/dd):</b>"  +$F{year_of_birth} + "/" + $F{month_of_birth} + "/" + $F{date_of_birth} + ";<b>Age:</b>" + $F{age} ]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="10" y="40" width="330" height="20" stretchType="RelativeToBandHeight"/>
