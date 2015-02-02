@@ -23,6 +23,8 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.model.Security"%>
+<%@page import="org.oscarehr.ws.WsUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="org.bouncycastle.util.encoders.UrlBase64"%>
@@ -34,6 +36,7 @@
 	String syncConfigUrl=StringUtils.trimToNull(OscarProperties.getInstance().getProperty("oscar_myoscar_sync_component_url"));
 	String oscarWsUrl=StringUtils.trimToNull(OscarProperties.getInstance().getProperty("ws_endpoint_url_base"));
    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+   	Security loggedInSecurity=loggedInInfo.getLoggedInSecurity();
 	
 	if (syncConfigUrl==null || oscarWsUrl==null)
 	{
@@ -52,16 +55,13 @@
 	else sb.append('&');
 	
 	sb.append("userName=");
-	String temp=loggedInInfo.getLoggedInSecurity().getUserName();
+	String temp=loggedInSecurity.getUserName();
 	sb.append(URLEncoder.encode(temp, "UTF-8"));
 	
 	sb.append("&password=");
-	temp=loggedInInfo.getLoggedInSecurity().getPassword();
+	temp=WsUtils.generateSecurityToken(loggedInSecurity);
 	sb.append(URLEncoder.encode(temp, "UTF-8"));
-	
-	sb.append("&oscarWsUrl=");
-	sb.append(URLEncoder.encode(oscarWsUrl, "UTF-8"));
-	
+		
 	String resultUrl=sb.toString();
 	
 	MiscUtils.getLogger().debug("data sync url : "+resultUrl);
