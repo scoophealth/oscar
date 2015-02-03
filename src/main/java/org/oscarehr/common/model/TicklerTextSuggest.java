@@ -60,7 +60,11 @@ public class TicklerTextSuggest extends AbstractModel<Integer>{
         return this.id;
     }
         
-    public String getCreator() {
+    public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCreator() {
         return this.creator;
     }
     
