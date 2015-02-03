@@ -22,7 +22,7 @@ copyAddress : left, 22, 283, 0, BaseFont.HELVETICA, 8, _, 238, 320, 10
 clinicianContactUrgent : left, 247, 128, 0, BaseFont.HELVETICA, 10, _, 447, 138, 10
 
 healthNumber :  left, 242, 153, 0, BaseFont.HELVETICA, 12, _, 386, 163, 10
-version :  left, 390, 153, 0, BaseFont.HELVETICA, 12, _, 410, 163, 10
+version :  left, 390, 153, 0, BaseFont.HELVETICA, 12, _, 415, 163, 10
 
 male : left, 422, 164, 0, BaseFont.ZAPFDINGBATS, 10, \u2713
 female : left, 451, 164, 0, BaseFont.ZAPFDINGBATS, 10, \u2713
