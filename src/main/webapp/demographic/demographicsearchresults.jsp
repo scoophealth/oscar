@@ -222,47 +222,47 @@
 		<% if ( fromMessenger ) {%>
 		<!-- leave blank -->
 		                <td class="demoIdSearch">
-                    <a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>"><bean:message
+                    <a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>"><bean:message
                         key="demographic.demographicsearchresults.btnDemoNo" /></a>
                 </td>
 		<%} else {%>
                 <td class="demoIdSearch">
-                    <a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>"><bean:message
+                    <a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>"><bean:message
                         key="demographic.demographicsearchresults.btnDemoNo" /></a>
                 </td>
 		<td class="links"><bean:message key="demographic.demographicsearchresults.module" /> <!-- b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit%>">Links<sup>*</sup></a></b --></td>
 
 		<%}%>
 		<td class="name"><a
-                    href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit%>"><bean:message
+                    href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit%>"><bean:message
                     key="demographic.demographicsearchresults.btnDemoName"/></a>
                 </td>
 		<td class="chartNo"><a
-			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=chart_no&limit1=0&limit2=<%=strLimit%>"><bean:message
+			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=chart_no&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnChart" /></a>
                 </td>
 		<td class="sex"><a
-			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=sex&limit1=0&limit2=<%=strLimit%>"><bean:message
+			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=sex&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnSex" /></a>
                 </td>
 		<td class="dob"><a
-			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=dob&limit1=0&limit2=<%=strLimit%>"><bean:message
+			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=dob&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnDOB" /> <span class="dateFormat"><bean:message key="demographic.demographicsearchresults.btnDOBFormat" /></span></a>
                 </td>
 		<td class="doctor"><a
-			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=provider_no&limit1=0&limit2=<%=strLimit%>"><bean:message
+			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=provider_no&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnDoctor" /></a>
                 </td>
                 <td class="rosterStatus"><a
-			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit%>"><bean:message
+			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit%>"><bean:message
                         key="demographic.demographicsearchresults.btnRosSta" /></a>
                 </td>
 		<td class="patientStatus"><a
-			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=patient_status&limit1=0&limit2=<%=strLimit%>"><bean:message
+			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=patient_status&limit1=0&limit2=<%=strLimit%>"><bean:message
                         key="demographic.demographicsearchresults.btnPatSta" /></a>
                 </td>
                 <td class="phone"><a
-			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=phone&limit1=0&limit2=<%=strLimit%>"><bean:message
+			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=phone&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnPhone" /></a>
                 </td>
 	</tr>
@@ -473,7 +473,7 @@
 %>
 <br> 
 <div class="createNew">
-<a href="demographicaddarecordhtm.jsp?search_mode=<%=searchMode%>&keyword=<%=keyWord%>" title="<bean:message key="demographic.search.btnCreateNewTitle" />">
+<a href="demographicaddarecordhtm.jsp?search_mode=<%=searchMode%>&keyword=<%=StringEscapeUtils.escapeHtml(keyWord)%>" title="<bean:message key="demographic.search.btnCreateNewTitle" />">
 <bean:message key="demographic.search.btnCreateNew" />
 </a>
 

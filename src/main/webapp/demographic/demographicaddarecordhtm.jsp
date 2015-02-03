@@ -58,6 +58,7 @@
 <%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@page import="oscar.OscarProperties" %>
 <%@page import="org.oscarehr.util.LoggedInInfo" %>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
@@ -1212,7 +1213,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
 				</td>
 				<td id="chartNoLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formChartNo" />:</b></td>
-				<td id="chartNo" align="left"><input type="text" id="chart_no" name="chart_no" value="<%=chartNoVal%>">
+				<td id="chartNo" align="left"><input type="text" id="chart_no" name="chart_no" value="<%=StringEscapeUtils.escapeHtml(chartNoVal)%>">
 				</td>
 			</tr>
 
