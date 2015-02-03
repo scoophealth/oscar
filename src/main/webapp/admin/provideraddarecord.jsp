@@ -62,6 +62,7 @@
 <%
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
+	boolean alreadyExists=false;
 %>
 <html:html locale="true">
 <head>
@@ -175,8 +176,14 @@ DBPreparedHandler dbObj = new DBPreparedHandler();
   {
   	p.setProviderNo(dbObj.getNewProviderNo());
   }
-  providerDao.saveProvider(p);
-  isOk=true;
+  
+  if(providerDao.providerExists(p.getProviderNo())) {
+	  isOk=false;
+	  alreadyExists=true;
+  } else {
+  	providerDao.saveProvider(p);
+ 	 isOk=true;
+  }
 
 if (isOk && org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 	String[] sites = request.getParameterValues("sites");
@@ -204,6 +211,10 @@ if (isOk) {
 %>
 <h1><bean:message key="admin.provideraddrecord.msgAdditionFailure" /></h1>
 <%
+	if(alreadyExists) {
+		%><h2><bean:message key="admin.provideraddrecord.msgAlreadyExists" /></h2><%
+	}
+
   }
 }
 else {
