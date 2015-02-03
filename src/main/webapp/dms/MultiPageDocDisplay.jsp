@@ -37,7 +37,7 @@
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
             ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
             ProviderDao providerDao = (ProviderDao) ctx.getBean("providerDao");
-            
+            DemographicDao demographicDao = (DemographicDao)ctx.getBean("demographicDao");
 
             String demoName, documentNo,providerNo,searchProviderNo,status;
 
@@ -60,6 +60,13 @@
             EDoc curdoc = EDocUtil.getDoc(documentNo);
 
             String demographicID = curdoc.getModuleId();
+            
+            if(demoName == null || "".equals(demoName)) {
+            	Demographic d = demographicDao.getDemographic(demographicID);
+            	if(d != null) {
+            		demoName = d.getFormattedName();
+            	}
+            }
 
             String docId = curdoc.getDocId();
             int tabindex = 0;
