@@ -368,6 +368,9 @@ oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigatio
 	  };
 	  
 	$scope.changeApptDate = function(){
+		if($scope.appointmentDate == undefined) {
+			$scope.today();
+		}
 		var formattedDate = $filter('date')($scope.appointmentDate,'yyyy-MM-dd');
 		$scope.changeApptList(formattedDate);
 	};
