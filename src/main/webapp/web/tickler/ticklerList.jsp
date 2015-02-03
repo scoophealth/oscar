@@ -52,7 +52,7 @@
   <div class="col-xs-2">
 	  <select ng-model="search.status" name="status" id="status" class="form-control" >
 	 	<option value=""><bean:message key="tickler.list.status" bundle="ui"/></option>
-	 	<option value="A"><bean:message key="tickler.list.status.actice" bundle="ui"/></option>
+	 	<option value="A"><bean:message key="tickler.list.status.active" bundle="ui"/></option>
 	 	<option value="C"><bean:message key="tickler.list.status.completed" bundle="ui"/></option>
 	 	<option value="D"><bean:message key="tickler.list.status.deleted" bundle="ui"/></option>
 	  </select>     
