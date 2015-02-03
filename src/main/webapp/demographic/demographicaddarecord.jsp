@@ -54,6 +54,7 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <% 
 	java.util.Properties oscarVariables = oscar.OscarProperties.getInstance();
@@ -365,7 +366,9 @@
 
 <br/>
 
+<caisi:isModuleLoad moduleName="caisi">
 <a href="../PMmodule/ClientManager.do?id=<%=dem%>"><bean:message key="demographic.demographicaddarecord.goToCaisiRecord"/></a>
+</caisi:isModuleLoad>
 
 
 <p></p>
