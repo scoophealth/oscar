@@ -389,13 +389,13 @@ type="SQL">select distinct dxresearch.demographic_no from dxresearch ,demographi
 <Denominator id="COPDReg" name="COPD Registry"
 description="Number of patients in the COPD" 
 type="SQL">select distinct dx.demographic_no from dxresearch dx, demographic d 
-where dx.dxresearch_code in ('416') and dx.coding_system = 'icd9' and dx.status = 'A' 
+where dx.dxresearch_code in ('491') and dx.coding_system = 'icd9' and dx.status = 'A' 
 and dx.demographic_no = d.demographic_no and d.patient_status = 'AC'
 </Denominator>
     
 <Denominator id="COPDRegbyP" name="COPD Registry by practice"
 description="Number of patients in the COPD by provider" replaceKeys="provider_no"
-type="SQL">select distinct dxresearch.demographic_no from dxresearch ,demographic where dxresearch_code in ('416') and coding_system = 'icd9' and dxresearch.status = 'A' and dxresearch.demographic_no = demographic.demographic_no and demographic.provider_no = '${provider_no}' and demographic.patient_status = 'AC'
+type="SQL">select distinct dxresearch.demographic_no from dxresearch ,demographic where dxresearch_code in ('491') and coding_system = 'icd9' and dxresearch.status = 'A' and dxresearch.demographic_no = demographic.demographic_no and demographic.provider_no = '${provider_no}' and demographic.patient_status = 'AC'
 </Denominator>
 
 
