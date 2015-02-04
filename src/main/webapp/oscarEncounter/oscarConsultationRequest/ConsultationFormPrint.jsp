@@ -761,6 +761,13 @@ for(ConsultationRequestExt ext:exts) {
                 </td>
             </tr>
             <%}%>
+            
+	    <tr>		
+		<td class="subTitles">		
+		<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAssociated"/> : <%=reqFrm.getFamilyDoctor() %>		
+		&nbsp;<br>		
+		</td>		
+	    </tr>           
 
             <tr>
             <td class="subTitles">
@@ -777,6 +784,7 @@ for(ConsultationRequestExt ext:exts) {
                         &nbsp;<br>
                     </td>
                 </tr>
+
                 <tr>
                     <td id="faxFooter">
 
