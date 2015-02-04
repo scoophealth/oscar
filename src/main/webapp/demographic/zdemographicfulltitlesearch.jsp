@@ -26,6 +26,7 @@
 
 <%@ page import="java.lang.*"%>
 <%@page import="oscar.OscarProperties"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 
 <%
         boolean fromMessenger = request.getParameter("fromMessenger") == null ? false : (request.getParameter("fromMessenger")).equalsIgnoreCase("true")?true:false;
@@ -108,7 +109,7 @@ function searchOutOfDomain() {
     <li>
         <div class="label">
         </div>
-        <input class="wideInput" type="text" NAME="keyword" VALUE="<%=keyWord%>" SIZE="17" MAXLENGTH="100">
+        <input class="wideInput" type="text" NAME="keyword" VALUE="<%=StringEscapeUtils.escapeHtml(keyWord)%>" SIZE="17" MAXLENGTH="100">
     </li>
     <li>
 				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
