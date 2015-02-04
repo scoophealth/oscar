@@ -64,7 +64,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 		
 		$scope.demographicSearchDropDownItems = response.menus.patientSearchMenu.items;
 		$scope.menuItems = response.menus.menu.items;
-		$scope.moreMenuItems = response.menus.moreMenu.items;
+		//$scope.moreMenuItems = response.menus.moreMenu.items;
 		$scope.userMenuItems = response.menus.userMenu.items;
 
     },function(reason){
@@ -89,7 +89,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 			
 			$scope.demographicSearchDropDownItems = response.menus.patientSearchMenu.items;
 			$scope.menuItems = response.menus.menu.items;
-			$scope.moreMenuItems = response.menus.moreMenu.items;
+		//	$scope.moreMenuItems = response.menus.moreMenu.items;
 			$scope.userMenuItems = response.menus.userMenu.items;
 
 	    },function(reason){
