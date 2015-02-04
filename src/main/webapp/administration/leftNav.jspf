@@ -919,12 +919,12 @@ String curProvider_no = (String)session.getAttribute("user");
 
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseFifteen">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseSixteen">
 				<bean:message key="admin.admin.updates" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseFifteen" class="accordion-body collapse">
+				<div id="collapseSixteen" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/pregnancy/migrateToSplitOnArEnhancedForm.jsp"><bean:message key="admin.admin.updates.migrate_onarenhanced"/></a></li>
