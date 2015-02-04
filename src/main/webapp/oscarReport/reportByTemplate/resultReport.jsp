@@ -146,9 +146,10 @@ function clearSession(){
 		for(int x=0;x<csvList.size();x++) {
 	%>			
 
-			<html:form
-			action="/oscarReport/reportByTemplate/generateOutFilesAction">
-			<label><%=(x+1) %></label>
+			<html:form action="/oscarReport/reportByTemplate/generateOutFilesAction">
+			<%if(x>1){ %>
+			<label><%=(x+1)%></label>
+			<%}%>
 			<input type="hidden" name="csv"
 				value="<%=StringEscapeUtils.escapeHtml(csvList.get(x))%>">
 
