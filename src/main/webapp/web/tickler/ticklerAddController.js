@@ -109,8 +109,8 @@ oscarApp.controller('TicklerAddController',function($scope, $modalInstance, demo
     }
     
     $scope.setSuggestedText = function() {
-    	var results = $filter('filter')($scope.textSuggestions,{id:$scope.tickler.suggestedTextId});
-    	
+    	var results = $filter('filter')($scope.textSuggestions,{id:$scope.tickler.suggestedTextId},true);
+    		
     	if(results!=null) {
     		$scope.tickler.message = results[0].suggestedText;
     	}
