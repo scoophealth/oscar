@@ -44,12 +44,26 @@ public class BillingONEAReportDao extends AbstractDao<BillingONEAReport> {
     }
     
     public List<BillingONEAReport> findByProviderOhipNoAndGroupNoAndSpecialtyAndProcessDate(String providerOhipNo, String groupNo, String specialty, Date processDate) {
-    	String sql = "select b from BillingONEAReport b where b.providerOHIPNo=:providerOHIPNo and b.groupNo=:groupNo and b.specialty=:specialty and b.processDate = :processDate";
+        String sql = "select b from BillingONEAReport b where b.providerOHIPNo=:providerOHIPNo and b.groupNo=:groupNo and b.specialty=:specialty and b.processDate = :processDate";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("providerOHIPNo", providerOhipNo);
+        query.setParameter("groupNo", groupNo);
+        query.setParameter("specialty", specialty);
+        query.setParameter("processDate", processDate);
+
+        List<BillingONEAReport> results = query.getResultList();
+        return results;
+    }
+
+
+    public List<BillingONEAReport> findByProviderOhipNoAndGroupNoAndSpecialtyAndProcessDateAndBillingNo(String providerOhipNo, String groupNo, String specialty, Date processDate, Integer billingNo) {
+    	String sql = "select b from BillingONEAReport b where b.providerOHIPNo=:providerOHIPNo and b.groupNo=:groupNo and b.specialty=:specialty and b.processDate = :processDate  and b.billingNo=:billingNo";
     	Query query = entityManager.createQuery(sql);
         query.setParameter("providerOHIPNo", providerOhipNo);
         query.setParameter("groupNo", groupNo);
         query.setParameter("specialty", specialty);
         query.setParameter("processDate", processDate);
+  	query.setParameter("billingNo", billingNo);
         
         List<BillingONEAReport> results = query.getResultList();       
         return results;
