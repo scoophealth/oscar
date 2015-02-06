@@ -38,8 +38,8 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 				user: function(providerService) { return providerService.getMe(); }
 			}
 		})
-		.state('newConsult', {
-			url: '/record/:demographicNo/newConsult',
+		.state('consultNew', {
+			url: '/consults/new/:demographicNo',
 			templateUrl: 'consults/consultDetail.jsp',
 			controller: 'ConsultDetailCtrl',
 			resolve: {

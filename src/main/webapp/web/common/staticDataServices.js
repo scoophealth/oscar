@@ -916,8 +916,8 @@ angular.module("staticDataServices", [])
 
 			getConsultRequestUrgencies: function() {
 				var urgencies = [];
-				urgencies.push({value:1, name:"Urgent"});
 				urgencies.push({value:2, name:"Non-Urgent"});
+				urgencies.push({value:1, name:"Urgent"});
 				urgencies.push({value:3, name:"Return"});
 				return urgencies;
 			},

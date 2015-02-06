@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConsultationDetailConverter extends AbstractConverter<ConsultationRequest, ConsultationDetailTo1> {
 	
-	public ConsultationRequest getAsExistingDomainObject(LoggedInInfo loggedInInfo, ConsultationDetailTo1 t, ConsultationRequest d) throws ConversionException {
+	public ConsultationRequest getAsDomainObject(LoggedInInfo loggedInInfo, ConsultationDetailTo1 t, ConsultationRequest d) throws ConversionException {
 		d.setAllergies(t.getAllergies());
 		d.setAppointmentDate(t.getAppointmentDate());
 		d.setAppointmentTime(t.getAppointmentTime());
@@ -61,7 +61,7 @@ public class ConsultationDetailConverter extends AbstractConverter<ConsultationR
 	
 	@Override
 	public ConsultationRequest getAsDomainObject(LoggedInInfo loggedInInfo, ConsultationDetailTo1 t) throws ConversionException {
-		return getAsExistingDomainObject(loggedInInfo, t, new ConsultationRequest());
+		return getAsDomainObject(loggedInInfo, t, new ConsultationRequest());
 	}
 
 	@Override

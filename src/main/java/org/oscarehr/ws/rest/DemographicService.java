@@ -176,6 +176,8 @@ public class DemographicService extends AbstractServiceImpl {
 	public DemographicTo1 getDemographicData(@PathParam("dataId") Integer id) {		
 		Demographic demo = demographicManager.getDemographic(getLoggedInInfo(),id);
 		if (demo == null) {
+			MiscUtils.getLogger().info("Ronnie: demo ["+demo+"]");
+			
 			return null;
 		}
 		
