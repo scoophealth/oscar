@@ -47,9 +47,9 @@
 	    		
 	    }
 	    
-	    if( faxJob.getDemographic_no() != null ) {
+	    if( faxJob.getDemographicNo() != null ) {
 			
-			Demographic demographic = demographicDao.getDemographic(String.valueOf(faxJob.getDemographic_no()));
+			Demographic demographic = demographicDao.getDemographic(String.valueOf(faxJob.getDemographicNo()));
 			demographicName = demographic.getDisplayName();
 	    }
 %>
