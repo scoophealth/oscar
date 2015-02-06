@@ -46,7 +46,7 @@ oscarApp.controller('ConsultListCtrl2', function ($scope, $timeout, $location, n
 
 
 	$scope.addConsult = function() {
-		$location.path("/record/"+$scope.search.demographicNo+"/newConsult");
+		$location.path("/consults/new/"+$scope.search.demographicNo);
 	}
 	
     $scope.checkAll = function() {

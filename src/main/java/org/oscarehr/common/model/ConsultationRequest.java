@@ -47,7 +47,7 @@ import org.apache.commons.lang.StringUtils;
 @Table(name = "consultationRequests")
 public class ConsultationRequest extends AbstractModel<Integer> implements Serializable {
 
-	public static final String ACTIVE_MARKER = "1";
+	private static final String ACTIVE_MARKER = "1";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

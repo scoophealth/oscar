@@ -137,17 +137,19 @@ public class ConsultationWebService extends AbstractServiceImpl {
 			detail = consultationDetailConverter.getAsTransferObject(getLoggedInInfo(), consultationManager.getRequest(getLoggedInInfo(), requestId));
 		} else {
 			detail.setDemographicId(demographicId);
-			detail.setStatus(ConsultationRequest.ACTIVE_MARKER);
+			
+			RxInformation rx = new RxInformation();
+			String info = rx.getAllergies(demographicId.toString());
+			if (StringUtils.isNotBlank(info)) detail.setAllergies(info);
+			info = rx.getCurrentMedication(demographicId.toString());
+			if (StringUtils.isNotBlank(info)) detail.setCurrentMeds(info);
 		}
 
 		detail.setLetterheadList(getLetterheadList());
 		detail.setFaxList(getFaxList());
 		detail.setServiceList((new ConsultationServiceConverter()).getAllAsTransferObjects(getLoggedInInfo(), consultationManager.getConsultationServices()));
 		detail.setSendToList(providerDao.getActiveTeams());
-		
-		RxInformation rx = new RxInformation();
-		detail.setAllergies(rx.getAllergies(detail.getDemographicId().toString()));
-		detail.setCurrentMeds(rx.getCurrentMedication(detail.getDemographicId().toString()));
+		detail.setProviderNo(getLoggedInInfo().getLoggedInProviderNo());
 		
 		return detail;
 	}
@@ -182,7 +184,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 			request = consultationDetailConverter.getAsDomainObject(getLoggedInInfo(), data);
 			request.setProfessionalSpecialist(consultationManager.getProfessionalSpecialist(data.getProfessionalSpecialist().getId()));
 		} else {
-			request = consultationDetailConverter.getAsExistingDomainObject(getLoggedInInfo(), data, consultationManager.getRequest(getLoggedInInfo(), data.getId()));
+			request = consultationDetailConverter.getAsDomainObject(getLoggedInInfo(), data, consultationManager.getRequest(getLoggedInInfo(), data.getId()));
 		}
 		consultationManager.saveConsultationRequest(getLoggedInInfo(), request);
 		

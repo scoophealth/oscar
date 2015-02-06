@@ -57,7 +57,7 @@
 </div>
 
 <div id="left_pane" class="col-md-2">
-	<label class="control-label">Patient Details</label>
+	<label class="control-label">Patient Details:</label>
 	<div class="demographic">
 		<p>{{demo.lastName}}, {{demo.firstName}} ({{demo.title}})</p>
 		<p>DOB: {{demo.dateOfBirth | date:'yyyy-MM-dd'}} ({{demo.age.years}})</p> 		
@@ -76,7 +76,7 @@
 	</div>
 	<br/>
 	<div id="consult_status">
-		<label class="control-label">Consultation Status</label>
+		<label class="control-label">Consultation Status:</label>
 		<div class="form-group">
 			<select class="form-control" ng-model="consult.status" ng-required="true" ng-options="status.value as status.name for status in statuses"/>
 		</div>
@@ -92,7 +92,7 @@
 
 <div id="right_pane" class="col-md-10">
 	<div class="col-md-6"><!-- Letterhead -->
-		<h4>Letterhead</h4>
+		<h4>Letterhead:</h4>
 		<div class="well">
 			<div>
 				<select id="letterhead" class="form-control" 
@@ -115,16 +115,18 @@
 		</div>
 	</div><!-- Letterhead End-->
 	<div class="col-md-6"><!-- Specialist -->
-		<h4>Specialist</h4>
+		<h4>Specialist:</h4>
 		<div class="well">
 			<div>
-				<select id="serviceId" class="form-control inline" style="width: 35%;" 
+				<select id="serviceId" class="form-control inline" style="width: 35%;"
+						title="Service" 
 						ng-model="consult.serviceId" 
 						ng-options="service.serviceId as service.serviceDesc for service in consult.serviceList"
 						ng-required="true"
 						ng-change="changeService()">
 				</select>
 				<select id="specId" class="form-control inline" style="width: 50%;"
+						title="Consultant"
 						ng-model="consult.professionalSpecialist.id"
 						ng-options="spec.id as spec.name for spec in specialists"
 						ng-change="changeSpecialist()">
@@ -179,11 +181,13 @@
 					<span style="white-space:nowrap;">
 						<select class="form-control inline" style="width:20%;" 
 								ng-model="consult.appointmentHour"
-								ng-options="hour for hour in hours">
+								ng-options="hour for hour in hours"
+								ng-change="changeAppointmentTime()">
 						</select> :
 						<select class="form-control inline" style="width:20%;" 
 								ng-model="consult.appointmentMinute"
-								ng-options="minute for minute in minutes">
+								ng-options="minute for minute in minutes"
+								ng-change="changeAppointmentTime()">
 						</select>
 					</span>
 				</div>
@@ -201,7 +205,7 @@
 			<div class="col-md-6">
 				<label class="control-label">Appointment Notes:</label>
 				<div class="form-group">
-					<textarea cols="80" rows="6" class="form-control" ng-model="consult.statusText"></textarea>
+					<textarea cols="80" rows="5" class="form-control" ng-model="consult.statusText"></textarea>
 				</div>
 			</div>
 			<div class="clear"></div>
@@ -227,7 +231,7 @@
 			</p>					
 			<div class="well">
 				<div>
-					<textarea id="clinicalInfo" cols="80" rows="6" class="form-control" placeholder="When creating a note use the Medical Summaries below to help you create the note with data from the patients chart."
+					<textarea id="clinicalInfo" cols="80" rows="5" class="form-control" placeholder="Use the buttons above to insert data from the patients chart"
 						ng-model="consult.clinicalInfo"></textarea>
 				</div>
 			</div>
@@ -247,7 +251,7 @@
 			</p>						
 			<div class="well">
 				<div>
-					<textarea id="concurrentProblems" cols="80" rows="6" class="form-control" placeholder="When creating a note use the Medical Summaries below to help you create the note with data from the patients chart."
+					<textarea id="concurrentProblems" cols="80" rows="5" class="form-control" placeholder="Use the buttons above to insert data from the patients chart"
 						ng-model="consult.concurrentProblems"></textarea>
 				</div>
 			</div>
@@ -259,14 +263,14 @@
 	<div class="col-md-6"><!-- Alergies / Current Medications -->
 		<h4>Allergies:</h4>
 		<div class="well">
-			<textarea cols="80" rows="6" class="form-control" ng-model="consult.allergies"></textarea>
+			<textarea cols="80" rows="5" class="form-control" ng-model="consult.allergies"></textarea>
 		</div>
 	</div><!-- Alergies End -->	
 	<div class="col-md-6">
 		<h4>Current Medications: <button type="button" class="btn btn-success" style="padding:0px 10px;" ng-click="getOtherMeds('concurrentMedications');">Other Meds</button></h4>
 		
 		<div class="well">
-			<textarea id="concurrentMedications" cols="80" rows="6" class="form-control" ng-model="consult.currentMeds"></textarea>
+			<textarea id="concurrentMedications" cols="80" rows="5" class="form-control" ng-model="consult.currentMeds" placeholder="Use the button above to insert Other Meds data from the patients chart"></textarea>
 		</div>
 	</div><!-- Current Medications End -->	
 	<div class="clear"></div>
