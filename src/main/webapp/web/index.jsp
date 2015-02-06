@@ -178,14 +178,14 @@ padding:8px;
 						
 					<li class="dropdown" class="hand-hover" ><a href="void()" class="dropdown-toggle"><bean:message key="navbar.modules" bundle="ui"/><b class="caret"></b></a>
 						<ul class="dropdown-menu">
-						<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item.state) }">
-						<a ng-click="transition(item.state)" data-toggle="tab" >{{item.label}}
+						<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item) }">
+						<a ng-click="transition(item)" data-toggle="tab" >{{item.label}}
 							<span ng-if="item.extra.length>0">({{item.extra}})</span>
 						</a>
 					</li>
 						<li class="divider"></li>
 							<li ng-repeat="item in moreMenuItems">
-								<a ng-class="{'active': isActive(item.state) }" ng-click="transition(item.state)">{{item.label}}
+								<a ng-class="{'active': isActive(item) }" ng-click="transition(item)">{{item.label}}
 								<span ng-if="item.extra.length>0" class="badge">{{item.extra}}</span></a>
 							</li>
 						</ul>
@@ -226,7 +226,7 @@ padding:8px;
 					<span class="dropdown-toggle hand-hover" data-toggle="dropdown" title="<bean:message key="navbar.user" bundle="ui"/>"><span class="glyphicon glyphicon-user"></span><u>{{me.firstName}}</u></span>
 					<ul class="dropdown-menu" role="menu">
 						<li ng-repeat="item in userMenuItems">
-							<a ng-click="transition(item.state)" ng-class="{'more-tab-highlight': isActive(item.state) }" >{{item.label}}</a>
+							<a ng-click="transition(item)" ng-class="{'more-tab-highlight': isActive(item) }" >{{item.label}}</a>
 						</li>
 				  	</ul>
 				  	

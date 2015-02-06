@@ -291,9 +291,9 @@ public class InboxResultsDao {
 					docNoLoc = 0; statusLoc = 1; docTypeLoc = 8; lastNameLoc = 2; firstNameLoc = 3; hinLoc = 4; sexLoc = 5; moduleLoc = 6; obsDateLoc = 7; descriptionLoc = 9; updateDateLoc = 10;
 					// N
 					// document_no, status, last_name, first_name, hin, sex, module_id, observationdate
-					sql = " SELECT doc.document_no, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype, doc.doctype as description, date(doc.updatedatetime)"
+					sql = " SELECT doc.document_no, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type, doc.doctype , date(doc.updatedatetime)"
 							+ " FROM document doc, "
-							+ " 	(SELECT DISTINCT pl.status, pl.lab_type, pl.lab_no FROM providerLabRouting pl"
+							+ " 	(SELECT DISTINCT pl.status, pl.lab_type, pl.lab_no FROM providerLabRouting pl "
 							+ (isAbnormal != null ? ", hl7TextInfo info " : "")
 							+ " 	WHERE pl.status like '%"
 							+ status
