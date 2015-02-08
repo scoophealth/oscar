@@ -30,7 +30,7 @@
 	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
-<%@page import="org.oscarehr.common.model.Billingreferral"%>
+<%@page import="org.oscarehr.common.model.ProfessionalSpecialist"%>
 <%@page import="java.util.*"%>
 
 <%
@@ -47,6 +47,32 @@
 
 <script type="text/javascript" language="JavaScript" src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" language="JavaScript" src="../share/javascript/Oscar.js"></script>
+
+<script>
+
+function popupOscarRx(vheight,vwidth,varpage) {
+	var page = varpage;
+	windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+	var popup=window.open(varpage, "ps_add", windowprops);
+	if (popup != null) {
+	if (popup.opener == null) {
+	popup.opener = self;
+	}
+	popup.focus();
+	}
+	}
+
+
+function openAddSpecialist() {
+	popupOscarRx(625,1024,'../oscarEncounter/oscarConsultationRequest/config/AddSpecialist.jsp');
+}
+
+function openEditSpecialist(specId) {
+	popupOscarRx(625,1024,'../oscarEncounter/EditSpecialists.do?specId='+specId);
+}
+
+
+</script>
 <link href="<html:rewrite page='/css/displaytag.css'/>" rel="stylesheet" ></link>
 </head>
 
@@ -83,17 +109,17 @@
       &nbsp;&nbsp;
       <nested:text property="search"></nested:text>
 	<nested:submit style="border:1px solid #666666;">Search</nested:submit>
-    <nested:submit style="border:1px solid #666666;" onclick="this.form.method.value='add'">Add</nested:submit>
+    <nested:submit style="border:1px solid #666666;" onclick="openAddSpecialist()">Add</nested:submit>
 </nested:form>
 
 <display:table name="referrals" id="referral" class="its" pagesize="15" style="border:1px solid #666666; width:99%;margin-top:2px;">
-    <display:column property="referralNo" title="Referral No" href="ManageBillingReferral.do?method=edit" paramId="referralNo"/>
+    <display:column><a href="javascript:void(0)" onclick="openEditSpecialist('${referral.id}')">${referral.referralNo}</a></display:column>
     <display:column property="firstName" title="First Name" />
     <display:column property="lastName" title="Last Name" />
-    <display:column property="specialty" title="Specialty" />
-    <display:column property="city" title="City" />
-    <display:column property="phone" title="Phone" />
-    <display:column property="fax" title="Fax" />
+    <display:column property="specialtyType" title="Specialty" />
+    <display:column property="streetAddress" title="Address" />
+    <display:column property="phoneNumber" title="Phone" />
+    <display:column property="faxNumber" title="Fax" />
 </display:table>
 		</td>
 	</tr>
