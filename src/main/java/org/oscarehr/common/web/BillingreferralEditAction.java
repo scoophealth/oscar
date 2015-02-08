@@ -33,8 +33,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.common.dao.BillingreferralDao;
-import org.oscarehr.common.model.Billingreferral;
+import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.util.SpringUtils;
 
 /**
@@ -44,8 +44,8 @@ import org.oscarehr.util.SpringUtils;
 
 public class BillingreferralEditAction extends DispatchAction{
 
-    private BillingreferralDao bDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
-
+    private ProfessionalSpecialistDao psDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
+    
 
 
     @Override
@@ -54,7 +54,7 @@ public class BillingreferralEditAction extends DispatchAction{
     }
 
     public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	List<Billingreferral> referrals = bDao.getBillingreferrals();
+    	List<ProfessionalSpecialist> referrals = psDao.findAll();
         request.setAttribute("referrals", referrals);
         request.setAttribute("searchBy", "searchByName");
         return mapping.findForward("list");
@@ -64,8 +64,9 @@ public class BillingreferralEditAction extends DispatchAction{
         DynaBean lazyForm = (DynaBean) form;
         String referralNo = (String)lazyForm.get("search");
 
-        List<Billingreferral> referrals = bDao.getBillingreferral(referralNo);
+        List<ProfessionalSpecialist> referrals = psDao.findByReferralNo(referralNo);
         request.setAttribute("referrals", referrals);
+        
         request.setAttribute("searchBy", "searchByNo");
 
         return mapping.findForward("list");
@@ -75,7 +76,7 @@ public class BillingreferralEditAction extends DispatchAction{
         DynaBean lazyForm = (DynaBean) form;
         String specialty = (String)lazyForm.get("search");
 
-        List<Billingreferral> referrals = bDao.getBillingreferralBySpecialty(specialty);
+        List<ProfessionalSpecialist> referrals = psDao.findBySpecialty(specialty);
         request.setAttribute("referrals", referrals);
         request.setAttribute("searchBy", "searchBySpecialty");
 
@@ -96,42 +97,14 @@ public class BillingreferralEditAction extends DispatchAction{
                 first_name = name.substring(name.indexOf(',') + 1, name.length());
             }
         }
-        List<Billingreferral> referrals = bDao.getBillingreferral(last_name,first_name);
+       
+        List<ProfessionalSpecialist> referrals = psDao.findByFullName(last_name, first_name);
         request.setAttribute("referrals", referrals);
         request.setAttribute("searchBy", "searchByName");
 
         return mapping.findForward("list");
     }
 
-    public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        DynaBean lazyForm = (DynaBean) form;
-
-        List<Billingreferral> referrals = bDao.getBillingreferral(request.getParameter("referralNo"));
-        Billingreferral referral = referrals.get(0);
-
-        lazyForm.set("referral", referral);
-
-        return mapping.findForward("detail");
-    }
-
-    public ActionForward add(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        DynaBean lazyForm = (DynaBean) form;
-
-        Billingreferral referral = new Billingreferral();
-
-        lazyForm.set("referral", referral);
-
-        return mapping.findForward("detail");
-    }
-
-    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        DynaBean lazyForm = (DynaBean) form;
-
-        Billingreferral referral = (Billingreferral)lazyForm.get("referral");
-        bDao.updateBillingreferral(referral);
-
-        return list(mapping,form,request,response);
-    }
-
-
+    
+  
 }

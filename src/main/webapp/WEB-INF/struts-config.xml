@@ -41,7 +41,7 @@
 		<form-bean name="billingreferralForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="search" type="java.lang.String" />
 			<form-property name="SearchBy" type="java.lang.String" />
-			<form-property name="referral" type="org.oscarehr.common.model.Billingreferral" />
+			<form-property name="referral" type="org.oscarehr.common.model.ProfessionalSpecialist" />
 		</form-bean>
 
 		<form-bean name="DxresearchReportForm" type="org.apache.struts.validator.DynaValidatorForm">
@@ -2375,7 +2375,6 @@
 
 		<action path="/admin/ManageBillingReferral" name="billingreferralForm" type="org.oscarehr.common.web.BillingreferralEditAction" parameter="method" scope="request">
 			<forward name="list" path="/admin/billingreferralAdmin.jsp" />
-			<forward name="detail" path="/admin/billingreferralAdminDetail.jsp" />
 		</action>
 
 		<action path="/report/DxresearchReport" name="DxresearchReportForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
