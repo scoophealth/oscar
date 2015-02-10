@@ -47,7 +47,7 @@ public class FrmAREnhancedBloodWorkTest {
         	try{
 				
 	            String sql = " SELECT pg1_labHb, pg1_labMCV, pg1_labABO, pg1_labRh, pg1_labAntiScr, " + 
-	                         " pg1_labRubella, pg1_labHBsAg, pg1_labVDRL, pg1_labHIV  FROM formONAREnhanced " + 
+	                         " pg1_labRubella, pg1_labHBsAg, pg1_labVDRL, pg1_labHIV  FROM formONAREnhancedRecord " + 
 	                         " WHERE demographic_no=" + demographicNo + 
 	                         " AND ID=" + formId;
 	            

@@ -61,7 +61,7 @@ public class ONAREnhancedBornConnector {
 		Connection conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
 		try {
 			Statement st = conn.createStatement();
-			ResultSet rs = st.executeQuery("select formEdited from formONAREnhanced where id="+formId);
+			ResultSet rs = st.executeQuery("select formEdited from formONAREnhancedRecord where id="+formId);
 			Timestamp ts = null;
 			if(rs.next()) {
 				ts = rs.getTimestamp("formEdited");
@@ -71,7 +71,7 @@ public class ONAREnhancedBornConnector {
 				return;
 			}
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			int res = st.executeUpdate("update formONAREnhanced set sent_to_born=1,formEdited='"+formatter.format(ts)+"' where id="+formId);
+			int res = st.executeUpdate("update formONAREnhancedRecord set sent_to_born=1,formEdited='"+formatter.format(ts)+"' where id="+formId);
 			st.close();
 		}finally {
 			//conn.close();
@@ -114,7 +114,7 @@ public class ONAREnhancedBornConnector {
 		
 		Connection conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
 		Statement st = conn.createStatement();
-		ResultSet rs = st.executeQuery("select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId,c_postal from (select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId,c_postal from formONAREnhanced where c_finalEDB!='' AND c_finalEDB IS NOT NULL ORDER BY formEdited DESC) AS x  GROUP BY demographic_no");
+		ResultSet rs = st.executeQuery("select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId,c_postal from (select r.demographic_no,r.id,r.formEdited,r.c_finalEDB,r.sent_to_born,r.pg1_signature,r2.pg2_signature,r.episodeId,r.c_postal from formONAREnhancedRecord r,formONAREnhancedRecordExt2 r2 where r.ID = r2.ID and c_finalEDB!='' AND c_finalEDB IS NOT NULL ORDER BY formEdited DESC) AS x  GROUP BY demographic_no");
 		
 		ONAREnhancedFormToXML xml = new ONAREnhancedFormToXML();
 		XmlOptions opts = getXmlOptions();
@@ -249,7 +249,7 @@ public class ONAREnhancedBornConnector {
 			
 			conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
 			st = conn.createStatement();
-			ResultSet rs = st.executeQuery("select provider_no,demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId,c_postal from (select provider_no,demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId,c_postal from formONAREnhanced where c_finalEDB!='' AND c_finalEDB IS NOT NULL ORDER BY formEdited DESC) AS x  GROUP BY demographic_no");
+			ResultSet rs = st.executeQuery("select provider_no,demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId,c_postal from (select r.provider_no,r.demographic_no,r.id,r.formEdited,r.c_finalEDB,r.sent_to_born,r.pg1_signature,r2.pg2_signature,r.episodeId,r.c_postal from formONAREnhancedRecord r,formONAREnhancedRecordExt2 r2 where r.ID = r2.ID and c_finalEDB!='' AND c_finalEDB IS NOT NULL ORDER BY formEdited DESC) AS x  GROUP BY demographic_no");
 			while(rs.next()) {
 				try {
 					int demographicNo = rs.getInt("demographic_no");

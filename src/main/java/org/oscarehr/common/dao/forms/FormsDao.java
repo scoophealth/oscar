@@ -112,7 +112,7 @@ public class FormsDao {
 		return "0";
 	}
 	
-	@NativeSql("formONAREnhanced")
+	@NativeSql("formONAREnhancedRecord")
 	public List<Integer> select_maxformar_id2(String dateStart, String dateEnd) {
 		String sql = "select max(ID) from formONAREnhancedRecord where c_finalEDB >= ? and c_finalEDB <= ? group by demographic_no";
 		Query query = entityManager.createNativeQuery(sql);
@@ -140,7 +140,7 @@ public class FormsDao {
 	
 	@NativeSql("formONAR")
 	public List<Object[]> select_formar2(String beginEdd, String endEdd, int limit, int offset) {
-		String sql = "select ID, demographic_no, c_finalEDB, concat(c_lastName,\",\",c_firstName) as c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formONAREnhanced where c_finalEDB >= ? and c_finalEDB <= ? order by c_finalEDB desc";
+		String sql = "select ID, demographic_no, c_finalEDB, concat(c_lastName,\",\",c_firstName) as c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formONAREnhancedRecord where c_finalEDB >= ? and c_finalEDB <= ? order by c_finalEDB desc";
 		Query query = entityManager.createNativeQuery(sql);
 		query.setParameter(1, beginEdd);
 		query.setParameter(2, endEdd);
