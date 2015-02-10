@@ -92,7 +92,7 @@ public class EctDisplayPregnancyAction extends EctDisplayAction {
 		        //check to see if they have an onar2005 form
 		        if(OscarProperties.getInstance().getProperty("billregion", "ON").equals("ON")) {
 			        EctFormData.PatientForm[] pforms = EctFormData.getPatientForms(bean.demographicNo, "formONAR");
-			        EctFormData.PatientForm[] eforms = EctFormData.getPatientForms(bean.demographicNo, "formONAREnhanced");
+			        EctFormData.PatientForm[] eforms = EctFormData.getPatientForms(bean.demographicNo, "formONAREnhancedRecord");
 					
 			        if(pforms.length>0 && eforms.length == 0) {
 						Dao.addPopUpUrl("popupPage(700,1000,'"+winName+"', '"+ request.getContextPath() +"/Pregnancy.do?method=migrate&demographicNo="+bean.demographicNo+"')");
