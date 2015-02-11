@@ -305,9 +305,19 @@ public class BORN18MConnector {
 		EFormValueDao eformValueDao = SpringUtils.getBean(EFormValueDao.class);
 		EFormDataDao eformDataDao = SpringUtils.getBean(EFormDataDao.class);
 		
-		EFormValue rourkeProvider = eformValueDao.findByFormDataIdAndKey(rourkeFdid, "efmprovider_no");
-		EFormValue nddsProvider = eformValueDao.findByFormDataIdAndKey(nddsFdid, "efmprovider_no");
-		EFormValue report18mProvider = eformValueDao.findByFormDataIdAndKey(report18mFdid, "efmprovider_no");
+		EFormValue rourkeProvider = null, nddsProvider = null, report18mProvider = null;
+		
+		if(rourkeFdid != null) {
+			rourkeProvider = eformValueDao.findByFormDataIdAndKey(rourkeFdid, "efmprovider_no");	
+		}
+		
+		if(nddsFdid != null) {
+			nddsProvider = eformValueDao.findByFormDataIdAndKey(nddsFdid, "efmprovider_no");	
+		}
+		if(report18mFdid != null) {
+			report18mProvider = eformValueDao.findByFormDataIdAndKey(report18mFdid, "efmprovider_no");
+		}
+		
 		
 		if(rourkeProvider != null) {
 			results.add(rourkeProvider.getVarValue());
