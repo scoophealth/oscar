@@ -2063,4 +2063,15 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		  orderBy = " ORDER BY " + orderBy;
 		  return "select " + select + " from demographic d left join provider p on d.provider_no = p.provider_no left join demographic_merged dm on d.demographic_no = dm.demographic_no where "+fieldname+" "+regularexp+" :keyword "+ptstatusexp+domainRestriction+orderBy ;
 	}
+
+	public List<Demographic> getDemographics(List<Integer> demographicIds) {
+		if (demographicIds.size() ==0) return(new ArrayList<Demographic>());
+		if (demographicIds.size() > MAX_SELECT_SIZE) throw (new IllegalArgumentException("please chunk your requests to max : " + MAX_SELECT_SIZE));
+
+		String q = "FROM Demographic d WHERE d.DemographicNo in (:ids)";
+		@SuppressWarnings("unchecked")
+		List<Demographic> results = getHibernateTemplate().findByNamedParam(q, "ids", demographicIds);
+		return (results);
+
+	}
 }

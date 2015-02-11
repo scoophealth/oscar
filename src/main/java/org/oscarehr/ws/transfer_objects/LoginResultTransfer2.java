@@ -22,15 +22,12 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.ws.transfer_objects;
 
-/**
- * @deprecated 2015-01-28 
- */
-public final class LoginResultTransfer {
+public final class LoginResultTransfer2 {
 	private Integer securityId;
 	private String securityTokenKey;
+	private ProviderTransfer provider;
 
 	public Integer getSecurityId() {
 		return (securityId);
@@ -47,4 +44,13 @@ public final class LoginResultTransfer {
 	public void setSecurityTokenKey(String securityTokenKey) {
 		this.securityTokenKey = securityTokenKey;
 	}
+
+	public ProviderTransfer getProvider() {
+		return (provider);
+	}
+
+	public void setProvider(ProviderTransfer provider) {
+		this.provider = provider;
+	}
+
 }

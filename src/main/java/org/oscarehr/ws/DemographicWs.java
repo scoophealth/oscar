@@ -25,6 +25,7 @@
 
 package org.oscarehr.ws;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -94,6 +95,27 @@ public class DemographicWs extends AbstractWs {
 	 */
 	public DemographicTransfer[] searchDemographicsByAttributes(String hin, String firstName, String lastName, Gender gender, Calendar dateOfBirth, String city, String province, String phone, String email, String alias, int startIndex, int itemsToReturn) {
 		List<Demographic> demographics=demographicManager.searchDemographicsByAttributes(getLoggedInInfo(),hin, firstName, lastName, gender, dateOfBirth, city, province, phone, email, alias, startIndex, itemsToReturn);
+		return(DemographicTransfer.toTransfers(demographics));	
+	}
+	
+	/**
+	 * @programId can be null for all / any program
+	 */
+	public Integer[] getAdmittedDemographicIdsByProgramProvider(Integer programId, String providerNo)
+	{
+		List<Integer> results=demographicManager.getAdmittedDemographicIdsByProgramAndProvider(getLoggedInInfo(), programId, providerNo);
+		return(results.toArray(new Integer[0]));
+	}
+	
+	public DemographicTransfer[] getDemographics(Integer[] demographicIds)
+	{
+		ArrayList<Integer> ids=new ArrayList<Integer>();
+		for(Integer i : demographicIds)
+		{
+			ids.add(i);
+		}
+		
+		List<Demographic> demographics=demographicManager.getDemographics(getLoggedInInfo(),ids);
 		return(DemographicTransfer.toTransfers(demographics));	
 	}
 }
