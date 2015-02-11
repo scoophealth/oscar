@@ -48,24 +48,9 @@ public class PreventionManager {
 	private PreventionDao preventionDao;
 	@Autowired
 	private PreventionExtDao preventionExtDao;
-	
+
 	private ArrayList<String> preventionTypeList = new ArrayList<String>();
 
-	/**
-	 * @deprecated 2014-05-20 remove after calling ws method is removed
-	 */
-	public List<Prevention> getPreventionsByIdStart(LoggedInInfo loggedInInfo, Boolean archived, Integer startIdInclusive, int itemsToReturn) {
-		List<Prevention> results = preventionDao.findByIdStart(archived, startIdInclusive, itemsToReturn);
-
-		//--- log action ---
-		if (results.size()>0) {
-			String resultIds=Prevention.getIdsAsStringList(results);
-			LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getPreventionsByIdStart", "ids returned=" + resultIds);
-		}
-
-		return (results);
-	}
-	
 	public List<Prevention> getUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Prevention> results = preventionDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
 
@@ -74,46 +59,40 @@ public class PreventionManager {
 		return (results);
 	}
 
-	public Prevention getPrevention(LoggedInInfo loggedInInfo, Integer id)
-	{
-		Prevention result=preventionDao.find(id);
-		
+	public Prevention getPrevention(LoggedInInfo loggedInInfo, Integer id) {
+		Prevention result = preventionDao.find(id);
+
 		//--- log action ---
 		if (result != null) {
 			LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getPrevention", "id=" + id);
 		}
 
-		return(result);
+		return (result);
 	}
 
-	public List<PreventionExt> getPreventionExtByPrevention(LoggedInInfo loggedInInfo, Integer preventionId)
-	{
-		List<PreventionExt> results=preventionExtDao.findByPreventionId(preventionId);
-		
-		//--- log action ---
-		if (results.size()>0) {
-			String resultIds=PreventionExt.getIdsAsStringList(results);
-			LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getPreventionExtByPrevention", "ids returned=" + resultIds);
-		}
+	public List<PreventionExt> getPreventionExtByPrevention(LoggedInInfo loggedInInfo, Integer preventionId) {
+		List<PreventionExt> results = preventionExtDao.findByPreventionId(preventionId);
 
-		return(results);
+		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getPreventionExtByPrevention", "preventionId=" + preventionId);
+
+		return (results);
 	}
-	
+
 	public ArrayList<String> getPreventionTypeList() {
 		if (preventionTypeList.isEmpty()) {
 			PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-			for (HashMap<String,String> prevTypeHash : pdc.getPreventions()) {
-			    if (prevTypeHash != null && StringUtils.filled(prevTypeHash.get("name"))) {
-			    	preventionTypeList.add(prevTypeHash.get("name").trim()); 
-			    }
+			for (HashMap<String, String> prevTypeHash : pdc.getPreventions()) {
+				if (prevTypeHash != null && StringUtils.filled(prevTypeHash.get("name"))) {
+					preventionTypeList.add(prevTypeHash.get("name").trim());
+				}
 			}
 		}
 		return preventionTypeList;
 	}
-	
+
 	public void addPreventionWithExts(Prevention prevention, HashMap<String, String> exts) {
 		if (prevention == null) return;
-		
+
 		preventionDao.persist(prevention);
 		if (exts != null) {
 			for (String keyval : exts.keySet()) {
@@ -132,10 +111,10 @@ public class PreventionManager {
 	 * programId is ignored for now as oscar doesn't support it yet.
 	 */
 	public List<Prevention> getPreventionsByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Prevention> results = preventionDao.findByProviderDemographicLastUpdateDate(providerNo, demographicId,updatedAfterThisDateInclusive, itemsToReturn);
+		List<Prevention> results = preventionDao.findByProviderDemographicLastUpdateDate(providerNo, demographicId, updatedAfterThisDateInclusive, itemsToReturn);
 
-		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getUpdatedAfterDate", "programId=" + programId+", providerNo="+providerNo+", demographicId="+demographicId+", updatedAfterThisDateInclusive="+updatedAfterThisDateInclusive.getTime());
+		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getUpdatedAfterDate", "programId=" + programId + ", providerNo=" + providerNo + ", demographicId=" + demographicId + ", updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive.getTime());
 
 		return (results);
-    }
+	}
 }

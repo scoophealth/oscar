@@ -46,21 +46,6 @@ public class MeasurementManager {
 	@Autowired
 	private MeasurementMapDao measurementMapDao;
 
-	/**
-	 * @deprecated 2014-05-20 remove after calling ws is removed
-	 */
-	public List<Measurement> getMeasurementsByIdStart(LoggedInInfo loggedInInfo, Integer startIdInclusive, int itemsToReturn) {
-		List<Measurement> results = measurementDao.findByIdStart(startIdInclusive, itemsToReturn);
-
-		//--- log action ---
-		if (results.size() > 0) {
-			String resultIds = Measurement.getIdsAsStringList(results);
-			LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.getMeasurementsByIdStart", "ids returned=" + resultIds);
-		}
-
-		return (results);
-	}
-
 	public List<Measurement> getCreatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Measurement> results = measurementDao.findByCreateDate(updatedAfterThisDateInclusive, itemsToReturn);
 
@@ -98,14 +83,10 @@ public class MeasurementManager {
 	/**
 	 * ProgramId is not available in oscar right now but the method signature is correct for when it is available.
 	 */
-	public List<Measurement> getMeasurementsByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn) {
-		List<Measurement> results = measurementDao.findByProviderDemographicLastUpdateDate(providerNo, demographicId, updatedAfterThisDate, itemsToReturn);
+	public List<Measurement> getMeasurementsByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+		List<Measurement> results = measurementDao.findByProviderDemographicLastUpdateDate(providerNo, demographicId, updatedAfterThisDateInclusive, itemsToReturn);
 
-		//--- log action ---
-		if (results.size() > 0) {
-			String resultIds = Measurement.getIdsAsStringList(results);
-			LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.getMeasurementsByIdStart", "ids returned=" + resultIds);
-		}
+		LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.getMeasurementsByProgramProviderDemographicDate", "programId=" + programId + ", providerNo=" + providerNo + ", demographicId=" + demographicId + ", updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive.getTime());
 
 		return (results);
     }

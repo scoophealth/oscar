@@ -66,21 +66,6 @@ public class PrescriptionManager {
 		return (result);
 	}
 
-	/**
-	 * @deprecated 2014-05-20 remove after calling ws method is removed
-	 */
-	public List<Prescription> getPrescriptionsByIdStart(LoggedInInfo loggedInInfo, Integer startIdInclusive, int itemsToReturn) {
-		List<Prescription> results = prescriptionDao.findByIdStart(startIdInclusive, itemsToReturn);
-
-		//--- log action ---
-		if (results.size() > 0) {
-			String resultIds = Prescription.getIdsAsStringList(results);
-			LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionsByIdStart", "ids returned=" + resultIds);
-		}
-
-		return (results);
-	}
-
 	public List<Prescription> getPrescriptionUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Prescription> results = prescriptionDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
 

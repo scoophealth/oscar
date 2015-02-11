@@ -26,7 +26,6 @@ package org.oscarehr.ws;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.jws.WebService;
@@ -36,7 +35,6 @@ import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Prescription;
 import org.oscarehr.managers.PrescriptionManager;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.ws.transfer_objects.DataIdTransfer;
 import org.oscarehr.ws.transfer_objects.PrescriptionTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -58,36 +56,6 @@ public class PrescriptionWs extends AbstractWs {
 		}
 
 		return (null);
-	}
-
-	/**
-	 * Get a list of DataIdTransfer objects for prescriptions starting with the passed in Id.
-	 * @deprecated 2014-05-20 use the method with lastUpdateDate instead
-	 */
-	public DataIdTransfer[] getPrescriptionDataIds(Integer startIdInclusive, int itemsToReturn) {
-		List<Prescription> prescriptions = prescriptionManager.getPrescriptionsByIdStart(getLoggedInInfo(),startIdInclusive, itemsToReturn);
-
-		DataIdTransfer[] results = new DataIdTransfer[prescriptions.size()];
-		for (int i = 0; i < prescriptions.size(); i++) {
-			results[i] = getDataIdTransfer(prescriptions.get(i));
-		}
-
-		return (results);
-	}
-
-	private DataIdTransfer getDataIdTransfer(Prescription prescription) {
-		DataIdTransfer result = new DataIdTransfer();
-
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(prescription.getLastUpdateDate());
-		result.setCreateDate(cal);
-
-		result.setCreatorProviderId(prescription.getProviderNo());
-		result.setDataId(prescription.getId().toString());
-		result.setDataType(Prescription.class.getSimpleName());
-		result.setOwnerDemographicId(prescription.getDemographicId());
-
-		return (result);
 	}
 	
 	public PrescriptionTransfer[] getPrescriptionUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
