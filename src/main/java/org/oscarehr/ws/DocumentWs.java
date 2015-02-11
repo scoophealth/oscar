@@ -27,7 +27,6 @@ package org.oscarehr.ws;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.jws.WebService;
@@ -35,14 +34,12 @@ import javax.xml.ws.WebServiceException;
 
 import org.apache.cxf.annotations.GZIP;
 import org.apache.log4j.Logger;
-import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.common.model.CtlDocument;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.managers.DocumentManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.ws.transfer_objects.DataIdTransfer;
 import org.oscarehr.ws.transfer_objects.DocumentTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -72,65 +69,14 @@ public class DocumentWs extends AbstractWs {
 	}
 
 	public DocumentTransfer[] getDocumentsUpdateAfterDate(Date updateAfterThisDateInclude, int itemsToReturn) {
-			LoggedInInfo loggedInInfo = getLoggedInInfo();
-			List<Document> documents = documentManager.getDocumentsUpdateAfterDate(loggedInInfo, updateAfterThisDateInclude, itemsToReturn);
-			return(DocumentTransfer.getTransfers(loggedInInfo, documents));
-	}
-
-	/**
-	 * Get a list of DataIdTransfer objects for documents starting with the passed in Id.
-	 * @deprecated 2014-05-15 use getDocumentsUpdateAfter() instead
-	 */
-	public DataIdTransfer[] getDocumentDataIds(Boolean active, Integer startIdInclusive, int itemsToReturn) {
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
-
-		Boolean archived = null;
-		if (active != null) archived = !active;
-
-		List<Document> documents = documentManager.getDocumentsByIdStart(loggedInInfo, archived, startIdInclusive, itemsToReturn);
-
-		DataIdTransfer[] results = new DataIdTransfer[documents.size()];
-		for (int i = 0; i < documents.size(); i++) {
-			Document document = documents.get(i);
-			CtlDocument ctlDocument = documentManager.getCtlDocumentByDocumentId(loggedInInfo, document.getDocumentNo());
-			results[i] = getDataIdTransfer(document, ctlDocument);
-		}
-
-		return (results);
-	}
-
-	private DataIdTransfer getDataIdTransfer(Document document, CtlDocument ctlDocument) {
-		DataIdTransfer result = new DataIdTransfer();
-
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(document.getUpdatedatetime());
-		result.setCreateDate(cal);
-
-		result.setCreatorProviderId(document.getDoccreator());
-		result.setDataId(document.getId().toString());
-		result.setDataType(Document.class.getSimpleName());
-
-		if (ctlDocument != null && "demographic".equals(ctlDocument.getId().getModule())) result.setOwnerDemographicId(ctlDocument.getId().getModuleId());
-
-		Integer programId = document.getProgramId();
-		// some one used -1 as none in this table instead of null...
-		if (programId != null && programId != -1) {
-			result.setClinicId(programId);
-
-			if (programId != null) {
-				Program program = programManager.getProgram(programId);
-				if (program != null) {
-					result.setFacilityId(program.getFacilityId());
-				}
-			}
-		}
-
-		return (result);
+		List<Document> documents = documentManager.getDocumentsUpdateAfterDate(loggedInInfo, updateAfterThisDateInclude, itemsToReturn);
+		return (DocumentTransfer.getTransfers(loggedInInfo, documents));
 	}
 
 	public DocumentTransfer[] getDocumentsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn) {
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
 		List<Document> documents = documentManager.getDocumentsByProgramProviderDemographicDate(loggedInInfo, programId, providerNo, demographicId, updatedAfterThisDate, itemsToReturn);
-		return(DocumentTransfer.getTransfers(loggedInInfo, documents));
+		return (DocumentTransfer.getTransfers(loggedInInfo, documents));
 	}
 }

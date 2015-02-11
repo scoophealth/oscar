@@ -26,7 +26,6 @@ package org.oscarehr.ws;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.jws.WebService;
@@ -36,7 +35,6 @@ import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.managers.PreventionManager;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.ws.transfer_objects.DataIdTransfer;
 import org.oscarehr.ws.transfer_objects.PreventionTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -65,41 +63,6 @@ public class PreventionWs extends AbstractWs {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		List<Prevention> preventions=preventionManager.getUpdatedAfterDate(loggedInInfo,updatedAfterThisDateInclusive, itemsToReturn);
 		return(PreventionTransfer.getTransfers(loggedInInfo, preventions));
-	}
-	
-	/**
-	 * Get a list of DataIdTransfer objects for preventions starting with the passed in Id.
-	 * @deprecated 2014-05-20 use getUpdatedAfterDate() instead
-	 */
-	public DataIdTransfer[] getPreventionDataIds(Boolean active, Integer startIdInclusive, int itemsToReturn) {
-		LoggedInInfo loggedInInfo=getLoggedInInfo();
-		
-		Boolean archived = null;
-		if (active != null) archived = !active;
-
-		List<Prevention> preventions = preventionManager.getPreventionsByIdStart(loggedInInfo, archived, startIdInclusive, itemsToReturn);
-
-		DataIdTransfer[] results = new DataIdTransfer[preventions.size()];
-		for (int i = 0; i < preventions.size(); i++) {
-			results[i] = getDataIdTransfer(preventions.get(i));
-		}
-
-		return (results);
-	}
-
-	private DataIdTransfer getDataIdTransfer(Prevention prevention) {
-		DataIdTransfer result = new DataIdTransfer();
-
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(prevention.getCreationDate());
-		result.setCreateDate(cal);
-
-		result.setCreatorProviderId(prevention.getProviderNo());
-		result.setDataId(prevention.getId().toString());
-		result.setDataType(Prevention.class.getSimpleName());
-		result.setOwnerDemographicId(prevention.getDemographicId());
-
-		return (result);
 	}
 	
 	public PreventionTransfer[] getPreventionsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {

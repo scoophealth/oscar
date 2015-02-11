@@ -22,12 +22,10 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.ws;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.jws.WebService;
@@ -36,67 +34,28 @@ import org.apache.cxf.annotations.GZIP;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.managers.AllergyManager;
 import org.oscarehr.ws.transfer_objects.AllergyTransfer;
-import org.oscarehr.ws.transfer_objects.DataIdTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @WebService
 @Component
-@GZIP(threshold=AbstractWs.GZIP_THRESHOLD)
+@GZIP(threshold = AbstractWs.GZIP_THRESHOLD)
 public class AllergyWs extends AbstractWs {
 	@Autowired
 	private AllergyManager allergyManager;
-	
-	public AllergyTransfer getAllergy(Integer allergyId)
-	{
-		Allergy allergy=allergyManager.getAllergy(getLoggedInInfo(),allergyId);
-		return(AllergyTransfer.toTransfer(allergy));
+
+	public AllergyTransfer getAllergy(Integer allergyId) {
+		Allergy allergy = allergyManager.getAllergy(getLoggedInInfo(), allergyId);
+		return (AllergyTransfer.toTransfer(allergy));
 	}
 
-	/**
-	 * Get a list of DataIdTransfer objects for allergies starting with the passed in Id.
-	 * @deprecated 2014-05-15 use the method with lastUpdateDate instead
-	 */
-	public DataIdTransfer[] getAllergyDataIds(Boolean active, Integer startIdInclusive, int itemsToReturn)
-	{
-		Boolean archived=null;
-		if (active!=null) archived=!active;
-		
-		List<Allergy> allergies=allergyManager.getAllergiesByIdStart(getLoggedInInfo(),archived, startIdInclusive, itemsToReturn);
-		
-		DataIdTransfer[] results=new DataIdTransfer[allergies.size()];
-		for (int i=0; i<allergies.size(); i++)
-		{
-			results[i]=getDataIdTransfer(allergies.get(i));
-		}
-		
-		return(results);
-	}
-	
-	private DataIdTransfer getDataIdTransfer(Allergy allergy)
-	{
-		DataIdTransfer result=new DataIdTransfer();
-		
-		// techincally incorrect but that's the best we've got from the current object fields
-		Calendar cal=new GregorianCalendar();
-		cal.setTime(allergy.getLastUpdateDate());
-		result.setCreateDate(cal);
-		
-		result.setCreatorProviderId(allergy.getProviderNo());
-		result.setDataId(allergy.getId().toString());
-		result.setDataType(Allergy.class.getSimpleName());
-		result.setOwnerDemographicId(allergy.getDemographicNo());
-		
-		return(result);
-	}
-	
 	public AllergyTransfer[] getAllergiesUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Allergy> allergies=allergyManager.getUpdatedAfterDate(getLoggedInInfo(),updatedAfterThisDateInclusive, itemsToReturn);
-		return(AllergyTransfer.toTransfers(allergies));
+		List<Allergy> allergies = allergyManager.getUpdatedAfterDate(getLoggedInInfo(), updatedAfterThisDateInclusive, itemsToReturn);
+		return (AllergyTransfer.toTransfers(allergies));
 	}
 
 	public AllergyTransfer[] getAllergiesByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Allergy> allergies=allergyManager.getAllergiesByProgramProviderDemographicDate(getLoggedInInfo(),programId,providerNo,demographicId,updatedAfterThisDateInclusive,itemsToReturn);
-		return(AllergyTransfer.toTransfers(allergies));
+		List<Allergy> allergies = allergyManager.getAllergiesByProgramProviderDemographicDate(getLoggedInInfo(), programId, providerNo, demographicId, updatedAfterThisDateInclusive, itemsToReturn);
+		return (AllergyTransfer.toTransfers(allergies));
 	}
 }

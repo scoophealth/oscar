@@ -708,25 +708,6 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		return results;
 	}
 
-	/**
-	 * This method will return a list of items starting from the provided ID.
-	 * It is an efficient method for iterating through all items (more efficient than using a startIndex).
-	 * 
-	 * @deprecated 2014-05-20 remove after calling manager method is removed
-	 */
-	public List<Measurement> findByIdStart(Integer startIdInclusive, int itemsToReturn) {
-		String sql = "select x from "+modelClass.getSimpleName()+" x where x.id>=?1 order by x.id";
-
-		Query query = entityManager.createQuery(sql);
-		query.setParameter(1, startIdInclusive);
-
-		setLimit(query, itemsToReturn);
-
-		@SuppressWarnings("unchecked")
-		List<Measurement> results = query.getResultList();
-		return results;
-	}
-
 	public List<Measurement> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Calendar afterThisDateInclusive, int itemsToReturn) {
 		String sql = "select x from "+modelClass.getSimpleName()+" x where x.providerNo=:providerNo and x.demographicId=:demographicId and x.createDate>=:createDate order by x.createDate";
 
