@@ -196,7 +196,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 							boolean dontAdd=false;
 							if(table.equals("formONAR")) {
 								//check to see if we have an enhanced one
-								EctFormData.PatientForm[] pf = EctFormData.getPatientFormsFromLocalAndRemote(loggedInInfo, bean.demographicNo, "formONAREnhanced");
+								EctFormData.PatientForm[] pf = EctFormData.getPatientFormsFromLocalAndRemote(loggedInInfo, bean.demographicNo, "formONAREnhancedRecord");
 								if(pf.length>0) {
 									dontAdd=true;
 								}
