@@ -1,4 +1,4 @@
-oscarApp.controller('ConsultListCtrl2', function ($scope, $timeout, $location, ngTableParams, consultService, providerService, demographicService) {
+oscarApp.controller('ConsultRequestListCtrl', function ($scope, $timeout, $location, ngTableParams, consultService, providerService, demographicService) {
 	$scope.consultReadAccess=true;
 	$scope.consultWriteAccess=true;
 	$scope.lastResponse = "";
@@ -62,10 +62,6 @@ oscarApp.controller('ConsultListCtrl2', function ($scope, $timeout, $location, n
     }
     
 	$scope.editConsult = function(consult) {
-		/*
-		windowprops = "height=700,width=960,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-		var popup=window.open('../oscarEncounter/ViewRequest.do?requestId='+consult.id, "oscarConsultationRequest", windowprops);
-		*/
 		$location.path("/consults/"+consult.id);
 	}
 	
@@ -109,7 +105,7 @@ oscarApp.controller('ConsultListCtrl2', function ($scope, $timeout, $location, n
         			search1.team = null;
         	}
         	
-        	consultService.search(search1).then(function(result){
+        	consultService.searchRequests(search1).then(function(result){
         		//console.log(JSON.stringify(result));
         		 params.total(result.total);
                  $defer.resolve(result.content);

@@ -30,25 +30,25 @@ angular.module("consultServices", [])
 		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
 
-		search: function(search){
+		searchRequests: function(search){
         	var deferred = $q.defer();
-        	$http.post(this.apiPath+'search',search).success(function(data){
+        	$http.post(this.apiPath+'searchRequests',search).success(function(data){
         		deferred.resolve(data);
             }).error(function(){
           	  console.log("error fetching items");
-              deferred.reject("An error occured while searching consults");
+              deferred.reject("An error occured while searching consult requests");
             });
        
             return deferred.promise;
         },
         
-		getDetail: function(requestId, demographicId){
+		getRequest: function(requestId, demographicId){
         	var deferred = $q.defer();
-        	$http.get(this.apiPath+'getDetail?requestId='+requestId+'&demographicId='+demographicId).success(function(data){
+        	$http.get(this.apiPath+'getRequest?requestId='+requestId+'&demographicId='+demographicId).success(function(data){
         		deferred.resolve(data);
             }).error(function(){
           	  console.log("error fetching items");
-              deferred.reject("An error occured while getting consult detail (requestId="+requestId+")");
+              deferred.reject("An error occured while getting consult request (requestId="+requestId+")");
             });
        
             return deferred.promise;
@@ -66,15 +66,15 @@ angular.module("consultServices", [])
         	return deferred.promise;
         },
         
-        save: function(consultDetail){
+        saveRequest: function(request){
         	var deferred = $q.defer();
-        	var consultationDetailTo1 = {consultationDetailTo1:consultDetail};
-        	$http.post(this.apiPath, consultationDetailTo1).success(function(data){
+        	var requestTo1 = {consultationRequestTo1:request};
+        	$http.post(this.apiPath+'saveRequest', requestTo1).success(function(data){
             	console.log(data);
                 deferred.resolve(data);
             }).error(function(){
           	  console.log("error fetching items");
-              deferred.reject("An error occured while fetching items");
+              deferred.reject("An error occured while fetching consult request after save");
             });
        
             return deferred.promise;

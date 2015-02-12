@@ -32,7 +32,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class ConsultationDetailTo1 implements Serializable {
+public class ConsultationRequestTo1 implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final String DEFAULT_NOTHING = "1";
 	private static final String DEFAULT_NON_URGENT = "2";

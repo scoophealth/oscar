@@ -25,13 +25,13 @@ package org.oscarehr.ws.rest.conversion;
 
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.ws.rest.to.model.ConsultationDetailTo1;
+import org.oscarehr.ws.rest.to.model.ConsultationRequestTo1;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ConsultationDetailConverter extends AbstractConverter<ConsultationRequest, ConsultationDetailTo1> {
+public class ConsultationRequestConverter extends AbstractConverter<ConsultationRequest, ConsultationRequestTo1> {
 	
-	public ConsultationRequest getAsDomainObject(LoggedInInfo loggedInInfo, ConsultationDetailTo1 t, ConsultationRequest d) throws ConversionException {
+	public ConsultationRequest getAsDomainObject(LoggedInInfo loggedInInfo, ConsultationRequestTo1 t, ConsultationRequest d) throws ConversionException {
 		d.setAllergies(t.getAllergies());
 		d.setAppointmentDate(t.getAppointmentDate());
 		d.setAppointmentTime(t.getAppointmentTime());
@@ -60,13 +60,13 @@ public class ConsultationDetailConverter extends AbstractConverter<ConsultationR
 	}
 	
 	@Override
-	public ConsultationRequest getAsDomainObject(LoggedInInfo loggedInInfo, ConsultationDetailTo1 t) throws ConversionException {
+	public ConsultationRequest getAsDomainObject(LoggedInInfo loggedInInfo, ConsultationRequestTo1 t) throws ConversionException {
 		return getAsDomainObject(loggedInInfo, t, new ConsultationRequest());
 	}
 
 	@Override
-	public ConsultationDetailTo1 getAsTransferObject(LoggedInInfo loggedInInfo, ConsultationRequest d) throws ConversionException {
-		ConsultationDetailTo1 t = new ConsultationDetailTo1();
+	public ConsultationRequestTo1 getAsTransferObject(LoggedInInfo loggedInInfo, ConsultationRequest d) throws ConversionException {
+		ConsultationRequestTo1 t = new ConsultationRequestTo1();
 		
 		t.setId(d.getId());
 		t.setAllergies(d.getAllergies());

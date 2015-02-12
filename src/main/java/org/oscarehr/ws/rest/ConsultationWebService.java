@@ -56,11 +56,11 @@ import org.oscarehr.consultations.ConsultationSearchFilter.SORTMODE;
 import org.oscarehr.managers.ConsultationManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.ws.rest.conversion.ConsultationDetailConverter;
+import org.oscarehr.ws.rest.conversion.ConsultationRequestConverter;
 import org.oscarehr.ws.rest.conversion.ConsultationServiceConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
-import org.oscarehr.ws.rest.to.model.ConsultationDetailTo1;
-import org.oscarehr.ws.rest.to.model.ConsultationSearchResult;
+import org.oscarehr.ws.rest.to.model.ConsultationRequestTo1;
+import org.oscarehr.ws.rest.to.model.ConsultationRequestSearchResult;
 import org.oscarehr.ws.rest.to.model.FaxConfigTo1;
 import org.oscarehr.ws.rest.to.model.LetterheadTo1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,14 +99,14 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	@Autowired
 	UserPropertyDAO userPropertyDAO;
 	
-	private ConsultationDetailConverter consultationDetailConverter = new ConsultationDetailConverter();
+	private ConsultationRequestConverter consultationRequestConverter = new ConsultationRequestConverter();
 	
 	@POST
-	@Path("/search")
+	@Path("/searchRequests")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public AbstractSearchResponse<ConsultationSearchResult> search(JSONObject json) {
-		AbstractSearchResponse<ConsultationSearchResult> response = new AbstractSearchResponse<ConsultationSearchResult>();
+	public AbstractSearchResponse<ConsultationRequestSearchResult> searchRequests(JSONObject json) {
+		AbstractSearchResponse<ConsultationRequestSearchResult> response = new AbstractSearchResponse<ConsultationRequestSearchResult>();
 
 		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_con", "r", null)) {
 			throw new RuntimeException("Access Denied");
@@ -118,7 +118,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 		int count = consultationManager.getConsultationCount(convertJSON(json));
 
 		if(count>0) {
-			List<ConsultationSearchResult> items =  consultationManager.search(getLoggedInInfo(), convertJSON(json));
+			List<ConsultationRequestSearchResult> items =  consultationManager.search(getLoggedInInfo(), convertJSON(json));
 			//convert items to a ConsultationSearchResult object
 			response.setContent(items);
 			response.setTotal(count);
@@ -128,30 +128,30 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	}
 	
 	@GET
-	@Path("/getDetail")
+	@Path("/getRequest")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ConsultationDetailTo1 getDetail(@QueryParam("requestId")Integer requestId, @QueryParam("demographicId")Integer demographicId) {
-		ConsultationDetailTo1 detail = new ConsultationDetailTo1();
+	public ConsultationRequestTo1 getRequest(@QueryParam("requestId")Integer requestId, @QueryParam("demographicId")Integer demographicId) {
+		ConsultationRequestTo1 request = new ConsultationRequestTo1();
 		
 		if (requestId>0) {
-			detail = consultationDetailConverter.getAsTransferObject(getLoggedInInfo(), consultationManager.getRequest(getLoggedInInfo(), requestId));
+			request = consultationRequestConverter.getAsTransferObject(getLoggedInInfo(), consultationManager.getRequest(getLoggedInInfo(), requestId));
 		} else {
-			detail.setDemographicId(demographicId);
+			request.setDemographicId(demographicId);
 			
 			RxInformation rx = new RxInformation();
 			String info = rx.getAllergies(demographicId.toString());
-			if (StringUtils.isNotBlank(info)) detail.setAllergies(info);
+			if (StringUtils.isNotBlank(info)) request.setAllergies(info);
 			info = rx.getCurrentMedication(demographicId.toString());
-			if (StringUtils.isNotBlank(info)) detail.setCurrentMeds(info);
+			if (StringUtils.isNotBlank(info)) request.setCurrentMeds(info);
 		}
 
-		detail.setLetterheadList(getLetterheadList());
-		detail.setFaxList(getFaxList());
-		detail.setServiceList((new ConsultationServiceConverter()).getAllAsTransferObjects(getLoggedInInfo(), consultationManager.getConsultationServices()));
-		detail.setSendToList(providerDao.getActiveTeams());
-		detail.setProviderNo(getLoggedInInfo().getLoggedInProviderNo());
+		request.setLetterheadList(getLetterheadList());
+		request.setFaxList(getFaxList());
+		request.setServiceList((new ConsultationServiceConverter()).getAllAsTransferObjects(getLoggedInInfo(), consultationManager.getConsultationServices()));
+		request.setSendToList(providerDao.getActiveTeams());
+		request.setProviderNo(getLoggedInInfo().getLoggedInProviderNo());
 		
-		return detail;
+		return request;
 	}
 	
 	@GET
@@ -175,16 +175,17 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	}
 
 	@POST
+	@Path("/saveRequest")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ConsultationDetailTo1 saveConsultDetail(ConsultationDetailTo1 data) {
+	public ConsultationRequestTo1 saveRequest(ConsultationRequestTo1 data) {
 		ConsultationRequest request = null;
 		
 		if (data.getId()==null) { //new consultation request
-			request = consultationDetailConverter.getAsDomainObject(getLoggedInInfo(), data);
+			request = consultationRequestConverter.getAsDomainObject(getLoggedInInfo(), data);
 			request.setProfessionalSpecialist(consultationManager.getProfessionalSpecialist(data.getProfessionalSpecialist().getId()));
 		} else {
-			request = consultationDetailConverter.getAsDomainObject(getLoggedInInfo(), data, consultationManager.getRequest(getLoggedInInfo(), data.getId()));
+			request = consultationRequestConverter.getAsDomainObject(getLoggedInInfo(), data, consultationManager.getRequest(getLoggedInInfo(), data.getId()));
 		}
 		consultationManager.saveConsultationRequest(getLoggedInInfo(), request);
 		

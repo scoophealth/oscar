@@ -360,8 +360,8 @@ padding:8px;
 	<script src="schedule/scheduleController.js"></script>
 	<script src="admin/adminController.js"></script>
 	<script src="billing/billingController.js"></script>
-	<script src="consults/consultListController.js"></script>
-	<script src="consults/consultDetailController.js"></script>	
+	<script src="consults/consultRequestListController.js"></script>
+	<script src="consults/consultRequestController.js"></script>	
 	<script src="inbox/inboxController.js"></script>
 	<script src="patientsearch/patientSearchController.js"></script>
 	

@@ -175,11 +175,7 @@ public class DemographicService extends AbstractServiceImpl {
 	@Produces({MediaType.APPLICATION_JSON , MediaType.APPLICATION_XML})
 	public DemographicTo1 getDemographicData(@PathParam("dataId") Integer id) {		
 		Demographic demo = demographicManager.getDemographic(getLoggedInInfo(),id);
-		if (demo == null) {
-			MiscUtils.getLogger().info("Ronnie: demo ["+demo+"]");
-			
-			return null;
-		}
+		if (demo == null) return null;
 		
 		List<DemographicExt> demoExts = demographicManager.getDemographicExts(getLoggedInInfo(),id);
 		if (demoExts!=null && !demoExts.isEmpty()) {
