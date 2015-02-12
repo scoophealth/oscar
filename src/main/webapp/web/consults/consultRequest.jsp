@@ -87,7 +87,7 @@
 	<br/>
 	<button type="button" class="btn btn-small btn-default form-control" ng-click="toPatientSummary()">Patient Summary</button>
 	<br/>
-	<button type="button" class="btn btn-small btn-default form-control" ng-click="toPatientConsultList()">Patient Referral History</button>
+	<button type="button" class="btn btn-small btn-default form-control" ng-click="toPatientConsultRequestList()">Patient Referral History</button>
 </div><!-- Left pane End -->
 
 <div id="right_pane" class="col-md-10">
