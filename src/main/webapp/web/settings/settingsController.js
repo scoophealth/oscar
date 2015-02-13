@@ -1,5 +1,5 @@
 oscarApp.controller('SettingsCtrl', function ($scope,$http,$state, providerList, user, billingServiceTypes, 
-		loadedSettings, providerService, $modal, encounterForms,eforms, $filter,teams,groupNames) {
+		loadedSettings, providerService, $modal, encounterForms,eforms, $filter,teams,groupNames,loadedApps,appService) {
 
 	$scope.$emit('configureShowPatientList', false);
 	 
@@ -9,6 +9,7 @@ oscarApp.controller('SettingsCtrl', function ($scope,$http,$state, providerList,
 	$scope.pref = loadedSettings;
 	$scope.encounterForms = encounterForms;
 	$scope.eforms = eforms;
+	$scope.loadedApps = loadedApps;
 	
 	
 	//convert to value/label object list from string array
@@ -213,6 +214,23 @@ oscarApp.controller('SettingsCtrl', function ($scope,$http,$state, providerList,
     
     $scope.openMyOscarUsernamePopup = function() {
     	window.open('../provider/providerIndivoIdSetter.jsp','invivo_setter','width=700,height=450');
+    }
+    
+    $scope.authenticate = function(app){
+    	window.open('../apps/oauth1.jsp?id='+app.id,'appAuth','width=700,height=450');
+    }
+    
+    $scope.refreshAppList = function(){
+    	console.log("refresh",$scope.loadedApps);
+    	appService.getApps().then(function(data) {
+    		$scope.loadedApps = data;
+        },
+    		function(errorMessage){
+    	       console.log("applist:"+errorMessage);
+     		}
+        );
+    	///
+    	console.log("refresh",$scope.loadedApps);
     }
 	
 });

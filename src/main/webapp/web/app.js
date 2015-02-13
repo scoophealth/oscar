@@ -3,7 +3,7 @@ var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResourc
 														  'ticklerServices','scheduleServices','billingServices','securityServices','staticDataServices',
 														  'patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll',
 														  'uxServices','ngTable','oscarFilters','messageServices','inboxServices','k2aServices', 'personaServices'
-														  ,'consultServices','angular-loading-bar']);
+														  ,'consultServices','appServices','angular-loading-bar']);
 
 
 oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
@@ -98,7 +98,8 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 				encounterForms: function(formService) { return formService.getAllEncounterForms();},
 				eforms: function(formService) { return formService.getAllEForms();},
 				teams: function(providerService) { return providerService.getActiveTeams();},
-				groupNames: function(formService) { return formService.getGroupNames();}
+				groupNames: function(formService) { return formService.getGroupNames();},
+				loadedApps: function(appService) { return appService.getApps();}
 			}
   		})
 		.state('support', {
