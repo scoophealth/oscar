@@ -51,13 +51,14 @@ public class HRMResultsData {
 		Integer viewed = 1;
 		Integer signedOff = 0;
 		if (status == null || status.equalsIgnoreCase("N")) {
-			viewed = 0;
+			viewed = 2;
 		} else if (status != null && (status.equalsIgnoreCase("A") || status.equalsIgnoreCase("F"))) {
 			signedOff = 1;
 		}
 
 		if (status != null && status.equalsIgnoreCase("")) {
 			viewed = 2;
+			signedOff = 2;
 		}
 
 		List<HRMDocumentToProvider> hrmDocResultsProvider = hrmDocumentToProviderDao.findByProviderNoLimit(providerNo, newestDate, oldestDate, viewed, signedOff);
