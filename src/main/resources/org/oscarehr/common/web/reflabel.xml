@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created originally by Prylynx for SJHCG-->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport name="stjoes_Chartlabel" columnCount="1"
+	printOrder="Vertical" orientation="Portrait" pageWidth="252"
+	pageHeight="81" columnWidth="220" columnSpacing="0" leftMargin="18"
+	rightMargin="14" topMargin="5" bottomMargin="5" whenNoDataType="NoPages"
+	isTitleNewPage="false" isSummaryNewPage="false">
+	<property name="ireport.zoom" value="3.0" />
+	<property name="ireport.x" value="0" />
+	<property name="ireport.y" value="0" />
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<style name="sansserif" isDefault="false" fontName="sansserif"
+		isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"
+		pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false">
+	</style>
+
+	<parameter name="billingreferral_no" isForPrompting="true"
+		class="java.lang.String" />
+	<queryString><![CDATA[select d.lName, d.referralNo, d.fName, replace(d.address,'\n','<br/>') as address, d.phone, d.fax from professionalSpecialists d where specId =$P{billingreferral_no}]]></queryString>
+
+	<field name="lName" class="java.lang.String" />
+	<field name="referralNo" class="java.lang.String" />
+	<field name="fName" class="java.lang.String" />
+	<field name="address" class="java.lang.String" />
+	<field name="phone" class="java.lang.String" />
+	<field name="fax" class="java.lang.String" />
+
+	<background>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</background>
+	<title>
+		<band height="71" isSplitAllowed="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true"
+				evaluationTime="Now" hyperlinkType="None" hyperlinkTarget="Self">
+				<reportElement mode="Opaque" x="0" y="0" width="220"
+					height="14" key="textField" positionType="Float" />
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000" />
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000" />
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000" />
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000" />
+				</box>
+				<textElement>
+					<font fontName="Droid Sans" pdfFontName="Helvetica-Bold" size="12"
+						isBold="true" isUnderline="false" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{lName} + ", " + $F{fName} ]]></textFieldExpression>
+			</textField>
+
+
+			<textField isStretchWithOverflow="false" isBlankWhenNull="true"
+				evaluationTime="Now" hyperlinkType="None" hyperlinkTarget="Self">
+				<reportElement mode="Opaque" x="0" y="16" width="220"
+					height="55" key="textField" positionType="Float" />
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000" />
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000" />
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000" />
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000" />
+				</box>
+				<textElement textAlignment="Left" markup="styled">
+					<font fontName="Droid Sans" size="8" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{address}]]></textFieldExpression>
+			</textField>
+
+
+		</band>
+	</title>
+	<pageHeader>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</summary>
+</jasperReport>

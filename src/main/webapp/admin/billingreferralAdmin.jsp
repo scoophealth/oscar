@@ -120,6 +120,7 @@ function openEditSpecialist(specId) {
     <display:column property="streetAddress" title="Address" />
     <display:column property="phoneNumber" title="Phone" />
     <display:column property="faxNumber" title="Fax" />
+    <display:column title="Label" url="/printReferralLabelAction.do" paramId="billingreferralNo" paramProperty="id">label</display:column>
 </display:table>
 		</td>
 	</tr>
