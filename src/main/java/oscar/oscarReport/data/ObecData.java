@@ -67,7 +67,7 @@ public class ObecData {
 		}
 		try {
 
-			String sql = "select d.demographic_no, d.last_name, d.first_name, LEFT(d.address, 32) as address, LEFT(d.city, 30) as city, d.postal, d.hin, d.ver, d.province from appointment a, demographic d where a.demographic_no=d.demographic_no and d.hin <> '' and a.appointment_date>= '" + sDate + "' and appointment_date<='" + eDate + "' and (d.province='Ontario' or d.province='ON' or d.province='ONTARIO') group by d.demographic_no order by d.last_name";
+			String sql = "select d.demographic_no, d.last_name, d.first_name, LEFT(d.address, 32) as address, LEFT(d.city, 30) as city, d.postal, d.hin, d.ver, d.province from appointment a, demographic d where a.demographic_no=d.demographic_no and d.hin <> '' and a.appointment_date>= '" + sDate + "' and appointment_date<='" + eDate + "' and (d.hc_type='Ontario' or d.hc_type='ON' or d.hc_type='ONTARIO') group by d.demographic_no order by d.last_name";
 			ResultSet rs = DBHandler.GetSQL(sql);
 			while (rs.next()) {
 				count = count + 1;
