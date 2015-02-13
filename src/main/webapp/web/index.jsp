@@ -339,6 +339,7 @@ padding:8px;
 	<script src="common/k2aServices.js"></script>
 	<script src="common/personaServices.js"></script>
 	<script src="common/consultServices.js"></script>
+	<script src="common/appServices.js"></script>
 	<script src="filters.js"></script>
 	<script src="app.js"></script>
 	
