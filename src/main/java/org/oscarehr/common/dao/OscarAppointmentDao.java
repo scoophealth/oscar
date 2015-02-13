@@ -386,8 +386,8 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 				"AND a.appointmentDate >= :sDate " +
 				"AND a.appointmentDate <= :eDate " +
 				"AND (" +
-				"	UPPER(d.Province) = 'ONTARIO' " +
-				"	OR d.Province='ON' " +
+				"	UPPER(d.HcType) = 'ONTARIO' " +
+				"	OR d.HcType='ON' " +
 				") GROUP BY d.DemographicNo " +
 				"ORDER BY d.LastName";
 		Query query = entityManager.createQuery(sql);
