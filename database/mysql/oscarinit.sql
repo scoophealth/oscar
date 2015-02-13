@@ -7127,7 +7127,11 @@ CREATE TABLE professionalSpecialists (
   annotation text,
   referralNo varchar(6),
   institutionId int(10) not null,
-  departmentId int(10) not null
+  departmentId int(10) not null,
+  privatePhoneNumber varchar(30),
+  cellPhoneNumber varchar(30),
+  pagerNumber varchar(30),
+  salutation varchar(10) 
 );
 
 --

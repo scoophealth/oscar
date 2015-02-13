@@ -84,6 +84,11 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 
     private Integer institutionId = 0;
     private Integer departmentId = 0;
+
+    private String privatePhoneNumber;
+    private String cellPhoneNumber;
+    private String pagerNumber;
+    private String salutation;
     
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();
@@ -288,5 +293,38 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 		}
 		return buf.toString();
 	}
+
+	public String getPrivatePhoneNumber() {
+		return privatePhoneNumber;
+	}
+
+	public void setPrivatePhoneNumber(String privatePhoneNumber) {
+		this.privatePhoneNumber = privatePhoneNumber;
+	}
+
+	public String getCellPhoneNumber() {
+		return cellPhoneNumber;
+	}
+
+	public void setCellPhoneNumber(String cellPhoneNumber) {
+		this.cellPhoneNumber = cellPhoneNumber;
+	}
+
+	public String getPagerNumber() {
+		return pagerNumber;
+	}
+
+	public void setPagerNumber(String pagerNumber) {
+		this.pagerNumber = pagerNumber;
+	}
+
+	public String getSalutation() {
+		return salutation;
+	}
+
+	public void setSalutation(String salutation) {
+		this.salutation = salutation;
+	}
+
 
 }
