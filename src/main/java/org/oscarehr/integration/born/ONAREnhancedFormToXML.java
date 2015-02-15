@@ -516,23 +516,23 @@ public class ONAREnhancedFormToXML {
 		if(props.getProperty("c_gravida", "").length()>0)
 			pregnancyHistory.setGravida(Integer.parseInt(props.getProperty("c_gravida", "")));	
 		else
-			pregnancyHistory.xsetGravida(null);
+			pregnancyHistory.setGravida(999);
 		if(props.getProperty("c_term", "").length()>0)
 			pregnancyHistory.setTerm(Integer.parseInt(props.getProperty("c_term", "")));
 		else
-			pregnancyHistory.xsetTerm(null);
+			pregnancyHistory.setTerm(999);
 		if(props.getProperty("c_prem", "").length()>0)
 			pregnancyHistory.setPremature(Integer.parseInt(props.getProperty("c_prem", "")));
 		else
-			pregnancyHistory.xsetPremature(null);
+			pregnancyHistory.setPremature(999);
 		if(props.getProperty("c_abort", "").length()>0)
 			pregnancyHistory.setAbortuses(Integer.parseInt(props.getProperty("c_abort", "")));
 		else 
-			pregnancyHistory.xsetAbortuses(null);
+			pregnancyHistory.setAbortuses(999);
 		if(props.getProperty("c_living", "").length()>0)
 			pregnancyHistory.setLiving(Integer.parseInt(props.getProperty("c_living", "")));
 		else 
-			pregnancyHistory.xsetLiving(null);
+			pregnancyHistory.setLiving(999);
 	}
 
 
