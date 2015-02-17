@@ -163,7 +163,7 @@ public class RecordUxService extends AbstractServiceImpl {
 		//}
 		
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.consultations", "r", null)) {
-			morelist.add(new MenuItemTo1(idCounter++, "Consultations", "consults", demographicNo.toString()));
+			morelist.add(new MenuItemTo1(idCounter++, "Consultations", "consultRequests", demographicNo.toString()));
 		}
 		
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.documents", "r", null)) {
