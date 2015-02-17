@@ -226,17 +226,16 @@ public class TicklerManager {
 	        boolean add = false;	        
 	        List<ProgramProvider> ppList = new ArrayList<ProgramProvider>();
 	        
-	        //If there is no selected program, show all ticklers in domain
-	        //if(programNo==null || "".equals(programNo) || "null".equals(programNo))
-	        	programId = String.valueOf(t.getProgramId());
+	        programId = String.valueOf(t.getProgramId());
 	        
-	        //If the ticklers are not in any problem (old ticklers), show them.
+	        //If the ticklers are not in any program (old ticklers), show them.
 	        //They will not be filtered by the role access.
 	        if(programId==null || "".equals(programId) || "null".equals(programId)) {
 	        	filteredTicklers.add(t);
 	        	continue;
 	        }
 	        
+	        //load up the program_provider entry to get the role for this provider in the tickler's program
 	        ppList = programProviderDAO.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
 	        if (ppList == null || ppList.isEmpty()) {
 	        	continue;
@@ -244,34 +243,24 @@ public class TicklerManager {
 	        ProgramProvider pp = ppList.get(0);
 		    Secrole role = pp.getRole();		   
 		    
-		    //Load up access list from program
-		    List<ProgramAccess> programAccessList = programAccessDAO.getAccessListByProgramId(new Long(programId));
-		    Map<String,ProgramAccess> programAccessMap = caseManagementManager.convertProgramAccessListToMap(programAccessList);
-			        
-	        
-	        //Get the tickler assigned provider's role         
-	        String assignedProviderId = t.getTaskAssignedTo();
-	        Integer ticklerProgramId = t.getProgramId();
+	        //Get the tickler assigned to provider's role in the tickler's program
+		    String ticklerRole = null;
 	        List<ProgramProvider> ppList2 = new  ArrayList<ProgramProvider>();
-	        if(ticklerProgramId!=null) {
-	        	ppList2 = this.programProviderDAO.getProgramProviderByProviderProgramId(assignedProviderId, new Long(ticklerProgramId));
-	        	if (ppList2 == null || ppList2.isEmpty()) {
-	        		//add = true; //????ture or false????
-	        		//filteredTicklers.add(t);
-	        		continue;
-	        	}	
-	        } else {
-	        	//add = true;
-	        	//filteredTicklers.add(t);
-	        	continue;
-	        }
-	        
-	        ProgramProvider pp2 = ppList2.get(0);
-	        String ticklerRole = pp2.getRole().getRoleName().toLowerCase();
+        	ppList2 = this.programProviderDAO.getProgramProviderByProviderProgramId(t.getTaskAssignedTo(), new Long(t.getProgramId()));
+        	if (ppList2 != null && !ppList2.isEmpty()) {
+        		ticklerRole = ppList2.get(0).getRole().getRoleName().toLowerCase();
+        	}
 	        
 	        ProgramAccess pa = null;        
-	
+	        
+	        //Load up access list from program
+		    List<ProgramAccess> programAccessList = programAccessDAO.getAccessListByProgramId(new Long(programId));
+		    Map<String,ProgramAccess> programAccessMap = caseManagementManager.convertProgramAccessListToMap(programAccessList);
+			
 	        //read
+		    
+		    //if the provider's role is allowed to read tickler's assigned to "ticklerRole". add.
+		    //if no entry exists, but the the provider has same role as assigned to role, then we add
 	        pa = programAccessMap.get("read ticklers assigned to a " + ticklerRole );
 	        if (pa != null) {
 	            if (pa.isAllRoles() || caseManagementManager.isRoleIncludedInAccess(pa, role)) {                
@@ -294,7 +283,7 @@ public class TicklerManager {
 	        
 	        }
 	
-	        //apply defaults
+	        //apply defaults - i think this is already added above
 	        if (!add) {
 	            if (ticklerRole.equals(role.getRoleName())) {                
 	                add = true;
