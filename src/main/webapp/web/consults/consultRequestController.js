@@ -1,4 +1,4 @@
-oscarApp.controller('ConsultDetailCtrl', function ($scope,$http,$resource,$location,consultService,demographicService,summaryService,staticDataService,consult,user) {
+oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$location,consultService,demographicService,summaryService,staticDataService,consult,user) {
 	$scope.consult = consult;
 	
 	consult.letterheadList = toArray(consult.letterheadList);
@@ -125,8 +125,8 @@ oscarApp.controller('ConsultDetailCtrl', function ($scope,$http,$resource,$locat
 		$location.path("/record/"+consult.demographicId+"/summary");
 	}
 	
-	$scope.toPatientConsultList = function(){
-		$location.path("/consults?demographicId="+consult.demographicId);
+	$scope.toPatientConsultRequestList = function(){
+		$location.path("/consults").search({"demographicId":consult.demographicId});
 	}
 	
 	$scope.invalidData = function(){
@@ -164,7 +164,7 @@ oscarApp.controller('ConsultDetailCtrl', function ($scope,$http,$resource,$locat
 		$scope.consultSaving = true; //show saving banner
 		$scope.consultChanged = 0; //reset change count
 		
-		consultService.save(consult).then(function(data){
+		consultService.saveRequest(consult).then(function(data){
 			if (consult.id==null) $location.path("/consults/"+data.id);
 		});
 		$scope.consultSaving = false; //hide saving banner

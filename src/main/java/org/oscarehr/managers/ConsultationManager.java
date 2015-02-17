@@ -38,7 +38,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.consultations.ConsultationDao;
 import org.oscarehr.consultations.ConsultationSearchFilter;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.ws.rest.to.model.ConsultationSearchResult;
+import org.oscarehr.ws.rest.to.model.ConsultationRequestSearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,8 +56,8 @@ public class ConsultationManager {
 	@Autowired
 	ProfessionalSpecialistDao professionalSpecialistDao;
 	
-	public List<ConsultationSearchResult> search(LoggedInInfo loggedInInfo, ConsultationSearchFilter filter) {
-		 List<ConsultationSearchResult> r = new  ArrayList<ConsultationSearchResult>();
+	public List<ConsultationRequestSearchResult> search(LoggedInInfo loggedInInfo, ConsultationSearchFilter filter) {
+		 List<ConsultationRequestSearchResult> r = new  ArrayList<ConsultationRequestSearchResult>();
 		List<Object[]> result = consultationDao.search(filter);
 		
 		for(Object[] items:result) {
@@ -103,8 +103,8 @@ public class ConsultationManager {
 	
 	
 	
-	private ConsultationSearchResult convertToResult(Object[] items) {
-		ConsultationSearchResult result = new ConsultationSearchResult();
+	private ConsultationRequestSearchResult convertToResult(Object[] items) {
+		ConsultationRequestSearchResult result = new ConsultationRequestSearchResult();
 		
 		ConsultationRequest consultRequest = (ConsultationRequest)items[0];
 		ProfessionalSpecialist professionalSpecialist = (ProfessionalSpecialist)items[1];

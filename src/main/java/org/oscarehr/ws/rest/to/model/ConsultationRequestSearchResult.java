@@ -29,7 +29,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 
-public class ConsultationSearchResult {
+public class ConsultationRequestSearchResult {
 
 	private Integer id;
 	private Demographic demographic;

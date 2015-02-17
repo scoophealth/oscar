@@ -175,7 +175,7 @@ public class PersonaService extends AbstractServiceImpl {
 		MenuTo1 menu = new MenuTo1()
 		        .add(idCounter++,bundle.getString("navbar.menu.schedule"),null,"../provider/providercontrol.jsp")
 				.addWithState(idCounter++,bundle.getString("navbar.menu.inbox"),null,"inbox")
-				.addWithState(idCounter++,bundle.getString("navbar.menu.consults"),null,"consults")
+				.addWithState(idCounter++,bundle.getString("navbar.menu.consults"),null,"consultRequests")
 				.addWithState(idCounter++,bundle.getString("navbar.menu.billing"),null,"billing")
 				.addWithState(idCounter++,bundle.getString("navbar.menu.tickler"),null,"ticklers")
 				
