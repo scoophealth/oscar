@@ -632,7 +632,7 @@
 </div>
 
 <div class="row" ng-show="currentTab.path == 'integration'" style="margin-left:10px">
-	<div class="col-xs-3">
+	<div class="col-xs-4">
 		<div class="form-group">
 		  <label>OLIS Default Reporting Laboratory:</label>
 		  <select class="form-control"  ng-model="pref.olisDefaultReportingLab" ng-options="item.value as item.label for item in olisLabs">
@@ -652,10 +652,9 @@
 		</div>			
 	</div>
 	
-	<div class="col-xs-2">
-	</div>
 	
-	<div class="col-xs-3">
+	
+	<div class="col-xs-4">
 		<div class="form-group">
 		  <label>MyDrugRef ID:</label>
 		  <input ng-model="pref.myDrugRefId" placeholder="MyDrugRef ID" class="form-control" type="text">
@@ -681,6 +680,20 @@
 		    </label>  
 		  </div>
 		</div>	
+	</div>
+	<div class="col-xs-4">
+		<label>Apps: <a ng-click="refreshAppList()">Refresh</a></label>
+		<table class="table table-striped table-bordered">
+			<tr>
+				<th>App Name</th>
+				<th>Status</th>
+			</tr>
+			<tr ng-repeat="app in loadedApps" >
+				<td>{{app.name}}</td>
+				<td ng-show="app.authenticated">{{app.authenticated}}</td>
+				<td ng-hide="app.authenticated"><a ng-click="authenticate(app)">Authenticate</a></td>
+			</tr>
+		</table>
 	</div>
 </div>
  	</form>
