@@ -631,6 +631,7 @@ function resetAll(){
 	document.getElementById('AddStamp').disabled=false; 
 	document.getElementById('AddSignatureBox2').disabled=false;
 	//document.getElementById('DefaultCheckmark').checked = false;
+
 	<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_print_enabled")) { %>
 		document.getElementById('includePdfPrintControl').checked = false;
 	<%}%>
@@ -656,10 +657,14 @@ function GetTextTop(){
 
 	textTop += "&lt;!-- OSCAR based files for greater functionality --&gt;\n"	
 	textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Djquery/jquery-1.4.2.js&quot;&gt;&lt;/script&gt;\n";
-	//reference built in functions as desired	
+	//reference built in functions as desired
+
+<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_print_enabled")) { %>
+	
 	if (document.getElementById('includePdfPrintControl').checked) {
 		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Deforms/printControl.js&quot;&gt;&lt;/script&gt;\n";
 	}
+<% }%>
 
 	//reference built in faxControl	
 	<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_fax_enabled")) { %>
