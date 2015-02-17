@@ -333,7 +333,8 @@ public class TicklerAction extends DispatchAction {
 		tickler.setServiceTime(service_hour + ":" + service_minute + " " + service_ampm);
 
 		tickler.setUpdateDate(new java.util.Date());
-
+		tickler.setId(null);
+		
 		ticklerManager.addTickler(loggedInInfo, tickler);
 
 		String echart = request.getParameter("echart");
