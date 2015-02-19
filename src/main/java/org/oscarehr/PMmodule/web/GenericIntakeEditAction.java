@@ -960,6 +960,12 @@ public class GenericIntakeEditAction extends DispatchAction {
 	}
 
 	private void saveClient(Demographic client, String providerNo) {
+		
+		String strSaveMrp = OscarProperties.getInstance().getProperty("caisi.registration_intake.updateMRPOnSave", "true");
+		if("true".equals(strSaveMrp)) {
+			client.setProviderNo(providerNo);
+		}
+
 		clientManager.saveClient(client);
 		try {
 			log.info("Processing client creation event with MatchManager..." + 
