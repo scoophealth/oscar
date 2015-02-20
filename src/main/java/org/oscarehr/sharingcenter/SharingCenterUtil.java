@@ -862,6 +862,7 @@ public class SharingCenterUtil {
         } catch (IllegalArgumentException e) {
             LOGGER.warn("Problem passing gender", e);
             retVal.setGender(Gender.O);
+         
         } catch (NullPointerException e) {
             LOGGER.warn("Problem passing gender", e);
             retVal.setGender(Gender.O);
