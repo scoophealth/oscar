@@ -50,7 +50,7 @@ import org.oscarehr.util.WebUtils;
 
 public class PHRLoginAction extends DispatchAction
 {
-	private static Logger log = MiscUtils.getLogger();
+	private static Logger logger = MiscUtils.getLogger();
 
 	public PHRLoginAction()
 	{
@@ -79,6 +79,7 @@ public class PHRLoginAction extends DispatchAction
 		try
 		{
 			String myOscarUserName=MyOscarUtils.getMyOscarUserNameFromOscar(providerNo);
+
 			LoginResultTransfer3 loginResultTransfer=AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, myoscarPassword);
 
 			if (loginResultTransfer == null)
@@ -97,19 +98,19 @@ public class PHRLoginAction extends DispatchAction
 		}
 		catch (NotAuthorisedException_Exception e)
 		{
-			MiscUtils.getLogger().error("Error", e);
+			logger.error("Error", e);
 			request.setAttribute("phrUserLoginErrorMsg", "Invalid user/password.");
 			return(ar);
 		}
 		catch (Exception e)
 		{
-			MiscUtils.getLogger().error("Error", e);
+			logger.error("Error", e);
 			request.setAttribute("phrUserLoginErrorMsg", "Error contacting MyOSCAR server, please try again later");
 			request.setAttribute("phrTechLoginErrorMsg", e.getMessage());
 			return ar;
 		}
 						
-		log.debug("Correct user/pass, auth success");
+		logger.debug("Correct user/pass, auth success");
 		return ar;
 	}
 
@@ -123,7 +124,7 @@ public class PHRLoginAction extends DispatchAction
 	        providerPreference.setEncryptedMyOscarPassword(encryptedMyOscarPassword);
 	        providerPreferenceDao.merge(providerPreference);
         } catch (Exception e) {
-	        log.error("Error saving myoscarPassword.", e);
+	        logger.error("Error saving myoscarPassword.", e);
         }	    
     }
 }

@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 
@@ -774,9 +775,19 @@ String curProvider_no = (String)session.getAttribute("user");
 					<%
 						if (StringUtils.trimToNull(OscarProperties.getInstance().getProperty("oscar_myoscar_sync_component_url"))!=null)
 						{
-							%>
-								<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscar_myoscar_sync_config_redirect.jsp"><bean:message key="admin.admin.oscar_myoscar_sync_config"/></a></li>
-							<%
+							MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+							if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn())
+							{
+								%>
+									<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscar_myoscar_sync_config_redirect.jsp"><bean:message key="admin.admin.oscar_myoscar_sync_config"/></a></li>
+								<%
+							}
+							else
+							{
+								%>
+									<li onclick="alert('<bean:message key="admin.admin.oscar_myoscar_sync_config_must_be_logged_in"/>');"><bean:message key="admin.admin.oscar_myoscar_sync_config"/></li>
+								<%							
+							}
 						}
 					%>
 		
@@ -801,7 +812,6 @@ String curProvider_no = (String)session.getAttribute("user");
 		                        %>		
 			
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/updateDrugref.jsp" ><bean:message key="admin.admin.UpdateDrugref"/></a></li>		
-					<li><a href="${ctx}/admin/oscar_myoscar_sync_config_redirect.jsp" target="myoscar_sync"><bean:message key="admin.admin.oscar_myoscar_sync_config"/></a></li>		
 					<li><a  href='javascript:void(0);' class="xlink" rel="${ctx}/admin/integratorPushStatus.jsp"><bean:message key="admin.admin.integratorPush" /></a></li>
 
 				</ul>

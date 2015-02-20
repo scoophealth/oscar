@@ -83,7 +83,8 @@ public class LoginWs extends AbstractWs {
 	}
 
 	/**
-	 * Returns LoginResultTransfer2 on valid login, will be provided with a security token too.
+	 * @param password can be the users password or a valid token
+	 * @return LoginResultTransfer2 on valid login, will be provided with a security token too.
 	 * @throws NotAuthorisedException if password is incorrect
 	 */
 	public LoginResultTransfer2 login2(String userName, String password) throws NotAuthorisedException {

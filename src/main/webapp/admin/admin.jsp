@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -847,9 +848,19 @@ div.logoutBox {
 			<%
 				if (StringUtils.trimToNull(OscarProperties.getInstance().getProperty("oscar_myoscar_sync_component_url"))!=null)
 				{
-					%>
-						<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/oscar_myoscar_sync_config_redirect.jsp"/>&quot;);return false;'><bean:message key="admin.admin.oscar_myoscar_sync_config"/></a></li>
-					<%
+					MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+					if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn())
+					{
+						%>
+							<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/oscar_myoscar_sync_config_redirect.jsp"/>&quot;);return false;'><bean:message key="admin.admin.oscar_myoscar_sync_config"/></a></li>
+						<%
+					}
+					else
+					{
+						%>
+							<li onclick="alert('<bean:message key="admin.admin.oscar_myoscar_sync_config_must_be_logged_in"/>');"><bean:message key="admin.admin.oscar_myoscar_sync_config"/></li>
+						<%							
+					}
 				}
 			%>
 
