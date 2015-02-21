@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.AppointmentArchiveDao;
 import org.oscarehr.common.dao.AppointmentStatusDao;
 import org.oscarehr.common.dao.LookupListDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
@@ -57,7 +58,10 @@ public class AppointmentManager {
 	private LookupListDao lookupListDao;
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
+	@Autowired
+	private AppointmentArchiveDao appointmentArchiveDao;
 	
+
 	public List<Appointment> getAppointmentHistoryWithoutDeleted(LoggedInInfo loggedInInfo, Integer demographicNo, Integer offset, Integer limit) {
 		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_appointment", "r", null)) {
 			throw new RuntimeException("Access Denied");
@@ -156,6 +160,10 @@ public class AppointmentManager {
 			throw new RuntimeException("Access Denied");
 		}
 
+		Appointment existing = appointmentDao.find(appointment.getId());
+		if(existing != null) {
+			appointmentArchiveDao.archiveAppointment(existing);	
+		}
 		appointmentDao.merge(appointment);
 
 		LogAction.addLogSynchronous(loggedInInfo, "AppointmentManager.updateAppointment", "id=" + appointment.getId());
@@ -163,9 +171,12 @@ public class AppointmentManager {
 	}
 
 	public void deleteAppointment(LoggedInInfo loggedInInfo, int apptNo) {
-
 		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_appointment", "d", null)) {
 			throw new RuntimeException("Access Denied");
+		}
+		Appointment existing = appointmentDao.find(apptNo);
+		if(existing != null) {
+			appointmentArchiveDao.archiveAppointment(existing);	
 		}
 		
 		appointmentDao.remove(apptNo);
@@ -194,6 +205,8 @@ public class AppointmentManager {
 		
 		Appointment appt = appointmentDao.find(apptNo);
 		if (appt != null) {
+			appointmentArchiveDao.archiveAppointment(appt);	
+		
 			appt.setStatus(status);
 		}
 		appointmentDao.merge(appt);
@@ -209,6 +222,8 @@ public class AppointmentManager {
 
 		Appointment appt = appointmentDao.find(apptNo);
 		if (appt != null) {
+			appointmentArchiveDao.archiveAppointment(appt);	
+			
 			appt.setType(type);
 		}
 		appointmentDao.merge(appt);
@@ -223,6 +238,8 @@ public class AppointmentManager {
 
 		Appointment appt = appointmentDao.find(apptNo);
 		if (appt != null) {
+			appointmentArchiveDao.archiveAppointment(appt);	
+			
 			appt.setUrgency(urgency);
 		}
 		appointmentDao.merge(appt);
@@ -281,4 +298,5 @@ public class AppointmentManager {
 		
 		return results;
 	}
+	
 }
