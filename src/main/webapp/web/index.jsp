@@ -56,6 +56,9 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 
 <link href="../library/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet">
 
+<link href="../css/bootstrap-timepicker.min.css" rel="stylesheet">
+
+
 
 <style>
 /*styles temporary, when design complete styles will be moved to css above*/
@@ -370,6 +373,9 @@ padding:8px;
 	<script src="help/supportController.js"></script>
 	<script src="help/helpController.js"></script>
 	
+	<script src="schedule/appointmentAddController.js"></script>
+	<script src="schedule/appointmentViewController.js"></script>
+	
 	<!-- 
 	
 	<script src="js/providerViewController.js"></script>
@@ -377,11 +383,12 @@ padding:8px;
 	
 	<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 
+	<script type="text/javascript" src="../js/bootstrap-timepicker.min.js"></script>
+
 <script>
 
 $(document).ready(function(){
-	
-	
+
 	$('#demographicQuickSearch').typeahead({
 		name: 'patients',
 		valueKey:'name',
