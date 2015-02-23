@@ -319,13 +319,16 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
         //save note
         WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
         CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
-        cmm.saveNoteSimple(cmn);
+        
+        Long note_id = cmm.saveNoteSimpleReturnID(cmn);
+        // Debugging purposes on the live server
+		MiscUtils.getLogger().info("Document Note ID: "+note_id.toString());
 
         //create an entry in casemgmt note link
         CaseManagementNoteLink cmnl=new CaseManagementNoteLink();
         cmnl.setTableName(CaseManagementNoteLink.DRUGS);
         cmnl.setTableId(Long.parseLong(idStr));//drug id
-        cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
+        cmnl.setNoteId(note_id);
 
 
         EDocUtil.addCaseMgmtNoteLink(cmnl);
