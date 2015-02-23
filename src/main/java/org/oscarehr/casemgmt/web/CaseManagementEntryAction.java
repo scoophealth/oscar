@@ -85,6 +85,7 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.service.NoteSelectionCriteria;
@@ -170,6 +171,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	public ActionForward setUpMainEncounter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		String demono = getDemographicNo(request);
+		logger.debug("client Image?");
+
+		//get client image
+		ClientImage img = clientImageMgr.getClientImage(Integer.parseInt(demono));
+		if (img != null) {
+			request.setAttribute("image_exists", "true");
+			request.setAttribute("demographicNo", demono);
+		}
 		return mapping.findForward("setUpMainEncounterPage");
 	}
 
