@@ -133,9 +133,13 @@
    <script type="text/javascript">
         function aSubmit(){
             if(document.getElementById("eform_iframe")!=null)document.getElementById("eform_iframe").contentWindow.document.forms[0].submit();
-            if(!checkFormTypeIn()) return;
+                        
+            if(!checkFormTypeIn()) return false;
 
-            document.getElementById("adddemographic").submit();
+            if( !ignoreDuplicates() ) return false;
+            //document.getElementById("adddemographic").submit();
+
+            return true;
         }        
         
    </script>
@@ -471,31 +475,36 @@ function ignoreDuplicates() {
 		var yearOfBirth = jQuery("#year_of_birth").val();
 		var monthOfBirth = jQuery("#month_of_birth").val();
 		var dayOfBirth = jQuery("#date_of_birth").val();
-		
+		var ret = false;
 	jQuery.ajax({
 			url:"../demographicSupport.do?method=checkForDuplicates&lastName="+lastName+"&firstName="+firstName+"&yearOfBirth="+yearOfBirth+"&monthOfBirth="+monthOfBirth+"&dayOfBirth="+dayOfBirth,
 			success:function(data){
 				if(data.hasDuplicates != null) {
 					if(data.hasDuplicates) {
+						
 						if(confirm('There are other patients in this system with the same name and date of birth. Are you sure you want to create this new patient record?')) {
 							//submit the form
-							jQuery("#adddemographic").submit();
+							ret = true;
 						}
 					} else {
+						
 						//submit the form
-						jQuery("#adddemographic").submit();
+						ret = true;
 					}
 				} else {
+					
 					//submit the form
-					jQuery("#adddemographic").submit();
+					ret = true;
 				}
 			},
-			dataType:'json'
+			dataType:'json',
+			async: false
 	});
 		
 		
-	return false;
+	return ret;
 }
+
 
 </script>
 </head>
@@ -521,7 +530,7 @@ function ignoreDuplicates() {
 	<% } %>
 </td></tr>
 <tr><td>
-<form method="post" id="adddemographic" name="adddemographic" action="demographicaddarecord.jsp" onsubmit="return checkFormTypeIn() && ignoreDuplicates()">
+<form method="post" id="adddemographic" name="adddemographic" action="demographicaddarecord.jsp" onsubmit="return aSubmit()">
 <input type="hidden" name="fromAppt" value="<%=request.getParameter("fromAppt")%>">
 <input type="hidden" name="originalPage" value="<%=request.getParameter("originalPage")%>">
 <input type="hidden" name="bFirstDisp" value="<%=request.getParameter("bFirstDisp")%>">

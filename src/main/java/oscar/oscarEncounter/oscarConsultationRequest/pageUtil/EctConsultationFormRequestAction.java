@@ -115,7 +115,7 @@ public class EctConsultationFormRequestAction extends Action {
 		String requestId = "";
 
 		boolean newSignature = request.getParameter("newSignature") != null && request.getParameter("newSignature").equalsIgnoreCase("true");
-		String signatureId = "";
+		String signatureId = null;
 		String signatureImg = frm.getSignatureImg();
 		if(StringUtils.isBlank(signatureImg)) {
 			signatureImg = request.getParameter("newSignatureImg");
@@ -237,7 +237,7 @@ public class EctConsultationFormRequestAction extends Action {
 					if (signature != null) {
 						signatureId = "" + signature.getId();
 					} else {
-						signatureId = signatureImg;
+						signatureId = null;
 					}
 				} else {
 					signatureId = signatureImg;

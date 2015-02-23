@@ -76,8 +76,10 @@ public class DigitalSignatureUtils {
 				return (digitalSignature);
 			} catch (FileNotFoundException e) {
 	            logger.debug("Signature file not found. User probably didn't collect a signature.", e);
+	            return null;
 			} catch (Exception e) {
 	            logger.error("UnexpectedError.", e);
+	            return null;
 			} finally {
 				if (fileInputStream != null) {
 					try {
