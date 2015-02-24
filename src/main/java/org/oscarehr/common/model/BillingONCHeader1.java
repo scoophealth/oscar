@@ -19,6 +19,7 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,10 +39,6 @@ import javax.persistence.PostPersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.oscarehr.PMmodule.utility.Utility;
-
-import oscar.util.DateUtils;
 
 @Entity
 @Table(name = "billing_on_cheader1")
@@ -88,15 +85,12 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 	private String demographicName = null;
 	private String sex = "1";
 	private String province = "ON";
-        @Temporal(TemporalType.DATE)
 	@Column(name = "billing_date")
-	private Date billingDate = null;
-        @Temporal(TemporalType.TIME)
+	private String billingDate = null;
 	@Column(name = "billing_time")
-	private Date billingTime = null; //time format        
-        @Column(name="total")
-	private String total = null;
-	private String paid = null;
+	private String billingTime = null; //time format
+	private BigDecimal total = null;
+	private BigDecimal paid = null;
 	private String status = null;
 	@Column(name = "comment1")
 	private String comment = null;
@@ -120,6 +114,54 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
         private List<BillingONItem>billingItems = new ArrayList<BillingONItem>(); 
 
 	public BillingONCHeader1() {}
+	
+	public BillingONCHeader1(Integer headerId, String transcId, String recId,
+			String hin, String ver, String dob, String payProgram,
+			String payee, String refNum, String faciltyNum, Date admissionDate,
+			String refLabNum, String manReview, String location,
+			Integer demographicNo, String providerNo, Integer appointmentNo,
+			String demographicName, String sex, String province,
+			Date billingDate, Date billingTime, Integer total, Integer paid,
+			String status, String comment, String visitType,
+			String providerOhipNo, String providerRmaNo, String apptProviderNo,
+			String asstProviderNo, String creator, Date timestamp, String clinic) {
+		super();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		this.headerId = headerId;
+		this.transcId = transcId;
+		this.recId = recId;
+		this.hin = hin;
+		this.ver = ver;
+		this.dob = dob;
+		this.payProgram = payProgram;
+		this.payee = payee;
+		this.refNum = refNum;
+		this.faciltyNum = faciltyNum;
+		this.admissionDate = df.format(admissionDate);
+		this.refLabNum = refLabNum;
+		this.manReview = manReview;
+		this.location = location;
+		this.demographicNo = demographicNo;
+		this.providerNo = providerNo;
+		this.appointmentNo = appointmentNo;
+		this.demographicName = demographicName;
+		this.sex = sex;
+		this.province = province;
+		this.billingDate = df.format(billingDate);
+		this.billingTime = df.format(billingTime);
+		this.total = BigDecimal.ZERO;
+		this.paid = BigDecimal.ZERO;
+		this.status = status;
+		this.comment = comment;
+		this.visitType = visitType;
+		this.providerOhipNo = providerOhipNo;
+		this.providerRmaNo = providerRmaNo;
+		this.apptProviderNo = apptProviderNo;
+		this.asstProviderNo = asstProviderNo;
+		this.creator = creator;
+		this.timestamp = timestamp;
+		this.clinic = clinic;
+	}
 
 	public BillingONCHeader1(Integer headerId, String transcId, String recId,
 			String hin, String ver, String dob, String payProgram,
@@ -154,10 +196,10 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 		this.demographicName = demographicName;
 		this.sex = sex;
 		this.province = province;
-		this.billingDate = billingDate;
-		this.billingTime = billingTime;
-		this.total = Utility.toCurrency(total);
-		this.paid = Utility.toCurrency(paid);
+		this.billingDate = df.format(billingDate);
+		this.billingTime = df.format(billingTime);
+		this.total = BigDecimal.ZERO;
+		this.paid = BigDecimal.ZERO;
 		this.status = status;
 		this.comment = comment;
 		this.visitType = visitType;
@@ -257,15 +299,12 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 	}
 
 	public Date getAdmissionDate() throws ParseException  {
-            if (this.admissionDate != null && !this.admissionDate.trim().isEmpty()) {
-            	return DateUtils.parseDate(admissionDate,java.util.Locale.getDefault());
-            } else {
-                return null;
-            }
+		if(this.admissionDate==null) return null;
+		return (new SimpleDateFormat("yyyy-MM-dd")).parse(this.admissionDate);
 	}
 
-	public void setAdmissionDate(Date admissionDate) {             
-		this.admissionDate = DateUtils.formatDate(admissionDate,java.util.Locale.getDefault());
+	public void setAdmissionDate(Date admissionDate) {
+		this.admissionDate = (new SimpleDateFormat("yyyy-MM-dd")).format(admissionDate);
 	}
 
 	public String getRefLabNum() {
@@ -340,51 +379,46 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 		this.province = province;
 	}
 
-	public Date getBillingDate() {
-		return this.billingDate;
+	public Date getBillingDate(){
+		try {
+	        return (new SimpleDateFormat("yyyy-MM-dd")).parse(this.billingDate);
+        } catch (ParseException e) {
+	        // TODO Auto-generated catch block
+	        return null;
+        }
 	}
 
 	public void setBillingDate(Date billingDate) {
-		this.billingDate = billingDate;
+		this.billingDate = (new SimpleDateFormat("yyyy-MM-dd")).format(billingDate);
 	}
 
-	public Date getBillingTime() {
-		return this.billingTime;
+	public Date getBillingTime(){
+		try {
+	        return (new SimpleDateFormat("HH:mm:ss")).parse(this.billingTime);
+        } catch (ParseException e) {
+	        // TODO Auto-generated catch block
+	        return null;
+        }
 	}
 
 	public void setBillingTime(Date billingTime) {
-		this.billingTime = billingTime;
+		this.billingTime = (new SimpleDateFormat("HH:mm:ss")).format(billingTime);
 	}
 
-	public String getTotal() {
-		if( total != null && this.total.length()>0 ) {
-			return this.total;
-		}
-		else {
-			return "0.00";
-		}
+	public BigDecimal getTotal() {
+		return this.total;
 	}
 
-	public void setTotal(String total) {
+	public void setTotal(BigDecimal total) {
 		this.total = total;
-		
-		if(this.total == null) {                    
-			this.total = "0.00";
-        }
-		
 	}
 
-	public String getPaid() {
-		if(this.paid != null && this.paid.length()>0) return this.paid;
-		else return "0.00";
+	public BigDecimal getPaid() {
+		return this.paid;
 	}
 
-	public void setPaid(String paid) {
+	public void setPaid(BigDecimal paid) {
 		this.paid = paid;
-		
-		if(this.paid == null) {
-			this.paid = "0.00";
-		}
 	}
 
 	public String getStatus() {

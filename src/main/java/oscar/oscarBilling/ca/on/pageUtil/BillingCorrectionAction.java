@@ -167,8 +167,8 @@ public class BillingCorrectionAction extends DispatchAction{
         //Add payment audit if bill has just been settled.
         if (newStatus.equals(BillingONCHeader1.SETTLED) && !oldStatus.equals(newStatus)) {  
                 BillingONPayment billPayment = new BillingONPayment();
-                billPayment.setBillingNo(bCh1.getId());
-                billPayment.setPayDate(new java.util.Date());
+                billPayment.setBillingOnCheader1(bCh1);
+                billPayment.setPaymentDate(new java.util.Date());
                 bPaymentDao.persist(billPayment);
         }
         
@@ -351,7 +351,7 @@ public class BillingCorrectionAction extends DispatchAction{
              */
             List<BillingONPayment> paymentRecords = bPaymentDao.find3rdPartyPayRecordsByBill(bCh1);
                    
-            BigDecimal totalOwing =  new BigDecimal(bCh1.getTotal());
+            BigDecimal totalOwing =  bCh1.getTotal();
             BigDecimal totalPaid = BillingONPaymentDao.calculatePaymentTotal(paymentRecords);
             BigDecimal totalRefund = BillingONPaymentDao.calculateRefundTotal(paymentRecords);
             BigDecimal amtOutstanding = totalOwing.subtract(totalPaid).add(totalRefund);

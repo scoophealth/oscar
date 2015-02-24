@@ -27,7 +27,6 @@
 
 package oscar.oscarBilling.ca.on.administration;
 
-import java.sql.SQLException;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -44,7 +43,7 @@ import oscar.util.ConversionUtils;
 
 public class GstReport {
 
-	public Vector<Properties> getGST(LoggedInInfo loggedInInfo, String providerNo, String startDate, String endDate) throws SQLException {
+	public Vector<Properties> getGST(LoggedInInfo loggedInInfo, String providerNo, String startDate, String endDate)  {
 		Properties props;
 		Vector<String> billno = new Vector<String>();
 		Vector<Properties> list = new Vector<Properties>();
@@ -78,7 +77,7 @@ public class GstReport {
 		return list;
 	}
 
-	public String getGstFlag(String code, String date) throws SQLException {
+	public String getGstFlag(String code, String date) {
 		BillingServiceDao dao = SpringUtils.getBean(BillingServiceDao.class);
 		for (BillingService bs : dao.findGst(code, ConversionUtils.fromDateString(date))) {
 			return ConversionUtils.toBoolString(bs.getGstFlag());

@@ -18,42 +18,91 @@
 
 package oscar.oscarBilling.ca.on.data;
 
+import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.oscarehr.billing.CA.ON.model.Billing3rdPartyAddress;
 import org.oscarehr.common.dao.Billing3rdPartyAddressDao;
 import org.oscarehr.common.dao.BillingONExtDao;
+import org.oscarehr.common.dao.BillingPaymentTypeDao;
 import org.oscarehr.common.model.BillingONExt;
+import org.oscarehr.common.model.BillingPaymentType;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.model.Clinic;
+
 
 public class JdbcBilling3rdPartImpl {
-	private static final Logger _logger = Logger
-			.getLogger(JdbcBilling3rdPartImpl.class);
 	
-	public static final String ACTIVE = "1";
-	public static final String INACTIVE = "0";
-
+	private ClinicDAO clinicDao = (ClinicDAO) SpringUtils.getBean("clinicDAO");
 	private Billing3rdPartyAddressDao dao = SpringUtils.getBean(Billing3rdPartyAddressDao.class);
 	private BillingONExtDao extDao = (BillingONExtDao)SpringUtils.getBean(BillingONExtDao.class);
+	private BillingPaymentTypeDao typeDao = (BillingPaymentTypeDao)SpringUtils.getBean(BillingPaymentTypeDao.class);
+	public static final String ACTIVE = "1";
+	public static final String INACTIVE = "0";
 	
+	public Properties get3rdPartBillProp(String invNo) {
+		Properties retval = new Properties();			
+		List<BillingONExt> billingExts = extDao.getBillingExtItems(invNo);
+		for(BillingONExt b : billingExts) {
+			retval.setProperty(b.getKeyVal(), b.getValue());			
+		}
+		return retval;
+	}
 	
+	public Properties get3rdPartBillPropInactive(String invNo) {
+		Properties retval = new Properties();
+		List<BillingONExt> billingExts = extDao.getInactiveBillingExtItems(invNo);
+		for(BillingONExt b : billingExts) {
+			retval.setProperty(b.getKeyVal(), b.getValue());			
+		}		
+		return retval;
+	}
+	
+	public Properties getLocalClinicAddr() {
+		Properties retval = new Properties();
+
+		Clinic clinic = clinicDao.getClinic();
+		if (clinic != null) {
+			retval.setProperty("clinic_name", clinic.getClinicName());
+			retval.setProperty("clinic_address", clinic.getClinicAddress());
+			retval.setProperty("clinic_city", clinic.getClinicCity());
+			retval.setProperty("clinic_province", clinic.getClinicProvince());
+			retval.setProperty("clinic_postal", clinic.getClinicPostal());
+			retval.setProperty("clinic_fax", clinic.getClinicFax());
+			retval.setProperty("clinic_phone", clinic.getClinicPhone());
+			retval.setProperty("clinic_fax", clinic.getClinicFax());
+		}
+
+		return retval;
+	}
+
+	public Properties get3rdPayMethod() {
+		Properties retval = new Properties();
+		List<BillingPaymentType> types = typeDao.findAll();
+		for(BillingPaymentType t : types) {
+			retval.setProperty(String.valueOf(t.getId()), t.getPaymentType());
+		}
+		return retval;
+	}
 
 	// 3rd bill ins. address
 	public int addOne3rdAddrRecord(Properties val) {
 		Billing3rdPartyAddress b = new Billing3rdPartyAddress();
-		b.setAttention(val.getProperty("attention", ""));
-		b.setCompanyName(val.getProperty("company_name", ""));
-		b.setAddress(val.getProperty("address", ""));
-		b.setCity(val.getProperty("city", ""));
-		b.setProvince(val.getProperty("province", ""));
-		b.setPostalCode(val.getProperty("postcode", ""));
-		b.setTelephone(val.getProperty("telephone", ""));
-		b.setFax(val.getProperty("fax", ""));
+		b.setAttention(StringEscapeUtils.escapeSql(val.getProperty("attention", "")));
+		b.setCompanyName(StringEscapeUtils.escapeSql(val.getProperty("company_name", "")));
+		b.setAddress(StringEscapeUtils.escapeSql(val.getProperty("address", "")));
+		b.setCity(StringEscapeUtils.escapeSql(val.getProperty("city", "")));
+		b.setProvince(StringEscapeUtils.escapeSql(val.getProperty("province", "")));
+		b.setPostalCode(StringEscapeUtils.escapeSql(val.getProperty("postcode", "")));
+		b.setTelephone(StringEscapeUtils.escapeSql(val.getProperty("telephone", "")));
+		b.setFax(StringEscapeUtils.escapeSql(val.getProperty("fax", "")));
 		
 		dao.persist(b);
 		
@@ -81,10 +130,14 @@ public class JdbcBilling3rdPartImpl {
 		BillingONExt b = new BillingONExt();
 		b.setBillingNo(Integer.parseInt(billingNo));
 		b.setDemographicNo(Integer.parseInt(demoNo));
-		b.setKeyVal(key);
+		b.setKeyVal(StringEscapeUtils.escapeSql(key));
 		b.setDateTime(new Date());
 		b.setStatus(ACTIVE.toCharArray()[0]);
-		b.setValue(value);
+
+		if (value == null && BillingONExtDao.isNumberKey(key)) {
+			value = "0.00";
+		}
+		b.setValue(StringEscapeUtils.escapeSql(value));
 		
 		extDao.persist(b);
 		
@@ -92,7 +145,7 @@ public class JdbcBilling3rdPartImpl {
 	}
 
         public boolean keyExists(String billingNo, String key) {
-        	List<BillingONExt> results = extDao.findByBillingNoAndKey(Integer.parseInt(billingNo),key);
+        	List<BillingONExt> results = extDao.findByBillingNoAndKey(Integer.parseInt(billingNo),StringEscapeUtils.escapeSql(key));
         	if(results.isEmpty())
         		return false;
         	return true;
@@ -100,7 +153,7 @@ public class JdbcBilling3rdPartImpl {
         
         
     public boolean updateKeyStatus(String billingNo, String key, String status) {
-    	List<BillingONExt> results = extDao.findByBillingNoAndKey(Integer.parseInt(billingNo),key);
+    	List<BillingONExt> results = extDao.findByBillingNoAndKey(Integer.parseInt(billingNo),StringEscapeUtils.escapeSql(key));
     	for(BillingONExt result:results) {
     		result.setStatus(status.toCharArray()[0]);
     		extDao.merge(result);
@@ -112,9 +165,9 @@ public class JdbcBilling3rdPartImpl {
      * We're updating a key--make sure it is active as well
      */
 	public boolean updateKeyValue(String billingNo, String key, String value) {
-		List<BillingONExt> results = extDao.findByBillingNoAndKey(Integer.parseInt(billingNo),key);
+		List<BillingONExt> results = extDao.findByBillingNoAndKey(Integer.parseInt(billingNo),StringEscapeUtils.escapeSql(key));
     	for(BillingONExt result:results) {
-    		result.setValue(value);
+    		result.setValue(StringEscapeUtils.escapeSql(value));
     		result.setStatus('1');
     		extDao.merge(result);
     	}
@@ -135,7 +188,31 @@ public class JdbcBilling3rdPartImpl {
 		}
 		return ret;
 	}
-
+	
+/*	seems this method not used by any one.
+	public List get3rdAddrList(String keyword, String field) {
+		Properties prop = new Properties();
+		List<Properties> ret = new Vector<Properties>();
+		List<Billing3rdPartyAddress> addressList = dao.findAddressesByOneField(field, keyword);
+		if(addressList != null) {
+			for(Billing3rdPartyAddress b : addressList) {
+				prop.setProperty("id", b.getId().toString());
+				prop.setProperty("attention", b.getAttention());
+				prop.setProperty("company_name", b.getCompanyName());
+				prop.setProperty("address", b.getAddress());
+				prop.setProperty("city", b.getCity());
+				prop.setProperty("province", b.getProvince());
+				prop.setProperty("postcode", b.getPostalCode());
+				prop.setProperty("telephone", b.getTelephone());
+				prop.setProperty("fax", b.getFax());
+				
+				ret.add(prop);
+			}
+		}
+		
+		return ret;
+	}
+*/
 
 	public Properties get3rdAddr(String id) {
 		Properties prop = new Properties();
@@ -171,4 +248,13 @@ public class JdbcBilling3rdPartImpl {
 		}
 		return prop;
 	}
+
+	public Properties getGstTotal(String invNo) {
+		Properties retval = new Properties();
+		BigDecimal gst = extDao.getAccountVal(Integer.parseInt(invNo),"gst");		
+		retval.setProperty("gst", String.valueOf(gst));			
+				
+		return retval;	
+	}
+	
 }

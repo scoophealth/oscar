@@ -29,7 +29,6 @@ import java.util.Map;
 
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DrugDispensingDao;
-import org.oscarehr.common.dao.DrugDispensingMappingDao;
 import org.oscarehr.common.dao.DrugProductDao;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.DrugDispensing;
@@ -44,9 +43,6 @@ public class DrugDispensingManager {
 	@Autowired
 	private DrugDispensingDao drugDispensingDao;
 	
-	@Autowired
-	private DrugDispensingMappingDao drugDispensingMappingDao;
-
 	@Autowired
 	private DrugProductDao drugProductDao;
 	

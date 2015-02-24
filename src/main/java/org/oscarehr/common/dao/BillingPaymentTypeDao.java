@@ -59,4 +59,10 @@ public class BillingPaymentTypeDao extends AbstractDao<BillingPaymentType>{
 	
 		return null;
 	}
+    public BillingPaymentType getPaymentTypeByName(String typeName) {
+    	Query query = entityManager.createQuery("from BillingPaymentType bpt where bpt.paymentType = :typeName");
+    	query.setParameter("typeName", typeName);    	
+ 	   	return this.getSingleResultOrNull(query); 	   
+    }
+	
 }

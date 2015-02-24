@@ -81,7 +81,7 @@ public class PharmacyInfo extends AbstractModel<Integer> implements Comparable<P
 	
 	@Transient
 	private Boolean persistent;
-
+	
 	public Integer getId() {
     	return id;
     }

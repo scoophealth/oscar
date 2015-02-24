@@ -22,11 +22,15 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Query;
 
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderSite;
 import org.oscarehr.common.model.Site;
 import org.oscarehr.util.SpringUtils;
@@ -76,6 +80,18 @@ public class SiteDao extends AbstractDao<Site> {
 			}
 		}
 
+		Set<Provider> providers = new HashSet<Provider>();
+		ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
+		ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+		List<ProviderSite> psList = providerSiteDao.findBySiteId(s.getSiteId());
+		for(ProviderSite ps : psList) {
+			Provider p = providerDao.getProvider(ps.getId().getProviderNo());
+			providers.add(p);
+		}
+		s.setProviders(providers);
+		
+		if(s.getSiteLogoId().intValue()==0)
+			s.setSiteLogoId(null);
 		merge(s);
 
 	}
@@ -179,7 +195,7 @@ public class SiteDao extends AbstractDao<Site> {
 		Query query = entityManager.createNativeQuery(
 					"select distinct p.provider_no	" +
 					" from provider p " +
-					" inner join providersite ps on ps.provider_no = p.provider_no " +
+					" inner join providersite ps on ps.provider_no = p.provider_no and p.status = 1" +
 					" where ps.site_id in (select site_id from providersite where provider_no = :providerno)");
 		query.setParameter("providerno", providerNo);
 
@@ -226,5 +242,38 @@ public class SiteDao extends AbstractDao<Site> {
 		}
 
 		return "";
+	}
+	
+	public List<String> getGroupsBySiteProviderNo(String groupNo) {
+		List<String> groupList = new ArrayList<String>();
+		Query  query = entityManager.createNativeQuery(
+				"select distinct g.mygroup_no from mygroup g	" +
+				" inner join provider p on p.provider_no = g.provider_no and p.status = 1 " +
+				" inner join providersite ps on ps.provider_no = g.provider_no " +
+				" where ps.site_id in (select site_id from providersite where provider_no = :providerno)");
+		query.setParameter("providerno", groupNo);
+
+		groupList = query.getResultList();
+		return groupList;
+	}	
+	
+	public List<String> getGroupsForAllSites() {
+		List<String> groupList = new ArrayList<String>();
+		Query  query = entityManager.createNativeQuery(
+				"select distinct g.mygroup_no from mygroup g	" +
+				" inner join provider p on p.provider_no = g.provider_no and p.status = 1 " +
+				" inner join providersite ps on ps.provider_no = g.provider_no");
+
+		groupList = query.getResultList();
+		return groupList;
+	}
+	
+	public Site findByName(String name) {
+		Query query = entityManager.createQuery("select site from Site site where site.name = ?1");
+		query.setParameter(1, name);
+		try {
+			return (Site) query.getSingleResult();
+		} catch (Exception e) {}
+		return null;
 	}
 }

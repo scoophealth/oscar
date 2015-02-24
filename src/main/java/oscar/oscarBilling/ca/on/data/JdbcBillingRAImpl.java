@@ -441,6 +441,17 @@ public class JdbcBillingRAImpl {
 		return ret;
 	}
 
+	public String getRAClaimNo4BillingNo(String billingNo) {
+		String claim_no = "";
+		RaDetailDao dao = SpringUtils.getBean(RaDetailDao.class);
+		List<RaDetail> claims = dao.findByBillingNo(Integer.parseInt(billingNo));
+		for(RaDetail claim : claims) {
+			claim_no = claim.getClaimNo();			
+		}		
+		
+		return claim_no;
+	}
+
 	public List<String> getRABillingNo4Code(String id, String codes) {
 		Set<String> ret = new HashSet<String>();
 

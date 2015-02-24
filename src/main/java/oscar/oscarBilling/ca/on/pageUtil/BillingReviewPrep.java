@@ -52,7 +52,10 @@ public class BillingReviewPrep {
 
 			// get fee
 			String fee = dbObj.getCodeFee((String) vecCode.get(i),billReferalDate);
-
+			
+			// get code description
+			String codeDescription = dbObj.getCodeDescription((String) vecCode.get(i),billReferalDate);
+			
 			// judge fee
 			if (fee == null) {
 				codeItem = new BillingReviewCodeItem();
@@ -100,9 +103,11 @@ public class BillingReviewPrep {
 			codeItem = new BillingReviewCodeItem();
 			codeItem.setCodeName((String) vecCode.get(i));
 			codeItem.setCodeUnit((String) vecUnit.get(i));
+			codeItem.setCodeAt((String)vecAt.get(i));
 			codeItem.setCodeFee(fee);
 			codeItem.setCodeTotal(bigFee.toString());
 			codeItem.setMsg("");
+			codeItem.setCodeDescription(codeDescription);
 			ret.add(codeItem);
 		}
 		return ret;

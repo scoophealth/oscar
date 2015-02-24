@@ -383,4 +383,21 @@ public class DocumentDao extends AbstractDao<Document> {
 		
 		return resultDocs;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Document> findByDoctype(String docType) {
+		Query query = entityManager.createQuery("SELECT d FROM Document d WHERE d.doctype = :doctype AND d.status = 'A'");
+		query.setParameter("doctype", docType);
+		return query.getResultList();
+	}
+	
+	public List<Document> findByDoctypeAndProviderNo(String docType, String provider_no, Integer isPublic) {
+		Query query = entityManager.createQuery("SELECT d FROM Document d WHERE d.doctype = :doctype AND d.status = 'A' and d.doccreator=:doccreator and d.public1=:public1 ORDER BY updatedatetime DESC");
+		query.setParameter("doctype", docType);
+		query.setParameter("doccreator", provider_no);
+		query.setParameter("public1", isPublic);
+		
+		return query.getResultList();
+		
+	}
 }

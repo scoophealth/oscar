@@ -29,7 +29,6 @@ import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.dao.TicklerDao;
 import org.oscarehr.common.dao.TicklerLinkDao;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.Tickler.STATUS;
@@ -42,15 +41,11 @@ import org.oscarehr.ws.rest.to.model.TicklerCommentTo1;
 import org.oscarehr.ws.rest.to.model.TicklerTo1;
 import org.oscarehr.ws.rest.to.model.TicklerUpdateTo1;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 //this isn't working - not being injected
 @Component
 public class TicklerConverter extends AbstractConverter<Tickler, TicklerTo1> {
-
-	@Autowired
-	private TicklerDao dao;
 	
 	private boolean includeLinks;
 	private boolean includeComments;

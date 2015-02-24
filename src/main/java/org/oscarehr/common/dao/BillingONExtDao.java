@@ -30,6 +30,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONExt;
@@ -45,7 +47,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 @SuppressWarnings("unchecked")
 public class BillingONExtDao extends AbstractDao<BillingONExt>{
-    
+	public final static String KEY_PAYMENT = "payment";
+	public final static String KEY_REFUND = "refund";
+	public final static String KEY_DISCOUNT = "discount";
+	public final static String KEY_CREDIT = "credit";
+	public final static String KEY_PAY_DATE = "payDate";
+	public final static String KEY_PAY_METHOD = "payMethod";
+	public final static String KEY_TOTAL = "total";
+	public final static String KEY_GST = "gst";
+	
     public BillingONExtDao() {
         super(BillingONExt.class);
     }
@@ -59,7 +69,7 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
 
     
     public List<BillingONExt> findByBillingNoAndKey(Integer billingNo, String key) {
-    	String sql = "select bExt from BillingONExt bExt where bExt.billingNo=? and bExt.keyVal=?";
+    	String sql = "select bExt from BillingONExt bExt where bExt.billingNo=? and bExt.keyVal=? order by bExt.id DESC";
         Query query = entityManager.createQuery(sql);
         query.setParameter(1, billingNo);
         query.setParameter(2, key);       
@@ -259,4 +269,112 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
         return results;
     }
     
+    public List<BillingONExt> getClaimExtItems(int billingNo){
+        Query query = entityManager.createQuery("select ext from BillingONExt ext where ext.billingNo = :billingNo");
+        query.setParameter("billingNo", billingNo);
+        return query.getResultList();
+    }
+    
+    public List<BillingONExt> getBillingExtItems(String billingNo){
+        Query query = entityManager.createQuery("select ext from BillingONExt ext where ext.billingNo = :billingNo and ext.status='1' ");
+        try {
+        	query.setParameter("billingNo", Integer.parseInt(billingNo));
+        	return query.getResultList();
+        } catch (Exception e) {
+        	return null;
+        }
+    }
+    
+    public List<BillingONExt> getInactiveBillingExtItems(String billingNo){
+        Query query = entityManager.createQuery("select ext from BillingONExt ext where ext.billingNo = :billingNo and ext.status='0' ");
+        try {
+        	query.setParameter("billingNo", Integer.parseInt(billingNo));
+        	return query.getResultList();
+        } catch (Exception e) {
+        	return null;
+        }
+    }
+    
+    public BigDecimal getAccountVal(int billingNo, String key) {
+    	BigDecimal val = new BigDecimal("0.00").setScale(2, BigDecimal.ROUND_HALF_UP);
+    	if (!KEY_TOTAL.equals(key) && !KEY_PAYMENT.equals(key) && !KEY_DISCOUNT.equals(key) && !KEY_REFUND.equals(key) && !KEY_CREDIT.equals(key)) {
+    		return val;
+    	}
+    	Query query = entityManager.createQuery("select ext from BillingONExt ext where ext.billingNo = ?1 and ext.keyVal = ?2");
+    	query.setParameter(1, billingNo);
+    	query.setParameter(2, key);
+    	BillingONExt ext = null;
+    	try {
+    		ext = (BillingONExt) query.getSingleResult();
+    	} catch (Exception e) {}
+    	if (ext != null) {
+    		val = new BigDecimal(ext.getValue()).setScale(2, BigDecimal.ROUND_HALF_UP);
+    	}
+    	return val;
+    }
+    public BillingONExt getClaimExtItem(Integer billingNo, Integer demographicNo, String keyVal) throws NonUniqueResultException {
+    	String filter1 = (billingNo == null ? "" : "ext.billingNo = :billingNo");
+    	String filter2 = (demographicNo == null ? "" : "ext.demographicNo = :demographicNo");
+    	String filter3 = (keyVal == null ? "" : "ext.keyVal = :keyVal");
+    	String sql = "select ext from BillingONExt ext";
+    	boolean isWhere = false;
+    	if(filter1 != null) {
+    		sql += " where ext.billingNo = :billingNo";
+    		isWhere = true;
+    	}
+    	if(filter2 != null) {
+    		if(isWhere) sql += " and demographicNo = :demographicNo";
+    		else {
+    			sql += "where demographicNo = :demographicNo";
+    			isWhere = true;
+    		}
+    	}
+    	if(filter3 != null) {
+    		if(isWhere) sql += " and keyVal = :keyVal";
+    		else {
+    			sql += "where keyVal = :keyVal";
+    			isWhere = true;
+    		}
+    	}
+    	Query query = entityManager.createQuery(sql);
+        if(filter1 != null) query.setParameter("billingNo", billingNo);
+        if(filter1 != null) query.setParameter("demographicNo", demographicNo);
+        if(filter3 != null) query.setParameter("keyVal", keyVal);
+        BillingONExt res = null;
+        try {
+        	res = (BillingONExt)query.getSingleResult();
+        } catch (NoResultException ex) {
+        	return null;
+        } 
+        return res;
+    }
+
+    public void setExtItem(int billingNo, int demographicNo, String keyVal, String value, Date dateTime, char status) throws NonUniqueResultException {
+    	BillingONExt ext = getClaimExtItem(billingNo, demographicNo, keyVal);
+    	if(ext != null) {
+    		ext.setValue(value);
+    		ext.setDateTime(dateTime);
+    		ext.setStatus(status);
+    		this.merge(ext);
+    	} else {
+    		BillingONExt res = new BillingONExt();
+    		res.setBillingNo(billingNo);
+    		res.setDemographicNo(demographicNo);
+    		res.setKeyVal(keyVal);
+    		res.setValue(value);
+    		res.setDateTime(dateTime);
+    		res.setStatus(status);
+    		this.persist(res);
+    	}
+    }
+    public static boolean isNumberKey(String key) {
+    	if (KEY_PAYMENT.equalsIgnoreCase(key) 
+    			|| KEY_DISCOUNT.equalsIgnoreCase(key) 
+    			|| KEY_TOTAL.equalsIgnoreCase(key) 
+    			|| KEY_REFUND.equalsIgnoreCase(key)
+    			|| KEY_CREDIT.equals(key)) {
+    		return true;
+    	}
+    	return false;
+    }
 }

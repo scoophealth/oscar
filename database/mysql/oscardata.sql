@@ -86,6 +86,7 @@ INSERT INTO ctl_doctype (module,doctype,status) VALUES ('provider','forms','A');
 INSERT INTO ctl_doctype (module,doctype,status) VALUES ('provider','others','A');
 INSERT INTO ctl_doctype (module,doctype,status) VALUES ('provider','share','A');
 INSERT INTO ctl_doctype (module,doctype,status) VALUES ('provider','photo','A');
+INSERT INTO `ctl_doctype` (`module`, `doctype`, `status`, `id`) VALUES('provider','invoice letterhead','A',null);
 
 --
 -- Dumping data for table 'ctl_doc_class'

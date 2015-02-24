@@ -29,6 +29,7 @@
 
 <%@page import="oscar.appt.status.service.impl.AppointmentStatusMgrImpl"%>
 <%
+  if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
   String curProvider_no = request.getParameter("provider_no");
   String appointment_no = request.getParameter("appointment_no");
   String curUser_no = (String) session.getAttribute("user");
@@ -44,7 +45,9 @@
 <%@page import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*, oscar.util.*, java.text.*, java.net.*, org.oscarehr.common.OtherIdManager"%>
 <%@ page import="oscar.appt.status.service.AppointmentStatusMgr"%>
 <%@ page import="org.oscarehr.common.model.AppointmentStatus"%>
-<%@ page import="org.oscarehr.common.model.Demographic, org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.dao.BillingONCHeader1Dao"%>
+<%@page import="org.oscarehr.common.model.BillingONCHeader1"%>
+<%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.PMmodule.dao.ProviderDao, org.oscarehr.common.model.*, org.oscarehr.util.SpringUtils"%>
 <%@ page import="oscar.oscarEncounter.data.EctFormData"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -71,8 +74,12 @@
 <%@ page import="org.oscarehr.common.model.LookupList"%>
 <%@ page import="org.oscarehr.common.model.LookupListItem"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
-
+<%@page import="oscar.oscarBilling.ca.on.data.BillingDataHlp" %>
+<%@page import="org.oscarehr.common.dao.BillingONExtDao" %>
+<%@page import="org.oscarehr.billing.CA.ON.dao.*" %>
+<%@page import="java.math.*" %>
 <%
+    String mrpName = "";
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 	EncounterFormDao encounterFormDao = SpringUtils.getBean(EncounterFormDao.class);
     ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
@@ -80,11 +87,23 @@
     OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
     ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
     SiteDao siteDao = SpringUtils.getBean(SiteDao.class);
+	ProviderDao pDao = SpringUtils.getBean(ProviderDao.class);
+	BillingONCHeader1Dao cheader1Dao = (BillingONCHeader1Dao)SpringUtils.getBean("billingONCHeader1Dao"); 
 	
     ProviderManager providerManager = SpringUtils.getBean(ProviderManager.class);
 	ProgramManager programManager = SpringUtils.getBean(ProgramManager.class);
-	
+	//String demographic_nox = (String)session.getAttribute("demographic_nox");
+	String demographic_nox = request.getParameter("demographic_no");
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    Demographic demographicTmp=demographicManager.getDemographic(loggedInInfo,demographic_nox);
+    String proNoTmp = demographicTmp==null?null:demographicTmp.getProviderNo();
+    if (demographicTmp!=null&&proNoTmp!=null&&proNoTmp.length()>0) {
+            Provider providerTmp=pDao.getProvider(demographicTmp.getProviderNo());
+        if (providerTmp != null) {
+            mrpName = providerTmp.getFormattedName();
+        }
+    }
+	
 	String providerNo = loggedInInfo.getLoggedInProviderNo();
 	Facility facility = loggedInInfo.getCurrentFacility();
 	
@@ -94,9 +113,11 @@
     LookupList reasonCodes = lookupListManager.findLookupListByName(loggedInInfo, "reasonCode");
 
     ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
-
+ List<BillingONCHeader1> cheader1s = cheader1Dao.getBillCheader1ByDemographicNo(Integer.parseInt(demographic_nox));
+ BillingONExtDao billingOnExtDao = (BillingONExtDao)SpringUtils.getBean(BillingONExtDao.class);
     oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
     String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
+  String apptStatusHere = pros.getProperty("appt_status_here");
 
     AppointmentStatusMgr apptStatusMgr =  new AppointmentStatusMgrImpl();
     List allStatus = apptStatusMgr.getAllActiveStatus();
@@ -931,7 +952,7 @@ if (bMultisites) { %>
 <hr />
 
 <% if (isSiteSelected) { %>
-<table width="95%" align="center">
+<table width="95%" align="center" id="belowTbl">
 	<tr>
 		<td><input type="submit"
 			onclick="document.forms['EDITAPPT'].displaymode.value='Cut';"
@@ -954,6 +975,34 @@ if (bMultisites) { %>
 		<% } %>
 		</td>
 	</tr>
+	<%if(cheader1s.size()>0){%>
+		<tr>
+		<th width="40%"><font color="red">Outstanding 3rd Invoices</font></th>
+		<th width="20%"><font color="red">Invoice Date</font></th>
+		<th><font color="red">Amount</font></th>
+		<th><font color="red">Balance</font></th>
+		</tr>
+		<%
+		java.text.SimpleDateFormat fm = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		for(int i=0;i<cheader1s.size();i++) {
+			if(cheader1s.get(i).getPayProgram().matches(BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)){ 
+				BigDecimal payment = billingOnExtDao.getAccountVal(cheader1s.get(i).getId(), billingOnExtDao.KEY_PAYMENT);
+				BigDecimal discount = billingOnExtDao.getAccountVal(cheader1s.get(i).getId(), billingOnExtDao.KEY_DISCOUNT);
+				BigDecimal credit =  billingOnExtDao.getAccountVal(cheader1s.get(i).getId(), billingOnExtDao.KEY_CREDIT);
+				BigDecimal total = cheader1s.get(i).getTotal();
+				BigDecimal balance = total.subtract(payment).subtract(discount).add(credit);
+				
+            	if(balance.compareTo(BigDecimal.ZERO) != 0) { %>
+					<tr>
+						<td align="center"><a href="#" onclick="popupPage(600,800, '<%=request.getContextPath() %>/billing/CA/ON/billingONCorrection.jsp?billing_no=<%=cheader1s.get(i).getId()%>')"><font color="red">Inv #<%=cheader1s.get(i).getId() %></font></a></td>
+						<td align="center"><font color="red"><%=fm.format(cheader1s.get(i).getTimestamp()) %></font></td>
+						<td align="center"><font color="red">$<%=cheader1s.get(i).getTotal() %></font></td>
+						<td align="center"><font color="red">$<%=balance %></font></td>
+					</tr>
+				<%}
+			}
+		}
+	 } %>
 </table>
 <% } %>
 
@@ -1095,6 +1144,14 @@ Currently this is only used in the mobile version -->
 <script type="text/javascript">
 var loc = document.forms['EDITAPPT'].location;
 if(loc.nodeName.toUpperCase() == 'SELECT') loc.style.backgroundColor=loc.options[loc.selectedIndex].style.backgroundColor;
+
+jQuery(document).ready(function(){
+	var belowTbl = jQuery("#belowTbl");
+	if (belowTbl != null && belowTbl.length > 0 && belowTbl.find("tr").length == 2) {
+		jQuery(belowTbl.find("tr")[1]).remove();
+	} 
+});
+
 </script>
 
 </html:html>

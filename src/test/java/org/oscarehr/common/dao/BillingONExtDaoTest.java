@@ -57,12 +57,14 @@ public class BillingONExtDaoTest extends DaoTestFixtures {
 		BillingONPaymentDao paymentDao = (BillingONPaymentDao)SpringUtils.getBean(BillingONPaymentDao.class);
 		BillingONPayment paymentRecord = new BillingONPayment();
 		paymentRecord.setBillingNo(1);
+		paymentRecord.setPaymentDate(new Date());
+		
 		BillingONExt extraBillingPayment = new BillingONExt();
 		extraBillingPayment.setBillingNo(1);
 		extraBillingPayment.setKeyVal("payment");
 		extraBillingPayment.setValue("10");
 		extraBillingPayment.setPaymentId(1);
-		
+	
 		paymentDao.persist(paymentRecord);
 		dao.persist(extraBillingPayment);
 		
@@ -119,6 +121,7 @@ public class BillingONExtDaoTest extends DaoTestFixtures {
 		BillingONPaymentDao paymentDao = (BillingONPaymentDao)SpringUtils.getBean(BillingONPaymentDao.class);
 		BillingONPayment paymentRecord = new BillingONPayment();
 		paymentRecord.setBillingNo(1);
+		paymentRecord.setPaymentDate(new Date());
 		
 		// Create extra billing payment where paymentID, billing number, 
 		// and keyval are all different from those of the payment record
@@ -143,6 +146,8 @@ public class BillingONExtDaoTest extends DaoTestFixtures {
 		BillingONPaymentDao paymentDao = (BillingONPaymentDao)SpringUtils.getBean(BillingONPaymentDao.class);
 		BillingONPayment paymentRecord = new BillingONPayment();
 		paymentRecord.setBillingNo(1);
+		paymentRecord.setPaymentDate(new Date());
+		
 		BillingONExt extraBillingPayment = new BillingONExt();
 		extraBillingPayment.setBillingNo(1);
 		extraBillingPayment.setKeyVal("payment");
@@ -165,6 +170,8 @@ public class BillingONExtDaoTest extends DaoTestFixtures {
 		BillingONPaymentDao paymentDao = (BillingONPaymentDao)SpringUtils.getBean(BillingONPaymentDao.class);
 		BillingONPayment paymentRecord = new BillingONPayment();
 		paymentRecord.setBillingNo(1);
+		paymentRecord.setPaymentDate(new Date());
+		
 		BillingONExt extraBillingPayment = new BillingONExt();
 		extraBillingPayment.setBillingNo(1);
 		extraBillingPayment.setKeyVal("refund");
@@ -227,6 +234,7 @@ public class BillingONExtDaoTest extends DaoTestFixtures {
 		BillingONPaymentDao paymentDao = (BillingONPaymentDao)SpringUtils.getBean(BillingONPaymentDao.class);
 		BillingONPayment paymentRecord = new BillingONPayment();
 		paymentRecord.setBillingNo(1);
+		paymentRecord.setPaymentDate(new Date());
 		
 		// Create extra billing payment where paymentID, billing number, 
 		// and keyval are all different from those of the payment record
@@ -252,6 +260,8 @@ public class BillingONExtDaoTest extends DaoTestFixtures {
 		BillingONPaymentDao paymentDao = (BillingONPaymentDao)SpringUtils.getBean(BillingONPaymentDao.class);
 		BillingONPayment paymentRecord = new BillingONPayment();
 		paymentRecord.setBillingNo(1);
+		paymentRecord.setPaymentDate(new Date());
+		
 		BillingONExt extraBillingPayment = new BillingONExt();
 		extraBillingPayment.setBillingNo(1);
 		extraBillingPayment.setKeyVal("refund");

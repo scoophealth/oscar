@@ -289,7 +289,7 @@ public class PdfRecordPrinter {
             getDocument().add(table);
     }
     
-    public void printBillingInvoice(Integer invoiceNo, Locale locale) {
+    public void printBillingInvoice(Integer invoiceNo, Locale locale){
         OscarProperties props = OscarProperties.getInstance();      
         InputStream is = null;
         InputStream imageIS = null;

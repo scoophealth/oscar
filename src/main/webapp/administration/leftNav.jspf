@@ -227,6 +227,7 @@ String curProvider_no = (String)session.getAttribute("user");
 		               
 		                <oscar:oscarPropertiesCheck property="billregion" value="ON">             	
 		                        <li><a href='javascript:void(0);' class="xlink" rel='${ctx}/billing/CA/ON/billingONPayment.jsp'><bean:message key="admin.admin.paymentReceived"/></a></li>
+		                        <li><a href='javascript:void(0);' class="xlink" rel='${ctx}/billing/CA/ON/managePaymentType.do'><bean:message key="admin.admin.managePaymentType"/></a></li>
 		                </oscar:oscarPropertiesCheck>
 				</ul>
 				</div>

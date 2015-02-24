@@ -164,7 +164,7 @@ public class BillingONItemDaoTest extends DaoTestFixtures {
 	@Test
 	public void testGetCh1ByDemographicNo() throws Exception {
 		
-		int demographicNo1 = 101, demographicNo2 = 202;
+		Integer demographicNo1 = 101, demographicNo2 = 202;
 		
 		BillingONCHeader1 bONCH11 = new BillingONCHeader1();
 		EntityDataGenerator.generateTestDataForModelClass(bONCH11);
@@ -201,7 +201,7 @@ public class BillingONItemDaoTest extends DaoTestFixtures {
 			fail("Array sizes do not match.");
 		}
 		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
+			if (!expectedResult.get(i).getDemographicNo().equals(result.get(i).getDemographicNo())){
 				logger.warn("Items  do not match.");
 				fail("Items  do not match.");
 			}

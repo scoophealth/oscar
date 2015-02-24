@@ -92,6 +92,8 @@ public class QueueDocumentLinkDao extends AbstractDao<QueueDocumentLink> {
         return (queues.size()>0);
     }
     public boolean setStatusInactive(Integer docId){
+    	if(docId == null) return false;
+    	
         List<QueueDocumentLink> qs=getQueueFromDocument(docId);
         if(qs.size()>0){
             QueueDocumentLink q=qs.get(0);

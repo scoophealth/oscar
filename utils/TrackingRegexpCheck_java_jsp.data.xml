@@ -1335,7 +1335,7 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:Vector&lt;Properties&gt; list = new Vector&lt;Properties&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:Vector&lt;String&gt; billno = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:public Vector&lt;Properties&gt; getGST(LoggedInInfo loggedInInfo, String providerNo, String startDate, String endDate) throws SQLException {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:public Vector&lt;Properties&gt; getGST(LoggedInInfo loggedInInfo, String providerNo, String startDate, String endDate)  {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingClaimBatchAcknowledgementReportBeanHandler.java:Vector batchAckReportBeanVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingClaimBatchAcknowledgementReportBeanHandler.java:batchAckReportBeanVector.add(CBABean);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingClaimBatchAcknowledgementReportBeanHandler.java:import java.util.Vector;</ViolationValue>
@@ -1408,6 +1408,7 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingStatusData.java:Hashtable&lt;String,Object&gt; h = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingStatusData.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingStatusData.java:public ArrayList&lt;Hashtable&lt;String,Object&gt;&gt; getBills(String statusType, String providerNo, String startDate, String endDate, String demoNo) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBilling3rdPartImpl.java:List&lt;Properties&gt; ret = new Vector&lt;Properties&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:List retval = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:Vector vecClaimrecord = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:Vector vecFilenameId = new Vector();</ViolationValue>
@@ -1417,10 +1418,12 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:Vector vecStatus = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:Vector vecTotal = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:public boolean add3rdBillExt(Map&lt;String,String&gt;mVal, int id, Vector vecObj) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingCodeImpl.java:List ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingCodeImpl.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingCorrection.java:List obj = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingCorrection.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:StringBuffer codeBuf = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:ArrayList&lt;Hashtable&lt;String, String&gt;&gt; list = new ArrayList&lt;Hashtable&lt;String, String&gt;&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:Hashtable&lt;String, String&gt; h = a.get(i);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:Hashtable&lt;String, String&gt; h = new Hashtable&lt;String, String&gt;();</ViolationValue>
@@ -1431,6 +1434,13 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:public String getAmountPaid(ArrayList&lt;Hashtable&lt;String, String&gt;&gt; a) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:public String getAmountPaid(ArrayList&lt;Hashtable&lt;String, String&gt;&gt; a, String billingNo, String serviceCode) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:public String getErrorCodes(ArrayList&lt;Hashtable&lt;String, String&gt;&gt; a) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java:Vector&lt;Object&gt; elemToDel = new Vector&lt;Object&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java:Vector&lt;String&gt; vecFee = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java:Vector&lt;String&gt; vecName = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java:Vector&lt;String&gt; vecStatus = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java:Vector&lt;String&gt; vecUnit = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java:private String sumFee(Vector vecFee) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDiskCreatePrep.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDiskCreatePrep.java:Vector vecTemp = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDiskCreatePrep.java:diskName.setProviderno((Vector) providerNo);</ViolationValue>
@@ -1476,6 +1486,8 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:public Vector getBillingClaimHospObj(HttpServletRequest requestData, String service_date, String total,</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:public Vector getBillingClaimObj(HttpServletRequest requestData) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:public boolean addABillingRecord(Vector val) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:public boolean addPrivateBillExtRecord(HttpServletRequest requestData, Vector vecObj) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:public void addOhipInvoiceTrans(Vector vecObj) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:// ret - Vector claimheader1data, itemdata</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:List aL = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:Vector ret = new Vector();</ViolationValue>

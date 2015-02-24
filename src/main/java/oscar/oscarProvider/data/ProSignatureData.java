@@ -25,16 +25,15 @@
 
 package oscar.oscarProvider.data;
 
-import org.apache.log4j.Logger;
+
 import org.oscarehr.casemgmt.model.ProviderExt;
 import org.oscarehr.common.dao.ProviderExtDao;
-import org.oscarehr.util.MiscUtils;
+
 import org.oscarehr.util.SpringUtils;
 
 
 public class ProSignatureData {
 	
-	private Logger log = MiscUtils.getLogger();
 	private ProviderExtDao providerExtDao = SpringUtils.getBean(ProviderExtDao.class);
 
     public boolean hasSignature(String proNo){

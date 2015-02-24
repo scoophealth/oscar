@@ -69,19 +69,19 @@ public class BillingONPaymentDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(bONPayment1);
 		Date date1 = new Date(dfm.parse("20110101").getTime());
 		bONPayment1.setBillingNo(billingNo);
-		bONPayment1.setPayDate(date1);
+		bONPayment1.setPaymentDate(date1);
 					
 		BillingONPayment bONPayment2 = new BillingONPayment();
 		EntityDataGenerator.generateTestDataForModelClass(bONPayment2);
 		Date date2 = new Date(dfm.parse("20110701").getTime());
 		bONPayment2.setBillingNo(billingNo);
-		bONPayment2.setPayDate(date2);
+		bONPayment2.setPaymentDate(date2);
 				
 		BillingONPayment bONPayment3 = new BillingONPayment();
 		EntityDataGenerator.generateTestDataForModelClass(bONPayment3);
 		Date date3 = new Date(dfm.parse("20110301").getTime());
 		bONPayment3.setBillingNo(billingNo);
-		bONPayment3.setPayDate(date3);
+		bONPayment3.setPaymentDate(date3);
 		
 		daoBONCH.persist(bONCHeader1);
 		dao.persist(bONPayment1);
@@ -125,32 +125,32 @@ public class BillingONPaymentDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(bONPayment1);
 		Date Date1 = new Date(dfm.parse("20110102").getTime());
 		bONPayment1.setBillingNo(1);
-		bONPayment1.setPayDate(Date1);
+		bONPayment1.setPaymentDate(Date1);
 		
 		BillingONPayment bONPayment2 = new BillingONPayment();
 		EntityDataGenerator.generateTestDataForModelClass(bONPayment2);
 		Date Date2 = new Date(dfm.parse("20110302").getTime());
 		bONPayment2.setBillingNo(1);
-		bONPayment2.setPayDate(Date2);
+		bONPayment2.setPaymentDate(Date2);
 		
 		BillingONPayment bONPayment3 = new BillingONPayment();
 		EntityDataGenerator.generateTestDataForModelClass(bONPayment3);
 		Date Date3 = new Date(dfm.parse("20110502").getTime());
 		bONPayment3.setBillingNo(1);
-		bONPayment3.setPayDate(Date3);
+		bONPayment3.setPaymentDate(Date3);
 		
 		///out of bound dates
 		BillingONPayment bONPayment4 = new BillingONPayment();
 		EntityDataGenerator.generateTestDataForModelClass(bONPayment4);
 		Date Date4 = new Date(dfm.parse("20090502").getTime());
 		bONPayment4.setBillingNo(1);
-		bONPayment4.setPayDate(Date4);
+		bONPayment4.setPaymentDate(Date4);
 		
 		BillingONPayment bONPayment5 = new BillingONPayment();
 		EntityDataGenerator.generateTestDataForModelClass(bONPayment5);
 		Date Date5 = new Date(dfm.parse("20130502").getTime());
 		bONPayment5.setBillingNo(1);
-		bONPayment5.setPayDate(Date5);
+		bONPayment5.setPaymentDate(Date5);
 		
 		daoBONCH.persist(bONCHeader1);
 		dao.persist(bONPayment1);

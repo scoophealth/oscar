@@ -72,7 +72,7 @@ public class BillingONService {
             BigDecimal paidTotal = BillingONPaymentDao.calculatePaymentTotal(paymentRecords);
             BigDecimal refundTotal = BillingONPaymentDao.calculateRefundTotal(paymentRecords);
 
-            BigDecimal billTotal = new BigDecimal(billingONCHeader1.getTotal());
+            BigDecimal billTotal = billingONCHeader1.getTotal();
 
             return billTotal.subtract(paidTotal).add(refundTotal);
         } else {
@@ -107,9 +107,9 @@ public class BillingONService {
 
             BigDecimal currentTotal = new BigDecimal("0.00");
             try {    
-                String total = billingONCHeader1.getTotal();                
+            	BigDecimal total = billingONCHeader1.getTotal();                
                 if (total != null) {
-                    currentTotal = new BigDecimal(total);                    
+                    currentTotal = total;                    
                 }                
             }
             catch (NumberFormatException e) {
@@ -119,7 +119,7 @@ public class BillingONService {
 
             if (isUpdated && (currentTotal.compareTo(feeTotal) != 0)) {   
             		MiscUtils.getLogger().info("Updating invoice " + billingONCHeader1.getId() + " total to " + feeTotal.toPlainString());
-                    billingONCHeader1.setTotal(feeTotal.toPlainString());
+                    billingONCHeader1.setTotal(feeTotal);
             } 
             
             return isUpdated;
