@@ -545,7 +545,7 @@ function popup1(height, width, url, windowName){
                            <%
                            }
 
-                 if(!moduleid.equals(session.getAttribute("user"))) {
+                 if(!(moduleid.equals(session.getAttribute("user"))&& module.equals("demographic"))) {
 
                                 String tickler_url;
                               if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {
