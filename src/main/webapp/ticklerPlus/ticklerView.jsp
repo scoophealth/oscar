@@ -207,11 +207,14 @@
 		if(provider != null) {
 			provider_name = provider.getLastName() + "," + provider.getFirstName();
 		}
-		status = "Active";
-		if(status.equals(Tickler.STATUS.C)) {
+		
+		if(update.getStatus().equals(Tickler.STATUS.A)){
+			status="Active";
+		}
+		if(update.getStatus().equals(Tickler.STATUS.C)) {
 			status="Completed";
 		}
-		if(status.equals(Tickler.STATUS.D)) {
+		if(update.getStatus().equals(Tickler.STATUS.D)) {
 			status="Deleted";
 		}
 		
