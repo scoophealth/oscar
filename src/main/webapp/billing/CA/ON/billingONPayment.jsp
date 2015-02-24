@@ -586,7 +586,7 @@ table td,th{font-size:12px;}
                                         
                                         if ((payAmt.compareTo(zeroAmt)!=0) || (refundAmt.compareTo(zeroAmt)!=0)) {                                                                                    
                                             numPayments++;
-                                            String payDate = DateUtils.formatDate(bPay.getPayDate(), locale);
+                                            String payDate = DateUtils.formatDate(bPay.getPaymentDate(), locale);
 
                                             String colSpan = "1";                                                                       
                                             if (numPayments > 1) {

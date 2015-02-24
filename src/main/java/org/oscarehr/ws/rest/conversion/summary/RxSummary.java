@@ -26,10 +26,8 @@ package org.oscarehr.ws.rest.conversion.summary;
 import java.util.List;
 
 import org.oscarehr.common.model.Drug;
-
 import org.oscarehr.managers.PrescriptionManager;
 import org.oscarehr.util.LoggedInInfo;
-//import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.to.model.SummaryItemTo1;
 import org.oscarehr.ws.rest.to.model.SummaryTo1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +40,7 @@ import oscar.util.StringUtils;
 
 @Component
 public class RxSummary implements Summary{
+
 	@Autowired
 	PrescriptionManager rxManager;
 	

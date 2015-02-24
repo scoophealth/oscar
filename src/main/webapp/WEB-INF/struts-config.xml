@@ -2517,6 +2517,12 @@
        <action input="/billing/CA/ON/viewMOHFiles.jsp" path="/billing/CA/ON/moveMOHFiles" scope="request" type="org.oscarehr.billing.CA.ON.web.MoveMOHFilesAction" validate="false">
 			<forward name="success" path="/billing/CA/ON/viewMOHFiles.jsp"/>
 		</action>
+        
+        <action path="/billing/CA/ON/managePaymentType" scope="request" parameter="method" type="org.springframework.web.struts.DelegatingActionProxy" validate="false">
+            <forward name="success" path="/billing/CA/ON/manageBillingPaymentType.jsp"/>
+        </action>
+
+
 
         <action input="/billing/CA/ON/endYearStatement.jsp" name="PatientEndYearStatementForm" path="/billing/CA/ON/endYearStatement" scope="request" type="oscar.oscarBilling.ca.on.pageUtil.PatientEndYearStatementAction" validate="false">
             <forward name="success" path="/billing/CA/ON/endYearStatement.jsp"/>
@@ -2786,6 +2792,20 @@
 		</action>
 		<action path="/printReferralLabelAction" type="org.oscarehr.common.web.PrintReferralLabelAction" />
 		
+		<action path="/billing/CA/ON/billingON3rdPayments" scope="request" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method">
+			<forward name="success" path="/billing/CA/ON/billingON3rdPayments.jsp"/>
+			<forward name="failure" path="/billing/CA/ON/billingON3rdPayments.jsp"/>
+			<forward name="viewPayment" path="/billing/CA/ON/billingON3rdViewPayment.jsp"/>
+		</action>	
+		<action name="BillingDocumentErrorReportUploadForm" path="/billing/CA/ON/displayMOHXML" scope="request" type="org.oscarehr.billing.CA.ON.web.DisplayMOHXMLAction">
+            		<forward name="success" path="/billing/CA/ON/billingLreport.jsp" />
+			<forward name="failure" path="/billing/CA/ON/billingLreport.jsp" />
+		</action> 			
+		<action input="/billing/CA/ON/viewMOHFiles.jsp" scope="request" path="/billing/CA/ON/moveMOHFiles" type="org.oscarehr.billing.CA.ON.web.ArchiveMOHFileAction">
+			<forward name="showInbox" path="/billing/CA/ON/viewMOHFiles.jsp" />
+		</action>
+		<action input="/billing/CA/ON/billingON3rdInv.jsp" name="FrmForm" path="/billing/ca/on/DisplayInvoiceLogo" scope="request" type="org.oscarehr.billing.CA.ON.util.DisplayInvoiceLogo"></action>
+
 		
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="100M" />

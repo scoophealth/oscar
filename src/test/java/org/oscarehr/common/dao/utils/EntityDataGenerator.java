@@ -82,7 +82,7 @@ public class EntityDataGenerator {
 	        }
 	        else if(f[i].getType() == double.class || f[i].getType() == Double.class) {
 	        	f[i].set(model,Math.random()*100);
-	        }
+	        } 	        
 	        else if(f[i].getType() == Date.class) {
 	        	f[i].set(model,new Date());
 	        }

@@ -44,6 +44,7 @@ import org.oscarehr.util.SpringUtils;
 import oscar.util.UtilDateUtilities;
 
 public class DemographicData {
+
 	private DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 	

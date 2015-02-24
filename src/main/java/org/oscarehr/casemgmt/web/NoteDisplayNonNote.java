@@ -95,19 +95,24 @@ public class NoteDisplayNonNote implements NoteDisplay {
 		date = null;
 		Date billDate = null;
 
-                    billDate = h1.getBillingDate();   
-                    if(  billDate != null ) {
-			cal1.setTime(h1.getBillingDate());
+                    
+	   billDate = h1.getBillingDate();
+                    
+      if(  billDate != null ) {
 			
-			if( h1.getBillingTime() != null ) {
-				cal2.setTime(h1.getBillingTime());
-				cal1.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
-				cal1.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
-				cal1.set(Calendar.SECOND, cal2.get(Calendar.SECOND));
-			}
+	        cal1.setTime(h1.getBillingDate());
+           
+			
+	        if( h1.getBillingTime() != null ) {
+	            	cal2.setTime(h1.getBillingTime());
+	            	cal1.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
+	            	cal1.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
+	            	cal1.set(Calendar.SECOND, cal2.get(Calendar.SECOND));
+	        }
+            
 			
 			date = cal1.getTime();
-                    }                    
+      }                    
                 
 		StringBuilder tmpNote = new StringBuilder();
                 BillingONService billingONService = (BillingONService) SpringUtils.getBean("billingONService");

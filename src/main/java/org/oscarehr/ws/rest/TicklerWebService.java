@@ -45,7 +45,6 @@ import org.oscarehr.common.model.TicklerTextSuggest;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.TicklerManager;
-import org.oscarehr.ticklers.service.TicklerService;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.conversion.TicklerConverter;
@@ -63,9 +62,7 @@ public class TicklerWebService extends AbstractServiceImpl {
 	
 	@Autowired
 	private TicklerManager ticklerManager; 
-	@Autowired
-	private TicklerService ticklerService;
-	
+		
 	private TicklerConverter ticklerConverter = new TicklerConverter();
 	
 	@Autowired

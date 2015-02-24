@@ -125,9 +125,9 @@ public class PatientEndYearStatementAction extends OscarAction {
 						
 					   result = new ArrayList<PatientEndYearStatementInvoiceBean>();
 					   
-					   String paid = Utility.toCurrency(bch.getPaid());
-					   String invoiced = Utility.toCurrency(bch.getTotal());
-					   PatientEndYearStatementInvoiceBean bean = new PatientEndYearStatementInvoiceBean(bch.getId(), bch.getBillingDate(), invoiced, paid );
+					   double paid = bch.getPaid().doubleValue();
+					   double invoiced = bch.getTotal().doubleValue();
+					   PatientEndYearStatementInvoiceBean bean = new PatientEndYearStatementInvoiceBean(bch.getId(), bch.getBillingDate(), String.valueOf(invoiced), String.valueOf(paid) );
 					   
 					   List<PatientEndYearStatementServiceBean> services = null;
 					   try {
@@ -148,8 +148,8 @@ public class PatientEndYearStatementAction extends OscarAction {
 					   
 					   bean.setServices(services);
 					   result.add(bean);
-					   totalInvoiced += Double.parseDouble(invoiced);
-					   totalPaid += Double.parseDouble(paid);
+					   totalInvoiced += invoiced;
+					   totalPaid += paid;
 					   invoiceCount += 1;
 					   request.setAttribute("result", result);
 				   }

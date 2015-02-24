@@ -29,7 +29,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.DemographicArchiveDao;
@@ -100,8 +99,7 @@ public class DemographicManager {
 
 	@Autowired
 	private AdmissionDao admissionDao;
-	@Autowired
-	private ProgramDao programDao;
+	
 
 	public Demographic getDemographic(LoggedInInfo loggedInInfo, Integer demographicId) {
 		Demographic result = demographicDao.getDemographicById(demographicId);

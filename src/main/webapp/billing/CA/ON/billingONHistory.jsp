@@ -17,6 +17,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="java.math.BigDecimal"%>
 <%
   if(session.getAttribute("user") == null)
     response.sendRedirect("../logout.htm");
@@ -34,6 +35,10 @@
 	import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.oscarDB.*"
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
+<%@page import="org.oscarehr.billing.CA.ON.dao.*" %>
+<%@page import="org.oscarehr.common.dao.BillingONExtDao" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -80,15 +85,18 @@ function popUpClosed() {
 <table width="100%" border="0" bgcolor="#ffffff">
 	<tr class="myYellow">
 		<TH width="12%"><b>Invoice No.</b></TH>
+		<TH width="12%"><b>Billing Doctor</b></TH>
 		<TH width="15%"><b>Appt. Date</b></TH>
 		<TH width="10%"><b>Bill Type</b></TH>
 		<TH width="35%"><b>Service Code</b></TH>
 		<TH width="5%"><b>Dx</b></TH>
+		<TH width="8%"><b>Balance</b></TH>
 		<TH width="8%"><b>Fee</b></TH>
 		<TH><b>COMMENTS</b></TH>
 	</tr>
 	<% // new billing records
 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
+BillingONExtDao billingOnExtDao = (BillingONExtDao)SpringUtils.getBean(BillingONExtDao.class);
 String limit = " limit " + strLimit1 + "," + strLimit2;
 List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), Integer.parseInt(strLimit2), Integer.parseInt(strLimit1), null);
 int nItems=0;
@@ -96,10 +104,30 @@ for(int i=0; i<aL.size(); i=i+2) {
 	nItems++;
 	BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
 	BillingItemData itObj = (BillingItemData) aL.get(i+1);
-	String strBillType = "";
-	String strPayProgram = obj.getPay_program();
-	if(strPayProgram != null) {
-		strBillType = BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"");
+	String strBillType = obj.getPay_program();
+	if(strBillType != null) {
+		if(strBillType.matches(BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) {
+			if(BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"").equals("Settled")) {
+				strBillType += " Settled";
+			}
+		} else {
+			strBillType = BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"");
+		}
+	} else {
+		strBillType = "";
+	}
+	
+
+	
+	//BigDecimal balance = new BigDecimal("0.00");
+	BigDecimal balance = new BigDecimal("0.00");
+	if("PAT".equals(strBillType)||"PAT Settled".equals(strBillType)){
+		int billingNo = Integer.parseInt(obj.getId());
+		BigDecimal payment = billingOnExtDao.getAccountVal(billingNo, billingOnExtDao.KEY_PAYMENT);
+		BigDecimal discount = billingOnExtDao.getAccountVal(billingNo, billingOnExtDao.KEY_DISCOUNT);
+		BigDecimal total = new BigDecimal(obj.getTotal()).setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal credit = billingOnExtDao.getAccountVal(billingNo, billingOnExtDao.KEY_CREDIT);
+		balance = total.subtract(payment).subtract(discount).add(credit);
 	}
 %>
 	<tr bgcolor="<%=i%2==0?"#CCFF99":"white"%>">
@@ -112,10 +140,16 @@ for(int i=0; i<aL.size(); i=i+2) {
 		</security:oscarSec>
 		<a href="javascript:void(0)" onClick="popupPage(600,800, 'billingON3rdInv.jsp?billingNo=<%=obj.getId()%>')">Print</a>
 		</td>
+		<td align="center"><%=obj.getLast_name()+", "+obj.getFirst_name()%></td>
 		<td align="center"><%=obj.getBilling_date()%> <%--=obj.getBilling_time()--%></td>
 		<td align="center"><%=strBillType%></td>
 		<td align="center"><%=itObj.getService_code()%></td>
 		<td align="center"><%=itObj.getDx()%></td>
+		<td align="center"><%if("PAT".equals(strBillType)||"PAT Settled".equals(strBillType)){ %>
+			<%=balance %>
+		<%}else{ %>
+			<%="" %>
+		<%} %></td>
 		<td align="center"><%=obj.getTotal()%></td>
 
 		<% if (obj.getStatus().compareTo("B")==0 || obj.getStatus().compareTo("S")==0) { %>
@@ -126,8 +160,8 @@ for(int i=0; i<aL.size(); i=i+2) {
                 </td>
 		<% } else { %>
                 <td align="center">
-                        <a href="billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&hotclick=0">Unbill</a>
-                </td>
+			<a href="billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
+
                 <% }%>
 	</tr>
 	<% 

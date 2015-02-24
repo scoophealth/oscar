@@ -25,6 +25,7 @@ package org.oscarehr.common.dao;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -78,7 +79,13 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     public BillingONCHeader1Dao() {
         super(BillingONCHeader1.class);
     }
-
+    
+    public List<BillingONCHeader1> getBillCheader1ByDemographicNo(int demographic_no){
+    	Query query = entityManager.createQuery("select ch from BillingONCHeader1 ch where ch.demographicNo=? AND ch.status!='D'");
+    	query.setParameter(1, demographic_no);
+    	return query.getResultList();
+    }
+    
     public int getNumberOfDemographicsWithInvoicesForProvider(String providerNo,Date startDate,Date endDate,boolean distinct ){
         String distinctStr = "distinct";
         if (distinct == false){
@@ -189,7 +196,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         header1.setProvince(demo.getHcType());
         header1.setBillingDate(serviceDate);
         header1.setBillingTime(serviceDate);
-        header1.setPaid("0.00");
+        header1.setPaid(new BigDecimal("0.00"));
         header1.setStatus("O");
         header1.setComment("");
         header1.setVisitType("00");
@@ -198,7 +205,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         header1.setApptProviderNo("");
         header1.setAsstProviderNo("");
         header1.setCreator(curUser);
-        header1.setTotal(total);
+        header1.setTotal(new BigDecimal(total));
 
         return header1;
     }
@@ -411,7 +418,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     }
      
      public List<BillingONCHeader1> get3rdPartyInvoiceByProvider(Provider p, Date start, Date end, Locale locale) {
-         String sql = "select distinct bCh1 from BillingONPayment bPay, BillingONCHeader1 bCh1 where bPay.billingNo=bCh1.id and bCh1.providerNo=? and bPay.payDate >= ? and bPay.payDate < ? order by bCh1.id";
+         String sql = "select distinct bCh1 from BillingONPayment bPay, BillingONCHeader1 bCh1 where bPay.billingNo=bCh1.id and bCh1.providerNo=? and bPay.paymentDate >= ? and bPay.paymentDate < ? order by bCh1.id";
          Query query = entityManager.createQuery(sql);        
          query.setParameter(1, p.getProviderNo());  
          query.setParameter(2, start);
@@ -424,7 +431,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     }
      
      public List<BillingONCHeader1> get3rdPartyInvoiceByDate(Date start, Date end, Locale locale) {
-         String sql = "select distinct bCh1 from BillingONPayment bPay, BillingONCHeader1 bCh1 where bPay.billingNo=bCh1.id and bPay.payDate >= ? and bPay.payDate < ? order by bCh1.id";
+         String sql = "select distinct bCh1 from BillingONPayment bPay, BillingONCHeader1 bCh1 where bPay.billingNo=bCh1.id and bPay.paymentDate >= ? and bPay.paymentDate < ? order by bCh1.id";
          Query query = entityManager.createQuery(sql);               
          query.setParameter(1, start);
          query.setParameter(2, end);
@@ -470,8 +477,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
                 + "GROUP BY b.visitType";
         Query q = entityManager.createQuery(sql);
         q.setParameter("providerNo", providerNo);
-        q.setParameter("dateBegin", dateBegin);
-        q.setParameter("dateEnd", dateEnd);
+        q.setParameter("dateBegin", (new SimpleDateFormat("yyyy-MM-dd")).format(dateBegin));
+        q.setParameter("dateEnd", (new SimpleDateFormat("yyyy-MM-dd")).format(dateEnd));
         return q.getResultList();
     }
     
@@ -486,8 +493,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
                 + "GROUP BY b.visitType";
         Query q = entityManager.createQuery(sql);
         q.setParameter("providerNo", providerNo);
-        q.setParameter("dateBegin", dateBegin);
-        q.setParameter("dateEnd", dateEnd);
+        q.setParameter("dateBegin", (new SimpleDateFormat("yyyy-MM-dd")).format(dateBegin));
+        q.setParameter("dateEnd", (new SimpleDateFormat("yyyy-MM-dd")).format(dateEnd));
         return q.getResultList();
     }
     
@@ -496,8 +503,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     	Query q = entityManager.createQuery("select count(b) from BillingONCHeader1 b where b.visitType = '00' and b.faciltyNum = ? and b.status <> 'D' and b.billingDate >=? and b.billingDate <=?");
     	
     	 q.setParameter(1, facilityNum);
-         q.setParameter(2, startDate);
-         q.setParameter(3, endDate);
+         q.setParameter(2, (new SimpleDateFormat("yyyy-MM-dd")).format(startDate));
+         q.setParameter(3, (new SimpleDateFormat("yyyy-MM-dd")).format(endDate));
     	
          return q.getResultList();
     }
@@ -510,8 +517,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     	 q.setParameter(2, facilityNum2);
     	 q.setParameter(3, facilityNum3);
     	 q.setParameter(4, facilityNum4);
-         q.setParameter(5, startDate);
-         q.setParameter(6, endDate);
+         q.setParameter(5, (new SimpleDateFormat("yyyy-MM-dd")).format(startDate));
+         q.setParameter(6, (new SimpleDateFormat("yyyy-MM-dd")).format(endDate));
     	
          return q.getResultList();
     }
@@ -525,8 +532,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     	 q.setParameter(3, facilityNum3);
     	 q.setParameter(4, facilityNum4);
     	 q.setParameter(5, facilityNum5);
-         q.setParameter(6, startDate);
-         q.setParameter(7, endDate);
+         q.setParameter(6, (new SimpleDateFormat("yyyy-MM-dd")).format(startDate));
+         q.setParameter(7, (new SimpleDateFormat("yyyy-MM-dd")).format(endDate));
     	
          return q.getResultList();
     }
@@ -543,12 +550,12 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		
 		if (startDate != null) {
 			buf.append("AND b.billingDate >= :startDate ");
-			params.put("startDate", startDate);
+			params.put("startDate", (new SimpleDateFormat("yyyy-MM-dd")).format(startDate));
 		}
 
 		if (endDate != null) {
 			buf.append("AND b.billingDate <= :endDate ");
-			params.put("endDate", endDate);
+			params.put("endDate", (new SimpleDateFormat("yyyy-MM-dd")).format(endDate));
 		}
 		
 		if (demoNo != null ) {
@@ -579,10 +586,10 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		query.setParameter("programs", Arrays.asList(new String[] {"HCP", "WCB", "RMB"}));
 		
 		if (dateRange.getTo() != null && dateRange.getFrom() != null ) {
-			query.setParameter("dateBegin", dateRange.getFrom());
-			query.setParameter("dateEnd", dateRange.getTo());
+			query.setParameter("dateBegin", (new SimpleDateFormat("yyyy-MM-dd")).format(dateRange.getFrom()));
+			query.setParameter("dateEnd", (new SimpleDateFormat("yyyy-MM-dd")).format(dateRange.getTo()));
 		} else if (dateRange.getTo() != null) {
-			query.setParameter("dateEnd", dateRange.getTo());
+			query.setParameter("dateEnd", (new SimpleDateFormat("yyyy-MM-dd")).format(dateRange.getTo()));
 		}
 		
 		return query.getResultList();
@@ -601,8 +608,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		app.and("h.payProgram in (:payPrograms)", "payPrograms", payPrograms);
 		app.and("h.status = :status", "status", statusType);
 		app.and("h.providerNo = :providerNo", "providerNo", providerNo);
-		app.and("h.billingDate >= :startDate", "startDate", startDate);
-		app.and("h.billingDate <= :endDate", "endDate", endDate);
+		app.and("h.billingDate >= :startDate", "startDate", (new SimpleDateFormat("yyyy-MM-dd")).format(startDate));
+		app.and("h.billingDate <= :endDate", "endDate", (new SimpleDateFormat("yyyy-MM-dd")).format(endDate));
 		if(visitLocation != null) {
 			app.and("h.facilityNum = :facilityNum", "facilityNum", visitLocation);
 		}
@@ -610,7 +617,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 			app.and("h.demographicNo = :demographicNo", "demographicNo", demoNo);
 		}
 		if(paymentStartDate != null) {
-			app.and("bp.payDate >= :paymentStartDate", "paymentStartDate", paymentStartDate);
+			app.and("bp.paymentDate >= :paymentStartDate", "paymentStartDate", paymentStartDate);
 		} 
 		if(paymentEndDate != null) {
 			Calendar cal = Calendar.getInstance();
@@ -619,7 +626,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 			cal.set(Calendar.HOUR_OF_DAY, 0);
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
-			app.and("bp.payDate < :paymentEndDate", "paymentEndDate", cal.getTime());
+			app.and("bp.paymentDate < :paymentEndDate", "paymentEndDate", cal.getTime());
 		}
 		
         app.addOrder("h.billingDate, h.billingTime");
@@ -658,11 +665,11 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		app.and("ch1.payProgram in (:payPrograms)", "payPrograms", payPrograms);
 		app.and("ch1.status = :status", "status", statusType);
 		app.and("ch1.providerNo = :providerNo", "providerNo", providerNo);
-		app.and("ch1.billingDate >= :startDate", "startDate", startDate);
-		app.and("ch1.billingDate <= :endDate", "endDate", endDate);
+		app.and("ch1.billingDate >= :startDate", "startDate", (new SimpleDateFormat("yyyy-MM-dd")).format(startDate));
+		app.and("ch1.billingDate <= :endDate", "endDate", (new SimpleDateFormat("yyyy-MM-dd")).format(endDate));
 		
 		if(paymentStartDate != null) {
-			app.and("bp.payDate >= :paymentStartDate", "paymentStartDate", paymentStartDate);
+			app.and("bp.paymentDate >= :paymentStartDate", "paymentStartDate", paymentStartDate);
 		} 
 		if(paymentEndDate != null) {
 			Calendar cal = Calendar.getInstance();
@@ -671,7 +678,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 			cal.set(Calendar.HOUR_OF_DAY, 0);
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
-			app.and("bp.payDate < :paymentEndDate", "paymentEndDate", cal.getTime());
+			app.and("bp.paymentDate < :paymentEndDate", "paymentEndDate", cal.getTime());
 		}
 		
 		if(visitLocation != null && !BillingStatusPrep.ANY_VISIT_LOCATION.equals(visitLocation)) {
@@ -714,8 +721,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 				"ORDER BY b.billingDate DESC, b.billingTime DESC, b.id DESC";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("demoNo", demoNo);
-		query.setParameter("dateStart", dateRange.getFrom());
-		query.setParameter("dateEnd", dateRange.getTo());
+		query.setParameter("dateStart", (new SimpleDateFormat("yyyy-MM-dd")).format(dateRange.getFrom()));
+		query.setParameter("dateEnd", (new SimpleDateFormat("yyyy-MM-dd")).format(dateRange.getTo()));
 		query.setFirstResult(iOffSet);
 		query.setMaxResults(pageSize);
 		return query.getResultList();
@@ -726,8 +733,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		app.and("bch.demographicNo = d.DemographicNo");
 		app.and("bch.demographicNo = :demoNo", "demoNo", demoNo);
 		app.and("bch.payProgram = :payProgram", "payProgram", payProgram);
-		app.and("bch.billingDate >= :fromDate", "fromDate", fromDate);
-		app.and("bch.billingDate <= :toDate", "toDate", toDate);
+		app.and("bch.billingDate >= :fromDate", "fromDate", (new SimpleDateFormat("yyyy-MM-dd")).format(fromDate));
+		app.and("bch.billingDate <= :toDate", "toDate", (new SimpleDateFormat("yyyy-MM-dd")).format(toDate));
 		app.addOrder("bch.id");
 
 		Query query = entityManager.createQuery(app.toString());
@@ -764,10 +771,27 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("demoNo", demoNo);
 		query.setParameter("serviceCodes", serviceCodes);
-		query.setParameter("from", from);
-		query.setParameter("to", to);
+		query.setParameter("from", (new SimpleDateFormat("yyyy-MM-dd")).format(from));
+		query.setParameter("to", (new SimpleDateFormat("yyyy-MM-dd")).format(to));
 		
 		return query.getResultList();
     }
     
+	public List<String[]> findBillingData(String conditions) {
+		if(conditions == null) return null;
+
+		String sql = "SELECT ch1.id,ch1.pay_program,ch1.demographic_no,ch1.demographic_name,ch1.billing_date,ch1.billing_time,"
+				+ "ch1.status,ch1.provider_no,ch1.provider_ohip_no,ch1.apptProvider_no,ch1.timestamp1,ch1.total,ch1.paid,ch1.clinic,"
+				+ "bi.fee, bi.service_code, bi.ser_num, bi.dx, bi.id as billing_on_item_id "
+				+ "FROM billing_on_item bi LEFT JOIN billing_on_cheader1 ch1 ON ch1.id=bi.ch1_id "
+				+ "WHERE "
+				+ conditions				
+				+ " ORDER BY ch1.billing_date, ch1.billing_time";
+		Query query = entityManager.createQuery(sql);
+		
+		List<String[]> results = query.getResultList();
+		
+		return results;
+	}
+	
 }

@@ -27,6 +27,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -107,5 +108,12 @@ public class BillingONCHeader1DaoTest extends DaoTestFixtures {
 	    assertNotNull(dao.findBillingsByDemoNoCh1HeaderServiceCodeAndDate(100, Arrays.asList(new String[] {"PP"}), new Date(), new Date()));
     }
     
-    
+    @Override
+    protected List<String> getSimpleExceptionTestExcludes() {
+		List<String> excludes = super.getSimpleExceptionTestExcludes();
+		// this is very JSP specific method that includes a mix of SQL fields, we will test it manuall in #findBillingData
+		excludes.add("findBillingData");
+		
+	    return excludes;
+    }
 }

@@ -614,8 +614,10 @@ function onNext() {
     var ret = true;
     if (!checkAllDates()) {
     	ret = false;
-    }
-    else if (!existServiceCode() && document.forms[0].services_checked.value<=0) {
+    }else if(!checkServicePercent()){
+    	ret = false;
+    	alert("Please enter a decimal number in the service code percent textbox!");
+    } else if (!existServiceCode() && document.forms[0].services_checked.value<=0) {
 	    ret = false;
 	    alert("You haven't selected any billing item yet!");
 	}
@@ -627,7 +629,21 @@ function onNext() {
 	    ret = confirm("You didn't enter a diagnostic code in the Dx box. Continue?");
 	    if (!ret) document.forms[0].dxCode.focus();
 	}
+   
     return ret;
+}
+
+function checkServicePercent() {
+	var ret = true;
+	var regInt = /^-?\d+\.\d+$/;
+	jQuery("input[id^='serviceAt'][value!='']").each(function() {
+		var val = this.value.trim();
+		if (val.length > 0 && !regInt.test(val)) {
+			ret = false;
+			return false;
+		}
+	});
+	return ret;
 }
 
 function checkSli() {

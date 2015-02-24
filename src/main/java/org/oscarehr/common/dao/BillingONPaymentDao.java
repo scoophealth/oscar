@@ -25,17 +25,20 @@
 package org.oscarehr.common.dao;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
+import java.text.NumberFormat;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONExt;
 import org.oscarehr.common.model.BillingONPayment;
 import org.oscarehr.util.SpringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import oscar.util.DateUtils;
@@ -48,8 +51,11 @@ import oscar.util.DateUtils;
 @Repository
 public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
     
-   
+	@Autowired
     private BillingONExtDao billingONExtDao;
+	
+	@Autowired
+    private BillingONCHeader1Dao billingONCHeader1Dao;
     
      public BillingONPaymentDao() {
         super(BillingONPayment.class);    
@@ -59,12 +65,120 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
         this.billingONExtDao = billingONExtDao;
     }
 
+    public void setBillingONCHeader1Dao(BillingONCHeader1Dao billingONCHeader1Dao) {
+    	this.billingONCHeader1Dao = billingONCHeader1Dao;
+    }
+    
     public BillingONExtDao getBillingONExtDao() {
         return this.billingONExtDao;
     }
+
+    public BillingONCHeader1Dao getBillingONCHeader1Dao() {
+        return this.billingONCHeader1Dao;
+    }
     
+    public List<BillingONPayment> listPaymentsByBillingNo(Integer billingNo){
+        Query query = entityManager.createQuery("select bp from BillingONPayment bp where bp.billingNo = :billingNo");
+        query.setParameter("billingNo", billingNo);
+        List<BillingONPayment> payments = query.getResultList();
+        return payments;
+    }
+
+    public List<BillingONPayment> listPaymentsByBillingNoDesc(Integer billingNo){
+        Query query = entityManager.createQuery("select bp from BillingONPayment bp where bp.billingNo = :billingNo order by bp.id desc");
+        query.setParameter("billingNo", billingNo);
+        List<BillingONPayment> payments = query.getResultList();
+        return payments;
+    }
+
+    public BigDecimal getPaymentsSumByBillingNo(Integer billingNo){
+        Query query = entityManager.createQuery("select sum(bp.total_payment) from BillingONPayment bp where bp.billingNo = :billingNo and total_payment>0 group by bp.billingONCheader1");
+        query.setParameter("billingNo", billingNo);
+        BigDecimal paymentsSum = null;
+        try {
+        	paymentsSum = (BigDecimal) query.getSingleResult();
+        } catch(NoResultException ex) {
+        	paymentsSum = new BigDecimal(0);
+        }
+        return paymentsSum;
+    }
+    
+    public BigDecimal getPaymentsRefundByBillingNo(Integer billingNo){
+        Query query = entityManager.createQuery("select sum(bp.total_refund) from BillingONPayment bp where bp.billingNo = :billingNo and total_refund>0 group by bp.billingONCheader1");
+        query.setParameter("billingNo", billingNo);
+        BigDecimal paymentsSum = null;
+        try {
+        	paymentsSum = (BigDecimal) query.getSingleResult();
+        } catch(NoResultException ex) {
+        	paymentsSum = new BigDecimal(0);
+        }
+        return paymentsSum;
+    }
+    public BigDecimal getPaymentsDiscountByBillingNo(Integer billingNo){
+        Query query = entityManager.createQuery("select sum(bp.total_discount) from BillingONPayment bp where bp.billingNo = :billingNo and total_discount>0 group by bp.billingONCheader1");
+        query.setParameter("billingNo", billingNo);
+        BigDecimal paymentsSum = null;
+        try {
+        	paymentsSum = (BigDecimal) query.getSingleResult();
+        } catch(NoResultException ex) {
+        	paymentsSum = new BigDecimal(0);
+        }
+        return paymentsSum;
+    }
+    
+    public String getTotalSumByBillingNoWeb(String billingNo){
+        Query query = entityManager.createQuery("select sum(bp.total_payment) from BillingONPayment bp where bp.billingNo = :billingNo group by bp.billingONCheader1");
+        BigDecimal paymentsSum = null;
+        try {
+        	query.setParameter("billingNo", Integer.parseInt(billingNo));
+        	paymentsSum = (BigDecimal) query.getSingleResult();
+        } catch(Exception ex) {
+        	paymentsSum = new BigDecimal(0);
+        }
+        NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.US);
+        return currency.format(paymentsSum);
+    }
+    
+    public String getPaymentsRefundByBillingNoWeb(String billingNo){
+        Query query = entityManager.createQuery("select -sum(bp.total_payment) from BillingONPayment bp where bp.billingNo = :billingNo and total_payment<0 group by bp.billingONCheader1");
+        BigDecimal paymentsSum = null;
+        try {
+        	query.setParameter("billingNo", Integer.parseInt(billingNo));   
+        	paymentsSum = (BigDecimal) query.getSingleResult();
+        } catch(Exception ex) {
+        	paymentsSum = new BigDecimal(0);
+        }
+        NumberFormat currency = NumberFormat.getCurrencyInstance();
+        return currency.format(paymentsSum);
+    }
+    public int getPaymentIdByBillingNo(int billingNo){
+    	Query query = entityManager.createQuery("select bp.id from BillingONPayment bp where bp.billingNo = :billingNo");
+    	try {
+    		query.setParameter("billingNo", Integer.valueOf(billingNo));
+    		return (Integer) query.getSingleResult();
+    	} catch (Exception e) {
+    		return 0;
+    	}
+    }
+    public int getCountOfPaymentByPaymentTypeId(int paymentTypeId) {
+    	Query query = entityManager.createQuery("select count(bp.id) from BillingONPayment bp where bp.paymentTypeId = ?1");
+    	query.setParameter(1, paymentTypeId);
+    	Number countResult=(Number) query.getSingleResult();
+    	return countResult.intValue();
+    }
+    public String getPaymentTypeById(int paymentTypeId) {
+    	Query query = entityManager.createQuery("select bp.paymentType from BillingPaymentType bp where bp.id = ?1");
+    	query.setParameter(1, paymentTypeId);
+    	List<String> types = query.getResultList();
+    	if(types!=null && types.size()>0)
+    		return types.get(0);
+    	else 
+    		return null;
+    }
+
+
     public List<BillingONPayment> find3rdPartyPayRecordsByBill(BillingONCHeader1 bCh1) {
-        String sql = "select bPay from BillingONPayment bPay where billingNo=?";
+        String sql = "select bPay from BillingONPayment bPay where bPay.billingNo= ?1";
         Query query = entityManager.createQuery(sql);
         query.setParameter(1, bCh1.getId());    
                  
@@ -76,7 +190,7 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
     }
     
     public List<Integer> find3rdPartyPayments(Integer billingNo) {
-    	String sql = "select bPay.paymentId from BillingONPayment bPay where bPay.billingNo=?";
+    	String sql = "select bPay.id from BillingONPayment bPay where bPay.billingNo = ?1";
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(1, billingNo);    
         
@@ -86,9 +200,29 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
         return results;
     }
     
+    public List<BillingONPayment> find3rdPartyPaymentsByBillingNo(Integer billingNo) {
+    	String sql = "select bPay from BillingONPayment bPay where bPay.billingNo = ?1 order by bPay.id asc";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1, billingNo);    
+        
+        @SuppressWarnings("unchecked")
+        List<BillingONPayment> results = query.getResultList();
+        
+        List<BillingONPayment> returnList = new ArrayList<BillingONPayment>();
+        
+        for(BillingONPayment payment : results) {
+        	if(payment.getBillingNo()!=null) {
+	        	BillingONCHeader1 cheader1 = billingONCHeader1Dao.find(payment.getBillingNo());
+	        	payment.setBillingOnCheader1(cheader1);
+        	}
+        	returnList.add(payment);
+        }
+        
+        return returnList;
+    }
     
     public List<BillingONPayment> find3rdPartyPayRecordsByBill(BillingONCHeader1 bCh1, Date startDate, Date endDate) {
-        String sql = "select bPay from BillingONPayment bPay where billingNo=? and payDate >= ? and payDate < ? order by payDate";
+        String sql = "select bPay from BillingONPayment bPay where bPay.billingNo = ? and bPay.paymentdate >= ? and bPay.paymentdate < ? order by bPay.paymentdate";
         Query query = entityManager.createQuery(sql);
         query.setParameter(1, bCh1.getId());    
         query.setParameter(2, startDate);
@@ -107,19 +241,20 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
          Date now = new Date();
          
          newPayment.setBillingNo(bCh1.getId());
-         newPayment.setPayDate(now);
+         newPayment.setBillingOnCheader1(bCh1);
+         newPayment.setPaymentDate(now);
          addPaymentItems(newPayment, bCh1, locale, now, payType, paidAmt, payMethod, providerNo);         
          this.persist(newPayment);
          
          //update billing claim header's total paid amount to reflect new payment
-         BigDecimal amtPaid = new BigDecimal(bCh1.getPaid());
+         BigDecimal amtPaid = bCh1.getPaid();
          
         if (payType.equals("P"))
             amtPaid = amtPaid.add(paidAmt);
         else
            amtPaid = amtPaid.subtract(paidAmt);
 
-        bCh1.setPaid(amtPaid.toPlainString());
+        bCh1.setPaid(amtPaid);
         
         BillingONCHeader1Dao bCh1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
         bCh1Dao.merge(bCh1);                  
@@ -130,7 +265,7 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
         
         BillingONExt bExt = new BillingONExt();
                 
-        bExt.setBillingNo(bCh1.getId());
+        bExt.setBillingNo(bCh1.getId());        
         bExt.setDateTime(payDate);
         bExt.setDemographicNo(bCh1.getDemographicNo());
         bExt.setStatus('1');            
@@ -202,5 +337,6 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
          }
          
          return refundTotal;
-    }       
+    }    
+ 
 }

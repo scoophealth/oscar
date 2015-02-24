@@ -22,17 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
-
-import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.model.BillingService;
-import org.oscarehr.util.MiscUtils;
+
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.ConversionUtils;
 
 public class JdbcBillingCodeImpl {
-	private static final Logger _logger = MiscUtils.getLogger();
+	
 	private BillingServiceDao dao = (BillingServiceDao)SpringUtils.getBean(BillingServiceDao.class);
 	
 	public List getBillingCodeAttr(String serviceCode) {

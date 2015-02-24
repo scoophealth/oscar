@@ -41,7 +41,7 @@ public class BillingPaymentType extends AbstractModel<Integer>{
 	private Integer id;
 
 	@Column(name="payment_type")
-	private String paymentType;
+	private String paymentType="";
 
 	public Integer getId() {
     	return id;

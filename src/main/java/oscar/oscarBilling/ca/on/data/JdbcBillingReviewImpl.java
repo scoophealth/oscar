@@ -18,7 +18,9 @@
 
 package oscar.oscarBilling.ca.on.data;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +28,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
@@ -37,6 +42,7 @@ import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.BillingONExtDao;
 import org.oscarehr.common.dao.BillingONItemDao;
 import org.oscarehr.common.dao.BillingONPaymentDao;
+import org.oscarehr.common.dao.BillingOnItemPaymentDao;
 import org.oscarehr.common.dao.BillingPaymentTypeDao;
 import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.dao.ClinicLocationDao;
@@ -44,6 +50,7 @@ import org.oscarehr.common.dao.CtlBillingServiceDao;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONExt;
 import org.oscarehr.common.model.BillingONItem;
+import org.oscarehr.common.model.BillingONPayment;
 import org.oscarehr.common.model.BillingService;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DateRange;
@@ -55,6 +62,10 @@ public class JdbcBillingReviewImpl {
 	private static final Logger _logger = Logger.getLogger(JdbcBillingReviewImpl.class);
 
 	private ClinicLocationDao clinicLocationDao = (ClinicLocationDao) SpringUtils.getBean("clinicLocationDao");
+	private BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+	private BillingONExtDao extDao = SpringUtils.getBean(BillingONExtDao.class);
+	private BillingONPaymentDao payDao = SpringUtils.getBean(BillingONPaymentDao.class);
+	private BillingServiceDao serviceDao = SpringUtils.getBean(BillingServiceDao.class);
 	
 	public String getCodeFee(String val, String billReferalDate) {
 		String retval = null;
@@ -106,15 +117,85 @@ public class JdbcBillingReviewImpl {
 		return retval;
 	}
 
+	// invoice report
+	public List getBill(String billType, String statusType, String providerNo,
+			String startDate, String endDate, String demoNo) {
+		
+		return getBill(billType, statusType, providerNo, startDate, endDate, demoNo, "", "", "");	
+		
+	}
+
+	// invoice report
+	public List getBill(String billType, String statusType, String providerNo,
+			String startDate, String endDate, String demoNo,
+			String serviceCodes, String dx, String visitType) {
+		
+		List<BillingClaimHeader1Data> retval = new ArrayList<BillingClaimHeader1Data>();
+		BillingClaimHeader1Data ch1Obj = null ;
+		
+		// For filtering invoice report based on dx code
+		String temp = demoNo + " " + providerNo + " " + statusType + " "
+				+ startDate + " " + endDate + " " + billType + " " + dx + " "
+				+ visitType + " " + serviceCodes;
+		temp = temp.trim().startsWith("and") ? temp.trim().substring(3) : temp;
+		
+		/*String sql = "SELECT ch1.id,ch1.pay_program,ch1.demographic_no,ch1.demographic_name,ch1.billing_date,ch1.billing_time,"
+		+ "ch1.status,ch1.provider_no,ch1.provider_ohip_no,ch1.apptProvider_no,ch1.timestamp1,ch1.total,ch1.paid,ch1.clinic,"
+		+ "bi.fee, bi.service_code, bi.ser_num, bi.dx, bi.id as billing_on_item_id "
+		+ "FROM billing_on_item bi LEFT JOIN billing_on_cheader1 ch1 ON ch1.id=bi.ch1_id "
+		+ "WHERE "
+		+ temp				
+		+ " ORDER BY ch1.billing_date, ch1.billing_time";
+		 */		
+		List<String[]> bills = dao.findBillingData(temp);
+		if(bills!=null) {
+			for(String[] b : bills) {
+				String prevId = null;
+				String prevPaid = null;
+				BillingOnItemPaymentDao billOnItemPaymentDao = (BillingOnItemPaymentDao)SpringUtils.getBean(BillingOnItemPaymentDao.class);
+				boolean bSameBillCh1 = false;
+				ch1Obj = new BillingClaimHeader1Data();
+				ch1Obj.setId(b[0]);
+				ch1Obj.setPay_program(b[1]);
+				ch1Obj.setDemographic_no(b[2]);
+				ch1Obj.setDemographic_name(b[3]);
+				ch1Obj.setBilling_date(b[4]);
+				ch1Obj.setBilling_time(b[5]);
+				ch1Obj.setStatus(b[6]);
+				ch1Obj.setProvider_no(b[7]);
+				ch1Obj.setProvider_ohip_no(b[8]);
+				ch1Obj.setUpdate_datetime(b[9]);
+				ch1Obj.setTotal(b[10]);
+				ch1Obj.setPaid(b[11]);
+				ch1Obj.setClinic(b[12]);
+				//ch1Obj.setTotal(b[13]);//fee is not total?
+				ch1Obj.setSer_num(b[15]); //14 is service code
+				ch1Obj.setBilling_on_item_id(b[17]); //16 is dx
+				
+				List<BillingONExt> exts = extDao.findByBillingNoAndKey(Integer.parseInt(b[0]), "payDate");
+				for(BillingONExt e : exts ) {
+					if(e.getStatus()=='1') {
+						ch1Obj.setSettle_date(e.getValue());
+					}
+				}
+				
+				retval.add(ch1Obj);
+				
+			}
+
+		}
+				
+		return retval;
+	}
+
+
 	public List<BillingClaimHeader1Data> getBill(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, String visitLocation, String paymentStartDate, String paymentEndDate) {
 		return getBillWithSorting(billType,statusType,providerNo,startDate,endDate,demoNo,visitLocation,null,null, paymentStartDate,paymentEndDate);
 	}
 	
 	// invoice report
 	public List<BillingClaimHeader1Data> getBillWithSorting(String[] billType, String statusType, String providerNo, String startDate, String endDate, String demoNo, String visitLocation, String sortName, String sortOrder,  String paymentStartDate, String paymentEndDate) {
-		List<BillingClaimHeader1Data> retval = new ArrayList<BillingClaimHeader1Data>();
-		BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
-		BillingONExtDao extDao = SpringUtils.getBean(BillingONExtDao.class);
+		List<BillingClaimHeader1Data> retval = new ArrayList<BillingClaimHeader1Data>();		
 		try {
 			for (BillingONCHeader1 h : dao.findByMagic(Arrays.asList(billType), statusType, providerNo, ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), ConversionUtils.fromIntString(demoNo),visitLocation, ConversionUtils.fromDateString(paymentStartDate), ConversionUtils.fromDateString(paymentEndDate))) {
 				BillingClaimHeader1Data ch1Obj = new BillingClaimHeader1Data();
@@ -128,9 +209,9 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setProvider_ohip_no(h.getProviderOhipNo());
 				ch1Obj.setApptProvider_no(h.getApptProviderNo());
 				ch1Obj.setUpdate_datetime(ConversionUtils.toDateString(h.getTimestamp()));
-				ch1Obj.setTotal(h.getTotal());
+				ch1Obj.setTotal(String.valueOf(h.getTotal().doubleValue()));
 				ch1Obj.setPay_program(h.getPayProgram());
-				ch1Obj.setPaid(h.getPaid());
+				ch1Obj.setPaid(String.valueOf(h.getPaid().doubleValue()));
 				ch1Obj.setClinic(h.getClinic());
 				for (BillingONExt b : extDao.findByBillingNoAndKey(h.getId(), "payDate")) {
 					ch1Obj.setSettle_date(b.getValue());
@@ -243,7 +324,7 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setClinic(ch1.getClinic());
 				ch1Obj.setPay_program(ch1.getPayProgram());
 				if (!(ch1Obj.getId().equals(prevId) && ch1.getPaid().equals(prevPaid))) {
-					ch1Obj.setPaid(ch1.getPaid());
+					ch1Obj.setPaid(ch1.getPaid().toString());
 				} else {
 					ch1Obj.setPaid("0.00");
 				}
@@ -253,7 +334,7 @@ public class JdbcBillingReviewImpl {
 
 				retval.add(ch1Obj);
 				prevId = ch1Obj.getId();
-				prevPaid = ch1.getPaid();
+				prevPaid = ch1.getPaid().toString();
 				
 				ch1Obj.setFacilty_num(clinicLocationDao.searchVisitLocation(ch1.getFaciltyNum()));
 				
@@ -307,6 +388,7 @@ public class JdbcBillingReviewImpl {
 		int iRow = 0;
 
 		BillingClaimHeader1Data ch1Obj = null;
+		ProviderDao providerdao = (ProviderDao)SpringUtils.getBean(ProviderDao.class);
 
 		BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 		BillingONItemDao itemDao = SpringUtils.getBean(BillingONItemDao.class);
@@ -339,23 +421,54 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setVisittype(h.getVisitType());
 				ch1Obj.setAdmission_date(ConversionUtils.toDateString(h.getAdmissionDate()));
 				ch1Obj.setFacilty_num(h.getFaciltyNum());
-				ch1Obj.setTotal(h.getTotal());
-
+				ch1Obj.setTotal(h.getTotal().toString());
+				
+				Provider provider = providerdao.getProvider(h.getProviderNo());
+				ch1Obj.setLast_name(provider.getLastName());
+				ch1Obj.setFirst_name(provider.getFirstName());
+				
+	
 				retval.add(ch1Obj);
 
 				String dx = "";
-				String strService = "";
+				Set<String> serviceCodeSet = new HashSet<String>();
+			
 				String strServiceDate = "";
+				BigDecimal paid = new BigDecimal("0.00");
+				BigDecimal refund = new BigDecimal("0.00");
+				BigDecimal discount = new BigDecimal("0.00");
+
+
 				for (BillingONItem i : itemDao.findByCh1IdAndStatusNotEqual(h.getId(), "D")) {
-					strService += i.getServiceCode() + " x " + i.getServiceCount() + ", ";
+					String strService = i.getServiceCode() + " x " + i.getServiceCount() + ", ";
 					dx = i.getDx();
 					strServiceDate = ConversionUtils.toDateString(i.getServiceDate());
+					
+					serviceCodeSet.add(strService);
 				}
-
+								
 				BillingItemData itObj = new BillingItemData();
-				itObj.setService_code(strService);
+				StringBuffer codeBuf = new StringBuffer();
+				for (String codeStr : serviceCodeSet) {
+					codeBuf.append(codeStr + ",");
+				}
+				if (codeBuf.length() > 0) {
+					codeBuf.deleteCharAt(codeBuf.length() - 1);
+				}
+				itObj.setService_code(codeBuf.toString());
 				itObj.setDx(dx);
 				itObj.setService_date(strServiceDate);
+				
+				List<BillingONPayment> payment = payDao.find3rdPartyPaymentsByBillingNo(h.getId());
+				itObj.setPaid(payDao.getTotalSumByBillingNoWeb(h.getId().toString()));
+				itObj.setRefund(payDao.getPaymentsRefundByBillingNoWeb(h.getId().toString()));
+				BigDecimal discount_total = payDao.getPaymentsDiscountByBillingNo(h.getId());
+				if(discount_total == null) {
+					discount_total = new BigDecimal(0);
+				}
+				NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.US);		        
+				itObj.setDiscount(currency.format(discount_total));
+				
 				retval.add(itObj);
 			}
 		} catch (Exception e) {
@@ -386,14 +499,14 @@ public class JdbcBillingReviewImpl {
 		if (serviceCodes != null && serviceCodes.length() > 0) {
 			String[] serviceArray = serviceCodes.split(",");
 			for (int i = 0; i < serviceArray.length; i++) {
-				serviceCodeList.add(serviceArray[i].trim());
+				serviceCodeList.add("bi.service_code like '%" + serviceArray[i].trim() +"%'");
 			}
 		} 
 		if (billingForm != null && billingForm.length() > 0) {
 			CtlBillingServiceDao dao = SpringUtils.getBean(CtlBillingServiceDao.class);
 			
 			for(Object code : dao.findServiceCodesByType(billingForm)) {
-				serviceCodeList.add(String.valueOf(code));
+				serviceCodeList.add("bi.service_code='" + String.valueOf(code) + "'");
 			}
 		}
 		return serviceCodeList;
@@ -432,7 +545,7 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setDob(h.getDob());
 				ch1Obj.setDemographic_name(h.getDemographicName());
 				ch1Obj.setDemographic_no("" + h.getDemographicNo());
-				ch1Obj.setTotal(h.getTotal());
+				ch1Obj.setTotal(String.valueOf(h.getTotal().doubleValue()));
 				retval.add(ch1Obj);
 				
 				String dx = null;
@@ -463,6 +576,12 @@ public class JdbcBillingReviewImpl {
 		}
 
 		return retval;
+	}
+	
+	
+	public String getCodeDescription(String val, String billReferalDate){
+		return serviceDao.getCodeDescription(val, billReferalDate);
+		
 	}
 
 }

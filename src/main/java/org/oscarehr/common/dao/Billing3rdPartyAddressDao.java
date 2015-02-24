@@ -106,4 +106,14 @@ public class Billing3rdPartyAddressDao extends AbstractDao<Billing3rdPartyAddres
 			return new ArrayList<Billing3rdPartyAddress>();
 		}
 	}
+	/* seems no one uses this method
+	public List<Billing3rdPartyAddress> findAddressesByOneField(String field, String keyword) {
+		if(field == null || keyword==null) return null;
+		
+		String sql = "select * from billing_on_3rdPartyAddress where " + field
+			+ " like '" + keyword + "%' order by attention, company_name";
+		
+		Query q = entityManager.createNativeQuery(sql, modelClass);
+		return q.getResultList();
+	}	*/
 }

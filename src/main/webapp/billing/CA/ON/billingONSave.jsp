@@ -20,15 +20,20 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page import="java.util.*,java.sql.*,oscar.util.*,oscar.oscarBilling.ca.on.pageUtil.*,oscar.oscarBilling.ca.on.data.*,oscar.oscarProvider.data.*,java.math.* ,oscar.oscarBilling.ca.on.administration.*"%>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.springframework.web.context.WebApplicationContext"%>
 <%@ page errorPage="errorpage.jsp" import="java.util.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"%>
-
-<%//
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%
 	WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     UserPropertyDAO userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
+    BillingONCHeader1Dao cheader1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
+    BillingONExtDao extDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
+    		
+    		
 	if (session.getAttribute("user") == null) {
 		response.sendRedirect("../../../logout.jsp");
 	}
@@ -42,19 +47,46 @@
 
 	// save the billing if needed
 	boolean ret = false;
-			
-	if (request.getParameter("submit") != null	&& ("Settle & Print Invoice".equals(request.getParameter("submit"))
-					    || "Save & Print Invoice".equals(request.getParameter("submit"))|| "Save".equals(request.getParameter("submit"))
-					    || "Save and Back".equals(request.getParameter("submit")) || "Save & Add Another Bill".equals(request.getParameter("submit")))) {
-				
+	if (request.getParameter("submit") != null
+			&& ("Settle & Print Invoice".equals(request.getParameter("submit"))
+			    || "Save & Print Invoice".equals(request.getParameter("submit"))
+			    || "Save".equals(request.getParameter("submit"))
+			    || "Save and Back".equals(request.getParameter("submit"))
+			    || "Save & Add Another Bill".equals(request.getParameter("submit")))) {
 		BillingSavePrep bObj = new BillingSavePrep();
 		Vector vecObj = bObj.getBillingClaimObj(request);
 		ret = bObj.addABillingRecord(vecObj);
 		if(request.getParameter("xml_billtype").substring(0,3).matches(BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) {
-			bObj.addPrivateBillExtRecord(request);
+			bObj.addPrivateBillExtRecord(request, vecObj);
+		} else {
+			// add transaction log here for ohip
+			bObj.addOhipInvoiceTrans(vecObj);
 		}
 		int billingNo = bObj.getBillingId();
-				
+		String demographic_no="";	
+		String time="";
+		String value="";
+		value=request.getParameter("payeename");		
+        if(value.trim()=="")
+        {
+        	value=request.getParameter("payeename1");
+        }
+
+        BillingONCHeader1 billing = cheader1Dao.find(billingNo);
+        if(billing!=null) {
+        	demographic_no = billing.getDemographicNo().toString();
+        	//time = billing.getTimestamp();
+        	
+        	BillingONExt ext = new BillingONExt();
+        	ext.setBillingNo(billingNo);
+        	ext.setDemographicNo(billing.getDemographicNo());
+        	ext.setKeyVal("payee");
+        	ext.setValue(value);
+        	ext.setDateTime(billing.getTimestamp());
+        	extDao.persist(ext);
+        	
+        }
+        
 		// update appt and close the page
 		if (ret) {
 			if (apptNo != null && apptNo.length() > 0 && !apptNo.equals("0")) {

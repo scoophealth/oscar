@@ -37,6 +37,7 @@ public class BillingClaimHeader1Data {
 	String man_review;
 	String location;
 	String clinic;
+	String billto;
 
 	String demographic_no;
 	String provider_no;
@@ -61,13 +62,23 @@ public class BillingClaimHeader1Data {
 	String asstProvider_no;
 	String creator;
 	String update_datetime;
+	String billing_on_item_id; // just used for 3rd party bill invoice report
+	String ser_num;
 
-	
 	double cashTotal;
 	double debitTotal;
 	String providerName;
 	int numItems;
 	
+	public String getSer_num() {
+		return ser_num;
+	}
+
+	public void setSer_num(String ser_num) {
+		this.ser_num = ser_num;
+	}
+
+
 	public String getClinic() {
 		return clinic;
 	}
@@ -385,6 +396,73 @@ public class BillingClaimHeader1Data {
     public void setSettle_date(String settle_date) {
         this.settle_date = settle_date;
     }
+
+	public String getBilling_on_item_id() {
+		return billing_on_item_id;
+	}
+
+	public void setBilling_on_item_id(String billing_on_item_id) {
+		this.billing_on_item_id = billing_on_item_id;
+	}
+
+	public String getBillto() {
+		return billto;
+	}
+
+	public void setBillto(String billto) {
+		this.billto = billto;
+	}
+	
+	public void clone(BillingClaimHeader1Data ch1Data) {
+		if (ch1Data == null) {
+			return;
+		}
+		this.id = ch1Data.getId();
+		this.bh_id = ch1Data.getBh_id();
+		this.transc_id = ch1Data.getTransc_id();
+		this.rec_id = ch1Data.getRec_id();
+		this.hin = ch1Data.getHin();
+		this.ver = ch1Data.getVer();
+		this.dob = ch1Data.getDob();
+		this.acc_num = ch1Data.getAcc_num();
+		this.pay_program = ch1Data.getPay_program();
+		this.payee = ch1Data.getPayee();
+		this.ref_num = ch1Data.getRef_num();
+		this.facilty_num = ch1Data.getFacilty_num();
+		this.admission_date = ch1Data.getAdmission_date();
+		this.ref_lab_num = ch1Data.getRef_lab_num();
+		this.man_review = ch1Data.getMan_review();
+		this.location = ch1Data.getLocation();
+		this.clinic = ch1Data.getClinic();
+		this.billto = ch1Data.getBillto();
+
+		this.demographic_no = ch1Data.getDemographic_no();
+		this.provider_no = ch1Data.getProviderNo();
+		this.appointment_no = ch1Data.getAppointment_no();
+		this.demographic_name = ch1Data.getDemographic_name();
+		this.last_name = ch1Data.getLast_name();
+		this.first_name = ch1Data.getFirst_name();
+		this.sex = ch1Data.getSex();
+		this.province = ch1Data.getProvince();
+
+		this.billing_date = ch1Data.getBilling_date();
+		this.billing_time = ch1Data.getBilling_time();
+	    this.settle_date = ch1Data.getSettle_date();
+		this.total = ch1Data.getTotal();
+		this.paid = ch1Data.getPaid();
+		this.status = ch1Data.getStatus();
+		this.comment = ch1Data.getComment();
+		this.visittype = ch1Data.getVisittype();
+		this.provider_ohip_no = ch1Data.getProvider_ohip_no();
+		this.provider_rma_no = ch1Data.getProvider_rma_no();
+		this.apptProvider_no = ch1Data.getApptProvider_no();
+		this.asstProvider_no = ch1Data.getAsstProvider_no();
+		this.creator = ch1Data.getCreator();
+		this.update_datetime = ch1Data.getUpdate_datetime();
+		this.billing_on_item_id = ch1Data.getBilling_on_item_id();
+		this.ser_num = ch1Data.getSer_num();
+	}
+
 
 	public double getCashTotal() {
 		return cashTotal;

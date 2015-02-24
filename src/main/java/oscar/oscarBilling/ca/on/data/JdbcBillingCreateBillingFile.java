@@ -24,12 +24,14 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -470,8 +472,9 @@ public class JdbcBillingCreateBillingFile {
 				ch1Obj.setBilling_date(ConversionUtils.toDateString(h.getBillingDate()));
 				ch1Obj.setBilling_time(ConversionUtils.toDateString(h.getBillingTime()));
 				// ch1Obj.setUpdate_datetime(h.gettransc_id());
-				ch1Obj.setTotal(h.getTotal());
-				ch1Obj.setPaid(h.getPaid());
+				NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.US);
+				ch1Obj.setTotal(h.getTotal()==null?"0.00":currency.format(h.getTotal()));
+				ch1Obj.setPaid(h.getPaid()==null?"0.00":currency.format(h.getPaid()));
 				ch1Obj.setStatus(h.getStatus());
 				ch1Obj.setComment(h.getComment());
 				ch1Obj.setVisittype(h.getVisitType());
@@ -635,8 +638,9 @@ public class JdbcBillingCreateBillingFile {
 
 				ch1Obj.setBilling_date(ConversionUtils.toDateString(b.getBillingDate()));
 				ch1Obj.setBilling_time(ConversionUtils.toTimeString(b.getBillingTime()));
-				ch1Obj.setTotal(b.getTotal());
-				ch1Obj.setPaid(b.getPaid());
+				NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.US);
+				ch1Obj.setTotal(b.getTotal()==null?"0.00":currency.format(b.getTotal()));
+				ch1Obj.setPaid(b.getPaid()==null?"0.00":currency.format(b.getPaid()));				
 				ch1Obj.setStatus(b.getStatus());
 				ch1Obj.setComment(b.getComment());
 				ch1Obj.setVisittype(b.getVisitType());

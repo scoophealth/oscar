@@ -26,7 +26,6 @@ package org.oscarehr.managers;
 import java.util.List;
 
 import org.oscarehr.common.dao.MessageListDao;
-import org.oscarehr.common.dao.MsgDemoMapDao;
 import org.oscarehr.common.model.MessageList;
 import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +40,6 @@ public class MessagingManager {
 
 	@Autowired
 	private MessageListDao messageListDao;
-	
-	@Autowired
-	private MsgDemoMapDao msgDemoMapDao;
-	
 	
 	public List<MessageList> getMyInboxMessages(LoggedInInfo loggedInInfo, String providerNo, int offset, int limit) {		
 		return getMyInboxMessages(loggedInInfo, providerNo, null, offset, limit);

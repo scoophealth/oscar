@@ -48,6 +48,7 @@ package org.oscarehr.common.dao;
 //*
 //-----------------------------------------------------------------------------------------------------------------------
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.ParseException;
@@ -407,8 +408,8 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		  billingONHeader1.setProvince(province);
 		  billingONHeader1.setBillingDate(billingDate);
 		  billingONHeader1.setBillingTime(billingTime);
-		  billingONHeader1.setTotal(total);
-		  billingONHeader1.setPaid(paid);
+		  billingONHeader1.setTotal(new BigDecimal(total));
+		  billingONHeader1.setPaid(new BigDecimal(paid));
 		  billingONHeader1.setStatus(statValue);
 		  billingONHeader1.setComment(comment);
 		  billingONHeader1.setVisitType("00");

@@ -34,13 +34,18 @@
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
+<%@page import="oscar.OscarProperties" %>
+<%@page import="org.oscarehr.billing.CA.ON.util.DisplayInvoiceLogo" %>
+<%@page import="org.oscarehr.common.dao.SiteDao" %>
+<%@page import="org.oscarehr.common.model.Site" %>
+<%@page import="oscar.oscarBilling.ca.on.pageUtil.Billing3rdPartPrep" %>
+<%@page import="oscar.oscarBilling.ca.on.administration.GstControlAction" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <%
     String invoiceNoStr = request.getParameter("billingNo");
-
     Integer invoiceNo = null;
     try {
         invoiceNo = Integer.parseInt(invoiceNoStr);
@@ -48,6 +53,16 @@
         invoiceNoStr = "";
         MiscUtils.getLogger().warn("Invalid Invoice No.");
     }
+    
+Billing3rdPartPrep privateObj = new Billing3rdPartPrep();
+Properties propClinic = privateObj.getLocalClinicAddr();
+Properties prop3rdPart = privateObj.get3rdPartBillProp(invoiceNoStr);
+Properties prop3rdPayMethod = privateObj.get3rdPayMethod();
+Properties propGst = privateObj.getGst(invoiceNoStr);
+OscarProperties oscarProp = OscarProperties.getInstance();
+boolean isMulitSites = oscarProp.getBooleanProperty("multisites", "on");
+
+
     
     BillingONCHeader1Dao bCh1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
     BillingONCHeader1 bCh1 = null;
@@ -74,11 +89,22 @@
     ClinicDAO clinicDao = (ClinicDAO) SpringUtils.getBean("clinicDAO");
     Clinic clinic = clinicDao.getClinic();              
     oscar.OscarProperties props = oscar.OscarProperties.getInstance();
-    
+
+	Properties gstProp = new Properties();
+	GstControlAction db = new GstControlAction();
+	gstProp = db.readDatabase();
+
+	String percent = gstProp.getProperty("gstPercent", "");
+
+	String filePath = DisplayInvoiceLogo.getLogoImgAbsPath();
+	boolean isLogoImgExisted = true;
+	if (filePath.isEmpty()) {
+		isLogoImgExisted = false;
+	}
+
     if (bCh1 != null) {
         BillingONExtDao billExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
         BillingONPaymentDao billPaymentDao = (BillingONPaymentDao) SpringUtils.getBean("billingONPaymentDao");
-
         DemographicDao demoDAO = (DemographicDao)SpringUtils.getBean("demographicDao");
         ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
         
@@ -90,7 +116,7 @@
 
         invoiceComment = bCh1.getComment(); 
         
-        totalOwed = new BigDecimal(bCh1.getTotal());
+        totalOwed = bCh1.getTotal();
 
         List<BillingONPayment> paymentRecords = billPaymentDao.find3rdPartyPayRecordsByBill(bCh1);
         paidTotal = BillingONPaymentDao.calculatePaymentTotal(paymentRecords);
@@ -213,41 +239,61 @@
             </div>
         </div>
     </form>
-        <table width="100%" border="0">
-            <tr>
-             <% if (clinic != null) {%>
-                <td><b><%=clinic.getClinicName()%></b><br />
-                       <%=clinic.getClinicAddress()%><br />
-                       <%=clinic.getClinicCity()%>, <%=clinic.getClinicProvince()%><br />
-                       <%=clinic.getClinicPostal()%><br />
-                        Tel.: <%=clinic.getClinicPhone()%><br />
-                </td>
-            <%  }%>
-                <td align="right" valign="top"><font size="+2"><b>Invoice - <%=invoiceNoStr%></b></font><br />
-                    <bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.printDate"/>:<%=DateUtils.sumDate("yyyy-MM-dd HH:mm","0") %><br/>
-                 <% if (props.hasProperty("invoice_due_date")) {
-                        Integer numDaysTilDue = Integer.parseInt(props.getProperty("invoice_due_date", "0")); 
-                        Date serviceDate = null;
-                        if(bCh1 != null) {
-                        	serviceDate = bCh1.getBillingDate();
-                        }
-                  %>
-                    <b><bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.dueDate"/>:</b><%=dueDateStr%>
-                 <% }%>
-                </td>
-            </tr>
-        </table>
-        <hr>
-        <table width="100%" border="0">
-            <tr>
-                <td width="50%" valign="top">Bill To<br />
-                    <pre><%=billTo%></pre>
-                </td>
-                <td valign="top">Remit To<br />
-                    <pre><%=remitTo%></pre>
-                </td>
-            </tr>
-        </table>
+	<table width="100%" border="0">
+		<tr>
+			<td>
+			
+			<%if (isMulitSites) {
+				// get site info by siteName
+				SiteDao siteDao = (SiteDao)SpringUtils.getBean(SiteDao.class);
+				Site site = siteDao.findByName(bCh1.getClinic());
+				if (site != null) {
+					if (site.getSiteLogoId() != null && site.getSiteLogoId() > 0) {
+					%>
+						<img src="<%=request.getContextPath() %>/dms/ManageDocument.do?method=display&doc_no=<%=site.getSiteLogoId() %>" />
+					<%
+					} else {
+					%>
+						<b><%=site.getName() %></b><br />
+						<%=site.getAddress() %><br />
+						<%=site.getCity() %>, <%=site.getProvince() %><br />
+						<%=site.getPostal() %><br />
+						Tel.: <%=site.getPhone() %><br />
+				  <%} %>
+			  <%} else { %>
+			  	<b><%=propClinic.getProperty("clinic_name", "") %></b><br />
+				<%=propClinic.getProperty("clinic_address", "") %><br />
+				<%=propClinic.getProperty("clinic_city", "") %>, <%=propClinic.getProperty("clinic_province", "") %><br />
+				<%=propClinic.getProperty("clinic_postal", "") %><br />
+				Tel.: <%=propClinic.getProperty("clinic_phone", "") %><br />
+			  <%} %>
+			<%} else if (isLogoImgExisted) {%>
+				<img src="<%=request.getContextPath() %>/billing/ca/on/DisplayInvoiceLogo.do" />
+			<%} else { %>	
+				<b><%=propClinic.getProperty("clinic_name", "") %></b><br />
+				<%=propClinic.getProperty("clinic_address", "") %><br />
+				<%=propClinic.getProperty("clinic_city", "") %>, <%=propClinic.getProperty("clinic_province", "") %><br />
+				<%=propClinic.getProperty("clinic_postal", "") %><br />
+				Tel.: <%=propClinic.getProperty("clinic_phone", "") %><br />
+			<%}%>
+			</td>
+			<td align="right" valign="top"><font size="+2"><b>Invoice
+			- <%=invoiceNoStr %></b></font><br />
+			Date:<%=DateUtils.sumDate("yyyy-MM-dd HH:mm","0") %></td>
+		</tr>
+	</table>
+
+<hr>
+<table width="100%" border="0">
+	<tr>
+		<td width="50%" valign="top">Bill To<br />
+		<pre><%=prop3rdPart.getProperty("billTo","") %>
+</pre></td>
+		<td valign="top">Remit To<br />
+		<pre><%=prop3rdPart.getProperty("remitTo","") %>
+</pre></td>
+	</tr>
+</table>
 
 <oscar:customInterface section="billingInvoice"/>
 <table width="100%" border="0">
@@ -334,27 +380,48 @@
         </table>
 
         <hr />
+<% 
+BigDecimal bdBal = bCh1.getTotal().setScale(2, BigDecimal.ROUND_HALF_UP);
+BigDecimal bdPay = new BigDecimal(prop3rdPart.getProperty("payment","0.00")).setScale(2, BigDecimal.ROUND_HALF_UP);
+BigDecimal bdDis = new BigDecimal(prop3rdPart.getProperty("discount","0.00")).setScale(2, BigDecimal.ROUND_HALF_UP);
+BigDecimal bdRef = new BigDecimal(prop3rdPart.getProperty("refund","0.00")).setScale(2, BigDecimal.ROUND_HALF_UP);
+BigDecimal bdCre = new BigDecimal(prop3rdPart.getProperty("credit","0.00")).setScale(2, BigDecimal.ROUND_HALF_UP);
+//bdBal = bdPay.subtract(bdBal);
+bdBal = bdBal.subtract(bdPay).subtract(bdDis).add(bdCre);
+//BigDecimal bdGst = new BigDecimal(propGst.getProperty("gst", "")).setScale(2, BigDecimal.ROUND_HALF_UP);
+%>
+<table width="100%" border="0">
 
-        <table width="100%" border="0">
-            <tr align="right">
-                <td width="86%">Total:</td>
-                <td><%=totalOwed.toPlainString()%></td>
-            </tr>
-            <tr align="right">
-                <td>Payments:</td>
-                <td><%=paidTotal.toPlainString()%></td>
-            </tr>
-            <tr align="right">
-                <td>Refunds:</td>
-                <td><%=refundTotal.toPlainString()%></td>
-            </tr>
-            <tr align="right">
-                <td><b>Balance:</b></td>
-                <td><%=balanceOwing.toPlainString()%></td>
-            </tr>	
-            <tr align="right">
-            	<td colspan="2"><%=paymentDescription.equals("") ? "" : "Paid by " + paymentDescription%></td>
-            </tr>
-        </table>
-    </body>
+	<tr align="right">
+		<td width="86%">Total:</td>
+		<td><%=bCh1.getTotal()%></td>
+	</tr>
+	<tr align="right">
+		<td>Payments:</td>
+		<td><%=prop3rdPart.getProperty("payment","0.00") %></td>
+	</tr>
+	<tr align="right">
+		<td>Discounts:</td>
+		<td><%=prop3rdPart.getProperty("discount","0.00") %></td>
+	</tr>
+	<tr align="right">
+		<td>Refund Credit / Overpayment:</td>
+		<td><%=prop3rdPart.getProperty("credit","0.00") %></td>
+	</tr>
+	<tr align="right">
+		<td>Refund / Write off:</td>
+		<td><%=prop3rdPart.getProperty("refund","0.00") %></td>
+	</tr>
+
+	<tr align="right">
+		<td><b>Balance:</b></td>
+		<td><%=bdBal %></td>
+	</tr>
+	<tr align="right">
+		<td>(<%=prop3rdPayMethod.getProperty(prop3rdPart.getProperty("payMethod",""), "") %>)</td>
+		<td></td>
+	</tr>
+</table>
+
+</body>
 </html>

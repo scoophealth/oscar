@@ -65,7 +65,7 @@ public class BillingONItemDao extends AbstractDao<BillingONItem>{
     }
 
     public List<BillingONCHeader1> getCh1ByDemographicNo(Integer demographic_no) {
-        String queryStr = "FROM BillingONCHeader1 b WHERE b.demographicNo = ?1";
+        String queryStr = "FROM BillingONCHeader1 b WHERE b.demographicNo = ?1 ORDER BY b.id DESC";
         Query q = entityManager.createQuery(queryStr);
         q.setParameter(1, demographic_no);
         
@@ -105,4 +105,5 @@ public class BillingONItemDao extends AbstractDao<BillingONItem>{
 
         return rs;
     }
+	
 }

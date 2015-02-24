@@ -23,6 +23,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -392,4 +396,38 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		query.setParameter("terminationDate", terminationDate);
 		return query.getResultList();
 	}
+	
+    public String getCodeDescription(String val, String billReferalDate){
+    	DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    	
+		String sql = "select x from BillingService x where x.serviceCode=?1 and x.billingserviceDate = (select max(y.billingserviceDate) from BillingService y where y.billingserviceDate <=?2 and y.serviceCode =?3)";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, val);
+		try {
+	        query.setParameter(2, df.parse(billReferalDate));
+        } catch (ParseException e1) {	
+        	return null;
+        }
+		query.setParameter(3, val);
+		String retval = null;
+		
+		List<BillingService> billingServices = query.getResultList();
+		if(billingServices.size()>0) {
+			BillingService b = billingServices.get(0);
+			retval = b.getDescription();		
+			
+			Date serviceDate = null;
+            try {
+	            serviceDate = df.parse(billReferalDate);
+            } catch (ParseException e) {
+            	return null;
+            }
+			Date tDate = b.getTerminationDate();				
+			if (tDate.before(serviceDate)) {
+				retval = "defunct";
+			}
+		}
+		
+		return retval;
+    }
 }

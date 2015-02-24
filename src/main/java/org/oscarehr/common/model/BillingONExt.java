@@ -42,7 +42,7 @@ import javax.persistence.TemporalType;
 public class BillingONExt extends AbstractModel<Integer> implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private Integer id;
 
 	@Column(name="billing_no")
@@ -60,16 +60,20 @@ public class BillingONExt extends AbstractModel<Integer> implements Serializable
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateTime;
 
-        @Column(name="status")
-        private char status = '1';
-        	     
-        @Column(name="payment_id")
-        private Integer paymentId;
+    @Column(name="status")
+    private char status = '1';
+        
+    @Column(name="payment_id")
+    private Integer paymentId;     	     
         
         @Override
 	public Integer getId() {
             return id;
         }
+
+	public void setId(Integer id) {
+    	this.id = id;
+    }
 
 	public int getBillingNo() {
             return billingNo;
@@ -119,11 +123,11 @@ public class BillingONExt extends AbstractModel<Integer> implements Serializable
             this.status = status;
         }
         
-        public Integer getPaymentId() {
-            return this.paymentId;
-        }
-        
-        public void setPaymentId(Integer paymentId) {
-            this.paymentId = paymentId;
-        }
+	 public Integer getPaymentId() {
+         return this.paymentId;
+     }
+     
+     public void setPaymentId(Integer paymentId) {
+         this.paymentId = paymentId;
+     }  
 }

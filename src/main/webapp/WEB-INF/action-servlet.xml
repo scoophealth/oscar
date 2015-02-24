@@ -222,5 +222,14 @@
 	<bean name="/admin/ManageSites" class="org.oscarehr.common.web.SitesManageAction" singleton="false">
 		<property name="siteDao" ref="siteDao" />
 	</bean>
-        
+
+	<bean name="/billing/CA/ON/BatchBill" class="org.oscarehr.billing.CA.ON.web.BatchBillAction" singleton="false">
+		<property name="billClaimDAO" ref="billingClaimDAO" />
+	</bean>
+	
+    <bean name="/billing/CA/ON/managePaymentType" class="oscar.oscarBilling.ca.on.pageUtil.PaymentTypeAction" singleton="false" autowire="byName">
+ 	<property name="billingPaymentTypeDao" ref="billingPaymentTypeDao" />
+ 	<property name="billPaymentDao" ref="billingONPaymentDao" />
+ 	</bean>
+	<bean name="/billing/CA/ON/billingON3rdPayments" class="org.oscarehr.billing.CA.ON.web.BillingONPaymentsAction" singleton="false" autowire="byName"/>
 </beans>

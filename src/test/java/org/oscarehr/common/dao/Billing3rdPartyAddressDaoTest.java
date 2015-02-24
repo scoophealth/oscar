@@ -118,7 +118,7 @@ public class Billing3rdPartyAddressDaoTest extends DaoTestFixtures{
     protected List<String> getSimpleExceptionTestExcludes() {
 		List<String> excludes = super.getSimpleExceptionTestExcludes();
 		// this is very JSP specific method that includes a mix of SQL fields, we will test it manuall in #testFindAddress
-		excludes.add("findAddresses");
+		excludes.add("findAddresses");		
 	    return excludes;
     }
 }

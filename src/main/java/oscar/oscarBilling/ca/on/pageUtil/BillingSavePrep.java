@@ -42,6 +42,7 @@ public class BillingSavePrep {
 	int billingId = 0;
 
 	// save a billing record
+	@SuppressWarnings("rawtypes")
 	public boolean addABillingRecord(Vector val) {
 		boolean ret = false;
 		BillingClaimHeader1Data claim1Obj = (BillingClaimHeader1Data) val.get(0);
@@ -49,6 +50,7 @@ public class BillingSavePrep {
 		billingId = billingNo;
 		if (billingNo == 0)
 			return false;
+		claim1Obj.setId(((Integer)billingId).toString());
 		if (val.size() > 1) {
 			ret = dbObj.addItemRecord((List) val.get(1), billingNo);
 			if (!ret)
@@ -70,6 +72,28 @@ public class BillingSavePrep {
 		return ret;
 	}
 
+
+	@SuppressWarnings("unchecked")
+	public boolean addPrivateBillExtRecord(HttpServletRequest requestData, Vector vecObj) {
+		boolean ret = false;
+		boolean rat = false;
+		
+		@SuppressWarnings("unused")
+		Map<String,String> val = getPrivateBillExtObj(requestData);
+		ret = dbObj.add3rdBillExt(val, billingId, vecObj);
+		if (!ret)
+			_logger.error("addPrivateBillExtRecord " + billingId);
+
+		return ret;
+	}
+	
+
+	
+	@SuppressWarnings("unchecked")
+	public void addOhipInvoiceTrans(Vector vecObj) {
+		dbObj.addCreateOhipInvoiceTrans((BillingClaimHeader1Data) vecObj.get(0), (List<BillingItemData>) vecObj.get(1));
+	}
+	
 	// set appt to B
 	public boolean updateApptStatus(String apptNo, String status, String userNo) {
 		boolean ret = (new JdbcBillingPageUtil()).updateApptStatus(apptNo, status, userNo);
@@ -176,8 +200,10 @@ public class BillingSavePrep {
 		if (val.getParameter("submit").equalsIgnoreCase("Settle")) {
 			paid = val.getParameter("total");
 		} else if (val.getParameter("submit").equalsIgnoreCase("Save & Print Invoice")
-				|| val.getParameter("submit").equalsIgnoreCase("Settle & Print Invoice")) {
-			paid = val.getParameter("payment");
+				|| val.getParameter("submit").equalsIgnoreCase("Settle & Print Invoice")
+				|| val.getParameter("submit").equalsIgnoreCase("Save")
+				|| val.getParameter("submit").equalsIgnoreCase("Save & Add Another Bill")) {
+			paid = val.getParameter("total_payment");
 		}
 		claim1Header.setPaid(paid);
 		claim1Header.setStatus(getStatus(val.getParameter("submit"), val.getParameter("xml_billtype")));
@@ -214,7 +240,22 @@ public class BillingSavePrep {
 			claimItem[i].setDx(val.getParameter("dxCode"));
 			claimItem[i].setDx1(val.getParameter("dxCode1"));
 			claimItem[i].setDx2(val.getParameter("dxCode2"));
-			claimItem[i].setStatus("O");
+			if(val.getParameter("paid_"+i)!=null){
+				claimItem[i].setPaid(val.getParameter("paid_"+i));
+			}else{
+				claimItem[i].setPaid("0.00");	
+			}
+			//claimItem[i].setRefund(val.getParameter("refund"));
+			if(val.getParameter("discount_"+i)!=null){
+				claimItem[i].setDiscount(val.getParameter("discount_"+i));
+			}else{
+				claimItem[i].setDiscount("0.00");
+			}
+			if(val.getParameter("xml_billtype").substring(0,3).matches(BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) {
+				claimItem[i].setStatus("P");
+			} else {
+				claimItem[i].setStatus("O");
+			}
 		}
 
 		return claimItem;
@@ -246,7 +287,12 @@ public class BillingSavePrep {
 		claim1Header.setLocation(val.getParameter("xml_slicode").trim());
 
 		claim1Header.setDemographic_no(val.getParameter("demographic_no"));
-		claim1Header.setProviderNo(val.getParameter("xml_provider"));
+		if(org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {		
+			claim1Header.setProviderNo(val.getParameter("xml_provider").substring(0, val.getParameter("xml_provider").indexOf("|")));
+		} else {
+			claim1Header.setProviderNo(val.getParameter("xml_provider"));
+		}
+		
 		claim1Header.setAppointment_no(val.getParameter("appointment_no"));
 		claim1Header.setDemographic_name(val.getParameter("demographic_name"));
 		String temp[] = getPatientLF(val.getParameter("demographic_name"));
@@ -268,7 +314,8 @@ public class BillingSavePrep {
 		claim1Header.setApptProvider_no(val.getParameter("apptProvider_no"));
 		claim1Header.setAsstProvider_no("");
 		claim1Header.setCreator((String) val.getSession().getAttribute("user"));
-
+		claim1Header.setClinic(val.getParameter("site"));
+		
 		return claim1Header;
 	}
 
@@ -296,6 +343,9 @@ public class BillingSavePrep {
 			claimItem[i].setDx(getDefaultSpace(val.getParameter("dxCode")));
 			claimItem[i].setDx1(getDefaultSpace(val.getParameter("dxCode1")));
 			claimItem[i].setDx2(getDefaultSpace(val.getParameter("dxCode2")));
+			claimItem[i].setPaid(getDefaultSpace(val.getParameter("payment")));
+			claimItem[i].setRefund(getDefaultSpace(val.getParameter("refund")));
+			claimItem[i].setDiscount(getDefaultSpace(val.getParameter("discount")));
 			claimItem[i].setStatus("O");
 		}
 		return claimItem;
@@ -305,13 +355,14 @@ public class BillingSavePrep {
 		Map<String,String> valsMap = new HashMap<String,String>();
 		valsMap.put("demographic_no",val.getParameter("demographic_no"));
 		valsMap.put("billTo",val.getParameter("billto"));
+		valsMap.put("total_discount", val.getParameter("total_discount"));
 		valsMap.put("remitTo",val.getParameter("remitto"));
                 valsMap.put("total",val.getParameter("gstBilledTotal"));
                 if (val.getParameter("submit").equalsIgnoreCase("Settle & Print Invoice")) {
-                    valsMap.put("payment", valsMap.get("total"));
+                    valsMap.put("total_payment", valsMap.get("total_payment"));
                 }
                 else {
-                    valsMap.put("payment", val.getParameter("payment"));
+                    valsMap.put("total_payment", val.getParameter("total_payment"));
                 }
 		valsMap.put("refund",val.getParameter("refund"));
                 valsMap.put("provider_no",val.getParameter("provider_no"));
@@ -319,10 +370,9 @@ public class BillingSavePrep {
 
 		if (val.getParameter("payMethod") != null) {
 			valsMap.put("payMethod",val.getParameter("payMethod"));
+		} else {
+			valsMap.put("payMethod", "1");
 		}
-                else {
-                    valsMap.put("payMethod","");
-                }
 		return valsMap;
 	}
 
