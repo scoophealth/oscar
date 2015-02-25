@@ -23,7 +23,13 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.dao.DxresearchDAO"%>
+<%@page import="org.oscarehr.common.model.Dxresearch"%>
 <%@page import="oscar.oscarRx.data.RxPatientData"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.managers.CodingSystemManager" %>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%
         oscar.oscarRx.pageUtil.RxSessionBean bean2 = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
@@ -48,6 +54,24 @@
 <%=allergies[j].getShortDesc(13,8,"...")%> </a></p>
 <%}%>
 </p>
+
+
+<p class="PropSheetLevel1CurrentItem">
+	<bean:message key="oscarRx.sideLinks.msgDiseases"/>
+</p>
+<%	
+DxresearchDAO dxreasearchDao = SpringUtils.getBean(DxresearchDAO.class);
+CodingSystemManager codingSystemManager = SpringUtils.getBean(CodingSystemManager.class);
+
+for (Dxresearch dx:dxreasearchDao.getByDemographicNo(bean2.getDemographicNo())){
+	String codeDescr = codingSystemManager.getCodeDescription(dx.getCodingSystem(),dx.getDxresearchCode());	
+	if(codeDescr != null) {
+%>
+<p class="PropSheetMenuItemLevel1"><%=StringEscapeUtils.escapeHtml(codeDescr)%></p>
+<%} }%>
+</p>
+
+
 <p class="PropSheetLevel1CurrentItem"><bean:message key="oscarRx.sideLinks.msgFavorites"/>
 <a href="EditFavorites2.jsp">edit</a>
 <a href="CopyFavorites2.jsp">copy</a>  <%-- <bean:message key="oscarRx.sideLinks.msgCopyFavorites"/> --%>
