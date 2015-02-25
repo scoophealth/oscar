@@ -29,6 +29,10 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.managers.CodingSystemManager" %>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.casemgmt.service.CaseManagementManager" %>
+<%@page import="org.oscarehr.casemgmt.model.Issue"%>
+<%@page import="org.oscarehr.casemgmt.model.CaseManagementNote"%>
+<%@page import="java.util.List" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%
@@ -69,6 +73,24 @@ for (Dxresearch dx:dxreasearchDao.getByDemographicNo(bean2.getDemographicNo())){
 %>
 <p class="PropSheetMenuItemLevel1"><%=StringEscapeUtils.escapeHtml(codeDescr)%></p>
 <%} }%>
+</p>
+
+<p class="PropSheetLevel1CurrentItem">
+	<bean:message key="oscarRx.sideLinks.msgMedHistory"/>
+</p>
+<%	
+	CaseManagementManager cmgmtMgr1 = SpringUtils.getBean(CaseManagementManager.class);
+	List<Issue> issues1 = cmgmtMgr1.getIssueInfoByCode(bean2.getProviderNo(), "MedHistory");
+	String[] issueIds1 = new String[] {String.valueOf(issues1.get(0).getId())};
+	List<CaseManagementNote> notes1 = cmgmtMgr1.getNotes(bean2.getDemographicNo()+"", issueIds1);
+	for(CaseManagementNote note:notes1) {
+		 if (!note.isLocked() && !note.isArchived()) {
+			 
+%>
+<p class="PropSheetMenuItemLevel1"><%=StringEscapeUtils.escapeHtml(note.getNote()) %></p>
+<%
+	} }
+%>
 </p>
 
 
