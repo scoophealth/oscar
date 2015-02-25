@@ -283,7 +283,7 @@ public class WCBTeleplanSubmission {
       dLine.append( "0" );//Misc.space(1)
       dLine.append( "00");//Misc.backwardSpace("", 2).toUpperCase()
       dLine.append( Misc.zero(2));
-      dLine.append( Misc.forwardZero(billingUnit,3));
+      dLine.append( Misc.forwardZero(bm.getBillingUnit(), 3)); // SR#: 7153 v1.9 Section 6.1.1 SEQ P20
       dLine.append( Misc.zero(2 + 2 + 1 + 2) ); //clarification
       dLine.append( Misc.forwardZero(feeitem, 5));
       dLine.append( Misc.moneyFormatPaddedZeroNoDecimal(billedAmount, 7));
