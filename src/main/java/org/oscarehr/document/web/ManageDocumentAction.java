@@ -375,12 +375,16 @@ public class ManageDocumentAction extends DispatchAction {
 		cmn.setLocked(false);
 		cmn.setHistory(strNote);
 		cmn.setPosition(0);
-		cmm.saveNoteSimple(cmn);
+
+		Long note_id = cmm.saveNoteSimpleReturnID(cmn);
+		// Debugging purposes on the live server
+		MiscUtils.getLogger().info("Document Note ID: "+note_id.toString());
+		
 		// Add a noteLink to casemgmt_note_link
 		CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
 		cmnl.setTableName(CaseManagementNoteLink.DOCUMENT);
 		cmnl.setTableId(Long.parseLong(documentId));
-		cmnl.setNoteId(cmn.getId());
+		cmnl.setNoteId(note_id);
 		EDocUtil.addCaseMgmtNoteLink(cmnl);
 	}
 
