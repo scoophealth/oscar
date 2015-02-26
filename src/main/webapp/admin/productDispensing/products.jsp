@@ -161,7 +161,8 @@
 						templates = xml.templates;
 						$("#productNameTemplate").append("<option value=\"\"></option>");
 						for(var x=0;x<xml.templates.length;x++) {
-							console.log(xml.templates[x].toSource());
+							//Line below needs to be commented out to work for Google Chrome
+							//console.log(xml.templates[x].toSource());
 							$("#productNameTemplate").append("<option value=\""+xml.templates[x].name+"\">"+xml.templates[x].name+"</option>");
 							
 						}
@@ -409,6 +410,18 @@
 			buttons: {
 				"Save Product": {class:"btn btn-primary", text:"Save", click: function() {	
 					if(validateSaveProduct()) {
+					
+						//This changes the productExpiryDate before sending the information to be updated in the database. The date before was a day behind and this corrects it to the right date.
+						var dbEntryDate = new Date($("#productExpiryDate").val());
+						var newDate = new Date(dbEntryDate.getFullYear(), dbEntryDate.getMonth()+1, dbEntryDate.getDate()+2);
+						var newDateString = (newDate.getFullYear() + '-' + newDate.getMonth() + '-' + newDate.getDate());
+
+						
+						$("#productExpiryDate").val(newDateString); 
+						//Must set the attr disabled to false so the values get passed properly
+						$("#productName").attr("disabled",false);
+						$("#productCode").attr("disabled",false);
+						$("#productAmount").attr("disabled",false);
 						$.post('../../ws/rs/productDispensing/saveDrugProduct',$('#productForm').serialize(),
 								function(data){
 									updatePage();
@@ -418,6 +431,10 @@
 					
 				} },
 				Cancel: { class:"btn", text:"Cancel", click:function() {
+					
+					$("#productName").attr("disabled",false);
+					$("#productCode").attr("disabled",false);
+					$("#productAmount").attr("disabled",false);
 					$( this ).dialog( "close" );
 				} }
 			},
