@@ -365,8 +365,11 @@ public class RxPrescriptionData {
 		List<Prescription> lst = new ArrayList<Prescription>();
 		DrugDao dao = SpringUtils.getBean(DrugDao.class);
 
-		for (Drug drug : dao.findByDemographicId(demographicNo))
-			lst.add(toPrescription(drug, demographicNo));
+		for (Drug drug : dao.findByDemographicId(demographicNo)) {
+			if((drug.isCurrent() && !drug.isArchived() && !drug.isDeleted() && !drug.isDiscontinued()) || drug.isLongTerm()) {
+				lst.add(toPrescription(drug, demographicNo));
+			}
+		}
 
 		return lst.toArray(new Prescription[lst.size()]);
 	}

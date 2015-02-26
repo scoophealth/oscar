@@ -273,6 +273,7 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
                 var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearReRxDrugList";
                        var data = "rand="+rand;
                        new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
+                    	   updateCurrentInteractions();
                         }});
             }
             function onPrint(cfgPage) {
@@ -1447,6 +1448,7 @@ function changeLt(drugId){
                              $(del).style.textDecoration='line-through';
                              $(discont).style.textDecoration='line-through';
                              $(prescrip).style.textDecoration='line-through';
+                             updateCurrentInteractions();
                     }
                 }});
 
@@ -1495,6 +1497,7 @@ function changeLt(drugId){
                   $(del).style.textDecoration='line-through';
                   $(discont).style.textDecoration='line-through';
                   $(prescrip).style.textDecoration='line-through';
+                  updateCurrentInteractions();
             }});
         }
         return false;
@@ -1577,6 +1580,7 @@ function changeLt(drugId){
                   $('del_'+json.id).style.textDecoration='line-through';
                   $('discont_'+json.id).innerHTML = json.reason;
                   $('prescrip_'+json.id).style.textDecoration='line-through';
+                  updateCurrentInteractions();
             }});
 
     }
