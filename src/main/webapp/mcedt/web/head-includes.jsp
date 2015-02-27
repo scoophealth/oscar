@@ -23,20 +23,5 @@
     Ontario, Canada
 
 --%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib uri="http://www.oscar-emr.com/tags/integration" prefix="i"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-
-<html:errors bundle="mcedt" />
-
-<html:messages id="message" bundle="mcedt" message="true">
-	<div class="alert alert-info">
-		<p>
-			<c:out escapeXml="false" value="${message}" />
-		</p>
-	</div>
-</html:messages>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.js"></script>
+<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">

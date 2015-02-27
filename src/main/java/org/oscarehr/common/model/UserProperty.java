@@ -118,6 +118,9 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     public static final String INTEGRATOR_LAST_PUSH = "integrator_last_push";
     public static final String INTEGRATOR_LAST_UPDATED = "integrator_last_updated";
 	public static final String INTEGRATOR_LAST_PULL_PRIMARY_EMR = "integrator_last_pull";
+	
+	// MCEDT Settings
+	public static final String MCEDT_ACCOUNT_PASSWORD = "mcedt_account_password";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

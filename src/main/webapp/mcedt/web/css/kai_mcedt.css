@@ -1,0 +1,621 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/* -------------------------------------------------- 
+   Table of Contents
+-----------------------------------------------------
+
+:: SHARED
+:: NAV BAR
+:: FOOTER
+:: FORM
+:: PADDING & MARGIN
+*/
+
+
+/*****************************************************************************************************************************************************/
+
+
+DIV.container { margin: auto; width: 90%; margin-bottom: 10px;}
+		
+TEXTAREA { width: 80%;}
+		
+FIELDSET { border: 1px solid #ccc; padding: 1em; margin: 0; }
+		
+LEGEND { color: #ccc; font-size: 120%; }
+		
+INPUT, TEXTAREA { font-family: Arial, verdana; font-size: 125%; padding: 7px; border: 1px solid #999; }
+		
+LABEL { display: block; margin-top: 10px; } 
+
+div.show {
+	display: block !important
+}
+
+.tabWrapper {
+	background-color: #191919;
+}
+
+UL.tabNavigation {
+	list-style: none;
+	padding: 25px 0;
+	line-height: 28px;
+	display:table;
+	margin: auto;
+}
+
+UL.tabNavigation LI {
+	display: inline;
+	margin:5px;
+}
+
+UL.tabNavigation LI A {
+	padding: 7px 20px;
+	border: 1px solid #fff;
+	color: #fff;
+	text-decoration: none;
+}
+
+UL.tabNavigation LI A.selected,
+UL.tabNavigation LI A:hover {
+	background-color: #fff;
+	color: #191919;
+}
+		
+UL.tabNavigation LI A:focus {
+	outline: 0;
+}
+
+/* div.tabs > div {
+	padding: 5px;
+	margin-top: 3px;
+	border: 1px solid #333;
+} */
+		
+div.tabs > div h2 {
+	margin-top: 0;
+}
+
+.logo {
+	padding:30px 0 20px;
+	display:table;
+	margin:auto;
+}
+
+.center {
+	width: 90%;
+	margin:auto;
+	padding: 50px 0;
+	min-height: 90vh;
+}
+
+/* #first {
+	background-color: #FFFFFF;
+}
+
+#upload {
+	background-color: #FFFFFF;
+}
+
+#sent {
+	background-color: #FFFFFF;
+}
+
+#download {
+	background-color: #FFFFFF;
+} */
+		
+.waste {
+	min-height: 1000px;
+}
+		
+/* needed to align elements in navbar */				
+.navbar {
+	line-height: 20px;
+	height: 20px;
+	vertical-align: middle;
+	margin-bottom: 20px;
+}
+    
+
+
+
+/* --------- SHARED ---------*/
+
+body {
+	margin: 0;
+	padding: 0px;
+	overflow: visible;
+	width: 100%;
+	height: 100%;
+	color: #191919;
+	background-color: #FFF;
+	font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	line-height: 20px;
+	font-weight: 400;
+	overflow-x: hidden;
+}
+
+img {
+	/*padding-bottom: 50px;*/
+	max-width:100%;
+}
+
+.row:before, .row:after {
+	display:table;
+	line-height:0;
+	content:"";
+}
+
+.row:after {
+	clear:both;
+}
+
+.center-text {
+	text-align: center;	
+}
+
+.right-text {
+	text-align: right;	
+}
+
+h1 {
+	font-size: 35px;
+	letter-spacing: 0.1em;
+	line-height: 40px;
+}
+
+h2 {
+	font-size: 21px;
+	text-decoration: none;
+	font-weight: normal;
+	line-height: 30px;
+	margin-top: 0px;
+}
+
+/*h3 {
+	letter-spacing: 0.1em;
+	margin-top: 0px;
+	font-size: 16px;
+	line-height: 10px;
+	font-weight:normal;
+}
+
+h4 {
+	font-size: 24px;
+	font-weight: normal;
+	line-height: 38px;
+}
+
+h5 {
+	font-size: 30px;
+	line-height: 33px;
+	margin: 0 0 30px;
+}*/
+
+.capital {
+	text-transform: uppercase;
+}
+
+.normal {
+	font-weight:400;
+}
+
+.bold {
+	font-weight:700;
+}
+
+.extraBold {
+	font-weight:900;
+}
+
+
+.font12 {
+	font-size: .8em !important;
+}
+
+.font14 {
+	font-size: 1.25em  !important;
+}
+
+
+a {
+	text-decoration: none;
+	color: #53B848;
+}
+
+a:hover {
+	color: #53B848;
+	border-bottom: 1px solid #53B848;
+}
+
+a.plainLink {
+	text-decoration: none;
+	color: inherit;
+}
+
+a:hover.plainLink {
+	border: none;
+}
+
+a:hover.plainLink .white {
+	border: 1px solid #fff;
+	background-color: rgba(153,34,109,0.3);
+	color: inherit;
+	-webkit-transition: background 0.25s linear;
+	-moz-transition: background 0.25s linear;
+	-ms-transition: background 0.25s linear;
+	-o-transition: background 0.25s linear;
+	transition: background 0.25s linear;
+}
+
+button {
+	font: inherit;
+}
+
+button.flatLink {
+	text-transform: uppercase;
+	vertical-align: middle;
+	letter-spacing: 0.1em;
+	padding:7px 20px;
+}
+
+button.flatLink.small {
+	padding:5px 10px;
+	line-height:initial;
+}
+
+a:hover .white {
+	background-color:#FFF;
+	cursor: pointer;
+	color: #191919;
+	-webkit-transition: background 0.25s linear;
+	-moz-transition: background 0.25s linear;
+	-ms-transition: background 0.25s linear;
+	-o-transition: background 0.25s linear;
+	transition: background 0.25s linear;	
+}
+
+button.green:hover  {
+	background-color:#53B848;
+	cursor: pointer;
+	color: #FFF;
+	/*border-bottom: none;*/
+	-webkit-transition: background 0.25s linear;
+	-moz-transition: background 0.25s linear;
+	-ms-transition: background 0.25s linear;
+	-o-transition: background 0.25s linear;
+	transition: background 0.25s linear;	
+}
+
+button.black:hover  {
+	background-color:#191919;
+	cursor: pointer;
+	color: #FFF;
+	/*border-bottom: none;*/
+	-webkit-transition: background 0.25s linear;
+	-moz-transition: background 0.25s linear;
+	-ms-transition: background 0.25s linear;
+	-o-transition: background 0.25s linear;
+	transition: background 0.25s linear;	
+}
+
+button.blackBox:hover:enabled  {
+	background-color: #444;
+	cursor: pointer;
+	color: #FFF;
+	/*border-bottom: none;*/
+	-webkit-transition: background 0.25s linear;
+	-moz-transition: background 0.25s linear;
+	-ms-transition: background 0.25s linear;
+	-o-transition: background 0.25s linear;
+	transition: background 0.25s linear;	
+}
+
+button.greenBox:hover  {
+	background-color: #6EC864;
+	cursor: pointer;
+	color: #FFF;
+	/*border-bottom: none;*/
+	-webkit-transition: background 0.25s linear;
+	-moz-transition: background 0.25s linear;
+	-ms-transition: background 0.25s linear;
+	-o-transition: background 0.25s linear;
+	transition: background 0.25s linear;	
+}
+
+button:disabled  {
+	opacity:0.5;
+	cursor: not-allowed;	
+}
+
+input.readonly  {
+	background-color: #C5C4C4;
+	border: none;	
+}
+
+input.readonly:hover  {
+	cursor: not-allowed;	
+}
+
+th {
+	font-weight: 400;
+	text-align: left;
+}
+
+.green{
+	border: 1px solid #53B848;
+	color: #53B848;
+	background-color:initial;	
+}
+
+.black{
+	border: 1px solid #191919;
+	color: #191919;
+	background-color:initial;	
+}
+
+.white{
+	border: 1px solid #fff;
+	color: #fff;
+
+}
+
+.whiteBox{
+	background-color:#FFF
+}
+
+.greenBox {
+	background-color:#53B848;
+	color: #FFF;
+}
+
+.blackBox {
+	background-color:#191919;
+	color: #FFF;
+}
+
+.greenText {
+	color:#53B848;
+}
+
+.whiteText {
+	color: #FFF;
+}
+
+.greyBox {
+	background-color:#f5f5f6;
+}
+
+.midGreyBox {
+	background-color:#eee;
+}
+
+.dkGreyBox {
+	background-color:#564c5e;
+}
+
+.noBorder {
+	border: none;
+}
+
+.alert-danger {
+	background-color: rgb(250, 161, 161);
+	padding: 0 10px;
+	margin-bottom: 10px;
+}
+.alert.alert-danger > p {
+    display: inline-block;
+}
+
+.alert-info {
+	background-color: rgb(163, 206, 211);
+	padding: 0 10px;
+	margin-bottom: 10px;
+}
+.alert.alert-info > p {
+    display: inline-block;
+}
+
+/* --------- NAV BAR ---------*/
+
+.fixed-nav {
+	left: 0;
+	position: fixed;
+	top: 0;
+	z-index: 19000;
+	width: 100%;
+}
+
+.fixed-nav.index {
+	background-color: #FFF;
+	height: 100px;
+}
+
+.fixed-nav-inner {
+	height: 50px;
+	margin: 0 auto;
+	width: 85%;
+}
+
+.fixed-nav-inner ul {
+	float: right;
+	margin-top: 0px;
+}
+
+.fixed-nav-inner ul li {
+	display: inline;
+}
+
+.fixed-nav-inner ul li a{
+	margin-left: 20px;
+	font-size: 14px;
+	line-height: 50px;
+}
+
+.index .fixed-nav-inner ul li a:hover{
+    border-bottom: 1px solid #191919;
+}
+
+
+
+/* --------- FORM ---------*/
+
+textarea, input {
+	font-size: 13px;
+	line-height: 22px;
+	font-weight: normal;
+	color: #191919;
+	background-color: #fff;
+	border: 1px solid #eee;
+	padding: 2.5%;
+	vertical-align: middle;
+}
+
+input[type=submit] {
+	color: #FFF;
+	background-color: #191919;
+	width: 40%;
+	padding: 10px;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	-webkit-transition: background 0.25s linear;
+	-moz-transition: background 0.25s linear;
+	-ms-transition: background 0.25s linear;
+	-o-transition: background 0.25s linear;
+	transition: background 0.25s linear;
+}
+
+a:hover .submit-button {
+	background-color: #444;
+	cursor: pointer;
+	-webkit-transition: background 0.25s linear;
+	-moz-transition: background 0.25s linear;
+	-ms-transition: background 0.25s linear;
+	-o-transition: background 0.25s linear;
+	transition: background 0.25s linear;
+}
+
+.password {
+	width: 100%;
+}
+
+.password td {
+	display: block;
+}
+
+.password textarea, .password input {
+	width: 95%;
+	margin-bottom: 25px;
+}
+
+.footer {
+	width:100%;
+	text-align: center;
+}
+
+.footer h1 {
+	color: transparent;
+}
+
+
+/* --------- PADDING & MARGIN ---------*/
+
+
+.margin20 {
+	margin: 20px
+}
+
+.topMargin30 {
+	margin-top: 30px;	
+}
+
+.topMargin60 {
+	margin-top: 60px;	
+}
+
+.bottomMargin20 {
+	margin-bottom: 20px;	
+}
+
+.bottomMargin60 {
+	margin-bottom: 60px;	
+}
+
+.bottomMargin10 {
+	margin-bottom: 10px;	
+}
+
+.leftMargin84 {
+	margin-left: 84px;
+}
+
+.rightMargin5 {
+	margin-right: 5px;
+}
+
+
+.padding020 {
+	padding:0 20px;
+}
+
+.padding20 {
+	padding:20px;
+}
+
+.padding40 {
+	padding:40px;
+}
+
+.padding60 {
+	padding:60px;
+}
+
+.padding175 {
+	padding:175px;
+}
+
+.topPadding40 {
+	padding-top: 40px;	
+} 
+
+.topPadding60 {
+	padding-top: 60px;	
+}
+
+.topPadding100 {
+	padding-top: 100px;	
+}
+
+.topPadding140 {
+	padding-top: 140px;	
+}
+
+.topPadding160 {
+	padding-top: 160px;	
+}
+
+.topPadding200 {
+	padding-top: 200px;	
+}
+
+.bottomPadding20 {
+	padding-bottom: 20px;	
+}
+
+.bottomPadding60 {
+	padding-bottom: 60px;	
+}
+
+.bottomPadding100 {
+	padding-bottom: 100px;	
+}
+
+.bottomPadding140 {
+	padding-bottom: 140px;	
+}
+
+.bottomPadding300 {
+	padding-bottom: 300px;	
+}

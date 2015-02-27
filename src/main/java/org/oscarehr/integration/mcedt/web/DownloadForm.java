@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+ * Copyright (c) 2014-2015. KAI Innovations Inc. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
+ *    
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.integration.mcedt;
+package org.oscarehr.integration.mcedt.web;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -35,17 +35,20 @@ import ca.ontario.health.edt.DetailData;
 import ca.ontario.health.edt.ResourceStatus;
 import ca.ontario.health.edt.TypeListResult;
 
-public class ResourceForm extends ActionForm {
+public class DownloadForm extends ActionForm {
 
 	private static final long serialVersionUID = 1L;
 
 	private String resourceType;
 	private String status;
 	private Integer pageNo;
+	private String serviceId;
+
 
 	private TypeListResult typeListResult;
 	private Detail detail;
-	private String serviceIdSent;
+	
+	private List<DetailDataCustom> data=new ArrayList<DetailDataCustom>();
 
 	public TypeListResult getTypeListResult() {
 		return typeListResult;
@@ -102,6 +105,15 @@ public class ResourceForm extends ActionForm {
 		this.pageNo = pageNo;
 	}
 
+	
+	public List<DetailDataCustom> getData() {
+		return data;
+	}
+
+	public void setData(List<DetailDataCustom> data) {
+		this.data = data;
+	}
+
 	public List<String> getResourceStatusValues() {
 		List<String> result = new ArrayList<String>();
 		for(ResourceStatus r : ResourceStatus.values()) {
@@ -133,12 +145,12 @@ public class ResourceForm extends ActionForm {
 		return BigInteger.valueOf(getPageNo().longValue());
 	}
 
-	public String getServiceIdSent() {
-	    return serviceIdSent;
+	public String getServiceId() {
+	    return serviceId;
     }
 
-	public void setServiceIdSent(String serviceId) {
-	    this.serviceIdSent = serviceId;
+	public void setServiceId(String serviceId) {
+	    this.serviceId = serviceId;
     }
 
 }

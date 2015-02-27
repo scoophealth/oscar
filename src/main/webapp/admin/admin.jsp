@@ -536,7 +536,11 @@ div.logoutBox {
 				</li>
 			<%}%>
 			<li>
+			<%if (oscarVariables.getProperty("mcedt.kai.enabled", "").equals("true")) { %>
+				<a href="#" onclick='popupPage(800,1000,&quot;<html:rewrite page="/mcedt/kaimcedt.do"/>&quot;);return false;'><bean:message key="admin.admin.kaimcedt"/></a>
+ 			<%} else { %>
 				<a href="#" onclick='popupPage(800,1000,&quot;<html:rewrite page="/mcedt/mcedt.do"/>&quot;);return false;'><bean:message key="admin.admin.mcedt"/></a>
+			<%} %>
 			</li>
 			<%
 				}

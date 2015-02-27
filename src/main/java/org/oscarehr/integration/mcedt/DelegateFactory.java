@@ -24,25 +24,31 @@
 package org.oscarehr.integration.mcedt;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.integration.ebs.client.EdtClientBuilder;
 import org.oscarehr.integration.ebs.client.EdtClientBuilderConfig;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import ca.ontario.health.edt.EDTDelegate;
 
-class DelegateFactory {
+public class DelegateFactory {
 	
 	private static Logger logger = MiscUtils.getLogger();
-	
-	static EDTDelegate newDelegate() {
+	private static UserPropertyDAO userPropertyDAO = SpringUtils.getBean(UserPropertyDAO.class);
+
+	public static EDTDelegate newDelegate() {
 		OscarProperties props = OscarProperties.getInstance();
 		EdtClientBuilderConfig config = new EdtClientBuilderConfig();
 		config.setLoggingRequired(!Boolean.valueOf(props.getProperty("mcedt.logging.skip")));
 		config.setKeystoreUser(props.getProperty("mcedt.keystore.user"));
 		config.setKeystorePassword(props.getProperty("mcedt.keystore.pass"));
 		config.setUserNameTokenUser(props.getProperty("mcedt.service.user"));
-		config.setUserNameTokenPassword(props.getProperty("mcedt.service.pass"));
+		//config.setUserNameTokenPassword(props.getProperty("mcedt.service.pass"));
+		UserProperty prop = userPropertyDAO.getProp(UserProperty.MCEDT_ACCOUNT_PASSWORD);
+		config.setUserNameTokenPassword((prop==null||prop.getValue()==null || prop.getValue().trim().equals(""))?props.getProperty("mcedt.service.pass"):prop.getValue());
 		config.setServiceUrl(props.getProperty("mcedt.service.url"));
 		config.setConformanceKey(props.getProperty("mcedt.service.conformanceKey"));
 		config.setServiceId(props.getProperty("mcedt.service.id"));
@@ -54,5 +60,35 @@ class DelegateFactory {
 		}
 		return result;
     }
+	
+	public static EDTDelegate newDelegate(String serviceId) {
+		OscarProperties props = OscarProperties.getInstance();
+		EdtClientBuilderConfig config = new EdtClientBuilderConfig();
+		config.setLoggingRequired(!Boolean.valueOf(props.getProperty("mcedt.logging.skip")));
+		config.setKeystoreUser(props.getProperty("mcedt.keystore.user"));
+		config.setKeystorePassword(props.getProperty("mcedt.keystore.pass"));
+		config.setUserNameTokenUser(props.getProperty("mcedt.service.user"));
+		//config.setUserNameTokenPassword(props.getProperty("mcedt.service.pass"));
+		UserProperty prop = userPropertyDAO.getProp(UserProperty.MCEDT_ACCOUNT_PASSWORD);
+		config.setUserNameTokenPassword((prop==null||prop.getValue()==null || prop.getValue().trim().equals(""))?props.getProperty("mcedt.service.pass"):prop.getValue());
+		config.setServiceUrl(props.getProperty("mcedt.service.url"));
+		config.setConformanceKey(props.getProperty("mcedt.service.conformanceKey"));
+		config.setServiceId((serviceId==null ||serviceId.trim().equals(""))?props.getProperty("mcedt.service.id"):serviceId);
+		config.setMtomEnabled(true);
+		EdtClientBuilder builder = new EdtClientBuilder(config);
+		EDTDelegate result = builder.build(EDTDelegate.class);
+		if (logger.isInfoEnabled()) {
+			logger.info("Created new EDT delegate " + result);
+		}
+		return result;
+    }
+	
+	public static UserPropertyDAO getUserPropertyDAO() {
+		return userPropertyDAO;
+	}
+
+	public static void setUserPropertyDAO(UserPropertyDAO userPropertyDAO) {
+		DelegateFactory.userPropertyDAO = userPropertyDAO;
+	}
 	
 }
