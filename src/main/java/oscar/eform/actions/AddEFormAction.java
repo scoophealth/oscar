@@ -42,7 +42,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.model.Demographic;
@@ -66,8 +65,8 @@ public class AddEFormAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
 
-	private DemographicArchiveDao demographicArchiveDao = (DemographicArchiveDao)SpringUtils.getBean("demographicArchiveDao");
-	private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+	//private DemographicArchiveDao demographicArchiveDao = (DemographicArchiveDao)SpringUtils.getBean("demographicArchiveDao");
+	//private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
@@ -233,7 +232,7 @@ public class AddEFormAction extends Action {
 				path = path.substring(0, path.indexOf(uri));
 				path += request.getContextPath();
 	
-				EFormUtil.writeEformTemplate(paramNames, paramValues, curForm, fdid, program_no, path);
+				EFormUtil.writeEformTemplate(LoggedInInfo.getLoggedInInfoFromSession(request),paramNames, paramValues, curForm, fdid, program_no, path);
 			}
 			
 		}
