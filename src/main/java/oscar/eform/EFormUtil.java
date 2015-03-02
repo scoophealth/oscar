@@ -52,6 +52,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -72,6 +73,7 @@ import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.PreventionManager;
+import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -823,7 +825,7 @@ public class EFormUtil {
 		return (results);
 	}
 
-	public static void writeEformTemplate(ArrayList<String> paramNames, ArrayList<String> paramValues, EForm eForm, String fdid, String programNo, String context_path) {
+	public static void writeEformTemplate(LoggedInInfo loggedInInfo, ArrayList<String> paramNames, ArrayList<String> paramValues, EForm eForm, String fdid, String programNo, String context_path) {
 		String text = eForm != null ? eForm.getTemplate() : null;
 		if (StringUtils.isBlank(text)) return;
 
@@ -987,6 +989,14 @@ public class EFormUtil {
 			tickler.setMessage(message);
 			tickler.setDemographicNo(Integer.valueOf(eForm.getDemographicNo()));
 			tickler.setCreator(eForm.getProviderNo());
+			
+			ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
+			ProgramProvider pp = programManager.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+			
+			if(pp != null) {
+				tickler.setProgramId(pp.getProgramId().intValue());
+			}
+			
 			ticklerDao.persist(tickler);
 		}
 	}
