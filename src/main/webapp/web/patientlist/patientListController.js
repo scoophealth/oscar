@@ -311,7 +311,7 @@ oscarApp.controller('PatientListDemographicSetCtrl', function($scope, Navigation
 
 });
 
-oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigation,$http, scheduleService,$q,$filter) {	
+oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigation,$http, scheduleService,$q,$filter,$modal,providerService) {	
 	 
 	scheduleService.getStatuses().then(function(data){
 		$scope.statuses = data.content;
@@ -424,7 +424,47 @@ oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigatio
 			 
 		}
 	}
+	
+	$scope.addNewAppointment = function() {
+	       var modalInstance = $modal.open({
+	        	templateUrl: 'schedule/appointmentAdd.jsp',
+	            controller: 'AppointmentAddController',
+	            backdrop: false,
+	            size: 'lg',
+	            resolve: {
+	            	me: function() {return providerService.getMe();},
+	       			apptDate: function() {return $scope.appointmentDate;}
+	            }
+	        });
+	        
+	        modalInstance.result.then(function(data){
+	        	$scope.switchDay(0);
+	        },function(reason){
+	        	alert(reason);
+	        });
+	}
 
+	$scope.viewAppointment = function(apptNo) {
+		var modalInstance = $modal.open({
+        	templateUrl: 'schedule/appointmentView.jsp',
+            controller: 'AppointmentViewController',
+            backdrop: false,
+            size: 'lg',
+            resolve: {
+            	me: function() {return providerService.getMe();},
+            	appointment: function() {return scheduleService.getAppointment(apptNo);},
+            	statusList: function() {return scheduleService.getStatuses();}
+            }
+        });
+        
+        modalInstance.result.then(function(data){
+        	$scope.switchDay(0);
+        	
+        },function(reason){
+        	alert(reason);
+        });
+	}
+	
 });
 
 
