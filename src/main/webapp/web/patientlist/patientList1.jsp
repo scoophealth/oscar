@@ -39,7 +39,8 @@
 				
 		<a href="javascript:void(0)" ng-model="appointmentDate"  datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="appointmentDatePicker" datepicker-options="dateOptions" 
 		ng-change="changeApptDate()" ng-click="appointmentDatePicker = true" ng-required="true" bundle="ui" title="{{appointmentDate | date:'fullDate' }}">{{appointmentDate | date:'yyyy-MM-dd' }}</a>
-		
+		&nbsp;
+		<a ng-click="addNewAppointment()">+</a>
 	</th>
 	<th style="text-align:right" >
 		<h6><a href="javascript:void(0)" ng-click="switchDay(+1)">
@@ -52,7 +53,7 @@
 </div>
 
 <a ng-repeat="patient in patients | offset:currentPage*pageSize | limitTo:pageSize | filter:query"
-	class="list-group-item default hand-hover" ng-click="goToRecord(patient)"  ng-style="getAppointmentStyle(patient)">
+	class="list-group-item default hand-hover" ng-click="goToRecord(patient)"  ng-style="getAppointmentStyle(patient)" ng-dblclick="viewAppointment(patient.appointmentNo)">
 	<!-- 
 	<span ng-if="patient.status.length>0 && patient.status != 't'" class="badge">{{patient.status}}</span>
 	-->
