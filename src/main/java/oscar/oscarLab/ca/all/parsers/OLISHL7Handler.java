@@ -1590,7 +1590,12 @@ public class OLISHL7Handler implements MessageHandler {
 		try {
 			OLISResultNomenclatureDao resultDao = (OLISResultNomenclatureDao) SpringUtils.getBean("OLISResultNomenclatureDao");
 			OLISResultNomenclature resultNomenclature = resultDao.findByNameId(obxName);
-			return StringUtils.trimToEmpty(resultNomenclature.getName());
+			if(resultNomenclature != null) {
+				return StringUtils.trimToEmpty(resultNomenclature.getName());
+			} else {
+				logger.warn("Missing OLIS nomenclature value ("+obxName+"). Are you sure you ran olisinit.sql and it successfully completed?");
+				return obxName;
+			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("OLIS HL7 Error", e);
 		}
