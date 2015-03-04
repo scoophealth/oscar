@@ -30,6 +30,11 @@
 <%@page import="org.oscarehr.util.SpringUtils,oscar.util.StringUtils"%>
 <%@ page import="org.oscarehr.common.dao.DxresearchDAO,org.oscarehr.common.model.Dxresearch,org.oscarehr.common.dao.Icd9Dao,org.oscarehr.common.model.Icd9" %>
 <%@ page import="org.oscarehr.util.MiscUtils" %>
+<%@page import="org.oscarehr.managers.CodingSystemManager" %>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%
+	CodingSystemManager codingSystemManager = SpringUtils.getBean(CodingSystemManager.class);
+%>
 <html:html locale="true">
 <head>
 
@@ -159,11 +164,12 @@ Icd9Dao icd9Dao = (Icd9Dao)  SpringUtils.getBean("Icd9DAO");
 				%>
 
 
-                <div style=" width:500px; height:400px; overflow:auto;">
+                <div style=" width:650px; height:400px; overflow:auto;">
 				<table>
 					<tr>
 						<th><bean:message key="SelectReason.table.codingSystem" /></th>
 						<th><bean:message key="SelectReason.table.code" /></th>
+						<th><bean:message key="SelectReason.table.description" /></th>
 						<th><bean:message key="SelectReason.table.comments" /></th>
 						<th><bean:message key="SelectReason.table.primaryReasonFlag" /></th>
 						<th><bean:message key="SelectReason.table.provider" /></th>
@@ -175,6 +181,13 @@ Icd9Dao icd9Dao = (Icd9Dao)  SpringUtils.getBean("Icd9DAO");
 					<tr>
 						<td><%=drugReason.getCodingSystem() %></td>
 						<td><%=drugReason.getCode() %></td>
+						<td>
+							<%
+							String descr = codingSystemManager.getCodeDescription(drugReason.getCodingSystem(), drugReason.getCode());
+							descr = org.apache.commons.lang.StringUtils.trimToEmpty(descr);
+							%>
+							<%=StringEscapeUtils.escapeHtml(descr) %>
+						</td>
 						<td><%=drugReason.getComments() %></td>
 						<td>
 						<%if(drugReason.getPrimaryReasonFlag()){ %>
