@@ -293,6 +293,7 @@ public class RxPrescriptionData {
 		if (drug.getDispenseInterval() != null) p.setDispenseInterval(drug.getDispenseInterval());
 		if (drug.getRefillDuration() != null) p.setRefillDuration(drug.getRefillDuration());
 		if (drug.getRefillQuantity() != null) p.setRefillQuantity(drug.getRefillQuantity());
+		p.setHideCpp(drug.getHideFromCpp());
 		return p;
 	}
 

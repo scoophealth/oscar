@@ -100,7 +100,7 @@ if (heading != null){
             	<th align="center" width="15px">&nbsp;</th>
             <% } %>
             <th align="center"><bean:message key="SearchDrug.msgLocationPrescribed"/></th>
-            <th align="center"><bean:message key="SearchDrug.msgHideCPP"/></th>
+            <th align="center" title="<bean:message key="SearchDrug.msgHideCPP_help"/>"><bean:message key="SearchDrug.msgHideCPP"/></th>
              <th align="center"><bean:message key="SearchDrug.msgDispense"/></th>
              <th align="center"></th>
         </tr>
