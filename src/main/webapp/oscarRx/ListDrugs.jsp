@@ -329,9 +329,9 @@ if (heading != null){
             <td width="10px" align="center" valign="top">
                 <%
                 if (prescriptDrug.getRemoteFacilityName() != null){ %>
-                    <%=prescriptDrug.getRemoteFacilityName()%>
+                    <span class="external"><%=prescriptDrug.getRemoteFacilityName()%></span>
                 <%}else if(  prescriptDrug.getOutsideProviderName() !=null && !prescriptDrug.getOutsideProviderName().equals("")  ){%>
-                    <%=prescriptDrug.getOutsideProviderName()%>
+                    <span class="external"><%=prescriptDrug.getOutsideProviderName()%></span>
                 <%}else{%>
                     local
                 <%}%>
@@ -413,7 +413,7 @@ String getName(Drug prescriptDrug){
 }
 
     String getClassColour(Drug drug, long referenceTime, long durationToSoon){
-        StringBuffer sb = new StringBuffer("class=\"");
+        StringBuilder sb = new StringBuilder("class=\"");
 
         if (!drug.isLongTerm() && (drug.isCurrent() && drug.getEndDate() != null && (drug.getEndDate().getTime() - referenceTime <= durationToSoon))) {
             sb.append("expireInReference ");
@@ -443,15 +443,20 @@ String getName(Drug prescriptDrug){
                 sb.append("deleted ");
 
         }
+        
+        if(drug.getOutsideProviderName() !=null && !drug.getOutsideProviderName().equals("")  ) {
+        	sb = new StringBuilder("class=\"");
+        	sb.append("external ");
+        }
+        if (drug.getRemoteFacilityName() != null){
+        	sb = new StringBuilder("class=\"");
+        	sb.append("external ");
+        }
         String retval = sb.toString();
 
         if(retval.equals("class=\"")){
             return "";
         }
-
-
-
-
 
         return retval.substring(0,retval.length())+"\"";
 

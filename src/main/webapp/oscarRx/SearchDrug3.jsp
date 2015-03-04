@@ -810,6 +810,11 @@ body {
          text-decoration: line-through;
 
      }
+     
+     .external{
+         color: purple;
+
+     }
 
 
      .sortheader{
@@ -1167,7 +1172,9 @@ body {
         <a href="javascript:void(0);" class="expireInReference">Drug that is current but will expire within the reference range</a><br/>
         <a href="javascript:void(0);" class="expiredDrug">Drug that is expired</a><br/>
         <a href="javascript:void(0);" class="longTermMed">Long Term Med Drug</a><br/>
-        <a href="javascript:void(0);" class="discontinued">Discontinued Drug</a><br/><br/><br/><br/>
+        <a href="javascript:void(0);" class="discontinued">Discontinued Drug</a><br/>
+        <a href="javascript:void(0);" class="external">Prescribed by an outside provider</a><br/>
+        <br/><br/><br/>
         <a href="javascript:void(0);" onclick="$('themeLegend').hide()">Close</a>
     </div>
 
