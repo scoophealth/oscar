@@ -89,27 +89,28 @@ public class BORN18MConnector {
 		if (rpt18mForm==null) logger.error(rpt18mFormName+" form not found!");
 		else buildDemoNos(rpt18mForm, rpt18mFormDemoList);
     	
-		HashMap<Integer,Integer> rourkeFormDemoFdids = new HashMap<Integer,Integer>();
-		HashMap<Integer,Integer> nddsFormDemoFdids = new HashMap<Integer,Integer>();
-		HashMap<Integer,Integer> rpt18mFormDemoFdids = new HashMap<Integer,Integer>();
-		
 		for (Integer demoNo : rourkeFormDemoList) {
 			Integer fdid = checkRourkeDone(rourkeFormName, demoNo);
-			if (fdid!=null) rourkeFormDemoFdids.put(demoNo, fdid);
-			if(!results.contains(demoNo))
-				results.add(demoNo);
+			if (fdid!=null) {
+				if(!results.contains(demoNo))
+					results.add(demoNo);
+			}
+			
 		}
 		for (Integer demoNo : nddsFormDemoList) {
 			Integer fdid = checkNddsDone(nddsFormName, demoNo);
-			if (fdid!=null) nddsFormDemoFdids.put(demoNo, fdid);
-			if(!results.contains(demoNo))
-				results.add(demoNo);
+			if (fdid!=null) {
+				if(!results.contains(demoNo))
+					results.add(demoNo);
+			}
+			
 		}
 		for (Integer demoNo : rpt18mFormDemoList) {
 			Integer fdid = checkReport18mDone(rpt18mFormName, demoNo);
-			if (fdid!=null) rpt18mFormDemoFdids.put(demoNo, fdid);
-			if(!results.contains(demoNo))
-				results.add(demoNo);
+			if (fdid!=null) {
+				if(!results.contains(demoNo))
+					results.add(demoNo);
+			}
 		}
 		
 		return results;
@@ -128,7 +129,7 @@ public class BORN18MConnector {
 		return ((rourkeFdid!=null)?rourkeFdid:0) + "-" + ((nddsFdid!=null)?nddsFdid:0) +  "-" + ((report18mFdid!=null)?report18mFdid:0);
 	}
 	
-	public String getXmlForDemographic(Integer demoNo) {
+	public Object[] getXmlForDemographic(Integer demoNo) {
 	   	String rourkeFormName = oscarProperties.getProperty("born18m_eform_rourke", "Rourke Baby Record");
     	String nddsFormName = oscarProperties.getProperty("born18m_eform_ndds", "Nipissing District Developmental Screen");
     	String rpt18mFormName = oscarProperties.getProperty("born18m_eform_report18m", "Summary Report: 18-month Well Baby Visit");
@@ -138,13 +139,16 @@ public class BORN18MConnector {
 		Integer report18mFdid = checkReport18mDone(rpt18mFormName, demoNo);
 		
 		byte[] born18mXml = generateXml(demoNo, rourkeFdid, nddsFdid, report18mFdid, true);
+		if(born18mXml == null) {
+			return null;
+		}
 		String decoded = null;
 		try {
 			decoded = new String(born18mXml, "UTF-8");
 		}catch(UnsupportedEncodingException e) {
 			logger.error("error",e);
 		}
-		return decoded;
+		return new Object[]{rourkeFdid,nddsFdid,report18mFdid,decoded};
 	}
 	
 	public void updateBorn() {
@@ -249,6 +253,12 @@ public class BORN18MConnector {
 			return null;
 		}
 		
+		eformValue = eformValueDao.findByFormDataIdAndKey(fdid,UPLOADED_TO_BORN);
+		if (eformValue!=null && eformValue.equals(VALUE_YES)) {
+			return null;
+		}
+		
+		
 		//check if the form is for 2-3y or 4-5y visit -> not uploading
 		eformValue = eformValueDao.findByFormDataIdAndKey(fdid, "visit_date_2y");
 		if (eformValue!=null && eformValue.getVarValue()!=null && !eformValue.getVarValue().trim().isEmpty()) {
@@ -274,6 +284,10 @@ public class BORN18MConnector {
 			return null;
 		}
 		
+		eformValue = eformValueDao.findByFormDataIdAndKey(fdid,UPLOADED_TO_BORN);
+		if (eformValue!=null && eformValue.equals(VALUE_YES)) {
+			return null;
+		}
 		return fdid;
 	}
 	
@@ -285,6 +299,11 @@ public class BORN18MConnector {
 		if (eformValue==null) return null;
 		
 		if (eformValue.getVarValue()!=null && eformValue.getVarValue().toLowerCase().contains("draft")) {
+			return null;
+		}
+		
+		eformValue = eformValueDao.findByFormDataIdAndKey(fdid,UPLOADED_TO_BORN);
+		if (eformValue!=null && eformValue.equals(VALUE_YES)) {
 			return null;
 		}
 		
@@ -432,7 +451,7 @@ public class BORN18MConnector {
 		return success;
 	}
 
-	private void recordFormSent(Integer demographicNo, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid) {
+	public void recordFormSent(Integer demographicNo, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid) {
 		List<Integer> fdids = new ArrayList<Integer>();
 		if (rourkeFdid!=null) fdids.add(rourkeFdid);
 		if (nddsFdid!=null) fdids.add(nddsFdid);
