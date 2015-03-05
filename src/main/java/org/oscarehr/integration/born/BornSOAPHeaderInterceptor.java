@@ -28,9 +28,9 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 
-import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.interceptor.Fault;
+import org.apache.cxf.message.Message;
+import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.phase.Phase;
 import org.oscarehr.sharingcenter.dao.ClinicInfoDao;
 import org.oscarehr.sharingcenter.model.ClinicInfoDataObject;
@@ -40,22 +40,38 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class BornSOAPHeaderInterceptor extends AbstractSoapInterceptor {
+public class BornSOAPHeaderInterceptor extends AbstractPhaseInterceptor<Message> {
 	
 	public BornSOAPHeaderInterceptor() {
 		super(Phase.POST_PROTOCOL);
 	}
 
-	public void handleMessage(SoapMessage message) throws Fault {
+	public void handleMessage(Message message) throws Fault {
 
 		// TODO: The following will add the eho:endpointID to the SOAP Header of all outgoing requests
 		// Not sure about the workflow, but perhaps we can check for the EHO endpoint URL if it will not change.. then add the header
 		
 		SOAPMessage msg = message.getContent(SOAPMessage.class);
+		
+		if(msg == null) {
+			return;
+		}
 		try {
 			// get the Header and the XML Document
 			SOAPHeader header = msg.getSOAPHeader();
 			Document doc = header.getOwnerDocument();
+			
+			String endpointUrl = null;
+			if(header != null) {
+				NodeList toList = header.getElementsByTagNameNS("http://www.w3.org/2005/08/addressing", "To");
+				if(toList != null && toList.getLength() == 1) {
+					endpointUrl = toList.item(0).getTextContent();
+				}
+			}
+			
+			if(endpointUrl != null && endpointUrl.indexOf("ehealthontario.ca") == -1) {
+				return;
+			}
 			
 			Element endpointID = doc.createElementNS("http://ehealthontario.on.ca/xmlns/common", "endpointID");
 			ClinicInfoDao clinicInfoDao = SpringUtils.getBean(ClinicInfoDao.class);
