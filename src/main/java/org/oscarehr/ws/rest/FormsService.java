@@ -23,26 +23,44 @@
  */
 package org.oscarehr.ws.rest;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.rs.security.oauth.client.OAuthClientUtils;
+import org.oscarehr.app.AppOAuth1Config;
+import org.oscarehr.common.dao.AppDefinitionDao;
 import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
+import org.oscarehr.common.model.AppDefinition;
+import org.oscarehr.common.model.AppUser;
 import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EncounterForm;
-import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.FormsManager;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.rest.conversion.EFormConverter;
 import org.oscarehr.ws.rest.conversion.EncounterFormConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
@@ -52,7 +70,9 @@ import org.oscarehr.ws.rest.to.model.FormListTo1;
 import org.oscarehr.ws.rest.to.model.FormTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.*;
 
+import oscar.eform.EFormExportZip;
 import oscar.oscarEncounter.data.EctFormData;
 
 
@@ -62,13 +82,11 @@ import oscar.oscarEncounter.data.EctFormData;
 @Path("/forms")
 @Component("formsService")
 public class FormsService extends AbstractServiceImpl {
-	
-	
-	@Autowired
-	private DemographicManager demographicManager;
-	
 	@Autowired
 	private FormsManager formsManager;
+	
+	@Autowired
+	private AppDefinitionDao appDefinitionDao;
 	
 	@GET
 	@Path("/{demographicNo}/all")
@@ -194,4 +212,94 @@ public class FormsService extends AbstractServiceImpl {
 		
 	}
 	
+	@POST
+	@Path("/getK2AEForm")
+	@Consumes("application/json")
+	@Produces("application/json")
+	public AbstractSearchResponse<String> getK2AEForm(String id) {
+		AbstractSearchResponse<String> response = new AbstractSearchResponse<String>();
+		MiscUtils.getLogger().info("EForm id is: " + id);
+		
+        try {
+        	AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
+        	AppOAuth1Config appAuthConfig = AppOAuth1Config.fromDocument(k2aApp.getConfig());
+		    URL url = new URL(appAuthConfig.getBaseURL() + "/download/eform/" + id);
+		    url.openStream();
+		    EFormExportZip eFormExportZip = new EFormExportZip();
+		    List<String> errors = eFormExportZip.importForm(url.openStream());
+		    if(errors != null) {
+			    response.setContent(errors);
+			}
+			response.setTotal(1);
+        } catch (Exception e) {
+        	MiscUtils.getLogger().error("Error parsing data - " + e);
+	        return null;
+        }
+        return response;
+	}
+	
+	@POST
+	@Path("/getAllK2AEForms")
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
+	public AbstractSearchResponse<String> getAllK2AEForms(String jsonString) {
+		try {
+			AbstractSearchResponse<String> response = new AbstractSearchResponse<String>();
+			JSONArray jsonArray = JSONArray.fromObject(jsonString);
+			List<String> errors = new ArrayList<String>();
+			int totalEFormsProcessed = 0;
+			
+			AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
+			AppOAuth1Config appAuthConfig = AppOAuth1Config.fromDocument(k2aApp.getConfig());
+			
+	        for (int i = 0; i < jsonArray.size(); i++) {
+	        		JSONObject eform = jsonArray.getJSONObject(i);
+				    URL url = new URL(appAuthConfig.getBaseURL() + "/download/eform/" + eform.getString("id"));
+			        
+					url.openStream();
+					EFormExportZip eFormExportZip = new EFormExportZip();
+					List<String> eformErrors = eFormExportZip.importForm(url.openStream());
+					if(eformErrors != null) {
+					    errors.add("failed to upload eform: " + eform.getString("name") + ", eform may already exist in OSCAR.");
+					}
+					totalEFormsProcessed++;
+	        }
+			response.setTotal(totalEFormsProcessed);
+	        response.setContent(errors);
+	        return response;
+		} catch (Exception e) {
+            MiscUtils.getLogger().error("Error parsing data - " + e);
+    	    return null;
+        }
+	}
+	
+	public static String getK2AEFormsList(AppDefinition k2aApp, AppUser k2aUser) {
+		try {
+			AppOAuth1Config appAuthConfig = AppOAuth1Config.fromDocument(k2aApp.getConfig());
+			Map<String,String> keySecret = AppOAuth1Config.getKeySecret(k2aUser.getAuthenticationData());
+			
+			OAuthClientUtils.Consumer consumer = new OAuthClientUtils.Consumer(appAuthConfig.getConsumerKey(),appAuthConfig.getConsumerSecret());
+			OAuthClientUtils.Token accessToken = new OAuthClientUtils.Token(keySecret.get("key"),keySecret.get("secret"));
+			String method = "GET";
+			String requestURI = appAuthConfig.getBaseURL() + "/ws/api/eforms/getEForms";
+			
+			WebClient webclient = WebClient.create(requestURI);
+			
+			webclient = webclient.replaceHeader("Authorization",OAuthClientUtils.createAuthorizationHeader(consumer, accessToken, method, requestURI));
+			
+			javax.ws.rs.core.Response reps = webclient.get();
+			
+			InputStream in = (InputStream) reps.getEntity();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			
+			String line;
+			StringBuilder sb = new StringBuilder();
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+			return sb.toString();
+		} catch(Exception e) {
+			return null;
+		}
+	}
 }
