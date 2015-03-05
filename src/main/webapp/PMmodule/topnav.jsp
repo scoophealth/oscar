@@ -175,7 +175,13 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 					<a HREF="#" ONCLICK ="popupOscarRx(700,687,'<html:rewrite page="/admin/admin.jsp"/>');return false;"><bean:message key="global.admin"/></a>
 				</li>
 </security:oscarSec>
-
+				<oscar:oscarPropertiesCheck property="referral_menu" value="yes">
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.misc" rights="r">
+						<li id="ref">
+ 							<a href="#" onclick="popupPage(550,800,'../admin/ManageBillingReferral.do');return false;"><bean:message key="global.manageReferrals"/></a>
+						</li>
+					</security:oscarSec>
+				</oscar:oscarPropertiesCheck>
 				<li>
 					<a href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'>Program</a>
 				</li>
