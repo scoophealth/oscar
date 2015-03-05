@@ -88,7 +88,8 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 		//CDA per patient.
 		ONAREnhancedBornConnector arConnector = new ONAREnhancedBornConnector();
 		BORN18MConnector eighteenMonthConnector = new BORN18MConnector();
-
+		List<Integer> formIdsSent = new ArrayList<Integer>();
+		
 		try {
 			//Check the AR connector first.
 			List<Map<String, Object>> arMetadata = arConnector.getMetadata();
@@ -104,6 +105,7 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 				if (xml.addXmlToStream(pw, opts, null, String.valueOf(metadata.get("demographicNo")), (Integer) metadata.get("id"), (Integer) metadata.get("episodeId"))) {
 					sw.append("</ARRecordSet>");
 					result = sw.toString();
+					formIdsSent.add((Integer) metadata.get("id"));
 				} else {
 					continue;
 				}
@@ -141,15 +143,29 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 				//Create the XDS record, and have it sent.
 
 				boolean xdsResult = createXds(demographic.getDemographicNo(), cdaForLogging);
+				
+				
+				if(xdsResult) {
+					ONAREnhancedBornConnector connector = new ONAREnhancedBornConnector();
+					for(Integer formId:formIdsSent) {
+						connector.updateToSent(formId);
+					}
+				}
 			}
 
 			/* EIGHTEEN MONTH SECTION */
 
+			
 			//We get list of patients that are candidates, from the patient, we have to create the CDA record.
 			List<Integer> eighteenMonthDemos = eighteenMonthConnector.getDemographicIdsOfUnsentRecords();
 
 			for (Integer d : eighteenMonthDemos) {
-				String xml = eighteenMonthConnector.getXmlForDemographic(d);
+				Object[] data = eighteenMonthConnector.getXmlForDemographic(d);
+				if(data == null) {
+					logger.warn("no data to send");
+					continue;
+				}
+				String xml = (String)data[3];
 				if (xml != null) {
 					if (logger.isDebugEnabled()) {
 						logger.debug("Eighteen Month XML for Patient " + d + "\n" + xml);
@@ -178,6 +194,9 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 
 					boolean xdsResult = createXds(d, cdaForLogging);
 
+					if(xdsResult) {
+						eighteenMonthConnector.recordFormSent(d, (Integer)data[0],(Integer) data[1],(Integer) data[2]);
+					}
 				}
 			}
 
