@@ -46,6 +46,7 @@
 <%@page import="org.oscarehr.util.LoggedInInfo,org.oscarehr.common.dao.DrugReasonDao,org.oscarehr.common.model.DrugReason"%>
 <%@page import="java.util.ArrayList,oscar.util.*,java.util.*,org.oscarehr.common.model.Drug,org.oscarehr.common.dao.*"%>
 <%@page import="org.oscarehr.managers.DrugDispensingManager" %>
+<%@page import="org.oscarehr.managers.CodingSystemManager" %>
 <bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 <logic:notPresent name="RxSessionBean" scope="session">
     <logic:redirect href="error.html" />
@@ -69,6 +70,8 @@
 	        showall = true;
 	    }
 	}
+	
+	CodingSystemManager codingSystemManager = SpringUtils.getBean(CodingSystemManager.class);
 	
 	boolean integratorEnabled = loggedInInfo.getCurrentFacility().isIntegratorEnabled();
 	String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
@@ -94,14 +97,16 @@ if (heading != null){
 			}            
             %>
             <th align="center" width="35px"><b><bean:message key="SearchDrug.msgDiscontinue"/></b></th>		
-			<th align="center" width="35px"><b><bean:message key="SearchDrug.msgReason"/></b></th>    
+			<th align="center" width="35px" title="<bean:message key="SearchDrug.msgReason_help"/>"><b><bean:message key="SearchDrug.msgReason"/></b></th>    
             <th align="center" width="35px"><b><bean:message key="SearchDrug.msgPastMed"/></b></th>
             <%if(securityManager.hasWriteAccess("_rx",roleName$,true)) {%>
             	<th align="center" width="15px">&nbsp;</th>
             <% } %>
             <th align="center"><bean:message key="SearchDrug.msgLocationPrescribed"/></th>
             <th align="center" title="<bean:message key="SearchDrug.msgHideCPP_help"/>"><bean:message key="SearchDrug.msgHideCPP"/></th>
+            <%if(OscarProperties.getInstance().getProperty("rx.enable_internal_dispensing","false").equals("true")) {%>
              <th align="center"><bean:message key="SearchDrug.msgDispense"/></th>
+             <%} %>
              <th align="center"></th>
         </tr>
 
@@ -285,11 +290,11 @@ if (heading != null){
             		if (prescriptDrug.getRemoteFacilityId()==null && securityManager.hasWriteAccess("_rx",roleName$,true) )
             		{
             			%>
-			           	 	<a href="javascript:void(0);"  onclick="popupRxReasonWindow(<%=patient.getDemographicNo()%>,<%=prescriptIdInt%>);"  title="<%=displayDrugReason(drugReasons) %>">
+			           	 	<a href="javascript:void(0);"  onclick="popupRxReasonWindow(<%=patient.getDemographicNo()%>,<%=prescriptIdInt%>);"  title="<%=displayDrugReason(codingSystemManager,drugReasons,true) %>">
             			<%
             		}
             	%>
-            	<%=StringUtils.maxLenString(displayDrugReason(drugReasons), 4, 3, StringUtils.ELLIPSIS)%>
+            	<%=StringUtils.maxLenString(displayDrugReason(codingSystemManager,drugReasons,false), 4, 3, StringUtils.ELLIPSIS)%>
 				<%
 		      		if (prescriptDrug.getRemoteFacilityId()==null  && securityManager.hasWriteAccess("_rx",roleName$,true))
 		      		{
@@ -345,6 +350,7 @@ if (heading != null){
 				<input type="checkbox" id="hidecpp_<%=prescriptIdInt%>" <%=checked%>/>
 			</td>
 			
+			<%if(OscarProperties.getInstance().getProperty("rx.enable_internal_dispensing","false").equals("true")) {%>
 			<td align="center" valign="top">
 				<%
 					if(prescriptDrug.getDispenseInternal() != null && prescriptDrug.getDispenseInternal() == true ) {
@@ -357,6 +363,7 @@ if (heading != null){
 					} }
 				%>
 			</td>
+			<% } %>
 			
 			<td nowrap="nowrap" align="center" valign="top">
 				<%if(!(prescriptDrugs.get(prescriptDrugs.size()-1) == prescriptDrug)) {%>
@@ -452,17 +459,25 @@ String getName(Drug prescriptDrug){
 
 %><%!
 
-String displayDrugReason(List<DrugReason> drugReasons){
+String displayDrugReason(CodingSystemManager codingSystemManager, List<DrugReason> drugReasons,boolean title){
 	StringBuilder sb = new StringBuilder();
 	boolean multiLoop = false;
 	for(DrugReason drugReason:drugReasons){
 		if(multiLoop){
 			sb.append(", ");
 		}
-		sb.append(drugReason.getCode());
+		String codeDescr = codingSystemManager.getCodeDescription(drugReason.getCodingSystem(),drugReason.getCode());
+		if(codeDescr != null) {
+			sb.append(StringEscapeUtils.escapeHtml(codeDescr));
+		} else {
+			sb.append(drugReason.getCode());
+		}
 		multiLoop = true;
 	}
 	if(sb.toString().equals("")){
+		if(title) {
+			return "No diseases are associated with this medication";
+		}
 		return "---";
 	}
 	
