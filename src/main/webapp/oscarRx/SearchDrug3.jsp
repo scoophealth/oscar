@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.util.WebUtilsOld"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.common.dao.DrugDao"%>
@@ -54,6 +55,10 @@
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
 <%@page import="org.oscarehr.study.StudyFactory, org.oscarehr.study.Study, org.oscarehr.study.types.MyMedsStudy" %>
 <bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
+
+<%@page import="org.oscarehr.casemgmt.service.CaseManagementManager" %>
+<%@page import="org.oscarehr.casemgmt.model.CaseManagementNote" %>
+<%@page import="org.oscarehr.casemgmt.model.Issue" %>
 
 <%
 String rx_enhance = OscarProperties.getInstance().getProperty("rx_enhance");
@@ -191,6 +196,15 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
                 boolean eRxTrainingModeTemp = providerPreference.isERxTrainingMode();
                 if(eRxTrainingModeTemp) eRxTrainingMode="1";
              }
+            
+            CaseManagementManager cmgmtMgr = SpringUtils.getBean(CaseManagementManager.class);
+            List<Issue> issues = cmgmtMgr.getIssueInfoByCode(loggedInInfo.getLoggedInProviderNo(),"OMeds");
+            String[] issueIds = new String[issues.size()];
+			int idx = 0;
+			for (Issue issue : issues) {
+				issueIds[idx] = String.valueOf(issue.getId());
+			}
+			List<CaseManagementNote> notes = cmgmtMgr.getNotes(bean.getDemographicNo()+"", issueIds);
              
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -1038,6 +1052,42 @@ body {
                                             </td>
                                         </tr>
                                     </table>
+                                    <table width="100%"><!--drug profile, view and listdrugs.jsp-->
+                                        <tr>
+                                            <td>
+                                                <div class="DivContentSectionHead">
+                                                Other Medications
+                                             </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td>
+                                        	<table class="sortable" id="OMedsTabls" width="50%" border="0" cellpadding="3">
+                                        		<tr>
+                                        			<th align="left">Date Entered</th>
+                                        			<th align="left">Medication</th>
+                                        		</tr>
+                                        		 <%
+                                        		// java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                                     			
+                                			for(CaseManagementNote note:notes) {
+                            				if (!note.isLocked() && !note.isArchived()) {
+                            					String str = note.getNote();
+                            					%>
+                            						<tr>
+                            							<td><%=formatter.format(note.getCreate_date()) %></td>
+                            							<td><%=StringEscapeUtils.escapeHtml(str)%></td>
+                            						</tr>
+                            					<% 
+                            				}
+                            			}
+                            			 %>
+                            			 
+                                        	</table>
+                                        	</td>
+                                        </tr>
+                                    </table>
+                                    
                                 </div>
                             </td>
                         </tr>
