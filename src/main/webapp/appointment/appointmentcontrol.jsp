@@ -42,6 +42,7 @@
      {"Group Action" ,  "appointmentgrouprecords.jsp"},
      {"Add Appt & PrintPreview" , "appointmentaddrecordprint.jsp"},
      {"Add Appt & PrintCard" , "appointmentaddrecordcard.jsp"},
+     {"PrintCard" , "appointmentviewrecordcard.jsp"},
      {"TicklerSearch" , "../tickler/ticklerAdd.jsp"},
      {"Search " , "../demographic/demographiccontrol.jsp"},
      {"Search" , "appointmentsearchrecords.jsp"},
