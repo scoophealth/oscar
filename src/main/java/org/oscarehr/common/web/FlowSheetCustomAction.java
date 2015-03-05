@@ -74,7 +74,7 @@ public class FlowSheetCustomAction extends DispatchAction {
         return null;
     }
 
-    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String flowsheet = request.getParameter("flowsheet");
         String demographicNo = request.getParameter("demographic");
 
@@ -92,10 +92,14 @@ public class FlowSheetCustomAction extends DispatchAction {
             h.put("value_name", request.getParameter("value_name"));
             String prevItem = null;
             if (request.getParameter("count") != null) {
-                int cou = Integer.parseInt(request.getParameter("count"));
-                if (cou != 0) {
-                    prevItem = mFlowsheet.getMeasurementList().get(cou);
-                }
+            	try {
+	                int cou = Integer.parseInt(request.getParameter("count"));
+	                if (cou != 0) {
+	                    prevItem = mFlowsheet.getMeasurementList().get(cou);
+	                }
+            	} catch (NumberFormatException ex) {
+            		logger.debug("Parameter 'count' is not a number",ex);
+            	}
             }
 
             @SuppressWarnings("unchecked")
