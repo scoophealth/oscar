@@ -81,6 +81,12 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
       document.getElementById("importHeading").className = activeStyle;
       document.getElementById("importDiv").style.display = 'block';
   }
+  
+  function openDownload() {
+      closeInputs();
+      document.getElementById("downloadHeading").className = activeStyle;
+      document.getElementById("downloadDiv").style.display = 'block';
+  }
 
   function doOnLoad() {
     <%String input = request.getParameter("input");
@@ -109,7 +115,7 @@ $(function ()  {
 <ul class="nav nav-pills" id="eformOptions">
 <li ><a href="#upload" >Upload</a></li>
 <li><a href="#import">Import</a></li>
-<li><a href="#download" onclick="newWindow('<%= request.getContextPath() %>/eform/efmformmanagerdownload.jsp', 'eformDownload'); return false;">Download</a></li>
+<li><a href="#download">Download</a></li>
 </ul>
  
 <div class="tab-content">
@@ -130,11 +136,17 @@ $(function ()  {
 </div>
 
 <div class="tab-pane" id="download">
+<div class="well">
+                        
+<iframe id="downloadFrame" name="downloadFrame" onload="downloadFrameLoaded()" frameborder="0" width="1200" height="auto" scrolling="no" src="<%=request.getContextPath()%>/eform/partials/download.jsp"></iframe>
 
+</div>
 </div>
 
 </div><!-- tab content eformOptions -->
     
+<h4><bean:message key="eform.uploadhtml.msgCurrentResources" /></h4>
+
 <table class="table table-condensed table-striped" id="eformTbl">
 <thead>
     <tr>
@@ -190,10 +202,20 @@ $(function ()  {
 <script>
     $('#eformOptions a').click(function (e) {
     e.preventDefault();
+    if(this.href.contains('download')) {
+    	document.getElementById("downloadFrame").src = document.getElementById("downloadFrame").src;
+    }
     $(this).tab('show');
     });
 
-
+	function downloadFrameLoaded() {
+		var iFrame = document.getElementById('downloadFrame');
+		if(iFrame) {
+            iFrame.height = "";
+            iFrame.height = iFrame.contentWindow.document.body.scrollHeight + "px";
+      	}   
+  	}
+  
 registerFormSubmit('eformImportForm', 'dynamic-content');
 
 </script>

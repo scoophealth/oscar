@@ -106,11 +106,11 @@ public class AppOAuth1Config implements AppAuthConfig{
 		this.consumerSecret = consumerSecret;
 	}
 
-	public static AppAuthConfig fromDocument(String s) throws Exception{
+	public static AppOAuth1Config fromDocument(String s) throws Exception{
 		return fromDocument(XmlUtils.toDocument(s));
 	}
 	
-	public static AppAuthConfig fromDocument(Document doc){
+	public static AppOAuth1Config fromDocument(Document doc){
 		AppOAuth1Config config = new AppOAuth1Config();
 
 		Node rootNode = doc.getFirstChild();
