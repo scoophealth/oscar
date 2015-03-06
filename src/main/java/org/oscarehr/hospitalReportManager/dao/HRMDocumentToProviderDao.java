@@ -9,6 +9,7 @@
 
 package org.oscarehr.hospitalReportManager.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -47,34 +48,37 @@ public class HRMDocumentToProviderDao extends AbstractDao<HRMDocumentToProvider>
 	}
 
 	public List<HRMDocumentToProvider> findByProviderNoLimit(String providerNo, Date newestDate, Date oldestDate, Integer viewed, Integer signedOff) {
-		String sql = "select x from " + this.modelClass.getName() + " x, HRMDocument h where x.hrmDocumentId=h.id and x.providerNo like ?";
-		if (newestDate != null)
-			sql += " and h.reportDate <= :newest";
-		if (oldestDate != null)
-			sql += " and h.reportDate >= :oldest";
-		if (viewed != 2)
-			sql += " and x.viewed = :viewed";
-		if (signedOff != 2)
-			sql += " and x.signedOff = :signedOff";
+		if (!(oldestDate == null && newestDate == null)) {
+			String sql = "select x from " + this.modelClass.getName() + " x, HRMDocument h where x.hrmDocumentId=h.id and x.providerNo like ?";
+			if (newestDate != null)
+				sql += " and h.reportDate <= :newest";
+			if (oldestDate != null)
+				sql += " and h.reportDate >= :oldest";
+			if (viewed != 2)
+				sql += " and x.viewed = :viewed";
+			if (signedOff != 2)
+				sql += " and x.signedOff = :signedOff";
 
-		Query query = entityManager.createQuery(sql);
-		query.setParameter(1, providerNo);
+			Query query = entityManager.createQuery(sql);
+			query.setParameter(1, providerNo);
 
-		if (newestDate != null)
-			query.setParameter("newest", newestDate);
+			if (newestDate != null)
+				query.setParameter("newest", newestDate);
 
-		if (oldestDate != null)
-			query.setParameter("oldest", oldestDate);
+			if (oldestDate != null)
+				query.setParameter("oldest", oldestDate);
 
-		if (viewed != 2)
-			query.setParameter("viewed", viewed);
-		
-		if (signedOff != 2)
-			query.setParameter("signedOff", signedOff);
+			if (viewed != 2)
+				query.setParameter("viewed", viewed);
+			
+			if (signedOff != 2)
+				query.setParameter("signedOff", signedOff);
 
-		@SuppressWarnings("unchecked")
-		List<HRMDocumentToProvider> documentToProviders = query.getResultList();
-		return documentToProviders;
+			@SuppressWarnings("unchecked")
+			List<HRMDocumentToProvider> documentToProviders = query.getResultList();
+			return documentToProviders;
+		}
+		return new ArrayList<HRMDocumentToProvider>();
 	}
 
 

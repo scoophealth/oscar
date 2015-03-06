@@ -58,6 +58,7 @@ String curUser_no = (String) session.getAttribute("user");
 			function submitLabel(lblval){
 		       	 document.forms['TDISLabelForm'].label.value = document.forms['acknowledgeForm'].label.value;
 	       	}
+			oldestLab = '<%=request.getAttribute("oldestLab") %>';
 </script>
 
 <% if (isListView && pageNum == 0) { %>
@@ -396,9 +397,6 @@ String curUser_no = (String) session.getAttribute("user");
                                                     arr2.push(ele);
                                                 }
                                                 doclabid_seq=arr2;
-
-                                                oldestLab = '<%=request.getAttribute("oldestLab") %>';
-
                                         </script>
                                         </tr>
                                     </table>

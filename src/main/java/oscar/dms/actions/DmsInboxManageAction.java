@@ -535,7 +535,7 @@ public class DmsInboxManageAction extends DispatchAction {
 		// Find the oldest lab returned in labdocs, use that as the limit date for the HRM query
 		Date oldestLab = null;
 		Date newestLab = null;
-		if (request.getParameter("newestDate") != null) {
+		if (request.getParameter("newestDate") != null && !request.getParameter("newestDate").equalsIgnoreCase("null")) {
 			try {
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				newestLab = formatter.parse(request.getParameter("newestDate"));
@@ -552,16 +552,22 @@ public class DmsInboxManageAction extends DispatchAction {
 					newestLab = result.getDateObj();
 			}
 		}
+		
+		// check if Ibox only includes no labs/documents but maybe HRM reports
+		if (page==0 && newestLab == null && oldestLab == null) {
+			newestLab = new Date();
+		}
 
 		HRMResultsData hrmResult = new HRMResultsData();
 
 		Collection<LabResultData> hrmDocuments = hrmResult.populateHRMdocumentsResultsData(searchProviderNo, ackStatus, newestLab, oldestLab);
-		if (oldestLab == null) {
+		/*// No need to update the oldest date from HRM list as it is already being picked from a defined time range
+		 * if (oldestLab == null) {
 			for (LabResultData hrmDocument : hrmDocuments) {
 				if (oldestLab == null || (hrmDocument.getDateObj() != null && oldestLab.compareTo(hrmDocument.getDateObj()) > 0))
 					oldestLab = hrmDocument.getDateObj();
 			}
-		}
+		}*/
 
 		labdocs.addAll(hrmDocuments);
 		Collections.sort(labdocs);
