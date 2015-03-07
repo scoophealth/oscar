@@ -51,7 +51,7 @@ public class EctConAddServiceAction extends Action
         String service = addServiceForm.getService();
 
         ConsultationServices cs = new ConsultationServices();
-        cs.setActive("1");
+        cs.setActive(consultationServiceDao.ACTIVE);
         cs.setServiceDesc(service);
         consultationServiceDao.persist(cs);
         request.setAttribute("SERVADD", service);

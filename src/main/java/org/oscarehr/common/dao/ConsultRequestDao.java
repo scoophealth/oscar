@@ -21,7 +21,7 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.consultations;
+package org.oscarehr.common.dao;
 
 import java.util.Date;
 import java.util.List;
@@ -33,16 +33,17 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 import org.oscarehr.common.PaginationQuery;
-import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.common.model.ConsultationRequest;
-import org.oscarehr.consultations.ConsultationSearchFilter.SORTMODE;
+import org.oscarehr.consultations.ConsultationQuery;
+import org.oscarehr.consultations.ConsultationRequestSearchFilter;
+import org.oscarehr.consultations.ConsultationRequestSearchFilter.SORTMODE;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ConsultationDao extends AbstractDao<ConsultationRequest> {
+public class ConsultRequestDao extends AbstractDao<ConsultationRequest> {
 
-	public ConsultationDao() {
+	public ConsultRequestDao() {
 		super(ConsultationRequest.class);
 	}
 
@@ -137,7 +138,7 @@ public class ConsultationDao extends AbstractDao<ConsultationRequest> {
 	}
 	
 	
-	public int getConsultationCount2(ConsultationSearchFilter filter) {
+	public int getConsultationCount2(ConsultationRequestSearchFilter filter) {
 		String sql = getSearchQuery(filter,true);
 		MiscUtils.getLogger().info("sql="+sql);
 		Query query = entityManager.createQuery(sql);
@@ -147,7 +148,7 @@ public class ConsultationDao extends AbstractDao<ConsultationRequest> {
 		return count.intValue();
 	}
 
-	public List<Object[]> search(ConsultationSearchFilter filter) {
+	public List<Object[]> search(ConsultationRequestSearchFilter filter) {
 		String sql = this.getSearchQuery(filter,false);
 		MiscUtils.getLogger().info("sql="+sql);
 		Query query = entityManager.createQuery(sql);
@@ -156,7 +157,7 @@ public class ConsultationDao extends AbstractDao<ConsultationRequest> {
 		return query.getResultList();
 	}
 	
-	private String getSearchQuery(ConsultationSearchFilter filter, boolean selectCountOnly) {
+	private String getSearchQuery(ConsultationRequestSearchFilter filter, boolean selectCountOnly) {
 		
 		StringBuilder sql = new StringBuilder(
 				"select "+ (selectCountOnly?"count(*)":"cr,specialist,cs,d,p") +
@@ -164,11 +165,11 @@ public class ConsultationDao extends AbstractDao<ConsultationRequest> {
 				" left outer join d.provider p where d.DemographicNo = cr.demographicId and cs.id = cr.serviceId ");
 		
 		if (filter.getAppointmentStartDate() != null) {
-			sql.append("and cr.appointmentDate >=  '" + FastDateFormat.getInstance("yyyy-MM-dd").format(filter.getAppointmentStartDate()) + " 00:00:00' ");			
+			sql.append("and cr.appointmentDate >=  '" + FastDateFormat.getInstance("yyyy-MM-dd").format(filter.getAppointmentStartDate()) + "' ");			
 		}
 		
 		if (filter.getAppointmentEndDate() != null) {
-			sql.append("and cr.appointmentDate <=  '" +  DateFormatUtils.ISO_DATE_FORMAT.format(filter.getAppointmentStartDate()) + " 23:59:59' ");			
+			sql.append("and cr.appointmentDate <=  '" +  DateFormatUtils.ISO_DATE_FORMAT.format(filter.getAppointmentEndDate()) + " 23:59:59' ");			
 		}
 		
 		if (filter.getReferralStartDate() != null) {

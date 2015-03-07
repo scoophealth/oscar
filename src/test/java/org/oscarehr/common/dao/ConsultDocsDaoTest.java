@@ -58,7 +58,7 @@ public class ConsultDocsDaoTest extends DaoTestFixtures {
         }
 
 	@Test
-	public void testFindByRequestIdDocumentNoAndDocumentType() throws Exception {
+	public void testFindByRequestIdDocNoDocType() throws Exception {
 		
 		int requestId1 = 111;
 		int requestId2 = 222;
@@ -74,6 +74,7 @@ public class ConsultDocsDaoTest extends DaoTestFixtures {
 		consultDocs1.setRequestId(requestId1);
 		consultDocs1.setDocumentNo(documentNo1);
 		consultDocs1.setDocType(docType1);
+		consultDocs1.setDeleted(null);
 		dao.persist(consultDocs1);
 		
 		ConsultDocs consultDocs2 = new ConsultDocs();
@@ -81,6 +82,7 @@ public class ConsultDocsDaoTest extends DaoTestFixtures {
 		consultDocs2.setRequestId(requestId2);
 		consultDocs2.setDocumentNo(documentNo1);
 		consultDocs2.setDocType(docType1);
+		consultDocs2.setDeleted(null);
 		dao.persist(consultDocs2);
 		
 		ConsultDocs consultDocs3 = new ConsultDocs();
@@ -88,6 +90,7 @@ public class ConsultDocsDaoTest extends DaoTestFixtures {
 		consultDocs3.setRequestId(requestId1);
 		consultDocs3.setDocumentNo(documentNo2);
 		consultDocs3.setDocType(docType1);
+		consultDocs3.setDeleted(null);
 		dao.persist(consultDocs3);
 		
 		ConsultDocs consultDocs4 = new ConsultDocs();
@@ -102,10 +105,19 @@ public class ConsultDocsDaoTest extends DaoTestFixtures {
 		consultDocs5.setRequestId(requestId1);
 		consultDocs5.setDocumentNo(documentNo1);
 		consultDocs5.setDocType(docType1);
+		consultDocs5.setDeleted(null);
 		dao.persist(consultDocs5);
 		
+		ConsultDocs consultDocs6 = new ConsultDocs();
+		EntityDataGenerator.generateTestDataForModelClass(consultDocs6);
+		consultDocs6.setRequestId(requestId1);
+		consultDocs6.setDocumentNo(documentNo1);
+		consultDocs6.setDocType(docType1);
+		consultDocs6.setDeleted("Y");
+		dao.persist(consultDocs6);
+		
 		List<ConsultDocs> expectedResult = new ArrayList<ConsultDocs>(Arrays.asList(consultDocs1, consultDocs5));
-		List<ConsultDocs> result = dao.findByRequestIdDocumentNoAndDocumentType(requestId1, documentNo1, docType1);
+		List<ConsultDocs> result = dao.findByRequestIdDocNoDocType(requestId1, documentNo1, docType1);
 
 		Logger logger = MiscUtils.getLogger();
 		
@@ -120,11 +132,6 @@ public class ConsultDocsDaoTest extends DaoTestFixtures {
 			}
 		}
 		assertTrue(true);
-	}
-
-	@Test
-	public void testfindByConsultationIdAndType()  {
-		assertNotNull(dao.findByConsultationIdAndType(199, "F"));
 	}
 	
 

@@ -48,8 +48,9 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 	});
 	
 	//set attachments
-	consultService.getAttachments(consult.id, consult.demographicId).then(function(data){
-		$scope.attachments = data;
+	consultService.getRequestAttachments(consult.id, consult.demographicId, true).then(function(data){
+		consult.attachments = toArray(data);
+		addShortNames(consult.attachments);
 	});
 	
 	//set appointment time
@@ -59,7 +60,7 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 		consult.appointmentMinute = pad0(apptTime.getMinutes());
 	}
 
-	$scope.urgencies = staticDataService.getConsultRequestUrgencies();
+	$scope.urgencies = staticDataService.getConsultUrgencies();
 	$scope.statuses = staticDataService.getConsultRequestStatuses();
 	$scope.hours = staticDataService.getHours();
 	$scope.minutes = staticDataService.getMinutes();
@@ -181,6 +182,10 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 			}
 		}
 		window.open("../oscarEncounter/oscarConsultationRequest/attachConsultation.jsp?provNo="+user.providerNo+"&demo="+consult.demographicId+"&requestId="+consult.id, "ConsultAttachment", "width=600, height=400");
+	}
+	
+	$scope.openAttach = function(attachment){
+		window.open("../"+attachment.url);
 	}
 	
 	$scope.printPreview = function(){
@@ -381,18 +386,17 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 
 
 function toArray(obj) { //convert single object to array
-	if (obj==null || (obj instanceof Array)) return obj;
+	if (obj instanceof Array) return obj;
+	else if (obj==null) return [];
 	else return [obj];
 }
 
 function writeToBox(data, boxId) {
 	var items = toArray(data.summaryItem);
-	if (items!=null) {
-		for (var i=0; i<items.length; i++) {
-			if (items[i].displayName!=null) {
-				if ($("#"+boxId).val().trim()!="") $("#"+boxId).val($("#"+boxId).val()+"\n");
-				$("#"+boxId).val($("#"+boxId).val()+items[i].displayName);
-			}
+	for (var i=0; i<items.length; i++) {
+		if (items[i].displayName!=null) {
+			if ($("#"+boxId).val().trim()!="") $("#"+boxId).val($("#"+boxId).val()+"\n");
+			$("#"+boxId).val($("#"+boxId).val()+items[i].displayName);
 		}
 	}
 }
@@ -425,4 +429,12 @@ function formatTime(d) {
 		d = pad0(d.getHours())+":"+pad0(d.getMinutes());
 	}
 	return d;
+}
+
+function addShortNames(docs) {
+	for (var i=0; i<docs.length; i++) {
+		var shortName = docs[i].displayName;
+		if (shortName.length>20) shortName = shortName.substring(0, 17)+"...";
+		docs[i].shortName = shortName;
+	}
 }

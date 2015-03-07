@@ -141,9 +141,6 @@ if (request.getParameter("casetoEncounter")==null)
   ArrayList labs = comLab.populateLabResultsData("",demoNo, "", "","","U");
   Collections.sort(labs);
 
-  //MDSResultsData labResults =  new MDSResultsData();
-  //labResults.populateMDSResultsData("", demoNo, "", "", "", "U");
-
   String province = ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
   Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes(provNo);
 

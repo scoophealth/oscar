@@ -32,6 +32,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.ConsultDocsDao;
+import org.oscarehr.common.dao.ConsultResponseDocDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.dao.MeasurementDao;
@@ -40,6 +41,7 @@ import org.oscarehr.common.dao.MeasurementsDeletedDao;
 import org.oscarehr.common.dao.MeasurementsExtDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.model.ConsultDocs;
+import org.oscarehr.common.model.ConsultResponseDoc;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.Measurement;
@@ -63,6 +65,12 @@ public class Hl7textResultsData {
 	private static MeasurementsDeletedDao measurementsDeletedDao = (MeasurementsDeletedDao) SpringUtils.getBean("measurementsDeletedDao");
 	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
+	private static MeasurementMapDao measurementMapDao = SpringUtils.getBean(MeasurementMapDao.class);
+	private static ConsultDocsDao consultDocsDao = SpringUtils.getBean(ConsultDocsDao.class);
+	private static ConsultResponseDocDao consultResponseDocDao = SpringUtils.getBean(ConsultResponseDocDao.class);
+	private static Hl7TextInfoDao hl7TxtInfoDao = SpringUtils.getBean(Hl7TextInfoDao.class);
+	private static Hl7TextMessageDao hl7TxtMsgDao = SpringUtils.getBean(Hl7TextMessageDao.class);
+	private static PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
 
 	private Hl7textResultsData() {
 		// no one should instantiate this
@@ -91,8 +99,7 @@ public class Hl7textResultsData {
 
 		if (k != 0) {
 			MeasurementsDeleted measurementsDeleted;
-			MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
-			for (Measurement m : dao.findByValue("lab_no", matchingLabs[k - 1])) {
+			for (Measurement m : measurementDao.findByValue("lab_no", matchingLabs[k - 1])) {
 				measurementsDeleted = new MeasurementsDeleted(m);
 				measurementsDeletedDao.persist(measurementsDeleted);
 				measurementDao.remove(m.getId());
@@ -132,8 +139,8 @@ public class Hl7textResultsData {
 
 				String measType = "";
 				String measInst = "";
-				MeasurementMapDao dao = SpringUtils.getBean(MeasurementMapDao.class);
-				List<Object[]> measurements = dao.findMeasurements("FLOWSHEET", identifier);
+				
+				List<Object[]> measurements = measurementMapDao.findMeasurements("FLOWSHEET", identifier);
 				if (measurements.isEmpty()) {
 					logger.warn("CODE:" + identifier + " needs to be mapped");
 				} else {
@@ -274,8 +281,7 @@ public class Hl7textResultsData {
 		Hl7TextInfo self = null;
 		List<Integer> idList = new ArrayList<Integer>();
 		
-		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
-		for (Object[] o : dao.findByLabIdViaMagic(ConversionUtils.fromIntString(lab_no))) {
+		for (Object[] o : hl7TxtInfoDao.findByLabIdViaMagic(ConversionUtils.fromIntString(lab_no))) {
 			Hl7TextInfo a = (Hl7TextInfo) o[0];
 			//Hl7TextInfo b = (Hl7TextInfo) o[1];
 
@@ -291,7 +297,7 @@ public class Hl7textResultsData {
 		//they come in with different accessions but same filler order no.
 		if(self != null && ret.length()>0 && ret.substring(1).indexOf(",") == -1) {
 			ret = "";
-			for(Hl7TextInfo info : dao.findByFillerOrderNumber(self.getFillerOrderNum())) {
+			for(Hl7TextInfo info : hl7TxtInfoDao.findByFillerOrderNumber(self.getFillerOrderNum())) {
 				ret = ret + "," + info.getLabNumber();
 				idList.add(info.getLabNumber());
 			}
@@ -320,14 +326,12 @@ public class Hl7textResultsData {
 		String ret = "";
 		int monthsBetween = 0;
 		
-		Hl7TextMessageDao msgDao = SpringUtils.getBean(Hl7TextMessageDao.class);
-		Hl7TextMessage hl7Msg = msgDao.find(Integer.parseInt(lab_no));
+		Hl7TextMessage hl7Msg = hl7TxtMsgDao.find(Integer.parseInt(lab_no));
 		if(hl7Msg != null && "CLS".equals(hl7Msg.getType())) {
 			return getMatchingLabs_CLS(lab_no);
 		}
 
-		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
-		for (Object[] o : dao.findByLabIdViaMagic(ConversionUtils.fromIntString(lab_no))) {
+		for (Object[] o : hl7TxtInfoDao.findByLabIdViaMagic(ConversionUtils.fromIntString(lab_no))) {
 			Hl7TextInfo a = (Hl7TextInfo) o[0];
 			Hl7TextInfo b = (Hl7TextInfo) o[1];
 
@@ -359,26 +363,41 @@ public class Hl7textResultsData {
 	}
 
 	/**
-	 *Populates ArrayList with labs attached to a consultation request
+	 * Populates ArrayList with labs attached to a consultation request
 	 */
-	@SuppressWarnings("unchecked")
+	// Populates labs to consult request
 	public static ArrayList<LabResultData> populateHL7ResultsData(String demographicNo, String consultationId, boolean attached) {
-		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
-		ArrayList<LabResultData> attachedLabs = new ArrayList<LabResultData>();
-
-		ConsultDocsDao cdDao = SpringUtils.getBean(ConsultDocsDao.class);
-		for (Object[] o : cdDao.findDocs(ConversionUtils.fromIntString(consultationId))) {
+		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
+		for (Object[] o : consultDocsDao.findLabs(ConversionUtils.fromIntString(consultationId))) {
 			ConsultDocs c = (ConsultDocs) o[0];
-
 			LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
 			lbData.labPatientId = ConversionUtils.toIntString(c.getDocumentNo());
 			attachedLabs.add(lbData);
 		}
-MiscUtils.getLogger().info("ATTACHED LAB " + attachedLabs.size());
+		List<Object[]> labsHl7 = hl7TxtInfoDao.findByDemographicId(ConversionUtils.fromIntString(demographicNo));
+		return populateHL7ResultsData(attachedLabs, labsHl7, attached);
+	}
+	
+	// Populates labs to consult response
+	public static ArrayList<LabResultData> populateHL7ResultsDataConsultResponse(String demographicNo, String consultationId, boolean attached) {
+		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
+		for (Object[] o : consultResponseDocDao.findLabs(ConversionUtils.fromIntString(consultationId))) {
+			ConsultResponseDoc c = (ConsultResponseDoc) o[0];
+			LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
+			lbData.labPatientId = ConversionUtils.toIntString(c.getDocumentNo());
+			attachedLabs.add(lbData);
+		}
+		List<Object[]> labsHl7 = hl7TxtInfoDao.findByDemographicId(ConversionUtils.fromIntString(demographicNo));
+		return populateHL7ResultsData(attachedLabs, labsHl7, attached);
+	}
+	
+	// Populates labs private shared method
+	private static ArrayList<LabResultData> populateHL7ResultsData(List<LabResultData> attachedLabs, List<Object[]> labsHl7, boolean attached) {
+		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
+
 		LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
 		LabResultData.CompareId c = lbData.getComparatorId();
-		Hl7TextInfoDao hlDao = SpringUtils.getBean(Hl7TextInfoDao.class);
-		for (Object[] o : hlDao.findByDemographicId(ConversionUtils.fromIntString(demographicNo))) {
+		for (Object[] o : labsHl7) {
 			Hl7TextInfo i = (Hl7TextInfo) o[0];
 			PatientLabRouting p = (PatientLabRouting) o[1];
 
@@ -389,7 +408,7 @@ MiscUtils.getLogger().info("ATTACHED LAB " + attachedLabs.size());
 			lbData.accessionNumber = i.getAccessionNumber();
 			lbData.finalResultsCount = i.getFinalResultCount();
 			lbData.label = i.getLabel();
-MiscUtils.getLogger().info("SEARCHING FOR " + lbData.getLabPatientId());
+
 			if (attached && Collections.binarySearch(attachedLabs, lbData, c) >= 0) labResults.add(lbData);
 			else if (!attached && Collections.binarySearch(attachedLabs, lbData, c) < 0) labResults.add(lbData);
 
@@ -398,6 +417,10 @@ MiscUtils.getLogger().info("SEARCHING FOR " + lbData.getLabPatientId());
 
 		return labResults;
 	}
+	/**
+	 * End Populates labs attached to consultation
+	 */
+	
 
 	public static ArrayList<LabResultData> getNotAckLabsFromLabNos(List<String> labNos) {
 		ArrayList<LabResultData> ret = new ArrayList<LabResultData>();
@@ -414,9 +437,7 @@ MiscUtils.getLogger().info("SEARCHING FOR " + lbData.getLabPatientId());
 		// note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
 		// for the provider number if unable to find correct provider
 
-		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
-		List<Hl7TextInfo> infos = dao.findByLabId(ConversionUtils.fromIntString(labNo));
-
+		List<Hl7TextInfo> infos = hl7TxtInfoDao.findByLabId(ConversionUtils.fromIntString(labNo));
 		if (infos.isEmpty()) return lbData;
 
 		Hl7TextInfo info = infos.get(0);
@@ -426,8 +447,7 @@ MiscUtils.getLogger().info("SEARCHING FOR " + lbData.getLabPatientId());
 		//check if any demographic is linked to this lab
 		if (lbData.isMatchedToPatient()) {
 			//get matched demographic no
-			PatientLabRoutingDao rDao = SpringUtils.getBean(PatientLabRoutingDao.class);
-			List<PatientLabRouting> rs = rDao.findByLabNoAndLabType(Integer.parseInt(lbData.segmentID), lbData.labType);
+			List<PatientLabRouting> rs = patientLabRoutingDao.findByLabNoAndLabType(Integer.parseInt(lbData.segmentID), lbData.labType);
 			if (!rs.isEmpty()) {
 				lbData.setLabPatientId("" + rs.get(0).getDemographicNo());
 			} else {
@@ -512,12 +532,11 @@ MiscUtils.getLogger().info("SEARCHING FOR " + lbData.getLabPatientId());
 
 		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
 
-		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
 		List<Object[]> routings = null;
 
 		if(labNo != null && labNo.intValue()>0) {
 			routings = new ArrayList<Object[]>();
-			for(Hl7TextInfo info:dao.findByLabId(labNo)) {
+			for(Hl7TextInfo info : hl7TxtInfoDao.findByLabId(labNo)) {
 				routings.add(new Object[]{info});
 			}
 		} else {
@@ -525,9 +544,9 @@ MiscUtils.getLogger().info("SEARCHING FOR " + lbData.getLabPatientId());
 				// note to self: lab reports not found in the providerLabRouting table will not show up - 
 				// need to ensure every lab is entered in providerLabRouting, with '0'
 				// for the provider number if unable to find correct provider				
-				routings = dao.findLabsViaMagic(status, providerNo, patientFirstName, patientLastName, patientHealthNumber);
+				routings = hl7TxtInfoDao.findLabsViaMagic(status, providerNo, patientFirstName, patientLastName, patientHealthNumber);
 			} else {
-				routings = dao.findByDemographicId(ConversionUtils.fromIntString(demographicNo));
+				routings = hl7TxtInfoDao.findByDemographicId(ConversionUtils.fromIntString(demographicNo));
 			}
 		}
 
@@ -542,8 +561,7 @@ MiscUtils.getLogger().info("SEARCHING FOR " + lbData.getLabPatientId());
 			//check if any demographic is linked to this lab
 			if (lbData.isMatchedToPatient()) {
 				//get matched demographic no
-				PatientLabRoutingDao pDao = SpringUtils.getBean(PatientLabRoutingDao.class);
-				List<PatientLabRouting> lst = pDao.findByLabNoAndLabType(Integer.parseInt(lbData.segmentID), lbData.labType);
+				List<PatientLabRouting> lst = patientLabRoutingDao.findByLabNoAndLabType(Integer.parseInt(lbData.segmentID), lbData.labType);
 
 				if (!lst.isEmpty()) {
 					lbData.setLabPatientId("" + lst.get(0).getDemographicNo());
@@ -645,11 +663,10 @@ MiscUtils.getLogger().info("SEARCHING FOR " + lbData.getLabPatientId());
 		boolean patientSearch = !"".equals(patientFirstName) || !"".equals(patientLastName) || !"".equals(patientHealthNumber);
 
 		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
-		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
 		// note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
 		// for the provider number if unable to find correct provider
 
-		for (Object[] i : dao.findLabAndDocsViaMagic(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, isPaged, page, pageSize, mixLabsAndDocs, isAbnormal, searchProvider, patientSearch)) {
+		for (Object[] i : hl7TxtInfoDao.findLabAndDocsViaMagic(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, isPaged, page, pageSize, mixLabsAndDocs, isAbnormal, searchProvider, patientSearch)) {
 
 			String label = String.valueOf(i[0]);
 			String lab_no = String.valueOf(i[1]);

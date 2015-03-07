@@ -79,7 +79,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 		$scope.currenttab2 = $scope.recordtabs2[temp.id];
 		
 		if(angular.isDefined(temp.state)){
-			if (temp.state=="consultRequests" && angular.isDefined(temp.extra)){
+			if ((temp.state=="consultRequests" || temp.state=="consultResponses") && angular.isDefined(temp.extra)){
 				 var params = {demographicId:temp.extra};
 				 $state.go(temp.state, params);
 			} else {

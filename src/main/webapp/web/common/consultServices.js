@@ -54,9 +54,9 @@ angular.module("consultServices", [])
             return deferred.promise;
         },
         
-        getAttachments: function(requestId, demographicId){
+        getRequestAttachments: function(requestId, demographicId, attached){
         	var deferred = $q.defer();
-        	$http.get(this.apiPath+'getAttachments?requestId='+requestId+'&demographicId='+demographicId).success(function(data){
+        	$http.get(this.apiPath+'getRequestAttachments?requestId='+requestId+'&demographicId='+demographicId+'&attached='+attached).success(function(data){
         		deferred.resolve(data);
         	}).error(function(){
             	  console.log("error fetching items");
@@ -75,6 +75,56 @@ angular.module("consultServices", [])
             }).error(function(){
           	  console.log("error fetching items");
               deferred.reject("An error occured while fetching consult request after save");
+            });
+       
+            return deferred.promise;
+        },
+
+		searchResponses: function(search){
+        	var deferred = $q.defer();
+        	$http.post(this.apiPath+'searchResponses',search).success(function(data){
+        		deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching items");
+              deferred.reject("An error occured while searching consult responses");
+            });
+       
+            return deferred.promise;
+        },
+        
+		getResponse: function(responseId, demographicNo){
+        	var deferred = $q.defer();
+        	$http.get(this.apiPath+'getResponse?responseId='+responseId+'&demographicNo='+demographicNo).success(function(data){
+        		deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching items");
+              deferred.reject("An error occured while getting consult response (responseId="+responseId+")");
+            });
+       
+            return deferred.promise;
+        },
+        
+        getResponseAttachments: function(responseId, demographicNo, attached){
+        	var deferred = $q.defer();
+        	$http.get(this.apiPath+'getResponseAttachments?responseId='+responseId+'&demographicNo='+demographicNo+'&attached='+attached).success(function(data){
+        		deferred.resolve(data);
+        	}).error(function(){
+            	  console.log("error fetching items");
+                  deferred.reject("An error occured while getting consult response attachments (responseId="+responseId+")");
+        	});
+        	
+        	return deferred.promise;
+        },
+        
+        saveResponse: function(response){
+        	var deferred = $q.defer();
+        	var responseTo1 = {consultationResponseTo1:response};
+        	$http.post(this.apiPath+'saveResponse', responseTo1).success(function(data){
+            	console.log(data);
+                deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching items");
+              deferred.reject("An error occured while fetching consult response after save");
             });
        
             return deferred.promise;
