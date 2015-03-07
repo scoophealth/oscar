@@ -104,6 +104,7 @@
 		<form-bean name="EctConAddSpecialistForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddSpecialistForm" />
 		<form-bean name="EctConAddInstitutionForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddInstitutionForm" />
 		<form-bean name="EctConAddDepartmentForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddDepartmentForm" />		
+		<form-bean name="EctConEnableReqRespForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConEnableReqRespForm" />
 		<form-bean name="EctConAddServiceForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddServiceForm" />
 		<form-bean name="EctConShowAllServicesForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConShowAllServicesForm" />
 		<form-bean name="EctConShowAllInstitutionsForm" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConShowAllInstitutionsForm" />
@@ -1135,6 +1136,9 @@
 		</action>
 		<action input="/oscarEncounter/oscarConsultationRequest/attachmentReport.jsp" name="FrmForm" path="/oscarEncounter/oscarConsultation/printAttached" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationPrintDocsAction">
 			<forward name="noprint" path="/oscarEncounter/oscarConsultationRequest/nothingtoPrint.jsp" />
+		</action>
+		<action input="/oscarConsultationRequest/config/EnableRequestResponse.jsp" name="EctConEnableReqRespForm" path="/oscarEncounter/EnableConRequestResponse" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConEnableReqRespAction">
+			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/EnableRequestResponse.jsp" />
 		</action>
 		<action input="/oscarConsultationRequest/config/AddService.jsp" name="EctConAddServiceForm" path="/oscarEncounter/AddService" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddServiceAction">
 			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/AddService.jsp" />
