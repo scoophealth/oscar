@@ -41,6 +41,7 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.managers.ConsultationManager;
 import org.oscarehr.managers.MessagingManager;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.SecurityInfoManager;
@@ -74,6 +75,9 @@ public class PersonaService extends AbstractServiceImpl {
 	
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
+	
+	@Autowired
+	private ConsultationManager consultationManager;
 	
 	
 	@GET
@@ -174,13 +178,31 @@ public class PersonaService extends AbstractServiceImpl {
 		
 		MenuTo1 menu = new MenuTo1()
 		        .add(idCounter++,bundle.getString("navbar.menu.schedule"),null,"../provider/providercontrol.jsp")
-				.addWithState(idCounter++,bundle.getString("navbar.menu.inbox"),null,"inbox")
-				.addWithState(idCounter++,bundle.getString("navbar.menu.consults"),null,"consultRequests")
-				.addWithState(idCounter++,bundle.getString("navbar.menu.billing"),null,"billing")
-				.addWithState(idCounter++,bundle.getString("navbar.menu.tickler"),null,"ticklers")
-				
-				//.add(0,"K2A",null,"#/k2a")
-				.addWithState(idCounter++,bundle.getString("navbar.menu.admin"),null,"admin");
+				.addWithState(idCounter++,bundle.getString("navbar.menu.inbox"),null,"inbox");
+
+		if (!consultationManager.isConsultResponseEnabled()) {
+			menu.addWithState(idCounter++,bundle.getString("navbar.menu.consults"),null,"consultRequests");
+		}
+		else if (!consultationManager.isConsultRequestEnabled()) {
+			menu.addWithState(idCounter++,bundle.getString("navbar.menu.consultResponses"),null,"consultResponses");
+		}
+
+		//consult menu
+		if (consultationManager.isConsultRequestEnabled() && consultationManager.isConsultResponseEnabled()) {
+			MenuItemTo1 consultMenu = new MenuItemTo1(idCounter++, bundle.getString("navbar.menu.consults"), null);
+			consultMenu.setDropdown(true);
+			MenuTo1 consultMenuList = new MenuTo1()
+					.addWithState(idCounter++,bundle.getString("navbar.menu.consultRequests"),null,"consultRequests")
+					.addWithState(idCounter++,bundle.getString("navbar.menu.consultResponses"),null,"consultResponses");
+			consultMenu.setDropdownItems(consultMenuList.getItems());
+			menu.getItems().add(consultMenu);
+		}
+		
+		menu.addWithState(idCounter++,bundle.getString("navbar.menu.billing"),null,"billing")
+			.addWithState(idCounter++,bundle.getString("navbar.menu.tickler"),null,"ticklers")
+			
+			//.add(0,"K2A",null,"#/k2a")
+			.addWithState(idCounter++,bundle.getString("navbar.menu.admin"),null,"admin");
 
 		MenuItemTo1 moreMenu = new MenuItemTo1(idCounter++, bundle.getString("navbar.menu.more"), null);
 		moreMenu.setDropdown(true);

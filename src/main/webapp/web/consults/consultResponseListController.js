@@ -1,4 +1,4 @@
-oscarApp.controller('ConsultRequestListCtrl', function ($scope, $timeout, $location, ngTableParams, consultService, providerService, demographicService, staticDataService) {
+oscarApp.controller('ConsultResponseListCtrl', function ($scope, $timeout, $location, ngTableParams, consultService, providerService, demographicService, staticDataService) {
 	$scope.consultReadAccess=true;
 	$scope.consultWriteAccess=true;
 	$scope.lastResponse = "";
@@ -15,8 +15,8 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope, $timeout, $locat
 	});
 
 	//set search statuses
-	$scope.statuses = staticDataService.getConsultRequestStatuses();
-	
+	$scope.statuses = staticDataService.getConsultResponseStatuses();
+
     $scope.searchPatients  = function(term) {
     	var search = {type:'Name','term':term,active:true,integrator:false,outofdomain:true};
     	return demographicService.search(search,0,25).then(function(response){
@@ -49,7 +49,7 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope, $timeout, $locat
 
 
 	$scope.addConsult = function() {
-		$location.path("/consults/new/"+$scope.search.demographicNo);
+		$location.path("/consultResponses/new/"+$scope.search.demographicNo);
 	}
 	
     $scope.checkAll = function() {
@@ -65,7 +65,7 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope, $timeout, $locat
     }
     
 	$scope.editConsult = function(consult) {
-		$location.path("/consults/"+consult.id);
+		$location.path("/consultResponses/"+consult.id);
 	}
 	
 	$scope.doSearch = function() {
@@ -108,7 +108,7 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope, $timeout, $locat
         			search1.team = null;
         	}
         	
-        	consultService.searchRequests(search1).then(function(result){
+        	consultService.searchResponses(search1).then(function(result){
         		//console.log(JSON.stringify(result));
         		 params.total(result.total);
                  $defer.resolve(result.content);
@@ -122,13 +122,4 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope, $timeout, $locat
     
     });
 
-});
-
-
-
-
-oscarApp.controller('ConsultListCtrl', function ($scope,$http,$resource) {
-	$scope.init = function(value) {
-		$scope.providerNo = value;
-	}
 });

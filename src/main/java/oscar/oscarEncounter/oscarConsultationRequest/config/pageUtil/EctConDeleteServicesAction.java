@@ -53,7 +53,7 @@ public class EctConDeleteServicesAction extends Action {
     	  for(String serv:frm.getService()) {
     		  ConsultationServices cs = consultationServiceDao.find(Integer.valueOf(serv));
     		  if(cs!=null) {
-    			  cs.setActive("02");
+    			  cs.setActive(consultationServiceDao.INACTIVE);
     			  consultationServiceDao.merge(cs);
     		  }
     	  }

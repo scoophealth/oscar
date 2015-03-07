@@ -50,7 +50,7 @@
 </style>
 
 <div class="col-md-12">
-	<h2>Consultation Request</h2>
+	<h2>Consultation Response</h2>
 </div>
 <div class="col-md-12 alert alert-success" ng-show="consultSaving">
 	Saving...
@@ -59,20 +59,20 @@
 <div id="left_pane" class="col-md-2">
 	<label class="control-label">Patient Details:</label>
 	<div class="demographic">
-		<p>{{demo.lastName}}, {{demo.firstName}} ({{demo.title}})</p>
-		<p>DOB: {{demo.dateOfBirth | date:'yyyy-MM-dd'}} ({{demo.age.years}})</p> 		
-		<p>Sex: {{demo.sexDesc}}</p> 
-		<p>HIN: {{demo.hin}} - {{demo.ver}}</p> 
+		<p>{{consult.demographic.lastName}}, {{consult.demographic.firstName}} ({{consult.demographic.title}})</p>
+		<p>DOB: {{consult.demographic.dateOfBirth | date:'yyyy-MM-dd'}} ({{consult.demographic.age.years}})</p> 		
+		<p>Sex: {{consult.demographic.sexDesc}}</p> 
+		<p>HIN: {{consult.demographic.hin}} - {{consult.demographic.ver}}</p> 
 		<p>Address:</p> 
 		<address>
-		{{demo.address.address}}<br/>
-		{{demo.address.city}}, {{demo.address.province}}, {{demo.address.postal}}<br>
+		{{consult.demographic.address.address}}<br/>
+		{{consult.demographic.address.city}}, {{consult.demographic.address.province}}, {{consult.demographic.address.postal}}<br>
 		</address>
-		<p>Phone (H): {{demo.phone}}</p>
-		<p>Phone (W): {{demo.alternativePhone}}</p>
-		<p>Phone (C): {{demo.cellPhone}}</p>
-		<p>Email: {{demo.email}}</p>
-		<p>MRP: {{demo.provider.firstName}}, {{demo.provider.lastName}}</p>
+		<p>Phone (H): {{consult.demographic.phone}}</p>
+		<p>Phone (W): {{consult.demographic.alternativePhone}}</p>
+		<p>Phone (C): {{consult.demographic.cellPhone}}</p>
+		<p>Email: {{consult.demographic.email}}</p>
+		<p>MRP: {{consult.demographic.provider.firstName}}, {{consult.demographic.provider.lastName}}</p>
 	</div>
 	<br/>
 	<div id="consult_status">
@@ -91,7 +91,7 @@
 	<br/>
 	<button type="button" class="btn btn-small btn-default form-control" ng-click="toPatientSummary()">Patient Summary</button>
 	<br/>
-	<button type="button" class="btn btn-small btn-default form-control" ng-click="toPatientConsultRequestList()">Patient Referral History</button>
+	<button type="button" class="btn btn-small btn-default form-control" ng-click="toPatientConsultResponseList()">Patient Response History</button>
 </div><!-- Left pane End -->
 
 <div id="right_pane" class="col-md-10">
@@ -119,34 +119,44 @@
 		</div>
 	</div><!-- Letterhead End-->
 	<div class="col-md-6"><!-- Specialist -->
-		<h4>Specialist:</h4>
+		<h4>Referring Doctor:</h4>
 		<div class="well">
 			<div>
-				<select id="serviceId" class="form-control inline" style="width: 35%;"
-						title="Service" 
-						ng-model="consult.serviceId" 
-						ng-options="service.serviceId as service.serviceDesc for service in consult.serviceList"
-						ng-required="true"
-						ng-change="changeService()">
-				</select>
-				<select id="specId" class="form-control inline" style="width: 50%;"
-						title="Consultant"
-						ng-model="consult.professionalSpecialist.id"
-						ng-options="spec.id as spec.name for spec in specialists"
-						ng-change="changeSpecialist()">
+				<select id="refDocId" class="form-control"
+						title="Referring Doctor"
+						ng-model="consult.referringDoctor.id"
+						ng-options="refDoc.id as refDoc.name for refDoc in consult.referringDoctorList"
+						ng-change="changeReferringDoctor()">
 				</select>
 			</div>
-			<p class="specialistDetails">
+			<p class="referringDoctorDetails">
 				<address>
-					<label>Address:</label> {{consult.professionalSpecialist.streetAddress}}<br/>
-					<label>Phone:</label> {{consult.professionalSpecialist.phoneNumber}} <br/>
-					<label>Fax:</label> {{consult.professionalSpecialist.faxNumber}}<br />
+					<label>Address:</label> {{consult.referringDoctor.streetAddress}}<br/>
+					<label>Phone:</label> {{consult.referringDoctor.phoneNumber}} <br/>
+					<label>Fax:</label> {{consult.referringDoctor.faxNumber}}<br />
 				</address>
 			</p>
 		</div>
 	</div><!-- Specialist End -->
 	<div class="clear"></div>
 	
+	<div class="col-md-12">
+		<div class="well">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="control-label">Response Date:</label>
+					<input id="dp-responseDate" type="text" class="form-control inline" style="width:60%" ng-model="consult.responseDate" placeholder="Response Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.respDatePicker" ng-click="page.respDatePicker=true"/>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="control-label">Send To:</label>
+					<select id="sendTo" class="form-control inline" style="width:70%" ng-model="consult.sendTo" ng-required="true" ng-options="sendTo for sendTo in consult.sendToList"/>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
 	<div class="col-md-12"><!-- Referral -->
 		<div class="well">
 			<div class="col-md-6">
@@ -158,20 +168,21 @@
 					<label class="control-label">Urgency:</label>
 					<select id="urgency" class="form-control inline" style="width:70%" ng-model="consult.urgency" ng-required="true" ng-options="urgency.value as urgency.name for urgency in urgencies"/>
 				</div>
-				<div class="form-group">
-					<label class="control-label">Send To:</label>
-					<select id="sendTo" class="form-control inline" style="width:70%" ng-model="consult.sendTo" ng-required="true" ng-options="sendTo for sendTo in consult.sendToList"/>
-				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="form-group">
 					<label class="control-label">Referrer Instructions:</label>
-					<textarea cols="80" rows="4" class="form-control" readOnly>{{consult.professionalSpecialist.annotation}}</textarea>
+					<textarea cols="80" rows="2" class="form-control" readOnly>{{consult.referringDoctor.annotation}}</textarea>
 				</div>
 			</div>
 			<div class="clear"></div>
+			<div class="col-md-12"><!-- Reason for Consultation -->
+				<label class="control-label">Reason for Consultation:</label>
+				<textarea cols="120" rows="2" class="form-control" ng-model="consult.reasonForReferral"></textarea>
+			</div><!-- Reason End -->
 		</div>
 	</div><!-- Referral End -->
+	
 	
 	<div class="col-md-12"><!-- Appointment -->
 		<div class="well" id="appointmentDetail">
@@ -199,28 +210,31 @@
 					<label class="control-label">Last Follow-up Date:</label>
 					<input id="dp-followUpDate" type="text" class="form-control inline" style="width:50%" ng-model="consult.followUpDate" placeholder="Follow Up Date"  datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.lfdDatePicker" ng-click="page.lfdDatePicker=true"/>
 				</div>
-				<div>
-					<label class="control-label">
-						<input type="checkbox" id="willBook" ng-model="consult.patientWillBook"/>
-						Patient Will Book
-					</label>
-				</div>
 			</div>
 			<div class="col-md-6">
 				<label class="control-label">Appointment Notes:</label>
 				<div class="form-group">
-					<textarea cols="80" rows="5" class="form-control" ng-model="consult.statusText"></textarea>
+					<textarea cols="80" rows="4" class="form-control" ng-model="consult.appointmentNote"></textarea>
 				</div>
 			</div>
 			<div class="clear"></div>
 		</div>
 	</div><!-- Appointment End -->
-	<div class="col-md-12"><!-- Reason for Consultation -->
-		<h4>Reason for Consultation:</h4>
+	
+	<div class="col-md-12"><!-- Consultation Response -->
+		<h4>Examination:</h4>
 		<div class="well">
-			<textarea cols="120" rows="4" class="form-control" ng-model="consult.reasonForReferral"></textarea>
+			<textarea cols="120" rows="3" class="form-control" ng-model="consult.examination"></textarea>
 		</div>
-	</div><!-- Reason End -->
+		<h4>Impression:</h4>
+		<div class="well">
+			<textarea cols="120" rows="3" class="form-control" ng-model="consult.impression"></textarea>
+		</div>
+		<h4>Plan:</h4>
+		<div class="well">
+			<textarea cols="120" rows="3" class="form-control" ng-model="consult.plan"></textarea>
+		</div>
+	</div><!-- Response End -->
 	<div class="clear"></div>
 	
 	<div id="clinical-note" class="col-md-6"><!-- Clinic Notes -->
@@ -235,7 +249,7 @@
 			</p>					
 			<div class="well">
 				<div>
-					<textarea id="clinicalInfo" cols="80" rows="5" class="form-control" placeholder="Use the buttons above to insert data from the patients chart"
+					<textarea id="clinicalInfo" cols="80" rows="4" class="form-control" placeholder="Use the buttons above to insert data from the patients chart"
 						ng-model="consult.clinicalInfo"></textarea>
 				</div>
 			</div>
@@ -255,7 +269,7 @@
 			</p>						
 			<div class="well">
 				<div>
-					<textarea id="concurrentProblems" cols="80" rows="5" class="form-control" placeholder="Use the buttons above to insert data from the patients chart"
+					<textarea id="concurrentProblems" cols="80" rows="4" class="form-control" placeholder="Use the buttons above to insert data from the patients chart"
 						ng-model="consult.concurrentProblems"></textarea>
 				</div>
 			</div>
@@ -267,14 +281,14 @@
 	<div class="col-md-6"><!-- Alergies / Current Medications -->
 		<h4>Allergies:</h4>
 		<div class="well">
-			<textarea cols="80" rows="5" class="form-control" ng-model="consult.allergies"></textarea>
+			<textarea cols="80" rows="4" class="form-control" ng-model="consult.allergies"></textarea>
 		</div>
 	</div><!-- Alergies End -->	
 	<div class="col-md-6">
 		<h4>Current Medications: <button type="button" class="btn btn-success" style="padding:0px 10px;" ng-click="getOtherMeds('concurrentMedications');">Other Meds</button></h4>
 		
 		<div class="well">
-			<textarea id="concurrentMedications" cols="80" rows="5" class="form-control" ng-model="consult.currentMeds" placeholder="Use the button above to insert Other Meds data from the patients chart"></textarea>
+			<textarea id="concurrentMedications" cols="80" rows="4" class="form-control" ng-model="consult.currentMeds" placeholder="Use the button above to insert Other Meds data from the patients chart"></textarea>
 		</div>
 	</div><!-- Current Medications End -->	
 	<div class="clear"></div>

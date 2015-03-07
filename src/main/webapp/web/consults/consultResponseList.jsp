@@ -109,8 +109,8 @@
 			<div class="col-xs-12">
 				<button class="btn btn-primary" type="button" ng-click="doSearch()"><bean:message key="global.search" bundle="ui"/></button>
 				<button class="btn btn-default" type="button" ng-click="clear()"><bean:message key="global.clear" bundle="ui"/></button>
-				<button class="btn btn-success" type="button" ng-click="addConsult()" ng-disabled="search.demographicNo==null">
-					<bean:message key="consult.list.new" bundle="ui"/>
+				<button class="btn btn-success" type="button" title=<bean:message key="consult.list.newRemindFill" bundle="ui"/> ng-click="addConsult()" ng-disabled="search.demographicNo==null">
+					<bean:message key="consult.list.newResponse" bundle="ui"/>
 				</button>
 			</div>
 		</div>
@@ -129,12 +129,11 @@
 					ng-click="editConsult(consult)" class="hand-hover"><bean:message key="global.edit" bundle="ui"/></a></td>
 				<td data-title="'<bean:message key="consult.list.header.patient" bundle="ui"/>'" class="text-center" sortable="'Demographic'">
 					{{consult.demographic.formattedName}}</td>
-				<td data-title="'<bean:message key="consult.list.header.service" bundle="ui"/>'" class="text-center" sortable="'Service'">{{consult.serviceName}}</td>
-				<td data-title="'<bean:message key="consult.list.header.consultant" bundle="ui"/>'" class="text-center" sortable="'Consultant'">{{consult.consultant.formattedName}}</td>
+				<td data-title="'<bean:message key="consult.list.header.referringDoctor" bundle="ui"/>'" class="text-center" sortable="'ReferringDoctor'">{{consult.referringDoctor.formattedName}}</td>
 				<td data-title="'<bean:message key="consult.list.header.team" bundle="ui"/>'" class="text-center" sortable="'Team'">{{consult.teamName}}</td>
 				<td data-title="'<bean:message key="consult.list.header.status" bundle="ui"/>'" class="text-center" sortable="'Status'">{{consult.statusDescription}}</td>
 				<td data-title="'<bean:message key="consult.list.header.priority" bundle="ui"/>'" class="text-center" sortable="'Urgency'">{{consult.urgencyDescription}}</td>
-				<td data-title="'<bean:message key="consult.list.header.mrp" bundle="ui"/>'" class="text-center" sortable="'MRP'">{{consult.mrp.formattedName}}</td>
+				<td data-title="'<bean:message key="consult.list.header.provider" bundle="ui"/>'" class="text-center" sortable="'Provider'">{{consult.provider.formattedName}}</td>
 
 				<td data-title="'<bean:message key="consult.list.header.appointmentDate" bundle="ui"/>'" class="text-center" sortable="'AppointmentDate'">
 					{{consult.appointmentDate | date: 'yyyy-MM-dd HH:mm'}}</td>
@@ -142,6 +141,8 @@
 					{{consult.lastFollowUp | date: 'yyyy-MM-dd'}}</td>
 				<td data-title="'<bean:message key="consult.list.header.referralDate" bundle="ui"/>'" class="text-center" sortable="'ReferralDate'">
 					{{consult.referralDate | date: 'yyyy-MM-dd'}}</td>
+				<td data-title="'<bean:message key="consult.list.header.responseDate" bundle="ui"/>'" class="text-center" sortable="'ResponseDate'">
+					{{consult.responseDate | date: 'yyyy-MM-dd'}}</td>
 			</tr>
 		</tbody>
 

@@ -25,6 +25,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -38,7 +39,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class ConsultationServiceDao extends AbstractDao<ConsultationServices> {
-
+	public final String REFERRING_DOCTOR = "Referring Doctor";
+    public final String ACTIVE = "1";
+    public final String INACTIVE = "02";
+    public final boolean ACTIVE_ONLY = true;
+    public final boolean WITH_INACTIVE = false;
+	
     public ConsultationServiceDao() {
         super(ConsultationServices.class);
     }
@@ -62,4 +68,27 @@ public class ConsultationServiceDao extends AbstractDao<ConsultationServices> {
         return results;
     }
 
+    public ConsultationServices findReferringDoctorService(boolean activeOnly) {
+    	String sql = "select x from ConsultationServices x where x.serviceDesc=?";
+    	if (activeOnly) sql += " and x.active=?";
+    	
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1, REFERRING_DOCTOR);
+    	if (activeOnly) query.setParameter(2, ACTIVE);
+
+        @SuppressWarnings("unchecked")
+        List<ConsultationServices> results = query.getResultList();
+        
+        //filter out the first active one if multiple services are found
+        if (results!=null && results.size()>1) {
+        	for (ConsultationServices cs : results) {
+        		if (cs.getActive().equals(ACTIVE)) {
+        			results = new ArrayList<ConsultationServices>();
+        			results.add(cs);
+        			break;
+        		}
+        	}
+        }
+        return (results==null || results.isEmpty()) ? null : results.get(0);
+    }
 }

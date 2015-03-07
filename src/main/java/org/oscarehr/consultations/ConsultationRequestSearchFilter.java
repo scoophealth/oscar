@@ -25,7 +25,7 @@ package org.oscarehr.consultations;
 
 import java.util.Date;
 
-public class ConsultationSearchFilter {
+public class ConsultationRequestSearchFilter {
 
 	public static enum SORTMODE {
         Demographic, Service, Consultant, Team, Status, MRP, AppointmentDate, FollowUpDate ,ReferralDate, Urgency

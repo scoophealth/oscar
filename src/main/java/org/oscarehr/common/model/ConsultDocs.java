@@ -39,6 +39,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="consultdocs")
 public class ConsultDocs extends AbstractModel<Integer>{
+	public static final String DOCTYPE_DOC = "D";
+	public static final String DOCTYPE_LAB = "L";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
