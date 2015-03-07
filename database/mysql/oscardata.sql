@@ -45,6 +45,7 @@ INSERT INTO consultationServices VALUES (54,'Dermatology','1');
 INSERT INTO consultationServices VALUES (55,'Neurology','1');
 INSERT INTO consultationServices VALUES (56,'Radiology','1');
 INSERT INTO consultationServices VALUES (57,'SEE NOTES','1');
+INSERT INTO consultationServices VALUES (58,'Referral Doctor','02');
 
 --
 -- Dumping data for table 'ctl_billingservice'
