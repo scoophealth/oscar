@@ -41,7 +41,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DemographicPharmacyDaoTest extends DaoTestFixtures {
 
-	private DemographicPharmacyDao dao = SpringUtils.getBean(DemographicPharmacyDao.class);
+	protected DemographicPharmacyDao dao = SpringUtils.getBean(DemographicPharmacyDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 	public DemographicPharmacyDaoTest() {

@@ -60,7 +60,7 @@ public class TeleplanFileWriter {
     StringBuilder mspFileStr = null;
     StringBuilder mspHtmlStr = null;
     int sequenceNum = 0;
-    ArrayList billingToBeMarkedAsBilled = null;
+    ArrayList<String> billingToBeMarkedAsBilled = null;
     ArrayList billingmasterToBeMarkedAsBilled = null;
     private BigDecimal bigTotal = null;
     ArrayList logList = null;
@@ -76,7 +76,7 @@ public class TeleplanFileWriter {
         mspFileStr = new StringBuilder();
         mspHtmlStr = new StringBuilder();
         sequenceNum = getLastSequenceNumber();
-        billingToBeMarkedAsBilled = new ArrayList();
+        billingToBeMarkedAsBilled = new ArrayList<String>();
         billingmasterToBeMarkedAsBilled = new ArrayList();
         bigTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
         logList = new ArrayList();

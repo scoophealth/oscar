@@ -55,7 +55,7 @@ public class TeleplanSubmission {
     private String mspFileStr = null;
     private String mspHtmlStr = null;
     private int sequenceNum = 0;
-    private ArrayList billingToBeMarkedAsBilled = null;
+    private ArrayList<String> billingToBeMarkedAsBilled = null;
     private ArrayList billingmasterToBeMarkedAsBilled = null;
     private BigDecimal bigTotal = null;
     private ArrayList logList = null;
@@ -67,7 +67,7 @@ public class TeleplanSubmission {
     }
     
     public TeleplanSubmission( String mspFileStr,String mspHtmlStr,int sequenceNum,
-            ArrayList billingToBeMarkedAsBilled,ArrayList billingmasterToBeMarkedAsBilled,BigDecimal bigTotal,ArrayList logList,int totalClaims){
+            ArrayList<String> billingToBeMarkedAsBilled,ArrayList billingmasterToBeMarkedAsBilled,BigDecimal bigTotal,ArrayList logList,int totalClaims){
          this.mspFileStr = mspFileStr;
          this.mspHtmlStr = mspHtmlStr;
          this.sequenceNum = sequenceNum;
@@ -189,7 +189,7 @@ public class TeleplanSubmission {
    
         
     //NEEDS TO BE MOVED OUT OF HERE    
-    private void markListAsBilled(List list){
+    private void markListAsBilled(List<String> list){
     	for(Billing b:billingDao.findSet(list)) {
     		b.setStatus("B");
     		billingDao.merge(b);
