@@ -38,7 +38,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class DesapriskDaoTest extends DaoTestFixtures {
 
-	private DesapriskDao dao = SpringUtils.getBean(DesapriskDao.class);
+	protected DesapriskDao dao = SpringUtils.getBean(DesapriskDao.class);
 	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 	public DesapriskDaoTest() {
