@@ -1,0 +1,140 @@
+body {
+  padding:0 20px;
+}
+
+.red {
+	color:red;
+	font-weight:bold;
+}
+
+header {
+  width:100%;
+  float:left;
+  padding-bottom: 10px;
+  border-bottom: black 2px solid;
+  margin-bottom: 10px;
+  
+}
+
+header h1 {
+  float:left;
+  font-size:2.1em;
+  margin:0px;
+}
+
+header #bpmhId {
+  width:33%;
+  float:left;
+  clear:right;
+  margin-left:25px;
+}
+
+header #bpmhId span {
+  float:left;
+  clear:left;
+
+}
+
+section {
+  width:100%;
+  float:left;
+  margin-bottom: 10px;
+
+}
+
+table {
+  	border-collapse: collapse;
+    margin:0px;
+    padding:0px;
+    border:none;
+}
+
+#patientId td, #drugData #drugtableSubheading td, #drugtable td {
+  border:black thin solid;
+}
+
+.columnTitle {
+  width:10%;
+  border:black thin solid;
+  text-align: right;
+  vertical-align: top;
+  font-weight:500;
+}
+
+table#providerId td {
+  border-bottom:black thin solid;
+}
+
+#drugData #drugtableSubheading td {
+  width: 25%;  
+}
+
+#allergies .columnTitle {
+  width:20%;
+}
+
+table#allergies {
+  margin-top:5px;
+}
+
+#drugtable .columnTitle {
+  font-weight: bold;
+}
+
+section table {
+  border:black thin solid;
+  width:100%;
+}
+
+section table th {
+  background-color:#ccc;
+  border:black 1px solid;
+}
+
+section table#providerId th {
+  border-bottom: none;
+}
+
+section table#providerId td {
+  border-top:black thin solid;
+}
+
+section#declaration table, section#controls table {
+	background-color:#ccc;
+}
+
+section#declaration table input {
+  float:left;
+  clear:both;
+  display:block;
+  margin-right: 3px;
+}
+
+section table td, section table th, #drugtable .columnTitle {
+  text-align: left;
+  vertical-align: top;
+}
+
+.smallText {
+  font-size:.7em;
+  font-weight: normal;
+}
+
+#note table {
+  border:none;
+}
+
+#note table td textarea, #drugtable textarea {
+  width:100%;
+}
+
+table td, table th {
+  padding:3px 5px;
+}
+
+footer {
+  border-top:black 2px solid;
+  width:100%;
+  float:left;
+  margin-bottom: 10px;
+}
