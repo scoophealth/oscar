@@ -4,6 +4,35 @@
 -- -------------------------------------------------------
 -- Server version	4.0.14-standard
 
+-- ----------------------------
+--  Table structure for `formBPMH`
+-- ----------------------------
+CREATE TABLE `formBPMH` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `demographic_no` int(10) NOT NULL,
+  `provider_no` int(10) NOT NULL,
+  `formCreated` date,
+  `formEdited` date,
+  `familyDrName` varchar(55),
+  `familyDrPhone` varchar(15),
+  `familyDrFax` varchar(15),
+  `note` varchar(255),
+  `allergies` blob,
+  `drugs` blob,
+  PRIMARY KEY (`id`)
+);
+
+-- ----------------------------
+--  Table structure for `dxCodeTranslations`
+-- ----------------------------
+CREATE TABLE `dxCodeTranslations` (
+  `dxCode` varchar(10) NOT NULL,
+  `patientFriendly` varchar(250) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+);
+
+
 --
 -- Table structure for table 'billinglocation'
 --
