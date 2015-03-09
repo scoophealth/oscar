@@ -14,8 +14,7 @@
         <java:condition>prev.getAgeInMonths() &lt; 72</java:condition>
         <java:condition>prev.getNumberOfPreventionType("DTaP-IPV") == 0</java:condition>
         <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
-        
-                
+        <java:condition>prev.getNumberOfPreventionType("DTaP-IPV-Hib") == 0</java:condition>
         <java:consequence>              
               prev.log("DTaP-IPV 1");
               prev.addWarning("DTaP-IPV", "Needs First DTaP-IPV /HIB");
@@ -202,7 +201,8 @@
         </parameter>
         <java:condition>prev.getAgeInMonths() &gt;= 2</java:condition>
         <java:condition>prev.getAgeInMonths() &lt; 12</java:condition>
-        <java:condition>prev.getNumberOfPreventionType("Hib") == 0 </java:condition>        
+        <java:condition>prev.getNumberOfPreventionType("Hib") == 0 </java:condition>
+	<java:condition>prev.getNumberOfPreventionType("DTaP-IPV-Hib") == 0</java:condition>       
         <java:consequence>              
               prev.log("Hib 1");
               prev.addWarning("Hib", "Needs first Hib");
