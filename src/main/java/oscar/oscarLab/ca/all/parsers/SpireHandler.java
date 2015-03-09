@@ -1021,4 +1021,8 @@ public class SpireHandler implements MessageHandler {
     	
     	return "";
     }
+
+    public String getNteForPID() {
+	    return "";
+    }
 }

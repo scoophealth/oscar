@@ -1186,5 +1186,10 @@ public class IHAHandler implements MessageHandler {
     	
     	return "";
     }
+
+	
+    public String getNteForPID() {
+	    return "";
+    }
     
 }

@@ -1036,5 +1036,9 @@ public class TDISHandler implements MessageHandler {
 	    // TODO Auto-generated method stub
 	    return null;
     }
+
+    public String getNteForPID() {
+	    return "";
+    }
 	
 }

@@ -247,4 +247,8 @@ public final class OscarToOscarHl7V2Handler implements MessageHandler {
     	return "";
     }
 
+    public String getNteForPID() {
+	    return "";
+    }
+
 }

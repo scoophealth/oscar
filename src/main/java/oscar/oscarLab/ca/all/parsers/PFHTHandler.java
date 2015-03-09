@@ -805,4 +805,8 @@ public class PFHTHandler implements MessageHandler {
 	        return null;
         }
 
+        public String getNteForPID() {
+	        return "";
+        }
+
 }

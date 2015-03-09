@@ -493,4 +493,8 @@ public class HRMXMLHandler implements MessageHandler {
 
 	    	return "";
 	    }
+
+        public String getNteForPID() {
+	        return "";
+        }
 }

@@ -814,4 +814,18 @@ public class GDMLHandler implements MessageHandler {
 
     	return "";
     }
+    public String getNteForPID(){
+    	try {
+    		String comments= new String();
+    		int CommentsCount = msg.getRESPONSE().getPATIENT().getNTEReps();
+    		for (int i=0; i<CommentsCount;i++) {
+    			comments += (i+1)+"-"+msg.getRESPONSE().getPATIENT().getNTE(i).getSourceOfComment().getValue()+". ";
+    		}
+    		return comments;
+    	}catch (Exception e){
+    		logger.error("Could not load Nte segment of patient: ",e);
+    		return "";
+    	}
+    }
+    
 }

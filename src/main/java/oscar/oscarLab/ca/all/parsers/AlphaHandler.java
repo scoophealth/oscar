@@ -539,7 +539,7 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
         }
     }
     
-    public String getPIDComment() {
+    public String getNteForPID() {
     try {
     	if (version.equals("2.2")) {
     		return("");

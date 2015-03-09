@@ -2801,4 +2801,8 @@ public class OLISHL7Handler implements MessageHandler {
 		}
 
 	}
+
+    public String getNteForPID() {
+	    return "";
+    }
 }
