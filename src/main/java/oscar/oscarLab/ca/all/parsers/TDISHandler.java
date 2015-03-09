@@ -130,10 +130,16 @@ public class TDISHandler implements MessageHandler {
 
 					for (int l = 0; l < observation_reps; l++) {
 						OBX obx = obsr.getOBSERVATION(l).getOBX();
-						if ((obxName = obx.getObservationIdentifier().getText().getValue()).indexOf("ITS") != -1
-								|| obxName.indexOf("DEPARTMENTAL") != -1) {
-							isITS = true;
+						if (obx.getObservationIdentifier().getText().getValue() != null) {
+							if ((obxName = obx.getObservationIdentifier().getText().getValue()).indexOf("ITS") != -1
+									|| obxName.indexOf("DEPARTMENTAL") != -1) {
+								isITS = true;
+							}
+						} else {
+							obx.getObservationIdentifier().getText().setValue("");
+							obx.getValueType().setValue("");
 						}
+						
 						obxSegs.add(obx);
 					}
 
