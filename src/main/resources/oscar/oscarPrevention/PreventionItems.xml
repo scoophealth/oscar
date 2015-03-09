@@ -151,7 +151,7 @@ Varicella Immunoglobulin	VarIg
 		name="MMR" 
 		healthCanadaType="MMR"
 		link="http://www.phac-aspc.gc.ca/publicat/cig-gci/p04-meas-roug-eng.php"
-		layout="injection" atc="J07BD52" minAge="0" maxAge="6"
+		layout="injection" atc="J07BD52" minAge="0" maxAge="9"
 		showIfMinRecordNum="1" />
 		
 	<item 
@@ -160,7 +160,7 @@ Varicella Immunoglobulin	VarIg
 		name="MMRV" 
 		healthCanadaType="MMRV"
 		link="http://www.phac-aspc.gc.ca/publicat/ccdr-rmtc/10vol36/acs-9/index-eng.php"
-		layout="injection" atc="J07BD54" minAge="0" maxAge="6"
+		layout="injection" atc="J07BD54" minAge="0" maxAge="9"
 		showIfMinRecordNum="1" />		
 
 	<item

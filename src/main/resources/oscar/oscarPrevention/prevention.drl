@@ -13,6 +13,7 @@
         <java:condition>prev.getAgeInMonths() &gt;= 2</java:condition>
         <java:condition>prev.getAgeInMonths() &lt; 72</java:condition>
         <java:condition>prev.getNumberOfPreventionType("DTaP-IPV") == 0</java:condition>
+	<java:condition>prev.getNumberOfPreventionType("DTaP-IPV-Hib") == 0</java:condition>
         <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
         
                 
@@ -202,7 +203,8 @@
         </parameter>
         <java:condition>prev.getAgeInMonths() &gt;= 2</java:condition>
         <java:condition>prev.getAgeInMonths() &lt; 12</java:condition>
-        <java:condition>prev.getNumberOfPreventionType("Hib") == 0 </java:condition>        
+        <java:condition>prev.getNumberOfPreventionType("Hib") == 0 </java:condition>    
+	<java:condition>prev.getNumberOfPreventionType("DTaP-IPV-Hib") == 0</java:condition>    
         <java:consequence>              
               prev.log("Hib 1");
               prev.addWarning("Hib", "Needs first Hib");
@@ -240,7 +242,8 @@
         </parameter>
         <java:condition>prev.getAgeInMonths() &gt;= 12</java:condition>
         <java:condition>prev.getAgeInMonths() &lt; 24</java:condition>
-        <java:condition>prev.getNumberOfPreventionType("Hib") == 0 </java:condition>        
+        <java:condition>prev.getNumberOfPreventionType("Hib") == 0 </java:condition>   
+	<java:condition>prev.getNumberOfPreventionType("DTaP-IPV-Hib") == 0</java:condition>     
         <java:consequence>              
               prev.log("Hib 4");
               prev.addWarning("Hib", "Needs first Hib");
@@ -355,60 +358,46 @@
      <rule name="MMR 1">
         <parameter identifier="prev">
             <class>oscar.oscarPrevention.Prevention</class>
-        </parameter>
-        <java:condition>prev.isFemale()</java:condition>             
+        </parameter>     
         <java:condition>prev.getAgeInMonths() &gt;= 12</java:condition>        
-        <java:condition>prev.getAgeInYears() &lt; 40</java:condition>        
-        <java:condition>prev.getNumberOfPreventionType("MMR") == 0</java:condition>                        
-        <java:consequence>              
+        <java:condition>prev.getAgeInYears() &lt; 10</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("MMR") == 0</java:condition>
+       <java:condition>prev.getNumberOfPreventionType("MMRV") == 0</java:condition>                          
+        <java:consequence>       
               prev.log("MMR 1");
-              prev.addWarning("MMR", "Needs First MMR");
-        </java:consequence>
-    </rule>
-    <rule name="MMR 1.1">
-        <parameter identifier="prev">
-            <class>oscar.oscarPrevention.Prevention</class>
-        </parameter>
-        <java:condition>prev.isMale()</java:condition>             
-        <java:condition>prev.getAgeInMonths() &gt;= 12</java:condition>        
-        <java:condition>prev.getAgeInYears() &lt; 30</java:condition>
-        <java:condition>prev.getNumberOfPreventionType("MMR") == 0</java:condition>                
-        <java:consequence>              
-              prev.log("MMR 1.1");
-              prev.addWarning("MMR", "Needs First MMR");
+              prev.addWarning("MMR", "Needs First MMR or MMRV");
         </java:consequence>
     </rule>
 
-    <rule name="MMR 2">
+
+   <rule name="MMR 2">
         <parameter identifier="prev">
             <class>oscar.oscarPrevention.Prevention</class>
         </parameter>
-        <java:condition>prev.getAgeInMonths() &gt;= 14</java:condition>
-        <java:condition>prev.getAgeInYears() &lt; 24</java:condition>
-        <java:condition>prev.getNumberOfPreventionType("MMR") == 1</java:condition>  
-        <java:condition>prev.getNumberOfPreventionType("MMRV") == 0</java:condition> 
-        <java:condition>prev.getHowManyMonthsSinceLast("MMR") &gt;= 2</java:condition>                                        
-        <java:condition>prev.getHowManyDaysSinceLast("VZ") &gt;= 28</java:condition>
+        <java:condition>prev.getAgeInMonths() &gt;= 48</java:condition>
+        <java:condition>prev.getAgeInYears() &lt; 10</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("MMR") == 1</java:condition>                                        
         <java:consequence>              
               prev.log("MMR 2");
               prev.addWarning("MMR", "Needs Second MMR or MMRV");
         </java:consequence>
     </rule>
 
+
     <rule name="MMRV 1">
         <parameter identifier="prev">
             <class>oscar.oscarPrevention.Prevention</class>
         </parameter>
         <java:condition>prev.getAgeInMonths() &gt;= 48</java:condition>
-        <java:condition>prev.getAgeInYears() &lt;= 6</java:condition>
-        <java:condition>prev.getNumberOfPreventionType("MMR") == 1</java:condition>  
-        <java:condition>prev.getHowManyMonthsSinceLast("MMR") &gt;= 2</java:condition>                                        
-        <java:condition>prev.getHowManyDaysSinceLast("VZ") &gt;= 28</java:condition>
-        <java:consequence>              
+        <java:condition>prev.getAgeInYears() &lt; 10</java:condition>
+        <java:condition>prev.getNumberOfPreventionType("MMRV") == 1</java:condition>  
+        <java:consequence>
               prev.log("MMRV 1");
-              prev.addWarning("MMRV", "Needs MMRV");
+              prev.addWarning("MMRV", "Needs Second MMR or MMRV");
         </java:consequence>
     </rule>
+?-->
+
 
     <rule name="MenC-C 1">
         <parameter identifier="prev">
