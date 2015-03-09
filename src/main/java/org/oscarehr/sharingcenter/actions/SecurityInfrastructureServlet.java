@@ -57,6 +57,8 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.bouncycastle.pkcs.PKCS10CertificationRequest;
+import org.marc.shic.core.CertificateIdentifier;
 import org.marc.shic.core.exceptions.SslException;
 import org.marc.shic.core.utils.SslUtility;
 import org.oscarehr.sharingcenter.dao.InfrastructureDao;
@@ -65,7 +67,6 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import sun.security.pkcs.PKCS10;
 
 public class SecurityInfrastructureServlet extends Action {
 
@@ -284,9 +285,10 @@ public class SecurityInfrastructureServlet extends Action {
 
             PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(pubKey));
             PrivateKey privateKey = KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(privKey));
-            PKCS10 result = SslUtility.generatePKCS10(publicKey, privateKey, CN, OU, O, L, S, C);
-
-            String csr = SslUtility.retrieveCSR(result);
+            
+            CertificateIdentifier principal = new CertificateIdentifier(CN, OU, O, L, S, C);
+            PKCS10CertificationRequest request = SslUtility.generatePKCS10(publicKey, privateKey, principal);
+            String csr = SslUtility.generateCSR(request);
             out.println(csr);
         } catch (NumberFormatException e) {
             out.println(e);
