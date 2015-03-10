@@ -170,6 +170,11 @@
         <ap-output>${chart_no}</ap-output>
     </databaseap>
     <databaseap>
+      <ap-name>email</ap-name>
+      <ap-sql>SELECT email FROM demographic WHERE demographic_no=${demographic)</ap-sql>
+      <ap-output>${email}</ap-output>
+    </databaseap>
+    <databaseap>
         <ap-name>phone</ap-name>
         <ap-sql>SELECT phone FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${phone}</ap-output>
