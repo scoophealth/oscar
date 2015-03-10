@@ -339,5 +339,6 @@ public interface MessageHandler {
     public String getRadiologistInfo();
 
     public String getNteForOBX(int i,int j);
-
+    
+    public String getNteForPID();
 }

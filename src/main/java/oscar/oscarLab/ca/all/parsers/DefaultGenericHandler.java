@@ -674,4 +674,8 @@ public class DefaultGenericHandler implements MessageHandler {
 
     	return "";
     }
+
+    public String getNteForPID() {
+    	return "";
+    }
 }

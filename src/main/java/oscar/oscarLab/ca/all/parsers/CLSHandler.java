@@ -692,4 +692,7 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 		}
 		return result;
 	}
+	public String getNteForPID() {
+    	return "";
+    }
 }
