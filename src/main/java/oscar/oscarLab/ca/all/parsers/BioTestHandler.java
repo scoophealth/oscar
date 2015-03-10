@@ -823,4 +823,7 @@ public class BioTestHandler implements MessageHandler {
 
     	return "";
     }
+    public String getNteForPID() {
+    	return "";
+    }
 }
