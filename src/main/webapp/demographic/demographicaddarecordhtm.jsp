@@ -1290,16 +1290,22 @@ document.forms[1].r_doctor_ohip.value = refNo;
 				</table>
 				</td>
 			</tr>
+
+
+<%-- TOGGLE PRIVACY CONSENT MODULE --%>			
+<oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">			
 			<tr valign="top">
-				<oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">
+	
 				<td colspan="2">
 					<input type="checkbox" name="privacyConsent" value="yes"><b>Privacy Consent (verbal) Obtained</b> 
 					<br/>
 					<input type="checkbox" name="informedConsent" value="yes"><b>Informed Consent (verbal) Obtained</b>
 					<br/>
 				</td>
-				</oscar:oscarPropertiesCheck>
+
 		  	</tr>
+</oscar:oscarPropertiesCheck>
+
 			<tr valign="top">
 				<td id="joinDateLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formDateJoined" /></b><b>:
@@ -1317,6 +1323,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
 					name="end_date_month" size="2" maxlength="2"> <input
 					type="text" name="end_date_date" size="2" maxlength="2"></td>
 			</tr>
+
 			<tr valign="top">
 			    <td colspan="4">
 			        <table border="1" width="100%">
@@ -1359,6 +1366,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
 			        </table>
 			    </td>
 			</tr>
+
 
 			<% if(oscarVariables.getProperty("demographicExt") != null) {
     boolean bExtForm = oscarVariables.getProperty("demographicExtForm") != null ? true : false;

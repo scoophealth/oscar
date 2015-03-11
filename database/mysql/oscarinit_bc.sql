@@ -4,8 +4,6 @@
 -- -------------------------------------------------------
 -- Server version	4.0.14-standard
 
-
-
 --
 -- Table structure for table 'billinglocation'
 --
@@ -4023,15 +4021,6 @@ CREATE TABLE log_teleplantx (
   PRIMARY KEY  (log_no)
 ) ;
 
---
--- Table structure for table 'specialty'
---
-
-CREATE TABLE specialty (
-  region varchar(5) default '',
-  specialty char(2) default '',
-  specialtydesc varchar(100) default ''
-) ;
 
 --
 -- Table structure for table 'teleplanS00'

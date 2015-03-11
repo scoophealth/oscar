@@ -39,6 +39,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.util.StringUtils;
 
 public class EctDisplayContactsAction extends EctDisplayAction {
@@ -53,24 +54,49 @@ public class EctDisplayContactsAction extends EctDisplayAction {
     
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
  		try {
+ 			
+ 			String healthCareTeamEnabled = OscarProperties.getInstance().get("DEMOGRAPHIC_PATIENT_HEALTH_CARE_TEAM").toString();
 		    //Set left hand module heading and link
 		    String winName = "contact" + bean.demographicNo;
 		    String pathview, pathedit;
+		    int width = 0;
+		    int height = 0;
 
-		    pathview = request.getContextPath() + "/demographic/professionalSpecialistSearch.jsp?keyword=&submit=Search";
-		    pathedit = request.getContextPath() + "/demographic/Contact.do?method=manage&demographic_no=" + bean.demographicNo;
+		    if("true".equalsIgnoreCase( healthCareTeamEnabled ) ){
+			    pathview = request.getContextPath() + 
+			    		"/demographic/displayHealthCareTeam.jsp?view=detached&demographicNo=" + 
+			    		bean.demographicNo;
+			    pathedit = request.getContextPath() + 
+			    		"/demographic/manageHealthCareTeam.jsp?view=detached&demographicNo=" + 
+			    		bean.demographicNo;
+			    width = 650;
+			    height = 400;
+		    } else {
+		    	pathview = request.getContextPath() + "/demographic/professionalSpecialistSearch.jsp?keyword=&submit=Search";
+			    pathedit = request.getContextPath() + "/demographic/Contact.do?method=manage&demographic_no=" + bean.demographicNo;
+			    width = 650;
+			    height = 900;
+		    }
 
-
-		    String url = "popupPage(650,900,'" + winName + "','" + pathview + "')";
-		    Dao.setLeftHeading(messages.getMessage(request.getLocale(), "global.contacts"));
+		    String url = "popupPage(" + height + "," + width + ",'" + winName + "','" + pathview + "')";
+		    
+		    if("true".equalsIgnoreCase( healthCareTeamEnabled ) ){
+		    	Dao.setLeftHeading("Health Care Team");
+		    	width = 700;
+			    height = 500; 
+		    } else {
+		    	Dao.setLeftHeading(messages.getMessage(request.getLocale(), "global.contacts"));
+		    	width = 800;
+			    height = 1000; 
+		    }
+		    
 		    Dao.setLeftURL(url);
 
 		    //set right hand heading link
 		    winName = "AddContact" + bean.demographicNo;
-		    url = "popupPage(800,1000,'" + winName + "','" + pathedit + "'); return false;";
+		    url = "popupPage(" + height + "," + width + ",'" + winName + "','" + pathedit + "'); return false;";
 		    Dao.setRightURL(url);
 		    Dao.setRightHeadingID(cmd);
-
 
 		    List<DemographicContact> contacts = demographicContactDao.findActiveByDemographicNo(Integer.parseInt(bean.demographicNo));
 
@@ -112,17 +138,36 @@ public class EctDisplayContactsAction extends EctDisplayAction {
 		        
 		        //item.setDate(contact.getUpdateDate());
 		        int hash = Math.abs(winName.hashCode());
-		        if(contact.getType() == DemographicContact.TYPE_CONTACT) {
-		        	url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/demographic/Contact.do?method=editProContact&pcontact.id="+ contact.getContactId() +"'); return false;";
-		        } else if (contact.getType() == DemographicContact.TYPE_CONTACT){
-		        	String roles =(String) request.getSession().getAttribute("userrole");
-		        	if(roles.indexOf("admin") != -1)
-		        		url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/admin/providerupdateprovider.jsp?keyword="+ contact.getContactId() +"'); return false;";
-		        	else
-		        		url = "alert('Cannot Edit');return false;";
-		        } else if(contact.getType() == DemographicContact.TYPE_PROFESSIONALSPECIALIST) {
-		        	url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/oscarEncounter/EditSpecialists.do?specId="+ contact.getContactId() +"'); return false;";
+		        
+		        if("true".equalsIgnoreCase( healthCareTeamEnabled ) ){
+		        	
+		        	if( contact.getType() == DemographicContact.TYPE_PROVIDER ) {
+		        		url = "alert('Edit internal providers from the provider menu');return false;";
+		        	} else {
+		        		url = "popupPage(650,500,'" + hash + "','" + 
+		        				request.getContextPath() + 
+		        				"/demographic/Contact.do?method=editHealthCareTeam&contactId="+ 
+		        				contact.getId() +"&role=" + 
+		        				contact.getRole() + 
+		        				"'); return false;";
+		        	}
+		        	
+		        } else {
+		        
+			        if(contact.getType() == DemographicContact.TYPE_CONTACT) {
+			        	url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/demographic/Contact.do?method=editProContact&pcontact.id="+ contact.getContactId() +"'); return false;";
+			        } else if (contact.getType() == DemographicContact.TYPE_CONTACT){
+			        	String roles =(String) request.getSession().getAttribute("userrole");
+			        	if(roles.indexOf("admin") != -1)
+			        		url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/admin/providerupdateprovider.jsp?keyword="+ contact.getContactId() +"'); return false;";
+			        	else
+			        		url = "alert('Cannot Edit');return false;";
+			        } else if(contact.getType() == DemographicContact.TYPE_PROFESSIONALSPECIALIST) {
+			        	url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/oscarEncounter/EditSpecialists.do?specId="+ contact.getContactId() +"'); return false;";
+			        }
+		        
 		        }
+		        
 		        item.setURL(url);
 		        Dao.addItem(item);
 		    }
