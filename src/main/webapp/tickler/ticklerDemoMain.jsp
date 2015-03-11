@@ -541,19 +541,23 @@ function generateRenalLabReq(demographicNo) {
 				    Demographic d = demographicDao.getDemographicById(t.getDemographicNo());
 				    Provider p = null;
 				    Provider assignedP = null;
-
-				    if(d != null && d.getProviderNo().length()>0)
-				            p = providerDao.getProvider(d.getProviderNo());
-				    if(t.getTaskAssignedTo().length()>0)
+					String providerNumber = d.getProviderNo();
+				    
+				    if(d != null && providerNumber != null && ! providerNumber.isEmpty()) {
+				            p = providerDao.getProvider(providerNumber);
+				    }
+				    if(t.getTaskAssignedTo().length()>0) {
 				            assignedP = providerDao.getProvider(t.getTaskAssignedTo());
+				    }
 
-				    nItems = nItems +1;     
+				    nItems = nItems +1; 
+				    
 				    if (p == null){
 				      provider = "";
-				    }
-				    else{
+				    } else {
 				      provider = p.getFormattedName();
 				    }
+				    
 				    if (assignedP == null){
 				      taskAssignedTo = "";
 				    }
