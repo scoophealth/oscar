@@ -1,3 +1,25 @@
+--
+-- Table structure for table 'contactspecialty'
+--
+CREATE TABLE `ContactSpecialty` (
+  `id` int(11) NOT NULL,
+  `specialty` varchar(50) NOT NULL,
+  `description` varchar(140),
+  PRIMARY KEY (`id`)
+);
+
+
+--
+-- Table structure for table 'specialty'
+--
+
+CREATE TABLE specialty (
+  region varchar(5),
+  specialty char(2),
+  specialtydesc varchar(100)
+) ;
+
+
 CREATE TABLE `surveyData` (
   surveyDataId int(10) NOT NULL auto_increment,
   surveyId varchar(5) default NULL,

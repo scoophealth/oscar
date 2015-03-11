@@ -1,0 +1,253 @@
+ /*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+/* GLOBAL */
+
+.alignRight {
+  text-align: right;
+}
+.alignLeft {
+  text-align: left;
+}
+.alignTop {
+  vertical-align: top;
+}
+.smallText {
+  font-size: small;
+}
+
+input#searchHealthCareTeamInput:not(:focus) { 
+	color:#000;
+	color: rgba(0, 0, 0, 0.5); 
+}
+
+input#searchHealthCareTeamInput:focus { 
+	color:black;
+}
+
+/* OVERRIDE ELEMENTS IN HOST PAGE */
+body#demographiceditdemographic table#demographicPatientNotes,
+body#demographiceditdemographic table#waitingListTable,
+body#demographiceditdemographic table#privacyConsentTable {
+  background-color:white !important;
+  border-collapse: collapse !important;
+  border-bottom:thin solid #CCCCFF !important;
+}
+
+body#demographiceditdemographic table#demographicPatientNotes textarea {
+  width:90% !important;
+}
+
+/* DISPLAY HEALTH CARE TEAM */
+
+div#healthCareTeam li {
+  display: block;
+  background-color: inherit;
+}
+
+div#healthCareTeam li:hover {
+  background-color: yellow;
+  cursor: default;
+}
+
+/* MANAGE HEALTH CARE TEAM */
+table#listHealthCareTeam {
+  width:100%;
+  border-collapse: collapse;
+}
+
+table#listHealthCareTeam .alignRight {
+  font-weight: 600;
+  padding-right: 5px;
+
+}
+
+table#listHealthCareTeam th {
+  padding-left: 5px;
+  background-color: #CCCCFF;
+   font-size: 7.5pt;  
+} 
+
+#healthCareTeamSubHeading td {
+  font-weight: bold;
+}
+
+table#addEditHealthCareTeam td {
+  padding:0 5px;
+  vertical-align: top;
+}
+
+table#listHealthCareTeam {
+  background-color: white;
+}
+
+table#listHealthCareTeam tr:hover td {
+  background-color:yellow;
+}
+
+table#addEditHealthCareTeam label {
+  display: block;
+  font-size: smaller;
+  padding-left: 5px;
+}
+
+table#addEditHealthCareTeam {
+  border-collapse: collapse;
+  margin-top: 10px;
+
+}
+
+/* ENABLE HIDDEN ELEMENTS */
+tr#privacyConsentHeading, tr#paitientNotesHeading, tr#waitingListHeading {
+  display: table-row !important;
+  display: '' !important;
+}
+
+table#privacyConsentTable {
+  width:100%;
+}
+
+tr#privacyConsentHeading th, tr#paitientNotesHeading th, tr#waitingListHeading th {
+  padding-left: 5px;
+  background-color: #CCCCFF;
+   font-size: 7.5pt; 
+}
+
+/* HEALTH CARE TEAM DETACHED VIEW */
+
+body#detachedView
+	ul {
+		list-style-type: none;
+		padding:0;
+		margin: 5px 0;
+		background-color:white;
+	}
+body#detachedView
+  	ul li {
+   		background-color:inherit;
+  	}
+body#detachedView
+	ul li.odd {
+    	background-color:inherit;
+ 	}
+body#detachedView 
+	ul li.even {
+    	background-color:inherit;
+ 	} 
+ 	
+
+/* HEALTH CARE TEAM DETACHED VIEW */
+body#detachedView {margin:0px; padding:0px;}
+
+body#detachedView #tableTitle {
+	display:none;
+}
+
+body#detachedView
+	ul {
+		list-style-type: none;
+		padding:0;
+		margin: 1px;
+		background-color:white;
+    border:#CCCCFF 1px solid;
+	}
+body#detachedView
+  	ul li {
+   		background-color:inherit;
+      padding:2px;
+  	}
+body#detachedView
+	ul li.odd {
+    	background-color:#EEEEFF;
+   
+ 	}
+body#detachedView 
+	ul li.even {
+    	background-color:inherit;
+     
+ 	} 
+body#detachedView 
+	ul li:hover {
+    	background-color:yellow;
+ 	}
+body#detachedView
+table {
+  border-collapse: collapse;
+
+}
+body#detachedView
+table.MainTable {
+   background-color: #A9A9A9;
+}
+
+body#detachedView 
+table.healthCareTeamMemberDetailTable {
+  border-top:#CCCCFF 1px solid;
+    border-bottom:#CCCCFF 1px solid;
+  width:100%;
+}
+
+body#detachedView table.healthCareTeamMemberDetailTable td.alignRight {
+  padding-left:10px;
+  width:100px;
+}
+
+body#detachedView table.healthCareTeamMemberDetailTable .role,
+body#detachedView table.healthCareTeamMemberDetailTable .contactName {
+  display:none;
+}
+
+
+/* TOGGLE VIEWS INSIDE manageHealthCareTeam.jsp */
+
+table#listHealthCareTeam.toolsView  {
+  display:none;
+}
+
+table#addEditHealthCareTeam.toolsView {
+  display: inherit;
+  border:none;
+  background-color: inherit;
+}
+
+table#addEditHealthCareTeam.toolsView td {
+  border:none;
+} 
+
+table#listHealthCareTeam.listView  {
+  display: inherit;
+  border:none;
+  background-color: inherit;
+}
+
+table#listHealthCareTeam.listView  {
+  border:none;
+}
+
+table#addEditHealthCareTeam.listView {
+  display:none;
+}
+
+
+

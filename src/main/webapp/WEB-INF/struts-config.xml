@@ -564,6 +564,7 @@
 		<form-bean name="mcedtUpdateForm" type="org.oscarehr.integration.mcedt.UpdateForm" />
 
         <form-bean name="ValidateSwipeCard" type="org.oscarehr.integration.mchcv.ValidateSwipeCard" />
+        
 	</form-beans>
 
 	<global-forwards>
@@ -574,7 +575,7 @@
 	</global-forwards>
 
 	<action-mappings>
-
+	
         <!-- Notification Mappings -->
         <action path="/notification/create"
                 type="org.oscarehr.common.web.ProviderNotificationAction"
@@ -2317,6 +2318,7 @@
 			<forward name="cForm" path="/demographic/addEditContact.jsp" />
 			<forward name="manage" path="/demographic/ManageContacts.jsp" />
 			<forward name="windowClose" path="/demographic/close.jsp" />
+			<forward name="ajax" path="/demographic/demographiceditdemographic.jsp" />
 		</action>
 
 		<action path="/oscarMDS/SubmitLab" type="oscar.oscarLab.ca.all.web.SubmitLabByFormAction" parameter="method" scope="request" validate="false">

@@ -46,6 +46,7 @@
 <%@ page import="java.util.*,java.sql.*, java.net.*"%>
 <%@ page import="org.oscarehr.common.web.ContactAction"%>
 <%@ page import="org.oscarehr.common.model.ProfessionalContact"%>
+<%@ page import="org.oscarehr.common.model.Contact"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.apache.commons.lang.WordUtils"%>
 
@@ -74,8 +75,16 @@
 			  
 	  String search_mode = request.getParameter("search_mode")==null?"search_name":request.getParameter("search_mode");
 	  String orderBy = request.getParameter("orderby")==null?"c.lastName,c.firstName":request.getParameter("orderby");
+	  String list = request.getParameter("list");
+	  List<?> contacts;
+
+	  if( "all".equalsIgnoreCase(list) ) {
+		  contacts = ContactAction.searchAllContacts(search_mode, orderBy, keyword);
+		  pageContext.setAttribute("toggleSearchTool", list);
+	  } else {
+		  contacts = ContactAction.searchProContacts(search_mode, orderBy, keyword);
+	  }
 	  
-	  List<ProfessionalContact> contacts = ContactAction.searchProContacts(search_mode, orderBy, keyword);
 	  nItems = contacts.size();
 	  pageContext.setAttribute("contacts",contacts);
 	}
@@ -88,38 +97,92 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Search Professional Contacts</title>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<script language="JavaScript">
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
+<script type="text/javascript">
 
-<!--
+//<!--
 		function setfocus() {
+		  var toggleSearchTool = "<c:out value="${ toggleSearchTool }" />"; 
+		  if( toggleSearchTool ) {
+			  document.getElementById("procontactSearch_searchTools").style.display="none";  
+		  }
+		  
 		  this.focus();
 		  document.forms[0].keyword.focus();
 		  document.forms[0].keyword.select();
 		}
+		
 		function check() {
 		  document.forms[0].submit.value="Search";
 		  return true;
 		}
-		function selectResult(data1,data2) {			
-			opener.document.<%=form%>.elements['<%=elementId%>'].value = data1;
-			opener.document.<%=form%>.elements['<%=elementName%>'].value = data2;
-			self.close();			
+		
+		function selectResult(data1,data2) {
+
+			try {
+				serializePopupData(data1, data2);
+			} catch(error) {				
+				// split contact type [0] from contact id [1]
+				data1 = data1.split("_")[1].trim();				
+				opener.document.<%=form%>.elements['<%=elementId%>'].value = data1;
+				opener.document.<%=form%>.elements['<%=elementName%>'].value = data2;
+				self.close();
+			}
+
+		}
+		
+		function serializePopupData(data1, data2) {			
+			
+			var id1 = '<%= elementId %>';
+			var id2 = '<%= elementName %>';
+			var contactType = data1.split("_")[0].trim();
+			var contactId = data1.split("_")[1].trim();
+			
+			var data = '{"' + 
+				id1 + '":"' + contactId + 
+				'","' + id2 + '":"' + data2 + 
+				'","contactRole":"' +
+				'","demographicContactId":"0' +
+				'","method":"saveManage' +
+				'","contactType":"' + contactType + '"}';
+	
+			opener.popUpData(data);
+			self.close();
 		}
 		                
--->
+//-->
 
-      </script>
+</script>
 </head>
-<body bgcolor="white" onload="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body onload="setfocus()" class="BodyStyle">
 	
 <form method="post" name="titlesearch" action="procontactSearch.jsp" onSubmit="return check();">
-<table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#CCCCFF">
-	<tr>
-		<td class="searchTitle" colspan="4">Search Professional Contacts</td>
+
+<table class="MainTable" >
+
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn" width="20%">Search Professional Contacts</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><oscar:help keywords="contact" key="app.top1"/> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
 	</tr>
-	<tr>
-		<td class="blueText" width="10%" nowrap>
-			<input type="radio" name="search_mode" value="search_name" checked="checked"> Name
+
+	<!--  tr>
+		<td class="searchTitle" colspan="4">Search Professional Contacts</td>
+	</tr-->
+	<tr id="procontactSearch_searchTools" >
+		<td class="blueText" >
+			<input type="radio" name="search_mode" value="search_name" checked="checked"> <label for="search_mode">Name</label>
 		</td>
 		<td valign="middle" rowspan="2" align="left">
 			<input type="text" name="keyword" value="" size="17" maxlength="100"> 
@@ -131,23 +194,33 @@
 		</td>
 	</tr>	
 </table>
-<table width="95%" border="0">
+
+<!-- table width="95%" border="0">
 	<tr>
 		<td align="left">Results based on keyword(s): <%=keyword==null?"":keyword%></td>
 	</tr>
-</table>
+</table  -->
+
 <input type='hidden' name='form' value="<%=StringEscapeUtils.escapeHtml(form)%>"/>
 <input type='hidden' name='elementName' value="<%=StringEscapeUtils.escapeHtml(elementName)%>"/>
 <input type='hidden' name='elementId' value="<%=StringEscapeUtils.escapeHtml(elementId)%>"/>
+
 </form>
+
+<table width="100%" style="text-align:left;" 
+	cellpadding="2" cellspacing="1" 
+	bgcolor="#ABABAB" >
 	
-<center>
-<table width="100%" border="0" cellpadding="0" cellspacing="2"
-	bgcolor="#C0C0C0">
+	<tr style="background-color:white;border:white;" >
+		<td colspan="3"  >
+			<strong>Results based on keyword(s):</strong> <%=keyword==null?"":keyword%>
+		</td>
+	</tr>
+	
 	<tr class="title">
-		<th width="25%"><b>Last Name</b></th>
-		<th width="20%"><b>First Name</b></th>		
-		<th width="20%"><b>Phone</b></th>
+		<th><strong>Last Name</strong></th>
+		<th><strong>First Name</strong></th>		
+		<th><strong>Phone</strong></th>
 	</tr>
 	
 	<c:forEach var="contact" items="${contacts}" varStatus="i">
@@ -155,13 +228,12 @@
 			ProfessionalContact contact = (ProfessionalContact)pageContext.getAttribute("contact");
 			javax.servlet.jsp.jstl.core.LoopTagStatus i = (javax.servlet.jsp.jstl.core.LoopTagStatus) pageContext.getAttribute("i");
 			String bgColor = i.getIndex()%2==0?"#EEEEFF":"ivory";	
-			
 			String strOnClick; 
-            strOnClick = "selectResult('" + contact.getId() + "','"+StringEscapeUtils.escapeJavaScript(contact.getLastName()+ "," + contact.getFirstName()) + "')";
+            strOnClick = "selectResult('" + contact.getSystemId() + "_" + contact.getId() + "','"+StringEscapeUtils.escapeJavaScript(contact.getLastName()+ "," + contact.getFirstName()) + "')";
                         
 		%>
-		<tr align="center" bgcolor="<%=bgColor%>" align="center"
-		onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
+		<tr bgcolor="<%=bgColor%>" 
+		onMouseOver="this.style.cursor='pointer';this.style.backgroundColor='pink';"
 		onMouseout="this.style.backgroundColor='<%=bgColor%>';" onClick="<%=strOnClick%>">
 			<td><c:out value="${contact.lastName}"/></td>
 			<td><c:out value="${contact.firstName}"/></td>
@@ -169,19 +241,53 @@
 		</tr>
 	</c:forEach>
 	
+	<%
+	  int nLastPage=0,nNextPage=0;
+	  nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
+	  nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
+	%> 
+	<%
+	  if(nItems==0 && nLastPage<=0) {
+	%> 
+	<tr>
+		<td colspan="3"> <bean:message key="demographic.search.noResultsWereFound" /> </td> 
+	</tr>
+	<% } %> 
 	
-</table>
+	<tr>	
+		<form method="post" name="nextform" action="searchRefDoc.jsp">
+			<%
+			  if(nLastPage>=0) {
+			%> 
+			<td><input type="submit" class="mbttn" name="submit"
+				value="<bean:message key="demographic.demographicsearch2apptresults.btnPrevPage"/>"
+				onClick="last()"> </td><%
+			  }
+			  if(nItems==Integer.parseInt(strLimit2)) {
+			%> <td><input type="submit" class="mbttn" name="submit"
+				value="<bean:message key="demographic.demographicsearch2apptresults.btnNextPage"/>"
+				onClick="next()"> </td><%
+			}
+			%>
+		</form>	
+	</tr>
 
-<%
-  int nLastPage=0,nNextPage=0;
-  nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
-  nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
-%> <%
-  if(nItems==0 && nLastPage<=0) {
-%> <bean:message key="demographic.search.noResultsWereFound" /> <%
-  }
-%> <script language="JavaScript">
-<!--
+</table>
+<table>
+
+	<tr>
+		<td>
+			<a href="Contact.do?method=addProContact&keyword=<%= keyword %>&contactRole=${ param.contactRole }" 
+			style="font:inherit;display:block;margin:10px;">
+				Add/Edit Professional Contact
+			</a>
+		</td>
+	</tr>
+	</table>
+
+
+<script type="text/javascript">
+//<!--
 function last() {
   document.nextform.action="procontactSearch.jsp?form=<%=URLEncoder.encode(form,"UTF-8")%>&elementName=<%=URLEncoder.encode(elementName,"UTF-8")%>&elementId=<%=URLEncoder.encode(elementId,"UTF-8")%>&keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>" ; 
   document.nextform.submit();
@@ -191,23 +297,7 @@ function next() {
   document.nextform.submit();
 }
 //-->
-</SCRIPT>
+</script>
 
-<form method="post" name="nextform" action="searchRefDoc.jsp">
-<%
-  if(nLastPage>=0) {
-%> <input type="submit" class="mbttn" name="submit"
-	value="<bean:message key="demographic.demographicsearch2apptresults.btnPrevPage"/>"
-	onClick="last()"> <%
-  }
-  if(nItems==Integer.parseInt(strLimit2)) {
-%> <input type="submit" class="mbttn" name="submit"
-	value="<bean:message key="demographic.demographicsearch2apptresults.btnNextPage"/>"
-	onClick="next()"> <%
-}
-%>
-</form>
-<br>
-<a href="Contact.do?method=addProContact">Add/Edit Professional Contact</a></center>
 </body>
 </html:html>
