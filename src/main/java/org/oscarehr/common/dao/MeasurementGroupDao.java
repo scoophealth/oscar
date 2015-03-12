@@ -32,6 +32,8 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.MeasurementGroup;
 import org.springframework.stereotype.Repository;
 
+import oscar.OscarProperties;
+
 @Repository
 @SuppressWarnings("unchecked")
 public class MeasurementGroupDao extends AbstractDao<MeasurementGroup>{
@@ -71,6 +73,11 @@ public class MeasurementGroupDao extends AbstractDao<MeasurementGroup>{
 	}
 	
 	public List<MeasurementGroup> findByName(String name) {
+		boolean orderById = "true".equals(OscarProperties.getInstance().getProperty("oscarMeasurements.orderGroupById","false"));
+		String orderBy="";
+    	if(orderById) {
+    		orderBy =  " ORDER BY x.id ASC";
+    	}
 		String sqlCommand = "select x from " + modelClass.getSimpleName()+" x where x.name=?";
 
 		Query query = entityManager.createQuery(sqlCommand);
