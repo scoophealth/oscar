@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
@@ -104,6 +105,12 @@ public class DemographicWs extends AbstractWs {
 	public Integer[] getAdmittedDemographicIdsByProgramProvider(Integer programId, String providerNo)
 	{
 		List<Integer> results=demographicManager.getAdmittedDemographicIdsByProgramAndProvider(getLoggedInInfo(), programId, providerNo);
+		return(results.toArray(new Integer[0]));
+	}
+	
+	public Integer[] getDemographicIdsWithMyOscarAccounts(@WebParam(name="startDemographicIdExclusive") Integer startDemographicIdExclusive, @WebParam(name="itemsToReturn") int itemsToReturn)
+	{
+		List<Integer> results=demographicManager.getDemographicIdsWithMyOscarAccounts(getLoggedInInfo(), startDemographicIdExclusive, itemsToReturn);
 		return(results.toArray(new Integer[0]));
 	}
 	

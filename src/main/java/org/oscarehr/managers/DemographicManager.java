@@ -534,6 +534,16 @@ public class DemographicManager {
 
 		return (demographicIds);
 	}
+	
+	public List<Integer> getDemographicIdsWithMyOscarAccounts(LoggedInInfo loggedInInfo, Integer startDemographicIdExclusive, int itemsToReturn) {
+		if (loggedInInfo == null) throw (new SecurityException("user not logged in?"));
+
+		List<Integer> demographicIds = demographicDao.getDemographicIdsWithMyOscarAccounts(startDemographicIdExclusive, itemsToReturn);
+
+		LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getDemographicIdsWithMyOscarAccounts", null);
+
+		return (demographicIds);
+	}
 
 	public List<Demographic> getDemographics(LoggedInInfo loggedInInfo, List<Integer> demographicIds) {
 		if (loggedInInfo == null) throw (new SecurityException("user not logged in?"));
