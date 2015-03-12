@@ -69,7 +69,7 @@ public class PrintReferralLabelAction extends OscarAction {
 			try {
 				ins = new FileInputStream(System.getProperty("user.home") + "/reflabel.xml");
 			} catch (Exception e) {
-				MiscUtils.getLogger().error("Error", e);
+				MiscUtils.getLogger().warn("no reflabel.xml found in user's home directory, going to backup");
 			}
 
 			if (ins == null) {
