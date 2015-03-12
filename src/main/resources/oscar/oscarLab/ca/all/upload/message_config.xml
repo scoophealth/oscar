@@ -20,4 +20,5 @@
     <handler name="BIOTEST" className="BioTestHandler"/>
     <handler name="eaaps"   className="org.oscarehr.research.eaaps.EaapsHandler"/>
     <handler name="CLS"		className="CLSHandler"/>
+    <handler name="AlphaHL7" className="AlphaHL7Handler"/>
 </message-configuration>
