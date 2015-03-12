@@ -3337,8 +3337,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String strBeanName = "casemgmt_oscar_bean" + this.getDemographicNo(request);
 		oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean) request.getSession().getAttribute(strBeanName);
 		if (bean == null) return new String("");
-
-		if (bean.familyDoctorNo.equals("")) return new String("");
+		if (bean.familyDoctorNo == null) return new String("");
+		if (bean.familyDoctorNo.isEmpty()) return new String("");
 
 		oscar.oscarEncounter.data.EctProviderData.Provider prov = new oscar.oscarEncounter.data.EctProviderData().getProvider(bean.familyDoctorNo);
 		String name = prov.getFirstName() + " " + prov.getSurname();
