@@ -101,7 +101,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Hashtable explCodes = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:billSearch.list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java:List&lt;String&gt; providerBillingNumbers = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java:billingToBeMarkedAsBilled = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java:billingmasterToBeMarkedAsBilled = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java:logList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/WcbHelper.java:ArrayList claimList = new ArrayList();</ViolationValue>
@@ -1425,7 +1424,7 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingCorrection.java:List obj = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingCorrection.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:ArrayList&lt;Hashtable&lt;String, String&gt;&gt; list = new ArrayList&lt;Hashtable&lt;String, String&gt;&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:Hashtable&lt;String, String&gt; h = (Hashtable&lt;String, String&gt;) a.get(i);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:Hashtable&lt;String, String&gt; h = a.get(i);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:Hashtable&lt;String, String&gt; h = new Hashtable&lt;String, String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:private Hashtable&lt;String, String&gt; getAsMap(RaDetail ra) {</ViolationValue>
@@ -2931,7 +2930,6 @@
         <ViolationValue>/src/main/webapp/oscarRx/InteractionDisplayMyD.jsp:vec = (Vector) holbrook;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/InteractionDisplayMyD.jsp:vec = (Vector) obj;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/InteractionDisplayMyD.jsp:}else if(obj instanceof Hashtable){</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarRx/ListDrugs.jsp:StringBuffer sb = new StringBuffer("class=\"");</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/MyDrugrefDisplay.jsp://key:comments val [{created_at=Fri Apr 04 14:35:10 EDT 2008, name=Re: APO-WARFARIN 10MG, id=4053, post_id=133, author=Guest, goat=true, created_by=7, body=i disagree , updated_at=Fri Apr 04 14:35:10 EDT 2008}]  class : java.util.Vector</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/MyDrugrefDisplay.jsp:&lt;legend&gt;Comments&lt;/legend&gt; &lt;%for(Hashtable comment : commentsVec){ %&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/MyDrugrefDisplay.jsp:Hashtable h = new Hashtable();</ViolationValue>

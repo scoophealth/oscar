@@ -58,7 +58,7 @@ public class OnlineHCValidator implements HCValidator {
         config.setServiceId(properties.getProperty("hcv.service.id"));
 
         EdtClientBuilder builder = new EdtClientBuilder(config);
-        validation = (HCValidation) builder.build(HCValidation.class);
+        validation = builder.build(HCValidation.class);
     }
 
     @Override
