@@ -101,7 +101,7 @@ public class DocumentConsentWrapper
     }
     
     public boolean isDiscloseAllowed() {
-        return disclosePermission == disclosePermission.Valid;
+        return disclosePermission == DocumentPermissionStatus.Valid;
     }
     
     public boolean isImportAllowed() {

@@ -355,7 +355,7 @@ public class MSPReconcile {
 		ArrayList<String> seqNums = getSequenceNumbers(billingMasterNo);
 		if (!seqNums.isEmpty()) {
 			Arrays.sort(seqNums.toArray());
-			maxNum = (String) seqNums.get(seqNums.size() - 1);
+			maxNum = seqNums.get(seqNums.size() - 1);
 		}
 		return maxNum;
 	}

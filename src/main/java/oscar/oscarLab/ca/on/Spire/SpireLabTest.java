@@ -198,13 +198,13 @@ public class SpireLabTest {
 			}
 
 			if (alist.size() == 1) {
-				dis = (String) alist.get(0); //Only one item
+				dis = alist.get(0); //Only one item
 			} else if (alist.size() != 0) {
 				int lenAvail = 20 - (alist.size() - 1);
 				if (lenAvail > count) {
 					StringBuilder s = new StringBuilder();
 					for (int i = 0; i < alist.size(); i++) {
-						s.append((String) alist.get(i));
+						s.append( alist.get(i));
 						if (i < (alist.size() - 1)) {
 							s.append("/");
 						}
@@ -214,7 +214,7 @@ public class SpireLabTest {
 					int charEach = lenAvail / alist.size();
 					StringBuilder s = new StringBuilder();
 					for (int i = 0; i < alist.size(); i++) {
-						String str = (String) alist.get(i);
+						String str = alist.get(i);
 
 						s.append(StringUtils.substring(str, 0, charEach));
 						if (i < (alist.size() - 1)) {

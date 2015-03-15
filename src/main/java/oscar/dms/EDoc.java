@@ -140,7 +140,7 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 	 *Comparable based on document id
 	 */
 	public int compareTo(EDoc o) {
-		EDoc doc = (EDoc) o;
+		EDoc doc = o;
 		int ret;
 		int id1 = Integer.parseInt(docId);
 		int id2 = Integer.parseInt(doc.getDocId());

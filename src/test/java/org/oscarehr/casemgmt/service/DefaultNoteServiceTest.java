@@ -23,7 +23,8 @@
  */
 package org.oscarehr.casemgmt.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -41,13 +42,11 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.service.impl.DefaultNoteService;
 import org.oscarehr.casemgmt.web.NoteDisplay;
 import org.oscarehr.common.dao.DaoTestFixtures;
+import org.oscarehr.common.dao.utils.AuthUtils;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
-import org.apache.log4j.Logger;
-import org.oscarehr.common.dao.utils.AuthUtils;
 
 public class DefaultNoteServiceTest extends DaoTestFixtures {
 	private static Logger logger = Logger.getLogger(DefaultNoteServiceTest.class);
@@ -119,7 +118,7 @@ public class DefaultNoteServiceTest extends DaoTestFixtures {
 
 		//These are used by the CaseManagementManager so they need to be initialized
 		RoleCache.reload();
-		ProgramAccessCache.setAccessMap((long) 10016);
+		ProgramAccessCache.setAccessMap(10016);
 
 		//Add 40 notes to the same patient advancing the day by 1 for each note. 
 		Calendar calendar = new GregorianCalendar(2011, 11, 9);

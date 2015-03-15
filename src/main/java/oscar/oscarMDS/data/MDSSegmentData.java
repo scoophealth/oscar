@@ -135,7 +135,7 @@ public class MDSSegmentData {
 					notes.put(nte.getAssociatedOBX(), new ArrayList<String>());
 				}
 				if (nte.getSourceOfComment().equals("M")) {
-					((ArrayList<String>) notes.get(nte.getAssociatedOBX())).add(new String(nte.getComment().substring(3)));
+					(notes.get(nte.getAssociatedOBX())).add(new String(nte.getComment().substring(3)));
 				} else {
 					if (nte.getSourceOfComment().equals("MC")) {
 						MdsZMC zmc = zmcDao.findByIdAndSetId(ConversionUtils.fromIntString(this.segmentID), nte.getComment().substring(1));
@@ -144,11 +144,11 @@ public class MDSSegmentData {
 						}
 
 						if (zmc != null) {
-							((ArrayList<String>) notes.get(nte.getAssociatedOBX())).add(zmc.getMessageCodeDesc());
+							( notes.get(nte.getAssociatedOBX())).add(zmc.getMessageCodeDesc());
 						}
 					} else {
 						logger.info("Found message note in unknown format.  Format:" + nte.getSourceOfComment());
-						((ArrayList<String>) notes.get(nte.getAssociatedOBX())).add("Unknown note format!");
+						(notes.get(nte.getAssociatedOBX())).add("Unknown note format!");
 					}
 				}
 			}
@@ -200,9 +200,9 @@ public class MDSSegmentData {
 					for (MdsOBX obx : obxDao.findByIdObrAndCodes(ConversionUtils.fromIntString(this.segmentID), associatedOBR, codes)) {
 
 						mdsOBXNum = obx.getObxId();
-						thisOBXMnemonics.update((Mnemonics) mnemonics.get(obx.getObservationIdentifier().substring(1, obx.getObservationIdentifier().indexOf('^'))));
+						thisOBXMnemonics.update( mnemonics.get(obx.getObservationIdentifier().substring(1, obx.getObservationIdentifier().indexOf('^'))));
 
-						((headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.add(new Results(thisOBXMnemonics.reportName, thisOBXMnemonics.referenceRange, thisOBXMnemonics.units, obx.getObservationValue(), obx.getAbnormalFlags(), obx.getObservationIdentifier(), obx.getObservationResultStatus(), (ArrayList<String>) notes.get(Integer.toString(mdsOBXNum)), obx.getProducersId().substring(0, obx.getProducersId().indexOf('^'))));
+						((headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.add(new Results(thisOBXMnemonics.reportName, thisOBXMnemonics.referenceRange, thisOBXMnemonics.units, obx.getObservationValue(), obx.getAbnormalFlags(), obx.getObservationIdentifier(), obx.getObservationResultStatus(),notes.get(Integer.toString(mdsOBXNum)), obx.getProducersId().substring(0, obx.getProducersId().indexOf('^'))));
 
 					}
 				}

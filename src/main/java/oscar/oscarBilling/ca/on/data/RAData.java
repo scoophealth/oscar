@@ -88,7 +88,7 @@ public class RAData {
 	public String getErrorCodes(ArrayList<Hashtable<String, String>> a) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < a.size(); i++) {
-			Hashtable<String, String> h = (Hashtable<String, String>) a.get(i);
+			Hashtable<String, String> h = a.get(i);
 			sb.append(h.get("error_code"));
 			sb.append(" ");
 		}
@@ -98,7 +98,7 @@ public class RAData {
 	public String getAmountPaid(ArrayList<Hashtable<String, String>> a) {
 		BigDecimal total = new BigDecimal("0.00").setScale(2, BigDecimal.ROUND_HALF_UP);
 		for (int i = 0; i < a.size(); i++) {
-			Hashtable<String, String> h = (Hashtable<String, String>) a.get(i);
+			Hashtable<String, String> h = a.get(i);
 			BigDecimal valueToAdd = new BigDecimal("0.00");
 			try {
 				String amount = "" + h.get("amountpay");
@@ -116,7 +116,7 @@ public class RAData {
 	public String getAmountPaid(ArrayList<Hashtable<String, String>> a, String billingNo, String serviceCode) {
 		BigDecimal total = new BigDecimal("0.00").setScale(2, BigDecimal.ROUND_HALF_UP);
 		for (int i = 0; i < a.size(); i++) {
-			Hashtable<String, String> h = (Hashtable<String, String>) a.get(i);
+			Hashtable<String, String> h = a.get(i);
 			if (!(h.get("billing_no").equals(billingNo)) || !(h.get("service_code").equals(serviceCode))) {
 				continue;
 			}
