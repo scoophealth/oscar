@@ -156,7 +156,7 @@ public class DSServiceMyDrugref extends DSService {
 
             } catch (Exception e) {
                 DecisionSupportException newException = new DecisionSupportException("Error parsing drug with with title: '" + (String) fetchedGuideline.get("name") + "' uuid: '" + (String) fetchedGuideline.get("uuid") + "'", e);
-                logger.error("Error", newException);
+                logger.error(newException.getMessage());
                 newGuideline.setStatus('F');
                 newGuideline.setDateDecomissioned(new Date());
             }
