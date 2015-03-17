@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.util.WebUtilsOld"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
@@ -36,7 +37,6 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
 <%@ page import="oscar.oscarRx.data.*,oscar.oscarProvider.data.ProviderMyOscarIdData,oscar.oscarDemographic.data.DemographicData,oscar.OscarProperties,oscar.log.*"%>
@@ -55,7 +55,6 @@
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
 <%@page import="org.oscarehr.study.StudyFactory, org.oscarehr.study.Study, org.oscarehr.study.types.MyMedsStudy" %>
 <bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
-
 <%@page import="org.oscarehr.casemgmt.service.CaseManagementManager" %>
 <%@page import="org.oscarehr.casemgmt.model.CaseManagementNote" %>
 <%@page import="org.oscarehr.casemgmt.model.Issue" %>
@@ -196,31 +195,44 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
                 boolean eRxTrainingModeTemp = providerPreference.isERxTrainingMode();
                 if(eRxTrainingModeTemp) eRxTrainingMode="1";
              }
-            
+
             CaseManagementManager cmgmtMgr = SpringUtils.getBean(CaseManagementManager.class);
             List<Issue> issues = cmgmtMgr.getIssueInfoByCode(loggedInInfo.getLoggedInProviderNo(),"OMeds");
             String[] issueIds = new String[issues.size()];
-			int idx = 0;
-			for (Issue issue : issues) {
-				issueIds[idx] = String.valueOf(issue.getId());
-			}
-			List<CaseManagementNote> notes = cmgmtMgr.getNotes(bean.getDemographicNo()+"", issueIds);
+	    int idx = 0;
+	    for (Issue issue : issues) {
+		issueIds[idx] = String.valueOf(issue.getId());
+	    }
+	   List<CaseManagementNote> notes = cmgmtMgr.getNotes(bean.getDemographicNo()+"", issueIds);
+             
              
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 <html:html locale="true">
     <head>
-            <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
+
 
         <title><bean:message key="SearchDrug.title" /></title>
         <link rel="stylesheet" type="text/css" href="styles.css">
 
         <html:base />
+        
+        <script type="text/javascript" >
+        	var ctx = '${ ctx }';
+        </script>
+<script type="text/javascript" src="${ ctx }/js/jquery-1.7.1.min.js" ></script>                
+<script type="text/javascript" src="${ ctx }/js/jquery-ui-1.8.18.custom.min.js" ></script>
+        <script>
+          jQuery.noConflict();
+        </script>
+
 
         <link rel="stylesheet" href="<c:out value="${ctx}/share/lightwindow/css/lightwindow.css"/>" type="text/css" media="screen" />
         <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
         <!--link rel="stylesheet" type="text/css" href="modaldbox.css"  /-->
+
+        <script type="text/javascript" src="${ctx}/js/global.js"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/rx.js"/>"></script>
@@ -232,12 +244,6 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
         <script type="text/javascript" src="<c:out value="${ctx}/share/lightwindow/javascript/lightwindow.js"/>"></script>
         <!--script type="text/javascript" src="<%--c:out value="modaldbox.js"/--%>"></script-->
         <script type="text/javascript" src="<c:out value="${ctx}/js/checkDate.js"/>"></script>
-
-        <script src="<c:out value="${ctx}/js/jquery.js"/>"></script>
-        <script>
-          jQuery.noConflict();
-        </script>
-
 
         <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}/share/yui/css/fonts-min.css"/>" >
         <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}/share/yui/css/autocomplete.css"/>" >
@@ -690,7 +696,7 @@ function checkFav(){
     }
        
 </script>
-
+               
                <style type="text/css" media="print">
 
 
@@ -755,8 +761,8 @@ body {
 	padding:0;
 }
 
-<%--
-/*THEMES*/
+
+/*THEMES
 
      .currentDrug{
         color:red;
@@ -780,8 +786,7 @@ body {
 
      }
 
---%>
-/*THEME 2*/
+THEME 2*/
 
      .currentDrug{
         font-weight:bold;
@@ -810,12 +815,9 @@ body {
          text-decoration: line-through;
 
      }
-     
-     .external{
-         color: purple;
-
-     }
-
+		.external {
+			color:purple;
+		}
 
      .sortheader{
          text-decoration: none;
@@ -961,6 +963,8 @@ body {
                                         </tr>
                                         <tr>
                                             <td>
+                                            
+<%-- Start List Drugs Prescribed --%>
                                                 <div style="height: 100px; overflow: auto; background-color: #DCDCDC; border: thin solid green; display: none;" id="reprint">
                                                     <%
 
@@ -987,6 +991,7 @@ body {
                         }
                                                     %>
                                                 </div>
+                                                
                                             </td>
                                         </tr>
                                         <tr><!--move this left-->
@@ -997,8 +1002,13 @@ body {
                                                             <table width="100%" cellspacing="0" cellpadding="0" class="legend">
                                                                     <tr>
                                                                         <td width="100">
-                                                                            <a href="javascript:void(0);" title="View drug profile legend" onclick="ThemeViewer();" style="font-style:normal;color:#000000" ><bean:message key="SearchDrug.msgProfileLegend"/>:</a>
-                                                                            <a href="#"  title="<bean:message key="provider.rxChangeProfileViewMessage"/>" onclick="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxProfileView');" style="color:red;text-decoration:none" ><bean:message key="provider.rxChangeProfileView"/></a>
+                                                                            <a href="javascript:void(0);" title="View drug profile legend" onclick="ThemeViewer();" style="font-style:normal;color:#000000" >
+                                                                            	<bean:message key="SearchDrug.msgProfileLegend"/>:
+                                                                            </a>
+                                                                            <a href="#"  title="<bean:message key="provider.rxChangeProfileViewMessage"/>" 
+                                                                            	onclick="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxProfileView');" style="color:red;text-decoration:none" >
+                                                                            	<bean:message key="provider.rxChangeProfileView"/>
+                                                                            </a>
                                                                         </td>
 
 																	    <td align="left">
@@ -1007,29 +1017,48 @@ body {
 																			<tr>
 																				<%if(show_current){%>
 																				<td >
-	                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp','drugProfile');CngClass(this);" id="selected_default" style="font: Arial; color:#000000; text-decoration: none;" TITLE="<bean:message key='SearchDrug.msgShowCurrentDesc'/>"><bean:message key="SearchDrug.msgShowCurrent"/></a>
+		                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp','drugProfile');CngClass(this);" 
+		                                                                            	id="selected_default" style="font: Arial; color:#000000; text-decoration: none;" 
+		                                                                            	TITLE="<bean:message key='SearchDrug.msgShowCurrentDesc'/>">
+		                                                                            	<bean:message key="SearchDrug.msgShowCurrent"/>
+		                                                                            </a>
 	                                                                            </td>
 																				<%}if(show_all){%>
 	                                                                            <td >
-																				<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?show=all','drugProfile');CngClass(this);" Title="<bean:message key='SearchDrug.msgShowAllDesc'/>"><bean:message key="SearchDrug.msgShowAll"/></a>
+																					<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?show=all','drugProfile');CngClass(this);" 
+																						Title="<bean:message key='SearchDrug.msgShowAllDesc'/>">
+																						<bean:message key="SearchDrug.msgShowAll"/>
+																					</a>
 	                                                                            </td>
 																				<%}if(active){%>
 																				<td >
-																				<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=active','drugProfile');CngClass(this);" TITLE="<bean:message key='SearchDrug.msgActiveDesc'/>"><bean:message key="SearchDrug.msgActive"/></a>
+																					<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=active','drugProfile');CngClass(this);" 
+																						TITLE="<bean:message key='SearchDrug.msgActiveDesc'/>">
+																						<bean:message key="SearchDrug.msgActive"/>
+																					</a>
 	                                                                            </td>
 																				<%}if(inactive){%>
 																				<td >
-																				<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');CngClass(this);" TITLE="<bean:message key='SearchDrug.msgInactiveDesc'/>"><bean:message key="SearchDrug.msgInactive"/></a>
+																					<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');CngClass(this);" 
+																						TITLE="<bean:message key='SearchDrug.msgInactiveDesc'/>">
+																						<bean:message key="SearchDrug.msgInactive"/>
+																					</a>
 	                                                                            </td>
 																				<%} if(!OscarProperties.getInstance().getProperty("rx.profile_legend.hide","false").equals("true")) {
 
 																				if(longterm_acute){%>
 																				<td >
-																				<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile');CngClass(this);" TITLE="<bean:message key='SearchDrug.msgLongTermAcuteDesc'/>"><bean:message key="SearchDrug.msgLongTermAcute"/></a>
+																					<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile');CngClass(this);" 
+																						TITLE="<bean:message key='SearchDrug.msgLongTermAcuteDesc'/>">
+																						<bean:message key="SearchDrug.msgLongTermAcute"/>
+																					</a>
 	                                                                            </td>
 																				<%}if(longterm_acute_inactive_external){%>
 																				<td >
-																				<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile');callAdditionWebService('ListDrugs.jsp?heading=External&drugLocation=external','drugProfile');CngClass(this);" TITLE="<bean:message key='SearchDrug.msgLongTermAcuteInactiveExternalDesc'/>"><bean:message key="SearchDrug.msgLongTermAcuteInactiveExternal"/></a>
+																					<a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile');callAdditionWebService('ListDrugs.jsp?heading=External&drugLocation=external','drugProfile');CngClass(this);" 
+																						TITLE="<bean:message key='SearchDrug.msgLongTermAcuteInactiveExternalDesc'/>">
+																						<bean:message key="SearchDrug.msgLongTermAcuteInactiveExternal"/>
+																					</a>
 	                                                                            </td>
 																				<%}
 																				}
@@ -1092,16 +1121,19 @@ body {
                                         	</td>
                                         </tr>
                                     </table>
-                                    
-                                </div>
+				                                    
+					</div>
                             </td>
                         </tr>
                     </table>
+<%-- End List Drugs Prescribed --%>
+
                 </td>
                 <td width="300px" valign="top" >
                     <div id="interactionsRxMyD" style="float:right;"></div>
                 </td>
             </tr>
+
             <tr><td></td><td align="center" ><a href="javascript:window.scrollTo(0,0);"><bean:message key="oscarRx.BackToTop"/></a></td></tr>
 
 <tr>
@@ -1131,7 +1163,7 @@ body {
 
 
 <div id="dragifm" style="top:0px;left:0px;"></div>
-    <div id="discontinueUI" style="position: absolute;display:none; width:500px;height:200px;background-color:white;padding:20px;border:1px solid grey">
+    <div id="discontinueUI" style="position: absolute;display:none;width:500px;height:200px;background-color:white;padding:20px;border:1px solid grey">
         <h3>Discontinue :<span id="disDrug"></span></h3>
         <input type="hidden" name="disDrugId" id="disDrugId"/>
         <bean:message key="oscarRx.discontinuedReason.msgReason"/>
@@ -1173,8 +1205,7 @@ body {
         <a href="javascript:void(0);" class="expiredDrug">Drug that is expired</a><br/>
         <a href="javascript:void(0);" class="longTermMed">Long Term Med Drug</a><br/>
         <a href="javascript:void(0);" class="discontinued">Discontinued Drug</a><br/>
-        <a href="javascript:void(0);" class="external">Prescribed by an outside provider</a><br/>
-        <br/><br/><br/>
+        <a href="javascript:void(0);" class="external">Prescribed by an outside provider</a><br/><br/><br/><br/>
         <a href="javascript:void(0);" onclick="$('themeLegend').hide()">Close</a>
     </div>
 
@@ -1505,7 +1536,7 @@ function changeLt(drugId){
                              $(del).style.textDecoration='line-through';
                              $(discont).style.textDecoration='line-through';
                              $(prescrip).style.textDecoration='line-through';
-                             updateCurrentInteractions();
+			     updateCurrentInteractions();
                     }
                 }});
 
@@ -1554,7 +1585,7 @@ function changeLt(drugId){
                   $(del).style.textDecoration='line-through';
                   $(discont).style.textDecoration='line-through';
                   $(prescrip).style.textDecoration='line-through';
-                  updateCurrentInteractions();
+		  updateCurrentInteractions();
             }});
         }
         return false;
@@ -2296,6 +2327,7 @@ $("searchString").focus();
 
 
 </script>
+
 <script language="javascript" src="../commons/scripts/sort_table/css.js"></script>
 <script language="javascript" src="../commons/scripts/sort_table/common.js"></script>
 <script language="javascript" src="../commons/scripts/sort_table/standardista-table-sorting.js"></script>

@@ -282,8 +282,8 @@ if (heading != null){
                   <%=prescriptDrug.getArchivedReason()%>
                 <%}%>
             </td>
-            
-            <td>
+  <%-- DRUG REASON --%>          
+            <td style="vertical-align:top;">
             	<% 	
             		List<DrugReason> drugReasons  = drugReasonDao.getReasonsForDrugID(prescriptDrug.getId(),true);            		            					        	
 			
@@ -304,7 +304,7 @@ if (heading != null){
             		}
 				%>
             </td>
-		
+  <%-- END DRUG REASON --%> 		
             <%
             Boolean past_med = prescriptDrug.getPastMed();
             if( past_med == null ) {
@@ -467,15 +467,16 @@ String getName(Drug prescriptDrug){
 String displayDrugReason(CodingSystemManager codingSystemManager, List<DrugReason> drugReasons,boolean title){
 	StringBuilder sb = new StringBuilder();
 	boolean multiLoop = false;
+	
 	for(DrugReason drugReason:drugReasons){
 		if(multiLoop){
 			sb.append(", ");
 		}
-		String codeDescr = codingSystemManager.getCodeDescription(drugReason.getCodingSystem(),drugReason.getCode());
+		String codeDescr = codingSystemManager.getCodeDescription( drugReason.getCodingSystem(), drugReason.getCode() );
 		if(codeDescr != null) {
 			sb.append(StringEscapeUtils.escapeHtml(codeDescr));
 		} else {
-			sb.append(drugReason.getCode());
+			sb.append( drugReason.getCode() );
 		}
 		multiLoop = true;
 	}
@@ -483,7 +484,7 @@ String displayDrugReason(CodingSystemManager codingSystemManager, List<DrugReaso
 		if(title) {
 			return "No diseases are associated with this medication";
 		}
-		return "---";
+		return "+";
 	}
 	
 	return sb.toString();

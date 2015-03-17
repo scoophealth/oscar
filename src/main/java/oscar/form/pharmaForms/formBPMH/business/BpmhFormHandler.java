@@ -39,7 +39,7 @@ import org.oscarehr.common.dao.DemographicCustDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DrugReasonDao;
-import org.oscarehr.common.dao.DxCodeTranslationsDao;
+import org.oscarehr.common.dao.Icd9SynonymDao;
 import org.oscarehr.common.dao.FormBPMHDao;
 import org.oscarehr.common.dao.Icd9Dao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
@@ -53,7 +53,7 @@ import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.DemographicCust;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.DrugReason;
-import org.oscarehr.common.model.DxCodeTranslations;
+import org.oscarehr.common.model.Icd9Synonym;
 import org.oscarehr.common.model.FormBPMH;
 import org.oscarehr.common.model.Icd9;
 import org.oscarehr.common.model.ProfessionalSpecialist;
@@ -124,7 +124,7 @@ public class BpmhFormHandler {
 	private ProviderDao providerDao;
 	private OscarAppointmentDao appointmentDao;
 	private Icd9Dao icd9Dao;
-	private DxCodeTranslationsDao dxCodeTranslationsDao;
+	private Icd9SynonymDao dxCodeTranslationsDao;
 	private FormBPMHDao formBPMHDao;
 	private ProfessionalSpecialistDao professionalSpecialistDao;
 	private ContactSpecialtyDao specialtyDao;
@@ -167,7 +167,7 @@ public class BpmhFormHandler {
     	setProviderDao( (ProviderDao) SpringUtils.getBean("providerDao") );
     	setAppointmentDao( (OscarAppointmentDao) SpringUtils.getBean(OscarAppointmentDao.class) );
     	setIcd9Dao( (Icd9Dao) SpringUtils.getBean(Icd9Dao.class) );
-    	setDxCodeTranslationsDao((DxCodeTranslationsDao) SpringUtils.getBean(DxCodeTranslationsDao.class) );
+    	setDxCodeTranslationsDao((Icd9SynonymDao) SpringUtils.getBean(Icd9SynonymDao.class) );
     	setFormBPMHDao( (FormBPMHDao) SpringUtils.getBean(FormBPMHDao.class) ); 
     	setProfessionalSpecialistDao( (ProfessionalSpecialistDao) SpringUtils.getBean(ProfessionalSpecialistDao.class) );
     	setSpecialtyDao( (ContactSpecialtyDao) SpringUtils.getBean(ContactSpecialtyDao.class) );
@@ -588,7 +588,7 @@ public class BpmhFormHandler {
 		Icd9 icd9 = null;
 		String patientFriendlyDx = "";
 		String drugReasonCode = null;
-		DxCodeTranslations dxCodeTranslations = null;
+		Icd9Synonym dxCodeTranslations = null;
 		StringBuilder stringBuilder = new StringBuilder("");		
 		List<DrugReason> drugReasonList = getDrugReasonDao().getReasonsForDrugID( drugId, true);
 		
@@ -720,11 +720,11 @@ public class BpmhFormHandler {
 		this.icd9Dao = icd9Dao;
 	}
 
-	public DxCodeTranslationsDao getDxCodeTranslationsDao() {
+	public Icd9SynonymDao getDxCodeTranslationsDao() {
 		return dxCodeTranslationsDao;
 	}
 
-	public void setDxCodeTranslationsDao(DxCodeTranslationsDao dxCodeTranslationsDao) {
+	public void setDxCodeTranslationsDao(Icd9SynonymDao dxCodeTranslationsDao) {
 		this.dxCodeTranslationsDao = dxCodeTranslationsDao;
 	}
 

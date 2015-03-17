@@ -23,9 +23,8 @@
     Ontario, Canada
 
 --%>
-
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page import="oscar.oscarRx.data.RxDrugData,java.util.*" %>
 <%@page import="java.text.SimpleDateFormat" %>
@@ -34,6 +33,7 @@
 <%@page import="oscar.oscarRx.util.*" %>
 <%@page import="oscar.OscarProperties"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
+
     <%
 
 List<RxPrescriptionData.Prescription> listRxDrugs=(List)request.getAttribute("listRxDrugs");
@@ -205,16 +205,15 @@ if(listRxDrugs!=null){
        	  &nbsp;       	  
        	  <bean:message key="WriteScript.msgPrescribedRefillQuantity"/>
        	  <input type="text" size="6" id="refillQuantity_<%=rand%>" name="refillQuantity_<%=rand%>" value="<%=refillQuantity%>" />
-       	  <br/>  
+       	  <br/>       	  
        	  <bean:message key="WriteScript.msgPrescribedDispenseInterval"/>
        	  <input type="text" size="6" id="dispenseInterval_<%=rand%>" name="dispenseInterval_<%=rand%>" value="<%=dispenseInterval%>" />
        	  <br/>
-  		 <%if(OscarProperties.getInstance().getProperty("rx.enable_internal_dispensing","false").equals("true")) {%>     	   
-		  <bean:message key="WriteScript.msgDispenseInternal"/>	
-		  <input type="checkbox" name="dispenseInternal_<%=rand%>" id="dispenseInternal_<%=rand%>" <%if(dispenseInternal) {%> checked="true" <%}%> />
-		   <br/>
-		  <% } %>
-      	
+       	  <%if(OscarProperties.getInstance().getProperty("rx.enable_internal_dispensing","false").equals("true")) {%>
+			  <bean:message key="WriteScript.msgDispenseInternal"/>	
+			  <input type="checkbox" name="dispenseInternal_<%=rand%>" id="dispenseInternal_<%=rand%>" <%if(dispenseInternal) {%> checked="true" <%}%> />
+			 <br/>
+			<% } %>
           <bean:message key="WriteScript.msgPrescribedByOutsideProvider"/>
           <input type="checkbox" id="ocheck_<%=rand%>" name="ocheck_<%=rand%>" onclick="$('otext_<%=rand%>').toggle();" <%if(isOutsideProvider){%> checked="true" <%}else{}%>/>
           <div id="otext_<%=rand%>" <%if(isOutsideProvider){%>style="display:table;padding:2px;"<%}else{%>style="display:none;padding:2px;"<%}%> >
@@ -299,7 +298,7 @@ if(listRxDrugs!=null){
 
     <label style="float:left;width:80px;" title="<%=ATC%>" >Name:</label>
     <input type="hidden" name="atcCode" value="<%=ATCcode%>" />
-    <input tabindex="-1" type="text" id="drugName_<%=rand%>"  name="drugName_<%=rand%>"  size="30" <%if(gcn==0){%> onkeyup="saveCustomName(this);" value="<%=drugName%>"<%} else{%> value='<%=drugName%>'  onchange="changeDrugName('<%=rand%>','<%=drugName%>');" <%}%> TITLE="<%=drugName%>"/>&nbsp;<span id="inactive_<%=rand%>" style="color:red;"></span><br>
+    <input tabindex="-1" type="text" id="drugName_<%=rand%>"  name="drugName_<%=rand%>"  size="30" <%if(gcn==0){%> onkeyup="saveCustomName(this);" value="<%=drugName%>"<%} else{%> value='<%=drugName%>'  onchange="changeDrugName('<%=rand%>','<%=drugName%>');" <%}%> TITLE="<%=drugName%>"/>&nbsp;<span id="inactive_<%=rand%>" style="color:red;"></span>
 
 	<!-- Allergy Alert Table-->
 	<table width="570px" border="1" bordercolor="#CCCCCC" cellspacing="0" cellpadding="0" style="border-collapse: collapse;display: none;" id="alleg_tbl_<%=rand%>">
@@ -314,8 +313,20 @@ if(listRxDrugs!=null){
 	    		<span id="alleg_<%=rand%>" style="font-size:11px;"></span>
 			</td>
 		</tr>
-	</table>     
-    
+	</table> 
+	    
+    <%-- Splice in the Indication field --%>
+<br />
+	<label style="float:left;width:80px;" for="jsonDxSearch_<%=rand%>" >Indication</label>
+		<select name="codingSystem_<%=rand%>" id="codingSystem_<%=rand%>" >
+		<option value="icd9">icd9</option>
+		<%-- option value="limitUse">Limited Use</option --%>
+	</select>
+	<input type="hidden" name="reasonCode_<%=rand%>" id="codeTxt_<%=rand%>" />
+	<input type="text" class="codeTxt" name="jsonDxSearch_<%=rand%>" id="jsonDxSearch_<%=rand%>" />
+<br />
+     <%-- Splice in the Indication field --%>
+     
     <a tabindex="-1" href="javascript:void(0);" onclick="showHideSpecInst('siAutoComplete_<%=rand%>')" style="float:left;width:80px;">Instructions:</a>
     <input type="text" id="instructions_<%=rand%>" name="instructions_<%=rand%>" onkeypress="handleEnter(this,event);" value="<%=instructions%>" size="60" onchange="parseIntr(this);" /><a href="javascript:void(0);" tabindex="-1" onclick="displayMedHistory('<%=rand%>');" style="color:red;font-size:13pt;vertical-align:super;text-decoration:none" TITLE="Instruction Examples"><b>*</b></a>  <a href="javascript:void(0);" tabindex="-1" onclick="displayInstructions('<%=rand%>');"><img src="<c:out value="${ctx}/images/icon_help_sml.gif"/>" border="0" TITLE="Instructions Field Reference"></a> <span id="major_<%=rand%>" style="display:none;background-color:red"></span>&nbsp;<span id="moderate_<%=rand%>" style="display:none;background-color:orange"></span>&nbsp;<span id='minor_<%=rand%>' style="display:none;background-color:yellow;"></span>&nbsp;<span id='unknown_<%=rand%>' style="display:none;background-color:#B1FB17"></span>
        <br>
@@ -324,7 +335,7 @@ if(listRxDrugs!=null){
            <label style="float:left;width:80px;">&nbsp;&nbsp;</label><input id="siInput_<%=rand%>"  type="text" size="60" <%if(!isSpecInstPresent) {%>style="color:gray; width:auto" value="Enter Special Instruction" <%} else {%> style="color:black; width:auto" value="<%=specialInstruction%>" <%}%> onblur="changeText('siInput_<%=rand%>');updateSpecialInstruction('siInput_<%=rand%>');" onfocus="changeText('siInput_<%=rand%>');" >
            <div id="siContainer_<%=rand%>" style="float:right" >
            </div>
-                       <br><br>
+                       
         </div>
 
         <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte:</label><input <%if(rx.isCustomNote()){%> disabled <%}%> type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
@@ -356,15 +367,18 @@ if(listRxDrugs!=null){
        	  &nbsp;       	  
        	  <bean:message key="WriteScript.msgPrescribedRefillQuantity"/>
        	  <input type="text" size="6" id="refillQuantity_<%=rand%>" name="refillQuantity_<%=rand%>" value="<%=refillQuantity%>" />
-       	  <br/>       	  
+       	  <br/> 
+    	  
        	  <bean:message key="WriteScript.msgPrescribedDispenseInterval"/>
        	  <input type="text" size="6" id="dispenseInterval_<%=rand%>" name="dispenseInterval_<%=rand%>" value="<%=dispenseInterval%>" />
        	  <br/>
-			<%if(OscarProperties.getInstance().getProperty("rx.enable_internal_dispensing","false").equals("true")) {%>     	       	   
-       	   <bean:message key="WriteScript.msgDispenseInternal"/>	
-		  <input type="checkbox" name="dispenseInternal_<%=rand%>" id="dispenseInternal_<%=rand%>" <%if(dispenseInternal) {%> checked="true" <%}%> />
+       	  
+	     <%if(OscarProperties.getInstance().getProperty("rx.enable_internal_dispensing","false").equals("true")) {%>  
+	       	   <bean:message key="WriteScript.msgDispenseInternal"/>	
+			  <input type="checkbox" name="dispenseInternal_<%=rand%>" id="dispenseInternal_<%=rand%>" <%if(dispenseInternal) {%> checked="true" <%}%> />
       	 <br/>
-      	 <%} %>
+      	 <% } %>
+
           <bean:message key="WriteScript.msgPrescribedByOutsideProvider"/>
           <input type="checkbox" id="ocheck_<%=rand%>" name="ocheck_<%=rand%>" onclick="$('otext_<%=rand%>').toggle();" <%if(isOutsideProvider){%> checked="true" <%}else{}%>/>
           <div id="otext_<%=rand%>" <%if(isOutsideProvider){%>style="display:table;padding:2px;"<%}else{%>style="display:none;padding:2px;"<%}%> >
@@ -458,17 +472,165 @@ if(listRxDrugs!=null){
                <script type="text/javascript">getLUC('luc_<%=rand%>','<%=rand%>','<%=rx.getRegionalIdentifier()%>');</script>
             </oscar:oscarPropertiesCheck>
 
+
 </fieldset>
 <%}%>
-                <script type="text/javascript">
-                        jQuery("document").ready(function() {
-                                if ( jQuery.browser.msie ) {
-                                        jQuery('#rx_save_updates_<%=rand%>').show();
-                                } else {
-                                        jQuery('#rx_save_updates_<%=rand%>').hide();
-                                }
-                        });
-                </script>
+<style type="text/css" >
+
+
+/*
+ * jQuery UI Autocomplete 1.8.18
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Autocomplete#theming
+ */
+.ui-autocomplete { position: absolute; cursor: default; }	
+
+/* workarounds */
+* html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */
+
+/*
+ * jQuery UI Menu 1.8.18
+ *
+ * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Menu#theming
+ */
+.ui-menu {
+	list-style:none;
+	padding: 2px;
+	margin: 0;
+	display:block;
+	float: left;
+}
+.ui-menu .ui-menu {
+	margin-top: -3px;
+}
+.ui-menu .ui-menu-item {
+	margin:0;
+	padding: 0;
+	zoom: 1;
+	float: left;
+	clear: left;
+	width: 100%;
+}
+.ui-menu .ui-menu-item a {
+	text-decoration:none;
+	display:block;
+	padding:.2em .4em;
+	line-height:1.5;
+	zoom:1;
+}
+.ui-menu .ui-menu-item a.ui-state-hover,
+.ui-menu .ui-menu-item a.ui-state-active {
+	font-weight: normal;
+	margin: -1px;
+}
+
+
+	.ui-autocomplete-loading { 
+		background: white url('../images/ui-anim_basic_16x16.gif') right center no-repeat; 
+	} 
+	.ui-autocomplete {
+		max-height: 200px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		background-color: whitesmoke;
+			border:#ccc thin solid;
+	}
+
+	.ui-menu .ui-menu {
+	
+		background-color: whitesmoke;
+	}
+	
+	.ui-menu .ui-menu-item a {
+		border-bottom:white thin solid;
+	}
+	.ui-menu .ui-menu-item a.ui-state-hover,
+	.ui-menu .ui-menu-item a.ui-state-active {
+		background-color: yellow;
+	}
+
+</style>
+
+<script type="text/javascript">
+       jQuery("document").ready(function() {
+    	   
+               if ( jQuery.browser.msie ) {
+                       jQuery('#rx_save_updates_<%=rand%>').show();
+               } else {
+                       jQuery('#rx_save_updates_<%=rand%>').hide();
+               }
+
+               	var sourceid = "";
+				var idindex = "";
+               jQuery( "input[id*='jsonDxSearch']" ).autocomplete({	
+       			source: function(request, response) {
+       				
+       				sourceid = this.element[0].id;
+       				if( sourceid.contains("_") ) {
+       					idindex = "_" + sourceid.split("_")[1];
+       				}
+       				       				
+       				jQuery.ajax({
+       				    url: ctx + "/dxCodeSearchJSON.do",
+       				    type: 'POST',
+       				    data: 'method=search' + ( jQuery( '#codingSystem' + idindex ).find(":selected").val() ).toUpperCase()
+       				    				+ '&keyword=' 
+       				    				+ jQuery( "#jsonDxSearch" + idindex ).val(),
+       				  	dataType: "json",
+       				    success: function(data) {
+       						response(jQuery.map( data, function(item) { 
+       							return {
+       								label: item.description.trim() + ' (' + item.code + ')',
+       								value: item.code,
+       								id: item.id
+       							};
+       				    	}))
+       				    }			    
+       				})					  
+       			},
+       			delay: 100,
+       			minLength: 2,
+       			select: function( event, ui) {
+       				event.preventDefault();
+       				jQuery( "#jsonDxSearch" + idindex ).val(ui.item.label);
+       				jQuery( '#codeTxt' + idindex ).val(ui.item.value);
+       			},
+       			focus: function(event, ui, idindex) {
+       		        event.preventDefault();
+       		        jQuery( "#jsonDxSearch" + idindex ).val(ui.item.label);
+       		    },
+       			open: function() {
+       				jQuery( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+       			},
+       			close: function() {
+       				jQuery( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+       			}
+       		})
+
+       		jQuery( "input[id*='jsonDxSearch']" )
+       		.val("Search")
+       		.css('color','grey')
+       		.focus(function(){
+       			if(this.value == "Search"){
+       		         this.value = "";
+       		         jQuery( "#" + this.id ).css('color','black');
+       		    } 			
+       		}).blur(function(){
+       		    if(this.value==""){
+       		         this.value = "Search";	
+       		         jQuery( "#" + this.id  ).css('color','grey');
+       		    } 
+       		});
+       });
+</script>
 
 
         <script type="text/javascript">
@@ -556,3 +718,5 @@ if(listRxDrugs!=null){
     counterRx=0;
 </script>
 <%}%>
+
+

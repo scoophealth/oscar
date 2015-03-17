@@ -22,16 +22,6 @@ CREATE TABLE `formBPMH` (
   PRIMARY KEY (`id`)
 );
 
--- ----------------------------
---  Table structure for `dxCodeTranslations`
--- ----------------------------
-CREATE TABLE `dxCodeTranslations` (
-  `dxCode` varchar(10) NOT NULL,
-  `patientFriendly` varchar(250) NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`)
-);
-
 
 --
 -- Table structure for table 'billinglocation'

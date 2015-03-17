@@ -573,7 +573,6 @@
 
         <form-bean name="ValidateSwipeCard" type="org.oscarehr.integration.mchcv.ValidateSwipeCard" />
         <form-bean name="bpmh" type="oscar.form.pharmaForms.formBPMH.bean.BpmhFormBean" />
-        
 	</form-beans>
 
 	<global-forwards>
@@ -770,6 +769,7 @@
 		</action>
 		<action input="/oscarRx/SearchDrug.jsp" name="RxSearchDrugForm" path="/oscarRx/searchDrug" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxSearchDrugAction">
 			<forward name="success" path="/oscarRx/ChooseDrug.jsp" />
+			<forward name="error" path="/500.jsp" />
 		</action>
 
 		<action input="/oscarRx/SearchDrug3.jsp" path="/oscarRx/WriteScript" parameter="parameterValue" scope="request" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
@@ -1601,12 +1601,18 @@
 			type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchLoadQuickListItemsAction"
 		>
 			<forward name="success" path="/oscarResearch/oscarDxResearch/dxResearchEditQuickList.jsp" />
+
 		</action>
 		<action input="/oscarResearch/oscarDxResearch/dxResearchEditQuickList.jsp" name="dxResearchUpdateQuickListForm" path="/oscarResearch/oscarDxResearch/dxResearchUpdateQuickList" scope="request"
 			type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchUpdateQuickListAction"
 		>
 			<forward name="success" path="/oscarResearch/oscarDxResearch/dxResearchLoadQuickListItems.do" />
 		</action>
+		
+		<action parameter="method" path="/dxCodeSearchJSON" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxCodeSearchJSONAction" >
+			 
+		</action>
+		
 		<action parameter="method" path="/oscarResearch/oscarDxResearch/dxResearchLoadAssociations" name="dxAssociationsForm" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchLoadAssociationsAction">
 			<forward name="success" path="/oscarResearch/oscarDxResearch/dxResearchSelectAssociations.jsp" redirect="true" />
 		</action>

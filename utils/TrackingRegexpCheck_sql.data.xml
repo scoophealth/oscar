@@ -292,6 +292,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:providerohip_no varchar(12) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:readdate varchar(12) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:records varchar(5) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:region varchar(5) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:responsible varchar(30) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:reviewer varchar(30) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:roster varchar(4) default '',</ViolationValue>
@@ -303,7 +304,9 @@
         <ViolationValue>/database/mysql/oscarinit.sql:sex char(1) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:sex char(2) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:special varchar(255) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:specialty char(2) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:specialty varchar(40) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:specialtydesc varchar(100) default ''</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:status char(1) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:status char(1) default ''</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:status char(1) default '',</ViolationValue>
@@ -386,12 +389,9 @@
         <ViolationValue>/database/mysql/oscarinit_bc.sql:oin_surname varchar(18) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:provider_no varchar(6) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:region varchar(5) default ''</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:region varchar(5) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:serviceCode varchar(10) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:service_code varchar(10) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:sidedesc varchar(30) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:specialty char(2) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:specialtydesc varchar(100) default ''</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:t_datacenter varchar(5) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:t_dataseq varchar(7) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:t_exp1 char(2) NOT NULL default '',</ViolationValue>
@@ -5614,6 +5614,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:referalDate date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:referenceRange varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:refused char(1) default '0',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:region varchar(5) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:region varchar(5) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:regional_identifier varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:relationship varchar(150) default NULL,</ViolationValue>
@@ -5803,9 +5804,11 @@
         <ViolationValue>/database/mysql/oscarinit.sql:specId int(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:special varchar(255) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:special_instruction TEXT default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:specialty char(2) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:specialty varchar(15) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:specialty varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:specialty varchar(40) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:specialtydesc varchar(100) default ''</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:specimenRecDateTime char(26) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:splenomeg varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:splenomegAbN tinyint(1) default NULL,</ViolationValue>
@@ -7285,7 +7288,6 @@
         <ViolationValue>/database/mysql/oscarinit_bc.sql:referral_no1 varchar(5) default '00000',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:referral_no2 varchar(5) default '00000',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:region varchar(5) default ''</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:region varchar(5) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:s21_id int(10) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:s21_id int(10) unsigned NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:sequence_no int(10) default NULL,</ViolationValue>
@@ -7300,8 +7302,6 @@
         <ViolationValue>/database/mysql/oscarinit_bc.sql:sidedesc varchar(30) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:sidetype char(2) default '00',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:sortOrder int(10) unsigned NOT NULL default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:specialty char(2) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:specialtydesc varchar(100) default ''</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:status char(1) NOT NULL default 'O',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:status char(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:submission_code char(1) default '0',</ViolationValue>

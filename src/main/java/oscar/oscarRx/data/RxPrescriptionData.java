@@ -134,7 +134,7 @@ public class RxPrescriptionData {
 
 		if (prescription.getSpecial() == null || prescription.getSpecial().length() <= 6) {
 			logger.warn("I strongly suspect something is wrong, either special is null or it appears to not contain anything useful. drugId=" + drugId + ", drug.special=" + prescription.getSpecial());
-			logger.error("data from db is : " + drug.getSpecial());
+			logger.warn("data from db is : " + drug.getSpecial());
 		}
 		prescription.setDispenseInternal(drug.getDispenseInternal());
 		return prescription;
@@ -361,7 +361,6 @@ public class RxPrescriptionData {
 		return lst;
 	}
 
-	// ///
 	public Prescription[] getPrescriptionsByPatientHideDeleted(int demographicNo) {
 		List<Prescription> lst = new ArrayList<Prescription>();
 		DrugDao dao = SpringUtils.getBean(DrugDao.class);
@@ -371,7 +370,6 @@ public class RxPrescriptionData {
 				lst.add(toPrescription(drug, demographicNo));
 			}
 		}
-
 		return lst.toArray(new Prescription[lst.size()]);
 	}
 
@@ -653,6 +651,25 @@ public class RxPrescriptionData {
 		private List<String> policyViolations = new ArrayList<String>();
 
 		private int drugReferenceId;
+		
+		private String drugReasonCode;
+		private String drugReasonCodeSystem;
+
+		public String getDrugReasonCode() {
+			return drugReasonCode;
+		}
+
+		public void setDrugReasonCode(String drugReasonCode) {
+			this.drugReasonCode = drugReasonCode;
+		}
+
+		public String getDrugReasonCodeSystem() {
+			return drugReasonCodeSystem;
+		}
+
+		public void setDrugReasonCodeSystem(String drugReasonCodeSystem) {
+			this.drugReasonCodeSystem = drugReasonCodeSystem;
+		}
 
 		public List<String> getPolicyViolations() {
 			return policyViolations;

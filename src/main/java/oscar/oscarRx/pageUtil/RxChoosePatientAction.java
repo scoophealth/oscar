@@ -32,6 +32,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -76,6 +77,7 @@ public final class RxChoosePatientAction extends Action {
 			return (mapping.findForward("Logout"));
 		}
 
+		String redirect = "error.html";
 		String user_no;
 		user_no = (String) request.getSession().getAttribute("user");
 		// p("user_no",user_no);
@@ -99,45 +101,53 @@ public final class RxChoosePatientAction extends Action {
 		userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
 		boolean providerUseRx3 = false;
 		UserProperty propUseRx3 = userPropertyDAO.getProp(provider, UserProperty.RX_USE_RX3);
-		if (propUseRx3 != null && propUseRx3.getValue().equalsIgnoreCase("yes")) providerUseRx3 = true;
-		if (patient != null) {
-			request.getSession().setAttribute("Patient", patient);
-			if (OscarProperties.getInstance().getBooleanProperty("RX3", "yes") || providerUseRx3) {// if rx3 is set to yes.
-				MiscUtils.getLogger().debug("successRX3");
-				// set the profile view
-				UserProperty prop = userPropertyDAO.getProp(provider, UserProperty.RX_PROFILE_VIEW);
-				if (prop != null) {
-					try {
-						String propValue = prop.getValue();
-
-						HashMap hm = new HashMap();
-						// the order of strings in this array is important, because of removing string from propValue if it contains the string.
-						String[] va = { "show_current", "show_all", "longterm_acute_inactive_external", "inactive", "active", "all", "longterm_acute", };
-						for (int i = 0; i < va.length; i++) {
-							if (propValue.contains(va[i])) {
-								propValue = propValue.replace(va[i], "");
-								hm.put(va[i].trim(), true);
-							} else {
-								hm.put(va[i].trim(), false);
-							}
-						}
-
-						request.getSession().setAttribute("profileViewSpec", hm);
-					} catch (Exception e) {
-						MiscUtils.getLogger().error("Error", e);
-					}
-					return (mapping.findForward("successRX3"));
-				} else {
-					return (mapping.findForward("successRX3"));
-				}
-			} else {
-				return (mapping.findForward("success"));
-			}
-
-		} else // no records found
-		{
-			response.sendRedirect("error.html");
-			return null;
+		
+		if(propUseRx3 != null) {
+			providerUseRx3 = BooleanUtils.toBoolean(propUseRx3.getValue());
 		}
+
+		if (patient != null) {
+	
+			if (OscarProperties.getInstance().getBooleanProperty("RX3", "yes") || providerUseRx3) {
+				redirect = "successRX3";
+			} 
+			// place holder.
+//			else if( OscarProperties.getInstance().getBooleanProperty("ENABLE_RX4", "yes") ) {
+//				redirect = "successRX4";
+//			} 
+			else {
+				redirect = "success";
+			}
+			
+			// set the profile view
+			UserProperty prop = userPropertyDAO.getProp(provider, UserProperty.RX_PROFILE_VIEW);
+			if (prop != null) {
+				try {
+					String propValue = prop.getValue();
+
+					HashMap hm = new HashMap();
+					// the order of strings in this array is important, because of removing string from propValue if it contains the string.
+					String[] va = { "show_current", "show_all", "longterm_acute_inactive_external", "inactive", "active", "all", "longterm_acute", };
+					for (int i = 0; i < va.length; i++) {
+						if (propValue.contains(va[i])) {
+							propValue = propValue.replace(va[i], "");
+							hm.put(va[i].trim(), true);
+						} else {
+							hm.put(va[i].trim(), false);
+						}
+					}
+
+					request.getSession().setAttribute("profileViewSpec", hm);
+				} catch (Exception e) {
+					MiscUtils.getLogger().error("Error", e);
+				}
+				
+			} 
+			
+			request.getSession().setAttribute("Patient", patient);
+		} 
+		
+		return (mapping.findForward(redirect));
+		
 	}
 }
