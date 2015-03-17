@@ -42,7 +42,7 @@ public class Icd9DaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("icd9");
+		SchemaUtils.restoreTable("icd9","Icd9Synonym");
 	}
 
 	@Test

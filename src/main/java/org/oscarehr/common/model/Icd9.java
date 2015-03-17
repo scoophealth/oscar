@@ -22,6 +22,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -35,6 +37,10 @@ public class Icd9 extends AbstractCodeSystemModel<Integer> implements java.io.Se
      private String icd9;
      private String description;
 
+ 	@OneToOne(optional=true)
+    @JoinColumn(name = "icd9", referencedColumnName="dxCode", insertable=false, updatable=false) 
+    private Icd9Synonym synonym;
+     
     public Icd9() {
     }
 
@@ -64,6 +70,14 @@ public class Icd9 extends AbstractCodeSystemModel<Integer> implements java.io.Se
     public void setDescription(String description) {
         this.description = description;
     }
+    
+	public Icd9Synonym getSynonymData() {
+		return synonym;
+	}
+
+	public void setDxSynonymData(Icd9Synonym synonym) {
+		this.synonym = synonym;
+	}
 
 	@Override
     public String getCode() {
@@ -79,9 +93,5 @@ public class Icd9 extends AbstractCodeSystemModel<Integer> implements java.io.Se
 	public void setCode(String code) {
 		this.setIcd9(code);
 	}
-	
-	
-
-
 
 }

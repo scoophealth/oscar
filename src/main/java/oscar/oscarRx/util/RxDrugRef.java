@@ -37,14 +37,12 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
-
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.Base64;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcClientLite;
 import org.apache.xmlrpc.XmlRpcException;
 import org.oscarehr.util.MiscUtils;
-
 import oscar.OscarProperties;
 
 /**
@@ -52,16 +50,31 @@ import oscar.OscarProperties;
  * @author  Jay
  */
 public class RxDrugRef {
+
+	
+	// DRUG CATEGORIES FOR THE DRUG REF SEARCH TABLE.
+	public static int CAT_BRAND = 13;
+	public static int CAT_COMPOSITE_GENERIC = 12;
+	public static int CAT_GENERIC = 11;
+	public static int CAT_ATC = 8;
+	public static int CAT_AHFS = 10;
+	public static int CAT_ACTIVE_INGREDIENT = 14;
+	public static int CAT_AI_COMPOSITE_GENERIC = 19;
+	public static int CAT_AI_GENERIC = 18;
+
     private static Logger logger=MiscUtils.getLogger(); 
 
-    private String server_url =
+    private String server_url = null;
+    		//"http://localhost:8080/drugref2/DrugrefService";
            // "http://www.hherb.com:8001";
-           "http://24.141.82.168:8001";
+           //"http://24.141.82.168:8001";
            //"http://192.168.42.3:8001";
+    		
     /** Creates a new instance of DrugRef */
     public RxDrugRef() {
         server_url = OscarProperties.getInstance().getProperty("drugref_url");
         //server_url = System.getProperty("drugref_url");
+  
     }
     
     public RxDrugRef(String url){
@@ -70,6 +83,15 @@ public class RxDrugRef {
     
     public String getDrugRefURL(){
        return server_url;
+    }
+    
+    public Hashtable<String, Object> getDrugByDIN(String DIN, Boolean boolVal) throws Exception {
+    	Vector params = new Vector();
+        params.addElement(DIN);
+        params.addElement(boolVal);
+    	Vector<Hashtable<String, Object>> vec = (Vector<Hashtable<String, Object>>) callWebserviceLite("get_drug_by_DIN", params);
+    	Hashtable<String, Object> returnVal = vec.get(0);
+    	return returnVal;
     }
     
     /**
@@ -294,6 +316,7 @@ public class RxDrugRef {
          return vec;		         
      }
      
+     @Deprecated
      public Vector listComponents(String drugId){
         Vector params = new Vector();
         params.addElement(drugId);
@@ -315,9 +338,7 @@ public class RxDrugRef {
          Vector vec = (Vector) callWebservice("getDrugInfoPage",params);             
          return vec;		         
      }	
-     
-     
-     
+         
      public Vector list_search_element_select_categories(String searchStr,Vector catVec){
          return list_search_element_select_categories(searchStr,catVec,false);
       }
@@ -456,6 +477,7 @@ public class RxDrugRef {
       * <B>last_change</B>: string (date in ISO format yyyy-mm-dd)
       * <B>deprecated</B>: boolean. True if this source is deprecated and should no longer be used
       */
+     @Deprecated
      public Vector list_sources(String searchexpr,Hashtable tags){
         return new Vector();
      }
@@ -465,6 +487,7 @@ public class RxDrugRef {
       *@param  pkey primary key.
       *@return tags: see [tags].
       */
+     @Deprecated
      public Hashtable get_source_tag(int pkey){
          return new Hashtable();
      }
@@ -593,6 +616,7 @@ public class RxDrugRef {
        *@param css CSS style sheet used to format the retunred HTML page. Details not finalized yet.
        *@return base64 encoded HTML page
        */
+     	@Deprecated
        public Base64 get_drug_html(int pkeye4,Base64 css){ //returns base64
            return  new Base64();
        }
@@ -610,6 +634,7 @@ public class RxDrugRef {
         *           subsidies : string. Brief human readable format
         *           manufacturer : string. Company name
         */
+       @Deprecated
        public Vector list_products(int pkey, Hashtable tags ){
            return new Vector();
        }
@@ -636,6 +661,7 @@ public class RxDrugRef {
         *           prices : struct. Key is price category (retail, wholesale, subsidized), value (Real) is the price
         *           currency : string. Currency the stated price / gap / premium is based on
         */
+       @Deprecated
        public Hashtable get_product(int pkey,Hashtable tags){
            return new Hashtable();
        }
@@ -648,6 +674,7 @@ public class RxDrugRef {
         *@param css CSS style sheet used to format the returned HTML page. Details not finalized yet.
         *@return base64 encoded HTML page
         */
+       @Deprecated
        public Base64 get_product_CPI(int pkey,Base64 css){
            return new Base64();
        }
@@ -668,6 +695,7 @@ public class RxDrugRef {
         *       evidence : integer. Level of evidence graded 1-3, 1=poor, 2=fair, 3=good
         *       reference : integer. Primary key of reference
         */
+       @Deprecated
        public Vector list_interactions(Vector drugs,Hashtable tags){
             return new Vector();
        }
@@ -676,6 +704,7 @@ public class RxDrugRef {
        /**List all conditions and their codes / coding systems known to drugref, constrained by searchexpr as welll as by tags. Searchexpr accepts % as wildcard.
         *
         */
+       @Deprecated
        public Vector list_conditions(String searchexpr,Hashtable tags){           
            return new Vector();
        }
@@ -683,6 +712,7 @@ public class RxDrugRef {
        /**
         *@param indication : integer. Primary key.
         */
+       @Deprecated
        public Vector list_drugs_for_indication(int indication ,Hashtable tags){
            return new Vector();
        }
@@ -696,6 +726,7 @@ public class RxDrugRef {
         *           authors : string
         *           publ_year : string
         */ 
+       @Deprecated
        public Vector list_references(Hashtable tags){
            return new Vector();
        }

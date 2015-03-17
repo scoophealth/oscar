@@ -1,25 +1,3 @@
---
--- Table structure for table 'contactspecialty'
---
-CREATE TABLE `ContactSpecialty` (
-  `id` int(11) NOT NULL,
-  `specialty` varchar(50) NOT NULL,
-  `description` varchar(140),
-  PRIMARY KEY (`id`)
-);
-
-
---
--- Table structure for table 'specialty'
---
-
-CREATE TABLE specialty (
-  region varchar(5),
-  specialty char(2),
-  specialtydesc varchar(100)
-) ;
-
-
 CREATE TABLE `surveyData` (
   surveyDataId int(10) NOT NULL auto_increment,
   surveyId varchar(5) default NULL,
@@ -11914,4 +11892,36 @@ CREATE TABLE `IntegratorProgressItem` (
  KEY `idx_id` (`integratorProgressId`),
  KEY `idx_status` (`status`)
 );
+
+-- ----------------------------
+--  Table structure for `Icd9Synonym`
+-- ----------------------------
+CREATE TABLE `Icd9Synonym` (
+  `dxCode` varchar(10) NOT NULL,
+  `patientFriendly` varchar(250) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+);
+
+
+--
+-- Table structure for table 'contactspecialty'
+--
+CREATE TABLE `ContactSpecialty` (
+  `id` int(11) NOT NULL,
+  `specialty` varchar(50) NOT NULL,
+  `description` varchar(140),
+  PRIMARY KEY (`id`)
+);
+
+
+--
+-- Table structure for table 'specialty'
+--
+
+CREATE TABLE specialty (
+  region varchar(5) default '',
+  specialty char(2) default '',
+  specialtydesc varchar(100) default ''
+) ;
 

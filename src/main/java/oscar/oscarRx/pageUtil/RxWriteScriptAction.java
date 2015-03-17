@@ -54,12 +54,15 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.dao.DrugReasonDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.DrugReason;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.managers.CodingSystemManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
@@ -71,6 +74,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarRx.data.RxDrugData;
+import oscar.oscarRx.data.RxDrugData.DrugMonograph.DrugComponent;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.util.RxUtil;
 import oscar.util.StringUtils;
@@ -91,6 +95,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 	String removeExtraChars(String s){
 		return s.replace(""+((char) 130 ),"").replace(""+((char) 194 ),"").replace(""+((char) 195 ),"").replace(""+((char) 172 ),"");
 	}
+	
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
@@ -511,8 +516,11 @@ public final class RxWriteScriptAction extends DispatchAction {
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		checkPrivilege(loggedInInfo, PRIVILEGE_WRITE);
 		
+		String success = "newRx";
 		// set default quantity
 		setDefaultQuantity(request);
+		userPropertyDAO = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
+		UserProperty propUseRx3 = userPropertyDAO.getProp( (String) request.getSession().getAttribute("user"), UserProperty.RX_USE_RX3);
 
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (bean == null) {
@@ -537,10 +545,37 @@ public final class RxWriteScriptAction extends DispatchAction {
 			logger.debug("requesting drug from drugref id="+drugId);
 			RxDrugData.DrugMonograph dmono = drugData.getDrug2(drugId);
 
-			String brandName = text;
+			String brandName = null;
+			ArrayList<DrugComponent> drugComponents = dmono.getDrugComponentList();	
+			
+			if(StringUtils.isNullOrEmpty(brandName)) {
+				brandName = text;
+			}
 
-			rx.setGenericName(dmono.name); // TODO: how was this done before?
+			if( drugComponents != null && drugComponents.size() > 0 ) {
+
+				StringBuilder stringBuilder = new StringBuilder();
+				int count = 0;
+				for( RxDrugData.DrugMonograph.DrugComponent drugComponent : drugComponents ) {
+					
+					stringBuilder.append( drugComponent.getName() );
+					stringBuilder.append(" ");
+					stringBuilder.append( drugComponent.getStrength() );
+					stringBuilder.append( drugComponent.getUnit() );
+					
+					count++;
+					if( count > 0 && count != drugComponents.size() ) {
+						stringBuilder.append( " / " );
+					}
+				}
+				
+				rx.setGenericName(stringBuilder.toString()); 
+			} else {
+				rx.setGenericName(dmono.name); 
+			}
+
 			rx.setBrandName(brandName);
+			
 
 			//there's a change there's multiple forms. Select the first one by default
 			//save the list in a separate variable to make a drop down in the interface.
@@ -611,7 +646,14 @@ public final class RxWriteScriptAction extends DispatchAction {
 			logger.error("Error", e);
 		}
 		logger.debug("=============END createNewRx RxWriteScriptAction.java===============");
-		return (mapping.findForward("newRx"));
+
+//		Place holder for new Medication Module proposal.
+//		if( OscarProperties.getInstance().getBooleanProperty("ENABLE_RX4", "yes") && 
+//				( ! BooleanUtils.toBoolean(propUseRx3.getValue()) ) ) {
+//			success = "newRx4";
+//		}
+	
+		return ( mapping.findForward(success) );
 	}
 
 	public ActionForward updateDrug(ActionMapping mapping, ActionForm aform, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -862,9 +904,9 @@ public final class RxWriteScriptAction extends DispatchAction {
 					boolean isPastMed = false;
 					boolean isDispenseInternal=false;
 					boolean isStartDateUnknown = false;
-                                        boolean isNonAuthoritative = false;
-                                        Date pickupDate;
-                                        Date pickupTime;
+	                boolean isNonAuthoritative = false;
+	                Date pickupDate;
+	                Date pickupTime;
                     int dispenseInterval;
                     int refillDuration;
                     int refillQuantity;
@@ -882,14 +924,23 @@ public final class RxWriteScriptAction extends DispatchAction {
 							} else {
 								rx.setBrandName(val);
 							}
-							;
+							
 						} else if (elem.equals("repeats_" + num)) {
 							if (val.equals("") || val == null) {
 								rx.setRepeat(0);
 							} else {
 								rx.setRepeat(Integer.parseInt(val));
 							}
-
+						
+						} else if(elem.equals("codingSystem_" + num)) {
+							if(val != null) {
+								rx.setDrugReasonCodeSystem(val);
+							}
+							
+						} else if(elem.equals("reasonCode_" + num)) {
+							if(val != null) {
+								rx.setDrugReasonCode(val);
+							}
 						} else if (elem.equals("instructions_" + num)) {
 							rx.setSpecial(val);
 						} else if (elem.equals("quantity_" + num)) {
@@ -916,12 +967,12 @@ public final class RxWriteScriptAction extends DispatchAction {
 							} else {
 								isNonAuthoritative = false;
 							}
-                                                } else if(elem.equals("refillDuration_"+num)) {
-                                                	rx.setRefillDuration(Integer.parseInt(val));
-                                                } else if(elem.equals("refillQuantity_"+num)) {
-                                                	rx.setRefillQuantity(Integer.parseInt(val));
-                                                } else if(elem.equals("dispenseInterval_"+num)) {
-                                                	rx.setDispenseInterval(Integer.parseInt(val));
+                        } else if(elem.equals("refillDuration_"+num)) {
+                        	rx.setRefillDuration(Integer.parseInt(val));
+                        } else if(elem.equals("refillQuantity_"+num)) {
+                        	rx.setRefillQuantity(Integer.parseInt(val));
+                        } else if(elem.equals("dispenseInterval_"+num)) {
+                        	rx.setDispenseInterval(Integer.parseInt(val));
 						} else if (elem.equals("lastRefillDate_" + num)) {
 							rx.setLastRefillDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
 						} else if (elem.equals("rxDate_" + num)) {
@@ -1149,13 +1200,23 @@ public final class RxWriteScriptAction extends DispatchAction {
 		String scriptId = prescription.saveScript(loggedInInfo, bean);
 		StringBuilder auditStr = new StringBuilder();
 		ArrayList<String> attrib_names = bean.getAttributeNames();
+		
 		for (int i = 0; i < bean.getStashSize(); i++) {
 			try {
 				rx = bean.getStashItem(i);
-				rx.Save(scriptId);// new drug id available after this line
+				rx.Save(scriptId);// new drug id available after this line			
 				bean.addRandomIdDrugIdPair(rx.getRandomId(), rx.getDrugId());
 				auditStr.append(rx.getAuditString());
 				auditStr.append("\n");
+				
+				// save drug reason. Method borrowed from 
+				// RxReasonAction. 
+				if( ! StringUtils.isNullOrEmpty( rx.getDrugReasonCode() ) ) {
+					addDrugReason( rx.getDrugReasonCodeSystem(), 
+							"false", "", rx.getDrugReasonCode(), 
+							rx.getDrugId()+"", rx.getDemographicNo()+"",  
+							rx.getProviderNo(), request );
+				}
 
 				//write partial date
 				if (StringUtils.filled(rx.getWrittenDateFormat()))
@@ -1163,6 +1224,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 			} catch (Exception e) {
 				logger.error("Error", e);
 			}
+
 			// Save annotation
 			HttpSession se = request.getSession();
 			WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
@@ -1232,5 +1294,54 @@ public final class RxWriteScriptAction extends DispatchAction {
 		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_rx", privilege, null)) {
 			throw new RuntimeException("missing required security object (_rx)");
 		}
+	}
+
+	private void addDrugReason(String codingSystem, 
+			String primaryReasonFlagStr, String comments, 
+			String code, String drugIdStr, String demographicNo,  
+			String providerNo, HttpServletRequest request ) {
+		
+		MessageResources mResources = MessageResources.getMessageResources( "oscarResources" );
+		DrugReasonDao drugReasonDao = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
+		Integer drugId = Integer.parseInt(drugIdStr);
+		
+		// should this be instantiated with the Spring Utilities?
+		CodingSystemManager codingSystemManager = new CodingSystemManager();
+
+		if ( ! codingSystemManager.isCodeAvailable(codingSystem, code) ){
+			request.setAttribute("message", mResources.getMessage("SelectReason.error.codeValid"));
+			return;
+		}
+
+        if(drugReasonDao.hasReason(drugId, codingSystem, code, true)){
+        	request.setAttribute("message", mResources.getMessage("SelectReason.error.duplicateCode"));
+        	return;
+        }
+
+        MiscUtils.getLogger().debug("addDrugReasonCalled codingSystem "+codingSystem+ " code "+code+ " drugIdStr "+drugId);
+
+        boolean primaryReasonFlag = true;
+        if(!"true".equals(primaryReasonFlagStr)){
+        	primaryReasonFlag = false;
+        }
+
+        DrugReason dr = new DrugReason();
+
+        dr.setDrugId(drugId);
+        dr.setProviderNo(providerNo);
+        dr.setDemographicNo(Integer.parseInt(demographicNo));
+
+        dr.setCodingSystem(codingSystem);
+        dr.setCode(code);
+        dr.setComments(comments);
+        dr.setPrimaryReasonFlag(primaryReasonFlag);
+        dr.setArchivedFlag(false);
+        dr.setDateCoded(new Date());
+
+        drugReasonDao.addNewDrugReason(dr);
+
+        String ip = request.getRemoteAddr();
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DRUGREASON, ""+dr.getId() , ip,demographicNo,dr.getAuditString());
+
 	}
 }

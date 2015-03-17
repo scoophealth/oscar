@@ -160,8 +160,6 @@ public final class RxReasonAction extends DispatchAction {
 		request.setAttribute("message", mResources.getMessage("SelectReason.msg.archived"));
 		return (mapping.findForward("success"));
     }
-
-
 }
 
 

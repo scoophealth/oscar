@@ -23,6 +23,7 @@
  */
 package org.oscarehr.managers;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.dao.AbstractCodeSystemDao;
 import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.util.SpringUtils;
@@ -44,5 +45,10 @@ public class CodingSystemManager {
 		}
 		return null;
 
+	}
+	
+	public boolean isCodeAvailable(String codingSystem, String code) {
+		String description = getCodeDescription(codingSystem, code);
+		return StringUtils.isNotBlank(description);
 	}
 }
