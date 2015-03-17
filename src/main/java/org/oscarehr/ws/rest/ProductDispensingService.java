@@ -134,11 +134,12 @@ public class ProductDispensingService extends AbstractServiceImpl{
 	@Path("/drugProducts")
 	@Produces("application/json")
 	public DrugProductResponse getAllDrugProducts(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit,
-			@QueryParam("limitByName") String limitByName,@QueryParam("limitByLot") String limitByLot,@QueryParam("limitByLocation") String limitByLocation) {
+			@QueryParam("limitByName") String limitByName,@QueryParam("limitByLot") String limitByLot,@QueryParam("limitByLocation") String limitByLocation,
+			@QueryParam("availableOnly") boolean availableOnly) {
 		List<DrugProduct> results = null;
 		
-		int count = drugProductManager.getAllDrugProductsByNameAndLotCount(getLoggedInInfo(),limitByName,limitByLot,(limitByLocation!=null && limitByLocation.length()>0)?Integer.valueOf(limitByLocation):null);
-		results = drugProductManager.getAllDrugProductsByNameAndLot(getLoggedInInfo(),offset,limit,limitByName, limitByLot, (limitByLocation!=null && limitByLocation.length()>0)?Integer.valueOf(limitByLocation):null);
+		int count = drugProductManager.getAllDrugProductsByNameAndLotCount(getLoggedInInfo(),limitByName,limitByLot,(limitByLocation!=null && limitByLocation.length()>0)?Integer.valueOf(limitByLocation):null,availableOnly);
+		results = drugProductManager.getAllDrugProductsByNameAndLot(getLoggedInInfo(),offset,limit,limitByName, limitByLot, (limitByLocation!=null && limitByLocation.length()>0)?Integer.valueOf(limitByLocation):null,availableOnly);
 		
 		DrugProductResponse response = new DrugProductResponse();
 		for(DrugProduct result:results) {

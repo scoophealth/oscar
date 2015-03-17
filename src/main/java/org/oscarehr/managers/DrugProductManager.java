@@ -102,8 +102,8 @@ public class DrugProductManager {
 		return results;
 	}
 	
-	public List<DrugProduct> getAllDrugProductsByNameAndLot(LoggedInInfo loggedInInfo, Integer offset, Integer limit, String productName, String lotNumber, Integer location) {
-		List<DrugProduct> results = drugProductDao.findByNameAndLot(offset,limit,productName, lotNumber, location);
+	public List<DrugProduct> getAllDrugProductsByNameAndLot(LoggedInInfo loggedInInfo, Integer offset, Integer limit, String productName, String lotNumber, Integer location,  boolean availableOnly) {
+		List<DrugProduct> results = drugProductDao.findByNameAndLot(offset,limit,productName, lotNumber, location, availableOnly);
 		
 		//--- log action ---
 		if (results.size()>0) {
@@ -114,8 +114,8 @@ public class DrugProductManager {
 		return results;
 	}
 	
-	public Integer getAllDrugProductsByNameAndLotCount(LoggedInInfo loggedInInfo, String productName, String lotNumber, Integer location) {
-		Integer result = drugProductDao.findByNameAndLotCount(productName, lotNumber, location);
+	public Integer getAllDrugProductsByNameAndLotCount(LoggedInInfo loggedInInfo, String productName, String lotNumber, Integer location,  boolean availableOnly) {
+		Integer result = drugProductDao.findByNameAndLotCount(productName, lotNumber, location, availableOnly);
 		
 		LogAction.addLogSynchronous(loggedInInfo,"DrugProductManager.getAllDrugProductsByNameAndLotCount","");
 		
