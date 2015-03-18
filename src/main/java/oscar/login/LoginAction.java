@@ -28,6 +28,7 @@ package oscar.login;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -221,7 +222,7 @@ public final class LoginAction extends DispatchAction {
             
             return(new ActionForward(newURL));
         }
-        logger.debug("strAuth : "+strAuth);
+        logger.debug("strAuth : "+Arrays.toString(strAuth));
         if (strAuth != null && strAuth.length != 1) { // login successfully
         	
         	
@@ -433,7 +434,10 @@ public final class LoginAction extends DispatchAction {
             
             return(new ActionForward(newURL));
         }
-        else { // go to normal directory
+        else { 
+        	logger.debug("go to normal directory");
+
+        	// go to normal directory
             // request.setAttribute("login", "failed");
             // LogAction.addLog(userName, "failed", LogConst.CON_LOGIN, "", ip);
             cl.updateLoginList(ip, userName);
@@ -451,6 +455,7 @@ public final class LoginAction extends DispatchAction {
             return mapping.findForward(where);
         }
 
+    	logger.debug("checking oauth_token");
         if(request.getParameter("oauth_token") != null) {
     		String proNo = (String)request.getSession().getAttribute("user");
     		ServiceRequestTokenDao serviceRequestTokenDao = SpringUtils.getBean(ServiceRequestTokenDao.class);
@@ -462,7 +467,7 @@ public final class LoginAction extends DispatchAction {
     	}
         
         if(ajaxResponse) {
-        	
+        	logger.debug("rendering ajax response");
         	Provider prov = providerDao.getProvider((String)request.getSession().getAttribute("user"));
         	JSONObject json = new JSONObject();
         	json.put("success", true);
@@ -473,6 +478,7 @@ public final class LoginAction extends DispatchAction {
         	return null;
         }
         
+    	logger.debug("rendering standard response : "+where);
         return mapping.findForward(where);
     }
     
