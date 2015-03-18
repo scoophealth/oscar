@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -51,6 +52,7 @@
 
 <%
     if(session.getAttribute("userrole") == null ) {
+   	 	MiscUtils.getLogger().error("userrole is null? logging user out");
         response.sendRedirect("../logout.jsp");
         return;
     }
