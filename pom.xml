@@ -649,6 +649,16 @@
 			<artifactId>x18MEWBV</artifactId>
 			<version>1.8.2</version>
 		</dependency>
+		<dependency>
+			<groupId>ca.bornontario</groupId>
+			<artifactId>BORNWB</artifactId>
+			<version>2.0.8</version>
+		</dependency>
+		<dependency>
+			<groupId>ca.bornontario</groupId>
+			<artifactId>BORNWBCSD</artifactId>
+			<version>1.4.1</version>
+		</dependency>
 
         <!-- FOR ORN Project - CKD config in XML format -->
         <dependency>
