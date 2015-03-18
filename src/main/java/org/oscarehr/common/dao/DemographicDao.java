@@ -2089,4 +2089,48 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 			this.releaseSession(session);
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Integer> getMissingExtKey(String keyName) {
+		Session session = getSession();
+		try {
+			SQLQuery sqlQuery = session.createSQLQuery("select distinct d.demographic_no from demographic d where d.demographic_no not in (select distinct d.demographic_no from demographic d, demographicExt e where d.demographic_no = e.demographic_no and key_val=:key)");
+			sqlQuery.setString("key", keyName);
+			List<Integer> ids =  sqlQuery.list();
+			
+			return ids;
+		} finally {
+			this.releaseSession(session);
+		}
+		
+	}
+	
+	/**
+	 * This method war written for BORN Kid eConnect job to figure out which eforms don't have an eform_value present
+	 * 
+	 * This method will be refined a bit during QA
+	 * @param fid
+	 * @param varName
+	 * @return
+	 */
+	public List<Integer> getBORNKidsMissingExtKey(String keyName) {
+		Calendar cal = Calendar.getInstance();
+		//TODO: change this to use a similar AGE calculation like in RptDemographicQueryBuilder
+		int year = cal.get(Calendar.YEAR) - 8;
+		Session session = getSession();
+		try {
+			SQLQuery sqlQuery = session.createSQLQuery("select distinct d.demographic_no from demographic d where d.year_of_birth >= :year1 and  d.demographic_no not in (select distinct d.demographic_no from demographic d, demographicExt e where d.demographic_no = e.demographic_no and d.year_of_birth >= :year2 and key_val=:key)");
+			sqlQuery.setInteger("year1", year);
+			sqlQuery.setInteger("year2", year);
+			sqlQuery.setString("key", keyName);
+			List<Integer> ids =  sqlQuery.list();
+			
+			return ids;
+		} finally {
+			this.releaseSession(session);
+		}
+		
+	}
+
+	
 }

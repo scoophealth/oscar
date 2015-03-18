@@ -722,4 +722,15 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		List<Measurement> results = query.getResultList();
 		return results;
 	}
+	
+	@NativeSql("measurements")
+	public List<Integer> findNewMeasurementsSinceDemoKey(String keyName) {
+		
+		String sql = "select distinct m.demographicNo from measurements m,demographic d,demographicExt e where m.demographicNo = d.demographic_no and d.demographic_no = e.demographic_no and e.key_val=? and m.type in ('HT','WT') and m.dateEntered > e.value";
+		Query query = entityManager.createNativeQuery(sql);
+		query.setParameter(1, keyName);
+		
+		return query.getResultList();
+	}
+
 }
