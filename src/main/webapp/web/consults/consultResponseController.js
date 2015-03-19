@@ -131,13 +131,16 @@ oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$loc
 
 	$scope.attachFiles = function(){
 		var modalInstance = $modal.open({
-			templateUrl: "consults/consultResponseAttachment.jsp",
-			controller: AttachmentCtrl
+			templateUrl: "consults/consultAttachment.jsp",
+			controller: AttachmentCtrl,
+			windowClass: "attachment-modal-window"
 		});
 		
 		modalInstance.result.then(function(){
-			$location.path("/consultResponses/"+consult.id);
-			if (consult.attachmentsChanged) $scope.consultChanged++;
+			if (consult.attachmentsChanged) {
+				$scope.consultChanged++;
+				consult.attachmentsChanged = false;
+			}
 		});
 	}
 
@@ -146,10 +149,12 @@ oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$loc
 		$scope.atth = {};
 		$scope.atth.patientName = consult.demographic.lastName + ", " + consult.demographic.firstName;
 		
-		$scope.atth.attachedDocs = toArray(consult.attachments);
+		$scope.atth.attachedDocs = consult.attachments;
 		if ($scope.atth.attachedDocs[0]!=null) $scope.atth.selectedAttachedDoc = $scope.atth.attachedDocs[0];
 		
-		consultService.getResponseAttachments(consult.id, consult.demographic.demographicNo, false).then(function(data){
+		var consultId = 0;
+		if (consult.id!=null) consultId = consult.id;
+		consultService.getResponseAttachments(consultId, consult.demographic.demographicNo, false).then(function(data){
 			if (consult.availableDocs==null) consult.availableDocs = toArray(data);
 			$scope.atth.availableDocs = consult.availableDocs;
 			sortAttachmentDocs($scope.atth.availableDocs);
