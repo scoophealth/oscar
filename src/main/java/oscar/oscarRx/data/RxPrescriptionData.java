@@ -397,6 +397,22 @@ public class RxPrescriptionData {
 		}
 		return new Vector(result);
 	}
+	
+	public List<String> getCurrentRegionalIdentifiersCodesByPatient(int demographicNo) {
+		List<String> result = new ArrayList<String>();
+
+		Prescription[] p = getPrescriptionsByPatientHideDeleted(demographicNo);
+		for (int i = 0; i < p.length; i++) {
+			if (p[i].isCurrent()) {
+				if (!result.contains(p[i].getRegionalIdentifier())) {
+					if (p[i].getRegionalIdentifier() != null && p[i].getRegionalIdentifier().trim().length() != 0   ){
+						result.add(p[i].getRegionalIdentifier());
+					}
+				}
+			}
+		}
+		return result;
+	}
 
 	public Prescription[] getUniquePrescriptionsByPatient(int demographicNo) {
 		List<Prescription> result = new ArrayList<Prescription>();

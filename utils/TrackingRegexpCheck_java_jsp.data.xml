@@ -2378,6 +2378,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("get_atcs_by_din",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("interaction",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("interaction_by_drugnames",params);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("interaction_by_regional_identifier",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("list_drug_class",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("list_search_element",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebserviceLite("get_allergy_classes",params);</ViolationValue>
@@ -2399,6 +2400,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:if (obj instanceof Vector){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:params.addElement(new Vector(regionalIdentifierList));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:private Object callWebservice(String procedureName,Vector params) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:private Object callWebserviceLite(String procedureName,Vector params) throws Exception{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Hashtable getDrug(String pKey, Boolean boolVal)throws Exception{</ViolationValue>
@@ -2430,6 +2432,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector getStrengths(String drugCode){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector interaction(Vector atclist){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector interaction(Vector atclist,int minimum_significance){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector interactionByRegionalIdentifier(List regionalIdentifierList,int minimum_significance){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector interaction_by_drugnames(Vector druglist, int minimum_significance){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector listComponents(String drugId){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector list_brands_from_element(String drugRefId) throws Exception{</ViolationValue>

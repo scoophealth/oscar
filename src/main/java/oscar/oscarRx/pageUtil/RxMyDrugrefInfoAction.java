@@ -165,9 +165,8 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         	ArrayList<String> remoteDrugAtcCodes=RemoteDrugAllergyHelper.getAtcCodesFromRemoteDrugs(loggedInInfo, bean.getDemographicNo());
         	codes.addAll(remoteDrugAtcCodes);
             log2.debug("remote drug atc codes : "+remoteDrugAtcCodes);
-        }
-
-        log2.debug("Interaction, local + remote drug atc codes : "+codes);
+        }        
+        log2.debug("Interaction, local + remote drug atc codes : "+codes);   
 
         Vector all = new Vector();
         for (String command : str){
@@ -183,6 +182,24 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
                 MiscUtils.getLogger().error("Error", e);
             }
         }
+        
+        if(OscarProperties.getInstance().isPropertyActive("RX_INTERACTION_LOCAL_DRUGREF_REGIONAL_IDENTIFIER")){
+        	List regionalIdentifiers = bean.getRegionalIdentifier();
+        	if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()){
+        		ArrayList<String> remoteDrugRegionalIdentiferCodes=RemoteDrugAllergyHelper.getRegionalIdentiferCodesFromRemoteDrugs(loggedInInfo, bean.getDemographicNo());
+        		regionalIdentifiers.addAll(remoteDrugRegionalIdentiferCodes);
+        	}
+        
+	        try{
+	        	RxDrugRef rxDrugRef = new RxDrugRef();
+	        	List localInteractions =  rxDrugRef.interactionByRegionalIdentifier(regionalIdentifiers,0);
+	        	regionalIdentifiers.addAll(localInteractions);
+	        }catch(Exception e){
+	        	log2.error("Error calling interactions by regional identifier",e);
+	        }
+        }
+        
+        
         Collections.sort(all, new MyDrugrefComparator());
 
         //filter out based on significance by facility, provider, demographic
