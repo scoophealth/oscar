@@ -47,6 +47,10 @@
 		opacity:1;
 		filter:alpha(opacity=100); /* For IE8 and earlier */
 	}
+	.attachment-modal-window .modal-dialog {
+		width: 60%;
+		min-width: 600px;
+	}
 </style>
 
 <div class="col-md-12">
