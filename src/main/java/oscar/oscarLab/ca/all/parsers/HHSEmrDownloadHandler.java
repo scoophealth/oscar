@@ -259,7 +259,7 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
       public String getOBRName(int i){
           String addToEnd = "";
           try{
-              addToEnd = " "+getString(terser.get("/.OBR-19-2"));
+              addToEnd = getString(terser.get("/.OBR-19-2"));
           }catch(Exception e){
         	  //empty
           }
