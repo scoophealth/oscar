@@ -430,7 +430,8 @@ function gotoPage(next) {
                             String appt    =  theRequests.apptDate.elementAt(i);
                             String patBook =  theRequests.patientWillBook.elementAt(i);
                             String urgency =  theRequests.urgency.elementAt(i);
-                            String sendTo = theRequests.teams.elementAt(i);
+                            String sendTo  =  theRequests.teams.elementAt(i);
+                            if (sendTo==null) sendTo = "-1";
                             String specialist = theRequests.vSpecialist.elementAt(i);
                             String followUpDate = theRequests.followUpDate.elementAt(i);
                             String siteName = ""; 

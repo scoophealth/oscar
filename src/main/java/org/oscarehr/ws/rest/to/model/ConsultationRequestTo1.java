@@ -34,9 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class ConsultationRequestTo1 implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private static final String DEFAULT_NOTHING = "1";
+	private static final String DEFAULT_NOT_COMPLETE = "1";
 	private static final String DEFAULT_NON_URGENT = "2";
-	private static final String DEFAULT_1 = "-1";
 	
 	private Integer id;
 	private Date referralDate = new Date();
@@ -50,16 +49,16 @@ public class ConsultationRequestTo1 implements Serializable {
 	private String allergies;
 	private String providerNo;
 	private Integer demographicId;
-	private String status = DEFAULT_NOTHING;
+	private String status = DEFAULT_NOT_COMPLETE;
 	private String statusText;
-	private String sendTo = DEFAULT_1;
+	private String sendTo;
 	private String concurrentProblems;
 	private String urgency = DEFAULT_NON_URGENT;
 	private boolean patientWillBook;
 	private String siteName;
 	private Date followUpDate;
 	private String signatureImg;
-	private String letterheadName = DEFAULT_1;
+	private String letterheadName;
 	private String letterheadAddress;
 	private String letterheadPhone;
 	private String letterheadFax;
