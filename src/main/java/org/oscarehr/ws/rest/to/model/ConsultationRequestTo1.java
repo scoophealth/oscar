@@ -63,6 +63,7 @@ public class ConsultationRequestTo1 implements Serializable {
 	private String letterheadAddress;
 	private String letterheadPhone;
 	private String letterheadFax;
+    private List<ConsultationAttachmentTo1> attachments;
 	
 	private List<LetterheadTo1> letterheadList;
 	private List<FaxConfigTo1> faxList;
@@ -219,6 +220,12 @@ public class ConsultationRequestTo1 implements Serializable {
 	}
 	public void setLetterheadFax(String letterheadFax) {
 		this.letterheadFax = letterheadFax;
+	}
+	public List<ConsultationAttachmentTo1> getAttachments() {
+		return attachments;
+	}
+	public void setAttachments(List<ConsultationAttachmentTo1> attachments) {
+		this.attachments = attachments;
 	}
 	
 	public List<LetterheadTo1> getLetterheadList() {

@@ -27,9 +27,9 @@ import java.io.Serializable;
 
 public class ConsultationAttachmentTo1 implements Serializable {
 	public static final String TYPE_DOC = "D";
+	public static final String TYPE_EFORM = "E";
 	public static final String TYPE_LAB = "L";
 	public static final boolean ATTACHED = true;
-	public static final boolean DETACHED = false;
 
 	private static final long serialVersionUID = 1L;
 	
@@ -37,6 +37,7 @@ public class ConsultationAttachmentTo1 implements Serializable {
 	private String documentType;
 	private boolean attached;
 	private String displayName;
+	private String displayDocType;
 	private String url;
 
 	public ConsultationAttachmentTo1() {}
@@ -63,6 +64,10 @@ public class ConsultationAttachmentTo1 implements Serializable {
 
 	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
+		
+		if (TYPE_DOC.equals(documentType)) this.displayDocType = "Document";
+		else if (TYPE_EFORM.equals(documentType)) this.displayDocType = "EForm";
+		else if (TYPE_LAB.equals(documentType)) this.displayDocType = "Lab Result";
 	}
 
 	public boolean isAttached() {
@@ -79,6 +84,14 @@ public class ConsultationAttachmentTo1 implements Serializable {
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+
+	public String getDisplayDocType() {
+		return displayDocType;
+	}
+
+	public void setDisplayDocType(String displayDocType) {
+		this.displayDocType = displayDocType;
 	}
 
 	public String getUrl() {

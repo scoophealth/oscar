@@ -47,6 +47,10 @@
 		opacity:1;
 		filter:alpha(opacity=100); /* For IE8 and earlier */
 	}
+	.attachment-modal-window .modal-dialog {
+		width: 60%;
+		min-width: 600px;
+	}
 </style>
 
 <div class="col-md-12">
@@ -59,20 +63,20 @@
 <div id="left_pane" class="col-md-2">
 	<label class="control-label">Patient Details:</label>
 	<div class="demographic">
-		<p>{{demo.lastName}}, {{demo.firstName}} ({{demo.title}})</p>
-		<p>DOB: {{demo.dateOfBirth | date:'yyyy-MM-dd'}} ({{demo.age.years}})</p> 		
-		<p>Sex: {{demo.sexDesc}}</p> 
-		<p>HIN: {{demo.hin}} - {{demo.ver}}</p> 
+		<p>{{consult.demographic.lastName}}, {{consult.demographic.firstName}} ({{consult.demographic.title}})</p>
+		<p>DOB: {{consult.demographic.dateOfBirth | date:'yyyy-MM-dd'}} ({{consult.demographic.age.years}})</p> 		
+		<p>Sex: {{consult.demographic.sexDesc}}</p> 
+		<p>HIN: {{consult.demographic.hin}} - {{consult.demographic.ver}}</p> 
 		<p>Address:</p> 
 		<address>
-		{{demo.address.address}}<br/>
-		{{demo.address.city}}, {{demo.address.province}}, {{demo.address.postal}}<br>
+		{{consult.demographic.address.address}}<br/>
+		{{consult.demographic.address.city}}, {{consult.demographic.address.province}}, {{consult.demographic.address.postal}}<br>
 		</address>
-		<p>Phone (H): {{demo.phone}}</p>
-		<p>Phone (W): {{demo.alternativePhone}}</p>
-		<p>Phone (C): {{demo.cellPhone}}</p>
-		<p>Email: {{demo.email}}</p>
-		<p>MRP: {{demo.provider.firstName}}, {{demo.provider.lastName}}</p>
+		<p>Phone (H): {{consult.demographic.phone}}</p>
+		<p>Phone (W): {{consult.demographic.alternativePhone}}</p>
+		<p>Phone (C): {{consult.demographic.cellPhone}}</p>
+		<p>Email: {{consult.demographic.email}}</p>
+		<p>MRP: {{consult.demographic.provider.firstName}}, {{consult.demographic.provider.lastName}}</p>
 	</div>
 	<br/>
 	<div id="consult_status">

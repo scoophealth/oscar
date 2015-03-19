@@ -28,12 +28,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.ConsultRequestDao;
 import org.oscarehr.common.dao.ConsultResponseDao;
 import org.oscarehr.common.dao.ConsultResponseDocDao;
 import org.oscarehr.common.dao.ConsultationServiceDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.ConsultResponseDoc;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ConsultationResponse;
@@ -63,6 +65,8 @@ public class ConsultationManager {
 	ConsultationServiceDao serviceDao;
 	@Autowired
 	ProfessionalSpecialistDao professionalSpecialistDao;
+	@Autowired
+	ConsultDocsDao requestDocDao;
 	@Autowired
 	ConsultResponseDocDao responseDocDao;
 	@Autowired
@@ -161,11 +165,27 @@ public class ConsultationManager {
 		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.saveConsultationResponse", "id="+response.getId());
 	}
 	
-	public List<ConsultResponseDoc> getConsultResponseDocs(LoggedInInfo loggedInInfo, Integer responseId) {
-		List<ConsultResponseDoc> docs = responseDocDao.findByResponseId(responseId);
-		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getConsultResponseDocs", "id="+responseId);
+	public List<ConsultDocs> getConsultRequestDocs(LoggedInInfo loggedInInfo, Integer requestId) {
+		List<ConsultDocs> docs = requestDocDao.findByRequestId(requestId);
+		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getConsultRequestDocs", "consult id="+requestId);
 		
 		return docs;
+	}
+	
+	public List<ConsultResponseDoc> getConsultResponseDocs(LoggedInInfo loggedInInfo, Integer responseId) {
+		List<ConsultResponseDoc> docs = responseDocDao.findByResponseId(responseId);
+		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getConsultResponseDocs", "consult id="+responseId);
+		
+		return docs;
+	}
+	
+	public void saveConsultRequestDoc(LoggedInInfo loggedInInfo, ConsultDocs doc) {
+		if (doc.getId()==null) { //new consultation attachment
+			requestDocDao.persist(doc);
+		} else {
+			requestDocDao.merge(doc); //only used for setting doc "deleted"
+		}
+		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.saveConsultRequestDoc", "id="+doc.getId());
 	}
 	
 	public void saveConsultResponseDoc(LoggedInInfo loggedInInfo, ConsultResponseDoc doc) {

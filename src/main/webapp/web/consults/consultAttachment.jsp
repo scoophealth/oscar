@@ -40,7 +40,7 @@
 		<div class="col-sm-5 middle">
 			<label>Available Documents</label>
 			<br/>
-			<select id="selAvailDoc" class="form-control" size="8" ng-model="atth.selectedAvailableDoc" ng-options="doc.displayName for doc in atth.availableDocs" ng-dblclick="openDoc(atth.selectedAvailableDoc)"></select>
+			<select id="selAvailDoc" class="form-control" size="8" ng-model="atth.selectedAvailableDoc" ng-options="doc.displayName group by doc.displayDocType for doc in atth.availableDocs" ng-dblclick="openDoc(atth.selectedAvailableDoc)"></select>
 		</div>
 		<div class="middle">
 			<button type="button" class="btn btn-default" ng-click="attach()">&gt;&gt;</button>
@@ -50,7 +50,7 @@
 		<div class="col-sm-5 middle">
 			<label>Attached Documents</label>
 			<br/>
-			<select id="selAttachDoc" class="form-control" size="8" ng-model="atth.selectedAttachedDoc" ng-options="doc.displayName for doc in atth.attachedDocs" ng-dblclick="openDoc(atth.selectedAttachedDoc)"></select>
+			<select id="selAttachDoc" class="form-control" size="8" ng-model="atth.selectedAttachedDoc" ng-options="doc.displayName group by doc.displayDocType for doc in atth.attachedDocs" ng-dblclick="openDoc(atth.selectedAttachedDoc)"></select>
 		</div>
 		<div class="clear"></div>
 		<div style="text-align:center;">(Double-click the document name to view it)</div>

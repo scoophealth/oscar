@@ -40,7 +40,9 @@ import javax.persistence.TemporalType;
 @Table(name="consultdocs")
 public class ConsultDocs extends AbstractModel<Integer>{
 	public static final String DOCTYPE_DOC = "D";
+	public static final String DOCTYPE_EFORM = "E";
 	public static final String DOCTYPE_LAB = "L";
+	public static final String DELETED = "Y";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,6 +64,16 @@ public class ConsultDocs extends AbstractModel<Integer>{
 
 	@Column(name="provider_no")
 	private String providerNo;
+	
+	public ConsultDocs() {}
+	
+	public ConsultDocs(int requestId, int documentNo, String docType, String providerNo) {
+		setRequestId(requestId);
+		setDocumentNo(documentNo);
+		setDocType(docType);
+		setProviderNo(providerNo);
+		setAttachDate(new Date());
+	}
 
 	public Integer getId() {
     	return id;

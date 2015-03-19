@@ -232,7 +232,11 @@ public class EFormUtil {
 
 		return fileList;
 	}
-
+	
+	public static List<EFormData> listPatientEformsCurrent(Integer demographicNo, Boolean current, int startIndex, int numToReturn) {
+		return eFormDataDao.findByDemographicIdCurrent(demographicNo, current, startIndex, numToReturn);
+	}
+	
 	public static ArrayList<HashMap<String, ? extends Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String userRoles, int offset, int itemsToReturn) {
 
 		Boolean current = null;
@@ -1098,21 +1102,32 @@ public class EFormUtil {
 			logger.error("Error", sqe);
 		}
 		return (results);
-		
-		
-		
-		
-		
 	}
 
-    public static boolean isLatestPatientForm(String fdid)
+
+	public static List<EFormData> listPatientEFormsShowLatestOnly(String demographicNo) {
+		//return all current eforms belonging to patient
+		//if eform is showLatestFormOnly, return only the latest one
+		
+		List<EFormData> list = new ArrayList<EFormData>();
+		List<EFormData> currentEForms = eFormDataDao.findByDemographicIdCurrent(NumberUtils.toInt(demographicNo), true);
+		if (currentEForms==null) return list;
+		
+		for (EFormData eform : currentEForms) {
+			if (eform.isShowLatestFormOnly()) {
+				if (EFormUtil.isLatestShowLatestFormOnlyPatientForm(eform.getId())) {
+					list.add(eform);
+				}
+			} else {
+				list.add(eform);
+			}
+		}
+		return list;
+	}
+	
+    public static boolean isLatestShowLatestFormOnlyPatientForm(Integer fdid)
     {
-    	return eFormDataDao.isLatestPatientForm(Integer.valueOf(fdid));
-    }
-    
-    public static boolean isShowLatestFormOnlyInMany(String fdid)
-    {
-    	return eFormDataDao.isShowLatestFormOnlyInMany(Integer.valueOf(fdid));
+    	return eFormDataDao.isLatestShowLatestFormOnlyPatientForm(fdid);
     }
 
 	
