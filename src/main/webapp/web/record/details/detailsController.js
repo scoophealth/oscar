@@ -296,7 +296,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		}
 		else if (status=="done") {
 			page.readyForSwipe = "btn-primary";
-			page.swipecardMsg = "Done Health Card Swipe";
+//			page.swipecardMsg = "Done Health Card Swipe"; //Let HCValidation write the message
 		}
 		else {
 			$("#swipecard").focus();
@@ -351,6 +351,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	    		} else {
 	    			alert("Not Ontario Health Card");
 	    		}
+	    		$scope.validateHC(); //Run HCValidation
 	    	}
 	    }
 	};
@@ -425,8 +426,17 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		if (demo.hin==null || demo.hin=="") return;
 		if (demo.ver==null) demo.ver = "";
 		patientDetailStatusService.validateHC(demo.hin,demo.ver).then(function(data){
-			if (data.valid==null) page.HCValidation = "n/a";
-			else page.HCValidation = data.valid ? "valid" : "invalid";
+			if (data.valid==null) {
+				page.HCValidation = "n/a";
+				page.swipecardMsg = "Done Health Card Swipe";
+			} else {
+				page.HCValidation = data.valid ? "valid" : "invalid";
+				var swipecardMsg = data.responseDescription;
+				if (swipecardMsg==null || swipecardMsg.trim()=="") {
+					swipecardMsg = "Health card "+page.HCValidation;
+				}
+				page.swipecardMsg = swipecardMsg+" ("+data.responseCode+")";
+			}
 		});
 	}
 	
