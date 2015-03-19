@@ -122,7 +122,7 @@ public class ConsultationAttachLabs {
     	ConsultDocs consultDoc = new ConsultDocs();
     	consultDoc.setRequestId(Integer.parseInt(consultId));
     	consultDoc.setDocumentNo(Integer.parseInt(LabNo));
-    	consultDoc.setDocType("L");
+    	consultDoc.setDocType(ConsultDocs.DOCTYPE_LAB);
     	consultDoc.setAttachDate(new Date());
     	consultDoc.setProviderNo(providerNo);
     	consultDocsDao.persist(consultDoc);
