@@ -51,6 +51,15 @@ public class ConsultDocsDao extends AbstractDao<ConsultDocs>{
         return results;
 	}
 
+	public List<ConsultDocs> findByRequestId(Integer requestId) {
+	  	String sql = "select x from ConsultDocs x where x.requestId=? and x.deleted is NULL";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1,requestId);
+
+        List<ConsultDocs> results = query.getResultList();
+        return results;
+	}
+
 	public List<Object[]> findLabs(Integer consultationId) {
 		String sql = "FROM ConsultDocs cd, PatientLabRouting plr " +
 				"WHERE plr.labNo = cd.documentNo " +
