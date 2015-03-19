@@ -23,17 +23,17 @@
     Ontario, Canada
 
 --%>
-<%@page import="org.oscarehr.myoscar_server.ws.LoginResultTransfer3"%>
-<%@page import="org.oscarehr.myoscar_server.ws.MessageWs"%>
-<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
-<%@page import="org.oscarehr.myoscar_server.ws.LoginWs"%>
-<%@page import="org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.oscarehr.myoscar_server.myoscar_server_client_stubs2.MessageWs"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.myoscar_server.myoscar_server_client_stubs2.LoginResultTransfer3"%>
+<%@page import="org.oscarehr.myoscar_server.myoscar_server_client_stubs2.LoginWs"%>
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
+<%@page import="org.oscarehr.myoscar.utils.MyOscarServerWebServicesManager"%>
 <html>
 	<head></head>
 	<body>
-		This page tests the original myoscar_client_utils packages.
+		This page tests the new embeded stub2's custom made for oscar's migration to newer stubs.
 		<form method="post">
 			user name : <input type="text" name="userName" />
 			<br />
@@ -63,7 +63,7 @@
 				   	MessageWs messageWs = MyOscarServerWebServicesManager.getMessageWs(myOscarLoggedInInfo);
 				   	
 				   	// THIS LINE will bomb with incorrect cipher/bouncy castle provider 
-				   	int count=messageWs.getUnreadActiveMessageCount(myOscarLoggedInInfo.getLoggedInPersonId());
+				   	int count=messageWs.getUnreadMessageCount(myOscarLoggedInInfo.getLoggedInPersonId());
 					%>
 						unread msg : <%=count%>
 					<%

@@ -26,13 +26,42 @@ package org.oscarehr.myoscar.utils;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.cxf.configuration.jsse.TLSClientParameters;
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.transport.common.gzip.GZIPInInterceptor;
+import org.apache.cxf.transport.common.gzip.GZIPOutInterceptor;
+import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.log4j.Logger;
-
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.AccountWs;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.AccountWsService;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.CalendarWs;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.CalendarWsService;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.GroupWs;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.GroupWsService;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.JournalWs;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.JournalWsService;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.LoginWs;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.LoginWsService;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.MedicalDataWs;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.MedicalDataWsService;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.MessageWs;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.MessageWsService;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.PersonToPersonPermissionsWs;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.PersonToPersonPermissionsWsService;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.ReportsWs;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.ReportsWsService;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.RoleRelationshipWs;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.RoleRelationshipWsService;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.SurveyWs;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.SurveyWsService;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.SystemInfoWs;
+import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.SystemInfoWsService;
 import org.oscarehr.util.ConfigXmlUtils;
 import org.oscarehr.util.CxfClientUtils;
+import org.oscarehr.util.CxfClientUtils.TrustAllManager;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.QueueCache;
-import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.*;
 
 /**
  * Port Caching : ports are partially thread safe (see the CXF documentation), they are not when the configuration is altered.
@@ -59,6 +88,34 @@ public class MyOscarServerWebServicesManager {
 		CxfClientUtils.initSslFromConfig();
 	}
 
+	public static void configureClientConnection(Object wsPort)
+	{
+		Client cxfClient = ClientProxy.getClient(wsPort);
+		HTTPConduit httpConduit = (HTTPConduit) cxfClient.getConduit();
+
+		configureSsl(httpConduit);
+		CxfClientUtils.configureTimeout(httpConduit);
+
+		configureGzip(cxfClient);
+	}
+
+	public static void configureGzip(Client cxfClient)
+	{
+		cxfClient.getInInterceptors().add(new GZIPInInterceptor());
+		cxfClient.getOutInterceptors().add(new GZIPOutInterceptor(0));
+	}
+	
+	public static void configureSsl(HTTPConduit httpConduit)
+	{
+		TLSClientParameters tslClientParameters = httpConduit.getTlsClientParameters();
+		if (tslClientParameters == null) tslClientParameters = new TLSClientParameters();
+		tslClientParameters.setDisableCNCheck(true);
+		TrustAllManager[] tam = { new TrustAllManager() };
+		tslClientParameters.setTrustManagers(tam);
+		tslClientParameters.setSecureSocketProtocol("TLS");
+		httpConduit.setTlsClientParameters(tslClientParameters);
+	}
+	
 	private static URL buildURL(String serverBaseUrl, String servicePoint) {
 		String urlString = serverBaseUrl + "/ws/" + servicePoint + "?wsdl";
 
@@ -76,7 +133,7 @@ public class MyOscarServerWebServicesManager {
 		SystemInfoWsService service = new SystemInfoWsService(buildURL(serverBaseUrl, "SystemInfoService"));
 		SystemInfoWs port = service.getSystemInfoWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		configureClientConnection(port);
 
 		return (port);
 	}
@@ -85,7 +142,7 @@ public class MyOscarServerWebServicesManager {
 		LoginWsService service = new LoginWsService(buildURL(serverBaseUrl, "LoginService"));
 		LoginWs port = service.getLoginWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		configureClientConnection(port);
 
 		return (port);
 	}
@@ -97,7 +154,7 @@ public class MyOscarServerWebServicesManager {
 			AccountWsService service = new AccountWsService(buildURL(credentials.getServerBaseUrl(), "AccountService"));
 			port = service.getAccountWsPort();
 
-			CxfClientUtils.configureClientConnection(port);
+			configureClientConnection(port);
 			CxfClientUtils.addWSS4JAuthentication(credentials.getLoggedInPersonId(), credentials.getLoggedInPersonSecurityToken(), port);
 			accountWsCache.put(credentials, port);
 		}
@@ -112,7 +169,7 @@ public class MyOscarServerWebServicesManager {
 			RoleRelationshipWsService service = new RoleRelationshipWsService(buildURL(credentials.getServerBaseUrl(), "RoleRelationshipService"));
 			port = service.getRoleRelationshipWsPort();
 
-			CxfClientUtils.configureClientConnection(port);
+			configureClientConnection(port);
 			CxfClientUtils.addWSS4JAuthentication(credentials.getLoggedInPersonId(), credentials.getLoggedInPersonSecurityToken(), port);
 			roleRelationshipWsCache.put(credentials, port);
 		}
@@ -127,7 +184,7 @@ public class MyOscarServerWebServicesManager {
 			MessageWsService service = new MessageWsService(buildURL(credentials.getServerBaseUrl(), "MessageService"));
 			port = service.getMessageWsPort();
 
-			CxfClientUtils.configureClientConnection(port);
+			configureClientConnection(port);
 			CxfClientUtils.addWSS4JAuthentication(credentials.getLoggedInPersonId(), credentials.getLoggedInPersonSecurityToken(), port);
 			messageWsCache.put(credentials, port);
 		}
@@ -142,7 +199,7 @@ public class MyOscarServerWebServicesManager {
 			MedicalDataWsService service = new MedicalDataWsService(buildURL(credentials.getServerBaseUrl(), "MedicalDataService"));
 			port = service.getMedicalDataWsPort();
 
-			CxfClientUtils.configureClientConnection(port);
+			configureClientConnection(port);
 			CxfClientUtils.addWSS4JAuthentication(credentials.getLoggedInPersonId(), credentials.getLoggedInPersonSecurityToken(), port);
 			medicalDataWsCache.put(credentials, port);
 		}
@@ -154,7 +211,7 @@ public class MyOscarServerWebServicesManager {
 		CalendarWsService service = new CalendarWsService(buildURL(credentials.getServerBaseUrl(), "CalendarService"));
 		CalendarWs port = service.getCalendarWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		configureClientConnection(port);
 		CxfClientUtils.addWSS4JAuthentication(credentials.getLoggedInPersonId(), credentials.getLoggedInPersonSecurityToken(), port);
 
 		return (port);
@@ -164,7 +221,7 @@ public class MyOscarServerWebServicesManager {
 		JournalWsService service = new JournalWsService(buildURL(credentials.getServerBaseUrl(), "JournalService"));
 		JournalWs port = service.getJournalWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		configureClientConnection(port);
 		CxfClientUtils.addWSS4JAuthentication(credentials.getLoggedInPersonId(), credentials.getLoggedInPersonSecurityToken(), port);
 
 		return (port);
@@ -174,7 +231,7 @@ public class MyOscarServerWebServicesManager {
 		SurveyWsService service = new SurveyWsService(buildURL(credentials.getServerBaseUrl(), "SurveyService"));
 		SurveyWs port = service.getSurveyWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		configureClientConnection(port);
 		CxfClientUtils.addWSS4JAuthentication(credentials.getLoggedInPersonId(), credentials.getLoggedInPersonSecurityToken(), port);
 
 		return (port);
@@ -184,7 +241,7 @@ public class MyOscarServerWebServicesManager {
 		GroupWsService service = new GroupWsService(buildURL(credentials.getServerBaseUrl(), "GroupService"));
 		GroupWs port = service.getGroupWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		configureClientConnection(port);
 		CxfClientUtils.addWSS4JAuthentication(credentials.getLoggedInPersonId(), credentials.getLoggedInPersonSecurityToken(), port);
 
 		return (port);
@@ -194,7 +251,7 @@ public class MyOscarServerWebServicesManager {
 		ReportsWsService service = new ReportsWsService(buildURL(credentials.getServerBaseUrl(), "ReportsService"));
 		ReportsWs port = service.getReportsWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		configureClientConnection(port);
 		CxfClientUtils.addWSS4JAuthentication(credentials.getLoggedInPersonId(), credentials.getLoggedInPersonSecurityToken(), port);
 
 		return (port);
@@ -204,7 +261,7 @@ public class MyOscarServerWebServicesManager {
 		PersonToPersonPermissionsWsService service = new PersonToPersonPermissionsWsService(buildURL(credentials.getServerBaseUrl(), "PersonToPersonPermissionsService"));
 		PersonToPersonPermissionsWs port = service.getPersonToPersonPermissionsWsPort();
 
-		CxfClientUtils.configureClientConnection(port);
+		configureClientConnection(port);
 		CxfClientUtils.addWSS4JAuthentication(credentials.getLoggedInPersonId(), credentials.getLoggedInPersonSecurityToken(), port);
 
 		return (port);
