@@ -520,18 +520,20 @@ text-align:left;
 		</div>
 		<% }
 
-	 String[] ColourCodesArray=new String[5];
+	 String[] ColourCodesArray=new String[6];
 	 ColourCodesArray[1]="#F0F0E7"; //very light grey - completed or normal
 	 ColourCodesArray[2]="#FFDDDD"; //light pink - Refused
 	 ColourCodesArray[3]="#FFCC24"; //orange - Ineligible
 	 ColourCodesArray[4]="#FF00FF"; //dark pink - pending
+	 ColourCodesArray[5]="#FF4D4D"; //red - Abnormal
 
 	 //labels for colour codes
-	 String[] lblCodesArray=new String[5];
+	 String[] lblCodesArray=new String[6];
 	 lblCodesArray[1]="Completed or Normal";
 	 lblCodesArray[2]="Refused";
 	 lblCodesArray[3]="Ineligible";
 	 lblCodesArray[4]="Pending";
+	 lblCodesArray[5]="Abnormal";
 
 	 //Title ie: Legend or Profile Legend
 	 String legend_title="Legend: ";
@@ -540,7 +542,7 @@ text-align:left;
 	 String legend_builder=" ";
 
 
-	 	for (int iLegend = 1; iLegend < 5; iLegend++){
+	 	for (int iLegend = 1; iLegend < 6; iLegend++){
 
 			legend_builder +="<td> <table class='colour_codes' bgcolor='"+ColourCodesArray[iLegend]+"'><td> </td></table> </td> <td align='center'>"+lblCodesArray[iLegend]+"</td>";
 
@@ -785,6 +787,9 @@ String r(Object re, String result){
            }
            else if( result != null && result.equalsIgnoreCase("pending")) {
                ret = "style=\"background: #FF00FF;\"";
+           }
+           else if( result != null && result.equalsIgnoreCase("abnormal")) {
+               ret = "style=\"background: #FF4D4D;\"";
            }
         }
         return ret;
