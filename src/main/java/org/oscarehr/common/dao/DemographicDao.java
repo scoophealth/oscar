@@ -2074,4 +2074,19 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		return (results);
 
 	}
+	
+	public List<Integer> getDemographicIdsWithMyOscarAccounts(Integer startDemographicIdExclusive, int itemsToReturn) {
+		Session session = getSession();
+		try {
+			SQLQuery sqlQuery = session.createSQLQuery("select demographic_no from demographic where demographic_no>:startDemographicIdExclusive and myOscarUserName is not null order by demographic_no");
+			sqlQuery.setInteger("startDemographicIdExclusive", startDemographicIdExclusive);
+			sqlQuery.setMaxResults(itemsToReturn);
+			
+			@SuppressWarnings("unchecked")
+            List<Integer> result=sqlQuery.list();
+			return(result);
+		} finally {
+			this.releaseSession(session);
+		}
+	}
 }
