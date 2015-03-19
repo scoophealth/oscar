@@ -73,6 +73,7 @@
 	<%
         if (true)
         {
+      	  	MiscUtils.getLogger().error("wrong role? logging user out");
             response.sendRedirect("../logout.jsp");
             return;
         }
@@ -81,6 +82,7 @@
 
 <%
     if(session.getAttribute("user") == null) {
+ 	  	MiscUtils.getLogger().error("missing session user? logging user out");
         response.sendRedirect("../logout.jsp");
         return;
     }
