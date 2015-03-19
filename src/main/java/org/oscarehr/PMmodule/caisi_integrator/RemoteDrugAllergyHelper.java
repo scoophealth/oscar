@@ -69,6 +69,36 @@ public class RemoteDrugAllergyHelper {
 		return (atcCodes);
 	}
 
+	public static ArrayList<String> getRegionalIdentiferCodesFromRemoteDrugs(LoggedInInfo loggedInInfo,Integer localDemographicId) {
+		ArrayList<String> regionalIdentifierCodes = new ArrayList<String>();
+
+		try {
+			List<CachedDemographicDrug> remoteDrugs  = null;
+			try {
+				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
+				   remoteDrugs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicDrugsByDemographicId(localDemographicId);
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Unexpected error.", e);
+				CaisiIntegratorManager.checkForConnectionError(loggedInInfo.getSession(),e);
+			}
+			
+			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
+			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(loggedInInfo, localDemographicId);	
+			}
+			
+			for (CachedDemographicDrug remoteDrug : remoteDrugs) {
+				if (remoteDrug.getAtc() != null) regionalIdentifierCodes.add(remoteDrug.getRegionalIdentifier());
+			}
+
+		} catch (Exception e) {
+			logger.error("Error ", e);
+		}
+
+		return (regionalIdentifierCodes);
+	}
+	
+	
 	public static ArrayList<Allergy> getRemoteAllergiesAsAllergyItems(LoggedInInfo loggedInInfo,Integer localDemographicId)
 	{
 		ArrayList<Allergy> results = new ArrayList<Allergy>();

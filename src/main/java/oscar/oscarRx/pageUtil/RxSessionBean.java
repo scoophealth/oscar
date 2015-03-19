@@ -375,6 +375,17 @@ public class RxSessionBean  implements java.io.Serializable {
        return atcCodes;
     }
 
+    public List getRegionalIdentifier(){
+    	RxPrescriptionData rxData = new RxPrescriptionData();
+        List regionalIdentifierCodes = rxData.getCurrentRegionalIdentifiersCodesByPatient(this.getDemographicNo());
+        RxPrescriptionData.Prescription rx;
+        for(int i=0;i<this.getStashSize(); i++) {
+           rx = this.getStashItem(i);
+           regionalIdentifierCodes.add(rx.getRegionalIdentifier());
+        }
+        return regionalIdentifierCodes;
+    }
+    
     public RxDrugData.Interaction[] getInteractions(){
        RxDrugData.Interaction[] interactions = null;
        long start = System.currentTimeMillis();

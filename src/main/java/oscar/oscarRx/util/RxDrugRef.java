@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -144,6 +145,14 @@ public class RxDrugRef {
          params.addElement(atclist);
          params.addElement(new Integer(minimum_significance));         
          Vector vec = (Vector) callWebservice("interaction",params);         
+         return vec;         
+     }
+     
+     public Vector interactionByRegionalIdentifier(List regionalIdentifierList,int minimum_significance){
+         Vector params = new Vector();
+         params.addElement(new Vector(regionalIdentifierList));
+         params.addElement(new Integer(minimum_significance));
+         Vector vec = (Vector) callWebservice("interaction_by_regional_identifier",params); 
          return vec;         
      }
      
