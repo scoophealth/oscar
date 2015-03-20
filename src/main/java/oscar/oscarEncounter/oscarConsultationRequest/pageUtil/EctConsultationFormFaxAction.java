@@ -66,8 +66,16 @@ public class EctConsultationFormFaxAction extends Action {
     	String reqId = request.getParameter("reqId");
 		String demoNo = request.getParameter("demographicNo");
 		String faxNumber = request.getParameter("letterheadFax");
+		String consultResponsePage = request.getParameter("consultResponsePage");
 		boolean doCoverPage = request.getParameter("coverpage").equalsIgnoreCase("true");
-		ArrayList<EDoc> docs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
+		
+		ArrayList<EDoc> docs;
+		if (consultResponsePage==null) {
+			docs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
+		} else {
+			docs = EDocUtil.listResponseDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
+		}
+		
 		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 		ArrayList<Object> alist = new ArrayList<Object>();
 		byte[] buffer;
@@ -77,7 +85,13 @@ public class EctConsultationFormFaxAction extends Action {
 		ArrayList<InputStream> streams = new ArrayList<InputStream>();
 		String provider_no = loggedInInfo.getLoggedInProviderNo();		
 
-		ArrayList<LabResultData> labs = consultLabs.populateLabResultsData(demoNo, reqId, CommonLabResultData.ATTACHED);
+		ArrayList<LabResultData> labs;
+		if (consultResponsePage==null) {
+			labs = consultLabs.populateLabResultsData(demoNo, reqId, CommonLabResultData.ATTACHED);
+		} else {
+			labs = consultLabs.populateLabResultsDataConsultResponse(demoNo, reqId, CommonLabResultData.ATTACHED);
+		}
+		
 		String error = "";
 		Exception exception = null;
 		try {
@@ -94,15 +108,21 @@ public class EctConsultationFormFaxAction extends Action {
 				
 			}
 
-			bos = new ByteOutputStream();
-			ConsultationPDFCreator cpdfc = new ConsultationPDFCreator(request, bos);
-			cpdfc.printPdf();
-			
-			buffer = bos.getBytes();
-			bis = new ByteInputStream(buffer, bos.getCount());
-			bos.close();
-			streams.add(bis);
-			alist.add(bis);
+			if (consultResponsePage==null) { //fax for consultation request
+				bos = new ByteOutputStream();
+				ConsultationPDFCreator cpdfc = new ConsultationPDFCreator(request, bos);
+				cpdfc.printPdf();
+				
+				buffer = bos.getBytes();
+				bis = new ByteInputStream(buffer, bos.getCount());
+				bos.close();
+				streams.add(bis);
+				alist.add(bis);
+			}
+			else { //fax for consultation response
+				String consultRespoonsePDF = ConsultResponsePDFCreator.create(consultResponsePage);
+				alist.add(consultRespoonsePDF);
+			}
 
 			for (int i = 0; i < docs.size(); i++) {
 				EDoc doc = docs.get(i);  

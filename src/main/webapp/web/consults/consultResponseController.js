@@ -9,7 +9,6 @@ oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$loc
 	//set attachments
 	consult.attachments = toArray(consult.attachments);
 	sortAttachmentDocs(consult.attachments);
-	addShortNames(consult.attachments);
 	
 	//set default letterhead
 	if (consult.letterheadName==null) {
@@ -154,11 +153,10 @@ oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$loc
 		
 		var consultId = 0;
 		if (consult.id!=null) consultId = consult.id;
-		consultService.getResponseAttachments(consultId, consult.demographic.demographicNo, false).then(function(data){
+		consultService.getResponseAttachments(consultId, consult.demographic.demographicNo).then(function(data){
 			if (consult.availableDocs==null) consult.availableDocs = toArray(data);
 			$scope.atth.availableDocs = consult.availableDocs;
 			sortAttachmentDocs($scope.atth.availableDocs);
-			addShortNames($scope.atth.availableDocs);
 			if ($scope.atth.availableDocs[0]!=null) $scope.atth.selectedAvailableDoc = $scope.atth.availableDocs[0];
 		});
 		
@@ -219,205 +217,41 @@ oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$loc
 		return true;
 	}
 	
+	//fax & print functions
+	var p_page1 = "<html><style>body{width:800px;font-family:arial,verdana,tahoma,helvetica,sans serif}table{width:100%}th{text-align:left;font-weight:bold;width:1;white-space:nowrap}td{vertical-align:top}label{font-weight:bold}em{font-size:small}.large{font-size:large}.center{text-align:center}</style><style media='print'>button{display:none}.noprint{display:none}</style><script>function printAttachments(url){window.open('../'+url);}</script><body>";
+	
+	$scope.sendFax = function(){
+		var p_urgency = noNull($scope.urgencies[$("#urgency").val()].name);
+		var p_letterheadName = noNull(consult.letterheadList[$("#letterhead").val()].name);
+		var p_page2 = getPrintPage2(p_urgency, p_letterheadName, consult, user);
+		
+		var consultResponsePage = encodeURIComponent(p_page1 + p_page2);
+		var reqId = consult.id;
+		var demographicNo = consult.demographic.demographicNo;
+		var letterheadFax = noNull(consult.letterheadFax);
+		var fax = noNull(consult.referringDoctor.faxNumber);
+		
+		window.open("../fax/CoverPage.jsp?consultResponsePage="+consultResponsePage+"&reqId="+reqId+"&demographicNo="+demographicNo+"&letterheadFax="+letterheadFax+"&fax="+fax);
+	}
+	
 	$scope.printPreview = function(){
 		if ($scope.invalidData()) return;
 
 		var printWin = window.open("","consultResponsePrintWin","width=830,height=900,scrollbars=yes,location=no");
 		printWin.document.open();
 
-		var attachments = "";
+		var p_buttons = "<button onclick='window.print()'>Print</button><button onclick='window.close()'>Close</button>";
+		var p_attachments = "";
 		for (var i=0; i<consult.attachments.length; i++) {
-			attachments += "<div class='noprint'><button onclick=printAttachments('"+consult.attachments[i].url+"')>Print attachment</button> "+consult.attachments[i].displayName+"</div>";
+			p_attachments += "<div class='noprint'><button onclick=printAttachments('"+consult.attachments[i].url+"')>Print attachment</button> "+consult.attachments[i].displayName+"</div>";
 		}
-		var clinicName = noNull(consult.letterheadList[0].name);
-		var urgency = noNull($scope.urgencies[$("#urgency").val()].name);
-		var responseDate = formatDate(consult.responseDate);
-		var referralDate = formatDate(consult.referralDate);
-		var letterheadName = noNull(consult.letterheadList[$("#letterhead").val()].name);
-		var letterheadAddress = noNull(consult.letterheadAddress);
-		var letterheadPhone = noNull(consult.letterheadPhone);
-		var letterheadFax = noNull(consult.letterheadFax);
-		var consultantName = noNull(consult.referringDoctor.name);
-		var consultantPhone = noNull(consult.referringDoctor.phoneNumber);
-		var consultantFax = noNull(consult.referringDoctor.faxNumber);
-		var consultantAddress = noNull(consult.referringDoctor.streetAddress);
-		var patientName = consult.demographic.lastName+", "+consult.demographic.firstName;
-		var patientAddress = consult.demographic.address.address+", "+consult.demographic.address.city+", "+consult.demographic.address.province+" "+consult.demographic.address.postal;
-		var patientPhone = noNull(consult.demographic.phone);
-		var patientWorkPhone = noNull(consult.demographic.alternativePhone);
-		var patientBirthdate = formatDate(consult.demographic.dateOfBirth);
-		var patientSex = noNull(consult.demographic.sexDesc);
-		var patientHealthCardNo = consult.demographic.hin+" - "+consult.demographic.ver;
-		var appointmentDate = formatDate(consult.appointmentDate);
-		var appointmentTime = formatTime(consult.appointmentTime);
-		var patientChartNo = noNull(consult.demographic.chartNo);
-		var reason = noNull(consult.reasonForReferral);
-		var examination = noNull(consult.examination);
-		var impression = noNull(consult.impression);
-		var plan = noNull(consult.plan);
-		var clinicalInfo = noNull(consult.clinicalInfo);
-		var concurrentProblems = noNull(consult.concurrentProblems);
-		var currentMeds = noNull(consult.currentMeds);
-		var allergies = noNull(consult.allergies);
-		var referringProvider = user.lastName+", "+user.firstName;
-		var provider = user.lastName+", "+user.firstName;
 		
-		printWin.document.write("<html><style>body{width:800px;font-family:arial,verdana,tahoma,helvetica,sans serif}table{width:100%}th{text-align:left;font-weight:bold;width:1;white-space:nowrap}td{vertical-align:top}label{font-weight:bold}em{font-size:small}.large{font-size:large}.center{text-align:center}</style><style media='print'>button{display:none}.noprint{display:none}</style><script>function printAttachments(url){window.open('../'+url);}</script><body><button onclick='window.print()'>Print</button><button onclick='window.close()'>Close</button>"+attachments+"<br/><div class='center'><label class='large'>"+clinicName+"</label><br/><label>Consultation Response</label><br/></div><br/><table><tr><td><label>Date: </label>"+responseDate+"</td><td rowspan=6 width=10>&nbsp;</td><td><label>Status: </label>"+urgency+"</td></tr><tr><td colspan=2>&nbsp;</td></tr><tr><th>FROM:</th><th>TO:</th></tr><tr><td><p class='large'>"+letterheadName+"</p>"+letterheadAddress+"<br/><label>Tel: </label>"+letterheadPhone+"<br/><label>Fax: </label>"+letterheadFax+"</td><td><table><tr><th>Referring Doctor:</th><td>"+consultantName+"</td></tr><tr><th>Phone:</th><td>"+consultantPhone+"</td></tr><tr><th>Fax:</th><td>"+consultantFax+"</td></tr><tr><th>Address:</th><td>"+consultantAddress+"</td></tr></table></td></tr><tr><td colspan=2>&nbsp;</td></tr><tr><td><table><tr><th>Patient:</th><td>"+patientName+"</td></tr><tr><th>Address:</th><td>"+patientAddress+"</td></tr><tr><th>Phone:</th><td>"+patientPhone+"</td></tr><tr><th>Work Phone:</th><td>"+patientWorkPhone+"</td></tr><tr><th>Birthdate:</th><td>"+patientBirthdate+"</td></tr></table></td><td><table><tr><th>Sex:</th><td>"+patientSex+"</td></tr><tr><th>Health Card No:</th><td>"+patientHealthCardNo+"</td></tr><tr><th>Appointment date:</th><td>"+appointmentDate+"</td></tr><tr><th>Appointment time:</th><td>"+appointmentTime+"</td></tr><tr><th>Chart No:</th><td>"+patientChartNo+"</td></tr></table></td></tr></table><br/><table><tr><th>Examination:</th></tr><tr><td>"+examination+"<hr></td></tr><tr><th>Impression:</th></tr><tr><td>"+impression+"<hr></td></tr><tr><th>Plan:</th></tr><tr><td>"+plan+"<hr></td></tr><tr><td>&nbsp;</td></tr><tr><th>Reason for consultation: (Date: "+referralDate+")</th></tr><tr><td>"+reason+"<hr></td></tr><tr><th>Pertinent Clinical Information:</th></tr><tr><td>"+clinicalInfo+"<hr></td></tr><tr><th>Significant Concurrent Problems:</th></tr><tr><td>"+concurrentProblems+"<hr></td></tr><tr><th>Current Medications:</th></tr><tr><td>"+currentMeds+"<hr></td></tr><tr><th>Allergies:</th></tr><tr><td>"+allergies+"<hr></td></tr><tr><td><label>Consultant: </label>"+provider+"</td></tr><tr><td>&nbsp;</td></tr><tr><td><div class='center'><em>Created by: OSCAR The open-source EMR www.oscarcanada.org</em></div></td></tr></table><button onclick='window.print();'>Print</button><button onclick='window.close()'>Close</button></body></html>");
+		var p_urgency = noNull($scope.urgencies[$("#urgency").val()].name);
+		var p_letterheadName = noNull(consult.letterheadList[$("#letterhead").val()].name);
+		var p_page2 = getPrintPage2(p_urgency, p_letterheadName, consult, user);
+		
+		printWin.document.write(p_page1 + p_buttons + p_attachments + p_page2);
 		printWin.document.close();
-/* html for printPreview, kept here for easy reference
-<html>
-<style>
-	body{width:800px;font-family:arial,verdana,tahoma,helvetica,sans serif}
-	table{width:100%}
-	th{text-align:left;font-weight:bold;width:1;white-space:nowrap}
-	td{vertical-align:top}
-	label{font-weight:bold}
-	em{font-size:small}
-	.large{font-size:large}
-	.center{text-align:center}
-</style>
-<style media='print'>
-	button{display:none}
-	.noprint{display:none}
-</style>
-<script>
-	function printAttachments(url){
-		window.open('../'+url);
-	}
-</script>
-<body>
-	<button onclick='window.print()'>Print</button>
-	<button onclick='window.close()'>Close</button>
-	"+attachments+"
-	<br/>
-	<div class='center'>
-		<label class='large'>"+clinicName+"</label><br/>
-		<label>Consultation Response</label><br/>
-	</div>
-	<br/>
-	<table>
-		<tr>
-			<td>
-				<label>Date: </label>"+responseDate+"
-			</td>
-			<td rowspan=6 width=10>&nbsp;</td>
-			<td>
-				<label>Status: </label>"+urgency+"
-			</td>
-		</tr>
-		<tr><td colspan=2>&nbsp;</td></tr>
-		<tr>
-			<th>FROM:</th>
-			<th>TO:</th>
-		</tr>
-		<tr>
-			<td>
-				<p class='large'>"+letterheadName+"</p>
-				"+letterheadAddress+"<br/>
-				<label>Tel: </label>"+letterheadPhone+"<br/>
-				<label>Fax: </label>"+letterheadFax+"
-			</td>
-			<td>
-				<table>
-					<tr>
-						<th>Referring Doctor:</th>
-						<td>"+consultantName+"</td>
-					</tr>
-					<tr>
-						<th>Phone:</th>
-						<td>"+consultantPhone+"</td>
-					</tr>
-					<tr>
-						<th>Fax:</th>
-						<td>"+consultantFax+"</td>
-					</tr>
-					<tr>
-						<th>Address:</th>
-						<td>"+consultantAddress+"</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		<tr><td colspan=2>&nbsp;</td></tr>
-		<tr>
-			<td>
-				<table>
-					<tr>
-						<th>Patient:</th>
-						<td>"+patientName+"</td>
-					</tr>
-					<tr>
-						<th>Address:</th>
-						<td>"+patientAddress+"</td>
-					</tr>
-					<tr>
-						<th>Phone:</th>
-						<td>"+patientPhone+"</td>
-					</tr>
-					<tr>
-						<th>Work Phone:</th>
-						<td>"+patientWorkPhone+"</td>
-					</tr>
-					<tr>
-						<th>Birthdate:</th>
-						<td>"+patientBirthdate+"</td>
-					</tr>
-				</table>
-			</td>
-			<td>
-				<table>
-					<tr>
-						<th>Sex:</th>
-						<td>"+patientSex+"</td>
-					</tr>
-					<tr>
-						<th>Health Card No:</th>
-						<td>"+patientHealthCardNo+"</td>
-					</tr>
-					<tr>
-						<th>Appointment date:</th>
-						<td>"+appointmentDate+"</td>
-					</tr>
-					<tr>
-						<th>Appointment time:</th>
-						<td>"+appointmentTime+"</td>
-					</tr>
-					<tr>
-						<th>Chart No:</th>
-						<td>"+patientChartNo+"</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
-	<br/>
-	<table>
-		<tr><th>Examination:</th></tr>
-		<tr><td>"+examination+"<hr></td></tr>
-		<tr><th>Impression:</th></tr>
-		<tr><td>"+impression+"<hr></td></tr>
-		<tr><th>Plan:</th></tr>
-		<tr><td>"+plan+"<hr></td></tr>
-		<tr><td>&nbsp;</td></tr>
-		<tr><th>Reason for consultation: (Date: "+referralDate+")</th></tr>
-		<tr><td>"+reason+"<hr></td></tr>
-		<tr><th>Pertinent Clinical Information:</th></tr>
-		<tr><td>"+clinicalInfo+"<hr></td></tr>
-		<tr><th>Significant Concurrent Problems:</th></tr>
-		<tr><td>"+concurrentProblems+"<hr></td></tr>
-		<tr><th>Current Medications:</th></tr>
-		<tr><td>"+currentMeds+"<hr></td></tr>
-		<tr><th>Allergies:</th></tr>
-		<tr><td>"+allergies+"<hr></td></tr>
-		<tr><td><label>Consultant: </label>"+provider+"</td></tr>
-		<tr><td>&nbsp;</td></tr>
-		<tr><td><div class='center'><em>Created by: OSCAR The open-source EMR www.oscarcanada.org</em></div></td></tr>
-	</table>
-	<button onclick='window.print();'>Print</button>
-	<button onclick='window.close()'>Close</button>
-</body>
-</html>
-*/
 	}
 });
 
@@ -481,10 +315,199 @@ function sortAttachmentDocs(arrayOfDocs) {
 	});
 }
 
-function addShortNames(docs) {
-	for (var i=0; i<docs.length; i++) {
-		var shortName = docs[i].displayName;
-		if (shortName.length>20) shortName = shortName.substring(0, 17)+"...";
-		docs[i].shortName = shortName;
-	}
+function getPrintPage2(p_urgency, p_letterheadName, consult, user) {
+	var p_clinicName = noNull(consult.letterheadList[0].name);
+	var p_responseDate = formatDate(consult.responseDate);
+	var p_referralDate = formatDate(consult.referralDate);
+	var p_letterheadAddress = noNull(consult.letterheadAddress);
+	var p_letterheadPhone = noNull(consult.letterheadPhone);
+	var p_letterheadFax = noNull(consult.letterheadFax);
+	var p_consultantName = noNull(consult.referringDoctor.name);
+	var p_consultantPhone = noNull(consult.referringDoctor.phoneNumber);
+	var p_consultantFax = noNull(consult.referringDoctor.faxNumber);
+	var p_consultantAddress = noNull(consult.referringDoctor.streetAddress);
+	var p_patientName = consult.demographic.lastName+", "+consult.demographic.firstName;
+	var p_patientAddress = consult.demographic.address.address+", "+consult.demographic.address.city+", "+consult.demographic.address.province+" "+consult.demographic.address.postal;
+	var p_patientPhone = noNull(consult.demographic.phone);
+	var p_patientWorkPhone = noNull(consult.demographic.alternativePhone);
+	var p_patientBirthdate = formatDate(consult.demographic.dateOfBirth);
+	var p_patientSex = noNull(consult.demographic.sexDesc);
+	var p_patientHealthCardNo = consult.demographic.hin+" - "+consult.demographic.ver;
+	var p_appointmentDate = formatDate(consult.appointmentDate);
+	var p_appointmentTime = formatTime(consult.appointmentTime);
+	var p_patientChartNo = noNull(consult.demographic.chartNo);
+	var p_reason = noNull(consult.reasonForReferral);
+	var p_examination = noNull(consult.examination);
+	var p_impression = noNull(consult.impression);
+	var p_plan = noNull(consult.plan);
+	var p_clinicalInfo = noNull(consult.clinicalInfo);
+	var p_concurrentProblems = noNull(consult.concurrentProblems);
+	var p_currentMeds = noNull(consult.currentMeds);
+	var p_allergies = noNull(consult.allergies);
+	var p_referringProvider = user.lastName+", "+user.firstName;
+	var p_provider = user.lastName+", "+user.firstName;
+	
+	return "<div class='center'><label class='large'>"+p_clinicName+"</label><br/><label>Consultation Response</label><br/></div><br/><table><tr><td><label>Date: </label>"+p_responseDate+"</td><td rowspan=6 width=10></td><td><label>Status: </label>"+p_urgency+"</td></tr><tr><td colspan=2></td></tr><tr><th>FROM:</th><th>TO:</th></tr><tr><td><p class='large'>"+p_letterheadName+"</p>"+p_letterheadAddress+"<br/><label>Tel: </label>"+p_letterheadPhone+"<br/><label>Fax: </label>"+p_letterheadFax+"</td><td><table><tr><th>Referring Doctor:</th><td>"+p_consultantName+"</td></tr><tr><th>Phone:</th><td>"+p_consultantPhone+"</td></tr><tr><th>Fax:</th><td>"+p_consultantFax+"</td></tr><tr><th>Address:</th><td>"+p_consultantAddress+"</td></tr></table></td></tr><tr><td colspan=2></td></tr><tr><td><table><tr><th>Patient:</th><td>"+p_patientName+"</td></tr><tr><th>Address:</th><td>"+p_patientAddress+"</td></tr><tr><th>Phone:</th><td>"+p_patientPhone+"</td></tr><tr><th>Work Phone:</th><td>"+p_patientWorkPhone+"</td></tr><tr><th>Birthdate:</th><td>"+p_patientBirthdate+"</td></tr></table></td><td><table><tr><th>Sex:</th><td>"+p_patientSex+"</td></tr><tr><th>Health Card No:</th><td>"+p_patientHealthCardNo+"</td></tr><tr><th>Appointment date:</th><td>"+p_appointmentDate+"</td></tr><tr><th>Appointment time:</th><td>"+p_appointmentTime+"</td></tr><tr><th>Chart No:</th><td>"+p_patientChartNo+"</td></tr></table></td></tr></table><br/><table><tr><th>Examination:</th></tr><tr><td>"+p_examination+"<hr></td></tr><tr><th>Impression:</th></tr><tr><td>"+p_impression+"<hr></td></tr><tr><th>Plan:</th></tr><tr><td>"+p_plan+"<hr></td></tr><tr><td></td></tr><tr><th>Reason for consultation: (Date: "+p_referralDate+")</th></tr><tr><td>"+p_reason+"<hr></td></tr><tr><th>Pertinent Clinical Information:</th></tr><tr><td>"+p_clinicalInfo+"<hr></td></tr><tr><th>Significant Concurrent Problems:</th></tr><tr><td>"+p_concurrentProblems+"<hr></td></tr><tr><th>Current Medications:</th></tr><tr><td>"+p_currentMeds+"<hr></td></tr><tr><th>Allergies:</th></tr><tr><td>"+p_allergies+"<hr></td></tr><tr><td><label>Consultant: </label>"+p_provider+"</td></tr><tr><td></td></tr><tr><td><div class='center'><em>Created by: OSCAR The open-source EMR www.oscarcanada.org</em></div></td></tr></table></body></html>";
 }
+/* html for fax & print, kept here for easy reference
+<html>
+<style>
+	body{width:800px;font-family:arial,verdana,tahoma,helvetica,sans serif}
+	table{width:100%}
+	th{text-align:left;font-weight:bold;width:1;white-space:nowrap}
+	td{vertical-align:top}
+	label{font-weight:bold}
+	em{font-size:small}
+	.large{font-size:large}
+	.center{text-align:center}
+</style>
+<style media='print'>
+	button{display:none}
+	.noprint{display:none}
+</style>
+<script>
+	function printAttachments(url){
+		window.open('../'+url);
+	}
+</script>
+<body>
+
+<!-- Print preview page exclusive -->
+	<!-- p_buttons -->
+	<button onclick='window.print()'>Print</button>
+	<button onclick='window.close()'>Close</button>
+	<!-- p_buttons -->
+	
+	<!-- p_attachments, 1 or more -->
+	<div class='noprint'>
+		<button onclick=printAttachments('"+consult.attachments[i].url+"')>Print attachment</button> "+consult.attachments[i].displayName+"
+	</div>
+	<!-- p_attachments -->
+<!-- Print preview page exclusive -->
+	
+	<div class='center'>
+		<label class='large'>"+p_clinicName+"</label><br/>
+		<label>Consultation Response</label><br/>
+	</div>
+	<br/>
+	<table>
+		<tr>
+			<td>
+				<label>Date: </label>"+p_responseDate+"
+			</td>
+			<td rowspan=6 width=10></td>
+			<td>
+				<label>Status: </label>"+p_urgency+"
+			</td>
+		</tr>
+		<tr><td colspan=2></td></tr>
+		<tr>
+			<th>FROM:</th>
+			<th>TO:</th>
+		</tr>
+		<tr>
+			<td>
+				<p class='large'>"+p_letterheadName+"</p>
+				"+p_letterheadAddress+"<br/>
+				<label>Tel: </label>"+p_letterheadPhone+"<br/>
+				<label>Fax: </label>"+p_letterheadFax+"
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th>Referring Doctor:</th>
+						<td>"+p_consultantName+"</td>
+					</tr>
+					<tr>
+						<th>Phone:</th>
+						<td>"+p_consultantPhone+"</td>
+					</tr>
+					<tr>
+						<th>Fax:</th>
+						<td>"+p_consultantFax+"</td>
+					</tr>
+					<tr>
+						<th>Address:</th>
+						<td>"+p_consultantAddress+"</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr><td colspan=2></td></tr>
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<th>Patient:</th>
+						<td>"+p_patientName+"</td>
+					</tr>
+					<tr>
+						<th>Address:</th>
+						<td>"+p_patientAddress+"</td>
+					</tr>
+					<tr>
+						<th>Phone:</th>
+						<td>"+p_patientPhone+"</td>
+					</tr>
+					<tr>
+						<th>Work Phone:</th>
+						<td>"+p_patientWorkPhone+"</td>
+					</tr>
+					<tr>
+						<th>Birthdate:</th>
+						<td>"+p_patientBirthdate+"</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th>Sex:</th>
+						<td>"+p_patientSex+"</td>
+					</tr>
+					<tr>
+						<th>Health Card No:</th>
+						<td>"+p_patientHealthCardNo+"</td>
+					</tr>
+					<tr>
+						<th>Appointment date:</th>
+						<td>"+p_appointmentDate+"</td>
+					</tr>
+					<tr>
+						<th>Appointment time:</th>
+						<td>"+p_appointmentTime+"</td>
+					</tr>
+					<tr>
+						<th>Chart No:</th>
+						<td>"+p_patientChartNo+"</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<br/>
+	<table>
+		<tr><th>Examination:</th></tr>
+		<tr><td>"+p_examination+"<hr></td></tr>
+		<tr><th>Impression:</th></tr>
+		<tr><td>"+p_impression+"<hr></td></tr>
+		<tr><th>Plan:</th></tr>
+		<tr><td>"+p_plan+"<hr></td></tr>
+		<tr><td></td></tr>
+		<tr><th>Reason for consultation: (Date: "+p_referralDate+")</th></tr>
+		<tr><td>"+p_reason+"<hr></td></tr>
+		<tr><th>Pertinent Clinical Information:</th></tr>
+		<tr><td>"+p_clinicalInfo+"<hr></td></tr>
+		<tr><th>Significant Concurrent Problems:</th></tr>
+		<tr><td>"+p_concurrentProblems+"<hr></td></tr>
+		<tr><th>Current Medications:</th></tr>
+		<tr><td>"+p_currentMeds+"<hr></td></tr>
+		<tr><th>Allergies:</th></tr>
+		<tr><td>"+p_allergies+"<hr></td></tr>
+		<tr><td><label>Consultant: </label>"+p_provider+"</td></tr>
+		<tr><td></td></tr>
+		<tr><td><div class='center'><em>Created by: OSCAR The open-source EMR www.oscarcanada.org</em></div></td></tr>
+	</table>
+</body>
+</html>
+*/
