@@ -28,10 +28,8 @@ package oscar.oscarProvider.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.model.Property;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 /**
@@ -39,10 +37,9 @@ import org.oscarehr.util.SpringUtils;
  */
 public final class ProviderMyOscarIdData {
 
-	private static final Logger logger = MiscUtils.getLogger();
 	private static PropertyDao dao = SpringUtils.getBean(PropertyDao.class);
 
-	private static String strColName = "MyOscarId";
+	private static final String PROPERTY_KEY = "MyOscarId";
 
 	private ProviderMyOscarIdData() {
 		// this is a utility class not an object, it shouldn't be instantiated.
@@ -53,7 +50,7 @@ public final class ProviderMyOscarIdData {
 	 */
 	public static String getMyOscarId(String providerNo) {
 		
-		List<Property> props = dao.findByNameAndProvider("MyOscarId", providerNo);
+		List<Property> props = dao.findByNameAndProvider(PROPERTY_KEY, providerNo);
 		if(props.size()>0) {
 			return props.get(0).getValue();
 		}
@@ -68,14 +65,14 @@ public final class ProviderMyOscarIdData {
 		String sql;
 		boolean ret = true;
 
-		List<Property> props = dao.findByNameAndProvider("MyOscarId", providerId);
+		List<Property> props = dao.findByNameAndProvider(PROPERTY_KEY, providerId);
 		Property p = new Property();
 		if(props.size()>0) {
 			p = props.get(0);
 			p.setValue(id);
 			dao.merge(p);
 		} else {
-			p.setName("MyOscarId");
+			p.setName(PROPERTY_KEY);
 			p.setValue(id);
 			p.setProviderNo(providerId);
 			dao.persist(p);
@@ -93,7 +90,7 @@ public final class ProviderMyOscarIdData {
 	public static String getProviderNo(String myOscarUserName) {
 		String providerNo = "";
 		
-		List<Property> props = dao.findByNameAndValue("MyOscarId", myOscarUserName);
+		List<Property> props = dao.findByNameAndValue(PROPERTY_KEY, myOscarUserName);
 		for(Property p:props) {
 			providerNo = p.getProviderNo();
 		}
@@ -105,7 +102,7 @@ public final class ProviderMyOscarIdData {
 	public static List<String> listMyOscarProviderNums() {
 		ArrayList<String> providerIdList = new ArrayList<String>();
 		
-		List<Property> props = dao.findByName("MyOscarId");	
+		List<Property> props = dao.findByName(PROPERTY_KEY);	
 		for(Property p:props) {
 			providerIdList.add(p.getProviderNo());
 		}
