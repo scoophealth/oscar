@@ -64,7 +64,7 @@
 	temp=WsUtils.generateSecurityToken(loggedInSecurity);
 	sb.append(URLEncoder.encode(temp, "UTF-8"));
 		
-	sb.append("myOscarUserName=");
+	sb.append("&myOscarUserName=");
 	temp=myOscarLoggedInInfo.getLoggedInPerson().getUserName();
 	sb.append(URLEncoder.encode(temp, "UTF-8"));
 	

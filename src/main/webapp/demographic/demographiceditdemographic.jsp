@@ -1348,10 +1348,21 @@ if(wLReadonly.equals("")){
 							</a>
 						</td>
 					</tr>
-                                        <tr>
-
-                                            <td><a href="" onclick="popup(600, 1000, '<%=request.getContextPath()%>/demographic/viewPhrRecord.do?demographic_no=<%=demographic_no%>', 'viewPatientPHR'); return false;">View PHR Record</a></td></tr>
-
+					<tr>
+						<td>
+							<a href="" onclick="popup(600, 1000, '<%=request.getContextPath()%>/demographic/viewPhrRecord.do?demographic_no=<%=demographic_no%>', 'viewPatientPHR'); return false;">View PHR Record</a>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<%
+								if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn()) onclickString="popupOscarRx(600,900,'"+request.getContextPath()+"/admin/oscar_myoscar_sync_config_redirect.jsp')";
+							%>
+							<a href="javascript: function myFunction() {return false; }" ONCLICK="<%=onclickString%>"	title="myOscar">
+								<bean:message key="demographic.demographiceditdemographic.MyOscarDataSync"/>
+							</a>
+						</td>
+					</tr>
 				</phr:indivoRegistered>
 			</oscar:oscarPropertiesCheck>
 <% if (oscarProps.getProperty("clinic_no", "").startsWith("1022")) { // quick hack to make Dr. Hunter happy
