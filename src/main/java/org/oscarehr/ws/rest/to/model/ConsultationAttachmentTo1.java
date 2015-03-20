@@ -35,11 +35,13 @@ public class ConsultationAttachmentTo1 implements Serializable {
 	
 	private int documentNo;
 	private String documentType;
+	private String documentTypeDisplay;
 	private boolean attached;
 	private String displayName;
-	private String displayDocType;
+	private String shortName;
 	private String url;
-
+	
+	
 	public ConsultationAttachmentTo1() {}
 	
 	public ConsultationAttachmentTo1(int documentNo, String documentType, boolean attached, String displayName, String url) {
@@ -65,9 +67,17 @@ public class ConsultationAttachmentTo1 implements Serializable {
 	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 		
-		if (TYPE_DOC.equals(documentType)) this.displayDocType = "Document";
-		else if (TYPE_EFORM.equals(documentType)) this.displayDocType = "EForm";
-		else if (TYPE_LAB.equals(documentType)) this.displayDocType = "Lab Result";
+		if (TYPE_DOC.equals(documentType)) documentTypeDisplay = "Document";
+		else if (TYPE_EFORM.equals(documentType)) documentTypeDisplay = "EForm";
+		else if (TYPE_LAB.equals(documentType)) documentTypeDisplay = "Lab Result";
+	}
+
+	public String getDocumentTypeDisplay() {
+		return documentTypeDisplay;
+	}
+	
+	public void setDocumentTypeDisplay(String documentTypeDisplay) {
+		this.documentTypeDisplay = documentTypeDisplay;
 	}
 
 	public boolean isAttached() {
@@ -84,14 +94,15 @@ public class ConsultationAttachmentTo1 implements Serializable {
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+		shortName = (displayName!=null && displayName.length()>20) ? displayName.substring(0, 17)+"..." : displayName;
 	}
-
-	public String getDisplayDocType() {
-		return displayDocType;
+	
+	public String getShortName() {
+		return shortName;
 	}
-
-	public void setDisplayDocType(String displayDocType) {
-		this.displayDocType = displayDocType;
+	
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
 	}
 
 	public String getUrl() {

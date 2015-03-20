@@ -181,7 +181,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	@GET
 	@Path("/getRequestAttachments")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ConsultationAttachmentTo1> getRequestAttachments(@QueryParam("requestId")Integer requestId, @QueryParam("demographicId")Integer demographicIdInt, @QueryParam("attached")Boolean attached) {
+	public List<ConsultationAttachmentTo1> getRequestAttachments(@QueryParam("requestId")Integer requestId, @QueryParam("demographicId")Integer demographicIdInt, @QueryParam("attached")boolean attached) {
 		List<ConsultationAttachmentTo1> attachments = new ArrayList<ConsultationAttachmentTo1>();
 		String demographicId = demographicIdInt.toString();
 		
@@ -284,7 +284,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	@GET
 	@Path("/getResponseAttachments")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ConsultationAttachmentTo1> getResponseAttachments(@QueryParam("responseId")Integer responseId, @QueryParam("demographicNo")Integer demographicNoInt, @QueryParam("attached")Boolean attached) {
+	public List<ConsultationAttachmentTo1> getResponseAttachments(@QueryParam("responseId")Integer responseId, @QueryParam("demographicNo")Integer demographicNoInt, @QueryParam("attached")boolean attached) {
 		List<ConsultationAttachmentTo1> attachments = new ArrayList<ConsultationAttachmentTo1>();
 		String demographicNo = demographicNoInt.toString();
 		
@@ -538,7 +538,8 @@ public class ConsultationWebService extends AbstractServiceImpl {
 				//if attached is wanted and attached found		OR
 				//if detached is wanted and attached not found
 				String url = "eform/efmshowform_data.jsp?fdid="+eform.getId();
-				attachments.add(new ConsultationAttachmentTo1(ConversionUtils.fromIntString(eform.getId()), ConsultationAttachmentTo1.TYPE_EFORM, attached, eform.getFormName(), url));
+				String displayName = eform.getFormName()+" "+eform.getFormDate();
+				attachments.add(new ConsultationAttachmentTo1(ConversionUtils.fromIntString(eform.getId()), ConsultationAttachmentTo1.TYPE_EFORM, attached, displayName, url));
 			}
 		}
 	}
