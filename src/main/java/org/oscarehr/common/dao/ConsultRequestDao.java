@@ -180,8 +180,8 @@ public class ConsultRequestDao extends AbstractDao<ConsultationRequest> {
 			sql.append("and cr.referralDate <=  '" + DateFormatUtils.ISO_DATE_FORMAT.format(filter.getReferralEndDate()) + " 23:59:59' ");			
 		}
 		
-		if (StringUtils.isNotBlank(filter.getStatus())) {
-			sql.append("and cr.status = '" + StringEscapeUtils.escapeSql(filter.getStatus()) + "' ");
+		if (filter.getStatus()!=null) {
+			sql.append("and cr.status = '" + filter.getStatus() + "' ");
 		} else {
 			sql.append("and cr.status != 4 ");
 		}

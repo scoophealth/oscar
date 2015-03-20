@@ -42,7 +42,7 @@ public class ConsultationRequestSearchFilter {
 	
 	private Date referralEndDate;
 	
-	private String status;
+	private Integer status;
 	
 	private String team;
 	
@@ -81,10 +81,10 @@ public class ConsultationRequestSearchFilter {
 	public void setReferralEndDate(Date referralEndDate) {
 		this.referralEndDate = referralEndDate;
 	}
-	public String getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 	public String getTeam() {

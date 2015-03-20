@@ -42,6 +42,10 @@ import com.quatro.model.security.Secuserrole;
 
 @Service
 public class SecurityInfoManager {
+	public String READ = "r";
+	public String WRITE = "w";
+	public String UPDATE = "u";
+	public String DELETE = "d";
 	
 	@Autowired
 	private SecuserroleDao secUserRoleDao;
@@ -51,7 +55,8 @@ public class SecurityInfoManager {
     
 	
 	public List<Secuserrole> getRoles(LoggedInInfo loggedInInfo) {
-		List<Secuserrole> results =  secUserRoleDao.findByProviderNo(loggedInInfo.getLoggedInProviderNo());
+		@SuppressWarnings("unchecked")
+        List<Secuserrole> results =  secUserRoleDao.findByProviderNo(loggedInInfo.getLoggedInProviderNo());
 		
 	//	LogAction.addLogSynchronous(loggedInInfo, "SecurityInfoManager.getRoles", loggedInInfo.getLoggedInProviderNo());
 			
@@ -126,17 +131,17 @@ public class SecurityInfoManager {
 			if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "x")) {
 				return true;
 			}
-			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "w")) {
-				return ("ruw".contains(privilege));
+			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), WRITE)) {
+				return ((READ+UPDATE+WRITE).contains(privilege));
 			}
-			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "u")) {
-				return ("ru".contains(privilege));
+			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), UPDATE)) {
+				return ((READ+UPDATE).contains(privilege));
 			}
-			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "r")) {
-				return ("r".contains(privilege));
+			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), READ)) {
+				return (READ.equals(privilege));
 			}
-			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "d")) {
-				return ("d".contains(privilege));
+			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), DELETE)) {
+				return (DELETE.equals(privilege));
 			}
 		} catch (Exception ex) {
 			MiscUtils.getLogger().error("Error checking privileges", ex);

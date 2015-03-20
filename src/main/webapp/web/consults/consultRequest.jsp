@@ -182,7 +182,7 @@
 			<div class="col-md-6">
 				<div class="form-group">
 					<label class="control-label">Appointment Date:</label>
-					<input id="dp-appointmentDate" type="text" class="form-control inline" style="width:50%" ng-model="consult.appointmentDate" placeholder="Appointment Date"  datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.aptDatePicker" ng-click="page.aptDatePicker=true"/>
+					<input id="dp-appointmentDate" type="text" class="form-control inline" style="width:50%" ng-model="consult.appointmentDate" placeholder="Appointment Date"  datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.aptDatePicker" ng-click="page.aptDatePicker=true" ng-disabled="consult.patientWillBook"/>
 				</div>
 				<div class="form-group">
 					<label class="control-label">Appointment Time:</label>
@@ -190,12 +190,12 @@
 						<select class="form-control inline" style="width:20%;" 
 								ng-model="consult.appointmentHour"
 								ng-options="hour for hour in hours"
-								ng-change="changeAppointmentTime()">
+								ng-change="changeAppointmentTime()" ng-disabled="consult.patientWillBook">
 						</select> :
 						<select class="form-control inline" style="width:20%;" 
 								ng-model="consult.appointmentMinute"
 								ng-options="minute for minute in minutes"
-								ng-change="changeAppointmentTime()">
+								ng-change="changeAppointmentTime()" ng-disabled="consult.patientWillBook">
 						</select>
 					</span>
 				</div>
@@ -285,7 +285,7 @@
 </div><!-- Right pane End -->
 
 <div class="wrapper-action"><!-- Action Buttons -->
-	<button type="button" class="btn btn-large btn-warning action" ng-click="printPreview()" ng-show="consult.id!=null">Print Preview</button>&nbsp;
-	<button type="button" class="btn btn-large btn-warning action" ng-click="sendFax()" ng-show="consult.id!=null">Send Fax</button>&nbsp;
+	<button type="button" class="btn btn-large btn-warning action" ng-click="printPreview()" ng-show="consult.id!=null && consultChanged<=0">Print Preview</button>&nbsp;
+	<button type="button" class="btn btn-large btn-warning action" ng-click="sendFax()" ng-show="consult.id!=null && consultChanged<=0">Send Fax</button>&nbsp;
 	<button type="button" class="btn btn-large btn-primary action" ng-click="save()" ng-disabled="consultChanged<=0">Save</button>&nbsp;
 </div>

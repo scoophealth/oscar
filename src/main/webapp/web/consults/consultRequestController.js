@@ -32,6 +32,11 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 		}
 	}
 	
+	//set default fax if there's only 1
+	if (consult.letterheadFax==null && consult.faxList.length==1) {
+		consult.letterheadFax = consult.faxList[0].faxNumber;
+	}
+	
 	//set specialist list
 	for (var i=0; i<consult.serviceList.length; i++) {
 		if (consult.serviceList[i].serviceId==consult.serviceId) {
@@ -148,12 +153,15 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 	}
 	
 	$scope.setAppointmentTime = function(){
-		if (consult.appointmentHour!=null && consult.appointmentMinute!=null) {
+		if (consult.appointmentHour!=null && consult.appointmentMinute!=null && !consult.patientWillBook) {
 			var apptTime = new Date();
 			if (consult.appointmentTime!=null) apptTime = new Date(consult.appointmentTime);
 			apptTime.setHours(consult.appointmentHour);
 			apptTime.setMinutes(consult.appointmentMinute);
+			apptTime.setSeconds(0);
 			consult.appointmentTime = apptTime;
+		} else {
+			consult.appointmentTime = null;
 		}
 	}
 	
@@ -237,15 +245,16 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 	
 	
 	$scope.save = function(){
-		if ($scope.invalidData()) return;
-
+		if ($scope.invalidData()) return false;
+		
 		$scope.consultSaving = true; //show saving banner
-		$scope.consultChanged = 0; //reset change count
+		$scope.setAppointmentTime();
 		
 		consultService.saveRequest(consult).then(function(data){
 			if (consult.id==null) $location.path("/consults/"+data.id);
 		});
 		$scope.consultSaving = false; //hide saving banner
+		$scope.consultChanged = -1; //reset change count
 		return true;
 	}
 	

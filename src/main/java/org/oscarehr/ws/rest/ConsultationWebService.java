@@ -60,7 +60,6 @@ import org.oscarehr.consultations.ConsultationRequestSearchFilter;
 import org.oscarehr.consultations.ConsultationResponseSearchFilter;
 import org.oscarehr.managers.ConsultationManager;
 import org.oscarehr.managers.DemographicManager;
-import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.rest.conversion.ConsultationRequestConverter;
 import org.oscarehr.ws.rest.conversion.ConsultationResponseConverter;
@@ -97,9 +96,6 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	ConsultationManager consultationManager;
 	
 	@Autowired
-	SecurityInfoManager securityInfoManager;
-	
-	@Autowired
 	CaseManagementManager caseManagementManager;
 	
 	@Autowired
@@ -133,10 +129,6 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public AbstractSearchResponse<ConsultationRequestSearchResult> searchRequests(JSONObject json) {
 		AbstractSearchResponse<ConsultationRequestSearchResult> response = new AbstractSearchResponse<ConsultationRequestSearchResult>();
-
-		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_con", "r", null)) {
-			throw new RuntimeException("Access Denied");
-		}
 				
 		int count = consultationManager.getConsultationCount(convertRequestJSON(json));
 
@@ -229,10 +221,6 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public AbstractSearchResponse<ConsultationResponseSearchResult> searchResponses(JSONObject json) {
 		AbstractSearchResponse<ConsultationResponseSearchResult> response = new AbstractSearchResponse<ConsultationResponseSearchResult>();
-
-		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_con", "r", null)) {
-			throw new RuntimeException("Access Denied");
-		}
 				
 		int count = consultationManager.getConsultationCount(convertResponseJSON(json));
 
@@ -345,7 +333,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 		filter.setReferralEndDate(convertJSONDate((String)json.get("referralEndDate")));
 		filter.setReferralStartDate(convertJSONDate((String)json.get("referralStartDate")));
 		filter.setStartIndex((Integer)json.get("startIndex"));
-		filter.setStatus((String)json.get("status"));
+		filter.setStatus((Integer)json.get("status"));
 		filter.setTeam((String)json.get("team"));
 		
 		JSONObject params = json.getJSONObject("params");
@@ -374,7 +362,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 		filter.setResponseEndDate(convertJSONDate((String)json.get("responseEndDate")));
 		filter.setResponseStartDate(convertJSONDate((String)json.get("responseStartDate")));
 		filter.setStartIndex((Integer)json.get("startIndex"));
-		filter.setStatus((String)json.get("status"));
+		filter.setStatus((Integer)json.get("status"));
 		filter.setTeam((String)json.get("team"));
 		
 		JSONObject params = json.getJSONObject("params");

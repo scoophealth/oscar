@@ -71,13 +71,17 @@ public class ConsultationManager {
 	ConsultResponseDocDao responseDocDao;
 	@Autowired
 	PropertyDao propertyDao;
+	@Autowired
+	SecurityInfoManager securityInfoManager;
 
 	public final String CON_REQUEST_ENABLED = "consultRequestEnabled";
 	public final String CON_RESPONSE_ENABLED = "consultResponseEnabled";
 	public final String ENABLED_YES = "Y";
 	
 	public List<ConsultationRequestSearchResult> search(LoggedInInfo loggedInInfo, ConsultationRequestSearchFilter filter) {
-		 List<ConsultationRequestSearchResult> r = new  ArrayList<ConsultationRequestSearchResult>();
+		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		
+		List<ConsultationRequestSearchResult> r = new  ArrayList<ConsultationRequestSearchResult>();
 		List<Object[]> result = consultationRequestDao.search(filter);
 		
 		for(Object[] items:result) {
@@ -89,7 +93,9 @@ public class ConsultationManager {
 	}
 	
 	public List<ConsultationResponseSearchResult> search(LoggedInInfo loggedInInfo, ConsultationResponseSearchFilter filter) {
-		 List<ConsultationResponseSearchResult> r = new  ArrayList<ConsultationResponseSearchResult>();
+		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		
+		List<ConsultationResponseSearchResult> r = new  ArrayList<ConsultationResponseSearchResult>();
 		List<Object[]> result = consultationResponseDao.search(filter);
 		
 		for(Object[] items:result) {
@@ -109,6 +115,8 @@ public class ConsultationManager {
 	}
 	
 	public ConsultationRequest getRequest(LoggedInInfo loggedInInfo, Integer id) {
+		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		
 		ConsultationRequest request = consultationRequestDao.find(id);
 		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getRequest", "id="+request.getId());
 		
@@ -116,6 +124,8 @@ public class ConsultationManager {
 	}
 	
 	public ConsultationResponse getResponse(LoggedInInfo loggedInInfo, Integer id) {
+		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		
 		ConsultationResponse response = consultationResponseDao.find(id);
 		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getResponse", "id="+response.getId());
 		
@@ -144,6 +154,8 @@ public class ConsultationManager {
 	
 	public void saveConsultationRequest(LoggedInInfo loggedInInfo, ConsultationRequest request) {
 		if (request.getId()==null) { //new consultation request
+			checkPrivilege(loggedInInfo, securityInfoManager.WRITE);
+			
 			ProfessionalSpecialist specialist = request.getProfessionalSpecialist();
 			request.setProfessionalSpecialist(null);
 			consultationRequestDao.persist(request);
@@ -151,6 +163,8 @@ public class ConsultationManager {
 			request.setProfessionalSpecialist(specialist);
 			consultationRequestDao.merge(request);
 		} else {
+			checkPrivilege(loggedInInfo, securityInfoManager.UPDATE);
+			
 			consultationRequestDao.merge(request);
 		}
 		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.saveConsultationRequest", "id="+request.getId());
@@ -158,14 +172,20 @@ public class ConsultationManager {
 	
 	public void saveConsultationResponse(LoggedInInfo loggedInInfo, ConsultationResponse response) {
 		if (response.getId()==null) { //new consultation response
+			checkPrivilege(loggedInInfo, securityInfoManager.WRITE);
+			
 			consultationResponseDao.persist(response);
 		} else {
+			checkPrivilege(loggedInInfo, securityInfoManager.UPDATE);
+			
 			consultationResponseDao.merge(response);
 		}
 		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.saveConsultationResponse", "id="+response.getId());
 	}
 	
 	public List<ConsultDocs> getConsultRequestDocs(LoggedInInfo loggedInInfo, Integer requestId) {
+		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		
 		List<ConsultDocs> docs = requestDocDao.findByRequestId(requestId);
 		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getConsultRequestDocs", "consult id="+requestId);
 		
@@ -173,6 +193,8 @@ public class ConsultationManager {
 	}
 	
 	public List<ConsultResponseDoc> getConsultResponseDocs(LoggedInInfo loggedInInfo, Integer responseId) {
+		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		
 		List<ConsultResponseDoc> docs = responseDocDao.findByResponseId(responseId);
 		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getConsultResponseDocs", "consult id="+responseId);
 		
@@ -180,6 +202,8 @@ public class ConsultationManager {
 	}
 	
 	public void saveConsultRequestDoc(LoggedInInfo loggedInInfo, ConsultDocs doc) {
+		checkPrivilege(loggedInInfo, securityInfoManager.UPDATE);
+		
 		if (doc.getId()==null) { //new consultation attachment
 			requestDocDao.persist(doc);
 		} else {
@@ -189,6 +213,8 @@ public class ConsultationManager {
 	}
 	
 	public void saveConsultResponseDoc(LoggedInInfo loggedInInfo, ConsultResponseDoc doc) {
+		checkPrivilege(loggedInInfo, securityInfoManager.UPDATE);
+		
 		if (doc.getId()==null) { //new consultation attachment
 			responseDocDao.persist(doc);
 		} else {
@@ -345,5 +371,10 @@ public class ConsultationManager {
 		
 		return cal.getTime();
 	}
+	
+	private void checkPrivilege(LoggedInInfo loggedInInfo, String privilege) {
+		if(!securityInfoManager.hasPrivilege(loggedInInfo, "_con", privilege, null)) {
+			throw new RuntimeException("Access Denied");
+		}
+	}
 }
- 
