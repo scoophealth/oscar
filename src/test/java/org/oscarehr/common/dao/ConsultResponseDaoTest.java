@@ -83,7 +83,7 @@ public class ConsultResponseDaoTest extends DaoTestFixtures {
 		Date date1 = DateUtils.parseDate("2015-03-05", format);
 		Date date2 = DateUtils.parseDate("2015-03-26", format);
 		
-		String status1="s1", status2="s2";
+		String status1="1", status2="2";
 		String team1="tttt1", team2="tttt2";
 		String urgency1="u1", urgency2="u2";
 		
@@ -162,7 +162,7 @@ public class ConsultResponseDaoTest extends DaoTestFixtures {
 		
 		ConsultationResponseSearchFilter filter = new ConsultationResponseSearchFilter();
 		filter.setDemographicNo(demoNo1);
-		filter.setStatus(status1);
+		filter.setStatus(Integer.valueOf(status1));
 		filter.setTeam(team1);
 		filter.setUrgency(urgency1);
 		
@@ -216,7 +216,7 @@ public class ConsultResponseDaoTest extends DaoTestFixtures {
 		Date date1 = DateUtils.parseDate("2015-03-05", format);
 		Date date2 = DateUtils.parseDate("2015-03-26", format);
 		
-		String status1="s1", status2="s2";
+		String status1="1", status2="2";
 		String team1="tttt1", team2="tttt2";
 		String urgency1="u1", urgency2="u2";
 		
@@ -284,7 +284,7 @@ public class ConsultResponseDaoTest extends DaoTestFixtures {
 		ConsultationResponseSearchFilter filter = new ConsultationResponseSearchFilter();
 		filter.setNumToReturn(99);
 		filter.setDemographicNo(demoNo1);
-		filter.setStatus(status1);
+		filter.setStatus(Integer.valueOf(status1));
 		filter.setTeam(team1);
 		filter.setUrgency(urgency1);
 		

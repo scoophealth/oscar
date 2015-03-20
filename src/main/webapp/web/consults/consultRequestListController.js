@@ -112,6 +112,24 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope, $timeout, $locat
         		//console.log(JSON.stringify(result));
         		 params.total(result.total);
                  $defer.resolve(result.content);
+                 
+                 for (var i=0; i<result.content.length; i++) {
+                	 var consult = result.content[i];
+                	 
+                	 //when searching "All Active", hide consults with status=Completed(4)/Cancelled(5)/Deleted(7)
+                	 if (search1.status==null || search1.status=="") {
+                		 if (consult.status==4 || consult.status==5 || consult.status==7) {
+                			 result.content.splice(i, 1);
+                			 i--;
+                			 continue;
+                		 }
+                	 }
+                     //add urgencyColor to content if consult urgency=Urgent(1)
+                	 if (consult.urgency==1) {
+                		 consult.urgencyColor = "text-danger"; //= red text
+                	 }
+                 }
+                 
                  $scope.lastResponse = result.content;
                  
         	},function(reason){
