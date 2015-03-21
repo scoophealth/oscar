@@ -984,7 +984,22 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                 </div>
                                             </td>
                                         </tr>
-                                        <% } %>
+                                        <% } 
+                                        String comment = handler.getNteForPID();
+                                        if (comment != null && !comment.equals("")) {%>
+                                        <tr>
+                                        	<td>
+                                                <div class="FieldData">
+                                                    <strong>Remarks:</strong>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="FieldData" nowrap="nowrap">
+                                                   <%= comment %>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <%} %>
                                     </table>
                                 </td>
                             </tr>

@@ -148,4 +148,9 @@ public final class OruR01Handler extends ChainnedMessageAdapter<ORU_R01> {
 	    // TODO Auto-generated method stub
 	    return null;
     }
+	@Override
+    public String getNteForPID(){
+		// TODO Auto-generated method stub
+	    return null;
+    }
 }

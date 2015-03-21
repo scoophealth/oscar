@@ -836,4 +836,9 @@ public class AlphaHL7Handler implements MessageHandler {
 
 		return "";
 	}
+
+	public String getNteForPID() {
+		return "";
+	}
+
 }
