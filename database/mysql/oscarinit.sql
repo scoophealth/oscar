@@ -8848,7 +8848,7 @@ CREATE TABLE appointmentArchive (
   reason varchar(80),
   location varchar(30),
   resources varchar(255),
-  type varchar(10),
+  type varchar(50),
   style varchar(10),
   billing varchar(10),
   status char(2),
