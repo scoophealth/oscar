@@ -140,6 +140,12 @@
    		rs.setStatus("D");
    		rScheduleDao.merge(rs);
    	}
+   	
+    rsl = rScheduleDao.findByProviderAvailableAndDate(request.getParameter("provider_no"),"A",MyDateFormat.getSysDate(request.getParameter("sdate")!=null?request.getParameter("sdate"):today));
+    for(RSchedule rs:rsl) {
+        rs.setStatus("D");
+        rScheduleDao.merge(rs);
+    }
 
 	if(request.getParameter("deldate")!= null && (request.getParameter("deldate").equals("b") || request.getParameter("deldate").equals("all")) ) { //delete scheduledate
 	  if(request.getParameter("deldate").equals("b")) {
