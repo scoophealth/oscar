@@ -2358,6 +2358,11 @@ public class OLISHL7Handler implements MessageHandler {
 	public String audit() {
 		return "";
 	}
+	
+	@Override
+	public String getNteForPID() {
+    	return "";
+    }
 
 	protected String getOBXField(int i, int j, int field, int rep, int comp) {
 		ArrayList<Segment> obxSegs = obrGroups.get(i);

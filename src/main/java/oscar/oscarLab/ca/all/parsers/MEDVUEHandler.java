@@ -703,4 +703,8 @@ public class MEDVUEHandler implements MessageHandler {
 	    return null;
     }
 	
+	public String getNteForPID() {
+    	return "";
+    }
+	
 }
