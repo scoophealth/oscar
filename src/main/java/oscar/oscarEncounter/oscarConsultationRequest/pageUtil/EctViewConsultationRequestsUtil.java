@@ -132,12 +132,17 @@ public class EctViewConsultationRequestsUtil {
               
               date1 = consult.getAppointmentDate();
               date2 = consult.getAppointmentTime();
-              if( date1 == null || date2 == null ) {
-            	  cal.set(1970, 0, 1, 1, 0, 0);
-            	  date1 = date2 = cal.getTime();
-              }              
               
-              apptDate.add(DateFormatUtils.ISO_DATE_FORMAT.format(date1) + " " +  DateFormatUtils.ISO_TIME_FORMAT.format(date2));
+              String apptDateStr = "";
+              if( date1 == null ) {
+            	  apptDateStr = "N/A";
+              } else if( date1 != null && date2 == null ) {
+            	  apptDateStr = DateFormatUtils.ISO_DATE_FORMAT.format(date1) + " T00:00:00";
+              } else {
+            	  apptDateStr = DateFormatUtils.ISO_DATE_FORMAT.format(date1) + " " +  DateFormatUtils.ISO_TIME_FORMAT.format(date2);
+              }
+              
+              apptDate.add(apptDateStr);
               patientWillBook.add(""+consult.isPatientWillBook());
               
               date1 = consult.getFollowUpDate();
