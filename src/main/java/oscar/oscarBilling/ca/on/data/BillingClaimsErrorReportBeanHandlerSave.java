@@ -77,7 +77,6 @@ public class BillingClaimsErrorReportBeanHandlerSave {
 					erObj.setGroup_no(nextline.substring(23, 27));
 					erObj.setSpecialty(nextline.substring(33, 35));
 					erObj.setProcess_date(nextline.substring(38, 46));
-					erRepObj.deleteErrorReport(erObj);
 				}
 
 				if (headerCount.compareTo("H") == 0) {
@@ -111,6 +110,8 @@ public class BillingClaimsErrorReportBeanHandlerSave {
 							+ nextline.substring(70, 73).trim() + " " + nextline.substring(73, 76).trim() + " "
 							+ nextline.substring(76, 79);
 					// erObj.setClaim_error()
+					erRepObj.deleteErrorReport(erObj);
+
 				}
 
 				if (headerCount.compareTo("R") == 0) {
