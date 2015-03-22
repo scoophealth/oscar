@@ -144,6 +144,7 @@
         
    </script>
 
+
 <oscar:customInterface section="masterCreate"/>
 
 <title><bean:message
@@ -172,12 +173,11 @@
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/check_hin.js"></script>
 
-<link rel="stylesheet" href="../web.css" />
-
 <!-- Stylesheet for zdemographicfulltitlesearch.jsp -->
 <link rel="stylesheet" type="text/css" href="../share/css/searchBox.css" />
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/css/Demographic.css" />
 
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<!--link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  /-->
 <script language="JavaScript">
 function upCaseCtrl(ctrl) {
 	ctrl.value = ctrl.value.toUpperCase();
