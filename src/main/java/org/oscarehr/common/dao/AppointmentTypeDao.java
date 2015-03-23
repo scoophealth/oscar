@@ -36,7 +36,7 @@ public class AppointmentTypeDao extends AbstractDao<AppointmentType>{
 	}
 	  
    public List<AppointmentType> listAll() {
-	   	String sqlCommand = "select x from AppointmentType x order by x.name desc";
+	   	String sqlCommand = "select x from AppointmentType x order by x.name";
 		Query query = entityManager.createQuery(sqlCommand);
 						
 		@SuppressWarnings("unchecked")

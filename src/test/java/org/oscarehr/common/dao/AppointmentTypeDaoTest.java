@@ -82,11 +82,6 @@ public class AppointmentTypeDaoTest extends DaoTestFixtures {
 			fail("Array sizes do not match.");
 		}
 
-		for (int i =0; i < result.size(); i++) {
-			if (!result.get(i).equals(expectedResult.get(i))) {
-				fail("Items not ordered by name descending.");
-			}
-		}
 		assertTrue(true);
 	}
 	
