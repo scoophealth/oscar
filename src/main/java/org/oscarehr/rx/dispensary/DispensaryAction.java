@@ -52,7 +52,9 @@ import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.DrugDispensing;
 import org.oscarehr.common.model.DrugDispensingMapping;
 import org.oscarehr.common.model.DrugProduct;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class DispensaryAction extends DispatchAction {
@@ -63,6 +65,7 @@ public class DispensaryAction extends DispatchAction {
 	private DrugProductDao drugProductDao = SpringUtils.getBean(DrugProductDao.class);
 	private DrugDispensingDao drugDispensingDao = SpringUtils.getBean(DrugDispensingDao.class);
 	private DrugDispensingMappingDao drugDispensingMappingDao = SpringUtils.getBean(DrugDispensingMappingDao.class);
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    return mapping.findForward("list");
@@ -106,6 +109,9 @@ public class DispensaryAction extends DispatchAction {
 		
 		
 		for(DrugDispensing dd:dispensingEvents) {
+			if(dd.isArchived()) {
+				continue;
+			}
 			int totalAmountForDD = 0;
 			
 			if(providerNames.get(dd.getDispensingProviderNo()) == null) {
@@ -247,4 +253,35 @@ public class DispensaryAction extends DispatchAction {
 
 	}
 
+	public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_dispensing", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		
+		Integer eventId = null;
+		
+		try {
+			String strEventId = request.getParameter("eventId");
+			if(strEventId != null) {
+				eventId = Integer.parseInt(strEventId);
+			}
+		}catch(Exception e) {
+			MiscUtils.getLogger().error("Error",e);
+		}
+		
+		if(eventId != null) {
+			for(DrugProduct dp:drugProductDao.findByDispensingId(eventId)) {
+				DrugDispensing dd = drugDispensingDao.find(dp.getDispensingEvent());
+				if(dd != null) {
+					dd.setArchived(true);
+					drugDispensingDao.merge(dd);
+				}
+				dp.setDispensingEvent(null);
+				drugProductDao.merge(dp);
+				MiscUtils.getLogger().debug("deleted from drug product " + dp.getId());
+			}
+		}
+		
+		return view(mapping,form,request,response);
+	}
 }

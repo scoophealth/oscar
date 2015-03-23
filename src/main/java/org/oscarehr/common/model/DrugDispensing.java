@@ -62,6 +62,8 @@ public class DrugDispensing extends AbstractModel<Integer> {
 	
 	private int programNo;
 	
+	private boolean archived = false;
+	
 	
 	public Integer getId() {
 		return id;
@@ -156,6 +158,15 @@ public class DrugDispensing extends AbstractModel<Integer> {
 	public void setProgramNo(int programNo) {
 		this.programNo = programNo;
 	}
+
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
+	
 	
 	
 }
