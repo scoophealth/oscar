@@ -874,6 +874,7 @@
                         <validHeader>utils/headers/indivica.txt</validHeader>
                         <validHeader>utils/headers/indivica2013.txt</validHeader>
                         <validHeader>utils/headers/peaceworks.txt</validHeader>
+                        <validHeader>utils/headers/kai.txt</validHeader>
                 </validHeaders>
                 <includes>
                     <include>src/main/java/**/*.java</include>

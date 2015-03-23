@@ -1538,7 +1538,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                    <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBRComment(j, k)%></pre></td>
                                </tr>
-                               <% if  (!handler.getMsgType().equals("HHSEMR")) {
+                               <% if  (!handler.getMsgType().equals("HHSEMR") || !handler.getMsgType().equals("TRUENORTH")) {
                                		if(handler.getOBXName(j,k).equals("")){
 	                                        String result = handler.getOBXResult(j, k);%>
 	                                         <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >

@@ -133,8 +133,9 @@ if(outcome != null){
 					<option value="OSCAR_TO_OSCAR_HL7_V2">OSCAR_TO_OSCAR_HL7_V2</option>
 					<option value="PFHT">PFHT</option>
 					<option value="SIOUX">SIOUX</option>
-					<option value="TDIS">TDIS</option>
 					<option value="Spire">Spire</option>
+					<option value="TDIS">TDIS</option>
+					<option value="TRUENORTH">TRUENORTH</option>
 					<option value="OTHER">Other</option>
 				</select></td>
 			</tr>
