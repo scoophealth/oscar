@@ -1849,6 +1849,9 @@ YAHOO.example.FnMultipleFields = function(){
 
 function addFav(randomId,brandName){
     var favoriteName = window.prompt('Please enter a name for the Favorite:',  brandName);
+    if(favoriteName == null) {
+    	return;
+    }
     favoriteName=encodeURIComponent(favoriteName);
    if (favoriteName.length > 0){
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/addFavorite2.do?parameterValue=addFav2";
