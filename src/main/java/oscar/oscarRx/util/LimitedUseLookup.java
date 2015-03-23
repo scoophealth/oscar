@@ -22,9 +22,11 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarRx.util;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -38,84 +40,106 @@ import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.OscarProperties;
+
+
 /**
  * Parses xml file, creating DosingRecomendation Objects storing them in a hashtable with the ATC code as the key
  * @author jay
  */
 public class LimitedUseLookup {
 
-    private static Logger log = MiscUtils.getLogger();
+	private static Logger log = MiscUtils.getLogger();
 
-    static Hashtable<String, ArrayList<LimitedUseCode>> luLookup = new Hashtable<String, ArrayList<LimitedUseCode>>();
-    static boolean loaded = false;
+	static Hashtable<String, ArrayList<LimitedUseCode>> luLookup = new Hashtable<String, ArrayList<LimitedUseCode>>();
+	static boolean loaded = false;
 
-    /** Creates a new instance of RenalDosingFactory */
-    protected LimitedUseLookup() {
-    }
+	/** Creates a new instance of RenalDosingFactory */
+	protected LimitedUseLookup() {
+	}
 
-    static public ArrayList<LimitedUseCode> getLUInfoForDin(String din) {
-        loadLULookupInformation();
-        if (din == null){
-            return null;
-        }
-        return luLookup.get(din);
-    }
+	static public ArrayList<LimitedUseCode> getLUInfoForDin(String din) {
+		loadLULookupInformation();
+		if (din == null) {
+			return null;
+		}
+		return luLookup.get(din);
+	}
 
-    static public LimitedUseCode makeLUNote(Element e) {
-        LimitedUseCode lu = new LimitedUseCode();
-        lu.setSeq(getVal(e, "seq"));
-        lu.setUseId(getVal(e, "reasonForUseId"));
-        lu.setType(getVal(e, "type"));
-        lu.setTxt(e.getText());
-        return lu;
-    }
+	static public LimitedUseCode makeLUNote(Element e) {
+		LimitedUseCode lu = new LimitedUseCode();
+		lu.setSeq(getVal(e, "seq"));
+		lu.setUseId(getVal(e, "reasonForUseId"));
+		lu.setType(getVal(e, "type"));
+		lu.setTxt(e.getText());
+		return lu;
+	}
 
-    static public String getVal(Element e, String name) {
-        if (e.getAttribute(name) != null) {
-            return e.getAttribute(name).getValue();
-        }
-        return "";
-    }
-    static private void loadLULookupInformation() {
-        log.debug("current LU lookup size " + luLookup.size());
-        if (!loaded) {
-            String dosing = "oscar/oscarRx/data_extract_20110804.xml";
-            LimitedUseLookup rdf = new LimitedUseLookup();
-            InputStream is = rdf.getClass().getClassLoader().getResourceAsStream(dosing);
+	static public String getVal(Element e, String name) {
+		if (e.getAttribute(name) != null) {
+			return e.getAttribute(name).getValue();
+		}
+		return "";
+	}
 
-            try {
-                SAXBuilder parser = new SAXBuilder();
-                Document doc = parser.build(is);
-                Element root = doc.getRootElement();
-                Element formulary = root.getChild("formulary");
-                @SuppressWarnings("unchecked")
-                Iterator<Element> items = formulary.getDescendants(new ElementFilter("pcgGroup"));
+	static private void loadLULookupInformation() {
+		log.debug("current LU lookup size " + luLookup.size());
+		if (!loaded) {
+			LimitedUseLookup rdf = new LimitedUseLookup();
+			InputStream is = null;
 
-                while (items.hasNext()) {
-                    Element pcgGroup = items.next();
-                    @SuppressWarnings("unchecked")
-                    List<Element> lccNoteList = pcgGroup.getChildren("lccNote");
+			try {
 
-                    if (lccNoteList.size() > 0) {
-                        ArrayList<LimitedUseCode> luList = new ArrayList<LimitedUseCode>();
-                        for (Element lccNo : lccNoteList) {
-                            luList.add(makeLUNote(lccNo));
-                        }
+				String fileName = OscarProperties.getInstance().getProperty("odb_formulary_file");
+				if (fileName != null && !fileName.isEmpty()) {
+					is = new BufferedInputStream(new FileInputStream(fileName));
 
-                        @SuppressWarnings("unchecked")
-                        Iterator<Element> drugs = pcgGroup.getDescendants(new ElementFilter("drug"));
-                        while (drugs.hasNext()) {
-                            Element drug = drugs.next();
-                            String din = drug.getAttribute("id").getValue();
-                            luLookup.put(din, luList);
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                MiscUtils.getLogger().error("Error", e);
-            }
-            loaded = true;
-        }
+				} else {
+					String dosing = "oscar/oscarRx/data_extract_20150226.xml";
+					is = rdf.getClass().getClassLoader().getResourceAsStream(dosing);
+				}
 
-    }
+				SAXBuilder parser = new SAXBuilder();
+				Document doc = parser.build(is);
+				Element root = doc.getRootElement();
+				Element formulary = root.getChild("formulary");
+				@SuppressWarnings("unchecked")
+				Iterator<Element> items = formulary.getDescendants(new ElementFilter("pcgGroup"));
+
+				while (items.hasNext()) {
+					Element pcgGroup = items.next();
+					@SuppressWarnings("unchecked")
+					List<Element> lccNoteList = pcgGroup.getChildren("lccNote");
+
+					if (lccNoteList.size() > 0) {
+						ArrayList<LimitedUseCode> luList = new ArrayList<LimitedUseCode>();
+						for (Element lccNo : lccNoteList) {
+							luList.add(makeLUNote(lccNo));
+						}
+
+						@SuppressWarnings("unchecked")
+						Iterator<Element> drugs = pcgGroup.getDescendants(new ElementFilter("drug"));
+						while (drugs.hasNext()) {
+							Element drug = drugs.next();
+							String din = drug.getAttribute("id").getValue();
+							luLookup.put(din, luList);
+						}
+					}
+				}
+
+				loaded = true;
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Error", e);
+			} finally {
+				if(is != null) {
+					try {
+						is.close();
+					}catch(IOException e) {
+						MiscUtils.getLogger().error("Error", e);
+					}
+				}
+			}
+		}
+
+	}
 }
