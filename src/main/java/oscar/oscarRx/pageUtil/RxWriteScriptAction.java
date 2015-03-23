@@ -385,6 +385,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 			response.sendRedirect("error.html");
 			return null;
 		}
+		
+		String customDrugName = request.getParameter("name");
 
 		try {
 			RxPrescriptionData rxData = new RxPrescriptionData();
@@ -392,6 +394,10 @@ public final class RxWriteScriptAction extends DispatchAction {
 			// create Prescription
 			RxPrescriptionData.Prescription rx = rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
 			String ra = request.getParameter("randomId");
+			
+			if(customDrugName != null && !customDrugName.isEmpty()) {
+				rx.setCustomName(customDrugName);
+			}
 			rx.setRandomId(Integer.parseInt(ra));
 			rx.setGenericName(null);
 			rx.setBrandName(null);
