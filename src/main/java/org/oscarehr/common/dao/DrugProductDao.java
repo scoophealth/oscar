@@ -158,7 +158,7 @@ public class DrugProductDao extends AbstractDao<DrugProduct>{
 
 	}
 	
-	public List<DrugProduct> findByNameAndLot(int offset, int limit, String name, String lotNumber, Integer location) {
+	public List<DrugProduct> findByNameAndLot(int offset, int limit, String name, String lotNumber, Integer location, boolean availableOnly) {
 		
 		String sqlStart = "from DrugProduct x where 1=1";
 		String sql = "";
@@ -182,6 +182,10 @@ public class DrugProductDao extends AbstractDao<DrugProduct>{
 			index++;
 		}
 		
+		if(availableOnly) {
+			sql += " and x.dispensingEvent IS NULL ";
+		}
+		
 		Integer result = null;
 		
 		Query query = entityManager.createQuery(sqlStart + sql);
@@ -196,7 +200,7 @@ public class DrugProductDao extends AbstractDao<DrugProduct>{
 
 	}
 	
-	public Integer findByNameAndLotCount(String name, String lotNumber, Integer location) {
+	public Integer findByNameAndLotCount(String name, String lotNumber, Integer location, boolean availableOnly) {
 		
 		String sqlStart = "select count(x) from DrugProduct x where 1=1";
 		String sql = "";
@@ -218,6 +222,10 @@ public class DrugProductDao extends AbstractDao<DrugProduct>{
 			sql += " and x.location = ?"+index;
 			params.add(location);
 			index++;
+		}
+		
+		if(availableOnly) {
+			sql += " and x.dispensingEvent IS NULL ";
 		}
 		
 		Integer result = null;

@@ -207,6 +207,7 @@
 		var productNameFilterValue = $('#productNameFilter').val();
 		var productLotFilterValue = $('#productLotFilter').val();
 		var productLocationFilterValue = $('#productLocationFilter').val();
+		var availableOnly = $('#availableOnly').is(':checked');
 		
 		console.log('listing products - current page is ' + currentPage + ', page size is ' + pageSize + ', name=' + productNameFilterValue + ',lot='+productLotFilterValue+',location='+productLocationFilterValue);
 		
@@ -215,7 +216,7 @@
 		
 		console.log('start index is ' + startIndex);
 		
-		jQuery.getJSON("../../ws/rs/productDispensing/drugProducts?offset="+startIndex+"&limit="+pageSize+"&limitByName="+productNameFilterValue + "&limitByLot=" + productLotFilterValue + "&limitByLocation=" + productLocationFilterValue, {},
+		jQuery.getJSON("../../ws/rs/productDispensing/drugProducts?offset="+startIndex+"&limit="+pageSize+"&limitByName="+productNameFilterValue + "&limitByLot=" + productLotFilterValue + "&limitByLocation=" + productLocationFilterValue + "&availableOnly=" + availableOnly, {},
         function(xml) {
 			$("#productTable tbody tr").remove();
 			
@@ -402,6 +403,12 @@
 			updatePage();
 		});
 		
+		$('#availableOnly').bind('change',function(){
+			currentPage=1;
+			updatePage();
+		});
+		
+		
 		$( "#new-product" ).dialog({
 			autoOpen: false,
 			height: 450,
@@ -516,6 +523,11 @@
 <select name="productLocationFilter" id="productLocationFilter">
 	<option value=""></option>
 </select>
+&nbsp;
+<input type="checkbox" name="availableOnly" id="availableOnly" value="true"/>Show Available Only
+</div>
+
+<div>
 <span id="productFilterMessage"></span>
 </div>
 
@@ -546,6 +558,7 @@
 		<option value="50">50</option>
 		<option value="100">100</option>
 	</select>
+	
 	&nbsp;&nbsp;&nbsp;
 	<input type="button" class="btn btn-primary" value="Add New" onClick="addNewProduct()"/>	
 	
