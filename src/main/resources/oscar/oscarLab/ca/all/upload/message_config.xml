@@ -17,4 +17,5 @@
 	<handler name="MEDVUE"  className="MEDVUEHandler" />
     <handler name="PFHT"	className="PFHTHandler"/>
     <handler name="Spire"	className="SpireHandler"/>
+    <handler name="TRUENORTH"»       className="TRUENORTHHandler"/>
 </message-configuration>

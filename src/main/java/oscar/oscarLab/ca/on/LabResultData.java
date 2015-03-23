@@ -56,6 +56,7 @@ public class LabResultData implements Comparable{
 	public static String DOCUMENT = "DOC"; //INTERNAL DOCUMENT
 	public static String HRM = "HRM";
 	public static String Spire = "Spire";
+	public static String TRUENORTH = "TRUENORTH";
 
 	//HL7TEXT handles all messages types recieved as a hl7 formatted string
 	public static String HL7TEXT = "HL7";
