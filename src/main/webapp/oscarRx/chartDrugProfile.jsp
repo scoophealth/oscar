@@ -56,10 +56,12 @@
                     h.put(d,"drug");
                 }
             }else{
-                for(int idx = 0; idx < arr.length; ++idx ) {
+                for(int idx = 0; idx < arr.length; ++idx ) {             	
                     oscar.oscarRx.data.RxPrescriptionData.Prescription drug = arr[idx];
-                    sb.append("&drug="+drug.getRegionalIdentifier());
-                    h.put(drug.getRegionalIdentifier(),"drug");
+                    if(!drug.isCustom()) {
+                   	 sb.append("&drug="+drug.getRegionalIdentifier());
+                    	h.put(drug.getRegionalIdentifier(),"drug");
+                    }
                 }
             }
             drugForGraph = sb.toString();
@@ -143,6 +145,9 @@
                                 continue;
                             }
 
+                            if(drug.isCustom()) {
+                            	continue;
+                            }
                             String styleColor = "";            
                             if (drug.isCurrent() && (drug.getEndDate().getTime() - now <= month)) {
                                 styleColor="style=\"color:orange;font-weight:bold;\"";
@@ -161,12 +166,15 @@
                     </td>
                 </tr>
             </table>
-        
+        <h5>Note: This tool does not chart custom drugs</h5>
     </body>
 </html>
 
 <%!
 String getChecked(Hashtable h,String reg){
+	if(reg == null || reg.isEmpty()) {
+		return "";
+	}
     if (h != null && h.containsKey(reg)){
         return "checked";
     }
