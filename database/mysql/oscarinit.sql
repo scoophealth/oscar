@@ -10568,6 +10568,7 @@ create table DrugDispensing (
         paidFor tinyint(1),
         notes text,
         programNo int,
+	archived tinyint(1) not null,
         primary key(id)
 );
 

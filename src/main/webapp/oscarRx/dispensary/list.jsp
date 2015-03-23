@@ -28,6 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.dao.DrugDao"%>
@@ -58,6 +59,7 @@
 
 <%
 	String curUser_no = (String) session.getAttribute("user");
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	Demographic demographic = (Demographic)request.getAttribute("demographic");
 	Drug drug = (Drug)request.getAttribute("drug");
 	List<Provider> providers = (List<Provider>)request.getAttribute("providers");
@@ -81,6 +83,9 @@
 	int totalQuantitiesDispensed = 0;
 	
 	for(DrugDispensing dd:(List<DrugDispensing>)request.getAttribute("dispensingEvents")) {
+		if(dd.isArchived()) {
+			continue;
+		}
 		totalDosesDispensed += productAmounts.get(dd.getId());
 		totalQuantitiesDispensed += dd.getQuantity();
 	}
@@ -335,6 +340,12 @@ function validateLotNumbers() {
 	return true;
 	
 }
+
+	function deleteDispensingEvent(id) {
+		if(confirm("Are you sure you want to delete this record?")) {
+			location.href="<%=request.getContextPath()%>/oscarRx/Dispense.do?method=delete&eventId=" + id + "&id=" + <%=request.getParameter("id")%>;
+		}
+	}
 </script>
 
 </head>
@@ -401,6 +412,7 @@ function validateLotNumbers() {
 					<table style="width:100%" border="1">
 						<thead>
 							<tr style="text-align:center">
+								<th></th>
 								<th>Date</th>
 								<th>Quantity</th>
 								<th>Dispensed By</th>
@@ -413,8 +425,16 @@ function validateLotNumbers() {
 						<tbody>
 						<%
 						for(DrugDispensing dd:(List<DrugDispensing>)request.getAttribute("dispensingEvents")) {
+							if(dd.isArchived()) {
+								continue;
+							}
 						%>
 							<tr valign="top">
+								<td>
+									<security:oscarSec roleName="<%=roleName$%>" objectName="_dispensing" rights="w">
+										<a href="javascript:void(0)" onClick="deleteDispensingEvent('<%=dd.getId()%>')"><img border="0" src="<%=request.getContextPath()%>/images/delete.png"/></a>
+									</security:oscarSec>
+								</td>
 								<td><%=dd.getDateCreatedAsString() %></td>
 								<td style="text-align:right"><%=dd.getQuantity() %></td>
 								<td><%=providerNames.get(dd.getDispensingProviderNo()) %></td>
