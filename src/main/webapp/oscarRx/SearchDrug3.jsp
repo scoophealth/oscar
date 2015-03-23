@@ -1692,7 +1692,8 @@ function customWarning2(){
 	+ '\n\nAre you sure you wish to use this feature?')==true) {
 	//call another function to bring up prescribe.jsp
         var randomId=Math.round(Math.random()*1000000);
-        var url="<c:out value="${ctx}"/>"+ "/oscarRx/WriteScript.do?parameterValue=newCustomDrug";
+		var searchString = $("searchString").value;
+        var url="<c:out value="${ctx}"/>"+ "/oscarRx/WriteScript.do?parameterValue=newCustomDrug&name=" + searchString;
         var data="randomId="+randomId;
         new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,evalScripts:true,
             insertion: Insertion.Bottom, onComplete:function(transport){
