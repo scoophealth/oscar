@@ -21,4 +21,5 @@
     <handler name="eaaps"   className="org.oscarehr.research.eaaps.EaapsHandler"/>
     <handler name="CLS"		className="CLSHandler"/>
     <handler name="AlphaHL7" className="AlphaHL7Handler"/>
+    <handler name="TRUENORTH"	className="TRUENORTHHandler"/>
 </message-configuration>
