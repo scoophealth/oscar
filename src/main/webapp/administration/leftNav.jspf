@@ -415,6 +415,13 @@ String curProvider_no = (String)session.getAttribute("user");
 						<bean:message key="admin.admin.fieldNoteReport" /></a>
 					</li>
 					</security:oscarSec>
+
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.eformreporttool" rights="r" reverse="<%=false%>">
+ 						<li>
+ 							<a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/eformReportTool/eformReportTool.jsp">
+ 							<bean:message key="admin.admin.eformReportTool" /></a>
+						</li>
+					</security:oscarSec>
 				</ul>
 
 				</div>

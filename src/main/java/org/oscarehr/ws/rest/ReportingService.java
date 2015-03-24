@@ -23,6 +23,8 @@
  */
 package org.oscarehr.ws.rest;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -32,12 +34,19 @@ import javax.ws.rs.Produces;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
+import org.oscarehr.common.dao.EFormReportToolDao;
 import org.oscarehr.common.model.DemographicSets;
+import org.oscarehr.common.model.EFormReportTool;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.DemographicSetsManager;
+import org.oscarehr.managers.EFormReportToolManager;
 import org.oscarehr.web.PatientListApptBean;
 import org.oscarehr.web.PatientListApptItemBean;
+import org.oscarehr.ws.rest.conversion.EFormReportToolConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
+import org.oscarehr.ws.rest.to.GenericRESTResponse;
+import org.oscarehr.ws.rest.to.model.EFormReportToolTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,6 +62,8 @@ public class ReportingService extends AbstractServiceImpl {
 	@Autowired
 	DemographicManager demographicManager;
 	
+	@Autowired
+	EFormReportToolManager eformReportToolManager;
 	
 	@GET
 	@Path("/demographicSets/list")
@@ -99,4 +110,89 @@ public class ReportingService extends AbstractServiceImpl {
 		return (response);
 	}
 		
+	/**
+	 * EFromReportTool is a utility for taking a snapshot of key-value pair data from saved eforms
+	 * to a new table for easier querying. need _admin.eformreporttool security object.
+	 * @return
+	 */
+	@GET
+	@Path("/eformReportTool/list")
+	@Produces("application/json")
+	public AbstractSearchResponse<EFormReportToolTo1> eformReportToolList(){
+		
+		List<EFormReportTool> results = eformReportToolManager.findAll(getLoggedInInfo(), 0, EFormReportToolDao.MAX_LIST_RETURN_SIZE);
+		
+		EFormReportToolConverter converter = new EFormReportToolConverter(true, true);
+		
+		AbstractSearchResponse<EFormReportToolTo1> response = new AbstractSearchResponse<EFormReportToolTo1>();
+		
+		response.setContent(converter.getAllAsTransferObjects(getLoggedInInfo(), results));
+		response.setTotal(response.getContent().size());
+		
+		return (response);
+	}
+	
+	
+	@POST
+	@Path("/eformReportTool/add")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse addEFormReportTool(EFormReportToolTo1 json){
+		
+		GenericRESTResponse response = new GenericRESTResponse();
+		
+		if(StringUtils.isEmpty(json.getName()) || json.getEformId() == 0) {
+			response.setSucess(false);
+			response.setMessage("Need required fields");
+			return response;
+		}
+		
+		EFormReportToolConverter converter = new EFormReportToolConverter();
+		
+		eformReportToolManager.addNew(getLoggedInInfo(),converter.getAsDomainObject(getLoggedInInfo(),json));
+		
+		return (response);
+	}
+	
+	@POST
+	@Path("/eformReportTool/populate")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse populateEFormReportTool(EFormReportToolTo1 json){
+		
+		GenericRESTResponse response = new GenericRESTResponse();
+		
+		eformReportToolManager.populateReportTable(getLoggedInInfo(), json.getId());
+		
+		return (response);
+	}
+	
+	
+	@POST
+	@Path("/eformReportTool/remove")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse removeEFormReportTool(EFormReportToolTo1 json){
+		
+		GenericRESTResponse response = new GenericRESTResponse();
+		
+		eformReportToolManager.remove(getLoggedInInfo(), json.getId());
+		
+		return (response);
+	}
+	
+	@POST
+	@Path("/eformReportTool/markLatest")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse markLatestEFormReportTool(EFormReportToolTo1 json){
+		
+		GenericRESTResponse response = new GenericRESTResponse();
+		
+		eformReportToolManager.markLatest(getLoggedInInfo(), json.getId());
+		
+		return (response);
+	}
+	
+	
 }

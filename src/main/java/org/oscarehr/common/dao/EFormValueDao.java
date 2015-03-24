@@ -93,4 +93,19 @@ public class EFormValueDao extends AbstractDao<EFormValue> {
 
 		return(results);
     }
+    
+    
+    //for EFormReportTool
+    public List<String> findAllVarNamesForEForm(Integer fid) {
+    	
+    	Query query = entityManager.createQuery("select DISTINCT(x.varName) from " + modelClass.getSimpleName() + " x where x.formId in (?1)");
+		query.setParameter(1, fid);
+
+		@SuppressWarnings("unchecked")
+		List<String> results=query.getResultList();
+
+		return(results);
+
+    }
 }
+		
