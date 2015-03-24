@@ -282,6 +282,7 @@
             <form-property name="displayDocumentAsProperty" type="org.oscarehr.common.model.UserProperty"/>
 			<form-property name="labAckCommentProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="cobaltProperty" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="hideOldEchartLinkInApptProperty" type="org.oscarehr.common.model.UserProperty" />
 		</form-bean>
 		<form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="myOscarLoginId" type="java.lang.String" />
@@ -1544,8 +1545,9 @@
             <forward name="genEDocBrowserInDocumentReport"	path="/provider/setEDocBrowserInDocumentReport.jsp"/>
             <forward name="genEDocBrowserInMasterFile"		path="/provider/setEDocBrowserInMasterFile.jsp"/>
             <forward name="genPatientNameLength" 			path="/provider/setPatientNameLength.jsp"/>
-            <forward name="genDisplayDocumentAs"		path="/provider/setDisplayDocumentAs.jsp"/>
+            <forward name="genDisplayDocumentAs"			path="/provider/setDisplayDocumentAs.jsp"/>
             <forward name="genCobalt"						path="/provider/setCobalt.jsp"/>
+            <forward name="genHideOldEchartLinkInAppt"		path="/provider/setHideOldEchartLinkInAppt.jsp"/>
         </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />

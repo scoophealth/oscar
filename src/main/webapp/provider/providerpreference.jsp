@@ -730,6 +730,12 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
      <tr>
         <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewCobalt');return false;"><bean:message key="provider.btnSetCobalt"/></a></td>
     </tr>
+    <% if(OscarProperties.getInstance().isPropertyActive("SINGLE_PAGE_CHART")){%>
+    <tr>
+    	<td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewHideOldEchartLinkInAppt');return false;"><bean:message key="provider.btnHideOldEchartLinkInAppt"/></a></td>
+    </tr>
+    <% } %>
+    
 	 <oscar:oscarPropertiesCheck property="util.erx.enabled" value="true">
 	 	<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r">
         <tr>
