@@ -139,7 +139,7 @@ public class DispensaryAction extends DispatchAction {
 		request.setAttribute("productAmounts",productAmounts);
 		request.setAttribute("providerNames", providerNames);
 		request.setAttribute("details", details);
-		
+		request.setAttribute("id",id);
 
 	    return mapping.findForward("list");
 	}
