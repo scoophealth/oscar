@@ -343,7 +343,7 @@ function validateLotNumbers() {
 
 	function deleteDispensingEvent(id) {
 		if(confirm("Are you sure you want to delete this record?")) {
-			location.href="<%=request.getContextPath()%>/oscarRx/Dispense.do?method=delete&eventId=" + id + "&id=" + <%=request.getParameter("id")%>;
+			location.href="<%=request.getContextPath()%>/oscarRx/Dispense.do?method=delete&eventId=" + id + "&id=" + <%=request.getAttribute("id")%>;
 		}
 	}
 </script>
