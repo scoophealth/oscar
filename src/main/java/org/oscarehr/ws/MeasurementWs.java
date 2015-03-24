@@ -59,8 +59,8 @@ public class MeasurementWs extends AbstractWs {
 		return (MeasurementTransfer.toTransfer(measurement));
 	}
 
-	public MeasurementTransfer[] getMeasurementsCreatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Measurement> results = measurementManager.getCreatedAfterDate(getLoggedInInfo(), updatedAfterThisDateInclusive, itemsToReturn);
+	public MeasurementTransfer[] getMeasurementsCreatedAfterDate(Date updatedAfterThisDateExclusive, int itemsToReturn) {
+		List<Measurement> results = measurementManager.getCreatedAfterDate(getLoggedInInfo(), updatedAfterThisDateExclusive, itemsToReturn);
 		return (MeasurementTransfer.toTransfers(results));
 	}
 
@@ -79,8 +79,8 @@ public class MeasurementWs extends AbstractWs {
 		return (measurement.getId());
 	}
 
-	public MeasurementTransfer[] getMeasurementsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Measurement> measurements = measurementManager.getMeasurementsByProgramProviderDemographicDate(getLoggedInInfo(), programId, providerNo, demographicId, updatedAfterThisDateInclusive, itemsToReturn);
+	public MeasurementTransfer[] getMeasurementsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
+		List<Measurement> measurements = measurementManager.getMeasurementsByProgramProviderDemographicDate(getLoggedInInfo(), programId, providerNo, demographicId, updatedAfterThisDateExclusive, itemsToReturn);
 		return (MeasurementTransfer.toTransfers(measurements));
 	}
 

@@ -66,10 +66,10 @@ public class PrescriptionManager {
 		return (result);
 	}
 
-	public List<Prescription> getPrescriptionUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Prescription> results = prescriptionDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
+	public List<Prescription> getPrescriptionUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateExclusive, int itemsToReturn) {
+		List<Prescription> results = prescriptionDao.findByUpdateDate(updatedAfterThisDateExclusive, itemsToReturn);
 
-		LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
+		LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionUpdatedAfterDate", "updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
 
 		return (results);
 	}
@@ -165,10 +165,10 @@ public class PrescriptionManager {
 	/**
 	 * ProgramId is currently ignored as oscar does not support tracking by program yet.
 	 */
-	public List<Prescription> getPrescriptionsByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
-		List<Prescription> results = prescriptionDao.findByProviderDemographicLastUpdateDate(providerNo, demographicId, updatedAfterThisDateInclusive, itemsToReturn);
+	public List<Prescription> getPrescriptionsByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
+		List<Prescription> results = prescriptionDao.findByProviderDemographicLastUpdateDate(providerNo, demographicId, updatedAfterThisDateExclusive, itemsToReturn);
 
-		LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionsByProgramProviderDemographicDate", "programId=" + programId+", providerNo="+providerNo+", demographicId="+demographicId+", updatedAfterThisDateInclusive="+updatedAfterThisDateInclusive.getTime());
+		LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionsByProgramProviderDemographicDate", "programId=" + programId+", providerNo="+providerNo+", demographicId="+demographicId+", updatedAfterThisDateExclusive="+updatedAfterThisDateExclusive.getTime());
 
 		return (results);
 	}

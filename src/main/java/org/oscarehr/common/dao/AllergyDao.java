@@ -112,15 +112,15 @@ public class AllergyDao extends AbstractDao<Allergy> {
 	/**
 	 * @return results ordered by lastUpdateDate asc
 	 */
-	public List<Allergy> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+	public List<Allergy> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
 		// the providerNo field is always blank right now... we have no idea which provider did the allery entry
-		// String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 and x.providerNo=?2 and x.lastUpdateDate>=?3 order by x.lastUpdateDate";
+		// String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 and x.providerNo=?2 and x.lastUpdateDate>?3 order by x.lastUpdateDate";
 
-		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 and x.lastUpdateDate>=?2 order by x.lastUpdateDate";
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 and x.lastUpdateDate>?2 order by x.lastUpdateDate";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, demographicId);
-		query.setParameter(2, updatedAfterThisDateInclusive);
+		query.setParameter(2, updatedAfterThisDateExclusive);
 		setLimit(query, itemsToReturn);
 		
 		@SuppressWarnings("unchecked")

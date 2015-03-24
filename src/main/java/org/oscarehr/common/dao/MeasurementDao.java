@@ -63,11 +63,11 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	/**
 	 * @return results ordered by createDate
 	 */
-	public List<Measurement> findByCreateDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
-		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.createDate>=?1 order by x.createDate";
+	public List<Measurement> findByCreateDate(Date updatedAfterThisDateExclusive, int itemsToReturn) {
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.createDate>?1 order by x.createDate";
 
 		Query query = entityManager.createQuery(sqlCommand);
-		query.setParameter(1, updatedAfterThisDateInclusive);
+		query.setParameter(1, updatedAfterThisDateExclusive);
 		setLimit(query, itemsToReturn);
 		
 		@SuppressWarnings("unchecked")
@@ -708,13 +708,13 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		return results;
 	}
 
-	public List<Measurement> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Calendar afterThisDateInclusive, int itemsToReturn) {
-		String sql = "select x from "+modelClass.getSimpleName()+" x where x.providerNo=:providerNo and x.demographicId=:demographicId and x.createDate>=:createDate order by x.createDate";
+	public List<Measurement> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
+		String sql = "select x from "+modelClass.getSimpleName()+" x where x.providerNo=:providerNo and x.demographicId=:demographicId and x.createDate>=:updatedAfterThisDateExclusive order by x.createDate";
 
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("providerNo", providerNo);
 		query.setParameter("demographicId", demographicId);
-		query.setParameter("createDate", afterThisDateInclusive);
+		query.setParameter("updatedAfterThisDateExclusive", updatedAfterThisDateExclusive);
 
 		setLimit(query, itemsToReturn);
 

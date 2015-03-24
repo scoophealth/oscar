@@ -73,11 +73,11 @@ public class PrescriptionDao extends AbstractDao<Prescription> {
 	/**
 	 * @return results ordered by lastUpdateDate
 	 */
-	public List<Prescription> findByUpdateDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
-		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.lastUpdateDate>=?1 order by x.lastUpdateDate";
+	public List<Prescription> findByUpdateDate(Date updatedAfterThisDateExclusive, int itemsToReturn) {
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.lastUpdateDate>?1 order by x.lastUpdateDate";
 
 		Query query = entityManager.createQuery(sqlCommand);
-		query.setParameter(1, updatedAfterThisDateInclusive);
+		query.setParameter(1, updatedAfterThisDateExclusive);
 		setLimit(query, itemsToReturn);
 		
 		@SuppressWarnings("unchecked")
@@ -88,13 +88,13 @@ public class PrescriptionDao extends AbstractDao<Prescription> {
 	/**
 	 * @return results ordered by lastUpdateDate asc
 	 */
-	public List<Prescription> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
-		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=:demographicId and x.providerNo=:providerNo and x.lastUpdateDate>=:lastUpdateDate order by x.lastUpdateDate";
+	public List<Prescription> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=:demographicId and x.providerNo=:providerNo and x.lastUpdateDate>=:updatedAfterThisDateExclusive order by x.lastUpdateDate";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter("demographicId", demographicId);
 		query.setParameter("providerNo", providerNo);
-		query.setParameter("lastUpdateDate", updatedAfterThisDateInclusive);
+		query.setParameter("updatedAfterThisDateExclusive", updatedAfterThisDateExclusive);
 		setLimit(query, itemsToReturn);
 		
 		@SuppressWarnings("unchecked")

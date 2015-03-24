@@ -58,15 +58,15 @@ public class PrescriptionWs extends AbstractWs {
 		return (null);
 	}
 	
-	public PrescriptionTransfer[] getPrescriptionUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+	public PrescriptionTransfer[] getPrescriptionUpdatedAfterDate(Date updatedAfterThisDateExclusive, int itemsToReturn) {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
-		List<Prescription> prescriptions=prescriptionManager.getPrescriptionUpdatedAfterDate(loggedInInfo,updatedAfterThisDateInclusive, itemsToReturn);
+		List<Prescription> prescriptions=prescriptionManager.getPrescriptionUpdatedAfterDate(loggedInInfo,updatedAfterThisDateExclusive, itemsToReturn);
 		return(PrescriptionTransfer.getTransfers(loggedInInfo, prescriptions));
 	}
 
-	public PrescriptionTransfer[] getPrescriptionsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+	public PrescriptionTransfer[] getPrescriptionsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
-		List<Prescription> prescriptions=prescriptionManager.getPrescriptionsByProgramProviderDemographicDate(loggedInInfo,programId,providerNo,demographicId,updatedAfterThisDateInclusive, itemsToReturn);
+		List<Prescription> prescriptions=prescriptionManager.getPrescriptionsByProgramProviderDemographicDate(loggedInInfo,programId,providerNo,demographicId,updatedAfterThisDateExclusive, itemsToReturn);
 		return(PrescriptionTransfer.getTransfers(loggedInInfo, prescriptions));
 	}
 

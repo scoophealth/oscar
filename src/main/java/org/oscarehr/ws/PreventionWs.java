@@ -59,15 +59,15 @@ public class PreventionWs extends AbstractWs {
 		return (null);
 	}
 
-	public PreventionTransfer[] getPreventionsUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
+	public PreventionTransfer[] getPreventionsUpdatedAfterDate(Date updatedAfterThisDateExclusive, int itemsToReturn) {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
-		List<Prevention> preventions=preventionManager.getUpdatedAfterDate(loggedInInfo,updatedAfterThisDateInclusive, itemsToReturn);
+		List<Prevention> preventions=preventionManager.getUpdatedAfterDate(loggedInInfo,updatedAfterThisDateExclusive, itemsToReturn);
 		return(PreventionTransfer.getTransfers(loggedInInfo, preventions));
 	}
 	
-	public PreventionTransfer[] getPreventionsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
+	public PreventionTransfer[] getPreventionsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
-		List<Prevention> preventions=preventionManager.getPreventionsByProgramProviderDemographicDate(getLoggedInInfo(),programId,providerNo,demographicId,updatedAfterThisDateInclusive,itemsToReturn);
+		List<Prevention> preventions=preventionManager.getPreventionsByProgramProviderDemographicDate(getLoggedInInfo(),programId,providerNo,demographicId,updatedAfterThisDateExclusive,itemsToReturn);
 		return(PreventionTransfer.getTransfers(loggedInInfo,preventions));
 	}
 
