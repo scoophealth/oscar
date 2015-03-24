@@ -143,18 +143,18 @@ public class ScheduleWs extends AbstractWs {
 		return (AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 
-	public AppointmentTransfer[] getAppointmentsUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn, boolean useGMTTime) {
-		List<Appointment> appointments=scheduleManager.getAppointmentUpdatedAfterDate(getLoggedInInfo(),updatedAfterThisDateInclusive, itemsToReturn);
+	public AppointmentTransfer[] getAppointmentsUpdatedAfterDate(Date updatedAfterThisDateExclusive, int itemsToReturn, boolean useGMTTime) {
+		List<Appointment> appointments=scheduleManager.getAppointmentUpdatedAfterDate(getLoggedInInfo(),updatedAfterThisDateExclusive, itemsToReturn);
 		return(AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 
-	public AppointmentArchiveTransfer[] getAppointmentArchivesUpdatedAfterDate(Date updatedAfterThisDateInclusive, int itemsToReturn, boolean useGMTTime) {
-		List<AppointmentArchive> appointments=scheduleManager.getAppointmentArchiveUpdatedAfterDate(getLoggedInInfo(),updatedAfterThisDateInclusive, itemsToReturn);
+	public AppointmentArchiveTransfer[] getAppointmentArchivesUpdatedAfterDate(Date updatedAfterThisDateExclusive, int itemsToReturn, boolean useGMTTime) {
+		List<AppointmentArchive> appointments=scheduleManager.getAppointmentArchiveUpdatedAfterDate(getLoggedInInfo(),updatedAfterThisDateExclusive, itemsToReturn);
 		return(AppointmentArchiveTransfer.toTransfers(appointments, useGMTTime));
 	}
 
-	public AppointmentTransfer[] getAppointmentsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn, boolean useGMTTime) {
-		List<Appointment> appointments = scheduleManager.getAppointmentsByProgramProviderDemographicDate(getLoggedInInfo(),programId, providerNo, demographicId, updatedAfterThisDate, itemsToReturn);
+	public AppointmentTransfer[] getAppointmentsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn, boolean useGMTTime) {
+		List<Appointment> appointments = scheduleManager.getAppointmentsByProgramProviderDemographicDate(getLoggedInInfo(),programId, providerNo, demographicId, updatedAfterThisDateExclusive, itemsToReturn);
 		return (AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 	

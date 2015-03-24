@@ -133,11 +133,11 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	/**
 	 * @return results ordered by lastUpdateDate
 	 */
-	public List<Appointment> findByUpdateDate(Date updatedAfterThisDateInclusive, int itemsToReturn) {
-		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.updateDateTime>=?1 order by x.updateDateTime";
+	public List<Appointment> findByUpdateDate(Date updatedAfterThisDateExclusive, int itemsToReturn) {
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.updateDateTime>?1 order by x.updateDateTime";
 
 		Query query = entityManager.createQuery(sqlCommand);
-		query.setParameter(1, updatedAfterThisDateInclusive);
+		query.setParameter(1, updatedAfterThisDateExclusive);
 		setLimit(query, itemsToReturn);
 		
 		@SuppressWarnings("unchecked")
