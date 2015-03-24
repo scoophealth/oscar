@@ -2190,6 +2190,76 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 		return actionmapping.findForward("genCobalt");
     }
     
+    
+    public ActionForward viewHideOldEchartLinkInAppt(ActionMapping actionmapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm frm = (DynaActionForm)actionform;
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+		UserProperty prop = this.userPropertyDAO.getProp(providerNo, UserProperty.HIDE_OLD_ECHART_LINK_IN_APPT);
+
+		String propValue="";
+		if (prop == null){
+			prop = new UserProperty();
+		}else{
+			propValue=prop.getValue();
+		}
+
+		boolean checked;
+		if(propValue.equals("Y"))
+			checked=true;
+		else
+			checked=false;
+
+		prop.setChecked(checked);
+		request.setAttribute("hideOldEchartLinkInApptProperty", prop);
+		request.setAttribute("providertitle","provider.hideOldEchartLinkInAppt.title"); //=Hide Old Echart Link in Appointment
+		request.setAttribute("providermsgPrefs","provider.hideOldEchartLinkInAppt.msgPrefs"); //=Preferences
+		request.setAttribute("providerbtnSubmit","provider.hideOldEchartLinkInAppt.btnSubmit"); //=Save
+		request.setAttribute("providerbtnCancel","provider.hideOldEchartLinkInAppt.btnCancel"); //=Cancel
+		request.setAttribute("method","saveHideOldEchartLinkInAppt");
+
+		frm.set("hideOldEchartLinkInApptProperty", prop);
+
+		return actionmapping.findForward("genHideOldEchartLinkInAppt");
+    }
+    
+
+    public ActionForward saveHideOldEchartLinkInAppt(ActionMapping actionmapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+    	DynaActionForm frm=(DynaActionForm)actionform;
+    	UserProperty Uprop=(UserProperty)frm.get("hideOldEchartLinkInApptProperty");
+
+		boolean checked=false;
+		if(Uprop!=null)
+			checked = Uprop.isChecked();
+		UserProperty prop=this.userPropertyDAO.getProp(providerNo, UserProperty.HIDE_OLD_ECHART_LINK_IN_APPT);
+		if(prop==null){
+			prop=new UserProperty();
+			prop.setName(UserProperty.HIDE_OLD_ECHART_LINK_IN_APPT);
+			prop.setProviderNo(providerNo);
+		}
+		String propValue="N";
+		if(checked) propValue="Y";
+
+		prop.setValue(propValue);
+		this.userPropertyDAO.saveProp(prop);
+
+		request.setAttribute("status", "success");
+		request.setAttribute("hideOldEchartLinkInApptProperty",prop);
+		request.setAttribute("providertitle","provider.hideOldEchartLinkInAppt.title"); //=Hide Old Echart Link in Appointment
+		request.setAttribute("providermsgPrefs","provider.hideOldEchartLinkInAppt.msgPrefs"); //=Preferences
+		request.setAttribute("providerbtnClose","provider.hideOldEchartLinkInAppt.btnClose"); //=Close
+		if(checked)
+			request.setAttribute("providermsgSuccess","provider.hideOldEchartLinkInAppt.msgSuccess_selected"); //=Old Echart Link Hidden in Appointment
+		else
+			request.setAttribute("providermsgSuccess","provider.hideOldEchartLinkInAppt.msgSuccess_unselected"); //Old Echart Link Shown in Appointment
+		request.setAttribute("method","saveHideOldEchartLinkInAppt");
+
+		return actionmapping.findForward("genHideOldEchartLinkInAppt");
+    }
+
+    
     /**
      * Creates a new instance of ProviderPropertyAction
      */
