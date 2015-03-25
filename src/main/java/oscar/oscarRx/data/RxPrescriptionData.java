@@ -70,7 +70,7 @@ public class RxPrescriptionData {
 				}
 			}
 		} else {
-			logger.error("Drugs special field was null, this means nothing will print.", new IllegalStateException("Drugs special field was null."));
+			logger.warn("Drugs special field was null, this means nothing will print.");
 		}
 
 		return ret;
@@ -133,7 +133,7 @@ public class RxPrescriptionData {
 		if (drug.getRefillQuantity() != null) prescription.setRefillQuantity(drug.getRefillQuantity());
 
 		if (prescription.getSpecial() == null || prescription.getSpecial().length() <= 6) {
-			logger.error("I strongly suspect something is wrong, either special is null or it appears to not contain anything useful. drugId=" + drugId + ", drug.special=" + prescription.getSpecial(), new IllegalStateException("Drug special is blank or invalid"));
+			logger.warn("I strongly suspect something is wrong, either special is null or it appears to not contain anything useful. drugId=" + drugId + ", drug.special=" + prescription.getSpecial());
 			logger.error("data from db is : " + drug.getSpecial());
 		}
 		prescription.setDispenseInternal(drug.getDispenseInternal());
@@ -333,7 +333,7 @@ public class RxPrescriptionData {
 		for (Object[] pair : dao.findDrugsAndPrescriptions(demographicNo)) {
 			Drug drug = (Drug) pair[0];
 			org.oscarehr.common.model.Prescription rx = (org.oscarehr.common.model.Prescription) pair[1];
-			MiscUtils.getLogger().info("Looking at drug " + drug + " and rx " + rx);
+			MiscUtils.getLogger().debug("Looking at drug " + drug + " and rx " + rx);
 			lst.add(toPrescription(demographicNo, drug, rx));
 		}
 		return lst.toArray(new Prescription[lst.size()]);
@@ -544,7 +544,7 @@ public class RxPrescriptionData {
 
 			String fullOutLine = rx.getFullOutLine();
 			if (fullOutLine == null || fullOutLine.length() < 6) {
-				logger.error("Drug full outline appears to be null or empty : " + fullOutLine, new IllegalStateException("full out line appears wrong"));
+				logger.warn("Drug full outline appears to be null or empty : " + fullOutLine);
 			}
 
 			txt = fullOutLine.replaceAll(";", "\n");
@@ -1253,7 +1253,7 @@ public class RxPrescriptionData {
 				// it was tracked down to some code which required a special, but we couldn't figure out why a special was required or missing.
 				// so now we have code to log an error when a drug is missing a special, we still don't know why it's required or missing
 				// but at least we know which drug does it.
-				logger.error("Some one is retrieving the drug special but it appears to be blank : " + special, new IllegalStateException());
+				logger.warn("Some one is retrieving the drug special but it appears to be blank : " + special);
 			}
 
 			return special;
@@ -1279,7 +1279,7 @@ public class RxPrescriptionData {
 
 			//if (RHS == null || RHS.length() < 6) {
 			if (RHS == null || RHS.length() < 4) {
-				logger.error("Some one is setting the drug special but it appears to be blank : " + special, new IllegalStateException());
+				logger.warn("Some one is setting the drug special but it appears to be blank : " + special);
 			}
 
 			if (RHS != null) {
@@ -1294,7 +1294,7 @@ public class RxPrescriptionData {
 
 			//if (special == null || special.length() < 6) {
 			if (special == null || special.length() < 4) {
-				logger.error("after processing the drug special but it appears to be blank : " + special, new IllegalStateException());
+				logger.warn("after processing the drug special but it appears to be blank : " + special);
 			}
 		}
 
@@ -1526,12 +1526,12 @@ public class RxPrescriptionData {
 			// clean up fields
 			if (this.takeMin > this.takeMax) this.takeMax = this.takeMin;
 
-			if (getSpecial() == null || getSpecial().length() < 6) logger.error("drug special appears to be null or empty : " + getSpecial(), new IllegalStateException("Drug special is invalid."));
+			if (getSpecial() == null || getSpecial().length() < 6) logger.warn("drug special appears to be null or empty : " + getSpecial());
 
 			//  String parsedSpecial = RxUtil.replace(this.getSpecial(), "'", "");//a bug?
 			String escapedSpecial = StringEscapeUtils.escapeSql(this.getSpecial());
 
-			if (escapedSpecial == null || escapedSpecial.length() < 6) logger.error("drug special after escaping appears to be null or empty : " + escapedSpecial, new IllegalStateException("Drug special is invalid after escaping."));			
+			if (escapedSpecial == null || escapedSpecial.length() < 6) logger.warn("drug special after escaping appears to be null or empty : " + escapedSpecial);
 
 			// check to see if there is an identitical prescription in
 			// the database. If there is we'll return that drugid instead
@@ -2090,12 +2090,12 @@ public class RxPrescriptionData {
 			}
 			if (getSpecial() == null || getSpecial().length() < 4) {
 				//if (getSpecial() == null || getSpecial().length() < 6) {
-				logger.error("drug special appears to be null or empty : " + getSpecial(), new IllegalStateException("Drug special is invalid."));
+				logger.warn("drug special appears to be null or empty : " + getSpecial());
 			}
 			String parsedSpecial = RxUtil.replace(this.getSpecial(), "'", "");
 			//if (parsedSpecial == null || parsedSpecial.length() < 6) {
 			if (parsedSpecial == null || parsedSpecial.length() < 4) {
-				logger.error("drug special after parsing appears to be null or empty : " + parsedSpecial, new IllegalStateException("Drug special is invalid after parsing."));
+				logger.warn("drug special after parsing appears to be null or empty : " + parsedSpecial);
 			}
 
 			FavoriteDao dao = SpringUtils.getBean(FavoriteDao.class);
