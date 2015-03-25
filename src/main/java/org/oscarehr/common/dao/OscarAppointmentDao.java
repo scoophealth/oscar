@@ -711,4 +711,19 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return results;
     }
 
+    /**
+     * @param programId can be null for all
+     */
+	public List<Integer> findAllDemographicIdByProgramProvider(Integer programId, String providerNo) {
+		String sql = "select distinct(x.demographicNo)from Appointment x where x.providerNo=?1"+(programId==null?"":" and x.programId=?2");
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, providerNo);
+		if (programId!=null) query.setParameter(2, programId);
+
+		setDefaultLimit(query);
+		
+		List<Integer> rs = query.getResultList();
+		return rs;
+	}
+
 }

@@ -172,4 +172,9 @@ public class ScheduleWs extends AbstractWs {
 		
 		return(cal);
 	}
+	
+	public Integer[] getAllDemographicIdByProgramProvider(Integer programId, String providerNo) {
+		List<Integer> results=scheduleManager.getAllDemographicIdByProgramProvider(getLoggedInInfo(), programId, providerNo);
+		return(results.toArray(new Integer[0]));
+	}
 }

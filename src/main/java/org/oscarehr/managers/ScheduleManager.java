@@ -272,4 +272,12 @@ public class ScheduleManager {
 
 		return (results);
 	}
+	
+	public List<Integer> getAllDemographicIdByProgramProvider(LoggedInInfo loggedInInfo, Integer programId, String providerNo) {
+		List<Integer> results = oscarAppointmentDao.findAllDemographicIdByProgramProvider(programId, providerNo);
+
+		LogAction.addLogSynchronous(loggedInInfo, "ScheduleManager.getAllDemographicIdByProgramProvider", "programId=" + programId+", providerNo="+providerNo);
+
+		return (results);
+	}
 }
