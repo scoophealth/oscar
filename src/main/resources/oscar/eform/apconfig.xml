@@ -55,7 +55,11 @@
         <ap-sql>SELECT '${provider}' AS providerId</ap-sql>
         <ap-output>${providerId}</ap-output>
     </databaseap>
-
+    <databaseap>
+	<ap-name>current_user_signature</ap-name>
+	<ap-sql>SELECT providerExt.signature FROM providerExt WHERE providerExt.provider_no='${provider}' </ap-sql>
+	<ap-output>${signature}</ap-output>
+    </databaseap>
 <!-- Patient demographic information -->
     <databaseap>
         <ap-name>patient_name</ap-name>
@@ -402,6 +406,11 @@
         <ap-output>${practitionerNo}</ap-output>
     </databaseap>
     <databaseap>
+	<ap-name>doctor_title</ap-name>
+	<ap-sql>SELECT provider.title FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+	<ap-output>${title}</ap-output>
+    </databaseap>
+    <databaseap>
         <ap-name>provider_name</ap-name>
         <ap-sql>SELECT provider.last_name, provider.first_name FROM provider, demographic
                 WHERE demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
@@ -418,6 +427,12 @@
         <ap-sql>SELECT provider.work_phone FROM provider, demographic
                 WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
         <ap-output>${work_phone}</ap-output>
+    </databaseap>
+    <databaseap>
+	<ap-name>doctor_signature</ap-name>
+	<ap-sql>SELECT providerExt.signature FROM providerExt, demographic
+	WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=providerExt.provider_no</ap-sql>
+	<ap-output>${signature}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>appt_provider_name</ap-name>
