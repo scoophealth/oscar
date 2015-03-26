@@ -24,7 +24,6 @@
 
 package org.oscarehr.common.dao;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -112,7 +111,7 @@ public class AllergyDao extends AbstractDao<Allergy> {
 	/**
 	 * @return results ordered by lastUpdateDate asc
 	 */
-	public List<Allergy> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
+	public List<Allergy> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Date updatedAfterThisDateExclusive, int itemsToReturn) {
 		// the providerNo field is always blank right now... we have no idea which provider did the allery entry
 		// String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 and x.providerNo=?2 and x.lastUpdateDate>?3 order by x.lastUpdateDate";
 
