@@ -11,8 +11,6 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -72,9 +70,7 @@ public class ImagePDFCreator extends PdfPageEventHelper {
 		PdfWriter writer = PdfWriterFactory.newInstance(document, os, FontSettings.HELVETICA_6PT);
 
 		
-		document.setPageSize(PageSize.LETTER);
-		ResourceBundle.getBundle("oscarResources",request.getLocale())
-			.getString("oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgImage");
+		document.setPageSize(PageSize.LETTER);		
 		document.addCreator("OSCAR");
 		document.open();
 		
