@@ -43,6 +43,7 @@ import org.oscarehr.billing.CA.BC.model.Hl7Obr;
 import org.oscarehr.billing.CA.BC.model.Hl7Orc;
 import org.oscarehr.billing.CA.BC.model.Hl7Pid;
 import org.oscarehr.common.dao.ConsultDocsDao;
+import org.oscarehr.common.dao.ConsultResponseDocDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.PatientLabRouting;
@@ -58,33 +59,54 @@ import oscar.util.UtilDateUtilities;
  * @author Jay Gallagher
  */
 public class PathnetResultsData {
+	private ConsultDocsDao consultDocsDao = SpringUtils.getBean(ConsultDocsDao.class);
+	private ConsultResponseDocDao consultResponseDocDao = SpringUtils.getBean(ConsultResponseDocDao.class);
+	private Hl7MessageDao hl7MsgDao = SpringUtils.getBean(Hl7MessageDao.class);
+	private Hl7MshDao hl7MshDao = SpringUtils.getBean(Hl7MshDao.class);
+	private Hl7ObrDao hl7ObrDao = SpringUtils.getBean(Hl7ObrDao.class);
+	private Hl7ObxDao hl7ObxDao = SpringUtils.getBean(Hl7ObxDao.class);
+	private Hl7OrcDao hl7OrcDao = SpringUtils.getBean(Hl7OrcDao.class);
+	private Hl7PidDao hl7PidDao = SpringUtils.getBean(Hl7PidDao.class);
 
 	Logger logger = Logger.getLogger(PathnetResultsData.class);
 
-	public PathnetResultsData() {
-	}
-
 	/**
-	 *Populates ArrayList with labs attached to a consultation request
+	 * Populates ArrayList with labs attached to a consultation
 	 */
+	// Populates labs for consult request
 	public ArrayList<LabResultData> populatePathnetResultsData(String demographicNo, String consultationId, boolean attached) {
+		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
+		for (Object[] o : consultDocsDao.findLabs(ConversionUtils.fromIntString(consultationId))) {
+			ConsultDocs c = (ConsultDocs) o[0];
+			LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
+			lbData.labPatientId = "" + c.getDocumentNo();
+			attachedLabs.add(lbData);
+		}
+		List<Object[]> labsBCP = hl7MsgDao.findByDemographicAndLabType(ConversionUtils.fromIntString(demographicNo), "BCP");
+		return populatePathnetResultsData(attachedLabs, labsBCP, attached);
+	}
+	
+	// Populates labs for consult response
+	public ArrayList<LabResultData> populatePathnetResultsDataConsultResponse(String demographicNo, String consultationId, boolean attached) {
+		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
+		for (Object[] o : consultResponseDocDao.findLabs(ConversionUtils.fromIntString(consultationId))) {
+			ConsultDocs c = (ConsultDocs) o[0];
+			LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
+			lbData.labPatientId = "" + c.getDocumentNo();
+			attachedLabs.add(lbData);
+		}
+		List<Object[]> labsBCP = hl7MsgDao.findByDemographicAndLabType(ConversionUtils.fromIntString(demographicNo), "BCP");
+		return populatePathnetResultsData(attachedLabs, labsBCP, attached);
+	}
+	
+	// Populates labs private shared method
+	private ArrayList<LabResultData> populatePathnetResultsData(List<LabResultData> attachedLabs, List<Object[]> labsBCP, boolean attached) {
 		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
-		ArrayList<LabResultData> attachedLabs = new ArrayList<LabResultData>();
 		try {
-			ConsultDocsDao dao = SpringUtils.getBean(ConsultDocsDao.class);
-			for (Object[] o : dao.findDocs(ConversionUtils.fromIntString(consultationId))) {
-				ConsultDocs c = (ConsultDocs) o[0];
-
-				LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
-				lbData.labPatientId = "" + c.getDocumentNo();
-				attachedLabs.add(lbData);
-			}
-
 			LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
 			LabResultData.CompareId c = lbData.getComparatorId();
 
-			Hl7MessageDao hmDao = SpringUtils.getBean(Hl7MessageDao.class);
-			for (Object[] o : hmDao.findByDemographicAndLabType(ConversionUtils.fromIntString(demographicNo), "BCP")) {
+			for (Object[] o : labsBCP) {
 				Hl7Message m = (Hl7Message) o[0];
 				PatientLabRouting r = (PatientLabRouting) o[1];
 
@@ -104,6 +126,10 @@ public class PathnetResultsData {
 		}
 		return labResults;
 	}
+	/**
+	 * End Populates labs attached to consultation
+	 */
+	
 
 	public ArrayList<LabResultData> populatePathnetResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, Integer labNo) {
 		if (providerNo == null) {
@@ -124,17 +150,15 @@ public class PathnetResultsData {
 
 		ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
 		try {
-			Hl7MshDao dao = SpringUtils.getBean(Hl7MshDao.class);
-
 			List<Object[]> pathnetResultsData = null;
 
 			if(labNo != null && labNo.intValue()>0) {
-				pathnetResultsData  = dao.findPathnetResultsByLabNo(labNo);
+				pathnetResultsData  = hl7MshDao.findPathnetResultsByLabNo(labNo);
 			} else {
 				if (demographicNo == null) {
-					pathnetResultsData = dao.findPathnetResultsDataByPatientNameHinStatusAndProvider(patientLastName + "%^" + patientFirstName + "%", "%" + patientHealthNumber + "%", "%" + status + "%", providerNo.equals("") ? "%" : providerNo, "BCP");
+					pathnetResultsData = hl7MshDao.findPathnetResultsDataByPatientNameHinStatusAndProvider(patientLastName + "%^" + patientFirstName + "%", "%" + patientHealthNumber + "%", "%" + status + "%", providerNo.equals("") ? "%" : providerNo, "BCP");
 				} else {
-					pathnetResultsData = dao.findPathnetResultsDeomgraphicNo(ConversionUtils.fromIntString(demographicNo), "BCP");
+					pathnetResultsData = hl7MshDao.findPathnetResultsDeomgraphicNo(ConversionUtils.fromIntString(demographicNo), "BCP");
 				}
 			}
 
@@ -187,8 +211,7 @@ public class PathnetResultsData {
 	}
 
 	public String findPathnetObservationDate(String labId) {
-		Hl7PidDao dao = SpringUtils.getBean(Hl7PidDao.class);
-		Date date = dao.findObservationDateByMessageId(ConversionUtils.fromIntString(labId));
+		Date date = hl7PidDao.findObservationDateByMessageId(ConversionUtils.fromIntString(labId));
 		if (date != null) {
 			return ConversionUtils.toDateString(date);
 		}
@@ -229,10 +252,8 @@ public class PathnetResultsData {
 		int monthsBetween = 0;
 
 		try {
-			Hl7OrcDao orcDao = SpringUtils.getBean(Hl7OrcDao.class);
-
 			// find the accession number
-			for (Object[] o : orcDao.findFillerAndStatusChageByMessageId(ConversionUtils.fromIntString(labDate))) {
+			for (Object[] o : hl7OrcDao.findFillerAndStatusChageByMessageId(ConversionUtils.fromIntString(labDate))) {
 				String fillerOrderNumber = String.valueOf(o[0]);
 				Date date = (Date) o[1];
 				accessionNum = justGetAccessionNumber(fillerOrderNumber);
@@ -287,8 +308,7 @@ public class PathnetResultsData {
 	}
 
 	public String findPathnetStatus(String labId) {
-		Hl7ObrDao dao = SpringUtils.getBean(Hl7ObrDao.class);
-		for (Object[] o : dao.findMinResultStatusByMessageId(ConversionUtils.fromIntString(labId))) {
+		for (Object[] o : hl7ObrDao.findMinResultStatusByMessageId(ConversionUtils.fromIntString(labId))) {
 			return String.valueOf(o[0]);
 		}
 		return "";
@@ -315,7 +335,6 @@ public class PathnetResultsData {
 	}
 
 	public int findPathnetAdnormalResults(String labId) {
-		Hl7ObxDao dao = SpringUtils.getBean(Hl7ObxDao.class);
-		return dao.findByMessageIdAndAbnormalFlags(ConversionUtils.fromIntString(labId), Arrays.asList(new String[] { "A", "H", "HH", "L" })).size();
+		return hl7ObxDao.findByMessageIdAndAbnormalFlags(ConversionUtils.fromIntString(labId), Arrays.asList(new String[] { "A", "H", "HH", "L" })).size();
 	}
 }

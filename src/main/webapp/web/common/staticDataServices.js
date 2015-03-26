@@ -914,7 +914,7 @@ angular.module("staticDataServices", [])
 				return questions;
 			},
 
-			getConsultRequestUrgencies: function() {
+			getConsultUrgencies: function() {
 				var urgencies = [];
 				urgencies.push({value:2, name:"Non-Urgent"});
 				urgencies.push({value:1, name:"Urgent"});
@@ -924,8 +924,20 @@ angular.module("staticDataServices", [])
 			
 			getConsultRequestStatuses: function() {
 				var statuses = [];
-				statuses.push({value:1, name:"Nothing"});
-				statuses.push({value:2, name:"Pending Specialist Callback"});
+				statuses.push({value:1, name:"Not Complete"});
+				statuses.push({value:2, name:"Preliminary Pending Specialist"});
+				statuses.push({value:3, name:"Pending Callback"});
+				statuses.push({value:4, name:"Completed"});
+				statuses.push({value:5, name:"Cancelled"});
+				statuses.push({value:6, name:"Appointment Booked"});
+				statuses.push({value:7, name:"Deleted"});
+				return statuses;
+			},
+			
+			getConsultResponseStatuses: function() {
+				var statuses = [];
+				statuses.push({value:1, name:"Not Complete"});
+				statuses.push({value:2, name:"Pending Referring Doctor Callback"});
 				statuses.push({value:3, name:"Pending Patient Callback"});
 				statuses.push({value:4, name:"Completed"});
 				statuses.push({value:5, name:"Cancelled"});

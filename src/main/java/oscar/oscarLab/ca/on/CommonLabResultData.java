@@ -97,7 +97,18 @@ public class CommonLabResultData {
 		return new String[] { "MDS", "CML", "BCP", "HL7", "DOC", "Epsilon" };
 	}
 
+	//Populate Lab data for consultation request
 	public ArrayList<LabResultData> populateLabResultsData(String demographicNo, String reqId, boolean attach) {
+		return populateLabResultsData(demographicNo, reqId, attach, false);
+	}
+	
+	//Populate Lab data for consultation response
+	public ArrayList<LabResultData> populateLabResultsDataConsultResponse(String demographicNo, String respId, boolean attach) {
+		return populateLabResultsData(demographicNo, respId, attach, true);
+	}
+	
+	//Populate Lab data for consultation (private shared method)
+	private ArrayList<LabResultData> populateLabResultsData(String demographicNo, String consultId, boolean attach, boolean isConsultResponse) {
 		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
 		oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
 
@@ -110,25 +121,35 @@ public class CommonLabResultData {
 		String epsilon = op.getProperty("Epsilon_LABS");
 
 		if (cml != null && cml.trim().equals("yes")) {
-			ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(demographicNo, reqId, attach);
+			ArrayList<LabResultData> cmlLabs = isConsultResponse ?
+					mDSData.populateCMLResultsDataConsultResponse(demographicNo, consultId, attach) :
+						mDSData.populateCMLResultsData(demographicNo, consultId, attach);
 			labs.addAll(cmlLabs);
 		}
 		if (epsilon != null && epsilon.trim().equals("yes")) {
-			ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(demographicNo, reqId, attach);
+			ArrayList<LabResultData> cmlLabs = isConsultResponse ?
+					mDSData.populateCMLResultsDataConsultResponse(demographicNo, consultId, attach) :
+						mDSData.populateCMLResultsData(demographicNo, consultId, attach);
 			labs.addAll(cmlLabs);
 		}
 
 		if (mds != null && mds.trim().equals("yes")) {
-			ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(demographicNo, reqId, attach);
+			ArrayList<LabResultData> mdsLabs = isConsultResponse ?
+					mDSData.populateMDSResultsDataConsultResponse(demographicNo, consultId, attach) :
+						mDSData.populateMDSResultsData(demographicNo, consultId, attach);
 			labs.addAll(mdsLabs);
 		}
 		if (pathnet != null && pathnet.trim().equals("yes")) {
 			PathnetResultsData pathData = new PathnetResultsData();
-			ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(demographicNo, reqId, attach);
+			ArrayList<LabResultData> pathLabs = isConsultResponse ?
+					pathData.populatePathnetResultsDataConsultResponse(demographicNo, consultId, attach) :
+						pathData.populatePathnetResultsData(demographicNo, consultId, attach);
 			labs.addAll(pathLabs);
 		}
 		if (hl7text != null && hl7text.trim().equals("yes")) {
-			ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHL7ResultsData(demographicNo, reqId, attach);
+			ArrayList<LabResultData> hl7Labs = isConsultResponse ?
+					Hl7textResultsData.populateHL7ResultsDataConsultResponse(demographicNo, consultId, attach) :
+						Hl7textResultsData.populateHL7ResultsData(demographicNo, consultId, attach);
 			labs.addAll(hl7Labs);
 		}
 

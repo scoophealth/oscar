@@ -406,7 +406,7 @@ public class EctConsultationFormRequestAction extends Action {
     	Demographic demographic=demographicDao.getDemographicById(consultationRequest.getDemographicId());
 
     	//--- process all documents ---
-	    ArrayList<EDoc> attachments=EDocUtil.listDocs(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), true);
+	    ArrayList<EDoc> attachments=EDocUtil.listDocs(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), EDocUtil.ATTACHED);
 	    for (EDoc attachment : attachments)
 	    {
 	        ObservationData observationData=new ObservationData();

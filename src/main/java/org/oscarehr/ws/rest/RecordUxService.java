@@ -39,6 +39,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.managers.ConsultationManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -60,6 +61,9 @@ public class RecordUxService extends AbstractServiceImpl {
 	
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
+	
+	@Autowired
+	private ConsultationManager consultationManager;
 
 	/**
 	$scope.recordtabs2 = [ 
@@ -163,7 +167,12 @@ public class RecordUxService extends AbstractServiceImpl {
 		//}
 		
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.consultations", "r", null)) {
-			morelist.add(new MenuItemTo1(idCounter++, "Consultations", "consultRequests", demographicNo.toString()));
+			if (consultationManager.isConsultRequestEnabled() || !consultationManager.isConsultResponseEnabled()) {
+				morelist.add(new MenuItemTo1(idCounter++, "Consultation Requests", "consultRequests", demographicNo.toString()));
+			}
+			if (consultationManager.isConsultResponseEnabled()) {
+				morelist.add(new MenuItemTo1(idCounter++, "Consultation Responses", "consultResponses", demographicNo.toString()));
+			}
 		}
 		
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.documents", "r", null)) {

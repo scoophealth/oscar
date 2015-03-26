@@ -132,8 +132,7 @@ public class InboxManager {
 			}
 		}
 		roleName += "," + searchProviderNo;
-		// mDSData.populateMDSResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
-		// HashMap<String,String> docQueue=comLab.getDocumentQueueLinks();
+
 		List<QueueDocumentLink> qd = queueDocumentLinkDAO.getQueueDocLinks();
 		HashMap<String, String> docQueue = new HashMap<String, String>();
 		for (QueueDocumentLink qdl : qd) {

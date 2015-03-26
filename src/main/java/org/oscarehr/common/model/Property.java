@@ -40,6 +40,12 @@ import org.apache.commons.lang.StringUtils;
 @Table(name = "property")
 public class Property extends AbstractModel<Integer> implements Serializable {
 
+	public Property() {}
+	
+	public Property(String name) {
+		setName(name);
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;

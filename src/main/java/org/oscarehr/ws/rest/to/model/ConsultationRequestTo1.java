@@ -59,7 +59,7 @@ public class ConsultationRequestTo1 implements Serializable {
 	private String siteName;
 	private Date followUpDate;
 	private String signatureImg;
-	private String letterheadName;
+	private String letterheadName = DEFAULT_1;
 	private String letterheadAddress;
 	private String letterheadPhone;
 	private String letterheadFax;

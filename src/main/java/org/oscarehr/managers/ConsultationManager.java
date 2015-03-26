@@ -28,17 +28,25 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.oscarehr.common.dao.ConsultRequestDao;
+import org.oscarehr.common.dao.ConsultResponseDao;
+import org.oscarehr.common.dao.ConsultResponseDocDao;
 import org.oscarehr.common.dao.ConsultationServiceDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.model.ConsultResponseDoc;
 import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.common.model.ConsultationResponse;
 import org.oscarehr.common.model.ConsultationServices;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.common.model.Property;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.consultations.ConsultationDao;
-import org.oscarehr.consultations.ConsultationSearchFilter;
+import org.oscarehr.consultations.ConsultationRequestSearchFilter;
+import org.oscarehr.consultations.ConsultationResponseSearchFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.to.model.ConsultationRequestSearchResult;
+import org.oscarehr.ws.rest.to.model.ConsultationResponseSearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,39 +56,82 @@ import oscar.log.LogAction;
 public class ConsultationManager {
 
 	@Autowired
-	ConsultationDao consultationDao;
-	
+	ConsultRequestDao consultationRequestDao;
+	@Autowired
+	ConsultResponseDao consultationResponseDao;
 	@Autowired
 	ConsultationServiceDao serviceDao;
-	
 	@Autowired
 	ProfessionalSpecialistDao professionalSpecialistDao;
+	@Autowired
+	ConsultResponseDocDao responseDocDao;
+	@Autowired
+	PropertyDao propertyDao;
+
+	public final String CON_REQUEST_ENABLED = "consultRequestEnabled";
+	public final String CON_RESPONSE_ENABLED = "consultResponseEnabled";
+	public final String ENABLED_YES = "Y";
 	
-	public List<ConsultationRequestSearchResult> search(LoggedInInfo loggedInInfo, ConsultationSearchFilter filter) {
+	public List<ConsultationRequestSearchResult> search(LoggedInInfo loggedInInfo, ConsultationRequestSearchFilter filter) {
 		 List<ConsultationRequestSearchResult> r = new  ArrayList<ConsultationRequestSearchResult>();
-		List<Object[]> result = consultationDao.search(filter);
+		List<Object[]> result = consultationRequestDao.search(filter);
 		
 		for(Object[] items:result) {
 			ConsultationRequest consultRequest = (ConsultationRequest)items[0];
-			LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.search", "id="+consultRequest.getId());
-			r.add(convertToResult(items));
+			LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.searchRequest", "id="+consultRequest.getId());
+			r.add(convertToRequestSearchResult(items));
 		}
 		return r;
 	}
 	
-	public int getConsultationCount(ConsultationSearchFilter filter) {
-		return consultationDao.getConsultationCount2(filter);
+	public List<ConsultationResponseSearchResult> search(LoggedInInfo loggedInInfo, ConsultationResponseSearchFilter filter) {
+		 List<ConsultationResponseSearchResult> r = new  ArrayList<ConsultationResponseSearchResult>();
+		List<Object[]> result = consultationResponseDao.search(filter);
+		
+		for(Object[] items:result) {
+			ConsultationResponse consultResponse = (ConsultationResponse)items[0];
+			LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.searchResponse", "id="+consultResponse.getId());
+			r.add(convertToResponseSearchResult(items));
+		}
+		return r;
+	}
+	
+	public int getConsultationCount(ConsultationRequestSearchFilter filter) {
+		return consultationRequestDao.getConsultationCount2(filter);
+	}
+	
+	public int getConsultationCount(ConsultationResponseSearchFilter filter) {
+		return consultationResponseDao.getConsultationCount(filter);
 	}
 	
 	public ConsultationRequest getRequest(LoggedInInfo loggedInInfo, Integer id) {
-		ConsultationRequest request = consultationDao.find(id);
+		ConsultationRequest request = consultationRequestDao.find(id);
 		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getRequest", "id="+request.getId());
 		
 		return request;
 	}
 	
+	public ConsultationResponse getResponse(LoggedInInfo loggedInInfo, Integer id) {
+		ConsultationResponse response = consultationResponseDao.find(id);
+		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getResponse", "id="+response.getId());
+		
+		return response;
+	}
+	
 	public List<ConsultationServices> getConsultationServices() {
-		return serviceDao.findActive();
+		List<ConsultationServices> services = serviceDao.findActive();
+		for (ConsultationServices service : services) {
+			if (service.getServiceDesc().equals(serviceDao.REFERRING_DOCTOR)) {
+				services.remove(service);
+				break;
+			}
+		}
+		return services;
+	}
+	
+	public List<ProfessionalSpecialist> getReferringDoctorList() {
+		ConsultationServices service = serviceDao.findReferringDoctorService(serviceDao.ACTIVE_ONLY);
+		return (service==null) ? null : service.getSpecialists();
 	}
 	
 	public ProfessionalSpecialist getProfessionalSpecialist(Integer id) {
@@ -91,19 +142,79 @@ public class ConsultationManager {
 		if (request.getId()==null) { //new consultation request
 			ProfessionalSpecialist specialist = request.getProfessionalSpecialist();
 			request.setProfessionalSpecialist(null);
-			consultationDao.persist(request);
+			consultationRequestDao.persist(request);
 			
 			request.setProfessionalSpecialist(specialist);
-			consultationDao.merge(request);
+			consultationRequestDao.merge(request);
 		} else {
-			consultationDao.merge(request);
+			consultationRequestDao.merge(request);
 		}
 		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.saveConsultationRequest", "id="+request.getId());
 	}
 	
+	public void saveConsultationResponse(LoggedInInfo loggedInInfo, ConsultationResponse response) {
+		if (response.getId()==null) { //new consultation response
+			consultationResponseDao.persist(response);
+		} else {
+			consultationResponseDao.merge(response);
+		}
+		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.saveConsultationResponse", "id="+response.getId());
+	}
+	
+	public List<ConsultResponseDoc> getConsultResponseDocs(LoggedInInfo loggedInInfo, Integer responseId) {
+		List<ConsultResponseDoc> docs = responseDocDao.findByResponseId(responseId);
+		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getConsultResponseDocs", "id="+responseId);
+		
+		return docs;
+	}
+	
+	public void saveConsultResponseDoc(LoggedInInfo loggedInInfo, ConsultResponseDoc doc) {
+		if (doc.getId()==null) { //new consultation attachment
+			responseDocDao.persist(doc);
+		} else {
+			responseDocDao.merge(doc); //only used for setting doc "deleted"
+		}
+		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.saveConsultResponseDoc", "id="+doc.getId());
+	}
+	
+	public void enableConsultRequestResponse(boolean conRequest, boolean conResponse) {
+		Property consultRequestEnabled = new Property(CON_REQUEST_ENABLED);
+		Property consultResponseEnabled = new Property(CON_RESPONSE_ENABLED);
+		
+		List<Property> results = propertyDao.findByName(CON_REQUEST_ENABLED);
+		if (results.size()>0) consultRequestEnabled = results.get(0);
+		results = propertyDao.findByName(CON_RESPONSE_ENABLED);
+		if (results.size()>0) consultResponseEnabled = results.get(0);
+		
+		consultRequestEnabled.setValue(conRequest?ENABLED_YES:null);
+		consultResponseEnabled.setValue(conResponse?ENABLED_YES:null);
+		
+		propertyDao.merge(consultRequestEnabled);
+		propertyDao.merge(consultResponseEnabled);
+		
+		ConsultationServices referringDocService = serviceDao.findReferringDoctorService(serviceDao.WITH_INACTIVE);
+		if (referringDocService==null) referringDocService = new ConsultationServices(serviceDao.REFERRING_DOCTOR);
+		if (conResponse) referringDocService.setActive(serviceDao.ACTIVE);
+		else referringDocService.setActive(serviceDao.INACTIVE);
+		
+		serviceDao.merge(referringDocService);
+	}
+	
+	public boolean isConsultRequestEnabled() {
+		List<Property> results = propertyDao.findByName(CON_REQUEST_ENABLED);
+		if (results.size()>0 && ENABLED_YES.equals(results.get(0).getValue())) return true;
+		return false;
+	}
+	
+	public boolean isConsultResponseEnabled() {
+		List<Property> results = propertyDao.findByName(CON_RESPONSE_ENABLED);
+		if (results.size()>0 && ENABLED_YES.equals(results.get(0).getValue())) return true;
+		return false;
+	}
 	
 	
-	private ConsultationRequestSearchResult convertToResult(Object[] items) {
+	
+	private ConsultationRequestSearchResult convertToRequestSearchResult(Object[] items) {
 		ConsultationRequestSearchResult result = new ConsultationRequestSearchResult();
 		
 		ConsultationRequest consultRequest = (ConsultationRequest)items[0];
@@ -131,8 +242,8 @@ public class ConsultationManager {
 			result.setStatusDescription("Pending Patient Callback");
 		} else if("4".equals(result.getStatus())) {
 			result.setStatusDescription("Completed");
-		} else if("6".equals(result.getStatus())) {
-			result.setStatusDescription("Preliminary");
+		} else if("5".equals(result.getStatus())) {
+			result.setStatusDescription("Cancelled");
 		}
 		
 		result.setUrgency(consultRequest.getUrgency());
@@ -146,6 +257,52 @@ public class ConsultationManager {
 
 		if(consultRequest.getSendTo() != null && !consultRequest.getSendTo().isEmpty() && !consultRequest.getSendTo().equals("-1")) {
 			result.setTeamName(consultRequest.getSendTo());	
+		}
+		
+		return result;
+	}
+	
+	private ConsultationResponseSearchResult convertToResponseSearchResult(Object[] items) {
+		ConsultationResponseSearchResult result = new ConsultationResponseSearchResult();
+		
+		ConsultationResponse consultResponse = (ConsultationResponse)items[0];
+		ProfessionalSpecialist professionalSpecialist = (ProfessionalSpecialist)items[1];
+		Demographic demographic = (Demographic)items[2];
+		Provider provider = (Provider)items[3];
+		
+		
+		result.setAppointmentDate(joinDateAndTime(consultResponse.getAppointmentDate(),consultResponse.getAppointmentTime()));
+		result.setReferringDoctor(professionalSpecialist);
+		result.setDemographic(demographic);
+		result.setId(consultResponse.getId());
+		result.setLastFollowUp(consultResponse.getFollowUpDate());
+		result.setProvider(provider);
+		result.setReferralDate(consultResponse.getReferralDate());
+		result.setStatus(consultResponse.getStatus());
+		
+		if("1".equals(result.getStatus())) {
+			result.setStatusDescription("Nothing");
+		} else if("2".equals(result.getStatus())) {
+			result.setStatusDescription("Pending Referring Doctor Callback");
+		} else if("3".equals(result.getStatus())) {
+			result.setStatusDescription("Pending Patient Callback");
+		} else if("4".equals(result.getStatus())) {
+			result.setStatusDescription("Completed");
+		} else if("5".equals(result.getStatus())) {
+			result.setStatusDescription("Cancelled");
+		}
+		
+		result.setUrgency(consultResponse.getUrgency());
+		if("1".equals(result.getUrgency())) {
+			result.setUrgencyDescription("Urgent");
+		} else if("2".equals(result.getUrgency())) {
+			result.setUrgencyDescription("Non-Urgent");
+		}else if("3".equals(result.getUrgency())) {
+			result.setUrgencyDescription("Return");
+		}
+
+		if(consultResponse.getSendTo() != null && !consultResponse.getSendTo().isEmpty() && !consultResponse.getSendTo().equals("-1")) {
+			result.setTeamName(consultResponse.getSendTo());	
 		}
 		
 		return result;

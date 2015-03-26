@@ -88,9 +88,8 @@ public final class EDocUtil {
 	private static ConsultDocsDao consultDocsDao = (ConsultDocsDao) SpringUtils.getBean("consultDocsDao");
 	private static DocumentDao documentDao = (DocumentDao) SpringUtils.getBean(DocumentDao.class);
 	private static IndivoDocsDao indivoDocsDao = (IndivoDocsDao) SpringUtils.getBean(IndivoDocsDao.class);
-
 	private static Logger logger = MiscUtils.getLogger();
-
+	
 	public static final String PUBLIC = "public";
 	public static final String PRIVATE = "private";
 	
@@ -225,7 +224,7 @@ public final class EDocUtil {
                 doc.setContentdatetime(newDocument.getContentDateTime());
 		doc.setStatus(newDocument.getStatus());
 		doc.setContenttype(newDocument.getContentType());
-		doc.setPublic1(Integer.parseInt(newDocument.getDocPublic()));
+		doc.setPublic1(ConversionUtils.fromIntString(newDocument.getDocPublic()));
 		doc.setObservationdate(MyDateFormat.getSysDate(newDocument.getObservationDate()));
 		doc.setNumberofpages(newDocument.getNumberOfPages());
 		doc.setAppointmentNo(newDocument.getAppointmentNo());
@@ -238,7 +237,7 @@ public final class EDocUtil {
 		cd.setId(cdpk);
 		cdpk.setModule(newDocument.getModule());
 		cdpk.setDocumentNo(document_no);
-		cd.getId().setModuleId(Integer.parseInt(newDocument.getModuleId()));
+		cd.getId().setModuleId(ConversionUtils.fromIntString(newDocument.getModuleId()));
 		cd.setStatus(String.valueOf(newDocument.getStatus()));
 		ctlDocumentDao.persist(cd);
 
@@ -264,7 +263,7 @@ public final class EDocUtil {
 	}
 
 	public static void detachDocConsult(String docNo, String consultId) {
-		List<ConsultDocs> consultDocs = consultDocsDao.findByRequestIdDocumentNoAndDocumentType(Integer.parseInt(consultId), Integer.parseInt(docNo), "D");
+		List<ConsultDocs> consultDocs = consultDocsDao.findByRequestIdDocNoDocType(ConversionUtils.fromIntString(consultId), ConversionUtils.fromIntString(docNo), ConsultDocs.DOCTYPE_DOC);
 		for (ConsultDocs consultDoc : consultDocs) {
 			consultDoc.setDeleted("Y");
 			consultDocsDao.merge(consultDoc);
@@ -273,9 +272,9 @@ public final class EDocUtil {
 
 	public static void attachDocConsult(String providerNo, String docNo, String consultId) {
 		ConsultDocs consultDoc = new ConsultDocs();
-		consultDoc.setRequestId(Integer.parseInt(consultId));
-		consultDoc.setDocumentNo(Integer.parseInt(docNo));
-		consultDoc.setDocType("D");
+		consultDoc.setRequestId(ConversionUtils.fromIntString(consultId));
+		consultDoc.setDocumentNo(ConversionUtils.fromIntString(docNo));
+		consultDoc.setDocType(ConsultDocs.DOCTYPE_DOC);
 		consultDoc.setAttachDate(new Date());
 		consultDoc.setProviderNo(providerNo);
 		consultDocsDao.persist(consultDoc);
@@ -283,7 +282,7 @@ public final class EDocUtil {
 
 	public static void editDocumentSQL(EDoc newDocument, boolean doReview) {
 
-		Document doc = documentDao.find(Integer.parseInt(newDocument.getDocId()));
+		Document doc = documentDao.find(ConversionUtils.fromIntString(newDocument.getDocId()));
 		if (doc != null) {
 			doc.setDoctype(newDocument.getType());
 			doc.setDocClass(newDocument.getDocClass());
@@ -293,7 +292,7 @@ public final class EDocUtil {
 			doc.setSourceFacility(newDocument.getSourceFacility());
 			doc.setDocxml(newDocument.getHtml());
 			doc.setResponsible(newDocument.getResponsibleId());
-			doc.setPublic1(Integer.parseInt(newDocument.getDocPublic()));
+			doc.setPublic1(ConversionUtils.fromIntString(newDocument.getDocPublic()));
 			if (doReview) {
 				doc.setReviewer(newDocument.getReviewerId());
 				doc.setReviewdatetime(ConversionUtils.fromDateString(newDocument.getReviewDateTime(), "yyyy/MM/dd HH:mm:ss"));
@@ -314,7 +313,7 @@ public final class EDocUtil {
 
 	public static void indivoRegister(EDoc doc) {
 		IndivoDocs id = new IndivoDocs();
-		id.setOscarDocNo(Integer.parseInt(doc.getDocId()));
+		id.setOscarDocNo(ConversionUtils.fromIntString(doc.getDocId()));
 		id.setIndivoDocIdx(doc.getIndivoIdx());
 		id.setDocType("document");
 		id.setDateSent(new Date());
@@ -329,12 +328,31 @@ public final class EDocUtil {
 	/**
 	 * Fetches all consult documents attached to specific consultation
 	 */
-	public static ArrayList<EDoc> listDocs(LoggedInInfo loggedInInfo, String demoNo, String consultationId, boolean attached) {
+	//Consultation Request fetch documents
+	public static ArrayList<EDoc> listDocs(LoggedInInfo loggedInInfo, String demoNo, String requestId, boolean attached) {
+		List<Object[]> docs = documentDao.findDocsAndConsultDocsByConsultId(ConversionUtils.fromIntString(requestId));
+		List<Object[]> ctlDocs = null;
+		if (!attached) {
+			ctlDocs = documentDao.findCtlDocsAndDocsByModuleAndModuleId(Module.DEMOGRAPHIC, ConversionUtils.fromIntString(demoNo));
+		}
+		return listDocs(loggedInInfo, attached, docs, ctlDocs);
+	}
+	
+	//Consultation Response fetch documents
+	public static ArrayList<EDoc> listResponseDocs(LoggedInInfo loggedInInfo, String demoNo, String responseId, boolean attached) {
+		List<Object[]> docs = documentDao.findDocsAndConsultResponseDocsByConsultId(ConversionUtils.fromIntString(responseId));
+		List<Object[]> ctlDocs = null;
+		if (!attached) {
+			ctlDocs = documentDao.findCtlDocsAndDocsByModuleAndModuleId(Module.DEMOGRAPHIC, ConversionUtils.fromIntString(demoNo));
+		}
+		return listDocs(loggedInInfo, attached, docs, ctlDocs);
+	}
+	
+	private static ArrayList<EDoc> listDocs(LoggedInInfo loggedInInfo, boolean attached, List<Object[]> docs, List<Object[]> ctlDocs) {
 		ArrayList<EDoc> resultDocs = new ArrayList<EDoc>();
 		ArrayList<EDoc> attachedDocs = new ArrayList<EDoc>();
 
-		DocumentDao dDao = SpringUtils.getBean(DocumentDao.class);
-		for (Object[] o : dDao.findDocsAndConsultDocsByConsultIdAndDocType(ConversionUtils.fromIntString(consultationId), "D")) {
+		for (Object[] o : docs) {
 			Document d = (Document) o[0];
 
 			EDoc currentdoc = new EDoc();
@@ -362,8 +380,11 @@ public final class EDocUtil {
 			attachedDocs.add(currentdoc);
 		}
 
-		if (!attached) {
-			for (Object[] o : dDao.findCtlDocsAndDocsByModuleAndModuleId(Module.DEMOGRAPHIC, ConversionUtils.fromIntString(demoNo))) {
+		if (attached) { //listing attached documents only
+			resultDocs = attachedDocs;
+		}
+		else { //remove attached documents from full document list
+			for (Object[] o : ctlDocs) {
 				Document d = (Document) o[1];
 
 				EDoc currentdoc = new EDoc();
@@ -391,8 +412,6 @@ public final class EDocUtil {
 
 				if (!attachedDocs.contains(currentdoc)) resultDocs.add(currentdoc);
 			}
-		} else {
-			resultDocs = attachedDocs;
 		}
 
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
@@ -401,6 +420,10 @@ public final class EDocUtil {
 
 		return resultDocs;
 	}
+	/**
+	 * End Fetches consult documents
+	 */
+	
 
 	public static ArrayList<EDoc> listDocs(LoggedInInfo loggedInInfo, String module, String moduleid, String docType, String publicDoc, EDocSort sort) {
 		return listDocs(loggedInInfo, module, moduleid, docType, publicDoc, sort, "active");
@@ -677,7 +700,7 @@ public final class EDocUtil {
 	}
 
 	public String getDocumentName(String id) {
-		Document d = documentDao.find(Integer.parseInt(id));
+		Document d = documentDao.find(ConversionUtils.fromIntString(id));
 		if (d != null) {
 			return d.getDocfilename();
 		}
@@ -691,7 +714,7 @@ public final class EDocUtil {
 			status = cd.getStatus();
 		}
 
-		Document d = documentDao.find(Integer.parseInt(documentNo));
+		Document d = documentDao.find(ConversionUtils.fromIntString(documentNo));
 		if (d != null) {
 			d.setStatus(status.toCharArray()[0]);
 			d.setUpdatedatetime(MyDateFormat.getSysDate(getDmsDateTime()));
@@ -700,7 +723,7 @@ public final class EDocUtil {
 	}
 
 	public static void deleteDocument(String documentNo) {
-		Document d = documentDao.find(Integer.parseInt(documentNo));
+		Document d = documentDao.find(ConversionUtils.fromIntString(documentNo));
 		if (d != null) {
 			d.setStatus('D');
 			d.setUpdatedatetime(MyDateFormat.getSysDate(getDmsDateTime()));
@@ -711,7 +734,7 @@ public final class EDocUtil {
        public static void refileDocument(String documentNo, String queueId) throws Exception {
 
             String sourceDocDir = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
-            Document d = documentDao.find(Integer.parseInt(documentNo));
+            Document d = documentDao.find(ConversionUtils.fromIntString(documentNo));
             File sourceFile = new File(sourceDocDir, d.getDocfilename());
 
             String destFileName = sourceFile.getName();
@@ -788,7 +811,7 @@ public final class EDocUtil {
 			cd.setId(cdpk);
 			cdpk.setModule("demographic");
 			cdpk.setDocumentNo(doc.getDocumentNo());
-			cd.getId().setModuleId(Integer.parseInt(demoNo));
+			cd.getId().setModuleId(ConversionUtils.fromIntString(demoNo));
 			cd.setStatus(String.valueOf('A'));
 			ctlDocumentDao.persist(cd);
 			key = 1;
@@ -961,7 +984,7 @@ public final class EDocUtil {
 	}
 
 	public static void subtractOnePage(String docId) {
-		Document doc = documentDao.find(Integer.parseInt(docId));
+		Document doc = documentDao.find(ConversionUtils.fromIntString(docId));
 		doc.setNumberofpages(doc.getNumberofpages() - 1);
 
 		documentDao.merge(doc);

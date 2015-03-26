@@ -27,6 +27,7 @@ package org.oscarehr.consultations;
 import java.util.List;
 
 import org.oscarehr.common.PaginationQuery;
+import org.oscarehr.common.dao.ConsultRequestDao;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ import oscar.log.LogAction;
 @Deprecated
 public class ConsultationService {
 	@Autowired
-	private ConsultationDao consultationDao;
+	private ConsultRequestDao consultationDao;
 
 
 	/**
