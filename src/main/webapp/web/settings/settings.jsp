@@ -191,6 +191,19 @@
 		<div class="form-group">
 		  <label>Length of link and form names to display on appointment screen:</label>
 		  <input ng-model="pref.appointmentScreenLinkNameDisplayLength" placeholder="Length" class="form-control" type="text">
+		</div>
+		<div class="form-group">
+			<label>Hide Old Echart Link in appointment</label>
+			  <div class="controls">
+			    <label class="radio inline" for="radioh-0">
+			      <input ng-model="pref.hideOldEchartLinkInAppointment" ng-value="true" id="radioh-0" type="radio">
+			      Enable
+			    </label>
+			    <label class="radio inline" for="radioh-1">
+			      <input ng-model="pref.hideOldEchartLinkInAppointment" ng-value="false" id="radioh-1" type="radio">
+			      Disable
+			    </label>  
+			  </div>
 		</div>				
 	</div>
 	<div class="col-xs-9">

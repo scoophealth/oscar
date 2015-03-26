@@ -46,6 +46,7 @@ public class ProviderSettings {
 	private int period = 15;
 	private String groupNo;
 	private int appointmentScreenLinkNameDisplayLength=3;
+	private boolean hideOldEchartLinkInAppointment=false;
 	
 	private Collection<String> appointmentScreenForms = new ArrayList<String>();	
 	private Collection<Integer> appointmentScreenEforms = new ArrayList<Integer>();
@@ -187,6 +188,12 @@ public class ProviderSettings {
 	}
 	public void setAppointmentScreenLinkNameDisplayLength(int appointmentScreenLinkNameDisplayLength) {
 		this.appointmentScreenLinkNameDisplayLength = appointmentScreenLinkNameDisplayLength;
+	}
+	public boolean isHideOldEchartLinkInAppointment() {
+		return hideOldEchartLinkInAppointment;
+	}
+	public void setHideOldEchartLinkInAppointment(boolean hideOldEchartLinkInAppointment) {
+		this.hideOldEchartLinkInAppointment = hideOldEchartLinkInAppointment;
 	}
 	public Collection<String> getAppointmentScreenForms() {
 		return appointmentScreenForms;
