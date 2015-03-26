@@ -334,11 +334,11 @@ public class DocumentDao extends AbstractDao<Document> {
 	/**
 	 * @return results ordered by updatedatetime
 	 */
-    public List<Document> findByUpdateDate(Date updateAfterThisDateInclusive, int itemsToReturn) {
-    	String sql = "select x from "+modelClass.getSimpleName()+" x where x.updatedatetime>=?1 order by x.updatedatetime";
+    public List<Document> findByUpdateDate(Date updatedAfterThisDateExclusive, int itemsToReturn) {
+    	String sql = "select x from "+modelClass.getSimpleName()+" x where x.updatedatetime>?1 order by x.updatedatetime";
     	
     	Query query = entityManager.createQuery(sql);
-    	query.setParameter(1, updateAfterThisDateInclusive);
+    	query.setParameter(1, updatedAfterThisDateExclusive);
     	setLimit(query, itemsToReturn);
 
         @SuppressWarnings("unchecked")
@@ -349,14 +349,14 @@ public class DocumentDao extends AbstractDao<Document> {
 	/**
 	 * @return results ordered by updatedatetime
 	 */
-    public List<Document> findByProgramProviderDemographicUpdateDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
-    	String sql = "select d from "+modelClass.getSimpleName()+"d, CtlDocument c where c.id.documentNo=d.documentNo and c.id.module='demographic' AND c.id.moduleId = :demographicId and d.programId=:programId and d.doccreator=:providerNo and d.updatedatetime>=:updatedatetime order by d.updatedatetime";
+    public List<Document> findByProgramProviderDemographicUpdateDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
+    	String sql = "select d from "+modelClass.getSimpleName()+"d, CtlDocument c where c.id.documentNo=d.documentNo and c.id.module='demographic' AND c.id.moduleId = :demographicId and d.programId=:programId and d.doccreator=:providerNo and d.updatedatetime>:updatedAfterThisDateExclusive order by d.updatedatetime";
     	
     	Query query = entityManager.createQuery(sql);
     	query.setParameter("demographicId", demographicId);
     	query.setParameter("programId", programId);
     	query.setParameter("providerNo", providerNo);
-    	query.setParameter("updatedatetime", updatedAfterThisDateInclusive);
+    	query.setParameter("updatedAfterThisDateExclusive", updatedAfterThisDateExclusive);
     	setLimit(query, itemsToReturn);
 
         @SuppressWarnings("unchecked")
