@@ -731,4 +731,9 @@ public class TRUENORTHHandler implements MessageHandler {
     public String getClientRef() {
 	    return "";
     }
+
+	@Override
+    public String getNteForPID() {
+	    return "";
+    }
 }
