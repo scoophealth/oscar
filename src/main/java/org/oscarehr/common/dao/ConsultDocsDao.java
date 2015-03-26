@@ -40,8 +40,8 @@ public class ConsultDocsDao extends AbstractDao<ConsultDocs>{
 		super(ConsultDocs.class);
 	}
 
-	public List<ConsultDocs> findByRequestIdDocumentNoAndDocumentType(Integer requestId, Integer documentNo, String docType) {
-	  	String sql = "select x from ConsultDocs x where x.requestId=? and x.documentNo=? and x.docType=?";
+	public List<ConsultDocs> findByRequestIdDocNoDocType(Integer requestId, Integer documentNo, String docType) {
+	  	String sql = "select x from ConsultDocs x where x.requestId=? and x.documentNo=? and x.docType=? and x.deleted is NULL";
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(1,requestId);
     	query.setParameter(2,documentNo);
@@ -51,7 +51,7 @@ public class ConsultDocsDao extends AbstractDao<ConsultDocs>{
         return results;
 	}
 
-	public List<Object[]> findByConsultationIdAndType(Integer consultationId, String docType) {
+	public List<Object[]> findLabs(Integer consultationId) {
 		String sql = "FROM ConsultDocs cd, PatientLabRouting plr " +
 				"WHERE plr.labNo = cd.documentNo " +
 				"AND cd.requestId = :consultationId " +
@@ -60,19 +60,7 @@ public class ConsultDocsDao extends AbstractDao<ConsultDocs>{
 				"ORDER BY cd.documentNo";
 		Query q = entityManager.createQuery(sql);
 		q.setParameter("consultationId", consultationId);
-		q.setParameter("docType", docType);
+		q.setParameter("docType", ConsultDocs.DOCTYPE_LAB);
 		return q.getResultList();
 	}
-
-    public List<Object[]> findDocs(Integer cid) {
-		String sql = "FROM ConsultDocs c, PatientLabRouting p " +
-				"WHERE p.labNo = c.documentNo " +
-				"AND c.requestId = :cid " +
-				"AND c.docType = 'L' " +
-				"AND c.deleted IS NULL " +
-				"ORDER BY c.documentNo";
-		Query q = entityManager.createQuery(sql);
-		q.setParameter("cid", cid);
-		return q.getResultList();
-    }
 }

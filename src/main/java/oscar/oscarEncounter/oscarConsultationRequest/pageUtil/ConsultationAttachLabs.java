@@ -111,7 +111,7 @@ public class ConsultationAttachLabs {
     }
 
     public static void detachLabConsult(String LabNo, String consultId) {
-    	List<ConsultDocs> consultDocs = consultDocsDao.findByRequestIdDocumentNoAndDocumentType(Integer.parseInt(consultId), Integer.parseInt(LabNo), "L");
+    	List<ConsultDocs> consultDocs = consultDocsDao.findByRequestIdDocNoDocType(Integer.parseInt(consultId), Integer.parseInt(LabNo), ConsultDocs.DOCTYPE_LAB);
     	for(ConsultDocs consultDoc:consultDocs) {
     		consultDoc.setDeleted("Y");
     		consultDocsDao.merge(consultDoc);

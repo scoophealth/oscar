@@ -46,7 +46,6 @@
     if ( ackStatus == null ) { ackStatus = "N"; } // default to only new lab reports
     if ( providerNo == null ) { providerNo = ""; }
     if ( searchProviderNo == null ) { searchProviderNo = providerNo; }
-    //mDSData.populateMDSResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
     
     ArrayList<LabResultData> labs = comLab.populateLabResultsData("",demographicNo, "", "","","U");
     

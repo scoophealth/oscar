@@ -366,6 +366,8 @@ padding:8px;
 	<script src="billing/billingController.js"></script>
 	<script src="consults/consultRequestListController.js"></script>
 	<script src="consults/consultRequestController.js"></script>	
+	<script src="consults/consultResponseListController.js"></script>
+	<script src="consults/consultResponseController.js"></script>	
 	<script src="inbox/inboxController.js"></script>
 	<script src="patientsearch/patientSearchController.js"></script>
 	

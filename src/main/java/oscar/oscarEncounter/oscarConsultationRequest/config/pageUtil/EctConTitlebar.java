@@ -49,6 +49,8 @@ public class EctConTitlebar
     private void init(ResourceBundle oscarR) {
     	jspVect = new ArrayList<String>();
         displayNameVect = new ArrayList<String>();
+        jspVect.add("EnableRequestResponse.jsp");
+        displayNameVect.add(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.btnEnableRequestResponse"));
         jspVect.add("AddSpecialist.jsp");
         displayNameVect.add(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.btnAddSpecialist"));
         jspVect.add("AddService.jsp");

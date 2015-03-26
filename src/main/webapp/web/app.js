@@ -47,6 +47,29 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 				user: function(providerService) { return providerService.getMe(); }
 			}
 		})
+  		.state('consultResponses', {
+  			url: '/consultResponses?demographicId',
+  			templateUrl: 'consults/consultResponseList.jsp',
+  			controller: 'ConsultResponseListCtrl'
+		})
+		.state('consultResponse', {
+			url: '/consultResponses/:responseId',
+			templateUrl: 'consults/consultResponse.jsp',
+			controller: 'ConsultResponseCtrl',
+			resolve: {
+				consult: function($stateParams, consultService) { return consultService.getResponse($stateParams.responseId, 0); },
+				user: function(providerService) { return providerService.getMe(); }
+			}
+		})
+		.state('consultResponseNew', {
+			url: '/consultResponses/new/:demographicNo',
+			templateUrl: 'consults/consultResponse.jsp',
+			controller: 'ConsultResponseCtrl',
+			resolve: {
+				consult: function($stateParams, consultService) { return consultService.getResponse(0, $stateParams.demographicNo); },
+				user: function(providerService) { return providerService.getMe(); }
+			}
+		})
   		.state('billing', {
   		  url: '/billing',
   		  templateUrl: 'billing/billing_popup.jsp',

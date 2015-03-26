@@ -113,6 +113,18 @@ public class DemographicManager {
 
 		return (result);
 	}
+	
+	public Demographic getDemographicWithExt(LoggedInInfo loggedInInfo, Integer demographicId) {
+		Demographic result = getDemographic(loggedInInfo, demographicId);
+		if (result!=null) {
+			List<DemographicExt> demoExts = getDemographicExts(loggedInInfo,demographicId);
+			if (demoExts!=null && !demoExts.isEmpty()) {
+				DemographicExt[] demoExtArray = demoExts.toArray(new DemographicExt[demoExts.size()]);
+				result.setExtras(demoExtArray);
+			}
+		}
+		return result;
+	}
 
 	public String getDemographicFormattedName(LoggedInInfo loggedInInfo, Integer demographicId) {
 		Demographic result = getDemographic(loggedInInfo, demographicId);
