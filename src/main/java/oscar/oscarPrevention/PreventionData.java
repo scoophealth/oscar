@@ -74,6 +74,7 @@ public class PreventionData {
 			prevention.setDemographicId(Integer.valueOf(demoNo));
 			prevention.setPreventionDate(UtilDateUtilities.StringToDate(date, "yyyy-MM-dd"));
 			prevention.setProviderNo(providerNo);
+			prevention.setProviderName(providerName);
 			prevention.setPreventionType(preventionType);
 			prevention.setNextDate(UtilDateUtilities.StringToDate(nextDate, "yyyy-MM-dd"));
 			prevention.setNever(neverWarn.trim().equals("1"));
@@ -463,7 +464,7 @@ public class PreventionData {
 				addToHashIfNotNull(h, "id", prevention.getId().toString());
 				addToHashIfNotNull(h, "demographicNo", prevention.getDemographicId().toString());
 				addToHashIfNotNull(h, "provider_no", prevention.getProviderNo());
-				addToHashIfNotNull(h, "providerName", providerName);
+				addToHashIfNotNull(h, "providerName", (prevention.getProviderName()==null)?providerName:prevention.getProviderName());
 				addToHashIfNotNull(h, "creationDate", UtilDateUtilities.DateToString(prevention.getCreationDate(), "yyyy-MM-dd"));
 				addToHashIfNotNull(h, "preventionDate", preventionDate);
 				addToHashIfNotNull(h, "prevention_date_asDate", prevention.getPreventionDate());
@@ -473,7 +474,7 @@ public class PreventionData {
 				addToHashIfNotNull(h, "next_date", UtilDateUtilities.DateToString(prevention.getNextDate(), "yyyy-MM-dd"));
 				addToHashIfNotNull(h, "never", prevention.isNever()?"1":"0");
 
-				String summary = "Prevention " + prevention.getPreventionType() + " provided by " + providerName + " on " + preventionDate + "\n";
+				String summary = "Prevention " + prevention.getPreventionType() + " provided by " + (prevention.getProviderName()==null?providerName:prevention.getProviderName()) + " on " + preventionDate + "\n";
 				Map<String,String> ext = getPreventionKeyValues(prevention.getId().toString());
 				if (ext.containsKey("result")) {
 					summary += "Result: " + ext.get("result");
