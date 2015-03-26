@@ -68,15 +68,15 @@ public class DocumentWs extends AbstractWs {
 		}
 	}
 
-	public DocumentTransfer[] getDocumentsUpdateAfterDate(Date updateAfterThisDateInclude, int itemsToReturn) {
+	public DocumentTransfer[] getDocumentsUpdateAfterDate(Date updatedAfterThisDateExclusive, int itemsToReturn) {
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
-		List<Document> documents = documentManager.getDocumentsUpdateAfterDate(loggedInInfo, updateAfterThisDateInclude, itemsToReturn);
+		List<Document> documents = documentManager.getDocumentsUpdateAfterDate(loggedInInfo, updatedAfterThisDateExclusive, itemsToReturn);
 		return (DocumentTransfer.getTransfers(loggedInInfo, documents));
 	}
 
-	public DocumentTransfer[] getDocumentsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDate, int itemsToReturn) {
+	public DocumentTransfer[] getDocumentsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
-		List<Document> documents = documentManager.getDocumentsByProgramProviderDemographicDate(loggedInInfo, programId, providerNo, demographicId, updatedAfterThisDate, itemsToReturn);
+		List<Document> documents = documentManager.getDocumentsByProgramProviderDemographicDate(loggedInInfo, programId, providerNo, demographicId, updatedAfterThisDateExclusive, itemsToReturn);
 		return (DocumentTransfer.getTransfers(loggedInInfo, documents));
 	}
 }
