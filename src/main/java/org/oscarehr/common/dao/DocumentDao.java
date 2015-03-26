@@ -337,7 +337,7 @@ public class DocumentDao extends AbstractDao<Document> {
 	 * @return results ordered by updatedatetime
 	 */
     public List<Document> findByProgramProviderDemographicUpdateDate(Integer programId, String providerNo, Integer demographicId, Date updatedAfterThisDateExclusive, int itemsToReturn) {
-    	String sql = "select d from "+modelClass.getSimpleName()+" d, CtlDocument c where c.id.documentNo=d.documentNo and c.id.module='demographic' AND c.id.moduleId = :demographicId and d.programId=:programId and d.doccreator=:providerNo and d.updatedatetime>:updatedAfterThisDateExclusive order by d.updatedatetime";
+    	String sql = "select d from "+modelClass.getSimpleName()+" d, CtlDocument c where c.id.documentNo=d.documentNo and c.id.module='demographic' AND c.id.moduleId = :demographicId and (d.programId=:programId or d.programId is null or d.programId=-1) and d.doccreator=:providerNo and d.updatedatetime>:updatedAfterThisDateExclusive order by d.updatedatetime";
     	
     	Query query = entityManager.createQuery(sql);
     	query.setParameter("demographicId", demographicId);
