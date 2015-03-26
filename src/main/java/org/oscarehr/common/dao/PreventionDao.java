@@ -22,7 +22,6 @@
  */
 package org.oscarehr.common.dao;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -84,7 +83,7 @@ public class PreventionDao extends AbstractDao<Prevention> {
 		return (results);
 	}
 	
-	public List<Prevention> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
+	public List<Prevention> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Date updatedAfterThisDateExclusive, int itemsToReturn) {
 		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicId=:demographicId and x.providerNo=:providerNo and x.lastUpdateDate>=:updatedAfterThisDateExclusive order by x.lastUpdateDate";
 
 		Query query = entityManager.createQuery(sqlCommand);

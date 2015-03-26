@@ -33,10 +33,12 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
+import org.apache.log4j.Logger;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.transfer_objects.DemographicTransfer;
 import org.oscarehr.ws.transfer_objects.PhrVerificationTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,8 @@ import org.springframework.stereotype.Component;
 @Component
 @GZIP(threshold=AbstractWs.GZIP_THRESHOLD)
 public class DemographicWs extends AbstractWs {
+	private static Logger logger=MiscUtils.getLogger();
+	
 	@Autowired
 	private DemographicManager demographicManager;
 	
@@ -104,6 +108,7 @@ public class DemographicWs extends AbstractWs {
 	 */
 	public Integer[] getAdmittedDemographicIdsByProgramProvider(Integer programId, String providerNo)
 	{
+		logger.debug("programId="+programId+", providerNo="+providerNo);
 		List<Integer> results=demographicManager.getAdmittedDemographicIdsByProgramAndProvider(getLoggedInInfo(), programId, providerNo);
 		return(results.toArray(new Integer[0]));
 	}
