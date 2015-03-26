@@ -127,7 +127,7 @@ function BackToOscar()
 							<td>
 							<%
                                       out.print("<a href=\"../../EditSpecialists.do?specId="+specId+"\"/>");
-                                      out.print(lName+" "+fName+" "+proLetters);
+                                      out.print(lName+" "+fName+" "+(proLetters==null?"":proLetters));
                                       out.print("</a>");
                                     %>
 							</td>
