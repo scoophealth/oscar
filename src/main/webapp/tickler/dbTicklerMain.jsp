@@ -37,7 +37,17 @@
 	String[] param = new String[2];
 String[] temp = request.getParameterValues("checkbox");
 if (temp == null){
-	response.sendRedirect("ticklerMain.jsp");
+    String sortColumn = request.getParameter("sort_column");
+    String sortOrder = request.getParameter("sort_order");
+    
+    if (sortColumn == null) {
+	sortColumn = TicklerManager.SERVICE_DATE;
+    }
+
+    if (sortOrder == null) {
+        sortOrder = TicklerManager.SORT_ASC;
+    }
+	response.sendRedirect("ticklerMain.jsp?sort_column="+sortColumn+"&sort_order="+sortOrder);
 	}else{
 	
     for (int i=0; i<temp.length; i++){

@@ -1150,6 +1150,12 @@ public class Demographic implements Serializable {
     	this.newsletter = newsletter;
     }
 
+    public static final Comparator<Demographic> FormattedNameComparator = new Comparator<Demographic>() {	
+        @Override	
+        public int compare(Demographic dm1, Demographic dm2) {	
+            return dm1.getFormattedName().compareToIgnoreCase(dm2.getFormattedName());	
+        }	
+    }; 
 	public static final Comparator<Demographic> LastNameComparator = new Comparator<Demographic>() {
         public int compare(Demographic dm1, Demographic dm2) {
         	return dm1.getLastName().compareTo(dm2.getLastName());

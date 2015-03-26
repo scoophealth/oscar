@@ -50,6 +50,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.util.LocaleUtils;
+import java.util.Comparator;
 
 @Entity
 @Table(name="tickler")
@@ -63,6 +64,8 @@ public class Tickler extends AbstractModel<Integer> {
 	public static final String HIGH = "High";
 	public static final String NORMAL = "Normal";
 	public static final String LOW = "Low";
+        
+        public static final String NOT_APPLICABLE = "N/A";
 	
 	public static enum STATUS {
         A, C, D
@@ -375,6 +378,182 @@ public class Tickler extends AbstractModel<Integer> {
 		return getPriority().toString();
 	}
 	
+         public static final Comparator<Tickler> DemographicNameAscComparator = new Comparator<Tickler>() {
+        @Override
+	public int compare(Tickler t1, Tickler t2) {          
+            int compareVal = (Demographic.FormattedNameComparator.compare(t1.getDemographic(),t2.getDemographic()));
+            
+            //if there are more than one ticklers for a given demographic name, order them in ascending order by service date
+            if (compareVal == 0) {
+                compareVal = t1.getServiceDate().compareTo(t2.getServiceDate());
+            }
+            
+            return compareVal;
+	}
+    };
+    
+    public static final Comparator<Tickler> DemographicNameDescComparator = new Comparator<Tickler>() {
+        @Override
+	public int compare(Tickler t1, Tickler t2) {          
+            int compareVal = (Demographic.FormattedNameComparator.compare(t2.getDemographic(),t1.getDemographic()));
+            if (compareVal == 0) {
+                compareVal = t2.getServiceDate().compareTo(t1.getServiceDate());
+            }
+            return compareVal;
+	}
+    };
+    
+    public static final Comparator<Tickler> CreatorAscComparator = new Comparator<Tickler>() {
+        @Override
+	public int compare(Tickler t1, Tickler t2) {  
+            String creator1 = NOT_APPLICABLE;           
+            if (t1.getProvider() != null) {
+                creator1 = t1.getProvider().getFormattedName();
+            }
+            
+            String creator2 = NOT_APPLICABLE;
+            if (t2.getProvider() != null) {
+                creator2 = t2.getProvider().getFormattedName();
+            }
+            
+            int compareVal = (creator1.compareToIgnoreCase(creator2));
+            if (compareVal == 0){
+                compareVal = t1.getServiceDate().compareTo(t2.getServiceDate());
+            }
+            return compareVal;
+	}
+    };
+    
+    public static final Comparator<Tickler> CreatorDescComparator = new Comparator<Tickler>() {
+        @Override
+	public int compare(Tickler t1, Tickler t2) {    
+            String creator1 = NOT_APPLICABLE;           
+            if (t1.getProvider() != null) {
+                creator1 = t1.getProvider().getFormattedName();
+            }
+            
+            String creator2 = NOT_APPLICABLE;
+            if (t2.getProvider() != null) {
+                creator2 = t2.getProvider().getFormattedName();
+            }
+            
+            int compareVal = creator2.compareToIgnoreCase(creator1);
+            if (compareVal == 0){
+                compareVal = t2.getServiceDate().compareTo(t1.getServiceDate());
+            }
+            return compareVal;
+	}
+    };
+    
+    public static final Comparator<Tickler> ServiceDateAscComparator = new Comparator<Tickler>() {
+        @Override
+	public int compare(Tickler t1, Tickler t2) {          
+            return (t1.getServiceDate().compareTo(t2.getServiceDate()));
+	}
+    };
+    
+    public static final Comparator<Tickler> ServiceDateDescComparator = new Comparator<Tickler>() {
+        @Override
+	public int compare(Tickler t1, Tickler t2) {          
+            return (t2.getServiceDate().compareTo(t1.getServiceDate()));
+	}
+    };
+    
+    public static final Comparator<Tickler> CreationDateAscComparator = new Comparator<Tickler>() {
+        @Override
+	public int compare(Tickler t1, Tickler t2) {          
+            return (t1.getUpdateDate().compareTo(t2.getUpdateDate()));
+	}
+    };
+    
+    public static final Comparator<Tickler> CreationDateDescComparator = new Comparator<Tickler>() {
+        @Override
+	public int compare(Tickler t1, Tickler t2) {          
+            return (t2.getUpdateDate().compareTo(t1.getUpdateDate()));
+	}
+    };
+    
+    public static final Comparator<Tickler> PriorityAscComparator = new Comparator<Tickler>() {
+        @Override
+	public int compare(Tickler t1, Tickler t2) {       
+            int compareVal = 0;
+            if (t1.getPriority().equals(PRIORITY.High) && !t2.getPriority().equals(PRIORITY.High)) {
+                compareVal = 1;
+            } else if (t2.getPriority().equals(PRIORITY.High)) {
+                compareVal = -1;
+            } else if (t1.getPriority().equals(PRIORITY.Normal) && !t2.getPriority().equals(PRIORITY.Normal)) {
+                compareVal = 1;
+            } else if (t2.getPriority().equals(PRIORITY.Normal)) {
+                compareVal = -1;
+            } else if (t1.getPriority().equals(PRIORITY.Low) && !t2.getPriority().equals(PRIORITY.Low)) {
+                compareVal = 1;
+            } else if (t2.getPriority().equals(PRIORITY.Low)) {
+                compareVal = -1;
+            } else { 
+                compareVal = 0;
+            }
+            
+            if (compareVal == 0) {
+                compareVal = t1.getServiceDate().compareTo(t2.getServiceDate());
+            }
+            
+            return compareVal;
+	}
+    };
+    
+    public static final Comparator<Tickler> PriorityDescComparator = new Comparator<Tickler>() {
+        @Override
+	public int compare(Tickler t1, Tickler t2) {       
+            int compareVal = 0;
+            if (t2.getPriority().equals(PRIORITY.High) && !t1.getPriority().equals(PRIORITY.High)) {
+                compareVal = 1;
+            } else if (t1.getPriority().equals(PRIORITY.High)) {
+                compareVal = -1;
+            } else if (t2.getPriority().equals(PRIORITY.Normal) && !t1.getPriority().equals(PRIORITY.Normal)) {
+                compareVal = 1;
+            } else if (t1.getPriority().equals(PRIORITY.Normal)) {
+                compareVal = -1;
+            } else if (t2.getPriority().equals(PRIORITY.Low) && !t1.getPriority().equals(PRIORITY.Low)) {
+                compareVal = 1;
+            } else if (t1.getPriority().equals(PRIORITY.Low)) {
+                compareVal = -1;
+            } else { 
+                compareVal = 0;
+            }
+            
+            if (compareVal == 0) {
+                compareVal = t2.getServiceDate().compareTo(t1.getServiceDate());
+            }
+            
+            return compareVal;
+	}
+    };
+    
+    public static final Comparator<Tickler> TaskAssignedToAscComparator = new Comparator<Tickler>() {
+        @Override
+	public int compare(Tickler t1, Tickler t2) {
+            String assignee1 = t1.getAssignee().getLastName() + ", " + t1.getAssignee().getFirstName();
+            String assignee2 = t2.getAssignee().getLastName() + ", " + t2.getAssignee().getFirstName();
+            int compareVal = (assignee1.compareToIgnoreCase(assignee2));
+            if (compareVal == 0) {
+                compareVal = t1.getServiceDate().compareTo(t2.getServiceDate());
+            }
+            return compareVal;
+	}
+    };	
+    
+    public static final Comparator<Tickler> TaskAssignedToDescComparator = new Comparator<Tickler>() {
+        @Override
+	public int compare(Tickler t1, Tickler t2) {          
+            String assignee1 = t1.getAssignee().getLastName() + ", " + t1.getAssignee().getFirstName();
+            String assignee2 = t2.getAssignee().getLastName() + ", " + t2.getAssignee().getFirstName();
+            int compareVal = (assignee2.compareToIgnoreCase(assignee1));
+            if (compareVal == 0) {
+                compareVal = t2.getServiceDate().compareTo(t1.getServiceDate());
+            }
+            return compareVal;
+	}
+    };	
 	
 }
 
