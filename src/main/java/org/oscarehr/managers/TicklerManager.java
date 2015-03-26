@@ -64,6 +64,7 @@ import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.VelocityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Collections;
 
 import oscar.OscarProperties;
 import oscar.log.LogAction;
@@ -73,6 +74,15 @@ import com.quatro.model.security.Secrole;
 @Service
 public class TicklerManager {
 	   
+    	public static String DEMOGRAPHIC_NAME = "demographic_name";
+        public static String CREATOR = "creator";
+        public static String SERVICE_DATE = "service_date";
+        public static String CREATION_DATE = "creation_date";
+        public static String PRIORITY = "priority";
+        public static String TASK_ASSIGNED_TO = "task_assigned_to";
+        public static String SORT_ASC = "asc";
+        public static String SORT_DESC = "desc";
+        
 	private static final String TICKLER_EMAIL_TEMPLATE_FILE="/tickler_email_notification_template.txt";
 	
 	@Autowired
@@ -623,4 +633,39 @@ public class TicklerManager {
     	  public List<TicklerTextSuggest> getAllTextSuggestions(LoggedInInfo loggedInInfo, int offset, int itemsToReturn) {
     		  return this.ticklerTextSuggestDao.findAll(offset,itemsToReturn);
     	  }
+          
+          public List<Tickler> sortTicklerList(Boolean isSortAscending, String sortColumn, List<Tickler> ticklers) {
+				
+                if (isSortAscending) {
+                    if (sortColumn.equals(DEMOGRAPHIC_NAME)) {
+                        Collections.sort(ticklers, Tickler.DemographicNameAscComparator);
+                    } else if (sortColumn.equals(CREATOR)) {
+                        Collections.sort(ticklers, Tickler.CreatorAscComparator);
+                    } else if (sortColumn.equals(SERVICE_DATE)) {
+                        Collections.sort(ticklers, Tickler.ServiceDateAscComparator);
+                    } else if (sortColumn.equals(CREATION_DATE)) {
+                        Collections.sort(ticklers,Tickler.CreationDateAscComparator);
+                    } else if (sortColumn.equals(PRIORITY)) {
+                        Collections.sort(ticklers,Tickler.PriorityAscComparator);
+                    } else if (sortColumn.equals(TASK_ASSIGNED_TO)) {
+                        Collections.sort(ticklers, Tickler.TaskAssignedToAscComparator);
+                    }
+                } else {
+                    if (sortColumn.equals(DEMOGRAPHIC_NAME)) {
+                        Collections.sort(ticklers, Tickler.DemographicNameDescComparator);
+                    } else if (sortColumn.equals(CREATOR)) {
+                        Collections.sort(ticklers, Tickler.CreatorDescComparator);
+                    } else if (sortColumn.equals(SERVICE_DATE)) {
+                        Collections.sort(ticklers, Tickler.ServiceDateDescComparator);
+                    } else if (sortColumn.equals(CREATION_DATE)) {
+                        Collections.sort(ticklers,Tickler.CreationDateDescComparator);
+                    } else if (sortColumn.equals(PRIORITY)) {
+                        Collections.sort(ticklers,Tickler.PriorityDescComparator);
+                    } else if (sortColumn.equals(TASK_ASSIGNED_TO)) {
+                        Collections.sort(ticklers, Tickler.TaskAssignedToDescComparator);
+                    }
+                }
+
+                return ticklers;
+          }
 }
