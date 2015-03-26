@@ -94,7 +94,7 @@ public class OscarProperties extends Properties {
 	 */
 	public boolean hasProperty(String key) {
 		boolean prop = false;
-		String propertyValue = getProperty(key);
+		String propertyValue = getProperty(key.trim());
 		if (propertyValue != null) {
 			prop = true;
 		}
@@ -102,29 +102,35 @@ public class OscarProperties extends Properties {
 	}
 
 	/**
-	 * Will check the properties to see if that property is set and if it's set to the given value. If it is method returns true if not method returns false. This method was improved to ensure positive response on any "true", "yes" or "on" property value.
+	 * Will check the properties to see if that property is set and if it's set to the given value. 
+	 * If it is method returns true if not method returns false. 
+	 * This method returns positive response on any "true", "yes" or "on" values.
 	 * 
 	 * @param key key of property
 	 * @param val value that will cause a true value to be returned
 	 * @return boolean
 	 */
 	public boolean getBooleanProperty(String key, String val) {
+		key = key==null ? null : key.trim();
+		val = val==null ? null : val.trim();
 		// if we're checking for positive value, any "active" one will do
 		if (val != null && activeMarkers.contains(val.toLowerCase())) {
 			return isPropertyActive(key);
 		}
-
-		return getProperty(key, "").equalsIgnoreCase(val);
+		
+		return getProperty(key, "").trim().equalsIgnoreCase(val);
 	}
 
 	/**
-	 * Will check the properties to see if that property is set and if it's set to "true", "yes" or "on" value. If it is method returns true if not method returns false.
+	 * Will check the properties to see if that property is set and if it's set to "true", "yes" or "on". 
+	 * If it is method returns true if not method returns false.
 	 * 
 	 * @param key key of property
 	 * @return boolean whether the property is active
 	 */
 	public boolean isPropertyActive(String key) {
-		return activeMarkers.contains(getProperty(key, "").toLowerCase());
+		key = key==null ? null : key.trim();
+		return activeMarkers.contains(getProperty(key, "").trim().toLowerCase());
 	}
 
 	/*
