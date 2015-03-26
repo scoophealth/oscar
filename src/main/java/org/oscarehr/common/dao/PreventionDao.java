@@ -84,7 +84,7 @@ public class PreventionDao extends AbstractDao<Prevention> {
 	}
 	
 	public List<Prevention> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Date updatedAfterThisDateExclusive, int itemsToReturn) {
-		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicId=:demographicId and x.providerNo=:providerNo and x.lastUpdateDate>=:updatedAfterThisDateExclusive order by x.lastUpdateDate";
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicId=:demographicId and x.providerNo=:providerNo and x.lastUpdateDate>:updatedAfterThisDateExclusive order by x.lastUpdateDate";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter("demographicId", demographicId);
