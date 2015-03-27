@@ -25,7 +25,6 @@ package org.oscarehr.common.dao;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -698,12 +697,12 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return results;
 	}
 	
-    public List<Appointment> findByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
-		Query query = entityManager.createQuery("select x from Appointment x where x.programId=?1 and x.demographicNo=?2 and x.providerNo=?3 and x.updateDateTime>=?4 order by x.updateDateTime");
+    public List<Appointment> findByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Date updatedAfterThisDateExclusive, int itemsToReturn) {
+		Query query = entityManager.createQuery("select x from Appointment x where (x.programId=?1 or x.programId is null or x.programId=0) and x.demographicNo=?2 and x.providerNo=?3 and x.updateDateTime>?4 order by x.updateDateTime");
 		query.setParameter(1, programId);
 		query.setParameter(2, demographicId);
 		query.setParameter(3, providerNo);
-		query.setParameter(4, updatedAfterThisDateInclusive);
+		query.setParameter(4, updatedAfterThisDateExclusive);
 
 		setLimit(query, itemsToReturn);
 		
