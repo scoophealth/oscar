@@ -22,8 +22,11 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.ws;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import javax.jws.WebService;
 
@@ -33,24 +36,34 @@ import org.springframework.stereotype.Component;
 
 @WebService
 @Component
-@GZIP(threshold=AbstractWs.GZIP_THRESHOLD)
-public class SystemInfoWs extends AbstractWs
-{
+@GZIP(threshold = AbstractWs.GZIP_THRESHOLD)
+public class SystemInfoWs extends AbstractWs {
 	/**
 	 * http://127.0.0.1:8080/myoscar_server/ws/SystemInfoService/helloWorld
 	 */
-	public String helloWorld()
-	{
-		return("Hello World! the configuration works! and your client works! :) " + (new java.util.Date()));
+	public String helloWorld() {
+		return ("Hello World! the configuration works! and your client works! :) " + (new java.util.Date()));
 	}
 
-	public String isAlive()
-	{
-		return("alive");
+	public String isAlive() {
+		return ("alive");
 	}
-	
-	public int getMaxListReturnSize()
-	{
-		return(AbstractDao.MAX_LIST_RETURN_SIZE);
+
+	public int getMaxListReturnSize() {
+		return (AbstractDao.MAX_LIST_RETURN_SIZE);
+	}
+
+	/**
+	 * This returns the time on the oscar server
+	 */
+	public Calendar getServerTime() {
+		Calendar cal = new GregorianCalendar();
+		return (cal);
+	}
+
+	public int getServerTimeGmtOffset() {
+		TimeZone timeZone=TimeZone.getDefault();
+		int offset=timeZone.getOffset(System.currentTimeMillis());
+		return(offset);
 	}
 }

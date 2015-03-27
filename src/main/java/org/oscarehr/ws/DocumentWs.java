@@ -32,6 +32,7 @@ import java.util.List;
 import javax.jws.WebService;
 import javax.xml.ws.WebServiceException;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.cxf.annotations.GZIP;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.service.ProgramManager;
@@ -77,6 +78,7 @@ public class DocumentWs extends AbstractWs {
 	public DocumentTransfer[] getDocumentsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
 		List<Document> documents = documentManager.getDocumentsByProgramProviderDemographicDate(loggedInInfo, programId, providerNo, demographicId, updatedAfterThisDateExclusive, itemsToReturn);
+		logger.debug("programId="+programId+", providerNo="+providerNo+", demographicId="+demographicId+", updatedAfterThisDateExclusive="+DateFormatUtils.ISO_DATETIME_FORMAT.format(updatedAfterThisDateExclusive)+", itemsToReturn="+itemsToReturn+", results="+documents.size());
 		return (DocumentTransfer.getTransfers(loggedInInfo, documents));
 	}
 }
