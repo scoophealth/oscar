@@ -114,6 +114,18 @@ public class DemographicManager {
 		return (result);
 	}
 	
+	public Demographic getDemographic(LoggedInInfo loggedInInfo, String demographicNo) {
+		Integer demographicId = null;
+		try {
+			demographicId = Integer.parseInt(demographicNo);
+		} catch(NumberFormatException e) {
+			return null;
+		}
+		return getDemographic(loggedInInfo,demographicId);
+		
+	}
+	
+	
 	public Demographic getDemographicWithExt(LoggedInInfo loggedInInfo, Integer demographicId) {
 		Demographic result = getDemographic(loggedInInfo, demographicId);
 		if (result!=null) {
@@ -563,6 +575,16 @@ public class DemographicManager {
 		List<Demographic> demographics = demographicDao.getDemographics(demographicIds);
 
 		LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getDemographics", "demographicIds=" + demographicIds);
+
+		return (demographics);
+	}
+	
+	public List<Demographic> searchDemographic(LoggedInInfo loggedInInfo, String searchStr) {
+		if (loggedInInfo == null) throw (new SecurityException("user not logged in?"));
+
+		List<Demographic> demographics = demographicDao.searchDemographic(searchStr);
+
+		LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.searchDemographic", "searchStr=" + searchStr);
 
 		return (demographics);
 	}

@@ -35,19 +35,19 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
 import org.oscarehr.common.dao.AllergyDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DiseasesDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Diseases;
 import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class RxPatientData {
 	private static Logger logger = MiscUtils.getLogger();
-	private static final DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	private static final DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 
 	private RxPatientData() {
 		// prevent instantiation
@@ -55,11 +55,11 @@ public class RxPatientData {
 
 	/* Patient Search */
 
-	public static Patient[] PatientSearch(String surname, String firstName) {
+	public static Patient[] PatientSearch(LoggedInInfo loggedInInfo, String surname, String firstName) {
 
 		Patient[] arr = {};
 		List<Patient> patients = new ArrayList<Patient>();
-		List<Demographic> demographics = demographicDao.searchDemographic(surname + "," + firstName);
+		List<Demographic> demographics = demographicManager.searchDemographic(loggedInInfo, surname + "," + firstName);
 		for (Demographic demographic : demographics) {
 			Patient p = new Patient(demographic);
 			patients.add(p);
@@ -69,13 +69,13 @@ public class RxPatientData {
 
 	/* Patient Information */
 
-	public static Patient getPatient(int demographicNo) {
-		Demographic demographic = demographicDao.getDemographicById(demographicNo);
+	public static Patient getPatient(LoggedInInfo loggedInInfo, int demographicNo) {
+		Demographic demographic = demographicManager.getDemographic(loggedInInfo, demographicNo);
 		return new Patient(demographic);
 	}
 
-	public static Patient getPatient(String demographicNo) {
-		Demographic demographic = demographicDao.getDemographicById(Integer.parseInt(demographicNo));
+	public static Patient getPatient(LoggedInInfo loggedInInfo, String demographicNo) {
+		Demographic demographic = demographicManager.getDemographic(loggedInInfo,demographicNo);
 		return new Patient(demographic);
 	}
 

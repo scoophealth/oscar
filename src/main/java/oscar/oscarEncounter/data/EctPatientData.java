@@ -29,15 +29,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
+import oscar.log.LogAction;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class EctPatientData {
 
-    public static String getProviderNo(String demographicNo) {
+    public static String getProviderNo(LoggedInInfo loggedInInfo, String demographicNo) {
         String ret = "";
         try {
 
@@ -49,10 +51,13 @@ public class EctPatientData {
         } catch (SQLException e) {
             MiscUtils.getLogger().debug("error - EctPatientData.getProviderNo");
         }
+        LogAction.addLogSynchronous(loggedInInfo, "EctPatientData.getProviderNo", "demographicNo=" + demographicNo);
+        
+        
         return ret;
     }
 
-    public Patient getPatient(String demographicNo) {
+    public Patient getPatient(LoggedInInfo loggedInInfo, String demographicNo) {
 
         Patient p = null;
         try {
@@ -68,6 +73,9 @@ public class EctPatientData {
         } catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
         }
+        
+        LogAction.addLogSynchronous(loggedInInfo, "EctPatientData.getPatient", "demographicNo=" + demographicNo);
+        
         return p;
     }
 

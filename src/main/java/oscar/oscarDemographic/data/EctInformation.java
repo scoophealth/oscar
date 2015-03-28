@@ -27,18 +27,20 @@ package oscar.oscarDemographic.data;
 
 import java.util.Date;
 
+import org.oscarehr.util.LoggedInInfo;
+
 public class EctInformation {
 
 	private oscar.oscarEncounter.data.EctPatientData.Patient patient;
 	private oscar.oscarEncounter.data.EctPatientData.Patient.eChart eChart;
 
-	public EctInformation(String demographic_no) {
-		init(demographic_no);
+	public EctInformation(LoggedInInfo loggedInInfo, String demographic_no) {
+		init(loggedInInfo, demographic_no);
 	}
 
-	private void init(String demographic_no) {
+	private void init(LoggedInInfo loggedInInfo, String demographic_no) {
 		oscar.oscarEncounter.data.EctPatientData patientData = new oscar.oscarEncounter.data.EctPatientData();
-		this.patient = patientData.getPatient(demographic_no);
+		this.patient = patientData.getPatient(loggedInInfo, demographic_no);
 		this.eChart = patient.getEChart();
 	}
 

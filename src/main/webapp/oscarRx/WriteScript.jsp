@@ -31,6 +31,7 @@
 <%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,oscar.oscarRx.util.*"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
 
 <%long start = System.currentTimeMillis();%>
 <html:html locale="true">
@@ -71,6 +72,7 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 Long now = new Date().getTime();
 String annotation_attrib = "";// = "anno"+now;
 
+LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 
 <script language=javascript>
@@ -914,7 +916,7 @@ Outside ProOhip: <%= thisForm.getOutsideProviderOhip() %><br>
 	<%
 
 // set patient info
-RxPatientData.Patient patient = RxPatientData.getPatient(thisForm.getDemographicNo());
+RxPatientData.Patient patient = RxPatientData.getPatient(loggedInInfo, thisForm.getDemographicNo());
 
 RxDrugData drug = new RxDrugData();
 
@@ -1359,7 +1361,7 @@ int i;
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:addWarning();" value="FillWarning" /-->
 					<br>
 					<!-- peice Went Here --> <%//RxPatientData.Patient.Allergy[] allerg = (RxPatientData.Patient.Allergy[]) request.getAttribute("ALLERGIES");
-                          org.oscarehr.common.model.Allergy[] allerg = bean.getAllergyWarnings(atcCode);
+                          org.oscarehr.common.model.Allergy[] allerg = bean.getAllergyWarnings(loggedInInfo, atcCode);
                           if (allerg != null && allerg.length > 0){
                             for (int i = 0 ; i < allerg.length; i++){  %>
 					<div

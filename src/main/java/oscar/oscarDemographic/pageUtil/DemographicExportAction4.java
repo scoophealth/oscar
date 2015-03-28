@@ -968,7 +968,7 @@ public class DemographicExportAction4 extends Action {
 
 			if (exAllergiesAndAdverseReactions) {
 				// ALLERGIES & ADVERSE REACTIONS
-				Allergy[] allergies = RxPatientData.getPatient(demoNo).getActiveAllergies();
+				Allergy[] allergies = RxPatientData.getPatient(loggedInInfo, demoNo).getActiveAllergies();
 				String dateFormat = null, annotation = null;
 				for (int j=0; j<allergies.length; j++) {
 					AllergiesAndAdverseReactions alr = patientRec.addNewAllergiesAndAdverseReactions();

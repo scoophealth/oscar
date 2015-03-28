@@ -35,6 +35,7 @@ import java.util.Properties;
 
 import org.apache.cxf.common.util.StringUtils;
 import org.apache.xmlbeans.XmlOptions;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarmcmaster.ar2005.AR1;
 import org.oscarmcmaster.ar2005.AR2;
@@ -88,13 +89,13 @@ public class ONAREnhancedFormToXML {
 	int formId;
 	int episodeId;
 	
-	public void generateXMLAndValidate(OutputStream os, String providerNo,String demographicNo, int formId, int episodeId) throws Exception {
+	public void generateXMLAndValidate(LoggedInInfo loggedInInfo, OutputStream os, String providerNo,String demographicNo, int formId, int episodeId) throws Exception {
 		this.demographicNo = demographicNo;
 		this.providerNo = providerNo;
 		this.formId = formId;
 		this.episodeId = episodeId;
 		FrmRecord rec = (new FrmRecordFactory()).factory("ONAREnhanced");
-	    props = rec.getFormRecord(Integer.parseInt(demographicNo), formId);
+	    props = rec.getFormRecord(loggedInInfo, Integer.parseInt(demographicNo), formId);
 
 		ARRecordSetDocument recordSetD = ARRecordSetDocument.Factory.newInstance();
 		ARRecordSet recordSet = recordSetD.addNewARRecordSet();
@@ -119,13 +120,13 @@ public class ONAREnhancedFormToXML {
 		recordSetD.save(os,opts);
 	}
 	
-	public boolean addXmlToStream(Writer os, XmlOptions opts, String providerNo,String demographicNo, int formId, int episodeId) throws Exception {
+	public boolean addXmlToStream(LoggedInInfo loggedInInfo, Writer os, XmlOptions opts, String providerNo,String demographicNo, int formId, int episodeId) throws Exception {
 		this.demographicNo = demographicNo;
 		this.providerNo = providerNo;
 		this.formId = formId;
 		this.episodeId = episodeId;	    
 	    FrmRecord rec = (new FrmRecordFactory()).factory("ONAREnhanced");
-	    props = rec.getFormRecord(Integer.parseInt(demographicNo), formId);	    
+	    props = rec.getFormRecord(loggedInInfo, Integer.parseInt(demographicNo), formId);	    
 	    
 	    if(StringUtils.isEmpty(props.getProperty("pg1_formDate")) || StringUtils.isEmpty(props.getProperty("pg2_formDate"))) {
 	    	MiscUtils.getLogger().warn("skipping form since the signature dates are not both set");
@@ -153,13 +154,13 @@ public class ONAREnhancedFormToXML {
 		return false;
 	}
 	
-	public FrmRecord addXmlToStream2(Writer os, XmlOptions opts, String providerNo,String demographicNo, int formId, int episodeId) throws Exception {
+	public FrmRecord addXmlToStream2(LoggedInInfo loggedInInfo, Writer os, XmlOptions opts, String providerNo,String demographicNo, int formId, int episodeId) throws Exception {
 		this.demographicNo = demographicNo;
 		this.providerNo = providerNo;
 		this.formId = formId;
 		this.episodeId = episodeId;	    
 	    FrmRecord rec = (new FrmRecordFactory()).factory("ONAREnhanced");
-	    props = rec.getFormRecord(Integer.parseInt(demographicNo), formId);	    
+	    props = rec.getFormRecord(loggedInInfo, Integer.parseInt(demographicNo), formId);	    
 		//ARRecord arRecord = ARRecord.Factory.newInstance();
 		ARRecordDocument arRecordDoc = ARRecordDocument.Factory.newInstance();
 		ARRecord arRecord = arRecordDoc.addNewARRecord();

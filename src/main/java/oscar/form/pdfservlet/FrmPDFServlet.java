@@ -309,7 +309,7 @@ public class FrmPDFServlet extends HttpServlet {
             java.util.Properties props = new Properties();
             if(record != null) {
 	            try {
-	            	props = record.getFormRecord(demoNo, formId);
+	            	props = record.getFormRecord(loggedInInfo, demoNo, formId);
 	            }catch(SQLException e) {
 	            	MiscUtils.getLogger().error("Error",e);
 	            }

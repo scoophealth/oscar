@@ -1,4 +1,6 @@
 <%@ page import="oscar.form.*"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+
 <%
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     String studyId = request.getParameter("study_no");
@@ -15,7 +17,7 @@
 			pageContext.forward("formarpg1.jsp?demographic_no=" + demoNo + "&formId=" + formId) ; 
  		} else {
 			FrmRecord rec = (new FrmRecordFactory()).factory("AR");
-			java.util.Properties props = rec.getFormRecord(demoNo, formId);
+			java.util.Properties props = rec.getFormRecord(LoggedInInfo.getLoggedInInfoFromSession(request),demoNo, formId);
 
 			pageContext.forward("formar" + props.getProperty("c_lastVisited", "pg1") 
 				+ ".jsp?demographic_no=" + demoNo + "&formId=" + formId + historyet)  ;

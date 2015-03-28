@@ -31,13 +31,14 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
 
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class FrmRourke2006Record extends FrmRecord {
-    public Properties getFormRecord(int demographicNo, int existingID)
+    public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID)
             throws SQLException    {
         Properties props = new Properties();
         

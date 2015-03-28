@@ -70,7 +70,7 @@
 			props = (java.util.Properties)request.getSession().getAttribute("labReq07"+demoNo);	
 		}
 		if(props == null) {
-	   		props = rec.getFormRecord(demoNo, formId);	        
+	   		props = rec.getFormRecord(LoggedInInfo.getLoggedInInfoFromSession(request),demoNo, formId);	        
 			props = ((FrmLabReq07Record) rec).getFormCustRecord(loggedInInfo, loggedInInfo.getCurrentFacility(), props, provNo);
 		}		
 	}

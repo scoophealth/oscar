@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -41,7 +42,7 @@ public class FrmRourkeRecord extends FrmRecord {
     private static Logger logger=MiscUtils.getLogger(); 
 
 	
-    public Properties getFormRecord(int demographicNo, int existingID)
+    public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID)
             throws SQLException    {
         Properties props = new Properties();
 

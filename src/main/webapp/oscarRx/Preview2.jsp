@@ -129,7 +129,7 @@ else {
 }
 
 
-oscar.oscarRx.data.RxPatientData.Patient patient = RxPatientData.getPatient(bean.getDemographicNo());
+oscar.oscarRx.data.RxPatientData.Patient patient = RxPatientData.getPatient(loggedInInfo, bean.getDemographicNo());
 
 
 oscar.oscarRx.data.RxPrescriptionData.Prescription rx = null;

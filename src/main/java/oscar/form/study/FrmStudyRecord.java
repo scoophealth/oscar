@@ -28,8 +28,10 @@ package oscar.form.study;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.oscarehr.util.LoggedInInfo;
+
 public abstract class FrmStudyRecord {
-    public abstract Properties getFormRecord(int demographicNo, int existingID) throws SQLException  ;
+    public abstract Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException  ;
     public abstract int saveFormRecord(Properties props) throws SQLException ;
     public abstract String findActionValue(String submit) throws SQLException ;
     public abstract String createActionURL(String where, String action, String demoId, String formId, String studyId, String studyName) throws SQLException ;

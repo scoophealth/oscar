@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
 
+import org.oscarehr.util.LoggedInInfo;
+
 import oscar.util.UtilDateUtilities;
 
 public class FrmBCBrithSumMoRecord extends FrmRecord {
@@ -13,12 +15,12 @@ public class FrmBCBrithSumMoRecord extends FrmRecord {
 		this.dateFormat = "dd/MM/yyyy";
 	}
 
-	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
+	public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException {
 		
         Properties props = new Properties();
 
         if(existingID <= 0) {
-        	this.setDemoProperties(demographicNo, props);
+        	this.setDemoProperties(loggedInInfo, demographicNo, props);
         	
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), dateFormat));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(new Date(), dateFormat));
@@ -30,7 +32,7 @@ public class FrmBCBrithSumMoRecord extends FrmRecord {
 			frh.setDateFormat(dateFormat);
 			props = (frh).getFormRecord(sql);
 			
-			this.setDemoCurProperties(demographicNo, props);
+			this.setDemoCurProperties(loggedInInfo, demographicNo, props);
         }
         return props;
     }

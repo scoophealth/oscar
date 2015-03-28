@@ -53,7 +53,7 @@
     Facility facility = loggedInInfo.getCurrentFacility();
 
     String demoNo = bean.demographicNo;
-    EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
+    EctPatientData.Patient pd = new EctPatientData().getPatient(loggedInInfo, demoNo);
     String famDocName, famDocSurname, famDocColour, inverseUserColour, userColour;
     String user = (String) session.getAttribute("user");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");

@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
 
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.SxmlMisc;
@@ -48,13 +49,13 @@ public class FrmBCAR2012Record extends FrmRecord{
 
 	private Properties props;
 	
-    public Properties getFormRecord(int demographicNo, int existingID) {
+    public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) {
     	      
         Date dateOfBirth;
         Date dateToday = new Date();
     	
         if(demographicNo > 0) {
-    		super.setDemographic(demographicNo);
+    		super.setDemographic(loggedInInfo, demographicNo);
         }
     	
         if (existingID <= 0) {

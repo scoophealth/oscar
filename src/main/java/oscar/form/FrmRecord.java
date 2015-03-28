@@ -30,10 +30,11 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.SxmlMisc;
@@ -49,13 +50,13 @@ public abstract class FrmRecord {
 	protected DemographicExt demographicExt;
 	protected Map<String, String> demographicExtMap;
 	
-	protected DemographicDao demographicDao;
+	protected DemographicManager demographicManager;
 	protected DemographicExtDao demographicExtDao;
 	
 	protected java.util.Date date;
 	protected String dateFormat;
 
-	public abstract Properties getFormRecord(int demographicNo, int existingID) throws SQLException;
+	public abstract Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException;
 
 	public abstract int saveFormRecord(Properties props) throws SQLException;
 
@@ -78,14 +79,14 @@ public abstract class FrmRecord {
 	
 	
 	public FrmRecord() {	
-		this.demographicDao = SpringUtils.getBean(DemographicDao.class);
+		this.demographicManager = SpringUtils.getBean(DemographicManager.class);
 		this.demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 	} 
 	
 	
-	protected void setDemoProperties(int demographicNo, Properties demoProps) {
+	protected void setDemoProperties(LoggedInInfo loggedInInfo, int demographicNo, Properties demoProps) {
 		
-		this.setDemographic(demographicNo);
+		this.setDemographic(loggedInInfo, demographicNo);
 		
         date = UtilDateUtilities.calcDate(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth());
         demoProps.setProperty("demographic_no", demographic.getDemographicNo().toString());
@@ -113,9 +114,9 @@ public abstract class FrmRecord {
         }
 	}
 	
-	protected void setDemoCurProperties(int demographicNo, Properties demoProps) {
+	protected void setDemoCurProperties(LoggedInInfo loggedInInfo, int demographicNo, Properties demoProps) {
 		
-		this.setDemographic(demographicNo);
+		this.setDemographic(loggedInInfo, demographicNo);
 
 		demoProps.setProperty("c_surname_cur", demographic.getLastName());
 		demoProps.setProperty("c_givenName_cur", demographic.getFirstName());
@@ -134,9 +135,9 @@ public abstract class FrmRecord {
         }
 	}
 	
-	protected void setDemographic(int demographicNo) {
-		if (this.demographicDao != null) {
-			this.demographic = demographicDao.getClientByDemographicNo(demographicNo);
+	protected void setDemographic(LoggedInInfo loggedInInfo, int demographicNo) {
+		if (this.demographicManager != null) {
+			this.demographic = demographicManager.getDemographic(loggedInInfo, demographicNo);
 			this.setDemographicExt(demographicNo);
 		}
 	}

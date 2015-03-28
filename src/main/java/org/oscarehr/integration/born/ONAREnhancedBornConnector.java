@@ -44,6 +44,7 @@ import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlOptions;
 import org.oscarehr.common.dao.BornTransmissionLogDao;
 import org.oscarehr.common.model.BornTransmissionLog;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -109,7 +110,7 @@ public class ONAREnhancedBornConnector {
 		return tmp;
 	}
 	
-	public String updateBorn() throws Exception {
+	public String updateBorn(LoggedInInfo loggedInInfo) throws Exception {
 		String filename = generateFilename();
 		
 		Connection conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
@@ -151,7 +152,7 @@ public class ONAREnhancedBornConnector {
 					*/
 					if(!sent) {
 						MiscUtils.getLogger().info("Adding form "+ id +" for patient " + demographicNo);
-						if(xml.addXmlToStream(pw,opts, null, String.valueOf(demographicNo), id, episodeId)) {				
+						if(xml.addXmlToStream(loggedInInfo, pw,opts, null, String.valueOf(demographicNo), id, episodeId)) {				
 							total++;
 							formIdsSent.add(id);
 						}

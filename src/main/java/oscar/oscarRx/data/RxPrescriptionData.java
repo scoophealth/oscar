@@ -494,7 +494,7 @@ public class RxPrescriptionData {
 	 * @param bean This is the oscarRx session bean
 	 * @return This returns the insert id of the script to be included the drugs table
 	 */
-	public String saveScript(oscar.oscarRx.pageUtil.RxSessionBean bean) {
+	public String saveScript(LoggedInInfo loggedInInfo, oscar.oscarRx.pageUtil.RxSessionBean bean) {
 		/*
 		 * create table prescription ( script_no int(10) auto_increment primary key, provider_no varchar(6), demographic_no int(10), date_prescribed date, date_printed date, dates_reprinted text, textView text);
 		 */
@@ -511,7 +511,7 @@ public class RxPrescriptionData {
 		oscar.oscarRx.data.RxPatientData.Patient patient = null;
 		oscar.oscarRx.data.RxProviderData.Provider provider = null;
 		try {
-			patient = RxPatientData.getPatient(demographic_no);
+			patient = RxPatientData.getPatient(loggedInInfo, demographic_no);
 			provider = new oscar.oscarRx.data.RxProviderData().getProvider(provider_no);
 		} catch (Exception e) {
 			logger.error("unexpected error", e);

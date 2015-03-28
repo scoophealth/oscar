@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -83,7 +84,7 @@ public final class RxChoosePatientAction extends Action {
 		RxPatientData rx = null;
 		RxPatientData.Patient patient = null;
 
-		patient = RxPatientData.getPatient(bean.getDemographicNo());
+		patient = RxPatientData.getPatient(LoggedInInfo.getLoggedInInfoFromSession(request),bean.getDemographicNo());
 
 		String provider = (String) request.getSession().getAttribute("user");
 		WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());

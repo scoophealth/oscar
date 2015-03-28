@@ -86,7 +86,7 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 			Integer demographicId = Integer.parseInt(bean.demographicNo);
 			Locale locale=request.getLocale();
 
-			allergies = RxPatientData.getPatient(demographicId).getActiveAllergies();
+			allergies = RxPatientData.getPatient(loggedInInfo, demographicId).getActiveAllergies();
 
 			// --- get local allergies ---
 			for (int idx = 0; idx < allergies.length; ++idx) {

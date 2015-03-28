@@ -29,6 +29,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
 
+import org.oscarehr.util.LoggedInInfo;
+
 import oscar.util.UtilDateUtilities;
 
 public class FrmBCNewBorn2008Record extends FrmRecord {
@@ -37,12 +39,12 @@ public class FrmBCNewBorn2008Record extends FrmRecord {
 		this.dateFormat = "dd/MM/yyyy";
 	}
 
-	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
+	public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException {
 		Properties props = new Properties();
 
 		if (existingID <= 0) {
 			
-			this.setDemoProperties(demographicNo, props);
+			this.setDemoProperties(loggedInInfo, demographicNo, props);
 			props.setProperty("MothersName", demographic.getLastName() + ", " + demographic.getFirstName());
 			props.setProperty("MothersAge", String.valueOf(UtilDateUtilities.calcAge(this.date)));
 
@@ -58,7 +60,7 @@ public class FrmBCNewBorn2008Record extends FrmRecord {
 			frh.setDateFormat(dateFormat);
 			props = (frh).getFormRecord(sql);
 			
-			this.setDemoCurProperties(demographicNo, props);
+			this.setDemoCurProperties(loggedInInfo, demographicNo, props);
 		}
 		return props;
 	}

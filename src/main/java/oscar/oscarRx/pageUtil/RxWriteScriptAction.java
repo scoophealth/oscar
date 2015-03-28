@@ -53,7 +53,6 @@ import org.apache.struts.util.MessageResources;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
@@ -61,6 +60,8 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -80,12 +81,15 @@ public final class RxWriteScriptAction extends DispatchAction {
 	private static final String DEFAULT_QUANTITY = "30";
 	private static final PartialDateDao partialDateDao = (PartialDateDao)SpringUtils.getBean("partialDateDao");
 
+	DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class) ;
+    
 	String removeExtraChars(String s){
 		return s.replace(""+((char) 130 ),"").replace(""+((char) 194 ),"").replace(""+((char) 195 ),"").replace(""+((char) 172 ),"");
 	}
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
-
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		RxWriteScriptForm frm = (RxWriteScriptForm) form;
 		String fwd = "refresh";
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
@@ -171,7 +175,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 			if (frm.getAction().equals("updateAndPrint")) {
 				// SAVE THE DRUG
 				int i;
-				String scriptId = prescription.saveScript(bean);
+				String scriptId = prescription.saveScript(loggedInInfo, bean);
 				@SuppressWarnings("unchecked")
 				ArrayList<String> attrib_names = bean.getAttributeNames();
 				// p("attrib_names", attrib_names.toString());
@@ -294,7 +298,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 	public ActionForward newCustomNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.debug("=============Start newCustomNote RxWriteScriptAction.java===============");
-
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (bean == null) {
 			response.sendRedirect("error.html");
@@ -326,7 +331,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 			if (RxUtil.isRxUniqueInStash(bean, rx)) {
 				listRxDrugs.add(rx);
 			}
-			int rxStashIndex = bean.addStashItem(rx);
+			int rxStashIndex = bean.addStashItem(loggedInInfo, rx);
 			bean.setStashIndex(rxStashIndex);
 
 			String today = null;
@@ -375,7 +380,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 	public ActionForward newCustomDrug(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.debug("=============Start newCustomDrug RxWriteScriptAction.java===============");
-
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		MessageResources messages = getResources(request);
 		// set default quantity;
 		setDefaultQuantity(request);
@@ -416,7 +422,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 			if (RxUtil.isRxUniqueInStash(bean, rx)) {
 				listRxDrugs.add(rx);
 			}
-			int rxStashIndex = bean.addStashItem(rx);
+			int rxStashIndex = bean.addStashItem(loggedInInfo, rx);
 			bean.setStashIndex(rxStashIndex);
 
 			String today = null;
@@ -486,6 +492,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 	public ActionForward createNewRx(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.debug("=============Start createNewRx RxWriteScriptAction.java===============");
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		// set default quantity
 		setDefaultQuantity(request);
 
@@ -567,7 +575,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 				listRxDrugs.add(rx);
 			}
 			bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
-			int rxStashIndex = bean.addStashItem(rx);
+			int rxStashIndex = bean.addStashItem(loggedInInfo, rx);
 			bean.setStashIndex(rxStashIndex);
 			String today = null;
 			Calendar calendar = Calendar.getInstance();
@@ -1055,8 +1063,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
         public ActionForward getDemoNameAndHIN(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
             String demoNo=request.getParameter("demoNo").trim();
-            DemographicDao demographicDAO=(DemographicDao)SpringUtils.getBean("demographicDao") ;
-            Demographic d=demographicDAO.getDemographic(demoNo);
+            Demographic d=demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request),demoNo);
             HashMap hm=new HashMap();
             if(d!=null){
                 hm.put("patientName", d.getDisplayName());
@@ -1099,11 +1106,13 @@ public final class RxWriteScriptAction extends DispatchAction {
 	}
 
 	public void saveDrug(final HttpServletRequest request) throws Exception {
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 
 		RxPrescriptionData.Prescription rx = null;
 		RxPrescriptionData prescription = new RxPrescriptionData();
-		String scriptId = prescription.saveScript(bean);
+		String scriptId = prescription.saveScript(loggedInInfo, bean);
 		StringBuilder auditStr = new StringBuilder();
 		ArrayList<String> attrib_names = bean.getAttributeNames();
 		for (int i = 0; i < bean.getStashSize(); i++) {

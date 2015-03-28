@@ -27,6 +27,7 @@ import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -41,7 +42,7 @@ public class FrmConsultantRecord extends FrmRecord {
 	private ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
 
 
-	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
+	public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException {
         	Properties props = new Properties();
 
         	if (existingID <= 0) {

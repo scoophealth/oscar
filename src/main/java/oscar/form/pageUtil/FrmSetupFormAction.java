@@ -50,6 +50,7 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -76,7 +77,7 @@ public final class FrmSetupFormAction extends Action {
 	private String _dateFormat = "yyyy-MM-dd";
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		/**
 		 * To create a new form which can write to measurement and osdsf, you need to ...
 		 * Create a xml file with all the measurement types named <formName>.xml (check form/VTForm.xml as an example)
@@ -110,8 +111,8 @@ public final class FrmSetupFormAction extends Action {
 		String today = UtilDateUtilities.DateToString(new Date(), _dateFormat);
 		String visitCod = UtilDateUtilities.DateToString(new Date(), "yyyy-MM-dd");
 
-		List drugLists = getDrugList(demo);
-		List allergyList = getDrugAllegyList(demo);
+		List drugLists = getDrugList(loggedInInfo, demo);
+		List allergyList = getDrugAllegyList(loggedInInfo, demo);
 
 		Properties currentRec = getFormRecord(formName, formId, demo);
 
@@ -250,13 +251,13 @@ public final class FrmSetupFormAction extends Action {
 		return (new ActionForward("/form/form" + formName + ".jsp"));
 	}
 
-	private List getDrugList(String demographicNo) {
+	private List getDrugList(LoggedInInfo loggedInInfo, String demographicNo) {
 		List drugs = new LinkedList();
 		String fluShot = getFluShotBillingDate(demographicNo);
 
 		if (fluShot != null) drugs.add(fluShot + "     Flu Shot");
 
-		RxPatientData.Patient p = RxPatientData.getPatient(Integer.parseInt(demographicNo));
+		RxPatientData.Patient p = RxPatientData.getPatient(loggedInInfo, Integer.parseInt(demographicNo));
 		RxPrescriptionData.Prescription[] prescribedDrugs = p.getPrescribedDrugsUnique();
 		if (prescribedDrugs.length == 0 && fluShot == null) drugs = null;
 		for (int i = 0; i < prescribedDrugs.length; i++) {
@@ -266,10 +267,10 @@ public final class FrmSetupFormAction extends Action {
 		return drugs;
 	}
 
-	private List getDrugAllegyList(String demographicNo) {
+	private List getDrugAllegyList(LoggedInInfo loggedInInfo, String demographicNo) {
 		List allergyLst = new LinkedList();
 
-		RxPatientData.Patient p = RxPatientData.getPatient(Integer.parseInt(demographicNo));
+		RxPatientData.Patient p = RxPatientData.getPatient(loggedInInfo, Integer.parseInt(demographicNo));
 		Allergy[] allergies = p.getActiveAllergies();
 		if (allergies.length == 0) allergyLst = null;
 		for (int i = 0; i < allergies.length; i++) {

@@ -25,6 +25,8 @@
 --%>
 
 <%@ page import="oscar.form.*"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
@@ -44,7 +46,7 @@
 			pageContext.forward("formmhreferral.jsp?demographic_no=" + demoNo + "&formId=" + formId) ;
  		} else {
 			FrmRecord rec = (new FrmRecordFactory()).factory("MentalHealth");
-			java.util.Properties props = rec.getFormRecord(demoNo, formId);
+			java.util.Properties props = rec.getFormRecord(LoggedInInfo.getLoggedInInfoFromSession(request),demoNo, formId);
 
 			pageContext.forward("formmh" + props.getProperty("c_lastVisited", "referral")
 				+ ".jsp?demographic_no=" + demoNo + "&formId=" + formId) ;

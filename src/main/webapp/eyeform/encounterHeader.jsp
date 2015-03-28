@@ -30,6 +30,8 @@
  <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
  <%@ page import="oscar.oscarEncounter.data.*, oscar.oscarProvider.data.*, oscar.util.UtilDateUtilities" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+
 <%
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
     if((bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean"))==null) {
@@ -38,7 +40,7 @@
     }
 
     String demoNo = bean.demographicNo;
-    EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
+    EctPatientData.Patient pd = new EctPatientData().getPatient(LoggedInInfo.getLoggedInInfoFromSession(request) , demoNo);
     String famDocName, famDocSurname, famDocColour, inverseUserColour, userColour;
     String user = (String) session.getAttribute("user");
     ProviderColourUpdater colourUpdater = new ProviderColourUpdater(user);

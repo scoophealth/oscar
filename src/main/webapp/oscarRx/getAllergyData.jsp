@@ -39,7 +39,7 @@ String disabled = oscar.OscarProperties.getInstance().getProperty("rx3.disable_a
 if(disabled.equals("false")) {
 
 oscar.oscarRx.pageUtil.RxSessionBean rxSessionBean = (oscar.oscarRx.pageUtil.RxSessionBean) session.getAttribute("RxSessionBean");
-Allergy[] allergies = RxPatientData.getPatient(rxSessionBean.getDemographicNo()).getAllergies(loggedInInfo);
+Allergy[] allergies = RxPatientData.getPatient(loggedInInfo, rxSessionBean.getDemographicNo()).getAllergies(loggedInInfo);
 
 if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 	try {

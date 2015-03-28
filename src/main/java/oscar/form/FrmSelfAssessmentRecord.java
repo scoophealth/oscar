@@ -29,6 +29,7 @@ import java.util.Properties;
 
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.UtilDateUtilities;
@@ -41,7 +42,7 @@ public class FrmSelfAssessmentRecord extends FrmRecord{
     private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 
     @Override
-    public Properties getFormRecord(int demographicNo, int existingID) throws SQLException{
+    public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException{
         Properties props = new Properties();
         Demographic demographic = demographicDao.getDemographicById(demographicNo);
 

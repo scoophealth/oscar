@@ -68,8 +68,8 @@ import org.oscarehr.ws.rest.conversion.DemographicConverter;
 import org.oscarehr.ws.rest.conversion.ProfessionalSpecialistConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
 import org.oscarehr.ws.rest.to.model.ConsultationAttachmentTo1;
-import org.oscarehr.ws.rest.to.model.ConsultationRequestTo1;
 import org.oscarehr.ws.rest.to.model.ConsultationRequestSearchResult;
+import org.oscarehr.ws.rest.to.model.ConsultationRequestTo1;
 import org.oscarehr.ws.rest.to.model.ConsultationResponseSearchResult;
 import org.oscarehr.ws.rest.to.model.ConsultationResponseTo1;
 import org.oscarehr.ws.rest.to.model.FaxConfigTo1;
@@ -155,7 +155,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 			request.setDemographicId(demographicId);
 			
 			RxInformation rx = new RxInformation();
-			String info = rx.getAllergies(demographicId.toString());
+			String info = rx.getAllergies(getLoggedInInfo(), demographicId.toString());
 			if (StringUtils.isNotBlank(info)) request.setAllergies(info);
 			info = rx.getCurrentMedication(demographicId.toString());
 			if (StringUtils.isNotBlank(info)) request.setCurrentMeds(info);
@@ -252,7 +252,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 		} else {
 			response.setProviderNo(getLoggedInInfo().getLoggedInProviderNo());
 			RxInformation rx = new RxInformation();
-			String info = rx.getAllergies(demographicNo.toString());
+			String info = rx.getAllergies(getLoggedInInfo(), demographicNo.toString());
 			if (StringUtils.isNotBlank(info)) response.setAllergies(info);
 			info = rx.getCurrentMedication(demographicNo.toString());
 			if (StringUtils.isNotBlank(info)) response.setCurrentMeds(info);

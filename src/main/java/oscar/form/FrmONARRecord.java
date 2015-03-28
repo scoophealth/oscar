@@ -6,13 +6,15 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
 
+import org.oscarehr.util.LoggedInInfo;
+
 import oscar.OscarProperties;
 import oscar.login.DBHelp;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class FrmONARRecord extends FrmRecord {
-    public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
+    public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException {
         Properties props = new Properties();
 
         if (existingID <= 0) {

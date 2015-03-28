@@ -35,6 +35,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarRx.data.RxDrugData;
@@ -48,6 +49,7 @@ public final class RxChooseDrugAction extends Action {
         }
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
             // Extract attributes we will need
 
        //     p("locale="+locale.toString());
@@ -131,7 +133,7 @@ public final class RxChooseDrugAction extends Action {
                 bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
                 
 
-                bean.setStashIndex(bean.addStashItem(rx));
+                bean.setStashIndex(bean.addStashItem(loggedInInfo, rx));
             }
             catch (Exception e){
                MiscUtils.getLogger().error("Error", e);

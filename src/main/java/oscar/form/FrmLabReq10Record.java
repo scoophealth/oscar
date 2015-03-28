@@ -41,7 +41,6 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicForm;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.common.dao.ClinicDAO;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
@@ -56,13 +55,12 @@ import oscar.util.UtilDateUtilities;
 public class FrmLabReq10Record extends FrmRecord {
 	private static Logger logger=MiscUtils.getLogger();
 
-	private DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
-
-	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
+	
+	public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException {
         Properties props = new Properties();
 
         if (existingID <= 0) {
-        	Demographic demographic=demographicDao.getDemographicById(demographicNo);
+        	Demographic demographic=demographicManager.getDemographic(loggedInInfo, demographicNo);
 
             if (demographic!=null) {
                 props.setProperty("demographic_no", String.valueOf(demographic.getDemographicNo()));

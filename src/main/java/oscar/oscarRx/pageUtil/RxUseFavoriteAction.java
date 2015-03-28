@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -52,7 +53,9 @@ public final class RxUseFavoriteAction extends DispatchAction {
     throws IOException, ServletException {
 
 
-
+    	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
+    	
         // Setup variables
         oscar.oscarRx.pageUtil.RxSessionBean bean =
         (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
@@ -76,7 +79,7 @@ public final class RxUseFavoriteAction extends DispatchAction {
 
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
 
-            bean.setStashIndex(bean.addStashItem(rx));
+            bean.setStashIndex(bean.addStashItem(loggedInInfo, rx));
             request.setAttribute("BoxNoFillFirstLoad", "true");
         }
         catch (Exception e) {
@@ -92,6 +95,8 @@ public final class RxUseFavoriteAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException {
 
+    	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
         // Setup variables
         oscar.oscarRx.pageUtil.RxSessionBean bean =
         (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
@@ -126,7 +131,7 @@ public final class RxUseFavoriteAction extends DispatchAction {
             if(RxUtil.isRxUniqueInStash(bean, rx)){
                 listRxDrugs.add(rx);
             }
-            int rxStashIndex=bean.addStashItem(rx);
+            int rxStashIndex=bean.addStashItem(loggedInInfo, rx);
             bean.setStashIndex(rxStashIndex);
 
 

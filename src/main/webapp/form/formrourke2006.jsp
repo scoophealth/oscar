@@ -23,7 +23,7 @@
     Ontario, Canada
 
 --%>
-
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="oscar.form.*"%><%
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));    
@@ -34,7 +34,7 @@
 			pageContext.forward("formrourke2006p1.jsp?demographic_no=" + demoNo + "&formId=" + formId) ; 
  		} else {
 			FrmRecord rec = (new FrmRecordFactory()).factory("Rourke2006");
-			java.util.Properties props = rec.getFormRecord(demoNo, formId);
+			java.util.Properties props = rec.getFormRecord(LoggedInInfo.getLoggedInInfoFromSession(request) ,demoNo, formId);
 
 			String pageNum = props.getProperty("c_lastVisited", "p1"); //'p1'
                         pageContext.forward("formrourke2006" + pageNum

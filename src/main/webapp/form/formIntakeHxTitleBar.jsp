@@ -28,6 +28,7 @@
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@ page import="oscar.form.FrmRecord"%>
 <%@ page import="oscar.form.FrmRecordFactory"%>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
 
 <%
     String formClass = "IntakeHx";
@@ -39,7 +40,7 @@
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
 
     FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
-    java.util.Properties props = rec.getFormRecord(demoNo, formId);
+    java.util.Properties props = rec.getFormRecord(LoggedInInfo.getLoggedInInfoFromSession(request),demoNo, formId);
     
     String projectHome = request.getContextPath().substring(1);
     ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");

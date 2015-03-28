@@ -32,7 +32,7 @@
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*"%>
 <%@ page import="oscar.form.*"%>
-
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

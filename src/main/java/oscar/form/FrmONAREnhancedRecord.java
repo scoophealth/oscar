@@ -38,6 +38,7 @@ import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -54,12 +55,12 @@ public class FrmONAREnhancedRecord extends FrmRecord {
 		this.dateFormat = "yyyy/MM/dd";
 	}
 	
-	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
+	public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException {
 		Properties props = new Properties();
 
 		if (existingID <= 0) {
 
-			this.setDemoProperties(demographicNo, props);
+			this.setDemoProperties(loggedInInfo, demographicNo, props);
 			props.setProperty("c_lastName", StringUtils.trimToEmpty(demographic.getLastName()));
 			props.setProperty("c_firstName", StringUtils.trimToEmpty(demographic.getFirstName()));
 			props.setProperty("c_hin", demographic.getHin());

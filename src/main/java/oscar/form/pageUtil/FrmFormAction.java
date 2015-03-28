@@ -52,6 +52,7 @@ import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementDao.SearchCriteria;
 import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -89,6 +90,8 @@ public class FrmFormAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
 
+    	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
         ActionMessages errors = new ActionMessages();
         boolean valid = true;
         logger.debug("FrmFormAction is called "+currentMem());
@@ -264,7 +267,7 @@ public class FrmFormAction extends Action {
             logger.debug("current mem 9 "+currentMem());
             //Send to Mils thru xml-rpc
             Properties nameProps = convertName(formName);
-            String xmlData = FrmToXMLUtil.convertToXml(measurementTypes, nameProps, props);
+            String xmlData = FrmToXMLUtil.convertToXml(loggedInInfo, measurementTypes, nameProps, props);
             String decisionSupportURL = connect2OSDSF(xmlData);
             request.setAttribute("decisionSupportURL", decisionSupportURL);
             logger.debug("current mem 9 "+currentMem());

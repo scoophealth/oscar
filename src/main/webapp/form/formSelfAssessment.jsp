@@ -35,6 +35,7 @@
 <%@ page import="org.oscarehr.common.model.Demographic"%>
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 
 <%
     String formClass = "SelfAssessment";
@@ -45,7 +46,7 @@
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
 
     FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
-    java.util.Properties props = rec.getFormRecord(demoNo, formId);  
+    java.util.Properties props = rec.getFormRecord(LoggedInInfo.getLoggedInInfoFromSession(request),demoNo, formId);  
     
     DemographicDao demoDao = (DemographicDao) SpringUtils.getBean("demographicDao");
     Demographic demo = demoDao.getDemographic(request.getParameter("demographic_no"));

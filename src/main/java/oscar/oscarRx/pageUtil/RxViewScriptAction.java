@@ -35,6 +35,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarRx.data.RxPrescriptionData;
 
@@ -46,7 +47,8 @@ public final class RxViewScriptAction extends Action {
     HttpServletResponse response)
     throws IOException, ServletException {
 
-        
+    	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
         // Setup variables
        
         
@@ -59,7 +61,7 @@ public final class RxViewScriptAction extends Action {
         
         RxPrescriptionData.Prescription rx;
         RxPrescriptionData prescription = new RxPrescriptionData();
-        String scriptId = prescription.saveScript(bean);
+        String scriptId = prescription.saveScript(loggedInInfo, bean);
         
         int i;
         

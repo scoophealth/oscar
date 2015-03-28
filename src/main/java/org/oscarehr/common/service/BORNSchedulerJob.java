@@ -23,24 +23,59 @@
  */
 package org.oscarehr.common.service;
 
+import java.util.List;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
+import org.caisi.dao.ProviderDAO;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.SecurityDao;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.integration.born.ONAREnhancedBornConnector;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
+
+import oscar.OscarProperties;
 
 public class BORNSchedulerJob extends TimerTask {
 
 	private static final Logger logger = MiscUtils.getLogger();
 
+
 	@Override
 	public void run() {
 		try {
+			
+			String providerNo = OscarProperties.getInstance().getProperty("born_scheduler_job_run_as_provider");
+			if(providerNo == null) {
+				return;
+			}
+			
+			ProviderDAO providerDao = SpringUtils.getBean(ProviderDao.class);
+			Provider provider = providerDao.getProvider(providerNo);
+			
+			if(provider == null) {
+				return;
+			}
+			
+			SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+			List<Security> securityList = securityDao.findByProviderNo(providerNo);
+			
+			if(securityList.isEmpty()) {
+				return;
+			}
+			
+			LoggedInInfo x = new LoggedInInfo();
+			x.setLoggedInProvider(provider);
+			x.setLoggedInSecurity(securityList.get(0));
+			
 			logger.info("starting BORN upload job");
 			
 			ONAREnhancedBornConnector c = new ONAREnhancedBornConnector();
-			c.updateBorn();
+			c.updateBorn(x);
 			
 			logger.info("done BORN upload job");
 			

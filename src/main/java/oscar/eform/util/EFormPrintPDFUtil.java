@@ -202,7 +202,7 @@ public final class EFormPrintPDFUtil {
         	FrmRecord rec = (new FrmRecordFactory()).factory("Growth0_36");
         	
             try {
-                java.util.Properties growthProps = rec.getFormRecord(demographicNo, pfrm.formId);
+                java.util.Properties growthProps = rec.getFormRecord(loggedInInfo, demographicNo, pfrm.formId);
                 Enumeration<Object> keys = growthProps.keys();
                 String key;
                 String value;

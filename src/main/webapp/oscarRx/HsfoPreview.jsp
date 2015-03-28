@@ -31,7 +31,7 @@
 <%@ page import="oscar.oscarProvider.data.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="oscar.*,java.lang.*"%>
-
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
 
 <html:html locale="true">
 <head>
@@ -68,8 +68,9 @@
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 
 <%
+
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
-oscar.oscarRx.data.RxPatientData.Patient patient = RxPatientData.getPatient(bean.getDemographicNo());
+oscar.oscarRx.data.RxPatientData.Patient patient = RxPatientData.getPatient(LoggedInInfo.getLoggedInInfoFromSession(request), bean.getDemographicNo());
 oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
 oscar.oscarRx.data.RxPrescriptionData.Prescription rx;
 int i;
