@@ -338,7 +338,7 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
         CaseManagementNoteLink cmnl=new CaseManagementNoteLink();
         cmnl.setTableName(CaseManagementNoteLink.DRUGS);
         cmnl.setTableId(Long.parseLong(idStr));//drug id
-        cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
+        cmnl.setNoteId(cmn.getId());
 
 
         EDocUtil.addCaseMgmtNoteLink(cmnl);

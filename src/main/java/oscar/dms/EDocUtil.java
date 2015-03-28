@@ -830,22 +830,6 @@ public final class EDocUtil extends SqlUtilBaseS {
 		return docDesc;
 	}
 
-	public static String getLastNoteId() {
-		String noteId = null;
-		try {
-
-			String sql = "select max(note_id) from casemgmt_note";
-			ResultSet rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				noteId = oscar.Misc.getString(rs, 1);
-			}
-			rs.close();
-		} catch (SQLException e) {
-			logger.error("Error", e);
-		}
-		return noteId;
-	}
-
 	public static byte[] getFile(String fpath) {
 		byte[] fdata = null;
 		FileInputStream fis=null;
