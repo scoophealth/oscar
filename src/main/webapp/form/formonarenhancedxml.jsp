@@ -39,7 +39,7 @@
 	response.setHeader ("Content-Disposition", "attachment; filename=\"ar.xml\"");
 
 	ONAREnhancedFormToXML gen = new ONAREnhancedFormToXML();
-	gen.generateXMLAndValidate(response.getOutputStream(),providerNo,demographicNo, Integer.parseInt(formId),Integer.parseInt(episodeId));
+	gen.generateXMLAndValidate(loggedInInfo, response.getOutputStream(),providerNo,demographicNo, Integer.parseInt(formId),Integer.parseInt(episodeId));
 	response.getOutputStream().flush();
 	response.getOutputStream().close();
 	%>

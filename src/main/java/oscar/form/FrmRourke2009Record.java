@@ -54,7 +54,7 @@ public class FrmRourke2009Record extends FrmRecord {
 	private DemographicDao demoDAO = (DemographicDao)SpringUtils.getBean("demographicDao");
 	private String graphType;
 	
-    public Properties getFormRecord(int demographicNo, int existingID)
+    public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID)
             throws SQLException    {
         Properties props = new Properties();
         
@@ -213,7 +213,7 @@ public class FrmRourke2009Record extends FrmRecord {
                 	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
                 	
 	                    try {
-	                        java.util.Properties growthProps = rec.getFormRecord(demographicNo, pfrm.formId);
+	                        java.util.Properties growthProps = rec.getFormRecord(loggedInInfo, demographicNo, pfrm.formId);
 	                        Enumeration<Object> keys = growthProps.keys();
 	                        String key;
 	                        String value;

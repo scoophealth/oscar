@@ -39,6 +39,7 @@ import org.apache.xmlbeans.XmlCalendar;
 import org.apache.xmlbeans.XmlOptions;
 import org.oscarehr.common.dao.BillingDao;
 import org.oscarehr.common.model.Billing;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -66,7 +67,7 @@ public class FrmToXMLUtil{
    public FrmToXMLUtil() {
    }
    
-    public static String convertToXml(Vector measurementTypes, Properties nameProps, Properties dataProps){
+    public static String convertToXml(LoggedInInfo loggedInInfo, Vector measurementTypes, Properties nameProps, Properties dataProps){
              
         // TODO code application logic here            
         String _dateFormat = "yyyy-MM-dd hh:mm:ss";
@@ -222,7 +223,7 @@ public class FrmToXMLUtil{
             
             
             //get drug list             
-            RxPatientData.Patient p = RxPatientData.getPatient(Integer.parseInt(dataProps.getProperty("demographic_no")==null?"0":dataProps.getProperty("demographic_no")));
+            RxPatientData.Patient p = RxPatientData.getPatient(loggedInInfo, Integer.parseInt(dataProps.getProperty("demographic_no")==null?"0":dataProps.getProperty("demographic_no")));
             RxPrescriptionData.Prescription[] prescribedDrugs = p.getPrescribedDrugsUnique();            
             for(int i=0; i<prescribedDrugs.length; i++){                
                 SitePatientVisitRecordsDocument.SitePatientVisitRecords.SitePatientVisit.SitePatientVisitDrug drug = visit.addNewSitePatientVisitDrug();                

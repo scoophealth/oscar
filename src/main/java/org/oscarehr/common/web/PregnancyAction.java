@@ -159,7 +159,7 @@ public class PregnancyAction extends DispatchAction {
 		//start up a new ar on enhanced form
 		try {
 			FrmONAREnhancedRecord f = new FrmONAREnhancedRecord();
-			Properties p = f.getFormRecord(demographicNo, 0);
+			Properties p = f.getFormRecord(loggedInInfo, demographicNo, 0);
 			p.setProperty("episodeId", String.valueOf(e.getId()));
 			f.saveFormRecord(p);
 		}catch(SQLException ee) {
@@ -240,7 +240,7 @@ public class PregnancyAction extends DispatchAction {
 
 		if(labReqVersion.equals("07")) {
 			FrmLabReq07Record lr = new FrmLabReq07Record();
-			Properties p = lr.getFormRecord(demographicNo, 0);		
+			Properties p = lr.getFormRecord(loggedInInfo, demographicNo, 0);		
 			p = lr.getFormCustRecord(loggedInInfo,loggedInInfo.getCurrentFacility(),p, providerNo);
 			if(penicillin != null && penicillin.equals("checked")) {
 				p.setProperty("o_otherTests1","Vaginal Anal GBS w/ sensitivities");
@@ -251,7 +251,7 @@ public class PregnancyAction extends DispatchAction {
 			request.getSession().setAttribute("labReq07"+demographicNo,p);
 		}else {
 			FrmLabReq10Record lr = new FrmLabReq10Record();
-			Properties p = lr.getFormRecord(demographicNo, 0);		
+			Properties p = lr.getFormRecord(loggedInInfo, demographicNo, 0);		
 			p = lr.getFormCustRecord(p, providerNo);
 			if(penicillin != null && penicillin.equals("checked")) {
 				p.setProperty("o_otherTests1","Vaginal Anal GBS w/ sensitivities");
@@ -275,7 +275,7 @@ public class PregnancyAction extends DispatchAction {
 
 		if(labReqVersion.equals("07")) {
 			FrmLabReq07Record lr = new FrmLabReq07Record();
-			Properties p = lr.getFormRecord(demographicNo, 0);
+			Properties p = lr.getFormRecord(loggedInInfo, demographicNo, 0);
 			p = lr.getFormCustRecord(loggedInInfo,loggedInInfo.getCurrentFacility(),p, providerNo);
 			
 			if(ferritin != null && ferritin.equals("checked")) {
@@ -288,7 +288,7 @@ public class PregnancyAction extends DispatchAction {
 			
 		} else {
 			FrmLabReq10Record lr = new FrmLabReq10Record();
-			Properties p = lr.getFormRecord(demographicNo, 0);
+			Properties p = lr.getFormRecord(loggedInInfo, demographicNo, 0);
 			p = lr.getFormCustRecord(p, providerNo);
 			
 			if(ferritin != null && ferritin.equals("checked")) {
@@ -373,7 +373,7 @@ public class PregnancyAction extends DispatchAction {
                 curPageNum = curPageNum.length() > 3 ? ("" + curPageNum.charAt(0)) : curPageNum;
 
                 //copy an old record
-                props = rec.getFormRecord(Integer.parseInt(request.getParameter("demographic_no")), Integer
+                props = rec.getFormRecord(LoggedInInfo.getLoggedInInfoFromSession(request) , Integer.parseInt(request.getParameter("demographic_no")), Integer
                         .parseInt(request.getParameter("formId")));
 
                 //empty the current page
@@ -541,7 +541,7 @@ Repeat antibody screen
 		
 		if(labReqVersion.equals("07")) {
 			FrmLabReq07Record lr = new FrmLabReq07Record();
-			Properties p = lr.getFormRecord(demographicNo, 0);
+			Properties p = lr.getFormRecord(loggedInInfo, demographicNo, 0);
 			p = lr.getFormCustRecord(loggedInInfo,loggedInInfo.getCurrentFacility(),p, providerNo);
 			
 			if(hb != null && hb.equals("checked")) {
@@ -560,7 +560,7 @@ Repeat antibody screen
 			request.getSession().setAttribute("labReq07"+demographicNo,p);
 		} else {
 			FrmLabReq10Record lr = new FrmLabReq10Record();
-			Properties p = lr.getFormRecord(demographicNo, 0);
+			Properties p = lr.getFormRecord(loggedInInfo, demographicNo, 0);
 			p = lr.getFormCustRecord(p, providerNo);
 			
 			if(hb != null && hb.equals("checked")) {
@@ -590,7 +590,7 @@ Repeat antibody screen
 
 		if(labReqVersion.equals("07")) {
 			FrmLabReq07Record lr = new FrmLabReq07Record();
-			Properties p = lr.getFormRecord(demographicNo, 0);
+			Properties p = lr.getFormRecord(loggedInInfo, demographicNo, 0);
 			p = lr.getFormCustRecord(loggedInInfo,loggedInInfo.getCurrentFacility(),p, providerNo);
 					
 			if(glucose != null && glucose.equals("checked")) {
@@ -599,7 +599,7 @@ Repeat antibody screen
 			request.getSession().setAttribute("labReq07"+demographicNo,p);
 		} else {
 			FrmLabReq10Record lr = new FrmLabReq10Record();
-			Properties p = lr.getFormRecord(demographicNo, 0);
+			Properties p = lr.getFormRecord(loggedInInfo, demographicNo, 0);
 			p = lr.getFormCustRecord(p, providerNo);
 					
 			if(glucose != null && glucose.equals("checked")) {
@@ -683,7 +683,7 @@ Repeat antibody screen
 		FrmONARRecord ar2005 = new FrmONARRecord();
 		Properties p = null;
 		try {
-			p = ar2005.getFormRecord(demographicNo, Integer.parseInt(formId));
+			p = ar2005.getFormRecord(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo, Integer.parseInt(formId));
 		}catch(SQLException ex) {
 			request.setAttribute("message", "Error: Couldn't read existing AR2005 form");
 			return mapping.findForward("migrate");
@@ -743,7 +743,7 @@ Repeat antibody screen
 		FrmONARRecord ar2005 = new FrmONARRecord();
 		Properties p = null;
 		try {
-			p = ar2005.getFormRecord(demographicNo, Integer.parseInt(formId));
+			p = ar2005.getFormRecord(loggedInInfo, demographicNo, Integer.parseInt(formId));
 		}catch(SQLException ex) {
 			request.setAttribute("message", "Error: Couldn't read existing AR2005 form");
 			return mapping.findForward("migrate");
@@ -752,7 +752,7 @@ Repeat antibody screen
 		FrmONAREnhancedRecord f = new FrmONAREnhancedRecord();
 		Properties newProps = null;
 		try {
-			newProps = f.getFormRecord(demographicNo, 0);
+			newProps = f.getFormRecord(loggedInInfo, demographicNo, 0);
 		}catch(SQLException ex) {
 			request.setAttribute("message", "Error: Couldn't create new enhanced form");
 			return mapping.findForward("migrate");

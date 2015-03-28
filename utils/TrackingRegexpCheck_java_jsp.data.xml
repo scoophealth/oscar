@@ -1304,7 +1304,7 @@
         <ViolationValue>/src/main/java/oscar/form/study/HSFO/pageUtil/ManageHSFOAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/study/HSFO/pageUtil/ManageHSFOAction.java:importanceHash[e] = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/util/FrmToXMLUtil.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/util/FrmToXMLUtil.java:public static String convertToXml(Vector measurementTypes, Properties nameProps, Properties dataProps){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/util/FrmToXMLUtil.java:public static String convertToXml(LoggedInInfo loggedInInfo, Vector measurementTypes, Properties nameProps, Properties dataProps){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/util/FrmXml2VTData.java:// "VTData":VTData; "VisitDrug":Vector-VisitDrug; "PatientContactInfo":PatientContactInfo</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/LoginCheckLogin.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/LoginCheckLogin.java:import java.util.Vector;</ViolationValue>

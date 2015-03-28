@@ -61,7 +61,7 @@ select {
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String demographicNo = (String) request.getAttribute("demographicNo");
-	org.oscarehr.common.model.Allergy[] allergies = RxPatientData.getPatient(Integer.parseInt(demographicNo)).getAllergies(loggedInInfo);
+	org.oscarehr.common.model.Allergy[] allergies = RxPatientData.getPatient(loggedInInfo, Integer.parseInt(demographicNo)).getAllergies(loggedInInfo);
 		String aller = "";
 		for (int j = 0; j < allergies.length; j++) {
 			aller += allergies[j].getShortDesc(13, 8,

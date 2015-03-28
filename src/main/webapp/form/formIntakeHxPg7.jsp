@@ -28,6 +28,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+
 <html:html locale="true">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

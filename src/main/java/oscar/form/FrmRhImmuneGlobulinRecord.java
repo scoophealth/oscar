@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Properties;
 
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -41,7 +42,7 @@ import oscar.util.UtilDateUtilities;
 public class FrmRhImmuneGlobulinRecord extends FrmRecord {
 	private String _dateFormat = "yyyy-MM-dd";
 
-	public Properties getFormRecord(int demographicNo, int existingID)
+	public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID)
 		throws SQLException {
 		Properties props = new Properties();
                 

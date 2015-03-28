@@ -41,6 +41,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarRx.data.RxPatientData;
+import oscar.oscarRx.data.RxPatientData.Patient;
 import oscar.util.DateUtils;
 
 public final class AllergyHelperBean {
@@ -50,7 +51,7 @@ public final class AllergyHelperBean {
 	public static List<AllergyDisplay> getAllergiesToDisplay(LoggedInInfo loggedInInfo, Integer demographicId, Locale locale)  {
 		ArrayList<AllergyDisplay> results = new ArrayList<AllergyDisplay>();
 
-		addLocalAllergies(demographicId, results, locale);
+		addLocalAllergies(loggedInInfo, demographicId, results, locale);
 
 		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 			addIntegratorAllergies(loggedInInfo, demographicId, results, locale);
@@ -59,8 +60,12 @@ public final class AllergyHelperBean {
 		return (results);
 	}
 
-	private static void addLocalAllergies(Integer demographicId, ArrayList<AllergyDisplay> results, Locale locale)  {
-		Allergy[] allergies = RxPatientData.getPatient(demographicId).getActiveAllergies();
+	private static void addLocalAllergies(LoggedInInfo loggedInInfo, Integer demographicId, ArrayList<AllergyDisplay> results, Locale locale)  {
+		Patient pt = RxPatientData.getPatient(loggedInInfo, demographicId);
+		if(pt == null) {
+			return;
+		}
+		Allergy[] allergies = pt.getActiveAllergies();
 
 		if (allergies == null) return;
 

@@ -31,6 +31,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
 
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
@@ -54,7 +55,7 @@
    int formId = Integer.parseInt(request.getParameter("formId"));
    
    FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
-   java.util.Properties props = rec.getFormRecord(demoNo, formId);
+   java.util.Properties props = rec.getFormRecord(LoggedInInfo.getLoggedInInfoFromSession(request),demoNo, formId);
    
    if (request.getParameter("readOnly") != null){
       readOnly = true;

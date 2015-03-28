@@ -27,6 +27,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
 
 <%
@@ -37,7 +38,7 @@ int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
 int formId = Integer.parseInt(request.getParameter("formId"));
 int provNo = Integer.parseInt((String) session.getAttribute("user"));
 FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
-java.util.Properties props = rec.getFormRecord(demoNo, formId);
+java.util.Properties props = rec.getFormRecord(LoggedInInfo.getLoggedInInfoFromSession(request),demoNo, formId);
 
 FrmData fd = new FrmData();
 String resource = fd.getResource();

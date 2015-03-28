@@ -35,6 +35,7 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.phr.model.PHRMedication;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -211,7 +212,7 @@ public class RxSessionBean  implements java.io.Serializable {
         stash.set(index, item);
     }
 
-    public int addStashItem(RxPrescriptionData.Prescription item) {
+    public int addStashItem(LoggedInInfo loggedInInfo, RxPrescriptionData.Prescription item) {
 
         int ret = -1;
 
@@ -251,7 +252,7 @@ public class RxSessionBean  implements java.io.Serializable {
         else {
             stash.add(item);
             preloadInteractions();
-            preloadAllergyWarnings(item.getAtcCode());
+            preloadAllergyWarnings(loggedInInfo, item.getAtcCode());
 
 
             return this.getStashSize()-1;
@@ -294,9 +295,9 @@ public class RxSessionBean  implements java.io.Serializable {
     }
 
 
-    private void preloadAllergyWarnings(String atccode){
+    private void preloadAllergyWarnings(LoggedInInfo loggedInInfo, String atccode){
        try{
-         Allergy[] allergies = RxPatientData.getPatient(getDemographicNo()).getActiveAllergies();
+         Allergy[] allergies = RxPatientData.getPatient(loggedInInfo, getDemographicNo()).getActiveAllergies();
          RxAllergyWarningWorker worker = new RxAllergyWarningWorker(this,atccode,allergies);
          addToWorkingAllergyWarnings(atccode,worker);
          worker.start();
@@ -317,7 +318,7 @@ public class RxSessionBean  implements java.io.Serializable {
     }
 
 
-    public Allergy[] getAllergyWarnings(String atccode){
+    public Allergy[] getAllergyWarnings(LoggedInInfo loggedInInfo, String atccode){
       Allergy[] allergies = null;
 
       //Check to see if Allergy checking property is on and if atccode is not null and if atccode is not "" or "null"
@@ -349,7 +350,7 @@ public class RxSessionBean  implements java.io.Serializable {
          	 logger.debug("NEW ATC CODE for allergy");
              try{
                 RxDrugData drugData = new RxDrugData();
-                Allergy[]  allAllergies = RxPatientData.getPatient(getDemographicNo()).getActiveAllergies();
+                Allergy[]  allAllergies = RxPatientData.getPatient(loggedInInfo, getDemographicNo()).getActiveAllergies();
                 allergies = drugData.getAllergyWarnings(atccode,allAllergies);
                     if (allergies != null){
                        addAllergyWarnings(atccode,allergies);

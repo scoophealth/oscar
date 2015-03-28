@@ -767,7 +767,7 @@ function importFromEnct(reqInfo,txtArea)
 					}
 					else
 					{
-						oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+						oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request), demo);
 						value = EctInfo.getMedicalHistory();
 					}
 					if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single"))
@@ -787,7 +787,7 @@ function importFromEnct(reqInfo,txtArea)
 					}
 					else
 					{
-						oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+						oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request),demo);
 						value = EctInfo.getOngoingConcerns();
 					}
 					if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single"))
@@ -803,7 +803,7 @@ function importFromEnct(reqInfo,txtArea)
 				{
 					if (OscarProperties.getInstance().getBooleanProperty("caisi", "on"))
 					{
-						oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+						oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request),demo);
 						value = EctInfo.getFamilyHistory();
 					}
 					else
@@ -814,7 +814,7 @@ function importFromEnct(reqInfo,txtArea)
 						}
 						else
 						{
-							oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+							oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request),demo);
 							value = EctInfo.getFamilyHistory();
 						}
 					}
@@ -842,7 +842,7 @@ function importFromEnct(reqInfo,txtArea)
 						else
 						{
 							//family history was used as bucket for Other Meds in old encounter
-							oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+							oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request),demo);
 							value = EctInfo.getFamilyHistory();
 						}
 					}
@@ -864,7 +864,7 @@ function importFromEnct(reqInfo,txtArea)
 					}
 					else
 					{
-						oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+						oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request),demo);
 						value = EctInfo.getReminders();
 					}
 					//if( !value.equals("") ) {
@@ -1152,11 +1152,11 @@ function updateFaxButton() {
 			{
 				oscar.oscarDemographic.data.RxInformation RxInfo = new oscar.oscarDemographic.data.RxInformation();
                 EctViewRequestAction.fillFormValues(thisForm,consultUtil);
-				thisForm.setAllergies(RxInfo.getAllergies(demo));
+				thisForm.setAllergies(RxInfo.getAllergies(loggedInInfo, demo));
 
 				if (props.getProperty("currentMedications", "").equalsIgnoreCase("otherMedications"))
 				{
-					oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+					oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request),demo);
 					thisForm.setCurrentMedications(EctInfo.getFamilyHistory());
 				}
 				else

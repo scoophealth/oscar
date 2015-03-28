@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.oscarehr.util.LoggedInInfo;
+
 import oscar.login.DBHelp;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
@@ -14,7 +16,7 @@ import oscar.util.UtilDateUtilities;
 public class FrmBCINRRecord extends FrmRecord {
 	private String _dateFormat = "dd/MM/yyyy";
 
-	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
+	public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException {
 		Properties props = new Properties();
 
 		if (existingID <= 0) {

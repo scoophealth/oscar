@@ -32,6 +32,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -239,7 +240,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
 
 
 
-	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
+	public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException {
         Properties props = new Properties();
         if (existingID <= 0) {
 

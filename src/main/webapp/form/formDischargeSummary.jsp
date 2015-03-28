@@ -29,7 +29,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page
 	import="org.springframework.context.*,org.springframework.web.context.support.*"%>
-
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 
 <%
 	String formClass = "DischargeSummary";

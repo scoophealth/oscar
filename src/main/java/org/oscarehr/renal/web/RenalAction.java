@@ -264,7 +264,7 @@ public class RenalAction extends DispatchAction {
 		
 		if(labReqVersion.equals("07")) {
 			FrmLabReq07Record lr = new FrmLabReq07Record();
-			Properties p = lr.getFormRecord(demographicNo, 0);		
+			Properties p = lr.getFormRecord(loggedInInfo, demographicNo, 0);		
 			p = lr.getFormCustRecord(loggedInInfo, loggedInInfo.getCurrentFacility(), p, loggedInInfo.getLoggedInProviderNo());
 			p.setProperty("b_creatinine","checked=\"checked\"");	
 			p.setProperty("b_acRatioUrine","checked=\"checked\"");	
@@ -272,7 +272,7 @@ public class RenalAction extends DispatchAction {
 			request.getSession().setAttribute("labReq07"+demographicNo,p);
 		}else {
 			FrmLabReq10Record lr = new FrmLabReq10Record();
-			Properties p = lr.getFormRecord(demographicNo, 0);		
+			Properties p = lr.getFormRecord(loggedInInfo, demographicNo, 0);		
 			p = lr.getFormCustRecord(p, loggedInInfo.getLoggedInProviderNo());
 			p.setProperty("b_creatinine","checked=\"checked\"");	
 			p.setProperty("b_acRatioUrine","checked=\"checked\"");	

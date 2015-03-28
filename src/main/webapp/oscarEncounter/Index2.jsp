@@ -61,7 +61,7 @@ You have no rights to access the data!
 <security:oscarSec roleName="_principal" objectName="_eChart"
 	rights="ow" reverse="<%=false%>">
 	<% 	bPrincipalControl = true;
-	if(EctPatientData.getProviderNo(demographic$).equals((String) session.getAttribute("user")) ) {
+	if(EctPatientData.getProviderNo(loggedInInfo, demographic$).equals((String) session.getAttribute("user")) ) {
 		bPrincipalDisplay = true;
 	}
 %>
@@ -168,7 +168,7 @@ if (request.getParameter("casetoEncounter")==null)
   String demoNo = bean.demographicNo;
   String provNo = bean.providerNo;
   EctFormData.Form[] forms = EctFormData.getForms();
-  EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
+  EctPatientData.Patient pd = new EctPatientData().getPatient(loggedInInfo, demoNo);
   String famDocName, famDocSurname;
   if(bean.familyDoctorNo.equals("")) {
     famDocName = "";
@@ -1403,7 +1403,7 @@ function grabEnterGetTemplate(event){
 						<div class="presBox" id="allergyBox">
 						<ul>
 							<%
-								org.oscarehr.common.model.Allergy[] allergies =RxPatientData.getPatient(Integer.parseInt(demoNo)).getAllergies(loggedInInfo);
+								org.oscarehr.common.model.Allergy[] allergies =RxPatientData.getPatient(loggedInInfo, Integer.parseInt(demoNo)).getAllergies(loggedInInfo);
 
                                             for (int j=0; j<allergies.length; j++){%>
 							<li><a

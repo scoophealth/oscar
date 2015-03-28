@@ -102,7 +102,7 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 				PrintWriter pw = new PrintWriter(sw);
 				String result = null;
 				sw.append("<ARRecordSet xmlns=\"http://www.oscarmcmaster.org/AR2005\">");
-				if (xml.addXmlToStream(pw, opts, null, String.valueOf(metadata.get("demographicNo")), (Integer) metadata.get("id"), (Integer) metadata.get("episodeId"))) {
+				if (xml.addXmlToStream(x,pw, opts, null, String.valueOf(metadata.get("demographicNo")), (Integer) metadata.get("id"), (Integer) metadata.get("episodeId"))) {
 					sw.append("</ARRecordSet>");
 					result = sw.toString();
 					formIdsSent.add((Integer) metadata.get("id"));

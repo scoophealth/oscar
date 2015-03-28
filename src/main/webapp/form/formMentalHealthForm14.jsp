@@ -25,6 +25,7 @@
 <%@ page
 	import="oscar.form.*, oscar.OscarProperties, java.util.Date, oscar.util.UtilDateUtilities"%>
 <%@page import="org.oscarehr.common.dao.FrmLabReqPreSetDao, org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -54,7 +55,7 @@
    int formId = Integer.parseInt(request.getParameter("formId"));
 	String provNo = (String) session.getAttribute("user");
 	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
-   java.util.Properties props = rec.getFormRecord(demoNo, formId);
+   java.util.Properties props = rec.getFormRecord(LoggedInInfo.getLoggedInInfoFromSession(request),demoNo, formId);
         
 	props = ((FrmMentalHealthForm14Record) rec).getFormCustRecord(props, provNo);
    OscarProperties oscarProps = OscarProperties.getInstance();

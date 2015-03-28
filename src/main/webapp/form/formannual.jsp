@@ -25,13 +25,14 @@
 --%>
 
 <%@ page import="oscar.oscarEncounter.data.EctPatientData"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 
 <%
     String demoNo = request.getParameter("demographic_no");
     int formId = Integer.parseInt(request.getParameter("formId"));
     //int provNo = Integer.parseInt(request.getParameter("provNo"));
 
-	EctPatientData.Patient p = new EctPatientData().getPatient(demoNo);
+	EctPatientData.Patient p = new EctPatientData().getPatient(LoggedInInfo.getLoggedInInfoFromSession(request), demoNo);
     String s = p.getSex();
 
     if(true) {

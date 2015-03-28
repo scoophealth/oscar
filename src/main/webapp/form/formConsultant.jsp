@@ -22,6 +22,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
     String formClass = "Consultant";
     String formLink = "formConsultant.jsp";
@@ -30,7 +31,7 @@
     int formId = Integer.parseInt(request.getParameter("formId")); // If <= 0, it means a new form is created, otherwise its an old form that is being editted
     int provNo = Integer.parseInt((String) session.getAttribute("user"));
     FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
-    java.util.Properties props = rec.getFormRecord(demoNo, formId);
+    java.util.Properties props = rec.getFormRecord(LoggedInInfo.getLoggedInInfoFromSession(request),demoNo, formId);
     FrmConsultantRecord rec1 = new FrmConsultantRecord();
     String doctor_name = rec1.getProvName(provNo);          // Retrieve the doctors name from provNo
     if (formId <= 0){

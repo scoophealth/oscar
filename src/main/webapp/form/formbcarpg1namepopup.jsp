@@ -12,6 +12,7 @@ String fieldName = request.getParameter("fieldname")!=null ? request.getParamete
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.Provider" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 %>

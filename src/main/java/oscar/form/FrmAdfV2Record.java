@@ -6,13 +6,15 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
 
+import org.oscarehr.util.LoggedInInfo;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class FrmAdfV2Record extends FrmRecord {
 	private String _dateFormat = "yyyy/MM/dd";
 
-	public Properties getFormRecord(int demographicNo, int existingID)
+	public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID)
 	throws SQLException {
 		Properties props = new Properties();
 

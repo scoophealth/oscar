@@ -30,9 +30,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.SxmlMisc;
@@ -41,17 +41,16 @@ import oscar.util.UtilDateUtilities;
 public class FrmBCAR2007Record extends FrmRecord {
     private String _dateFormat = "dd/MM/yyyy";
 
-    private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
     private DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 
-    public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
+    public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException {
         
     	Demographic demo = null;
     	Properties props = new Properties();
 
         if (existingID <= 0) {
 
-            demo = demographicDao.getDemographicById(demographicNo);
+            demo = demographicManager.getDemographic(loggedInInfo, demographicNo);
 
             if (demo != null) {
                 java.util.Date date = UtilDateUtilities.calcDate(demo.getYearOfBirth(), demo.getMonthOfBirth(), demo.getDateOfBirth());
@@ -89,7 +88,7 @@ public class FrmBCAR2007Record extends FrmRecord {
             frh.setDateFormat(_dateFormat);
             props = (frh).getFormRecord(sql);
 
-            demo = demographicDao.getDemographicById(demographicNo);
+            demo = demographicManager.getDemographic(loggedInInfo, demographicNo);
             
             if (demo != null) {
                 props.setProperty("c_surname_cur", demo.getLastName());

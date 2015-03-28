@@ -33,7 +33,7 @@
 <%@ page
 	import="org.springframework.context.*,org.springframework.web.context.support.*"%>
 
-
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
 	String formClass = "DischargeSummary";
 	String formLink = "formDischargeSummary.jsp";

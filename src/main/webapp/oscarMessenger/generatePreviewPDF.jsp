@@ -33,7 +33,7 @@
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.dao.EChartDao" %>
 <%@ page import="org.oscarehr.common.model.EChart" %>
-
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%
 	EChartDao eChartDao = SpringUtils.getBean(EChartDao.class);
 %>
@@ -47,7 +47,8 @@
 <%
 String demographic_no = request.getParameter("demographic_no");
 
-
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    		
 DemographicData demoData = new  DemographicData();
 org.oscarehr.common.model.Demographic demo =  demoData.getDemographic(demographic_no);
 String demoName = "";
@@ -330,7 +331,7 @@ request.getSession().setAttribute("EctSessionBean",bean);
 
                                             request.getSession().setAttribute("RxSessionBean", Rxbean);
 
-                                            RxPatientData.Patient patient = RxPatientData.getPatient(demographic_no);
+                                            RxPatientData.Patient patient = RxPatientData.getPatient(loggedInInfo, demographic_no);
 
                                             if(patient!=null) {
                                                 request.getSession().setAttribute("Patient", patient);
