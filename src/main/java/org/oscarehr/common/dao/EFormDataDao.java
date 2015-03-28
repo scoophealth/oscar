@@ -317,39 +317,38 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 		return results;	
     }
 
-    public boolean isLatestPatientForm(Integer fdid)
+    public boolean isLatestShowLatestFormOnlyPatientForm(Integer fdid)
     {
+    	//return true if:
+    	// 1) this is a ShowLatestFormOnly eform	AND
+    	// 2.1) the patient has only 1 eform of the same fid	OR
+    	// 2.2) this is the patient's latest eform of the same fid
+    	
     	EFormData eformData = this.find(fdid);
     	if (eformData==null) return false;
+    	if (!eformData.isShowLatestFormOnly()) return false;
     	
-    	Date eformDataDate = eformData.getFormDate();
-    	Date eformDataTime = eformData.getFormTime();
-    	if (eformDataDate==null) return false;
+    	List<EFormData> sameEformList = this.getFormsSameFidSamePatient(fdid);
+    	if (sameEformList.size()==1) return true;
     	
-    	List<EFormData> efmDataList = this.getFormsSameFidSamePatient(fdid);
-    	
-    	for (EFormData efmData : efmDataList) {
-    		if (efmData.getId().equals(fdid)) continue;
+    	for (EFormData otherEform : sameEformList) {
+    		if (otherEform.getId().equals(fdid)) continue; //current eform
     		
-    		Date efmDataDate = efmData.getFormDate();
-    		Date efmDataTime = efmData.getFormTime();
-    		if (efmDataDate==null) continue;
+        	Date eformDataDate = eformData.getFormDate();
+        	Date eformDataTime = eformData.getFormTime();
+    		Date otherEformDate = otherEform.getFormDate();
+    		Date otherEformTime = otherEform.getFormTime();
     		
-    		if (efmDataDate.after(eformDataDate)) return false;
-    		if (efmDataDate.equals(eformDataDate) && efmDataTime.after(eformDataTime)) return false;
-    		if (efmDataDate.equals(eformDataDate) && efmDataTime.equals(eformDataTime) && efmData.getId()>fdid) return false;
+        	if (eformDataDate!=null && otherEformDate!=null) {
+        		if (otherEformDate.after(eformDataDate)) return false;
+        		
+        		if (eformDataTime!=null && otherEformTime!=null) {
+        			if (eformDataDate.equals(otherEformDate) && otherEformTime.after(eformDataTime)) return false;
+        		}
+        	}
+    		if (eformDataDate.equals(otherEformDate) && eformDataTime.equals(otherEformTime) && otherEform.getId()>fdid) return false;
     	}
-    	
     	return true;
-    }
-    
-    public boolean isShowLatestFormOnlyInMany(Integer fdid)
-    {
-    	EFormData eformData = this.find(fdid);
-    	if (eformData==null) return false;
-    	
-    	List<EFormData> efmDataList = this.getFormsSameFidSamePatient(fdid);
-    	return (eformData.isShowLatestFormOnly() && efmDataList.size()>1);
     }
     
     public List<EFormData> getFormsSameFidSamePatient(Integer fdid)

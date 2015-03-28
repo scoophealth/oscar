@@ -148,38 +148,6 @@ public class EFormDataDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
-	public void testIsShowLatestFormOnlyInMany() throws Exception {
-		EFormData[] models = {new EFormData(), new EFormData(), new EFormData(), new EFormData()};
-		
-		for (EFormData model : models) {
-			EntityDataGenerator.generateTestDataForModelClass(model);
-			model.setPatientIndependent(false);
-			model.setFormId(7890);
-			model.setDemographicId(6543);
-			eFormDataDao.persist(model);
-		}
-		for (EFormData model : models) {
-			assertTrue(eFormDataDao.isShowLatestFormOnlyInMany(model.getId()));
-		}
-		
-		models[0].setShowLatestFormOnly(false);
-		eFormDataDao.merge(models[0]);
-		assertFalse(eFormDataDao.isShowLatestFormOnlyInMany(models[0].getId()));
-		models[1].setDemographicId(4365);
-		eFormDataDao.merge(models[1]);
-		assertFalse(eFormDataDao.isShowLatestFormOnlyInMany(models[1].getId()));
-		models[2].setFormId(9078);
-		eFormDataDao.merge(models[2]);
-		assertFalse(eFormDataDao.isShowLatestFormOnlyInMany(models[2].getId()));
-		
-		for (int i=0; i<3; i++) {
-			models[i].setCurrent(false);
-			eFormDataDao.merge(models[i]);
-		}
-		assertFalse(eFormDataDao.isShowLatestFormOnlyInMany(models[3].getId()));
-	}
-	
-	@Test
 	public void testIsLatestPatientForm() throws Exception {
 		EFormData[] models = {new EFormData(), new EFormData(), new EFormData(), new EFormData()};
 		
@@ -190,21 +158,22 @@ public class EFormDataDaoTest extends DaoTestFixtures {
 			EFormData model = models[i];
 			EntityDataGenerator.generateTestDataForModelClass(model);
 			model.setPatientIndependent(false);
+			model.setShowLatestFormOnly(true);
 			model.setFormId(1023);
 			model.setDemographicId(4036);
 			model.setFormDate(setupDate);
 			model.setFormTime(setupDate);
 			eFormDataDao.persist(model);
 		}
-		assertTrue(eFormDataDao.isLatestPatientForm(models[3].getId()));
+		assertTrue(eFormDataDao.isLatestShowLatestFormOnlyPatientForm(models[3].getId()));
 
 		cal.add(Calendar.HOUR_OF_DAY, 1);
 		models[0].setFormTime(cal.getTime());
 		eFormDataDao.merge(models[0]);
-		assertTrue(eFormDataDao.isLatestPatientForm(models[0].getId()));
+		assertTrue(eFormDataDao.isLatestShowLatestFormOnlyPatientForm(models[0].getId()));
 		
 		models[1].setFormDate(new Date());
 		eFormDataDao.merge(models[1]);
-		assertTrue(eFormDataDao.isLatestPatientForm(models[1].getId()));
+		assertTrue(eFormDataDao.isLatestShowLatestFormOnlyPatientForm(models[1].getId()));
 	}
 }
