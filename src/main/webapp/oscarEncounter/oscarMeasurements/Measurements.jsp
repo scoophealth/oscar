@@ -34,7 +34,7 @@
 <%@ page import="oscar.oscarEncounter.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.bean.EctMeasuringInstructionBeanHandler, oscar.oscarEncounter.oscarMeasurements.bean.EctMeasuringInstructionBean"%>
-<%@ page import="java.util.Vector;"%>
+<%@ page import="java.util.Vector"%>
 <%
     String demo = (String) request.getAttribute("demographicNo"); //bean.getDemographicNo();
 %>

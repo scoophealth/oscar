@@ -447,4 +447,22 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 
 		return items;
 	}
+	
+	@SuppressWarnings("unchecked")
+    public List<Dxresearch> findNonDeletedByDemographicNo(Integer demographicNo) {
+		Query query = entityManager.createQuery("FROM Dxresearch d WHERE d.demographicNo = :dn and (d.status = 'A' or d.status = 'C')");
+		query.setParameter("dn", demographicNo);
+	
+	    return query.getResultList();
+    }
+	
+	@NativeSql("dxresearch")
+	public List<Integer> findNewProblemsSinceDemokey(String keyName) {
+		
+		String sql = "select distinct dx.demographic_no from dxresearch dx,demographic d,demographicExt e where dx.demographic_no = d.demographic_no and d.demographic_no = e.demographic_no and e.key_val=? and dx.status != 'D' and dx.update_date > e.value";
+		Query query = entityManager.createNativeQuery(sql);
+		query.setParameter(1, keyName);
+		
+		return query.getResultList();
+	}
 }
