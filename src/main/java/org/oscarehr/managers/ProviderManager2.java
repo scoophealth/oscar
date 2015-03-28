@@ -281,6 +281,10 @@ public class ProviderManager2 {
 		if(map.get("use_mymeds") != null) {
 			settings.setUseMyMeds(Boolean.valueOf(map.get("use_mymeds").getValue()));
 		}
+		
+		if(map.get("hide_old_echart_link_in_appointment") != null) {
+			settings.setHideOldEchartLinkInAppointment("Y".equals(map.get("hide_old_echart_link_in_appointment").getValue()));
+		}
 		/*
 		if(settings.getFavoriteFormGroup()==null) {
 			settings.setFavoriteFormGroup("");
@@ -479,6 +483,8 @@ public class ProviderManager2 {
 		p.setValue(settings.getMyDrugRefId());	
 		p = getMappedOrNewProperty(map, "use_mymeds", providerNo);
 		p.setValue(String.valueOf(settings.isUseMyMeds()));
+		p = getMappedOrNewProperty(map, "hide_old_echart_link_in_appointment", providerNo);
+		p.setValue(settings.isHideOldEchartLinkInAppointment() ? "Y" : "N");
 		
 		p = getMappedOrNewProperty(map, "cobalt", providerNo);
 		p.setValue(settings.isUseCobaltOnLogin()?"yes":"no");
