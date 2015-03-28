@@ -382,7 +382,7 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 		CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
 		cmnl.setTableName(noteLink);
 		cmnl.setTableId(Long.parseLong(EDocUtil.getLastDocumentNo()));
-		cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
+		cmnl.setNoteId(cmn.getId());
 
 		EDocUtil.addCaseMgmtNoteLink(cmnl);
 	}

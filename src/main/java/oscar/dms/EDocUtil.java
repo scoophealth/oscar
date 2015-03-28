@@ -835,11 +835,6 @@ public final class EDocUtil {
 		return null;
 	}
 
-	public static String getLastNoteId() {
-		CaseManagementNoteDAO dao = SpringUtils.getBean(CaseManagementNoteDAO.class);
-		return "" + dao.findMaxNoteId();
-	}
-
 	public static byte[] getFile(String fpath) {
 		byte[] fdata = null;
 		FileInputStream fis = null;
