@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.bornontario.ca/wbcsd" xmlns:tns="http://www.bornontario.ca/wbcsd" elementFormDefault="qualified">
+
+    <complexType name="BORN_WBCSD_Batch">
+    	<sequence>
+    		<element name="PatientInfo" type="tns:PatientInfo" minOccurs="1" maxOccurs="unbounded"></element>
+    	</sequence>
+    </complexType>
+
+	<element name="BORN_WBCSD_Batch" type="tns:BORN_WBCSD_Batch"></element>
+
+	<simpleType name="HealthCardType">
+		<restriction base="int">
+			<enumeration value="1"></enumeration>
+			<enumeration value="2"></enumeration>
+			<enumeration value="0"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="Gender">
+		<restriction base="string">
+			<enumeration value="M"></enumeration>
+			<enumeration value="F"></enumeration>
+			<enumeration value="O"></enumeration>
+			<enumeration value="U"></enumeration>
+		</restriction>
+	</simpleType>
+	<simpleType name="CountryProvince">
+		<restriction base="string">
+			<enumeration value="CA-AB"></enumeration>
+			<enumeration value="CA-BC"></enumeration>
+			<enumeration value="CA-MB"></enumeration>
+			<enumeration value="CA-NB"></enumeration>
+			<enumeration value="CA-NL"></enumeration>
+			<enumeration value="CA-NT"></enumeration>
+			<enumeration value="CA-NS"></enumeration>
+			<enumeration value="CA-NU"></enumeration>
+			<enumeration value="CA-ON"></enumeration>
+			<enumeration value="CA-PE"></enumeration>
+			<enumeration value="CA-QC"></enumeration>
+			<enumeration value="CA-SK"></enumeration>
+			<enumeration value="CA-YT"></enumeration>
+			<enumeration value="USA"></enumeration>
+			<enumeration value="OUTP"></enumeration>
+			<enumeration value="OUTC"></enumeration>
+			<enumeration value="UNKN"></enumeration>
+		</restriction>
+	</simpleType>
+	<simpleType name="ProblemsDiagnosisCodeSystem">
+		<restriction base="string">
+			<enumeration value="ENCODE-FM"></enumeration>
+			<enumeration value="SNOMED-CT"></enumeration>
+			<enumeration value="ICD9"></enumeration>
+			<enumeration value="ICD10-CA"></enumeration>
+			<enumeration value="ICPC-2"></enumeration>
+		</restriction>
+	</simpleType>	
+	<simpleType name="unsignedDecimal31">
+		<restriction base="decimal">
+			<pattern value="\d{1,3}(\.\d)?"></pattern>
+		</restriction>
+	</simpleType>
+	<simpleType name="unsignedInt1">
+		<restriction base="unsignedInt">
+			<maxInclusive value="9"/>
+		</restriction>
+	</simpleType>	
+	<simpleType name="unsignedInt5">
+		<restriction base="unsignedInt">
+			<maxInclusive value="99999"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="unsignedInt8">
+		<restriction base="unsignedInt">
+			<maxInclusive value="99999999"/>
+		</restriction>
+	</simpleType>	
+	<simpleType name="string50">
+		<restriction base="string">
+			<maxLength value="50"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="string250">
+		<restriction base="string">
+			<maxLength value="250"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="string500">
+		<restriction base="string">
+			<maxLength value="500"/>
+		</restriction>
+	</simpleType>	
+	<simpleType name="string120">
+		<restriction base="string">
+			<maxLength value="120"/>
+		</restriction>
+	</simpleType>	
+	<simpleType name="string20">
+		<restriction base="string">
+			<maxLength value="20"/>
+		</restriction>
+	</simpleType>	
+	<simpleType name="string100">
+		<restriction base="string">
+			<maxLength value="100"/>
+		</restriction>
+	</simpleType>	
+	<complexType name="PatientInfo">
+    	<sequence>
+			<element name="OrganizationID">
+    			<simpleType>
+    				<restriction base="tns:string50">
+						<minLength value="1"/>
+    				</restriction>
+    			</simpleType>
+			</element>
+			<element name="HealthCardType" type="tns:HealthCardType"></element>
+			<element name="HealthCardNum">
+    			<simpleType>
+    				<restriction base="string">
+						<minLength value="1"/>
+						<maxLength value="20"/>
+    				</restriction>
+    			</simpleType>
+			</element>
+			<element name="ChartNumber">
+    			<simpleType>
+    				<restriction base="string">
+						<minLength value="1"/>
+						<maxLength value="15"/>
+    				</restriction>
+    			</simpleType>
+			</element>
+			<element name="UniqueVendorIDSequence">
+    			<simpleType>
+    				<restriction base="string">
+						<minLength value="1"/>
+						<maxLength value="20"/>
+    				</restriction>
+    			</simpleType>
+			</element>
+			<element name="LastName">
+    			<simpleType>
+    				<restriction base="tns:string250">
+						<minLength value="1"/>
+    				</restriction>
+    			</simpleType>
+			</element>
+			<element name="FirstName">
+    			<simpleType>
+    				<restriction base="tns:string250">
+						<minLength value="1"/>
+    				</restriction>
+    			</simpleType>
+			</element>
+			<element name="DOB" type="date"></element>
+			<element name="Gender" type="tns:Gender"></element>
+			<element name="ResidentAddressLine1" type="tns:string250" minOccurs="0"></element>
+			<element name="ResidentAddressLine2" type="tns:string250" minOccurs="0"></element>
+			<element name="ResidentCity" minOccurs="0">
+    			<simpleType>
+    				<restriction base="string">
+						<maxLength value="100"/>
+    				</restriction>
+    			</simpleType>
+			</element>
+			<element name="ResidentPostalCode" minOccurs="0">
+    			<simpleType>
+    				<restriction base="string">
+    					<pattern value="[A-Z][0-9][A-Z][0-9][A-Z][0-9]"></pattern>
+    				</restriction>
+    			</simpleType>
+			</element>
+			<element name="ResidentCountryProvince" type="tns:CountryProvince" minOccurs="0"></element>
+			<element name="VisitData" type="tns:VisitData" minOccurs="0"></element>
+			<element name="ImmunizationData" type="tns:ImmunizationData" minOccurs="0"></element>
+
+		</sequence>
+    </complexType>
+	<complexType name="VisitData">
+    	<sequence>
+			<element name="VisitDate" type="date" minOccurs="0"></element>
+			<element name="Height" type="tns:unsignedDecimal31" minOccurs="0"></element>
+			<element name="Weight" type="tns:unsignedInt5" minOccurs="0"></element>
+			<element name="Medication" type="tns:Medication" minOccurs="0"></element>
+			<element name="HealthProblem" type="tns:HealthProblem" minOccurs="0"></element>
+    	</sequence>
+    </complexType>
+	<complexType name="Medication">
+    	<sequence>
+			<element name="MedicationName" type="tns:string250" minOccurs="0"></element>
+			<element name="MedicationDosage" type="tns:string250" minOccurs="0"></element>
+			<element name="MedicationDrugStrength" type="tns:string20" minOccurs="0"></element>
+			<element name="MedicationFrequency" type="tns:string120" minOccurs="0"></element>
+			<element name="MedicationDIN" type="tns:unsignedInt8" minOccurs="0"></element>
+			<element name="MedicationNumberofRefills" type="tns:string100" minOccurs="0"></element>
+			<element name="MedicationStartDate" type="date" minOccurs="0"></element>
+    	</sequence>
+    </complexType>
+	<complexType name="HealthProblem">
+    	<sequence>
+			<element name="ProblemDiagnosisName" type="tns:string500" minOccurs="0"></element>
+			<element name="ProblemDiagnosisCodeSystem" type="tns:ProblemsDiagnosisCodeSystem" minOccurs="0"></element>
+			<element name="ProblemDiagnosisCode" type="tns:string20" minOccurs="0"></element>
+			<element name="ProblemOnsetDate" type="date" minOccurs="0"></element>
+			<element name="ProblemDiagnosisDate" type="date" minOccurs="0"></element>
+			<element name="ProblemStatus" type="tns:string50" minOccurs="0"></element>
+    	</sequence>
+    </complexType>    
+	<complexType name="ImmunizationData">
+    	<sequence>
+			<element name="DateReceived" type="date" minOccurs="0"></element>
+			<element name="VaccineName" type="tns:string500" minOccurs="0"></element>
+			<element name="VaccineDIN" type="tns:unsignedInt8" minOccurs="0"></element>
+			<element name="DoseNum" type="tns:unsignedInt1" minOccurs="0"></element>
+			<element name="InjectionSite" type="tns:string50" minOccurs="0"></element>
+			<element name="LotNumber" type="tns:string50" minOccurs="0"></element>
+			<element name="ExpiryDate" type="date" minOccurs="0"></element>
+			<element name="Initials" type="tns:string50" minOccurs="0"></element>
+			<element name="Comments" type="tns:string250" minOccurs="0"></element>
+    	</sequence>
+    </complexType>    
+</schema>

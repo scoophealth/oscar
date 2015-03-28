@@ -30,26 +30,25 @@
 		</cxf:properties>
 		
 		<!-- BORN XDS Soap Header Interceptor (Adds endpointID node to header) -->
-		<!-- 
+		
 		<cxf:outInterceptors>
 			<bean id="bornSOAPHeaderInterceptor" class="org.oscarehr.integration.born.BornSOAPHeaderInterceptor" />
+			<ref bean="loggingOutInterceptor" />
 		</cxf:outInterceptors>
-		-->
+		
 		<!-- logging interceptors -->
-		<!-- 
+		 
 		<cxf:inInterceptors>
 			<ref bean="loggingInInterceptor" />
 		</cxf:inInterceptors>
-		<cxf:outInterceptors>
-			<ref bean="loggingOutInterceptor" />
-		</cxf:outInterceptors>
+		
 		<cxf:outFaultInterceptors>
 			<ref bean="loggingOutInterceptor" />
 		</cxf:outFaultInterceptors>
 		<cxf:inFaultInterceptors>
 			<ref bean="loggingInInterceptor" />
 		</cxf:inFaultInterceptors>
-		 -->
+		 
     </cxf:bus>
 
 	<!-- Managed WS Beans -->
