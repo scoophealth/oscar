@@ -39,7 +39,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DxresearchDAO;
-import org.oscarehr.common.dao.StudyDataDao;
 import org.oscarehr.common.dao.UserDSMessagePrefsDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.UserDSMessagePrefs;
@@ -63,8 +62,6 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 	private static Logger logger = Logger.getLogger(EctDisplayEaapsAction.class);
 	
 	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
-	
-	private StudyDataDao studyDataDao = SpringUtils.getBean(StudyDataDao.class);
 	
 	private UserDSMessagePrefsDao userDsMessagePrefsDao = SpringUtils.getBean(UserDSMessagePrefsDao.class);
 	
