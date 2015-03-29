@@ -83,15 +83,15 @@ public class ChildImmunizationReport implements PreventionReport{
              log.debug("fieldList "+fieldList.size());
 
 			// search prevention_date prevention_type deleted refused
-			ArrayList<Map<String, Object>> prevs1 = PreventionData.getPreventionData("DTap-IPV", demo);
+			ArrayList<Map<String, Object>> prevs1 = PreventionData.getPreventionData(loggedInInfo, "DTap-IPV", demo);
 			PreventionData.addRemotePreventions(loggedInInfo, prevs1, demo,"DTap-IPV",null);
-			ArrayList<Map<String, Object>> prevsDtapIPVHIB = PreventionData.getPreventionData("DTaP-IPV-Hib", demo);
+			ArrayList<Map<String, Object>> prevsDtapIPVHIB = PreventionData.getPreventionData(loggedInInfo, "DTaP-IPV-Hib", demo);
 			PreventionData.addRemotePreventions(loggedInInfo, prevsDtapIPVHIB, demo,"DTaP-IPV-Hib",null);
-			ArrayList<Map<String, Object>> prevs2 = PreventionData.getPreventionData("Hib", demo);
+			ArrayList<Map<String, Object>> prevs2 = PreventionData.getPreventionData(loggedInInfo, "Hib", demo);
 			PreventionData.addRemotePreventions(loggedInInfo, prevs2, demo,"Hib",null);
-			ArrayList<Map<String, Object>> prevs4 = PreventionData.getPreventionData("MMR",demo);
+			ArrayList<Map<String, Object>> prevs4 = PreventionData.getPreventionData(loggedInInfo, "MMR",demo);
 			PreventionData.addRemotePreventions(loggedInInfo, prevs4, demo,"MMR",null);
-			prevs4.addAll(PreventionData.getPreventionData("MMRV", demo));
+			prevs4.addAll(PreventionData.getPreventionData(loggedInInfo, "MMRV", demo));
 			PreventionData.addRemotePreventions(loggedInInfo, prevs4, demo,"MMRV",null);
 
              //need to compile accurate dtap numbers

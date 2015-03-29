@@ -34,7 +34,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Measurement;
@@ -51,14 +50,13 @@ public class FrmRourke2009Record extends FrmRecord {
 	private static final String HEAD_CIRCUMFERENCE_GRAPH = "HEAD_CIRC";
 	private static final String LENGTH_GRAPH = "LENGTH";
 	
-	private DemographicDao demoDAO = (DemographicDao)SpringUtils.getBean("demographicDao");
 	private String graphType;
 	
     public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID)
             throws SQLException    {
         Properties props = new Properties();
         
-        Demographic demo = demoDAO.getDemographicById(demographicNo);
+        Demographic demo = demographicManager.getDemographic(loggedInInfo, demographicNo);
         String updated = "false";
         if(existingID <= 0) {
 
@@ -92,7 +90,7 @@ public class FrmRourke2009Record extends FrmRecord {
             sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, "
                 + "year_of_birth, month_of_birth, date_of_birth, sex, postal "
                 + "FROM demographic WHERE demographic_no = " + demographicNo;
-            demo = demoDAO.getDemographicById(demographicNo);
+            demo = demographicManager.getDemographic(loggedInInfo, demographicNo);
 
             if(demo != null) {
                 String rourkeVal = props.getProperty("c_pName","");
@@ -138,10 +136,10 @@ public class FrmRourke2009Record extends FrmRecord {
     }
 
 //////////////new/ Done By Jay////
-    public boolean isFemale(int demoNo){
+    public boolean isFemale(LoggedInInfo loggedInInfo, int demoNo){
 	boolean retval = false;
-        DemographicDao demoDAO = (DemographicDao)SpringUtils.getBean("demographicDao");
-        Demographic demo = demoDAO.getDemographicById(demoNo);
+	Demographic demo = demographicManager.getDemographic(loggedInInfo, demoNo);
+     
 	if( demo != null && demo.getSex().equalsIgnoreCase("F") ) {
             retval = true;
         }
@@ -246,7 +244,7 @@ public class FrmRourke2009Record extends FrmRecord {
                 //first set up cutoff for first page = 2 years of age
                 //then set up cutoff for second page = 19 years of age
                 //then we can compare measurement dates and slot them accordingly
-                Demographic demographic = demoDAO.getClientByDemographicNo(demographicNo);
+                Demographic demographic = demographicManager.getDemographic(loggedInInfo, demographicNo);
                 
                 
                 MeasurementDao measurementDao = (MeasurementDao)SpringUtils.getBean("measurementDao");

@@ -30,21 +30,22 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicArchiveDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicArchive;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public final class PreventionReportUtil {
 	private static Logger logger = MiscUtils.getLogger();
 
-	public static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	public static DemographicManager demographicManager =  SpringUtils.getBean(DemographicManager.class);
 	public static DemographicArchiveDao demographicArchiveDao = (DemographicArchiveDao) SpringUtils.getBean("demographicArchiveDao");
 
-	public static boolean wasRostered(Integer demographicId, Date onThisDate) {
+	public static boolean wasRostered(LoggedInInfo loggedInInfo, Integer demographicId, Date onThisDate) {
 		logger.debug("Checking rosterd:" + demographicId);
-		Demographic demographic = demographicDao.getDemographicById(demographicId);
+		Demographic demographic = demographicManager.getDemographic(loggedInInfo, demographicId);
 
 		if (rosteredDuringThisTimeDemographic(onThisDate, demographic.getRosterDate(), demographic.getRosterTerminationDate())) return (true);
 
@@ -56,14 +57,14 @@ public final class PreventionReportUtil {
 		return (false);
 	}
 	
-	public static boolean wasRosteredToThisProvider(Integer demographicId, Date onThisDate,String providerNo) {
+	public static boolean wasRosteredToThisProvider(LoggedInInfo loggedInInfo, Integer demographicId, Date onThisDate,String providerNo) {
 		logger.debug("Checking rosterd:" + demographicId+ " for this date "+onThisDate+" for this providerNo "+providerNo);
 		if(providerNo == null){
 			return false;
 		}
 		
 		
-		Demographic demographic = demographicDao.getDemographicById(demographicId);
+		Demographic demographic = demographicManager.getDemographic(loggedInInfo, demographicId);
 
 		if (rosteredDuringThisTimeDemographic(onThisDate, demographic.getRosterDate(), demographic.getRosterTerminationDate()) && providerNo.equals(demographic.getProviderNo())) return (true);
 

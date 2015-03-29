@@ -68,7 +68,7 @@ public class PapReport implements PreventionReport {
              ArrayList<String> fieldList = (ArrayList<String>) list.get(i);
              Integer demo = Integer.valueOf(fieldList.get(0));
              //search   prevention_date prevention_type  deleted   refused
-             ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData("PAP",demo);
+             ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData(loggedInInfo, "PAP",demo);
              PreventionData.addRemotePreventions(loggedInInfo, prevs, demo,"PAP",null);
              ArrayList<Map<String,Object>> noFutureItems =  removeFutureItems(prevs, asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();

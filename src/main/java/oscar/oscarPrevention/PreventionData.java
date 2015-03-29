@@ -40,12 +40,12 @@ import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.caisi_integrator.RemotePreventionHelper;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -226,24 +226,24 @@ public class PreventionData {
 		return list;
 	}
 
-	public static Date getDemographicDateOfBirth(Integer demoNo) {
-		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
-		Demographic dd = demographicDao.getDemographicById(demoNo);
+	public static Date getDemographicDateOfBirth(LoggedInInfo loggedInInfo, Integer demoNo) {
+		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+		Demographic dd = demographicManager.getDemographic(loggedInInfo,demoNo);
 		if (dd == null) return (null);
 		Calendar bday = dd.getBirthDay();
 		if (bday == null) return (null);
 		return (bday.getTime());
 	}
 
-	public static ArrayList<Map<String, Object>> getPreventionData(Integer demoNo) {
-		return getPreventionData(null, demoNo);
+	public static ArrayList<Map<String, Object>> getPreventionData(LoggedInInfo loggedInInfo, Integer demoNo) {
+		return getPreventionData(loggedInInfo, null, demoNo);
 	}
 
-	public static ArrayList<Map<String, Object>> getPreventionData(String preventionType, Integer demographicId) {
+	public static ArrayList<Map<String, Object>> getPreventionData(LoggedInInfo loggedInInfo, String preventionType, Integer demographicId) {
 		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
 		try {
-			Date dob = getDemographicDateOfBirth(demographicId);
+			Date dob = getDemographicDateOfBirth(loggedInInfo, demographicId);
 			List<Prevention> preventions = preventionType == null ? preventionDao.findNotDeletedByDemographicId(demographicId) : preventionDao.findByTypeAndDemoNo(preventionType, demographicId);
 			for (Prevention prevention : preventions) {
 
@@ -311,7 +311,7 @@ public class PreventionData {
 	}
 
 	public static oscar.oscarPrevention.Prevention getLocalandRemotePreventions(LoggedInInfo loggedInInfo, Integer demographicId) {
-		oscar.oscarPrevention.Prevention prevention = getPrevention(demographicId);
+		oscar.oscarPrevention.Prevention prevention = getPrevention(loggedInInfo, demographicId);
 
 		List<CachedDemographicPrevention> cachedPreventions = getRemotePreventions(loggedInInfo, demographicId);
 
@@ -325,9 +325,9 @@ public class PreventionData {
 		return prevention;
 	}
 
-	public static oscar.oscarPrevention.Prevention getPrevention(Integer demoNo) {
-		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
-		Demographic dd = demographicDao.getDemographicById(demoNo);
+	public static oscar.oscarPrevention.Prevention getPrevention(LoggedInInfo loggedInInfo, Integer demoNo) {
+		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+		Demographic dd = demographicManager.getDemographic(loggedInInfo, demoNo);
 
 		java.util.Date dob = null;
 		String sex = null;

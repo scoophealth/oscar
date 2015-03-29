@@ -41,10 +41,11 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -102,8 +103,8 @@ public class PreventionPrintPdf {
             throw new DocumentException();
         
         String demoNo = request.getParameter("demographicNo");
-        DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-        Demographic demo = demographicDao.getDemographic(demoNo);
+        DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+        Demographic demo = demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demoNo);
         
         if (demo == null) 
             throw new DocumentException();

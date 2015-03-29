@@ -208,7 +208,7 @@ public class DemographicExportAction4 extends Action {
 			frm.addDemoIfNotPresent();
 			frm.setAsofDate(UtilDateUtilities.DateToString(asofDate));
 			RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
-			ArrayList<ArrayList<String>> list2 = demoQ.buildQuery(frm,UtilDateUtilities.DateToString(asofDate));
+			ArrayList<ArrayList<String>> list2 = demoQ.buildQuery(loggedInInfo, frm,UtilDateUtilities.DateToString(asofDate));
 			for (ArrayList<String> listDemo : list2) {
 				list.add(listDemo.get(0));
 			}
@@ -1051,7 +1051,7 @@ public class DemographicExportAction4 extends Action {
 			
 
 			// IMMUNIZATIONS & PASTHEALTH (Preventive tests)
-			ArrayList<Map<String,Object>> prevList = PreventionData.getPreventionData(Integer.valueOf(demoNo));
+			ArrayList<Map<String,Object>> prevList = PreventionData.getPreventionData(loggedInInfo, Integer.valueOf(demoNo));
 			String phSummary, imSummary;
 			int cnt = 0;
 			

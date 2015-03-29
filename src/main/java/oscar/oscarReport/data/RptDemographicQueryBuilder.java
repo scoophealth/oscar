@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.oscarehr.common.dao.forms.FormsDao;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -62,11 +63,11 @@ public class RptDemographicQueryBuilder {
 	public RptDemographicQueryBuilder() {
 	}
 
-	public java.util.ArrayList<ArrayList<String>> buildQuery(RptDemographicReportForm frm) {
-		return buildQuery(frm, null);
+	public java.util.ArrayList<ArrayList<String>> buildQuery(LoggedInInfo loggedInInfo, RptDemographicReportForm frm) {
+		return buildQuery(loggedInInfo, frm, null);
 	}
 
-	public java.util.ArrayList<ArrayList<String>> buildQuery(RptDemographicReportForm frm, String asofRosterDate) {
+	public java.util.ArrayList<ArrayList<String>> buildQuery(LoggedInInfo loggedInInfo, RptDemographicReportForm frm, String asofRosterDate) {
 		MiscUtils.getLogger().debug("in buildQuery");
 
 		String[] select = frm.getSelect();
@@ -401,7 +402,7 @@ public class RptDemographicQueryBuilder {
 				if (demoNo != null && asofRosterDate != null && providers != null && providers.length > 0) {
 					//Only checking the first doc.  Only one should be included for finding the cumulative bonus
 					try {
-						if (!PreventionReportUtil.wasRosteredToThisProvider(Integer.parseInt(demoNo), DateUtils.parseDate(asofRosterDate, null), providers[0])) {
+						if (!PreventionReportUtil.wasRosteredToThisProvider(loggedInInfo, Integer.parseInt(demoNo), DateUtils.parseDate(asofRosterDate, null), providers[0])) {
 							MiscUtils.getLogger().info("Demographic :" + demoNo + " was not included in returned array because they were not rostered to " + providers[0] + " on " + asofRosterDate);
 							continue;
 						} else {

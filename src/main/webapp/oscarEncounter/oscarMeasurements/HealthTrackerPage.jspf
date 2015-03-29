@@ -1303,7 +1303,7 @@ $(document).ready(function(){ $(id).trigger('slid.bs.carousel'); });
     }else{
     String prevType = (String) h2.get("prevention_type");
     long startPrevType = System.currentTimeMillis();
-    ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, Integer.parseInt(demographic_no));
+    ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(loggedInInfo, prevType, Integer.parseInt(demographic_no));
 %>	
 
 <div class="panel panel-default" style="<%=hidden%>">
