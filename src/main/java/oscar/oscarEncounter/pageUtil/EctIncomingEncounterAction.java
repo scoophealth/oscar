@@ -106,7 +106,7 @@ public class EctIncomingEncounterAction extends Action {
 
 		if (request.getParameter("appointmentList") != null) {
 			bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");
-			bean.setUpEncounterPage(request.getParameter("appointmentNo"));
+			bean.setUpEncounterPage(loggedInInfo, request.getParameter("appointmentNo"));
 			bean.template = "";
 		} else if (request.getParameter("demographicSearch") != null) {
 			//Coming in from the demographicSearch page
@@ -129,7 +129,7 @@ public class EctIncomingEncounterAction extends Action {
 			//bean.date="";
 			bean.appointmentNo = "0";
 			bean.check = "myCheck";
-			bean.setUpEncounterPage();
+			bean.setUpEncounterPage(LoggedInInfo.getLoggedInInfoFromSession(request));
 			request.getSession().setAttribute("EctSessionBean", bean);
 		} else {
 			if ("yes".equals(request.getParameter("PEAttach"))) {
@@ -212,7 +212,7 @@ public class EctIncomingEncounterAction extends Action {
 			bean.date = request.getParameter("date");
 			bean.check = "myCheck";
 			bean.oscarMsgID = request.getParameter("msgId");
-			bean.setUpEncounterPage();
+			bean.setUpEncounterPage(LoggedInInfo.getLoggedInInfoFromSession(request));
 			request.getSession().setAttribute("EctSessionBean", bean);
 			request.getSession().setAttribute("eChartID", bean.eChartId);
 			if (request.getParameter("source") != null) {

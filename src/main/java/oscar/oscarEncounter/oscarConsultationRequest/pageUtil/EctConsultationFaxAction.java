@@ -46,6 +46,7 @@ import org.oscarehr.common.dao.OscarCommLocationsDao;
 import org.oscarehr.common.model.FaxClientLog;
 import org.oscarehr.common.model.FaxJob;
 import org.oscarehr.common.model.OscarCommLocations;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -122,7 +123,7 @@ public class EctConsultationFaxAction extends Action {
 
       oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil reqFrm;
       reqFrm = new oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil();
-      reqFrm.estRequestFromId(requestId);
+      reqFrm.estRequestFromId(LoggedInInfo.getLoggedInInfoFromSession(request), requestId);
 
       try{
          if (Integer.parseInt(reqFrm.status) > 2 ){

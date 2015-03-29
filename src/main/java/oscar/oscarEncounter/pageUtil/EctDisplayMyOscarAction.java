@@ -31,12 +31,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.service.myoscar.MeasurementsManager;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.myoscar.commons.MedicalDataType;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -48,10 +49,10 @@ public class EctDisplayMyOscarAction extends EctDisplayAction {
 
 	private static final MedicalDataType[] MED_DATA_TYPES = { MedicalDataType.BLOOD_PRESSURE, MedicalDataType.HEIGHT_AND_WEIGHT, MedicalDataType.GLUCOSE };
 
-	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
-
+	DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+	 
 	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-		Demographic demographic = demographicDao.getDemographic(bean.getDemographicNo());
+		Demographic demographic = demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), bean.getDemographicNo());
 
 		//Does a patient have a myoscar account
 		String myoscarusername = demographic.getMyOscarUserName();

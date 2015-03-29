@@ -31,12 +31,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.eyeform.dao.EyeformConsultationReportDao;
 import org.oscarehr.eyeform.model.EyeformConsultationReport;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -46,7 +47,7 @@ public class EctDisplayConReportAction extends EctDisplayAction {
     private static final String cmd = "conReport";
 
     ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
-    DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+    DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
@@ -62,7 +63,7 @@ public class EctDisplayConReportAction extends EctDisplayAction {
 	    //Set lefthand module heading and link
 	    String winName = "ConReport" + bean.demographicNo;
 	    String pathview, pathedit;
-	    Demographic d= demographicDao.getClientByDemographicNo(Integer.valueOf(bean.demographicNo));
+	    Demographic d= demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.valueOf(bean.demographicNo));
 	    pathview = request.getContextPath() + "/eyeform/ConsultationReportList.do?method=list&cr.demographicNo=" + bean.demographicNo + "&dmname=" + d.getFormattedName();
 	    pathedit = request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&demographicNo="+bean.demographicNo + "&appNo="+appointmentNo + "&flag=new&cpp="+cpp;
 	

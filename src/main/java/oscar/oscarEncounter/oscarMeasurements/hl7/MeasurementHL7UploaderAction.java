@@ -42,6 +42,8 @@ import org.apache.struts.upload.FormFile;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.struts.DispatchActionSupport;
 
@@ -117,8 +119,8 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 			String hcn = patient.getPatientIDInternalID(0).getID().getValue();
 			String hcnType = patient.getPatientIDInternalID(0).getAssigningAuthority().getNamespaceID().getValue();
 			// get demographic no from hcn
-			org.oscarehr.common.dao.DemographicDao demographicDao=(org.oscarehr.common.dao.DemographicDao) SpringUtils.getBean("demographicDao");
-			List<Demographic> demos = demographicDao.getActiveDemosByHealthCardNo(hcn, hcnType);
+			DemographicManager demographicManager= SpringUtils.getBean(DemographicManager.class);
+			List<Demographic> demos = demographicManager.getActiveDemosByHealthCardNo(LoggedInInfo.getLoggedInInfoFromSession(request), hcn, hcnType);
 			if (demos == null || demos.size() == 0) throw new RuntimeException("There is no active patient with the supplied health card number: " + hcn + " " + hcnType);
 
 			// try to get consult doctor's providerID

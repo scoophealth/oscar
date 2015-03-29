@@ -100,7 +100,7 @@ public class EctConsultationFormRequestPrintPdf {
     public void printPdf(LoggedInInfo loggedInInfo) throws IOException, DocumentException{
 
         EctConsultationFormRequestUtil reqForm = new EctConsultationFormRequestUtil();
-        reqForm.estRequestFromId((String) request.getAttribute("reqId"));
+        reqForm.estRequestFromId(loggedInInfo, (String) request.getAttribute("reqId"));
 
         // init req form info
         reqForm.specAddr = request.getParameter("address");

@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page
 	import="java.util.*, org.w3c.dom.*, oscar.oscarEncounter.oscarConsultationRequest.pageUtil.*"%>
 <%@ page import="oscar.oscarClinic.*"%>
@@ -41,7 +42,7 @@ if(session.getValue("user") == null)
    //if (requestId == null) { return "bad"; }
    oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil reqFrm;
    reqFrm = new oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil ();
-   reqFrm.estRequestFromId(requestId);
+   reqFrm.estRequestFromId(LoggedInInfo.getLoggedInInfoFromSession(request), requestId);
    ClinicData clinic = new ClinicData();
 
    String strPhones = clinic.getClinicDelimPhone() == null ? "" : clinic.getClinicDelimPhone();

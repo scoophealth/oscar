@@ -111,7 +111,7 @@ public class EctConsultationFormFaxAction extends Action {
 			if (consultResponsePage==null) { //fax for consultation request
 				bos = new ByteOutputStream();
 				ConsultationPDFCreator cpdfc = new ConsultationPDFCreator(request, bos);
-				cpdfc.printPdf();
+				cpdfc.printPdf(loggedInInfo);
 				
 				buffer = bos.getBytes();
 				bis = new ByteInputStream(buffer, bos.getCount());

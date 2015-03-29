@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.EChartDao;
 import org.oscarehr.common.dao.EncounterTemplateDao;
 import org.oscarehr.common.dao.MeasurementGroupStyleDao;
@@ -41,6 +40,8 @@ import org.oscarehr.common.model.EChart;
 import org.oscarehr.common.model.EncounterTemplate;
 import org.oscarehr.common.model.MeasurementGroupStyle;
 import org.oscarehr.common.model.MessageTbl;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -48,6 +49,7 @@ import oscar.oscarEncounter.oscarConsultation.data.EctConProviderData;
 import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
+@Deprecated
 public class EctSessionBean implements java.io.Serializable {
     //data passed from the oscar appointment screen these members are constant for the duration of
     // a session
@@ -130,7 +132,7 @@ public class EctSessionBean implements java.io.Serializable {
      * sets up the encounter page as befits entrance into the oscarEncounter module from the oscar
      * appointment scheduling screen
      */
-    public void setUpEncounterPage() {
+    public void setUpEncounterPage(LoggedInInfo loggedInInfo) {
         resetAll();
 
         appointmentsIdArray = new ArrayList<String>();
@@ -139,8 +141,8 @@ public class EctSessionBean implements java.io.Serializable {
         measurementGroupNames = new ArrayList<String>();
 
         //This block gets the patient age and
-        DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
-        Demographic d  = demoDao.getDemographic(demographicNo);
+        DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+        Demographic d  = demographicManager.getDemographic(loggedInInfo, demographicNo);
         
         patientLastName = d.getLastName();
         patientFirstName = d.getFirstName();
@@ -239,7 +241,7 @@ public class EctSessionBean implements java.io.Serializable {
      *
      * @param appointmentNo
      */
-    public void setUpEncounterPage(String appointmentNo) {
+    public void setUpEncounterPage(LoggedInInfo loggedInInfo, String appointmentNo) {
         resetAll();
         appointmentsIdArray = new ArrayList<String>();
         appointmentsNamesArray = new ArrayList<String>();
@@ -296,8 +298,8 @@ public class EctSessionBean implements java.io.Serializable {
         //already set up so no need to get them again
     
         //
-		DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
-		Demographic demo = demoDao.getDemographic(demographicNo);
+		DemographicManager demogaphicManager = SpringUtils.getBean(DemographicManager.class);
+		Demographic demo = demogaphicManager.getDemographic(loggedInInfo, demographicNo);
         if (demo != null) {
             patientLastName = demo.getLastName(); 
             patientFirstName = demo.getFirstName();
@@ -331,7 +333,7 @@ public class EctSessionBean implements java.io.Serializable {
   * @param echartid
   * @param demographicNo
   */
-    public void setUpEncounterPage(String echartid, String demographicNo) {
+    public void setUpEncounterPage(LoggedInInfo loggedInInfo, String echartid, String demographicNo) {
         resetAll();
 
         OscarProperties properties = OscarProperties.getInstance();
@@ -355,9 +357,9 @@ public class EctSessionBean implements java.io.Serializable {
 	        }
 		}
 
-		DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
-		Demographic demo = demoDao.getDemographic(demographicNo);
-        if (demo != null) {
+		DemographicManager demogaphicManager = SpringUtils.getBean(DemographicManager.class);
+		Demographic demo = demogaphicManager.getDemographic(loggedInInfo, demographicNo);
+		if (demo != null) {
             patientLastName = demo.getLastName(); 
             patientFirstName = demo.getFirstName();
             address = demo.getAddress();

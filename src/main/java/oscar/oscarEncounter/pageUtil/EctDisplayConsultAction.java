@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -79,7 +80,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
             //grab all consultations for patient and add list item for each
             oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil theRequests;
             theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil();
-            theRequests.estConsultationVecByDemographic(bean.demographicNo);
+            theRequests.estConsultationVecByDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), bean.demographicNo);
             
             //determine cut off period for highlighting
             UserPropertyDAO pref = (UserPropertyDAO) WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("UserPropertyDAO");     
