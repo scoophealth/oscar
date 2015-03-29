@@ -71,7 +71,7 @@ public class FluReport implements PreventionReport {
 
              //search   prevention_date prevention_type  deleted   refused
 
-             ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData("Flu",demo);
+             ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData(loggedInInfo, "Flu",demo);
              PreventionData.addRemotePreventions(loggedInInfo, prevs, demo,"Flu",null);
 
              if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {

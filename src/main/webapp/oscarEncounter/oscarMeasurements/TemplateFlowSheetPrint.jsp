@@ -30,6 +30,8 @@
 <%@ page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
 <%@ page import="org.oscarehr.common.dao.FlowSheetDrugDao,org.oscarehr.common.model.FlowSheetDrug"%>
 <%@ page import="oscar.util.UtilDateUtilities" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -114,7 +116,7 @@ maybe use jquery/ajax to post this data instead of submitting a form to send ALL
     /////
 
     long startTimeToGetP = System.currentTimeMillis();
-    Prevention p = PreventionData.getPrevention(Integer.valueOf(demographic_no));
+    Prevention p = PreventionData.getPrevention(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.valueOf(demographic_no));
 
     boolean dsProblems = false;
 
@@ -655,7 +657,7 @@ view:
 
     String prevType = (String) h2.get("prevention_type");
     long startPrevType = System.currentTimeMillis();
-    ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, Integer.valueOf(demographic_no));
+    ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(LoggedInInfo.getLoggedInInfoFromSession(request), prevType, Integer.valueOf(demographic_no));
 %>
 
 <div class="preventionSection" style="<%=hidden%>">

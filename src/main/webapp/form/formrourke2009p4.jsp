@@ -42,7 +42,7 @@
     FrmRecord rec = (FrmRecord) request.getAttribute("frmRecord"); 
     String []growthCharts = new String[2];
     
-    if( ((FrmRourke2009Record)rec).isFemale(demoNo) ) {
+    if( ((FrmRourke2009Record)rec).isFemale(loggedInInfo, demoNo) ) {
     	growthCharts[0] = new String("GrowthChartRourke2009Girls&__cfgfile=GrowthChartRourke2009Girls3&__cfgGraphicFile=GrowthChartRourke2009GirlGraphic&__cfgGraphicFile=GrowthChartRourke2009GirlGraphic2&__cfgGraphicFile1=GrowthChartRourke2009GirlGraphic5&__cfgGraphicFile1=GrowthChartRourke2009GirlGraphic6&__numPages=2&__graphType=LENGTH&__template=GrowthChartRourke2009Girls");
         growthCharts[1] = new String("GrowthChartRourke2009Girls2&__cfgGraphicFile=GrowthChartRourke2009GirlGraphic3&__cfgGraphicFile=GrowthChartRourke2009GirlGraphic4&__graphType=HEAD_CIRC&__template=GrowthChartRourke2009Girlspg2");
     }
@@ -134,7 +134,7 @@ description layer</div>
 				value="<%= props.getProperty("c_birthDate", "") %>" readonly="true">
 			&nbsp;&nbsp; 
 			Age: <input type="text" id="currentAge4" size="10" maxlength="10" readonly="true" ondblclick="calcAge();">
-				<% if(! ((FrmRourke2009Record)rec).isFemale(demoNo))
+				<% if(! ((FrmRourke2009Record)rec).isFemale(loggedInInfo, demoNo))
                 {
                     %>(<bean:message
 				key="oscarEncounter.formRourke1.msgMale" />)

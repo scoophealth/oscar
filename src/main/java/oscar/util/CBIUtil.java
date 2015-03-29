@@ -60,7 +60,6 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.OcanSubmissionLog;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.dao.AdmissionDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.OcanStaffFormDataDao;
@@ -68,6 +67,8 @@ import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.OcanStaffForm;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -80,8 +81,7 @@ public class CBIUtil
 {
 	private static Logger logger = Logger.getLogger(CBIUtil.class);
 	private static OscarProperties oscarProperties = OscarProperties.getInstance();
-	private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-
+	
 	// submit cbi data to cbi web service
 	public void submitCBIData(OcanStaffForm ocanStaffForm) throws Exception
 	{
@@ -402,9 +402,9 @@ public class CBIUtil
 		return finalProgramList;
 	}
 
-	public OcanStaffForm getCBIFormData(Integer clientId)
+	public OcanStaffForm getCBIFormData(LoggedInInfo loggedInInfo, Integer clientId)
 	{
-		Integer facilityId = getFacilityId(clientId);
+		Integer facilityId = getFacilityId(loggedInInfo, clientId);
 		OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
 		OcanStaffForm ocanStaffForm = ocanStaffFormDao.findLatestByFacilityClient(facilityId, clientId, "CBI");
 
@@ -431,13 +431,13 @@ public class CBIUtil
 	 * 2) if no facility id associted with provider no.. then get the first
 	 * facility from facility table
 	 */
-	public Integer getFacilityId(Integer clientId)
+	public Integer getFacilityId(LoggedInInfo loggedInInfo, Integer clientId)
 	{
 		Integer facilityId = 0;
 
-		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
-		Demographic demographic = demographicDao.getDemographic(clientId + "");
+		Demographic demographic = demographicManager.getDemographic(loggedInInfo, clientId);
 		if (demographic != null)
 		{
 			String providerNo = demographic.getProviderNo();

@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.Properties;
 
 import org.oscarehr.common.dao.ClinicDAO;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.LoggedInInfo;
@@ -41,12 +40,11 @@ import oscar.util.UtilDateUtilities;
  */
 
 public class FrmCounselingRecord extends FrmRecord{
-    private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-
+    
     @Override
     public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException{
         Properties props = new Properties();
-        Demographic demographic = demographicDao.getDemographicById(demographicNo);
+        Demographic demographic = demographicManager.getDemographic(loggedInInfo, demographicNo);
 
         if(existingID <= 0 && demographic != null) {
             props.setProperty("demographic_no", String.valueOf(demographicNo));

@@ -67,6 +67,7 @@ import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -135,7 +136,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     } else {
         tmpDir = Util.fixDirName(tmpDir);
     }
-    ArrayList<File> exportFiles = this.make(patientList, tmpDir);
+    ArrayList<File> exportFiles = this.make(LoggedInInfo.getLoggedInInfoFromSession(request) , patientList, tmpDir);
 
     //Create & put error.log into the file list
     File errorLog = makeErrorLog("error.log", tmpDir);
@@ -155,12 +156,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     return null;
 }
 
-    boolean fillPatientRecord(PatientRecord patientRecord,String demoNo) throws SQLException, Exception{
+    boolean fillPatientRecord(LoggedInInfo loggedInInfo, PatientRecord patientRecord,String demoNo) throws SQLException, Exception{
 	if (setProblemList(patientRecord, demoNo)) {
 	    setReportInformation(patientRecord);
 	    setDemographicDetails(patientRecord, demoNo);
 	    setCareElements(patientRecord, demoNo);
-	    setImmunizations(patientRecord, Integer.valueOf(demoNo));
+	    setImmunizations(loggedInInfo, patientRecord, Integer.valueOf(demoNo));
 	    setLaboratoryResults(patientRecord, demoNo);
 	    setMedicationsAndTreatments(patientRecord, demoNo);
             return true;
@@ -169,7 +170,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     }
 
 
-    ArrayList<File> make(List<String> demographicNos, String tmpDir) throws Exception{
+    ArrayList<File> make(LoggedInInfo loggedInInfo, List<String> demographicNos, String tmpDir) throws Exception{
 	XmlOptions options = new XmlOptions();
 	options.put( XmlOptions.SAVE_PRETTY_PRINT );
 	options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
@@ -188,7 +189,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    OmdCdsDiabetesDocument.OmdCdsDiabetes omdcdsdiabetes = omdCdsDiabetesDoc.addNewOmdCdsDiabetes();
 
 	    PatientRecord patientRecord = omdcdsdiabetes.addNewPatientRecord();
-	    if (!fillPatientRecord(patientRecord, demoNo)) continue;
+	    if (!fillPatientRecord(loggedInInfo, patientRecord, demoNo)) continue;
 
 
             //export file to temp directory
@@ -556,7 +557,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         }
     }
 
-    void setImmunizations(PatientRecord patientRecord, Integer demoNo) {
+    void setImmunizations(LoggedInInfo loggedInInfo, PatientRecord patientRecord, Integer demoNo) {
         ArrayList<String> inject = new ArrayList<String>();
         ArrayList<? extends Map<String,? extends Object>> preventionList = PreventionDisplayConfig.getInstance().getPreventions();
         for (int i=0; i<preventionList.size(); i++){
@@ -566,7 +567,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 inject.add((String) h.get("name"));
             }
         }
-        preventionList = PreventionData.getPreventionData(demoNo);
+        preventionList = PreventionData.getPreventionData(loggedInInfo, demoNo);
         for (int i=0; i<preventionList.size(); i++){
             HashMap<String,Object> h = new HashMap<String,Object>();
             h.putAll(preventionList.get(i));
