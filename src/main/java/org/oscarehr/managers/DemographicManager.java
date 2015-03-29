@@ -588,4 +588,14 @@ public class DemographicManager {
 
 		return (demographics);
 	}
+	
+	public List<Demographic> getActiveDemosByHealthCardNo(LoggedInInfo loggedInInfo, String hcn, String hcnType) {
+		if (loggedInInfo == null) throw (new SecurityException("user not logged in?"));
+		
+		List<Demographic> demographics = demographicDao.getActiveDemosByHealthCardNo(hcn, hcnType);
+		
+		LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getActiveDemosByHealthCardNo", "hcn=" + hcn + ",hcnType=" + hcnType);
+
+		return (demographics);
+	}
 }

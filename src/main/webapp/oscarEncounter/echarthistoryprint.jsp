@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -44,7 +45,7 @@
     response.sendRedirect("error.jsp");
     return;
   }
-  bean.setUpEncounterPage(request.getParameter("echartid"),request.getParameter("demographic_no"));
+  bean.setUpEncounterPage(LoggedInInfo.getLoggedInInfoFromSession(request), request.getParameter("echartid"),request.getParameter("demographic_no"));
 %>
 
 <script type="text/javascript" language="Javascript">

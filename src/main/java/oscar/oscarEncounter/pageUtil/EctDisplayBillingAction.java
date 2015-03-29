@@ -36,11 +36,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -54,7 +54,8 @@ import oscar.oscarBilling.ca.on.data.JdbcBillingReviewImpl;
 public class EctDisplayBillingAction extends EctDisplayAction {
 
     private static final String cmd = "Billing";
-
+    DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+    
     @SuppressWarnings("unchecked")
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
@@ -84,8 +85,7 @@ public class EctDisplayBillingAction extends EctDisplayAction {
 
                 if(appointmentNo != null && appointmentNo.length()>0) {
                 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
-                	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-                	Demographic d = demographicDao.getClientByDemographicNo(Integer.parseInt(bean.demographicNo));
+                	Demographic d = demographicManager.getDemographic(loggedInInfo, Integer.parseInt(bean.demographicNo));
                     Appointment appt = appointmentDao.find(Integer.parseInt(appointmentNo));
                     String billform = OscarProperties.getInstance().getProperty("default_view");
                     SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");

@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Provider;
@@ -75,8 +74,7 @@ public class EctDisplayAppointmentHistoryAction extends EctDisplayAction {
 
 
    ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-    DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-
+   
 
     OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
     List<Appointment> appts = appointmentDao.getAppointmentHistory(Integer.parseInt(bean.getDemographicNo()));

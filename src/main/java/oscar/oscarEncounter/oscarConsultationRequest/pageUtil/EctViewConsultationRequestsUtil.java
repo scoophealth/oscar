@@ -34,34 +34,35 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.ConsultationServiceDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ConsultationServices;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class EctViewConsultationRequestsUtil {         
    
-   public boolean estConsultationVecByTeam(String team) {   
-      return estConsultationVecByTeam(team,false,null,null);
+   public boolean estConsultationVecByTeam(LoggedInInfo loggedInInfo,String team) {   
+      return estConsultationVecByTeam(loggedInInfo,team,false,null,null);
    }
-   public boolean estConsultationVecByTeam(String team,boolean showCompleted) {   
-      return estConsultationVecByTeam(team,showCompleted,null,null);
+   public boolean estConsultationVecByTeam(LoggedInInfo loggedInInfo,String team,boolean showCompleted) {   
+      return estConsultationVecByTeam(loggedInInfo,team,showCompleted,null,null);
    }   
-   public boolean estConsultationVecByTeam(String team,boolean showCompleted,Date startDate, Date endDate) {
-      return estConsultationVecByTeam(team,showCompleted,null,null,null);
+   public boolean estConsultationVecByTeam(LoggedInInfo loggedInInfo, String team,boolean showCompleted,Date startDate, Date endDate) {
+      return estConsultationVecByTeam(loggedInInfo,team,showCompleted,null,null,null);
    }   
-   public boolean estConsultationVecByTeam(String team,boolean showCompleted,Date startDate, Date endDate,String orderby) {   
-      return estConsultationVecByTeam(team,showCompleted,null,null,null,null);
+   public boolean estConsultationVecByTeam(LoggedInInfo loggedInInfo, String team,boolean showCompleted,Date startDate, Date endDate,String orderby) {   
+      return estConsultationVecByTeam(loggedInInfo,team,showCompleted,null,null,null,null);
    }   
-   public boolean estConsultationVecByTeam(String team,boolean showCompleted,Date startDate, Date endDate,String orderby,String desc) { 
-      return estConsultationVecByTeam(team,showCompleted,null,null,null,null,null,null,null);
+   public boolean estConsultationVecByTeam(LoggedInInfo loggedInInfo, String team,boolean showCompleted,Date startDate, Date endDate,String orderby,String desc) { 
+      return estConsultationVecByTeam(loggedInInfo,team,showCompleted,null,null,null,null,null,null,null);
    }  
             
-   public boolean estConsultationVecByTeam(String team,boolean showCompleted,Date startDate, Date endDate,String orderby,String desc,String searchDate, Integer offset, Integer limit) {       
+   public boolean estConsultationVecByTeam(LoggedInInfo loggedInInfo, String team,boolean showCompleted,Date startDate, Date endDate,String orderby,String desc,String searchDate, Integer offset, Integer limit) {       
       ids = new Vector<String>();
       status = new Vector<String>();
       patient = new Vector<String>();
@@ -81,7 +82,7 @@ public class EctViewConsultationRequestsUtil {
 
       try {
           ConsultationRequestDao consultReqDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
-          DemographicDao demoDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+          DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
           ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
           ConsultationServiceDao serviceDao = (ConsultationServiceDao) SpringUtils.getBean("consultationServiceDao");
           ConsultationRequest consult;
@@ -96,7 +97,7 @@ public class EctViewConsultationRequestsUtil {
 
           for( int idx = 0; idx < consultList.size(); ++idx ) {
               consult = (ConsultationRequest)consultList.get(idx);
-              demo = demoDao.getDemographicById(consult.getDemographicId());
+              demo = demographicManager.getDemographic(loggedInInfo, consult.getDemographicId());
               services = serviceDao.find(consult.getServiceId());
 
               providerId = demo.getProviderNo();
@@ -161,7 +162,7 @@ public class EctViewConsultationRequestsUtil {
    }      
    
       
-   public boolean estConsultationVecByDemographic(String demoNo) {      
+   public boolean estConsultationVecByDemographic(LoggedInInfo loggedInInfo, String demoNo) {      
       ids = new Vector<String>();
       status = new Vector<String>();
       patient = new Vector<String>();
@@ -177,7 +178,7 @@ public class EctViewConsultationRequestsUtil {
           ConsultationRequestDao consultReqDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
 
           ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
-          DemographicDao demoDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+          DemographicManager demoManager = SpringUtils.getBean(DemographicManager.class);
           ConsultationServiceDao serviceDao = (ConsultationServiceDao) SpringUtils.getBean("consultationServiceDao");
           ConsultationRequest consult;
           Provider prov;
@@ -188,7 +189,7 @@ public class EctViewConsultationRequestsUtil {
           List consultList = consultReqDao.getConsults(Integer.parseInt(demoNo));
           for( int idx = 0; idx < consultList.size(); ++idx ) {
               consult = (ConsultationRequest)consultList.get(idx);
-              demo = demoDao.getDemographicById(consult.getDemographicId());
+              demo = demoManager.getDemographic(loggedInInfo, consult.getDemographicId());
               providerId = demo.getProviderNo();
               if( providerId != null && !providerId.equals("")) {
               prov = providerDao.getProvider(demo.getProviderNo());

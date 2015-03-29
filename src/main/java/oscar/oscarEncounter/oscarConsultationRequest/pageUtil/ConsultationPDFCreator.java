@@ -18,12 +18,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DigitalSignatureDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DigitalSignature;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -70,7 +71,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 	public ConsultationPDFCreator(HttpServletRequest request, OutputStream os) {
 		this.os = os;
 	    reqFrm = new EctConsultationFormRequestUtil ();
-	    reqFrm.estRequestFromId( request.getParameter("reqId") == null ? (String)request.getAttribute("reqId") : request.getParameter("reqId"));
+	    reqFrm.estRequestFromId(LoggedInInfo.getLoggedInInfoFromSession(request), request.getParameter("reqId") == null ? (String)request.getAttribute("reqId") : request.getParameter("reqId"));
 	    props = OscarProperties.getInstance();
 	    clinic = new ClinicData();
 		oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
@@ -81,7 +82,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 	 * @throws IOException when an error with the output stream occurs
 	 * @throws DocumentException when an error in document construction occurs
 	 */
-	public void printPdf() throws IOException, DocumentException {
+	public void printPdf(LoggedInInfo loggedInInfo) throws IOException, DocumentException {
 
 		// Create the document we are going to write to
 		document = new Document();
@@ -101,7 +102,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		font = new Font(bf, 9, Font.NORMAL);
 		boldFont = new Font(bf, 10, Font.BOLD);
 
-		createConsultationRequest();
+		createConsultationRequest(loggedInInfo);
 
 		document.close();
 	}
@@ -110,7 +111,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 	 * Creates and adds the table at the top of the document
 	 * which contains the consultation request.
 	 */
-	private void createConsultationRequest() throws DocumentException {
+	private void createConsultationRequest(LoggedInInfo loggedInInfo) throws DocumentException {
 
 		float[] tableWidths = { 1f, 1f };
 		PdfPTable table = new PdfPTable(1);
@@ -139,7 +140,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		addToTable(border2, infoTable, true);
 
 		// Creating a table with details for the consultation request.
-		infoTable = createConsultDetailTable();
+		infoTable = createConsultDetailTable(loggedInInfo);
 
 //		// Adding promotional information if appropriate.
 //		if (props.getProperty("FORMS_PROMOTEXT") != null){
@@ -380,7 +381,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 	 * about the reason for the consultation request.
 	 * @return the table produced
 	 */
-	private PdfPTable createConsultDetailTable() {
+	private PdfPTable createConsultDetailTable(LoggedInInfo loggedInInfo) {
 		PdfPTable infoTable;
 		PdfPCell cell;
 		infoTable = new PdfPTable(1);
@@ -422,8 +423,8 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		org.oscarehr.common.model.Provider pro = proDAO.getProvider(reqFrm.providerNo);
 		String ohipNo = pro.getOhipNo();
 		
-		DemographicDao demoDAO = (DemographicDao) SpringUtils.getBean("demographicDao");
-		Demographic demo = demoDAO.getDemographic(reqFrm.demoNo);
+		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+		Demographic demo = demographicManager.getDemographic(loggedInInfo, reqFrm.demoNo);
 
 		String famDocOhipNo = "";
 		if(demo.getProviderNo()!=null && !demo.getProviderNo().equals("")) {

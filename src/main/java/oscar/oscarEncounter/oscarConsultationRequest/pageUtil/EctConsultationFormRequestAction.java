@@ -53,7 +53,6 @@ import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.ConsultationRequestExtDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01;
@@ -68,6 +67,7 @@ import org.oscarehr.common.model.DigitalSignature;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.DigitalSignatureUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -402,8 +402,8 @@ public class EctConsultationFormRequestAction extends Action {
 	    
 	    //--- send attachments ---
     	Provider sendingProvider=loggedInInfo.getLoggedInProvider();
-    	DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
-    	Demographic demographic=demographicDao.getDemographicById(consultationRequest.getDemographicId());
+    	DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+    	Demographic demographic=demographicManager.getDemographic(loggedInInfo, consultationRequest.getDemographicId());
 
     	//--- process all documents ---
 	    ArrayList<EDoc> attachments=EDocUtil.listDocs(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), EDocUtil.ATTACHED);

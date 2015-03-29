@@ -42,6 +42,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.util.UtilDateUtilities;
@@ -137,7 +138,7 @@ public class EctDisplayAction extends Action {
 			bean.date = request.getParameter("date");
 			bean.check = "myCheck";
 			bean.oscarMsgID = request.getParameter("msgId");
-			bean.setUpEncounterPage();
+			bean.setUpEncounterPage(LoggedInInfo.getLoggedInInfoFromSession(request));
 			request.getSession().setAttribute("EctSessionBean", bean);
 			request.getSession().setAttribute("eChartID", bean.eChartId);
 			if (request.getParameter("source") != null) {

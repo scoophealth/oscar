@@ -113,7 +113,7 @@
 		
 		EctConsultationFormRequestUtil consultUtil = new EctConsultationFormRequestUtil();
 		
-		if (requestId != null) consultUtil.estRequestFromId(requestId);
+		if (requestId != null) consultUtil.estRequestFromId(loggedInInfo, requestId);
 		if (demo == null) demo = consultUtil.demoNo;
 
 		ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
@@ -140,7 +140,7 @@
 			MiscUtils.getLogger().error("Missing both requestId and segmentId.");
 		}
 
-		if (demo != null) consultUtil.estPatient(demo);
+		if (demo != null) consultUtil.estPatient(loggedInInfo, demo);
 		consultUtil.estActiveTeams();
 
 		if (request.getParameter("error") != null)
@@ -1134,7 +1134,7 @@ function updateFaxButton() {
 
 		if (requestId != null)
 		{
-			EctViewRequestAction.fillFormValues(thisForm, new Integer(requestId));
+			EctViewRequestAction.fillFormValues(LoggedInInfo.getLoggedInInfoFromSession(request), thisForm, new Integer(requestId));
                 thisForm.setSiteName(consultUtil.siteName);
                 defaultSiteName = consultUtil.siteName ;
 

@@ -27,9 +27,9 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +45,6 @@ import org.apache.xml.security.exceptions.Base64DecodingException;
 import org.apache.xml.security.utils.Base64;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ConsultationRequestDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
@@ -55,6 +54,8 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -117,7 +118,7 @@ public class EctViewRequestAction extends Action {
 	}
 
 
-        public static void fillFormValues(EctConsultationFormRequestForm thisForm, Integer requestId) {
+        public static void fillFormValues(LoggedInInfo loggedInInfo, EctConsultationFormRequestForm thisForm, Integer requestId) {
             ConsultationRequestDao consultDao = (ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
             ConsultationRequest consult = consultDao.find(requestId);
 
@@ -146,8 +147,8 @@ public class EctViewRequestAction extends Action {
                 thisForm.setFollowUpDate("");
             }
 
-            DemographicDao demoDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-            Demographic demo = demoDao.getDemographicById(consult.getDemographicId());
+            DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+            Demographic demo = demographicManager.getDemographic(loggedInInfo, consult.getDemographicId());
 
             thisForm.setPatientAddress(demo.getAddress());
             thisForm.setPatientDOB(demo.getFormattedDob());

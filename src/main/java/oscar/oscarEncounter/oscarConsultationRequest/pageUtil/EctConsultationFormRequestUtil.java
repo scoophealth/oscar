@@ -24,16 +24,15 @@
 
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
-import java.util.List;
-import java.util.Vector;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Vector;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.ConsultationServiceDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.ConsultationRequest;
@@ -41,6 +40,8 @@ import org.oscarehr.common.model.ConsultationServices;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -97,13 +98,13 @@ public class EctConsultationFormRequestUtil {
 	public String letterheadFax;
 	
 	private ConsultationServiceDao consultationServiceDao = (ConsultationServiceDao) SpringUtils.getBean("consultationServiceDao");
-	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 
 	private boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
 
-	public boolean estPatient(String demographicNo) {
+	public boolean estPatient(LoggedInInfo loggedInInfo, String demographicNo) {
 
-		Demographic demographic = demographicDao.getDemographicById(Integer.parseInt(demographicNo));
+		Demographic demographic = demographicManager.getDemographic(loggedInInfo, Integer.parseInt(demographicNo));
 		boolean estPatient = false;
 
 		if (demographic != null) {
@@ -185,7 +186,7 @@ public class EctConsultationFormRequestUtil {
 		return verdict;
 	}
 
-	public boolean estRequestFromId(String id) {
+	public boolean estRequestFromId(LoggedInInfo loggedInInfo, String id) {
 
 		boolean verdict = true;
 		getSpecailistsName(id);
@@ -224,7 +225,7 @@ public class EctConsultationFormRequestUtil {
 			if (appointmentNotes == null || appointmentNotes.equals("null")) {
 				appointmentNotes = "";
 			}
-			estPatient("" + cr.getDemographicId());
+			estPatient(loggedInInfo, "" + cr.getDemographicId());
 
 			if (bMultisites) {
 				siteName = cr.getSiteName();
