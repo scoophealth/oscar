@@ -421,7 +421,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    
 	    //--- process all labs ---
         CommonLabResultData labData = new CommonLabResultData();
-        ArrayList<LabResultData> labs = labData.populateLabResultsData(demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), CommonLabResultData.ATTACHED);
+        ArrayList<LabResultData> labs = labData.populateLabResultsData(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), CommonLabResultData.ATTACHED);
 	    for (LabResultData attachment : labs)
 	    {
 	    	try {
