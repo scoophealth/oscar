@@ -894,6 +894,11 @@ if (bMultisites) { %>
 			name="buttoncancel" id="noShowButton"
 			value="<bean:message key="appointment.editappointment.btnNoShow"/>"
 			onClick="window.location='appointmentcontrol.jsp?buttoncancel=No Show&displaymode=Update Appt&appointment_no=<%=appointment_no%>'">
+			<input type="button"
+			name="buttonprintcard" id="printCardButton"
+			value="Print Card"
+			onClick="window.location='appointmentcontrol.jsp?displaymode=PrintCard&appointment_no=<%=appointment_no%>'">
+			
 		</td>
 		<td align="right" nowrap><input type="button" name="labelprint" id="labelButton"
 			value="<bean:message key="appointment.editappointment.btnLabelPrint"/>"
