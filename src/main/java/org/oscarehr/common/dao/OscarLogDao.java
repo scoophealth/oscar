@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.OscarLog;
 import org.springframework.stereotype.Repository;
 
@@ -130,4 +131,16 @@ public class OscarLogDao extends AbstractDao<OscarLog> {
 		
 		return(results);
 	}
+
+	@Override
+    public void remove(AbstractModel<?> o) {
+	    throw new SecurityException("Cannot remove audit log entries!");
+    }
+
+	@Override
+    public boolean remove(Object id) {
+		 throw new SecurityException("Cannot remove audit log entries!");
+    }
+	
+	
 }
