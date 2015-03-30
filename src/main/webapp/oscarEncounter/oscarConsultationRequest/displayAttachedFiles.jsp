@@ -51,7 +51,7 @@
             }
 
                 CommonLabResultData labData = new CommonLabResultData();
-                ArrayList labs = labData.populateLabResultsData(demo, requestId, CommonLabResultData.ATTACHED);
+                ArrayList labs = labData.populateLabResultsData(loggedInInfo, demo, requestId, CommonLabResultData.ATTACHED);
                 LabResultData resData;
                 for(int idx = 0; idx < labs.size(); ++idx) 
                 {

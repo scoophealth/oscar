@@ -2976,7 +2976,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		if (request.getParameter("printLabs") != null && request.getParameter("printLabs").equalsIgnoreCase("true")) {
 			// get the labs which fall into the date range which are attached to this patient
 			CommonLabResultData comLab = new CommonLabResultData();
-			ArrayList<LabResultData> labs = comLab.populateLabResultsData("", demono, "", "", "", "U");
+			ArrayList<LabResultData> labs = comLab.populateLabResultsData(loggedInInfo, "", demono, "", "", "", "U");
 			LinkedHashMap<String, LabResultData> accessionMap = new LinkedHashMap<String, LabResultData>();
 			for (int i = 0; i < labs.size(); i++) {
 				LabResultData result = labs.get(i);

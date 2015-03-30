@@ -138,7 +138,7 @@ if (request.getParameter("casetoEncounter")==null)
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
   CommonLabResultData comLab = new CommonLabResultData();
-  ArrayList labs = comLab.populateLabResultsData("",demoNo, "", "","","U");
+  ArrayList labs = comLab.populateLabResultsData(loggedInInfo,"",demoNo, "", "","","U");
   Collections.sort(labs);
 
   String province = ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();

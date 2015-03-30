@@ -40,7 +40,6 @@ import org.oscarehr.billing.CA.BC.dao.Hl7MshDao;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.CtlDocumentDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DocumentResultsDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.dao.LabPatientPhysicianInfoDao;
@@ -56,6 +55,7 @@ import org.oscarehr.common.model.QueueDocumentLink;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.labs.LabIdAndType;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -98,17 +98,17 @@ public class CommonLabResultData {
 	}
 
 	//Populate Lab data for consultation request
-	public ArrayList<LabResultData> populateLabResultsData(String demographicNo, String reqId, boolean attach) {
-		return populateLabResultsData(demographicNo, reqId, attach, false);
+	public ArrayList<LabResultData> populateLabResultsData(LoggedInInfo loggedInInfo, String demographicNo, String reqId, boolean attach) {
+		return populateLabResultsData(loggedInInfo, demographicNo, reqId, attach, false);
 	}
 	
 	//Populate Lab data for consultation response
-	public ArrayList<LabResultData> populateLabResultsDataConsultResponse(String demographicNo, String respId, boolean attach) {
-		return populateLabResultsData(demographicNo, respId, attach, true);
+	public ArrayList<LabResultData> populateLabResultsDataConsultResponse(LoggedInInfo loggedInInfo, String demographicNo, String respId, boolean attach) {
+		return populateLabResultsData(loggedInInfo, demographicNo, respId, attach, true);
 	}
 	
 	//Populate Lab data for consultation (private shared method)
-	private ArrayList<LabResultData> populateLabResultsData(String demographicNo, String consultId, boolean attach, boolean isConsultResponse) {
+	private ArrayList<LabResultData> populateLabResultsData(LoggedInInfo loggedInInfo, String demographicNo, String consultId, boolean attach, boolean isConsultResponse) {
 		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
 		oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
 
@@ -157,7 +157,7 @@ public class CommonLabResultData {
 	}
 
 
-    public ArrayList<LabResultData> populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, boolean isPaged, Integer page, Integer pageSize, boolean mixLabsAndDocs, Boolean isAbnormal) {
+    public ArrayList<LabResultData> populateLabResultsData(LoggedInInfo loggedInInfo, String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, boolean isPaged, Integer page, Integer pageSize, boolean mixLabsAndDocs, Boolean isAbnormal) {
 
     		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
     		oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
@@ -201,15 +201,15 @@ public class CommonLabResultData {
     		return labs;
     }
 
-    public ArrayList<LabResultData> populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String ackStatus, String docScanStatus, boolean isPaged, Integer page, Integer pageSize, boolean mixLabsAndDocs, Boolean isAbnormal) {
-    		return populateLabResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, ackStatus, isPaged, page, pageSize, mixLabsAndDocs, isAbnormal);
+    public ArrayList<LabResultData> populateLabResultsData(LoggedInInfo loggedInInfo, String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String ackStatus, String docScanStatus, boolean isPaged, Integer page, Integer pageSize, boolean mixLabsAndDocs, Boolean isAbnormal) {
+    		return populateLabResultsData(loggedInInfo, providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, ackStatus, isPaged, page, pageSize, mixLabsAndDocs, isAbnormal);
     }
 
-	public ArrayList<LabResultData> populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
-		return populateLabResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, "I");
+	public ArrayList<LabResultData> populateLabResultsData(LoggedInInfo loggedInInfo, String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+		return populateLabResultsData(loggedInInfo, providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, "I");
 	}
 
-	public ArrayList<LabResultData> populateLabResultsDataInboxIndexPage(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, String scannedDocStatus) {
+	public ArrayList<LabResultData> populateLabResultsDataInboxIndexPage(LoggedInInfo loggedInInfo, String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, String scannedDocStatus) {
 		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
 		oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
 
@@ -259,9 +259,9 @@ public class CommonLabResultData {
 	}
 
 	// get documents that are specific provider to show in that provider's inbox
-	public ArrayList<LabResultData> populateLabResultsData2(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, String scannedDocStatus) {
+	public ArrayList<LabResultData> populateLabResultsData2(LoggedInInfo loggedInInfo, String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, String scannedDocStatus) {
 		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
-		labs = populateLabsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, scannedDocStatus);
+		labs = populateLabsData(loggedInInfo, providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, scannedDocStatus);
 		labs.addAll(populateDocumentDataSpecificProvider(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, scannedDocStatus));
 		return labs;
 	}
@@ -287,14 +287,14 @@ public class CommonLabResultData {
 		return labs;
 	}
 
-	public ArrayList<LabResultData> populateLabsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, String scannedDocStatus) {
+	public ArrayList<LabResultData> populateLabsData(LoggedInInfo loggedInInfo, String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, String scannedDocStatus) {
 		ArrayList<LabResultData> result = new ArrayList<LabResultData>();
 		List<Integer> ids = new ArrayList<Integer>();
 		Integer parentId = ConversionUtils.fromIntString(demographicNo); 
 		ids.add(parentId);
 		
-		DemographicDao dao = SpringUtils.getBean(DemographicDao.class);
-		ids.addAll(dao.getMergedDemographics(parentId));
+		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+		ids.addAll(demographicManager.getMergedDemographicIds(loggedInInfo, parentId));
 		
 		for(Integer id : ids) { 
 			result.addAll(pleaseRefactorMe(providerNo, id.toString(), patientFirstName, patientLastName, patientHealthNumber, status, scannedDocStatus));
@@ -351,9 +351,9 @@ public class CommonLabResultData {
 		return labs;
     }
 
-	public ArrayList<LabResultData> populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, String scannedDocStatus) {
+	public ArrayList<LabResultData> populateLabResultsData(LoggedInInfo loggedInInfo, String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, String scannedDocStatus) {
 		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
-		labs = populateLabsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, scannedDocStatus);
+		labs = populateLabsData(loggedInInfo, providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, scannedDocStatus);
 		labs.addAll(populateDocumentData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status, scannedDocStatus));
 
 		return labs;

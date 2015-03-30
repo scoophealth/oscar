@@ -47,7 +47,7 @@
     if ( providerNo == null ) { providerNo = ""; }
     if ( searchProviderNo == null ) { searchProviderNo = providerNo; }
     
-    ArrayList<LabResultData> labs = comLab.populateLabResultsData("",demographicNo, "", "","","U");
+    ArrayList<LabResultData> labs = comLab.populateLabResultsData(LoggedInInfo.getLoggedInInfoFromSession(request), "",demographicNo, "", "","","U");
     
     LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
     if (loggedInInfo.getCurrentFacility().isIntegratorEnabled())

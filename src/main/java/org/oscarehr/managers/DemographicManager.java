@@ -598,4 +598,17 @@ public class DemographicManager {
 
 		return (demographics);
 	}
+	
+	       
+	   public List<Integer> getMergedDemographicIds(LoggedInInfo loggedInInfo, Integer demographicNo) {    
+		   if (loggedInInfo == null) throw (new SecurityException("user not logged in?"));
+	       
+	       List<Integer> ids = demographicDao.getMergedDemographics(demographicNo);
+	       
+	       LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getMergedDemographics", "demographicNo=" + demographicNo);
+	           
+	       return ids;
+	   }
+	       
+
 }
