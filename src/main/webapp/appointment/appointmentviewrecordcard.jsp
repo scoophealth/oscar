@@ -102,7 +102,7 @@
 	<%
         } else {
         	
-        	for(Appointment a: appointmentDao.findDemoAppointmentsToday(appt.getDemographicNo())) {   	
+        	for(Appointment a: appointmentDao.findDemoAppointmentsOnDate(appt.getDemographicNo(),appt.getAppointmentDate())) {   	
         		Provider provider = providerDao.getProvider(a.getProviderNo());
      
     %>
