@@ -123,7 +123,7 @@
 				$('#productCode').val(drugProduct.code);
 				$('#productLocation').val(drugProduct.location);
 				$('#productLot').val(drugProduct.lotNumber);
-				$('#productExpiryDate').val(drugProduct.expiryDate);
+				$('#productExpiryDate').val(dateToYMD(drugProduct.expiryDate));
 				$('#productAmount').val(drugProduct.amount);
 				$('#productId').val(drugProduct.id);
 				$('#totalEntriesToCreateGroup').hide();
@@ -195,9 +195,10 @@
 	}
 	
 	function dateToYMD(date) {
-	    var d = date.getDate();
-	    var m = date.getMonth() + 1;
-	    var y = date.getFullYear();
+	    var changeDate = new Date(date.toString());
+	    var d = changeDate.getDate();
+	    var m = changeDate.getMonth() + 1;
+	    var y = changeDate.getFullYear();
 	    return '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
 	}
 
@@ -418,14 +419,13 @@
 				"Save Product": {class:"btn btn-primary", text:"Save", click: function() {	
 					if(validateSaveProduct()) {
 					
-						//This changes the productExpiryDate before sending the information to be updated in the database. The date before was a day behind and this corrects it to the right date.
 						var dbEntryDate = new Date($("#productExpiryDate").val());
-						var newDate = new Date(dbEntryDate.getFullYear(), dbEntryDate.getMonth()+1, dbEntryDate.getDate()+2);
-						var newDateString = (newDate.getFullYear() + '-' + newDate.getMonth() + '-' + newDate.getDate());
-
-						
-						$("#productExpiryDate").val(newDateString); 
 						//Must set the attr disabled to false so the values get passed properly
+						//The date was still being set to one day in the past so this corrects the error.
+						dbEntryDate.setDate(dbEntryDate.getDate() + 2);
+						
+						$("#productExpiryDate").val(dateToYMD(dbEntryDate));
+						
 						$("#productName").attr("disabled",false);
 						$("#productCode").attr("disabled",false);
 						$("#productAmount").attr("disabled",false);
