@@ -27,7 +27,7 @@
 
 <script>
 function newWindow(url) {
-    newwindow=window.open(url,'administration','height=700,width=1000');
+    newwindow=window.open(url,'administration','height=700,width=1000,scrollbars=1');
     if (window.focus) {newwindow.focus()}
     return false;
 }
