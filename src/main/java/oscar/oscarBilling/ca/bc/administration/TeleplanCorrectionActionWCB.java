@@ -40,10 +40,11 @@ import org.oscarehr.billing.CA.BC.dao.WcbDao;
 import org.oscarehr.billing.CA.BC.model.Wcb;
 import org.oscarehr.common.dao.BillingDao;
 import org.oscarehr.common.dao.BillingServiceDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Billing;
 import org.oscarehr.common.model.BillingService;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -70,7 +71,7 @@ public class TeleplanCorrectionActionWCB extends org.apache.struts.action.Action
 	
 	private BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
 	private WcbDao wcbDao = SpringUtils.getBean(WcbDao.class);
-	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request,
@@ -125,7 +126,7 @@ public class TeleplanCorrectionActionWCB extends org.apache.struts.action.Action
             String getItemAmt = this.GetFeeItemAmount(feeItem, extraFeeItem);
             log.debug("fee " + feeItem + " extra " + extraFeeItem + " item amt " + getItemAmt);
           
-            Demographic d = demographicDao.getDemographic(data.getDemographicNumber());
+            Demographic d = demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), data.getDemographicNumber());
             
             for(Wcb w : wcbDao.findByBillingNo(Integer.parseInt(data.getBillingNo()))) {
             	w.setFormEdited(new Date());

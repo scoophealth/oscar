@@ -113,7 +113,7 @@ if( !"".equalsIgnoreCase(moduleid) && (demographicNo == null || demographicNo.eq
 
 String moduleName = "";
 if(module.equals("demographic")) {
-  moduleName = EDocUtil.getDemographicName(moduleid);
+  moduleName = EDocUtil.getDemographicName(loggedInInfo, moduleid);
 } else if(module.equals("provider")) {
   moduleName = EDocUtil.getProviderName(moduleid);
 }

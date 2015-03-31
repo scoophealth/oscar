@@ -30,12 +30,15 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.sf.json.JSONObject;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.model.ProviderData;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarBilling.ca.bc.data.BillingFormData;
 import oscar.oscarBilling.ca.bc.data.BillingFormData.BillingVisit;
@@ -87,7 +90,7 @@ public class QuickBillingBCAction extends Action{
     		} 
     		
 			// add data to the quick billing session form bean			
-			quickBillingHandler.addBill(this.billingEntry);
+			quickBillingHandler.addBill(LoggedInInfo.getLoggedInInfoFromSession(request), this.billingEntry);
 				
 			return mapping.findForward("success");
 

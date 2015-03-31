@@ -36,24 +36,27 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.ListIterator;
 import java.util.Properties;
+
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.model.Billing;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProviderData;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
+
 import oscar.OscarProperties;
 import oscar.entities.Billingmaster;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarBilling.ca.bc.data.BillingNote;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager;
+import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
 import oscar.oscarBilling.ca.bc.pageUtil.BillingSaveBillingAction;
 import oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean;
-import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
 
 
 /**
@@ -95,7 +98,7 @@ public class QuickBillingBCHandler {
 	
 	private Date today;
 	private QuickBillingBCFormBean quickBillingBCFormBean;
-	private DemographicDao demographicDao;
+	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 	private ProviderDataDao providerDao;
 	private Properties oscarProperties;
 	private BillingBillingManager bmanager;
@@ -111,7 +114,6 @@ public class QuickBillingBCHandler {
 	public QuickBillingBCHandler(){
 		
 		this.today = new Date();
-    	demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
     	providerDao = (ProviderDataDao) SpringUtils.getBean("providerDataDao");
     	oscarProperties = OscarProperties.getInstance();
     	bmanager = new BillingBillingManager();
@@ -129,7 +131,6 @@ public class QuickBillingBCHandler {
 		this.quickBillingBCFormBean = quickBillingBCFormBean;
 		
 		this.today = new Date();
-    	demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
     	providerDao = (ProviderDataDao) SpringUtils.getBean("providerDataDao");
     	oscarProperties = OscarProperties.getInstance();
     	bmanager = new BillingBillingManager();
@@ -139,13 +140,7 @@ public class QuickBillingBCHandler {
 		
 	}
 	
-	/**
-	 * 
-	 * @return Demographic Data Access Object
-	 */
-	public DemographicDao getDemographicDao() {
-		return demographicDao;
-	}
+	
 
 	/**
 	 * 
@@ -237,7 +232,7 @@ public class QuickBillingBCHandler {
      * for later processing.
      * Lots of data here is hard coded.
      */
-	public boolean addBill(JSONObject billingEntry) {
+	public boolean addBill(LoggedInInfo loggedInInfo, JSONObject billingEntry) {
 
 		String providerNo = this.quickBillingBCFormBean.getBillingProviderNo();
 		BillingSessionBean bean = new BillingSessionBean();
@@ -261,7 +256,7 @@ public class QuickBillingBCHandler {
 		}
 		
 		if(!demographicNo.isEmpty()) {
-			demographic = this.demographicDao.getDemographic(demographicNo);
+			demographic = this.demographicManager.getDemographic(loggedInInfo, demographicNo);
 		}
 		
 		if(!providerNo.isEmpty()) {

@@ -30,8 +30,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.Misc;
@@ -46,7 +47,7 @@ import oscar.oscarBilling.ca.bc.MSP.TeleplanFileWriter;
 public class WCBTeleplanSubmission {
     private static Logger log = MiscUtils.getLogger();
     
-    private DemographicDao demographicDao = null;
+    private DemographicManager demographicManager = null;
     
     //Misc misc = new Misc();
     public String getHtmlLine(WCB wcb,Billingmaster bm) {
@@ -143,35 +144,35 @@ public class WCBTeleplanSubmission {
     
  
    
-    public String Line1(String dsn,Billingmaster bm,WCB wcb) {
-      return this.Claim1(dsn, bm, wcb);
+    public String Line1(LoggedInInfo loggedInInfo, String dsn,Billingmaster bm,WCB wcb) {
+      return this.Claim1(loggedInInfo, dsn, bm, wcb);
    }
    public String Line2(String dsn,Billingmaster bm,WCB wcb) {
       return this.Note1(dsn, bm, wcb);
    }
-   public String Line3(String dsn,Billingmaster bm,WCB wcb) {
-      return this.Claim2(dsn, bm, wcb);
+   public String Line3(LoggedInInfo loggedInInfo, String dsn,Billingmaster bm,WCB wcb) {
+      return this.Claim2(loggedInInfo, dsn, bm, wcb);
    }
    public String Line4(String dsn,Billingmaster bm,WCB wcb) {
       return this.Note2(dsn, bm, wcb);
    }
-   public String Line5(String dsn,Billingmaster bm,WCB wcb) {
-      return this.Claim3(dsn, bm, wcb);
+   public String Line5(LoggedInInfo loggedInInfo, String dsn,Billingmaster bm,WCB wcb) {
+      return this.Claim3(loggedInInfo, dsn, bm, wcb);
    }
    public String Line6(String dsn,Billingmaster bm,WCB wcb) {
       return this.Note3(dsn, bm, wcb);
    }
-   public String Line7(String dsn,Billingmaster bm,WCB wcb) {
-      return this.Claim4(dsn, bm, wcb);
+   public String Line7(LoggedInInfo loggedInInfo, String dsn,Billingmaster bm,WCB wcb) {
+      return this.Claim4(loggedInInfo, dsn, bm, wcb);
    }
    public String Line8(String dsn,Billingmaster bm,WCB wcb) {
       return this.Note4(dsn, bm, wcb);
    }
-   public String Line9(String dsn,Billingmaster bm,WCB wcb) {
-      return this.Claim5(dsn, bm, wcb);
+   public String Line9(LoggedInInfo loggedInInfo, String dsn,Billingmaster bm,WCB wcb) {
+      return this.Claim5(loggedInInfo, dsn, bm, wcb);
    }
-   private String Claim1(String logNo,Billingmaster bm,WCB wcb) {
-      return this.Claim(logNo, bm.getBillAmount(), bm.getBillingCode(),TeleplanFileWriter.roundUp(bm.getBillingUnit()), "N", bm, wcb);
+   private String Claim1(LoggedInInfo loggedInInfo, String logNo,Billingmaster bm,WCB wcb) {
+      return this.Claim(loggedInInfo, logNo, bm.getBillAmount(), bm.getBillingCode(),TeleplanFileWriter.roundUp(bm.getBillingUnit()), "N", bm, wcb);
    }
 
 
@@ -224,28 +225,28 @@ public class WCBTeleplanSubmission {
       + Misc.backwardSpace(wcb.getW_opcity(), 25)
       + ((wcb.getW_reporttype().compareTo("F") == 0) ? Misc.backwardSpace("Y", 2) : Misc.forwardSpace("Y", 2)) + Misc.space(70)),bm,wcb);
    }
-   private String Claim2(String logNo,Billingmaster bm,WCB wcb) {
-      return this.Claim(logNo, "0", "19333", "N",bm,wcb);
+   private String Claim2(LoggedInInfo loggedInInfo, String logNo,Billingmaster bm,WCB wcb) {
+      return this.Claim(loggedInInfo, logNo, "0", "19333", "N",bm,wcb);
    }
    private String Note2(String logNo,Billingmaster bm,WCB wcb) {
       return this.Note(logNo,
             Misc.backwardSpace( ((wcb.getW_problem().compareTo("") == 0) ? "Intentionally left blank" : wcb.getW_problem()),160),Misc.backwardSpace(wcb.getW_capreason(), 240),bm,wcb);
    }
-   private String Claim3(String logNo,Billingmaster bm,WCB wcb) {
-      return this.Claim(logNo, "0", "19334", "N",bm,wcb);
+   private String Claim3(LoggedInInfo loggedInInfo, String logNo,Billingmaster bm,WCB wcb) {
+      return this.Claim(loggedInInfo, logNo, "0", "19334", "N",bm,wcb);
    }
    private String Note3(String logNo,Billingmaster bm,WCB wcb) {
       return this.Note(logNo, Misc.backwardSpace(wcb.getW_clinicinfo(), 400),bm,wcb);
    }
-   private String Claim4(String logNo,Billingmaster bm,WCB wcb) {
-      return this.Claim(logNo, "0", "19335", "N",bm,wcb);
+   private String Claim4(LoggedInInfo loggedInInfo, String logNo,Billingmaster bm,WCB wcb) {
+      return this.Claim(loggedInInfo, logNo, "0", "19335", "N",bm,wcb);
    }
    private String Note4(String logNo,Billingmaster bm,WCB wcb) {
       int length = wcb.getW_clinicinfo().length();
       return this.Note(logNo,Misc.backwardSpace(((length >= 400)? wcb.getW_clinicinfo().substring(400, length): "Clinical Information Complete"),400),bm,wcb);
    }
-   private String Claim5(String logNo,Billingmaster bm,WCB wcb) {      
-      return this.Claim(logNo, bm.getBillAmount(), bm.getBillingCode() ,TeleplanFileWriter.roundUp(bm.getBillingUnit()), "0",bm,wcb);
+   private String Claim5(LoggedInInfo loggedInInfo, String logNo,Billingmaster bm,WCB wcb) {      
+      return this.Claim(loggedInInfo,logNo, bm.getBillAmount(), bm.getBillingCode() ,TeleplanFileWriter.roundUp(bm.getBillingUnit()), "0",bm,wcb);
    }
    private String Note(String logNo, String a,Billingmaster bm,WCB wcb) {
       return this.Note(logNo, a, "",bm,wcb);
@@ -266,14 +267,14 @@ public class WCBTeleplanSubmission {
    }
 
    
-   private String Claim(String logNo, String billedAmount, String feeitem,String correspondenceCode,Billingmaster bm,WCB wcb) {
+   private String Claim(LoggedInInfo loggedInInfo, String logNo, String billedAmount, String feeitem,String correspondenceCode,Billingmaster bm,WCB wcb) {
 	   String billingUnit = "1";
-	   return Claim(logNo, billedAmount,  feeitem, billingUnit,correspondenceCode, bm,wcb) ;
+	   return Claim(loggedInInfo, logNo, billedAmount,  feeitem, billingUnit,correspondenceCode, bm,wcb) ;
    }
-   private String Claim(String logNo, String billedAmount, String feeitem,String billingUnit,String correspondenceCode,Billingmaster bm,WCB wcb) {
+   private String Claim(LoggedInInfo loggedInInfo, String logNo, String billedAmount, String feeitem,String billingUnit,String correspondenceCode,Billingmaster bm,WCB wcb) {
       StringBuilder dLine = new StringBuilder();
-      log.debug("Demographic "+demographicDao+"   "+bm.getDemographicNo());
-      Demographic d = demographicDao.getDemographic(""+bm.getDemographicNo()); 
+     
+      Demographic d = demographicManager.getDemographic(loggedInInfo, ""+bm.getDemographicNo()); 
       
       dLine.append("C02");
       dLine.append( this.ClaimNote1Head(logNo,bm.getPayeeNo(),bm.getPractitionerNo()) );
@@ -344,11 +345,9 @@ public class WCBTeleplanSubmission {
    } 
    
    
-   // wtf do you think this does
-    public void setDemographicDao(
-
-    DemographicDao demographicDao) {
-        this.demographicDao = demographicDao;
+   public void setDemographicManager(
+		   DemographicManager demographicManager) {
+	   	this.demographicManager = demographicManager;
     }
   
    

@@ -42,13 +42,14 @@ import org.oscarehr.billing.CA.ON.model.BillingONHeader;
 import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.BillingONItemDao;
 import org.oscarehr.common.dao.BillingServiceDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.SiteDao;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Site;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.DateRange;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -65,7 +66,7 @@ public class JdbcBillingCreateBillingFile {
 	private BillingClaimHeader1Data ch1Obj = null;
 	private BillingItemData itemObj = null;
 	private Properties propBillingNo = null;
-	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 	private BillingONCHeader1Dao cheaderDao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 	private BillingONHeaderDao headerDao = SpringUtils.getBean(BillingONHeaderDao.class);
 	private BillingONFilenameDao filenameDao = SpringUtils.getBean(BillingONFilenameDao.class);
@@ -162,11 +163,11 @@ public class JdbcBillingCreateBillingFile {
 		errorMsg += errorPartMsg;
 	}
 
-	private String buildHeader1() {
+	private String buildHeader1(LoggedInInfo loggedInInfo) {
 		String ret = "";
 		String header1 = null;
 		String header2 = "";
-		updateDemoData(ch1Obj);
+		updateDemoData(loggedInInfo, ch1Obj);
 		boolean bRMB = ch1Obj.getPay_program().equals("RMB") ? true : false;
 		String str1Hin = bRMB ? space(10) : leftJustify(" ", 10, ch1Obj.getHin());
 		String ver = bRMB ? space(2) : leftJustify(" ", 2, ch1Obj.getVer());
@@ -239,12 +240,12 @@ public class JdbcBillingCreateBillingFile {
 		return ret;
 	}
 
-	private String buildHTMLContentRecord(int invCount, boolean simulation) {
+	private String buildHTMLContentRecord(LoggedInInfo loggedInInfo,  int invCount, boolean simulation) {
 		String ret = null;
 		ret = "";
 		String styleClass = patientCount % 2 == 0 ? "myLightBlue" : "myIvory";
 		if (invCount == 0) {
-			Demographic demo = demographicDao.getDemographic(ch1Obj.getDemographic_no());
+			Demographic demo = demographicManager.getDemographic(loggedInInfo, ch1Obj.getDemographic_no());
 			ret += "\n<tr " + (summaryView ? "style='display:none;' class='record" + providerNo + "'" : "") + ">";
 			if (simulation) {
 				ret += "<td class='" + styleClass + "'>" + ch1Obj.getProvider_ohip_no() + "</td>"
@@ -389,11 +390,11 @@ public class JdbcBillingCreateBillingFile {
 		return ret;
 	}
 
-	public void createBillingFileStr(String bid, String[] status, boolean simulation, String mohOffice, boolean summaryView) {
-		createBillingFileStr(bid, status, simulation, mohOffice, summaryView, false);
+	public void createBillingFileStr(LoggedInInfo loggedInInfo, String bid, String[] status, boolean simulation, String mohOffice, boolean summaryView) {
+		createBillingFileStr(loggedInInfo, bid, status, simulation, mohOffice, summaryView, false);
 	}
 
-	public void createBillingFileStr(String bid, String[] status, boolean simulation, String mohOffice, boolean summaryView, boolean useProviderMOH) {
+	public void createBillingFileStr(LoggedInInfo loggedInInfo, String bid, String[] status, boolean simulation, String mohOffice, boolean summaryView, boolean useProviderMOH) {
 		this.summaryView = summaryView;
 		try {
 			if (!"0".equals(bid)) { // for simulation only
@@ -483,7 +484,7 @@ public class JdbcBillingCreateBillingFile {
 
 				ch1Obj.setClinic(h.getClinic());
 
-				value += buildHeader1();
+				value += buildHeader1(loggedInInfo);
 				if (!simulation) {
 					htmlContent += printErrorPartMsg();
 				} else {
@@ -529,7 +530,7 @@ public class JdbcBillingCreateBillingFile {
 					checkItem();
 					value += buildItem();
 					_logger.info("createBillingFileStr(value = " + value + ")");
-					htmlContent += buildHTMLContentRecord(invCount, simulation);
+					htmlContent += buildHTMLContentRecord(loggedInInfo, invCount, simulation);
 					if (!simulation) {
 						htmlContent += printErrorPartMsg();
 					} else {
@@ -581,7 +582,7 @@ public class JdbcBillingCreateBillingFile {
 		}
 	}
 
-	public void createSiteBillingFileStr(String bid, String[] statuses) {
+	public void createSiteBillingFileStr(LoggedInInfo loggedInInfo, String bid, String[] statuses) {
 
 		SiteDao siteDao = (SiteDao) SpringUtils.getBean("siteDao");
 
@@ -654,7 +655,7 @@ public class JdbcBillingCreateBillingFile {
 					clinicBgColor = (clinicBgColor == null || clinicBgColor.equalsIgnoreCase("null") ? "FFFFFF" : clinicBgColor);
 				}
 
-				value += buildHeader1();
+				value += buildHeader1(loggedInInfo);
 				htmlContent += printSiteErrorPartMsg();
 				// build billing detail
 				invCount = 0;
@@ -776,9 +777,9 @@ public class JdbcBillingCreateBillingFile {
 		}
 	}
 
-	private void updateDemoData(BillingClaimHeader1Data chObj) {
+	private void updateDemoData(LoggedInInfo loggedInInfo, BillingClaimHeader1Data chObj) {
 		// last_name,first_name,dob,hin,ver,hc_type,sex
-		List<String> vecStr = (new JdbcBillingPageUtil()).getPatientCurBillingDemo(chObj.getDemographic_no());
+		List<String> vecStr = (new JdbcBillingPageUtil()).getPatientCurBillingDemo(loggedInInfo, chObj.getDemographic_no());
 
 		//Bonus Billing (Incentives)? Block out patient data : update with patient data
 		if (chObj.getStatus().equals("I")) {

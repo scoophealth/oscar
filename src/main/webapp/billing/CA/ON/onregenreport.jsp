@@ -17,6 +17,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="oscar.util.ConversionUtils"%>
 <%@page import="org.oscarehr.util.DateRange"%>
 <%if (session.getAttribute("user") == null)
@@ -74,7 +75,7 @@
 				DateRange dateRange = new DateRange(null, ConversionUtils.fromDateString(dateEnd));
 				objFile.setDateRange(dateRange);
 				
-				objFile.createBillingFileStr("" + headerId, new String[] {"B"}, false, mohOffice, false, false);
+				objFile.createBillingFileStr(LoggedInInfo.getLoggedInInfoFromSession(request), "" + headerId, new String[] {"B"}, false, mohOffice, false, false);
 				objFile.writeFile(objFile.getValue());
 				objFile.writeHtml(objFile.getHtmlCode());
 				// update the diskname 
@@ -111,7 +112,7 @@
 						
 						DateRange dateRange = new DateRange(null, ConversionUtils.fromDateString(dateEnd));
 						objFile.setDateRange(dateRange);
-						objFile.createBillingFileStr("" + headerId, new String[] {"B"}, false, mohOffice, false, false);						
+						objFile.createBillingFileStr(LoggedInInfo.getLoggedInInfoFromSession(request), "" + headerId, new String[] {"B"}, false, mohOffice, false, false);						
 						value += objFile.getValue() + "\n";
 						objFile.writeHtml(objFile.getHtmlCode());
 						objFile.updateDisknameSum(Integer.parseInt(diskId));
