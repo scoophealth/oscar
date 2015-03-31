@@ -159,7 +159,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     boolean fillPatientRecord(LoggedInInfo loggedInInfo, PatientRecord patientRecord,String demoNo) throws SQLException, Exception{
 	if (setProblemList(patientRecord, demoNo)) {
 	    setReportInformation(patientRecord);
-	    setDemographicDetails(patientRecord, demoNo);
+	    setDemographicDetails(loggedInInfo, patientRecord, demoNo);
 	    setCareElements(patientRecord, demoNo);
 	    setImmunizations(loggedInInfo, patientRecord, Integer.valueOf(demoNo));
 	    setLaboratoryResults(patientRecord, demoNo);
@@ -456,9 +456,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         }
     }
 
-    void setDemographicDetails(PatientRecord patientRec, String demoNo){
+    void setDemographicDetails(LoggedInInfo loggedInInfo, PatientRecord patientRec, String demoNo){
 	Demographics demo = patientRec.addNewDemographics();
-        org.oscarehr.common.model.Demographic demographic = new DemographicData().getDemographic(demoNo);
+        org.oscarehr.common.model.Demographic demographic = new DemographicData().getDemographic(loggedInInfo, demoNo);
 
         cdsDt.PersonNameStandard.LegalName legalName = demo.addNewNames().addNewLegalName();
         cdsDt.PersonNameStandard.LegalName.FirstName firstName = legalName.addNewFirstName();

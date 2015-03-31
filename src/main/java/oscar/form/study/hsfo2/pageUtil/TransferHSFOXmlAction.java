@@ -25,15 +25,18 @@ package oscar.form.study.hsfo2.pageUtil;
 
 import java.io.IOException;
 
-import org.oscarehr.util.MiscUtils;
-import org.apache.log4j.Logger;
-import oscar.oscarDemographic.data.DemographicData;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
+
+import oscar.oscarDemographic.data.DemographicData;
 
 
 public class TransferHSFOXmlAction extends Action
@@ -62,7 +65,7 @@ public class TransferHSFOXmlAction extends Action
 		if (demoNo!=0){
 			//if no internal doctor assigned for designated patient,report error.
 			DemographicData demoData = new DemographicData();
-			String internalId=demoData.getDemographic(demoNo.toString()).getProviderNo();
+			String internalId=demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demoNo.toString()).getProviderNo();
 			
 			if(internalId==null || internalId.length()==0){
 				request.setAttribute("HSFOmessage", "Unable to upload. Please go to the master page, and assign a internal doctor to this patient.");

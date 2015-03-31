@@ -46,6 +46,7 @@ import org.oscarehr.decisionSupport.model.DSDemographicAccess;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DSGuidelineFactory;
 import org.oscarehr.decisionSupport.service.DSService;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarDemographic.data.DemographicData;
 
@@ -113,11 +114,11 @@ public class DSGuidelineAction extends DispatchAction {
             testGuideline.setParsed(true); //supress parsing of xml, othewrise would overwrite the condition
             boolean result = testGuideline.evaluateBoolean(demographicNo);
             DSDemographicAccess demographicAccess = new DSDemographicAccess(demographicNo);
-            String actualValues = demographicAccess.getDemogrpahicValues(dsCondition.getConditionType());
+            String actualValues = demographicAccess.getDemogrpahicValues(LoggedInInfo.getLoggedInInfoFromSession(request), dsCondition.getConditionType());
             conditionResults.add(new ConditionResult(dsCondition, result, actualValues));
         }
         DemographicData demographicData = new DemographicData();
-        org.oscarehr.common.model.Demographic demographic = demographicData.getDemographic(demographicNo);
+        org.oscarehr.common.model.Demographic demographic = demographicData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo);
 
         request.setAttribute("patientName", demographic.getFirstName() + " " + demographic.getLastName());
         request.setAttribute("guideline", dsGuideline);

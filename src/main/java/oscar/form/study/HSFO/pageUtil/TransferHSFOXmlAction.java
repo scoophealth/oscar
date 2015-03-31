@@ -37,6 +37,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarDemographic.data.DemographicData;
 
@@ -72,11 +73,11 @@ public class TransferHSFOXmlAction extends Action
 		if (demographicNo != null)
 			demoNo = new Integer(demographicNo.trim());
 		ArrayList message = new ArrayList();
-		HsfoHbpsDataDocument doc = tfutil.generateXML(providerNo, demoNo);
+		HsfoHbpsDataDocument doc = tfutil.generateXML(LoggedInInfo.getLoggedInInfoFromSession(request), providerNo, demoNo);
 		if (demoNo!=0){
 			//if no internal doctor assigned for designated patient,report error.
 			DemographicData demoData = new DemographicData();
-			String internalId=demoData.getDemographic(demoNo.toString()).getProviderNo();
+			String internalId=demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demoNo.toString()).getProviderNo();
 			
 			if(internalId==null || internalId.length()==0){
 				message.add("");

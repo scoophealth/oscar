@@ -38,7 +38,7 @@ public class PFHTHandler implements MessageHandler {
 	            for (i=0; i < messages.size(); i++){
 
 	                String msg = (String) messages.get(i);
-	                MessageUploader.routeReport(serviceName, "PFHT", msg,fileId);
+	                MessageUploader.routeReport(loggedInInfo, serviceName, "PFHT", msg,fileId);
 
 	            }
 

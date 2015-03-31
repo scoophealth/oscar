@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page %><%@page import="oscar.oscarDemographic.data.*,org.oscarehr.common.model.Demographic"%>
 <%@page import="oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler,java.util.*,oscar.oscarRx.util.*" %>
@@ -38,7 +39,7 @@ if (rd == null){  // No data so don't continue
 }
 
 DemographicData demoData = new DemographicData();
-Demographic demographic = demoData.getDemographic(demographicNo);
+Demographic demographic = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo);
 
 int age = demographic.getAgeInYears();
 boolean female = DemographicData.isFemale(demographic);

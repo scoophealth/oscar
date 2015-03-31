@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
   if(session.getValue("user") == null)
     response.sendRedirect("../../../logout.jsp");
@@ -44,7 +45,7 @@
 String color = "", colorflag ="";
 BillingSessionBean bean = (BillingSessionBean)pageContext.findAttribute("billingSessionBean");
 oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
-org.oscarehr.common.model.Demographic demo = demoData.getDemographic(bean.getPatientNo());
+org.oscarehr.common.model.Demographic demo = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), bean.getPatientNo());
 
 ArrayList billItem = bean.getBillItem();
 BillingFormData billform = new BillingFormData();

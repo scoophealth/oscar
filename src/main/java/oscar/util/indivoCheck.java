@@ -29,6 +29,7 @@ package oscar.util;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
@@ -67,7 +68,7 @@ public class indivoCheck extends TagSupport {
           try {     
             if( ProviderMyOscarIdData.idIsSet(providerNo) ) {
                 if( demoNo != null ) {
-                   org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(demoNo); 
+                   org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(LoggedInInfo.getLoggedInInfoFromSession(this.pageContext.getSession()), demoNo); 
                    String myOscarUserName = demo.getMyOscarUserName();
                    if( myOscarUserName != null ) 
                         conditionMet = true;

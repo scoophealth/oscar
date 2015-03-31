@@ -70,11 +70,11 @@ public class EpsilonHandler implements MessageHandler {
 			for (i = 0; i < messages.size(); i++) {
 
 				String msg = messages.get(i);
-				String auditLine = MessageUploader.routeReport(serviceName, "EPSILON", msg, fileId) + "\n";
+				String auditLine = MessageUploader.routeReport(loggedInInfo, serviceName, "EPSILON", msg, fileId) + "\n";
 				audit.append(auditLine);
 
 			}
-			logger.info("Parsed OK");
+			logger.debug("Parsed OK");
 
 			return (audit.toString());
 

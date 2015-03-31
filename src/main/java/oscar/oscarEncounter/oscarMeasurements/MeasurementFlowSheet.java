@@ -46,6 +46,7 @@ import org.drools.WorkingMemory;
 import org.drools.io.RuleBaseLoader;
 import org.jdom.Element;
 import org.oscarehr.common.dao.DxDao;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -420,7 +421,7 @@ public class MeasurementFlowSheet {
     }
 
 
-    public void runRulesForMeasurement(EctMeasurementsDataBean mdb) {
+    public void runRulesForMeasurement(LoggedInInfo loggedInInfo, EctMeasurementsDataBean mdb) {
 
         String type = mdb.getType();
         log.debug("GETTING RULES FOR TYPE "+type);
@@ -432,7 +433,7 @@ public class MeasurementFlowSheet {
 
             try {
                 WorkingMemory workingMemory = rb.newWorkingMemory();
-                workingMemory.assertObject(new MeasurementDSHelper(mdb));
+                workingMemory.assertObject(new MeasurementDSHelper(loggedInInfo, mdb));
                 workingMemory.fireAllRules();
             } catch (Exception e) {
                 MiscUtils.getLogger().error("Error", e);

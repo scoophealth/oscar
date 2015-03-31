@@ -8,6 +8,7 @@
     and "gnu.org/licenses/gpl-2.0.html".
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <% long startTime = System.currentTimeMillis(); %>
 <%@page contentType="text/html"%>
 <%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*, oscar.oscarRx.util.*"%>
@@ -1015,7 +1016,7 @@ String date = year+"-"+month+"-"+day;
    						<%
    						if (alistIterator.hasNext()) {
    							mdb = alistIterator.next();
-   							mFlowsheet.runRulesForMeasurement(mdb);
+   							mFlowsheet.runRulesForMeasurement(LoggedInInfo.getLoggedInInfoFromSession(request), mdb);
    							hdata = new HashMap<String,String>();
    							hdata.put("id",""+mdb.getId());
    							hdata.put("data",mdb.getDataField());
@@ -1053,7 +1054,7 @@ String date = year+"-"+month+"-"+day;
 		            	if (counter >= numPrev) break;
 		            	counter++;
 		            	mdb = alistIterator.next();
-		            	mFlowsheet.runRulesForMeasurement(mdb);
+		            	mFlowsheet.runRulesForMeasurement(LoggedInInfo.getLoggedInInfoFromSession(request), mdb);
 		                hdata = new HashMap<String,String>();
 		                hdata.put("data",mdb.getDataField());
 		                hdata.put("prevention_date",mdb.getDateObserved());

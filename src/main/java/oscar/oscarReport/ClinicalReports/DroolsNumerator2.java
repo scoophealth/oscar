@@ -37,6 +37,7 @@ import org.drools.RuleBase;
 import org.drools.WorkingMemory;
 import org.drools.io.RuleBaseLoader;
 import org.jdom.Element;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -77,7 +78,7 @@ public class DroolsNumerator2 implements Numerator{
         this.id = id;
     }
 
-    public boolean evaluate(String demographicNo) {
+    public boolean evaluate(LoggedInInfo loggedInInfo, String demographicNo) {
         boolean evalTrue = false;
         try{
 
@@ -112,7 +113,7 @@ public class DroolsNumerator2 implements Numerator{
 //           Collection v = ect.getMeasurementsDataVector();
 //           measurementList.add(new ArrayList(v));
 
-            MeasurementDSHelper dshelper = new MeasurementDSHelper(demographicNo);
+            MeasurementDSHelper dshelper = new MeasurementDSHelper(loggedInInfo, demographicNo);
             dshelper.setMeasurement(measurement);
 
 

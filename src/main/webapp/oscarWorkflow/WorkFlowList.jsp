@@ -25,6 +25,7 @@
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
         "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page
 	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.ClinicalReports.*,oscar.oscarWorkflow.*"%>
 
@@ -148,7 +149,7 @@
           
                           for (int j = 0; j < workList.size(); j++){
                           Hashtable h = (Hashtable) workList.get(j);
-                          Hashtable demoHash = deName.getNameAgeSexHashtable(""+h.get("demographic_no"));
+                          Hashtable demoHash = deName.getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), ""+h.get("demographic_no"));
                           String colour = "";
                           
                           WorkFlowInfo wfi = flow.executeRules(wfDS,h);

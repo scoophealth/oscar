@@ -444,11 +444,11 @@ public class PHRUserManagementAction extends DispatchAction {
 			
 			//if all is well, add the "pin" in the demographic screen			
 			DemographicData dd = new DemographicData();
-			dd.setDemographicPin(demographicNo, newAccount.getUserName());
+			dd.setDemographicPin(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo, newAccount.getUserName());
 			
 			//... and add the email address, if present
 			if(email != null && !"".equals(email)){
-				dd.setDemographicEmail(demographicNo, email);
+				dd.setDemographicEmail(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo, email);
 				LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.UPDATE, LogConst.CON_DEMOGRAPHIC,   demographicNo , request.getRemoteAddr(),demographicNo);	
 			}
 			//Then create the record in the demographic file for record.

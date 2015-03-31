@@ -154,7 +154,7 @@ public class PHRViewPatientRecord extends DispatchAction {
         }
         
         DemographicData demographicData = new DemographicData();
-        phrA.setPhrUserName(demographicData.getDemographic(demographicNo).getMyOscarUserName());
+        phrA.setPhrUserName(demographicData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo).getMyOscarUserName());
         phrA.setVerificationLevel(request.getParameter("verificationLevel"));
         phrA.setVerificationDate(verificationDate);// fix me
         phrA.setPhotoId(photoId);

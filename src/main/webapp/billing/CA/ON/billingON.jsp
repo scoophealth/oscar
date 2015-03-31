@@ -18,6 +18,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.common.model.Appointment"%>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao"%>
 <%@page import="org.oscarehr.common.model.CtlDiagCode"%>
@@ -52,13 +53,17 @@
 	import="oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines"%>
 <%@page import="org.oscarehr.decisionSupport.model.DSConsequence"%>
 <%@page
-	import="org.oscarehr.common.model.Demographic, org.oscarehr.common.dao.DemographicDao"%>
+	import="org.oscarehr.common.model.Demographic"%>
 <%@page
 	import="org.oscarehr.common.model.CtlBillingService, org.oscarehr.common.dao.CtlBillingServiceDao"%>
 <%@page
 	import="org.oscarehr.common.model.MyGroup, org.oscarehr.common.dao.MyGroupDao"%>
+	
+	<%@page import="org.oscarehr.managers.DemographicManager"%>
+	
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+    LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
@@ -136,8 +141,8 @@
 			    ctlBillForm = curBillForm;
 			} else {                    
                             //check if patient's roster status determines which billing form to display (this superceeds provider preference)                    
-                            DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-                            Demographic demo = demographicDao.getDemographic(demo_no); 
+                            DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+                            Demographic demo = demographicManager.getDemographic(loggedInInfo, demo_no); 
                             String rosterStatus = demo.getRosterStatus();
                             
                             CtlBillingServiceDao ctlBillingServiceDao = (CtlBillingServiceDao) SpringUtils.getBean("ctlBillingServiceDao");
@@ -1546,7 +1551,7 @@ function changeSite(sel) {
           try{
              if(inPatient != null && inPatient.trim().equalsIgnoreCase("YES")){
 				oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
-				admDate = demoData.getDemographicDateJoined(demo_no);
+				admDate = demoData.getDemographicDateJoined(loggedInInfo, demo_no);
 	     }
           }catch(Exception inPatientEx){
         	  MiscUtils.getLogger().error("Error", inPatientEx);

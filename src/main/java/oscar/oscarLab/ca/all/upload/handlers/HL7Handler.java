@@ -64,7 +64,7 @@ public class HL7Handler implements MessageHandler {
 			for (i = 0; i < messages.size(); i++) {
 
 				String msg =  messages.get(i);
-				MessageUploader.routeReport("","HL7", msg, fileId); //Setting serviceName="" for now
+				MessageUploader.routeReport(loggedInInfo, "","HL7", msg, fileId); //Setting serviceName="" for now
 
 			}
 

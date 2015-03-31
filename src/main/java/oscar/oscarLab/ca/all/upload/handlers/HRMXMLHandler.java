@@ -48,7 +48,7 @@ public class HRMXMLHandler implements MessageHandler {
 			for (i = 0; i < messages.size(); i++) {
 
 				String msg =  messages.get(i);
-				MessageUploader.routeReport("","HRMXML", msg, fileId);
+				MessageUploader.routeReport(loggedInInfo, "","HRMXML", msg, fileId);
 
 			}
 

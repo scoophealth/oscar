@@ -101,7 +101,7 @@ public class FluReport implements PreventionReport {
                 Date dueDate = cal.getTime();
                 //cal.add(Calendar.MONTH,-6);
                 Date cutoffDate =  dueDate;//asofDate ; //cal.getTime();
-             if(!isOfAge(demo.toString(),asofDate)){
+             if(!isOfAge(loggedInInfo, demo.toString(),asofDate)){
                 prd.rank = 5;
                 prd.lastDate = "------";
                 prd.state = "Ineligible";
@@ -182,7 +182,7 @@ public class FluReport implements PreventionReport {
                 log.debug("bonusEl start date "+beginingOfYear+ " "+beginingOfYear.before(prevDate));
                 log.debug("bonusEl end date "+endOfYear+ " "+endOfYear.after(prevDate));
                 log.debug("ASOFDATE "+asofDate);
-                if (beginingOfYear.before(prevDate) && endOfYear.after(prevDate) && isOfAge(demo.toString(),asofDate)){
+                if (beginingOfYear.before(prevDate) && endOfYear.after(prevDate) && isOfAge(loggedInInfo, demo.toString(),asofDate)){
                     if( refused ) {
                         prd.billStatus = "Y";
                     }
@@ -300,10 +300,10 @@ public class FluReport implements PreventionReport {
        return false;
    }
 
-   boolean isOfAge(String d,Date asofDate){
+   boolean isOfAge(LoggedInInfo loggedInInfo, String d,Date asofDate){
         boolean isAge = true;
         DemographicData demoData= new DemographicData();
-        org.oscarehr.common.model.Demographic demo = demoData.getDemographic(d);
+        org.oscarehr.common.model.Demographic demo = demoData.getDemographic(loggedInInfo, d);
         Date demoDOB = DemographicData.getDOBObj(demo);
 
         Calendar bonusEl = Calendar.getInstance();
