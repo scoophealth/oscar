@@ -217,7 +217,7 @@ public class DmsInboxManageAction extends DispatchAction {
 		else if (searchProviderNo == null) {
 			searchProviderNo = providerNo;
 		} // default to current provider
-		MiscUtils.getLogger().info("SEARCH " + searchProviderNo);
+		MiscUtils.getLogger().debug("SEARCH " + searchProviderNo);
 		String patientFirstName = request.getParameter("fname");
 		String patientLastName = request.getParameter("lname");
 		String patientHealthNumber = request.getParameter("hnum");
@@ -239,7 +239,7 @@ public class DmsInboxManageAction extends DispatchAction {
 			CategoryData cData = new CategoryData(patientLastName, patientFirstName, patientHealthNumber,
 					patientSearch, providerSearch, searchProviderNo, status);
 			cData.populateCountsAndPatients();
-			MiscUtils.getLogger().info("LABS " + cData.getTotalLabs());
+			MiscUtils.getLogger().debug("LABS " + cData.getTotalLabs());
 			request.setAttribute("patientFirstName", patientFirstName);
 			request.setAttribute("patientLastName", patientLastName);
 			request.setAttribute("patientHealthNumber", patientHealthNumber);
@@ -324,7 +324,7 @@ public class DmsInboxManageAction extends DispatchAction {
 			endDate = null;
 		}
 
-		logger.info("Got dates: " + startDate + "-" + endDate + " out of " + startDateStr + "-" + endDateStr);
+		logger.debug("Got dates: " + startDate + "-" + endDate + " out of " + startDateStr + "-" + endDateStr);
 		
 		Boolean isAbnormal = null;
 		if ("abnormal".equals(view))

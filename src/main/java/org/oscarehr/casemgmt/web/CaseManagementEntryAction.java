@@ -561,7 +561,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 					casemgmtNoteLock.setLocked(true);
 				}
 				else if( note_id == 0 ){
-					logger.info("STATIC isNoteEdited CREATING LOCK NOTE ID 0 DEMO: " + demographicNo + " PROVIDER: " + providerNo);
+					logger.debug("STATIC isNoteEdited CREATING LOCK NOTE ID 0 DEMO: " + demographicNo + " PROVIDER: " + providerNo);
 					casemgmtNoteLock = new CasemgmtNoteLock();
 					casemgmtNoteLock.setDemographicNo(demographicNo);
 					casemgmtNoteLock.setIpAddress(ipAddress);
@@ -573,7 +573,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				}
 		}
 		else {
-			logger.info("STATIC isNoteEdited CREATING NEW LOCK DEMO: " + demographicNo + " PROVIDER: " + providerNo);
+			logger.debug("STATIC isNoteEdited CREATING NEW LOCK DEMO: " + demographicNo + " PROVIDER: " + providerNo);
 			casemgmtNoteLock = new CasemgmtNoteLock();
 			casemgmtNoteLock.setDemographicNo(demographicNo);
 			casemgmtNoteLock.setIpAddress(ipAddress);
@@ -596,7 +596,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String ipAddress = request.getRemoteAddr();
 		String sessionId = request.getRequestedSessionId();
 		
-		logger.info("WEB isNoteEdited CALLED");
+		logger.debug("WEB isNoteEdited CALLED");
 		CasemgmtNoteLock casemgmtNoteLock = isNoteEdited(Long.parseLong(noteId), Integer.parseInt(demoNo), providerNo, ipAddress, sessionId);		
 		
 		String ret = "unlocked";
@@ -633,7 +633,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		
 		casemgmtNoteLock.setIpAddress(request.getRemoteAddr());
 		casemgmtNoteLock.setSessionId(request.getRequestedSessionId());
-		logger.info("UPDATING LOCK DEMO " + demoNo + " SESSION " + casemgmtNoteLock.getSessionId() + " LOCK IP " + casemgmtNoteLock.getIpAddress());
+		logger.debug("UPDATING LOCK DEMO " + demoNo + " SESSION " + casemgmtNoteLock.getSessionId() + " LOCK IP " + casemgmtNoteLock.getIpAddress());
 		casemgmtNoteLockDao.merge(casemgmtNoteLock);
 		
 		session.setAttribute("casemgmtNoteLock"+demoNo, casemgmtNoteLock);
@@ -946,7 +946,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			try {
 				note.setAppointmentNo(Integer.parseInt(appointmentNo));
 			} catch (NumberFormatException e) {
-				logger.info("no appt no");
+				logger.debug("no appt no");
 			}
 		}
 		// update note issues
@@ -1262,7 +1262,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			CasemgmtNoteLock casemgmtNoteLock = casemgmtNoteLockDao.find(casemgmtNoteLockSession.getId());
 			//if other window has acquired lock we reject save									
 			if( !casemgmtNoteLock.getSessionId().equals(casemgmtNoteLockSession.getSessionId()) || !request.getRequestedSessionId().equals(casemgmtNoteLockSession.getSessionId()) ) {
-				logger.info("DO NOT HAVE LOCK FOR " + demo + " PROVIDER " + providerNo + " CONTINUE SAVING LOCAL SESSION " + request.getRequestedSessionId() + " LOCAL IP " + request.getRemoteAddr() + " LOCK SESSION " + casemgmtNoteLockSession.getSessionId() + " LOCK IP " + casemgmtNoteLockSession.getIpAddress());
+				logger.debug("DO NOT HAVE LOCK FOR " + demo + " PROVIDER " + providerNo + " CONTINUE SAVING LOCAL SESSION " + request.getRequestedSessionId() + " LOCAL IP " + request.getRemoteAddr() + " LOCK SESSION " + casemgmtNoteLockSession.getSessionId() + " LOCK IP " + casemgmtNoteLockSession.getIpAddress());
 				return -1L;
 			}
 		}
@@ -1474,7 +1474,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		
 		//update lock to new note id
 		casemgmtNoteLockSession.setNoteId(note.getId());
-		logger.info("UPDATING NOTE ID in LOCK");
+		logger.debug("UPDATING NOTE ID in LOCK");
 		casemgmtNoteLockDao.merge(casemgmtNoteLockSession);
 		session.setAttribute("casemgmtNoteLock"+demo, casemgmtNoteLockSession);	
 		
@@ -1897,7 +1897,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	private void releaseNoteLock(String providerNo, Integer demographicNo, Long noteId) {		
-		logger.info("REMOVING LOCK FOR PROVIDER " + providerNo + " DEMO " + demographicNo + " NOTE ID " + noteId);
+		logger.debug("REMOVING LOCK FOR PROVIDER " + providerNo + " DEMO " + demographicNo + " NOTE ID " + noteId);
 		casemgmtNoteLockDao.remove(providerNo, demographicNo, noteId);
 	}
 	
@@ -2357,7 +2357,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 						if (dxProps != null && dxProps.get(issueList[i].getIssue().getCode()) != null) {
 							String codingSystem = dxProps.getProperty("coding_system");
 							if (caseIssueList[oldList.length + k].getIssue().isCertain()) {
-								logger.info("adding to Dx");
+								logger.debug("adding to Dx");
 								this.caseManagementMgr.saveToDx(getDemographicNo(request), issueList[i].getIssue().getCode(), codingSystem, false);
 								caseIssueList[oldList.length + k].getIssue().setMajor(true);
 							}
@@ -2844,7 +2844,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		if (printAllNotes) {
 			ids = getAllNoteIds(request);
 		}
-		logger.info("NOTES2PRINT: " + ids);
+		logger.debug("NOTES2PRINT: " + ids);
 
 		String demono = getDemographicNo(request);
 		request.setAttribute("demoName", getDemoName(demono));
@@ -3075,7 +3075,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		MacroDao macroDao = (MacroDao) SpringUtils.getBean("macroDao");
 		Macro macro = macroDao.find(Integer.parseInt(request.getParameter("macro.id")));
-		logger.info("loaded macro " + macro.getLabel());
+		logger.debug("loaded macro " + macro.getLabel());
 		/*
 		boolean cppFromMeasurements = false;
 		String cpp = request.getParameter("cpp");
@@ -3589,7 +3589,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		
 		caseManagementMgr.saveNoteSimple(cmn);
 
-		log.info("note id is " + cmn.getId());
+		log.debug("note id is " + cmn.getId());
 		
 		
 		//save link, so we know what tickler this note is linked to

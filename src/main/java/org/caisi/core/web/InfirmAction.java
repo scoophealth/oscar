@@ -67,7 +67,7 @@ public class InfirmAction extends DispatchAction
 		}catch(NumberFormatException e) {
 			logger.error("error parsing programId to set a users default program",e);
 		}
-		logger.info("updating the current program to " + programId);
+		logger.debug("updating the current program to " + programId);
 		
 		bpm.setDefaultProgramId(providerNo, Integer.parseInt(programId));
 	}

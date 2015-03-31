@@ -135,7 +135,7 @@
                         
         
                         if (arr != null){
-                        	MiscUtils.getLogger().error("ARR "+arr.length);
+                        	MiscUtils.getLogger().debug("ARR "+arr.length);
                         }
         
                         long now = System.currentTimeMillis();
