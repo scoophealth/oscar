@@ -90,8 +90,8 @@ public class EctDisplayAction extends Action {
 			Actions.put("myoscar", "/oscarEncounter/displayMyOscar.do");
 			Actions.put("eaaps", "/eaaps/displayEctEaaps.do");
 			
-			if (logger.isInfoEnabled()) {
-				logger.info("Instantiated encounter display actions: " + Actions);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Instantiated encounter display actions: " + Actions);
 			}
 		}
 		

@@ -107,7 +107,7 @@ public class InboxResultsDao {
 				Query q = entityManager.createNativeQuery(sql);
 				List<Object[]> rs = q.getResultList();
 
-				logger.info(sql);
+				logger.debug(sql);
 				if (!rs.isEmpty()) {
 					return true;
 				} else
@@ -396,7 +396,7 @@ public class InboxResultsDao {
 				}
 			}
 
-			logger.info(sql);
+			logger.debug(sql);
 
 			Query q = entityManager.createNativeQuery(sql);
 

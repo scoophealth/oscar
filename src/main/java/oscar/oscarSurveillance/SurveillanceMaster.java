@@ -235,7 +235,7 @@ public   class SurveillanceMaster {
             log.error("OSCAR SURVEILLANCE ERROR: could not load from file "+filename);
          }
       }else{
-         log.info("OSCAR SURVEILLANCE -- module not initialized");
+         log.debug("OSCAR SURVEILLANCE -- module not initialized");
          surveyList  = new ArrayList<Survey>();
          surveyTable = new Hashtable();
       }
