@@ -61,7 +61,7 @@ public class SpireHandler implements MessageHandler {
 				if(isDuplicate(loggedInInfo, msg)) {
 					return ("success");
 				}
-				MessageUploader.routeReport(serviceName, "Spire", msg, fileId);
+				MessageUploader.routeReport(loggedInInfo, serviceName, "Spire", msg, fileId);
 
 			}
 		} catch (Exception e) {

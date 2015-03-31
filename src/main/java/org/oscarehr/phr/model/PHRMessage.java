@@ -54,6 +54,7 @@ import org.indivo.xml.phr.message.MessageType;
 import org.indivo.xml.phr.message.TextMessage;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Element;
 
@@ -343,7 +344,7 @@ public class PHRMessage  extends PHRDocument implements Serializable{
 //        return (String) h.get("oscarId");
 //    }
 
-    public Hashtable findOscarId(int idType, String myOscarUserName) {
+    public Hashtable findOscarId(LoggedInInfo loggedInInfo, int idType, String myOscarUserName) {
        DemographicData demographicData = new DemographicData();
        Hashtable results = new Hashtable();
        String oscarId = "";
@@ -351,7 +352,7 @@ public class PHRMessage  extends PHRDocument implements Serializable{
            oscarId = ProviderMyOscarIdData.getProviderNo(myOscarUserName);
            log.debug("OSCAR ID "+oscarId);
        } else if(idType == PHRDocument.TYPE_DEMOGRAPHIC) {
-           oscarId = demographicData.getDemographicNoByIndivoId(myOscarUserName);
+           oscarId = demographicData.getDemographicNoByIndivoId(loggedInInfo, myOscarUserName);
        } else if (idType == PHRDocument.TYPE_NOT_SET) {
            //try provider:
            String searchNo = ProviderMyOscarIdData.getProviderNo(myOscarUserName);
@@ -360,7 +361,7 @@ public class PHRMessage  extends PHRDocument implements Serializable{
                idType = PHRDocument.TYPE_PROVIDER;
            }
            //try demographic
-           searchNo = demographicData.getDemographicNoByIndivoId(myOscarUserName);
+           searchNo = demographicData.getDemographicNoByIndivoId(loggedInInfo, myOscarUserName);
            if (!searchNo.equals("")) {
                oscarId = searchNo;
                idType = PHRDocument.TYPE_DEMOGRAPHIC;

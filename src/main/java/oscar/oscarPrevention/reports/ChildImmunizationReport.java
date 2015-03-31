@@ -124,7 +124,7 @@ public class ChildImmunizationReport implements PreventionReport{
              log.debug("prev1 "+prevs1.size()+ " prevs2 "+ prevs2.size() +" prev4 "+prevs4.size());
 
              DemographicData dd = new DemographicData();
-             org.oscarehr.common.model.Demographic demoData = dd.getDemographic(demo.toString());
+             org.oscarehr.common.model.Demographic demoData = dd.getDemographic(loggedInInfo, demo.toString());
              // This a kludge to get by conformance testing in ontario -- needs to be done in a smarter way
              int totalImmunizations = numDtap + /*numHib +*/ numMMR ;
              int recommTotal = 5; //9;NOT SURE HOW HIB WORKS
@@ -188,7 +188,7 @@ public class ChildImmunizationReport implements PreventionReport{
                    numMonths = ""+num+" months";
                 }
 
-                Date dob = dd.getDemographicDOB(demo.toString());
+                Date dob = dd.getDemographicDOB(loggedInInfo, demo.toString());
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(dob);
                 cal.add(Calendar.MONTH, 30);

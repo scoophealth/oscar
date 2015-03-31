@@ -61,7 +61,7 @@ public class TicklerWorker extends Thread {
 			String demo = cr.getDemographicId().toString();
 			String date = ConversionUtils.toDateString(cr.getReferralDate());
 
-			ticklerMessage = DemographicNameAgeString.getInstance().getNameAgeString(Integer.valueOf(demo)) + " has an Consultation Request with a status of 'Nothing Done'. Referral Date was " + date;
+			ticklerMessage = DemographicNameAgeString.getInstance().getNameAgeString(loggedInInfo, Integer.valueOf(demo)) + " has an Consultation Request with a status of 'Nothing Done'. Referral Date was " + date;
 			if (!td.hasTickler(demo, provider, ticklerMessage)) {
 				td.addTickler(loggedInInfo, demo, ticklerMessage, status, UtilDateUtilities.getToday("yyyy-MM-dd"), "0", priority, provider);
 			}

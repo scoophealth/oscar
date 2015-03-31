@@ -40,6 +40,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.Misc;
@@ -80,7 +81,7 @@ public class ManageHSFOAction extends Action{
         firstrecord = hsfoDAO.isFirstRecord(id);
 
         DemographicData demoData = new DemographicData();
-        org.oscarehr.common.model.Demographic de = demoData.getDemographic(id);
+        org.oscarehr.common.model.Demographic de = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), id);
 
         if (firstrecord == true) {//		determine if this is the first record
             isfirstrecord="true";

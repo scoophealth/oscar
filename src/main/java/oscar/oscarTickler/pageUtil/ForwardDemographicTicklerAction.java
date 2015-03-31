@@ -34,6 +34,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarDemographic.data.DemographicNameAgeString;
 
@@ -49,7 +50,7 @@ public class ForwardDemographicTicklerAction extends Action {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
        String demoNo = request.getParameter("demographic_no");
        if ( demoNo != null ){
-          Hashtable h = DemographicNameAgeString.getInstance().getNameAgeSexHashtable(demoNo);
+          Hashtable h = DemographicNameAgeString.getInstance().getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), demoNo);
           request.setAttribute("demographic_no", demoNo);
           request.setAttribute("demoName", ""+h.get("lastName")+", "+h.get("firstName"));
           

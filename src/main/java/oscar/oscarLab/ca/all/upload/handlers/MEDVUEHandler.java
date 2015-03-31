@@ -45,7 +45,7 @@ public class MEDVUEHandler implements MessageHandler {
 				String msg = messages.get(i);
 
 
-				MessageUploader.routeReport(serviceName, "MEDVUE", msg, fileId);
+				MessageUploader.routeReport(loggedInInfo, serviceName, "MEDVUE", msg, fileId);
 
 			}
 

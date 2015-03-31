@@ -45,7 +45,7 @@ public class AlphaHL7Handler implements MessageHandler {
 		try {
 			ArrayList<String> messages = Utilities.separateMessages(fileName);
 			for(String msg:messages) {
-				 MessageUploader.routeReport(serviceName, LabResultData.ALPHAHL7, msg, fileId);
+				 MessageUploader.routeReport(loggedInInfo, serviceName, LabResultData.ALPHAHL7, msg, fileId);
 			}
 		} catch (Exception e) {
 			MessageUploader.clean(fileId);

@@ -25,6 +25,8 @@
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="org.oscarehr.common.dao.ProviderDataDao"%>
+<%@page import="org.oscarehr.managers.DemographicManager"%>
+
 <%@page import="oscar.appt.status.service.impl.AppointmentStatusMgrImpl"%>
 <%
   String curProvider_no = request.getParameter("provider_no");
@@ -42,7 +44,7 @@
 <%@page import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*, oscar.util.*, java.text.*, java.net.*, org.oscarehr.common.OtherIdManager"%>
 <%@ page import="oscar.appt.status.service.AppointmentStatusMgr"%>
 <%@ page import="org.oscarehr.common.model.AppointmentStatus"%>
-<%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic, org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.model.Demographic, org.oscarehr.util.SpringUtils"%>
 <%@ page import="oscar.oscarEncounter.data.EctFormData"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -74,7 +76,7 @@
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 	EncounterFormDao encounterFormDao = SpringUtils.getBean(EncounterFormDao.class);
     ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
-    DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+    DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
     OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
     ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
     SiteDao siteDao = SpringUtils.getBean(SiteDao.class);
@@ -441,7 +443,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 
 	//get chart_no from demographic table if it exists
 	if (!demono.equals("0") && !demono.equals("")) {
-		Demographic d = demographicDao.getDemographic(demono);
+		Demographic d = demographicManager.getDemographic(loggedInInfo, demono);
 		if(d != null) {
 			chartno = d.getChartNo();
 			phone = d.getPhone();
@@ -498,7 +500,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
     //Else how did we get here?
     if( bFirstDisp ) {
         DemographicData dd = new DemographicData();
-        org.oscarehr.common.model.Demographic demo = dd.getDemographic(String.valueOf(appt.getDemographicNo()));
+        org.oscarehr.common.model.Demographic demo = dd.getDemographic(loggedInInfo, String.valueOf(appt.getDemographicNo()));
         doctorNo = demo!=null ? (demo.getProviderNo()) : "";
     } else if (!request.getParameter("doctor_no").equals("")) {
         doctorNo = request.getParameter("doctor_no");
@@ -606,8 +608,8 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
     int starttime = (startCal.get(Calendar.HOUR_OF_DAY) )*60 + (startCal.get(Calendar.MINUTE)) ;
     everyMin = endtime - starttime +1;
 
-    if (!demono.equals("0") && !demono.equals("") && (demographicDao != null)) {
-        Demographic demo = demographicDao.getDemographic(demono);
+    if (!demono.equals("0") && !demono.equals("") && (demographicManager != null)) {
+        Demographic demo = demographicManager.getDemographic(loggedInInfo, demono);
         nameSb.append(demo.getLastName())
               .append(",")
               .append(demo.getFirstName());

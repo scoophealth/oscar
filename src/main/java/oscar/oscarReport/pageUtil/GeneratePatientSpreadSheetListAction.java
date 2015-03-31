@@ -36,6 +36,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
@@ -64,7 +65,7 @@ public class GeneratePatientSpreadSheetListAction  extends Action {
    
    for (int i = 0; i <demos.length;i++){
          DemographicData demoData = new DemographicData();
-         Demographic d = demoData.getDemographic(demos[i]);
+         Demographic d = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demos[i]);
        
          
            // Create a row and put some cells in it. Rows are 0 based.

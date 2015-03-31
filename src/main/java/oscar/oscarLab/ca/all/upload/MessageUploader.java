@@ -46,7 +46,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.OtherIdManager;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.FileUploadCheckDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
@@ -66,9 +65,11 @@ import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderLabRoutingModel;
 import org.oscarehr.common.model.RecycleBin;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.olis.dao.OLISSystemPreferencesDao;
 import org.oscarehr.olis.model.OLISSystemPreferences;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -92,7 +93,7 @@ public final class MessageUploader {
 	private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
 	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	private static FileUploadCheckDao fileUploadCheckDao = SpringUtils.getBean(FileUploadCheckDao.class);
-	private static DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	private static DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 
 
 
@@ -100,14 +101,14 @@ public final class MessageUploader {
 		// there's no reason to instantiate a class with no fields.
 	}
 
-	public static String routeReport(String serviceName, String type, String hl7Body, int fileId) throws Exception {
-		return routeReport(serviceName, type, hl7Body, fileId, null);
+	public static String routeReport(LoggedInInfo loggedInInfo, String serviceName, String type, String hl7Body, int fileId) throws Exception {
+		return routeReport(loggedInInfo, serviceName, type, hl7Body, fileId, null);
 	}
 
 	/**
 	 * Insert the lab into the proper tables of the database
 	 */
-	public static String routeReport(String serviceName, String type, String hl7Body, int fileId, RouteReportResults results) throws Exception {
+	public static String routeReport(LoggedInInfo loggedInInfo, String serviceName, String type, String hl7Body, int fileId, RouteReportResults results) throws Exception {
 
 		
 		String retVal = "";
@@ -135,8 +136,7 @@ public final class MessageUploader {
 	            	String chartNo = ((HHSEmrDownloadHandler)h).getPatientIdByType("MR");
 	            	if(chartNo != null) {
 	            		//let's get the hin
-	            		DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-	            		List<Demographic> clients = demographicDao.getClientsByChartNo(chartNo);
+	            		List<Demographic> clients = demographicManager.getDemosByChartNo(loggedInInfo, chartNo);
 	            		if(clients!=null && clients.size()>0) {
 	            			hin = clients.get(0).getHin();
 	            		}
@@ -244,7 +244,7 @@ public final class MessageUploader {
 				hl7TextInfoDao.persist(hl7TextInfo);
 			}
 
-			String demProviderNo = patientRouteReport(insertID, lastName, firstName, sex, dob, hin, DbConnectionFilter.getThreadLocalDbConnection());
+			String demProviderNo = patientRouteReport(loggedInInfo, insertID, lastName, firstName, sex, dob, hin, DbConnectionFilter.getThreadLocalDbConnection());
 			if(type.equals("OLIS_HL7") && demProviderNo.equals("0")) {
 				OLISSystemPreferencesDao olisPrefDao = (OLISSystemPreferencesDao)SpringUtils.getBean("OLISSystemPreferencesDao");
 			    OLISSystemPreferences olisPreferences =  olisPrefDao.getPreferences();
@@ -410,7 +410,7 @@ public final class MessageUploader {
 	/**
 	 * Attempt to match the patient from the lab to a demographic, return the patients provider which is to be used then no other provider can be found to match the patient to.
 	 */
-	private static String patientRouteReport(int labId, String lastName, String firstName, String sex, String dob, String hin, Connection conn) throws SQLException {
+	private static String patientRouteReport(LoggedInInfo loggedInInfo, int labId, String lastName, String firstName, String sex, String dob, String hin, Connection conn) throws SQLException {
 		PatientLabRoutingResult result = null;
 		
 			String sql;
@@ -480,7 +480,7 @@ public final class MessageUploader {
 				DemographicMerged dm = new DemographicMerged();
 				Integer headDemo = dm.getHead(result.getDemographicNo());
 				if(headDemo != null && headDemo.intValue() != result.getDemographicNo()) {
-					Demographic demoTmp = demographicDao.getDemographicById(headDemo);
+					Demographic demoTmp = demographicManager.getDemographic(loggedInInfo, headDemo);
 					if(demoTmp != null) {
 						result.setDemographicNo(demoTmp.getDemographicNo());
 						result.setProviderNo(demoTmp.getProviderNo());

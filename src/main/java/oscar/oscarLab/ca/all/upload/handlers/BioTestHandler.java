@@ -60,7 +60,7 @@ public class BioTestHandler implements MessageHandler {
 				}
 				
 				routeResults = new RouteReportResults();
-				MessageUploader.routeReport(serviceName, "BIOTEST", msg, fileId, routeResults);
+				MessageUploader.routeReport(loggedInInfo, serviceName, "BIOTEST", msg, fileId, routeResults);
 				
 				oscar.oscarLab.ca.all.parsers.MessageHandler msgHandler = Factory.getHandler(String.valueOf(routeResults.segmentId));
 				

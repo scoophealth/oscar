@@ -28,6 +28,7 @@ package oscar.oscarReport.ClinicalReports;
 import java.sql.ResultSet;
 import java.util.Hashtable;
 
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -111,7 +112,7 @@ public class SQLNumerator implements Numerator {
     //The difference between this version of evaluate is that it evaluates true if there are any rows returned from the query.
     //as apposed to looking for the value of count(*).
     // change to get a list of params 
-    public boolean evaluate(String demographicNo) {
+    public boolean evaluate(LoggedInInfo loggedInInfo, String demographicNo) {
         boolean evalTrue = false;
         
         outputValues = null;

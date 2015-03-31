@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -44,7 +45,7 @@ String team = pdata.getTeam();
 
 if (demo != null ){ 
     demoData = new oscar.oscarDemographic.data.DemographicData();
-    demographic = demoData.getDemographic(demo);    
+    demographic = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demo);    
 }
 else
     response.sendRedirect("../error.jsp");

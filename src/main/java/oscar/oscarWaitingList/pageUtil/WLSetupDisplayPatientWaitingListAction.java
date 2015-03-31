@@ -33,6 +33,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarWaitingList.bean.WLPatientWaitingListBeanHandler;
@@ -47,7 +48,7 @@ public final class WLSetupDisplayPatientWaitingListAction extends Action {
         
         String demographicNo = request.getParameter("demographic_no");
         DemographicData demoData = new DemographicData();
-        org.oscarehr.common.model.Demographic demo = demoData.getDemographic(demographicNo);
+        org.oscarehr.common.model.Demographic demo = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo);
         String demoInfo = demo.getLastName() + ", " + demo.getFirstName() + " " + demo.getSex() + " " + demo.getAge();
         WLPatientWaitingListBeanHandler hd = new WLPatientWaitingListBeanHandler(demographicNo);           
         HttpSession session = request.getSession();

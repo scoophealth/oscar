@@ -23,16 +23,18 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page
 	import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarDemographic.data.*, org.oscarehr.common.OtherIdManager, java.text.SimpleDateFormat"
 	errorPage="errorpage.jsp"%>
-<%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic,oscar.appt.AppointmentMailer, org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Demographic,oscar.appt.AppointmentMailer, org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
 <%@page import="org.oscarehr.common.dao.WaitingListDao" %>
 <%@page import="oscar.util.ConversionUtils" %>
 <%@page import="oscar.util.UtilDateUtilities"%>
 <%@ page import="org.oscarehr.event.EventService"%>
+<%@page import="org.oscarehr.managers.DemographicManager" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
@@ -48,6 +50,8 @@
 	</tr>
 </table>
 <%
+
+LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 
 OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 WaitingListDao waitingListDao = SpringUtils.getBean(WaitingListDao.class);
@@ -67,7 +71,7 @@ param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
  param[16] = dmDAO.getHead(request.getParameter("demographic_no"));
  
         DemographicData demData = new DemographicData();
-        demo = demData.getDemographic(param[16]);
+        demo = demData.getDemographic(loggedInInfo,param[16]);
         param[4] = demo.getLastName()+","+demo.getFirstName();
     } else {
  param[16] = "0";
@@ -114,7 +118,7 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
     a.setDemographicNo(Integer.parseInt(dmDAO.getHead(request.getParameter("demographic_no"))));
 
 	DemographicData demData = new DemographicData();
-	demo = demData.getDemographic(String.valueOf(a.getDemographicNo()));
+	demo = demData.getDemographic(loggedInInfo,String.valueOf(a.getDemographicNo()));
 	a.setName(demo.getLastName()+","+demo.getFirstName());
 } else {
     a.setDemographicNo(0);
@@ -138,8 +142,8 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
 		   
                     if (aa != null) {
 						Integer apptNo = aa.getId();
-                        DemographicDao demoDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-                        Demographic demographic = demoDao.getDemographic(param[16]);
+                        DemographicManager demographicManager =  SpringUtils.getBean(DemographicManager.class);
+                        Demographic demographic = demographicManager.getDemographic(loggedInInfo,param[16]);
 
                         if ((demographic != null) && (apptNo > 0)) {
                             AppointmentMailer emailer = new AppointmentMailer(apptNo,demographic);

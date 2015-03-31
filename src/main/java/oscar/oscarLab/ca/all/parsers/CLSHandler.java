@@ -672,7 +672,7 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 
 		// do crazy redirection to itself via message uploader
 		try {
-			MessageUploader.routeReport(serviceName, getMsgType(), hl7content, fileId);
+			MessageUploader.routeReport(loggedInInfo, serviceName, getMsgType(), hl7content, fileId);
 		} catch (Exception e) {
 			MessageUploader.clean(fileId);
 			return null;

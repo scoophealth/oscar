@@ -36,12 +36,14 @@ package oscar.oscarReport.ClinicalReports;
 
 import java.util.Hashtable;
 
+import org.oscarehr.util.LoggedInInfo;
+
 /**
  *
  * @author jay
  */
 public interface Numerator {
-    public boolean evaluate(String demographicNo);
+    public boolean evaluate(LoggedInInfo loggedInInfo, String demographicNo);
     public String getId();
     public String getNumeratorName();
     public Hashtable getOutputValues();

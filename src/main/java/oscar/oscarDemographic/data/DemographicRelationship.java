@@ -32,6 +32,7 @@ import java.util.Map;
 
 import org.oscarehr.common.dao.RelationshipsDao;
 import org.oscarehr.common.model.Relationships;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -129,7 +130,7 @@ public class DemographicRelationship {
 		return result;
 	}
 
-	public List<Map<String, Object>> getDemographicRelationshipsWithNamePhone(String demographic_no) {
+	public List<Map<String, Object>> getDemographicRelationshipsWithNamePhone(LoggedInInfo loggedInInfo, String demographic_no) {
 		RelationshipsDao dao = SpringUtils.getBean(RelationshipsDao.class);
 		List<Relationships> rs = dao.findActiveSubDecisionMaker(ConversionUtils.fromIntString(demographic_no));
 
@@ -140,7 +141,7 @@ public class DemographicRelationship {
 			String demo = ConversionUtils.toIntString(r.getRelationDemographicNo());
 
 			DemographicData dd = new DemographicData();
-			org.oscarehr.common.model.Demographic demographic = dd.getDemographic(demo);
+			org.oscarehr.common.model.Demographic demographic = dd.getDemographic(loggedInInfo, demo);
 			h.put("lastName", demographic.getLastName());
 			h.put("firstName", demographic.getFirstName());
 			h.put("phone", demographic.getPhone());
@@ -156,7 +157,7 @@ public class DemographicRelationship {
 		return list;
 	}
 
-	public List<Map<String, Object>> getDemographicRelationshipsWithNamePhone(String demographic_no, Integer facilityId) {
+	public List<Map<String, Object>> getDemographicRelationshipsWithNamePhone(LoggedInInfo loggedInInfo, String demographic_no, Integer facilityId) {
 		RelationshipsDao dao = SpringUtils.getBean(RelationshipsDao.class);
 		List<Relationships> rs = dao.findActiveByDemographicNumberAndFacility(ConversionUtils.fromIntString(demographic_no), facilityId);
 
@@ -166,7 +167,7 @@ public class DemographicRelationship {
 			String demo = ConversionUtils.toIntString(r.getRelationDemographicNo());
 
 			DemographicData dd = new DemographicData();
-			org.oscarehr.common.model.Demographic demographic = dd.getDemographic(demo);
+			org.oscarehr.common.model.Demographic demographic = dd.getDemographic(loggedInInfo, demo);
 			h.put("lastName", demographic.getLastName());
 			h.put("firstName", demographic.getFirstName());
 			h.put("phone", demographic.getPhone());

@@ -1667,7 +1667,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 						<bean:message key="demographic.demographiceditdemographic.msgAddRelation"/><!--i18n--></a></b></h3>
 						<ul>
 							<%DemographicRelationship demoRelation = new DemographicRelationship();
-                                          List relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographic.getDemographicNo().toString(), loggedInInfo.getCurrentFacility().getId());
+                                          List relList = demoRelation.getDemographicRelationshipsWithNamePhone(loggedInInfo, demographic.getDemographicNo().toString(), loggedInInfo.getCurrentFacility().getId());
                                           for (int reCounter = 0; reCounter < relList.size(); reCounter++){
                                              HashMap relHash = (HashMap) relList.get(reCounter);
                                              String dNo = (String)relHash.get("demographicNo");

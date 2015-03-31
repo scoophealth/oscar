@@ -78,6 +78,7 @@ import org.oscarehr.PMmodule.utility.UtilDateUtilities;
 import org.oscarehr.common.dao.MeasurementsExtDao;
 import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -105,7 +106,7 @@ public class MeasurementGraphAction2 extends Action {
         String typeIdName = request.getParameter("type");
         String typeIdName2 = request.getParameter("type2");
 
-        String patientName = oscar.oscarDemographic.data.DemographicNameAgeString.getInstance().getNameAgeString(demographicNo);
+        String patientName = oscar.oscarDemographic.data.DemographicNameAgeString.getInstance().getNameAgeString(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo);
         String chartTitle = "Data Graph for " + patientName;
         int width = 800;
         int height = 400;

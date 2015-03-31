@@ -74,8 +74,8 @@ public class DefaultHandler implements MessageHandler {
                     
                     if (hl7Body != null && hl7Body.indexOf("\nPID|") > 0){
                         msgCount++;
-                        logger.info("using xml HL7 Type "+getHl7Type());
-                        MessageUploader.routeReport(serviceName, getHl7Type(), hl7Body,fileId);
+                        logger.debug("using xml HL7 Type "+getHl7Type());
+                        MessageUploader.routeReport(loggedInInfo, serviceName, getHl7Type(), hl7Body,fileId);
                     }
                 }
             }catch(Exception e){
@@ -90,7 +90,7 @@ public class DefaultHandler implements MessageHandler {
                 for (i=0; i < messages.size(); i++){
                     String msg = messages.get(i);
                     logger.info("using HL7 Type "+getHl7Type());
-                    MessageUploader.routeReport(serviceName, getHl7Type(), msg,fileId);
+                    MessageUploader.routeReport(loggedInInfo, serviceName, getHl7Type(), msg,fileId);
                 }
             }catch(Exception e){
             	MessageUploader.clean(fileId);

@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.BillingDao;
 import org.oscarehr.common.model.Billing;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -73,7 +74,7 @@ public class BillingReProcessBillAction extends Action {
 
         String demographicNo = frm.getDemoNo();
         DemographicData demoD = new DemographicData();
-        org.oscarehr.common.model.Demographic demo = demoD.getDemographic(demographicNo);
+        org.oscarehr.common.model.Demographic demo = demoD.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo);
 
 
         oscar.oscarBilling.data.BillingFormData billform = new oscar.oscarBilling.data.BillingFormData();

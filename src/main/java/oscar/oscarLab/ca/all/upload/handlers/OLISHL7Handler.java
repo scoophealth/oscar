@@ -63,7 +63,7 @@ public class OLISHL7Handler implements MessageHandler {
 				if(OLISUtils.isDuplicate(loggedInInfo, msg)) {
 					continue; 
 				}
-				MessageUploader.routeReport(serviceName,"OLIS_HL7", msg.replace("\\E\\", "\\SLASHHACK\\").replace("µ", "\\MUHACK\\").replace("\\H\\", "\\.H\\").replace("\\N\\", "\\.N\\"), fileId, results);
+				MessageUploader.routeReport(loggedInInfo, serviceName,"OLIS_HL7", msg.replace("\\E\\", "\\SLASHHACK\\").replace("µ", "\\MUHACK\\").replace("\\H\\", "\\.H\\").replace("\\N\\", "\\.N\\"), fileId, results);
 				if (routeToCurrentProvider) {
 					ProviderLabRouting routing = new ProviderLabRouting();
 					routing.route(results.segmentId, loggedInInfo.getLoggedInProviderNo(), DbConnectionFilter.getThreadLocalDbConnection(), "HL7");

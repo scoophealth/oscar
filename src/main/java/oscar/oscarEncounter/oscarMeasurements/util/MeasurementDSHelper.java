@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
@@ -57,21 +58,21 @@ public class MeasurementDSHelper {
         log.debug(logMessage);
     }
     
-    public MeasurementDSHelper(String demo){
+    public MeasurementDSHelper(LoggedInInfo loggedInInfo, String demo){
         log.debug("sdfsdf ==" +demo);
         demographic_no = demo;
         DemographicData dd = new DemographicData();
-        dob = dd.getDemographicDOB(demo);
-        sex = dd.getDemographicSex(demo);
+        dob = dd.getDemographicDOB(loggedInInfo, demo);
+        sex = dd.getDemographicSex(loggedInInfo, demo);
    
         log.debug("goin out");
     }
     
-    public MeasurementDSHelper(EctMeasurementsDataBean mdb) {
+    public MeasurementDSHelper(LoggedInInfo loggedInInfo, EctMeasurementsDataBean mdb) {
         this.mdb= mdb;
         DemographicData dd = new DemographicData();
-        dob = dd.getDemographicDOB(mdb.getDemo());
-        sex = dd.getDemographicSex(mdb.getDemo());
+        dob = dd.getDemographicDOB(loggedInInfo, mdb.getDemo());
+        sex = dd.getDemographicSex(loggedInInfo, mdb.getDemo());
         
     }
     

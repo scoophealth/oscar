@@ -40,7 +40,6 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.dao.PublicKeyDao;
@@ -49,6 +48,7 @@ import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.PublicKey;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -64,7 +64,7 @@ public final class SendOruR01UIBean {
 	private static ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	private static Hl7TextMessageDao hl7TextMessageDao = (Hl7TextMessageDao) SpringUtils.getBean("hl7TextMessageDao");
 	private static PublicKeyDao publicKeyDao = (PublicKeyDao) SpringUtils.getBean("publicKeyDao");
-	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	private static DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 	private static CaseManagementNoteDAO caseManagementNoteDAO = (CaseManagementNoteDAO) SpringUtils.getBean("caseManagementNoteDAO");
 	private static CaseManagementIssueNotesDao caseManagementIssueNotesDao= (CaseManagementIssueNotesDao) SpringUtils.getBean("caseManagementIssueNotesDao");
 	
@@ -107,7 +107,7 @@ public final class SendOruR01UIBean {
 			
 			// fill demographic info
 			String demographicId=caseManagementNote.getDemographic_no();
-			Demographic demographic=demographicDao.getDemographic(demographicId);
+			Demographic demographic=demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicId);
 			clientFirstName=StringEscapeUtils.escapeHtml(StringUtils.trimToEmpty(demographic.getFirstName()));
 			clientLastName=StringEscapeUtils.escapeHtml(StringUtils.trimToEmpty(demographic.getLastName()));
 			clientHin=StringEscapeUtils.escapeHtml(StringUtils.trimToEmpty(demographic.getHin()));

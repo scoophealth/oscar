@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.common.dao.PHRVerificationDao,org.oscarehr.common.model.PHRVerification,org.oscarehr.util.SpringUtils,java.util.*" %>
 
 <%@ page import="oscar.oscarDemographic.data.DemographicData"%>
@@ -65,7 +66,7 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 
 List<PHRVerification> phrVerifications = phrVerificationDao.findByDemographic(demoNo, true);
 
-org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(demographicNo); 
+org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo); 
 String myOscarUserName = demo.getMyOscarUserName();
 
 %>

@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page
     import="java.util.*,oscar.oscarLab.ca.on.*,oscar.oscarDemographic.data.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -39,7 +40,7 @@
 
             DemographicData dData = new DemographicData();
 
-            org.oscarehr.common.model.Demographic demographic = dData.getDemographic(demographicNo);
+            org.oscarehr.common.model.Demographic demographic = dData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo);
 
 
             oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();

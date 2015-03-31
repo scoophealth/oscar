@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
   
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
@@ -221,7 +222,7 @@ function newWindow(file,window) {
                      HashMap h = (HashMap) list.get(i);
                      String relatedDemo = (String) h.get("demographic_no");              
                      DemographicData dd = new DemographicData();
-                     org.oscarehr.common.model.Demographic demographic = dd.getDemographic(relatedDemo);    %>
+                     org.oscarehr.common.model.Demographic demographic = dd.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), relatedDemo);    %>
 			<tr>
 				<td><%=demographic.getLastName() +", "+demographic.getFirstName()%></td>
 				<td><%=h.get("relation")%></td>

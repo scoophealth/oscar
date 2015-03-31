@@ -18,6 +18,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.math.*,java.util.*,java.sql.*,oscar.*,java.net.*" %> <!-- errorPage="errorpage.jsp" -->
 <%@page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
@@ -422,7 +423,7 @@ function checkSettle(status) {
 
                 BigDecimal billTotal = new BigDecimal(bCh1.getTotal());                
 
-                org.oscarehr.common.model.Demographic sdemo = (new DemographicData()).getDemographic(DemoNo);
+                org.oscarehr.common.model.Demographic sdemo = (new DemographicData()).getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), DemoNo);
                 hin = sdemo.getHin()+sdemo.getVer();
                 DemoDOB = sdemo.getYearOfBirth() + sdemo.getMonthOfBirth() + sdemo.getDateOfBirth();
                 DemoSex = sdemo.getSex();

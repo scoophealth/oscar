@@ -129,7 +129,7 @@
   Date dateOfPrev = fmt.parse(prevDate);
   String age = UtilDateUtilities.calcAgeAtDate(dob, dateOfPrev);
   DemographicData demoData = new DemographicData();
-  String[] demoInfo = demoData.getNameAgeSexArray(Integer.valueOf(demographic_no));
+  String[] demoInfo = demoData.getNameAgeSexArray(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.valueOf(demographic_no));
   String nameage = demoInfo[0] + ", " + demoInfo[1] + " " + demoInfo[2] + " " + age;
 
   HashMap<String,String> genders = new HashMap<String,String>();

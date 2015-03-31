@@ -1,3 +1,4 @@
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="oscar.oscarDB.DBHandler"%>
 <%@ page import="java.lang.reflect.*, java.sql.*"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
@@ -25,7 +26,7 @@ String actorTicket = null;
 String actor = "clinic@iampregnant.org"; //"clinic@citizenhealth.ca"; // marcelle@citizenhealth.ca
 String actorPassword = "password";
 DemographicData demoData = new DemographicData();
-String patientPingId = demoData.getDemographic(request.getParameter("demographic_no")).getEmail();
+String patientPingId = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), request.getParameter("demographic_no")).getEmail();
 
 OscarPingTalk ping = new OscarPingTalk();
 boolean connected = true;
