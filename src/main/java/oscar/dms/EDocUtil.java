@@ -54,7 +54,6 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.CtlDocTypeDao;
 import org.oscarehr.common.dao.CtlDocumentDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.dao.DocumentDao.Module;
 import org.oscarehr.common.dao.IndivoDocsDao;
@@ -69,6 +68,7 @@ import org.oscarehr.common.model.IndivoDocs;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerLink;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -140,7 +140,7 @@ public final class EDocUtil {
         private static TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 	private static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	private static CtlDocTypeDao ctldoctypedao = (CtlDocTypeDao) SpringUtils.getBean("ctlDocTypeDao");
-	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	private static DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 	private static CtlDocumentDao ctlDocumentDao = (CtlDocumentDao) SpringUtils.getBean("ctlDocumentDao");
 	
 	public static String getProviderName(String providerNo) {
@@ -154,11 +154,11 @@ public final class EDocUtil {
 		return "";
 	}
 
-	public static String getDemographicName(String demographicNo) {
+	public static String getDemographicName(LoggedInInfo loggedInInfo, String demographicNo) {
 		if (demographicNo == null || demographicNo.length() == 0) {
 			return "";
 		}
-		Demographic d = demographicDao.getDemographic(demographicNo);
+		Demographic d = demographicManager.getDemographic(loggedInInfo, demographicNo);
 		if (d != null) {
 			return d.getLastName().toUpperCase() + ", " + d.getFirstName().toUpperCase();
 		}

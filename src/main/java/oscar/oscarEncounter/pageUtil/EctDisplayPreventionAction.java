@@ -107,7 +107,7 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
             ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(loggedInInfo, prevName, Integer.valueOf(bean.demographicNo));
             Date demographicDateOfBirth=PreventionData.getDemographicDateOfBirth(loggedInInfo, Integer.valueOf(bean.demographicNo));
             PreventionData.addRemotePreventions(loggedInInfo, alist, Integer.valueOf(bean.demographicNo),prevName,demographicDateOfBirth);
-            boolean show = pdc.display(LoggedInInfo.getLoggedInInfoFromRequest(request), h, bean.demographicNo,alist.size());
+            boolean show = pdc.display(loggedInInfo, h, bean.demographicNo,alist.size());
             if( show ) {
                 if( alist.size() > 0 ) {
                     Map<String,Object> hdata = alist.get(alist.size()-1);

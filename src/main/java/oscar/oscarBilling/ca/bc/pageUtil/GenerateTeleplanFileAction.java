@@ -34,7 +34,8 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -96,12 +97,11 @@ public class GenerateTeleplanFileAction extends Action{
             try{
              
             BillingmasterDAO billingmasterDAO = (BillingmasterDAO) SpringUtils.getBean("BillingmasterDAO");
-            DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");    //ctx.getBean("demographicDao");
+            DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
             TeleplanFileWriter teleplanWr = new TeleplanFileWriter();  
             teleplanWr.setBillingmasterDAO(billingmasterDAO);
-            MiscUtils.getLogger().debug("\ndemographic DAO -->"+demographicDao);
-            teleplanWr.setDemographicDao(demographicDao);
-            TeleplanSubmission submission = teleplanWr.getSubmission(testRun,pdArr,dataCenterId);
+            teleplanWr.setDemographicManager(demographicManager);
+            TeleplanSubmission submission = teleplanWr.getSubmission(LoggedInInfo.getLoggedInInfoFromSession(request), testRun,pdArr,dataCenterId);
 
             BillActivityDAO bActDao  = new BillActivityDAO();
             batchCount = bActDao.getNextMonthlySequence("");

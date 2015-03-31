@@ -48,7 +48,7 @@ if( demoNo == null || demoNo.equals("null")  ) {
     
 }
 
-String patientName = EDocUtil.getDemographicName(demoNo);
+String patientName = EDocUtil.getDemographicName(loggedInInfo, demoNo);
 String[] docType = {"D","L"};
 String http_user_agent = request.getHeader("User-Agent");
 boolean onIPad = http_user_agent.indexOf("iPad") >= 0;

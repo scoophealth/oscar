@@ -32,7 +32,6 @@ import org.oscarehr.billing.CA.ON.model.BillingONFavourite;
 import org.oscarehr.billing.CA.ON.model.BillingONFilename;
 import org.oscarehr.common.dao.BillingPaymentTypeDao;
 import org.oscarehr.common.dao.ClinicLocationDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.dao.ProviderSiteDao;
@@ -43,6 +42,8 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderSite;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -58,7 +59,7 @@ public class JdbcBillingPageUtil {
 	private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	private BillingPaymentTypeDao billingPaymentTypeDao = SpringUtils.getBean(BillingPaymentTypeDao.class);
 	private BillingONFavouriteDao billingONFavouriteDao = SpringUtils.getBean(BillingONFavouriteDao.class);
-	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 	private BillingONFilenameDao billingONFilenameDao = SpringUtils.getBean(BillingONFilenameDao.class);
 	private ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
 
@@ -343,9 +344,9 @@ public class JdbcBillingPageUtil {
 		return retval;
 	}
 
-	public List<String> getPatientCurBillingDemographic(String demoNo) {
+	public List<String> getPatientCurBillingDemographic(LoggedInInfo loggedInInfo, String demoNo) {
 		List<String> retval = null;
-		Demographic d = demographicDao.getDemographic(demoNo);
+		Demographic d = demographicManager.getDemographic(loggedInInfo, demoNo);
 		if(d != null) {
 			retval = new ArrayList<String>();
 			retval.add(d.getLastName());
@@ -372,9 +373,9 @@ public class JdbcBillingPageUtil {
 		return retval;
 	}
 
-	public List<String> getPatientCurBillingDemo(String demoNo) {
+	public List<String> getPatientCurBillingDemo(LoggedInInfo loggedInInfo, String demoNo) {
 		List<String> retval = null;
-		Demographic d = demographicDao.getDemographic(demoNo);
+		Demographic d = demographicManager.getDemographic(loggedInInfo, demoNo);
 		if(d != null) {
 			retval = new ArrayList<String>();
 			retval.add(d.getLastName());

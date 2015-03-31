@@ -36,10 +36,11 @@ import java.util.Hashtable;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.SurveyDataDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.SurveyData;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -111,19 +112,19 @@ public class Survey {
 		return patientseen;//false;  //TODO    
 	}
 
-	boolean doesPatientMeetCriteria(String demographic_no) {
+	boolean doesPatientMeetCriteria(LoggedInInfo loggedInInfo, String demographic_no) {
 		boolean doespatientmeetcriteria = true;
 		if (hasPatientCriteria()) {
 			log.debug("Survey " + surveyTitle + " has patientCriteria");
-			doespatientmeetcriteria = isDemographicSelected(demographic_no);
+			doespatientmeetcriteria = isDemographicSelected(loggedInInfo, demographic_no);
 		}
 		log.debug("Does patient Meet Criteria " + doespatientmeetcriteria);
 		return doespatientmeetcriteria; //TODO
 	}
 
-	public boolean isDemographicSelected(String demographicNo) {
-		DemographicDao dao = SpringUtils.getBean(DemographicDao.class);
-		Demographic demo = dao.getDemographic(demographicNo);
+	public boolean isDemographicSelected(LoggedInInfo loggedInInfo, String demographicNo) {
+		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+		Demographic demo = demographicManager.getDemographic(loggedInInfo, demographicNo);
 		return demo != null;
 	}
 
@@ -141,7 +142,7 @@ public class Survey {
 		return isPatientSelect; //true; //TODO
 	}
 
-	boolean isInSurvey(String demographic_no, String provider_no) {
+	boolean isInSurvey(LoggedInInfo loggedInInfo, String demographic_no, String provider_no) {
 		boolean isinsurvey = false;
 		String sStatus = null;
 		if (isProviderInSurvey(provider_no)) {
@@ -152,7 +153,7 @@ public class Survey {
 				isinsurvey = true;
 			} else {
 				if (!isPatientSeenInPeriod(sStatus)) {
-					if (doesPatientMeetCriteria(demographic_no)) {
+					if (doesPatientMeetCriteria(loggedInInfo, demographic_no)) {
 						if (isPatientRandomlySelected()) {
 							isinsurvey = true;
 							addPatientToPeriod(demographic_no, provider_no, Survey.DEFFERED);

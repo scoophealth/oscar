@@ -44,6 +44,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 
@@ -106,7 +107,7 @@ public class CheckSurveillanceAction extends Action {
             request.setAttribute("proceedURL", proceed);
             request.setAttribute("demographic_no", demographic_no);
 
-            if (survey.isInSurvey(demographic_no,provider_no)){
+            if (survey.isInSurvey(LoggedInInfo.getLoggedInInfoFromSession(request), demographic_no,provider_no)){
                forward = mapping.findForward("survey");
                request.setAttribute("currSurveyNum", new Integer(i+ 1));
                i = surveys.size();

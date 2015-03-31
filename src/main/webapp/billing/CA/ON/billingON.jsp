@@ -224,7 +224,7 @@
 			String referSpet = "";
 			// last_name,first_name,dob,hin,ver,hc_type,sex,family_doctor
 			JdbcBillingPageUtil tdbObj = new JdbcBillingPageUtil();
-			List demoL = tdbObj.getPatientCurBillingDemographic(demo_no);
+			List demoL = tdbObj.getPatientCurBillingDemographic(loggedInInfo, demo_no);
 
 			//String sql = "select * from demographic where demographic_no=" + demo_no;
 			//ResultSet rs = dbObj.searchDBRecord(sql);

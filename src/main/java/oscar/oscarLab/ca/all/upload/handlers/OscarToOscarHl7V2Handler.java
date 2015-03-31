@@ -52,7 +52,7 @@ public class OscarToOscarHl7V2Handler implements MessageHandler {
 
 			if (message instanceof ADT_A09) 
 			{
-				AdtA09Handler.handle((ADT_A09) message);
+				AdtA09Handler.handle(loggedInInfo, (ADT_A09) message);
 			}
 			else
 			{
