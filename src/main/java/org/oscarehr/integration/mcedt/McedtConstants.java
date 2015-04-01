@@ -36,4 +36,10 @@ public class McedtConstants {
 	public static final String SESSION_KEY_TYPE_LIST = "mcedtTypeList";
 	public static final String SESSION_KEY_RESOURCE_LIST = "mcedtResourceList";
 	
+	public static final String SESSION_KEY_UPLOAD_RESOURCE_ID = "uploadResourceId";
+	public static final String SESSION_KEY_UPLOAD_FILENAME = "uploadFileName";
+	public static final String SESSION_SUCCESSFUL_UPLOADS ="successfulUpload";
+	public static final String SESSION_KEY_UPLOAD_RESPONSE_RESULT = "uploadResponseResult";
+	public static final String SESSION_KEY_SUBMIT_RESPONSE_RESULT = "submitResponseResult";
+	
 }

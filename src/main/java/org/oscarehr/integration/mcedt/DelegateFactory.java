@@ -24,9 +24,12 @@
 package org.oscarehr.integration.mcedt;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.integration.ebs.client.EdtClientBuilder;
 import org.oscarehr.integration.ebs.client.EdtClientBuilderConfig;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import ca.ontario.health.edt.EDTDelegate;
@@ -34,6 +37,7 @@ import ca.ontario.health.edt.EDTDelegate;
 public class DelegateFactory {
 	
 	private static Logger logger = MiscUtils.getLogger();
+	private static UserPropertyDAO userPropertyDAO = SpringUtils.getBean(UserPropertyDAO.class);
 	
 	public static EDTDelegate newDelegate() {
 		OscarProperties props = OscarProperties.getInstance();
@@ -42,7 +46,8 @@ public class DelegateFactory {
 		config.setKeystoreUser(props.getProperty("mcedt.keystore.user"));
 		config.setKeystorePassword(props.getProperty("mcedt.keystore.pass"));
 		config.setUserNameTokenUser(props.getProperty("mcedt.service.user"));
-		config.setUserNameTokenPassword(props.getProperty("mcedt.service.pass"));
+		UserProperty prop = userPropertyDAO.getProp(UserProperty.MCEDT_ACCOUNT_PASSWORD);
+		config.setUserNameTokenPassword((prop==null||prop.getValue()==null || prop.getValue().trim().equals(""))?props.getProperty("mcedt.service.pass"):prop.getValue());
 		config.setServiceUrl(props.getProperty("mcedt.service.url"));
 		config.setConformanceKey(props.getProperty("mcedt.service.conformanceKey"));
 		config.setServiceId(props.getProperty("mcedt.service.id"));
@@ -53,6 +58,14 @@ public class DelegateFactory {
 			logger.info("Created new EDT delegate " + result);
 		}
 		return result;
+    }
+
+	public UserPropertyDAO getUserPropertyDAO() {
+	    return userPropertyDAO;
+    }
+
+	public void setUserPropertyDAO(UserPropertyDAO userPropertyDAOin) {
+	    userPropertyDAO = userPropertyDAOin;
     }
 	
 }

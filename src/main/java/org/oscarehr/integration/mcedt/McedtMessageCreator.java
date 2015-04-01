@@ -26,6 +26,8 @@ package org.oscarehr.integration.mcedt;
 import oscar.util.Appender;
 import ca.ontario.health.ebs.EbsFault;
 import ca.ontario.health.edt.CommonResult;
+import ca.ontario.health.edt.DownloadData;
+import ca.ontario.health.edt.DownloadResult;
 import ca.ontario.health.edt.Faultexception;
 import ca.ontario.health.edt.ResourceResult;
 import ca.ontario.health.edt.ResponseResult;
@@ -81,6 +83,27 @@ public class McedtMessageCreator {
 		return fault.getCode() + " " + fault.getMessage();
 	}
 
+	 public static String downloadDataToString(DownloadData result) {
+		 boolean isResourcePresent = (result != null && result.getResourceID() != null);
+		 Appender appender = new Appender();
+		 if (isResourcePresent) {
+			 appender.append(result.getResourceID().toString());
+			 } else {
+				 appender.append("Failure:");
+				 }
+
+		 CommonResult commonResult = result.getResult();
+		 if (commonResult != null) {
+
+			 appender.append("-");
+			 appender.append(commonResult.getCode());
+			 appender.append("-");
+			 appender.append(commonResult.getMsg());
+			 }
+		 appender.appendNonEmpty(result.getDescription());
+		 return appender.toString();
+		 }
+	 
 	public static String resourceResultToString(ResourceResult result) {
 		Appender app = new Appender("<br/>");
 		for(ResponseResult r : result.getResponse()) {
@@ -89,4 +112,11 @@ public class McedtMessageCreator {
 		return app.toString(); 
     }
 
+	public static String downloadResultToString(DownloadResult result) {
+		Appender app = new Appender("<br/>");
+		for(DownloadData r : result.getData()) {
+			app.append(downloadDataToString(r));
+			}
+		return app.toString();
+		}
 }
