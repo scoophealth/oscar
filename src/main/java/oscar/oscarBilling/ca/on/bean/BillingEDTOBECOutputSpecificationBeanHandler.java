@@ -31,15 +31,16 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.BatchEligibilityDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.BatchEligibility;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.apache.commons.lang.StringUtils;
 
 public class BillingEDTOBECOutputSpecificationBeanHandler {
 
@@ -48,11 +49,11 @@ public class BillingEDTOBECOutputSpecificationBeanHandler {
 	Vector<BillingEDTOBECOutputSpecificationBean> EDTOBECOutputSecifiationBeanVector = new Vector<BillingEDTOBECOutputSpecificationBean>();
 	public boolean verdict = true;
 
-	public BillingEDTOBECOutputSpecificationBeanHandler(FileInputStream file) {
-		init(file);
+	public BillingEDTOBECOutputSpecificationBeanHandler(LoggedInInfo loggedInInfo, FileInputStream file) {
+		init(loggedInInfo, file);
 	}
 
-	public boolean init(FileInputStream file) {
+	public boolean init(LoggedInInfo loggedInInfo, FileInputStream file) {
 
 		InputStreamReader reader = new InputStreamReader(file);
 		BufferedReader input = new BufferedReader(reader);
@@ -69,9 +70,8 @@ public class BillingEDTOBECOutputSpecificationBeanHandler {
 					String obecResponse = nextline.substring(12, 14);
 					BillingEDTOBECOutputSpecificationBean osBean = new BillingEDTOBECOutputSpecificationBean(obecHIN, obecVer, obecResponse);
 
-					DemographicDao dao = SpringUtils.getBean(DemographicDao.class);
-
-					List<Demographic> demos = dao.searchByHealthCard(obecHIN);
+					DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+					List<Demographic> demos = demographicManager.searchByHealthCard(loggedInInfo, obecHIN);
 					if (!demos.isEmpty()) {
 						Demographic demo = demos.get(0);
 						osBean.setLastName(demo.getLastName());

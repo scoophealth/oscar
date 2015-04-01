@@ -34,8 +34,9 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.BillingDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Billing;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -67,7 +68,7 @@ public class TeleplanFileWriter {
     int totalClaims = 0;
     
     private BillingmasterDAO billingmasterDAO = null;
-    private DemographicDao demographicDAO = null;
+    private DemographicManager demographicManager = null;
     
     public CheckBillingData checkData = new CheckBillingData();
     
@@ -132,7 +133,7 @@ public class TeleplanFileWriter {
         mspHtmlStr.append(str);
     }
     
-    public TeleplanSubmission getSubmission(boolean testRun,ProviderData[] providers,String dataCenterId ) throws Exception{
+    public TeleplanSubmission getSubmission(LoggedInInfo loggedInInfo, boolean testRun,ProviderData[] providers,String dataCenterId ) throws Exception{
         log.debug("Start getSubmission");
         
         String logNo =  getNextSequenceNumber() ;
@@ -175,7 +176,7 @@ public class TeleplanFileWriter {
                 }else if(billType.equals("WCB")){
                     //TODO:Should pass dataCenterId to WCB but it looks it up in the properties currently, fix in the future
                     log.debug("Billing # :"+billing_no+" Data Center :"+dataCenterId+ " WCB BILL");
-                    c = createWCB2(billing_no);            
+                    c = createWCB2(loggedInInfo, billing_no);            
                 }
                 
                 if(c == null){
@@ -213,7 +214,7 @@ public class TeleplanFileWriter {
         return submission;
     }
     
-    private Claims createWCB2(String billing_no){
+    private Claims createWCB2(LoggedInInfo loggedInInfo, String billing_no){
         
         
             //setMasDAO(new BillingmasterDAO());
@@ -231,7 +232,7 @@ public class TeleplanFileWriter {
            MiscUtils.getLogger().debug("BM "+bm+" WCB "+wcbForm + " for "+billing_no);
            
            WCBTeleplanSubmission wcbSub = new WCBTeleplanSubmission();
-           wcbSub.setDemographicDao(demographicDAO);
+           wcbSub.setDemographicManager(demographicManager);
            //WcbSb sb = new WcbSb(billing_no);
            appendToHTML(wcbSub.getHtmlLine(wcbForm,bm)); //sb.getHtmlLine());
            appendToHTML(wcbSub.validate(wcbForm,bm)); //sb.validate());
@@ -247,7 +248,7 @@ public class TeleplanFileWriter {
            if(wcbSub.isFormNeeded(bm)){
                
                 String logNo = getNextSequenceNumber();
-                String lines = wcbSub.Line1(String.valueOf(logNo),bm,wcbForm);
+                String lines = wcbSub.Line1(loggedInInfo, String.valueOf(logNo),bm,wcbForm);
                 appendToFile("\n"+ lines +"\r");
                 setLog(logNo, lines,""+bm.getBillingmasterNo());
 
@@ -257,7 +258,7 @@ public class TeleplanFileWriter {
                 setLog(logNo, lines,""+bm.getBillingmasterNo());
 
                 logNo = getNextSequenceNumber();
-                lines = wcbSub.Line3(String.valueOf(logNo),bm,wcbForm);
+                lines = wcbSub.Line3(loggedInInfo, String.valueOf(logNo),bm,wcbForm);
                 appendToFile("\n"+ lines +"\r");
                 setLog(logNo, lines,""+bm.getBillingmasterNo());
 
@@ -267,7 +268,7 @@ public class TeleplanFileWriter {
                 setLog(logNo, lines,""+bm.getBillingmasterNo());
 
                 logNo = getNextSequenceNumber();
-                lines = wcbSub.Line5(String.valueOf(logNo),bm,wcbForm);
+                lines = wcbSub.Line5(loggedInInfo, String.valueOf(logNo),bm,wcbForm);
                 appendToFile("\n"+ lines +"\r");
                 setLog(logNo, lines,""+bm.getBillingmasterNo());
 
@@ -277,7 +278,7 @@ public class TeleplanFileWriter {
                 setLog(logNo, lines,""+bm.getBillingmasterNo());
 
                 logNo = getNextSequenceNumber();
-                lines = wcbSub.Line7(String.valueOf(logNo),bm,wcbForm);
+                lines = wcbSub.Line7(loggedInInfo, String.valueOf(logNo),bm,wcbForm);
                 appendToFile("\n"+ lines +"\r");
                 setLog(logNo, lines,""+bm.getBillingmasterNo());
 
@@ -287,7 +288,7 @@ public class TeleplanFileWriter {
                 setLog(logNo, lines,""+bm.getBillingmasterNo());
            }else{
                 String logNo = getNextSequenceNumber();
-                String lines = wcbSub.Line9(String.valueOf(logNo),bm,wcbForm);
+                String lines = wcbSub.Line9(loggedInInfo, String.valueOf(logNo),bm,wcbForm);
                 appendToFile("\n"+ lines +"\r");
                 setLog(logNo, lines,""+bm.getBillingmasterNo());
            }
@@ -512,8 +513,8 @@ public class TeleplanFileWriter {
     }
    
    
-    public void setDemographicDao(DemographicDao demoDAO) {
-        this.demographicDAO = demoDAO;
+    public void setDemographicManager(DemographicManager demographicManager) {
+        this.demographicManager = demographicManager;
     }
    
     

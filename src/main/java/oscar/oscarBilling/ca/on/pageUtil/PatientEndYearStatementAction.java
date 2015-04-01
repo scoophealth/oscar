@@ -40,11 +40,12 @@ import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.utility.Utility;
 import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.BillingONItemDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarAction;
@@ -59,6 +60,9 @@ public class PatientEndYearStatementAction extends OscarAction {
 	private static final Logger _logger = Logger.getLogger(BillingStatusPrep.class);
 	private static final String RES_SUCCESS = "success";
 	private static final String RES_FAILURE = "failure";
+	
+	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class); 
+	
       
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 	   
@@ -66,7 +70,9 @@ public class PatientEndYearStatementAction extends OscarAction {
 	   List<PatientEndYearStatementInvoiceBean> result = null;
 	   PatientEndYearStatementBean summary = new PatientEndYearStatementBean("", "", 0, "", "", "", new Date(), new Date(), "","");
 	   ActionMessages errors = this.getErrors(request);
-
+	   LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	   
+	   
 	   if(request.getParameter("search") != null || request.getParameter("pdf") != null) {
 
 		   request.setAttribute("fromDateParam",statement.getFromDateParam());
@@ -76,15 +82,14 @@ public class PatientEndYearStatementAction extends OscarAction {
 		   SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd"); 
 
 		   if(request.getParameter("search") != null) {
-			   DemographicDao dao = (DemographicDao) SpringUtils.getBean("demographicDao"); 
 			   List<Demographic> demographicList = new ArrayList<Demographic>();
 			   if(statement.getDemographicNoParam() != null && statement.getDemographicNoParam().length()>0) {
-				   Demographic d =dao.getDemographic(statement.getDemographicNoParam());
+				   Demographic d =demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), statement.getDemographicNoParam());
 				   if(d!=null) {
 					   demographicList.add(d);
 				   }
 			   } else {
-				   demographicList = dao.searchDemographic(statement.getLastNameParam()+","+statement.getFirstNameParam());
+				   demographicList = demographicManager.searchDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), statement.getLastNameParam()+","+statement.getFirstNameParam());
 					  
 			   }
 			   if(demographicList == null || demographicList.size()==0) {
@@ -207,16 +212,15 @@ public class PatientEndYearStatementAction extends OscarAction {
 		   } 
 	   } else if (request.getParameter("demosearch") != null) {
 		   request.getSession().setAttribute("summary", null);			   
-		   DemographicDao dao = (DemographicDao) SpringUtils.getBean("demographicDao"); 
-		  
+		   
 		   List<Demographic> demographicList = new ArrayList<Demographic>();
 		   if(request.getParameter("demographic_no") != null && request.getParameter("demographic_no").length() > 0) {
-			   Demographic d =dao.getDemographic(request.getParameter("demographic_no"));
+			   Demographic d =demographicManager.getDemographic(loggedInInfo, request.getParameter("demographic_no"));
 			   if(d!=null) {
 				   demographicList.add(d);
 			   }
 		   } else {
-			   demographicList = dao.searchDemographic(statement.getLastNameParam()+","+statement.getFirstNameParam());
+			   demographicList = demographicManager.searchDemographic(loggedInInfo, statement.getLastNameParam()+","+statement.getFirstNameParam());
 				  
 		   }
 		   

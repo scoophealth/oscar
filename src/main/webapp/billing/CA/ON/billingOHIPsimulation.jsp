@@ -17,6 +17,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <html>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ page import="org.oscarehr.util.DateRange"%>
@@ -136,7 +137,7 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 		//bhObj.setBatch_date(rs.getString("batch_date"));
 		
 		dbObj.setBatchHeaderObj(bhObj);	
-		dbObj.createSiteBillingFileStr("0", new String[] {"O", "W", "I" });
+		dbObj.createSiteBillingFileStr(LoggedInInfo.getLoggedInInfoFromSession(request), "0", new String[] {"O", "W", "I" });
 		htmlValue = "<font color='red'>" + errorMsg + "</font>" + dbObj.getHtmlValue();
 	}
 	else {
@@ -208,7 +209,7 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 			dbObj.setBatchHeaderObj(bhObj);
 			dbObj.errorMsg += errorMsg;
 			
-			dbObj.createBillingFileStr("0", new String[] { "O", "W", "I" }, true, null, summaryView);
+			dbObj.createBillingFileStr(LoggedInInfo.getLoggedInInfoFromSession(request), "0", new String[] { "O", "W", "I" }, true, null, summaryView);
 			if (dbObj.getRecordCount() > 0) {
 				recordCount += dbObj.getRecordCount();	
 				bigTotal = bigTotal.add(dbObj.getBigTotal());

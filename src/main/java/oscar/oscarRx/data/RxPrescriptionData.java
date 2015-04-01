@@ -442,7 +442,7 @@ public class RxPrescriptionData {
 			}
 
 			if (isCustomName) {
-				logger.info("ADDING PRESCRIPTION " + drug.getId());
+				logger.debug("ADDING PRESCRIPTION " + drug.getId());
 				Prescription p = toPrescription(drug, demographicNo);
 
 				if (myOscarEnabled) {

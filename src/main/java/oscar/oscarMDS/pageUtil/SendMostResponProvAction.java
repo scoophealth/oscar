@@ -40,8 +40,9 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.on.CommonLabResultData;
@@ -50,7 +51,9 @@ import oscar.oscarLab.ca.on.CommonLabResultData;
  * @author jackson
  */
 public class SendMostResponProvAction extends Action{
-        private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+        
+	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+        
         public ActionForward execute(ActionMapping mapping,
             ActionForm form,
             HttpServletRequest request,
@@ -64,7 +67,7 @@ public class SendMostResponProvAction extends Action{
                 ArrayList listFlaggedLabs = new ArrayList();
                 if(demoId!=null && docLabId!=null && docLabType!=null){
                     demoId=demoId.trim();
-                    Demographic demog=demographicDao.getDemographicById(Integer.parseInt(demoId));
+                    Demographic demog=demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.parseInt(demoId));
                     String mrp=demog.getProviderNo();
                     //MiscUtils.getLogger().info(mrp);
                      String[] la =  new String[] {docLabId,docLabType};
