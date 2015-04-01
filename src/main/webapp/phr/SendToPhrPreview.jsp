@@ -32,6 +32,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="oscar.oscarDemographic.data.DemographicData"%>
 <%@ page import="java.util.Enumeration"%>
 
@@ -41,7 +42,7 @@
 String demographicNo = request.getParameter("demographic_no");
 if (demographicNo == null) demographicNo = request.getParameter("demographicNo");
 DemographicData demographicData = new DemographicData();
-String demographicName = demographicData.getDemographicFirstLastName(demographicNo);
+String demographicName = demographicData.getDemographicFirstLastName(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo);
 %>
 
 <html>

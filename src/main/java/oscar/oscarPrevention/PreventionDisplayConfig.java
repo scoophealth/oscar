@@ -38,6 +38,7 @@ import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -187,11 +188,11 @@ public class PreventionDisplayConfig {
 	}
 
 
-    public String getDisplay(Map<String,Object> setHash, String Demographic_no) {
+    public String getDisplay(LoggedInInfo loggedInInfo, Map<String,Object> setHash, String Demographic_no) {
         String display = "style=\"display:none;\"";
         DemographicData dData = new DemographicData();
         log.debug("demoage " + Demographic_no);
-        org.oscarehr.common.model.Demographic demograph = dData.getDemographic(Demographic_no);
+        org.oscarehr.common.model.Demographic demograph = dData.getDemographic(loggedInInfo, Demographic_no);
         try {
             String minAgeStr = (String) setHash.get("minAge");
             String maxAgeStr = (String) setHash.get("maxAge");
@@ -243,11 +244,11 @@ public class PreventionDisplayConfig {
         return display;
     }
 
-    public boolean display(Map<String,String> setHash, String Demographic_no,int numberOfPrevs) {
+    public boolean display(LoggedInInfo loggedInInfo, Map<String,String> setHash, String Demographic_no,int numberOfPrevs) {
         boolean display = false;
         DemographicData dData = new DemographicData();
         log.debug("demoage " + Demographic_no);
-        org.oscarehr.common.model.Demographic demograph = dData.getDemographic(Demographic_no);
+        org.oscarehr.common.model.Demographic demograph = dData.getDemographic(loggedInInfo, Demographic_no);
         try {
             String minAgeStr = setHash.get("minAge");
             String maxAgeStr = setHash.get("maxAge");

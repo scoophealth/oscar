@@ -143,7 +143,7 @@ public class IHAHandler extends DefaultGenericHandler implements MessageHandler 
 	                    hl7Body = allNodes.item(i).getFirstChild().getTextContent();
 	                    if (hl7Body != null && hl7Body.indexOf("\nPID|") > 0){
 	                        logger.info("using xml HL7 Type "+getHl7Type());
-	                        MessageUploader.routeReport(serviceName, "IHA", hl7Body, fileId);
+	                        MessageUploader.routeReport(loggedInInfo, serviceName, "IHA", hl7Body, fileId);
 	                        result += "success:" + msgId + ",";
 	                    }
                 	}

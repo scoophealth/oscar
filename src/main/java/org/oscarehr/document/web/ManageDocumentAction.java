@@ -222,7 +222,7 @@ public class ManageDocumentAction extends DispatchAction {
 	public ActionForward getDemoNameAjax(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String dn = request.getParameter("demo_no");
 		HashMap hm = new HashMap();
-		hm.put("demoName", getDemoName(dn));
+		hm.put("demoName", getDemoName(LoggedInInfo.getLoggedInInfoFromSession(request), dn));
 		JSONObject jsonObject = JSONObject.fromObject(hm);
 		try {
 			response.getOutputStream().write(jsonObject.toString().getBytes());
@@ -319,7 +319,7 @@ public class ManageDocumentAction extends DispatchAction {
 		String providerNo = request.getParameter("providerNo");
 		String searchProviderNo = request.getParameter("searchProviderNo");
 		String ackStatus = request.getParameter("status");
-		String demoName = getDemoName(demog);
+		String demoName = getDemoName(LoggedInInfo.getLoggedInInfoFromSession(request) , demog);
 		request.setAttribute("demoName", demoName);
 		request.setAttribute("segmentID", documentId);
 		request.setAttribute("providerNo", providerNo);
@@ -330,9 +330,9 @@ public class ManageDocumentAction extends DispatchAction {
 
 	}
 
-	private String getDemoName(String demog) {
+	private String getDemoName(LoggedInInfo loggedInInfo, String demog) {
 		DemographicData demoD = new DemographicData();
-		org.oscarehr.common.model.Demographic demo = demoD.getDemographic(demog);
+		org.oscarehr.common.model.Demographic demo = demoD.getDemographic(loggedInInfo, demog);
 		String demoName = demo.getLastName() + ", " + demo.getFirstName();
 		return demoName;
 	}

@@ -1910,7 +1910,7 @@ public class ClientManagerAction extends DispatchAction {
 
 		/* Relations */
 		DemographicRelationship demoRelation = new DemographicRelationship();
-		List<Map<String,Object>> relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographicNo, facilityId);
+		List<Map<String,Object>> relList = demoRelation.getDemographicRelationshipsWithNamePhone(loggedInInfo, demographicNo, facilityId);
 		List<JointAdmission> list = clientManager.getDependents(new Integer(demographicNo));
 		JointAdmission clientsJadm = clientManager.getJointAdmission(new Integer(demographicNo));
 		int familySize = list.size() + 1;

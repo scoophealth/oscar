@@ -34,10 +34,10 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -51,13 +51,13 @@ public final class EFormPrintPDFUtil {
 	private static final String HEAD_CIRCUMFERENCE_GRAPH = "HEAD_CIRC";
 	private static final String LENGTH_GRAPH = "LENGTH";
     
-    private static DemographicDao demoDAO = (DemographicDao)SpringUtils.getBean(DemographicDao.class);
+    private static DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 
     public static Properties getFrmRourkeGraph(LoggedInInfo loggedInInfo, Properties full_props) {
     	String graphType = full_props.getProperty("__graphType");
     	Integer demographicNo = Integer.valueOf(full_props.getProperty("demographic_no"));
     	
-    	Demographic demographic = demoDAO.getClientByDemographicNo(demographicNo);
+    	Demographic demographic = demographicManager.getDemographic(loggedInInfo, demographicNo);
     	Date dob = demographic.getBirthDay().getTime();
         
     	String[] names = {"baby_name", "birthday", "birth_length", "birth_wt", "head_circ",

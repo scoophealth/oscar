@@ -28,6 +28,7 @@ package oscar.form.study.HSFO.pageUtil;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,13 +40,21 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.LazyValidatorForm;
+import org.caisi.dao.ProviderDAO;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.SecurityDao;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.web.struts.DispatchActionSupport;
 
+import oscar.OscarProperties;
 import oscar.form.study.HSFO.RecommitDAO;
 import oscar.form.study.HSFO.RecommitSchedule;
 
@@ -145,6 +154,31 @@ public class RecommitHSFOAction extends DispatchActionSupport {
 
         public void execute(JobExecutionContext ctx) throws JobExecutionException {
 
+        	
+        	String providerNo = OscarProperties.getInstance().getProperty("hsfo_job_run_as_provider");
+			if(providerNo == null) {
+				return;
+			}
+			
+			ProviderDAO providerDao = SpringUtils.getBean(ProviderDao.class);
+			Provider provider = providerDao.getProvider(providerNo);
+			
+			if(provider == null) {
+				return;
+			}
+			
+			SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+			List<Security> securityList = securityDao.findByProviderNo(providerNo);
+			
+			if(securityList.isEmpty()) {
+				return;
+			}
+			
+			LoggedInInfo x = new LoggedInInfo();
+			x.setLoggedInProvider(provider);
+			x.setLoggedInSecurity(securityList.get(0));
+			
+			
     		try {
                 XMLTransferUtil tfutil = new XMLTransferUtil();
                 RecommitDAO rDao = new RecommitDAO();
@@ -154,15 +188,15 @@ public class RecommitHSFOAction extends DispatchActionSupport {
                 if (!"D".equalsIgnoreCase(rs.getStatus())) {
                     rs.setStatus("D");
 
-                    if (rs.isCheck_flag()) retS = rDao.SynchronizeDemoInfo();
-                    else retS = rDao.checkProvider();
+                    if (rs.isCheck_flag()) retS = rDao.SynchronizeDemoInfo(x);
+                    else retS = rDao.checkProvider(x);
 
                     if (retS != null) {
                         rs.setMemo("Upload failure. Missing internal doctor for patient " + retS + ".");
                         rDao.updateLastSchedule(rs);
                         return;
                     }
-                    HsfoHbpsDataDocument doc = tfutil.generateXML(rs.getUser_no(), 0);
+                    HsfoHbpsDataDocument doc = tfutil.generateXML(x, rs.getUser_no(), 0);
 
                     if (doc == null) {
                         message.add("");

@@ -29,6 +29,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicNameAgeString;
@@ -54,7 +55,7 @@ public class DemographicNameAgeTag extends TagSupport {
     	   MiscUtils.getLogger().error("Unable to parse demo no: " + demoNo);
     	   return SKIP_BODY;
        }
-       String nameage = demoNameAge.getNameAgeString(intDemoNo);            
+       String nameage = demoNameAge.getNameAgeString(LoggedInInfo.getLoggedInInfoFromSession(this.pageContext.getSession()), intDemoNo);            
        try{
           JspWriter out = super.pageContext.getOut();          
           out.print(nameage);                          

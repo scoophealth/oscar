@@ -40,6 +40,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarReport.ClinicalReports.ClinicalReportManager;
@@ -144,7 +145,7 @@ public class RunClinicalReportAction extends Action {
         
         
         ReportEvaluator re  = new ReportEvaluator();
-        re.evaluate(d,n,extraVal);
+        re.evaluate(LoggedInInfo.getLoggedInInfoFromSession(request), d,n,extraVal);
         
         int num = re.getNumeratorCount();
         int denom = re.getDenominatorCount();

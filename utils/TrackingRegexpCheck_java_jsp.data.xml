@@ -949,8 +949,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctAlphaRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctAnnualRecord.java:ResultSet rs = DBHandler.GetSQL(sql, true);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctAnnualRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctLabReqRecord.java:ResultSet rs = DBHandler.GetSQL(sql, true);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctLabReqRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctMMSERecord.java:ResultSet rs = DBHandler.GetSQL(sql, true);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctMMSERecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctMentalHealthRecord.java:ResultSet rsDB = DBHandler.GetSQL(sqlDB);</ViolationValue>
@@ -1195,7 +1193,7 @@
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable result = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable results = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:public Hashtable findOscarId(int idType, String myOscarUserName) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:public Hashtable findOscarId(LoggedInInfo loggedInInfo, int idType, String myOscarUserName) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:List&lt;Hashtable&gt; queues= queueDao.getQueues();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:Vector&lt;String&gt; vect = conUtil.teamVec;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:for(Hashtable ht:queues){</ViolationValue>
@@ -1337,7 +1335,7 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:Vector&lt;Properties&gt; list = new Vector&lt;Properties&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:Vector&lt;String&gt; billno = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:public Vector&lt;Properties&gt; getGST(String providerNo, String startDate, String endDate) throws SQLException {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:public Vector&lt;Properties&gt; getGST(LoggedInInfo loggedInInfo, String providerNo, String startDate, String endDate) throws SQLException {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingClaimBatchAcknowledgementReportBeanHandler.java:Vector batchAckReportBeanVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingClaimBatchAcknowledgementReportBeanHandler.java:batchAckReportBeanVector.add(CBABean);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingClaimBatchAcknowledgementReportBeanHandler.java:import java.util.Vector;</ViolationValue>
@@ -1490,7 +1488,7 @@
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:Hashtable h = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:public Hashtable getNameAgeSexHashtable(String demoNo){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:public Hashtable getNameAgeSexHashtable(LoggedInInfo loggedInInfo, String demoNo){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:static Hashtable hashtable = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctSplitChart.java:Vector&lt;String[]&gt; vec = new Vector&lt;String[]&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctSplitChart.java:import java.util.Vector;</ViolationValue>
@@ -2489,7 +2487,7 @@
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/Survey.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/Survey.java:private Hashtable answerTable = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarTickler/TicklerCreator.java:* @param cdmPatientNos Vector (strings)</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarTickler/pageUtil/ForwardDemographicTicklerAction.java:Hashtable h = DemographicNameAgeString.getInstance().getNameAgeSexHashtable(demoNo);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarTickler/pageUtil/ForwardDemographicTicklerAction.java:Hashtable h = DemographicNameAgeString.getInstance().getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), demoNo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarTickler/pageUtil/ForwardDemographicTicklerAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarWaitingList/pageUtil/WLSetupDisplayWaitingListAction.java:allProviders = phd.getThisGroupProviderVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarWaitingList/pageUtil/WLSetupDisplayWaitingListAction.java:phd.setThisGroupProviderVector(groupNo);</ViolationValue>
@@ -2524,7 +2522,7 @@
         <ViolationValue>/src/main/webapp/admin/adminnewgroup.jsp:StringBuffer strbuf=new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/adminnewgroup.jsp:strbuf=new StringBuffer(e.nextElement().toString());</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/cbiAdmin.jsp:StringBuffer treeDataStr = cbiUtil.generateTree(submissionDateList);</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/gstreport.jsp:Vector list = gstReport.getGST(providerNo, startDate, endDate);</ViolationValue>
+        <ViolationValue>/src/main/webapp/admin/gstreport.jsp:Vector list = gstReport.getGST(LoggedInInfo.getLoggedInInfoFromSession(request), providerNo, startDate, endDate);</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:Vector   vecProvider  = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:Vector&lt;Properties&gt; vec = new Vector&lt;Properties&gt;();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/manageFlowsheets.jsp:Hashtable&lt;String, String&gt; systemFlowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetDisplayNames();</ViolationValue>
@@ -2860,7 +2858,7 @@
         <ViolationValue>/src/main/webapp/oscarMessenger/ViewPDFAttachment.jsp:&lt;% Vector attVector = Doc2PDF.getXMLTagValue(pdfAttch, "TITLE" ); %&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/ViewPDFAttachment.jsp:&lt;% for ( int i = 0 ; i &lt; attVector.size(); i++) { %&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/ViewPDFAttachment.jsp:&lt;td bgcolor="#DDDDFF"&gt;&lt;%=(String) attVector.get(i)%&gt;&lt;/td&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarPrevention/PreventionReporting.jsp:Hashtable h = deName.getNameAgeSexHashtable(dis.demographicNo.toString());</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarPrevention/PreventionReporting.jsp:Hashtable h = deName.getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), dis.demographicNo.toString());</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/LabReqReport.jsp:Hashtable h = (Hashtable) labRep.get(j);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/RptByExamplesAllFavorites.jsp:property="favoriteVector"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/RptViewAllQueryByExamples.jsp:property="queryVector"&gt;</ViolationValue>
@@ -3034,7 +3032,7 @@
         <ViolationValue>/src/main/webapp/oscarRx/search2.jsp:for(Hashtable drug : vec){</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/updateHiddenResources.jsp:Hashtable ht=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/updateMyDrugrefResource.jsp:Hashtable hiddenResources = (Hashtable) request.getSession().getAttribute("hideResources");</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarWorkflow/WorkFlowList.jsp:Hashtable demoHash = deName.getNameAgeSexHashtable(""+h.get("demographic_no"));</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarWorkflow/WorkFlowList.jsp:Hashtable demoHash = deName.getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), ""+h.get("demographic_no"));</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarWorkflow/WorkFlowList.jsp:Hashtable h = (Hashtable) workList.get(j);</ViolationValue>
         <ViolationValue>/src/main/webapp/patient/sc.jsp:StringBuffer tt;</ViolationValue>
         <ViolationValue>/src/main/webapp/patient/sc.jsp:tt = new StringBuffer().append(e.nextElement());</ViolationValue>
@@ -3073,7 +3071,7 @@
         <ViolationValue>/src/main/webapp/provider/providerupdatepassword.jsp:StringBuffer sbTemp = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/providerupdatepassword.jsp:sbTemp = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:ArrayList&lt;Hashtable&gt; list = (ArrayList) request.getAttribute("list");</ViolationValue>
-        <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable demoHash = deName.getNameAgeSexHashtable("" + h.get("_demographic_no"));</ViolationValue>
+        <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable demoHash = deName.getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), "" + h.get("_demographic_no"));</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable forView = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable rep = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable repNum = new Hashtable();</ViolationValue>
@@ -3081,7 +3079,7 @@
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Vector&lt;EctMeasurementTypesBean&gt; vec = hd.getMeasurementTypeVector();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:for (Hashtable h : list) {</ViolationValue>
         <ViolationValue>/src/main/webapp/report/GenerateLetters.jsp:Hashtable h = (Hashtable) list.get(i);%&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/report/GenerateLetters.jsp:Hashtable h = deName.getNameAgeSexHashtable(demos[i]);</ViolationValue>
+        <ViolationValue>/src/main/webapp/report/GenerateLetters.jsp:Hashtable h = deName.getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), demos[i]);</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ManageLetters.jsp:Hashtable h = (Hashtable) list.get(i);</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:Vector vecARCaption = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:Vector vecDateFormat = new Vector();</ViolationValue>

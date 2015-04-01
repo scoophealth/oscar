@@ -26,6 +26,7 @@
 
 <!-- page updated to support better use of CRUD operations -->
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page
 	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -157,7 +158,7 @@ function disableifchecked(ele,nextDate){
 				</tr>
 				<%for (int i=0; i < list.size(); i++){
                      Map<String,String> h = list.get(i);
-                     org.oscarehr.common.model.Demographic demo = dd.getDemographic(h.get("demographic_no"));  %>
+                     org.oscarehr.common.model.Demographic demo = dd.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), h.get("demographic_no"));  %>
 				<tr>
 					<td><input type="checkbox" name="demoNo"
 						value="<%=h.get("demographic_no")%>" />

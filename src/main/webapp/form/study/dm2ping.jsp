@@ -1,3 +1,4 @@
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page contentType="text/xml"%>
 <%@ page import="java.util.*, java.sql.*,  org.w3c.dom.*, oscar.util.*,java.io.*"%>
 
@@ -34,7 +35,7 @@ String actorTicket = null;
 String actor = "clinic@citizenhealth.ca";
 String actorPassword = "password";
 DemographicData demoData = new DemographicData();
-String patientPingId = demoData.getDemographic(request.getParameter("demographic_no")).getEmail();
+String patientPingId = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), request.getParameter("demographic_no")).getEmail();
 
 OscarPingTalk ping = new OscarPingTalk();
 boolean connected = true;

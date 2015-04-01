@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.Misc;
@@ -681,12 +682,12 @@ public class TeleplanCorrectionFormWCB
     }
 
     //TODO check to see if this works.  i think if you escape a prepared statement you end up with double escaped text
-    public String[] getWcb(String billamt) {
+    public String[] getWcb(LoggedInInfo loggedInInfo, String billamt) {
 
         MiscUtils.getLogger().debug("reseting wcb with bill amount " + billamt);
 
         DemographicData demoData = new DemographicData();
-        org.oscarehr.common.model.Demographic demo = demoData.getDemographic(this.demographicNumber);
+        org.oscarehr.common.model.Demographic demo = demoData.getDemographic(loggedInInfo, this.demographicNumber);
 
         return new String[]{
             oscar.Misc.mysqlEscape(this.w_reportype),

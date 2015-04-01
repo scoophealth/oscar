@@ -50,7 +50,7 @@ String demographic_no = request.getParameter("demographic_no");
 LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
     		
 DemographicData demoData = new  DemographicData();
-org.oscarehr.common.model.Demographic demo =  demoData.getDemographic(demographic_no);
+org.oscarehr.common.model.Demographic demo =  demoData.getDemographic(loggedInInfo, demographic_no);
 String demoName = "";
 if ( demo != null ) {
     demoName = demo.getLastName()+", "+demo.getFirstName();

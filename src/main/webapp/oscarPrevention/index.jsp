@@ -46,8 +46,8 @@
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
   String demographic_no = request.getParameter("demographic_no");
   DemographicData demoData = new DemographicData();
-  String nameAge = demoData.getNameAgeString(demographic_no);
-  org.oscarehr.common.model.Demographic demo = demoData.getDemographic(demographic_no);
+  String nameAge = demoData.getNameAgeString(loggedInInfo, demographic_no);
+  org.oscarehr.common.model.Demographic demo = demoData.getDemographic(loggedInInfo, demographic_no);
   String hin = demo.getHin()+demo.getVer();
   String mrp = demo.getProviderNo();
 
@@ -573,7 +573,7 @@ text-align:left;
                         String prevName = h.get("name");
                         ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(loggedInInfo, prevName, Integer.valueOf(demographic_no));
                         PreventionData.addRemotePreventions(loggedInInfo, alist, demographicId,prevName,demographicDateOfBirth);
-                        boolean show = pdc.display(h, demographic_no,alist.size());
+                        boolean show = pdc.display(loggedInInfo, h, demographic_no,alist.size());
                         if(!show){
                             Map<String,Object> h2 = new HashMap<String,Object>();
                             h2.put("prev",h);
@@ -696,7 +696,7 @@ text-align:left;
 			onclick="Element.toggle('<%="prev"+setNum%>'); return false;"
 			style="font-size: xx-small;">show/hide</a>
 		<div class="preventionSet"
-			<%=pdc.getDisplay(setHash,demographic_no)%>;"  id="<%="prev"+setNum%>">
+			<%=pdc.getDisplay(loggedInInfo, setHash,demographic_no)%>;"  id="<%="prev"+setNum%>">
 		<%for (int i = 0; i < prevs.length ; i++) {
 			HashMap<String,String> h = pdc.getPrevention(prevs[i]); %>
 		<div class="preventionSection">

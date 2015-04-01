@@ -59,7 +59,6 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
@@ -81,6 +80,7 @@ import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.sharingcenter.DocumentType;
 import org.oscarehr.sharingcenter.dao.DemographicExportDao;
 import org.oscarehr.sharingcenter.model.DemographicExport;
@@ -257,7 +257,7 @@ public class DemographicExportAction4 extends Action {
 			// DEMOGRAPHICS
 			DemographicData d = new DemographicData();
 
-			org.oscarehr.common.model.Demographic demographic = d.getDemographic(demoNo);
+			org.oscarehr.common.model.Demographic demographic = d.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demoNo);
 
 			if (demographic.getPatientStatus()!=null && demographic.getPatientStatus().equals("Contact-only")) continue;
 
@@ -507,9 +507,9 @@ public class DemographicExportAction4 extends Action {
 			demoExt = null;
 
 			if (oscarProperties.isPropertyActive("NEW_CONTACTS_UI")) {
-				addDemographicContacts(demoNo, demo);
+				addDemographicContacts(loggedInInfo, demoNo, demo);
 			} else {
-				addDemographicRelationships(demoNo, demo);
+				addDemographicRelationships(loggedInInfo, demoNo, demo);
 			}
 
 			List<CaseManagementNote> lcmn = cmm.getNotes(demoNo);
@@ -2072,12 +2072,12 @@ public class DemographicExportAction4 extends Action {
 			String exportFile = Util.fixDirName(tmpDir) + zipName;
 			
 			DemographicExportDao demographicExportDao = SpringUtils.getBean(DemographicExportDao.class);
-			DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+			DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 			
 			DemographicExport demographicExport = new DemographicExport();
 			byte[] data = FileUtils.readFileToByteArray(new File(exportFile));
 			demographicExport.setDocument(data);
-			demographicExport.setDemographic(demographicDao.getDemographic(demographicNo));
+			demographicExport.setDemographic(demographicManager.getDemographic(loggedInInfo, demographicNo));
 			demographicExport.setDocumentType(DocumentType.CDS.name());
 			
 			DemographicExport export = demographicExportDao.saveEntity(demographicExport);
@@ -2448,7 +2448,7 @@ public class DemographicExportAction4 extends Action {
 		return hrmEnumF;
 	}
 
-	private void addDemographicContacts(String demoNo, Demographics demo) {
+	private void addDemographicContacts(LoggedInInfo loggedInInfo, String demoNo, Demographics demo) {
 		List<DemographicContact> demoContacts = contactDao.findByDemographicNo(Integer.valueOf(demoNo));
 		DemographicContact demoContact;
 
@@ -2497,13 +2497,13 @@ public class DemographicExportAction4 extends Action {
 				}
 				if (StringUtils.filled(contactNote)) contact.setNote(contactNote);
 
-				fillContactInfo(contact, contactId[j], demoNo, j);
+				fillContactInfo(loggedInInfo, contact, contactId[j], demoNo, j);
 			}
 		}
 	}
 
 
-	private void addDemographicRelationships(String demoNo, Demographics demo) {
+	private void addDemographicRelationships(LoggedInInfo loggedInInfo, String demoNo, Demographics demo) {
 		DemographicRelationship demographicRelationship = new DemographicRelationship();
 		List<Map<String,String>> demographicRelationships = demographicRelationship.getDemographicRelationships(demoNo);
 		Map<String,String> demoRel;
@@ -2553,14 +2553,14 @@ public class DemographicExportAction4 extends Action {
 				}
 				if (StringUtils.filled(contactNote)) contact.setNote(contactNote);
 
-				fillContactInfo(contact, contactId[j], demoNo, j);
+				fillContactInfo(loggedInInfo, contact, contactId[j], demoNo, j);
 			}
 		}
 	}
 
-	private void fillContactInfo(Demographics.Contact contact, String contactId, String demoNo, int index) {
+	private void fillContactInfo(LoggedInInfo loggedInInfo, Demographics.Contact contact, String contactId, String demoNo, int index) {
 
-		org.oscarehr.common.model.Demographic relDemo = new DemographicData().getDemographic(contactId);
+		org.oscarehr.common.model.Demographic relDemo = new DemographicData().getDemographic(loggedInInfo, contactId);
 		HashMap<String,String> relDemoExt = new HashMap<String,String>();
 		relDemoExt.putAll(demographicExtDao.getAllValuesForDemo(Integer.parseInt(contactId)));
 

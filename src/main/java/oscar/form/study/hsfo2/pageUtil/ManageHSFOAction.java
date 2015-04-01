@@ -50,6 +50,7 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Hsfo2Patient;
 import org.oscarehr.common.model.Hsfo2Visit;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -119,7 +120,7 @@ public class ManageHSFOAction extends Action
 
     DemographicData demoData = new DemographicData();
     //DemographicData.Demographic de = demoData.getDemographic( patientId );
-    Demographic de = demoData.getDemographic(patientId);
+    Demographic de = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), patientId);
     
     boolean isDisplayGraphs = "displayGraphs".equalsIgnoreCase( request.getParameter( "operation" ) );
     

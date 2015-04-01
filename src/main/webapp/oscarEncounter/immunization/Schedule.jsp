@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="oscar.oscarEncounter.immunization.data.*, oscar.util.*, oscar.oscarDemographic.data.*" %>
 <%@ page import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*" %>
 <%
@@ -37,7 +38,7 @@ String sex = "";
 String age = "";
 if( demoNo != null ) {
     DemographicData dData = new DemographicData();
-    org.oscarehr.common.model.Demographic demographic = dData.getDemographic(demoNo);
+    org.oscarehr.common.model.Demographic demographic = dData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demoNo);
     last_name = demographic.getLastName();
     first_name = demographic.getFirstName();
     sex = demographic.getSex();

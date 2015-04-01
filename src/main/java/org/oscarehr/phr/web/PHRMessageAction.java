@@ -181,7 +181,7 @@ public class PHRMessageAction extends DispatchAction {
 		
 		
 		DemographicData dd = new DemographicData();
-		org.oscarehr.common.model.Demographic d = dd.getDemographic(demographicNo);
+		org.oscarehr.common.model.Demographic d = dd.getDemographic(loggedInInfo, demographicNo);
 
 		String providerName = ProviderData.getProviderName(provNo);
 

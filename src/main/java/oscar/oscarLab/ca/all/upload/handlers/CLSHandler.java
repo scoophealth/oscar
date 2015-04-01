@@ -59,7 +59,7 @@ public class CLSHandler implements MessageHandler {
 				*/
 				
 				routeResults = new RouteReportResults();
-				MessageUploader.routeReport(serviceName, "CLS", msg, fileId, routeResults);
+				MessageUploader.routeReport(loggedInInfo, serviceName, "CLS", msg, fileId, routeResults);
 				
 				oscar.oscarLab.ca.all.parsers.MessageHandler msgHandler = Factory.getHandler(String.valueOf(routeResults.segmentId));
 				

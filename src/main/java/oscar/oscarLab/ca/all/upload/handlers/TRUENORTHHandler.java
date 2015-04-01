@@ -64,7 +64,7 @@ public class TRUENORTHHandler implements MessageHandler {
 				if(isDuplicate(loggedInInfo,msg)) {
 					return ("success");
 				}
-				MessageUploader.routeReport(serviceName, "TRUENORTH", msg, fileId);
+				MessageUploader.routeReport(loggedInInfo, serviceName, "TRUENORTH", msg, fileId);
 
 			}
 

@@ -67,7 +67,7 @@ public class CMLHandler implements MessageHandler {
 				}
 				
 				routeResults = new RouteReportResults();
-				MessageUploader.routeReport(serviceName, "CML", msg, fileId, routeResults);
+				MessageUploader.routeReport(loggedInInfo, serviceName, "CML", msg, fileId, routeResults);
 				
 				oscar.oscarLab.ca.all.parsers.MessageHandler msgHandler = Factory.getHandler(String.valueOf(routeResults.segmentId));
 				if( msgHandler == null ) {

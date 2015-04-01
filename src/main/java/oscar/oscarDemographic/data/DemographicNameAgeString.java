@@ -27,6 +27,8 @@ package oscar.oscarDemographic.data;
 
 import java.util.Hashtable;
 
+import org.oscarehr.util.LoggedInInfo;
+
 /**
  * 
  * @author Jay Gallagher
@@ -57,14 +59,14 @@ public class DemographicNameAgeString {
     * @return returns a String containing name age sex ie "Last, First M 2 weeks"
     *
     */   
-   public String getNameAgeString(Integer demoNo){
+   public String getNameAgeString(LoggedInInfo loggedInInfo,  Integer demoNo){
 
       String retval = "";      
       if (demoNo != null){                     
          if (!hashtable.containsKey(demoNo)){        
 
             DemographicData dData = new DemographicData();
-            String[] dArray = dData.getNameAgeSexArray(demoNo);
+            String[] dArray = dData.getNameAgeSexArray(loggedInInfo, demoNo);
             if (dArray != null){
                hashtable.put(demoNo,dArray);
             }        
@@ -100,14 +102,14 @@ public class DemographicNameAgeString {
     *   "sex"
     *   "age"
     */   
-   public Hashtable getNameAgeSexHashtable(String demoNo){
+   public Hashtable getNameAgeSexHashtable(LoggedInInfo loggedInInfo, String demoNo){
       Hashtable h = null;      
 
       if ( demoNo != null){
          if (!hashtable.containsKey(demoNo)){
 
             DemographicData dData = new DemographicData();
-            String[] dArray = dData.getNameAgeSexArray(Integer.valueOf(demoNo));
+            String[] dArray = dData.getNameAgeSexArray(loggedInInfo, Integer.valueOf(demoNo));
             if (dArray != null){
                hashtable.put(demoNo,dArray);
             }                                

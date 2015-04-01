@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%    
 if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
@@ -384,7 +385,7 @@ function fmtOscarMsg() {
 
                                 String demographic_no = request.getParameter("demographic_no");
                                 DemographicData demoData = new  DemographicData();
-                                org.oscarehr.common.model.Demographic demo =  demoData.getDemographic(demographic_no);
+                                org.oscarehr.common.model.Demographic demo =  demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographic_no);
                                 String demoName = "";
                                 String demoLastName = "";
                                 String demoFirstName = "";
