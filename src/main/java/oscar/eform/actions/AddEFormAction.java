@@ -65,10 +65,7 @@ public class AddEFormAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
 
-	//private DemographicArchiveDao demographicArchiveDao = (DemographicArchiveDao)SpringUtils.getBean("demographicArchiveDao");
-	//private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-
-
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("==================SAVING ==============");
@@ -138,7 +135,7 @@ public class AddEFormAction extends Action {
 						inSQL = DatabaseAP.parserReplace("value", request.getParameter(field), inSQL);
 
 						//if(currentAP.getArchive() != null && currentAP.getArchive().equals("demographic")) {
-						//	demographicArchiveDao.archiveRecord(demographicDao.getDemographic(demographic_no));
+						//	demographicArchiveDao.archiveRecord(demographicManager.getDemographic(loggedInInfo,demographic_no));
 						//}
 
 						// Run the SQL query against the database

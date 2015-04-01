@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="oscar.oscarReport.data.DemographicSets, oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.ClinicalReports.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*"%>
 <%@page import="com.Ostermiller.util.CSVPrinter,java.io.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -415,8 +416,8 @@
                     ArrayList<Hashtable> list = (ArrayList) request.getAttribute("list");
                     for (Hashtable h : list) {
 
-                        Hashtable demoHash = deName.getNameAgeSexHashtable("" + h.get("_demographic_no"));
-                        org.oscarehr.common.model.Demographic demoObj = demoData.getDemographic("" + h.get("_demographic_no"));
+                        Hashtable demoHash = deName.getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), "" + h.get("_demographic_no"));
+                        org.oscarehr.common.model.Demographic demoObj = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), "" + h.get("_demographic_no"));
 
                         String colour = "";
                         if (h.get("_report_result") != null && ("" + h.get("_report_result")).equals("false")) {

@@ -99,6 +99,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocument;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
@@ -249,7 +250,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                         OutputStream out = new FileOutputStream(ofile);
                         while ((len=in.read(buf)) > 0) out.write(buf,0,len);
                         out.close();
-                        logs.add(importXML(ofile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
+                        logs.add(importXML(LoggedInInfo.getLoggedInInfoFromSession(request) , ofile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
                         importNo++;
                         demographicNo=null;
                     }
@@ -265,7 +266,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                 Util.cleanFile(ifile);
 
             } else if (matchFileExt(ifile, "xml")) {
-                logs.add(importXML(ifile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
+                logs.add(importXML(LoggedInInfo.getLoggedInInfoFromSession(request), ifile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
                 demographicNo=null;
                 importLog = makeImportLog(logs, tmpDir);
             } else {
@@ -284,9 +285,9 @@ import cdsDt.PersonNameStandard.OtherNames;
         return mapping.findForward("success");
     }
 
-    String[] importXML(String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays,List<Provider> students, int courseId) throws SQLException, Exception {
+    String[] importXML(LoggedInInfo loggedInInfo, String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays,List<Provider> students, int courseId) throws SQLException, Exception {
         if(students == null || students.isEmpty()) {
-            return importXML(xmlFile,warnings,request,timeShiftInDays,null,null,0);
+            return importXML(loggedInInfo, xmlFile,warnings,request,timeShiftInDays,null,null,0);
         }
 
         List<String> logs = new ArrayList<String>();
@@ -301,7 +302,7 @@ import cdsDt.PersonNameStandard.OtherNames;
             }
             Program p = programManager.getProgram(pid);
 
-            String[] result = importXML(xmlFile,warnings,request,timeShiftInDays,student,p,courseId);
+            String[] result = importXML(loggedInInfo, xmlFile,warnings,request,timeShiftInDays,student,p,courseId);
             logs.addAll(convertLog(result));
         }
         return logs.toArray(new String[logs.size()]);
@@ -315,7 +316,7 @@ import cdsDt.PersonNameStandard.OtherNames;
 
 
 
-    String[] importXML(String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays, Provider student, Program admitTo, int courseId) throws SQLException, Exception {
+    String[] importXML(LoggedInInfo loggedInInfo, String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays, Provider student, Program admitTo, int courseId) throws SQLException, Exception {
         ArrayList<String> err_demo = new ArrayList<String>(); //errors: duplicate demographics
         ArrayList<String> err_data = new ArrayList<String>(); //errors: discrete data
         ArrayList<String> err_summ = new ArrayList<String>(); //errors: summary
@@ -411,8 +412,8 @@ import cdsDt.PersonNameStandard.OtherNames;
         //Check duplicate
         DemographicData dd = new DemographicData();
         ArrayList<Demographic> demodup = null;
-        if (StringUtils.filled(hin)) demodup = dd.getDemographicWithHIN(hin);
-        else demodup = dd.getDemographicWithLastFirstDOB(lastName, firstName, birthDate);
+        if (StringUtils.filled(hin)) demodup = dd.getDemographicWithHIN(loggedInInfo, hin);
+        else demodup = dd.getDemographicWithLastFirstDOB(loggedInInfo, lastName, firstName, birthDate);
         if (demodup.size()>0) {
             err_data.clear();
             err_demo.add("Error! Patient "+patientName+" already exist! Not imported.");
@@ -610,8 +611,8 @@ import cdsDt.PersonNameStandard.OtherNames;
         org.oscarehr.common.model.Demographic demographic = null;
 
         if(courseId == 0) {
-            demographicNo = dd.getDemoNoByNamePhoneEmail(firstName, lastName, homePhone, workPhone, email);
-            demographic = dd.getDemographic(demographicNo);
+            demographicNo = dd.getDemoNoByNamePhoneEmail(loggedInInfo, firstName, lastName, homePhone, workPhone, email);
+            demographic = dd.getDemographic(loggedInInfo, demographicNo);
         }
 
         if (demographic!=null && StringUtils.nullSafeEqualsIgnoreCase(demographic.getPatientStatus(), "Contact-only")) {
@@ -675,11 +676,11 @@ import cdsDt.PersonNameStandard.OtherNames;
             
             demographic.setHcRenewDate(dDate);
             demographic.setSin(sin);
-            dd.setDemographic(demographic);
+            dd.setDemographic(loggedInInfo, demographic);
             err_note.add("Replaced Contact-only patient "+patientName+" (Demo no="+demographicNo+")");
 
         } else { //add patient!
-            demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, rosterStatus, rosterDate, termDate, termReason, patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
+            demoRes = dd.addDemographic(loggedInInfo, title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, rosterStatus, rosterDate, termDate, termReason, patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
             demographicNo = demoRes.getId();
         }
 
@@ -696,7 +697,7 @@ import cdsDt.PersonNameStandard.OtherNames;
             }
 
             //Put enrolment history into demographicArchive
-            demographic = dd.getDemographic(demographicNo);
+            demographic = dd.getDemographic(loggedInInfo, demographicNo);
             for (int i=0; i<roster_status.length-1; i++) {
             	DemographicArchive demographicArchive = archiveDemographic(demographic);
             	demographicArchive.setRosterStatus(roster_status[i]);
@@ -760,11 +761,11 @@ import cdsDt.PersonNameStandard.OtherNames;
                 }
 
                 String contactNote = StringUtils.noNull(contt[i].getNote());
-                String cDemoNo = dd.getDemoNoByNamePhoneEmail(cFirstName, cLastName, homePhone, workPhone, cEmail);
+                String cDemoNo = dd.getDemoNoByNamePhoneEmail(loggedInInfo, cFirstName, cLastName, homePhone, workPhone, cEmail);
                 String cPatient = cLastName+","+cFirstName;
                 if (StringUtils.empty(cDemoNo)) {   //add new demographic as contact
                     psDate = UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd");
-                    demoRes = dd.addDemographic(""/*title*/, cLastName, cFirstName, ""/*address*/, ""/*city*/, ""/*province*/, ""/*postal*/,
+                    demoRes = dd.addDemographic(loggedInInfo, ""/*title*/, cLastName, cFirstName, ""/*address*/, ""/*city*/, ""/*province*/, ""/*postal*/,
                     			homePhone, workPhone, ""/*year_of_birth*/, ""/*month_*/, ""/*date_*/, ""/*hin*/, ""/*ver*/, ""/*roster_status*/, "", "", "",
                     			"Contact-only", psDate, ""/*date_joined*/, ""/*chart_no*/, ""/*official_lang*/, ""/*spoken_lang*/, ""/*provider_no*/,
                     			"F", ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, ""/*hc_type*/, ""/*hc_renew_date*/, ""/*family_doctor*/,

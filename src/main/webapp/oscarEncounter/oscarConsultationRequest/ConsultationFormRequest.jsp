@@ -133,7 +133,7 @@
 		if (demo != null)
 		{
 			demoData = new oscar.oscarDemographic.data.DemographicData();
-			demographic = demoData.getDemographic(demo);
+			demographic = demoData.getDemographic(loggedInInfo, demo);
 		}
 		else if (requestId == null && segmentId == null)
 		{

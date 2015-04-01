@@ -33,10 +33,11 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.CtlRelationshipsDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.CtlRelationships;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
@@ -48,7 +49,7 @@ import oscar.oscarDemographic.data.DemographicRelationship;
  */
 public class AddDemographicRelationshipAction extends Action {
     
-	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
     
     public AddDemographicRelationshipAction() {
         
@@ -120,7 +121,7 @@ public class AddDemographicRelationshipAction extends Action {
         CtlRelationships cr = ctlRelationshipsDao.findByValue(relation);
         if(cr != null && ((cr.getMaleInverse() != null && cr.getMaleInverse().length()>0) || (cr.getFemaleInverse() != null && cr.getFemaleInverse().length()>0)) ) {
         	//need sex of the relation
-        	Demographic d = demographicDao.getDemographic(origDemo);
+        	Demographic d = demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), origDemo);
         	if(d != null && d.getSex().equalsIgnoreCase("M")) {
         		relation = cr.getMaleInverse();
         		relationset=true;

@@ -581,7 +581,7 @@ view:
     <%  int k = 0;
         for (EctMeasurementsDataBean mdb:alist){
             k++;
-            mFlowsheet.runRulesForMeasurement(mdb);
+            mFlowsheet.runRulesForMeasurement(LoggedInInfo.getLoggedInInfoFromSession(request), mdb);
             Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);
             hdata.put("age",mdb.getDataField());
             hdata.put("prevention_date",mdb.getDateObserved());

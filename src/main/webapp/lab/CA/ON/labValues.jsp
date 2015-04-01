@@ -49,7 +49,7 @@ String highlight = "#E0E0FF";
 LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
 DemographicData dData = new DemographicData();
-org.oscarehr.common.model.Demographic demographic =  dData.getDemographic(demographicNo);
+org.oscarehr.common.model.Demographic demographic =  dData.getDemographic(loggedInInfo, demographicNo);
 
 ArrayList list = null;
 

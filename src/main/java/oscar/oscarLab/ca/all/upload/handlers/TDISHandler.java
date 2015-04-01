@@ -54,7 +54,7 @@ public class TDISHandler implements MessageHandler {
 				String msg = (String) messages.get(i);
 
 
-				MessageUploader.routeReport(serviceName, "TDIS", msg, fileId);
+				MessageUploader.routeReport(loggedInInfo, serviceName, "TDIS", msg, fileId);
 
 			}
 

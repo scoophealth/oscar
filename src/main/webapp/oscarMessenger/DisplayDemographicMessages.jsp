@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -69,7 +70,7 @@ String demographic_no = bean.getDemographic_no();
 String demographic_name = "";
 if ( demographic_no != null ) {   
     DemographicData demographic_data = new DemographicData();
-    org.oscarehr.common.model.Demographic demographic = demographic_data.getDemographic(demographic_no);
+    org.oscarehr.common.model.Demographic demographic = demographic_data.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographic_no);
     demographic_name = demographic.getLastName() + ", " + demographic.getFirstName();
 }
 

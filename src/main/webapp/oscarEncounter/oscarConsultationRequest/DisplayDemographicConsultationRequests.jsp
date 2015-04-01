@@ -43,7 +43,7 @@ String team = pdata.getTeam();
 
 if (demo != null ){ 
     demoData = new oscar.oscarDemographic.data.DemographicData();
-    demographic = demoData.getDemographic(demo);    
+    demographic = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demo);    
 }
 else
     response.sendRedirect("../error.jsp");

@@ -164,7 +164,7 @@ public class FrmFormAction extends Action {
 
         if(valid){
             DemographicData demoData = new DemographicData();
-            org.oscarehr.common.model.Demographic demo = demoData.getDemographic(demographicNo);
+            org.oscarehr.common.model.Demographic demo = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo);
             logger.debug("is valid, procede write to table");
             //Store form information as properties for saving to form table
             props.setProperty("demographic_no", demographicNo);

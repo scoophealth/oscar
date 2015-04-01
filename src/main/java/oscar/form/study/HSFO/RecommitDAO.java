@@ -38,6 +38,7 @@ import org.oscarehr.common.dao.HsfoRecommitScheduleDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.HsfoRecommitSchedule;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -143,7 +144,7 @@ public class RecommitDAO {
 		 }
 	 }
 
-	 public String SynchronizeDemoInfo() {
+	 public String SynchronizeDemoInfo(LoggedInInfo loggedInInfo) {
 		 HSFODAO hsfoDao=new HSFODAO();
 		 List idList=hsfoDao.getAllPatientId();
 		 Iterator itr=idList.iterator();
@@ -151,7 +152,7 @@ public class RecommitDAO {
 		 while (itr.hasNext()){
 			 String pid=(String)itr.next();
 			 PatientData pd=hsfoDao.retrievePatientRecord(pid);
-			 Demographic demo=demoData.getDemographic(pid);
+			 Demographic demo=demoData.getDemographic(loggedInInfo, pid);
 			 String internalId=demo.getProviderNo();
 			 if(internalId==null || internalId.length()==0){
 				 return demo.getLastName()+","+demo.getFirstName();
@@ -173,14 +174,14 @@ public class RecommitDAO {
 		 return null;
 	 }
 
-	 public String checkProvider() {
+	 public String checkProvider(LoggedInInfo loggedInInfo) {
 		 HSFODAO hsfoDao=new HSFODAO();
 		 List idList=hsfoDao.getAllPatientId();
 		 Iterator itr=idList.iterator();
 		 DemographicData demoData = new DemographicData();
 		 while (itr.hasNext()){
 			 String pid=(String)itr.next();
-			 Demographic demo=demoData.getDemographic(pid);
+			 Demographic demo=demoData.getDemographic(loggedInInfo, pid);
 			 String internalId=demo.getProviderNo();
 			 if(internalId==null || internalId.length()==0){
 				 return demo.getLastName()+","+demo.getFirstName();

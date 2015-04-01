@@ -75,7 +75,7 @@ public class SendDocToPhrAction extends Action {
 
 
 			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-			Demographic demo = new DemographicData().getDemographic(demographicId);
+			Demographic demo = new DemographicData().getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicId);
 			ProviderData prov = new ProviderData(loggedInInfo.getLoggedInProviderNo());
 
 			for (int idx = 0; idx < files.length; ++idx) {

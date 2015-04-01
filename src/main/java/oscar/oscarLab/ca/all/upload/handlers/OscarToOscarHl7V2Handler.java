@@ -56,7 +56,7 @@ public class OscarToOscarHl7V2Handler implements MessageHandler {
 			}
 			else
 			{
-				MessageUploader.routeReport(serviceName, OscarToOscarUtils.UPLOAD_MESSAGE_TYPE, dataString, fileId);
+				MessageUploader.routeReport(loggedInInfo, serviceName, OscarToOscarUtils.UPLOAD_MESSAGE_TYPE, dataString, fileId);
 			}
 			
 			return("success");

@@ -33,6 +33,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.MyOscarLoggedInInfoInterface"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
@@ -61,7 +62,7 @@ DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.clas
 String demographicNo = request.getParameter("demographicNo");
 int demographicId=Integer.parseInt(demographicNo);
 
-org.oscarehr.common.model.Demographic demographic = new DemographicData().getDemographic(demographicNo);
+org.oscarehr.common.model.Demographic demographic = new DemographicData().getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo);
 request.setAttribute("demographic", demographic);
 
 String hPhoneExt = demographicExtDao.getValueForDemoKey(Integer.parseInt(demographicNo), "hPhoneExt");

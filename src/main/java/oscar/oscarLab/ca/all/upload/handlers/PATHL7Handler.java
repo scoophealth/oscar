@@ -72,7 +72,7 @@ public class PATHL7Handler implements MessageHandler {
 				for (i = 0; i < messages.getLength(); i++) {
 
 					String hl7Body = messages.item(i).getFirstChild().getTextContent();
-					MessageUploader.routeReport(serviceName, "PATHL7", hl7Body, fileId);
+					MessageUploader.routeReport(loggedInInfo, serviceName, "PATHL7", hl7Body, fileId);
 
 				}
 			} catch (Exception e) {

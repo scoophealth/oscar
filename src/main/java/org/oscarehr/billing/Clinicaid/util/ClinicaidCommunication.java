@@ -32,16 +32,16 @@ import java.io.OutputStreamWriter;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 //import java.util.List;
 
+
 import org.apache.commons.codec.binary.Base64;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.util.UtilMisc;
 import oscar.oscarBilling.data.BillingFormData;
@@ -87,7 +87,7 @@ public class ClinicaidCommunication {
 			oscar.oscarDemographic.data.DemographicData demoData =
 				new oscar.oscarDemographic.data.DemographicData();
 			org.oscarehr.common.model.Demographic demo =
-				demoData.getDemographic(service_recipient_oscar_number);
+				demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), service_recipient_oscar_number);
 
 			String referral_doc = demo.getFamilyDoctor();
 			if (referral_doc == null)

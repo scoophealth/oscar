@@ -68,7 +68,7 @@ public class MDSHandler implements MessageHandler {
 					continue;
 				}
 				routeResults = new RouteReportResults();
-				String auditLine = MessageUploader.routeReport(serviceName, "MDS", msg, fileId, routeResults) + "\n";
+				String auditLine = MessageUploader.routeReport(loggedInInfo, serviceName, "MDS", msg, fileId, routeResults) + "\n";
 				
 				oscar.oscarLab.ca.all.parsers.MessageHandler msgHandler = Factory.getHandler(String.valueOf(routeResults.segmentId));
 				if( msgHandler == null ) {

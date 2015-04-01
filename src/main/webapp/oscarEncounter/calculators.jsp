@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="oscar.util.StringUtils"%>
 <%@ page
 	import="oscar.oscarDemographic.data.*, org.oscarehr.common.model.Demographic"%>
@@ -38,7 +39,7 @@ String demo=request.getParameter("demo");
 
 if(!StringUtils.isNullOrEmpty(demo)){
     DemographicData dd = new DemographicData();
-    Demographic d = dd.getDemographic(demo);  
+    Demographic d = dd.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demo);  
     sex = d.getSex();
     age = d.getAge();
 }

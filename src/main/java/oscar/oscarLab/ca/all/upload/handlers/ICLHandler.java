@@ -46,7 +46,7 @@ public class ICLHandler implements MessageHandler {
 			for (i = 0; i < messages.size(); i++) {
 
 				String msg = messages.get(i);
-				MessageUploader.routeReport(serviceName, "ICL", msg, fileId);
+				MessageUploader.routeReport(loggedInInfo, serviceName, "ICL", msg, fileId);
 
 			}
 

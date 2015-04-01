@@ -45,6 +45,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -87,7 +88,7 @@ public class BillingCreateBillingAction extends Action {
     String other_service3_unit = frm.getXml_other3_unit();
 
     BillingSessionBean bean = (BillingSessionBean) request.getSession().getAttribute("billingSessionBean");
-    org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(bean.getPatientNo());
+    org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), bean.getPatientNo());
     this.patientDX = vldt.getPatientDxCodes(demo.getDemographicNo().toString());
     ArrayList<BillingItem> billItem = bmanager.getDups2(service, other_service1,
                                            other_service2, other_service3,

@@ -35,10 +35,11 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
-import org.oscarehr.common.model.Demographic;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.Document;
@@ -77,7 +78,7 @@ public class GenerateEnvelopesAction  extends Action {
       
       for (int i = 0; i <demos.length;i++){
          DemographicData demoData = new DemographicData();
-         Demographic d = demoData.getDemographic(demos[i]);
+         Demographic d = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demos[i]);
          String envelopeLabel = d.getFirstName()+" "+d.getLastName()+"\n"+d.getAddress()+"\n"+d.getCity()+", "+d.getProvince()+"\n"+d.getPostal();
          
          document.add(getEnvelopeLabel(envelopeLabel));

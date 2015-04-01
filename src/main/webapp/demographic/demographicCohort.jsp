@@ -24,9 +24,14 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="oscar.oscarReport.data.DemographicSets, oscar.oscarDemographic.data.DemographicData" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ include file="/casemgmt/taglibs.jsp" %>
+
+<%
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -98,7 +103,7 @@
             demoSets.addDemographicSet(setName,arrDemo);
             arrCurDemoSets.add(setName);
             %>
-            <p style="font-size:small; font-variant:small-caps"><bean:message key="demographic.demographiccohort.saved" /> <%=demoData.getDemographic(demoNo).getFirstName() + " " + demoData.getDemographic(demoNo).getLastName()%> <bean:message key="demographic.demographiccohort.to" /> <%=setName%></p>
+            <p style="font-size:small; font-variant:small-caps"><bean:message key="demographic.demographiccohort.saved" /> <%=demoData.getDemographic(loggedInInfo, demoNo).getFirstName() + " " + demoData.getDemographic(loggedInInfo, demoNo).getLastName()%> <bean:message key="demographic.demographiccohort.to" /> <%=setName%></p>
             <%
             }
             }
