@@ -28,6 +28,7 @@
 
 <%-- Updated by Eugene Petruhin on 11 dec 2008 while fixing #2356548 & #2393547 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <% long loadPage = System.currentTimeMillis(); %>
 <%@ include file="/casemgmt/taglibs.jsp" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
@@ -419,7 +420,7 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
 <%
     String pAge = Integer.toString(oscar.util.UtilDateUtilities.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
     oscar.oscarLab.ca.on.CommonLabResultData comLab = new oscar.oscarLab.ca.on.CommonLabResultData();
-    java.util.ArrayList labs = comLab.populateLabResultsData("",bean.demographicNo, "", "","","U");
+    java.util.ArrayList labs = comLab.populateLabResultsData(LoggedInInfo.getLoggedInInfoFromSession(request), "",bean.demographicNo, "", "","","U");
     session.setAttribute("casemgmt_labsbeans",labs);
 %>
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">

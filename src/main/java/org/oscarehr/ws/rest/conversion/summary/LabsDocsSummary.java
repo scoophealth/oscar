@@ -68,7 +68,7 @@ public class LabsDocsSummary implements Summary {
 		 //_newCasemgmt.labResult
 		
 		CommonLabResultData comLab = new CommonLabResultData();
-        ArrayList<LabResultData> labs = comLab.populateLabResultsData("",""+demographicNo, "", "","","U");
+        ArrayList<LabResultData> labs = comLab.populateLabResultsData(loggedInInfo, "",""+demographicNo, "", "","","U");
         Collections.sort(labs);
      
         //now we add individual module items

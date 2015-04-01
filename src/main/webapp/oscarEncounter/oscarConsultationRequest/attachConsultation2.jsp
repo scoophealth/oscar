@@ -71,7 +71,7 @@ boolean onIPad = http_user_agent.indexOf("iPad") >= 0;
 //<!--   
 <% 
 CommonLabResultData labData = new CommonLabResultData();
-ArrayList<LabResultData> labs = labData.populateLabResultsData(demoNo, requestId, CommonLabResultData.ATTACHED);
+ArrayList<LabResultData> labs = labData.populateLabResultsData(loggedInInfo, demoNo, requestId, CommonLabResultData.ATTACHED);
 ArrayList<EDoc> privatedocs = new ArrayList<EDoc>();
 privatedocs = EDocUtil.listDocs(loggedInInfo, demoNo, requestId, EDocUtil.ATTACHED);
 String attachedDocs = "";
@@ -213,7 +213,7 @@ function toggleSelectAll() {
             
             privatedocs = EDocUtil.listDocs(loggedInInfo, "demographic", demoNo, null, EDocUtil.PRIVATE, EDocUtil.EDocSort.OBSERVATIONDATE);
             labData = new CommonLabResultData();
-            labs = labData.populateLabResultsData("",demoNo, "", "","","U");
+            labs = labData.populateLabResultsData(loggedInInfo, "",demoNo, "", "","","U");
             Collections.sort(labs);       
             
             if (labs.size() == 0 && privatedocs.size() == 0) {

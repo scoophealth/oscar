@@ -31,6 +31,7 @@ import java.util.List;
 
 import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.model.ConsultDocs;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -75,11 +76,11 @@ public class ConsultationAttachLabs {
         }
     }
 
-    public void attach() {
+    public void attach(LoggedInInfo loggedInInfo) {
 
         //first we get a list of currently attached labs
         CommonLabResultData labResData = new CommonLabResultData();
-        ArrayList<LabResultData> oldlist = labResData.populateLabResultsData(demoNo,reqId,CommonLabResultData.ATTACHED);
+        ArrayList<LabResultData> oldlist = labResData.populateLabResultsData(loggedInInfo, demoNo,reqId,CommonLabResultData.ATTACHED);
         ArrayList<String> newlist = new ArrayList<String>();
         ArrayList<LabResultData> keeplist = new ArrayList<LabResultData>();
         boolean alreadyAttached;

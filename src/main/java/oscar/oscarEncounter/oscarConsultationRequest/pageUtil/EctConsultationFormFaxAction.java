@@ -87,9 +87,9 @@ public class EctConsultationFormFaxAction extends Action {
 
 		ArrayList<LabResultData> labs;
 		if (consultResponsePage==null) {
-			labs = consultLabs.populateLabResultsData(demoNo, reqId, CommonLabResultData.ATTACHED);
+			labs = consultLabs.populateLabResultsData(loggedInInfo, demoNo, reqId, CommonLabResultData.ATTACHED);
 		} else {
-			labs = consultLabs.populateLabResultsDataConsultResponse(demoNo, reqId, CommonLabResultData.ATTACHED);
+			labs = consultLabs.populateLabResultsDataConsultResponse(loggedInInfo, demoNo, reqId, CommonLabResultData.ATTACHED);
 		}
 		
 		String error = "";

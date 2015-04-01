@@ -80,6 +80,7 @@ import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -289,7 +290,7 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 		List<String> patientList = demoSets.getDemographicSet(frm.getString("patientSet"));
 
 		//make all xml files, zip them and save to document directory
-		String filename = this.make(frm, patientList, tmpDir);
+		String filename = this.make(LoggedInInfo.getLoggedInInfoFromSession(request), frm, patientList, tmpDir);
 
 		//we got this far so save entry to db
 		DataExport dataExport = new DataExport();
@@ -311,7 +312,7 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-    private String make(DynaValidatorForm frm, List patientList, String tmpDir) throws Exception {
+    private String make(LoggedInInfo loggedInInfo, DynaValidatorForm frm, List patientList, String tmpDir) throws Exception {
 		 HashMap<String,CiHiCdsDocument> xmlMap = new HashMap<String,CiHiCdsDocument>();
 		 HashMap<String,String> fileNamesMap = new HashMap<String,String>();
 		 String demoNo;
@@ -369,7 +370,7 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 			
 
 			 this.buildProcedure(demo, patientRecord);
-			 this.buildLaboratoryResults(demo, patientRecord);
+			 this.buildLaboratoryResults(loggedInInfo, demo, patientRecord);
 			 this.buildMedications(demo, patientRecord);
 			 this.buildImmunizations(demo, patientRecord);
 		 }
@@ -1025,10 +1026,10 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 		}
 	}
 
-	private void buildLaboratoryResults(Demographic demo, PatientRecord patientRecord) {
+	private void buildLaboratoryResults(LoggedInInfo loggedInInfo, Demographic demo, PatientRecord patientRecord) {
 
 		CommonLabResultData comLab = new CommonLabResultData();
-		ArrayList<LabResultData> labdocs = comLab.populateLabsData(demo.getProviderNo(), String.valueOf(demo.getDemographicNo()), demo.getFirstName(), demo.getLastName(), demo.getHin(), "", "");
+		ArrayList<LabResultData> labdocs = comLab.populateLabsData(loggedInInfo, demo.getProviderNo(), String.valueOf(demo.getDemographicNo()), demo.getFirstName(), demo.getLastName(), demo.getHin(), "", "");
 		MessageHandler handler;
 		int i;
 		int j;

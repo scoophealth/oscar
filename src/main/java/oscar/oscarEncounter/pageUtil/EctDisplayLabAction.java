@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.on.CommonLabResultData;
@@ -50,7 +51,7 @@ public class EctDisplayLabAction extends EctDisplayAction {
 	  logger.debug("EctDisplayLabAction");
 	  
 	  CommonLabResultData comLab = new CommonLabResultData();
-        ArrayList<LabResultData> labs = comLab.populateLabResultsData("",bean.demographicNo, "", "","","U");
+        ArrayList<LabResultData> labs = comLab.populateLabResultsData(LoggedInInfo.getLoggedInInfoFromSession(request), "",bean.demographicNo, "", "","","U");
         Collections.sort(labs);
 
         //set text for lefthand module title
