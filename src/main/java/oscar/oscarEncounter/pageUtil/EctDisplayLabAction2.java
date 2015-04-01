@@ -74,7 +74,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 		} else {
 
 			CommonLabResultData comLab = new CommonLabResultData();
-			ArrayList<LabResultData> labs = comLab.populateLabResultsData("", bean.demographicNo, "", "", "", "U");
+			ArrayList<LabResultData> labs = comLab.populateLabResultsData(loggedInInfo, "", bean.demographicNo, "", "", "", "U");
 			logger.debug("local labs found : "+labs.size());
 
 			if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {

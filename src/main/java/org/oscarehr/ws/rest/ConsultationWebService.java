@@ -183,7 +183,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 		List<EFormData> eforms = EFormUtil.listPatientEFormsShowLatestOnly(demographicId);
 		getEformsForRequest(eforms, attached, attachments, requestId);
 		
-		List<LabResultData> labs = new CommonLabResultData().populateLabResultsData(demographicId, requestId.toString(), attached);
+		List<LabResultData> labs = new CommonLabResultData().populateLabResultsData(getLoggedInInfo(), demographicId, requestId.toString(), attached);
 		getLabs(labs, demographicId, attached, attachments);
 		
 		return attachments;
@@ -282,7 +282,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 		List<EFormData> eformList = EFormUtil.listPatientEFormsShowLatestOnly(demographicNo);
 		getEformsForResponse(eformList, attached, attachments, responseId);
 		
-		List<LabResultData> labs = new CommonLabResultData().populateLabResultsDataConsultResponse(demographicNo, responseId.toString(), attached);
+		List<LabResultData> labs = new CommonLabResultData().populateLabResultsDataConsultResponse(getLoggedInInfo(), demographicNo, responseId.toString(), attached);
 		getLabs(labs, demographicNo, attached, attachments);
 		
 		return attachments;

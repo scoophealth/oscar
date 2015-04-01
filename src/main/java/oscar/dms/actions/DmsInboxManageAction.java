@@ -373,7 +373,7 @@ public class DmsInboxManageAction extends DispatchAction {
 					patientLastName, patientHealthNumber, ackStatus, true, page, pageSize, mixLabsAndDocs, isAbnormal);
 		}
 		if (!"documents".equals(view)) {
-			labdocs.addAll(comLab.populateLabResultsData(searchProviderNo, demographicNo, patientFirstName,
+			labdocs.addAll(comLab.populateLabResultsData(loggedInInfo, searchProviderNo, demographicNo, patientFirstName,
 					patientLastName, patientHealthNumber, ackStatus, scannedDocStatus, true, page, pageSize,
 					mixLabsAndDocs, isAbnormal));
 		}

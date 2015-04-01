@@ -63,7 +63,7 @@ public class ConsultationAttachDocsAction
 	        Doc.attach(loggedInInfo);
 	        
 	        ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,arrDocs);
-	        Lab.attach();
+	        Lab.attach(loggedInInfo);
 	        return mapping.findForward("success");
         }
         else { 
@@ -76,7 +76,7 @@ public class ConsultationAttachDocsAction
             Doc.attach(loggedInInfo);
             
             ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,labs);
-            Lab.attach();
+            Lab.attach(loggedInInfo);
             return mapping.findForward("success");	
         }
     }  

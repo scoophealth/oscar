@@ -209,7 +209,7 @@ function popup1(height, width, url, windowName){
 
 				<%}
                 CommonLabResultData consultLabs = new CommonLabResultData();
-                ArrayList attachedLabs = consultLabs.populateLabResultsData(demoNo, reqId, CommonLabResultData.ATTACHED);
+                ArrayList attachedLabs = consultLabs.populateLabResultsData(loggedInInfo, demoNo, reqId, CommonLabResultData.ATTACHED);
 
                 LabResultData result;
                 String labURL;
