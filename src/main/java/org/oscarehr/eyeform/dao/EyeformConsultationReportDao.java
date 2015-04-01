@@ -119,7 +119,7 @@ public class EyeformConsultationReportDao extends AbstractDao<EyeformConsultatio
 			params.put(pos, endDate);
 		}
 		
-		logger.info(sql);
+		
 		Query query = entityManager.createQuery(sql);
 		for(Integer p:params.keySet()) {
 			query.setParameter(p,params.get(p));

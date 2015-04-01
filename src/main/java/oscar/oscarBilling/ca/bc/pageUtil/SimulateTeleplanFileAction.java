@@ -34,7 +34,8 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -90,12 +91,12 @@ public class SimulateTeleplanFileAction extends Action{
             try {
                 WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
                 BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
-                DemographicDao demographicDao = (DemographicDao) ctx.getBean("demographicDao");
+                DemographicManager demographicManager =  ctx.getBean(DemographicManager.class);
              
                 TeleplanFileWriter teleplanWr = new TeleplanFileWriter();
                 teleplanWr.setBillingmasterDAO(billingmasterDAO);
-                teleplanWr.setDemographicDao(demographicDao);
-                TeleplanSubmission submission = teleplanWr.getSubmission(testRun, pdArr, dataCenterId);
+                teleplanWr.setDemographicManager(demographicManager);
+                TeleplanSubmission submission = teleplanWr.getSubmission(LoggedInInfo.getLoggedInInfoFromSession(request), testRun, pdArr, dataCenterId);
 
                 //response.getWriter().print(submission.getHtmlFile());
                 request.setAttribute("TeleplanHtmlFile", submission.getHtmlFile());

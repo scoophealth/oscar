@@ -506,6 +506,10 @@ boolean filterOut=false;
 				<br>
 				<%
                         String sBack="SearchDrug.jsp";
+				
+						if("yes".equalsIgnoreCase(OscarProperties.getInstance().getProperty("RX3"))) {
+							sBack="SearchDrug3.jsp";
+						}
                       %> <input type=button class="ControlPushButton"
 					onclick="javascript:window.location.href='<%=sBack%>';"
 					value="Back to Search Drug" /></td>

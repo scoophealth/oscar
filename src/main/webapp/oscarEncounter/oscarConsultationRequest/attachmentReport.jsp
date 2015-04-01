@@ -47,7 +47,7 @@ String module = "demographic";
 String demoNo= request.getParameter("demographicNo");
 String reqId = request.getParameter("reqId");
 String provNo = request.getParameter("providerNo");
-String demoName = EDocUtil.getDemographicName(demoNo);
+String demoName = EDocUtil.getDemographicName(loggedInInfo, demoNo);
 
 ArrayList doctypes = EDocUtil.getDoctypes(module);
 
