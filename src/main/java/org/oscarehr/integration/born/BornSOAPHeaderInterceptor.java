@@ -69,7 +69,7 @@ public class BornSOAPHeaderInterceptor extends AbstractPhaseInterceptor<Message>
 				}
 			}
 			
-			if(endpointUrl != null && endpointUrl.indexOf("ehealthontario.ca") == -1) {
+			if(endpointUrl == null || (endpointUrl != null && endpointUrl.indexOf("ehealthontario.ca") == -1)) {
 				return;
 			}
 			

@@ -190,12 +190,21 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/billing/CA/ON/viewMOHFiles.jsp"><bean:message key="admin.admin.viewMOHFiles"/></a></li>
 					</oscar:oscarPropertiesCheck>
 					
+					<oscar:oscarPropertiesCheck property="mcedt.mailbox.enabled" value="false" defaultVal="false">
 					<li>
 						<a href="javascript:void(0);" class="xlink" rel="${ctx}/mcedt/mcedt.do">
 							<bean:message key="admin.admin.mcedt"/>
 						</a>
 					</li>
+					</oscar:oscarPropertiesCheck>
 					
+					<oscar:oscarPropertiesCheck property="mcedt.mailbox.enabled" value="true" defaultVal="false">
+					<li>
+						<a href="javascript:void(0);" class="xlink" rel="${ctx}/mcedt/kaimcedt.do">
+							<bean:message key="admin.admin.mcedt.mailbox"/>
+						</a>
+					</li>
+					</oscar:oscarPropertiesCheck>
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/servlet/oscar.DocumentUploadServlet"><bean:message
 						key="admin.admin.btnBillingReconciliation" /></a></li>                       

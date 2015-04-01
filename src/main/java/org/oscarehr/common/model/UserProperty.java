@@ -136,6 +136,10 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
 	public static final String INTEGRATOR_LAST_PULL_PRIMARY_EMR = "integrator_last_pull";
 	
 	public static final String PROVIDER_FOR_TICKLER_WARNING = "provider_for_tickler_warning";
+	
+	// MCEDT Settings
+	public static final String MCEDT_ACCOUNT_PASSWORD = "mcedt_account_password";
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
