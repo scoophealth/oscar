@@ -68,8 +68,6 @@ import oscar.util.ConversionUtils;
 
 public class EctMeasurementsAction extends Action {
 
-	private MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
-	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
