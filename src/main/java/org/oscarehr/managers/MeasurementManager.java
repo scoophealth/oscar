@@ -84,7 +84,7 @@ public class MeasurementManager {
 	 * ProgramId is not available in oscar right now but the method signature is correct for when it is available.
 	 */
 	public List<Measurement> getMeasurementsByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
-		List<Measurement> results = measurementDao.findByProviderDemographicLastUpdateDate(providerNo, demographicId, updatedAfterThisDateExclusive, itemsToReturn);
+		List<Measurement> results = measurementDao.findByProviderDemographicLastUpdateDate(providerNo, demographicId, updatedAfterThisDateExclusive.getTime(), itemsToReturn);
 
 		LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.getMeasurementsByProgramProviderDemographicDate", "programId=" + programId + ", providerNo=" + providerNo + ", demographicId=" + demographicId + ", updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive.getTime());
 
