@@ -708,7 +708,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	}
 
 	public List<Measurement> findByProviderDemographicLastUpdateDate(String providerNo, Integer demographicId, Date updatedAfterThisDateExclusive, int itemsToReturn) {
-		String sql = "select x from "+modelClass.getSimpleName()+" x where x.providerNo=:providerNo and x.demographicId=:demographicId and x.createDate>=:updatedAfterThisDateExclusive order by x.createDate";
+		String sql = "select x from "+modelClass.getSimpleName()+" x where x.providerNo=:providerNo and x.demographicId=:demographicId and x.createDate>:updatedAfterThisDateExclusive order by x.createDate";
 
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("providerNo", providerNo);
