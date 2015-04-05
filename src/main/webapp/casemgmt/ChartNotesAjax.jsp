@@ -589,14 +589,18 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 							<input type="image" id="anno<%=globalNoteId%>" src='<%=ctx %>/oscarEncounter/graphics/annotation.png' title='<bean:message key="oscarEncounter.Index.btnAnnotation"/>' style="float: right; margin-right: 5px; margin-bottom: 3px; height:10px;width:10px" onclick="window.open('<%=addr%>','anwin','width=400,height=500');$('annotation_attribname').value='<%=atbname%>'; return false;" />
 						<%}
 						%>
+
+							<div id="wrapper<%=globalNoteId%>" style="<%=(note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()||note.isInvoice())?(bgColour+";color:white;font-size:10px"):""%>">
 							<%-- render the note contents here --%>
-			  				<div id="txt<%=globalNoteId%>" style="<%=(note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()||note.isInvoice())?(bgColour+";color:white;font-size:10px"):""%>">
+			  				<div id="txt<%=globalNoteId%>" style="display:inline-block;<%=(note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()||note.isInvoice())?("max-width:60%;"):""%>">
+
 		  						<%=noteStr%>
+							</div> <!-- end of txt<%=globalNoteId%> -->
 		  						<%
 		  							if (note.isCpp()||note.isEformData()||note.isEncounterForm()||note.isInvoice())
 		  							{
 		  								%>
-											<div id="observation<%=globalNoteId%>" style="font-size: 11px; float: right; margin-right: 3px;">
+											<div id="observation<%=globalNoteId%>" style="display:inline-block;font-size: 11px; float: right; margin-right: 3px;">
 													<bean:message key="oscarEncounter.encounterDate.title"/>:&nbsp;
 													<span id="obs<%=globalNoteId%>"><%=note.getObservationDate() != null ? DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale()) : "N/A"%></span>
 													<%
@@ -610,7 +614,7 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 															if (rev!=null)
 															{
 																%>
-																	<a style="color:#ddddff" href="#" onclick="return showHistory('<%=globalNoteId%>', event);"><%=rev%></a>
+																	<a style="color:#ddddff;" href="#" onclick="return showHistory('<%=globalNoteId%>', event);"><%=rev%></a>
 																<%
 															}
 															else
@@ -625,7 +629,7 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 		  								<%
 		  							}
 		  						%>
-			  				</div> <!-- end of txt<%=globalNoteId%> -->
+			  				</div> <!-- end of wrapper<%=globalNoteId%> -->
 						<%
 
 			 			if (largeNote(noteStr))
