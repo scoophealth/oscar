@@ -166,7 +166,7 @@ public class PrescriptionManager {
 	 * ProgramId is currently ignored as oscar does not support tracking by program yet.
 	 */
 	public List<Prescription> getPrescriptionsByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
-		List<Prescription> results = prescriptionDao.findByProviderDemographicLastUpdateDate(providerNo, demographicId, updatedAfterThisDateExclusive, itemsToReturn);
+		List<Prescription> results = prescriptionDao.findByProviderDemographicLastUpdateDate(providerNo, demographicId, updatedAfterThisDateExclusive.getTime(), itemsToReturn);
 
 		LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionsByProgramProviderDemographicDate", "programId=" + programId+", providerNo="+providerNo+", demographicId="+demographicId+", updatedAfterThisDateExclusive="+updatedAfterThisDateExclusive.getTime());
 
