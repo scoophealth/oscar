@@ -367,7 +367,7 @@ public class RxPrescriptionData {
 		DrugDao dao = SpringUtils.getBean(DrugDao.class);
 
 		for (Drug drug : dao.findByDemographicId(demographicNo)) {
-			if((drug.isCurrent() && !drug.isArchived() && !drug.isDeleted() && !drug.isDiscontinued()) || drug.isLongTerm()) {
+			if ((drug.isCurrent() && !drug.isArchived() && !drug.isDeleted() && !drug.isDiscontinued()) || drug.isLongTerm()) {
 				lst.add(toPrescription(drug, demographicNo));
 			}
 		}
@@ -387,7 +387,7 @@ public class RxPrescriptionData {
 		}
 		return lst.toArray(new Prescription[lst.size()]);
 	}
-	
+
 	public Vector getCurrentATCCodesByPatient(int demographicNo) {
 		List<String> result = new ArrayList<String>();
 
@@ -401,7 +401,7 @@ public class RxPrescriptionData {
 		}
 		return new Vector(result);
 	}
-	
+
 	public List<String> getCurrentRegionalIdentifiersCodesByPatient(int demographicNo) {
 		List<String> result = new ArrayList<String>();
 
@@ -409,7 +409,7 @@ public class RxPrescriptionData {
 		for (int i = 0; i < p.length; i++) {
 			if (p[i].isCurrent()) {
 				if (!result.contains(p[i].getRegionalIdentifier())) {
-					if (p[i].getRegionalIdentifier() != null && p[i].getRegionalIdentifier().trim().length() != 0   ){
+					if (p[i].getRegionalIdentifier() != null && p[i].getRegionalIdentifier().trim().length() != 0) {
 						result.add(p[i].getRegionalIdentifier());
 					}
 				}
@@ -424,7 +424,7 @@ public class RxPrescriptionData {
 
 		boolean myOscarEnabled = OscarProperties.getInstance().isPropertyActive("MY_OSCAR");
 		List<Drug> drugList = dao.findByDemographicId(demographicNo);
-		
+
 		Collections.sort(drugList, new Drug.ComparatorIdDesc());
 
 		for (Drug drug : drugList) {
@@ -506,7 +506,7 @@ public class RxPrescriptionData {
 		//String date_printed = date_prescribed;
 
 		StringBuilder textView = new StringBuilder();
-		
+
 		// ///create full text view
 		oscar.oscarRx.data.RxPatientData.Patient patient = null;
 		oscar.oscarRx.data.RxProviderData.Provider provider = null;
@@ -649,7 +649,7 @@ public class RxPrescriptionData {
 		private String drugFormList = "";
 		private String datesReprinted = "";
 		private boolean dispenseInternal = false;
-		
+
 		private List<String> policyViolations = new ArrayList<String>();
 
 		private int drugReferenceId;
@@ -943,6 +943,9 @@ public class RxPrescriptionData {
 		}
 
 		public boolean isCurrent() {
+			if(isLongTerm() && !isDiscontinued() && !isArchived()) {
+				return true;
+			}
 			boolean b = false;
 
 			try {
@@ -959,12 +962,11 @@ public class RxPrescriptionData {
 			return b;
 		}
 
-
 		public void calcEndDate() {
 			try {
 				GregorianCalendar cal = new GregorianCalendar(Locale.CANADA);
 				int days = 0;
-				
+
 				//          p("this.getRxDate()",this.getRxDate().toString());
 				cal.setTime(this.getRxDate());
 
@@ -1213,7 +1215,7 @@ public class RxPrescriptionData {
 		public boolean getDispenseInternal() {
 			return isDispenseInternal();
 		}
-		
+
 		public boolean isDispenseInternal() {
 			return dispenseInternal;
 		}
@@ -1536,20 +1538,19 @@ public class RxPrescriptionData {
 			// check to see if there is an identitical prescription in
 			// the database. If there is we'll return that drugid instead
 			// of adding a new prescription.
-/*
-			String endDate;
-			if (this.getEndDate() == null) {
-				endDate = "0001-01-01";
-			} else {
-				endDate = RxUtil.DateToString(this.getEndDate());
-			}
-*/
+			/*
+						String endDate;
+						if (this.getEndDate() == null) {
+							endDate = "0001-01-01";
+						} else {
+							endDate = RxUtil.DateToString(this.getEndDate());
+						}
+			*/
 			DrugDao dao = SpringUtils.getBean(DrugDao.class);
 			// double check if we don't h
 			Drug drug = dao.findByEverything(this.getProviderNo(), this.getDemographicNo(), this.getRxDate(), this.getEndDate(), this.getWrittenDate(), this.getBrandName(), this.getGCN_SEQNO(), this.getCustomName(), this.getTakeMin(), this.getTakeMax(), this.getFrequencyCode(), this.getDuration(), this.getDurationUnit(), this.getQuantity(), this.getUnitName(), this.getRepeat(), this.getLastRefillDate(), this.getNosubs(), this.getPrn(), escapedSpecial, this.getOutsideProviderName(),
 			        this.getOutsideProviderOhip(), this.getCustomInstr(), this.getLongTerm(), this.isCustomNote(), this.getPastMed(), this.getPatientCompliance(), this.getSpecialInstruction(), this.getComment(), this.getStartDateUnknown());
 
-			
 			drug = new Drug();
 
 			int position = this.getNextPosition();
@@ -1557,7 +1558,7 @@ public class RxPrescriptionData {
 			syncDrug(drug, ConversionUtils.fromIntString(scriptId));
 			dao.persist(drug);
 			drugId = drug.getId();
-			
+
 			return true;
 		}
 
@@ -2072,7 +2073,6 @@ public class RxPrescriptionData {
 			this.customInstr = customInstr;
 		}
 
-		
 		public Boolean getDispenseInternal() {
 			return dispenseInternal;
 		}
@@ -2153,8 +2153,8 @@ public class RxPrescriptionData {
 			f.setDrugForm(this.getDrugForm());
 			f.setCustomInstructions(this.getCustomInstr());
 			f.setDosage(this.getDosage());
-	        return f;
-        }
+			return f;
+		}
 
 		/**
 		 * Getter for property atcCode.
