@@ -598,25 +598,24 @@ public class TRUENORTHHandler implements MessageHandler {
     }
 
     public ArrayList<String> getDocNums(){
-        String docNum = "";
+    	String docNum = "";
         ArrayList<String> nums = new ArrayList<String>();
-        /*int i=0;
+        int i=0;
         try{
 
             //requesting client number
-            docNum = msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i).getIDNumber().getValue();
+            docNum = msg.getRESPONSE().getPATIENT().getVISIT().getPV1().getReferringDoctor(i).getIDNumber().getValue();
             if (docNum != null){
                nums.add(docNum);
             }
 
             //cc'd docs numbers
-            Terser terser = new Terser(msg);
-            String num = terser.get("/.ZDR(0)-3-1");
+            String num = msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i).getIDNumber().getValue();
             i=1;
             while (num != null){
                 if (!num.equals(docNum))
                     nums.add(num);
-                num = terser.get("/.ZDR("+i+")-3-1");
+                num = msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i).getIDNumber().getValue();
                 i++;
             }
 
@@ -624,7 +623,7 @@ public class TRUENORTHHandler implements MessageHandler {
             //ignore error... it will occur when the zdr segment is not present
             //logger.error("Could not return numbers", e);
         }
-*/
+
         return(nums);
     }
 

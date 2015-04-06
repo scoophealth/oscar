@@ -80,7 +80,7 @@ public class TRUENORTHHandler implements MessageHandler {
 
 	private boolean isDuplicate(String msg) {
 		//OLIS requirements - need to see if this is a duplicate
-		oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler("GDML", msg);
+		oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler("TRUENORTH", msg);
 		//if final		
 		if(h.getOrderStatus().equals("F")) {
 			String fullAcc = h.getAccessionNum();
