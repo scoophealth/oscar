@@ -69,11 +69,24 @@ DxresearchDAO dxreasearchDao = SpringUtils.getBean(DxresearchDAO.class);
 CodingSystemManager codingSystemManager = SpringUtils.getBean(CodingSystemManager.class);
 
 for (Dxresearch dx:dxreasearchDao.getByDemographicNo(bean2.getDemographicNo())){
-	String codeDescr = codingSystemManager.getCodeDescription(dx.getCodingSystem(),dx.getDxresearchCode());	
+	String codeDescr = null;
+
+	try{
+		if(!dx.getDxresearchCode().equals("CKDSCREEN")){
+			codeDescr = codingSystemManager.getCodeDescription(dx.getCodingSystem(),dx.getDxresearchCode());
+		}
+	}
+	catch (Exception e){
+	    out.println("Please report error to support: " + e.getMessage());
+	}
+
 	if(codeDescr != null) {
 %>
 <p class="PropSheetMenuItemLevel1"><%=StringEscapeUtils.escapeHtml(codeDescr)%></p>
-<%} }%>
+<%
+	} 
+}
+%>
 </p>
 
 <p class="PropSheetLevel1CurrentItem">
