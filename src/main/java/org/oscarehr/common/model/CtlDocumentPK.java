@@ -28,34 +28,36 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 @Embeddable
-public class CtlDocumentPK implements Serializable{
+public class CtlDocumentPK implements Serializable {
 
 	private String module;
-	
-	@Column(name="module_id")
+
+	@Column(name = "module_id")
 	private Integer moduleId;
-	
-	@Column(name="document_no")
+
+	@Column(name = "document_no")
 	private Integer documentNo;
 
 	public CtlDocumentPK() {
-		
+
 	}
-	
+
 	public CtlDocumentPK(String module, Integer moduleId, Integer documentNo) {
 		setModule(module);
 		setModuleId(moduleId);
 		setDocumentNo(documentNo);
 	}
-	
+
 	public CtlDocumentPK(Integer documentNo, String module) {
 		setModule(module);
 		setDocumentNo(documentNo);
 	}
-	
+
 	public String getModule() {
 		return module;
 	}
@@ -79,10 +81,20 @@ public class CtlDocumentPK implements Serializable{
 	public void setDocumentNo(Integer documentNo) {
 		this.documentNo = documentNo;
 	}
-	
+
 	@Override
-	public String toString()
-	{
-		return(ReflectionToStringBuilder.toString(this));
+	public String toString() {
+		return (ReflectionToStringBuilder.toString(this));
 	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+
 }
