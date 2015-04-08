@@ -526,7 +526,7 @@ public final class LoginAction extends DispatchAction {
      	   newURL = newURL + "?errormsg=Your old password, does NOT match the password in the system. Please enter your old password.";  
      	} else if (!newPassword.equals(confirmPassword)) {
       	   newURL = newURL + "?errormsg=Your new password, does NOT match the confirmed password. Please try again.";  
-      	} else if (newPassword.equals(oldPassword)) {
+      	} else if (!Boolean.parseBoolean(OscarProperties.getInstance().getProperty("IGNORE_PASSWORD_REQUIREMENTS")) && newPassword.equals(oldPassword)) {
        	   newURL = newURL + "?errormsg=Your new password, is the same as your old password. Please choose a new password.";  
        	} 
     	    
