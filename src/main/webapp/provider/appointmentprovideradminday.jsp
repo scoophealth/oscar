@@ -253,8 +253,10 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     }
     String caisiView = null;
     caisiView = request.getParameter("GoToCaisiViewFromOscarView");
-    if(caisiView!=null && "true".equals(caisiView)) {
+    boolean notOscarView = "false".equals(session.getAttribute("infirmaryView_isOscar"));
+    if((caisiView!=null && "true".equals(caisiView)) || notOscarView) {
     	mygroupno = ".default";
+    	//MARC
     }
     String userfirstname = (String) session.getAttribute("userfirstname");
     String userlastname = (String) session.getAttribute("userlastname");
@@ -909,6 +911,9 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
      curProvider_no[0]=mygroupno;
      
      curProviderName[0]=providerDao.getProvider(mygroupno).getFullName();
+     
+     //MARC here
+     
 } else {
 	if(view==0) { //multiple views
 	   if (selectedSite!=null) {
