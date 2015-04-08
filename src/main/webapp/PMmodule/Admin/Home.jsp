@@ -28,7 +28,7 @@
 String _appPath = request.getContextPath();
 %>
 <%@ include file="/taglibs.jsp"%>
-<%@page import="com.quatro.common.KeyConstants;" %>
+<%@page import="com.quatro.common.KeyConstants" %>
 
 <table width="100%" height="100%" cellpadding="0px" cellspacing="0px" style="border-width: 1px; border-style: solid; bordercolor: black">
 	<tr>
