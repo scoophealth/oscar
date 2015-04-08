@@ -23,7 +23,7 @@
 
 --%>
 <%@ include file="../../../taglibs.jsp"%>
-<%@page import="com.quatro.common.KeyConstants;"%>
+<%@page import="com.quatro.common.KeyConstants"%>
 
 
 <script type="text/javascript"

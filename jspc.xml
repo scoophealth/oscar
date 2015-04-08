@@ -27,6 +27,8 @@
 		2) compile java source into class files
 		-->
 
+		<mkdir dir="target/generated_jsp_classes"/>
+
 		<condition property="tomcat.lib" value="${catalina.home}/lib">
 			<available file="${catalina.home}/lib" type="dir" />
 		</condition>
@@ -46,14 +48,14 @@
 		<if>
 			<equals arg1="${tomcat.lib.dir}" arg2="${catalina.home}/lib" />
 			<then>
-				<jasper uriroot="${jspc.expandedWarDir}" webXmlFragment="${jspc.generatedDir}/generated_web.xml" outputDir="${jspc.generatedDir}" failOnError="true" />
+				<jasper uriroot="${jspc.expandedWarDir}" webXmlFragment="${jspc.generatedDir}/generated_web.xml" outputDir="${jspc.generatedDir}" failOnError="true" verbose="0" />
 			</then>
 			<else>
 				<jasper2 uriroot="${jspc.expandedWarDir}" webXmlFragment="${jspc.generatedDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="true" />
 			</else>
 		</if>
 
-		<javac srcdir="${jspc.generatedDir}" source="1.5" target="1.5" debug="on" memoryInitialSize="128m" compiler="modern" includeantruntime="false" memoryMaximumSize="1024m" fork="yes" encoding="UTF8">
+		<javac srcdir="${jspc.generatedDir}" source="7" target="7" debug="on" memoryInitialSize="128m" compiler="modern" includeantruntime="false" memoryMaximumSize="1024m" fork="yes" encoding="UTF8">
 			<classpath>
 				<pathelement location="${jspc.expandedWarDir}/WEB-INF/classes" />
 				<pathelement path="${jspc.expandedWarDir}/WEB-INF/lib/*" />
