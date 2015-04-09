@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -70,7 +71,6 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
-import java.util.Locale;
 
 
 
@@ -265,9 +265,9 @@ public String geti18nTagValue(Locale locale, String tag) {
                                 //header table for patient's information.
                                                 PdfPTable head = new PdfPTable(1);
                                                 String newline = System.getProperty("line.separator");
-                                StringBuilder hStr = new StringBuilder(this.patientName);
+                                StringBuilder hStr = new StringBuilder(this.patientName.replaceAll("\\s+"," "));
                                 if(showPatientDOB){
-                                     hStr.append("   DOB:").append(this.patientDOB).append(newline);}
+                                     hStr.append(newline).append("DOB:").append(this.patientDOB).append(newline);}
                                 else{
                                     hStr.append(newline);
                                 }
