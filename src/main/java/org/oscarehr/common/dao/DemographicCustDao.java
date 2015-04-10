@@ -124,5 +124,15 @@ public class DemographicCustDao extends AbstractDao<DemographicCust> {
         }
         return null;
     }
+    
+    public List<DemographicCust> findAllByDemographicNumber(int demographic_no) {
+    	String sql = "select x from DemographicCust x where x.id = ?";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1,demographic_no);
+    	
+        @SuppressWarnings("unchecked")
+        List<DemographicCust> results = query.getResultList();
+        return results;
+    }
 
 }

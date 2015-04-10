@@ -564,6 +564,7 @@
 		<form-bean name="mcedtUpdateForm" type="org.oscarehr.integration.mcedt.UpdateForm" />
 
         <form-bean name="ValidateSwipeCard" type="org.oscarehr.integration.mchcv.ValidateSwipeCard" />
+        <form-bean name="bpmh" type="oscar.form.pharmaForms.formBPMH.bean.BpmhFormBean" />
         
 	</form-beans>
 
@@ -575,6 +576,13 @@
 	</global-forwards>
 
 	<action-mappings>
+		<!-- Pharma Best Possible Medication Health form -->
+	 	<action path="/formBPMH" parameter="method" name="bpmh" type="oscar.form.pharmaForms.formBPMH.web.BpmhFormRetrieve"	
+	 		scope="request" validate="false" > 
+	 			<forward name="saved" path="/formBPMH.do?method=fetch" />
+	 			<forward name="success" path="/form/pharmaForms/formBPMH.jsp" />
+		</action>
+	
 	
         <!-- Notification Mappings -->
         <action path="/notification/create"
