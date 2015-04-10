@@ -651,9 +651,7 @@
 		</action>
 
 		<!-- caisi core action -->
-		<action path="/Admin" type="com.quatro.web.admin.AdminAction" parameter="method" scope="request" name="systemMessageForm" input="/admin/admin.jsp" validate="false">
-			<forward name="list" path="page.admin.list" />
-		</action>
+		
 		<action path="/SystemMessage" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="systemMessageForm" input="/caisicore/SystemMessageForm.jsp" validate="false">
 			<forward name="view" path="/caisicore/SystemMessage.jsp" />
 			<forward name="list" path="/caisicore/SystemMessageList.jsp" />
