@@ -25,23 +25,22 @@
 */
 oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$stateParams,$state,$filter,$modal,user,noteService,summaryService) {
 	console.log("in summary Ctrl ",$stateParams);
-	
+
 	$scope.page = {};
 	$scope.page.columnOne = {};
 	$scope.page.columnOne.modules = {};
-	
+
 	$scope.page.columnThree = {};
 	$scope.page.columnThree.modules = {};
-	
+
 	$scope.page.notes = {};
-    $scope.index = 0;
-    $scope.page.notes = {};
-    $scope.page.notes.notelist = [];
-    $scope.busy = false;
-    $scope.page.noteFilter = {};
-    $scope.page.currentFilter = 'none';
-    $scope.page.onlyNotes = false;
-    
+	$scope.index = 0;
+	$scope.page.notes = {};
+	$scope.page.notes.notelist = [];
+	$scope.busy = false;
+	$scope.page.noteFilter = {};
+	$scope.page.currentFilter = 'none';
+	$scope.page.onlyNotes = false;
     
    
     // Note list filtering functions   
@@ -70,6 +69,13 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
 		win = "win" + rnd;
 		var url = "../CaseManagementEntry.do?method=notehistory&noteId=" + note.noteId;
 		window.open(url,win,"scrollbars=yes, location=no, width=647, height=600","");   			
+   	}
+
+   	$scope.openRx = function(demoNo){
+		var rnd = Math.round(Math.random() * 1000);
+		win = "win" + rnd;
+		var url = "../oscarRx/choosePatient.do?demographicNo=" + demoNo;
+		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   			
    	}
    
    	$scope.isCurrentStatus = function(stat){
@@ -228,25 +234,13 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
     	return firstL;
     };
 
+    $scope.trackerUrl="";
+
     $scope.getTrackerUrl = function(demographicNo) {
-    	
-    url = '../oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf?template=tracker&demographic_no=' + demographicNo + '&numEle=4&tracker=slim';
-  	
-    return url;  
-    
+      $scope.trackerUrl = '../oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf?template=tracker&demographic_no=' + demographicNo + '&numEle=4&tracker=slim';    
     };
     
-//for demo will resolve 
-function resizeIframe(iframe) {
-	
-	var h = iframe.contentWindow.document.body.scrollHeight;
-	if(h>0){
-    iframe.height =  h + "px";
-    //alert("h > 0");
-	}
-    //alert("h" + h);
-  }
-    
+  
 
 
 
@@ -343,7 +337,7 @@ function fillItems(itemsToFill){
 }
 
 
-editGroupedNotes = function(size,mod){
+editGroupedNotes = function(size,mod,action){
 
 	var modalInstance = $modal.open({
 	      templateUrl: 'record/summary/groupNotes.jsp',
@@ -352,6 +346,10 @@ editGroupedNotes = function(size,mod){
 	      resolve: {
 	          mod: function () {
 	            return mod;
+	          },
+	          
+	          action: function (){
+	        	  return action;
 	          }
 	        }
 	    });
@@ -367,17 +365,20 @@ editGroupedNotes = function(size,mod){
 }
 
 
-$scope.gotoState = function(item,mod){
-	console.log(item);
-	
-	if(item.type == 'lab' || item.type == 'document'  || item.type == 'rx' ){
+$scope.gotoState = function(item,mod,itemId){
+
+	if(item=="add"){
+		editGroupedNotes('lg',mod,null);
+		
+	}else if(item.type == 'lab' || item.type == 'document'  || item.type == 'rx' ){
 		var rnd = Math.round(Math.random() * 1000);
 		win = "win_item.type_" + rnd;
 		
 		window.open(item.action,win,"scrollbars=yes, location=no, width=900, height=600","");  
 		return;
 	}else if(item.action == 'action'){
-		editGroupedNotes('lg',mod);
+		editGroupedNotes('lg',mod,itemId);
+
 	}else{	
 		$state.transitionTo(item.action,{demographicNo:$stateParams.demographicNo, type: item.type ,id: item.id},{location:'replace',notify:true});
 	}
@@ -386,25 +387,120 @@ $scope.gotoState = function(item,mod){
 
 
 
-
-
-
-
 });
 
 
-GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod){
-	console.log("Group notes",mod);
+GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,$state,noteService){
+
+
 	$scope.page = {};
 	$scope.page.title = mod.displayName;
 	$scope.page.items = mod.summaryItem;
-	console.log("items",$scope.page.items);
+
+	//$scope.action = action;
+	$scope.page.code = mod.summaryCode;
 	
+	$scope.groupNotesForm = {};
+
+	//set hidden which can can move out of hidden to $scope values
+	var now = new Date();
+    	$scope.groupNotesForm.annotation_attrib = "anno"+now.getTime();
+
+
+	displayIssueId = function(issueCode){
+
+			noteService.getIssueId(issueCode).then(function(data){
+	    	
+			$scope.page.issueId = data.id;
+
+		    	},function(reason){
+		    		alert(reason);
+		    	});
+
+	}
+
+	displayIssueId($scope.page.code);
+
 	
+
+
+	displayGroupNote = function(item,itemId){
+
+				noteService.getIssueNote($scope.page.items[itemId].noteId).then(function(iNote){
+
+			       	//$scope.master = angular.copy( "iNote----" +  JSON.stringify(iNote) );
+	
+				$scope.groupNotesForm.encounterNote = iNote.encounterNote;
+				$scope.groupNotesForm.groupNoteExt = iNote.groupNoteExt;
+
+				},function(reason){
+					alert(reason);
+				});
+	
+	};
+
+
+
+	if(action!=null){
+		displayGroupNote($scope.page.items,action);
+	}else{
+	//todo
+
+	}
+
+	$scope.changeNote = function(item, itemId){
+
+		return displayGroupNote(item,itemId);
+	};
+
+	$scope.saveGroupNotes = function(){
+		if($scope.groupNotesForm.encounterNote.noteId==null){
+			$scope.groupNotesForm.encounterNote.noteId=0;
+		}
+
+		$scope.groupNotesForm.encounterNote.noteId = $scope.groupNotesForm.encounterNote.noteId; //tmp crap
+		$scope.groupNotesForm.encounterNote.cpp = true;
+		$scope.groupNotesForm.encounterNote.editable = true;
+		$scope.groupNotesForm.encounterNote.isSigned = true;
+		$scope.groupNotesForm.encounterNote.observationDate = new Date();
+		$scope.groupNotesForm.encounterNote.appointmentNo=$stateParams.appointmentNo; //TODO: make this dynamic so it changes on edit
+		$scope.groupNotesForm.encounterNote.encounterType="";
+		$scope.groupNotesForm.encounterNote.encounterTime="";
+		
+		$scope.groupNotesForm.encounterNote.summaryCode = $scope.page.code; //'ongoingconcerns';
+
+		noteService.saveIssueNote($stateParams.demographicNo, $scope.groupNotesForm).then(function(data){
+    		$modalInstance.dismiss('cancel');
+		//alert(JSON.stringify(data));
+/*{"appointmentNo":1146,"cpp":true,"document":false,"editable":true,"eformData":false,"encounterForm":false,"encounterTime":"","encounterType":"","groupNote":false,"invoice":false,"isSigned":true,"note":"test new note","noteId":590,"observationDate":"2015-03-11T23:41:10.543-04:00","readOnly":false,"rxAnnotation":false,"ticklerNote":false,"updateDate":"2015-03-11T23:41:10.664-04:00","uuid":"bbc1fea1-42d9-4418-99b4-24902e902484"}
+*/
+
+		$state.transitionTo($state.current, $stateParams, { reload: true, inherit: false, notify: true });
+
+	    	},function(reason){
+	    		alert(reason);
+	    	});
+
+	}
+
+	$scope.archiveGroupNotes = function(){
+		//$scope.master = angular.copy($scope.groupNotesForm);
+		$scope.groupNotesForm.encounterNote.archived = true;
+		$scope.saveGroupNotes();
+	}
+		
 	$scope.cancel = function () {
   		$modalInstance.dismiss('cancel');
   	};
-	
+
+	//temp load into pop-up
+   	$scope.openRevisionHistory = function(note){
+		var rnd = Math.round(Math.random() * 1000);
+		win = "win" + rnd;
+		var url = "../CaseManagementEntry.do?method=notehistory&noteId=" + note.noteId;
+		window.open(url,win,"scrollbars=yes, location=no, width=647, height=600","");   			
+   	}
+
 };
 
 

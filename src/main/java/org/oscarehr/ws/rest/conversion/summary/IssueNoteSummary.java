@@ -101,11 +101,11 @@ public class IssueNoteSummary implements Summary {
 
 		}
 		String[] issueIds = getIssueIds(issueList);
-	
+		
 		Collection<CaseManagementNote> notes = caseManagementMgr.getActiveNotes(""+demographicNo, issueIds);
 		int count = 0;
 		for(CaseManagementNote note:notes){
-			logger.debug("adding "+note.getNote()+" for issues "+issueIds);
+			
 			Set<CaseManagementIssue> issueSet = note.getIssues();
 			StringBuilder issueString = new StringBuilder();
 			for (CaseManagementIssue s : issueSet) {
@@ -114,6 +114,7 @@ public class IssueNoteSummary implements Summary {
 			SummaryItemTo1 summaryItem = new SummaryItemTo1(count, note.getNote(),"action","notes_"+issueString.toString());
 			summaryItem.setDate(note.getObservation_date());
 			summaryItem.setEditor(note.getProviderName());
+			summaryItem.setNoteId(note.getId());
 			
 			list.add(summaryItem);
 			count++;
