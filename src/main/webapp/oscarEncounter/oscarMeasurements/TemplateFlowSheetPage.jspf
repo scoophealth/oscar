@@ -48,6 +48,7 @@
     String providerNo = (String) session.getAttribute("user");
     String temp = request.getParameter("template");
     
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
     <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
@@ -583,7 +584,7 @@ div.recommendations li{
 
                 <%
 			org.oscarehr.common.model.Allergy[] allergies;
-                    allergies = RxPatientData.getPatient(Integer.parseInt(demographic_no)).getActiveAllergies();
+                    allergies = RxPatientData.getPatient(loggedInInfo, Integer.parseInt(demographic_no)).getActiveAllergies();
 
 // oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies;
 //                    allergies = oscar.oscarRx.data.RxPatientData().getPatient(Integer.parseInt(demographic_no)).getAllergies();
@@ -641,8 +642,6 @@ div.recommendations li{
 	//set add link array
 	String[] addAllLink = new String[measurements.size()];
 	int mCount=0;
-
-	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	
     EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
     long startTimeToLoopAndPrint = System.currentTimeMillis();
