@@ -1431,8 +1431,8 @@ public class XMLTransferUtil
 	public ArrayList validateDoc(HsfoHbpsDataDocument doc) throws IOException,
 			XmlException
 	{
-		if (logger.isInfoEnabled())
-			logger.info("<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n"
+		if (logger.isDebugEnabled())
+			logger.debug("<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n"
 					+ PrettyPrinter.indent(doc.xmlText()));
 
 		ArrayList messageArray = new ArrayList();

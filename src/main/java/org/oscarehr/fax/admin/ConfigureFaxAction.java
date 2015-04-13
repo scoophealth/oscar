@@ -39,11 +39,15 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.FaxConfigDao;
 import org.oscarehr.common.model.FaxConfig;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class ConfigureFaxAction extends DispatchAction {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
 		return configure(mapping, form, request, response);
@@ -51,6 +55,10 @@ public class ConfigureFaxAction extends DispatchAction {
 	
 	public ActionForward configure(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		JSONObject jsonObject;
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "r", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
 		
 		try {
 			FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);

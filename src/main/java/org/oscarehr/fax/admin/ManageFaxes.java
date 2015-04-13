@@ -61,6 +61,8 @@ import org.oscarehr.common.dao.FaxConfigDao;
 import org.oscarehr.common.dao.FaxJobDao;
 import org.oscarehr.common.model.FaxConfig;
 import org.oscarehr.common.model.FaxJob;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -70,6 +72,8 @@ import oscar.log.LogConst;
 public class ManageFaxes extends DispatchAction {
 	
 	private Logger log = MiscUtils.getLogger();
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	 
 	
 	private File hasCacheVersion2(FaxJob faxJob, Integer pageNum) {
 		int index;
@@ -158,6 +162,10 @@ public class ManageFaxes extends DispatchAction {
 		
 		String jobId = request.getParameter("jobId");
 				
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+
 		
 		FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);
 		FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);
@@ -236,6 +244,11 @@ public class ManageFaxes extends DispatchAction {
 		String faxNumber = request.getParameter("faxNumber");
 		JSONObject jsonObject;
 		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+
+		
 		try {
 		
 			FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);
@@ -271,6 +284,12 @@ public class ManageFaxes extends DispatchAction {
 	
 
 	public ActionForward viewFax(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "r", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+        }
+
+		
 		try {
 			String doc_no = request.getParameter("jobId");
 			String pageNum = request.getParameter("curPage");
@@ -407,6 +426,11 @@ public class ManageFaxes extends DispatchAction {
 	}
 	
 	public ActionForward SetCompleted(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+
 		
 		String id = request.getParameter("jobId");		
 		FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);		

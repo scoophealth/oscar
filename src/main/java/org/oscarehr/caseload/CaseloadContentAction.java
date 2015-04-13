@@ -32,20 +32,30 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.CaseloadDao;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import oscar.log.LogAction;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
 public class CaseloadContentAction extends DispatchAction {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	   
+
 	public ActionForward noteSearch(ActionMapping actionMapping,
 			ActionForm actionForm,
 			HttpServletRequest request,
 			HttpServletResponse response) {
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
 		String caseloadProv     = request.getParameter("clProv");
 		String caseloadQuery    = request.getParameter("clQ");
 		boolean sortAscending   = "true".equals(request.getParameter("clSortAsc"));
@@ -116,6 +126,8 @@ public class CaseloadContentAction extends DispatchAction {
 			Integer size = caseloadDao.getCaseloadDemographicSearchSize(clSearchQuery, clSearchParams);
 			json.put("size", size);
 		}
+
+		LogAction.addLogSynchronous(LoggedInInfo.getLoggedInInfoFromSession(request), "CaseloadContentAction", "view caseload");
 
 		try {
 			json.write(response.getWriter());

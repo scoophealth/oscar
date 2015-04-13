@@ -20,16 +20,24 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarTickler.TicklerCreator;
 
 
 public class EyeformSendTicklerAction extends DispatchAction {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
 		String followUp = request.getParameter("followUp");
 		String procedure = request.getParameter("procedure");
 		String diagnostics = request.getParameter("diagnostics");

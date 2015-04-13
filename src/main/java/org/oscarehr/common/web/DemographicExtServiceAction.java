@@ -38,6 +38,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -46,7 +47,8 @@ import oscar.log.LogAction;
 public class DemographicExtServiceAction extends DispatchAction {
 
 	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
-	
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	   
 
 	public ActionForward saveNewValue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException  {
 		String demographicNo = request.getParameter("demographicNo");
@@ -55,6 +57,10 @@ public class DemographicExtServiceAction extends DispatchAction {
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo = loggedInInfo.getLoggedInProviderNo();
 		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+
 		
 		DemographicExt existing = demographicExtDao.getDemographicExt(Integer.parseInt(demographicNo), key);
 		Integer id = null;

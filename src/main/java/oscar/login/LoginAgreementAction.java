@@ -58,12 +58,12 @@ public class LoginAgreementAction extends DispatchAction {
         String userAgreement = request.getParameter("submit");
         String user = (String)request.getSession().getAttribute("user");
         if( userAgreement.equalsIgnoreCase("refuse") ) {
-            _logger.info(user + " refused agreement");
+            _logger.debug(user + " refused agreement");
             LogAction.addLog(user, LogConst.REFUSED, LogConst.CON_LOGIN_AGREEMENT, userAgreement, request.getRemoteAddr(),null,AcceptableUseAgreementManager.getAUAText());
             return mapping.findForward("Logout");
             
         }else if( userAgreement.equalsIgnoreCase("accept") ) {
-            _logger.info(user + " accepted agreement");
+            _logger.debug(user + " accepted agreement");
             Provider provider = providerDao.getProvider(user);
             Date now = new Date();
             provider.setSignedConfidentiality(now);

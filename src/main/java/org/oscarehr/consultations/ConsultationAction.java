@@ -52,6 +52,7 @@ import org.oscarehr.common.model.ConsultationServices;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.PaginationUtils;
 import org.oscarehr.util.SpringUtils;
@@ -63,11 +64,15 @@ public class ConsultationAction extends Action {
 	private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	private ConsultationServiceDao consultationServiceDao = SpringUtils.getBean(ConsultationServiceDao.class);
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	private PaginationUtils paginationUtils = new PaginationUtils();
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "r", null)) {
+        	throw new SecurityException("missing required security object (_con)");
+        }
 		
 		//grab and execute query
 		ConsultationQuery query = new ConsultationQuery();

@@ -64,7 +64,7 @@ public class OscarOAuthDataProvider implements OAuthDataProvider {
 	
 	@Override
 	public Client getClient(String clientId) throws OAuthServiceException {
-		logger.info("getClient() called");
+		logger.debug("getClient() called");
 		ServiceClient sc = serviceClientDao.findByKey(clientId);
 		if(sc != null) {
 			Client newClient = new Client(sc.getKey(), sc.getSecret(), sc.getName(), sc.getUri());
@@ -79,7 +79,7 @@ public class OscarOAuthDataProvider implements OAuthDataProvider {
 	 */
 	@Override
 	public RequestToken createRequestToken(RequestTokenRegistration reg) throws OAuthServiceException {
-		logger.info("createRequestToken() called");
+		logger.debug("createRequestToken() called");
         String tokenId = UUID.randomUUID().toString();
         String tokenSecret = UUID.randomUUID().toString();
         RequestToken rt = new RequestToken(reg.getClient(), tokenId, tokenSecret);
@@ -112,7 +112,7 @@ public class OscarOAuthDataProvider implements OAuthDataProvider {
 
 	@Override
 	public RequestToken getRequestToken(String requestToken) throws OAuthServiceException {
-		logger.info("getRequestToken() called");
+		logger.debug("getRequestToken() called");
 		ServiceRequestToken serviceToken = serviceRequestTokenDao.findByTokenId(requestToken);
 		if(serviceToken != null) {
 			
@@ -148,7 +148,7 @@ public class OscarOAuthDataProvider implements OAuthDataProvider {
 
 	@Override
 	public String finalizeAuthorization(AuthorizationInput data) throws OAuthServiceException {
-		logger.info("finalizeAuthorization() called");
+		logger.debug("finalizeAuthorization() called");
 		RequestToken requestToken = data.getToken();
         requestToken.setVerifier(UUID.randomUUID().toString());
         
@@ -163,7 +163,7 @@ public class OscarOAuthDataProvider implements OAuthDataProvider {
 
 	@Override
 	public AccessToken createAccessToken(AccessTokenRegistration reg) throws OAuthServiceException {
-		logger.info("createAccessToken() called");
+		logger.debug("createAccessToken() called");
         RequestToken requestToken = reg.getRequestToken();
 
         Client client = requestToken.getClient();

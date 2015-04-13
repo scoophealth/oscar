@@ -25,23 +25,24 @@
 package org.oscarehr.common.web;
 
 import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.processors.JsDateJsonBeanProcessor;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import net.sf.json.JsonConfig;
-import net.sf.json.processors.JsDateJsonBeanProcessor;
-
-import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.model.Demographic;
-
 import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Clinic;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 /**
@@ -52,10 +53,18 @@ public class BillingONReviewAction extends DispatchAction {
     
     private ClinicDAO clinicDao = (ClinicDAO) SpringUtils.getBean("clinicDAO");
     private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+    
     
     public ActionForward getDemographic(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String demographicNo = request.getParameter("demographicNo");  
+        
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+
         Demographic demographic = demographicDao.getDemographic(demographicNo);
+        
         
         JsonConfig config = new JsonConfig();
 	config.registerJsonBeanProcessor(java.sql.Date.class, new JsDateJsonBeanProcessor());        

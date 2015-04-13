@@ -50,6 +50,8 @@ import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -61,7 +63,7 @@ public class ExaminationHistoryAction extends DispatchAction {
 	protected MeasurementDao measurementsDao = SpringUtils.getBean(MeasurementDao.class);
 	DemographicDao demographicDao= (DemographicDao)SpringUtils.getBean("demographicDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
-	
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	@Override	   
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {		   
@@ -82,6 +84,10 @@ public class ExaminationHistoryAction extends DispatchAction {
 		String strEndDate = StringUtils.transformNullInEmptyString(request.getParameter("edate"));
 		String refPage = request.getParameter("refPage");
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
 		request.setAttribute("demographic",demographicDao.getClientByDemographicNo(Integer.parseInt(demographicNo)));
 		
 		String[] fields = request.getParameterValues("fromlist2");

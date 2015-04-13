@@ -39,6 +39,8 @@ import org.apache.struts.actions.DispatchAction;
 import org.caisi.service.IssueAdminManager;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.SecRoleDao;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -49,12 +51,10 @@ public class IssueAdminAction extends DispatchAction {
     private IssueAdminManager mgr = SpringUtils.getBean(IssueAdminManager.class);
    
     private SecRoleDao secRoleDao = SpringUtils.getBean(SecRoleDao.class);
-
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
    
     public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        if (log.isDebugEnabled()) {
-            log.debug("entering 'delete' method...");
-        }
+        
         return list(mapping, form, request, response);
     }
 
@@ -62,6 +62,11 @@ public class IssueAdminAction extends DispatchAction {
         if (log.isDebugEnabled()) {
             log.debug("entering 'delete' method...");
         }
+        
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+        
         mgr.removeIssueAdmin(request.getParameter("issueAdmin.id"));
         ActionMessages messages = new ActionMessages();
         messages.add(ActionMessages.GLOBAL_MESSAGE,
@@ -74,6 +79,11 @@ public class IssueAdminAction extends DispatchAction {
         if (log.isDebugEnabled()) {
             log.debug("entering 'edit' method...");
         }
+        
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+
         DynaActionForm issueAdminForm = (DynaActionForm) form;
         String issueAdminId = request.getParameter("id");
         // null issueAdminId indicates an add
@@ -89,8 +99,7 @@ public class IssueAdminAction extends DispatchAction {
             request.setAttribute("issueRole", issueAdmin.getRole());
             issueAdminForm.set("issueAdmin", issueAdmin);
         }
-        //request.setAttribute("caisiRoles", caisiRoleMgr.getRoles());
-	
+        
         request.setAttribute("caisiRoles", secRoleDao.findAll());
         return mapping.findForward("edit");
     }
@@ -103,6 +112,11 @@ public class IssueAdminAction extends DispatchAction {
         if (log.isDebugEnabled()) {
             log.debug("entering 'list' method...");
         }
+        
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "r", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+        
         request.setAttribute("issueAdmins", mgr.getIssueAdmins());
         return mapping.findForward("list");
     }
@@ -110,6 +124,10 @@ public class IssueAdminAction extends DispatchAction {
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         if (log.isDebugEnabled()) {
             log.debug("entering 'save' method...");
+        }
+
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
         }
 
         // run validation rules on this form

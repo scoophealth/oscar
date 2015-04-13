@@ -42,6 +42,7 @@ import org.oscarehr.common.model.EyeformMacro;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.eyeform.model.EyeformMacroBillingItem;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
@@ -52,6 +53,8 @@ import oscar.util.StringUtils;
 public class EyeformUtilAction extends DispatchAction {
 
 	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	
 	public ActionForward getProviders(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
@@ -72,6 +75,11 @@ public class EyeformUtilAction extends DispatchAction {
 
 	public ActionForward getTickler(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_tickler", "r", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
 		Tickler t = ticklerManager.getTickler(loggedInInfo,Integer.parseInt(request.getParameter("tickler_no")));
 
 		HashMap<String, HashMap<String, Object>> hashMap = new HashMap<String, HashMap<String, Object>>();

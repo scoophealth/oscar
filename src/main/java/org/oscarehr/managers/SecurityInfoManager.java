@@ -78,6 +78,10 @@ public class SecurityInfoManager {
 		return results;
 	}
 	
+	public boolean hasPrivilege(LoggedInInfo loggedInInfo, String objectName, String privilege, int demographicNo) {
+		return hasPrivilege(loggedInInfo, objectName, privilege, String.valueOf(demographicNo));
+	}
+	
 	/**
 	 * Checks to see if this provider has the privilege to the security object being requested.
 	 * 
