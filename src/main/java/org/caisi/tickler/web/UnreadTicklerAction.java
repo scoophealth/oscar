@@ -40,6 +40,7 @@ import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
@@ -49,7 +50,8 @@ import oscar.login.LoginCheckLogin;
 public class UnreadTicklerAction extends DispatchAction {
 	
 	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String providerNo = (String) request.getSession().getAttribute("user");
@@ -68,6 +70,10 @@ public class UnreadTicklerAction extends DispatchAction {
 		if(providerNo == null) {
 			return mapping.findForward("login");
 		}
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_tickler", "r", null)) {
+        	throw new SecurityException("missing required security object (_tickler)");
+        }
 		
 		UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 		UserProperty prop = propDao.getProp(providerNo, UserProperty.PROVIDER_FOR_TICKLER_WARNING);

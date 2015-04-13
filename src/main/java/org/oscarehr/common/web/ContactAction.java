@@ -56,6 +56,7 @@ import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.ProfessionalContact;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -73,7 +74,8 @@ public class ContactAction extends DispatchAction {
 	static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	static ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
 	static ContactSpecialtyDao contactSpecialtyDao = SpringUtils.getBean(ContactSpecialtyDao.class);
-	
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	 
 	@Override
 	protected ActionForward unspecified(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
@@ -83,6 +85,11 @@ public class ContactAction extends DispatchAction {
 	public ActionForward manage(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
 		String demographicNo = request.getParameter("demographic_no");
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
 		List<DemographicContact> dcs = demographicContactDao.findByDemographicNoAndCategory(Integer.parseInt(demographicNo),DemographicContact.CATEGORY_PERSONAL);
 		for(DemographicContact dc:dcs) {
 			if(dc.getType() == (DemographicContact.TYPE_DEMOGRAPHIC)) {
@@ -134,6 +141,10 @@ public class ContactAction extends DispatchAction {
     	String forward = "windowClose";
     	String postMethod = request.getParameter("postMethod");
    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", String.valueOf(demographicNo))) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+    	
     	if( "ajax".equalsIgnoreCase( postMethod ) ) {
     		forward = postMethod;
     	}
@@ -346,6 +357,10 @@ public class ContactAction extends DispatchAction {
 		String removeSingleId = request.getParameter("contactId");
 		ActionForward actionForward = null;
 		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
     	if( "ajax".equalsIgnoreCase( postMethod ) ) {
     		actionForward = mapping.findForward( postMethod );
     	}
@@ -409,6 +424,11 @@ public class ContactAction extends DispatchAction {
 		ProfessionalSpecialist professionalSpecialist = null;
 		String contactRole = "";
 		List<ContactSpecialty> specialtyList = null;
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
 		
 		if( StringUtils.isNotBlank( demographicContactId ) ) {
 			
@@ -483,6 +503,11 @@ public class ContactAction extends DispatchAction {
 
 	public ActionForward saveContact(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
 		DynaValidatorForm dform = (DynaValidatorForm)form;
 		Contact contact = (Contact)dform.get("contact");
 		String id = request.getParameter("contact.id");
@@ -510,6 +535,9 @@ public class ContactAction extends DispatchAction {
 		Integer contactType = null; // this needs to be null as there are -1 and 0 contact types
 		String contactRole = ""; 
 		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
 		
 		if(id != null && id.length() > 0) {
 			

@@ -28,16 +28,21 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.service.PdfRecordPrinter;
 import org.oscarehr.managers.BillingONManager;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
 import oscar.util.ConcatPDF;
 import oscar.util.UtilDateUtilities;
 
@@ -47,9 +52,17 @@ import oscar.util.UtilDateUtilities;
  */
 public class BillingInvoiceAction extends DispatchAction {
     
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	   
+	
     public ActionForward getPrintPDF(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws IOException {
         String invoiceNo = request.getParameter("invoiceNo");                
         String actionResult = "failure";
+        
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_billing", "r", null)) {
+        	throw new SecurityException("missing required security object (_billing)");
+        }
+
         
         if (invoiceNo != null) {
             response.setContentType("application/pdf"); // octet-stream
@@ -64,6 +77,10 @@ public class BillingInvoiceAction extends DispatchAction {
     
     public ActionForward getListPrintPDF(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws IOException {
        
+    	 if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_billing", "r", null)) {
+         	throw new SecurityException("missing required security object (_billing)");
+         }
+    	 
         String actionResult = "failure";       
         String[] invoiceNos = request.getParameterValues("invoiceAction");
         
@@ -97,6 +114,10 @@ public class BillingInvoiceAction extends DispatchAction {
     
     public ActionForward sendEmail(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         
+    	 if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_billing", "w", null)) {
+         	throw new SecurityException("missing required security object (_billing)");
+         }
+    	 
         String invoiceNoStr = request.getParameter("invoiceNo");
         Integer invoiceNo = Integer.parseInt(invoiceNoStr);
         Locale locale = request.getLocale();
@@ -113,6 +134,10 @@ public class BillingInvoiceAction extends DispatchAction {
     
     public ActionForward sendListEmail(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         
+    	 if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_billing", "w", null)) {
+         	throw new SecurityException("missing required security object (_billing)");
+         }
+    	 
         String actionResult = "failure";       
         String[] invoiceNos = request.getParameterValues("invoiceAction");
         Locale locale = request.getLocale();

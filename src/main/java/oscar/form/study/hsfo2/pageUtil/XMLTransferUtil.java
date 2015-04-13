@@ -2026,7 +2026,7 @@ public class XMLTransferUtil
 
   public ArrayList validateDoc( HsfHmpDataDocument doc ) throws IOException, XmlException
   {
-      logger.info( "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n" + PrettyPrinter.indent( doc.xmlText() ) );
+      logger.debug( "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n" + PrettyPrinter.indent( doc.xmlText() ) );
 
     ArrayList<StringBuilder> messageArray = new ArrayList<StringBuilder>();
     XmlOptions option = new XmlOptions();
@@ -2151,7 +2151,7 @@ public class XMLTransferUtil
 
       output.put( SoapElementKey.responseStatusCode, result );
       String rsXml = post.getResponseBodyAsString();
-      logger.info( "response xml of GetDataDateRange: \n" + rsXml );
+      logger.debug( "response xml of GetDataDateRange: \n" + rsXml );
       if ( result != 200 )
       {
         logger.error( "GetDataDateRange result code: " + result );

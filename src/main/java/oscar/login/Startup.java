@@ -55,7 +55,7 @@ public class Startup implements ServletContextListener {
 			try {
 				// Anyone know a better way to do this?
 				String url = sc.getServletContext().getResource("/").getPath();
-				logger.info(url);
+				logger.debug(url);
 				int idx = url.lastIndexOf('/');
 				url = url.substring(0, idx);
 
@@ -171,14 +171,13 @@ public class Startup implements ServletContextListener {
 		String propertyDir = p.getProperty(propName);
 		if (propertyDir == null) {
 			propertyDir = baseDir + "/" + context + endDir;
-			logger.info("Setting property " + propName + " with value " + propertyDir);
+			logger.debug("Setting property " + propName + " with value " + propertyDir);
 			p.setProperty(propName, propertyDir);
 			// Create directory if it does not exist
 			if (!(new File(propertyDir)).exists()) {
-				logger.info("Directory does not exist:  " + propertyDir);
-				logger.info("Creating...");
+				logger.warn("Directory does not exist:  " + propertyDir + ". Creating.");
 				boolean success = (new File(propertyDir)).mkdirs();
-				if (!success) logger.info("An error occured when creating " + propertyDir);
+				if (!success) logger.error("An error occured when creating " + propertyDir);
 			}
 		}
 	}

@@ -128,7 +128,7 @@ public final class LoginCheckLoginBean {
 	}
 
 	private String[] cleanNullObj(String errorMsg) {
-		logger.info(errorMsg);
+		logger.warn(errorMsg);
 		LogAction.addLogSynchronous("", "failed", LogConst.CON_LOGIN, username, ip);
 		userpassword = null;
 		password = null;
@@ -136,7 +136,7 @@ public final class LoginCheckLoginBean {
 	}
 
 	private String[] cleanNullObjExpire(String errorMsg) {
-		logger.info(errorMsg);
+		logger.warn(errorMsg);
 		LogAction.addLogSynchronous("", "expired", LogConst.CON_LOGIN, username, ip);
 		userpassword = null;
 		password = null;

@@ -80,6 +80,7 @@ import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.sharingcenter.SharingCenterUtil;
 import org.oscarehr.sharingcenter.model.DemographicExport;
 import org.oscarehr.util.LoggedInInfo;
@@ -112,6 +113,7 @@ public class ManageDocumentAction extends DispatchAction {
 	private DocumentDao documentDao = SpringUtils.getBean(DocumentDao.class);
 	private CtlDocumentDao ctlDocumentDao = SpringUtils.getBean(CtlDocumentDao.class);
 	private ProviderInboxRoutingDao providerInboxRoutingDAO = SpringUtils.getBean(ProviderInboxRoutingDao.class);
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
@@ -127,6 +129,10 @@ public class ManageDocumentAction extends DispatchAction {
 		String documentId = request.getParameter("documentId");// :29<
 		String docType = request.getParameter("docType");// :consult<
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "w", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+        }
+		
 		LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, documentId, request.getRemoteAddr());
 
 		String demog = request.getParameter("demog");
@@ -221,6 +227,11 @@ public class ManageDocumentAction extends DispatchAction {
 
 	public ActionForward getDemoNameAjax(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String dn = request.getParameter("demo_no");
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", dn)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
 		HashMap hm = new HashMap();
 		hm.put("demoName", getDemoName(LoggedInInfo.getLoggedInInfoFromSession(request), dn));
 		JSONObject jsonObject = JSONObject.fromObject(hm);
@@ -238,6 +249,11 @@ public class ManageDocumentAction extends DispatchAction {
 		String docType = request.getParameter("docType");
 		String docId = request.getParameter("docId");
 		String providerNo = request.getParameter("providerNo");
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "w", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+        }
+		
 
 		providerInboxRoutingDAO.removeLinkFromDocument(docType, Integer.parseInt(docId), providerNo);
 		HashMap hm = new HashMap();
@@ -262,6 +278,10 @@ public class ManageDocumentAction extends DispatchAction {
 		String documentId = request.getParameter("documentId");// :29<
 		String docType = request.getParameter("docType");// :consult<
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "w", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+        }
+		
 		LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, documentId, request.getRemoteAddr());
 
 		String demog = request.getParameter("demog");
@@ -628,6 +648,11 @@ public class ManageDocumentAction extends DispatchAction {
 	}
 
 	public ActionForward viewDocPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "r", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+        }
+		
 		log.debug("in viewDocPage");
 		try {
 			String doc_no = request.getParameter("doc_no");
@@ -689,7 +714,10 @@ public class ManageDocumentAction extends DispatchAction {
 
 	public ActionForward view2(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		// TODO: NEED TO CHECK FOR ACCESS
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "r", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+        }
+		
 		String doc_no = request.getParameter("doc_no");
 		log.debug("Document No :" + doc_no);
 
@@ -742,6 +770,10 @@ public class ManageDocumentAction extends DispatchAction {
 
 	public ActionForward getDocPageNumber(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "r", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+        }
+		
 		String doc_no = request.getParameter("doc_no");
 		String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 		// File documentDir = new File(docdownload);
@@ -766,6 +798,10 @@ public class ManageDocumentAction extends DispatchAction {
 	
 	public ActionForward downloadCDS(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "r", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+        }
+		
 		DemographicExport export = SharingCenterUtil.retrieveDemographicExport(Integer.valueOf(request.getParameter("doc_no")));
 		String contentType = "application/zip";
 		String filename = String.format("%s_%s", export.getDocumentType(), export.getId());
@@ -785,6 +821,10 @@ public class ManageDocumentAction extends DispatchAction {
 	public ActionForward display(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "r", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+        }
 		
 		String temp = request.getParameter("remoteFacilityId");
 		Integer remoteFacilityId = null;
@@ -913,6 +953,11 @@ public class ManageDocumentAction extends DispatchAction {
      
         public void doViewDocumentInfo(HttpServletRequest request, PrintWriter out,boolean viewAnnotationAcknowledgementTicklerFlag, boolean viewDocumentDescriptionFlag) {
         	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        	
+        	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "r", null)) {
+            	throw new SecurityException("missing required security object (_edoc)");
+            }
+        	
             String doc_no = request.getParameter("doc_no");
             Locale locale=request.getLocale();
                 
@@ -977,6 +1022,10 @@ public class ManageDocumentAction extends DispatchAction {
         String sourceFilePath = IncomingDocUtil.getIncomingDocumentFilePathName(queueId1, pdfDir, pdfName);
         String destFilePath;
 
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "w", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+        }
+        
         String savePath = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
         if (!savePath.endsWith(File.separator)) {
             savePath += File.separator;
@@ -1059,6 +1108,9 @@ public class ManageDocumentAction extends DispatchAction {
         
     public ActionForward viewIncomingDocPageAsPdf(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "r", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+        }
 
         String pageNum = request.getParameter("curPage");
         String queueId = request.getParameter("queueId");
@@ -1138,6 +1190,10 @@ public class ManageDocumentAction extends DispatchAction {
 
     public ActionForward displayIncomingDocs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "r", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+        }
+    	
         String queueId = request.getParameter("queueId");
         String pdfDir = request.getParameter("pdfDir");
         String pdfName = request.getParameter("pdfName");
@@ -1174,6 +1230,10 @@ public class ManageDocumentAction extends DispatchAction {
     public ActionForward viewIncomingDocPageAsImage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "r", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+        }
+    	
         String pageNum = request.getParameter("curPage");
         String queueId = request.getParameter("queueId");
         String pdfDir = request.getParameter("pdfDir");

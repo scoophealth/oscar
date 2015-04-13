@@ -46,6 +46,8 @@ import org.oscarehr.common.dao.FlowSheetCustomizationDao;
 import org.oscarehr.common.dao.FlowSheetUserCreatedDao;
 import org.oscarehr.common.model.FlowSheetCustomization;
 import org.oscarehr.common.model.FlowSheetUserCreated;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -62,16 +64,15 @@ public class FlowSheetCustomAction extends DispatchAction {
 
     private FlowSheetCustomizationDao flowSheetCustomizationDao =  (FlowSheetCustomizationDao) SpringUtils.getBean("flowSheetCustomizationDao");
     private FlowSheetUserCreatedDao flowSheetUserCreatedDao = (FlowSheetUserCreatedDao) SpringUtils.getBean("flowSheetUserCreatedDao");
-
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+    
     public void setFlowSheetCustomizationDao(FlowSheetCustomizationDao flowSheetCustomizationDao) {
         this.flowSheetCustomizationDao = flowSheetCustomizationDao;
     }
 
     @Override
     protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        logger.debug("AnnotationAction-unspec");
-        //return setup(mapping, form, request, response);
-        return null;
+       return null;
     }
 
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -81,6 +82,10 @@ public class FlowSheetCustomAction extends DispatchAction {
         	demographicNo = request.getParameter("demographic");
         }
 
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+        
         MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
         MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(flowsheet);
 
@@ -158,6 +163,10 @@ public class FlowSheetCustomAction extends DispatchAction {
         String demographicNo = "0";
         if (request.getParameter("demographic")!=null){
         	demographicNo = request.getParameter("demographic");
+        }
+        
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demographic)");
         }
 
         logger.debug("UPDATING FOR demographic "+demographicNo);
@@ -324,6 +333,10 @@ public class FlowSheetCustomAction extends DispatchAction {
         if (request.getParameter("demographic")!=null){
         	demographicNo = request.getParameter("demographic");
         }
+        
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
 
         FlowSheetCustomization cust = new FlowSheetCustomization();
         cust.setAction(FlowSheetCustomization.DELETE);
@@ -346,6 +359,10 @@ public class FlowSheetCustomAction extends DispatchAction {
 
         String flowsheet = request.getParameter("flowsheet");
         String demographicNo = request.getParameter("demographic");
+        
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
 
         FlowSheetCustomization cust = flowSheetCustomizationDao.getFlowSheetCustomization(Integer.parseInt(id));
         if(cust != null) {

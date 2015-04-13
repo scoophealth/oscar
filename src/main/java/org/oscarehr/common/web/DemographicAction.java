@@ -43,6 +43,8 @@ import org.oscarehr.common.dao.DemographicExtArchiveDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicExtArchive;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 /*
@@ -56,11 +58,16 @@ public class DemographicAction extends DispatchAction  {
 	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	private DemographicArchiveDao demographicArchiveDao = SpringUtils.getBean(DemographicArchiveDao.class);
 	private DemographicExtArchiveDao demographicExtArchiveDao = SpringUtils.getBean(DemographicExtArchiveDao.class);
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	public ActionForward getAddressAndPhoneHistoryAsJson(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) 
 			throws Exception{
 		
 		String demographicNo = request.getParameter("demographicNo");
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
 		
 		if(demographicNo != null) {
 			List<DemographicArchive> archives = demographicArchiveDao.findByDemographicNoChronologically(Integer.parseInt(demographicNo));

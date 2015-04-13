@@ -38,15 +38,26 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.billing.CA.ON.util.EDTFolder;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
 public class MoveMOHFilesAction extends Action {
 
 	private static Logger logger = MiscUtils.getLogger();
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	   
+
 
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+
 		StringBuilder messages = new StringBuilder();
 		StringBuilder errors = new StringBuilder();
 

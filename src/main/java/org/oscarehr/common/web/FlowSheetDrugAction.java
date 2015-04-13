@@ -39,6 +39,8 @@ import org.oscarehr.common.dao.FlowSheetDrugDao;
 import org.oscarehr.common.dao.FlowSheetDxDao;
 import org.oscarehr.common.model.FlowSheetDrug;
 import org.oscarehr.common.model.FlowSheetDx;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -48,7 +50,8 @@ public class FlowSheetDrugAction extends DispatchAction {
     private FlowSheetDrugDao flowSheetDrugDao;
 
     private FlowSheetDxDao flowSheetDxDao = SpringUtils.getBean(FlowSheetDxDao.class);
-
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+    
     public void setFlowSheetDrugDao(FlowSheetDrugDao flowSheetDrugDao) {
         this.flowSheetDrugDao = flowSheetDrugDao;
     }
@@ -72,6 +75,9 @@ public class FlowSheetDrugAction extends DispatchAction {
         cust.setDemographicNo(Integer.parseInt(demographicNo));
         cust.setCreateDate(new Date());
 
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
         log2.debug("SAVE " + cust);
 
         flowSheetDrugDao.persist(cust);
@@ -105,6 +111,10 @@ public class FlowSheetDrugAction extends DispatchAction {
 
         log2.debug("SAVE " + cust);
 
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+        
         flowSheetDxDao.persist(cust);
 
         ActionForward ff = mapping.findForward("success");

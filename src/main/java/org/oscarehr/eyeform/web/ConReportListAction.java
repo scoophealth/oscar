@@ -45,6 +45,8 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.eyeform.dao.EyeformConsultationReportDao;
 import org.oscarehr.eyeform.model.EyeformConsultationReport;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -55,7 +57,7 @@ public class ConReportListAction extends DispatchAction {
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	DemographicDao demographicDao= (DemographicDao)SpringUtils.getBean("demographicDao");
 	EyeformConsultationReportDao crDao = SpringUtils.getBean(EyeformConsultationReportDao.class);
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	@Override
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -67,6 +69,10 @@ public class ConReportListAction extends DispatchAction {
 		
 		DynaValidatorForm testForm = (DynaValidatorForm) form;
 		ConsultationReportFormBean crBean = (ConsultationReportFormBean)testForm.get("cr");
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "r", null)) {
+        	throw new SecurityException("missing required security object (_billing)");
+        }
 		
 		EyeformConsultationReport cr = new EyeformConsultationReport();
 		if(crBean.getStatus() != null && crBean.getStatus().length()>0) {

@@ -25,15 +25,24 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class HealthCardSearchAction extends DispatchAction {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String hin = request.getParameter("hin");
 		String ver = request.getParameter("ver");
 		String issueDate = request.getParameter("issueDate");
 		String hinExp = request.getParameter("hinExp");
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
 		
 		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 		List<Demographic> matches = demographicDao.getDemographicsByHealthNum(hin);
