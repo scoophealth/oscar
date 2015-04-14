@@ -146,6 +146,8 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     @Column(name="appointment_no")
     private Integer appointmentNo;
 
+    private Boolean restrictToProgram=false;
+    
     public Document() {
     }
 
@@ -365,4 +367,14 @@ public class Document extends AbstractModel<Integer> implements Serializable {
 	protected void jpaUpdateDate() {
 		this.updatedatetime = new Date();
 	}
+
+	public Boolean isRestrictToProgram() {
+		return restrictToProgram;
+	}
+
+	public void setRestrictToProgram(Boolean restrictToProgram) {
+		this.restrictToProgram = restrictToProgram;
+	}
+	
+	
 }

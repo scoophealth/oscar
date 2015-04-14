@@ -46,6 +46,7 @@ import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -56,6 +57,8 @@ import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.DocumentStorage;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
+import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
@@ -86,6 +89,15 @@ public class AddEditDocumentAction extends DispatchAction {
 		EDoc newDoc = new EDoc("", "", fileName, "", user, user, fm.getSource(), 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1", 0);
 		newDoc.setDocPublic("0");
 		newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
+		
+        // if the document was added in the context of a program
+		ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
+		LoggedInInfo loggedInInfo  = LoggedInInfo.getLoggedInInfoFromSession(request);
+		ProgramProvider pp = programManager.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+		if(pp != null && pp.getProgramId() != null) {
+			newDoc.setProgramId(pp.getProgramId().intValue());
+		}
+		
 		fileName = newDoc.getFileName();
 		// save local file;
 		if (docFile.getFileSize() == 0) {
@@ -165,6 +177,15 @@ public class AddEditDocumentAction extends DispatchAction {
 		EDoc newDoc = new EDoc("", "", fileName, "", user, user, fm.getSource(), 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1");
 		newDoc.setDocPublic("0");
 		newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
+		
+        // if the document was added in the context of a program
+		ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
+		LoggedInInfo loggedInInfo  = LoggedInInfo.getLoggedInInfoFromSession(request);
+		ProgramProvider pp = programManager.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+		if(pp != null && pp.getProgramId() != null) {
+			newDoc.setProgramId(pp.getProgramId().intValue());
+		}
+		
 		fileName = newDoc.getFileName();
 		// save local file;
 		if (docFile.getFileSize() == 0) {
@@ -251,6 +272,7 @@ public class AddEditDocumentAction extends DispatchAction {
 
 			EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName1, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), "", "", fm.getFunction(), fm.getFunctionId());
 			newDoc.setDocPublic(fm.getDocPublic());
+
 			newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
                         newDoc.setDocClass(fm.getDocClass());
                         newDoc.setDocSubClass(fm.getDocSubClass());
@@ -267,9 +289,16 @@ public class AddEditDocumentAction extends DispatchAction {
 		
 
 			// if the document was added in the context of a program
-			String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
-			if (programIdStr != null) newDoc.setProgramId(Integer.valueOf(programIdStr));
-
+			ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
+			LoggedInInfo loggedInInfo  = LoggedInInfo.getLoggedInInfoFromSession(request);
+			ProgramProvider pp = programManager.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+			if(pp != null && pp.getProgramId() != null) {
+				newDoc.setProgramId(pp.getProgramId().intValue());
+			}
+			
+			String restrictToProgramStr = request.getParameter("restrictToProgram");
+			newDoc.setRestrictToProgram("on".equals(restrictToProgramStr));
+			
 			// if the document was added in the context of an appointment
 			if(fm.getAppointmentNo() != null && fm.getAppointmentNo().length()>0) {
 				newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
@@ -392,8 +421,12 @@ public class AddEditDocumentAction extends DispatchAction {
 			newDoc.setDocId(fm.getMode());
 			newDoc.setDocPublic(fm.getDocPublic());
 			newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
-                        newDoc.setDocClass(fm.getDocClass());
-                        newDoc.setDocSubClass(fm.getDocSubClass());
+            newDoc.setDocClass(fm.getDocClass());
+            newDoc.setDocSubClass(fm.getDocSubClass());
+            String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+            if (programIdStr != null) newDoc.setProgramId(Integer.valueOf(programIdStr));
+
+            			
 			fileName = newDoc.getFileName();
 			if (docFile.getFileSize() != 0 && fileName.length()!=0) {
 				// save local file

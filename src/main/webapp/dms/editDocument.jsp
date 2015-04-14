@@ -81,6 +81,7 @@ if (request.getAttribute("completedForm") != null) {
     formdata.setReviewerId(currentDoc.getReviewerId());
     formdata.setReviewDateTime(currentDoc.getReviewDateTime());
     formdata.setContentDateTime(UtilDateUtilities.DateToString(currentDoc.getContentDateTime(),EDocUtil.CONTENT_DATETIME_FORMAT));
+    formdata.setRestrictToProgram(currentDoc.isRestrictToProgram());
     lastUpdate = currentDoc.getDateTimeStamp();
     fileName = currentDoc.getFileName();
 }
@@ -304,6 +305,13 @@ for (String reportClass : reportClasses) {
 			<td>
 			<div style="width: 300px; overflow: hidden; text-overflow: ellipsis;"><%=fileName%></div>
 		</tr>
+		<tr>
+			<td>Restricted to program:</td>
+			<td>
+				<%=formdata.isRestrictToProgram() %>
+			</td>
+		</tr>
+		
 		<tr>
                 <% boolean updatableContent=false; %>
                 <oscar:oscarPropertiesCheck property="ALLOW_UPDATE_DOCUMENT_CONTENT" value="true" defaultVal="false">
