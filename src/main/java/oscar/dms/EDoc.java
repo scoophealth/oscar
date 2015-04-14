@@ -76,6 +76,8 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 	private boolean indivoRegistered = false;
 	private int numberOfPages = 0;
 	private Integer appointmentNo = -1;
+	private boolean restrictToProgram=false;
+	
 
 	/** Creates a new instance of EDoc */
 	public EDoc() {
@@ -504,6 +506,16 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 
 	public void setNumberOfPages(int n) {
 		this.numberOfPages = n;
+	}
+	
+	
+
+	public boolean isRestrictToProgram() {
+		return restrictToProgram;
+	}
+
+	public void setRestrictToProgram(boolean restrictToProgram) {
+		this.restrictToProgram = restrictToProgram;
 	}
 
 	@Override

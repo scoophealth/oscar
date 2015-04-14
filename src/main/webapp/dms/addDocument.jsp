@@ -352,6 +352,8 @@ for (String reportClass : reportClasses) {
         <bean:message key="dms.addDocument.msgDocSubClass"/>:
         <input type="text" name="docSubClass" id="docSubClass" style="width:330px">
         <div class="autocomplete_style" id="docSubClass_list"></div>
+        &nbsp;
+        <input type="checkbox" name="restrictToProgram"> Restrict to current program
         <br />
 	<input type="hidden" name="mode" value="add">
 	<input type="submit" name="Submit" value="Add">
@@ -419,6 +421,9 @@ for (String reportClass : reportClasses) {
         <bean:message key="dms.addDocument.msgDocSubClass"/>:
         <input type="text" name="docSubClass" id="docSubClass2" style="width:330px">
         <div class="autocomplete_style" id="docSubClass_list2"></div>
+        
+        
+		
         <br />
 	<input type="hidden" name="mode" value="addLink">
 	<input type="SUBMIT" name="Submit" value="Add">

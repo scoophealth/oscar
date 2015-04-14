@@ -9,11 +9,13 @@
 
 package oscar.dms.actions;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,32 +23,33 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.common.dao.QueueDocumentLinkDao;
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
+import oscar.dms.IncomingDocUtil;
 import oscar.dms.data.DocumentUploadForm;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 
 import com.lowagie.text.pdf.PdfReader;
-import java.io.File;
-import java.util.ResourceBundle;
-import org.apache.commons.io.IOUtils;
-import org.oscarehr.common.dao.UserPropertyDAO;
-import org.oscarehr.common.model.UserProperty;
-import org.oscarehr.util.SpringUtils;
-import oscar.dms.IncomingDocUtil;
 
 public class DocumentUploadAction extends DispatchAction {
 	
@@ -102,6 +105,15 @@ public class DocumentUploadAction extends DispatchAction {
 			EDoc newDoc = new EDoc("", "", fileName, "", user, user, fm.getSource(), 'A',
 								   oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1", 0);
 			newDoc.setDocPublic("0");
+			
+	        // if the document was added in the context of a program
+			ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
+			LoggedInInfo loggedInInfo  = LoggedInInfo.getLoggedInInfoFromSession(request);
+			ProgramProvider pp = programManager.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+			if(pp != null && pp.getProgramId() != null) {
+				newDoc.setProgramId(pp.getProgramId().intValue());
+			}
+			
 			fileName = newDoc.getFileName();
 			// save local file;
 			if (docFile.getFileSize() == 0) {
@@ -244,7 +256,7 @@ public class DocumentUploadAction extends DispatchAction {
         return null;
     }
         public ActionForward setUploadIncomingDocumentFolder(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-								 HttpServletResponse response) throws Exception {
+								 HttpServletResponse response)  {
 
         String user_no = (String) request.getSession().getAttribute("user");
         String destFolder=request.getParameter("destFolder");

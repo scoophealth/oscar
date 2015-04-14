@@ -45,6 +45,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
@@ -69,6 +70,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerLink;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -89,6 +91,8 @@ public final class EDocUtil {
 	private static DocumentDao documentDao = (DocumentDao) SpringUtils.getBean(DocumentDao.class);
 	private static IndivoDocsDao indivoDocsDao = (IndivoDocsDao) SpringUtils.getBean(IndivoDocsDao.class);
 	private static Logger logger = MiscUtils.getLogger();
+	private static ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+	
 	
 	public static final String PUBLIC = "public";
 	public static final String PRIVATE = "private";
@@ -228,6 +232,7 @@ public final class EDocUtil {
 		doc.setObservationdate(MyDateFormat.getSysDate(newDocument.getObservationDate()));
 		doc.setNumberofpages(newDocument.getNumberOfPages());
 		doc.setAppointmentNo(newDocument.getAppointmentNo());
+		doc.setRestrictToProgram(newDocument.isRestrictToProgram());
 		documentDao.persist(doc);
 
 		Integer document_no = doc.getId();
@@ -335,7 +340,7 @@ public final class EDocUtil {
 		if (!attached) {
 			ctlDocs = documentDao.findCtlDocsAndDocsByModuleAndModuleId(Module.DEMOGRAPHIC, ConversionUtils.fromIntString(demoNo));
 		}
-		return listDocs(loggedInInfo, attached, docs, ctlDocs);
+		return documentProgramFiltering(loggedInInfo,listDocs(loggedInInfo, attached, docs, ctlDocs));
 	}
 	
 	//Consultation Response fetch documents
@@ -345,7 +350,7 @@ public final class EDocUtil {
 		if (!attached) {
 			ctlDocs = documentDao.findCtlDocsAndDocsByModuleAndModuleId(Module.DEMOGRAPHIC, ConversionUtils.fromIntString(demoNo));
 		}
-		return listDocs(loggedInInfo, attached, docs, ctlDocs);
+		return documentProgramFiltering(loggedInInfo,listDocs(loggedInInfo, attached, docs, ctlDocs));
 	}
 	
 	private static ArrayList<EDoc> listDocs(LoggedInInfo loggedInInfo, boolean attached, List<Object[]> docs, List<Object[]> ctlDocs) {
@@ -377,6 +382,7 @@ public final class EDocUtil {
 			currentdoc.setReviewDateTime(ConversionUtils.toTimestampString(d.getReviewdatetime()));
 			currentdoc.setReviewDateTimeDate(d.getReviewdatetime());
                         currentdoc.setContentDateTime(d.getContentdatetime());
+            currentdoc.setRestrictToProgram(d.isRestrictToProgram());
 			attachedDocs.add(currentdoc);
 		}
 
@@ -409,7 +415,8 @@ public final class EDocUtil {
 				currentdoc.setReviewDateTime(ConversionUtils.toTimestampString(d.getReviewdatetime()));
 				currentdoc.setReviewDateTimeDate(d.getReviewdatetime());
                                 currentdoc.setContentDateTime(d.getContentdatetime());
-
+                currentdoc.setRestrictToProgram(d.isRestrictToProgram());
+                                
 				if (!attachedDocs.contains(currentdoc)) resultDocs.add(currentdoc);
 			}
 		}
@@ -497,6 +504,9 @@ public final class EDocUtil {
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
 			resultDocs = documentFacilityFiltering(loggedInInfo, resultDocs);
 		}
+		
+		//filter by program.
+		resultDocs = documentProgramFiltering(loggedInInfo, resultDocs);
 
 		return resultDocs;
 	}
@@ -548,11 +558,14 @@ public final class EDocUtil {
 		currentdoc.setReviewerId(d.getReviewer());
 		currentdoc.setReviewDateTime(ConversionUtils.toDateString(d.getReviewdatetime()));
 		currentdoc.setReviewDateTimeDate(d.getReviewdatetime());
-                currentdoc.setDateTimeStamp(ConversionUtils.toDateString(d.getUpdatedatetime()));
-                currentdoc.setDateTimeStampAsDate(d.getUpdatedatetime());
-                currentdoc.setDocClass(d.getDocClass());
-                currentdoc.setDocSubClass(d.getDocSubClass());
-                currentdoc.setContentDateTime(d.getContentdatetime());
+        currentdoc.setDateTimeStamp(ConversionUtils.toDateString(d.getUpdatedatetime()));
+        currentdoc.setDateTimeStampAsDate(d.getUpdatedatetime());
+        currentdoc.setDocClass(d.getDocClass());
+        currentdoc.setDocSubClass(d.getDocSubClass());
+        currentdoc.setContentDateTime(d.getContentdatetime());
+        if(d.isRestrictToProgram() != null && d.isRestrictToProgram()) {
+        	currentdoc.setRestrictToProgram(true);
+        }
 	    return currentdoc;
     }
 
@@ -600,6 +613,32 @@ public final class EDocUtil {
 		for (EDoc eDoc : eDocs) {
 			Integer programId = eDoc.getProgramId();
 			if (programManager.hasAccessBasedOnCurrentFacility(loggedInInfo, programId)) results.add(eDoc);
+		}
+
+		return results;
+	}
+
+	/*
+	 * 1) is the patient in my program domain
+	 */
+	private static ArrayList<EDoc> documentProgramFiltering(LoggedInInfo loggedInInfo, List<EDoc> eDocs) {		
+		ArrayList<EDoc> results = new ArrayList<EDoc>();
+
+		List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+			
+		for (EDoc eDoc : eDocs) {
+			
+			if(!eDoc.isRestrictToProgram() || eDoc.getProgramId() == null || eDoc.getProgramId().intValue() == -1) {
+				results.add(eDoc);
+				continue;
+			}
+			
+			for(ProgramProvider pp:ppList){
+				if(pp.getProgramId().intValue() == eDoc.getProgramId().intValue()) {
+					results.add(eDoc);
+					continue;
+				}
+			}
 		}
 
 		return results;
@@ -684,7 +723,8 @@ public final class EDocUtil {
 			currentdoc.setContentType(d.getContenttype());
 			currentdoc.setNumberOfPages(d.getNumberofpages());
                         currentdoc.setContentDateTime(d.getContentdatetime());
-
+            currentdoc.setRestrictToProgram(d.isRestrictToProgram());
+            
 			if (myOscarEnabled) {
 				IndivoDocs id = iDao.findByOscarDocNo(d.getDocumentNo(), "document");
 				if (id != null) {
