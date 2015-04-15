@@ -123,6 +123,10 @@ width: auto;
 #left_pane{
 padding:8px;
 }
+
+@media print {
+ .noprint {display:none;}
+}
 </style>
 
 </head>
@@ -250,7 +254,7 @@ padding:8px;
 	 <!-- Start patient List template --> 
 
 	<div class="container-fluid" ng-controller="PatientListCtrl" >
-		<div id="left_pane" class="col-md-2" ng-if="showPatientList()">
+		<div id="left_pane" class="col-md-2 noprint" ng-if="showPatientList()">
 		
 			<ul class="nav nav-tabs">			
 				<li ng-repeat="item in tabItems" ng-class="{'active': isActive(item.id)}" class="hand-hover">
