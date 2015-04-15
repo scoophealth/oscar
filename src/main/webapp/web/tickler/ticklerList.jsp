@@ -40,7 +40,7 @@
 <div ng-show="ticklerReadAccess" class="col-lg-12">
  	
 
-<form name="searchForm" id="searchForm">
+<form name="searchForm" id="searchForm" class="noprint">
     
 <div class="row">
   <div class="col-xs-2">
@@ -95,9 +95,11 @@
 <div style="height:5px"></div>
 
 <div class="row">
-  <div class="col-xs-2">
+<div class="col-xs-6">
 <button class="btn btn-primary" type="button" ng-click="doSearch()" ><bean:message key="global.search" bundle="ui"/></button>
 <button class="btn btn-default" type="button" ng-click="clear()" ><bean:message key="global.clear" bundle="ui"/></button>
+
+<button class="btn btn-default" type="button" ng-click="printArea()"><span class="glyphicon glyphicon-print"></span> Print List</button>
 </div>
 </div>        	
 </form>
@@ -108,11 +110,11 @@
   <tbody>
     	
     <tr ng-repeat="tickler in $data">
- 		<td ng-show="ticklerWriteAccess" >
- 			<input type="checkbox" ng-model="tickler.checked" >
+ 		<td ng-show="ticklerWriteAccess">
+ 			<input type="checkbox" ng-model="tickler.checked" class="noprint">
  		</td>
     	<td ng-show="ticklerWriteAccess" >
-    		<a ng-click="editTickler(tickler)" class="hand-hover"><bean:message key="global.edit" bundle="ui"/></a> 		
+    		<a ng-click="editTickler(tickler)" class="hand-hover noprint"><bean:message key="global.edit" bundle="ui"/></a> 		
     	</td>
     	<td ng-show="!ticklerWriteAccess" >
     		<a ng-click="editTickler(tickler)" class="hand-hover"><bean:message key="global.view" bundle="ui"/></a> 		
@@ -148,12 +150,12 @@
 		 	</span>
         </td>      
         <td ng-show="ticklerWriteAccess" data-title="''">     
-    		<a ng-click="editNote2(tickler)" class="hand-hover"><img src="../images/notepad.gif" border="0"></a>
+    		<a ng-click="editNote2(tickler)" class="hand-hover noprint"><img src="../images/notepad.gif" border="0"></a>
     	</td>  
     </tr>
   </tbody>
 
-    <tfoot ng-show="ticklerWriteAccess">   
+    <tfoot ng-show="ticklerWriteAccess" class="noprint">   
         <tr><td colspan="11" class="white">
         	<a ng-click="checkAll()"><bean:message key="tickler.list.checkAll" bundle="ui"/></a> - <a ng-click="checkNone()"><bean:message key="tickler.list.checkNone" bundle="ui"/></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
             <button class="btn btn-default" name="button" type="button" ng-click="addTickler()"><bean:message key="tickler.list.add" bundle="ui"/></button>
