@@ -44,6 +44,7 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.PHRVerificationDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.util.LoggedInInfo;
@@ -61,6 +62,8 @@ import oscar.util.UtilDateUtilities;
  */
 public class PHRViewPatientRecord extends DispatchAction {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
        return super.execute(mapping, form, request, response);
@@ -80,6 +83,10 @@ public class PHRViewPatientRecord extends DispatchAction {
         if (demographicNo == null) { //shouldn't really happy, but just in case
             response.getWriter().println("Error: Lost demographic number.  Please try again");
             return null;
+        }
+        
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demgoraphic)");
         }
         
         LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);

@@ -137,7 +137,7 @@
 		}
 		else if (requestId == null && segmentId == null)
 		{
-			MiscUtils.getLogger().error("Missing both requestId and segmentId.");
+			MiscUtils.getLogger().debug("Missing both requestId and segmentId.");
 		}
 
 		if (demo != null) consultUtil.estPatient(loggedInInfo, demo);

@@ -195,7 +195,7 @@ public class EctConsultationFormRequestAction extends Action {
                                         consult.setProfessionalSpecialist(professionalSpecialist);
                                         consultationRequestDao.merge(consult);
                                     }
-                                        MiscUtils.getLogger().info("saved new consult id "+ consult.getId());
+                                        MiscUtils.getLogger().debug("saved new consult id "+ consult.getId());
                                         requestId = String.valueOf(consult.getId());
                                         
                                 Enumeration e = request.getParameterNames();

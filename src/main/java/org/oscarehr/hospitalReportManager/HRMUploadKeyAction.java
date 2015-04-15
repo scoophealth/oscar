@@ -55,12 +55,12 @@ public class HRMUploadKeyAction extends Action {
             is.close();
           
             if (checkFileUploadedSuccessfully != FileUploadCheck.UNSUCCESSFUL_SAVE){
-                logger.info("filePath"+filePath);
-                logger.info("Type :"+type);
+                logger.debug("filePath"+filePath);
+                logger.debug("Type :"+type);
                 
                 DefaultHandler defaultHandler =  HandlerClassFactory.getDefaultHandler();
                 if(defaultHandler != null) {
-                	logger.info("MESSAGE HANDLER "+defaultHandler.getClass().getName());
+                	logger.debug("MESSAGE HANDLER "+defaultHandler.getClass().getName());
                 }
                 if((defaultHandler.readTextFile(filePath))!= null) {
                 	outcome = "success";

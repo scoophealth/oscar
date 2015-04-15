@@ -23,7 +23,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import com.indivica.olis.Driver;
 
@@ -35,10 +38,15 @@ import oscar.oscarLab.ca.all.util.Utilities;
 public class OLISResultsAction extends DispatchAction {
 
 	public static HashMap<String, OLISHL7Handler> searchResultsMap = new HashMap<String, OLISHL7Handler>();
-	
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	 
 	@Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "r", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+		
 		try {
 			String olisResultString = (String) request.getAttribute("olisResponseContent");			
 			if(olisResultString == null) {

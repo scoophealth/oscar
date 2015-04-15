@@ -180,7 +180,7 @@ public class BillingGuidelines  {
 
     public List<DSConsequence> evaluateAndGetConsequences(String demographicNo, String providerNo) {
         log.debug("passed in provider: " + providerNo + " demographicNo" + demographicNo);
-        log.info("Decision Support 'evaluateAndGetConsequences' has been called, reading " + billingGuideLines.size() + " for this provider");
+        log.debug("Decision Support 'evaluateAndGetConsequences' has been called, reading " + billingGuideLines.size() + " for this provider");
         ArrayList<DSConsequence> allResultingConsequences = new ArrayList<DSConsequence>();
         for (DSGuideline dsGuideline: billingGuideLines) {
             try {
@@ -189,10 +189,10 @@ public class BillingGuidelines  {
                     allResultingConsequences.addAll(newConsequences);
                 }
             } catch (DecisionSupportException dse) {
-                log.error("Failed to evaluate the patient against guideline, skipping guideline uuid: " , dse);
+                log.warn("Failed to evaluate the patient against guideline, skipping guideline uuid " + dsGuideline.getUuid() + " (" + dsGuideline.getTitle() + ")");
             }
         }
-        log.info("Decision Support 'evaluateAndGetConsequences' finished, returing " + allResultingConsequences.size() + " consequences");
+        log.debug("Decision Support 'evaluateAndGetConsequences' finished, returing " + allResultingConsequences.size() + " consequences");
         return allResultingConsequences;
     }
 

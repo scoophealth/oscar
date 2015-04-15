@@ -41,17 +41,25 @@ import org.apache.struts.action.ActionMapping;
 import org.marc.shic.core.configuration.IheAffinityDomainConfiguration;
 import org.marc.shic.core.exceptions.IheConfigurationException;
 import org.marc.shic.core.utils.ConfigurationUtility;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.sharingcenter.dao.AffinityDomainDao;
 import org.oscarehr.sharingcenter.model.AffinityDomainDataObject;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class AffinityDomainParseServlet extends Action {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         IheAffinityDomainConfiguration config = null;
         InputStream filecontent = null;
 
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "r", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+        
         try {
             List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
             for (FileItem item : items) {

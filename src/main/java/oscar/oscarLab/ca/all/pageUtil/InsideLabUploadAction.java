@@ -86,11 +86,11 @@ public class InsideLabUploadAction extends Action {
             int checkFileUploadedSuccessfully = FileUploadCheck.addFile(file.getName(),localFileIs,proNo);            
             
             if (checkFileUploadedSuccessfully != FileUploadCheck.UNSUCCESSFUL_SAVE){
-                logger.info("filePath"+filePath);
-                logger.info("Type :"+type);
+                logger.debug("filePath"+filePath);
+                logger.debug("Type :"+type);
                 MessageHandler msgHandler = HandlerClassFactory.getHandler(type);
                 if(msgHandler != null){
-                   logger.info("MESSAGE HANDLER "+msgHandler.getClass().getName());
+                   logger.debug("MESSAGE HANDLER "+msgHandler.getClass().getName());
                 }
                 if((msgHandler.parse(loggedInInfo, getClass().getSimpleName(), filePath,checkFileUploadedSuccessfully, request.getRemoteAddr())) != null)
                     outcome = "success";
