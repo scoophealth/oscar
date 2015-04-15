@@ -207,6 +207,10 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
             }
         });
     };
+    
+    $scope.printArea = function() {
+    	window.print();
+    }
    
     
 });
