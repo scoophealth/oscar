@@ -31,14 +31,19 @@ import javax.ws.rs.QueryParam;
 import org.oscarehr.managers.BillingManager;
 import org.oscarehr.ws.rest.conversion.ServiceTypeConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
+import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.model.ServiceTypeTo;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import oscar.OscarProperties;
 
 @Path("/billing")
 public class BillingService extends AbstractServiceImpl {
 
 	@Autowired
 	BillingManager billingManager;
+
+	private OscarProperties oscarProperties = OscarProperties.getInstance();
 	
 	@GET
 	@Path("/uniqueServiceTypes")
@@ -55,5 +60,17 @@ public class BillingService extends AbstractServiceImpl {
 		return response;
 
 	}
+
+    @GET
+    @Path("/billingRegion")
+    @Produces("application/json")
+    public GenericRESTResponse billingRegion() {
+        boolean billRegionSet = true;
+        String billRegion = oscarProperties.getProperty("billregion", "").trim().toUpperCase();
+        if(billRegion==null){
+            billRegionSet = false;
+        }
+        return new GenericRESTResponse(billRegionSet, billRegion);
+    }
 	
 }

@@ -130,7 +130,7 @@ padding:8px;
 </style>
 
 </head>
-
+	
 <body ng-controller="OscarCtrl">
 
 	<!-- Fixed navbar -->
@@ -165,11 +165,11 @@ padding:8px;
 					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard" title="<bean:message key="navbar.dashboard" bundle="ui"/>"></span></li>
 				
 					<li ng-repeat="item in menuItems" ng-class="isActive(item)">
-						<a  ng-if="!item.dropdown" ng-click="transition(item)" >{{item.label}}</a>
-						<a  ng-if="item.dropdown"  class="dropdown-toggle" data-toggle="dropdown">{{item.label}}<span class="caret"></span></a>
+						<a href="javascript:void(0)" ng-if="!item.dropdown" ng-click="transition(item)" >{{item.label}}</a>
+						<a href="javascript:void(0)" ng-if="item.dropdown"  class="dropdown-toggle" data-toggle="dropdown">{{item.label}}<span class="caret"></span></a>
 						<ul ng-if="item.dropdown" class="dropdown-menu" role="menu">
 							<li ng-repeat="dropdownItem in item.dropdownItems" >
-								<a  ng-click="transition(dropdownItem)" >{{dropdownItem.label}}</a>
+								<a href="javascript:void(0)" ng-click="transition(dropdownItem)" >{{dropdownItem.label}}</a>
 							</li>
 						</ul>
 					</li>

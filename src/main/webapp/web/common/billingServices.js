@@ -41,6 +41,16 @@ angular.module("billingServices", [])
      
           return deferred.promise;
             
+        },
+        getBillingRegion: function () {
+            var deferred = $q.defer();
+        $http.get(this.apiPath+'billing/billingRegion',this.configHeadersWithCache).success(function (data) {
+                  deferred.resolve(data);
+                }).error(function (data, status, headers, config) {
+                    deferred.reject("An error occured while setting bilingRegion");
+                });
+           return deferred.promise;
         }
+    
     };
 });
