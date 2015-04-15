@@ -1826,6 +1826,8 @@ insert into `secObjectName` (`objectName`) values ('_newCasemgmt.pregnancy');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.episode');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.photo');
 
+insert into `secObjectName` (`objectName`) values ('_hrm');
+
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_billing', 'x', 0, '999998');
@@ -1926,6 +1928,7 @@ insert into `secObjPrivilege` values('doctor','_pmm_editProgram.vacancies','x',0
 insert into `secObjPrivilege` values('doctor','_newCasemgmt.pregnancy','o',0,'999998');
 insert into `secObjPrivilege` values('doctor','_newCasemgmt.episode','o',0,'999998');
 insert into `secObjPrivilege` values('doctor','_newCasemgmt.photo','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_hrm','x',0,'999998');
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);

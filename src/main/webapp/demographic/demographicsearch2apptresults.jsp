@@ -347,7 +347,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 
 <%
 	String ptstatus = request.getParameter("ptstatus") == null ? "active" : request.getParameter("ptstatus");
-	org.oscarehr.util.MiscUtils.getLogger().info("PSTATUS " + ptstatus);
+	org.oscarehr.util.MiscUtils.getLogger().debug("PSTATUS " + ptstatus);
 
 	int rowCounter=0;
 	String bgColor = rowCounter%2==0?"#EEEEFF":"white";

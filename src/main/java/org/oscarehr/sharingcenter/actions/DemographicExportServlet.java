@@ -34,10 +34,12 @@ import org.apache.struts.action.ActionMapping;
 import org.marc.shic.cda.level1.PhrExtractDocument;
 import org.marc.shic.cda.utils.CdaUtils;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.sharingcenter.DocumentType;
 import org.oscarehr.sharingcenter.dao.DemographicExportDao;
 import org.oscarehr.sharingcenter.model.DemographicExport;
 import org.oscarehr.sharingcenter.util.CDADocumentUtil;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 /**
@@ -48,6 +50,8 @@ import org.oscarehr.util.SpringUtils;
  */
 public class DemographicExportServlet extends Action {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -55,6 +59,10 @@ public class DemographicExportServlet extends Action {
 
         String demographicNo = request.getParameter("demographic_no");
 
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+        
         String documentType = request.getParameter("documentType");
 
         String affinityDomain = request.getParameter("affinityDomain");

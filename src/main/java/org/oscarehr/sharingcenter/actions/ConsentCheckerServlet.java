@@ -34,9 +34,11 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.sharingcenter.dao.PatientPolicyConsentDao;
 import org.oscarehr.sharingcenter.dao.PolicyDefinitionDao;
 import org.oscarehr.sharingcenter.model.PolicyDefinitionDataObject;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -46,6 +48,8 @@ public class ConsentCheckerServlet extends Action {
     private static final PatientPolicyConsentDao patientPolicyConsentDao = SpringUtils.getBean(PatientPolicyConsentDao.class);
     private static final PolicyDefinitionDao policyDefinitionDao = SpringUtils.getBean(PolicyDefinitionDao.class);
 
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+    
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         // Get request data
@@ -53,6 +57,10 @@ public class ConsentCheckerServlet extends Action {
         int domainId = Integer.valueOf(request.getParameter("domain"));
         int policyId = Integer.valueOf(request.getParameter("policy"));
 
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+        
         // prepare response
         JSONObject policy = new JSONObject();
         try {

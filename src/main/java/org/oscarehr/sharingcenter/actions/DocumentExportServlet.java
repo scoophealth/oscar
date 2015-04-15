@@ -29,16 +29,17 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
 import org.marc.shic.core.DocumentContainerMetaData;
 import org.marc.shic.core.DocumentMetaData;
 import org.marc.shic.core.FolderMetaData;
 import org.marc.shic.core.MappingCodeType;
 import org.marc.shic.core.SubmissionType;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.sharingcenter.DocumentType;
 import org.oscarehr.sharingcenter.SharingCenterUtil;
 import org.oscarehr.sharingcenter.dao.AffinityDomainDao;
@@ -48,10 +49,13 @@ import org.oscarehr.sharingcenter.dao.PatientSharingNetworkDao;
 import org.oscarehr.sharingcenter.model.AffinityDomainDataObject;
 import org.oscarehr.sharingcenter.model.ClinicInfoDataObject;
 import org.oscarehr.sharingcenter.model.ExportedDocument;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class DocumentExportServlet extends Action {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -62,6 +66,10 @@ public class DocumentExportServlet extends Action {
         // patient
         int patientId = Integer.parseInt(request.getParameter("demographic_no"));
 
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+        
         // authenticator
         int authenticatorId = Integer.parseInt(request.getParameter("authenticatorSelect"));
 

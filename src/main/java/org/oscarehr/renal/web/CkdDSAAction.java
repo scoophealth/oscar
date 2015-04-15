@@ -34,15 +34,23 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.renal.CkdScreener;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class CkdDSAAction extends DispatchAction {
 
 	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	public ActionForward detail(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String demographicNo = request.getParameter("demographic_no");
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
 		CkdScreener ckdScreener = new CkdScreener();
         List<String> reasons =new ArrayList<String>();
         boolean match = ckdScreener.screenDemographic(Integer.parseInt(demographicNo),reasons, null);

@@ -47,6 +47,7 @@ import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.service.StreetHealthReportManager;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -62,6 +63,8 @@ public class StreetHealthIntakeReportAction extends DispatchAction {
 	
 	private static final String SDF_PATTERN = "yyyy-MM-dd";
 	private static final String COHORT_CRITICAL_YM = "-03-31";
+	
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	/*
 	 * 	these values must be retrieved by node id because they are not mapped to a label
@@ -389,6 +392,10 @@ public class StreetHealthIntakeReportAction extends DispatchAction {
 	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_report", "r", null)) {
+        	throw new SecurityException("missing required security object (_report)");
+        }
 		
 		String target = "success";   
         

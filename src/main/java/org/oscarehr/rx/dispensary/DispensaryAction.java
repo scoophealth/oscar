@@ -72,6 +72,7 @@ public class DispensaryAction extends DispatchAction {
 	}
 	
 	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+		
 		String id = request.getParameter("id");
 		if(id == null) {
 			id = (String)request.getAttribute("drugId");
@@ -145,6 +146,10 @@ public class DispensaryAction extends DispatchAction {
 	}
 	
 	public ActionForward saveEvent(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+	
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_dispensing", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo=loggedInInfo.getLoggedInProviderNo();

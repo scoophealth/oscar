@@ -18,15 +18,23 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.hospitalReportManager.dao.HRMCategoryDao;
 import org.oscarehr.hospitalReportManager.dao.HRMSubClassDao;
 import org.oscarehr.hospitalReportManager.model.HRMSubClass;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class HRMMappingAction extends DispatchAction {
 
+	 private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 
 		HRMCategoryDao hrmCategoryDao = (HRMCategoryDao) SpringUtils.getBean("HRMCategoryDao");
 		HRMSubClassDao hrmSubClassDao = (HRMSubClassDao) SpringUtils.getBean("HRMSubClassDao");
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "r", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
 		
 		try {
 			if (request.getParameter("deleteMappingId") != null && request.getParameter("deleteMappingId").trim().length() > 0) {

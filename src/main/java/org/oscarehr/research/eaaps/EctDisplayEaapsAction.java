@@ -42,6 +42,7 @@ import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.UserDSMessagePrefsDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.UserDSMessagePrefs;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -67,6 +68,8 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 	
 	private DxresearchDAO dxresearchDAO = SpringUtils.getBean(DxresearchDAO.class);
 	
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public EctDisplayEaapsAction() {
 		OscarProperties props = OscarProperties.getInstance();
 		setEnabled(Boolean.parseBoolean(props.getProperty("eaaps.enabled", "false")));
@@ -87,6 +90,10 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 		if (!isEnabled()) {
 			return true;
 		}
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_newCasemgmt.eaaps", "r", null)) {
+        	return true;
+        }
 		
 		Demographic demographic = demographicDao.getDemographic(bean.getDemographicNo());
 		if (demographic == null) {

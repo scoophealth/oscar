@@ -25,21 +25,22 @@ package org.oscarehr.sharingcenter.actions;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
 import org.oscarehr.sharingcenter.DocumentType;
 
 public class DocumentPreviewServlet extends Action {
 
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         // get parameters
         String docType = request.getParameter("doc_type");
         String document = request.getParameter("doc_no");
         String provider = request.getParameter("prov_no");
-
+        
         // figure out the destination by the document type
         String destination = "";
         if (DocumentType.CDS.name().equalsIgnoreCase(docType)) {

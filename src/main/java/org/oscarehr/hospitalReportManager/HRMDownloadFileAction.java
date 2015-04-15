@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DownloadAction;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -43,7 +44,8 @@ import oscar.util.StringUtils;
 public class HRMDownloadFileAction extends DownloadAction{
     
 	private static HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
-	
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	 
     /** Creates a new instance of DownloadFileAction */
     public HRMDownloadFileAction() {
     }
@@ -55,6 +57,10 @@ public class HRMDownloadFileAction extends DownloadAction{
             throws Exception {
       
     	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_hrm", "r", null)) {
+        	throw new SecurityException("missing required security object (_hrm)");
+        }
     	
     	String hash = request.getParameter("hash");
     	if(StringUtils.isNullOrEmpty(hash)) {

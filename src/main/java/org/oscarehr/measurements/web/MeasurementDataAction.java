@@ -47,6 +47,7 @@ import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -55,7 +56,8 @@ public class MeasurementDataAction extends DispatchAction {
 
 	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	 
 	public ActionForward getLatestValues(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String demographicNo = request.getParameter("demographicNo");
 		String typeStr = request.getParameter("types");
@@ -65,6 +67,10 @@ public class MeasurementDataAction extends DispatchAction {
 			apptNo = Integer.parseInt(appointmentNo);
 		}
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
 		int prevApptNo = 0;
 		if(apptNo > 0) {
 			List<Appointment> appts = appointmentDao.getAppointmentHistory(Integer.parseInt(demographicNo));
@@ -142,6 +148,10 @@ public class MeasurementDataAction extends DispatchAction {
 		String demographicNo = request.getParameter("demographicNo");
 		String[] types = (request.getParameter("types") != null ? request.getParameter("types") : "").split(",");
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
 		List<Date> measurementDates = measurementDao.getDatesForMeasurements(Integer.parseInt(demographicNo), types);
 		HashMap<String, HashMap<String, Measurement>> measurementsMap = new HashMap<String, HashMap<String, Measurement>>();
 
@@ -175,6 +185,10 @@ public class MeasurementDataAction extends DispatchAction {
 
 		boolean isJsonRequest = request.getParameter("json") != null && request.getParameter("json").equalsIgnoreCase("true");
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
 		try {
 
 			Enumeration e = request.getParameterNames();

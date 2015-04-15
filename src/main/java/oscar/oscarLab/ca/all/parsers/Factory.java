@@ -135,7 +135,7 @@ public final class Factory {
 
 			// create and return the message handler
 			if (msgHandler.equals("")) {
-				logger.info("No message handler specified for type: " + type + "\nUsing default message handler instead");
+				logger.debug("No message handler specified for type: " + type + "\nUsing default message handler instead");
 				MessageHandler mh = new DefaultGenericHandler();
 				mh.init(hl7Body);
 				return (mh);
@@ -143,17 +143,17 @@ public final class Factory {
 				try {
 					Class classRef = Class.forName(msgHandler);
 					MessageHandler mh = (MessageHandler) classRef.newInstance();
-					logger.info("Message handler '" + msgHandler + "' created successfully");
+					logger.debug("Message handler '" + msgHandler + "' created successfully");
 					logger.debug("Message: " + hl7Body);
 					mh.init(hl7Body);
 					return (mh);
 				} catch (ClassNotFoundException e) {
-					logger.info("Could not find message handler: " + msgHandler + "\nUsing default message handler instead");
+					logger.debug("Could not find message handler: " + msgHandler + "\nUsing default message handler instead");
 					MessageHandler mh = new DefaultGenericHandler();
 					mh.init(hl7Body);
 					return (mh);
 				} catch (Exception e1) {
-					logger.error("Could not create message handler: " + msgHandler + "\nUsing default message handler instead", e1);
+					logger.debug("Could not create message handler: " + msgHandler + "\nUsing default message handler instead", e1);
 					MessageHandler mh = new DefaultGenericHandler();
 					mh.init(hl7Body);
 					return (mh);

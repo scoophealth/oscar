@@ -20,16 +20,24 @@ import org.apache.struts.actions.DispatchAction;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.olis.dao.OLISSystemPreferencesDao;
 import org.oscarehr.olis.model.OLISSystemPreferences;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.scheduling.timer.ScheduledTimerTask;
 
 public class OLISPreferencesAction extends DispatchAction  {
 
+	 private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	 
 	 @Override
 	    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		 	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "r", null)) {
+	        	throw new SecurityException("missing required security object (_admin)");
+	        }
+		 
 	     	DateTimeFormatter input = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss Z");
 	     	DateTimeFormatter output = DateTimeFormat.forPattern("YYYYMMddHHmmssZ");
 	     	DateTime date;

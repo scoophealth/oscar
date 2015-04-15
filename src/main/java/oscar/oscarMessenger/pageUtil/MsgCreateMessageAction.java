@@ -63,9 +63,9 @@ public class MsgCreateMessageAction extends Action {
 	    bean.setMessage(null);
             bean.setSubject(null);
             
-            MiscUtils.getLogger().info("Providers: " + Arrays.toString(providers));
-            MiscUtils.getLogger().info("Subject: " + subject);
-            MiscUtils.getLogger().info("Message: " + message);
+            MiscUtils.getLogger().debug("Providers: " + Arrays.toString(providers));
+            MiscUtils.getLogger().debug("Subject: " + subject);
+            MiscUtils.getLogger().debug("Message: " + message);
             
             String sentToWho    = null;
             String currLoco     = null;
