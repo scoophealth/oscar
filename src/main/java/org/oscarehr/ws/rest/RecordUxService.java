@@ -135,6 +135,15 @@ public class RecordUxService extends AbstractServiceImpl {
 			}
 			
 		}
+		
+		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.consultations", "r", null)) {
+			if (consultationManager.isConsultRequestEnabled() || !consultationManager.isConsultResponseEnabled()) {
+				menulist.add(new MenuItemTo1(idCounter++, "Consultation Requests", "consultRequests", demographicNo.toString()));
+			}
+			if (consultationManager.isConsultResponseEnabled()) {
+				menulist.add(new MenuItemTo1(idCounter++, "Consultation Responses", "consultResponses", demographicNo.toString()));
+			}
+		}
 		//END PHR
 		
 		MenuItemTo1 moreMenu = new MenuItemTo1(idCounter++, "More", null);
@@ -146,13 +155,13 @@ public class RecordUxService extends AbstractServiceImpl {
 			morelist.add(new MenuItemTo1(idCounter++, "Preventions", "../oscarPrevention/index.jsp?demographic_no="+demographicNo));
 		}
 		
-		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.viewTickler", "r", null)) {
+		/*if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.viewTickler", "r", null)) {
 			if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()) {
 				morelist.add(new MenuItemTo1(idCounter++, "Tickler", "../Tickler.do?filter.demographicNo="+demographicNo));
 			}else {
 				morelist.add(new MenuItemTo1(idCounter++, "Tickler", "..//tickler/ticklerDemoMain.jsp?demoview="+demographicNo));
 			}
-		}
+		}*/
 		
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.DxRegistry", "r", null)) {
 			morelist.add(new MenuItemTo1(idCounter++, "Disease Registry", "../oscarResearch/oscarDxResearch/setupDxResearch.do?quickList=&demographicNo="+demographicNo));
@@ -161,20 +170,15 @@ public class RecordUxService extends AbstractServiceImpl {
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.oscarMsg", "r", null)) {
 			morelist.add(new MenuItemTo1(idCounter++, "Messenger", "../oscarMessenger/DisplayDemographicMessages.do?orderby=date&boxType=3&demographic_no="+demographicNo));
 		}
+		
+		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.oscarMsg", "r", null)) {
+			morelist.add(new MenuItemTo1(idCounter++, "Create Message", "../oscarMessenger/SendDemoMessage.do?demographic_no="+demographicNo));
+		}		
 		// Requires EctSession bean to open the window.  I think it's best to just redo measurements in a better interface in the record with angular
 		//if(checkPermissions("_newCasemgmt.measurements", roleName)){
 		//	morelist.add(new MenuItemTo1(2, "Measurements", "../oscarEncounter/oscarMeasurements/SetupHistoryIndex.do?demographic_no="+demographicNo));
 		//}
-		
-		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.consultations", "r", null)) {
-			if (consultationManager.isConsultRequestEnabled() || !consultationManager.isConsultResponseEnabled()) {
-				morelist.add(new MenuItemTo1(idCounter++, "Consultation Requests", "consultRequests", demographicNo.toString()));
-			}
-			if (consultationManager.isConsultResponseEnabled()) {
-				morelist.add(new MenuItemTo1(idCounter++, "Consultation Responses", "consultResponses", demographicNo.toString()));
-			}
-		}
-		
+				
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.documents", "r", null)) {
 			morelist.add(new MenuItemTo1(idCounter++, "Documents", "../dms/documentReport.jsp?function=demographic&doctype=lab&functionid="+demographicNo));
 		}
