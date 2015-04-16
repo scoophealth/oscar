@@ -36,7 +36,7 @@ oscarApp.controller('PHRCtrl', function ($scope,$http,$location,$stateParams,dem
 	
 	$scope.page.formlists = [{id:0,label:'Data'}];//,{id:1,label:'Msgs'}];  //Need to get this from the server.
 	
-	$scope.page.currentFormList[0] = [{id:0, name:'Glucose', url:'../oscarEncounter/myoscar/measurements_glucose.do?type=GLUCOSE&demoNo=',type:'frame'},{id:1, name:'BP', url:'../oscarEncounter/myoscar/measurements_blood_pressure.do?type=BLOOD_PRESSURE&demoNo=',type:'frame'},{id:2,name:'Height & Weight', url:'../oscarEncounter/myoscar/measurements_height_and_weight.do?type=HEIGHT_AND_WEIGHT&demoNo=',type:'frame' },{id:3,name:'Open Record', url:'../demographic/viewPhrRecord.do?demographic_no=',type:'window' },{id:4,name:'Send a Message', url:'../phr/PhrMessage.do?method=createMessage&demographicNo=',type:'window' }]; 
+	$scope.page.currentFormList[0] = [{id:0, name:'Glucose', url:'../oscarEncounter/myoscar/measurements_glucose.do?type=GLUCOSE&demoNo=',type:'frame'},{id:1, name:'BP', url:'../oscarEncounter/myoscar/measurements_blood_pressure.do?type=BLOOD_PRESSURE&demoNo=',type:'frame'},{id:2,name:'Height & Weight', url:'../oscarEncounter/myoscar/measurements_height_and_weight.do?type=HEIGHT_AND_WEIGHT&demoNo=',type:'frame' },{id:3,name:'Open Record', url:'../demographic/viewPhrRecord.do?demographic_no=',type:'window' },{id:4,name:'Send a Message', url:'../phr/PhrMessage.do?method=createMessage&demographicNo=',type:'window' },{id:5,name:'Data Sync', url:'../admin/oscar_myoscar_sync_config_redirect.jsp?uselessParam=',type:'window' }]; 
 	
 
 	
