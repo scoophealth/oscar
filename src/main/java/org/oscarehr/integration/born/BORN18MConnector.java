@@ -237,8 +237,8 @@ public class BORN18MConnector {
 	}
 	
 	private Integer checkRourkeDone(String rourkeFormName, Integer demographicNo) {
-		Integer fdid = getMaxFdid(rourkeFormName, demographicNo);
-		if (fdid==null) return null; //no un-uploaded form data
+		Integer fdid = getLatestUnsentFdids(rourkeFormName, demographicNo);
+		if (fdid<0) return null; //no un-uploaded form data
 		
 		EFormValue eformValue = eformValueDao.findByFormDataIdAndKey(fdid, "visit_date_18m");
 		if (eformValue==null) return null;
@@ -246,19 +246,8 @@ public class BORN18MConnector {
 		Date visitDate = UtilDateUtilities.StringToDate(eformValue.getVarValue(), "yyyy-MM-dd");
 		if (!checkDate18m(visitDate, demographicNo)) return null;
 		
-		eformValue = eformValueDao.findByFormDataIdAndKey(fdid, "subject");
-		if (eformValue==null) return null;
-		
-		if (eformValue.getVarValue()!=null && eformValue.getVarValue().toLowerCase().contains("draft")) {
-			return null;
-		}
-		
-		eformValue = eformValueDao.findByFormDataIdAndKey(fdid,UPLOADED_TO_BORN);
-		if (eformValue!=null && eformValue.equals(VALUE_YES)) {
-			return null;
-		}
-		
-		
+/* Commented by Ronnie 2015-4-16: An unsent Rourke should be uploaded no matter how long 
+ * 		
 		//check if the form is for 2-3y or 4-5y visit -> not uploading
 		eformValue = eformValueDao.findByFormDataIdAndKey(fdid, "visit_date_2y");
 		if (eformValue!=null && eformValue.getVarValue()!=null && !eformValue.getVarValue().trim().isEmpty()) {
@@ -269,43 +258,20 @@ public class BORN18MConnector {
 		if (eformValue!=null && eformValue.getVarValue()!=null && !eformValue.getVarValue().trim().isEmpty()) {
 			return null;
 		}
-		
+*/		
 		return fdid;
 	}
 	
 	private Integer checkNddsDone(String nddsFormName, Integer demographicNo) {
-		Integer fdid = getMaxFdid(nddsFormName, demographicNo);
-		if (fdid==null) return null; //no un-uploaded form data
+		Integer fdid = getLatestUnsentFdids(nddsFormName, demographicNo);
+		if (fdid<0) return null; //no un-uploaded form data
 		
-		EFormValue eformValue = eformValueDao.findByFormDataIdAndKey(fdid, "subject");
-		if (eformValue==null) return null;
-		
-		if (eformValue.getVarValue()!=null && eformValue.getVarValue().toLowerCase().contains("draft")) {
-			return null;
-		}
-		
-		eformValue = eformValueDao.findByFormDataIdAndKey(fdid,UPLOADED_TO_BORN);
-		if (eformValue!=null && eformValue.equals(VALUE_YES)) {
-			return null;
-		}
 		return fdid;
 	}
 	
 	private Integer checkReport18mDone(String report18mFormName, Integer demographicNo) {
-		Integer fdid = getMaxFdid(report18mFormName, demographicNo);
-		if (fdid==null) return null; //no un-uploaded form data
-		
-		EFormValue eformValue = eformValueDao.findByFormDataIdAndKey(fdid, "subject");
-		if (eformValue==null) return null;
-		
-		if (eformValue.getVarValue()!=null && eformValue.getVarValue().toLowerCase().contains("draft")) {
-			return null;
-		}
-		
-		eformValue = eformValueDao.findByFormDataIdAndKey(fdid,UPLOADED_TO_BORN);
-		if (eformValue!=null && eformValue.equals(VALUE_YES)) {
-			return null;
-		}
+		Integer fdid = getLatestUnsentFdids(report18mFormName, demographicNo);
+		if (fdid<0) return null; //no un-uploaded form data
 		
 		return fdid;
 	}
@@ -478,21 +444,24 @@ public class BORN18MConnector {
 		return true;
 	}
 	
-	private Integer getMaxFdid(String formName, Integer demographicNo) {
+	private int getLatestUnsentFdids(String formName, Integer demographicNo) {
 		List<EFormData> eformDatas = eformDataDao.findByDemographicIdAndFormName(demographicNo, formName);
+		
+		Integer latestFdid = -1;
 		if (eformDatas==null || eformDatas.isEmpty()) {
 			logger.warn(formName+" form data not found for patient #"+demographicNo);
-			return null;
+			return latestFdid;
 		}
 		
-		Integer fdid = null;
 		for (EFormData eformData : eformDatas) {
-			if (fdid==null || fdid < eformData.getId()) {
-				fdid = eformData.getId();
-			}
+			if (eformData.getId()<latestFdid) continue;
+			if (eformData.getSubject()==null || eformData.getSubject().trim().isEmpty()) continue;
+			if (eformData.getSubject().toLowerCase().contains("draft")) continue;
+			if (checkUploadedToBorn(eformData.getId())) continue;
+			
+			if (eformData.getId()>latestFdid) latestFdid = eformData.getId();
 		}
-		if (!checkUploadedToBorn(fdid)) return fdid;
-		else return null;
+		return latestFdid;
 	}
 	
 	private boolean hasFormUploaded(String formName, Integer demographicNo) {
