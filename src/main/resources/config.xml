@@ -8,6 +8,7 @@
 		<ws_client_port_cache_time_ms>3600000</ws_client_port_cache_time_ms>
 		<!-- this setting will allow all ssl certificates including self signed one -->
 		<allow_all_ssl_certificates>true</allow_all_ssl_certificates>
+		<ws_client_ssl_protocol>TLS</ws_client_ssl_protocol>
 	</misc>
 	<myoscar_client>
 		<!-- Cache Settings, 3600000 ms is 1 hour -->
