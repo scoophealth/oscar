@@ -22,8 +22,11 @@ package com.quatro.service.security;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Properties;
 
 import org.oscarehr.util.SpringUtils;
+
+import oscar.util.OscarRoleObjectPrivilege;
 
 import com.quatro.dao.security.SecobjprivilegeDao;
 import com.quatro.model.security.Secobjprivilege;
@@ -123,5 +126,10 @@ public class SecurityManager {
 				result=true;
 		}
     	return result;
+    }
+    
+    public static boolean hasPrivilege(String objectName, String roleName) {
+        ArrayList<Object> v = OscarRoleObjectPrivilege.getPrivilegePropAsArrayList(objectName);
+        return OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (ArrayList<String>) v.get(1));
     }
 }
