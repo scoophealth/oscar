@@ -53,11 +53,11 @@
 			style="padding-left: 0px;">
 			<ul class="nav navbar-nav" id="myTabs">
 				<li ng-repeat="tab in recordtabs2" ng-class="isTabActive(tab)">
-					<a  ng-if="!tab.dropdown" ng-click="changeTab(tab)" >{{tab.label}}</a>
-					<a  ng-if="tab.dropdown"  class="dropdown-toggle" data-toggle="dropdown">{{tab.label}}<span class="caret"></span></a>
+					<a href="javascript:void(0)" ng-if="!tab.dropdown" ng-click="changeTab(tab)" >{{tab.label}}</a>
+					<a href="javascript:void(0)" ng-if="tab.dropdown"  class="dropdown-toggle" data-toggle="dropdown">{{tab.label}}<span class="caret"></span></a>
 						<ul ng-if="tab.dropdown" class="dropdown-menu" role="menu">
 							<li ng-repeat="dropdownItem in tab.dropdownItems" >
-								<a  ng-click="changeTab(dropdownItem)" >{{dropdownItem.label}}</a>
+								<a href="javascript:void(0)" ng-click="changeTab(dropdownItem)" >{{dropdownItem.label}}</a>
 							</li>
 						</ul>
 				</li>
@@ -71,14 +71,14 @@
     </div>
     
     <div class="row">
-    	<div id="noteInput2" class="center-block well col-md-4 col-md-offset-3 text-center" style="padding:0px;" ng-click="toggleNote();"  >
+    	<div id="noteInput2" class="center-block well col-md-4 col-md-offset-3 text-center hand-hover" style="padding:0px;" ng-click="toggleNote();">
     		<span class="glyphicon glyphicon-chevron-up"></span><span class="glyphicon glyphicon-chevron-up"></span><span class="glyphicon glyphicon-chevron-up"></span>
     	</div>
     	<div id="noteInput" class="center-block well col-md-4 col-md-offset-3" ng-show="hideNote">
 			<div class="col-xs-4">
 			    <input type="text" class="form-control" placeholder="Type Command" data-ng-disabled="true">
 		    </div>
-			<div class="col-xs-3 text-center" style="padding:0px;line-height:1;font-size:14px;" ng-click="toggleNote();"  >
+			<div class="col-xs-3 text-center hand-hover" style="padding:0px;line-height:1;font-size:14px;" ng-click="toggleNote();"  >
 			<span class="glyphicon glyphicon-chevron-down"></span><span class="glyphicon glyphicon-chevron-down"></span><span class="glyphicon glyphicon-chevron-down"></span>
 			
 			</div>
