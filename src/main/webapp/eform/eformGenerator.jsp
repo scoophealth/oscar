@@ -893,7 +893,7 @@ function GetTextTop(){
 		textTop += "\t\t\tvar ListItemArr =  ImgArray[i].split(&quot;|&quot;);\n"
 		textTop += "\t\t\tvar UserName = ListItemArr[0];\n"
 		textTop += "\t\t\tvar FileName = ListItemArr[1];\n"
-		textTop += "\t\t\tif (document.getElementById(&quot;DoctorName&quot;).value.indexOf(UserName)>0){\n"
+		textTop += "\t\t\tif (document.getElementById(&quot;DoctorName&quot;).value.indexOf(UserName)>=0){\n"
 		textTop += "\t\t\t\tdocument.getElementById(&quot;Stamp&quot;).src = &quot;../eform/displayImage.do?imagefile=&quot;+FileName;\n"
 		textTop += "\t\t\t}\n"
 		textTop += "\t\t}\n"
