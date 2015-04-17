@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.marc.everest.datatypes.AD;
 import org.marc.everest.datatypes.BL;
 import org.marc.everest.datatypes.ENXP;
@@ -205,7 +206,11 @@ public class BornCDADocument extends Level1Document{
 			AssignedAuthor aa = new AssignedAuthor();
 			
 			SET<II> authorIdSet = new SET<II>();
-			II authorId = new II("2.16.840.1.113883.3.239.36.1.1.3",provider.getOhipNo());
+			String provId = provider.getOhipNo();
+			if(StringUtils.isEmpty(id)) {
+				provId = provider.getProviderNo();
+			}
+			II authorId = new II("2.16.840.1.113883.3.239.36.1.1.3",provId);
 			authorIdSet.add(authorId);
 			aa.setId(authorIdSet);
 			
