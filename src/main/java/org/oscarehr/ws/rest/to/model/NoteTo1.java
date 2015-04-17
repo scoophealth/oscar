@@ -26,10 +26,13 @@ package org.oscarehr.ws.rest.to.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.oscarehr.casemgmt.model.CaseManagementIssue;
 
 @XmlRootElement(name="encounterNote")
 public class NoteTo1 implements Serializable{
@@ -51,6 +54,7 @@ public class NoteTo1 implements Serializable{
 	private String uuid;
 	private Boolean hasHistory;
 	private Boolean locked;
+	private boolean archived;
 	private String note;
 	private boolean isDocument;
 	private boolean isRxAnnotation;
@@ -60,6 +64,7 @@ public class NoteTo1 implements Serializable{
 	private boolean isTicklerNote;
 	private String encounterType;
 	private Integer appointmentNo;
+	private String summaryCode;
 
 	private ArrayList<String> editorNames;
 	private ArrayList<String> issueDescriptions;
@@ -71,6 +76,9 @@ public class NoteTo1 implements Serializable{
 	private boolean isCpp;
 	private String encounterTime;
 	private String encounterTransportationTime;
+	
+	//???
+	private Set<CaseManagementIssue> issues = new HashSet<CaseManagementIssue>();
 	
 	
 	public Integer getNoteId() {
@@ -127,6 +135,20 @@ public class NoteTo1 implements Serializable{
 
 	public void setProviderNo(String providerNo) {
 		this.providerNo = providerNo;
+	}
+	
+	/**
+	 * deprecated too inefficient and too many dependencies use CaseManagementIssueNotesDao
+	 */
+	public Set<CaseManagementIssue> getIssues() {
+		return issues;
+	}
+
+	/**
+	 * deprecated too inefficient and too many dependencies use CaseManagementIssueNotesDao
+	 */
+	public void setIssues(Set issues) {
+		this.issues = issues;
 	}
 
 	public String getStatus() {
@@ -191,6 +213,14 @@ public class NoteTo1 implements Serializable{
 
 	public void setLocked(Boolean locked) {
 		this.locked = locked;
+	}
+	
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
 	}
 
 	public String getNote() {
@@ -296,6 +326,14 @@ public class NoteTo1 implements Serializable{
 	public void setCpp(boolean isCpp) {
 		this.isCpp = isCpp;
 	}
+	
+	public String getSummaryCode() {
+		return summaryCode;
+	}
+
+	public void setSummaryCode(String code) {
+		this.summaryCode = code;
+	}
 
 	public String getEncounterTime() {
 		return encounterTime;
@@ -346,5 +384,7 @@ public class NoteTo1 implements Serializable{
 	public void setIsVerified(Boolean isVerified) {
 	    this.isVerified = isVerified;
     }
+	
+
 	
 }

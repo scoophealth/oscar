@@ -53,6 +53,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "summaryItem")
 public class SummaryItemTo1 {
 	Integer id;
+	Long noteId;
 	String type;
 	String displayName;
 	String action;
@@ -86,6 +87,14 @@ public class SummaryItemTo1 {
 	
 	public void setId(Integer i){
 		id = i;
+	}
+	
+	public Long getNoteId() {
+	    return noteId;
+	}
+	
+	public void setNoteId(Long nId) {
+	    noteId = nId;
 	}
 
 	public String getAction() {

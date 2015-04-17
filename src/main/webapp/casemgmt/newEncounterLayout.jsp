@@ -598,7 +598,7 @@ div.autocomplete ul li {
         assignObservationDateError = "<bean:message key="oscarEncounter.assignObservationDateError.msg"/>";
       
         encTimeMandatoryMsg = "<bean:message key="oscarEncounter.encounterTimeMandatory.msg"/>";
-	encTimeMandatory = <%=encTimeMandatoryValue%>;
+		encTimeMandatory = <%=encTimeMandatoryValue%>;
 
         assignEncTypeError = "<bean:message key="oscarEncounter.assignEncTypeError.msg"/>";
         savingNoteError = "<bean:message key="oscarEncounter.savingNoteError.msg"/>";

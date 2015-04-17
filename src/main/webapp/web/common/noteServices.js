@@ -50,7 +50,21 @@ angular.module("noteServices", [])
            	deferred.resolve(data);
            }).error(function(){
            	console.log("error saving notes");
-           	deferred.reject("An error occured while fetching items");
+           	deferred.reject("An error occured while trying to save note");
+           });
+    
+         return deferred.promise;
+       },
+       saveIssueNote: function(demographicNo,notea){
+       	var deferred = $q.defer();
+	var note = { noteIssue: notea };
+	 console.log("sending to server -------------------note" + note);
+       	 $http.post(this.apiPath+'/'+demographicNo+'/saveIssueNote',note).success(function(data){
+           	console.log("returned from /save",data);
+           	deferred.resolve(data);
+           }).error(function(){
+           	console.log("error saving Issuenotes");
+           	deferred.reject("An error occured while trying to save Issuenote");
            });
     
          return deferred.promise;
@@ -79,6 +93,40 @@ angular.module("noteServices", [])
                });
         
              return deferred.promise;
+       },
+       getNoteExt: function(noteId){
+    	   var deferred = $q.defer();
+          	 $http.post(this.apiPath+'/getGroupNoteExt/'+noteId).success(function(data){
+              	console.log("returned from /getGroupNoteExt",data);
+              	deferred.resolve(data);
+              }).error(function(){
+              	console.log("error getting note ext");
+              	deferred.reject("An error occured while fetching note ext");
+              });
+            return deferred.promise;
+       },
+
+       getIssueNote: function(noteId){
+    	   var deferred = $q.defer();
+          	 $http.post(this.apiPath+'/getIssueNote/'+noteId).success(function(data){
+              	console.log("returned from /getIssueNote",data);
+              	deferred.resolve(data);
+              }).error(function(){
+              	console.log("error getting getIssueNote");
+              	deferred.reject("An error occured while fetching getIssueNote");
+              });
+            return deferred.promise;
+       },
+       getIssueId: function(issueCode){
+    	   var deferred = $q.defer();
+          	 $http.post(this.apiPath+'/getIssueId/'+issueCode).success(function(data){
+              	console.log("returned from /getIssueId",data);
+              	deferred.resolve(data);
+              }).error(function(){
+              	console.log("error getting issue id");
+              	deferred.reject("An error occured while fetching issue id");
+              });
+            return deferred.promise;
        },
        getTicklerNote: function (ticklerId) {
            var deferred = $q.defer();

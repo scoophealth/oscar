@@ -112,7 +112,7 @@ public class SummaryTo1 {
 	public void setId(Integer i){
 		id = i;
 	}
-
+	
 	public List<SummaryItemTo1> getSummaryItem() {
 		return summaryItem;
 	}
