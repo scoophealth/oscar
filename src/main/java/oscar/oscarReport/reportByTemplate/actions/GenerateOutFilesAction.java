@@ -50,6 +50,11 @@ public class GenerateOutFilesAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                  HttpServletRequest request, HttpServletResponse response) {
 
+    	String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+    	if(!com.quatro.service.security.SecurityManager.hasPrivilege("_admin", roleName$)  && !com.quatro.service.security.SecurityManager.hasPrivilege("_report", roleName$)) {
+    		throw new SecurityException("Insufficient Privileges");
+    	}
+    	
         String csv = (String) request.getSession().getAttribute("csv");
         if (csv ==null){
             csv = request.getParameter("csv");
