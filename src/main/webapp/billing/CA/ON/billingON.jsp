@@ -794,6 +794,11 @@ function changeCut(dropdown) {
 			n=n+1;
 		}
 	}
+	if (document.forms[0].dxCode.value=="" && document.forms[0].dxCode1.value=="" && document.forms[0].dxCode2.value=="") {
+		document.forms[0].dxCode.value='<%=request.getParameter("dxCode")!=null?request.getParameter("dxCode"):dxCode%>';
+		document.forms[0].dxCode1.value='<%=request.getParameter("dxCode1")!=null?request.getParameter("dxCode1"):""%>';
+		document.forms[0].dxCode2.value='<%=request.getParameter("dxCode2")!=null?request.getParameter("dxCode2"):""%>';
+		}
 }
 
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
