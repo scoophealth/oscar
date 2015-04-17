@@ -24,6 +24,7 @@
 package org.oscarehr.ws.rest;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +46,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
@@ -52,6 +54,7 @@ import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -61,6 +64,7 @@ import org.oscarehr.casemgmt.service.NoteService;
 import org.oscarehr.casemgmt.web.CaseManagementEntryAction;
 import org.oscarehr.casemgmt.web.NoteDisplay;
 import org.oscarehr.casemgmt.web.NoteDisplayLocal;
+import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.model.CaseManagementTmpSave;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.ProgramManager2;
@@ -71,9 +75,12 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.TicklerNoteResponse;
+import org.oscarehr.ws.rest.to.model.NoteExtTo1;
 import org.oscarehr.ws.rest.to.model.NoteSelectionTo1;
 import org.oscarehr.ws.rest.to.model.NoteTo1;
+import org.oscarehr.ws.rest.to.model.NoteIssueTo1;
 import org.oscarehr.ws.rest.to.model.TicklerNoteTo1;
+import org.oscarehr.ws.rest.to.model.IssueTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -107,7 +114,6 @@ public class NotesService extends AbstractServiceImpl {
 	
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
-	
 	
 	
 	@POST
@@ -430,8 +436,9 @@ public class NotesService extends AbstractServiceImpl {
 		*/
 		
 		// update appointment and add verify message to note if verified
+		
 		boolean verify = false;
-		if(note.getIsVerified()){
+		if(note.getIsVerified()!=null && note.getIsVerified()){
 			verify = true;
 		}
 		
@@ -551,6 +558,442 @@ public class NotesService extends AbstractServiceImpl {
 	}
 	
 	
+	
+	@POST
+	@Path("/{demographicNo}/saveIssueNote")
+	@Consumes("application/json")
+	@Produces("application/json")
+	public NoteIssueTo1 saveIssueNote(@PathParam("demographicNo") Integer demographicNo ,NoteIssueTo1 noteIssue) throws Exception{
+		
+		NoteTo1 note = noteIssue.getEncounterNote();
+		NoteExtTo1 noteExt = noteIssue.getGroupNoteExt();
+		IssueTo1 issue = noteIssue.getIssue();
+		
+		LoggedInInfo loggedInInfo = getLoggedInInfo(); //LoggedInInfo.loggedInInfo.get();
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+		Provider provider = loggedInInfo.getLoggedInProvider();
+		String userName = provider != null ? provider.getFullName() : "";
+
+		String demo = ""+demographicNo;
+		String noteId = String.valueOf(note.getNoteId());
+		
+		String programId = getProgram(loggedInInfo,providerNo);
+				
+		CaseManagementNote caseMangementNote  = new CaseManagementNote();
+		boolean newNote = false;
+		
+		// we don't want to try to remove an issue from a new note so we test here
+		if(note.getNoteId()==null || note.getNoteId()==0){
+			
+			newNote = true;
+		}else{
+			boolean extChanged = true; //false
+			
+			// if note has not changed don't save
+			caseManagementMgr.getNote(noteId);
+			if ( note.getNote().equals(note.getNote()) && issue.isIssueChange() && !extChanged && note.isArchived() ) return null;
+		}
+		
+		caseMangementNote.setDemographic_no(demo);
+
+		if(!newNote) {
+						
+			if (note.isArchived() ){
+				note.setArchived(true);
+			}
+			
+			note.setRevision(Integer.parseInt(note.getRevision())+1 + "");	
+		}
+		
+		
+		if(note.getUuid() != null && !note.getUuid().trim().equals("")){
+			caseMangementNote.setUuid(note.getUuid());
+		}
+		
+		String noteTxt = note.getNote();
+		noteTxt = org.apache.commons.lang.StringUtils.trimToNull(noteTxt);
+		if (noteTxt == null || noteTxt.equals("")) return null;
+
+		caseMangementNote.setNote(noteTxt);
+	
+		CaseManagementCPP cpp = this.caseManagementMgr.getCPP(demo);
+		if (cpp == null) {
+			cpp = new CaseManagementCPP();
+			cpp.setDemographic_no(demo);
+		}
+		
+		if(note.isCpp() && note.getSummaryCode()!=null){
+		cpp = copyNote2cpp(cpp, note.getNote(), note.getSummaryCode());
+		}
+		
+		ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
+		AdmissionManager admissionManager = (AdmissionManager) SpringUtils.getBean("admissionManager");
+
+		String role = null;
+		String team = null;
+
+		try {
+			role = String.valueOf((programManager.getProgramProvider(providerNo, programId)).getRole().getId());
+		} catch (Exception e) {
+			logger.error("Error", e);
+			role = "0";
+		}
+
+		caseMangementNote.setReporter_caisi_role(role);
+
+		try {
+			team = String.valueOf((admissionManager.getAdmission(programId, demographicNo)).getTeamId());
+		} catch (Exception e) {
+			logger.error("Error", e);
+			team = "0";
+		}
+		caseMangementNote.setReporter_program_team(team);		
+				
+		//Need to check some how that if a note is signed that it must stay signed, currently this is done in the interface where the save button is not available.
+		if(note.getIsSigned()){
+			caseMangementNote.setSigning_provider_no(providerNo);
+			caseMangementNote.setSigned(true);
+		} else {
+			caseMangementNote.setSigning_provider_no("");
+			caseMangementNote.setSigned(false);
+		}
+		
+		caseMangementNote.setProviderNo(providerNo);
+		if (provider != null) caseMangementNote.setProvider(provider);
+
+		
+		caseMangementNote.setProgram_no(programId);
+		
+		/*
+		 * Here we will set the issues
+		 * 
+		 */
+
+		//TODO
+		//translate summary codes
+		String issueCode = note.getSummaryCode();//set temp
+		if("ongoingconcerns".equals(issueCode)){
+			issueCode = "Concerns";
+		}else if("medhx".equals(issueCode)){
+			issueCode = "MedHistory";
+		}else if("reminders".equals(issueCode)){
+			issueCode = "Reminders"; 
+		}else if("othermeds".equals(issueCode)){
+			issueCode = "OMeds";
+		}else if("sochx".equals(issueCode)){
+			issueCode = "SocHistory";
+		}else if("famhx".equals(issueCode)){
+			issueCode = "FamHistory";
+		}
+		
+		Issue issues = caseManagementMgr.getIssueInfoByCode(issueCode);
+				
+		//String issue_id = issues.getId().toString();
+		//CaseManagementIssue cIssue;
+		
+		
+		List<CaseManagementIssue> issuelist = new ArrayList<CaseManagementIssue>();
+		//String ongoing = new String();
+	
+		
+		//caseMangementNote.setIssues(issueset);
+
+		CaseManagementIssue cIssue2;
+		
+		String issueAlphaCode = issues.getId().toString();
+		if (issueAlphaCode != null && issueAlphaCode.length() > 0){
+			cIssue2 = this.caseManagementMgr.getIssueByIssueCode(demo, issueAlphaCode);
+
+		}else{
+			cIssue2 = this.caseManagementMgr.getIssueById(demo,issueCode);
+
+		}
+		Set<CaseManagementIssue> issueSet = new HashSet<CaseManagementIssue>();
+		Set<CaseManagementNote> noteSet = new HashSet<CaseManagementNote>();
+		int programNo = Integer.parseInt(programId);
+		
+		if( cIssue2 == null ) {
+			Issue issue2;
+			if (issueAlphaCode != null && issueAlphaCode.length() > 0)
+				issue2 = this.caseManagementMgr.getIssueByCode(issueAlphaCode);
+			else
+				issue2 = this.caseManagementMgr.getIssue(issueCode);
+
+			//cIssue2 = this.newIssueToCIssue(demo, issue2, Integer.parseInt("10016"));
+			
+			
+			Date creationDate = new Date();
+
+				cIssue2 = new CaseManagementIssue();
+				cIssue2.setAcute(false);
+				cIssue2.setCertain(false);
+				cIssue2.setDemographic_no(demo);
+				cIssue2.setIssue_id(issues.getId());
+				
+				//do I need to cIssue2 set note???
+				
+				cIssue2.setMajor(false);
+				cIssue2.setProgram_id(programNo);
+				cIssue2.setResolved(false);
+				cIssue2.setType(issues.getRole()); 
+				cIssue2.setUpdate_date(creationDate);
+				
+				caseManagementMgr.saveCaseIssue(cIssue2);
+							
+			cIssue2.setNotes(noteSet);
+		}
+
+		issueSet.add(cIssue2);	
+		note.setIssues(issueSet);
+		caseMangementNote.setIssues(issueSet);
+		
+		// remove signature and the related issues from note 
+		String noteString = note.getNote();
+		// noteString = removeSignature(noteString);
+		// noteString = removeCurrentIssue(noteString);
+		caseMangementNote.setNote(noteString);
+		
+
+		// update appointment and add verify message to note if verified
+		boolean verify = false;
+
+		Date now = new Date();
+		
+		Date observationDate = note.getObservationDate();
+		if (observationDate != null && !observationDate.equals("")) {
+			if (observationDate.getTime() > now.getTime()) {
+				//request.setAttribute("DateError", props.getString("oscarEncounter.futureDate.Msg"));
+				caseMangementNote.setObservation_date(now);
+			} else{
+				caseMangementNote.setObservation_date(observationDate);
+			}
+		} else if (note.getObservationDate() == null) {
+			caseMangementNote.setObservation_date(now);
+		}
+		
+		caseMangementNote.setUpdate_date(now);
+		caseMangementNote.setAppointmentNo(note.getAppointmentNo());
+		
+		/*
+		 * 
+		 * update_date, observation_date, 
+		 * demographic_no, provider_no, note, signed, 
+		 * include_issue_innote, signing_provider_no, encounter_type, billing_code, 
+		 * program_no, reporter_caisi_role, reporter_program_team, history,
+		 *  uuid, password, locked, archived, position, appointmentNo, hourOfEncounterTime, minuteOfEncounterTime, hourOfEncTransportationTime, minuteOfEncTransportationTime
+		 * 
+		 */
+		
+		// Save annotation 
+		CaseManagementNote annotationNote = null;// (CaseManagementNote) session.getAttribute(attrib_name);
+		//logger.error(noteIssue.getAnnotation_attrib());
+		
+		//String ongoing = null; // figure out this
+		String lastSavedNoteString = null;
+		String user = loggedInInfo.getLoggedInProvider().getProviderNo();
+		String remoteAddr = 	""; // Not sure how to get this	
+		
+		//caseMangementNote = caseManagementMgr.saveCaseManagementNote(caseMangementNote,issuelist, cpp, ongoing,verify, loggedInInfo.getLocale(),now,annotationNote,userName,user,remoteAddr, lastSavedNoteString) ;
+		
+		String savedStr = caseManagementMgr.saveNote(cpp, caseMangementNote, providerNo, userName, null, note.getRoleName());
+		caseManagementMgr.saveCPP(cpp, providerNo);
+		
+		caseManagementMgr.getEditors(caseMangementNote);
+		
+		
+		note.setNoteId(Integer.parseInt(""+caseMangementNote.getId()));
+		note.setUuid(caseMangementNote.getUuid());
+		note.setUpdateDate(caseMangementNote.getUpdate_date());
+		note.setObservationDate(caseMangementNote.getObservation_date());
+		logger.debug("note should return like this " + note.getNote() );
+		
+		
+			long newNoteId =  Long.valueOf(note.getNoteId());
+			
+			logger.debug("ISSUES LIST START for note " + newNoteId);
+			CaseManagementIssueNotesDao cmeIssueNotesDao = (CaseManagementIssueNotesDao) SpringUtils.getBean("caseManagementIssueNotesDao");
+			List<CaseManagementIssue> issuesList = cmeIssueNotesDao.getNoteIssues(note.getNoteId());
+			for (CaseManagementIssue issueItem : issuesList) {
+				logger.debug("ISSUES LIST " + issueItem + " for note " + newNoteId);
+			}
+			
+			Date creationDate = new Date();
+			CaseManagementIssue cmi = caseManagementMgr.getIssueById(demographicNo.toString(), issues.getId().toString());
+			
+			//TODO: better conditions to avoid redundant entry
+			if(cmi == null) {
+				cmi = new CaseManagementIssue();
+				cmi.setAcute(false);
+				cmi.setCertain(false);
+				cmi.setDemographic_no(String.valueOf(demographicNo));
+				cmi.setIssue_id(issues.getId());
+				cmi.setMajor(false);
+				cmi.setProgram_id(programNo);
+				cmi.setResolved(false);
+				cmi.setType(issues.getRole()); 
+				cmi.setUpdate_date(creationDate);
+				
+				caseManagementMgr.saveCaseIssue(cmi);
+			}
+			
+			
+			if(note.getNoteId()!=0){
+			caseManagementMgr.addNewNoteLink(newNoteId);
+			}
+			
+			/* save extra fields */
+			CaseManagementNoteExt cme = new CaseManagementNoteExt();
+			
+			if(noteExt.getStartDate()!=null){
+				cme.setNoteId(newNoteId);
+				cme.setKeyVal(NoteExtTo1.STARTDATE);	
+				cme.setDateValue(noteExt.getStartDate());
+				caseManagementMgr.saveNoteExt(cme);
+			}
+			
+			if(noteExt.getResolutionDate()!=null){
+				cme.setNoteId(newNoteId);
+				cme.setKeyVal(NoteExtTo1.RESOLUTIONDATE);	
+				cme.setDateValue(noteExt.getResolutionDate());
+				caseManagementMgr.saveNoteExt(cme);
+			}
+			
+			if(noteExt.getProcedureDate()!=null){
+				cme.setNoteId(newNoteId);
+				cme.setKeyVal(NoteExtTo1.PROCEDUREDATE);
+				cme.setDateValue(noteExt.getProcedureDate());
+				caseManagementMgr.saveNoteExt(cme);
+			}
+			
+			if(noteExt.getAgeOnSet()!=null){
+				cme.setNoteId(newNoteId);
+				cme.setKeyVal(NoteExtTo1.AGEATONSET);
+				cme.setDateValue((Date) null);
+				cme.setValue(noteExt.getAgeOnSet());
+				caseManagementMgr.saveNoteExt(cme);
+			}
+			
+			if(noteExt.getTreatment()!=null){
+				cme.setNoteId(newNoteId);
+				cme.setKeyVal(NoteExtTo1.TREATMENT);
+				cme.setDateValue((Date) null);
+				cme.setValue(noteExt.getTreatment());
+				caseManagementMgr.saveNoteExt(cme);
+			}
+			
+			if(noteExt.getProblemStatus()!=null){
+				cme.setNoteId(newNoteId);
+				cme.setKeyVal(NoteExtTo1.PROBLEMSTATUS);
+				cme.setDateValue((Date) null);
+				cme.setValue(noteExt.getProblemStatus());
+				caseManagementMgr.saveNoteExt(cme);
+			}
+			
+			if(noteExt.getExposureDetail()!=null){
+				cme.setNoteId(newNoteId);
+				cme.setKeyVal(NoteExtTo1.EXPOSUREDETAIL);
+				cme.setDateValue((Date) null);
+				cme.setValue(noteExt.getExposureDetail());
+				caseManagementMgr.saveNoteExt(cme);
+			}
+			
+			if(noteExt.getRelationship()!=null){
+				cme.setNoteId(newNoteId);
+				cme.setKeyVal(NoteExtTo1.RELATIONSHIP);
+				cme.setDateValue((Date) null);
+				cme.setValue(noteExt.getRelationship());
+				caseManagementMgr.saveNoteExt(cme);
+			}
+			
+			if(noteExt.getLifeStage()!=null){
+				cme.setNoteId(newNoteId);
+				cme.setKeyVal(NoteExtTo1.LIFESTAGE);
+				cme.setDateValue((Date) null);
+				cme.setValue(noteExt.getLifeStage());
+				caseManagementMgr.saveNoteExt(cme);			
+			}
+			
+			if(noteExt.getHideCpp()!=null){
+				cme.setNoteId(newNoteId);
+				cme.setKeyVal(NoteExtTo1.HIDECPP);
+				cme.setDateValue((Date) null);
+				cme.setValue(noteExt.getHideCpp());
+				caseManagementMgr.saveNoteExt(cme);			
+			}
+			
+			if(noteExt.getProblemDesc()!=null){
+				cme.setNoteId(newNoteId);
+				cme.setKeyVal(NoteExtTo1.PROBLEMDESC);
+				cme.setDateValue((Date) null);
+				cme.setValue(noteExt.getProblemDesc());
+				caseManagementMgr.saveNoteExt(cme);
+			}
+			/* save extra fields */			
+			
+			
+		noteIssue.setEncounterNote(note);	
+		noteIssue.setGroupNoteExt(noteExt);	
+	
+		return noteIssue;
+			
+		
+	}
+	
+	
+	
+	protected CaseManagementCPP copyNote2cpp(CaseManagementCPP cpp, String note, String code) {
+		//TODO: change this back to a loop
+		StringBuilder text = new StringBuilder();
+		Date d = new Date();
+		String separator = "\n-----[[" + d + "]]-----\n";
+	
+			if (code.equals("othermeds")) {
+				text.append(cpp.getFamilyHistory());
+				text.append(separator);
+				text.append(note);
+				cpp.setFamilyHistory(text.toString());
+				
+			} else if (code.equals("sochx")) {
+				text.append(cpp.getSocialHistory());
+				text.append(separator);
+				text.append(note);
+				cpp.setSocialHistory(text.toString());
+				
+			} else if (code.equals("medhx")) {
+				text.append(cpp.getMedicalHistory());
+				text.append(separator);
+				text.append(note);
+				cpp.setMedicalHistory(text.toString());
+				
+			} else if (code.equals("ongoingconcerns")) {
+				text.append(cpp.getOngoingConcerns());
+				text.append(separator);
+				text.append(note);
+				cpp.setOngoingConcerns(text.toString());
+				
+			} else if (code.equals("reminders")) {
+				text.append(cpp.getReminders());
+				text.append(separator);
+				text.append(note);
+				cpp.setReminders(text.toString());
+				
+			} else if (code.equals("famhx")) {
+				text.append(cpp.getFamilyHistory());
+				text.append(separator);
+				text.append(note);
+				cpp.setFamilyHistory(text.toString());
+				
+			} else if (code.equals("riskfactors")) {
+				text.append(cpp.getRiskFactors());
+				text.append(separator);
+				text.append(note);
+				cpp.setRiskFactors(text.toString());
+				
+			}
+		
+
+		return cpp;
+	}
 	
 	
 	
@@ -822,9 +1265,6 @@ public class NotesService extends AbstractServiceImpl {
 	}
 	
 	
-	
-	
-	
 	private void processJsonArray( JSONObject jsonobject, String key, List<String> list){
 		if( jsonobject != null && jsonobject.containsKey(key)){
 			JSONArray arr = jsonobject.getJSONArray(key);
@@ -835,6 +1275,155 @@ public class NotesService extends AbstractServiceImpl {
 	 
 	}
 	
+	@POST
+	@Path("/getIssueNote/{noteId}")	
+	@Produces("application/json")
+	public NoteIssueTo1 getIssueNote(@PathParam("noteId") Integer noteId){
+		
+		
+		//get all note values NoteDisplay nd = new NoteDisplayLocal(loggedInInfo,note);
+		CaseManagementNote casemgmtNote = null;
+		casemgmtNote = caseManagementMgr.getNote(String.valueOf(noteId));
+		
+		NoteTo1 note = new NoteTo1();
+		note.setNoteId(noteId);
+		note.setIsSigned(casemgmtNote.isSigned());
+		note.setRevision(casemgmtNote.getRevision());
+		note.setUpdateDate(casemgmtNote.getUpdate_date());
+		note.setProviderName(casemgmtNote.getProviderName());
+		note.setProviderNo(casemgmtNote.getProviderNo());
+		note.setStatus(casemgmtNote.getStatus());
+		note.setProgramName(casemgmtNote.getProgramName());
+		note.setRoleName(casemgmtNote.getRoleName());
+		note.setUuid(casemgmtNote.getUuid());
+		note.setHasHistory(casemgmtNote.getHasHistory());
+		note.setLocked(casemgmtNote.isLocked());
+		note.setNote(casemgmtNote.getNote());
+		note.setRxAnnotation(casemgmtNote.isRxAnnotation());
+		note.setEncounterType(casemgmtNote.getEncounter_type());
+		//note.setEditorNames(casemgmtNote.getEditors());		
+		//note.setIssueDescriptions(casemgmtNote.get);
+		
+		//note.getIssueDescriptions(casemgmtNote.getIssues());
+		note.setAppointmentNo(casemgmtNote.getAppointmentNo());	
+		
+		
+		//get all note extra values	
+		List<CaseManagementNoteExt> lcme = new ArrayList<CaseManagementNoteExt>();
+		lcme.addAll(caseManagementMgr.getExtByNote( Long.valueOf(noteId) ));
+
+		NoteExtTo1 noteExt = new NoteExtTo1();
+		noteExt.setNoteId( Long.valueOf(noteId) );
+		
+		for(CaseManagementNoteExt l : lcme){
+			logger.debug("NOTE EXT KEY:" +l.getKeyVal() + l.getValue());
+			
+			if(l.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)){
+				noteExt.setStartDate(l.getDateValueStr());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)){
+				noteExt.setResolutionDate(l.getDateValueStr());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.PROCEDUREDATE)){
+				noteExt.setProcedureDate(l.getDateValueStr());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.AGEATONSET)){
+				noteExt.setAgeOnSet(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.TREATMENT)){
+				noteExt.setTreatment(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.PROBLEMSTATUS)){
+				noteExt.setProblemStatus(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.EXPOSUREDETAIL)){
+				noteExt.setExposureDetail(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.RELATIONSHIP)){
+				noteExt.setRelationship(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)){
+				noteExt.setLifeStage(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.HIDECPP)){
+				noteExt.setHideCpp(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.PROBLEMDESC)){
+				noteExt.setProblemDesc(l.getValue());
+			}
+			
+		}
+		
+		//set NoteIssue to return
+		NoteIssueTo1 noteIssue = new NoteIssueTo1();
+		noteIssue.setEncounterNote(note);	
+		noteIssue.setGroupNoteExt(noteExt);	
+	
+		return noteIssue;
+		
+	}
+	
+	@POST
+	@Path("/getGroupNoteExt/{noteId}")	
+	@Produces("application/json")
+	public NoteExtTo1 getGroupNoteExt(@PathParam("noteId") Long noteId){
+		
+		List<CaseManagementNoteExt> lcme = new ArrayList<CaseManagementNoteExt>();
+		lcme.addAll(caseManagementMgr.getExtByNote(noteId));
+
+		NoteExtTo1 noteExt = new NoteExtTo1();
+		noteExt.setNoteId(noteId);
+		
+		for(CaseManagementNoteExt l : lcme){
+			logger.debug("NOTE EXT KEY:" +l.getKeyVal() + l.getValue());
+			
+			if(l.getKeyVal().equals(CaseManagementNoteExt.STARTDATE)){
+				noteExt.setStartDate(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.RESOLUTIONDATE)){
+				noteExt.setResolutionDate(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.PROCEDUREDATE)){
+				noteExt.setProcedureDate(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.AGEATONSET)){
+				noteExt.setAgeOnSet(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.TREATMENT)){
+				noteExt.setTreatment(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.PROBLEMSTATUS)){
+				noteExt.setProblemStatus(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.EXPOSUREDETAIL)){
+				noteExt.setExposureDetail(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.RELATIONSHIP)){
+				noteExt.setRelationship(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.LIFESTAGE)){
+				noteExt.setLifeStage(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.HIDECPP)){
+				noteExt.setHideCpp(l.getValue());
+			}else if(l.getKeyVal().equals(CaseManagementNoteExt.PROBLEMDESC)){
+				noteExt.setProblemDesc(l.getValue());
+			}
+			
+		}
+		
+		return noteExt;
+	}
+	
+	//TODO
+	@POST
+	@Path("/getIssueId/{issueCode}")	
+	@Produces("application/json")
+	public IssueTo1 getIssueId(@PathParam("issueCode") String issueCode){
+		
+		//translate summary codes
+		if("ongoingconcerns".equals(issueCode)){
+			issueCode = "Concerns";
+		}else if("medhx".equals(issueCode)){
+			issueCode = "MedHistory";
+		}else if("reminders".equals(issueCode)){
+			issueCode = "Reminders"; 
+		}else if("othermeds".equals(issueCode)){
+			issueCode = "OMeds";
+		}else if("sochx".equals(issueCode)){
+			issueCode = "SocHistory";
+		}else if("famhx".equals(issueCode)){
+			issueCode = "FamHistory";
+		}
+		
+		Issue issues = caseManagementMgr.getIssueInfoByCode(issueCode);
+		
+		IssueTo1 issueId = new IssueTo1();
+		issueId.setId(issues.getId());
+		
+		return issueId;
+	}
 
 	@GET
 	@Path("/ticklerGetNote/{ticklerNo}")
