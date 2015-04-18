@@ -130,7 +130,7 @@ public class ONAREnhancedFormToXML {
 	    
 	    if(StringUtils.isEmpty(props.getProperty("pg1_formDate")) || StringUtils.isEmpty(props.getProperty("pg2_formDate"))) {
 	    	MiscUtils.getLogger().warn("skipping form since the signature dates are not both set");
-	    	return true;
+	    	return false;
 	    }
 		//ARRecord arRecord = ARRecord.Factory.newInstance();
 		ARRecordDocument arRecordDoc = ARRecordDocument.Factory.newInstance();
@@ -442,19 +442,26 @@ public class ONAREnhancedFormToXML {
 		int length = Integer.parseInt(props.getProperty("obxhx_num","0"));
 		for(int x=0;x<length;x++) {
 			int n = x+1;
+			
+			//skip empty line
 			if(props.getProperty("pg1_year"+n,"").length()==0 && props.getProperty("pg1_sex"+n,"").length()==0 && props.getProperty("pg1_oh_gest"+n,"").length()==0
 					&& props.getProperty("pg1_weight"+n,"").length()==0 && props.getProperty("pg1_length"+n,"").length()==0 && props.getProperty("pg1_place"+n,"").length()==0 
 					&& props.getProperty("pg1_svb"+n,"").length()==0 && props.getProperty("pg1_cs"+n,"").length()==0 && props.getProperty("pg1_ass"+n,"").length()==0 && 
 					props.getProperty("pg1_oh_comments"+n,"").length()==0 ) {
 				continue;
 			}
+			
+			if(StringUtils.isEmpty(props.getProperty("pg1_sex"+n))) {
+				continue;
+			}
+			
 			ObstetricalHistoryItemList item1 = obstetricalHistory.addNewObsList();
 			item1.setYear(props.getProperty("pg1_year"+n,"0").length()>0?Integer.parseInt(props.getProperty("pg1_year"+n, "0")):0);
 			item1.setSex(ObstetricalHistoryItemList.Sex.Enum.forString(props.getProperty("pg1_sex"+n).toUpperCase()));
 			item1.setGestAge(props.getProperty("pg1_oh_gest"+n,"0").length()>0?Integer.parseInt(props.getProperty("pg1_oh_gest"+n, "0")):0);
 			item1.setBirthWeight(props.getProperty("pg1_weight"+n,""));
 			item1.setLengthOfLabour(props.getProperty("pg1_length"+n,"0").length()>0?Float.parseFloat(props.getProperty("pg1_length"+n, "0")):0);
-			item1.setPlaceOfBirth(props.getProperty("pg1_place"+n,""));
+			item1.setPlaceOfBirth(props.getProperty("pg1_place"+n,"")!=null?props.getProperty("pg1_place"+n,""):"");
 			if(props.getProperty("pg1_svb"+n,"").length()>0)
 				item1.setTypeOfDelivery(ObstetricalHistoryItemList.TypeOfDelivery.SVAG);
 			else if(props.getProperty("pg1_cs"+n,"").length()>0)
@@ -464,7 +471,7 @@ public class ONAREnhancedFormToXML {
 			else 
 				item1.setTypeOfDelivery(ObstetricalHistoryItemList.TypeOfDelivery.UN);
 			
-			item1.setComments(props.getProperty("pg1_oh_comments"+n,""));
+			item1.setComments(props.getProperty("pg1_oh_comments"+n,"")!=null?props.getProperty("pg1_oh_comments"+n,""):"");
 		}
 	}
 
@@ -707,7 +714,7 @@ public class ONAREnhancedFormToXML {
 				ultrasound.setDate(null);
 			}
 			ultrasound.setGa(props.getProperty("ar2_uGA"+y));
-			ultrasound.setResults(props.getProperty("ar2_uResults"+y));
+			ultrasound.setResults(props.getProperty("ar2_uResults"+y)!=null?props.getProperty("ar2_uResults"+y):"");
 		}
 
 		AdditionalLabInvestigationsType additionalLabInvestigations = ar2.addNewAdditionalLabInvestigations();
