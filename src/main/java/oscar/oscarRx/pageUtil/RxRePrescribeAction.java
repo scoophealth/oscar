@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -50,12 +51,17 @@ import oscar.oscarRx.data.RxPrescriptionData.Prescription;
 import oscar.oscarRx.util.RxUtil;
 
 public final class RxRePrescribeAction extends DispatchAction {
+	
+	private static final String PRIVILEGE_READ = "r"; 
+	private static final String PRIVILEGE_WRITE = "w";
 
 	private static final Logger logger = MiscUtils.getLogger();
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
 	public ActionForward reprint(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		checkPrivilege(loggedInInfo, PRIVILEGE_READ);
 		
 		oscar.oscarRx.pageUtil.RxSessionBean sessionBeanRX = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (sessionBeanRX == null) {
@@ -101,6 +107,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 	public ActionForward reprint2(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		checkPrivilege(loggedInInfo, PRIVILEGE_READ);
 
 		oscar.oscarRx.pageUtil.RxSessionBean sessionBeanRX = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (sessionBeanRX == null) {
@@ -141,6 +148,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 
 	public ActionForward represcribe(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		checkPrivilege(loggedInInfo, PRIVILEGE_WRITE);
 		
 		oscar.oscarRx.pageUtil.RxSessionBean beanRX = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (beanRX == null) {
@@ -251,6 +259,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 	public ActionForward represcribe2(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		MiscUtils.getLogger().debug("================in represcribe2 of RxRePrescribeAction.java=================");
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		checkPrivilege(loggedInInfo, PRIVILEGE_WRITE);
 		
 		oscar.oscarRx.pageUtil.RxSessionBean beanRX = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (beanRX == null) {
@@ -313,6 +322,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 
 	public ActionForward repcbAllLongTerm(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		checkPrivilege(loggedInInfo, PRIVILEGE_WRITE);
 		
 		oscar.oscarRx.pageUtil.RxSessionBean beanRX = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (beanRX == null) {
@@ -402,6 +412,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 	public ActionForward represcribeMultiple(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		MiscUtils.getLogger().debug("================in represcribeMultiple of RxRePrescribeAction.java=================");
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		checkPrivilege(loggedInInfo, PRIVILEGE_WRITE);
 		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (bean == null) {
@@ -449,4 +460,10 @@ public final class RxRePrescribeAction extends DispatchAction {
 		MiscUtils.getLogger().debug(s + "=" + s1);
 	}
 
+	
+	private void checkPrivilege(LoggedInInfo loggedInInfo, String privilege) {
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_rx", privilege, null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
+	}
 }

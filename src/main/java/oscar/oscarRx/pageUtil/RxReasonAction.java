@@ -40,6 +40,8 @@ import org.oscarehr.common.dao.DrugReasonDao;
 import org.oscarehr.common.dao.Icd9Dao;
 import org.oscarehr.common.model.DrugReason;
 import org.oscarehr.common.model.Icd9;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -48,6 +50,7 @@ import oscar.log.LogConst;
 
 
 public final class RxReasonAction extends DispatchAction {
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
 
 	/*
@@ -63,6 +66,10 @@ public final class RxReasonAction extends DispatchAction {
 	 */
     public ActionForward addDrugReason(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
 
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", "r", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
+		
     		MessageResources mResources = MessageResources.getMessageResources( "oscarResources" );
     		DrugReasonDao drugReasonDao     = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
     		Icd9Dao icd9Dao = (Icd9Dao)  SpringUtils.getBean("Icd9DAO");
@@ -128,6 +135,10 @@ public final class RxReasonAction extends DispatchAction {
 
     public ActionForward archiveReason(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
 
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", "r", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
+		
     	MessageResources mResources = MessageResources.getMessageResources( "ApplicationResources" );
 		DrugReasonDao drugReasonDao     = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
 		String reasonId = request.getParameter("reasonId");

@@ -35,8 +35,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -44,12 +46,19 @@ import oscar.oscarRx.data.RxPrescriptionData;
 
 
 public final class RxChooseDrugAction extends Action {
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
         public void p(String s){
 
         }
+        
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_rx", "r", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
+		
             // Extract attributes we will need
 
        //     p("locale="+locale.toString());

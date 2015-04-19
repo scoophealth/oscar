@@ -40,13 +40,17 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.util.RxDrugRef;
 
 public final class RxSearchDrugAction extends DispatchAction {
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
 
     @Override
@@ -55,6 +59,10 @@ public final class RxSearchDrugAction extends DispatchAction {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
+
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", "r", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
 
             // Setup variables
             RxSearchDrugForm reqForm = (RxSearchDrugForm) form;
@@ -86,6 +94,10 @@ public final class RxSearchDrugAction extends DispatchAction {
     }
 
     public ActionForward jsonSearch(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws Exception, ServletException {
+
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", "r", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
 
         String searchStr = request.getParameter("query");
         if (searchStr == null){

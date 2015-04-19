@@ -38,8 +38,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -49,6 +51,7 @@ import oscar.oscarRx.data.RxPatientData;
 public final class RxChoosePatientAction extends Action {
 
 	private static UserPropertyDAO userPropertyDAO;
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
 	public void p(String s) {
 		MiscUtils.getLogger().debug(s);
@@ -59,6 +62,11 @@ public final class RxChoosePatientAction extends Action {
 	}
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", "r", null)) {
+			throw new RuntimeException("missing required security object (_demoraphic)");
+		}
 
 		// p("locale",locale.toString());
 		// p("messages",messages.toString());
@@ -84,7 +92,7 @@ public final class RxChoosePatientAction extends Action {
 		RxPatientData rx = null;
 		RxPatientData.Patient patient = null;
 
-		patient = RxPatientData.getPatient(LoggedInInfo.getLoggedInInfoFromSession(request),bean.getDemographicNo());
+		patient = RxPatientData.getPatient(loggedInInfo, bean.getDemographicNo());
 
 		String provider = (String) request.getSession().getAttribute("user");
 		WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());

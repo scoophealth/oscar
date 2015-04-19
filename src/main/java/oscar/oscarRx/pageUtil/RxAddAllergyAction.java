@@ -37,7 +37,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.log.LogAction;
 import oscar.log.LogConst;
@@ -46,9 +49,13 @@ import oscar.oscarRx.data.RxPatientData;
 
 
 public final class RxAddAllergyAction extends Action {
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", "w", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
+    	
             int id = Integer.parseInt(request.getParameter("ID"));
 
             String name = request.getParameter("name");
