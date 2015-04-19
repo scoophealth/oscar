@@ -37,6 +37,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -45,6 +47,7 @@ import oscar.oscarRx.util.RxUtil;
 
 
 public final class RxAddFavoriteAction extends DispatchAction {
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
     
     
     public ActionForward unspecified(ActionMapping mapping,
@@ -52,6 +55,10 @@ public final class RxAddFavoriteAction extends DispatchAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
+    	
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", "w", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
         
         // Setup variables        
         
@@ -97,6 +104,10 @@ public final class RxAddFavoriteAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException {
 
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", "w", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
+    	
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
         if(bean==null) {
             response.sendRedirect("error.html");

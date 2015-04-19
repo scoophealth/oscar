@@ -45,6 +45,7 @@ import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerComment;
 import org.oscarehr.common.model.TicklerTextSuggest;
 import org.oscarehr.common.model.TicklerUpdate;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -57,9 +58,15 @@ public class EditTicklerAction extends DispatchAction{
     
     private static final Logger logger=MiscUtils.getLogger();
     private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
     
     public ActionForward editTickler(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_tickler", "u", null)) {
+			throw new RuntimeException("missing required security object (_tickler)");
+		}
+		
 		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		
         ActionMessages errors = this.getErrors(request);

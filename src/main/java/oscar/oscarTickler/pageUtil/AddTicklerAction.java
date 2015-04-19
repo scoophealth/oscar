@@ -33,7 +33,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.model.Tickler;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.TicklerManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarTickler.TicklerData;
@@ -45,13 +47,17 @@ import oscar.oscarTickler.TicklerData;
 public class AddTicklerAction extends Action {
    
 	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
    public AddTicklerAction() {
    }
                    
    public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_tickler", "w", null)) {
+			throw new RuntimeException("missing required security object (_tickler)");
+		}
+	   
       String[] demos = request.getParameterValues("demo");                           
-      
       String message          = request.getParameter("message");
       String status           = request.getParameter("status");
       String service_date     = request.getParameter("date");

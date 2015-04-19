@@ -61,6 +61,7 @@ import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -75,6 +76,10 @@ import oscar.oscarRx.util.RxUtil;
 import oscar.util.StringUtils;
 
 public final class RxWriteScriptAction extends DispatchAction {
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
+	private static final String PRIVILEGE_READ = "r";
+	private static final String PRIVILEGE_WRITE = "w";
 
 	private static final Logger logger = MiscUtils.getLogger();
 	private static UserPropertyDAO userPropertyDAO;
@@ -89,6 +94,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		checkPrivilege(loggedInInfo, PRIVILEGE_WRITE);
 		
 		RxWriteScriptForm frm = (RxWriteScriptForm) form;
 		String fwd = "refresh";
@@ -217,6 +223,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 	}
 
 	public ActionForward updateReRxDrug(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), PRIVILEGE_WRITE);
+		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (bean == null) {
 			response.sendRedirect("error.html");
@@ -240,6 +248,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 	}
 
 	public ActionForward saveCustomName(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), PRIVILEGE_WRITE);
+		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (bean == null) {
 			response.sendRedirect("error.html");
@@ -299,6 +309,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 	public ActionForward newCustomNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.debug("=============Start newCustomNote RxWriteScriptAction.java===============");
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		checkPrivilege(loggedInInfo, PRIVILEGE_WRITE);
 		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (bean == null) {
@@ -356,6 +367,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 	}
 
 	public ActionForward listPreviousInstructions(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), PRIVILEGE_READ);
+		
 		logger.debug("=============Start listPreviousInstructions RxWriteScriptAction.java===============");
 		String randomId = request.getParameter("randomId");
 		randomId = randomId.trim();
@@ -381,6 +394,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 	public ActionForward newCustomDrug(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.debug("=============Start newCustomDrug RxWriteScriptAction.java===============");
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		checkPrivilege(loggedInInfo, PRIVILEGE_WRITE);
 		
 		MessageResources messages = getResources(request);
 		// set default quantity;
@@ -446,6 +460,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 	}
 
 	public ActionForward normalDrugSetCustom(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), PRIVILEGE_WRITE);
+		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (bean == null) {
 			response.sendRedirect("error.html");
@@ -493,6 +509,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 	public ActionForward createNewRx(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.debug("=============Start createNewRx RxWriteScriptAction.java===============");
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		checkPrivilege(loggedInInfo, PRIVILEGE_WRITE);
 		
 		// set default quantity
 		setDefaultQuantity(request);
@@ -598,6 +615,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 	}
 
 	public ActionForward updateDrug(ActionMapping mapping, ActionForm aform, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), PRIVILEGE_WRITE);
+		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (bean == null) {
 			response.sendRedirect("error.html");
@@ -746,6 +765,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 	}
 
 	public ActionForward updateSpecialInstruction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		checkPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), PRIVILEGE_WRITE);
+		
 		// get special instruction from parameter
 		// get rx from random Id
 		// rx.setspecialisntruction
@@ -763,6 +784,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 	}
 
 	public ActionForward updateProperty(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		checkPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), PRIVILEGE_WRITE);
+		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		String elem = request.getParameter("elementId");
 		String val = request.getParameter("propertyValue");
@@ -799,6 +822,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 	}
 
 	public ActionForward updateSaveAllDrugs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
+		checkPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), PRIVILEGE_WRITE);
+		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		request.getSession().setAttribute("rePrint", null);// set to print.
 		List<String> paramList = new ArrayList();
@@ -1062,8 +1087,13 @@ public final class RxWriteScriptAction extends DispatchAction {
 	}
 
         public ActionForward getDemoNameAndHIN(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
+        	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", PRIVILEGE_READ, null)) {
+    			throw new RuntimeException("missing required security object (_demographic)");
+    		}
+        	
             String demoNo=request.getParameter("demoNo").trim();
-            Demographic d=demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request),demoNo);
+            Demographic d=demographicManager.getDemographic(loggedInInfo, demoNo);
             HashMap hm=new HashMap();
             if(d!=null){
                 hm.put("patientName", d.getDisplayName());
@@ -1076,7 +1106,10 @@ public final class RxWriteScriptAction extends DispatchAction {
             response.getOutputStream().write(jo.toString().getBytes());
             return null;
         }
+        
 	public ActionForward changeToLongTerm(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
+		checkPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), PRIVILEGE_WRITE);
+		
 		String strId = request.getParameter("ltDrugId");
 		if (strId != null) {
 			int drugId = Integer.parseInt(strId);
@@ -1107,6 +1140,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 	public void saveDrug(final HttpServletRequest request) throws Exception {
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		checkPrivilege(loggedInInfo, PRIVILEGE_WRITE);
 		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 
@@ -1191,5 +1225,12 @@ public final class RxWriteScriptAction extends DispatchAction {
 		JSONObject jsonObject = JSONObject.fromObject(hm);
 		response.getOutputStream().write(jsonObject.toString().getBytes());
 		return null;
+	}
+	
+	
+	private void checkPrivilege(LoggedInInfo loggedInInfo, String privilege) {
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_rx", privilege, null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
 	}
 }

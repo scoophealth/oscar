@@ -34,7 +34,9 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDemographic.data.DemographicNameAgeString;
 
@@ -42,12 +44,18 @@ import oscar.oscarDemographic.data.DemographicNameAgeString;
  * This class is used to forward to the add tickler screen with the demographic preselected
  * @author jay
  */
-public class ForwardDemographicTicklerAction extends Action {  
+public class ForwardDemographicTicklerAction extends Action {
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     /** Creates a new instance of ForwardDemographicTicklerAction */
     public ForwardDemographicTicklerAction() {
     }
     
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_tickler", "u", null)) {
+			throw new RuntimeException("missing required security object (_tickler)");
+		}
+  	
        String demoNo = request.getParameter("demographic_no");
        if ( demoNo != null ){
           Hashtable h = DemographicNameAgeString.getInstance().getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), demoNo);

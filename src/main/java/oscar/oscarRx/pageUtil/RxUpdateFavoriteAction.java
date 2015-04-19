@@ -35,12 +35,16 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.util.RxUtil;
 
 
 public final class RxUpdateFavoriteAction extends DispatchAction {
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
 
     public ActionForward unspecified(ActionMapping mapping,
@@ -49,6 +53,9 @@ public final class RxUpdateFavoriteAction extends DispatchAction {
 				 HttpServletResponse response)
 	throws IOException, ServletException {
 
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", "u", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
 
 
             // Setup variables
@@ -81,6 +88,10 @@ public final class RxUpdateFavoriteAction extends DispatchAction {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	{
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", "u", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
+		
             // Setup variables
             int favId = Integer.parseInt(request.getParameter("favoriteId"));
 

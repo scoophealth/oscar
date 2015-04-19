@@ -35,12 +35,16 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarRx.data.RxPrescriptionData;
 
 
 public final class RxViewScriptAction extends Action {
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public ActionForward execute(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
@@ -48,6 +52,9 @@ public final class RxViewScriptAction extends Action {
     throws IOException, ServletException {
 
     	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_rx", "r", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
 		
         // Setup variables
        

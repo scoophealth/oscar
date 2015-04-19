@@ -38,14 +38,21 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class RxReorderAction extends DispatchAction {
 
 	private static final Logger logger = MiscUtils.getLogger();
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
 	public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", "u", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
+		
 		String demographicNo = request.getParameter("demographicNo");
 		int drugId = Integer.parseInt(request.getParameter("drugId"));
 		int swapDrugId = Integer.parseInt(request.getParameter("swapDrugId"));

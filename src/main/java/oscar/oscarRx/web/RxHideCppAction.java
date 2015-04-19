@@ -37,6 +37,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -45,8 +47,13 @@ public class RxHideCppAction extends DispatchAction {
 	private static final Logger logger = MiscUtils.getLogger();
 
 	private DrugDao drugDao = (DrugDao)SpringUtils.getBean("drugDao");
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", "u", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
+    	
         String prescriptId = request.getParameter("prescriptId");
         String value= request.getParameter("value");
         Drug drug = drugDao.find(Integer.valueOf(prescriptId));

@@ -49,6 +49,8 @@ import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.SecRole;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -62,7 +64,9 @@ import oscar.oscarEncounter.data.EctProgram;
 
 public final class RxDeleteRxAction extends DispatchAction {
     private DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
+    private static final String PRIVILEGE_UPDATE = "u";
 
     @Override
     public ActionForward unspecified(ActionMapping mapping,
@@ -71,6 +75,7 @@ public final class RxDeleteRxAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException, ServletException {
 
+    	checkPrivilege(request, PRIVILEGE_UPDATE);
 
         // Setup variables
         RxSessionBean bean =(RxSessionBean)request.getSession().getAttribute("RxSessionBean");
@@ -117,7 +122,8 @@ public final class RxDeleteRxAction extends DispatchAction {
     throws IOException {
 
         MiscUtils.getLogger().debug("===========================Delete2 RxDeleteRxAction========================");
-
+        checkPrivilege(request, PRIVILEGE_UPDATE);
+        
         // Setup variables
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
         if(bean==null) {
@@ -139,10 +145,13 @@ public final class RxDeleteRxAction extends DispatchAction {
               MiscUtils.getLogger().debug("===========================END Delete2 RxDeleteRxAction========================");
          return null;
     }
+    
     public ActionForward DeleteRxOnCloseRxBox(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
     throws IOException {
 
         MiscUtils.getLogger().debug("===========================DeleteRxOnCloseRxBox RxDeleteRxAction========================");
+        checkPrivilege(request, PRIVILEGE_UPDATE);
+        
         String randomId=request.getParameter("randomId");
 
 
@@ -190,6 +199,8 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
 
    public ActionForward clearReRxDrugList(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
     throws IOException {
+		checkPrivilege(request, PRIVILEGE_UPDATE);
+		
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
         if(bean==null) {
             response.sendRedirect("error.html");
@@ -201,6 +212,8 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
     }
    public ActionForward clearPHRMeds(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
     throws IOException {
+		checkPrivilege(request, PRIVILEGE_UPDATE);
+		
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
         if(bean==null) {
             response.sendRedirect("error.html");
@@ -229,6 +242,8 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
      */
     //STILL NEED TO SAVE REASON AND COMMENT "would like to create a summary note in the echart"
     public ActionForward Discontinue(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException {
+		checkPrivilege(request, PRIVILEGE_UPDATE);
+		
         String idStr = request.getParameter("drugId");
         int id = Integer.parseInt(idStr);
 
@@ -334,4 +349,11 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
         EDocUtil.addCaseMgmtNoteLink(cmnl);
     }
 
+    
+    
+    private void checkPrivilege(HttpServletRequest request, String privilege) {
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", privilege, null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
+    }
 }

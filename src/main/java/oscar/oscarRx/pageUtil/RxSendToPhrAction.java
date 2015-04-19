@@ -46,6 +46,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.commons.MedicalDataType;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
@@ -62,6 +63,7 @@ import oscar.oscarRx.data.RxPrescriptionData.Prescription;
  * @author apavel
  */
 public class RxSendToPhrAction extends Action {
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
 	PHRService phrService = null;
 
@@ -70,6 +72,14 @@ public class RxSendToPhrAction extends Action {
 	}
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_rx", "r", null)) {
+			throw new RuntimeException("missing required security object (_rx)");
+		}
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", "r", null)) {
+			throw new RuntimeException("missing required security object (_demographic)");
+		}
+		
 		// boolean errors = false;
 		String errorMsg = null;
 
@@ -80,12 +90,12 @@ public class RxSendToPhrAction extends Action {
 		try {
 			MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
 			DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
-			Demographic demographic = demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), bean.getDemographicNo());
+			Demographic demographic = demographicManager.getDemographic(loggedInInfo, bean.getDemographicNo());
 			Long myOscarUserId = AccountManager.getUserId(myOscarLoggedInInfo, demographic.getMyOscarUserName());
 
 			RxPatientData.Patient patient = null;
 
-			patient = RxPatientData.getPatient(LoggedInInfo.getLoggedInInfoFromSession(request),demographic.getDemographicNo());
+			patient = RxPatientData.getPatient(loggedInInfo, demographic.getDemographicNo());
 
 			oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
 			prescribedDrugs = patient.getPrescribedDrugs();
