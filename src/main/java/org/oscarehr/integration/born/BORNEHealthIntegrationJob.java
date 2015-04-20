@@ -156,10 +156,14 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 			/* EIGHTEEN MONTH SECTION */
 
 			
+			logger.debug("running the 18m section");
 			//We get list of patients that are candidates, from the patient, we have to create the CDA record.
 			List<Integer> eighteenMonthDemos = eighteenMonthConnector.getDemographicIdsOfUnsentRecords();
 
+			logger.debug("found " + eighteenMonthDemos.size() + " patients that have pending data to send");
+			
 			for (Integer d : eighteenMonthDemos) {
+				logger.debug("fetching xml for demographic no " + d);
 				Object[] data = eighteenMonthConnector.getXmlForDemographic(d);
 				if(data == null) {
 					logger.warn("no data to send");
