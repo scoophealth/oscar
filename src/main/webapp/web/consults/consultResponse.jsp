@@ -301,5 +301,6 @@
 <div class="wrapper-action"><!-- Action Buttons -->
 	<button type="button" class="btn btn-large btn-warning action" ng-click="printPreview()" ng-show="consult.id!=null && consultChanged<=0">Print Preview</button>&nbsp;
 	<button type="button" class="btn btn-large btn-warning action" ng-click="sendFax()" ng-show="consult.id!=null && consultChanged<=0">Send Fax</button>&nbsp;
-	<button type="button" class="btn btn-large btn-primary action" ng-click="save()" ng-disabled="consultChanged<=0">Save</button>&nbsp;
+	<button type="button" class="btn btn-large btn-primary action" ng-click="save()" ng-show="consultChanged>0">Save</button>&nbsp;
+	<button type="button" class="btn btn-large btn-default action" onclick="window.history.back()">Close</button>&nbsp;
 </div>

@@ -25,7 +25,7 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 		  controller: 'InboxCtrl'
 		})
   		.state('consultRequests', {
-  			url: '/consults?demographicId',
+  			url: '/consults',
   			templateUrl: 'consults/consultRequestList.jsp',
   			controller: 'ConsultRequestListCtrl'
 		})
@@ -48,7 +48,7 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 			}
 		})
   		.state('consultResponses', {
-  			url: '/consultResponses?demographicId',
+  			url: '/consultResponses',
   			templateUrl: 'consults/consultResponseList.jsp',
   			controller: 'ConsultResponseListCtrl'
 		})
