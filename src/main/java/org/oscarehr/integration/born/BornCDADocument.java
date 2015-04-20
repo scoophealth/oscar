@@ -207,7 +207,7 @@ public class BornCDADocument extends Level1Document{
 			
 			SET<II> authorIdSet = new SET<II>();
 			String provId = provider.getOhipNo();
-			if(StringUtils.isEmpty(id)) {
+			if(StringUtils.isEmpty(provId)) {
 				provId = provider.getProviderNo();
 			}
 			II authorId = new II("2.16.840.1.113883.3.239.36.1.1.3",provId);
