@@ -279,27 +279,7 @@ public class ConsultationManager {
 		result.setReferralDate(consultRequest.getReferralDate());
 		result.setServiceName(consultationServices.getServiceDesc());
 		result.setStatus(consultRequest.getStatus());
-		
-		if("1".equals(result.getStatus())) {
-			result.setStatusDescription("Nothing");
-		} else if("2".equals(result.getStatus())) {
-			result.setStatusDescription("Pending Specialist Callback");
-		} else if("3".equals(result.getStatus())) {
-			result.setStatusDescription("Pending Patient Callback");
-		} else if("4".equals(result.getStatus())) {
-			result.setStatusDescription("Completed");
-		} else if("5".equals(result.getStatus())) {
-			result.setStatusDescription("Cancelled");
-		}
-		
 		result.setUrgency(consultRequest.getUrgency());
-		if("1".equals(result.getUrgency())) {
-			result.setUrgencyDescription("Urgent");
-		} else if("2".equals(result.getUrgency())) {
-			result.setUrgencyDescription("Non-Urgent");
-		}else if("3".equals(result.getUrgency())) {
-			result.setUrgencyDescription("Return");
-		}
 
 		if(consultRequest.getSendTo() != null && !consultRequest.getSendTo().isEmpty() && !consultRequest.getSendTo().equals("-1")) {
 			result.setTeamName(consultRequest.getSendTo());	
@@ -325,27 +305,7 @@ public class ConsultationManager {
 		result.setProvider(provider);
 		result.setReferralDate(consultResponse.getReferralDate());
 		result.setStatus(consultResponse.getStatus());
-		
-		if("1".equals(result.getStatus())) {
-			result.setStatusDescription("Nothing");
-		} else if("2".equals(result.getStatus())) {
-			result.setStatusDescription("Pending Referring Doctor Callback");
-		} else if("3".equals(result.getStatus())) {
-			result.setStatusDescription("Pending Patient Callback");
-		} else if("4".equals(result.getStatus())) {
-			result.setStatusDescription("Completed");
-		} else if("5".equals(result.getStatus())) {
-			result.setStatusDescription("Cancelled");
-		}
-		
 		result.setUrgency(consultResponse.getUrgency());
-		if("1".equals(result.getUrgency())) {
-			result.setUrgencyDescription("Urgent");
-		} else if("2".equals(result.getUrgency())) {
-			result.setUrgencyDescription("Non-Urgent");
-		}else if("3".equals(result.getUrgency())) {
-			result.setUrgencyDescription("Return");
-		}
 
 		if(consultResponse.getSendTo() != null && !consultResponse.getSendTo().isEmpty() && !consultResponse.getSendTo().equals("-1")) {
 			result.setTeamName(consultResponse.getSendTo());	

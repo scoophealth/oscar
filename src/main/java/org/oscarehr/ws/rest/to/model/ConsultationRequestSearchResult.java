@@ -37,13 +37,11 @@ public class ConsultationRequestSearchResult {
 	private ProfessionalSpecialist consultant;
 	private String teamName;
 	private String status;
-	private String statusDescription;
 	private Provider mrp;
 	private Date appointmentDate;
 	private Date lastFollowUp;
 	private Date referralDate;
 	private String urgency;
-	private String urgencyDescription;
 
 	public Integer getId() {
 		return id;
@@ -132,22 +130,4 @@ public class ConsultationRequestSearchResult {
 	public void setMrp(Provider mrp) {
 		this.mrp = mrp;
 	}
-
-	public String getStatusDescription() {
-		return statusDescription;
-	}
-
-	public void setStatusDescription(String statusDescription) {
-		this.statusDescription = statusDescription;
-	}
-
-	public String getUrgencyDescription() {
-		return urgencyDescription;
-	}
-
-	public void setUrgencyDescription(String urgencyDescription) {
-		this.urgencyDescription = urgencyDescription;
-	}
-	
-
 }
