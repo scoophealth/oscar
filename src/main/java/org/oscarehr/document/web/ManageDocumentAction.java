@@ -63,6 +63,7 @@ import org.jpedal.PdfDecoder;
 import org.jpedal.fonts.FontMappings;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDocumentContents;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
@@ -81,6 +82,7 @@ import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.sharingcenter.SharingCenterUtil;
 import org.oscarehr.sharingcenter.model.DemographicExport;
 import org.oscarehr.util.LoggedInInfo;
@@ -1040,6 +1042,15 @@ public class ManageDocumentAction extends DispatchAction {
         String fileName = pdfName;
         String user = (String) request.getSession().getAttribute("user");
         EDoc newDoc = new EDoc(documentDescription, docType, fileName, "", user, user, source, 'A', formattedDate, "", "", "demographic", demographic_no, 0);
+        
+        // if the document was added in the context of a program
+		ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
+		LoggedInInfo loggedInInfo  = LoggedInInfo.getLoggedInInfoFromSession(request);
+		ProgramProvider pp = programManager.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+		if(pp != null && pp.getProgramId() != null) {
+			newDoc.setProgramId(pp.getProgramId().intValue());
+		}
+		
         newDoc.setDocClass(docClass);
         newDoc.setDocSubClass(docSubClass);
         newDoc.setDocPublic("0");
