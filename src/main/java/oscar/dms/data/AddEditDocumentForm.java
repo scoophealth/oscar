@@ -54,6 +54,8 @@ public class AddEditDocumentForm extends ActionForm {
     
     private String appointmentNo = "0";
     
+    private boolean restrictToProgram = false;
+    
     public AddEditDocumentForm() {
     }
 
@@ -223,6 +225,14 @@ public class AddEditDocumentForm extends ActionForm {
 
 	public void setAppointmentNo(String appointment) {
 		this.appointmentNo = appointment;
+	}
+
+	public boolean isRestrictToProgram() {
+		return restrictToProgram;
+	}
+
+	public void setRestrictToProgram(boolean restrictToProgram) {
+		this.restrictToProgram = restrictToProgram;
 	}
     
     

@@ -37,10 +37,14 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -120,6 +124,15 @@ public class AddEditHtmlAction extends Action {
             currentDoc.setDocPublic(fm.getDocPublic());
             currentDoc.setDocClass(fm.getDocClass());
             currentDoc.setDocSubClass(fm.getDocSubClass());
+           
+            // if the document was added in the context of a program
+    		ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
+    		LoggedInInfo loggedInInfo  = LoggedInInfo.getLoggedInInfoFromSession(request);
+    		ProgramProvider pp = programManager.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+    		if(pp != null && pp.getProgramId() != null) {
+    			currentDoc.setProgramId(pp.getProgramId().intValue());
+    		}
+    		
             String docId = EDocUtil.addDocumentSQL(currentDoc);
 	    
 	    /* Save annotation */

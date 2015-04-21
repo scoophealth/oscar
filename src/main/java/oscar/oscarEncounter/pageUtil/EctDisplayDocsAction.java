@@ -57,6 +57,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		
+		
     	boolean a = true;
     	Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.documents");
     	String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");

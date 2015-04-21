@@ -942,6 +942,9 @@ public class RxPrescriptionData {
 			this.writtenDateFormat = RHS;
 		}
 
+		/*
+		 * Current should contain non-expired drugs, as well as long terms drugs that are not deleted/discontinued
+		 */
 		public boolean isCurrent() {
 			if(isLongTerm() && !isDiscontinued() && !isArchived()) {
 				return true;
