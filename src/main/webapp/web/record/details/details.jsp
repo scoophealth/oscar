@@ -56,11 +56,11 @@
 			</button>
 			<ul class="dropdown-menu">
 				<li><a href="../report/GenerateEnvelopes.do?demos={{page.demo.demographicNo}}">PDF Envelope</a></li>
-				<li><a ng-click="printLabel('PDFLabel')">PDF Label</a></li>
-				<li><a ng-click="printLabel('PDFAddress')">PDF Address Label</a></li>
-				<li><a ng-click="printLabel('PDFChart')">PDF Chart Label</a></li>
-				<li><a ng-click="printLabel('PrintLabel')">Print Label</a></li>
-				<li><a ng-click="printLabel('ClientLab')">Client Lab Label</a></li>
+				<li><a class="hand-hover" ng-click="printLabel('PDFLabel')">PDF Label</a></li>
+				<li><a class="hand-hover" ng-click="printLabel('PDFAddress')">PDF Address Label</a></li>
+				<li><a class="hand-hover" ng-click="printLabel('PDFChart')">PDF Chart Label</a></li>
+				<li><a class="hand-hover" ng-click="printLabel('PrintLabel')">Print Label</a></li>
+				<li><a class="hand-hover" ng-click="printLabel('ClientLab')">Client Lab Label</a></li>
 			</ul>
 		</div>
 		<div class="btn-group">
@@ -83,8 +83,8 @@
 				Appointment <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
-				<li><a ng-click="appointmentDo('ApptHistory')">Appointment History</a></li>
-				<li><a ng-click="appointmentDo('WaitingList')">Waiting List</a></li>
+				<li><a class="hand-hover" ng-click="appointmentDo('ApptHistory')">Appointment History</a></li>
+				<li><a class="hand-hover" ng-click="appointmentDo('WaitingList')">Waiting List</a></li>
 			</ul>
 		</div>
 		<div class="btn-group">
@@ -92,13 +92,13 @@
 				Billing <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
-				<li><a ng-click="billingDo('BillingHistory')">{{page.billingHistoryLabel}}</a></li>
-				<li><a ng-click="billingDo('CreateInvoice')">Create Invoice</a></li>
-				<li><a ng-click="billingDo('FluBilling')">Flu Billing</a></li>
-				<li><a ng-click="billingDo('HospitalBilling')">Hospital Billing</a></li>
-				<li><a ng-click="billingDo('AddBatchBilling')">Add Batch Billing</a></li>
-				<li><a ng-click="billingDo('AddINR')">Add INR</a></li>
-				<li><a ng-click="billingDo('BillINR')">Bill INR</a></li>
+				<li><a class="hand-hover" ng-click="billingDo('BillingHistory')">{{page.billingHistoryLabel}}</a></li>
+				<li><a class="hand-hover" ng-click="billingDo('CreateInvoice')">Create Invoice</a></li>
+				<li><a class="hand-hover" ng-click="billingDo('FluBilling')">Flu Billing</a></li>
+				<li><a class="hand-hover" ng-click="billingDo('HospitalBilling')">Hospital Billing</a></li>
+				<li><a class="hand-hover" ng-click="billingDo('AddBatchBilling')">Add Batch Billing</a></li>
+				<li><a class="hand-hover" ng-click="billingDo('AddINR')">Add INR</a></li>
+				<li><a class="hand-hover" ng-click="billingDo('BillINR')">Bill INR</a></li>
 			</ul>
 		</div>
 		<div class="btn-group" ng-show="page.macPHRIdsSet">
@@ -106,8 +106,8 @@
 				Personal Health Record <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
-				<li><a ng-click="macPHRDo('SendMessage')">Send Message to PHR</a></li>
-				<li><a ng-click="macPHRDo('ViewRecord')">View PHR Record</a></li>
+				<li><a class="hand-hover" ng-click="macPHRDo('SendMessage')">Send Message to PHR</a></li>
+				<li><a class="hand-hover" ng-click="macPHRDo('ViewRecord')">View PHR Record</a></li>
 			</ul>
 		</div>
 		<div class="btn-group">
