@@ -89,6 +89,10 @@ public class BORN18MConnector {
 		if (rpt18mForm==null) logger.error(rpt18mFormName+" form not found!");
 		else buildDemoNos(rpt18mForm, rpt18mFormDemoList);
     	
+		logger.debug("rourke demo list size " + rourkeFormDemoList.size());
+		logger.debug("ndds demo list size " + nddsFormDemoList.size());
+		logger.debug("18m report demo list size " + rpt18mFormDemoList.size());
+		
 		for (Integer demoNo : rourkeFormDemoList) {
 			Integer fdid = checkRourkeDone(rourkeFormName, demoNo);
 			if (fdid!=null) {
@@ -112,6 +116,8 @@ public class BORN18MConnector {
 					results.add(demoNo);
 			}
 		}
+		
+		logger.debug("results list size " + results.size());
 		
 		return results;
 	}
