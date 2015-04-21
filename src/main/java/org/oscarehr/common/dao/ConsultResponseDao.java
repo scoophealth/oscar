@@ -105,8 +105,11 @@ public class ConsultResponseDao extends AbstractDao<ConsultationResponse> {
 		if (StringUtils.isNotBlank(filter.getUrgency())) {
 			sql.append("and cr.urgency = '" + StringEscapeUtils.escapeSql(filter.getUrgency()) + "' ");
 		}
-		if (filter.getDemographicNo() != null && filter.getDemographicNo().intValue()>0) {
-			sql.append("and cr.demographicNo = " +  StringEscapeUtils.escapeSql(filter.getDemographicNo().toString()) + " ");
+		if (filter.getDemographicNo() != null && filter.getDemographicNo()>0) {
+			sql.append("and cr.demographicNo = " + filter.getDemographicNo() + " ");
+		}
+		if (filter.getMrpNo() != null && filter.getMrpNo()>0) {
+			sql.append("and d.ProviderNo = '" + filter.getMrpNo() + "' ");
 		}
 		
 		String orderBy = "cr.referralDate";

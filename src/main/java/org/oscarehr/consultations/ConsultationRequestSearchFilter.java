@@ -37,29 +37,18 @@ public class ConsultationRequestSearchFilter {
 	
 	
 	private Integer id;
-	
 	private Date referralStartDate;
-	
 	private Date referralEndDate;
-	
 	private Integer status;
-	
 	private String team;
-	
 	private Date appointmentStartDate;
-	
 	private Date appointmentEndDate;
-	
 	private Integer demographicNo;
-	
+	private Integer mrpNo;
 	private String urgency;
-
 	private SORTMODE sortMode = SORTMODE.ReferralDate;
-	
 	private SORTDIR sortDir = SORTDIR.desc;
-	
 	private int startIndex;
-	
 	private int numToReturn;
 
 	
@@ -110,6 +99,12 @@ public class ConsultationRequestSearchFilter {
 	}
 	public void setDemographicNo(Integer demographicNo) {
 		this.demographicNo = demographicNo;
+	}
+	public Integer getMrpNo() {
+		return mrpNo;
+	}
+	public void setMrpNo(Integer mrpNo) {
+		this.mrpNo = mrpNo;
 	}
 	public String getUrgency() {
 		return urgency;

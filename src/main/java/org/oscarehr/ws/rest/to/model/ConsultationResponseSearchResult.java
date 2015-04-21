@@ -36,14 +36,12 @@ public class ConsultationResponseSearchResult {
 	private ProfessionalSpecialist referringDoctor;
 	private String teamName;
 	private String status;
-	private String statusDescription;
 	private Provider provider;
 	private Date appointmentDate;
 	private Date lastFollowUp;
 	private Date referralDate;
 	private Date responseDate;
 	private String urgency;
-	private String urgencyDescription;
 
 	public Integer getId() {
 		return id;
@@ -131,21 +129,5 @@ public class ConsultationResponseSearchResult {
 
 	public void setProvider(Provider provider) {
 		this.provider = provider;
-	}
-
-	public String getStatusDescription() {
-		return statusDescription;
-	}
-
-	public void setStatusDescription(String statusDescription) {
-		this.statusDescription = statusDescription;
-	}
-
-	public String getUrgencyDescription() {
-		return urgencyDescription;
-	}
-
-	public void setUrgencyDescription(String urgencyDescription) {
-		this.urgencyDescription = urgencyDescription;
 	}
 }
