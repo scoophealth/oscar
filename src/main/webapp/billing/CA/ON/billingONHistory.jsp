@@ -108,8 +108,10 @@ for(int i=0; i<aL.size(); i=i+2) {
 		<security:oscarSec roleName="<%=roleName$%>"
 			objectName="_admin,_admin.billing" rights="r">
 			<a href=#
-				onClick="popupPage(600,800, 'billingONCorrection.jsp?billing_no=<%=obj.getId()%>')">edit</a>
-		</security:oscarSec></td>
+				onClick="popupPage(600,800, 'billingONCorrection.jsp?billing_no=<%=obj.getId()%>')">Edit</a>
+		</security:oscarSec>
+		<a href="javascript:void(0)" onClick="popupPage(600,800, 'billingON3rdInv.jsp?billingNo=<%=obj.getId()%>')">Print</a>
+		</td>
 		<td align="center"><%=obj.getBilling_date()%> <%--=obj.getBilling_time()--%></td>
 		<td align="center"><%=strBillType%></td>
 		<td align="center"><%=itObj.getService_code()%></td>
