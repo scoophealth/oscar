@@ -25,7 +25,7 @@
 */
 
 
-oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, securityService, personaService, $rootScope) {
+oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, securityService, personaService, billingService, $rootScope) {
 	
 
 	$scope.$watch(function() {
@@ -34,7 +34,12 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 		  $scope.me = newVal;
 		}, true);
 	
-	
+   billingService.getBillingRegion().then(function(response){
+    console.log("billRegion----------------------" + JSON.stringify( response ) );
+    $scope.billRegion = response.message;
+   },function(reason){
+    alert(reason);
+   });	
 	
 	
     securityService.hasRights({items:[{objectName:'_search',privilege:'r'},
@@ -104,8 +109,35 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 	//to help ng-clicks on buttons
 	$scope.transition = function (item) {
 		if(angular.isDefined(item) && angular.isDefined(item.state)){
-			$state.go(item.state);
+			url = "";
+			wname="";
+			if(item.label=="Inbox"){
+				url = "../dms/inboxManage.do?method=prepareForIndexPage";
+				wname="inbox";
+			}else if(item.label=="Billing"){
+				url = "../billing/CA/" + $scope.billRegion + "/billingReportCenter.jsp?displaymode=billreport";
+				wname="billing";
+			}else if(item.label=="Admin"){
+				url = "../administration/index.jsp";
+				wname="admin";
+			}else if(item.label=="Documents"){
+				url = "../dms/documentReport.jsp?function=provider&functionid="+$scope.me.providerNo;
+				wname="edocView";
+			}else{
+				
+				$state.go(item.state);
+			}
+			
+			if(url!="" && wname!=""){
+				 newwindow=window.open(url,wname,'height=700,width=1000');
+				 if (window.focus) {
+					 newwindow.focus();
+				 }
+			}
+		
+		
 		}else if(angular.isDefined(item) && angular.isDefined(item.url)){
+			
 			window.location = item.url;   
 		}
 	
