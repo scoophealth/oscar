@@ -41,14 +41,23 @@ import org.oscarehr.common.dao.MeasurementCSSLocationDao;
 import org.oscarehr.common.dao.MeasurementGroupStyleDao;
 import org.oscarehr.common.model.MeasurementCSSLocation;
 import org.oscarehr.common.model.MeasurementGroupStyle;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.ConversionUtils;
 
 public class EctDeleteMeasurementStyleSheetAction extends Action {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		EctDeleteMeasurementStyleSheetForm frm = (EctDeleteMeasurementStyleSheetForm) form;
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+			throw new SecurityException("missing required security object (_admin)");
+		}
+		
 		request.getSession().setAttribute("EctDeleteMeasurementStyleSheetForm", frm);
 		String[] deleteCheckbox = frm.getDeleteCheckbox();
 

@@ -33,6 +33,8 @@ import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.FlowSheetCustomization;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.Validations;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -47,19 +49,25 @@ import oscar.util.ConversionUtils;
 
 import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.SecRole;
+
 import oscar.oscarEncounter.data.EctProgram;
+
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
-
 import org.apache.log4j.Logger;
 
 public class FormUpdateAction extends Action {
 	
 	private static Logger log = MiscUtils.getLogger();
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String date = request.getParameter("date");
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_measurement", "w", null)) {
+			throw new SecurityException("missing required security object (_measurement)");
+		}
+		
 		String testOutput = "";
 		String textOnEncounter = ""; // ********CDM Indicators Update******** \\n";
 		boolean valid = true;

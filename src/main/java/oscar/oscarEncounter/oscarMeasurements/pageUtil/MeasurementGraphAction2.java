@@ -77,6 +77,7 @@ import org.jfree.data.xy.XYDataset;
 import org.oscarehr.PMmodule.utility.UtilDateUtilities;
 import org.oscarehr.common.dao.MeasurementsExtDao;
 import org.oscarehr.common.model.MeasurementsExt;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -93,6 +94,7 @@ import oscar.oscarLab.ca.on.CommonLabTestValues;
 public class MeasurementGraphAction2 extends Action {
 
     private static Logger log = MiscUtils.getLogger();
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.debug("In MeasurementGraphAction2");
@@ -101,6 +103,10 @@ public class MeasurementGraphAction2 extends Action {
             response.sendRedirect("../logout.jsp");
         }
 
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_measurement", "r", null)) {
+			throw new SecurityException("missing required security object (_measurement)");
+		}
+        
 
         Integer demographicNo = Integer.valueOf(request.getParameter("demographic_no"));
         String typeIdName = request.getParameter("type");

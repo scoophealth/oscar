@@ -45,6 +45,9 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig;
 
@@ -55,6 +58,8 @@ import oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig;
 public class EctAddMeasurementMapAction extends Action{
     
     Logger logger = Logger.getLogger(EctAddMeasurementMapAction.class);
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+    
     
     /** Creates a new instance of EctEditMeasurementMapAction */
     public EctAddMeasurementMapAction() {
@@ -62,6 +67,10 @@ public class EctAddMeasurementMapAction extends Action{
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+			throw new SecurityException("missing required security object (_admin)");
+		}
+    	
         String identifier = request.getParameter("identifier");
         String loinc_code = request.getParameter("loinc_code");
         String outcome = "continue";

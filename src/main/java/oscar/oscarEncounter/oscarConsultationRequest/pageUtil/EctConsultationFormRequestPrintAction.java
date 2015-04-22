@@ -42,8 +42,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import com.lowagie.text.DocumentException;
 
@@ -54,6 +56,7 @@ import com.lowagie.text.DocumentException;
 public class EctConsultationFormRequestPrintAction extends Action {
     
     private static final Logger logger = MiscUtils.getLogger();
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
     
     public EctConsultationFormRequestPrintAction() {
     }
@@ -61,6 +64,10 @@ public class EctConsultationFormRequestPrintAction extends Action {
     @Override
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
     	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "r", null)) {
+			throw new SecurityException("missing required security object (_con)");
+		}
     	
         try {
             EctConsultationFormRequestPrintPdf pdf = new EctConsultationFormRequestPrintPdf(request, response);

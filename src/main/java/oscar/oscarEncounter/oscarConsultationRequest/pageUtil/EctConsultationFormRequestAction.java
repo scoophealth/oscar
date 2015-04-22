@@ -68,6 +68,7 @@ import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.DigitalSignatureUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -90,10 +91,15 @@ import com.lowagie.text.DocumentException;
 public class EctConsultationFormRequestAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "w", null)) {
+			throw new SecurityException("missing required security object (_con)");
+		}
+		
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		EctConsultationFormRequestForm frm = (EctConsultationFormRequestForm) form;		
 

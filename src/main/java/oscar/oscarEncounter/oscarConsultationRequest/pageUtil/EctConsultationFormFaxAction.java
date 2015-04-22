@@ -32,6 +32,7 @@ import org.oscarehr.common.dao.FaxJobDao;
 import org.oscarehr.common.model.FaxConfig;
 import org.oscarehr.common.model.FaxJob;
 import org.oscarehr.fax.util.PdfCoverPageCreator;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -54,6 +55,7 @@ import com.sun.xml.messaging.saaj.util.ByteOutputStream;
 public class EctConsultationFormFaxAction extends Action {
 
 	private static final Logger logger = MiscUtils.getLogger();
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	public EctConsultationFormFaxAction() {
 	}
@@ -62,6 +64,10 @@ public class EctConsultationFormFaxAction extends Action {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
         
     	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
     	
     	String reqId = request.getParameter("reqId");
 		String demoNo = request.getParameter("demographicNo");

@@ -54,6 +54,8 @@ import org.oscarehr.common.model.FlowSheetCustomization;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.common.model.Validations;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -68,9 +70,15 @@ import oscar.util.ConversionUtils;
 
 public class EctMeasurementsAction extends Action {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_measurement", "w", null)) {
+			throw new SecurityException("missing required security object (_measurement)");
+		}
+    	
         EctMeasurementsForm frm = (EctMeasurementsForm) form;
 
         HttpSession session = request.getSession();

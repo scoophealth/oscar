@@ -42,6 +42,8 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.common.dao.MeasurementTypeDao;
 import org.oscarehr.common.model.MeasurementType;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarMessenger.util.MsgStringQuote;
@@ -50,12 +52,17 @@ import oscar.oscarMessenger.util.MsgStringQuote;
 public class EctAddMeasuringInstructionAction extends Action {
 
 	private MeasurementTypeDao dao = SpringUtils.getBean(MeasurementTypeDao.class);
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
         EctAddMeasuringInstructionForm frm = (EctAddMeasuringInstructionForm) form;
 
+        
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+			throw new SecurityException("missing required security object (_admin)");
+		}
         
         request.getSession().setAttribute("EctAddMeasuringInstructionForm", frm);
         

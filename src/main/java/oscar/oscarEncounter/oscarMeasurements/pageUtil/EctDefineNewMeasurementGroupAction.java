@@ -40,17 +40,24 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.common.dao.MeasurementGroupStyleDao;
 import org.oscarehr.common.model.MeasurementGroupStyle;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 
 public class EctDefineNewMeasurementGroupAction extends Action {
 
 	private MeasurementGroupStyleDao dao = SpringUtils.getBean(MeasurementGroupStyleDao.class);
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
  
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+			throw new SecurityException("missing required security object (_admin)");
+		}
+    	
         EctDefineNewMeasurementGroupForm frm = (EctDefineNewMeasurementGroupForm) form;                
         request.getSession().setAttribute("EctDefineNewMeasurementGroupForm", frm);
         

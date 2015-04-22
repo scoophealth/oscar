@@ -38,6 +38,8 @@ import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementsDeletedDao;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementsDeleted;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -46,8 +48,14 @@ import oscar.util.ParameterActionForward;
 
 public class EctDeleteDataAction extends Action {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_measurement", "d", null)) {
+			throw new SecurityException("missing required security object (_measurement)");
+		}
+		
 		EctDeleteDataForm frm = (EctDeleteDataForm) form;
 		request.getSession().setAttribute("EctDeleteDataForm", frm);
 		String[] deleteCheckbox = frm.getDeleteCheckbox();
