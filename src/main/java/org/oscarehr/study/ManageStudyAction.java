@@ -49,6 +49,7 @@ import org.oscarehr.common.model.ProviderStudy;
 import org.oscarehr.common.model.ProviderStudyPK;
 import org.oscarehr.common.model.Study;
 import org.oscarehr.common.model.StudyData;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.OscarAuditLogger;
@@ -59,12 +60,17 @@ import oscar.util.ConversionUtils;
 public class ManageStudyAction extends DispatchAction {
 	
 	private static Logger logger = Logger.getLogger(Logger.class);
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	public ActionForward saveUpdateStudy(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) {
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "r", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+		
 		StudyDao studyDao = (StudyDao)SpringUtils.getBean(StudyDao.class);
 		String studyId = request.getParameter("studyId");
 		
@@ -108,6 +114,10 @@ public class ManageStudyAction extends DispatchAction {
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "r", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+		
 		StudyDao studyDao = (StudyDao)SpringUtils.getBean(StudyDao.class);
 		String studyId = request.getParameter("studyId");
 		String studyStatus = request.getParameter("studyStatus");
@@ -225,6 +235,10 @@ public class ManageStudyAction extends DispatchAction {
 	
 	public ActionForward AddProvider(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) {
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "r", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
 		
 		String studyId = request.getParameter("studyId");
 		String[] providerIds = request.getParameterValues("providerNo");

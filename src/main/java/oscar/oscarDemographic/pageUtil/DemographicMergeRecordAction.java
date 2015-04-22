@@ -45,6 +45,9 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDemographic.data.DemographicMerged;
 
@@ -55,12 +58,17 @@ import oscar.oscarDemographic.data.DemographicMerged;
 public class DemographicMergeRecordAction  extends Action {
 
     Logger logger = Logger.getLogger(DemographicMergeRecordAction.class);
-
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+    
     public DemographicMergeRecordAction() {
 
     }
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
 
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
+    	
         if (request.getParameterValues("records")==null) {
             return mapping.findForward("failure");
         }

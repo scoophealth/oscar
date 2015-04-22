@@ -17,12 +17,21 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.EFormDao;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class RTLSettingsAction extends DispatchAction {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eform", "w", null)) {
+			throw new SecurityException("missing required security object (_eform)");
+		}
+    	
         boolean status = "on".equals(request.getParameter("indivica_rtl_enabled"));
         EFormDao efd = (EFormDao) SpringUtils.getBean("EFormDao");
         efd.setIndivicaRTLEnabled(status);

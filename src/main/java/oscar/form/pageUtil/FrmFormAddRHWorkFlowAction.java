@@ -34,7 +34,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.util.WriteNewMeasurements;
 import oscar.oscarWorkflow.WorkFlowState;
@@ -46,8 +49,14 @@ import oscar.util.UtilDateUtilities;
  */
 public class FrmFormAddRHWorkFlowAction extends Action{
     
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){    
         MiscUtils.getLogger().debug("FrmFormRHPrevention Action");
+        
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_form", "w", null)) {
+			throw new SecurityException("missing required security object (_form)");
+		}
         
         String providerNo = (String) request.getSession().getAttribute("user");
         String demographicNo = request.getParameter("demographic_no");

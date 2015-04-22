@@ -32,15 +32,25 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.eform.EFormUtil;
 import oscar.eform.data.AddToGroupForm;
 
 public class AddToGroupAction extends Action {
+	
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
    
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                 HttpServletRequest request, HttpServletResponse response) {
          AddToGroupForm fm = (AddToGroupForm) form;
+         
+         if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eform", "w", null)) {
+ 			throw new SecurityException("missing required security object (_eform)");
+ 		}
+         
          String fid = fm.getFid();
          String groupName = fm.getGroupName();
          if (fid != null) {

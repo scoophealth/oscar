@@ -41,8 +41,11 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarAction;
 import oscar.OscarDocumentCreator;
@@ -51,11 +54,17 @@ import oscar.OscarDocumentCreator;
 public class PrintClientLabLabelAction extends OscarAction {
 
     private static Logger logger = MiscUtils.getLogger();
-
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+    
     public PrintClientLabLabelAction() {
     }
 
     public ActionForward execute(ActionMapping actionMapping, ActionForm actionForm, HttpServletRequest request, HttpServletResponse response) {
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
+    	
         //patient
         String classpath = (String)request.getSession().getServletContext().getAttribute("org.apache.catalina.jsp_classpath");
         if (classpath==null) classpath = (String)request.getSession().getServletContext().getAttribute("com.ibm.websphere.servlet.application.classpath");

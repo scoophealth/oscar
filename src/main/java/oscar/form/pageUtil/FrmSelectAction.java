@@ -39,18 +39,25 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.model.EncounterForm;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class FrmSelectAction extends Action {
 
 	private static Logger logger = MiscUtils.getLogger();
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		FrmSelectForm frm = (FrmSelectForm) form;
 		request.getSession().setAttribute("FrmSelectForm", frm);
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_form", "w", null)) {
+			throw new SecurityException("missing required security object (_form)");
+		}
+		
 		String fwd=frm.getForward();
 		if (fwd != null) {
 			if (fwd.compareTo("add") == 0) {

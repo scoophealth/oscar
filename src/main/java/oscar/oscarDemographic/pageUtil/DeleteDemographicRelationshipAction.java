@@ -35,6 +35,9 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.log.LogAction;
 import oscar.log.LogConst;
@@ -46,11 +49,18 @@ import oscar.oscarDemographic.data.DemographicRelationship;
  */
 public class DeleteDemographicRelationshipAction extends Action {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     /** Creates a new instance of DeleteDemographicRelationshipAction */
     public DeleteDemographicRelationshipAction() {
     }
 
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
+    	
       String origDemo = request.getParameter("origDemo");
       String id = request.getParameter("id");
       String idRel = getRelationID(id);

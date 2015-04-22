@@ -24,17 +24,28 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.eform.EFormLoader;
 import oscar.eform.EFormUtil;
 import oscar.eform.data.DatabaseAP;
 
 public final class FetchUpdatedDataAction extends DispatchAction {
+	
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward ajaxFetchData(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String demographic = request.getParameter("demographic");
 		String provider = request.getParameter("provider");
 		String uuid = request.getParameter("uuid");
 		String fields = request.getParameter("fields");
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eform", "r", null)) {
+			throw new SecurityException("missing required security object (_eform)");
+		}
+		
 
 		HashMap<String, String> outValues = new HashMap<String, String>();
 

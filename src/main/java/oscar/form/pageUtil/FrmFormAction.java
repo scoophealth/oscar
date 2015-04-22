@@ -52,6 +52,7 @@ import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementDao.SearchCriteria;
 import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -76,6 +77,7 @@ import oscar.util.UtilDateUtilities;
 public class FrmFormAction extends Action {
 
 	private static Logger logger=MiscUtils.getLogger();
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
     /**
      * To create a new form which can write to measurement and osdsf, you need to ...
@@ -91,6 +93,10 @@ public class FrmFormAction extends Action {
         throws ServletException, IOException{
 
     	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_form", "w", null)) {
+			throw new SecurityException("missing required security object (_form)");
+		}
     	
         ActionMessages errors = new ActionMessages();
         boolean valid = true;

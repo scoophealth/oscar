@@ -50,6 +50,7 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -75,9 +76,15 @@ import oscar.util.UtilDateUtilities;
 public final class FrmSetupFormAction extends Action {
 
 	private String _dateFormat = "yyyy-MM-dd";
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
+		
 		/**
 		 * To create a new form which can write to measurement and osdsf, you need to ...
 		 * Create a xml file with all the measurement types named <formName>.xml (check form/VTForm.xml as an example)
