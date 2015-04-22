@@ -81,6 +81,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocument;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.sharingcenter.DocumentType;
 import org.oscarehr.sharingcenter.dao.DemographicExportDao;
 import org.oscarehr.sharingcenter.model.DemographicExport;
@@ -165,6 +166,8 @@ public class DemographicExportAction4 extends Action {
 	public static final int CMS4 = 0;
 	public static final int E2E = 1;
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	Integer exportNo = 0;
 	ArrayList<String> exportError = null;
 	HashMap<String, Integer> entries = new HashMap<String, Integer>();
@@ -175,6 +178,10 @@ public class DemographicExportAction4 extends Action {
 		String strEditable = oscarProperties.getProperty("ENABLE_EDIT_APPT_STATUS");
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
 		
 		DemographicExportForm defrm = (DemographicExportForm)form;
 		String demographicNo = defrm.getDemographicNo();

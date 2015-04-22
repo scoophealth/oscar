@@ -36,6 +36,7 @@ import org.oscarehr.common.dao.QueueDocumentLinkDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -54,11 +55,16 @@ import com.lowagie.text.pdf.PdfReader;
 public class DocumentUploadAction extends DispatchAction {
 	
 	private static Logger logger = MiscUtils.getLogger();
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	public ActionForward executeUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 								 HttpServletResponse response) throws Exception {
 		DocumentUploadForm fm = (DocumentUploadForm) form;
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "w", null)) {
+			throw new SecurityException("missing required security object (_edoc)");
+		}
+		
 		HashMap<String,Object>map = new HashMap<String,Object>();
 		FormFile docFile = fm.getFiledata();
                 String destination=request.getParameter("destination");
@@ -237,7 +243,7 @@ public class DocumentUploadAction extends DispatchAction {
 
         public ActionForward setUploadDestination(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 								 HttpServletResponse response) {
-
+        	
         String user_no = (String) request.getSession().getAttribute("user");
         String destination=request.getParameter("destination");
         UserPropertyDAO pref = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
@@ -258,6 +264,7 @@ public class DocumentUploadAction extends DispatchAction {
         public ActionForward setUploadIncomingDocumentFolder(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 								 HttpServletResponse response)  {
 
+        	
         String user_no = (String) request.getSession().getAttribute("user");
         String destFolder=request.getParameter("destFolder");
         UserPropertyDAO pref = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");

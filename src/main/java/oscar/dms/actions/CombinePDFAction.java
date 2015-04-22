@@ -35,7 +35,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.dms.EDocUtil;
@@ -48,7 +51,14 @@ import oscar.util.UtilDateUtilities;
  */
 public class CombinePDFAction extends Action {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "w", null)) {
+			throw new SecurityException("missing required security object (_doc)");
+		}
+    	
         String[] files = request.getParameterValues("docNo");
         String ContentDisposition=request.getParameter("ContentDisposition");
         ArrayList<Object> alist = new ArrayList<Object>();

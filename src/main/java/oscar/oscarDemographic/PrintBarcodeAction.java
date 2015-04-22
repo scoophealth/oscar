@@ -34,29 +34,27 @@ import net.sf.jasperreports.engine.JREmptyDataSource;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarAction;
 import oscar.OscarDocumentCreator;
 
 public class PrintBarcodeAction extends OscarAction {
-	private static final String TASK_FILL = "fill";
-	private static final String TASK_PRINT = "print";
-	private static final String TASK_PDF = "pdf";
-	private static final String TASK_XML = "xml";
-	private static final String TASK_XML_EMBED = "xmlEmbed";
-	private static final String TASK_HTML = "html";
-	private static final String TASK_RTF = "rtf";
-	private static final String TASK_XLS = "xls";
-	private static final String TASK_JXL = "jxl";
-	private static final String TASK_CSV = "csv";
-	private static final String TASK_ODT = "odt";
-	private static final String TASK_RUN = "run";
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 
     public PrintBarcodeAction() {
     }
 
     public ActionForward execute(ActionMapping actionMapping, ActionForm actionForm, HttpServletRequest request, HttpServletResponse response) {
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
+    	
         //patient
         String classpath = (String)request.getSession().getServletContext().getAttribute("org.apache.catalina.jsp_classpath");
         if (classpath==null) classpath = (String)request.getSession().getServletContext().getAttribute("com.ibm.websphere.servlet.application.classpath");

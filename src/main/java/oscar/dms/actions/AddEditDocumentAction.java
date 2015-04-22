@@ -58,6 +58,7 @@ import org.oscarehr.common.model.DocumentStorage;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
@@ -77,11 +78,18 @@ import oscar.util.UtilDateUtilities;
 import com.lowagie.text.pdf.PdfReader;
 
 public class AddEditDocumentAction extends DispatchAction {
+	
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward html5MultiUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ResourceBundle props = ResourceBundle.getBundle("oscarResources");
 		
 		AddEditDocumentForm fm = (AddEditDocumentForm) form;
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "w", null)) {
+			throw new SecurityException("missing required security object (_edoc)");
+		}
+		
 		FormFile docFile = fm.getFiledata();
 		int numberOfPages = 0;
 		String fileName = docFile.getFileName();
@@ -170,6 +178,11 @@ public class AddEditDocumentAction extends DispatchAction {
 
 	public ActionForward fastUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		AddEditDocumentForm fm = (AddEditDocumentForm) form;
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "w", null)) {
+			throw new SecurityException("missing required security object (_edoc)");
+		}
+		
 		Hashtable errors = new Hashtable();
 		FormFile docFile = fm.getDocFile();
 		String fileName = docFile.getFileName();
@@ -211,6 +224,11 @@ public class AddEditDocumentAction extends DispatchAction {
 
 	public ActionForward execute2(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		AddEditDocumentForm fm = (AddEditDocumentForm) form;
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "w", null)) {
+			throw new SecurityException("missing required security object (_edoc)");
+		}
+		
 		if (fm.getMode().equals("") && fm.getFunction().equals("") && fm.getFunctionId().equals("")) {
 			// file size exceeds the upload limit
 			Hashtable errors = new Hashtable();
@@ -386,6 +404,11 @@ public class AddEditDocumentAction extends DispatchAction {
 
 	private ActionForward editDocument(AddEditDocumentForm fm, ActionMapping mapping, HttpServletRequest request) {
 		Hashtable errors = new Hashtable();
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "w", null)) {
+			throw new SecurityException("missing required security object (_edoc)");
+		}
+		
 		try {
 			if (fm.getDocDesc().length() == 0) {
 				errors.put("descmissing", "dms.error.descriptionInvalid");

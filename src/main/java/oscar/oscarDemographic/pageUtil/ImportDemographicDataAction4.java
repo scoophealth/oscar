@@ -99,6 +99,7 @@ import org.oscarehr.hospitalReportManager.model.HRMDocument;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
@@ -149,6 +150,8 @@ import cdsDt.PersonNameStandard.OtherNames;
  */
     public class ImportDemographicDataAction4 extends Action {
 
+    	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+    	
     private static final Logger logger = MiscUtils.getLogger();
     private static final String PATIENTID = "Patient";
     private static final String ALERT = "Alert";
@@ -191,6 +194,11 @@ import cdsDt.PersonNameStandard.OtherNames;
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception  {
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
+    	
         admProviderNo = (String) request.getSession().getAttribute("user");
         programId = new EctProgram(request.getSession()).getProgram(admProviderNo);
         String tmpDir = oscarProperties.getProperty("TMP_DIR");

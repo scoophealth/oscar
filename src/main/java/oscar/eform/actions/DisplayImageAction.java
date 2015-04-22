@@ -46,6 +46,7 @@ import oscar.OscarProperties;
  */
 public class DisplayImageAction extends DownloadAction{
 
+	
     /** Creates a new instance of DisplayImageAction */
     public DisplayImageAction() {
     }
@@ -54,6 +55,8 @@ public class DisplayImageAction extends DownloadAction{
                                        HttpServletRequest request,
                                        HttpServletResponse response)
             throws Exception {
+    	
+    	   	
         String fileName = request.getParameter("imagefile");
         //if (fileName.indexOf('/') != -1) return null;  //prevents navigating away from the page.
         String home_dir = OscarProperties.getInstance().getProperty("eform_image");

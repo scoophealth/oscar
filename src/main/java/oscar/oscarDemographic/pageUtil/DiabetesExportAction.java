@@ -67,6 +67,7 @@ import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -104,6 +105,8 @@ import cdsdiabetes.ReportInformationDocument.ReportInformation;
  * @author jaygallagher
  */
 public class DiabetesExportAction extends Action {
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     Date startDate;
     Date endDate;
     ArrayList<String> errors;
@@ -119,6 +122,11 @@ public DiabetesExportAction(){}
 
     @Override
 public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
+    	
     DiabetesExportForm defrm = (DiabetesExportForm)form;
     String setName = defrm.getPatientSet();
     this.startDate = UtilDateUtilities.StringToDate(defrm.getstartDate());

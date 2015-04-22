@@ -43,16 +43,25 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.eform.EFormExportZip;
 import oscar.eform.data.EForm;
 
 public class ManageEFormAction extends DispatchAction {
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public ActionForward exportEForm(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eform", "r", null)) {
+			throw new SecurityException("missing required security object (_eform)");
+		}
+    	
         String fid = request.getParameter("fid");
         MiscUtils.getLogger().debug("fid: " + fid);
         response.setContentType("application/zip");  //octet-stream
@@ -67,6 +76,11 @@ public class ManageEFormAction extends DispatchAction {
 
     public ActionForward importEForm(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eform", "w", null)) {
+			throw new SecurityException("missing required security object (_eform)");
+		}
+    	
         FormFile zippedForm = (FormFile) form.getMultipartRequestHandler().getFileElements().get("zippedForm");
         request.setAttribute("input", "import");
         EFormExportZip eFormExportZip = new EFormExportZip();
@@ -85,6 +99,11 @@ public class ManageEFormAction extends DispatchAction {
      */
     public ActionForward importEFormFromRemote(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eform", "w", null)) {
+			throw new SecurityException("missing required security object (_eform)");
+		}
+    	
         String sURL = request.getParameter("url");
         URL url = new URL("http://mydrugref.org/data/" + sURL);
         url.openStream();
@@ -97,6 +116,11 @@ public class ManageEFormAction extends DispatchAction {
 
     public ActionForward exportEFormSend(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eform", "r", null)) {
+			throw new SecurityException("missing required security object (_eform)");
+		}
+    	
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");

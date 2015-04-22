@@ -44,7 +44,6 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -61,8 +60,10 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.marc.shic.core.CertificateIdentifier;
 import org.marc.shic.core.exceptions.SslException;
 import org.marc.shic.core.utils.SslUtility;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.sharingcenter.dao.InfrastructureDao;
 import org.oscarehr.sharingcenter.model.InfrastructureDataObject;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -71,10 +72,15 @@ import oscar.OscarProperties;
 public class SecurityInfrastructureServlet extends Action {
 
     private static final Logger LOGGER = MiscUtils.getLogger();
-
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+    
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "r", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+    	
         String status = "error";
         //if this is an update request from the chain import page
         if (request.getMethod().equalsIgnoreCase("post")) {
@@ -110,7 +116,7 @@ public class SecurityInfrastructureServlet extends Action {
         return null;
     }
 
-    private String performImport(List<FileItem> files) throws ServletException, IOException {
+    private String performImport(List<FileItem> files)  {
         //import certificate
         String status = "";
         InputStream filecontent = null;

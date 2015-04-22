@@ -37,6 +37,7 @@ import org.oscarehr.common.model.CtlRelationships;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
@@ -50,12 +51,17 @@ import oscar.oscarDemographic.data.DemographicRelationship;
 public class AddDemographicRelationshipAction extends Action {
     
 	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
-    
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public AddDemographicRelationshipAction() {
         
     }
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
         
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
+    	
         String origDemo = request.getParameter("origDemo");
         String linkingDemo = request.getParameter("linkingDemo");
         String relation = request.getParameter("relation");

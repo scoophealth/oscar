@@ -46,6 +46,7 @@ import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.match.IMatchManager;
 import org.oscarehr.match.MatchManager;
 import org.oscarehr.match.MatchManagerException;
@@ -64,10 +65,15 @@ import oscar.util.StringUtils;
 public class AddEFormAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eform", "w", null)) {
+			throw new SecurityException("missing required security object (_eform)");
+		}
+		
 		logger.debug("==================SAVING ==============");
 		HttpSession se = request.getSession();
 

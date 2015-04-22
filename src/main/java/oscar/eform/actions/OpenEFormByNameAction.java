@@ -29,21 +29,31 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.EFormDao;
 import org.oscarehr.common.model.EForm;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 
 public class OpenEFormByNameAction extends Action {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String eform_name = request.getParameter("eform_name");
 		String demographic_no = request.getParameter("demographic_no");
 		Integer fid = null;
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eform", "w", null)) {
+			throw new SecurityException("missing required security object (_eform)");
+		}
+		
 		
 		EFormDao eformDao = SpringUtils.getBean(EFormDao.class);
 		EForm eform = eformDao.findByName(eform_name);

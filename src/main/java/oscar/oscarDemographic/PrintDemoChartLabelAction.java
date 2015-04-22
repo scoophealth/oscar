@@ -22,6 +22,7 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -33,7 +34,7 @@ import oscar.OscarDocumentCreator;
 public class PrintDemoChartLabelAction extends OscarAction {
 
     private static Logger logger = MiscUtils.getLogger();
-
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
     public PrintDemoChartLabelAction() {
     }
@@ -41,6 +42,10 @@ public class PrintDemoChartLabelAction extends OscarAction {
     public ActionForward execute(ActionMapping actionMapping, ActionForm actionForm, HttpServletRequest request, HttpServletResponse response) {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
+		
 		Provider provider = loggedInInfo.getLoggedInProvider();
     	
     	Map<String,String> nameToFileMap = new HashMap<String,String>();
