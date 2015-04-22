@@ -38,6 +38,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.MeasurementGroupDao;
 import org.oscarehr.common.model.MeasurementGroup;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -45,10 +47,15 @@ import org.oscarehr.util.SpringUtils;
 public class EctEditMeasurementGroupAction extends Action {
 
 	private MeasurementGroupDao dao = SpringUtils.getBean(MeasurementGroupDao.class);
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+			throw new SecurityException("missing required security object (_admin)");
+		}
+    	
         EctEditMeasurementGroupForm frm = (EctEditMeasurementGroupForm) form;                
         request.getSession().setAttribute("EctEditMeasurementGroupForm", frm);
         String groupName = frm.getGroupName();

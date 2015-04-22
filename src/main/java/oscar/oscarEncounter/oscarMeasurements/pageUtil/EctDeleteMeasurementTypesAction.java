@@ -42,6 +42,8 @@ import org.oscarehr.common.dao.MeasurementTypeDao;
 import org.oscarehr.common.dao.MeasurementTypeDeletedDao;
 import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.common.model.MeasurementTypeDeleted;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -53,10 +55,15 @@ public class EctDeleteMeasurementTypesAction extends Action {
 	private MeasurementTypeDao measurementTypeDao = SpringUtils.getBean(MeasurementTypeDao.class);
 	private MeasurementGroupDao measurementGroupDao = SpringUtils.getBean(MeasurementGroupDao.class);
 	private MeasurementTypeDeletedDao measurementTypeDeletedDao = SpringUtils.getBean(MeasurementTypeDeletedDao.class);
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+			throw new SecurityException("missing required security object (_admin)");
+		}
+    	
         EctDeleteMeasurementTypesForm frm = (EctDeleteMeasurementTypesForm) form;                
         request.getSession().setAttribute("EctDeleteMeasurementTypesForm", frm);
         String[] deleteCheckbox = frm.getDeleteCheckbox();

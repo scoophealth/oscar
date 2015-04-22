@@ -35,6 +35,9 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -48,6 +51,8 @@ import oscar.util.UtilXML;
  */
 public class EctImmDeleteImmScheduleAction extends Action {
    
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
    /**
    
     Creates a new instance of EctImmDeleteImmScheduleAction
@@ -58,6 +63,10 @@ public class EctImmDeleteImmScheduleAction extends Action {
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
       
+	   if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
+	   
       EctImmImmunizationData immData = new EctImmImmunizationData();
 
       String demographicNo = request.getParameter("demoNo");

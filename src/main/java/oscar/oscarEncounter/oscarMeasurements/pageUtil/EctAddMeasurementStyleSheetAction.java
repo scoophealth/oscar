@@ -47,6 +47,8 @@ import org.apache.struts.upload.FormFile;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.common.dao.MeasurementCSSLocationDao;
 import org.oscarehr.common.model.MeasurementCSSLocation;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -56,10 +58,16 @@ import oscar.OscarProperties;
 public class EctAddMeasurementStyleSheetAction extends Action {
 	
 	private static MeasurementCSSLocationDao dao = SpringUtils.getBean(MeasurementCSSLocationDao.class);
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+			throw new SecurityException("missing required security object (_admin)");
+		}
+    	
         EctAddMeasurementStyleSheetForm frm = (EctAddMeasurementStyleSheetForm) form;
         request.getSession().setAttribute("EctAddMeasurementStyleSheetForm", frm);
         FormFile fileName = frm.getFile();

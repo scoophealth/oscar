@@ -40,7 +40,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarPrevention.reports.FollowupManagement;
 import oscar.util.UtilDateUtilities;
@@ -51,12 +54,18 @@ import oscar.util.UtilDateUtilities;
  */
 public class EctAddShortMeasurementAction extends DispatchAction{
     
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     /** Creates a new instance of EctAddShortMeasurementAction */
     public EctAddShortMeasurementAction() {
     }
     
     public ActionForward unspecified(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws IOException  {
      
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_measurement", "w", null)) {
+			throw new SecurityException("missing required security object (_measurement)");
+		}
+    	
         //MARK IN MEASUREMENTS????
        String followUpType =  request.getParameter("followupType");//"FLUF";
        String followUpValue = request.getParameter("followupValue"); //"L1";
@@ -78,6 +87,11 @@ public class EctAddShortMeasurementAction extends DispatchAction{
      * Add Measurements from prevention report.  Allow multiple values with multiple demos
      */
     public ActionForward addMeasurements(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
+    	
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_measurement", "w", null)) {
+			throw new SecurityException("missing required security object (_measurement)");
+		}
+    	
     	String followUpType = request.getParameter("followUpType");
     	String[] arrDemoContactMethods = request.getParameterValues("nsp");
     	String providerNo = (String) request.getSession().getAttribute("user");

@@ -671,7 +671,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
     //  <warning gt="6m">Blood Glucose hasn't been reviewed in $NUMMONTHS months</warning>
     //  <warning eq="-1">Blood Glucose hasn't been reviewed</warning>
     //</rules>
-
+/*
     private Hashtable<String,String> getRecommendationHash(Element recowarn){
         Hashtable h = new Hashtable();
         String toParse = recowarn.getAttributeValue("monthrange");
@@ -685,7 +685,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
         }
         return h;
     }
-
+*/
     protected Element getRuleBaseElement(String ruleName,String measurement,Hashtable<String,String> recowarn){
 
         log.debug("LOADING RULES - getRuleBaseElement");

@@ -46,6 +46,7 @@ import org.oscarehr.common.dao.OscarCommLocationsDao;
 import org.oscarehr.common.model.FaxClientLog;
 import org.oscarehr.common.model.FaxJob;
 import org.oscarehr.common.model.OscarCommLocations;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -57,6 +58,8 @@ import oscar.oscarFax.client.OSCARFAXSOAPMessage;
 
 public class EctConsultationFaxAction extends Action {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
    String replaceIllegalCharacters(String str){
       return str.replaceAll("&", "&amp;").replaceAll(">","&gt;").replaceAll("<","&lt;");
    }
@@ -67,11 +70,16 @@ public class EctConsultationFaxAction extends Action {
 
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
    throws ServletException, IOException {
+	    
       String curUser_no = (String) request.getSession().getAttribute("user");
 
       if(curUser_no == null){
          MiscUtils.getLogger().debug("EJECTING");
          return mapping.findForward("eject");
+      }
+      
+      if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "r", null)) {
+			throw new SecurityException("missing required security object (_con)");
       }
 
       OscarProperties props = OscarProperties.getInstance();
