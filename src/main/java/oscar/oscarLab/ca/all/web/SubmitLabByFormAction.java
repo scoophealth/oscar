@@ -41,8 +41,10 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.model.Lab;
 import org.oscarehr.common.model.LabTest;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.FileUploadCheck;
 import oscar.oscarLab.ca.all.upload.HandlerClassFactory;
@@ -52,7 +54,8 @@ import oscar.oscarLab.ca.all.util.Utilities;
 public class SubmitLabByFormAction extends DispatchAction {
 
 	Logger logger = MiscUtils.getLogger();
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward manage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		return mapping.findForward("manage");
 	}
@@ -61,6 +64,10 @@ public class SubmitLabByFormAction extends DispatchAction {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo=loggedInInfo.getLoggedInProviderNo();
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_lab", "w", null)) {
+			throw new SecurityException("missing required security object (_lab)");
+		}
+		
 		logger.info("in save lab from form");
 		String labName = request.getParameter("labname");
 		String accession = request.getParameter("accession");

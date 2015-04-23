@@ -35,19 +35,29 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.on.CommonLabResultData;
 
 
 public class SearchPatientAction extends Action {
    
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
+	
    public SearchPatientAction() {
    }
    
    public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
    throws ServletException, IOException {
 
+	   if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_lab", "r", null)) {
+			throw new SecurityException("missing required security object (_lab)");
+		}
+	   
       String labNo = request.getParameter("segmentID");
       String name = request.getParameter("name");
       String labType = request.getParameter("labType");

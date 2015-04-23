@@ -46,6 +46,8 @@ import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.EChart;
 import org.oscarehr.common.model.EncounterWindow;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -60,7 +62,8 @@ public class EctSaveEncounterAction extends Action {
     static Logger log=MiscUtils.getLogger();
     AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
     OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
-
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 
 	private String getLatestID(String demoNo) {
 		EChartDao dao = SpringUtils.getBean(EChartDao.class);
@@ -114,6 +117,11 @@ public class EctSaveEncounterAction extends Action {
                                HttpServletRequest httpservletrequest,
                                HttpServletResponse httpservletresponse) throws
       IOException, ServletException {
+	  
+	  if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(httpservletrequest), "_demographic", "w", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+	  }
+	  
       log.debug("EctSaveEncounterAction Start");
     //UtilDateUtilities dateutilities = new UtilDateUtilities();
     EctSessionBean sessionbean = null;

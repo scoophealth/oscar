@@ -40,6 +40,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.ProviderLabRoutingFavoritesDao;
 import org.oscarehr.common.model.ProviderLabRoutingFavorite;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -48,6 +50,7 @@ import oscar.oscarLab.ca.on.CommonLabResultData;
 public class ReportReassignAction extends Action {
     
     Logger logger = Logger.getLogger(ReportReassignAction.class);
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
     
     public ReportReassignAction() {
     }
@@ -58,6 +61,10 @@ public class ReportReassignAction extends Action {
             HttpServletResponse response)
             throws ServletException, IOException {
         
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_lab", "w", null)) {
+			throw new SecurityException("missing required security object (_lab)");
+		}
+    	
         String providerNo = request.getParameter("providerNo");
         String searchProviderNo = request.getParameter("searchProviderNo");
         String status = request.getParameter("status");        

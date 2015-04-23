@@ -42,8 +42,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.util.UtilDateUtilities;
 
@@ -65,6 +67,8 @@ public class EctDisplayAction extends Action {
 	protected static final int CROP_LEN_KEY = 9;
 	
 	private boolean enabled;
+	
+	protected SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
 	public EctDisplayAction() {
 		super();
@@ -108,6 +112,10 @@ public class EctDisplayAction extends Action {
 
 		request.setAttribute("navbarName", navName);
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", bean.demographicNo)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
+		
 		boolean isJsonRequest = request.getParameter("json") != null && request.getParameter("json").equalsIgnoreCase("true");
 		request.setAttribute("isJsonRequest", isJsonRequest);
 
