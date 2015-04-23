@@ -90,19 +90,26 @@
 					ng-click="data4.isOpen = true" placeholder="<bean:message key="consult.list.appointmentEndDate" bundle="ui"/>">
 			</div>
 			
-		<div class="col-xs-2">
-		 <div class="input-group">
-   		   <div class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="removeDemographicAssignment()"></span></div>
-      
-				 <input type="text" ng-model="consult.demographicName" placeholder="<bean:message key="consult.list.patient" bundle="ui"/>" 
-				typeahead="pt.demographicNo as pt.name for pt in searchPatients($viewValue)" 
-				typeahead-on-select="updateDemographicNo($item, $model, $label)"
-				class="form-control">
-			</div>	
+			<div class="col-xs-2">
+				<div class="input-group">
+					<div class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="removeDemographicAssignment()"></span></div>
+					<input type="text" ng-model="consult.demographicName" placeholder="<bean:message key="consult.list.patient" bundle="ui"/>"
+						typeahead="pt.demographicNo as pt.name for pt in searchPatients($viewValue)"
+						typeahead-on-select="updateDemographicNo($item, $model, $label)"
+						class="form-control"/>
+				</div>
+			</div>
+			
+			<div class="col-xs-2">
+				<div class="input-group">
+					<div class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="removeMrpAssignment()"></span></div>
+					<input type="text" ng-model="consult.mrpName" placeholder="<bean:message key="consult.list.mrp" bundle="ui"/>"
+						typeahead="pvd as pvd.name for pvd in searchMrps($viewValue)"
+						typeahead-on-select="updateMrpNo($model)"
+						class="form-control"/>
+				</div>
+			</div>
 		</div>
-
-		</div>
-
 
 		<div style="height: 5px"></div>
 

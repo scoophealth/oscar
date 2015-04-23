@@ -329,6 +329,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 		filter.setAppointmentEndDate(convertJSONDate((String)json.get("appointmentEndDate")));
 		filter.setAppointmentStartDate(convertJSONDate((String)json.get("appointmentStartDate")));
 		filter.setDemographicNo((Integer)json.get("demographicNo"));
+		filter.setMrpNo((Integer)json.get("mrpNo"));
 		filter.setNumToReturn((Integer)json.get("numToReturn"));
 		filter.setReferralEndDate(convertJSONDate((String)json.get("referralEndDate")));
 		filter.setReferralStartDate(convertJSONDate((String)json.get("referralStartDate")));
@@ -356,6 +357,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 		filter.setAppointmentEndDate(convertJSONDate((String)json.get("appointmentEndDate")));
 		filter.setAppointmentStartDate(convertJSONDate((String)json.get("appointmentStartDate")));
 		filter.setDemographicNo((Integer)json.get("demographicNo"));
+		filter.setMrpNo((Integer)json.get("mrpNo"));
 		filter.setNumToReturn((Integer)json.get("numToReturn"));
 		filter.setReferralEndDate(convertJSONDate((String)json.get("referralEndDate")));
 		filter.setReferralStartDate(convertJSONDate((String)json.get("referralStartDate")));
