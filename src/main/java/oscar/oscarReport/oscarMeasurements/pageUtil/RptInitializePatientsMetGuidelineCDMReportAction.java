@@ -25,9 +25,7 @@
 package oscar.oscarReport.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +33,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanComparator;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -47,6 +44,8 @@ import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.forms.FormsDao;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.Validations;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -56,8 +55,14 @@ import oscar.util.ConversionUtils;
 
 public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_report", "r", null)) {
+	  		  throw new SecurityException("missing required security object (_report)");
+	  	  	}
+		
 		RptInitializePatientsMetGuidelineCDMReportForm frm = (RptInitializePatientsMetGuidelineCDMReportForm) form;
 		request.getSession().setAttribute("RptInitializePatientsMetGuidelineCDMReportForm", frm);
 		MessageResources mr = getResources(request);
@@ -352,6 +357,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
 	 *
 	 * @return ArrayList which contain the result in String format
 	 ******************************************************************************************/
+	/*
 	private ArrayList getPatientsMetAllSelectedGuideline(RptInitializePatientsMetGuidelineCDMReportForm frm, ArrayList reportMsg, HttpServletRequest request) {
 		String[] guidelineCheckbox = frm.getGuidelineCheckbox();
 		String[] guidelineB = frm.getGuidelineB();
@@ -459,4 +465,5 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
 
 		return reportMsg;
 	}
+	*/
 }

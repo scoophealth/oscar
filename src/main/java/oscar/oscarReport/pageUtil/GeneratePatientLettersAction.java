@@ -49,6 +49,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -68,6 +69,8 @@ import oscar.util.UtilDateUtilities;
 public class GeneratePatientLettersAction extends Action {
 
     private static Logger log = MiscUtils.getLogger();
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+    
 
     /**
      * Creates a new instance of GeneratePatientLettersAction
@@ -78,6 +81,10 @@ public class GeneratePatientLettersAction extends Action {
 
      public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 
+    	 if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_report", "r", null)) {
+     		  throw new SecurityException("missing required security object (_report)");
+     	  	}
+    	 
         String classpath = (String) request.getSession().getServletContext().getAttribute("org.apache.catalina.jsp_classpath");
         System.setProperty("jasper.reports.compile.class.path", classpath);
 
