@@ -41,11 +41,18 @@ import org.oscarehr.common.dao.AbstractCodeSystemDao;
 import org.oscarehr.common.dao.QuickListDao;
 import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.QuickList;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class dxResearchUpdateQuickListAction extends Action {
+	private static SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_dxresearch", "w", null)) {
+			throw new RuntimeException("missing required security object (_dxresearch)");
+		}
+		
 		dxResearchUpdateQuickListForm frm = (dxResearchUpdateQuickListForm) form;
 		String quickListName = frm.getQuickListName();
 		String forward = frm.getForward();
