@@ -69,6 +69,7 @@ public class BORN18MConnector {
 	private final String filenameStart = "BORN_" + oscarProperties.getProperty("born18m_orgcode", "") + "_18MEWBV_" + oscarProperties.getProperty("born18m_env", "T");
 
 	public List<Integer> getDemographicIdsOfUnsentRecords()  {		
+		logger.debug("getDemographicIdsOfUnsentRecords() starting");
 		List<Integer> results = new ArrayList<Integer>();
     	String rourkeFormName = oscarProperties.getProperty("born18m_eform_rourke", "Rourke Baby Record");
     	String nddsFormName = oscarProperties.getProperty("born18m_eform_ndds", "Nipissing District Developmental Screen");
@@ -237,6 +238,7 @@ public class BORN18MConnector {
 	
 	private void buildDemoNos(EForm eform, List<Integer> demoList) {
 		List<EFormData> eformDataList = eformDataDao.findByFormId(eform.getId());
+		logger.debug("buildDemoNos() running for eform " + eform.getFormName());
 		for (EFormData eformData : eformDataList) {
 			if (!demoList.contains(eformData.getDemographicId())) demoList.add(eformData.getDemographicId());
 		}
