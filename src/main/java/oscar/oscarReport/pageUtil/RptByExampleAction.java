@@ -57,6 +57,11 @@ public class RptByExampleAction extends Action {
         
         if(request.getSession().getAttribute("user") == null)
             response.sendRedirect("../logout.htm");     
+
+	String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+    	if(!com.quatro.service.security.SecurityManager.hasPrivilege("_admin", roleName$)  && !com.quatro.service.security.SecurityManager.hasPrivilege("_report", roleName$)) {
+    		throw new SecurityException("Insufficient Privileges");
+    	}
         
         String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 

@@ -26,11 +26,20 @@
 
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+  String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
 <%@ page import="java.util.*,oscar.oscarReport.data.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin,_report"	rights="r" reverse="<%=true%>">
+	<%
+		response.sendRedirect("../../logout.jsp");
+	%>
+</security:oscarSec>
 <link rel="stylesheet" type="text/css"
 	href="../oscarEncounter/encounterStyles.css">
 <html:html locale="true">
