@@ -1851,21 +1851,21 @@ insert into `secObjPrivilege` values('doctor','_flowsheet','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_masterLink','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_rx','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_tasks','x',0,'999998');
-insert into `secObjPrivilege` values('doctor','_admin.reporting','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.reporting','o',0,999998);
 
-insert into `secObjPrivilege` values('doctor','_admin.facilityMessage','x',0,999998);
-insert into `secObjPrivilege` values('doctor','_admin.systemMessage','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.facilityMessage','o',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.systemMessage','o',0,999998);
 
-insert into `secObjPrivilege` values('doctor','_admin.provider','x',0,999998);
-insert into `secObjPrivilege` values('doctor','_admin.security','x',0,999998);
-insert into `secObjPrivilege` values('doctor','_admin.securityLogReport','x',0,999998);
-insert into `secObjPrivilege` values('doctor','_admin.unlockAccount','x',0,999998);
-insert into `secObjPrivilege` values('doctor','_admin.cookieRevolver','x',0,999998);
-insert into `secObjPrivilege` values('doctor','_admin.caisi','x',0,999998);
-insert into `secObjPrivilege` values('doctor','_admin.lookupFieldEditor','x',0,999998);
-insert into `secObjPrivilege` values('doctor','_admin.issueEditor','x',0,999998);
-insert into `secObjPrivilege` values('doctor','_admin.caisiRoles','x',0,999998);
-insert into `secObjPrivilege` values('doctor','_admin.userCreatedForms','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.provider','o',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.security','o',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.securityLogReport','o',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.unlockAccount','o',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.cookieRevolver','o',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.caisi','o',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.lookupFieldEditor','o',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.issueEditor','o',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.caisiRoles','o',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.userCreatedForms','o',0,999998);
 
 insert into `secObjPrivilege` values('doctor','_pmm.clientSearch','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.newClient','x',0,999998);
