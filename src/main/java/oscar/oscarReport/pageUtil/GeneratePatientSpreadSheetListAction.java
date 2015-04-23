@@ -36,8 +36,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.util.UtilDateUtilities;
@@ -51,8 +53,14 @@ import com.lowagie.text.Paragraph;
  */
 public class GeneratePatientSpreadSheetListAction  extends Action {
    
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
        
+	   if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_report", "r", null)) {
+	  		  throw new SecurityException("missing required security object (_report)");
+	  	  	}
+	   
     String[] demos = request.getParameterValues("demo");
        
     MiscUtils.getLogger().debug("Generating Spread Sheet file ..");

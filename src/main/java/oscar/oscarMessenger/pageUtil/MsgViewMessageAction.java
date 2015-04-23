@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.MessageListDao;
 import org.oscarehr.common.model.MessageList;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -48,7 +49,7 @@ import oscar.util.ParameterActionForward;
 public class MsgViewMessageAction extends Action {
 	
 	private MessageListDao messageListDao = SpringUtils.getBean(MessageListDao.class);
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
     public ActionForward execute(ActionMapping mapping,
 				 ActionForm form,
@@ -56,6 +57,10 @@ public class MsgViewMessageAction extends Action {
 				 HttpServletResponse response)
 	throws IOException, ServletException {
 
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_msg", "r", null)) {
+			throw new SecurityException("missing required security object (_msg)");
+		}
+    	
         // Extract attributes we will need
         
 

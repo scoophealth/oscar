@@ -33,7 +33,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarReport.data.ManageLetters;
 
@@ -44,12 +47,17 @@ import oscar.oscarReport.data.ManageLetters;
 public class DeletePatientLettersAction extends Action {
     
     private static Logger log = MiscUtils.getLogger();
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
     
     /** Creates a new instance of DeletePatientLettersAction */
     public DeletePatientLettersAction() {   
     }
     
      public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+    	 if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_report", "r", null)) {
+     		  throw new SecurityException("missing required security object (_report)");
+     	  	}
+    	 
         if (log.isTraceEnabled()) { log.trace("Start of DeletePatientLettersAction Action");}
    
         String fileId = request.getParameter("reportID");
