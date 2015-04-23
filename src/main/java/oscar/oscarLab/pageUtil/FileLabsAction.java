@@ -36,12 +36,17 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.on.CommonLabResultData;
 
 public class FileLabsAction extends DispatchAction {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
    public FileLabsAction() {
    }
 
@@ -50,6 +55,10 @@ public class FileLabsAction extends DispatchAction {
    HttpServletRequest request,
    HttpServletResponse response)
    throws ServletException, IOException {
+	   
+	   if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_lab", "w", null)) {
+			throw new SecurityException("missing required security object (_lab)");
+		}
 
       String providerNo = (String) request.getSession().getAttribute("user");
       String searchProviderNo = request.getParameter("searchProviderNo");
@@ -95,6 +104,10 @@ public class FileLabsAction extends DispatchAction {
    HttpServletResponse response)
    {
 
+	   if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_lab", "w", null)) {
+			throw new SecurityException("missing required security object (_lab)");
+		}
+	   
       String providerNo = (String) request.getSession().getAttribute("user");
       String flaggedLab=request.getParameter("flaggedLabId").trim();
       String labType=request.getParameter("labType").trim();

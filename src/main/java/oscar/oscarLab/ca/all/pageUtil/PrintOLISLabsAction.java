@@ -24,8 +24,11 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.olis.OLISResultsAction;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.Factory;
@@ -38,6 +41,7 @@ import oscar.oscarLab.ca.all.parsers.OLISHL7Handler;
 public class PrintOLISLabsAction extends Action{
     
     Logger logger = Logger.getLogger(PrintLabsAction.class);
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
     
     /** Creates a new instance of PrintLabsAction */
     public PrintOLISLabsAction() {
@@ -45,6 +49,10 @@ public class PrintOLISLabsAction extends Action{
     
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
         
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_lab", "r", null)) {
+			throw new SecurityException("missing required security object (_lab)");
+		}
+    	
     	try {
 	    	String segmentID = request.getParameter("segmentID");
 	    	String resultUuid = request.getParameter("uuid");
