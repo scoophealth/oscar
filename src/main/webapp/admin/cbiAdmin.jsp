@@ -25,6 +25,15 @@
 --%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=true%>">
+	<%response.sendRedirect("../securityError.jsp?type=_admin");%>
+</security:oscarSec>
+
+
 <%@page import="java.util.Date"%>
 <%@page import="java.util.List"%>
 <%@page import="oscar.util.CBIUtil"%>
