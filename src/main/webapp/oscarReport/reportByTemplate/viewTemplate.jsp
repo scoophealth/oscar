@@ -28,12 +28,22 @@
 <%--This JSP is the 'view template XML' jsp from the report configuraiton screen--%>
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+  String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
 
 <%@ page
 	import="oscar.oscarReport.reportByTemplate.*, org.apache.commons.lang.StringEscapeUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin,_report"	rights="r" reverse="<%=true%>">
+	<%
+		response.sendRedirect("../logout.jsp");
+	%>
+</security:oscarSec>
+
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
