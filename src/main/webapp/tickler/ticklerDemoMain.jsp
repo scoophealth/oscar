@@ -345,6 +345,12 @@ function setup() {
 			<TR bgcolor=#666699>
 				<TD width="3%"><FONT FACE="verdana,arial,helvetica"
 					COLOR="#FFFFFF" SIZE="-2"><B></B></FONT></TD>
+				<% 
+            boolean ticklerEditEnabled = Boolean.parseBoolean(OscarProperties.getInstance().getProperty("tickler_edit_enabled")); 
+            if (ticklerEditEnabled) { %>
+            <TD width="5%"><FONT FACE="verdana,arial,helvetica"
+					COLOR="#FFFFFF" SIZE="-2"><B></B></FONT></TD>
+            <% }%>
 				<TD width="17%"><FONT FACE="verdana,arial,helvetica"
 					COLOR="#FFFFFF" SIZE="-2"><B><bean:message
 					key="tickler.ticklerMain.msgDemographicName" /></B></FONT></TD>
@@ -418,6 +424,11 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
 				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><input
 					type="checkbox" name="checkbox"
 					value="<%=apptMainBean.getString(rs,"tickler_no")%>"></TD>
+				<% if (ticklerEditEnabled) { %>
+            <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>">
+            	<a href=#  onClick="popupPage(600,800, '../tickler/ticklerEdit.jsp?tickler_no=<%=apptMainBean.getString(rs,"tickler_no")%>')"><bean:message key="tickler.ticklerMain.editTickler"/></a>
+            </TD>
+            <% }%>
 				<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><a
 					href=#
 					onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=apptMainBean.getString(rs,"last_name")%>,<%=apptMainBean.getString(rs,"first_name")%></a></TD>
@@ -450,6 +461,11 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
 				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><input
 					type="checkbox" name="checkbox"
 					value="<%=apptMainBean.getString(rs,"tickler_no")%>"></TD>
+					<% if (ticklerEditEnabled) { %>
+            <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>">
+            	<a href=#  onClick="popupPage(600,800, '../tickler/ticklerEdit.jsp?tickler_no=<%=apptMainBean.getString(rs,"tickler_no")%>')"><bean:message key="tickler.ticklerMain.editTickler"/></a>
+            </TD>
+            <% }%>
 				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><a href=#
 					onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=apptMainBean.getString(rs,"last_name")%>,<%=apptMainBean.getString(rs,"first_name")%></a></TD>
 				<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=provider%></TD>
