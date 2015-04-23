@@ -1830,6 +1830,7 @@ insert into `secObjectName` (`objectName`) values ('_hrm');
 insert into `secObjectName` (`objectName`) values ('_eform');
 insert into `secObjectName` (`objectName`) values ('_form');
 insert into `secObjectName` (`objectName`) values ('_measurement');
+insert into `secObjectName` (`objectName`) values ('_lab');
 
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
@@ -1935,6 +1936,7 @@ insert into `secObjPrivilege` values('doctor','_hrm','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_eform','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_form','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_measurement','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_lab','x',0,'999998');
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);

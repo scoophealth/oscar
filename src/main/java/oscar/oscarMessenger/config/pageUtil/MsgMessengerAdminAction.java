@@ -39,6 +39,8 @@ import org.oscarehr.common.dao.GroupMembersDao;
 import org.oscarehr.common.dao.GroupsDao;
 import org.oscarehr.common.model.GroupMembers;
 import org.oscarehr.common.model.Groups;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarMessenger.data.MsgAddressBookMaker;
@@ -48,9 +50,14 @@ public class MsgMessengerAdminAction extends Action {
 
 	private GroupsDao groupsDao = SpringUtils.getBean(GroupsDao.class);
 	private GroupMembersDao groupMembersDao = (GroupMembersDao) SpringUtils.getBean(GroupMembersDao.class);
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+			throw new SecurityException("missing required security object (_admin)");
+		}
+		
 		String[] providers = ((MsgMessengerAdminForm) form).getProviders();
 		String grpNo = ((MsgMessengerAdminForm) form).getGrpNo();
 		String update = ((MsgMessengerAdminForm) form).getUpdate();

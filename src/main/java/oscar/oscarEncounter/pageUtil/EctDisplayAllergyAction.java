@@ -53,13 +53,16 @@ import oscar.util.StringUtils;
 public class EctDisplayAllergyAction extends EctDisplayAction {
 
 	private static Logger logger = MiscUtils.getLogger();
-
+	
+	
 	private String cmd = "allergies";
 
 	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
+		
+		
 		boolean a = true;
 		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.allergies");
 		String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");

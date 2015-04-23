@@ -42,6 +42,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -53,13 +54,18 @@ import oscar.oscarLab.ca.on.CommonLabResultData;
 public class SendMostResponProvAction extends Action{
         
 	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
-        
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
         public ActionForward execute(ActionMapping mapping,
             ActionForm form,
             HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
 
+        	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_lab", "w", null)) {
+    			throw new SecurityException("missing required security object (_lab)");
+    		}
+        	
                 String demoId=request.getParameter("demoId");
                 String docLabId=request.getParameter("docLabId");
                 String docLabType=request.getParameter("docLabType");
