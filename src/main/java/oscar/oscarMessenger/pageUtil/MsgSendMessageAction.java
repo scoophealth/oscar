@@ -43,15 +43,23 @@ import org.oscarehr.common.dao.MessageTblDao;
 import org.oscarehr.common.model.MessageList;
 import org.oscarehr.common.model.MessageTbl;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class MsgSendMessageAction extends Action {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		// Extract attributes we will need
 		// Setup variables
 		ActionMessages errors = new ActionMessages();
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_msg", "w", null)) {
+			throw new SecurityException("missing required security object (_msg)");
+		}
+		
 		String message = ((MsgCreateMessageForm) form).getMessage();
 		String[] providers = ((MsgCreateMessageForm) form).getProvider();
 		String subject = ((MsgCreateMessageForm) form).getSubject();

@@ -38,6 +38,7 @@ import org.oscarehr.common.dao.MessageListDao;
 import org.oscarehr.common.model.MessageList;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.ProviderManager2;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -46,8 +47,14 @@ import oscar.util.ConversionUtils;
 
 public class MsgDisplayMessagesAction extends Action {
 
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_msg", "r", null)) {
+			throw new SecurityException("missing required security object (_msg)");
+		}
+		
 		// Setup variables            
 		oscar.oscarMessenger.pageUtil.MsgSessionBean bean = null;
 		String[] messageNo = ((MsgDisplayMessagesForm) form).getMessageNo();
