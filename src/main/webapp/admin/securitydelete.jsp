@@ -26,6 +26,18 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>"
+        objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r"
+        reverse="<%=true%>">
+        <%response.sendRedirect("../logout.jsp");%>
+</security:oscarSec>
+
+
 <%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
