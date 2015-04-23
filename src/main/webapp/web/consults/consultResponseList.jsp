@@ -131,8 +131,12 @@
 
 			<tr ng-repeat="consult in $data" ng-mouseover="consult.$selected=true" ng-mouseout="consult.$selected=false"
     	 ng-class="{'active': consult.$selected}">
-				<td ng-show="consultWriteAccess"><input type="checkbox"
-					ng-model="consult.checked"></td>
+    	 
+				<td ng-show="consultWriteAccess">
+<!-- Ronnie: Temporarily hidden until batch operations is created
+					<input type="checkbox" ng-model="consult.checked">
+ -->
+ 				</td>
 				<td ng-show="consultWriteAccess"><a
 					ng-click="editConsult(consult)" class="hand-hover"><bean:message key="global.edit" bundle="ui"/></a></td>
 				<td data-title="'<bean:message key="consult.list.header.patient" bundle="ui"/>'" class="text-center" sortable="'Demographic'">
