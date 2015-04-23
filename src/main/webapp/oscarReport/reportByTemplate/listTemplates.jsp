@@ -23,13 +23,24 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
 <%@ page import="java.util.*, oscar.oscarReport.reportByTemplate.*"%>
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+  String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 ArrayList templates = (new ReportManager()).getReportTemplatesNoParam();
 String templateViewId = request.getParameter("templateviewid");
 if (templateViewId == null) templateViewId = "";
 %>
+
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin,_report"	rights="r" reverse="<%=true%>">
+	<%
+		response.sendRedirect("../logout.jsp");
+	%>
+</security:oscarSec>
+
 <div class="templatelist">
 <div class="templatelistHeader">Select a template:</div>
 <ul class="templatelist">

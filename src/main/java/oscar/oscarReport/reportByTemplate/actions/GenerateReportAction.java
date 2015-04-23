@@ -46,6 +46,11 @@ public class GenerateReportAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                  HttpServletRequest request, HttpServletResponse response) {
        
+    	String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+    	if(!com.quatro.service.security.SecurityManager.hasPrivilege("_admin", roleName$)  && !com.quatro.service.security.SecurityManager.hasPrivilege("_report", roleName$)) {
+    		throw new SecurityException("Insufficient Privileges");
+    	}
+    	
         Reporter reporter = ReportFactory.getReporter(request.getParameter("type"));
         
         if( reporter.generateReport(request)) {

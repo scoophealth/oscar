@@ -56,6 +56,12 @@ import oscar.oscarReport.reportByTemplate.ReportManager;
 public class UploadTemplates extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                  HttpServletRequest request, HttpServletResponse response) {
+    	
+    	String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+    	if(!com.quatro.service.security.SecurityManager.hasPrivilege("_admin", roleName$)  && !com.quatro.service.security.SecurityManager.hasPrivilege("_report", roleName$)) {
+    		throw new SecurityException("Insufficient Privileges");
+    	}
+		
          String action = request.getParameter("action");
          String message = "Error: Improper request - Action param missing";
          FormFile file = (FormFile) form.getMultipartRequestHandler().getFileElements().get("templateFile");
@@ -80,5 +86,4 @@ public class UploadTemplates extends Action {
          request.setAttribute("opentext", request.getParameter("opentext"));
          return mapping.findForward("success");
     }
-    
 }
