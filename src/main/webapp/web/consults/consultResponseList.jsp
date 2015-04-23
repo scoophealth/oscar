@@ -89,20 +89,27 @@
 					datepicker-append-to-body="true" is-open="data4.isOpen"
 					ng-click="data4.isOpen = true" placeholder="<bean:message key="consult.list.appointmentEndDate" bundle="ui"/>">
 			</div>
+		
+			<div class="col-xs-2">
+				<div class="input-group">
+					<div class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="removeDemographicAssignment()"></span></div>
+					<input type="text" ng-model="consult.demographicName" placeholder="<bean:message key="consult.list.patient" bundle="ui"/>"
+						typeahead="pt.demographicNo as pt.name for pt in searchPatients($viewValue)"
+						typeahead-on-select="updateDemographicNo($item, $model, $label)"
+						class="form-control"/>
+				</div>
+			</div>
 			
-		<div class="col-xs-2">
-		 <div class="input-group">
-   		   <div class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="removeDemographicAssignment()"></span></div>
-      
-				 <input type="text" ng-model="consult.demographicName" placeholder="<bean:message key="consult.list.patient" bundle="ui"/>" 
-				typeahead="pt.demographicNo as pt.name for pt in searchPatients($viewValue)" 
-				typeahead-on-select="updateDemographicNo($item, $model, $label)"
-				class="form-control">
-			</div>	
+			<div class="col-xs-2">
+				<div class="input-group">
+					<div class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="removeMrpAssignment()"></span></div>
+					<input type="text" ng-model="consult.mrpName" placeholder="<bean:message key="consult.list.mrp" bundle="ui"/>"
+						typeahead="pvd as pvd.name for pvd in searchMrps($viewValue)"
+						typeahead-on-select="updateMrpNo($model)"
+						class="form-control"/>
+				</div>
+			</div>
 		</div>
-
-		</div>
-
 
 		<div style="height: 5px"></div>
 
@@ -134,7 +141,7 @@
 				<td data-title="'<bean:message key="consult.list.header.team" bundle="ui"/>'" class="text-center" sortable="'Team'">{{consult.teamName}}</td>
 				<td data-title="'<bean:message key="consult.list.header.status" bundle="ui"/>'" class="text-center" sortable="'Status'">{{consult.statusDescription}}</td>
 				<td data-title="'<bean:message key="consult.list.header.priority" bundle="ui"/>'" class="text-center {{consult.urgencyColor}}" sortable="'Urgency'">{{consult.urgencyDescription}}</td>
-				<td data-title="'<bean:message key="consult.list.header.provider" bundle="ui"/>'" class="text-center" sortable="'Provider'">{{consult.provider.formattedName}}</td>
+				<td data-title="'<bean:message key="consult.list.header.mrp" bundle="ui"/>'" class="text-center" sortable="'Provider'">{{consult.provider.formattedName}}</td>
 
 				<td data-title="'<bean:message key="consult.list.header.appointmentDate" bundle="ui"/>'" class="text-center" sortable="'AppointmentDate'">
 					{{consult.appointmentDate | date: 'yyyy-MM-dd HH:mm'}}</td>

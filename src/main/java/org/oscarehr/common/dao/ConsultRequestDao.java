@@ -194,8 +194,12 @@ public class ConsultRequestDao extends AbstractDao<ConsultationRequest> {
 			sql.append("and cr.urgency = '" + StringEscapeUtils.escapeSql(filter.getUrgency()) + "' ");
 		}
 		
-		if (filter.getDemographicNo() != null && filter.getDemographicNo().intValue()>0) {
-			sql.append("and cr.demographicId = " +  StringEscapeUtils.escapeSql(filter.getDemographicNo().toString()) + " ");
+		if (filter.getDemographicNo() != null && filter.getDemographicNo()>0) {
+			sql.append("and cr.demographicId = " + filter.getDemographicNo() + " ");
+		}
+		
+		if (filter.getMrpNo() != null && filter.getMrpNo()>0) {
+			sql.append("and d.ProviderNo = '" + filter.getMrpNo() + "' ");
 		}
 		
 		  
