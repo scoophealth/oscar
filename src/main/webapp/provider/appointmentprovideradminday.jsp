@@ -63,6 +63,7 @@
 <%@page import="org.oscarehr.managers.LookupListManager" %>
 <%@page import="org.oscarehr.common.model.LookupList" %>
 <%@page import="org.oscarehr.common.model.LookupListItem" %>
+<%@page import="org.oscarehr.managers.SecurityInfoManager" %>
 
 <!-- add by caisi -->
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
@@ -75,7 +76,8 @@
 
 <%
 	LoggedInInfo loggedInInfo1=LoggedInInfo.getLoggedInInfoFromSession(request);
-
+	SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	TicklerManager ticklerManager= SpringUtils.getBean(TicklerManager.class);
 	DemographicStudyDao demographicStudyDao = SpringUtils.getBean(DemographicStudyDao.class);
 	StudyDao studyDao = SpringUtils.getBean(StudyDao.class);
@@ -1868,11 +1870,12 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                   tickler_no = "";
                   tickler_note="";
                   
-                 
-                  for(Tickler t: ticklerManager.search_tickler(loggedInInfo1, demographic_no,MyDateFormat.getSysDate(strDate))) {
-                	  tickler_no = t.getId().toString();
-                      tickler_note = t.getMessage()==null?tickler_note:tickler_note + "\n" + t.getMessage();
-                  }
+                 if(securityInfoManager.hasPrivilege(loggedInInfo1, "_tickler", "r", demographic_no)) {
+	                  for(Tickler t: ticklerManager.search_tickler(loggedInInfo1, demographic_no,MyDateFormat.getSysDate(strDate))) {
+	                	  tickler_no = t.getId().toString();
+	                      tickler_note = t.getMessage()==null?tickler_note:tickler_note + "\n" + t.getMessage();
+	                  }
+                 }
                      
                   //alerts and notes
                   DemographicCust dCust = demographicCustDao.find(demographic_no);
