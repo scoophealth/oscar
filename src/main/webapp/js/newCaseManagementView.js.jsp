@@ -1181,8 +1181,8 @@ function loadDiv(div,url,limit) {
         text = text.replace(/\\u0022/g, "\u0022");
         text = text.replace(/\\u0027/g, "\u0027");
 
-        if( $(caseNote).value.length > 0 )
-            $(caseNote).value += "\n\n";
+        //if( $(caseNote).value.length > 0 )
+            //$(caseNote).value += "\n\n";
 
         var curPos = $(caseNote).value.length;
         //subtract \r chars from total length for IE
