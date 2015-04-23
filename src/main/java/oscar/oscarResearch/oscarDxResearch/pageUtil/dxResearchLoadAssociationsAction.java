@@ -48,6 +48,8 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DxDao;
 import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.model.DxAssociation;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -59,8 +61,15 @@ import com.Ostermiller.util.ExcelCSVPrinter;
 public class dxResearchLoadAssociationsAction extends DispatchAction {
 
 	private DxDao dxDao = (DxDao) SpringUtils.getBean("dxDao");
+	private static SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
+	private static final String PRIVILEGE_READ = "r";
+	private static final String PRIVILEGE_UPDATE = "u";
+	private static final String PRIVILEGE_WRITE = "w";
 
 	public ActionForward getAllAssociations(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkPrivilege(request, PRIVILEGE_READ);
+		
 		//load associations
 		List<DxAssociation> associations = dxDao.findAllAssociations();
 
@@ -83,6 +92,8 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
 	}
 
 	public ActionForward clearAssociations(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkPrivilege(request, PRIVILEGE_UPDATE);
+		
 		int recordsUpdated = dxDao.removeAssociations();
 
 		Map<String, Integer> map = new HashMap<String, Integer>();
@@ -92,6 +103,8 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
 	}
 
 	public ActionForward addAssociation(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkPrivilege(request, PRIVILEGE_WRITE);
+		
 		DxAssociation dxa = new DxAssociation();
 		dxa.setCodeType(request.getParameter("codeType"));
 		dxa.setCode(request.getParameter("code"));
@@ -107,6 +120,8 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
 	}
 
 	public ActionForward export(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkPrivilege(request, PRIVILEGE_READ);
+		
 		List<DxAssociation> associations = dxDao.findAllAssociations();
 
 		response.setContentType("application/octet-stream");
@@ -126,6 +141,8 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
 	}
 
 	public ActionForward uploadFile(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkPrivilege(request, PRIVILEGE_WRITE);
+		
 		dxAssociationBean f = (dxAssociationBean) form;
 		FormFile formFile = f.getFile();
 
@@ -159,6 +176,8 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
 	}
 
 	public ActionForward autoPopulateAssociations(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkPrivilege(request, PRIVILEGE_WRITE);
+		
 		int recordsAdded = 0;
 		CaseManagementIssueDAO cmiDao = (CaseManagementIssueDAO) SpringUtils.getBean("CaseManagementIssueDAO");
 		CaseManagementManager cmMgr = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
@@ -188,5 +207,12 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
 		response.getWriter().print(JSONObject.fromObject(map));
 
 		return null;
+	}
+	
+	
+	private void checkPrivilege(HttpServletRequest request, String privilege) {
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_dxresearch", privilege, null)) {
+			throw new RuntimeException("missing required security object (_dxresearch)");
+		}
 	}
 }
