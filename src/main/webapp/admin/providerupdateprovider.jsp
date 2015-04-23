@@ -26,6 +26,15 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=true%>">
+	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.userAdmin");%>
+</security:oscarSec>
+
+
 <%@ page
 	import="java.sql.*, java.util.*, oscar.SxmlMisc, oscar.oscarProvider.data.ProviderBillCenter"
 	errorPage="errorpage.jsp"%>
@@ -74,8 +83,7 @@ function setfocus() {
 
 <%
     String curProvider_no = (String) session.getAttribute("user");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-	List<Integer> siteIDs = new ArrayList<Integer>();
+    List<Integer> siteIDs = new ArrayList<Integer>();
     boolean isSiteAccessPrivacy=false;
 %>
 
