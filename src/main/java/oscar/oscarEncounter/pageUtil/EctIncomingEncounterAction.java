@@ -60,6 +60,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.myoscar.client.ws_manager.AccountManager;
 import org.oscarehr.myoscar.client.ws_manager.MessageManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
@@ -69,7 +70,6 @@ import org.oscarehr.phr.web.MyOscarMessagesHelper;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
-
 import org.oscarehr.util.SpringUtils;
 
 import com.quatro.dao.security.SecroleDao;
@@ -84,12 +84,18 @@ public class EctIncomingEncounterAction extends Action {
 	private static Logger log = MiscUtils.getLogger();
 	private CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO) SpringUtils.getBean("caseManagementNoteDAO");
 	private CaseManagementManager caseManagementMgr = SpringUtils.getBean(CaseManagementManager.class);
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		String demoNo = request.getParameter("demographicNo");
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
+		
 		if(!"true".equals(OscarProperties.getInstance().getProperty("program_domain.show_echart", "false"))) {
 			if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.getLoggedInProviderNo(), demoNo) && !caseManagementMgr.isClientReferredInProgramDomain(loggedInInfo.getLoggedInProviderNo(), demoNo)) {
 				return mapping.findForward("domain-error");

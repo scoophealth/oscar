@@ -36,6 +36,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.GroupsDao;
 import org.oscarehr.common.model.Groups;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarMessenger.data.MsgAddressBookMaker;
@@ -43,9 +45,14 @@ import oscar.oscarMessenger.data.MsgAddressBookMaker;
 public class MsgMessengerCreateGroupAction extends Action {
 
 	private GroupsDao dao = SpringUtils.getBean(GroupsDao.class);
-
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+			throw new SecurityException("missing required security object (_admin)");
+		}
+		
 		String grpName = ((MsgMessengerCreateGroupForm) form).getGroupName();
 		String parentID = ((MsgMessengerCreateGroupForm) form).getParentID();
 		String type = ((MsgMessengerCreateGroupForm) form).getType2();

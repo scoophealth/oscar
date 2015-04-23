@@ -41,6 +41,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.model.PatientLabRouting;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -53,6 +55,8 @@ public class ReportStatusUpdateAction extends DispatchAction {
 
     private static Logger logger = MiscUtils.getLogger();
 
+    private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+    
     public ReportStatusUpdateAction() {
     }
 
@@ -66,6 +70,10 @@ public class ReportStatusUpdateAction extends DispatchAction {
             HttpServletResponse response)
              {
 
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_lab", "w", null)) {
+			throw new SecurityException("missing required security object (_lab)");
+		}
+    	
         int labNo = Integer.parseInt(request.getParameter("segmentID"));
         String multiID = request.getParameter("multiID");
         String providerNo = request.getParameter("providerNo");
