@@ -39,6 +39,8 @@ import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.ConversionUtils;
@@ -46,8 +48,13 @@ import oscar.util.ParameterActionForward;
 
 public class dxResearchUpdateAction extends Action {
 	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
-
+	private static SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_dxresearch", "u", null)) {
+			throw new RuntimeException("missing required security object (_dxresearch)");
+		}
+		
 		String status = request.getParameter("status");
 		String did = request.getParameter("did");
 		String demographicNo = request.getParameter("demographicNo");
