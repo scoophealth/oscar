@@ -45,8 +45,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarPrevention.reports.PreventionReport;
 import oscar.oscarPrevention.reports.PreventionReportFactory;
@@ -62,12 +64,18 @@ import oscar.util.UtilDateUtilities;
 public class PreventionReportAction extends Action {
    private static Logger log = MiscUtils.getLogger();
 
+   private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+   
    public PreventionReportAction() {
    }
 
    public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
 
 	   LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	   
+	   if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_report", "r", null)) {
+ 		  throw new SecurityException("missing required security object (_report)");
+ 	  }
 	   
        String setName = request.getParameter("patientSet");
        String prevention  = request.getParameter("prevention");

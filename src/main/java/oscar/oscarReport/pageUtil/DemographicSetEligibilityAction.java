@@ -32,6 +32,9 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarReport.data.DemographicSets;
 
@@ -41,8 +44,14 @@ import oscar.oscarReport.data.DemographicSets;
  */
 public class DemographicSetEligibilityAction extends Action {
    
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
    
+	   if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_report", "w", null)) {
+	  		  throw new SecurityException("missing required security object (_report)");
+	  	  	}
+	   
         String[] s = request.getParameterValues("demoNo") ;
         String setName = request.getParameter("setName");
         DemographicSets dsets = new DemographicSets();
