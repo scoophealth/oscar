@@ -23,6 +23,7 @@
 
 package org.oscarehr.PMmodule.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -71,7 +72,7 @@ public class ProgramSignatureDao extends HibernateDaoSupport {
         if (programSignature == null) {
             throw new IllegalArgumentException();
         }
-
+        programSignature.setUpdateDate(new Date());
         getHibernateTemplate().saveOrUpdate(programSignature);
         getHibernateTemplate().flush();
 
