@@ -844,7 +844,7 @@ div.logoutBox {
 			%>
 			<li><a href="#" onclick='popupPage(400, 400,&quot;<html:rewrite page="/olis/Preferences.jsp"/>&quot;);return false;'>OLIS Preferences</a></li>
 			<% } %>			
-			<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/MyoscarConfiguration.jsp"/>&quot;);return false;'><bean:message key="admin.admin.myoscarconfig"/></a></li>
+			<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/MyoscarConfiguration.jsp"/>&quot;);return false;'><bean:message key="admin.admin.phrconfig"/></a></li>
 			<%
 				if (StringUtils.trimToNull(OscarProperties.getInstance().getProperty("oscar_myoscar_sync_component_url"))!=null)
 				{
@@ -852,13 +852,13 @@ div.logoutBox {
 					if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn())
 					{
 						%>
-							<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/oscar_myoscar_sync_config_redirect.jsp"/>&quot;);return false;'><bean:message key="admin.admin.oscar_myoscar_sync_config"/></a></li>
+							<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/admin/oscar_myoscar_sync_config_redirect.jsp"/>&quot;);return false;'><bean:message key="admin.admin.oscar_phr_sync_config"/></a></li>
 						<%
 					}
 					else
 					{
 						%>
-							<li onclick="alert('<bean:message key="admin.admin.oscar_myoscar_sync_config_must_be_logged_in"/>');"><bean:message key="admin.admin.oscar_myoscar_sync_config"/></li>
+							<li onclick="alert('<bean:message key="admin.admin.oscar_phr_sync_config_must_be_logged_in"/>');"><bean:message key="admin.admin.oscar_phr_sync_config"/></li>
 						<%							
 					}
 				}

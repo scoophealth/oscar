@@ -2639,7 +2639,7 @@ if ( Dead.equals(PatStat) ) {%>
 									value="<%=demographic.getEmail()!=null? demographic.getEmail() : ""%>">
 								</td>
 								<td align="right"><b><bean:message
-									key="demographic.demographiceditdemographic.formMyOscarUserName" />: </b></td>
+									key="demographic.demographiceditdemographic.formPHRUserName" />: </b></td>
 								<td align="left"><input type="text" name="myOscarUserName" size="30" <%=getDisabled("myOscarUserName")%>
 									value="<%=demographic.getMyOscarUserName()!=null? demographic.getMyOscarUserName() : ""%>"><br />
 								<%if (demographic.getMyOscarUserName()==null ||demographic.getMyOscarUserName().equals("")) {%>
@@ -2651,7 +2651,7 @@ if ( Dead.equals(PatStat) ) {%>
 								%>
 								<a href="javascript:"
 									onclick="<%=onclickString%>"><sub
-									style="white-space: nowrap;"><bean:message key="demographic.demographiceditdemographic.msgRegisterMyOSCAR"/></sub></a> <%}%>
+									style="white-space: nowrap;"><bean:message key="demographic.demographiceditdemographic.msgRegisterPHR"/></sub></a> <%}%>
 								</td>
 							</tr>
 							<tr valign="top">

@@ -61,7 +61,7 @@
 			response.sendRedirect(parentPage);
 		}
 		
-		WebUtils.addInfoMessage(session, LocaleUtils.getMessage(request,"ItemsHaveBeenSentToMyOscar"));
+		WebUtils.addInfoMessage(session, LocaleUtils.getMessage(request,"ItemsHaveBeenSentToPHR"));
 	}
 	catch (Exception e)
 	{

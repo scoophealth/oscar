@@ -201,7 +201,7 @@ out.println("failed!!!");
 		<td align="left"><b><bean:message
 			key="demographic.demographiceditdemographic.formEmail" />: </b><%=d.getEmail()!=null? d.getEmail() : ""%></td>
 		<td align="left"><b><bean:message
-			key="demographic.demographiceditdemographic.formMyOscarUserName" />: </b></td>
+			key="demographic.demographiceditdemographic.formPHRUserName" />: </b></td>
 		<td align="left"><%=d.getMyOscarUserName()!=null? d.getMyOscarUserName() : ""%></td>
 	</tr>
 	<tr valign="top">

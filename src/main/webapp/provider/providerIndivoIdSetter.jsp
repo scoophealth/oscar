@@ -44,7 +44,7 @@ curUser_no = (String) session.getAttribute("user");
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
-<title><bean:message key="provider.setMyOscarLogin.title" /></title>
+<title><bean:message key="provider.setPHRLogin.title" /></title>
 
 <link rel="stylesheet" type="text/css"
 	href="../oscarEncounter/encounterStyles.css">
@@ -72,7 +72,7 @@ curUser_no = (String) session.getAttribute("user");
 		<td class="MainTableTopRowLeftColumn"><bean:message
 			key="provider.setColour.msgPrefs" /></td>
 		<td style="color: white" class="MainTableTopRowRightColumn"><bean:message
-			key="provider.setMyOscarLogin.msgMyOscarId" /></td>
+			key="provider.setPHRLogin.msgMyOscarId" /></td>
 	</tr>
 	<tr>
 		<td class="MainTableLeftColumn">&nbsp;</td>
@@ -86,16 +86,16 @@ curUser_no = (String) session.getAttribute("user");
                {
       
             %> <html:form action="/setMyOscarId.do">
-			<bean:message key="provider.setMyOscarLogin.msgEdit" />&nbsp;&nbsp;
+			<bean:message key="provider.setPHRLogin.msgEdit" />&nbsp;&nbsp;
                <html:text property="myOscarLoginId" value="<%=login%>"
 				size="20" />
 			<br>
 			<input type="submit" onclick="return validate();"
-				value="<bean:message key="provider.setMyOscarLogin.btnSubmit"/>" />
+				value="<bean:message key="provider.setPHRLogin.btnSubmit"/>" />
 		</html:form> <%
                }               
                else if( ((String)request.getAttribute("status")).equals("complete") ) {
-            %> <bean:message key="provider.setMyOscarLogin.msgSuccess" />&nbsp;'<%=login%>'
+            %> <bean:message key="provider.setPHRLogin.msgSuccess" />&nbsp;'<%=login%>'
 
 		<%
                }
