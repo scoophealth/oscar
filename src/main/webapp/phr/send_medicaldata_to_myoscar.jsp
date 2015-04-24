@@ -63,13 +63,13 @@
 <html>
 <head>
 	<title>
-		<%=LocaleUtils.getMessage(request, "ConfirmSending")%>&nbsp;<%=LocaleUtils.getMessage(request, medicalDataType)%>&nbsp;<%=LocaleUtils.getMessage(request, "ToMyOscar")%>
+		<%=LocaleUtils.getMessage(request, "ConfirmSending")%>&nbsp;<%=LocaleUtils.getMessage(request, medicalDataType)%>&nbsp;<%=LocaleUtils.getMessage(request, "ToPHR")%>
 	</title>
 </head>
 <body>
 	<p>
 	<h3><%=LocaleUtils.getMessage(request, "WarningNotLevel3")%></h3>
-	<h3><%=LocaleUtils.getMessage(request, "AreYouSureYouWantToSend")%>&nbsp;<%=LocaleUtils.getMessage(request, medicalDataType)%>&nbsp;<%=LocaleUtils.getMessage(request, "ToMyOscar")%>?</h3>
+	<h3><%=LocaleUtils.getMessage(request, "AreYouSureYouWantToSend")%>&nbsp;<%=LocaleUtils.getMessage(request, medicalDataType)%>&nbsp;<%=LocaleUtils.getMessage(request, "ToPHR")%>?</h3>
 	<p>
 	<input type="button" value="Yes" onclick="window.location.href='<%=sendDataPath%>'" />
 	<p>

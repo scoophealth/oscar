@@ -112,7 +112,7 @@
 					+ "medicalDataType=Measurements" + "&"
 					+ "parentPage=" + request.getRequestURI(); 
 			%>
-				<input type="button" name="Button" <%=WebUtils.getDisabledString(enabledMyOscarButton)%> value="<%=LocaleUtils.getMessage(request, "SendToMyOscar")%>" onclick="document.location.href='<%=sendDataPath%>'">
+				<input type="button" name="Button" <%=WebUtils.getDisabledString(enabledMyOscarButton)%> value="<%=LocaleUtils.getMessage(request, "SendToPHR")%>" onclick="document.location.href='<%=sendDataPath%>'">
 			<%
 		}
 	%>

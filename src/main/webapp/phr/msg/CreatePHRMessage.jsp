@@ -345,19 +345,19 @@
                                             			<input type="submit" 
                                             			<%if (demographic == null){%>
 		                                   					disabled="disabled"
-		                                   					title="<bean:message key="global.no.myoscar.account.registered"/>"
+		                                   					title="<bean:message key="global.no.phr.account.registered"/>"
 		                                				<%}%> 
                                             				class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessageCpyToeChart"/>" onclick="setCpyToChart();" >
                                             			<input type="button" 
                                             				<%if (demographic == null){%>
 		                                   						disabled="disabled"
-		                                   						title="<bean:message key="global.no.myoscar.account.registered"/>"
+		                                   						title="<bean:message key="global.no.phr.account.registered"/>"
 		                                					<%}%> 
                                             				class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnOpenEchart"/>" onclick="gotoEchart2('<%=request.getParameter("demographicNo")%>','<%=replyToMessageId%>');" />
                                             			<input type="button" 
                                             				<%if (demographic == null){%>
 		                                   						disabled="disabled"
-		                                   						title="<bean:message key="global.no.myoscar.account.registered"/>"
+		                                   						title="<bean:message key="global.no.phr.account.registered"/>"
 		                                					<%}%> 
                                             				class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnPasteToEchart"/>" onclick="paste2Echart();"/>
                                         			<%

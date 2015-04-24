@@ -783,7 +783,7 @@ String curProvider_no = (String)session.getAttribute("user");
 					%>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/olis/Preferences.jsp">OLIS Preferences</a></li>
 					<% } %>			
-					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/MyoscarConfiguration.jsp"><bean:message key="admin.admin.myoscarconfig"/></a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/MyoscarConfiguration.jsp"><bean:message key="admin.admin.phrconfig"/></a></li>
 					<%
 						if (StringUtils.trimToNull(OscarProperties.getInstance().getProperty("oscar_myoscar_sync_component_url"))!=null)
 						{
@@ -791,13 +791,13 @@ String curProvider_no = (String)session.getAttribute("user");
 							if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn())
 							{
 								%>
-									<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscar_myoscar_sync_config_redirect.jsp"><bean:message key="admin.admin.oscar_myoscar_sync_config"/></a></li>
+									<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscar_myoscar_sync_config_redirect.jsp"><bean:message key="admin.admin.oscar_phr_sync_config"/></a></li>
 								<%
 							}
 							else
 							{
 								%>
-									<li onclick="alert('<bean:message key="admin.admin.oscar_myoscar_sync_config_must_be_logged_in"/>');"><bean:message key="admin.admin.oscar_myoscar_sync_config"/></li>
+									<li onclick="alert('<bean:message key="admin.admin.oscar_phr_sync_config_must_be_logged_in"/>');"><bean:message key="admin.admin.oscar_phr_sync_config"/></li>
 								<%							
 							}
 						}
@@ -809,13 +809,13 @@ String curProvider_no = (String)session.getAttribute("user");
 							if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn())
 							{
 								%>
-									<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscar_myoscar_clinic_config_redirect.jsp"><bean:message key="admin.admin.oscar_myoscar_clinic_config"/></a></li>
+									<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscar_myoscar_clinic_config_redirect.jsp"><bean:message key="admin.admin.oscar_phr_clinic_config"/></a></li>
 								<%
 							}
 							else
 							{
 								%>
-									<li onclick="alert('<bean:message key="admin.admin.oscar_myoscar_sync_config_must_be_logged_in"/>');"><bean:message key="admin.admin.oscar_myoscar_clinic_config"/></li>
+									<li onclick="alert('<bean:message key="admin.admin.oscar_phr_sync_config_must_be_logged_in"/>');"><bean:message key="admin.admin.oscar_phr_clinic_config"/></li>
 								<%							
 							}
 						}

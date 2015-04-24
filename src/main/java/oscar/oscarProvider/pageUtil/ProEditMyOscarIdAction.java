@@ -57,7 +57,7 @@ public class ProEditMyOscarIdAction extends Action {
                 
         if( ProviderMyOscarIdData.getMyOscarId(providerNo).equals(loginId) ) {
             ActionMessages errors = new ActionMessages();
-            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("provider.setMyOscarLogin.msgNotUnique"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("provider.setPHRLogin.msgNotUnique"));
             this.addErrors(request, errors);
             forward = new String("failure");
             

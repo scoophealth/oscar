@@ -51,7 +51,7 @@ String winName2 = "SendMyoscarMsg" + demographicNo;
 		elSelect = jQuery("select#MyOscarSelect");
 	}
 
-	elSelect.append('<option>MyOscar</option>');
+	elSelect.append('<option>PHR</option>');
 
 <%if (demographic.getMyOscarUserName()==null ||demographic.getMyOscarUserName().equals("")) {		/*register link -myoscar (strikethrough) links to create account*/	%>		
 		elSelect.append('<option onclick="popupPage(700,900, \'indivoRegistration\', \'../phr/indivo/RegisterIndivo.jsp?demographicNo=<%=demographicNo%>\');" >Register Patient for MyOSCAR</option>');

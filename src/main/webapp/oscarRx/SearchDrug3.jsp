@@ -946,13 +946,13 @@ THEME 2*/
 																			+ "medicalDataType=Prescriptions" + "&"
 																			+ "parentPage=" + request.getRequestURI();
 																	%>
-																		<a href="<%=sendDataPath%>"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
+																		<a href="<%=sendDataPath%>"><%=LocaleUtils.getMessage(request, "SendToPHR")%></a>
 																	<%
 																}
 																else
 																{
 																	%>
-																		<span style="color:grey;text-decoration:underline"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></span>
+																		<span style="color:grey;text-decoration:underline"><%=LocaleUtils.getMessage(request, "SendToPHR")%></span>
 																	<%
 																}
 									                  	  }
