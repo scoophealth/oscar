@@ -63,6 +63,7 @@ public class EFormConverter  extends AbstractConverter<EForm, EFormTo1> {
 			excludes = new String[]{"formHtml"};
 		}
 		BeanUtils.copyProperties(d, t,excludes);
+		t.setId(d.getId());
 		return t;
 	}
 }

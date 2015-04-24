@@ -237,10 +237,50 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 
 		return results;
 	}
-
-	public List<EFormData> findByFormIdProviderNo(List<String> providerNo, Integer formId) {
-
-		Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.formId = ?1 and x.providerNo in (?2) and x.current = 1");
+    
+    public List<Integer> findAllFdidByFormId(Integer formId)
+	{
+	
+	Query query = entityManager.createQuery("select distinct x.id from " + modelClass.getSimpleName() + " x where x.formId = ?1");
+		query.setParameter(1,formId);
+	
+		@SuppressWarnings("unchecked")
+		List<Integer> results=query.getResultList();
+	
+		return results;
+	}
+    
+    //for EFormReportTool
+    public List<Object[]> findMetaFieldsByFormId(Integer formId)
+	{
+	
+	Query query = entityManager.createQuery("select distinct x.id, x.demographicId,x.formDate, x.formTime, x.providerNo  from " + modelClass.getSimpleName() + " x where x.formId = ?1");
+		query.setParameter(1,formId);
+	
+		@SuppressWarnings("unchecked")
+		List<Object[]> results=query.getResultList();
+	
+		return results;
+	}
+    
+    
+    public List<Integer> findAllCurrentFdidByFormId(Integer formId)
+	{
+	
+	Query query = entityManager.createQuery("select distinct x.id from " + modelClass.getSimpleName() + " x where x.formId = ?1 and x.current = 1");
+		query.setParameter(1,formId);
+	
+		@SuppressWarnings("unchecked")
+		List<Integer> results=query.getResultList();
+	
+		return results;
+	}
+    
+    
+    public List<EFormData> findByFormIdProviderNo(List<String> providerNo, Integer formId)
+	{
+	
+	Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.formId = ?1 and x.providerNo in (?2) and x.current = 1");
 		//query.setParameter(1,fid);
 		query.setParameter(1, formId);
 		query.setParameter(2, providerNo);
@@ -250,6 +290,7 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 
 		return results;
 	}
+
 
 	/**
 	 * Finds form data for the specified demographic record and form name
