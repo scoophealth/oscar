@@ -230,7 +230,7 @@ CREATE TABLE `caisi_role` (
   `name` varchar(255) NOT NULL default '',
   userDefined tinyint not null,
   `oscar_name` varchar(255) NOT NULL default '',
-  `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `update_date` datetime NOT NULL,
   PRIMARY KEY  (`role_id`)
 );
 
@@ -270,7 +270,7 @@ CREATE TABLE `casemgmt_issue` (
   `resolved` tinyint(1) NOT NULL default '0',
   program_id int,
   `type` varchar(100) NOT NULL default '',
-  `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `update_date` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `FK718D130B49CFB32F` (`issue_id`)
 );
@@ -1138,8 +1138,8 @@ CREATE TABLE `room_demographic` (
   `room_id` int(10) unsigned NOT NULL default '0',
   `demographic_no` int(10) unsigned NOT NULL default '0',
   `provider_no` varchar(6) NOT NULL default '',
-  `assign_start` date  NULL default '0000-00-00',
-  `assign_end` date  NULL default '0000-00-00',
+  `assign_start` date,
+  `assign_end` date ,
   `comments` varchar(50)  NULL default '',
 
   PRIMARY KEY  (`room_id`,`demographic_no`)
@@ -1149,8 +1149,8 @@ CREATE TABLE `room_demographic` (
 CREATE TABLE `room_bed` (
   `room_id` int(10) unsigned NOT NULL default '0',
   `bed_id` int(10) unsigned NOT NULL default '0',
-  `assign_start` date NULL default '0000-00-00',
-  `assign_end` date NULL default '0000-00-00',
+  `assign_start` date,
+  `assign_end` date,
   `comments` varchar(50)  NULL default '',
 
   PRIMARY KEY  (`room_id`,`bed_id`)
@@ -1360,7 +1360,7 @@ create table programSignature (
   	`providerId` varchar(6) NOT NULL default '0',
   	`providerName` varchar(60) NOT NULL default '',
   	`caisiRoleName` varchar(255) NOT NULL default '',
-  	`updateDate` datetime default '0000-00-00 00:00:00',
+  	`updateDate` datetime,
   	PRIMARY KEY (`id`)
 );
 

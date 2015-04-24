@@ -6647,7 +6647,7 @@ CREATE TABLE labRequestReportLink (
 CREATE TABLE mdsMSH (
   segmentID int(10) NOT NULL auto_increment,
   sendingApp char(180) default NULL,
-  dateTime datetime NOT NULL default '0000-00-00 00:00:00',
+  dateTime datetime NOT NULL,
   type char(7) default NULL,
   messageConID char(20) default NULL,
   processingID char(3) default NULL,
@@ -7617,7 +7617,7 @@ CREATE TABLE `waitingListName` (
   `name` varchar(80) NOT NULL default '',
   `group_no` varchar(10) default '',
   `provider_no` varchar(6) default '',
-  `create_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `create_date` datetime NOT NULL,
   `is_history` char(1) default 'N',
   PRIMARY KEY  (`ID`)
 );
@@ -7632,7 +7632,7 @@ CREATE TABLE `waitingList` (
   `demographic_no` int(10) NOT NULL default '0',
   `note` varchar(255) default NULL,
   `position` bigint(20) NOT NULL default '0',
-  `onListSince` datetime NOT NULL default '0000-00-00 00:00:00',
+  `onListSince` datetime NOT NULL,
   `is_history` char(1) default NULL,
   PRIMARY KEY  (`id`),
   KEY `listID` (`listID`)
@@ -7906,7 +7906,7 @@ CREATE TABLE `fileUploadCheck` (
   `provider_no` varchar(6) NOT NULL default '',
   `filename` varchar(255) NOT NULL default '',
   `md5sum` varchar(255) default NULL,
-  `date_time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `date_time` datetime NOT NULL,
   PRIMARY KEY  (`id`)
 );
 
