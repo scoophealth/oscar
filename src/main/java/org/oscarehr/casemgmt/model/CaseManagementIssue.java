@@ -57,7 +57,7 @@ public class CaseManagementIssue extends BaseObject {
 	// protected boolean active;
 	protected boolean resolved;
 	protected String type;
-	protected Date update_date;
+	protected Date update_date = new Date();
 	protected Set notes = new HashSet();
 	protected Issue issue;
 	protected Integer program_id = null;

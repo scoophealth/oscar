@@ -914,7 +914,7 @@ CREATE TABLE `formovulation` (
   `ID` bigint(11) NOT NULL auto_increment,
   `demographic_no` bigint(11) NOT NULL default '0',
   `provider_no` bigint(11) default '0',
-  `formCreated` date default '0000-00-00',
+  `formCreated` date default NULL,
   `formEdited` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `clientFirstName` varchar(30) default '',
   `clientLastName` varchar(30) default '',
