@@ -279,13 +279,13 @@ padding-right:6;
 														+ "medicalDataType=Allergies" + "&"
 														+ "parentPage=" + request.getRequestURI();
 								%>
-									| <a href="<%=sendDataPath%>"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
+									| <a href="<%=sendDataPath%>"><%=LocaleUtils.getMessage(request, "SendToPHR")%></a>
 								<%
 							}
 							else
 							{
 								%>
-									| <span style="color:grey;text-decoration:underline"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></span>
+									| <span style="color:grey;text-decoration:underline"><%=LocaleUtils.getMessage(request, "SendToPHR")%></span>
 								<%
 							}
                   	  }

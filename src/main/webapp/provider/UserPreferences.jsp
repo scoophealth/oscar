@@ -173,7 +173,7 @@ function dxScriptAttach(name2) {
 					    <h3 class="head" pane="encounter"><a href="#"><bean:message key="provider.pref.section.encounter" /></a></h3>
 					    <h3 class="head" pane="rx"><a href="#"><bean:message key="provider.pref.section.rx" /></a></h3>					    
 					    <h3 class="head" pane="consultation"><a href="#"><bean:message key="provider.pref.section.consultation" /></a></h3>
-					    <h3 class="head" pane="myoscar"><a href="#"><bean:message key="provider.pref.section.myoscar" /></a></h3>
+					    <h3 class="head" pane="myoscar"><a href="#"><bean:message key="provider.pref.section.phr" /></a></h3>
 					    <h3 class="head" pane="caisi"><a href="#"><bean:message key="provider.pref.section.caisi" /></a></h3>
 					</div>
 				</div>
@@ -427,15 +427,15 @@ function dxScriptAttach(name2) {
 										
 
 					<div id="myoscar" class="pref_pane">
-						<h3 style="text-align:center"><bean:message key="provider.pref.myoscar.title"/></h3>
+						<h3 style="text-align:center"><bean:message key="provider.pref.phr.title"/></h3>
 						<br/><br/>						
 						<table border="0">							
 							<tr>
-								<td nowrap="nowrap"><bean:message key="provider.pref.myoscar.id"/>:</td>
+								<td nowrap="nowrap"><bean:message key="provider.pref.phr.id"/>:</td>
 								<td><input type="text" size="20" <%=UserPreferenceAction.getTextData(prefs,"pref."+UserProperty.MYOSCAR_ID)%>/></td>
 							</tr>
 							<tr>
-								<td nowrap="nowrap"><bean:message key="provider.pref.myoscar.mymeds"/>: </td>
+								<td nowrap="nowrap"><bean:message key="provider.pref.phr.mymeds"/>: </td>
 								<td><%=UserPreferenceAction.getSelect(prefs,"pref."+UserProperty.MYMEDS)%></td>
 							</tr>
 							<tr style="height:20px"><td colspan="2"></td></tr>													

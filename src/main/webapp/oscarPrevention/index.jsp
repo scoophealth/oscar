@@ -483,13 +483,13 @@ text-align:left;
 								+ "medicalDataType=Immunizations" + "&"
 								+ "parentPage=" + request.getRequestURI() + "?demographic_no=" + demographic_no;
 		%>
-		| | <a href="<%=sendDataPath%>"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
+		| | <a href="<%=sendDataPath%>"><%=LocaleUtils.getMessage(request, "SendToPHR")%></a>
 		<%
 					}
 					else
 					{
 		%>
-		| | <span style="color:grey;text-decoration:underline"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></span>
+		| | <span style="color:grey;text-decoration:underline"><%=LocaleUtils.getMessage(request, "SendToPHR")%></span>
 		<%
 					}
 				}

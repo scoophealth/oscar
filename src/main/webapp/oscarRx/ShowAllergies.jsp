@@ -266,13 +266,13 @@ padding-right:6;
 							if (enabledMyOscarButton) 
 							{
 								%>
-									| <a href="send_allergies_to_myoscar_action.jsp?demographicId=<%=demoNo%>"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
+									| <a href="send_allergies_to_myoscar_action.jsp?demographicId=<%=demoNo%>"><%=LocaleUtils.getMessage(request, "SendToPHR")%></a>
 								<%
 							}
 							else
 							{
 								%>
-									| <span style="color:grey;text-decoration:underline"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></span>
+									| <span style="color:grey;text-decoration:underline"><%=LocaleUtils.getMessage(request, "SendToPHR")%></span>
 								<%
 							}
                   	  }
