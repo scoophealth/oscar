@@ -30,9 +30,9 @@
         <title>test</title>
     </head>
     <body>
-    	<h3>test find myoscar user</h3>
+    	<h3>test find PHR user</h3>
     	<br />
-		(you must already be logged into myoscar for this page to work)
+		(you must already be logged into PHR for this page to work)
     	<br />
     	<form action="test_find_myoscar_user.jsp">
 	    	userName : <input type="text" name="userName" />

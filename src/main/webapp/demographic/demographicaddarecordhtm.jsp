@@ -813,7 +813,7 @@ function ignoreDuplicates() {
 				<td id="emailCell" align="left"><input type="text" id="email" name="email" value="">
 				</td>
 				<td id="myOscarLbl" align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formMyOscarUserName" />:</b></td>
+					key="demographic.demographicaddrecordhtm.formPHRUserName" />:</b></td>
 				<td id="myOscarCell"  align="left"><input type="text" name="myOscarUserName" value="">
 				</td>
 			</tr>

@@ -45,7 +45,7 @@ public class EctDisplayMyOscarAction extends EctDisplayAction {
 
 	Logger logger = MiscUtils.getLogger();
 
-	private static final String cmd = "myoscar";
+	private static final String cmd = "PHR";
 
 	private static final MedicalDataType[] MED_DATA_TYPES = { MedicalDataType.BLOOD_PRESSURE, MedicalDataType.HEIGHT_AND_WEIGHT, MedicalDataType.GLUCOSE };
 
@@ -58,11 +58,11 @@ public class EctDisplayMyOscarAction extends EctDisplayAction {
 		String myoscarusername = demographic.getMyOscarUserName();
 		if (myoscarusername == null || myoscarusername.trim().equals("")) {//No Account don't show
 			logger.debug("no myoscar account registered");
-			Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Myoscar"));
+			Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.PHR"));
 			NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 			String registrationUrl = "popupPage(700,1000,'indivoRegistration','" + request.getContextPath() + "/phr/indivo/RegisterIndivo.jsp?demographicNo=" + demographic.getDemographicNo() + "');return false;";
 			item.setURL(registrationUrl);
-			item.setTitle(messages.getMessage(request.getLocale(), "demographic.demographiceditdemographic.msgRegisterMyOSCAR"));
+			item.setTitle(messages.getMessage(request.getLocale(), "demographic.demographiceditdemographic.msgRegisterPHR"));
 			Dao.addItem(item);
 			Dao.setRightURL(registrationUrl);
 			Dao.setRightHeadingID(cmd);
@@ -81,7 +81,7 @@ public class EctDisplayMyOscarAction extends EctDisplayAction {
 		String curProvider_no = (String) request.getSession().getAttribute("user");
 
 		//set text for lefthand module title
-		Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Myoscar"));
+		Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.PHR"));
 
 		//set link for lefthand module title
 		String winName = "viewPatientPHR" + bean.demographicNo;

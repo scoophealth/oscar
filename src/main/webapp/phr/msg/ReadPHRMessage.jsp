@@ -192,7 +192,7 @@ function gotoEchart3(demoNo) {
                                     	<input 
                                     	<%if (demographic == null){%>
 		                                   disabled="disabled"
-		                                   title="<bean:message key="global.no.myoscar.account.registered"/>"
+		                                   title="<bean:message key="global.no.phr.account.registered"/>"
 		                                <%}%> 
                                     	class="ControlPushButton" type="button" onclick="gotoEchart3('<%=demographicNo%>');" value="<bean:message key="oscarMessenger.CreateMessage.btnOpenEchart"/>" >
                                     </td>

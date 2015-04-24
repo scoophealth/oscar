@@ -200,7 +200,7 @@ public class EctIncomingEncounterAction extends Action {
 					bean.reason = props.getString("myoscar.msg.SubjectPrefix") + " - " + subject;
 					bean.myoscarMsgId = messageBeingRepliedTo + StringEscapeUtils.escapeHtml(messageBody) + "\n";
 				} catch (Exception myoscarEx) {
-					bean.oscarMsg = "myoscar message was not retrieved";
+					bean.oscarMsg = "PHR message was not retrieved";
 					log.error("ERROR retrieving message", myoscarEx);
 				}
 
