@@ -24,6 +24,7 @@
 package org.oscarehr.PMmodule.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class ProgramSignature implements Serializable {
 	public Integer id;
@@ -32,7 +33,7 @@ public class ProgramSignature implements Serializable {
 	public String providerId;
 	public String providerName;
 	public String caisiRoleName;
-	public java.util.Date updateDate;
+	public java.util.Date updateDate = new Date();
 	private int hashCode = Integer.MIN_VALUE;
 	
 	public ProgramSignature() {
