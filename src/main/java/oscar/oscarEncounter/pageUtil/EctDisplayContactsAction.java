@@ -55,7 +55,7 @@ public class EctDisplayContactsAction extends EctDisplayAction {
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
  		try {
  			
- 			String healthCareTeamEnabled = OscarProperties.getInstance().get("DEMOGRAPHIC_PATIENT_HEALTH_CARE_TEAM").toString();
+ 			String healthCareTeamEnabled = OscarProperties.getInstance().getProperty("DEMOGRAPHIC_PATIENT_HEALTH_CARE_TEAM","true").toString();
 		    //Set left hand module heading and link
 		    String winName = "contact" + bean.demographicNo;
 		    String pathview, pathedit;
