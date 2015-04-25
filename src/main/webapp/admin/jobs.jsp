@@ -184,6 +184,8 @@ java.util.Map<Integer,java.util.concurrent.ScheduledFuture<Object>> futures = or
 	function listJobs() {
 		jQuery.getJSON("../ws/rs/jobs/all", {},
         function(xml) {
+			clearJobs();
+			
 			if(xml.jobs) {
 				var arr = new Array();
 				if(xml.jobs instanceof Array) {
@@ -199,9 +201,9 @@ java.util.Map<Integer,java.util.concurrent.ScheduledFuture<Object>> futures = or
 					html += '<td><a onclick="scheduleJob('+job.id+');"><i class="icon-calendar ' + extraClass + '"></i></a></td>';
 					html += '<td><u><a href="javascript:void();" onclick="editJob('+job.id+');">'+job.name+'</a></u></td>';
 					html += '<td><a onclick="cancelJob('+job.id+');">Cancel</a></td>';
-					html += '<td>'+((job.enabled==true)?"Enabled (<a onclick='updateJobStatus("+job.id+",false)'>Disable</a>)":"<span color='red'>Disabled</span> (<a onclick='updateJobStatus("+job.id+",true))'>Enable</a>)") +'</td>';
+					html += '<td>'+((job.enabled==true)?"Enabled (<a onclick='updateJobStatus("+job.id+",false)'>Disable</a>)":"<span color='red'>Disabled</span> (<a onclick='updateJobStatus("+job.id+",true)'>Enable</a>)") +'</td>';
 					html += '<td>N/A</td>';
-					html += '<td>'+job.nextPlannedExecutionDate+'</td>';		
+					html += '<td>'+((job.nextPlannedExecutionDate==null)?'N/A':job.nextPlannedExecutionDate) +'</td>';		
 					html += '</tr>';
 				
 					jQuery('#jobTable tbody').append(html);
@@ -238,11 +240,11 @@ java.util.Map<Integer,java.util.concurrent.ScheduledFuture<Object>> futures = or
 	function getProviders() {
 		jQuery.getJSON("../ws/rs/providerService/providers_json",{async:false},
         function(xml) {
-			if(xml instanceof Array) {
-				for(var i=0;i<xml.length;i++) {
+			if(xml.content instanceof Array) {
+				for(var i=0;i<xml.content.length;i++) {
 					$('#jobProvider').append($('<option>', {
-					    value: xml[i].providerNo,
-					    text: xml[i].lastName + ',' + xml[i].firstName
+					    value: xml.content[i].providerNo,
+					    text: xml.content[i].lastName + ',' + xml.content[i].firstName
 					}));
 				}
 			}
@@ -262,7 +264,7 @@ java.util.Map<Integer,java.util.concurrent.ScheduledFuture<Object>> futures = or
 			buttons: {
 				"Save Job": function() {	
 					if(validateSaveJob()) {
-						$.post('../ws/rs/jobs/saveJob',$('#jobForm').serialize(),function(data){clearJobs();listJobs();});
+						$.post('../ws/rs/jobs/saveJob',$('#jobForm').serialize(),function(data){listJobs();});
 						$( this ).dialog( "close" );	
 					}
 					
@@ -285,7 +287,7 @@ java.util.Map<Integer,java.util.concurrent.ScheduledFuture<Object>> futures = or
 				"Save": function() {	
 					//TODO: validate the fields.
 					//submit the crontab-form , close the dialog.
-					$.post('../ws/rs/jobs/saveCrontabExpression',$('#crontab-form').serialize(),function(data){clearJobs();listJobs();});	
+					$.post('../ws/rs/jobs/saveCrontabExpression',$('#crontab-form').serialize(),function(data){listJobs();});	
 					$( this ).dialog( "close" );	
 					
 				},

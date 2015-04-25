@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import org.apache.cxf.common.util.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlOptions;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -82,6 +83,7 @@ public class ONAREnhancedFormToXML {
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd");
 	private SimpleDateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd");
 	private SimpleDateFormat dateFormatter3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private Logger logger = MiscUtils.getLogger();
 
 	Properties props;
 	String demographicNo;
@@ -709,7 +711,9 @@ public class ONAREnhancedFormToXML {
 			if(props.getProperty("ar2_uDate"+y).length()>0) {
 				try {
 					ultrasound.setDate(createDate(dateFormatter.parse(props.getProperty("ar2_uDate"+y))));
-				}catch(ParseException e){}
+				}catch(ParseException e){
+					logger.warn("can't parse date " + props.getProperty("ar2_uDate"+y));
+				}
 			} else {
 				ultrasound.setDate(null);
 			}

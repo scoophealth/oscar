@@ -77,8 +77,11 @@ public class OscarJobUtils {
 		TaskScheduler taskScheduler = (TaskScheduler) SpringUtils.getBean("taskScheduler");
 		OscarJobDao oscarJobDao = SpringUtils.getBean(OscarJobDao.class);
 		ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
-				
 		
+		ScheduledFuture<Object> future = OscarJobExecutingManager.getFutures().get(job.getId());
+		if(future != null) {
+			future.cancel(false);
+		}
 		
 		if(!job.isEnabled()) {
 			return false;
@@ -88,11 +91,6 @@ public class OscarJobUtils {
 		}
 		if(job.getOscarJobType() == null || !job.getOscarJobType().isEnabled() || !OscarJobUtils.isJobTypeCurrentlyValid(job.getOscarJobType())) {
 			return false;
-		}
-	
-		ScheduledFuture<Object> future = OscarJobExecutingManager.getFutures().get(job.getId());
-		if(future != null) {
-			future.cancel(false);
 		}
 		
 		CronTrigger trigger = new CronTrigger(job.getCronExpression());
