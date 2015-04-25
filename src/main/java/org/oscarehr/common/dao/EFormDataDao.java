@@ -322,6 +322,16 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 		query.setParameter("formName", formName);
 		return query.getResultList();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<EFormData> findByDemographicIdAndFormId(Integer demographicNo, Integer fid) {
+		String queryString = "FROM EFormData e WHERE e.demographicId = :demographicNo AND e.formId = :formId and status = '1' ORDER BY e.formDate DESC, e.formTime DESC";
+		Query query = entityManager.createQuery(queryString);
+		query.setParameter("demographicNo", demographicNo);
+		query.setParameter("formId", fid);
+		return query.getResultList();
+	}
+	
 
 	public List<EFormData> findByFidsAndDates(TreeSet<Integer> fids, Date dateStart, Date dateEnd) {
 		if (fids == null || fids.isEmpty()) return null;
@@ -479,9 +489,10 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 	 */
 	public List<Integer> getDemographicNosMissingVarName(int fid, String varName) {
 
-		Query query = entityManager.createNativeQuery("select distinct d.demographic_no from eform e,eform_data d,eform_values v where e.fid = d.fid and d.fdid = v.fdid and d.demographic_no not in (select distinct d.demographic_no from eform e,eform_data d,eform_values v where e.fid = d.fid and d.fdid = v.fdid and e.fid=? and v.var_name=?)");
+		Query query = entityManager.createNativeQuery("select distinct d.demographic_no from eform e,eform_data d,eform_values v where e.fid = ? and e.fid = d.fid and d.fdid = v.fdid and d.fdid not in (select distinct d.fdid from eform e,eform_data d,eform_values v where e.fid = d.fid and d.fdid = v.fdid and e.fid=? and v.var_name=?)");
 		query.setParameter(1, fid);
-		query.setParameter(2, varName);
+		query.setParameter(2, fid);
+		query.setParameter(3, varName);
 
 		List<Integer> results = query.getResultList();
 
@@ -509,8 +520,17 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 			Date date = (Date)results.get(0)[0];
 			Date time = (Date)results.get(0)[1];
 			
-			date.setTime(date.getTime()+time.getTime());
-			return date;
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(time);
+			int timeComponentInMillis = ((cal.get(Calendar.HOUR_OF_DAY)*60*60) + (cal.get(Calendar.MINUTE)*60) + cal.get(Calendar.SECOND))*1000;
+			
+			//date.setTime(date.getTime()+timeComponentInMillis);
+			
+		//	cal.setTime(date);
+		//	cal.add(Calendar.MILLISECOND, timeComponentInMillis);
+			
+			Date d = new Date(date.getTime() + timeComponentInMillis);
+			return d;
 		}
 		
 		return null;
