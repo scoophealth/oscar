@@ -108,11 +108,15 @@ public class OscarJobService extends AbstractServiceImpl {
 			to.setOscarJobType(new OscarJobTypeTo1());
 			BeanUtils.copyProperties(result.getOscarJobType(), to.getOscarJobType());
 			
-			CronTrigger trigger = new CronTrigger(result.getCronExpression());
-			ScheduledFuture<Object> future = OscarJobExecutingManager.getFutures().get(result.getId());
-			
-			to.setNextPlannedExecutionDate(trigger.nextExecutionTime(new SimpleTriggerContext()));
-			
+			if(result.getCronExpression() != null) {
+				CronTrigger trigger = new CronTrigger(result.getCronExpression());
+				//ScheduledFuture<Object> future = OscarJobExecutingManager.getFutures().get(result.getId());
+				
+				if(result.isEnabled()) {
+					to.setNextPlannedExecutionDate(trigger.nextExecutionTime(new SimpleTriggerContext()));
+				}
+				
+			}
 			response.getJobs().add(to);
 		}
 		return response;
@@ -214,7 +218,7 @@ public class OscarJobService extends AbstractServiceImpl {
 		
 		Integer jobId = null;
 		try {jobId = Integer.parseInt(params.getFirst("scheduleJobId"));}catch(NumberFormatException e){
-			//TODO: log error
+			//TODO: log error	
 			return null;
 		}	
 		
@@ -236,7 +240,7 @@ public class OscarJobService extends AbstractServiceImpl {
 		String cronExpression = "* * * * * *";
 		String[] parts = cronExpression.split(" ");
 		
-		parts[0] = "*";
+		parts[0] = "0";
 		parts[1] = generateCronTabItem(minuteChooser, minutes);
 		parts[2] = generateCronTabItem(hourChooser, hours);
 		parts[3] = generateCronTabItem(dayChooser, days);
@@ -261,7 +265,7 @@ public class OscarJobService extends AbstractServiceImpl {
 			}
 		}
 		
-		return null;
+		return getJob(jobId);
 	}
 	
 	private String generateCronTabItem(String chooser, List<String> values) {
@@ -349,11 +353,13 @@ public class OscarJobService extends AbstractServiceImpl {
 			job.setEnabled(false);
 		}
 		oscarJobManager.updateJob(getLoggedInInfo(),job);
-		try {
-			OscarJobUtils.scheduleJob(job);
-		}catch(Exception e) {
-			logger.warn("error scheduling job " + e);
+		
+		ScheduledFuture<Object> future = OscarJobExecutingManager.getFutures().get(job.getId());
+		if(future != null) {
+			future.cancel(false);
 		}
+		
+		
 		return getJob(jobId);
 	}
 }
