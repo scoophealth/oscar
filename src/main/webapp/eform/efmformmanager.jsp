@@ -25,6 +25,7 @@
 --%>
 <!DOCTYPE html>
 <%@ page import="oscar.eform.data.*, oscar.eform.*, java.util.*"%>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
@@ -165,7 +166,7 @@ $(function ()  {
 
 <tbody>
     <%
-    ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT);
+    ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(LoggedInInfo.getLoggedInInfoFromSession(request), orderBy, EFormUtil.CURRENT);
   for (int i=0; i<eForms.size(); i++) {
 	  HashMap<String, ? extends Object> curForm = eForms.get(i);
 %>
