@@ -293,23 +293,30 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 		var consultantPhone = noNull(consult.professionalSpecialist.phoneNumber);
 		var consultantFax = noNull(consult.professionalSpecialist.faxNumber);
 		var consultantAddress = noNull(consult.professionalSpecialist.streetAddress);
-		var patientName = consult.demographic.lastName+", "+consult.demographic.firstName;
-		var patientAddress = consult.demographic.address.address+", "+consult.demographic.address.city+", "+consult.demographic.address.province+" "+consult.demographic.address.postal;
+		var patientName = noNull(consult.demographic.lastName)+", "+noNull(consult.demographic.firstName);
 		var patientPhone = noNull(consult.demographic.phone);
 		var patientWorkPhone = noNull(consult.demographic.alternativePhone);
 		var patientBirthdate = formatDate(consult.demographic.dateOfBirth);
 		var patientSex = noNull(consult.demographic.sexDesc);
-		var patientHealthCardNo = consult.demographic.hin+" - "+consult.demographic.ver;
+		var patientHealthCardNo = noNull(consult.demographic.hin)+"-"+noNull(consult.demographic.ver);
+		var patientChartNo = noNull(consult.demographic.chartNo);
+		var patientAddress = "";
+		if (consult.demographic.address!=null) {
+			patientAddress = noNull(consult.demographic.address.address)+", "+noNull(consult.demographic.address.city)+", "+noNull(consult.demographic.address.province)+" "+noNull(consult.demographic.address.postal);
+		}
 		var appointmentDate = formatDate(consult.appointmentDate);
 		var appointmentTime = formatTime(consult.appointmentTime);
-		var patientChartNo = noNull(consult.demographic.chartNo);
 		var reason = noNull(consult.reasonForReferral);
 		var clinicalInfo = noNull(consult.clinicalInfo);
 		var concurrentProblems = noNull(consult.concurrentProblems);
 		var currentMeds = noNull(consult.currentMeds);
 		var allergies = noNull(consult.allergies);
-		var referringProvider = user.lastName+", "+user.firstName;
-		var mrp = consult.demographic.provider.lastName+", "+consult.demographic.provider.firstName;
+		var referringProvider = noNull(user.lastName)+", "+noNull(user.firstName);
+		var mrp = "";
+		if (consult.demographic.provider!=null) {
+			mrp = noNull(consult.demographic.provider.lastName)+", "+noNull(consult.demographic.provider.firstName);
+		}
+		
 		var reqId = consult.id;
 		var demoId = consult.demographicId;
 		var userId = user.providerNo;
