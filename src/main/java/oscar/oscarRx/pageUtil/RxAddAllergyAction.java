@@ -52,8 +52,8 @@ public final class RxAddAllergyAction extends Action {
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", "w", null)) {
-			throw new RuntimeException("missing required security object (_rx)");
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_allergy", "w", null)) {
+			throw new RuntimeException("missing required security object (_allergy)");
 		}
     	
             int id = Integer.parseInt(request.getParameter("ID"));

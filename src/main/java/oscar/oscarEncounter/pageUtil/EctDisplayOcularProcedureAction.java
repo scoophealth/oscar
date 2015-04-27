@@ -35,6 +35,7 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.eyeform.dao.EyeformOcularProcedureDao;
 import org.oscarehr.eyeform.model.EyeformOcularProcedure;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -46,6 +47,9 @@ public class EctDisplayOcularProcedureAction extends EctDisplayAction {
     private static final String cmd = "ocularprocedure";
 
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
+	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eyeform", "r", null)) {
+		throw new SecurityException("missing required security object (_eyeform)");
+	}
 
 	 try {
 	

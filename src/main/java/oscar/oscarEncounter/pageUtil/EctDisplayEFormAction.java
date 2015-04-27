@@ -37,6 +37,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.common.model.EFormData;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.eform.EFormUtil;
@@ -52,11 +53,9 @@ public class EctDisplayEFormAction extends EctDisplayAction {
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {                                                                                                  
 	try
 	{
-		boolean a = true;
-		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.eForms");
 		String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-		a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
-		if(!a) {
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eform", "r", null)) {
 			 return true; //eforms link won't show up on new CME screen.
 		} else {
 			

@@ -67,8 +67,8 @@ public final class RxShowAllergyAction extends DispatchAction {
     throws IOException, ServletException {
 
     	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
-		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_rx", "r", null)) {
-			throw new RuntimeException("missing required security object (_rx)");
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_allergy", "r", null)) {
+			throw new RuntimeException("missing required security object (_allergy)");
 		}
 		
         boolean useRx3=false;

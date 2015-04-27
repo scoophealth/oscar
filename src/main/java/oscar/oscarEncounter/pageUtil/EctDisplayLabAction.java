@@ -47,11 +47,16 @@ public class EctDisplayLabAction extends EctDisplayAction {
 	private static final String cmd = "labs";
     
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {          
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	
+	if(!securityInfoManager.hasPrivilege(loggedInInfo, "_lab", "r", null)) {
+		throw new SecurityException("missing required security object (_lab)");
+	}
      
 	  logger.debug("EctDisplayLabAction");
 	  
 	  CommonLabResultData comLab = new CommonLabResultData();
-        ArrayList<LabResultData> labs = comLab.populateLabResultsData(LoggedInInfo.getLoggedInInfoFromSession(request), "",bean.demographicNo, "", "","","U");
+        ArrayList<LabResultData> labs = comLab.populateLabResultsData(loggedInInfo, "",bean.demographicNo, "", "","","U");
         Collections.sort(labs);
 
         //set text for lefthand module title

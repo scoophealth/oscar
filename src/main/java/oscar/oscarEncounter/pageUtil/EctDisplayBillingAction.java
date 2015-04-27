@@ -60,6 +60,9 @@ public class EctDisplayBillingAction extends EctDisplayAction {
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
     	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    	if(!securityInfoManager.hasPrivilege(loggedInInfo, "_billing", "r", null)) {
+    		throw new SecurityException("missing required security object (_billing)");
+    	}
     	String appointmentNo = request.getParameter("appointment_no");
 
 
