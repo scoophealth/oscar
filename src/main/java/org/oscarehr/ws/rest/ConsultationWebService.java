@@ -537,6 +537,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	private void saveRequestAttachments(ConsultationRequestTo1 request) {
 		List<ConsultationAttachmentTo1> newAttachments = request.getAttachments();
 		List<ConsultDocs> currentDocs = consultationManager.getConsultRequestDocs(getLoggedInInfo(), request.getId());
+		if (newAttachments==null || currentDocs==null) return;
 		
 		//first assume all current docs detached (set delete)
 		for (ConsultDocs doc : currentDocs) {
@@ -567,6 +568,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	private void saveResponseAttachments(ConsultationResponseTo1 response) {
 		List<ConsultationAttachmentTo1> newAttachments = response.getAttachments();
 		List<ConsultResponseDoc> currentDocs = consultationManager.getConsultResponseDocs(getLoggedInInfo(), response.getId());
+		if (newAttachments==null || currentDocs==null) return;
 		
 		//first assume all current docs detached (set delete)
 		for (ConsultResponseDoc doc : currentDocs) {
