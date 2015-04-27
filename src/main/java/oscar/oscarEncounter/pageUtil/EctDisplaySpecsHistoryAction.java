@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.eyeform.dao.EyeformSpecsHistoryDao;
 import org.oscarehr.eyeform.model.EyeformSpecsHistory;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -44,6 +45,9 @@ public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
     private EyeformSpecsHistoryDao specsHistoryDao = (EyeformSpecsHistoryDao)SpringUtils.getBean(EyeformSpecsHistoryDao.class);
 	
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
+	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eyeform", "r", null)) {
+		throw new SecurityException("missing required security object (_eyeform)");
+	}
 
  try {
 

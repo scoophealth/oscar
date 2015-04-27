@@ -48,6 +48,7 @@ import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -57,10 +58,15 @@ import oscar.util.DateUtils;
 import ca.uhn.hl7v2.model.v26.message.ORU_R01;
 
 public class OruR01UploadAction extends Action {
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
     private static Logger logger = MiscUtils.getLogger();
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException  {
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_lab", "w", null)) {
+    		throw new SecurityException("missing required security object (_lab)");
+    	}
+    	
     	try {
 	        OruR01UploadForm oruR01UploadForm = (OruR01UploadForm) form;
 	        FormFile formFile=oruR01UploadForm.getUploadFile();

@@ -30,9 +30,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Properties;
-import java.util.Vector;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
@@ -43,7 +40,6 @@ import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.util.DateUtils;
-import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
 
@@ -55,14 +51,11 @@ public class EctDisplayConsultAction extends EctDisplayAction {
     private String cmd = "consultation";
  
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
+    	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 
     	String appointmentNo = bean.appointmentNo;
     	
-       boolean a = true;
-       Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.consultations");
-       String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-       a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
-       if(!a) {
+       if(!securityInfoManager.hasPrivilege(loggedInInfo, "_con", "r", null)) {
             return true; //Consultations link won't show up on new CME screen.
        } else {
             //set lefthand module heading and link
@@ -80,7 +73,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
             //grab all consultations for patient and add list item for each
             oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil theRequests;
             theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil();
-            theRequests.estConsultationVecByDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), bean.demographicNo);
+            theRequests.estConsultationVecByDemographic(loggedInInfo, bean.demographicNo);
             
             //determine cut off period for highlighting
             UserPropertyDAO pref = (UserPropertyDAO) WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("UserPropertyDAO");     

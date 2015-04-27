@@ -54,12 +54,11 @@ public class UnlinkDemographicAction  extends Action {
     
     @Override
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
-        
-    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
-			throw new SecurityException("missing required security object (_demographic)");
-		}
     	
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    	if(!securityInfoManager.hasPrivilege(loggedInInfo, "_lab", "u", null)) {
+			throw new SecurityException("missing required security object (_lab)");
+		}
 
 		//set the demographicNo in the patientLabRouting table 
         String reason = request.getParameter("reason");

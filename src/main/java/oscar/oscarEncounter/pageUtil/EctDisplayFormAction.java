@@ -32,9 +32,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
-import java.util.Vector;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -50,7 +47,6 @@ import oscar.OscarProperties;
 import oscar.oscarEncounter.data.EctFormData;
 import oscar.oscarLab.LabRequestReportLink;
 import oscar.util.DateUtils;
-import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
 public class EctDisplayFormAction extends EctDisplayAction {
@@ -71,11 +67,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 		}
     	
 		
-		boolean a = true;
-		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.forms");
-		String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-		a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
-		if (!a) {
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_form", "r", null)) {
 			return true; // The link of form won't show up on new CME screen.
 		} else {
 			try {

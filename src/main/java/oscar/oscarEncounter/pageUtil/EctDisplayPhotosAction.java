@@ -30,8 +30,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -43,7 +41,6 @@ import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.dms.EDocUtil.EDocSort;
 import oscar.util.DateUtils;
-import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
 public class EctDisplayPhotosAction extends EctDisplayAction {
@@ -52,14 +49,8 @@ public class EctDisplayPhotosAction extends EctDisplayAction {
 
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
-	 LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-	 
-	 boolean a = true;
- 	 ArrayList<Object> v = OscarRoleObjectPrivilege.getPrivilegePropAsArrayList("_newCasemgmt.documents");
-     String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-     a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (ArrayList) v.get(1));
-     a=true;
- 	if(!a) {
+	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	if(!securityInfoManager.hasPrivilege(loggedInInfo, "_edoc", "r", null)) {
  		return true; //The link of tickler won't show up on new CME screen.
  	} else {
 
