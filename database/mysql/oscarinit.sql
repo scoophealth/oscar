@@ -823,6 +823,8 @@ CREATE TABLE eform (
   showLatestFormOnly boolean NOT NULL,
   patient_independent boolean NOT NULL,
   roleType varchar(50) default NULL,
+  programNo int(10),
+  restrictToProgram tinyint(1),
   PRIMARY KEY  (fid),
   UNIQUE KEY id (fid)
 ) ;

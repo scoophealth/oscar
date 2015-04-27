@@ -47,6 +47,7 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
 		throw new SecurityException("missing required security object (_eform)");
 	}
 
+	  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
         //set text for lefthand module title
         Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Diagrams"));
         
@@ -63,7 +64,7 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
         
         winName = "AllDiagrams" + bean.demographicNo;
               
-        ArrayList<HashMap<String, ? extends Object>> eforms = EFormUtil.listEForms("eform_groups.group_name", "current", "Eye Form", null);
+        ArrayList<HashMap<String, ? extends Object>> eforms = EFormUtil.listEForms(loggedInInfo, "eform_groups.group_name", "current", "Eye Form", null);
         for(int x=0;x<eforms.size();x++) {
         	HashMap<String, ? extends Object> ht = eforms.get(x);
         	url = "popupPage(700,1000,'"+winName+"', '"+ request.getContextPath() +"/eform/efmformadd_data.jsp?fid="+ht.get("fid")+"&demographic_no="+bean.demographicNo+"&appointment="+bean.appointmentNo+"')";

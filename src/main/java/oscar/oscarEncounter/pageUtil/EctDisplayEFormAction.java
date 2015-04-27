@@ -59,6 +59,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 			 return true; //eforms link won't show up on new CME screen.
 		} else {
 			
+			LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		 	String omitTypeStr = request.getParameter("omit");
 		 	String[] omitTypes = new String[0];
 		 	if(omitTypeStr!=null) {
@@ -79,7 +80,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 	
 	        StringBuilder javascript = new StringBuilder("<script type=\"text/javascript\">");        
 	        String js = ""; 
-	        ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(EFormUtil.DATE, EFormUtil.CURRENT, roleName);//EFormUtil.listEForms(EFormUtil.DATE, EFormUtil.NAME, EFormUtil.CURRENT, roleName);
+	        ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(loggedInInfo, EFormUtil.DATE, EFormUtil.CURRENT, roleName);//EFormUtil.listEForms(EFormUtil.DATE, EFormUtil.NAME, EFormUtil.CURRENT, roleName);
 	        String key;
 	        int hash;
 	        String BGCOLOUR = request.getParameter("hC");
