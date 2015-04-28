@@ -1061,13 +1061,14 @@ public class DemographicExportAction4 extends Action {
 			ArrayList<Map<String,Object>> prevList = PreventionData.getPreventionData(loggedInInfo, Integer.valueOf(demoNo));
 			String phSummary, imSummary;
 			int cnt = 0;
+			Map<String,Object> prevTypes = Util.getPreventionTypes(loggedInInfo);
 			
 			for (Map<String, Object> prevMap : prevList) {
 				HashMap<String,Object> extraData = new HashMap<String,Object>();
 				extraData.putAll(PreventionData.getPreventionById((String) prevMap.get("id")));
 
 				String prevType = (String)prevMap.get("type");
-				if (Util.isNonImmunizationPrevention(prevType)) {
+				if (Util.isNonImmunizationPrevention(loggedInInfo, prevType, prevTypes)) {
 					if (exPastHealth) {
 						phSummary = null;
 						PastHealth pHealth = patientRec.addNewPastHealth();
@@ -1119,7 +1120,7 @@ public class DemographicExportAction4 extends Action {
 					if (StringUtils.filled((String)extraData.get("dose"))) immu.setDose((String)extraData.get("dose"));
 					if (StringUtils.filled((String)extraData.get("comments"))) immu.setNotes((String)extraData.get("comments"));
 
-					prevType = Util.getImmunizationType(prevType);
+					prevType = Util.getImmunizationType(loggedInInfo, prevType,prevTypes);
 					if (cdsDt.ImmunizationType.Enum.forString(prevType)!=null) {
 						immu.setImmunizationType(cdsDt.ImmunizationType.Enum.forString(prevType));
 					} else {

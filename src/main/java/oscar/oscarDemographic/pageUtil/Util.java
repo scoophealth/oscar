@@ -43,6 +43,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -54,6 +55,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -491,15 +493,16 @@ public class Util {
     	cmn.setNote(note);
     }
     
-    static private HashMap<String,String> preventionToImmunizationType = new HashMap<String,String>(); 
-    static private HashMap<String,String> immunizationToPreventionType = new HashMap<String,String>();
-    static private ArrayList<String> nonImmunizationPreventionType = new ArrayList<String>();
     
-    static private void setPreventionTypes() {
-    	if (!preventionToImmunizationType.isEmpty() && !immunizationToPreventionType.isEmpty() && !nonImmunizationPreventionType.isEmpty()) return;
-    	
-        PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-        ArrayList<HashMap<String,String>> prevTypeList = pdc.getPreventions();
+    
+    public static Map<String,Object> getPreventionTypes(LoggedInInfo loggedInInfo) {
+        HashMap<String,String> preventionToImmunizationType = new HashMap<String,String>(); 
+        HashMap<String,String> immunizationToPreventionType = new HashMap<String,String>();
+        ArrayList<String> nonImmunizationPreventionType = new ArrayList<String>();
+
+
+        PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance(loggedInInfo);
+        ArrayList<HashMap<String,String>> prevTypeList = pdc.getPreventions(loggedInInfo);
         
         for (HashMap<String,String> prevTypeHash : prevTypeList) {
             if (prevTypeHash != null && StringUtils.filled(prevTypeHash.get("layout"))) {
@@ -511,21 +514,37 @@ public class Util {
             	}
             }
         }
+        
+        Map<String,Object> results = new HashMap<String,Object>();
+        results.put("preventionToImmunizationType", preventionToImmunizationType);
+        results.put("immunizationToPreventionType", immunizationToPreventionType);
+        results.put("nonImmunizationPreventionType", nonImmunizationPreventionType);
+        
+        return results;
     }
     
-    static public String getImmunizationType(String preventionType) {
-    	if (preventionToImmunizationType.isEmpty()) setPreventionTypes();
-    	return preventionToImmunizationType.get(preventionType);
+    static public String getImmunizationType(LoggedInInfo loggedInInfo, String preventionType,Map<String,Object> prevTypesContainer) {
+    	HashMap<String,String> preventionToImmunizationType = (HashMap<String,String>)prevTypesContainer.get("preventionToImmunizationType");
+    	if(preventionToImmunizationType != null) {
+    		return preventionToImmunizationType.get(preventionType);
+    	}
+    	return null;
     }
     
-    static public String getPreventionType(String immunizationType) {
-    	if (immunizationToPreventionType.isEmpty()) setPreventionTypes();
-    	return immunizationToPreventionType.get(immunizationType);
+    static public String getPreventionType(LoggedInInfo loggedInInfo, String immunizationType, Map<String,Object> prevTypesContainer) {
+    	HashMap<String,String> immunizationToPreventionType =  (HashMap<String,String>)prevTypesContainer.get("immunizationToPreventionType");
+    	if(immunizationToPreventionType != null) {
+    		return immunizationToPreventionType.get(immunizationType);
+    	}
+    	return null;
     }
 
-    static public boolean isNonImmunizationPrevention(String type) {
-    	if (nonImmunizationPreventionType.isEmpty()) setPreventionTypes();
-    	return nonImmunizationPreventionType.contains(type);
+    static public boolean isNonImmunizationPrevention(LoggedInInfo loggedInInfo, String type, Map<String,Object> prevTypesContainer) {
+    	ArrayList<String> nonImmunizationPreventionType = (ArrayList<String>)prevTypesContainer.get("nonImmunizationPreventionType");
+    	if(nonImmunizationPreventionType != null) {
+    		return nonImmunizationPreventionType.contains(type);
+    	}
+    	return false;
     }
     
     static public String replaceTags(String s) {

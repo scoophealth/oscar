@@ -27,9 +27,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimerTask;
 
+import org.apache.cxf.common.util.StringUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.common.dao.SecurityDao;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.integration.born.BORN18MConnector;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
+
 import oscar.OscarProperties;
 
 public class BORN18MSchedulerJob extends TimerTask {
@@ -39,9 +47,33 @@ public class BORN18MSchedulerJob extends TimerTask {
 	private static final String uploadHour = oscarProperties.getProperty("born18m_upload_hour", "01");
 	private static final Logger logger = MiscUtils.getLogger();
 
+	private ProviderManager providerManager = SpringUtils.getBean(ProviderManager.class);
+	private SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
 	
 	@Override
 	public void run() {
+		
+		LoggedInInfo x = new LoggedInInfo();
+		
+		String jobProvider = OscarProperties.getInstance().getProperty("born18m_job_provider");
+		if(StringUtils.isEmpty(jobProvider)) {
+			logger.error("no born provider - set born18m_job_provider");
+			return;
+		}
+		
+		//load the provider record
+		Provider p = providerManager.getProvider(jobProvider);
+		if(p == null) {
+			logger.error("cannot load born provider: " + jobProvider);
+			return;
+		}
+		x.setLoggedInProvider(p);
+		
+		//load the first security record
+		for(Security sec : securityDao.findByProviderNo(p.getProviderNo())) {
+			x.setLoggedInSecurity(sec);
+			break;
+		}
 		
     	Calendar cal = Calendar.getInstance();
     	SimpleDateFormat sdf = new SimpleDateFormat("HH");
@@ -50,7 +82,7 @@ public class BORN18MSchedulerJob extends TimerTask {
 		logger.info("starting BORN18M upload job");
 		
 		BORN18MConnector c = new BORN18MConnector();
-        c.updateBorn();
+        c.updateBorn(x);
         
 		logger.info("done BORN18M upload job");
 	}

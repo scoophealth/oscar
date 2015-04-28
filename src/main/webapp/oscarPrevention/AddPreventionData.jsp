@@ -39,6 +39,7 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 <%
+  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
   DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
       		
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
@@ -102,8 +103,8 @@
   
   String prevResultDesc = request.getParameter("prevResultDesc");
 
-  PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-  HashMap<String,String> prevHash = pdc.getPrevention(prevention);
+  PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance(loggedInInfo);
+  HashMap<String,String> prevHash = pdc.getPrevention(loggedInInfo,prevention);
 
   String layoutType = prevHash.get("layout");
   if ( layoutType == null){
@@ -124,12 +125,12 @@
   }
   
   //calc age at time of prevention
-  Date dob = PreventionData.getDemographicDateOfBirth(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.valueOf(demographic_no));
+  Date dob = PreventionData.getDemographicDateOfBirth(loggedInInfo, Integer.valueOf(demographic_no));
   SimpleDateFormat fmt = new SimpleDateFormat(dateFmt);
   Date dateOfPrev = fmt.parse(prevDate);
   String age = UtilDateUtilities.calcAgeAtDate(dob, dateOfPrev);
   DemographicData demoData = new DemographicData();
-  String[] demoInfo = demoData.getNameAgeSexArray(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.valueOf(demographic_no));
+  String[] demoInfo = demoData.getNameAgeSexArray(loggedInInfo, Integer.valueOf(demographic_no));
   String nameage = demoInfo[0] + ", " + demoInfo[1] + " " + demoInfo[2] + " " + age;
 
   HashMap<String,String> genders = new HashMap<String,String>();

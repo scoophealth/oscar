@@ -911,7 +911,7 @@ public class EFormUtil {
 		for (String template : templates) {
 			if (StringUtils.isBlank(template)) continue;
 
-			String preventionType = getEqualIgnoreCase(preventionManager.getPreventionTypeList(), getContent("type", template, null));
+			String preventionType = getEqualIgnoreCase(preventionManager.getPreventionTypeList(loggedInInfo), getContent("type", template, null));
 			if (preventionType == null) continue;
 			
 			String preventionProvider = getContent("provider", template, eForm.getProviderNo());
