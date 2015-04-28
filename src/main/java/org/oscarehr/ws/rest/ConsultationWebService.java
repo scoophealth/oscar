@@ -198,10 +198,10 @@ public class ConsultationWebService extends AbstractServiceImpl {
 		
 		if (data.getId()==null) { //new consultation request
 			request = requestConverter.getAsDomainObject(getLoggedInInfo(), data);
-			request.setProfessionalSpecialist(consultationManager.getProfessionalSpecialist(data.getProfessionalSpecialist().getId()));
 		} else {
 			request = requestConverter.getAsDomainObject(getLoggedInInfo(), data, consultationManager.getRequest(getLoggedInInfo(), data.getId()));
 		}
+		request.setProfessionalSpecialist(consultationManager.getProfessionalSpecialist(data.getProfessionalSpecialist().getId()));
 		consultationManager.saveConsultationRequest(getLoggedInInfo(), request);
 	    if (data.getId()==null) data.setId(request.getId());
 	    
