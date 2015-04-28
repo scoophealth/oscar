@@ -333,16 +333,19 @@ function getPrintPage2(p_urgency, p_letterheadName, consult, user) {
 	var p_consultantPhone = noNull(consult.referringDoctor.phoneNumber);
 	var p_consultantFax = noNull(consult.referringDoctor.faxNumber);
 	var p_consultantAddress = noNull(consult.referringDoctor.streetAddress);
-	var p_patientName = consult.demographic.lastName+", "+consult.demographic.firstName;
-	var p_patientAddress = consult.demographic.address.address+", "+consult.demographic.address.city+", "+consult.demographic.address.province+" "+consult.demographic.address.postal;
+	var p_patientName = noNull(consult.demographic.lastName)+", "+noNull(consult.demographic.firstName);
 	var p_patientPhone = noNull(consult.demographic.phone);
 	var p_patientWorkPhone = noNull(consult.demographic.alternativePhone);
 	var p_patientBirthdate = formatDate(consult.demographic.dateOfBirth);
 	var p_patientSex = noNull(consult.demographic.sexDesc);
-	var p_patientHealthCardNo = consult.demographic.hin+" - "+consult.demographic.ver;
+	var p_patientHealthCardNo = noNull(consult.demographic.hin)+"-"+noNull(consult.demographic.ver);
+	var p_patientChartNo = noNull(consult.demographic.chartNo);
+	var patientAddress = "";
+	if (consult.demographic.address!=null) {
+		patientAddress = noNull(consult.demographic.address.address)+", "+noNull(consult.demographic.address.city)+", "+noNull(consult.demographic.address.province)+" "+noNull(consult.demographic.address.postal);
+	}
 	var p_appointmentDate = formatDate(consult.appointmentDate);
 	var p_appointmentTime = formatTime(consult.appointmentTime);
-	var p_patientChartNo = noNull(consult.demographic.chartNo);
 	var p_reason = noNull(consult.reasonForReferral);
 	var p_examination = noNull(consult.examination);
 	var p_impression = noNull(consult.impression);
@@ -351,8 +354,7 @@ function getPrintPage2(p_urgency, p_letterheadName, consult, user) {
 	var p_concurrentProblems = noNull(consult.concurrentProblems);
 	var p_currentMeds = noNull(consult.currentMeds);
 	var p_allergies = noNull(consult.allergies);
-	var p_referringProvider = user.lastName+", "+user.firstName;
-	var p_provider = user.lastName+", "+user.firstName;
+	var p_provider = noNull(user.lastName)+", "+noNull(user.firstName);
 	
 	return "<div class='center'><label class='large'>"+p_clinicName+"</label><br/><label>Consultation Response</label><br/></div><br/><table><tr><td><label>Date: </label>"+p_responseDate+"</td><td rowspan=6 width=10></td><td><label>Status: </label>"+p_urgency+"</td></tr><tr><td colspan=2></td></tr><tr><th>FROM:</th><th>TO:</th></tr><tr><td><p class='large'>"+p_letterheadName+"</p>"+p_letterheadAddress+"<br/><label>Tel: </label>"+p_letterheadPhone+"<br/><label>Fax: </label>"+p_letterheadFax+"</td><td><table><tr><th>Referring Doctor:</th><td>"+p_consultantName+"</td></tr><tr><th>Phone:</th><td>"+p_consultantPhone+"</td></tr><tr><th>Fax:</th><td>"+p_consultantFax+"</td></tr><tr><th>Address:</th><td>"+p_consultantAddress+"</td></tr></table></td></tr><tr><td colspan=2></td></tr><tr><td><table><tr><th>Patient:</th><td>"+p_patientName+"</td></tr><tr><th>Address:</th><td>"+p_patientAddress+"</td></tr><tr><th>Phone:</th><td>"+p_patientPhone+"</td></tr><tr><th>Work Phone:</th><td>"+p_patientWorkPhone+"</td></tr><tr><th>Birthdate:</th><td>"+p_patientBirthdate+"</td></tr></table></td><td><table><tr><th>Sex:</th><td>"+p_patientSex+"</td></tr><tr><th>Health Card No:</th><td>"+p_patientHealthCardNo+"</td></tr><tr><th>Appointment date:</th><td>"+p_appointmentDate+"</td></tr><tr><th>Appointment time:</th><td>"+p_appointmentTime+"</td></tr><tr><th>Chart No:</th><td>"+p_patientChartNo+"</td></tr></table></td></tr></table><br/><table><tr><th>Examination:</th></tr><tr><td>"+p_examination+"<hr></td></tr><tr><th>Impression:</th></tr><tr><td>"+p_impression+"<hr></td></tr><tr><th>Plan:</th></tr><tr><td>"+p_plan+"<hr></td></tr><tr><td></td></tr><tr><th>Reason for consultation: (Date: "+p_referralDate+")</th></tr><tr><td>"+p_reason+"<hr></td></tr><tr><th>Pertinent Clinical Information:</th></tr><tr><td>"+p_clinicalInfo+"<hr></td></tr><tr><th>Significant Concurrent Problems:</th></tr><tr><td>"+p_concurrentProblems+"<hr></td></tr><tr><th>Current Medications:</th></tr><tr><td>"+p_currentMeds+"<hr></td></tr><tr><th>Allergies:</th></tr><tr><td>"+p_allergies+"<hr></td></tr><tr><td><label>Consultant: </label>"+p_provider+"</td></tr><tr><td></td></tr><tr><td><div class='center'><em>Created by: OSCAR The open-source EMR www.oscarcanada.org</em></div></td></tr></table></body></html>";
 }
