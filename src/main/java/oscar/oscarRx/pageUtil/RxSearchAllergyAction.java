@@ -63,8 +63,8 @@ public final class RxSearchAllergyAction extends Action {
     HttpServletResponse response)
     throws IOException, ServletException {
 
-		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_rx", "r", null)) {
-			throw new RuntimeException("missing required security object (_rx)");
+		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_allergy", "r", null)) {
+			throw new RuntimeException("missing required security object (_allergy)");
 		}
 
 

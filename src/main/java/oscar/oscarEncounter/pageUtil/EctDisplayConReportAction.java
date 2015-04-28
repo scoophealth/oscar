@@ -51,6 +51,10 @@ public class EctDisplayConReportAction extends EctDisplayAction {
 
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	if(!securityInfoManager.hasPrivilege(loggedInInfo, "_eyeform", "r", null)) {
+		throw new SecurityException("missing required security object (_eyeform)");
+	}
 
 	 try {
 	
@@ -63,7 +67,7 @@ public class EctDisplayConReportAction extends EctDisplayAction {
 	    //Set lefthand module heading and link
 	    String winName = "ConReport" + bean.demographicNo;
 	    String pathview, pathedit;
-	    Demographic d= demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.valueOf(bean.demographicNo));
+	    Demographic d= demographicManager.getDemographic(loggedInInfo, Integer.valueOf(bean.demographicNo));
 	    pathview = request.getContextPath() + "/eyeform/ConsultationReportList.do?method=list&cr.demographicNo=" + bean.demographicNo + "&dmname=" + d.getFormattedName();
 	    pathedit = request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&demographicNo="+bean.demographicNo + "&appNo="+appointmentNo + "&flag=new&cpp="+cpp;
 	

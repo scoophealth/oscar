@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtilsOld;
 
 import oscar.oscarProvider.data.ProviderMyOscarIdData;
@@ -47,7 +48,7 @@ public class ProEditMyOscarIdAction extends Action {
         throws Exception
     {
         String forward;
-        String providerNo = (String) request.getSession().getAttribute("user");
+        String providerNo = LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo();
         if ( providerNo == null)
               return mapping.findForward("eject");
 

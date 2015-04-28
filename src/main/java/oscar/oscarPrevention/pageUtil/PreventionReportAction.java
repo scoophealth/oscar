@@ -73,7 +73,7 @@ public class PreventionReportAction extends Action {
 
 	   LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	   
-	   if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_report", "r", null)) {
+	   if(!securityInfoManager.hasPrivilege(loggedInInfo, "_report", "r", null)) {
  		  throw new SecurityException("missing required security object (_report)");
  	  }
 	   

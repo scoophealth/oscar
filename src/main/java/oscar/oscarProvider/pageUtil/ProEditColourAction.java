@@ -33,6 +33,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarProvider.data.ProviderColourUpdater;
 
@@ -43,7 +44,7 @@ public class ProEditColourAction extends Action {
         throws Exception
     {
         String forward;
-        String providerNo = (String) request.getSession().getAttribute("user");
+        String providerNo = LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo();
         if ( providerNo == null)
               return mapping.findForward("eject");
 
