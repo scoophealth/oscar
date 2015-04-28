@@ -108,21 +108,33 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 		}
 		consult.professionalSpecialist = $scope.specialists[index];
 	}
+
+	$scope.writeToBox = function(data, boxId){
+		var items = toArray(data.summaryItem);
+		var boxData = null;
+		for (var i=0; i<items.length; i++) {
+			boxData = addNewLine(items[i].displayName, boxData);
+		}
+		if (boxId=="clinicalInfo") consult.clinicalInfo = addNewLine(boxData, consult.clinicalInfo);
+		else if (boxId=="concurrentProblems") consult.concurrentProblems = addNewLine(boxData, consult.concurrentProblems);
+		else if (boxId=="currentMeds") consult.currentMeds = addNewLine(boxData, consult.currentMeds);
+	}
+	
 	
 	$scope.getFamilyHistory = function(boxId){
-		summaryService.getFamilyHistory(consult.demographicId).then(function(data){ writeToBox(data, boxId); });
+		summaryService.getFamilyHistory(consult.demographicId).then(function(data){ $scope.writeToBox(data, boxId); });
 	}
 	$scope.getMedicalHistory = function(boxId){
-		summaryService.getMedicalHistory(consult.demographicId).then(function(data){ writeToBox(data, boxId); });
+		summaryService.getMedicalHistory(consult.demographicId).then(function(data){ $scope.writeToBox(data, boxId); });
 	}
 	$scope.getOngoingConcerns = function(boxId){
-		summaryService.getOngoingConcerns(consult.demographicId).then(function(data){ writeToBox(data, boxId); });
+		summaryService.getOngoingConcerns(consult.demographicId).then(function(data){ $scope.writeToBox(data, boxId); });
 	}
 	$scope.getOtherMeds = function(boxId){
-		summaryService.getOtherMeds(consult.demographicId).then(function(data){ writeToBox(data, boxId); });
+		summaryService.getOtherMeds(consult.demographicId).then(function(data){ $scope.writeToBox(data, boxId); });
 	}
 	$scope.getReminders = function(boxId){
-		summaryService.getReminders(consult.demographicId).then(function(data){ writeToBox(data, boxId); });
+		summaryService.getReminders(consult.demographicId).then(function(data){ $scope.writeToBox(data, boxId); });
 	}
 	
 	$scope.toPatientSummary = function(){
@@ -482,16 +494,6 @@ function toArray(obj) { //convert single object to array
 	else return [obj];
 }
 
-function writeToBox(data, boxId) {
-	var items = toArray(data.summaryItem);
-	for (var i=0; i<items.length; i++) {
-		if (items[i].displayName!=null) {
-			if ($("#"+boxId).val().trim()!="") $("#"+boxId).val($("#"+boxId).val()+"\n");
-			$("#"+boxId).val($("#"+boxId).val()+items[i].displayName);
-		}
-	}
-}
-
 function pad0(n) {
 	var s = n.toString();
 	if (s.length==1) s = "0"+s;
@@ -532,4 +534,13 @@ function sortAttachmentDocs(arrayOfDocs) {
 		}
 		return 0;
 	});
+}
+
+function addNewLine(line, mssg) {
+	if (line==null || line.trim()=="") return mssg;
+	
+	if (mssg==null || mssg.trim()=="") mssg = line.trim();
+	else mssg += "\n" + line.trim();
+	
+	return mssg;
 }
