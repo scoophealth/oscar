@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 
@@ -44,7 +45,7 @@ public class ProEditPhoneNumAction extends Action {
         throws Exception
     {
         String forward;
-        String providerNo = (String) request.getSession().getAttribute("user");
+        String providerNo = LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo();
         if ( providerNo == null)
               return mapping.findForward("eject");
 

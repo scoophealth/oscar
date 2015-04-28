@@ -32,9 +32,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.Properties;
-import java.util.Vector;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -52,7 +49,6 @@ import oscar.oscarLab.ca.all.web.LabDisplayHelper;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.DateUtils;
-import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
 public class EctDisplayLabAction2 extends EctDisplayAction {
@@ -60,16 +56,12 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 	private static final String cmd = "labs";
 
 	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-
-		logger.debug("EctDisplayLabAction2");
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		logger.debug("EctDisplayLabAction2");
 		OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
 
-		boolean a = true;
-		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.labResult");
-		String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-		a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
-		if (!a) {
+		if(!securityInfoManager.hasPrivilege(loggedInInfo, "_lab", "r", null)) {
 			return true; // Lab result link won't show up on new CME screen.
 		} else {
 

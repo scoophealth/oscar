@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -39,7 +37,6 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.on.HRMResultsData;
 import oscar.util.DateUtils;
-import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
 public class EctDisplayHRMAction extends EctDisplayAction {
@@ -52,12 +49,8 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 	
 	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-
-		boolean a = true;
-		List v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.documents");
-		String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-		a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (List) v.get(1));
-		if(!a) {
+		
+    	if(!securityInfoManager.hasPrivilege(loggedInInfo, "_hrm", "r", null)) {
 			return true; //Prevention link won't show up on new CME screen.
 		} else {
 

@@ -1836,6 +1836,8 @@ insert into `secObjectName` (`objectName`) values ('_measurement');
 insert into `secObjectName` (`objectName`) values ('_lab');
 insert into `secObjectName` (`objectName`) values ('_prevention');
 insert into `secObjectName` (`objectName`) values ('_dxresearch');
+insert into `secObjectName` (`objectName`) values ('_allergy');
+insert into `secObjectName` (`objectName`) values ('_eyeform');
 
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
@@ -1944,6 +1946,8 @@ insert into `secObjPrivilege` values('doctor','_measurement','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_lab','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_prevention','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_dxresearch','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_allergy','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_eyeform','x',0,'999998');
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);
