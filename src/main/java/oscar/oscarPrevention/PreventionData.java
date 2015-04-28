@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.caisi_integrator.RemotePreventionHelper;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.common.dao.PreventionDao;
@@ -46,6 +47,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -59,7 +61,8 @@ public class PreventionData {
 	private static Logger log = MiscUtils.getLogger();
 	private static PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
 	private static PreventionExtDao preventionExtDao = (PreventionExtDao) SpringUtils.getBean("preventionExtDao");
-
+	private static ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+	
 	private PreventionData() {
 		// prevent instantiation
 	}
@@ -341,8 +344,20 @@ public class PreventionData {
 
 		PreventionDao dao = SpringUtils.getBean(PreventionDao.class);
 		for (Prevention pp : dao.findActiveByDemoId(demoNo)) {
-			PreventionItem pi = new PreventionItem(pp);
-			p.addPreventionItem(pi);
+			
+			if(pp.getRestrictToProgram() != null && pp.getRestrictToProgram().booleanValue() && pp.getProgramNo() != null) {
+				List<ProgramProvider> programProviders = programManager2.getProgramDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+				for(ProgramProvider programProvider:programProviders) {
+					if(programProvider.getProgramId().intValue() == pp.getProgramNo().intValue()) {
+						PreventionItem pi = new PreventionItem(pp);
+						p.addPreventionItem(pi);
+						break;
+					}
+				}
+			} else {
+				PreventionItem pi = new PreventionItem(pp);
+				p.addPreventionItem(pi);
+			}
 		}
 		return p;
 	}

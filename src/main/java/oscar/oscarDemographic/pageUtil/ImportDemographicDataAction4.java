@@ -1634,6 +1634,8 @@ import cdsDt.PersonNameStandard.OtherNames;
 
                 //IMMUNIZATIONS
                 Immunizations[] immuArray = patientRec.getImmunizationsArray();
+                Map<String,Object> prevTypes = Util.getPreventionTypes(loggedInInfo);
+                
                 for (int i=0; i<immuArray.length; i++) {
                     String preventionDate="", refused="0";
                     String preventionType=null, immExtra=null;
@@ -1648,7 +1650,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                     }
 
                     if (immuArray[i].getImmunizationType()!=null)
-                        preventionType = Util.getPreventionType(immuArray[i].getImmunizationType().toString());
+                        preventionType = Util.getPreventionType(loggedInInfo, immuArray[i].getImmunizationType().toString(),prevTypes);
 //					if (preventionType==null)
 //                    	preventionType = mapPreventionTypeByCode(immuArray[i].getImmunizationCode());
                     if (preventionType==null) {

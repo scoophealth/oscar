@@ -48,6 +48,7 @@ import org.oscarehr.common.model.BornTransmissionLog;
 import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EFormValue;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -154,7 +155,7 @@ public class BORN18MConnector {
 		return ((rourkeFdid!=null)?rourkeFdid:0) + "-" + ((nddsFdid!=null)?nddsFdid:0) +  "-" + ((report18mFdid!=null)?report18mFdid:0);
 	}
 	
-	public Object[] getXmlForDemographic(Integer demoNo) {
+	public Object[] getXmlForDemographic(LoggedInInfo loggedInInfo, Integer demoNo) {
 	   	String rourkeFormName = oscarProperties.getProperty("born18m_eform_rourke", "Rourke Baby Record");
     	String nddsFormName = oscarProperties.getProperty("born18m_eform_ndds", "Nipissing District Developmental Screen");
     	String rpt18mFormName = oscarProperties.getProperty("born18m_eform_report18m", "Summary Report: 18-month Well Baby Visit");
@@ -163,7 +164,7 @@ public class BORN18MConnector {
 		Integer nddsFdid = checkNddsDone(nddsFormName, demoNo);
 		Integer report18mFdid = checkReport18mDone(rpt18mFormName, demoNo);
 		
-		byte[] born18mXml = generateXml(demoNo, rourkeFdid, nddsFdid, report18mFdid, true);
+		byte[] born18mXml = generateXml(loggedInInfo, demoNo, rourkeFdid, nddsFdid, report18mFdid, true);
 		if(born18mXml == null) {
 			return null;
 		}
@@ -176,7 +177,7 @@ public class BORN18MConnector {
 		return new Object[]{rourkeFdid,nddsFdid,report18mFdid,decoded};
 	}
 	
-	public void updateBorn() {
+	public void updateBorn(LoggedInInfo loggedInInfo) {
     	String rourkeFormName = oscarProperties.getProperty("born18m_eform_rourke", "Rourke Baby Record");
     	String nddsFormName = oscarProperties.getProperty("born18m_eform_ndds", "Nipissing District Developmental Screen");
     	String rpt18mFormName = oscarProperties.getProperty("born18m_eform_report18m", "Summary Report: 18-month Well Baby Visit");
@@ -215,25 +216,25 @@ public class BORN18MConnector {
 
 		//Upload to BORN repository
 		for (Integer demoNo : rourkeFormDemoFdids.keySet()) {
-			uploadToBorn(demoNo, rourkeFormDemoFdids.get(demoNo), nddsFormDemoFdids.get(demoNo), rpt18mFormDemoFdids.get(demoNo));
+			uploadToBorn(loggedInInfo, demoNo, rourkeFormDemoFdids.get(demoNo), nddsFormDemoFdids.get(demoNo), rpt18mFormDemoFdids.get(demoNo));
 			nddsFormDemoFdids.remove(demoNo);
 			rpt18mFormDemoFdids.remove(demoNo);
 		}
 		for (Integer demoNo : nddsFormDemoFdids.keySet()) {
-			uploadToBorn(demoNo, null, nddsFormDemoFdids.get(demoNo), rpt18mFormDemoFdids.get(demoNo));
+			uploadToBorn(loggedInInfo, demoNo, null, nddsFormDemoFdids.get(demoNo), rpt18mFormDemoFdids.get(demoNo));
 			rpt18mFormDemoFdids.remove(demoNo);
 		}
 		for (Integer demoNo : rpt18mFormDemoFdids.keySet()) {
 			if (hasFormUploaded(rourkeFormName, demoNo) && hasFormUploaded(nddsFormName, demoNo)) {
-				uploadToBorn(demoNo, null, null, rpt18mFormDemoFdids.get(demoNo));
+				uploadToBorn(loggedInInfo, demoNo, null, null, rpt18mFormDemoFdids.get(demoNo));
 			}
 		}
 	}
 	
 
 	
-	private void uploadToBorn(Integer demographicNo, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid) {
-		byte[] born18mXml = generateXml(demographicNo, rourkeFdid, nddsFdid, report18mFdid,false);
+	private void uploadToBorn(LoggedInInfo loggedInInfo, Integer demographicNo, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid) {
+		byte[] born18mXml = generateXml(loggedInInfo, demographicNo, rourkeFdid, nddsFdid, report18mFdid,false);
 		if (born18mXml == null) return;
 		
 		BornTransmissionLog log = prepareLog();
@@ -377,7 +378,7 @@ public class BORN18MConnector {
 		return latestDate;	
 	}
 	
-	private byte[] generateXml(Integer demographicNo, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid, boolean useClinicInfoForOrganizationId) {
+	private byte[] generateXml(LoggedInInfo loggedInInfo, Integer demographicNo, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid, boolean useClinicInfoForOrganizationId) {
 		HashMap<String,String> suggestedPrefixes = new HashMap<String,String>();
 		suggestedPrefixes.put("http://www.w3.org/2001/XMLSchema-instance","xsi");
 		XmlOptions opts = new XmlOptions();
@@ -395,7 +396,7 @@ public class BORN18MConnector {
 			os = new ByteArrayOutputStream();
 			pw = new PrintWriter(os, true);
 			//pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-			xmlCreated = xml.addXmlToStream(pw, opts, rourkeFdid, nddsFdid, report18mFdid, useClinicInfoForOrganizationId);
+			xmlCreated = xml.addXmlToStream(loggedInInfo, pw, opts, rourkeFdid, nddsFdid, report18mFdid, useClinicInfoForOrganizationId);
 			
 			pw.close();
 			if (xmlCreated) return os.toByteArray();

@@ -31,10 +31,13 @@
 <%@ page import="org.oscarehr.common.model.PreventionsLotNrs"%>
 <%@ page import="org.oscarehr.common.dao.PreventionsLotNrsDao"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="java.util.*"%>
 <%@ page import="oscar.OscarProperties"%>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%
+  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    		
   String curProvider_no,userfirstname,userlastname;
   curProvider_no = (String) session.getAttribute("user");
   userfirstname = (String) session.getAttribute("userfirstname");
@@ -56,7 +59,7 @@
 
 <%
 ArrayList<String> inject_prev_list = new ArrayList<String>();
-ArrayList<HashMap<String,String>> prevList = PreventionDisplayConfig.getInstance().getPreventions();
+ArrayList<HashMap<String,String>> prevList = PreventionDisplayConfig.getInstance(loggedInInfo).getPreventions(loggedInInfo);
         for (int i=0; i<prevList.size(); i++){
             HashMap<String,Object> h = new HashMap<String,Object>();
             h.putAll(prevList.get(i));
