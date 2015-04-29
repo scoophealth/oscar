@@ -275,10 +275,10 @@
 		</div>
 	</div><!-- Alergies End -->	
 	<div class="col-md-6">
-		<h4>Current Medications: <button type="button" class="btn btn-success" style="padding:0px 10px;" ng-click="getOtherMeds('concurrentMedications');">Other Meds</button></h4>
+		<h4>Current Medications: <button type="button" class="btn btn-success" style="padding:0px 10px;" ng-click="getOtherMeds('currentMeds');">Other Meds</button></h4>
 		
 		<div class="well">
-			<textarea id="concurrentMedications" cols="80" rows="5" class="form-control" ng-model="consult.currentMeds" placeholder="Use the button above to insert Other Meds data from the patients chart"></textarea>
+			<textarea id="currentMeds" cols="80" rows="5" class="form-control" ng-model="consult.currentMeds" placeholder="Use the button above to insert Other Meds data from the patients chart"></textarea>
 		</div>
 	</div><!-- Current Medications End -->	
 	<div class="clear"></div>
