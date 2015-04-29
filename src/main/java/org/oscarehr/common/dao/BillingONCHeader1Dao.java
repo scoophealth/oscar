@@ -418,7 +418,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     }
      
      public List<BillingONCHeader1> get3rdPartyInvoiceByProvider(Provider p, Date start, Date end, Locale locale) {
-         String sql = "select distinct bCh1 from BillingONPayment bPay, BillingONCHeader1 bCh1 where bPay.billingNo=bCh1.id and bCh1.providerNo=? and bPay.paymentDate >= ? and bPay.paymentDate < ? order by bCh1.id";
+         String sql = "select distinct bCh1 from BillingONPayment bPay, BillingONCHeader1 bCh1 where bPay.billingNo=bCh1.id and bCh1.providerNo=? and bPay.paymentdate >= ? and bPay.paymentdate <= ? order by bCh1.id";
          Query query = entityManager.createQuery(sql);        
          query.setParameter(1, p.getProviderNo());  
          query.setParameter(2, start);
@@ -431,7 +431,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     }
      
      public List<BillingONCHeader1> get3rdPartyInvoiceByDate(Date start, Date end, Locale locale) {
-         String sql = "select distinct bCh1 from BillingONPayment bPay, BillingONCHeader1 bCh1 where bPay.billingNo=bCh1.id and bPay.paymentDate >= ? and bPay.paymentDate < ? order by bCh1.id";
+         String sql = "select distinct bCh1 from BillingONPayment bPay, BillingONCHeader1 bCh1 where bPay.billingNo=bCh1.id and bPay.paymentdate >= ? and bPay.paymentdate <= ? order by bCh1.id";
          Query query = entityManager.createQuery(sql);               
          query.setParameter(1, start);
          query.setParameter(2, end);
@@ -617,7 +617,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 			app.and("h.demographicNo = :demographicNo", "demographicNo", demoNo);
 		}
 		if(paymentStartDate != null) {
-			app.and("bp.paymentDate >= :paymentStartDate", "paymentStartDate", paymentStartDate);
+			app.and("bp.paymentdate >= :paymentStartDate", "paymentStartDate", paymentStartDate);
 		} 
 		if(paymentEndDate != null) {
 			Calendar cal = Calendar.getInstance();
@@ -626,7 +626,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 			cal.set(Calendar.HOUR_OF_DAY, 0);
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
-			app.and("bp.paymentDate < :paymentEndDate", "paymentEndDate", cal.getTime());
+			app.and("bp.paymentdate < :paymentEndDate", "paymentEndDate", cal.getTime());
 		}
 		
         app.addOrder("h.billingDate, h.billingTime");
@@ -669,7 +669,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		app.and("ch1.billingDate <= :endDate", "endDate", (new SimpleDateFormat("yyyy-MM-dd")).format(endDate));
 		
 		if(paymentStartDate != null) {
-			app.and("bp.paymentDate >= :paymentStartDate", "paymentStartDate", paymentStartDate);
+			app.and("bp.paymentdate >= :paymentStartDate", "paymentStartDate", paymentStartDate);
 		} 
 		if(paymentEndDate != null) {
 			Calendar cal = Calendar.getInstance();
@@ -678,7 +678,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 			cal.set(Calendar.HOUR_OF_DAY, 0);
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
-			app.and("bp.paymentDate < :paymentEndDate", "paymentEndDate", cal.getTime());
+			app.and("bp.paymentdate < :paymentEndDate", "paymentEndDate", cal.getTime());
 		}
 		
 		if(visitLocation != null && !BillingStatusPrep.ANY_VISIT_LOCATION.equals(visitLocation)) {
