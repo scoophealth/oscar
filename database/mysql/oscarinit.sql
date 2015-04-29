@@ -10635,6 +10635,7 @@ CREATE TABLE `faxes` (
   `faxline` varchar(11),
   `destination` varchar(11),
   `status` varchar(32),
+  `statusString` varchar(255),
   `document` text,
   `numPages` int(11),
   `stamp` datetime,
