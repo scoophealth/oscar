@@ -45,6 +45,10 @@ public class AppManager {
 
 	@Autowired
 	private AppUserDao appUserDao;
+	
+	@Autowired
+	private SecurityInfoManager securityInfoManager;
+	
 
 	public List<AppDefinitionTo1> getAppDefinitions(LoggedInInfo loggedInInfo){
 		List<AppDefinition> appList = appDefinitionDao.findAll();
@@ -73,6 +77,34 @@ public class AppManager {
 		}
 		
 		return returningAppList;
+	}
+	
+	public AppDefinition saveAppDefinition(LoggedInInfo loggedInInfo,  AppDefinition appDef){
+		//Can user create new AppDefinitions?
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_appDefinition", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		
+		appDefinitionDao.persist(appDef);
+		
+		//--- log action ---
+		if (appDef!=null) {
+			LogAction.addLogSynchronous(loggedInInfo, "AppManager.saveAppDefinition", "id=" + appDef.getId());
+		}
+		return appDef;
+	}
+	
+	public AppDefinition getAppDefinition(LoggedInInfo loggedInInfo,  String appName){
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_appDefinition", "r", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		AppDefinition appDef = appDefinitionDao.findByName(appName);
+		
+		//--- log action ---
+		if (appDef!=null) {
+			LogAction.addLogSynchronous(loggedInInfo, "AppManager.getAppDefinition", "id=" + appDef.getId());
+		}
+		return appDef;
 	}
 
 	
