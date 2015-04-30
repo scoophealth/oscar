@@ -127,6 +127,18 @@ padding:8px;
 @media print {
  .noprint {display:none;}
 }
+
+/*for patient header*/
+@media (max-width: 1320px) {
+.patientHeaderName{
+font-size:26px
+}
+
+.patientHeaderExt{
+font-size:20px
+}
+
+}
 </style>
 
 </head>
