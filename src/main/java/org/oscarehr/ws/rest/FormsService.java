@@ -70,7 +70,6 @@ import org.oscarehr.ws.rest.to.model.FormListTo1;
 import org.oscarehr.ws.rest.to.model.FormTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.*;
 
 import oscar.eform.EFormExportZip;
 import oscar.oscarEncounter.data.EctFormData;
