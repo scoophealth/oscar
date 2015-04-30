@@ -38,8 +38,16 @@
 <input type="hidden" name="demographicNo" value="<%=request.getParameter("demographicNo")%>"/>
 <input type="hidden" name="letterheadFax" value="<%=request.getParameter("letterheadFax")%>"/>
 <input type="hidden" name="fax" value="<%=request.getParameter("fax")%>"/>
-<input type="hidden" name="consultResponsePage" value="<%=request.getParameter("consultResponsePage")%>"/>
 
+<%
+	String consultResponsePage = request.getParameter("consultResponsePage");
+	if (consultResponsePage!=null) {
+	%>
+		<input type="hidden" name="consultResponsePage" value="<%=consultResponsePage%>"/>
+	<%
+	}
+%>
+	
 <%
 	String[] faxRecipients = request.getParameterValues("faxRecipients");
 
