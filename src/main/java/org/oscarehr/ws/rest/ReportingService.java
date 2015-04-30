@@ -142,7 +142,7 @@ public class ReportingService extends AbstractServiceImpl {
 		GenericRESTResponse response = new GenericRESTResponse();
 		
 		if(StringUtils.isEmpty(json.getName()) || json.getEformId() == 0) {
-			response.setSucess(false);
+			response.setSuccess(false);
 			response.setMessage("Need required fields");
 			return response;
 		}

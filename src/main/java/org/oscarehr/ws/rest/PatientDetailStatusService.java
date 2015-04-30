@@ -39,6 +39,7 @@ import org.oscarehr.integration.mchcv.HCValidator;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.model.PatientDetailStatusTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -135,5 +136,14 @@ public class PatientDetailStatusService extends AbstractServiceImpl {
 			logger.error("Error doing HCValidation", ex);
 		}
 		return result;
+	}
+	
+	@GET
+	@Path("/getAlternative")
+	@Produces({MediaType.APPLICATION_JSON})
+	public GenericRESTResponse getAlternative() {
+		GenericRESTResponse response = new GenericRESTResponse();
+		response.setSuccess(oscarProperties.isPropertyActive("ALT_PATIENT_DETAIL_UI"));
+		return response;
 	}
 }
