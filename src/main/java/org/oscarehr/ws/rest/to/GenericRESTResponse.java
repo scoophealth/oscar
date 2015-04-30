@@ -33,7 +33,7 @@ public class GenericRESTResponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private boolean sucess = true;
+	private boolean success = true;
 	
 	private String message;
 	
@@ -42,16 +42,16 @@ public class GenericRESTResponse implements Serializable {
 	}
 	
 	public GenericRESTResponse(boolean success, String message) {
-		this.sucess = success;
-		this.message = message;
+		setSuccess(success);
+		setMessage(message);
 	}
 
-	public boolean isSucess() {
-		return sucess;
+	public boolean isSuccess() {
+		return success;
 	}
 
-	public void setSucess(boolean sucess) {
-		this.sucess = sucess;
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 
 	public String getMessage() {
