@@ -318,9 +318,9 @@ public class PersonaService extends AbstractServiceImpl {
 			
 			propDao.saveProp(prop);
 			
-			response.setSucess(true);
+			response.setSuccess(true);
 		} else {
-			response.setSucess(false);
+			response.setSuccess(false);
 		}
 		
 		

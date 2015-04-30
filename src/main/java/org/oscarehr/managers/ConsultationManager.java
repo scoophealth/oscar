@@ -23,24 +23,43 @@
  */
 package org.oscarehr.managers;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
+
+import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.ConsultRequestDao;
 import org.oscarehr.common.dao.ConsultResponseDao;
 import org.oscarehr.common.dao.ConsultResponseDocDao;
 import org.oscarehr.common.dao.ConsultationServiceDao;
+import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.ConsultResponseDoc;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ConsultationResponse;
 import org.oscarehr.common.model.ConsultationServices;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Property;
 import org.oscarehr.common.model.Provider;
@@ -52,7 +71,17 @@ import org.oscarehr.ws.rest.to.model.ConsultationResponseSearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lowagie.text.DocumentException;
+
+import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.v26.message.ORU_R01;
+import ca.uhn.hl7v2.model.v26.message.REF_I12;
+import oscar.dms.EDoc;
+import oscar.dms.EDocUtil;
 import oscar.log.LogAction;
+import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
+import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.oscarLab.ca.on.LabResultData;
 
 @Service
 public class ConsultationManager {
@@ -71,6 +100,12 @@ public class ConsultationManager {
 	ConsultResponseDocDao responseDocDao;
 	@Autowired
 	PropertyDao propertyDao;
+	@Autowired
+	Hl7TextInfoDao hl7TextInfoDao;
+	@Autowired
+	ClinicDAO clinicDao;
+	@Autowired
+	DemographicManager demographicManager;
 	@Autowired
 	SecurityInfoManager securityInfoManager;
 
@@ -256,6 +291,66 @@ public class ConsultationManager {
 		List<Property> results = propertyDao.findByName(CON_RESPONSE_ENABLED);
 		if (results.size()>0 && ENABLED_YES.equals(results.get(0).getValue())) return true;
 		return false;
+	}
+
+	/*
+	 * Send consultation request electronically
+	 * Copied and modified from
+	 * 	oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestAction.java
+	 */
+	public void doHl7Send(LoggedInInfo loggedInInfo, Integer consultationRequestId) throws HL7Exception, InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, DocumentException, ServletException {
+		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		
+		ConsultationRequest consultationRequest=consultationRequestDao.find(consultationRequestId);
+		ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
+		Clinic clinic=clinicDao.getClinic();
+		
+		// set status now so the remote version shows this status
+		consultationRequest.setStatus("2");
+
+		REF_I12 refI12=RefI12.makeRefI12(clinic, consultationRequest);
+		SendingUtils.send(loggedInInfo, refI12, professionalSpecialist);
+		
+		// save after the sending just in case the sending fails.
+		consultationRequestDao.merge(consultationRequest);
+		
+		//--- send attachments ---
+		Provider sendingProvider=loggedInInfo.getLoggedInProvider();
+		Demographic demographic=demographicManager.getDemographic(loggedInInfo, consultationRequest.getDemographicId());
+
+		//--- process all documents ---
+		ArrayList<EDoc> attachments=EDocUtil.listDocs(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), EDocUtil.ATTACHED);
+		for (EDoc attachment : attachments)
+		{
+			ObservationData observationData=new ObservationData();
+			observationData.subject=attachment.getDescription();
+			observationData.textMessage="Attachment for consultation : "+consultationRequestId;
+			observationData.binaryDataFileName=attachment.getFileName();
+			observationData.binaryData=attachment.getFileBytes();
+
+			ORU_R01 hl7Message=OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);		
+			SendingUtils.send(loggedInInfo, hl7Message, professionalSpecialist);			
+		}
+		
+		//--- process all labs ---
+		CommonLabResultData labData = new CommonLabResultData();
+		ArrayList<LabResultData> labs = labData.populateLabResultsData(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), CommonLabResultData.ATTACHED);
+		for (LabResultData attachment : labs)
+		{
+			byte[] dataBytes=LabPDFCreator.getPdfBytes(attachment.getSegmentID(), sendingProvider.getProviderNo());
+			Hl7TextInfo hl7TextInfo=hl7TextInfoDao.findLabId(Integer.parseInt(attachment.getSegmentID()));
+			
+			ObservationData observationData=new ObservationData();
+			observationData.subject=hl7TextInfo.getDiscipline();
+			observationData.textMessage="Attachment for consultation : "+consultationRequestId;
+			observationData.binaryDataFileName=hl7TextInfo.getDiscipline()+".pdf";
+			observationData.binaryData=dataBytes;
+
+			
+			ORU_R01 hl7Message=OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);		
+			int statusCode=SendingUtils.send(loggedInInfo, hl7Message, professionalSpecialist);
+			if (HttpServletResponse.SC_OK!=statusCode) throw(new ServletException("Error, received status code:"+statusCode));
+		}
 	}
 	
 	
