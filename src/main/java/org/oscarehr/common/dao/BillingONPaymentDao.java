@@ -316,10 +316,11 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
      public static BigDecimal calculatePaymentTotal(List<BillingONPayment> paymentRecords) {
         
          BigDecimal paidTotal = new BigDecimal("0.00");
-         BillingONExtDao bExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");    
+         //BillingONExtDao bExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");    
          for (BillingONPayment bPay : paymentRecords) {
                           
-             BigDecimal amtPaid = bExtDao.getPayment(bPay);
+             //BigDecimal amtPaid = bExtDao.getPayment(bPay);
+        	 BigDecimal amtPaid = bPay.getTotal_payment();
              paidTotal = paidTotal.add(amtPaid);                                   
          }
          
@@ -329,10 +330,11 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
     public static BigDecimal calculateRefundTotal(List<BillingONPayment> paymentRecords) {
         
          BigDecimal refundTotal = new BigDecimal("0.00");
-         BillingONExtDao bExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");       
+         //BillingONExtDao bExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");       
          for (BillingONPayment bPay : paymentRecords) {
                           
-             BigDecimal amtRefunded = bExtDao.getRefund(bPay);
+             //BigDecimal amtRefunded = bExtDao.getRefund(bPay);
+        	 BigDecimal amtRefunded = bPay.getTotal_refund();
              refundTotal = refundTotal.add(amtRefunded);                                   
          }
          
