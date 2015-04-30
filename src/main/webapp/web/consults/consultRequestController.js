@@ -41,16 +41,14 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 	for (var i=0; i<consult.serviceList.length; i++) {
 		if (consult.serviceList[i].serviceId==consult.serviceId) {
 			$scope.specialists = toArray(consult.serviceList[i].specialists);
-			
-			for (var j=0; j<$scope.specialists.length; j++) {
-				if ($scope.specialists[j].id==consult.professionalSpecialist.id) {
-					$("#specId").val(j);
-					break;
-				}
-			}
 			break;
 		}
 	}
+	angular.forEach($scope.specialists, function(spec) {
+		if (spec.id == consult.professionalSpecialist.id) {
+			consult.professionalSpecialist = spec;
+		}
+	});
 	
 	//set attachments
 	consult.attachments = toArray(consult.attachments);
@@ -99,15 +97,6 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 		$scope.specialists = toArray(consult.serviceList[index].specialists);
 		consult.professionalSpecialist = null;
 	};
-	
-	$scope.changeSpecialist = function(){
-		var index = $("#specId").val();
-		if (index==null) {
-			consult.professionalSpecialist = null;
-			return;
-		}
-		consult.professionalSpecialist = $scope.specialists[index];
-	}
 
 	$scope.writeToBox = function(data, boxId){
 		var items = toArray(data.summaryItem);
@@ -256,6 +245,12 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 	//end modal controller
 	
 	
+	//show/hide e-send button
+	$scope.setESendEnabled = function(){
+		$scope.eSendEnabled = consult.professionalSpecialist!=null && consult.professionalSpecialist.eDataUrl!=null && consult.professionalSpecialist.eDataUrl.trim()!="";
+	}
+	$scope.setESendEnabled(); //execute once on form open
+	
 	$scope.save = function(){
 		if ($scope.invalidData()) return false;
 		
@@ -265,6 +260,7 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 		consultService.saveRequest(consult).then(function(data){
 			if (consult.id==null) $location.path("/consults/"+data.id);
 		});
+		$scope.setESendEnabled();
 		$scope.consultSaving = false; //hide saving banner
 		$scope.consultChanged = -1; //reset change count
 		return true;
@@ -282,6 +278,14 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 //		var faxRecipients = *additional fax recipients (can be >1)*
 		
 		window.open("../fax/CoverPage.jsp?reqId="+reqId+"&demographicNo="+demographicNo+"&letterheadFax="+letterheadFax+"&fax="+fax);
+	}
+	
+	$scope.eSend = function(){
+		if ($scope.eSendEnabled) {
+			consultService.eSendRequest(consult.id).then(function(data){
+				alert(data.message);
+			});
+		}
 	}
 	
 	$scope.printPreview = function(){

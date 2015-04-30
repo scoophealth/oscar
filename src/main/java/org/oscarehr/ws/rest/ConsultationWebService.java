@@ -67,6 +67,7 @@ import org.oscarehr.ws.rest.conversion.ConsultationServiceConverter;
 import org.oscarehr.ws.rest.conversion.DemographicConverter;
 import org.oscarehr.ws.rest.conversion.ProfessionalSpecialistConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
+import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.model.ConsultationAttachmentTo1;
 import org.oscarehr.ws.rest.to.model.ConsultationRequestSearchResult;
 import org.oscarehr.ws.rest.to.model.ConsultationRequestTo1;
@@ -128,18 +129,18 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public AbstractSearchResponse<ConsultationRequestSearchResult> searchRequests(JSONObject json) {
-		AbstractSearchResponse<ConsultationRequestSearchResult> response = new AbstractSearchResponse<ConsultationRequestSearchResult>();
+		AbstractSearchResponse<ConsultationRequestSearchResult> rp = new AbstractSearchResponse<ConsultationRequestSearchResult>();
 				
 		int count = consultationManager.getConsultationCount(convertRequestJSON(json));
 
 		if(count>0) {
 			List<ConsultationRequestSearchResult> items =  consultationManager.search(getLoggedInInfo(), convertRequestJSON(json));
 			//convert items to a ConsultationRequestSearchResult object
-			response.setContent(items);
-			response.setTotal(count);
+			rp.setContent(items);
+			rp.setTotal(count);
 		}
 		
-		return response;
+		return rp;
 	}
 	
 	@GET
@@ -211,6 +212,23 @@ public class ConsultationWebService extends AbstractServiceImpl {
 		return data;
 	}
 	
+	@GET
+	@Path("/eSendRequest")
+	@Produces(MediaType.APPLICATION_JSON)
+	public GenericRESTResponse eSendRequest(@QueryParam("requestId")Integer requestId) {
+		GenericRESTResponse rp = new GenericRESTResponse();
+		try {
+            consultationManager.doHl7Send(getLoggedInInfo(), requestId);
+            rp.setSuccess(true);
+            rp.setMessage("Referral Electronically Sent");
+        } catch (Exception e) {
+        	MiscUtils.getLogger().error("Error contacting remote server.", e);
+        	rp.setSuccess(false);
+        	rp.setMessage("There was an error sending electronically, please try again or manually process the referral.");
+        }
+		return rp;
+	}
+	
 	
 	/********************************
 	 * Consultation Response methods *
@@ -220,17 +238,17 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public AbstractSearchResponse<ConsultationResponseSearchResult> searchResponses(JSONObject json) {
-		AbstractSearchResponse<ConsultationResponseSearchResult> response = new AbstractSearchResponse<ConsultationResponseSearchResult>();
+		AbstractSearchResponse<ConsultationResponseSearchResult> rp = new AbstractSearchResponse<ConsultationResponseSearchResult>();
 				
 		int count = consultationManager.getConsultationCount(convertResponseJSON(json));
 
 		if(count>0) {
 			List<ConsultationResponseSearchResult> items =  consultationManager.search(getLoggedInInfo(), convertResponseJSON(json));
 			//convert items to a ConsultationResponseSearchResult object
-			response.setContent(items);
-			response.setTotal(count);
+			rp.setContent(items);
+			rp.setTotal(count);
 		}
-		return response;
+		return rp;
 	}
 	
 	@GET
