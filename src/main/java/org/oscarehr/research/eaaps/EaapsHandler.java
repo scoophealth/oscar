@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -40,19 +41,18 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.common.dao.QueueDocumentLinkDao;
 import org.oscarehr.common.dao.SecRoleDao;
-import org.oscarehr.common.dao.StudyDataDao;
 import org.oscarehr.common.dao.UserDSMessagePrefsDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
-import org.oscarehr.common.model.StudyData;
 import org.oscarehr.common.model.UserDSMessagePrefs;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
-
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.log.LogAction;
@@ -77,8 +77,6 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 
 	private static Logger logger = Logger.getLogger(EaapsHandler.class);
 
-	private StudyDataDao studyDataDao = SpringUtils.getBean(StudyDataDao.class);
-
 	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 
 	private QueueDocumentLinkDao queueDocumentLinkDao = SpringUtils.getBean(QueueDocumentLinkDao.class);
@@ -94,6 +92,8 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 	private ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
 
 	private SecRoleDao secRoleDao = SpringUtils.getBean(SecRoleDao.class);
+	
+	private DxresearchDAO dxresearchDAO = SpringUtils.getBean(DxresearchDAO.class);
 
 	@Override
 	public void init(String hl7Body) throws HL7Exception {
@@ -123,21 +123,36 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 			logger.info("Processing hash code " + hash);
 		}
 
-		StudyData studyData = studyDataDao.findSingleByContent(hash);
-		if (studyData == null) {
-			throw new IllegalStateException("Unable to determine demographic info for " + hash);
+	    //loop through asthma dx registry / create hash and compare it to hash in report.  If it is get demographic object . if not check the next.
+		List<Dxresearch> asthmaRegList =  dxresearchDAO.findActive("icd9", "493");
+		int countNumberOfDemographicsCompared = 0;
+		Demographic demo = null;
+		for(Dxresearch dxresearch: asthmaRegList){
+			demo = demographicDao.getDemographicById(dxresearch.getDemographicNo());
+			if (demo != null) {
+				countNumberOfDemographicsCompared++;
+				EaapsHash dxListHash = new EaapsHash(demo);
+				if (hash.equals(dxListHash.getHash())){
+					logger.debug(demo.getDemographicNo()+" report hash "+hash+" computed hash "+dxListHash.getHash()+" Match! no need to keep looking"); 
+					break;
+				}else{
+					logger.debug(demo.getDemographicNo()+" report hash "+hash+" computed hash "+dxListHash.getHash());
+					demo = null;//Set this to null so the last entry in the loop isn't used 
+				}
+			}
 		}
-		Demographic demo = demographicDao.getDemographicById(studyData.getDemographicNo());
+		
 		if (demo == null) {
 			throw new IllegalStateException("Demographic record is not available for " + hash);
 		}
+		
 		if (logger.isInfoEnabled()) {
-			logger.info("Loaded demographic " + demo.getDemographicNo() + " for hash code " + hash);
+			logger.info("Loaded demographic " + demo.getDemographicNo() + " for hash code " + hash+" found in "+countNumberOfDemographicsCompared+" comparisons ");
 		}
 
 		// create edoc
 		if (fileName != null) {
-			String provider = getProvider(message, studyData, demo); 
+			String provider = getProvider(message, demo); 
 						
 			String description = "eAAPS Action plan for " + demo.getFormattedName();
 
@@ -170,7 +185,7 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 
 		String recommendations = message.getRecommendations();
 		if (recommendations != null && !recommendations.isEmpty()) {
-			String provider = getProvider(message, studyData, demo);
+			String provider = getProvider(message, demo);
 			addCaseManagementNote(demo, recommendations, CaseManagementNoteLink.CASEMGMTNOTE, false, provider);
 			if (logger.isInfoEnabled()) {
 				logger.info("Added recommendations successfully.");
@@ -197,14 +212,12 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 	 * 
 	 * @param message
 	 * 		HL7 message 
-	 * @param studyData
-	 * 		Study record for the demographic
 	 * @param demo
 	 * 		Demographic record to be associated with the document
 	 * @return
 	 * 		Returns the provider ID
 	 */
-	private String getProvider(EaapsMessageSupport message, StudyData studyData, Demographic demo) {
+	private String getProvider(EaapsMessageSupport message, Demographic demo) {
 	    if (message.getOrderingProvider() != null) {
 	    	return message.getOrderingProvider();
 	    }
@@ -213,9 +226,7 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 	    	 return demo.getProviderNo();
 	    }
 	    
-	    if (studyData.getProviderNo() != null) {
-	    	return studyData.getProviderNo();
-	    }
+	   
 	    
 	    return SYSTEM_PROVIDER;
     }
@@ -311,7 +322,7 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 		String docSubClass = "eaap";
 		String contentType = "application/pdf";
 		String observationDate = ConversionUtils.toDateString(new Date());
-		String providerId = getProvider(message, null, demo); 
+		String providerId = getProvider(message,  demo); 
 		String docCreator = providerId;
 		String responsible = providerId;
 		String reviewer = "";
