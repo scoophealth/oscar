@@ -359,7 +359,7 @@ public class BillingSavePrep {
 		valsMap.put("remitTo",val.getParameter("remitto"));
                 valsMap.put("total",val.getParameter("gstBilledTotal"));
                 if (val.getParameter("submit").equalsIgnoreCase("Settle & Print Invoice")) {
-                    valsMap.put("total_payment", valsMap.get("total_payment"));
+                    valsMap.put("total_payment", val.getParameter("total_payment"));
                 }
                 else {
                     valsMap.put("total_payment", val.getParameter("total_payment"));
