@@ -36,7 +36,7 @@ angular.module("patientDetailStatusServices", [])
 				console.log(data);
 				deferred.resolve(data);
 			}).error(function(){
-				console.log("error fetching Integrator status");
+				console.log("error fetching patient detail status");
 				deferred.reject("An error occured while fetching items");
 			});
 			return deferred.promise;
@@ -48,7 +48,19 @@ angular.module("patientDetailStatusServices", [])
 				console.log(data);
 				deferred.resolve(data);
 			}).error(function(){
-				console.log("error fetching Integrator status");
+				console.log("error fetching validate heatlh card data");
+				deferred.reject("An error occured while fetching items");
+			});
+			return deferred.promise;
+		},
+		
+		getAlternative: function(){
+			var deferred = $q.defer();
+			$http.get(this.apiPath+"/getAlternative",this.configHeaders).success(function(data){
+				console.log(data);
+				deferred.resolve(data);
+			}).error(function(){
+				console.log("error fetching patient detail ui alternative");
 				deferred.reject("An error occured while fetching items");
 			});
 			return deferred.promise;

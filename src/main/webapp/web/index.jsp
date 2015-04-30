@@ -370,6 +370,7 @@ font-size:20px
 	<script src="record/summary/summaryController.js"></script>
 	<script src="record/forms/formsController.js"></script>
 	<script src="record/details/detailsController.js"></script>
+	<script src="record/details/detailsControllerAlt.js"></script>
 	<script src="record/phr/phrController.js"></script>
 	<script src="record/tracker/trackerController.js"></script>
 	
