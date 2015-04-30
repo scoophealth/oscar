@@ -66,6 +66,7 @@ public class JdbcBillingReviewImpl {
 	private BillingONExtDao extDao = SpringUtils.getBean(BillingONExtDao.class);
 	private BillingONPaymentDao payDao = SpringUtils.getBean(BillingONPaymentDao.class);
 	private BillingServiceDao serviceDao = SpringUtils.getBean(BillingServiceDao.class);
+	BillingOnItemPaymentDao billOnItemPaymentDao = (BillingOnItemPaymentDao)SpringUtils.getBean(BillingOnItemPaymentDao.class);
 	
 	public String getCodeFee(String val, String billReferalDate) {
 		String retval = null;
@@ -152,7 +153,7 @@ public class JdbcBillingReviewImpl {
 			for(String[] b : bills) {
 				String prevId = null;
 				String prevPaid = null;
-				BillingOnItemPaymentDao billOnItemPaymentDao = (BillingOnItemPaymentDao)SpringUtils.getBean(BillingOnItemPaymentDao.class);
+				
 				boolean bSameBillCh1 = false;
 				ch1Obj = new BillingClaimHeader1Data();
 				ch1Obj.setId(b[0]);
@@ -166,7 +167,7 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setProvider_ohip_no(b[8]);
 				ch1Obj.setUpdate_datetime(b[9]);
 				ch1Obj.setTotal(b[10]);
-				ch1Obj.setPaid(b[11]);
+				//ch1Obj.setPaid(b[11]);
 				ch1Obj.setClinic(b[12]);
 				//ch1Obj.setTotal(b[13]);//fee is not total?
 				ch1Obj.setSer_num(b[15]); //14 is service code
@@ -179,8 +180,22 @@ public class JdbcBillingReviewImpl {
 					}
 				}
 				
+				if("PAT".equals(ch1Obj.getPay_program())){
+					BigDecimal amountPaid = billOnItemPaymentDao.getAmountPaidByItemId(Integer.parseInt(b[17]));
+					ch1Obj.setPaid(amountPaid.toString());					
+				} else {
+					if( prevId==null && prevPaid==null) {
+						ch1Obj.setPaid(b[11]);
+					} else if(prevId!=null && prevPaid!=null && !ch1Obj.getId().equals(prevId) ) {
+						ch1Obj.setPaid(b[11]);
+					} else {
+						ch1Obj.setPaid("0.00");			
+					}
+				}
 				retval.add(ch1Obj);
 				
+				prevId = ch1Obj.getId();
+				prevPaid = b[11];
 			}
 
 		}
@@ -198,6 +213,9 @@ public class JdbcBillingReviewImpl {
 		List<BillingClaimHeader1Data> retval = new ArrayList<BillingClaimHeader1Data>();		
 		try {
 			for (BillingONCHeader1 h : dao.findByMagic(Arrays.asList(billType), statusType, providerNo, ConversionUtils.fromDateString(startDate), ConversionUtils.fromDateString(endDate), ConversionUtils.fromIntString(demoNo),visitLocation, ConversionUtils.fromDateString(paymentStartDate), ConversionUtils.fromDateString(paymentEndDate))) {
+				String prevId = null;
+				String prevPaid = null;
+				
 				BillingClaimHeader1Data ch1Obj = new BillingClaimHeader1Data();
 				ch1Obj.setId("" + h.getId());
 				ch1Obj.setDemographic_no("" + h.getDemographicNo());
@@ -323,10 +341,18 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setUpdate_datetime(ConversionUtils.toTimestampString(ch1.getTimestamp()));
 				ch1Obj.setClinic(ch1.getClinic());
 				ch1Obj.setPay_program(ch1.getPayProgram());
-				if (!(ch1Obj.getId().equals(prevId) && ch1.getPaid().equals(prevPaid))) {
-					ch1Obj.setPaid(ch1.getPaid().toString());
+				
+				if("PAT".equals(ch1.getPayProgram()) ){ 
+					BigDecimal amountPaid = billOnItemPaymentDao.getAmountPaidByItemId(bi.getId());
+					ch1Obj.setPaid(amountPaid.toString());
+					ch1Obj.setBilling_on_item_id(bi.getId().toString());
 				} else {
-					ch1Obj.setPaid("0.00");
+					if( prevId==null && prevPaid==null) {
+						ch1Obj.setPaid(ch1.getPaid().toString());
+					} else if(prevId!=null && prevPaid!=null && !ch1Obj.getId().equals(prevId) ) {
+						ch1Obj.setPaid(ch1.getPaid().toString());
+					} else
+						ch1Obj.setPaid("0.00");				
 				}
 				ch1Obj.setTotal(bi.getFee());
 				ch1Obj.setRec_id(bi.getDx());
