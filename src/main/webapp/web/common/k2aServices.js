@@ -42,6 +42,31 @@ angular.module("k2aServices", [])
                 	deferred.reject("An error occured while getting k2a content");
                 });
            return deferred.promise;
-        }
+        },
+        isK2AInit: function () {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/app/K2AActive',
+                method: "GET",
+                headers: this.configHeaders,
+              }).success(function (data) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers) {
+                	deferred.reject("An error occured while getting k2a content");
+                });
+           return deferred.promise;
+        },
+        initK2A: function(clinicName){
+           	var deferred = $q.defer();
+           	 $http.post(this.apiPath+'/app/K2AInit',clinicName).success(function(data){
+               	console.log("returned from /K2AInit",data);
+               	deferred.resolve(data);
+               }).error(function(){
+               	console.log("error initializing k2a");
+               	deferred.reject("An error occured while trying to initialize k2a");
+               });
+        
+             return deferred.promise;
+         }
     };
 });
