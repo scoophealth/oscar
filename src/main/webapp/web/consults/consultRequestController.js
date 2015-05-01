@@ -138,7 +138,7 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 	}
 	
 	$scope.toPatientSummary = function(){
-		$location.path("/record/"+consult.demographicId+"/summary");
+		$location.url("/record/"+consult.demographicId+"/summary");
 	}
 	
 	$scope.toPatientConsultRequestList = function(){
@@ -268,6 +268,10 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 		$scope.consultSaving = false; //hide saving banner
 		$scope.consultChanged = -1; //reset change count
 		return true;
+	}
+	
+	$scope.close = function(){
+		$location.path("/consults").search($location.search());
 	}
 	
 	$scope.sendFax = function(){
