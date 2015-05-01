@@ -29,13 +29,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.MiscUtils;
+
 import org.oscarehr.ws.rest.to.model.SummaryItemTo1;
 import org.oscarehr.ws.rest.to.model.SummaryTo1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class IssueNoteSummary implements Summary {
-	private static Logger logger = MiscUtils.getLogger();
+	
     
 	@Autowired
 	private CaseManagementManager caseManagementMgr;
