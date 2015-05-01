@@ -24,24 +24,6 @@ oscarApp.controller('ConsultResponseListCtrl', function ($scope, $timeout, $loca
     		return resp;
     	});
     }
-
-    //get parameter "demographicId"
-    var demographicId = $location.search().demographicId;
-    
-    $scope.updateDemographicNo = function(item, model, label) {
-    	demographicService.getDemographic(model).then(function(data){
-    		$scope.search.demographicNo=data.demographicNo;
-    		
-    		if ($scope.consult==null) $scope.consult = {};
-    		$scope.consult.demographicName = data.lastName + "," + data.firstName;
-    		
-    		//Refresh screen with search results if "demographicId" is passed
-    		if (demographicId!=null) {
-    			$scope.doSearch();
-    			demographicId = null;
-    		}
-    	});
-    }
 	
     $scope.searchMrps  = function(term) {
     	var search = {searchTerm:term, active:true};
@@ -59,17 +41,29 @@ oscarApp.controller('ConsultResponseListCtrl', function ($scope, $timeout, $loca
 		
 		if ($scope.consult==null) $scope.consult = {};
 		$scope.consult.mrpName = model.name;
+		
+		$scope.doSearch();
     }
     
-    //Show patient referral history if "demographicId" is passed
-    if (demographicId!=null) $scope.updateDemographicNo(null, demographicId);
+    $scope.updateDemographicNo = function(item, model, label) {
+    	demographicService.getDemographic(model).then(function(data){
+    		$scope.search.demographicNo=data.demographicNo;
+    		
+    		if ($scope.consult==null) $scope.consult = {};
+    		$scope.consult.demographicName = data.lastName + "," + data.firstName;
+    		
+   			$scope.doSearch();
+    	});
+    }
+
+    //get parameter "demographicId"
+    $scope.demographicId = $location.search().demographicId;
+    
+    //Show patient response history if "demographicId" is passed
+    if ($scope.demographicId!=null) $scope.updateDemographicNo(null, $scope.demographicId);
     
 
 
-	$scope.addConsult = function() {
-		$location.path("/consultResponses/new/"+$scope.search.demographicNo);
-	}
-	
     $scope.checkAll = function() {
         angular.forEach($scope.lastResponse, function (item) {
             item.checked = true;
@@ -82,12 +76,21 @@ oscarApp.controller('ConsultResponseListCtrl', function ($scope, $timeout, $loca
         })
     }
     
+	$scope.addConsult = function() {
+		var url = "/consultResponses/new/"+$scope.search.demographicNo;
+		if ($scope.demographicId==null) $location.url(url);
+		else $location.path(url).search({"demographicId":$scope.demographicId});
+	}
+	
 	$scope.editConsult = function(consult) {
-		$location.path("/consultResponses/"+consult.id);
+		var url = "/consultResponses/"+consult.id;
+		if ($scope.demographicId==null) $location.url(url);
+		else $location.path(url).search({"demographicId":$scope.demographicId});
 	}
 	
 	$scope.doSearch = function() {
 		$scope.tableParams.reload();
+		$scope.demographicId = $scope.search.demographicNo;
 	}
 	
     $scope.removeDemographicAssignment = function() {
@@ -104,7 +107,7 @@ oscarApp.controller('ConsultResponseListCtrl', function ($scope, $timeout, $loca
     	$scope.removeDemographicAssignment(); 	 
     	$scope.removeMrpAssignment();
     	$scope.search = angular.copy({team:'All Teams', startIndex:0, numToReturn:10});
-    	$scope.tableParams.reload();
+    	$scope.doSearch();
     }
 
 	//set search statuses
