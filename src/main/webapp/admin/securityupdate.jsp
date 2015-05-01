@@ -28,11 +28,21 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=true%>">
-	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.userAdmin");%>
+<security:oscarSec roleName="<%=roleName$%>"
+        objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r"
+        reverse="<%=true%>">
+        <%response.sendRedirect("../logout.jsp");
+        authed=false;
+        %>
 </security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 
 <%@ page import="java.sql.*, java.util.*,java.security.*,oscar.*,oscar.oscarDB.*" errorPage="errorpage.jsp"%>
