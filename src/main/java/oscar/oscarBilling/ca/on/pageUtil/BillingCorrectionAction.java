@@ -306,11 +306,11 @@ public class BillingCorrectionAction extends DispatchAction{
             bCh1.setPayProgram(payProgram);
             bCh1.setRefNum(request.getParameter("rdohip"));
             bCh1.setVisitType(request.getParameter("visittype"));            
-            bCh1.setAdmissionDate(visitDate);
             bCh1.setFaciltyNum(request.getParameter("clinic_ref_code"));                        
             bCh1.setManReview(manualReview);                        
             bCh1.setBillingDate(billingDate); 
-            bCh1.setAdmissionDate(visitDate);
+            if(visitDate!=null) 
+            	bCh1.setAdmissionDate(visitDate);
             bCh1.setProviderNo(request.getParameter("provider_no"));
             bCh1.setComment(request.getParameter("comment"));           
             bCh1.setProviderOhipNo(provider.getOhipNo());
