@@ -34,14 +34,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oscarehr.common.dao.DaoTestFixtures;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.MessageTblDao;
-import org.oscarehr.common.dao.StudyDao;
-import org.oscarehr.common.dao.StudyDataDao;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.MessageTbl;
-import org.oscarehr.common.model.Study;
-import org.oscarehr.common.model.StudyData;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -91,6 +89,17 @@ public class EaapsHandlerTest extends DaoTestFixtures {
 			demoDao.save(demo);
 		}
 		
+		DxresearchDAO dxresearchDAO = SpringUtils.getBean(DxresearchDAO.class);
+		Dxresearch dxresearch = new Dxresearch();
+		
+		dxresearch.setCodingSystem("icd9");
+		dxresearch.setDemographicNo(demo.getDemographicNo());
+		dxresearch.setStatus('A');
+		dxresearch.setDxresearchCode("493");
+		
+		dxresearchDAO.persist(dxresearch);
+		
+		/* Study is no longer running
 		StudyDao studyDao = SpringUtils.getBean(StudyDao.class);
 		Study study = studyDao.findByName("eAAPS Study");
 		if (study == null) {
@@ -114,6 +123,7 @@ public class EaapsHandlerTest extends DaoTestFixtures {
 			studyData.setContent(getHash(demo));
 			studyDataDao.saveEntity(studyData);
 		}
+		*/
 		
 		String hl7 = getHL7(demo);
 		EaapsHandler handler = new EaapsHandler();
