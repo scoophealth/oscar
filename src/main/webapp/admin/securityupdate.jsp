@@ -30,12 +30,20 @@
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
 %>
 <security:oscarSec roleName="<%=roleName$%>"
         objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r"
         reverse="<%=true%>">
-        <%response.sendRedirect("../logout.jsp");%>
+        <%response.sendRedirect("../logout.jsp");
+        authed=false;
+        %>
 </security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <%@ page import="java.sql.*, java.util.*,java.security.*,oscar.*,oscar.oscarDB.*, oscar.util.SqlUtils" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
