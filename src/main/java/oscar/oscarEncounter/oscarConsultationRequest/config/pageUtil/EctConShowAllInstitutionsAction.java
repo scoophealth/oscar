@@ -33,11 +33,20 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 public class EctConShowAllInstitutionsAction extends Action {
+	private static SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
 	   public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
 			   throws ServletException, IOException {
+		   
+			if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "r", null)) {
+				throw new SecurityException("missing required security object (_con)");
+			}
+			
 			      EctConShowAllInstitutionsForm showAllInstitutionsForm = (EctConShowAllInstitutionsForm)form;
 			      String id = showAllInstitutionsForm.getId();
 			      String name = showAllInstitutionsForm.getName();
