@@ -354,9 +354,9 @@ function getPrintPage2(p_urgency, p_letterheadName, consult, user) {
 	var p_patientSex = noNull(consult.demographic.sexDesc);
 	var p_patientHealthCardNo = noNull(consult.demographic.hin)+"-"+noNull(consult.demographic.ver);
 	var p_patientChartNo = noNull(consult.demographic.chartNo);
-	var patientAddress = "";
+	var p_patientAddress = "";
 	if (consult.demographic.address!=null) {
-		patientAddress = noNull(consult.demographic.address.address)+", "+noNull(consult.demographic.address.city)+", "+noNull(consult.demographic.address.province)+" "+noNull(consult.demographic.address.postal);
+		p_patientAddress = noNull(consult.demographic.address.address)+", "+noNull(consult.demographic.address.city)+", "+noNull(consult.demographic.address.province)+" "+noNull(consult.demographic.address.postal);
 	}
 	var p_appointmentDate = formatDate(consult.appointmentDate);
 	var p_appointmentTime = formatTime(consult.appointmentTime);
