@@ -38,15 +38,23 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.ServiceSpecialistsDao;
 import org.oscarehr.common.model.ServiceSpecialists;
 import org.oscarehr.common.model.ServiceSpecialistsPK;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class EctConDisplayServiceAction extends Action {
    
 	private ServiceSpecialistsDao dao = SpringUtils.getBean(ServiceSpecialistsDao.class);
+	private static SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
    throws ServletException, IOException {
+	   
+	   if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "r", null)) {
+		   throw new SecurityException("missing required security object (_con)");
+	   }
+	   
       EctConDisplayServiceForm displayServiceForm = (EctConDisplayServiceForm)form;
       String serviceId = displayServiceForm.getServiceId();
       String specialists[] = displayServiceForm.getSpecialists();
