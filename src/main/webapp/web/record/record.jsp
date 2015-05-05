@@ -72,7 +72,7 @@
         <div class="include-record-peice" ui-view></div>
     </div>
     
-    <div class="row">
+    <div class="row noprint">
     	<div id="noteInput2" class="center-block well col-md-4 col-md-offset-3 text-center hand-hover" style="padding:0px;" ng-click="toggleNote();">
     		<span class="glyphicon glyphicon-chevron-up"></span><span class="glyphicon glyphicon-chevron-up"></span><span class="glyphicon glyphicon-chevron-up"></span>
     	</div>
