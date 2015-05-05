@@ -159,11 +159,11 @@
 		</tbody>
 
 		<tfoot ng-show="consultWriteAccess">
-			<tr>
+			<!-- <tr>
 				<td colspan="12" class="white">
 					<a ng-click="checkAll()" class="hand-hover"><bean:message key="consult.list.checkAll" bundle="ui"/></a> - <a ng-click="checkNone()" class="hand-hover"><bean:message key="consult.list.checkNone" bundle="ui"/></a>								
 				</td>
-			</tr>
+			</tr> -->
 		</tfoot>
 		
 	</table>
