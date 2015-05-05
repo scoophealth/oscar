@@ -67,6 +67,8 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
 		}
     	
     	String reqId = (String) request.getAttribute("reqId");
+    	if (request.getParameter("reqId")!=null) reqId = request.getParameter("reqId");
+    	
 		String demoNo = request.getParameter("demographicNo");
 		ArrayList<EDoc> docs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
 		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
