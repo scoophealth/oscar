@@ -146,10 +146,10 @@ public class PapReport implements PreventionReport {
                    numMonths = ""+num+" months";
                 }
 
-                // if prevDate is less than as of date and greater than 2 years prior
+                // if prevDate is less than as of date and greater than 3 years prior
                 Calendar bonusEl = Calendar.getInstance();
                 bonusEl.setTime(asofDate);
-                bonusEl.add(Calendar.MONTH,-30);
+                bonusEl.add(Calendar.MONTH,-36);
                 //bonusEl.add(Calendar.YEAR,-2);
                 Date bonusStartDate = bonusEl.getTime();
 
