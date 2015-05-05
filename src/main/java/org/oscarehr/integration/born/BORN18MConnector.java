@@ -75,20 +75,38 @@ public class BORN18MConnector {
     	String nddsFormName = oscarProperties.getProperty("born18m_eform_ndds", "Nipissing District Developmental Screen");
     	String rpt18mFormName = oscarProperties.getProperty("born18m_eform_report18m", "Summary Report: 18-month Well Baby Visit");
     	
+    	logger.debug("form names retrieved from properties");
+    			
 		EForm rourkeForm = eformDao.findByName(rourkeFormName);
 		EForm nddsForm = eformDao.findByName(nddsFormName);
 		EForm rpt18mForm = eformDao.findByName(rpt18mFormName);
 
+		logger.debug("loaded eforms");
+		
 		List<Integer> rourkeFormDemoList = new ArrayList<Integer>();
 		List<Integer> nddsFormDemoList = new ArrayList<Integer>();
 		List<Integer> rpt18mFormDemoList = new ArrayList<Integer>();
 		
-		if (rourkeForm==null) logger.error(rourkeFormName+" form not found!");
-		else buildDemoNos(rourkeForm, rourkeFormDemoList);
-		if (nddsForm==null) logger.error(nddsFormName+" form not found!");
-		else buildDemoNos(nddsForm, nddsFormDemoList);
-		if (rpt18mForm==null) logger.error(rpt18mFormName+" form not found!");
-		else buildDemoNos(rpt18mForm, rpt18mFormDemoList);
+		logger.debug("intialized lists");
+		
+		if (rourkeForm==null) {
+			logger.error(rourkeFormName+" form not found!");
+		} else {
+			logger.debug("build demographic id list for rourke");
+			buildDemoNos(rourkeForm, rourkeFormDemoList);
+		}
+		if (nddsForm==null) {
+			logger.error(nddsFormName+" form not found!");
+		} else {
+			logger.debug("build demographic id list for ndds");
+			buildDemoNos(nddsForm, nddsFormDemoList);
+		}
+		if (rpt18mForm==null) {
+			logger.error(rpt18mFormName+" form not found!");
+		} else {
+			logger.debug("build demographic id list for 18m report");
+			buildDemoNos(rpt18mForm, rpt18mFormDemoList);
+		}
     	
 		logger.debug("rourke demo list size " + rourkeFormDemoList.size());
 		logger.debug("ndds demo list size " + nddsFormDemoList.size());
@@ -237,11 +255,13 @@ public class BORN18MConnector {
 	}
 	
 	private void buildDemoNos(EForm eform, List<Integer> demoList) {
-		List<EFormData> eformDataList = eformDataDao.findByFormId(eform.getId());
 		logger.debug("buildDemoNos() running for eform " + eform.getFormName());
+		List<EFormData> eformDataList = eformDataDao.findByFormId(eform.getId());
+		logger.debug("loaded eformData list for " + eform.getFormName());
 		for (EFormData eformData : eformDataList) {
 			if (!demoList.contains(eformData.getDemographicId())) demoList.add(eformData.getDemographicId());
 		}
+		logger.debug("completed building demoList for eform " + eform.getFormName());
 	}
 	
 	private Integer checkRourkeDone(String rourkeFormName, Integer demographicNo) {
