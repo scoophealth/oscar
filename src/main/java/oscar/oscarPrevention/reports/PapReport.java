@@ -125,13 +125,13 @@ public class PapReport implements PreventionReport {
 
 
                     Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.YEAR, -2);
+                cal.add(Calendar.YEAR, -3);
                 Date dueDate = cal.getTime();
                 cal.add(Calendar.MONTH,-6);
                 Date cutoffDate = cal.getTime();
 
                 Calendar cal2 = GregorianCalendar.getInstance();
-                cal2.add(Calendar.YEAR, -2);
+                cal2.add(Calendar.YEAR, -3);
 
                 //cal2.roll(Calendar.YEAR, -1);
                 cal2.add(Calendar.MONTH,-6);
