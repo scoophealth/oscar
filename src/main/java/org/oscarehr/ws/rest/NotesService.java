@@ -599,7 +599,7 @@ public class NotesService extends AbstractServiceImpl {
 		if(!newNote) {
 						
 			if (note.isArchived() ){
-				note.setArchived(true);
+				caseMangementNote.setArchived(true);
 			}
 			
 			note.setRevision(Integer.parseInt(note.getRevision())+1 + "");	
