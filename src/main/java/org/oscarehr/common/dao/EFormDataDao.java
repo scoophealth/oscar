@@ -237,6 +237,18 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 
 		return results;
 	}
+	
+	public List<Integer> findDemographicNosByFormId(Integer formId) {
+
+		Query query = entityManager.createQuery("select x.demographicId from " + modelClass.getSimpleName() + " x where x.formId = ?1 and x.current = 1");
+		query.setParameter(1, formId);
+
+		@SuppressWarnings("unchecked")
+		List<Integer> results = query.getResultList();
+
+		return results;
+	}
+	
     
     public List<Integer> findAllFdidByFormId(Integer formId)
 	{

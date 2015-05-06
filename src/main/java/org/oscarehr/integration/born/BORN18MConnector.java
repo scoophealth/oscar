@@ -256,10 +256,10 @@ public class BORN18MConnector {
 	
 	private void buildDemoNos(EForm eform, List<Integer> demoList) {
 		logger.debug("buildDemoNos() running for eform " + eform.getFormName());
-		List<EFormData> eformDataList = eformDataDao.findByFormId(eform.getId());
+		List<Integer> eformDataList = eformDataDao.findDemographicNosByFormId(eform.getId());
 		logger.debug("loaded eformData list for " + eform.getFormName());
-		for (EFormData eformData : eformDataList) {
-			if (!demoList.contains(eformData.getDemographicId())) demoList.add(eformData.getDemographicId());
+		for (Integer eformData : eformDataList) {
+			if (!demoList.contains(eformData)) demoList.add(eformData);
 		}
 		logger.debug("completed building demoList for eform " + eform.getFormName());
 	}
