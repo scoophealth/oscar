@@ -360,6 +360,11 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 $(function (){ 
 	$('#BillDate').datepicker();
 }); 
+
+$( document ).ready(function() {
+parent.parent.resizeIframe($('html').height()+300);
+});
+
 </script>
 </body>
 </html>
