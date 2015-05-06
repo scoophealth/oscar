@@ -23,38 +23,6 @@
     Ontario, Canada
 
 --%>
-<style>
-/* TODO:move this out of here */
-li.ui-state-default{
-    background:#fff0;
-    border:none;
-    border-bottom:1px solid #ddd;
-    text-align: left;
-    padding-top:4px;
-    padding-bottom: 10px;
-}
-
-li.ui-state-default{
-cursor: pointer;
-}
-
-li.ui-state-default:last-child{
-    border-bottom:none;
-}
-
-.well-note{
-    border-color:#d2d2d2;
-    box-shadow:0 1px 0 #cfcfcf;
-    border-radius:3px;
-    
-    /*not sure if this will stay*/
-    max-height:300px;
-    overflow-y:auto;
-}
-
-.
-</style>
-
 
 <!-- #996633 cpp -->
 <!-- #006600 famhx -->
@@ -71,11 +39,7 @@ li.ui-state-default:last-child{
 			<h4 class="modal-title">{{page.title}}</h4>
 		</div>
 
-		<div class="modal-body" style="background-color:#fff;color:#333">
-			<!--<h1> {{page.code}} </h1>
-			{{page}}-->
-
-			
+		<div class="modal-body" style="background-color:#fff;color:#333">			
 <!-- 
         	      
         <div> 
@@ -95,7 +59,7 @@ li.ui-state-default:last-child{
 		<ul data-brackets-id="12674" id="sortable" class="list-unstyled ui-sortable" >
 		    
 		
-		    <li class="ui-state-default" ng-repeat="item in page.items" ng-click="changeNote(item,item.id)">
+		    <li class="cpp-note-list" ng-repeat="item in page.items" ng-click="changeNote(item,item.id)">
 		    <small class="pull-left text-muted">{{item.editor}}</small>
 		    <small class="pull-right text-muted">
 		       <span class="glyphicon glyphicon-calendar"></span> {{item.date | date : 'dd-MMM-yyyy'}}
@@ -276,7 +240,7 @@ li.ui-state-default:last-child{
 				  <div class="col-lg-12" style="margin-top:6px;">
 				<div class="checkbox" >
 				    <label>
-				      <input type="checkbox" ng-model="groupNotesForm.issue.issueId" ng-true-value="'{{page.issueId}}'" ng-false-value="'0'">  <em>{{page.title}}</em>  as part of cpp
+				      <input type="checkbox" ng-model="groupNotesForm.issue.issueId" ng-checked="true" ng-true-value="'{{page.issueId}}'" ng-false-value="'0'">  <em>{{page.title}}</em>  as part of cpp
 
 				    </label>
 				</div>
@@ -291,27 +255,6 @@ li.ui-state-default:last-child{
 		</div><!-- modal-body -->		
 		
 		<div class="modal-footer" style="background-color:#eeeeee;margin-top:0px">
-		<%--
-			<form class="form-horizontal">
-				 <div class="form-group">
-				 
-				 	<div class="col-sm-12">
-						<textarea class="form-control" rows="3"></textarea>
-					</div>
-					<br/>
-				    <div class="col-sm-8">
-				      <input type="text" class="form-control" placeholder="Start Date"  />
-				    </div>
-				    <br/>
-				    <div class="col-sm-8">
-				      <input type="text" class="form-control" placeholder="Resolution Date"  />
-				    </div>
-				    
-			   
-				</div>
-			</form>
-			--%>
-
 <!-- TODO: see what of these can be functions inline or maybe obsolete???
  
  				<input type="image"	src="<c:out value="${ctx}/oscarEncounter/graphics/copy.png"/>" title='<bean:message key="oscarEncounter.Index.btnCopy"/>' onclick="copyCppToCurrentNote(); return false;"> 
@@ -320,12 +263,9 @@ li.ui-state-default:last-child{
 
  -->
 
-<div ng-show="master" style="text-align:left;color:#000000">{{master | json}}</div>
-
-		<br>
-	<button ng-click="archiveGroupNotes()" type="button" class="btn btn-danger"><bean:message key="oscarEncounter.Index.btnArchive"/></button>	
-	<button ng-click="saveGroupNotes()" type="button" class="btn btn-primary"><bean:message key="oscarEncounter.Index.btnSignSave"/></button>	
-		
+			<br>
+			<button ng-click="archiveGroupNotes()" type="button" class="btn btn-danger"><bean:message key="oscarEncounter.Index.btnArchive"/></button>	
+			<button ng-click="saveGroupNotes()" type="button" class="btn btn-primary"><bean:message key="oscarEncounter.Index.btnSignSave"/></button>	
 			<button ng-click="cancel()" type="button" class="btn"><bean:message key="modal.newPatient.close" bundle="ui"/></button>
 		</div>
 	</div>
