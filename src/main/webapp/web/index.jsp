@@ -124,8 +124,9 @@ width: auto;
 padding:8px;
 }
 
-@media print {
- .noprint {display:none;}
+.add-summary:hover{
+color:#333 !important;
+text-decoration:none;
 }
 
 /*for patient header*/
@@ -138,6 +139,12 @@ font-size:26px
 font-size:20px
 }
 
+}
+
+@media print {
+ .noprint {display:none;}
+ .patientHeaderName{font-size:16px;}
+ .patientHeaderExt{font-size:16px;}
 }
 </style>
 
@@ -195,7 +202,7 @@ font-size:20px
 					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard" title="<bean:message key="navbar.dashboard" bundle="ui"/>"></span></li>
 				
 						
-					<li class="dropdown" class="hand-hover" ><a href="void()" class="dropdown-toggle"><bean:message key="navbar.modules" bundle="ui"/><b class="caret"></b></a>
+					<li class="dropdown hand-hover"><a href="void()" class="dropdown-toggle"><bean:message key="navbar.modules" bundle="ui"/><b class="caret"></b></a>
 						<ul class="dropdown-menu">
 						<li ng-repeat="item in menuItems"  ng-class="{'active': isActive(item) }">
 						<a ng-click="transition(item)" data-toggle="tab" >{{item.label}}
@@ -301,7 +308,7 @@ font-size:20px
 			</button>
 			
 			<form class="form-search" role="search">
-				<span ng-show="showFilter === true" class="form-group" class="twitter-typeahead">
+				<span ng-show="showFilter === true" class="form-group twitter-typeahead">
 					<input type="text"  class="form-control" placeholder="<bean:message key="patientList.filter" bundle="ui"/>" ng-model="query"/>
 				</span>
 			</form>
