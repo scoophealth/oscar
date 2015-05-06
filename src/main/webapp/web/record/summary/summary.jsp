@@ -24,19 +24,6 @@
 
 --%>
 
-<style>
-/* will move out when done */
-legend{}
-.add-summary{
-   /* opacity: 0.4;
-    filter: alpha(opacity=40); /* For IE8 and earlier */
-}
-
-.add-summary:hover{
-color:#333 !important;
-text-decoration:none;
-}
-</style>
 	<div class="col-lg-3">
        <fieldset ng-repeat="mod in page.columnOne.modules">
        		<legend style="margin-bottom:0px;"> 
