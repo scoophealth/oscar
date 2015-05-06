@@ -129,6 +129,33 @@ color:#333 !important;
 text-decoration:none;
 }
 
+li.cpp-note-list{
+    background:#fff0;
+    border:none;
+    border-bottom:1px solid #ddd;
+    text-align: left;
+    padding-top:4px;
+    padding-bottom: 10px;
+}
+
+li.cpp-note-list{
+cursor: pointer;
+}
+
+li.cpp-note-list:last-child{
+    border-bottom:none;
+}
+
+.well-note{
+    border-color:#d2d2d2;
+    box-shadow:0 1px 0 #cfcfcf;
+    border-radius:3px;
+    
+    /*not sure if this will stay*/
+    max-height:300px;
+    overflow-y:auto;
+}
+
 /*for patient header*/
 @media (max-width: 1320px) {
 .patientHeaderName{
