@@ -29,10 +29,11 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
 <%@page import="org.oscarehr.util.SpringUtils,org.oscarehr.util.LocaleUtils,org.oscarehr.util.MiscUtils, oscar.util.DateUtils"%>
-<%@page import="org.oscarehr.common.model.Demographic, org.oscarehr.common.model.BillingONItem, org.oscarehr.common.model.RaDetail"%>
+<%@page import="org.oscarehr.common.model.Demographic, org.oscarehr.common.model.BillingONItem, org.oscarehr.common.model.BillingOnItemPayment, org.oscarehr.common.model.RaDetail"%>
 <%@page import="java.util.Locale, java.math.BigDecimal, java.util.Calendar,java.util.List,java.util.ArrayList, java.util.HashMap, java.util.Map, java.util.Date"%>
 <%@page import="java.text.ParseException"%>
 <%@page import="org.oscarehr.common.model.BillingONPayment,org.oscarehr.common.dao.BillingONPaymentDao"%>
+<%@page import="org.oscarehr.common.model.BillingONPayment,org.oscarehr.common.dao.BillingOnItemPaymentDao"%>
 <%@page import="org.oscarehr.common.model.BillingONCHeader1,org.oscarehr.common.dao.BillingONCHeader1Dao"%>
 <%@page import="org.oscarehr.common.model.BillingONExt,org.oscarehr.common.dao.BillingONExtDao"%>
 <%@page import="org.oscarehr.common.model.Demographic,org.oscarehr.common.dao.DemographicDao"%>
@@ -123,6 +124,7 @@
     RaDetailDao raDetailDao = (RaDetailDao) SpringUtils.getBean("raDetailDao");
     BillingONCHeader1Dao bCh1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
     BillingONPaymentDao bPaymentDao = (BillingONPaymentDao) SpringUtils.getBean("billingONPaymentDao");
+    BillingOnItemPaymentDao bItemPaymentDao = (BillingOnItemPaymentDao) SpringUtils.getBean("billingOnItemPaymentDao");
     BillingONExtDao bExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
     DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");    
     BillingONService billingONService = (BillingONService) SpringUtils.getBean("billingONService");
@@ -538,7 +540,7 @@ table td,th{font-size:12px;}
                                     String serviceCode = "";
                                     String serviceCount = "";
                                     String amtBilled = "";
-
+									
                                     List<BillingONItem> bItems = billingONService.getNonDeletedInvoices(bCh1.getId());
 
                                     BigDecimal totalBilled = new BigDecimal("0.00");
@@ -555,7 +557,10 @@ table td,th{font-size:12px;}
                                            MiscUtils.getLogger().warn("BillItem fee is not a valid amount:" + amtBilled); 
                                         }
                                         numBillItems++;
-
+										
+                                        List<BillingOnItemPayment> bItemPayList = bItemPaymentDao.getItemPaymentByInvoiceNoItemId(bCh1.getId(), bItem.getId());                                        
+                                        BigDecimal amtPaid = bItemPaymentDao.calculateItemPaymentTotal(bItemPayList);
+                                        BigDecimal amtRefund = bItemPaymentDao.calculateItemRefundTotal(bItemPayList);
                                         if (numBillItems > 1) {
                      %>
                        </tr>
@@ -566,7 +571,9 @@ table td,th{font-size:12px;}
                                  <td style="text-align:center"><%=serviceCode%></td>
                                  <td style="text-align:center"><%=serviceCount%></td>
                                  <td style="text-align:right"><%=amtBilled%></td>
-				 <td colspan="4"></td>
+                                 <td style="text-align:right"><%=amtPaid.toPlainString()%></td>
+                                 <td style="text-align:right"><%=amtRefund.toPlainString()%></td>
+				 <td colspan="2"></td>
                     
 							                                          
                      <%             }     %>
@@ -580,10 +587,9 @@ table td,th{font-size:12px;}
                                     total3rdBilled = total3rdBilled.add(totalBilled);
 
                                     int numPayments = 0;
-                                    for (BillingONPayment bPay : bPayList) {                                        
-                                        BigDecimal payAmt = bExtDao.getPayment(bPay);
-                                        BigDecimal refundAmt = bExtDao.getRefund(bPay);
-                                        
+                                    for (BillingONPayment bPay : bPayList) {  
+                                        BigDecimal payAmt = bPay.getTotal_payment();
+                                        BigDecimal refundAmt = bPay.getTotal_refund();
                                         if ((payAmt.compareTo(zeroAmt)!=0) || (refundAmt.compareTo(zeroAmt)!=0)) {                                                                                    
                                             numPayments++;
                                             String payDate = DateUtils.formatDate(bPay.getPaymentDate(), locale);
