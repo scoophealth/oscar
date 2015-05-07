@@ -304,7 +304,8 @@ boolean dupServiceCode = false;
 
 		function scriptAttach(elementName) {
 		     var d = elementName;
-		     t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
+		     //t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
+		     t0 = d;
 		     popupPage('600', '700', 'onSearch3rdBillAddr.jsp?param='+t0);
 		}
                 function showtotal(){
@@ -1121,8 +1122,8 @@ Properties prop = oscar.OscarProperties.getInstance();
 			</td></tr>
 			<tr>
 				<td colspan='2' align='center' bgcolor="silver"><input type="submit" name="submit" value="Save & Print Invoice"
-					style="width: 120px;" /><input type="submit" name="submit"
-					value="Settle & Print Invoice" onClick="document.forms['titlesearch'].btnPressed.value='Settle'; document.forms['titlesearch'].submit();javascript:popupPage(700,720,'billingON3rdInv.jsp');" style="width: 120px;" />
+					style="width: 150px;" /><input type="submit" name="submit"
+					value="Settle & Print Invoice" onClick="document.forms['titlesearch'].btnPressed.value='Settle'; document.forms['titlesearch'].submit();javascript:popupPage(700,720,'billingON3rdInv.jsp');" style="width: 160px;" />
 				<input type="hidden"  name="btnPressed" value="">
 				<input type="hidden" name="total_payment" id="total_payment" value="0.00"/>
 				<input type="hidden" name="total_discount" id="total_discount" value="0.00"/>
