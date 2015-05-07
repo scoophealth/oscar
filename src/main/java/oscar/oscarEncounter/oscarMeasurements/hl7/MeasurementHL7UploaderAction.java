@@ -43,6 +43,7 @@ import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.struts.DispatchActionSupport;
@@ -64,11 +65,11 @@ import ca.uhn.hl7v2.validation.impl.NoValidation;
 
 public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 	private static Logger logger = Logger.getLogger(MeasurementHL7UploaderAction.class);
-
 	private static SimpleDateFormat sdf = new SimpleDateFormat(OscarProperties.getInstance().getProperty("oscar.measurements.hl7.datetime.format", "yyyyMMddHHmmss"));
 
-	private MeasurementDao measurementsDao = SpringUtils.getBean(MeasurementDao.class);
-
+	private static MeasurementDao measurementsDao = SpringUtils.getBean(MeasurementDao.class);
+	private static SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
 	// settings to be set in spring config xml, if needed
 	private String defaultProviderNo = OscarProperties.getInstance().getProperty("oscar.measurements.hl7.defaultProviderNo", "999998");
 	private String hl7UploadPassword = OscarProperties.getInstance().getProperty("oscar.measurements.hl7.password");
@@ -82,6 +83,12 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 	}
 
 	public ActionForward upload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+        if(!securityInfoManager.hasPrivilege(loggedInInfo, "_measurement", "w", null)) {
+			throw new SecurityException("missing required security object (_measurement)");
+		}
+        
 		Date dateEntered = new Date();
 		String hl7msg = null;
 
@@ -120,7 +127,7 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 			String hcnType = patient.getPatientIDInternalID(0).getAssigningAuthority().getNamespaceID().getValue();
 			// get demographic no from hcn
 			DemographicManager demographicManager= SpringUtils.getBean(DemographicManager.class);
-			List<Demographic> demos = demographicManager.getActiveDemosByHealthCardNo(LoggedInInfo.getLoggedInInfoFromSession(request), hcn, hcnType);
+			List<Demographic> demos = demographicManager.getActiveDemosByHealthCardNo(loggedInInfo, hcn, hcnType);
 			if (demos == null || demos.size() == 0) throw new RuntimeException("There is no active patient with the supplied health card number: " + hcn + " " + hcnType);
 
 			// try to get consult doctor's providerID
