@@ -70,7 +70,6 @@
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <script language="JavaScript">
 
-<!--
 		function setfocus() {
 		  this.focus();
 		  document.forms[0].keyword.focus();
@@ -82,8 +81,8 @@
 		}
 		<%if(param.length()>0) {%>
 		function typeInData1(data) {
-			if( opener.updateElement != undefined ) {				
-				opener.updateElement('<%=param%>', data);
+			if( opener.updateElement != undefined ) {
+				opener.updateElement("<%=param%>", data);
 			}
 			else {
 	   	  		opener.<%=param%> = data;
@@ -98,16 +97,14 @@
 		  self.close();
 		}
 		<%}}%>
--->
+
 
       </script>
 </head>
-<body bgcolor="white" bgproperties="fixed" onload="setfocus()"
-	topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellpadding="1" cellspacing="0" width="100%"
-	class="myDarkGreen">
-	<form method="post" name="titlesearch" action="onSearch3rdBillAddr.jsp"
-		onSubmit="return check();">
+<body bgcolor="white" bgproperties="fixed" onload="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+	
+<form method="post" name="titlesearch" action="onSearch3rdBillAddr.jsp" onSubmit="return check();">	
+<table border="0" cellpadding="1" cellspacing="0" width="100%" class="myDarkGreen">
 	<tr>
 		<td class="searchTitle" colspan="4"><font color="white">Search
 		Address</font></td>
@@ -136,20 +133,20 @@
 	<tr>
 		<td align="left">Results based on keyword(s): <%=keyword == null ? "" : keyword%></td>
 	</tr>
-	</form>
 </table>
+</form>
 <center>
-<table width="100%" border="0" cellpadding="0" cellspacing="2"
-	class="myYellow">
+<table width="100%" border="0" cellpadding="0" cellspacing="2" class="myYellow">
 	<tr class="title">
-		<th width="20%">Attention</b></th>
-		<th width="20%">Company name</b></th>
-		<th width="25%">Address</b></th>
-		<th width="10%">City</b></th>
-		<th width="10%">Postcode</b></th>
-		<th>Phone</b></th>
+		<th width="20%">Attention</th>
+		<th width="20%">Company name</th>
+		<th width="25%">Address</th>
+		<th width="10%">City</th>
+		<th width="10%">Postcode</th>
+		<th>Phone</th>
 		<!--  >th width="20%">Fax</b></th-->
 	</tr>
+	
 	<%for (int i = 0; i < vec.size(); i++) {
 					prop = (Properties) vec.get(i);
 					String bgColor = i % 2 == 0 ? "#EEEEFF" : "ivory";
@@ -166,8 +163,8 @@
 							+ prop.getProperty("city", "") + "')";
 
 					%>
-	<tr align="center" bgcolor="<%=bgColor%>" align="center"
-		onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
+	<tr align="center" bgcolor="<%=bgColor%>"
+		onMouseOver="this.style.cursor='pointer';this.style.backgroundColor='pink';"
 		onMouseout="this.style.backgroundColor='<%=bgColor%>';"
 		onClick="<%=StringEscapeUtils.escapeHtml(strOnClick)%>">
 		<td><%=prop.getProperty("attention", "")%></td>
