@@ -26,9 +26,7 @@ package org.oscarehr.common.dao;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import javax.persistence.Query;
-
 import org.oscarehr.common.model.BillingOnItemPayment;
 import org.springframework.stereotype.Repository;
 
@@ -73,4 +71,38 @@ public class BillingOnItemPaymentDao extends AbstractDao<BillingOnItemPayment>{
 		
 		return paid;
 	}
+	
+    public List<BillingOnItemPayment> getItemPaymentByInvoiceNoItemId(Integer ch1_id, Integer item_id) {
+        String sql = "select bPay from BillingOnItemPayment bPay where bPay.ch1Id= ?1 and bPay.billingOnItemId = ?2 ";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter(1, ch1_id);    
+        query.setParameter(2, item_id); 
+        
+        @SuppressWarnings("unchecked")
+        List<BillingOnItemPayment> results = query.getResultList();
+                              
+        return results;
+    }
+    
+	public static BigDecimal calculateItemPaymentTotal(List<BillingOnItemPayment> paymentRecords) {
+	        
+	     BigDecimal paidTotal = new BigDecimal("0.00");	        
+	     for (BillingOnItemPayment bPay : paymentRecords) {
+	         BigDecimal amtPaid = bPay.getPaid();
+	         paidTotal = paidTotal.add(amtPaid);                                   
+	     }
+	         
+	     return paidTotal;
+	}
+	
+	public static BigDecimal calculateItemRefundTotal(List<BillingOnItemPayment> paymentRecords) {
+        
+        BigDecimal refundTotal = new BigDecimal("0.00");
+        for (BillingOnItemPayment bPay : paymentRecords) {
+       	 	BigDecimal amtRefunded = bPay.getRefund();
+            refundTotal = refundTotal.add(amtRefunded);                                   
+        }
+        
+        return refundTotal;
+   }   
 }
