@@ -1008,15 +1008,9 @@ for (ClinicNbr clinic : nbrs) {
 <% } %>
 </select><br>
 
-<input type="hidden" name="xml_visitdate"
-			value="<%=visitdate%>" /> <bean:message
-			key="billing.billingCorrection.btnAdmissionDate" /><img
-			src="../../../images/cal.gif" id="xml_vdate_cal" />: <input
-			type="text" id="xml_vdate" name="xml_vdate" value="<%=visitdate%>"
-			size=10 /></b>
 
 <%String clinicNo = OscarProperties.getInstance().getProperty("clinic_no", "").trim();%>
-<td colspan="2"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode"/>: <br>
+<bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode"/>: <br>
 	<select name="xml_slicode">
 		<option value="<%=clinicNo%>" ><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.NA" /></option>
 		<option value="HDS " <%=sliCode.startsWith("HDS")?"selected":""%>><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HDS" /></option>
@@ -1149,10 +1143,10 @@ for (ClinicNbr clinic : nbrs) {
 
 <%if (request.getParameter("admin")!=null || request.getParameter("adminSubmit")!=null ) { %>
 <input type="hidden" name="adminSubmit" value="adminSubmit">
-<input class="btn btn-primary" type="submit" name="submit" onclick="return validateAllItems();" value="Submit">
+<input class="btn btn-primary" type="submit" name="submit" onclick="return validateAllItems();" value="Save">
 <%}else{%> 
-<input class="btn btn-primary" type="submit" name="submit" onclick="return validateAllItems();" value="<bean:message key="billing.billingCorrection.btnSubmit"/>">
-<input class="btn" type="submit" name="submit" onclick="return validateAllItems();" value="Submit&Correct Another">
+<input class="btn btn-primary" type="submit" name="submit" onclick="return validateAllItems();" value="Save">
+<input class="btn" type="submit" name="submit" onclick="return validateAllItems();" value="Save&Correct Another">
 <%}%>
 
 <%if(billNo!=null){%>
@@ -1161,24 +1155,9 @@ for (ClinicNbr clinic : nbrs) {
 <%}%>
 	
 <br><br>
-                
-                    <span id="thirdParty" style="float:right; <%=thirdParty ? "" : "display:none"%>">
-                        <a href="#" onclick="search3rdParty('billTo');return false;"><bean:message key="billing.billingCorrection.msgPayer"/></a><br>
-                        <textarea id="billTo" name="billTo" cols="32" rows=4><%=payer%></textarea>
-                          <% String useDemoClinicInfoOnInvoice = oscar.OscarProperties.getInstance().getProperty("useDemoClinicInfoOnInvoice","");
-                             if (bCh1 != null && !useDemoClinicInfoOnInvoice.isEmpty() && useDemoClinicInfoOnInvoice.equals("true")) { 
-                                BillingONExt bExtUseBillTo = bExtDao.getUseBillTo(bCh1);
-                                String selectUseBillTo=""; 
-                                                               
-                                if ((bExtUseBillTo != null) && bExtUseBillTo.getValue().equalsIgnoreCase("on")) {
-                                    selectUseBillTo = "checked";
-                                } 
-                           %>
-                                <br><bean:message key="billing.billingCorrection.useDemoContactYesNo"/>:<input type="checkbox" name="overrideUseDemoContact" id="overrideUseDemoContact" <%=selectUseBillTo%> />
-                          <% } %>
-                    </span>
-                
-                <span style="float:left;">
+               
+                <div class="row">
+                <div class="span5">
                     <bean:message key="billing.billingCorrection.msgNotes"/>:<br>
                     <textarea name="comment" cols="32" rows=4><%=comment %></textarea>
                     <%               
@@ -1207,7 +1186,24 @@ for (ClinicNbr clinic : nbrs) {
 					</div>
 					</div>
                     <% } %>
-                </span>
+                </div>
+                
+                    <div class="span5" id="thirdParty" style=" <%=thirdParty ? "" : "display:none"%>">
+                        <a href="#" onclick="search3rdParty('billTo');return false;"><bean:message key="billing.billingCorrection.msgPayer"/></a><br>
+                        <textarea id="billTo" name="billTo" cols="32" rows=4><%=payer%></textarea>
+                          <% String useDemoClinicInfoOnInvoice = oscar.OscarProperties.getInstance().getProperty("useDemoClinicInfoOnInvoice","");
+                             if (bCh1 != null && !useDemoClinicInfoOnInvoice.isEmpty() && useDemoClinicInfoOnInvoice.equals("true")) { 
+                                BillingONExt bExtUseBillTo = bExtDao.getUseBillTo(bCh1);
+                                String selectUseBillTo=""; 
+                                                               
+                                if ((bExtUseBillTo != null) && bExtUseBillTo.getValue().equalsIgnoreCase("on")) {
+                                    selectUseBillTo = "checked";
+                                } 
+                           %>
+                                <br><bean:message key="billing.billingCorrection.useDemoContactYesNo"/>:<input type="checkbox" name="overrideUseDemoContact" id="overrideUseDemoContact" <%=selectUseBillTo%> />
+                          <% } %>
+                    </div>
+                    </div>
  
 </div>
 </div>
