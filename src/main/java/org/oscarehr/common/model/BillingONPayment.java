@@ -75,13 +75,13 @@ public class BillingONPayment extends AbstractModel<Integer> implements Serializ
 	private BillingONCHeader1 billingONCheader1;	
 	
 	private String creator;
-	private int paymentTypeId; 
+	private Integer paymentTypeId; 
 
 	public int getPaymentTypeId() {
 		return paymentTypeId;
 	}
 
-	public void setPaymentTypeId(int paymentTypeId) {
+	public void setPaymentTypeId(Integer paymentTypeId) {
 		this.paymentTypeId = paymentTypeId;
 	}
 
