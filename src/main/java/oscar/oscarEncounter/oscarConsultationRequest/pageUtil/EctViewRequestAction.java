@@ -55,6 +55,7 @@ import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -68,9 +69,11 @@ import ca.uhn.hl7v2.model.v26.segment.PRD;
 public class EctViewRequestAction extends Action {
 	
 	private static final Logger logger=MiscUtils.getLogger();
+	private static SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	@Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse  response)	throws ServletException, IOException {
+		checkPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request));
 
 		EctViewRequestForm frm = (EctViewRequestForm) form;
 
@@ -119,6 +122,8 @@ public class EctViewRequestAction extends Action {
 
 
         public static void fillFormValues(LoggedInInfo loggedInInfo, EctConsultationFormRequestForm thisForm, Integer requestId) {
+        	checkPrivilege(loggedInInfo);
+        	
             ConsultationRequestDao consultDao = (ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
             ConsultationRequest consult = consultDao.find(requestId);
 
@@ -283,5 +288,12 @@ public class EctViewRequestAction extends Action {
         thisForm.setProfessionalSpecialistAddress(professionalSpecialist.getStreetAddress());
         thisForm.setProfessionalSpecialistPhone(professionalSpecialist.getPhoneNumber());
 
-	}	
+	}
+	
+	
+	private static void checkPrivilege(LoggedInInfo loggedInInfo) {
+        if(!securityInfoManager.hasPrivilege(loggedInInfo, "_con", "r", null)) {
+			throw new SecurityException("missing required security object (_con)");
+		}
+	}
 }
