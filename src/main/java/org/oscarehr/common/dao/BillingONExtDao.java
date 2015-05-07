@@ -88,11 +88,11 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
     
     public BigDecimal getPayment(BillingONPayment paymentRecord) {
         
-        String sql = "select bExt from BillingONExt bExt where paymentId=? and billingNo=? and keyVal=?";
+        String sql = "select bExt from BillingONExt bExt where billingNo=? and keyVal=?";
         Query query = entityManager.createQuery(sql);
-        query.setParameter(1, paymentRecord.getId());
-        query.setParameter(2, paymentRecord.getBillingNo());       
-        query.setParameter(3, "payment");
+        
+        query.setParameter(1, paymentRecord.getBillingNo());       
+        query.setParameter(2, "payment");
          
         List<BillingONExt> results = query.getResultList();
         
