@@ -183,7 +183,7 @@ public class ConsultRequestDao extends AbstractDao<ConsultationRequest> {
 		if (filter.getStatus()!=null) {
 			sql.append("and cr.status = '" + filter.getStatus() + "' ");
 		} else {
-			sql.append("and cr.status != 4 ");
+			sql.append("and cr.status!=4 and cr.status!=5 and cr.status!=7 ");
 		}
 		
 		if (StringUtils.isNotBlank(filter.getTeam())) {

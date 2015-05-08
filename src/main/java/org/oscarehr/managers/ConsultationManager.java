@@ -304,6 +304,7 @@ public class ConsultationManager {
 		result.setLastFollowUp(consultResponse.getFollowUpDate());
 		result.setProvider(provider);
 		result.setReferralDate(consultResponse.getReferralDate());
+		result.setResponseDate(consultResponse.getResponseDate());
 		result.setStatus(consultResponse.getStatus());
 		result.setUrgency(consultResponse.getUrgency());
 
