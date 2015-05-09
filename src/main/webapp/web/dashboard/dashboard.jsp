@@ -48,7 +48,7 @@
 
 
 <div ng-if="inbox.length > 0">
-<table class="table table-condensed  table-hover" >
+<table class="table table-condensed table-hover" >
 	<thead>
     <tr>
     	<th class="flag-column"></th>
@@ -61,12 +61,11 @@
     </thead>
               
      <tbody>
-    <tr ng-repeat="item in inbox" ng-hide="$index >= 5" ng-click="openInbox()" >
-  <td><span ng-if="item.properity != null && item.priority != 'Routine'" class="glyphicon glyphicon-flag" style="color:red"></span></td>
-		  	
+    <tr ng-repeat="item in inbox" ng-hide="$index >= 5" ng-click="openInbox()" class="hand-hover">
+  		<td><span ng-if="item.properity != null && item.priority != 'Routine'" class="glyphicon glyphicon-flag" style="color:red"></span></td>
         <td >{{item.demographicName}}</td>
         <td>{{item.discipline}}</td>
-       <!--  <td>{{item.source}}</td> -->
+       	<!--  <td>{{item.source}}</td> -->
         <td>{{item.dateReceived}}</td>
        	<td>{{item.status}}</td>
     </tr>
