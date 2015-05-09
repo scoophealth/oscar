@@ -811,9 +811,14 @@ window.onload=function(){
 				</td>
 				<%if(!"PAT".equals(billType)){%>
 					<td width='25%'><%=propCodeDesc.getProperty(codeName, "") %></td>
-				<%}else{%>
+				<%}else{
+				String paid_value = "0.00";
+				%>
+				<oscar:oscarPropertiesCheck property="BILLING_REVIEW_AUTO_PAYMENT" value="yes">
+				<%paid_value = codeTotal; %>
+				</oscar:oscarPropertiesCheck>
 				<td nowrap width='14%'><pre><%=codeDescription%></pre></td>
-				<td nowrap width='3%'><input type="text" id="paid_<%=i%>" name="paid_<%=i %>" value="<%=codeTotal %>" onBlur="calculatePayment();" onchange="validatePaymentNumberic(<%=i %>)"/></td>
+				<td nowrap width='3%'><input type="text" id="paid_<%=i%>" name="paid_<%=i %>" value="<%=paid_value%>" onBlur="calculatePayment();" onchange="validatePaymentNumberic(<%=i %>)"/></td>
 				<td nowrap width='3%'><input type="text" id="discount_<%=i%>" name="discount_<%=i %>" value="0.00" onBlur="calculateDiscount();" onchange="validateDiscountNumberic(<%=i %>)"/></td>
 				<%}%>
 			</tr>
