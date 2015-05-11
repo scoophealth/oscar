@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.HL7HandlerMSHMappingDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.model.HL7HandlerMSHMapping;
@@ -880,34 +881,15 @@ public class TDISHandler implements MessageHandler {
 		String docNames = "";
 
 		try {
-			Terser terser = new Terser(msg);
-
-			String givenName = terser.get("/.ZDR(0)-4-1");
-			String middleName = terser.get("/.ZDR(0)-4-3");
-			String familyName = terser.get("/.ZDR(0)-4-2");
-
-			int i = 1;
-			while (givenName != null) {
-
-				if (i == 1)
-					docNames = givenName;
-				else
-					docNames = docNames + ", " + givenName;
-
-				if (middleName != null)
-					docNames = docNames + " " + middleName;
-				if (familyName != null)
-					docNames = docNames + " " + familyName;
-
-				givenName = terser.get("/.ZDR(" + i + ")-4-1");
-				middleName = terser.get("/.ZDR(" + i + ")-4-3");
-				familyName = terser.get("/.ZDR(" + i + ")-4-2");
-
-				i++;
+			int ccs = obrSegKeySet.get(0).getResultCopiesToReps();
+			for (int j=0; j<ccs;j++){
+				String name = getFullDocName(obrSegKeySet.get(0).getResultCopiesTo(j));
+				if (name != null && !name.equals("")) {
+					if (j>0) docNames +=", "+name;
+					else docNames +=name;
+				}
 			}
-
 			return (docNames);
-
 		} catch (Exception e) {
 			// ignore error... it will occur when the zdr segment is not present
 			// logger.error("Could not retrieve cc'd docs", e);
@@ -917,6 +899,7 @@ public class TDISHandler implements MessageHandler {
 	}
 
 	public ArrayList<String> getDocNums() {
+		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 		String docNum = "";
 		ArrayList<String> nums = new ArrayList<String>();
 		int i = 0;
@@ -924,17 +907,17 @@ public class TDISHandler implements MessageHandler {
 
 			// requesting client number
 			docNum = obrSegKeySet.get(0).getOrderingProvider(i).getIDNumber().getValue();
-			nums.add(docNum);
+			String billingNum = providerDao.getProviderByPractitionerNo(docNum).getOhipNo();
+			nums.add(billingNum == null?docNum:billingNum);
 
 			// cc'd docs numbers
-			Terser terser = new Terser(msg);
-			String num = terser.get("/.ZDR(0)-3-1");
-			i = 1;
-			while (num != null) {
-				if (!num.equals(docNum))
-					nums.add(num);
-				num = terser.get("/.ZDR(" + i + ")-3-1");
-				i++;
+			int ccs = obrSegKeySet.get(0).getResultCopiesToReps();
+			for (int j=0; j<ccs;j++){
+				String num = obrSegKeySet.get(0).getResultCopiesTo(j).getIDNumber().getValue();
+				if (num != null && !num.equals("") && !num.equals(docNum)) {
+					billingNum = providerDao.getProviderByPractitionerNo(num).getOhipNo();
+					nums.add(billingNum == null?num:billingNum);
+				}
 			}
 
 		} catch (Exception e) {
