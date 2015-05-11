@@ -97,7 +97,7 @@ public class ConsultResponseDao extends AbstractDao<ConsultationResponse> {
 		if (filter.getStatus()!=null) {
 			sql.append("and cr.status = '" + filter.getStatus() + "' ");
 		} else {
-			sql.append("and cr.status != 4 ");
+			sql.append("and cr.status!=4 and cr.status!=5 ");
 		}
 		if (StringUtils.isNotBlank(filter.getTeam())) {
 			sql.append("and cr.sendTo = '" + StringEscapeUtils.escapeSql(filter.getTeam()) + "' ");

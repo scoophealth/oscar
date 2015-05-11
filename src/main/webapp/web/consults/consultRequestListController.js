@@ -89,7 +89,10 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope, $timeout, $locat
 	}
 	
 	$scope.doSearch = function() {
+		$scope.backToPage1 = true;
 		$scope.tableParams.reload();
+		$scope.backToPage1 = null;
+		
 		$scope.demographicId = $scope.search.demographicNo;
 	}
 	
@@ -127,9 +130,7 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope, $timeout, $locat
         getData: function($defer, params) {
         	var count = params.url().count;
         	var page = params.url().page;
-        	
-        	//$scope.search.params = params.url();
-        //	console.log(params.url().toSource());
+        	if ($scope.backToPage1) page = 1; //reset to page1 if "Search" button is pressed
         	
         	$scope.search.startIndex = ((page-1)*count);
         	$scope.search.numToReturn=parseInt(count);
@@ -142,7 +143,6 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope, $timeout, $locat
         	}
         	
         	consultService.searchRequests(search1).then(function(result){
-        		//console.log(JSON.stringify(result));
         		 params.total(result.total);
                  $defer.resolve(result.content);
                  
@@ -168,15 +168,6 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope, $timeout, $locat
                      //add urgencyColor if consult urgency=Urgent(1)
                 	 if (consult.urgency==1) {
                 		 consult.urgencyColor = "text-danger"; //= red text
-                	 }
-                	 
-                	 //when searching "All Active", hide consults with status=Completed(4)/Cancelled(5)/Deleted(7)
-                	 if (search1.status==null || search1.status=="") {
-                		 if (consult.status==4 || consult.status==5 || consult.status==7) {
-                			 result.content.splice(i, 1);
-                			 i--;
-                			 continue;
-                		 }
                 	 }
                  }
                  
