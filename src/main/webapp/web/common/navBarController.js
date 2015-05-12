@@ -35,7 +35,6 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 		}, true);
 	
    billingService.getBillingRegion().then(function(response){
-    console.log("billRegion----------------------" + JSON.stringify( response ) );
     $scope.billRegion = response.message;
    },function(reason){
     alert(reason);
@@ -129,7 +128,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 			}
 			
 			if(url!="" && wname!=""){
-				 newwindow=window.open(url,wname,'height=700,width=1000');
+				 newwindow=window.open(url,wname,'scrollbars=1,height=700,width=1000');
 				 if (window.focus) {
 					 newwindow.focus();
 				 }
