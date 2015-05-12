@@ -36,6 +36,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.DepartmentDao;
 import org.oscarehr.common.model.Department;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -44,10 +46,15 @@ public class EctConAddDepartmentAction extends Action {
 	private static final Logger logger=MiscUtils.getLogger();
 
 	private DepartmentDao DepartmentDao= SpringUtils.getBean(DepartmentDao.class);
+	private static SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
+		
+	  	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "w", null)) {
+			throw new SecurityException("missing required security object (_con)");
+		}
 
 		Department Department=null;
 		EctConAddDepartmentForm addDepartmentForm = (EctConAddDepartmentForm)form;

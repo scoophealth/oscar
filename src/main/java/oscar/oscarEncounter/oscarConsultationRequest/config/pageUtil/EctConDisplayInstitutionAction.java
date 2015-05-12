@@ -36,15 +36,23 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.InstitutitionDepartmentDao;
 import org.oscarehr.common.model.InstitutionDepartment;
 import org.oscarehr.common.model.InstitutionDepartmentPK;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class EctConDisplayInstitutionAction extends Action {
 
 	private InstitutitionDepartmentDao dao = SpringUtils.getBean(InstitutitionDepartmentDao.class);
+	private static SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	   public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
 	   throws ServletException, IOException {
-		   EctConDisplayInstitutionForm displayServiceForm = (EctConDisplayInstitutionForm)form;
+		   
+		   if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "r", null)) {
+			   throw new SecurityException("missing required security object (_con)");
+		   }
+			
+		  EctConDisplayInstitutionForm displayServiceForm = (EctConDisplayInstitutionForm)form;
 	      String id = displayServiceForm.getId();
 	      String specialists[] = displayServiceForm.getSpecialists();
 	       

@@ -65,8 +65,8 @@ public class EctConsultationFormFaxAction extends Action {
         
     	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
     	
-    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
-			throw new SecurityException("missing required security object (_demographic)");
+    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "r", null)) {
+			throw new SecurityException("missing required security object (_con)");
 		}
     	
     	String reqId = request.getParameter("reqId");
