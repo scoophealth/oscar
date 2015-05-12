@@ -25,7 +25,7 @@
 --%>
 <div class="page-header" style="margin-top: 0px; margin-bottom: 0px;">
 		<h1 class="patientHeaderName" style="margin-top: 0px;" ng-cloak>
-			<b>{{demographic.lastName}}, {{demographic.firstName}}</b>  <span ng-show="demographic.title != ''">({{demographic.title}})</span> 
+			<b>{{demographic.lastName}}, {{demographic.firstName}}</b>  <span ng-show="demographic.title">({{demographic.title}})</span> 
 			
 			<small class="patientHeaderExt pull-right"> 
 				<i>Born:</i>
