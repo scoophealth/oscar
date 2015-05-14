@@ -109,18 +109,24 @@ public class DSDemographicAccess {
     private org.oscarehr.common.model.Demographic demographicData;
     private List<Prescription> prescriptionData;
 
-    public DSDemographicAccess(String demographicNo) {
+    private LoggedInInfo loggedInInfo;
+    
+    private DSDemographicAccess() {
+    	
+    }
+    
+    public DSDemographicAccess(LoggedInInfo loggedInInfo, String demographicNo) {
+    	this.loggedInInfo = loggedInInfo;
         this.demographicNo = demographicNo;
     }
 
-    public DSDemographicAccess(String demographicNo, String providerNo) {
-        this.demographicNo = demographicNo;
+    public DSDemographicAccess(LoggedInInfo loggedInInfo, String demographicNo, String providerNo) {
+        this(loggedInInfo,demographicNo);
         this.providerNo = providerNo;
     }
     
-    public DSDemographicAccess(String demographicNo, String providerNo, List<Object> dynamicArgs) {
-        this.demographicNo = demographicNo;
-        this.providerNo = providerNo;
+    public DSDemographicAccess(LoggedInInfo loggedInInfo, String demographicNo, String providerNo, List<Object> dynamicArgs) {
+        this(loggedInInfo,demographicNo,providerNo);
         this.dynamicArgs = dynamicArgs;
         logger.debug("dynamic args size " + this.dynamicArgs.size());
     }
@@ -384,11 +390,11 @@ public class DSDemographicAccess {
     public boolean hasRxCodesNotany(String rxCodesStr) throws DecisionSupportException { return !hasRxCodesAny(rxCodesStr); }
 
     //not used by isAge
-    public String getAge(LoggedInInfo loggedInInfo) {
+    public String getAge() {
         return getDemographicData(loggedInInfo).getAge() + " y";
     }
 
-    public boolean isAge(LoggedInInfo loggedInInfo, DSValue statement) throws DecisionSupportException {
+    public boolean isAge(DSValue statement) throws DecisionSupportException {
     	logger.debug("IS AGE CALLED");
         String compareAge = getDemographicData(loggedInInfo).getAgeInYears() + "";
         if (statement.getValueUnit() != null) {
@@ -400,24 +406,24 @@ public class DSDemographicAccess {
         return statement.testValue(compareAge);
     }
 
-    public long getAgeDays(LoggedInInfo loggedInInfo) {
+    public long getAgeDays() {
         return DemographicData.getAgeInDays(getDemographicData(loggedInInfo));
     }
 
-    public boolean isAgeAny(LoggedInInfo loggedInInfo, String ageStatements) throws DecisionSupportException {
+    public boolean isAgeAny(String ageStatements) throws DecisionSupportException {
         List<DSValue> statements =  DSValue.createDSValues(ageStatements);
         for (DSValue statement: statements) {
-            if (isAge(loggedInInfo, statement)) {
+            if (isAge(statement)) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean isAgeAll(LoggedInInfo loggedInInfo, String ageStatements) throws DecisionSupportException {
+    public boolean isAgeAll(String ageStatements) throws DecisionSupportException {
         List<DSValue> statements =  DSValue.createDSValues(ageStatements);
         for (DSValue statement: statements) {
-            if (!isAge(loggedInInfo, statement)) {
+            if (!isAge(statement)) {
                 return false;
             }
         }
@@ -425,27 +431,27 @@ public class DSDemographicAccess {
     }
 
     //ageStatement: ">2y"
-    public boolean isAgeNot(LoggedInInfo loggedInInfo, String ageStatement) throws DecisionSupportException { return isAgeNotany(loggedInInfo, ageStatement); }
+    public boolean isAgeNot( String ageStatement) throws DecisionSupportException { return isAgeNotany(ageStatement); }
 
-    public boolean isAgeNotall(LoggedInInfo loggedInInfo, String ageStatement) throws DecisionSupportException { return !isAgeAll(loggedInInfo, ageStatement); }
+    public boolean isAgeNotall(String ageStatement) throws DecisionSupportException { return !isAgeAll(ageStatement); }
 
-    public boolean isAgeNotany(LoggedInInfo loggedInInfo, String ageStatement) throws DecisionSupportException { return !isAgeAny(loggedInInfo, ageStatement); }
+    public boolean isAgeNotany( String ageStatement) throws DecisionSupportException { return !isAgeAny(ageStatement); }
 
-    public String getSex(LoggedInInfo loggedInInfo) {
+    public String getSex() {
         return getDemographicData(loggedInInfo).getSex();
     }
 
-    public boolean isSex(LoggedInInfo loggedInInfo, DSValue sexStatement) throws DecisionSupportException {
+    public boolean isSex(DSValue sexStatement) throws DecisionSupportException {
     	logger.debug("IS SEX CALLED");
         if (sexStatement.getValue().equalsIgnoreCase("male")) sexStatement.setValue("M");
         else if (sexStatement.getValue().equalsIgnoreCase("female")) sexStatement.setValue("F");
-        return sexStatement.testValue(this.getSex(loggedInInfo));
+        return sexStatement.testValue(this.getSex());
     }
 
-    public boolean isSexAny(LoggedInInfo loggedInInfo, String sexStatements) throws DecisionSupportException {
+    public boolean isSexAny(String sexStatements) throws DecisionSupportException {
         List<DSValue> statements =  DSValue.createDSValues(sexStatements);
         for (DSValue statement: statements) {
-            if (isSex(loggedInInfo, statement)) {
+            if (isSex(statement)) {
                 return true;
             }
         }
@@ -454,21 +460,21 @@ public class DSDemographicAccess {
 
 
     //makes no sense, but for consistency...
-    public boolean isSexAll(LoggedInInfo loggedInInfo, String sexStatements) throws DecisionSupportException {
+    public boolean isSexAll(String sexStatements) throws DecisionSupportException {
         List<DSValue> statements =  DSValue.createDSValues(sexStatements);
         for (DSValue statement: statements) {
-            if (isSex(loggedInInfo, statement)) {
+            if (isSex(statement)) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean isSexNot(LoggedInInfo loggedInInfo, String sexStatement) throws DecisionSupportException { return isSexNotany(loggedInInfo, sexStatement); }
+    public boolean isSexNot(String sexStatement) throws DecisionSupportException { return isSexNotany(sexStatement); }
 
-    public boolean isSexNotall(LoggedInInfo loggedInInfo, String sexStatement) throws DecisionSupportException { return !isSexAll(loggedInInfo, sexStatement); }
+    public boolean isSexNotall(String sexStatement) throws DecisionSupportException { return !isSexAll(sexStatement); }
 
-    public boolean isSexNotany(LoggedInInfo loggedInInfo, String sexStatement) throws DecisionSupportException { return !isSexAny(loggedInInfo, sexStatement); }
+    public boolean isSexNotany(String sexStatement) throws DecisionSupportException { return !isSexAny(sexStatement); }
 
 
      public boolean noteContains(DSValue searchValue) {
@@ -744,12 +750,12 @@ public class DSDemographicAccess {
 
 
     //for testing purposes mostly (used to list patient values in echart
-    public String getDemogrpahicValues(LoggedInInfo loggedInInfo, Module module) {
+    public String getDemogrpahicValues(Module module) {
         try {
             if (module == Module.dxcodes) return this.getDxCodesStr();
             if (module == Module.drugs) return this.getRxCodesStr();
-            if (module == Module.age) return this.getAge(loggedInInfo);
-            if (module == Module.sex) return this.getSex(loggedInInfo);
+            if (module == Module.age) return this.getAge();
+            if (module == Module.sex) return this.getSex();
             if (module == Module.notes) return "";
         } catch (Exception dse) {
             logger.error("Cannot get demographic data for decision support, module: '" + module + "'", dse);
