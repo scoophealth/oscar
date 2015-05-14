@@ -39,6 +39,7 @@ import org.oscarehr.common.dao.DSGuidelineProviderMappingDao;
 import org.oscarehr.decisionSupport.model.DSConsequence;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DecisionSupportException;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -57,14 +58,14 @@ public abstract class DSService {
   
     }
 
-    public List<DSConsequence> evaluateAndGetConsequences(String demographicNo, String providerNo) {
+    public List<DSConsequence> evaluateAndGetConsequences(LoggedInInfo loggedInInfo, String demographicNo, String providerNo) {
         logger.debug("passed in provider: " + providerNo + " demographicNo" + demographicNo);
         List<DSGuideline> dsGuidelines = this.dSGuidelineDao.getDSGuidelinesByProvider(providerNo);
         logger.info("Decision Support 'evaluateAndGetConsequences' has been called, reading " + dsGuidelines.size() + " for this provider");
         ArrayList<DSConsequence> allResultingConsequences = new ArrayList<DSConsequence>();
         for (DSGuideline dsGuideline: dsGuidelines) {
             try {
-                List<DSConsequence> newConsequences = dsGuideline.evaluate(demographicNo);
+                List<DSConsequence> newConsequences = dsGuideline.evaluate(loggedInInfo, demographicNo);
                 if (newConsequences != null) {
                     allResultingConsequences.addAll(newConsequences);
                 }

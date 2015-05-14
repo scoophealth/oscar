@@ -118,7 +118,7 @@
             //check for management fee code eligibility
             StringBuilder billingRecomendations = new StringBuilder();
             try{
-            	List<DSConsequence> list = BillingGuidelines.getInstance().evaluateAndGetConsequences(request.getParameter("demographic_no"), (String) request.getSession().getAttribute("user"));
+            	List<DSConsequence> list = BillingGuidelines.getInstance().evaluateAndGetConsequences(loggedInInfo, request.getParameter("demographic_no"), (String) request.getSession().getAttribute("user"));
 
             	for (DSConsequence dscon : list){
                      if (dscon.getConsequenceStrength().equals(DSConsequence.ConsequenceStrength.warning)) {
