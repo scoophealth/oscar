@@ -498,19 +498,24 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	public List<CaseManagementNote> search(CaseManagementSearchBean searchBean) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-		Criteria criteria = getSession().createCriteria(CaseManagementNote.class);
-
-		criteria.add(Expression.eq("demographic_no", searchBean.getDemographicNo()));
-
-		if (searchBean.getSearchRoleId() > 0) {
-			criteria.add(Expression.eq("reporter_caisi_role", String.valueOf(searchBean.getSearchRoleId())));
-		}
-
-		if (searchBean.getSearchProgramId() > 0) {
-			criteria.add(Expression.eq("program_no", String.valueOf(searchBean.getSearchProgramId())));
-		}
-
+		Session session = getSession();
+		
+		List<CaseManagementNote> results = null;
+		
 		try {
+			Criteria criteria = session.createCriteria(CaseManagementNote.class);
+	
+			criteria.add(Expression.eq("demographic_no", searchBean.getDemographicNo()));
+	
+			if (searchBean.getSearchRoleId() > 0) {
+				criteria.add(Expression.eq("reporter_caisi_role", String.valueOf(searchBean.getSearchRoleId())));
+			}
+	
+			if (searchBean.getSearchProgramId() > 0) {
+				criteria.add(Expression.eq("program_no", String.valueOf(searchBean.getSearchProgramId())));
+			}
+	
+		
 			Date startDate;
 			Date endDate;
 			if (searchBean.getSearchStartDate().length() > 0) {
@@ -526,14 +531,17 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 				endDate = new Date();
 			}
 			criteria.add(Restrictions.between("update_date", startDate, endDate));
-		}
-		catch (ParseException e) {
+		
+			criteria.addOrder(Order.desc("update_date"));
+			results = criteria.list();
+			
+		} catch (ParseException e) {
 			log.warn("Warning", e);
+		} finally {
+			this.releaseSession(session);
 		}
 
-		criteria.addOrder(Order.desc("update_date"));
-		@SuppressWarnings("unchecked")
-		List<CaseManagementNote> results = criteria.list();
+		
 		
 		return results;
 
@@ -546,25 +554,28 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	}
 
 	public boolean haveIssue(Long issid, String demoNo) {
-		SQLQuery query = this.getSession().createSQLQuery("select * from casemgmt_issue_notes where id=" + issid.longValue());
-		List results = query.list();
-		// log.info("haveIssue - DAO - # of results = " + results.size());
-		if (results.size() > 0) return true;
-		return false;
+		Session session = getSession();
+		try {
+			SQLQuery query = session.createSQLQuery("select * from casemgmt_issue_notes where id=" + issid.longValue());
+			List results = query.list();
+			// log.info("haveIssue - DAO - # of results = " + results.size());
+			if (results.size() > 0) return true;
+			return false;
+		} finally {
+			this.releaseSession(session);
+		}
 	}
 
 	public boolean haveIssue(String issueCode, Integer demographicId) {
 		Session session=getSession();
 		try
 		{
-		SQLQuery query = session.createSQLQuery("select casemgmt_issue.id from casemgmt_issue_notes,casemgmt_issue,issue   where issue.issue_id=casemgmt_issue.issue_id and casemgmt_issue.id=casemgmt_issue_notes.id and demographic_no="+demographicId+" and issue.code='"+issueCode+"'");
-		List results = query.list();
-		// log.info("haveIssue - DAO - # of results = " + results.size());
-		if (results.size() > 0) return true;
-		return false;
-		}
-		finally
-		{
+			SQLQuery query = session.createSQLQuery("select casemgmt_issue.id from casemgmt_issue_notes,casemgmt_issue,issue   where issue.issue_id=casemgmt_issue.issue_id and casemgmt_issue.id=casemgmt_issue_notes.id and demographic_no="+demographicId+" and issue.code='"+issueCode+"'");
+			List results = query.list();
+			// log.info("haveIssue - DAO - # of results = " + results.size());
+			if (results.size() > 0) return true;
+			return false;
+		} finally {
 			session.close();
 		}
 	}
