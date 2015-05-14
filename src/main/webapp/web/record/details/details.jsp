@@ -446,7 +446,7 @@
 	  			<strong>{{page.demo.lastName}}, {{page.demo.firstName}}</strong><br/>
 		  		{{page.demo.address.address}}<br/>
 		  		{{page.demo.address.city}}, {{page.demo.address.province}} {{page.demo.address.postal}}<br/>
-	  			<abbr title="Phone">P:</abbr> {{page.preferredPhoneNumber}}
+	  			<abbr title="Phone" ng-show="page.preferredPhoneNumber">P:</abbr> {{page.preferredPhoneNumber}}
 			</address>
 			<a ng-click="macPHRDo('Verification')" ng-show="page.macPHRIdsSet">MyOSCAR{{page.macPHRVerificationLevel}}</a>
 		</div>
