@@ -847,21 +847,27 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 			queryString += " AND d.id IN ("+ PROGRAM_DOMAIN_RESTRICTION+") ";
 		}
 		
+		Session session = getSession();
+		List<Demographic> list = null;
 		
-		Query q = this.getSession().createQuery(queryString);
-		q.setFirstResult(offset);
-		q.setMaxResults(limit);
-
-		q.setParameter("chartNo", chartNoStr.trim() + "%");
-		
-		if(statuses != null) {
-			q.setParameterList("statuses", statuses);
+		try {
+			Query q = session.createQuery(queryString);
+			q.setFirstResult(offset);
+			q.setMaxResults(limit);
+	
+			q.setParameter("chartNo", chartNoStr.trim() + "%");
+			
+			if(statuses != null) {
+				q.setParameterList("statuses", statuses);
+			}
+	
+			if(providerNo != null && !outOfDomain) {
+				q.setParameter("providerNo", providerNo);
+			}
+			list = q.list();
+		} finally {
+			this.releaseSession(session);
 		}
-
-		if(providerNo != null && !outOfDomain) {
-			q.setParameter("providerNo", providerNo);
-		}
-		List<Demographic> list = q.list();
 		return list;
 	}
 	
@@ -892,31 +898,38 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		}
 		
 		
-		Query q = this.getSession().createQuery(queryString);
-		q.setFirstResult(offset);
-		q.setMaxResults(limit);
-
-		Integer val = null;
+		Session session = getSession();
+		List<Demographic> list = null;
+		
 		try {
-			val = Integer.valueOf(demographicNoStr.trim());
-		}catch(NumberFormatException e) {
-			//ignore
-		}
-		
-		if(val == null) {
-			return new ArrayList<Demographic>();
+			Query q = this.getSession().createQuery(queryString);
+			q.setFirstResult(offset);
+			q.setMaxResults(limit);
+	
+			Integer val = null;
+			try {
+				val = Integer.valueOf(demographicNoStr.trim());
+			}catch(NumberFormatException e) {
+				//ignore
+			}
 			
+			if(val == null) {
+				return new ArrayList<Demographic>();
+				
+			}
+			q.setParameter("demographicNo", val);
+			
+			if(statuses != null) {
+				q.setParameterList("statuses", statuses);
+			}
+	
+			if(providerNo != null && !outOfDomain) {
+				q.setParameter("providerNo", providerNo);
+			}
+			list = q.list();
+		}  finally {
+			this.releaseSession(session);
 		}
-		q.setParameter("demographicNo", val);
-		
-		if(statuses != null) {
-			q.setParameterList("statuses", statuses);
-		}
-
-		if(providerNo != null && !outOfDomain) {
-			q.setParameter("providerNo", providerNo);
-		}
-		List<Demographic> list = q.list();
 		return list;
 	}
 

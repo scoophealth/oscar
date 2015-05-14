@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.hibernate.Session;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.model.Facility;
@@ -548,7 +549,12 @@ public class LookupDao extends HibernateDaoSupport {
 
 			String sql = "update lst_orgcd set fullcode =replace(fullcode,'" + oldFullCode + "','" + newFullCode + "')" + ",codetree =replace(codetree,'" + oldTreeCode + "','" + newTreeCode + "')" + ",codecsv =replace(codecsv,'" + oldCsv + "','" + newCsv + "')" + " where codecsv like '" + oldCsv + "_%'";
 
-			this.getSession().createSQLQuery(sql).executeUpdate();
+			Session session = getSession();
+			try {
+				session.createSQLQuery(sql).executeUpdate();
+			} finally {
+				this.releaseSession(session);
+			}
 
 		}
 

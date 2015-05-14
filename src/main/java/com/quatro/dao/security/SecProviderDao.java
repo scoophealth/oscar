@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.criterion.Example;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -119,8 +120,9 @@ public class SecProviderDao extends HibernateDaoSupport {
 
 	public List findByExample(SecProviderDao instance) {
 		logger.debug("finding Provider instance by example");
+		Session session = getSession();
 		try {
-			List results = getSession().createCriteria(
+			List results = session.createCriteria(
 					"com.quatro.model.security.SecProvider").add(
 					Example.create(instance)).list();
 			logger.debug("find by example successful, result size: "
@@ -129,21 +131,26 @@ public class SecProviderDao extends HibernateDaoSupport {
 		} catch (RuntimeException re) {
 			logger.error("find by example failed", re);
 			throw re;
+		} finally {
+			this.releaseSession(session);
 		}
 	}
 
 	public List findByProperty(String propertyName, Object value) {
 		logger.debug("finding Provider instance with property: " + propertyName
 				+ ", value: " + value);
+		Session session = getSession();
 		try {
 			String queryString = "from Provider as model where model."
 					+ propertyName + "= ?";
-			Query queryObject = getSession().createQuery(queryString);
+			Query queryObject = session.createQuery(queryString);
 			queryObject.setParameter(0, value);
 			return queryObject.list();
 		} catch (RuntimeException re) {
 			logger.error("find by property name failed", re);
 			throw re;
+		} finally {
+			this.releaseSession(session);
 		}
 	}
 
@@ -213,47 +220,59 @@ public class SecProviderDao extends HibernateDaoSupport {
 
 	public List findAll() {
 		logger.debug("finding all Provider instances");
+		Session session = getSession();
 		try {
 			String queryString = "from Provider";
-			Query queryObject = getSession().createQuery(queryString);
+			Query queryObject = session.createQuery(queryString);
 			return queryObject.list();
 		} catch (RuntimeException re) {
 			logger.error("find all failed", re);
 			throw re;
+		} finally {
+			this.releaseSession(session);
 		}
 	}
 
 	public SecProviderDao merge(SecProviderDao detachedInstance) {
 		logger.debug("merging Provider instance");
+		Session session = getSession();
 		try {
-			SecProviderDao result = (SecProviderDao) getSession().merge(detachedInstance);
+			SecProviderDao result = (SecProviderDao) session.merge(detachedInstance);
 			logger.debug("merge successful");
 			return result;
 		} catch (RuntimeException re) {
 			logger.error("merge failed", re);
 			throw re;
+		} finally {
+			this.releaseSession(session);
 		}
 	}
 
 	public void attachDirty(SecProviderDao instance) {
 		logger.debug("attaching dirty Provider instance");
+		Session session = getSession();
 		try {
-			getSession().saveOrUpdate(instance);
+			session.saveOrUpdate(instance);
 			logger.debug("attach successful");
 		} catch (RuntimeException re) {
 			logger.error("attach failed", re);
 			throw re;
+		} finally {
+			this.releaseSession(session);
 		}
 	}
 
 	public void attachClean(SecProviderDao instance) {
 		logger.debug("attaching clean Provider instance");
+		Session session = getSession();
 		try {
-			getSession().lock(instance, LockMode.NONE);
+			session.lock(instance, LockMode.NONE);
 			logger.debug("attach successful");
 		} catch (RuntimeException re) {
 			logger.error("attach failed", re);
 			throw re;
+		} finally {
+			this.releaseSession(session);
 		}
 	}
 }
