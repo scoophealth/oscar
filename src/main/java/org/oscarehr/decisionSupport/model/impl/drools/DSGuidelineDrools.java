@@ -52,6 +52,7 @@ import org.oscarehr.decisionSupport.model.DSDemographicAccess;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DSParameter;
 import org.oscarehr.decisionSupport.model.DecisionSupportException;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.util.RuleBaseCreator;
@@ -76,12 +77,12 @@ public class DSGuidelineDrools extends DSGuideline {
     @Transient
     private RuleBase _ruleBase = null;
 
-    public List<DSConsequence> evaluate(String demographicNo) throws DecisionSupportException {
+    public List<DSConsequence> evaluate(LoggedInInfo loggedInInfo, String demographicNo) throws DecisionSupportException {
         if (_ruleBase == null)
             generateRuleBase();
         //at this point _ruleBase WILL be set or exception is thrown in generateRuleBase()
         WorkingMemory workingMemory = _ruleBase.newWorkingMemory( );
-        DSDemographicAccess dsDemographicAccess = new DSDemographicAccess(demographicNo);
+        DSDemographicAccess dsDemographicAccess = new DSDemographicAccess(loggedInInfo, demographicNo);
         //put "bob" in working memory
         try {
 
@@ -145,12 +146,12 @@ public class DSGuidelineDrools extends DSGuideline {
         }
     }
 
-    public List<DSConsequence> evaluate(String demographicNo, String providerNo) throws DecisionSupportException {
+    public List<DSConsequence> evaluate(LoggedInInfo loggedInInfo, String demographicNo, String providerNo) throws DecisionSupportException {
         if (_ruleBase == null)
             generateRuleBase();
         //at this point _ruleBase WILL be set or exception is thrown in generateRuleBase()
         WorkingMemory workingMemory = _ruleBase.newWorkingMemory( );
-        DSDemographicAccess dsDemographicAccess = new DSDemographicAccess(demographicNo, providerNo);
+        DSDemographicAccess dsDemographicAccess = new DSDemographicAccess(loggedInInfo, demographicNo, providerNo);
         //put "bob" in working memory
         try {
 
@@ -214,12 +215,12 @@ public class DSGuidelineDrools extends DSGuideline {
         }
     }
 
-    public List<DSConsequence> evaluate(String demographicNo, String providerNo, List<Object> dynamicArgs) throws DecisionSupportException {
+    public List<DSConsequence> evaluate(LoggedInInfo loggedInInfo, String demographicNo, String providerNo, List<Object> dynamicArgs) throws DecisionSupportException {
         if (_ruleBase == null)
             generateRuleBase();
         //at this point _ruleBase WILL be set or exception is thrown in generateRuleBase()
         WorkingMemory workingMemory = _ruleBase.newWorkingMemory( );
-        DSDemographicAccess dsDemographicAccess = new DSDemographicAccess(demographicNo, providerNo, dynamicArgs);
+        DSDemographicAccess dsDemographicAccess = new DSDemographicAccess(loggedInInfo, demographicNo, providerNo, dynamicArgs);
         //put "bob" in working memory
         try {
 

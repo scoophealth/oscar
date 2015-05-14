@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.decisionSupport.model.DSConsequence;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.billing.Clinicaid.util.ClinicaidCommunication;
 
@@ -55,6 +56,7 @@ public final class BillingAction extends Action {
                                HttpServletRequest request,
                                HttpServletResponse response) throws IOException,
       ServletException {
+	  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
     // Setup variables
     ActionMessages errors = new ActionMessages();
     oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean = null;
@@ -129,7 +131,7 @@ public final class BillingAction extends Action {
  //                                   request.getParameter("demographic_no"));
         try{
             _log.debug("Start of billing rules");
-            List<DSConsequence> list = BillingGuidelines.getInstance().evaluateAndGetConsequences(request.getParameter("demographic_no"), (String) request.getSession().getAttribute("user"));
+            List<DSConsequence> list = BillingGuidelines.getInstance().evaluateAndGetConsequences(loggedInInfo, request.getParameter("demographic_no"), (String) request.getSession().getAttribute("user"));
         
             for (DSConsequence dscon : list){
                 _log.debug("DSTEXT "+dscon.getText());

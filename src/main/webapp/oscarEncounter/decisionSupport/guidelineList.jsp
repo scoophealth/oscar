@@ -32,6 +32,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -42,6 +43,7 @@
 
 <%pageContext.setAttribute("demographic_no", request.getParameter("demographic_no"));
 pageContext.setAttribute("provider_no", request.getParameter("provider_no"));
+LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 
 <html>
@@ -80,7 +82,7 @@ pageContext.setAttribute("provider_no", request.getParameter("provider_no"));
                 <%
                 if (request.getParameter("demographic_no") != null) {
                     DSGuideline dsGuideline = (DSGuideline) pageContext.getAttribute("guideline");
-                    boolean passed = dsGuideline.evaluate(request.getParameter("demographic_no")) != null;
+                    boolean passed = dsGuideline.evaluate(loggedInInfo, request.getParameter("demographic_no")) != null;
                     pageContext.setAttribute("passed", passed);
                 %>
                 <td>
