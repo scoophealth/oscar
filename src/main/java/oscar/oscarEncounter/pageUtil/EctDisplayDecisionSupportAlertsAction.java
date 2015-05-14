@@ -48,6 +48,7 @@ import org.oscarehr.decisionSupport.model.DSConsequence;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.service.DSService;
 import org.oscarehr.renal.CkdScreener;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -70,6 +71,7 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
 
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
+	  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 	  boolean a = true;
       Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.decisionSupportAlerts");
       String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -156,7 +158,7 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
         		continue;
         	}
             try {
-                List<DSConsequence> dsConsequences = dsGuideline.evaluate(bean.demographicNo);
+                List<DSConsequence> dsConsequences = dsGuideline.evaluate(loggedInInfo, bean.demographicNo);
                 if (dsConsequences == null) continue;
                 for (DSConsequence dsConsequence: dsConsequences) {
                     if (dsConsequence.getConsequenceType() != DSConsequence.ConsequenceType.warning)

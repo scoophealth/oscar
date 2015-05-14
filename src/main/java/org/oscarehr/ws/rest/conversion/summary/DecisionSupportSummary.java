@@ -131,7 +131,7 @@ public class DecisionSupportSummary implements Summary{
         		continue;
         	}
             try {
-                List<DSConsequence> dsConsequences = dsGuideline.evaluate(""+demographicNo);
+                List<DSConsequence> dsConsequences = dsGuideline.evaluate(loggedInInfo, ""+demographicNo);
                 if (dsConsequences == null) continue;
                 for (DSConsequence dsConsequence: dsConsequences) {
                     if (dsConsequence.getConsequenceType() != DSConsequence.ConsequenceType.warning)

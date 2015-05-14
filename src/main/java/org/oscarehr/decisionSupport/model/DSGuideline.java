@@ -48,6 +48,7 @@ import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.AbstractModel;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 /**
@@ -133,14 +134,14 @@ public abstract class DSGuideline extends AbstractModel<Integer> {
         this.consequences = consequences;
     }
 
-    public abstract List<DSConsequence> evaluate(String demographicNo) throws DecisionSupportException;
+    public abstract List<DSConsequence> evaluate(LoggedInInfo loggedInInfo, String demographicNo) throws DecisionSupportException;
 
-    public abstract List<DSConsequence> evaluate(String demographicNo, String providerNo) throws DecisionSupportException;
+    public abstract List<DSConsequence> evaluate(LoggedInInfo loggedInInfo, String demographicNo, String providerNo) throws DecisionSupportException;
     
-    public abstract List<DSConsequence> evaluate(String demographicNo, String providerNo, List<Object>dynamicArgs) throws DecisionSupportException;
+    public abstract List<DSConsequence> evaluate(LoggedInInfo loggedInInfo, String demographicNo, String providerNo, List<Object>dynamicArgs) throws DecisionSupportException;
 
-    public boolean evaluateBoolean(String demographicNo) throws DecisionSupportException {
-        if (evaluate(demographicNo) == null) return false;
+    public boolean evaluateBoolean(LoggedInInfo loggedInInfo, String demographicNo) throws DecisionSupportException {
+        if (evaluate(loggedInInfo, demographicNo) == null) return false;
         return true;
     }
 
