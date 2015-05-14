@@ -52,7 +52,13 @@ public  class DemographicHistoryItem  implements Serializable {
 	public DemographicHistoryItem(String name, String type, Date dateSeen) {
 		this.name = name;
 		this.type = type;
-		this.dateSeen = DateFormatUtils.ISO_DATE_FORMAT.format(dateSeen);
+		
+		if( dateSeen == null ) {
+			this.dateSeen = null;
+		}
+		else {
+			this.dateSeen = DateFormatUtils.ISO_DATE_FORMAT.format(dateSeen);
+		}
 	}
 	public String getName() {
 		return name;
