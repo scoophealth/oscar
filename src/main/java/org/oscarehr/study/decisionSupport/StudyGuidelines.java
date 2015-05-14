@@ -37,6 +37,7 @@ import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DSGuidelineFactory;
 import org.oscarehr.decisionSupport.model.DecisionSupportException;
 import org.oscarehr.study.Study;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 /**
@@ -101,13 +102,13 @@ public class StudyGuidelines  {
     }
 
 
-    public List<DSConsequence> evaluateAndGetConsequences(String demographicNo, String providerNo, List<Object> dynamicArgs) {
+    public List<DSConsequence> evaluateAndGetConsequences(LoggedInInfo loggedInInfo, String demographicNo, String providerNo, List<Object> dynamicArgs) {
         log.debug("passed in provider: " + providerNo + " demographicNo " + demographicNo + " dynamicArgs size " + dynamicArgs.size());
         log.info("Decision Support 'evaluateAndGetConsequences' has been called, reading " + studyGuideLines.size() + " for this provider");
         ArrayList<DSConsequence> allResultingConsequences = new ArrayList<DSConsequence>();
         for (DSGuideline dsGuideline: studyGuideLines) {
             try {
-                List<DSConsequence> newConsequences = dsGuideline.evaluate(demographicNo, providerNo, dynamicArgs);
+                List<DSConsequence> newConsequences = dsGuideline.evaluate(loggedInInfo, demographicNo, providerNo, dynamicArgs);
                 if (newConsequences != null) {
                     allResultingConsequences.addAll(newConsequences);
                 }
