@@ -37,7 +37,9 @@ import org.oscarehr.decisionSupport.model.DSConsequence;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DSGuidelineFactory;
 import org.oscarehr.decisionSupport.model.DecisionSupportException;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -178,13 +180,13 @@ public class BillingGuidelines  {
     }
 
 
-    public List<DSConsequence> evaluateAndGetConsequences(String demographicNo, String providerNo) {
+    public List<DSConsequence> evaluateAndGetConsequences(LoggedInInfo loggedInInfo, String demographicNo, String providerNo) {
         log.debug("passed in provider: " + providerNo + " demographicNo" + demographicNo);
         log.debug("Decision Support 'evaluateAndGetConsequences' has been called, reading " + billingGuideLines.size() + " for this provider");
         ArrayList<DSConsequence> allResultingConsequences = new ArrayList<DSConsequence>();
         for (DSGuideline dsGuideline: billingGuideLines) {
             try {
-                List<DSConsequence> newConsequences = dsGuideline.evaluate(demographicNo, providerNo);
+                List<DSConsequence> newConsequences = dsGuideline.evaluate(loggedInInfo, demographicNo, providerNo);
                 if (newConsequences != null) {
                     allResultingConsequences.addAll(newConsequences);
                 }
