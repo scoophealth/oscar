@@ -1038,7 +1038,12 @@ div.demographicWrapper {
                                 	alert = demographicCust.getAlert();
                                 	midwife = demographicCust.getMidwife();
                                 	notes = SxmlMisc.getXmlContent(demographicCust.getNotes(),"unotes") ;
-                                	notes = notes==null?"":notes;
+                                	
+                                	resident = resident==null?"":resident;
+                                	nurse = nurse==null?"":nurse;
+                                	alert = alert==null?"":alert;	
+                                	midwife = midwife==null?"":midwife;
+                                	notes = notes==null?"":notes;                               	
                                 }
 
                                 // Demographic demographic=demographicDao.getDemographic(demographic_no);
@@ -1969,7 +1974,6 @@ if ( Dead.equals(PatStat) ) {%>
 <%-- TOGGLE WORKFLOW_ENHANCE - SHOWS PATIENTS INTERNAL PROVIDERS AND RELATED SCHEDULE AVAIL --%>
 
 <oscar:oscarPropertiesCheck value="true" property="workflow_enhance">
-
 <%--if (OscarProperties.getInstance().getProperty("workflow_enhance")!=null && OscarProperties.getInstance().getProperty("workflow_enhance").equals("true")) {--%>
 						
 						<div class="demographicSection">
@@ -1977,10 +1981,7 @@ if ( Dead.equals(PatStat) ) {%>
                         <div style="background-color: #EEEEFF;">
                         <ul>
 			<%!	// ===== functions for quick appointment booking =====
-			
-			
-				
-					
+
 				// convert hh:nn:ss format to elapsed minutes (from 00:00:00)
 				int timeStrToMins (String timeStr) {
 					String[] temp = timeStr.split(":");
@@ -2044,8 +2045,7 @@ if ( Dead.equals(PatStat) ) {%>
 						
 						// get timecode string template associated with this day, number of minutes each slot represents
 						ScheduleTemplateDao dao = SpringUtils.getBean(ScheduleTemplateDao.class); 
-						List<Object> timecodeResult = dao.findTimeCodeByProviderNo(thisProvNo, 
-								ConversionUtils.fromDateString(qCurDate));
+						List<Object> timecodeResult = dao.findTimeCodeByProviderNo(thisProvNo, ConversionUtils.fromDateString(qCurDate));
 
 						// if theres a template on this day, continue
                         if (!timecodeResult.isEmpty()) {
