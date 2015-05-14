@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.decisionSupport.service.DSService;
+import org.oscarehr.util.LoggedInInfo;
 
 /**
  *
@@ -51,9 +52,11 @@ public class TestActionW extends Action {
     
      
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
         String demographic_no = request.getParameter("demographic_no");
         if (demographic_no == null) demographic_no = "1";
-        response.getWriter().println(dsService.evaluateAndGetConsequences(demographic_no, (String) request.getSession().getAttribute("user")));
+        response.getWriter().println(dsService.evaluateAndGetConsequences(loggedInInfo, demographic_no, (String) request.getSession().getAttribute("user")));
         return null;
     }
 

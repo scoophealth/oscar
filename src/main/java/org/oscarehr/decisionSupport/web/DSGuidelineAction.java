@@ -83,6 +83,8 @@ public class DSGuidelineAction extends DispatchAction {
     }
 
     public ActionForward detail(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
         String guidelineId = request.getParameter("guidelineId");
         String demographicNo = request.getParameter("demographic_no");
         if (guidelineId == null) {
@@ -112,9 +114,9 @@ public class DSGuidelineAction extends DispatchAction {
             testGuideline.setConsequences(new ArrayList<DSConsequence>());
             testGuideline.setTitle(dsGuideline.getTitle());
             testGuideline.setParsed(true); //supress parsing of xml, othewrise would overwrite the condition
-            boolean result = testGuideline.evaluateBoolean(demographicNo);
-            DSDemographicAccess demographicAccess = new DSDemographicAccess(demographicNo);
-            String actualValues = demographicAccess.getDemogrpahicValues(LoggedInInfo.getLoggedInInfoFromSession(request), dsCondition.getConditionType());
+            boolean result = testGuideline.evaluateBoolean(loggedInInfo, demographicNo);
+            DSDemographicAccess demographicAccess = new DSDemographicAccess(loggedInInfo, demographicNo);
+            String actualValues = demographicAccess.getDemogrpahicValues(dsCondition.getConditionType());
             conditionResults.add(new ConditionResult(dsCondition, result, actualValues));
         }
         DemographicData demographicData = new DemographicData();
@@ -122,9 +124,9 @@ public class DSGuidelineAction extends DispatchAction {
 
         request.setAttribute("patientName", demographic.getFirstName() + " " + demographic.getLastName());
         request.setAttribute("guideline", dsGuideline);
-        request.setAttribute("consequences", dsGuideline.evaluate(demographicNo));
+        request.setAttribute("consequences", dsGuideline.evaluate(loggedInInfo, demographicNo));
         request.setAttribute("conditionResults", conditionResults);
-        request.setAttribute("demographicAccess", new DSDemographicAccess(demographicNo));
+        request.setAttribute("demographicAccess", new DSDemographicAccess(loggedInInfo, demographicNo));
         return mapping.findForward("guidelineDetail");
 
     }

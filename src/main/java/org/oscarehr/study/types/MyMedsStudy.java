@@ -25,11 +25,19 @@ package org.oscarehr.study.types;
 
 import java.util.List;
 
+import org.caisi.dao.ProviderDAO;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.dao.StudyDao;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.decisionSupport.model.DSConsequence;
 import org.oscarehr.study.Study;
 import org.oscarehr.study.decisionSupport.StudyGuidelines;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
+
+import oscar.OscarProperties;
 
 public class MyMedsStudy implements Study {
 	
@@ -139,10 +147,36 @@ public class MyMedsStudy implements Study {
 	@Override
 	public boolean run() {
 		StudyGuidelines studyGuidelines = StudyGuidelines.getInstance(Study.MYMEDS);
-		List<DSConsequence> listDSConsequence = studyGuidelines.evaluateAndGetConsequences(demographicNo, providerNo, atcCodes);
+		List<DSConsequence> listDSConsequence = studyGuidelines.evaluateAndGetConsequences(getLoggedInInfo(), demographicNo, providerNo, atcCodes);
 		
 		return (listDSConsequence.size() == 1);
 		
+	}
+	
+	private LoggedInInfo getLoggedInInfo() {
+		String providerNo = OscarProperties.getInstance().getProperty("mymeds_job_run_as_provider");
+		if(providerNo == null) {
+			return null;
+		}
+		
+		ProviderDAO providerDao = SpringUtils.getBean(ProviderDao.class);
+		Provider provider = providerDao.getProvider(providerNo);
+		
+		if(provider == null) {
+			return null;
+		}
+		
+		SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+		List<Security> securityList = securityDao.findByProviderNo(providerNo);
+		
+		if(securityList.isEmpty()) {
+			return null;
+		}
+		
+		LoggedInInfo x = new LoggedInInfo();
+		x.setLoggedInProvider(provider);
+		x.setLoggedInSecurity(securityList.get(0));
+		return x;
 	}
 	
 	public boolean isActive() {
