@@ -144,11 +144,12 @@ public class BillingRAPrep {
 				BigDecimal bdHFee = new BigDecimal(dHFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 				BigHTotal = BigHTotal.add(bdHFee);
 				clinicPay = "N/A";
-				hospitalPay = amountpay;
+				hospitalPay = "N/A";
 
 				// is local for hospital
 				if (demo_hin.length() > 1 && servicedate.equals(localServiceDate)) {
 					BigLocalHTotal = BigLocalHTotal.add(bdHFee);
+					hospitalPay = amountpay;
 				}
 			} else {
 				if (location.compareTo("00") == 0 && demo_hin.length() > 1 && servicedate.equals(localServiceDate)) {
