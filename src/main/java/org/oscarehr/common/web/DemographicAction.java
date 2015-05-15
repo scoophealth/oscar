@@ -72,19 +72,29 @@ public class DemographicAction extends DispatchAction  {
 		if(demographicNo != null) {
 			List<DemographicArchive> archives = demographicArchiveDao.findByDemographicNoChronologically(Integer.parseInt(demographicNo));
 			
-			String address="";
-			String city="";
-			String province="";
-			String postal="";
-			String phone="";
-			String phone2="";
-			String cell="";
-			String hPhoneExt="";
-			String wPhoneExt="";
+			String address;
+			String city;
+			String province;
+			String postal;
+			String phone;
+			String phone2;
+			String cell;
+			String hPhoneExt;
+			String wPhoneExt;
 						
 			List<DemographicHistoryItem> items = new ArrayList<DemographicHistoryItem>();
 			
 			for(DemographicArchive archive:archives) {
+				
+				address="";
+				city="";
+				province="";
+				postal="";
+				phone="";
+				phone2="";
+				cell="";
+				hPhoneExt="";
+				wPhoneExt="";
 				
 				List<DemographicExtArchive> exts = demographicExtArchiveDao.getDemographicExtArchiveByArchiveId(archive.getId());
 				java.util.Map<String,DemographicExtArchive> extMap = new java.util.HashMap<String,DemographicExtArchive>();
