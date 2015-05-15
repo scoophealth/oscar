@@ -301,7 +301,7 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
        
 %> 
 <tr <%=(deleted)?"style='text-decoration: line-through' ":"" %> bgcolor="<%=bodd?weakColor:"white"%>" appt_no="<%=appointment.getId().toString()%>" demographic_no="<%=demographic_no%>">	  
-      <td align="center"><a href=# onClick ="popupPageNew(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.getId().toString()%>&displaymode=edit&dboperation=search');return false;" ><%=appointment.getAppointmentDate()%></a></td>
+      <td align="center"><a href=# onClick ="popupPageNew(360,680,'../appointment/appointmentcontrol.jsp?demographic_no=<%=demographic_no%>&appointment_no=<%=appointment.getId().toString()%>&displaymode=edit&dboperation=search');return false;" ><%=appointment.getAppointmentDate()%></a></td>
       <td align="center"><%=appointment.getStartTime()%></td>
       <td align="center"><%=appointment.getEndTime()%></td>
       <td align="center">
