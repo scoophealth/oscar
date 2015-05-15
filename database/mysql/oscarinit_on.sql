@@ -1494,7 +1494,7 @@ CREATE TABLE billing_on_ext (
   PRIMARY KEY  (id),
   key (key_val),
   key (billing_no),
-  payment_id int(10) NOT NULL
+  payment_id int(10)
 ) ;
 
 CREATE TABLE ctl_billingtype (
