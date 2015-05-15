@@ -113,6 +113,7 @@
     LookupList reasonCodes = lookupListManager.findLookupListByName(loggedInInfo, "reasonCode");
 
     ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
+
  List<BillingONCHeader1> cheader1s = cheader1Dao.getBillCheader1ByDemographicNo(Integer.parseInt(demographic_nox));
  BillingONExtDao billingOnExtDao = (BillingONExtDao)SpringUtils.getBean(BillingONExtDao.class);
     oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
