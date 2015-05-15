@@ -465,7 +465,7 @@ $(document).ready(function(){
 	            			tmp.formattedDOB = null;
 	            		}
 	            		
-	            		tmp.name = tmp.lastName + "," + tmp.firstName;
+	            		tmp.name = tmp.lastName + ", " + tmp.firstName;
 	            		tmp.blah = "";
 	            		retval.push(tmp);
 	                 }
@@ -487,7 +487,7 @@ $(document).ready(function(){
 	    },
 	    
 		template: [
-		        '<p class="demo-quick-name">{{name}}</p>',
+		        "<p class='demo-quick-name'>{{name}}</p>",
 		        '{{#hin}}<p class="demo-quick-hin">&nbsp;<em>{{hin}}</em></p>{{/hin}}',
 		       	'{{#dob}}<p class="demo-quick-dob">&nbsp;{{formattedDOB}}</p>{{/dob}}'
 		 ].join(''),
