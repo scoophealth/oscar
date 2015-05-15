@@ -66,15 +66,19 @@ final int INITIAL_DISPLAY=20;
 </logic:present>
 <%
 oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)pageContext.findAttribute("bean");
-String demographic_no = bean.getDemographic_no();
+String demographic_no = "";
+if(request.getParameter("demographic_no")!=null){
+	demographic_no = request.getParameter("demographic_no");
+}else{
+	demographic_no = bean.getDemographic_no();
+}
+
 String demographic_name = "";
 if ( demographic_no != null ) {   
     DemographicData demographic_data = new DemographicData();
     org.oscarehr.common.model.Demographic demographic = demographic_data.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographic_no);
     demographic_name = demographic.getLastName() + ", " + demographic.getFirstName();
 }
-
-
 
 %>
 <jsp:useBean id="DisplayMessagesBeanId" scope="session"
