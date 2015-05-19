@@ -860,4 +860,11 @@
         <ap-output>${type}, ${dataField}, ${comments}, ${dateObserved}, ${dateEntered}</ap-output>
         <ap-json-output>true</ap-json-output>
     </databaseap>
+    <databaseap>
+        <ap-name>provider_list_json</ap-name>
+        <ap-sql>SELECT provider.provider_no, provider.first_name, provider.last_name FROM provider</ap-sql>
+        <ap-output>${provider_no}, ${last_name}, ${first_name}</ap-output>
+        <ap-json-output>true</ap-json-output>
+    </databaseap>
+
 </eformap-config>
