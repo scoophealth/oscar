@@ -1292,6 +1292,37 @@ document.forms[1].r_doctor_ohip.value = refNo;
 			</tr>
 
 
+<%-- TOGGLE CREATING BABY RECORD MODULE --%>	
+<oscar:oscarPropertiesCheck property="enable_create_child_record" value="true">
+			<tr>
+				<td id="babyTbl" colspan="4">
+					<table border="1" width="100%">
+						<tr valign="top">
+	 					<td>
+	 					<span style="font-size:12px"><b><bean:message key="demographic.demographicaddrecordhtm.childHeader" /></b></span>
+	 					<br/>
+						<bean:message key="demographic.demographicaddrecordhtm.childLastName" />: <input type="text" name="child_last_name" />&nbsp;
+						<bean:message key="demographic.demographicaddrecordhtm.childFirstName" />: <input type="text" name="child_first_name"/>&nbsp;
+						<bean:message key="demographic.demographicaddrecordhtm.childDateOfBirth" />:
+						<input type="text"
+							name="child_dob" id="child_dob"
+							value="" size="12" > <img
+							src="../images/cal.gif" id="child_dob_cal">(yyyy-mm-dd)
+							&nbsp;
+						<bean:message key="demographic.demographicaddrecordhtm.childGender" />:  
+						             <select  name="child_gender">
+				                        <option value=""></option>
+				                		<% for(org.oscarehr.common.Gender gn : org.oscarehr.common.Gender.values()){ %>
+				                        <option value=<%=gn.name()%>><%=gn.getText()%></option>
+				                        <% } %>
+				                        </select>
+				                        </td>
+				       </tr>
+				      </table>               
+				</td>
+			</tr>
+</oscar:oscarPropertiesCheck>
+
 <%-- TOGGLE PRIVACY CONSENT MODULE --%>			
 <oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">			
 			<tr valign="top">
@@ -1471,6 +1502,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 
 <script type="text/javascript">
 Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "child_dob", ifFormat : "%Y-%m-%d", showsTime :false, button : "child_dob_cal", singleClick : true, step : 1 });
 
 <%
 if (privateConsentEnabled) {
