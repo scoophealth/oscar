@@ -63,14 +63,11 @@ public class DSServiceMyDrugref extends DSService {
     }
 
     public void fetchGuidelinesFromService(String providerNo) {
-
-        Vector<String> params = new Vector<String>();
-        params.addElement(this.getMyDrugrefId(providerNo));
         RxMyDrugrefInfoAction myDrugrefAction = new RxMyDrugrefInfoAction();
         try {
             logger.debug("CALLING MYDRUGREF");
             @SuppressWarnings("unchecked")
-            Vector<Hashtable<String,String>> providerGuidelines = (Vector<Hashtable<String,String>>) myDrugrefAction.callWebserviceLite("GetGuidelineIds", params);
+            Vector<Hashtable<String,String>> providerGuidelines = myDrugrefAction.callOAuthService("guidelines/getGuidelineIds", null, providerNo, this.getMyDrugrefId(providerNo));
             if (providerGuidelines == null) {
                 logger.error("Could not get provider decision support guidelines from MyDrugref.");
                 return;
@@ -96,8 +93,9 @@ public class DSServiceMyDrugref extends DSService {
                     guidelinesToFetch.add(uuid);
                 }
             }
+            
             //fetch the new ones
-            List<DSGuideline> newGuidelines = this.fetchGuidelines(guidelinesToFetch);
+            List<DSGuideline> newGuidelines = this.fetchGuidelines(guidelinesToFetch, providerNo);
             for (DSGuideline newGuideline: newGuidelines) {
                 dSGuidelineDao.persist(newGuideline);
             }
@@ -114,7 +112,7 @@ public class DSServiceMyDrugref extends DSService {
             }
             //remove ones left over
             for (DSGuidelineProviderMapping uuidLeft: uuidsMapped) {
-            	dSGuidelineProviderMappingDao.remove(uuidLeft);
+            	dSGuidelineProviderMappingDao.remove(uuidLeft.getId());
             }
         } catch (Exception e) {
             logger.error("Unable to fetch guidelines from MyDrugref", e);
@@ -122,13 +120,16 @@ public class DSServiceMyDrugref extends DSService {
 
     }
 
-    public List<DSGuideline> fetchGuidelines(List<String> uuids)  {
-
+    public List<DSGuideline> fetchGuidelines(List<String> uuids, String providerNo)  {
         RxMyDrugrefInfoAction myDrugrefAction = new RxMyDrugrefInfoAction();
         Vector params = new Vector();
-        params.addElement(new Vector(uuids));
+        if(uuids.size() > 0) {
+        	for(int i=0; i < uuids.size(); i++) {
+        		params.add(uuids.get(i));
+        	}
+        }
 
-        Vector<Hashtable> fetchedGuidelines = (Vector<Hashtable>) myDrugrefAction.callWebserviceLite("GetGuidelines", params);
+        Vector<Hashtable> fetchedGuidelines = myDrugrefAction.callOAuthService("guidelines/getGuidelines", params, providerNo, null);
         ArrayList<DSGuideline> newGuidelines = new ArrayList<DSGuideline>();
         for (Hashtable<String,Serializable> fetchedGuideline: fetchedGuidelines) {
             logger.debug("Title: " + (String) fetchedGuideline.get("name"));
