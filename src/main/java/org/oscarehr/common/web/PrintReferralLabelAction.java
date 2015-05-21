@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +41,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
@@ -84,8 +86,20 @@ public class PrintReferralLabelAction extends OscarAction {
 
 			response.setHeader("Content-disposition", getHeader(response).toString());
 
-			if (!StringUtils.isEmpty(request.getParameter("ids"))) {
-				String[] ids = request.getParameter("ids").split(",");
+			String idList = request.getParameter("ids");
+			
+			if("true".equals(request.getParameter("useCheckList"))) {
+				idList = "";
+				List<ProfessionalSpecialist> checkedSpecs = (List<ProfessionalSpecialist>) request.getSession().getAttribute("billingReferralAdminCheckList");
+		    	if(checkedSpecs != null && checkedSpecs.size()>0) {
+		    		for(ProfessionalSpecialist ps:checkedSpecs) {
+		    			idList  += ("," +ps.getId()); 
+		    		}
+		    		idList = idList.substring(1);
+		    	}
+			}
+			if (!StringUtils.isEmpty(idList)) {
+				String[] ids = idList.split(",");
 				ArrayList<Object> printList = new ArrayList<Object>();
 				OscarDocumentCreator osc = new OscarDocumentCreator();
 				
@@ -116,6 +130,9 @@ public class PrintReferralLabelAction extends OscarAction {
 			IOUtils.closeQuietly(ins);
 		}
 
+		if("true".equals(request.getParameter("useCheckList"))) {
+			request.getSession().setAttribute("billingReferralAdminCheckList",new ArrayList<ProfessionalSpecialist>());
+		}
 		return actionMapping.findForward(this.target);
 	}
 
