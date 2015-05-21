@@ -159,9 +159,9 @@ function updateAjax() {
 <%
   ArrayList<HashMap<String, ? extends Object>> eForms;
   if (groupView.equals("") || groupView.equals("default")) {
-      eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, roleName$);
+      eForms = EFormUtil.listEForms(LoggedInInfo.getLoggedInInfoFromSession(request), orderBy, EFormUtil.CURRENT, roleName$);
   } else {
-      eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, groupView, roleName$);
+      eForms = EFormUtil.listEForms(LoggedInInfo.getLoggedInInfoFromSession(request), orderBy, EFormUtil.CURRENT, groupView, roleName$);
   }
   if (eForms.size() > 0) {
       for (int i=0; i<eForms.size(); i++) {

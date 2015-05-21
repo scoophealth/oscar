@@ -1,0 +1,4 @@
+alter table eform add programNo int(10);
+alter table eform add restrictToProgram tinyint(1);
+update eform set restrictToProgram = 0;
+
