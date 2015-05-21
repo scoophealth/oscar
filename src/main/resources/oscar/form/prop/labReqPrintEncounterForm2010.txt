@@ -104,7 +104,7 @@ m_urine : left, 244, 589, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
 m_stoolCulture : left, 244, 602, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
 m_stoolOvaParasites : left, 244, 614, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
 m_otherSwabsPus : left, 244, 626, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
-m_otherSwabsPusSource : left, 374, 617, 0, BaseFont.HELVETICA, 7, _, 416, 627, 10
+m_otherSwabsSource : left, 374, 617, 0, BaseFont.HELVETICA, 7, _, 416, 627, 10
 m_blank : left, 244, 639, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
 m_blankText : left, 262, 629, 0, BaseFont.HELVETICA, 8, _, 416, 639, 10
 
