@@ -65,10 +65,13 @@ public class HtmlEditAction extends Action {
             String formHtml = fm.getFormHtml();
             boolean showLatestFormOnly = WebUtils.isChecked(request, "showLatestFormOnly");
             boolean patientIndependent = WebUtils.isChecked(request, "patientIndependent");
+            boolean restrictByProgram = WebUtils.isChecked(request, "restrictByProgram");
+            
             String roleType = fm.getRoleType();
+            String programNo = fm.getProgramNo();
             
             HashMap<String, String> errors = new HashMap<String, String>();
-            EFormBase updatedform = new EFormBase(fid, formName, formSubject, formFileName, formHtml, showLatestFormOnly, patientIndependent, roleType); //property container (bean)
+            EFormBase updatedform = new EFormBase(fid, formName, formSubject, formFileName, formHtml, showLatestFormOnly, patientIndependent, roleType, programNo, restrictByProgram); //property container (bean)
             //validation...
             if ((formName == null) || (formName.length() == 0)) {
                 errors.put("formNameMissing", "eform.errors.form_name.missing.regular");
@@ -77,14 +80,14 @@ public class HtmlEditAction extends Action {
                 errors.put("formNameExists", "eform.errors.form_name.exists.regular");
             }
             if ((fid.length() == 0) && (errors.size() == 0)) {
-                fid = EFormUtil.saveEForm(formName, formSubject, formFileName, formHtml, showLatestFormOnly, patientIndependent, roleType);
+                fid = EFormUtil.saveEForm(formName, formSubject, formFileName, formHtml, showLatestFormOnly, patientIndependent, roleType,programNo,restrictByProgram);
                 request.setAttribute("success", "true");
             } else if (errors.size() == 0) {
                 EFormUtil.updateEForm(updatedform);
                 request.setAttribute("success", "true");
             }
             
-            HashMap<String, Object> curht = createHashMap(fid, formName, formSubject, formFileName, formHtml, showLatestFormOnly, patientIndependent, roleType);
+            HashMap<String, Object> curht = createHashMap(fid, formName, formSubject, formFileName, formHtml, showLatestFormOnly, patientIndependent, roleType, programNo, restrictByProgram);
             request.setAttribute("submitted", curht);
             
             request.setAttribute("errors", errors);
@@ -95,7 +98,7 @@ public class HtmlEditAction extends Action {
         return(mapping.findForward("success"));
     }
     
-    private HashMap<String, Object> createHashMap(String fid, String formName, String formSubject, String formFileName, String formHtml, boolean showLatestFormOnly, boolean patientIndependent, String roleType) {
+    private HashMap<String, Object> createHashMap(String fid, String formName, String formSubject, String formFileName, String formHtml, boolean showLatestFormOnly, boolean patientIndependent, String roleType, String programNo, boolean restrictByProgram) {
     	HashMap<String, Object> curht = new HashMap<String, Object>();
         curht.put("fid", fid);  
         curht.put("formName", formName);
@@ -105,6 +108,8 @@ public class HtmlEditAction extends Action {
         curht.put("showLatestFormOnly", showLatestFormOnly);
         curht.put("patientIndependent", patientIndependent);
         curht.put("roleType", roleType);
+        curht.put("programNo",programNo);
+        curht.put("restrictByProgram", restrictByProgram);
         
         if (fid.length() == 0) {
             curht.put("formDate", "--");

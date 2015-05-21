@@ -38,6 +38,8 @@ public class HtmlEditForm extends ActionForm {
     private boolean showLatestFormOnly = false;
     private boolean patientIndependent = false;
     private String roleType = "";
+    private String programNo = "";
+    private boolean restrictByProgram =false; 
     
     public HtmlEditForm() {
     }
@@ -113,4 +115,22 @@ public class HtmlEditForm extends ActionForm {
     public void setPatientIndependent(boolean patientIndependent) {
         this.patientIndependent = patientIndependent;
     }
+
+	public String getProgramNo() {
+		return programNo;
+	}
+
+	public void setProgramNo(String programNo) {
+		this.programNo = programNo;
+	}
+
+	public boolean isRestrictByProgram() {
+		return restrictByProgram;
+	}
+
+	public void setRestrictByProgram(boolean restrictByProgram) {
+		this.restrictByProgram = restrictByProgram;
+	}
+    
+    
 }
