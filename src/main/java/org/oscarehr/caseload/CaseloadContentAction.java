@@ -450,7 +450,7 @@ public class CaseloadContentAction extends DispatchAction {
 						MiscUtils.getLogger().error("Couldn't encode string", e);
 					}
 					String eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo=0&demographicNo="+demographic_no+"&curProviderNo="+caseloadProv+"&reason=&encType="+encType+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+apptime.getHours()+":"+apptime.getMinutes()+"&status=T"+"&apptProvider_no="+caseloadProv+"&providerview="+caseloadProv;
-					buttons += "<a href='#' onClick=\"popupPage(710, 1024,'../oscarSurveillance/CheckSurveillance.do?demographicNo="+demographic_no+"&proceed="+URLEncoder.encode(eURL)+"');return false;\" title='Encounter'>E</a> ";
+					buttons += "<a href='#' onClick=\"popupWithApptNo(710, 1024,'../oscarSurveillance/CheckSurveillance.do?demographicNo="+demographic_no+"&proceed="+URLEncoder.encode(eURL)+"', 'encounter');return false;\" title='Encounter'>E</a> ";
 				}
 
 				// add form links to string
