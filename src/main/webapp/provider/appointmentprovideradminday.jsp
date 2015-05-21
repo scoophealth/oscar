@@ -598,12 +598,14 @@ popup.focus();
 
 function popupWithApptNo(vheight,vwidth,varpage,name,apptNo) {
 	if (apptNo) storeApptNo(apptNo);
-	if (name=='master')
+	if (name=='master'){
 		popup(vheight,vwidth,varpage,name);
-	else if (name=='encounter')
-		popUpEncounter(vheight, vwidth, varpage);
-	else
+	}else if (name=='encounter'){
+	
+		popup(vheight, vwidth, varpage, name);
+	}else{
 		popupOscarRx(vheight,vwidth,varpage);
+	}
 }
 
 function review(key) {
