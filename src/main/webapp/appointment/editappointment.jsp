@@ -652,7 +652,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             <div class="label"><bean:message key="Appointment.formChartNo" />:</div>
             <div class="input">
                 <input type="TEXT" name="chart_no"
-                    readonly value="<%=bFirstDisp?chartno:request.getParameter("chart_no")%>"
+                    readonly value="<%=bFirstDisp?StringUtils.trimToEmpty(chartno):request.getParameter("chart_no")%>"
                     width="25">
             </div>
         </li>
@@ -942,8 +942,8 @@ if (bMultisites) { %>
 <div id="bottomInfo">
 <table width="95%" align="center">
 	<tr>
-		<td><bean:message key="Appointment.msgTelephone" />: <%= phone%><br>
-		<bean:message key="Appointment.msgRosterStatus" />: <%=rosterstatus%>
+		<td><bean:message key="Appointment.msgTelephone" />: <%= StringUtils.trimToEmpty(phone)%><br>
+		<bean:message key="Appointment.msgRosterStatus" />: <%=StringUtils.trimToEmpty(rosterstatus)%>
 		</td>
 		<% if (alert!=null && !alert.equals("")) { %>
 		<td bgcolor='yellow'><font color='red'><b><%=alert%></b></font></td>
