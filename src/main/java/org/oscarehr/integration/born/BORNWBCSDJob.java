@@ -185,18 +185,23 @@ public class BORNWBCSDJob implements OscarRunnable {
 			Calendar cal = Calendar.getInstance();
 
 			BornCDADocument bornCDA = new BornCDADocument(CDAStandard.CCD, BORNCDADocumentType.EighteenMonth, demographic, authorList, props, cal, String.valueOf(demographicNo));
-			bornCDA.setNonXmlBody(generateWBCSDXml(xml, demographicNo), "text/plain");
-			String cdaForLogging = CdaUtils.toXmlString(bornCDA.getDocument(), true);
-
-			if (logger.isDebugEnabled()) {
-				logger.info("WBCSD CDA Record for Patient ID:" + demographicNo + "\n" + cdaForLogging + "\n");
-			}
-
-			boolean xdsResult = createXds(demographicNo, cdaForLogging);
-
-			if (xdsResult) {
-				MiscUtils.getLogger().info("SUCCESS OVER XDS");
-				markAsSent(demographicNo);
+			byte[] wbcsdXml = generateWBCSDXml(xml, demographicNo);
+			if(wbcsdXml != null) {
+				bornCDA.setNonXmlBody(wbcsdXml, "text/plain");
+				String cdaForLogging = CdaUtils.toXmlString(bornCDA.getDocument(), true);
+	
+				if (logger.isDebugEnabled()) {
+					logger.info("WBCSD CDA Record for Patient ID:" + demographicNo + "\n" + cdaForLogging + "\n");
+				}
+	
+				boolean xdsResult = createXds(demographicNo, cdaForLogging);
+	
+				if (xdsResult) {
+					MiscUtils.getLogger().info("SUCCESS OVER XDS");
+					markAsSent(demographicNo);
+				}
+			} else {
+				logger.info("failed to generate valid xml for patient " + demographicNo);
 			}
 
 		} catch (Exception e) {

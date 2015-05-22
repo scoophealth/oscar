@@ -134,7 +134,9 @@ public class BORNWBJob implements OscarRunnable {
 					FileWriter fw = null;
 					try {
 						fw = new FileWriter(pathStr + File.separator + "born_wb_" + demographicNo + ".xml");
-						testGen.addToStream(fw, opts, false);
+						if(!testGen.addToStream(fw, opts, false)) {
+							logger.debug("no record to write");
+						}
 					} finally {
 						fw.close();
 					}
@@ -157,24 +159,31 @@ public class BORNWBJob implements OscarRunnable {
 					BornHialProperties props = getBornHialProperties();
 
 					Calendar cal = Calendar.getInstance();
-					cal.setTime(eformDataDao.getLatestFormDateAndTimeForEforms(xml.getEformFdidMap().values()));
-					
+					eformDataDao.getLatestFormDateAndTimeForEforms(xml.getEformFdidMap().values());
+
 					String id = BORNWbXmlGenerator.generateHash(xml.getEformFdidMap().values());
 					logger.info("id is " + id);
 
 					BornCDADocument bornCDA = new BornCDADocument(CDAStandard.CCD, BORNCDADocumentType.EighteenMonth, demographic, authorList, props, cal, id);
-					bornCDA.setNonXmlBody(generateWBXml(xml, demographicNo), "text/plain");
-					String cdaForLogging = CdaUtils.toXmlString(bornCDA.getDocument(), true);
-
-					if (logger.isDebugEnabled()) {
-						logger.info("WB CDA Record for Patient ID:" + demographicNo + "\n" + cdaForLogging + "\n");
-					}
-
-					boolean xdsResult = createXds(demographicNo, cdaForLogging);
-
-					if (xdsResult) {
-						MiscUtils.getLogger().info("SUCCESS OVER XDS");
-						markAsSent(xml, demographicNo);
+					//TODO:need to check if empty
+					byte[] wbXml = generateWBXml(xml, demographicNo);
+					
+					if(wbXml != null) {
+						bornCDA.setNonXmlBody(wbXml, "text/plain");
+						String cdaForLogging = CdaUtils.toXmlString(bornCDA.getDocument(), true);
+	
+						if (logger.isDebugEnabled()) {
+							logger.info("WB CDA Record for Patient ID:" + demographicNo + "\n" + cdaForLogging + "\n");
+						}
+	
+						boolean xdsResult = createXds(demographicNo, cdaForLogging);
+	
+						if (xdsResult) {
+							MiscUtils.getLogger().info("SUCCESS OVER XDS");
+							markAsSent(xml, demographicNo);
+						}
+					} else {
+						logger.info("failed to generate valid xml for patient " + demographicNo);
 					}
 
 				} catch (Exception e) {
@@ -314,7 +323,7 @@ public class BORNWBJob implements OscarRunnable {
 		return null;
 	}
 
-	private void markAsSent(BORNWbXmlGenerator xml, Integer demographicNo) {
+	protected void markAsSent(BORNWbXmlGenerator xml, Integer demographicNo) {
 		String val = formatter.format(new Date());
 
 		for (String name : xml.getEformMap().keySet()) {
