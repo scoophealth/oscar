@@ -37,6 +37,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,7 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
+import com.lowagie.text.html.simpleparser.HTMLWorker;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPCell;
@@ -585,8 +587,25 @@ public class LabPDFCreator extends PdfPageEventHelper{
 						// cell.setBackgroundColor(getHighlightColor(linenum));
 						linenum++;
 						//cell.setPaddingLeft(100);
-						cell.setPhrase(new Phrase(handler.getOBRComment(j, k)
-								.replaceAll("<br\\s*/*>", "\n"), font));
+						if (handler.getMsgType().equals("TRUENORTH")) {
+							try {
+								Phrase phrase= new Phrase();
+								StringReader strReader = new StringReader(handler.getOBRComment(j, k));
+								@SuppressWarnings("rawtypes")
+                                ArrayList p = HTMLWorker.parseToList(strReader, null);
+								for (int h=0; h<p.size();h++) {
+									phrase.add(p.get(h));
+									phrase.add("\n");
+								}
+								cell.setPhrase(phrase);
+							} catch (Exception e) {
+					            throw new ExceptionConverter(e);
+					        }
+							
+						} else {
+							cell.setPhrase(new Phrase(handler.getOBRComment(j, k)
+									.replaceAll("<br\\s*/*>", "\n"), font));
+						}
 						table.addCell(cell);
 						cell.setPadding(3);
 					}
