@@ -1117,19 +1117,19 @@ function pasteAppt(multipleSameDayGroupAppt) {
             </tr>
              <tr bgcolor="#ccccff">
                 <th style="padding-right: 20px" align="left"><bean:message key="appointment.addappointment.msgHin"/>:</th>
-                <td><%=hin%> </td>
+                <td><%=hin.replace("null", "")%> </td>
             </tr>
             <tr bgcolor="#ccccff">
                 <th style="padding-right: 20px"align="left"><bean:message key="appointment.addappointment.msgAddress"/>:</th>
-                <td><%=address%>, <%=city%>, <%=province%>, <%=postal%></td>
+                <td><%=StringUtils.trimToEmpty(address)%>, <%=StringUtils.trimToEmpty(city)%>, <%=StringUtils.trimToEmpty(province)%>, <%=StringUtils.trimToEmpty(postal)%></td>
             </tr>
             <tr bgcolor="#ccccff">
                 <th style="padding-right: 20px" align="left"><bean:message key="appointment.addappointment.msgPhone"/>:</th>
-                <td><b><bean:message key="appointment.addappointment.msgH"/></b>:<%=phone%> <b><bean:message key="appointment.addappointment.msgW"/></b>:<%=phone2%> </td>
+                <td><b><bean:message key="appointment.addappointment.msgH"/></b>:<%=StringUtils.trimToEmpty(phone)%> <b><bean:message key="appointment.addappointment.msgW"/></b>:<%=StringUtils.trimToEmpty(phone2)%> </td>
             </tr>
             <tr bgcolor="#ccccff" align="left">
                 <th style="padding-right: 20px"><bean:message key="appointment.addappointment.msgEmail"/>:</th>
-                <td><%=email%></td>
+                <td><%=StringUtils.trimToEmpty(email)%></td>
             </tr>
 
         </table>
