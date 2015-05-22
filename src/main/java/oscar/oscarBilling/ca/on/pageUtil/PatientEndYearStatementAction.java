@@ -31,6 +31,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -192,23 +193,27 @@ public class PatientEndYearStatementAction extends OscarAction {
 
 			   //open corresponding Jasper Report Definition
 			   InputStream reportInstream = osc.getDocumentStream("/oscar/oscarBilling/ca/on/reports/" + "end_year_statement_report.jrxml");
-
-			   //COnfigure Reponse Header
-			   cfgHeader(response, "end_year_statement_report.pdf", docFmt);
-                           //Fill document with report parameter data
-			   Connection dbConn = null;
 			   try {
-				   dbConn = DbConnectionFilter.getThreadLocalDbConnection();
-			   } catch (SQLException ex) {
-				   errors.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("errors.billing.ca.on.database", "Database access error"));
-				   saveErrors(request,errors);
-				   _logger.error("Can't get db connection",ex);
-				   return mapping.findForward(RES_FAILURE);		   				
+				   //COnfigure Reponse Header
+				   cfgHeader(response, "end_year_statement_report.pdf", docFmt);
+	                           //Fill document with report parameter data
+				   Connection dbConn = null;
+				   try {
+					   dbConn = DbConnectionFilter.getThreadLocalDbConnection();
+				   } catch (SQLException ex) {
+					   errors.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("errors.billing.ca.on.database", "Database access error"));
+					   saveErrors(request,errors);
+					   _logger.error("Can't get db connection",ex);
+					   return mapping.findForward(RES_FAILURE);		   				
+				   }
+				   if(dbConn != null) {
+					   osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream, dbConn);
+				   }
+				   return null;	   
 			   }
-			   if(dbConn != null) {
-				   osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream, dbConn);
+			   finally {
+				   IOUtils.closeQuietly(reportInstream);
 			   }
-			   return null;	   
 		   } 
 	   } else if (request.getParameter("demosearch") != null) {
 		   request.getSession().setAttribute("summary", null);			   
