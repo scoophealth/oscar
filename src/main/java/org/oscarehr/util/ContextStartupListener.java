@@ -33,6 +33,8 @@ import org.oscarehr.PMmodule.utility.ProgramAccessCache;
 import org.oscarehr.PMmodule.utility.RoleCache;
 import org.oscarehr.common.jobs.OscarJobUtils;
 import org.oscarehr.threads.WaitListEmailThread;
+import org.quartz.SchedulerException;
+import org.quartz.impl.StdSchedulerFactory;
 
 import oscar.OscarProperties;
 
@@ -119,6 +121,11 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 		CaisiIntegratorUpdateTask.stopTask();
 		VmStat.stopContinuousLogging();
 
+		try {
+			 StdSchedulerFactory.getDefaultScheduler().shutdown();
+		 } catch(SchedulerException e) {
+			 logger.error("Error",e);
+		 }
 		try {
 			MiscUtilsOld.checkShutdownSignaled();
 			MiscUtilsOld.deregisterShutdownHook();
