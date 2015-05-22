@@ -109,6 +109,8 @@ int i, j;
         var customInstr      = eval('get.customInstr' + rowId).checked;
         var special          = eval('get.fldSpecial' + rowId).value;
         var dispenseInternal = eval('get.dispenseInternal'+rowId).value;
+        customName			= encodeURI(customName);
+        special				= encodeURI(special); 
         
         if(favoriteName==null || favoriteName.length < 1) {
             alert('Please enter a favorite name.');
