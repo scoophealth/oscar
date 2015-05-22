@@ -108,6 +108,9 @@ int i, j;
         var prn              = eval('get.fldPrn' + rowId).checked;
         var customInstr      = eval('get.customInstr' + rowId).checked;
         var special          = eval('get.fldSpecial' + rowId).value;
+        customName			= encodeURI(customName);
+        special				= encodeURI(special);
+        
         if(favoriteName==null || favoriteName.length < 1) {
             alert('Please enter a favorite name.');
             err = true;
