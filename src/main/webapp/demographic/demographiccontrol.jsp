@@ -42,12 +42,11 @@
   }
 %>
 
-<%@ page errorPage="errorpage.jsp" import="oscar.OscarProperties"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ page import="oscar.OscarProperties"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <%
-	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+  LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
   OscarProperties props = OscarProperties.getInstance();
 
