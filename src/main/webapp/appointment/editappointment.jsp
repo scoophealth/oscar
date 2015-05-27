@@ -728,8 +728,11 @@ if (bMultisites) { %>
             </div>
         </li>
         <li class="row weak">
-			<div class="label"></div>
-            <div class="input"></div>
+			<div class="label">Creator:</div>
+            <div class="input">
+            <% String lastCreatorNo = bFirstDisp?((String)appt.get("creator")):request.getParameter("user_id"); %>
+                <INPUT TYPE="TEXT" NAME="creator_user_id" VALUE="<%=lastCreatorNo%>" readonly WIDTH="25">
+            </div>
             <div class="space">&nbsp;</div>
 			<div class="label"></div>
             <div class="input"></div>
