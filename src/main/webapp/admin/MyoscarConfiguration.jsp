@@ -51,7 +51,7 @@
 
 <html:html locale="true">
 <head>
-	<title>MyOscar Account Creation Config</title>
+	<title>PHR Account Creation Config</title>
 	<link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet" type="text/css">
 	<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
 	<link href="<%=request.getContextPath() %>/css/DT_bootstrap.css" rel="stylesheet" type="text/css">
@@ -73,7 +73,7 @@
 </head>
 
 <body vlink="#0000FF" class="BodyStyle">
-<h4>MyOscar Account Creation Config</h4>
+<h4>PHR Account Creation Config</h4>
 
 <html-el:form action="/phr/UserManagement" styleId="registrationForm" method="POST">
  	<html-el:hidden property="method" value="setRegistrationLetterData"/>
