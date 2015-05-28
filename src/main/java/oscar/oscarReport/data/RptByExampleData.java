@@ -57,6 +57,14 @@ public class RptByExampleData {
 
     public String exampleReportGenerate( String sql, Properties oscarVariables ){
 
+    	//https://bugs.mysql.com/bug.php?id=35653
+    	if(sql.matches(".*((?i)truncate).*")) {
+    		throw new SecurityException("don't use truncate!");
+    	}
+    	if(sql.matches(".*((?i)rename).*")) {
+    		throw new SecurityException("don't use rename!");
+    	}
+    	
            if (sql.compareTo("") != 0){
 
 
