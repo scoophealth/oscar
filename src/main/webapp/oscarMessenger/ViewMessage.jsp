@@ -82,12 +82,13 @@ function BackToOscar()
 }
 
 function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
+
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
   var winName;
   
   if( page.indexOf("IncomingEncounter.do") > -1 ) {
-    winName = "Encounter";
+    winName = "encounter";
   }
   else {
     winName = "oscarMVA";
