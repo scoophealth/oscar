@@ -497,6 +497,8 @@ function addUltraSound() {
 	jQuery.ajax({url:'onarenhanced_us.jsp?n='+total,async:false, success:function(data) {
 		  jQuery("#us_container tbody").append(data);
 	}});
+	
+	Calendar.setup({ inputField : "ar2_uDate"+total, ifFormat : "%Y/%m/%d", showsTime :false, button : "ar2_uDate"+total+"_cal", singleClick : true, step : 1 });	
 }
 
 function deleteUltraSound(id) {
