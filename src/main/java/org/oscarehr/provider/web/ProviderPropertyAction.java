@@ -2260,6 +2260,98 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
     }
 
     
+    public ActionForward viewAppointmentCardPrefs(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
+
+		DynaActionForm frm = (DynaActionForm)actionform;
+		String provider = (String) request.getSession().getAttribute("user");
+
+		UserProperty name = this.userPropertyDAO.getProp(provider, "APPT_CARD_NAME");
+		UserProperty phone = this.userPropertyDAO.getProp(provider, "APPT_CARD_PHONE");
+		UserProperty fax = this.userPropertyDAO.getProp(provider, "APPT_CARD_FAX");
+
+		if (name == null){
+			name = new UserProperty();
+		}
+		if (phone == null){
+			phone = new UserProperty();
+		}
+		if (fax == null){
+			fax = new UserProperty();
+		}
+		
+		request.setAttribute("appointmentCardName",name);
+		request.setAttribute("appointmentCardPhone",phone);
+		request.setAttribute("appointmentCardFax",fax);
+
+
+		request.setAttribute("providertitle","provider.appointmentCardPrefs.title"); //=Set myDrugref ID
+		request.setAttribute("providermsgPrefs","provider.appointmentCardPrefs.msgPrefs"); //=Preferences"); //
+		request.setAttribute("providermsgProvider","provider.appointmentCardPrefs.msgProvider"); //=myDrugref ID
+		request.setAttribute("providermsgEdit","provider.appointmentCardPrefs.msgEdit"); //=Enter your desired login for myDrugref
+		request.setAttribute("providerbtnSubmit","provider.appointmentCardPrefs.btnSubmit"); //=Save
+		request.setAttribute("providermsgSuccess","provider.appointmentCardPrefs.msgSuccess"); //=myDrugref Id saved
+		request.setAttribute("method","saveAppointmentCardPrefs");
+
+		frm.set("appointmentCardName", name);
+		frm.set("appointmentCardPhone", phone);
+		frm.set("appointmentCardFax", fax);
+
+		return actionmapping.findForward("genAppointmentCardPrefs");
+    }
+
+    public ActionForward saveAppointmentCardPrefs(ActionMapping actionmapping,ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+
+		DynaActionForm frm = (DynaActionForm)actionform;
+		UserProperty n = (UserProperty)frm.get("appointmentCardName");
+		UserProperty p = (UserProperty)frm.get("appointmentCardPhone");
+		UserProperty f = (UserProperty)frm.get("appointmentCardFax");
+
+		String name = n != null ? n.getValue() : "";
+		String phone = p != null ? p.getValue() : "";
+		String fax = f != null ? f.getValue() : "";
+		
+		String provider = (String) request.getSession().getAttribute("user");
+
+		UserProperty wProperty = this.userPropertyDAO.getProp(provider,"APPT_CARD_NAME");
+		if( wProperty == null ) {
+			wProperty = new UserProperty();
+			wProperty.setProviderNo(provider);
+			wProperty.setName("APPT_CARD_NAME");
+		}
+		wProperty.setValue(name);
+
+		userPropertyDAO.saveProp(wProperty);
+
+		UserProperty hProperty = this.userPropertyDAO.getProp(provider,"APPT_CARD_PHONE");
+		if( hProperty == null ) {
+			hProperty = new UserProperty();
+			hProperty.setProviderNo(provider);
+			hProperty.setName("APPT_CARD_PHONE");
+		}
+		hProperty.setValue(phone);
+		userPropertyDAO.saveProp(hProperty);
+
+		UserProperty mProperty = this.userPropertyDAO.getProp(provider,"APPT_CARD_FAX");
+		if( mProperty == null ) {
+			mProperty = new UserProperty();
+			mProperty.setProviderNo(provider);
+			mProperty.setName("APPT_CARD_FAX");
+		}
+		mProperty.setValue(fax);
+		userPropertyDAO.saveProp(mProperty);
+
+		request.setAttribute("status", "success");
+		request.setAttribute("providertitle","provider.appointmentCardPrefs.title"); //=Set myDrugref ID
+		request.setAttribute("providermsgPrefs","provider.appointmentCardPrefs.msgPrefs"); //=Preferences"); //
+		request.setAttribute("providermsgProvider","provider.appointmentCardPrefs.msgProvider"); //=myDrugref ID
+		request.setAttribute("providermsgEdit","provider.appointmentCardPrefs.msgEdit"); //=Enter your desired login for myDrugref
+		request.setAttribute("providerbtnSubmit","provider.appointmentCardPrefs.btnSubmit"); //=Save
+		request.setAttribute("providermsgSuccess","provider.appointmentCardPrefs.msgSuccess"); //=myDrugref Id saved
+		request.setAttribute("method","saveAppointmentCardPrefs");
+
+		return actionmapping.findForward("genAppointmentCardPrefs");
+	}
+    
     /**
      * Creates a new instance of ProviderPropertyAction
      */
