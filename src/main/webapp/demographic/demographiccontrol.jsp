@@ -71,6 +71,9 @@
 	MiscUtils.getLogger().debug("Search parameters, searchMode="+searchMode+", keyword="+keyword);
 
   if(searchMode!=null) {
+	  if(searchMode.equals("")) {
+		  searchMode = "search_name";
+	  }
 	  if(keyword.indexOf("*")!=-1 || keyword.indexOf("%")!=-1) regularexp="like";
 
     if(searchMode.equals("search_address")) fieldname="address";
