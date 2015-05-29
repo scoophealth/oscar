@@ -92,9 +92,13 @@ for(ReportProvider rp:res) {
 	  reportProviderDao.persist(rp);
 %> <%
 }
-%> <script type="text/javascript">      
-	  window.opener.document.location.href="<%=request.getContextPath() %>/administration/?show=VisitReport";
-      window.close();
+%> 
+<script type="text/javascript">
+	<%if(action.equals("visitreport")){%>
+	window.opener.location.href="<%=request.getContextPath() %>/administration/?show=<%=action%>";
+	<%}%>  
+
+    window.close();
 </script> <%
 %>
 <p></p>
