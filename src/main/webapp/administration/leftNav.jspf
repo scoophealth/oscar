@@ -325,7 +325,7 @@ String curProvider_no = (String)session.getAttribute("user");
 					<a href="javascript:void(0);" class="xlink" rel="${ctx}/oscarReport/dbReportAgeSex.jsp"><bean:message key="admin.admin.btnAgeSexReport" /></a>
 					</li>
 					
-					<li><a href="${ctx}/oscarReport/oscarReportVisitControl.jsp" class="contentLink defaultVisitReport">
+					<li><a href="${ctx}/oscarReport/oscarReportVisitControl.jsp" class="contentLink defaultvisitreport">
 						<bean:message key="admin.admin.btnVisitReport" />
 						</a>
 					</li>
