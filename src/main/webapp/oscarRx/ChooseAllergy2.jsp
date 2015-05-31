@@ -77,6 +77,18 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
             window.location="addReaction2.do?ID=0&type=0&name="+name;
         }
     }
+    
+    function addPenicillinAllergy(){
+            window.location="addReaction2.do?ID=44452&name=PENICILLINS&type=10";
+    }
+    
+    function addSulfonamideAllergy(){
+            window.location="addReaction2.do?ID=44159&name=SULFONAMIDES&type=10";
+    }
+    
+    function addCustomNKDA(){
+            window.location="addReaction2.do?ID=0&type=0&name=NKDA";
+    }
 
     function toggleSection(typecode) {
     	var imgsrc = document.getElementById(typecode+"_img").src;
@@ -140,8 +152,10 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 							<td><input type=button class="ControlPushButton"
 								onclick="javascript:document.forms.RxSearchAllergyForm.searchString.value='';document.forms.RxSearchAllergyForm.searchString.focus();"
 								value="Reset" />
-                                                             <input type=button class="ControlPushButton" onclick="javascript:addCustomAllergy();" value="Custom Allergy" />
-
+                               <input type=button class="ControlPushButton" onclick="javascript:addCustomAllergy();" value="Custom Allergy" />
+                               <input type=button class="ControlPushButton" onclick="javascript:addCustomNKDA();" value="NKDA" />
+                               <input type=button class="ControlPushButton" onclick="javascript:addPenicillinAllergy();" value="Penicillin" />
+                               <input type=button class="ControlPushButton" onclick="javascript:addSulfonamideAllergy();" value="Sulfa" />
                                                         </td>
 						</tr>
 					</table>
