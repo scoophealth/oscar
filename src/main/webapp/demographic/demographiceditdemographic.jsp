@@ -1717,10 +1717,11 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 							for(DemographicContact dContact:dContacts) {
 								String sdm = (dContact.getSdm()!=null && dContact.getSdm().equals("true"))?"<span title=\"SDM\" >/SDM</span>":"";
 								String ec = (dContact.getEc()!=null && dContact.getEc().equals("true"))?"<span title=\"Emergency Contact\" >/EC</span>":"";
+								String masterLink1 = "<a href=\""+request.getContextPath()+"/demographic/demographiccontrol.jsp?demographic_no="+dContact.getContactId()+"&displaymode=edit&dboperation=search_detail\">M</a>";
 						%>
 
 								<li><span class="label"><%=dContact.getRole()%>:</span>
-                                                            <span class="info"><%=dContact.getContactName() %><%=sdm%><%=ec%></span>
+                                                            <span class="info"><%=dContact.getContactName() %><%=sdm%><%=ec%> <%=masterLink1%></span>
                                                         </li>
 
 						<%  } %>
