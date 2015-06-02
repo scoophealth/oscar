@@ -905,7 +905,7 @@ function ignoreDuplicates() {
                                 <select  name="sex" id="sex">
 			                        <option value=""></option>
 			                		<% for(org.oscarehr.common.Gender gn : org.oscarehr.common.Gender.values()){ %>
-			                        <option value=<%=gn.name()%> <%=((sex.toUpperCase().equals(gn.name())) ? "selected" : "") %>><%=gn.getText()%></option>
+			                        <option value="<%=gn.name()%>" <%=((sex.toUpperCase().equals(gn.name())) ? "selected=\"selected\"" : "") %>><%=gn.getText()%></option>
 			                        <% } %>
 			                        </select>
 			                        
