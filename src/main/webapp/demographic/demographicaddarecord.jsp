@@ -443,7 +443,22 @@
        		
        		dc2.setUpdateDate(new java.util.Date());
        		demographicContactDao.persist(dc2);
-       		
+       	
+       		//admit the child in same programs as the parent
+            gieat = new GenericIntakeEditAction();
+            gieat.setAdmissionManager(am);
+            gieat.setProgramManager(pm);
+            gieat.admitBedCommunityProgram(childDemographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),Integer.parseInt(bedP),"","",null);
+
+    
+            if(servP!=null&&servP.length>0){
+  	  		  Set<Integer> s = new HashSet<Integer>();
+              for(String _s:servP) s.add(Integer.parseInt(_s));
+              gieat.admitServicePrograms(childDemographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),s,"",null);
+            }
+          
+            LogAction.addLog(curUser_no, "add", "demographic", childDemographic.getDemographicNo().toString(), ip, childDemographic.getDemographicNo().toString());
+
        		
         }
         
