@@ -1033,10 +1033,10 @@ div.demographicWrapper {
                                 
                                 DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(demographic_no));
                                 if(demographicCust != null) {
-                                	resident = demographicCust.getResident();
-                                	nurse = demographicCust.getNurse();
-                                	alert = demographicCust.getAlert();
-                                	midwife = demographicCust.getMidwife();
+                                    resident = demographicCust.getResident() == null ? "" : demographicCust.getResident();
+                            		nurse = demographicCust.getNurse() == null ? "" : demographicCust.getNurse();
+                            		alert = demographicCust.getAlert() == null ? "" : demographicCust.getAlert();;
+                            		midwife = demographicCust.getMidwife() == null ? "" : demographicCust.getMidwife();;
                                 	notes = SxmlMisc.getXmlContent(demographicCust.getNotes(),"unotes") ;
                                 	
                                 	resident = resident==null?"":resident;
