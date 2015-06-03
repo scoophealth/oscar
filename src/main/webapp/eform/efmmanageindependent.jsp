@@ -28,6 +28,7 @@
 <%@page import="org.oscarehr.web.eform.EfmPatientFormList"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
 	
@@ -120,7 +121,7 @@ function checkSelectBox() {
 					<tbody>
 					<%
 						ArrayList<HashMap<String,? extends Object>> eForms;
-						eForms = EFormUtil.listPatientIndependentEForms(orderBy, EFormUtil.CURRENT);
+						eForms = EFormUtil.listPatientIndependentEForms(LoggedInInfo.getLoggedInInfoFromSession(request), orderBy, EFormUtil.CURRENT);
 						
 						for (int i = 0; i < eForms.size(); i++)
 						{

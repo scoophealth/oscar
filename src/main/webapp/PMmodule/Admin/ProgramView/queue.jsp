@@ -25,7 +25,7 @@
 --%>
 
 
-
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@page import="oscar.eform.EFormUtil"%>
 <%@ page import="java.util.*"%>
 <%@ page import="org.oscarehr.PMmodule.model.ProgramQueue"%>
@@ -289,7 +289,7 @@ String reason ="";
 				else if (orderByRequest.equals("form_subject")) orderBy = EFormUtil.SUBJECT;
 				else if (orderByRequest.equals("form_name")) orderBy = EFormUtil.NAME;
 				Map<String,? extends Object> curform = Collections.EMPTY_MAP;
-				ArrayList<HashMap<String,? extends Object>> eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no.toString(), roleName$);
+				ArrayList<HashMap<String,? extends Object>> eForms = EFormUtil.listPatientEForms(LoggedInInfo.getLoggedInInfoFromSession(request), orderBy, EFormUtil.CURRENT, demographic_no.toString(), roleName$);
 				if(eForms != null ){
 					int eformsSize = eForms.size();
 					curform = eformsSize > 0 ? eForms.get(eformsSize-1):Collections.EMPTY_MAP;

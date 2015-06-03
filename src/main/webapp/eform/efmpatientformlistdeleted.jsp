@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%
 if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -137,7 +138,7 @@ function updateAjax() {
 				<th><bean:message key="eform.showmyform.msgAction" /></th>
 			</tr>
 			<%
-			ArrayList<HashMap<String, ? extends Object>> forms = EFormUtil.listPatientEForms(orderBy, EFormUtil.DELETED, demographic_no, null);
+			ArrayList<HashMap<String, ? extends Object>> forms = EFormUtil.listPatientEForms(LoggedInInfo.getLoggedInInfoFromSession(request), orderBy, EFormUtil.DELETED, demographic_no, null);
 			    for (int i=0; i< forms.size(); i++) {
 			    	HashMap<String, ? extends Object> curform = forms.get(i);
 			%>

@@ -29,6 +29,8 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
+
 <%
 	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
 	String country = request.getLocale().getCountry();
@@ -113,7 +115,7 @@ function checkSelectBox() {
 <tbody>
 		<%
 			ArrayList<HashMap<String,? extends Object>> eForms;
-			eForms = EFormUtil.listPatientIndependentEForms(orderBy, EFormUtil.DELETED);
+			eForms = EFormUtil.listPatientIndependentEForms(LoggedInInfo.getLoggedInInfoFromSession(request), orderBy, EFormUtil.DELETED);
 			
 			for (int i = 0; i < eForms.size(); i++)
 			{
