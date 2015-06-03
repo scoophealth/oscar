@@ -43,8 +43,8 @@ public class OLISResultsAction extends DispatchAction {
 	@Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
-		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "r", null)) {
-        	throw new SecurityException("missing required security object (_admin)");
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_lab", "r", null)) {
+        	throw new SecurityException("missing required security object (_lab)");
         }
 		
 		try {
