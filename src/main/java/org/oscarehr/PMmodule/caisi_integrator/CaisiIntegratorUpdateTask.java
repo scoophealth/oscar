@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -178,6 +179,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private static final String INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY = "INTEGRATOR_UPDATE_PERIOD";
 	private static final String INTEGRATOR_THROTTLE_DELAY_PROPERTIES_KEY = "INTEGRATOR_THROTTLE_DELAY";
 	private static final long INTEGRATOR_THROTTLE_DELAY = Long.parseLong((String) OscarProperties.getInstance().get(INTEGRATOR_THROTTLE_DELAY_PROPERTIES_KEY));
+	private static final String INTEGRATOR_SLEEP_ON_ERROR_KEY = "INTEGRATOR_SLEEP_ON_ERROR";
+	private static final long SLEEP_ON_ERROR = Long.parseLong((String) OscarProperties.getInstance().get(INTEGRATOR_SLEEP_ON_ERROR_KEY));
+	private static final double SLEEP_ON_ERROR_STEP = 1.5;
 
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
 
@@ -583,6 +587,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				}
 			}
 		} 
+				
+		long currentSleepOnErrorTime = SLEEP_ON_ERROR;
 		
 		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs(null, facility);
 		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
@@ -602,6 +608,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			BenchmarkTimer benchTimer = new BenchmarkTimer("pushing demo facilityId:" + facility.getId() + ", demographicId:" + demographicId + "  " + demographicPushCount + " of " + demographicIds.size());
 
 			try {
+		
 				demographicService.setLastPushDate(demographicId);
 				
 				pushDemographic(lastDataUpdated, facility, demographicService, demographicId, facility.getId());
@@ -645,6 +652,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				logger.debug(benchTimer.report());
 
 				DbConnectionFilter.releaseAllThreadDbResources();
+				currentSleepOnErrorTime = SLEEP_ON_ERROR;
+				
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
 				// all other errors thrown by the above methods should indicate a failure in the service
@@ -654,11 +663,25 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			} catch (ShutdownException e) {
 				throw (e);
 			} catch (Exception e) {
+				
+				Throwable cause = e.getCause();
+				if( cause instanceof SocketTimeoutException ) {
+										
+					try {
+	                    Thread.sleep(currentSleepOnErrorTime);
+                    } catch (InterruptedException e1) {	                 
+                    }
+					
+					currentSleepOnErrorTime = Math.round(currentSleepOnErrorTime * SLEEP_ON_ERROR_STEP);
+				}
+				
+				
 				logger.error("Unexpected error.", e);
 				//not so sure about this yet. We don't want to end up in a loop where an exception is being thrown
 				//so we just keep retrying..this way a new job gets created.
 				//integratorPushManager.setError(ip,e);
 			}
+			
 		}
 		
 		if(ip != null) {
