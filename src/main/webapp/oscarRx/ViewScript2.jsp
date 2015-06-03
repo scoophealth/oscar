@@ -535,8 +535,8 @@ function toggleView(form) {
 
                                 }
                                 function expandPreview(text){
-                                    parent.document.getElementById('lightwindow_container').style.width="840px";
-                                    parent.document.getElementById('lightwindow_contents').style.width="820px";
+                                    parent.document.getElementById('lightwindow_container').style.width="1170px";
+                                    parent.document.getElementById('lightwindow_contents').style.width="1150px";
                                     document.getElementById('preview').style.width="580px";
                                     frames['preview'].document.getElementById('pharmInfo').innerHTML=text;
                                     //frames['preview'].document.getElementById('removePharm').show();
@@ -544,8 +544,8 @@ function toggleView(form) {
 
                                 }
                                 function reducePreview(){
-                                    parent.document.getElementById('lightwindow_container').style.width="680px";
-                                    parent.document.getElementById('lightwindow_contents').style.width="660px";
+                                    parent.document.getElementById('lightwindow_container').style.width="967px";
+                                    parent.document.getElementById('lightwindow_contents').style.width="946px";
                                     document.getElementById('preview').style.width="420px";
                                     frames['preview'].document.getElementById('pharmInfo').innerHTML="";
                                     $("selectedPharmacy").innerHTML="";
@@ -670,7 +670,7 @@ function toggleView(form) {
 					<tr>
                         <td>
                             <input type="hidden" name="<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>" value="<%=signatureRequestId%>" />
-                            <iframe style="width:500px; height:132px;"id="signatureFrame" src="<%= request.getContextPath() %>/signature_pad/tabletSignature.jsp?inWindow=true&<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>" ></iframe>
+                            <iframe style="width:350px; height:132px;"id="signatureFrame" src="<%= request.getContextPath() %>/signature_pad/tabletSignature.jsp?inWindow=true&<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>" ></iframe>
                         </td>
 					</tr>
 		            <%}%>
