@@ -288,7 +288,7 @@ public class BORN18MFormToXML {
 		
 		ndds.setLastUpdateDateTime(formDateTimeToCal(fdid));
 		ndds.setSetID(fdid);
-		ndds.setVersionID(fdid);
+		ndds.setVersionID(1);
 	}
 	
 	private void propulateRourke(RBR rourke, Integer fdid) {
@@ -300,7 +300,7 @@ public class BORN18MFormToXML {
 		rourke.setLastUpdateDate(formDateTimeToCal(fdid));
 		
 		rourke.setSetID(fdid);
-		rourke.setVersionID(fdid);
+		rourke.setVersionID(1);
 		
 	}
 	
@@ -542,7 +542,7 @@ public class BORN18MFormToXML {
 		
 		m18Markers.setLastUpdateDateTime(formDateTimeToCal(fdid));
 		m18Markers.setSetID(fdid);
-		m18Markers.setVersionID(fdid);
+		m18Markers.setVersionID(1);
 	}
 	
 	private Calendar formDateTimeToCal(Integer fdid) {
