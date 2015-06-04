@@ -72,7 +72,7 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
         	Dao.addPopUpText((String)ht.get("formName"));
         }
         
-        ArrayList<HashMap<String,? extends Object>> patientEforms = EFormUtil.listPatientEForms("eform_data.form_date", "current", bean.demographicNo, "Eye Form", null);
+        ArrayList<HashMap<String,? extends Object>> patientEforms = EFormUtil.listPatientEForms(loggedInInfo, "eform_data.form_date", "current", bean.demographicNo, "Eye Form", null);
         for(int x=0;x<patientEforms.size();x++) {
         	NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
         	HashMap<String,? extends Object> form = patientEforms.get(x);
