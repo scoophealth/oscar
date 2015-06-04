@@ -184,7 +184,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         header1.setPayee(BillingDataHlp.CLAIMHEADER1_PAYEE);
         header1.setRefNum("");
         header1.setFaciltyNum(clinicRefCode);
-        header1.setAdmissionDate(null);
+        //header1.setAdmissionDate(null);
         header1.setRefLabNum("");
         header1.setManReview("");
         header1.setLocation(properties.getProperty("clinic_no", ""));
