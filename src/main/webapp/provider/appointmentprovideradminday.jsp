@@ -1447,11 +1447,13 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
      resultList = oscarSuperManager.find("providerDao", "search_scheduledate_single", param1);
 
      //viewall function
-     if(request.getParameter("viewall")==null || request.getParameter("viewall").equals("0") ) {
-         if(resultList.size()==0 || "0".equals(resultList.get(0).get("available")) ) {
-             if(nProvider!=me ) continue;
-             else userAvail = false;
-         }
+     if(!isWeekView) {
+	     if(request.getParameter("viewall")==null || request.getParameter("viewall").equals("0") ) {
+	         if(resultList.size()==0 || "0".equals(resultList.get(0).get("available")) ) {
+	             if(nProvider!=me ) continue;
+	             else userAvail = false;
+	         }
+	     }
      }
      bColor=bColor?false:true;
  %>
