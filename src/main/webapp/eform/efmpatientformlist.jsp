@@ -88,7 +88,7 @@
 	ArrayList<HashMap<String,? extends Object>> eForms;
 	if (groupView.equals(""))
 	{
-		eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, roleName$, pageSize*(pageNo-1), pageSize);
+		eForms = EFormUtil.listPatientEForms(LoggedInInfo.getLoggedInInfoFromSession(request), orderBy, EFormUtil.CURRENT, demographic_no, roleName$, pageSize*(pageNo-1), pageSize,true);
 	}
 	else
 	{

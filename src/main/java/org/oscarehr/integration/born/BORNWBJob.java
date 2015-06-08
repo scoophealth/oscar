@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,6 +46,8 @@ import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.jobs.OscarRunnable;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.EForm;
+import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
@@ -91,8 +94,27 @@ public class BORNWBJob implements OscarRunnable {
 			logger.info("BORN EHealth Kid eConnect integration job started and running as " + x.getLoggedInProvider().getFormattedName());
 			String pathStr = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + File.separator + "born5";
 
-			List<Integer> demographicsToSend = eformDataDao.getDemographicNosMissingVarName(21, "uploaded_to_BORN");
-
+			
+			//TODO: take into account drafts
+			List<Integer> demographicsToSend = new ArrayList<Integer>();
+			BORNWbXmlGenerator xmlGen = new BORNWbXmlGenerator();
+			for(String name : xmlGen.getEformMap().keySet()) {
+				EForm eform = xmlGen.getEformMap().get(name);
+				
+				if(eform != null) {
+					List<Integer> tmp = eformDataDao.getDemographicNosMissingVarName(eform.getId(), "processed_by_BORN");
+					
+					for(Integer t:tmp) {
+						if(!demographicsToSend.contains(t)) {
+							demographicsToSend.add(t);
+						}
+					}
+				}
+			}
+			
+		//	List<Integer> demographicsToSend = eformDataDao.getDemographicNosMissingVarName(21, "processed_by_BORN");
+			
+			
 			for (Integer demographicNo : demographicsToSend) {
 				try {
 
@@ -112,7 +134,9 @@ public class BORNWBJob implements OscarRunnable {
 					FileWriter fw = null;
 					try {
 						fw = new FileWriter(pathStr + File.separator + "born_wb_" + demographicNo + ".xml");
-						testGen.addToStream(fw, opts, false);
+						if(!testGen.addToStream(fw, opts, false)) {
+							logger.debug("no record to write");
+						}
 					} finally {
 						fw.close();
 					}
@@ -141,18 +165,25 @@ public class BORNWBJob implements OscarRunnable {
 					logger.info("id is " + id);
 
 					BornCDADocument bornCDA = new BornCDADocument(CDAStandard.CCD, BORNCDADocumentType.EighteenMonth, demographic, authorList, props, cal, id);
-					bornCDA.setNonXmlBody(generateWBXml(xml, demographicNo), "text/plain");
-					String cdaForLogging = CdaUtils.toXmlString(bornCDA.getDocument(), true);
-
-					if (logger.isDebugEnabled()) {
-						logger.info("WB CDA Record for Patient ID:" + demographicNo + "\n" + cdaForLogging + "\n");
-					}
-
-					boolean xdsResult = createXds(demographicNo, cdaForLogging);
-
-					if (xdsResult) {
-						MiscUtils.getLogger().info("SUCCESS OVER XDS");
-						markAsSent(xml, demographicNo);
+					//TODO:need to check if empty
+					byte[] wbXml = generateWBXml(xml, demographicNo);
+					
+					if(wbXml != null) {
+						bornCDA.setNonXmlBody(wbXml, "text/plain");
+						String cdaForLogging = CdaUtils.toXmlString(bornCDA.getDocument(), true);
+	
+						if (logger.isDebugEnabled()) {
+							logger.info("WB CDA Record for Patient ID:" + demographicNo + "\n" + cdaForLogging + "\n");
+						}
+	
+						boolean xdsResult = createXds(demographicNo, cdaForLogging);
+	
+						if (xdsResult) {
+							MiscUtils.getLogger().info("SUCCESS OVER XDS");
+							markAsSent(xml, demographicNo);
+						}
+					} else {
+						logger.info("failed to generate valid xml for patient " + demographicNo);
 					}
 
 				} catch (Exception e) {
@@ -292,7 +323,7 @@ public class BORNWBJob implements OscarRunnable {
 		return null;
 	}
 
-	private void markAsSent(BORNWbXmlGenerator xml, Integer demographicNo) {
+	protected void markAsSent(BORNWbXmlGenerator xml, Integer demographicNo) {
 		String val = formatter.format(new Date());
 
 		for (String name : xml.getEformMap().keySet()) {
@@ -310,7 +341,48 @@ public class BORNWBJob implements OscarRunnable {
 				}
 			}
 		}
+		
+		//for each eform, set something to know that fdids before this one for this demographic are considered processed_by_Born
+		//including this current one
+
+		for (String name: xml.getEformMap().keySet()) {
+			
+			EForm eform = xml.getEformMap().get(name);
+			Integer fdid = xml.getEformFdidMap().get(name);
+			
+			if(fdid == null) {
+				continue;
+			}
+			
+			List<EFormData> efdList = eformDataDao.findByDemographicIdAndFormId(demographicNo, eform.getId());
+			
+			boolean seen=false;
+			//only set for the ones older than the one we sent.
+			for(EFormData efd : efdList) {
+				if(efd.getId().intValue() == fdid.intValue()) {
+					seen=true;
+				}
+				if(seen) {
+					//ADD the value if it doesn't exist processed_by_Born
+					logger.debug("SET processed_by_BORN on fdid " + efd.getId());
+					addValueIfMissing(efd.getId(),"processed_by_BORN","Yes",demographicNo,efd.getFormId());
+				}
+			}
+		}
 
 	}
 
+	private void addValueIfMissing(Integer fdid, String varName, String varValue, Integer demographicNo, Integer formId) {
+		EFormValue val = eformValueDao.findByFormDataIdAndKey(fdid, varName);
+		if(val == null) {
+			val = new EFormValue();
+			val.setDemographicId(demographicNo);
+			val.setFormDataId(fdid);
+			val.setFormId(formId);
+			val.setVarName(varName);
+			val.setVarValue(varValue);
+			eformValueDao.persist(val);
+		}
+		
+	}
 }

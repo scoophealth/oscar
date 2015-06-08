@@ -31,6 +31,10 @@
 <%@ page import="org.oscarehr.common.model.Appointment"%>
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@ page import="org.oscarehr.common.model.Provider"%>
+<%@ page import="org.oscarehr.common.dao.ClinicDAO"%>
+<%@ page import="org.oscarehr.common.model.Clinic"%>
+<%@ page import="org.oscarehr.common.dao.UserPropertyDAO"%>
+<%@ page import="org.oscarehr.common.model.UserProperty"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -56,30 +60,44 @@
 	</tr>
 </table>
 <%
+	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+
 	String strAppointmentNo = request.getParameter("appointment_no");
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 	SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mm aaa");
 
+	
+	SimpleDateFormat dateFormatter2 = new SimpleDateFormat("EEE, d MMM yyyy");
 	
 	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
 	Appointment appt = appointmentDao.find(Integer.parseInt(strAppointmentNo));
 	
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	
+	//get clinic info for address
+	ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
+	Clinic clinic = clinicDao.getClinic();
+			
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	
 %>
 <p>
 
     </div>
+    
+    <!-- hiding this old version -->
+    <%--
+    <div class="DoNotPrint">
 <form>
     <table border="1" bgcolor="white" >
         <tr><td>
- 
-        <table style="font-size: 8pt;"  align="left" valign="top">
+	
+        <table style="font-size: 14pt;"  align="left" valign="top">
 
-            <tr style="font-family: arial, sans-serif; font-size: 6pt;" >
+            <tr style="font-family: arial, sans-serif; font-size: 12pt;" >
                 <th colspan="3"><%=appt.getName()%></th>
             </tr>
-             <tr style="font-family: arial, sans-serif; font-size: 8pt;" >
+             <tr style="font-family: arial, sans-serif; font-size: 12pt;" >
 		<th style="padding-right: 10px"><bean:message key="Appointment.formDate" /></th>
  		<th width="60" style="padding-right: 10px"><bean:message key="Appointment.formStartTime" /></th>
 		<th width="120" style="padding-right: 10px"><bean:message key="appointment.addappointment.msgProvider" /></th>
@@ -124,13 +142,81 @@
        </table>
        </td></tr>
 </table>
-
 <p>
 
-<div class="DoNotPrint">
 <p></p>
 <hr width="90%"/>
 
+
+</div>
+
+--%>
+
+<table border="1" bgcolor="white" >
+	<tr><td style="padding: 10px 10px 10px 10px">
+	<table>
+	<tr> <!-- first row is logo | prov info -->
+		<td style="padding-right: 10px">
+			<img src="../imageRenderingServlet?source=clinic_logo" width="200px"/>
+		</td>
+		<td>
+		<%
+			Provider provider = providerDao.getProvider(appt.getProviderNo());
+		
+			String salutation="";
+			
+			if(roleName$.indexOf("doctor") != -1) {
+				salutation="Dr.";
+			}
+			
+			String firstLine = salutation + " " + provider.getFirstName() + " " + provider.getLastName();
+			String phone = clinic.getClinicPhone();
+			String fax = clinic.getClinicFax();
+			
+	
+			UserProperty up = userPropertyDao.getProp(appt.getProviderNo(),"APPT_CARD_NAME");
+			if(up != null && !up.getValue().isEmpty()) {
+				firstLine = up.getValue();
+			}
+			
+			up = userPropertyDao.getProp(appt.getProviderNo(),"APPT_CARD_PHONE");
+			if(up != null && !up.getValue().isEmpty()) {
+				phone = up.getValue();
+			}
+			
+			up = userPropertyDao.getProp(appt.getProviderNo(),"APPT_CARD_FAX");
+			if(up != null && !up.getValue().isEmpty()) {
+				fax = up.getValue();
+			}
+			
+		%>
+			<b style="font-size:14pt"><%=firstLine %></b><br/>
+			<%=provider.getSpecialty() %><br/>
+			<br/>
+			<%=clinic.getClinicAddress() %><br/>
+			<%=clinic.getClinicCity() %>, <%=clinic.getClinicProvince() %>  <%=clinic.getClinicPostal() %><br/>
+			<%=phone %><br/>
+			Fax <%=fax %> <br/>
+		</td>
+	</tr>
+
+	<tr> <!-- patient name -->
+		<td colspan="2">
+			<b>Name</b>: <span style="text-decoration: underline;"><%=appt.getName() %></span>
+		</td>
+	</tr>
+	
+	<tr> <!-- appt date and time-->
+		<td colspan="2">
+			<b>Appointment Date</b>: <span style="text-decoration: underline;"><%=dateFormatter2.format(appt.getAppointmentDate()) %> at <%=timeFormatter.format(appt.getStartTime()) %><span>
+		</td>
+	</tr>
+	
+	</table>
+	</td></tr>
+</table>
+
+<div class="DoNotPrint">
 <input type="button" value="<bean:message key="global.btnClose"/>" onClick="window.close();">
 </div>
 </form>

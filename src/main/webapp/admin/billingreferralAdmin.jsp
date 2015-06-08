@@ -112,11 +112,22 @@ function openEditSpecialist(specId) {
 </nested:form>
 
 <display:table name="referrals" id="referral" class="its" pagesize="15" style="border:1px solid #666666; width:99%;margin-top:2px;" requestURI="ManageBillingReferral.do?method=list">
-    <display:column><a href="javascript:void(0)" onclick="openEditSpecialist('${referral.id}')">${referral.referralNo}</a></display:column>
+	<%
+    	ProfessionalSpecialist	ps = (ProfessionalSpecialist)pageContext.getAttribute("referral");
+		String linkName = ps.getReferralNo();
+		if(oscar.util.StringUtils.isNullOrEmpty(ps.getReferralNo())) {
+			linkName = "N/A";
+		}
+    %>
+    	
+    <display:column><a href="javascript:void(0)" onclick="openEditSpecialist('${referral.id}')"><%=linkName %></a></display:column>
     <display:column property="firstName" title="First Name" />
     <display:column property="lastName" title="Last Name" />
     <display:column property="specialtyType" title="Specialty" />
-    <display:column property="streetAddress" title="Address" />
+    <display:column title="Address">
+    	
+    	<%=ps.getStreetAddress().replaceAll("\\n", "<br/>") %>
+    </display:column>
     <display:column property="phoneNumber" title="Phone" />
     <display:column property="faxNumber" title="Fax" />
     <display:column title="Label" url="/printReferralLabelAction.do" paramId="billingreferralNo" paramProperty="id">label</display:column>

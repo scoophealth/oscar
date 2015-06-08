@@ -77,8 +77,8 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         }
 
         //now we list prevention modules as items
-        PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-        ArrayList<HashMap<String,String>> prevList = pdc.getPreventions();
+        PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance(loggedInInfo);
+        ArrayList<HashMap<String,String>> prevList = pdc.getPreventions(loggedInInfo);
         Map warningTable = p.getWarningMsgs();
 
 

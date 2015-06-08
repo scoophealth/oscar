@@ -77,7 +77,7 @@ function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
   var winName;
   
   if( page.indexOf("IncomingEncounter.do") > -1 ) {
-    winName = "Encounter";
+    winName = "encounter";
   }
   else {
     winName = "oscarMVA";

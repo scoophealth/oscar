@@ -78,10 +78,10 @@ public class PreventionManager {
 		return (results);
 	}
 
-	public ArrayList<String> getPreventionTypeList() {
+	public ArrayList<String> getPreventionTypeList(LoggedInInfo loggedInInfo) {
 		if (preventionTypeList.isEmpty()) {
-			PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-			for (HashMap<String, String> prevTypeHash : pdc.getPreventions()) {
+			PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance(loggedInInfo);
+			for (HashMap<String, String> prevTypeHash : pdc.getPreventions(loggedInInfo)) {
 				if (prevTypeHash != null && StringUtils.filled(prevTypeHash.get("name"))) {
 					preventionTypeList.add(prevTypeHash.get("name").trim());
 				}

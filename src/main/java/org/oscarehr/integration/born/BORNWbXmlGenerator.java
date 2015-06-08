@@ -79,6 +79,7 @@ import ca.bornontario.wb.NDDS15M;
 import ca.bornontario.wb.NDDS18M;
 import ca.bornontario.wb.NDDS1M2M;
 import ca.bornontario.wb.NDDS2Y;
+import ca.bornontario.wb.NDDS30M;
 import ca.bornontario.wb.NDDS3Y;
 import ca.bornontario.wb.NDDS4Y;
 import ca.bornontario.wb.NDDS5Y;
@@ -105,7 +106,6 @@ import ca.bornontario.wb.RBRY23;
 import ca.bornontario.wb.RBRY23Y45;
 import ca.bornontario.wb.RBRY45;
 import ca.bornontario.wb.SUMRPTMARKERS;
-import ca.bornontario.wb.YesNoUnknown;
 
 /**
  * For KidConnect 0-5 project (BORN)
@@ -149,7 +149,7 @@ public class BORNWbXmlGenerator {
 	public BORNWbXmlGenerator() {
 		OscarProperties props = OscarProperties.getInstance();
 		eformMap.put("RBR", eformDao.findByName(props.getProperty("born_eform_rourke", "Rourke Baby Record")));
-		eformMap.put("SUMRPTMARKERS", eformDao.findByName(props.getProperty("born_eform_sumrptmarkers", "BORN Summary Report Markers")));
+		eformMap.put("SUMRPT", eformDao.findByName(props.getProperty("born_eform_sumrptmarkers", "Summary Report: Well Baby Visit")));
 		eformMap.put("NDDS1M2M", eformDao.findByName(props.getProperty("born_eform_ndds1m2m", "NDDS 1&2 Months")));
 		eformMap.put("NDDS4M", eformDao.findByName(props.getProperty("born_eform_ndds4m", "NDDS 4 Months")));
 		eformMap.put("NDDS6M", eformDao.findByName(props.getProperty("born_eform_ndds6m", "NDDS 6 Months")));
@@ -158,6 +158,7 @@ public class BORNWbXmlGenerator {
 		eformMap.put("NDDS15M", eformDao.findByName(props.getProperty("born_eform_ndds15m", "NDDS 15 Months")));
 		eformMap.put("NDDS18M", eformDao.findByName(props.getProperty("born_eform_ndds18m", "NDDS 18 Months")));
 		eformMap.put("NDDS24M", eformDao.findByName(props.getProperty("born_eform_ndds24m", "NDDS 24 Months")));
+		eformMap.put("NDDS30M", eformDao.findByName(props.getProperty("born_eform_ndds30m", "NDDS 30 Months")));
 		eformMap.put("NDDS3Y", eformDao.findByName(props.getProperty("born_eform_ndds3y", "NDDS 3 Years")));
 		eformMap.put("NDDS4Y", eformDao.findByName(props.getProperty("born_eform_ndds4y", "NDDS 4 Years")));
 		eformMap.put("NDDS5Y", eformDao.findByName(props.getProperty("born_eform_ndds5y", "NDDS 5 Years")));
@@ -225,7 +226,7 @@ public class BORNWbXmlGenerator {
 		}
 
 		//populate summary report markers (eform doesn't exist yet)
-		if (this.eformValuesMap.get("SUMRPTMARKERS") != null) {
+		if (this.eformValuesMap.get("SUMRPT") != null) {
 			populateSumRptMarkers(patientInfo.addNewSUMRPTMARKERS());
 		}
 
@@ -365,17 +366,14 @@ public class BORNWbXmlGenerator {
 			rbr.setWeight(weight);
 		}
 
-		//TODO
-		rbr.setInvestigationsImmunizationRecordVaccines(0);
+		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_1w") ? 1 : 0);
 
 		rbr.setInvestigationsImmunizationHBsAgPosParentVaccine1(hasValue("RBR", "hepbimmuneglobulin_1w") ? 1 : 0);
 		rbr.setInvestigationsImmunizationHemoglobinopathyScreen(hasValue("RBR", "hemoglobinopathy_1w") ? 1 : 0);
 		rbr.setInvestigationsImmunizationNBS(hasValue("RBR", "pkuthyroid_1w") ? 1 : 0);
 		rbr.setInvestigationsImmunizationUNHS(hasValue("RBR", "unhs_1w") ? 1 : 0);
 
-		//TODO
-		rbr.setNeedForAddAssessmentNo(YesNoUnknown.U); //??
-
+		
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_1w"));
 		rbr.setNutritionFormulaFeeding(getDiscussedConcernNotDiscussed("formulafeeding_1w"));
 		rbr.setNutritionStoolUrine(getDiscussedConcernNotDiscussed("stoolurine_1w"));
@@ -446,8 +444,7 @@ public class BORNWbXmlGenerator {
 			rbr.setWeight(weight);
 		}
 
-		//TODO
-		rbr.setInvestigationsImmunizationRecordVaccines(0);
+		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_2w") ? 1 : 0);
 
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_2w"));
 		rbr.setNutritionFormulaFeeding(getDiscussedConcernNotDiscussed("formulafeeding_2w"));
@@ -478,9 +475,6 @@ public class BORNWbXmlGenerator {
 		if (getRourkeStrValue("signature2w") != null) {
 			rbr.setSignature(getRourkeStrValue("signature2w"));
 		}
-
-		//TODO:
-		rbr.setNeedForAddAssessmentNo(YesNoUnknown.U);
 
 		//problems and plans
 		if (getRourkeStrValue("problemsPlans2w") != null) {
@@ -564,12 +558,9 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopmentStartlesLoudNoise(getDiscussedConcernNotDiscussed("startlestonoise_1m"));
 		rbr.setDevelopmentSucksWellOnNipple(getDiscussedConcernNotDiscussed("suckswell_1m"));
 		rbr.setInvestigationsImmunizationHBsAgPosParentVaccine2(hasValue("RBR", "hepbimmuneglobulin_1m") ? 1 : 0);
-		//TODO:
-		rbr.setInvestigationsImmunizationRecordVaccines(0);
+		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_1m") ? 1 : 0);
 
-		//TODO
-		rbr.setNeedForAddAssessmentNo(YesNoUnknown.U);
-
+		
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_1m"));
 		rbr.setNutritionFormulaFeeding(getDiscussedConcernNotDiscussed("formulafeeding_1m"));
 		rbr.setNutritionStoolUrine(getDiscussedConcernNotDiscussed("stoolurine_1m"));
@@ -643,12 +634,9 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopmentSmiles(getDiscussedConcernNotDiscussed("smilesresponsively_2m"));
 		rbr.setDevelopmentTwoOrMoreSucks(getDiscussedConcernNotDiscussed("sequencessucks_2m"));
 
-		//TODO
-		rbr.setInvestigationsImmunizationRecordVaccines(0);
+		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_2m") ? 1 : 0);
 
-		//TODO
-		rbr.setNeedForAddAssessmentNo(YesNoUnknown.U);
-
+		
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_2m"));
 		rbr.setNutritionFormulaFeeding(getDiscussedConcernNotDiscussed("formulafeeding_2m"));
 		rbr.setVitaminD400UIDay(getDiscussedConcernNotDiscussed("vitaminD_2m"));
@@ -718,12 +706,9 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopmentNoParentCaregiverConcerns(getDiscussedConcernNotDiscussed("noconcerns_4m"));
 		rbr.setDevelopmentRespondsWithExcitement(getDiscussedConcernNotDiscussed("respondswithexcitement_4m"));
 
-		//TODO
-		rbr.setInvestigationsImmunizationRecordVaccines(0);
+		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_4m") ? 1 : 0);
 
-		//TODO
-		rbr.setNeedForAddAssessmentNo(YesNoUnknown.U);
-
+		
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_4m"));
 		rbr.setNutritionFormulaFeeding(getDiscussedConcernNotDiscussed("formulafeeding_4m"));
 		rbr.setNutritionIntroductionSolids(getDiscussedConcernNotDiscussed("discussSolids_4m"));
@@ -787,12 +772,9 @@ public class BORNWbXmlGenerator {
 		rbr.setInvestigationsImmunizationHemoglobin(hasValue("RBR", "hemoglobinRisk_6m") ? 1 : 0);
 		rbr.setInvestigationsImmunizationInquireTBRiskFactors(hasValue("RBR", "tbriskfactors_6m") ? 1 : 0);
 
-		//TODO
-		rbr.setInvestigationsImmunizationRecordVaccines(0);
+		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_6m") ? 1 : 0);
 
-		//TODO
-		rbr.setNeedForAddAssessmentNo(YesNoUnknown.U);
-
+		
 		rbr.setNutritionAvoidSweetJuicesLiquids(getDiscussedConcernNotDiscussed("avoidsweetened_6m"));
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_6m"));
 		rbr.setNutritionChokingSafeFood(getDiscussedConcernNotDiscussed("chokingsafefood_6m"));
@@ -915,12 +897,9 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopmentSitsWithoutSupport(getDiscussedConcernNotDiscussed("sitsnosupport_9m"));
 		rbr.setDevelopmentStandsWithSupport(getDiscussedConcernNotDiscussed("standswithsupport_9m"));
 
-		//TODO
-		rbr.setInvestigationsImmunizationRecordVaccines(0);
+		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_9m") ? 1 : 0);
 
-		//TODO
-		rbr.setNeedForAddAssessmentNo(YesNoUnknown.U);
-
+		
 		rbr.setNutritionAvoidSweetJuicesLiquids(getDiscussedConcernNotDiscussed("avoidsweetened_9m"));
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_9m"));
 		rbr.setNutritionCerealMeatFruitsVegetables(getDiscussedConcernNotDiscussed("cerealmeatfruits_9m"));
@@ -1001,11 +980,8 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopmentShowsDistressWhenSeparated(getDiscussedConcernNotDiscussed("distressseparated_12m"));
 		rbr.setDevelopmentUnderstandsSimpleRequests(getDiscussedConcernNotDiscussed("understandsrequests_12m"));
 
-		//TODO
-		rbr.setInvestigationsImmunizationRecordVaccines(0);
-		//TODO
-		rbr.setNeedForAddAssessmentNo(YesNoUnknown.U);
-
+		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_12m") ? 1 : 0);
+		
 		rbr.setNutritionAppetiteReduced(getDiscussedConcernNotDiscussed("appetitereduced_12m"));
 		rbr.setNutritionAvoidSweetJuicesLiquids(getDiscussedConcernNotDiscussed("avoidsweetened_12m"));
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_12m"));
@@ -1044,12 +1020,9 @@ public class BORNWbXmlGenerator {
 		}
 	}
 
-	//hemoglobinRisk_9m
-	//hepbimmuneglobulin_9m
 	private void populateRBRM09M1213(RBRM09M1213 rbr) {
-		//TODO
-		rbr.setInvestigationsImmunizationHBsAgPosMotherCheckAntibodies(0);
-		rbr.setInvestigationsImmunizationHBsAgPosParentVaccine3(0);
+		rbr.setInvestigationsImmunizationHBsAgPosMotherCheckAntibodies(hasValue("RBR", "hepbimmuneglobulin_9m") ? 1 : 0);
+		rbr.setInvestigationsImmunizationHBsAgPosParentVaccine3(hasValue("RBR", "hemoglobinRisk_9m") ? 1 : 0);
 	}
 
 	private void populateRBRM15(RBRM15 rbr) {
@@ -1087,11 +1060,8 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopmentTriesSquat(getDiscussedConcernNotDiscussed("squattopick_15m"));
 		rbr.setDevelopmentWalkSidewaysHolding(getDiscussedConcernNotDiscussed("walkssideways_15m"));
 
-		//TODO
-		rbr.setInvestigationsImmunizationRecordVaccines(0);
-		//TODO
-		rbr.setNeedForAddAssessmentNo(YesNoUnknown.U);
-
+		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_15m") ? 1 : 0);
+		
 		rbr.setNutritionAvoidSweetJuicesLiquids(getDiscussedConcernNotDiscussed("avoidsweetened_15m"));
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_15m"));
 		rbr.setNutritionChokingSafeFood(getDiscussedConcernNotDiscussed("chokingsafefood_15m"));
@@ -1192,26 +1162,17 @@ public class BORNWbXmlGenerator {
 			rbr.setWeight(weight);
 		}
 
-		//TODO
-		/*
-		rbr.setDevelopmentNDDSNotAttained18M01(0);
-		rbr.setDevelopmentNDDSNotAttained18M02(0);
-		rbr.setDevelopmentNDDSNotAttained18M03(0);
-		rbr.setDevelopmentNDDSNotAttained18M04(0);
-		rbr.setDevelopmentNDDSNotAttained18M05(0);
-		rbr.setDevelopmentNDDSNotAttained18M06(0);
-		rbr.setDevelopmentNDDSNotAttained18M07(0);
-		rbr.setDevelopmentNDDSNotAttained18M08(0);
-		rbr.setDevelopmentNDDSNotAttained18M09(0);
-		rbr.setDevelopmentNDDSNotAttained18M10(0);
-		rbr.setDevelopmentNDDSNotAttained18M11(0);
-		rbr.setDevelopmentNDDSNotAttained18M12(0);
-		rbr.setDevelopmentNDDSNotAttained18M13(0);
-		rbr.setDevelopmentNDDSNotAttained18M14(0);
-		rbr.setDevelopmentNDDSNotAttained18M15(0);
-		rbr.setDevelopmentNDDSNotAttained18M16(0);
-		rbr.setDevelopmentNDDSNotAttained18M17(0);
-		*/
+		String nddsNotAttained = getRourkeStrValue("nddsNotAttained");
+		if(nddsNotAttained != null && nddsNotAttained.length()>0) {
+			for(String item:nddsNotAttained.split(",")) {
+				String val = item.length()==1?"0"+item:item;
+				try {
+					BeanUtils.setProperty(rbr, "developmentNDDSNotAttained18M"+val, item);
+				} catch (Exception e) {
+					MiscUtils.getLogger().warn("error setting developmentNDDSNotAttained18M"+val, e);
+				}
+			}
+		}
 
 		rbr.setAdaptiveMotorSkillsNoParentConcerns(getDiscussedConcernNotDiscussed("noconcerns_18m"));
 		rbr.setAdaptiveSkillsRemovesHat(getDiscussedConcernNotDiscussed("removeshatsocks_18m"));
@@ -1253,10 +1214,8 @@ public class BORNWbXmlGenerator {
 		rbr.setEducationAdviceOtherSocializing(getDiscussedConcernNotDiscussed("socializing_18m"));
 		rbr.setEducationAdviceOtherToiletLearning(getDiscussedConcernNotDiscussed("toiletlearning_18m"));
 
-		//TODO
-		rbr.setInvestigationsImmunizationRecordVaccines(0);
-		rbr.setNeedForAddAssessmentNo(YesNoUnknown.U);
-
+		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_18m") ? 1 : 0);
+		
 		rbr.setNutritionAvoidSweetJuicesLiquids(getDiscussedConcernNotDiscussed("avoidsweetened_18m"));
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_18m"));
 		rbr.setNutritionHomogenizedMilk(getDiscussedConcernNotDiscussed("formulafeeding_18m"));
@@ -1275,7 +1234,7 @@ public class BORNWbXmlGenerator {
 
 		//signature
 		if (getRourkeStrValue("signature18m") != null) {
-			rbr.setSignature18M(getRourkeStrValue("signature18m"));
+			rbr.setSignature(getRourkeStrValue("signature18m"));
 		}
 
 		//problems and plans
@@ -1336,9 +1295,10 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopment3YTwistsLids(getDiscussedConcernNotDiscussed("twistslidsoff_3y"));
 		rbr.setDevelopment3YTwoThreeStepDirections(getDiscussedConcernNotDiscussed("understandsdirections_3y"));
 		rbr.setDevelopment3YWalksUpStairs(getDiscussedConcernNotDiscussed("walksupstairs_3y"));
-
-		rbr.setInvestigationsImmunizationRecordVaccines(0);
-		rbr.setNeedForAddAssessmentNo(YesNoUnknown.U);
+		
+		//TODO:check this
+		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_3y") ? 1 : 0);
+		
 		rbr.setNutritionAvoidSweetenedLiquids(getDiscussedConcernNotDiscussed("avoidSweetLiquids_2y"));
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_2y"));
 		rbr.setNutritionCanadaFoodGuide(getDiscussedConcernNotDiscussed("foodguide_2y"));
@@ -1359,7 +1319,7 @@ public class BORNWbXmlGenerator {
 
 		//signature
 		if (getRourkeStrValue("signature2y") != null) {
-			rbr.setSignature2T3Y(getRourkeStrValue("signature2y"));
+			rbr.setSignature(getRourkeStrValue("signature2y"));
 		}
 
 		//problems and plans
@@ -1425,7 +1385,6 @@ public class BORNWbXmlGenerator {
 
 		rbr.setInvestigationsImmunizationRecordVaccines(0);
 
-		rbr.setNeedForAddAssessmentNo(YesNoUnknown.U);
 		rbr.setNutritionAvoidSweetenedLiquids(getDiscussedConcernNotDiscussed("avoidsweeteded_4y"));
 		rbr.setNutritionCanadaFoodGuide(getDiscussedConcernNotDiscussed("foodguide_4y"));
 		rbr.setNutritionMilk(getDiscussedConcernNotDiscussed("formulafeeding_4y"));
@@ -1444,7 +1403,7 @@ public class BORNWbXmlGenerator {
 
 		//signature
 		if (getRourkeStrValue("signature4y") != null) {
-			rbr.setSignature2T3Y(getRourkeStrValue("signature4y"));
+			rbr.setSignature(getRourkeStrValue("signature4y"));
 		}
 
 		//problems and plans
@@ -1524,10 +1483,9 @@ public class BORNWbXmlGenerator {
 			populateNDDS2Y(ndds.addNewNDDS2Y());
 		}
 
-		//TODO
-		//	if(this.eformValuesMap.get("") != null) {
-		//	populateNDDS30M(ndds.addNewNDDS30M());
-		//	}
+		if(this.eformValuesMap.get("NDDS30M") != null) {
+			populateNDDS30M(ndds.addNewNDDS30M());
+		}
 
 		if (this.eformValuesMap.get("NDDS3Y") != null) {
 			populateNDDS3Y(ndds.addNewNDDS3Y());
@@ -1682,6 +1640,12 @@ public class BORNWbXmlGenerator {
 		setNDDSAnswers("NDDS18M", ndds, 17);
 
 	}
+	
+	private void populateNDDS30M(NDDS30M ndds) {
+		ndds.setFormVersion(FormVersion.X_2011);
+		setNDDSCompletionDateTime("NDDS30M", ndds);
+		setNDDSAnswers("NDDS30M", ndds, 16);
+	}
 
 	private void populateNDDS2Y(NDDS2Y ndds) {
 		ndds.setFormVersion(FormVersion.X_2011);
@@ -1689,14 +1653,7 @@ public class BORNWbXmlGenerator {
 		setNDDSAnswers("NDDS24M", ndds, 17);
 
 	}
-
-	/*
-		private void populateNDDS30M(NDDS30M ndds) {
-			ndds.setFormVersion(FormVersion.X_2011);
-			ndds.setNDDSCompletionDateTime(Calendar.getInstance());
-			setNddsQuestions(ndds, 16, "NDDS30M");
-		}
-	*/
+	
 	private void populateNDDS3Y(NDDS3Y ndds) {
 		ndds.setFormVersion(FormVersion.X_2011);
 		setNDDSCompletionDateTime("NDDS3Y", ndds);
@@ -1721,22 +1678,73 @@ public class BORNWbXmlGenerator {
 		setNDDSAnswers("NDDS6Y", ndds, 22);
 	}
 
+	
+   protected ca.bornontario.wb.YesNoUnknown.Enum getSumRptAnswer(String key) {
+	   String val = getValueFromEForm("SUMRPT", key);
+		if(val == null) {
+			return ca.bornontario.wb.YesNoUnknown.N;
+		}
+		if(val != null && "on".equals(val)) {
+			return ca.bornontario.wb.YesNoUnknown.Y;
+		}
+		return ca.bornontario.wb.YesNoUnknown.U;
+   }
+
+	
 	private void populateSumRptMarkers(SUMRPTMARKERS markers) {
-		markers.setAPGAR1(getDiscussedConcernNotDiscussed(""));
-		markers.setAPGAR5(0);
-		markers.setFSA("A0A");
-		markers.setHighRisk(ca.bornontario.wb.YesNoUnknown.Y);
-		markers.setLastUpdateDateTime(formDateTimeToCal(eformFdidMap.get("SUMRPTMARKERS")));
-		markers.setMoreThanOneDevAreaAffectedYes(ca.bornontario.wb.YesNoUnknown.Y);
-		markers.setNeedForAddAssessmentYes(ca.bornontario.wb.YesNoUnknown.Y);
-		markers.setPremature(ca.bornontario.wb.YesNoUnknown.Y);
-		markers.setSecondHandSmokeExposureInUtero(ca.bornontario.wb.YesNoUnknown.Y);
-		markers.setSecondHandSmokeExposureSinceBirth(ca.bornontario.wb.YesNoUnknown.Y);
-		markers.setSubstanceAbuseAlcohol(ca.bornontario.wb.YesNoUnknown.Y);
-		markers.setSubstanceAbuseDrugs(ca.bornontario.wb.YesNoUnknown.Y);
-		markers.setSubstanceAbuseInUteroYes(ca.bornontario.wb.YesNoUnknown.Y);
-		markers.setNoConcerns(ca.bornontario.wb.YesNoUnknown.Y);
-		markers.setMoreThanOneDevAreaAffectedYes(ca.bornontario.wb.YesNoUnknown.Y);
+
+		markers.setSetID(this.eformFdidMap.get("SUMRPT"));
+		markers.setVersionID(1);
+		markers.setLastUpdateDateTime(formDateTimeToCal(eformFdidMap.get("SUMRPT")));
+		markers.setNoConcerns(getSumRptAnswer("NoConcerns"));
+		Integer apgar1 = getIntFromEForm("SUMRPT", "APGAR1");
+		if(apgar1 != null) {
+		        markers.setAPGAR1(apgar1);
+		}
+		Integer apgar5 = getIntFromEForm("SUMRPT", "APGAR5");
+		if(apgar5 != null) {
+		        markers.setAPGAR5(apgar5);
+		}
+
+		markers.setFSA(getValueFromEForm("SUMRPT", "fsa"));
+		if(getValueFromEForm("RPTSUM", "MoreThanOneDevAreaAffectedYes") != null) {
+			markers.setMoreThanOneDevAreaAffected(ca.bornontario.wb.YesNoUnknown.Y);
+		} else if(getValueFromEForm("RPTSUM", "MoreThanOneDevAreaAffectedNo") != null) {
+			markers.setMoreThanOneDevAreaAffected(ca.bornontario.wb.YesNoUnknown.N);
+		} else {
+			markers.setMoreThanOneDevAreaAffected(ca.bornontario.wb.YesNoUnknown.U);
+		}
+				
+		markers.setPremature(getSumRptAnswer("Premature"));
+		markers.setPremature(getSumRptAnswer("HighRisk"));
+
+		markers.setSecondHandSmokeExposureInUtero(getSumRptAnswer("SecondHandSmokeInUtero"));
+		markers.setSecondHandSmokeExposureSinceBirth(getSumRptAnswer("SecondHandSmokeSinceBirth"));
+		markers.setSecondHandSmokeExposureNoExposure(getSumRptAnswer("SecondHandSmokeNoExposure"));
+		
+		if(getValueFromEForm("RPTSUM", "SubstanceAbuseInUteroYes") != null) {
+			markers.setSubstanceAbuseInUtero(ca.bornontario.wb.YesNoUnknown.Y);
+		}
+		else if(getValueFromEForm("RPTSUM", "SubstanceAbuseInUteroNo") != null) {
+	        markers.setSubstanceAbuseInUtero(ca.bornontario.wb.YesNoUnknown.N);
+		} else {
+	        markers.setSubstanceAbuseInUtero(ca.bornontario.wb.YesNoUnknown.U);
+		}
+			
+		if(getValueFromEForm("RPTSUM", "SubstanceAbuseInUteroYes") != null) {
+	        markers.setSubstanceAbuseAlcohol(getSumRptAnswer("SubstanceAbuseAlcohol"));
+	        markers.setSubstanceAbuseDrugs(getSumRptAnswer("SubstanceAbuseDrugs"));
+		}
+	
+		if(getValueFromEForm("RPTSUM", "NeedForAddAssessmentYes") != null) {
+			markers.setNeedForAddAssessment(ca.bornontario.wb.YesNoUnknown.Y);
+		}
+		else if(getValueFromEForm("RPTSUM", "NeedForAddAssessmentNo") != null) {
+	        markers.setNeedForAddAssessment(ca.bornontario.wb.YesNoUnknown.N);
+		} else {
+			markers.setNeedForAddAssessment(ca.bornontario.wb.YesNoUnknown.U);
+		}
+			
 	}
 
 	/*
@@ -2067,6 +2075,22 @@ public class BORNWbXmlGenerator {
 		}
 		return null;
 	}
+	
+	protected Integer getIntFromEForm(String name, String key) {
+		Map<String, EFormValue> m = this.eformValuesMap.get(name);
+		if (m != null) {
+			String v =  (m.get(key) != null ? m.get(key).getVarValue() : null);
+			if(v!=null) {
+				try {
+					int iv = Integer.parseInt(v);
+					return iv;
+				}catch(NumberFormatException e) {
+					return null;
+				}
+			}
+		}
+		return null;
+	}
 
 	private String getRourkeStrValue(String key) {
 		return getValueFromEForm("RBR", key);
@@ -2074,6 +2098,10 @@ public class BORNWbXmlGenerator {
 
 	private Integer getRourkeIntValue(String key) {
 		String str = getRourkeStrValue(key);
+		if(str == null) {
+			MiscUtils.getLogger().info("couldn't find value for integer key " +  key + ":" + str);
+			return null;
+		}
 		try {
 			return Integer.parseInt(str);
 		} catch (NumberFormatException e) {

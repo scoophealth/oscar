@@ -607,9 +607,9 @@ function onSelectSpecialist(SelectedSpec)	{
         for( var idx = 0; idx < specs.length; ++idx ) {
             aSpeci = specs[idx];									// get the specialist Object for the currently selected spec
             if( aSpeci.specNbr == SelectedSpec.value ) {
-            	form.phone.value = (aSpeci.phoneNum);
-            	form.fax.value = (aSpeci.specFax);					// load the text fields with phone fax and address
-            	form.address.value = (aSpeci.specAddress);
+            	form.phone.value = (aSpeci.phoneNum.replace(null,""));
+            	form.fax.value = (aSpeci.specFax.replace(null,""));					// load the text fields with phone fax and address
+            	form.address.value = (aSpeci.specAddress.replace(null,""));
             	
        			//since there is a match make sure the dislaimer is hidden
        			document.getElementById("consult-disclaimer").style.display='none';
@@ -1565,7 +1565,7 @@ function updateFaxButton() {
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgAddress" />:
 							</td>
-							<td class="tite1"><%=thisForm.getPatientAddress()%></td>
+							<td class="tite1"><%=thisForm.getPatientAddress().replace("null", "")%></td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message

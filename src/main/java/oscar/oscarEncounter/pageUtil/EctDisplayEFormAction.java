@@ -59,6 +59,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 			 return true; //eforms link won't show up on new CME screen.
 		} else {
 			
+			LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		 	String omitTypeStr = request.getParameter("omit");
 		 	String[] omitTypes = new String[0];
 		 	if(omitTypeStr!=null) {
@@ -79,7 +80,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 	
 	        StringBuilder javascript = new StringBuilder("<script type=\"text/javascript\">");        
 	        String js = ""; 
-	        ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(EFormUtil.DATE, EFormUtil.CURRENT, roleName);//EFormUtil.listEForms(EFormUtil.DATE, EFormUtil.NAME, EFormUtil.CURRENT, roleName);
+	        ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(loggedInInfo, EFormUtil.DATE, EFormUtil.CURRENT, roleName);//EFormUtil.listEForms(EFormUtil.DATE, EFormUtil.NAME, EFormUtil.CURRENT, roleName);
 	        String key;
 	        int hash;
 	        String BGCOLOUR = request.getParameter("hC");
@@ -100,7 +101,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 			//I've put in an arbitrary limit here of 100. Some people use a single eform/patient for
 			//logging calls, etc. This makes this result set huge. People can click on the eform tab and view the full
 			//history if they need to.
-			List<EFormData> eFormDatas=EFormUtil.listPatientEformsCurrent(new Integer(bean.demographicNo), true, 0, 100);
+			List<EFormData> eFormDatas=EFormUtil.listPatientEformsCurrent(loggedInInfo, new Integer(bean.demographicNo), true, 0, 100);
 			filterRoles(eFormDatas, roleName);
 			//Collections.sort(eFormDatas, EFormData.FORM_DATE_COMPARATOR);
 			//Collections.reverse(eFormDatas);
@@ -116,6 +117,8 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 		        		break;
 		        	}
 		        }
+		        
+		    
 		        if(skip)
 		        	continue;
 		        
