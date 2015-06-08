@@ -165,7 +165,7 @@
 		<input  type="text" class="form-control" id="treatment" name="treatment" ng-model="groupNotesForm.groupNoteExt.treatment" placeholder="<bean:message key="oscarEncounter.treatment.title" />" />
 </div>
 
-<div ng-if="page.code == 'medhx'" class="col-lg-6">
+<div ng-if="page.code == 'famhx'" class="col-lg-6">
 		<label><bean:message key="oscarEncounter.relationship.title" /></label>
 		<input type="text" class="form-control" id="relationship" name="relationship" ng-model="groupNotesForm.groupNoteExt.relationship" placeholder="<bean:message key="oscarEncounter.relationship.title" />" />
 </div>

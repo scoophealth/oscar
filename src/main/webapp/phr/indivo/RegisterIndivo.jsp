@@ -75,7 +75,7 @@ if (wPhoneExt != null)
 
 <html>
     <head>
-        <title>Register for MyOSCAR</title>
+        <title>Register for PHR</title>
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/bootstrap.css">
         <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.7.1.min.js"></script>
         
@@ -222,7 +222,7 @@ if (wPhoneExt != null)
                 <html-el:hidden property="method" value="registerUser"/>
                 <html-el:hidden property="demographicNo" value="<%=demographicNo%>"/>
 				<div class="page-header">			
-					<h3>MyOSCAR Patient Registration</h3>
+					<h3>PHR Patient Registration</h3>
 				</div>
 
 			

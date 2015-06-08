@@ -381,8 +381,12 @@ public final class EDocUtil {
 			currentdoc.setReviewerId(d.getReviewer());
 			currentdoc.setReviewDateTime(ConversionUtils.toTimestampString(d.getReviewdatetime()));
 			currentdoc.setReviewDateTimeDate(d.getReviewdatetime());
-                        currentdoc.setContentDateTime(d.getContentdatetime());
-            currentdoc.setRestrictToProgram(d.isRestrictToProgram());
+            currentdoc.setContentDateTime(d.getContentdatetime());
+            
+            if(d.isRestrictToProgram() != null){            
+            	currentdoc.setRestrictToProgram(d.isRestrictToProgram());
+            }
+            
 			attachedDocs.add(currentdoc);
 		}
 
@@ -689,6 +693,7 @@ public final class EDocUtil {
 	}
 
 	public static EDoc getDoc(String documentNo) {
+		
 		DocumentDao dao = SpringUtils.getBean(DocumentDao.class);
 		IndivoDocsDao iDao = SpringUtils.getBean(IndivoDocsDao.class);
 
@@ -722,8 +727,11 @@ public final class EDocUtil {
 			currentdoc.setStatus(d.getStatus());
 			currentdoc.setContentType(d.getContenttype());
 			currentdoc.setNumberOfPages(d.getNumberofpages());
-                        currentdoc.setContentDateTime(d.getContentdatetime());
-            currentdoc.setRestrictToProgram(d.isRestrictToProgram());
+            currentdoc.setContentDateTime(d.getContentdatetime());
+            
+            if(d.isRestrictToProgram() != null){
+            	currentdoc.setRestrictToProgram(d.isRestrictToProgram());
+            }
             
 			if (myOscarEnabled) {
 				IndivoDocs id = iDao.findByOscarDocNo(d.getDocumentNo(), "document");

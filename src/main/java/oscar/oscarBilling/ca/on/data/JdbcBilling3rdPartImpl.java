@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.billing.CA.ON.model.Billing3rdPartyAddress;
 import org.oscarehr.common.dao.Billing3rdPartyAddressDao;
 import org.oscarehr.common.dao.BillingONExtDao;
@@ -51,7 +52,7 @@ public class JdbcBilling3rdPartImpl {
 		Properties retval = new Properties();			
 		List<BillingONExt> billingExts = extDao.getBillingExtItems(invNo);
 		for(BillingONExt b : billingExts) {
-			retval.setProperty(b.getKeyVal(), b.getValue());			
+			retval.setProperty(StringUtils.trimToEmpty(b.getKeyVal()), StringUtils.trimToEmpty(b.getValue()));
 		}
 		return retval;
 	}

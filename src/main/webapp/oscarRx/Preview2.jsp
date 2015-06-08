@@ -293,7 +293,8 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                             <input type="hidden" name="pdfId" id="pdfId" value="" />
                                             <input type="hidden" name="patientAddress" value="<%= StringEscapeUtils.escapeHtml(patient.getAddress()) %>" />
                                             <%
-                                            int check = (patient.getCity() != null & patient.getCity().trim().length() > 0 ? 1 : 0) | (patient.getProvince() != null & patient.getProvince().trim().length() > 0 ? 2 : 0);  
+                                            int check = (patient.getCity() != null && patient.getCity().trim().length() > 0 ? 1 : 0) 
+						| (patient.getProvince() != null && patient.getProvince().trim().length() > 0 ? 2 : 0);  
                                             String patientPostal = String.format("%s%s%s %s",
                                             							  patient.getCity(),
                                             							  check == 3 ? ", " : check == 2 ? "" : " ",

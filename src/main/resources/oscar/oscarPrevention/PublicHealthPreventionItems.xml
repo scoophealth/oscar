@@ -441,6 +441,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" /-->
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="Bacterial Vaginosis"
@@ -448,6 +449,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="CT Culture Cervical"
@@ -455,6 +457,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="CT Culture Throat"
@@ -462,6 +465,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="CT Culture Rectal"
@@ -469,6 +473,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="CT Culture Urethral"
@@ -476,6 +481,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="CT NAAT Cervical"
@@ -483,6 +489,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="CT NAAT Urethral"
@@ -490,6 +497,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="CT NAAT Urine"
@@ -497,6 +505,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="GC Culture Cervical"
@@ -504,6 +513,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="GC Culture Throat"
@@ -511,6 +521,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="GC Culture Rectal"
@@ -518,6 +529,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="GC Culture Urethral"
@@ -525,6 +537,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="GC NAAT Cervical"
@@ -532,6 +545,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="GC NAAT Urethral"
@@ -539,6 +553,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="GC NAAT Urine"
@@ -546,11 +561,13 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item 
+		private="sexualHealth"
 		resultDesc=""
 		desc="Hep A=Hepatitis A" name="HepA" link="" layout="injection" healthCanadaType="HA"
 		atc="J07BC02" showIfMinRecordNum="1" />
 
 	<item 
+		private="sexualHealth"
 		resultDesc=""
 		desc="Hep B=Hepatitis B" name="HepB" healthCanadaType="HB"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#HepB"
@@ -558,6 +575,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="Hep A Screen"
@@ -565,6 +583,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 		
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc="HepC screen = Hep C Ab serology in contacts of multiple sex partners, traumatic anal intercourse with infected person, IVDU"
 		name="Hep C screen"
@@ -575,6 +594,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="HSV viral swab"
@@ -582,6 +602,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="HIV Confirm Anon"
@@ -589,6 +610,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="HIV Confirm Nominal"
@@ -596,6 +618,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="HIV Serology Anon"
@@ -603,6 +626,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="HIV Serology Nominal"
@@ -610,6 +634,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc="Normal=Non-reactive, Abnormal=Reactive，Other=Invalid"
 		desc=""
 		name="HIV POC Nominal"
@@ -617,6 +642,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc="Normal=Non-reactive, Abnormal=Reactive，Other=Invalid"
 		desc=""
 		name="HIV POC Anon"
@@ -624,6 +650,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item 
+		private="sexualHealth"
 		resultDesc=""
 		desc="Women ages of 9 and 26 years are recommended to receive human papillomavirus vaccine" 
 		name="HPV Vaccine"
@@ -635,11 +662,13 @@ Varicella Immunoglobulin	VarIg
    		showIfMinRecordNum="1" />
 
 	<item 
+		private="sexualHealth"
 		resultDesc=""
 		desc="PAP=" name="PAP" link="" layout="PAPMAM" minAge="20"
 		maxAge="65" sex="F" showIfMinRecordNum="1" />
 		
 	<item
+		private="sexualHealth"
 		resultDesc="Normal=Positive, Abnormal=Negative"
 		desc=""
 		name="Pregnancy Test"
@@ -647,6 +676,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 		
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="Syphilis Serology"
@@ -654,6 +684,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 		
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="Trichomaniasis"
@@ -661,6 +692,7 @@ Varicella Immunoglobulin	VarIg
 		showIfMinRecordNum="1" />
 
 	<item
+		private="sexualHealth"
 		resultDesc=""
 		desc=""
 		name="Yeast"

@@ -73,7 +73,7 @@ window.top.location.href = "<%=request.getContextPath()%>/administration/?show=F
                                         <div class='uploadEformTitle'>
                                         <bean:message key="eform.uploadhtml.btnRoleType"/><br>
                                         <select name="roleType">
-                                        <option value="" >- select one -</option>
+                                        <option value="" >- select one (optional) -</option>
                                        <%  ArrayList roleList = EFormUtil.listSecRole();
   											for (int i=0; i<roleList.size(); i++) {    
   										%>  											
@@ -84,10 +84,29 @@ window.top.location.href = "<%=request.getContextPath()%>/administration/?show=F
                                         </select>
                                         </div>
                                         
+                                   
+                                        <div class='uploadEformTitle'>
+                                        <bean:message key="eform.uploadhtml.btnProgram"/><br>
+                                        <select name="programNo">
+                                        <option value="" >- select one (optional) -</option>
+                                       <%  List<org.oscarehr.PMmodule.model.Program> pList = EFormUtil.listPrograms();
+  											for (int i=0; i<pList.size(); i++) {    
+  										%>  											
+                                        	
+                                        		<option value="<%=pList.get(i).getId() %>"><%=pList.get(i).getName() %></option>
+                                        	
+                                        <%} %>
+                                        </select>
+                                        </div>
+                                        
                                         <div class='uploadEformTitle'>
                                         <input type="checkbox" name="showLatestFormOnly" value="true"/><bean:message key="eform.uploadhtml.showLatestFormOnly"/><br>
-                                        <input type="checkbox" name="patientIndependent" value="true"/><bean:message key="eform.uploadhtml.patientIndependent"/>
+                                        <input type="checkbox" name="patientIndependent" value="true"/><bean:message key="eform.uploadhtml.patientIndependent"/><br/>
+                                        <input type="checkbox" name="restrictByProgram" value="true"/><bean:message key="eform.uploadhtml.restrictByProgram"/>
+                                        
                                         </div>
+                                        
+                                      
                                         
                                         <input type="file" name="formHtml" id="formHtml" class="check" size="50" required>
                                         <input type="submit" name="subm" class="btn btn-primary upload" value="<bean:message key="eform.uploadhtml.btnUpload"/>" disabled>

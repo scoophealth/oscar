@@ -284,6 +284,9 @@
 			<form-property name="labAckCommentProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="cobaltProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="hideOldEchartLinkInApptProperty" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="appointmentCardName" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="appointmentCardPhone" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="appointmentCardFax" type="org.oscarehr.common.model.UserProperty" />
 		</form-bean>
 		<form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="myOscarLoginId" type="java.lang.String" />
@@ -1567,6 +1570,8 @@
             <forward name="genDisplayDocumentAs"			path="/provider/setDisplayDocumentAs.jsp"/>
             <forward name="genCobalt"						path="/provider/setCobalt.jsp"/>
             <forward name="genHideOldEchartLinkInAppt"		path="/provider/setHideOldEchartLinkInAppt.jsp"/>
+             <forward name="genAppointmentCardPrefs"     path="/provider/setAppointmentCardPrefs.jsp"/>
+
         </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
@@ -2790,6 +2795,7 @@
 
 		<action path="/integrator/IntegratorPush" type="org.oscarehr.common.web.IntegratorPushAction" parameter="method">
 		</action>
+
 		<action path="/printReferralLabelAction" type="org.oscarehr.common.web.PrintReferralLabelAction" />
 		
 		<action path="/billing/CA/ON/billingON3rdPayments" scope="request" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method">
@@ -2806,7 +2812,6 @@
 		</action>
 		<action input="/billing/CA/ON/billingON3rdInv.jsp" name="FrmForm" path="/billing/ca/on/DisplayInvoiceLogo" scope="request" type="org.oscarehr.billing.CA.ON.util.DisplayInvoiceLogo"></action>
 
-		
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="100M" />
 	<message-resources parameter="oscarResources" null="false" />

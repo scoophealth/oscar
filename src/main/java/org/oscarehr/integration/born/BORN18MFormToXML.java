@@ -26,14 +26,14 @@ package org.oscarehr.integration.born;
 import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import org.apache.xmlbeans.XmlCalendar;
 import org.apache.xmlbeans.XmlOptions;
@@ -54,13 +54,25 @@ import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.sharingcenter.dao.ClinicInfoDao;
 import org.oscarehr.sharingcenter.model.ClinicInfoDataObject;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarPrevention.PreventionDisplayConfig;
 import oscar.util.StringUtils;
-import oscar.OscarProperties;
-import ca.bornontario.x18MEWBV.*;
+import ca.bornontario.x18MEWBV.BORN18MEWBVBatch;
+import ca.bornontario.x18MEWBV.BORN18MEWBVBatchDocument;
+import ca.bornontario.x18MEWBV.CountryProvince;
+import ca.bornontario.x18MEWBV.Gender;
+import ca.bornontario.x18MEWBV.IMMUNIZATION;
+import ca.bornontario.x18MEWBV.M18MARKERS;
+import ca.bornontario.x18MEWBV.NDDS;
+import ca.bornontario.x18MEWBV.PatientInfo;
+import ca.bornontario.x18MEWBV.ProblemsAndPlans;
+import ca.bornontario.x18MEWBV.RBR;
+import ca.bornontario.x18MEWBV.RBRM18;
+import ca.bornontario.x18MEWBV.YesNoUnknown;
 
 
 public class BORN18MFormToXML {
@@ -83,11 +95,11 @@ public class BORN18MFormToXML {
 		this.demographicNo = demographicNo.toString();
 	}
 	
-	public boolean addXmlToStream(Writer os, XmlOptions opts, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid) throws IOException {
-		return addXmlToStream(os,opts,rourkeFdid,nddsFdid, report18mFdid,false);
+	public boolean addXmlToStream(LoggedInInfo loggedInInfo, Writer os, XmlOptions opts, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid) throws IOException {
+		return addXmlToStream(loggedInInfo, os,opts,rourkeFdid,nddsFdid, report18mFdid,false);
 	}
 	
-	public boolean addXmlToStream(Writer os, XmlOptions opts, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid, boolean useClinicInfoForOrganizationId) throws IOException {
+	public boolean addXmlToStream(LoggedInInfo loggedInInfo, Writer os, XmlOptions opts, Integer rourkeFdid, Integer nddsFdid, Integer report18mFdid, boolean useClinicInfoForOrganizationId) throws IOException {
 		if (rourkeFdid==null && nddsFdid==null && report18mFdid==null) return false;
 	    
 		BORN18MEWBVBatchDocument bornBatchDocument = ca.bornontario.x18MEWBV.BORN18MEWBVBatchDocument.Factory.newInstance();
@@ -96,7 +108,7 @@ public class BORN18MFormToXML {
 
 		propulatePatientInfo(patientInfo, rourkeFdid, useClinicInfoForOrganizationId);
 		if (nddsFdid!=null) propulateNdds(patientInfo.addNewNDDS(), nddsFdid);
-		if (rourkeFdid!=null) propulateRourke(patientInfo.addNewRBR(), rourkeFdid);
+		if (rourkeFdid!=null) propulateRourke(loggedInInfo, patientInfo.addNewRBR(), rourkeFdid);
 		if (report18mFdid!=null) propulateM18Markers(patientInfo.addNewM18MARKERS(), report18mFdid);
 
 		//xml validation
@@ -288,19 +300,19 @@ public class BORN18MFormToXML {
 		
 		ndds.setLastUpdateDateTime(formDateTimeToCal(fdid));
 		ndds.setSetID(fdid);
-		ndds.setVersionID(fdid);
+		ndds.setVersionID(1);
 	}
 	
-	private void propulateRourke(RBR rourke, Integer fdid) {
+	private void propulateRourke(LoggedInInfo loggedInInfo, RBR rourke, Integer fdid) {
 		RBRM18 rbrm18 = rourke.addNewRBRM18();
 		
 		propulateRourkeFromRourke18m(rbrm18, fdid);
 		propulateRourkeFromNDDS(rbrm18);
-		propulateRourkeFromImmunization(rourke);
+		propulateRourkeFromImmunization(loggedInInfo, rourke);
 		rourke.setLastUpdateDate(formDateTimeToCal(fdid));
 		
 		rourke.setSetID(fdid);
-		rourke.setVersionID(fdid);
+		rourke.setVersionID(1);
 		
 	}
 	
@@ -448,14 +460,14 @@ public class BORN18MFormToXML {
 		if (YesNoUnknown.N.equals(nddsQ.get(nddsQkey[16]))) rbrm18.setDevelopmentNDDSNotAttained18M01(17);
 	}
 	
-	private void propulateRourkeFromImmunization(RBR rourke) {
+	private void propulateRourkeFromImmunization(LoggedInInfo loggedInInfo, RBR rourke) {
 		PreventionDao preventionDao = SpringUtils.getBean(PreventionDao.class);
 		PreventionExtDao preventionExtDao = SpringUtils.getBean(PreventionExtDao.class);
 		List<String> immunizationPreventionTypes = new ArrayList<String>();
 
 		//Prepare list of prevention types which are immunizations
-        PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-        ArrayList<HashMap<String,String>> prevList = pdc.getPreventions();
+        PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance(loggedInInfo);
+        ArrayList<HashMap<String,String>> prevList = pdc.getPreventions(loggedInInfo);
         for (int k =0 ; k < prevList.size(); k++){
             HashMap<String,String> a = new HashMap<String,String>();
             a.putAll(prevList.get(k));
@@ -542,7 +554,7 @@ public class BORN18MFormToXML {
 		
 		m18Markers.setLastUpdateDateTime(formDateTimeToCal(fdid));
 		m18Markers.setSetID(fdid);
-		m18Markers.setVersionID(fdid);
+		m18Markers.setVersionID(1);
 	}
 	
 	private Calendar formDateTimeToCal(Integer fdid) {

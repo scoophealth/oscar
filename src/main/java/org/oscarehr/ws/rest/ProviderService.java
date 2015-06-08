@@ -37,7 +37,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.processors.JsDateJsonBeanProcessor;
@@ -114,13 +113,17 @@ public class ProviderService extends AbstractServiceImpl {
  
     @GET
     @Path("/providers_json")
-    public String getProvidersAsJSON() {
+    @Produces("application/json")
+    public AbstractSearchResponse<ProviderTo1> getProvidersAsJSON() {
     	JsonConfig config = new JsonConfig();
     	config.registerJsonBeanProcessor(java.sql.Date.class, new JsDateJsonBeanProcessor());
     	
-    	List<Provider> p = providerDao.getActiveProviders();
-    	JSONArray arr = JSONArray.fromObject(p, config);
-    	return arr.toString();
+    	List<ProviderTo1> providers = new ProviderConverter().getAllAsTransferObjects(getLoggedInInfo(), providerDao.getActiveProviders());
+    	
+    	AbstractSearchResponse<ProviderTo1> response = new AbstractSearchResponse<ProviderTo1>();
+    	response.setContent(providers);
+  
+    	return response;
     }
 
     @GET

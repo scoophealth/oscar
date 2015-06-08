@@ -69,8 +69,7 @@ public class MessagingConverter extends AbstractConverter<MessageList, MessageTo
 		
 		
 		MessageTo1 d = new MessageTo1();
-		d.setId(t.getId());
-		
+		d.setId(msg.getId());
 		
 		String strDate = (new SimpleDateFormat("yyyy-MM-dd")).format(msg.getDate()) + " " + (new SimpleDateFormat("HH:mm")).format(msg.getTime());
 

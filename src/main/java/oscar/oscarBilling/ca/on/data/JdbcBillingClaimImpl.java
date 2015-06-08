@@ -144,8 +144,15 @@ public class JdbcBillingClaimImpl {
 				b.setBillingTime(timeFormatter.parse(val.billing_time));
 			}catch(ParseException e){MiscUtils.getLogger().error("Invalid time", e);}
 
+		
 		b.setTotal(new BigDecimal(val.total==null?"0.00":val.total));
-		b.setPaid(new BigDecimal(val.paid==null?"0.00":val.paid));
+				
+		if(val.paid == null || val.paid.isEmpty()){
+			b.setPaid(new BigDecimal("0.00"));
+		}else{
+			b.setPaid(new BigDecimal(val.paid));
+		}
+		
 		b.setStatus(val.status);
 		b.setComment(StringEscapeUtils.escapeSql(val.comment));
 		b.setVisitType(val.visittype);

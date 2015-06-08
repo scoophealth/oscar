@@ -823,6 +823,8 @@ CREATE TABLE eform (
   showLatestFormOnly boolean NOT NULL,
   patient_independent boolean NOT NULL,
   roleType varchar(50) default NULL,
+  programNo int(10),
+  restrictToProgram tinyint(1),
   PRIMARY KEY  (fid),
   UNIQUE KEY id (fid)
 ) ;
@@ -7709,6 +7711,8 @@ CREATE TABLE preventions (
   never char(1) default '0',
   creator int(10) default NULL,
   lastUpdateDate datetime NOT NULL,
+  restrictToProgram tinyint(1),
+  programNo int,
   INDEX `preventions_demographic_no` (`demographic_no`),
   INDEX `preventions_provider_no` (provider_no(6)),
   INDEX `preventions_prevention_type` (prevention_type(10)),

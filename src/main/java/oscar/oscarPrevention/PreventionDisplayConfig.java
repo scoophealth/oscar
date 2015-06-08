@@ -33,20 +33,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDemographic.data.DemographicData;
 
 public class PreventionDisplayConfig {
     private static Logger log = MiscUtils.getLogger();
-    private static PreventionDisplayConfig preventionDisplayConfig = new PreventionDisplayConfig();
+    //private PreventionDisplayConfig preventionDisplayConfig = new PreventionDisplayConfig();
    
     private HashMap<String,HashMap<String,String>> prevHash = null;
     private ArrayList<HashMap<String,String>> prevList = null;
@@ -54,33 +58,38 @@ public class PreventionDisplayConfig {
     private HashMap<String,Map<String,Object>> configHash = null;
     private ArrayList<Map<String,Object>> configList = null;
 
+   private ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+    
     private PreventionDisplayConfig() {
     	// use getInstance()
     }
     
-    static public PreventionDisplayConfig getInstance(){
-       if (preventionDisplayConfig.prevList == null) {
-         preventionDisplayConfig.loadPreventions();
-       }
-       return preventionDisplayConfig;
+    static public PreventionDisplayConfig getInstance(LoggedInInfo loggedInInfo){
+     /// if (preventionDisplayConfig.prevList == null) {
+     //    preventionDisplayConfig.loadPreventions(loggedInInfo);
+    //   }
+    //   return preventionDisplayConfig;
+    	PreventionDisplayConfig pdc = new PreventionDisplayConfig();
+    	pdc.loadPreventions(loggedInInfo);
+    	return pdc;
     }
 
-    public ArrayList<HashMap<String,String>> getPreventions() {
+    public ArrayList<HashMap<String,String>> getPreventions(LoggedInInfo loggedInInfo) {
         if (prevList == null) {
-            loadPreventions();
+            loadPreventions(loggedInInfo);
         }
         return prevList;
     }
 
-    public HashMap<String,String> getPrevention(String s) {
+    public HashMap<String,String> getPrevention(LoggedInInfo loggedInInfo, String s) {
         if (prevHash == null) {
-            loadPreventions();
+            loadPreventions(loggedInInfo);
         }
         log.debug("getting " + s);
         return prevHash.get(s);
     }
     
-	public void loadPreventions() {
+	public void loadPreventions(LoggedInInfo loggedInInfo) {
 		prevList = new ArrayList<HashMap<String, String>>();
 		prevHash = new HashMap<String, HashMap<String, String>>();
 		log.debug("STARTING2");
@@ -112,8 +121,35 @@ public class PreventionDisplayConfig {
 					Attribute att = (Attribute) attr.get(j);
 					h.put(att.getName(), att.getValue());
 				}
-				prevList.add(h);
-				prevHash.put(h.get("name"), h);
+				
+			
+				if(!StringUtils.isEmpty(h.get("private"))) {
+					String key = h.get("private");
+					if(key != null) {
+					
+						String programs = OscarProperties.getInstance().getProperty(key);
+						if(programs != null) {
+							String[] programNos = programs.split(",");
+							
+							List<ProgramProvider> programProviders = programManager2.getProgramDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+							for(ProgramProvider programProvider:programProviders) {
+								
+								if(contains(programNos,String.valueOf(programProvider.getProgramId()))) {
+									prevList.add(h);
+									prevHash.put(h.get("name"), h);
+								}
+							}
+						} else {
+							log.warn("property " + programs + " should have a comma separated list of programNos");
+						}
+					} else {
+						log.warn("prevention " + h.get("name") + " has an invalid private attribute. It should map to a property name");
+					}
+					
+				} else {
+					prevList.add(h);
+					prevHash.put(h.get("name"), h);
+				}
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
@@ -126,19 +162,28 @@ public class PreventionDisplayConfig {
 		}
 	}
 
-
-    public ArrayList<Map<String,Object>> getConfigurationSets() {
+	
+	private boolean contains(String[] arr, String val) {
+		for(String a:arr) {
+			if(val.equals(a)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+    public ArrayList<Map<String,Object>> getConfigurationSets(LoggedInInfo loggedInInfo) {
         log.debug("returning config sets");
         if (configList == null) {
-            loadConfigurationSets();
+            loadConfigurationSets(loggedInInfo);
         }
         log.debug("returning config sets" + configList);
         return configList;
     }
 
    
-	public void loadConfigurationSets() {
-		getPreventions();
+	public void loadConfigurationSets(LoggedInInfo loggedInInfo) {
+		getPreventions(loggedInInfo);
 		configHash = new HashMap<String, Map<String, Object>>();
 		configList = new ArrayList<Map<String, Object>>();
 
@@ -172,8 +217,34 @@ public class PreventionDisplayConfig {
 					}
 
 				}
-				configList.add(h);
-				configHash.put((String) h.get("title"), h);
+				
+				
+				if(!StringUtils.isEmpty((String)h.get("private"))) {
+					String key = (String)h.get("private");
+					if(key != null) {
+					
+						String programs = OscarProperties.getInstance().getProperty(key);
+						if(programs != null) {
+							String[] programNos = programs.split(",");
+							
+							List<ProgramProvider> programProviders = programManager2.getProgramDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+							for(ProgramProvider programProvider:programProviders) {
+								
+								if(contains(programNos,String.valueOf(programProvider.getProgramId()))) {
+									configList.add(h);
+									configHash.put((String) h.get("title"), h);
+								}
+							}
+						} else {
+							log.warn("property " + programs + " should have a comma separated list of programNos");
+						}
+					} else {
+						log.warn("prevention " + h.get("name") + " has an invalid private attribute. It should map to a property name");
+					}
+				} else {
+					configList.add(h);
+					configHash.put((String) h.get("title"), h);
+				}
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);

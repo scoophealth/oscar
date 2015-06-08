@@ -37,12 +37,16 @@
 <%@page import="java.util.regex.Pattern" %>
 <%@page import="java.util.regex.*" %>
 <%@page import="java.util.*" %>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 
+<%
+LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html:html locale="true">
@@ -119,8 +123,8 @@ String setPropValue;
 String vProp="hide_prevention_stop_signs";
 
 //create preventions list
-PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-ArrayList<HashMap<String,String>> prevList = pdc.getPreventions();
+PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance(loggedInInfo);
+ArrayList<HashMap<String,String>> prevList = pdc.getPreventions(loggedInInfo);
 
 	
 	PropertyDao propDao = (PropertyDao)SpringUtils.getBean("propertyDao");
