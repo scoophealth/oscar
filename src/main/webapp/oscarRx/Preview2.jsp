@@ -151,16 +151,26 @@ OscarProperties props = OscarProperties.getInstance();
 String pracNo = provider.getPractitionerNo();
 String strUser = (String)session.getAttribute("user");
 ProviderData user = new ProviderData(strUser);
+String pharmaName = "";
+String pharmaTel="";
 String pharmaFax = "";
 String pharmaFax2 = "";
-String pharmaName = "";
+String pharmaAddress1="";
+String pharmaAddress2="";
+String pharmaEmail="";
+String pharmaNote="";
 RxPharmacyData pharmacyData = new RxPharmacyData();
 PharmacyInfo pharmacy;
 pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
 if (pharmacy != null) {
-	pharmaFax = pharmacy.fax;
-	pharmaFax2 = "Fax: " + pharmacy.fax;
 	pharmaName = pharmacy.getName();
+	pharmaTel = pharmacy.getPhone1() + ((pharmacy.getPhone2()!=null && !pharmacy.getPhone2().isEmpty())? "," + pharmacy.getPhone2():"");
+	pharmaFax = pharmacy.getFax();
+	pharmaFax2 = "Fax: " + pharmacy.fax;
+	pharmaAddress1 = pharmacy.getAddress();
+	pharmaAddress2 = pharmacy.getCity() + ", " + pharmacy.getProvince() + " " +pharmacy.getPostalCode();
+	pharmaEmail = pharmacy.getEmail();
+	pharmaNote = pharmacy.getNotes();
 }
 
 String patientDOBStr=RxUtil.DateToString(patient.getDOB(), "MMM d, yyyy") ;
@@ -282,6 +292,13 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                             <input type="hidden" name="patientDOB" value="<%= StringEscapeUtils.escapeHtml(patientDOBStr) %>" />
                                             <input type="hidden" name="pharmaFax" value="<%=pharmaFax%>" />
                                             <input type="hidden" name="pharmaName" value="<%=pharmaName%>" />
+                                            <input type="hidden" name="pharmaTel" value="<%=pharmaTel%>" />
+                                            <input type="hidden" name="pharmaAddress1" value="<%=pharmaAddress1%>" />
+                                            <input type="hidden" name="pharmaAddress2" value="<%=pharmaAddress2%>" />
+                                            <input type="hidden" name="pharmaEmail" value="<%=pharmaEmail%>" />
+                                            <input type="hidden" name="pharmaNote" value="<%=pharmaNote%>" />
+                                            <input type="hidden" name="pharmaShow" id="pharmaShow" value="false" />
+                                            
                                             <input type="hidden" name="pracNo" value="<%= StringEscapeUtils.escapeHtml(pracNo) %>" />
                                             <input type="hidden" name="showPatientDOB" value="<%=showPatientDOB%>"/>
                                             <input type="hidden" name="pdfId" id="pdfId" value="" />
