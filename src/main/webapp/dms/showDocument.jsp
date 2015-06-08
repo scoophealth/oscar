@@ -484,7 +484,7 @@
                                                         <input type="button" id="closeBtn_<%=docId%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                                         <input type="button" id="printBtn_<%=docId%>" value=" <bean:message key="global.btnPrint"/> " onClick="popup(700,960,'<%=url2%>','file download')">
                                                         <% if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")) {%>
-                                                        <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
+                                                        <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popup(700,960,'<%= request.getContextPath() %>/oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
                                                         <input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="popupStart(450,600,'<%= request.getContextPath() %>/tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%= docId %>&demographic_no=<%=demographicID%>','tickler')"/>
                                                         <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '<%= request.getContextPath() %>/oscarMDS/SearchPatient.do?labType=DOC&segmentID=<%= docId %>&name=<%=java.net.URLEncoder.encode(demoName)%>', 'searchPatientWindow')">
                                                         <% }
