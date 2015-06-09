@@ -32,14 +32,18 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.log4j.Logger;
 import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EFormReportTool;
 import org.oscarehr.common.model.EFormValue;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 
+	Logger logger = MiscUtils.getLogger();
+	
 	public EFormReportToolDao() {
 		super(EFormReportTool.class);
 	}
@@ -81,7 +85,7 @@ public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 		}
 		sql.append(")");
 
-		//logger.debug("sql=" + sql);
+		logger.debug("sql=" + sql);
 
 		//commit the table
 		Query q = entityManager.createNativeQuery(sql.toString());
@@ -131,7 +135,7 @@ public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 
 		sb.append(")");
 
-		//logger.debug("sql=" + sb.toString());
+		logger.debug("sql=" + sb.toString());
 
 		Query q = entityManager.createNativeQuery(sb.toString());
 		q.executeUpdate();
