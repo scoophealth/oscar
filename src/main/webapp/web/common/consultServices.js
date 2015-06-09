@@ -79,6 +79,18 @@ angular.module("consultServices", [])
        
             return deferred.promise;
         },
+        
+        eSendRequest: function(requestId){
+        	var deferred = $q.defer();
+        	$http.get(this.apiPath+'eSendRequest?requestId='+requestId).success(function(data){
+        		deferred.resolve(data);
+        	}).error(function(){
+            	  console.log("error fetching items");
+                  deferred.reject("An error occured while e-sending consult request (requestId="+requestId+")");
+        	});
+        	
+        	return deferred.promise;
+        },
 
 		searchResponses: function(search){
         	var deferred = $q.defer();
