@@ -27,6 +27,13 @@ oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$loc
 		consult.letterheadFax = consult.faxList[0].faxNumber;
 	}
 	
+	//show referringDoctor in list
+	angular.forEach(consult.referringDoctorList, function(referringDoc) {
+		if (referringDoc.id == consult.referringDoctor.id) {
+			consult.referringDoctor = referringDoc;
+		}
+	});
+	
 	//set patient cell phone
 	consult.demographic.extras = toArray(consult.demographic.extras);
 	for (var i=0; i<consult.demographic.extras.length; i++) {
@@ -69,15 +76,6 @@ oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$loc
 		consult.letterheadAddress = consult.letterheadList[index].address;
 		consult.letterheadPhone = consult.letterheadList[index].phone;
 	};
-	
-	$scope.changeReferringDoctor = function(){
-		var index = $("#refDocId").val();
-		if (index==null) {
-			consult.referringDoctor = null;
-			return;
-		}
-		consult.referringDoctor = consult.referringDoctorList[index];
-	}
 
 	$scope.writeToBox = function(data, boxId){
 		var items = toArray(data.summaryItem);

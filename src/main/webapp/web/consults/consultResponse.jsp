@@ -128,9 +128,8 @@
 			<div>
 				<select id="refDocId" class="form-control"
 						title="Referring Doctor"
-						ng-model="consult.referringDoctor.id"
-						ng-options="refDoc.id as refDoc.name for refDoc in consult.referringDoctorList"
-						ng-change="changeReferringDoctor()">
+						ng-model="consult.referringDoctor"
+						ng-options="refDoc.name for refDoc in consult.referringDoctorList">
 				</select>
 			</div>
 			<p class="referringDoctorDetails">
