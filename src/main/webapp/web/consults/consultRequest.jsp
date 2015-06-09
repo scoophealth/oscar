@@ -135,9 +135,8 @@
 				</select>
 				<select id="specId" class="form-control inline" style="width: 50%;"
 						title="Consultant"
-						ng-model="consult.professionalSpecialist.id"
-						ng-options="spec.id as spec.name for spec in specialists"
-						ng-change="changeSpecialist()">
+						ng-model="consult.professionalSpecialist"
+						ng-options="spec.name for spec in specialists">
 				</select>
 			</div>
 			<p class="specialistDetails">
@@ -287,6 +286,7 @@
 <div class="wrapper-action"><!-- Action Buttons -->
 	<button type="button" class="btn btn-large btn-warning action" ng-click="printPreview()" ng-show="consult.id!=null && consultChanged<=0">Print Preview</button>&nbsp;
 	<button type="button" class="btn btn-large btn-warning action" ng-click="sendFax()" ng-show="consult.id!=null && consultChanged<=0">Send Fax</button>&nbsp;
+	<button type="button" class="btn btn-large btn-warning action" ng-click="eSend()" ng-show="eSendEnabled && consult.id!=null && consultChanged<=0">Send Electronically</button>&nbsp;
 	<button type="button" class="btn btn-large btn-primary action" ng-click="save()" ng-show="consultChanged>0">Save</button>&nbsp;
 	<button type="button" class="btn btn-large btn-default action" ng-click="close()">Close</button>&nbsp;
 </div>
