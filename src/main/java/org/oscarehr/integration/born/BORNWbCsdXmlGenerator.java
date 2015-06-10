@@ -226,7 +226,7 @@ public class BORNWbCsdXmlGenerator {
 		
 		if(drug.getRegionalIdentifier() != null && !drug.getRegionalIdentifier().isEmpty()) {
 			try {
-				medication.setMedicationDIN(Integer.parseInt(drug.getRegionalIdentifier()));
+				medication.setMedicationDIN(drug.getRegionalIdentifier());
 			} catch(NumberFormatException e) {
 				logger.warn("regional identifier is not a number (id="+drug.getId()+")");
 			}
