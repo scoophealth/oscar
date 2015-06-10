@@ -72,6 +72,7 @@ public class BornCDADocument extends Level1Document{
 
 	public static final String TITLE_A1A2 = "Antenatal Record";
 	public static final String TITLE_18M ="Well Baby";
+	public static final String TITLE_CSD ="Well Baby CSD";
 	
 	public static final String OID_CDA_ONTARIO_EHEALTH = "2.16.840.1.113883.3.239.34.1";
 	public static final String OID_CONFIDENTIALITY = "2.16.840.1.113883.5.25";
@@ -85,7 +86,8 @@ public class BornCDADocument extends Level1Document{
 	
     public enum BORNCDADocumentType {
         A1A2(1),
-        EighteenMonth(2);
+        EighteenMonth(2),
+        CSD(3);
         
         private Integer value;
         
@@ -322,6 +324,9 @@ public class BornCDADocument extends Level1Document{
 		}
 		if(type == BORNCDADocumentType.EighteenMonth) {
 			return TITLE_18M;
+		}
+		if(type == BORNCDADocumentType.CSD) {
+			return TITLE_CSD;
 		}
 		return null;
 	}
