@@ -186,7 +186,7 @@ public class PHRUserManagementAction extends DispatchAction {
 			// writer = PdfWriter.getInstance(document, baosPDF);
 
 			String title = "TITLE";
-			String template = "MyOscarLetterHead.pdf";
+			String template = "McMasterPHRLetterHead.pdf";
 
 			Properties printCfg = getCfgProp();
 
@@ -202,12 +202,12 @@ public class PHRUserManagementAction extends DispatchAction {
 			props.setProperty("address", demographic.getAddress());
 			props.setProperty("city", demographic.getCity() + ", " + demographic.getProvince());
 			props.setProperty("postalCode", demographic.getPostal());
-			props.setProperty("credHeading", "MyOscar User Account Details");
+			props.setProperty("credHeading", "PHR User Account Details");
 			props.setProperty("username", "Username: " + username);
 			props.setProperty("password", "Password: " + password);
 			//Temporary - the intro will change to be dynamic
 			
-			props.setProperty("intro", "We are pleased to provide you with a log in and password for your new MyOSCAR Personal Health Record. This account will allow you to connect electronically with our clinic. Please take a few minutes to review the accompanying literature for further information.We look forward to you benefiting from this service.");
+			props.setProperty("intro", "We are pleased to provide you with a log in and password for your new Personal Health Record. This account will allow you to connect electronically with our clinic. Please take a few minutes to review the accompanying literature for further information.We look forward to you benefiting from this service.");
 			
 			document.addTitle(title);
 			document.addSubject("");
@@ -387,7 +387,7 @@ public class PHRUserManagementAction extends DispatchAction {
 
 		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
 		if (myOscarLoggedInInfo == null || !myOscarLoggedInInfo.isLoggedIn()) {
-			ar.addParameter("failmessage", "Permission Denied: You must be logged into myOSCAR to register users");
+			ar.addParameter("failmessage", "Permission Denied: You must be logged into PHR to register users");
 			return ar;
 		}
 
@@ -432,7 +432,7 @@ public class PHRUserManagementAction extends DispatchAction {
 			return ar;
 		} catch (Exception e){
 			log.debug("error", e);
-			ar.addParameter("failmessage", "Failed creating MyOscar user."  + e.getClass().getName() + " - " + e.getMessage());
+			ar.addParameter("failmessage", "Failed creating PHR user."  + e.getClass().getName() + " - " + e.getMessage());
 			return ar;
 		}
 		
@@ -456,7 +456,7 @@ public class PHRUserManagementAction extends DispatchAction {
 			String docDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 			File docDirectory = new File(docDir);
 			Date registrationDate = new Date();
-			String filename = "MyoscarRegistrationLetter." + demographicNo + "." + registrationDate.getTime() + ".pdf";
+			String filename = "PHRRegistrationLetter." + demographicNo + "." + registrationDate.getTime() + ".pdf";
 			File patientRegistrationDocument = new File(docDirectory, filename);
 			fos = new FileOutputStream(patientRegistrationDocument);
 			boas.writeTo(fos);
@@ -464,7 +464,7 @@ public class PHRUserManagementAction extends DispatchAction {
 
 			org.oscarehr.common.model.Document document = new org.oscarehr.common.model.Document();
 			document.setContenttype("application/pdf");
-			document.setDocdesc("MyOscar Registration");
+			document.setDocdesc("PHR Registration");
 			document.setDocfilename(filename);
 			document.setDoccreator(user);
 			document.setPublic1(new Byte("0"));
@@ -495,8 +495,8 @@ public class PHRUserManagementAction extends DispatchAction {
 			ar.addParameter("failmessage", "Failed saving registration letter:" + pe.getMessage());
 			return ar;
 		} catch (Exception e) {
-			log.error("Failed to register myOSCAR user", e);
-			ar.addParameter("failmessage", "Failed persisting MyOscar user."  + e.getClass().getName() + " - " + e.getMessage());
+			log.error("Failed to register PHR user", e);
+			ar.addParameter("failmessage", "Failed persisting PHR user."  + e.getClass().getName() + " - " + e.getMessage());
 			return ar;
 		} finally {
 			try {
@@ -562,7 +562,7 @@ public class PHRUserManagementAction extends DispatchAction {
 
 		newAccount = AccountManager.createPerson(myOscarLoggedInInfo, newAccount, newAccountPassword, true);
 
-		if (newAccount == null) throw (new Exception("Error creating new Myoscar Account."));
+		if (newAccount == null) throw (new Exception("Error creating new PHR Account."));
 
 		return (newAccount);
 	}
