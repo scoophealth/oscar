@@ -252,6 +252,8 @@ public class RecordUxService extends AbstractServiceImpl {
 	
 			summaryList.add(new SummaryTo1("Reminders",count++,SummaryTo1.REMINDERS_CODE));
 			
+			summaryList.add(new SummaryTo1("Allergies",count++,SummaryTo1.ALLERGIES));  
+			
 			
 			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.prescriptions", "r", null)) {
 				summaryList.add(new SummaryTo1("Medications",count++,SummaryTo1.MEDICATIONS_CODE));  
@@ -286,6 +288,7 @@ public class RecordUxService extends AbstractServiceImpl {
 		result.put("famhx","issueNoteSummary"); 
 		result.put("incoming","labsDocsSummary");
 		result.put("dssupport","decisionSupportSummary");
+		result.put("allergies","allergiesSummary");
 		
         return Collections.unmodifiableMap(result);
     }
@@ -339,5 +342,12 @@ public class RecordUxService extends AbstractServiceImpl {
 	@Produces(MediaType.APPLICATION_JSON)
 	public SummaryTo1 getReminders(@PathParam("demographicNo") Integer demographicNo) {
 		return getFullSummmary(demographicNo, SummaryTo1.REMINDERS_CODE);
+	}
+	
+	@GET
+	@Path("/{demographicNo}/getAllergies")
+	@Produces(MediaType.APPLICATION_JSON)
+	public SummaryTo1 getAllergies(@PathParam("demographicNo") Integer demographicNo) {
+		return getFullSummmary(demographicNo, SummaryTo1.ALLERGIES);
 	}
 }
