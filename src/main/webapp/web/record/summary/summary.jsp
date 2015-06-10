@@ -28,11 +28,15 @@
        <fieldset ng-repeat="mod in page.columnOne.modules">
        		<legend style="margin-bottom:0px;"> 
 
-		<a href="javascript:void(0)" style="font-size:12px;color:#333;padding-top:10px" class="pull-right" ng-click="gotoState('add', mod)" ng-hide="mod.summaryCode=='meds' || mod.summaryCode=='assessments'">
+		<a href="javascript:void(0)" style="font-size:12px;color:#333;padding-top:10px" class="pull-right" ng-click="gotoState('add', mod)" ng-hide="mod.summaryCode=='meds' || mod.summaryCode=='assessments' || mod.summaryCode=='allergies'">
 			<span class="glyphicon glyphicon-plus-sign" title="{{mod.summaryCode}}"></span>
 		</a> 
 
 		<a href="javascript:void(0)" style="font-size:12px;color:#333;padding-top:10px" class="pull-right" ng-click="openRx(demographicNo)" ng-show="mod.summaryCode=='meds'">
+		<span class="glyphicon glyphicon-plus-sign" title="{{mod.summaryCode}}"></span>
+		</a>
+		
+		<a href="javascript:void(0)" style="font-size:12px;color:#333;padding-top:10px" class="pull-right" ng-click="openAllergies(demographicNo)" ng-show="mod.summaryCode=='allergies'">
 		<span class="glyphicon glyphicon-plus-sign" title="{{mod.summaryCode}}"></span>
 		</a>
 

@@ -71,6 +71,7 @@ public class SummaryTo1 {
 	public static final String SOCIALFAMILYHISTORY_CODE = "socfamhx";
 	public static final String SOCIALHISTORY_CODE = "sochx";
 	public static final String OTHERMEDS_CODE = "othermeds";
+	public static final String ALLERGIES = "allergies";
 	
 	
 	Integer id;
