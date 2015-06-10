@@ -266,8 +266,7 @@ public class BORNWbXmlGenerator {
 	}
 
 	private void populateRBR(RBR rbr) {
-		rbr.setFormVersion(FormVersion.X_2014);
-
+		
 		EFormData efd = eformDataDao.find(eformFdidMap.get("RBR"));
 		if (efd != null) {
 			Date date = new Date();
@@ -337,6 +336,22 @@ public class BORNWbXmlGenerator {
 		}
 
 	}
+	
+	private Calendar generateNonTimestampDate(String strDate) {
+		String[] parts = strDate.split("-");
+		if(!(parts.length==3)) {
+			return null;
+		}
+		//XmlDateTime xmlDateTime = XmlDateTime.Factory.newInstance();
+		Calendar xmlCalendar = new XmlCalendar();
+		xmlCalendar.set(Calendar.YEAR, Integer.parseInt(parts[0]));
+		xmlCalendar.set(Calendar.MONTH, Integer.parseInt(parts[1])-1);
+		xmlCalendar.set(Calendar.DATE, Integer.parseInt(parts[2]));
+		//xmlDateTime.setCalendarValue(xmlCalendar);
+		
+		return xmlCalendar;
+	}
+	
 
 	private void populateRBRW01(RBRW01 rbr) {
 		rbr.setFormVersion(FormVersion.X_2014);
@@ -344,14 +359,7 @@ public class BORNWbXmlGenerator {
 		//visit date
 		EFormValue date = this.eformValuesMap.get("RBR").get("visit_date_1w");
 		if (date != null && date.getVarValue() != null && !date.getVarValue().isEmpty()) {
-			try {
-				Date x = visitDateFormatter.parse(date.getVarValue());
-				Calendar c = Calendar.getInstance();
-				c.setTime(x);
-				rbr.setVisitDate(c);
-			} catch (ParseException e) {
-				MiscUtils.getLogger().warn("invalid date " + date.getVarValue());
-			}
+			rbr.setVisitDate(generateNonTimestampDate(date.getVarValue()));
 		}
 
 		if (stringToBigDecimal(getRourkeStrValue("headcirc_1w")) != null) {
@@ -420,14 +428,7 @@ public class BORNWbXmlGenerator {
 		//visit date
 		EFormValue date = this.eformValuesMap.get("RBR").get("visit_date_2w");
 		if (date != null && date.getVarValue() != null && !date.getVarValue().isEmpty()) {
-			try {
-				Date x = visitDateFormatter.parse(date.getVarValue());
-				Calendar c = Calendar.getInstance();
-				c.setTime(x);
-				rbr.setVisitDate(c);
-			} catch (ParseException e) {
-				MiscUtils.getLogger().warn("invalid date " + date.getVarValue());
-			}
+			rbr.setVisitDate(generateNonTimestampDate(date.getVarValue()));
 		}
 
 		rbr.setFormVersion(FormVersion.X_2014);
@@ -531,14 +532,7 @@ public class BORNWbXmlGenerator {
 		//visit date
 		EFormValue date = this.eformValuesMap.get("RBR").get("visit_date_1m");
 		if (date != null && date.getVarValue() != null && !date.getVarValue().isEmpty()) {
-			try {
-				Date x = visitDateFormatter.parse(date.getVarValue());
-				Calendar c = Calendar.getInstance();
-				c.setTime(x);
-				rbr.setVisitDate(c);
-			} catch (ParseException e) {
-				MiscUtils.getLogger().warn("invalid date " + date.getVarValue());
-			}
+			rbr.setVisitDate(generateNonTimestampDate(date.getVarValue()));
 		}
 
 		if (stringToBigDecimal(getRourkeStrValue("headcirc_1m")) != null) {
@@ -605,14 +599,7 @@ public class BORNWbXmlGenerator {
 		//visit date
 		EFormValue date = this.eformValuesMap.get("RBR").get("visit_date_2m");
 		if (date != null && date.getVarValue() != null && !date.getVarValue().isEmpty()) {
-			try {
-				Date x = visitDateFormatter.parse(date.getVarValue());
-				Calendar c = Calendar.getInstance();
-				c.setTime(x);
-				rbr.setVisitDate(c);
-			} catch (ParseException e) {
-				MiscUtils.getLogger().warn("invalid date " + date.getVarValue());
-			}
+			rbr.setVisitDate(generateNonTimestampDate(date.getVarValue()));
 		}
 
 		if (stringToBigDecimal(getRourkeStrValue("headcirc_2m")) != null) {
@@ -678,14 +665,7 @@ public class BORNWbXmlGenerator {
 		//visit date
 		EFormValue date = this.eformValuesMap.get("RBR").get("visit_date_4m");
 		if (date != null && date.getVarValue() != null && !date.getVarValue().isEmpty()) {
-			try {
-				Date x = visitDateFormatter.parse(date.getVarValue());
-				Calendar c = Calendar.getInstance();
-				c.setTime(x);
-				rbr.setVisitDate(c);
-			} catch (ParseException e) {
-				MiscUtils.getLogger().warn("invalid date " + date.getVarValue());
-			}
+			rbr.setVisitDate(generateNonTimestampDate(date.getVarValue()));
 		}
 
 		if (stringToBigDecimal(getRourkeStrValue("headcirc_4m")) != null) {
@@ -739,14 +719,7 @@ public class BORNWbXmlGenerator {
 		//visit date
 		EFormValue date = this.eformValuesMap.get("RBR").get("visit_date_6m");
 		if (date != null && date.getVarValue() != null && !date.getVarValue().isEmpty()) {
-			try {
-				Date x = visitDateFormatter.parse(date.getVarValue());
-				Calendar c = Calendar.getInstance();
-				c.setTime(x);
-				rbr.setVisitDate(c);
-			} catch (ParseException e) {
-				MiscUtils.getLogger().warn("invalid date " + date.getVarValue());
-			}
+			rbr.setVisitDate(generateNonTimestampDate(date.getVarValue()));
 		}
 
 		if (stringToBigDecimal(getRourkeStrValue("headcirc_6m")) != null) {
@@ -865,14 +838,7 @@ public class BORNWbXmlGenerator {
 		//visit date
 		EFormValue date = this.eformValuesMap.get("RBR").get("visit_date_9m");
 		if (date != null && date.getVarValue() != null && !date.getVarValue().isEmpty()) {
-			try {
-				Date x = visitDateFormatter.parse(date.getVarValue());
-				Calendar c = Calendar.getInstance();
-				c.setTime(x);
-				rbr.setVisitDate(c);
-			} catch (ParseException e) {
-				MiscUtils.getLogger().warn("invalid date " + date.getVarValue());
-			}
+			rbr.setVisitDate(generateNonTimestampDate(date.getVarValue()));
 		}
 
 		if (stringToBigDecimal(getRourkeStrValue("headcirc_9m")) != null) {
@@ -949,14 +915,7 @@ public class BORNWbXmlGenerator {
 		//visit date
 		EFormValue date = this.eformValuesMap.get("RBR").get("visit_date_12m");
 		if (date != null && date.getVarValue() != null && !date.getVarValue().isEmpty()) {
-			try {
-				Date x = visitDateFormatter.parse(date.getVarValue());
-				Calendar c = Calendar.getInstance();
-				c.setTime(x);
-				rbr.setVisitDate(c);
-			} catch (ParseException e) {
-				MiscUtils.getLogger().warn("invalid date " + date.getVarValue());
-			}
+			rbr.setVisitDate(generateNonTimestampDate(date.getVarValue()));
 		}
 
 		if (stringToBigDecimal(getRourkeStrValue("headcirc_12m")) != null) {
@@ -1031,14 +990,7 @@ public class BORNWbXmlGenerator {
 		//visit date
 		EFormValue date = this.eformValuesMap.get("RBR").get("visit_date_15m");
 		if (date != null && date.getVarValue() != null && !date.getVarValue().isEmpty()) {
-			try {
-				Date x = visitDateFormatter.parse(date.getVarValue());
-				Calendar c = Calendar.getInstance();
-				c.setTime(x);
-				rbr.setVisitDate(c);
-			} catch (ParseException e) {
-				MiscUtils.getLogger().warn("invalid date " + date.getVarValue());
-			}
+			rbr.setVisitDate(generateNonTimestampDate(date.getVarValue()));
 		}
 
 		if (stringToBigDecimal(getRourkeStrValue("headcirc_15m")) != null) {
@@ -1141,14 +1093,7 @@ public class BORNWbXmlGenerator {
 		//visit date
 		EFormValue date = this.eformValuesMap.get("RBR").get("visit_date_18m");
 		if (date != null && date.getVarValue() != null && !date.getVarValue().isEmpty()) {
-			try {
-				Date x = visitDateFormatter.parse(date.getVarValue());
-				Calendar c = Calendar.getInstance();
-				c.setTime(x);
-				rbr.setVisitDate(c);
-			} catch (ParseException e) {
-				MiscUtils.getLogger().warn("invalid date " + date.getVarValue());
-			}
+			rbr.setVisitDate(generateNonTimestampDate(date.getVarValue()));
 		}
 
 		if (stringToBigDecimal(getRourkeStrValue("headcirc_18m")) != null) {
@@ -1256,14 +1201,7 @@ public class BORNWbXmlGenerator {
 		//visit date
 		EFormValue date = this.eformValuesMap.get("RBR").get("visit_date_2y");
 		if (date != null && date.getVarValue() != null && !date.getVarValue().isEmpty()) {
-			try {
-				Date x = visitDateFormatter.parse(date.getVarValue());
-				Calendar c = Calendar.getInstance();
-				c.setTime(x);
-				rbr.setVisitDate(c);
-			} catch (ParseException e) {
-				MiscUtils.getLogger().warn("invalid date " + date.getVarValue());
-			}
+			rbr.setVisitDate(generateNonTimestampDate(date.getVarValue()));
 		}
 
 		if (stringToBigDecimal(getRourkeStrValue("headcirc_2y")) != null) {
@@ -1345,14 +1283,7 @@ public class BORNWbXmlGenerator {
 		//visit date
 		EFormValue date = this.eformValuesMap.get("RBR").get("visit_date_4y");
 		if (date != null && date.getVarValue() != null && !date.getVarValue().isEmpty()) {
-			try {
-				Date x = visitDateFormatter.parse(date.getVarValue());
-				Calendar c = Calendar.getInstance();
-				c.setTime(x);
-				rbr.setVisitDate(c);
-			} catch (ParseException e) {
-				MiscUtils.getLogger().warn("invalid date " + date.getVarValue());
-			}
+			rbr.setVisitDate(generateNonTimestampDate(date.getVarValue()));
 		}
 
 		if (stringToBigDecimal(getRourkeStrValue("headcirc_4y")) != null) {
@@ -1509,10 +1440,10 @@ public class BORNWbXmlGenerator {
 			ndds.setLastUpdateDateTime(cal);
 		}
 		
-		String id = BORNWbXmlGenerator.generateHash(nddsFdids);
-		//TODO:
-		//ndds.setSetID(id);
-		//ndds.setVersionID(1);
+		//String id = BORNWbXmlGenerator.generateHash(nddsFdids);
+		
+		ndds.setSetID(1);
+		ndds.setVersionID(1);
 	}
 
 	/*
