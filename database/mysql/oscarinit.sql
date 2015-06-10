@@ -82,7 +82,7 @@ CREATE TABLE appointment (
   type varchar(50) NULL,
   style varchar(10) default NULL,
   billing varchar(10) default NULL,
-  status char(2) default NULL,
+  status char(2) BINARY default NULL,
   imported_status varchar(20),
   createdatetime datetime default NULL,
   updatedatetime datetime default NULL,
