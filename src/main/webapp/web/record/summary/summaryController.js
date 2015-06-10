@@ -77,6 +77,13 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
 		var url = "../oscarRx/choosePatient.do?demographicNo=" + demoNo;
 		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   			
    	}
+   	
+   	$scope.openAllergies = function(demoNo){
+		var rnd = Math.round(Math.random() * 1000);
+		win = "win" + rnd;
+		var url = "../oscarRx/showAllergy.do?demographicNo=" + demoNo;
+		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   			
+   	}
    
    	$scope.isCurrentStatus = function(stat){
 	   //console.log("stat",stat);
