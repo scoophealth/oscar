@@ -593,6 +593,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								StringReader strReader = new StringReader(handler.getOBRComment(j, k));
 								@SuppressWarnings("rawtypes")
                                 ArrayList p = HTMLWorker.parseToList(strReader, null);
+								strReader.close();
 								for (int h=0; h<p.size();h++) {
 									phrase.add(p.get(h));
 									phrase.add("\n");
