@@ -131,7 +131,7 @@ public final class EFormPrintPDFUtil {
         	else {
         		mDateHt = mHt.getCreateDate();                		
         	}
-        	                	
+        	        	                	
         	age = calcYears(dob, mDateHt);
         	MiscUtils.getLogger().info("Age " + age);
         	
@@ -157,7 +157,7 @@ public final class EFormPrintPDFUtil {
         		}
         	}
         	else if( graphType.equals(LENGTH_GRAPH )) {                	
-        		date = UtilDateUtilities.DateToString(mDateHt, "dd/MM/yyyy");
+        		date = UtilDateUtilities.DateToString(mDateHt, "yyyy-MM-dd"); //dd/MM/yyyy
         	
         		//name = elementName_num_section_page
         		props.setProperty("xVal_"+idx + "_1_" + graphicPage, date);                	
@@ -182,7 +182,7 @@ public final class EFormPrintPDFUtil {
             	else if( age <= 19 ) graphicPage = "1";
             	else continue;
             	
-            	date = UtilDateUtilities.DateToString(mDateWt, "dd/MM/yyyy");
+            	date = UtilDateUtilities.DateToString(mDateWt, "yyyy-MM-dd"); //dd/MM/yyyy
             	props.setProperty("xVal_"+idx + "_0_" + graphicPage, date);                	
             	props.setProperty("yVal_"+idx + "_0_" + graphicPage, m.getDataField());
 	                	
