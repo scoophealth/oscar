@@ -45,6 +45,7 @@ import org.oscarehr.managers.ConsultationManager;
 import org.oscarehr.managers.MessagingManager;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.conversion.ProgramProviderConverter;
 import org.oscarehr.ws.rest.conversion.SecobjprivilegeConverter;
@@ -62,6 +63,10 @@ import org.oscarehr.ws.rest.to.model.MenuTo1;
 import org.oscarehr.ws.rest.to.model.NavBarMenuTo1;
 import org.oscarehr.ws.rest.to.model.ProgramProviderTo1;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.oscarehr.myoscar.client.ws_manager.MessageManager;
+import org.oscarehr.phr.util.MyOscarUtils;
+
+import oscar.OscarProperties;
 
 @Path("/persona")
 public class PersonaService extends AbstractServiceImpl {
@@ -161,14 +166,33 @@ public class PersonaService extends AbstractServiceImpl {
 		
 		int messageCount = messagingManager.getMyInboxMessageCount(getLoggedInInfo(),provider.getProviderNo(), false);
 		int ptMessageCount = messagingManager.getMyInboxMessageCount(getLoggedInInfo(),provider.getProviderNo(),true);
-		result.setUnreadMessagesCount(messageCount);
-		result.setUnreadPatientMessagesCount(ptMessageCount);
+		MenuTo1 messengerMenu = new MenuTo1();
+		messengerMenu.add(0, bundle.getString("navbar.newOscarDemoMessages"), ""+messageCount, "classic");
+		messengerMenu.add(1, bundle.getString("navbar.newOscarMessages"), ""+ptMessageCount, "classic");
+		
+		
+		if(OscarProperties.getInstance().getBooleanProperty("MY_OSCAR", "yes")){
+			String phrMessageCount = "-";
+			MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(getLoggedInInfo().getSession());
+
+			if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn()){
+				try{
+					int phrMCount = MessageManager.getUnreadActiveMessageCount(myOscarLoggedInInfo, myOscarLoggedInInfo.getLoggedInPersonId());
+					phrMessageCount = ""+phrMCount;
+				}catch (Exception e){
+					// we'll force a re-login if this ever fails for any reason what so ever.
+					MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(getLoggedInInfo(), true);
+				}
+			}
+			messengerMenu.add(2, bundle.getString("navbar.newMyOscarMessages"), phrMessageCount, "phr");
+		}
 		
 		
 		/* this is manual right now. Need to have this generated from some kind
 		 * of user data
 		 */
 		NavBarMenuTo1 navBarMenu = new NavBarMenuTo1();
+		navBarMenu.setMessengerMenu(messengerMenu);
 		
 		MenuTo1 patientSearchMenu = new MenuTo1().add(0,bundle.getString("navbar.menu.newPatient"),null,"#/newpatient")
 				.add(1,bundle.getString("navbar.menu.advancedSearch"),null,"#/search");
