@@ -252,12 +252,12 @@ font-size:20px
 					 </a>
 					&nbsp;&nbsp;
 					<span ng-show="messageRights === true">
-						<a ng-click="openClassicMessenger()" title="<bean:message key="navbar.messenger" bundle="ui"/>" class="hand-hover">
+						<a ng-click="openMessenger()" title="<bean:message key="navbar.messenger" bundle="ui"/>" class="hand-hover">
 							<span  class="glyphicon glyphicon-envelope"></span> 
 						</a>
-						<span title="<bean:message key="navbar.newOscarDemoMessages" bundle="ui"/>">{{unreadMessagesCount}}</span> |
-						<span title="<bean:message key="navbar.newOscarMessages" bundle="ui"/>">{{unreadPatientMessagesCount}}</span> |
-						<span title="<bean:message key="navbar.newMyOscarMessages" bundle="ui"/>">-</span> 
+						<span ng-repeat="item in messengerMenu">
+						   <a ng-click="openMessenger(item)"  title="{{item.label}}">{{item.extra}}</a> <span ng-if="!$last">|</span>
+						</span>
 					</span>
 					&nbsp; &nbsp;
 					
