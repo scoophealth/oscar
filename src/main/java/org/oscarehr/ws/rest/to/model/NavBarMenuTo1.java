@@ -43,6 +43,9 @@ public class NavBarMenuTo1 implements Serializable {
 	 
 	 //user menu
 	 private MenuTo1 userMenu;
+	 
+	 private MenuTo1 messengerMenu;
+
 
 	public MenuTo1 getPatientSearchMenu() {
 		return patientSearchMenu;
@@ -75,6 +78,14 @@ public class NavBarMenuTo1 implements Serializable {
 	public void setUserMenu(MenuTo1 userMenu) {
 		this.userMenu = userMenu;
 	}
+	
+	public MenuTo1 getMessengerMenu() {
+	    return messengerMenu;
+    }
+
+	public void setMessengerMenu(MenuTo1 messengerMenu) {
+	    this.messengerMenu = messengerMenu;
+    }
 	 
 	 
 }

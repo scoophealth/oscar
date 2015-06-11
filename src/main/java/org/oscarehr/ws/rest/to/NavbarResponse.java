@@ -44,13 +44,8 @@ public class NavbarResponse implements Serializable {
 	
 	private List<ProgramProviderTo1> programDomain;
 
-	private int unreadMessagesCount;
-	
-	private int unreadPatientMessagesCount;
-	
 	private NavBarMenuTo1 menus;
 	
-
 	public ProgramProviderTo1 getCurrentProgram() {
 		return currentProgram;
 	}
@@ -68,23 +63,7 @@ public class NavbarResponse implements Serializable {
 	public void setProgramDomain(List<ProgramProviderTo1> programDomain) {
 		this.programDomain = programDomain;
 	}
-
-	public int getUnreadMessagesCount() {
-		return unreadMessagesCount;
-	}
-
-	public void setUnreadMessagesCount(int unreadMessagesCount) {
-		this.unreadMessagesCount = unreadMessagesCount;
-	}
-
-	public int getUnreadPatientMessagesCount() {
-		return unreadPatientMessagesCount;
-	}
-
-	public void setUnreadPatientMessagesCount(int unreadPatientMessagesCount) {
-		this.unreadPatientMessagesCount = unreadPatientMessagesCount;
-	}
-
+		
 	public NavBarMenuTo1 getMenus() {
 		return menus;
 	}
@@ -92,9 +71,5 @@ public class NavbarResponse implements Serializable {
 	public void setMenus(NavBarMenuTo1 menus) {
 		this.menus = menus;
 	}
-
-	
-	
-
 
 }
