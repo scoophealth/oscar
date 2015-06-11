@@ -24,8 +24,16 @@
 	import="java.util.*,java.math.*,java.net.*,java.sql.*,oscar.util.*,oscar.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
+<%@page import="org.oscarehr.managers.SecurityInfoManager"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+
 
 <%
+		SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+
+		if(securityInfoManager.hasPrivilege(loggedInInfo, "_billing", "w", null)) {
 			String billingNo = request.getParameter("xml_billing_no");
 			String error = null;
 			
@@ -66,4 +74,6 @@ if(error == null) {
 <script LANGUAGE="JavaScript">
 	self.close();
 </script>
-<%} }%>
+<%} } } else {%>
+	<h1 style="color:red">You don't have billing rights!</h1>
+<% } %>
