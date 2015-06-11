@@ -70,7 +70,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 		$scope.menuItems = response.menus.menu.items;
 		//$scope.moreMenuItems = response.menus.moreMenu.items;
 		$scope.userMenuItems = response.menus.userMenu.items;
-
+		$scope.messengerMenu = response.menus.messengerMenu.items;
     },function(reason){
     	alert(reason);
     });
@@ -95,7 +95,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 			$scope.menuItems = response.menus.menu.items;
 		//	$scope.moreMenuItems = response.menus.moreMenu.items;
 			$scope.userMenuItems = response.menus.userMenu.items;
-
+			$scope.messengerMenu = response.menus.messengerMenu.items;
 	    },function(reason){
 	    	alert(reason);
 	    });
@@ -150,11 +150,15 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 		$state.go('search');
 	}
 	
-	$scope.openClassicMessenger = function() {
+	$scope.openMessenger = function(item){
 		if($scope.me != null) {
-			window.open('../oscarMessenger/DisplayMessages.do?providerNo='+$scope.me.providerNo,'msgs','height=700,width=1024');
+			if(angular.isDefined(item) && angular.isDefined(item.url) && item.url == 'phr'){
+				window.open('../phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER'+$scope.me.providerNo,'height=700,width=1024');
+			}else{ // by default open classic messenger
+				window.open('../oscarMessenger/DisplayMessages.do?providerNo='+$scope.me.providerNo,'msgs','height=700,width=1024');
+			}
 		}
-	}	 
+	}
 	
 	$scope.newDemographic = function(size){
 		console.log("modal?");
