@@ -18,6 +18,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.oscarehr.managers.SecurityInfoManager"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.math.*,java.util.*,java.sql.*,oscar.*,java.net.*" %> <!-- errorPage="errorpage.jsp" -->
 <%@page import="oscar.oscarBilling.ca.on.data.*"%>
@@ -69,6 +70,9 @@
 
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false;
+    
+    SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+    LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
     
 %>
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
@@ -464,7 +468,7 @@ function validateAmountNumberic(idx) {
 
                 BigDecimal billTotal = bCh1.getTotal();                
 
-                org.oscarehr.common.model.Demographic sdemo = (new DemographicData()).getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), DemoNo);
+                org.oscarehr.common.model.Demographic sdemo = (new DemographicData()).getDemographic(loggedInInfo, DemoNo);
                 hin = sdemo.getHin()+sdemo.getVer();
                 DemoDOB = sdemo.getYearOfBirth() + sdemo.getMonthOfBirth() + sdemo.getDateOfBirth();
                 DemoSex = sdemo.getSex();
@@ -1141,12 +1145,16 @@ for (ClinicNbr clinic : nbrs) {
 <div class="row well well-small">
 <div class="span10">
 
+<%
+	if(securityInfoManager.hasPrivilege(loggedInInfo, "_billing", "w", null)) {
+%>
 <%if (request.getParameter("admin")!=null || request.getParameter("adminSubmit")!=null ) { %>
 <input type="hidden" name="adminSubmit" value="adminSubmit">
 <input class="btn btn-primary" type="submit" name="submit" onclick="return validateAllItems();" value="Save">
 <%}else{%> 
 <input class="btn btn-primary" type="submit" name="submit" onclick="return validateAllItems();" value="Save">
 <input class="btn" type="submit" name="submit" onclick="return validateAllItems();" value="Save&Correct Another">
+<%}%>
 <%}%>
 
 <%if(billNo!=null){%>
