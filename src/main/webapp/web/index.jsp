@@ -198,7 +198,7 @@ font-size:20px
 	 				<div class="form-group">
 		 				<div class="input-group">
 			 				<input type="text" class="form-control search-query" placeholder="<bean:message key="navbar.searchPatients" bundle="ui"/>" id="demographicQuickSearch" autocomplete="off" value="">
-			 				<span class="input-group-addon btn-default hand-hover" ng-click="transition('search')" title="<bean:message key="navbar.searchPatients" bundle="ui"/>"><span class="glyphicon glyphicon-search" ></span></span>
+			 				<span class="input-group-addon btn-default hand-hover" ng-click="goToPatientSearch()" title="<bean:message key="navbar.searchPatients" bundle="ui"/>"><span class="glyphicon glyphicon-search" ></span></span>
 			 				<span class="input-group-addon btn-default hand-hover"  ng-click="newDemographic('sm')" title="<bean:message key="navbar.newPatient" bundle="ui"/>"><span class="glyphicon glyphicon-plus"></span></span>	 				
 						</div>						
 					</div>			
