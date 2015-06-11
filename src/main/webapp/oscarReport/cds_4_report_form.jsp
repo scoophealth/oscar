@@ -22,6 +22,7 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="java.util.Calendar"%>
 <%@page import="org.oscarehr.PMmodule.model.Program"%>
 <%@page import="org.oscarehr.PMmodule.service.ProgramManager"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
@@ -34,6 +35,8 @@
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="java.text.DateFormatSymbols"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
+
 
 <%@ include file="/taglibs.jsp"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"
@@ -46,13 +49,19 @@
 
     LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.getCurrentFacility().getId());
+	
+	Calendar cal = Calendar.getInstance();
+	String today = DateFormatUtils.ISO_DATE_FORMAT.format(cal);
+	cal.add(Calendar.MONTH,-1);
+	String lastMonth = DateFormatUtils.ISO_DATE_FORMAT.format(cal);
+	
 %>
 
 <div class="page-header">
 	<h4>CDS Reports</h4>
 </div>
 
-<form class="well form-horizontal" action="cds_4_report_results.jsp"
+<form class="well form-horizontal" action="${ctx}/oscarReport/cds_4_report_results.jsp"
 	id="cdsForm">
 	<fieldset>
 
@@ -79,22 +88,9 @@
 			<div class="controls">
 				<input type="text" name="startDate" id="startDate" />
 				<script type="text/javascript">
-					jQuery('#startDate').datepicker({ dateFormat: 'yy-mm-dd' });
-					
-					var d=new Date();
-					var month=d.getMonth();
-					if (month>0)
-					{
-						d.setMonth(month-1);
-					}
-					else
-					{
-						d.setMonth(11);
-						d.setYear(d.getYear()-1);
-					}
-					
-					jQuery('#startDate').datepicker("setDate", d);
-					jQuery('#startDate').attr("readonly", true);
+					$('#startDate').datepicker({ format: 'yyyy-mm-dd' });
+					$('#startDate').val('<%=lastMonth%>');
+					$('#startDate').attr("readonly", true);
 				</script>
 			</div>
 		</div>
@@ -103,16 +99,16 @@
 			<div class="controls">
 				<input type="text" name="endDate" id="endDate" />
 				<script type="text/javascript">
-					jQuery('#endDate').datepicker({ dateFormat: 'yy-mm-dd' });					
-					jQuery('#endDate').datepicker("setDate", new Date());
-					jQuery('#endDate').attr("readonly", true);
+					$('#endDate').datepicker({ format: 'yyyy-mm-dd' });					
+					$('#endDate').val('<%=today%>');
+					$('#endDate').attr("readonly", true);
 				</script>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">Filter By</label>
 			<div class="controls">
-				<select id="filterCriteriaSelection" onchange="showFilterCriteria()">
+				<select id="filterCriteriaSelection" name="filterCriteriaSelection" onchange="showFilterCriteria()">
 					<option value="">None</option>
 					<option value="PROVIDER">Provider</option>
 					<option value="PROGRAM">Program</option>
@@ -158,7 +154,7 @@
 				</small>
 			</label>
 			<div class="controls">
-				<select name="providerIds" class="input-medium" multiple="multiple">
+				<select name="providerIds" class="input-medium" multiple="multiple"  style="width:225px" size="10">
 					<%
 						// null for both active and inactive because the report might be for a provider who's just left in the current reporting period.
 						List<Provider> providers=providerManager.getProviders(loggedInInfo, null);
@@ -184,7 +180,7 @@
 				</small>
 			</label>
 			<div class="controls">
-				<select name="programIds" class="input-medium" multiple="multiple">
+				<select name="programIds" class="input-medium" multiple="multiple" style="width:225px" size="10">
 					<%
 						List<Program> programs=programManager.getPrograms(loggedInInfo.getCurrentFacility().getId());
 					
@@ -218,7 +214,17 @@
 				}
 			}
 		});
+		
+		$('#cdsForm').submit(function() {
+			if(!$('#cdsForm').valid()){
+				return false;
+			}
+			var data = $('#cdsForm').serialize();
+			$.post($('#cdsForm').attr('action'), data, function(returnData) {
+				$('#cds-results').html(returnData);
+			})
+			return false;
+		});
+		
 	});
-
-	registerFormSubmit('cdsForm', 'cds-results');
 </script>
