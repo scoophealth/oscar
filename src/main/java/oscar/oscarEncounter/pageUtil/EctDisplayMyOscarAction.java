@@ -52,70 +52,79 @@ public class EctDisplayMyOscarAction extends EctDisplayAction {
 	DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 	 
 	public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-		Demographic demographic = demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), bean.getDemographicNo());
 
-		//Does a patient have a myoscar account
-		String myoscarusername = demographic.getMyOscarUserName();
-		if (myoscarusername == null || myoscarusername.trim().equals("")) {//No Account don't show
-			logger.debug("no myoscar account registered");
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
+		Demographic demographic = demographicManager.getDemographic(loggedInInfo, bean.getDemographicNo());
+
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_phr", "r", null)){
+			return true;
+		}else{
+		
+
+			//Does a patient have a myoscar account
+			String myoscarusername = demographic.getMyOscarUserName();
+			if (myoscarusername == null || myoscarusername.trim().equals("")) {//No Account don't show
+				logger.debug("no myoscar account registered");
+				Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.PHR"));
+				NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
+				String registrationUrl = "popupPage(700,1000,'indivoRegistration','" + request.getContextPath() + "/phr/indivo/RegisterIndivo.jsp?demographicNo=" + demographic.getDemographicNo() + "');return false;";
+				item.setURL(registrationUrl);
+				item.setTitle(messages.getMessage(request.getLocale(), "demographic.demographiceditdemographic.msgRegisterPHR"));
+				Dao.addItem(item);
+				Dao.setRightURL(registrationUrl);
+				Dao.setRightHeadingID(cmd);
+				return true;
+			}
+
+			//Is provider not logged in?
+			MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+			if (myOscarLoggedInInfo != null && myOscarLoggedInInfo.isLoggedIn()) {
+				Dao.setHeadingColour("83C659");
+			} else {
+				logger.debug("provider not logged into myoscar");
+				Dao.setHeadingColour("C0C0C0");
+			}
+
+			String curProvider_no = (String) request.getSession().getAttribute("user");
+
+			//set text for lefthand module title
 			Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.PHR"));
-			NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
-			String registrationUrl = "popupPage(700,1000,'indivoRegistration','" + request.getContextPath() + "/phr/indivo/RegisterIndivo.jsp?demographicNo=" + demographic.getDemographicNo() + "');return false;";
-			item.setURL(registrationUrl);
-			item.setTitle(messages.getMessage(request.getLocale(), "demographic.demographiceditdemographic.msgRegisterPHR"));
-			Dao.addItem(item);
-			Dao.setRightURL(registrationUrl);
-			Dao.setRightHeadingID(cmd);
+
+			//set link for lefthand module title
+			String winName = "viewPatientPHR" + bean.demographicNo;
+			String url = "popupPage(600,900,'" + winName + "','" + request.getContextPath() + "/demographic/viewPhrRecord.do?demographic_no=" + bean.demographicNo + "')";
+			Dao.setLeftURL(url);
+
+			//set the right hand heading link
+			winName = "SendMyoscarMsg" + bean.demographicNo;
+			url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/phr/PhrMessage.do?method=createMessage&providerNo=" + curProvider_no + "&demographicNo=" + bean.demographicNo + "'); return false;";
+			Dao.setRightURL(url);
+			Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
+	
+			try {
+				Map<MedicalDataType, List<Measurement>> mm = MeasurementsManager.getMeasurementsFromMyOscar(myOscarLoggedInInfo, demographic.getDemographicNo(), MED_DATA_TYPES);
+				String demoNo = demographic.getDemographicNo().toString();
+				for (MedicalDataType mdt : MED_DATA_TYPES) {
+					String title = toReadableName(mdt);
+					List<Measurement> measurements = mm.get(mdt);
+					if (measurements == null || measurements.isEmpty()) {
+						Dao.addItem(newItem(title, "black"));
+						continue;
+					}
+	
+					Measurement latestMeasurement = getLatestMeasurement(measurements);
+					NavBarDisplayDAO.Item item = newItem(title, getPageName(request, mdt, demoNo), "blue");
+					item.setURLJavaScript(false);
+					item.setDate(latestMeasurement.getDateObserved());
+					Dao.addItem(item);
+				}
+			} catch (Exception e) {
+				logger.error("Unexpected error", e);
+			}
+
 			return true;
 		}
-
-		//Is provider not logged in?
-		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
-		if (myOscarLoggedInInfo != null && myOscarLoggedInInfo.isLoggedIn()) {
-			Dao.setHeadingColour("83C659");
-		} else {
-			logger.debug("provider not logged into myoscar");
-			Dao.setHeadingColour("C0C0C0");
-		}
-
-		String curProvider_no = (String) request.getSession().getAttribute("user");
-
-		//set text for lefthand module title
-		Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.PHR"));
-
-		//set link for lefthand module title
-		String winName = "viewPatientPHR" + bean.demographicNo;
-		String url = "popupPage(600,900,'" + winName + "','" + request.getContextPath() + "/demographic/viewPhrRecord.do?demographic_no=" + bean.demographicNo + "')";
-		Dao.setLeftURL(url);
-
-		//set the right hand heading link
-		winName = "SendMyoscarMsg" + bean.demographicNo;
-		url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/phr/PhrMessage.do?method=createMessage&providerNo=" + curProvider_no + "&demographicNo=" + bean.demographicNo + "'); return false;";
-		Dao.setRightURL(url);
-		Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
-
-		try {
-			Map<MedicalDataType, List<Measurement>> mm = MeasurementsManager.getMeasurementsFromMyOscar(myOscarLoggedInInfo, demographic.getDemographicNo(), MED_DATA_TYPES);
-			String demoNo = demographic.getDemographicNo().toString();
-			for (MedicalDataType mdt : MED_DATA_TYPES) {
-				String title = toReadableName(mdt);
-				List<Measurement> measurements = mm.get(mdt);
-				if (measurements == null || measurements.isEmpty()) {
-					Dao.addItem(newItem(title, "black"));
-					continue;
-				}
-
-				Measurement latestMeasurement = getLatestMeasurement(measurements);
-				NavBarDisplayDAO.Item item = newItem(title, getPageName(request, mdt, demoNo), "blue");
-				item.setURLJavaScript(false);
-				item.setDate(latestMeasurement.getDateObserved());
-				Dao.addItem(item);
-			}
-		} catch (Exception e) {
-			logger.error("Unexpected error", e);
-		}
-
-		return true;
 	}
 
 	private String getPageName(HttpServletRequest request, MedicalDataType mdt, String demoNo) {
