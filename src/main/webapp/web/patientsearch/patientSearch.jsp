@@ -48,6 +48,7 @@ input.checkStyle{
           <option value="Address"><bean:message key="patientsearch.type.address" bundle="ui"/></option>
           <option value="HIN"><bean:message key="patientsearch.type.hin" bundle="ui"/></option>
           <option value="ChartNo"><bean:message key="patientsearch.type.chartNo" bundle="ui"/></option>
+          <option value="DemographicNo"><bean:message key="patientsearch.type.demographicNo" bundle="ui"/></option>
         </select>
             <div class="btn-group">
     <a class="btn dropdown-toggle" data-toggle="dropdown">
