@@ -267,7 +267,7 @@ function validateDiscountNumberic(idx) {
 </script>
 <title><bean:message key="admin.admin.editBillPaymentList"/></title>
 </head>
-
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="w">
 <body bgcolor="ivory" text="#000000" topmargin="0" leftmargin="0" rightmargin="0" >
 
 <logic:present name="paymentTypeList" scope="request">
@@ -361,6 +361,7 @@ function validateDiscountNumberic(idx) {
     	<input type="hidden" name="size" value="<%=items.size() %>">
     </form>
 </logic:present>
+</security:oscarSec>
 
 <%  BillingPaymentTypeDao paymentTypeDao = (BillingPaymentTypeDao) SpringUtils.getBean("billingPaymentTypeDao");
 	BigDecimal sum = BigDecimal.valueOf(0);
@@ -455,6 +456,8 @@ function validateDiscountNumberic(idx) {
 
 </body>
 </html>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="w">
 <script type="text/javascript">
     Calendar.setup( { inputField : "paymentDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "btn_date", singleClick : true, step : 1 } );
 </script>
+</security:oscarSec>
