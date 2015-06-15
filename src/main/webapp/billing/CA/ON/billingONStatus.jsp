@@ -348,7 +348,8 @@ table td,th{font-size:12px;}
 <%=DateUtils.sumDate("yyyy-MM-dd","0")%>
 
 <div class="pull-right hidden-print">
-<a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,720,'../../../oscarReport/manageProvider.jsp?action=billingreport')">Manage Provider List</a>
+<!--Hiding for now since this does not seem to manage the providers in the select 
+<a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,720,'../../../oscarReport/manageProvider.jsp?action=billingreport')">Manage Provider List</a>-->
 <button class="btn" type='button' name='print' value='Print' onClick='window.print()'><i class="icon icon-print"></i> Print</i></button>
 </div>
 </div>
