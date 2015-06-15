@@ -513,7 +513,7 @@ public class BORNWbXmlGenerator {
 
 		rbr.setEducationAdviceInjuryPrevCarSeat(getDiscussedConcernNotDiscussed("carseat_p1"));
 		rbr.setEducationAdviceInjuryPrevChokingSafeToys(getDiscussedConcernNotDiscussed("choking_p1"));
-		rbr.setEducationAdviceInjuryPrevCribSafety(getDiscussedConcernNotDiscussed("cribsafety_p1"));
+		//rbr.setEducationAdviceInjuryPrevCribSafety(getDiscussedConcernNotDiscussed("cribsafety_p1")); DO NOT USE
 		rbr.setEducationAdviceInjuryPrevFirearmSafety(getDiscussedConcernNotDiscussed("firearmsafety_p1"));
 		rbr.setEducationAdviceInjuryPrevHotWater(getDiscussedConcernNotDiscussed("hotwater_p1"));
 		rbr.setEducationAdviceInjuryPrevPacifierUse(getDiscussedConcernNotDiscussed("pacifier_p1"));
@@ -822,7 +822,7 @@ public class BORNWbXmlGenerator {
 		rbr.setEducationAdviceOtherEncourageReading(getDiscussedConcernNotDiscussed("reading_p2"));
 		rbr.setEducationAdviceOtherFeverAdvice(getDiscussedConcernNotDiscussed("feveradvice_p2"));
 		rbr.setEducationAdviceOtherNoOTCCoughColdMeds(getDiscussedConcernNotDiscussed("nootcmedn_p2"));
-		rbr.setEducationAdviceOtherPacifierUse(getDiscussedConcernNotDiscussed("pacifier_p2"));
+		rbr.setEducationAdviceInjuryPrevPacifierUse(getDiscussedConcernNotDiscussed("pacifier_p2"));
 		rbr.setEducationAdviceOtherTeethingDentalCleaningFluoride(getDiscussedConcernNotDiscussed("dental_p2"));
 		rbr.setEducationAdviceOtherTempControl(getDiscussedConcernNotDiscussed("temperaturectrl_p2"));
 	}
@@ -1052,7 +1052,7 @@ public class BORNWbXmlGenerator {
 	}
 
 	private void populateRBRM09M1213M15(RBRM09M1213M15 rbr) {
-		rbr.setEducationAdviceBehaviouNightWaking(getDiscussedConcernNotDiscussed("nightwak_p3"));
+		rbr.setEducationAdviceBehaviourNightWaking(getDiscussedConcernNotDiscussed("nightwak_p3"));
 		rbr.setEducationAdviceBehaviourChildCareReturnToWork(getDiscussedConcernNotDiscussed("childcare_p3"));
 		rbr.setEducationAdviceBehaviourCrying(getDiscussedConcernNotDiscussed("sleepcry_p3"));
 		rbr.setEducationAdviceBehaviourFamilyActiveLiving(getDiscussedConcernNotDiscussed("activehealthy_p3"));
@@ -1156,7 +1156,7 @@ public class BORNWbXmlGenerator {
 		rbr.setEducationAdviceInjuryPrevFalls(getDiscussedConcernNotDiscussed("falls_18m"));
 		rbr.setEducationAdviceInjuryPrevWeanFromPacifier(getDiscussedConcernNotDiscussed("weanpacifier_18m"));
 		rbr.setEducationAdviceOtherDentalCare(getDiscussedConcernNotDiscussed("dental_18m"));
-		rbr.setEducationAdviceOtherSocializing(getDiscussedConcernNotDiscussed("socializing_18m"));
+		rbr.setEducationAdviceFamilySocializing(getDiscussedConcernNotDiscussed("socializing_18m"));
 		rbr.setEducationAdviceOtherToiletLearning(getDiscussedConcernNotDiscussed("toiletlearning_18m"));
 
 		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_18m") ? 1 : 0);
