@@ -53,7 +53,6 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
     private long startTime = System.currentTimeMillis();
 
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-
     	boolean a = true;
     	Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.preventions");
         String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -88,11 +87,13 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         ArrayList<HashMap<String,String>> prevList = pdc.getPreventions();
         Map warningTable = p.getWarningMsgs();
 
-
-
-        String highliteColour = "#FF0000";
-        String inelligibleColour = "#FF6600";
-        String pendingColour = "#FF00FF";
+        String highliteColour 	= "#FF0000";
+        //String inelligibleColour = "#FF6600";
+        String refusedColour 	= "#FFDDDD";	//light pink 
+        String ineligibleColour	= "#FFCC24";	//orange
+        String pendingColour 	= "#FF00FF";	//dark pink
+        String abnormalColor 	= "#FF4D4D";	//dark salmon
+        
         Date date = null;
         //Date defaultDate = new Date(System.currentTimeMillis());
         url += "; return false;";
@@ -123,8 +124,15 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
                     
                     item.setDate(date);
 
-                    if( hdata.get("refused") != null && hdata.get("refused").equals("2") ) {
-                        item.setColour(inelligibleColour);
+                    if( hdata.get("refused") != null && hdata.get("refused").equals("1") ) { // 1 for refused
+                        item.setColour(refusedColour);
+                    }
+                    else if( hdata.get("refused") != null && hdata.get("refused").equals("2") ) {	// 2 for ineligible 
+                        item.setColour(ineligibleColour);
+                    }
+
+                    else if( result != null && result.equalsIgnoreCase("abnormal") ) {
+                        item.setColour(abnormalColor);
                     }
                     else if( result != null && result.equalsIgnoreCase("pending") ) {
                         item.setColour(pendingColour);
