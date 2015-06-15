@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -53,14 +54,17 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.rs.security.oauth.client.OAuthClientUtils;
 import org.oscarehr.app.AppOAuth1Config;
 import org.oscarehr.common.dao.AppDefinitionDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
 import org.oscarehr.common.model.AppDefinition;
 import org.oscarehr.common.model.AppUser;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.managers.FormsManager;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.conversion.EFormConverter;
 import org.oscarehr.ws.rest.conversion.EncounterFormConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
@@ -68,11 +72,13 @@ import org.oscarehr.ws.rest.to.model.EFormTo1;
 import org.oscarehr.ws.rest.to.model.EncounterFormTo1;
 import org.oscarehr.ws.rest.to.model.FormListTo1;
 import org.oscarehr.ws.rest.to.model.FormTo1;
+import org.oscarehr.ws.rest.to.model.MenuTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import oscar.eform.EFormExportZip;
 import oscar.oscarEncounter.data.EctFormData;
+import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
 
 /**
@@ -270,6 +276,26 @@ public class FormsService extends AbstractServiceImpl {
             MiscUtils.getLogger().error("Error parsing data - " + e);
     	    return null;
         }
+	}
+	
+	
+	@GET
+	@Path("/{demographicNo}/formOptions")
+	@Produces("application/json")
+	public MenuTo1 getFormOptions(@PathParam("demographicNo") String demographicNo){
+		ResourceBundle bundle = getResourceBundle();
+		MenuTo1 formMenu = new MenuTo1();
+		int idCounter =0;
+
+		//formMenu.add(idCounter++, bundle.getString("global.saveAsPDF"), "PDF", "URL"); 
+		if( ProviderMyOscarIdData.idIsSet(getLoggedInInfo().getLoggedInProviderNo())) {
+			DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
+			Demographic demographic=demographicDao.getDemographic(""+demographicNo);
+			if (demographic.getMyOscarUserName()!=null && !demographic.getMyOscarUserName().equals("")) {		/*register link -myoscar (strikethrough) links to create account*/
+				formMenu.add(idCounter++, bundle.getString("global.send2PHR"), "send2PHR", "url");
+			}
+		}
+		return formMenu;
 	}
 	
 	public static String getK2AEFormsList(AppDefinition k2aApp, AppUser k2aUser) {

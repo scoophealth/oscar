@@ -96,6 +96,18 @@ angular.module("formServices", [])
             });
      
           return deferred.promise;
+        },
+        getFormOptions: function(demographicNo){
+        	var deferred = $q.defer();
+        	 $http.get(this.apiPath+'/'+demographicNo+'/formOptions',this.configHeaders).success(function(data){
+        		 //console.log('got group names !' + data.toSource());
+            	deferred.resolve(data);
+            }).error(function(){
+            	console.log("error fetching eforms");
+            	deferred.reject("An error occured while fetching group names");
+            });
+     
+          return deferred.promise;
         }
     };
 });
