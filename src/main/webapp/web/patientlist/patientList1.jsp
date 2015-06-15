@@ -23,6 +23,8 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+
 <div ng-controller="PatientListAppointmentListCtrl" class="list-patients">
 
 <div class="list-group-item list-group-item-head">
@@ -59,7 +61,7 @@
 	-->
 	<h5 class="list-group-item-heading">{{patient.name}}</h5>
 	<h5 class="list-group-item-heading pull-right">{{patient.startTime}}</h5>
-	<p class="list-group-item-text">Reason: {{patient.reason}}  </p>
+	<p class="list-group-item-text"><bean:message key="provider.appointmentProviderAdminDay.Reason"/>: {{patient.reason}}  </p>
 </a>
 
 </div>
