@@ -23,10 +23,19 @@
     Ontario, Canada
 
 --%>
-
-<div class="col-lg-3">		
+<div class="col-sm-3">		
 	<ul class="nav nav-tabs nav-justified">
 		<li ng-repeat="list in page.formlists" ng-class="getListClass(list.id)" class="hand-hover"><a ng-click="changeTo(list.id)">{{list.label}}</a></li>
+
+		<li class="dropdown">
+		    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+		      <span class="glyphicon glyphicon-tasks"> </span>
+		    </a>
+		    <ul class="dropdown-menu">
+		      <li ng-repeat="opt in page.formOptions"><a ng-click="formOption(opt)">{{opt.label}}</a></li>
+		    </ul>
+		</li>
+		
 	</ul> 	
 	<%--
 	<fieldset >
@@ -42,7 +51,7 @@
 	  	   <input type="search" class="form-control" placeholder="Filter" ng-model="filterFormsQ">
 	  	   <ul class="list-group" tabindex="0" ng-keypress="keypress($event)">
    				<li class="list-group-item" ng-repeat="item in page.currentFormList[page.currentlistId] | filter:filterFormsQ" ng-class="getActiveFormClass(item)">
-   					<a class="list-group-item-text hand-hover" ng-click="viewFormState(item)" ><span  ng-show="item.date" class="pull-right">{{item.date | date : 'd-MMM-y'}}</span>{{item.name}}</a>
+   					<input type="checkbox" ng-model="item.isChecked"/> <a class="list-group-item-text hand-hover" ng-click="viewFormState(item)" ><span  ng-show="item.date" class="pull-right">{{item.date | date : 'd-MMM-y'}}</span>{{item.name}}</a>
    				</li>
 
    				<li class="list-group-item" ng-repeat="formItem2 in page.encounterFormlist[page.currentlistId] | filter:filterFormsQ" ng-hide="page.currentlistId==1">
@@ -56,6 +65,6 @@
    			</ul>
 	</div>
 </div>
-<div class="col-lg-9">
+<div class="col-sm-9">
 	<div id="formInViewFrame"></div>
 </div>

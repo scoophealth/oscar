@@ -33,7 +33,7 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	$scope.page.currentFormList = [];
 	$scope.page.currentForm = {};
 	$scope.page.currentlistId = 0;
-	
+		
 	console.log("What is the state "+$state.params.type+" : "+angular.isUndefined($state.params.type)+" id "+$state.params.id,$state); // Use this to load the current form if the page is refreshed
 	
 	
@@ -53,6 +53,18 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 
 	$scope.page.encounterFormlist = [];
 	
+	
+	formService.getFormOptions($scope.demographicNo).then(function(data){
+		console.log("data",data);
+		
+		if(data.items instanceof Array){
+			$scope.page.formOptions = data.items;
+	    }else{
+	    	$scope.page.formOptions.push(data.items);
+	  	}
+		
+		console.log("form options",$scope.page.formOptions);
+	});
 	
 	formService.getCompletedEncounterForms($stateParams.demographicNo).then(function(data) {
 		$scope.page.encounterFormlist[0] = data.list;
@@ -123,6 +135,30 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 		
 		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");  
 		return;
+	}
+	
+	
+	$scope.formOption = function(opt){	
+		var atleastOneItemSelected = false;
+		if(opt.extra == "send2PHR"){
+			var docIds = "";
+			for(var i = 0; i < $scope.page.currentFormList[$scope.page.currentlistId].length; i++){
+				if($scope.page.currentFormList[$scope.page.currentlistId][i].isChecked){
+				    docIds = docIds + '&sendToPhr='+$scope.page.currentFormList[$scope.page.currentlistId][i].id;
+				    atleastOneItemSelected = true;
+				}
+			}
+			if(atleastOneItemSelected){
+				var rnd = Math.round(Math.random() * 1000);
+				win = "win" + rnd;
+				var url = '../eform/efmpatientformlistSendPhrAction.jsp?clientId='+$scope.demographicNo+docIds;
+				window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");
+			}
+		}
+		
+		if(!atleastOneItemSelected){
+			alert("No Documents Selected");
+		}
 	}
 	
 	
