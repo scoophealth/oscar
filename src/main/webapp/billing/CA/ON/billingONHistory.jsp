@@ -129,15 +129,17 @@ for(int i=0; i<aL.size(); i=i+2) {
 		BigDecimal credit = billingOnExtDao.getAccountVal(billingNo, billingOnExtDao.KEY_CREDIT);
 		balance = total.subtract(payment).subtract(discount).add(credit);
 	}
+	
+	String invoiceLabel = "View";
 %>
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="w">
+	<% invoiceLabel = "Edit"; %>
+</security:oscarSec>
+
 	<tr bgcolor="<%=i%2==0?"#CCFF99":"white"%>">
 		<td width="5%" align="center" height="25"><a href=#
-			onClick="popupPage(600,800, 'billingONDisplay.jsp?billing_no=<%=obj.getId()%>')"><%=obj.getId()%></a>
-		<security:oscarSec roleName="<%=roleName$%>"
-			objectName="_admin,_admin.billing" rights="r">
-			<a href=#
-				onClick="popupPage(600,800, 'billingONCorrection.jsp?billing_no=<%=obj.getId()%>')">Edit</a>
-		</security:oscarSec>
+		<a href="javascript:void(0)" onClick="popupPage(600,800, 'billingONCorrection.jsp?billing_no=<%=obj.getId()%>')"><%=obj.getId()%> <%=invoiceLabel%></a>
 		<a href="javascript:void(0)" onClick="popupPage(600,800, 'billingON3rdInv.jsp?billingNo=<%=obj.getId()%>')">Print</a>
 		</td>
 		<td align="center"><%=obj.getLast_name()+", "+obj.getFirst_name()%></td>
