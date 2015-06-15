@@ -41,6 +41,8 @@
 <%@page import="org.oscarehr.common.model.ClinicNbr, org.oscarehr.common.dao.ClinicNbrDao"%>
 <%@page import="org.oscarehr.common.model.Site, org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.oscarehr.common.model.ProviderSite, org.oscarehr.common.dao.ProviderSiteDao"%>
+<%@page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
+<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
 <%@page import="org.oscarehr.common.service.BillingONService"%> 
 <%@page import="java.text.NumberFormat" %>
 
@@ -494,8 +496,13 @@ function validateAmountNumberic(idx) {
                 HCTYPE = bCh1.getProvince();
                 HCSex = bCh1.getSex();
                 r_doctor_ohip = bCh1.getRefNum();
-                r_doctor = "";
-                r_doctor_ohip_s = "";
+                ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+				List<ProfessionalSpecialist> professionalSpecialists = professionalSpecialistDao.findByReferralNo(r_doctor_ohip);
+				if (professionalSpecialists != null)
+					r_doctor = professionalSpecialists.get(0).getLastName()+", "+professionalSpecialists.get(0).getFirstName();
+				else
+					r_doctor = "";
+				r_doctor_ohip_s = "";
                 r_doctor_s = "";
                 m_review = bCh1.getManReview();
                 specialty = "";
