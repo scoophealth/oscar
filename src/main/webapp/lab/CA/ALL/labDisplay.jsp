@@ -1439,6 +1439,13 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                    				
                                    				}
                                				else if(handler.getMsgType().equals("ALPHA") ) {
+                               					if (((AlphaHandler) handler).getOBXDataType(j,k).equals("FT")) {
+                               						%>
+                                   					<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %>  
+    	                                        		<%
+    	                                        		
+                               					} else {
+                               				
                                			
                                			%>
                                					<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %>
@@ -1449,7 +1456,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	                                        		<% } else { %>
 	                                        		<%=obxName %>
 	                                        		<% } 
-                               					
+                               					}
                                						
                                				}
                                				else{%>
@@ -1471,8 +1478,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                           	//for pathl7, if it is an SG/CDC result greater than 100 characters, left justify it
                                            	if((handler.getOBXResult(j, k).length() > 100) && (isSGorCDC)){%>
                                            		<td align="left"><%= handler.getOBXResult( j, k) %></td><%
-                                           	}else{%>
-                                           <td align="right"><%= handler.getOBXResult( j, k) %></td><%}%>
+                                           	}else{
+                                           	if(handler.getMsgType().equals("ALPHA") && ((AlphaHandler) handler).getOBXDataType(j,k).equals("FT")) {
+                                           		%>
+                                           		<td align="left"><pre><%= handler.getOBXResult( j, k) %></pre></td><%
+                                           	} else {%>
+                                           <td align="right"><%= handler.getOBXResult( j, k) %></td><%}}%>
 
                                            <td align="center">
                                                    <%= handler.getOBXAbnormalFlag(j, k)%>

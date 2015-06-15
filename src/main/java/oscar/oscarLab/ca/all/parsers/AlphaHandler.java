@@ -30,6 +30,8 @@ import org.apache.log4j.Logger;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Segment;
 import ca.uhn.hl7v2.model.Structure;
+import ca.uhn.hl7v2.model.Type;
+import ca.uhn.hl7v2.model.v22.segment.OBX;
 import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Terser;
@@ -149,13 +151,13 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
         try{
         	if (version.equals("2.2")) {
             for (i=0; i < msg22.getPATIENT_RESULT().getORDER_OBSERVATIONReps(); i++){
-
-                currentHeader = getObservationHeader(i, 0);
-                arraySize = headers.size();
-                if (arraySize == 0 || !currentHeader.equals(headers.get(arraySize-1))){
-                    headers.add(currentHeader);
-                }
-
+            	if (Terser.get(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBR(),25,0,1,2)==null ||!Terser.get(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBR(),25,0,1,2).equals("D")) {
+            		currentHeader = getObservationHeader(i, 0);
+                    arraySize = headers.size();
+                    if (arraySize == 0 || !currentHeader.equals(headers.get(arraySize-1))){
+                        headers.add(currentHeader);
+                    }
+            	}
             } 
         	}else {
         		for (i=0; i < msg23.getRESPONSE().getORDER_OBSERVATIONReps(); i++){
@@ -178,11 +180,16 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
     }
     
     public int getOBRCount(){
-    	if (version.equals("2.2")) {
-    		return(msg22.getPATIENT_RESULT().getORDER_OBSERVATIONReps());
-    	}else {
-    		return(msg23.getRESPONSE().getORDER_OBSERVATIONReps());	
-    	}
+    	try {
+    		if (version.equals("2.2")) {
+    			return(msg22.getPATIENT_RESULT().getORDER_OBSERVATIONReps());
+        	}else {
+        		return(msg23.getRESPONSE().getORDER_OBSERVATIONReps());	
+        	}
+    	} catch(Exception e){
+            return(0);
+        }
+    	
         
     }
     
@@ -251,7 +258,11 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
     public String getOBXName(int i, int j){
         try{
         	if (version.equals("2.2")) {
-                return(getString(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getText().getValue()));
+        		OBX obx = msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
+        		if (!obx.getValueType().getValue().equals("CE") && !oBXHasForm(i,j))
+                return(getString(obx.getObservationIdentifier().getText().getValue()));
+        		else
+        			return "";
 
         	} else {
                 return(getString(msg23.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getText().getValue()));
@@ -260,6 +271,47 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
         }catch(Exception e){
             logger.error("Error retrieving obx name", e);
             return("");
+        }
+    }
+    
+    public String getOBXDataType(int i, int j){
+        try{
+        	if (version.equals("2.2")) {
+        		return msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getValueType().getValue();
+        	} else {
+                return(getString(msg23.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getValueType().getValue()));
+
+        	}
+        }catch(Exception e){
+            logger.error("Error retrieving obx name", e);
+            return("");
+        }
+    }
+    
+    /** When the Test Source = ”FORM”, then REPLACE all previous  NM and ST results with the FT results.
+     * When the Test Source<>”FORM”, then APPEND the FT results to the previous results.
+     * **/
+    public boolean oBXHasForm(int i, int j){
+        try{
+        	if (version.equals("2.2")) {
+        		if (msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getValueType().getValue().equals("FT")) {
+        			return false;
+        		}
+        		String testCode= msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue();
+        		for (int k=0;k < getOBXCount(i);k++) {
+        			OBX obx =msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(k).getOBX();
+        			if (testCode.contains(obx.getObservationIdentifier().getIdentifier().getValue()) && obx.getValueType().getValue().equals("FT") && obx.getObservationIdentifier().getComponent(5)!= null && obx.getObservationIdentifier().getComponent(5).toString().equals("FORM")) {
+        				return true;
+        			}
+        		}
+        		return false;
+        	} else {
+                return(false);
+
+        	}
+        }catch(Exception e){
+            logger.error("Error retrieving obx name", e);
+            return(false);
         }
     }
 
@@ -281,7 +333,6 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
     public String getOBXReferenceRange(int i, int j){
         try{
         	if (version.equals("2.2")) {
-                //return(getString(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getReferencesRange().getValue()));
         		return(getString(Terser.get(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),7,0,2,1)));
     	} else {
             //return(getString(msg23.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getReferencesRange().getValue()));
@@ -393,7 +444,7 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
     public int getOBXCommentCount(int i, int j){
         try {
         	if (version.equals("2.2")) {
-                return(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTEReps());
+                return(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getField(7).length-1);
     	} else {
             return(msg23.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTEReps());
     	}
@@ -407,11 +458,13 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
     public String getOBXComment(int i, int j, int k){
         try {
         	if (version.equals("2.2")) {
-                // ICL likes to thrown reserved characters in their comments -- this is to compensate
-                String obxComment = getString(Terser.get(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTE(k),3,0,1,1))+" "+
-                        getString(Terser.get(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTE(k),3,0,2,1)).trim();
-
-                return(obxComment);
+                Type[] field= msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getField(7);
+        		if (field.length>1) {
+        			String range = field[k+1].toString();
+        			return(getString(range));
+        		} else {
+        			return "";
+        		}
     	} else {
             // ICL likes to thrown reserved characters in their comments -- this is to compensate
             String obxComment = getString(Terser.get(msg23.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTE(k),3,0,1,1))+" "+

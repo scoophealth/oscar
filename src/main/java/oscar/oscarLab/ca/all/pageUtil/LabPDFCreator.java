@@ -48,6 +48,7 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
+import oscar.oscarLab.ca.all.parsers.AlphaHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.all.parsers.PATHL7Handler;
@@ -388,7 +389,11 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								table.addCell(cell);
 							}
 							else{
-							cell.setPhrase(new Phrase((obrFlag ? "   " : "")
+								if(handler.getMsgType().equals("ALPHA") && ((AlphaHandler) handler).getOBXDataType(j,k).equals("FT"))
+									cell.setPhrase(new Phrase((obrFlag ? "   " : "")
+											, lineFont));
+								else
+									cell.setPhrase(new Phrase((obrFlag ? "   " : "")
 									+ obxName, lineFont));
 							table.addCell(cell);}
 							boolean isLongText =false;
@@ -577,7 +582,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
 							cell.setPhrase(new Phrase(handler.getOBRComment(j, k)
 									.replaceAll("<br\\s*/*>", "\n"), font));
 						}
-						
 						table.addCell(cell);
 						cell.setPadding(3);
 					}
