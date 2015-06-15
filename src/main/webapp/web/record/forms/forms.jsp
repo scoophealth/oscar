@@ -26,7 +26,7 @@
 
 <div class="col-lg-3">		
 	<ul class="nav nav-tabs nav-justified">
-		<li ng-repeat="list in page.formlists" ng-class="getListClass(list.id)" ><a ng-click="changeTo(list.id)">{{list.label}}</a></li>
+		<li ng-repeat="list in page.formlists" ng-class="getListClass(list.id)" class="hand-hover"><a ng-click="changeTo(list.id)">{{list.label}}</a></li>
 	</ul> 	
 	<%--
 	<fieldset >
@@ -42,15 +42,15 @@
 	  	   <input type="search" class="form-control" placeholder="Filter" ng-model="filterFormsQ">
 	  	   <ul class="list-group" tabindex="0" ng-keypress="keypress($event)">
    				<li class="list-group-item" ng-repeat="item in page.currentFormList[page.currentlistId] | filter:filterFormsQ" ng-class="getActiveFormClass(item)">
-   					<a class="list-group-item-text" ng-click="viewFormState(item)" ><span  ng-show="item.date" class="pull-right">{{item.date | date : 'd-MMM-y'}}</span>{{item.name}}</a>
+   					<a class="list-group-item-text hand-hover" ng-click="viewFormState(item)" ><span  ng-show="item.date" class="pull-right">{{item.date | date : 'd-MMM-y'}}</span>{{item.name}}</a>
    				</li>
 
    				<li class="list-group-item" ng-repeat="formItem2 in page.encounterFormlist[page.currentlistId] | filter:filterFormsQ" ng-hide="page.currentlistId==1">
-   					<a class="list-group-item-text" ng-click="viewFormState(formItem2)">{{formItem2.name}}</a>
+   					<a class="list-group-item-text hand-hover" ng-click="viewFormState(formItem2)">{{formItem2.name}}</a>
    				</li>
    				
    				<li class="list-group-item" ng-repeat="formItem in page.encounterFormlist[page.currentlistId] | filter:filterFormsQ" ng-hide="page.currentlistId==0">
-   					<a class="list-group-item-text" ng-click="viewFormNewWin(formItem.formValue)">{{formItem.formName}} <span ng-show="formItem.date" class="pull-right">{{formItem.date | date : 'd-MMM-y'}}</span></a>
+   					<a class="list-group-item-text hand-hover" ng-click="viewFormNewWin(formItem.formValue)">{{formItem.formName}} <span ng-show="formItem.date" class="pull-right">{{formItem.date | date : 'd-MMM-y'}}</span></a>
    				</li>
    				
    			</ul>
