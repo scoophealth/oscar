@@ -204,13 +204,21 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		private String origPrintDate = null;
 		private String numPrint = null;
 		private String imgPath;
+		private String pharmaName;
+		private String pharmaTel;
+		private String pharmaFax;
+		private String pharmaAddress1;
+		private String pharmaAddress2;
+		private String pharmaEmail;
+		private String pharmaNote;
+		private boolean pharmaShow;
                 Locale locale = null;
                 
 		public EndPage() {
 		}
 
-        public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress,
-                String patientName,String patientDOB, String sigDoctorName, String rxDate,String origPrintDate,String numPrint, String imgPath, String patientHIN, String patientChartNo,String pracNo, Locale locale) {
+		public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress,
+                String patientName,String patientDOB, String sigDoctorName, String rxDate,String origPrintDate,String numPrint, String imgPath, String patientHIN, String patientChartNo,String pracNo, String pharmaName, String pharmaAddress1, String pharmaAddress2, String pharmaTel, String pharmaFax, String pharmaEmail, String pharmaNote, boolean pharmaShow, Locale locale) {
 			this.clinicName = clinicName;
 			this.clinicTel = clinicTel;
 			this.clinicFax = clinicFax;
@@ -230,7 +238,15 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			this.imgPath = imgPath;
 			this.patientHIN = patientHIN;
                         this.patientChartNo = patientChartNo;
-			this.pracNo = pracNo;     
+			this.pracNo = pracNo;
+			this.pharmaName=pharmaName;
+			this.pharmaTel=pharmaTel;
+			this.pharmaFax=pharmaFax;
+			this.pharmaAddress1=pharmaAddress1;
+			this.pharmaAddress2=pharmaAddress2;
+			this.pharmaEmail=pharmaEmail;
+			this.pharmaNote=pharmaNote;
+			this.pharmaShow=pharmaShow;
                         this.locale = locale;
 		}
 
@@ -300,7 +316,7 @@ public String geti18nTagValue(Locale locale, String tag) {
 
 				bf = BaseFont.createFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, this.sigDoctorName, 80, (page.getHeight() - 25), 0);
-				writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, this.rxDate, 188, (page.getHeight() - 112), 0);
+				writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, this.rxDate, 15, (page.getHeight() - 95), 0);
 
 				bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				int fontFlags = Font.NORMAL;
@@ -325,6 +341,16 @@ public String geti18nTagValue(Locale locale, String tag) {
 					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, geti18nTagValue(locale, "RxPreview.msgTel")+":" + str1, 188, (page.getHeight() - 70), 0);
 					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, str2, 188, (page.getHeight() - 80), 0);
 					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, geti18nTagValue(locale, "RxPreview.msgFax")+":" + this.clinicFax, 188, (page.getHeight() - 88), 0);
+				}
+				
+				if (this.pharmaShow) {
+					writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT,this.pharmaName,290,(page.getHeight()-30),0);
+					writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT,this.pharmaAddress1,290,(page.getHeight()-42),0);
+					writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT,this.pharmaAddress2,290,(page.getHeight()-54),0);
+					writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT,"Tel:" + this.pharmaTel,290,(page.getHeight()-66),0);
+					writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT,"Fax:" + this.pharmaFax,290,(page.getHeight()-78),0);
+					writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT,"Email:" + this.pharmaEmail,290,(page.getHeight()-90),0);
+					writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT,"Note:" + this.pharmaNote,290,(page.getHeight()-102),0);
 				}
 
 				// get the end of paragraph
@@ -478,6 +504,14 @@ public String geti18nTagValue(Locale locale, String tag) {
         String patientHIN=req.getParameter("patientHIN");
         String patientChartNo = req.getParameter("patientChartNo");
         String pracNo=req.getParameter("pracNo");
+        String pharmaName = req.getParameter("pharmaName");
+        String pharmaAddress1 = req.getParameter("pharmaAddress1");
+        String pharmaAddress2 = req.getParameter("pharmaAddress2");
+        String pharmaTel = req.getParameter("pharmaTel");
+        String pharmaFax = req.getParameter("pharmaFax");
+        String pharmaEmail = req.getParameter("pharmaEmail");
+        String pharmaNote = req.getParameter("pharmaNote");
+        boolean pharmaShow = (req.getParameter("pharmaShow").equals("true")?true:false);
         Locale locale = req.getLocale();
         
         boolean isShowDemoDOB=false;
@@ -569,7 +603,7 @@ public String geti18nTagValue(Locale locale, String tag) {
 			document.setMargins(15, pageSize.getWidth() - 285f + 5f, 170, 60);// left, right, top , bottom
 
 			writer = PdfWriter.getInstance(document, baosPDF);
-			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName,patientDOB, sigDoctorName, rxDate, origPrintDate, numPrint, imgFile, patientHIN, patientChartNo, pracNo, locale));
+			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName,patientDOB, sigDoctorName, rxDate, origPrintDate, numPrint, imgFile, patientHIN, patientChartNo, pracNo, pharmaName, pharmaAddress1, pharmaAddress2, pharmaTel, pharmaFax, pharmaEmail, pharmaNote, pharmaShow, locale));
 			document.addTitle(title);
 			document.addSubject("");
 			document.addKeywords("pdf, itext");

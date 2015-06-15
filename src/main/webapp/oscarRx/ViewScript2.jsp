@@ -541,7 +541,7 @@ function toggleView(form) {
                                     frames['preview'].document.getElementById('pharmInfo').innerHTML=text;
                                     //frames['preview'].document.getElementById('removePharm').show();
                                     $("selectedPharmacy").innerHTML='<bean:message key="oscarRx.printPharmacyInfo.paperSizeWarning"/>';
-
+                                    frames['preview'].document.getElementById('pharmaShow').value='true';
                                 }
                                 function reducePreview(){
                                     parent.document.getElementById('lightwindow_container').style.width="967px";
@@ -549,6 +549,7 @@ function toggleView(form) {
                                     document.getElementById('preview').style.width="420px";
                                     frames['preview'].document.getElementById('pharmInfo').innerHTML="";
                                     $("selectedPharmacy").innerHTML="";
+                                    frames['preview'].document.getElementById('pharmaShow').value='false';
                                 }
                             </script>
 
