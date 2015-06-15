@@ -1502,8 +1502,15 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 
 <script type="text/javascript">
 Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 });
-Calendar.setup({ inputField : "child_dob", ifFormat : "%Y-%m-%d", showsTime :false, button : "child_dob_cal", singleClick : true, step : 1 });
+</script>
 
+<oscar:oscarPropertiesCheck property="enable_create_child_record" value="true">
+<script type="text/javascript">
+Calendar.setup({ inputField : "child_dob", ifFormat : "%Y-%m-%d", showsTime :false, button : "child_dob_cal", singleClick : true, step : 1 });
+</script>
+</oscar:oscarPropertiesCheck>
+
+<script type="text/javascript">
 <%
 if (privateConsentEnabled) {
 %>
