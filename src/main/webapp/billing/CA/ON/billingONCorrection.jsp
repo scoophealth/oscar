@@ -149,6 +149,8 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.model.ClinicNbr"%>
 <%@page import="org.oscarehr.common.dao.ClinicNbrDao"%>
+<%@page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
+<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
 
 <html:html locale="true">
 <head>
@@ -410,7 +412,12 @@ function checkSettle(status) {
 						HCTYPE = ch1Obj.getProvince();
 						HCSex = ch1Obj.getSex();
 						r_doctor_ohip = ch1Obj.getRef_num();
-						r_doctor = "";
+						ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+						List<ProfessionalSpecialist> professionalSpecialists = professionalSpecialistDao.findByReferralNo(r_doctor_ohip);
+						if (professionalSpecialists != null)
+							r_doctor = professionalSpecialists.get(0).getLastName()+", "+professionalSpecialists.get(0).getFirstName();
+						else
+							r_doctor = "";
 						r_doctor_ohip_s = "";
 						r_doctor_s = "";
 						m_review = ch1Obj.getMan_review();
