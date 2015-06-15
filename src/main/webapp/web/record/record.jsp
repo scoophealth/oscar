@@ -23,14 +23,16 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+
 <div class="page-header" style="margin-top: 0px; margin-bottom: 0px;">
 		<h1 class="patientHeaderName" style="margin-top: 0px;" ng-cloak>
 			<b>{{demographic.lastName}}, {{demographic.firstName}}</b>  <span ng-show="demographic.title">({{demographic.title}})</span> 
 			
 			<small class="patientHeaderExt pull-right"> 
-				<i>Born:</i>
-				<b>{{demographic.dobYear}}-{{demographic.dobMonth}}-{{demographic.dobDay}}</b> (<b>{{demographic.age | age}}</b>) &nbsp;&nbsp; <i>Sex:</i> <b>{{demographic.sex}}</b>
-				<i> &nbsp;&nbsp; Tel:</i> <b>{{demographic.phone}}</b> 
+				<i><bean:message key="demographic.patient.context.born"/>: </i>
+				<b>{{demographic.dobYear}}-{{demographic.dobMonth}}-{{demographic.dobDay}}</b> (<b>{{demographic.age | age}}</b>) &nbsp;&nbsp; <i><bean:message key="demographic.patient.context.sex"/>:</i> <b>{{demographic.sex}}</b>
+				<i> &nbsp;&nbsp; <bean:message key="Appointment.msgTelephone"/>:</i> <b>{{demographic.phone}}</b> 
 				<!-- <span class="glyphicon glyphicon-new-window"></span>-->
 			</small>
 		</h1>
