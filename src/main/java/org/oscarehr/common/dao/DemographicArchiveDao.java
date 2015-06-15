@@ -105,4 +105,16 @@ public class DemographicArchiveDao extends AbstractDao<DemographicArchive> {
         return (results);
     }
     
+    public List<Object[]> findMetaByDemographicNo(Integer demographicNo) {
+
+    	String sqlCommand = "select x.id,x.demographicNo,x.lastUpdateUser,x.lastUpdateDate from DemographicArchive x where x.demographicNo=?1 order by x.lastUpdateDate DESC, x.id DESC";
+
+        Query query = entityManager.createQuery(sqlCommand);
+        query.setParameter(1, demographicNo);
+
+        @SuppressWarnings("unchecked")
+        List<Object[]> results = query.getResultList();
+
+        return (results);
+    }
 }
