@@ -289,7 +289,29 @@ public class DemographicDao extends HibernateDaoSupport {
         return list;
      }
 
-
+    public List<Demographic> searchDemographicAllActive(String searchStr) {
+    	String inactiveStatuses = OscarProperties.getInstance().getProperty("inactive_statuses", "'IN','DE','IC','ID','MO','FI'");
+        String fieldname = "", regularexp = "like";
+        if (searchStr.indexOf(",") == -1) {
+            fieldname = "last_name";
+         } else if (searchStr.trim().indexOf(",") == (searchStr.trim().length() - 1)) {
+            fieldname = "last_name";
+         } else {
+            fieldname = "last_name " + regularexp + " ?" + " and first_name ";
+        }
+        
+        String hql = "From Demographic d where " + fieldname + " " + regularexp + " ?  and patient_status not in (" + inactiveStatuses + ")";
+        
+        String[] lastfirst = searchStr.split(",");
+        Object[] object = null;
+        if (lastfirst.length > 1) {
+            object = new Object[] { lastfirst[0].trim() + "%", lastfirst[1].trim() + "%" };
+        } else {
+            object = new Object[] { lastfirst[0].trim() + "%" };
+        }
+        List list = getHibernateTemplate().find(hql, object);
+        return list;
+     }
 
      public List<Demographic> getDemographicsByExtKey(String key, String value) {
     	 List<DemographicExt> extras = this.getHibernateTemplate().find("from DemographicExt d where d.key=? and d.value=?", new Object[] {key,value});
