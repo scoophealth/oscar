@@ -676,5 +676,14 @@ public class DemographicManager {
 			return (results);
 		}
 		
+		
+		public List<Object[]> getArchiveMeta(LoggedInInfo loggedInInfo, Integer demographicNo) {
+			
+			List<Object[]> archiveMeta = demographicArchiveDao.findMetaByDemographicNo(demographicNo);
+			
+			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getArchiveMeta", ""+demographicNo);
+			
+			return archiveMeta;
+		}
 	
 }
