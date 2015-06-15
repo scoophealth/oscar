@@ -61,24 +61,23 @@
     </tr>
 	<xsl:for-each select="REPORT/GROUP/PROVIDER/PATIENT">
       <tr>
-		<td WIDTH="12%" ALIGN="left" valign="top" class="dataBlack">
-                <xsl:value-of select="PATIENT-DTL/PATIENT-LAST-NAME"/></td>
-		<td WIDTH="12%" ALIGN="left" valign="top" class="dataBlack">
-                <xsl:value-of select="PATIENT-DTL/PATIENT-FIRST-NAME"/></td>
-		<td WIDTH="10%" ALIGN="left" valign="top" class="dataBlack">
-		<xsl:value-of select="PATIENT-DTL/PATIENT-HEALTH-NUMBER"/></td>
-		<td WIDTH="10%" ALIGN="left" valign="top" class="dataBlack">
-		<xsl:value-of select="PATIENT-DTL/PATIENT-BIRTHDATE"/></td>
-		<td width="5%" align="left" valign="top" class="dataBlack">
-		<xsl:value-of select="PATIENT-DTL/PATIENT-SEX"/></td>
-		<td width="10%" align="left" valign="top" class="dataBlack">
-		<xsl:value-of select="SERVICE-DTL1/SERVICE-DATE"/></td>
-		<td width="6%" align="left" valign="top" class="dataBlack">
-		<xsl:value-of select="SERVICE-DTL1/SERVICE-CODE"/></td>
-		<td width="25%" align="left" valign="top" class="dataBlack">
-		<xsl:value-of select="SERVICE-DTL1/SERVICE-DESCRIPTION"/></td>
-		<td WIDTH="10%" ALIGN="left" valign="top" class="dataBlack">
-		$ <xsl:value-of select="SERVICE-DTL1/SERVICE-AMT"/></td>
+		<td WIDTH="12%" ALIGN="left" valign="top" class="dataBlack"> <xsl:value-of select="PATIENT-DTL/PATIENT-LAST-NAME"/></td>
+		<td WIDTH="12%" ALIGN="left" valign="top" class="dataBlack"> <xsl:value-of select="PATIENT-DTL/PATIENT-FIRST-NAME"/></td>
+		<td WIDTH="10%" ALIGN="left" valign="top" class="dataBlack"> <xsl:value-of select="PATIENT-DTL/PATIENT-HEALTH-NUMBER"/></td>
+		<td WIDTH="10%" ALIGN="left" valign="top" class="dataBlack"> <xsl:value-of select="PATIENT-DTL/PATIENT-BIRTHDATE"/></td>
+		<td width="5%" align="left" valign="top" class="dataBlack"> <xsl:value-of select="PATIENT-DTL/PATIENT-SEX"/></td>
+		<td colspan="4">
+			<table border="0" width="100%" cellspacing="0" cellpadding="2" ID="Service">
+				<xsl:for-each select="SERVICE-DTL1">
+					<tr>
+						<td width="10%" align="left" valign="top" class="dataBlack"><xsl:value-of select="SERVICE-DATE"/> </td>
+						<td width="6%" align="left" valign="top" class="dataBlack"> <xsl:value-of select="SERVICE-CODE"/></td>
+						<td width="25%" align="left" valign="top" class="dataBlack"> <xsl:value-of select="SERVICE-DESCRIPTION"/></td>
+						<td width="10%" align="left" valign="top" class="dataBlack"> $ <xsl:value-of select="SERVICE-AMT"/></td>
+					</tr>				
+				</xsl:for-each>
+			</table>
+		</td>
       </tr>
     </xsl:for-each>
 </table>
