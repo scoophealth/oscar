@@ -23,7 +23,7 @@
     Ontario, Canada
 
 */
-oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams,$state,demographicService,patientDetailStatusService,securityService,staticDataService,demo,user) {
+oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams,$state,$modal, demographicService,patientDetailStatusService,securityService,staticDataService,demo,user) {
 	console.log("details ctrl ", $stateParams, $state, demo);
 	
 	var page = {};
@@ -875,6 +875,35 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		page.saving = true;
 		location.reload();
 	}
+
+	$scope.loadHistoryList = function() {
+		/*
+		demographicService.historyList($scope.page.demo.demographicNo).then(function(data){
+			alert(JSON.stringify(data));
+		},function(error){
+			
+		});
+		*/
+		
+		var modalInstance = $modal.open({
+        	templateUrl: 'record/details/historyList.jsp',
+            controller: 'DetailsHistoryListCtrl',
+            backdrop: false,
+            size: 'lg',
+            resolve: {
+                historyList: function() {
+                	return demographicService.historyList($scope.page.demo.demographicNo);
+                }
+            }
+        });
+        
+        modalInstance.result.then(function(data){
+        	console.log('data from modalInstance '+data);
+        },function(reason){
+        	alert(reason);
+        });
+        
+	}
 });
 
 function copyDemoExt(ext1) {
@@ -1084,3 +1113,4 @@ function statusValueToArray(statusValue) {
 	}
 	return statusValue;
 }
+

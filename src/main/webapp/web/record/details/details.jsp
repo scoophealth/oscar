@@ -49,6 +49,7 @@
 	</div>
 	
 	<button type="button" class="btn {{needToSave()}}" ng-click="save()" ng-disabled="page.dataChanged<1">Save</button>
+	
 	<div class="btn-group">
 		<div class="btn-group">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -113,6 +114,10 @@
 		<div class="btn-group">
 			<button type="button" class="btn btn-default" ng-click="exportDemographic()">Export</button>
 		</div>
+		
+		<button type="button" class="btn btn-default" ng-click="loadHistoryList()" >History</button>
+	
+	 
 	</div>
 
 	<button type="button" class="btn {{page.readyForSwipe}}" ng-show="page.workflowEnhance" ng-click="setSwipeReady()" title="Click for Card Swipe" style="padding-top: 0px; padding-bottom: 0px; font-size: small">
