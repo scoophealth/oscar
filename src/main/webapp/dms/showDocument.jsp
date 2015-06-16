@@ -299,6 +299,7 @@
                                 </tr>
 
                             </table>
+                            <form><!-- This blank form is to prevent the deletion of subsequent forms nested on preview screen --></form>
 
                             <form id="forms_<%=docId%>" onsubmit="return updateDocument('forms_<%=docId%>');">
                                 <input type="hidden" name="method" value="documentUpdateAjax" />
