@@ -79,10 +79,11 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
    	}
    	
    	$scope.openAllergies = function(demoNo){
-		var rnd = Math.round(Math.random() * 1000);
+   		var rnd = Math.round(Math.random() * 1000);
 		win = "win" + rnd;
 		var url = "../oscarRx/showAllergy.do?demographicNo=" + demoNo;
-		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   			
+		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   
+		return false;
    	}
    
    	$scope.isCurrentStatus = function(stat){
@@ -373,16 +374,16 @@ editGroupedNotes = function(size,mod,action){
 
 
 $scope.gotoState = function(item,mod,itemId){
-
+	
 	if(item=="add"){
 		editGroupedNotes('lg',mod,null);
 		
-	}else if(item.type == 'lab' || item.type == 'document'  || item.type == 'rx' ){
+	}else if(item.type == 'lab' || item.type == 'document'  || item.type == 'rx'|| item.type == 'allergy' ){
 		var rnd = Math.round(Math.random() * 1000);
 		win = "win_item.type_" + rnd;
 		
 		window.open(item.action,win,"scrollbars=yes, location=no, width=900, height=600","");  
-		return;
+		return false;
 	}else if(item.action == 'action'){
 		editGroupedNotes('lg',mod,itemId);
 
