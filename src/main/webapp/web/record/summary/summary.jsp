@@ -24,7 +24,7 @@
 
 --%>
 
-	<div class="col-lg-3">
+	<div class="col-sm-3">
        <fieldset ng-repeat="mod in page.columnOne.modules">
        		<legend style="margin-bottom:0px;"> 
 
@@ -60,7 +60,7 @@
        </fieldset>   
     </div>
     
-    <div class="col-lg-6" id="middleSpace">
+    <div class="col-sm-6" id="middleSpace">
         <ul class="nav nav-pills">
 		  <li ng-class="isCurrentStatus('none')"><a data-target="#all" ng-click="removeFilter(0)" data-toggle="tab">All</a></li>
 		  <li ng-class="isCurrentStatus('Just My Notes')"><a ng-click="changeNoteFilter('Just My Notes')">Just My Notes</a></li>
@@ -108,7 +108,7 @@
      </div><!-- middleSpace -->
 
 
-	 <div class="col-lg-3">
+	 <div class="col-sm-3">
 	 	<fieldset ng-repeat="mod in page.columnThree.modules">
        		<legend style="margin-bottom:0px;">{{mod.displayName}}
        			<div class="form-group">
