@@ -172,13 +172,13 @@
 			</select>
 		</div>
 		<div class="col-md-6">
-			<label>MyOSCAR</label>
-			<input type="text" class="form-control form-control-details" placeholder="MyOSCAR UserName" title="MyOSCAR UserName" ng-model="page.demo.myOscarUserName"/>
+			<label>PHR</label>
+			<input type="text" class="form-control form-control-details" placeholder="PHR UserName" title="PHR UserName" ng-model="page.demo.myOscarUserName"/>
 		</div>
 		<div class="col-md-6"></div>
 		<div class="col-md-6">
 			<label/>
-			<button type="button" class="btn" style="padding-top: 0px; padding-bottom: 0px; font-size: small" ng-click="macPHRDo('Register')" ng-show="page.demo.myOscarUserName==null || page.demo.myOscarUserName==''">Register for MyOSCAR</button>
+			<button type="button" class="btn" style="padding-top: 0px; padding-bottom: 0px; font-size: small" ng-click="macPHRDo('Register')" ng-show="page.demo.myOscarUserName==null || page.demo.myOscarUserName==''">Register for PHR</button>
 		</div>
 		<div class="col-md-11">
 			<label>Country of Origin</label>
@@ -448,7 +448,7 @@
 		  		{{page.demo.address.city}}, {{page.demo.address.province}} {{page.demo.address.postal}}<br/>
 	  			<abbr title="Phone" ng-show="page.preferredPhoneNumber">P:</abbr> {{page.preferredPhoneNumber}}
 			</address>
-			<a ng-click="macPHRDo('Verification')" ng-show="page.macPHRIdsSet">MyOSCAR{{page.macPHRVerificationLevel}}</a>
+			<a ng-click="macPHRDo('Verification')" ng-show="page.macPHRIdsSet">PHR{{page.macPHRVerificationLevel}}</a>
 		</div>
 	</div>
 	<br/>
