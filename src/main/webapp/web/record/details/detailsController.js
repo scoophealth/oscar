@@ -695,7 +695,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		var url = null;
 		if (func=="Register") {
 			if (!page.macPHRLoggedIn) {
-				alert("Please login to MyOscar first");
+				alert("Please login to PHR first");
 				return;
 			}
 			url="../phr/indivo/RegisterIndivo.jsp?demographicNo="+demo.demographicNo;
