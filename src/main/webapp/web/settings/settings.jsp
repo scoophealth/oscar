@@ -676,7 +676,7 @@
 		<div class="form-group">
 		  <label ></label>
 		  <div class="controls">
-		    <button class="btn btn-default" ng-click="openMyOscarUsernamePopup()">Set MyOSCAR Username</button>
+		    <button class="btn btn-default" ng-click="openMyOscarUsernamePopup()">Set PHR Username</button>
 			</div>	
 		</div>		
 			
