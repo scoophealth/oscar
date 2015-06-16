@@ -50,7 +50,7 @@ public class AllergiesSummary implements Summary {
 		
 		List<Allergy> allergies = allergyManager.getActiveAllergies(loggedInInfo, demographicNo);
 		for(Allergy allergy:allergies) {
-			list.add(new SummaryItemTo1(allergy.getId(), allergy.getDescription(),"../oscarRx/ShowAllergies2.jsp?demographicNo="+demographicNo,"allergy"));
+			list.add(new SummaryItemTo1(allergy.getId(), allergy.getDescription(),"../oscarRx/showAllergy.do?demographicNo="+demographicNo,"allergy"));
 		}
 		
 		return summary;
