@@ -1744,9 +1744,8 @@ public class BORNWbXmlGenerator {
 		else if ("F".equals(demographic.getSex())) patientInfo.setGender(Gender.F);
 		else patientInfo.setGender(Gender.U);
 
-		if (StringUtils.filled(demographic.getChartNo())) patientInfo.setChartNumber(String.valueOf(demographic.getDemographicNo()));
-		else patientInfo.setChartNumber("0");
-
+		patientInfo.setChartNumber(String.valueOf(demographic.getDemographicNo()));
+		
 		if (StringUtils.filled(demographic.getHin())) patientInfo.setHealthCardNum(demographic.getHin());
 		else patientInfo.setHealthCardNum("0");
 
