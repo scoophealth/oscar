@@ -41,6 +41,18 @@ angular.module("providerServices", [])
      
           return deferred.promise;
         },
+		getProvider: function(id){
+			var deferred = $q.defer();
+			$http.get(this.apiPath+'/provider/'+id,this.configHeaders).success(function(data){
+				console.log("get provider: "+data);
+				deferred.resolve(data);
+			}).error(function(){
+				console.log("error fetching provider "+id);
+				deferred.reject("An error occured while getting user data");
+			});
+			
+			return deferred.promise;
+		},
         searchProviders: function (filter) {
         	var deferred = $q.defer();
             
