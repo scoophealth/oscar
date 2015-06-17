@@ -128,6 +128,7 @@ public class ProviderService extends AbstractServiceImpl {
 
     @GET
     @Path("/provider/{id}")
+    @Produces({"application/xml","application/json"})
     public ProviderTransfer getProvider(@PathParam("id") String id) {
         return ProviderTransfer.toTransfer(providerDao.getProvider(id));
     }

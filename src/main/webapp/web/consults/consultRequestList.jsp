@@ -66,7 +66,7 @@
 			</div>
 			<div class="col-xs-2">
 				<select ng-model="search.team" name="team" id="team"
-					class="form-control" ng-init="search.team='<bean:message key="consult.list.team.all" bundle="ui"/>'" ng-options="t for t in teams">
+					class="form-control" ng-options="t for t in teams">
 				</select>
 			</div>
 		</div>
@@ -90,7 +90,7 @@
 					ng-click="data4.isOpen = true" placeholder="<bean:message key="consult.list.appointmentEndDate" bundle="ui"/>">
 			</div>
 			
-			<div class="col-xs-2">
+			<div class="col-xs-2" ng-hide="hideSearchPatient">
 				<div class="input-group">
 					<div class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="removeDemographicAssignment()"></span></div>
 					<input type="text" ng-model="consult.demographicName" placeholder="<bean:message key="consult.list.patient" bundle="ui"/>"
@@ -117,7 +117,7 @@
 			<div class="col-xs-12">
 				<button class="btn btn-primary" type="button" ng-click="doSearch()"><bean:message key="global.search" bundle="ui"/></button>
 				<button class="btn btn-default" type="button" ng-click="clear()"><bean:message key="global.clear" bundle="ui"/></button>
-				<button class="btn btn-success" type="button" ng-click="addConsult()" ng-disabled="search.demographicNo==null">
+				<button class="btn btn-success" type="button" title=<bean:message key="consult.list.newRemindFill" bundle="ui"/> ng-click="addConsult()" ng-disabled="search.demographicNo==null">
 					<bean:message key="consult.list.new" bundle="ui"/>
 				</button>
 			</div>
@@ -131,12 +131,12 @@
 
 			<tr ng-repeat="consult in $data" ng-mouseover="consult.$selected=true" ng-mouseout="consult.$selected=false"
     	 ng-class="{'active': consult.$selected}">
-				<td ng-show="consultWriteAccess">
+				<td>
 <!-- Ronnie: Temporarily hidden until batch operations is created
 					<input type="checkbox" ng-model="consult.checked">
  -->
 				</td>
-				<td ng-show="consultWriteAccess"><a
+				<td><a
 					ng-click="editConsult(consult)" class="hand-hover"><bean:message key="global.edit" bundle="ui"/></a></td>
 				<td data-title="'<bean:message key="consult.list.header.patient" bundle="ui"/>'" class="text-center" sortable="'Demographic'">
 					{{consult.demographic.formattedName}}</td>
@@ -156,7 +156,7 @@
 			</tr>
 		</tbody>
 
-		<tfoot ng-show="consultWriteAccess">
+		<tfoot>
 			<!--<tr>
 				<td colspan="12" class="white">
 					<a ng-click="checkAll()" class="hand-hover"><bean:message key="consult.list.checkAll" bundle="ui"/></a> - <a ng-click="checkNone()" class="hand-hover"><bean:message key="consult.list.checkNone" bundle="ui"/></a>								
