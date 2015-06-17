@@ -1,10 +1,23 @@
-oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$location,$modal,consultService,demographicService,summaryService,staticDataService,consult,user) {
+oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$location,$modal,consultService,demographicService,securityService,summaryService,staticDataService,consult,user) {
+	
+	//get access rights
+	securityService.hasRight("_con", "r").then(function(data){
+		$scope.consultReadAccess=true;
+	});
+	securityService.hasRight("_con", "u").then(function(data){
+		$scope.consultUpdateAccess=true;
+	});
+	securityService.hasRight("_con", "w").then(function(data){
+		$scope.consultWriteAccess=true;
+	});
+	
 	$scope.consult = consult;
 	
 	consult.letterheadList = toArray(consult.letterheadList);
 	consult.referringDoctorList = toArray(consult.referringDoctorList);
 	consult.faxList = toArray(consult.faxList);
 	consult.sendToList = toArray(consult.sendToList);
+	if (consult.referringDoctor==null) consult.referringDoctor = {};
 	
 	//set attachments
 	consult.attachments = toArray(consult.attachments);
@@ -102,14 +115,6 @@ oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$loc
 	}
 	$scope.getReminders = function(boxId){
 		summaryService.getReminders(consult.demographic.demographicNo).then(function(data){ $scope.writeToBox(data, boxId); });
-	}
-	
-	$scope.toPatientSummary = function(){
-		$location.url("/record/"+consult.demographic.demographicNo+"/summary");
-	}
-	
-	$scope.toPatientConsultResponseList = function(){
-		$location.path("/consultResponses").search({"demographicId":consult.demographic.demographicNo});
 	}
 	
 	$scope.invalidData = function(){
@@ -219,14 +224,23 @@ oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$loc
 	
 	
 	$scope.save = function(){
-		if ($scope.invalidData()) return;
+		if (!$scope.consultWriteAccess && consult.id==null) {
+			alert("You don't have right to save new consult");
+			return false;
+		}
+		if (!$scope.consultUpdateAccess) {
+			alert("You don't have right to update consult");
+			return false;
+		}
+		
+		if ($scope.invalidData()) return false;
 
 		$scope.consultSaving = true; //show saving banner
 		$scope.setAppointmentTime();
 		
 		consultService.saveResponse(consult).then(function(data){
 			//update url for new consultation
-			if (consult.id==null) $location.path("/consultResponses/"+data.id);
+			if (consult.id==null) $location.path("/record/"+consult.demographicId+"/consultResponse/"+data.id);
 		});
 		$scope.consultSaving = false; //hide saving banner
 		$scope.consultChanged = -1; //reset change count
@@ -234,7 +248,8 @@ oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$loc
 	}
 	
 	$scope.close = function(){
-		$location.path("/consultResponses").search($location.search());
+		if ($location.search().list=="patient") $location.path("/record/"+consult.demographicId+"/consultResponses");
+		else $location.path("/consultResponses");
 	}
 	
 	//fax & print functions
