@@ -43,11 +43,11 @@
 		style="padding-top: 0px;margin-bottom:3px;">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse"
-				data-target=".navbar-ex1-collapse">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+				<span class="sr-only">Toggle navigation</span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand navbar-toggle pull-left" href="#">Select Module</a>
 		</div>
@@ -94,12 +94,10 @@
     		<textarea class="form-control input-lg col-lg-4" rows="6" ng-model="page.encounterNote.note"></textarea>
 			<div class="pull-left"><input type="text" class="form-control" placeholder="Assign Issue"></div>
     		<div class="btn-group btn-group-sm pull-right">
-    		
-			  <button type="button" class="btn btn-default" ng-click="saveNote()" id="saveButton"  data-ng-disabled="page.encounterNote.isSigned" >Save</button>
-			  <button type="button" class="btn btn-default" ng-click="saveSignNote()">Sign & Save</button>
-			  <button type="button" class="btn btn-default" ng-click="saveSignVerifyNote()">Verify & Sign</button>
-			  
-			  <button type="button" class="btn btn-default" data-ng-disabled="true">Sign, Save & Bill</button>
+			  <button type="button" class="btn btn-default" ng-click="saveNote()" id="saveButton"  data-ng-disabled="page.encounterNote.isSigned" ><bean:message key="oscarEncounter.Index.btnSave"/></button>
+			  <button type="button" class="btn btn-default" ng-click="saveSignNote()"><bean:message key="oscarEncounter.Index.btnSignSave"/></button>
+			  <button type="button" class="btn btn-default" ng-click="saveSignVerifyNote()"><bean:message key="oscarEncounter.Index.btnSign"/></button>
+			  <button type="button" class="btn btn-default" data-ng-disabled="true"><bean:message key="oscarEncounter.Index.btnSignSaveBill"/></button>
 			</div>
     		
     	</div>
