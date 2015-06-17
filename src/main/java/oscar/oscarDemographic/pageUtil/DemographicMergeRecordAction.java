@@ -65,6 +65,8 @@ public class DemographicMergeRecordAction  extends Action {
     }
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
 
+    	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
     	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
 			throw new SecurityException("missing required security object (_demographic)");
 		}
@@ -83,7 +85,7 @@ public class DemographicMergeRecordAction  extends Action {
 
             for (int i=0; i < records.size(); i++){
                 if (!( records.get(i)).equals(head))
-                     dmDAO.Merge( records.get(i), head);
+                     dmDAO.Merge( loggedInInfo, records.get(i), head);
                     
             }
 
@@ -91,7 +93,7 @@ public class DemographicMergeRecordAction  extends Action {
             outcome = "successUnMerge";
             for (int i=0; i < records.size(); i++){
                 String demographic_no = records.get(i);
-                dmDAO.UnMerge(demographic_no, provider_no);
+                dmDAO.UnMerge(loggedInInfo, demographic_no, provider_no);
                
             }
 
