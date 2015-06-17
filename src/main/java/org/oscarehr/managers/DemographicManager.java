@@ -297,6 +297,9 @@ public class DemographicManager {
 		Demographic prevDemo = demographicDao.getDemographicById(demographic.getDemographicNo());
 		demographicArchiveDao.archiveRecord(prevDemo);
 
+		//retain merge info
+		demographic.setSubRecord(prevDemo.getSubRecord());
+		
 		//save current demo
 		demographicDao.save(demographic);
 
