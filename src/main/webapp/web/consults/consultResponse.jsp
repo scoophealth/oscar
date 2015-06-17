@@ -60,7 +60,7 @@
 	Saving...
 </div>
 
-<div id="left_pane" class="col-md-2">
+<div id="left_pane" class="col-md-2" ng-show="consultReadAccess">
 	<label class="control-label">Patient Details:</label>
 	<div class="demographic">
 		<p>{{consult.demographic.lastName}}, {{consult.demographic.firstName}} ({{consult.demographic.title}})</p>
@@ -92,13 +92,9 @@
 			<a ng-click="openAttach(attachment)" title="{{attachment.displayName}}">{{attachment.shortName}}</a>
 		</li>
 	</ol>
-	<br/>
-	<button type="button" class="btn btn-small btn-default form-control" ng-click="toPatientSummary()">Patient Summary</button>
-	<br/>
-	<button type="button" class="btn btn-small btn-default form-control" ng-click="toPatientConsultResponseList()">Patient Response History</button>
 </div><!-- Left pane End -->
 
-<div id="right_pane" class="col-md-10">
+<div id="right_pane" class="col-md-10" ng-show="consultReadAccess">
 	<div class="col-md-6"><!-- Letterhead -->
 		<h4>Letterhead:</h4>
 		<div class="well">
@@ -297,9 +293,16 @@
 	<div class="clear"></div>
 </div><!-- Right pane End -->
 
-<div class="wrapper-action"><!-- Action Buttons -->
+<div class="wrapper-action" ng-show="consultReadAccess"><!-- Action Buttons -->
 	<button type="button" class="btn btn-large btn-warning action" ng-click="printPreview()" ng-show="consult.id!=null && consultChanged<=0">Print Preview</button>&nbsp;
 	<button type="button" class="btn btn-large btn-warning action" ng-click="sendFax()" ng-show="consult.id!=null && consultChanged<=0">Send Fax</button>&nbsp;
 	<button type="button" class="btn btn-large btn-primary action" ng-click="save()" ng-show="consultChanged>0">Save</button>&nbsp;
 	<button type="button" class="btn btn-large btn-default action" ng-click="close()">Close</button>&nbsp;
+</div>
+
+<div ng-show="consultReadAccess != null && consultReadAccess == false"
+	class="col-lg-12">
+	<h3 class="text-danger">
+		<span class="glyphicon glyphicon-warning-sign"></span>You don't have access to view consult
+	</h3>
 </div>

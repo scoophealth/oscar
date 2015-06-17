@@ -1,4 +1,16 @@
-oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$location,$modal,consultService,demographicService,summaryService,staticDataService,consult,user) {
+oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$location,$modal,consultService,demographicService,securityService,summaryService,staticDataService,consult,user) {
+	
+	//get access rights
+	securityService.hasRight("_con", "r").then(function(data){
+		$scope.consultReadAccess=true;
+	});
+	securityService.hasRight("_con", "u").then(function(data){
+		$scope.consultUpdateAccess=true;
+	});
+	securityService.hasRight("_con", "w").then(function(data){
+		$scope.consultWriteAccess=true;
+	});
+	
 	$scope.consult = consult;
 	
 	consult.letterheadList = toArray(consult.letterheadList);
@@ -126,14 +138,6 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 		summaryService.getReminders(consult.demographicId).then(function(data){ $scope.writeToBox(data, boxId); });
 	}
 	
-	$scope.toPatientSummary = function(){
-		$location.url("/record/"+consult.demographicId+"/summary");
-	}
-	
-	$scope.toPatientConsultRequestList = function(){
-		$location.path("/consults").search({"demographicId":consult.demographicId});
-	}
-	
 	$scope.invalidData = function(){
 		if ($scope.urgencies[$("#urgency").val()]==null) {
 			alert("Please select an Urgency"); return true;
@@ -252,13 +256,22 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 	$scope.setESendEnabled(); //execute once on form open
 	
 	$scope.save = function(){
+		if (!$scope.consultWriteAccess && consult.id==null) {
+			alert("You don't have right to save new consult");
+			return false;
+		}
+		if (!$scope.consultUpdateAccess) {
+			alert("You don't have right to update consult");
+			return false;
+		}
+		
 		if ($scope.invalidData()) return false;
 		
 		$scope.consultSaving = true; //show saving banner
 		$scope.setAppointmentTime();
 		
 		consultService.saveRequest(consult).then(function(data){
-			if (consult.id==null) $location.path("/consults/"+data.id);
+			if (consult.id==null) $location.path("/record/"+consult.demographicId+"/consult/"+data.id);
 		});
 		$scope.setESendEnabled();
 		$scope.consultSaving = false; //hide saving banner
@@ -267,7 +280,8 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 	}
 	
 	$scope.close = function(){
-		$location.path("/consults").search($location.search());
+		if ($location.search().list=="patient") $location.path("/record/"+consult.demographicId+"/consults");
+		else $location.path("/consults");
 	}
 	
 	$scope.sendFax = function(){

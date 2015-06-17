@@ -25,50 +25,14 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 		  controller: 'InboxCtrl'
 		})
   		.state('consultRequests', {
-  			url: '/consults?demographicId',
+  			url: '/consults',
   			templateUrl: 'consults/consultRequestList.jsp',
   			controller: 'ConsultRequestListCtrl'
 		})
-		.state('consultRequest', {
-			url: '/consults/:requestId',
-			templateUrl: 'consults/consultRequest.jsp',
-			controller: 'ConsultRequestCtrl',
-			resolve: {
-				consult: function($stateParams, consultService) { return consultService.getRequest($stateParams.requestId, 0); },
-				user: function(providerService) { return providerService.getMe(); }
-			}
-		})
-		.state('consultRequestNew', {
-			url: '/consults/new/:demographicNo',
-			templateUrl: 'consults/consultRequest.jsp',
-			controller: 'ConsultRequestCtrl',
-			resolve: {
-				consult: function($stateParams, consultService) { return consultService.getRequest(0, $stateParams.demographicNo); },
-				user: function(providerService) { return providerService.getMe(); }
-			}
-		})
   		.state('consultResponses', {
-  			url: '/consultResponses?demographicId',
+  			url: '/consultResponses',
   			templateUrl: 'consults/consultResponseList.jsp',
   			controller: 'ConsultResponseListCtrl'
-		})
-		.state('consultResponse', {
-			url: '/consultResponses/:responseId',
-			templateUrl: 'consults/consultResponse.jsp',
-			controller: 'ConsultResponseCtrl',
-			resolve: {
-				consult: function($stateParams, consultService) { return consultService.getResponse($stateParams.responseId, 0); },
-				user: function(providerService) { return providerService.getMe(); }
-			}
-		})
-		.state('consultResponseNew', {
-			url: '/consultResponses/new/:demographicNo',
-			templateUrl: 'consults/consultResponse.jsp',
-			controller: 'ConsultResponseCtrl',
-			resolve: {
-				consult: function($stateParams, consultService) { return consultService.getResponse(0, $stateParams.demographicNo); },
-				user: function(providerService) { return providerService.getMe(); }
-			}
 		})
   		.state('billing', {
   		  url: '/billing',
@@ -145,7 +109,7 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 			}
 		})
 		.state('record.details', {
-			url: '^/record/:demographicNo/details', 
+			url: '/details', 
 			templateUrl: 'record/details/details.jsp',
 			controller: 'DetailsCtrl'
 		})
@@ -155,37 +119,65 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 			controller: 'DetailsCtrlAlt'
 		})
 		.state('record.summary', {
-			url: '^/record/:demographicNo/summary?appointmentNo&encType', 
+			url: '/summary?appointmentNo&encType', 
 			templateUrl: 'record/summary/summary.jsp',
 			controller: 'SummaryCtrl'
 		})
 		.state('record.forms', {
-			url: '^/record/:demographicNo/forms', 
+			url: '/forms', 
 			templateUrl: 'record/forms/forms.jsp',
 			controller: 'FormCtrl'
 		}).state('record.forms.new', {
-			url: '^/record/:demographicNo/forms/:type/:id', 
+			url: '/:type/:id', 
 			templateUrl: 'record/forms/forms.jsp',
 			controller: 'FormCtrl'
 		}).state('record.forms.existing', {
-			url: '^/record/:demographicNo/forms/:type/id/:id', 
+			url: '/:type/id/:id', 
 			templateUrl: 'record/forms/forms.jsp',
 			controller: 'FormCtrl'
 		})
+  		.state('record.consultRequests', {
+  			url: '/consults',
+  			templateUrl: 'consults/consultRequestList.jsp',
+  			controller: 'ConsultRequestListCtrl'
+		})
+  		.state('record.consultResponses', {
+  			url: '/consultResponses',
+  			templateUrl: 'consults/consultResponseList.jsp',
+  			controller: 'ConsultResponseListCtrl'
+		})
+		.state('record.consultRequest', {
+			url: '/consult/:requestId',
+			templateUrl: 'consults/consultRequest.jsp',
+			controller: 'ConsultRequestCtrl',
+			resolve: {
+				consult: function($stateParams, consultService) { return consultService.getRequest($stateParams.requestId, $stateParams.demographicNo); },
+				user: function(providerService) { return providerService.getMe(); }
+			}
+		})
+		.state('record.consultResponse', {
+			url: '/consultResponse/:responseId',
+			templateUrl: 'consults/consultResponse.jsp',
+			controller: 'ConsultResponseCtrl',
+			resolve: {
+				consult: function($stateParams, consultService) { return consultService.getResponse($stateParams.responseId, $stateParams.demographicNo); },
+				user: function(providerService) { return providerService.getMe(); }
+			}
+		})
 		.state('record.tickler', {
-			url: '^/record/:demographicNo/tickler', 
+			url: '/tickler', 
 			templateUrl: 'tickler/ticklerList.jsp',
 			controller: 'TicklerListCtrl',
 			resolve: { 
 				providers: function(providerService) { return providerService.searchProviders({active:true}); }
 			}
 		}).state('record.tracker', {
-			url: '^/record/:demographicNo/tracker', 
+			url: '/tracker', 
 			templateUrl: 'record/tracker/tracker.jsp',
 			controller: 'TrackerCtrl'
 		})
 		.state('record.phr', {
-			url: '^/record/:demographicNo/phr', 
+			url: '/phr', 
 			templateUrl: 'record/phr/phr.jsp',
 			controller: 'PHRCtrl'
 		})

@@ -43,8 +43,10 @@ angular.module("consultServices", [])
         },
         
 		getRequest: function(requestId, demographicId){
+			if (requestId=="new") requestId = 0;
+			
         	var deferred = $q.defer();
-        	$http.get(this.apiPath+'getRequest?requestId='+requestId+'&demographicId='+demographicId).success(function(data){
+        	$http.get(this.apiPath+'getRequest', {params: {requestId:requestId, demographicId:demographicId}}).success(function(data){
         		deferred.resolve(data);
             }).error(function(){
           	  console.log("error fetching items");
@@ -105,8 +107,10 @@ angular.module("consultServices", [])
         },
         
 		getResponse: function(responseId, demographicNo){
+			if (responseId=="new") responseId = 0;
+			
         	var deferred = $q.defer();
-        	$http.get(this.apiPath+'getResponse?responseId='+responseId+'&demographicNo='+demographicNo).success(function(data){
+        	$http.get(this.apiPath+'getResponse', {params: {responseId:responseId, demographicNo:demographicNo}}).success(function(data){
         		deferred.resolve(data);
             }).error(function(){
           	  console.log("error fetching items");
