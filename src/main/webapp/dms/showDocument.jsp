@@ -508,7 +508,7 @@
                                 <tr bgcolor="#ccccff">
                                     <th><bean:message key="Appointment.formDate" /></th>
                                     <th><bean:message key="Appointment.formStartTime" /></th>
-                                    <th ><bean:message key="appointment.addappointment.msgProvider" /></th>
+                                    <th><bean:message key="appointment.addappointment.msgProvider" /></th>
                                     <th><bean:message key="appointment.addappointment.msgComments" /></th>
                                 </tr>
                                 <%
@@ -522,7 +522,7 @@
                                 <tr bgcolor="<%=HighlightUserAppt == false ? "#FFFFFF" : "#CCFFCC"%>">
                                     <td ><%=ConversionUtils.toDateString(a.getAppointmentDate())%></td>
                                     <td ><%=ConversionUtils.toTimeString(a.getStartTime())%></td>
-                                    <td ><%=prov.getFormattedName()%></td>
+                                    <td ><%=prov == null ? "N/A" : prov.getFormattedName()%></td>
                                     <td ><% if (a.getStatus() == null) {%>"" <% } else if (a.getStatus().equals("N")) {%><bean:message key="oscar.appt.ApptStatusData.msgNoShow" /><% } else if (a.getStatus().equals("C")) {%><bean:message key="oscar.appt.ApptStatusData.msgCanceled" /> <%}%>
                                     </td>
                                 </tr>
