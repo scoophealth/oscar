@@ -137,11 +137,22 @@ public class RecordUxService extends AbstractServiceImpl {
 		}
 		
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.consultations", "r", null)) {
-			if (consultationManager.isConsultRequestEnabled() || !consultationManager.isConsultResponseEnabled()) {
-				menulist.add(new MenuItemTo1(idCounter++, "Consultation Requests", "consultRequests", demographicNo.toString()));
+			if (consultationManager.isConsultRequestEnabled() && !consultationManager.isConsultResponseEnabled()) {
+				menulist.add(new MenuItemTo1(idCounter++, "Consultations", "record.consultRequests", demographicNo.toString()));
 			}
-			if (consultationManager.isConsultResponseEnabled()) {
-				menulist.add(new MenuItemTo1(idCounter++, "Consultation Responses", "consultResponses", demographicNo.toString()));
+			else if (!consultationManager.isConsultRequestEnabled() && consultationManager.isConsultResponseEnabled()) {
+				menulist.add(new MenuItemTo1(idCounter++, "Consultation Responses", "record.consultResponses", demographicNo.toString()));
+			}
+			else if (consultationManager.isConsultRequestEnabled() && consultationManager.isConsultResponseEnabled()) {
+				MenuItemTo1 consultMenu = new MenuItemTo1(idCounter++, "Consultations", null);
+				consultMenu.setDropdown(true);
+				
+				List<MenuItemTo1> consultList = new ArrayList<MenuItemTo1>();
+				consultList.add(new MenuItemTo1(idCounter++, "Consultation Requests", "record.consultRequests", demographicNo.toString()));
+				consultList.add(new MenuItemTo1(idCounter++, "Consultation Responses", "record.consultResponses", demographicNo.toString()));
+				consultMenu.setDropdownItems(consultList);
+				
+				menulist.add(consultMenu);
 			}
 		}
 		//END PHR
