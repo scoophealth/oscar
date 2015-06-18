@@ -45,8 +45,11 @@ import org.oscarehr.common.dao.SecObjPrivilegeDao;
 import org.oscarehr.common.model.RecycleBin;
 import org.oscarehr.common.model.SecObjPrivilege;
 import org.oscarehr.common.model.SecObjPrivilegePrimaryKey;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
+import oscar.log.LogAction;
 
 /**
  *
@@ -62,7 +65,7 @@ public class DemographicMerged {
     public DemographicMerged() {
     }
 
-    public void Merge(String demographic_no, String head) {
+    public void Merge(LoggedInInfo loggedInInfo, String demographic_no, String head) {
 
     	org.oscarehr.common.model.DemographicMerged dm = new org.oscarehr.common.model.DemographicMerged();
     	
@@ -75,24 +78,34 @@ public class DemographicMerged {
 
         dm.setMergedTo(Integer.parseInt( head ));
        
+        dm.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
+        dm.setLastUpdateDate(new Date());
         dao.persist(dm);
         
-        SecObjPrivilege sop = new SecObjPrivilege();
-        SecObjPrivilegePrimaryKey pk = new SecObjPrivilegePrimaryKey();
-        pk.setRoleUserGroup("_all");
-        pk.setObjectName("_eChart$"+demographic_no);
-        sop.setId(pk);
-        sop.setPrivilege("|or|");
-        sop.setPriority(0);
-        sop.setProviderNo("0");
-        secObjPrivilegeDao.persist(sop);
+        //only if it doesn't exist
+        if(secObjPrivilegeDao.find(new SecObjPrivilegePrimaryKey("_all","_eChart$"+demographic_no)) == null) {
+	        SecObjPrivilege sop = new SecObjPrivilege();
+	        SecObjPrivilegePrimaryKey pk = new SecObjPrivilegePrimaryKey();
+	        pk.setRoleUserGroup("_all");
+	        pk.setObjectName("_eChart$"+demographic_no);
+	        sop.setId(pk);
+	        sop.setPrivilege("|or|");
+	        sop.setPriority(0);
+	        sop.setProviderNo("0");
+	        secObjPrivilegeDao.persist(sop);
+        }
+        
+        LogAction.addLogSynchronous(loggedInInfo, "DemographicMerged.Merge", "demographic_no="+demographic_no);
+
   
     }
 
-    public void UnMerge(String demographic_no, String curUser_no) {
+    public void UnMerge(LoggedInInfo loggedInInfo, String demographic_no, String curUser_no) {
 
     	List<org.oscarehr.common.model.DemographicMerged> dms = dao.findByDemographicNo(Integer.parseInt(demographic_no));
     	for(org.oscarehr.common.model.DemographicMerged dm:dms) {
+    		dm.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
+            dm.setLastUpdateDate(new Date());
     		dm.setDeleted(1);
     		dao.merge(dm);
     	}
@@ -116,6 +129,8 @@ public class DemographicMerged {
     	rb.setKeyword("_all|_eChart$"+ demographic_no);
     	rb.setTableContent("<roleUserGroup>_all</roleUserGroup>" + "<objectName>_eChart$" + demographic_no + "</objectName><privilege>" + privilege + "</privilege>" + "<priority>" + priority + "</priority><provider_no>" + provider_no + "</provider_no>");
     	recycleBinDao.persist(rb);
+
+    	 LogAction.addLogSynchronous(loggedInInfo, "DemographicMerged.UnMerge", "demographic_no="+demographic_no);
 
     }
     
