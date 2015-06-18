@@ -279,7 +279,6 @@ public class RxPrescriptionData {
 		p.setLongTerm(drug.getLongTerm());
 		p.setCustomNote(drug.isCustomNote());
 		p.setPastMed(drug.getPastMed());
-		p.setDispenseInternal(drug.getDispenseInternal());
 		p.setStartDateUnknown(drug.getStartDateUnknown());
 		p.setComment(drug.getComment());
 		if (drug.getPatientCompliance() == null) p.setPatientCompliance(null);
