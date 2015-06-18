@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
 	<div class="col-sm-3">
        <fieldset ng-repeat="mod in page.columnOne.modules">
@@ -52,9 +53,9 @@
         	<%-- href="{{item.action}}" --%>
         	<li ng-repeat="item in mod.summaryItem" ng-show="$index < mod.displaySize" popover="{{item.displayName}}" popover-trigger="mouseenter"><span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span><a ng-click="gotoState(item,mod,item.id)" href="javascript:void(0)" >{{item.displayName | limitTo: 34 }} {{item.displayName.length > 34 ? '...' : '' }}<small ng-show="item.classification">({{item.classification}})</small></a> </li> 			
 
-			<a href="javascript:void(0)" class="text-muted add-summary" ng-if="mod.summaryItem==null" ng-click="gotoState('add', mod)" ng-hide="mod.summaryCode=='meds' || mod.summaryCode=='assessments'">Add {{mod.displayName}}</a>
-			<a href="javascript:void(0)" class="text-muted add-summary" ng-if="mod.summaryItem==null" ng-click="openRx(demographicNo)" ng-show="mod.summaryCode=='meds'">Add {{mod.displayName}}</a>
-			<a href="#/record/{{demographicNo}}/forms" class="text-muted add-summary" ng-if="mod.summaryItem==null" ng-show="mod.summaryCode=='assessments'">Add {{mod.displayName}}</a>
+			<a href="javascript:void(0)" class="text-muted add-summary" ng-if="mod.summaryItem==null" ng-click="gotoState('add', mod)" ng-hide="mod.summaryCode=='meds' || mod.summaryCode=='assessments'"><bean:message key="global.btnAdd"/> {{mod.displayName}}</a>
+			<a href="javascript:void(0)" class="text-muted add-summary" ng-if="mod.summaryItem==null" ng-click="openRx(demographicNo)" ng-show="mod.summaryCode=='meds'"><bean:message key="global.btnAdd"/> {{mod.displayName}}</a>
+			<a href="#/record/{{demographicNo}}/forms" class="text-muted add-summary" ng-if="mod.summaryItem==null" ng-show="mod.summaryCode=='assessments'"><bean:message key="global.btnAdd"/> {{mod.displayName}}</a>
         	</ul>
 		
        </fieldset>   
@@ -85,9 +86,9 @@
 								  </ul>
 								</div --%>{{note.observationDate | date : 'dd-MMM-yyyy'}} {{firstLine(note)}}</dt>
 			    				<dd ng-repeat-end  ng-show="showNote(note)"><pre ng-class="isNoteBeingEdited(note)" style="margin-bottom:0px;" ng-show="showNote(note)" ng-hide="note.cpp==true" ng-dblclick="editNote(note)">{{note.note}}</pre>
-			    					<h6 style="margin-top:1px;margin-bottom:0px;">Editors: <small>{{note.editorNames}}</small> <span class="pull-right">Encounter Date: <small>{{note.observationDate | date: 'medium'}}</small> Rev: <small ng-click="openRevisionHistory(note)" >{{note.revision}}</small></span></h6>
+			    					<h6 style="margin-top:1px;margin-bottom:0px;"><bean:message key="oscarEncounter.editors.title"/>: <small>{{note.editorNames}}</small> <span class="pull-right"><bean:message key="oscarEncounter.encounterDate.title"/>: <small>{{note.observationDate | date: 'medium'}}</small> <bean:message key="oscarEncounter.noteRev.title"/>: <small ng-click="openRevisionHistory(note)" >{{note.revision}}</small></span></h6>
 
-			    					<h6 style="margin-top:0px;">Assigned Issues: <small>{{note.issueDescriptions}}</small> <span class="pull-right">Enc Type: <small>{{note.encounterType}}</small></span></h6>
+			    					<h6 style="margin-top:0px;"><bean:message key="oscarEncounter.assignedIssues.title"/>: <small>{{note.issueDescriptions}}</small> <span class="pull-right"><bean:message key="oscarEncounter.encType.title"/>: <small>{{note.encounterType}}</small></span></h6>
 			    				</dd>					
 			    		</dl>
 			  </div>
