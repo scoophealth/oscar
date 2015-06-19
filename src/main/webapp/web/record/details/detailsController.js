@@ -300,7 +300,6 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		}
 		else if (status=="done") {
 			page.readyForSwipe = "btn-primary";
-//			page.swipecardMsg = "Done Health Card Swipe"; //Let HCValidation write the message
 		}
 		else {
 			$("#swipecard").focus();
@@ -427,19 +426,15 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 
 	//HCValidation
 	$scope.validateHC = function(){
-		if (demo.hin==null || demo.hin=="") return;
+		if (demo.hcType!="ON" || demo.hin==null || demo.hin=="") return;
 		if (demo.ver==null) demo.ver = "";
 		patientDetailStatusService.validateHC(demo.hin,demo.ver).then(function(data){
 			if (data.valid==null) {
 				page.HCValidation = "n/a";
-				page.swipecardMsg = "Done Health Card Swipe";
+				page.swipecardMsg = "Done Health Card Action";
 			} else {
 				page.HCValidation = data.valid ? "valid" : "invalid";
-				var swipecardMsg = data.responseDescription;
-				if (swipecardMsg==null || swipecardMsg.trim()=="") {
-					swipecardMsg = "Health card "+page.HCValidation;
-				}
-				page.swipecardMsg = swipecardMsg+" ("+data.responseCode+")";
+				page.swipecardMsg = data.responseDescription+" ("+data.responseCode+")";
 			}
 		});
 	}
@@ -760,6 +755,36 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		var url = "../demographic/demographicExport.jsp?demographicNo="+demo.demographicNo;
 		window.open(url, "DemographicExport", "width=960, height=700");
 	}
+
+	//HCValidation on open & save
+	$scope.validateHCSave = function(doSave){
+		if (demo.hin==null || demo.hin=="") {
+			if (doSave) $scope.save();
+		} else {
+			patientDetailStatusService.isUniqueHC(demo.hin,demo.demographicNo).then(function(data){
+				if (!data.success) {
+					alert("HIN is already in use!");
+				}
+				else if (demo.hcType!="ON") {
+					if (doSave) $scope.save();
+				}
+				else {
+					if (demo.ver==null) demo.ver = "";
+					patientDetailStatusService.validateHC(demo.hin,demo.ver).then(function(data){
+						if (data.valid==null) {
+							page.HCValidation = "n/a";
+						}
+						else if (!data.valid) {
+							alert("Health Card Validation failed: "+data.responseDescription+" ("+data.responseCode+")");
+							doSave = false;
+						}
+						if (doSave) $scope.save();
+					});
+				}
+			});
+		}
+	}
+	$scope.validateHCSave();
 	
 	
 	//-----------------//
