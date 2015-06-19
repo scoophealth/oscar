@@ -95,11 +95,10 @@
 			<div class="pull-left"><input type="text" class="form-control" placeholder="Assign Issue"></div>
     		<div class="btn-group btn-group-sm pull-right">
     		
-			  <button type="button" class="btn btn-default" ng-click="saveNote()" id="saveButton"  data-ng-disabled="page.encounterNote.isSigned" >Save</button>
-			  <button type="button" class="btn btn-default" ng-click="saveSignNote()">Sign & Save</button>
-			  <button type="button" class="btn btn-default" ng-click="saveSignVerifyNote()">Verify & Sign</button>
-			  
-			  <button type="button" class="btn btn-default" data-ng-disabled="true">Sign, Save & Bill</button>
+			  <button type="button" class="btn btn-default" ng-click="saveNote()" id="saveButton"  data-ng-disabled="page.encounterNote.isSigned" ><bean:message key="oscarEncounter.Index.btnSave"/></button>
+			  <button type="button" class="btn btn-default" ng-click="saveSignNote()"><bean:message key="oscarEncounter.Index.btnSignSave"/></button>
+			  <button type="button" class="btn btn-default" ng-click="saveSignVerifyNote()"><bean:message key="oscarEncounter.Index.btnSign"/></button>
+			  <button type="button" class="btn btn-default" data-ng-disabled="true"><bean:message key="oscarEncounter.Index.btnSignSaveBill"/></button>
 			</div>
     		
     	</div>
