@@ -3178,7 +3178,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 							</tr>
 							
 							<tr>
-	                            <td align="right"><b>Archived Paper Chart Indicator: </b></td>
+	                            <td align="right"><b><bean:message key="web.record.details.archivedPaperChart" />: </b></td>
 	                            <td align="left">
 	                            	<%
 	                            		String paperChartIndicator = StringUtils.trimToEmpty(demoExt.get("paper_chart_archived"));
