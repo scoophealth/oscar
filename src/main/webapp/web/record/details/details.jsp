@@ -50,7 +50,7 @@
 		<bean:message key="web.record.details.saving"/>
 	</div>
 	
-	<button type="button" class="btn {{needToSave()}}" ng-click="save()" ng-disabled="page.dataChanged<1">Save</button>
+	<button type="button" class="btn {{needToSave()}}" ng-click="validateHCSave(true)" ng-disabled="page.dataChanged<1">Save</button>
 	
 	<div class="btn-group">
 		<div class="btn-group">
@@ -262,16 +262,19 @@
 		<fieldset>
 			<legend><bean:message key="demographic.demographiceditdemographic.msgHealthIns"/></legend>
 		</fieldset>
+		<div class="alert-warning" ng-show="page.HCValidation=='n/a'">
+			Online Health Card Validation unavailable
+		</div>
 		<div class="col-md-6">
 			<label>
-				<bean:message key="demographic.demographiceditdemographic.msgHealthIns"/>
+				HIN
 				<span ng-show="page.HCValidation=='valid'" title="HIN Valid" style="font-size:large; color:#009900">&#10004;</span>
 				<span ng-show="page.HCValidation=='invalid'" title="HIN Invalid" style="font-size:large; color:red">&#10008;</span>
-				<span ng-show="page.HCValidation=='n/a'" title="Health Card Validation not ready" style="font-size:large; color:#ff5500">?</span>
+				<span ng-show="page.HCValidation=='n/a'" title="Online Health Card Validation unavailable" style="font-size:large; color:#ff5500">?</span>
 				<button class="btn" title="Validate HIN #" ng-click="validateHC()" ng-hide="page.demo.hin==null || page.demo.hin=='' || page.demo.hcType!='ON'" style="padding: 0px 5px; font-size: small">Validate</button>
 			</label>
 			<span style="white-space:nowrap">
-				<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.msgHealthIns"/>" title="<bean:message key="demographic.demographiceditdemographic.msgHealthIns"/>" ng-model="page.demo.hin" ng-change="checkHin()" style="width:140px; background-color:{{page.hinColor}}"/>
+				<input type="text" class="form-control form-control-details" placeholder="HIN" title="Health Insurance Number" ng-model="page.demo.hin" ng-change="checkHin()" style="width:140px; background-color:{{page.hinColor}}"/>
 				<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formVer"/>" title="HIN Version" ng-model="page.demo.ver" ng-change="checkHinVer()" style="width:55px; background-color:{{page.verColor}}"/>
 			</span>
 		</div>
