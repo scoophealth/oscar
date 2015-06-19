@@ -35,7 +35,7 @@
 	<div class="modal-content" style="background-color: #996633; color: white;   border:0px;  border-radius: 0px;">
 
 		<div class="modal-header"  > <!-- ng-style="setColor(note.cpp)" -->
-		<button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="cancel()"><span aria-hidden="true" >&times;</span></button>
+		<button type="button" class="close" data-dismiss="modal" aria-label="<bean:message key="global.close"/>" ng-click="cancel()"><span aria-hidden="true" >&times;</span></button>
 			<h4 class="modal-title">{{page.title}}</h4>
 		</div>
 
@@ -85,8 +85,8 @@
 
 				<input type="hidden" name="id" ng-model="groupNotesForm.encounterNote.id">
 
-				<em><small>Editors: <span>{{ groupNotesForm.encounterNote.providerName }}</span></small></em>  
-				<div class="pull-right"><em><small>Encounter Date: <span>{{groupNotesForm.encounterNote.updateDate | date : 'dd-MMM-yyyy'}}</span>  Rev: <a href="javascript:void(0)" ng-click="openRevisionHistory(groupNotesForm.encounterNote)">{{groupNotesForm.encounterNote.revision}}</a></small></em></div>
+				<em><small><bean:message key="oscarEncounter.editors.title"/>: <span>{{ groupNotesForm.encounterNote.providerName }}</span></small></em>  
+				<div class="pull-right"><em><small><bean:message key="oscarEncounter.encounterDate.title"/>: <span>{{groupNotesForm.encounterNote.updateDate | date : 'dd-MMM-yyyy'}}</span>  <bean:message key="oscarEncounter.noteRev.title"/>: <a href="javascript:void(0)" ng-click="openRevisionHistory(groupNotesForm.encounterNote)">{{groupNotesForm.encounterNote.revision}}</a></small></em></div>
 				
 				<textarea class="form-control" rows="5" placeholder="Enter Note" ng-model="groupNotesForm.encounterNote.note" style="margin-bottom:6px;" required></textarea>
 					
