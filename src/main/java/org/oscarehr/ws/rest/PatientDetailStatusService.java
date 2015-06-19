@@ -23,6 +23,8 @@
  */
 package org.oscarehr.ws.rest;
 
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -36,9 +38,11 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.integration.mchcv.HCValidationFactory;
 import org.oscarehr.integration.mchcv.HCValidationResult;
 import org.oscarehr.integration.mchcv.HCValidator;
+import org.oscarehr.integration.mchcv.OnlineHCValidator;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.model.PatientDetailStatusTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -48,6 +52,7 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
 
 @Path("/patientDetailStatusService")
+@Produces({MediaType.APPLICATION_JSON})
 public class PatientDetailStatusService extends AbstractServiceImpl {
 	@Autowired
 	private DemographicManager demographicManager;
@@ -61,7 +66,6 @@ public class PatientDetailStatusService extends AbstractServiceImpl {
 	
 	@GET
 	@Path("/getStatus")
-	@Produces({MediaType.APPLICATION_JSON})
 	public PatientDetailStatusTo1 getStatus(@QueryParam("demographicNo") Integer demographicNo) {
 		PatientDetailStatusTo1 status = new PatientDetailStatusTo1();
 		
@@ -123,17 +127,45 @@ public class PatientDetailStatusService extends AbstractServiceImpl {
 	
 	@GET
 	@Path("/validateHC")
-	@Produces({MediaType.APPLICATION_JSON})
-	public HCValidationResult validateHC(@QueryParam("hin") String healthCardNumber, @QueryParam("ver") String versionCode) {
+	public HCValidationResult validateHC(@QueryParam("hin") String healthCardNo, @QueryParam("ver") String versionCode) {
 		HCValidator validator = HCValidationFactory.getHCValidator();
-		
 		HCValidationResult result = null;
-		try {
-			result = validator.validate(healthCardNumber,versionCode);
+		
+		if (validator.getClass().equals(OnlineHCValidator.class)) {
+			HCValidator simpleValidator = HCValidationFactory.getSimpleValidator();
+			result = simpleValidator.validate(healthCardNo,versionCode);
+			
+			if (result.isValid()) result = null;
 		}
-		catch (Exception ex) {
-			logger.error("Error doing HCValidation", ex);
+		
+		if (result==null) {
+			try {
+				result = validator.validate(healthCardNo,versionCode);
+			}
+			catch (Exception ex) {
+				logger.error("Error doing HCValidation", ex);
+			}
+		}
+		
+		if (result!=null && result.getResponseDescription()==null) {
+			if (result.isValid()) result.setResponseDescription("Valid Health Card Number");
+			else result.setResponseDescription("Invalid Health Card Number");
 		}
 		return result;
+	}
+	
+	@GET
+	@Path("/isUniqueHC")
+	public GenericRESTResponse isUniqueHC(@QueryParam("hin") String healthCardNo, @QueryParam("demographicNo") Integer demographicNo) {
+		GenericRESTResponse response = new GenericRESTResponse();
+		if (healthCardNo!=null && !healthCardNo.trim().isEmpty() && demographicNo!=null) {
+			List<Demographic> demos = demographicManager.searchByHealthCard(getLoggedInInfo(), healthCardNo);
+			if (demos!=null) {
+				if (demos.size()>1 || (demos.size()==1 && !demos.get(0).getDemographicNo().equals(demographicNo))) {
+					response.setSuccess(false);
+				}
+			}
+		}
+		return response;
 	}
 }
