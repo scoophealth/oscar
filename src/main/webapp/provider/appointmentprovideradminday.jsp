@@ -1706,7 +1706,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=StringEscapeUtils.escapeJavaScript(curProviderName[nProvider])%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>"-->
           <%=curProviderName[nProvider]%></a> 
-       	<oscar:oscarPropertiesCheck value="yes" property="TOGGLE_REASON_BY_PROVIDER">   
+       	<oscar:oscarPropertiesCheck value="yes" property="TOGGLE_REASON_BY_PROVIDER" defaultVal="true">   
 				<a id="expandReason" href="#" onclick="return toggleReason('<%=curProvider_no[nProvider]%>');" 
 					title="<bean:message key="provider.appointmentProviderAdminDay.expandreason"/>">*</a>
 					<%-- Default is to hide inline reasons. --%>
@@ -2022,14 +2022,13 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
     		
 <a href=# onClick ="popupPage(535,860,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.getId()%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
 <%=name%>
-<%=reasonCodeName!=null?"&nbsp; reason: " + reasonCodeName:""%>
-<%=reason!=null && !reason.isEmpty()?"&nbsp; reason: " + UtilMisc.htmlEscape(reason):""%>
-<bean:message key="provider.appointmentProviderAdminDay.notes"/>: <%=UtilMisc.htmlEscape(notes)%>
-" >
+	<%=type != null ? "type: " + type : "" %>
+	reason: <%=reasonCodeName!=null?reasonCodeName:""%> <%if(reason!=null && !reason.isEmpty()){%>- <%=UtilMisc.htmlEscape(reason)%>
+<%}%>	<bean:message key="provider.appointmentProviderAdminDay.notes"/>: <%=UtilMisc.htmlEscape(notes)%>" >
             .<%=(view==0&&numAvailProvider!=1)?(name.length()>len?name.substring(0,len).toUpperCase():name.toUpperCase()):name.toUpperCase()%>
             </font></a><!--Inline display of reason -->
       <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON" value="yes" defaultVal="true">
-      <span class="reason"><bean:message key="provider.appointmentProviderAdminDay.Reason"/>:<%=UtilMisc.htmlEscape(reason)%></span>
+      <span class="reason reason_<%=curProvider_no[nProvider]%> ${ hideReason ? "hideReason" : "" }"><bean:message key="provider.appointmentProviderAdminDay.Reason"/>:<%=UtilMisc.htmlEscape(reason)%></span>
       </oscar:oscarPropertiesCheck></td>
         <%
         			} else {
@@ -2105,7 +2104,7 @@ start_time += iSm + ":00";
 <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"> 
 	title="<%=name%>
 	type: <%=type != null ? type : "" %>
-	reason: <%=(reasonCodeName != null) ? reasonCodeName : ( (reason != null && !reason.isEmpty() ) ? reason : "") %>
+	reason: <%=reasonCodeName!=null? reasonCodeName:""%> <%if(reason!=null && !reason.isEmpty()){%>- <%=UtilMisc.htmlEscape(reason)%><%}%>
 	notes: <%=notes%>"
 </oscar:oscarPropertiesCheck> ><%=(view==0) ? (name.length()>len?name.substring(0,len) : name) :name%></a>
 
@@ -2225,9 +2224,9 @@ start_time += iSm + ":00";
 	  %>
 	  &#124;<b style="color:#FF0000">$</b>
 	  <%}}%>
-      <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON" value="yes">
+      <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON" value="yes" defaultVal="true">
      		<span class="reason_<%=curProvider_no[nProvider]%> ${ hideReason ? "hideReason" : "" }">
-     			<strong>&#124;&nbsp;<%=reasonCodeName%>&nbsp;<%=reason%></strong>
+     			<strong>&#124;<%=reasonCodeName==null?"":"&nbsp;" + reasonCodeName + " -"%><%=reason==null?"":"&nbsp;" + reason%></strong>
      		</span>
       </oscar:oscarPropertiesCheck>
       
