@@ -37,6 +37,9 @@ import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlCalendar;
 import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.XmlValidationError;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
 //import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
@@ -99,7 +102,12 @@ public class BORNWbCsdXmlGenerator {
 		populateImmunizationData(patientInfo, demographicNo);
 
 		////business validation
-
+		//business validation
+		if (!isAgeLessThan7y(patientInfo)) {
+			MiscUtils.getLogger().warn("Child is over 6years old..skipping");
+			return false;
+		}
+				
 		//TODO: xml validation - how can we report the problem better??
 		XmlOptions m_validationOptions = new XmlOptions();
 		ArrayList<Object> validationErrors = new ArrayList<Object>();
@@ -354,4 +362,16 @@ public class BORNWbCsdXmlGenerator {
 		}
 	}
 
+	private boolean isAgeLessThan7y(PatientInfo patientInfo) {	
+		LocalDate date1 = new LocalDate(LocalDate.fromCalendarFields(patientInfo.getDOB()));
+        LocalDate date2 = new LocalDate(new java.util.Date());
+        PeriodType monthDay = PeriodType.months();
+        Period difference = new Period(date1, date2, monthDay);
+        int months = difference.getMonths();
+        
+        if(months > ((12*6)+6)) {
+        	return false;
+        }
+        return true;
+	}
 }
