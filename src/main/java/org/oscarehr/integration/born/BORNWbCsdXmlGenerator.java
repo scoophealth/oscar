@@ -29,7 +29,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +58,7 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.util.StringUtils;
+import ca.bornontario.wbcsd.CountryProvince;
 import ca.bornontario.wbcsd.BORNWBCSDBatch;
 import ca.bornontario.wbcsd.BORNWBCSDBatchDocument;
 import ca.bornontario.wbcsd.Gender;
@@ -151,7 +151,7 @@ public class BORNWbCsdXmlGenerator {
 			VisitData visitData = patientInfo.addNewVisitData();
 		
 			try {
-				Calendar cal = Calendar.getInstance();
+				XmlCalendar cal = new XmlCalendar();
 				cal.setTime(dateFormatter.parse(date));
 				visitData.setVisitDate(cal);
 			} catch(ParseException e) {
@@ -208,11 +208,8 @@ public class BORNWbCsdXmlGenerator {
 		}
 		problem.setProblemStatus(String.valueOf(dx.getStatus()));
 		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(dx.getStartDate());
-		problem.setProblemDiagnosisDate(cal);
-		
-	/*
+		problem.setProblemDiagnosisDate(new XmlCalendar(dx.getStartDate()));
+		/*
 		problem.setProblemOnsetDate(arg0);
 		*/
 	}
@@ -231,9 +228,6 @@ public class BORNWbCsdXmlGenerator {
 				logger.warn("regional identifier is not a number (id="+drug.getId()+")");
 			}
 		}
-		//if(drug.getDosage() != null && !drug.getDosage().isEmpty()) {
-		//	medication.setMedicationDosage(drug.getDosage());
-		//}
 		
 		if(drug.getRefillQuantity() != null) {
 			medication.setMedicationNumberofRefills(drug.getRefillQuantity()+"");
@@ -243,9 +237,9 @@ public class BORNWbCsdXmlGenerator {
 		medication.setMedicationDrugStrength(arg0);
 		
 		medication.setMedicationFrequency(arg0);
-		
-		medication.setMedicationStartDate(arg0);
 		*/
+		medication.setMedicationStartDate(new XmlCalendar(drug.getRxDate()));
+		
 	}
 	
 	private void addToDateMap(Map<String,List<Object>> map, String date, Object obj) {
@@ -268,9 +262,7 @@ public class BORNWbCsdXmlGenerator {
 		for(Prevention prevention:preventions) {
 			List<PreventionExt> exts = preventionExtDao.findByPreventionId(prevention.getId());
 			ImmunizationData immunizationData = patientInfo.addNewImmunizationData();
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(prevention.getPreventionDate());
-			immunizationData.setDateReceived(cal);
+			immunizationData.setDateReceived(new XmlCalendar(prevention.getPreventionDate()));
 			immunizationData.setVaccineName(prevention.getPreventionType()); 
 			/*
 			immunizationData.setVaccineDIN(arg0);
@@ -325,14 +317,29 @@ public class BORNWbCsdXmlGenerator {
 			if (demographic.getHcType().equals("QC")) patientInfo.setHealthCardType(2);
 		}
 
-		//TODO
-		/*
-		patientInfo.setResidentAddressLine1(arg0);
-		patientInfo.setResidentAddressLine2(arg0);
-		patientInfo.setResidentCity(arg0);
-		patientInfo.setResidentCountryProvince(arg0);
-		patientInfo.setResidentPostalCode(arg0);
-		*/
+		if (StringUtils.filled(demographic.getAddress())) patientInfo.setResidentAddressLine1(demographic.getAddress());
+		if (StringUtils.filled(demographic.getCity())) patientInfo.setResidentCity(demographic.getCity());
+		if (StringUtils.filled(demographic.getProvince())) {
+			String province = demographic.getProvince();
+			if (province.equals("AB")) patientInfo.setResidentCountryProvince(CountryProvince.CA_AB);
+			else if (province.equals("BC")) patientInfo.setResidentCountryProvince(CountryProvince.CA_BC);
+			else if (province.equals("MB")) patientInfo.setResidentCountryProvince(CountryProvince.CA_MB);
+			else if (province.equals("NB")) patientInfo.setResidentCountryProvince(CountryProvince.CA_NB);
+			else if (province.equals("NL")) patientInfo.setResidentCountryProvince(CountryProvince.CA_NL);
+			else if (province.equals("NT")) patientInfo.setResidentCountryProvince(CountryProvince.CA_NT);
+			else if (province.equals("NS")) patientInfo.setResidentCountryProvince(CountryProvince.CA_NS);
+			else if (province.equals("NU")) patientInfo.setResidentCountryProvince(CountryProvince.CA_NU);
+			else if (province.equals("ON")) patientInfo.setResidentCountryProvince(CountryProvince.CA_ON);
+			else if (province.equals("PE")) patientInfo.setResidentCountryProvince(CountryProvince.CA_PE);
+			else if (province.equals("QC")) patientInfo.setResidentCountryProvince(CountryProvince.CA_QC);
+			else if (province.equals("SK")) patientInfo.setResidentCountryProvince(CountryProvince.CA_SK);
+			else if (province.equals("YT")) patientInfo.setResidentCountryProvince(CountryProvince.CA_YT);
+			else if (province.startsWith("US")) patientInfo.setResidentCountryProvince(CountryProvince.USA);
+			else patientInfo.setResidentCountryProvince(CountryProvince.UNKN);
+		}
+		if (StringUtils.filled(demographic.getPostal())) {
+			patientInfo.setResidentPostalCode(demographic.getPostal().replace(" ", ""));
+		}
 
 		patientInfo.setOrganizationID(OscarProperties.getInstance().getProperty("born_orgcode"));
 
