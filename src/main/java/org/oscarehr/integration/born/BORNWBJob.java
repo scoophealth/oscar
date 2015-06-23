@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.helpers.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlOptions;
@@ -151,6 +152,12 @@ public class BORNWBJob implements OscarRunnable {
 					//load patient
 					Demographic demographic = demographicManager.getDemographic(x, demographicNo);
 
+					if(StringUtils.isEmpty(demographic.getHin())) {
+						logger.warn("skipping patient, no HIN");
+						continue;
+					}
+					
+					
 					//load providers that are authors (from all eforms?)
 					List<String> providerNos = eformDataDao.getProvidersForEforms(xml.getEformFdidMap().values());
 					List<Provider> authorList = providerManager.getProvidersByIds(x, providerNos);
