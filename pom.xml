@@ -657,7 +657,7 @@
 		<dependency>
 			<groupId>ca.bornontario</groupId>
 			<artifactId>BORNWBCSD</artifactId>
-			<version>1.5.2</version>
+			<version>1.5.3.1</version>
 		</dependency>
 
         <!-- FOR ORN Project - CKD config in XML format -->
