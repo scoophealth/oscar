@@ -58,15 +58,16 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.util.StringUtils;
-import ca.bornontario.wbcsd.CountryProvince;
 import ca.bornontario.wbcsd.BORNWBCSDBatch;
 import ca.bornontario.wbcsd.BORNWBCSDBatchDocument;
+import ca.bornontario.wbcsd.CountryProvince;
 import ca.bornontario.wbcsd.Gender;
 import ca.bornontario.wbcsd.HealthProblem;
 import ca.bornontario.wbcsd.ImmunizationData;
 import ca.bornontario.wbcsd.Medication;
 import ca.bornontario.wbcsd.PatientInfo;
 import ca.bornontario.wbcsd.ProblemsDiagnosisCodeSystem;
+import ca.bornontario.wbcsd.Vaccine;
 import ca.bornontario.wbcsd.VisitData;
 
 public class BORNWbCsdXmlGenerator {
@@ -258,12 +259,15 @@ public class BORNWbCsdXmlGenerator {
 			return;
 		}
 
+		ImmunizationData immunizationData = patientInfo.addNewImmunizationData();
+		
 		
 		for(Prevention prevention:preventions) {
+			Vaccine vaccine = immunizationData.addNewVaccine();
+			
 			List<PreventionExt> exts = preventionExtDao.findByPreventionId(prevention.getId());
-			ImmunizationData immunizationData = patientInfo.addNewImmunizationData();
-			immunizationData.setDateReceived(new XmlCalendar(prevention.getPreventionDate()));
-			immunizationData.setVaccineName(prevention.getPreventionType()); 
+			vaccine.setDateReceived(new XmlCalendar(prevention.getPreventionDate()));
+			vaccine.setVaccineName(prevention.getPreventionType()); 
 			/*
 			immunizationData.setVaccineDIN(arg0);
 			immunizationData.setDoseNum(arg0);
@@ -273,9 +277,9 @@ public class BORNWbCsdXmlGenerator {
 			*/
 			for(PreventionExt ext:exts) {
 				if("lot".equals(ext.getkeyval())) {
-					immunizationData.setLotNumber(ext.getVal());
+					vaccine.setLotNumber(ext.getVal());
 				} else if("comments".equals(ext.getkeyval())) {
-					immunizationData.setComments(ext.getVal());
+					vaccine.setComments(ext.getVal());
 				}
 			}
 			
