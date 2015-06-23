@@ -134,7 +134,7 @@ public class BORNWBJob implements OscarRunnable {
 					FileWriter fw = null;
 					try {
 						fw = new FileWriter(pathStr + File.separator + "born_wb_" + demographicNo + ".xml");
-						if(!testGen.addToStream(fw, opts, false)) {
+						if(!testGen.addToStream(fw, opts, true)) {
 							logger.debug("no record to write");
 						}
 					} finally {
@@ -312,7 +312,7 @@ public class BORNWBJob implements OscarRunnable {
 			os = new ByteArrayOutputStream();
 			pw = new PrintWriter(os, true);
 			//pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-			xmlCreated = xml.addToStream(pw, opts, false);
+			xmlCreated = xml.addToStream(pw, opts, true);
 
 			pw.close();
 			if (xmlCreated) return os.toByteArray();
