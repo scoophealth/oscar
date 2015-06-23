@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.helpers.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlOptions;
@@ -174,10 +175,17 @@ public class BORNWBCSDJob implements OscarRunnable {
 			//load patient
 			Demographic demographic = demographicManager.getDemographic(x, demographicNo);
 
-			//load providers that are authors (from all eforms?)
-			Provider p = providerManager.getProvider(x, demographic.getProviderNo());
+			if(StringUtils.isEmpty(demographic.getHin())) {
+				logger.warn("skipping patient, no HIN");
+				return;
+			}
+			
 			List<Provider> authorList = new ArrayList<Provider>();
-			authorList.add(p);
+			if(!StringUtils.isEmpty(demographic.getProviderNo())) {
+				//load providers that are authors (from all eforms?)
+				Provider p = providerManager.getProvider(x, demographic.getProviderNo());
+				authorList.add(p);
+			}
 
 			//Load the environment (still a bit in the works)
 			BornHialProperties props = getBornHialProperties();

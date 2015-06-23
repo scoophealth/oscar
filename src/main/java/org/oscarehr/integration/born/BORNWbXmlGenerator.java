@@ -44,7 +44,8 @@ import org.apache.xmlbeans.XmlCalendar;
 import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.XmlValidationError;
 import org.joda.time.LocalDate;
-import org.joda.time.Years;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -1861,11 +1862,29 @@ public class BORNWbXmlGenerator {
 	}
 
 	private boolean isAgeLessThan7y(PatientInfo patientInfo) {
+		
+		
+		LocalDate date1 = new LocalDate(LocalDate.fromCalendarFields(patientInfo.getDOB()));
+        LocalDate date2 = new LocalDate(new java.util.Date());
+        PeriodType monthDay = PeriodType.months();
+        Period difference = new Period(date1, date2, monthDay);
+        int months = difference.getMonths();
+        
+        if(months > ((12*6)+6)) {
+        	return false;
+        }
+        return true;
+        
+       //return months + 1; 
+        
+        /*
 		Years age = Years.yearsBetween(LocalDate.fromCalendarFields(patientInfo.getDOB()), new LocalDate());
+		
 		if (age.getYears() < 7) {
 			return true;
 		}
 		return false;
+		*/
 	}
 
 	/*
