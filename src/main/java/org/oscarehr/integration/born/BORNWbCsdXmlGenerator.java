@@ -26,7 +26,6 @@ package org.oscarehr.integration.born;
 import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -159,13 +158,9 @@ public class BORNWbCsdXmlGenerator {
 			
 			VisitData visitData = patientInfo.addNewVisitData();
 		
-			try {
-				XmlCalendar cal = new XmlCalendar();
-				cal.setTime(dateFormatter.parse(date));
-				visitData.setVisitDate(cal);
-			} catch(ParseException e) {
-				logger.warn("can't reparse date?");
-			}
+			XmlCalendar cal = new XmlCalendar(date);
+			visitData.setVisitDate(cal);
+			
 			
 			for(Object item:items) {
 				if(item instanceof Measurement) {
@@ -217,7 +212,7 @@ public class BORNWbCsdXmlGenerator {
 		}
 		problem.setProblemStatus(String.valueOf(dx.getStatus()));
 		
-		problem.setProblemDiagnosisDate(new XmlCalendar(dx.getStartDate()));
+		problem.setProblemDiagnosisDate(new XmlCalendar(dateFormatter.format(dx.getStartDate())));
 		/*
 		problem.setProblemOnsetDate(arg0);
 		*/
@@ -228,6 +223,18 @@ public class BORNWbCsdXmlGenerator {
 	
 		if(drug.getBrandName() != null && !drug.getBrandName().isEmpty()) {
 			medication.setMedicationName(drug.getBrandName());
+		}
+		
+		if(medication.getMedicationName()==null || medication.getMedicationName().isEmpty()) {
+			medication.setMedicationName(drug.getCustomName());
+		}
+		
+		if(medication.getMedicationName()==null || medication.getMedicationName().isEmpty()) {
+			medication.setMedicationName(drug.getGenericName());
+		}
+		
+		if(medication.getMedicationName()==null || medication.getMedicationName().isEmpty()) {
+			logger.warn("Could not find name for this drug! " + drug.getId());
 		}
 		
 		if(drug.getRegionalIdentifier() != null && !drug.getRegionalIdentifier().isEmpty()) {
@@ -247,7 +254,7 @@ public class BORNWbCsdXmlGenerator {
 		
 		medication.setMedicationFrequency(arg0);
 		*/
-		medication.setMedicationStartDate(new XmlCalendar(drug.getRxDate()));
+		medication.setMedicationStartDate(new XmlCalendar(dateFormatter.format(drug.getRxDate())));
 		
 	}
 	
@@ -274,7 +281,7 @@ public class BORNWbCsdXmlGenerator {
 			Vaccine vaccine = immunizationData.addNewVaccine();
 			
 			List<PreventionExt> exts = preventionExtDao.findByPreventionId(prevention.getId());
-			vaccine.setDateReceived(new XmlCalendar(prevention.getPreventionDate()));
+			vaccine.setDateReceived(new XmlCalendar(dateFormatter.format(prevention.getPreventionDate())));
 			vaccine.setVaccineName(prevention.getPreventionType()); 
 			/*
 			immunizationData.setVaccineDIN(arg0);

@@ -212,7 +212,12 @@
     </databaseap>
     <databaseap>
         <ap-name>age</ap-name>
-        <ap-sql>SELECT (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d')))-(RIGHT(CURRENT_DATE, 5) &lt; RIGHT(DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d'),5)) AS 'age' FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-sql>SELECT (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d')))-(RIGHT(CURRENT_DATE, 5) &lt; RIGHT(DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d'),5))  AS 'age' FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${age}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>age_in_months</ap-name>
+        <ap-sql>SELECT (MONTH(CURDATE()) - MONTH(DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d')))  - IF(DAYOFMONTH(CURDATE( )) &lt; DAYOFMONTH(DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d')),1,0) +  (12*(YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d')))-(RIGHT(CURRENT_DATE, 5) &lt; RIGHT(DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d'),5)))  AS 'age' FROM demographic demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${age}</ap-output>
     </databaseap>
     <databaseap>
