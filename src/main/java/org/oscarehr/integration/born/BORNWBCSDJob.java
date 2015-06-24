@@ -48,6 +48,7 @@ import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.jobs.OscarRunnable;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
@@ -86,7 +87,8 @@ public class BORNWBCSDJob implements OscarRunnable {
 	private MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	private DxresearchDAO dxResearchDAO = SpringUtils.getBean(DxresearchDAO.class);
 	private DrugDao drugDao = SpringUtils.getBean(DrugDao.class);
-
+	private PreventionDao preventionDao = SpringUtils.getBean(PreventionDao.class);
+	
 	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Override
@@ -124,6 +126,12 @@ public class BORNWBCSDJob implements OscarRunnable {
 				}
 			}
 			for (Integer i : drugDao.findNewDrugsSinceDemoKey("uploaded_to_BORN")) {
+				if (!demoIds.contains(i)) {
+					demoIds.add(i);
+				}
+			}
+			
+			for (Integer i : preventionDao.findNewPreventionsSinceDemoKey("uploaded_to_BORN")) {
 				if (!demoIds.contains(i)) {
 					demoIds.add(i);
 				}
