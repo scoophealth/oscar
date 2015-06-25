@@ -942,8 +942,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		if (demographic.getDemographicNo() != null) {
 			objExists = clientExistsThenEvict(demographic.getDemographicNo());
 		}
-
-		demographic.setLastUpdateDate(new Date());
+		
 		this.getHibernateTemplate().saveOrUpdate(demographic);
 
 		if (OscarProperties.getInstance().isHL7A04GenerationEnabled() && !objExists) {
