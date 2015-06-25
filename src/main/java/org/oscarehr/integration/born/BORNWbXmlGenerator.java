@@ -1896,7 +1896,7 @@ public class BORNWbXmlGenerator {
 
 	private boolean passBirthweightValidation(PatientInfo patientInfo) {
 		int ga = patientInfo.getGestationalAge();
-		int wks = (int) Math.floor(ga / 7);
+		int wks = (int) Math.ceil((double)ga / 7);
 		if (wks >= 20 && wks <= 22) {
 			if (patientInfo.getBirthWeight() >= 100 && patientInfo.getBirthWeight() <= 800) {
 				return true;
