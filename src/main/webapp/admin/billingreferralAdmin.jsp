@@ -38,6 +38,10 @@
 	if(request.getAttribute("searchBy")!=null) {
 		searchBy = (String)request.getAttribute("searchBy");
 	}
+	
+	String name = (String)request.getAttribute("name");
+	String specialty = (String)request.getAttribute("specialty");
+	String addressQ = (String)request.getAttribute("address");
 %>
 <html:html locale="true">
 <head>
@@ -56,12 +60,12 @@ function popupOscarRx(vheight,vwidth,varpage) {
 	windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
 	var popup=window.open(varpage, "ps_add", windowprops);
 	if (popup != null) {
-	if (popup.opener == null) {
-	popup.opener = self;
+		if (popup.opener == null) {
+			popup.opener = self;
+		}
+		popup.focus();
 	}
-	popup.focus();
-	}
-	}
+}
 
 
 function openAddSpecialist() {
@@ -89,16 +93,6 @@ function clearCheckedLabels(referralId) {
 }
 
 function printAllCheckedLabels() {
-	/*
-	var ids = "";
-	$("input[name^='checked_']:checked").each(function(){
-		if(ids.length>0) {
-			ids+=",";
-		}
-		ids += $(this).attr("name").substring(8);
-	});
-	location.href='<%=request.getContextPath() %>/printReferralLabelAction.do?ids='+ids;
-	*/
 	$("#checked_items_tbl tbody tr").remove();
 	$("#checked_items_tbl tbody").append("<tr><td>Processing. Refresh to get updated list</td></tr>");
 	location.href='<%=request.getContextPath() %>/printReferralLabelAction.do?useCheckList=true';
@@ -113,6 +107,12 @@ function updateCheckedList(data) {
 	for(var x=0;x<data.length;x++) {
 		$("#checked_items_tbl tbody").append("<tr><td>"+data[x].formattedName+"</td></tr>");
     }
+}
+
+function clearMe() {
+	$("#nameQuery").val('');
+	$("#specialtyQuery").val('');
+	$("#addressQuery").val('');
 }
 </script>
 <link href="<html:rewrite page='/css/displaytag.css'/>" rel="stylesheet" ></link>
@@ -138,22 +138,19 @@ function updateCheckedList(data) {
 
 
 <nested:form action="/admin/ManageBillingReferral">
-	<nested:hidden property="method" value="<%=searchBy %>"/>
-    <label>
-      <input type="radio" name="SearchBy" value="radio" value="searchByNo" id="SearchBy_0" <%=(searchBy.equals("searchByNo")?"checked=\"checked\" ":"") %> onclick="javascript:this.form.method.value='searchByNo'">
-      ReferralNo</label>
-    <label>
-      <input type="radio" name="SearchBy" value="radio" value="searchByName" id="SearchBy_1" <%=(searchBy.equals("searchByName")?"checked=\"checked\" ":"") %> onclick="javascript:this.form.method.value='searchByName'">
-      Name</label>
-      <label>
-      <input type="radio" name="SearchBy" value="radio" value="searchBySpecialty" id="SearchBy_2" <%=(searchBy.equals("searchBySpecialty")?"checked=\"checked\" ":"") %> onclick="javascript:this.form.method.value='searchBySpecialty'">
-      Specialty</label>
-      &nbsp;&nbsp;
-      <nested:text property="search"></nested:text>
+	 <nested:hidden property="method" value="advancedSearch"/>
+	 <input type="text" name="nameQuery" id="nameQuery" placeholder="Name or ReferralId" value="<%=(name != null)?name:""%>">
+	 &nbsp;
+	 <input type="text" name="specialtyQuery" id="specialtyQuery" placeholder="Specialty" value="<%=(specialty != null)?specialty:""%>">
+	  &nbsp;
+	 <input type="text" name="addressQuery" id="addressQuery" placeholder="Address" value="<%=(addressQ != null)?addressQ:""%>">
+	  
+    
 	<nested:submit style="border:1px solid #666666;">Search</nested:submit>
+	<nested:submit style="border:1px solid #666666;" onclick="clearMe()">Clear</nested:submit>
     <nested:submit style="border:1px solid #666666;" onclick="openAddSpecialist()">Add</nested:submit>
 </nested:form>
-
+<br/>
 <%
 	if(request.getAttribute("referrals") == null) {
 	%>
@@ -164,6 +161,7 @@ function updateCheckedList(data) {
 <display:table name="referrals" id="referral" class="its" pagesize="15" style="border:1px solid #666666; width:99%;margin-top:2px;" requestURI="ManageBillingReferral.do?method=list">
 	<%
     	ProfessionalSpecialist	ps = (ProfessionalSpecialist)pageContext.getAttribute("referral");
+	
 		String linkName = ps.getReferralNo();
 		if(oscar.util.StringUtils.isNullOrEmpty(ps.getReferralNo())) {
 			linkName = "N/A";
