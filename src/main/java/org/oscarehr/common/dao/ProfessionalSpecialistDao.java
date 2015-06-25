@@ -134,6 +134,7 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
 		return(findByEDataUrlNotNull().size()>0);
 	}
 	
+
 	public List<ProfessionalSpecialist> search(String keyword) {
 		StringBuilder where = new StringBuilder();
 		List<String> paramList = new ArrayList<String>();
@@ -162,5 +163,36 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
 		@SuppressWarnings("unchecked")
 		List<ProfessionalSpecialist> contacts = query.getResultList();
 		return contacts;
+	}
+	
+	public List<ProfessionalSpecialist> findByFullNameAndSpecialtyAndAddress(String lastName, String firstName, String specialty, String address) {
+		String sql = "select x from " + modelClass.getName() + " x WHERE (x.lastName like ? and x.firstName like ?) ";
+		
+		if(!StringUtils.isEmpty(specialty)) {
+			sql += " AND x.specialtyType LIKE ? ";
+		}
+		
+		if(!StringUtils.isEmpty(address)) {
+			sql += " AND x.streetAddress LIKE ? ";
+		}
+		
+		sql += " order by x.lastName";
+		
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, "%"+lastName+"%");
+		query.setParameter(2, "%"+firstName+"%");
+
+		int index=3;
+		if(!StringUtils.isEmpty(specialty)) {
+			query.setParameter(index++, "%" + specialty +"%");
+		}
+		if(!StringUtils.isEmpty(address)) {
+			query.setParameter(index++, "%" + address +"%");
+		}
+		
+		@SuppressWarnings("unchecked")
+		List<ProfessionalSpecialist> cList = query.getResultList();
+
+		return cList;
 	}
 }
