@@ -46,6 +46,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.ConversionUtils;
+import oscar.util.StringUtils;
 
 public class EctConsultationFormRequestUtil {
 
@@ -112,18 +113,22 @@ public class EctConsultationFormRequestUtil {
 			patientFirstName = demographic.getFirstName();
 			patientLastName = demographic.getLastName();
 			patientName = demographic.getFormattedName();
+			
 			StringBuilder patientAddressSb = new StringBuilder();
-			patientAddressSb.append(demographic.getAddress()).append("<br>").append(demographic.getCity()).append(",").append(demographic.getProvince()).append(",").append(demographic.getPostal());
+			patientAddressSb.append(StringUtils.noNull(demographic.getAddress())).append("<br>")
+							.append(StringUtils.noNull(demographic.getCity())).append(",")
+							.append(StringUtils.noNull(demographic.getProvince())).append(",")
+							.append(StringUtils.noNull(demographic.getPostal()));
 			patientAddress = patientAddressSb.toString();
-			patientPhone = demographic.getPhone();
-			patientWPhone = demographic.getPhone2();
-			patientEmail = demographic.getEmail();
+			patientPhone = StringUtils.noNull(demographic.getPhone());
+			patientWPhone = StringUtils.noNull(demographic.getPhone2());
+			patientEmail = StringUtils.noNull(demographic.getEmail());
 			patientDOB = demographic.getFormattedDob();
-			patientHealthNum = demographic.getHin();
+			patientHealthNum = StringUtils.noNull(demographic.getHin());
 			patientSex = demographic.getSex();
-			patientHealthCardType = demographic.getHcType();
-			patientHealthCardVersionCode = demographic.getVer();
-			patientChartNo = demographic.getChartNo();
+			patientHealthCardType = StringUtils.noNull(demographic.getHcType());
+			patientHealthCardVersionCode = StringUtils.noNull(demographic.getVer());
+			patientChartNo = StringUtils.noNull(demographic.getChartNo());
 			patientAge = demographic.getAge();
 			mrp = demographic.getFamilyDoctor();
 

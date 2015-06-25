@@ -263,6 +263,8 @@ public class DemographicManager {
 		}
 
 		demographic.setPatientStatus(PatientStatus.AC.name());
+		demographic.setFamilyDoctor("<rdohip></rdohip><rd></rd>");
+		demographic.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
 		demographicDao.save(demographic);
 
 		Admission admission = new Admission();
@@ -301,6 +303,7 @@ public class DemographicManager {
 		demographic.setSubRecord(prevDemo.getSubRecord());
 		
 		//save current demo
+		demographic.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
 		demographicDao.save(demographic);
 
 		if (demographic.getExtras() != null) {
@@ -323,6 +326,7 @@ public class DemographicManager {
 		}
 
 		//save current demo
+		demographic.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
 		demographicDao.save(demographic);
 
 		if (demographic.getExtras() != null) {
@@ -372,6 +376,7 @@ public class DemographicManager {
 	public void deleteDemographic(LoggedInInfo loggedInInfo, Demographic demographic) {
 		demographicArchiveDao.archiveRecord(demographic);
 		demographic.setPatientStatus(Demographic.PatientStatus.DE.name());
+		demographic.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
 		demographicDao.save(demographic);
 
 		for (DemographicExt ext : getDemographicExts(loggedInInfo, demographic.getDemographicNo())) {
