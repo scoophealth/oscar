@@ -165,7 +165,7 @@ public class TicklerDAO extends HibernateDaoSupport {
 
             
             paramList.add(filter.getStart_date());
-            paramList.add(new Date(filter.getEnd_date().getTime()+DateUtils.MILLIS_PER_DAY));
+            paramList.add(new Date(filter.getEnd_date().getTime()+DateUtils.MILLIS_PER_DAY-1));
             
             if(includeMRPClause) {
             	query = "select t from Tickler t, Demographic d where t.service_date >= ? and t.service_date <= ? and d.DemographicNo = cast(t.demographic_no as integer) and d.ProviderNo = '" + filter.getMrp() + "'";
