@@ -649,8 +649,17 @@ function changeSite(sel) {
 } else {
 %>
         <select id="assignedTo" name="assignedTo">
-        <option value="all" <%=assignedTo.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
-        <%
+        <% 
+        // Check for property to default assigned provider and if present - default to user logged in
+        	boolean ticklerDefaultAssignedProvier = OscarProperties.getInstance().isPropertyActive("tickler_default_assigned_provider");
+        	if (ticklerDefaultAssignedProvier) { 
+        		if("all".equals(assignedTo)) {
+        			assignedTo = user_no;
+        		}
+        	}
+        %>
+        	<option value="all" <%=assignedTo.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
+        <% 	
         	List<Provider> providersActive = providerDao.getActiveProviders(); 
                                     for (Provider p : providersActive) {
         %>
