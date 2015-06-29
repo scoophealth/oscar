@@ -109,7 +109,9 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     public static final String PENDINGDOCS="pendingDocs";
     public static final String UPLOAD_INCOMING_DOCUMENT_FOLDER="upload_incoming_document_folder";
     public static final String HIDE_OLD_ECHART_LINK_IN_APPT="hide_old_echart_link_in_appointment";
+    public static final String DISABLE_BORN_PROMPTS = "disable_born_prompts";
 
+    
     public static final String INTEGRATOR_DEMOGRAPHIC_SYNC = "integrator_demographic_sync";
     public static final String INTEGRATOR_DEMOGRAPHIC_ISSUES = "integrator_demographic_issues";
     public static final String INTEGRATOR_DEMOGRAPHIC_CONSENT = "integrator_demographic_consent";
