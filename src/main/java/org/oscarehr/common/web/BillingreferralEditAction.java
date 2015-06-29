@@ -160,7 +160,13 @@ public class BillingreferralEditAction extends DispatchAction{
     	String name = request.getParameter("nameQuery");
     	String specialty = request.getParameter("specialtyQuery");
     	String address = request.getParameter("addressQuery");
-
+    	String pShowHidden = request.getParameter("showHidden");
+    	Boolean showHidden;
+    	if(pShowHidden != null && "on".equals(pShowHidden)) {
+    		showHidden=true;
+    	} else {
+    		showHidden=false;
+    	}
     	Integer referralNo = null;
     	
     	//check if it's a referralNo
@@ -188,7 +194,7 @@ public class BillingreferralEditAction extends DispatchAction{
                     first_name = name.substring(name.indexOf(',') + 1, name.length());
                 }
             } 
-            referrals = psDao.findByFullNameAndSpecialtyAndAddress(last_name, first_name, specialty,address);    
+            referrals = psDao.findByFullNameAndSpecialtyAndAddress(last_name, first_name, specialty,address,showHidden);    
     	}
     	
     	if(referrals.isEmpty()) {
@@ -199,6 +205,7 @@ public class BillingreferralEditAction extends DispatchAction{
         request.setAttribute("name", name);
         request.setAttribute("specialty",specialty);
         request.setAttribute("address",address);
+        request.setAttribute("showHidden",showHidden);
         return mapping.findForward("list");
     }
     

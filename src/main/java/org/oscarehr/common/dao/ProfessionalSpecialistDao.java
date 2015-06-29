@@ -165,7 +165,7 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
 		return contacts;
 	}
 	
-	public List<ProfessionalSpecialist> findByFullNameAndSpecialtyAndAddress(String lastName, String firstName, String specialty, String address) {
+	public List<ProfessionalSpecialist> findByFullNameAndSpecialtyAndAddress(String lastName, String firstName, String specialty, String address, Boolean showHidden) {
 		String sql = "select x from " + modelClass.getName() + " x WHERE (x.lastName like ? and x.firstName like ?) ";
 		
 		if(!StringUtils.isEmpty(specialty)) {
@@ -176,6 +176,9 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
 			sql += " AND x.streetAddress LIKE ? ";
 		}
 		
+		if(showHidden == null || !showHidden) {
+			sql += " AND x.hideFromView=false ";
+		}
 		sql += " order by x.lastName";
 		
 		Query query = entityManager.createQuery(sql);
