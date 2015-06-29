@@ -755,7 +755,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	public void sortIssuesByOrderId(ArrayList<CheckBoxBean> checkBoxBeanList) {
 		Comparator<CheckBoxBean> cbbComparator = new Comparator<CheckBoxBean>() {
 			public int compare(CheckBoxBean o1, CheckBoxBean o2) {
-				if (o1.getIssueDisplay() != null && o2.getIssueDisplay() != null && o1.getIssueDisplay().sortOrderId != null) {
+				if (o1.getIssueDisplay() != null && o2.getIssueDisplay() != null && o1.getIssueDisplay().sortOrderId != null && o2.getIssueDisplay().sortOrderId != null) {
 					return (o1.getIssueDisplay().sortOrderId.compareTo(o2.getIssueDisplay().sortOrderId));
 				} else return (0);
 			}
