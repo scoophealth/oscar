@@ -282,6 +282,10 @@ public class ProviderManager2 {
 			settings.setUseMyMeds(Boolean.valueOf(map.get("use_mymeds").getValue()));
 		}
 		
+		if(map.get("disable_born_prompts") != null) {
+			settings.setDisableBornPrompts("Y".equals(map.get("disable_born_prompts").getValue()));
+		}
+		
 		if(map.get("hide_old_echart_link_in_appointment") != null) {
 			settings.setHideOldEchartLinkInAppointment("Y".equals(map.get("hide_old_echart_link_in_appointment").getValue()));
 		}
@@ -483,6 +487,9 @@ public class ProviderManager2 {
 		p.setValue(settings.getMyDrugRefId());	
 		p = getMappedOrNewProperty(map, "use_mymeds", providerNo);
 		p.setValue(String.valueOf(settings.isUseMyMeds()));
+		p = getMappedOrNewProperty(map, "disable_born_prompts", providerNo);
+		p.setValue(String.valueOf(settings.isDisableBornPrompts()));
+		
 		p = getMappedOrNewProperty(map, "hide_old_echart_link_in_appointment", providerNo);
 		p.setValue(settings.isHideOldEchartLinkInAppointment() ? "Y" : "N");
 		

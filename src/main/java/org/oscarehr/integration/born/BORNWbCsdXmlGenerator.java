@@ -103,7 +103,7 @@ public class BORNWbCsdXmlGenerator {
 		////business validation
 		//business validation
 		if (!isAgeLessThan7y(patientInfo)) {
-			MiscUtils.getLogger().warn("Child is over 6years old..skipping");
+			MiscUtils.getLogger().warn("Child is over 6.5 years old..skipping");
 			return false;
 		}
 				
@@ -196,19 +196,23 @@ public class BORNWbCsdXmlGenerator {
 	}
 	
 	private void populateProblem(VisitData visitData, Dxresearch dx) {
+		
+		if(!"icd9".equals(dx.getCodingSystem())) {
+			return;
+		}
+		
 		HealthProblem problem = visitData.addNewHealthProblem();
 		
 		
 		problem.setProblemDiagnosisCode(dx.getDxresearchCode());
 		
-		if("icd9".equals(dx.getCodingSystem())) {
-			problem.setProblemDiagnosisCodeSystem(ProblemsDiagnosisCodeSystem.ICD_9);
-			
-			CodingSystemManager csm = SpringUtils.getBean(CodingSystemManager.class);
-			String descr = csm.getCodeDescription(dx.getCodingSystem(), dx.getDxresearchCode());
-			if(descr != null) {
-				problem.setProblemDiagnosisName(descr);
-			}
+		problem.setProblemDiagnosisCodeSystem(ProblemsDiagnosisCodeSystem.ICD_9);
+		
+		
+		CodingSystemManager csm = SpringUtils.getBean(CodingSystemManager.class);
+		String descr = csm.getCodeDescription(dx.getCodingSystem(), dx.getDxresearchCode());
+		if(descr != null) {
+			problem.setProblemDiagnosisName(descr);
 		}
 		problem.setProblemStatus(String.valueOf(dx.getStatus()));
 		
@@ -376,7 +380,7 @@ public class BORNWbCsdXmlGenerator {
         Period difference = new Period(date1, date2, monthDay);
         int months = difference.getMonths();
         
-        if(months > ((12*6)+6)) {
+        if(months >= ((12*6)+6)) {
         	return false;
         }
         return true;
