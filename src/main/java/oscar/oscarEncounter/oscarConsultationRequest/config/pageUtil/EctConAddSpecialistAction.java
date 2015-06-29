@@ -166,5 +166,6 @@ public class EctConAddSpecialistAction extends Action {
 		professionalSpecialist.setCellPhoneNumber(addSpecailistForm.getCellPhoneNumber());
 		professionalSpecialist.setPagerNumber(addSpecailistForm.getPagerNumber());
 		professionalSpecialist.setSalutation(addSpecailistForm.getSalutation());
+		professionalSpecialist.setHideFromView(addSpecailistForm.getHideFromView());
 	}
 }
