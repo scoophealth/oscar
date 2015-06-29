@@ -43,6 +43,7 @@
 	String name = (String)request.getAttribute("name");
 	String specialty = (String)request.getAttribute("specialty");
 	String addressQ = (String)request.getAttribute("address");
+	Boolean checked = (Boolean)request.getAttribute("showHidden");
 %>
 <html:html locale="true">
 <head>
@@ -71,6 +72,7 @@ function popupOscarRx(vheight,vwidth,varpage) {
 
 function openAddSpecialist() {
 	popupOscarRx(625,1024,'../oscarEncounter/oscarConsultationRequest/config/AddSpecialist.jsp');
+	return false;
 }
 
 function openEditSpecialist(specId) {
@@ -113,6 +115,7 @@ function updateCheckedList(data) {
 function clearMe() {
 	$("#nameQuery").val('');
 	$("#specialtyQuery").val('');
+	$("#showHidden").prop('checked',false);
 	$("#addressQuery").val('');
 }
 </script>
@@ -145,11 +148,13 @@ function clearMe() {
 	 <input type="text" name="specialtyQuery" id="specialtyQuery" placeholder="Specialty" value="<%=(specialty != null)?specialty:""%>">
 	  &nbsp;
 	 <input type="text" name="addressQuery" id="addressQuery" placeholder="Address" value="<%=(addressQ != null)?addressQ:""%>">
-	  
+	  &nbsp;
+	  Include hidden:
+	  <input type="checkbox" name="showHidden" id="showHidden" <%=(checked!=null&&checked)?" checked=\"checked\" ":"" %> />
     
 	<nested:submit style="border:1px solid #666666;">Search</nested:submit>
 	<nested:submit style="border:1px solid #666666;" onclick="clearMe()">Clear</nested:submit>
-    <nested:submit style="border:1px solid #666666;" onclick="openAddSpecialist()">Add</nested:submit>
+    <nested:submit style="border:1px solid #666666;" onclick="return openAddSpecialist()">Add</nested:submit>
 </nested:form>
 <br/>
 <%
