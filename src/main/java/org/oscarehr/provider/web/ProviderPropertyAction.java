@@ -1,4 +1,4 @@
-/**
+	/**
  *
  * Copyright (c) 2005-2012. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -2259,6 +2259,73 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 		return actionmapping.findForward("genHideOldEchartLinkInAppt");
     }
 
+    
+    public ActionForward viewBornPrefs(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
+    	DynaActionForm frm = (DynaActionForm)actionform;
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+		UserProperty prop = this.userPropertyDAO.getProp(providerNo, UserProperty.DISABLE_BORN_PROMPTS);
+
+		String propValue="";
+		if (prop == null){
+			prop = new UserProperty();
+		}else{
+			propValue=prop.getValue();
+		}
+
+		boolean checked;
+		if(propValue.equals("Y"))
+			checked=true;
+		else
+			checked=false;
+
+		prop.setChecked(checked);
+		request.setAttribute("bornPromptsProperty", prop);
+		request.setAttribute("providertitle","provider.bornPrefs.title"); 
+		request.setAttribute("providermsgPrefs","provider.bornPrefs.msgPrefs"); //=Preferences
+		request.setAttribute("providerbtnSubmit","provider.bornPrefs.btnSubmit"); //=Save
+		request.setAttribute("providerbtnCancel","provider.bornPrefs.btnCancel"); //=Cancel
+		request.setAttribute("method","saveBornPrefs");
+
+		frm.set("bornPromptsProperty", prop);
+
+		return actionmapping.findForward("genBornPrefs");
+    }
+
+    public ActionForward saveBornPrefs(ActionMapping actionmapping,ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+    	DynaActionForm frm=(DynaActionForm)actionform;
+    	UserProperty Uprop=(UserProperty)frm.get("bornPromptsProperty");
+
+		boolean checked=false;
+		if(Uprop!=null)
+			checked = Uprop.isChecked();
+		UserProperty prop=this.userPropertyDAO.getProp(providerNo, UserProperty.DISABLE_BORN_PROMPTS);
+		if(prop==null){
+			prop=new UserProperty();
+			prop.setName(UserProperty.DISABLE_BORN_PROMPTS);
+			prop.setProviderNo(providerNo);
+		}
+		String propValue="N";
+		if(checked) propValue="Y";
+
+		prop.setValue(propValue);
+		this.userPropertyDAO.saveProp(prop);
+
+		request.setAttribute("status", "success");
+		request.setAttribute("bornPromptsProperty",prop);
+		request.setAttribute("providertitle","provider.bornPrefs.title"); 
+		request.setAttribute("providermsgPrefs","provider.bornPrefs.msgPrefs"); //=Preferences
+		request.setAttribute("providerbtnClose","provider.bornPrefs.btnClose"); //=Close
+		if(checked)
+			request.setAttribute("providermsgSuccess","provider.bornPrefs.msgSuccess_selected"); 
+		else
+			request.setAttribute("providermsgSuccess","provider.bornPrefs.msgSuccess_unselected"); 
+		request.setAttribute("method","saveBornPrefs");
+
+		return actionmapping.findForward("genBornPrefs");
+	}
     
     /**
      * Creates a new instance of ProviderPropertyAction

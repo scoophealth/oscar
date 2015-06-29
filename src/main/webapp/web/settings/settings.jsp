@@ -707,6 +707,21 @@
 				<td ng-hide="app.authenticated"><a ng-click="authenticate(app)">Authenticate</a></td>
 			</tr>
 		</table>
+		
+		<div class="form-group">
+		  <label>BORN prompts in RBR/NDDS:</label>
+		  <div class="controls">
+		    <label class="radio inline" for="radios-int-0">
+		      <input name="radios-int-0" id="radios-int-0" ng-model="pref.disableBornPrompts" ng-value="true" type="radio">
+		      Disable
+		    </label>
+		    <label class="radio inline" for="radios-int-1">
+		      <input name="radios-int-1" id="radios-int-1" ng-model="pref.disableBornPrompts" ng-value="false" type="radio">
+		      Enable
+		    </label>  
+		  </div>
+		</div>	
+		
 	</div>
 </div>
  	</form>
