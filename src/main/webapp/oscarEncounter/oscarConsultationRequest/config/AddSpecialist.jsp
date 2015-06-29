@@ -197,6 +197,7 @@ function BackToOscar() {
                           				   thisForm.setCellPhoneNumber((String)request.getAttribute("cellPhoneNumber"));
 				                           thisForm.setPagerNumber((String)request.getAttribute("pagerNumber"));
 				                           thisForm.setSalutation((String)request.getAttribute("salutation"));
+				                           thisForm.setHideFromView((Boolean) request.getAttribute("hideFromView"));
 
 						   %>
 						   	<script>
@@ -320,6 +321,15 @@ function BackToOscar() {
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eDataServiceName" /></td>
 							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataServiceName" /></td>
+						</tr>
+						<tr>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.hideFromView" /></td>
+							<td colspan="5">
+								<html:select name="EctConAddSpecialistForm" property="hideFromView">
+									<html:option value="false"></html:option>
+									<html:option value="true"></html:option>
+								</html:select>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="6">

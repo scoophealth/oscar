@@ -101,6 +101,7 @@ public class EctConEditSpecialistsAction extends Action {
         request.setAttribute("cellPhoneNumber",professionalSpecialist.getCellPhoneNumber());
         request.setAttribute("pagerNumber",professionalSpecialist.getPagerNumber());
         request.setAttribute("salutation",professionalSpecialist.getSalutation());
+        request.setAttribute("hideFromView",professionalSpecialist.getHideFromView());
 
 		request.setAttribute("upd", new Integer(updater));
 		EctConConstructSpecialistsScriptsFile constructSpecialistsScriptsFile = new EctConConstructSpecialistsScriptsFile();
