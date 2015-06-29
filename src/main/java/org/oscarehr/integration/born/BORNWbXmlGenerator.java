@@ -1870,21 +1870,12 @@ public class BORNWbXmlGenerator {
         Period difference = new Period(date1, date2, monthDay);
         int months = difference.getMonths();
         
-        if(months > ((12*6)+6)) {
+        if(months >= ((12*6)+6)) {
         	return false;
         }
         return true;
         
-       //return months + 1; 
-        
-        /*
-		Years age = Years.yearsBetween(LocalDate.fromCalendarFields(patientInfo.getDOB()), new LocalDate());
-		
-		if (age.getYears() < 7) {
-			return true;
-		}
-		return false;
-		*/
+     
 	}
 
 	/*

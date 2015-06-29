@@ -100,7 +100,7 @@ public class ProviderSettings {
 	private String olisDefaultExcludeReportingLab = "";
 	private String myDrugRefId;
 	private boolean useMyMeds;
-	
+	private boolean disableBornPrompts;
 	
 	
 	
@@ -441,6 +441,12 @@ public class ProviderSettings {
 	}
 	public void setUseCobaltOnLogin(boolean useCobaltOnLogin) {
 		this.useCobaltOnLogin = useCobaltOnLogin;
+	}
+	public boolean isDisableBornPrompts() {
+		return disableBornPrompts;
+	}
+	public void setDisableBornPrompts(boolean disableBornPrompts) {
+		this.disableBornPrompts = disableBornPrompts;
 	}
 	
 	

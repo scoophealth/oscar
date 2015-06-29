@@ -341,7 +341,7 @@ public class BORNWBCSDJob implements OscarRunnable {
 			os = new ByteArrayOutputStream();
 			pw = new PrintWriter(os, true);
 			//pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-			xmlCreated = xml.addToStream(pw, opts, demographicNo, false);
+			xmlCreated = xml.addToStream(pw, opts, demographicNo, true);
 
 			pw.close();
 			if (xmlCreated) return os.toByteArray();

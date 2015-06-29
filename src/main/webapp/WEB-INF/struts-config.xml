@@ -287,6 +287,8 @@
 			<form-property name="appointmentCardName" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="appointmentCardPhone" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="appointmentCardFax" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="bornPromptsProperty" type="org.oscarehr.common.model.UserProperty" />
+			
 		</form-bean>
 		<form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="myOscarLoginId" type="java.lang.String" />
@@ -1570,7 +1572,8 @@
             <forward name="genDisplayDocumentAs"			path="/provider/setDisplayDocumentAs.jsp"/>
             <forward name="genCobalt"						path="/provider/setCobalt.jsp"/>
             <forward name="genHideOldEchartLinkInAppt"		path="/provider/setHideOldEchartLinkInAppt.jsp"/>
-             <forward name="genAppointmentCardPrefs"     path="/provider/setAppointmentCardPrefs.jsp"/>
+            <forward name="genAppointmentCardPrefs"     path="/provider/setAppointmentCardPrefs.jsp"/>
+            <forward name="genBornPrefs"     path="/provider/setBornPrefs.jsp"/>
 
         </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
