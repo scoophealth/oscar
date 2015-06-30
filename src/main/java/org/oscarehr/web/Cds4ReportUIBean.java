@@ -283,7 +283,7 @@ public final class Cds4ReportUIBean {
 					
 					CdsClientForm form = cdsClientFormDao.findLatestByFacilityClient(loggedInInfo.getCurrentFacility().getId(), admission.getClientId());
 					
-					if(!form.getProviderNo().equals(admission.getProviderNo())) {
+					if(form != null && !form.getProviderNo().equals(admission.getProviderNo())) {
 						//we know the provider who did the latest one isn't the one that did the admission, and this gets missed in the report.
 						//lets add the admission in this case of a staff change...if the provider is in our list
 						
