@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Chartlabel" pageWidth="350" pageHeight="75" columnWidth="330" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Chartlabel" pageWidth="240" pageHeight="75" columnWidth="240" leftMargin="0" rightMargin="0" topMargin="9" bottomMargin="0">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -38,23 +38,23 @@
 		<variableExpression><![CDATA[new java.lang.Integer($F{year_of_birth})]]></variableExpression>
 	</variable>
 	<title>
-		<band height="60" splitType="Stretch">
+		<band height="66" splitType="Stretch">
 			<textField>
-				<reportElement x="10" y="0" width="330" height="20" stretchType="RelativeToBandHeight"/>
+				<reportElement x="10" y="0" width="225" height="22" stretchType="RelativeToBandHeight"/>
 				<textElement markup="html">
 					
 				</textElement>
 				<textFieldExpression><![CDATA["<b>Last:</b>" + $F{last_name} + ";<b>First:</b>" + $F{first_name} + ";<b>ID#:</b>" + $F{demographic_no}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="10" y="20" width="330" height="20" stretchType="RelativeToBandHeight"/>
+				<reportElement x="10" y="20" width="225" height="22" stretchType="RelativeToBandHeight"/>
 				<textElement markup="html"/>
-				<textFieldExpression><![CDATA["<b>HIN:</b>" + $F{hin} + " " + $F{ver} + ";<b>DOB (yyyy/mm/dd):</b>"  +$F{year_of_birth} + "/" + $F{month_of_birth} + "/" + $F{date_of_birth} + ";<b>Age:</b>" + $F{age} ]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<b>Sex:</b>" + $F{sex} + ";<b>DOB (y/m/d):</b>"  +$F{year_of_birth} + "/" + $F{month_of_birth} + "/" + $F{date_of_birth} + ";<b>Age:</b>" + $F{age} ]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="10" y="40" width="330" height="20" stretchType="RelativeToBandHeight"/>
+				<reportElement x="10" y="40" width="225" height="22" stretchType="RelativeToBandHeight"/>
 				<textElement markup="html"/>
-				<textFieldExpression><![CDATA["<b>Sex:</b>" + $F{sex} + ";<b>Collect Date:</b>" + new java.text.SimpleDateFormat("dd/MM/yyyy").format(new Date()) + ";<b>Clinic:</b>" + $P{program} ]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<b>Date:</b>" + new java.text.SimpleDateFormat("dd/MM/yyyy").format(new Date()) + ";<b>Clinic:</b>" + $P{program} ]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
