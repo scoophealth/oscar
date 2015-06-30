@@ -239,6 +239,7 @@
 <script language="javascript" src="<%=request.getContextPath() %>/hcHandler/hcHandler.js"></script>
 <script language="javascript" src="<%=request.getContextPath() %>/hcHandler/hcHandlerUpdateDemographic.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath() %>/hcHandler/hcHandler.css" type="text/css" />
+<link rel="stylesheet" href="<%=request.getContextPath() %>/demographic/demographiceditdemographic.css" type="text/css" />
 <% } %>
 
 <!-- main calendar program -->
@@ -281,77 +282,10 @@
    </script>
 <oscar:customInterface section="master"/>
 
+<script type="text/javascript" src="<%=request.getContextPath() %>/demographic/demographiceditdemographic.js"></script>
+
 <script language="JavaScript" type="text/javascript">
 
-function rs(n,u,w,h,x) {
-  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=360,left=30";
-  remote=window.open(u,n,args);
-  if (remote != null) {
-    if (remote.opener == null)
-      remote.opener = self;
-  }
-  if (x == 1) { return remote; }
-}
-
-var awnd=null;
-function ScriptAttach() {
-  awnd=rs('swipe','zdemographicswipe.htm',600,600,1);
-  awnd.focus();
-}
-
-function setfocus() {
-  this.focus();
-  document.titlesearch.keyword.focus();
-  document.titlesearch.keyword.select();
-}
-function upCaseCtrl(ctrl) {
-	ctrl.value = ctrl.value.toUpperCase();
-}
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
-  var popup=window.open(page, "demodetail", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
-    }
-    popup.focus();
-  }
-}
-
-
-function popupEChart(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
-  var popup=window.open(page, "encounter", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
-    }
-    popup.focus();
-  }
-}
-function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
-  var page = varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "oscarRx", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
-    }
-    popup.focus();
-  }
-}
-function popupS(varpage) {
-	if (! window.focus)return true;
-	var href;
-	if (typeof(varpage) == 'string')
-	   href=varpage;
-	else
-	   href=varpage.href;
-	window.open(href, "fullwin", ',type=fullWindow,fullscreen,scrollbars=yes');
-	return false;
-}
 function checkTypeIn() {
   var dob = document.titlesearch.keyword; typeInOK = false;
 
@@ -444,35 +378,7 @@ function checkHin() {
 	return(true);
 }
 
-function checkRosterStatus() {
-	if (rosterStatusChangedNotBlank()) {
-		if (document.updatedelete.roster_status.value=="RO") { //Patient rostered
-			if (!rosterStatusDateValid(false)) return false;
-		}
-		else {
-			if (!rosterStatusTerminationDateValid(false)) return false;
-			if (!rosterStatusTerminationReasonNotBlank()) return false;
-		}
-	}
 
-	if (rosterStatusDateAllowed()) {
-		if (document.updatedelete.roster_status.value=="RO") { //Patient rostered
-			if (!rosterStatusDateValid(false)) return false;
-		}
-		else {
-			if (!rosterStatusTerminationDateValid(true)) return false;
-		}
-	} else {
-		return false;
-	}
-	if (!rosterStatusDateValid(true)) return false;
-	if (!rosterStatusTerminationDateValid(true)) return false;
-	return true;
-}
-
-function rosterStatusChanged() {
-	return (document.updatedelete.initial_rosterstatus.value!=document.updatedelete.roster_status.value);
-}
 
 function rosterStatusChangedNotBlank() {
 	if (rosterStatusChanged()) {
@@ -535,16 +441,6 @@ function rosterStatusTerminationReasonNotBlank() {
 	return true;
 }
 
-function checkPatientStatus() {
-	if (patientStatusChanged()) {
-		return patientStatusDateValid(false);
-	}
-	return patientStatusDateValid(true);
-}
-
-function patientStatusChanged() {
-	return (document.updatedelete.initial_patientstatus.value!=document.updatedelete.patient_status.value);
-}
 
 function patientStatusDateValid(trueIfBlank) {
     var yyyy = document.updatedelete.patientstatus_date_year.value.trim();
@@ -558,43 +454,7 @@ function patientStatusDateValid(trueIfBlank) {
 }
 
 
-function checkSex() {
-	var sex = document.updatedelete.sex.value;
-	
-	if(sex.length == 0)
-	{
-		alert ("You must select a Gender.");
-		return(false);
-	}
 
-	return(true);
-}
-
-
-function checkTypeInEdit() {
-  if ( !checkName() ) return false;
-  if ( !checkDob() ) return false;
-  if ( !checkHin() ) return false;
-  if ( !checkSex() ) return false;
-  if ( !checkRosterStatus() ) return false;
-  if ( !checkPatientStatus() ) return false;
-  return(true);
-}
-
-function formatPhoneNum() {
-    if (document.updatedelete.phone.value.length == 10) {
-        document.updatedelete.phone.value = document.updatedelete.phone.value.substring(0,3) + "-" + document.updatedelete.phone.value.substring(3,6) + "-" + document.updatedelete.phone.value.substring(6);
-        }
-    if (document.updatedelete.phone.value.length == 11 && document.updatedelete.phone.value.charAt(3) == '-') {
-        document.updatedelete.phone.value = document.updatedelete.phone.value.substring(0,3) + "-" + document.updatedelete.phone.value.substring(4,7) + "-" + document.updatedelete.phone.value.substring(7);
-    }
-    if (document.updatedelete.phone2.value.length == 10) {
-        document.updatedelete.phone2.value = document.updatedelete.phone2.value.substring(0,3) + "-" + document.updatedelete.phone2.value.substring(3,6) + "-" + document.updatedelete.phone2.value.substring(6);
-        }
-    if (document.updatedelete.phone2.value.length == 11 && document.updatedelete.phone2.value.charAt(3) == '-') {
-        document.updatedelete.phone2.value = document.updatedelete.phone2.value.substring(0,3) + "-" + document.updatedelete.phone2.value.substring(4,7) + "-" + document.updatedelete.phone2.value.substring(7);
-    }
-}
 
 function checkONReferralNo() {
 	<%
@@ -609,18 +469,6 @@ function checkONReferralNo() {
   <% } %>
 }
 
-
-  //
-function rs(n,u,w,h,x) {
-  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
-  remote=window.open(u,n,args);
-}
-function referralScriptAttach2(elementName, name2) {
-     var d = elementName;
-     t0 = escape("document.forms[1].elements[\'"+d+"\'].value");
-     t1 = escape("document.forms[1].elements[\'"+name2+"\'].value");
-     rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&param2='+t1),600,600,1);
-}
 
 function newStatus() {
     newOpt = prompt("<bean:message key="demographic.demographiceditdemographic.msgPromptStatus"/>:", "");
@@ -645,25 +493,6 @@ function newStatus1() {
         alert("<bean:message key="demographic.demographiceditdemographic.msgInvalidEntry"/>");
     }
 }
-
-function removeAccents(s){
-        var r=s.toLowerCase();
-        r = r.replace(new RegExp("\\s", 'g'),"");
-        r = r.replace(new RegExp("[������]", 'g'),"a");
-        r = r.replace(new RegExp("�", 'g'),"ae");
-        r = r.replace(new RegExp("�", 'g'),"c");
-        r = r.replace(new RegExp("[����]", 'g'),"e");
-        r = r.replace(new RegExp("[����]", 'g'),"i");
-        r = r.replace(new RegExp("�", 'g'),"n");
-        r = r.replace(new RegExp("[�����]", 'g'),"o");
-        r = r.replace(new RegExp("?", 'g'),"oe");
-        r = r.replace(new RegExp("[����]", 'g'),"u");
-        r = r.replace(new RegExp("[��]", 'g'),"y");
-        r = r.replace(new RegExp("\\W", 'g'),"");
-        return r;
-}
-
-
 
 </script>
 <script language="JavaScript">
@@ -913,91 +742,6 @@ jQuery(document).ready(function() {
 
 </script>
 
-<style type="text/css">
-#pup {
-  position:absolute;
-  z-index:200; /* aaaalways on top*/
-  padding: 3px;
-  margin-left: 10px;
-  margin-top: 5px;
-  width: 250px;
-  border: 1px solid black;
-  background-color: #777;
-  color: white;
-  font-size: 0.95em;
-}
-
-div.demographicSection{
-   width:100%;
-   margin-top: 2px;
-   margin-left:3px;
-   border-top: 1px solid #ccccff;
-   border-bottom: 1px solid #ccccff;
-   border-left: 1px solid #ccccff;
-   border-right: 1px solid #ccccff;
-   float: left;
-}
-
-div.demographicSection h3 {
-   background-color: #ccccff;
-   font-size: 8pt;
-   font-variant:small-caps;
-   font:bold;
-   margin-top:0px;
-   padding-top:0px;
-   margin-bottom:0px;
-   padding-bottom:0px;
-}
-
-div.demographicSection ul{
-
-       list-style:none;
-       list-style-type:none;
-       list-style-position:outside;
-       padding-left:1px;
-       margin-left:1px;
-       margin-top:0px;
-       padding-top:1px;
-       margin-bottom:0px;
-       padding-bottom:0px;
-}
-
-
-div.demographicSection li {
-padding-right: 15px;
-white-space: nowrap;
-}
-
-
-div.demographicWrapper {
-  background-color: #eeeeff;
-  margin-top: 5px;
-  margin-left:1px;
-  margin-right:1px;
-}
-
-/* popup menu style for encounter reason */
-.menu {
-    position: absolute;
-    visibility: hidden;
-    background-color: #6699cc;
-    layer-background-color: #6699cc;
-    color: white;
-    border-left: 1px solid black;
-    border-top: 1px solid black;
-    border-bottom: 3px solid black;
-    border-right: 3px solid black;
-    padding: 3px;
-    z-index: 10;
-    font-size: 9px;
-    width: 25em;
-}
-
-.menu a {
-    text-decoration: none;
-    color:white;
-}
-</style>
 </head>
 <body onLoad="setfocus(); checkONReferralNo(); formatPhoneNum(); checkRosterStatus2();"
 	topmargin="0" leftmargin="0" rightmargin="0" id="demographiceditdemographic">
