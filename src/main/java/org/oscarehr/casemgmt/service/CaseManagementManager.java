@@ -1759,7 +1759,7 @@ public class CaseManagementManager {
 	}
 	
 
-	public void saveToDx(String demographicNo, String code, String codingSystem, boolean association) {
+	public void saveToDx(LoggedInInfo loggedInInfo, String demographicNo, String code, String codingSystem, boolean association) {
 		if (codingSystem == null) {
 			codingSystem = "icd10";
 		}
@@ -1772,14 +1772,14 @@ public class CaseManagementManager {
 		dx.setUpdateDate(new Date());
 		dx.setStatus('A');
 		dx.setAssociation(association?(byte)1:(byte)0);
-
+		dx.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 		if (!dxresearchDAO.entryExists(dx.getDemographicNo(), codingSystem, code)) {
 			this.dxresearchDAO.save(dx);
 		}
 	}
 
-	public void saveToDx(String demographicNo, String code) {
-		saveToDx(demographicNo, code, null, false);
+	public void saveToDx(LoggedInInfo loggedInInfo, String demographicNo, String code) {
+		saveToDx(loggedInInfo, demographicNo, code, null, false);
 	}
 
 	public List<Dxresearch> getDxByDemographicNo(String demographicNo) {
@@ -2028,7 +2028,7 @@ private String updateApptStatus(String status, String type) {
 	}
 	
 	
-	public CaseManagementNote saveCaseManagementNote(CaseManagementNote note,List<CaseManagementIssue> issuelist,CaseManagementCPP cpp,String ongoing,boolean verify,Locale locale,Date now,CaseManagementNote annotationNote,String userName,String user,String remoteAddr,String lastSavedNoteString) throws Exception {
+	public CaseManagementNote saveCaseManagementNote(LoggedInInfo loggedInInfo, CaseManagementNote note,List<CaseManagementIssue> issuelist,CaseManagementCPP cpp,String ongoing,boolean verify,Locale locale,Date now,CaseManagementNote annotationNote,String userName,String user,String remoteAddr,String lastSavedNoteString) throws Exception {
 		ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 		AdmissionManager admissionManager = (AdmissionManager) SpringUtils.getBean("admissionManager");	
 		
@@ -2129,7 +2129,7 @@ private String updateApptStatus(String status, String type) {
 					DxAssociation assoc = dxDao.findAssociation(cmIssue.getIssue().getType(), cmIssue.getIssue().getCode());
 					if (assoc != null) {
 						// we found a match. Let's add them to registry
-						this.saveToDx(note.getDemographic_no(), assoc.getDxCode(), assoc.getDxCodeType(), true);
+						this.saveToDx(loggedInInfo, note.getDemographic_no(), assoc.getDxCode(), assoc.getDxCodeType(), true);
 
 					}
 				}

@@ -1733,7 +1733,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			logger.warn("Unable to load Dx properties file");
 		}
 
-		this.caseManagementMgr.saveToDx(getDemographicNo(request), request.getParameter("issue_code"), codingSystem, false);
+		this.caseManagementMgr.saveToDx(LoggedInInfo.getLoggedInInfoFromSession(request), getDemographicNo(request), request.getParameter("issue_code"), codingSystem, false);
 
 		return view(mapping, form, request, response);
 	}

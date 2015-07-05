@@ -56,6 +56,8 @@ public class Dxresearch  extends AbstractModel<Integer> implements java.io.Seria
     private String codingSystem;
     private byte association;
 
+    private String providerNo;
+    
     public Dxresearch() {
     }
 
@@ -63,7 +65,7 @@ public class Dxresearch  extends AbstractModel<Integer> implements java.io.Seria
     public Dxresearch(byte association) {
         this.association = association;
     }
-    public Dxresearch(Integer demographicNo, Date startDate, Date updateDate, Character status, String dxresearchCode, String codingSystem, byte association) {
+    public Dxresearch(Integer demographicNo, Date startDate, Date updateDate, Character status, String dxresearchCode, String codingSystem, byte association, String providerNo) {
        this.demographicNo = demographicNo;
        this.startDate = startDate;
        this.updateDate = updateDate;
@@ -71,6 +73,7 @@ public class Dxresearch  extends AbstractModel<Integer> implements java.io.Seria
        this.dxresearchCode = dxresearchCode;
        this.codingSystem = codingSystem;
        this.association = association;
+       this.providerNo = providerNo;
     }
 
     public Integer getId() {
@@ -133,8 +136,20 @@ public class Dxresearch  extends AbstractModel<Integer> implements java.io.Seria
     public void setAssociation(byte association) {
         this.association = association;
     }
+    
+    
 
-    @Override
+    public String getProviderNo() {
+		return providerNo;
+	}
+
+
+	public void setProviderNo(String providerNo) {
+		this.providerNo = providerNo;
+	}
+
+
+	@Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -161,6 +176,10 @@ public class Dxresearch  extends AbstractModel<Integer> implements java.io.Seria
         if ((this.codingSystem == null) ? (other.codingSystem != null) : !this.codingSystem.equals(other.codingSystem)) {
             return false;
         }
+        
+        if ((this.providerNo == null) ? (other.providerNo != null) : !this.providerNo.equals(other.providerNo)) {
+            return false;
+        }
         return true;
     }
 
@@ -173,6 +192,7 @@ public class Dxresearch  extends AbstractModel<Integer> implements java.io.Seria
         hash = 67 * hash + (this.updateDate != null ? this.updateDate.hashCode() : 0);
         hash = 67 * hash + (this.dxresearchCode != null ? this.dxresearchCode.hashCode() : 0);
         hash = 67 * hash + (this.codingSystem != null ? this.codingSystem.hashCode() : 0);
+        hash = 67 * hash + (this.providerNo != null ? this.providerNo.hashCode() : 0);
         return hash;
     }
 

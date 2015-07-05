@@ -131,6 +131,7 @@ public class RenalAction extends DispatchAction {
 			item.setStartDate(new Date());
 			item.setStatus('A');
 			item.setUpdateDate(new Date());
+			item.setProviderNo(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo());
 			dxResearchDao.persist(item);
 			id = item.getDxresearchNo();
 		}
