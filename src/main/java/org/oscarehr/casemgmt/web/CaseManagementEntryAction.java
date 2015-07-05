@@ -1424,8 +1424,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		CaseManagementNote annotationNote = (CaseManagementNote) session.getAttribute(attrib_name);
 
 		//String ongoing = null; // figure out this
-		note = caseManagementMgr.saveCaseManagementNote(note, issuelist, cpp, ongoing, verify, request.getLocale(), now, annotationNote, userName, (String) session.getAttribute("user"), request.getRemoteAddr(), lastSavedNoteString);
-
+		note = caseManagementMgr.saveCaseManagementNote(loggedInInfo, note,issuelist, cpp, ongoing,verify, request.getLocale(),now,annotationNote,userName,(String) session.getAttribute("user"),request.getRemoteAddr(), lastSavedNoteString) ;
 		caseManagementMgr.getEditors(note);
 		cform.setCaseNote(note);
 
@@ -2299,7 +2298,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 							String codingSystem = dxProps.getProperty("coding_system");
 							if (caseIssueList[oldList.length + k].getIssue().isCertain()) {
 								logger.debug("adding to Dx");
-								this.caseManagementMgr.saveToDx(getDemographicNo(request), issueList[i].getIssue().getCode(), codingSystem, false);
+								this.caseManagementMgr.saveToDx(loggedInInfo, getDemographicNo(request), issueList[i].getIssue().getCode(), codingSystem, false);
 								caseIssueList[oldList.length + k].getIssue().setMajor(true);
 							}
 						}

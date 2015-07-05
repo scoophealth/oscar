@@ -43,6 +43,8 @@ import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 import oscar.util.ConversionUtils;
 import oscar.util.ParameterActionForward;
 
@@ -82,6 +84,10 @@ public class dxResearchUpdateAction extends Action {
 		forward.addParameter("providerNo", providerNo);
 		forward.addParameter("quickList", "");
 
+		String ip = request.getRemoteAddr();
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.UPDATE, "DX", ""+research.getId() , ip,"");
+
+        
 		return forward;
 	}
 
