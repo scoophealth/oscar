@@ -171,7 +171,7 @@ $(function ()  {
 	  HashMap<String, ? extends Object> curForm = eForms.get(i);
 %>
     <tr>
-        <td><%if(curForm.get("formFileName").toString().length()!=0){%><i class="icon-file" title="<%=curForm.get("formFileName").toString()%>"></i><%}%></td>
+        <td><%if(curForm.get("formFileName") != null && curForm.get("formFileName").toString().length()!=0){%><i class="icon-file" title="<%=curForm.get("formFileName").toString()%>"></i><%}%></td>
         <td title="<%=curForm.get("formName")%>">
         <a href="#" onclick="newWindow('<%= request.getContextPath() %>/eform/efmshowform_data.jsp?fid=<%=curForm.get("fid")%>', '<%="Form"+i%>'); return false;"><%=curForm.get("formName")%></a>
         </td>

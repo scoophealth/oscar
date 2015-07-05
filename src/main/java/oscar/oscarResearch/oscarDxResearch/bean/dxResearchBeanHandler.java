@@ -59,8 +59,8 @@ public class dxResearchBeanHandler {
 					String cds = String.valueOf(o[3]);
 					String dxresearch_no = String.valueOf(o[4]);
 					String status = String.valueOf(o[5]);
-
-					dxResearchBean bean = new dxResearchBean(description, dxresearch_no, cds, update_date, start_date, status, codingSystem);
+					String providerNo = String.valueOf(o[6]);
+					dxResearchBean bean = new dxResearchBean(description, dxresearch_no, cds, update_date, start_date, status, codingSystem,providerNo);
 					dxResearchBeanVector.add(bean);
 
 				}

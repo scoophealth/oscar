@@ -197,7 +197,7 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
 			if (assoc != null) {
 				MiscUtils.getLogger().debug("match");
 				//we now have a certain issue which matches an association.
-				cmMgr.saveToDx(issue.getDemographic_no(), assoc.getDxCode(), assoc.getDxCodeType(), true);
+				cmMgr.saveToDx(LoggedInInfo.getLoggedInInfoFromSession(request), issue.getDemographic_no(), assoc.getDxCode(), assoc.getDxCodeType(), true);
 				recordsAdded++;
 			}
 		}
