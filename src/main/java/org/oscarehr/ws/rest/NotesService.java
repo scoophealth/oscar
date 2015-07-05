@@ -528,7 +528,7 @@ public class NotesService extends AbstractServiceImpl {
 		String lastSavedNoteString = null;
 		String user = loggedInInfo.getLoggedInProvider().getProviderNo();
 		String remoteAddr = 	""; // Not sure how to get this	
-		caseMangementNote = caseManagementMgr.saveCaseManagementNote(caseMangementNote,issuelist, cpp, ongoing,verify, loggedInInfo.getLocale(),now,annotationNote,userName,user,remoteAddr, lastSavedNoteString) ;
+		caseMangementNote = caseManagementMgr.saveCaseManagementNote(loggedInInfo, caseMangementNote,issuelist, cpp, ongoing,verify, loggedInInfo.getLocale(),now,annotationNote,userName,user,remoteAddr, lastSavedNoteString) ;
 			
 		caseManagementMgr.getEditors(caseMangementNote);
 		

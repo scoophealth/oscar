@@ -774,6 +774,7 @@ CREATE TABLE dxresearch (
   dxresearch_code varchar(10) default '',
   coding_system varchar(20),
   association tinyint(1) not null default 0,
+  providerNo varchar(6),
   PRIMARY KEY  (dxresearch_no)
 ) ;
 
