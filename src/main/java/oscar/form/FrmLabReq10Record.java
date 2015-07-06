@@ -27,7 +27,6 @@ package oscar.form;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
@@ -112,76 +111,58 @@ public class FrmLabReq10Record extends FrmRecord {
     }
 
     public Properties getFormCustRecord(Properties props, String provNo) {
-        String demoProvider = props.getProperty("demoProvider", "");
-        String xmlSpecialtyCode = "<xml_p_specialty_code>";
-        String xmlSpecialtyCode2 = "</xml_p_specialty_code>";
+                             
+        ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");                
+        Provider mrp = null;
+        String demoProvider = props.getProperty("demoProvider","");   
+        
+        if (!demoProvider.isEmpty()) {
+            mrp =  providerDao.getProvider(demoProvider);
 
-        ResultSet rs = null;
-        String sql = null;
-
-        if (!demoProvider.equals("")) {
-
-        	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-        	Provider provider = providerDao.getProvider(provNo);
-
-            if (demoProvider.equals(provNo) ) {
-                // from provider table
-
-                    String comments = provider.getComments();
-                    String strSpecialtyCode = "00";
-                    if( comments.indexOf(xmlSpecialtyCode) != -1 ) {
-                        strSpecialtyCode = comments.substring(comments.indexOf(xmlSpecialtyCode) + xmlSpecialtyCode.length(), comments.indexOf(xmlSpecialtyCode2));
-                        strSpecialtyCode = strSpecialtyCode.trim();
-                        if( strSpecialtyCode.equals("") ) {
-                            strSpecialtyCode = "00";
-                        }
-                    }
-                    String num = provider.getOhipNo() == null ? "" : provider.getOhipNo();
-                    props.setProperty("reqProvName", provider.getFormattedName());
-                    props.setProperty("provName", "MRP: " + provider.getFormattedName());
-                    props.setProperty("practitionerNo", "0000-" + num + "-" + strSpecialtyCode);
-
-            } else {
-                // from provider table
-
-                String num = "";
-
-                    String comments = provider.getComments();
-                    String strSpecialtyCode = "00";
-                    if( comments.indexOf(xmlSpecialtyCode) != -1 ) {
-                        strSpecialtyCode = comments.substring(comments.indexOf(xmlSpecialtyCode)+xmlSpecialtyCode.length(), comments.indexOf(xmlSpecialtyCode2));
-                        strSpecialtyCode = strSpecialtyCode.trim();
-                        if( strSpecialtyCode.equals("") ) {
-                            strSpecialtyCode = "00";
-                        }
-                    }
-                    num = provider.getOhipNo() == null ? "" : provider.getOhipNo();
-                    props.setProperty("reqProvName", provider.getFormattedName());
-                    props.setProperty("practitionerNo", "0000-" + num + "-" + strSpecialtyCode);
-
-
-                // from provider table
-                provider = providerDao.getProvider(demoProvider);
-
-                    if( num.equals("") ) {
-                    	num = provider.getOhipNo() == null ? "" : provider.getOhipNo();
-                        props.setProperty("practitionerNo", "0000-"+num+"-00");
-                        props.setProperty("reqProvName", provider.getFormattedName());
-                    }
-                    props.setProperty("provName", "MRP: " + provider.getFormattedName());
-
+            if (mrp != null) {
+                props.setProperty("provName", "MRP: " + mrp.getFormattedName());            
             }
         }
+                        
+        OscarProperties oscarProps = OscarProperties.getInstance();
         
-        //lab_req_override=true
-    	OscarProperties oscarProps = OscarProperties.getInstance();
-    	if(oscarProps.getProperty("lab_req_provider","").length()>0) {
-    		props.setProperty("reqProvName", oscarProps.getProperty("lab_req_provider"));
-    	}
-    	if(oscarProps.getProperty("lab_req_billing_no","").length()>0) {
-    		props.setProperty("practitionerNo", oscarProps.getProperty("lab_req_billing_no"));
-    	}
-    	
+        if ((oscarProps.getProperty("lab_req_provider") != null) && (oscarProps.getProperty("lab_req_billing_no") != null)) {
+            
+            props.setProperty("reqProvName", oscarProps.getProperty("lab_req_provider"));
+            props.setProperty("practitionerNo", oscarProps.getProperty("lab_req_billing_no"));
+            
+    	} else {             
+            Provider provider = providerDao.getProvider(provNo);
+                
+            String ohipNo = provider.getOhipNo();
+            if (ohipNo == null || ohipNo.isEmpty()) {                
+                provider = mrp;            
+            }  
+            
+            if (provider != null) {
+                
+                String xmlSpecialtyCode = "<xml_p_specialty_code>";
+                String xmlSpecialtyCode2 = "</xml_p_specialty_code>";
+                String strSpecialtyCode = "00";
+                String comments = provider.getComments();     
+
+                if( comments.indexOf(xmlSpecialtyCode) != -1 ) {                                    
+                    String specialtyCode = comments.substring(comments.indexOf(xmlSpecialtyCode)+xmlSpecialtyCode.length(), comments.indexOf(xmlSpecialtyCode2));
+                    specialtyCode = specialtyCode.trim();
+                    if(!specialtyCode.isEmpty()) {
+                        strSpecialtyCode = specialtyCode;
+                    }
+                }                                            
+                
+                ohipNo = provider.getOhipNo();
+            
+                if (ohipNo != null && !ohipNo.isEmpty()) {                                        
+                    props.setProperty("reqProvName", provider.getFormattedName());
+                    props.setProperty("practitionerNo", "0000-" + ohipNo + "-" + strSpecialtyCode);
+                }
+            }
+        }
+                                                 	    	    	    	
         //get local clinic information
         ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
     	Clinic clinic = clinicDao.getClinic();
