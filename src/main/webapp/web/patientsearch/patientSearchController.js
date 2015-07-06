@@ -61,6 +61,16 @@ oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, 
 	
     
     $scope.doSearch = function() {
+    	if ($scope.search.type=="DOB") {
+    		if ($scope.search.term.match("^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$") || $scope.search.term.match("^[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}$")) {
+    			$scope.search.term = $scope.search.term.replace(/\//g, "-");
+    			var datePart = $scope.search.term.split("-");
+    			$scope.search.term = datePart[0]+"-"+pad0(datePart[1])+"-"+pad0(datePart[2]);
+    		} else {
+    			alert("Please enter Date of Birth in format YYYY-MM-DD.");
+    			return;
+    		}
+    	}
     	$scope.tableParams.reload();
     }
     
@@ -72,7 +82,11 @@ oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, 
     $scope.clearButMaintainSearchType = function() {
     	$scope.search = {type:$scope.search.type,term:"",active:true,integrator:false,outofdomain:true};
     	$scope.tableParams.reload();
+    	
+    	if ($scope.search.type=="DOB") $scope.searchTermPlaceHolder = "YYYY-MM-DD";
+    	else $scope.searchTermPlaceHolder = "Search Term";
     }
+    $scope.searchTermPlaceHolder = "Search Term";
     
     $scope.loadRecord = function(demographicNo) {
 		 $state.go('record.details', {demographicNo:demographicNo, hideNote:true});
@@ -96,6 +110,10 @@ oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, 
     }
 });
 
+function pad0(n) {
+	if (n.length>1) return n;
+	else return "0"+n;
+}
 
 
 oscarApp.controller('RemotePatientResultsController',function($scope, $modalInstance, results, total, $http) {
