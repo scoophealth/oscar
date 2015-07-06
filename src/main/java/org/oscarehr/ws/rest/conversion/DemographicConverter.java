@@ -93,8 +93,6 @@ public class DemographicConverter extends AbstractConverter<Demographic, Demogra
 		d.setSpokenLanguage(t.getSpokenLanguage());
 		d.setActiveCount(t.getActiveCount());
 		d.setHsAlertCount(t.getHsAlertCount());
-		d.setLastUpdateUser(t.getLastUpdateUser());
-		d.setLastUpdateDate(t.getLastUpdateDate());
 		d.setTitle(t.getTitle());
 		d.setOfficialLanguage(t.getOfficialLanguage());
 		d.setCountryOfOrigin(t.getCountryOfOrigin());
