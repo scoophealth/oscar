@@ -1996,8 +1996,11 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		    	matchingDemographicParameters.setBirthDate(cal);
 	    	}
 	    	catch (Exception e){
-	    		// this is okay, person imputed a bad date, we'll ignore for now
+	    		// this is okay, person inputed a bad date, we'll ignore for now
 	    		matchingDemographicParameters=null;
+	    		params.put("year", null);
+	    		params.put("month", null);
+	    		params.put("keyword", null);
 	    	}
 		}
 		if(searchRequest.getMode() == SEARCHMODE.ChartNo) {
