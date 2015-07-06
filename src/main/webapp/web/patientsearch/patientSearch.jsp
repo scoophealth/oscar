@@ -70,7 +70,7 @@ input.checkStyle{
     </ul>
     </div>
     
-        <input ng-model="search.term" type="text" class="form-control" style="width:auto" placeholder="Search Term" ng-init="search.term=''"/>
+        <input ng-model="search.term" type="text" class="form-control" style="width:auto" placeholder={{searchTermPlaceHolder}} ng-init="search.term=''"/>
         <button class="btn btn-primary" ng-click="doSearch()"><bean:message key="global.search" bundle="ui"/></button>
         <button class="btn" ng-click="doClear()"><bean:message key="global.clear" bundle="ui"/></button>  
         
