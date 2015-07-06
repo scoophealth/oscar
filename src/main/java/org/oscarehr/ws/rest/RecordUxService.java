@@ -24,19 +24,31 @@
 package org.oscarehr.ws.rest;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.StreamingOutput;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.casemgmt.service.CaseManagementPrint;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.managers.ConsultationManager;
@@ -349,5 +361,87 @@ public class RecordUxService extends AbstractServiceImpl {
 	@Produces(MediaType.APPLICATION_JSON)
 	public SummaryTo1 getAllergies(@PathParam("demographicNo") Integer demographicNo) {
 		return getFullSummmary(demographicNo, SummaryTo1.ALLERGIES);
+	}
+	
+	boolean getBoolean(JSONObject jsonobject,String key){
+		if(jsonobject.containsKey(key)){
+			return jsonobject.getBoolean(key); 
+		}
+		return false;
+	}
+	
+	String getString(JSONObject jsonobject,String key){
+		if(jsonobject.containsKey(key)){
+			return jsonobject.getString(key); 
+		}
+		return null;
+	}
+	
+	
+	
+	@GET
+	@Path("/{demographicNo}/print")
+	@Produces("application/pdf")
+	public StreamingOutput print(@PathParam("demographicNo") Integer demographicNo,  @QueryParam("printOps") String jsonString,@Context HttpServletRequest request){
+		
+		
+		logger.debug("jsonobject " +jsonString);
+		JSONObject jsonobject = JSONObject.fromObject(jsonString);
+		//{"printType":"all","cpp":true,"rx":true,"selectedList":[]}
+		
+		final Integer demographicNof = demographicNo;
+		final HttpServletRequest requestf = request;
+		boolean printAllNotesType = "all".equalsIgnoreCase(getString(jsonobject,"printType"));
+		final boolean printDateRangeNotes = "dates".equalsIgnoreCase(getString(jsonobject,"printType"));
+		
+		Calendar startCal = null;
+		Calendar endCal = null;
+		if(printDateRangeNotes){
+			if(jsonobject.containsKey("dates")){
+				JSONObject datesJson = jsonobject.getJSONObject("dates");
+				if(datesJson.containsKey("start")){
+					startCal = javax.xml.bind.DatatypeConverter.parseDateTime(datesJson.getString("start"));
+				}
+				if(datesJson.containsKey("end")){
+					endCal = javax.xml.bind.DatatypeConverter.parseDateTime(datesJson.getString("end"));
+				}
+			}
+			if(startCal != null && endCal != null){
+				printAllNotesType = true;
+			}
+			
+		}
+		final Calendar startCalf = startCal;
+		final Calendar endCalf = endCal;
+		
+		final boolean printAllNotes = printAllNotesType; 
+		
+		final LoggedInInfo loggedInInfo = getLoggedInInfo();
+		final boolean printCPP  = getBoolean(jsonobject,"cpp");
+		final boolean printRx   = getBoolean(jsonobject,"rx");
+		final boolean printLabs = getBoolean(jsonobject,"labs");
+		
+		final JSONArray keyArray = jsonobject.getJSONArray("selectedList");
+		final String[] noteIds = new String[keyArray.size()];
+		for(int i = 0; i < keyArray.size(); i++) {
+			noteIds[i] = keyArray.getString(i);
+		}
+		
+		
+		return new StreamingOutput() {
+			@Override
+			public void write(java.io.OutputStream os)
+					throws IOException, WebApplicationException {
+				try{
+					CaseManagementPrint cmp = new CaseManagementPrint();
+					cmp.doPrint(loggedInInfo,demographicNof, printAllNotes,noteIds,printCPP,printRx,printLabs,startCalf,endCalf, requestf, os);
+		        }catch(Exception e){
+		        		logger.error("error streaming",e);
+		        }finally{
+		        	IOUtils.closeQuietly(os);
+		        }
+				
+			}  
+	    };
 	}
 }
