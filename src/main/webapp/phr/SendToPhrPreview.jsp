@@ -75,7 +75,7 @@ String demographicName = demographicData.getDemographicFirstLastName(LoggedInInf
         <script type="text/javascript" language="JavaScript" src="phr.js"></script>
         <script type="text/javascript" language="JavaScript">
             function send(obj) {
-                if (obj.form.demographic_no.value == "") {
+                if (document.getElementById('demographic_no').value == "") {
                     alert("Cannot find demographic number");
                     return false;
                 }
@@ -102,7 +102,7 @@ String demographicName = demographicData.getDemographicFirstLastName(LoggedInInf
     <body onload="onloadd()">
         <div class="title">Send to PHR - Preview</div>
         <form action="<%=request.getContextPath()%>/SendToPhr.do" method="POST">
-            <input type="hidden" name="demographic_no" value="<%=demographicNo%>">
+            <input type="hidden" name="demographic_no" value="<%=demographicNo%>" id="demographic_no">
             <input type="hidden" name="method" value="send">
             <input type="Hidden" name="SendToPhrPreview" value="yes">
             <table>
