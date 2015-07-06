@@ -822,16 +822,16 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			demo.notes = "<unotes>" + page.notes + "</unotes>";
 		}
 		
-		//save referral doctor
-		demo.familyDoctor = "<rdohip>";
+		//save referral doctor (familyDoctor)
+		var referralDocNo = "<rdohip></rdohip>";
+		var referralDoc = "<rd></rd>";
 		if (page.referralDocNo!=null && page.referralDocNo!="") {
-			demo.familyDoctor += page.referralDocNo;
+			referralDocNo = "<rdohip>"+page.referralDocNo+"</rdohip>";
 		}
-		demo.familyDoctor += "</rdohip><rd>";
 		if (page.referralDoc!=null && page.referralDoc!="") {
-			demo.familyDoctor += page.referralDoc;
+			referralDoc = "<rd>"+page.referralDoc+"</rd>";
 		}
-		demo.familyDoctor += "</rd>";
+		demo.familyDoctor = referralDocNo + referralDoc;
 
 		//save phone numbers
 		page.demoCell.value = page.cellPhone;
