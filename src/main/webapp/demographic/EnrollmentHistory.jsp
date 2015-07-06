@@ -30,6 +30,7 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.dao.DemographicArchiveDao" %>
 <%@page import="org.oscarehr.common.model.DemographicArchive" %>
@@ -115,18 +116,20 @@
 								<td nowrap="nowrap"><%=DateUtils.formatDate(demographic.getLastUpdateDate(),request.getLocale())%></td>
 								<td nowrap="nowrap"><%=viewRS(rosterStatus)%></td>
 								
-							<%if("RO".equals(rosterStatus)){ %>
+							<%Provider demoP = providerDao.getProvider(demographic.getProviderNo());
+							   if("RO".equals(rosterStatus)){ %>
 								<td nowrap="nowrap"><%=DateUtils.formatDate(rosterDate,request.getLocale())%></td>
-							<%}else if( rosterStatus != null && !rosterStatus.trim().equals("")){ %>
+							<%}else if(StringUtils.filled(rosterStatus)){ %>
 								<td nowrap="nowrap"><%=DateUtils.formatDate(rosterTermDate,request.getLocale())%></td>
-							<%}%>
-								<td nowrap="nowrap"><%=(demographic.getProviderNo().length()>0 && demographic.getRosterStatus().equals("RO"))?providerDao.getProvider(demographic.getProviderNo()).getFormattedName():"" %></td>
-							<% if(StringUtils.filled(demographic.getLastUpdateUser())){ %>
+							<%}else{ %>
+								<td nowrap="nowrap"></td>
+								<td nowrap="nowrap"><%=(demoP!=null && "RO".equals(demographic.getRosterStatus()))?demoP.getFormattedName():"" %></td>
+							<%}
+							   if(StringUtils.filled(demographic.getLastUpdateUser())){ %>
 								<td nowrap="nowrap"><%=providerDao.getProvider(demographic.getLastUpdateUser()).getFormattedName() %></td>
 							<%}else{ %>
 								<td nowrap="nowrap">System</td>
 							<%} %>
-								<td nowrap="nowrap">(Current)</td>
 							</tr>
 						<%if(!"RO".equals(rosterStatus)
 								&& demographic.getRosterTerminationReason()!=null
@@ -163,8 +166,8 @@
 					                		<td nowrap="nowrap">
 					                		<%
 					                		String name = "";
-					                		if(da.getProviderNo().length()>0 && historyRS.equals("RO")) {
-					                			org.oscarehr.common.model.Provider p  = providerDao.getProvider(da.getProviderNo());
+					                		if(StringUtils.filled(da.getProviderNo()) && "RO".equals(historyRS)) {
+					                			Provider p  = providerDao.getProvider(da.getProviderNo());
 					                			if(p != null) {
 					                				name = p.getFormattedName();
 					                			}
@@ -176,7 +179,7 @@
 				                		    <td nowrap="nowrap">
 				                		    	<%
 				                		    	name = "";
-				                		    	org.oscarehr.common.model.Provider p = providerDao.getProvider(da.getLastUpdateUser());
+				                		    	Provider p = providerDao.getProvider(da.getLastUpdateUser());
 				                		    	if(p != null) {
 				                		    		name = p.getFormattedName();
 				                		    	}
@@ -242,20 +245,20 @@
 </html:html>
 
 <%! public String viewRS(String code)  {
-	if(code.equals("RO")) {
+	if(StringUtils.empty(code)) {
+		return "&lt;Not Set&gt;";
+	}
+	if(("RO").equals(code)) {
 		return "Rostered";
 	}
-	if(code.equals("NR")) {
+	if(("NR").equals(code)) {
 		return "Not Rostered";
 	}
-	if(code.equals("TE")) {
+	if(("TE").equals(code)) {
 		return "Terminated";
 	}
-	if(code.equals("FS")) {
+	if(("FS").equals(code)) {
 		return "Fee for Service";
-	}
-	if(code.equals("")) {	
-		return "&lt;Not Set&gt;";
 	}
 	return code;
 }
