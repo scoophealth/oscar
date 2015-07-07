@@ -334,14 +334,14 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	    			hcParts["issueDate"] = swipeCardData.substring(endNamePos + 24, endNamePos + 30);
 	    			hcParts["lang"] = swipeCardData.substring(endNamePos + 30, endNamePos + 32);
 	    			
-	    			if (notNumber(hcParts["dob"])) {
+	    			if (!isNumber(hcParts["dob"])) {
 	    				hcParts["dob"] = null;
 	    				hcParts["hinExp"] = null;
 	    			}
-	    			if (notNumber(hcParts["hinExp"])) {
+	    			if (!isNumber(hcParts["hinExp"])) {
 	    				hcParts["hinExp"] = null;
 	    			}
-	    			if (notNumber(hcParts["issueDate"])) {
+	    			if (!isNumber(hcParts["issueDate"])) {
 	    				hcParts["issueDate"] = null;
 	    			}
 	    			
@@ -439,9 +439,9 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	var hin0 = demo.hin;
 	var ver0 = demo.ver;
 	$scope.checkHin = function(){
-		if (demo.hcType=="ON") {
+		if (demo.hcType=="ON" && demo.hin!=null && demo.hin!="") {
 			if (demo.hin.length>10) demo.hin = hin0;
-			if (notNumber(demo.hin)) demo.hin = hin0;
+			if (!isNumber(demo.hin)) demo.hin = hin0;
 		}
 		hin0 = demo.hin;
 		page.HCValidation = null;
@@ -487,7 +487,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		}
 	}
 	
-	//check postal code (Canada provinces only)
+	//check&format postal code (Canada provinces only)
 	var postal0 = demo.address.postal;
 	$scope.checkPostal = function(){
 		if (demo.address.province==null || demo.address.province=="OT" || demo.address.province.indexOf("US")==0)
@@ -522,18 +522,161 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			postal = postal.replace(/\s/g, "");
 			if (postal.length>6) return true;
 			
-			postal = postal.toUpperCase();
 			for (var i=0; i<postal.length; i+=2) {
-				var cc = postal.charCodeAt(i);
-				if (cc<65 || cc>90) return true;
+				var cc = postal.charAt(i);
+				if (/^[^A-Za-z]$/.test(cc)) return true;
 
 				if (i<postal.length-1) {
 					cc = postal.charAt(i+1);
-					if (notDigit(cc)) return true;
+					if (!isNumber(cc)) return true;
 				}
 			}
 		}
 		return false;
+	}
+	
+	//check email
+	$scope.checkEmail = function() {
+		if (demo.email==null || demo.email=="") return true;
+		
+		var regex = /^[^@]+@[^@]+$/;
+		if (regex.test(demo.email)) {
+			var email = demo.email.split("@");
+			
+			regex = /^[!#%&'=`~\{}\-\$\*\+\/\?\^\|\w]+(\.[!#%&'=`~\{}\-\$\*\+\/\?\^\|\w]+)*$/;
+			if (regex.test(email[0])) { //test email local address part
+				
+				regex = /^[^\W_]+(([^\W_]|-)+[^\W_]+)*(\.[^\W_]+(([^\W_]|-)+[^\W_]+)*)*\.[^\W_]{2,3}$/;
+				if (regex.test(email[1])) return true; //test email address domain part
+			}
+		}
+		alert("Invalid email address");
+		return false;
+	}
+	
+	//check Chart No (length)
+	var chartNo0 = demo.chartNo;
+	$scope.checkChartNo = function() {
+		if (demo.chartNo==null || demo.chartNo=="") {
+			chartNo0 = demo.chartNo; return;
+		}
+		if (demo.chartNo.length>10) demo.chartNo = chartNo0;
+		else chartNo0 = demo.chartNo;
+	}
+	
+	//check Cytology Number
+	var cytolNum0 = page.cytolNum.value;
+	$scope.checkCytoNum = function() {
+		if (page.cytolNum.value==null || page.cytolNum.value=="") {
+			cytolNum0 = page.cytolNum.value; return;
+		}
+		if (!isNumber(page.cytolNum.value)) page.cytolNum.value = cytolNum0;
+		else cytolNum0 = page.cytolNum.value;
+	}
+	
+	//check Referral Doctor No
+	var referralDocNo0 = page.referralDocNo;
+	$scope.checkReferralDocNo = function() {
+		if (page.referralDocNo==null || page.referralDocNo=="") {
+			referralDocNo0 = page.referralDocNo; return;
+		}
+		if (!isNumber(page.referralDocNo) || page.referralDocNo.length>6) page.referralDocNo = referralDocNo0;
+		else referralDocNo0 = page.referralDocNo;
+	}
+	
+	$scope.validateReferralDocNo = function() {
+		if (page.referralDocNo==null || page.referralDocNo=="") return true;
+		
+		if (!isNumber(page.referralDocNo || page.referralDocNo!=6)) {
+			alert("Invalid Referral Doctor Number");
+			return false;
+		}
+		return true;
+	}
+	
+	//check SIN
+	var sin0 = demo.sin;
+	$scope.checkSin = function() {
+		if (demo.sin==null || demo.sin=="") {
+			sin0 = demo.sin; return;
+		}
+		
+		var sin = demo.sin.replace(/\s/g, "");
+		if (!isNumber(sin) || sin.length>9) {
+			demo.sin = sin0;
+		} else {
+			if (sin.length>6) {
+				demo.sin = sin.substring(0,3)+" "+sin.substring(3,6)+" "+sin.substring(6);
+			}
+			else if (sin.length>3) {
+				demo.sin = sin.substring(0,3)+" "+sin.substring(3);
+			}
+			sin0 = demo.sin;
+		}
+	}
+	
+	$scope.validateSin = function() {
+		if (demo.sin==null || demo.sin=="") return true;
+		
+		var sin = demo.sin.replace(/\s/g, "");
+		if (isNumber(sin) && sin.length==9) {
+			var sinNumber = 0;
+			for (var i=0; i<sin.length; i++) {
+				var n = Number(sin.charAt(i))*(i%2+1);
+				sinNumber += n%10 + Math.floor(n/10);
+			}
+			if (sinNumber%10==0) return true;
+		}
+		alert("Invalid SIN #");
+		return false;
+	}
+	
+	//prevent manual input dates
+	var effDate0 = demo.effDate;
+	var hcRenewDate0 = demo.hcRenewDate;
+	var rosterDate0 = demo.rosterDate;
+	var rosterTerminationDate0 = demo.rosterTerminationDate;
+	var patientStatusDate0 = demo.patientStatusDate;
+	var dateJoined0 = demo.dateJoined;
+	var endDate0 = demo.endDate;
+	var onWaitingListSinceDate0 = demo.onWaitingListSinceDate;
+	var paperChartArchivedDate0 = page.paperChartArchivedDate.value;
+	
+	$scope.preventManualEffDate = function() {
+		if (demo.effDate==null) demo.effDate = effDate0;
+		else effDate0 = demo.effDate;
+	}
+	$scope.preventManualHcRenewDate = function() {
+		if (demo.hcRenewDate==null) demo.hcRenewDate = hcRenewDate0;
+		else hcRenewDate0 = demo.hcRenewDate;
+	}
+	$scope.preventManualRosterDate = function() {
+		if (demo.rosterDate==null) demo.rosterDate = rosterDate0;
+		else rosterDate0 = demo.rosterDate;
+	}
+	$scope.preventManualRosterTerminationDate = function() {
+		if (demo.rosterTerminationDate==null) demo.rosterTerminationDate = rosterTerminationDate0;
+		else rosterTerminationDate0 = demo.rosterTerminationDate;
+	}
+	$scope.preventManualPatientStatusDate = function() {
+		if (demo.patientStatusDate==null) demo.patientStatusDate = patientStatusDate0;
+		else patientStatusDate0 = demo.patientStatusDate;
+	}
+	$scope.preventManualDateJoined = function() {
+		if (demo.dateJoined==null) demo.dateJoined = dateJoined0;
+		else dateJoined0 = demo.dateJoined;
+	}
+	$scope.preventManualEndDate = function() {
+		if (demo.endDate==null) demo.endDate = endDate0;
+		else endDate0 = demo.endDate;
+	}
+	$scope.preventManualOnWaitingListSinceDate = function() {
+		if (demo.onWaitingListSinceDate==null) demo.onWaitingListSinceDate = onWaitingListSinceDate0;
+		else onWaitingListSinceDate0 = demo.onWaitingListSinceDate;
+	}
+	$scope.preventManualPaperChartArchivedDate = function() {
+		if (page.paperChartArchivedDate.value==null) page.paperChartArchivedDate.value = paperChartArchivedDate0;
+		else paperChartArchivedDate0 = page.paperChartArchivedDate.value;
 	}
 	
 	//show/hide items
@@ -600,12 +743,12 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			if (invalidPhoneNumber(page.workPhone)) page.workPhone = phoneNum["W"];
 			else phoneNum["W"] = page.workPhone;
 		}
-		else if (type=="HX") {
-			if (notNumber(page.hPhoneExt.value)) page.hPhoneExt.value = phoneNum["HX"];
+		else if (type=="HX" && page.hPhoneExt.value!=null && page.hPhoneExt.value!="") {
+			if (!isNumber(page.hPhoneExt.value)) page.hPhoneExt.value = phoneNum["HX"];
 			else phoneNum["HX"] = page.hPhoneExt.value;
 		}
-		else if (type=="WX") {
-			if (notNumber(page.wPhoneExt.value)) page.wPhoneExt.value = phoneNum["WX"];
+		else if (type=="WX" && page.wPhoneExt.value!=null && page.wPhoneExt.value!="") {
+			if (!isNumber(page.wPhoneExt.value)) page.wPhoneExt.value = phoneNum["WX"];
 			else phoneNum["WX"] = page.wPhoneExt.value;
 		}
 	}
@@ -801,17 +944,25 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			alert("Date of Birth is required"); return;
 		}
 		
-		//check patient status and end date
-		if ($scope.checkPatientStatus()) return;
-
-		//check postal code complete
-		if (!$scope.isPostalComplete()) return;
-		
-		//check date of birth
+		//validate field inputs
 		demo.dateOfBirth = buildDate(demo.dobYear, demo.dobMonth, demo.dobDay);
 		if (demo.dateOfBirth==null) {
 			alert("Invalid Date of Birth"); return;
 		}
+		if ($scope.checkPatientStatus()) return;
+		if (!$scope.isPostalComplete()) return;
+		if (!$scope.validateSin()) return;
+		if (!$scope.validateReferralDocNo()) return;
+		if (!$scope.validateEffDate()) return;
+		if (!$scope.validateHcRenewDate()) return;
+		if (!$scope.validateRosterDate()) return;
+		if (!$scope.validateRosterTerminationDate()) return;
+		if (!$scope.validatePatientStatusDate()) return;
+		if (!$scope.validateDateJoined()) return;
+		if (!$scope.validateEndDate()) return;
+		if (!$scope.validatePaperChartArchivedDate()) return;
+		if (!$scope.validateOnWaitingListSinceDate()) return;
+		
 		
 		//save notes
 		if (page.notes!=null) {
@@ -924,7 +1075,7 @@ function buildDate(year, month, day) {
 
 function checkYear(year) {
 	for (var i=0; i<year.length; i++) {
-		if (notDigit(year.charAt(i))) {
+		if (!isNumber(year.charAt(i))) {
 			year = year.substring(0,i) + year.substring(i+1);
 		}
 	}
@@ -938,7 +1089,7 @@ function checkYear(year) {
 
 function checkMonth(month) {
 	for (var i=0; i<month.length; i++) {
-		if (notDigit(month.charAt(i))) {
+		if (!isNumber(month.charAt(i))) {
 			month = month.substring(0,i) + month.substring(i+1);
 		}
 	}
@@ -953,7 +1104,7 @@ var daysOfMonth = [31,28,31,30,31,30,31,31,30,31,30,31];
 
 function checkDay(day, month, year) {
 	for (var i=0; i<day.length; i++) {
-		if (notDigit(day.charAt(i))) {
+		if (!isNumber(day.charAt(i))) {
 			day = day.substring(0,i) + day.substring(i+1);
 		}
 	}
@@ -986,24 +1137,24 @@ function date3Valid(year, month, day) {
 	return dateEmpty(year, month, day);
 }
 
-function dateValid(dateStr) {
+function dateEmpty(year, month, day) {
+	return ((year==null || year=="") && (month==null || month=="") && (day==null || day==""));
+}
+
+function dateValid(dateStr) { //valid date format: yyyy-MM-dd
 	if (dateStr==null || dateStr=="") return true;
 	
 	var datePart = dateStr.toString().split("-");
 	if (datePart.length!=3) return false;
 	
 	var dateDate = new Date(datePart[0], datePart[1]-1, datePart[2]);
-	if (dateDate=="Invalid Date") return false;
+	if (isNaN(dateDate.getTime())) return false;
 	
 	if (dateDate.getFullYear()!=datePart[0]) return false;
 	if (dateDate.getMonth()!=datePart[1]-1) return false;
 	if (dateDate.getDate()!=datePart[2]) return false;
 	
 	return true;
-}
-
-function dateEmpty(year, month, day) {
-	return ((year==null || year=="") && (month==null || month=="") && (day==null || day==""));
 }
 
 function pad0(s) {
@@ -1016,30 +1167,12 @@ function pad0(s) {
 }
 
 function isNumber(s) {
-	if (s!=null && s!="") {
-		for (var i=0; i<s.length; i++) {
-			if (notDigit(s.charAt(i))) return false;
-		}
-	}
-	return true;
-}
-
-function notNumber(s) {
-	return (!isNumber(s));
-}
-
-function notDigit(n) { //n: 1-digit
-	return ("0123456789".indexOf(n)<0);
+	return /^[0-9]+$/.test(s);
 }
 
 function invalidPhoneNumber(phone) {
-	if (phone!=null && phone!="") {
-		for (var i=0; i<phone.length; i++) {
-			var n = phone.charAt(i);
-			if (n!=" " && n!="-" && n!="(" && n!=")" && notDigit(n)) return true;
-		}
-	}
-	return false;
+	if (phone==null) return false; //phone number is NOT invalid
+	return !(/^[0-9 \-\()]*$/.test(phone));
 }
 
 function isPreferredPhone(phone) {

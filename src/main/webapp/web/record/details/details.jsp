@@ -154,7 +154,7 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="web.record.details.sin"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="web.record.details.sin"/>" title="<bean:message key="web.record.details.sin"/>" ng-model="page.demo.sin"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="web.record.details.sin"/>" title="<bean:message key="web.record.details.sin"/>" ng-model="page.demo.sin" ng-change="checkSin()" ng-blur="validateSin()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.msgDemoLanguage"/></label>
@@ -212,7 +212,7 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formEmail"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formEmail"/>" title="<bean:message key="demographic.demographiceditdemographic.formEmail"/>" ng-model="page.demo.email"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formEmail"/>" title="<bean:message key="demographic.demographiceditdemographic.formEmail"/>" ng-model="page.demo.email" ng-blur="checkEmail()"/>
 		</div>
 		<div class="col-md-6">
 			<label style="background-color: {{page.cellPhonePreferredColor}}" title="{{page.cellPhonePreferredMsg}}">
@@ -283,11 +283,11 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formEFFDate"/></label>
-			<input id="effDate" ng-model="page.demo.effDate" type="text" class="form-control form-control-details" title="Health Card Effective Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.effDatePicker" ng-click="page.effDatePicker = true" placeholder="YYYY-MM-DD" style="background-color:{{page.effDateColor}}">
+			<input id="effDate" ng-model="page.demo.effDate" type="text" class="form-control form-control-details" title="Health Card Effective Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.effDatePicker" ng-click="page.effDatePicker = true" placeholder="YYYY-MM-DD" style="background-color:{{page.effDateColor}}" ng-change="preventManualEffDate()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formHCRenewDate"/></label>
-			<input id="hcRenewDate" ng-model="page.demo.hcRenewDate" type="text" class="form-control form-control-details" title="Health Card Renew Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.hcRenewDatePicker" ng-click="page.hcRenewDatePicker = true" placeholder="YYYY-MM-DD" style="background-color:{{page.hcRenewDateColor}}">
+			<input id="hcRenewDate" ng-model="page.demo.hcRenewDate" type="text" class="form-control form-control-details" title="Health Card Renew Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.hcRenewDatePicker" ng-click="page.hcRenewDatePicker = true" placeholder="YYYY-MM-DD" style="background-color:{{page.hcRenewDateColor}}" ng-change="preventManualHcRenewDate()"/>
 		</div>
 	</div>
 	
@@ -325,7 +325,7 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formRefDocNo"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formRefDocNo"/>" title="<bean:message key="demographic.demographiceditdemographic.formRefDocNo"/>" ng-model="page.referralDocNo" style="width:130px"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formRefDocNo"/>" title="<bean:message key="demographic.demographiceditdemographic.formRefDocNo"/>" ng-model="page.referralDocNo" style="width:130px" ng-change="checkReferralDocNo()"/>
 			<button type="button" class="btn btn-sm" ng-click="showReferralDocList()"><bean:message key="demographic.demographiceditdemographic.btnSearch"/></button>
 			<div style="position: absolute; right: 25px; z-index: 1; background-color: white" ng-show="page.showReferralDocList">
 				<select class="form-control form-control-details" title="<bean:message key="web.record.details.pickReferralDoctor"/>" size="7" ng-model="page.referralDocObj" ng-options="rfd.label for rfd in page.demo.referralDoctors" ng-click="fillReferralDoc()">
@@ -345,11 +345,11 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.DateJoined"/></label>
-			<input id="rosterDate" ng-model="page.demo.rosterDate" type="text" class="form-control form-control-details" title="Roster Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.rosterDatePicker" ng-click="page.rosterDatePicker = true" placeholder="YYYY-MM-DD">
+			<input id="rosterDate" ng-model="page.demo.rosterDate" type="text" class="form-control form-control-details" title="Roster Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.rosterDatePicker" ng-click="page.rosterDatePicker = true" placeholder="YYYY-MM-DD" ng-change="preventManualRosterDate()"/>
 		</div>
 		<div class="col-md-6" ng-show="isRosterTerminated()">
 			<label><bean:message key="demographic.demographiceditdemographic.RosterTerminationDate"/></label>
-			<input id="rosterTerminationDate" ng-model="page.demo.rosterTerminationDate" type="text" class="form-control form-control-details" title="<bean:message key="web.record.details.rosterTerminationDate"/>" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.rosterTerminationDatePicker" ng-click="page.rosterTerminationDatePicker = true" placeholder="YYYY-MM-DD">
+			<input id="rosterTerminationDate" ng-model="page.demo.rosterTerminationDate" type="text" class="form-control form-control-details" title="<bean:message key="web.record.details.rosterTerminationDate"/>" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.rosterTerminationDatePicker" ng-click="page.rosterTerminationDatePicker = true" placeholder="YYYY-MM-DD" ng-change="preventManualRosterTerminationDate()"/>
 		</div>
 		<div class="col-md-11" ng-show="isRosterTerminated()">
 			<label><bean:message key="demographic.demographiceditdemographic.RosterTerminationReason"/></label>
@@ -367,23 +367,23 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.PatientStatusDate"/></label>
-			<input id="patientStatusDate" ng-model="page.demo.patientStatusDate" type="text" class="form-control form-control-details" title="Patient Status Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.patientStatusDatePicker" ng-click="page.patientStatusDatePicker = true" placeholder="YYYY-MM-DD">
+			<input id="patientStatusDate" ng-model="page.demo.patientStatusDate" type="text" class="form-control form-control-details" title="Patient Status Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.patientStatusDatePicker" ng-click="page.patientStatusDatePicker = true" placeholder="YYYY-MM-DD" ng-change="preventManualPatientStatusDate()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formDateJoined1"/></label>
-			<input id="dateJoined" ng-model="page.demo.dateJoined" type="text" class="form-control form-control-details" title="Date Joined" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.dateJoinedPicker" ng-click="page.dateJoinedPicker = true" placeholder="YYYY-MM-DD">
+			<input id="dateJoined" ng-model="page.demo.dateJoined" type="text" class="form-control form-control-details" title="Date Joined" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.dateJoinedPicker" ng-click="page.dateJoinedPicker = true" placeholder="YYYY-MM-DD" ng-change="preventManualDateJoined()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formEndDate"/></label>
-			<input id="endDate" ng-model="page.demo.endDate" type="text" class="form-control form-control-details" title="End Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.endDatePicker" ng-click="page.endDatePicker = true" placeholder="YYYY-MM-DD">
+			<input id="endDate" ng-model="page.demo.endDate" type="text" class="form-control form-control-details" title="End Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.endDatePicker" ng-click="page.endDatePicker = true" placeholder="YYYY-MM-DD" ng-change="preventManualEndDate()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formChartNo"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="Chart Number" title="Chart Number" ng-model="page.demo.chartNo"/>
+			<input type="text" class="form-control form-control-details" placeholder="Chart Number" title="Chart Number" ng-model="page.demo.chartNo" ng-change="checkChartNo()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.cytolNum"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.cytolNum"/>" title="<bean:message key="demographic.demographiceditdemographic.cytolNum"/>" ng-model="page.cytolNum.value"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.cytolNum"/>" title="<bean:message key="demographic.demographiceditdemographic.cytolNum"/>" ng-model="page.cytolNum.value" ng-change="checkCytoNum()"/>
 		</div>
 	</div>
 	
@@ -400,7 +400,7 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.paperChartIndicator.dateArchived"/></label>
-			<input id="paperChartArchivedDate" ng-model="page.paperChartArchivedDate.value" type="text" class="form-control form-control-details" title="Paper Chart Archive Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.paperChartArchivedDatePicker" ng-click="page.paperChartArchivedDatePicker = true" placeholder="YYYY-MM-DD">
+			<input id="paperChartArchivedDate" ng-model="page.paperChartArchivedDate.value" type="text" class="form-control form-control-details" title="Paper Chart Archive Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.paperChartArchivedDatePicker" ng-click="page.paperChartArchivedDatePicker = true" placeholder="YYYY-MM-DD" ng-change="preventManualPaperChartArchivedDate()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.msgWaitList"/></label>
@@ -410,7 +410,7 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographicaddarecordhtm.msgDateOfReq"/></label>
-			<input id="onWaitingListSinceDate" ng-model="page.demo.onWaitingListSinceDate" type="text" class="form-control form-control-details" title="<bean:message key="demographic.demographicaddarecordhtm.msgDateOfReq"/>" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.onWaitingListSinceDatePicker" ng-click="page.onWaitingListSinceDatePicker = true" placeholder="YYYY-MM-DD">
+			<input id="onWaitingListSinceDate" ng-model="page.demo.onWaitingListSinceDate" type="text" class="form-control form-control-details" title="<bean:message key="demographic.demographicaddarecordhtm.msgDateOfReq"/>" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.onWaitingListSinceDatePicker" ng-click="page.onWaitingListSinceDatePicker = true" placeholder="YYYY-MM-DD" ng-change="preventManualOnWaitingListSinceDate()"/>
 		</div>
 		<div class="col-md-11">
 			<label><bean:message key="demographic.demographicaddarecordhtm.msgWaitListNote"/></label>
