@@ -519,6 +519,7 @@ public class ContactAction extends DispatchAction {
 			}
 		}
 		else {
+			contact.setId(null);
 			contactDao.persist(contact);
 		}
 	   return mapping.findForward("cForm");
@@ -646,6 +647,11 @@ public class ContactAction extends DispatchAction {
 	
 	public static List<DemographicContact> getDemographicContacts(Demographic demographic) {
 		List<DemographicContact> contacts = demographicContactDao.findByDemographicNo(demographic.getDemographicNo());	
+		return fillContactNames(contacts);
+	}
+	
+	public static List<DemographicContact> getDemographicContacts(Demographic demographic, String category) {
+		List<DemographicContact> contacts = demographicContactDao.findByDemographicNoAndCategory(demographic.getDemographicNo(),category);	
 		return fillContactNames(contacts);
 	}
 
