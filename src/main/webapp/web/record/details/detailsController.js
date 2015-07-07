@@ -26,10 +26,6 @@
 oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams,$state,demographicService,patientDetailStatusService,securityService,staticDataService,demo,user) {
 	console.log("details ctrl ", $stateParams, $state, demo);
 	
-	patientDetailStatusService.getAlternative().then(function(data){
-		if (data.success) $state.go("record.detailsAlt");
-	});
-	
 	var page = {};
 	$scope.page = page;
 	$scope.page.demo = demo;
