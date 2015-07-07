@@ -511,7 +511,46 @@ function ignoreDuplicates() {
 		
 	return ret;
 }
+var child_record_index=0;
 
+function addChildRecord() {
+	
+	//add row to table. need a unique index	
+	var rowData = "<tr valign=\"top\" id=\"child_record"+child_record_index+"\">" +
+		"<td>" +
+			"[<a href=\"javascript:void()\" onClick=\"removeChildRecord("+child_record_index+");return false;\">X</a>]" +
+			"&nbsp;" +
+			"Last Name: <input type=\"text\" name=\"child_last_name"+child_record_index+"\" />&nbsp;" +
+			"First Name: <input type=\"text\" name=\"child_first_name"+child_record_index+"\"/>&nbsp;" +
+			"DOB (yyyy-mm-dd):" +
+			"<input type=\"text\" name=\"child_dob"+child_record_index+"\" id=\"child_dob"+child_record_index+"\" value=\"\" size=\"12\" >" +
+			"<img src=\"../images/cal.gif\" id=\"child_dob_cal"+child_record_index+"\"/>(yyyy-mm-dd)&nbsp;" +
+			"Gender: " + 
+        "<select  name=\"child_gender"+child_record_index+"\">" +
+        "<option value=\"\"></option>" +
+        "<option value=\"M\">Male</option>" +
+        "<option value=\"F\">Female</option>" +
+        "<option value=\"T\">Transgendered</option>" +
+        "<option value=\"O\">Other</option>" +
+        "<option value=\"U\">Undefined</option>" +
+        "</select>" +
+   		"</td>" +
+		"</tr>";
+		
+		jQuery("#child_record_tbl").append(rowData);
+
+		Calendar.setup({ inputField : "child_dob"+child_record_index, ifFormat : "%Y-%m-%d", showsTime :false, button : "child_dob_cal"+child_record_index, singleClick : true, step : 1 });
+		
+		jQuery("#max_child_record").val(child_record_index);	
+		child_record_index++;
+		
+	
+}
+
+
+function removeChildRecord(index) {
+	jQuery("#child_record"+index).remove();
+}
 
 </script>
 </head>
@@ -1300,6 +1339,8 @@ document.forms[1].r_doctor_ohip.value = refNo;
 
 
 <%-- TOGGLE CREATING BABY RECORD MODULE --%>	
+<input type="hidden" name="max_child_record" id="max_child_record" value="0"/>
+
 <oscar:oscarPropertiesCheck property="enable_create_child_record" value="true">
 	<%
 		String tmp = OscarProperties.getInstance().getProperty("enableCreateChildRecordPrograms","");
@@ -1326,32 +1367,18 @@ document.forms[1].r_doctor_ohip.value = refNo;
 	%>
 			<tr>
 				<td id="babyTbl" colspan="4">
-					<table border="1" width="100%">
+					<table border="0" width="100%" id="child_record_tbl">
 						<tr valign="top">
-	 					<td>
-	 					<span style="font-size:12px"><b><bean:message key="demographic.demographicaddrecordhtm.childHeader" /></b></span>
-	 					<br/>
-						<bean:message key="demographic.demographicaddrecordhtm.childLastName" />: <input type="text" name="child_last_name" />&nbsp;
-						<bean:message key="demographic.demographicaddrecordhtm.childFirstName" />: <input type="text" name="child_first_name"/>&nbsp;
-						<bean:message key="demographic.demographicaddrecordhtm.childDateOfBirth" />:
-						<input type="text"
-							name="child_dob" id="child_dob"
-							value="" size="12" > <img
-							src="../images/cal.gif" id="child_dob_cal">(yyyy-mm-dd)
-							&nbsp;
-						<bean:message key="demographic.demographicaddrecordhtm.childGender" />:  
-						             <select  name="child_gender">
-				                        <option value=""></option>
-				                		<% for(org.oscarehr.common.Gender gn : org.oscarehr.common.Gender.values()){ %>
-				                        <option value=<%=gn.name()%>><%=gn.getText()%></option>
-				                        <% } %>
-				                        </select>
-				                        </td>
-				       </tr>
-				      </table>               
+	 						<td>
+	 							<span style="font-size:12px"><b><bean:message key="demographic.demographicaddrecordhtm.childHeader" /></b></span>
+	 						</td>
+	 					</tr>
+	 					
+				    </table>
+				    <input type="button" value="Add" onClick="addChildRecord()" />
+				                   
 				</td>
 			</tr>
-			
 			<% } %>
 </oscar:oscarPropertiesCheck>
 
@@ -1536,11 +1563,6 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 });
 </script>
 
-<oscar:oscarPropertiesCheck property="enable_create_child_record" value="true">
-<script type="text/javascript">
-Calendar.setup({ inputField : "child_dob", ifFormat : "%Y-%m-%d", showsTime :false, button : "child_dob_cal", singleClick : true, step : 1 });
-</script>
-</oscar:oscarPropertiesCheck>
 
 <script type="text/javascript">
 <%

@@ -348,119 +348,133 @@
 
         } //end of waitingl list
 
-        String childLastName = request.getParameter("child_last_name");
-        String childFirstName = request.getParameter("child_first_name");
-        String childGender = request.getParameter("child_gender");
-        String childDateOfBirth = request.getParameter("child_dob");
+        //enable_child_record
+        String strMaxChildRecords=request.getParameter("max_child_record");
         
-        if(!StringUtils.isEmpty(childLastName) && !StringUtils.isEmpty(childFirstName) && !StringUtils.isEmpty(childGender) && !StringUtils.isEmpty(childDateOfBirth)) {
-        	Demographic childDemographic = new Demographic();
-        	childDemographic.setLastName(childLastName);
-        	childDemographic.setFirstName(childFirstName);
-        	childDemographic.setSex(childGender);
-        	if(childDateOfBirth.split("-").length==3) {
-        		String[] dateParts = childDateOfBirth.split("-");
-        		childDemographic.setYearOfBirth(dateParts[0]);
-        		childDemographic.setMonthOfBirth(dateParts[1]);
-        		childDemographic.setDateOfBirth(dateParts[2]);
-        	}
-        	childDemographic.setTitle("");
-        	childDemographic.setAddress("");
-        	childDemographic.setCity("");
-        	childDemographic.setProvince("");
-        	childDemographic.setPostal("");
-        	childDemographic.setPhone("");
-        	childDemographic.setPhone2("");
-        	childDemographic.setEmail("");
-        	childDemographic.setHin("");
-        	childDemographic.setVer("");
-        	childDemographic.setPatientStatus("AC");
-        	childDemographic.setPatientStatusDate(new java.util.Date());
-        	childDemographic.setDateJoined(new java.util.Date());
-        	childDemographic.setChartNo("");
-        	childDemographic.setSpokenLanguage("");
-        	childDemographic.setRosterStatus("");
-        	childDemographic.setProviderNo("");
-        	childDemographic.setHcType(demographic.getHcType());
-        	childDemographic.setFamilyDoctor("<rdohip></rdohip><rd></rd>");
-        	childDemographic.setSin("");
-        	childDemographic.setCountryOfOrigin("-1");
-        	childDemographic.setNewsletter("Unknown");
-        	childDemographic.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
-        	
-        	demographicDao.save(childDemographic);
-        	
-        	
-        	//setup relationship
-        	DemographicContact dc1 = new DemographicContact();
-       		dc1.setActive(true);
-       		dc1.setCategory("personal");
-       		dc1.setConsentToContact(true);
-       		dc1.setCreated(new java.util.Date());
-       		dc1.setCreator(loggedInInfo.getLoggedInProviderNo());
-       		dc1.setEc("");
-       		dc1.setFacilityId(loggedInInfo.getCurrentFacility().getId());
-       		dc1.setNote("");
-       		dc1.setSdm("");
-       		dc1.setType(1);
-       		
-       		dc1.setDemographicNo(demographic.getDemographicNo());
-       		dc1.setContactId(childDemographic.getDemographicNo().toString());
-       		
-       		if(childDemographic.getSex().equalsIgnoreCase("M")) {
-       			dc1.setRole("Son");
-       		}else if(childDemographic.getSex().equalsIgnoreCase("F")) {
-       			dc1.setRole("Daughter");
-       		} else {
-       			dc1.setRole("Child");
-       		}
-       		
-       		dc1.setUpdateDate(new java.util.Date());
-       		demographicContactDao.persist(dc1);
-       		
-       		DemographicContact dc2 = new DemographicContact();
-       		dc2.setActive(true);
-       		dc2.setCategory("personal");
-       		dc2.setConsentToContact(true);
-       		dc2.setCreated(new java.util.Date());
-       		dc2.setCreator(loggedInInfo.getLoggedInProviderNo());
-       		dc2.setEc("");
-       		dc2.setFacilityId(loggedInInfo.getCurrentFacility().getId());
-       		dc2.setNote("");
-       		dc2.setSdm("");
-       		dc2.setType(1);
-       		
-       		dc2.setDemographicNo(childDemographic.getDemographicNo());
-       		dc2.setContactId(demographic.getDemographicNo().toString());
-       		
-       		if(demographic.getSex().equalsIgnoreCase("M")) {
-       			dc2.setRole("Father");
-       		}else if(demographic.getSex().equalsIgnoreCase("F")) {
-       			dc2.setRole("Mother");
-       		} else {
-       			dc2.setRole("Parent");
-       		}
-       		
-       		dc2.setUpdateDate(new java.util.Date());
-       		demographicContactDao.persist(dc2);
-       	
-       		//admit the child in same programs as the parent
-            gieat = new GenericIntakeEditAction();
-            gieat.setAdmissionManager(am);
-            gieat.setProgramManager(pm);
-            gieat.admitBedCommunityProgram(childDemographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),Integer.parseInt(bedP),"","",null);
-
-    
-            if(servP!=null&&servP.length>0){
-  	  		  Set<Integer> s = new HashSet<Integer>();
-              for(String _s:servP) s.add(Integer.parseInt(_s));
-              gieat.admitServicePrograms(childDemographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),s,"",null);
-            }
-          
-            LogAction.addLog(curUser_no, "add", "demographic", childDemographic.getDemographicNo().toString(), ip, childDemographic.getDemographicNo().toString());
-
-       		
+        int maxChildRecords = 0;
+        try {
+        	maxChildRecords = Integer.parseInt(strMaxChildRecords);
+        }catch(NumberFormatException e) {
+        	//ignore
         }
+        
+        for(int x=0;x<maxChildRecords+1;x++) {
+	        String childLastName = request.getParameter("child_last_name" +x);
+	        String childFirstName = request.getParameter("child_first_name"+x);
+	        String childGender = request.getParameter("child_gender"+x);
+	        String childDateOfBirth = request.getParameter("child_dob"+x);
+	        
+	        if(!StringUtils.isEmpty(childLastName) && !StringUtils.isEmpty(childFirstName) && !StringUtils.isEmpty(childGender) && !StringUtils.isEmpty(childDateOfBirth)) {
+	        	Demographic childDemographic = new Demographic();
+	        	childDemographic.setLastName(childLastName);
+	        	childDemographic.setFirstName(childFirstName);
+	        	childDemographic.setSex(childGender);
+	        	if(childDateOfBirth.split("-").length==3) {
+	        		String[] dateParts = childDateOfBirth.split("-");
+	        		childDemographic.setYearOfBirth(dateParts[0]);
+	        		childDemographic.setMonthOfBirth(dateParts[1]);
+	        		childDemographic.setDateOfBirth(dateParts[2]);
+	        	}
+	        	childDemographic.setTitle("");
+	        	childDemographic.setAddress("");
+	        	childDemographic.setCity("");
+	        	childDemographic.setProvince("");
+	        	childDemographic.setPostal("");
+	        	childDemographic.setPhone("");
+	        	childDemographic.setPhone2("");
+	        	childDemographic.setEmail("");
+	        	childDemographic.setHin("");
+	        	childDemographic.setVer("");
+	        	childDemographic.setPatientStatus("AC");
+	        	childDemographic.setPatientStatusDate(new java.util.Date());
+	        	childDemographic.setDateJoined(new java.util.Date());
+	        	childDemographic.setChartNo("");
+	        	childDemographic.setSpokenLanguage("");
+	        	childDemographic.setRosterStatus("");
+	        	childDemographic.setProviderNo("");
+	        	childDemographic.setHcType(demographic.getHcType());
+	        	childDemographic.setFamilyDoctor("<rdohip></rdohip><rd></rd>");
+	        	childDemographic.setSin("");
+	        	childDemographic.setCountryOfOrigin("-1");
+	        	childDemographic.setNewsletter("Unknown");
+	        	childDemographic.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
+	        	
+	        	demographicDao.save(childDemographic);
+	        	
+	        	
+	        	//setup relationship
+	        	DemographicContact dc1 = new DemographicContact();
+	       		dc1.setActive(true);
+	       		dc1.setCategory("personal");
+	       		dc1.setConsentToContact(true);
+	       		dc1.setCreated(new java.util.Date());
+	       		dc1.setCreator(loggedInInfo.getLoggedInProviderNo());
+	       		dc1.setEc("");
+	       		dc1.setFacilityId(loggedInInfo.getCurrentFacility().getId());
+	       		dc1.setNote("");
+	       		dc1.setSdm("");
+	       		dc1.setType(1);
+	       		
+	       		dc1.setDemographicNo(demographic.getDemographicNo());
+	       		dc1.setContactId(childDemographic.getDemographicNo().toString());
+	       		
+	       		if(childDemographic.getSex().equalsIgnoreCase("M")) {
+	       			dc1.setRole("Son");
+	       		}else if(childDemographic.getSex().equalsIgnoreCase("F")) {
+	       			dc1.setRole("Daughter");
+	       		} else {
+	       			dc1.setRole("Child");
+	       		}
+	       		
+	       		dc1.setUpdateDate(new java.util.Date());
+	       		demographicContactDao.persist(dc1);
+	       		
+	       		DemographicContact dc2 = new DemographicContact();
+	       		dc2.setActive(true);
+	       		dc2.setCategory("personal");
+	       		dc2.setConsentToContact(true);
+	       		dc2.setCreated(new java.util.Date());
+	       		dc2.setCreator(loggedInInfo.getLoggedInProviderNo());
+	       		dc2.setEc("");
+	       		dc2.setFacilityId(loggedInInfo.getCurrentFacility().getId());
+	       		dc2.setNote("");
+	       		dc2.setSdm("");
+	       		dc2.setType(1);
+	       		
+	       		dc2.setDemographicNo(childDemographic.getDemographicNo());
+	       		dc2.setContactId(demographic.getDemographicNo().toString());
+	       		
+	       		if(demographic.getSex().equalsIgnoreCase("M")) {
+	       			dc2.setRole("Father");
+	       		}else if(demographic.getSex().equalsIgnoreCase("F")) {
+	       			dc2.setRole("Mother");
+	       		} else {
+	       			dc2.setRole("Parent");
+	       		}
+	       		
+	       		dc2.setUpdateDate(new java.util.Date());
+	       		demographicContactDao.persist(dc2);
+	       	
+	       		//admit the child in same programs as the parent
+	            gieat = new GenericIntakeEditAction();
+	            gieat.setAdmissionManager(am);
+	            gieat.setProgramManager(pm);
+	            gieat.admitBedCommunityProgram(childDemographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),Integer.parseInt(bedP),"","",null);
+	
+	    
+	            if(servP!=null&&servP.length>0){
+	  	  		  Set<Integer> s = new HashSet<Integer>();
+	              for(String _s:servP) s.add(Integer.parseInt(_s));
+	              gieat.admitServicePrograms(childDemographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),s,"",null);
+	            }
+	          
+	            LogAction.addLog(curUser_no, "add", "demographic", childDemographic.getDemographicNo().toString(), ip, childDemographic.getDemographicNo().toString());
+	
+	        }
+	       		
+        }
+        //end of enable_child_record
+        
         
         //if(request.getParameter("fromAppt")!=null && request.getParameter("provider_no").equals("1")) {
         if(start_time2!=null && !start_time2.equals("null")) {
