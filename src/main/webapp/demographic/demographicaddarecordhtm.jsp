@@ -59,6 +59,11 @@
 <%@page import="oscar.OscarProperties" %>
 <%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+<%@page import="org.oscarehr.managers.ProgramManager2" %>
+
+
+
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
@@ -72,6 +77,8 @@
     boolean privateConsentEnabled = privateConsentEnabledProperty != null && privateConsentEnabledProperty.equals("true");
     
     LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+    
+    ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
 %>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
@@ -1294,6 +1301,29 @@ document.forms[1].r_doctor_ohip.value = refNo;
 
 <%-- TOGGLE CREATING BABY RECORD MODULE --%>	
 <oscar:oscarPropertiesCheck property="enable_create_child_record" value="true">
+	<%
+		String tmp = OscarProperties.getInstance().getProperty("enableCreateChildRecordPrograms","");
+		String[] enableChildRecordPrograms = tmp.split(",");
+
+	
+		boolean showChildRecordSection=true;
+		if(!StringUtils.isEmpty(tmp) && enableChildRecordPrograms.length >0 ) {
+			showChildRecordSection=false;
+			 
+			ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+		
+			if(pp != null) {
+				for(int x=0;x<enableChildRecordPrograms.length;x++) {
+					if(enableChildRecordPrograms[x].equals(pp.getProgramId().toString())) {
+						showChildRecordSection=true;
+					}
+				}
+			}
+		}
+		
+		if(showChildRecordSection) {
+		
+	%>
 			<tr>
 				<td id="babyTbl" colspan="4">
 					<table border="1" width="100%">
@@ -1321,6 +1351,8 @@ document.forms[1].r_doctor_ohip.value = refNo;
 				      </table>               
 				</td>
 			</tr>
+			
+			<% } %>
 </oscar:oscarPropertiesCheck>
 
 <%-- TOGGLE PRIVACY CONSENT MODULE --%>			
