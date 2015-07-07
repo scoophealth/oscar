@@ -72,7 +72,7 @@ public class WLWaitingListUtil {
 		}
 		list.setPosition(maxPosition + 1);
 		list.setHistory(false);
-
+		list.setListId(ConversionUtils.fromIntString(waitingListID));
 		dao.persist(list);
 
 		// update the waiting list positions
