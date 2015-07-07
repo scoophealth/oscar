@@ -47,6 +47,7 @@
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
 <title>Waiting List</title>
 
 <!-- calendar stylesheet -->
@@ -269,11 +270,14 @@ function removePatient(demographicNo, waitingList){
 								<td class="<%=styleClass%>"><html:text
 									name="waitingListBean" property="onListSince" indexed="true"
 									styleClass="data3" onblur="setParameters(this);"
-									onchange="setParameters(this);" /> <img
+									onchange="setParameters(this);" styleId="waitingListBean[${ctr}].onListSince" /> <img
 									src="../images/cal.gif" id="referral_date_cal_<%=ctr%>">
 								</td>
 								<script type="text/javascript">
-Calendar.setup({ inputField : "waitingListBean[<%=ctr%>].onListSince", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal_<%=ctr%>", singleClick : true, step : 1 });
+								$(document).ready(function(){
+									Calendar.setup({ inputField : "waitingListBean[<%=ctr%>].onListSince", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal_<%=ctr%>", singleClick : true, step : 1 });
+
+								});
 </script>
 								<td class="<%=styleClass%>"><html:select
 									property="selectedProvider" styleClass="data3">

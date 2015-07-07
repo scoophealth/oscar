@@ -70,7 +70,7 @@ public class WLWaitingListBeanHandler {
 
 		if (waitingListID != null && waitingListID.length() > 0) {
 			WaitingListNameDao nameDao = SpringUtils.getBean(WaitingListNameDao.class);
-			WaitingListName name = nameDao.find(waitingListID);
+			WaitingListName name = nameDao.find(Integer.parseInt(waitingListID));
 			if (name != null) {
 				waitingListName = name.getName();
 			}
