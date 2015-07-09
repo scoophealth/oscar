@@ -117,7 +117,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 				url = "../billing/CA/" + $scope.billRegion + "/billingReportCenter.jsp?displaymode=billreport";
 				wname="billing";
 			}else if(item.label=="Admin"){
-				url = "../administration/index.jsp";
+				url = "../administration/";
 				wname="admin";
 			}else if(item.label=="Documents"){
 				url = "../dms/documentReport.jsp?function=provider&functionid="+$scope.me.providerNo;

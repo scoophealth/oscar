@@ -32,9 +32,9 @@ function newWindow(url) {
     return false;
 }
 
-newWindow('<%=request.getContextPath()%>/administration/index.jsp');
+newWindow('<%=request.getContextPath()%>/administration/');
 </script>
-<p class="info"><a href="javascript:void()" onClick="newWindow('<%=request.getContextPath()%>/administration/index.jsp');return false"><bean:message key="admin.panel" bundle="ui"/></a> <bean:message key="admin.popupMessage" bundle="ui"/></p>
+<p class="info"><a href="javascript:void()" onClick="newWindow('<%=request.getContextPath()%>/administration/');return false"><bean:message key="admin.panel" bundle="ui"/></a> <bean:message key="admin.popupMessage" bundle="ui"/></p>
 
 <p><a href="#/dashboard"><bean:message key="global.goToDashboard" bundle="ui"/></a></p>
 
