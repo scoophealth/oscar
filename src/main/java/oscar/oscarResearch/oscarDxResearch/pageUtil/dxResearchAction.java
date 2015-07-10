@@ -46,6 +46,8 @@ import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 import oscar.util.ConversionUtils;
 import oscar.util.ParameterActionForward;
 
@@ -113,6 +115,10 @@ public class dxResearchAction extends Action {
 					r.setStatus('A');
 
 					dao.save(r);
+					
+					String ip = request.getRemoteAddr();
+			        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.UPDATE, "DX", ""+r.getId() , ip,"");
+
 				}
 
 				if (count == 0) {
@@ -135,7 +141,12 @@ public class dxResearchAction extends Action {
 						dr.setStatus('A');
 						dr.setDxresearchCode(xml_research[i]);
 						dr.setCodingSystem(codingSystem);
+						dr.setProviderNo(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo());
 						dao.persist(dr);
+						
+						String ip = request.getRemoteAddr();
+				        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, "DX", ""+dr.getId() , ip,"");
+
 					}
 				}
 			}
