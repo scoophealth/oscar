@@ -404,7 +404,7 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 
     @NativeSql
     public List<Object[]> findResearchAndCodingSystemByDemographicAndCondingSystem(String codingSystem, String demographicNo) {
-	    String sql = "select d.start_date, d.update_date, c.description, c."+codingSystem+", d.dxresearch_no, d.status from dxresearch d, "+codingSystem+" c " +
+	    String sql = "select d.start_date, d.update_date, c.description, c."+codingSystem+", d.dxresearch_no, d.status,d.providerNo from dxresearch d, "+codingSystem+" c " +
                 "where d.dxresearch_code=c."+codingSystem+" and d.status<>'D' and d.demographic_no ='"+ demographicNo +"' and d.coding_system = '"+codingSystem+"'"
                +" order by d.start_date desc, d.update_date desc";
 		Query query = entityManager.createNativeQuery(sql);
