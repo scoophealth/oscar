@@ -209,7 +209,7 @@ function ClipBoard4() {
 		hin = "HN " + demo.getHcType() + " " + demo.getHin() + " " + demo.getVer();
 		refDoc = SxmlMisc.getXmlContent(demo.getFamilyDoctor(),"rd");
 	}
-	phone2 = phone2.equals("")?"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":(phone2+"&nbsp;") ;
+	phone2 = (phone2==null || phone2.equals(""))?"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":(phone2+"&nbsp;") ;
 %>
 
 <form method="post" name="labelprint" action="demographicprintdemographic.jsp">
