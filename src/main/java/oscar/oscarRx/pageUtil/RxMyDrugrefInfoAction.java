@@ -192,10 +192,13 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
 	        try{
 	        	RxDrugRef rxDrugRef = new RxDrugRef();
 	        	List localInteractions =  rxDrugRef.interactionByRegionalIdentifier(regionalIdentifiers,0);
-	        	regionalIdentifiers.addAll(localInteractions);
+	        	log2.debug("local interactions size = "+localInteractions.size());
+	        	all.addAll(localInteractions);
 	        }catch(Exception e){
 	        	log2.error("Error calling interactions by regional identifier",e);
 	        }
+        }else{
+        	log2.debug("RX_INTERACTION_LOCAL_DRUGREF_REGIONAL_IDENTIFIER was null" );
         }
         
         
