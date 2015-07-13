@@ -27,6 +27,13 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
 <%
+// Force the page to un-cache itself so user cannot go back after logout
+// The 3 lines ensure that all browsers are covered
+// They are necessary for URL not showing this file name (index.jsp)
+response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+response.setHeader("Pragma", "no-cache");
+response.setDateHeader("Expires", 0);
+
 session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 %>
 
