@@ -2023,12 +2023,17 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 
 	    	if(searchRequest.getKeyword().indexOf(",")==-1) {
 	    		fieldname="lower(d.last_name)";
-	    	} else if(searchRequest.getKeyword().trim().indexOf(",")==(searchRequest.getKeyword().trim().length()-1))  {
+	    	}
+	    	else if(searchRequest.getKeyword().indexOf(",")==(searchRequest.getKeyword().length()-1))  {
+	    		fieldname="lower(d.last_name)";
+	    		params.put("keyword", searchRequest.getKeyword().substring(0, searchRequest.getKeyword().length()-1).trim());
+	    	}
+	    	else if(searchRequest.getKeyword().indexOf(",")==0) {
 	    		fieldname="lower(d.first_name)";
-	    		params.put("keyword", searchRequest.getKeyword().substring(0, searchRequest.getKeyword().length()-1));
-	    	} else {
-	    		params.put("extraKeyword", searchRequest.getKeyword().split(",")[0]);
-	    		params.put("keyword", searchRequest.getKeyword().split(",")[1]);
+	    		params.put("keyword", searchRequest.getKeyword().substring(1).trim());
+	    	}else{
+	    		params.put("extraKeyword", searchRequest.getKeyword().split(",")[0].trim());
+	    		params.put("keyword", searchRequest.getKeyword().split(",")[1].trim());
 	    		fieldname="lower(d.last_name) "+regularexp+" :extraKeyword"+" and lower(d.first_name) ";
 	    		}
 			}
