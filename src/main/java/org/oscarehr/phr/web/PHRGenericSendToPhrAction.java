@@ -31,6 +31,7 @@
 package org.oscarehr.phr.web;
 
 import java.io.OutputStream;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -42,9 +43,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.casemgmt.service.CaseManagementManager;
-import org.oscarehr.casemgmt.web.CaseManagementEntryAction;
+import org.oscarehr.casemgmt.service.CaseManagementPrint;
 import org.oscarehr.common.dao.RemoteDataLogDao;
 import org.oscarehr.common.model.RemoteDataLog;
 import org.oscarehr.common.service.myoscar.MyOscarMedicalDataManagerUtils;
@@ -109,10 +108,28 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
             preventionPrintPdf.printPdf(headerIds, request, response.getOutputStream());
         }
         if (module != null && module.equals("echart")) {
-            CaseManagementEntryAction action = new CaseManagementEntryAction();
-            action.setCaseManagementManager((CaseManagementManager) SpringUtils.getBean("caseManagementManager"));
-            action.setProviderManager((ProviderManager) SpringUtils.getBean("providerManager"));
-            action.doPrint(request, response.getOutputStream());
+        	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+        	String demono = request.getParameter("demographicNo");
+        	if (demono == null)  demono = request.getParameter("demographic_no");
+    		if (demono == null || "".equals(demono)) {
+    			demono = (String) request.getAttribute("casemgmt_DemoNo");
+    		}
+			Integer demographicNo = Integer.parseInt(demono);
+			String ids = request.getParameter("notes2print");
+			boolean printAllNotes = "ALL_NOTES".equals(ids);
+			String[] noteIds;
+			if (ids.length() > 0) {
+				noteIds = ids.split(",");
+			} else {
+				noteIds = new String[] {};
+			}
+			boolean printCPP  = request.getParameter("printCPP") != null && request.getParameter("printCPP").equalsIgnoreCase("true");
+			boolean printRx   = request.getParameter("printRx") != null && request.getParameter("printRx").equalsIgnoreCase("true");
+			boolean printLabs = request.getParameter("printLabs") != null && request.getParameter("printLabs").equalsIgnoreCase("true");		
+		
+			CaseManagementPrint cmp = new CaseManagementPrint();
+			cmp.doPrint(loggedInInfo,demographicNo, printAllNotes,noteIds,printCPP,printRx,printLabs,null,null,request, response.getOutputStream());
+        	
         }
         return null;
     }
@@ -181,10 +198,36 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 
                 OutputStream os = newEDoc.getFileOutputStream();
 
-                CaseManagementEntryAction action = new CaseManagementEntryAction();
-                action.setCaseManagementManager((CaseManagementManager) SpringUtils.getBean("caseManagementManager"));
-                action.setProviderManager((ProviderManager) SpringUtils.getBean("providerManager"));
-                action.doPrint(request, os);
+    			String ids = request.getParameter("notes2print");
+    			boolean printAllNotes = "ALL_NOTES".equals(ids);
+    			String[] noteIds;
+    			if (ids.length() > 0) {
+    				noteIds = ids.split(",");
+    			} else {
+    				noteIds = new String[] {};
+    			}
+    			boolean printCPP  = request.getParameter("printCPP") != null && request.getParameter("printCPP").equalsIgnoreCase("true");
+    			boolean printRx   = request.getParameter("printRx") != null && request.getParameter("printRx").equalsIgnoreCase("true");
+    			boolean printLabs = request.getParameter("printLabs") != null && request.getParameter("printLabs").equalsIgnoreCase("true");
+    			Calendar startDate = null;
+    			try{
+    				startDate = Calendar.getInstance();
+    				startDate.setTimeInMillis(Long.parseLong(request.getParameter("startDate")));
+    			}catch(Exception e){
+    				startDate = null;
+    			}
+    			
+    			Calendar endDate = null;
+    			try{
+    				endDate = Calendar.getInstance();
+    				endDate.setTimeInMillis(Long.parseLong(request.getParameter("endDate")));
+    			}catch(Exception e){
+    				endDate = null;
+    			}
+    		
+    			CaseManagementPrint cmp = new CaseManagementPrint();
+    			cmp.doPrint(loggedInInfo,demographicNo, printAllNotes,noteIds,printCPP,printRx,printLabs,startDate,endDate,request, os);
+            	
             } else {
                 response.getWriter().append("object ID is unrecognized or is not set");
                 return null;
