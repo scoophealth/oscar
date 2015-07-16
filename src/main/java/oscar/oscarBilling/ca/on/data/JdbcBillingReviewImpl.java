@@ -51,6 +51,7 @@ import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONExt;
 import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.common.model.BillingONPayment;
+import org.oscarehr.common.model.BillingOnItemPayment;
 import org.oscarehr.common.model.BillingService;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DateRange;
@@ -66,7 +67,7 @@ public class JdbcBillingReviewImpl {
 	private BillingONExtDao extDao = SpringUtils.getBean(BillingONExtDao.class);
 	private BillingONPaymentDao payDao = SpringUtils.getBean(BillingONPaymentDao.class);
 	private BillingServiceDao serviceDao = SpringUtils.getBean(BillingServiceDao.class);
-	BillingOnItemPaymentDao billOnItemPaymentDao = (BillingOnItemPaymentDao)SpringUtils.getBean(BillingOnItemPaymentDao.class);
+	private BillingOnItemPaymentDao billOnItemPaymentDao = (BillingOnItemPaymentDao)SpringUtils.getBean(BillingOnItemPaymentDao.class);
 	
 	public String getCodeFee(String val, String billReferalDate) {
 		String retval = null;
@@ -370,6 +371,18 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setNumItems(Integer.parseInt(bi.getServiceCount()));
 				
 				for(Integer paymentId:billingOnPaymentDao.find3rdPartyPayments(Integer.parseInt(ch1Obj.getId()))) {
+					//because private billing changed, we'll check via paymentTypeId in billing_on_payment
+					BillingONPayment paymentObj = billingOnPaymentDao.find(paymentId);
+					BillingOnItemPayment boip = billOnItemPaymentDao.findByPaymentIdAndItemId(paymentId, bi.getId());
+					
+					
+					if(paymentObj.getPaymentTypeId() == CASH_PAYMENT_ID) {
+						cashTotal += boip.getPaid().intValue();
+					} else if(paymentObj.getPaymentTypeId() == DEBIT_PAYMENT_ID) {
+						debitTotal += boip.getPaid().intValue();
+					}
+					/*
+					
 					//lets go through the exts, and pull out the ones.
 					String payment = null;
 					String payMethod=null;
@@ -387,6 +400,7 @@ public class JdbcBillingReviewImpl {
 					if(DEBIT_PAYMENT_ID.toString().equals(payMethod)) {
 						debitTotal += Double.valueOf(payment);
 					}
+					*/
 				}
 				
 				
