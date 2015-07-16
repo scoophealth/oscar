@@ -463,10 +463,14 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	}
 	
 	$scope.formatDate = function(id){
-		if (id=="DobY" || id=="DobM" || id=="DobD") $scope.calculateAge();
+		$scope.calculateAge();
 		
-		if (id=="DobM") demo.dobMonth = pad0(demo.dobMonth);
-		else if (id=="DobD") demo.dobDay = pad0(demo.dobDay);
+		if (id=="DobM" && demo.dobMonth!=null && String(demo.dobMonth).length==1) {
+			demo.dobMonth = "0"+demo.dobMonth;
+		}
+		else if (id=="DobD" && demo.dobDay!=null && String(demo.dobDay).length==1) {
+			demo.dobDay = "0"+demo.dobDay;
+		}
 	}
 	$scope.formatDate("DobM"); //done on page load
 	$scope.formatDate("DobD"); //done on page load
@@ -485,6 +489,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 				}
 			}
 		}
+		return true;
 	}
 	
 	//check&format postal code (Canada provinces only)
@@ -949,20 +954,10 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		if (demo.dateOfBirth==null) {
 			alert("Invalid Date of Birth"); return;
 		}
-		if ($scope.checkPatientStatus()) return;
+		if (!$scope.checkPatientStatus()) return;
 		if (!$scope.isPostalComplete()) return;
 		if (!$scope.validateSin()) return;
 		if (!$scope.validateReferralDocNo()) return;
-		if (!$scope.validateEffDate()) return;
-		if (!$scope.validateHcRenewDate()) return;
-		if (!$scope.validateRosterDate()) return;
-		if (!$scope.validateRosterTerminationDate()) return;
-		if (!$scope.validatePatientStatusDate()) return;
-		if (!$scope.validateDateJoined()) return;
-		if (!$scope.validateEndDate()) return;
-		if (!$scope.validatePaperChartArchivedDate()) return;
-		if (!$scope.validateOnWaitingListSinceDate()) return;
-		
 		
 		//save notes
 		if (page.notes!=null) {
@@ -1155,15 +1150,6 @@ function dateValid(dateStr) { //valid date format: yyyy-MM-dd
 	if (dateDate.getDate()!=datePart[2]) return false;
 	
 	return true;
-}
-
-function pad0(s) {
-	if (s!=null && s!="") {
-		s = parseInt(s).toString();
-		if (s.length<2) s = "0"+s;
-		if (s==0) s = "";
-	}
-	return s;
 }
 
 function isNumber(s) {
