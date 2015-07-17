@@ -40,7 +40,7 @@ public class ProSignatureData {
        boolean retval = false;
        
       ProviderExt pe =  providerExtDao.find(proNo);
-      if(pe != null) {
+      if(pe!=null && pe.getSignature()!=null) {
     	  retval=true;
       }
        

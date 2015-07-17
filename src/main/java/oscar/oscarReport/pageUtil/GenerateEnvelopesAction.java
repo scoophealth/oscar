@@ -86,7 +86,11 @@ public class GenerateEnvelopesAction  extends Action {
       for (int i = 0; i <demos.length;i++){
          DemographicData demoData = new DemographicData();
          Demographic d = demoData.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demos[i]);
-         String envelopeLabel = d.getFirstName()+" "+d.getLastName()+"\n"+d.getAddress()+"\n"+d.getCity()+", "+d.getProvince()+"\n"+d.getPostal();
+         String address = d.getAddress()==null ? "" : d.getAddress();
+         String city = d.getCity()==null ? "" : d.getCity();
+         String province = d.getProvince()==null ? "" : d.getProvince();
+         String postal = d.getPostal()==null ? "" : d.getPostal();
+         String envelopeLabel = d.getFirstName()+" "+d.getLastName()+"\n"+address+"\n"+city+", "+province+"\n"+postal;
          
          document.add(getEnvelopeLabel(envelopeLabel));
          document.newPage();
