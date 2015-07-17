@@ -58,6 +58,8 @@ import org.oscarehr.common.model.BillingOnItemPayment;
 import org.oscarehr.common.model.BillingOnTransaction;
 import org.oscarehr.common.model.BillingPaymentType;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
+
 import oscar.oscarBilling.ca.on.data.BillingItemData;
 import oscar.oscarBilling.ca.on.data.JdbcBilling3rdPartImpl;
 
@@ -87,6 +89,28 @@ public class BillingONPaymentsAction extends DispatchAction {
 		if (paymentLists == null) {
 			paymentLists = new ArrayList<BillingONPayment>();
 		}
+		
+		BillingONCHeader1Dao ch1Dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+		BillingONCHeader1 cheader = ch1Dao.find(billingNo);
+		BigDecimal total = cheader.getTotal();
+		
+		request.setAttribute("totalInvoiced", cheader.getTotal());
+		
+		BigDecimal payments = BigDecimal.ZERO;
+		BigDecimal balances = BigDecimal.ZERO;
+		BigDecimal refunds = BigDecimal.ZERO;
+		BigDecimal discounts = BigDecimal.ZERO;
+		BigDecimal credits = BigDecimal.ZERO;
+		for(BillingONPayment pmt:paymentLists) {
+			payments = new BigDecimal(pmt.getTotal_payment().intValue() + payments.intValue());
+			discounts = new BigDecimal(pmt.getTotal_discount().intValue() + discounts.intValue());
+			refunds = new BigDecimal (pmt.getTotal_refund().intValue() + refunds.intValue());
+			credits = new BigDecimal(pmt.getTotal_credit().intValue() + credits.intValue());
+		}
+		BigDecimal balance = total.subtract(payments).subtract(discounts).add(credits);
+		request.setAttribute("balance", balance);
+	
+		
 		request.setAttribute("paymentsList", paymentLists);
 		
 		List<BillingONItem> items = billingONItemDao.getActiveBillingItemByCh1Id(billingNo);
@@ -119,36 +143,25 @@ public class BillingONPaymentsAction extends DispatchAction {
 		request.setAttribute("itemDataList", itemDataList);
 		List<BillingPaymentType> paymentTypes = billingPaymentTypeDao.findAll();
 		request.setAttribute("paymentTypeList", paymentTypes);
+
 		
 		BillingONCHeader1 cheader1 = billingClaimDAO.find(billingNo);
 		Integer demographicNo = cheader1.getDemographicNo();
 		BigDecimal payment = BigDecimal.ZERO;
-		BigDecimal balance = BigDecimal.ZERO;
-		BigDecimal total = BigDecimal.ZERO;
+		balance = BigDecimal.ZERO;
+		total = BigDecimal.ZERO;
 		BigDecimal discount = BigDecimal.ZERO;
 		BigDecimal credit = BigDecimal.ZERO;
+		BigDecimal refund = BigDecimal.ZERO;
 		
-		BillingONExt paymentItem = billingONExtDao.getClaimExtItem(billingNo, demographicNo, BillingONExtDao.KEY_PAYMENT);
-		if (paymentItem != null) {
-			payment = new BigDecimal(paymentItem.getValue());
-		}
-		BillingONExt discountItem = billingONExtDao.getClaimExtItem(billingNo, demographicNo, BillingONExtDao.KEY_DISCOUNT);
-		if (discountItem != null) {
-			discount = new BigDecimal(discountItem.getValue());
-		}
-		BillingONExt creditItem = billingONExtDao.getClaimExtItem(billingNo, demographicNo, BillingONExtDao.KEY_CREDIT);
-		if (creditItem != null) {
-			credit = new BigDecimal(creditItem.getValue());
-		}
-		BillingONExt totalItem = billingONExtDao.getClaimExtItem(billingNo, demographicNo, BillingONExtDao.KEY_TOTAL);
-		if (totalItem != null) {
-			total = new BigDecimal(totalItem.getValue());
-		}
-		balance = total.subtract(payment).subtract(discount).add(credit);
+		total = cheader1.getTotal();
 		
-		request.setAttribute("totalInvoiced", total);
-		request.setAttribute("balance", balance);
-	
+		for (BillingONPayment bop : paymentLists) {
+			credit = credit.add(bop.getTotal_credit());
+			discount = discount.add(bop.getTotal_discount());
+			payment = payment.add(bop.getTotal_payment());
+			refund = refund.add(bop.getTotal_refund());		
+		}
 		return actionMapping.findForward("success");
 	}
 	
