@@ -78,6 +78,18 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
         
         return results;
     }
+    
+    public List<BillingONExt> findByBillingNoAndPaymentIdAndKey(Integer billingNo, Integer paymentId, String key) {
+    	String sql = "select bExt from BillingONExt bExt where bExt.billingNo=? and bExt.paymentId=? and bExt.keyVal=? order by bExt.id DESC";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter(1, billingNo);
+        query.setParameter(2, paymentId);
+        query.setParameter(3, key);
+        List<BillingONExt> results = query.getResultList();
+        
+        return results;
+    }
+    
             
     public String getPayMethodDesc(BillingONExt bExt) {
         BillingPaymentTypeDao payMethod = SpringUtils.getBean(BillingPaymentTypeDao.class);
