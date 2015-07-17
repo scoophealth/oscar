@@ -190,24 +190,24 @@ function ClipBoard4() {
 			providername = provider.getLastName() + "," + provider.getFirstName();
 		}
 		
+		first_name = Misc.JSEscape(demo.getFirstName());
+		last_name = Misc.JSEscape(demo.getLastName());
+		sex = demo.getSex();
 		dob_year = Integer.parseInt(demo.getYearOfBirth());
 		dob_month = Integer.parseInt(demo.getMonthOfBirth());
 		dob_date = Integer.parseInt(demo.getDateOfBirth());
 		if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
-		
-		first_name = Misc.JSEscape(demo.getFirstName());
-		last_name = Misc.JSEscape(demo.getLastName());
-		chart_no = demo.getChartNo();
-		address = Misc.JSEscape(demo.getAddress());
-		city = demo.getCity();
-		province = demo.getProvince();
-		postal = demo.getPostal();
-		phone = demo.getPhone();
-		phone2 = demo.getPhone2();
 		dob=dob_year + "/" + demo.getMonthOfBirth() + "/" + demo.getDateOfBirth();
-		sex = demo.getSex();
-		hin = "HN " + demo.getHcType() + " " + demo.getHin() + " " + demo.getVer();
-		refDoc = SxmlMisc.getXmlContent(demo.getFamilyDoctor(),"rd");
+		
+		if (demo.getChartNo()!=null) chart_no = demo.getChartNo();
+		if (demo.getAddress()!=null) address = Misc.JSEscape(demo.getAddress());
+		if (demo.getCity()!=null) city = demo.getCity();
+		if (demo.getProvince()!=null) province = demo.getProvince();
+		if (demo.getPostal()!=null) postal = demo.getPostal();
+		if (demo.getPhone()!=null) phone = demo.getPhone();
+		if (demo.getPhone2()!=null) phone2 = demo.getPhone2();
+		if (demo.getHin()!=null) hin = "HN "+demo.getHcType()+" "+demo.getHin()+" "+demo.getVer();
+		if (demo.getFamilyDoctor()!=null) refDoc = SxmlMisc.getXmlContent(demo.getFamilyDoctor(),"rd");
 	}
 	phone2 = (phone2==null || phone2.equals(""))?"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":(phone2+"&nbsp;") ;
 %>

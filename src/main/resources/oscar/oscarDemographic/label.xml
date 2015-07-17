@@ -5,9 +5,15 @@
 	<property name="ireport.y" value="0"/>
 	<parameter name="demo" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select d.last_name, d.chart_no, d.first_name, d.address, d.city , d.province, d.postal, d.phone, d.phone2, d.year_of_birth,
-                 d.month_of_birth, d.date_of_birth, d.hin, d.ver, d.sex, CONCAT(p.last_name, ', ' ,p.first_name) as doc_name from demographic d
-                 left outer join provider p on d.provider_no = p.provider_no where demographic_no =$P{demo}]]>
+		<![CDATA[select d.last_name, IFNULL(d.chart_no,'') AS chart_no, d.first_name, 
+			IFNULL(d.address,'') AS address, IFNULL(d.city,'') AS city,
+			IFNULL(d.province,'') AS province, IFNULL(d.postal,'') AS postal,
+			IFNULL(d.phone,'') AS phone, IFNULL(d.phone2,'') AS phone2,
+			d.year_of_birth, d.month_of_birth, d.date_of_birth,
+			IFNULL(d.hin,'') AS hin, IFNULL(d.ver,'') AS ver, d.sex,
+			CONCAT(p.last_name, ', ' ,p.first_name) AS doc_name
+			from demographic d left outer join provider p on d.provider_no = p.provider_no
+			where demographic_no =$P{demo}]]>
 	</queryString>
 	<field name="last_name" class="java.lang.String"/>
 	<field name="chart_no" class="java.lang.String"/>

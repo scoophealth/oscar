@@ -10,19 +10,19 @@
 		isPdfEmbedded="false" />
 	<parameter name="demo" class="java.lang.String">
 	</parameter>
-	<queryString><![CDATA[select d.last_name, d.first_name, d.address, d.city , d.province, d.postal, CONCAT(p.last_name, ', ' ,p.first_name) as doc_name from demographic d left outer join provider p on d.provider_no = p.provider_no where demographic_no =$P{demo} ]]></queryString>
-	<field name="last_name" class="java.lang.String">
-	</field>
-	<field name="first_name" class="java.lang.String">
-	</field>
-	<field name="address" class="java.lang.String">
-	</field>
-	<field name="city" class="java.lang.String">
-	</field>
-	<field name="province" class="java.lang.String">
-	</field>
-	<field name="postal" class="java.lang.String">
-	</field>
+	<queryString>
+		<![CDATA[select d.last_name, d.first_name, IFNULL(d.address,'') AS address,
+			IFNULL(d.city,'') AS city, IFNULL(d.province,'') AS province, IFNULL(d.postal,'') AS postal,
+			CONCAT(p.last_name, ', ' ,p.first_name) AS doc_name
+			from demographic d left outer join provider p on d.provider_no = p.provider_no
+			where demographic_no =$P{demo}]]>
+	</queryString>
+	<field name="last_name" class="java.lang.String"/>
+	<field name="first_name" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="city" class="java.lang.String"/>
+	<field name="province" class="java.lang.String"/>
+	<field name="postal" class="java.lang.String"/>
 	<title>
 		<band height="60">
 			<textField>
