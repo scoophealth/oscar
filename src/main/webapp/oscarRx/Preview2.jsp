@@ -130,6 +130,12 @@ else {
 
 
 oscar.oscarRx.data.RxPatientData.Patient patient = RxPatientData.getPatient(loggedInInfo, bean.getDemographicNo());
+String patientAddress = patient.getAddress()==null ? "" : patient.getAddress();
+String patientCity = patient.getCity()==null ? "" : patient.getCity();
+String patientProvince = patient.getProvince()==null ? "" : patient.getProvince();
+String patientPostal = patient.getPostal()==null ? "" : patient.getPostal();
+String patientPhone = patient.getPhone()==null ? "" : patient.getPhone();
+String patientHin = patient.getHin()==null ? "" : patient.getHin();
 
 
 oscar.oscarRx.data.RxPrescriptionData.Prescription rx = null;
@@ -215,13 +221,13 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                         
                                             	String patientInfo = patient.getFirstName() + " "
 														+ patient.getSurname() + "\n"
-														+ patient.getAddress() + "\n"
-														+ patient.getCity() + "   "
-														+ patient.getPostal() + "\n"
-														+ "<bean:message key='RxPreview.msgTel'/>"+": "+ patient.getPhone()
+														+ patientAddress + "\n"
+														+ patientCity + "   "
+														+ patientPostal + "\n"
+														+ "<bean:message key='RxPreview.msgTel'/>"+": "+ patientPhone
 														+ (patientDOB != null && !patientDOB.trim().equals("") ? "\n"
 														+"<bean:message key='RxPreview.msgDOB'/>"+": "+ patientDOB : "") 
-														+ (patient.getHin() != null && !patient.getHin().trim().equals("") ? "\n"+"<bean:message key='oscar.oscarRx.hin'/>"+": " + patient.getHin() : "");
+														+ (!patientHin.trim().equals("") ? "\n"+"<bean:message key='oscar.oscarRx.hin'/>"+": " + patientHin : "");
                                             }    
                                                     
                                             %> <input type="hidden" name="doctorName"
@@ -291,26 +297,25 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                             <input type="hidden" name="pracNo" value="<%= StringEscapeUtils.escapeHtml(pracNo) %>" />
                                             <input type="hidden" name="showPatientDOB" value="<%=showPatientDOB%>"/>
                                             <input type="hidden" name="pdfId" id="pdfId" value="" />
-                                            <input type="hidden" name="patientAddress" value="<%= StringEscapeUtils.escapeHtml(patient.getAddress()) %>" />
+                                            <input type="hidden" name="patientAddress" value="<%= StringEscapeUtils.escapeHtml(patientAddress) %>" />
                                             <%
-                                            int check = (patient.getCity() != null && patient.getCity().trim().length() > 0 ? 1 : 0) 
-						| (patient.getProvince() != null && patient.getProvince().trim().length() > 0 ? 2 : 0);  
-                                            String patientPostal = String.format("%s%s%s %s",
-                                            							  patient.getCity(),
-                                            							  check == 3 ? ", " : check == 2 ? "" : " ",
-                                            							  patient.getProvince(),
-																		  patient.getPostal());
-                                            String ptChartNo = ""; 
-                                            if(props.getProperty("showRxChartNo", "").equalsIgnoreCase("true")) {
-                                                ptChartNo = patient.getChartNo();
-                                            } 
-                                            
+											int check = (patientCity.trim().length()>0 ? 1 : 0) | (patientProvince.trim().length()>0 ? 2 : 0);  
+											String patientCityPostal = String.format("%s%s%s %s",
+											patientCity,
+											check == 3 ? ", " : check == 2 ? "" : " ",
+											patientProvince,
+											patientPostal);
+											
+											String ptChartNo = ""; 
+											if(props.getProperty("showRxChartNo", "").equalsIgnoreCase("true")) {
+												ptChartNo = patient.getChartNo()==null ? "" : patient.getChartNo();
+											} 
                                             %>
-                                            <input type="hidden" name="patientCityPostal" value="<%= StringEscapeUtils.escapeHtml(patientPostal)%>" />
-                                            <input type="hidden" name="patientHIN" value="<%= StringEscapeUtils.escapeHtml(patient.getHin()) %>" />
+                                            <input type="hidden" name="patientCityPostal" value="<%= StringEscapeUtils.escapeHtml(patientCityPostal)%>" />
+                                            <input type="hidden" name="patientHIN" value="<%= StringEscapeUtils.escapeHtml(patientHin) %>" />
                                             <input type="hidden" name="patientChartNo" value="<%=StringEscapeUtils.escapeHtml(ptChartNo)%>" />
                                             <input type="hidden" name="patientPhone"
-                                                    value="<bean:message key="RxPreview.msgTel"/><%=StringEscapeUtils.escapeHtml(patient.getPhone()) %>" />
+                                                    value="<bean:message key="RxPreview.msgTel"/><%=StringEscapeUtils.escapeHtml(patientPhone) %>" />
 
                                             <input type="hidden" name="rxDate"
                                                     value="<%= StringEscapeUtils.escapeHtml(oscar.oscarRx.util.RxUtil.DateToString(rxDate, "MMMM d, yyyy")) %>" />
@@ -388,11 +393,11 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                                     <tr>
                                                             <td align=left valign=top><br>
                                                                 <%= patient.getFirstName() %> <%= patient.getSurname() %> <%if(showPatientDOB){%>&nbsp;&nbsp; DOB:<%= StringEscapeUtils.escapeHtml(patientDOBStr) %> <%}%><br>
-                                                            <%= patient.getAddress() %><br>
-                                                            <%= patientPostal %><br>
-                                                            <%= patient.getPhone() %><br>
+                                                            <%= patientAddress %><br>
+                                                            <%= patientCityPostal %><br>
+                                                            <%= patientPhone %><br>
                                                             <b> <% if(!props.getProperty("showRxHin", "").equals("false")) { %>
-                                                            <bean:message key="oscar.oscarRx.hin" /><%= patient.getHin() %> <% } %>                                                            
+                                                            <bean:message key="oscar.oscarRx.hin" /><%= patientHin %> <% } %>                                                            
                                                             </b><br>
                                                                 <% if(props.getProperty("showRxChartNo", "").equalsIgnoreCase("true")) { %>
                                                             <bean:message key="oscar.oscarRx.chartNo" /><%=ptChartNo%><% } %></td>
