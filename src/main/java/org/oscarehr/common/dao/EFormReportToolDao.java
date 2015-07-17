@@ -77,7 +77,7 @@ public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 		sql.append("fdid int (10) NOT NULL, ");
 		sql.append("demographicNo int (10) NOT NULL, ");
 		sql.append("dateFormCreated datetime NOT NULL, ");
-		sql.append("providerNo varchar(6) NOT NULL, ");
+		sql.append("eft_providerNo varchar(6) NOT NULL, ");
 		sql.append("eft_latest tinyint(1) NOT NULL, ");
 		sql.append("dateCreated timestamp NOT NULL ");
 		for (String field : fields) {
@@ -110,7 +110,7 @@ public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 		sb.append("fdid,");
 		sb.append("demographicNo,");
 		sb.append("dateFormCreated,");
-		sb.append("providerNo,");
+		sb.append("eft_providerNo,");
 		sb.append("eft_latest,");
 		sb.append("dateCreated,");
 		for (EFormValue v : values) {
