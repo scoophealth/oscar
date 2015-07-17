@@ -18,6 +18,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.oscarehr.common.dao.BillingOnItemPaymentDao"%>
 <%@page import="org.oscarehr.managers.SecurityInfoManager"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.math.*,java.util.*,java.sql.*,oscar.*,java.net.*" %> <!-- errorPage="errorpage.jsp" -->
@@ -575,8 +576,6 @@ function validateAmountNumberic(idx) {
 					BigDecimal discount = BigDecimal.ZERO;
 					BigDecimal credit = BigDecimal.ZERO;
 					
-					total = bCh1.getTotal();
-					
 					List<BillingONPayment> bops = billingOnPaymentDao.find3rdPartyPaymentsByBillingNo(Integer.parseInt(request.getParameter("billing_no").trim()));
 					for(BillingONPayment bop:bops) {
 						credit = credit.add(bop.getTotal_credit());
@@ -606,7 +605,9 @@ function validateAmountNumberic(idx) {
 					BillingONExt creditItem = billingOnExtDao.getClaimExtItem(Integer.parseInt(request.getParameter("billing_no").trim()), Integer.parseInt(DemoNo), BillingONExtDao.KEY_CREDIT);
 					if (creditItem != null) {
 						credit = new BigDecimal(creditItem.getValue());
-					}*/
+					}
+					*/
+					total = bCh1.getTotal();
 					
 					balance = total.subtract(payment).subtract(discount).add(credit);
 					payment = payment.subtract(credit);

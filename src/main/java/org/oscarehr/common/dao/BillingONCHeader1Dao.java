@@ -795,4 +795,17 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		return results;
 	}
 	
+	
+	public List<BillingONCHeader1> findAllByPayProgram (String payProgram, int startIndex, int limit) {            
+        String sql = "select b FROM BillingONCHeader1 b where b.payProgram=? order by b.id ASC";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter(1,payProgram);
+        query.setFirstResult(startIndex);
+        query.setMaxResults(limit);
+        
+        List<BillingONCHeader1> results = query.getResultList();
+       
+        return results;
+    }
+	
 }
