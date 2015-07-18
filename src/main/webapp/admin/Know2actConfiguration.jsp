@@ -75,13 +75,18 @@
 		app.controller("k2aConfig", function($scope,k2aService) {
 			checkStatus = function(){
 			    k2aService.isK2AInit().then(function(data){
-			    	$scope.k2aActive = data.sucess;
+			    	console.log("data coming back",data);
+			    	$scope.k2aActive = data.success;
+			    	console.log($scope.k2aActive );
 				});
 			}
 		    checkStatus();
 			
 		    $scope.initK2A = function(){
-		    	k2aService.initK2A().then(function(data){
+		    	console.log($scope.clinicName);
+		    	var clinic = {};
+		    	clinic.name = $scope.clinicName;
+		    	k2aService.initK2A(clinic).then(function(data){
 		    		checkStatus();
 		    	});
 		    }   

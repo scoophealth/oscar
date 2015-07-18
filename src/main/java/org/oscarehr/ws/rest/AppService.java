@@ -32,10 +32,15 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+
+import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.AppDefinition;
@@ -45,6 +50,8 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.model.AppDefinitionTo1;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import oscar.OscarProperties;
 
 @Path("/app")
 public class AppService extends AbstractServiceImpl {
@@ -79,7 +86,9 @@ public class AppService extends AbstractServiceImpl {
 	
 	@POST
 	@Path("/K2AInit/")
-	public void initK2A(String clinicName){
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse initK2A(JSONObject clinicName,@Context HttpServletRequest request){
 		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_appDefinition", "w", null)) {
 			throw new RuntimeException("Access Denied");
 		}
@@ -90,21 +99,23 @@ public class AppService extends AbstractServiceImpl {
 		
 		URL url;
 	    HttpURLConnection connection = null;  
+	    
+	    clinicName.accumulate("url", request.getRequestURL().toString());
 					
 	    try {
 		      //Create connection
-	      url = new URL("http://www.know2act.org:80/ws/rs/localoauth/new");
+	      url = new URL(OscarProperties.getInstance().getProperty("K2A_URL","https://www.know2act.org/ws/rs/localoauth/new"));
 	      connection = (HttpURLConnection)url.openConnection();
 	      connection.setRequestMethod("POST");   
 	      connection.setRequestProperty("Content-Type", "application/json");
-	      connection.setRequestProperty("Content-Length", "" +Integer.toString(clinicName.getBytes().length));
+	      connection.setRequestProperty("Content-Length", "" +Integer.toString(clinicName.toString().getBytes().length));
 	      connection.setUseCaches (false);
 	      connection.setDoInput(true);
 	      connection.setDoOutput(true);
-
+	      logger.info("k2a json "+clinicName.toString());
 	      //Send request
 	      DataOutputStream wr = new DataOutputStream (connection.getOutputStream ());
-	      wr.writeBytes (clinicName);
+	      wr.writeBytes (clinicName.toString());
 	      wr.flush ();
 	      wr.close ();
 
@@ -139,7 +150,7 @@ public class AppService extends AbstractServiceImpl {
 	        connection.disconnect(); 
 	      }
 	    }
-		
+		return  new GenericRESTResponse(false,"K2A active");
 	}
 	
 }
