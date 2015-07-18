@@ -58,7 +58,7 @@ angular.module("k2aServices", [])
         },
         initK2A: function(clinicName){
            	var deferred = $q.defer();
-           	 $http.post(this.apiPath+'/app/K2AInit',clinicName).success(function(data){
+           	 $http.post(this.apiPath+'/app/K2AInit',clinicName,this.configHeaders).success(function(data){
                	console.log("returned from /K2AInit",data);
                	deferred.resolve(data);
                }).error(function(){
