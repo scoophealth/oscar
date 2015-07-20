@@ -27,6 +27,7 @@
 
 
 <script type="text/javascript">
-window.opener.location.reload(true);
+if (window.opener != null)
+	window.opener.location.reload(true);
 window.close();
 </script>
