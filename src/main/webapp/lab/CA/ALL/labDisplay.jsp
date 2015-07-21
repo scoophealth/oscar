@@ -1439,7 +1439,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                    				
                                    				}
                                				else if(handler.getMsgType().equals("ALPHA") ) {
-                               					if (((AlphaHandler) handler).getOBXDataType(j,k).equals("FT")) {
+                               					if (handler.getOBXValueType(j,k).equals("FT")) { 
                                						%>
                                    					<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %>  
     	                                        		<%
@@ -1479,7 +1479,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                            	if((handler.getOBXResult(j, k).length() > 100) && (isSGorCDC)){%>
                                            		<td align="left"><%= handler.getOBXResult( j, k) %></td><%
                                            	}else{
-                                           	if(handler.getMsgType().equals("ALPHA") && ((AlphaHandler) handler).getOBXDataType(j,k).equals("FT")) {
+                                           	if(handler.getMsgType().equals("ALPHA") && handler.getOBXValueType(j,k).equals("FT")) {	
                                            		%>
                                            		<td align="left"><pre><%= handler.getOBXResult( j, k) %></pre></td><%
                                            	} else {%>
