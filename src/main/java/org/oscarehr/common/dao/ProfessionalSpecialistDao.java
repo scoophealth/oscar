@@ -105,7 +105,7 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
 			return null;
 		}
 		
-		Query query = entityManager.createQuery("select x from " + modelClass.getName() + " x WHERE x.referralNo=? order by x.lastName");
+		Query query = entityManager.createQuery("select x from " + modelClass.getName() + " x WHERE x.referralNo LIKE ? order by x.lastName");
 		query.setParameter(1, referralNo);
 
 		@SuppressWarnings("unchecked")
@@ -134,4 +134,13 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
 	{
 		return(findByEDataUrlNotNull().size()>0);
 	}
+	
+	public String getProfessionalSpecialistName(String referral_no) {
+		ProfessionalSpecialist ps = this.getByReferralNo(referral_no);
+
+		 if(ps != null)
+			 return ps.getLastName() + ", " + ps.getFirstName();
+
+		 return "";
+	 }
 }

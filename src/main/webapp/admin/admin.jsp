@@ -83,32 +83,9 @@ function onsub() {
 	// check input data in the future
 }
 
-function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
-  var page = varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "oscarRx", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
-    }
-    popup.focus();
-  }
-}
-
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";//360,680
-  var popup=window.open(page, "groupno", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
-    }
-    popup.focus();
-  }
-}
-function popUpBillStatus(vheight,vwidth,varpage) {
- var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=no,menubars=no,toolbars=no,resizable=no,screenX=0,screenY=0,top=0,left=0";//360,680
   var popup=window.open(page, "groupno", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
@@ -451,7 +428,7 @@ div.logoutBox {
 			<li><a href="#"
 				onclick='popupPage(600,500,&quot;<html:rewrite page="/billing/CA/BC/supServiceCodeAssocAction.do"/>&quot;);return false;'><bean:message key="admin.admin.ManageProcedureFeeCodeAssoc"/></a></li>
 			<li><a href="#"
-				onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/CA/BC/billingManageReferralDoc.jsp"/>&quot;);return false;'><bean:message key="admin.admin.ManageReferralDoc"/></a></li>
+				onclick='popupPage(700,960,&quot;<html:rewrite page="/oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp"/>&quot;);return false;'><bean:message key="admin.admin.ManageReferralDoc"/></a></li>
 			<oscar:oscarPropertiesCheck property="NEW_BC_TELEPLAN" value="no"
 				defaultVal="true">
 				<li><a href="#"
@@ -475,7 +452,7 @@ div.logoutBox {
 			<li><a href="#"
 				onclick='popupPage(600,800,&quot;<html:rewrite page="/billing/CA/BC/viewReconcileReports.jsp"/>&quot;);return false;'><bean:message key="admin.admin.reconciliationReports"/></a></li>
 			<li><a href="#"
-				onclick='popUpBillStatus(375,425,&quot;<html:rewrite page="/billing/CA/BC/billingAccountReports.jsp"/>&quot;);return false;'><bean:message key="admin.admin.AccountingRpts"/></a></li>
+				onclick='popupPage(375,425,&quot;<html:rewrite page="/billing/CA/BC/billingAccountReports.jsp"/>&quot;);return false;'><bean:message key="admin.admin.AccountingRpts"/></a></li>
 			<li><a href="#"
 				onclick='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/BC/billStatus.jsp"/>&quot;);return false;'><bean:message key="admin.admin.editInvoices"/></a></li>
 			<li><a href="#"
@@ -678,10 +655,10 @@ div.logoutBox {
 		<h3>&nbsp;<bean:message key="admin.admin.oscarMessenger" /></h3>
 		<ul>
 			<li><a href="#"
-				onclick='popupOscarRx(600,900,&quot;<html:rewrite page="/oscarMessenger/DisplayMessages.do"/>?providerNo=<%=curProvider_no%>&amp;userName=<%=userfirstname%>%20<%=userlastname%>&quot;);return false;'><bean:message
+				onclick='popupPage(600,900,&quot;<html:rewrite page="/oscarMessenger/DisplayMessages.do"/>?providerNo=<%=curProvider_no%>&amp;userName=<%=userfirstname%>%20<%=userlastname%>&quot;);return false;'><bean:message
 				key="admin.admin.messages" /></a></li>
 			<li><a href="#"
-				onclick='popupOscarRx(600,900,&quot;<html:rewrite page="/oscarMessenger/config/MessengerAdmin.jsp"/>&quot;);return false;'><bean:message
+				onclick='popupPage(600,900,&quot;<html:rewrite page="/oscarMessenger/config/MessengerAdmin.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnMessengerAdmin" /></a></li>
 		</ul>
 		</div>

@@ -413,17 +413,17 @@
 	</databaseap>
 	<databaseap>
 		<ap-name>bc_referral_name</ap-name>
-		<ap-sql>SELECT billingreferral.last_name, billingreferral.first_name
-				FROM billingreferral, demographic
+		<ap-sql>SELECT professionalSpecialists.lName, professionalSpecialists.fName
+				FROM professionalSpecialists, demographic
 				WHERE demographic.demographic_no=${demographic}
-				AND LENGTH(billingreferral.referral_no) > 0
-				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
+				AND LENGTH(professionalSpecialists.referral_no) > 0
+				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referral_no)))=professionalSpecialists.referral_no</ap-sql>
 		<ap-output>${last_name}, ${first_name}</ap-output>
 	</databaseap>
 	<databaseap>
 		<ap-name>bc_referral_address</ap-name>
-		<ap-sql>SELECT CONCAT( b.address1, IF( b.address1 ='', '', '\n' ), b.address2, IF( b.address2 ='', '',  '\n' ) , b.city, ' ', b.province, ' ', b.postal ) AS raddress
-				FROM billingreferral b, demographic d
+		<ap-sql>SELECT b.address AS raddress
+				FROM professionalSpecialists b, demographic d
 				WHERE d.demographic_no=${demographic}
 				AND LENGTH(b.referral_no) > 0
 				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
@@ -432,7 +432,7 @@
 	<databaseap>
 		<ap-name>bc_referral_phone</ap-name>
 		<ap-sql>SELECT b.phone
-				FROM billingreferral b, demographic d
+				FROM professionalSpecialists b, demographic d
 				WHERE d.demographic_no=${demographic}
 				AND LENGTH(b.referral_no) > 0
 				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
@@ -441,7 +441,7 @@
 	<databaseap>
 		<ap-name>bc_referral_fax</ap-name>
 		<ap-sql>SELECT b.fax
-				FROM billingreferral b, demographic d
+				FROM professionalSpecialists b, demographic d
 				WHERE d.demographic_no=${demographic}
 				AND LENGTH(b.referral_no) > 0
 				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
@@ -450,7 +450,7 @@
 	<databaseap>
 		<ap-name>bc_referral_no</ap-name>
 		<ap-sql>SELECT b.referral_no
-				FROM billingreferral b, demographic d
+				FROM professionalSpecialists b, demographic d
 				WHERE d.demographic_no=${demographic}
 				AND LENGTH(b.referral_no) > 0
 				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>

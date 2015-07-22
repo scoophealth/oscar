@@ -68,7 +68,6 @@ import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
-import org.oscarehr.common.dao.BillingreferralDao;
 import org.oscarehr.common.dao.SiteDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
@@ -80,7 +79,6 @@ import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.EFormGroup;
 import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.ProfessionalSpecialist;
-import org.oscarehr.common.model.Billingreferral;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Site;
 import org.oscarehr.common.service.PdfRecordPrinter;
@@ -134,7 +132,6 @@ public class EyeformAction extends DispatchAction {
 	EyeFormDao eyeFormDao = (EyeFormDao)SpringUtils.getBean("EyeFormDao");
 	MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
-	BillingreferralDao billingreferralDao = (BillingreferralDao) SpringUtils.getBean("billingreferralDao");
 	ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
 	SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
 	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
@@ -1142,9 +1139,7 @@ public class EyeformAction extends DispatchAction {
 			SimpleDateFormat sf = new SimpleDateFormat("MM/dd/yyyy");
 			request.setAttribute("date", sf.format(new Date()));
 
-			Billingreferral ref = billingreferralDao.getByReferralNo(String.valueOf(cp.getReferralId()));
-			request.setAttribute("refer", ref);
-		//	request.setAttribute("refer", professionalSpecialist);
+			request.setAttribute("refer", professionalSpecialist);
 
 			request.setAttribute("cp", cp);
 

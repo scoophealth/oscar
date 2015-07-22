@@ -34,10 +34,10 @@
 <%@ page import="java.util.*, oscar.oscarDemographic.data.*"%>
 <%@ page import="oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.common.model.Billingreferral" %>
-<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%@page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
+<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
 <%
-	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 %>
 <%
 
@@ -48,11 +48,7 @@ org.oscarehr.common.model.Demographic demo = demoData.getDemographic(bean.getPat
 
 ArrayList billItem = bean.getBillItem();
 BillingFormData billform = new BillingFormData();
-
-
 %>
-
-
 
 <html>
 <head>
@@ -86,22 +82,15 @@ function rs(n,u,w,h,x) {
   if (x == 1) { return remote; }
 }
 
-
 var awnd=null;
 function ScriptAttach() {
-
 
   t0 = escape(document.serviceform.xml_diagnostic_detail1.value);
   t1 = escape(document.serviceform.xml_diagnostic_detail2.value);
   t2 = escape(document.serviceform.xml_diagnostic_detail3.value);
   awnd=rs('att','/billingDigSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
   awnd.focus();
-
-
-
 }
-
-
 
 function OtherScriptAttach() {
   t0 = escape(document.serviceform.xml_other1.value);
@@ -123,7 +112,6 @@ function ResearchScriptAttach() {
   awnd=rs('att','billingResearchCodeSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
   awnd.focus();
 }
-
 
 function ResearchScriptAttach() {
   t0 = escape(document.serviceform.xml_referral1.value);
@@ -167,9 +155,6 @@ function showHideLayers() { //v3.0
 </script>
 <link rel="stylesheet" href="../billing/billing.css" type="text/css">
 </head>
-
-
-
 
 <body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0"
 	topmargin="10" marginwidth="0" marginheight="0"
@@ -259,9 +244,9 @@ function showHideLayers() { //v3.0
 			</tr>
 			<tr>
 				<td height="16" colspan="3"><%=getReferralString(bean.getReferType1())%>
-				<%=billingReferralDao.getReferralDocName(bean.getReferral1()) %> <%=addBrackets(bean.getReferral1())%>
+				<%=professionalSpecialistDao.getProfessionalSpecialistName(bean.getReferral1()) %> <%=addBrackets(bean.getReferral1())%>
 				&nbsp;&nbsp;&nbsp;&nbsp; <%=getReferralString(bean.getReferType2())%>
-				<%=billingReferralDao.getReferralDocName(bean.getReferral2()) %> <%=addBrackets(bean.getReferral2())%>
+				<%=professionalSpecialistDao.getProfessionalSpecialistName(bean.getReferral2()) %> <%=addBrackets(bean.getReferral2())%>
 				</td>
 				<td>Dependent: <%=bean.getDependent()%></td>
 

@@ -36,10 +36,10 @@
 	scope="session" />
 <%@ include file="dbBilling.jspf"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.common.model.Billingreferral" %>
-<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%@page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
+<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
 <%
-	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 %>
 
 <% String search = "",search2 = "";
@@ -175,40 +175,39 @@ function CodeAttach(File0) {
 		<td width="22%"><b><font face="Arial, Helvetica, sans-serif"
 			size="2">Specialty</font></b></td>
 		<td width="22%"><b><font face="Arial, Helvetica, sans-serif"
-			size="2">City</font></b></td>
+			size="2">Address</font></b></td>
 		<td width="22%"><b><font face="Arial, Helvetica, sans-serif"
 			size="2">Phone</font></b></td>
 	</tr>
 
 	<%
-    String color="";
- int Count = 0;
- int intCount = 0;
- String numCode="";
-   String textCode="";
-   String searchType="";
-// Retrieving Provider
+	 String color="";
+	 int Count = 0;
+	 int intCount = 0;
+	 String numCode="";
+	   String textCode="";
+	   String searchType="";
+	// Retrieving Provider
 
-String Dcode="", DcodeDesc="", DcodeCity="", DcodeSpecialty="", DcodePhone="";
+	String Dcode="", DcodeDesc="", DcodeAddr="", DcodeSpecialty="", DcodePhone="";
 
-  List<Billingreferral> billingReferrals = billingReferralDao.searchReferralCode(param[0], param[1], param[2], param[3], param[4], param[5], param[6], param[7], param[8]);
-  for(Billingreferral billingReferral:billingReferrals) {
-
-
- intCount = intCount + 1;
- Dcode = billingReferral.getReferralNo();
-  DcodeDesc = billingReferral.getLastName()+","+billingReferral.getFirstName();
-  DcodeCity = billingReferral.getCity();
-  DcodeSpecialty = billingReferral.getSpecialty();
-  DcodePhone =billingReferral.getPhone();
- if (Count == 0){
- Count = 1;
- color = "#FFFFFF";
- } else {
- Count = 0;
- color="#EEEEFF";
- }
- %>
+	List<ProfessionalSpecialist> professionalSpecialists = professionalSpecialistDao.findByReferralNo(param[0]);
+	if(professionalSpecialists != null) {
+		for(ProfessionalSpecialist professionalSpecialist:professionalSpecialists) {	
+			intCount = intCount + 1;
+			Dcode = professionalSpecialist.getReferralNo();
+			DcodeDesc = professionalSpecialist.getLastName()+","+professionalSpecialist.getFirstName();
+			DcodeAddr = professionalSpecialist.getStreetAddress();
+			DcodeSpecialty = professionalSpecialist.getSpecialtyType();
+			DcodePhone =professionalSpecialist.getPhoneNumber();
+			if (Count == 0){
+			 Count = 1;
+			 color = "#FFFFFF";
+			} else {
+			 Count = 0;
+			 color="#EEEEFF";
+			}
+	%>
 
 	<tr bgcolor="<%=color%>">
 		<td width="12%"><font face="Arial, Helvetica, sans-serif"
@@ -222,12 +221,13 @@ String Dcode="", DcodeDesc="", DcodeCity="", DcodeSpecialty="", DcodePhone="";
 		<td width="22%"><font face="Arial, Helvetica, sans-serif"
 			size="2"><%=DcodeSpecialty%></font></td>
 		<td width="22%"><font face="Arial, Helvetica, sans-serif"
-			size="2"><%=DcodeCity%></font></td>
+			size="2"><%=DcodeAddr%></font></td>
 		<td width="22%"><font face="Arial, Helvetica, sans-serif"
 			size="2"><%=DcodePhone%></font></td>
 	</tr>
 	<%
-  }
+	  }
+	}
   %>
 
 	<%  if (intCount == 0 ) { %>

@@ -67,7 +67,7 @@
         <input type="hidden" name="formId" value="<%=formId%>" />
         <input type="hidden" name="provider_no" value="<%=provNo%>" />
         <input type="hidden" name="submit" value="exit"/>
-        <input type="hidden" name="billingreferral_no" value="<%=props.getProperty("billingreferral_no", "")%>" />
+        <input type="hidden" name="referral_no" value="<%=props.getProperty("referral_no", "")%>" />
         <input type="hidden" name="doc_name" value="<%=props.getProperty("doc_name", "")%>" />
         <input type="hidden" name="cl_name" value="<%=props.getProperty("cl_name","")%>" />
         <input type="hidden" name="cl_address1" value="<%=props.getProperty("cl_address1","")%>" />
@@ -111,7 +111,7 @@
                         <TR>
                             <TD align="left">To:</TD>
                             <TD align="left">
-                                    <INPUT name="t_name" style="border: none; font-size: 13px; text-decoration: underline; width: 80%; " type="text" value="<%=props.getProperty("t_name", "")%>" >&nbsp;</INPUT><span id="searching"><a href="javascript:search('billingreferral_no', 't_name', 't_address1', 't_phone', 't_fax')"><small>Search #</small></a></span>
+                                    <INPUT name="t_name" style="border: none; font-size: 13px; text-decoration: underline; width: 80%; " type="text" value="<%=props.getProperty("t_name", "")%>" >&nbsp;</INPUT><span id="searching"><a href="javascript:search('referral_no', 't_name', 't_address1', 't_phone', 't_fax')"><small>Search #</small></a></span>
 
                             </TD>
                         </TR>
