@@ -107,6 +107,7 @@ import ca.bornontario.wb.RBRY23;
 import ca.bornontario.wb.RBRY23Y45;
 import ca.bornontario.wb.RBRY45;
 import ca.bornontario.wb.SUMRPTMARKERS;
+import ca.bornontario.wb.YesNoUnknown;
 
 /**
  * For KidConnect 0-5 project (BORN)
@@ -388,6 +389,12 @@ public class BORNWbXmlGenerator {
 		rbr.setNutritionStoolUrine(getDiscussedConcernNotDiscussed("stoolurine_1w"));
 		rbr.setVitaminD400UIDay(getDiscussedConcernNotDiscussed("vitaminD_1w"));
 
+		//the yes no stuff
+		rbr.setNutritionBreastfeedingYesNo(getYesNoUnknown("breastfeeding_1w_yes_no"));
+		rbr.setNutritionFormulaFeedingYesNo(getYesNoUnknown("formulafeeding_1w_yes_no"));
+		rbr.setSupplementationWaterYesNo(getYesNoUnknown("supplementationWater_1w_yes_no"));
+		rbr.setSupplementationOtherFluidsYesNo(getYesNoUnknown("supplementationOther_1w_yes_no"));
+		
 		if (getRourkeStrValue("parentConcerns1w") != null) {
 			rbr.setParentalCaregiverConcerns(getRourkeStrValue("parentConcerns1w"));
 		}
@@ -453,6 +460,13 @@ public class BORNWbXmlGenerator {
 		rbr.setNutritionStoolUrine(getDiscussedConcernNotDiscussed("stoolurine_2w"));
 		rbr.setVitaminD400UIDay(getDiscussedConcernNotDiscussed("vitaminD_2w"));
 
+		//the yes no stuff
+		rbr.setNutritionBreastfeedingYesNo(getYesNoUnknown("breastfeeding_2w_yes_no"));
+		rbr.setNutritionFormulaFeedingYesNo(getYesNoUnknown("formulafeeding_2w_yes_no"));
+		rbr.setSupplementationWaterYesNo(getYesNoUnknown("supplementationWater_2w_yes_no"));
+		rbr.setSupplementationOtherFluidsYesNo(getYesNoUnknown("supplementationOther_2w_yes_no"));
+		
+				
 		rbr.setDevelopmentNoParentCaregiverConcerns(getDiscussedConcernNotDiscussed("noconcerns_2w"));
 		rbr.setDevelopmentSucksWellOnNipple(getDiscussedConcernNotDiscussed("suckswell_2w"));
 
@@ -561,6 +575,13 @@ public class BORNWbXmlGenerator {
 		rbr.setNutritionStoolUrine(getDiscussedConcernNotDiscussed("stoolurine_1m"));
 		rbr.setVitaminD400UIDay(getDiscussedConcernNotDiscussed("vitaminD_1m"));
 
+		//the yes no stuff
+		rbr.setNutritionBreastfeedingYesNo(getYesNoUnknown("breastfeeding_1m_yes_no"));
+		rbr.setNutritionFormulaFeedingYesNo(getYesNoUnknown("formulafeeding_1m_yes_no"));
+		rbr.setSupplementationWaterYesNo(getYesNoUnknown("supplementationWater_1m_yes_no"));
+		rbr.setSupplementationOtherFluidsYesNo(getYesNoUnknown("supplementationOther_1m_yes_no"));
+		rbr.setSupplementationSolidsYesNo(getYesNoUnknown("supplementationSolid_1m_yes_no"));
+				
 		if (getRourkeStrValue("parentConcerns1m") != null) {
 			rbr.setParentalCaregiverConcerns(getRourkeStrValue("parentConcerns1m"));
 		}
@@ -629,6 +650,13 @@ public class BORNWbXmlGenerator {
 		rbr.setNutritionFormulaFeeding(getDiscussedConcernNotDiscussed("formulafeeding_2m"));
 		rbr.setVitaminD400UIDay(getDiscussedConcernNotDiscussed("vitaminD_2m"));
 
+		//the yes no stuff
+		rbr.setNutritionBreastfeedingYesNo(getYesNoUnknown("breastfeeding_2m_yes_no"));
+		rbr.setNutritionFormulaFeedingYesNo(getYesNoUnknown("formulafeeding_2m_yes_no"));
+		rbr.setSupplementationWaterYesNo(getYesNoUnknown("supplementationWater_2m_yes_no"));
+		rbr.setSupplementationOtherFluidsYesNo(getYesNoUnknown("supplementationOther_2m_yes_no"));
+		rbr.setSupplementationSolidsYesNo(getYesNoUnknown("supplementationSolid_2m_yes_no"));
+		
 		if (getRourkeStrValue("parentConcerns2m") != null) {
 			rbr.setParentalCaregiverConcerns(getRourkeStrValue("parentConcerns2m"));
 		}
@@ -694,6 +722,15 @@ public class BORNWbXmlGenerator {
 		rbr.setNutritionFormulaFeeding(getDiscussedConcernNotDiscussed("formulafeeding_4m"));
 		rbr.setNutritionIntroductionSolids(getDiscussedConcernNotDiscussed("discussSolids_4m"));
 		rbr.setVitaminD400UIDay(getDiscussedConcernNotDiscussed("vitaminD_4m"));
+
+		//the yes no stuff
+		rbr.setNutritionBreastfeedingYesNo(getYesNoUnknown("breastfeeding_4m_yes_no"));
+		rbr.setNutritionFormulaFeedingYesNo(getYesNoUnknown("formulafeeding_4m_yes_no"));
+		rbr.setSupplementationWaterYesNo(getYesNoUnknown("supplementationWater_4m_yes_no"));
+		rbr.setSupplementationOtherFluidsYesNo(getYesNoUnknown("supplementationOther_4m_yes_no"));
+		rbr.setSupplementationSolidsYesNo(getYesNoUnknown("supplementationSolid_4m_yes_no"));
+
+		
 		if (getRourkeStrValue("parentConcerns4m") != null) {
 			rbr.setParentalCaregiverConcerns(getRourkeStrValue("parentConcerns4m"));
 		}
@@ -759,6 +796,11 @@ public class BORNWbXmlGenerator {
 		rbr.setNutritionNoHoney(getDiscussedConcernNotDiscussed("noeggnuthoney_6m"));
 		rbr.setVitaminD400UIDay(getDiscussedConcernNotDiscussed("vitaminD_6m"));
 
+		//the yes no stuff
+		rbr.setNutritionBreastfeedingYesNo(getYesNoUnknown("breastfeeding_6m_yes_no"));
+		rbr.setNutritionFormulaFeedingYesNo(getYesNoUnknown("formulafeeding_6m_yes_no"));
+		
+		
 		if (getRourkeStrValue("parentConcerns6m") != null) {
 			rbr.setParentalCaregiverConcerns(getRourkeStrValue("parentConcerns6m"));
 		}
@@ -877,6 +919,11 @@ public class BORNWbXmlGenerator {
 		rbr.setNutritionNoBottlesInBed(getDiscussedConcernNotDiscussed("nobottleinbed_9m"));
 		rbr.setNutritionNoHoney(getDiscussedConcernNotDiscussed("noeggnuthoney_9m"));
 
+		//the yes no stuff
+		rbr.setNutritionBreastfeedingYesNo(getYesNoUnknown("breastfeeding_9m_yes_no"));
+		rbr.setNutritionFormulaFeedingYesNo(getYesNoUnknown("formulafeeding_9m_yes_no"));
+
+		
 		if (getRourkeStrValue("parentConcerns9m") != null) {
 			rbr.setParentalCaregiverConcerns(getRourkeStrValue("parentConcerns9m"));
 		}
@@ -950,6 +997,10 @@ public class BORNWbXmlGenerator {
 		rbr.setNutritionIronPromoteCup(getDiscussedConcernNotDiscussed("bottletocup_12m"));
 		rbr.setNutritionVegeterianDiets(getDiscussedConcernNotDiscussed("vegetariandiets_12m"));
 
+		//the yes no stuff
+		rbr.setNutritionBreastfeedingYesNo(getYesNoUnknown("breastfeeding_12m_yes_no"));
+
+		
 		if (getRourkeStrValue("parentConcerns12m") != null) {
 			rbr.setParentalCaregiverConcerns(getRourkeStrValue("parentConcerns12m"));
 		}
@@ -1022,6 +1073,10 @@ public class BORNWbXmlGenerator {
 		rbr.setNutritionIronPromoteCup(getDiscussedConcernNotDiscussed("bottletocup_15m"));
 		rbr.setNutritionVegeterianDiets(getDiscussedConcernNotDiscussed("vegetariandiets_15m"));
 
+		//the yes no stuff
+		rbr.setNutritionBreastfeedingYesNo(getYesNoUnknown("breastfeeding_15m_yes_no"));
+
+		
 		if (getRourkeStrValue("parentConcerns15m") != null) {
 			rbr.setParentalCaregiverConcerns(getRourkeStrValue("parentConcerns15m"));
 		}
@@ -1167,6 +1222,10 @@ public class BORNWbXmlGenerator {
 		rbr.setNutritionHomogenizedMilk(getDiscussedConcernNotDiscussed("formulafeeding_18m"));
 		rbr.setNutritionNoBottles(getDiscussedConcernNotDiscussed("nobottle_18m"));
 
+		//the yes no stuff
+		rbr.setNutritionBreastfeedingYesNo(getYesNoUnknown("breastfeeding_18m_yes_no"));
+
+		
 		if (getRourkeStrValue("parentConcerns18m") != null) {
 			rbr.setParentalCaregiverConcerns(getRourkeStrValue("parentConcerns18m"));
 		}
@@ -1245,6 +1304,10 @@ public class BORNWbXmlGenerator {
 		rbr.setNutritionTransitionToLowerFatDiet(getDiscussedConcernNotDiscussed("lowerfatdiet_2y"));
 		rbr.setNutritionVegeterianDiets(getDiscussedConcernNotDiscussed("vegetariandiets_2y"));
 
+		//the yes no stuff
+		rbr.setNutritionBreastfeedingYesNo(getYesNoUnknown("breastfeeding_2y_yes_no"));
+
+		
 		if (getRourkeStrValue("parentConcerns2y") != null) {
 			rbr.setParentalCaregiverConcerns(getRourkeStrValue("parentConcerns2y"));
 		}
@@ -2006,6 +2069,17 @@ public class BORNWbXmlGenerator {
 		}
 		return 0;
 
+	}
+	
+	private YesNoUnknown.Enum getYesNoUnknown(String key) {
+		Map<String, EFormValue> m = this.eformValuesMap.get("RBR");
+		if (m.get(key) != null && "Yes".equals(m.get(key).getVarValue())) {
+			return YesNoUnknown.Y;
+		}
+		if (m.get(key) != null && "No".equals(m.get(key).getVarValue())) {
+			return YesNoUnknown.N;
+		}
+		return YesNoUnknown.U;
 	}
 
 	private String getValueFromEForm(String name, String key) {
