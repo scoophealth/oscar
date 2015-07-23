@@ -1705,6 +1705,15 @@ function fileDoc(docId){
 	}
 }
 
+function refileDoc(id) {
+    var queueId=document.getElementById('queueList_'+id).options[document.getElementById('queueList_'+id).selectedIndex].value;
+    var url=contextpath +"/dms/ManageDocument.do";
+    var data='method=refileDocumentAjax&documentId='+id+"&queueId="+queueId;
+    new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+        fileDoc(id);
+    }});
+ }
+ 
 function addDocToList(provNo, provName, docId) {
 	var bdoc = document.createElement('a');
 	bdoc.setAttribute("onclick", "removeProv(this);");
