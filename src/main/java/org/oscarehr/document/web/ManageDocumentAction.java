@@ -270,7 +270,23 @@ public class ManageDocumentAction extends DispatchAction {
 
 		return null;
 	}	
+        public ActionForward refileDocumentAjax(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	
+		String documentId = request.getParameter("documentId");
+		String queueId = request.getParameter("queueId");
 
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "w", null)) {
+        	throw new SecurityException("missing required security object (_edoc)");
+                }
+                
+                try {
+                    EDocUtil.refileDocument(documentId,queueId);
+                } catch (Exception e) {
+                    MiscUtils.getLogger().error("Error", e);
+                }
+                return null;
+        }
+        
 	public ActionForward documentUpdate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
 		String ret = "";

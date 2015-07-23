@@ -71,7 +71,16 @@
             if(inQueue!=null) {
                 inQueueB=true;
             }
-
+            
+            String defaultQueue = IncomingDocUtil.getAndSetIncomingDocQueue(providerNo, null);
+            QueueDao queueDao = (QueueDao) ctx.getBean("queueDao");
+            List<Hashtable> queues = queueDao.getQueues();
+            int queueId=1;
+            if (defaultQueue != null) {
+                defaultQueue = defaultQueue.trim();
+                queueId = Integer.parseInt(defaultQueue);
+            }
+            
             String creator = (String) session.getAttribute("user");
             ArrayList doctypes = EDocUtil.getActiveDocTypes("demographic");
             EDoc curdoc = EDocUtil.getDoc(documentNo);
@@ -280,6 +289,18 @@
                                                         <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popup(360, 680, '<%= request.getContextPath() %>/oscarMDS/SearchPatient.do?labType=DOC&segmentID=<%= docId %>&name=<%=java.net.URLEncoder.encode(demoName)%>', 'encounter')">
                                                         <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popup(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?demographic_no=<%=demographicID%>&displaymode=edit&dboperation=search_detail','master')">
                                                         <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popup(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?demographic_no=<%=demographicID%>&orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25','ApptHist')">
+                                                        
+                                                        <input type="button" id="refileDoc_<%=docId%>" value="<bean:message key="oscarEncounter.noteBrowser.msgRefile"/>" onclick="refileDoc('<%=docId%>');" >
+                                                        <select  id="queueList_<%=docId%>" name="queueList">
+                                                            <%
+                                                            for (Hashtable ht : queues) {
+                                                                int id = (Integer) ht.get("id");
+                                                                String qName = (String) ht.get("queue");
+                                                            %>
+                                                            <option value="<%=id%>" <%=((id == queueId) ? " selected" : "")%>><%= qName%> </option>
+                                                            <%}%>
+                                                        </select>
+                                
                                                         <% }
                                                         %>                                                                                                                
                             </form>        	            
