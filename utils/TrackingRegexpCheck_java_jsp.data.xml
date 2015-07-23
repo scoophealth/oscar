@@ -2667,6 +2667,8 @@
         <ViolationValue>/src/main/webapp/dms/html5AddDocuments.jsp:for (Hashtable ht : queues) {</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/incomingDocs.jsp:List&lt;Hashtable&gt; queues = queueDao.getQueues();</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/incomingDocs.jsp:for (Hashtable ht : queues) {</ViolationValue>
+        <ViolationValue>/src/main/webapp/dms/showDocument.jsp:List&lt;Hashtable&gt; queues = queueDao.getQueues();</ViolationValue>
+        <ViolationValue>/src/main/webapp/dms/showDocument.jsp:for (Hashtable ht : queues) {</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/listDocumentFromProvider.jsp:Hashtable providerDocs=(Hashtable)request.getSession().getAttribute("providerDocs");</ViolationValue>
         <ViolationValue>/src/main/webapp/dms/listDocumentFromQueue.jsp:Hashtable queueDocs=(Hashtable)request.getSession().getAttribute("queueDocs");</ViolationValue>
         <ViolationValue>/src/main/webapp/eform/efmformmanagerdownload.jsp:Object holbrook = ((Hashtable) obj).get("Holbrook Drug Interactions");</ViolationValue>
