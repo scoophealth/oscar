@@ -825,7 +825,7 @@ CREATE TABLE eform (
   patient_independent boolean NOT NULL,
   roleType varchar(50) default NULL,
   programNo int(10),
-  restrictToProgram tinyint(1),
+  restrictToProgram tinyint(1) NOT NULL,
   PRIMARY KEY  (fid),
   UNIQUE KEY id (fid)
 ) ;
