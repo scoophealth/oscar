@@ -1320,8 +1320,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			if (sessionBean.appointmentNo != null && !(sessionBean.appointmentNo.equals("") || sessionBean.appointmentNo.equals("0"))) {
 				//get latest and sign it.
 				Appointment appointment = appointmentDao.find(Integer.parseInt(sessionBean.appointmentNo));
-				String currentStatusFromDb = appointment.getStatus();
 				if(appointment != null) {
+					String currentStatusFromDb = appointment.getStatus();
 					String apptStatus = updateApptStatus(currentStatusFromDb, "sign");
 					
 					appointmentArchiveDao.archiveAppointment(appointment);
