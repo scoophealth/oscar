@@ -33,7 +33,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -43,25 +45,29 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.StreamingOutput;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.casemgmt.service.CaseManagementPrint;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.EncounterTemplateDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.EncounterTemplate;
 import org.oscarehr.managers.ConsultationManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.ws.rest.conversion.EncounterTemplateConverter;
 import org.oscarehr.ws.rest.conversion.summary.Summary;
+import org.oscarehr.ws.rest.to.EncounterTemplateResponse;
+import org.oscarehr.ws.rest.to.model.EncounterTemplateTo1;
 import org.oscarehr.ws.rest.to.model.MenuItemTo1;
 import org.oscarehr.ws.rest.to.model.SummaryTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
 
@@ -76,6 +82,10 @@ public class RecordUxService extends AbstractServiceImpl {
 	
 	@Autowired
 	private ConsultationManager consultationManager;
+	
+	@Autowired
+	private EncounterTemplateDao encounterTemplateDao;
+	
 
 	/**
 	$scope.recordtabs2 = [ 
@@ -444,4 +454,43 @@ public class RecordUxService extends AbstractServiceImpl {
 			}  
 	    };
 	}
+	
+	@POST
+	@Path("/searchTemplates")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public EncounterTemplateResponse getEncounterTemplates(JSONObject obj, @QueryParam("startIndex") Integer startIndex, @QueryParam("itemsToReturn") Integer itemsToReturn) {
+		
+		String name = obj.getString("name");
+		
+		List<EncounterTemplate> et = encounterTemplateDao.findByName(name + "%", startIndex, itemsToReturn);
+		
+		List<EncounterTemplateTo1> transfers = new EncounterTemplateConverter().getAllAsTransferObjects(getLoggedInInfo(), et);
+		
+		EncounterTemplateResponse response = new EncounterTemplateResponse();
+		response.setTemplates(transfers);
+		
+		return response;
+	}
+	
+	@POST
+	@Path("/template")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public EncounterTemplateResponse getEncounterTemplate(JSONObject obj) {
+		
+		String name = obj.getString("name");
+		
+		List<EncounterTemplate> et = new ArrayList<EncounterTemplate>();
+		
+		et.add(encounterTemplateDao.find(name));
+		
+		List<EncounterTemplateTo1> transfers = new EncounterTemplateConverter().getAllAsTransferObjects(getLoggedInInfo(), et);
+		
+		EncounterTemplateResponse response = new EncounterTemplateResponse();
+		response.setTemplates(transfers);
+		
+		return response;
+	}
+	
 }
