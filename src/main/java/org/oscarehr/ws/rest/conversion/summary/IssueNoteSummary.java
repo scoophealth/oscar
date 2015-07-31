@@ -79,6 +79,9 @@ public class IssueNoteSummary implements Summary {
 		}else if("famhx".equals(summaryCode)){
 			summary = new SummaryTo1("Family History",3,SummaryTo1.FAMILYHISTORY_CODE);
 			issueIds = new String[] {"FamHistory"};
+		} else if("riskfactors".equals(summaryCode)){
+			summary = new SummaryTo1("Risk Factors",7,SummaryTo1.RISK_FACTORS);
+			issueIds = new String[] {"RiskFactors"};
 		}
 	
 		

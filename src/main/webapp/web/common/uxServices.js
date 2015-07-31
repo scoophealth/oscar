@@ -103,6 +103,16 @@ angular.module("uxServices", [])
               deferred.reject("An error occured while fetching items");
             });
             return deferred.promise;
+    	},
+    	getRiskFactors: function(demographicNo){
+        	var deferred = $q.defer();
+        	$http.get(this.apiPath+'/'+demographicNo+'/getRiskFactors').success(function(data){
+                deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching items");
+              deferred.reject("An error occured while fetching items");
+            });
+            return deferred.promise;
     	}
     };
 }).service("uxService", function($http,$q,$log){
