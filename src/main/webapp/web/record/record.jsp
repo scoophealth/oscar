@@ -80,7 +80,13 @@
     	</div>
     	<div id="noteInput" class="center-block well col-md-4 col-md-offset-3" ng-show="hideNote">
 			<div class="col-xs-4">
-			    <input type="text" class="form-control" placeholder="Type Command" data-ng-disabled="true">
+			    
+			    <input type="text" ng-model="options.magicVal" placeholder="Type Command" 
+				typeahead="t.encounterTemplateName as t.encounterTemplateName for t in searchTemplates($viewValue)" 
+				typeahead-on-select="insertTemplate($item, $model, $label)"
+				class="form-control">
+				
+				
 		    </div>
 			<div class="col-xs-3 text-center hand-hover" style="padding:0px;line-height:1;font-size:14px;" ng-click="toggleNote();"  >
 			<span class="glyphicon glyphicon-chevron-down"></span><span class="glyphicon glyphicon-chevron-down"></span><span class="glyphicon glyphicon-chevron-down"></span>

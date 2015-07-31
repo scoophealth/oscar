@@ -132,6 +132,29 @@ angular.module("uxServices", [])
   
        return deferred.promise;
          
-     }
+     },
+ 	searchTemplates: function(search,startIndex,itemsToReturn){
+    	var deferred = $q.defer();
+    	$http.post(this.apiPath+'/searchTemplates?startIndex='+startIndex + "&itemsToReturn="+itemsToReturn,search).success(function(data){
+    		deferred.resolve(data);
+        }).error(function(){
+      	  console.log("error fetching items");
+          deferred.reject("An error occured while fetching items");
+        });
+   
+        return deferred.promise;
+    },
+ 	getTemplate: function(name){
+    	var deferred = $q.defer();
+    	$http.post(this.apiPath+'/template',name).success(function(data){
+    		deferred.resolve(data);
+        }).error(function(){
+      	  console.log("error fetching items");
+          deferred.reject("An error occured while fetching items");
+        });
+   
+        return deferred.promise;
+    }
+     
    };
 });
