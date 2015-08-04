@@ -153,7 +153,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     				isURLjavaScript = true;
     			}
     			else if( curDoc.getRemoteFacilityId()==null && curDoc.isPDF() ) {
-    				url = "popupPage(window.screen.width,window.screen.height,'" + hash + "','" + request.getContextPath() + "/dms/MultiPageDocDisplay.jsp?segmentID=" + dispDocNo + "&providerNo=" + user + "&searchProviderNo=" + user + "&status=A&demoName=" + StringEscapeUtils.escapeHtml(bean.getPatientLastName() + ", " + bean.getPatientFirstName()) + "'); return false;";
+    				url = "popupPage(window.screen.width,window.screen.height,'" + hash + "','" + request.getContextPath() + "/dms/MultiPageDocDisplay.jsp?segmentID=" + dispDocNo + "&providerNo=" + user + "&searchProviderNo=" + user + "&status=A'); return false;";
     				isURLjavaScript = true;
     			}
     			else {
