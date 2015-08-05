@@ -613,9 +613,15 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 
 															if (rev!=null)
 															{
-																%>
-																	<a style="color:#ddddff;" href="#" onclick="return showHistory('<%=globalNoteId%>', event);"><%=rev%></a>
-																<%
+																if(globalNoteId.contains("EFORM")){
+																	%>
+																	 <a style="color:#ddddff;" href="#" onclick="return showHistory('<%=globalNoteId.replace("EFORM","")%>', event);"><%=rev%></a>
+																	<%
+																}else{
+																	%>
+																	 <a style="color:#ddddff;" href="#" onclick="return showHistory('<%=globalNoteId%>', event);"><%=rev%></a>
+																	<%
+																}
 															}
 															else
 															{
