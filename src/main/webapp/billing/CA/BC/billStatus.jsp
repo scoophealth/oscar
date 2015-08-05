@@ -290,56 +290,7 @@ function addEvent(elm, evType, fn, useCapture)
 
 </script>
 <script language="JavaScript">
-<!--
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
-  var popup=window.open(page, "attachment", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
-    }
-   popup.focus();
-  }
-}
 
-function popupPage2(vheight,vwidth,varpage,pagename) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
-  var popup=window.open(page, pagename, windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
-    }
-   popup.focus();
-  }
-}
-function selectprovider(s) {
-  if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
-  else a = self.location.href;
-	self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
-}
-function openBrWindow(theURL,winName,features) { //v2.0
-  window.open(theURL,winName,features);
-}
-function setfocus() {
-  this.focus();
-}
-function refresh() {
-      history.go(0);
-
-}
-
-function fillEndDate(d){
-    document.serviceform.xml_appointment_date.value= d;
-
-}
-function setDemographic(demoNo){
-    document.serviceform.demographicNo.value = demoNo;
-}
-
-
-//-->
 
 function billTypeOnly(showEle){
    document.serviceform.showMSP.checked = false;
