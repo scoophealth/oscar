@@ -96,31 +96,7 @@ String outcome = (String) request.getAttribute("outcome");
 				<bean:message key="lab.ca.all.testUploader.labType" /><br />
 				<select name="type" id="type" onchange="selectOther()">
 					<option value="0">Select Lab Type:</option>
-					<option value="AlphaHL7">ALPHA</option>
-					<option value="CML">CML</option>
-					<option value="EPSILON">EPSILON/MHL</option>
-					<option value="PATHL7"
-					<oscar:oscarPropertiesCheck property="PATHNET_LABS" value="yes">Selected</oscar:oscarPropertiesCheck>>EXCELLERIS</option>
-					<option value="GDML">GDML</option>
-					<option value="HHSEMR">HHSEMR</option>
-					<option value="HRMXML">HRM XML</option>
-					<option value="ICL">ICL</option>
-					<option value="IHA">IHA</option>
-					<option value="MDS">MDS/Lifelabs</option>
-					<option value="MEDVUE">MEDVUE</option>
-					<!-- <option value="HL7">HL7</option> -->
-					<option value="OLIS_HL7">OLIS HL7</option>
-					<option value="OSCAR_TO_OSCAR_HL7_V2">OSCAR_TO_OSCAR_HL7_V2</option>
-					<option value="PFHT">PFHT</option>
-					<option value="SIOUX">SIOUX</option>
-					<option value="TDIS">TDIS</option>
-					<option value="Spire">Spire</option>
-					<option value="OUL_R21">OUL_R21</option>
-					<option value="ORU_R01">ORU_R01</option>
-					<option value="BIOTEST">BioTest</option>
-					<option value="CLS">Calgary Lab Services (CLS)</option>
-					<option value="TRUENORTH">TRUENORTH</option>
-					<option value="OTHER">Other</option>
+					<%@ include file="labOptions.jspf"%>
 				</select>
 			<br />
 			<div id="OTHER" style="display: none;">
