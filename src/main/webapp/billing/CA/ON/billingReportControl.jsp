@@ -66,24 +66,7 @@ String xml_appointment_date = request.getParameter("xml_appointment_date")==null
 <title>Billing Report</title>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<script language="JavaScript">
-<!--
 
-function selectprovider(s) {
-  if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
-  else a = self.location.href;
-	self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
-}
-function openBrWindow(theURL,winName,features) { //v2.0
-  window.open(theURL,winName,features);
-}
-
-function refresh() {
-      history.go(0);
-  
-}
-//-->
-</script>
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
