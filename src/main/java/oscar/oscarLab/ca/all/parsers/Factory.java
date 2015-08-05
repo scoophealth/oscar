@@ -99,6 +99,12 @@ public final class Factory {
 
 		try {
 
+			String enabled = OscarProperties.getInstance().getProperty("lab.handler."+type+".enabled", "false");
+			if(!"true".equals(enabled)) {
+				logger.info("Handler " + type + " is not enabled. add lab.handler."+type+".enabled=true in your properties file");
+				return null;
+			}
+			
 			// return default handler if the type is not specified
 			if (type == null) {
 				MessageHandler handler = new DefaultGenericHandler();
@@ -120,6 +126,7 @@ public final class Factory {
 			for (int i = 0; i < items.size(); i++) {
 				Element e = (Element) items.get(i);
 				msgType = e.getAttributeValue("name");
+				
 				if (msgType.equals(type)) {
 					String className = e.getAttributeValue("className");
 					
