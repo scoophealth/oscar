@@ -343,6 +343,8 @@ public class Hl7textResultsData {
 			//months of each other even this is a large time span
 			Date dateA = ConversionUtils.fromTimestampString(a.getObrDate());
 			Date dateB = ConversionUtils.fromTimestampString(b.getObrDate());
+			if (dateA==null || dateB==null) continue;
+			
 			if (dateA.before(dateB)) {
 				monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
 			} else {
