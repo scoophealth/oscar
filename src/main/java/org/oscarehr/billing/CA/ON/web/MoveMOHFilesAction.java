@@ -127,6 +127,8 @@ public class MoveMOHFilesAction extends Action {
 	private boolean moveFile(File file) {
 		File archiveDir = new File(EDTFolder.ARCHIVE.getPath());
 		try {
+			File archivedFile =  new File(archiveDir.getPath()+File.separator+file.getName());
+			if (archivedFile.exists()) archivedFile.delete();
 			FileUtils.moveToDirectory(file, archiveDir, true);
         } catch (IOException e) {
 	       logger.error("Unable to move", e);
