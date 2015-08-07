@@ -376,12 +376,13 @@ public class BORNWbXmlGenerator {
 			rbr.setWeight(weight);
 		}
 
-		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_1w") ? 1 : 0);
+		
+		rbr.setInvestigationsImmunizationRecordVaccines(getDiscussedConcernNotDiscussed("recordVaccines_1w"));
 
-		rbr.setInvestigationsImmunizationHBsAgPosParentVaccine1(hasValue("RBR", "hepbimmuneglobulin_1w") ? 1 : 0);
-		rbr.setInvestigationsImmunizationHemoglobinopathyScreen(hasValue("RBR", "hemoglobinopathy_1w") ? 1 : 0);
-		rbr.setInvestigationsImmunizationNBS(hasValue("RBR", "pkuthyroid_1w") ? 1 : 0);
-		rbr.setInvestigationsImmunizationUNHS(hasValue("RBR", "unhs_1w") ? 1 : 0);
+		rbr.setInvestigationsImmunizationHBsAgPosParentVaccine1(getDiscussedConcernNotDiscussed("hepbimmuneglobulin_1w"));
+		rbr.setInvestigationsImmunizationHemoglobinopathyScreen(getDiscussedConcernNotDiscussed("hemoglobinopathy_1w"));
+		rbr.setInvestigationsImmunizationNBS(getDiscussedConcernNotDiscussed("newbornscreen_1w"));
+		rbr.setInvestigationsImmunizationUNHS(getDiscussedConcernNotDiscussed("unhs_1w"));
 
 		
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_1w"));
@@ -453,7 +454,7 @@ public class BORNWbXmlGenerator {
 			rbr.setWeight(weight);
 		}
 
-		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_2w") ? 1 : 0);
+		rbr.setInvestigationsImmunizationRecordVaccines(getDiscussedConcernNotDiscussed("recordVaccines_2w"));
 
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_2w"));
 		rbr.setNutritionFormulaFeeding(getDiscussedConcernNotDiscussed("formulafeeding_2w"));
@@ -566,8 +567,9 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopmentNoParentCaregiverConcerns(getDiscussedConcernNotDiscussed("noconcerns_1m"));
 		rbr.setDevelopmentStartlesLoudNoise(getDiscussedConcernNotDiscussed("startlestonoise_1m"));
 		rbr.setDevelopmentSucksWellOnNipple(getDiscussedConcernNotDiscussed("suckswell_1m"));
-		rbr.setInvestigationsImmunizationHBsAgPosParentVaccine2(hasValue("RBR", "hepbimmuneglobulin_1m") ? 1 : 0);
-		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_1m") ? 1 : 0);
+		
+		rbr.setInvestigationsImmunizationHBsAgPosParentVaccine2(getDiscussedConcernNotDiscussed("hepbimmuneglobulin_1m") );
+		rbr.setInvestigationsImmunizationRecordVaccines(getDiscussedConcernNotDiscussed("recordVaccines_1m"));
 
 		
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_1m"));
@@ -643,7 +645,7 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopmentSmiles(getDiscussedConcernNotDiscussed("smilesresponsively_2m"));
 		rbr.setDevelopmentTwoOrMoreSucks(getDiscussedConcernNotDiscussed("sequencessucks_2m"));
 
-		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_2m") ? 1 : 0);
+		rbr.setInvestigationsImmunizationRecordVaccines(getDiscussedConcernNotDiscussed("recordVaccines_2m") );
 
 		
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_2m"));
@@ -715,7 +717,7 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopmentNoParentCaregiverConcerns(getDiscussedConcernNotDiscussed("noconcerns_4m"));
 		rbr.setDevelopmentRespondsWithExcitement(getDiscussedConcernNotDiscussed("respondswithexcitement_4m"));
 
-		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_4m") ? 1 : 0);
+		rbr.setInvestigationsImmunizationRecordVaccines(getDiscussedConcernNotDiscussed("recordVaccines_4m"));
 
 		
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_4m"));
@@ -779,11 +781,11 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopmentTurnsHead(getDiscussedConcernNotDiscussed("turnstowardsounds_6m"));
 		rbr.setDevelopmentVocalizes(getDiscussedConcernNotDiscussed("vocalizes_6m"));
 
-		rbr.setInvestigationsImmunizationHBsAgPosParentVaccine3(hasValue("RBR", "hepbimmuneglobulin_6m") ? 1 : 0);
-		rbr.setInvestigationsImmunizationHemoglobin(hasValue("RBR", "hemoglobinRisk_6m") ? 1 : 0);
-		rbr.setInvestigationsImmunizationInquireTBRiskFactors(hasValue("RBR", "tbriskfactors_6m") ? 1 : 0);
+		rbr.setInvestigationsImmunizationHBsAgPosParentVaccine3(getDiscussedConcernNotDiscussed("hepbimmuneglobulin_6m") );
+		rbr.setInvestigationsImmunizationHemoglobin(getDiscussedConcernNotDiscussed( "hemoglobinRisk_6m") );
+		rbr.setInvestigationsImmunizationInquireTBRiskFactors(getDiscussedConcernNotDiscussed( "tbriskfactors_6m"));
 
-		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_6m") ? 1 : 0);
+		rbr.setInvestigationsImmunizationRecordVaccines(getDiscussedConcernNotDiscussed("recordVaccines_6m"));
 
 		
 		rbr.setNutritionAvoidSweetJuicesLiquids(getDiscussedConcernNotDiscussed("avoidsweetened_6m"));
@@ -906,7 +908,7 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopmentSitsWithoutSupport(getDiscussedConcernNotDiscussed("sitsnosupport_9m"));
 		rbr.setDevelopmentStandsWithSupport(getDiscussedConcernNotDiscussed("standswithsupport_9m"));
 
-		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_9m") ? 1 : 0);
+		rbr.setInvestigationsImmunizationRecordVaccines(getDiscussedConcernNotDiscussed("recordVaccines_9m"));
 
 		
 		rbr.setNutritionAvoidSweetJuicesLiquids(getDiscussedConcernNotDiscussed("avoidsweetened_9m"));
@@ -987,7 +989,7 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopmentShowsDistressWhenSeparated(getDiscussedConcernNotDiscussed("distressseparated_12m"));
 		rbr.setDevelopmentUnderstandsSimpleRequests(getDiscussedConcernNotDiscussed("understandsrequests_12m"));
 
-		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_12m") ? 1 : 0);
+		rbr.setInvestigationsImmunizationRecordVaccines(getDiscussedConcernNotDiscussed("recordVaccines_9m"));
 		
 		rbr.setNutritionAppetiteReduced(getDiscussedConcernNotDiscussed("appetitereduced_12m"));
 		rbr.setNutritionAvoidSweetJuicesLiquids(getDiscussedConcernNotDiscussed("avoidsweetened_12m"));
@@ -1032,8 +1034,8 @@ public class BORNWbXmlGenerator {
 	}
 
 	private void populateRBRM09M1213(RBRM09M1213 rbr) {
-		rbr.setInvestigationsImmunizationHBsAgPosMotherCheckAntibodies(hasValue("RBR", "hepbimmuneglobulin_9m") ? 1 : 0);
-		rbr.setInvestigationsImmunizationHBsAgPosParentVaccine3(hasValue("RBR", "hemoglobinRisk_9m") ? 1 : 0);
+		rbr.setInvestigationsImmunizationHBsAgPosMotherCheckAntibodies(getDiscussedConcernNotDiscussed("hepbimmuneglobulin_9m") );
+		rbr.setInvestigationsImmunizationHBsAgPosParentVaccine3(getDiscussedConcernNotDiscussed("hemoglobinRisk_9m") );
 	}
 
 	private void populateRBRM15(RBRM15 rbr) {
@@ -1064,7 +1066,7 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopmentTriesSquat(getDiscussedConcernNotDiscussed("squattopick_15m"));
 		rbr.setDevelopmentWalkSidewaysHolding(getDiscussedConcernNotDiscussed("walkssideways_15m"));
 
-		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_15m") ? 1 : 0);
+		rbr.setInvestigationsImmunizationRecordVaccines(getDiscussedConcernNotDiscussed("recordVaccines_15m"));
 		
 		rbr.setNutritionAvoidSweetJuicesLiquids(getDiscussedConcernNotDiscussed("avoidsweetened_15m"));
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_15m"));
@@ -1215,7 +1217,7 @@ public class BORNWbXmlGenerator {
 		rbr.setEducationAdviceFamilySocializing(getDiscussedConcernNotDiscussed("socializing_18m"));
 		rbr.setEducationAdviceOtherToiletLearning(getDiscussedConcernNotDiscussed("toiletlearning_18m"));
 
-		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_18m") ? 1 : 0);
+		rbr.setInvestigationsImmunizationRecordVaccines(getDiscussedConcernNotDiscussed("recordVaccines_18m"));
 		
 		rbr.setNutritionAvoidSweetJuicesLiquids(getDiscussedConcernNotDiscussed("avoidsweetened_18m"));
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_18m"));
@@ -1294,8 +1296,7 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopment3YTwoThreeStepDirections(getDiscussedConcernNotDiscussed("understandsdirections_3y"));
 		rbr.setDevelopment3YWalksUpStairs(getDiscussedConcernNotDiscussed("walksupstairs_3y"));
 		
-		//TODO:check this
-		rbr.setInvestigationsImmunizationRecordVaccines(hasValue("RBR", "recordVaccines_3y") ? 1 : 0);
+		rbr.setInvestigationsImmunizationRecordVaccines(getDiscussedConcernNotDiscussed("recordVaccines_2y"));
 		
 		rbr.setNutritionAvoidSweetenedLiquids(getDiscussedConcernNotDiscussed("avoidSweetLiquids_2y"));
 		rbr.setNutritionBreastfeeding(getDiscussedConcernNotDiscussed("breastfeeding_2y"));
@@ -1378,7 +1379,7 @@ public class BORNWbXmlGenerator {
 		rbr.setDevelopment5YSpeaksClearly(getDiscussedConcernNotDiscussed("speaksadultlike_5y"));
 		rbr.setDevelopment5YThrowsAndCatchesBall(getDiscussedConcernNotDiscussed("throwscatchesball_5y"));
 
-		rbr.setInvestigationsImmunizationRecordVaccines(0);
+		rbr.setInvestigationsImmunizationRecordVaccines(getDiscussedConcernNotDiscussed("recordVaccines_4y"));
 
 		rbr.setNutritionAvoidSweetenedLiquids(getDiscussedConcernNotDiscussed("avoidsweeteded_4y"));
 		rbr.setNutritionCanadaFoodGuide(getDiscussedConcernNotDiscussed("foodguide_4y"));
@@ -2042,7 +2043,8 @@ public class BORNWbXmlGenerator {
 		}
 		return false;
 	}
-
+	
+	
 	private boolean hasValue(String name, String key) {
 		Map<String, EFormValue> m = this.eformValuesMap.get(name);
 		if (m != null) {
