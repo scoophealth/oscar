@@ -43,7 +43,6 @@
      document.forms[0].forward.value=target;
 };
 </script>
-
 </head>
 
 <body class="BodyStyle" vlink="#0000FF">
@@ -55,7 +54,7 @@
 		<tr class="MainTableTopRow">
 			<td class="MainTableTopRowLeftColumn"><bean:message
 				key="oscarEncounter.Measurements.msgMeasurements" /></td>
-			<td class="MainTableTopRowRightColumn" width="400">
+			<td class="MainTableTopRowRightColumn">
 			<table class="TopStatusBar">
 				<tr>
 					<td><bean:message
@@ -67,7 +66,7 @@
 		<tr>
 			<td class="MainTableLeftColumn"></td>
 			<td class="MainTableRightColumn">
-			<table border=0 cellspacing=4 width=700>
+			<table border=0 cellspacing=4 width=800>
 				<tr>
 					<td>
 					<table>
