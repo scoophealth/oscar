@@ -50,6 +50,7 @@
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@ page import="oscar.oscarDemographic.data.DemographicMerged" %>
+<%@page import="org.oscarehr.common.dao.OscarLogDao"%>
 
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
@@ -77,7 +78,7 @@
 
 	List<Demographic> demoList = null;  
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-	
+	OscarLogDao oscarLogDao = (OscarLogDao)SpringUtils.getBean("oscarLogDao");
 	String providerNo = loggedInInfo.getLoggedInProviderNo();
 	boolean outOfDomain = true;
 	if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1) {
@@ -268,7 +269,11 @@ function searchAll() {
     </div>
 <table width="95%" border="0">
 	<tr>
-		<td align="left"><bean:message key="demographic.demographicsearch2apptresults.msgKeywords" /> <%=request.getParameter("keyword")%></td>
+            <td align="left">
+                    <%if(request.getParameter("keyword")!=null && request.getParameter("keyword").length()==0) { %>
+                    <bean:message key="demographic.demographicsearch2apptresults.msgMostRecentPatients"/>
+                    <% } else { %>
+                    <bean:message key="demographic.demographicsearch2apptresults.msgKeywords" /> <%=request.getParameter("keyword")%> <%}%></td>
 	</tr>
 </table>
 
@@ -355,7 +360,16 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 	String pstatus = props.getProperty("inactive_statuses", "IN, DE, IC, ID, MO, FI");
 	pstatus = pstatus.replaceAll("'","").replaceAll("\\s", "");
 	List<String>stati = Arrays.asList(pstatus.split(","));
-
+        
+        if(request.getParameter("keyword")!=null && request.getParameter("keyword").length()==0) {
+            int mostRecentPatientListSize=Integer.parseInt(OscarProperties.getInstance().getProperty("MOST_RECENT_PATIENT_LIST_SIZE","3"));
+            List<Integer> results = oscarLogDao.getRecentDemographicsAccessedByProvider(providerNo,  0, mostRecentPatientListSize);
+            demoList = new ArrayList<Demographic>();
+            for(Integer r:results) {
+                demoList.add(demographicDao.getDemographicById(r));
+            }
+        } else {
+            
 	if( "".equals(ptstatus) ) {
 		if(searchMode.equals("search_name")) {
 			demoList = demographicDao.searchDemographicByName(keyword, limit, offset,providerNo,outOfDomain);
@@ -416,6 +430,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 			demoList = demographicDao.findDemographicByChartNoAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 	}
+        }
 	
 	if(demoList == null) {
 	    //out.println("failed!!!");

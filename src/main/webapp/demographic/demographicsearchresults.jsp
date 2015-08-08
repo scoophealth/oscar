@@ -35,6 +35,7 @@
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="oscar.util.DateUtils"%>
+<%@page import="org.oscarehr.common.dao.OscarLogDao"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicTransfer"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
 <%@page import="org.oscarehr.casemgmt.service.CaseManagementManager"%>
@@ -214,8 +215,11 @@
 <div id="searchResults">
 <a href="#" onclick="showHideItem('demographicSearch');" id="searchPopUpButton" class="rightButton top">Search</a>
 <br>
+<%if(request.getParameter("keyword")!=null && request.getParameter("keyword").length()==0) { %>
+<i><bean:message key="demographic.demographicsearchresults.msgMostRecentPatients" /></i> :
+<% } else {%> 
 <i><bean:message key="demographic.demographicsearchresults.msgSearchKeys" /></i> : <%=request.getParameter("keyword")%>
-
+<%}%>
     <table>
         <tr class="tableHeadings deep">
         
@@ -268,6 +272,7 @@
 	</tr>
 	<%
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+        OscarLogDao oscarLogDao = (OscarLogDao)SpringUtils.getBean("oscarLogDao");
 	CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
 	String providerNo = loggedInInfo.getLoggedInProviderNo();
 	boolean outOfDomain = true;
@@ -290,8 +295,17 @@
 	
 	List<Demographic> demoList = null;
 	
-	demoList = doSearch(demographicDao,searchMode,ptstatus,keyword,limit,offset,orderBy,providerNo,outOfDomain);	
-	
+        if(request.getParameter("keyword")!=null && request.getParameter("keyword").length()==0) {
+            int mostRecentPatientListSize=Integer.parseInt(OscarProperties.getInstance().getProperty("MOST_RECENT_PATIENT_LIST_SIZE","3"));
+            List<Integer> results = oscarLogDao.getRecentDemographicsAccessedByProvider(providerNo,  0, mostRecentPatientListSize);
+            demoList = new ArrayList<Demographic>();
+            for(Integer r:results) {
+                demoList.add(demographicDao.getDemographicById(r));
+            }
+            
+        } else {
+            demoList = doSearch(demographicDao,searchMode,ptstatus,keyword,limit,offset,orderBy,providerNo,outOfDomain);	
+        }	
 	
 	boolean toggleLine = false;
 	boolean firstPageShowIntegratedResults = request.getParameter("firstPageShowIntegratedResults") != null && "true".equals(request.getParameter("firstPageShowIntegratedResults"));
