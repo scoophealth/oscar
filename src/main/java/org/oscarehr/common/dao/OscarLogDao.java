@@ -111,6 +111,19 @@ public class OscarLogDao extends AbstractDao<OscarLog> {
 		return(results);
 	}
 
+        public List<Integer> getRecentDemographicsAccessedByProvider(String providerNo, int startPosition, int itemsToReturn) {
+		String sqlCommand="select distinct demographicId from "+modelClass.getSimpleName()+" l where l.providerNo = ?1 and l.demographicId is not null and l.demographicId != '-1' order by dateTime desc";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, providerNo);
+		query.setFirstResult(startPosition);
+		setLimit(query,itemsToReturn);
+
+		@SuppressWarnings("unchecked")
+		List<Integer> results=query.getResultList();
+
+		return(results);
+	}
 	/**
 	 * 
 	 * @param providerNo
