@@ -305,6 +305,8 @@ public class Hl7textResultsData {
 				//months of eachother even this is a large timespan
 				Date dateA = UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "obr_date"), "yyyy-MM-dd hh:mm:ss");
 				Date dateB = UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "labDate"), "yyyy-MM-dd hh:mm:ss");
+				if (dateA==null || dateB==null) continue;
+				
 				if (dateA.before(dateB)){
 					monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
 				}else{

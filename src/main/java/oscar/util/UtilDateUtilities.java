@@ -27,13 +27,14 @@ package oscar.util;
 
 import java.text.DateFormat;
 import java.text.Format;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import org.oscarehr.util.MiscUtils;
 
 public class UtilDateUtilities {
 
@@ -211,7 +212,8 @@ public class UtilDateUtilities {
          // Some examples
          DateFormat formatter = new SimpleDateFormat(datePattern);
          date = formatter.parse(dateStr);                        
-      } catch (ParseException e) {
+      } catch (Exception e) {
+    	  MiscUtils.getLogger().error("Fail to parse date string, return null", e);
       }
       return date   ;     
     }
