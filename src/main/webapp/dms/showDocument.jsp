@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="oscar.dms.*,java.util.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -124,7 +125,7 @@
             String cp=request.getContextPath() ;
             String url = cp+"/dms/ManageDocument.do?method=viewDocPage&doc_no=" + docId+"&curPage=1";
             String url2 = cp+"/dms/ManageDocument.do?method=display&doc_no=" + docId;
-
+            String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());	
 %>
 <% if (request.getParameter("inWindow") != null && request.getParameter("inWindow").equalsIgnoreCase("true")) {  %>
 <html>
@@ -286,7 +287,7 @@
                                                         <% if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")) {%>
                                                         <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popup(700,960,'<%= request.getContextPath() %>/oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
                                                         <input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="handleDocSave('<%=docId%>','addTickler')"/>
-                                                        <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popup(360, 680, '<%= request.getContextPath() %>/oscarMDS/SearchPatient.do?labType=DOC&segmentID=<%= docId %>&name=<%=java.net.URLEncoder.encode(demoName)%>', 'encounter')">
+                                                        <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popup(710, 1024,'<%= request.getContextPath() %>/oscarEncounter/IncomingEncounter.do?demographicNo=<%=demographicID%>&reason=<bean:message key="oscarMDS.segmentDisplay.labResults"/>&curDate=<%=currentDate%>>&appointmentNo=&appointmentDate=&startTime=&status=', 'encounter')">
                                                         <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popup(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?demographic_no=<%=demographicID%>&displaymode=edit&dboperation=search_detail','master')">
                                                         <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popup(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?demographic_no=<%=demographicID%>&orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25','ApptHist')">
                                                         
