@@ -49,7 +49,7 @@ String curProvider_no = (String)session.getAttribute("user");
 
 <!-- #USER MANAGEMENT -->
 <security:oscarSec roleName="<%=roleName$%>"
-	objectName="_admin,_admin.userAdmin,_admin.torontoRfq,_admin.provider"
+	objectName="_admin,_admin.userAdmin,_admin.provider"
 	rights="r" reverse="<%=false%>">			
 				<div class="accordion-heading">
 				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseOne">

@@ -76,7 +76,7 @@ int curDay = cal.get(Calendar.DAY_OF_MONTH);
 <html lang="en">
 
 <head>
-<title>Administration Panel</title>
+<title><bean:message key="admin.admin.page.title" /></title>
 <link href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet" type="text/css">
 <link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
 <link href="<%=request.getContextPath() %>/css/DT_bootstrap.css" rel="stylesheet" type="text/css">
@@ -309,67 +309,62 @@ String loadPage=request.getParameter("load");
 
 if(showMenu==null && loadPage==null){
 %>
-<div class="row-fluid">	
+<div class="row-fluid">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.unlockAccount" rights="r">	
       <div class="well quick-links">
-	<a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/unLock.jsp"><i class="icon-user icon-4x"></i>
-      
-      <h5><bean:message key="admin.admin.unlockAcct"/></h5></a>
+	    <a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/unLock.jsp"><i class="icon-user icon-4x"></i>
+        <h5><bean:message key="admin.admin.unlockAcct"/></h5></a>
       </div>
-      
-     <div class="well quick-links">
+	</security:oscarSec>
+
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.provider" rights="r" reverse="<%=false%>">      
+      <div class="well quick-links">
 	    <a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/provideraddarecordhtm.jsp"><i class="icon-user icon-4x"></i>	
-      
         <h5><bean:message key="admin.admin.btnAddProvider" /></h5></a>
       </div>
-            
-      <div class="well quick-links">	
-      	<a href="${ctx}/eform/efmformmanager.jsp" class="contentLink defaultForms"><i class="icon-file icon-4x"></i>
-      	
-      	<h5><bean:message key="eform.showmyform.msgManageEFrm"/></h5>
-		</a>
-      </div>
-      
-      <!-- <div class="well quick-links">
-        <a href='javascript:void(0);' class="xlink" rel="${ctx}/lab/CA/ALL/testUploader.jsp" ><i class="icon-inbox icon-4x"></i>
-      
-        <h5><bean:message key="admin.admin.hl7LabUpload" /></h5></a>
-      </div>-->
       
       <div class="well quick-links">
+        <a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/securityaddarecord.jsp"><i class="icon-user icon-4x"></i>
+        <h5><bean:message key="admin.admin.btnAddLogin" /></h5></a>
+      </div>
+	</security:oscarSec>        
+
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>">            
+      <div class="well quick-links">	
+      	<a href="${ctx}/eform/efmformmanager.jsp" class="contentLink defaultForms"><i class="icon-file icon-4x"></i>
+      	<h5><bean:message key="eform.showmyform.msgManageEFrm"/></h5></a>
+      </div>
+	</security:oscarSec>
+
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule" rights="r" reverse="<%=false%>">            
+      <div class="well quick-links">
         <a href="javascript:void(0);" class="xlink" rel="${ctx}/schedule/scheduletemplatesetting.jsp" title="<bean:message key="admin.admin.scheduleSettingTitle"/>"><i class="icon-calendar icon-4x"></i>
-      
         <h5><bean:message key="admin.admin.scheduleSetting" /></h5></a>
       </div>
 
-
-       <div class="well quick-links">
-         <a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/securityaddarecord.jsp"><i class="icon-user icon-4x"></i>
-      
-         <h5><bean:message key="admin.admin.btnAddLogin" /></h5></a>
-      </div>
-      
-      <div class="well quick-links">
-        <a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/providertemplate.jsp"><i class="icon-medkit icon-4x"></i>
-      
-        <h5><bean:message key="admin.admin.btnInsertTemplate" /></h5></a>
-      </div>
-      
       <div class="well quick-links">
         <a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/admindisplaymygroup.jsp"><i class="icon-calendar icon-4x"></i>
-      
         <h5><bean:message key="admin.admin.btnSearchGroupNoRecords" /></h5></a>     
+      </div>      
+	</security:oscarSec>
+
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.encounter" rights="r" reverse="<%=false%>">      
+      <div class="well quick-links">
+        <a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/providertemplate.jsp"><i class="icon-medkit icon-4x"></i>
+        <h5><bean:message key="admin.admin.btnInsertTemplate" /></h5></a>
       </div>
-      
+	</security:oscarSec>
+
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=false%>">      
       <div class="well quick-links">
         <a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/providerPrivilege.jsp"><i class="icon-wrench icon-4x"></i>
-      
         <h5><bean:message key="admin.admin.assignRightsObject"/></h5></a>
-      </div>     
+      </div>
+	</security:oscarSec>
  </div>     
               
 <%}%>             
-          
-       
+   
     <!-- ****DYNAMIC CONTENT END**** -->
     
     </div><!-- span8 end -->
