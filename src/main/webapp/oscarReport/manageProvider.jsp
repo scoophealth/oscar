@@ -59,29 +59,6 @@ String last_name="", first_name="", mygroup="";
 <head>
 <title><bean:message key="oscarReport.manageProvider.title" /></title>
 <link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
-<script language="JavaScript">
-<!--
-
-function selectprovider(s) {
-  if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
-  else a = self.location.href;
-	self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
-}
-function openBrWindow(theURL,winName,features) { 
-  window.open(theURL,winName,features);
-}
-
-function refresh() {
-  var u = self.location.href;
-  if(u.lastIndexOf("view=1") > 0) {
-    self.location.href = u.substring(0,u.lastIndexOf("view=1")) + "view=0" + u.substring(eval(u.lastIndexOf("view=1")+6));
-  } else {
-    history.go(0);
-  }
-}
-//-->
-</script>
-
 
 </head>
 <body>

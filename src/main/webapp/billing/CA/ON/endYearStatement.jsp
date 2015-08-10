@@ -54,14 +54,7 @@ function demographicSearch() {
 	return false;	
 }
 
-function refresh() {
-  var u = self.location.href;
-  if(u.lastIndexOf("view=1") > 0) {
-    self.location.href = u.substring(0,u.lastIndexOf("view=1")) + "view=0" + u.substring(eval(u.lastIndexOf("view=1")+6));
-  } else {
-    history.go(0);
-  }
-}
+
 
 function calToday(field) {
 	var calDate=new Date();
