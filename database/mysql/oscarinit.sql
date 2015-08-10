@@ -677,7 +677,7 @@ CREATE TABLE document (
   reviewdatetime datetime default NULL,
   number_of_pages int(6),
   appointment_no int(11) default NULL,
-  restrictToProgram tinyint(1),
+  restrictToProgram tinyint(1) NOT NULL,
   PRIMARY KEY  (document_no)
 ) ;
 
