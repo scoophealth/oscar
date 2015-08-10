@@ -206,35 +206,7 @@
 	   adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript"
 	src="../../../share/calendar/calendar-setup.js"></script>
-<script type="text/javascript">
-<!--
 
-function selectprovider(s) {
-  if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
-  else a = self.location.href;
-	self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
-}
-function openBrWindow(theURL,winName,features) { //v2.0
-  window.open(theURL,winName,features);
-}
-
-function refresh() {
-  var u = self.location.href;
-  if(u.lastIndexOf("view=1") > 0) {
-	self.location.href = u.substring(0,u.lastIndexOf("view=1")) + "view=0" + u.substring(eval(u.lastIndexOf("view=1")+6));
-  } else {
-	history.go(0);
-  }
-}
-function calToday(field) {
-	var calDate=new Date();
-	varMonth = calDate.getMonth()+1;
-	varMonth = varMonth>9? varMonth : ("0"+varMonth);
-	varDate = calDate.getDate()>9? calDate.getDate(): ("0"+calDate.getDate());
-	field.value = calDate.getFullYear() + '/' + (varMonth) + '/' + varDate;
-}
-//-->
-</script>
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
