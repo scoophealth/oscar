@@ -1,2 +1,2 @@
-alter table document add restrictToProgram tinyint(1);
+alter table document add restrictToProgram tinyint(1) not null;
 
