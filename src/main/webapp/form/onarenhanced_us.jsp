@@ -27,11 +27,6 @@
 	int n = Integer.parseInt(request.getParameter("n"));
 %>
 <tr id="us_<%=n%>" >
-<script>
-$(document).ready(function() {
-	Calendar.setup({ inputField : "ar2_uDate<%=n %>", ifFormat : "%Y/%m/%d", showsTime :false, button : "ar2_uDate<%=n %>_cal", singleClick : true, step : 1 });	
-});
-</script>
 	<td>
 		<a href="javascript:void(0)" onclick="deleteUltraSound('<%=n%>'); return false;">[x]</a>
 	</td>
