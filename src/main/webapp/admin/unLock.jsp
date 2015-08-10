@@ -41,7 +41,7 @@
 
 	boolean isSiteAccessPrivacy=false;
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r" reverse="<%=true%>"> <%response.sendRedirect("../noRights.html");%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.unlockAccount" rights="r" reverse="<%=true%>"> <%response.sendRedirect("../noRights.html");%>
 </security:oscarSec>
 
 
