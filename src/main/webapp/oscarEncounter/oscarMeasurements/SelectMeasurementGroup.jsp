@@ -78,7 +78,7 @@ function confirmDelete(target) {
 		<tr>
 			<td class="MainTableLeftColumn"></td>
 			<td class="MainTableRightColumn">
-			<table border=0 cellspacing=4 width=400>
+			<table border=0 cellspacing=4 width=800>
 				<tr>
 					<td>
 					<table>
