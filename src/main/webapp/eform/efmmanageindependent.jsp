@@ -23,7 +23,6 @@
     Ontario, Canada
 
 --%>
-
 <%@page import="java.util.*,oscar.eform.*"%>
 <%@page import="org.oscarehr.web.eform.EfmPatientFormList"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
@@ -31,7 +30,6 @@
 <%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
-	
 	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
 	String country = request.getLocale().getCountry();
 	
@@ -79,7 +77,6 @@ function checkSelectBox() {
 <body>
 
 <%@ include file="efmTopNav.jspf"%>
-
 
 <div class="well">
 <h3 style="display:inline"><bean:message key="admin.admin.frmIndependent"/>s</h3> <i class="icon-question-sign"></i> <oscar:help keywords="patient independent" key="app.top1"/>
@@ -129,14 +126,14 @@ function checkSelectBox() {
 					%>
 					<tr>
 						<td><a href="#"
-							ONCLICK="popupPage('efmshowform_data.jsp?fdid=<%=curform.get("fdid")%>', '<%="FormP" + i%>'); return false;"
+							ONCLICK="popupPage('../eform/efmshowform_data.jsp?fdid=<%=curform.get("fdid")%>', '<%="FormP" + i%>'); return false;"
 							TITLE="<bean:message key="eform.showmyform.msgViewFrm"/>"
 							onmouseover="window.status='<bean:message key="eform.showmyform.msgViewFrm"/>'; return true"><%=curform.get("formName")%></a></td>
 						<td><%=curform.get("formSubject")%></td>
 						<td align='center'><%=providerDao.getProviderNameLastFirst((String)curform.get("providerNo"))%></td>
 						<td align='center'><%=curform.get("formDate")%></td>
 						<td align='center'><a
-							href="../eform/removeEForm.do?callpage=independent&fdid=<%=curform.get("fdid")%>" onClick="javascript: return confirm('Are you sure you want to delete this eform?');"><bean:message
+							href="../eform/removeEForm.do?callpage=independent&fdid=<%=curform.get("fdid")%>" onClick="javascript: return confirm('Are you sure you want to delete this eform?');" class="contentLink"><bean:message
 							key="eform.uploadimages.btnDelete" /></a></td>
 					</tr>
 					<%
