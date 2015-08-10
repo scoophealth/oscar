@@ -274,7 +274,7 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
         }
     }
     
-    public String getOBXDataType(int i, int j){
+    public String getOBXValueType(int i, int j){
         try{
         	if (version.equals("2.2")) {
         		return msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getValueType().getValue();
@@ -287,6 +287,22 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
             return("");
         }
     }
+    
+    public String getRequestDate(int i){
+    	try{
+	    	if (version.equals("2.2")) {
+	    		return formatDateTime(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBR().getRequestedDateTimeNotused().getTimeOfAnEvent().getValue());
+	    	} else {
+	    		return formatDateTime(msg23.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getRequestedDateTime().getTimeOfAnEvent().getValue());
+	    	}
+    	} catch(Exception e){
+            logger.error("Error getRequestDate", e);
+            return("");
+        }    	
+    }
+    
+    
+    
     
     /** When the Test Source = ”FORM”, then REPLACE all previous  NM and ST results with the FT results.
      * When the Test Source<>”FORM”, then APPEND the FT results to the previous results.
@@ -403,12 +419,12 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
     }
 
     public String getTimeStamp(int i, int j){
-        try{
+    	try{
         	if (version.equals("2.2")) {
-                return(formatDateTime(getString(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getDateTimeOfTheObservation().getTimeOfAnEvent().getValue())));
-    	} else {
-            return(formatDateTime(getString(msg23.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getDateTimeOfTheObservation().getTimeOfAnEvent().getValue())));
-    	}
+                return formatDateTime(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue());
+        	} else {
+            return formatDateTime(msg23.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue());
+        	}
         }catch(Exception e){
             return("");
         }

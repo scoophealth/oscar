@@ -118,6 +118,11 @@ public class Hl7textResultsData {
                     // only insert if there is a result and it is supposed to be viewed
                     if (result.equals("") || result.equals("DNR") || h.getOBXName(i, j).equals("") || h.getOBXResultStatus(i, j).equals("DNS"))
                         continue;
+                    
+                    //Insert into measurements if value types are ST or NMs or blank
+                    if(!approveValueTypeMeasurment(h.getOBXValueType(i,j)))	
+                    	continue;
+                    
                     logger.debug("obx("+j+") should be inserted");
                     String identifier = h.getOBXIdentifier(i,j);
                     String name = h.getOBXName(i,j);
@@ -911,4 +916,22 @@ public class Hl7textResultsData {
 		}
 		return refRange;
 	}
+	
+	private static boolean approveValueTypeMeasurment(String valueType) {
+    	try {
+			if (valueType.equals(""))
+	    		return true;
+	    	
+	    	String[] approveValueTypes = {"NM","ST"};
+	    	for(String approveValueType : approveValueTypes) {
+	    		if (valueType.equals(approveValueType))	return true;
+	    	}
+	    	
+	    	return false;
+    	}
+    	catch(Exception ex) {
+    		logger.error("exception in approveValueTypeMeasurment:", ex);
+    		return true;
+    	}
+   }
 }

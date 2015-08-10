@@ -938,7 +938,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 	                                   			if(handler.getMsgType().equals("PATHL7")&& !isAllowedDuplicate && (obxCount>1) && handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){%>
 	                                   				<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"></a><%
 	                                   				}
-	                               				else if(handler.getMsgType().equals("ALPHA") && ((AlphaHandler) handler).getOBXDataType(j,k).equals("FT")){%>
+	                               				else if(handler.getMsgType().equals("ALPHA") && handler.getOBXValueType(j,k).equals("FT")){%>
 	                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %></td>
 	                                            <%} else {%>
 	                                             <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../lab/CA/ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labype=HL7&identifier='+encodeURIComponent('<%= handler.getOBXIdentifier(j, k)%>'))"><%=obxName %></a></td>

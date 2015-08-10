@@ -731,7 +731,9 @@ div.recommendations li{
     <%}%>
     >
         <p <%=indColour%> title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]"><%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
-            <%=hdata.get("prevention_date")%>&nbsp;<%=mdb.getNumMonthSinceObserved()%>M
+            <%if (hdata.get("prevention_date") != null && !hdata.get("prevention_date").equals("")) {%>
+            	<%=hdata.get("prevention_date")%>&nbsp;<%=mdb.getNumMonthSinceObserved()%>M
+            <%}%>
             <%if (comb) {%>
             <span class="footnote"><%=comments.size()%></span>
             <%}%>
