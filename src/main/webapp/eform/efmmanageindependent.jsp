@@ -52,11 +52,14 @@
 
 
 <script type="text/javascript">
-function popupPage(varpage, windowname) {
-    var page = "" + varpage;
+function openEform(varpage, windowname) {
+	var page = "" + varpage;
+	
     windowprops = "height=700,width=800,location=no,"
     + "scrollbars=yes,menubars=no,status=yes,toolbars=no,resizable=yes,top=10,left=200";
+        
     var popup = window.open(page, windowname, windowprops);
+    
     if (popup != null) {
        if (popup.opener == null) {
           popup.opener = self;
@@ -126,7 +129,7 @@ function checkSelectBox() {
 					%>
 					<tr>
 						<td><a href="#"
-							ONCLICK="popupPage('../eform/efmshowform_data.jsp?fdid=<%=curform.get("fdid")%>', '<%="FormP" + i%>'); return false;"
+							ONCLICK="openEform('../eform/efmshowform_data.jsp?fdid=<%=curform.get("fdid")%>', '<%="FormP" + i%>'); return false;"
 							TITLE="<bean:message key="eform.showmyform.msgViewFrm"/>"
 							onmouseover="window.status='<bean:message key="eform.showmyform.msgViewFrm"/>'; return true"><%=curform.get("formName")%></a></td>
 						<td><%=curform.get("formSubject")%></td>
