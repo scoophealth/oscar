@@ -44,11 +44,25 @@ public class EncounterTemplateDao extends AbstractDao<EncounterTemplate> {
 		return results;
 	}
 	
+	public List<EncounterTemplate> findByName(String name)
+	{
+		Query query = entityManager.createQuery("select x from EncounterTemplate x where x.encounterTemplateName like ?");
+		query.setParameter(1, name);
+		
+		@SuppressWarnings("unchecked")
+		List<EncounterTemplate> results=query.getResultList();
+		
+		return(results);
+	}
+	
 
-	   public List<EncounterTemplate> findByName(String name)
+	   public List<EncounterTemplate> findByName(String name, Integer startIndex, Integer itemsToReturn)
 		{
 			Query query = entityManager.createQuery("select x from EncounterTemplate x where x.encounterTemplateName like ?");
 			query.setParameter(1, name);
+			
+			query.setFirstResult(startIndex);
+			query.setMaxResults(itemsToReturn);
 			
 			@SuppressWarnings("unchecked")
 			List<EncounterTemplate> results=query.getResultList();
