@@ -237,7 +237,8 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 		 
 		 uxService.getTemplate({name:model}).then(function(data){
 			 if(data.templates != null) {
-				 $scope.page.encounterNote.note = $scope.page.encounterNote.note + "\n\n" + data.templates.encounterTemplateValue;
+//				 $scope.page.encounterNote.note = $scope.page.encounterNote.note + "\n\n" + data.templates.encounterTemplateValue;
+				 $scope.page.encounterNote.note = $scope.page.encounterNote.note + data.templates.encounterTemplateValue;
 				 $scope.options= {magicVal:''};
 			 }
 			
