@@ -220,6 +220,30 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	    	$rootScope.$emit('currentlyEditingNote',$scope.page.encounterNote);
 	 });
 
+	 
+	 $scope.searchTemplates  = function(term) {
+	    	var search = {name:term};
+	    	
+	    	return uxService.searchTemplates(search,0,25).then(function(response){
+	    		var resp = [];
+	    		for(var x=0;x<response.templates.length;x++) {
+	    			resp.push({encounterTemplateName:response.templates[x].encounterTemplateName});
+	    		}
+	    		return resp;
+	    	});
+	 }
+	 
+	 $scope.insertTemplate = function(item, model, label) {
+		 
+		 uxService.getTemplate({name:model}).then(function(data){
+			 if(data.templates != null) {
+				 $scope.page.encounterNote.note = $scope.page.encounterNote.note + "\n\n" + data.templates.encounterTemplateValue;
+				 $scope.options= {magicVal:''};
+			 }
+			
+		 });
+	 }
+	 
 	
 });
 
