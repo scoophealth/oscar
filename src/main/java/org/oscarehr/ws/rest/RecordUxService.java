@@ -259,6 +259,8 @@ public class RecordUxService extends AbstractServiceImpl {
 		}else if("left".equals(summaryName )){
 			summaryList = new ArrayList<SummaryTo1>();
 			
+			summaryList.add(new SummaryTo1("Preventions",count++,SummaryTo1.PREVENTIONS));
+			
 			summaryList.add(new SummaryTo1("Ongoing Concerns",count++,SummaryTo1.ONGOINGCONCERNS_CODE));
 			
 			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.medicalHistory", "r", null)) {
@@ -301,6 +303,7 @@ public class RecordUxService extends AbstractServiceImpl {
 
     private static Map<String, String> createMap() {
         Map<String, String> result = new HashMap<String, String>();
+        result.put("preventions","preventionsSummary");
         result.put("ongoingconcerns","issueNoteSummary"); 
         result.put("medhx","issueNoteSummary"); 
 		result.put("socfamhx","issueNoteSummary"); 		
@@ -382,6 +385,13 @@ public class RecordUxService extends AbstractServiceImpl {
 	@Produces(MediaType.APPLICATION_JSON)
 	public SummaryTo1 getAllergies(@PathParam("demographicNo") Integer demographicNo) {
 		return getFullSummmary(demographicNo, SummaryTo1.ALLERGIES);
+	}
+	
+	@GET
+	@Path("/{demographicNo}/getPreventions")
+	@Produces(MediaType.APPLICATION_JSON)
+	public SummaryTo1 getPreventions(@PathParam("demographicNo") Integer demographicNo) {
+		return getFullSummmary(demographicNo, SummaryTo1.PREVENTIONS);
 	}
 	
 	boolean getBoolean(JSONObject jsonobject,String key){
