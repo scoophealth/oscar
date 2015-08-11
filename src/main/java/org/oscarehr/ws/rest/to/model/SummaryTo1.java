@@ -72,7 +72,7 @@ public class SummaryTo1 {
 	public static final String SOCIALHISTORY_CODE = "sochx";
 	public static final String OTHERMEDS_CODE = "othermeds";
 	public static final String ALLERGIES = "allergies";
-	
+	public static final String RISK_FACTORS = "riskfactors";
 	
 	Integer id;
 	String displayName;
