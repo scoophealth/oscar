@@ -252,15 +252,15 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
         public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress,
                 String patientName,String patientDOB, String sigDoctorName, String rxDate,String origPrintDate,String numPrint, String imgPath, String patientHIN, String patientChartNo,String pracNo, Locale locale) {
-			this.clinicName = clinicName;
-			this.clinicTel = clinicTel;
-			this.clinicFax = clinicFax;
-			this.patientPhone = patientPhone;
-			this.patientCityPostal = patientCityPostal;
-			this.patientAddress = patientAddress;
+			this.clinicName = clinicName==null ? "" : clinicName;
+			this.clinicTel = clinicTel==null ? "" : clinicTel;
+			this.clinicFax = clinicFax==null ? "" : clinicFax;
+			this.patientPhone = patientPhone==null ? "" : patientPhone;
+			this.patientCityPostal = patientCityPostal==null ? "" : patientCityPostal;
+			this.patientAddress = patientAddress==null ? "" : patientAddress;
 			this.patientName = patientName;
             this.patientDOB=patientDOB;
-			this.sigDoctorName = sigDoctorName;
+			this.sigDoctorName = sigDoctorName==null ? "" : sigDoctorName;
 			this.rxDate = rxDate;
 			this.promoText = OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT");
 			this.origPrintDate = origPrintDate;
@@ -269,10 +269,10 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 				promoText = "";
 			}
 			this.imgPath = imgPath;
-			this.patientHIN = patientHIN;
-                        this.patientChartNo = patientChartNo;
-			this.pracNo = pracNo;     
-                        this.locale = locale;
+			this.patientHIN = patientHIN==null ? "" : patientHIN;
+			this.patientChartNo = patientChartNo==null ? "" : patientChartNo;
+			this.pracNo = pracNo==null ? "" : pracNo;
+			this.locale = locale;
 		}
 
 		@Override
@@ -347,7 +347,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 				ColumnText ct = new ColumnText(cb);
 				ct.setSimpleColumn(80, (page.getHeight() - 25), 280, (page.getHeight() - 90), 11, Element.ALIGN_LEFT);
 				// p("value of clinic name", this.clinicName);
-				ct.setText(new Phrase(12, clinicName+(pracNo != null && pracNo.trim().length() >0 ? "\r\n"+geti18nTagValue(locale, "RxPreview.PractNo")+": "+ pracNo : ""), font));ct.go();
+				ct.setText(new Phrase(12, clinicName+(pracNo.trim().length()>0 ? "\r\n"+geti18nTagValue(locale, "RxPreview.PractNo")+": "+ pracNo : ""), font));ct.go();
 				// render clnicaTel;
 				if (this.clinicTel.length() <= 13) {
 					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, geti18nTagValue(locale, "RxPreview.msgTel")+":" + this.clinicTel, 188, (page.getHeight() - 70), 0);
@@ -514,6 +514,17 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         String patientChartNo = req.getParameter("patientChartNo");
         String pracNo=req.getParameter("pracNo");
         Locale locale = req.getLocale();
+        
+		if (clinicName==null) clinicName = "";
+		if (clinicTel==null) clinicTel = "";
+		if (clinicFax==null) clinicFax = "";
+		if (patientPhone==null) patientPhone = "";
+		if (patientCityPostal==null) patientCityPostal = "";
+		if (patientAddress==null) patientAddress = "";
+		if (sigDoctorName==null) sigDoctorName = "";
+        if (patientHIN==null) patientHIN = "";
+        if (patientChartNo==null) patientChartNo = "";
+        if (pracNo==null) pracNo = "";
         
         boolean isShowDemoDOB=false;
         if(showPatientDOB!=null&&showPatientDOB.equalsIgnoreCase("true")){
