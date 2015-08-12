@@ -137,6 +137,7 @@
 			<bean class="org.oscarehr.ws.rest.ConsultationWebService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.AppService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.AllergyService" autowire="byName" />
+			<bean class="org.oscarehr.ws.rest.PreventionService" autowire="byName" />
 		</jaxrs:serviceBeans>
 
 		<jaxrs:extensionMappings>
