@@ -83,7 +83,7 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
 
         String highliteColour 	= "#FF0000";
         //String inelligibleColour = "#FF6600";
-        String refusedColour 	= "#FFDDDD";	//light pink 
+        String refusedColour 	= "#EAACAC";	//light pink 
         String ineligibleColour	= "#FFCC24";	//orange
         String pendingColour 	= "#FF00FF";	//dark pink
         String abnormalColor 	= "#FF4D4D";	//dark salmon
