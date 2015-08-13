@@ -109,6 +109,11 @@
 	key="appointment.appointmentupdatearecord.msgUpdateSuccess" /></h1>
 
 <script LANGUAGE="JavaScript">
+    <% 
+        if(!(request.getParameter("printReceipt")==null) && request.getParameter("printReceipt").equals("1")) {
+    %>
+            popupPage(350,750,'printappointment.jsp?appointment_no=<%=request.getParameter("appointment_no")%>') ;
+    <%}%>
 	self.opener.refresh();
 	self.close();
 </script>

@@ -20,7 +20,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.DbConnectionFilter;
@@ -47,7 +49,32 @@ public class PrintDemoChartLabelAction extends OscarAction {
 		}
 		
 		Provider provider = loggedInInfo.getLoggedInProvider();
-    	
+        String curUser_no = loggedInInfo.getLoggedInProviderNo();
+        UserPropertyDAO propertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
+        UserProperty prop;
+        String defaultPrinterName = "";
+        Boolean silentPrint = false;
+        prop = propertyDao.getProp(curUser_no, UserProperty.DEFAULT_PRINTER_PDF_CHART_LABEL);
+        if (prop != null) {
+            defaultPrinterName = prop.getValue();
+        }
+        prop = propertyDao.getProp(curUser_no, UserProperty.DEFAULT_PRINTER_PDF_LABEL_SILENT_PRINT);
+        if (prop != null) {
+            if (prop.getValue().equalsIgnoreCase("yes")) {
+                silentPrint = true;
+            }
+        }
+        String exportPdfJavascript = null;
+
+        if (defaultPrinterName != null && !defaultPrinterName.isEmpty()) {
+            exportPdfJavascript = "var params = this.getPrintParams();"
+                    + "params.pageHandling=params.constants.handling.none;"
+                    + "params.printerName='" + defaultPrinterName + "';";
+            if (silentPrint == true) {
+                exportPdfJavascript += "params.interactive=params.constants.interactionLevel.silent;";
+            }
+            exportPdfJavascript += "this.print(params);";
+        }     	
     	Map<String,String> nameToFileMap = new HashMap<String,String>();
     	nameToFileMap.put("ChartLabel", "Chartlabel.xml");
     	nameToFileMap.put("SexualHealthClinicLabel", "SexualHealthClinicLabel.xml");
@@ -112,7 +139,7 @@ public class PrintDemoChartLabelAction extends OscarAction {
 	        response.setHeader("Content-disposition", getHeader(response).toString());
 	        OscarDocumentCreator osc = new OscarDocumentCreator();
         
-            osc.fillDocumentStream(parameters, sos, "pdf", ins, DbConnectionFilter.getThreadLocalDbConnection());
+            osc.fillDocumentStream(parameters, sos, "pdf", ins, DbConnectionFilter.getThreadLocalDbConnection(),exportPdfJavascript);
         }
         catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);

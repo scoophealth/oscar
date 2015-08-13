@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JRResultSetDataSource;
@@ -42,11 +43,23 @@ public class OscarDocumentCreator {
   public void fillDocumentStream(HashMap parameters, OutputStream sos,
                                  String docType, InputStream xmlDesign,
                                  Object dataSrc) {
+     fillDocumentStream(parameters, sos, docType, xmlDesign, dataSrc,null); 
+  }
+  
+  public void fillDocumentStream(HashMap parameters, OutputStream sos,
+                                 String docType, InputStream xmlDesign,
+                                 Object dataSrc, String exportPdfJavascript) {
     try {
       JasperReport jasperReport = null;
       JasperPrint print = null;
       jasperReport = getJasperReport(xmlDesign);
-      if (dataSrc instanceof List) {
+      if (docType.equals(OscarDocumentCreator.PDF) && exportPdfJavascript!=null) {
+        jasperReport.setProperty("net.sf.jasperreports.export.pdf.javascript",exportPdfJavascript);
+      }
+      if (dataSrc==null) {
+        print = JasperFillManager.fillReport(jasperReport, parameters,new JREmptyDataSource());  
+      }
+      else if (dataSrc instanceof List) {
         JRDataSource ds = new JRBeanCollectionDataSource( (List) dataSrc);
         print = JasperFillManager.fillReport(jasperReport, parameters,
                                              ds);
