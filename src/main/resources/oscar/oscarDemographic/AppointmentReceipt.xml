@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+
+<jasperReport name="label" pageWidth="229" pageHeight="210"
+	columnWidth="200" leftMargin="15" rightMargin="0" topMargin="0"
+	bottomMargin="4">
+	<reportFont name="sansserif" isDefault="false" fontName="sansserif"
+		size="10" isBold="false" isItalic="false" isUnderline="false"
+		isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252"
+		isPdfEmbedded="false" />
+	<parameter name="clinicName" class="java.lang.String" />
+        <parameter name="clinicAddress" class="java.lang.String" />
+        <parameter name="clinicCity" class="java.lang.String" />
+        <parameter name="clinicProvince" class="java.lang.String" />
+        <parameter name="clinicPostal" class="java.lang.String" />
+        <parameter name="clinicPhone" class="java.lang.String" />
+        <parameter name="clinicFax" class="java.lang.String" />
+        <parameter name="apptDate" class="java.lang.String" />
+        <parameter name="apptName" class="java.lang.String" />
+        <parameter name="apptTime" class="java.lang.String" />
+        <parameter name="apptId" class="java.lang.String" />
+        <parameter name="DOB" class="java.lang.String" />
+        <parameter name="printedDateTime" class="java.lang.String" />
+        <parameter name="providerName" class="java.lang.String" />
+        <parameter name="report.appointmentReceipt.Name" class="java.lang.String" />
+        <parameter name="report.appointmentReceipt.DOB" class="java.lang.String" />
+        <parameter name="report.appointmentReceipt.Date" class="java.lang.String" />
+        <parameter name="report.appointmentReceipt.Time" class="java.lang.String" />
+        <parameter name="report.appointmentReceipt.With" class="java.lang.String" />
+        <parameter name="report.appointmentReceipt.Printed" class="java.lang.String" />
+  
+	<title>
+		<band height="205">
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="0"
+					y="10" width="330" height="14" />
+				<textElement>
+					<font size="10" isBold="true" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{clinicName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="0"
+					y="23" width="330" height="14" />
+				<textElement>
+					<font size="10" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{clinicAddress}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" mode="Opaque" x="0"
+					y="36" width="330" height="14" />
+				<textElement>
+					<font size="10" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{clinicCity} + "," + $P{clinicProvince} + " " + $P{clinicPostal}]]></textFieldExpression>
+			</textField>
+                            <textField>
+				<reportElement positionType="Float" mode="Opaque" x="0"
+					y="49" width="330" height="14" />
+				<textElement>
+					<font size="10" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Phone:"+$P{clinicPhone} + "  Fax:" + $P{clinicFax} ]]></textFieldExpression>
+			</textField>
+                        <line><reportElement x="0" y="65" width="200" height="1"/></line>
+                        <textField>
+				<reportElement positionType="Float" mode="Opaque" x="0"
+					y="70" width="330" height="14" />
+				<textElement>
+					<font size="10" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{report.appointmentReceipt.Name}+":"]]></textFieldExpression>
+			</textField>
+                        <textField>
+				<reportElement positionType="Float" mode="Opaque" x="50"
+					y="70" width="330" height="14" />
+				<textElement>
+					<font size="10" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{apptName}]]></textFieldExpression>
+			</textField>
+                        <textField>
+				<reportElement positionType="Float" mode="Opaque" x="0"
+					y="85" width="330" height="14" />
+				<textElement>
+					<font size="10" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{report.appointmentReceipt.DOB}+":"]]></textFieldExpression>
+			</textField>
+                        <textField>
+				<reportElement positionType="Float" mode="Opaque" x="50"
+					y="85" width="330" height="14" />
+				<textElement>
+					<font size="10" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{DOB}]]></textFieldExpression>
+			</textField>
+                        <textField>
+				<reportElement positionType="Float" mode="Opaque" x="0"
+					y="110" width="330" height="14" />
+				<textElement>
+					<font size="10" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{report.appointmentReceipt.Date}+":"]]></textFieldExpression>
+			</textField>
+                        <textField>
+				<reportElement positionType="Float" mode="Opaque" x="50"
+					y="110" width="330" height="14" />
+				<textElement>
+					<font size="10" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{apptDate}]]></textFieldExpression>
+			</textField>
+                        <textField>
+				<reportElement positionType="Float" mode="Opaque" x="0"
+					y="125" width="330" height="14" />
+				<textElement>
+					<font size="10" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{report.appointmentReceipt.Time}+":"]]></textFieldExpression>
+			</textField>
+                        <textField>
+				<reportElement positionType="Float" mode="Opaque" x="50"
+					y="125" width="330" height="14" />
+				<textElement>
+					<font size="10" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{apptTime}]]></textFieldExpression>
+			</textField>
+                        <textField>
+				<reportElement positionType="Float" mode="Opaque" x="0"
+					y="140" width="330" height="14" />
+				<textElement>
+					<font size="10" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{report.appointmentReceipt.With}+":"]]></textFieldExpression>
+			</textField>
+                        <textField>
+				<reportElement positionType="Float" mode="Opaque" x="50"
+					y="140" width="330" height="14" />
+				<textElement>
+					<font size="10" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{providerName}]]></textFieldExpression>
+			</textField>
+                        <line><reportElement x="0" y="160" width="200" height="1"/></line>
+                        <textField>
+				<reportElement positionType="Float" mode="Opaque" x="0"
+					y="165" width="330" height="14" />
+				<textElement>
+					<font size="8" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{report.appointmentReceipt.Printed}]]></textFieldExpression>
+			</textField>
+                        <textField>
+				<reportElement positionType="Float" mode="Opaque" x="50"
+					y="165" width="330" height="14" />
+				<textElement>
+					<font size="8" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{printedDateTime}+" #"+$P{apptId}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>
+
+
