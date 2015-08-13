@@ -639,6 +639,9 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
           <td align="center"><a href=# onClick ="popupPage(230,860,'providerColourPicker.jsp');return false;"><bean:message key="provider.btnEditColour"/></a></td>
       </tr>
       <tr>
+          <td align="center"><a href=# onClick ="popupPage(500,860,'providerPrinter.jsp');return false;"><bean:message key="provider.btnSetDefaultPrinter"/></a></td>
+      </tr>
+      <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxPageSize');return false;"><bean:message key="provider.btnSetRxPageSize"/></a></td>
       </tr>
       <tr>

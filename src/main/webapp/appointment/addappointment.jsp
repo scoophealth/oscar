@@ -1072,6 +1072,11 @@ function pasteAppt(multipleSameDayGroupAppt) {
             onclick="document.forms['ADDAPPT'].displaymode.value='Add Appt & PrintCard'"
             VALUE="<bean:message key='global.btnPrint'/>"
             <%=disabled%>>
+        <input TYPE="submit" id="printReceiptButton"
+            onclick="document.forms['ADDAPPT'].displaymode.value='Add Appointment';document.forms['ADDAPPT'].printReceipt.value='1';"
+            VALUE="<bean:message key='appointment.addappointment.btnPrintReceipt'/>"
+            <%=disabled%>>
+        <input type="hidden" name="printReceipt" value="">
                 </TD>
 		<TD></TD>
         <% } %>
