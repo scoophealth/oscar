@@ -257,6 +257,20 @@
 			<form-property name="province" type="java.lang.String" />
 			<form-property name="postal" type="java.lang.String" />
 		</form-bean>
+                <form-bean name="editProviderPrinterForm" type="org.apache.struts.action.DynaActionForm">
+			<form-property name="defaultPrinterNameAppointmentReceipt" type="java.lang.String" />
+                        <form-property name="defaultPrinterNamePDFLabel" type="java.lang.String" />
+                        <form-property name="defaultPrinterNamePDFEnvelope" type="java.lang.String" />
+                        <form-property name="defaultPrinterNamePDFChartLabel" type="java.lang.String" />
+                        <form-property name="defaultPrinterNamePDFAddressLabel" type="java.lang.String" />
+                        <form-property name="defaultPrinterNameClientLabLabel" type="java.lang.String" />
+                        <form-property name="silentPrintAppointmentReceipt" type="java.lang.Boolean" />
+                        <form-property name="silentPrintPDFLabel" type="java.lang.Boolean" />
+                        <form-property name="silentPrintPDFEnvelope" type="java.lang.Boolean" />
+                        <form-property name="silentPrintPDFChartLabel" type="java.lang.Boolean" />
+                        <form-property name="silentPrintPDFAddressLabel" type="java.lang.Boolean" />
+                        <form-property name="silentPrintClientLabLabel" type="java.lang.Boolean" />
+		</form-bean>
 		<form-bean name="setProviderColour" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="colour" type="java.lang.String" />
 		</form-bean>
@@ -1531,6 +1545,10 @@
             <forward name="success" path="/provider/providerAddress.jsp" />
             <forward name="eject" path="/index.jsp" />
         </action>
+        <action input="/provider/providerPrinter.jsp" name="editProviderPrinterForm" path="/EditPrinter" scope="request" type="oscar.oscarProvider.pageUtil.ProEditPrinterAction">
+            <forward name="success" path="/provider/providerPrinter.jsp" />
+            <forward name="eject" path="/index.jsp" />
+        </action>
 		<action input="/provider/providerFax.jsp" name="editProviderFaxForm" path="/EditFaxNum" scope="request" type="oscar.oscarProvider.pageUtil.ProEditFaxNumAction">
 			<forward name="success" path="/provider/providerFax.jsp" />
 			<forward name="error" path="/provider/providerFaxErr.jsp" />
@@ -2426,6 +2444,9 @@
                 <action path="/DocumentDescriptionTemplate" name="FrmForm" type="org.oscarehr.provider.web.DocumentDescriptionTemplateAction" parameter="method" scope="request">
 		</action>
                 
+                <action path="/PrinterList" name="FrmForm" type="org.oscarehr.printer.PrinterListAction" parameter="method" scope="request">
+		</action>
+                
 		<action path="/dms/SplitDocument" name="FrmForm" type="org.oscarehr.document.web.SplitDocumentAction" parameter="method" scope="request">
         	<forward name="success" path="/oscarMDS/Splitclose.jsp" />
         </action>
@@ -2471,6 +2492,7 @@
 			<forward name="success" path="/appointment/appointmentstatussetting.jsp" />
 			<forward name="edit" path="/appointment/appointmentstatusedit.jsp" />
 		</action>
+                <action path="/appointment/printAppointmentReceiptAction" type="oscar.oscarReport.pageUtil.PrintAppointmentReceiptAction" />
                 <action path="/oscarRx/updateDrugrefDB"  type="oscar.oscarRx.pageUtil.RxUpdateDrugref" scope="request" parameter="method">
                 </action>
 		<action path="/oscarRx/copyFavorite" name="rxCopyForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request" parameter="dispatch">
