@@ -241,7 +241,7 @@
         <ap-name>family_history</ap-name>
         <ap-sql>SELECT GROUP_CONCAT(t.famHist SEPARATOR ', ') as famHistory FROM( SELECT notes.note as famHist FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note 
         FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i 
-        WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='FamHistory' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic}  
+        WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='FamHistory' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} and archived=0
         ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
         <ap-output>${famHistory}</ap-output>
     </databaseap>
