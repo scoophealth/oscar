@@ -706,9 +706,6 @@ div.logoutBox {
 			<li><html:link page="/admin/../eform/efmformrtl_config.jsp"><bean:message key="admin.admin.richTextLetter"/></html:link></li>
 			<% } %>
 
-			<li><html:link page="/admin/../eform/efmmanageformgroups.jsp">
-				<bean:message key="admin.admin.frmGroups"/>
-			</html:link></li>
 			<li><html:link page="/admin/../eform/efmmanageindependent.jsp">
 				<bean:message key="admin.admin.frmIndependent"/>
 			</html:link></li>
