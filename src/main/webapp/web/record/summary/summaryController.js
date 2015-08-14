@@ -433,47 +433,48 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,
 	//$scope.action = action;
 	$scope.page.code = mod.summaryCode;
 	
-	$scope.groupNotesForm = {};
+	$scope.groupNotesForm = {assignedCMIssues:[]};
 
+	
 	//set hidden which can can move out of hidden to $scope values
 	var now = new Date();
-    	$scope.groupNotesForm.annotation_attrib = "anno"+now.getTime();
+    $scope.groupNotesForm.annotation_attrib = "anno"+now.getTime();
 
-
-	displayIssueId = function(issueCode){
-
-			noteService.getIssueId(issueCode).then(function(data){
-	    	
-			$scope.page.issueId = data.id;
-
-		    	},function(reason){
-		    		alert(reason);
-		    	});
-
+    
+    displayIssueId = function(issueCode){
+    	noteService.getIssueId(issueCode).then(function(data){
+    		$scope.page.issueId = data.id;
+    	},function(reason){
+		   	alert(reason);
+		});
 	}
 
 	displayIssueId($scope.page.code);
 
-	
-
-
 	displayGroupNote = function(item,itemId){
-
-				noteService.getIssueNote($scope.page.items[itemId].noteId).then(function(iNote){
-
-			       	//$scope.master = angular.copy( "iNote----" +  JSON.stringify(iNote) );
-	
+			noteService.getIssueNote($scope.page.items[itemId].noteId).then(function(iNote){
+				//$scope.master = angular.copy( "iNote----" +  JSON.stringify(iNote) );
 				$scope.groupNotesForm.encounterNote = iNote.encounterNote;
 				$scope.groupNotesForm.groupNoteExt = iNote.groupNoteExt;
-
-				},function(reason){
-					alert(reason);
-				});
-	
+				$scope.groupNotesForm.assignedCMIssues = iNote.assignedCMIssues;
+				
+				$scope.groupNotesForm.assignedCMIssues = [];
+				
+				if(iNote.assignedCMIssues instanceof Array) {
+					$scope.groupNotesForm.assignedCMIssues = iNote.assignedCMIssues;
+				} else {
+					if(iNote.assignedCMIssues != null) {
+						$scope.groupNotesForm.assignedCMIssues.push(iNote.assignedCMIssues);
+					}
+				}
+				
+				console.log(JSON.stringify($scope.groupNotesForm));
+				
+			},function(reason){
+				alert(reason);
+			});
 	};
-
-
-
+	
 	if(action!=null){
 		displayGroupNote($scope.page.items,action);
 	}else{
@@ -482,7 +483,6 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,
 	}
 
 	$scope.changeNote = function(item, itemId){
-
 		return displayGroupNote(item,itemId);
 	};
 
@@ -502,18 +502,24 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,
 		
 		$scope.groupNotesForm.encounterNote.summaryCode = $scope.page.code; //'ongoingconcerns';
 
+		$scope.groupNotesForm.assignedIssues = [];
+		
+		//checked_issue_{{i}}
+		
 		noteService.saveIssueNote($stateParams.demographicNo, $scope.groupNotesForm).then(function(data){
     		$modalInstance.dismiss('cancel');
-		//alert(JSON.stringify(data));
-/*{"appointmentNo":1146,"cpp":true,"document":false,"editable":true,"eformData":false,"encounterForm":false,"encounterTime":"","encounterType":"","groupNote":false,"invoice":false,"isSigned":true,"note":"test new note","noteId":590,"observationDate":"2015-03-11T23:41:10.543-04:00","readOnly":false,"rxAnnotation":false,"ticklerNote":false,"updateDate":"2015-03-11T23:41:10.664-04:00","uuid":"bbc1fea1-42d9-4418-99b4-24902e902484"}
-*/
+    		$state.transitionTo($state.current, $stateParams, { reload: true, inherit: false, notify: true });
 
-		$state.transitionTo($state.current, $stateParams, { reload: true, inherit: false, notify: true });
-
-	    	},function(reason){
-	    		alert(reason);
-	    	});
-
+	    },function(reason){
+	    	alert(reason);
+	    });
+	}
+	
+	$scope.removeIssue = function(i) {
+		i.unchecked=true;
+	}
+	$scope.restoreIssue = function(i) {
+		i.unchecked=false;
 	}
 
 	$scope.archiveGroupNotes = function(){
@@ -534,6 +540,33 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,
 		window.open(url,win,"scrollbars=yes, location=no, width=647, height=600","");   			
    	}
 
+    $scope.searchIssues  = function(term) {
+    	var search = {'term':term};
+    	return noteService.searchIssues(search,0,100).then(function(response){
+    		var resp = [];
+    		for(var x=0;x<response.content.length;x++) {
+    			resp.push({issueId:response.content[x].id,code: response.content[x].description + '(' + response.content[x].code + ')'});
+    		}
+    		if(response.total > response.content.length) {
+    			//warn user there's more results somehow?
+    		}
+    		return resp;
+    	});
+    }
+    
+    $scope.assignIssue = function(item, model, label) {
+    	for(var x=0;x<$scope.groupNotesForm.assignedCMIssues.length;x++) {
+    		if($scope.groupNotesForm.assignedCMIssues[x].issue.id == model) {
+    			return;
+    		}
+    	}
+    	
+    	noteService.getIssue(model).then(function(response){
+    		var cmIssue = {acute:false,certain:false,issue:response,issue_id:item.issueId,major:false,resolved:false,unsaved:true};
+        	$scope.groupNotesForm.assignedCMIssues.push(cmIssue);
+    	});
+    }
+    
 };
 
 
