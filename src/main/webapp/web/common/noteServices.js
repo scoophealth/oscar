@@ -151,6 +151,28 @@ angular.module("noteServices", [])
                	deferred.reject("An error occured while setting saving tickler note");
                });
           return deferred.promise;
+       },
+       searchIssues: function(search,startIndex,itemsToReturn){
+       	var deferred = $q.defer();
+       	$http.post(this.apiPath+'/searchIssues?startIndex='+startIndex + "&itemsToReturn="+itemsToReturn,search).success(function(data){
+       		deferred.resolve(data);
+           }).error(function(){
+         	  console.log("error fetching items");
+             deferred.reject("An error occured while fetching items");
+           });
+      
+           return deferred.promise;
+       },
+       getIssue: function(issueId){
+    	   var deferred = $q.defer();
+          	 $http.post(this.apiPath+'/getIssueById/'+issueId).success(function(data){
+              	console.log("returned from /getIssueById",data);
+              	deferred.resolve(data);
+              }).error(function(){
+              	console.log("error getting issue");
+              	deferred.reject("An error occured while fetching issue");
+              });
+            return deferred.promise;
        }
     };
 });

@@ -98,7 +98,30 @@
     		
     		
     		<textarea class="form-control input-lg col-lg-4" rows="6" ng-model="page.encounterNote.note"></textarea>
-			<div class="pull-left"><input type="text" class="form-control" placeholder="Assign Issue"></div>
+    		
+    		<div style="font-size:8pt" ng-if="page.assignedCMIssues != null  && page.assignedCMIssues.length > 0">
+			    <label>Assigned Issues:</label>
+			    <table class="table">
+					<tr ng-repeat="i in page.assignedCMIssues">
+						<td>
+							<input type="button" value="remove" ng-click="removeIssue(i)" ng-if="i.unchecked==null || i.unchecked==false"/>
+						</td>
+						<td>{{i.issue.description}} ({{i.issue.code}})</td>
+					</tr>
+					
+				</table>
+			</div>
+			
+			<div class="pull-left">
+				<input type="text" class="form-control" placeholder="Assign Issue"  
+					typeahead="i.issueId as i.code for i in searchIssues($viewValue)" 
+					typeahead-on-select="assignIssue($item, $model, $label);selectedIssue='';" 
+					ng-model="selectedIssue" 
+					typeahead-loading="loadingIssues"
+					typeahead-min-length="3" typeahead-append-to-body="true"/>
+			</div>
+			
+			
     		<div class="btn-group btn-group-sm pull-right">
     		
 			  <button type="button" class="btn btn-default" ng-click="saveNote()" id="saveButton"  data-ng-disabled="page.encounterNote.isSigned" ><bean:message key="oscarEncounter.Index.btnSave"/></button>
