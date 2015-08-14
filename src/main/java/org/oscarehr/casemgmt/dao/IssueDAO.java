@@ -23,14 +23,19 @@
 
 package org.oscarehr.casemgmt.dao;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.util.MiscUtils;
+import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.quatro.model.security.Secrole;
@@ -103,7 +108,8 @@ public class IssueDAO extends HibernateDaoSupport {
         return this.getHibernateTemplate().find(sql);
     }
 
-    public List<Issue> search(String search, List<Secrole> roles) {
+    @SuppressWarnings("unchecked")
+    public List<Issue> search(String search, List<Secrole> roles, final int startIndex, final int numToReturn) {
         if (roles.size() == 0) {
             return new ArrayList<Issue>();
         }
@@ -115,15 +121,55 @@ public class IssueDAO extends HibernateDaoSupport {
             }
             buf.append("\'" + StringEscapeUtils.escapeSql((roles.get(x)).getName()) + "\'");
         }
-        String roleList = buf.toString();
+        final String roleList = buf.toString();
 
         search = "%" + search + "%";
         search = search.toLowerCase();
-        String sql = "from Issue i where (lower(i.code) like ? or lower(i.description) like ?  or lower(i.role) like ?) and i.role in (" + roleList + ") order by sortOrderId";
+        final String sql = "from Issue i where (lower(i.code) like :term or lower(i.description) like :term  or lower(i.role) like :roles) and i.role in (" + roleList + ") order by sortOrderId";
         logger.debug(sql);
-        return this.getHibernateTemplate().find(sql, new Object[] {search, search,roleList});
+        final String s = search;
+        //return this.getHibernateTemplate().find(sql, new Object[] {search, search,roleList});
+        return getHibernateTemplate().executeFind(new HibernateCallback<List<Issue>>() {
+            public List<Issue> doInHibernate(Session session) throws HibernateException, SQLException {
+                Query q = session.createQuery(sql);
+                q.setMaxResults(numToReturn);
+                q.setFirstResult(startIndex);
+                q.setParameter("term", s);
+                q.setParameter("roles", roleList);
+                return q.list();
+            }
+        });
 
     }
+    
+    @SuppressWarnings("unchecked")
+    public Integer searchCount(String search, List<Secrole> roles) {
+        if (roles.size() == 0) {
+            return 0;
+        }
+
+        StringBuilder buf = new StringBuilder();
+        for (int x = 0; x < roles.size(); x++) {
+            if (x != 0) {
+                buf.append(",");
+            }
+            buf.append("\'" + StringEscapeUtils.escapeSql((roles.get(x)).getName()) + "\'");
+        }
+        final String roleList = buf.toString();
+
+        search = "%" + search + "%";
+        search = search.toLowerCase();
+        final String sql = "select count(i) from Issue i where (lower(i.code) like ? or lower(i.description) like ?  or lower(i.role) like ?) and i.role in (" + roleList + ") order by sortOrderId";
+        logger.debug(sql);
+        List<Long> result = this.getHibernateTemplate().find(sql, new Object[] {search, search,roleList});
+
+        if(result.size()>0) {
+        	return result.get(0).intValue();
+        }
+
+        return 0;
+    }
+    
 
     public List searchNoRolesConcerned(String search) {
         search = "%" + search + "%";

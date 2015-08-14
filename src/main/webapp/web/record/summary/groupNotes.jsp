@@ -90,6 +90,24 @@
 				
 				<textarea class="form-control" rows="5" placeholder="Enter Note" ng-model="groupNotesForm.encounterNote.note" style="margin-bottom:6px;" required></textarea>
 					
+				
+				<div class="row" ng-if="groupNotesForm.assignedCMIssues != null && groupNotesForm.assignedCMIssues.length > 0">
+					<div class="col-lg-12">
+						<label>Assigned Issues:</label>
+						<table class="table">
+							<tr ng-repeat="i in groupNotesForm.assignedCMIssues">
+								<td>
+									<input type="button" value="restore" ng-click="restoreIssue(i)" ng-if="i.unchecked!=null && i.unchecked"/>
+									<input type="button" value="remove" ng-click="removeIssue(i)" ng-if="i.unchecked==null || i.unchecked==false"/>
+								</td>
+								<td>{{i.issue.description}} ({{i.issue.code}})</td>
+							</tr>
+							
+						</table>
+					</div>
+				
+				</div>
+				
 				<div ng-if="page.code == 'ongoingconcerns' " class="row">
 					<div class="col-lg-6">					
 					<label><bean:message key="oscarEncounter.problemdescription.title" /></label>
@@ -210,7 +228,14 @@
 					    
 				<div class="col-lg-6"><!-- TODO: most likely a typeahead and display assigned issues below using the badges or labels-->
 				<label><bean:message key="oscarEncounter.Index.assnIssue" /></label>			
-					 <input type="text" class="form-control" placeholder="<bean:message key="oscarEncounter.Index.assnIssue" />"  />
+					 <input type="text" class="form-control" placeholder="<bean:message key="oscarEncounter.Index.assnIssue" />"
+					 	typeahead="i.issueId as i.code for i in searchIssues($viewValue)" 
+						typeahead-on-select="assignIssue($item, $model, $label);selectedIssue='';" 
+						 ng-model="selectedIssue" 
+						  typeahead-loading="loadingIssues"
+						  typeahead-min-length="3"
+						 />
+						
 				</div><!-- col-lg-6 -->	   
 				
 				<div class="col-lg-3">		   

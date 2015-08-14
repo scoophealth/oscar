@@ -26,12 +26,15 @@
 
 oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,$state,noteService,$timeout,uxService) {
 	
+	
 	console.log("in patient Ctrl ",demo);
 	console.log("in RecordCtrl state params ",$stateParams,$location.search());
 	
 	$scope.demographicNo = $stateParams.demographicNo;
 	$scope.demographic= demo;
 	$scope.page = {};
+	$scope.page.assignedCMIssues = [];
+
 	$scope.hideNote = false;
 	
 	//this doesn't actually work, hideNote is note showing up in the $stateParams
@@ -165,6 +168,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	$scope.saveNote = function(){
 		console.log("This is the note"+$scope.page.encounterNote);
 		$scope.page.encounterNote.observationDate = new Date(); 
+		$scope.page.encounterNote.assignedIssues = $scope.page.assignedCMIssues;
 		noteService.saveNote($stateParams.demographicNo,$scope.page.encounterNote).then(function(data) {
 			$rootScope.$emit('noteSaved',data);
 			skipTmpSave = true;
@@ -245,6 +249,44 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 		 });
 	 }
 	 
-	
+	    $scope.searchIssues  = function(term) {
+	    	var search = {'term':term};
+	    	return noteService.searchIssues(search,0,100).then(function(response){
+	    		var resp = [];
+	    		for(var x=0;x<response.content.length;x++) {
+	    			resp.push({issueId:response.content[x].id,code: response.content[x].description + '(' + response.content[x].code + ')'});
+	    		}
+	    		if(response.total > response.content.length) {
+	    			//warn user there's more results somehow?
+	    		}
+	    		return resp;
+	    	});
+	    }
+	    
+	    $scope.assignIssue = function(item, model, label) {
+	    	for(var x=0;x<$scope.page.assignedCMIssues.length;x++) {
+	    		if($scope.page.assignedCMIssues[x].issue.id == model) {
+	    			return;
+	    		}
+	    	}
+	    	
+	    	noteService.getIssue(model).then(function(response){
+	    		var cmIssue = {acute:false,certain:false,issue:response,issue_id:item.issueId,major:false,resolved:false,unsaved:true};
+	        	$scope.page.assignedCMIssues.push(cmIssue);
+	    	});
+	    }
+	    
+		$scope.removeIssue = function(i) {
+			i.unchecked=true;
+			var newList = [];
+			for(var x=0;x<$scope.page.assignedCMIssues.length;x++) {
+				if(!$scope.page.assignedCMIssues[x].issue_id == i.issue_id) {
+					newList.push($scope.page.assignedCMIssues[x]);
+				}
+			}
+			$scope.page.assignedCMIssues = newList;
+		}
+		
+
 });
 
