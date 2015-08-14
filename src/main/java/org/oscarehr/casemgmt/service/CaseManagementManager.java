@@ -1332,12 +1332,56 @@ public class CaseManagementManager {
 		return map;
 	}
 
+	
+	public Integer searchIssuesCount(String providerNo, String programId, String search) {
+		// Get Role - if no ProgramProvider record found, show no issues.
+		List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
+		if (ppList == null || ppList.isEmpty()) {
+			return 0;
+		}
+		ProgramProvider pp = ppList.get(0);
+		Secrole role = pp.getRole();
+
+		// get program accesses... program allows either all roles or not all roles (does this mean no roles?)
+		List<ProgramAccess> paList = programAccessDAO.getAccessListByProgramId(new Long(programId));
+		Map<String,ProgramAccess> paMap = convertProgramAccessListToMap(paList);
+
+		// get all roles
+		List<Secrole> allRoles = this.roleManager.getRoles();
+
+		List<Secrole> allowableSearchRoles = new ArrayList<Secrole>();
+		for (Iterator<Secrole> iter = allRoles.iterator(); iter.hasNext();) {
+			Secrole r = iter.next();
+			String key = "write " + r.getName().toLowerCase() + " issues";
+			ProgramAccess pa = paMap.get(key);
+			if (pa != null) {
+				if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
+					allowableSearchRoles.add(r);
+				}
+			}
+			if (pa == null && r.getId().intValue() == role.getId().intValue()) {
+				allowableSearchRoles.add(r);
+			}
+
+			// global default role access
+			if (roleProgramAccessDAO.hasAccess(key, role.getId())) {
+				allowableSearchRoles.add(r);
+			}
+		}
+
+		return  issueDAO.searchCount(search, allowableSearchRoles);
+	}
+	
+	public List<Issue> searchIssues(String providerNo, String programId, String search) {
+		return searchIssues(providerNo,programId,search,0,Integer.MAX_VALUE);
+	}
+	
 	/**
 	 * @param providerNo
 	 * @param programId
 	 * @param search
 	 */
-	public List<Issue> searchIssues(String providerNo, String programId, String search) {
+	public List<Issue> searchIssues(String providerNo, String programId, String search, int startIndex, int numToReturn) {
 		// Get Role - if no ProgramProvider record found, show no issues.
 		List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
@@ -1373,7 +1417,7 @@ public class CaseManagementManager {
 			}
 		}
 
-		List<Issue> issList = issueDAO.search(search, allowableSearchRoles);
+		List<Issue> issList = issueDAO.search(search, allowableSearchRoles, startIndex, numToReturn);
 
 		return issList;
 	}

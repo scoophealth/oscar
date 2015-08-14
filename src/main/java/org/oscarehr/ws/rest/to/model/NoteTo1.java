@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -79,6 +80,8 @@ public class NoteTo1 implements Serializable{
 	
 	//???
 	private Set<CaseManagementIssue> issues = new HashSet<CaseManagementIssue>();
+	
+	private List<CaseManagementIssueTo1> assignedIssues = new ArrayList<CaseManagementIssueTo1>();
 	
 	
 	public Integer getNoteId() {
@@ -384,6 +387,14 @@ public class NoteTo1 implements Serializable{
 	public void setIsVerified(Boolean isVerified) {
 	    this.isVerified = isVerified;
     }
+
+	public List<CaseManagementIssueTo1> getAssignedIssues() {
+		return assignedIssues;
+	}
+
+	public void setAssignedIssues(List<CaseManagementIssueTo1> assignedIssues) {
+		this.assignedIssues = assignedIssues;
+	}
 	
 
 	
