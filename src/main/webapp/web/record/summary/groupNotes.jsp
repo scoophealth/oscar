@@ -159,9 +159,9 @@
 
 <div class="row">
 		
-<div ng-if="page.code == 'famhx' " class="col-lg-6"> 
+<div ng-if="page.code == 'famhx' || page.code == 'riskfactors'" class="col-lg-6"> 
 		<label><bean:message key="oscarEncounter.ageAtOnset.title" /></label>
-		<input ng-if="page.code == 'famhx' " type="text" class="form-control" id="ageatonset" name="ageatonset" ng-model="groupNotesForm.groupNoteExt.ageAtOnset" placeholder="<bean:message key="oscarEncounter.ageAtOnset.title" />" />
+		<input ng-if="page.code == 'famhx' || page.code == 'riskfactors' " type="text" class="form-control" id="ageatonset" name="ageatonset" ng-model="groupNotesForm.groupNoteExt.ageAtOnset" placeholder="<bean:message key="oscarEncounter.ageAtOnset.title" />" />
 </div>				
 		<div ng-if="page.code == 'medhx'" class="col-lg-6">	
 		<label><bean:message key="oscarEncounter.procedureDate.title" /></label>	 
@@ -177,6 +177,12 @@
 		<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 		</div>
 		</div>
+
+<div ng-if="page.code == 'riskfactors' " class="col-lg-6"> 
+		<label><bean:message key="oscarEncounter.exposureDetail.title" /></label>				    	
+		<input  type="text" class="form-control" id="exposuredetail" name="exposuredetail" ng-model="groupNotesForm.groupNoteExt.exposureDetail" placeholder="<bean:message key="oscarEncounter.exposureDetail.title" />" />
+</div>
+
 		
 <div ng-if="page.code == 'medhx' || page.code == 'famhx' " class="col-lg-6"> 
 		<label><bean:message key="oscarEncounter.treatment.title" /></label>				    	
@@ -188,15 +194,11 @@
 		<input type="text" class="form-control" id="relationship" name="relationship" ng-model="groupNotesForm.groupNoteExt.relationship" placeholder="<bean:message key="oscarEncounter.relationship.title" />" />
 </div>
 
-
-				
-		<input ng-if="page.code == 'riskfactors' " type="text" class="form-control" id="exposuredetail" ng-model="groupNotesForm.groupNoteExt.exposureDetail" placeholder="<bean:message key="oscarEncounter.exposureDetail.title" />" />
-
 </div><!--row-->			
 
 		
 				<div class="row">		    
-				<div ng-if="page.code == 'medhx' || page.code == 'famhx' || page.code == 'ongoingconcerns' " class="col-lg-6">
+				<div ng-if="page.code == 'medhx' || page.code == 'famhx' || page.code == 'ongoingconcerns' || page.code == 'riskfactors' " class="col-lg-6">
 				    <label><bean:message key="oscarEncounter.lifestage.title" /></label>
 				    <select class="form-control" name="lifestage" id="lifestage" ng-model="groupNotesForm.groupNoteExt.lifeStage">
 							<option value="">
