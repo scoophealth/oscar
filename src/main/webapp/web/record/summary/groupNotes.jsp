@@ -222,7 +222,7 @@
 
 				<div class="col-lg-3">
 		<!--shouldn't this just be a single checkbox and the answer is always no unless checked?-->				    
-				 <label><bean:message key="oscarEncounter.hidecpp.title" /></label>
+				 <label><bean:message key="oscarEncounter.hideFromPrint.title" /></label>
 					<div class="form-group" ng-init="groupNotesForm.groupNoteExt.hideCpp=0">
 					<label class="radio-inline" id="hidecpp" name="hidecpp">
 					  <input type="radio" id="hidecpp" name="hidecpp" ng-model="groupNotesForm.groupNoteExt.hideCpp" value="0"> No
