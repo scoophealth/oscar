@@ -49,14 +49,16 @@ public final class EctSetupDisplayMeasurementStyleSheetAction extends Action {
                                  HttpServletResponse response)
         throws Exception {
     	
-    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
-			throw new SecurityException("missing required security object (_admin)");
-		}
+    	if( securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null) || securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin.measurements", "w", null) )  {
   
         EctStyleSheetBeanHandler hd = new EctStyleSheetBeanHandler();           
         HttpSession session = request.getSession();
         session.setAttribute( "styleSheets", hd );            
        
         return (mapping.findForward("continue"));
+        
+    	}else{
+			throw new SecurityException("Access Denied!"); //missing required security object (_admin)
+    	} 
     }
 }

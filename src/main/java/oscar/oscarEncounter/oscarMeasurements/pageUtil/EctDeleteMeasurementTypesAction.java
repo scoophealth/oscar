@@ -60,9 +60,7 @@ public class EctDeleteMeasurementTypesAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
-    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
-			throw new SecurityException("missing required security object (_admin)");
-		}
+    	if( securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null) || securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin.measurements", "w", null) )  {
     	
         EctDeleteMeasurementTypesForm frm = (EctDeleteMeasurementTypesForm) form;                
         request.getSession().setAttribute("EctDeleteMeasurementTypesForm", frm);
@@ -75,7 +73,7 @@ public class EctDeleteMeasurementTypesAction extends Action {
             for(int i=0; i<deleteCheckbox.length; i++){
                 MiscUtils.getLogger().debug(deleteCheckbox[i]);
                 
-                MeasurementType mt = measurementTypeDao.find(deleteCheckbox[i]);
+                MeasurementType mt = measurementTypeDao.find(Integer.parseInt(deleteCheckbox[i]));
                 if(mt != null) {
                 	MeasurementTypeDeleted mtd = new MeasurementTypeDeleted();
                 	mtd.setType(mt.getType());
@@ -86,7 +84,8 @@ public class EctDeleteMeasurementTypesAction extends Action {
                 	mtd.setDateDeleted(new Date());
                 	measurementTypeDeletedDao.persist(mtd);
                 	
-                	measurementTypeDao.remove(measurementTypeDao.find(deleteCheckbox[i]).getId());
+                	MiscUtils.getLogger().error("ID of mtype: " +  mt.getId());
+                	measurementTypeDao.remove(mt.getId());
                 	
                 	measurementGroupDao.remove(measurementGroupDao.findByTypeDisplayName(mt.getTypeDisplayName()));
                 }
@@ -101,6 +100,10 @@ public class EctDeleteMeasurementTypesAction extends Action {
         MeasurementTypes mt =  MeasurementTypes.getInstance();
         mt.reInit();
         return mapping.findForward("success");
+
+		}else{
+			throw new SecurityException("Access Denied!"); //missing required security object (_admin)
+		}
     }
      
 }

@@ -60,9 +60,7 @@ public class EctAddMeasuringInstructionAction extends Action {
         EctAddMeasuringInstructionForm frm = (EctAddMeasuringInstructionForm) form;
 
         
-        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
-			throw new SecurityException("missing required security object (_admin)");
-		}
+        if( securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null) || securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin.measurements", "w", null) )  {
         
         request.getSession().setAttribute("EctAddMeasuringInstructionForm", frm);
         
@@ -124,6 +122,10 @@ public class EctAddMeasuringInstructionAction extends Action {
         messages.add(msg);
         request.setAttribute("messages", messages);                
         return mapping.findForward("success");
+        
+		}else{
+			throw new SecurityException("Access Denied!"); //missing required security object (_admin)
+		}
 
     }
     
