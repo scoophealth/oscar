@@ -48,10 +48,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-import net.sf.json.processors.JsDateJsonBeanProcessor;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -80,7 +76,6 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementPrint;
-import org.oscarehr.casemgmt.service.NoteService;
 import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
 import org.oscarehr.common.dao.BillingServiceDao;
@@ -117,6 +112,11 @@ import org.oscarehr.util.WebUtils;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.quatro.model.security.Secrole;
+
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.processors.JsDateJsonBeanProcessor;
 import oscar.OscarProperties;
 import oscar.appt.ApptStatusData;
 import oscar.log.LogAction;
@@ -126,8 +126,6 @@ import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.oscarSurveillance.SurveillanceMaster;
 import oscar.util.UtilDateUtilities;
-
-import com.quatro.model.security.Secrole;
 
 /*
  * Updated by Eugene Petruhin on 12 and 13 jan 2009 while fixing #2482832 & #2494061
@@ -143,7 +141,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	private IssueDAO issueDao = (IssueDAO) SpringUtils.getBean("IssueDAO");
 	//private AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	private CasemgmtNoteLockDao casemgmtNoteLockDao = SpringUtils.getBean(CasemgmtNoteLockDao.class);
-	private NoteService noteService = SpringUtils.getBean(NoteService.class);
+	//private NoteService noteService = SpringUtils.getBean(NoteService.class);
 	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {

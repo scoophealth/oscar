@@ -24,6 +24,9 @@
 package org.oscarehr.ws.rest.to.model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="noteIssue")
@@ -33,7 +36,12 @@ public class NoteIssueTo1 {
 	private NoteExtTo1 groupNoteExt = new NoteExtTo1();
 	private IssueTo1 issue = new IssueTo1();
 	private String annotation_attrib;
+	
+	private List<IssueTo1> assignedIssues = new ArrayList<IssueTo1>();
 
+	private List<CaseManagementIssueTo1> assignedCMIssues = new ArrayList<CaseManagementIssueTo1>();
+
+	
 	public NoteTo1 getEncounterNote() {
 	    return encounterNote;
     }
@@ -65,6 +73,22 @@ public class NoteIssueTo1 {
 	public void setAnnotation_attrib(String annotation_attrib) {
 	    this.annotation_attrib = annotation_attrib;
     }
+
+	public List<IssueTo1> getAssignedIssues() {
+		return assignedIssues;
+	}
+
+	public void setAssignedIssues(List<IssueTo1> assignedIssues) {
+		this.assignedIssues = assignedIssues;
+	}
+
+	public List<CaseManagementIssueTo1> getAssignedCMIssues() {
+		return assignedCMIssues;
+	}
+
+	public void setAssignedCMIssues(List<CaseManagementIssueTo1> assignedCMIssues) {
+		this.assignedCMIssues = assignedCMIssues;
+	}
 
 
 }
