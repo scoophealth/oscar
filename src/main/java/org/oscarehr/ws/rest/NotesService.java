@@ -26,6 +26,7 @@ package org.oscarehr.ws.rest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -822,13 +823,65 @@ public class NotesService extends AbstractServiceImpl {
 		caseMangementNote.setUpdate_date(now);
 		caseMangementNote.setAppointmentNo(note.getAppointmentNo());
 		
+		
+		//update positions
+		/*
+		 * There's a few cases to handle, but basically when user is adding, editing, or archiving,
+		 * we go and set the positions so it's always 1,2,..,n across the group note. Archived notes,
+		 * and older notes (not the latest based on uuid/id) have positions set to 0
+		 */
+		String[] strIssueId = { String.valueOf(cppIssue.getId()) };
+		List<CaseManagementNote> curCPPNotes = this.caseManagementMgr.getActiveNotes(demo, strIssueId);
+		Collections.sort(curCPPNotes,CaseManagementNote.getPositionComparator());
+		
+		
+		if(note.isArchived()) {
+			//this one will basically assign 1,2,3,..,n to the group and ignore the one to be archived..setting it's position to 0
+			int positionToAssign=1;
+			for(int x=0;x<curCPPNotes.size();x++) {
+				if(curCPPNotes.get(x).getUuid().equals(note.getUuid())) {
+					curCPPNotes.get(x).setPosition(0);
+					caseManagementMgr.updateNote(curCPPNotes.get(x));
+					continue;
+				}
+				curCPPNotes.get(x).setPosition(positionToAssign);
+				caseManagementMgr.updateNote(curCPPNotes.get(x));
+				positionToAssign++;
+			}
+			
+		} else {
+			//we make a fake CaseManagementNoteEntry into curCPPNotes, and insert it into desired location. 
+			//we then just set the positions to 1,2,...,n ignoring the fake one, but still incrementing the positionToAssign variable
+			//when the new note is saved.it will have the missing position.
+			int positionToAssign=1;
+			CaseManagementNote xn = new CaseManagementNote();
+			xn.setId(-1L);
+			curCPPNotes.add(note.getPosition()-1,xn);
+			for(int x=0;x<curCPPNotes.size();x++) {
+				if(curCPPNotes.get(x).getId() != -1L) {
+					//update the note
+					curCPPNotes.get(x).setPosition(positionToAssign);
+					caseManagementMgr.updateNote(curCPPNotes.get(x));
+				} 
+				if(curCPPNotes.get(x).getId() != -1L && curCPPNotes.get(x).getUuid().equals(note.getUuid())) {
+					curCPPNotes.get(x).setPosition(0);
+					caseManagementMgr.updateNote(curCPPNotes.get(x));
+					positionToAssign--;
+				}
+				positionToAssign++;
+			}
+		}
+		if(!note.isArchived()) {
+			caseMangementNote.setPosition(note.getPosition());
+		}
+		
 		/*
 		 * 
 		 * update_date, observation_date, 
 		 * demographic_no, provider_no, note, signed, 
 		 * include_issue_innote, signing_provider_no, encounter_type, billing_code, 
 		 * program_no, reporter_caisi_role, reporter_program_team, history,
-		 *  uuid, password, locked, archived, position, appointmentNo, hourOfEncounterTime, minuteOfEncounterTime, hourOfEncTransportationTime, minuteOfEncTransportationTime
+		 *  uuid, password, locked, archived, appointmentNo, hourOfEncounterTime, minuteOfEncounterTime, hourOfEncTransportationTime, minuteOfEncTransportationTime
 		 * 
 		 */
 		
@@ -1330,6 +1383,7 @@ public class NotesService extends AbstractServiceImpl {
 		note.setEncounterType(casemgmtNote.getEncounter_type());
 		//note.setEditorNames(casemgmtNote.getEditors());		
 		//note.setIssueDescriptions(casemgmtNote.get);
+		note.setPosition(casemgmtNote.getPosition());
 		
 		//note.getIssueDescriptions(casemgmtNote.getIssues());
 		note.setAppointmentNo(casemgmtNote.getAppointmentNo());	

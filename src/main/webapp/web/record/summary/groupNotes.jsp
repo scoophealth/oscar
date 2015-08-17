@@ -242,11 +242,11 @@
 				
 				<div class="col-lg-3">		   
 				<label><bean:message key="oscarEncounter.Index.btnPosition" /></label>
-					<select class="form-control" id="position" name="position" >
-					<option id="popt0" value="0">1</option>
-					</select>
+					<select class="form-control" id="position" ng-model="groupNotesForm.encounterNote.position" >
+						<option ng-value="i" ng-repeat="i in availablePositions" >{{i}}</option>
+					</select>	
 				</div> <!-- col-lg-4 -->
-
+				
 				<div class="col-lg-3">
 		<!--shouldn't this just be a single checkbox and the answer is always no unless checked?-->				    
 				 <label><bean:message key="oscarEncounter.hideFromPrint.title" /></label>
