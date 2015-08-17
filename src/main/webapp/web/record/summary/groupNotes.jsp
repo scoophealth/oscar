@@ -29,6 +29,11 @@
 <!-- #306754 othermeds -->
 <!-- not sure colours are staying -->
 <!--ng-style="page.code == 'famhx' && {'background-color' : '#006600'} || page.code == 'othermeds' && {'background-color' : '#306754'}"-->
+<style>
+	.group-note-selected {
+		background-color:yellow;
+	}
+</style>
 
 <!-- make div layout more fluid see medical history as an example -->
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -59,7 +64,7 @@
 		<ul data-brackets-id="12674" id="sortable" class="list-unstyled ui-sortable" >
 		    
 		
-		    <li class="cpp-note-list" ng-repeat="item in page.items" ng-click="changeNote(item,item.id)">
+		    <li class="cpp-note-list" ng-repeat="item in page.items" ng-click="changeNote(item,item.id)" ng-class="isSelected(item)">
 		    <small class="pull-left text-muted">{{item.editor}}</small>
 		    <small class="pull-right text-muted">
 		       <span class="glyphicon glyphicon-calendar"></span> {{item.date | date : 'dd-MMM-yyyy'}}
@@ -90,6 +95,24 @@
 				
 				<textarea class="form-control" rows="5" placeholder="Enter Note" ng-model="groupNotesForm.encounterNote.note" style="margin-bottom:6px;" required></textarea>
 					
+				
+				<div class="row" ng-if="groupNotesForm.assignedCMIssues != null && groupNotesForm.assignedCMIssues.length > 0">
+					<div class="col-lg-12">
+						<label>Assigned Issues:</label>
+						<table class="table">
+							<tr ng-repeat="i in groupNotesForm.assignedCMIssues">
+								<td>
+									<input type="button" value="restore" ng-click="restoreIssue(i)" ng-if="i.unchecked!=null && i.unchecked"/>
+									<input type="button" value="remove" ng-click="removeIssue(i)" ng-if="i.unchecked==null || i.unchecked==false"/>
+								</td>
+								<td>{{i.issue.description}} ({{i.issue.code}})</td>
+							</tr>
+							
+						</table>
+					</div>
+				
+				</div>
+				
 				<div ng-if="page.code == 'ongoingconcerns' " class="row">
 					<div class="col-lg-6">					
 					<label><bean:message key="oscarEncounter.problemdescription.title" /></label>
@@ -141,9 +164,9 @@
 
 <div class="row">
 		
-<div ng-if="page.code == 'famhx' " class="col-lg-6"> 
+<div ng-if="page.code == 'famhx' || page.code == 'riskfactors'" class="col-lg-6"> 
 		<label><bean:message key="oscarEncounter.ageAtOnset.title" /></label>
-		<input ng-if="page.code == 'famhx' " type="text" class="form-control" id="ageatonset" name="ageatonset" ng-model="groupNotesForm.groupNoteExt.ageAtOnset" placeholder="<bean:message key="oscarEncounter.ageAtOnset.title" />" />
+		<input ng-if="page.code == 'famhx' || page.code == 'riskfactors' " type="text" class="form-control" id="ageatonset" name="ageatonset" ng-model="groupNotesForm.groupNoteExt.ageAtOnset" placeholder="<bean:message key="oscarEncounter.ageAtOnset.title" />" />
 </div>				
 		<div ng-if="page.code == 'medhx'" class="col-lg-6">	
 		<label><bean:message key="oscarEncounter.procedureDate.title" /></label>	 
@@ -159,6 +182,12 @@
 		<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 		</div>
 		</div>
+
+<div ng-if="page.code == 'riskfactors' " class="col-lg-6"> 
+		<label><bean:message key="oscarEncounter.exposureDetail.title" /></label>				    	
+		<input  type="text" class="form-control" id="exposuredetail" name="exposuredetail" ng-model="groupNotesForm.groupNoteExt.exposureDetail" placeholder="<bean:message key="oscarEncounter.exposureDetail.title" />" />
+</div>
+
 		
 <div ng-if="page.code == 'medhx' || page.code == 'famhx' " class="col-lg-6"> 
 		<label><bean:message key="oscarEncounter.treatment.title" /></label>				    	
@@ -170,15 +199,11 @@
 		<input type="text" class="form-control" id="relationship" name="relationship" ng-model="groupNotesForm.groupNoteExt.relationship" placeholder="<bean:message key="oscarEncounter.relationship.title" />" />
 </div>
 
-
-				
-		<input ng-if="page.code == 'riskfactors' " type="text" class="form-control" id="exposuredetail" ng-model="groupNotesForm.groupNoteExt.exposureDetail" placeholder="<bean:message key="oscarEncounter.exposureDetail.title" />" />
-
 </div><!--row-->			
 
 		
 				<div class="row">		    
-				<div ng-if="page.code == 'medhx' || page.code == 'famhx' || page.code == 'ongoingconcerns' " class="col-lg-6">
+				<div ng-if="page.code == 'medhx' || page.code == 'famhx' || page.code == 'ongoingconcerns' || page.code == 'riskfactors' " class="col-lg-6">
 				    <label><bean:message key="oscarEncounter.lifestage.title" /></label>
 				    <select class="form-control" name="lifestage" id="lifestage" ng-model="groupNotesForm.groupNoteExt.lifeStage">
 							<option value="">
@@ -210,19 +235,26 @@
 					    
 				<div class="col-lg-6"><!-- TODO: most likely a typeahead and display assigned issues below using the badges or labels-->
 				<label><bean:message key="oscarEncounter.Index.assnIssue" /></label>			
-					 <input type="text" class="form-control" placeholder="<bean:message key="oscarEncounter.Index.assnIssue" />"  />
+					 <input type="text" class="form-control" placeholder="<bean:message key="oscarEncounter.Index.assnIssue" />"
+					 	typeahead="i.issueId as i.code for i in searchIssues($viewValue)" 
+						typeahead-on-select="assignIssue($item, $model, $label);selectedIssue='';" 
+						 ng-model="selectedIssue" 
+						  typeahead-loading="loadingIssues"
+						  typeahead-min-length="3"
+						 />
+						
 				</div><!-- col-lg-6 -->	   
 				
 				<div class="col-lg-3">		   
 				<label><bean:message key="oscarEncounter.Index.btnPosition" /></label>
-					<select class="form-control" id="position" name="position" >
-					<option id="popt0" value="0">1</option>
-					</select>
+					<select class="form-control" id="position" ng-model="groupNotesForm.encounterNote.position" >
+						<option ng-value="i" ng-repeat="i in availablePositions" >{{i}}</option>
+					</select>	
 				</div> <!-- col-lg-4 -->
-
+				
 				<div class="col-lg-3">
 		<!--shouldn't this just be a single checkbox and the answer is always no unless checked?-->				    
-				 <label><bean:message key="oscarEncounter.hidecpp.title" /></label>
+				 <label><bean:message key="oscarEncounter.hideFromPrint.title" /></label>
 					<div class="form-group" ng-init="groupNotesForm.groupNoteExt.hideCpp=0">
 					<label class="radio-inline" id="hidecpp" name="hidecpp">
 					  <input type="radio" id="hidecpp" name="hidecpp" ng-model="groupNotesForm.groupNoteExt.hideCpp" value="0"> No
@@ -236,16 +268,16 @@
 				
 				</div> <!-- row -->
 
+<!-- 
 				<div class="row">
 				  <div class="col-lg-12" style="margin-top:6px;">
 				<div class="checkbox" >
 				    <label>
 				      <input type="checkbox" ng-model="groupNotesForm.issue.issueId" ng-checked="true" ng-true-value="'{{page.issueId}}'" ng-false-value="'0'">  <em>{{page.title}}</em>  as part of cpp
 				    </label>
-				</div>
-				
+				</div>				
 				  </div>
-				</div><!-- row -->
+				</div> -->
 		
 		</form>
 			
