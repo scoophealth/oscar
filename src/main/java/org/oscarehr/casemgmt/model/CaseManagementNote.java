@@ -425,6 +425,19 @@ public class CaseManagementNote extends BaseObject {
 		}
 	};
 
+	public static Comparator<CaseManagementNote> getPositionComparator() {
+		return new Comparator<CaseManagementNote>() {
+			public int compare(CaseManagementNote note1, CaseManagementNote note2) {
+				if (note1 == null || note2 == null) {
+					return 0;
+				}
+
+				return new Integer(note1.getPosition()).compareTo(new Integer(note2.getPosition()));
+			}
+		};
+
+	}
+	
 	public boolean getHasHistory() {
 		if (getHistory() != null) {
 			if (getHistory().indexOf("----------------History Record----------------") != -1) {

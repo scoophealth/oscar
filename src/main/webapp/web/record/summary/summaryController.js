@@ -434,7 +434,8 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,
 	$scope.page.code = mod.summaryCode;
 	
 	$scope.groupNotesForm = {assignedCMIssues:[]};
-
+	$scope.groupNotesForm.encounterNote = {position:1};
+	
 	
 	//set hidden which can can move out of hidden to $scope values
 	var now = new Date();
@@ -468,6 +469,10 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,
 					}
 				}
 				
+				action = itemId;
+				$scope.setAvailablePositions();
+				
+				
 				console.log(JSON.stringify($scope.groupNotesForm));
 				
 			},function(reason){
@@ -475,12 +480,29 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,
 			});
 	};
 	
+	//action is NULL when new , action is some id when not
 	if(action!=null){
 		displayGroupNote($scope.page.items,action);
 	}else{
-	//todo
-
+		//new entry
 	}
+	
+	$scope.setAvailablePositions = function() {
+		$scope.availablePositions = [];
+		if($scope.page.items == null || $scope.page.items.length == 0) {
+			$scope.availablePositions.push(1);
+		} else {
+			var x=0;
+			for(x=0;x<$scope.page.items.length;x++) {
+				$scope.availablePositions.push(x+1);
+			}
+			if(action == null) {
+				$scope.availablePositions.push(x+1);
+			}
+		}
+	}
+	
+	$scope.setAvailablePositions();
 
 	$scope.changeNote = function(item, itemId){
 		return displayGroupNote(item,itemId);
@@ -503,8 +525,6 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,
 		$scope.groupNotesForm.encounterNote.summaryCode = $scope.page.code; //'ongoingconcerns';
 
 		$scope.groupNotesForm.assignedIssues = [];
-		
-		//checked_issue_{{i}}
 		
 		noteService.saveIssueNote($stateParams.demographicNo, $scope.groupNotesForm).then(function(data){
     		$modalInstance.dismiss('cancel');
