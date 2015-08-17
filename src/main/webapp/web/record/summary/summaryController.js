@@ -587,6 +587,11 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,
     	});
     }
     
+    $scope.isSelected = function(item) {
+    	if(item.id == action) {
+    		return "group-note-selected";
+    	}
+    }
 };
 
 
