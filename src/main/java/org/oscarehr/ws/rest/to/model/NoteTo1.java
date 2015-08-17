@@ -78,6 +78,8 @@ public class NoteTo1 implements Serializable{
 	private String encounterTime;
 	private String encounterTransportationTime;
 	
+	private Integer position;
+	
 	//???
 	private Set<CaseManagementIssue> issues = new HashSet<CaseManagementIssue>();
 	
@@ -394,6 +396,14 @@ public class NoteTo1 implements Serializable{
 
 	public void setAssignedIssues(List<CaseManagementIssueTo1> assignedIssues) {
 		this.assignedIssues = assignedIssues;
+	}
+
+	public Integer getPosition() {
+		return position;
+	}
+
+	public void setPosition(Integer position) {
+		this.position = position;
 	}
 	
 
