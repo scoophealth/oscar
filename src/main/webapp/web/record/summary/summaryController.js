@@ -86,6 +86,16 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
 		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   
 		return false;
    	}
+
+   	$scope.openPreventions = function(demoNo){
+   		var rnd = Math.round(Math.random() * 1000);
+		win = "win" + rnd;
+		var url = "../oscarPrevention/index.jsp?demographic_no=" + demoNo;
+		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   
+		return false;
+   	}   	
+
+      	
    
    	$scope.isCurrentStatus = function(stat){
 	   //console.log("stat",stat);
@@ -379,7 +389,7 @@ $scope.gotoState = function(item,mod,itemId){
 	if(item=="add"){
 		editGroupedNotes('lg',mod,null);
 		
-	}else if(item.type == 'lab' || item.type == 'document'  || item.type == 'rx'|| item.type == 'allergy' ){
+	}else if(item.type == 'lab' || item.type == 'document'  || item.type == 'rx'|| item.type == 'allergy' || item.type == 'prevention' ){
 		var rnd = Math.round(Math.random() * 1000);
 		win = "win_item.type_" + rnd;
 		
