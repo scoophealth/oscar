@@ -58,10 +58,7 @@ public class EctAddMeasurementTypeAction extends Action {
     {
         EctAddMeasurementTypeForm frm = (EctAddMeasurementTypeForm) form;
 
-        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
-			throw new SecurityException("missing required security object (_admin)");
-		}
-        
+        if( securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null) || securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin.measurements", "w", null) )  {
        
         request.getSession().setAttribute("EctAddMeasurementTypeForm", frm);
         
@@ -95,6 +92,10 @@ public class EctAddMeasurementTypeAction extends Action {
         MeasurementTypes mts =  MeasurementTypes.getInstance();
         mts.reInit();
         return mapping.findForward("success");
+        
+		}else{
+			throw new SecurityException("Access Denied!"); //missing required security object (_admin)
+		}
 
     }
     
