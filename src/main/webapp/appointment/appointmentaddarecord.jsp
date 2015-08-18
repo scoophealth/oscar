@@ -198,6 +198,16 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
 <h1><bean:message key="appointment.addappointment.msgAddSuccess" /></h1>
 
 <script LANGUAGE="JavaScript">
+    <% 
+        int apptId=0;
+        if(!(request.getParameter("printReceipt")==null) && request.getParameter("printReceipt").equals("1")) { 
+            Appointment aa =  appointmentDao.search_appt_no(request.getParameter("provider_no"), ConversionUtils.fromDateString(request.getParameter("appointment_date")), ConversionUtils.fromTimeStringNoSeconds(request.getParameter("start_time")),
+     			ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")),ConversionUtils.fromTimestampString(createDateTime),  request.getParameter("creator"), Integer.parseInt(param[16]));
+            if (aa != null) {
+                apptId = aa.getId();
+            }%>
+            popupPage(350,750,'printappointment.jsp?appointment_no=<%=apptId%>') ;
+        <%}%>
 	self.opener.refresh();
 	self.close();
 </script>

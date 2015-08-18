@@ -42,6 +42,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -69,7 +71,32 @@ public class PrintClientLabLabelAction extends OscarAction {
         String classpath = (String)request.getSession().getServletContext().getAttribute("org.apache.catalina.jsp_classpath");
         if (classpath==null) classpath = (String)request.getSession().getServletContext().getAttribute("com.ibm.websphere.servlet.application.classpath");
         System.setProperty("jasper.reports.compile.class.path", classpath);
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        UserPropertyDAO propertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
+        UserProperty prop;
+        String defaultPrinterName = "";
+        Boolean silentPrint = false;
+        prop = propertyDao.getProp(loggedInInfo.getLoggedInProviderNo(), UserProperty.DEFAULT_PRINTER_CLIENT_LAB_LABEL);
+        if (prop != null) {
+            defaultPrinterName = prop.getValue();
+        }
+        prop = propertyDao.getProp(loggedInInfo.getLoggedInProviderNo(), UserProperty.DEFAULT_PRINTER_CLIENT_LAB_LABEL_SILENT_PRINT);
+        if (prop != null) {
+            if (prop.getValue().equalsIgnoreCase("yes")) {
+                silentPrint = true;
+            }
+        }
+        String exportPdfJavascript = null;
 
+        if (defaultPrinterName != null && !defaultPrinterName.isEmpty()) {
+            exportPdfJavascript = "var params = this.getPrintParams();"
+                    + "params.pageHandling=params.constants.handling.none;"
+                    + "params.printerName='" + defaultPrinterName + "';";
+            if (silentPrint == true) {
+                exportPdfJavascript += "params.interactive=params.constants.interactionLevel.silent;";
+            }
+            exportPdfJavascript += "this.print(params);";
+        }    
         HashMap<String, String> parameters = new HashMap<String, String>();
         parameters.put("demo", request.getParameter("demographic_no"));
 
@@ -86,7 +113,7 @@ public class PrintClientLabLabelAction extends OscarAction {
         	ServletOutputStream sos = response.getOutputStream();
         	response.setHeader("Content-disposition", getHeader(response).toString());
             OscarDocumentCreator osc = new OscarDocumentCreator();
-            osc.fillDocumentStream(parameters, sos, "pdf", ins, DbConnectionFilter.getThreadLocalDbConnection());
+            osc.fillDocumentStream(parameters, sos, "pdf", ins, DbConnectionFilter.getThreadLocalDbConnection(),exportPdfJavascript);
         } catch (FileNotFoundException ex1) {
         	logger.debug("Addresslabel.xml not found in user's home directory. Using default instead");
         } catch (IOException ex) {
