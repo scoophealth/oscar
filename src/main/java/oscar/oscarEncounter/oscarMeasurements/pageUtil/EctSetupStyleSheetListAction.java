@@ -50,10 +50,8 @@ public final class EctSetupStyleSheetListAction extends Action {
                                  HttpServletRequest request,
                                  HttpServletResponse response)
         throws Exception {
-                
-    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
-			throw new SecurityException("missing required security object (_admin)");
-		}
+    	
+    	if( securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null) || securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin.measurements", "w", null) )  {
     	
         EctStyleSheetBeanHandler sshd = new EctStyleSheetBeanHandler();
         Collection allStyleSheets = sshd.getStyleSheetNameVector();
@@ -62,5 +60,9 @@ public final class EctSetupStyleSheetListAction extends Action {
         session.setAttribute( "allStyleSheets", allStyleSheets);
         
         return (mapping.findForward("continue"));
+        
+    	}else{
+    		throw new SecurityException("Access Denied!"); //missing required security object (_admin) or (_admin.measurements)
+    	}
     }
 }
