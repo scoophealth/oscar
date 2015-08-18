@@ -55,9 +55,7 @@ public class EctAddMeasurementGroupAction extends Action {
         throws ServletException, IOException
     {
     	
-    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
-			throw new SecurityException("missing required security object (_admin)");
-		}
+    	if( securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null) || securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin.measurements", "w", null) )  {
     	
         EctAddMeasurementGroupForm frm = (EctAddMeasurementGroupForm) form;                
         request.getSession().setAttribute("EctAddMeasurementGroupForm", frm);
@@ -66,9 +64,6 @@ public class EctAddMeasurementGroupAction extends Action {
         
         String requestId = "";
         
-       
-       
-                
         if(frm.getForward()!=null){
                                                                                   
                 
@@ -103,6 +98,10 @@ public class EctAddMeasurementGroupAction extends Action {
         }                          
         
         return mapping.findForward("success");
+        
+		}else{
+			throw new SecurityException("Access Denied!"); //missing required security object (_admin)
+		}
     }
      
 }

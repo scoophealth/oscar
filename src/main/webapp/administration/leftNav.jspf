@@ -579,7 +579,7 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #CAISI END-->
 
 <!-- #SYSTEM Management-->
-	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.measurements" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
 				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseEight">
 				<bean:message key="admin.admin.SystemManagement" />
@@ -589,13 +589,13 @@ String curProvider_no = (String)session.getAttribute("user");
 				<div id="collapseEight" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
-				<security:oscarSec roleName="<%=roleName$%>"
-					objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=false%>">
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=false%>">
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/providerAddRole.jsp">
 					<bean:message key="admin.admin.addRole"/></a></li>
 				</security:oscarSec>
-							
+				
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">			
 				<li><a href='javascript:void(0);'
 					class="xlink" rel="${ctx}/admin/providerPrivilege.jsp">
 				<bean:message key="admin.admin.assignRightsObject"/></a></li>
@@ -626,26 +626,32 @@ String curProvider_no = (String)session.getAttribute("user");
 						class="xlink" rel="${ctx}/oscarResearch/oscarDxResearch/dxResearchCustomization.jsp"><bean:message
 						key="oscarEncounter.Index.btnCustomize" /> <bean:message
 						key="oscar.admin.diseaseRegistryQuickList" /></a></li>
+					</security:oscarSec>
+					
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.measurements" rights="r" reverse="<%=false%>">	
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/oscarEncounter/oscarMeasurements/Customization.jsp"><bean:message
 						key="oscarEncounter.Index.btnCustomize" /> <bean:message
 						key="admin.admin.oscarMeasurements" /></a></li>
+					</security:oscarSec>
+					
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">	
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/resourcebaseurl.jsp"
 						title='<bean:message key="admin.admin.baseURLSettingTitle"/>'><bean:message
 						key="admin.admin.btnBaseURLSetting" /></a></li>
+					</security:oscarSec>	
 				
-					<security:oscarSec roleName="<%=roleName$%>"
-						objectName="_admin,_admin.messenger" rights="r" reverse="<%=false%>">
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.messenger" rights="r" reverse="<%=false%>">
 							<li><a href='javascript:void(0);'
 								class="xlink" rel="${ctx}/oscarMessenger/DisplayMessages.do?providerNo=<%=curProvider_no%>&amp;userName=<%=userfirstname%>%20<%=userlastname%>"><bean:message
 								key="admin.admin.messages" /></a></li>
 							<li><a href='javascript:void(0);'
 								class="xlink" rel="${ctx}/oscarMessenger/config/MessengerAdmin.jsp"><bean:message
 								key="admin.admin.btnMessengerAdmin" /></a></li>
-				
 					</security:oscarSec>
 					
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/keygen/keyManager.jsp"><bean:message key="admin.admin.keyPairGen" /></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/FacilityManager.do"><bean:message key="admin.admin.manageFacilities" /></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/oscarEncounter/oscarMeasurements/adminFlowsheet/NewFlowsheet.jsp">Create New Flowsheet</a></li>
@@ -662,14 +668,13 @@ String curProvider_no = (String)session.getAttribute("user");
 			            class="xlink" rel="${ctx}/admin/uploadEntryText.jsp"><bean:message key="admin.admin.uploadEntryTxt"/></a>
 			            </li>
 		            </oscar:oscarPropertiesCheck>	
+		            </security:oscarSec>
 		            
 				 	<%
 						if (oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled())
 								{
 					%>
-					<security:oscarSec roleName="<%=roleName$%>"
-						objectName="_admin.cookieRevolver" rights="r">
-				
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.cookieRevolver" rights="r">
 						<li>&nbsp; <bean:message key="admin.admin.titleFactorAuth"/>
 						<ul>
 							<li><a href='javascript:void(0);'
