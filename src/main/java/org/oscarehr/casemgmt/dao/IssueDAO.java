@@ -34,6 +34,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -132,7 +133,7 @@ public class IssueDAO extends HibernateDaoSupport {
         return getHibernateTemplate().executeFind(new HibernateCallback<List<Issue>>() {
             public List<Issue> doInHibernate(Session session) throws HibernateException, SQLException {
                 Query q = session.createQuery(sql);
-                q.setMaxResults(numToReturn);
+                q.setMaxResults(Math.min(numToReturn,AbstractDao.MAX_LIST_RETURN_SIZE));
                 q.setFirstResult(startIndex);
                 q.setParameter("term", s);
                 q.setParameter("roles", roleList);
