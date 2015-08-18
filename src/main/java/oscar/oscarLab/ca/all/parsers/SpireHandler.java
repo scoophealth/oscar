@@ -42,8 +42,6 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import oscar.oscarLab.ca.all.spireHapiExt.v23.message.ORU_R01;
-import oscar.util.UtilDateUtilities;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Segment;
 import ca.uhn.hl7v2.model.v23.datatype.CN;
@@ -56,6 +54,8 @@ import ca.uhn.hl7v2.validation.impl.NoValidation;
 //import ca.uhn.hl7v2.model.v23.message.ORU_R01;
 //import ca.uhn.hl7v2.parser.Parser;
 //import oscar.oscarLab.ca.all.spireHapiExt.v23.segment.ZDS;
+import oscar.oscarLab.ca.all.spireHapiExt.v23.message.ORU_R01;
+import oscar.util.UtilDateUtilities;
 
 class Lines {
 	private String message = "";
@@ -404,11 +404,11 @@ public class SpireHandler implements MessageHandler {
         try{
 			String abnormalFlag = getOBXAbnormalFlag(i, j);
 			
-            if(abnormalFlag.equals("ABN") || abnormalFlag.equals("HI") || abnormalFlag.equals("LOW") || abnormalFlag.equals("CRIT") || abnormalFlag.equals("NA") || abnormalFlag.equals("Unknown")){
-                return(true);
-            }else{
-                return(false);
-            }
+//          if(abnormalFlag.equals("ABN") || abnormalFlag.equals("HI") || abnormalFlag.equals("LOW") || abnormalFlag.equals("CRIT") || abnormalFlag.equals("NA") || abnormalFlag.equals("Unknown")){
+	        if (abnormalFlag.equals("") || abnormalFlag.equals("N"))
+	            return(false);
+	        else
+	            return(true);
             
         }catch(Exception e){
             return(false);
