@@ -893,11 +893,11 @@ public class NotesService extends AbstractServiceImpl {
 			caseManagementMgr.saveNoteExt(cme);
 		}
 			
-		if(noteExt.getAgeOnSet()!=null){
+		if(noteExt.getAgeAtOnset()!=null){
 			cme.setNoteId(newNoteId);
 			cme.setKeyVal(NoteExtTo1.AGEATONSET);
 			cme.setDateValue((Date) null);
-			cme.setValue(noteExt.getAgeOnSet());
+			cme.setValue(noteExt.getAgeAtOnset());
 			caseManagementMgr.saveNoteExt(cme);
 		}
 		
@@ -1352,7 +1352,7 @@ public class NotesService extends AbstractServiceImpl {
 			}else if(l.getKeyVal().equals(CaseManagementNoteExt.PROCEDUREDATE)){
 				noteExt.setProcedureDate(l.getDateValueStr());
 			}else if(l.getKeyVal().equals(CaseManagementNoteExt.AGEATONSET)){
-				noteExt.setAgeOnSet(l.getValue());
+				noteExt.setAgeAtOnset(l.getValue());
 			}else if(l.getKeyVal().equals(CaseManagementNoteExt.TREATMENT)){
 				noteExt.setTreatment(l.getValue());
 			}else if(l.getKeyVal().equals(CaseManagementNoteExt.PROBLEMSTATUS)){
@@ -1416,7 +1416,7 @@ public class NotesService extends AbstractServiceImpl {
 			}else if(l.getKeyVal().equals(CaseManagementNoteExt.PROCEDUREDATE)){
 				noteExt.setProcedureDate(l.getValue());
 			}else if(l.getKeyVal().equals(CaseManagementNoteExt.AGEATONSET)){
-				noteExt.setAgeOnSet(l.getValue());
+				noteExt.setAgeAtOnset(l.getValue());
 			}else if(l.getKeyVal().equals(CaseManagementNoteExt.TREATMENT)){
 				noteExt.setTreatment(l.getValue());
 			}else if(l.getKeyVal().equals(CaseManagementNoteExt.PROBLEMSTATUS)){
