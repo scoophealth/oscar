@@ -29,6 +29,11 @@
 <!-- #306754 othermeds -->
 <!-- not sure colours are staying -->
 <!--ng-style="page.code == 'famhx' && {'background-color' : '#006600'} || page.code == 'othermeds' && {'background-color' : '#306754'}"-->
+<style>
+	.group-note-selected {
+		background-color:yellow;
+	}
+</style>
 
 <!-- make div layout more fluid see medical history as an example -->
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -59,7 +64,7 @@
 		<ul data-brackets-id="12674" id="sortable" class="list-unstyled ui-sortable" >
 		    
 		
-		    <li class="cpp-note-list" ng-repeat="item in page.items" ng-click="changeNote(item,item.id)">
+		    <li class="cpp-note-list" ng-repeat="item in page.items" ng-click="changeNote(item,item.id)" ng-class="isSelected(item)">
 		    <small class="pull-left text-muted">{{item.editor}}</small>
 		    <small class="pull-right text-muted">
 		       <span class="glyphicon glyphicon-calendar"></span> {{item.date | date : 'dd-MMM-yyyy'}}
