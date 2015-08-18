@@ -1770,6 +1770,7 @@ insert into `secObjectName` (`objectName`) values ('_admin.billing');
 insert into `secObjectName` (`objectName`) values ('_admin.resource');
 insert into `secObjectName` (`objectName`) values ('_admin.reporting');
 insert into `secObjectName` (`objectName`) values ('_admin.backup');
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.measurements', 'access to customize measurements',0);
 insert into `secObjectName` (`objectName`) values ('_admin.messenger');
 insert into `secObjectName` (`objectName`) values ('_admin.eform');
 insert into `secObjectName` (`objectName`) values ('_admin.encounter');
@@ -1967,6 +1968,7 @@ insert into `secObjPrivilege` values('admin','_admin.systemMessage','x',0,'99999
 insert into `secObjPrivilege` values('admin','_admin.unlockAccount','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_admin.fax','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_admin.userCreatedForms','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.measurements','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_appointment','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_appointment.doctorLink','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_pmm.addProgram','x',0,'999998');

@@ -67,9 +67,7 @@ public class EctAddMeasurementMapAction extends Action{
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         
-    	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
-			throw new SecurityException("missing required security object (_admin)");
-		}
+    	if( securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null) || securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin.measurements", "w", null) )  {
     	
         String identifier = request.getParameter("identifier");
         String loinc_code = request.getParameter("loinc_code");
@@ -88,6 +86,11 @@ public class EctAddMeasurementMapAction extends Action{
                 
         }
         return mapping.findForward(outcome);
+        
+    	}else{
+			throw new SecurityException("Access Denied!"); //missing required security object (_admin)
+		
+    	} 
     }
     
 }

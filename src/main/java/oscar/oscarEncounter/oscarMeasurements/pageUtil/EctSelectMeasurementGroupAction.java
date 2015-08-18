@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.MeasurementGroupDao;
 import org.oscarehr.common.dao.MeasurementGroupStyleDao;
 import org.oscarehr.common.model.MeasurementGroup;
+import org.oscarehr.common.model.MeasurementGroupStyle;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -93,7 +94,13 @@ public class EctSelectMeasurementGroupAction extends Action {
      * @return 
      ******************************************************************************************/
     private void deleteGroup(String inputGroupName){
-        styleDao.remove(styleDao.findByGroupName(inputGroupName));
+    	
+    	//MeasurementGroupStyle
+    	for(MeasurementGroupStyle ms:styleDao.findByGroupName(inputGroupName)) {
+    		styleDao.remove(ms.getId());
+        } 
+    	
+        //MeasurementGroup
         for(MeasurementGroup m:groupDao.findByName(inputGroupName)) {
         	groupDao.remove(m.getId());
         }
