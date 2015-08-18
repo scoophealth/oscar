@@ -117,4 +117,12 @@ public class PreventionManager {
 
 		return (results);
 	}
+	
+	public List<Prevention> getPreventionsByDemographicNo(LoggedInInfo loggedInInfo, Integer demographicNo) {
+		List<Prevention> results = preventionDao.findByDemographicId(demographicNo);
+		
+		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getPreventionsByDemographicNo", "demographicNo=" + demographicNo);
+
+		return (results);
+	}
 }
