@@ -25,6 +25,7 @@
 
 package oscar.oscarReport.pageUtil;
 
+import com.itextpdf.text.pdf.PdfAction;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,12 +45,14 @@ import org.oscarehr.util.SpringUtils;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.util.UtilDateUtilities;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfWriter;
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.UserProperty;
 
 /**
  *
@@ -66,8 +69,33 @@ public class GenerateEnvelopesAction  extends Action {
 	  	  	}
 	   
     String[] demos = request.getParameterValues("demos");
-    String providerNo = (String) request.getSession().getAttribute("user");
-           
+ 
+       String curUser_no = (String) request.getSession().getAttribute("user");
+       UserPropertyDAO propertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
+       UserProperty prop;
+       String defaultPrinterNamePDFLabel = "";
+       Boolean silentPrintPDFLabel = false;
+       prop = propertyDao.getProp(curUser_no, UserProperty.DEFAULT_PRINTER_PDF_ENVELOPE);
+       if (prop != null) {
+           defaultPrinterNamePDFLabel = prop.getValue();
+       }
+       prop = propertyDao.getProp(curUser_no, UserProperty.DEFAULT_PRINTER_PDF_ENVELOPE_SILENT_PRINT);
+       if (prop != null) {
+           if (prop.getValue().equalsIgnoreCase("yes")) {
+               silentPrintPDFLabel = true;
+           }
+       }
+       String exportPdfJavascript = "";
+
+       if (defaultPrinterNamePDFLabel != null && !defaultPrinterNamePDFLabel.isEmpty()) {
+           exportPdfJavascript = "var params = this.getPrintParams();"
+                   + "params.pageHandling=params.constants.handling.none;"
+                   + "params.printerName='" + defaultPrinterNamePDFLabel + "';";
+           if (silentPrintPDFLabel == true) {
+               exportPdfJavascript += "params.interactive=params.constants.interactionLevel.silent;";
+           }
+           exportPdfJavascript += "this.print(params);";
+       }
     //TODO: Change to be able to use other size envelopes
     Rectangle _10Envelope = new Rectangle(0,0,684,297);
     float marginLeft   = 252;
@@ -79,7 +107,7 @@ public class GenerateEnvelopesAction  extends Action {
     response.setHeader("Content-Disposition", "attachment; filename=\"envelopePDF-"+UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")+".pdf\"");
                 
     try {
-      PdfWriter.getInstance(document,  response.getOutputStream());
+      PdfWriter writer=PdfWriter.getInstance(document,  response.getOutputStream());
       document.open();
       
       
@@ -95,7 +123,8 @@ public class GenerateEnvelopesAction  extends Action {
          document.add(getEnvelopeLabel(envelopeLabel));
          document.newPage();
       }
-      
+      PdfAction action = PdfAction.javaScript(exportPdfJavascript, writer);
+      writer.setOpenAction(action);  
     }
     catch(DocumentException de) {
       logger.error("", de);
