@@ -909,6 +909,10 @@ if (bMultisites) { %>
 			onclick="document.forms['EDITAPPT'].displaymode.value='Group Action'; onButUpdate();"
 			value="<bean:message key="appointment.editappointment.btnGroupAction"/>">
              <% }%>
+        <input TYPE="submit" id="printReceiptButton"
+            onclick="document.forms['EDITAPPT'].displaymode.value='Update Appt';document.forms['EDITAPPT'].printReceipt.value='1';"
+            VALUE="<bean:message key='appointment.editappointment.btnPrintReceipt'/>">
+        <input type="hidden" name="printReceipt" value="">             
 		<input type="submit" class="redButton button" id="deleteButton"
 			onclick="document.forms['EDITAPPT'].displaymode.value='Delete Appt'; onButDelete();"
 			value="<bean:message key="appointment.editappointment.btnDeleteAppointment"/>">

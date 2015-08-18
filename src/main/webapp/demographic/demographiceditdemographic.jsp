@@ -1564,29 +1564,29 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                 
                                 <input type="button" size="110" name="Button"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFEnvelope"/>"
-                                    onclick="window.location='../report/GenerateEnvelopes.do?demos=<%=demographic.getDemographicNo()%>'">
+                                    onclick="popupPage(400,500,'printEnvelope.jsp?demos=<%=demographic.getDemographicNo()%>');return false;">
                                 <input type="button" size="110" name="Button"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFLabel"/>"
-                                    onclick="window.location='printDemoLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
+                                    onclick="popupPage(400,500,'printDemoLabel.jsp?demographic_no=<%=demographic.getDemographicNo()%>');return false;">
                                 <input type="button" size="110" name="Button"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFAddressLabel"/>"
-                                    onclick="window.location='printDemoAddressLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
+                                    onclick="popupPage(400,500,'printAddressLabel.jsp?demographic_no=<%=demographic.getDemographicNo()%>');return false;">
                                 <input type="button" size="110" name="Button"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFChartLabel"/>"
-                                    onclick="window.location='printDemoChartLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
+                                    onclick="popupPage(400,500,'printDemoChartLabel.jsp?demographic_no=<%=demographic.getDemographicNo()%>');return false;">
                                     <%
 										if(oscarVariables.getProperty("showSexualHealthLabel", "false").equals("true")) {
 									 %>
                                 <input type="button" size="110" name="Button"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnCreatePublicHealthLabel"/>"
-                                    onclick="window.location='printDemoChartLabelAction.do?labelName=SexualHealthClinicLabel&demographic_no=<%=demographic.getDemographicNo()%>'">
+                                    onclick="popupPage(400,500,'printDemoChartLabel.jsp?labelName=SexualHealthClinicLabel&demographic_no=<%=demographic.getDemographicNo()%>'');return false;">
                                     <% } %>
                                 <input type="button" name="Button" size="110"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>"
                                     onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=demographic.getDemographicNo()%>'">
                                 <input type="button" size="110" name="Button"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnClientLabLabel"/>"
-                                    onclick="window.location='printClientLabLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
+                                    onclick="popupPage(400,500,'printClientLabLabel.jsp?demographic_no=<%=demographic.getDemographicNo()%>');return false;">
                                 </td>
                                                         </tr>
                         </table>
@@ -3644,30 +3644,30 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 								</span> <!--input type="button" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnSwipeCard"/>" onclick="javascript:window.alert('Health Card Number Already Inuse');"-->
 								<input type="button" size="110" name="Button"
 									value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFEnvelope"/>"
-									onclick="window.location='../report/GenerateEnvelopes.do?demos=<%=demographic.getDemographicNo()%>'">
+									onclick="popupPage(400,500,'printEnvelope.jsp?demos=<%=demographic.getDemographicNo()%>');return false;">
 								<input type="button" size="110" name="Button"
 									value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFLabel"/>"
-									onclick="window.location='printDemoLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>&appointment_no=<%=appointment%>'">
+									onclick="popupPage(400,500,'printDemoLabel.jsp?demographic_no=<%=demographic.getDemographicNo()%>&appointment_no=<%=appointment%>');return false;">
 								<input type="button" size="110" name="Button"
 									value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFAddressLabel"/>"
-									onclick="window.location='printDemoAddressLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
+									onclick="popupPage(400,500,'printAddressLabel.jsp?demographic_no=<%=demographic.getDemographicNo()%>');return false;">
 								<input type="button" size="110" name="Button"
 									value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFChartLabel"/>"
-									onclick="window.location='printDemoChartLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
+									onclick="popupPage(400,500,'printDemoChartLabel.jsp?demographic_no=<%=demographic.getDemographicNo()%>');return false;">
 									
 									<%
 										if(oscarVariables.getProperty("showSexualHealthLabel", "false").equals("true")) {
 									 %>
 								<input type="button" size="110" name="Button"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnCreatePublicHealthLabel"/>"
-                                    onclick="window.location='printDemoChartLabelAction.do?labelName=SexualHealthClinicLabel&demographic_no=<%=demographic.getDemographicNo()%>'">
+                                    onclick="popupPage(400,500,'printDemoChartLabel.jsp?labelName=SexualHealthClinicLabel&demographic_no=<%=demographic.getDemographicNo()%>');return false;">
                                     <% } %>
 								<input type="button" name="Button" size="110"
 									value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>"
 									onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=demographic.getDemographicNo()%>'">
 								<input type="button" size="110" name="Button"
                                     value="<bean:message key="demographic.demographiceditdemographic.btnClientLabLabel"/>"
-                                    onclick="window.location='printClientLabLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
+                                    onclick="popupPage(400,500,'printClientLabLabel.jsp?demographic_no=<%=demographic.getDemographicNo()%>');return false;">
 								</td>
                                                         </tr>
 						</table>

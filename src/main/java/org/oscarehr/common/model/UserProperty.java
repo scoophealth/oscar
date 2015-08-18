@@ -112,6 +112,19 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     public static final String DISABLE_BORN_PROMPTS = "disable_born_prompts";
 
     
+    public static final String DEFAULT_PRINTER_PDF_LABEL="default_printer_pdf_label";
+    public static final String DEFAULT_PRINTER_PDF_ENVELOPE="default_printer_pdf_envelope";
+    public static final String DEFAULT_PRINTER_APPOINTMENT_RECEIPT="default_printer_appointment_receipt";
+    public static final String DEFAULT_PRINTER_PDF_ADDRESS_LABEL="default_printer_pdf_address_label";
+    public static final String DEFAULT_PRINTER_PDF_CHART_LABEL="default_printer_pdf_chart_label";
+    public static final String DEFAULT_PRINTER_CLIENT_LAB_LABEL="default_printer_client_lab_label";
+    public static final String DEFAULT_PRINTER_PDF_LABEL_SILENT_PRINT="default_printer_pdf_label_silent_print";
+    public static final String DEFAULT_PRINTER_PDF_ENVELOPE_SILENT_PRINT="default_printer_pdf_envelope_silent_print";
+    public static final String DEFAULT_PRINTER_APPOINTMENT_RECEIPT_SILENT_PRINT="default_printer_appointment_receipt_silent_print";
+    public static final String DEFAULT_PRINTER_PDF_ADDRESS_LABEL_SILENT_PRINT="default_printer_pdf_address_label_silent_print";
+    public static final String DEFAULT_PRINTER_PDF_CHART_LABEL_SILENT_PRINT="default_printer_pdf_chart_label_silent_print";
+    public static final String DEFAULT_PRINTER_CLIENT_LAB_LABEL_SILENT_PRINT="default_printer_client_lab_label_silent_print";
+
     public static final String INTEGRATOR_DEMOGRAPHIC_SYNC = "integrator_demographic_sync";
     public static final String INTEGRATOR_DEMOGRAPHIC_ISSUES = "integrator_demographic_issues";
     public static final String INTEGRATOR_DEMOGRAPHIC_CONSENT = "integrator_demographic_consent";
