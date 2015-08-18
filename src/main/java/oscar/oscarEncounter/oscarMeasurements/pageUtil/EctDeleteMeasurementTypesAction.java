@@ -84,7 +84,6 @@ public class EctDeleteMeasurementTypesAction extends Action {
                 	mtd.setDateDeleted(new Date());
                 	measurementTypeDeletedDao.persist(mtd);
                 	
-                	MiscUtils.getLogger().error("ID of mtype: " +  mt.getId());
                 	measurementTypeDao.remove(mt.getId());
                 	
                 	measurementGroupDao.remove(measurementGroupDao.findByTypeDisplayName(mt.getTypeDisplayName()));
