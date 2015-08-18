@@ -60,7 +60,7 @@ public class NoteExtTo1 implements Serializable{
 	private String resolutionDate;
 	private String procedureDate;
 
-	private String ageOnSet;
+	private String ageAtOnset;
 	private String treatment;
 	private String problemStatus;
 	private String exposureDetail;
@@ -128,14 +128,12 @@ public class NoteExtTo1 implements Serializable{
 	public void setProcedureDate(String procedureDate) {
 	    this.procedureDate = procedureDate;
     }
-	public String getAgeOnSet() {
-	    return ageOnSet;
-    }
-	
-	public void setAgeOnSet(String ageOnSet) {
-	    this.ageOnSet = ageOnSet;
-    }
-	
+	public String getAgeAtOnset() {
+		return ageAtOnset;
+	}
+	public void setAgeAtOnset(String ageAtOnset) {
+		this.ageAtOnset = ageAtOnset;
+	}
 	public String getTreatment() {
 	    return treatment;
     }
