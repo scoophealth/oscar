@@ -789,6 +789,12 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		return (phone==null || phone=="");
 	}
 	
+	//show enrollment history (roster staus history)
+	$scope.showEnrollmentHistory = function(){
+		var url = "../demographic/EnrollmentHistory.jsp?demographicNo="+demo.demographicNo;
+		window.open(url, "enrollmentHistory", "width=650, height=1000");
+	}
+	
 	//upload photo
 	$scope.launchPhoto = function(){
 		var url = "../casemgmt/uploadimage.jsp?demographicNo="+demo.demographicNo;
