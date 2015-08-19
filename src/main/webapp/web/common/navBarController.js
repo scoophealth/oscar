@@ -258,6 +258,8 @@ function NewPatientCtrl($scope,$modal,$modalInstance,demographicService,security
 			}
 			
 			$scope.demographic.dateOfBirth = $scope.demographic.dobYear+'-'+$scope.demographic.dobMonth+"-"+$scope.demographic.dobDay;
+			$scope.demographic.patientStatusDate = new Date();
+			$scope.demographic.dateJoined = new Date();
 			$scope.demoRetVal = {};
 			
 			demographicService.saveDemographic($scope.demographic).then(function(data){
