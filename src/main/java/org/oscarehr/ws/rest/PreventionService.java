@@ -30,8 +30,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import org.oscarehr.managers.PreventionManager;
 import org.oscarehr.common.model.Prevention;
-import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.ws.rest.conversion.PreventionConverter;
 import org.oscarehr.ws.rest.to.PreventionResponse;
 import org.oscarehr.ws.rest.to.model.PreventionTo1;
@@ -44,13 +44,13 @@ import org.springframework.stereotype.Component;
 public class PreventionService extends AbstractServiceImpl {
 
 	@Autowired
-	private PreventionDao preventionDao;
-	
+	private PreventionManager preventionManager;
+
 	@GET
 	@Path("/active")
 	@Produces("application/json")
 	public PreventionResponse getCurrentPreventions(@QueryParam("demographicNo") Integer demographicNo) {
-		List<Prevention> preventions = preventionDao.findByDemographicId(demographicNo);
+		List<Prevention> preventions = preventionManager.getPreventionsByDemographicNo(getLoggedInInfo(), demographicNo);
 		
 		List<PreventionTo1> preventionsT = new PreventionConverter().getAllAsTransferObjects(getLoggedInInfo(), preventions);
 		
@@ -59,4 +59,5 @@ public class PreventionService extends AbstractServiceImpl {
 		
 		return response;
 	}
+
 }

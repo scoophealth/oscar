@@ -184,9 +184,9 @@ public class RecordUxService extends AbstractServiceImpl {
 	
 		List<MenuItemTo1> morelist = new ArrayList<MenuItemTo1>();
 		
-		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.preventions", "r", null)) {
+		/*if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.preventions", "r", null)) {
 			morelist.add(new MenuItemTo1(idCounter++, "Preventions", "../oscarPrevention/index.jsp?demographic_no="+demographicNo));
-		}
+		}*/
 		
 		/*if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.viewTickler", "r", null)) {
 			if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()) {

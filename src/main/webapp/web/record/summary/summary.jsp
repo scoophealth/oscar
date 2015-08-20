@@ -63,6 +63,7 @@
 			<a href="#/record/{{demographicNo}}/forms" class="text-muted add-summary" ng-if="mod.summaryItem==null" ng-show="mod.summaryCode=='assessments'"><bean:message key="global.btnAdd"/> {{mod.displayName}}</a>
         	</ul>
 		
+		<a href="javascript:void(0)" ng-click="toggleList(mod)" ng-show="showMorePreventions(mod)"><span ng-class="showMorePreventionsSymbol(mod)"></span></a>
        </fieldset>   
     </div>
     
