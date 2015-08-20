@@ -32,6 +32,11 @@
 		display: inline;
 		width: 200px;
 	}
+	.flat-btn {
+		padding-top: 0px;
+		padding-bottom: 0px;
+		font-size:x-small;
+	}
 	#photo {
 		height: 150px;
 		width: auto;
@@ -153,7 +158,9 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.msgDemoTitle"/></label>
-			<select class="form-control form-control-details" title="Title" ng-model="page.demo.title" ng-options="tt.value as tt.label for tt in page.titles"/>
+			<select class="form-control form-control-details" title="Title" ng-model="page.demo.title" ng-options="tt.value as tt.label for tt in page.titles">
+				<option value="">--</option>
+			</select>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="web.record.details.sin"/></label>
@@ -161,7 +168,9 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.msgDemoLanguage"/></label>
-			<select class="form-control form-control-details" title="Language" ng-model="page.demo.officialLanguage" ng-options="ef.value as ef.label for ef in page.engFre"/>
+			<select class="form-control form-control-details" title="Language" ng-model="page.demo.officialLanguage" ng-options="ef.value as ef.label for ef in page.engFre">
+				<option value="">--</option>
+			</select>
 		</div>
 		<div class="col-md-6">
 			<label>Spoken</label>
@@ -172,6 +181,7 @@
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.aboriginal"/></label>
 			<select class="form-control form-control-details" title="Aboriginal" ng-model="page.aboriginal.value">
+				<option value="">--</option>
 				<option value="Yes">Yes</option>
 				<option value="No">No</option>
 			</select>
@@ -180,14 +190,14 @@
 			<label><bean:message key="demographic.demographiceditdemographic.formPHRUserName"/></label>
 			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formPHRUserName"/>" title="<bean:message key="demographic.demographiceditdemographic.formPHRUserName"/>" ng-model="page.demo.myOscarUserName"/>
 		</div>
-		<div class="col-md-6"></div>
+		<div class="col-md-6"/>
 		<div class="col-md-6">
 			<label/>
-			<button type="button" class="btn" style="padding-top: 0px; padding-bottom: 0px; font-size: small" ng-click="macPHRDo('Register')" ng-show="page.demo.myOscarUserName==null || page.demo.myOscarUserName==''">Register for PHR</button>
+			<button type="button" class="btn flat-btn" ng-click="macPHRDo('Register')" ng-show="page.demo.myOscarUserName==null || page.demo.myOscarUserName==''"><bean:message key="demographic.demographiceditdemographic.msgRegisterPHR"/></button>
 		</div>
 		<div class="col-md-11">
 			<label><bean:message key="demographic.demographiceditdemographic.msgCountryOfOrigin"/></label>
-			<select class="form-control form-control-details" title="<bean:message key="demographic.demographiceditdemographic.msgCountryOfOrigin"/>" ng-model="page.demo.countryOfOrigin" ng-options="cnty.value as cnty.label for cnty in page.countries" style="width:520px">
+			<select class="form-control form-control-details" title="<bean:message key="demographic.demographiceditdemographic.msgCountryOfOrigin"/>" ng-model="page.demo.countryOfOrigin" ng-options="cnty.value as cnty.label for cnty in page.countries" style="width:450px">
 				<option value="">--</option>
 			</select>
 		</div>
@@ -207,7 +217,9 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formProcvince"/></label>
-			<select class="form-control form-control-details" title="<bean:message key="demographic.demographiceditdemographic.formProcvince"/>" ng-model="page.demo.address.province" ng-options="pv.value as pv.label for pv in page.provinces"/>
+			<select class="form-control form-control-details" title="<bean:message key="demographic.demographiceditdemographic.formProcvince"/>" ng-model="page.demo.address.province" ng-options="pv.value as pv.label for pv in page.provinces">
+				<option value="">--</option>
+			</select>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formPostal"/></label>
@@ -244,13 +256,15 @@
 				<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.msgExt"/>" title="Work Phone Extension" ng-model="page.wPhoneExt.value" ng-change="checkPhone('WX')" style="width:65px"/>
 			</span>
 		</div>
-		<div class="col-md-11">
+		<div style="line-height:0%">&nbsp;</div>
+		<div class="col-md-12">
 			<label><bean:message key="demographic.demographicaddrecordhtm.formPhoneComment"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographicaddrecordhtm.formPhoneComment"/>" title="<bean:message key="demographic.demographicaddrecordhtm.formPhoneComment"/>" ng-model="page.phoneComment.value" style="width:520px"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographicaddrecordhtm.formPhoneComment"/>" title="<bean:message key="demographic.demographicaddrecordhtm.formPhoneComment"/>" ng-model="page.phoneComment.value" style="width:570px"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formNewsLetter"/></label>
 			<select class="form-control form-control-details" title="<bean:message key="demographic.demographiceditdemographic.formNewsLetter"/>" ng-model="page.demo.newsletter">
+				<option value="">--</option>
 				<option value="<bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optNo"/>"><bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optNo"/></option>
 				<option value="<bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optPaper"/>"><bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optPaper"/></option>
 				<option value="<bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optElectronic"/>"><bean:message key="demographic.demographicaddrecordhtm.formNewsLetter.optElectronic"/></option>
@@ -338,7 +352,9 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formRosterStatus"/></label>
-			<select class="form-control form-control-details" title="<bean:message key="demographic.demographiceditdemographic.formRosterStatus"/>" ng-model="page.demo.rosterStatus" ng-options="rs.value as rs.label for rs in page.demo.rosterStatusList" style="width:150px"/>
+			<select class="form-control form-control-details" title="<bean:message key="demographic.demographiceditdemographic.formRosterStatus"/>" ng-model="page.demo.rosterStatus" ng-options="rs.value as rs.label for rs in page.demo.rosterStatusList" style="width:150px">
+				<option value="">--</option>
+			</select>
 			<button type="button" class="btn btn-sm" title="Add new roster status" ng-click="showAddNewRosterStatus()"><bean:message key="global.btnAdd"/></button>
 			<div style="position: absolute; right: 55px; top: 0px; z-index: 1; background-color: #EEEEEE; padding: 5px;" ng-show="page.showAddNewRosterStatus">
 				<input type="text" class="form-control" placeholder="New Roster Status" ng-model="page.newRosterStatus"/>
@@ -350,17 +366,26 @@
 			<label><bean:message key="demographic.demographiceditdemographic.DateJoined"/></label>
 			<input id="rosterDate" ng-model="page.demo.rosterDate" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.rosterDatePicker" ng-click="page.rosterDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.DateJoined"/>" ng-change="preventManualRosterDate()"/>
 		</div>
-		<div class="col-md-6" ng-show="isRosterTerminated()">
-			<label><bean:message key="demographic.demographiceditdemographic.RosterTerminationDate"/></label>
-			<input id="rosterTerminationDate" ng-model="page.demo.rosterTerminationDate" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.rosterTerminationDatePicker" ng-click="page.rosterTerminationDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="web.record.details.rosterTerminationDate"/>" ng-change="preventManualRosterTerminationDate()"/>
+		<div class="col-md-11">
+			<label/>
+			<button type="button" class="btn flat-btn" ng-click="showEnrollmentHistory()"><bean:message key="demographic.demographiceditdemographic.msgEnrollmentHistory"/></button>
 		</div>
-		<div class="col-md-11" ng-show="isRosterTerminated()">
-			<label><bean:message key="demographic.demographiceditdemographic.RosterTerminationReason"/></label>
-			<select class="form-control form-control-details" title="<bean:message key="web.record.details.rosterTerminationReason"/>" ng-model="page.demo.rosterTerminationReason" ng-options="rtr.value as rtr.label for rtr in page.rosterTermReasons" style="width:520px"/>
+		<div style="line-height:0%">&nbsp;</div>
+		<div class="col-md-12" ng-show="isRosterTerminated()">
+			<label style="width:150px"><bean:message key="demographic.demographiceditdemographic.RosterTerminationDate"/></label>
+			<input id="rosterTerminationDate" ng-model="page.demo.rosterTerminationDate" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.rosterTerminationDatePicker" ng-click="page.rosterTerminationDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="web.record.details.rosterTerminationDate"/>" ng-change="preventManualRosterTerminationDate()" style="width:175px"/>
+		</div>
+		<div class="col-md-12" ng-show="isRosterTerminated()">
+			<label style="width:150px"><bean:message key="demographic.demographiceditdemographic.RosterTerminationReason"/></label>
+			<select class="form-control form-control-details" title="<bean:message key="web.record.details.rosterTerminationReason"/>" ng-model="page.demo.rosterTerminationReason" ng-options="rtr.value as rtr.label for rtr in page.rosterTermReasons" style="width:550px">
+				<option value="">--</option>
+			</select>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formPatientStatus"/></label>
-			<select class="form-control form-control-details" title="Patient Status" ng-model="page.demo.patientStatus" ng-options="ps.value as ps.label for ps in page.demo.patientStatusList" ng-blur="checkPatientStatus()" style="width:150px"/>
+			<select class="form-control form-control-details" title="Patient Status" ng-model="page.demo.patientStatus" ng-options="ps.value as ps.label for ps in page.demo.patientStatusList" ng-blur="checkPatientStatus()" style="width:150px">
+				<option value="">--</option>
+			</select>
 			<button type="button" class="btn btn-sm" title="Add new patient status" ng-click="showAddNewPatientStatus()">Add</button>
 			<div style="position: absolute; right: 55px; top: 0px; z-index: 1; background-color: #EEEEEE; padding: 5px;" ng-show="page.showAddNewPatientStatus">
 				<input type="text" class="form-control" placeholder="New Patient Status" ng-model="page.newPatientStatus"/>
@@ -369,8 +394,8 @@
 			</div>
 		</div>
 		<div class="col-md-6">
-			<label><bean:message key="demographic.demographiceditdemographic.PatientStatusDate"/></label>
-			<input id="patientStatusDate" ng-model="page.demo.patientStatusDate" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.patientStatusDatePicker" ng-click="page.patientStatusDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.PatientStatusDate"/>" ng-change="preventManualPatientStatusDate()"/>
+			<label style="width:140px"><bean:message key="demographic.demographiceditdemographic.PatientStatusDate"/></label>
+			<input id="patientStatusDate" ng-model="page.demo.patientStatusDate" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.patientStatusDatePicker" ng-click="page.patientStatusDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.PatientStatusDate"/>" ng-change="preventManualPatientStatusDate()" style="width:185px"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formDateJoined1"/></label>
@@ -397,6 +422,7 @@
 		<div class="col-md-6">
 			<label style="width:150px"><bean:message key="web.record.details.archivedPaperChart"/></label>
 			<select class="form-control form-control-details" title="Archived Paper Chart" ng-model="page.paperChartArchived.value" style="width:175px">
+				<option value="">--</option>
 				<option value="NO"><bean:message key="demographic.demographiceditdemographic.paperChartIndicator.no"/></option>
 				<option value="YES"><bean:message key="demographic.demographiceditdemographic.paperChartIndicator.yes"/></option>
 			</select>
@@ -415,9 +441,10 @@
 			<label><bean:message key="demographic.demographicaddarecordhtm.msgDateOfReq"/></label>
 			<input id="onWaitingListSinceDate" ng-model="page.demo.onWaitingListSinceDate" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.onWaitingListSinceDatePicker" ng-click="page.onWaitingListSinceDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographicaddarecordhtm.msgDateOfReq"/>"  ng-change="preventManualOnWaitingListSinceDate()"/>
 		</div>
-		<div class="col-md-11">
+		<div style="line-height:0%">&nbsp;</div>
+		<div class="col-md-12">
 			<label><bean:message key="demographic.demographicaddarecordhtm.msgWaitListNote"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographicaddarecordhtm.msgWaitListNote"/>" title="<bean:message key="demographic.demographicaddarecordhtm.msgWaitListNote"/>" ng-model="page.demo.waitingListNote" style="width:520px"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographicaddarecordhtm.msgWaitListNote"/>" title="<bean:message key="demographic.demographicaddarecordhtm.msgWaitListNote"/>" ng-model="page.demo.waitingListNote" style="width:570px"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="web.record.details.privacyConsent"/></label>
@@ -427,19 +454,20 @@
 			<label><bean:message key="web.record.details.informedConsent"/></label>
 			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.informedConsent"/>" title="<bean:message key="demographic.demographiceditdemographic.informedConsent"/>" ng-model="page.informedConsent.value"/>
 		</div>
-		<div class="col-md-6">
+		<div style="line-height:0%">&nbsp;</div>
+		<div class="col-md-12">
 			<label style="width:195px"><bean:message key="demographic.demographiceditdemographic.usConsent"/></label>
 			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.usConsent"/>" title="<bean:message key="demographic.demographiceditdemographic.usConsent"/>" ng-model="page.usSigned.value" style="width:130px"/>
 		</div>
-		<div class="col-md-11">
+		<div class="col-md-12">
 			<label><bean:message key="web.record.details.securityQuestion"/></label>
-			<select class="form-control form-control-details" title="Select a Security Question<bean:message key="web.record.details.selectSecurityQuestion"/>" ng-model="page.securityQuestion1.value" ng-options="sq.value as sq.label for sq in page.securityQuestions" style="width:520px">
+			<select class="form-control form-control-details" title="<bean:message key="web.record.details.selectSecurityQuestion"/>" ng-model="page.securityQuestion1.value" ng-options="sq.value as sq.label for sq in page.securityQuestions" style="width:570px">
 				<option value="">--</option>
 			</select>
 		</div>
-		<div class="col-md-11">
+		<div class="col-md-12">
 			<label><bean:message key="web.record.details.answer"/></label>
-			<input type="text" class="form-control form-control-details" title="<bean:message key="web.record.details.answerToSecurityQuestion"/>" ng-model="page.securityAnswer1.value" style="width:520px"/>
+			<input type="text" class="form-control form-control-details" title="<bean:message key="web.record.details.answerToSecurityQuestion"/>" placeholder="<bean:message key="web.record.details.answerToSecurityQuestion"/>" ng-model="page.securityAnswer1.value" style="width:570px"/>
 		</div>
 	</div>
 	</div>
