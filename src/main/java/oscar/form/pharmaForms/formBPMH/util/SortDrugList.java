@@ -30,12 +30,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import oscar.form.pharmaForms.formBPMH.bean.BpmhDrug;
+
 /*
  * Author: Dennis Warren 
  * Company: Colcamex Resources
  * Date: November 2014
  * For: UBC Pharmacy Clinic and McMaster Department of Family Medicine
  */
+
 public class SortDrugList {
 	
 	public static void byPositionOrder (List<BpmhDrug> drugList) {		

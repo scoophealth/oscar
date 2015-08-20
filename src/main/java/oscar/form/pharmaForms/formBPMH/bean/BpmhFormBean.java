@@ -40,6 +40,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicCust;
 import org.oscarehr.common.model.Provider;
@@ -73,6 +74,7 @@ public class BpmhFormBean extends ActionForm implements Serializable {
 	private Demographic demographic;
 	private DemographicCust demographicCust;
 	private Provider provider;
+	private Clinic clinic;
 	
 	// lazy collections
 	private List<Allergy> allergies;
@@ -288,6 +290,14 @@ public class BpmhFormBean extends ActionForm implements Serializable {
 
 	public void setDrugs(final List<BpmhDrug> drugs) {
 		this.drugs = drugs;
+	}
+
+	public Clinic getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(Clinic clinic) {
+		this.clinic = clinic;
 	}
 
 	@Override

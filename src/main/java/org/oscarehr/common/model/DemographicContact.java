@@ -77,6 +77,7 @@ public class DemographicContact extends AbstractModel<Integer> {
 
 	private Boolean consentToContact = true;
 	private Boolean active = true;
+	private boolean mrp = Boolean.FALSE;
 	
 	@Transient
 	private String contactName;
@@ -234,6 +235,14 @@ public class DemographicContact extends AbstractModel<Integer> {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	public boolean isMrp() {
+		return mrp;
+	}
+
+	public void setMrp(boolean mrp) {
+		this.mrp = mrp;
 	}
 
 	public Contact getDetails() {

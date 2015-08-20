@@ -43,6 +43,7 @@ import oscar.OscarProperties;
 import oscar.form.pharmaForms.formBPMH.bean.BpmhFormBean;
 import oscar.form.pharmaForms.formBPMH.business.BpmhFormHandler;
 import oscar.form.pharmaForms.formBPMH.pdf.PDFController;
+import oscar.form.pharmaForms.formBPMH.pdf.PDFControllerConfig;
 
 /*
  * Author: Dennis Warren 
@@ -54,11 +55,12 @@ public class BpmhFormRetrieve extends DispatchAction {
 	
 	private static final String BPMH_PDF_TEMPLATE = "/WEB-INF/classes/oscar/form/prop/bpmh_template_marked.pdf";
 	private BpmhFormHandler bpmhFormHandler;
-			
+
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
 		return fetch(mapping,form,request,response);
 	}
+	
 	public ActionForward fetch(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
 		
@@ -127,7 +129,15 @@ public class BpmhFormRetrieve extends DispatchAction {
 			
 		bpmhFormHandler.populateFormBean();
 
-		PDFController pdfController = new PDFController(getServlet().getServletContext().getRealPath(BPMH_PDF_TEMPLATE));
+		PDFControllerConfig config = new PDFControllerConfig();
+		config.setTargetBeans( new String[]{"org.oscarehr.common.model", "oscar.form.pharmaForms.formBPMH.bean"} );
+		config.setJavaScript( new String[]{ "this.print({bUI: true, bSilent: true, bShrinkToFit:true});", "this.closeDoc(true);" } );
+		config.addTableRowLimit("drugs", 10, 2);
+		config.addTextBoxLineLimits("note", 10, 3);
+		config.addTextLengthLimits("note", 1200, 3);
+
+		PDFController pdfController = new PDFController( getServlet().getServletContext().getResource( BPMH_PDF_TEMPLATE ), config );
+		 //getServlet().getServletContext().getRealPath(BPMH_PDF_TEMPLATE),
 		pdfController.setOutputPath(OscarProperties.getInstance().getProperty("DOCUMENT_DIR"));
 		pdfController.writeDataToPDF(bpmh, new String[]{"1"}, demographicNo + "");
 		
