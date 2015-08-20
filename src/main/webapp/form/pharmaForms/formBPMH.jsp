@@ -131,10 +131,10 @@
 					<bean:write name="bpmh" property="formDateFormatted" />	
 				</span>
 									
-				<span>				
+				<%-- <span>				
 					<bean:message key="colcamex.formBPMH.printedon" />
 					<bean:write name="bpmh" property="editDateFormatted" />	
-				</span>	
+				</span>	 --%>
 				
 			</div>		
 		</header>
@@ -329,7 +329,8 @@
 			<table>
 				<tr>
 					<td>
-					<bean:message key="colcamex.formBPMH.notes" />
+					<bean:message key="colcamex.formBPMH.notes" />&nbsp; 
+					<span class="smallText" >Lines > 10 or Characters > 1250 will carry over to a new page.</span>
 					</td>
 				</tr>
 				<tr>

@@ -51,8 +51,11 @@ public class AllergyManager {
 
 		return (result);
 	}
-	
+
 	public List<Allergy> getActiveAllergies(LoggedInInfo loggedInInfo, Integer demographicNo) {
+		if(demographicNo == null) {
+			return null;
+		}
 		List<Allergy> results = allergyDao.findActiveAllergiesOrderByDescription(demographicNo);
 		
 		//--- log action ---
@@ -82,4 +85,5 @@ public class AllergyManager {
 
 		return (results);
 	}
+	
 }

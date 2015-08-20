@@ -26,12 +26,14 @@ package oscar.form.pharmaForms.formBPMH.pdf;
 
 import static org.junit.Assert.*;
 
-import java.lang.reflect.Method;
+//import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+//import java.util.Map;
+
+
 
 import org.junit.After;
 import org.junit.Before;
@@ -61,8 +63,18 @@ public class PDFControllerTest {
 		ClassLoader loader = PDFController.class.getClassLoader();
 		url = loader.getResource("oscar/form/prop/bpmh_template_marked.pdf");
 
-		pdfController = new PDFController(url.getPath());			
+		PDFControllerConfig config = new PDFControllerConfig();
+		config.setTargetBeans( new String[]{"org.oscarehr.common.model", "oscar.form.pharmaForms.formBPMH.bean"} );
+		config.setJavaScript( new String[]{ "this.print({bUI: true, bSilent: true, bShrinkToFit:true});", "this.closeDoc(true);" } );
+		config.addTableRowLimit("drugs", 10, 2);
+		config.addTextBoxLineLimits("note", 10, 2);
+		config.addTextLengthLimits("note", 1250, 2);
+		config.addTextBoxLineLimits("note2", 10, 3);
+		config.addTextLengthLimits("note2", 1250, 3);
+		
+		pdfController = new PDFController(url, config);			
 		pdfController.setOutputPath("/var/lib/tomcat6");
+		pdfController.setFileName("bpmh_test");
 		
 		demographic = new Demographic();
 		demographic.setDemographicNo(12345);
@@ -80,15 +92,53 @@ public class PDFControllerTest {
 		bpmhDrug2.setGenericName("DRUG NAME");
 		bpmhDrug2.setWhy("take this drug daily");
 		
+		BpmhDrug bpmhDrug3 = new BpmhDrug();		
+		bpmhDrug3.setGenericName("DRUG NAME");
+		bpmhDrug3.setWhy("take this drug daily");
+		
+		BpmhDrug bpmhDrug4 = new BpmhDrug();		
+		bpmhDrug4.setGenericName("DRUG NAME");
+		bpmhDrug4.setWhy("take this drug daily");
+		
 		List<BpmhDrug> bpmhDrugList = new ArrayList<BpmhDrug>();
 		bpmhDrugList.add(bpmhDrug1);
 		bpmhDrugList.add(bpmhDrug2);
+		bpmhDrugList.add(bpmhDrug3);
+		bpmhDrugList.add(bpmhDrug4);
 		
 		data = new BpmhFormBean();
 		data.setDemographicNo("2345");
 		data.setFamilyDrName("Dr. Who");
 		data.setDemographic(demographic);
 		data.setDrugs(bpmhDrugList);
+		data.setNote(
+				" 1 \n " +
+				"2 \n " +
+				"3\n " +
+				"4\n " +
+				"5\n " +
+				"6\n " +
+				"7\n " +
+				"8\n " +
+				"9\n " +
+				"10\n " +
+				"11\n " +
+				"12\n " +
+				"13\n " +
+				"14\n " +
+				"15"
+				);
+		
+		
+		
+//		data.setNote(
+//				 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse iaculis tempor rutrum. Quisque nisl elit, pretium ut efficitur vel, convallis non metus. Nam blandit mattis orci. Proin dictum consequat ante, vel commodo enim maximus non. Morbi ut nisl imperdiet, iaculis enim non, convallis ligula. Phasellus nec sodales elit, nec dictum nisl. Aliquam erat volutpat. Curabitur ut bibendum quam. Sed ultricies pellentesque gravida. Pellentesque bibendum lorem nisl, ut lobortis risus luctus sed."
+//				 + " Morbi porta, mi quis egestas euismod, quam risus accumsan ante, eget vulputate risus nulla vitae diam. Vestibulum imperdiet quam sed velit consequat sagittis. Morbi finibus felis nec enim fermentum, in consequat ipsum ultricies. Nam molestie ipsum ut leo fringilla fringilla. Morbi ultrices, metus nec tristique fermentum, nunc dolor aliquet dolor, ac eleifend mi ante vitae lorem. Pellentesque enim eros, iaculis tempus lectus eget, commodo interdum massa. Pellentesque eleifend tortor et eros feugiat dapibus. Duis ac erat id erat varius tempus. Integer accumsan, ante a aliquet malesuada, turpis tortor mollis risus, ac vehicula urna orci a lorem. Aenean orci ante, gravida at tempus non, auctor a ex. Suspendisse elementum magna nisl, sit amet lacinia augue aliquam et. Suspendisse ex mauris, ultrices nec cursus sit amet, maximus eget ipsum. Etiam tempor finibus finibus. In nec lacus ac ipsum blandit malesuada ut ac ligula. Donec pharetra ultricies fringilla. Vestibulum sed dui eget ex venenatis aliquam at at quam."
+//				 + " Praesent varius ac neque feugiat luctus. Nunc vitae blandit risus, non faucibus purus. Suspendisse potenti. Aenean et ultricies arcu. Mauris id tellus sed nulla egestas placerat. Etiam elit mauris, rhoncus non rutrum ut, vulputate at eros. Cras lacinia volutpat interdum. Praesent eget volutpat eros. Phasellus tincidunt id turpis sit amet suscipit."
+//				 + " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse iaculis tempor rutrum. Quisque nisl elit, pretium ut efficitur vel, convallis non metus. Nam blandit mattis orci. Proin dictum consequat ante, vel commodo enim maximus non. Morbi ut nisl imperdiet, iaculis enim non, convallis ligula. Phasellus nec sodales elit, nec dictum nisl. Aliquam erat volutpat. Curabitur ut bibendum quam. Sed ultricies pellentesque gravida. Pellentesque bibendum lorem nisl, ut lobortis risus luctus sed."
+//				 + " Morbi porta, mi quis egestas euismod, quam risus accumsan ante, eget vulputate risus nulla vitae diam. Vestibulum imperdiet quam sed velit consequat sagittis. Morbi finibus felis nec enim fermentum, in consequat ipsum ultricies. Nam molestie ipsum ut leo fringilla fringilla. Morbi ultrices, metus nec tristique fermentum, nunc dolor aliquet dolor, ac eleifend mi ante vitae lorem. Pellentesque enim eros, iaculis tempus lectus eget, commodo interdum massa. Pellentesque eleifend tortor et eros feugiat dapibus. Duis ac erat id erat varius tempus. Integer accumsan, ante a aliquet malesuada, turpis tortor mollis risus, ac vehicula urna orci a lorem. Aenean orci ante, gravida at tempus non, auctor a ex. Suspendisse elementum magna nisl, sit amet lacinia augue aliquam et. Suspendisse ex mauris, ultrices nec cursus sit amet, maximus eget ipsum. Etiam tempor finibus finibus. In nec lacus ac ipsum blandit malesuada ut ac ligula. Donec pharetra ultricies fringilla. Vestibulum sed dui eget ex venenatis aliquam at at quam."
+//				 + " Praesent varius ac neque feugiat luctus. Nunc vitae blandit risus, non faucibus purus. Suspendisse potenti. Aenean et ultricies arcu. Mauris id tellus sed nulla egestas placerat. Etiam elit mauris, rhoncus non rutrum ut, vulputate at eros. Cras lacinia volutpat interdum. Praesent eget volutpat eros. Phasellus tincidunt id turpis sit amet suscipit." 
+//		);
 	}
 	
 	@After
@@ -106,33 +156,34 @@ public class PDFControllerTest {
 	}
 	
 	@Test
-	public void testGetInput() {
-		assertEquals("bpmh_template_marked.pdf", pdfController.getFilePath().getName());
+	public void testGetFileName() {
+		assertEquals("bpmh_test", pdfController.getFileName());
 	}
 	
 	@Test
-	public void testWriteDataToPDF() {
+	public void testWriteDataToPDF() {		
+
 		pdfController.writeDataToPDF(data, new String[]{"1"}, "6789");
 	}
 	
-	@Test
+	
 	public void testGetGetterMethods() {
 		pdfController.setDataObject(demographic);
 		assertEquals("Dennis",pdfController.invokeValue("firstName"));
 		assertEquals("9374636728674",pdfController.invokeValue("hin"));
 	}
 	
-	@Test
-	public void testGetGetterMethodsWithMissingValue() {
-		
-		Map<String,Method> getterMethods = PDFController.getGetterMethods(data);
-		
-		assertEquals(null, PDFController.invokeValue("democratic.fakemethod", getterMethods, data));
-		assertEquals(null, PDFController.invokeValue("fakemethod", getterMethods, data));
-		
-	}
+//	@Test uncomment and change method PDFController.invokeValue to public or protected to test
+//	public void testGetGetterMethodsWithMissingValue() {
+//		
+//		Map<String,Method> getterMethods = PDFController.getGetterMethods(data);
+//		
+//		assertEquals(null, PDFController.invokeValue("democratic.fakemethod", getterMethods, data));
+//		assertEquals(null, PDFController.invokeValue("fakemethod", getterMethods, data));
+//		
+//	}
 	
-	@Test
+	
 	public void testGetGetterMethodsWithListDataTypes() {
 //		Map<String,Method> getterMethods = PDFController.getGetterMethods(data);
 		pdfController.setDataObject(data);
@@ -147,5 +198,10 @@ public class PDFControllerTest {
 //		}
 
 	}
+	
+	
+	public void testPrintSmartTagsToPDF() {
+		pdfController.printSmartTagsToPDF( new String[]{"1,2,3"} );
+	} 
 
 }

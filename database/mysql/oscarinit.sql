@@ -1,3 +1,4 @@
+
 CREATE TABLE `surveyData` (
   surveyDataId int(10) NOT NULL auto_increment,
   surveyId varchar(5) default NULL,
@@ -9139,6 +9140,7 @@ create table DemographicContact (
 	note varchar(200),
 	consentToContact tinyint(1),
 	active tinyint(1),
+	mrp tinyint(1),
 	KEY (`demographicNo`)
 );
 

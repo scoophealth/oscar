@@ -25,11 +25,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="icd9")
-public class Icd9 extends AbstractCodeSystemModel<Integer> implements java.io.Serializable {
+public class Icd9 extends AbstractCodeSystemModel<Integer> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,12 +70,25 @@ public class Icd9 extends AbstractCodeSystemModel<Integer> implements java.io.Se
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
+    public String getSynonym() {
+    	String synonym = "";
+    	if( getSynonymData() != null ) {
+    		synonym = getSynonymData().getPatientFriendly();
+    	}
+    	if( synonym == null ) {
+    		return ""; 
+    	}
+    	return synonym;
+    }
+
+	@Transient
 	public Icd9Synonym getSynonymData() {
 		return synonym;
 	}
 
-	public void setDxSynonymData(Icd9Synonym synonym) {
+	@Transient
+	public void setSynonymData(Icd9Synonym synonym) {
 		this.synonym = synonym;
 	}
 

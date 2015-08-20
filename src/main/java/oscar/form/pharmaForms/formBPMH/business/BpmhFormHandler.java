@@ -25,6 +25,7 @@ package oscar.form.pharmaForms.formBPMH.business;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,13 +34,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ContactSpecialtyDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DemographicCustDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DrugReasonDao;
-import org.oscarehr.common.dao.Icd9SynonymDao;
 import org.oscarehr.common.dao.FormBPMHDao;
 import org.oscarehr.common.dao.Icd9Dao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
@@ -47,17 +48,18 @@ import org.oscarehr.common.dao.ProfessionalContactDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.DemographicCust;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.DrugReason;
-import org.oscarehr.common.model.Icd9Synonym;
 import org.oscarehr.common.model.FormBPMH;
 import org.oscarehr.common.model.Icd9;
-import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.form.pharmaForms.formBPMH.bean.BpmhDrug;
@@ -100,6 +102,24 @@ import oscar.oscarRx.data.RxDrugData;
  *  - form history data is retrieved from the formBPMH table as JSON and then converted to beans.
  *  - if a NULL is sent to any of the set form bean signatures - parameters will be populated with
  *  	new data automatically.
+ *  
+ *  States of a BPMH Form:
+ *  
+ *  The BPMH form was designed to record a final snapshot and summary of a patients medication profile 
+ *  and consultation results. Each new session with a patient requires a new BPMH form. Once saved, 
+ *  the BPMH form becomes a snapshot that represents a finalized session. 
+ *  
+ *  A New Form compiles all current data in the patients profile.  A New Form must be created and 
+ *  saved to reflect any changed information.
+ *  
+ *  A Saved Form is a snapshot of the data in the patient profile at the time the form was saved 
+ *  or printed. Saved Forms cannot be edited. If the patient consultation or profile is not complete, 
+ *  simply close the form without saving, and then start it later.
+ *  
+ *  A Printed Form behaves the same as saving a form. The difference is a printable PDF is created.
+ *  
+ *  Additional Notes are saved in the form snapshot. They cannot be edited after saving, and they 
+ *  are not populated anywhere else in the patient profile. 
  * 
  */
 public class BpmhFormHandler {
@@ -111,7 +131,8 @@ public class BpmhFormHandler {
 		"hours", 
 		"minutes", 
 		"seconds"};
-	private static final String PRIMARY_DR_TITLE = "family physician";
+	//private static final String PRIMARY_DR_TITLE = "family physician";
+	private static final String PRIMARY_DR_CODE = "49";
 
 	private BpmhFormBean bpmhFormBean;
 	private FormBPMH formBPMH;
@@ -124,12 +145,12 @@ public class BpmhFormHandler {
 	private ProviderDao providerDao;
 	private OscarAppointmentDao appointmentDao;
 	private Icd9Dao icd9Dao;
-	private Icd9SynonymDao dxCodeTranslationsDao;
 	private FormBPMHDao formBPMHDao;
 	private ProfessionalSpecialistDao professionalSpecialistDao;
 	private ContactSpecialtyDao specialtyDao;
 	private ProfessionalContactDao proContactDao;
 	private DemographicContactDao demographicContactDao;
+	private ClinicDAO clinicDao;
 	
 	/**
 	 * Depends on: 
@@ -142,12 +163,13 @@ public class BpmhFormHandler {
 	 *   ProviderDao providerDao;
 	 *   OscarAppointmentDao appointmentDao;
 	 *   Icd9Dao icd9Dao;
-	 *   DxCodeTranslationsDao dxCodeTranslationsDao;
+	 *
 	 *   FormBPMHDao formBPMHDao;
 	 *   ProfessionalSpecialistDao professionalSpecialistDao;
 	 *   SpecialtyDao specialtyDao;
 	 *   ProfessionalContactDao proContactDao;
 	 *   DemographicContactDao demographicContactDao;
+	 *   ClinicDAO clinicDao;
 	 */
 	public BpmhFormHandler() {
 		// default constructor
@@ -159,6 +181,9 @@ public class BpmhFormHandler {
 	}
 
 	private void _init() {		
+
+		// this class was created before Oscar's Manager classes were discovered.
+		
 		setDemographicDao( (DemographicDao) SpringUtils.getBean(DemographicDao.class) );
     	setAllergyDao( (AllergyDao) SpringUtils.getBean(AllergyDao.class) );
     	setDemographicCustDao( (DemographicCustDao) SpringUtils.getBean(DemographicCustDao.class) );
@@ -167,12 +192,12 @@ public class BpmhFormHandler {
     	setProviderDao( (ProviderDao) SpringUtils.getBean("providerDao") );
     	setAppointmentDao( (OscarAppointmentDao) SpringUtils.getBean(OscarAppointmentDao.class) );
     	setIcd9Dao( (Icd9Dao) SpringUtils.getBean(Icd9Dao.class) );
-    	setDxCodeTranslationsDao((Icd9SynonymDao) SpringUtils.getBean(Icd9SynonymDao.class) );
     	setFormBPMHDao( (FormBPMHDao) SpringUtils.getBean(FormBPMHDao.class) ); 
     	setProfessionalSpecialistDao( (ProfessionalSpecialistDao) SpringUtils.getBean(ProfessionalSpecialistDao.class) );
     	setSpecialtyDao( (ContactSpecialtyDao) SpringUtils.getBean(ContactSpecialtyDao.class) );
     	setProContactDao( (ProfessionalContactDao) SpringUtils.getBean(ProfessionalContactDao.class) );
     	setDemographicContactDao( (DemographicContactDao) SpringUtils.getBean(DemographicContactDao.class) );
+    	setClinicDao( (ClinicDAO) SpringUtils.getBean(ClinicDAO.class) );
     }
 	
     public void populateFormBean() { 
@@ -208,13 +233,13 @@ public class BpmhFormHandler {
 			getBpmhFormBean().setFormDate( getFormHistory().getFormCreated() );
 			getBpmhFormBean().setFormId( getFormHistory().getId() + "" );
 			getBpmhFormBean().setEditDate( getFormHistory().getFormEdited() );
-			// provider is implicitly set from form table.
-			formBeanProvider = getProviderDao().getProvider( getFormHistory().getProviderNo() + "" );
 			familyDrName = getFormHistory().getFamilyDrName();
 			familyDrPhone = getFormHistory().getFamilyDrPhone();
 			familyDrFax = getFormHistory().getFamilyDrFax();
+			
 			// note is only set and saved from the form table.
-			getBpmhFormBean().setNote( getFormHistory().getNote() );
+			getBpmhFormBean().setNote( getFormHistory().getNote() );			
+			formBeanProvider = getProviderDao().getProvider( getFormHistory().getProviderNo() + "" );
 			
 			// allergies and drugs are stored as serialized JSON
 			formBeanAllergyList = (List<Allergy>) JsonUtil.jsonToPojoList( getFormHistory().getAllergies(), Allergy.class );
@@ -240,6 +265,9 @@ public class BpmhFormHandler {
 		
 		setFormBeanAllergyList( formBeanAllergyList );
 		logger.debug("Setting Allergy List");
+		
+		setFormBeanClinicData();
+		logger.debug("Setting Clinic Data");
 
 	}
 	
@@ -295,6 +323,13 @@ public class BpmhFormHandler {
 		return formBpmh.getId();
 
 	}
+	
+	public void setFormBeanClinicData() {
+		Clinic clinic = getClinicDao().getClinic();
+		if( clinic != null ) {
+			getBpmhFormBean().setClinic( clinic );
+		}		 
+	}
 
 	public void setFormBeanDemographic(Demographic demographic) {
 
@@ -305,6 +340,10 @@ public class BpmhFormHandler {
 		getBpmhFormBean().setDemographic(demographic);		
 	}
 	
+	/**
+	 * Provider is set based on the provider who attends the last appointment.
+	 * @param provider
+	 */
 	public void setFormBeanProvider(Provider provider) {
 		
 		List<Appointment> appointmentList = null;
@@ -332,16 +371,21 @@ public class BpmhFormHandler {
 			}
 			
 			// the prepared-on date is the same as the last appointment
-			if( lastAppointment != null ) {
-				
-				logger.debug("Setting Form Prepared Date");				
-				getBpmhFormBean().setFormDate( lastAppointment.getAppointmentDate() );
+			// recently changed to current date. 
+			if( lastAppointment != null ) {	
+				//lastAppointment.getAppointmentDate() 
+				setDatePrepared( new Date() );
 			}
 			
 		}
 		
 		getBpmhFormBean().setProvider(provider);
 
+	}
+	
+	public void setDatePrepared(Date date) {
+		logger.debug("Setting Form Prepared Date");				
+		getBpmhFormBean().setFormDate( date );
 	}
 	
 	/**
@@ -353,63 +397,31 @@ public class BpmhFormHandler {
 
 		List<DemographicCust> demographicCustList = null;
 		String parseMe = "";
-		List<DemographicContact> demographicContacts = null;
-		Integer demographicContactId = null;
-		String familyDrRole = "";
-		String familyDrContactId = "";
-		Integer familyDrId = null;
-		Integer contactType = null;
-		ProfessionalSpecialist professionalSpecialist = null;
+		Integer demographicContactId = null;		
 		Contact professionalContact = null;
+		DemographicContact demographicContact = null;
+		DemographicManager demographicManager = null;
 		
 		if(familyDrName.isEmpty() && familyDrPhone.isEmpty() && 
 				familyDrFax.isEmpty() && getFormHistory() == null ) {
 
 			// look for the Dr. in the demographic health care team.
-			demographicContacts = getDemographicContactDao().findByDemographicNoAndCategory(demographicNo, DemographicContact.CATEGORY_PROFESSIONAL);
-
-			for( DemographicContact demographicContact : demographicContacts ) {
-				
-				if( StringUtils.isNumeric( demographicContact.getRole() ) ) {
-					familyDrRole = getSpecialtyDao().find( Integer.parseInt( demographicContact.getRole() ) ).getSpecialty();
-				} else {
-					familyDrRole = demographicContact.getRole();
-				}
-				
-				if( PRIMARY_DR_TITLE.equalsIgnoreCase( familyDrRole ) ) {					
-					demographicContactId = demographicContact.getId();
-					familyDrContactId = demographicContact.getContactId().trim();
-					
-					if( StringUtils.isNumeric( familyDrContactId ) ) {
-						familyDrId = Integer.parseInt( familyDrContactId );
-					}
-					
-					contactType = demographicContact.getType();
-				}
+			demographicManager = SpringUtils.getBean(DemographicManager.class);
+			demographicContact = demographicManager.getHealthCareMemberbyRole(LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod(), 
+					demographicNo, BpmhFormHandler.PRIMARY_DR_CODE);
+			if( demographicContact != null ) {
+				professionalContact = demographicContact.getDetails();
+				demographicContactId = demographicContact.getId();
 			}
 
-			logger.debug("Found Family Dr. in Health Care Contacts. Provider Type: " + contactType + " Provider ID: " + familyDrId);
-			
-			// populate the Dr. found in the Health Care Team
-			if( familyDrId != null && contactType != null ) {
+			if( professionalContact != null ) {
 				
-				if( contactType == DemographicContact.TYPE_PROFESSIONALSPECIALIST ) {
-					
-					professionalSpecialist = getProfessionalSpecialistDao().find( familyDrId );
-					familyDrName = professionalSpecialist.getFormattedName().trim();
-					familyDrPhone = professionalSpecialist.getPhoneNumber().trim();
-					familyDrFax = professionalSpecialist.getFaxNumber().trim();
-					
-				} else {
-					
-					professionalContact = getProContactDao().find(familyDrId);
-					familyDrName = professionalContact.getFormattedName().trim();
-					familyDrPhone = professionalContact.getWorkPhone().trim();
-					familyDrFax = professionalContact.getFax().trim();
-					
-				}
+				logger.info("Found Family Dr. in Health Care Contacts. Provider Type: " + professionalContact);
+				
+				familyDrName = professionalContact.getFormattedName();
+				familyDrPhone = professionalContact.getWorkPhone();
+				familyDrFax = professionalContact.getFax();
 
-			// otherwise check the Demogrpahic notes - just in case (soon to be deprecated.)
 			} else {
 			
 				demographicCustList = getDemographicCustDao().findAllByDemographicNumber(demographicNo);
@@ -525,8 +537,7 @@ public class BpmhFormHandler {
 					// retrieved from DrugRef.
 					// using this uses wayyyy too many resources, but it is the only way to 
 					// ensure this form is extensible with other Oscar changes.
-					//TODO: fix once othe parts merged in
-					/*
+
 					if( ! StringUtils.isBlank(drugDIN) ) {
 						
 						stringBuilder = new StringBuilder();
@@ -574,7 +585,9 @@ public class BpmhFormHandler {
 						} else {
 							// do nothing
 						}												
-					}*/
+
+					}
+
 				}
 				
 				SortDrugList.byPositionOrder( bpmhDrugBeans );
@@ -587,37 +600,37 @@ public class BpmhFormHandler {
 
 		Icd9 icd9 = null;
 		String patientFriendlyDx = "";
-		String drugReasonCode = null;
-		Icd9Synonym dxCodeTranslations = null;
+		String dxCode = null;
 		StringBuilder stringBuilder = new StringBuilder("");		
 		List<DrugReason> drugReasonList = getDrugReasonDao().getReasonsForDrugID( drugId, true);
 		
 		if( ( drugReasonList != null ) && ( drugReasonList.size() > 0 ) ) {
 					
 			for( DrugReason drugReason : drugReasonList ) {
-	
-				if( drugReason.getCodingSystem().equalsIgnoreCase("icd9") ) {
-					
-					drugReasonCode = drugReason.getCode();
+				dxCode = null;
+
+				dxCode = drugReason.getCode();
+				
+				if(dxCode != null) {
+					icd9 = getIcd9Dao().findByCode(dxCode);
+				}
+			
+				if(icd9 != null) {
+					patientFriendlyDx = icd9.getSynonym().trim();
 				}
 				
-				if(drugReasonCode != null) {
-					dxCodeTranslations = getDxCodeTranslationsDao().findPatientFriendlyTranslationFor(drugReasonCode);
-				}
-				
-				if(dxCodeTranslations != null) {
-					
-					patientFriendlyDx = dxCodeTranslations.getPatientFriendly();
-					
-				} else {
-					
-					icd9 = getIcd9Dao().findByCode(drugReasonCode);
-					patientFriendlyDx = icd9.getDescription();
-					
+				if( StringUtils.isBlank(patientFriendlyDx) ) {
+					patientFriendlyDx = icd9.getDescription().trim();
 				}
 
-				stringBuilder.append( patientFriendlyDx + " " );						
+				// the wildcard A9999 ICD9 code has "comment" as a description.
+				if( ! "comment".equalsIgnoreCase( patientFriendlyDx ) ) {
+					stringBuilder.append( patientFriendlyDx + " " );
+				}
+				
 				stringBuilder.append( drugReason.getComments() );
+				
+				logger.debug("Found drug reason " + stringBuilder.toString() + " for drug id " + drugId);
 			}
 
 		}
@@ -720,14 +733,6 @@ public class BpmhFormHandler {
 		this.icd9Dao = icd9Dao;
 	}
 
-	public Icd9SynonymDao getDxCodeTranslationsDao() {
-		return dxCodeTranslationsDao;
-	}
-
-	public void setDxCodeTranslationsDao(Icd9SynonymDao dxCodeTranslationsDao) {
-		this.dxCodeTranslationsDao = dxCodeTranslationsDao;
-	}
-
 	public FormBPMHDao getFormBPMHDao() {
 		return formBPMHDao;
 	}
@@ -766,6 +771,14 @@ public class BpmhFormHandler {
 
 	public void setDemographicContactDao(DemographicContactDao demographicContactDao) {
 		this.demographicContactDao = demographicContactDao;
-	}	
+	}
+
+	public ClinicDAO getClinicDao() {
+		return clinicDao;
+	}
+
+	public void setClinicDao(ClinicDAO clinicDao) {
+		this.clinicDao = clinicDao;
+	}
 
 }
