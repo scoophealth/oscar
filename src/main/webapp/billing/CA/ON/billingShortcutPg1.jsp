@@ -83,7 +83,8 @@
   String            apptProvider_no   = request.getParameter("apptProvider_no");
   String ctlBillForm = request.getParameter("billForm");
   String            assgProvider_no   = request.getParameter("assgProvider_no");
-  //String            dob               = request.getParameter("dob");
+  if (assgProvider_no==null) assgProvider_no = new String();
+
   String            demoSex           = request.getParameter("DemoSex");
   GregorianCalendar now               = new GregorianCalendar();
   int               curYear           = now.get(Calendar.YEAR);
@@ -120,6 +121,8 @@
   Demographic demo = demoDao.getDemographic(demo_no);
   if (demo != null) {
     assgProvider_no = demo.getProviderNo();
+    if (assgProvider_no==null) assgProvider_no = new String();
+    
 	demoFirst = demo.getFirstName();
 	demoLast = demo.getLastName();
 	demoHIN = demo.getHin() + demo.getVer();
