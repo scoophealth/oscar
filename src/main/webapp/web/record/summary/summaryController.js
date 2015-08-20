@@ -260,7 +260,15 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
     };
     
   
-
+$scope.toggleList = function(mod){
+	i = 5; 
+	
+	if(mod.displaySize>5){
+		mod.displaySize = i;
+	}else{
+		mod.displaySize = mod.summaryItem.length;
+	}
+}
 
 
 $scope.expandlist = function(mod){
@@ -286,8 +294,41 @@ $scope.showMoreDocuments = function(mod){
 	return true;
 	
 }
+
+
 $scope.showMoreDocumentsSymbol = function(mod){
 	if(!angular.isDefined(mod.summaryItem)){
+		return "";
+	}
+	////console.log("mod symbol output ",mod.displaySize, mod.summaryItem.length,mod);
+	if ( mod.displaySize < mod.summaryItem.length) {
+		return "glyphicon glyphicon-chevron-down pull-right";
+	}else{
+		return "glyphicon glyphicon-chevron-up pull-right";	
+	}
+
+}
+
+
+$scope.showMorePreventions = function(mod){
+
+	if(!angular.isDefined(mod.summaryItem)){
+		return false;
+	}
+	
+	if(mod.summaryItem.length == 0){
+		return false;
+	}
+	
+	return true;
+}
+
+$scope.showMorePreventionsSymbol = function(mod){
+	if(!angular.isDefined(mod.summaryItem)){
+		return "";
+	}
+	
+	if(mod.summaryCode!="preventions"){
 		return "";
 	}
 	////console.log("mod symbol output ",mod.displaySize, mod.summaryItem.length,mod);
