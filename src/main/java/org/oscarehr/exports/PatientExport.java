@@ -364,6 +364,23 @@ public abstract class PatientExport {
 		return id;
 	}
 
+	public String getProviderRoot(String providerNo) {
+		String root;
+		try {
+			ProviderData providerData = providerDataDao.findByProviderNo(providerNo);
+			if(!StringUtils.isNullOrEmpty(providerData.getPractitionerNo())) {
+				root = "2.16.840.1.113883.3.40.2.11";
+			} else if (!StringUtils.isNullOrEmpty(providerData.getOhipNo())) {
+				root = "TBD";
+			} else {
+				root = "TBD";
+			}
+		} catch (Exception e) {
+			root = "2.16.840.1.113883.3.40.2.11";
+		}
+		return root;
+	}
+
 	/**
 	 * Allows for collection sort by DIN numbers
 	 * 

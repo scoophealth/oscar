@@ -108,7 +108,7 @@ CDA Header
   <author typeCode="AUT" contextControlCode="OP">
     <time value="$dateTool.get('yyyyMMdd')"/>
     <assignedAuthor classCode="ASSIGNED">
-      <id root="2.16.840.1.113883.3.40.2.11" extension="$patient.getProviderID($patient.authorId)"/>
+      <id root="$patient.getProviderRoot($patient.authorId)" extension="$patient.getProviderID($patient.authorId)"/>
 #if ( !$stringUtils.isNullOrEmpty($patient.getProviderHomePhone($patient.authorId)) )
       <telecom value="tel:$patient.getProviderHomePhone($patient.authorId).replaceAll("-","")" use="H"/>
 #end
