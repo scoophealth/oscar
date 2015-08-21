@@ -38,10 +38,11 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OscarLogDao;
-import org.oscarehr.exports.e2e.E2EPatientExport;
-import org.oscarehr.exports.e2e.E2EVelocityTemplate;
+import org.oscarehr.e2e.director.E2ECreator;
+import org.oscarehr.e2e.util.EverestUtils;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -60,17 +61,17 @@ public class E2ESchedulerJob extends TimerTask {
 	private static final String e2eUrl = OscarProperties.getInstance().getProperty("E2E_URL");
 	private static final String e2eDiff = OscarProperties.getInstance().getProperty("E2E_DIFF");
 	private static final String e2eDiffDays = OscarProperties.getInstance().getProperty("E2E_DIFF_DAYS");
-	private static final boolean diffMode = e2eDiff != null && e2eDiff.toLowerCase().equals("on");
+	private static final Boolean diffMode = e2eDiff != null && e2eDiff.toLowerCase().equals("on");
 
 	@Override
 	public void run() {
 		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 		OscarLogDao oscarLogDao = SpringUtils.getBean(OscarLogDao.class);
 		StringBuilder sb = new StringBuilder(255);
-		int success = 0;
-		int failure = 0;
-		int skipped = 0;
-		int diffDays = 14;
+		Integer success = 0;
+		Integer failure = 0;
+		Integer skipped = 0;
+		Integer diffDays = 14;
 		List<Integer> ids = null;
 
 		try {
@@ -105,64 +106,48 @@ public class E2ESchedulerJob extends TimerTask {
 			}
 			logger.info(sbStartRec.toString());
 
-			long startJob = System.currentTimeMillis();
-			long endJob = startJob;
+			Long startJob = System.currentTimeMillis();
+			Long endJob = startJob;
 
 			for(Integer id:ids) {
-				// Select Template
-				E2EVelocityTemplate t = new E2EVelocityTemplate();
-
-				// Create and load Patient data
-				long startLoad = System.currentTimeMillis();
-				E2EPatientExport patient = new E2EPatientExport();
-				patient.setExAllTrue();
-				long endLoad = startLoad;
-
-				long startTemplate = 0;
-				long endTemplate = startTemplate;
-				// Load patient data and merge to template
-				String output = "";
-				if(patient.loadPatient(id.toString())) {
-					endLoad = System.currentTimeMillis();
-					if(patient.isActive()) {
-						startTemplate = System.currentTimeMillis();
-						output = t.export(patient);
-						endTemplate = System.currentTimeMillis();
-					} else {
-						logger.info("[Demo: ".concat(id.toString()).concat("] Not active - skipped"));
-						skipped++;
-						continue;
-					}
-				} else {
-					endLoad = System.currentTimeMillis();
-					logger.error("[Demo: ".concat(id.toString()).concat("] Failed to load"));
-					failure++;
-					continue;
+				Long startLoad = System.currentTimeMillis();
+				// Populate Clinical Document
+				ClinicalDocument clinicalDocument = E2ECreator.createEmrConversionDocument(id);
+				if(clinicalDocument == null) {
+					logger.info("[Demo ".concat(id.toString()).concat("] Not active or failed to populate"));
 				}
+				Long endLoad = System.currentTimeMillis();
 
-				long startPost = System.currentTimeMillis();
-				long endPost = startPost;
+				Long startGenerate = System.currentTimeMillis();
+				// Output Clinical Document as String
+				String output = EverestUtils.generateDocumentToString(clinicalDocument, true);
+				Long endGenerate = System.currentTimeMillis();
+
+				Long startPost = System.currentTimeMillis();
+				Long endPost = startPost;
 
 				// Attempt to perform HTTP POST request
 				try {
-					HttpClient httpclient = new DefaultHttpClient();
-					HttpPost httpPost = new HttpPost(e2eUrl);
+					if(output != null) {
+						HttpClient httpclient = new DefaultHttpClient();
+						HttpPost httpPost = new HttpPost(e2eUrl);
 
-					// Assemble Multi-part Request
-					StringBuilder sbFile = reuseStringBuilder(sb);
-					sbFile.append("output_").append(id).append(".xml");
-					ByteArrayBody body = new ByteArrayBody(output.getBytes(), "text/xml", sbFile.toString());
-					MultipartEntity reqEntity = new MultipartEntity();
-					reqEntity.addPart("content", body);
-					httpPost.setEntity(reqEntity);
+						// Assemble Multi-part Request
+						StringBuilder sbFile = reuseStringBuilder(sb);
+						sbFile.append("Record_").append(id).append(".xml");
+						ByteArrayBody body = new ByteArrayBody(output.getBytes(), "text/xml", sbFile.toString());
+						MultipartEntity reqEntity = new MultipartEntity();
+						reqEntity.addPart("content", body);
+						httpPost.setEntity(reqEntity);
 
-					// Send HTTP POST request
-					HttpResponse response = httpclient.execute(httpPost);
-					if(response != null && response.getStatusLine().getStatusCode() == 201) {
-						success++;
-					} else {
-						logger.warn(response.getStatusLine());
-						failure++;
+						// Send HTTP POST request
+						HttpResponse response = httpclient.execute(httpPost);
+						if(response != null && response.getStatusLine().getStatusCode() == 201) {
+							success++;
+						} else {
+							logger.warn(response.getStatusLine());
+							failure++;
+						}
 					}
 				} catch (HttpHostConnectException e) {
 					logger.error("Connection to ".concat(e2eUrl).concat(" refused"));
@@ -181,7 +166,7 @@ public class E2ESchedulerJob extends TimerTask {
 				StringBuilder sbTimer = reuseStringBuilder(sb);
 				sbTimer.append("[Demo: ").append(id);
 				sbTimer.append("] L:").append( (endLoad - startLoad)/1000.0 );
-				sbTimer.append(" T:").append( (endTemplate - startTemplate)/1000.0 );
+				sbTimer.append(" G:").append( (endGenerate - startGenerate)/1000.0 );
 				sbTimer.append(" P:").append( (endPost - startPost)/1000.0 );
 				logger.info(sbTimer.toString());
 			}
@@ -193,7 +178,7 @@ public class E2ESchedulerJob extends TimerTask {
 			logger.info("E2E export job aborted");
 		} finally {
 			// Log final record counts
-			int unaccounted = ids.size() - success - failure - skipped;
+			Integer unaccounted = ids.size() - success - failure - skipped;
 			sb = reuseStringBuilder(sb);
 			sb.append(success).append(" records processed");
 			if(failure > 0) sb.append("\n").append(failure).append(" records failed");
@@ -221,7 +206,7 @@ public class E2ESchedulerJob extends TimerTask {
 	 * @param time
 	 * @return string
 	 */
-	public String convertTime(long time) {
+	private String convertTime(long time) {
 		Long ms = time;
 		Long seconds = time / 1000L;
 		Long minutes = time / 60000L;
