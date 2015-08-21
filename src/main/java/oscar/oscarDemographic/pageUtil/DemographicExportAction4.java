@@ -52,6 +52,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.xmlbeans.XmlOptions;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
@@ -72,8 +73,8 @@ import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.exports.e2e.E2EPatientExport;
-import org.oscarehr.exports.e2e.E2EVelocityTemplate;
+import org.oscarehr.e2e.director.E2ECreator;
+import org.oscarehr.e2e.util.EverestUtils;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
@@ -90,6 +91,22 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
+import cds.AlertsAndSpecialNeedsDocument.AlertsAndSpecialNeeds;
+import cds.AllergiesAndAdverseReactionsDocument.AllergiesAndAdverseReactions;
+import cds.AppointmentsDocument.Appointments;
+import cds.CareElementsDocument.CareElements;
+import cds.ClinicalNotesDocument.ClinicalNotes;
+import cds.DemographicsDocument.Demographics;
+import cds.FamilyHistoryDocument.FamilyHistory;
+import cds.ImmunizationsDocument.Immunizations;
+import cds.LaboratoryResultsDocument.LaboratoryResults;
+import cds.MedicationsAndTreatmentsDocument.MedicationsAndTreatments;
+import cds.OmdCdsDocument;
+import cds.PastHealthDocument.PastHealth;
+import cds.PatientRecordDocument.PatientRecord;
+import cds.ProblemListDocument.ProblemList;
+import cds.ReportsReceivedDocument.ReportsReceived;
+import cds.RiskFactorsDocument.RiskFactors;
 import oscar.OscarProperties;
 import oscar.appt.ApptStatusData;
 import oscar.dms.EDoc;
@@ -113,22 +130,6 @@ import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.util.ConversionUtils;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
-import cds.AlertsAndSpecialNeedsDocument.AlertsAndSpecialNeeds;
-import cds.AllergiesAndAdverseReactionsDocument.AllergiesAndAdverseReactions;
-import cds.AppointmentsDocument.Appointments;
-import cds.CareElementsDocument.CareElements;
-import cds.ClinicalNotesDocument.ClinicalNotes;
-import cds.DemographicsDocument.Demographics;
-import cds.FamilyHistoryDocument.FamilyHistory;
-import cds.ImmunizationsDocument.Immunizations;
-import cds.LaboratoryResultsDocument.LaboratoryResults;
-import cds.MedicationsAndTreatmentsDocument.MedicationsAndTreatments;
-import cds.OmdCdsDocument;
-import cds.PastHealthDocument.PastHealth;
-import cds.PatientRecordDocument.PatientRecord;
-import cds.ProblemListDocument.ProblemList;
-import cds.ReportsReceivedDocument.ReportsReceived;
-import cds.RiskFactorsDocument.RiskFactors;
 
 /**
  *
@@ -2111,57 +2112,29 @@ public class DemographicExportAction4 extends Action {
 						continue;
 					}
 
-					// Select Template
-					E2EVelocityTemplate t = new E2EVelocityTemplate();
-
-					// Create and select patient data
-					E2EPatientExport patient = new E2EPatientExport();
-					patient.setExMedications(exMedicationsAndTreatments);
-					patient.setExAllergiesAndAdverseReactions(exAllergiesAndAdverseReactions);
-					patient.setExImmunizations(exImmunizations);
-					patient.setExProblemList(exProblemList);
-					patient.setExLaboratoryResults(exLaboratoryResults);
-					patient.setExCareElements(exCareElements);
-					patient.setExRiskFactors(exRiskFactors);
-					patient.setExPersonalHistory(exPersonalHistory);
-					patient.setExFamilyHistory(exFamilyHistory);
-					patient.setExAlertsAndSpecialNeeds(exAlertsAndSpecialNeeds);
-					patient.setExClinicalNotes(exClinicalNotes);
-
-					// Load patient data and merge to template
-					String output = "";
-					if(patient.loadPatient(demoNo)) {
-						if(patient.isActive()) {
-							output = t.export(patient);
-							exportLog.append(t.getExportLog());
-						} else {
-							String msg = "[Demo ".concat(demoNo).concat("] Not active - skipped");
-							logger.info(msg);
-							t.addExportLogEntry(msg);
-							exportLog.append(t.getExportLog());
-							continue;
-						}
-					} else {
-						String msg = "[Demo ".concat(demoNo).concat("] Failed to load");
-						logger.error(msg);
-						t.addExportLogEntry(msg);
-						exportLog.append(t.getExportLog());
+					// Populate Clinical Document
+					ClinicalDocument clinicalDocument = E2ECreator.createEmrConversionDocument(Integer.parseInt(demoNo));
+					if(clinicalDocument == null) {
+						String msg = "[Demo ".concat(demoNo).concat("] Not active or failed to populate");
+						logger.info(msg);
+						exportLog.append(msg);
 						continue;
 					}
 
+					// Output Clinical Document as String
+					String output = EverestUtils.generateDocumentToString(clinicalDocument, true);
+
 					//export file to temp directory
-					try{
+					try {
 						File directory = new File(tmpDir);
 						if(!directory.exists()){
 							throw new Exception("Temporary Export Directory does not exist!");
 						}
 
-						//Standard format for xml exported file : PatientFN_PatientLN_PatientUniqueID_DOB (DOB: ddmmyyyy)
-						String expFile = patient.getDemographic().getFirstName()+"_"+patient.getDemographic().getLastName();
-						expFile += "_"+demoNo;
-						expFile += "_"+patient.getDemographic().getDateOfBirth()+patient.getDemographic().getMonthOfBirth()+patient.getDemographic().getYearOfBirth();
+						//Standard format for xml exported file : Demographic_PatientUniqueID
+						String expFile = "Demographic_".concat(demoNo);
 						files.add(new File(directory, expFile+".xml"));
-					}catch(Exception e){
+					} catch(Exception e) {
 						logger.error("Error", e);
 					}
 					BufferedWriter out = null;
@@ -2184,8 +2157,8 @@ public class DemographicExportAction4 extends Action {
 				try {
 					File exportLogFile = new File(files.get(0).getParentFile(), "ExportEvent.log");
 					BufferedWriter out = new BufferedWriter(new FileWriter(exportLogFile));
-					String pidRange = "Patient ID Range: ".concat(getIDInExportFilename(files.get(0).getName()));
-					pidRange = pidRange.concat("-").concat(getIDInExportFilename(files.get(files.size()-1).getName()));
+					String pidRange = "Patient ID Range: ".concat(list.get(0));
+					pidRange = pidRange.concat("-").concat(list.get(list.size()-1));
 
 					out.write(pidRange.concat(System.getProperty("line.separator")));
 					out.write(System.getProperty("line.separator"));
