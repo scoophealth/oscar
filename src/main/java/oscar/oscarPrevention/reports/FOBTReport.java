@@ -78,7 +78,7 @@ public class FOBTReport implements PreventionReport{
              prd.bonusStatus = "N";
              prd.billStatus = "N";
              Date prevDate = null;
-             if(ineligible(prevs) || colonoscopywith5(colonoscopys,asofDate)){
+             if(ineligible(prevs) || colonoscopywith10(colonoscopys,asofDate)){
                 prd.rank = 5;
                 prd.lastDate = "------";
                 prd.state = "Ineligible";
@@ -238,12 +238,12 @@ public class FOBTReport implements PreventionReport{
        return false;
    }
 
-   boolean colonoscopywith5(ArrayList<Map<String,Object>> list,Date asofDate){
+   boolean colonoscopywith10(ArrayList<Map<String,Object>> list,Date asofDate){
        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
        Calendar cal = Calendar.getInstance();
        cal.setTime(asofDate);
-       cal.add(Calendar.YEAR, -5);
-       Date fiveyearcutoff = cal.getTime();
+       cal.add(Calendar.YEAR, -10);
+       Date tenyearcutoff = cal.getTime();
        for (int i =0; i < list.size(); i ++){
     	   Map<String,Object> h = list.get(i);
            if ( h.get("refused") != null && ((String) h.get("refused")).equals("0")){
@@ -256,8 +256,8 @@ public class FOBTReport implements PreventionReport{
                 	//empty
                 }
 
-                if (fiveyearcutoff.before(prevDate)){
-                   log.debug("Colonoscopy within 5 years: Last colonoscopy "+formatter.format(prevDate)+ " 5 year mark "+formatter.format(fiveyearcutoff) );
+                if (tenyearcutoff.before(prevDate)){
+                   log.debug("Colonoscopy within 10 years: Last colonoscopy "+formatter.format(prevDate)+ " 10 year mark "+formatter.format(tenyearcutoff) );
                    return true;
                 }
            }
