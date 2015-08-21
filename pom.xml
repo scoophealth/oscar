@@ -1691,7 +1691,6 @@
 		<profile>
 			<id>jdk6</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
 				<jdk>1.6</jdk>
 			</activation>
 
@@ -1735,7 +1734,7 @@
 		<profile>
 			<id>jdk7</id>
 			<activation>
-				<activeByDefault>false</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 				<jdk>1.7</jdk>
 			</activation>
 
