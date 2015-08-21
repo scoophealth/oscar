@@ -1188,6 +1188,7 @@
                         <validHeader>utils/headers/indivica.txt</validHeader>
                         <validHeader>utils/headers/peaceworks.txt</validHeader>
                         <validHeader>utils/headers/ubc.txt</validHeader>
+                        <validHeader>utils/headers/uvic.txt</validHeader>
                         <validHeader>utils/headers/kai.txt</validHeader>
                 </validHeaders>
                 <includes>
