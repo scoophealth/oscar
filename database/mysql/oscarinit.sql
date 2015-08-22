@@ -758,7 +758,8 @@ CREATE TABLE drugs (
   start_date_unknown boolean,
   lastUpdateDate datetime not null,
   dispenseInternal tinyint(1) not null,
-  PRIMARY KEY  (drugid)
+  PRIMARY KEY  (drugid),
+  KEY `drugs_demographic_no` (demographic_no)
 ) ;
 
 
@@ -12019,4 +12020,5 @@ CREATE TABLE `billing_on_transaction` (
   KEY `creator`(`creator`),
   KEY `pay_program`(`pay_program`)
 );
+
 

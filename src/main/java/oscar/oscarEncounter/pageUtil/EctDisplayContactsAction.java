@@ -27,11 +27,15 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ContactDao;
+import org.oscarehr.common.dao.ContactSpecialtyDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.model.Contact;
+import org.oscarehr.common.model.ContactSpecialty;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.ProfessionalContact;
 import org.oscarehr.common.model.ProfessionalSpecialist;
@@ -45,6 +49,7 @@ import oscar.util.StringUtils;
 public class EctDisplayContactsAction extends EctDisplayAction {
 
     private static final String cmd = "contacts";
+    private static final Logger logger = Logger.getLogger(EctDisplayContactsAction.class);
 
     DemographicContactDao demographicContactDao = SpringUtils.getBean(DemographicContactDao.class);
     ContactDao contactDao = SpringUtils.getBean(ContactDao.class);
@@ -64,7 +69,7 @@ public class EctDisplayContactsAction extends EctDisplayAction {
 
 		    if("true".equalsIgnoreCase( healthCareTeamEnabled ) ){
 			    pathview = request.getContextPath() + 
-			    		"/demographic/displayHealthCareTeam.jsp?view=detached&demographicNo=" + 
+			    		"/demographic/Contact.do?method=displayHealthCareTeam&view=detached&demographicNo=" + 
 			    		bean.demographicNo;
 			    pathedit = request.getContextPath() + 
 			    		"/demographic/manageHealthCareTeam.jsp?view=detached&demographicNo=" + 
@@ -99,22 +104,48 @@ public class EctDisplayContactsAction extends EctDisplayAction {
 		    Dao.setRightHeadingID(cmd);
 
 		    List<DemographicContact> contacts = demographicContactDao.findActiveByDemographicNo(Integer.parseInt(bean.demographicNo));
+		    ContactSpecialtyDao contactSpecialtyDao = SpringUtils.getBean(ContactSpecialtyDao.class);
 
 		    for(DemographicContact contact:contacts) {
 		    	//only show professional contacts
-		    	if(contact.getCategory().equals(DemographicContact.CATEGORY_PERSONAL))
+		    	if(contact.getCategory().equals(DemographicContact.CATEGORY_PERSONAL)) {
 		    		continue;
-		    	
+		    	}
 		    	String name="N/A";
 		    	String specialty = "";
 		    	String workPhone = "";
 		    	//String consent = "";
 		    	
 		    	if(contact.getType() == DemographicContact.TYPE_CONTACT) {
-		    		ProfessionalContact c = (ProfessionalContact)contactDao.find(Integer.parseInt(contact.getContactId()));
+		    		Contact c = contactDao.find(Integer.parseInt(contact.getContactId()));
 		    		name = c.getLastName() + "," + c.getFirstName();
-		    		specialty = c.getSpecialty();
 		    		workPhone = c.getWorkPhone();
+		    		
+		    		if(contact.getCategory() == DemographicContact.CATEGORY_PROFESSIONAL) {
+		    			specialty = ((ProfessionalContact) c).getSpecialty();
+		    			logger.info("Found professional contact specialty " 
+		    			+  specialty 
+		    			+ " for demographicContact_id " 
+		    			+ contact.getId()
+		    			+ " in the *Contact* object.");
+		    		}
+	
+		    		if( StringUtils.isNullOrEmpty(specialty) ) {
+		    			specialty = contact.getRole();
+		    		} 
+		    		
+		    		if(StringUtils.isNumeric( specialty )) {
+		    			ContactSpecialty contactSpecialty = contactSpecialtyDao.find( Integer.parseInt(specialty) );
+		    			if(contactSpecialty != null) {
+		    				specialty = contactSpecialty.getSpecialty();
+		    			}
+		    			logger.info("Found professional contact specialty "
+		    					+ specialty 
+		    					+ " for demographicContact_id"
+		    					+  contact.getId()
+		    					+ " in the *DemographicContact* object ");
+		    		}
+		    		
 		    	} else if(contact.getType() == DemographicContact.TYPE_PROVIDER) {
 		    		Provider p = providerDao.getProvider(contact.getContactId());
 		    		name = p.getFormattedName();
@@ -130,8 +161,8 @@ public class EctDisplayContactsAction extends EctDisplayAction {
 		    	NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 		    	//48.45
 		    	String itemHeader = StringUtils.maxLenString(name, 20, 17, ELLIPSES) +
-		    			((specialty.length()>0)?StringUtils.maxLenString("  "+ specialty, 14, 11, ELLIPSES):"") +
-		    			((workPhone.length()>0)?StringUtils.maxLenString("  "+workPhone, 17, 14, ELLIPSES):"");
+		    			((specialty.length()>0)?StringUtils.maxLenString("  "+ specialty, 14, 11, ELLIPSES):""); 
+		    			//+((workPhone.length()>0)?StringUtils.maxLenString("  "+workPhone, 17, 14, ELLIPSES):"");
 		        item.setTitle((contact.isConsentToContact()?"":"*") + itemHeader);
 		        String consent = contact.isConsentToContact()?"Ok to contact":"Do not contact";
 		        item.setLinkTitle(name + " " + specialty + " " + workPhone + " " + consent);
