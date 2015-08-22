@@ -125,8 +125,8 @@ if(!authed) {
 <%@page import="org.oscarehr.PMmodule.service.ProgramManager" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProgramDao" %>
 <%@page import="org.oscarehr.PMmodule.service.AdmissionManager" %>
-<%@ page import="org.oscarehr.common.dao.SpecialtyDao" %>
-<%@ page import="org.oscarehr.common.model.Specialty" %>
+<%@ page import="org.oscarehr.common.dao.ContactSpecialtyDao" %>
+<%@ page import="org.oscarehr.common.model.ContactSpecialty" %>
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
@@ -2121,7 +2121,7 @@ if ( Dead.equals(PatStat) ) {%>
 
 <%-- AUTHOR DENNIS WARREN O/A COLCAMEX RESOURCES --%>
 <oscar:oscarPropertiesCheck property="DEMOGRAPHIC_PATIENT_HEALTH_CARE_TEAM" value="true">
-	<jsp:include page="displayHealthCareTeam.jsp">
+	<jsp:include page="/demographic/displayHealthCareTeam.jsp"> 	    		
 		<jsp:param name="demographicNo" value="<%= demographic_no %>" />
 	</jsp:include>
 </oscar:oscarPropertiesCheck>
