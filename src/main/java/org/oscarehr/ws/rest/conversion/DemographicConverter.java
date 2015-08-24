@@ -103,9 +103,7 @@ public class DemographicConverter extends AbstractConverter<Demographic, Demogra
 			exts[i] = demoExtConverter.getAsDomainObject(loggedInInfo,t.getExtras().get(i));
 			
 			if (exts[i].getDemographicNo()==null) exts[i].setDemographicNo(d.getDemographicNo());
-			if (exts[i].getProviderNo()==null) {
-		    	exts[i].setProviderNo(loggedInInfo.getLoggedInProviderNo());
-			}
+			if (exts[i].getProviderNo()==null) exts[i].setProviderNo(loggedInInfo.getLoggedInProviderNo());
 		}
 		d.setExtras(exts);
 
