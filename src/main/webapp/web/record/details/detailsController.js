@@ -81,9 +81,9 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 
 	//show notes
 	if (demo.notes!=null) {
-		var pageNotes = demo.notes.substring("<unotes>".length);
-		pageNotes = pageNotes.substring(0, pageNotes.length-("</unotes>".length));
-		page.notes = pageNotes;
+		demo.scrNotes = demo.notes;
+		if (/^<unotes>[\s\S]*/.test(demo.scrNotes)) demo.scrNotes = demo.scrNotes.substring("<unotes>".length);
+		if (/[\s\S]*<\/unotes>$/.test(demo.scrNotes)) demo.scrNotes = demo.scrNotes.substring(0, demo.scrNotes.lastIndexOf("</unotes>"));
 	}
 	
 	//show referral doctor
@@ -91,58 +91,43 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		var referralDoc = demo.familyDoctor;
 		var begin = referralDoc.indexOf("<rdohip>") + "<rdohip>".length;
 		var end = referralDoc.indexOf("</rdohip>");
-		if (end>begin && end>=0 && begin>=0) page.referralDocNo = referralDoc.substring(begin, end);
+		if (end>begin && end>=0 && begin>=0) demo.scrReferralDocNo = referralDoc.substring(begin, end);
 		
 		begin = referralDoc.indexOf("<rd>") + "<rd>".length;
 		end = referralDoc.indexOf("</rd>");
-		if (end>begin && end>=0 && begin>=0) page.referralDoc = referralDoc.substring(begin, end);
+		if (end>begin && end>=0 && begin>=0) demo.scrReferralDoc = referralDoc.substring(begin, end);
 	}
 	
-	//initialize "extras" in page
-	page.demoCell = {};
-	page.aboriginal = {};
-	page.hPhoneExt = {};
-	page.wPhoneExt = {};
-	page.cytolNum = {};
-	page.phoneComment = {};
-	page.paperChartArchived = {};
-	page.paperChartArchivedDate = {};
-	page.usSigned = {};
-	page.privacyConsent = {};
-	page.informedConsent = {};
-	page.securityQuestion1 = {};
-	page.securityAnswer1 = {};
-	
 	//show extras
+	var posExtras = {};
 	if (demo.extras!=null) {
-		if (demo.extras.key!=null) { //only 1 entry
-			var tmp = copyDemoExt(demo.extras);
-			demo.extras = [];
-			demo.extras.push(tmp);
-		}
+		demo.extras = toArray(demo.extras);
 		for (var i=0; i<demo.extras.length; i++) {
-			if (demo.extras[i].key=="demo_cell") page.demoCell = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="aboriginal") page.aboriginal = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="hPhoneExt") page.hPhoneExt = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="wPhoneExt") page.wPhoneExt = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="cytolNum") page.cytolNum = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="phoneComment") page.phoneComment = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="paper_chart_archived") page.paperChartArchived = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="paper_chart_archived_date") page.paperChartArchivedDate = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="usSigned") page.usSigned = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="privacyConsent") page.privacyConsent = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="informedConsent") page.informedConsent = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="securityQuestion1") page.securityQuestion1 = copyDemoExt(demo.extras[i]);
-			else if (demo.extras[i].key=="securityAnswer1") page.securityAnswer1 = copyDemoExt(demo.extras[i]);
+			if (demo.extras[i].key=="demo_cell") demo.scrDemoCell = demo.extras[i].value;
+			else if (demo.extras[i].key=="aboriginal") demo.scrAboriginal = demo.extras[i].value;
+			else if (demo.extras[i].key=="hPhoneExt") demo.scrHPhoneExt = demo.extras[i].value;
+			else if (demo.extras[i].key=="wPhoneExt") demo.scrWPhoneExt = demo.extras[i].value;
+			else if (demo.extras[i].key=="cytolNum") demo.scrCytolNum = demo.extras[i].value;
+			else if (demo.extras[i].key=="phoneComment") demo.scrPhoneComment = demo.extras[i].value;
+			else if (demo.extras[i].key=="paper_chart_archived") demo.scrPaperChartArchived = demo.extras[i].value;
+			else if (demo.extras[i].key=="paper_chart_archived_date") demo.scrPaperChartArchivedDate = demo.extras[i].value;
+			else if (demo.extras[i].key=="usSigned") demo.scrUsSigned = demo.extras[i].value;
+			else if (demo.extras[i].key=="privacyConsent") demo.scrPrivacyConsent = demo.extras[i].value;
+			else if (demo.extras[i].key=="informedConsent") demo.scrInformedConsent = demo.extras[i].value;
+			else if (demo.extras[i].key=="securityQuestion1") demo.scrSecurityQuestion1 = demo.extras[i].value;
+			else if (demo.extras[i].key=="securityAnswer1") demo.scrSecurityAnswer1 = demo.extras[i].value;
+			
+			//record array position of extras by keys - to be used on saving
+			posExtras[demo.extras[i].key] = i;
 		}
 	}
 	
 	var colorAttn = "#ffff99";
 	
 	//show phone numbers with preferred check
-	page.cellPhone = getPhoneNum(page.demoCell.value);
-	page.homePhone = getPhoneNum(demo.phone);
-	page.workPhone = getPhoneNum(demo.alternativePhone);
+	demo.scrCellPhone = getPhoneNum(demo.scrDemoCell);
+	demo.scrHomePhone = getPhoneNum(demo.phone);
+	demo.scrWorkPhone = getPhoneNum(demo.alternativePhone);
 	
 	var defPhTitle = "Check to set preferred contact number";
 	var prefPhTitle = "Preferred contact number";
@@ -150,26 +135,26 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	page.cellPhonePreferredMsg = defPhTitle;
 	page.homePhonePreferredMsg = defPhTitle;
 	page.workPhonePreferredMsg = defPhTitle;
-	if (isPreferredPhone(page.demoCell.value)) {
-		page.preferredPhone = "C";
-		page.preferredPhoneNumber = page.cellPhone;
+	if (isPreferredPhone(demo.scrDemoCell)) {
+		demo.scrPreferredPhone = "C";
+		page.preferredPhoneNumber = demo.scrCellPhone;
 		page.cellPhonePreferredMsg = prefPhTitle;
 		page.cellPhonePreferredColor = colorAttn;
 	}
 	else if (isPreferredPhone(demo.phone)) {
-		page.preferredPhone = "H";
-		page.preferredPhoneNumber = page.homePhone;
+		demo.scrPreferredPhone = "H";
+		page.preferredPhoneNumber = demo.scrHomePhone;
 		page.homePhonePreferredMsg = prefPhTitle;
 		page.homePhonePreferredColor = colorAttn;
 	}
 	else if (isPreferredPhone(demo.alternativePhone)) {
-		page.preferredPhone = "W";
-		page.preferredPhoneNumber = page.workPhone;
+		demo.scrPreferredPhone = "W";
+		page.preferredPhoneNumber = demo.scrWorkPhone;
 		page.workPhonePreferredMsg = prefPhTitle;
 		page.workPhonePreferredColor = colorAttn;
 	}
 	else {
-		page.preferredPhoneNumber = page.homePhone;
+		page.preferredPhoneNumber = demo.scrHomePhone;
 	}
 	
 	//show demoContacts/demoContactPros
@@ -182,13 +167,13 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 
 	//show doctors/nurses/midwives
 	if (demo.doctors!=null) {
-		demo.doctors = providerToArray(demo.doctors);
+		demo.doctors = toArray(demo.doctors);
 	}
 	if (demo.nurses!=null) {
-		demo.nurses = providerToArray(demo.nurses);
+		demo.nurses = toArray(demo.nurses);
 	}
 	if (demo.midwives!=null) {
-		demo.midwives = providerToArray(demo.midwives);
+		demo.midwives = toArray(demo.midwives);
 	}
 	
 	//show referralDoc specialties & names
@@ -223,14 +208,14 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	}
 	
 	//show patientStatusList & rosterStatusList values
-	demo.patientStatusList = statusValueToArray(demo.patientStatusList);
+	demo.patientStatusList = toArray(demo.patientStatusList);
 	demo.patientStatusList.unshift({"value":"FI", "label":"FI - Fired"});
 	demo.patientStatusList.unshift({"value":"MO", "label":"MO - Moved"});
 	demo.patientStatusList.unshift({"value":"DE", "label":"DE - Deceased"});
 	demo.patientStatusList.unshift({"value":"IN", "label":"IN - Inactive"});
 	demo.patientStatusList.unshift({"value":"AC", "label":"AC - Active"});
 	
-	demo.rosterStatusList = statusValueToArray(demo.rosterStatusList);
+	demo.rosterStatusList = toArray(demo.rosterStatusList);
 	demo.rosterStatusList.unshift({"value":"FS", "label":"FS - fee for service"});
 	demo.rosterStatusList.unshift({"value":"TE", "label":"TE - terminated"});
 	demo.rosterStatusList.unshift({"value":"NR", "label":"NR - not rostered"});
@@ -242,12 +227,15 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	//----------------------//
 	//monitor data changed
 	page.dataChanged = -2;
-	$scope.$watch(function(){
-		return $("#pd1").html()+$("#pd2").html();
-	}, function(){
-		page.dataChanged++;
-		if (page.cannotChange) page.dataChanged = 0; //do not monitor data change if user only has read-access
-	});
+	if (!page.cannotChange) {
+		$scope.$watchCollection("page.demo", function(){
+			page.dataChanged++;
+		});
+		$scope.$watchCollection("page.demo.address", function(){
+			page.dataChanged++;
+		});
+	}
+	
 	$scope.needToSave = function(){
 		if (page.dataChanged>0) return "btn-primary";
 	}
@@ -570,29 +558,29 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	}
 	
 	//check Cytology Number
-	var cytolNum0 = page.cytolNum.value;
+	var cytolNum0 = demo.scrCytolNum;
 	$scope.checkCytoNum = function() {
-		if (page.cytolNum.value==null || page.cytolNum.value=="") {
-			cytolNum0 = page.cytolNum.value; return;
+		if (demo.scrCytolNum==null || demo.scrCytolNum=="") {
+			cytolNum0 = demo.scrCytolNum; return;
 		}
-		if (!isNumber(page.cytolNum.value)) page.cytolNum.value = cytolNum0;
-		else cytolNum0 = page.cytolNum.value;
+		if (!isNumber(demo.scrCytolNum)) demo.scrCytolNum = cytolNum0;
+		else cytolNum0 = demo.scrCytolNum;
 	}
 	
 	//check Referral Doctor No
-	var referralDocNo0 = page.referralDocNo;
+	var referralDocNo0 = demo.scrReferralDocNo;
 	$scope.checkReferralDocNo = function() {
-		if (page.referralDocNo==null || page.referralDocNo=="") {
-			referralDocNo0 = page.referralDocNo; return;
+		if (demo.scrReferralDocNo==null || demo.scrReferralDocNo=="") {
+			referralDocNo0 = demo.scrReferralDocNo; return;
 		}
-		if (!isNumber(page.referralDocNo) || page.referralDocNo.length>6) page.referralDocNo = referralDocNo0;
-		else referralDocNo0 = page.referralDocNo;
+		if (!isNumber(demo.scrReferralDocNo) || demo.scrReferralDocNo.length>6) demo.scrReferralDocNo = referralDocNo0;
+		else referralDocNo0 = demo.scrReferralDocNo;
 	}
 	
 	$scope.validateReferralDocNo = function() {
-		if (page.referralDocNo==null || page.referralDocNo=="") return true;
+		if (demo.scrReferralDocNo==null || demo.scrReferralDocNo=="") return true;
 		
-		if (!isNumber(page.referralDocNo || page.referralDocNo!=6)) {
+		if (!isNumber(demo.scrReferralDocNo || demo.scrReferralDocNo!=6)) {
 			alert("Invalid Referral Doctor Number");
 			return false;
 		}
@@ -645,7 +633,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	var dateJoined0 = demo.dateJoined;
 	var endDate0 = demo.endDate;
 	var onWaitingListSinceDate0 = demo.onWaitingListSinceDate;
-	var paperChartArchivedDate0 = page.paperChartArchivedDate.value;
+	var paperChartArchivedDate0 = demo.scrPaperChartArchivedDate;
 	
 	$scope.preventManualEffDate = function() {
 		if (demo.effDate==null) demo.effDate = effDate0;
@@ -680,8 +668,8 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		else onWaitingListSinceDate0 = demo.onWaitingListSinceDate;
 	}
 	$scope.preventManualPaperChartArchivedDate = function() {
-		if (page.paperChartArchivedDate.value==null) page.paperChartArchivedDate.value = paperChartArchivedDate0;
-		else paperChartArchivedDate0 = page.paperChartArchivedDate.value;
+		if (demo.scrPaperChartArchivedDate==null) demo.scrPaperChartArchivedDate = paperChartArchivedDate0;
+		else paperChartArchivedDate0 = demo.scrPaperChartArchivedDate;
 	}
 	
 	//show/hide items
@@ -703,8 +691,8 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	//fill referral doc from list
 	$scope.fillReferralDoc = function(){
 		if (page.referralDocObj!=null) {
-			page.referralDocNo = page.referralDocObj.referralNo;
-			page.referralDoc = page.referralDocObj.name;
+			demo.scrReferralDocNo = page.referralDocObj.referralNo;
+			demo.scrReferralDoc = page.referralDocObj.name;
 		}
 		page.showReferralDocList = false;
 	}
@@ -729,32 +717,32 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	
 	//check phone numbers
 	var phoneNum = {};
-	phoneNum["C"] = page.cellPhone;
-	phoneNum["H"] = page.homePhone;
-	phoneNum["W"] = page.workPhone;
-	phoneNum["HX"] = page.hPhoneExt.value;
-	phoneNum["WX"] = page.wPhoneExt.value;
+	phoneNum["C"] = demo.scrCellPhone;
+	phoneNum["H"] = demo.scrHomePhone;
+	phoneNum["W"] = demo.scrWorkPhone;
+	phoneNum["HX"] = demo.scrHPhoneExt;
+	phoneNum["WX"] = demo.scrWPhoneExt;
 	
 	$scope.checkPhone = function(type){
 		if (type=="C") {
-			if (invalidPhoneNumber(page.cellPhone)) page.cellPhone = phoneNum["C"];
-			else phoneNum["C"] = page.cellPhone;
+			if (invalidPhoneNumber(demo.scrCellPhone)) demo.scrCellPhone = phoneNum["C"];
+			else phoneNum["C"] = demo.scrCellPhone;
 		}
 		else if (type=="H") {
-			if (invalidPhoneNumber(page.homePhone)) page.homePhone = phoneNum["H"];
-			else phoneNum["H"] = page.homePhone;
+			if (invalidPhoneNumber(demo.scrHomePhone)) demo.scrHomePhone = phoneNum["H"];
+			else phoneNum["H"] = demo.scrHomePhone;
 		}
 		else if (type=="W") {
-			if (invalidPhoneNumber(page.workPhone)) page.workPhone = phoneNum["W"];
-			else phoneNum["W"] = page.workPhone;
+			if (invalidPhoneNumber(demo.scrWorkPhone)) demo.scrWorkPhone = phoneNum["W"];
+			else phoneNum["W"] = demo.scrWorkPhone;
 		}
-		else if (type=="HX" && page.hPhoneExt.value!=null && page.hPhoneExt.value!="") {
-			if (!isNumber(page.hPhoneExt.value)) page.hPhoneExt.value = phoneNum["HX"];
-			else phoneNum["HX"] = page.hPhoneExt.value;
+		else if (type=="HX" && demo.scrHPhoneExt!=null && demo.scrHPhoneExt!="") {
+			if (!isNumber(demo.scrHPhoneExt)) demo.scrHPhoneExt = phoneNum["HX"];
+			else phoneNum["HX"] = demo.scrHPhoneExt;
 		}
-		else if (type=="WX" && page.wPhoneExt.value!=null && page.wPhoneExt.value!="") {
-			if (!isNumber(page.wPhoneExt.value)) page.wPhoneExt.value = phoneNum["WX"];
-			else phoneNum["WX"] = page.wPhoneExt.value;
+		else if (type=="WX" && demo.scrWPhoneExt!=null && demo.scrWPhoneExt!="") {
+			if (!isNumber(demo.scrWPhoneExt)) demo.scrWPhoneExt = phoneNum["WX"];
+			else phoneNum["WX"] = demo.scrWPhoneExt;
 		}
 	}
 	
@@ -767,18 +755,18 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		page.workPhonePreferredMsg = defPhTitle;
 		page.workPhonePreferredColor = "";
 		
-		if (page.preferredPhone=="C") {
-			page.preferredPhoneNumber = page.cellPhone;
+		if (demo.scrPreferredPhone=="C") {
+			page.preferredPhoneNumber = demo.scrCellPhone;
 			page.cellPhonePreferredMsg = prefPhTitle;
 			page.cellPhonePreferredColor = colorAttn;
 		}
-		else if (page.preferredPhone=="H") {
-			page.preferredPhoneNumber = page.homePhone;
+		else if (demo.scrPreferredPhone=="H") {
+			page.preferredPhoneNumber = demo.scrHomePhone;
 			page.homePhonePreferredMsg = prefPhTitle;
 			page.homePhonePreferredColor = colorAttn;
 		}
-		else if (page.preferredPhone=="W") {
-			page.preferredPhoneNumber = page.workPhone;
+		else if (demo.scrPreferredPhone=="W") {
+			page.preferredPhoneNumber = demo.scrWorkPhone;
 			page.workPhonePreferredMsg = prefPhTitle;
 			page.workPhonePreferredColor = colorAttn;
 		}
@@ -883,7 +871,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			url="../billing.do?billRegion="+page.billregion+"&billForm="+page.defaultView+"&hotclick=&appointment_no=0&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&demographic_no="+demo.demographicNo+"&providerview="+demo.providerNo+"&user_no="+user.providerNo+"&apptProvider_no=none&appointment_date="+now.getFullYear+"-"+(now.getMonth()+1)+"-"+now.getDate()+"&start_time=00:00:00&bNewForm=1&status=t";
 		}
 		else if (func=="FluBilling") {
-			url="../billing/CA/ON/specialtyBilling/fluBilling/addFluBilling.jsp?function=demographic&functionid="+demo.demographicNo+"&creator="+user.providerNo+"&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&hin="+demo.hin+demo.ver+"&demo_sex="+demo.sex+"&demo_hctype="+demo.hcType+"&rd="+encodeURI(page.referralDoc)+"&rdohip="+page.referralDocNo+"&dob="+demo.dobYear+demo.dobMonth+demo.dobDay+"&mrp="+demo.providerNo;
+			url="../billing/CA/ON/specialtyBilling/fluBilling/addFluBilling.jsp?function=demographic&functionid="+demo.demographicNo+"&creator="+user.providerNo+"&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&hin="+demo.hin+demo.ver+"&demo_sex="+demo.sex+"&demo_hctype="+demo.hcType+"&rd="+encodeURI(demo.scrReferralDoc)+"&rdohip="+demo.scrReferralDocNo+"&dob="+demo.dobYear+demo.dobMonth+demo.dobDay+"&mrp="+demo.providerNo;
 		}
 		else if (func=="HospitalBilling") {
 			url="../billing/CA/ON/billingShortcutPg1.jsp?billRegion="+page.billregion+"&billForm="+encodeURI(page.hospitalView)+"&hotclick=&appointment_no=0&demographic_name="+encodeURI(demo.lastName)+encodeURI(",")+encodeURI(demo.firstName)+"&demographic_no="+demo.demographicNo+"&providerview="+demo.providerNo+"&user_no="+user.providerNo+"&apptProvider_no=none&appointment_date="+now.getFullYear+"-"+(now.getMonth()+1)+"-"+now.getDate()+"&start_time=00:00:00&bNewForm=1&status=t";
@@ -966,84 +954,46 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		if (!$scope.validateReferralDocNo()) return;
 		
 		//save notes
-		if (page.notes!=null) {
-			demo.notes = "<unotes>" + page.notes + "</unotes>";
+		if (demo.scrNotes!=null) {
+			demo.notes = "<unotes>" + demo.scrNotes + "</unotes>";
 		}
 		
 		//save referral doctor (familyDoctor)
 		var referralDocNo = "<rdohip></rdohip>";
 		var referralDoc = "<rd></rd>";
-		if (page.referralDocNo!=null && page.referralDocNo!="") {
-			referralDocNo = "<rdohip>"+page.referralDocNo+"</rdohip>";
+		if (demo.scrReferralDocNo!=null && demo.scrReferralDocNo!="") {
+			referralDocNo = "<rdohip>"+demo.scrReferralDocNo+"</rdohip>";
 		}
-		if (page.referralDoc!=null && page.referralDoc!="") {
-			referralDoc = "<rd>"+page.referralDoc+"</rd>";
+		if (demo.scrReferralDoc!=null && demo.scrReferralDoc!="") {
+			referralDoc = "<rd>"+demo.scrReferralDoc+"</rd>";
 		}
 		demo.familyDoctor = referralDocNo + referralDoc;
 
 		//save phone numbers
-		page.demoCell.value = page.cellPhone;
-		demo.phone = page.homePhone;
-		demo.alternativePhone = page.workPhone;
+		demo.scrDemoCell = demo.scrCellPhone;
+		demo.phone = demo.scrHomePhone;
+		demo.alternativePhone = demo.scrWorkPhone;
 		
-		if (page.preferredPhone=="C") page.demoCell.value += "*";
-		else if (page.preferredPhone=="H") demo.phone += "*";
-		else if (page.preferredPhone=="W") demo.alternativePhone += "*";
+		if (demo.scrPreferredPhone=="C") demo.scrDemoCell += "*";
+		else if (demo.scrPreferredPhone=="H") demo.phone += "*";
+		else if (demo.scrPreferredPhone=="W") demo.alternativePhone += "*";
 		
 		//save extras
-		demo.extras = [];
-		if (page.demoCell.value!=null) {
-			if (page.demoCell.key==null) page.demoCell.key = "demo_cell";
-			demo.extras.push(copyDemoExt(page.demoCell));
-		}
-		if (page.aboriginal.value!=null) {
-			if (page.aboriginal.key==null) page.aboriginal.key = "aboriginal";
-			demo.extras.push(copyDemoExt(page.aboriginal));
-		}
-		if (page.hPhoneExt.value!=null) {
-			if (page.hPhoneExt.key==null) page.hPhoneExt.key = "hPhoneExt";
-			demo.extras.push(copyDemoExt(page.hPhoneExt));
-		}
-		if (page.wPhoneExt.value!=null) {
-			if (page.wPhoneExt.key==null) page.wPhoneExt.key = "wPhoneExt";
-			demo.extras.push(copyDemoExt(page.wPhoneExt));
-		}
-		if (page.cytolNum.value!=null) {
-			if (page.cytolNum.key==null) page.cytolNum.key = "cytolNum";
-			demo.extras.push(copyDemoExt(page.cytolNum));
-		}
-		if (page.phoneComment.value!=null) {
-			if (page.phoneComment.key==null) page.phoneComment.key = "phoneComment";
-			demo.extras.push(copyDemoExt(page.phoneComment));
-		}
-		if (page.paperChartArchived.value!=null) {
-			if (page.paperChartArchived.key==null) page.paperChartArchived.key = "paper_chart_archived";
-			demo.extras.push(copyDemoExt(page.paperChartArchived));
-		}
-		if (page.paperChartArchivedDate.value!=null) {
-			if (page.paperChartArchivedDate.key==null) page.paperChartArchivedDate.key = "paper_chart_archived_date";
-			demo.extras.push(copyDemoExt(page.paperChartArchivedDate));
-		}
-		if (page.usSigned.value!=null) {
-			if (page.usSigned.key==null) page.usSigned.key = "usSigned";
-			demo.extras.push(copyDemoExt(page.usSigned));
-		}
-		if (page.privacyConsent.value!=null) {
-			if (page.privacyConsent.key==null) page.privacyConsent.key = "privacyConsent";
-			demo.extras.push(copyDemoExt(page.privacyConsent));
-		}
-		if (page.informedConsent.value!=null) {
-			if (page.informedConsent.key==null) page.informedConsent.key = "informedConsent";
-			demo.extras.push(copyDemoExt(page.informedConsent));
-		}
-		if (page.securityQuestion1.value!=null) {
-			if (page.securityQuestion1.key==null) page.securityQuestion1.key = "securityQuestion1";
-			demo.extras.push(copyDemoExt(page.securityQuestion1));
-		}
-		if (page.securityAnswer1.value!=null) {
-			if (page.securityAnswer1.key==null) page.securityAnswer1.key = "securityAnswer1";
-			demo.extras.push(copyDemoExt(page.securityAnswer1));
-		}
+		var newDemoExtras = [];
+		newDemoExtras = updateDemoExtras("demo_cell", demo.scrDemoCell, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("aboriginal", demo.scrAboriginal, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("hPhoneExt", demo.scrHPhoneExt, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("wPhoneExt", demo.scrWPhoneExt, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("cytolNum", demo.scrCytolNum, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("phoneComment", demo.scrPhoneComment, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("paper_chart_archived", demo.scrPaperChartArchived, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("paper_chart_archived_date", demo.scrPaperChartArchivedDate, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("usSigned", demo.scrUsSigned, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("privacyConsent", demo.scrPrivacyConsent, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("informedConsent", demo.scrInformedConsent, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("securityQuestion1", demo.scrSecurityQuestion1, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("securityAnswer1", demo.scrSecurityAnswer1, posExtras, demo.extras, newDemoExtras);
+		demo.extras = newDemoExtras;
 		
 		//save to database
 		demographicService.updateDemographic(demo);
@@ -1083,18 +1033,18 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	}
 });
 
-function copyDemoExt(ext1) {
-	var ext2 = {};
-	if (ext1!=null) {
-		ext2.id = ext1.id;
-		ext2.demographicNo = ext1.demographicNo;
-		ext2.providerNo = ext1.providerNo;
-		ext2.key = ext1.key;
-		ext2.value = ext1.value;
-		ext2.dateCreated = ext1.dateCreated;
-		ext2.hidden = ext1.hidden;
+function updateDemoExtras(extKey, newVal, posExtras, oldExtras, newExtras) {
+	if (newVal==null) return newExtras;
+	
+	var pos = posExtras[extKey];
+	if (pos!=null && oldExtras[pos]!=null) { //existing ext
+		if (oldExtras[pos].value!=newVal) {
+			newExtras.push({id:oldExtras[pos].id, key:extKey, value:newVal, hidden:oldExtras[pos].hidden});
+		}
+	} else { //newly added ext
+		newExtras.push({key:extKey, value:newVal});
 	}
-	return ext2;
+	return newExtras;
 }
 
 function buildDate(year, month, day) {
@@ -1239,27 +1189,8 @@ function demoContactShow(demoContact) {
 	return contactShow;
 }
 
-function providerToArray(provider) {
-	if (provider.providerNo!=null) { //only 1 entry
-		var tmp = {};
-		tmp.providerNo = provider.providerNo;
-		tmp.lastName = provider.lastName;
-		tmp.firstName = provider.firstName;
-		tmp.name = provider.name;
-		return [tmp];
-	}
-	return provider;
-}
-
-function statusValueToArray(statusValue) {
-	if (statusValue==null) {
-		statusValue = [];
-	}
-	else if (statusValue.value!=null) { //only 1 entry
-		var tmp = {};
-		tmp.value = statusValue.value;
-		tmp.label = statusValue.label;
-		return [tmp];
-	}
-	return statusValue;
+function toArray(obj) { //convert single object to array
+	if (obj instanceof Array) return obj;
+	else if (obj==null) return [];
+	else return [obj];
 }
