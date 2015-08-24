@@ -180,7 +180,7 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.aboriginal"/></label>
-			<select class="form-control form-control-details" title="Aboriginal" ng-model="page.aboriginal.value">
+			<select class="form-control form-control-details" title="Aboriginal" ng-model="page.demo.scrAboriginal">
 				<option value="">--</option>
 				<option value="Yes">Yes</option>
 				<option value="No">No</option>
@@ -232,34 +232,34 @@
 		<div class="col-md-6">
 			<label style="background-color: {{page.cellPhonePreferredColor}}" title="{{page.cellPhonePreferredMsg}}">
 				<bean:message key="demographic.demographiceditdemographic.formPhoneC"/>
-				<input type="checkbox" ng-model="page.preferredPhone" ng-change="setPreferredPhone()" ng-true-value="C" ng-disabled="isPhoneVoid(page.cellPhone)"/>
+				<input type="checkbox" ng-model="page.demo.scrPreferredPhone" ng-change="setPreferredPhone()" ng-true-value="C" ng-disabled="isPhoneVoid(page.demo.scrCellPhone)"/>
 			</label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formPhoneC"/>" title="<bean:message key="demographic.demographiceditdemographic.formPhoneC"/>" ng-model="page.cellPhone" ng-change="checkPhone('C')"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formPhoneC"/>" title="<bean:message key="demographic.demographiceditdemographic.formPhoneC"/>" ng-model="page.demo.scrCellPhone" ng-change="checkPhone('C')"/>
 		</div>
 		<div class="col-md-6">
 			<label style="background-color: {{page.homePhonePreferredColor}}" title="{{page.homePhonePreferredMsg}}">
 				<bean:message key="demographic.demographiceditdemographic.formPhoneH"/>
-				<input type="checkbox" ng-model="page.preferredPhone" ng-change="setPreferredPhone()" ng-true-value="H" ng-disabled="isPhoneVoid(page.homePhone)"/>
+				<input type="checkbox" ng-model="page.demo.scrPreferredPhone" ng-change="setPreferredPhone()" ng-true-value="H" ng-disabled="isPhoneVoid(page.demo.scrHomePhone)"/>
 			</label>
 			<span style="white-space:nowrap">
-				<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formPhoneH"/>" title="<bean:message key="demographic.demographiceditdemographic.formPhoneH"/>" ng-model="page.homePhone" ng-change="checkPhone('H')" style="width:130px"/>
-				<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.msgExt"/>" title="Home Phone Extension" ng-model="page.hPhoneExt.value" ng-change="checkPhone('HX')" style="width:65px"/>
+				<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formPhoneH"/>" title="<bean:message key="demographic.demographiceditdemographic.formPhoneH"/>" ng-model="page.demo.scrHomePhone" ng-change="checkPhone('H')" style="width:130px"/>
+				<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.msgExt"/>" title="Home Phone Extension" ng-model="page.demo.scrHPhoneExt" ng-change="checkPhone('HX')" style="width:65px"/>
 			</span>
 		</div>
 		<div class="col-md-6">
 			<label style="background-color: {{page.workPhonePreferredColor}}" title="{{page.workPhonePreferredMsg}}">
 				<bean:message key="demographic.demographiceditdemographic.formPhoneW"/>
-				<input type="checkbox" ng-model="page.preferredPhone" ng-change="setPreferredPhone()" ng-true-value="W" ng-disabled="isPhoneVoid(page.workPhone)"/>
+				<input type="checkbox" ng-model="page.demo.scrPreferredPhone" ng-change="setPreferredPhone()" ng-true-value="W" ng-disabled="isPhoneVoid(page.demo.scrWorkPhone)"/>
 			</label>
 			<span style="white-space:nowrap">
-				<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formPhoneW"/>" title="<bean:message key="demographic.demographiceditdemographic.formPhoneW"/>" ng-model="page.workPhone" ng-change="checkPhone('W')" style="width:130px"/>
-				<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.msgExt"/>" title="Work Phone Extension" ng-model="page.wPhoneExt.value" ng-change="checkPhone('WX')" style="width:65px"/>
+				<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formPhoneW"/>" title="<bean:message key="demographic.demographiceditdemographic.formPhoneW"/>" ng-model="page.demo.scrWorkPhone" ng-change="checkPhone('W')" style="width:130px"/>
+				<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.msgExt"/>" title="Work Phone Extension" ng-model="page.demo.scrWPhoneExt" ng-change="checkPhone('WX')" style="width:65px"/>
 			</span>
 		</div>
 		<div style="line-height:0%">&nbsp;</div>
 		<div class="col-md-12">
 			<label><bean:message key="demographic.demographicaddrecordhtm.formPhoneComment"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographicaddrecordhtm.formPhoneComment"/>" title="<bean:message key="demographic.demographicaddrecordhtm.formPhoneComment"/>" ng-model="page.phoneComment.value" style="width:570px"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographicaddrecordhtm.formPhoneComment"/>" title="<bean:message key="demographic.demographicaddrecordhtm.formPhoneComment"/>" ng-model="page.demo.scrPhoneComment" style="width:570px"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formNewsLetter"/></label>
@@ -338,11 +338,11 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formRefDoc"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formRefDoc"/>" title="<bean:message key="demographic.demographiceditdemographic.formRefDoc"/>" ng-model="page.referralDoc"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formRefDoc"/>" title="<bean:message key="demographic.demographiceditdemographic.formRefDoc"/>" ng-model="page.demo.scrReferralDoc"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formRefDocNo"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formRefDocNo"/>" title="<bean:message key="demographic.demographiceditdemographic.formRefDocNo"/>" ng-model="page.referralDocNo" style="width:130px" ng-change="checkReferralDocNo()"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formRefDocNo"/>" title="<bean:message key="demographic.demographiceditdemographic.formRefDocNo"/>" ng-model="page.demo.scrReferralDocNo" style="width:130px" ng-change="checkReferralDocNo()"/>
 			<button type="button" class="btn btn-sm" ng-click="showReferralDocList()"><bean:message key="demographic.demographiceditdemographic.btnSearch"/></button>
 			<div style="position: absolute; right: 25px; z-index: 1; background-color: white" ng-show="page.showReferralDocList">
 				<select class="form-control form-control-details" title="<bean:message key="web.record.details.pickReferralDoctor"/>" size="7" ng-model="page.referralDocObj" ng-options="rfd.label for rfd in page.demo.referralDoctors" ng-click="fillReferralDoc()">
@@ -411,7 +411,7 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.cytolNum"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.cytolNum"/>" title="<bean:message key="demographic.demographiceditdemographic.cytolNum"/>" ng-model="page.cytolNum.value" ng-change="checkCytoNum()"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.cytolNum"/>" title="<bean:message key="demographic.demographiceditdemographic.cytolNum"/>" ng-model="page.demo.scrCytolNum" ng-change="checkCytoNum()"/>
 		</div>
 	</div>
 	
@@ -421,7 +421,7 @@
 		</fieldset>
 		<div class="col-md-6">
 			<label style="width:150px"><bean:message key="web.record.details.archivedPaperChart"/></label>
-			<select class="form-control form-control-details" title="Archived Paper Chart" ng-model="page.paperChartArchived.value" style="width:175px">
+			<select class="form-control form-control-details" title="Archived Paper Chart" ng-model="page.demo.scrPaperChartArchived" style="width:175px">
 				<option value="">--</option>
 				<option value="NO"><bean:message key="demographic.demographiceditdemographic.paperChartIndicator.no"/></option>
 				<option value="YES"><bean:message key="demographic.demographiceditdemographic.paperChartIndicator.yes"/></option>
@@ -429,7 +429,7 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.paperChartIndicator.dateArchived"/></label>
-			<input id="paperChartArchivedDate" ng-model="page.paperChartArchivedDate.value" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.paperChartArchivedDatePicker" ng-click="page.paperChartArchivedDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.paperChartIndicator.dateArchived"/>" ng-change="preventManualPaperChartArchivedDate()"/>
+			<input id="paperChartArchivedDate" ng-model="page.demo.scrPaperChartArchivedDate" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.paperChartArchivedDatePicker" ng-click="page.paperChartArchivedDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.paperChartIndicator.dateArchived"/>" ng-change="preventManualPaperChartArchivedDate()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.msgWaitList"/></label>
@@ -448,26 +448,26 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="web.record.details.privacyConsent"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.privacyConsent"/>" title="<bean:message key="demographic.demographiceditdemographic.privacyConsent"/>" ng-model="page.privacyConsent.value"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.privacyConsent"/>" title="<bean:message key="demographic.demographiceditdemographic.privacyConsent"/>" ng-model="page.demo.scrPrivacyConsent"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="web.record.details.informedConsent"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.informedConsent"/>" title="<bean:message key="demographic.demographiceditdemographic.informedConsent"/>" ng-model="page.informedConsent.value"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.informedConsent"/>" title="<bean:message key="demographic.demographiceditdemographic.informedConsent"/>" ng-model="page.demo.scrInformedConsent"/>
 		</div>
 		<div style="line-height:0%">&nbsp;</div>
 		<div class="col-md-12">
 			<label style="width:195px"><bean:message key="demographic.demographiceditdemographic.usConsent"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.usConsent"/>" title="<bean:message key="demographic.demographiceditdemographic.usConsent"/>" ng-model="page.usSigned.value" style="width:130px"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.usConsent"/>" title="<bean:message key="demographic.demographiceditdemographic.usConsent"/>" ng-model="page.demo.scrUsSigned" style="width:130px"/>
 		</div>
 		<div class="col-md-12">
 			<label><bean:message key="web.record.details.securityQuestion"/></label>
-			<select class="form-control form-control-details" title="<bean:message key="web.record.details.selectSecurityQuestion"/>" ng-model="page.securityQuestion1.value" ng-options="sq.value as sq.label for sq in page.securityQuestions" style="width:570px">
+			<select class="form-control form-control-details" title="<bean:message key="web.record.details.selectSecurityQuestion"/>" ng-model="page.demo.scrSecurityQuestion1" ng-options="sq.value as sq.label for sq in page.securityQuestions" style="width:570px">
 				<option value="">--</option>
 			</select>
 		</div>
 		<div class="col-md-12">
 			<label><bean:message key="web.record.details.answer"/></label>
-			<input type="text" class="form-control form-control-details" title="<bean:message key="web.record.details.answerToSecurityQuestion"/>" placeholder="<bean:message key="web.record.details.answerToSecurityQuestion"/>" ng-model="page.securityAnswer1.value" style="width:570px"/>
+			<input type="text" class="form-control form-control-details" title="<bean:message key="web.record.details.answerToSecurityQuestion"/>" placeholder="<bean:message key="web.record.details.answerToSecurityQuestion"/>" ng-model="page.demo.scrSecurityAnswer1" style="width:570px"/>
 		</div>
 	</div>
 	</div>
@@ -497,7 +497,7 @@
 		<br/>
 		<fieldset>
 			<legend><bean:message key="demographic.demographiceditdemographic.formNotes"/></legend>
-			<textarea ng-model="page.notes" class="form-control form-control-details" style="height:55px; width:100%;"></textarea>
+			<textarea ng-model="page.demo.scrNotes" class="form-control form-control-details" style="height:55px; width:100%;"></textarea>
 		</fieldset>
 		</div>
 		<br/>
