@@ -33,7 +33,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.integration.mchcv.HCValidationFactory;
 import org.oscarehr.integration.mchcv.HCValidationResult;
@@ -56,9 +55,6 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
 public class PatientDetailStatusService extends AbstractServiceImpl {
 	@Autowired
 	private DemographicManager demographicManager;
-	
-	@Autowired
-	private SecUserRoleDao secUserRoleDao;
 	
 	private OscarProperties oscarProperties = OscarProperties.getInstance();
 	private Logger logger = MiscUtils.getLogger();
