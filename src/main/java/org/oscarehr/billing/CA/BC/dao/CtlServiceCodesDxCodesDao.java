@@ -48,7 +48,7 @@ public class CtlServiceCodesDxCodesDao extends AbstractDao<CtlServiceCodesDxCode
 	}
 	
 	public List<CtlServiceCodesDxCodes> findByServiceCode(String serviceCode) {
-		Query q = entityManager.createQuery("select c from CtlServiceCodesDxCodes where c.serviceCode=:serviceCode");
+		Query q = entityManager.createQuery("select c from CtlServiceCodesDxCodes c where c.serviceCode=:serviceCode");
 		q.setParameter("serviceCode", serviceCode);
 		
 		@SuppressWarnings("unchecked")
