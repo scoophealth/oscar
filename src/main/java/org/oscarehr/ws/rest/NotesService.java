@@ -850,22 +850,31 @@ public class NotesService extends AbstractServiceImpl {
 			}
 			
 		} else {
+			List<CaseManagementNote> curCPPNotes2 = new ArrayList<CaseManagementNote>();
+			for(CaseManagementNote cn:curCPPNotes) {
+				if(!cn.getUuid().equals(note.getUuid())) {
+					curCPPNotes2.add(cn);
+				} else {
+					cn.setPosition(0);
+					caseManagementMgr.updateNote(cn);
+				}
+			}
 			//we make a fake CaseManagementNoteEntry into curCPPNotes, and insert it into desired location. 
 			//we then just set the positions to 1,2,...,n ignoring the fake one, but still incrementing the positionToAssign variable
 			//when the new note is saved.it will have the missing position.
 			int positionToAssign=1;
 			CaseManagementNote xn = new CaseManagementNote();
 			xn.setId(-1L);
-			curCPPNotes.add(note.getPosition()-1,xn);
-			for(int x=0;x<curCPPNotes.size();x++) {
-				if(curCPPNotes.get(x).getId() != -1L) {
+			curCPPNotes2.add(note.getPosition()-1,xn);
+			for(int x=0;x<curCPPNotes2.size();x++) {
+				if(curCPPNotes2.get(x).getId() != -1L) {
 					//update the note
-					curCPPNotes.get(x).setPosition(positionToAssign);
-					caseManagementMgr.updateNote(curCPPNotes.get(x));
+					curCPPNotes2.get(x).setPosition(positionToAssign);
+					caseManagementMgr.updateNote(curCPPNotes2.get(x));
 				} 
-				if(curCPPNotes.get(x).getId() != -1L && curCPPNotes.get(x).getUuid().equals(note.getUuid())) {
-					curCPPNotes.get(x).setPosition(0);
-					caseManagementMgr.updateNote(curCPPNotes.get(x));
+				if(curCPPNotes2.get(x).getId() != -1L && curCPPNotes2.get(x).getUuid().equals(note.getUuid())) {
+					curCPPNotes2.get(x).setPosition(0);
+					caseManagementMgr.updateNote(curCPPNotes2.get(x));
 					positionToAssign--;
 				}
 				positionToAssign++;
