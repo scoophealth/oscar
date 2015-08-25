@@ -73,6 +73,7 @@ public class SummaryTo1 {
 	public static final String OTHERMEDS_CODE = "othermeds";
 	public static final String ALLERGIES = "allergies";
 	public static final String RISK_FACTORS = "riskfactors";
+	public static final String PREVENTIONS = "preventions";
 	
 	Integer id;
 	String displayName;
