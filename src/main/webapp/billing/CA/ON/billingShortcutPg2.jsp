@@ -73,7 +73,8 @@
   String            apptProvider_no   = request.getParameter("apptProvider_no");
   String ctlBillForm = request.getParameter("billForm");
   String            assgProvider_no   = request.getParameter("assgProvider_no");
-  //String            dob               = request.getParameter("dob");
+  if (assgProvider_no==null) assgProvider_no = new String();
+  
   String            demoSex           = request.getParameter("DemoSex");
   GregorianCalendar now               = new GregorianCalendar();
   int               curYear           = now.get(Calendar.YEAR);
@@ -112,10 +113,12 @@
   Demographic demo = demoDao.getDemographic(demo_no);
   if (demo != null) {
     assgProvider_no = demo.getProviderNo();
+    if (assgProvider_no==null) assgProvider_no = new String();
+    
 	demoFirst = demo.getFirstName();
 	demoLast = demo.getLastName();
-	demoHIN = demo.getHin() + demo.getVer();
 	demoSex = demo.getSex();
+	if (demo.getHin()!=null && demo.getVer()!=null) demoHIN = demo.getHin() + demo.getVer();
 	if (demoSex.compareTo("M")==0) demoSex ="1";
 	if (demoSex.compareTo("F")==0) demoSex ="2";
 
@@ -140,10 +143,7 @@
 	demoDOBDD = demoDOBDD.length() == 1 ? ("0" + demoDOBDD) : demoDOBDD;
 	demoDOB = demoDOBYY + demoDOBMM + demoDOBDD;
 
-	if (demo.getHin() == null ) {
-		errorFlag = "1";
-		errorMsg = errorMsg + "<br><font color='red'>Error: The patient does not have a valid HIN. </font><br>";
-	} else if (demo.getHin().equals("")) {
+	if (demo.getHin()==null || demo.getHin().equals("")) {
 		warningMsg += "<br><font color='orange'>Warning: The patient does not have a valid HIN. </font><br>";
 	}
 	if (r_doctor_ohip != null && r_doctor_ohip.length()>0 && r_doctor_ohip.length() != 6) {
