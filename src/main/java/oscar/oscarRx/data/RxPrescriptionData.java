@@ -1444,6 +1444,8 @@ public class RxPrescriptionData {
         }
 
         public boolean isCurrent() {
+        	if (isLongTerm() && !isDiscontinued() && !isArchived())
+        		return true;
             boolean b = false;
 
             try {
