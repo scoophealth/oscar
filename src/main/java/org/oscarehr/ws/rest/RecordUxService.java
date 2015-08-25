@@ -159,10 +159,7 @@ public class RecordUxService extends AbstractServiceImpl {
 		}
 		
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.consultations", "r", null)) {
-			if (consultationManager.isConsultRequestEnabled() && !consultationManager.isConsultResponseEnabled()) {
-				menulist.add(new MenuItemTo1(idCounter++, "Consultations", "record.consultRequests", demographicNo.toString()));
-			}
-			else if (!consultationManager.isConsultRequestEnabled() && consultationManager.isConsultResponseEnabled()) {
+			if (!consultationManager.isConsultRequestEnabled() && consultationManager.isConsultResponseEnabled()) {
 				menulist.add(new MenuItemTo1(idCounter++, "Consultation Responses", "record.consultResponses", demographicNo.toString()));
 			}
 			else if (consultationManager.isConsultRequestEnabled() && consultationManager.isConsultResponseEnabled()) {
@@ -175,6 +172,9 @@ public class RecordUxService extends AbstractServiceImpl {
 				consultMenu.setDropdownItems(consultList);
 				
 				menulist.add(consultMenu);
+			}
+			else {
+				menulist.add(new MenuItemTo1(idCounter++, "Consultations", "record.consultRequests", demographicNo.toString()));
 			}
 		}
 		//END PHR
