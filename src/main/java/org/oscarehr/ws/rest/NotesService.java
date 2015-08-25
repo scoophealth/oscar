@@ -695,7 +695,7 @@ public class NotesService extends AbstractServiceImpl {
 		if(!newNote) {
 			List<String> removedIssueNames = new ArrayList<String>();
 			for(CaseManagementIssueTo1 cmit : assignedCMIssues) {
-				if(cmit.isUnchecked()) {
+				if(cmit.isUnchecked() && cmit.getId() != null && cmit.getId().longValue()>0) {
 					//we want to remove this association, and append to the note
 					removedIssueNames.add(cmit.getIssue().getDescription());
 				}
