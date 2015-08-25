@@ -125,8 +125,8 @@
     
 	demoFirst = demo.getFirstName();
 	demoLast = demo.getLastName();
-	demoHIN = demo.getHin() + demo.getVer();
 	demoSex = demo.getSex();
+	if (demo.getHin()!=null && demo.getVer()!=null) demoHIN = demo.getHin() + demo.getVer();
 	if (demoSex.compareTo("M")==0) demoSex ="1";
 	if (demoSex.compareTo("F")==0) demoSex ="2";
 
@@ -151,10 +151,7 @@
 	demoDOBDD = demoDOBDD.length() == 1 ? ("0" + demoDOBDD) : demoDOBDD;
 	demoDOB = demoDOBYY + demoDOBMM + demoDOBDD;
 
-	if (demo.getHin() == null ) {
-		errorFlag = "1";
-		errorMsg = errorMsg + "<br><b><font color='red'>Error: The patient does not have a valid HIN. </font></b><br>";
-	} else if (demo.getHin().equals("")) {
+	if (demo.getHin()==null || demo.getHin().equals("")) {
 		warningMsg += "<br><b><font color='orange'>Warning: The patient does not have a valid HIN. </font></b><br>";
 	}
 	if (r_doctor_ohip != null && r_doctor_ohip.length()>0 && r_doctor_ohip.length() != 6) {
