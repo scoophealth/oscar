@@ -363,11 +363,11 @@
 			<label><bean:message key="demographic.demographiceditdemographic.DateJoined"/></label>
 			<input id="rosterDate" ng-model="page.demo.rosterDate" type="text" class="form-control form-control-details" title="Roster Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.rosterDatePicker" ng-click="page.rosterDatePicker = true" placeholder="YYYY-MM-DD" ng-change="preventManualRosterDate()"/>
 		</div>
-		<div class="col-md-11">
+		<div style="line-height:0%">&nbsp;</div>
+		<div class="col-md-12">
 			<label/>
 			<button type="button" class="btn flat-btn" ng-click="showEnrollmentHistory()"><bean:message key="demographic.demographiceditdemographic.msgEnrollmentHistory"/></button>
 		</div>
-		<div style="line-height:0%">&nbsp;</div>
 		<div class="col-md-12" ng-show="isRosterTerminated()">
 			<label style="width:150px"><bean:message key="demographic.demographiceditdemographic.RosterTerminationDate"/></label>
 			<input id="rosterTerminationDate" ng-model="page.demo.rosterTerminationDate" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.rosterTerminationDatePicker" ng-click="page.rosterTerminationDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="web.record.details.rosterTerminationDate"/>" ng-change="preventManualRosterTerminationDate()" style="width:175px"/>
