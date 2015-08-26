@@ -68,9 +68,9 @@
     
     <div class="col-sm-6" id="middleSpace">
         <ul class="nav nav-pills">
-		  <li ng-class="isCurrentStatus('none')"><a data-target="#all" ng-click="removeFilter(0)" data-toggle="tab">All</a></li>
-		  <li ng-class="isCurrentStatus('Just My Notes')"><a ng-click="changeNoteFilter('Just My Notes')">Just My Notes</a></li>
-		  <li ng-class="isOnlyNotesStatus()"><a ng-click="setOnlyNotes()" >Just Notes</a></li>
+		  <li ng-class="isCurrentStatus('none')"><a data-target="#all" ng-click="removeFilter(0)" data-toggle="tab" class="hand-hover">All</a></li>
+		  <li ng-class="isCurrentStatus('Just My Notes')"><a ng-click="changeNoteFilter('Just My Notes')" class="hand-hover">Just My Notes</a></li>
+		  <li ng-class="isOnlyNotesStatus()"><a ng-click="setOnlyNotes()" class="hand-hover">Just Notes</a></li>
 		  <li><a href="javascript:void(0)" data-target="#tracker" role="tab" data-toggle="tab" ng-click="getTrackerUrl(demographicNo)" >Tracker</a></li>
 		  <li class="pull-right"><span style="margin-top:12px;" class="glyphicon glyphicon-print" ng-click="showPrintModal(page.notes.notelist)"></span></li>
     		
@@ -92,7 +92,7 @@
 								  </ul>
 								</div --%>{{note.observationDate | date : 'dd-MMM-yyyy'}} {{firstLine(note)}} <input type="checkbox" ng-model="note.isSelected" class="pull-right" style="margin-right:3px;"/></dt>
 			    				<dd ng-repeat-end  ng-show="showNote(note)"><pre ng-class="isNoteBeingEdited(note)" style="margin-bottom:0px;" ng-show="showNote(note)" ng-hide="note.cpp==true" ng-dblclick="editNote(note)">{{note.note}}</pre>
-			    					<h6 style="margin-top:1px;margin-bottom:0px;"><bean:message key="oscarEncounter.editors.title"/>: <small>{{note.editorNames}}</small> <span class="pull-right"><bean:message key="oscarEncounter.encounterDate.title"/>: <small>{{note.observationDate | date: 'medium'}}</small> <bean:message key="oscarEncounter.noteRev.title"/>: <small ng-click="openRevisionHistory(note)" >{{note.revision}}</small></span></h6>
+			    					<h6 style="margin-top:1px;margin-bottom:0px;"><bean:message key="oscarEncounter.editors.title"/>: <small>{{note.editorNames}}</small> <span class="pull-right"><bean:message key="oscarEncounter.encounterDate.title"/>: <small>{{note.observationDate | date: 'medium'}}</small> <bean:message key="oscarEncounter.noteRev.title"/>: <small ng-click="openRevisionHistory(note)" class="hand-hover">{{note.revision}}</small></span></h6>
 
 			    					<h6 style="margin-top:0px;"><bean:message key="oscarEncounter.assignedIssues.title"/>: <small>{{note.issueDescriptions}}</small> <span class="pull-right"><bean:message key="oscarEncounter.encType.title"/>: <small>{{note.encounterType}}</small></span></h6>
 			    				</dd>					
