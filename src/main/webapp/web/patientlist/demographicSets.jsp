@@ -33,7 +33,7 @@
 </select>
 </form>
 
-<a ng-repeat="patient in patients | filter:query" ng-click="goToRecord(patient)" class="list-group-item " class="default">	
+<a ng-repeat="patient in patients | filter:query" ng-click="goToRecord(patient)" class="list-group-item default hand-hover">	
 	<h5 class="list-group-item-heading">{{patient.name}}</h5>
 </a>
 </div>
