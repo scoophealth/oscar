@@ -259,7 +259,9 @@ public class RecordUxService extends AbstractServiceImpl {
 		}else if("left".equals(summaryName )){
 			summaryList = new ArrayList<SummaryTo1>();
 			
-			summaryList.add(new SummaryTo1("Preventions",count++,SummaryTo1.PREVENTIONS));
+			if (securityInfoManager.hasPrivilege(loggedInInfo, "_prevention", "r", null)) {
+				summaryList.add(new SummaryTo1("Preventions",count++,SummaryTo1.PREVENTIONS));
+			}
 			
 			summaryList.add(new SummaryTo1("Ongoing Concerns",count++,SummaryTo1.ONGOINGCONCERNS_CODE));
 			
