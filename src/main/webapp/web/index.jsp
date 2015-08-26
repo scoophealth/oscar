@@ -71,6 +71,9 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 /*styles temporary, when design complete styles will be moved to css above*/
 .hand-hover{cursor: pointer; cursor: hand;}
 
+.hand-hover:hover{
+text-decoration:none;
+}
 
 #parent{
     position:fixed;
@@ -163,6 +166,22 @@ li.cpp-note-list:last-child{
     overflow-y:auto;
 }
 
+ .nav .navbar-nav li.dropdown > a .caret {
+   border-top-color:  red !important; /*#555555;*/
+   border-bottom-color: red !important;/*#555555;*/
+
+ }
+ 
+ .more {
+   border-top-color:  #727272 !important; 
+   border-bottom-color: #727272 !important;
+ }
+ 
+ .more:hover {
+   border-top-color:  #333 !important; 
+   border-bottom-color: #333 !important;
+ }
+
 /*for patient header*/
 @media (max-width: 1320px) {
 .patientHeaderName{
@@ -219,7 +238,7 @@ font-size:20px
 				
 					<li ng-repeat="item in menuItems" ng-class="isActive(item)">
 						<a href="javascript:void(0)" ng-if="!item.dropdown" ng-click="transition(item)" >{{item.label}}</a>
-						<a href="javascript:void(0)" ng-if="item.dropdown"  class="dropdown-toggle" data-toggle="dropdown">{{item.label}}<span class="caret"></span></a>
+						<a href="javascript:void(0)" ng-if="item.dropdown"  class="dropdown-toggle" data-toggle="dropdown">{{item.label}}<span class="caret more"></span></a>
 						<ul ng-if="item.dropdown" class="dropdown-menu" role="menu">
 							<li ng-repeat="dropdownItem in item.dropdownItems" >
 								<a href="javascript:void(0)" ng-click="transition(dropdownItem)" >{{dropdownItem.label}}</a>
@@ -254,16 +273,16 @@ font-size:20px
 				
 				
 				<div class="navbar-text pull-right" style="line-height:20px">
-					<a onClick="popup(700,1024,'../scratch/index.jsp','scratch')" title="<bean:message key="navbar.scratchpad" bundle="ui"/>">
+					<a onClick="popup(700,1024,'../scratch/index.jsp','scratch')" title="<bean:message key="navbar.scratchpad" bundle="ui"/>" class="hand-hover">
 					 	<span class="glyphicon glyphicon-edit"></span>
-					 </a>
+					</a>
 					&nbsp;&nbsp;
 					<span ng-show="messageRights === true">
 						<a ng-click="openMessenger()" title="<bean:message key="navbar.messenger" bundle="ui"/>" class="hand-hover">
 							<span  class="glyphicon glyphicon-envelope"></span> 
 						</a>
 						<span ng-repeat="item in messengerMenu">
-						   <a ng-click="openMessenger(item)"  title="{{item.label}}">{{item.extra}}</a> <span ng-if="!$last">|</span>
+						   <a ng-click="openMessenger(item)"  title="{{item.label}}" class="hand-hover">{{item.extra}}</a> <span ng-if="!$last">|</span>
 						</span>
 					</span>
 					&nbsp; &nbsp;
@@ -286,7 +305,7 @@ font-size:20px
 					<span class="dropdown-toggle hand-hover" data-toggle="dropdown" title="<bean:message key="navbar.user" bundle="ui"/>"><span class="glyphicon glyphicon-user"></span><u>{{me.firstName}}</u></span>
 					<ul class="dropdown-menu" role="menu">
 						<li ng-repeat="item in userMenuItems">
-							<a ng-click="transition(item)" ng-class="{'more-tab-highlight': isActive(item) }" >{{item.label}}</a>
+							<a ng-click="transition(item)" ng-class="{'more-tab-highlight': isActive(item) }" class="hand-hover" >{{item.label}}</a>
 						</li>
 				  	</ul>
 				  	
@@ -314,10 +333,10 @@ font-size:20px
 					<a  ng-click="changeTab(item.id)" data-toggle="tab">{{item.label}}</a>
 				</li>
 				
-				<li class="dropdown" ng-class="{'active': currentmoretab != null}"><a class="dropdown-toggle" ><b class="caret"></b></a>
+				<li class="dropdown" ng-class="{'active': currentmoretab != null}"><a class="dropdown-toggle hand-hover" ><b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li ng-repeat="item in moreTabItems">
-							<a ng-class="getMoreTabClass(item.id)" ng-click="changeMoreTab(item.id)">{{item.label}}<span ng-if="item.extra.length>0" class="badge">{{item.extra}}</span></a></li>
+							<a ng-class="getMoreTabClass(item.id)" ng-click="changeMoreTab(item.id)" class="hand-hover">{{item.label}}<span ng-if="item.extra.length>0" class="badge">{{item.extra}}</span></a></li>
 						</ul>
 				</li>
 				
