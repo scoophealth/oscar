@@ -121,7 +121,7 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope,$timeout,$state,$
 	$scope.clear = function() {
 		$scope.removeDemographicAssignment();
 		$scope.removeMrpAssignment();
-		$scope.search = angular.copy({team:allTeams, startIndex:0, numToReturn:10});
+		$scope.search = {team:allTeams, startIndex:0, numToReturn:10, demographicNo:parseInt($state.params.demographicNo)};
 		$scope.doSearch();
 	}
 	
