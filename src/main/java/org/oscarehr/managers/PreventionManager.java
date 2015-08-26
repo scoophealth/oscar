@@ -119,7 +119,7 @@ public class PreventionManager {
 	}
 	
 	public List<Prevention> getPreventionsByDemographicNo(LoggedInInfo loggedInInfo, Integer demographicNo) {
-		List<Prevention> results = preventionDao.findByDemographicId(demographicNo);
+		List<Prevention> results = preventionDao.findUniqueByDemographicId(demographicNo);
 		
 		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getPreventionsByDemographicNo", "demographicNo=" + demographicNo);
 
