@@ -196,7 +196,7 @@ function popPage(url) {
 
 function checkDelete(url, docDescription){
 // revision Apr 05 2004 - we now allow anyone to delete documents
-	if(confirm("<bean:message key="dms.documentReport.msgDelete"/> " + docDescription)) {
+	if(confirm("<bean:message key="dms.documentReport.msgDelete"/> " + docDescription + "<bean:message key="dms.documentReport.msgDelete2"/> ")) {
 		window.location = url;
 	}
 }

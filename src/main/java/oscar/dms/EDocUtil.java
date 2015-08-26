@@ -53,12 +53,14 @@ import org.oscarehr.common.dao.CtlDocTypeDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.dao.IndivoDocsDao;
+import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.CtlDocType;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.IndivoDocs;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.ProviderInboxItem;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -100,6 +102,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 	private static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	private static CtlDocTypeDao ctldoctypedao = (CtlDocTypeDao) SpringUtils.getBean("ctlDocTypeDao");
 	private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+	private static ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao)SpringUtils.getBean(ProviderInboxRoutingDao.class);
 
 	public static String getProviderName(String providerNo) {
 		if(providerNo == null || providerNo.length() == 0) {
@@ -730,6 +733,17 @@ public final class EDocUtil extends SqlUtilBaseS {
 			d.setStatus('D');
 			d.setUpdatedatetime(MyDateFormat.getSysDate(getDmsDateTime()));
 			documentDao.merge(d);
+			List<ProviderInboxItem> routes = providerInboxRoutingDao.getProvidersWithRoutingForDocument("DOC",documentNo);
+			if (routes!= null && routes.size()>0) {
+				for (ProviderInboxItem route: routes) {
+					if (route.getStatus().equals("N")) {
+						route.setStatus("A");
+						route.setComment("Deleted from eChart");
+						route.setTimestamp(new Date());
+						providerInboxRoutingDao.merge(route);
+					}						
+				}
+			}
 		}
 	}
 
