@@ -211,6 +211,14 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope,$timeout,$state,$
 					 if (consult.urgency==1) {
 						 consult.urgencyColor = "text-danger"; //= red text
 					 }
+					 
+					 //add notification if outstanding (incomplete requests > 1 month)
+					 if (consult.status!=4 && consult.status!=5 && consult.status!=7) {
+						 var dp = consult.referralDate.split("-");
+						 var rDate = new Date(dp[0], dp[1]-1, dp[2]);
+						 rDate.setMonth(rDate.getMonth()+1);
+						 if ((new Date())>=rDate) consult.outstanding = true;
+					 }
 				 }
 				 $scope.lastResponse = result.content;
 				 

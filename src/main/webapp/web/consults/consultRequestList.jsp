@@ -152,7 +152,7 @@
 				<td data-title="'<bean:message key="consult.list.header.lastFollowUp" bundle="ui"/>'" class="text-center" sortable="'FollowUpDate'">
 					{{consult.lastFollowUp | date: 'yyyy-MM-dd'}}</td>
 				<td data-title="'<bean:message key="consult.list.header.referralDate" bundle="ui"/>'" class="text-center" sortable="'ReferralDate'">
-					{{consult.referralDate | date: 'yyyy-MM-dd'}}</td>
+					{{consult.referralDate | date: 'yyyy-MM-dd'}} <strong class="text-danger" ng-show="consult.outstanding" title="<bean:message key="consult.list.outstanding" bundle="ui"/>">!</strong></td>
 			</tr>
 		</tbody>
 
