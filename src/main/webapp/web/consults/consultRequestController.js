@@ -199,7 +199,7 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 		
 		var consultId = 0;
 		if (consult.id!=null) consultId = consult.id;
-		consultService.getRequestAttachments(consultId, consult.demographic.demographicNo).then(function(data){
+		consultService.getRequestAttachments(consultId, consult.demographicId).then(function(data){
 			if (consult.availableDocs==null) consult.availableDocs = toArray(data);
 			$scope.atth.availableDocs = consult.availableDocs;
 			sortAttachmentDocs($scope.atth.availableDocs);
