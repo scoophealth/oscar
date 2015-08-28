@@ -81,7 +81,7 @@ public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 		sql.append("eft_latest tinyint(1) NOT NULL, ");
 		sql.append("dateCreated timestamp NOT NULL ");
 		for (String field : fields) {
-			sql.append("," + field + " text");
+			sql.append(",`" + field + "` text");
 		}
 		sql.append(")");
 
