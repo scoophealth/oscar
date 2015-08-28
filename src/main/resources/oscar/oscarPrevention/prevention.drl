@@ -773,10 +773,10 @@
         </parameter>
         <java:condition>prev.getAgeInYears() &gt;= 50</java:condition>
         <java:condition>prev.getAgeInYears() &lt;= 74</java:condition>
-        <java:condition>prev.getHowManyMonthsSinceLast("COLONOSCOPY") &gt;= 60</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("COLONOSCOPY") &gt;= 120</java:condition>
         <java:consequence>
               prev.log("FOBT 3 debug");
-              prev.addWarning("FOBT", "Colonoscopy is over 5 years old");
+              prev.addWarning("FOBT", "Colonoscopy is over 10 years old");
         </java:consequence>
     </rule>
 
