@@ -186,30 +186,6 @@ window.opener.location.href = '<%=request.getContextPath()%>/administration/?sho
 			<bean:message key="eform.uploadhtml.patientIndependent" /> <input type="checkbox" name="patientIndependent" value="true" <%= (Boolean)curform.get("patientIndependent")?"checked":"" %> /><br />
 			</div>
 
-<!--
-<div class="span4">		
-			<bean:message key="eform.uploadhtml.formFileName" /> <small>optional</small>: <br />
-			<input type="text" name="formFileName" value="<%= curform.get("formFileName")%>" size="50" /> <br />
-</div>
-		
-
-<div class="span4">		
-			<bean:message key="eform.edithtml.frmUploadFile" /> <small>optional</small>:<br />
-                        <input type="file" name="uploadFile" size="30"
-				<% if (errors.containsKey("uploadError")) { %> class="warning"
-				<% } %>> <input type="hidden" name="uploadMarker"
-				id="uploadMarker" value="false"> <input type="button"
-				name="uploadbtn" id="uploadbtn" class="btn"
-				value="<bean:message key="eform.edithtml.frmUpload"/>"
-				onclick="disablenupload()"> <% if (errors.containsKey("uploadError")) { 
-                                    String uploadError = errors.get("uploadError"); %>
-                                <font class="warning"><bean:message key="<%=uploadError%>" /></font>
-			<% } %><br />
-		
-</div>		
--->
-
-
 			<br />			
 			<bean:message key="eform.edithtml.msgEditHtml" />:<br />
 			<textarea wrap="off" name="formHtml" style="" class="span12" rows="40"><%= formHtml%></textarea><br />

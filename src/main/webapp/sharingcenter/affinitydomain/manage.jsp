@@ -25,6 +25,7 @@
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <%@page import="org.oscarehr.sharingcenter.dao.AffinityDomainDao"%>
 <%@page import="org.oscarehr.sharingcenter.model.AffinityDomainDataObject"%>
@@ -66,6 +67,16 @@
             }
         </script>
 
+		<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css"/>
+		<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+
+
+		<script>
+		$(function() {
+		    $( document ).tooltip();
+		  });
+		</script>
+
     </head>
     <body>
         <div class="container" width="500px">
@@ -83,6 +94,8 @@
                         <div class="input-group">
                             <span class="input-group-addon">Upload Configuration:</span> <input
                                 id="file" name="file" type="file" style="display: none">
+                                <span title="<bean:message key="global.uploadWarningBody"/>" style="vertical-align:middle;font-family:arial;font-size:20px;font-weight:bold;color:#ABABAB;cursor:pointer"><img border="0" src="../../images/icon_alertsml.gif"/></span></span>
+        
                             <input id="photoCover" class="form-control" type="text" />
 
                             <div class="input-group-btn btn-group">
