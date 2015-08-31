@@ -112,6 +112,9 @@ body {
 
      }
 
+	.external {
+		color:purple;
+	}
 
      .sortheader{
          text-decoration: none;
