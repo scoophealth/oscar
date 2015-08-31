@@ -58,7 +58,7 @@
 	<div class="collapse navbar-collapse navbar-ex1-collapse"
 		style="padding-left: 0px;">
 		<ul class="nav navbar-nav" id="myTabs">
-			<li ng-repeat="tab in tabs" ng-model="currentTab" ng-class="{'active':isActive(tab)}"><a ng-click="changeTab(tab)">{{tab.displayName}}</a></li>
+			<li ng-repeat="tab in tabs" ng-model="currentTab" ng-class="{'active':isActive(tab)}"><a ng-click="changeTab(tab)" class="hand-hover">{{tab.displayName}}</a></li>
 			
 		</ul>
 	</div>
