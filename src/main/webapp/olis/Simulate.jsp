@@ -8,7 +8,20 @@
     and "gnu.org/licenses/gpl-2.0.html".
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <html>
+<head>
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css"/>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+
+<script>
+$(function() {
+    $( document ).tooltip();
+  });
+</script>
+
+</head>
 <body>
 	
 	<%
@@ -22,7 +35,10 @@
 	<form action="<%=request.getContextPath() %>/olis/UploadSimulationData.do" method="POST" enctype="multipart/form-data" name="simulate_form">
 <table>	
 		<tr>
-			<td colspan="2"><b>Simulation File:</b><input type="file" name="simulateFile"/></td>
+			<td colspan="2"><b>Simulation File:</b><input type="file" name="simulateFile"/>
+			<span title="<bean:message key="global.uploadWarningBody"/>" style="vertical-align:middle;font-family:arial;font-size:20px;font-weight:bold;color:#ABABAB;cursor:pointer"><img border="0" src="../images/icon_alertsml.gif"/></span></span>
+        
+			</td>
 		</tr>
 		<tr>
 			<td colspan="2"><b>Simulate Error:</b><input type="checkbox" name="simulateError"/></td>
