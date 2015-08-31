@@ -59,6 +59,20 @@ function displayAndDisable(){
 
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css"/>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+
+
+<script>
+$(document).ready(function(){
+	$("#uploadWarn").tooltip();
+});
+
+
+</script>
+
 </head>
 
 <body vlink="#0000FF">
@@ -79,7 +93,10 @@ if (!Util.checkDir(op.getProperty("TMP_DIR"))) { %>
 		
 		<html:form action="/form/importUpload.do" method="POST"
 			enctype="multipart/form-data" onsubmit="displayAndDisable()">
-                        <p><html:file property="importFile" value=""/></p>
+                        <p><html:file property="importFile" value=""/>
+                        <span id="uploadWarn" title="<bean:message key="global.uploadWarningBody"/>" style="vertical-align:middle;font-family:arial;font-size:20px;font-weight:bold;color:#ABABAB;cursor:pointer"><img border="0" src="../images/icon_alertsml.gif"/></span></span>
+        
+                        </p>
 						<%if(learningEnabled != null && learningEnabled.equalsIgnoreCase("yes")) { %>
 							<!-- Drop Down box of courses -->
 							Course:&nbsp;<html:select property="courseId">

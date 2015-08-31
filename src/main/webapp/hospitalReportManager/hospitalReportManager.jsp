@@ -50,6 +50,17 @@
 		window.location = "<%=request.getContextPath() %>/hospitalReportManager/hospitalReportManager.jsp?fetch=true";
 	}
 	</script>
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css"/>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+
+
+<script>
+jQuery.noConflict();
+jQuery(function() {
+	jQuery( document ).tooltip();
+  });
+</script>
 </head>
 <body>
 <h4>Hospital Report Manager</h4>
@@ -65,7 +76,10 @@
 	<% } %>
 </p>
 <form enctype="multipart/form-data" action="<%=request.getContextPath() %>/hospitalReportManager/UploadLab.do" method="post">
-    Upload an HRM report from your computer: <input type="file" name="importFile" /> <input type="submit" class="btn" name="submit" value="Upload" />
+    Upload an HRM report from your computer: <input type="file" name="importFile" />
+    <span title="<bean:message key="global.uploadWarningBody"/>" style="vertical-align:middle;font-family:arial;font-size:20px;font-weight:bold;color:#ABABAB;cursor:pointer"><img border="0" src="../images/icon_alertsml.gif"/></span></span>
+        
+     <input type="submit" class="btn" name="submit" value="Upload" />
 </form>
 <%
 	HRMProviderConfidentialityStatementDao hrmProviderConfidentialityStatementDao = (HRMProviderConfidentialityStatementDao) SpringUtils.getBean("HRMProviderConfidentialityStatementDao");
