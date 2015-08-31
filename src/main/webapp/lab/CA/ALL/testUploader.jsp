@@ -63,6 +63,14 @@ String outcome = (String) request.getAttribute("outcome");
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.dataTables.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/DT_bootstrap.js"></script> 
 
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css"/>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+
+<script>
+$(function() {
+    $( document ).tooltip();
+  });
+</script>
 
 </head>
 
@@ -87,11 +95,14 @@ String outcome = (String) request.getAttribute("outcome");
     Choose File...
     <input type="file" name="importFile" id="importFile" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val());'>
 </a>
+</span>
+     
 &nbsp;
 <span class='label label-success' id="upload-file-info"></span>
 
 </div>
-	
+	<span title="<bean:message key="global.uploadWarningBody"/>" style="vertical-align:middle;font-family:arial;font-size:20px;font-weight:bold;color:#ABABAB;cursor:pointer"><img border="0" src="../../../images/icon_alertsml.gif"/></span>
+  
 	<br /><br />
 				<bean:message key="lab.ca.all.testUploader.labType" /><br />
 				<select name="type" id="type" onchange="selectOther()">
