@@ -110,12 +110,13 @@ public class EctDisplayRxAction extends EctDisplayAction {
 					if (remoteDrug.getEndDate()!=null) p.setEndDate(remoteDrug.getEndDate().getTime());
 					if (remoteDrug.getRxDate()!=null) p.setRxDate(remoteDrug.getRxDate().getTime());
 					p.setSpecial(remoteDrug.getSpecial());
+					p.setOutsideProviderName(" "); //little hack so that the style gets set to "external"
 					
 					// okay so I'm not exactly making it unique... that's the price of last minute conformance test changes.
 					uniqueDrugs.add(p);
 				}
 			} catch (Exception e) {
-				logger.error("error getting remote allergies", e);
+				logger.error("error getting remote drugs", e);
 			}
 		}
 
@@ -146,7 +147,8 @@ public class EctDisplayRxAction extends EctDisplayAction {
             String tmp = "";
             if (drug.getFullOutLine()!=null) tmp=drug.getFullOutLine().replaceAll(";", " ");
             String strTitle = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
-            strTitle = "<span " + styleColor + ">" + strTitle + "</span>";
+           // strTitle = "<span " + styleColor + ">" + strTitle + "</span>";
+            strTitle = "<span " + getClassColour(drug, now, month) + ">" + strTitle + "</span>";
             item.setTitle(strTitle);
             item.setLinkTitle(tmp + " " + serviceDateStr + " - " + drug.getEndDate());
             item.setURL("return false;");
@@ -158,6 +160,49 @@ public class EctDisplayRxAction extends EctDisplayAction {
         }
     }
 
+    String getClassColour(Prescription drug, long referenceTime, long durationToSoon){
+        StringBuilder sb = new StringBuilder("class=\"");
+
+        if (!drug.isLongTerm() && (drug.isCurrent() && drug.getEndDate() != null && (drug.getEndDate().getTime() - referenceTime <= durationToSoon))) {
+            sb.append("expireInReference ");
+        }
+
+        if ((drug.isCurrent() && !drug.isArchived()) || drug.isLongTerm()) {
+            sb.append("currentDrug ");
+        }
+
+        if (drug.isArchived()) {
+            sb.append("archivedDrug ");
+        }
+
+        if(!drug.isLongTerm() && !drug.isCurrent()) {
+            sb.append("expiredDrug ");
+        }
+
+        if(drug.isLongTerm()){
+            sb.append("longTermMed ");
+        }
+
+        if(drug.isDiscontinued()){
+            sb.append("discontinued ");
+        }
+
+        if(drug.getOutsideProviderName() !=null && !drug.getOutsideProviderName().equals("")  ) {
+        	sb = new StringBuilder("class=\"");
+        	sb.append("external ");
+        }
+
+        String retval = sb.toString();
+
+        if(retval.equals("class=\"")){
+            return "";
+        }
+
+        return retval.substring(0,retval.length())+"\"";
+
+    }
+
+    
     public String getCmd() {
       return cmd;
     }
