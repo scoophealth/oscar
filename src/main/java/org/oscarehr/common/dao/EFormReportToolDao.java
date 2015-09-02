@@ -114,7 +114,7 @@ public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 		sb.append("eft_latest,");
 		sb.append("dateCreated,");
 		for (EFormValue v : values) {
-			sb.append(StringEscapeUtils.escapeSql(v.getVarName()));
+			sb.append("`" + StringEscapeUtils.escapeSql(v.getVarName()) + "`");
 			sb.append(",");
 		}
 
