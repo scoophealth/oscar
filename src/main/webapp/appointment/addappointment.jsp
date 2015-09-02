@@ -261,7 +261,9 @@ function checkDateTypeIn(obj) {
           return false;
     } 
 }
-
+function isEmpty(str) {
+    return (!str || 0 === str.length);
+}
 function calculateEndTime() {
   var stime = document.ADDAPPT.start_time.value;
   var vlen = stime.indexOf(':')==-1?1:2;
@@ -269,7 +271,7 @@ function calculateEndTime() {
   var smin = stime.substring(stime.length-vlen) ;
   var duration = document.ADDAPPT.duration.value ;
   
-  if(isNaN(duration)) {
+  if(isNaN(duration) || isEmpty(duration)) {
 	  alert("<bean:message key="Appointment.msgFillTimeField"/>");
 	  return false;
   }
