@@ -121,6 +121,7 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
         <script type="text/javascript" src="<%=request.getContextPath()%>/share/yui/js/autocomplete-min.js"></script>
         <script type="text/javascript" src="<%=request.getContextPath()%>/js/demographicProviderAutocomplete.js"></script>
         <script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/oscarMDSIndex.js"></script>
+		<script type="text/javascript" src="<%= request.getContextPath() %>/hospitalReportManager/displayHRM.js.jsp"></script>
 
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/yui/css/fonts-min.css"/>
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/yui/css/autocomplete.css"/>
