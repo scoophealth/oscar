@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -43,7 +44,6 @@ import oscar.dms.EDocUtil;
 import oscar.dms.EDocUtil.EDocSort;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
-import oscar.util.DateUtils;
 import oscar.util.StringUtils;
 
 @Component
@@ -69,19 +69,27 @@ public class LabsDocsSummary implements Summary {
 		
 		CommonLabResultData comLab = new CommonLabResultData();
         ArrayList<LabResultData> labs = comLab.populateLabResultsData(loggedInInfo, "",""+demographicNo, "", "","","U");
+        
         Collections.sort(labs);
-     
+        
+		LinkedHashMap<String,LabResultData> accessionMap = new LinkedHashMap<String,LabResultData>();
+		for (int i = 0; i < labs.size(); i++) {
+			LabResultData result = labs.get(i);
+			if (result.accessionNumber == null || result.accessionNumber.equals("")) {
+				accessionMap.put("noAccessionNum" + i + result.labType, result);
+			} else {
+				if (!accessionMap.containsKey(result.accessionNumber + result.labType)) accessionMap.put(result.accessionNumber + result.labType, result);
+			}
+		}
+		labs = new ArrayList<LabResultData>(accessionMap.values());
+		
         //now we add individual module items
-        LabResultData result;
-        String labDisplayName, label;
-        //String bgcolour = "FFFFCC";
-
         String url = null;
         for( int idx = 0; idx < labs.size(); ++idx ) {
-            result =  labs.get(idx);
+            LabResultData result =  labs.get(idx);
             Date date = result.getDateObj();
-            String formattedDate = DateUtils.formatDate(date,loggedInInfo.getLocale());               
-            label = result.getLabel();
+            String label = result.getLabel();
+            String labDisplayName;
             
             if ( result.isMDS() ){ 
             	if (label == null || label.equals("")) labDisplayName = result.getDiscipline();
@@ -105,18 +113,11 @@ public class LabsDocsSummary implements Summary {
             summaryItem.setDate(date);
             summaryItem.setAction(url);
             
-           
-            //item.setLinkTitle(labDisplayName + " " + formattedDate);
-            //labDisplayName = StringUtils.maxLenString(labDisplayName, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES); // +" "+formattedDate;
-                   
-            //item.setBgColour(bgcolour);
-            
             list.add(summaryItem);
             count++;
         } 
         
         //Docs
-		
         ArrayList<EDoc> docList = EDocUtil.listDocs(loggedInInfo, "demographic", ""+demographicNo, null, EDocUtil.PRIVATE, EDocSort.OBSERVATIONDATE, "active");
 		String dbFormat = "yyyy-MM-dd";
 
