@@ -77,7 +77,7 @@ public class SupServiceCodeAssocDAO extends AbstractDao<BillingTrayFee> {
 		}
 		return ret;
 	}
-
+	
 	/**
 	 * Returns a Map of ServiceCode associations
 	 * Key = Service Code
@@ -89,7 +89,7 @@ public class SupServiceCodeAssocDAO extends AbstractDao<BillingTrayFee> {
 	public Map<String, String> getAssociationKeyValues() {
 		// TODO test me
 		// TODO replace with find all
-		List<BillingTrayFee> btfs = entityManager.createQuery(getBaseQuery()).getResultList();
+		List<BillingTrayFee> btfs = entityManager.createQuery("SELECT x FROM BillingTrayFee x").getResultList();
 		Map<String, String> ret = new HashMap<String, String>();
 		for (BillingTrayFee btf : btfs) {
 			String key = this.getBillingServiceValue(btf.getBillingServiceNo(), SupServiceCodeAssocDAO.VALUE_BY_ID);
