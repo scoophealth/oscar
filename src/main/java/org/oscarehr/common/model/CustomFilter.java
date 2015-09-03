@@ -151,7 +151,7 @@ public class CustomFilter extends AbstractModel<Integer> {
 	
 	public CustomFilter(boolean noEndDate) {
 		setStatus("A");
-		setPriority("Normal");
+		setPriority(null);
 		if(!noEndDate) {
 			setEndDate(new Date());
 		}
