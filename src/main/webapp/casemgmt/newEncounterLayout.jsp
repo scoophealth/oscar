@@ -109,6 +109,10 @@
 <!-- phr popups -->
 <script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
 
+
+<link rel="stylesheet" type="text/css" href="<c:out value="${ctx}/css/oscarRx.css" />">
+
+
 <script type="text/javascript">
 var Colour = {
 	prevention: '<%=Colour.getInstance().prevention%>',
