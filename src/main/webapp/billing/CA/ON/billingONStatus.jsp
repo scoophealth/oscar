@@ -177,7 +177,7 @@ NumberFormat formatter = new DecimalFormat("#0.00");
 		<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
 		<script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
-		
+		<script type="text/javascript" src="<%=request.getContextPath() %>/js/excellentexport.min.js"></script>
 		<link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
 		<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css">
        
@@ -720,7 +720,7 @@ if(statusType.equals("_")) { %>
     		</tr>
 <% }}} else { %>
     <!--  div class="tableListing"-->
-       <table class="table">
+       <table class="table" id="bListTable">
           <thead>
 		<tr> 
              <th><a href="javascript:void();" onClick="updateSort('ServiceDate');return false;">SERVICE DATE</a></th>
@@ -919,6 +919,12 @@ if(statusType.equals("_")) { %>
           </tr>
 	</tobdy>
        </table>
+       <%if(bList != null && !bList.isEmpty()) {%> 
+     	  <a download="oscar_invoices.xls" href="#" onclick="return ExcellentExport.excel(this, 'bListTable', 'OSCAR Invoices');">Export to Excel</a>
+		  <a download="oscar_invoices.csv" href="#" onclick="return ExcellentExport.csv(this, 'bListTable');">Export to CSV</a>
+     	  
+     	  
+       <%} %>
 <% } %>
     </form>    
                         
