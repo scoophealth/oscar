@@ -34,8 +34,8 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.managers.PreferenceManager;
 import org.oscarehr.util.LoggedInInfo;
-
 import org.oscarehr.ws.rest.to.model.SummaryItemTo1;
 import org.oscarehr.ws.rest.to.model.SummaryTo1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +48,9 @@ public class IssueNoteSummary implements Summary {
     
 	@Autowired
 	private CaseManagementManager caseManagementMgr;
+	
+	@Autowired
+	private PreferenceManager preferenceManager;
     
 	//protected static final String ELLIPSES = "...";
 	//protected static final int MAX_LEN_TITLE = 48;
@@ -89,7 +92,6 @@ public class IssueNoteSummary implements Summary {
 
 	    getSummaryListForIssuedNotes( loggedInInfo,demographicNo, list,issueIds );
 
-
 		return summary;
 	}
 	
@@ -106,15 +108,23 @@ public class IssueNoteSummary implements Summary {
 		String[] issueIds = getIssueIds(issueList);
 		
 		Collection<CaseManagementNote> notes = caseManagementMgr.getActiveNotes(""+demographicNo, issueIds);
+		
+		String cppExts = "";
 		int count = 0;
 		for(CaseManagementNote note:notes){
 			
 			Set<CaseManagementIssue> issueSet = note.getIssues();
-			StringBuilder issueString = new StringBuilder();
+			StringBuilder issueBuilder = new StringBuilder();
 			for (CaseManagementIssue s : issueSet) {
-			    issueString.append(s.getIssue().getCode());
+			    issueBuilder.append(s.getIssue().getCode());
 			}
-			SummaryItemTo1 summaryItem = new SummaryItemTo1(count, note.getNote(),"action","notes_"+issueString.toString());
+			String issueString = issueBuilder.toString();
+
+			if( preferenceManager.isCppItem(issueString) && preferenceManager.isCustomSummaryEnabled(loggedInInfo) ){
+				cppExts = preferenceManager.getCppExtsItem(loggedInInfo, caseManagementMgr.getExtByNote(note.getId()), issueString);
+			}
+			
+			SummaryItemTo1 summaryItem = new SummaryItemTo1(count, note.getNote() + cppExts,"action","notes_"+issueString);
 			summaryItem.setDate(note.getObservation_date());
 			summaryItem.setEditor(note.getProviderName());
 			summaryItem.setNoteId(note.getId());
