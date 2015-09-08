@@ -29,6 +29,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.commons.lang.StringUtils;
+import org.oscarehr.common.exception.PatientDirectiveException;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,8 @@ public class SecurityInfoManager {
 	public static final String WRITE = "w";
 	public static final String UPDATE = "u";
 	public static final String DELETE = "d";
+	public static final String NORIGHTS = "o";
+	
 	
 	@Autowired
 	private SecuserroleDao secUserRoleDao;
@@ -133,7 +136,9 @@ public class SecurityInfoManager {
 			}
 			if (noMatchingRoleToSpecificPatient) v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);
 			
-			if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "x")) {
+			if (!noMatchingRoleToSpecificPatient && OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), NORIGHTS)) {
+					throw new PatientDirectiveException("Patient has requested user not access record");
+			} else  if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "x")) {
 				return true;
 			}
 			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), WRITE)) {
@@ -148,9 +153,13 @@ public class SecurityInfoManager {
 			else if (OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), DELETE)) {
 				return (DELETE.equals(privilege));
 			}
+	
+		} catch (PatientDirectiveException ex) {
+			throw(ex);
 		} catch (Exception ex) {
 			MiscUtils.getLogger().error("Error checking privileges", ex);
 		}
+		
 		return false;
 	}
 	

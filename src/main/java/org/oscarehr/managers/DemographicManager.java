@@ -40,6 +40,7 @@ import org.oscarehr.common.dao.DemographicExtArchiveDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DemographicMergedDao;
 import org.oscarehr.common.dao.PHRVerificationDao;
+import org.oscarehr.common.exception.PatientDirectiveException;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Demographic.PatientStatus;
@@ -104,7 +105,7 @@ public class DemographicManager {
 	private SecurityInfoManager securityInfoManager;
 	
 
-	public Demographic getDemographic(LoggedInInfo loggedInInfo, Integer demographicId) {
+	public Demographic getDemographic(LoggedInInfo loggedInInfo, Integer demographicId) throws PatientDirectiveException {
 		checkPrivilege(loggedInInfo, SecurityInfoManager.READ, (demographicId!=null)?demographicId:null );
 		
 		Demographic result = demographicDao.getDemographicById(demographicId);
@@ -740,5 +741,7 @@ public class DemographicManager {
     			throw new RuntimeException("missing required security object (_demographic)");
     		}
         }
+		
+	
 		
 }
