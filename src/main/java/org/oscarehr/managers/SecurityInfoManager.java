@@ -26,6 +26,7 @@ package org.oscarehr.managers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Vector;
 
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.util.LoggedInInfo;
@@ -42,10 +43,10 @@ import com.quatro.model.security.Secuserrole;
 
 @Service
 public class SecurityInfoManager {
-	public String READ = "r";
-	public String WRITE = "w";
-	public String UPDATE = "u";
-	public String DELETE = "d";
+	public static final String READ = "r";
+	public static final String WRITE = "w";
+	public static final String UPDATE = "u";
+	public static final String DELETE = "d";
 	
 	@Autowired
 	private SecuserroleDao secUserRoleDao;
@@ -151,5 +152,28 @@ public class SecurityInfoManager {
 			MiscUtils.getLogger().error("Error checking privileges", ex);
 		}
 		return false;
+	}
+	
+	public boolean isAllowedAccessToPatientRecord(LoggedInInfo loggedInInfo, Integer demographicNo) {
+		
+		List<String> roleNameLs = new ArrayList<String>();
+		for(Secuserrole role:getRoles(loggedInInfo)) {
+			roleNameLs.add(role.getRoleName());
+		}
+		roleNameLs.add(loggedInInfo.getLoggedInProviderNo());
+		String roleNames = StringUtils.join(roleNameLs, ",");
+		
+		
+		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_demographic$"+demographicNo);
+		if(OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "o")) {
+			return false;
+		}
+		
+		v = OscarRoleObjectPrivilege.getPrivilegeProp("_eChart$"+demographicNo);
+		if(OscarRoleObjectPrivilege.checkPrivilege(roleNames, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "o")) {
+			return false;
+		}
+		
+		return true;
 	}
 }
