@@ -172,7 +172,8 @@
             	
             var nId = document.forms['caseManagementEntryForm'].noteId.value;
 				
-            	
+            clearAutoSaveTimer();
+            
             if ((noteNotNull && notesChanged) || (parseInt(nId) !=0 && datesChanged)) {
                 
                 //autoSave(false);
@@ -2507,6 +2508,8 @@ function saveNoteAjax(method, chain) {
     document.forms["caseManagementEntryForm"].chain.value = chain;
     document.forms["caseManagementEntryForm"].includeIssue.value = "off";
 
+    clearAutoSaveTimer();
+
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
 
 	var params = Form.serialize(caseMgtEntryfrm);
@@ -2619,7 +2622,9 @@ function savePage(method, chain) {
     document.forms["caseManagementViewForm"].method.value = method;
 
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
-    
+
+    clearAutoSaveTimer();
+
     if( method == "saveAndExit" ) {
     	needToReleaseLock = false;
     }
@@ -3042,6 +3047,10 @@ function backup() {
 var autoSaveTimer;
 function setTimer() {
     autoSaveTimer = setTimeout("backup()", 30000);
+}
+
+function clearAutoSaveTimer() {
+    clearTimeout(autoSaveTimer);
 }
 
 var unsavedNoteMsg;
