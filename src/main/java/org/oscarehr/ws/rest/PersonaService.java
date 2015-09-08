@@ -133,6 +133,21 @@ public class PersonaService extends AbstractServiceImpl {
 		return response;
 	}
 	
+	@POST
+	@Path("/isAllowedAccessToPatientRecord")
+	@Consumes("application/json")
+	@Produces("application/json")
+	public AbstractSearchResponse<Boolean> isAllowedAccessToPatientRecord(JSONObject json) {
+		AbstractSearchResponse<Boolean> response = new AbstractSearchResponse<Boolean>();
+		
+		Integer demographicNo = json.getInt("demographicNo");
+		
+		response.getContent().add(securityInfoManager.isAllowedAccessToPatientRecord(getLoggedInInfo(),demographicNo));
+		response.setTotal(response.getContent().size());
+		
+		return response;
+	}
+	
 	@GET
 	@Path("/navbar")
 	@Produces("application/json")
