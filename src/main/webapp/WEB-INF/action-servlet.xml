@@ -193,12 +193,6 @@
 		<property name="phrService" ref="phrService" />
 		<property name="phrActionDAO" ref="phrActionDAO" />
 	</bean>
-	<bean name="/SendImmunizationToPhr" class="oscar.oscarPrevention.pageUtil.PHRSendImmunizationToPhrAction" singleton="false">
-		<property name="preventionDao" ref="preventionDao" />
-		<property name="preventionExtDao" ref="preventionExtDao" />
-		<property name="providerDao" ref="providerDao" />
-		<property name="demographicDao" ref="demographicDao" />
-	</bean>
 	<bean name="/SendToPhr" class="org.oscarehr.phr.web.PHRGenericSendToPhrAction" singleton="false">
 		<property name="phrService" ref="phrService" />
 	</bean>
