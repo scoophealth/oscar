@@ -67,6 +67,23 @@ angular.module("securityServices", [])
              });
 
           return deferred.promise;
+        },
+        isAllowedAccessToPatientRecord: function (demographicNo) {
+        	console.log('in isAllowedAccessToPatientRecord');
+        	var deferred = $q.defer();
+            
+            $http({
+                url: this.apiPath+'persona/isAllowedAccessToPatientRecord',
+                method: "POST",
+                data: JSON.stringify({"demographicNo":demographicNo}),   
+                headers: {'Content-Type': 'application/json'}
+             }).success(function (data, status, headers, config) {
+            	 deferred.resolve(data);
+             }).error(function (data, status, headers, config) {
+            	 deferred.reject("An error occured while fetching access rights");
+             });
+
+          return deferred.promise;
         }
     };
 });
