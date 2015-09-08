@@ -53,6 +53,7 @@ import org.oscarehr.common.dao.ContactDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.dao.WaitingListDao;
 import org.oscarehr.common.dao.WaitingListNameDao;
+import org.oscarehr.common.exception.PatientDirectiveException;
 import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicContact;
@@ -180,7 +181,7 @@ public class DemographicService extends AbstractServiceImpl {
 	@GET
 	@Path("/{dataId}")
 	@Produces({MediaType.APPLICATION_JSON , MediaType.APPLICATION_XML})
-	public DemographicTo1 getDemographicData(@PathParam("dataId") Integer id) {		
+	public DemographicTo1 getDemographicData(@PathParam("dataId") Integer id) throws PatientDirectiveException {		
 		Demographic demo = demographicManager.getDemographic(getLoggedInInfo(),id);
 		if (demo == null) return null;
 		
