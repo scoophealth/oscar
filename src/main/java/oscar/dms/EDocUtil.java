@@ -401,7 +401,9 @@ public final class EDocUtil extends SqlUtilBaseS {
 				currentdoc.setReviewerId(rsGetString(rs, "reviewer"));
 				currentdoc.setReviewDateTime(rsGetString(rs, "reviewdatetime"));
 				currentdoc.setReviewDateTimeDate(rs.getTimestamp("reviewdatetime"));
-
+				currentdoc.setDocPublic(rsGetString(rs, "public1"));
+				currentdoc.setHtml(rsGetString(rs, "docxml"));
+				currentdoc.setNumberOfPages(rs.getInt("number_of_pages"));
 				rs.close();
 			}
 		} catch (SQLException sqe) {
