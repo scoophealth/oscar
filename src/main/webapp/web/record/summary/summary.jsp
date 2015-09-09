@@ -125,9 +125,9 @@
 			</legend>
         	<ul style="padding-left:12px;">
         	<%-- href="{{item.action}}" --%>
-        	<li ng-repeat="item in mod.summaryItem | filter:incomingQ" ng-show="$index < mod.displaySize"  ><span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span><a ng-click="gotoState(item)" >{{item.displayName}}<small ng-show="item.classification">({{item.classification}})</small></a> </li> 
+        	<li ng-repeat="item in mod.summaryItem | filter:incomingQ" ng-show="$index < mod.displaySize"  ><span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span><a ng-click="gotoState(item)" class="hand-hover" ng-class="{true: 'abnormal', false: ''}[item.abnormalFlag]">{{item.displayName}}<small ng-show="item.classification">({{item.classification}})</small></a> </li> 
         	</ul>
-        	<a ng-click="expandlist(mod)" ng-show="showMoreDocuments(mod)" ><span ng-class="showMoreDocumentsSymbol(mod)"></span></a>
+        	<a ng-click="toggleList(mod)" ng-show="showMoreDocuments(mod)" class="hand-hover" ><span ng-class="showMoreDocumentsSymbol(mod)"></span></a>
        </fieldset>
 	 	
 	 <%-- 
