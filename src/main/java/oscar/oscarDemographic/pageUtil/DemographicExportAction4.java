@@ -184,6 +184,10 @@ public class DemographicExportAction4 extends Action {
 			throw new SecurityException("missing required security object (_demographic)");
 		}
 		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographicExport", "r", null)) {
+			throw new SecurityException("missing required security object (_demographicExport)");
+		}
+		
 		DemographicExportForm defrm = (DemographicExportForm)form;
 		String demographicNo = defrm.getDemographicNo();
 		String setName = defrm.getPatientSet();
