@@ -38,6 +38,14 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 <%
+String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_demographicExport"
+	rights="r" reverse="<%=true%>">
+	<% response.sendRedirect("../noRights.html"); %>
+</security:oscarSec>
+
+<%
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 
   oscar.OscarProperties op = oscar.OscarProperties.getInstance();
