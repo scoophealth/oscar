@@ -1487,7 +1487,7 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:private BillingItemData[] getItemHospObj(HttpServletRequest val, Vector vecServiceCode, Vector vecServiceCodeUnit,</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:public Vector getBillingClaimHospObj(HttpServletRequest requestData, String service_date, String total,</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:public Vector getBillingClaimObj(HttpServletRequest requestData) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:public boolean addABillingRecord(Vector val) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:public boolean addABillingRecord(LoggedInInfo loggedInInfo, Vector val) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:public boolean addPrivateBillExtRecord(HttpServletRequest requestData, Vector vecObj) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:public void addOhipInvoiceTrans(Vector vecObj) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:// ret - Vector claimheader1data, itemdata</ViolationValue>
@@ -1496,7 +1496,7 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:public Vector getBillingClaimInrObj(HttpServletRequest requestData) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:public Vector getBillingClaimObj(HttpServletRequest requestData) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:public boolean addABillingRecord(Vector val) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:public boolean addABillingRecord(LoggedInInfo loggedInInfo, Vector val) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:* @return Hashtable with these fields:</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:* Used to get a Hashtable containing  lastName, firstName, sex, age</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:Hashtable h = null;</ViolationValue>

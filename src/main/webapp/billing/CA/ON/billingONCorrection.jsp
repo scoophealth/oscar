@@ -45,6 +45,9 @@
 <%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
 <%@page import="org.oscarehr.common.service.BillingONService"%> 
 <%@page import="java.text.NumberFormat" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProgramProviderDAO" %>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+
 
 <%@taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -393,6 +396,7 @@ function validateAmountNumberic(idx) {
     RaDetailDao raDetailDao = (RaDetailDao) SpringUtils.getBean("raDetailDao");
     BillingONCHeader1Dao bCh1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
     BillingServiceDao bServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
+    ProgramProviderDAO programProviderDAO = SpringUtils.getBean(ProgramProviderDAO.class);
     
     // bFlag - fill in data?
     boolean bFlag = false;
@@ -428,6 +432,23 @@ function validateAmountNumberic(idx) {
         billingNo = Integer.parseInt(billNo);
 		bCh1 = bCh1Dao.find(billingNo);
 
+		
+		//do a program check here.
+		if(bCh1 != null && bCh1.getProgramNo() != null) {
+			List<ProgramProvider> ppList = programProviderDAO.getProgramDomain(loggedInInfo.getLoggedInProviderNo());
+			boolean found=false;
+			for(ProgramProvider pp:ppList) {
+				if(pp.getProgramId().intValue() == bCh1.getProgramNo().intValue()) {
+					found=true;
+					break;
+				}
+			}
+			
+			if(!found) {
+				throw new RuntimeException("You do not have access to this invoice! It's from another program.");
+			}
+		}
+		
         if (bCh1 != null) {	
 
 	    clinicSite = bCh1.getClinic();

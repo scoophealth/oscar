@@ -2969,7 +2969,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				mockReq.getSession().setAttribute("user", loggedInInfo.getLoggedInProviderNo());
 
 				BillingSavePrep bObj = new BillingSavePrep();
-				boolean ret = bObj.addABillingRecord(bObj.getBillingClaimObj(mockReq));
+				boolean ret = bObj.addABillingRecord(loggedInInfo, bObj.getBillingClaimObj(mockReq));
 				/*
 				 * not applicable in macro context if (mockReq.getParameter("xml_billtype").substring(0, 3).matches( BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) { mockReq.addParameter("billto", macro.getBillingBillto()); mockReq.addParameter("remitto",
 				 * macro.getBillingRemitto()); mockReq.addParameter("gstBilledTotal", macro .getBillingGstBilledTotal()); mockReq.addParameter("payment", macro.getBillingPayment()); mockReq.addParameter("refund", macro.getBillingRefund());

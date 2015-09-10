@@ -18,6 +18,7 @@
 
 --%>
 <%@page import="java.math.BigDecimal"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
   if(session.getAttribute("user") == null)
     response.sendRedirect("../logout.htm");
@@ -30,6 +31,9 @@
   String strLimit2="10";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
+  
+  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+
 %>
 <%@ page
 	import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.oscarDB.*"
@@ -98,7 +102,7 @@ function popUpClosed() {
 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 BillingONExtDao billingOnExtDao = (BillingONExtDao)SpringUtils.getBean(BillingONExtDao.class);
 String limit = " limit " + strLimit1 + "," + strLimit2;
-List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), Integer.parseInt(strLimit2), Integer.parseInt(strLimit1), null);
+List aL = dbObj.getBillingHist(loggedInInfo, request.getParameter("demographic_no"), Integer.parseInt(strLimit2), Integer.parseInt(strLimit1), null);
 int nItems=0;
 for(int i=0; i<aL.size(); i=i+2) {
 	nItems++;

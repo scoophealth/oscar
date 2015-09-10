@@ -103,7 +103,7 @@ public class EctDisplayBillingAction extends EctDisplayAction {
                 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
                 List<Object> aL = null;
                 try{
-                     aL   = dbObj.getBillingHist(bean.demographicNo, 10, 0, null);
+                     aL   = dbObj.getBillingHist(loggedInInfo, bean.demographicNo, 10, 0, null);
                 }catch(Exception e){
 
                     MiscUtils.getLogger().error("Error", e);
