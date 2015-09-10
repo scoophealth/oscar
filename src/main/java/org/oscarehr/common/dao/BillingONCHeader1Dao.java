@@ -50,6 +50,7 @@ import org.oscarehr.common.model.BillingService;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DateRange;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -106,7 +107,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         }
     }
     
-    public String createBill(String provider, Integer demographic, String code, String clinicRefCode, Date serviceDate, String curUser) {
+    public String createBill(LoggedInInfo loggedInInfo, String provider, Integer demographic, String code, String clinicRefCode, Date serviceDate, String curUser) {
         BillingONCHeader1 header1 = null;
         Provider prov = providerDao.getProvider(provider);
         OscarProperties properties = OscarProperties.getInstance();
@@ -125,7 +126,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return total;
     }
     
-    public String createBill(String provider, Integer demographic, String code, String dxCode, String clinicRefCode, Date serviceDate, String curUser) {
+    public String createBill(LoggedInInfo loggedInInfo, String provider, Integer demographic, String code, String dxCode, String clinicRefCode, Date serviceDate, String curUser) {
         BillingONCHeader1 header1 = null;
         Provider prov = providerDao.getProvider(provider);
         OscarProperties properties = OscarProperties.getInstance();
@@ -147,7 +148,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     }
     
 
-    public String createBills(String provider, List<String>demographic_nos, List<String>codes, List<String>dxcodes, String clinicRefCode, Date serviceDate, String curUser) {
+    public String createBills(LoggedInInfo loggedInInfo, String provider, List<String>demographic_nos, List<String>codes, List<String>dxcodes, String clinicRefCode, Date serviceDate, String curUser) {
         BillingONCHeader1 header1 = null;
         Provider prov = providerDao.getProvider(provider);
         OscarProperties properties = OscarProperties.getInstance();

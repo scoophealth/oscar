@@ -30,6 +30,7 @@ import java.util.Vector;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.billing.CA.ON.dao.BillingONDiskNameDao;
 import org.oscarehr.billing.CA.ON.dao.BillingONFilenameDao;
 import org.oscarehr.billing.CA.ON.dao.BillingONHeaderDao;
@@ -52,6 +53,8 @@ import org.oscarehr.common.model.BillingONRepo;
 import org.oscarehr.common.model.BillingOnItemPayment;
 import org.oscarehr.common.model.BillingOnTransaction;
 import org.oscarehr.common.model.BillingPaymentType;
+import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -66,7 +69,7 @@ public class JdbcBillingClaimImpl {
 	private BillingONDiskNameDao diskNameDao = SpringUtils.getBean(BillingONDiskNameDao.class);
 	private BillingONFilenameDao filenameDao = SpringUtils.getBean(BillingONFilenameDao.class);
 	private BillingONRepoDao repoDao = SpringUtils.getBean(BillingONRepoDao.class);
-
+	private ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
 	
 
 	SimpleDateFormat dateformatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -101,7 +104,7 @@ public class JdbcBillingClaimImpl {
 		return b.getId();
 	}
 
-	public int addOneClaimHeaderRecord(BillingClaimHeader1Data val) {
+	public int addOneClaimHeaderRecord(LoggedInInfo loggedInInfo, BillingClaimHeader1Data val) {
 		BillingONCHeader1 b = new BillingONCHeader1();
 		b.setHeaderId(0);
 		b.setTranscId(val.transc_id);
@@ -162,6 +165,12 @@ public class JdbcBillingClaimImpl {
 		b.setAsstProviderNo(val.asstProvider_no);
 		b.setCreator(val.creator);
 		b.setClinic(val.clinic);
+		
+		ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+		
+		if(pp != null) {
+			b.setProgramNo(pp.getProgramId().intValue());
+		}
 		
 		cheaderDao.persist(b);
 		

@@ -27,8 +27,12 @@
 <%@page import="org.oscarehr.billing.CA.dao.BillingInrDao" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="oscar.util.ConversionUtils" %>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+
 <%
 	BillingInrDao billingInrDao = SpringUtils.getBean(BillingInrDao.class);
+LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+
 %>
 <%//
 			JdbcBillingClaimImpl dbObj = new JdbcBillingClaimImpl();
@@ -148,7 +152,7 @@
 					claim1Header.setAsstProvider_no("");
 					claim1Header.setCreator(creator);
 
-					int nNo = dbObj.addOneClaimHeaderRecord(claim1Header);
+					int nNo = dbObj.addOneClaimHeaderRecord(loggedInInfo, claim1Header);
 					String billNo = "" + nNo;
 
 					int recordAffected = 0;

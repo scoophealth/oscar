@@ -273,7 +273,7 @@
 			// get patient's billing history
 			boolean bFirst = true;
 			JdbcBillingReviewImpl hdbObj = new JdbcBillingReviewImpl();
-			List aL = hdbObj.getBillingHist(demo_no, 5,0, null);
+			List aL = hdbObj.getBillingHist(loggedInInfo, demo_no, 5,0, null);
 
 			Vector vecHistD = new Vector();
 			if (aL.size()>0) {

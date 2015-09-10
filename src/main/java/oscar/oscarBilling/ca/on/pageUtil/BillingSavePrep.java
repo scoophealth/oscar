@@ -27,6 +27,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarBilling.ca.on.data.BillingClaimHeader1Data;
@@ -43,10 +44,10 @@ public class BillingSavePrep {
 
 	// save a billing record
 	@SuppressWarnings("rawtypes")
-	public boolean addABillingRecord(Vector val) {
+	public boolean addABillingRecord(LoggedInInfo loggedInInfo, Vector val) {
 		boolean ret = false;
 		BillingClaimHeader1Data claim1Obj = (BillingClaimHeader1Data) val.get(0);
-		int billingNo = dbObj.addOneClaimHeaderRecord(claim1Obj);
+		int billingNo = dbObj.addOneClaimHeaderRecord(loggedInInfo, claim1Obj);
 		billingId = billingNo;
 		if (billingNo == 0)
 			return false;
