@@ -27,12 +27,15 @@
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+
 <%
 	WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     UserPropertyDAO userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
     BillingONCHeader1Dao cheader1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
     BillingONExtDao extDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
-    		
+    LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+
     		
 	if (session.getAttribute("user") == null) {
 		response.sendRedirect("../../../logout.jsp");
@@ -55,7 +58,7 @@
 			    || "Save & Add Another Bill".equals(request.getParameter("submit")))) {
 		BillingSavePrep bObj = new BillingSavePrep();
 		Vector vecObj = bObj.getBillingClaimObj(request);
-		ret = bObj.addABillingRecord(vecObj);
+		ret = bObj.addABillingRecord(loggedInInfo, vecObj);
 		if(request.getParameter("xml_billtype").substring(0,3).matches(BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) {
 			bObj.addPrivateBillExtRecord(request, vecObj);
 		} else {

@@ -19,11 +19,14 @@
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@ page import="java.util.*, oscar.oscarBilling.ca.on.pageUtil.*"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 
 <%//
+			LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+
 			BillingSpecPrep obj = new BillingSpecPrep();
 			Vector vec = obj.getBillingClaimObj(request);
-			boolean billSaved = obj.addABillingRecord(vec);
+			boolean billSaved = obj.addABillingRecord(loggedInInfo,vec);
 
 			if(billSaved) {
                 String prevention = request.getParameter("goPrev");
