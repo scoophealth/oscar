@@ -40,6 +40,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.common.model.ProviderPreference.QuickLink;
 import org.oscarehr.managers.model.ProviderSettings;
+
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,7 @@ public class ProviderManager2 {
 
 	@Autowired
 	private ProviderExtDao providerExtDao;
-	
+		
 	public List<Provider> getProviders(LoggedInInfo loggedInInfo, Boolean active) {
 		List<Provider> results = null;
 
@@ -104,7 +105,7 @@ public class ProviderManager2 {
 		
 		return(results);
 	}
-	
+		
 	/*
 	 * Format is LastName[,FirstName]
 	 */
@@ -234,6 +235,150 @@ public class ProviderManager2 {
 			settings.setCppSingleLine("yes".equals(map.get("cpp_single_line").getValue())?true:false);
 		}
 		
+		//custom summary display
+		//NEW
+		/*
+		if(map.get("summary.item.custom.display") != null) {
+			settings.setSummaryItemCustomDisplay("on".equals(map.get("summary.item.custom.display").getValue())?true:false);
+		}
+		*/
+		
+		//OLD
+		//cpp.pref.enable - use for now so changes in the new to hide or display cpp items reflect in the encounter as well as new ui
+		//if this =on then enabled other wise disabled
+		 if(map.get("cpp.pref.enable") != null) {
+			settings.setSummaryItemCustomDisplay("on".equals(map.get("cpp.pref.enable").getValue())?true:false);
+		 }
+		
+
+		 //.position exists -> value blank = disable  --in the old ui if cpp.pref.enabled is "on" then changing the position to "None" sets the value to "" hides the CPP item
+		 //.position exists -> value off = disable 
+		 //except for cpp.pref.enable if the absence of the property in the db the UI should display "true" or "Enable" for .position.
+			if(map.get(PreferenceManager.ONGOING_POS) != null) {
+				settings.setCppDisplayOngoingConcerns("on".equals(map.get(PreferenceManager.ONGOING_POS).getValue())?true:false);
+			}else if(map.get(PreferenceManager.OLD_ONGOING_CONCERNS_POS) != null) {
+				settings.setCppDisplayOngoingConcerns(!"".equals(map.get(PreferenceManager.OLD_ONGOING_CONCERNS_POS).getValue())?true:false);
+			}else{
+				settings.setCppDisplayOngoingConcerns(true);
+			}
+			if(map.get(PreferenceManager.ONGOING_START_DATE) != null) {
+				settings.setCppOngoingConcernsStartDate("on".equals(map.get(PreferenceManager.ONGOING_START_DATE).getValue())?true:false);
+			}
+			if(map.get(PreferenceManager.ONGOING_RES_DATE) != null) {
+				settings.setCppOngoingConcernsResDate("on".equals(map.get(PreferenceManager.ONGOING_RES_DATE).getValue())?true:false);
+			}
+			if(map.get(PreferenceManager.ONGOING_PROBLEM_STATUS) != null) {
+				settings.setCppOngoingConcernsProblemStatus("on".equals(map.get(PreferenceManager.ONGOING_PROBLEM_STATUS).getValue())?true:false);
+			}
+			
+			/*
+			 * 
+			 * if .position dosen't exist = on
+			 * if .position exists and not equal "" = on
+			 * ignore the R* position eg: R1I1 R1I2 R2I1 R2I2
+			 * 
+			 * so setting position in old ui will have no effect on the new ui
+			 * and when setting position in new ui it will have no effect on the old ui
+			 *  
+			 */		
+			if(map.get(PreferenceManager.MED_HX_POS) != null) {
+				settings.setCppDisplayMedHx("on".equals(map.get(PreferenceManager.MED_HX_POS).getValue())?true:false);
+			}else if(map.get(PreferenceManager.OLD_MEDICAL_HISTORY_POS) != null) {
+				settings.setCppDisplayMedHx(!"".equals(map.get(PreferenceManager.OLD_MEDICAL_HISTORY_POS).getValue())?true:false);
+			}else{
+				settings.setCppDisplayMedHx(true);
+			}
+			if(map.get(PreferenceManager.MED_HX_START_DATE) != null) {
+				settings.setCppMedHxStartDate("on".equals(map.get(PreferenceManager.MED_HX_START_DATE).getValue())?true:false);
+			}
+			if(map.get(PreferenceManager.MED_HX_RES_DATE) != null) {
+				settings.setCppMedHxResDate("on".equals(map.get(PreferenceManager.MED_HX_RES_DATE).getValue())?true:false);
+			}
+			if(map.get(PreferenceManager.MED_HX_TREATMENT) != null) {
+				settings.setCppMedHxTreatment("on".equals(map.get(PreferenceManager.MED_HX_TREATMENT).getValue())?true:false);
+			}
+			if(map.get(PreferenceManager.MED_HX_PROCEDURE_DATE) != null) {
+				settings.setCppMedHxProcedureDate("on".equals(map.get(PreferenceManager.MED_HX_PROCEDURE_DATE).getValue())?true:false);
+			}
+			
+			if(map.get(PreferenceManager.SOC_HX_POS) != null) {
+				settings.setCppDisplaySocialHx("on".equals(map.get(PreferenceManager.SOC_HX_POS).getValue())?true:false);
+			}else if(map.get(PreferenceManager.OLD_SOCIAL_HISTORY_POS) != null){
+				settings.setCppDisplaySocialHx(!"".equals(map.get(PreferenceManager.OLD_SOCIAL_HISTORY_POS).getValue())?true:false);
+			}else{	
+				settings.setCppDisplaySocialHx(true);
+			}
+			
+			if(map.get(PreferenceManager.SOC_HX_START_DATE) != null) {
+				settings.setCppSocialHxStartDate("on".equals(map.get(PreferenceManager.SOC_HX_START_DATE).getValue())?true:false);
+			}
+			if(map.get(PreferenceManager.SOC_HX_RES_DATE) != null) {
+				settings.setCppSocialHxResDate("on".equals(map.get(PreferenceManager.SOC_HX_RES_DATE).getValue())?true:false);
+			}
+
+			if(map.get(PreferenceManager.REMINDERS_POS) != null) {
+				settings.setCppDisplayReminders("on".equals(map.get(PreferenceManager.REMINDERS_POS).getValue())?true:false);
+			}else if(map.get(PreferenceManager.OLD_REMINDERS_POS) != null) {
+				settings.setCppDisplayReminders(!"".equals(map.get(PreferenceManager.OLD_REMINDERS_POS).getValue())?true:false);
+			}else{
+				settings.setCppDisplayReminders(true);
+			}
+			if(map.get(PreferenceManager.REMINDERS_START_DATE) != null) {
+				settings.setCppRemindersStartDate("on".equals(map.get(PreferenceManager.REMINDERS_START_DATE).getValue())?true:false);
+			}
+			if(map.get(PreferenceManager.REMINDERS_RES_DATE) != null) {
+				settings.setCppRemindersResDate("on".equals(map.get(PreferenceManager.REMINDERS_RES_DATE).getValue())?true:false);
+			}
+			
+			if(map.get(PreferenceManager.PREVENTION_POS) != null) {
+				settings.setSummaryItemDisplayPreventions("on".equals(map.get(PreferenceManager.PREVENTION_POS).getValue())?true:false);
+			}else{
+				settings.setSummaryItemDisplayPreventions(true);
+			}
+			if(map.get(PreferenceManager.FAM_HX_POS) != null) {
+				settings.setSummaryItemDisplayFamHx("on".equals(map.get(PreferenceManager.FAM_HX_POS).getValue())?true:false);
+			}else{
+				settings.setSummaryItemDisplayFamHx(true);
+			}
+			if(map.get(PreferenceManager.RISK_FACTORS_POS) != null) {
+				settings.setSummaryItemDisplayRiskFactors("on".equals(map.get(PreferenceManager.RISK_FACTORS_POS).getValue())?true:false);
+			}else{
+				settings.setSummaryItemDisplayRiskFactors(true);
+			}
+			if(map.get(PreferenceManager.ALLERGIES_POS) != null) {
+				settings.setSummaryItemDisplayAllergies("on".equals(map.get(PreferenceManager.ALLERGIES_POS).getValue())?true:false);
+			}else{
+				settings.setSummaryItemDisplayAllergies(true);
+			}
+			
+			if(map.get(PreferenceManager.MEDS_POS) != null) {
+				settings.setSummaryItemDisplayMeds("on".equals(map.get(PreferenceManager.MEDS_POS).getValue())?true:false);
+			}else{
+				settings.setSummaryItemDisplayMeds(true);
+			}
+			if(map.get(PreferenceManager.OTHER_MEDS_POS) != null) {
+				settings.setSummaryItemDisplayOtherMeds("on".equals(map.get(PreferenceManager.OTHER_MEDS_POS).getValue())?true:false);
+			}else{
+				settings.setSummaryItemDisplayOtherMeds(true);
+			}
+			if(map.get(PreferenceManager.ASSESSMENTS_POS) != null) {
+				settings.setSummaryItemDisplayAssessments("on".equals(map.get(PreferenceManager.ASSESSMENTS_POS).getValue())?true:false);
+			}else{
+				settings.setSummaryItemDisplayAssessments(true);
+			}
+						
+			if(map.get(PreferenceManager.INCOMING_POS) != null) {
+				settings.setSummaryItemDisplayIncoming("on".equals(map.get(PreferenceManager.INCOMING_POS).getValue())?true:false);
+			}else{
+				settings.setSummaryItemDisplayIncoming(true);
+			}
+			
+			if(map.get(PreferenceManager.DS_SUPPORT_POS) != null) {
+				settings.setSummaryItemDisplayDsSupport("on".equals(map.get(PreferenceManager.DS_SUPPORT_POS).getValue())?true:false);
+			}else{
+				settings.setSummaryItemDisplayDsSupport(true);
+			}
+
 		if(map.get("cme_note_date") != null) {
 			settings.setCmeNoteDate(map.get("cme_note_date").getValue());
 		}
@@ -461,6 +606,65 @@ public class ProviderManager2 {
 		
 		p = getMappedOrNewProperty(map, "cpp_single_line", providerNo);
 		p.setValue(settings.isCppSingleLine()?"yes":"no");
+		
+		p = getMappedOrNewProperty(map, PreferenceManager.CUSTOM_SUMMARY_ENABLE, providerNo);
+		p.setValue(settings.isSummaryItemCustomDisplay()?"on":"off"); 	
+
+		p = getMappedOrNewProperty(map, PreferenceManager.ONGOING_POS, providerNo);
+		p.setValue(settings.isCppDisplayOngoingConcerns()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.ONGOING_START_DATE, providerNo);
+		p.setValue(settings.isCppOngoingConcernsStartDate()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.ONGOING_RES_DATE, providerNo);
+		p.setValue(settings.isCppOngoingConcernsResDate()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.ONGOING_PROBLEM_STATUS, providerNo);
+		p.setValue(settings.isCppOngoingConcernsProblemStatus()?"on":"off");
+		
+		p = getMappedOrNewProperty(map, PreferenceManager.MED_HX_POS, providerNo);
+		p.setValue(settings.isCppDisplayMedHx()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.MED_HX_START_DATE, providerNo);
+		p.setValue(settings.isCppMedHxStartDate()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.MED_HX_RES_DATE, providerNo);
+		p.setValue(settings.isCppMedHxResDate()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.MED_HX_TREATMENT, providerNo);
+		p.setValue(settings.isCppMedHxTreatment()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.MED_HX_PROCEDURE_DATE, providerNo);
+		p.setValue(settings.isCppMedHxProcedureDate()?"on":"off");
+		
+		p = getMappedOrNewProperty(map, PreferenceManager.SOC_HX_POS, providerNo);
+		p.setValue(settings.isCppDisplaySocialHx()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.SOC_HX_START_DATE, providerNo);
+		p.setValue(settings.isCppSocialHxStartDate()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.SOC_HX_RES_DATE, providerNo);
+		p.setValue(settings.isCppSocialHxResDate()?"on":"off");
+		
+		p = getMappedOrNewProperty(map, PreferenceManager.REMINDERS_POS, providerNo);
+		p.setValue(settings.isCppDisplayReminders()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.REMINDERS_START_DATE, providerNo);
+		p.setValue(settings.isCppRemindersStartDate()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.REMINDERS_RES_DATE, providerNo);
+		p.setValue(settings.isCppRemindersResDate()?"on":"off");
+
+		p = getMappedOrNewProperty(map, PreferenceManager.PREVENTION_POS, providerNo);
+		p.setValue(settings.isSummaryItemDisplayPreventions()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.FAM_HX_POS, providerNo);
+		p.setValue(settings.isSummaryItemDisplayFamHx()?"on":"off"); 
+		p = getMappedOrNewProperty(map, PreferenceManager.RISK_FACTORS_POS, providerNo);
+		p.setValue(settings.isSummaryItemDisplayRiskFactors()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.ALLERGIES_POS, providerNo);
+		p.setValue(settings.isSummaryItemDisplayAllergies()?"on":"off");
+		p = getMappedOrNewProperty(map, PreferenceManager.MEDS_POS, providerNo);
+		p.setValue(settings.isSummaryItemDisplayMeds()?"on":"off"); 
+		p = getMappedOrNewProperty(map, PreferenceManager.OTHER_MEDS_POS, providerNo);
+		p.setValue(settings.isSummaryItemDisplayOtherMeds()?"on":"off"); 
+		p = getMappedOrNewProperty(map, PreferenceManager.ASSESSMENTS_POS, providerNo);
+		p.setValue(settings.isSummaryItemDisplayAssessments()?"on":"off"); 
+
+		p = getMappedOrNewProperty(map, PreferenceManager.INCOMING_POS, providerNo);
+		p.setValue(settings.isSummaryItemDisplayIncoming()?"on":"off"); 	
+		
+		p = getMappedOrNewProperty(map, PreferenceManager.DS_SUPPORT_POS, providerNo);
+		p.setValue(settings.isSummaryItemDisplayDsSupport()?"on":"off"); 
+		
 		p = getMappedOrNewProperty(map, "cme_note_date", providerNo);
 		p.setValue(settings.getCmeNoteDate());	
 		p = getMappedOrNewProperty(map, "cme_note_format", providerNo);

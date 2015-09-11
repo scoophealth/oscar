@@ -84,6 +84,43 @@ public class ProviderSettings {
 	private boolean documentBrowserInMasterFile;
 	
 	private boolean cppSingleLine;
+	
+	
+	private boolean summaryItemCustomDisplay;
+	
+	private boolean cppDisplayOngoingConcerns;
+	private boolean cppOngoingConcernsStartDate;
+	private boolean cppOngoingConcernsResDate;
+	private boolean cppOngoingConcernsProblemStatus;
+	
+	private boolean cppDisplayMedHx;
+	private boolean cppMedHxStartDate;
+	private boolean cppMedHxResDate;
+	private boolean cppMedHxTreatment;
+	private boolean cppMedHxProcedureDate;
+	
+	private boolean cppDisplaySocialHx;
+	private boolean cppSocialHxStartDate;
+	private boolean cppSocialHxResDate;
+	
+	private boolean cppDisplayReminders;
+	private boolean cppRemindersStartDate;
+	private boolean cppRemindersResDate;
+	
+	private boolean summaryItemDisplayPreventions;
+	private boolean summaryItemDisplayFamHx;
+	private boolean summaryItemDisplayRiskFactors;
+	private boolean summaryItemDisplayAllergies;
+	
+	private boolean summaryItemDisplayMeds;
+	private boolean summaryItemDisplayOtherMeds;
+	private boolean summaryItemDisplayAssessments;
+	
+	//private boolean summaryItemDisplayOutgoing;
+	
+	private boolean summaryItemDisplayIncoming;
+	private boolean summaryItemDisplayDsSupport;
+
 	private String cmeNoteDate = "A";
 	private boolean cmeNoteFormat;
 	private String quickChartSize;
@@ -357,6 +394,164 @@ public class ProviderSettings {
 	public void setCppSingleLine(boolean cppSingleLine) {
 		this.cppSingleLine = cppSingleLine;
 	}
+	
+	
+	public boolean isSummaryItemCustomDisplay(){
+		return summaryItemCustomDisplay;
+	}
+	public void setSummaryItemCustomDisplay(boolean cppCustomDisplay){
+		this.summaryItemCustomDisplay = cppCustomDisplay;
+	}
+	
+	public boolean isCppDisplayOngoingConcerns(){
+		return cppDisplayOngoingConcerns;
+	}
+	public void setCppDisplayOngoingConcerns(boolean cppDisplayOngoingConcerns){
+		this.cppDisplayOngoingConcerns = cppDisplayOngoingConcerns;
+	}
+	public boolean isCppOngoingConcernsStartDate(){
+		return cppOngoingConcernsStartDate;
+	}
+	public void setCppOngoingConcernsStartDate(boolean cppOngoingConcernsStartDate){
+		this.cppOngoingConcernsStartDate = cppOngoingConcernsStartDate;
+	}
+	public boolean isCppOngoingConcernsResDate(){
+		return cppOngoingConcernsResDate;
+	}
+	public void setCppOngoingConcernsResDate(boolean cppOngoingConcernsResDate){
+		this.cppOngoingConcernsResDate = cppOngoingConcernsResDate;
+	}
+	public boolean isCppOngoingConcernsProblemStatus(){
+		return cppOngoingConcernsProblemStatus;
+	}
+	public void setCppOngoingConcernsProblemStatus(boolean cppOngoingConcernsProblemStatus){
+		this.cppOngoingConcernsProblemStatus = cppOngoingConcernsProblemStatus;
+	}
+	public boolean isCppDisplayMedHx(){
+		return cppDisplayMedHx;
+	}
+	public void setCppDisplayMedHx(boolean cppDisplayMedHx){
+		this.cppDisplayMedHx = cppDisplayMedHx;
+	}
+	public boolean isCppMedHxStartDate(){
+		return cppMedHxStartDate;
+	}
+	public void setCppMedHxStartDate(boolean cppMedHxStartDate){
+		this.cppMedHxStartDate = cppMedHxStartDate;
+	}
+	public boolean isCppMedHxResDate(){
+		return cppMedHxResDate;
+	}
+	public void setCppMedHxResDate(boolean cppMedHxResDate){
+		this.cppMedHxResDate = cppMedHxResDate;
+	}
+	public boolean isCppMedHxTreatment(){
+		return cppMedHxTreatment;
+	}
+	public void setCppMedHxTreatment(boolean cppMedHxTreatment){
+		this.cppMedHxTreatment = cppMedHxTreatment;
+	}
+	public boolean isCppMedHxProcedureDate(){
+		return cppMedHxProcedureDate;
+	}
+	public void setCppMedHxProcedureDate(boolean cppMedHxProcedureDate){
+		this.cppMedHxProcedureDate = cppMedHxProcedureDate;
+	}
+	public boolean isCppDisplaySocialHx(){
+		return cppDisplaySocialHx;
+	}
+	public void setCppDisplaySocialHx(boolean cppDisplaySocialHx){
+		this.cppDisplaySocialHx = cppDisplaySocialHx;
+	}
+	public boolean isCppSocialHxStartDate(){
+		return cppSocialHxStartDate;
+	}
+	public void setCppSocialHxStartDate(boolean cppSocialHxStartDate){
+		this.cppSocialHxStartDate = cppSocialHxStartDate;
+	}
+	public boolean isCppSocialHxResDate(){
+		return cppSocialHxResDate;
+	}
+	public void setCppSocialHxResDate(boolean cppSocialHxResDate){
+		this.cppSocialHxResDate = cppSocialHxResDate;
+	}
+	public boolean isCppDisplayReminders(){
+		return cppDisplayReminders;
+	}
+	public void setCppDisplayReminders(boolean cppDisplayReminders){
+		this.cppDisplayReminders = cppDisplayReminders;
+	}
+	public boolean isCppRemindersStartDate(){
+		return cppRemindersStartDate;
+	}
+	public void setCppRemindersStartDate(boolean cppRemindersStartDate){
+		this.cppRemindersStartDate = cppRemindersStartDate;
+	}
+	public boolean isCppRemindersResDate(){
+		return cppRemindersResDate;
+	}
+	public void setCppRemindersResDate(boolean cppRemindersResDate){
+		this.cppRemindersResDate = cppRemindersResDate;
+	}
+	
+	public boolean isSummaryItemDisplayPreventions(){
+		return summaryItemDisplayPreventions;
+	}
+	public void setSummaryItemDisplayPreventions(boolean summaryItemDisplayPreventions){
+		this.summaryItemDisplayPreventions = summaryItemDisplayPreventions;
+	}
+	public boolean isSummaryItemDisplayFamHx(){
+		return summaryItemDisplayFamHx;
+	}
+	public void setSummaryItemDisplayFamHx(boolean summaryItemDisplayFamHx){
+		this.summaryItemDisplayFamHx = summaryItemDisplayFamHx;
+	}
+	public boolean isSummaryItemDisplayRiskFactors(){
+		return summaryItemDisplayRiskFactors;
+	}
+	public void setSummaryItemDisplayRiskFactors(boolean summaryItemDisplayRiskFactors){
+		this.summaryItemDisplayRiskFactors = summaryItemDisplayRiskFactors;
+	}
+	public boolean isSummaryItemDisplayAllergies(){
+		return summaryItemDisplayAllergies;
+	}
+	public void setSummaryItemDisplayAllergies(boolean summaryItemDisplayAllergies){
+		this.summaryItemDisplayAllergies = summaryItemDisplayAllergies;
+	}
+	public boolean isSummaryItemDisplayMeds(){
+		return summaryItemDisplayMeds;
+	}
+	public void setSummaryItemDisplayMeds(boolean summaryItemDisplayMeds){
+		this.summaryItemDisplayMeds = summaryItemDisplayMeds;
+	}
+	public boolean isSummaryItemDisplayOtherMeds(){
+		return summaryItemDisplayOtherMeds;
+	}
+	public void setSummaryItemDisplayOtherMeds(boolean summaryItemDisplayOtherMeds){
+		this.summaryItemDisplayOtherMeds = summaryItemDisplayOtherMeds;
+	}
+	public boolean isSummaryItemDisplayAssessments(){
+		return summaryItemDisplayAssessments;
+	}
+	public void setSummaryItemDisplayAssessments(boolean summaryItemDisplayAssessments){
+		this.summaryItemDisplayAssessments = summaryItemDisplayAssessments;
+	}
+	
+	public boolean isSummaryItemDisplayIncoming(){
+		return summaryItemDisplayIncoming;
+	}
+	public void setSummaryItemDisplayIncoming(boolean summaryItemDisplayIncoming){
+		this.summaryItemDisplayIncoming = summaryItemDisplayIncoming;
+	}
+	
+	public boolean isSummaryItemDisplayDsSupport(){
+		return summaryItemDisplayDsSupport;
+	}
+	public void setSummaryItemDisplayDsSupport(boolean summaryItemDisplayDsSupport){
+		this.summaryItemDisplayDsSupport = summaryItemDisplayDsSupport;
+	}
+	
+	
 	public String getCmeNoteDate() {
 		return cmeNoteDate;
 	}
@@ -448,9 +643,5 @@ public class ProviderSettings {
 	public void setDisableBornPrompts(boolean disableBornPrompts) {
 		this.disableBornPrompts = disableBornPrompts;
 	}
-	
-	
-	
-	
 
 }
