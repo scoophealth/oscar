@@ -115,7 +115,7 @@ function add(control) {
 	if (control) {
 		control.disabled = true;
 	}
-	window.location.href = '<%= request.getContextPath() %>/mcedt/kai/addUpload.jsp';
+	window.location.href = '<%= request.getContextPath() %>/mcedt/mailbox/addUpload.jsp';
 	return false;
 }
 
