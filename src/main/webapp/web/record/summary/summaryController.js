@@ -266,13 +266,6 @@ $scope.toggleList = function(mod){
 	}
 }
 
-
-$scope.expandlist = function(mod){
-	console.log(mod);
-	mod.displaySize = mod.summaryItem.length;
-	//$scope.documentlabsSize = $scope.documentlabs.length;
-}
-
 $scope.showMoreDocuments = function(mod){
 	////console.log('showMoreDocuments',mod);
 	if(!angular.isDefined(mod.summaryItem)){

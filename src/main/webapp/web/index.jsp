@@ -181,6 +181,14 @@ li.cpp-note-list:last-child{
    border-top-color:  #333 !important; 
    border-bottom-color: #333 !important;
  }
+ 
+ .abnormal{
+color:red;
+}
+
+.abnormal:hover{
+color:red;
+}
 
 /*for patient header*/
 @media (max-width: 1320px) {
