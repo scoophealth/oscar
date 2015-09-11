@@ -26,11 +26,10 @@
 
 <%@ page import="oscar.eform.actions.DisplayImageAction,java.lang.*,java.io.File,oscar.OscarProperties,java.io.*,oscar.eform.*,oscar.eform.data.*,java.util.*,org.apache.log4j.Logger"%>
 <!--
-/*  Shelter Lee's eForm Generator v4 modified after Amos Raphenya by Peter Hutten-Czapski
+/*  eForm Generator v5.3 reimagined by Peter Hutten-Czapski 2014
  *
  *  eformGenerator.jsp
  *
- *  Created on October 1st, 2010, updated Oct 27th
  *
  */
 -->
@@ -38,6 +37,66 @@
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <html>
+<script type='text/javascript'>
+/**
+ * Enable nudging with arrow keys
+ * - Binds to arrow keys to nudge and resize fields
+ * - Shift as a modifier switches from move to resize mode
+ * - Alt as a modifier changes the step size from 1px to 10px
+ *
+ *
+ * Written By Charlie Livingston <charlie@litsolutions.ca>
+*/
+document.onkeydown = function(evt) {
+    evt = (evt) ? evt : ((window.event) ? event : null);
+	var myReturn;
+    if (evt) {
+		if (evt.altKey) {
+		  step = 10;
+		} else {
+		  step = 1;
+		}
+        switch (evt.keyCode) {
+            case 37:
+			    if (evt.shiftKey) {
+					changeInput('width', -step);
+				} else {
+					changeInput('left', step);
+				}
+				myReturn = false;
+                break;
+            case 38:
+			    if (evt.shiftKey) {
+					changeInput('height', -step);
+				} else {
+					changeInput('up', step);
+				}
+				myReturn = false;
+                break;
+            case 39:
+			    if (evt.shiftKey) {
+					changeInput('width', step);
+				} else {
+					changeInput('right', step);
+				}
+				myReturn = false;
+                break;
+            case 40:
+			    if (evt.shiftKey) {
+					changeInput('height', step);
+				} else {
+					changeInput('down', step);
+				}
+				myReturn = false;
+                break;
+			default:
+				myReturn = true;
+				break;
+         }
+    }
+	return myReturn;
+}
+</script>
 <head>
 <title> <bean:message key="eFormGenerator.title"/></title>
 
@@ -73,6 +132,21 @@ a			{font-family: sans-serif; font-size: 12px; font-weight: normal; color: blue;
 </style>
 
 <script type="text/javascript">
+
+var BGWidth = 0;
+var BGHeight = 0;
+var PageNum = 0;
+var PageIterate = 1;
+var sigint = 0;
+var pageoffset = 0;
+
+var SignatureHolderX = 0;
+var SignatureHolderY = 0;
+var sigOffset = 0; 
+var SignatureHolderH = 0;
+var SignatureHolderW = 0;
+var SignatureHolderP = 0;
+
 function getCheckedValue(radioObj) {
 	if(!radioObj)
 		return "";
@@ -90,16 +164,27 @@ function getCheckedValue(radioObj) {
 	return "";
 }
 
-var BGWidth = 0;
-var BGHeight = 0;
-
-
 function loadImage(){
 	var img = document.getElementById('imageName');
 	var bg = document.getElementById('BGImage');
-
+	if ( img.value == "" ) {
+		return
+	} 
+	if ( bg.src.indexOf(img.value)>0) {
+		var r=confirm('<bean:message key="eFormGenerator.loadFileAgain"/>'+img.value+'<bean:message key="eFormGenerator.Again"/>');
+		if (r!=true)  {
+		  	return
+		}
+	} 
 	//Boilerplate mod to set the path for image function
-	bg.src = ("<%=request.getContextPath()%>"+"/eform/displayImage.do?imagefile="+img.value);	
+	bg.src = ("<%=request.getContextPath()%>"+"/eform/displayImage.do?imagefile="+img.value);
+	PageNum = PageNum +1;
+
+	DrawPage(jg,PageNum,img.value,bg.width)
+	document.getElementById('page').value=PageNum;
+	document.getElementById('AutoNamePrefix').value="page"+PageNum+"_";
+
+	loadInputList();	
 }
 
 function finishLoadingImage() {
@@ -111,7 +196,12 @@ function finishLoadingImage() {
 	document.getElementById('OrientCustom').value = document.getElementById('OrientCustomValue').value;
 	BGWidth = parseInt(getCheckedValue(document.getElementsByName('Orientation')));
 	bg.width = BGWidth;
+	if (PageNum >0){
+		pageoffset += bg.height;  //the current one
+	}
+	//alert("Page"+PageNum+"\nPageoffset"+pageoffset+"\nBGHeight"+BGHeight+"\nbg.height"+bg.height+"\nPageNum"+PageNum);
 	BGHeight = bg.height;
+
 	document.getElementById('Wizard').style.left = BGWidth;
 
 	myCnv.style.top = bg.style.top;
@@ -121,6 +211,7 @@ function finishLoadingImage() {
 
 	jg.clear();
 	drawPageOutline();
+
 }
 
 function drawPageOutline(){
@@ -179,6 +270,14 @@ function loadInputList(){
 			InputName= new String(RedrawParameter[5]);
 		}else if (InputType == 'Checkbox'){
 			InputName = new String(RedrawParameter[3]);
+		}else if (InputType == 'Xbox'){
+			InputName = new String(RedrawParameter[5]);
+		}else if (InputType == 'Page'){
+			InputName = "--Page--";
+		}else if (InputType == 'Signature'){
+			InputName = new String(RedrawParameter[5]);
+		}else if (InputType == 'Stamp'){
+			InputName = new String(RedrawParameter[5]);
 		}
 		//adds InputName as list item in InputList
 		var ListItem = document.createElement("li");
@@ -186,20 +285,11 @@ function loadInputList(){
 		ListItem.innerHTML = txt;
 		InputList.appendChild(ListItem);
 	}
-	if (document.getElementById('preCheckGender').checked){
-		ListItem = document.createElement("li");
-		ListItem.innerHTML = "<input name='InputChecklist' type='checkbox' id='Male' value ='Male'>Male";
-		InputList.appendChild(ListItem);
-
-		ListItem = document.createElement("li");
-		ListItem.innerHTML = "<input name='InputChecklist' type='checkbox' id='Female' value ='Female'>Female";
-		InputList.appendChild(ListItem);
-	}
-	if (document.getElementById('AddSignature').checked){
-		ListItem = document.createElement("li");
-		ListItem.innerHTML = "<input name='InputChecklist' type='checkbox' id='SignatureBox' value ='SignatureBox'>SignatureBox";
-		InputList.appendChild(ListItem);
-	}
+	//if (document.getElementById('AddSignatureClassic').checked){
+	//	ListItem = document.createElement("li");
+	//	ListItem.innerHTML = "<input name='InputChecklist' type='checkbox' id='SignatureBox' value ='SignatureBox'>SignatureBox";
+	//	InputList.appendChild(ListItem);
+	//}
 }
 
 function addToUserSignatureList(){
@@ -267,9 +357,18 @@ function TransformInput(n, d, p){
 			DataNumber = j;
 		}else if (InputType == 'Textbox'){
 			InputName = new String(RedrawParameter[5]);
-			DataNumber = j;
+			DataNumber = j;			
 		}else if (InputType == 'Checkbox'){
 			InputName = new String(RedrawParameter[3]);
+			DataNumber = j;
+		}else if (InputType == 'Xbox'){
+			InputName = new String(RedrawParameter[5]);
+			DataNumber = j;
+		}else if (InputType == 'Signature'){
+			InputName = new String(RedrawParameter[5]);
+			DataNumber = j;
+		}else if (InputType == 'Stamp'){
+			InputName = new String(RedrawParameter[5]);
 			DataNumber = j;
 		}
 		if (InputName == n){		//if InputName matches n
@@ -300,49 +399,8 @@ function TransformInput(n, d, p){
 		DrawData[j] = TargetParameter.join("|");
 		}
 	}
-	//shift gender boxes
-	if (document.getElementById('preCheckGender').checked){
-		if (n == 'Male'){
-			if (d == 'up'){
-				MTopLeftY = MTopLeftY - p;
-			} else if (d == 'down'){
-				MTopLeftY = MTopLeftY + p;
-			} else if (d == 'left'){
-				MTopLeftX = MTopLeftX - p;
-			} else if (d == 'right'){
-				MTopLeftX = MTopLeftX + p;
-			}
-		}else if (n == 'Female'){
-			if (d == 'up'){
-				FTopLeftY = FTopLeftY - p;
-			} else if (d == 'down'){
-				FTopLeftY = FTopLeftY + p;
-			} else if (d == 'left'){
-				FTopLeftX = FTopLeftX - p;
-			} else if (d == 'right'){
-				FTopLeftX = FTopLeftX + p;
-			}
-		}
-	}
-	//shift SignatureBox
-	if (document.getElementById('AddSignature').checked){
-		if(n == 'SignatureBox'){
-			if (d == 'up'){
-				SignatureHolderY = SignatureHolderY - p;
-			}else if (d == 'down'){
-				SignatureHolderY = SignatureHolderY + p;
-			}else if (d == 'left'){
-				SignatureHolderX = SignatureHolderX - p;
-			}else if (d == 'right'){
-				SignatureHolderX = SignatureHolderX + p;
-			}else if (d == 'width'){
-				SignatureHolderW = SignatureHolderW + p;
-			}else if (d == 'height'){
-				SignatureHolderH = SignatureHolderH + p;
-			}
-		}
-	}
-		//Redraw boxes after updating coordinates
+
+	//Redraw boxes after updating coordinates
 	RedrawAll();
 }
 
@@ -357,8 +415,8 @@ function alignInput(edge){
 //finds checked InputName, then aligns checked input boxes to top/bottom/left/right edge
 	TempData = DrawData;
 	var InputChecklist = document.getElementsByName('InputChecklist');
-	var InputName = ""	//hold InputName
-	var	DataNumber	= parseInt(0)	//holds the number that correspond to the order in which the Input is entered into the array
+	var InputName = "";		//hold InputName
+	var DataNumber	= parseInt(0);	//holds the number that correspond to the order in which the Input is entered into the array
 	var Initialized = false;
 
 	//find the inputs with the most top/bottom/left/right coordinates
@@ -370,15 +428,24 @@ function alignInput(edge){
 			for (var j=0; (j < (TempData.length)); j++){
 				var RedrawParameter = TempData[j].split("|");
 				var InputType = RedrawParameter[0]
-
+				
 				if (InputType == 'Text'){
 					InputName = new String(RedrawParameter[5]);
 					DataNumber = j;
 				}else if (InputType == 'Textbox'){
 					InputName = new String(RedrawParameter[5]);
-					DataNumber = j;
+					DataNumber = j;			
 				}else if (InputType == 'Checkbox'){
 					InputName = new String(RedrawParameter[3]);
+					DataNumber = j;
+				}else if (InputType == 'Xbox'){
+					InputName = new String(RedrawParameter[5]);
+					DataNumber = j;
+				}else if (InputType == 'Signature'){
+					InputName = new String(RedrawParameter[5]);
+					DataNumber = j;
+				}else if (InputType == 'Stamp'){
+					InputName = new String(RedrawParameter[5]);
 					DataNumber = j;
 				}
 				if (InputName == n){
@@ -392,83 +459,22 @@ function alignInput(edge){
 						RightEdge = Xcoord;
 						Initialized = true;
 					}
-
+					
 					if (Xcoord < LeftEdge){
 						LeftEdge = Xcoord;
 					}else if (Xcoord > RightEdge){
 						RightEdge = Xcoord;
-					}
+					} 
 					if (Ycoord < TopEdge){
 						TopEdge = Ycoord;
 					}else if (Ycoord > BottomEdge){
 						BottomEdge = Ycoord;
-					}
-				}
-			}
-			if (document.getElementById('preCheckGender').checked){
-				if (n == 'Male'){
-					if (!Initialized){
-						TopEdge = MTopLeftY;
-						BottomEdge = MTopLeftY;
-						LeftEdge = MTopLeftX;
-						RightEdge = MTopLeftX;
-						Initialized = true;
-					}
-					if (MTopLeftY > BottomEdge){
-						BottomEdge = MTopLeftY;
-					}else if (MTopLeftY < TopEdge){
-						TopEdge = MTopLeftY;
-					}
-					if (MTopLeftX < LeftEdge){
-						LeftEdge = MTopLeftX;
-					}else if (MTopLeftX > RightEdge){
-						RightEdge = MTopLeftX;
-					}
-				}else if (n == 'Female'){
-					if (!Initialized){
-						TopEdge = FTopLeftY;
-						BottomEdge = FTopLeftY;
-						LeftEdge = FTopLeftX;
-						RightEdge = FTopLeftX;
-						Initialized = true;
-					}
-					if (FTopLeftY > BottomEdge){
-						BottomEdge = FTopLeftY;
-					}else if (FTopLeftY < TopEdge){
-						TopEdge = FTopLeftY;
-					}
-					if (FTopLeftX < LeftEdge){
-						LeftEdge = FTopLeftX;
-					}else if (FTopLeftX > RightEdge){
-						RightEdge = FTopLeftX;
-					}
-				}
-			}
-			if (document.getElementById('AddSignature').checked){
-				if (n == 'SignatureBox'){
-					if (!Initialized){
-						TopEdge = SignatureHolderY;
-						BottomEdge = SignatureHolderY;
-						LeftEdge = SignatureHolderX;
-						RightEdge = SignatureHolderX;
-						Initialized = true;
-					}
-					if (SignatureHolderY > BottomEdge){
-						BottomEdge = SignatureHolderY;
-					}else if (SignatureHolderY < TopEdge){
-						TopEdge = SignatureHolderY;
-					}
-					if (SignatureHolderX < LeftEdge){
-						LeftEdge = SignatureHolderX;
-					}else if (SignatureHolderX > RightEdge){
-						RightEdge = SignatureHolderX;
-					}
+					}			
 				}
 			}
 		}
-
 	}
-
+	
 	//change selected inputs' coordinates to top/bottom/left/right edges
 	for (i=0; i < InputChecklist.length; i++){
 		if (InputChecklist[i].checked){
@@ -478,12 +484,21 @@ function alignInput(edge){
 				var InputType = RedrawParameter[0]
 				if (InputType == 'Text'){
 					InputName = new String(RedrawParameter[5]);
-					DataNumber = j;
+					DataNumber = j;				
 				}else if (InputType == 'Textbox'){
 					InputName = new String(RedrawParameter[5]);
-					DataNumber = j;
+					DataNumber = j;			
 				}else if (InputType == 'Checkbox'){
 					InputName = new String(RedrawParameter[3]);
+					DataNumber = j;
+				}else if (InputType == 'Xbox'){
+					InputName = new String(RedrawParameter[5]);
+					DataNumber = j;
+				}else if (InputType == 'Signature'){
+					InputName = new String(RedrawParameter[5]);
+					DataNumber = j;
+				}else if (InputType == 'Stamp'){
+					InputName = new String(RedrawParameter[5]);
 					DataNumber = j;
 				}
 				if (InputName == n){		//if InputName matches n
@@ -498,51 +513,15 @@ function alignInput(edge){
 						TargetParameter[1] = LeftEdge;
 					}else if (edge == 'right'){
 						TargetParameter[1] = RightEdge;
-					}
-					DrawData[j] = TargetParameter.join("|");
+					}	
+					DrawData[DataNumber] = TargetParameter.join("|");
 				}
 			}
-			if (document.getElementById('preCheckGender').checked){
-				if (n == 'Male'){
-					if (edge == 'bottom'){
-						MTopLeftY = BottomEdge;
-					}else if (edge == 'top'){
-						MTopLeftY = TopEdge;
-					}else if (edge == 'left'){
-						MTopLeftX = LeftEdge;
-					}else if (edge == 'right'){
-						MTopLeftX = RightEdge;
-					}
-				}else if (n == 'Female'){
-					if (edge == 'bottom'){
-						FTopLeftY = BottomEdge;
-					}else if (edge == 'top'){
-						FTopLeftY = TopEdge;
-					}else if (edge == 'left'){
-						FTopLeftX = LeftEdge;
-					}else if (edge == 'right'){
-						FTopLeftX = RightEdge;
-					}
-				}
-			}
-			if (document.getElementById('AddSignature').checked){
-				if (n == 'SignatureBox'){
-					if (edge == 'bottom'){
-						SignatureHolderY = BottomEdge;
-					}else if (edge == 'top'){
-						SignatureHolderY = TopEdge;
-					}
-					if (edge == 'left'){
-						SignatureHolderX = LeftEdge;
-					}else if (edge == 'right'){
-						SignatureHolderX = RightEdge;
-					}
-				}
-			}
+
 		}
-
+	
 	}
-
+	
 	//Redraw boxes after updating coordinates
 	RedrawAll();
 }
@@ -569,9 +548,24 @@ function deleteInput(){
 					DataNumber = j;
 				}else if (InputType == 'Textbox'){
 					InputName = new String(RedrawParameter[5]);
-					DataNumber = j;
+					DataNumber = j;			
 				}else if (InputType == 'Checkbox'){
 					InputName = new String(RedrawParameter[3]);
+					DataNumber = j;
+				}else if (InputType == 'Xbox'){
+					InputName = new String(RedrawParameter[5]);
+					DataNumber = j;
+				}else if (InputType == 'Signature'){
+					InputName = new String(RedrawParameter[5]);
+					//document.getElementById('AddSignature').checked=false;
+					//document.getElementById('AddSignature').disabled=false;
+					//document.getElementById('AddSignatureBox1').disabled=false;
+					DataNumber = j;
+				}else if (InputType == 'Stamp'){
+					InputName = new String(RedrawParameter[5]);
+					document.getElementById('AddStamp').checked=false;
+					document.getElementById('AddStamp').disabled=false;
+					document.getElementById('AddSignatureBox2').disabled=false;
 					DataNumber = j;
 				}
 				if (InputName == n){
@@ -596,6 +590,8 @@ var textMiddle = "";
 var textBottom = "";
 
 var CheckboxOffset = 4;
+var XboxOffset = 4;
+
 var MTopLeftX = 0;
 var MTopLeftY = 0;
 var FTopLeftX = 0;
@@ -616,118 +612,206 @@ function resetAll(){
 	TempData = new Array();
 
 	SetSwitchOn('Text');
-	document.getElementById('Text').checked = true;
+	document.getElementById('Text').click();
 
 	document.getElementById('inputValue').value = "";
 	document.getElementById('inputName').value = "";
+	document.getElementById('page').value="";
 	document.getElementById('preCheck').checked = false;
 	document.getElementById('preCheckGender').checked = false;
+	document.getElementById('XboxType').checked = false;
 	document.getElementById('maximizeWindow').checked = false;
 	var l = document.getElementById('oscarDB');
 		l[0].selected = true;
-	document.getElementById('DefaultCheckmark').checked = false;
+	document.getElementById('AddSignature').checked = false;
+	document.getElementById('AddStamp').checked = false;
+	document.getElementById('AddSignatureClassic').checked = false;
+	document.getElementById('AddSignature').disabled=false;
+	document.getElementById('AddSignatureClassic').disabled=false;
+	document.getElementById('AddSignatureBox1').disabled=false;
+	document.getElementById('AddStamp').disabled=false; 
+	document.getElementById('AddSignatureBox2').disabled=false;
+	//document.getElementById('DefaultCheckmark').checked = false;
+	document.getElementById('includePdfPrintControl').checked = false;
+	document.getElementById('includeFaxControl').checked = false;
+	document.getElementById('BlackBox').checked = false;
 	clearGraphics(jg);
+	PageNum=0;
 	finishLoadingImage();
+	loadImage();
 }
 
 function GetTextTop(){
-	textTop = "&lt;html&gt;\n&lt;head&gt;\n&lt;title&gt;"
+	textTop = "&lt;html&gt;\n&lt;head&gt;\n"
+	textTop += "&lt;META http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;\n"
+	textTop += "&lt;title&gt;"
 	textTop += document.getElementById('eFormName').value;
-	textTop += "&lt;/title&gt;\n&lt;style type=&quot;text/css&quot; media=&quot;print&quot;&gt;\n .DoNotPrint {\n\t display: none;\n }\n .noborder {\n\t border : 0px;\n\t background: transparent;\n\t scrollbar-3dlight-color: transparent;\n\t scrollbar-3dlight-color: transparent;\n\t scrollbar-arrow-color: transparent;\n\t scrollbar-base-color: transparent;\n\t scrollbar-darkshadow-color: transparent;\n\t scrollbar-face-color: transparent;\n\t scrollbar-highlight-color: transparent;\n\t scrollbar-shadow-color: transparent;\n\t scrollbar-track-color: transparent;\n\t background: transparent;\n\t overflow: hidden;\n }\n &lt;/style&gt;\n\n"
-	//auto ticking gender boxes
-	if (document.getElementById('preCheckGender').checked){
-		textTop += "&lt;script type=&quot;text/javascript&quot; language=&quot;javascript&quot;&gt;\n"
-		textTop += "function checkGender(){\n"
-		textTop += "\t if (document.getElementById('PatientGender').value == 'M'){\n"
-		textTop += "\t document.getElementById('Male').checked = true;\n"
-		textTop += "\t }else if (document.getElementById('PatientGender').value == 'F'){\n"
-		textTop += "\t document.getElementById('Female').checked = true;\n"
-		textTop += "\t}\n }\n"
-		textTop += "&lt;/script&gt;\n\n"
-	}
-	//load jsgraphic scripts for drawing in checkbox or freehand signatures
-	if(document.getElementById('DefaultCheckmark').checked <% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>|| document.getElementById('DrawSign').checked<%}%>){
-		textTop += "&lt;!-- js graphics scripts --&gt;\n"
-		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_image_path%7Djsgraphics.js&quot;&gt;&lt;/script&gt;\n"
-	}
-	<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_print_enabled") || OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_fax_enabled") || OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
+	textTop += "&lt;/title&gt;\n&lt;style&gt;\n input {\n\t -moz-box-sizing: content-box;\n\t -webkit-print-color-adjust: exact;\n\t -webkit-box-sizing: content-box;\n\t box-sizing: content-box\n}\n .sig {\n\t border: 2px dotted blue;\n\t background-color: lightgrey;\n }\n &lt;/style&gt;\n\n"
+
+	textTop += "&lt;style type=&quot;text/css&quot; media=&quot;print&quot;&gt;\n .DoNotPrint {\n\t display: none;\n }\n .noborder {\n\t border : 0px;\n\t background: transparent;\n\t scrollbar-3dlight-color: transparent;\n\t scrollbar-3dlight-color: transparent;\n\t scrollbar-arrow-color: transparent;\n\t scrollbar-base-color: transparent;\n\t scrollbar-darkshadow-color: transparent;\n\t scrollbar-face-color: transparent;\n\t scrollbar-highlight-color: transparent;\n\t scrollbar-shadow-color: transparent;\n\t scrollbar-track-color: transparent;\n\t background: transparent;\n\t overflow: hidden;\n }\n.sig {\n\t border-style: solid;\n\t border-color: transparent;\n\t background-color: transparent;\n }\n &lt;/style&gt;\n\n"
+
+	textTop += "&lt;!-- OSCAR based files for greater functionality --&gt;\n"	
 	textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Djquery/jquery-1.4.2.js&quot;&gt;&lt;/script&gt;\n";
-	<% } %>
-	
-	<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_print_enabled")) { %>
-	textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Deforms/printControl.js&quot;&gt;&lt;/script&gt;\n";
-	<% } %>
-	
-	<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_fax_enabled")) { %>
+	//reference built in functions as desired	
+	if (document.getElementById('includePdfPrintControl').checked) {
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Deforms/printControl.js&quot;&gt;&lt;/script&gt;\n";
+	}
+
+	//reference built in faxControl	
 	if (document.getElementById("includeFaxControl").checked) {
 		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Deforms/faxControl.js&quot;&gt;&lt;/script&gt;\n";
 	}
-	<% } %>	
-		
-	<% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
-	//load mouse function scripts for freehand signatures
-	if(document.getElementById('DrawSign').checked){
-		textTop += "&lt;!-- mousefunction scripts --&gt;\n"
-		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_image_path%7Dmouse.js&quot;&gt;&lt;/script&gt;\n\n"
-	}
-	<%} %>
-	if (document.getElementById('AddSignature').checked){
-	<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>		
+
+	//reference built in signatureControl
+	if (document.getElementById('AddSignatureClassic').checked){
+			
 		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Deforms/signatureControl.jsp&quot;&gt;&lt;/script&gt;\n";
-		textTop += "&lt;script type=&quot;text/javascript&quot;&gt;";	
+		textTop += "&lt;script type=&quot;text/javascript&quot;&gt;\n";	
 		textTop += "if (typeof jQuery != &quot;undefined&quot; &amp;&amp; typeof signatureControl != &quot;undefined&quot;) {";
 		textTop += "jQuery(document).ready(function() {";
-		textTop += "signatureControl.initialize({eform:true, height:"+SignatureHolderH+", width:"+SignatureHolderW+", top:"+SignatureHolderY+", left:"+SignatureHolderX+"});";
+		var totalpx = SignatureHolderY + sigOffset;
+		textTop += "signatureControl.initialize({eform:true, height:"+SignatureHolderH+", width:"+SignatureHolderW+", top:"+totalpx+", left:"+SignatureHolderX+"});";
 		textTop += "});}";
 		textTop +="&lt;/script&gt;\n";
-		<% } else { %> //
-		textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
-		textTop += "function show(x){\n"
-		textTop += "\tdocument.getElementById(x).style.display = 'block';\n"
-		textTop += "}\n"
-		textTop += "function hide(x){\n"
-		textTop += "\tdocument.getElementById(x).style.display = 'none';\n"
-		textTop += "}\n"
-		textTop += "&lt;/script&gt;\n\n"
-		<% } %>
+		
 	}
+
+
+	//reference Signature library
+	if (document.getElementById('AddSignature').checked){
+
+		var sigArray = new Array();
+		for (j=0; (j < (DrawData.length) ); j++){
+			var P = DrawData[j].split("|");
+			if ((P[0]=="Signature")&& (P[5] != "ClassicSignature")) {
+				sigArray.push(P[5]);		
+			}
+		}
+
+		textTop += "\n&lt;!-- Freeform Signatures --&gt;\n"
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Djquery/jSignature.min.js&quot;&gt;&lt;/script&gt;\n\n";
+		textTop += "&lt;!--[if lt IE 9]&gt;\n"
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Dflashcanvas.js&quot;&gt;&lt;/script&gt;\n";
+		textTop += "&lt;![endif]--&gt;\n\n"
+
+
+		textTop += "&lt;script type=&quot;text/javascript&quot;&gt;\n";	
+		textTop += "jQuery(document).ready(function() {\n";
+		for (j=0; (j < (sigArray.length) ); j++){
+			textTop += "\t$(&quot;#Canvas"+sigArray[j]+"&quot;).jSignature()\n"
+		}
+		textTop += "})\n";
+		textTop +="&lt;/script&gt;\n\n";
+		textTop += "&lt;script type=&quot;text/javascript&quot;&gt;\n";
+		textTop += "function saveSig(){\n"
+		for (j=0; (j < (sigArray.length) ); j++){
+			textTop += "\tvar $sig=$(&quot;#Canvas"+sigArray[j]+"&quot;);\n"
+			textTop += "\tvar datapair=new Array();\n"
+			textTop += "\tdatapair=$sig.jSignature(&quot;getData&quot;,&quot;base30&quot;);\n"
+			textTop += "\tdocument.getElementById(&quot;Store"+sigArray[j]+"&quot;).value=datapair.join(&quot;,&quot;);\n"
+		}
+		textTop += "}\n";
+		textTop += "function clearSig(){\n"
+		for (j=0; (j < (sigArray.length) ); j++){
+			textTop += "\t$(&quot;#Canvas"+sigArray[j]+"&quot;).jSignature(&quot;reset&quot;);\n"
+		}
+		textTop += "}\n";
+
+		textTop += "function loadSig(){\n"
+		for (j=0; (j < (sigArray.length) ); j++){
+			textTop += "\tvar $sig=$(&quot;#Canvas"+sigArray[j]+"&quot;);\n"
+			textTop += "\tvar data\n"
+			textTop += "\tdata=document.getElementById(&quot;Store"+sigArray[j]+"&quot;).value;\n"
+			textTop += "\t$sig.jSignature(&quot;setData&quot;,&quot;data:&quot;+ data) ;\n"
+		}
+		textTop += "}\n";
+		textTop += "&lt;/script&gt;\n\n"
+	}
+
+
+	//auto ticking gender Xboxes OR checkboxes
+	if ((document.getElementById('preCheckGender').checked)||(document.getElementById('XboxType').checked)){
+		textTop += "&lt;!-- auto ticking gender Xboxes OR checkboxes --&gt;\n"	
+		textTop += "&lt;script type=&quot;text/javascript&quot; language=&quot;javascript&quot;&gt;\n"
+		textTop += "function checkGender(){\n"
+		textTop += "\t if (document.getElementById(&quot;PatientGender&quot;).value == &quot;M&quot;){\n"
+		textTop += "\t document.getElementById(&quot;Male&quot;).click();\n"
+		textTop += "\t }else if (document.getElementById(&quot;PatientGender&quot;).value == &quot;F&quot;){\n"
+		textTop += "\t document.getElementById(&quot;Female&quot;).click();\n"
+		textTop += "\t}\n }\n"
+		textTop += "&lt;/script&gt;\n\n"
+	}
+
 	//printing script
 	textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
 	textTop += "function formPrint(){\n"
-	//when printing checkmarks, need to move checkmark canvas to the front.
-	//After printing, need to move canvas to the back, so that you can interact with form inputs again
-	if(document.getElementById('DefaultCheckmark').checked){
-		textTop += "\t if (document.getElementById('DrawCheckmark').checked){ \n"
-		textTop += "\t\t	printCheckboxes();\n"
-		textTop += "\t }else{\n"
-	}
-	textTop += "\t\t	window.print();\n"
-	if(document.getElementById('DefaultCheckmark').checked){
-		textTop += "\t } \n"
-	}
+	textTop += "\twindow.print();\n"
 	textTop += "} \n"
 	textTop += "&lt;/script&gt;\n\n"
 
 	//Peter Hutten-Czapski's script to confirm closing of window if eform changed
-	textTop += "&lt;!-- scripts to confirm closing of window if it hadn't been saved yet --&gt;\n"
+	textTop += "&lt;!-- scripts to confirm closing of window if it hadnt been saved yet --&gt;\n"
 	textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
 	textTop += "//keypress events trigger dirty flag\n"
 	textTop += "var needToConfirm = false;\n"
 	textTop += "document.onkeyup=setDirtyFlag;\n"
 	textTop += "function setDirtyFlag(){\n"
-	textTop += "\t	needToConfirm = true;\n"
+	textTop += "\tneedToConfirm = true;\n"
 	textTop += "}\n"
 	textTop += "function releaseDirtyFlag(){\n"
-	textTop += "\t	needToConfirm = false; //Call this function if doesn't requires an alert.\n"
+	textTop += "\tneedToConfirm = false; //Call this function to prevent an alert.\n"
 	textTop += "//this could be called when save button is clicked\n"
 	textTop += "}\n"
 	textTop += "window.onbeforeunload = confirmExit;\n"
 	textTop += "function confirmExit(){\n"
-	textTop += "\t if (needToConfirm){\n"
+	textTop += "\tif (needToConfirm){\n"
 	textTop += "\t\t return &quot;You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?&quot;;\n"
 	textTop += "\t }\n"
 	textTop += "}\n"
 	textTop += "&lt;/script&gt;\n\n"
+
+	//Peter Hutten-Czapski's Xbox scripts
+
+	var xPresent=false;
+	for (j=0; (j < (DrawData.length) ); j++){
+		var P = DrawData[j].split("|");
+		if (P[0]=="Xbox") {
+			xPresent=true;		
+		}
+	}
+	
+	if (xPresent){
+		textTop += "&lt;!-- scripts for Xbox functions --&gt;\n"
+		textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
+		textTop += "$(document).ready(function() {\n"
+		textTop += "\t  $( &quot;.Xbox&quot; ).click(function() {\n"
+		if (document.getElementById('BlackBox').checked){
+			textTop += "\t\t  var bc = $( this ).css( &quot;background-color&quot; );\n"
+			textTop += "\t\t  if (bc==&quot;rgb(0, 0, 0)&quot;) {\n"
+			textTop += "\t\t\t  $( this ).css( &quot;background-color&quot;, &quot;white&quot; );\n"
+			textTop += "\t\t\t  $( this ).val(&quot;&quot;);\n"
+			textTop += "\t\t  } else {\n"
+			textTop += "\t\t\t  $( this ).css( &quot;background-color&quot;, &quot;rgb(0, 0, 0)&quot; );\n"
+		} else {
+			textTop += "\t\t  var st = $( this ).val();\n"
+			textTop += "\t\t  if (st==&quot;X&quot;) {\n"
+			textTop += "\t\t\t  $( this ).val(&quot;&quot;);\n"
+			textTop += "\t\t  } else {\n"
+		}
+		textTop += "\t\t\t  $( this ).val(&quot;X&quot;);\n"
+		textTop += "\t\t  }\n"
+		textTop += "\t});\n\n"
+
+		textTop += "$( &quot;.Xbox&quot; ).keypress(function(event) {\n"
+		textTop += "\t  // any key press except tab will constitute a value change to the checkbox\n"
+		textTop += "\t  if (event.which != 0){\n"
+		textTop += "\t\t  $( this ).click();\n"
+		textTop += "\t\t  return false;\n"
+		textTop += "\t\t  }\n"
+		textTop += "\t});\n\n"
+		textTop += "});\n"
+		textTop += "&lt;/script&gt;\n\n"
+	}
 
 	//maximize window script
 	if (document.getElementById('maximizeWindow').checked){
@@ -742,8 +826,9 @@ function GetTextTop(){
 		textTop += "\t\t top.window.outerWidth = screen.availWidth;\n"
 		textTop += "\t}\n}\n &lt;/script&gt;\n\n"
 	}
-	// David Daley and Peter Hutten-Czapski's scripts for scaling up checkboxes
+	//scripts for scaling up checkboxes
 	if (document.getElementById('ScaleCheckmark').checked){
+		textTop += "&lt;!-- scripts for scaling up checkboxes --&gt;\n"	
 		textTop += "&lt;style type=&quot;Text/css&quot;&gt;\n"
 		textTop += "input.largerCheckbox {\n"
 		textTop += "\t-moz-transform:scale(1.3);         /*scale up image 1.3x - Firefox specific */ \n"
@@ -767,179 +852,112 @@ function GetTextTop(){
 		textTop += "&lt;/style&gt; \n"
 		textTop += "&lt;![endif]--&gt; \n\n"
 	}
-	<% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
-	//autoloading signature images
-	var List = document.getElementsByName('UserSignatureListItem');
-	if (document.getElementById('AutoSign').checked){
-		textTop += "&lt;script type=&quot;text/javascript&quot;&gt;\n"
-		textTop += "function preloadImg(){\n"
-		textTop += "\t// create object\n"
-		textTop += "\timageObj = new Image();\n"
-		textTop += "\t// set image list\n"
-		textTop += "\timages = new Array();\n"
-		for (i=0; i<List.length;i++){
-			var ListItem = List[i].innerHTML
-			var ListItemArr =  ListItem.split('|')
-			var UserName = ListItemArr[0];
-			var FileName = ListItemArr[1];
-			textTop +="\timages[" + i + "]='$%7Boscar_image_path%7D" + FileName + "'\n"
-		}
-		textTop += "\t// start preloading\n"
-		textTop += "\tfor(i=0; i&lt;=images.length; i++){\n"
-		textTop += "\t\timageObj.src=images[i];\n"
-		textTop += "\t}\n"
-		textTop += "}\n\n"
-		textTop += "function reloadSignature(){\n"
-		textTop += "\tpreloadImg();\n"
-		textTop += "\tvar SubmittedBy = document.getElementById('SubmittedBy').value;\n"
-		textTop += "\tif (!SubmittedBy){\n"
-		textTop += "\t\tSignForm('current_user');\n"
-		textTop += "\t} else {\n"
-		textTop += "\t\tSignForm(SubmittedBy);\n"
-		textTop += "\t}\n"
-		textTop += "\tresizeSignature();\n"
-		textTop += "}\n\n"
 
-		textTop += "function SignForm(SignBy){\n"
-		textTop += "\tvar SignatureHolder = document.getElementById('SignatureHolder');\n"
-		textTop += "\tvar DoctorName = document.getElementById('DoctorName').value;\n"
-		textTop += "\tvar CurrentUserName = document.getElementById('CurrentUserName').value;\n"
+	if (document.getElementById('AddStamp').checked){
 
-		textTop += "\t\tif(SignBy == 'doctor'){\n"
 		var List = document.getElementsByName('UserSignatureListItem');
-		for (i=0; i<List.length;i++){
-			var ListItem = List[i].innerHTML;
-			var ListItemArr =  ListItem.split('|');
-			var UserName = ListItemArr[0];
-			var FileName = ListItemArr[1];
-			if (i <1){
-				textTop += "\t\t\tif (DoctorName.indexOf('" + UserName + "') &gt;= 0){\n"
-				textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;img id='SignatureImage' src='$%7Boscar_image_path%7D" + FileName + "'&gt;&quot;;\n"
-			} else if (i>=1){
-				textTop += "\t\t\t}else if(DoctorName.indexOf('" + UserName + "') &gt;= 0){\n"
-				textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;img id='SignatureImage' src='$%7Boscar_image_path%7D" + FileName + "'&gt;&quot;;\n"
-			}
-		}
-		textTop += "\t\t\t} else {\n"
-		textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;div id='SignatureImage'&gt;&lt;/div&gt;&quot;;\n"
-		textTop += "\t\t\t}\n"
-		textTop += "\t\t\tdocument.getElementById('SubmittedBy').value = SignBy;\n"
-		textTop += "\t\t}else if (SignBy == 'current_user'){\n"
-		for (i=0; i<List.length;i++){
-			var ListItem = List[i].innerHTML
-			var ListItemArr =  ListItem.split('|')
-			var UserName = ListItemArr[0];
-			var FileName = ListItemArr[1];
-			if (i<1){
-				textTop += "\t\t\tif (CurrentUserName.indexOf('" + UserName + "') &gt;= 0){\n"
-				textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;img id='SignatureImage' src='$%7Boscar_image_path%7D" + FileName + "'&gt;&quot;;\n"
-			} else if (i>=1){
-				textTop += "\t\t\t}else if(CurrentUserName.indexOf('" + UserName + "') &gt;= 0){\n"
-				textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;img id='SignatureImage' src='$%7Boscar_image_path%7D" + FileName + "'&gt;&quot;;\n"
-			}
-		}
-		textTop += "\t\t\t} else {\n"
-		textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;div id='SignatureImage'&gt;&lt;/div&gt;&quot;;\n"
-		textTop += "\t\t\t}\n"
-		textTop += "\t\t\tdocument.getElementById('SubmittedBy').value = SignBy;\n"
-		textTop += "\t\t}else if (SignBy == 'none'){\n"
-		textTop += "\t\t\tSignatureHolder.innerHTML = &quot;&lt;div id='SignatureImage'&gt;&lt;/div&gt;&quot;;\n"
-		textTop += "\t\t}\n"
-		textTop += "\t\tresizeSignature();\n"
 
+		textTop += "&lt;!-- Stamped Signatures --&gt;\n"
+		textTop += "&lt;script type=&quot;text/javascript&quot;&gt;\n"
+		textTop += "//autoloading signature images\n"
+		textTop += "var ImgArray = [\n\t&quot;anonymous|BNK.png&quot;"
+		for (i=0; i<List.length;i++){
+			textTop +=",\n\t&quot;"+List[i].innerHTML.trim()+"&quot;"
+		}
+		textTop += "\n\t];\n\n"
+		textTop += "function SignForm(){\n"
+		textTop += "\t//first look for the current users stamp\n"
+		textTop += "\tfor (i=0; i&lt;ImgArray.length;i++){\n"
+		textTop += "\t\tvar ListItemArr =  ImgArray[i].split(&quot;|&quot;);\n"
+		textTop += "\t\tvar UserName = ListItemArr[0];\n"
+		textTop += "\t\tvar FileName = ListItemArr[1];\n"
+		textTop += "\t\tif (document.getElementById(&quot;CurrentUserName&quot;).value.indexOf(UserName)>0){\n"
+		textTop += "\t\t\tdocument.getElementById(&quot;Stamp&quot;).src = &quot;../eform/displayImage.do?imagefile=&quot;+FileName;\n"
+		textTop += "\t\t}\n"
+		textTop += "\t}\n"
+		textTop += "\t//hmm not found so lets try the MRPs stamp\n"
+		textTop += "\tif (document.getElementById(&quot;Stamp&quot;).src.indexOf(&quot;BNK.png&quot;)>0){\n"
+		textTop += "\t\tfor (i=0; i&lt;ImgArray.length;i++){\n"
+		textTop += "\t\t\tvar ListItemArr =  ImgArray[i].split(&quot;|&quot;);\n"
+		textTop += "\t\t\tvar UserName = ListItemArr[0];\n"
+		textTop += "\t\t\tvar FileName = ListItemArr[1];\n"
+		textTop += "\t\t\tif (document.getElementById(&quot;DoctorName&quot;).value.indexOf(UserName)>0){\n"
+		textTop += "\t\t\t\tdocument.getElementById(&quot;Stamp&quot;).src = &quot;../eform/displayImage.do?imagefile=&quot;+FileName;\n"
+		textTop += "\t\t\t}\n"
+		textTop += "\t\t}\n"
+		textTop += "\t}\n"
 		textTop += "}\n"
 
-		textTop += "function resizeSignature(){\n"
-		textTop += "\t//resize signature image to fit inside SignatureHolder\n"
-		textTop += "\tif (document.getElementById('SignatureImage')){\n"
-
-		textTop += "\t\tvar Holder = document.getElementById('SignatureHolder')\n"
-		textTop += "\t\tvar Image = document.getElementById('SignatureImage')\n"
-		textTop += "\t\tvar HolderW = parseInt(document.getElementById('SignatureHolder').style.width);\n"
-		textTop += "\t\tvar HolderH = parseInt(document.getElementById('SignatureHolder').style.height);\n"
-		textTop += "\t\tvar ImageW = document.getElementById('SignatureImage').width;\n"
-		textTop += "\t\tvar ImageH = document.getElementById('SignatureImage').height;\n"
-		textTop += "\t\tif (ImageW &gt; HolderW){\n"
-		textTop += "\t\t\tImage.style.width = HolderW;\n"
-		textTop += "\t\t\tvar NewH = (HolderW * (ImageH/ImageW));\n"
-		textTop += "\t\t\tImage.style.height = parseInt(NewH);\n"
-		textTop += "\t\t\tif (NewH &gt; HolderH){\n"
-		textTop += "\t\t\t\tImage.style.height = HolderH;\n"
-		textTop += "\t\t\t\tvar NewW = (HolderH * (ImageW/ImageH));\n"
-		textTop += "\t\t\t\tImage.style.width = parseInt(NewW);\n"
-		textTop += "\t\t\t}\n"
-		textTop += "\t\t}else if (ImageW &lt; HolderW){\n"
-		textTop += "\t\t\tif (ImageH &gt; HolderH){\n"
-		textTop += "\t\t\t\tImage.style.height = HolderH;\n"
-		textTop += "\t\t\t\tvar NewW = (HolderH * (ImageW/ImageH));\n"
-		textTop += "\t\t\t\tImage.style.width = parseInt(NewW);\n"
-		textTop += "\t\t\t}\n"
-		textTop += "\t\t}\n"
-		textTop += "\t\treorderSignature();\n"
+		textTop += "function toggleMe(){\n"
+		textTop += "\tif (document.getElementById(&quot;Stamp&quot;).src.indexOf(&quot;BNK.png&quot;)>0){\n"
+		textTop += "\t\tSignForm()\n"
+		textTop += "\t} else {\n"
+		textTop += "\t\tdocument.getElementById(&quot;Stamp&quot;).src = &quot;../eform/displayImage.do?imagefile=BNK.png&quot;;\n"
 		textTop += "\t}\n"
 		textTop += "}\n"
 		textTop += "&lt;/script&gt;\n\n"
+	
 	}
-	//relayer background images and signatures to bottom	
-	if (document.getElementById('AddSignature').checked){
-		textTop += "&lt;script type=&quot;text/javascript&quot;&gt;\n"
-		textTop += "function reorderSignature(){\n"
-		textTop += "\tdocument.getElementById('BGImage').style.zIndex = '-10';\n"
+	if (document.getElementById('AddDate').checked){
+		textTop +="\n&lt;!-- main calendar program --&gt;\n"
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;../share/calendar/calendar.js&quot;&gt;&lt;/script&gt;\n"
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;../share/calendar/lang/<bean:message key="global.javascript.calendar"/>&quot;&gt;&lt;/script&gt;\n"
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;../share/calendar/calendar-setup.js&quot;&gt;&lt;/script&gt;\n"
+		textTop += "&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;all&quot; href=&quot;../share/calendar/calendar.css&quot; title=&quot;win2k-cold-1&quot; /&gt;\n\n"
+
 	}
-		
-	if (document.getElementById('AutoSign').checked){
-		textTop += "\tdocument.getElementById('SignatureHolder').style.zIndex = '-9';\n"
-		textTop += "\tdocument.getElementById('SignatureImage').style.zIndex = '-8';\n"
-	}
-	if (document.getElementById('DrawSign').checked){
-		textTop += "\tdocument.getElementById('preview').style.zIndex = '-7';\n"
-		textTop += "\tdocument.getElementById('SignCanvas').style.zIndex = '-6';\n\n"
-	}
-	if (document.getElementById('AddSignature').checked){
-		textTop += "}\n"
-		textTop += "&lt;/script&gt;\n\n"
-	}
-	<% } %>
+
+
+
 	//</head>
 	textTop += "&lt;/head&gt;\n\n"
 	//<body>
 	textTop += "&lt;body"
 	textTop += " onload=&quot;"
 	//auto check gender boxes
-	if (document.getElementById('preCheckGender').checked){
+	if ((document.getElementById('preCheckGender').checked)||(document.getElementById('XboxType').checked)){
 		textTop += "checkGender();"
 	}
-	<% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
-	//auto load signature image, default to 'current_user'
-	if (document.getElementById('AutoSign').checked){
-		textTop += "reloadSignature();"
+	//auto load signature stamp image, default to 'current_user'
+	if (document.getElementById('AddStamp').checked){
+		textTop += "SignForm();"
 	}
-	//if freehand signature, initialize mouse scripts and reload previous freehand signature
-	if (document.getElementById('DrawSign').checked){
-		textTop += "init();"
+	if (document.getElementById('AddSignature').checked){
+		textTop += "loadSig();"
 	}
-	<% } %>
+
 	textTop += "&quot;&gt;\n"
-	//<img> background image
-	textTop += "&lt;img id='BGImage' src=&quot;$%7Boscar_image_path%7D";
-	textTop += document.getElementById('imageName').value;
-	textTop += "&quot; style=&quot;position: absolute; left: 0px; top: 0px; width:"
-	textTop += BGWidth;
-	textTop += "px&quot;&gt;\n"
-	//overlay canvas the size of background iamge for drawing in checkmarks
-	if(document.getElementById('DefaultCheckmark').checked){
-		textTop += "&lt;div id=&quot;chkCanvas&quot; style=&quot;position:absolute; left:0px; top:0px; width:"
-		textTop += BGWidth
-		textTop += "; height:"
-		textTop += BGHeight
-		textTop += ";&quot; onmouseover=&quot;putInBack();&quot;&gt;&lt;/div&gt;\n\n"
-	}
+
 	//<form>
-	textTop +="&lt;form method=&quot;post&quot; action=&quot;&quot; name=&quot;FormName&quot; id=&quot;FormName&quot; &gt;\n\n";
+	textTop +="&lt;form method=&quot;post&quot; action=&quot;&quot; name=&quot;FormName&quot; id=&quot;FormName&quot; &gt;\n";
+	// empty <div> to alow simpler pagation
+	textTop +="&lt;div&gt;\n";
+
 }
 
 function GetTextMiddle(P){
+
 var InputType = P[0];
+
+	if (InputType == "Page"){
+
+		var pg = parseInt(P[1]);
+		var im = P[2];
+		var width = parseInt(P[3]);
+		m = "&lt;/div&gt;\n\n\n"
+		m += "&lt;div id=&quot;page"
+		m += pg
+		m += "&quot; style=&quot;page-break-after:always;position:relative;&quot; &gt;\n\n"
+		m += "&lt;img id=&quot;BGImage"
+		m += pg
+		m += "&quot; src=&quot;$%7Boscar_image_path%7D";
+		m += im
+		m += "&quot; style=&quot;position: relative; left: 0px; top: 0px; width:"
+		m += width
+		m += "px&quot;&gt;\n"
+		
+	}
+
 	if (InputType == "Text"){
 		var x0 = parseInt(P[1]);
 		var y0 = parseInt(P[2]);
@@ -954,7 +972,7 @@ var InputType = P[0];
 		var bgColor = P[11];
 		var oscarDB = P[12];
 		var inputValue = P[13];
-		m = "&lt;input name=&quot;"
+		m = "&lt;input name=&quot;" 
 		m += inputName
 		m += "&quot; id=&quot;"
 		m += inputName
@@ -1037,13 +1055,13 @@ var InputType = P[0];
 			m += inputValue
 		}
 		m += "&lt;/textarea&gt;\n"
-
+	
 	} else if (InputType == "Checkbox"){
 		var x = parseInt(P[1]);
 		var y = parseInt(P[2]);
 		var inputName = P[3];
 		var preCheck = P[4];
-		m = "&lt;input name=&quot;"
+		m = "&lt;input name=&quot;" 
 		m += inputName
 		m += "&quot; id=&quot;"
 		m += inputName
@@ -1052,192 +1070,170 @@ var InputType = P[0];
 			m += " class=&quot;largerCheckbox&quot;"
 		}
 		m += " style=&quot;position:absolute; left:"
-		var a = parseInt(x - CheckboxOffset);
+		var a = parseInt(x - XboxOffset);
 		m += a
 		m += "px; top:"
-		var b = parseInt(y - CheckboxOffset);
+		var b = parseInt(y - XboxOffset);
 		m += b
 		m += "px; &quot;"
-		if (preCheck == 'true'){
-			m += " checked"
-		}
 		m += "&gt;\n"
+
+	} else if (InputType == "Xbox"){
+		var x0 = parseInt(P[1]);
+		var y0 = parseInt(P[2]);
+		var width = parseInt(P[9])+2;
+		var height = width;
+		var inputName = P[5];
+		var fontFamily = P[6];
+		var fontStyle = P[7];
+		var fontWeight = P[8];
+		var fontSize = P[9];
+		var textAlign = P[10];
+		var bgColor = P[11];
+		var oscarDB = P[12];
+		var inputValue = P[13];
+		m = "&lt;input name=&quot;" 
+		m += inputName
+		m += "&quot; id=&quot;"
+		m += inputName
+		m += "&quot; type=&quot;text&quot; class=&quot;Xbox&quot; style=&quot;position:absolute; left:"
+		m += x0
+		m += "px; top:"
+		m += y0
+		m += "px; width:"
+		m += width
+		m += "px; height:"
+		m += height
+		m += "px; font-family:"
+		m += fontFamily
+		m += "; font-style:"
+		m += fontStyle
+		m += "; font-weight:"
+		m += "bold"
+		m += "; font-size:"
+		m += fontSize
+		m += "px; text-align:"
+		m += "center"
+		m += "; background-color:"
+		if ((document.getElementById('BlackBox').checked) && (inputValue=='X')) {
+			m +="rgb(0,0,0)"
+		} else {
+			m += bgColor
+		}
+		m += ";&quot; "
+		m += "value=&quot;"
+		m += inputValue
+		m += "&quot;"
+		m += "&gt;\n"
+
+	} else if (InputType == "Signature"){
+		if (P[5] == "ClassicSignature"){
+			m="";
+		} else {
+			var x0 = parseInt(P[1]);
+			var y0 = parseInt(P[2]);
+			var width = parseInt(P[3]);
+			var height = parseInt(P[4]);
+			m ="";
+			m +="\t&lt;div id=&quot;Canvas"+P[5]+"&quot; class=&quot;sig&quot; style=&quot;position:absolute; left:";
+			m += x0;
+			m += "px; top:"
+			m += y0;
+			m += "px; width:"
+			m += width;
+			m += "px; height:"
+			m += height;
+			m += "; z-index:10;&quot;&gt;\n";
+	 		m +="\t&lt;/div&gt;\n\n";
+			m +="\t&lt;input type=&quot;hidden&quot; name=&quot;Store"+P[5]+"&quot; id=&quot;Store"+P[5]+"&quot; value=&quot;&quot;&gt;\n";
+		}
+
+	} else if (InputType == "Stamp"){
+		var x0 = parseInt(P[1]);
+		var y0 = parseInt(P[2]);
+		var width = parseInt(P[3]);
+		var height = parseInt(P[4]);
+		var inputName = P[5];
+		var signo = parseInt(P[6]);
+		m = "&lt;div style=&quot;position:absolute; left:" 
+		m += x0
+		m += "px; top:"
+		m += y0
+		m += "px;&quot;&gt;\n"
+		m += "&lt;img id=&quot;Stamp&quot; src=&quot;../eform/displayImage.do?imagefile=BNK.png&quot; width=&quot;" 
+		m += width
+		m += "&quot; height=&quot;"
+		m += height
+		m += "&quot; onclick=&quot;toggleMe();&quot;&gt;\n&lt;/div&gt;\n\n"
 	}
-
 	textMiddle += m;
-	textMiddle += "\n\n"
+	textMiddle += "\n"
 }
-
 function GetTextBottom(){
 	//gender checkboxes
-	if (document.getElementById('preCheckGender').checked){
+	if ((document.getElementById('preCheckGender').checked)||(document.getElementById('XboxType').checked)){
 		textBottom += "&lt;input name=&quot;PatientGender&quot; id=&quot;PatientGender&quot; type=&quot;hidden&quot; oscarDB=sex&gt;\n"
-		textBottom += "&lt;input name=&quot;Male&quot; id=&quot;Male&quot; type=&quot;checkbox&quot; class=&quot;noborder&quot; style=&quot;position:absolute; left: "
-		textBottom += parseInt(MTopLeftX - CheckboxOffset);
-		textBottom += "px; top: "
-		textBottom += parseInt(MTopLeftY - CheckboxOffset);
-		textBottom += "px&quot;&gt;\n"
-		textBottom += "&lt;input name=&quot;Female&quot; id=&quot;Female&quot; type=&quot;checkbox&quot; class=&quot;noborder&quot; style=&quot;position:absolute; left: "
-		textBottom += parseInt(FTopLeftX - CheckboxOffset);
-		textBottom += "px; top: "
-		textBottom += parseInt(FTopLeftY - CheckboxOffset);
-		textBottom += "px&quot;&gt;\n\n"
 	}
-	<% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
+
+	//close pagation
+	textBottom += "&lt;/div&gt;\n"
+
 	//auto load signature images
-	if (document.getElementById('AutoSign').checked){
+	if (document.getElementById('AddStamp').checked){
 		textBottom +="&lt;input type=&quot;hidden&quot; name=&quot;DoctorName&quot; id=&quot;DoctorName&quot; oscarDB=doctor&gt;\n"
 		textBottom +="&lt;input type=&quot;hidden&quot; name=&quot;CurrentUserName&quot; id=&quot;CurrentUserName&quot; oscarDB=current_user&gt;\n"
 		textBottom +="&lt;input type=&quot;hidden&quot; name=&quot;SubmittedBy&quot; id=&quot;SubmittedBy&quot;&gt;\n"
-		textBottom +="&lt;div name=&quot;SignatureHolder&quot; id=&quot;SignatureHolder&quot; style=&quot;position:absolute; left:"
-		textBottom += SignatureHolderX;
-		textBottom += "px; top:"
-		textBottom += SignatureHolderY;
-		textBottom += "px; width:"
-		textBottom += SignatureHolderW;
-		textBottom += "px; height:"
-		textBottom += SignatureHolderH;
-		textBottom += "&quot; onmouseover=&quot;show('SignaturePicker');&quot; onmouseout=&quot;hide('SignaturePicker');&quot;&gt;\n"
-		textBottom += "&lt;/div&gt;\n"
-		textBottom += "&lt;div class=&quot;DoNotPrint&quot; name=&quot;SignaturePicker&quot; id=&quot;SignaturePicker&quot; style=&quot;position:absolute; background-color:#dddddd; left:"
-		textBottom += SignatureHolderX;
-		textBottom += "px; top:"
-		textBottom += SignatureHolderY;
-		textBottom += "px; height:"
-		textBottom += SignatureHolderH;
-		textBottom += "; display:none;&quot; onmouseover=&quot;show(this.id)&quot; onmouseout=&quot;hide(this.id)&quot;&gt;\n"
-		textBottom += "	&lt;span style=&quot;font-family:sans-serif; font-size:12px; font-weight:bold&quot;&gt;\n"
-		textBottom += "		Signature:&lt;br&gt;\n"
-		textBottom += "		&lt;input type=&quot;radio&quot; name=&quot;SignBy&quot; id=&quot;SignDoctor&quot; value=&quot;doctor&quot; onclick=&quot;SignForm(this.value);&quot; onmouseout=&quot;resizeSignature();&quot;&gt;Patient's Doctor\n"
-		textBottom += "		&lt;input type=&quot;radio&quot; name=&quot;SignBy&quot; id=&quot;SignCurrentUser&quot; value=&quot;current_user&quot; onclick=&quot;SignForm(this.value);&quot; onmouseout=&quot;resizeSignature();&quot;&gt;Current User\n"
-		textBottom += "		&lt;input type=&quot;radio&quot; name=&quot;SignBy&quot; id=&quot;SignNone&quot; value=&quot;none&quot; onclick=&quot;SignForm(this.value);&quot;&gt;None\n"
-		textBottom += "	&lt;/span&gt;\n"
-		textBottom += "&lt;/div&gt;\n\n"
 	}
 
-	//Freehand Signature
-	if (document.getElementById('DrawSign').checked){
-		textBottom += "&lt;input type=&quot;hidden&quot; name=&quot;TempData&quot; id=&quot;TempData&quot;&gt;\n"
-		textBottom += "&lt;input type=&quot;hidden&quot; name=&quot;DrawData&quot; id=&quot;DrawData&quot;&gt;\n"
-		textBottom += "&lt;input type=&quot;hidden&quot; name=&quot;SubmitData&quot; id=&quot;SubmitData&quot;&gt;\n"
-
-		textBottom += "&lt;input type=&quot;button&quot; name=&quot;ClearSignature&quot; id=&quot;ClearSignature&quot; style=&quot;position:absolute; display:none; top:"
-		textBottom += SignatureHolderY
-		textBottom += "px; left:"
-		textBottom += SignatureHolderX + SignatureHolderW
-		textBottom += "px; height:"
-		textBottom += SignatureHolderH
-		textBottom += "px&quot; value='Clear Signature';\n"
-		textBottom += "\tonmouseover=&quot;show(this.id);&quot; onmouseout=&quot;hide(this.id);&quot; onclick=&quot;Clear();&quot;&gt;\n"
-
-		textBottom += "&lt;div id=&quot;preview&quot; style=&quot;position:absolute; left:"
-		textBottom += SignatureHolderX
-		textBottom += "px; top:"
-		textBottom += SignatureHolderY
-		textBottom += "px; width:"
-		textBottom += SignatureHolderW
-		textBottom += "px; height:"
-		textBottom += SignatureHolderH
-		textBottom += "px; background-color:grey;opacity:0.5;filter:alpha(opacity=50);&quot; class=&quot;DoNotPrint&quot;&gt;&lt;/div&gt;\n"
-		textBottom += "&lt;div id=&quot;SignCanvas&quot; style=&quot;position:absolute; left:"
-		textBottom += SignatureHolderX
-		textBottom += "px; top:"
-		textBottom += SignatureHolderY
-		textBottom += "px; width:"
-		textBottom += SignatureHolderW
-		textBottom += "px; height:"
-		textBottom += SignatureHolderH
-		textBottom += "px&quot;\n"
-		textBottom += "		onmouseover=&quot;SetDrawOn(); show('ClearSignature');&quot;\n"
-		textBottom += "		onmouseout=&quot;SetDrawOff(); hide('ClearSignature');&quot;\n"
-		textBottom += "		onmousedown=&quot;SetMouseDown();SetStart();&quot;\n"
-		textBottom += "		onmouseup=&quot;SetMouseUp();  DrawMarker();&quot;\n"
-		textBottom += "		onmousemove=&quot;DrawPreview();&quot;&gt; \n"
-		textBottom += "&lt;/div&gt;\n"
+	//classic signature
+	if (document.getElementById('AddSignatureClassic').checked){
+		textBottom +="&lt;div id=&quot;signatureDisplay&quot;&gt;&lt;/div&gt;&lt;input type=&quot;hidden&quot; name=&quot;signatureValue&quot; id=&quot;signatureValue&quot; value=&quot;&quot; &gt;&lt;/input&gt;\n"	
 	}
-	<% } %>
 
 	//bottom submit boxes
-	textBottom += "\n\n &lt;div class=&quot;DoNotPrint&quot; style=&quot;position: absolute; top:"
-	textBottom += BGHeight;
-	textBottom += "px; left:0px;&quot; id=&quot;BottomButtons&quot; &gt;\n"
+	/*textBottom += "\n\n &lt;div class=&quot;DoNotPrint&quot; id=&quot;BottomButtons&quot; style=&quot;position: relative; top:"
+	textBottom += "10px; left:0px;&quot;&gt;\n" */
+
+	textBottom += "\n\n &lt;div class=&quot;DoNotPrint&quot; id=&quot;BottomButtons&quot; style=&quot;position: absolute; top:"
+
+	//var totalpx =  parseInt(BGHeight) ;
+	//if ( totalpx == 750 ) { totalpx=1000;} // deep choclate fudge
+	//if ( parseInt(pageoffset) == 750 ) { pageoffset=1000;} // more brown fudge
+	//totalpx =  totalpx + parseInt(pageoffset);
+	//textBottom += totalpx;
+	textBottom += pageoffset;
+	textBottom += "px; left:0px;&quot;&gt;\n"
+
 	textBottom += "\t &lt;table&gt;&lt;tr&gt;&lt;td&gt;\n"
-	textBottom += "\t\t Subject: &lt;input name=&quot;subject&quot; size=&quot;40&quot; type=&quot;text&quot;&gt; \n"
-	textBottom += "\t\t	&lt;input value=&quot;Submit&quot; name=&quot;SubmitButton&quot; id=&quot;SubmitButton&quot; type=&quot;submit&quot; onclick=&quot;"
-	<% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
-	if (document.getElementById('DrawSign').checked){
-		textBottom += " SubmitImage();"
+	textBottom += "\t\t Subject: &lt;input name=&quot;subject&quot; size=&quot;40&quot; type=&quot;text&quot;&gt; &lt;br&gt; \n"
+	textBottom += "\t\t&lt;input value=&quot;Submit&quot; name=&quot;SubmitButton&quot; id=&quot;SubmitButton&quot; type=&quot;submit&quot; onclick=&quot;"
+
+	if (document.getElementById('AddSignature').checked){
+		textBottom += " saveSig(); releaseDirtyFlag();&quot;&gt; \n"
+		textBottom += "\t\t&lt;input value=&quot;Clear Sig&quot; name=&quot;ClearButton&quot; id=&quot;ClearButton&quot; type=&quot;button&quot; onclick=&quot;clearSig();&quot;&gt; \n"
+	} else {
+		textBottom += " releaseDirtyFlag();&quot;&gt; \n"
 	}
-	<% } %>
-	textBottom += " releaseDirtyFlag();&quot;&gt; \n"
 	textBottom += "\t\t\t&lt;input value=&quot;Reset&quot; name=&quot;ResetButton&quot; id=&quot;ResetButton&quot; type=&quot;reset&quot;&gt; \n"
 	textBottom += "\t\t	&lt;input value=&quot;Print&quot; name=&quot;PrintButton&quot; id=&quot;PrintButton&quot; type=&quot;button&quot; onclick=&quot;formPrint();&quot;&gt; \n"
 	textBottom += "\t\t	&lt;input value=&quot;Print &amp; Submit&quot; name=&quot;PrintSubmitButton&quot; id=&quot;PrintSubmitButton&quot; type=&quot;button&quot; onclick=&quot;formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);&quot;&gt; \n"
-	if(document.getElementById('DefaultCheckmark').checked){
-		textBottom += "\t\t	&lt;input name=&quot;DrawCheckmark&quot; id=&quot;DrawCheckmark&quot; type=&quot;checkbox&quot; checked&gt;"
-		textBottom += "&lt;span style=&quot;font-family:sans-serif; font-size:12px;&quot;&gt;Draw Checkmarks&lt;/span&gt; \n"
-	}
+
 	textBottom += "\t &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;\n"
-	textBottom += " &lt;/div&gt;\n &lt;/form&gt;\n\n"
+	textBottom += " &lt;/div&gt;\n"
+	textBottom += " &lt;/form&gt;\n\n"
 
-	//Bottom Graphic Scripts for drawing in checkmarks
-	if (document.getElementById('DefaultCheckmark').checked){
+	if (document.getElementById('AddDate').checked){
+		textBottom +="\n&lt;!-- Define Date Calendars --&gt;\n"
 		textBottom += "&lt;script type=&quot;text/javascript&quot;&gt;\n"
-		textBottom += "&lt;!-- Drawing in checkmarks --&gt;\n"
-		textBottom += "var chkcnv = document.getElementById('chkCanvas');\n"
-		textBottom += "var chkjg = new jsGraphics(chkcnv);\n"
-		textBottom += "var chkcnvLeft = parseInt(chkcnv.style.left);\n"
-		textBottom += "var chkcnvTop = parseInt(chkcnv.style.top);\n"
-		textBottom += "chkjg.setPrintable(true);\n"
-
-		textBottom += "function drawCheckmark(x,y){\n"
-		textBottom += "var offset = 6;\n"
-		textBottom += "var x = parseInt(x) + offset;\n"
-		textBottom += "var y = parseInt(y) + offset;\n"
-		textBottom += "chkjg.setColor('black');\n"
-		textBottom += "chkjg.setStroke(3);\n"
-		textBottom += "\t	// draws checkmark\n"
-		textBottom += "\t	var x1 = x;\n"
-		textBottom += "\t	var y1 = y+4;\n"
-		textBottom += "\t	var x2 = x1 + 3;\n"
-		textBottom += "\t	var y2 = y1 + 4;\n"
-		textBottom += "\t	var x3 = x2 + 4;\n"
-		textBottom += "\t	var y3 = y2 - 12;\n"
-		textBottom += "\t	chkjg.drawLine(x1,y1,x2,y2);\n"
-		textBottom += "\t	chkjg.drawLine(x2,y2,x3,y3);\n"
-		textBottom += "\t	chkjg.paint();\n"
-		textBottom += "}\n"
-		textBottom += "function replaceCheckmarks(){\n"
-		textBottom += "var f = document.getElementById(&quot;FormName&quot;);\n"
-		textBottom += "	\t for (var i=0;i&lt;f.length;i++){\n"
-		textBottom += "	\t\t	if ((f.elements[i].type == 'checkbox') &amp;&amp; (f.elements[i].checked)){\n"
-		textBottom += "	\t\t		var a = f.elements[i].style.left;\n"
-		textBottom += "	\t\t		var b = f.elements[i].style.top;\n"
-		textBottom += "	\t\t		drawCheckmark(a,b);\n"
-		textBottom += "	\t\t	}\n"
-		textBottom += "	\t }\n"
-		textBottom += "}\n"
-		textBottom += "function printCheckboxes(){\n"
-		textBottom += "\t	putInFront();\n"
-		textBottom += "\t	replaceCheckmarks();\n"
-		textBottom += "\t	window.print();\n"
-		textBottom += "}\n"
-		textBottom += "function putInFront(){\n"
-		textBottom += "\t	chkcnv.style.zIndex = &quot;999999&quot;;	\n"
-		textBottom += "}\n"
-		textBottom += "function putInBack(){\n"
-		textBottom += "\t	chkcnv.style.zIndex = &quot;-999999&quot;;	\n"
-		textBottom += "}\n"
-		textBottom += "&lt;/script&gt;\n"
+		for (j=0; (j < (DrawData.length) ); j++){
+			var P = DrawData[j].split("|");
+			if ((P[0]=="Text") && ((P[5].indexOf("today") >-1)||(P[5].indexOf("date") >-1)))  {
+				textBottom += "\tCalendar.setup( { inputField : &quot;"+P[5]+"&quot;, ifFormat : &quot;%Y-%m-%d&quot;,  button : &quot;"+P[5]+"&quot; } );\n"		
+			}
+		}
+		textBottom += "&lt;/script&gt;\n\n"
 	}
 
-	<% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
-	//script for drawing signatures
-	if (document.getElementById('DrawSign').checked){
-		textBottom += "&lt;!-- freehand signature scripts --&gt;\n"
-		textBottom += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_image_path%7DSignatureScripts.js&quot;&gt;&lt;/script&gt;\n"
-	}
-	<% } %> 
 	//</body></html>
 	textBottom += "&lt;/body&gt;\n&lt;/html&gt;\n";
 }
@@ -1255,12 +1251,8 @@ for (j=0; (j < (DrawData.length) ); j++){
 		GetTextMiddle(GetTextMiddleParameter);
 	}
 
-<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
-if (document.getElementById('AddSignature').checked){
-	textMiddle +="&lt;div id=&quot;signatureDisplay&quot;&gt;&lt;/div&gt;";
-	textMiddle +="&lt;input type=&quot;hidden&quot; name=&quot;signatureValue&quot; id=&quot;signatureValue&quot; value=&quot;&quot; &gt;&lt;/input&gt;";
-}
-<% } %>
+//PHC edit//
+
 textBottom = "";
 GetTextBottom();
 
@@ -1274,11 +1266,6 @@ return unescape(text);
 function injectHtml(){
     document.getElementById('formHtml').value = popUp();
     document.getElementById('toSave').submit();
-}
-//this function used for injecting html in to Edit E-Form in efmformmanageredit.jsp w/ variable formHtml BUT not efficient
-function injectHtml2(){
-window.open('efmformmanageredit.jsp?formHtml=','happyWindow');
-happyWindow.document.getElementById('formHtml').value = popUp();
 }
 
 </script>
@@ -1386,18 +1373,21 @@ function update(e)
 </script>
 
 <!-- js graphics scripts -->
+<script type="text/javascript" src= "<%=request.getContextPath()%>/share/javascript/eforms/jsgraphics.js" ></script>
+
+<!-- 
 <script type="text/javascript">
 /* This notice must be untouched at all times.
 
-wz_jsgraphics.js    v. 3.01
+wz_jsgraphics.js    v. 3.05
 The latest version is available at
 http://www.walterzorn.com
 or http://www.devira.com
 or http://www.walterzorn.de
 
-Copyright (c) 2002-2004 Walter Zorn. All rights reserved.
+Copyright (c) 2002-2009 Walter Zorn. All rights reserved.
 Created 3. 11. 2002 by Walter Zorn (Web: http://www.walterzorn.com )
-Last modified: 1. 6. 2007
+Last modified: 2. 2. 2009
 
 Performance optimizations for Internet Explorer
 by Thomas Frank and John Holdsworth.
@@ -1434,16 +1424,17 @@ or see http://www.gnu.org/copyleft/lesser.html
 var jg_ok, jg_ie, jg_fast, jg_dom, jg_moz;
 
 
-function _chkDHTM(x, i)
+function _chkDHTM(wnd, x, i)
+// Under XUL, owner of 'document' must be specified explicitly
 {
-	x = document.body || null;
-	jg_ie = x && typeof x.insertAdjacentHTML != "undefined" && document.createElement;
+	x = wnd.document.body || null;
+	jg_ie = x && typeof x.insertAdjacentHTML != "undefined" && wnd.document.createElement;
 	jg_dom = (x && !jg_ie &&
 		typeof x.appendChild != "undefined" &&
-		typeof document.createRange != "undefined" &&
-		typeof (i = document.createRange()).setStartBefore != "undefined" &&
+		typeof wnd.document.createRange != "undefined" &&
+		typeof (i = wnd.document.createRange()).setStartBefore != "undefined" &&
 		typeof i.createContextualFragment != "undefined");
-	jg_fast = jg_ie && document.all && !window.opera;
+	jg_fast = jg_ie && wnd.document.all && !wnd.opera;
 	jg_moz = jg_dom && typeof x.style.MozOpacity != "undefined";
 	jg_ok = !!(jg_ie || jg_dom);
 }
@@ -1512,7 +1503,7 @@ function _htmRpc()
 	return this.htm.replace(
 		_regex,
 		'<div style="overflow:hidden;position:absolute;background-color:'+
-		'$1;left:$2;top:$3;width:$4;height:$5"></div>');
+		'$1;left:$2px;top:$3px;width:$4px;height:$5px"></div>\n');
 }
 
 function _htmPrtRpc()
@@ -1520,7 +1511,7 @@ function _htmPrtRpc()
 	return this.htm.replace(
 		_regex,
 		'<div style="overflow:hidden;position:absolute;background-color:'+
-		'$1;left:$2;top:$3;width:$4;height:$5;border-left:$4px solid $1"></div>');
+		'$1;left:$2px;top:$3px;width:$4px;height:$5px;border-left:$4px solid $1"></div>\n');
 }
 
 function _mkLin(x1, y1, x2, y2)
@@ -2136,7 +2127,7 @@ function jsGraphics(cnv, wnd)
 				| (2 << (Math.floor((fAngZ %= 360.0)/180.0) << 3))
 				| ((fAngA >= fAngZ) << 16),
 		aBndA = new Array(b+1), aBndZ = new Array(b+1);
-
+		
 		// Set up radial boundary lines
 		fAngA *= Math.PI/180.0;
 		fAngZ *= Math.PI/180.0;
@@ -2299,9 +2290,11 @@ text both horizontally (e.g. right) and vertically within that rectangle */
 		this.htm += '<div style="position:absolute;'+
 			'left:' + x + 'px;'+
 			'top:' + y + 'px;'+
-			'width:' +  w + 'px;'+
-			'height:' + h + 'px;">'+
-			'<img src="' + imgSrc + '" width="' + w + '" height="' + h + '"' + (a? (' '+a) : '') + '>'+
+			// w (width) and h (height) arguments are now optional.
+			// Added by Mahmut Keygubatli, 14.1.2008
+			(w? ('width:' +  w + 'px;') : '') +
+			(h? ('height:' + h + 'px;'):'')+'">'+
+			'<img src="' + imgSrc +'"'+ (w ? (' width="' + w + '"'):'')+ (h ? (' height="' + h + '"'):'') + (a? (' '+a) : '') + '>'+
 			'<\/div>';
 	};
 
@@ -2324,7 +2317,7 @@ text both horizontally (e.g. right) and vertically within that rectangle */
 		this._mkDiv(xl, yt, w, h);
 		this._mkDiv(xl, yb, w, h);
 	};
-
+	
 	this._mkArcDiv = function(x, y, oy, cx, cy, iOdds, aBndA, aBndZ, iSects)
 	{
 		var xrDef = cx + x + (iOdds & 0xffff), y2, h = oy - y, xl, xr, w;
@@ -2410,7 +2403,7 @@ text both horizontally (e.g. right) and vertically within that rectangle */
 	this.htm = "";
 	this.wnd = wnd || window;
 
-	if(!jg_ok) _chkDHTM();
+	if(!jg_ok) _chkDHTM(this.wnd);
 	if(jg_ok)
 	{
 		if(cnv)
@@ -2427,7 +2420,8 @@ text both horizontally (e.g. right) and vertically within that rectangle */
 			// Create new canvas inside container DIV. Thus the drawing and clearing
 			// methods won't interfere with the container's inner html.
 			// Solution suggested by Vladimir.
-			this.cnv = document.createElement("div");
+			this.cnv = this.wnd.document.createElement("div");
+			this.cnv.style.fontSize=0;
 			this.cont.appendChild(this.cnv);
 			this.paint = jg_dom? _pntCnvDom : _pntCnvIe;
 		}
@@ -2491,12 +2485,18 @@ function _CompInt(x, y)
 	return(x - y);
 }
 
+
 </script>
+-->
+
 
 </head>
 
 <!-- resetAll() -->
-<body onload="init(); resetAll(); hide('all')">
+<body onload="init(); resetAll(); hide('all');
+<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
+show('classic');
+<% } %> ">
 
 <img name="BGImage" id="BGImage" style="position: absolute; left: 0px; top: 0px;"
 	onmouseover="SetDrawOn();"
@@ -2508,15 +2508,14 @@ function _CompInt(x, y)
 
 <h1><bean:message key="eFormGenerator.title"/></h1>
 
-<!-- this form  used for injecting html in to Edit E-Form-->
+<!-- this form  used for injecting html in to Edit E-Form  PHC TO DO CHANGE TO formHtmlG-->
 <form method="post" action="efmformmanageredit.jsp" id="toSave">
     <input type="hidden" name="formHtml" id="formHtml" />
 </form>
 
 <form method="post" action="" name="FormName" id="FormName">
-<!-- <div name="Wizard" id="Wizard" class="DoNotPrint" style="position: absolute; left:750px; top: 0px; width: 500px; padding:5px" > -->
-<div name="Wizard" id="Wizard" class="DoNotPrint" style="position: absolute; leftoscar_image_path:750px; top: 0px; width: 500px;" >
 
+<div name="Wizard" id="Wizard" class="DoNotPrint" style="position: absolute; left:750px; top: 0px; width: 500px; padding:5px; height: 1010; overflow-y: scroll;" >
 
 <span class="h1"><bean:message key="eFormGenerator.title"/></span>
 	<a onclick="show('all');"><bean:message key="eFormGenerator.expandAll"/></a>/
@@ -2548,10 +2547,11 @@ function _CompInt(x, y)
                        <%
                       }
                      %>
-            </select>
+            </select> <bean:message key="eFormGenerator.page"/> <input type="text" name="page" id="page" style="width:30px" value="" readonly="true">
         </p>
 
-	<p>	- <bean:message key="eFormGenerator.imageUploadPrompt"/> <bean:message key="eFormGenerator.imageUploadLink"/></p>
+	<!-- <p><b>Image Name:</b><input type="text" name="imageName" id="imageName"></p> -->
+	<p>	- <bean:message key="eFormGenerator.imageUploadPrompt"/> <bean:message key="eFormGenerator.imageUploadLink"/> </p>
 	<p><b>Orientation of form:</b><br>
 			<input type="radio" name="Orientation" id="OrientPortrait" value="750" checked><bean:message key="eFormGenerator.imagePortrait"/><br>
 			<input type="radio" name="Orientation" id="OrientLandscape" value="1000"><bean:message key="eFormGenerator.imageLandscape"/><br>
@@ -2573,7 +2573,8 @@ function _CompInt(x, y)
 
 <span class='h2'>3. <bean:message key="eFormGenerator.gender"/></span> <a onclick="show('Section3');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section3');"><bean:message key="eFormGenerator.collapse"/></a>
 <div id="Section3">
-			<p><bean:message key="eFormGenerator.genderCheckbox"/> <input name="preCheckGender" id="preCheckGender" type="checkbox" onclick="toggleView(this.checked,'Section3a');"></p>
+			<p><bean:message key="eFormGenerator.genderCheckbox"/><br> <input name="preCheckGender" id="preCheckGender" type="checkbox" onclick="toggleView(this.checked,'Section3a');"><bean:message key="eFormGenerator.GenderCheckbox"/></p>
+			<p><input name="XboxType" id="XboxType" type="checkbox" onclick="toggleView(this.checked,'Section3a');"><bean:message key="eFormGenerator.GenderXbox"/></p>
 			<div id="Section3a" style="display:none">
 				<table>
 					<tr>
@@ -2588,24 +2589,26 @@ function _CompInt(x, y)
 			</div>
 </div>
 <hr>
-<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
-<span class='h2'>4. <bean:message key="eFormGenerator.signature"/></span><a onclick="show('Section4');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section4');"><bean:message key="eFormGenerator.collapse"/></a>
-<div id="Section4">
-		<div id="Section4a">
-			<input type="radio" name="inputType" id="IndivicaSignature" value="checkbox" onclick="document.getElementById('AddSignature').checked=true;SetSwitchOn(this.id);"><span><bean:message key="eFormGenerator.signatureCheckbox"/></span>
-			<input type="checkbox" name="AddSignature" id="AddSignature" style="display:none">
-		</div>		
-</div>
-<% } else { %>
+
+
 <span class='h2'>4. <bean:message key="eFormGenerator.signature"/></span><a onclick="show('Section4');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section4');"><bean:message key="eFormGenerator.collapse"/></a>
 <div id="Section4">
 	<p>
-		<input type="checkbox" name="AddSignature" id="AddSignature"
-			onclick="	toggleView(this.checked,'Section4a');toggleView(this.checked,'Section4b');"><bean:message key="eFormGenerator.signatureCheckbox"/><br>
-		<div id="Section4a" style="display:none">
-			<input type="radio" name="SignatureType" id="AutoSign" value="AutoSign" onclick="show('Section4aa'); show('Section4ab'); hide('Section4ba');"><span><bean:message key="eFormGenerator.signatureLoad"/></span><br>
-		</div>
-			<div id="Section4aa" style="display:none">
+		<input type="checkbox" name="AddSignature" id="AddSignature" 
+			onclick="	toggleView(this.checked,'Section4a');"><bean:message key="eFormGenerator.freehand"/>
+<!-- Add A Freehand Signature area to this form--> <br>
+			<div id="Section4a" style="display:none"> 
+				<input type="button" name="AddSignatureBox1" id="AddSignatureBox1" style="width:400px" value="<bean:message key="eFormGenerator.signatureLocationButton"/>" onclick="SetSwitchOn('SignatureBox');document.getElementById('AddSignature').disabled=true; ">
+			</div> 
+
+
+		<input type="checkbox" name="AddStamp" id="AddStamp" 
+			onclick="	toggleView(this.checked,'Section4b');toggleView(this.checked,'Section4c');"><span><bean:message key="eFormGenerator.stamp"/></span><br>
+			<div id="Section4b" style="display:none">
+				<input type="button" name="AddSignatureBox2" id="AddSignatureBox2" style="width:400px" value="Click here, then drag a box around the signature area" 
+onclick="SetSwitchOn('Stamp');document.getElementById('AddStamp').disabled=true; document.getElementById('AddSignatureBox2').disabled=true;">
+			</div>
+			<div id="Section4c" style="display:none">
 				<ul>
 					<li><bean:message key="eFormGenerator.signatureFragment"/>
 						<input type="text" name="UserList" id="UserList" style="width:200px;"></li>
@@ -2613,30 +2616,40 @@ function _CompInt(x, y)
 						<input type="text" name="SignatureList" id="SignatureList" style="width:200px;"></li>
 					<input type="button" name="AddToUserSignatureList" id="AddToUserSignatureList" value="<bean:message key="eFormGenerator.signatureAddButton"/>" onclick="addToUserSignatureList();">
 					<input type="button" name="EmptyUserSignatureList" id="EmptyUserSignatureList" value="<bean:message key="eFormGenerator.signatureEmptyButton"/>" onclick="emptyUserSignaturelist()"><br>
-					<ul name="UserSignatureList" id="UserSignatureList" style="list-style-type:none; list-style: none; margin-left: 0; padding-left: 1em; text-indent: -1em"></ul>
+					<ul name="UserSignatureList" id="UserSignatureList" style="list-style-type:none; list-style: none; margin-left: 0; padding-left: 1em; text-indent: -1em">
+						<li name="UserSignatureListItem">
+						      zapski|PHC.png
+						</li>
+					</ul>
 				</ul>
 			</div>
-			<div id="Section4ab" style="display:none">
-				<input type="button" name="AddSignatureBox1" id="AddSignatureBox1" style="width:400px" value="<bean:message key="eFormGenerator.signatureLocationButton"/>" onclick="SetSwitchOn('SignatureBox');">
-			</div>
-		<div id="Section4b"  style="display:none">
-			<input type="radio" name="SignatureType" id="DrawSign" value="DrawSign" onclick="show('Section4ba'); hide('Section4aa'); hide('Section4ab');"><span><bean:message key="eFormGenerator.signatureFreehand"/><span>
-		</div>
-			<div id="Section4ba" style="display:none">
-				<input type="button" name="AddSignatureBox2" id="AddSignatureBox2" style="width:400px" value="<bean:message key="eFormGenerator.signatureLocationButton"/>" onclick="SetSwitchOn('SignatureBox');">
-			</div>
 	</p>
+
+	<span id="classic" style="display:none">
+	<p>
+		<input type="checkbox" name="AddSignatureClassic" id="AddSignatureClassic" 
+			onclick="	toggleView(this.checked,'Section4d');"><bean:message key="eFormGenerator.classic"/>
+<br>	</span>
+			<div id="Section4d" style="display:none"> 
+				<input type="button" name="AddClassicSignatureBox" id="AddClassicSignatureBox" style="width:400px" value="<bean:message key="eFormGenerator.signatureLocationButton"/>" onclick="SetSwitchOn('ClassicSignature');document.getElementById('AddSignatureClassic').disabled=true; document.getElementById('AddClassicSignatureBox').disabled=true;">
+			</div> 
+
+
 </div>
-<% } %>
 
 <hr>
+
+
+
+
 <span class='h2'>5. <bean:message key="eFormGenerator.input"/></span> <a onclick="show('Section5');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section5');"><bean:message key="eFormGenerator.collapse"/></a></span>
 <div id="Section5">
 	<span class='h3'><bean:message key="eFormGenerator.inputType"/></span>
 		<p>
-		<input type="radio" name="inputType" id="Text" value="text" onclick="hide('SectionPrecheck');show('SectionCustomText');show('SectionDatabase');show('SectionImportMeasurements');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeText"/>
-		<input type="radio" name="inputType" id="Textbox" value="textarea" onclick="hide('SectionPrecheck');show('SectionCustomText');show('SectionDatabase');show('SectionImportMeasurements');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeTextArea"/>
-		<input type="radio" name="inputType" id="Checkbox" value="checkbox" onclick="show('SectionPrecheck');hide('SectionCustomText');hide('SectionDatabase');hide('SectionImportMeasurements');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeCheckbox"/>
+		<input type="radio" name="inputType" id="Text" value="text" onclick="hide('SectionPrecheck');show('SectionCustomText');show('SectionDatabase');show('SectionImportMeasurements');show('wtalign');show('SectionCustomText');show('iiimeasures');show('c_formating');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeText"/>
+		<input type="radio" name="inputType" id="Textbox" value="textarea" onclick="hide('SectionPrecheck');show('SectionCustomText');show('SectionDatabase');show('wtalign');show('SectionCustomText');show('c_formating');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeTextArea"/>
+		<input type="radio" name="inputType" id="Checkbox" value="checkbox" onclick="show('SectionPrecheck');hide('SectionCustomText');hide('SectionDatabase');hide('SectionImportMeasurements');hide('iiimeasures');hide('c_formating');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeCheckbox"/>
+		<input type="radio" name="inputType" id="Xbox" value="Xbox" onclick="show('SectionPrecheck');show('SectionCustomText');hide('SectionDatabase');hide('SectionImportMeasurements');hide('wtalign');show('c_formating');hide('iiimeasures');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeXbox"/>
 		</p>
 
 	<span class='h3'><bean:message key="eFormGenerator.inputAuto"/></span>
@@ -2671,6 +2684,10 @@ function _CompInt(x, y)
 								<option value="BMI">BMI</option>
 								<option value="WAIS">WAIS (waist)</option>
 								<option value="WC">WC (waist circ.)</option>
+								<option value="G">Gravida</option>
+								<option value="P">Para</option>
+								<option value="LMP">LMP</option>
+								<option value="SMK">Smoking</option>
 								<option value="HbAi">HbAi</option>
 								<option value="A1C">A1C</option>
 								<option value="FBS">FBS</option>
@@ -2681,8 +2698,7 @@ function _CompInt(x, y)
 								<option value="TCHL">TCHL</option>
 								<option value="EGFR">EGFR</option>
 								<option value="SCR">SCR (Cr)</option>
-								<option value="ACR">ACR</option>
-							</select>
+								<option value="ACR">ACR</option>								</select>
 							<br>
 						<bean:message key="eFormGenerator.inputTypeMeasurementsCustom"/><input type="text" name="MeasurementCustom" id="MeasurementCustom" style="width:50px;">
 						</p>
@@ -2699,12 +2715,12 @@ function _CompInt(x, y)
 					</tr>
 				</table>
 			</li>
-			<li id='SectionPrecheck' style="display:none">Pre-check the checkbox<input name="preCheck" id="preCheck" type="checkbox"></li>
+			<li id='SectionPrecheck' style="display:none"><input name="preCheck" id="preCheck" type="checkbox"><bean:message key="eFormGenerator.precheck"/></li>
 
 		</ul>
 
 
-	<span class='h3'><bean:message key="eFormGenerator.inputFormat"/></span>
+	<span id="c_formating"><span class='h3'><bean:message key="eFormGenerator.inputFormat"/></span>
 			<p>
 			<bean:message key="eFormGenerator.inputFormatFont"/>
 				<select id="fontFamily">
@@ -2717,14 +2733,14 @@ function _CompInt(x, y)
 					 <option value="normal"><bean:message key="eFormGenerator.inputFormatStyleNormal"/></option>
 					 <option value="italic"><bean:message key="eFormGenerator.inputFormatStyleItalic"/></option>
 				</select>
-			<bean:message key="eFormGenerator.inputFormatWeight"/>
+			<span id="wtalign"><bean:message key="eFormGenerator.inputFormatWeight"/>
 				<select id="fontWeight">
 					 <option value="normal"><bean:message key="eFormGenerator.inputFormatStyleNormal"/></option>
 					 <option value="bold"><bean:message key="eFormGenerator.inputFormatWeightBold"/></option>
 					 <option value="bolder"><bean:message key="eFormGenerator.inputFormatWeightBolder"/></option>
 					 <option value="lighter"><bean:message key="eFormGenerator.inputFormatWeightLighter"/></option>
 				</select>
-			<br>
+			<br></span>
 			<bean:message key="eFormGenerator.inputFormatSize"/><input type="text" name="fontSize" id="fontSize"  style="width:50px" value="12"><bean:message key="eFormGenerator.inputFormatSizehint"/>
 			<bean:message key="eFormGenerator.inputFormatAlign"/>
 				<select id="textAlign">
@@ -2740,43 +2756,47 @@ function _CompInt(x, y)
 					<option value="white"><bean:message key="eFormGenerator.inputFormatBackgroundWhite"/></option>
 				</select><br>
 				- <bean:message key="eFormGenerator.inputFormatBackgroundhint"/>
-			</p>
+			</p></span>
 
 
 
 	<span class='h3'><bean:message key="eFormGenerator.inputName"/></span>
 		<p><input type="radio" name="InputNameType" id="InputNameAuto" value="Auto" checked><bean:message key="eFormGenerator.inputNameSeq"/><br>
 				- <bean:message key="eFormGenerator.inputNameSeqPrefix"/><input type="text" name="AutoNamePrefix" id="AutoNamePrefix" style="width:100px" value="AutoName"><br>
-			<input type="radio" name="InputNameCustom" id="InputNameCustom" value="Custom"><bean:message key="eFormGenerator.inputNameSeqCustom"/>
+			<input type="radio" name="InputNameType" id="InputNameCustom" value="Custom"><bean:message key="eFormGenerator.inputNameSeqCustom"/>
 				<input type="text" name="inputName" id="inputName">
 				<br>
 				- <bean:message key="eFormGenerator.inputNameSeqCustomhint1"/><br>
 				- <bean:message key="eFormGenerator.inputNameSeqCustomhint2"/>
 			<br>
-			<input type="radio" name="InputNameType" id="InputNameMeasurement" value="Measurement"><bean:message key="eFormGenerator.inputNameMeasurement"/><br>
+			<span id="iiimeasures"><input type="radio" name="InputNameType" id="InputNameMeasurement" value="Measurement"><bean:message key="eFormGenerator.inputNameMeasurement"/><br>
 			<table>
 				<tr>
 					<td><p><bean:message key="eFormGenerator.inputNameMeasurementType"/></p></td>
 					<td><p>
 						<select name="ExportMeasurementList" id="ExportMeasurementList">
 							<option value="" selected="selected"><bean:message key="eFormGenerator.inputNameMeasurementButton"/></option>
-							<option value="HT">HT</option>
-							<option value="WT">WT</option>
-							<option value="BP">BP</option>
-							<option value="BMI">BMI</option>
-							<option value="WAIS">WAIS (waist)</option>
-							<option value="WC">WC (waist circ.)</option>
-							<option value="HbAi">HbAi</option>
-							<option value="A1C">A1C</option>
-							<option value="FBS">FBS</option>
-							<option value="TG">TG</option>
-							<option value="LDL">LDL</option>
-							<option value="HDL">HDL</option>
-							<option value="TCHD">TCHD</option>
-							<option value="TCHL">TCHL</option>
-							<option value="EGFR">EGFR</option>
-							<option value="SCR">SCR (Cr)</option>
-							<option value="ACR">ACR</option>
+								<option value="HT">HT</option>
+								<option value="WT">WT</option>
+								<option value="BP">BP</option>
+								<option value="BMI">BMI</option>
+								<option value="WAIS">WAIS (waist)</option>
+								<option value="WC">WC (waist circ.)</option>
+								<option value="G">Gravida</option>
+								<option value="P">Para</option>
+								<option value="LMP">LMP</option>
+								<option value="SMK">Smoking</option>
+								<option value="HbAi">HbAi</option>
+								<option value="A1C">A1C</option>
+								<option value="FBS">FBS</option>
+								<option value="TG">TG</option>
+								<option value="LDL">LDL</option>
+								<option value="HDL">HDL</option>
+								<option value="TCHD">TCHD</option>
+								<option value="TCHL">TCHL</option>
+								<option value="EGFR">EGFR</option>
+								<option value="SCR">SCR (Cr)</option>
+								<option value="ACR">ACR</option>	
 						</select>
 						<br>
 				&nbsp;<bean:message key="eFormGenerator.inputNameMeasurementsCustom"/>&nbsp;<input type="text" name="ExportMeasurementCustom" id="ExportMeasurementCustom" style="width:50px;">
@@ -2794,7 +2814,7 @@ function _CompInt(x, y)
 				</tr>
 			</table>
 
-		</p>
+		</p></span>
 	<span class='h3'><bean:message key="eFormGenerator.inputDraw"/></span>
 	<br>
 		<span class='h4'><bean:message key="eFormGenerator.inputDrawText"/></span>
@@ -2851,20 +2871,20 @@ function _CompInt(x, y)
 	<tr>
 		<td style="background-color:#dddddd;">
 			<span><bean:message key="eFormGenerator.tuningWidth"/></span><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningIncreaseButton"/>' style="width:75px;" onclick="changeInput('width',1);"><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningDecreaseButton"/>' style="width:75px;" onclick="changeInput('width',-1);">
+			<input type="button" value='<bean:message key="eFormGenerator.tuningIncreaseButton"/> &#8657;+&#8594;' style="width:120px;" onclick="changeInput('width',1);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningDecreaseButton"/> &#8657;+&#8592;' style="width:120px;" onclick="changeInput('width',-1);">
 		</td>
 		<td>
 
-			<input type="button" value='<bean:message key="eFormGenerator.tuningNudgeButton"/>' style="width:100px;" onclick="changeInput('down',1);"><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningShiftButton"/>' style="width:100px;" onclick="changeInput('down',10);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningNudgeButton"/> &#8595;' style="width:100px;" onclick="changeInput('down',1);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningShiftButton"/> [alt]&#8595;' style="width:100px;" onclick="changeInput('down',10);"><br>
 			<input type="button" value='<bean:message key="eFormGenerator.tuningAlignButton"/>' style="width:100px;" onclick="alignInput('bottom');"><br>
 			<span><bean:message key="eFormGenerator.tuningDown"/></span>
 			</td>
 		<td style="background-color:#dddddd;">
 			<span><bean:message key="eFormGenerator.tuningHeight"/></span><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningIncreaseButton"/>' style="width:75px;" onclick="changeInput('height',1);"><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningDecreaseButton"/>' style="width:75px;" onclick="changeInput('height',-1);">
+			<input type="button" value='<bean:message key="eFormGenerator.tuningIncreaseButton"/> &#8657;+&#8595;' style="width:120px;" onclick="changeInput('height',1);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningDecreaseButton"/> &#8657;+&#8593;' style="width:120px;" onclick="changeInput('height',-1);">
 		</td>
 	</tr>
 </table>
@@ -2876,15 +2896,31 @@ function _CompInt(x, y)
 <p><span class="h2"><bean:message key="eFormGenerator.miscMax"/></span><br>
 	<input name="maximizeWindow" id="maximizeWindow" type="checkbox"><bean:message key="eFormGenerator.miscMaxhint"/>
 </p>
-<p><span class='h2'><bean:message key="eFormGenerator.miscCheckmarks"/></span><br>
+<p><span class='h2'><bean:message key="eFormGenerator.date"/></span><br>
+	<input name="AddDate" id="AddDate" type="checkBox" checked><bean:message key="eFormGenerator.dateDescription"/>
+</p>
+	<p><span class='h2'><bean:message key="eFormGenerator.miscCheckmarks"/></span><br>
+<input name="BlackBox" id="BlackBox" type="checkbox">
+<bean:message key="eFormGenerator.BlackBox"/>
+<br>
+
 	<input name="ScaleCheckmark" id="ScaleCheckmark" type="checkbox"><bean:message key="eFormGenerator.miscCheckmarksScale"/><br>
-	<input name="DefaultCheckmark" id="DefaultCheckmark" type="checkbox"><bean:message key="eFormGenerator.miscCheckmarksDraw"/>
+	<input name="DefaultCheckmark" id="DefaultCheckmark" type="checkbox" style="display:none"><span style="display:none"><bean:message key="eFormGenerator.miscCheckmarksDraw"/></span>
 </p>
 <% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_fax_enabled")) { %>
 <p><span class='h2'><bean:message key="eFormGenerator.fax"/></span><br>
 	<input name="includeFaxControl" id="includeFaxControl" type="checkBox"><bean:message key="eFormGenerator.faxDescription"/>
 </p>
 <% } %>
+
+<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_print_enabled")) { %>
+<div id='pdfOption'>
+<p><span class='h2'><bean:message key="eFormGenerator.PDFprint"/></span><br>
+	<input name="includePdfPrintControl" id="includePdfPrintControl" type="checkBox">
+<bean:message key="eFormGenerator.includePDFprint"/>
+</p>
+<% } %>
+</div>
 </div>
 <hr>
 <span class='h2'>8. <bean:message key="eFormGenerator.generate"/></span><a onclick="show('Section8');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section8');"><bean:message key="eFormGenerator.collapse"/></a>
@@ -2915,7 +2951,7 @@ function _CompInt(x, y)
 var DrawData = new Array();
 var TempData = new Array();
 
-var cnv = document.getElementById("myCanvas");
+var cnv = document.getElementById("myCanvas"); 
 var jg = new jsGraphics(cnv);
 
 var pvcnv = document.getElementById("preview");
@@ -2956,23 +2992,28 @@ function SetDrawOff(){
 var TextSwitch = true;
 var TextboxSwitch = false;
 var CheckboxSwitch = false;
+var XboxSwitch = false;
 var MaleSwitch = false;
 var FemaleSwitch = false;
 var SignatureBoxSwitch = false;
-var IndivicaSignatureSwitch = false;
+var StampSwitch = false;
+var ClassicSignatureSwitch = false;
+
 function SetSwitchesOff(){
 	TextSwitch = false;
 	TextboxSwitch = false;
 	CheckboxSwitch = false;
+	XboxSwitch = false;
 	MaleSwitch = false;
 	FemaleSwitch = false;
 	SignatureBoxSwitch = false;
-	IndivicaSignatureSwitch = false;
+	StampSwitch = false;
+	ClassicSignatureSwitch = false;
 }
 
 var DrawTool = "Text";
 
-function SetSwitchOn(n){
+function SetSwitchOn(n){	
 	SetSwitchesOff();
 	DrawTool = n;
 
@@ -2982,19 +3023,20 @@ function SetSwitchOn(n){
 		TextboxSwitch = true;
 	}else if(n=="Checkbox"){
 		CheckboxSwitch = true;
+	}else if(n=="Xbox"){
+		XboxSwitch = true;
 	}else if (n=="Male"){
 		MaleSwitch = true;
 	}else if (n=="Female"){
 		FemaleSwitch = true;
 	}else if (n=="SignatureBox"){
 		SignatureBoxSwitch = true;
-	}else if (n=="IndivicaSignature") {
-		IndivicaSignatureSwitch = true;
+	}else if (n=="Stamp"){
+		StampSwitch = true;
+	}else if (n=="ClassicSignature") {
+		ClassicSignatureSwitch = true;
 	}
-	
 }
-
-
 function SetStart(){
 	x0 = parseInt(mousex);	//assign x coordinate at mousedown to x0
 	y0 = parseInt(mousey);	//assign y coordinate at mousedown to y0
@@ -3002,26 +3044,28 @@ function SetStart(){
 
 function DrawText(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue){
 	// draw Rectangle
-	var x0 = parseInt(x0);
-	var y0 = parseInt(y0);
-	var width = parseInt(width);
-	var height = parseInt(height);
-	canvas.setColor(StrokeColor);
-	canvas.setStroke(StrokeThickness);
-	canvas.drawRect(x0,y0,width,height);
-	canvas.paint();
-	if (ShowInputName){
-		canvas.setColor('blue');
-		canvas.setFont("sans-serif","10px",Font.BOLD);
-		var xt = x0 + StrokeThickness
-		var yt = y0 + StrokeThickness
-		canvas.drawString(inputName,xt,y0);
-		canvas.paint();
+//alert(PageIterate+"|"+PageNum+"|"+( PageIterate == PageNum )+(canvas == jg));
+	if ( PageIterate == PageNum ) {
+		var x0 = parseInt(x0);
+		var y0 = parseInt(y0);
+		var width = parseInt(width);
+		var height = parseInt(height);
 		canvas.setColor(StrokeColor);
+		canvas.setStroke(StrokeThickness);
+		canvas.drawRect(x0,y0,width,height);
+		canvas.paint();
+		if (ShowInputName){
+			canvas.setColor('blue');
+			canvas.setFont("sans-serif","10px",Font.BOLD);
+			var xt = x0 + StrokeThickness
+			var yt = y0 + StrokeThickness
+			canvas.drawString(inputName,xt,y0);
+			canvas.paint();
+			canvas.setColor(StrokeColor);
+		}
 	}
-
 	//store parameters in an array (using separator "|")
-	if (canvas == jg){
+	if (canvas == jg){ 
 		var Parameter = "Text" + "|" + x0 + "|" + y0 + "|" + width + "|" + height + "|" + inputName + "|" + fontFamily + "|" + fontStyle + "|" + fontWeight + "|" + fontSize + "|" + textAlign + "|" + bgColor + "|" + oscarDB + "|" + inputValue;
 		DrawData.push(Parameter);
 	}
@@ -3029,25 +3073,27 @@ function DrawText(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fontW
 
 function DrawTextbox(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue){
 	// draws Rectangle
-	var x0 = parseInt(x0);
-	var y0 = parseInt(y0);
-	var width = parseInt(width);
-	var height = parseInt(height);
-	canvas.setColor(StrokeColor);
-	canvas.setStroke(StrokeThickness);
-	canvas.drawRect(x0,y0,width,height);
-	canvas.paint()
-	if (ShowInputName){
-		canvas.setColor('blue');
-		canvas.setFont("sans-serif","10px",Font.BOLD);
-		var xt = x0 + StrokeThickness
-		var yt = y0 + StrokeThickness
-		canvas.drawString(inputName,xt,y0);
-		canvas.paint();
+	if ( PageIterate == PageNum ) {
+		var x0 = parseInt(x0);
+		var y0 = parseInt(y0);
+		var width = parseInt(width);
+		var height = parseInt(height);
 		canvas.setColor(StrokeColor);
+		canvas.setStroke(StrokeThickness);
+		canvas.drawRect(x0,y0,width,height);
+		canvas.paint()
+		if (ShowInputName){
+			canvas.setColor('blue');
+			canvas.setFont("sans-serif","10px",Font.BOLD);
+			var xt = x0 + StrokeThickness
+			var yt = y0 + StrokeThickness
+			canvas.drawString(inputName,xt,y0);
+			canvas.paint();
+			canvas.setColor(StrokeColor);
+		}
 	}
 	//store parameters in an array (using separator "|")
-	if (canvas == jg){
+	if (canvas == jg){ 
 		var Parameter = "Textbox" + "|" + x0 + "|" + y0 + "|" + width + "|" + height + "|" + inputName + "|" + fontFamily + "|" + fontStyle + "|" + fontWeight + "|" + fontSize + "|" + textAlign + "|" + bgColor + "|" + oscarDB + "|" + inputValue;
 		DrawData.push(Parameter);
 	}
@@ -3055,14 +3101,107 @@ function DrawTextbox(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fo
 
 function DrawCheckbox(canvas,x0,y0,inputName,preCheck){
 	// draws Checkbox
-	var x = parseInt(x);
-	var y = parseInt(y);
+	if ( PageIterate == PageNum ) {
+		var x = parseInt(x);
+		var y = parseInt(y);
+		canvas.setColor(StrokeColor);
+		canvas.setStroke(StrokeThickness);
+		var s = 10; 	//square with side of 10
+		canvas.drawRect(x0,y0,s,s);
+		canvas.paint();
+		if (ShowInputName){
+			canvas.setColor('blue');
+			canvas.setFont("sans-serif","10px",Font.BOLD);
+			var xt = x0 + StrokeThickness
+			var yt = y0 + StrokeThickness
+			canvas.drawString(inputName,xt,y0);
+			canvas.paint();
+			canvas.setColor(StrokeColor);
+		}
+		canvas.paint();
+	}
+	//store parameters in an array (using separator "|")
+	if (canvas == jg){ 
+		var Parameter = "Checkbox" + "|" + x0 + "|" + y0 + "|" + inputName + "|" + preCheck;
+		DrawData.push(Parameter);
+	}
+	if ((inputName == "Male")||(inputName == "Female")){ 
+		SetSwitchOn('Text');
+		document.getElementById('Text').click();
+	}
+}
+
+function DrawXbox(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue){
+	// draw Rectangle
+	if ( PageIterate == PageNum ) {
+		var x0 = parseInt(x0);
+		var y0 = parseInt(y0);
+		var s = 10; 	//square with side of 10
+		var s = parseInt(fontSize)+2;
+		canvas.setColor(StrokeColor);
+		canvas.setStroke(StrokeThickness);
+		canvas.drawRect(x0,y0,s,s);
+		canvas.paint();
+		if (ShowInputName){
+			canvas.setColor('blue');
+			canvas.setFont("sans-serif","10px",Font.BOLD);
+			var xt = x0 + StrokeThickness
+			var yt = y0 + StrokeThickness
+			canvas.drawString(inputName,xt,y0);
+			canvas.paint();
+			canvas.setColor(StrokeColor);
+		}
+	}
+	//store parameters in an array (using separator "|")
+	if (canvas == jg){ 
+		var Parameter = "Xbox" + "|" + x0 + "|" + y0 + "|" + width + "|" + height + "|" + inputName + "|" + fontFamily + "|" + fontStyle + "|" + fontWeight + "|" + fontSize + "|" + textAlign + "|" + bgColor + "|" + oscarDB + "|" + inputValue;
+		DrawData.push(Parameter);
+	}
+	if ((inputName == "Male")||(inputName == "Female")){ 
+		SetSwitchOn('Text');
+		document.getElementById('Text').click();
+	}
+
+}
+
+function DrawPage(canvas,pnum,pimage,bwidth){
+//alert("page draw"+pnum)
+	PageIterate = pnum;
+	//store parameters in an array (using separator "|")
+	if (canvas == jg){ 
+		var Parameter = "Page" + "|" + pnum + "|" + pimage + "|" + bwidth;
+		DrawData.push(Parameter);
+	}
+//var tempa="";
+//for (j=0; (j < (DrawData.length) ); j++){
+//		tempa += DrawData[j]+"\n";
+//	}
+//alert(tempa);
+}
+
+function DrawSignatureBox(canvas,x0,y0, width, height, inputName){
+
+	if (inputName == "ClassicSignature"){
+		//assigns coordinates of top left corner of box
+		SignatureHolderX = x0;
+		SignatureHolderY = y0;
+		SignatureHolderW = width;
+		SignatureHolderH = height;
+		sigOffset = pageoffset - document.getElementById('BGImage').height;
+
+	} else {
+		//constrains width and height
+		if (height<30) { height=30;}
+		width=4*height;
+	}
+
+	//draws box
 	canvas.setColor(StrokeColor);
 	canvas.setStroke(StrokeThickness);
-	var s = 10; 	//square with side of 10
-	canvas.drawRect(x0,y0,s,s);
+	canvas.drawRect(x0,y0,width,height);
 	canvas.paint();
-	if (ShowInputName){
+	
+	if(ShowInputName){
 		canvas.setColor('blue');
 		canvas.setFont("sans-serif","10px",Font.BOLD);
 		var xt = x0 + StrokeThickness
@@ -3071,107 +3210,56 @@ function DrawCheckbox(canvas,x0,y0,inputName,preCheck){
 		canvas.paint();
 		canvas.setColor(StrokeColor);
 	}
-	canvas.paint();
+
 	//store parameters in an array (using separator "|")
-	if (canvas == jg){
-		var Parameter = "Checkbox" + "|" + x0 + "|" + y0 + "|" + inputName + "|" + preCheck;
+	if (canvas == jg){ 
+		var Parameter = "Signature" + "|" + x0 + "|" + y0 + "|" + width + "|" + height + "|" + inputName;
 		DrawData.push(Parameter);
 	}
-}
 
-function DrawMale(canvas,x0,y0){
-	// draws Checkbox
-	canvas.setColor(StrokeColor);
-	canvas.setStroke(StrokeThickness);
-	var s = 10;  //s = lenght of side of square
-	canvas.drawRect(x0,y0,s,s);
-	canvas.paint();
-	if (ShowInputName){
-		canvas.setColor('blue');
-		canvas.setFont("sans-serif","10px",Font.BOLD);
-		var xt = x0 + StrokeThickness
-		var yt = y0 + StrokeThickness
-		canvas.drawString("Male",xt,y0);
-		canvas.paint();
-		canvas.setColor(StrokeColor)
-	}
-
-	//assigns coordinates of top left corner of checkbox
-	MTopLeftX = x0;
-	MTopLeftY = y0;
-
-	//reset to default text input
+	//reset to default input of text input
 	SetSwitchOn('Text');
-	document.getElementById('Text').checked = true;
-
+	document.getElementById('Text').click();
 }
 
-function DrawFemale(canvas,x0,y0){
-	// draws Checkbox
-	canvas.setColor(StrokeColor);
-	canvas.setStroke(StrokeThickness);
-	var s = 10;
-	canvas.drawRect(x0,y0,s,s);
-	canvas.paint();
-
-	if (ShowInputName){
-		canvas.setColor('blue');
-		canvas.setFont("sans-serif","10px",Font.BOLD);
-		var xt = x0 + StrokeThickness
-		var yt = y0 + StrokeThickness
-		canvas.drawString("Female",xt,y0);
-		canvas.paint();
-		canvas.setColor(StrokeColor);
-	}
-
-	//assigns coordinates of top left corner of checkbox
-	FTopLeftX = x0;
-	FTopLeftY = y0;
-	//reset to default text input
-	SetSwitchOn('Text');
-	document.getElementById('Text').checked = true;
-
-}
-
-function DrawSignatureBox(canvas,x0,y0, width, height){
+function DrawStamp(canvas,x0,y0, width, height, inputName){
 	//draws box
 	canvas.setColor(StrokeColor);
 	canvas.setStroke(StrokeThickness);
 	canvas.drawRect(x0,y0,width,height);
 	canvas.paint();
-
+	
 	if(ShowInputName){
 		canvas.setColor('blue');
 		canvas.setFont("sans-serif","10px",Font.BOLD);
 		var xt = x0 + StrokeThickness
 		var yt = y0 + StrokeThickness
-		canvas.drawString("SignatureBox",xt,y0);
+		canvas.drawString(inputName,xt,y0);
 		canvas.paint();
 		canvas.setColor(StrokeColor);
 	}
-	//assigns coordinates of top left corner of box
-	SignatureHolderX = x0;
-	SignatureHolderY = y0;
-	SignatureHolderW = width;
-	SignatureHolderH = height;
+
+	//store parameters in an array (using separator "|")
+	if (canvas == jg){ 
+		var Parameter = "Stamp" + "|" + x0 + "|" + y0 + "|" + width + "|" + height + "|" + inputName;
+		DrawData.push(Parameter);
+	}
 
 	//reset to default input of text input
 	SetSwitchOn('Text');
-	document.getElementById('Text').checked = true;
-
+	document.getElementById('Text').click();
 }
-
 
 var inputName="";
 var inputCounter = 1;
 
-
+	
 function DrawMarker(){
 	var x = parseInt(mousex);	//assign x coordinate at mouseup to x
 	var y = parseInt(mousey);	//assign y coordinate at mouseup to y
 
-
-	var width = x - x0;
+		
+	var width = x - x0;	
 	var height = y - y0;
 	var fontFamily = document.getElementById('fontFamily').value;
 	var fontStyle = document.getElementById('fontStyle').value;
@@ -3212,7 +3300,7 @@ function DrawMarker(){
 			inputName = "m$" + document.getElementById('ExportMeasurementList').value + "#" + document.getElementById('ExportMeasurementField').value;
 		}else if (document.getElementById('ExportMeasurementCustom').value){
 			inputName = "m$" + document.getElementById('ExportMeasurementCustom').value + "#" + document.getElementById('ExportMeasurementField').value;
-		}
+		}		
 	}else if (inputNameType == "Auto") {
 		if (oscarDB){
 			inputName = oscarDB;	//if auto-naming input fields, use oscarDB tag if available
@@ -3225,7 +3313,7 @@ function DrawMarker(){
 				}
 			}
 			if (j>0){
-				inputName = inputName + j;
+				inputName = inputName + j;	
 			}
 		}else{
 			inputName = document.getElementById('AutoNamePrefix').value + inputCounter;
@@ -3239,8 +3327,8 @@ function DrawMarker(){
 			alert("<bean:message key="eFormGenerator.duplicateName"/>");
 		}
 	}
-
-
+	
+	
 	if(DrawSwitch){
 		if (TextSwitch){
 			DrawText(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue);
@@ -3248,15 +3336,35 @@ function DrawMarker(){
 			DrawTextbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue);
 		}else if (CheckboxSwitch){
 			DrawCheckbox(jg,x0,y0,inputName,preCheck);
+		}else if (XboxSwitch){
+			if (preCheck){ inputValue='X'; } else {inputValue='';}
+			DrawXbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue);
 		}else if(MaleSwitch){
-			DrawMale(jg,x0,y0);
+			if (document.getElementById('XboxType').checked) {
+				DrawXbox(jg,x0,y0,width,height,"Male",fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,"");
+			} else {
+				DrawCheckbox(jg,x0,y0,"Male",false);
+			}
 		}else if(FemaleSwitch){
-			DrawFemale(jg,x0,y0);
-		}else if (SignatureBoxSwitch || IndivicaSignatureSwitch){
-			DrawSignatureBox(jg,x0,y0,width,height);
+			if (document.getElementById('XboxType').checked) {
+				DrawXbox(jg,x0,y0,width,height,"Female",fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,"");
+			} else {
+				DrawCheckbox(jg,x0,y0,"Female",false);
+			}
+		}else if (SignatureBoxSwitch){
+			var sigtext ="Signature";
+			sigint += 1;
+			sigtext = sigtext + sigint
+			DrawSignatureBox(jg,x0,y0,width,height,sigtext);
+		}else if (StampSwitch){
+			var sigtext ="Stamp";
+			DrawStamp(jg,x0,y0,width,height,sigtext);
+		}else if (ClassicSignatureSwitch){
+			var sigtext ="ClassicSignature";
+			DrawSignatureBox(jg,x0,y0,width,height,sigtext);
 		}
 	}
-
+	
 	//reset input data
 	document.getElementById('inputValue').value = "";
 	document.getElementById('inputName').value = "";
@@ -3267,10 +3375,11 @@ function DrawMarker(){
 	document.getElementById('ExportMeasurementList')[0].selected = true;
 	document.getElementById('MeasurementCustom').value = "";
 	document.getElementById('ExportMeasurementCustom').value = "";
-
+	
 }
 
 function ToggleInputName(){
+	PageIterate=0;
 	jg.clear();
 	if (ShowInputName){
 		ShowInputName = false;
@@ -3284,16 +3393,10 @@ function ToggleInputName(){
 		var RedrawParameter = TempData[j].split("|");
 		RedrawImage(RedrawParameter);
 	}
-	if (document.getElementById('preCheckGender').checked){
-		DrawMale(jg,MTopLeftX,MTopLeftY);
-		DrawFemale(jg,FTopLeftX,FTopLeftY);
-	}
-	if (document.getElementById('AddSignature').checked){
-		DrawSignatureBox(jg,SignatureHolderX,SignatureHolderY,SignatureHolderW,SignatureHolderH);
-	}
 }
 
 function RedrawAll(){
+	PageIterate=0;
 	jg.clear();
 
 	drawPageOutline();
@@ -3303,20 +3406,13 @@ function RedrawAll(){
 		var RedrawParameter = TempData[j].split("|");
 		RedrawImage(RedrawParameter);
 	}
-	if (document.getElementById('preCheckGender').checked){
-		DrawMale(jg,MTopLeftX,MTopLeftY);
-		DrawFemale(jg,FTopLeftX,FTopLeftY);
-	}
-	if (document.getElementById('AddSignature').checked){
-		DrawSignatureBox(jg,SignatureHolderX,SignatureHolderY,SignatureHolderW,SignatureHolderH);
-	}
 }
 
 function Undo(){
 	jg.clear();
 	TempData = DrawData;
 	DrawData = new Array();
-
+	
 	drawPageOutline();
 	for (j=0; (j < (TempData.length - 1) ); j++){
 		var RedrawParameter = TempData[j].split("|");
@@ -3326,6 +3422,7 @@ function Undo(){
 	if (inputNameType == "Auto") {
 		--inputCounter;
 	}
+	loadInputList();	
 }
 
 function RedrawImage(RedrawParameter){
@@ -3333,9 +3430,9 @@ function RedrawImage(RedrawParameter){
 	if(InputType == "Text"){
 		var x0 = parseInt(RedrawParameter[1]);
 		var y0 = parseInt(RedrawParameter[2]);
-		var width = parseInt(RedrawParameter[3]);
-		var height = parseInt(RedrawParameter[4]);
-		var inputName = RedrawParameter[5];
+		var width = parseInt(RedrawParameter[3]);	
+		var height = parseInt(RedrawParameter[4]);	
+		var inputName = RedrawParameter[5];	
 		var fontFamily = RedrawParameter[6];
 		var fontStyle = RedrawParameter[7];
 		var fontWeight = RedrawParameter[8];
@@ -3348,9 +3445,9 @@ function RedrawImage(RedrawParameter){
 	}else if (InputType == "Textbox"){
 		var x0 = parseInt(RedrawParameter[1]);
 		var y0 = parseInt(RedrawParameter[2]);
-		var width = parseInt(RedrawParameter[3]);
-		var height = parseInt(RedrawParameter[4]);
-		var inputName = RedrawParameter[5];
+		var width = parseInt(RedrawParameter[3]);	
+		var height = parseInt(RedrawParameter[4]);	
+		var inputName = RedrawParameter[5];	
 		var fontFamily = RedrawParameter[6];
 		var fontStyle = RedrawParameter[7];
 		var fontWeight = RedrawParameter[8];
@@ -3366,6 +3463,41 @@ function RedrawImage(RedrawParameter){
 		var inputName = RedrawParameter[3];
 		var preCheck = RedrawParameter[4];
 		DrawCheckbox(jg,x0,y0,inputName,preCheck);
+	}else if (InputType == "Xbox"){
+		var x0 = parseInt(RedrawParameter[1]);
+		var y0 = parseInt(RedrawParameter[2]);
+		var width = parseInt(RedrawParameter[3]);	
+		var height = parseInt(RedrawParameter[4]);	
+		var inputName = RedrawParameter[5];	
+		var fontFamily = RedrawParameter[6];
+		var fontStyle = RedrawParameter[7];
+		var fontWeight = RedrawParameter[8];
+		var fontSize = RedrawParameter[9];
+		var textAlign = RedrawParameter[10];
+		var bgColor = RedrawParameter[11];
+		var oscarDB = RedrawParameter[12];
+		var inputValue = RedrawParameter[13];
+		DrawXbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue);
+	}else if (InputType == "Page"){
+		var pnum = parseInt(RedrawParameter[1]);
+		PageIterate = pnum;
+		var pimage = RedrawParameter[2];
+		var bwidth = parseInt(RedrawParameter[3]);
+		DrawPage(jg,pnum,pimage,bwidth);
+	}else if (InputType == "Signature"){
+		var x0 = parseInt(RedrawParameter[1]);
+		var y0 = parseInt(RedrawParameter[2]);
+		var width = parseInt(RedrawParameter[3]);	
+		var height = parseInt(RedrawParameter[4]);
+		var inputName = RedrawParameter[5];
+		DrawSignatureBox(jg,x0,y0,width,height,inputName);
+	}else if (InputType == "Stamp"){
+		var x0 = parseInt(RedrawParameter[1]);
+		var y0 = parseInt(RedrawParameter[2]);
+		var width = parseInt(RedrawParameter[3]);	
+		var height = parseInt(RedrawParameter[4]);
+		var inputName = RedrawParameter[5];
+		DrawStamp(jg,x0,y0,width,height,inputName);
 	}
 }
 
