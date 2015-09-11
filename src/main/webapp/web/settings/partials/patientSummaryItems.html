@@ -1,0 +1,313 @@
+<!-- <h3>CPP Items <button type="button" class="btn btn-default pull-right">
+  <span class="glyphicon glyphicon-sort-by-order"></span>
+</button></h3><!-- CPP Display -->
+	
+	<h4>Summary Items - Left Side
+ 	 <a class="hand-hover"><span class="glyphicon glyphicon-sort-by-order pull-right"></span></a>
+	</h4>
+	<table class="table table-hover table-condensed">
+		<tbody>
+		<tr>
+			<td>
+				Ongoing Concerns
+			</td>	
+		  	<td>
+			  	<div class="col-lg-12 col-md-12 col-sm-12">
+				    <label class="radio-inline" for="radios-enc-10">
+				      <input name="radios-enc-10" id="radios-enc-10" ng-model="pref.cppDisplayOngoingConcerns" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-11">
+				      <input name="radios-enc-11" id="radios-enc-11" ng-model="pref.cppDisplayOngoingConcerns" ng-value="false" type="radio">
+				      Disable
+				    </label>
+				    
+				    <br>
+				    <small ng-if="pref.cppDisplayOngoingConcerns">
+				    <label class="checkbox-inline">
+					  <input type="checkbox" name="check-enc-7" id="check-enc-7" ng-model="pref.cppOngoingConcernsStartDate" value="true"> Show Start Date
+					</label>
+					<label class="checkbox-inline">
+					  <input type="checkbox" name="check-enc-8" id="check-enc-8" ng-model="pref.cppOngoingConcernsResDate" value="true"> Show Resolution Date
+					</label>
+					
+					<label class="checkbox-inline">
+					  <input type="checkbox" name="check-enc-9" id="check-enc-9" ng-model="pref.cppOngoingConcernsProblemStatus" value="true"> Show Problem Status
+					</label>
+					</small>
+				 </div>
+			 </td>
+		</tr>  
+		<tr>
+			<td>
+				Medical History
+		  	</td>
+		  	<td>
+			  	<div class="col-lg-12 col-md-12 col-sm-12">
+				    <label class="radio-inline" for="radios-enc-8">
+				      <input name="radios-enc-8" id="radios-enc-8" ng-model="pref.cppDisplayMedHx" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-9">
+				      <input name="radios-enc-9" id="radios-enc-9" ng-model="pref.cppDisplayMedHx" ng-value="false" type="radio">
+				      Disable
+				    </label> 
+				    
+				    <br>
+				    <small ng-if="pref.cppDisplayMedHx">
+				    <label class="checkbox-inline">
+					  <input type="checkbox" name="check-enc-3" id="check-enc-3" ng-model="pref.cppMedHxStartDate" value="true"> Show Start Date
+					</label>
+					<label class="checkbox-inline">
+					  <input type="checkbox" name="check-enc-4" id="check-enc-4" ng-model="pref.cppMedHxResDate" value="true"> Show Resolution Date
+					</label>
+					<label class="checkbox-inline">
+					  <input type="checkbox" name="check-enc-5" id="check-enc-5" ng-model="pref.cppMedHxTreatment" value="true"> Show Treatment
+					</label>
+					<br>
+					<label class="checkbox-inline">
+					  <input type="checkbox" name="check-enc-6" id="check-enc-6" ng-model="pref.cppMedHxProcedureDate" value="true"> Show Procedure Date
+					</label>
+					</small>
+				</div> 
+			</td>
+		</tr>			
+		<tr>
+			<td>
+				Social History
+			</td>
+			<td>
+				<div class="col-lg-12 col-md-12 col-sm-12">	
+				    <label class="radio-inline" for="radios-enc-6">
+				      <input name="radios-enc-6" id="radios-enc-6" ng-model="pref.cppDisplaySocialHx" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-7">
+				      <input name="radios-enc-7" id="radios-enc-7" ng-model="pref.cppDisplaySocialHx" ng-value="false" type="radio">
+				      Disable
+				    </label>
+				    
+				    <br>
+				    <small ng-if="pref.cppDisplaySocialHx">
+				    <label class="checkbox-inline">
+					  <input type="checkbox" name="check-enc-1" id="check-enc-1" ng-model="pref.cppSocialHxStartDate" value="true"> Show Start Date
+					</label>
+					<label class="checkbox-inline">
+					  <input type="checkbox" name="check-enc-2" id="check-enc-2" ng-model="pref.cppSocialHxResDate" value="true"> Show Resolution Date
+					</label>
+					</small>
+				</div>  
+		  	</td>
+		</tr>	
+		<tr>
+			<td>
+				Reminders
+			</td>
+			<td>	
+				<div class="col-lg-12 col-md-12 col-sm-12">
+				    <label class="radio-inline" for="radios-enc-12">
+				      <input name="radios-enc-12" id="radios-enc-12" ng-model="pref.cppDisplayReminders" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-13">
+				      <input name="radios-enc-13" id="radios-enc-13" ng-model="pref.cppDisplayReminders" ng-value="false" type="radio">
+				      Disable
+				    </label> 
+				    
+				    <br>
+				    <small ng-if="pref.cppDisplayReminders">
+				    <label class="checkbox-inline">
+					  <input type="checkbox" name="check-enc-10" id="check-enc-10" ng-model="pref.cppRemindersStartDate" value="true"> Show Start Date
+					</label>
+					<label class="checkbox-inline">
+					  <input type="checkbox" name="check-enc-11" id="check-enc-11" ng-model="pref.cppRemindersResDate" value="true"> Show Resolution Date
+					</label>
+					</small>
+				</div> 
+			</td>
+		</tr><!-- CPP Display -->
+		</tbody>
+		</table>
+				
+		<table class="table table-hover table-condensed">
+		<tbody>
+		<tr><!-- Summary Items -->	
+			<td>
+				Preventions
+			</td>
+			<td>
+				<div class="col-lg-12 col-md-12 col-sm-12">
+				    <label class="radio-inline" for="radios-enc-14">
+				      <input name="radios-enc-14" id="radios-enc-14" ng-model="pref.summaryItemDisplayPreventions" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-15">
+				      <input name="radios-enc-15" id="radios-enc-15" ng-model="pref.summaryItemDisplayPreventions" ng-value="false" type="radio">
+				      Disable
+				    </label> 
+				</div> 
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Family History
+			</td>
+			<td>
+				<div class="col-lg-12 col-md-12 col-sm-12">		    
+				    <label class="radio-inline" for="radios-enc-32">
+				      <input name="radios-enc-32" id="radios-enc-32" ng-model="pref.summaryItemDisplayFamHx" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-33">
+				      <input name="radios-enc-33" id="radios-enc-33" ng-model="pref.summaryItemDisplayFamHx" ng-value="false" type="radio">
+				      Disable
+				    </label> 
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Risk Factors
+			</td>
+			<td>
+				<div class="col-lg-12 col-md-12 col-sm-12">		    
+				    <label class="radio-inline" for="radios-enc-30">
+				      <input name="radios-enc-30" id="radios-enc-30" ng-model="pref.summaryItemDisplayRiskFactors" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-31">
+				      <input name="radios-enc-31" id="radios-enc-31" ng-model="pref.summaryItemDisplayRiskFactors" ng-value="false" type="radio">
+				      Disable
+				    </label> 
+				</div>
+			</td>
+		</tr>		
+		<tr>
+			<td>
+				Allergies
+			</td>
+			<td>
+				<div class="col-lg-12 col-md-12 col-sm-12"> 
+				    <label class="radio-inline" for="radios-enc-28">
+				      <input name="radios-enc-28" id="radios-enc-28" ng-model="pref.summaryItemDisplayAllergies" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-29">
+				      <input name="radios-enc-29" id="radios-enc-29" ng-model="pref.summaryItemDisplayAllergies" ng-value="false" type="radio">
+				      Disable
+				    </label> 
+				 </div>   
+			 </td>
+		</tr>
+		<tr>
+			<td>
+				Medications
+			</td>
+			<td>
+				<div class="col-lg-12 col-md-12 col-sm-12">
+				    <label class="radio-inline" for="radios-enc-16">
+				      <input name="radios-enc-16" id="radios-enc-16" ng-model="pref.summaryItemDisplayMeds" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-17">
+				      <input name="radios-enc-17" id="radios-enc-17" ng-model="pref.summaryItemDisplayMeds" ng-value="false" type="radio">
+				      Disable
+				    </label>  
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Other Medications
+			</td>
+			<td>
+				<div class="col-lg-12 col-md-12 col-sm-12">
+				    <label class="radio-inline" for="radios-enc-18">
+				      <input name="radios-enc-18" id="radios-enc-18" ng-model="pref.summaryItemDisplayOtherMeds" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-19">
+				      <input name="radios-enc-19" id="radios-enc-19" ng-model="pref.summaryItemDisplayOtherMeds" ng-value="false" type="radio">
+				      Disable
+				    </label>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Assessments
+			</td>
+			<td>
+				<div class="col-lg-12 col-md-12 col-sm-12">
+				    <label class="radio-inline" for="radios-enc-20">
+				      <input name="radios-enc-20" id="radios-enc-20" ng-model="pref.summaryItemDisplayAssessments" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-21">
+				      <input name="radios-enc-21" id="radios-enc-21" ng-model="pref.summaryItemDisplayAssessments" ng-value="false" type="radio">
+				      Disable
+				    </label> 
+				</div> 
+				</td>
+		</tr>
+		<!-- <tr>
+			<td>
+				Outgoing
+			</td>
+			<td>
+				<div class="col-lg-12 col-md-12 col-sm-12">
+				    <label class="radio-inline" for="radios-enc-22">
+				      <input name="radios-enc-22" id="radios-enc-22" ng-model="pref.summaryItemDisplayOutgoing" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-23">
+				      <input name="radios-enc-23" id="radios-enc-23" ng-model="pref.summaryItemDisplayOutgoing" ng-value="false" type="radio">
+				      Disable
+				    </label>  
+				</div>
+			</td>
+		</tr>-->
+		</tbody>
+		</table><!-- Summary Items -->  
+		
+		<h4>Summary Items - Right Side
+	 	 <a class="hand-hover"><span class="glyphicon glyphicon-sort-by-order pull-right"></span></a>
+		</h4>
+		<table class="table table-hover table-condensed">
+		<tbody>
+		<tr>
+			<td>
+				Incoming
+			</td>
+			<td>
+				<div class="col-lg-12 col-md-12 col-sm-12">
+				    <label class="radio-inline" for="radios-enc-24">
+				      <input name="radios-enc-24" id="radios-enc-24" ng-model="pref.summaryItemDisplayIncoming" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-25">
+				      <input name="radios-enc-25" id="radios-enc-25" ng-model="pref.summaryItemDisplayIncoming" ng-value="false" type="radio">
+				      Disable
+				    </label> 
+				</div> 
+		    </td>
+		</tr>
+		<tr>
+			<td>
+				Decision Support
+			</td>
+			<td>
+				<div class="col-lg-12 col-md-12 col-sm-12">
+				    <label class="radio-inline" for="radios-enc-26">
+				      <input name="radios-enc-26" id="radios-enc-26" ng-model="pref.summaryItemDisplayDsSupport" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-27">
+				      <input name="radios-enc-27" id="radios-enc-27" ng-model="pref.summaryItemDisplayDsSupport" ng-value="false" type="radio">
+				      Disable
+				    </label>
+				</div>
+		    </td>
+		</tr>
+		</tbody>
+		</table>
