@@ -31,6 +31,7 @@ import org.oscarehr.common.dao.HL7HandlerMSHMappingDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.model.HL7HandlerMSHMapping;
 import org.oscarehr.common.model.Hl7TextMessageInfo;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.all.pageUtil.ORUR01Manager;
@@ -907,7 +908,8 @@ public class TDISHandler implements MessageHandler {
 
 			// requesting client number
 			docNum = obrSegKeySet.get(0).getOrderingProvider(i).getIDNumber().getValue();
-			String billingNum = providerDao.getProviderByPractitionerNo(docNum).getOhipNo();
+			Provider provider = providerDao.getProviderByPractitionerNo(docNum);
+			String billingNum = provider.getOhipNo();
 			nums.add(billingNum == null?docNum:billingNum);
 
 			// cc'd docs numbers
@@ -915,7 +917,8 @@ public class TDISHandler implements MessageHandler {
 			for (int j=0; j<ccs;j++){
 				String num = obrSegKeySet.get(0).getResultCopiesTo(j).getIDNumber().getValue();
 				if (num != null && !num.equals("") && !num.equals(docNum)) {
-					billingNum = providerDao.getProviderByPractitionerNo(num).getOhipNo();
+					provider = providerDao.getProviderByPractitionerNo(num);
+					billingNum = provider.getOhipNo();
 					nums.add(billingNum == null?num:billingNum);
 				}
 			}
