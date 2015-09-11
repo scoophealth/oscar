@@ -54,7 +54,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		
     	if (!securityInfoManager.hasPrivilege(loggedInInfo, "_edoc", "r", null)) {
-    		return true; // Prevention link won't show up on new CME screen.
+    		return true; // documents link won't show up on new CME screen.
     	} else {
     
     		String omitTypeStr = request.getParameter("omit");

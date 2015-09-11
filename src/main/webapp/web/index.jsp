@@ -65,6 +65,7 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 
 <link href="../css/bootstrap-timepicker.min.css" rel="stylesheet">
 
+<link href="../library/bootstrap/3.0.0/assets/css/bootstrap3_badge_colours.css" rel="stylesheet">
 
 
 <style>
@@ -245,7 +246,7 @@ font-size:20px
 					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard" title="<bean:message key="navbar.dashboard" bundle="ui"/>"></span></li>
 				
 					<li ng-repeat="item in menuItems" ng-class="isActive(item)">
-						<a href="javascript:void(0)" ng-if="!item.dropdown" ng-click="transition(item)" >{{item.label}}</a>
+						<a href="javascript:void(0)" ng-if="!item.dropdown" ng-click="transition(item)" >{{item.label}} <span ng-if="item.label=='Inbox' && unAckLabDocTotal>0" class="badge badge-danger">{{unAckLabDocTotal}}</span></a>
 						<a href="javascript:void(0)" ng-if="item.dropdown"  class="dropdown-toggle" data-toggle="dropdown">{{item.label}}<span class="caret more"></span></a>
 						<ul ng-if="item.dropdown" class="dropdown-menu" role="menu">
 							<li ng-repeat="dropdownItem in item.dropdownItems" >

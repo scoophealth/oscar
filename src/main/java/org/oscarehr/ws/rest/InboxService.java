@@ -40,7 +40,6 @@ import org.oscarehr.ws.rest.to.InboxResponse;
 import org.oscarehr.ws.rest.to.model.InboxTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import oscar.oscarLab.ca.on.LabResultData;
 
 @Path("/inbox")
@@ -73,7 +72,7 @@ public class InboxService extends AbstractServiceImpl {
 		
 		InboxManagerResponse response = inboxManager.getInboxResults(loggedInInfo, query);
 		
-		List<LabResultData> labDocs = response.getLabdocs();
+		List<LabResultData> labDocs = response.getLabdocs();		
 		List<InboxTo1> responseItems = new ArrayList<InboxTo1>();
 	
 		for(LabResultData result:labDocs) {
@@ -110,5 +109,32 @@ public class InboxService extends AbstractServiceImpl {
 		
 
 		return resp;
+	}
+	
+	@GET
+	@Path("/mine/count")
+	public int getMyUnacknowlegedReportsCount() {
+	
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+	
+		InboxManagerQuery query = new InboxManagerQuery();
+		query.setProviderNo(providerNo);
+		query.setSearchProviderNo(providerNo);
+		query.setStatus("N");
+		query.setScannedDocStatus("I");
+		query.setPage(0);
+		query.setPageSize(20);
+		query.setView("all");
+		query.setPatientFirstName("");
+		query.setPatientLastName("");
+		query.setPatientHIN("");
+		
+		InboxManagerResponse response = inboxManager.getInboxResults(loggedInInfo, query);
+		List<LabResultData> labDocs = response.getLabdocs();
+		
+		int count = labDocs.size();
+		
+		return count;
 	}
 }
