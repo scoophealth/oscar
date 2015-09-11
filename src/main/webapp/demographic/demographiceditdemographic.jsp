@@ -1287,8 +1287,10 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                 
                                 <input type="hidden" name="dboperation" value="update_record">
                             
+                            <security:oscarSec roleName="<%=roleName$%>" objectName="_demographicExport" rights="r" reverse="<%=false%>">
                                 <input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgExport"/>"
                                     onclick="window.open('demographicExport.jsp?demographicNo=<%=demographic.getDemographicNo()%>');">
+                             </security:oscarSec>     
                                 </td>
                                 <td width="30%" align='center' valign="top">
                                 <% if (OscarProperties.getInstance().getBooleanProperty("workflow_enhance", "true")) { %>
@@ -3363,8 +3365,10 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 								<td width="30%" valign="top">
 								<input type="hidden" name="dboperation" value="update_record"> 
 
+								 <security:oscarSec roleName="<%=roleName$%>" objectName="_demographicExport" rights="r" reverse="<%=false%>">
 								<input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgExport"/>"
 									onclick="window.open('demographicExport.jsp?demographicNo=<%=demographic.getDemographicNo()%>');">
+								</security:oscarSec>
 									<br>
 								<input
 									type="button" name="Button" id="cancelButton" class="leftButton top"

@@ -1840,6 +1840,8 @@ insert into `secObjectName` (`objectName`) values ('_allergy');
 insert into `secObjectName` (`objectName`) values ('_eyeform');
 insert into `secObjectName` (`objectName`) values ('_appDefinition');
 
+insert into `secObjectName`  (`objectName`,`description`,`orgapplicable`) values('_demographicExport', 'Export Demographic', 0);
+
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_billing', 'x', 0, '999998');
@@ -2022,6 +2024,7 @@ insert into `secObjPrivilege` values('admin','_newCasemgmt.doctorName','x',0,'99
 insert into `secObjPrivilege` values('doctor','_admin.traceability','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_admin.traceability','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_appDefinition','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_demographicExport','x',0,'999998');
 
 
 
