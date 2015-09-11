@@ -69,6 +69,14 @@ function validateInput() {
 
 </script>
 
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css"/>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+<script>
+$(function() {
+    $( document ).tooltip();
+  });
+</script>
+
 </head>
 <body>
 <h3><bean:message key="admin.admin.traceabilityReport"/></h3>
@@ -89,7 +97,10 @@ You can click "Download Traceability Data from this Oscar" to generate a file wi
 If you have a Traceability Data file from another Oscar, you can choose it and click "Generate Traceability Report" to create a file which will let you know what files in the OSCAR program have been modified, added, or removed.
 
 <form action="GenerateTraceabilityReportAction.do" method="post" enctype="multipart/form-data" onsubmit="return validateInput()">
-<input type="file" name="file" value="Browse" /><br>
+<input type="file" name="file" value="Browse" />
+<span title="<bean:message key="global.uploadWarningBody"/>" style="vertical-align:middle;font-family:arial;font-size:20px;font-weight:bold;color:#ABABAB;cursor:pointer"><img border="0" src="../images/icon_alertsml.gif"/></span></span>
+        
+<br>
 <input class="btn btn-primary" type="submit" name="submit" value="Generate"/>
 </form>
 

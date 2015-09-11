@@ -628,7 +628,7 @@ String curProvider_no = (String)session.getAttribute("user");
 						key="oscar.admin.diseaseRegistryQuickList" /></a></li>
 					</security:oscarSec>
 					
-					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.measurements" rights="r" reverse="<%=false%>">	
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.measurements" rights="r" reverse="<%=false%>">	
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/oscarEncounter/oscarMeasurements/Customization.jsp"><bean:message
 						key="oscarEncounter.Index.btnCustomize" /> <bean:message

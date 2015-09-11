@@ -34,7 +34,10 @@
 <head>
 <link rel="stylesheet" type="text/css" href="dxResearch.css">
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.js"></script>
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css"/>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+
 <title><bean:message
 	key="oscarResearch.oscarDxResearch.dxCustomization.selectAssociations" />
 </title>
@@ -94,10 +97,15 @@ $(document).ready(function() {
 	
 	//populate the current list of associations
 	populateListOfAssociations();
-
 });
 </script>
 
+	<script>
+	$(function() {
+	    $( document ).tooltip();
+	  });
+	</script>
+	
 </head>
 <link rel="stylesheet" type="text/css" href="dxResearch.css">
 <body class="BodyStyle" vlink="#0000FF" rightmargin="0" leftmargin="0"
@@ -123,6 +131,8 @@ $(document).ready(function() {
 	<h4>Upload CSV file:</h4>
 	<html:form action="/oscarResearch/oscarDxResearch/dxResearchLoadAssociations.do?method=uploadFile" method="post" enctype="multipart/form-data">
 		<html:file property="file"></html:file>
+		<span title="<bean:message key="global.uploadWarningBody"/>" style="vertical-align:middle;font-family:arial;font-size:20px;font-weight:bold;color:#ABABAB;cursor:pointer"><img border="0" src="../../images/icon_alertsml.gif"/></span></span>
+        
 		<br/>
 		<html:radio property="replace" value="true"/>Replace&nbsp;
 		<html:radio property="replace" value="false"/>Append
