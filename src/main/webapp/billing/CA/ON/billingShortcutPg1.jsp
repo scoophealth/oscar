@@ -61,6 +61,7 @@
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.common.dao.ClinicNbrDao"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 
 <% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 <jsp:useBean id="providerBean" class="java.util.Properties"
@@ -71,6 +72,7 @@
 <%@page import="org.apache.commons.lang.StringUtils" %>
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 <%
   boolean bHospitalBilling = true;
@@ -219,7 +221,7 @@
   }
   } else {
 		JdbcBillingReviewImpl hdbObj = new JdbcBillingReviewImpl();
-		aL = hdbObj.getBillingHist(demo_no, 5,0, null);
+		aL = hdbObj.getBillingHist(loggedInInfo, demo_no, 5,0, null);
 		if (aL.size()>0) {
 			BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(0);
 			BillingItemData iobj = (BillingItemData) aL.get(1);

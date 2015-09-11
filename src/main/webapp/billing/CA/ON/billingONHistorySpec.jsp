@@ -18,6 +18,7 @@
 
 --%>
 <%@page import="org.oscarehr.util.DateRange"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
   if(session.getAttribute("user") == null)
     response.sendRedirect("../logout.htm");
@@ -36,6 +37,8 @@
   DateRange pDateRange= new DateRange(MyDateFormat.getSysDate(strStartDay), MyDateFormat.getSysDate(strToday));
   
   String serviceCode = request.getParameter("serviceCode")!=null? request.getParameter("serviceCode") : "";
+  
+  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 <%@ page
 	import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.oscarDB.*"
@@ -98,7 +101,7 @@ function upCaseCtrl(ctrl) {
 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 String limit = "";
 
-List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), 10000000, 0, pDateRange);
+List aL = dbObj.getBillingHist(loggedInInfo, request.getParameter("demographic_no"), 10000000, 0, pDateRange);
 int nItems=0;
 for(int i=0; i<aL.size(); i=i+2) {
 	BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);

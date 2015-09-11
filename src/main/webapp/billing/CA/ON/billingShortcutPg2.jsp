@@ -25,10 +25,15 @@
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+
 <%
   if (session.getAttribute("user") == null) {
     response.sendRedirect("../../../logout.jsp");
   }
+
+  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+
 
   String user_no         = (String)session.getAttribute("user");
   String providerview    = request.getParameter("providerview") == null
@@ -366,7 +371,7 @@
                                         }
 				}
 				Vector vecT = saveObj.getBillingClaimHospObj(request, tempDate[k], total, vecServiceCode, vecServiceCodeUnit, vecServiceCodePrice);
-				saveObj.addABillingRecord(vecT);
+				saveObj.addABillingRecord(loggedInInfo, vecT);
 			} else {
 				Billing b = new Billing();
 				b.setClinicNo(Integer.parseInt(param[0]));

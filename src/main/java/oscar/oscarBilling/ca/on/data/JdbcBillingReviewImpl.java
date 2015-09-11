@@ -35,7 +35,9 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.billing.CA.ON.dao.BillingPercLimitDao;
 import org.oscarehr.billing.CA.ON.model.BillingPercLimit;
 import org.oscarehr.common.dao.BillingONCHeader1Dao;
@@ -55,6 +57,7 @@ import org.oscarehr.common.model.BillingOnItemPayment;
 import org.oscarehr.common.model.BillingService;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DateRange;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.ConversionUtils;
@@ -68,6 +71,8 @@ public class JdbcBillingReviewImpl {
 	private BillingONPaymentDao payDao = SpringUtils.getBean(BillingONPaymentDao.class);
 	private BillingServiceDao serviceDao = SpringUtils.getBean(BillingServiceDao.class);
 	private BillingOnItemPaymentDao billOnItemPaymentDao = (BillingOnItemPaymentDao)SpringUtils.getBean(BillingOnItemPaymentDao.class);
+	
+	private ProgramProviderDAO programProviderDAO = SpringUtils.getBean(ProgramProviderDAO.class);
 	
 	public String getCodeFee(String val, String billReferalDate) {
 		String retval = null;
@@ -422,8 +427,33 @@ public class JdbcBillingReviewImpl {
 		return retval;
 	}
 
+	public List<BillingONCHeader1> filterOutOtherPrograms(LoggedInInfo loggedInInfo, List<BillingONCHeader1> hs) {
+		List<BillingONCHeader1> filtered = new ArrayList<BillingONCHeader1>();
+		
+		List<ProgramProvider> ppList = programProviderDAO.getProgramDomain(loggedInInfo.getLoggedInProviderNo());
+		List<Integer> programIdsUserCanAccess = new ArrayList<Integer>();
+		for(ProgramProvider pp:ppList) {
+			programIdsUserCanAccess.add(pp.getProgramId().intValue());
+		}
+		
+		for(BillingONCHeader1 h:hs) {
+			Integer programNo = h.getProgramNo();
+			if(programNo != null) {
+				if(programIdsUserCanAccess.contains(programNo)) {
+					filtered.add(h);
+				} else {
+					continue;
+				}
+			} else {
+				filtered.add(h);
+			}
+			
+		}
+		return filtered;
+	}
+	
 	// billing page
-	public List<Object> getBillingHist(String demoNo, int iPageSize, int iOffSet, DateRange dateRange)  {
+	public List<Object> getBillingHist(LoggedInInfo loggedInInfo, String demoNo, int iPageSize, int iOffSet, DateRange dateRange)  {
 		List<Object> retval = new ArrayList<Object>();
 		int iRow = 0;
 
@@ -440,6 +470,9 @@ public class JdbcBillingReviewImpl {
 			hs = dao.findByDemoNoAndDates(ConversionUtils.fromIntString(demoNo), dateRange, iOffSet, iPageSize);
 		}
 
+		//filter out the ones with programNos not in my domain
+		hs = filterOutOtherPrograms(loggedInInfo, hs);
+		
 		try {
 			for (BillingONCHeader1 h : hs) {
 				iRow++;
