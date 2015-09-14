@@ -24,6 +24,21 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+	String roleName$ = (String) session.getAttribute("userrole") + ","
+			+ (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
 <%@page import="org.oscarehr.web.admin.KeyManagerUIBean"%><%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%

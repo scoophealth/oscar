@@ -29,9 +29,7 @@
 <%@page import="org.oscarehr.common.model.UserProperty" %>
 
 <%
-if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 String curUser_no = (String) session.getAttribute("user");
-if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
 String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
 
