@@ -23,10 +23,24 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=true%>"> 
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="org.oscarehr.util.WebUtils,org.oscarehr.common.service.AcceptableUseAgreementManager,org.oscarehr.common.model.Property" %>
 <%
-if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
-    		
+		
 Property latestProperty = AcceptableUseAgreementManager.findLatestProperty();
 String checked = "";
 String fromDate = "";

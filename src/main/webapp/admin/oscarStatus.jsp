@@ -20,6 +20,17 @@ String curUser_no;
 curUser_no = (String) session.getAttribute("user");
 String tite = (String) request.getAttribute("provider.title");
 String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
+boolean authed=true;
+%>
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.misc" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.misc");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
 %>
 
 <html:html>

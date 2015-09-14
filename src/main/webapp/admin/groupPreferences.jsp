@@ -35,15 +35,19 @@
 <%@ page import="org.oscarehr.common.model.CtlBillingService, org.oscarehr.common.dao.CtlBillingServiceDao"%>
 
 <%
-    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=true%>">
-	<%
-		response.sendRedirect("../logout.jsp");
-	%>
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.userAdmin");%>
 </security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%
     MyGroupDao myGroupDao = (MyGroupDao) SpringUtils.getBean("myGroupDao");
     CtlBillingServiceDao ctlBillingServiceDao = (CtlBillingServiceDao) SpringUtils.getBean("ctlBillingServiceDao");
