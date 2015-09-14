@@ -36,6 +36,15 @@ String status = (String) request.getAttribute("status");
 
 <head>
 <link href="<%=request.getContextPath()%>/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css"/>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+
+<script>
+$(function() {
+    $( document ).tooltip();
+  });
+</script>
 </head>
 
 <style>
@@ -85,6 +94,8 @@ window.top.location.href = "<%=request.getContextPath()%>/administration/?show=I
 		<span class="text-error message"><html:errors /></span>
 		<br>
 		<input type="file" name="image" id="image" class="check" size="40"  required>
+		<span title="<bean:message key="global.uploadWarningBody"/>" style="vertical-align:middle;font-family:arial;font-size:20px;font-weight:bold;color:#ABABAB;cursor:pointer"><img border="0" src="../../images/icon_alertsml.gif"/></span></span>
+        
 		<input type="submit" class="btn upload" name="subm" value="<bean:message key="eform.uploadimages.btnUpload"/>" disabled>
 
 		</html:form>
