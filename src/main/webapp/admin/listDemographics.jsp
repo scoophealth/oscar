@@ -27,6 +27,22 @@
 <%@ page import="org.oscarehr.common.model.Demographic, org.oscarehr.common.model.Provider" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="java.util.Set" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.reporting");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+
 
 <html>
 <head>
