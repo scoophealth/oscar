@@ -37,6 +37,7 @@ if(outcome != null){
 %>
 
 
+
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -73,6 +74,15 @@ if(outcome != null){
                 return true;
             }
         </script>
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css"/>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+
+<script>
+$(function() {
+    $( document ).tooltip();
+  });
+</script>
 </head>
 
 <body>
@@ -106,7 +116,10 @@ if(outcome != null){
 		<table>
 			<tr>
 				<td>Please select the key file:</td>
-				<td><input type="file" name="importFile"></td>
+				<td><input type="file" name="importFile">
+				<span title="<bean:message key="global.uploadWarningBody"/>" style="vertical-align:middle;font-family:arial;font-size:20px;font-weight:bold;color:#ABABAB;cursor:pointer"><img border="0" src="../images/icon_alertsml.gif"/></span></span>
+        
+				</td>
 			</tr>
 			<tr>
 				<td>Key type:</td>

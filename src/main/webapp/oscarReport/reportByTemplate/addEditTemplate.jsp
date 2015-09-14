@@ -57,6 +57,15 @@ String roleName$ = (String)session.getAttribute("userrole") + "," + (String)sess
 <script type="text/javascript" language="JavaScript"
 	src="../../share/javascript/Oscar.js"></script>
 
+<link rel="stylesheet" type="text/css" href="../../js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css"/>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="../../jquery-ui-1.10.2.custom.min.js"></script>
+<script>
+$(function() {
+    $( document ).tooltip();
+  });
+</script>
+
 </head>
 
 <body vlink="#0000FF" class="BodyStyle">
@@ -120,6 +129,8 @@ String roleName$ = (String)session.getAttribute("userrole") + "," + (String)sess
 			enctype="multipart/form-data">
                   Upload Templates: <input type="file"
 				name="templateFile">
+				<span title="<bean:message key="global.uploadWarningBody"/>" style="vertical-align:middle;font-family:arial;font-size:20px;font-weight:bold;color:#ABABAB;cursor:pointer"><img border="0" src="../../images/icon_alertsml.gif"/></span></span>
+        
 			<input type="hidden" name="action" value="<%=action%>">
 			<input type="hidden" name="opentext" value="<%=openText%>">
 			<input type="hidden" name="templateid" value="<%=templateid%>">
