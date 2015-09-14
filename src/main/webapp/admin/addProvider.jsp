@@ -27,10 +27,17 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
       String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
-	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.reporting");%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.userAdmin");%>
 </security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
 
 <%@ page import="oscar.oscarProvider.data.ProviderData, java.util.ArrayList,java.util.Map, java.util.List, org.oscarehr.util.SpringUtils"%>
 <%@ page import="org.oscarehr.common.dao.ProviderLabRoutingFavoritesDao, org.oscarehr.common.model.ProviderLabRoutingFavorite" %>

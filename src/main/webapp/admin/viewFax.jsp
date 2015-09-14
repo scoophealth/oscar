@@ -23,6 +23,21 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.fax" rights="r" reverse="<%=true%>"> 
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.fax");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@ page import="org.oscarehr.common.dao.FaxJobDao, org.oscarehr.common.model.FaxJob"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="java.util.List" %>

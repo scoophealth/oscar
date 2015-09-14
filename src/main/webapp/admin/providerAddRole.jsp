@@ -42,9 +42,17 @@
 
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	String curUser_no = (String)session.getAttribute("user");
+	boolean authed=true;
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=true%>"> <%response.sendRedirect("../logout.jsp");%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.userAdmin");%>
 </security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <%
   int ROLENAME_LENGTH = 30;

@@ -27,10 +27,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
-<%
-  if((String) session.getAttribute("user") == null)
-    response.sendRedirect("../logout.htm");
-%>
+
 <%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="../errorpage.jsp"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.MyGroup" %>

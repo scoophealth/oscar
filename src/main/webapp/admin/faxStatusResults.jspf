@@ -3,7 +3,20 @@
 <%@ page import="java.util.List" %>
 <%@ page import="org.apache.commons.lang.time.DateFormatUtils"%>
 
-
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_admin,_admin.fax" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.fax");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
 <table class="table-condensed table-bordered small" id="content">
 	<thead>
 		<tr>

@@ -27,14 +27,23 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%
-    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
-
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false; 
+    
+    boolean authed=true;
+%>
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.reporting,_admin.billing" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.billing&type=_admin.reporting");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
 %>
 
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">

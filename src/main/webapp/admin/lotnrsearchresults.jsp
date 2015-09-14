@@ -36,17 +36,31 @@
 <%@ page import="oscar.OscarProperties"%>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%
-  if(session.getValue("user") == null )
-    response.sendRedirect("../logout.jsp");
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):"prevention_type" ;
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
-  
-  
 %>
 <%@ page import="java.sql.*, java.util.*, oscar.*" buffer="none"
 	errorPage="errorpage.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
+<%
+String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+boolean authed=true;
+%>
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 
 <html:html locale="true">
 <head>

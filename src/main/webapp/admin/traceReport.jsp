@@ -30,13 +30,19 @@
 
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
 %>
 
 <security:oscarSec roleName="<%=roleName$%>"
 	objectName="_admin, _admin.traceability" rights="r" reverse="<%=true%>">
-	<%response.sendRedirect("../logout.jsp");%>
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.traceability");%>
 </security:oscarSec>
-
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <html:html locale="true">
 <head>
