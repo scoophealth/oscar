@@ -11,6 +11,25 @@
         <ap-sql>SELECT appointment_date from appointment WHERE appointment_no=${appt_no}</ap-sql>
         <ap-output>${appointment_date}</ap-output>
     </databaseap>
+    <!-- Next booked appointment date -->
+    <databaseap>
+        <ap-name>next_appt_date</ap-name>
+        <ap-sql>SELECT appointment_date, start_time from appointment WHERE demographic_no = ${demographic}  AND `status` NOT IN('C', 'N', 'NS') AND appointment_date >= CURDATE( )
+                  ORDER BY appointment_date LIMIT 1 </ap-sql>
+        <ap-output>${appointment_date}, ${start_time}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>next_appt_time</ap-name>
+        <ap-sql>SELECT LEFT(start_time,5) AS startt from appointment WHERE demographic_no = ${demographic} AND `status` NOT IN('C', 'N', 'NS') AND appointment_date >= CURDATE( )
+                  ORDER BY appointment_date LIMIT 1 </ap-sql>
+        <ap-output>${startt}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>nextf_appt_date</ap-name>
+        <ap-sql>SELECT DATE_FORMAT(appointment_date, '%Y-%b-%d' ) as nextf_appt_date from appointment WHERE demographic_no = ${demographic} AND `status` NOT IN('C', 'N', 'NS') AND appointment_date >= CURDATE( )
+                  ORDER BY appointment_date LIMIT 1 </ap-sql>
+        <ap-output>${nextf_appt_date}</ap-output>
+    </databaseap>
 
 <!-- Current eform information -->
     <databaseap>
