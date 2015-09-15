@@ -1,7 +1,17 @@
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
+    String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
 %>
-
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_form" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../../securityError.jsp?type=_form");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <%@ page contentType="text/xml"%>
 <%@ page import="java.util.*, java.sql.*,  org.w3c.dom.*, oscar.util.*,java.io.*" errorPage="../../appointment/errorpage.jsp"%>
