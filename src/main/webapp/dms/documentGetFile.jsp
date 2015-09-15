@@ -32,11 +32,23 @@
 <%@page import="org.oscarehr.common.dao.DocumentDao" %>
 <%@page import="org.oscarehr.common.model.Document" %>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-	DocumentDao documentDao = SpringUtils.getBean(DocumentDao.class);
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_edoc" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_edoc");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
 %>
 
 <%
+	DocumentDao documentDao = SpringUtils.getBean(DocumentDao.class);
   String filename = "", filetype = "", doc_no = "";
   String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
   String downloadMethod = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DOWNLOAD_METHOD");

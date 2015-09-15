@@ -32,13 +32,18 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_tasks" rights="r" reverse="<%=true%>" >
-<%response.sendRedirect("../noRights.html");%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_tickler" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_tickler");%>
 </security:oscarSec>
-
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 
 <%

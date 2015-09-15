@@ -52,20 +52,24 @@
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Locale" %>
+
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_tickler" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_tickler");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%
 	TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
-%>
 
-<%
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-%>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_tasks" rights="r" reverse="<%=true%>" >
-<%
-	response.sendRedirect("../noRights.html");
-%>
-</security:oscarSec>
-
-<%
 	String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
 	if(labReqVer.equals("")) {labReqVer="07";}
 
