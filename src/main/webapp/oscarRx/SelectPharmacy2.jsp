@@ -32,6 +32,21 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ page import="oscar.oscarRx.data.*,java.util.*"%>
 <%@ page import="org.oscarehr.common.model.PharmacyInfo" %>
+
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_rx");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <html:html locale="true">
 <head>
 
@@ -55,8 +70,6 @@
 </logic:present>
 
 <%
-if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
-String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 %>
 
@@ -548,10 +561,7 @@ $(function() {
 					</tr>
 					<tr>
 						<td>
-						<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
-							
-							<br/>
-						</security:oscarSec>
+						
 						<input type="button" value="Set Preferred Pharmacy" onclick="return setPreferredPharmacy();"/> &nbsp;
 						<select id="preferredOrder" name="preferredOrder">
 						<%
@@ -567,7 +577,7 @@ $(function() {
 							</td>
 						<td style="text-align:right;padding-right:250px;" colspan="2">
 						<input type="button" value="Reset" onclick="return resetForm();"/>&nbsp;
-						<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
+						<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="w" reverse="<%=false%>">
 						<input type="button" value="Save" onclick="return savePharmacy();"/>&nbsp;&nbsp;
 <!-- 							<input type="button" value="<bean:message key="SelectPharmacy.deleteLink" />" onclick="return deletePharmacy($('#preferedPharmacy>option:selected').val())"/> -->
 						</security:oscarSec>

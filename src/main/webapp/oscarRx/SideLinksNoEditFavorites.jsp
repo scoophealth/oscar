@@ -25,6 +25,11 @@
 --%>
 <%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%
@@ -39,6 +44,9 @@
 
 <td width="10%" height="100%" valign="top">
 <div class="PropSheetMenu">
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_allergy" rights="r" reverse="<%=false%>">
+
 <p class="PropSheetLevel1CurrentItem<%=alle%>"><bean:message key="oscarRx.sideLinks.msgAllergies"/></p>
 <p class="PropSheetMenuItemLevel1">
 <%for (int j=0; j<allergies.length; j++){%>
@@ -48,6 +56,8 @@
 <%=allergies[j].getShortDesc(13,8,"...")%> </a></p>
 <%}%>
 </p>
+
+</security:oscarSec>
 
 <p class="PropSheetLevel1CurrentItem"><bean:message key="oscarRx.sideLinks.msgFavorites"/></p>
 <p class="PropSheetMenuItemLevel1">
