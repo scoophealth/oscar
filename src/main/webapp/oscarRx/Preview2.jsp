@@ -54,7 +54,25 @@
 	String rx_enhance = OscarProperties.getInstance().getProperty("rx_enhance");
 %>	
 
-<%@page import="org.oscarehr.web.PrescriptionQrCodeUIBean"%><html:html locale="true">
+<%@page import="org.oscarehr.web.PrescriptionQrCodeUIBean"%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_rx");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+
+<html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>

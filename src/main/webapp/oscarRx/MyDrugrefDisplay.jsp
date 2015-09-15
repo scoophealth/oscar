@@ -51,6 +51,23 @@ trusted truejava.lang.Boolean ? i think
 
 
 --%><%@ page import="java.util.*,oscar.oscarRx.data.*,java.text.DateFormatSymbols,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*, oscar.util.StringUtils,java.util.Random"%>
+
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_rx");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <div id="showHideTotal"></div>
 <%
     Vector<Hashtable> warnings = (Vector)request.getAttribute("warnings");
