@@ -29,6 +29,22 @@
 <%@page %><%@page import="oscar.oscarDemographic.data.*,org.oscarehr.common.model.Demographic"%>
 <%@page import="oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler,java.util.*,oscar.oscarRx.util.*" %>
 <%@page import="oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*" %>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_rx");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%
 String atc = request.getParameter("atcCode");
 String demographicNo = request.getParameter("demographicNo");

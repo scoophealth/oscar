@@ -73,22 +73,23 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
 <%
 	} 
 }
-%>
-
-
-<%
-        if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
-        String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
         com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r"
-                   reverse="<%=true%>">
-    <%
-    //LogAction.addLog((String) session.getAttribute("user"), LogConst.NORIGHT+LogConst.READ,  LogConst.CON_PRESCRIPTION, demographic$, request.getRemoteAddr(),demographic$);
 
-            response.sendRedirect("../noRights.html");
-    %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_rx" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_rx");%>
 </security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 
 <logic:notPresent name="RxSessionBean" scope="session">
@@ -109,7 +110,7 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
             String favid=request.getParameter("favid");
             int demoNo=bean.getDemographicNo();
 %>
-<security:oscarSec roleName="<%=roleName$%>"
+<security:oscarSec roleName="<%=roleName2$%>"
 	objectName='<%="_rx$"+demoNo%>' rights="o"
 	reverse="<%=false%>">
 <bean:message key="demographic.demographiceditdemographic.accessDenied"/>
@@ -860,7 +861,7 @@ THEME 2*/
 
                         <tr><!--put this left-->
                             <td valign="top" align="left">
-							<%if(securityManager.hasWriteAccess("_rx",roleName$,true)) {%>
+							<%if(securityManager.hasWriteAccess("_rx",roleName2$,true)) {%>
                                 <html:form action="/oscarRx/searchDrug"  onsubmit="return checkEnterSendRx();" style="display: inline; margin-bottom:0;" styleId="drugForm">
                                     <div id="interactingDrugErrorMsg" style="display:none"></div>
                                     <div id="rxText" style="float:left;"></div><br style="clear:left;">
@@ -886,7 +887,7 @@ THEME 2*/
                                                 <a href="javascript:goOMD();" title="<bean:message key="SearchDrug.help.OMD"/>"><bean:message key="SearchDrug.msgOMDLookup"/></a>
                                                 <%}%>
                                                 <br>
-                                                <security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="x">
+                                                <security:oscarSec roleName="<%=roleName2$%>" objectName="_rx" rights="x">
                                                 <input id="saveButton" type="button"  class="ControlPushButton" onclick="updateSaveAllDrugsPrint();" value="<bean:message key="SearchDrug.msgSaveAndPrint"/>" title="<bean:message key="SearchDrug.help.SaveAndPrint"/>" />
                                                 </security:oscarSec>
 
@@ -924,7 +925,7 @@ THEME 2*/
                                                     &nbsp;
                                                     <a href="javascript:popupWindow(720,700,'PrintDrugProfile2.jsp','PrintDrugProfile')"><bean:message key="SearchDrug.Print"/></a>
                                                     &nbsp;
-													<%if(securityManager.hasWriteAccess("_rx",roleName$,true)) {%>
+													<%if(securityManager.hasWriteAccess("_rx",roleName2$,true)) {%>
                                                     <a href="#" onclick="$('reprint').toggle();return false;"><bean:message key="SearchDrug.Reprint"/></a>
                                                     &nbsp;
                                                     <a href="javascript:void(0);"name="cmdRePrescribe"  onclick="javascript:RePrescribeLongTerm();" style="width: 200px" ><bean:message key="SearchDrug.msgReprescribeLongTermMed"/></a>
