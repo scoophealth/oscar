@@ -23,6 +23,12 @@
     Ontario, Canada
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+
 <%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -39,6 +45,9 @@
 <p class="PropSheetMenuItemLevel1"><a href="SelectPharmacy.jsp"><bean:message key="oscarRx.sideLinks.msgEditPharmacy"/></a></p>
 <p class="PropSheetMenuItemLevel1"><a href="EditFavorites.jsp"><bean:message key="oscarRx.sideLinks.msgEditFavorites"/></a></p>
 <p class="PropSheetMenuItemLevel1"><a href="CopyFavorites.jsp"><bean:message key="oscarRx.sideLinks.msgCopyFavorites"/></a></p>
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_allergy" rights="r" reverse="<%=false%>">
+
 <p class="PropSheetLevel1CurrentItem<%=alle%>"><bean:message key="oscarRx.sideLinks.msgAllergies"/></p>
 <p class="PropSheetMenuItemLevel1">
 <%
@@ -50,6 +59,10 @@
 <%=allergies[j].getShortDesc(13,8,"...")%> </a></p>
 <%}%>
 </p>
+
+</security:oscarSec>
+
+
 <p class="PropSheetLevel1CurrentItem"><bean:message key="oscarRx.sideLinks.msgFavorites"/></p>
 <p class="PropSheetMenuItemLevel1">
 <%
