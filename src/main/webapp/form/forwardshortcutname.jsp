@@ -27,12 +27,18 @@
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart"
-	rights="r" reverse="<%=true%>">
-	<%response.sendRedirect("../logout.jsp");%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_echart" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_eChart");%>
 </security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <%@ page import="java.net.URLDecoder, oscar.form.data.*" errorPage="../errorpage.jsp"%>
 
