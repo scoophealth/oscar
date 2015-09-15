@@ -73,6 +73,22 @@ List<AffinityDomainDataObject> affinityDomains = affDao.getAllAffinityDomains();
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
+
+
+<%
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_edoc,_admin,_admin.edocdelete" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_edoc&type=_admin&type=_admin.edocdelete");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+
 <%
 
 //if delete request is made
