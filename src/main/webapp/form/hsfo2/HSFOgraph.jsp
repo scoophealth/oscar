@@ -25,7 +25,23 @@
 --%>
 <%@ page
 	import="org.jfree.chart.ChartUtilities,org.jfree.chart.ChartFactory,java.util.*,java.io.*,org.jfree.data.time.TimeSeriesCollection,org.jfree.data.time.Day,org.jfree.data.time.TimeSeries,org.jfree.chart.JFreeChart"%>
-%><%
+%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_form" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../../securityError.jsp?type=_form");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+<%
 OutputStream o = response.getOutputStream(); 
 
 org.jfree.data.time.TimeSeriesCollection dataset = new org.jfree.data.time.TimeSeriesCollection();
