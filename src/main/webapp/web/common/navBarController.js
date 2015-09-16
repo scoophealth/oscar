@@ -225,7 +225,7 @@ function NewPatientCtrl($scope,$modal,$modalInstance,demographicService,security
   	
 	//get access right for creating new patient
 	securityService.hasRight("_demographic", "w").then(function(data){
-		$scope.hasRight = data.value;
+		$scope.hasRight = data;
 	});
 	
 	//get programs to be selected

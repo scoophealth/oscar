@@ -24,7 +24,7 @@
 
 */
 
-oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,$state,noteService,$timeout,uxService) {
+oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,$state,noteService,$timeout,uxService,securityService) {
 	
 	
 	console.log("in patient Ctrl ",demo);
@@ -34,7 +34,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	$scope.demographic= demo;
 	$scope.page = {};
 	$scope.page.assignedCMIssues = [];
-
+	
 	$scope.hideNote = false;
 	
 	//this doesn't actually work, hideNote is note showing up in the $stateParams
@@ -66,6 +66,19 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	                 	 {id : 3,displayName : 'Labs/Docs',path : 'partials/eform.jsp'},
 	                 	 {id : 4,displayName : 'Rx'       ,path : 'partials/eform.jsp'}];
 	*/
+
+	//get access rights
+	securityService.hasRight("_eChart", "w", $scope.demographicNo).then(function(data){
+		$scope.page.cannotChange = !data;
+	});
+	
+	//disable click and keypress if user only has read-access
+	$scope.checkAction = function(event){
+		if ($scope.page.cannotChange) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+	}
 	
 	$scope.fillMenu = function(){
 		uxService.menu($stateParams.demographicNo).then(function(data){
