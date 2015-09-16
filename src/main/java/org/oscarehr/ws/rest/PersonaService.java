@@ -57,7 +57,6 @@ import org.oscarehr.ws.rest.to.NavbarResponse;
 import org.oscarehr.ws.rest.to.PatientList;
 import org.oscarehr.ws.rest.to.PersonaResponse;
 import org.oscarehr.ws.rest.to.PersonaRightsResponse;
-import org.oscarehr.ws.rest.to.PrimitiveResponseWrapper;
 import org.oscarehr.ws.rest.to.model.MenuItemTo1;
 import org.oscarehr.ws.rest.to.model.MenuTo1;
 import org.oscarehr.ws.rest.to.model.NavBarMenuTo1;
@@ -103,9 +102,9 @@ public class PersonaService extends AbstractServiceImpl {
 	@GET
 	@Path("/hasRight")
 	@Produces("application/json")
-	public PrimitiveResponseWrapper<Boolean> hasRight(@QueryParam("objectName") String objectName, @QueryParam("privilege") String privilege, @QueryParam("demographicNo") String demographicNo) {
-		PrimitiveResponseWrapper<Boolean> response = new PrimitiveResponseWrapper<Boolean>();
-		response.setValue(securityInfoManager.hasPrivilege(getLoggedInInfo(), objectName, privilege, demographicNo));
+	public GenericRESTResponse hasRight(@QueryParam("objectName") String objectName, @QueryParam("privilege") String privilege, @QueryParam("demographicNo") String demographicNo) {
+		GenericRESTResponse response = new GenericRESTResponse();
+		response.setSuccess(securityInfoManager.hasPrivilege(getLoggedInInfo(), objectName, privilege, demographicNo));
 		
 		return response;
 	}

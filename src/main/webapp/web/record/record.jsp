@@ -78,7 +78,7 @@
     	<div id="noteInput2" class="center-block well col-md-4 col-md-offset-3 text-center hand-hover" style="padding:0px;" ng-click="toggleNote();">
     		<span class="glyphicon glyphicon-chevron-up"></span><span class="glyphicon glyphicon-chevron-up"></span><span class="glyphicon glyphicon-chevron-up"></span>
     	</div>
-    	<div id="noteInput" class="center-block well col-md-4 col-md-offset-3" ng-show="hideNote">
+    	<div id="noteInput" class="center-block well col-md-4 col-md-offset-3" ng-show="hideNote" ng-click="checkAction($event)" ng-keypress="checkAction($event)">
 			<div class="col-xs-4">
 			    
 			    <input type="text" ng-model="options.magicVal" placeholder="Type Command" 
@@ -97,7 +97,7 @@
 			</div>
     		
     		
-    		<textarea class="form-control input-lg col-lg-4" rows="6" ng-model="page.encounterNote.note"></textarea>
+    		<textarea class="form-control input-lg col-lg-4" rows="6" ng-model="page.encounterNote.note" ng-disabled="page.cannotChange"></textarea>
     		
     		<div style="font-size:8pt" ng-if="page.assignedCMIssues != null  && page.assignedCMIssues.length > 0">
 			    <label>Assigned Issues:</label>
