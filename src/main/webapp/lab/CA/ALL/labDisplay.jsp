@@ -1184,7 +1184,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
 
                                        if (handler.getMsgType().equals("EPSILON")) {
-	                                    	   if (handler.getOBXIdentifier(j,k).equals(headers.get(i)) && !obxName.equals("")) { %>
+	                                    	   if (handler.getObservationHeader(j,k).equals(headers.get(i)) && !obxName.equals("")) { %>
 
 	                                        	<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
 	                                        		<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %>
@@ -1213,7 +1213,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	                                                </a>
                                                 </td>
 	                                       		</tr>
-	                                       <% } else if (handler.getOBXIdentifier(j,k).equals(headers.get(i)) && obxName.equals("")) { %>
+	                                       <% } else if (handler.getObservationHeader(j,k).equals(headers.get(i)) && obxName.equals("")) { %>
 	                                       			<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
 	                                                    <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXResult( j, k)%></pre></td>
 

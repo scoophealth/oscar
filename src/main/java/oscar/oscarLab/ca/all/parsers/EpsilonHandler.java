@@ -146,14 +146,32 @@ public class EpsilonHandler  extends CMLHandler implements MessageHandler {
 	@Override
 	public String getObservationHeader(int i, int j) {
 		try {
-			
-			return	getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getText().getValue()).trim();
+			return getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue()).trim();
 			
 		} catch (Exception e) {
 			return ("");
 		}
 	}
+	
+	public String getOBXHeader(int i, int j) {
+		try {
+			return getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue()).trim();
+			
+		} catch (Exception e) {
+			return ("");
+		}
+	}	
+	
+	@Override
+	public String getOBXIdentifier(int i, int j){
+        try{
+        	return getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getText().getValue());
 
+        }catch(Exception e){
+            return("");
+        }
+    }	
+	
 	@Override
 	public String getTimeStamp(int i, int j) {
 		try {
@@ -255,20 +273,25 @@ public class EpsilonHandler  extends CMLHandler implements MessageHandler {
 		return "";		
 	}
 	
-	 public String getOBXName(int i, int j){
-	        String ret = "";
-	        try{
-	            // leave the name blank if the value type is 'FT' this is because it
-	            // is a comment, if the name is blank the obx segment will not be displayed
-	            OBX obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
-	            if ((obxSeg.getValueType().getValue()!=null) && (!obxSeg.getValueType().getValue().equals("FT")))
-	                ret = getString(obxSeg.getObservationIdentifier().getText().getValue());
-	        }catch(Exception e){
-	            logger.error("Error returning OBX name", e);
-	        }
-	        
-	        return ret;
-	    }
+	public String getOBXName(int i, int j){
+        String ret = "";
+        try{
+        	// leave the name blank if the value type is 'FT' this is because it
+            // is a comment, if the name is blank the obx segment will not be displayed
+            OBX obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
+            if ((obxSeg.getValueType().getValue()!=null) && (!obxSeg.getValueType().getValue().equals("FT"))) {
+            	ret = getString(obxSeg.getObservationIdentifier().getNameOfCodingSystem().getValue());  // Epsilon-Med Health Message keeps the name of identifier in the field of coding System
+            		
+	            if (ret == null)
+	            	ret = getString(obxSeg.getObservationIdentifier().getText().getValue());
+            }
+        }catch(Exception e){
+            logger.error("Error returning OBX name", e);
+        }
+        
+        return ret;
+    }
+	 
 	  
 	 public String getOBXResult(int i, int j){
 	        
