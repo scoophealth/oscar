@@ -23,7 +23,7 @@
     Ontario, Canada
 
 */
-oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$stateParams,$state,$filter,$modal,user,noteService,summaryService) {
+oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$stateParams,$state,$filter,$modal,user,noteService,summaryService,securityService) {
 	console.log("in summary Ctrl ",$stateParams);
 
 	$scope.page = {};
@@ -43,6 +43,24 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
 	$scope.page.currentFilter = 'none';
 	$scope.page.onlyNotes = false;
     
+	//get access rights
+	securityService.hasRight("_eChart", "r", $stateParams.demographicNo).then(function(data){
+		$scope.page.canRead = data;
+	});
+	securityService.hasRight("_eChart", "u", $stateParams.demographicNo).then(function(data){
+		$scope.page.cannotChange = !data;
+	});
+	securityService.hasRight("_eChart", "w", $stateParams.demographicNo).then(function(data){
+		$scope.page.cannotAdd = !data;
+	});
+	
+	//disable click and keypress if user only has read-access
+	$scope.checkAction = function(event){
+		if ($scope.page.cannotChange) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+	}
    
     // Note list filtering functions   
     $scope.setOnlyNotes = function(){
@@ -473,7 +491,7 @@ $scope.gotoState = function(item,mod,itemId){
 });
 
 
-GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,$state,noteService){
+GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,$state,noteService,securityService){
 
 
 	$scope.page = {};
@@ -491,6 +509,19 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,
 	var now = new Date();
     $scope.groupNotesForm.annotation_attrib = "anno"+now.getTime();
 
+    
+	//get access rights
+	securityService.hasRight("_eChart", "u", $stateParams.demographicNo).then(function(data){
+		$scope.page.cannotChange = !data;
+	});
+	
+	//disable click and keypress if user only has read-access
+	$scope.checkAction = function(event){
+		if ($scope.page.cannotChange) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+	}
     
     displayIssueId = function(issueCode){
     	noteService.getIssueId(issueCode).then(function(data){
