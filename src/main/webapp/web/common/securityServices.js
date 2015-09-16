@@ -43,7 +43,7 @@ angular.module("securityServices", [])
             var deferred = $q.defer();
             $http.get(this.apiPath+'persona/hasRight?objectName='+objectName+'&privilege='+privilege+'&demographicNo='+demographicNo,this.configHeadersWithCache).success(function(data){
             	console.log(data);
-            	deferred.resolve(data);
+            	deferred.resolve(data.success);
             }).error(function(){
             	console.log("error fetching rights");
             	deferred.reject("An error occured while fetching access right");
