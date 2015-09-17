@@ -2,13 +2,13 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope,$timeout,$state,$
 	
 	//get access rights
 	securityService.hasRight("_con", "r").then(function(data){
-		$scope.consultReadAccess=true;
+		$scope.consultReadAccess=data;
 	});
 	securityService.hasRight("_con", "u").then(function(data){
-		$scope.consultUpdateAccess=true; //to be used with batch operations (not yet implemented)
+		$scope.consultUpdateAccess=data; //to be used with batch operations (not yet implemented)
 	});
 	securityService.hasRight("_con", "w").then(function(data){
-		$scope.consultWriteAccess=true;
+		$scope.consultWriteAccess=data;
 	});
 
 	//set search statuses
