@@ -14,14 +14,12 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%
-if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 String curUser_no;
 curUser_no = (String) session.getAttribute("user");
 String tite = (String) request.getAttribute("provider.title");
 %>
 
 <%
-	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
 
@@ -58,6 +56,12 @@ String tite = (String) request.getAttribute("provider.title");
 	
 	<%} %>
 	
+	</security:oscarSec>
+	
+	<security:oscarSec roleName="<%=roleName$%>"
+		objectName="_admin,_admin.misc" rights="r" reverse="<%=true%>">
+		
+		You don't have access!
 	</security:oscarSec>
 </body>
 

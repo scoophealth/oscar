@@ -30,16 +30,20 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html"
 	prefix="html"%>
 <%
-	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
+	boolean authed=true;
 %>
 <security:oscarSec roleName="<%=roleName$%>"
 	objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.invoices,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc,_admin.torontoRfq"
 	rights="r" reverse="<%=true%>">
-	<%
-		response.sendRedirect("../logout.jsp");
-	%>
+		<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.*");%>
 </security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>

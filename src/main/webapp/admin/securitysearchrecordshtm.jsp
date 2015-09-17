@@ -27,6 +27,27 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    
+    boolean isSiteAccessPrivacy=false;
+    boolean authed=true;
+%>
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="*" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.userAdmin");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+	<%isSiteAccessPrivacy=true; %>
+</security:oscarSec>
 
 <html:html locale="true">
 <head>
@@ -62,15 +83,7 @@
 	</tr>
 </table>
 
-<%
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    
-    boolean isSiteAccessPrivacy=false;
-%>
 
-<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isSiteAccessPrivacy=true; %>
-</security:oscarSec>
 
 <table cellspacing="0" cellpadding="2" width="100%" border="0"
 	BGCOLOR="#C4D9E7">
