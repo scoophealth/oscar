@@ -53,6 +53,7 @@ import org.oscarehr.common.dao.EncounterTemplateDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.EncounterTemplate;
 import org.oscarehr.managers.ConsultationManager;
+import org.oscarehr.managers.PreferenceManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -86,7 +87,9 @@ public class RecordUxService extends AbstractServiceImpl {
 	@Autowired
 	private EncounterTemplateDao encounterTemplateDao;
 	
-
+	@Autowired
+	private PreferenceManager preferenceManager;
+	
 	/**
 	$scope.recordtabs2 = [ 
 	 {id : 0,name : 'Master',url : 'partials/master.html'},
@@ -184,9 +187,9 @@ public class RecordUxService extends AbstractServiceImpl {
 	
 		List<MenuItemTo1> morelist = new ArrayList<MenuItemTo1>();
 		
-		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.preventions", "r", null)) {
+		/*if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.preventions", "r", null)) {
 			morelist.add(new MenuItemTo1(idCounter++, "Preventions", "../oscarPrevention/index.jsp?demographic_no="+demographicNo));
-		}
+		}*/
 		
 		/*if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.viewTickler", "r", null)) {
 			if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()) {
@@ -249,48 +252,58 @@ public class RecordUxService extends AbstractServiceImpl {
 		
 		if("right".equals(summaryName )){
 			summaryList = new ArrayList<SummaryTo1>();
-			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.documents", "r", null) || securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.labResult", "r", null) ) {
+			if( (securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.documents", "r", null) || securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.labResult", "r", null) )  && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.INCOMING_POS) ) {
 				summaryList.add(new SummaryTo1("Incoming",count++,SummaryTo1.INCOMING_CODE));
 			}
 			
-			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.decisionSupportAlerts", "r", null)) {
+			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.decisionSupportAlerts", "r", null) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.DS_SUPPORT_POS)) {
 				summaryList.add(new SummaryTo1("Decision Support",count++,SummaryTo1.DECISIONSUPPORT_CODE)); 
 			}
 		}else if("left".equals(summaryName )){
 			summaryList = new ArrayList<SummaryTo1>();
 			
-			summaryList.add(new SummaryTo1("Preventions",count++,SummaryTo1.PREVENTIONS));
+			if (securityInfoManager.hasPrivilege(loggedInInfo, "_prevention", "r", null)&& preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.PREVENTION_POS)) {
+				summaryList.add(new SummaryTo1("Preventions",count++,SummaryTo1.PREVENTIONS));
+			}
 			
-			summaryList.add(new SummaryTo1("Ongoing Concerns",count++,SummaryTo1.ONGOINGCONCERNS_CODE));
+			if(preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.ONGOING_POS)){
+				summaryList.add(new SummaryTo1("Ongoing Concerns",count++,SummaryTo1.ONGOINGCONCERNS_CODE));
+			}
 			
-			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.medicalHistory", "r", null)) {
+			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.medicalHistory", "r", null) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.MED_HX_POS)) {
 				summaryList.add(new SummaryTo1("Medical History",count++,SummaryTo1.MEDICALHISTORY_CODE)); 
 			}
 			
-			//summaryList[2] = new SummaryTo1("Social/Family History",2,"socfamhx");
-			summaryList.add(new SummaryTo1("Social History",count++,SummaryTo1.SOCIALHISTORY_CODE));
+			if(preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.SOC_HX_POS)){
+				//summaryList[2] = new SummaryTo1("Social/Family History",2,"socfamhx");
+				summaryList.add(new SummaryTo1("Social History",count++,SummaryTo1.SOCIALHISTORY_CODE));
+			}
 			
-			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.familyHistory", "r", null)) {
+			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.familyHistory", "r", null) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.FAM_HX_POS)) {
 				summaryList.add(new SummaryTo1("Family History",count++,SummaryTo1.FAMILYHISTORY_CODE));
 			}
 	
-			summaryList.add(new SummaryTo1("Reminders",count++,SummaryTo1.REMINDERS_CODE));
+			if(preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.REMINDERS_POS)){
+				summaryList.add(new SummaryTo1("Reminders",count++,SummaryTo1.REMINDERS_CODE));
+			}
 			
+			if(preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.RISK_FACTORS_POS)){
 			summaryList.add(new SummaryTo1("Risk Factors",count++,SummaryTo1.RISK_FACTORS));
+			}
 			
-			
+			if(preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.ALLERGIES_POS)){
 			summaryList.add(new SummaryTo1("Allergies",count++,SummaryTo1.ALLERGIES));  
+			}
 			
-			
-			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.prescriptions", "r", null)) {
+			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.prescriptions", "r", null) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.MEDS_POS)) {
 				summaryList.add(new SummaryTo1("Medications",count++,SummaryTo1.MEDICATIONS_CODE));  
 			}
 			
-			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.otherMeds", "r", null)) {
+			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.otherMeds", "r", null) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.OTHER_MEDS_POS)) {
 				summaryList.add(new SummaryTo1("Other Meds",count++,SummaryTo1.OTHERMEDS_CODE));
 			}
 			
-			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.forms", "r", null) || securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.eforms", "r", null)) {
+			if( (securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.forms", "r", null) || securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.eforms", "r", null)) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.ASSESSMENTS_POS)  ){
 				summaryList.add(new SummaryTo1("Assessments",count++,SummaryTo1.ASSESSMENTS_CODE));
 			}
 			//summaryList[9] = new SummaryTo1("Outgoing",7,"outgoing");
