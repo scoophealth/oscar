@@ -30,6 +30,20 @@
 <%@page import="org.oscarehr.common.dao.DemographicStudyDao" %>
 <%@page import="org.oscarehr.common.model.Study" %>
 <%@page import="org.oscarehr.common.dao.StudyDao" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	  boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.reporting" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.reporting");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
 <%
 	DemographicStudyDao demographicStudyDao = SpringUtils.getBean(DemographicStudyDao.class);
     StudyDao studyDao = SpringUtils.getBean(StudyDao.class);
@@ -69,6 +83,7 @@
 		out.println("<script language='JavaScript'>window.close();opener.refreshstudy();</script>);");
     }
 %>
+
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
