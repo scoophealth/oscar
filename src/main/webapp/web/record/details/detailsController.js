@@ -32,11 +32,20 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 
 	//get access rights
 	securityService.hasRight("_demographic", "r", demo.demographicNo).then(function(data){
-		page.canRead = data.value;
+		page.canRead = data;
 	});
 	securityService.hasRight("_demographic", "u", demo.demographicNo).then(function(data){
-		page.cannotChange = !data.value;
+		page.cannotChange = !data;
 	});
+	
+	//disable click and keypress if user only has read-access
+	$scope.checkAction = function(event){
+		if (page.cannotChange) {
+			event.preventDefault();
+			event.stopPropagation();
+			$scope.setSwipeReady();
+		}
+	}
 	
 	//get static lists to be selected
 	page.genders = staticDataService.getGenders();
@@ -247,15 +256,6 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			if (!discard) event.preventDefault();
 		}
 	});
-	
-	//disable click and keypress if user only has read-access
-	$scope.checkAction = function(event){
-		if (page.cannotChange) {
-			event.preventDefault();
-			event.stopPropagation();
-			$scope.setSwipeReady();
-		}
-	}
 
 	//format lastname, firstname
 	$scope.formatLastName = function(){

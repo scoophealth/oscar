@@ -2,13 +2,13 @@ oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$loc
 	
 	//get access rights
 	securityService.hasRight("_con", "r").then(function(data){
-		$scope.consultReadAccess=true;
+		$scope.consultReadAccess=data;
 	});
 	securityService.hasRight("_con", "u").then(function(data){
-		$scope.consultUpdateAccess=true;
+		$scope.consultUpdateAccess=data;
 	});
 	securityService.hasRight("_con", "w").then(function(data){
-		$scope.consultWriteAccess=true;
+		$scope.consultWriteAccess=data;
 	});
 	
 	$scope.consult = consult;

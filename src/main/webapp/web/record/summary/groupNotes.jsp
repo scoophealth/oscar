@@ -37,7 +37,7 @@
 
 <!-- make div layout more fluid see medical history as an example -->
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-	<div class="modal-content" style="background-color: #996633; color: white;   border:0px;  border-radius: 0px;">
+	<div class="modal-content" style="background-color: #996633; color: white;   border:0px;  border-radius: 0px;" ng-click="checkAction($event)" ng-keypress="checkAction($event)">
 
 		<div class="modal-header"  > <!-- ng-style="setColor(note.cpp)" -->
 		<button type="button" class="close" data-dismiss="modal" aria-label="<bean:message key="global.close"/>" ng-click="cancel()"><span aria-hidden="true" >&times;</span></button>
@@ -45,19 +45,6 @@
 		</div>
 
 		<div class="modal-body" style="background-color:#fff;color:#333">			
-<!-- 
-        	      
-        <div> 
-			<table class="table table-striped">
-				<tr ng-repeat="item in page.items">
-        			<td><a ng-click="gotoState(item,mod)" >{{item.displayName}}</td>
-        			<td>{{item.date | date : 'dd-MMM-yyyy'}}</td>
-        			<td>{{item.editor}}</td>
-        			<%--td><a ng-click="gotoState(item,mod)" >code</a></td  --%>
-        	    </tr> 
-        	</table>
-        	</div>		
--->	
 	
 		<!-- TODO: what happens here if there is a long list of notes??? -->
 		<div class="well well-note">
@@ -296,8 +283,8 @@
  -->
 
 			<br>
-			<button ng-click="archiveGroupNotes()" type="button" class="btn btn-danger"><bean:message key="oscarEncounter.Index.btnArchive"/></button>	
-			<button ng-click="saveGroupNotes()" type="button" class="btn btn-primary"><bean:message key="oscarEncounter.Index.btnSignSave"/></button>	
+			<button ng-click="archiveGroupNotes()" type="button" class="btn btn-danger" ng-hide="page.cannotChange"><bean:message key="oscarEncounter.Index.btnArchive"/></button>	
+			<button ng-click="saveGroupNotes()" type="button" class="btn btn-primary" ng-hide="page.cannotChange"><bean:message key="oscarEncounter.Index.btnSignSave"/></button>	
 			<button ng-click="cancel()" type="button" class="btn"><bean:message key="modal.newPatient.close" bundle="ui"/></button>
 		</div>
 	</div>
