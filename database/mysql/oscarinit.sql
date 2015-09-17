@@ -10572,8 +10572,12 @@ create table DrugProduct(
         amount int not null,
         expiryDate date,
         location int,
+	dateCreated TIMESTAMP,
+	lastUpdateDate TIMESTAMP,
+	lastUpdateUser varchar(10),
         primary key (id)
 );
+
 
 create table DrugDispensing (
         id int(9) not null auto_increment,
