@@ -23,15 +23,39 @@
     Ontario, Canada
 
 --%>
+<style>
+#summary tr > td:first-child{
+width:400px;
+}
+
+/*
+@media (min-width: min-width: 1400px) { 
+
+#summary tr > td:first-child{
+width:500px;
+}
+
+}
+*/
+
+/*
+@media (max-width: 767px) { 
+.checkbox-inline{
+margin:0px;
+}
+}
+*/
+</style>
 <div class="row">
 
 <div class="col-xs-6">
-	<h1>Personalize OSCAR</h1>
+	<!-- <h1>Personalize OSCAR</h1> -->
+	<h2>User Settings</h2>
 </div>
 <div class="col-xs-6">
 	<p class="bg-danger pull-right">
 	<button type="button" class="btn btn-default btn-lg" onClick="window.open('../provider/providerpreference.jsp?provider_no=999998','prefs','width=715,height=680,scrollbars=yes')">
-	  <span class="glyphicon glyphicon-cog"></span> Open classic settings
+	  <span class="glyphicon glyphicon-cog"></span> Open Classic Preferences
 	</button>
 	</p>
 </div>
@@ -526,76 +550,138 @@
 	</div>
 </div>
 
-<div class="row" ng-show="currentTab.path == 'encounter'" style="margin-left:10px">
-	<div class="col-xs-3">	
-		<div class="form-group">
-		  <label >CPP Single Line:</label>
+<div class="row" ng-show="currentTab.path == 'summary'" id="summary">
+	<div class="container-fluid">
+	<div class="col-lg-9">	
+				
+		<h3>Notes</h3>
+		<table class="table table-hover table-condensed">
+		<tbody>
+		<tr>
+			<td>
+				CPP Single Line
+			</td>
+			<td>
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<label class="radio-inline" for="radios-enc-0">
+			      <input name="radios-enc-0" id="radios-enc-0" ng-model="pref.cppSingleLine" ng-value="true" type="radio">
+			      Enable
+			    </label>
+			    <label class="radio-inline" for="radios-enc-1">
+			      <input name="radios-enc-1" id="radios-enc-1" ng-model="pref.cppSingleLine" ng-value="false" type="radio">
+			      Disable
+			    </label>
+			 </div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Use Single View
+			</td>
+			<td>
+			<div class="col-lg-12 col-md-12 col-sm-12">
+			    <label class="radio-inline" for="radios-enc-2">
+			      <input name="radios-enc-2" id="radios-enc-2" ng-model="pref.cmeNoteFormat" ng-value="true" type="radio">
+			      Enable
+			    </label>
+			    <label class="radio-inline" for="radios-enc-3">
+			      <input name="radios-enc-3" id="radios-enc-3" ng-model="pref.cmeNoteFormat" ng-value="false" type="radio">
+			      Disable
+			    </label> 
+			</div>
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				Stale Date<br>
+				<small><em>Please set how many months in the past before a Case Management Note is fully visible e.g. Set to 6 will display fully all notes within the last 6 months</em></small>
+			</td>
+			<td>
+				<div class="col-lg-4 col-md-6 col-sm-8">
+				  <select ng-model="pref.cmeNoteDate" class="form-control" ng-options="p.value as p.label for p in staleDates">
+				  </select>
+				</div>
+			</td>
+		</tr>
+
+		  
+
+		<tr>
+			<td>
+				Default Quick Chart Size<br>
+				<small><em>Enter the number of notes for quick chart size.</em></small>
+			</td>
+			<td>
+				<div class="col-lg-4 col-md-6 col-sm-8">
+					<input ng-model="pref.quickChartSize" class="form-control" type="text">
+				</div>
+			</td>
+		</tr>
+		<!--   
+		<tr>
+			<td>
+				
+			</td>
+			<td>
+
+			</td>
+		</tr>		
+		-->
+		</tbody>
+		</table>
+ 	
+ 		<h3>Patient Summary Viewable Items</h3> <!-- CPP & Summary Item Display -->
+		<table class="table table-hover table-condensed">
+		<tbody>
+		<tr>
+			<td>
+				Enable Custom Summary<br>
+				<small><em>Enabling this feature will allow you to to hide or display CPP and Summary Items.</em></small>
+		  	</td>
+			<td>
+				<div class="col-lg-12 col-md-12 col-sm-12">
+				    <label class="radio-inline" for="radios-enc-4">
+				      <input name="radios-enc-4" id="radios-enc-4" ng-model="pref.summaryItemCustomDisplay" ng-value="true" type="radio">
+				      Enable
+				    </label>
+				    <label class="radio-inline" for="radios-enc-5">
+				      <input name="radios-enc-5" id="radios-enc-5" ng-model="pref.summaryItemCustomDisplay" ng-value="false" type="radio">
+				      Disable
+				    </label>
+				 </div>
+			 </td>
+		</tr>
+ 		</tbody>
+ 		</table>
+
+		<ng-include ng-if="pref.summaryItemCustomDisplay" src="'settings/partials/patientSummaryItems.html'"></ng-include>
+  
+	</div>
+			<!-- <div class="form-group">
+		  <label ></label>
 		  <div class="controls">
-		    <label class="radio inline" for="radios-enc-0">
-		      <input name="radios-enc-0" id="radios-enc-0" ng-model="pref.cppSingleLine" ng-value="true" type="radio">
-		      Enable
-		    </label>
-		    <label class="radio inline" for="radios-enc-1">
-		      <input name="radios-enc-1" id="radios-enc-1" ng-model="pref.cppSingleLine" ng-value="false" type="radio">
-		      Disable
-		    </label>  
-		  </div>
-		</div>		
-		
-		<div class="form-group">
-		  <label>Stale Date:</label>
-		  <select ng-model="pref.cmeNoteDate" class="form-control" ng-options="p.value as p.label for p in staleDates">
-		  </select>
+		    
+		  </div>	
 		</div>
 		
 		<div class="form-group">
-		  <label >Use single view:</label>
-		  <div class="controls">
-		    <label class="radio inline" for="radios-enc-2">
-		      <input name="radios-enc-2" id="radios-enc-2" ng-model="pref.cmeNoteFormat" ng-value="true" type="radio">
-		      Enable
-		    </label>
-		    <label class="radio inline" for="radios-enc-3">
-		      <input name="radios-enc-3" id="radios-enc-3" ng-model="pref.cmeNoteFormat" ng-value="false" type="radio">
-		      Disable
-		    </label>  
-		  </div>
-		</div>				
-
-		<div class="form-group">
 		  <label ></label>
 		  <div class="controls">
-		    <button class="btn btn-default" ng-click="openConfigureEChartCppPopup()">Configure EChart CPP</button>
+		    
 			</div>	
-		</div>	
-		
-		<div class="form-group">
-		  <label ></label>
-		  <div class="controls">
-		    <button class="btn btn-default" ng-click="showProviderColourPopup()">Set Provider Colour</button>
-			</div>	
-		</div>				
+		</div>-->
+	<div class="col-lg-3 col-sm-9">
+		<div class="well">
+			<h4>Classic Encounter Preferences:</h4>
+			<a href="javascript:void(0)" ng-click="showDefaultEncounterWindowSizePopup()">Set Default Encounter Window Size</a><br>
+			<a href="javascript:void(0)" ng-click="showProviderColourPopup()">Set Provider Colour</a><br>
+			<a href="javascript:void(0)" ng-click="openConfigureEChartCppPopup()">Configure EChart CPP</a><br>
+		</div>
 	</div>
 	
-	<div class="col-xs-2">
-	</div>
-	
-	<div class="col-xs-3">
-	
-		<div class="form-group">
-		  <label>Default Quick Chart Size:</label>
-		  <input ng-model="pref.quickChartSize" placeholder="Quick Chart Size" class="form-control" type="text">
-		</div>		
-		
-		<div class="form-group">
-		  <label ></label>
-		  <div class="controls">
-		    <button class="btn btn-default" ng-click="showDefaultEncounterWindowSizePopup()">Set Default Encounter Window Size</button>
-			</div>	
-		</div>		
-		
-	</div> <!-- col -->
-</div>
+	</div><!-- container -->
+</div><!--  row summary  -->
 
 <div class="row" ng-show="currentTab.path == 'eforms'" style="margin-left:10px">
 	<div class="col-xs-3">
