@@ -89,8 +89,12 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 				$state.go(temp.state);
 			}
 		}else if(angular.isDefined(temp.url)){
-			var rnd = Math.round(Math.random() * 1000);
-			win = "win" + rnd;
+			if(temp.label=="Rx"){
+				win = temp.label+$scope.demographicNo;
+			}else{
+				var rnd = Math.round(Math.random() * 1000);
+				win = "win" + rnd;
+			}
 			window.open(temp.url,win,"scrollbars=yes, location=no, width=1000, height=600","");   
 		}
 		//console.log($scope.recordtabs2[temp].path);

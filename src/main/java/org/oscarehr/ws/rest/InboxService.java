@@ -111,4 +111,31 @@ public class InboxService extends AbstractServiceImpl {
 
 		return resp;
 	}
+	
+	@GET
+	@Path("/mine/count")
+	public int getMyUnacknowlegedReportsCount() {
+	
+		LoggedInInfo loggedInInfo=getLoggedInInfo();
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+	
+		InboxManagerQuery query = new InboxManagerQuery();
+		query.setProviderNo(providerNo);
+		query.setSearchProviderNo(providerNo);
+		query.setStatus("N");
+		query.setScannedDocStatus("I");
+		query.setPage(0);
+		query.setPageSize(20);
+		query.setView("all");
+		query.setPatientFirstName("");
+		query.setPatientLastName("");
+		query.setPatientHIN("");
+		
+		InboxManagerResponse response = inboxManager.getInboxResults(loggedInInfo, query);
+		List<LabResultData> labDocs = response.getLabdocs();
+		
+		int count = labDocs.size();
+		
+		return count;
+	}
 }
