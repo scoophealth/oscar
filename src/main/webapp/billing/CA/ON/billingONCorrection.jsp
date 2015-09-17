@@ -47,30 +47,24 @@
 <%@page import="java.text.NumberFormat" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProgramProviderDAO" %>
 <%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
-
+<%@page import="org.oscarehr.common.dao.BillingONPaymentDao" %>
+<%@page import="org.oscarehr.common.model.BillingONPayment" %>
 
 <%@taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
-<%			if (session.getAttribute("user") == null)
-				response.sendRedirect("../../../logout.htm");
-			String userfirstname, userlastname;
-			
+<%	
+
+	String userfirstname, userlastname;		
 
     String userProviderNo = (String) session.getAttribute("user");
     ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
     BillingONExtDao bExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
-    
+    BillingONPaymentDao billingOnPaymentDao = SpringUtils.getBean(BillingONPaymentDao.class);
     Provider userProvider = providerDao.getProvider(userProviderNo);
-    
-    if (userProvider == null)
-        response.sendRedirect("../logout.jsp");
-    
-    if(session.getAttribute("userrole") == null )  
-        response.sendRedirect("../logout.jsp");
-    
+       
     String roleName$ = (String)session.getAttribute("userrole") + "," + userProviderNo;
 
     boolean isSiteAccessPrivacy=false;
@@ -581,6 +575,17 @@ function validateAmountNumberic(idx) {
 					BigDecimal discount = BigDecimal.ZERO;
 					BigDecimal credit = BigDecimal.ZERO;
 					
+					total = bCh1.getTotal();
+					
+					List<BillingONPayment> bops = billingOnPaymentDao.find3rdPartyPaymentsByBillingNo(Integer.parseInt(request.getParameter("billing_no").trim()));
+					for(BillingONPayment bop:bops) {
+						credit = credit.add(bop.getTotal_credit());
+						discount = discount.add(bop.getTotal_discount());
+						payment = payment.add(bop.getTotal_payment());
+						refund = refund.add(bop.getTotal_refund());				
+					}
+					/*
+					
 					BillingONExtDao billingOnExtDao = (BillingONExtDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("billingONExtDao");
 					BillingONExt paymentItem = billingOnExtDao.getClaimExtItem(Integer.parseInt(request.getParameter("billing_no").trim()), Integer.parseInt(DemoNo), BillingONExtDao.KEY_PAYMENT);
 					if (paymentItem != null) {
@@ -601,7 +606,7 @@ function validateAmountNumberic(idx) {
 					BillingONExt creditItem = billingOnExtDao.getClaimExtItem(Integer.parseInt(request.getParameter("billing_no").trim()), Integer.parseInt(DemoNo), BillingONExtDao.KEY_CREDIT);
 					if (creditItem != null) {
 						credit = new BigDecimal(creditItem.getValue());
-					}
+					}*/
 					
 					balance = total.subtract(payment).subtract(discount).add(credit);
 					payment = payment.subtract(credit);

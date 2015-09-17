@@ -127,7 +127,17 @@ public class BillingONPaymentsAction extends DispatchAction {
 		BigDecimal total = BigDecimal.ZERO;
 		BigDecimal discount = BigDecimal.ZERO;
 		BigDecimal credit = BigDecimal.ZERO;
+		BigDecimal refund = BigDecimal.ZERO;
 		
+		total = cheader1.getTotal();
+		
+		for (BillingONPayment bop : paymentLists) {
+			credit = credit.add(bop.getTotal_credit());
+			discount = discount.add(bop.getTotal_discount());
+			payment = payment.add(bop.getTotal_payment());
+			refund = refund.add(bop.getTotal_refund());		
+		}
+		/*
 		BillingONExt paymentItem = billingONExtDao.getClaimExtItem(billingNo, demographicNo, BillingONExtDao.KEY_PAYMENT);
 		if (paymentItem != null) {
 			payment = new BigDecimal(paymentItem.getValue());
@@ -144,6 +154,7 @@ public class BillingONPaymentsAction extends DispatchAction {
 		if (totalItem != null) {
 			total = new BigDecimal(totalItem.getValue());
 		}
+		*/
 		balance = total.subtract(payment).subtract(discount).add(credit);
 		
 		request.setAttribute("totalInvoiced", total);
