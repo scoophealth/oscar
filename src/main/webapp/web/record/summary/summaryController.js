@@ -65,31 +65,27 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
    	
    	
    	$scope.openRevisionHistory = function(note){
-   		console.log("jhistory",note);
-		var rnd = Math.round(Math.random() * 1000);
-		win = "win" + rnd;
+   		//var rnd = Math.round(Math.random() * 1000);
+		win = "revision";
 		var url = "../CaseManagementEntry.do?method=notehistory&noteId=" + note.noteId;
 		window.open(url,win,"scrollbars=yes, location=no, width=647, height=600","");   			
    	}
 
    	$scope.openRx = function(demoNo){
-		var rnd = Math.round(Math.random() * 1000);
-		win = "win" + rnd;
+		win = "Rx"+demoNo;
 		var url = "../oscarRx/choosePatient.do?demographicNo=" + demoNo;
 		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   			
    	}
    	
    	$scope.openAllergies = function(demoNo){
-   		var rnd = Math.round(Math.random() * 1000);
-		win = "win" + rnd;
+		win = "Allergy"+demoNo;
 		var url = "../oscarRx/showAllergy.do?demographicNo=" + demoNo;
 		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   
 		return false;
    	}
 
    	$scope.openPreventions = function(demoNo){
-   		var rnd = Math.round(Math.random() * 1000);
-		win = "win" + rnd;
+		win = "prevention"+demoNo;
 		var url = "../oscarPrevention/index.jsp?demographic_no=" + demoNo;
 		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   
 		return false;
@@ -260,13 +256,14 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
     };
     
   
-
-
-
-$scope.expandlist = function(mod){
-	console.log(mod);
-	mod.displaySize = mod.summaryItem.length;
-	//$scope.documentlabsSize = $scope.documentlabs.length;
+$scope.toggleList = function(mod){
+	i = 5; 
+	
+	if(mod.displaySize>5){
+		mod.displaySize = i;
+	}else{
+		mod.displaySize = mod.summaryItem.length;
+	}
 }
 
 $scope.showMoreDocuments = function(mod){
@@ -286,8 +283,41 @@ $scope.showMoreDocuments = function(mod){
 	return true;
 	
 }
+
+
 $scope.showMoreDocumentsSymbol = function(mod){
 	if(!angular.isDefined(mod.summaryItem)){
+		return "";
+	}
+	////console.log("mod symbol output ",mod.displaySize, mod.summaryItem.length,mod);
+	if ( mod.displaySize < mod.summaryItem.length) {
+		return "glyphicon glyphicon-chevron-down pull-right";
+	}else{
+		return "glyphicon glyphicon-chevron-up pull-right";	
+	}
+
+}
+
+
+$scope.showMorePreventions = function(mod){
+
+	if(!angular.isDefined(mod.summaryItem)){
+		return false;
+	}
+	
+	if(mod.summaryItem.length == 0){
+		return false;
+	}
+	
+	return true;
+}
+
+$scope.showMorePreventionsSymbol = function(mod){
+	if(!angular.isDefined(mod.summaryItem)){
+		return "";
+	}
+	
+	if(mod.summaryCode!="preventions"){
 		return "";
 	}
 	////console.log("mod symbol output ",mod.displaySize, mod.summaryItem.length,mod);
@@ -390,8 +420,18 @@ $scope.gotoState = function(item,mod,itemId){
 		editGroupedNotes('lg',mod,null);
 		
 	}else if(item.type == 'lab' || item.type == 'document'  || item.type == 'rx'|| item.type == 'allergy' || item.type == 'prevention' ){
-		var rnd = Math.round(Math.random() * 1000);
-		win = "win_item.type_" + rnd;
+
+		if(item.type == 'rx'){
+			win = "Rx" + $stateParams.demographicNo;
+		}else if(item.type == 'allergy' ){
+			win = "Allergy" + $stateParams.demographicNo;
+		}else if(item.type == 'prevention'){
+			win = "prevention" + $stateParams.demographicNo;
+		}else{
+			//item.type == 'lab' || item.type == 'document'
+			//var rnd = Math.round(Math.random() * 1000);
+			win = "win_item.type_";
+		}
 		
 		window.open(item.action,win,"scrollbars=yes, location=no, width=900, height=600","");  
 		return false;

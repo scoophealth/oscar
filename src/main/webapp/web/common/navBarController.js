@@ -25,9 +25,10 @@
 */
 
 
-oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, securityService, personaService, billingService, $rootScope) {
+oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, securityService, personaService, billingService, inboxService, $rootScope) {
 	
-
+	$scope.unAckLabDocTotal = 0;
+	 
 	$scope.$watch(function() {
 		  return securityService.getUser();
 		}, function(newVal) {
@@ -64,8 +65,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 		}
 		$scope.unreadMessagesCount = response.unreadMessagesCount;
 		$scope.unreadPatientMessagesCount = response.unreadPatientMessagesCount;
-		
-		
+		getUnAckLabDocCount();	
 		$scope.demographicSearchDropDownItems = response.menus.patientSearchMenu.items;
 		$scope.menuItems = response.menus.menu.items;
 		//$scope.moreMenuItems = response.menus.moreMenu.items;
@@ -75,6 +75,14 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
     	alert(reason);
     });
 	
+  
+	getUnAckLabDocCount = function(){     
+		inboxService.getUnAckLabDocCount().then(function(response){
+		   $scope.unAckLabDocTotal = response;
+	    },function(reason){
+	    	alert(reason);
+	    });
+	}
     
 	//reload the navbar at any time..not sure why i can't call this form the controller.
 	getNavBar = function() {

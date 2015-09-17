@@ -112,7 +112,9 @@ public class LabsDocsSummary implements Summary {
             SummaryItemTo1 summaryItem = new SummaryItemTo1(Integer.parseInt(result.segmentID), labDisplayName,"action","lab");//+result.labType);
             summaryItem.setDate(date);
             summaryItem.setAction(url);
-            
+            if(result.isAbnormal()){
+            	summaryItem.setAbnormalFlag(true);
+            }
             list.add(summaryItem);
             count++;
         } 

@@ -42,6 +42,20 @@ angular.module("inboxServices", [])
                 	deferred.reject("An error occured while getting inbox content");
                 });
            return deferred.promise;
+        },
+        
+        getUnAckLabDocCount: function () {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/mine/count',
+                method: "GET",
+                headers: this.configHeaders,
+              }).success(function (data) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers) {
+                	deferred.reject("An error occured while getting inbox content");
+                });
+           return deferred.promise;
         }
     };
 });
