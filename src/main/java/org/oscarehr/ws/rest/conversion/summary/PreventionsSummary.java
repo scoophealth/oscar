@@ -23,7 +23,13 @@
  */
 package org.oscarehr.ws.rest.conversion.summary;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.oscarehr.managers.PreventionManager;
 import org.oscarehr.common.model.Prevention;
@@ -33,9 +39,15 @@ import org.oscarehr.ws.rest.to.model.SummaryTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import oscar.oscarEncounter.pageUtil.NavBarDisplayDAO.Item;
+import oscar.oscarPrevention.PreventionDS;
+import oscar.oscarPrevention.PreventionData;
+import oscar.oscarPrevention.PreventionDisplayConfig;
+
+
 @Component
 public class PreventionsSummary implements Summary {
-		
+
 	@Autowired
 	private PreventionManager preventionManager;
 	
@@ -45,11 +57,98 @@ public class PreventionsSummary implements Summary {
 		
 		List<SummaryItemTo1> list = summary.getSummaryItem();
 		
-		List<Prevention> preventions = preventionManager.getPreventionsByDemographicNo(loggedInInfo, demographicNo);
-		for(Prevention prevention:preventions) {
-			list.add(new SummaryItemTo1(prevention.getId(), prevention.getPreventionType(),"../oscarPrevention/index.jsp?demographic_no="+demographicNo,"prevention"));
-		}
+		preventionsList(loggedInInfo, list, demographicNo);
 		
 		return summary;
 	}
+	
+
+	@SuppressWarnings("unchecked")
+	private void preventionsList(LoggedInInfo loggedInInfo,List<SummaryItemTo1> list, Integer demographicNo){
+		
+		String url = "../oscarPrevention/index.jsp?demographic_no="+demographicNo;
+		
+		//saved preventions for demographicNo
+		List<Prevention> preventions = preventionManager.getPreventionsByDemographicNo(loggedInInfo, demographicNo);
+		
+		SummaryItemTo1 summaryItem;
+				
+		oscar.oscarPrevention.Prevention p = PreventionData.getPrevention(loggedInInfo, demographicNo);
+
+        PreventionDS pf = PreventionDS.getInstance();
+
+        try{
+            pf.getMessages(p);
+        }catch(Exception dsException){
+            //do nothing for now
+        }
+        
+        //create list of preventions
+        PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
+        ArrayList<HashMap<String,String>> prevList = pdc.getPreventions(); 
+        
+        //get warnings from list of preventions for demographicNo
+		@SuppressWarnings("rawtypes")
+		Map warningTable = p.getWarningMsgs();
+		        
+		List<String> items = new ArrayList<String>();
+		
+		for (int i = 0 ; i < prevList.size(); i++){
+			
+			HashMap<String,String> h = prevList.get(i);
+            String prevName = h.get("name");
+            ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(loggedInInfo, prevName, demographicNo);
+            Date demographicDateOfBirth=PreventionData.getDemographicDateOfBirth(loggedInInfo, demographicNo);
+            PreventionData.addRemotePreventions(loggedInInfo, alist, demographicNo,prevName,demographicDateOfBirth);
+            boolean show = pdc.display(loggedInInfo, h, demographicNo.toString(),alist.size());
+            if( show ) {
+              //add warnings right away so they display first
+        	  if( warningTable.containsKey(prevName) ){
+					summaryItem = new SummaryItemTo1(0, prevName, url, "prevention");
+					list.add(summaryItem);
+              } else {
+                  	items.add(prevName);
+              }
+
+            }
+		}
+		
+		//sort items
+		Collections.sort(list, new ChronologicAsc());
+		
+		//add the rest of the items
+        for(int idx = 0; idx < items.size(); ++idx ){
+        	summaryItem = new SummaryItemTo1(0, items.get(idx),url,"prevention");
+        	list.add(summaryItem);
+        }
+
+		for(Prevention prevention:preventions) {
+			
+			summaryItem = new SummaryItemTo1(prevention.getId(), prevention.getPreventionType(),url,"prevention");
+			summaryItem.setDate(prevention.getPreventionDate());
+			
+			list.add(summaryItem);
+		}
+	        
+	}	
+	
+	 @SuppressWarnings("rawtypes")
+	 public class ChronologicAsc implements Comparator {
+		 public int compare( Object o1, Object o2 ) {
+			 Item i1 = (Item)o1;
+			 Item i2 = (Item)o2;
+			 Date d1 = i1.getDate();
+			 Date d2 = i2.getDate();
+
+			 if( d1 == null && d2 != null )
+				 return -1;
+			 else if( d1 != null && d2 == null )
+				 return 1;
+			 else if( d1 == null && d2 == null )
+				 return 0;
+			 else
+				 return -(i1.getDate().compareTo(i2.getDate()));
+		 }
+	 }
+	
 }
