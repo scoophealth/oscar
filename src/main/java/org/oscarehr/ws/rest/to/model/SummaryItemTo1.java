@@ -61,6 +61,8 @@ public class SummaryItemTo1 {
 	String classification;
 	String editor;
 	boolean abnormalFlag;
+	String indicatorClass;
+	String warning;
 
 	
 	public SummaryItemTo1(){}
@@ -127,6 +129,22 @@ public class SummaryItemTo1 {
 
 	public void setAbnormalFlag(boolean abnormalFlag) {
 		this.abnormalFlag = abnormalFlag;
+	}
+		
+	public String isIndicatorClass() {
+		return indicatorClass;
+	}
+
+	public void setIndicatorClass(String indicatorClass) {
+		this.indicatorClass = indicatorClass;
+	}
+	
+	public String getWarning() {
+		return warning;
+	}
+
+	public void setWarning(String warning) {
+		this.warning = warning;
 	}
 	
 	public String getType() {
