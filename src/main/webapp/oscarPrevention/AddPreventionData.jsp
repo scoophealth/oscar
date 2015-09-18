@@ -37,6 +37,20 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	  boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_prevention" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_prevention");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
 
 <%
   DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
