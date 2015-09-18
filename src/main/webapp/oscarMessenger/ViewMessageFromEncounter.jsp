@@ -25,8 +25,6 @@
 --%>
 
 <%    
-if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
 String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 boolean bFirstDisp=true; //this is the first time to display the window
 if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
@@ -35,6 +33,21 @@ if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter(
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	  boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_msg" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_msg");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <link rel="stylesheet" type="text/css" href="encounterStyles.css"
 	media="screen">
 <link rel="stylesheet" type="text/css" href="printable.css"

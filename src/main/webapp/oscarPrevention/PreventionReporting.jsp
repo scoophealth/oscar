@@ -36,8 +36,22 @@
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	  boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_prevention" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_prevention");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
+<%
   String demographic_no = request.getParameter("demographic_no");
 
   oscar.oscarReport.data.RptSearchData searchData  = new oscar.oscarReport.data.RptSearchData();
