@@ -23,6 +23,21 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_report");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="java.text.SimpleDateFormat"%>
