@@ -28,22 +28,25 @@
    "http://www.w3.org/TR/html4/loose.dtd">
 <%--This JSP is to configure the report before it is run, this is where the user fills in all the param--%>
 
-<%
-  if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-  String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
-%>
+
 
 <%@ page import="java.util.*,oscar.oscarReport.reportByTemplate.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-
-<security:oscarSec roleName="<%=roleName$%>"
-	objectName="_admin,_report"	rights="r" reverse="<%=true%>">
-	<%
-		response.sendRedirect("../logout.jsp");
-	%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report,_admin.reporting,_admin" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../../securityError.jsp?type=_report&type=_admin.reporting&type=_admin");%>
 </security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
 
 <html:html locale="true">
 <head>

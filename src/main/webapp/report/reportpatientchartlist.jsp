@@ -24,6 +24,21 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report,_admin.reporting" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_report&type=_admin.reporting");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"	errorPage="../appointment/errorpage.jsp"%>
 
 <%@ page import="org.oscarehr.util.SpringUtils"%>
@@ -39,7 +54,6 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <jsp:useBean id="patientBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="myGroupBean" class="java.util.Vector" scope="page" />
@@ -52,7 +66,6 @@
 	ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
 	
 	String curProvider_no = (String) session.getAttribute("user");
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("last_name") ;
 	   
 	String [][] dbQueries=new String[][] { 
