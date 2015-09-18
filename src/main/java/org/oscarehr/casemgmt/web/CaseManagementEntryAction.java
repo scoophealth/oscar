@@ -1953,7 +1953,18 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				++dxNum;
 			}
 
-			String url = "/billing.do?billRegion=" + region + "&billForm=" + defaultView + "&hotclick=&appointment_no=" + appointmentNo + "&demographic_name=" + java.net.URLEncoder.encode(name, "utf-8") + "&amp;status=t&demographic_no=" + demoNo + "&providerview=" + providerview + "&user_no=" + providerNo + "&apptProvider_no=" + apptProvider + "&appointment_date=" + date + "&start_time=" + start_time + "&bNewForm=1" + dxCodes.toString();
+			String url = "/billing.do?billRegion=" + region
+					+ "&billForm=" + defaultView
+					+ "&hotclick=&appointment_no="
+					+ appointmentNo
+					+ "&demographic_name=" + java.net.URLEncoder.encode(name, "utf-8")
+					+ "&amp;status=t&demographic_no=" + demoNo
+					+ "&providerview=" + providerview
+					+ "&user_no=" + providerNo
+					+ "&apptProvider_no=" + apptProvider
+					+ "&appointment_date=" + date
+					+ "&start_time=" + start_time
+					+ "&bNewForm=1" + dxCodes.toString();
 			logger.debug("BILLING URL " + url);
 			ActionForward forward = new ActionForward();
 			forward.setPath(url);
