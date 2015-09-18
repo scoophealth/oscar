@@ -36,9 +36,7 @@
         </script>
 </head>
 <body>
-<% /*
-        <bean:message key="oscarEncounter.close.msgClick1"/><a href="javascript:window.close();"><bean:message key="oscarEncounter.close.btnHere"/></a>
-*/ %>
+
 <a href="javascript:window.close();"><bean:message
 	key="oscarMDS.close.msgClose" />.</a>
 </body>
