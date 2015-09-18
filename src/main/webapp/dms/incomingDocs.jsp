@@ -23,6 +23,21 @@
 
 --%>
     
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_edoc" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_edoc");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
   
 <%@page import="org.oscarehr.common.model.UserProperty"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
@@ -84,9 +99,6 @@
 </style>
     
 <%
-    if (session.getAttribute("userrole") == null) {
-        response.sendRedirect("../logout.jsp");
-    }
     String user_no = (String) session.getAttribute("user");
         
     String imageType = IncomingDocUtil.getAndSetViewDocumentAs(user_no, request.getParameter("imageType"));

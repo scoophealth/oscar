@@ -23,6 +23,7 @@
 
 --%>
 
+
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="java.util.*" %>
 
@@ -44,18 +45,23 @@
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_edoc" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_edoc");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-
-    if (session.getValue("user") == null) {
-        response.sendRedirect("../logout.jsp");
-    }
-    if (session.getAttribute("userrole") == null) {
-        response.sendRedirect("../logout.jsp");
-    }
-
-    String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
     String demographicID = request.getParameter("demographicID");
     String categoryKey = request.getParameter("categorykey");
