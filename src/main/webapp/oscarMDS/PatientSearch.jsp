@@ -29,11 +29,25 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	  boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_lab" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_lab");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <% 
 
 // Apologies for the crap code.  Definitely could do with a major rewrite...
 
-  if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
   // String curProvider_no = (String) session.getAttribute("user");
   String curProvider_no = request.getParameter("provider_no");
   String strLimit1="0";
