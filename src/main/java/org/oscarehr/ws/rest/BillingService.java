@@ -67,10 +67,21 @@ public class BillingService extends AbstractServiceImpl {
     public GenericRESTResponse billingRegion() {
         boolean billRegionSet = true;
         String billRegion = oscarProperties.getProperty("billregion", "").trim().toUpperCase();
-        if(billRegion==null){
+        if(billRegion.isEmpty()){
             billRegionSet = false;
         }
         return new GenericRESTResponse(billRegionSet, billRegion);
     }
 	
+    @GET
+    @Path("/defaultView")
+    @Produces("application/json")
+    public GenericRESTResponse defaultView() {
+        boolean defaultViewSet = true;
+        String defaultView = oscarProperties.getProperty("default_view", "").trim();
+        if(defaultView.isEmpty()){
+        	defaultViewSet = false;
+        }
+        return new GenericRESTResponse(defaultViewSet, defaultView);
+    }
 }

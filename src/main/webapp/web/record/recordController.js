@@ -24,7 +24,7 @@
 
 */
 
-oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,$state,noteService,$timeout,uxService,securityService) {
+oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,user,$state,noteService,$timeout,uxService,securityService,scheduleService,billingService) {
 	
 	
 	console.log("in patient Ctrl ",demo);
@@ -209,6 +209,54 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 		$scope.saveNote() ;
 	}
 	
+	billingService.getBillingRegion().then(function(response){
+		$scope.page.billregion = response.message;
+	});
+	billingService.getDefaultView().then(function(response){
+		$scope.page.defaultView = response.message;
+	});
+	if ($location.search().appointmentNo!=null){
+		scheduleService.getAppointment($location.search().appointmentNo).then(function(data){
+			$scope.page.appointment = data;
+		});
+	}
+	
+	$scope.saveSignBillNote = function(){
+		$scope.page.encounterNote.isSigned = true;
+		$scope.saveNote() ;
+
+		noteService.getIssueNote($scope.page.encounterNote.noteId).then(function(data){
+			var issues = toArray(data.assignedCMIssues);
+			var dxCode = "";
+			for (var i=0; i<issues.length; i++){
+				dxCode += "&dxCode="+issues[i].issue.code.substring(0,3);
+			}
+			
+			var apptNo = "", apptProvider = "", apptDate = "", apptStartTime = "";
+			if ($scope.page.appointment!=null){
+				apptNo = $scope.page.appointment.id;
+				apptProvider = $scope.page.appointment.providerNo;
+				
+				var dt = new Date($scope.page.appointment.appointmentDate);
+				apptDate = dt.getFullYear()+"-"+zero(dt.getMonth()+1)+"-"+zero(dt.getDate());
+				dt = new Date($scope.page.appointment.startTime);
+				apptStartTime = zero(dt.getHours())+":"+zero(dt.getMinutes())+":"+zero(dt.getSeconds());
+			}
+			
+			var url = "../billing.do?billRegion="+$scope.page.billregion;
+			url += "&billForm="+$scope.page.defaultView;
+			url += "&demographic_name="+"Ronnie+Cheng";
+			url += "&demographic_no="+demo.demographicNo;
+			url += "&providerview="+user.providerNo+"&user_no="+user.providerNo;
+			url += "&appointment_no="+apptNo+"&apptProvider_no="+apptProvider;
+			url += "&appointment_date="+apptDate+"&start_time="+apptStartTime;
+			url += "&hotclick=&status=t&bNewForm=1"+dxCode;
+
+			window.open(url,"billingWin","scrollbars=yes, location=no, width=1000, height=600","");
+		});
+	}
+	
+	
 	console.log('RecordCtrlEnd',$state);
 	
 	$scope.page.currentNoteConfig = {};
@@ -307,3 +355,13 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 
 });
 
+function toArray(obj){ //convert single object to array
+	if (obj instanceof Array) return obj;
+	if (obj==null) return [];
+	return [obj];
+}
+
+function zero(n){
+	if (n<10) n = "0"+n;
+	return n;
+}
