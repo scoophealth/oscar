@@ -182,14 +182,34 @@ li.cpp-note-list:last-child{
    border-top-color:  #333 !important; 
    border-bottom-color: #333 !important;
  }
+
+.highlight, .highlight:hover{
+color: #FF0000;
+}
+
+
+.refused, .refused:hover{
+color: #EAACAC;
+}
+
+.ineligible, .ineligible:hover{
+color: #FFCC24;
+}
+
+.pending, .pending:hover{
+color: #FF00FF;
+}
+
+/*think of changing this to be consistent*/
+.abnormal-prev, .abnormal-prev:hover{
+color: #FF4D4D;
+}
  
- .abnormal{
+ .abnormal,  .abnormal:hover{
 color:red;
 }
 
-.abnormal:hover{
-color:red;
-}
+
 
 /*for patient header*/
 @media (max-width: 1320px) {

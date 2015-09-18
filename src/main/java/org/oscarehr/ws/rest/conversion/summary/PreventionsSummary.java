@@ -24,8 +24,6 @@
 package org.oscarehr.ws.rest.conversion.summary;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +37,6 @@ import org.oscarehr.ws.rest.to.model.SummaryTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import oscar.oscarEncounter.pageUtil.NavBarDisplayDAO.Item;
 import oscar.oscarPrevention.PreventionDS;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarPrevention.PreventionDisplayConfig;
@@ -90,9 +87,9 @@ public class PreventionsSummary implements Summary {
         //get warnings from list of preventions for demographicNo
 		@SuppressWarnings("rawtypes")
 		Map warningTable = p.getWarningMsgs();
-		        
+				
 		List<String> items = new ArrayList<String>();
-		
+
 		for (int i = 0 ; i < prevList.size(); i++){
 			
 			HashMap<String,String> h = prevList.get(i);
@@ -105,34 +102,59 @@ public class PreventionsSummary implements Summary {
               //add warnings right away so they display first
         	  if( warningTable.containsKey(prevName) ){
 					summaryItem = new SummaryItemTo1(0, prevName, url, "prevention");
+					summaryItem.setIndicatorClass("highlight");
+					summaryItem.setWarning(warningTable.get(prevName).toString());
 					list.add(summaryItem);
               } else {
+            	  
+            	  if(!isPreventionExist(preventions, prevName)){//don't add to items if data entered already
                   	items.add(prevName);
+            	  }
               }
 
             }
 		}
 		
-		//sort items
-		Collections.sort(list, new ChronologicAsc());
 		
 		//add the rest of the items
         for(int idx = 0; idx < items.size(); ++idx ){
-        	summaryItem = new SummaryItemTo1(0, items.get(idx),url,"prevention");
-        	list.add(summaryItem);
+	        	summaryItem = new SummaryItemTo1(0, items.get(idx),url,"prevention");
+	        	list.add(summaryItem);
         }
 
 		for(Prevention prevention:preventions) {
-			
 			summaryItem = new SummaryItemTo1(prevention.getId(), prevention.getPreventionType(),url,"prevention");
 			summaryItem.setDate(prevention.getPreventionDate());
+		    if( prevention.isRefused() ) {
+                summaryItem.setIndicatorClass("refused");
+            }else if( prevention.isIneligible()) {
+            	summaryItem.setIndicatorClass("ineligible");
+            }else if(PreventionData.getExtValue(String.valueOf(prevention.getId()), "result").equals("abnormal")){
+            	summaryItem.setIndicatorClass("abnormal-prev");
+            }else if(PreventionData.getExtValue(String.valueOf(prevention.getId()), "result").equals("pending")){
+                	summaryItem.setIndicatorClass("pending");
+            }
 			
 			list.add(summaryItem);
 		}
+		
+		//sort items
+		//Collections.sort(list, new ChronologicAsc());
 	        
 	}	
 	
-	 @SuppressWarnings("rawtypes")
+	private boolean isPreventionExist(List<Prevention> preventions, String prevName){
+		
+		for(Prevention prevention:preventions) {
+			if(prevention.getPreventionType().equals(prevName)){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/* @SuppressWarnings("rawtypes")
 	 public class ChronologicAsc implements Comparator {
 		 public int compare( Object o1, Object o2 ) {
 			 Item i1 = (Item)o1;
@@ -149,6 +171,6 @@ public class PreventionsSummary implements Summary {
 			 else
 				 return -(i1.getDate().compareTo(i2.getDate()));
 		 }
-	 }
+	 }*/
 	
 }
