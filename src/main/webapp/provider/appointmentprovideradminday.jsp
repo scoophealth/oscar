@@ -1788,7 +1788,20 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                	Iterator<Appointment> it = appointments.iterator();
 		
                 Appointment appointment = null;
-
+            	String router = "";
+            	String record = "";
+            	String module = "";
+            	String newUxUrl = "";
+            	String inContextStyle = "";
+            	
+            	if(request.getParameter("record")!=null){
+            		record=request.getParameter("record");
+            	}
+            	
+            	if(request.getParameter("module")!=null){
+            		module=request.getParameter("module");
+            	}
+            	
 	    for(ih=startHour*60; ih<=(endHour*60+(60/depth-1)*depth); ih+=depth) { // use minutes as base
             hourCursor = ih/60;
             minuteCursor = ih%60;
@@ -2119,10 +2132,20 @@ start_time += iSm + ":00";
 
 <!-- doctor code block 3 -->
 <% if(bShowEncounterLink && !isWeekView) { %>
-<% if (oscar.OscarProperties.getInstance().isPropertyActive("SINGLE_PAGE_CHART")) { %>
-
-&#124; <a  href="../web/#/record/<%=demographic_no %>/summary?appointmentNo=<%=appointment.getId() %>&encType=face%20to%20face%20encounter%20with%20client">
-<bean:message key="provider.appointmentProviderAdminDay.btnE"/>2</a><%}%>
+<% if (oscar.OscarProperties.getInstance().isPropertyActive("SINGLE_PAGE_CHART")) { 
+	
+	newUxUrl = "../web/#/record/" + demographic_no + "/";
+	
+	if(String.valueOf(demographic_no).equals(record) && !module.equals("summary")){
+		newUxUrl =  newUxUrl + module;
+		inContextStyle = "style='color: blue;'";
+	}else{
+		newUxUrl =  newUxUrl + "summary?appointmentNo=" + appointment.getId() + "&encType=face%20to%20face%20encounter%20with%20client";
+		inContextStyle = "";
+	}
+%>
+&#124; <a href="<%=newUxUrl%>" <%=inContextStyle %>><bean:message key="provider.appointmentProviderAdminDay.btnE"/>2</a>
+<%}%>
 
 <% String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="
 	+curUser_no+"&appointmentNo="
