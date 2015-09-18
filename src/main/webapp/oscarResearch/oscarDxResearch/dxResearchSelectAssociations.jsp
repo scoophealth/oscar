@@ -22,9 +22,7 @@
     Toronto, Ontario, Canada
 
 --%>
-<%
-  if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-%>
+
 <%@ page import="java.util.*,oscar.oscarReport.pageUtil.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>

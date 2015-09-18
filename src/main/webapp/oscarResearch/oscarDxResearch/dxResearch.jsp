@@ -33,9 +33,22 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	  boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_dxresearch" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_dxresearch");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%   
-    if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	
 	//John's Question: Can't we just get rid of this to force use of the object _dx.code
 	//String disableVal = OscarProperties.getInstance().getProperty("dxResearch_disable_entry", "false");
