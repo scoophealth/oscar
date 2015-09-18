@@ -23,6 +23,22 @@
     Ontario, Canada
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed2=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_report,_admin.reporting" rights="r" reverse="<%=true%>">
+	<%authed2=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_report&type=_admin.reporting");%>
+</security:oscarSec>
+<%
+if(!authed2) {
+	return;
+}
+%>
+
 <%@ page import="org.apache.commons.lang.StringUtils" %>
 <%
 String country = request.getLocale() .getCountry();
@@ -50,22 +66,20 @@ String billingRegion = (oscar.OscarProperties.getInstance()).getProperty("billre
 
 <%
 
-	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false; 
     String provider_dboperation = "search_provider";
     String mygroup_dboperation = "search_group";
 %>
-<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName2$%>" rights="r" reverse="false">
 	<%
 		isSiteAccessPrivacy =true;
 		provider_dboperation = "site_search_provider";
 		mygroup_dboperation = "site_search_group";
 	%>
 </security:oscarSec>
-<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
+<security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName2$%>" rights="r" reverse="false">
 	<%
 		isTeamAccessPrivacy =true; 
 		provider_dboperation = "team_search_provider";
@@ -830,7 +844,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
     </tr>
 
 
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.reporting" rights="r" reverse="<%=false%>">
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_admin,_admin.reporting" rights="r" reverse="<%=false%>">
     <tr>
 	<td width="2"><%=j%><%j++;%></td>
 	<td width="1"></td>

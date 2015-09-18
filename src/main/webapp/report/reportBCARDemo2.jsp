@@ -1,4 +1,19 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report,_admin.reporting" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_report&type=_admin.reporting");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@ page
 	import="java.util.*, oscar.oscarReport.data.*, java.sql.*, oscar.login.*, java.net.*"
 	errorPage="../appointment/errorpage.jsp"%>

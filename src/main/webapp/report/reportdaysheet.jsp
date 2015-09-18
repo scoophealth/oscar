@@ -23,6 +23,22 @@
     Ontario, Canada
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report,_admin.reporting" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_report&type=_admin.reporting");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.login.*,java.net.*" errorPage="../appointment/errorpage.jsp"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
@@ -49,8 +65,7 @@
 <%
 
 	String curProvider_no = (String) session.getAttribute("user");
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("start_time") ;
+	String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("start_time") ;
     
     java.util.Properties oscarVariables = oscar.OscarProperties.getInstance();
     java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);

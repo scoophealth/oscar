@@ -23,6 +23,22 @@
     Ontario, Canada
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed2=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_report,_admin.reporting" rights="r" reverse="<%=true%>">
+	<%authed2=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_report&type=_admin.reporting");%>
+</security:oscarSec>
+<%
+if(!authed2) {
+	return;
+}
+%>
+
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page
 	import="org.apache.commons.lang.StringUtils,org.apache.commons.lang.StringEscapeUtils,java.util.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarDB.*,java.sql.*,oscar.oscarDemographic.data.*,oscar.eform.*,org.oscarehr.common.model.Provider,org.oscarehr.managers.ProviderManager2,org.oscarehr.util.SpringUtils"%>
@@ -45,8 +61,6 @@
 <link rel="stylesheet" type="text/css"
 	href="../oscarEncounter/encounterStyles.css">
 <%  //This could be done alot better.
-if(session.getValue("user") == null)
-    response.sendRedirect("../logout.htm");
   String curUser_no,userfirstname,userlastname;
   curUser_no = (String) session.getAttribute("user");
 
