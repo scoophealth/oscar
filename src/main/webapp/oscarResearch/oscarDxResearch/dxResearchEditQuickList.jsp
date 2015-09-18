@@ -28,7 +28,6 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%   
-    if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 
     String user_no = (String) session.getAttribute("user");
     String color ="";
