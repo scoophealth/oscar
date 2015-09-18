@@ -818,6 +818,20 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
     	    
      	curProviderName[0]=providerDao.getProvider(mygroupno).getFullName();
      }
+     UserProperty uppatientNameLength = userPropertyDao.getProp(curUser_no, UserProperty.PATIENT_NAME_LENGTH);
+     int NameLength=0;
+     
+     if ( uppatientNameLength != null && uppatientNameLength.getValue() != null) {
+         try {
+            NameLength=Integer.parseInt(uppatientNameLength.getValue());
+         } catch (NumberFormatException e) {
+            NameLength=0;
+         }
+     
+         if(NameLength>0) {
+            len=lenLimitedS= lenLimitedL = NameLength;
+         }
+    }
 } else {
 	if(view==0) { //multiple views
 	   if (selectedSite!=null) {
