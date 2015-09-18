@@ -23,6 +23,22 @@
     Ontario, Canada
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName3$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed3=true;
+%>
+<security:oscarSec roleName="<%=roleName3$%>" objectName="_form" rights="r" reverse="<%=true%>">
+	<%authed3=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_form");%>
+</security:oscarSec>
+<%
+	if(!authed3) {
+		return;
+	}
+%>
+
 <!DOCTYPE html>
 <%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
