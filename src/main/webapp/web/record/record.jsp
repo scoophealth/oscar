@@ -126,7 +126,7 @@
 			  <button type="button" class="btn btn-default" ng-click="saveNote()" id="saveButton"  data-ng-disabled="page.encounterNote.isSigned" ><bean:message key="oscarEncounter.Index.btnSave"/></button>
 			  <button type="button" class="btn btn-default" ng-click="saveSignNote()"><bean:message key="oscarEncounter.Index.btnSignSave"/></button>
 			  <button type="button" class="btn btn-default" ng-click="saveSignVerifyNote()"><bean:message key="oscarEncounter.Index.btnSign"/></button>
-			  <button type="button" class="btn btn-default" data-ng-disabled="true"><bean:message key="oscarEncounter.Index.btnSignSaveBill"/></button>
+			  <button type="button" class="btn btn-default" ng-click="saveSignBillNote()"><bean:message key="oscarEncounter.Index.btnSignSaveBill"/></button>
 			</div>
     		
     	</div>
