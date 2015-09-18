@@ -17,6 +17,7 @@ outcome.appendChild(doc.createTextNode(s));
 audit.appendChild(doc.createTextNode(a));
 out.write(UtilXML.toXML(doc));
 %>
+
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
