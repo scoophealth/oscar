@@ -43,7 +43,24 @@
 <%@page import="oscar.oscarRx.util.RxUtil" %>
 <%@page import="org.apache.commons.lang.StringEscapeUtils" %>
 
-<%@page import="java.util.ArrayList"%><html:html locale="true">
+<%@page import="java.util.ArrayList"%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_rx" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_rx");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+<html:html locale="true">
 <head>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <title><bean:message key="StaticScript.title" /></title>
@@ -74,7 +91,6 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
 	if( rxBean == null ) {
 		rxBean=(oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 	}
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 	com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
 %>
 
@@ -250,7 +266,7 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
 							}
 						%>
 						</td>
-						<%if(securityManager.hasWriteAccess("_rx",roleName$,true)) {%>
+						<%if(securityManager.hasWriteAccess("_rx",roleName2$,true)) {%>
 						<td>
 							<%
 								if (drug.isLocal)

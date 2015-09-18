@@ -46,6 +46,20 @@
 <%@page import="org.oscarehr.common.model.DrugDispensing" %>
 <%@page import="java.util.Map" %>
 
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_dispensing" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_dispensing");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
@@ -59,7 +73,6 @@
 
 <%
 	String curUser_no = (String) session.getAttribute("user");
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	Demographic demographic = (Demographic)request.getAttribute("demographic");
 	Drug drug = (Drug)request.getAttribute("drug");
 	List<Provider> providers = (List<Provider>)request.getAttribute("providers");

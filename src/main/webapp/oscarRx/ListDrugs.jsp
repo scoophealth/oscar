@@ -59,9 +59,23 @@
     </logic:equal>
 </logic:present>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
+
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_rx");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 	com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
 	oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) pageContext.findAttribute("bean");
 	boolean showall = false;
@@ -354,7 +368,7 @@ if (heading != null){
 			<td align="center" valign="top">
 				<%
 					if(prescriptDrug.getDispenseInternal() != null && prescriptDrug.getDispenseInternal() == true ) {
-						if(securityManager.hasWriteAccess("_rx.dispense",roleName$,true)) {	
+						if(securityManager.hasWriteAccess("_dispensing",roleName$,true)) {	
 							String dispensingStatus = drugDispensingManager.getStatus(prescriptDrug.getId());
 				               
 				%>
