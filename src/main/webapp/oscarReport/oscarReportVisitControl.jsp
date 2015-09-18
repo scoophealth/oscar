@@ -23,6 +23,22 @@
     Ontario, Canada
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed2=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_report,_admin.reporting" rights="r" reverse="<%=true%>">
+	<%authed2=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_report&type=_admin.reporting");%>
+</security:oscarSec>
+<%
+if(!authed2) {
+	return;
+}
+%>
+
 <%
 	String user_no = (String) session.getAttribute("user");
   int  nItems=0;
