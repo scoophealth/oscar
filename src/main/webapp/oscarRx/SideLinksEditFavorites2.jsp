@@ -34,6 +34,10 @@
 <%@page import="org.oscarehr.casemgmt.model.CaseManagementNote"%>
 <%@page import="java.util.List" %>
 <%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%
@@ -45,6 +49,9 @@
         %>
 <td width="10%" height="100%" valign="top">
 <div class="PropSheetMenu">
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_allergy" rights="r" reverse="<%=false%>">
+
 <p class="PropSheetLevel1CurrentItem<%=alle%>">
     <bean:message key="oscarRx.sideLinks.msgAllergies"/>
     <a href="javascript:void(0);" name="cmdAllergies"   onclick="javascript:window.location.href='ShowAllergies2.jsp?demographicNo=<%=request.getParameter("demographicNo")%>';" style="width: 200px" >+</a>
@@ -60,6 +67,9 @@
 <%}%>
 </p>
 
+</security:oscarSec>
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_rxresearch" rights="r" reverse="<%=false%>">
 
 <p class="PropSheetLevel1CurrentItem">
 	<bean:message key="oscarRx.sideLinks.msgDiseases"/>
@@ -89,6 +99,10 @@ for (Dxresearch dx:dxreasearchDao.getByDemographicNo(bean2.getDemographicNo())){
 %>
 </p>
 
+</security:oscarSec>
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r" reverse="<%=false%>">
+
 <p class="PropSheetLevel1CurrentItem">
 	<bean:message key="oscarRx.sideLinks.msgMedHistory"/>
 </p>
@@ -107,6 +121,7 @@ for (Dxresearch dx:dxreasearchDao.getByDemographicNo(bean2.getDemographicNo())){
 %>
 </p>
 
+</security:oscarSec>
 
 <p class="PropSheetLevel1CurrentItem"><bean:message key="oscarRx.sideLinks.msgFavorites"/>
 <a href="EditFavorites2.jsp">edit</a>

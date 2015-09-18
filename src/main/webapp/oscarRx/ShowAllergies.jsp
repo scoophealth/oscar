@@ -37,16 +37,24 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
+   String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+   boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_allergy" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_allergy");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+<%
 	OscarProperties props = OscarProperties.getInstance();
    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-   		 
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r"
-	reverse="<%=true%>">
-	<%response.sendRedirect("../noRights.html");%>
-</security:oscarSec>
+
 <logic:notPresent name="RxSessionBean" scope="session">
 	<logic:redirect href="error.html" />
 </logic:notPresent>
@@ -390,7 +398,7 @@ boolean filterOut=false;
 											</td>
 										<td>
 									<%									
-									if (displayAllergy.getRemoteFacilityId()==null && securityManager.hasDeleteAccess("_allergies",roleName$)) {
+									if (displayAllergy.getRemoteFacilityId()==null && securityManager.hasDeleteAccess("_allergies",roleName2$)) {
 									%>
 									<a href="deleteAllergy.do?ID=<%= String.valueOf(displayAllergy.getId()) %>&demographicNo=<%=demoNo %>&action=<%=actionPath %>" onClick="return confirm('Are you sure you want to set the allergy <%=displayAllergy.getDescription() %> to <%=labelConfirmAction%>?');"><%=labelAction%></a>
 									<% } %>
@@ -407,7 +415,7 @@ boolean filterOut=false;
 				</table>
 				</td>
 			</tr>
-			<%if(securityManager.hasWriteAccess("_allergies",roleName$)) {%>
+			<%if(securityManager.hasWriteAccess("_allergies",roleName2$)) {%>
 			<tr> 
 				<td>
 				<div class="DivContentSectionHead"><bean:message
