@@ -50,6 +50,22 @@
 
     String submitUrl = "SharedDocuments.do?demographic_no=" + request.getParameter("demographic_no");
 %>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_edoc" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../../securityError.jsp?type=_edoc");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <!DOCTYPE html>
 <html>
     <head>
