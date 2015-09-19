@@ -245,7 +245,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 			
 			var url = "../billing.do?billRegion="+$scope.page.billregion;
 			url += "&billForm="+$scope.page.defaultView;
-			url += "&demographic_name="+"Ronnie+Cheng";
+			url += "&demographic_name="+demo.firstName+"+"+demo.lastName;
 			url += "&demographic_no="+demo.demographicNo;
 			url += "&providerview="+user.providerNo+"&user_no="+user.providerNo;
 			url += "&appointment_no="+apptNo+"&apptProvider_no="+apptProvider;
