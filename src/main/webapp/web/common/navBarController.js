@@ -76,7 +76,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
     });
 	
   
-	getUnAckLabDocCount = function(){     
+	getUnAckLabDocCount = function(){  
 		inboxService.getUnAckLabDocCount().then(function(response){
 		   $scope.unAckLabDocTotal = response;
 	    },function(reason){
@@ -116,6 +116,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 	
 	//to help ng-clicks on buttons
 	$scope.transition = function (item) {
+				
 		if(angular.isDefined(item) && angular.isDefined(item.state)){
 			url = "";
 			wname="";
@@ -146,10 +147,28 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 		
 		}else if(angular.isDefined(item) && angular.isDefined(item.url)){
 			
-			window.location = item.url;   
+			if(item.label=="Schedule"){				
+				qs = "";
+				path = $location.path();
+				path = path.substring(1); //remove leading /
+				param = path.split("/");
+				
+				if(param.length==1){
+					qs = "?module=" + param[0];
+				}else if(param.length==3){
+					qs = "?record=" + param[1] + "&module=" + param[2];
+				}
+					
+				window.location = item.url + qs;
+				return false;
+			}else{
+				window.location = item.url;
+			}
 		}
 	
 	};
+	
+
 	
 	$scope.goHome = function() {
 		$state.go('dashboard');

@@ -87,6 +87,27 @@
         return;
     }
 
+	//preserving context for new ui this is temp until schedule is created in new ui
+	String router = "";
+	String record = "";
+	String module = "";
+	//retained date as well  
+	
+	if(request.getParameter("record")!=null){
+		record="record="+request.getParameter("record");
+	}
+	
+	if(request.getParameter("module")!=null){
+		module="module=" + request.getParameter("module");
+	}
+	
+	if(!record.equals("") && !module.equals("")){
+		router = "&" + record + "&" + module;
+	}else if(record.equals("") && !module.equals("")){
+		router = "&" + module;
+	}
+	//preserving context ---end
+
     if(request.getParameter("year")==null && request.getParameter("month")==null && request.getParameter("day")==null && request.getParameter("displaymode")==null && request.getParameter("dboperation")==null) {
         GregorianCalendar now=new GregorianCalendar();
         int nowYear = now.get(Calendar.YEAR);
@@ -111,11 +132,12 @@
 	        }
         }
         if (viewAll_bool){
-	        response.sendRedirect("./providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1");
+        	       	
+	        response.sendRedirect("./providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1" + router);
 	        return;
 	    }
 	    else{
-	    	response.sendRedirect("./providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=0");
+	    	response.sendRedirect("./providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday&viewall=0" + router);
 	        return;
 	    }
 	        
