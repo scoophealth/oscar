@@ -44,11 +44,19 @@
     String eChart$ = "_eChart$"+demographic$;
 
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart"
-	rights="r" reverse="<%=true%>">
-"You have no right to access this page!"
-<% response.sendRedirect("../noRights.html"); %>
+<%
+       boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_eChart");%>
 </security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="<%=eChart$%>"
 	rights="o" reverse="<%=false%>">

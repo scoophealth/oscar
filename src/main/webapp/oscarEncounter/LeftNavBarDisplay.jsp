@@ -24,6 +24,22 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_eChart");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
+
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page
 	import="oscar.oscarEncounter.pageUtil.NavBarDisplayDAO, oscar.util.*, java.util.ArrayList, java.util.Date, java.util.Calendar, java.io.IOException"%>
@@ -53,7 +69,6 @@
         //Do we have a '+' command to display on the right of the module header?
         String rh = dao.getRightHeadingID();
 		String rhid = dao.getRightHeadingID();
-		String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 		com.quatro.service.security.SecurityManager securityMgr = new com.quatro.service.security.SecurityManager();
 
 		if( !rh.equals("") && securityMgr.hasWriteAccess("_" + ((String)request.getAttribute("cmd")).toLowerCase(),roleName$)) {
