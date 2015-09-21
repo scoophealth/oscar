@@ -28,28 +28,31 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
 
 <%
-    if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-    //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+     //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
     String project = request.getContextPath();
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    String demographic_no = request.getParameter("demographic_no");
+   String demographic_no = request.getParameter("demographic_no");
     String providerNo = (String) session.getAttribute("user");
     String temp = "diab3";
 
     AllergyDao allergyDao = (AllergyDao)SpringUtils.getBean("allergyDao");
 %>
-<oscar:oscarPropertiesCheck property="SPEC3" value="yes">
-    <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
-        "You have no right to access this page!"
-        <%
-         LogAction.addLog((String) session.getAttribute("user"), LogConst.NORIGHT+LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
-        response.sendRedirect("../../noRights.html"); %>
-    </security:oscarSec>
-</oscar:oscarPropertiesCheck>
 
+<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../../securityError.jsp?type=_flowsheet");%>
+	 LogAction.addLog((String) session.getAttribute("user"), LogConst.NORIGHT+LogConst.READ, LogConst.CON_FLOWSHEET,  "diab3" , request.getRemoteAddr(),demographic_no);
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
 
 <%
 boolean dsProblems = false;
