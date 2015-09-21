@@ -30,7 +30,6 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     String demographic$ = request.getParameter("demographicNo") ;
     boolean bPrincipalControl = false;
@@ -38,11 +37,19 @@
     
     LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart"
-	rights="r" reverse="<%=true%>">
-"You have no right to access this page!"
-<% response.sendRedirect("../noRights.html"); %>
+
+<%
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_eChart");%>
 </security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
 
 <security:oscarSec roleName="<%=roleName$%>"
 	objectName='<%="_eChart$"+demographic$%>' rights="o"
