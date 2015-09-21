@@ -17,8 +17,6 @@
 	String demographic_no = request.getParameter("demographic_no");
 	String deepColor = "#CCCCFF", weakColor = "#EEEEFF";
 
-	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 	String country = request.getLocale().getCountry();
 	String orderByRequest = request.getParameter("orderby");
 	String orderBy = "";
@@ -38,6 +36,20 @@
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_lab" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_lab");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
 
 <html:html locale="true">
 
