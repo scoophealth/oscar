@@ -17,6 +17,20 @@
 <%@page import="oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
 <%@page import="org.oscarehr.common.dao.DocumentDao" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	  boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_lab" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_lab");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
 
 <html>
 <head>
