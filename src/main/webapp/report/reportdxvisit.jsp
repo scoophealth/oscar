@@ -1,3 +1,18 @@
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report,_admin.reporting" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../securityError.jsp?type=_report&type=_admin.reporting");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="org.oscarehr.common.dao.BillingDao"%>
 <%@page import="oscar.util.ConversionUtils"%>
 <%@page import="org.oscarehr.common.dao.DxresearchDAO"%>
