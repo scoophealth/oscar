@@ -32,6 +32,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarBilling.ca.bc.data.SupServiceCodeAssocDAO;
 
@@ -44,7 +45,7 @@ public class SupServiceCodeAssocAction
     SupServiceCodeAssocActionForm frm = (
         SupServiceCodeAssocActionForm) actionForm;
 
-    SupServiceCodeAssocDAO dao = new SupServiceCodeAssocDAO();
+    SupServiceCodeAssocDAO dao = SpringUtils.getBean(SupServiceCodeAssocDAO.class);
     ActionForward fwd = actionMapping.findForward("success");
     if (!SupServiceCodeAssocActionForm.MODE_VIEW.equals(frm.getActionMode())) {
       ActionMessages errors = frm.validate(actionMapping, servletRequest);

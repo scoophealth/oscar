@@ -37,6 +37,7 @@
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="oscar.oscarDemographic.data.*"%>
 <%@page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.entities.*"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
 <%!
   public void fillDxcodeList(BillingFormData.BillingService[] servicelist, Map dxcodeList) {
     for (int i = 0; i < servicelist.length; i++) {
@@ -94,7 +95,7 @@
   BillingFormData.Location[] billlocation = billform.getLocationList(bean.getBillRegion());
   BillingFormData.Diagnostic[] diaglist = billform.getDiagnosticList(bean.getBillForm(), bean.getBillRegion());
   BillingFormData.BillingForm[] billformlist = billform.getFormList();
-  SupServiceCodeAssocDAO supDao = new SupServiceCodeAssocDAO();
+  SupServiceCodeAssocDAO supDao = SpringUtils.getBean(SupServiceCodeAssocDAO.class);
   HashMap assocCodeMap = new HashMap();
   fillDxcodeList(billlist1, assocCodeMap);
   fillDxcodeList(billlist2, assocCodeMap);
