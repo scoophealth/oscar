@@ -367,7 +367,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 	public static EDoc getEDocFromDocId(String docId) {
 		String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.source, d.sourceFacility, d.responsible, d.program_id, "
                            + "d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, "
-                           + "d.docClass, d.docSubClass, d.reviewer, d.reviewdatetime, d.appointment_no " + "FROM document d, ctl_document c "
+                           + "d.docClass, d.docSubClass, d.reviewer, d.reviewdatetime, d.appointment_no, d.public1, d.docxml, d.number_of_pages " + "FROM document d, ctl_document c "
                            + "WHERE c.document_no=d.document_no AND c.document_no='" + docId + "'";
 		sql = sql + " ORDER BY " + EDocUtil.SORT_OBSERVATIONDATE;// default sort
 
