@@ -29,9 +29,6 @@
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
-<%
-  if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -44,6 +41,21 @@
 <%
     EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
     MeasurementMapConfig measurementMapConfig = new MeasurementMapConfig();
+%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_measurement" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../../securityError.jsp?type=_measurement");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
 %>
 
 <html:html locale="true">

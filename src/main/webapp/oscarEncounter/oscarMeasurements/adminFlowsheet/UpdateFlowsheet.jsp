@@ -23,6 +23,21 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../../../securityError.jsp?type=_flowsheet");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <% long startTime = System.currentTimeMillis(); %>
 <%@ page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
 <%@ page import="org.jdom.Element,oscar.oscarEncounter.oscarMeasurements.data.*,org.jdom.output.Format,org.jdom.output.XMLOutputter,oscar.oscarEncounter.oscarMeasurements.util.*,java.io.*" %>
@@ -37,11 +52,8 @@
 
 <%
     long startTimeToGetP = System.currentTimeMillis();
-    if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
     //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
- //TODO: MOVE THIS TO AN ACTION
+     //TODO: MOVE THIS TO AN ACTION
 WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
 MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();

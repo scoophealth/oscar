@@ -24,10 +24,6 @@
 
 --%>
 
-<%
-  if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-  String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -36,7 +32,22 @@
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.bean.*"%>
 <%@ page import="java.util.Vector"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../../securityError.jsp?type=_flowsheet");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 
 <%
     String demo = ((Integer) request.getAttribute("demographicNo")).toString();	

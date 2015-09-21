@@ -24,6 +24,22 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.measurements" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../../securityError.jsp?type=_admin.measurements");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
+
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -155,8 +171,8 @@ MeasurementMapConfig mmc = new MeasurementMapConfig();
 			</tr>
 			<tr>
 				<td colspan="2" class="Cell" align="center">NOTE: It
-				is suggested that you refer to approrpiate referece material to determine
-				correct loinc codes.
+				is suggested that you refer to appropriate reference material to determine
+				correct LOINC codes.
 				<span class="HelpAboutLogout"><oscar:help keywords="&Title=Measurements+Admin&portal_type%3Alist=Document" key="app.top1" style="color:blue; font-size:10px;font-style:normal;"/>&nbsp;
 				</span>
 				</td>
