@@ -68,12 +68,12 @@ public class UploadAction extends DispatchAction {
     }
 
 	public ActionForward addNew(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response)  {
+			HttpServletRequest request, HttpServletResponse response) {
 		return mapping.findForward("addNew");
 	}
 	
 	public ActionForward removeSelected(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response)  {
+			HttpServletRequest request, HttpServletResponse response) {
 		
 		List<UploadData> uploads = ActionUtils.getUploadList(request.getSession());
 		
@@ -99,7 +99,7 @@ public class UploadAction extends DispatchAction {
     }
 
 	public ActionForward uploadToMcedt(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response)  {
+			HttpServletRequest request, HttpServletResponse response) {
 		
 		List<UploadData> uploads = ActionUtils.getUploadList(request.getSession());
 		

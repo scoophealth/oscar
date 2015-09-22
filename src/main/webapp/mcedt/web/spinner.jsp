@@ -89,5 +89,5 @@ function HideSpin()
 <link href="<%=request.getContextPath() %>/css/bootstrap.min.css" rel="stylesheet">
     <div id="screen" class="screen"></div>
 <div id="spinner" class="spinner" style="display:none;">
-    <img id="img-spinner" src="<%=request.getContextPath() %>/mcedt/mailbox/img/spinner.gif" alt="Loading"/>
+    <img id="img-spinner" src="<%=request.getContextPath() %>/mcedt/web/img/spinner.gif" alt="Loading"/>
 </div>
