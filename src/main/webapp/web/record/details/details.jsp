@@ -466,6 +466,10 @@
 			<label><bean:message key="web.record.details.answer"/></label>
 			<input type="text" class="form-control form-control-details" title="<bean:message key="web.record.details.answerToSecurityQuestion"/>" placeholder="<bean:message key="web.record.details.answerToSecurityQuestion"/>" ng-model="page.demo.scrSecurityAnswer1" style="width:570px"/>
 		</div>
+		<div class="col-md-12">
+			<label><bean:message key="web.record.details.rxInteractionLevel"/></label>
+			<select class="form-control form-control-details" title="<bean:message key="web.record.details.rxInteractionLevel"/>" ng-model="page.demo.scrRxInteractionLevel" ng-options="r.value as r.name for r in page.rxInteractionLevels" />
+		</div>
 	</div>
 	</div>
 </div>
