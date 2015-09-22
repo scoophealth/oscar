@@ -94,10 +94,10 @@ public class TeleplanFileWriter {
     private void addToMarkBillingList(String billingNo){
         billingToBeMarkedAsBilled.add(billingNo);
     }
-    
+    /*
     private void increaseClaims(){
         totalClaims++;
-    }
+    }*/
 
     private void increaseClaims(int numClaims){
         totalClaims += numClaims;
@@ -307,7 +307,7 @@ public class TeleplanFileWriter {
            Claims claims = new Claims();
            claims.increaseClaims();
            claims.addToTotal(sb.getBillingAmountForFee1BigDecimal());
-           BillingmasterDAO masDAO = new BillingmasterDAO();
+           BillingmasterDAO masDAO = SpringUtils.getBean(BillingmasterDAO.class);
         
            List billMasterList = masDAO.getBillingMasterByBillingNo(billing_no);
            Billingmaster bm = (Billingmaster) billMasterList.get(0);
