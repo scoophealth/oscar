@@ -43,7 +43,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Update MCEDT Password</title>
 	<script src="../js/jquery-1.7.1.min.js"></script>
-	<link href="mailbox/css/mcedt.css" rel="stylesheet" type="text/css">
+	<link href="web/css/kai_mcedt.css" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,900" rel="stylesheet" type="text/css">
 	
 	<script type="text/javascript" charset="utf-8">
@@ -107,7 +107,7 @@
 </head>
 <body>
 	<!-- <div class="show">
-   		<img class="logo" src="mailbox/img/kai.png"/>
+   		<img class="logo" src="web/img/kai.png"/>
    </div> -->
 	<div class="greyBox">    
 		<div class="center">

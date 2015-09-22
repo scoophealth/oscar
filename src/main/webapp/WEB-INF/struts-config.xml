@@ -582,13 +582,13 @@
 		
 		<form-bean name="mcedtUpdateForm" type="org.oscarehr.integration.mcedt.UpdateForm" />
 		
-		<form-bean name="mcedtDownloadForm" type="org.oscarehr.integration.mcedt.mailbox.DownloadForm" />
+		<form-bean name="mcedtDownloadForm" type="org.oscarehr.integration.mcedt.web.DownloadForm" />		
 		
-		<form-bean name="kaiedtUploadForm" type="org.oscarehr.integration.mcedt.mailbox.UploadForm" />
+		<form-bean name="kaiedtUploadForm" type="org.oscarehr.integration.mcedt.web.UploadForm" />
 		
-		<form-bean name="kaiedtAutoUploadForm" type="org.oscarehr.integration.mcedt.mailbox.UploadForm" />
-		
-		<form-bean name="mcedtDownloadForm" type="org.oscarehr.integration.mcedt.mailbox.DownloadForm" />
+		<form-bean name="kaiedtAutoUploadForm" type="org.oscarehr.integration.mcedt.web.UploadForm" />
+				
+		<form-bean name="mcedtDownloadForm" type="org.oscarehr.integration.mcedt.web.DownloadForm" />
 
         <form-bean name="ValidateSwipeCard" type="org.oscarehr.integration.mchcv.ValidateSwipeCard" />
         <form-bean name="bpmh" type="oscar.form.pharmaForms.formBPMH.bean.BpmhFormBean" />
@@ -2745,58 +2745,58 @@
 			<forward name="info" path="/mcedt/info.jsp" />
 		</action>
 		
-		<action path="/mcedt/kaimcedt" type="org.oscarehr.integration.mcedt.mailbox.ResourceAction" name="mcedtResourceForm" parameter="method">			
-			<forward name="success" path="/mcedt/mailbox/index.jsp" />
-			<!-- <forward name="download" path="/mcedt/mailbox/download.jsp" /> -->
-			<forward name="successUserDownload" path="/mcedt/mailbox/index.jsp?tab=download" />
-			<forward name="failUserDownload" path="/mcedt/mailbox/index.jsp?tab=download" />	
-			<forward name="successUserSent" path="/mcedt/mailbox/index.jsp?tab=sent" />		
+		<action path="/mcedt/kaimcedt" type="org.oscarehr.integration.mcedt.web.ResourceAction" name="mcedtResourceForm" parameter="method">			
+			<forward name="success" path="/mcedt/web/index.jsp" />
+			<!-- <forward name="download" path="/mcedt/web/download.jsp" /> -->
+			<forward name="successUserDownload" path="/mcedt/web/index.jsp?tab=download&amp;tabChange=true" />
+			<forward name="failUserDownload" path="/mcedt/web/index.jsp?tab=download" />	
+			<forward name="successUserSent" path="/mcedt/web/index.jsp?tab=sent&amp;tabChange=true" />		
 		</action>
-		<action path="/mcedt/openAutoUpload" type="org.oscarehr.integration.mcedt.mailbox.ResourceAction" name="kaiedtHomeForm" parameter="method">			
-			<forward name="success" path="/mcedt/mailbox/autoUpload.jsp" />
+		<action path="/mcedt/openAutoUpload" type="org.oscarehr.integration.mcedt.web.ResourceAction" name="kaiedtHomeForm" parameter="method">			
+			<forward name="success" path="/mcedt/web/autoUpload.jsp" />
 		</action>
-		<action path="/mcedt/autoUpload" input="/mcedt/mailbox/autoUpload.jsp" type="org.oscarehr.integration.mcedt.mailbox.UploadAction" name="kaiedtAutoUploadForm" parameter="method" validate="false" >			
-			<forward name="success" path="/mcedt/mailbox/autoUpload.jsp" />
-			<forward name="failure" path="/mcedt/mailbox/autoUpload.jsp?connection=failed" />
+		<action path="/mcedt/autoUpload" input="/mcedt/web/autoUpload.jsp" type="org.oscarehr.integration.mcedt.web.UploadAction" name="kaiedtAutoUploadForm" parameter="method" validate="false" >			
+			<forward name="success" path="/mcedt/web/autoUpload.jsp" />
+			<forward name="failure" path="/mcedt/web/autoUpload.jsp?connection=failed" />
 			<forward name="cancel" path="/mcedt/kaimcedt.do" redirect="true" />
 		</action>
 		
-		<action path="/mcedt/upload" input="/mcedt/mailbox/upload.jsp" type="org.oscarehr.integration.mcedt.mailbox.UploadAction" name="kaiedtAutoUploadForm" parameter="method" validate="false" >			
-			<forward name="success" path="/mcedt/mailbox/index.jsp?tab=upload" />
+		<action path="/mcedt/upload" input="/mcedt/web/upload.jsp" type="org.oscarehr.integration.mcedt.web.UploadAction" name="kaiedtAutoUploadForm" parameter="method" validate="false" >			
+			<forward name="success" path="/mcedt/web/index.jsp?tab=upload" />
 			<forward name="cancel" path="/mcedt/kaimcedt.do" redirect="true" />
 		</action>
 		
-		<action path="/mcedt/addUpload" input="/mcedt/mailbox/addUpload.jsp" type="org.oscarehr.integration.mcedt.mailbox.UploadAction" name="kaiedtAutoUploadForm" parameter="method" validate="false" >			
-			<forward name="success" path="/mcedt/mailbox/index.jsp?tab=upload" />
-			<forward name="failure" path="/mcedt/mailbox/addUpload.jsp" />
+		<action path="/mcedt/addUpload" input="/mcedt/web/addUpload.jsp" type="org.oscarehr.integration.mcedt.web.UploadAction" name="kaiedtAutoUploadForm" parameter="method" validate="false" >			
+			<forward name="success" path="/mcedt/web/index.jsp?tab=upload" />
+			<forward name="failure" path="/mcedt/web/addUpload.jsp" />
 			<forward name="cancel" path="/mcedt/kaimcedt.do" redirect="true" />
 		</action>
 		
-		<action path="/mcedt/kaichpass" type="org.oscarehr.integration.mcedt.mailbox.UserAction" name="loginForm" parameter="method">			
-			<forward name="success" path="/mcedt/mailbox/changepass.jsp" />
+		<action path="/mcedt/kaichpass" type="org.oscarehr.integration.mcedt.web.UserAction" name="loginForm" parameter="method">			
+			<forward name="success" path="/mcedt/web/changepass.jsp" />
 			<forward name="cancel" path="/mcedt/kaimcedt.do" redirect="true" />
 		</action>
 		
-		<action path="/mcedt/kaiautodl" type="org.oscarehr.integration.mcedt.mailbox.DownloadAction" name="mcedtDownloadForm" parameter="method">			
-			<forward name="success" path="/mcedt/mailbox/autoDownload.jsp" />
+		<action path="/mcedt/kaiautodl" type="org.oscarehr.integration.mcedt.web.DownloadAction" name="mcedtDownloadForm" parameter="method">			
+			<forward name="success" path="/mcedt/web/autoDownload.jsp" />
 			<forward name="cancel" path="/mcedt/kaimcedt.do" redirect="true" />			
-			<!-- <forward name="successUserDownload" path="/mcedt/mailbox/index.jsp?tab=download" />
-			<forward name="failUserDownload" path="/mcedt/mailbox/index.jsp?tab=download" /> -->
+			<!-- <forward name="successUserDownload" path="/mcedt/kai/index.jsp?tab=download" />
+			<forward name="failUserDownload" path="/mcedt/kai/index.jsp?tab=download" /> -->
 		</action>
 		
-		<action path="/mcedt/download" type="org.oscarehr.integration.mcedt.mailbox.DownloadAction" name="mcedtDownloadForm" parameter="method">							
-			<forward name="success" path="/mcedt/mailbox/index.jsp?tab=download" />
-			<forward name="error" path="/mcedt/mailbox/index.jsp?tab=download" />
+		<action path="/mcedt/download" type="org.oscarehr.integration.mcedt.web.DownloadAction" name="mcedtDownloadForm" parameter="method">							
+			<forward name="success" path="/mcedt/web/index.jsp?tab=download" />
+			<forward name="error" path="/mcedt/web/index.jsp?tab=download" />
 		</action>
 		
-		<action path="/mcedt/resourceInfo" type="org.oscarehr.integration.mcedt.mailbox.InfoAction" name="mcedtResourceForm" parameter="method">
+		<action path="/mcedt/resourceInfo" type="org.oscarehr.integration.mcedt.web.InfoAction" name="mcedtResourceForm" parameter="method">
 			<!-- <forward name="info" path="/mcedt/info.jsp" /> -->
-			<forward name="success" path="/mcedt/mailbox/index.jsp?tab=sent" />
+			<forward name="success" path="/mcedt/web/index.jsp?tab=sent" />
 		</action>				
 		
-		<action path="/mcedt/reSubmit" type="org.oscarehr.integration.mcedt.mailbox.ReSubmitAction" name="mcedtResourceForm" parameter="method">
+		<action path="/mcedt/reSubmit" type="org.oscarehr.integration.mcedt.web.ReSubmitAction" name="mcedtResourceForm" parameter="method">
 			<!-- <forward name="info" path="/mcedt/info.jsp" /> -->
-			<forward name="success" path="/mcedt/mailbox/index.jsp?tab=sent" />
+			<forward name="success" path="/mcedt/web/index.jsp?tab=sent" />
 		</action>
 		
 		<action path="/mcedt/uploads" type="org.oscarehr.integration.mcedt.UploadAction" name="mcedtUploadForm" parameter="method">

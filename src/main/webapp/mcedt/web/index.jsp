@@ -34,31 +34,40 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page import="java.util.*,org.oscarehr.integration.mcedt.web.ActionUtils" %>
+
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title>MCEDT</title>
-    <link href="mailbox/css/mcedt.css" rel="stylesheet" type="text/css">
+    <link href="web/css/kai_mcedt.css" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,900" rel="stylesheet" type="text/css">
 	
-	<% String tab = ((request.getParameter("tab")==null ||request.getParameter("tab").equals(""))?"first":request.getParameter("tab")); %>
+	<% String tab = ((request.getParameter("tab")==null ||request.getParameter("tab").equals(""))?"first":request.getParameter("tab"));
+		String tabChange = ((request.getParameter("tabChange")==null)?"":request.getParameter("tabChange"));
+		List<String> serviceIds=ActionUtils.getServiceIds();
+		request.setAttribute("serviceIds", serviceIds);
+		String defaultId=ActionUtils.getDefaultServiceId();
+		request.setAttribute("defaultId", defaultId);
+		%>
 	
 	<script src="<%= request.getContextPath() %>/js/jquery-1.7.1.min.js"></script> 
 	<script type="text/javascript" charset="utf-8">
 		$(function () {
 			var tabContainers = $('div.tabs > div');
 			var tab = '<%=tab %>';
-			if (tab == 'download') tabContainers.hide().filter('#download').show();
-			else if (tab == 'upload') tabContainers.hide().filter('#upload').show();
-			else if (tab == 'sent') tabContainers.hide().filter('#sent').show();
-			else tabContainers.hide().filter('#first').show();
+			//if (tab == 'download') tabContainers.hide().filter('#download').show();
+			//else if (tab == 'upload') tabContainers.hide().filter('#upload').show();
+			//else if (tab == 'sent') tabContainers.hide().filter('#sent').show();
+			//else tabContainers.hide().filter('#first').show();
 			
 			$('div.tabs ul.tabNavigation a').click(function () {
 				tabContainers.hide();
 				tabContainers.filter(this.hash).show();
 				$('div.tabs ul.tabNavigation a').removeClass('selected');
 				$(this).addClass('selected');
+				
 				if(this.hash=="#download")
 		           {					  
 					ShowSpin(true);
@@ -81,6 +90,28 @@
 				
 				return false;
 			});
+			
+			// setting the service Id:
+			var tabChange = '<%=tabChange%>';
+			if (tabChange == "true") {
+				var val = "<%=defaultId%>";
+			    var sel = document.getElementById('serviceIdSent');
+			    var opts = sel.options;
+			    for(var opt, j = 0; opt = opts[j]; j++) {
+			        if(opt.value == val) {
+			            sel.selectedIndex = j;
+			            break;
+			        }
+			    }
+			    var sel = document.getElementById('serviceId');
+			    var opts = sel.options;
+			    for(var opt, j = 0; opt = opts[j]; j++) {
+			        if(opt.value == val) {
+			            sel.selectedIndex = j;
+			            break;
+			        }
+			    }
+			}
 		});
 		
 		function userDownload() {			
@@ -151,16 +182,16 @@
     <div class="tabs">
         <div id="tabWrapper" class="show tabWrapper">
 	        <ul class="tabNavigation">
-	            <li><a href='tabs.html#first' <%=((tab==null ||tab.equals("first"))?"class='selected'":"") %> >Menu</a></li>
-            <li><a href='tabs.html#upload' <%=((tab.equals("upload"))?"class='selected'":"") %> >Upload</a></li>
-            <li><a href='tabs.html#sent' <%=((tab.equals("sent"))?"class='selected'":"") %> >Sent</a></li>
-            <li><a href='tabs.html#download' <%=((tab.equals("download"))?"class='selected'":"") %>>Download</a></li>
+	            <li><a href='#first' <%=((tab==null ||tab.equals("first"))?"class='selected'":"") %> >Menu</a></li>
+            <li><a href='#upload' <%=((tab.equals("upload"))?"class='selected'":"") %> >Upload</a></li>
+            <li><a href='#sent' <%=((tab.equals("sent"))?"class='selected'":"") %> >Sent</a></li>
+            <li><a href='#download' <%=((tab.equals("download"))?"class='selected'":"") %>>Download</a></li>
         </ul>
 	    </div>
 	    <!-- <div class="show">
-	    	<img class="logo" src="mailbox/img/kai.png"/>
+	    	<img class="logo" src="web/img/kai.png"/>
 	    </div> -->
-        <div id="first" class="greyBox">    
+        <div id="first" class="greyBox" <%=((tab==null ||tab.equals("first"))?"style='display:block;'":"style='display:none;'") %> >    
 	        <div class="center">    
 	            <html:form action="/mcedt/kaimcedt" method="post" styleId="form">
 					<table>
@@ -174,10 +205,10 @@
 						        
 						        <div class="navbar" style="width: 30%; float: right;">
 						        	<p class="greenText bold capital font14" style="margin-top:5px;">Other Tools</p>
-									<div class="navbar-inner" style="vertical-align: middle !important;">
+									<div style="vertical-align: middle !important;">
 										<button type="button" class="flatLink black font12 bottomMargin20" onclick="return changePass();">Change Password</button>
 									</div>
-									<div class="navbar-inner" style="vertical-align: middle !important;">	
+									<div style="vertical-align: middle !important;">	
 										<button class="flatLink black font12" onclick="return deleteSelected(this);" disabled>Check Connection</button>
 									</div>
 								</div>
@@ -186,13 +217,13 @@
 						
 						<tr>
 							<div class="navbar">
-								<div class="navbar-inner" style="vertical-align: middle !important; width: 65%; float: left;">
+								<div style="vertical-align: middle !important; width: 65%; float: left;">
 									<button class="green flatLink font14" style="width:45%; padding:20px; margin-right:2%;"onclick="this.disabled=true;ShowSpin(true); return autoDownload();">
-										<img src="mailbox/img/download.png" style="float:left;"/>
+										<img src="web/img/download.png" style="float:left;"/>
 										Download new files (EDT  >>  Oscar)
 									</button>	
 									<button class="green flatLink font14" style="width:45%; padding:20px;" onclick="return submitSelected(this);">
-										<img src="mailbox/img/upload.png" style="float:left;"/>
+										<img src="web/img/upload.png" style="float:left;"/>
 										Upload new files (Oscar  >>  EDT)
 									</button>
 								</div>
@@ -202,27 +233,25 @@
 				</html:form>
 			</div>
         </div>
-        <div id="upload" class="greyBox">
+        <div id="upload" class="greyBox" <%=((tab.equals("upload"))?"style='display:block;'":"style='display:none;'") %> >
 			<div class="center">
 	            <h1>Upload</h1>
 	            <p><jsp:include page="upload.jsp" flush="true"/></p>
 	    	</div>
         </div>
-        <div id="sent" class="greyBox">
+        <div id="sent" class="greyBox" <%=((tab.equals("sent"))?"style='display:block;'":"style='display:none;'") %> >
 			<div class="center">
 	            <h1>Sent Items</h1>
 	            <p><jsp:include page="sent.jsp" flush="true"/></p>
         	</div>
         </div>
-        <div id="download" class="greyBox">
+        <div id="download" class="greyBox" <%=((tab.equals("download"))?"style='display:block;'":"style='display:none;'") %> >
 			<div class="center">
 	            <h1>Download</h1>
 	            <p><jsp:include page="download.jsp" flush="true"/></p>
         	</div>
         </div>
     </div>
-    
-    
 	<!-- <div class="waste"></div> -->
   </body>
 </html>
