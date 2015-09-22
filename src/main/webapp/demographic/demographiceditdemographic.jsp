@@ -3554,7 +3554,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(oscarVariables.getProperty("demographicExtJScript")); }
 %>
 
-<%--
+
 <tr valign="top">
 <td nowrap colspan="4">
 <b><bean:message key="demographic.demographiceditdemographic.rxInteractionWarningLevel" /></b>
@@ -3582,7 +3582,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 					</oscar:oscarPropertiesCheck>
 
 </td>
-</tr> --%>
+</tr> 
 <%-- PATIENT NOTES MODULE --%>		
 							<tr valign="top">
 								<td nowrap colspan="4">
