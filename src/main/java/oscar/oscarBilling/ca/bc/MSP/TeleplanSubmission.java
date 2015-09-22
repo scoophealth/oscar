@@ -165,7 +165,7 @@ public class TeleplanSubmission {
     
         
         
-        BillingmasterDAO billingmaster = new BillingmasterDAO();
+        BillingmasterDAO billingmaster = SpringUtils.getBean(BillingmasterDAO.class);
         billingmaster.markListAsBilled(billingmasterToBeMarkedAsBilled);
         
         markListAsBilled(billingToBeMarkedAsBilled);
