@@ -56,6 +56,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	page.spokenlangs = staticDataService.getSpokenLanguages();
 	page.rosterTermReasons = staticDataService.getRosterTerminationReasons();
 	page.securityQuestions = staticDataService.getSecurityQuestions();
+	page.rxInteractionLevels = staticDataService.getRxInteractionLevels();
 	
 	//get patient detail status
 	patientDetailStatusService.getStatus(demo.demographicNo).then(function(data){
@@ -87,6 +88,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		page.billingHistoryLabel = "Invoice List";
 		if (page.billregion=="ON") page.billingHistoryLabel = "Billing History";
 	});
+
 
 	//show notes
 	if (demo.notes!=null) {
@@ -125,6 +127,8 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			else if (demo.extras[i].key=="informedConsent") demo.scrInformedConsent = demo.extras[i].value;
 			else if (demo.extras[i].key=="securityQuestion1") demo.scrSecurityQuestion1 = demo.extras[i].value;
 			else if (demo.extras[i].key=="securityAnswer1") demo.scrSecurityAnswer1 = demo.extras[i].value;
+			else if (demo.extras[i].key=="rxInteractionWarningLevel") demo.scrRxInteractionLevel = demo.extras[i].value;
+
 			
 			//record array position of extras by keys - to be used on saving
 			posExtras[demo.extras[i].key] = i;
@@ -993,6 +997,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		newDemoExtras = updateDemoExtras("informedConsent", demo.scrInformedConsent, posExtras, demo.extras, newDemoExtras);
 		newDemoExtras = updateDemoExtras("securityQuestion1", demo.scrSecurityQuestion1, posExtras, demo.extras, newDemoExtras);
 		newDemoExtras = updateDemoExtras("securityAnswer1", demo.scrSecurityAnswer1, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("rxInteractionWarningLevel", demo.scrRxInteractionLevel, posExtras, demo.extras, newDemoExtras);
 		demo.extras = newDemoExtras;
 		
 		//save to database
