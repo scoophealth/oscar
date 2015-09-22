@@ -589,9 +589,10 @@ public class MDSHandler implements MessageHandler {
         }
     }
 
+    //should be from the 1st OBR always.
     public String getServiceDate(){
         try{
-            Date mshDate = UtilDateUtilities.StringToDate(getMsgDate(), "yyyy-MM-dd hh:mm:ss");
+        	Date mshDate = UtilDateUtilities.StringToDate(getRequestDate(0), "yyyy-MM-dd hh:mm:ss");
             return( UtilDateUtilities.DateToString(mshDate, "dd-MMM-yyyy") );
         }catch(Exception e){
             return("");
