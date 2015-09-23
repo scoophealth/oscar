@@ -31,6 +31,7 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.util.MiscUtils;
 
 @SuppressWarnings("unchecked")
 public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
@@ -69,7 +70,9 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
 
         
         public List<ConsultationRequest> getConsults(String team, boolean showCompleted, Date startDate, Date endDate, String orderby, String desc, String searchDate, Integer offset, Integer limit) {
-            StringBuilder sql = new StringBuilder("select cr from ConsultationRequest cr left outer join cr.professionalSpecialist specialist, ConsultationServices service, Demographic d left outer join d.provider p where d.DemographicNo = cr.demographicId and service.id = cr.serviceId ");
+        	MiscUtils.getLogger().error("getConsults(bunch)-----------------------------------------------"); 
+        	
+        	StringBuilder sql = new StringBuilder("select cr from ConsultationRequest cr left outer join cr.professionalSpecialist specialist, ConsultationServices service, Demographic d left outer join d.provider p where d.DemographicNo = cr.demographicId and service.id = cr.serviceId ");
 
             if( !showCompleted ) {
                sql.append("and cr.status != 4 ");
@@ -96,20 +99,21 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
             }
 
             String orderDesc = desc != null && desc.equals("1") ? "DESC" : "";
+            String service = ", service.serviceDesc";
             if (orderby == null){
                 sql.append("order by cr.referralDate desc ");
             }else if(orderby.equals("1")){               //1 = msgStatus
-                sql.append("order by cr.status " + orderDesc);
+                sql.append("order by cr.status " + orderDesc + service);
              }else if(orderby.equals("2")){               //2 = msgTeam
-                sql.append("order by cr.sendTo " + orderDesc);
+                sql.append("order by cr.sendTo " + orderDesc + service);
             }else if(orderby.equals("3")){               //3 = msgPatient
-                sql.append("order by d.LastName " + orderDesc);
+                sql.append("order by d.LastName " + orderDesc + service);
             }else if(orderby.equals("4")){               //4 = msgProvider
-                sql.append("order by p.LastName " + orderDesc);
+                sql.append("order by p.LastName " + orderDesc + service);
             }else if(orderby.equals("5")){               //5 = msgService Desc
                 sql.append("order by service.serviceDesc " + orderDesc);
             }else if(orderby.equals("6")){               //6 = msgSpecialist Name
-                sql.append("order by specialist.lastName " + orderDesc);
+                sql.append("order by specialist.lastName " + orderDesc + service);
             }else if(orderby.equals("7")){               //7 = msgRefDate
                 sql.append("order by cr.referralDate " + orderDesc);
             }else if(orderby.equals("8")){               //8 = Appointment Date
@@ -119,6 +123,7 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
             }else{
                 sql.append("order by cr.referralDate desc");
             }
+            
 
             Query query = entityManager.createQuery(sql.toString());
             query.setFirstResult(offset!=null?offset:0);
