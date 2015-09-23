@@ -337,7 +337,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		logger.debug("Get admission " + String.valueOf(current - start));
 		start = current;
 
-		if (admission != null) {
+		if (admission != null && admission.getTeamId() != null) {
 			logger.debug("Get teams");
 			List<ProgramTeam> teams = programMgr.getProgramTeams(programId);
 			current = System.currentTimeMillis();
