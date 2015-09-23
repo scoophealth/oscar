@@ -385,7 +385,13 @@ public class TDISHandler implements MessageHandler {
 
 	private boolean isReport(int i, int j) {
 		String obxName = getOBXName(i, j, true);
-		return obxName.indexOf("REPORT") != -1;
+
+		//Get the Sending Facility ID and Value Type - some of the HL7 Message of TDIS does not have the value 'REPORT' in Observation Identifier 
+		String sendindFacility = getString(msg.getMSH().getSendingFacility().getNamespaceID().getValue());
+		String valueType = getOBXValueType(i,j);
+		
+		return ((sendindFacility.equalsIgnoreCase("MLM") && valueType.equals("TX"))
+				|| (obxName.indexOf("REPORT") != -1)); 
 	}
 
 	public String getOBXResult(int i, int j) {
