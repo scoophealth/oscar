@@ -281,6 +281,7 @@
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "usSigned", request.getParameter("usSigned"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "privacyConsent", request.getParameter("privacyConsent"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "informedConsent", request.getParameter("informedConsent"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "IPHISClientNumber", request.getParameter("IPHISClientNumber"),"");
        //for the IBD clinic
 		OtherIdManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
 
