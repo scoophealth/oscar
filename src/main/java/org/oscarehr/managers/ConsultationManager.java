@@ -64,6 +64,7 @@ import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Property;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.consultations.ConsultationRequestSearchFilter;
+import org.oscarehr.consultations.ConsultationRequestSearchFilter.SORTDIR;
 import org.oscarehr.consultations.ConsultationResponseSearchFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.to.model.ConsultationRequestSearchResult;
@@ -147,6 +148,28 @@ public class ConsultationManager {
 	
 	public int getConsultationCount(ConsultationResponseSearchFilter filter) {
 		return consultationResponseDao.getConsultationCount(filter);
+	}
+	
+	public boolean hasOutstandingConsultations(LoggedInInfo loggedInInfo, Integer demographicNo) {
+		//Outstanding consultations = Incomplete consultation requests > 1 month
+		ConsultationRequestSearchFilter filter = new ConsultationRequestSearchFilter();
+		filter.setDemographicNo(demographicNo);
+		filter.setNumToReturn(100);
+		filter.setSortDir(SORTDIR.asc);
+		
+		List<ConsultationRequestSearchResult> results = search(loggedInInfo, filter);
+		boolean outstanding = false;
+		for (ConsultationRequestSearchResult result : results) {
+			if (result.getReferralDate()!=null) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(result.getReferralDate());
+				cal.roll(Calendar.MONTH, true);
+				if (new Date().after(cal.getTime())) {
+					outstanding = true; break;
+				}
+			}
+		}
+		return outstanding;
 	}
 	
 	public ConsultationRequest getRequest(LoggedInInfo loggedInInfo, Integer id) {
