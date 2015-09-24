@@ -162,22 +162,26 @@ public class RecordUxService extends AbstractServiceImpl {
 		}
 		
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.consultations", "r", null)) {
+			
+			//add notification if patient has outstanding consultation requests (incomplete requests > 1 month)
+			String outstanding = consultationManager.hasOutstandingConsultations(loggedInInfo, demographicNo)? "outstanding" : null;
+			
 			if (!consultationManager.isConsultRequestEnabled() && consultationManager.isConsultResponseEnabled()) {
-				menulist.add(new MenuItemTo1(idCounter++, "Consultation Responses", "record.consultResponses", demographicNo.toString()));
+				menulist.add(new MenuItemTo1(idCounter++, "Consultation Responses", "record.consultResponses."+demographicNo, null));
 			}
 			else if (consultationManager.isConsultRequestEnabled() && consultationManager.isConsultResponseEnabled()) {
-				MenuItemTo1 consultMenu = new MenuItemTo1(idCounter++, "Consultations", null);
+				MenuItemTo1 consultMenu = new MenuItemTo1(idCounter++, "Consultations", null, outstanding);
 				consultMenu.setDropdown(true);
 				
 				List<MenuItemTo1> consultList = new ArrayList<MenuItemTo1>();
-				consultList.add(new MenuItemTo1(idCounter++, "Consultation Requests", "record.consultRequests", demographicNo.toString()));
-				consultList.add(new MenuItemTo1(idCounter++, "Consultation Responses", "record.consultResponses", demographicNo.toString()));
+				consultList.add(new MenuItemTo1(idCounter++, "Consultation Requests", "record.consultRequests."+demographicNo, outstanding));
+				consultList.add(new MenuItemTo1(idCounter++, "Consultation Responses", "record.consultResponses."+demographicNo, null));
 				consultMenu.setDropdownItems(consultList);
 				
 				menulist.add(consultMenu);
 			}
 			else {
-				menulist.add(new MenuItemTo1(idCounter++, "Consultations", "record.consultRequests", demographicNo.toString()));
+				menulist.add(new MenuItemTo1(idCounter++, "Consultations", "record.consultRequests."+demographicNo, outstanding));
 			}
 		}
 		//END PHR
