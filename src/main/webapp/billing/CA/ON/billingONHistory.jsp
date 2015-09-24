@@ -43,6 +43,15 @@
 <%@page import="org.oscarehr.common.dao.BillingONExtDao" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 
+<%@page import="org.oscarehr.common.dao.BillingONPaymentDao" %>
+<%@page import="org.oscarehr.common.model.BillingONPayment" %>
+<%@page import="org.oscarehr.common.dao.BillingONCHeader1Dao" %>
+<%@page import="org.oscarehr.common.model.BillingONCHeader1" %>
+<%
+	BillingONPaymentDao billingOnPaymentDao = SpringUtils.getBean(BillingONPaymentDao.class);
+	BillingONCHeader1Dao bCh1Dao = SpringUtils.getBean(BillingONCHeader1Dao.class);	
+%>
+
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -127,11 +136,22 @@ for(int i=0; i<aL.size(); i=i+2) {
 	BigDecimal balance = new BigDecimal("0.00");
 	if("PAT".equals(strBillType)||"PAT Settled".equals(strBillType)){
 		int billingNo = Integer.parseInt(obj.getId());
-		BigDecimal payment = billingOnExtDao.getAccountVal(billingNo, billingOnExtDao.KEY_PAYMENT);
-		BigDecimal discount = billingOnExtDao.getAccountVal(billingNo, billingOnExtDao.KEY_DISCOUNT);
-		BigDecimal total = new BigDecimal(obj.getTotal()).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigDecimal credit = billingOnExtDao.getAccountVal(billingNo, billingOnExtDao.KEY_CREDIT);
-		balance = total.subtract(payment).subtract(discount).add(credit);
+		BillingONCHeader1 bCh1 = bCh1Dao.find(billingNo);
+		
+		BigDecimal total = bCh1.getTotal();
+		BigDecimal sumOfPay = BigDecimal.ZERO;
+		BigDecimal sumOfDiscount = BigDecimal.ZERO;
+		BigDecimal sumOfRefund = BigDecimal.ZERO;
+		BigDecimal sumOfCredit = BigDecimal.ZERO;
+		
+		for(BillingONPayment payment:billingOnPaymentDao.find3rdPartyPaymentsByBillingNo(billingNo)) {
+			sumOfPay = sumOfPay.add(payment.getTotal_payment());
+			sumOfDiscount = sumOfDiscount.add(payment.getTotal_discount());
+			sumOfRefund = sumOfRefund.add(payment.getTotal_refund());
+			sumOfCredit = sumOfCredit.add(payment.getTotal_credit());
+		}
+		
+		balance = total.subtract(sumOfPay).subtract(sumOfDiscount).add(sumOfCredit);
 	}
 	
 	String invoiceLabel = "View";
