@@ -42,9 +42,7 @@ public class MenuItemTo1 implements Serializable {
     private Boolean dropdown = false;
     
     
-    public MenuItemTo1(){
-    	
-    }
+    public MenuItemTo1(){}
     
     public MenuItemTo1(Integer id, String label, String url){
     	this.id = id;
