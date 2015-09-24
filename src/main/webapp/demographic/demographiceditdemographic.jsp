@@ -178,8 +178,10 @@
 	String usSigned = StringUtils.defaultString(apptMainBean.getString(demoExt.get("usSigned")));
     String privacyConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("privacyConsent")), "");
 	String informedConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("informedConsent")), "");
-	
+	String IPHISClientNumber = StringUtils.defaultString(apptMainBean.getString(demoExt.get("IPHISClientNumber")),"");	
+
 	boolean showConsentsThisTime = false;
+	boolean showIPHIS = false;
 	
     GregorianCalendar now=new GregorianCalendar();
     int curYear = now.get(Calendar.YEAR);
@@ -1416,9 +1418,47 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 						</ul>
 						</div>
 
+
+						
+<%-- TOGGLE PUBLIC HEALTH IDS --%>
+<%if(OscarProperties.getInstance().isPropertyActive("PublicHealthIDsEnabled")) {
+%>
+			<div class="demographicSection" id="PublicHealthIDs">
+				<h3><bean:message key="demographic.demographiceditdemographic.PublicHealthID"/></h3>
+<%
+	String[] iphisPrograms = OscarProperties.getInstance().getProperty("IPHISid","").split(",");
+	ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+	
+	if(pp!=null){
+		for(int x=0;x<iphisPrograms.length;x++){
+			if(iphisPrograms[x].equals(pp.getProgramId().toString())) {
+				showIPHIS=true;
+			}
+		}
+	}
+
+	if(showIPHIS) {
+%>
+				<ul>
+			        	<li><span class="label">
+		                        <bean:message key="demographic.demographiceditdemographic.IPHIS"/>:</span>
+
+					<span class="info"><%=IPHISClientNumber%></span></li>
+				</ul>
+				
+	<%}else{%>
+		<span class="label">N/A</span>
+	<%}%>
+	</div>
+<%}%>
+<%-- END TOGGLE PUBLIC HEALTH IDS --%>
+
 <%-- TOGGLE NEW CONTACTS UI --%>
 <%if(!OscarProperties.getInstance().isPropertyActive("NEW_CONTACTS_UI")) { %>
+					
 						
+
+	
 						<div class="demographicSection" id="otherContacts">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgOtherContacts"/>: <b><a
 							href="javascript: function myFunction() {return false; }"
@@ -1608,11 +1648,11 @@ if ( Dead.equals(PatStat) ) {%>
 <oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">
 						<%
 							String[] privateConsentPrograms = OscarProperties.getInstance().getProperty("privateConsentPrograms","").split(",");
-							ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+							ProgramProvider pp2 = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
 		
-							if(pp != null) {
+							if(pp2 != null) {
 								for(int x=0;x<privateConsentPrograms.length;x++) {
-									if(privateConsentPrograms[x].equals(pp.getProgramId().toString())) {
+									if(privateConsentPrograms[x].equals(pp2.getProgramId().toString())) {
 										showConsentsThisTime=true;
 									}
 								}
@@ -2947,7 +2987,11 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 											<bean:message key="schedule.scheduletemplateapplying.msgDateFormat"/>
 										
 									<input type="hidden" name="paper_chart_archived_program" id="paper_chart_archived_program" value="<%=paperChartIndicatorProgram%>"/>
+			
                                 </td>
+
+								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.IPHIS" />:</b></td>
+								<td align="left"><input type="text" name="IPHISClientNumber" size="30" value="<%=IPHISClientNumber%>"></td>
 							</tr>
 							<%-- 
 						THE "PATIENT JOINED DATE" ROW HAS NOT BEEN ADDED TWICE IN ERROR 
