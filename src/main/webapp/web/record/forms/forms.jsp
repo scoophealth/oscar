@@ -51,7 +51,8 @@
 	  	   <input type="search" class="form-control" placeholder="Filter" ng-model="filterFormsQ">
 	  	   <ul class="list-group" tabindex="0" ng-keypress="keypress($event)">
    				<li class="list-group-item" ng-repeat="item in page.currentFormList[page.currentlistId] | filter:filterFormsQ" ng-class="getActiveFormClass(item)">
-   					<input type="checkbox" ng-model="item.isChecked"/> <a class="list-group-item-text hand-hover" ng-click="viewFormState(item)" ><span  ng-show="item.date" class="pull-right">{{item.date | date : 'd-MMM-y'}}</span>{{item.name}}</a>
+   					<input type="checkbox" ng-model="item.isChecked"/>
+   					<a class="list-group-item-text hand-hover" title="{{item.subject}}" ng-click="viewFormState(item)" ><span  ng-show="item.date" class="pull-right">{{item.date | date : 'd-MMM-y'}}</span>{{item.name}}</a>
    				</li>
 
    				<li class="list-group-item" ng-repeat="formItem2 in page.encounterFormlist[page.currentlistId] | filter:filterFormsQ" ng-hide="page.currentlistId==1">
