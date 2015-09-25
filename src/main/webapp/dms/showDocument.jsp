@@ -24,6 +24,7 @@
 
 --%>
 
+
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -301,13 +302,14 @@
                                                         <input type="button" id="printBtn_<%=docId%>" value=" <bean:message key="global.btnPrint"/> " onClick="popup(700,960,'<%=url2%>','file download')">
                                                         <% if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")) {%>
                                                         <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popup(700,960,'<%= request.getContextPath() %>/oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
-                                                        <input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="handleDocSave('<%=docId%>','addTickler')"/>
+                                                        <!--input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="handleDocSave('<%=docId%>','addTickler')"/-->
+ 														<input type="button" value="Tickler" onClick="popup(710, 1024,'<%= request.getContextPath() %>/Tickler.do?method=edit&tickler.demographic_webName=<%=demoName%>&tickler.demographicNo=<%=demographicID%>&docType=DOC&docId=<%=docId%>', 'Tickler')">
                                                         <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popup(710, 1024,'<%= request.getContextPath() %>/oscarEncounter/IncomingEncounter.do?demographicNo=<%=demographicID%>&reason=<bean:message key="oscarMDS.segmentDisplay.labResults"/>&curDate=<%=currentDate%>>&appointmentNo=&appointmentDate=&startTime=&status=', 'encounter')">
                                                         <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popup(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?demographic_no=<%=demographicID%>&displaymode=edit&dboperation=search_detail','master')">
                                                         <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popup(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?demographic_no=<%=demographicID%>&orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25','ApptHist')">
                                                         
                                                         <input type="button" id="refileDoc_<%=docId%>" value="<bean:message key="oscarEncounter.noteBrowser.msgRefile"/>" onclick="refileDoc('<%=docId%>');" >
-                                                        <select  id="queueList_<%=docId%>" name="queueList">
+                                                        <select  id="queueList_<%=docId%>" name="queueList"> 
                                                             <%
                                                             for (Hashtable ht : queues) {
                                                                 int id = (Integer) ht.get("id");
