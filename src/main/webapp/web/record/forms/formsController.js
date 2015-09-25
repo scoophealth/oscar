@@ -46,7 +46,7 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 		console.log('What is the item ',item);
 		formService.getAllFormsByHeading($stateParams.demographicNo,item.label).then(function(data) {
 	        console.debug('whats the index'+index,data);
-	        $scope.page.currentFormList[index] = data.list;
+	        $scope.page.currentFormList[index] = toArray(data.list);
 	    });
 	});
 	
@@ -70,7 +70,7 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 		if(listId == 0){
 			formService.getAllFormsByHeading($stateParams.demographicNo,'Completed').then(function(data) {
 		        console.debug('whats the index'+0,data);
-		        $scope.page.currentFormList[0] = data.list;
+		        $scope.page.currentFormList[0] = toArray(data.list);
 		    });
 		}
 	}
@@ -194,3 +194,9 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	
 	
 });
+
+function toArray(obj) { //convert single object to array
+	if (obj instanceof Array) return obj;
+	else if (obj==null) return [];
+	else return [obj];
+}
