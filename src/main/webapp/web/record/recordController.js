@@ -95,7 +95,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 		$scope.currenttab2 = $scope.recordtabs2[temp.id];
 		
 		if(angular.isDefined(temp.state)){
-			if (/^record.consultRequests.[0-9]$/.test(temp.state) || /^record.consultResponses.[0-9]$/.test(temp.state)) {
+			if (/^record.consultRequests.[0-9]+$/.test(temp.state) || /^record.consultResponses.[0-9]+$/.test(temp.state)) {
 				var recIdPos = temp.state.lastIndexOf(".");
 				$state.go(temp.state.substring(0, recIdPos), {demographicNo:temp.state.substring(recIdPos+1)});
 			} else {
