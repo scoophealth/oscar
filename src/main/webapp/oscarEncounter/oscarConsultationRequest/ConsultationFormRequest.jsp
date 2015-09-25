@@ -1140,7 +1140,6 @@ function updateFaxButton() {
 <body topmargin="0" leftmargin="0" vlink="#0000FF" 
 	onload="window.focus();disableDateFields();fetchAttached();disableEditing();showSignatureImage();">
 <html:errors />
-
 <html:form action="/oscarEncounter/RequestConsultation"
 	onsubmit="alert('HTHT'); return false;">
 	<%
@@ -1676,16 +1675,15 @@ function updateFaxButton() {
 					<table border=0 width="100%">
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.letterheadName" />:
-							</td>
+							</td>							
 							<td align="right" class="tite3">
 								<select name="letterheadName" id="letterheadName" onchange="switchProvider(this.value)">
-									<option value="<%=StringEscapeUtils.escapeHtml(clinic.getClinicName())%>"><%=clinic.getClinicName() %></option>
+									<option value="<%=StringEscapeUtils.escapeHtml(clinic.getClinicName())%>" <%=(consultUtil.letterheadName != null && consultUtil.letterheadName.equalsIgnoreCase(clinic.getClinicName()) ? "selected='selected'"  : "" )%>><%=clinic.getClinicName() %></option>
 								<%
 									for (Provider p : prList) {
 										if (p.getProviderNo().compareTo("-1") != 0 && (p.getFirstName() != null || p.getSurname() != null)) {
 								%>
-								<option value="<%=p.getProviderNo() %>" <%=(consultUtil.letterheadName != null && consultUtil.letterheadName.equalsIgnoreCase(p.getProviderNo()) ? "selected='selected'"  : p.getProviderNo().equalsIgnoreCase(providerNo) ? "selected='selected'"  : "") %>>
-
+								<option value="<%=p.getProviderNo() %>" <%=(consultUtil.letterheadName != null && consultUtil.letterheadName.equalsIgnoreCase(p.getProviderNo()) ? "selected='selected'"  : consultUtil.letterheadName == null && p.getProviderNo().equalsIgnoreCase(providerNo) ? "selected='selected'"  : "") %>>
 									<%=p.getSurname() %>, <%=p.getFirstName() %>
 								</option>
 								<% }
