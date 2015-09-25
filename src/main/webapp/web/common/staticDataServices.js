@@ -386,6 +386,7 @@ angular.module("staticDataServices", [])
 				var langs = [];
 				langs.push({"value":"English", "label":"English"});
 				langs.push({"value":"French", "label":"French"});
+				langs.push({"value":"Other", "label":"Other"});
 				return langs;
 			},
 			
