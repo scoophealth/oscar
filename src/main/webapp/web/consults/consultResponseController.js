@@ -240,7 +240,7 @@ oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$loc
 		
 		consultService.saveResponse(consult).then(function(data){
 			//update url for new consultation
-			if (consult.id==null) $location.path("/record/"+consult.demographicId+"/consultResponse/"+data.id);
+			if (consult.id==null) $location.path("/record/"+consult.demographic.demographicNo+"/consultResponse/"+data.id);
 		});
 		$scope.consultSaving = false; //hide saving banner
 		$scope.consultChanged = -1; //reset change count
@@ -248,7 +248,7 @@ oscarApp.controller('ConsultResponseCtrl', function ($scope,$http,$resource,$loc
 	}
 	
 	$scope.close = function(){
-		if ($location.search().list=="patient") $location.path("/record/"+consult.demographicId+"/consultResponses");
+		if ($location.search().list=="patient") $location.path("/record/"+consult.demographic.demographicNo+"/consultResponses");
 		else $location.path("/consultResponses");
 	}
 	
