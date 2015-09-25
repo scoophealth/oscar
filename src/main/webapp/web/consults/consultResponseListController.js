@@ -138,7 +138,7 @@ oscarApp.controller('ConsultResponseListCtrl', function ($scope,$timeout,$state,
 	//retain search & filters for users to go back
 	$scope.setSearchParams = function() {
 		$scope.searchParams = {};
-		if ($state.$current=="record.consultRequests") $scope.searchParams.list = "patient";
+		if ($state.$current=="record.consultResponses") $scope.searchParams.list = "patient";
 		else if ($scope.search.demographicNo!=null) $scope.searchParams.srhDemoNo = $scope.search.demographicNo;
 		
 		if ($scope.search.mrpNo!=null) $scope.searchParams.srhMrpNo = $scope.search.mrpNo;
