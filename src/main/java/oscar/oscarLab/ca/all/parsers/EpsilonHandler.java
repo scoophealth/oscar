@@ -279,7 +279,15 @@ public class EpsilonHandler  extends CMLHandler implements MessageHandler {
         	// leave the name blank if the value type is 'FT' this is because it
             // is a comment, if the name is blank the obx segment will not be displayed
             OBX obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
-            if ((obxSeg.getValueType().getValue()!=null) && (!obxSeg.getValueType().getValue().equals("FT"))) {
+            String pregObxIdentifier = null; 
+            
+            if(j!=0 && msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j-1).getOBX() != null) {
+            	OBX pregObxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j-1).getOBX();
+            	pregObxIdentifier = getString(pregObxSeg.getObservationIdentifier().getNameOfCodingSystem().getValue());
+            }
+            
+            if ((obxSeg.getValueType().getValue()!=null) && 
+            		(!obxSeg.getValueType().getValue().equals("FT") || !pregObxIdentifier.equals(getString(obxSeg.getObservationIdentifier().getNameOfCodingSystem().getValue())))) {
             	ret = getString(obxSeg.getObservationIdentifier().getNameOfCodingSystem().getValue());  // Epsilon-Med Health Message keeps the name of identifier in the field of coding System
             		
 	            if (ret == null)
