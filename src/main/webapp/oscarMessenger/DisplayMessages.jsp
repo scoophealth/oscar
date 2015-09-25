@@ -29,6 +29,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ page import="oscar.oscarDemographic.data.DemographicData"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 
 <%
 int pageType = 0;
@@ -445,7 +446,7 @@ function checkAll(formId){
                                     </td>
                                     <td bgcolor="#EEEEFF">
                                     <a href="<%=request.getContextPath()%>/oscarMessenger/ViewMessage.do?messageID=<%=dm.messageId%>&boxType=<%=pageType%>">
-                                        <%=dm.thesubject%>
+                                        <%=StringEscapeUtils.escapeHtml(dm.thesubject)%>
                                     </a>
 
                                     </td>

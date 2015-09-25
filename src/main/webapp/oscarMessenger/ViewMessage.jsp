@@ -33,6 +33,8 @@ if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter(
 %>
 <%@ page 
 	import="oscar.oscarDemographic.data.*, java.util.Enumeration"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+	
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -307,7 +309,7 @@ function fmtOscarMsg() {
 						<tr>
 							<td class="Printable" bgcolor="#DDDDFF"><bean:message
 								key="oscarMessenger.ViewMessage.msgSubject" />:</td>
-							<td id="msgSubject" class="Printable" bgcolor="#BBBBFF"><%= request.getAttribute("viewMessageSubject") %>
+							<td id="msgSubject" class="Printable" bgcolor="#BBBBFF"><%= StringEscapeUtils.escapeHtml((String)request.getAttribute("viewMessageSubject")) %>
 							</td>
 						</tr>
 
@@ -350,7 +352,7 @@ function fmtOscarMsg() {
 
 							<td bgcolor="#EEEEFF"></td>
 							<td bgcolor="#EEEEFF"><textarea id="msgBody" name="Message"
-								wrap="hard" readonly="true" rows="18" cols="60"><%= request.getAttribute("viewMessageMessage") %></textarea><br>
+								wrap="hard" readonly="true" rows="18" cols="60"><%= StringEscapeUtils.escapeHtml((String)request.getAttribute("viewMessageMessage")) %></textarea><br>
 							<html:submit styleClass="ControlPushButton" property="reply">
 								<bean:message key="oscarMessenger.ViewMessage.btnReply" />
 							</html:submit> <html:submit styleClass="ControlPushButton" property="replyAll">
