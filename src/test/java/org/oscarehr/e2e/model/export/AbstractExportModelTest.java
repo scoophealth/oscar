@@ -32,7 +32,7 @@ import org.oscarehr.e2e.constant.Constants;
 
 public abstract class AbstractExportModelTest extends DaoTestFixtures {
 	@BeforeClass
-	public static void beforeClass() throws Exception {
+	public static void abstractBeforeClass() throws Exception {
 		SchemaUtils.restoreTable(Constants.Runtime.TABLES);
 		assertEquals(0, SchemaUtils.loadFileIntoMySQL(Constants.Runtime.E2E_SETUP));
 	}

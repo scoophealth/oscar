@@ -53,7 +53,7 @@ public abstract class AbstractBodyPopulatorTest extends DaoTestFixtures {
 	protected static AbstractBodyConstants bodyConstants;
 
 	@BeforeClass
-	public static void beforeClass() throws Exception {
+	public static void abstractBeforeClass() throws Exception {
 		SchemaUtils.restoreTable(Constants.Runtime.TABLES);
 		assertEquals(0, SchemaUtils.loadFileIntoMySQL(Constants.Runtime.E2E_SETUP));
 	}
