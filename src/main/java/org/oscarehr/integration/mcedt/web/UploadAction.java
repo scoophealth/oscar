@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
+ *    
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.integration.mcedt.mailbox;
+package org.oscarehr.integration.mcedt.web;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,10 +35,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.cxf.helpers.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.integration.mcedt.DelegateFactory;
@@ -80,6 +82,8 @@ public class UploadAction extends DispatchAction {
 		List<File> files = ActionUtils.getSuccessfulUploads(request);
 		OscarProperties props = OscarProperties.getInstance();
 		File sent = new File(props.getProperty("ONEDT_SENT",""));
+		if (!sent.exists())
+			FileUtils.mkDir(sent);
 		if (files!=null && files.size()>0) {
 			for (File file: files) {
 				ActionUtils.moveFileToDirectory(file, sent, false, true);
@@ -96,16 +100,16 @@ public class UploadAction extends DispatchAction {
 	}
 
 	public ActionForward addNew(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return mapping.findForward("addNew");
 	}
 	
 	public ActionForward removeSelected(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return mapping.findForward("success");
 	}
 
-	public ActionForward uploadToMcedt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward uploadToMcedt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		UploadForm uploadForm = (UploadForm) form;
 		//uploadForm.setResourceType("HE");
 
@@ -120,7 +124,7 @@ public class UploadAction extends DispatchAction {
 			}*/
 
 			try {
-				EDTDelegate delegate = DelegateFactory.newDelegate();
+				EDTDelegate delegate = DelegateFactory.newDelegate(ActionUtils.getServiceId(uploadForm.getDescription()));
 				ResourceResult result = delegate.upload(uploads);
 				if (result.getResponse().get(0).getResult().getCode().equals("IEDTS0001")) {
 					ActionUtils.setUploadResourceId(request, result.getResponse().get(0).getResourceID());
@@ -154,7 +158,7 @@ public class UploadAction extends DispatchAction {
 		return mapping.findForward("success");
 	}
 	
-	public ActionForward submitToMcedt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward submitToMcedt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		UploadForm submitForm = (UploadForm) form;
 		//submitForm.setResourceId(new BigInteger("-1"));
 		// if resourceId is -2, it indicates upload was not successful, submission will not be attempted
@@ -168,7 +172,7 @@ public class UploadAction extends DispatchAction {
 			}*/
 
 			try {
-				EDTDelegate delegate = DelegateFactory.newDelegate();
+				EDTDelegate delegate = DelegateFactory.newDelegate(ActionUtils.getServiceId(submitForm.getFileName()));
 				ResourceResult result = delegate.submit(ids);
 				if (!result.getResponse().get(0).getResult().getCode().equals("IEDTS0001")) {
 					result.getResponse().get(0).setDescription(submitForm.getFileName());
@@ -190,33 +194,61 @@ public class UploadAction extends DispatchAction {
 		}
 	}
 	
-	public ActionForward uploadSubmitToMcedt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward uploadSubmitToMcedt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
+			List<String> successUploads= new ArrayList<String>();
+			List<String> failUploads= new ArrayList<String>();
+			List<String> successSubmits= new ArrayList<String>();
+			List<String> failSubmits= new ArrayList<String>();
 			List<UploadData> uploads =toUploadMultipe((UploadForm)form);
-			EDTDelegate delegate = DelegateFactory.newDelegate();
-			ResourceResult result = delegate.upload(uploads);
-			List<BigInteger> ids = new ArrayList<BigInteger>();
-			OscarProperties props = OscarProperties.getInstance();
-			File sent = new File(props.getProperty("ONEDT_SENT",""));
-			for (ResponseResult edtResponse: result.getResponse()) {
-				if (edtResponse.getResult().getCode().equals("IEDTS0001")) {
-					ids.add(edtResponse.getResourceID());
-					File file = new File(props.getProperty("ONEDT_OUTBOX", "") + edtResponse.getDescription());
-					ActionUtils.moveFileToDirectory(file, sent,false,true);
-					saveMessages(request, ActionUtils.addMessage("uploadAction.upload.success", McedtMessageCreator.resourceResultToString(result)));
-				} else {
-					saveErrors(request, ActionUtils.addMessage("uploadAction.upload.failure", edtResponse.getResult().getMsg()));
+			for (UploadData upload: uploads) {
+				List<UploadData> uploadData= new ArrayList<UploadData>();
+				uploadData.add(upload);
+				EDTDelegate delegate = DelegateFactory.newDelegate(ActionUtils.getServiceId(upload.getDescription()));
+				ResourceResult result = delegate.upload(uploadData);
+				List<BigInteger> ids = new ArrayList<BigInteger>();
+				OscarProperties props = OscarProperties.getInstance();
+				File sent = new File(props.getProperty("ONEDT_SENT",""));
+				if (!sent.exists())
+					FileUtils.mkDir(sent);
+				for (ResponseResult edtResponse: result.getResponse()) {
+					if (edtResponse.getResult().getCode().equals("IEDTS0001")) {
+						ids.add(edtResponse.getResourceID());
+						File file = new File(props.getProperty("ONEDT_OUTBOX", "") + edtResponse.getDescription());
+						ActionUtils.moveFileToDirectory(file, sent,false,true);
+						//saveMessages(request, ActionUtils.addMessage("uploadAction.upload.success", McedtMessageCreator.resourceResultToString(result)));
+						successUploads.add(McedtMessageCreator.resourceResultToString(result));
+					} else {
+						edtResponse.setDescription(upload.getDescription());
+						//saveErrors(request, ActionUtils.addMessage("uploadAction.upload.failure", edtResponse.getDescription()+": "+edtResponse.getResult().getMsg()));
+						failUploads.add(edtResponse.getDescription()+": "+edtResponse.getResult().getMsg());
+					}
+				}
+				if (ids.size()>0) {
+					result =delegate.submit(ids);
+					for (ResponseResult edtResponse: result.getResponse()) {
+						if (edtResponse.getResult().getCode().equals("IEDTS0001")) {
+							//saveMessages(request, ActionUtils.addMessage("uploadAction.submit.success", McedtMessageCreator.resourceResultToString(result)));
+							successSubmits.add(McedtMessageCreator.resourceResultToString(result));
+						} else {
+							edtResponse.setDescription(upload.getDescription());
+							//saveErrors(request, ActionUtils.addMessage("uploadAction.submit.failure", edtResponse.getDescription()+": "+edtResponse.getResult().getMsg()));
+							failSubmits.add(edtResponse.getDescription()+": "+edtResponse.getResult().getMsg());
+						}
+					}
 				}
 			}
-			if (ids.size()>0) result =delegate.submit(ids);
-			for (ResponseResult edtResponse: result.getResponse()) {
-				if (edtResponse.getResult().getCode().equals("IEDTS0001")) {
-					saveMessages(request, ActionUtils.addMessage("uploadAction.submit.success", McedtMessageCreator.resourceResultToString(result)));
-				} else {
-					saveErrors(request, ActionUtils.addMessage("uploadAction.submit.failure", edtResponse.getDescription()+": "+edtResponse.getResult().getMsg()));			
-				}
-			}
-			
+			// Finally save all the messages/errors
+			ActionMessages messages = new ActionMessages();
+			// we don't need to find out if upload is successful, we rather get info about submit status of that file
+			//if ( successUploads!=null && successUploads.size()>0 ) messages = ActionUtils.addMoreMessage(messages, "uploadAction.upload.success", McedtMessageCreator.stringListToString(successUploads));
+			if ( successSubmits!=null && successSubmits.size()>0 ) messages = ActionUtils.addMoreMessage(messages, "uploadAction.submit.success", McedtMessageCreator.stringListToString(successSubmits));
+			saveMessages(request, messages);
+
+			ActionMessages errors = new ActionMessages();
+			if ( failUploads!=null && failUploads.size()>0 ) errors = ActionUtils.addMoreMessage(errors,"uploadAction.upload.failure", McedtMessageCreator.stringListToString(failUploads));
+			if ( failSubmits!=null && failSubmits.size()>0 ) errors = ActionUtils.addMoreMessage(errors,"uploadAction.submit.failure", McedtMessageCreator.stringListToString(failSubmits));		
+			saveErrors(request, errors);
 			
 		} catch (Exception e) {
 			logger.error("Unable to Upload/Submit file", e);
@@ -225,7 +257,7 @@ public class UploadAction extends DispatchAction {
 		return mapping.findForward("success");
 	}
 	
-	public ActionForward deleteUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward deleteUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
 			UploadForm uploadForm=(UploadForm) form;
 			List<String> fileNames = Arrays.asList(uploadForm.getFileName().trim().split(","));
@@ -241,7 +273,7 @@ public class UploadAction extends DispatchAction {
 		return mapping.findForward("success");
 	}
 	
-	public ActionForward addUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward addUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
 			FormFile formFile = ((UploadForm) form).getAddUploadFile();
 			if (!ActionUtils.isOBECFile(formFile.getFileName()) && !ActionUtils.isOHIPFile(formFile.getFileName())) {
@@ -253,7 +285,7 @@ public class UploadAction extends DispatchAction {
 				FileOutputStream outputStream = new FileOutputStream(myFile);
 				outputStream.write(formFile.getFileData());
 				outputStream.close();
-				saveMessages(request, ActionUtils.addMessage("uploadAction.upload.add.success", formFile.getFileName()+ "uploaded succesfully!"));
+				saveMessages(request, ActionUtils.addMessage("uploadAction.upload.add.success", formFile.getFileName()+ "is succesfully added to the uploads list!"));
 			}
 			
 		} catch (Exception e) {
