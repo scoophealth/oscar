@@ -110,4 +110,14 @@ public class ScheduleTemplateDao extends AbstractDao<ScheduleTemplate> {
 		return query.getResultList();
 	}
 	
+	//TODO:modelClass causing error on master record
+	@NativeSql({"scheduletemplate", "scheduledate"})
+	public List<Object> findTimeCodeByProviderNo2(String providerNo, Date date) {
+		String sql = "select timecode from scheduletemplate, (select hour from (select provider_no, hour, status from scheduledate where sdate = :date) as df where status = 'A' and provider_no= :providerNo) as hf where scheduletemplate.name=hf.hour and (scheduletemplate.provider_no= :providerNo or scheduletemplate.provider_no='Public')";
+		Query query = entityManager.createNativeQuery(sql);
+		query.setParameter("date", date);
+		query.setParameter("providerNo", providerNo);
+		return query.getResultList();
+	}
+	
 }

@@ -1792,7 +1792,7 @@ if ( Dead.equals(PatStat) ) {%>
 						
 						// get timecode string template associated with this day, number of minutes each slot represents
 						ScheduleTemplateDao dao = SpringUtils.getBean(ScheduleTemplateDao.class); 
-						List<Object> timecodeResult = dao.findTimeCodeByProviderNo(thisProvNo, ConversionUtils.fromDateString(qCurDate));
+						List<Object> timecodeResult = dao.findTimeCodeByProviderNo2(thisProvNo, ConversionUtils.fromDateString(qCurDate));
 
 						// if theres a template on this day, continue
                         if (!timecodeResult.isEmpty()) {
