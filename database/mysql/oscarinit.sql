@@ -8625,7 +8625,7 @@ create table favoritesprivilege
 
 CREATE TABLE `appointment_status` (
   `id` int(11) NOT NULL auto_increment,
-  `status` char(2) NOT NULL,
+  `status` char(2) BINARY NOT NULL,
   `description` char(30) NOT NULL default 'no description',
   `color` char(7) NOT NULL default '#cccccc',
   `icon` char(30) NOT NULL default '''''',
