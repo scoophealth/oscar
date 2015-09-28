@@ -34,7 +34,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ page import="java.io.*,java.util.*, java.sql.*, oscar.*, java.net.*,org.oscarehr.integration.mcedt.mailbox.ActionUtils" %>
+<%@ page import="java.io.*,java.util.*, java.sql.*, oscar.*, java.net.*, org.oscarehr.integration.mcedt.web.ActionUtils" %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -70,6 +70,8 @@ $(window).load(function(){
 		$('input[type="checkbox"]').filter(':checked').prop('checked', false);
 		$('input[type="checkbox"]').filter(':disabled').prop('disabled', false);
    	 	$("#unSelUpload").prop('disabled', true);
+		$("#submitUpload").prop('disabled', true);
+	 	$("#deleteUpload").prop('disabled', true);
 	})
 });
 
@@ -115,7 +117,7 @@ function add(control) {
 	if (control) {
 		control.disabled = true;
 	}
-	window.location.href = '<%= request.getContextPath() %>/mcedt/mailbox/addUpload.jsp';
+	window.location.href = '<%= request.getContextPath() %>/mcedt/web/addUpload.jsp';
 	return false;
 }
 
