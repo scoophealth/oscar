@@ -1377,7 +1377,7 @@
 							<goal>run</goal>
 						</goals>
 						<configuration>
-							<tasks>
+							<target>
 								<tstamp>
 									<format property="build.dateTime.value" pattern="yyyy-MM-dd hh:mm aa" />
 								</tstamp>
@@ -1390,7 +1390,7 @@
 								<echo message="JOB_NAME - BUILD_NUMBER : ${env.JOB_NAME} - ${env.BUILD_NUMBER}" />
 								<replace file="target/classes/oscar_mcmaster.properties" token="${build.JOB_NAME}" value="${env.JOB_NAME}" />
 								<replace file="target/classes/oscar_mcmaster.properties" token="${build.BUILD_NUMBER}" value="${env.BUILD_NUMBER}" />
-							</tasks>
+							</target>
 						</configuration>
 					</execution>
 
@@ -1402,11 +1402,11 @@
 							<goal>run</goal>
 						</goals>
 						<configuration>
-							<tasks>
+							<target>
 								<property name="build.compiler" value="extJavac" />
 								<property name='jspc_target' value="${project.name}-${project.version}" />
 								<ant antfile="jspc.xml" target="jspc" />
-							</tasks>
+							</target>
 						</configuration>
 					</execution>
 					
@@ -1417,24 +1417,24 @@
 							<goal>run</goal>
 						</goals>
 						<configuration>
-							<tasks>
+							<target>
 								<copy todir="catalina_base/webapps/oscar">
 									<fileset dir="target/${project.name}-${project.version}" />
 								</copy>
-							</tasks>
+							</target>
 						</configuration>
 					</execution>
 					<execution>
 						<id>clean_local_catalina_base</id>
 						<phase>clean</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<delete dir="catalina_base/webapps/oscar" />
 								<delete includeemptydirs="true" quiet="true">
 									<fileset dir="catalina_base/logs" excludes=".gitignore" />
 									<fileset dir="catalina_base/work" excludes=".gitignore" />
 								</delete>
-							</tasks>
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>
