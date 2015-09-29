@@ -25,15 +25,15 @@
 --%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-      boolean authed=true;
+      String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed2=true;
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w" reverse="<%=true%>">
-	<%authed=false; %>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_flowsheet" rights="w" reverse="<%=true%>">
+	<%authed2=false; %>
 	<%response.sendRedirect("../../../securityError.jsp?type=_flowsheet");%>
 </security:oscarSec>
 <%
-if(!authed) {
+if(!authed2) {
 	return;
 }
 %>
