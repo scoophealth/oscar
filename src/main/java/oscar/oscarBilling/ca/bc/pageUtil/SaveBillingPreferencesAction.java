@@ -31,6 +31,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarBilling.ca.bc.data.BillingPreference;
 import oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO;
@@ -47,7 +48,7 @@ public class SaveBillingPreferencesAction
                                HttpServletResponse servletResponse) {
     BillingPreferencesActionForm frm = (
         BillingPreferencesActionForm) actionForm;
-    BillingPreferencesDAO dao = new BillingPreferencesDAO();
+    BillingPreferencesDAO dao = SpringUtils.getBean(BillingPreferencesDAO.class);
     BillingPreference pref = new BillingPreference();
     pref.setProviderNo(Integer.parseInt(frm.getProviderNo()));
     pref.setReferral(Integer.parseInt(frm.getReferral()));

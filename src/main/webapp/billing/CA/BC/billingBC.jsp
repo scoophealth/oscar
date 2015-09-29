@@ -37,7 +37,7 @@
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="oscar.oscarDemographic.data.*"%>
 <%@page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.entities.*"%>
-<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 <%!
   public void fillDxcodeList(BillingFormData.BillingService[] servicelist, Map dxcodeList) {
     for (int i = 0; i < servicelist.length; i++) {
@@ -755,7 +755,7 @@ if(wcbneeds != null){%>
       thisForm.setDependent("66");
     }
     thisForm.setCorrespondenceCode(bean.getCorrespondenceCode());
-    oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO dao = new oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO();
+    oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO dao = SpringUtils.getBean(oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO.class);
     oscar.oscarBilling.ca.bc.data.BillingPreference pref = null;
     //checking for a bug where the passed in provider number is actually "none" rather than numeral 0
     if (oscar.util.StringUtils.isNumeric(thisForm.getXml_provider())) {

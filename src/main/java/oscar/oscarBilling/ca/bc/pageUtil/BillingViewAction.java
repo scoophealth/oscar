@@ -41,6 +41,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.entities.Provider;
@@ -150,7 +151,7 @@ public final class BillingViewAction
    */
   public Provider getPreferredPayeeProvider(String userProviderNo){
     Provider p = new Provider();
-    BillingPreferencesDAO dao = new BillingPreferencesDAO();
+    BillingPreferencesDAO dao = SpringUtils.getBean(BillingPreferencesDAO.class);
     BillingPreference pref = dao.getUserBillingPreference(userProviderNo);
 
     if(pref != null){
