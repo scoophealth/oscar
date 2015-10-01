@@ -139,14 +139,14 @@
 
    <script type="text/javascript">
         function aSubmit(){
-            if(document.getElementById("eform_iframe")!=null)document.getElementById("eform_iframe").contentWindow.document.forms[0].submit();
-                        
+        	if(document.getElementById("eform_iframe")!=null)document.getElementById("eform_iframe").contentWindow.document.forms[0].submit();
+            
             if(!checkFormTypeIn()) return false;
 
-            if( !ignoreDuplicates() ) return false;
-            //document.getElementById("adddemographic").submit();
-
-            return true;
+            //inside this method, it will post the form when the user says OK, or no dups found.
+           	ignoreDuplicates();
+           
+            return false;
         }        
         
    </script>
@@ -482,7 +482,7 @@ function ignoreDuplicates() {
 		var yearOfBirth = jQuery("#year_of_birth").val();
 		var monthOfBirth = jQuery("#month_of_birth").val();
 		var dayOfBirth = jQuery("#date_of_birth").val();
-		var ret = false;
+	
 	jQuery.ajax({
 			url:"../demographicSupport.do?method=checkForDuplicates&lastName="+lastName+"&firstName="+firstName+"&yearOfBirth="+yearOfBirth+"&monthOfBirth="+monthOfBirth+"&dayOfBirth="+dayOfBirth,
 			success:function(data){
@@ -491,26 +491,25 @@ function ignoreDuplicates() {
 						
 						if(confirm('There are other patients in this system with the same name and date of birth. Are you sure you want to create this new patient record?')) {
 							//submit the form
-							ret = true;
+							$("#adddemographic").submit();
 						}
 					} else {
 						
 						//submit the form
-						ret = true;
+						$("#adddemographic").submit();
 					}
 				} else {
 					
 					//submit the form
-					ret = true;
+					$("#adddemographic").submit();
 				}
 			},
 			dataType:'json',
 			async: false
 	});
 		
-		
-	return ret;
 }
+
 var child_record_index=0;
 
 function addChildRecord() {
@@ -551,6 +550,7 @@ function addChildRecord() {
 function removeChildRecord(index) {
 	jQuery("#child_record"+index).remove();
 }
+
 
 </script>
 </head>
