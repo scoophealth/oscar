@@ -1341,7 +1341,6 @@ document.forms[1].r_doctor_ohip.value = refNo;
 <%-- TOGGLE CREATING BABY RECORD MODULE --%>	
 <input type="hidden" name="max_child_record" id="max_child_record" value="0"/>
 
-<oscar:oscarPropertiesCheck property="enable_create_child_record" value="true">
 	<%
 		String tmp = OscarProperties.getInstance().getProperty("enableCreateChildRecordPrograms","");
 		String[] enableChildRecordPrograms = tmp.split(",");
@@ -1380,7 +1379,6 @@ document.forms[1].r_doctor_ohip.value = refNo;
 				</td>
 			</tr>
 			<% } %>
-</oscar:oscarPropertiesCheck>
 
 <%-- TOGGLE PRIVACY CONSENT MODULE --%>			
 <oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">			
