@@ -712,6 +712,10 @@ text-align:left;
 			<%=pdc.getDisplay(loggedInInfo, setHash,demographic_no)%>;"  id="<%="prev"+setNum%>">
 		<%for (int i = 0; i < prevs.length ; i++) {
 			HashMap<String,String> h = pdc.getPrevention(prevs[i]); %>
+			if(h == null) { //this happens with private entries
+				continue;
+			}
+			%>
 		<div class="preventionSection">
 		<div class="headPrevention">
 		<p><a href="javascript: function myFunction() {return false; }"
