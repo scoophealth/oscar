@@ -117,7 +117,7 @@ public class SplitDocumentAction extends DispatchAction {
 
 			WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
 			ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
-			providerInboxRoutingDao.addToProviderInbox("0", Integer.parseInt(newDocNo), "DOC");
+			//providerInboxRoutingDao.addToProviderInbox("0", Integer.parseInt(newDocNo), "DOC");
 
 			List<ProviderInboxItem> routeList = providerInboxRoutingDao.getProvidersWithRoutingForDocument("DOC", Integer.parseInt(docNum));
 			for (ProviderInboxItem i : routeList) {
