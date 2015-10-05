@@ -738,7 +738,7 @@ public class SpireHandler implements MessageHandler {
     }
     
     public String getHealthNum(){
-        String hin = (getString(msg.getRESPONSE().getPATIENT().getPID().getAlternatePatientID().getID().getValue()));
+        String hin = (getString(msg.getRESPONSE().getPATIENT().getPID().getPatientIDExternalID().getID().getValue()));
         
         if (hin != null && hin.equals(""))
 			hin = null;
