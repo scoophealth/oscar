@@ -1,0 +1,1 @@
+alter table appointment change status status char(2) BINARY;
