@@ -185,3 +185,7 @@ p {
 #ivoryBar td {
     border-top: 1px solid #c0c0c0;
 }
+
+@media print {
+ .noprint {display:none !important;}
+}
