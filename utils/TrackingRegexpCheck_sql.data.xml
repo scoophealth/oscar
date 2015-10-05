@@ -43,10 +43,6 @@
         <ViolationValue>/database/mysql/caisi/cookierevolverinit.sql:`question_id` varchar(37) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/cookierevolverinit.sql:`user_id` varchar(64) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/cookierevolverinit.sql:`user_role` varchar(64) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_end` date  NULL default '0000-00-00',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_end` date NULL default '0000-00-00',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_start` date  NULL default '0000-00-00',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_start` date NULL default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`billing_code` varchar(100) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`caisiRoleName` varchar(255) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cert_id` varchar(37) NOT NULL default '',</ViolationValue>
@@ -75,7 +71,6 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`start_date` date NOT NULL default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`status` char(1) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`type` varchar(100) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`updateDate` datetime default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`update_date` datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`user_id` varchar(64) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`user_role` varchar(64) NOT NULL default '',</ViolationValue>
@@ -200,10 +195,8 @@
         <ViolationValue>/database/mysql/oscarinit.sql:`city` varchar(200) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`city` varchar(25) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`company_name` varchar(100) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:`create_date` datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`creator` varchar(6) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`date_format` varchar(20) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:`date_time` datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`description` varchar(80) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`fax` varchar(15) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`fax` varchar(50) default '',</ViolationValue>
@@ -214,7 +207,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:`name` varchar(255) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`name` varchar(80) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`objectName` varchar(100) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:`onListSince` datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`phone` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`position` varchar(80) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`postal` varchar(10) default '',</ViolationValue>
@@ -251,7 +243,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:comment varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:contenttype varchar(60) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:creator varchar(6) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:dateTime datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:demo_name varchar(60) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:demographic_name varchar(60) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:description varchar(255) NOT NULL default '',</ViolationValue>
@@ -600,7 +591,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:`flag_tshPrl9a` varchar(8) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:`flag_tshPrl9b` varchar(8) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:`folicAcid` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:`formCreated` date default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:`fsh` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:`gonad` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:`healthNum` varchar(24) default '',</ViolationValue>
@@ -931,10 +921,6 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessCompleteTime` varchar(50) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessDate` varchar(24) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessStartTime` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_end` date  NULL default '0000-00-00',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_end` date NULL default '0000-00-00',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_start` date  NULL default '0000-00-00',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_start` date NULL default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assigned_bed`  tinyint(1)  NOT NULL default '1',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided1` varchar(120) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided2` varchar(120) default NULL,</ViolationValue>
@@ -1423,7 +1409,6 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`type` varchar(100) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`type` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`unassigned` tinyint(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`updateDate` datetime default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`update_date` datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`update_date` datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`update_date` timestamp NOT NULL default CURRENT_TIMESTAMP,</ViolationValue>
@@ -2312,7 +2297,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:`creat2` varchar(4) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`creat3` varchar(4) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`creat` tinyint(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:`create_date` datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`create_date` datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`creation_date` datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`creator` varchar(50) default NULL,</ViolationValue>
@@ -2388,7 +2372,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:`date_8` date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`date_9` date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`date_format` varchar(20) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:`date_time` datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`date_time` datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`day_of_week` varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`deleted` char(1) DEFAULT NULL,</ViolationValue>
@@ -2578,7 +2561,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:`obsHisTubMolPregNo` tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`obsHisTubMolPregYes` tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`observation_date` datetime default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:`onListSince` datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`orgapplicable` tinyint(1) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`orgcd` VARCHAR(80) default 'R0000001',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:`orthopnea1` tinyint(1) default NULL,</ViolationValue>
@@ -4167,7 +4149,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:date8 date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:dateAdmin date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:dateDx date default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:dateTime datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:date_joined date default '0001-01-01'</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:date_prescribed date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:date_printed date default NULL,</ViolationValue>
@@ -5826,6 +5807,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:status char(1) default 'A',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:status char(1) default NULL</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:status char(1) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:status char(2) BINARY default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:status char(2) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:status char(2) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:status tinyint(1) NOT NULL default '1',</ViolationValue>
@@ -7707,7 +7689,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:`flag_tshPrl9a` varchar(8) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:`flag_tshPrl9b` varchar(8) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:`folicAcid` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:`formCreated` date default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:`formCreated` date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:`formEdited` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:`form_class` tinyint(1) default NULL,</ViolationValue>
@@ -8033,7 +8014,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:claimrecord varchar(10) default null,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:clinic varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:comment varchar(200)  default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:comment1 varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:creator char(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:creator varchar(6) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:creator varchar(6) default NULL,</ViolationValue>
@@ -8062,7 +8042,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:name varchar(60) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:object varchar(60) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:operator varchar(6) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:paid varchar(7) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:pay_program char(3) default 'HCP',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:payee char(1) default 'P',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:pg1_BP varchar(10) default NULL,</ViolationValue>
@@ -8842,7 +8821,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:status char(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:t_count varchar(5) default '00000',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:total varchar(20) default null,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:total varchar(7) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:transc_id char(2) default 'HE',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:ver char(2) default '  ',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:visittype char(2) default NULL,</ViolationValue>
