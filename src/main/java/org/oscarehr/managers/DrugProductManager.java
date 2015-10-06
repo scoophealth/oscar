@@ -162,6 +162,11 @@ public class DrugProductManager {
 	
 	
 	public void deleteDrugProduct(LoggedInInfo loggedInInfo, Integer drugProductId) {
+		DrugProduct drugProduct = drugProductDao.find(drugProductId);
+		if(drugProduct != null && drugProduct.getDispensingEvent() != null) { 
+			throw new RuntimeException("Cannot delete a dispensed drug");
+		}
+		
 		drugProductDao.remove(drugProductId);
 		
 		//--- log action ---
