@@ -23,14 +23,21 @@
     Ontario, Canada
 
 --%>
-<%@taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-  String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
 %>
-<security:oscarSec roleName="<%=roleName$%>"
-	objectName="_admin,_admin.billing" rights="r" reverse="<%=true%>">
-	<%response.sendRedirect("../logout.jsp");%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../../../securityError.jsp?type=_billing");%>
 </security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="oscar.oscarBilling.ca.bc.data.*,oscar.*"%>
 <%@page	import="java.util.*,java.io.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.oscarBilling.ca.bc.administration.*,java.sql.*"%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
