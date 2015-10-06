@@ -252,6 +252,24 @@
 
         var _in_window = <%=( "true".equals(request.getParameter("inWindow")) ? "true" : "false" )%>;
         var contextpath = "<%=request.getContextPath()%>";
+        
+        
+        function popupPatient(height, width, url, windowName) {
+        	  d = document.getElementById('demofind'+<%=docId%>).value; //demog  //attachedDemoNo
+        	  urlNew = url + d;
+        	
+        	  return popup2(height, width, 0, 0, urlNew, windowName);
+        }
+        
+        function popupPatientTickler(height, width, url, windowName) {
+      	  d = document.getElementById('demofind'+<%=docId%>).value; //demog  //attachedDemoNo
+      	  n = document.getElementById('demofindName' + <%=docId%>).value;
+      	  urlNew = url + "method=edit&tickler.demographic_webName=" + n + "&tickler.demographicNo=" +  d + "&docType=DOC&docId=<%=docId%>";
+      	
+      	  return popup2(height, width, 0, 0, urlNew, windowName);
+      }
+        
+        
         </script>
 </head>
 <body>
@@ -300,13 +318,19 @@
                                                     <%} %>
                                                         <input type="button" id="closeBtn_<%=docId%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">                                                        
                                                         <input type="button" id="printBtn_<%=docId%>" value=" <bean:message key="global.btnPrint"/> " onClick="popup(700,960,'<%=url2%>','file download')">
-                                                        <% if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")) {%>
-                                                        <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popup(700,960,'<%= request.getContextPath() %>/oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
+                                                        <% 
+                                                        String btnDisabled = "disabled";
+                                                        if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null") && !demographicID.equals("-1") ) {
+                                                        	btnDisabled = "";
+                                                        }
+                                                        
+                                                        %>
+                                                        <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popupPatient(700,960,'<%= request.getContextPath() %>/oscarMessenger/SendDemoMessage.do?demographic_no=','msg')" <%=btnDisabled %>/>
                                                         <!--input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="handleDocSave('<%=docId%>','addTickler')"/-->
- 														<input type="button" value="Tickler" onClick="popup(710, 1024,'<%= request.getContextPath() %>/Tickler.do?method=edit&tickler.demographic_webName=<%=demoName%>&tickler.demographicNo=<%=demographicID%>&docType=DOC&docId=<%=docId%>', 'Tickler')">
-                                                        <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popup(710, 1024,'<%= request.getContextPath() %>/oscarEncounter/IncomingEncounter.do?demographicNo=<%=demographicID%>&reason=<bean:message key="oscarMDS.segmentDisplay.labResults"/>&curDate=<%=currentDate%>>&appointmentNo=&appointmentDate=&startTime=&status=', 'encounter')">
-                                                        <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popup(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?demographic_no=<%=demographicID%>&displaymode=edit&dboperation=search_detail','master')">
-                                                        <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popup(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?demographic_no=<%=demographicID%>&orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25','ApptHist')">
+ 														<input type="button" id="mainTickler" value="Tickler" onClick="popupPatientTickler(710, 1024,'<%= request.getContextPath() %>/Tickler.do?', 'Tickler')" <%=btnDisabled %>>
+                                                        <input type="button" id="mainEchart" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupPatient(710, 1024,'<%= request.getContextPath() %>/oscarEncounter/IncomingEncounter.do?reason=<bean:message key="oscarMDS.segmentDisplay.labResults"/>&curDate=<%=currentDate%>>&appointmentNo=&appointmentDate=&startTime=&status=&demographicNo=', 'encounter')" <%=btnDisabled %>>
+                                                        <input type="button" id="mainMaster" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=','master')" <%=btnDisabled %>>
+                                                        <input type="button" id="mainApptHistory" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25&demographic_no=','ApptHist')" <%=btnDisabled %>>
                                                         
                                                         <input type="button" id="refileDoc_<%=docId%>" value="<bean:message key="oscarEncounter.noteBrowser.msgRefile"/>" onclick="refileDoc('<%=docId%>');" >
                                                         <select  id="queueList_<%=docId%>" name="queueList"> 
@@ -317,10 +341,7 @@
                                                             %>
                                                             <option value="<%=id%>" <%=((id == queueId) ? " selected" : "")%>><%= qName%> </option>
                                                             <%}%>
-                                                        </select>
-                                
-                                                        <% }
-                                                        %>                                                                                                                
+                                                        </select>                                                                                                         
                             </form>        	            
             <table class="docTable">
                 <tr>
@@ -418,9 +439,12 @@
                                         if(!demographicID.equals("-1")){%>
                                             <input id="saved<%=docId%>" type="hidden" name="saved" value="true"/>
                                             <input type="hidden" value="<%=demographicID%>" name="demog" id="demofind<%=docId%>" />
+                                            <input type="hidden" name="demofindName" value="<%=demoName%>" id="demofindName<%=docId%>"/> 
                                             <%=demoName%><%}else{%>
                                             <input id="saved<%=docId%>" type="hidden" name="saved" value="false"/>
-                                            <input type="hidden" name="demog" value="<%=demographicID%>" id="demofind<%=docId%>" />                                            
+                                            <input type="hidden" name="demog" value="<%=demographicID%>" id="demofind<%=docId%>"/>   
+                                            <input type="hidden" name="demofindName" value="<%=demoName%>" id="demofindName<%=docId%>"/>   
+                                                                                   
                                             <input type="checkbox" id="activeOnly<%=docId%>" name="activeOnly" checked="checked" value="true" onclick="setupDemoAutoCompletion()">Active Only<br>  
                                             <input type="text" style="width:400px;" id="autocompletedemo<%=docId%>" onchange="checkSave('<%=docId%>');" name="demographicKeyword" />
                                             <div id="autocomplete_choices<%=docId%>" class="autocomplete"></div>
@@ -630,6 +654,7 @@
 	              select: function(event, ui) {    	  
 	            	  jQuery( "#autocompletedemo<%=docId%>" ).val(ui.item.label);
 	            	  jQuery( "#demofind<%=docId%>").val(ui.item.value);
+	            	  jQuery( "#demofindName<%=docId%>" ).val(ui.item.formattedName);
 	            	  selectedDemos.push(ui.item.label);
 	            	  console.log(ui.item.providerNo);
 	            	  if( ui.item.providerNo != undefined && ui.item.providerNo != null &&ui.item.providerNo != "" && ui.item.providerNo != "null" ) {
@@ -639,13 +664,17 @@
 	            	  //enable Save button whenever a selection is made
 	                  jQuery('#save<%=docId%>').removeAttr('disabled');
 	                  jQuery('#saveNext<%=docId%>').removeAttr('disabled');
-
+	                  
+	                  jQuery('#msgBtn_<%=docId%>').removeAttr('disabled');
+	                  jQuery('#mainTickler').removeAttr('disabled');
+	                  jQuery('#mainEchart').removeAttr('disabled');
+	                  jQuery('#mainMaster').removeAttr('disabled');
+	                  jQuery('#mainApptHistory').removeAttr('disabled');
 	                  return false;
 	              }      
 	            });
         	}
           }
-        
         
         jQuery(setupDemoAutoCompletion());
         
