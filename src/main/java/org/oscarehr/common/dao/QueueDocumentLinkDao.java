@@ -97,7 +97,7 @@ public class QueueDocumentLinkDao extends AbstractDao<QueueDocumentLink> {
         List<QueueDocumentLink> qs=getQueueFromDocument(docId);
         if(qs.size()>0){
             QueueDocumentLink q=qs.get(0);
-            if(!q.getStatus().equals("I")){
+            if(q.getStatus() != null && !q.getStatus().equals("I")){
                 q.setStatus("I");
                 merge(q);
                 return true;
