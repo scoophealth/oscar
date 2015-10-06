@@ -54,7 +54,7 @@
 		<td class="MainTableLeftColumn"></td>
 		<td class="MainTableRightColumn"><pre>
 /* *
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+ * Copyright (c) 2001-2015. Department of Family Medicine, McMaster University. All Rights Reserved.
  *
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
