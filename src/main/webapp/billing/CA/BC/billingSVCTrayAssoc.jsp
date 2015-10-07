@@ -4,6 +4,21 @@
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.billing,_admin" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../../../securityError.jsp?type=_admin&type=_admin.billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html:html>
 <head>
