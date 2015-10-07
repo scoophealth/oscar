@@ -60,7 +60,13 @@
             <%=defaultPrinterName%>
         <%}%>
         <br>
-        <object id="pdf" type="application/pdf"  data="../report/GenerateEnvelopes.do?demos=<%=request.getParameter("demos")%>" height="80%" width="100%"></object>  
+        
+        
+        <object id="pdf" type="application/pdf"  data="<%= request.getContextPath() %>/report/GenerateEnvelopes.do?demos=<%=request.getParameter("demos")%>" height="80%" width="100%" standby="Loading pdf...">
+        
+        Sorry the pdf failed to load...<a href="../report/GenerateEnvelopes.do?demos=<%=request.getParameter("demos")%>">click here to download the PDF</a>.
+        
+        </object>
     </body>
 </html:html>
 

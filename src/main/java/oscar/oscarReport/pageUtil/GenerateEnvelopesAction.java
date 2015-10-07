@@ -104,7 +104,8 @@ public class GenerateEnvelopesAction  extends Action {
     float marginBottom = 0;
     Document document = new Document(_10Envelope,marginLeft,marginRight,marginTop,marginBottom); 
     response.setContentType("application/pdf");
-    response.setHeader("Content-Disposition", "attachment; filename=\"envelopePDF-"+UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")+".pdf\"");
+    //response.setHeader("Content-Disposition", "attachment; filename=\"envelopePDF-"+UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")+".pdf\"");
+    response.setHeader("Content-Disposition", "filename=\"envelopePDF-"+UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")+".pdf\"");
                 
     try {
       PdfWriter writer=PdfWriter.getInstance(document,  response.getOutputStream());
