@@ -80,7 +80,7 @@ public class ProviderDao extends OscarSuperDao {
 			{"site_searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=?  and provider_no in (select ps.provider_no from providersite ps inner join site s on ps.site_id = s.site_id where s.name = ?)"},
 			{"site_search_scheduledate_datep", "select * from scheduledate where sdate between ? and ? and status = 'A' and provider_no in (select ps.provider_no from providersite ps inner join site s on ps.site_id = s.site_id where s.name = ?) order by sdate" },
 
-			{"intake_pharmacy","SELECT * FROM  pharmacyInfo where ID = (select d.pharmacyID from demographicPharmacy d where  d.status = 1 and d.demographic_no = ? order by addDate desc limit 1) order by recordID desc limit 1"},
+			{"intake_pharmacy","SELECT * FROM  pharmacyInfo where recordID = (select d.pharmacyID from demographicPharmacy d where  d.status = 1 and d.demographic_no = ? order by addDate desc limit 1) order by recordID desc limit 1"},
 			{"intake_allergies","SELECT * FROM allergies WHERE demographic_no = ? and archived = '0' ORDER BY DESCRIPTION"},
 			{"intake_medications","select * from drugs as D where demographic_no = ? and archived = 0 and drugId = (select max(drugId) from drugs where demographic_no = D.demographic_no and archived = 0 and regional_identifier = D.regional_identifier)  and (long_term=1 or (end_date is not null and end_date > now())) ORDER BY rx_date DESC, drugId DESC"},
 			{"intake_demographic","select last_name, first_name, year_of_birth, month_of_birth, date_of_birth from demographic where demographic_no=?"},
