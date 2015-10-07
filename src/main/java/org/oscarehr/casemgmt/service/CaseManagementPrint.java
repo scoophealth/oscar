@@ -69,6 +69,7 @@ import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.DocumentException;
+import java.io.File;
 
 public class CaseManagementPrint {
 	
@@ -211,7 +212,14 @@ public class CaseManagementPrint {
 		// Create new file to save form to
 		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 		String fileName = path + "EncounterForm-" + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf";
-		FileOutputStream out = new FileOutputStream(fileName);
+                File file=null;
+                FileOutputStream out=null;
+                File file2=null;
+                FileOutputStream os2=null;
+                
+                try {
+                file= new File(fileName);
+		out = new FileOutputStream(file);
 
 		CaseManagementPrintPdf printer = new CaseManagementPrintPdf(request, out);
 		printer.printDocHeaderFooter();
@@ -258,7 +266,8 @@ public class CaseManagementPrint {
 				String segmentId = result.segmentID;
 				MessageHandler handler = Factory.getHandler(segmentId);
 				String fileName2 = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "//" + handler.getPatientName().replaceAll("\\s", "_") + "_" + handler.getMsgDate() + "_LabReport.pdf";
-				OutputStream os2 = new FileOutputStream(fileName2);
+                                file2= new File(fileName2);
+				os2 = new FileOutputStream(file2);
 				LabPDFCreator pdfCreator = new LabPDFCreator(os2, segmentId, loggedInInfo.getLoggedInProviderNo());
 				pdfCreator.printPdf();
 				pdfDocs.add(fileName2);
@@ -266,6 +275,25 @@ public class CaseManagementPrint {
 
 		}
 		ConcatPDF.concat(pdfDocs, os);
+                } catch (IOException e)
+                {
+                    logger.error("Error ",e);
+                    
+                }
+                finally {
+                  if (out!=null) {
+                      out.close();
+                  }
+                  if (os2!=null) {
+                      os2.close();
+                  }
+                  if (file!=null) {
+                      file.delete();
+                  }
+                  if (file2!=null) {
+                      file2.delete();
+                  }
+                }
 	}
 	
 	public String[] getIssueIds(List<Issue> issues) {
