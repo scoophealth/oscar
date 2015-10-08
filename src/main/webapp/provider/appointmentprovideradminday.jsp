@@ -2011,14 +2011,16 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
         			if(demographic_no==0) {
         %>
         	<!--  caisi  -->
-        	<% if (tickler_no.compareTo("") != 0) {%>
-	        	<caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
-        			<a href="#" onClick="popupPage(700,1024, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
-    			</caisi:isModuleLoad>
-    			<caisi:isModuleLoad moduleName="ticklerplus">
-    				<a href="../ticklerPlus/index.jsp" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
-    			</caisi:isModuleLoad>
-    		<%} %>
+        	<security:oscarSec roleName="<%=roleName$%>" objectName="_tickler" rights="r">
+	        	<% if (tickler_no.compareTo("") != 0) {%>
+		        	<caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
+	        			<a href="#" onClick="popupPage(700,1024, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
+	    			</caisi:isModuleLoad>
+	    			<caisi:isModuleLoad moduleName="ticklerplus">
+	    				<a href="../ticklerPlus/index.jsp" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
+	    			</caisi:isModuleLoad>
+	    		<%} %>
+    		</security:oscarSec>
     		
     		<!--  alerts -->
     		<% if(OscarProperties.getInstance().getProperty("displayAlertsOnScheduleScreen", "").equals("true")){ %>
