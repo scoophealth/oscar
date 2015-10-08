@@ -258,10 +258,10 @@ public class JdbcBillingCreateBillingFile {
 				ret += "<td class='" + styleClass + "'>" + ch1Obj.getId() + "</td>" 
 						+ "<td class='" + styleClass + "'>" + ch1Obj.getDemographic_name() + "</td>"; 
 			}
-			ret += "<td class='" + styleClass + "'>" + demo.getRosterStatus() + "</td>" 
+			ret += "<td class='" + styleClass + "'>" + (demo.getRosterStatus()==null?"":demo.getRosterStatus()) + "</td>" 
 			+ "<td class='" + styleClass + "'>" + demo.getBirthDayAsString() + "</td>" 
 			+ "<td class='" + styleClass + "'>" + demo.getSex() + "</td>" 
-			+ "<td class='" + styleClass + "'>" + ch1Obj.getHin() + ch1Obj.getVer() + "</td>"
+			+ "<td class='" + styleClass + "'>" + (ch1Obj.getHin()==null?"":ch1Obj.getHin()) + (ch1Obj.getVer()==null?"":ch1Obj.getVer()) + "</td>"
 			+ "<td class='" + styleClass + "'>" + ch1Obj.getBilling_date()+ "</td>" 
 			+ "<td class='" + styleClass + "'>" + itemObj.getService_code() + "</td>" 
 			+ "<td align='right' class='" + styleClass + "'>" + itemObj.getFee() + "</td>"
