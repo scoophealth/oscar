@@ -29,7 +29,6 @@
 <%@ page import="org.oscarehr.common.model.UserProperty"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%
-    if (session.getAttribute("userrole") == null) { response.sendRedirect("../logout.jsp"); }
     String curUser_no = (String) session.getAttribute("user");
     UserPropertyDAO propertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
     String defaultPrinterName = "";
