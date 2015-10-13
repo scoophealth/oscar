@@ -10,17 +10,27 @@
     
 --%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.billing,_admin" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin&type=_admin.billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     boolean bodd = false;
     EDTFolder folder = EDTFolder.getFolder(request.getParameter("folder"));
     String folderPath = folder.getPath();
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.backup,_admin.billing" rights="r" reverse="<%=true%>">
-	<%response.sendRedirect("/oscar/logout.jsp");%>
-</security:oscarSec>
+
 <%@ page import="java.util.*,oscar.*,java.io.*,java.net.*,oscar.util.*,org.apache.commons.io.FileUtils,java.text.SimpleDateFormat,org.oscarehr.billing.CA.ON.util.EDTFolder,org.oscarehr.util.MiscUtils" errorPage="errorpage.jsp"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <html>

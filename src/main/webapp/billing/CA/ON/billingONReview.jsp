@@ -17,6 +17,22 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
+
 <%@page import="org.oscarehr.common.dao.BillingServiceDao"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
@@ -54,9 +70,7 @@
         BillingONCHeader1Dao billingONCHeader1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
 %>
 <%//
-	if (session.getAttribute("user") == null) {
-		response.sendRedirect("../../../logout.jsp");
-	}
+	
 
 			String user_no = (String) session.getAttribute("user");
 			String providerview = request.getParameter("providerview") == null ? "" : request

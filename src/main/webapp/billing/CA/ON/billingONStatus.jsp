@@ -18,6 +18,21 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report,_admin.reporting,_admin" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_report&type=_admin.reporting&type=_admin");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="oscar.OscarProperties" %>
 <%@page import="java.text.NumberFormat" %>
@@ -37,11 +52,9 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%> 
 --%>
 
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    boolean isTeamBillingOnly=false;
+     boolean isTeamBillingOnly=false;
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false; 
     OscarProperties props = OscarProperties.getInstance();

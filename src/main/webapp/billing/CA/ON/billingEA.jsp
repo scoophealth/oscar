@@ -17,11 +17,25 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report,_admin.reporting,_admin" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_report&type=_admin.reporting&type=_admin");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
 <%   
-  if(session.getValue("user") == null)
-    response.sendRedirect("../../logout.jsp");
-  String user_no;
+   String user_no;
   user_no = (String) session.getAttribute("user");
            String docdownload = oscarVariables.getProperty("project_home") ;;
            session.setAttribute("homepath", docdownload);      
