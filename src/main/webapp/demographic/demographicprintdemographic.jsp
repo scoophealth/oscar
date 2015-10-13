@@ -24,10 +24,7 @@
 
 --%>
 
-<%
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
-%>
+
 <%@ page import="java.util.*, java.sql.*, oscar.*"
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

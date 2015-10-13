@@ -24,11 +24,6 @@
 
 --%>
 
-<%
-  if (session.getAttribute("user") == null) {
-    response.sendRedirect("../logout.jsp");
-  }
-%>
 <%@page import="oscar.OscarProperties"%>
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.Properties"%>

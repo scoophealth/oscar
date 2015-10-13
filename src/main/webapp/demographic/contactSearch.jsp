@@ -33,9 +33,6 @@
 <%@ include file="/taglibs.jsp"%>
 
 <%
-  if (session.getAttribute("user") == null) {
-    response.sendRedirect("../logout.jsp");
-  }
   String strLimit1="0";
   String strLimit2="10";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
