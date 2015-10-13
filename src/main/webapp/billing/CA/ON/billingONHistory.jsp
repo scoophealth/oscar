@@ -17,14 +17,28 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="java.math.BigDecimal"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
-  if(session.getAttribute("user") == null)
-    response.sendRedirect("../logout.htm");
+
   String curProvider_no;
   curProvider_no = (String) session.getAttribute("user");
-  String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user"); 
   //display the main provider page
   //includeing the provider name and a month calendar
   String strLimit1="0";
@@ -52,7 +66,6 @@
 	BillingONCHeader1Dao bCh1Dao = SpringUtils.getBean(BillingONCHeader1Dao.class);	
 %>
 
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <jsp:useBean id="providerBean" class="java.util.Properties"

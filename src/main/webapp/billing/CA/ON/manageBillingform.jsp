@@ -17,6 +17,21 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed2=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_admin.billing,_admin" rights="w" reverse="<%=true%>">
+	<%authed2=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin&type=_admin.billing");%>
+</security:oscarSec>
+<%
+if(!authed2) {
+	return;
+}
+%>
+
 <%      
 String user_no = (String) session.getAttribute("user");
 String asstProvider_no = "";
