@@ -43,11 +43,7 @@
  * <OSCAR TEAM>
  */
 -->
-<%
-  if (session.getAttribute("user") == null) {
-    response.sendRedirect("../logout.jsp");
-  }
-%>
+
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.Properties"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>

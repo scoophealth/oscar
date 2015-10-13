@@ -25,6 +25,21 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_demographic");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@page import="org.oscarehr.common.dao.DataExportDao"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="oscar.util.StringUtils"%>
@@ -35,13 +50,8 @@
 <%@include file="/casemgmt/taglibs.jsp"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 <%
-if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 String demographic_no = request.getParameter("demographic_no");
-String roleName = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName%>" objectName="_admin" rights="r" reverse="true">
-<%response.sendRedirect("../logout.jsp");%>
-</security:oscarSec>
 
 <%
 DemographicSets  ds = new DemographicSets();
