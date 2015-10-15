@@ -59,6 +59,9 @@
 <%@page import="oscar.OscarProperties" %>
 <%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.managers.ProgramManager2" %>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
@@ -68,6 +71,7 @@
 	WaitingListNameDao waitingListNameDao = SpringUtils.getBean(WaitingListNameDao.class);
 	EFormDao eformDao = (EFormDao)SpringUtils.getBean("EFormDao");
 	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
+	ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
     String privateConsentEnabledProperty = OscarProperties.getInstance().getProperty("privateConsentEnabled");
     boolean privateConsentEnabled = privateConsentEnabledProperty != null && privateConsentEnabledProperty.equals("true");
     
@@ -1037,6 +1041,20 @@ function ignoreDuplicates() {
           </select>
       </td>
 		<oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">
+		<%
+			String[] privateConsentPrograms = OscarProperties.getInstance().getProperty("privateConsentPrograms","").split(",");
+			ProgramProvider pp2 = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+			boolean showConsentsThisTime=false;
+			if(pp2 != null) {
+				for(int x=0;x<privateConsentPrograms.length;x++) {
+					if(privateConsentPrograms[x].equals(pp2.getProgramId().toString())) {
+						showConsentsThisTime=true;
+					}
+				}
+			}
+		
+			if(showConsentsThisTime) {
+		%>
 		<td colspan="2">
 			<div id="usSigned">
 				<input type="radio" name="usSigned" value="signed">U.S. Resident Consent Form Signed
@@ -1044,6 +1062,7 @@ function ignoreDuplicates() {
 			    <input type="radio" name="usSigned" value="unsigned">U.S. Resident Consent Form NOT Signed
 		    </div>
 		</td>
+		<% } %>
 		</oscar:oscarPropertiesCheck>
     </tr>
     <tr valign="top">
