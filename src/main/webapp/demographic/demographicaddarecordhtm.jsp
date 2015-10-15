@@ -1083,6 +1083,20 @@ function removeChildRecord(index) {
           </select>
       </td>
 		<oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">
+		<%
+			String[] privateConsentPrograms = OscarProperties.getInstance().getProperty("privateConsentPrograms","").split(",");
+			ProgramProvider pp2 = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+			boolean showConsentsThisTime=false;
+			if(pp2 != null) {
+				for(int x=0;x<privateConsentPrograms.length;x++) {
+					if(privateConsentPrograms[x].equals(pp2.getProgramId().toString())) {
+						showConsentsThisTime=true;
+					}
+				}
+			}
+		
+			if(showConsentsThisTime) {
+		%>
 		<td colspan="2">
 			<div id="usSigned">
 				<input type="radio" name="usSigned" value="signed">U.S. Resident Consent Form Signed
@@ -1090,6 +1104,7 @@ function removeChildRecord(index) {
 			    <input type="radio" name="usSigned" value="unsigned">U.S. Resident Consent Form NOT Signed
 		    </div>
 		</td>
+		<% } %>
 		</oscar:oscarPropertiesCheck>
     </tr>
     <tr valign="top">
