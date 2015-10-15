@@ -112,20 +112,23 @@ function displayReport()
 }
 // -->
 </script>
+
+<style>
+@media print {
+	.noprint {display:none !important;}
+}
+</style>
 </head>
 
-<body onload="displayReport()" >
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<body onload="displayReport()">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="noprint">
 	<tr>
-		<td height="40" width="10%" class="Header"><input type="button"
-			name="print" value="<bean:message key="global.btnPrint"/>"
-			onClick="window.print()"></td>
-		<td width="80%" align="left" class="Header">oscar<font size="3">Billing</font>
+		<td height="40" width="10%" class="Header">
+			<font size="3">Billing</font>
 		</td>
-		<td width="10%" align="right" class="Header"><input type="button" name="close"
-                        value="<bean:message key="global.btnClose"/>"
-                        onClick="window.close()"></td>
-
+		<td width="90%" align="right" class="Header">
+			<input type="button" name="print" value="<bean:message key="global.btnPrint"/>"	onClick="window.print()">
+		</td>
 	</tr>
 </table>
 <div id="MOHreport" ></div>
