@@ -66,7 +66,6 @@ import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.ConcatPDF;
 import oscar.util.ConversionUtils;
-import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.DocumentException;
 import java.io.File;
@@ -209,9 +208,13 @@ public class CaseManagementPrint {
 			}
 		}
 
+		SimpleDateFormat headerFormat = new SimpleDateFormat("yyyy-MM-dd.hh.mm.ss");
+	    Date now = new Date();
+	    String headerDate = headerFormat.format(now);
+		
 		// Create new file to save form to
 		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
-		String fileName = path + "EncounterForm-" + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf";
+		String fileName = path + "EncounterForm-" + headerDate + ".pdf";
                 File file=null;
                 FileOutputStream out=null;
                 File file2=null;
