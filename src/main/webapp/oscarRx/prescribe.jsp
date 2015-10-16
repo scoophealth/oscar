@@ -120,6 +120,7 @@ if(listRxDrugs!=null){
          boolean startDateUnknown	= rx.getStartDateUnknown();
          boolean nonAuthoritative   = rx.isNonAuthoritative();
          String quantity            = rx.getQuantity();
+         String dispensingUnits     = rx.getDispensingUnits();
          String quantityText="";
          String unitName=rx.getUnitName();
          if(unitName==null || unitName.equalsIgnoreCase("null") || unitName.trim().length()==0){
@@ -158,6 +159,7 @@ if(listRxDrugs!=null){
                     String durationStr = duration;
                     String durationUnitStr = durationUnit;
                     String quantityStr = quantityText;
+                    String dispensingUnitsStr = rx.getDispensingUnits();
                     String unitNameStr="";
                     if(rx.getUnitName()!=null && !rx.getUnitName().equalsIgnoreCase("null"))
                         unitNameStr=rx.getUnitName();
@@ -192,7 +194,8 @@ if(listRxDrugs!=null){
                        <br><br>
         </div>
 
-        <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte:</label><input <%if(rx.isCustomNote()){%> disabled <%}%> type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
+        <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte:</label><input <%if(rx.isCustomNote()){%> disabled <%}%> type="text" id="quantity_<%=rand%>"    size="10" name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
+        <label style="">Units:</label><input type="text" id="dispensingUnits_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="dispensingUnits_<%=rand%>"   value="<%=repeats%>" />
         <label style="">Repeats:</label><input type="text" id="repeats_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="repeats_<%=rand%>"   value="<%=repeats%>" />
 
         <input  type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" <%if(longTerm) {%> checked="true" <%}%> >Long Term Med </input>
@@ -207,6 +210,7 @@ if(listRxDrugs!=null){
            <a tabindex="-1" href="javascript:void(0);" onclick="focusTo('duration_<%=rand%>')">Duration:</a><a  id="duration_<%=rand%>" onclick="focusTo(this.id) " onfocus="lookEdittable(this.id)" onblur="lookNonEdittable(this.id);updateProperty(this.id);"> <%=durationStr%></a>
            <a tabindex="-1" href="javascript:void(0);" onclick="focusTo('durationUnit_<%=rand%>')">DurationUnit:</a><a  id="durationUnit_<%=rand%>" onclick="focusTo(this.id) " onfocus="lookEdittable(this.id)" onblur="lookNonEdittable(this.id);updateProperty(this.id);"> <%=durationUnitStr%></a>
            <a tabindex="-1" >Qty/Mitte:</a><a tabindex="-1" id="quantityStr_<%=rand%>"> <%=quantityStr%></a>
+           <a tabindex="-1" >Units:</a><a tabindex="-1" id="dispensingUnitsStr_<%=rand%>"> <%=dispensingUnitsStr%></a>
            <a> </a><a tabindex="-1" id="unitName_<%=rand%>"> </a>
            <a> </a><a tabindex="-1" href="javascript:void(0);" id="prn_<%=rand%>" onclick="setPrn('<%=rand%>');updateProperty('prnVal_<%=rand%>');"><%=prnStr%></a>
            <input id="prnVal_<%=rand%>"  style="display:none" <%if(prnStr.trim().length()==0){%>value="false"<%} else{%>value="true" <%}%> />
@@ -353,8 +357,9 @@ if(listRxDrugs!=null){
               	<br><br>         
         </div>
 
-        <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte:</label><input <%if(rx.isCustomNote()){%> disabled <%}%> type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
-        <label style="">Repeats:</label><input type="text" id="repeats_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="repeats_<%=rand%>"   value="<%=repeats%>" />
+        <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte:</label><input size="8" <%if(rx.isCustomNote()){%> disabled <%}%> type="text" id="quantity_<%=rand%>"     size="10" name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
+        <label style="">Units:</label><input type="text" size="5" id="dispensingUnits_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="dispensingUnits_<%=rand%>"   value="<%=repeats%>" />
+        <label style="">Repeats:</label><input type="text" size="5" id="repeats_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="repeats_<%=rand%>"   value="<%=repeats%>" />
 
         <input  type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" <%if(longTerm) {%> checked="true" <%}%> />Long Term Med
         <%if(genericName!=null&&!genericName.equalsIgnoreCase("null")){%>
@@ -368,6 +373,7 @@ if(listRxDrugs!=null){
            <a tabindex="-1" href="javascript:void(0);" onclick="focusTo('duration_<%=rand%>')">Duration:</a><a  id="duration_<%=rand%>" onclick="focusTo(this.id) " onfocus="lookEdittable(this.id)" onblur="lookNonEdittable(this.id);updateProperty(this.id);"> <%=durationStr%></a>
            <a tabindex="-1" href="javascript:void(0);" onclick="focusTo('durationUnit_<%=rand%>')">DurationUnit:</a><a  id="durationUnit_<%=rand%>" onclick="focusTo(this.id) " onfocus="lookEdittable(this.id)" onblur="lookNonEdittable(this.id);updateProperty(this.id);"> <%=durationUnitStr%></a>
            <a tabindex="-1" >Qty/Mitte:</a><a tabindex="-1" id="quantityStr_<%=rand%>"> <%=quantityStr%></a>
+           <a tabindex="-1" >Units:</a><a tabindex="-1" id="dispensingUnitsStr_<%=rand%>"> <%=dispensingUnitsStr%></a>
            <a> </a><a tabindex="-1" id="unitName_<%=rand%>"> </a>
            <a> </a><a tabindex="-1" href="javascript:void(0);" id="prn_<%=rand%>" onclick="setPrn('<%=rand%>');updateProperty('prnVal_<%=rand%>');"><%=prnStr%></a>
            <input id="prnVal_<%=rand%>"  style="display:none" <%if(prnStr.trim().length()==0){%>value="false"<%} else{%>value="true" <%}%> />

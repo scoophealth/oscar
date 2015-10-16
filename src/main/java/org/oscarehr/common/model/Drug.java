@@ -85,6 +85,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	@Column(name = "durunit")
 	private String durUnit = null;
 	private String quantity = null;
+	private String dispensingUnits = null;
 	@Column(name = "`repeat`")
 	private Integer repeat = 0;
 	@Column(name = "last_refill_date")
@@ -204,6 +205,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		this.freqCode = drug.getFrequencyCode();
 		this.duration = drug.getDuration();
 		this.durUnit = drug.getDurationUnit();
+		this.dispensingUnits = drug.getDispensingUnits();
 		this.quantity = drug.getQuantity();
 		this.repeat = drug.getRepeat();
 		this.lastRefillDate = drug.getLastRefillDate();
@@ -482,6 +484,14 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 
 	public void setQuantity(String quantity) {
 		this.quantity = StringUtils.trimToNull(quantity);
+	}
+
+	public String getDispensingUnits() {
+		return dispensingUnits;
+	}
+
+	public void setDispensingUnits(String dispensingUnits) {
+		this.dispensingUnits = StringUtils.trimToNull(dispensingUnits);
 	}
 
 	public Integer getRepeat() {
