@@ -26,7 +26,7 @@
 
 <%@ page import="oscar.eform.actions.DisplayImageAction,java.lang.*,java.io.File,oscar.OscarProperties,java.io.*,oscar.eform.*,oscar.eform.data.*,java.util.*,org.apache.log4j.Logger"%>
 <!--
-/*  eForm Generator v5.3 reimagined by Peter Hutten-Czapski 2014
+/*  eForm Generator v5.4h reimagined by Peter Hutten-Czapski 2014
  *
  *  eformGenerator.jsp
  *
@@ -145,6 +145,9 @@ var sigOffset = 0;
 var SignatureHolderH = 0;
 var SignatureHolderW = 0;
 var SignatureHolderP = 0;
+var SignatureColor="Black";
+var SignatureLineColor="#FFFFFF";
+var SignatureBorder="2px dotted blue";
 
 function getCheckedValue(radioObj) {
 	if(!radioObj)
@@ -651,27 +654,39 @@ function GetTextTop(){
 	textTop += "&lt;META http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;\n"
 	textTop += "&lt;title&gt;"
 	textTop += document.getElementById('eFormName').value;
-	textTop += "&lt;/title&gt;\n&lt;style&gt;\n input {\n\t -moz-box-sizing: content-box;\n\t -webkit-print-color-adjust: exact;\n\t -webkit-box-sizing: content-box;\n\t box-sizing: content-box\n}\n .sig {\n\t border: 2px dotted blue;\n\t background-color: lightgrey;\n }\n &lt;/style&gt;\n\n"
+	textTop += "&lt;/title&gt;\n"
+	textTop += "&lt;style type=&quot;text/css&quot; media=&quot;screen&quot; &gt;\n";
+	textTop += "input {\n\t-moz-box-sizing: content-box;\n\t-webkit-print-color-adjust: exact;\n\t-webkit-box-sizing: content-box;\n\tbox-sizing: content-box\n}\n .sig {\n\tborder: "+SignatureBorder+";\n\tcolor: "+SignatureColor+";\n\tbackground-color: white;\n }\n    /* Drawing the 'gripper' for touch-enabled devices */\n    html.touch #content {\n        float:left;\n        width:92%;\n    }\n    html.touch #scrollgrabber {\n        float:right;\n        width:4%;\n        margin-right:2%;\n        background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)\n    }\n    html.borderradius #scrollgrabber {\n        border-radius: 1em;\n    }\n"
+	textTop += " &lt;/style&gt;\n\n";
 
-	textTop += "&lt;style type=&quot;text/css&quot; media=&quot;print&quot;&gt;\n .DoNotPrint {\n\t display: none;\n }\n .noborder {\n\t border : 0px;\n\t background: transparent;\n\t scrollbar-3dlight-color: transparent;\n\t scrollbar-3dlight-color: transparent;\n\t scrollbar-arrow-color: transparent;\n\t scrollbar-base-color: transparent;\n\t scrollbar-darkshadow-color: transparent;\n\t scrollbar-face-color: transparent;\n\t scrollbar-highlight-color: transparent;\n\t scrollbar-shadow-color: transparent;\n\t scrollbar-track-color: transparent;\n\t background: transparent;\n\t overflow: hidden;\n }\n.sig {\n\t border-style: solid;\n\t border-color: transparent;\n\t background-color: transparent;\n }\n &lt;/style&gt;\n\n"
+	textTop += "&lt;style type=&quot;text/css&quot; media=&quot;print&quot;&gt;\n"
+	textTop += "\n .DoNotPrint {\n\tdisplay: none;\n }\n .noborder {\n\tborder : 0px;\n\tbackground: transparent;\n\tscrollbar-3dlight-color: transparent;\n\tscrollbar-3dlight-color: transparent;\n\tscrollbar-arrow-color: transparent;\n\tscrollbar-base-color: transparent;\n\tscrollbar-darkshadow-color: transparent;\n\tscrollbar-face-color: transparent;\n\tscrollbar-highlight-color: transparent;\n\tscrollbar-shadow-color: transparent;\n\tscrollbar-track-color: transparent;\n\tbackground: transparent;\n\toverflow: hidden;\n }\n.sig {\n\tborder-style: solid;\n\tborder-color: transparent;\n\tcolor: "+SignatureColor+";\n\tbackground-color: transparent;\n }\n\n "
+	textTop += "&lt;/style&gt;\n\n";
 
-	textTop += "&lt;!-- OSCAR based files for greater functionality --&gt;\n"	
-	textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Djquery/jquery-1.4.2.js&quot;&gt;&lt;/script&gt;\n";
+	textTop += "&lt;!-- jQuery for greater functionality --&gt;\n"
+	// dependency on jquery and for pdf and faxing hack it helps that you are not referencing a local version
+	textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js&quot;&gt;&lt;/script&gt;\n";	
+	// if unavailable reference the one in OSCAR
+	textTop += "&lt;script&gt;if (typeof jQuery === 'undefined') {\n\tdocument.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));\n}\n"
+	textTop += "&lt;/script&gt;\n";
+	// ole darn it, I knew I left a copy of jQuery lying around somewhere... perhaps under my nose?
+	textTop += "&lt;script&gt;if (typeof jQuery === 'undefined') {\n\tdocument.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));\n}\n"
+	textTop += "&lt;/script&gt;\n";
+
 	//reference built in functions as desired
 
 <% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_print_enabled")) { %>
-	
 	if (document.getElementById('includePdfPrintControl').checked) {
 		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Deforms/printControl.js&quot;&gt;&lt;/script&gt;\n";
 	}
 <% }%>
 
 	//reference built in faxControl	
-	<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_fax_enabled")) { %>
+<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_fax_enabled")) { %>
 		if (document.getElementById("includeFaxControl").checked) {
 			textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Deforms/faxControl.js&quot;&gt;&lt;/script&gt;\n";
 	}
-	<% } %>
+<% } %>
 
 
 	//reference built in signatureControl
@@ -701,17 +716,31 @@ function GetTextTop(){
 		}
 
 		textTop += "\n&lt;!-- Freeform Signatures --&gt;\n"
-		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Djquery/jSignature.min.js&quot;&gt;&lt;/script&gt;\n\n";
+		//In OSCAR 15 jSignature is available within the source  
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;${oscar_javascript_path}/jquery/jSignature.min.js&quot;&gt;&lt;/script&gt;\n\n";
 		textTop += "&lt;!--[if lt IE 9]&gt;\n"
-		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Dflashcanvas.js&quot;&gt;&lt;/script&gt;\n";
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;${oscar_javascript_path}flashcanvas.js&quot;&gt;&lt;/script&gt;\n";
 		textTop += "&lt;![endif]--&gt;\n\n"
 
 
 		textTop += "&lt;script type=&quot;text/javascript&quot;&gt;\n";	
 		textTop += "jQuery(document).ready(function() {\n";
 		for (j=0; (j < (sigArray.length) ); j++){
-			textTop += "\t$(&quot;#Canvas"+sigArray[j]+"&quot;).jSignature()\n"
+			textTop += "\t$(&quot;#Canvas"+sigArray[j]+"&quot;).jSignature({'decor-color':'"+SignatureLineColor+"'})\n"
 		}
+		textTop += "\tvar pdf = jQuery(&quot;input[name='pdfButton']&quot;);\n"
+		textTop += "\tif (pdf.size() != 0) {\n"
+		textTop += "\t\tpdf.attr('onclick', '').unbind('click');\n"
+		textTop += "\t\tpdf.attr('value', 'PDF');\n"
+		textTop += "\t\tpdf.click(function(){saveSig();submitPrintButton(false);});\n"
+		textTop += "\t\t}\n"
+		textTop += "\tvar pdfSave = jQuery(&quot;input[name='pdfSaveButton']&quot;);\n"
+		textTop += "\tif (pdfSave.size() != 0) {\n"
+		textTop += "\t\tpdfSave.attr('onclick', '').unbind('click');\n"
+		textTop += "\t\tpdfSave.attr('value', 'Submit & PDF');\n"
+		textTop += "\t\tpdfSave.click(function(){saveSig();submitPrintButton(true);});\n"
+		textTop += "\t\t}\n"
+
 		textTop += "})\n";
 		textTop +="&lt;/script&gt;\n\n";
 		textTop += "&lt;script type=&quot;text/javascript&quot;&gt;\n";
@@ -2611,6 +2640,44 @@ show('classic');
 <!-- Add A Freehand Signature area to this form--> <br>
 			<div id="Section4a" style="display:none"> 
 				<input type="button" name="AddSignatureBox1" id="AddSignatureBox1" style="width:400px" value="<bean:message key="eFormGenerator.signatureLocationButton"/>" onclick="SetSwitchOn('SignatureBox');document.getElementById('AddSignature').disabled=true; ">
+				<p>Signature Color
+				<select id="sigColor" onchange="SignatureColor=document.getElementById('sigColor').value;">
+					<option value="black" selected>black</option>
+					<option value="blue">blue</option>
+					<option value="green">green</option>
+					<option value="red">red</option>
+					<option value="orange">orange</option>
+					<option value="purple">purple</option>
+					<option value="brown">brown</option>
+				</select>
+Signature Line Color
+				<select id="sigLineColor" onchange="SignatureLineColor=document.getElementById('sigLineColor').value;">
+					<option value="#FFFFFF" selected>white</option>
+					<option value="#000000">black</option>
+					<option value="#0000FF">blue</option>
+					<option value="#00FF00">green</option>
+					<option value="#FF0000">red</option>
+				</select><br>
+Boundary Type
+				<select id="sigBorderType" onchange="SignatureBorder='2px '+document.getElementById('sigBorderType').value+' '+document.getElementById('sigBorderColor').value;">
+					<option value="none">none</option>
+					<option value="dotted" selected>dotted</option>
+					<option value="dashed">dashed</option>
+					<option value="solid">solid</option>
+					<option value="double">double</option>
+					<option value="groove">groove</option>
+				</select>
+Boundary Color
+				<select id="sigBorderColor" onchange="SignatureBorder='2px '+document.getElementById('sigBorderType').value+' '+document.getElementById('sigBorderColor').value;">
+					<option value="black">black</option>
+					<option value="blue" selected>blue</option>
+					<option value="green">green</option>
+					<option value="red">red</option>
+					<option value="orange">orange</option>
+					<option value="yellow">yellow</option>
+					<option value="purple">purple</option>
+					<option value="brown">brown</option>
+				</select><br>
 			</div> 
 
 
