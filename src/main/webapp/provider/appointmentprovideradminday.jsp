@@ -1801,6 +1801,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
             	if(request.getParameter("module")!=null){
             		module=request.getParameter("module");
             	}
+        List<Object[]> confirmTimeCode = scheduleDateDao.search_appttimecode(ConversionUtils.fromDateString(strDate), curProvider_no[nProvider]);
             	
 	    for(ih=startHour*60; ih<=(endHour*60+(60/depth-1)*depth); ih+=depth) { // use minutes as base
             hourCursor = ih/60;
@@ -1808,9 +1809,9 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
             bColorHour=minuteCursor==0?true:false; //every 00 minute, change color
 
             //templatecode
-            if((dateTimeCodeBean.get(curProvider_no[nProvider]) != null)&&(dateTimeCodeBean.get(curProvider_no[nProvider]) != "")) {
-	            int nLen = 24*60 / ((String) dateTimeCodeBean.get(curProvider_no[nProvider]) ).length();
-	            int ratio = (hourCursor*60+minuteCursor)/nLen;
+            if((dateTimeCodeBean.get(curProvider_no[nProvider]) != null)&&(dateTimeCodeBean.get(curProvider_no[nProvider]) != "") && confirmTimeCode.size()!=0) {
+	          int nLen = 24*60 / ((String) dateTimeCodeBean.get(curProvider_no[nProvider]) ).length();
+	          int ratio = (hourCursor*60+minuteCursor)/nLen;
               hourmin = new StringBuffer(dateTimeCodeBean.get(curProvider_no[nProvider])!=null?((String) dateTimeCodeBean.get(curProvider_no[nProvider])).substring(ratio,ratio+1):" " );
             } else { hourmin = new StringBuffer(); }
 %>
