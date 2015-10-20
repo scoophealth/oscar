@@ -3405,9 +3405,9 @@ function autoCompleteShowMenuCPP(element, update) {
     function printNotes() {
         if( $("printopDates").checked && !printDateRange()) {
             return false;
-        }
-        else if( $("printopAll").checked )
+        }else if( $("printopAll").checked ){
             printAll();
+        }
 
         if( $F("notes2print").length == 0 && $F("printCPP") == "false" && $F("printRx") == "false" && $F("printLabs") == "false" ) {
             alert(nothing2PrintMsg);
@@ -3422,7 +3422,6 @@ function autoCompleteShowMenuCPP(element, update) {
         frm.pStartDate.value = $F("printStartDate");
         frm.pEndDate.value = $F("printEndDate");
         frm.submit();
-
 
         return false;
     }
