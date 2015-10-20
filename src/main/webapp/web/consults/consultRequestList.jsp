@@ -120,6 +120,8 @@
 				<button class="btn btn-success" type="button" title=<bean:message key="consult.list.newRemindFill" bundle="ui"/> ng-click="addConsult()" ng-disabled="search.demographicNo==null">
 					<bean:message key="consult.list.new" bundle="ui"/>
 				</button>
+				
+				<button class="btn btn-default" type="button" ng-click="popup(700,960,'<%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp','<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgConsConfig"/>')"><bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgEditSpecialists"/></button>
 			</div>
 		</div>
 	</form>
