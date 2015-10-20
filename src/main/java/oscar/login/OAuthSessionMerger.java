@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * of the License, or (at your option) any later version. 
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,36 +21,34 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.web;
 
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
+/*
+ * Written by Brandon Aubie
+ * brandon@aubie.ca
+ */
 
-import org.oscarehr.common.dao.CasemgmtNoteLockDao;
-import org.oscarehr.common.model.CasemgmtNoteLock;
-import org.oscarehr.util.MiscUtils;
+
+package oscar.login;
+
+import org.oscarehr.common.dao.ServiceRequestTokenDao;
+import org.oscarehr.common.model.ServiceRequestToken;
+import javax.servlet.http.HttpServletRequest;
 import org.oscarehr.util.SpringUtils;
 
-public class OscarSessionListener implements HttpSessionListener {
 
-	@Override
-	public void sessionCreated(HttpSessionEvent se) {
-		// TODO Auto-generated method stub
+public class OAuthSessionMerger {
 
-	}
+    public static boolean mergeSession(HttpServletRequest request) {
 
-	@Override
-	public void sessionDestroyed(HttpSessionEvent se) {
-		String id = se.getSession().getId();
-		MiscUtils.getLogger().info("session is being destroyed - " + id);
-
-		CasemgmtNoteLockDao casemgmtNoteLockDao = SpringUtils.getBean(CasemgmtNoteLockDao.class);
-		
-		for(CasemgmtNoteLock lock:casemgmtNoteLockDao.findBySession(id)) {
-			MiscUtils.getLogger().info("removing note locks for this session - " + lock);
-			
-			casemgmtNoteLockDao.remove(lock.getId());
-		}
-	}
+    		String proNo = (String)request.getSession().getAttribute("user");
+    		ServiceRequestTokenDao serviceRequestTokenDao = SpringUtils.getBean(ServiceRequestTokenDao.class);
+    		ServiceRequestToken srt = serviceRequestTokenDao.findByTokenId(request.getParameter("oauth_token"));
+    		if(srt != null) {
+    			srt.setProviderNo(proNo);
+    			serviceRequestTokenDao.merge(srt);
+                return true;
+    		}
+            return false;
+    }
 
 }

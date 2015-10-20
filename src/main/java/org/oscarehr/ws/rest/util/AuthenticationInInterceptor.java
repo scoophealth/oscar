@@ -47,7 +47,7 @@ public class AuthenticationInInterceptor extends AbstractPhaseInterceptor<Messag
 
 	private LoggedInInfo getLoggedInInfo(Message message) {
 		HttpServletRequest request = (HttpServletRequest) message.get(AbstractHTTPDestination.HTTP_REQUEST);
-		return LoggedInInfo.getLoggedInInfoFromSession(request);
+               return LoggedInInfo.getLoggedInInfoFromSession(request);
 	}
 
 	@Override

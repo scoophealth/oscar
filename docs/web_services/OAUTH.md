@@ -6,6 +6,8 @@ When creating new web service classes, you must add a new <bean /> tag to src/ma
 
 All OAuth token requests take place at /ws/oauth/{command}.  See the Admin > Integration > REST Clients screen in the OSCAR EMR 15 user interface for more details.
 
+A special OAuth only endpoint is available to see information about the OAuth request at /ws/services/oauth/info.
+
 
 
 OAUTH 1.0a for OSCAR Developers

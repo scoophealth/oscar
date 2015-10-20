@@ -96,7 +96,7 @@ public class OscarOAuthDataProvider implements OAuthDataProvider {
         
         rt.setCallback(reg.getCallback());
        
-        
+
         ServiceRequestToken srt = new ServiceRequestToken();
         srt.setCallback(rt.getCallback());
         srt.setClientId(serviceClientDao.findByKey(rt.getClient().getConsumerKey()).getId());
@@ -115,7 +115,7 @@ public class OscarOAuthDataProvider implements OAuthDataProvider {
 		logger.debug("getRequestToken() called");
 		ServiceRequestToken serviceToken = serviceRequestTokenDao.findByTokenId(requestToken);
 		if(serviceToken != null) {
-			
+
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.HOUR, -1);
 			Date oneHourAgo = cal.getTime();
