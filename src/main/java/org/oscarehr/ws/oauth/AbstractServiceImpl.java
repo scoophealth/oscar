@@ -21,27 +21,25 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.ws.rest;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
+/*
+ * Written by Brandon Aubie <brandon@aubie.ca>
+ */
+
+package org.oscarehr.ws.oauth;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
 
+import org.apache.cxf.rs.security.oauth.data.OAuthContext;
+import org.apache.cxf.transport.http.AbstractHTTPDestination;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.PhaseInterceptorChain;
-import org.apache.cxf.transport.http.AbstractHTTPDestination;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 
-
 /**
- * Base class for RESTful web services
+ * Base class for OAuth web services
  */
-@Produces({ "application/xml" })
-@Consumes({ "application/xml" })
 public abstract class AbstractServiceImpl {
 
 	protected HttpServletRequest getHttpServletRequest()
@@ -50,62 +48,26 @@ public abstract class AbstractServiceImpl {
 	    HttpServletRequest request = (HttpServletRequest)message.get(AbstractHTTPDestination.HTTP_REQUEST);
 	    return(request);
 	}
-	
-	/**
-	 * Gets the client's locale
-	 * 
-	 * @return
-	 */
-	protected Locale getLocale()
-	{
-		return getHttpServletRequest().getLocale();
-	}
-	
-	/**
-	 * 
-	 * Get the UI resource bundle for locale specific messages
-	 * 
-	 * @return
-	 */
-	protected ResourceBundle getResourceBundle() 
-	{
-		return ResourceBundle.getBundle("uiResources", getLocale());
+
+	protected OAuthContext getOAuthContext() {
+		Message m = PhaseInterceptorChain.getCurrentMessage();
+		OAuthContext oac = m.getContent(OAuthContext.class);
+    	return oac;
 	}
 
-	/**
-	 * Gets current provider.
-	 * 
-	 * @return
-	 * 		Returns the provider authenticated for the current request processing. 
-	 */
 	protected Provider getCurrentProvider() {
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
 		return (loggedInInfo.getLoggedInProvider());
 	}
 
-	/**
-	 * Gets the login information associated with the current request.
-	 * 
-	 * @return
-	 * 		Returns the login information
-	 * 
-	 * @throws IllegalStateException
-	 * 		IllegalStateException is thrown in case authentication info is not available 
-	 */
 	protected LoggedInInfo getLoggedInInfo() {
 
-		Message message = PhaseInterceptorChain.getCurrentMessage();
-	    HttpServletRequest request = (HttpServletRequest)message.get(AbstractHTTPDestination.HTTP_REQUEST);
-	    
-	    LoggedInInfo info = LoggedInInfo.getLoggedInInfoFromSession(request);
-
-        if (info != null && info.getLoggedInProvider() == null) {
-            // It's possible in the OAuth situation that the session is empty, but we have a valid LoggedInInfo on the request.
-            info = LoggedInInfo.getLoggedInInfoFromRequest(request);
-        }
-
+        /* The OAuthInterceptor already put its loggedInInfo into the request. */
+        HttpServletRequest request = getHttpServletRequest();
+	    LoggedInInfo info = LoggedInInfo.getLoggedInInfoFromRequest(request);
 		if (info == null) {
             throw new IllegalStateException("Authentication info is not available.");
+
 		}
 		return info;
 	}
