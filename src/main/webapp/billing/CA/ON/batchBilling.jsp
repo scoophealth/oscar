@@ -24,11 +24,24 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
 
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="oscar.OscarProperties"%>
 <%
-if(session.getAttribute("user") == null)    response.sendRedirect("../../../../logout.jsp");
 String user_no="";
 user_no = (String) session.getAttribute("user");
 %>

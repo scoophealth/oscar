@@ -17,6 +17,21 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -33,7 +48,7 @@
 		SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 
-		if(securityInfoManager.hasPrivilege(loggedInInfo, "_billing", "w", null)) {
+		
 			String billingNo = request.getParameter("xml_billing_no");
 			String error = null;
 			
@@ -74,6 +89,4 @@ if(error == null) {
 <script LANGUAGE="JavaScript">
 	self.close();
 </script>
-<%} } } else {%>
-	<h1 style="color:red">You don't have billing rights!</h1>
-<% } %>
+<%} }%>

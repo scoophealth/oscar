@@ -17,15 +17,29 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="org.oscarehr.util.DateRange"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
-  if(session.getAttribute("user") == null)
-    response.sendRedirect("../logout.htm");
+ 
   String curProvider_no;
   curProvider_no = (String) session.getAttribute("user");
-  String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user"); 
-
+ 
   String strDay="0";
   if(request.getParameter("day")!=null) strDay = request.getParameter("day");
   
@@ -44,7 +58,6 @@
 	import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.oscarDB.*"
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <html>

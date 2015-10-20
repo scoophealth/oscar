@@ -18,6 +18,21 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="org.oscarehr.common.dao.BillingOnItemPaymentDao"%>
 <%@page import="org.oscarehr.managers.SecurityInfoManager"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
@@ -51,7 +66,6 @@
 <%@page import="org.oscarehr.common.dao.BillingONPaymentDao" %>
 <%@page import="org.oscarehr.common.model.BillingONPayment" %>
 
-<%@taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -66,8 +80,7 @@
     BillingONPaymentDao billingOnPaymentDao = SpringUtils.getBean(BillingONPaymentDao.class);
     Provider userProvider = providerDao.getProvider(userProviderNo);
        
-    String roleName$ = (String)session.getAttribute("userrole") + "," + userProviderNo;
-
+  
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false;
     
