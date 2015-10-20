@@ -90,7 +90,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 				saveErrors(request, errors);
 				return (new ActionForward(mapping.getInput()));
 			} else {
-				if (getData(loggedInInfo, filename, "DOCUMENT_DIR", request))
+				if (getData(loggedInInfo, file1.toString(), "DOCUMENT_DIR", request))
 					return file1.getFileName().startsWith("L") ? mapping.findForward("outside") : mapping.findForward("success");
 				else {
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.incorrectFileFormat"));
@@ -178,12 +178,13 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 			boolean bNewBilling = props.getProperty("isNewONbilling", "").equals("true") ? true : false;
 			if (!filepath.endsWith("/"))
 				filepath = new StringBuilder(filepath).insert(filepath.length(), "/").toString();
+
 			FileInputStream file = new FileInputStream(filepath + fileName);
 			MiscUtils.getLogger().debug("file path: " + filepath + fileName);
 			// Assign associated report Name
 			ArrayList<String> messages = new ArrayList<String>();
 			String ReportName = "";
-
+			
 			if (fileName.substring(0, 1).compareTo("E") == 0 || fileName.substring(0, 1).compareTo("F") == 0) {
 				ReportName = "Claims Error Report";
 				BillingClaimsErrorReportBeanHandler hd = generateReportE(file, bNewBilling, fileName);
@@ -214,6 +215,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 				request.setAttribute("filename", fileName);
 				isGot = true;
 			}
+			
 			request.setAttribute("ReportName", ReportName);
 		} catch (FileNotFoundException fnfe) {
 
