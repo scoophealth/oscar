@@ -44,7 +44,6 @@
 <%@page import="org.oscarehr.common.model.BillingONItem, org.oscarehr.common.service.BillingONService"%>
 
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");   
 %> 
 
