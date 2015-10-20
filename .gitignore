@@ -15,3 +15,4 @@ oscar.iml
 /oscar_data_dir
 src/main/resources/uiResources_*.properties
 *.DS_Store
+*.swp

@@ -26,11 +26,19 @@
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.apache.cxf.rs.security.oauth.data.OAuthAuthorizationData" %>
 <%@page import="org.apache.cxf.rs.security.oauth.data.OAuthPermission" %>
+<%@page import="oscar.login.OAuthSessionMerger" %>
 
 <%
 	boolean loggedIn= false;
 	if(session.getAttribute("user") != null) {
 		loggedIn=true;
+
+        // Merge the session into our request token
+        
+        boolean didMerge = OAuthSessionMerger.mergeSession(request);
+        if (!didMerge) {
+            loggedIn = false; // Couldn't get the merge so request credentials again.
+        }
 	}
 	
 	OAuthAuthorizationData oauthData = (OAuthAuthorizationData)request.getAttribute("oauthauthorizationdata");
@@ -100,8 +108,10 @@
                         			$('#scope_div').show();
                         			$('#loggedin_div').show();
                         			$('#providerName').html(data.providerName);
-                        			
-            					}
+                                } else {
+                                    $('#login_error').show();
+                                    $('#login_error > span > span').html(data.error);
+                                }
             					
             		}, 'json');
             	}
@@ -147,6 +157,11 @@
 				        <input class="input-block-level" placeholder="Username" type="text" id="username">
 				        <input class="input-block-level" placeholder="Password" type="password" id="password">
 				        <input class="input-block-level" placeholder="Pin" type="password" id="pin">
+
+                        <div id="login_error" class="help-block" style="display: none;">
+                            <span class="text-error"><strong>Login Failed: </strong><span></span></span>
+                        </div>
+
 				        <button class="btn btn-large btn-primary" type="button" onclick="submitCredentials()">Sign in</button>
 				      </form>    	
 			      </div>
@@ -157,23 +172,31 @@
 				        <h4><span id="providerName"></span></h4>      
 				      </form> 
 				      <br/><br/>
-				      <h5>The 3rd party application "<%=oauthData.getApplicationName()%>" is requesting access to your OSCAR account.</h5>
-				      <h5>(<%=oauthData.getApplicationURI() %>)</h5>
-				      
+                      <h5>The 3rd party application "<%=oauthData.getApplicationName()%>" is requesting access to your OSCAR account.<br>
+				          URL for <%=oauthData.getApplicationName() %> is <%=oauthData.getApplicationURI() %>.</h5>
+
+                      <h5>Permissions requested:</h5>
 				        <form id="scopeForm" method="post" action="<%=oauthData.getReplyTo()%>;jsessionid=<%=session.getId()%>">
 				        	
+                            
 				        	<%
 				        	for(Object p:oauthData.getPermissions()) {
 				        		OAuthPermission perm = (OAuthPermission)p;
 				        	%>
-				        		<input type="checkbox" readonly="readonly" checked="checked"><%=perm.getDescription()%><br/>
+                            <div class="control group">
+                                <div class="controls">
+                                    <label class="checkbox">
+                                        <input type="checkbox" readonly="readonly" checked="checked"> <%=perm.getDescription()%> <% if ("".equals(perm.getDescription().trim())) { %><em>Permission with no description</em><% } %>
+                                    </label>
+                                </div>
+                            </div>
 				        	<% } %>
 				        	
 				            <input type="hidden" name="session_authenticity_token" value="<%=oauthData.getAuthenticityToken()%>"/>
 				            <input type="hidden" name="oauth_token" id="oauth_token" value="<%=oauthData.getOauthToken()%>"/>
 				            <input type="hidden" name="oauthDecision" id="oauthDecision" value="allow"/>
-				           	<input type="submit"/>
-				           	<input type="button" value="Cancel" onClick="deny();"/>
+                            <input type="submit" value="Authorize <%= oauthData.getApplicationName() %>" class="btn btn-primary"/>
+				           	<input type="button" value="Cancel" onClick="deny();" class="btn btn-danger" />
 				        </form>
 	        
        	
