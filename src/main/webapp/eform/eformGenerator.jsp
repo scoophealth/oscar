@@ -2926,8 +2926,8 @@ onclick="SetSwitchOn('Stamp');document.getElementById('AddStamp').disabled=true;
 	<input name="includePdfPrintControl" id="includePdfPrintControl" type="checkBox">
 <bean:message key="eFormGenerator.includePDFprint"/>
 </p>
-<% } %>
 </div>
+<% } %>
 </div>
 <hr>
 <span class='h2'>8. <bean:message key="eFormGenerator.generate"/></span><a onclick="show('Section8');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section8');"><bean:message key="eFormGenerator.collapse"/></a>
