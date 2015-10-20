@@ -24,23 +24,37 @@
 
 --%>
 <%-- @ taglib uri="../WEB-INF/taglibs-log.tld" prefix="log" --%>
+<%
+    String demographic$ = request.getParameter("demographic_no") ;
+%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    String demographic$ = request.getParameter("demographic_no") ;
+    boolean authed=true;
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_demographic"
-	rights="r" reverse="<%=true%>">
-	<% response.sendRedirect("../noRights.html"); %>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_demographic" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_demographic");%>
 </security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <security:oscarSec roleName="<%=roleName$%>"
 	objectName='<%="_demographic$"+demographic$%>' rights="o"
 	reverse="<%=false%>">
 You have no rights to access the data!
+<% authed=false; %>
 <% response.sendRedirect("../noRights.html"); %>
 </security:oscarSec>
 
+<%
+if(!authed) {
+	return;
+}
+%>
 <%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.ProfessionalSpecialist" %>

@@ -34,13 +34,7 @@
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicParameters"%>
-<%
-  if(session.getAttribute("user") == null)
-  {
-	  response.sendRedirect("../logout.jsp");
-	  return;
-  }
-%>
+
 
 <%@ page errorPage="errorpage.jsp" import="oscar.OscarProperties"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"

@@ -23,6 +23,22 @@
     Ontario, Canada
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_demographic" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_demographic");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- @ taglib uri="../WEB-INF/taglibs-log.tld" prefix="log" --%>
 <%@page import="org.oscarehr.sharingcenter.SharingCenterUtil"%>
@@ -48,13 +64,10 @@
 <%@page import="org.oscarehr.PMmodule.model.Program" %>
 <%@page import="org.oscarehr.PMmodule.web.GenericIntakeEditAction" %>
 <%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
-	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
 
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     String demographic$ = request.getParameter("demographic_no") ;
     
     LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
@@ -73,18 +86,22 @@
     String privateConsentEnabledProperty = OscarProperties.getInstance().getProperty("privateConsentEnabled");
     boolean privateConsentEnabled = (privateConsentEnabledProperty != null && privateConsentEnabledProperty.equals("true"));
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_demographic"
-	rights="r" reverse="<%=true%>">
-	<% response.sendRedirect("../noRights.html"); %>
-</security:oscarSec>
 
 <security:oscarSec roleName="<%=roleName$%>"
 	objectName='<%="_demographic$"+demographic$%>' rights="o"
 	reverse="<%=false%>">
 <bean:message key="demographic.demographiceditdemographic.accessDenied"/>
-<% response.sendRedirect("../acctLocked.html"); %>
+<% response.sendRedirect("../acctLocked.html"); 
+authed=false;
+%>
 </security:oscarSec>
 
+<%
+if(!authed) {
+	return;
+}
+
+%>
 <%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList, oscar.oscarReport.data.DemographicSets,oscar.log.*"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
 <%@ page import="oscar.oscarDemographic.pageUtil.Util" %>

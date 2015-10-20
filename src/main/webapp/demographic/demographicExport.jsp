@@ -25,6 +25,21 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_demographic,_demographicExport" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_demographic&type=_demographicExport");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.sharingcenter.SharingCenterUtil"%>
 <%@page import="org.oscarehr.sharingcenter.dao.AffinityDomainDao"%>
@@ -38,15 +53,6 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 <%
-String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-%>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_demographicExport"
-	rights="r" reverse="<%=true%>">
-	<% response.sendRedirect("../noRights.html"); %>
-</security:oscarSec>
-
-<%
-  if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 
   oscar.OscarProperties op = oscar.OscarProperties.getInstance();
   String tmp_dir = op.getProperty("TMP_DIR");

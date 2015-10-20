@@ -23,13 +23,27 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_demographic" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_demographic");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO"%>
 <%@ page import="org.oscarehr.common.model.UserProperty"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%
-    if (session.getAttribute("userrole") == null) { response.sendRedirect("../logout.jsp"); }
     String curUser_no = (String) session.getAttribute("user");
     UserPropertyDAO propertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
     String defaultPrinterName = "";

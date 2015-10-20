@@ -23,6 +23,21 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_demographic" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_demographic");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page
 	import="org.oscarehr.common.dao.DemographicDao,org.oscarehr.caisi_integrator.ws.DemographicWs,org.oscarehr.util.SpringUtils,org.oscarehr.common.model.Demographic"%>
@@ -69,13 +84,6 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
-<%-- This JSP is the first page you see when you enter 'report by template' --%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-<%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-%>
-
 
 <%@ page import="java.util.*,oscar.oscarReport.reportByTemplate.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
