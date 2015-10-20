@@ -39,7 +39,7 @@ function onSubmit(){
 	if (val1.length>30) {
 			alert("File name: "+val1+" is too long. Please rename file and upload again!");
 			return false;
-			}
+	}
 	if (val1.substring(0,1) == "P" || val1.substring(0,1) == "S"){
 		if (document.all){
 			document.all.form1.action="../../../servlet/oscar.DocumentUploadServlet";
