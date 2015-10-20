@@ -137,8 +137,8 @@ public class ProviderService extends AbstractServiceImpl {
     @Path("/provider/me")
     @Produces("application/json")
     public String getLoggedInProvider() {
-    	Provider provider = getLoggedInInfo().getLoggedInProvider();
-    	
+       Provider provider = getLoggedInInfo().getLoggedInProvider();
+
     	if(provider != null) {
     		JsonConfig config = new JsonConfig();
         	config.registerJsonBeanProcessor(java.sql.Date.class, new JsDateJsonBeanProcessor());

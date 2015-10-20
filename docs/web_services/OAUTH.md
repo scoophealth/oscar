@@ -1,5 +1,17 @@
-OAUTH 1.0a
----------------
+Web Services via OAuth
+----------------------
+Access to web services via OAuth is available on at /ws/oauth for token requests and /ws/services for data requests.  For example, if the URL for a web service accessed via an OSCAR sesion token is /ws/rs/status/checkIfAuthed, then the same resource can be requested with OAuth authentication at /ws/services/status/checkIfAuthed.
+
+When creating new web service classes, you must add a new <bean /> tag to src/main/resources/applicationContextREST.xml in both the <jaxrs:server id="restServices" address="/services" /> element (for OAuth access) and the <jaxrs:server address="/rs" id="jaxrServer" /> element (for HTTP cookie access).
+
+All OAuth token requests take place at /ws/oauth/{command}.  See the Admin > Integration > REST Clients screen in the OSCAR EMR 15 user interface for more details.
+
+A special OAuth only endpoint is available to see information about the OAuth request at /ws/services/oauth/info.
+
+
+
+OAUTH 1.0a for OSCAR Developers
+-------------------------------
 
 OAUTH was implemented in order to provide browser based authentication to the OSCAR web services.
 This protocol is an industry standard specification used and maintained by established organizations.
