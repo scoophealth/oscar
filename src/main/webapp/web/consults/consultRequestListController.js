@@ -254,4 +254,15 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope,$timeout,$state,$
 	$scope.toPage = null;
 	$scope.sortMode = null;
 	
+	$scope.popup = function (vheight,vwidth,varpage, winname) {
+		  var page = varpage;
+		  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+		  var popup=window.open(varpage, winname, windowprops);
+		  if (popup != null) {
+		    if (popup.opener == null) {
+		      popup.opener = self;
+		    }
+		  }
+	}
+	
 });
