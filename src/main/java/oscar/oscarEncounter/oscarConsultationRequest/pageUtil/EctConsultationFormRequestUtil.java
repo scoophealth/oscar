@@ -32,6 +32,7 @@ import java.util.Vector;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestDao;
+import org.oscarehr.common.dao.ConsultationRequestExtDao;
 import org.oscarehr.common.dao.ConsultationServiceDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.Clinic;
@@ -94,6 +95,7 @@ public class EctConsultationFormRequestUtil {
 	public String signatureImg;
 
 	public String letterheadName;
+	public String letterheadTitle;
 	public String letterheadAddress;
 	public String letterheadPhone;
 	public String letterheadFax;
@@ -198,6 +200,8 @@ public class EctConsultationFormRequestUtil {
 
 		ConsultationRequestDao dao = SpringUtils.getBean(ConsultationRequestDao.class);
 		ConsultationRequest cr = dao.find(ConversionUtils.fromIntString(id));
+		ConsultationRequestExtDao daoExt = (ConsultationRequestExtDao) SpringUtils.getBean("consultationRequestExtDao");
+		
 		if (cr != null) {
 			pwb = ConversionUtils.toBoolString(cr.isPatientWillBook());
 			urgency = cr.getUrgency();
@@ -215,11 +219,13 @@ public class EctConsultationFormRequestUtil {
 			status = cr.getStatus();
 
 			letterheadName = cr.getLetterheadName();
+			letterheadTitle = daoExt.getConsultationRequestExtsByKey(ConversionUtils.fromIntString(id),"letterheadTitle");
 			letterheadAddress = cr.getLetterheadAddress();
 			letterheadPhone = cr.getLetterheadPhone();
 			letterheadFax = cr.getLetterheadFax();
 
 			letterheadName = letterheadName == null?"":letterheadName;
+			letterheadTitle = letterheadTitle == null?"":letterheadTitle;
 			letterheadAddress = letterheadAddress == null?"":letterheadAddress;
 			letterheadPhone = letterheadPhone == null?"":letterheadPhone;
 			letterheadFax = letterheadFax == null?"":letterheadFax;
