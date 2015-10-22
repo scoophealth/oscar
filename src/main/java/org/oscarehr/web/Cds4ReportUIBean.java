@@ -287,7 +287,7 @@ public final class Cds4ReportUIBean {
 						//we know the provider who did the latest one isn't the one that did the admission, and this gets missed in the report.
 						//lets add the admission in this case of a staff change...if the provider is in our list
 						
-						if (providerIdsToReportOn!=null && providerIdsToReportOn.contains(admission.getProviderNo())) {
+						if (providerIdsToReportOn!=null && providerIdsToReportOn.contains(form.getProviderNo())) {
 							admissionMap.put(admission.getId().intValue(), admission);
 						}
 						
