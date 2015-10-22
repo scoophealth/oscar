@@ -1055,6 +1055,11 @@ public class EFormUtil {
 			if (preventionStatus.equalsIgnoreCase("refused")) prevention.setRefused(true);
 			else if (preventionStatus.equalsIgnoreCase("ineligible")) prevention.setIneligible(true);
 			
+			ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+			if(pp != null && pp.getProgramId() != null) {
+				prevention.setProgramNo(pp.getProgramId().intValue());
+			}
+			
 			HashMap<String, String> extHash = new HashMap<String, String>();
 			String extData = null;
 			if ((extData = getContent("name", template, null)) != null) extHash.put("name", extData);

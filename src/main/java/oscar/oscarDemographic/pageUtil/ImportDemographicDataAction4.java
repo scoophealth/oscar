@@ -1713,7 +1713,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                     immExtra = Util.addLine(immExtra, "Instructions: ", immuArray[i].getInstructions());
                     immExtra = Util.addLine(immExtra, getResidual(immuArray[i].getResidualInfo()));
 
-                    Integer preventionId = PreventionData.insertPreventionData(admProviderNo, demographicNo, preventionDate, defaultProviderNo(), "", preventionType, refused, "", "", preventionExt);
+                    Integer preventionId = PreventionData.insertPreventionData(loggedInInfo, admProviderNo, demographicNo, preventionDate, defaultProviderNo(), "", preventionType, refused, "", "", preventionExt);
                     addOneEntry(IMMUNIZATION);
 
                     //to dumpsite: Extra immunization data

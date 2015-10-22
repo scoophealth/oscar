@@ -67,7 +67,7 @@ public class PreventionData {
 		// prevent instantiation
 	}
 
-	public static Integer insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
+	public static Integer insertPreventionData(LoggedInInfo loggedInInfo, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
 		Integer insertId = -1;
 		try {
 			Prevention prevention = new Prevention();
@@ -81,6 +81,11 @@ public class PreventionData {
 			if (refused.trim().equals("1")) prevention.setRefused(true);
 			else if (refused.trim().equals("2")) prevention.setIneligible(true);
 
+			ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+			if(pp != null && pp.getProgramId() != null) {
+				prevention.setProgramNo(pp.getProgramId().intValue());
+			}
+			
 			preventionDao.persist(prevention);
 			if (prevention.getId() == null) return insertId;
 
@@ -161,9 +166,9 @@ public class PreventionData {
 		return name;
 	}
 
-	public static void updatetPreventionData(String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
+	public static void updatetPreventionData(LoggedInInfo loggedInInfo, String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
 		deletePreventionData(id);
-		insertPreventionData(creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list);
+		insertPreventionData(loggedInInfo, creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list);
 	}
 
 	public static ArrayList<Map<String, Object>> getPreventionDataFromExt(String extKey, String extVal) {

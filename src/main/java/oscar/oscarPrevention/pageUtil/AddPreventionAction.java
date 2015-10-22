@@ -58,8 +58,9 @@ public class AddPreventionAction  extends Action {
    }
    
       public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)  {
-                       
-    	  if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_prevention", "w", null)) {
+          LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+ 
+    	  if(!securityInfoManager.hasPrivilege(loggedInInfo, "_prevention", "w", null)) {
     		  throw new SecurityException("missing required security object (_prevention)");
     	  }
     	  
@@ -145,12 +146,12 @@ public class AddPreventionAction  extends Action {
          addHashtoArray(extraData,request.getParameter("name"),"name");
                                                                                                                            
          if (id == null || id.equals("null")){ //New                                             
-        	 PreventionData.insertPreventionData(sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData);            
+        	 PreventionData.insertPreventionData(loggedInInfo, sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData);            
          }else if (id != null &&  delete != null  ){  // Delete
         	 PreventionData.deletePreventionData(id);               
          }else if (id != null && delete == null ){ //Update
             addHashtoArray(extraData,id,"previousId"); 
-            PreventionData.updatetPreventionData(id,sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData);
+            PreventionData.updatetPreventionData(loggedInInfo, id,sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData);
          }
 
          ServletContext servletCtx = request.getSession().getServletContext();
