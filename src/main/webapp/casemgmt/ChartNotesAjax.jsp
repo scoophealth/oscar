@@ -65,6 +65,20 @@
 <%@page import="org.oscarehr.common.model.CasemgmtNoteLock"%>
 
 <%
+    String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed2=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_casemgmt.notes" rights="r" reverse="<%=true%>">
+	<%authed2=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_casemgmt.notes");%>
+</security:oscarSec>
+<%
+	if(!authed2) {
+		return;
+	}
+%>
+
+<%
 String ctx = request.getContextPath();
 
 LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
