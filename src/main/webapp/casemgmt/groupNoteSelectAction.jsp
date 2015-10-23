@@ -32,6 +32,21 @@
 <%@page import="org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean" %>
 <%@page import="org.oscarehr.casemgmt.web.GroupNoteAction" %>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_casemgmt.notes");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	String demographicNo = request.getParameter("demographicNo");

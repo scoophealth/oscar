@@ -24,6 +24,22 @@
 
 --%>
 <%@ include file="/taglibs.jsp"%>
+
+
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@page import="java.util.List,org.caisi.model.DefaultIssue" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.caisi.model.DefaultIssue" %>

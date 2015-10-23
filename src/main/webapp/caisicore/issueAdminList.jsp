@@ -27,7 +27,19 @@
 
 
 <%@ include file="/taglibs.jsp"%>
-
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 <title>MyIssues ~ Issue List</title>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
