@@ -29,6 +29,19 @@
 <%-- Updated by Eugene Petruhin on 08 jan 2009 while fixing #2482832 & #2494061 --%>
 
 <%@ include file="/casemgmt/taglibs.jsp" %>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.issues" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_casemgmt.issues");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <%
     String demographicNo = request.getParameter("demographicNo");

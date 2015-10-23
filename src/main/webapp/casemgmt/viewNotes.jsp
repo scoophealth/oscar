@@ -27,7 +27,8 @@
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="oscar.util.ConversionUtils"%>
 <%@page import="org.oscarehr.casemgmt.web.NoteDisplay"%>
-<%  long start = System.currentTimeMillis(); %><%@include file="/casemgmt/taglibs.jsp"%>
+<%  long start = System.currentTimeMillis(); %>
+<%@include file="/casemgmt/taglibs.jsp"%>
 <%@page
 	import="java.util.List, java.util.Set, java.util.Iterator, org.oscarehr.casemgmt.model.CaseManagementIssue, org.oscarehr.casemgmt.model.CaseManagementNoteExt"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
@@ -39,7 +40,19 @@
 <%@page import="org.oscarehr.common.model.PartialDate"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
-
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_casemgmt.notes");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />
@@ -49,7 +62,6 @@
 <h3 style="padding:0px; background-color:#<c:out value="${param.hc}"/>">
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
 	if(securityManager.hasWriteAccess("_" + request.getParameter("issue_code"),roleName$)) {
 %>
