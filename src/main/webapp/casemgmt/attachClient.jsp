@@ -23,6 +23,20 @@
 
 --%>
 <%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_demographic" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_demographic");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@ include file="/common/messages.jsp"%>
 <%@page import="oscar.OscarProperties"%>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
@@ -49,9 +63,7 @@
 			@import "<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />";
 		</style -->
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    String noteId$ = (String)session.getAttribute("noteId");
+     String noteId$ = (String)session.getAttribute("noteId");
 %>
 
 <script>
