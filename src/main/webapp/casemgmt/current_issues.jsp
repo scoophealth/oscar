@@ -28,6 +28,20 @@
 
 <%@ include file="/casemgmt/taglibs.jsp"%>
 
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.issues" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_casemgmt.issues");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@ page import="org.oscarehr.casemgmt.model.*"%>
 <%@ page import="org.oscarehr.casemgmt.web.formbeans.*"%>
 <%@page import="org.oscarehr.casemgmt.web.CaseManagementViewAction"%>
@@ -35,12 +49,6 @@
 <%@page import="java.util.Map"%>
 <%@page import="org.oscarehr.casemgmt.web.CheckBoxBean"%>
 
-<%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-%>
-
-<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.issues" rights="r">
 
 <%
 	Map dxMap = (Map)request.getAttribute("dxMap");
@@ -130,4 +138,4 @@
 		onclick="document.caseManagementViewForm.hideActiveIssue.value='true';document.caseManagementViewForm.method.value='setHideActiveIssues';document.caseManagementViewForm.submit(); return false;">hide
 	resolved issues</span>
 </logic:notEqual>
-</security:oscarSec>
+
