@@ -1676,7 +1676,7 @@ function updateFaxButton() {
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.letterheadName" />:
 							</td>							
-							<td align="right" class="tite3">
+							<td align="right" class="tite3">				
 								<select name="letterheadName" id="letterheadName" onchange="switchProvider(this.value)">
 									<option value="<%=StringEscapeUtils.escapeHtml(clinic.getClinicName())%>" <%=(consultUtil.letterheadName != null && consultUtil.letterheadName.equalsIgnoreCase(clinic.getClinicName()) ? "selected='selected'"  : "" )%>><%=clinic.getClinicName() %></option>
 								<%
@@ -1684,7 +1684,7 @@ function updateFaxButton() {
 										if (p.getProviderNo().compareTo("-1") != 0 && (p.getFirstName() != null || p.getSurname() != null)) {
 								%>
 								<option value="<%=p.getProviderNo() %>" <%=(consultUtil.letterheadName != null && consultUtil.letterheadName.equalsIgnoreCase(p.getProviderNo()) ? "selected='selected'"  : consultUtil.letterheadName == null && p.getProviderNo().equalsIgnoreCase(providerNo) ? "selected='selected'"  : "") %>>
-									<%=p.getSurname() %>, <%=p.getFirstName() %>
+									<%=p.getSurname() %>, <%=p.getFirstName().replace("Dr.", "") %>
 								</option>
 								<% }
 								}
@@ -1698,6 +1698,9 @@ function updateFaxButton() {
 								<% }
 								}%>
 								</select>
+								<%if ( props.getBooleanProperty("consultation_fax_enabled", "true") ) {%>
+									<div style="font-size:12px"><input type="checkbox" name="ext_letterheadTitle" value="Dr" <%=(consultUtil.letterheadTitle != null && consultUtil.letterheadTitle.equals("Dr") ? "checked"  : "") %>>Include Dr. with name</div>
+								<%}%>
 							</td>
 						</tr>
 						<tr>
