@@ -23,6 +23,23 @@
     Ontario, Canada
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.eform" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin.eform");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+
 <!DOCTYPE html>
 <%@ page import="oscar.eform.data.*, oscar.eform.*, java.util.*"%>
 <%@ page import="org.oscarehr.util.LoggedInInfo" %>

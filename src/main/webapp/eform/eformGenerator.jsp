@@ -24,6 +24,21 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.eform" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin.eform");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@ page import="oscar.eform.actions.DisplayImageAction,java.lang.*,java.io.File,oscar.OscarProperties,java.io.*,oscar.eform.*,oscar.eform.data.*,java.util.*,org.apache.log4j.Logger"%>
 <!--
 /*  eForm Generator v5.4h Peter Hutten-Czapski 2015 based on earlier work by the community
