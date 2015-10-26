@@ -28,10 +28,20 @@
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@ include file="/taglibs.jsp"%>
+
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed2=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_eChart" rights="r" reverse="<%=true%>">
+	<%authed2=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_eChart");%>
+</security:oscarSec>
+<%
+	if(!authed2) {
+		return;
+	}
 %>
 
 <%@page import="java.util.*"%>
