@@ -11,6 +11,9 @@ oscarApp.controller('SettingsCtrl', function ($scope,$http,$state, providerList,
 	$scope.eforms = eforms;
 	$scope.loadedApps = loadedApps;
 	
+	if($scope.pref.recentPatients==null){
+		$scope.pref.recentPatients="8";
+	}
 	
 	//convert to value/label object list from string array
 	$scope.formGroupNames = [{"value":"","label":"None"}];
@@ -25,8 +28,7 @@ oscarApp.controller('SettingsCtrl', function ($scope,$http,$state, providerList,
 		$scope.teams.push({"value":teams[i],"label":teams[i]});
 	}
 	$scope.teams.push({"value":"","label":"None"});
-	
-	
+		
 	//add none -option to start.
 	$scope.billingServiceTypesMod = [];
 	angular.copy($scope.billingServiceTypes,$scope.billingServiceTypesMod);
