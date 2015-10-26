@@ -43,6 +43,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.managers.ConsultationManager;
 import org.oscarehr.managers.MessagingManager;
+import org.oscarehr.managers.PreferenceManager;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
@@ -82,6 +83,9 @@ public class PersonaService extends AbstractServiceImpl {
 	
 	@Autowired
 	private ConsultationManager consultationManager;
+	
+	@Autowired
+	private PreferenceManager preferenceManager;
 	
 	
 	@GET
@@ -277,11 +281,16 @@ public class PersonaService extends AbstractServiceImpl {
 		Provider provider = getCurrentProvider();
 		ResourceBundle bundle = getResourceBundle();
 		
-		
+		String itemsToReturn = "8";
+		String recentPatients = preferenceManager.getProviderPreference(getLoggedInInfo(), "recentPatients");
+		if(recentPatients!=null){
+			itemsToReturn = recentPatients;
+		}
+
 		PersonaResponse response = new PersonaResponse();
 
 		response.getPatientListTabItems().add(new PatientList(0,bundle.getString("patientList.tab.appts"),"../ws/rs/schedule/day/today","patientlist/patientList1.jsp","GET"));
-		response.getPatientListTabItems().add(new PatientList(1,bundle.getString("patientList.tab.recent"),"../ws/rs/providerService/getRecentDemographicsViewed?startIndex=0&itemsToReturn=100","patientlist/recent.jsp","GET"));
+		response.getPatientListTabItems().add(new PatientList(1,bundle.getString("patientList.tab.recent"),"../ws/rs/providerService/getRecentDemographicsViewed?startIndex=0&itemsToReturn="+itemsToReturn,"patientlist/recent.jsp","GET"));
 		
 		response.getPatientListMoreTabItems().add(new PatientList(0,bundle.getString("patientList.tab.patientSets"),"../ws/rs/reporting/demographicSets/patientList","patientlist/demographicSets.jsp","POST"));
 		response.getPatientListMoreTabItems().add(new PatientList(1,bundle.getString("patientList.tab.caseload"),null,"patientlist/program.jsp",null));
