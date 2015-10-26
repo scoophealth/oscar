@@ -29,6 +29,7 @@ import java.util.Collection;
 
 public class ProviderSettings {
 
+	private String recentPatients;
 	private String rxAddress;
 	private String rxCity;
 	private String rxProvince;
@@ -140,7 +141,13 @@ public class ProviderSettings {
 	private boolean disableBornPrompts;
 	
 	
-	
+
+	public String getRecentPatients() {
+		return recentPatients;
+	}
+	public void setRecentPatients(String recentPatients) {
+		this.recentPatients = recentPatients;
+	}
 	
 	public String getRxAddress() {
 		return rxAddress;

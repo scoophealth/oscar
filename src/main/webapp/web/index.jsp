@@ -359,7 +359,7 @@ font-size:20px
 		
 			<ul class="nav nav-tabs">			
 				<li ng-repeat="item in tabItems" ng-class="{'active': isActive(item.id)}" class="hand-hover">
-					<a  ng-click="changeTab(item.id)" data-toggle="tab">{{item.label}}</a>
+					<a ng-click="changeTab(item.id)" data-toggle="tab">{{item.label}}</a>
 				</li>
 				
 				<li class="dropdown" ng-class="{'active': currentmoretab != null}"><a class="dropdown-toggle hand-hover" ><b class="caret"></b></a>
