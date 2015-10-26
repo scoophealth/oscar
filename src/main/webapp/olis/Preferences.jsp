@@ -13,11 +13,20 @@
 <%@ page import="java.util.*,oscar.oscarReport.reportByTemplate.*,org.oscarehr.olis.*,org.oscarehr.olis.model.*, org.oscarehr.olis.dao.*, org.oscarehr.util.SpringUtils, org.joda.time.DateTime, org.joda.time.format.DateTimeFormat, org.joda.time.format.DateTimeFormatter"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-
-	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-  
-    if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.misc" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin.misc&type=_admin");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+<%
     String curProvider = (String) session.getAttribute("userlastname") + ","+ (String) session.getAttribute("userfirstname");
     OLISSystemPreferencesDao olisPrefDao = (OLISSystemPreferencesDao)SpringUtils.getBean("OLISSystemPreferencesDao");
     OLISSystemPreferences olisPreferences =  olisPrefDao.getPreferences();
@@ -37,10 +46,7 @@
     }
  	Integer pollFrequency = oscar.Misc.getInt(request.getParameter("pollFrequency"), 30);
 %>
-<security:oscarSec roleName="<%=roleName$%>"
-	objectName="_admin,_admin.misc" rights="r" reverse="<%=true%>">
-	<%response.sendRedirect("../logout.jsp");%>
-</security:oscarSec>
+
 
 <%@ page import="java.util.*,oscar.oscarReport.reportByTemplate.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
