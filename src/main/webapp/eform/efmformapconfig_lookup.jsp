@@ -8,6 +8,23 @@
     and "gnu.org/licenses/gpl-2.0.html".
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eform" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_eform");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+
 <%@ page import="java.io.*, java.util.*, oscar.eform.*, oscar.eform.data.*, oscar.eform.EFormUtil"
 %><input type="hidden" name="oscarAPCacheLookupType" value="<%= request.getParameter("oscarAPCacheLookupType") %>" /><%
 String[] keys = request.getParameterValues("key");

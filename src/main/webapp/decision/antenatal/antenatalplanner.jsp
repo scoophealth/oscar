@@ -24,8 +24,22 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_eChart");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+<%
   String demographic_no = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):("null") ;
   String form_no = request.getParameter("formId")!=null?request.getParameter("formId"):("0") ;
   String query_name = request.getParameter("query_name")!=null?request.getParameter("query_name"):("") ;

@@ -23,11 +23,26 @@
     Ontario, Canada
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eform" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_eform");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 <%
 //Lists forms available to add to patient
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String demographic_no = request.getParameter("demographic_no"); 
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
   String country = request.getLocale().getCountry();
@@ -45,8 +60,6 @@
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
 <%
 String user = (String) session.getAttribute("user");
-if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + user;
     
 String orderByRequest = request.getParameter("orderby");
 String orderBy = "";
