@@ -24,6 +24,21 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_phr" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_phr");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%-- TODO:Only works for local patients right now. Not sure if that's a big deal. Probably should be a warning that this isn't a local patient --%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.AccountManager"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
