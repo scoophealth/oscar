@@ -252,4 +252,21 @@ public class PreferenceManager {
 		return false;
 	}
 	
+	public String getProviderPreference(LoggedInInfo loggedInInfo, String propertyName){
+		List<Property> results = providerManager.getProviderProperties(loggedInInfo, loggedInInfo.getLoggedInProviderNo(), propertyName);
+		
+		String value = null;
+		
+		if(results.size()>0){
+			
+			for(Property result:results){
+				value = result.getValue();
+			}
+
+			return value;
+		}
+		
+		return value;		
+	}
+	
 }
