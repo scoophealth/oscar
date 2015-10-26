@@ -162,6 +162,10 @@ public class ProviderManager2 {
 			map.put(prop.getName(), prop);
 		}
 		
+		if(map.get("recentPatients") != null) {
+			settings.setRecentPatients(map.get("recentPatients").getValue());
+		}
+		
 		if(map.get("rxAddress") != null) {
 			settings.setRxAddress(map.get("rxAddress").getValue());
 		}
@@ -562,6 +566,8 @@ public class ProviderManager2 {
 		
 		Property p = null;
 		
+		p = getMappedOrNewProperty(map, "recentPatients", providerNo);
+		p.setValue(settings.getRecentPatients());
 		p = getMappedOrNewProperty(map, "rxAddress", providerNo);
 		p.setValue(settings.getRxAddress());
 		p = getMappedOrNewProperty(map, "rxCity", providerNo);
