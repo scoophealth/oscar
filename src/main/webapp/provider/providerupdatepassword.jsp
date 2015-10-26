@@ -25,8 +25,7 @@
 --%>
 
 <%
-	if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
+	
   String curUser_no = (String) session.getAttribute("user");
   MessageDigest md = MessageDigest.getInstance("SHA");
 %>
