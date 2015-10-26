@@ -25,6 +25,19 @@
 --%>
 
 <%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_report");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <h4>Summary</h4>
 

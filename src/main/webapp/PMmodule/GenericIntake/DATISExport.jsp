@@ -23,6 +23,20 @@
 
 --%>
 <%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_pmm");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@page
 	import="java.util.*,org.oscarehr.PMmodule.service.*,org.oscarehr.util.SpringUtils,org.oscarehr.common.model.Facility, org.springframework.web.context.support.*,org.springframework.web.context.*"%>
 <%@page import="org.oscarehr.common.dao.FacilityDao"%>

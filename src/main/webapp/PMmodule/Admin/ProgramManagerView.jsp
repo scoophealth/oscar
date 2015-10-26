@@ -23,6 +23,20 @@
 
 --%>
 <%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.pmm" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin.pmm");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@ page import="org.oscarehr.PMmodule.web.formbean.*"%>
 <%@page import="org.oscarehr.PMmodule.model.Program"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -68,8 +82,7 @@
 			if (selectedTab == null || selectedTab.trim().equals("")) {
 				selectedTab = ProgramManagerViewFormBean.tabs[0];
 			}
-			String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-
+			
 		%>
 	<table cellpadding="0" cellspacing="0" border="0">
 		<tr>

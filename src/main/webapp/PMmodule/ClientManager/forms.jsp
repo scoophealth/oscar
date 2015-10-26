@@ -24,6 +24,19 @@
 --%>
 
 <%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_pmm");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
@@ -43,8 +56,7 @@
 
 <% 
 	Demographic currentDemographic=(Demographic)request.getAttribute("client");
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
- 		boolean programEnableOcan=false;
+		boolean programEnableOcan=false;
  		String currentProgram = (String)session.getAttribute(org.oscarehr.util.SessionConstants.CURRENT_PROGRAM_ID);
  		if(currentProgram != null) {
  			ProgramManager pm = SpringUtils.getBean(ProgramManager.class);

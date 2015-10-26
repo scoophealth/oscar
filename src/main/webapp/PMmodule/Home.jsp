@@ -27,6 +27,20 @@ String _appPath = request.getContextPath();
 %>
 
 <%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_pmm");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 
 
 <table width="100%" height="100%" cellpadding="0px" cellspacing="0px"

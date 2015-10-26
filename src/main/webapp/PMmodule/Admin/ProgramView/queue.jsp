@@ -36,11 +36,21 @@
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProgramProviderDAO"%>
 <%@page import="org.oscarehr.PMmodule.model.Program"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ include file="/taglibs.jsp"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.pmm" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin.pmm");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 <script>
     function do_admission() {
     	var admissionDate = document.getElementById('admissionDate').value;
@@ -203,7 +213,6 @@
 <%
 	ProgramProviderDAO ppd =(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
 	boolean bShowEncounterLink = false; 
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
 <% bShowEncounterLink = true; %>
