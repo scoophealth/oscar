@@ -27,6 +27,20 @@
 
 
 <%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_pmm");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@ page import="java.util.*"%>
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
@@ -40,9 +54,6 @@
 <%@page import="org.oscarehr.PMmodule.web.AdmissionForDisplay"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.PMmodule.web.ReferralHistoryDisplay" %>
-<%
-String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-%>
 
 <script type="text/javascript">
     function popupAdmissionInfo(admissionId) {

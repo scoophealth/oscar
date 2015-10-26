@@ -1775,6 +1775,7 @@ insert into `secObjectName` (`objectName`) values ('_admin.messenger');
 insert into `secObjectName` (`objectName`) values ('_admin.eform');
 insert into `secObjectName` (`objectName`) values ('_admin.encounter');
 insert into `secObjectName` (`objectName`) values ('_admin.misc');
+insert into `secObjectName` (`objectName`) values ('_admin.pmm');
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_masterlink', 'Client Master Record',0);
 insert into `secObjectName` (`objectName`) values ('_rx');
 insert into `secObjectName` (`objectName`) values ('_merge');
@@ -1840,6 +1841,7 @@ insert into `secObjectName` (`objectName`) values ('_allergy');
 insert into `secObjectName` (`objectName`) values ('_eyeform');
 insert into `secObjectName` (`objectName`) values ('_appDefinition');
 insert into `secObjectName` (`objectName`) values ('_phr');
+insert into `secObjectName` (`objectName`) values ('_pmm');
 
 insert into `secObjectName`  (`objectName`,`description`,`orgapplicable`) values('_demographicExport', 'Export Demographic', 0);
 
@@ -1953,6 +1955,7 @@ insert into `secObjPrivilege` values('doctor','_dxresearch','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_allergy','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_eyeform','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_phr','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_pmm','x',0,'999998');
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);
@@ -2012,6 +2015,7 @@ insert into `secObjPrivilege` values('admin','_newCasemgmt.medicalHistory','x',0
 insert into `secObjPrivilege` values('admin','_newCasemgmt.calculators','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.templates','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.cpp','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.pmm','x',0,'999998');
 
 
 insert into `secObjPrivilege` values('admin','_resource','x',0,'999998');
@@ -2064,6 +2068,7 @@ insert into `secObjPrivilege` values('nurse','_pmm.mergeRecords','x',0,'999998')
 insert into `secObjPrivilege` values('nurse','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('nurse','_tasks','x',0,'999998');
 insert into `secObjPrivilege` values('nurse','_phr','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_pmm','x',0,'999998');
 
 
 
@@ -2085,6 +2090,7 @@ insert into `secObjPrivilege` values('psychiatrist','_pmm.mergeRecords','x',0,'9
 insert into `secObjPrivilege` values('psychiatrist','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('psychiatrist','_rx','x',0,'999998');
 insert into `secObjPrivilege` values('psychiatrist','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_pmm','x',0,'999998');
 
 insert into `secObjPrivilege` values('RN','_appointment','x',0,'999998');
 insert into `secObjPrivilege` values('RN','_casemgmt.issues','x',0,'999998');
@@ -2101,6 +2107,7 @@ insert into `secObjPrivilege` values('RN','_pmm.clientSearch','x',0,'999998');
 insert into `secObjPrivilege` values('RN','_pmm.mergeRecords','x',0,'999998');
 insert into `secObjPrivilege` values('RN','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('RN','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_pmm','x',0,'999998');
 
 
 
@@ -2119,6 +2126,7 @@ insert into `secObjPrivilege` values('RPN','_pmm.clientSearch','x',0,'999998');
 insert into `secObjPrivilege` values('RPN','_pmm.mergeRecords','x',0,'999998');
 insert into `secObjPrivilege` values('RPN','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('RPN','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_pmm','x',0,'999998');
 
 
 
@@ -2138,6 +2146,7 @@ insert into `secObjPrivilege` values('Nurse Manager','_pmm.clientSearch','x',0,'
 insert into `secObjPrivilege` values('Nurse Manager','_pmm.mergeRecords','x',0,'999998');
 insert into `secObjPrivilege` values('Nurse Manager','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Nurse Manager','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_pmm','x',0,'999998');
 
 
 insert into `secObjPrivilege` values('Clinical Social Worker','_appointment','x',0,'999998');
@@ -2154,7 +2163,7 @@ insert into `secObjPrivilege` values('Clinical Social Worker','_pmm.clientSearch
 insert into `secObjPrivilege` values('Clinical Social Worker','_pmm.mergeRecords','x',0,'999998');
 insert into `secObjPrivilege` values('Clinical Social Worker','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Clinical Social Worker','_tasks','x',0,'999998');
-
+insert into `secObjPrivilege` values('Clinical Social Worker','_pmm','x',0,'999998');
 
 insert into `secObjPrivilege` values('Clinical Case Manager','_appointment','x',0,'999998');
 insert into `secObjPrivilege` values('Clinical Case Manager','_casemgmt.issues','x',0,'999998');
@@ -2170,7 +2179,7 @@ insert into `secObjPrivilege` values('Clinical Case Manager','_pmm.clientSearch'
 insert into `secObjPrivilege` values('Clinical Case Manager','_pmm.mergeRecords','x',0,'999998');
 insert into `secObjPrivilege` values('Clinical Case Manager','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Clinical Case Manager','_tasks','x',0,'999998');
-
+insert into `secObjPrivilege` values('Clinical Case Manager','_pmm','x',0,'999998');
 
 insert into `secObjPrivilege` values('counsellor','_appointment','x',0,'999998');
 insert into `secObjPrivilege` values('counsellor','_casemgmt.issues','x',0,'999998');
@@ -2186,6 +2195,7 @@ insert into `secObjPrivilege` values('counsellor','_pmm.clientSearch','x',0,'999
 insert into `secObjPrivilege` values('counsellor','_pmm.mergeRecords','x',0,'999998');
 insert into `secObjPrivilege` values('counsellor','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('counsellor','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_pmm','x',0,'999998');
 
 
 insert into `secObjPrivilege` values('Case Manager','_appointment','x',0,'999998');
@@ -2202,6 +2212,7 @@ insert into `secObjPrivilege` values('Case Manager','_pmm.clientSearch','x',0,'9
 insert into `secObjPrivilege` values('Case Manager','_pmm.mergeRecords','x',0,'999998');
 insert into `secObjPrivilege` values('Case Manager','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Case Manager','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_pmm','x',0,'999998');
 
 
 insert into `secObjPrivilege` values('Housing Worker','_appointment','x',0,'999998');
@@ -2218,6 +2229,7 @@ insert into `secObjPrivilege` values('Housing Worker','_pmm.clientSearch','x',0,
 insert into `secObjPrivilege` values('Housing Worker','_pmm.mergeRecords','x',0,'999998');
 insert into `secObjPrivilege` values('Housing Worker','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Housing Worker','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_pmm','x',0,'999998');
 
 
 insert into `secObjPrivilege` values('Medical Secretary','_appointment','x',0,'999998');
@@ -2232,6 +2244,7 @@ insert into `secObjPrivilege` values('Medical Secretary','_pmm.clientSearch','x'
 insert into `secObjPrivilege` values('Medical Secretary','_pmm.mergeRecords','x',0,'999998');
 insert into `secObjPrivilege` values('Medical Secretary','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Medical Secretary','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('Medical Secretary','_pmm','x',0,'999998');
 
 
 insert into `secObjPrivilege` values('Clinical Assistant','_appointment','x',0,'999998');
@@ -2246,6 +2259,7 @@ insert into `secObjPrivilege` values('Clinical Assistant','_pmm.clientSearch','x
 insert into `secObjPrivilege` values('Clinical Assistant','_pmm.mergeRecords','x',0,'999998');
 insert into `secObjPrivilege` values('Clinical Assistant','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Clinical Assistant','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Assistant','_pmm','x',0,'999998');
 
 
 insert into `secObjPrivilege` values('secretary','_appointment','x',0,'999998');
@@ -2273,6 +2287,7 @@ insert into `secObjPrivilege` values('Support Worker','_pmm.caseManagement','x',
 insert into `secObjPrivilege` values('Support Worker','_pmm.clientSearch','x',0,'999998');
 insert into `secObjPrivilege` values('Support Worker','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Support Worker','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('Support Worker','_pmm','x',0,'999998');
 
 insert into `secObjPrivilege` values('Client Service Worker','_appointment','x',0,'999998');
 insert into `secObjPrivilege` values('Client Service Worker','_casemgmt.issues','x',0,'999998');
@@ -2286,6 +2301,7 @@ insert into `secObjPrivilege` values('Client Service Worker','_pmm.caseManagemen
 insert into `secObjPrivilege` values('Client Service Worker','_pmm.clientSearch','x',0,'999998');
 insert into `secObjPrivilege` values('Client Service Worker','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Client Service Worker','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('Client Service Worker','_pmm','x',0,'999998');
 
 insert into `secObjPrivilege` values('Recreation Therapist','_appointment','x',0,'999998');
 insert into `secObjPrivilege` values('Recreation Therapist','_casemgmt.issues','x',0,'999998');
@@ -2301,6 +2317,7 @@ insert into `secObjPrivilege` values('Recreation Therapist','_pmm.clientSearch',
 insert into `secObjPrivilege` values('Recreation Therapist','_pmm.mergeRecords','x',0,'999998');
 insert into `secObjPrivilege` values('Recreation Therapist','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Recreation Therapist','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('Recreation Therapist','_pmm','x',0,'999998');
 
 insert into `secObjPrivilege` values('Counselling Intern','_appointment','x',0,'999998');
 insert into `secObjPrivilege` values('Counselling Intern','_casemgmt.issues','x',0,'999998');
@@ -2316,6 +2333,7 @@ insert into `secObjPrivilege` values('Counselling Intern','_pmm.clientSearch','x
 insert into `secObjPrivilege` values('Counselling Intern','_pmm.mergeRecords','x',0,'999998');
 insert into `secObjPrivilege` values('Counselling Intern','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Counselling Intern','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('Counselling Intern','_pmm','x',0,'999998');
 
 insert into `secObjPrivilege` values('Field Note Admin','_admin.fieldnote','x',0,'999998');
 

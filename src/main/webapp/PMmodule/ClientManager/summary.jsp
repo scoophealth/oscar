@@ -23,6 +23,19 @@
 
 --%>
 <%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_pmm");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <%@page import="java.util.List"%>
 <%@page import="oscar.util.DateUtils"%>
@@ -795,9 +808,7 @@ function openSurvey() {
 </table>
 </div>
 
-<% boolean bShowEncounterLink = false;
-String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-%>
+<% boolean bShowEncounterLink = false;%>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
 <% bShowEncounterLink = true; %>
 </security:oscarSec>

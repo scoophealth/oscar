@@ -23,14 +23,22 @@
 
 --%>
 <%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_demographic" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_demographic");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@page import="com.quatro.common.KeyConstants"  %>
 <%
-		if (session.getValue("user") == null)
-		response.sendRedirect("../login.htm");
-	//String curProvider_no;
-	//curProvider_no = (String) session.getAttribute("user");
-	//curProvider_no =  request.getParameter("provider_no");
-
 	//display the main provider page
 	//includeing the provider name and a month calendar
 	String strLimit1 = "0";
