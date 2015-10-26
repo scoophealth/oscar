@@ -27,24 +27,6 @@
 #summary tr > td:first-child{
 width:400px;
 }
-
-/*
-@media (min-width: min-width: 1400px) { 
-
-#summary tr > td:first-child{
-width:500px;
-}
-
-}
-*/
-
-/*
-@media (max-width: 767px) { 
-.checkbox-inline{
-margin:0px;
-}
-}
-*/
 </style>
 <div class="row">
 
@@ -175,24 +157,41 @@ margin:0px;
 </div> <!--  end row -->
 
 <div class="row" ng-show="currentTab.path == 'persona'" style="margin-left:10px">
-
 	<div class="col-xs-3">
-		<div class="form-group">
-		  <label >Enable New UI on login:</label>
-		  <div class="controls">
-		    <label class="radio inline" for="radios-per-0">
-		      <input ng-model="pref.useCobaltOnLogin" name="radios-per-0" id="radios-per-0" ng-value="true" type="radio">
-		      Enable
-		    </label>
-		    <label class="radio inline" for="radios-1">
-		      <input ng-model="pref.useCobaltOnLogin" name="radios-per-0" id="radios-per-1" ng-value="false" type="radio">
-		      Disable
-		    </label>  
-		  </div>
-		</div>
-				
-	</div>
-</div>
+	<h3>Dashboard</h3>
+	  Enable New UI on login:<br>
+	    <label class="radio-inline" for="radios-per-0">
+	      <input ng-model="pref.useCobaltOnLogin" name="radios-per-0" id="radios-per-0" ng-value="true" type="radio">
+	      Enable
+	    </label>
+	    <label class="radio-inline" for="radios-1">
+	      <input ng-model="pref.useCobaltOnLogin" name="radios-per-0" id="radios-per-1" ng-value="false" type="radio">
+	      Disable
+	    </label>  
+
+		<h3>Recent Patient List</h3>
+		
+		Number of recent patients to display:<br>
+		<select ng-model="pref.recentPatients" class="form-control">
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+		</select>	
+	</div><!-- Dashboard -->
+</div><!-- persona -->
 	
 <div class="row" ng-show="currentTab.path == 'schedule'">
 	<div class="col-xs-3">
