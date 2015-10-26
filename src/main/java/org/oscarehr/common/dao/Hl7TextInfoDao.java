@@ -34,6 +34,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessageInfo;
+import org.oscarehr.common.model.Hl7TextMessageInfo2;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
@@ -125,6 +126,21 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 
     }
 
+    public List<Hl7TextMessageInfo2> getMatchingLabsByAccessionNo(String accession) {
+    	if(accession != null){
+    		String sql = "SELECT a.lab_no as id,  m2.message,  a.lab_no AS lab_no_A,  a.obr_date as labDate_A  FROM hl7TextInfo a, hl7TextMessage m2  WHERE  m2.lab_id = a.lab_no AND  a.accessionNum = ? ORDER BY a.obr_date, a.lab_no";
+    		Query query = entityManager.createNativeQuery(sql, Hl7TextMessageInfo2.class);
+    	
+    		query.setParameter(1, accession);
+        
+    		@SuppressWarnings("unchecked")
+    		List<Hl7TextMessageInfo2> labs =  query.getResultList();
+    		return labs;
+    	}
+    	return null;
+    }
+
+    
     public List<Hl7TextInfo> getAllLabsByLabNumberResultStatus() {
     	String sql = "SELECT x FROM Hl7TextInfo x";
     	Query query = entityManager.createQuery(sql);
