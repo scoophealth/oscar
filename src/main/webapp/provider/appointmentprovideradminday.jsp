@@ -109,6 +109,21 @@
 
     MyGroupAccessRestrictionDao myGroupAccessRestrictionDao = SpringUtils.getBean(MyGroupAccessRestrictionDao.class);
 %>
+
+<%
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment,_day" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_appointment");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
 	<%
 		isSiteAccessPrivacy=true;
@@ -174,14 +189,8 @@ private HashMap<String,String> CurrentSiteMap = new HashMap<String,String>();%>
 
 <%
 	long loadPage = System.currentTimeMillis();
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    //String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment" rights="r" reverse="<%=true%>" >
-<%
-	response.sendRedirect("../logout.jsp");
-%>
-</security:oscarSec>
+
 
 <!-- caisi infirmary view extension add -->
 <caisi:isModuleLoad moduleName="caisi">

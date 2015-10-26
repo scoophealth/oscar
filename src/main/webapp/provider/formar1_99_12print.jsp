@@ -24,9 +24,23 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-  if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
-  int oox=0, ooy=0;
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_form" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_form");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+<%
+ int oox=0, ooy=0;
   if(request.getParameter("oox")!=null) oox += Integer.parseInt(request.getParameter("oox"));
   if(request.getParameter("ooy")!=null) ooy += Integer.parseInt(request.getParameter("ooy"));
 %>

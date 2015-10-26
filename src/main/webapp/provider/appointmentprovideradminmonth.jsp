@@ -157,6 +157,21 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	boolean isSiteAccessPrivacy=false;
 	boolean isTeamAccessPrivacy=false; 
 %>
+
+<%
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment,_month" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_appointment");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
 	<%isSiteAccessPrivacy=true; %>
 </security:oscarSec>

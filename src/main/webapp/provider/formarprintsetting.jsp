@@ -24,9 +24,6 @@
 
 --%>
 
-<%
-  if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
-%>
 
 <html>
 <head>
