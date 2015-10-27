@@ -73,8 +73,9 @@
       <jaxrs:providers>
            <ref bean="oAuthFilter"/>
            <ref bean="jaxb"/>
+           <ref bean="jsonProvider"/>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/> 
         </jaxrs:providers>
-      
       
         <jaxrs:extensionMappings>
             <entry key="xml" value="application/xml" />
