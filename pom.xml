@@ -1687,6 +1687,15 @@
 		</pluginManagement>
 	</build>
 
+	<reporting>
+	 <plugins>
+     <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>3.0.3-SNAPSHOT</version>
+      </plugin>
+	 </plugins>
+	</reporting>
 	<profiles>
 		<profile>
 			<id>jdk6</id>
