@@ -79,8 +79,8 @@ public class BORNSchedulerJob extends TimerTask {
 			
 			logger.info("done BORN upload job");
 			
-		}catch(Throwable e ) {
-			logger.error("Error",e);
+		}catch(Exception e ) {
+			logger.error("Error",e);	
 		} finally {
 			DbConnectionFilter.releaseAllThreadDbResources();
 		}

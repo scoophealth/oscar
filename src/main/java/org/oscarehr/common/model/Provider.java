@@ -325,19 +325,29 @@ public class Provider implements Serializable, Comparable<Provider>{
 		return new ComparatorName();
 	}
 
-	public boolean equals(Provider provider) {
-		try {
-			return (providerNo.equals(provider.providerNo));
-		} catch (Exception e) {
-			return (false);
-		}
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((providerNo == null) ? 0 : providerNo.hashCode());
+		return result;
 	}
 
 	@Override
-    public int hashCode() {
-		if (providerNo==null) return(super.hashCode());
-		else return(providerNo.hashCode());
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Provider other = (Provider) obj;
+		if (providerNo == null) {
+			if (other.providerNo != null) return false;
+		} else if (!providerNo.equals(other.providerNo)) return false;
+		return true;
 	}
+
+
 
 	public class ComparatorName implements Comparator<Provider>, Serializable {
 
