@@ -99,6 +99,12 @@ public final class LoginAction extends DispatchAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	boolean ajaxResponse = request.getParameter("ajaxResponse") != null?Boolean.valueOf(request.getParameter("ajaxResponse")):false;
     	
+    	if(!"POST".equals(request.getMethod())) {
+    		MiscUtils.getLogger().error("Someone is trying to login with a GET request.",new Exception());
+    		 String newURL = mapping.findForward("error").getPath();
+             newURL = newURL + "?errormsg=Application Error. See Log.";         
+             return new ActionForward(newURL);
+    	}
     	String ip = request.getRemoteAddr();
         Boolean isMobileOptimized = request.getSession().getAttribute("mobileOptimized") != null;
     	
