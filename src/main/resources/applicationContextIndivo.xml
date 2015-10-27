@@ -27,12 +27,6 @@
 			<ref bean="sessionFactory" />
 		</property>
 	</bean>
-	<bean id="phrDocumentExtDAO"
-		class="org.oscarehr.phr.dao.hibernate.PHRDocumentExtDAOHibernate">
-		<property name="sessionFactory">
-			<ref bean="sessionFactory" />
-		</property>
-	</bean>
 	<bean id="phrActionDAO" class="org.oscarehr.phr.dao.PHRActionDAO">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
