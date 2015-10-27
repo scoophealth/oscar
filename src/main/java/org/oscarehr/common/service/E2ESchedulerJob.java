@@ -173,7 +173,7 @@ public class E2ESchedulerJob extends TimerTask {
 
 			endJob = System.currentTimeMillis();
 			logger.info("Done E2E export job (" + convertTime(endJob - startJob) + ")");
-		} catch(Throwable e) {
+		} catch(Exception e) {
 			logger.error("Error", e);
 			logger.info("E2E export job aborted");
 		} finally {

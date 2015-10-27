@@ -53,13 +53,6 @@ public class GroupNoteLink extends AbstractModel<Integer> implements Serializabl
 	private boolean anonymous;
 	private boolean active;
 	
-	
-	
-	@Override
-    public int hashCode() {
-		return (id != null ? id.hashCode() : 0);
-	}
-	
 	@PreRemove
 	protected void jpaPreventDelete()
 	{

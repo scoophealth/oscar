@@ -67,16 +67,33 @@ public class DSGuidelineProviderMapping extends AbstractModel<Integer> {
         this.providerNo = providerNo;
     }
 
-    @Override  //must have same hashcode, but oh well
-    public boolean equals(Object object2) {
-        DSGuidelineProviderMapping mapping2 = (DSGuidelineProviderMapping) object2;
-        if (mapping2.getProviderNo().equals(this.getProviderNo()) && mapping2.getGuidelineUUID().equals(this.getGuidelineUUID())) {
-            return true;
-        }
-        return false;
-    }
+   
 
-    /**
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((guidelineUUID == null) ? 0 : guidelineUUID.hashCode());
+		result = prime * result + ((providerNo == null) ? 0 : providerNo.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (!super.equals(obj)) return false;
+		if (getClass() != obj.getClass()) return false;
+		DSGuidelineProviderMapping other = (DSGuidelineProviderMapping) obj;
+		if (guidelineUUID == null) {
+			if (other.guidelineUUID != null) return false;
+		} else if (!guidelineUUID.equals(other.guidelineUUID)) return false;
+		if (providerNo == null) {
+			if (other.providerNo != null) return false;
+		} else if (!providerNo.equals(other.providerNo)) return false;
+		return true;
+	}
+
+	/**
      * @return the id
      */
     public Integer getId() {

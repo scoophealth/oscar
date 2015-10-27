@@ -112,7 +112,7 @@ public class PDFHandler  implements MessageHandler{
                 }                
             } catch (IOException e1) {
                 logger.info("An unexpected error has occurred:" + e1.toString());
-                return null;
+               
             }
         }			      	              
 		
