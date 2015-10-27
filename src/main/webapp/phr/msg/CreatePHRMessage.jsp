@@ -64,7 +64,7 @@
     <html:base/>
     <link rel="stylesheet" type="text/css" href="../../oscarMessenger/encounterStyles.css">
 <title>
-<%--bean:message key="indivoMessenger.CreateIndivoMessage.title"/--%> Create Message
+Create Message
 </title>
 
 <style type="text/css">
@@ -147,7 +147,7 @@
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                <%-- bean:message key="indivoMessenger.CreateMessage.msgMessenger"/ --%>Create Message
+                Create Message
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
