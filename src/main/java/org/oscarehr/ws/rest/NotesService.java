@@ -292,7 +292,7 @@ public class NotesService extends AbstractServiceImpl {
 		try {
 			caseManagementMgr.deleteTmpSave(providerNo, ""+demographicNo, programId);
 			caseManagementMgr.tmpSave(providerNo, ""+demographicNo, programId, noteId, noteStr);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("AutoSave Error: ", e);
 		}
 

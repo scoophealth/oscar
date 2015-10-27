@@ -186,7 +186,7 @@ public final class MyOscarUtils {
 			// remove myoscar saved password
 			providerPreference.setEncryptedMyOscarPassword(null);
 			providerPreferenceDao.merge(providerPreference);
-		} catch (Throwable t) {
+		} catch (Exception t) {
 			logger.error("Error attempting auto-myoscar login", t);
 		}
 	}
