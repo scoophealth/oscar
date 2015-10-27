@@ -435,10 +435,6 @@
 		<!-- Generic Intake -->
 
 
-		<!--
-			form-bean name="SendActionForm" type="oscar.indivoMessenger.SendActionForm"/> <form-bean name="NewStrutsActionForm" type="oscar.indivoMessenger.NewStrutsActionForm"/> <form-bean name="CreateIndivoMessageActionForm"
-			type="oscar.indivoMessenger.CreateIndivoMessageActionForm"/> <form-bean name="DisplayIndivoMsgsActionForm" type="oscar.indivoMessenger.DisplayIndivoMsgsActionForm"/
-		-->
 		<form-bean name="apptStatusEditForm" type="org.apache.struts.validator.LazyValidatorForm" />
 		<form-bean name="rxCopyForm" type="org.apache.struts.validator.LazyValidatorForm" />
 
@@ -2378,15 +2374,6 @@
 			<forward name="report" path="/PMmodule/vaccine/vaccine_provider_report.jsp" />
 		</action>
 
-		<!--
-			<action input="/indivoMessenger/DisplayIndivoMessages.jsp" name="DisplayIndivoMsgsActionForm" path="/indivoMessenger/DisplayIndivoMessages" scope="request" type="oscar.indivoMessenger.DisplayIndivoMsgsAction"> <forward name="success"
-			path="/indivoMessenger/DisplayIndivoMessages.jsp"/> </action> <action input="/indivoMessenger/ViewIndivoMessage.jsp" name="NewStrutsActionForm" path="/newStrutsAction" scope="request" type="oscar.indivoMessenger.NewStrutsAction"> <forward name="success"
-			path="/indivoMessenger/CreateIndivoMessage.jsp"/> </action> <action input="/indivoMessenger/CreateIndivoMessage.jsp" name="SendActionForm" path="/indivoMessenger/Send" scope="request" type="oscar.indivoMessenger.SendAction"> <forward name="success"
-			path="/indivoMessenger/SentIndivoMessage.jsp"/> </action> <action input="/indivoMessenger/ViewIndivoMessage.jsp" name="CreateIndivoMessageActionForm" path="/indivoMessenger/CreateIndivoMessage" scope="request"
-			type="oscar.indivoMessenger.CreateIndivoMessageAction"/>
-		-->
-
-
 
 		<!-- Population Report -->
 		<action path="/PopulationReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
@@ -2464,7 +2451,6 @@
 		</action>
 		<action path="/phr/PhrMessage" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="view" path="/phr/msg/DisplayPHRMessages.jsp" />
-			<forward name="login" path="/indivoMessenger/LoginIndivo.jsp" />
 			<forward name="read" path="/phr/msg/ReadPHRMessage.jsp" />
 			<forward name="create" path="/phr/msg/CreatePHRMessage.jsp" />
 			<forward name="document_not_found" path="/phr/PHRDocNotFound.jsp" />
