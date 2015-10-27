@@ -24,6 +24,11 @@
 
 --%>
 
+<%@page import="org.apache.commons.codec.binary.Base64"%>
+<%@page import="org.w3c.dom.Node"%>
+<%@page import="org.oscarehr.util.XmlUtils"%>
+<%@page import="org.w3c.dom.Document"%>
+<%@page import="org.oscarehr.myoscar_server.ws.Message2DataTransfer"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -66,6 +71,23 @@
  	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
 	Long senderPersonId=messageTransfer.getSenderPersonId();
 	MinimalPersonTransfer2 minimalPersonSender=AccountManager.getMinimalPerson(myOscarLoggedInInfo, senderPersonId);
+	
+	Message2DataTransfer messageDataTransfer=MyOscarMessagesHelper.getFileAttachment(messageTransfer);
+	String filename=null;
+	String mimeType=null;
+	int fileSize=0;
+	if (messageDataTransfer!=null)
+	{
+		// filename / mimeType / bytes
+		
+		Document doc=XmlUtils.toDocument(messageDataTransfer.getContents());
+		Node rootNode=doc.getFirstChild();
+		filename=XmlUtils.getChildNodeTextContents(rootNode, "filename");
+		mimeType=XmlUtils.getChildNodeTextContents(rootNode, "mimeType");
+		String tempString=XmlUtils.getChildNodeTextContents(rootNode, "bytes");
+		byte[] tempBytes=Base64.decodeBase64(tempString);
+		fileSize=tempBytes.length;
+	}
 %>
 
 <html:html locale="true">
@@ -155,7 +177,15 @@ function gotoEchart3(demoNo) {
                                     <bean:message key="oscarMessenger.ViewMessage.msgFrom"/>:
                                     </td>
                                     <td class="Printable" bgcolor="#CCCCFF">
-                                    	<%=StringEscapeUtils.escapeHtml(minimalPersonSender.getLastName()+", "+minimalPersonSender.getFirstName()+" ("+minimalPersonSender.getUserName()+")")%>
+                                    	<%
+                                    		StringBuilder displayName=new StringBuilder();
+                                    		if (minimalPersonSender.getLastName()!=null) displayName.append(minimalPersonSender.getLastName()).append(", ");
+                                    		if (minimalPersonSender.getFirstName()!=null) displayName.append(minimalPersonSender.getFirstName());
+                                    		displayName.append(" (");
+                                    		displayName.append(minimalPersonSender.getUserName());
+                                    		displayName.append(")");
+                                    	%>
+                                    	<%=StringEscapeUtils.escapeHtml(displayName.toString())%>
                                     </td>
                                 </tr>
                                 <tr>
@@ -195,6 +225,24 @@ function gotoEchart3(demoNo) {
                                     <td bgcolor="#EEEEFF" ></td>
                                     <td bgcolor="#EEEEFF" >
                                         <textarea name="msgBody" wrap="hard" readonly="true" rows="18" cols="60" ><%=StringEscapeUtils.escapeHtml(messageBody)%></textarea><br>
+                                        
+                                        <%
+                                        	if (filename!=null)
+                                        	{
+                                        		%>
+			                                        <div style="padding-top:0.5em;padding-bottom:0.5em">
+				                                        <%=StringEscapeUtils.escapeHtml(filename)%>
+				                                    	&nbsp;
+				                                    	(<%=StringEscapeUtils.escapeHtml(mimeType)%> <%=fileSize%> bytes)
+				                                    	&nbsp;
+				                                    	<a href="msg/attachment_retriever.jsp?messageId=<%=messageId%>&amp;download=false">open</a>
+				                                    	&nbsp;
+				                                    	<a href="msg/attachment_retriever.jsp?messageId=<%=messageId%>&amp;download=true" download="<%=StringEscapeUtils.escapeHtml(filename)%>">download</a> 
+			                                        </div>
+                                        		<%
+                                        	}
+                                        %>
+                                        
                                         <input class="ControlPushButton" type="button" value="<bean:message key="oscarMessenger.ViewMessage.btnReply"/>" onclick="window.location.href='<%=request.getContextPath()%>/phr/msg/CreatePHRMessage.jsp?replyToMessageId=<%=messageId%>&amp;demographicNo=<%=demographicNo%>'"/>
                                         <input class="ControlPushButton" type="button" value="<bean:message key="oscarMessenger.ViewMessage.btnReplyAll"/>" onclick="window.location.href='<%=request.getContextPath()%>/phr/msg/CreatePHRMessage.jsp?replyAll=true&amp;replyToMessageId=<%=messageId%>&amp;demographicNo=<%=demographicNo%>'"/>
  
