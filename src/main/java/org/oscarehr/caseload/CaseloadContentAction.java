@@ -56,8 +56,8 @@ public class CaseloadContentAction extends DispatchAction {
         	throw new SecurityException("missing required security object (_demographic)");
         }
 		
-		String caseloadProv     = request.getParameter("clProv");
-		String caseloadQuery    = request.getParameter("clQ");
+		String caseloadProv     = StringEscapeUtils.escapeSql(request.getParameter("clProv"));
+		String caseloadQuery    = StringEscapeUtils.escapeSql(request.getParameter("clQ"));
 		boolean sortAscending   = "true".equals(request.getParameter("clSortAsc"));
 
 		Integer caseloadPage;
@@ -144,10 +144,10 @@ public class CaseloadContentAction extends DispatchAction {
 			HttpServletResponse response) {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 
-		String caseloadDx       = request.getParameter("clDx");
-		String caseloadProv     = request.getParameter("clProv");
-		String caseloadRoster   = request.getParameter("clRo");
-		String caseloadProgram	= request.getParameter("clProg");
+		String caseloadDx       = StringEscapeUtils.escapeSql(request.getParameter("clDx"));
+		String caseloadProv     = StringEscapeUtils.escapeSql( request.getParameter("clProv"));
+		String caseloadRoster   = StringEscapeUtils.escapeSql( request.getParameter("clRo"));
+		String caseloadProgram	= StringEscapeUtils.escapeSql( request.getParameter("clProg"));
 		boolean sortAscending   = "true".equals(request.getParameter("clSortAsc"));
 
 		Integer caseloadPage;
