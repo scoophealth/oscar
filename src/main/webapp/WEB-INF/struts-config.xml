@@ -247,7 +247,6 @@
 		<form-bean name="customFilterForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="filter" type="org.oscarehr.common.model.CustomFilter" />
 		</form-bean>
-		<form-bean name="unreadTicklerForm" type="org.apache.struts.validator.LazyValidatorForm" />
 		<form-bean name="editProviderFaxForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="faxNumber" type="java.lang.String" />
 		</form-bean>
@@ -2036,11 +2035,6 @@
 		<action path="/CustomFilter" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="customFilterForm" input="/ticklerPlus/customFilterForm.jsp" validate="false">
 			<forward name="customFilterList" path="/ticklerPlus/customFilterList.jsp" />
 			<forward name="customFilterForm" path="/ticklerPlus/customFilterForm.jsp" />
-		</action>
-		<action path="/UnreadTickler" type="org.caisi.tickler.web.UnreadTicklerAction" parameter="method" scope="request" name="unreadTicklerForm" input="/ticklerPlus/loginUnreadTickler.jsp" validate="false">
-			<forward name="error" path="/loginfailed.jsp" />
-			<forward name="view" path="/ticklerPlus/viewUnreadTicklers.jsp" />
-			<forward name="login" path="/ticklerPlus/loginUnreadTicklers.jsp" />
 		</action>
 		<action path="/PMmodule/StreetHealthIntakeReportAction" type="org.oscarehr.PMmodule.streethealth.StreetHealthIntakeReportAction" name="StreetHealthIntakeReportForm" scope="request" input="/PMmodule/StreetHealthIntakeReport.jsp">
 			<forward name="success" path="/PMmodule/StreetHealthIntakeReport.jsp" />
