@@ -499,7 +499,15 @@ request.setAttribute("pageMethod",pageMethod);
 						{
 							Long senderPersonId=message.getSenderPersonId();
 							MinimalPersonTransfer2 minimalPersonSender=AccountManager.getMinimalPerson(myOscarLoggedInInfo, senderPersonId);
-							String senderString=minimalPersonSender.getLastName()+", "+minimalPersonSender.getFirstName()+" ("+minimalPersonSender.getUserName()+")";
+
+		               		StringBuilder displayName=new StringBuilder();
+		               		if (minimalPersonSender.getLastName()!=null) displayName.append(minimalPersonSender.getLastName()).append(", ");
+		               		if (minimalPersonSender.getFirstName()!=null) displayName.append(minimalPersonSender.getFirstName());
+		               		displayName.append(" (");
+		               		displayName.append(minimalPersonSender.getUserName());
+		               		displayName.append(")");
+							
+							String senderString=displayName.toString();
 							
 							StringBuilder sb=new StringBuilder();
 		               		for (Long recipientId : message.getRecipientPeopleIds())
