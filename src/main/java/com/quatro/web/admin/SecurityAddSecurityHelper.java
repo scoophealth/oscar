@@ -27,10 +27,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
-import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.model.Security;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -44,7 +45,7 @@ import oscar.log.LogConst;
  */
 public class SecurityAddSecurityHelper {
 
-	private SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+	private org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
 
 	/**
 	 * Adds a security record (i.e. user login information) for the provider.
@@ -61,6 +62,7 @@ public class SecurityAddSecurityHelper {
 	
 	private String process(PageContext pageContext) {
 		ServletRequest request = pageContext.getRequest();
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession((HttpServletRequest)request);
 		
 		StringBuilder sbTemp = new StringBuilder();
 		MessageDigest md;
@@ -75,10 +77,10 @@ public class SecurityAddSecurityHelper {
 		for (int i = 0; i < btNewPasswd.length; i++)
 			sbTemp = sbTemp.append(btNewPasswd[i]);
 
-		boolean isUserRecordAlreadyCreatedForProvider = !securityDao.findByProviderNo(request.getParameter("provider_no")).isEmpty();
+		boolean isUserRecordAlreadyCreatedForProvider = securityManager.findByProviderNo(loggedInInfo, request.getParameter("provider_no"))!=null;
 		if (isUserRecordAlreadyCreatedForProvider) return "admin.securityaddsecurity.msgLoginAlreadyExistsForProvider";
 
-		boolean isUserAlreadyExists = securityDao.findByUserName(request.getParameter("user_name")).size() > 0;
+		boolean isUserAlreadyExists = securityManager.findByUserName(loggedInInfo, request.getParameter("user_name")).size() > 0;
 		if (isUserAlreadyExists) return "admin.securityaddsecurity.msgAdditionFailureDuplicate";
 
 		Security s = new Security();
@@ -97,7 +99,7 @@ public class SecurityAddSecurityHelper {
     		s.setForcePasswordReset(Boolean.FALSE);  
         }
 		
-		securityDao.persist(s);
+    	securityManager.saveNewSecurityRecord(loggedInInfo, s);
 
 		LogAction.addLog((String) pageContext.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_SECURITY, request.getParameter("user_name"), request.getRemoteAddr());
 

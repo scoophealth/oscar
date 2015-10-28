@@ -48,9 +48,11 @@
 <%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
-<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.managers.SecurityManager" %>
 <%
-	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
 %>
 
 <html:html locale="true">
@@ -78,7 +80,7 @@
 
     int rowsAffected =0;
 
-    Security s = securityDao.find(Integer.parseInt(request.getParameter("security_no")));
+    Security s = securityManager.find(loggedInInfo,Integer.parseInt(request.getParameter("security_no")));
     if(s != null) {
     	s.setUserName(request.getParameter("user_name"));
 	    s.setProviderNo(request.getParameter("provider_no"));
@@ -101,7 +103,7 @@
     		s.setForcePasswordReset(Boolean.FALSE);  
         }
     	
-    	securityDao.saveEntity(s);
+    	securityManager.updateSecurityRecord(loggedInInfo, s);
     	rowsAffected=1;
     }
 
