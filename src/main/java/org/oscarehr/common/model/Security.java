@@ -50,13 +50,13 @@ public class Security extends AbstractModel<Integer> {
 	@Column(name = "security_no")
 	private Integer id;
 	
-	@Column(name = "user_name")
+	@Column(name = "user_name",nullable=false)
 	private String userName;
 	
-	@Column(name = "password")
+	@Column(name = "password",nullable=false)
 	private String password;
 	
-	@Column(name = "provider_no")
+	@Column(name = "provider_no",nullable=false)
 	private String providerNo;
 
 	@Column(name = "pin")

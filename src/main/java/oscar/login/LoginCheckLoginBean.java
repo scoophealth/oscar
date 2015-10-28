@@ -144,7 +144,8 @@ public final class LoginCheckLoginBean {
 	}
 
 	private Security getUserID() {
-
+		//this gets a pass on not being used by a manager because the user is not authenticated
+		//I didn't want to add a non loggedInInfo method for getByUserName()
 		SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
 		List<Security> results = securityDao.findByUserName(username);
 		Security security = null;

@@ -33,9 +33,10 @@
 <%@ page import="java.util.*" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
-<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
+<%@ page import="org.oscarehr.managers.SecurityManager" %>
 <%@ page import="org.oscarehr.common.model.UserProperty" %>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     
@@ -60,7 +61,8 @@
 	%>
 </security:oscarSec>
 <%
-	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
 	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 %>
 	
@@ -173,7 +175,7 @@
 	</tr>
 
 <%
-	List<org.oscarehr.common.model.Security> securityList = securityDao.findAllOrderBy("user_name");
+	List<org.oscarehr.common.model.Security> securityList = securityManager.findAllOrderByUserName(loggedInInfo);
 	
 	//if action is good, then give me the result
 	String searchMode = request.getParameter("search_mode");
@@ -181,11 +183,11 @@
 	
 	// if search mode is provider_no 
 	if(searchMode.equals("search_providerno"))
-		securityList = securityDao.findByLikeProviderNo(keyword);
+		securityList = securityManager.findByLikeProviderNo(loggedInInfo, keyword);
 	
 	// if search mode is user_name
 	if(searchMode.equals("search_username"))
-		securityList = securityDao.findByLikeUserName(keyword);
+		securityList = securityManager.findByLikeUserName(loggedInInfo, keyword);
 	
 	boolean toggleLine = false;
 

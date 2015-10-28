@@ -35,15 +35,18 @@
 	errorPage="errorpage.jsp"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
-<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.managers.SecurityManager" %>
+<%
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
+%>
 <%@ page import="oscar.log.LogAction" %>
 <%@ page import="oscar.log.LogConst" %>
 
 <%
-	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
-	List<Security> ss = securityDao.findByProviderNo(curUser_no);
-	for(Security s:ss) {
-
+	Security s = securityManager.findByProviderNo(loggedInInfo, curUser_no);
+	
 	     boolean pinUpdateRequired = false;
 	     String errorMsg = "";
 	     //check if the user will change the  PIN
@@ -105,7 +108,7 @@
 	     
 	     //Persist it if one of them has gone thru.
          if (passwordUpdateRequired || pinUpdateRequired) {
-        	 securityDao.saveEntity(s);
+        	 securityManager.updateSecurityRecord(loggedInInfo, s);
         	 
         	 //Log the action
         	 String ip = request.getRemoteAddr();
@@ -125,5 +128,5 @@
 	     
 	     out.println("<script language='javascript'>self.close();</script>");
 	     
-	}
+	
 %>
