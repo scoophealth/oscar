@@ -74,7 +74,7 @@
 <link rel="stylesheet" type="text/css" href="../oscarMessenger/printable.css" media="print">    
 
 <title>
-<%-- bean:message key="indivoMessenger.ViewIndivoMessage.title"/--%>View Message
+	View Message
 </title>
 
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
@@ -98,7 +98,7 @@ function gotoEchart3(demoNo) {
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                <%-- bean:message key="indivoMessenger.ViewIndivoMessage.msgMessenger"/ --%>View Message
+                View Message
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
@@ -140,7 +140,7 @@ function gotoEchart3(demoNo) {
                                     </td>                                    
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
-                                            <a href="javascript:BackToOscar()" class="messengerButtons"><%-- bean:message key="indivoMessenger.ViewMessage.btnExit"/ --%>Exit</a>
+                                            <a href="javascript:BackToOscar()" class="messengerButtons">Exit</a>
                                         </td></tr></table>
                                     </td>                                    
                                 </tr>
