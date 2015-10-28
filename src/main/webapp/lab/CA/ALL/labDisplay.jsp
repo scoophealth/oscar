@@ -443,7 +443,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         		else
         		{
         			%>
-	                    popup(300, 600, "<%=request.getContextPath()%>/phr/SendToPhrPreview.jsp?labId=" + labId + "&demographic_no=" + demographicNo, "sendtophr");
+	                    popup(450, 600, "<%=request.getContextPath()%>/phr/SendToPhrPreview.jsp?labId=" + labId + "&demographic_no=" + demographicNo, "sendtophr");
         			<%
         		}
         	%>
