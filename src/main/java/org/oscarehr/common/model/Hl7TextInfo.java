@@ -31,6 +31,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -221,6 +222,15 @@ public class Hl7TextInfo extends AbstractModel<Integer> implements Serializable 
 	public void setLabel(String label) {
     	this.label = label;
     }
+	
+	@Transient
+	public String getLabelOrDiscipline(){
+		if (label == null || label.equals("")){
+			return  discipline;
+		}else{
+			return label;    
+		}
+	}
 	
 	
 	
