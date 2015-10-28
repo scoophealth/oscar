@@ -22,15 +22,18 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.phr.web;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -39,6 +42,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
+import org.apache.struts.upload.FormFile;
+import org.apache.struts.upload.MultipartRequestHandler;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.managers.DemographicManager;
@@ -59,6 +64,8 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
+import org.oscarehr.util.XmlUtils;
+import org.w3c.dom.Document;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderData;
@@ -103,12 +110,12 @@ public class PHRMessageAction extends DispatchAction {
 
 		clearSessionVariables(request);
 
-		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-		String providerNo=loggedInInfo.getLoggedInProviderNo();
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
 
 		List docs = phrDocumentDAO.getDocumentsReceived("MESSAGE", providerNo);
 		ArrayList<PHRMessage> messages = null;
-//		List<PHRAction> actionsPendingApproval = phrActionDAO.getActionsByStatus(PHRAction.STATUS_APPROVAL_PENDING, providerNo);
+		//		List<PHRAction> actionsPendingApproval = phrActionDAO.getActionsByStatus(PHRAction.STATUS_APPROVAL_PENDING, providerNo);
 		if (docs != null) {
 			messages = new ArrayList<PHRMessage>(docs.size());
 			for (int idx = 0; idx < docs.size(); ++idx) {
@@ -118,18 +125,17 @@ public class PHRMessageAction extends DispatchAction {
 			}
 		}
 
-
 		request.getSession().setAttribute("indivoMessages", docs);
 		request.getSession().setAttribute("indivoMessageBodies", messages);
 
-//		if (actionsPendingApproval != null) {
-//			request.getSession().setAttribute("actionsPendingApproval", actionsPendingApproval);
-//		}
+		//		if (actionsPendingApproval != null) {
+		//			request.getSession().setAttribute("actionsPendingApproval", actionsPendingApproval);
+		//		}
 
 		return mapping.findForward("view");
 	}
 
-	public ActionForward viewSentMessages(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+	public ActionForward viewSentMessages(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
 		return mapping.findForward("view");
 	}
@@ -152,34 +158,33 @@ public class PHRMessageAction extends DispatchAction {
 	}
 
 	public ActionForward createMessage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 
 		String demographicNo = request.getParameter("demographicNo");
 		String provNo = (String) request.getSession().getAttribute("user");
-		
-        MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
-        if (myOscarLoggedInInfo == null || !myOscarLoggedInInfo.isLoggedIn()) {
-            request.setAttribute("forwardToOnSuccess", request.getContextPath() + "/phr/PhrMessage.do?method=createMessage&providerNo="+provNo+"&demographicNo=" + demographicNo);
-            return mapping.findForward("loginAndRedirect");
-        }
-		
-        //Check if patient has been verified
-        DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class); 
-	   	String verificationLevel = demographicManager.getPhrVerificationLevelByDemographicId(loggedInInfo, Integer.parseInt(demographicNo));
-	   	int verifyLevel = 0;
-	   	try{
-	      verifyLevel = Integer.parseInt(verificationLevel.replace('+', ' ').trim());
-	   	}catch(Exception e){ /*Should already be set to zero */ }
-	   
-	   	if (verifyLevel != 3){ //Prompt for verification
-	   		request.setAttribute("forwardToOnSuccess", "/phr/PhrMessage.do?method=createMessage&providerNo="+provNo+"&demographicNo=" + demographicNo);
-	   		request.setAttribute("demographicNo", demographicNo);
-	   		return mapping.findForward("verifyAndRedirect");
-	   		
-	   	}
-        
-		
-		
+
+		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+		if (myOscarLoggedInInfo == null || !myOscarLoggedInInfo.isLoggedIn()) {
+			request.setAttribute("forwardToOnSuccess", request.getContextPath() + "/phr/PhrMessage.do?method=createMessage&providerNo=" + provNo + "&demographicNo=" + demographicNo);
+			return mapping.findForward("loginAndRedirect");
+		}
+
+		//Check if patient has been verified
+		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+		String verificationLevel = demographicManager.getPhrVerificationLevelByDemographicId(loggedInInfo, Integer.parseInt(demographicNo));
+		int verifyLevel = 0;
+		try {
+			verifyLevel = Integer.parseInt(verificationLevel.replace('+', ' ').trim());
+		} catch (Exception e) { /*Should already be set to zero */
+		}
+
+		if (verifyLevel != 3) { //Prompt for verification
+			request.setAttribute("forwardToOnSuccess", "/phr/PhrMessage.do?method=createMessage&providerNo=" + provNo + "&demographicNo=" + demographicNo);
+			request.setAttribute("demographicNo", demographicNo);
+			return mapping.findForward("verifyAndRedirect");
+
+		}
+
 		DemographicData dd = new DemographicData();
 		org.oscarehr.common.model.Demographic d = dd.getDemographic(loggedInInfo, demographicNo);
 
@@ -209,6 +214,11 @@ public class PHRMessageAction extends DispatchAction {
 		String message=StringUtils.trimToNull(request.getParameter("body"));
 		boolean replyAll=Boolean.parseBoolean(request.getParameter("replyAll"));
 
+		MultipartRequestHandler multipartRequestHandler=form.getMultipartRequestHandler();
+		@SuppressWarnings("unchecked")
+        Hashtable<String,FormFile> fileElements=multipartRequestHandler.getFileElements();
+		FormFile attachment=fileElements.get("fileAttachment");
+		
 		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
 		MessageTransfer3 previousMessage=MessageManager.getMessage(myOscarLoggedInInfo, replyToMessageId);
 		
@@ -229,6 +239,12 @@ public class PHRMessageAction extends DispatchAction {
 			}
 		}
 		
+		if (attachment!=null)
+		{
+			Message2DataTransfer attachmentPart=makeFileAttachmentMessagePart(attachment);
+			newMessage.getMessageDataList().add(attachmentPart);
+		}
+
 		Long messageId=null;
 		try {
 			 messageId= MessageManager.sendMessage(myOscarLoggedInInfo, newMessage);
@@ -249,23 +265,40 @@ public class PHRMessageAction extends DispatchAction {
 		return mapping.findForward("view");
 	}
 
+	private static Message2DataTransfer makeFileAttachmentMessagePart(FormFile attachment) throws ParserConfigurationException, FileNotFoundException, IOException, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException
+	{
+		Message2DataTransfer result=new Message2DataTransfer();
+		result.setMimeType("application/xml");
+		result.setDataType("FILE_ATTACHMENT");
+				
+		Document doc = XmlUtils.newDocument("file_attachment");
+		XmlUtils.appendChildToRoot(doc, "filename", attachment.getFileName());
+		XmlUtils.appendChildToRoot(doc, "mimeType", attachment.getContentType());
+		XmlUtils.appendChildToRoot(doc, "bytes", attachment.getFileData());
+
+		result.setContents(XmlUtils.toBytes(doc, false));
+
+		return(result);
+	}
+
+	
 	public ActionForward sendPatient(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String subject = request.getParameter("subject");
 		String messageBody = request.getParameter("body");
 		Integer demographicId = Integer.parseInt(request.getParameter("demographicId"));
 
-		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
-		
+		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+
 		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 		Long recipientMyOscarUserId = AccountManager.getUserId(myOscarLoggedInInfo, demographic.getMyOscarUserName());
 
 		try {
-	        MessageManager.sendMessage(myOscarLoggedInInfo, recipientMyOscarUserId, subject, messageBody);
-        } catch (NotAuthorisedException_Exception e) {
-	        WebUtils.addErrorMessage(request.getSession(), "This patient has not given you permissions to send them a message.");
-	        return mapping.findForward("create");
-        }
+			MessageManager.sendMessage(myOscarLoggedInInfo, recipientMyOscarUserId, subject, messageBody);
+		} catch (NotAuthorisedException_Exception e) {
+			WebUtils.addErrorMessage(request.getSession(), "This patient has not given you permissions to send them a message.");
+			return mapping.findForward("create");
+		}
 
 		return mapping.findForward("view");
 	}
@@ -295,13 +328,12 @@ public class PHRMessageAction extends DispatchAction {
 		return viewSentMessages(mapping, form, request, response);
 	}
 
-
 	public ActionForward flipActive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		Long messageId=new Long(request.getParameter("messageId"));
+		Long messageId = new Long(request.getParameter("messageId"));
 
-		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
-		
-		Message2RecipientPersonAttributesTransfer recipientAttributes=MessageManager.getMessageRecipientPersonAttributesTransfer(myOscarLoggedInInfo, messageId, myOscarLoggedInInfo.getLoggedInPersonId());
+		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+
+		Message2RecipientPersonAttributesTransfer recipientAttributes = MessageManager.getMessageRecipientPersonAttributesTransfer(myOscarLoggedInInfo, messageId, myOscarLoggedInInfo.getLoggedInPersonId());
 		recipientAttributes.setActive(!recipientAttributes.isActive());
 		MessageManager.updateMessageRecipientPersonAttributesTransfer(myOscarLoggedInInfo, recipientAttributes);
 
