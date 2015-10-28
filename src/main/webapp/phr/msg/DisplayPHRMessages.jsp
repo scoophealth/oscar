@@ -259,12 +259,6 @@ request.setAttribute("pageMethod",pageMethod);
             }
         }
         
-        function gotoEchart(demoNo, msgBody) {
-            var url = '<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=session.getAttribute("user")%>&appointmentNo=&demographicNo='+ demoNo + '&curProviderNo=&reason=<%=URLEncoder.encode("My Oscar Notes")%>&userName=<%=URLEncoder.encode(session.getAttribute("userfirstname")+" "+session.getAttribute("userlastname")) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&encType=<%=URLEncoder.encode("MyOSCAR Note","UTF-8")%>&noteBody=';
-            url += msgBody + '&appointmentDate=&startTime=&status=';
-            popup(755,1048,url,'apptProvider');
-        }
-        
         function gotoEchart2(demoNo,myoscarmsg) {
             var url = '<%=request.getContextPath()%>/oscarEncounter/IncomingEncounter.do?demographicNo='+ demoNo+'&myoscarmsg='+myoscarmsg+'&appointmentDate=<%=UtilDateUtilities.DateToString(new Date())%>';
             popup(755,1048,url,'apptProvider');

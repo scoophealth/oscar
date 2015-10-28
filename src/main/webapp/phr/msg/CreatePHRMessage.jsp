@@ -227,7 +227,7 @@ Create Message
                             			}
                             		}
                             	%>
-                                <html:form action="/phr/PhrMessage">
+                                <html:form action="/phr/PhrMessage" enctype="multipart/form-data">
                                     <tr>
                                         <th align="left" bgcolor="#DDDDFF">
                                             <bean:message key="oscarMessenger.CreateMessage.msgMessage"/>
@@ -326,7 +326,16 @@ Create Message
 	                                        	%>
                                                 <tr>
                                                     <td>&nbsp;</td>
-                                                    <td><html:textarea value="" name="body" styleId="message" property="body" cols="60" rows="18"/></td>
+                                                    <td>
+                                                    	<html:textarea value="" name="body" styleId="message" property="body" cols="60" rows="18"/>
+                                                    </td>
+                                                        
+                                                </tr>
+                                                <tr>
+                                                    <td><bean:message key="oscarMessenger.CreateMessage.AttachFile"/></td>
+                                                    <td>
+                                                    	<input type="file" name="fileAttachment" />
+                                                    </td>
                                                         
                                                 </tr>
                                             </table>
