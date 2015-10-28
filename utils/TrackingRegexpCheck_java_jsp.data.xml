@@ -812,8 +812,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/phr/dao/PHRActionDAO.java:public class PHRActionDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/dao/hibernate/PHRDocumentDAOHibernate.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/dao/hibernate/PHRDocumentDAOHibernate.java:public class PHRDocumentDAOHibernate extends HibernateDaoSupport</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/phr/dao/hibernate/PHRDocumentExtDAOHibernate.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/phr/dao/hibernate/PHRDocumentExtDAOHibernate.java:public class PHRDocumentExtDAOHibernate extends HibernateDaoSupport</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/util/DbConnectionFilter.java:Connection c = ((DataSource) SpringUtils.getBean("dataSource")).getConnection();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:dbPH=new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:if(aKeyword[0].getParamType().equals(DBPreparedHandlerParam.PARAM_STRING) &amp;&amp;</ViolationValue>
@@ -1196,6 +1194,8 @@
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable results = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:public Hashtable findOscarId(LoggedInInfo loggedInInfo, int idType, String myOscarUserName) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/phr/web/PHRMessageAction.java:Hashtable&lt;String,FormFile&gt; fileElements=multipartRequestHandler.getFileElements();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/phr/web/PHRMessageAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:List&lt;Hashtable&gt; queues= queueDao.getQueues();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:Vector&lt;String&gt; vect = conUtil.teamVec;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:for(Hashtable ht:queues){</ViolationValue>
