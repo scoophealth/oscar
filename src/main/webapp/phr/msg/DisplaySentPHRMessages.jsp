@@ -67,7 +67,7 @@ request.setAttribute("forwardto", request.getRequestURI());
         <html:base />
         <link rel="stylesheet" type="text/css" href="../../oscarMessenger/encounterStyles.css">
         <title>
-        <%-- bean:message key="indivoMessenger.DisplayMessages.title"/ --%>  myOSCAR
+        	myOSCAR
         </title>
         <style type="text/css">
         td.messengerButtonsA{

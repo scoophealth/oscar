@@ -133,7 +133,7 @@ request.setAttribute("pageMethod",pageMethod);
         <html:base />
         <link rel="stylesheet" type="text/css" href="../../oscarMessenger/encounterStyles.css">
         <title>
-        <%-- bean:message key="indivoMessenger.DisplayMessages.title"/ --%>  myOSCAR
+        	myOSCAR
         </title>
         <script type="text/javascript" src="../../share/javascript/prototype.js"></script>
         <script type="text/javascript" src="../../share/javascript/Oscar.js"></script>
