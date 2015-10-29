@@ -51,18 +51,20 @@
 <%@ page import="org.oscarehr.common.dao.ClinicNbrDao"%>
 <%@ page import="org.oscarehr.common.model.ProviderData"%>
 <%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
-<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO"%>
 <%@page import="org.oscarehr.common.model.UserProperty"%>
 <%@ page import="oscar.OscarProperties"%>
 <%@page import="org.oscarehr.common.Gender" %>
-
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.managers.SecurityManager" %>
 <%
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
+
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
   ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
 %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
@@ -124,10 +126,7 @@ function setfocus() {
 	String keyword = request.getParameter("keyword");
 	ProviderData provider = providerDao.findByProviderNo(keyword);
 	
-	SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
-	List<Security>  results = securityDao.findByProviderNo(provider.getId());
-	Security security = null;
-	if (results.size() > 0) security = results.get(0);
+	Security security = securityManager.findByProviderNo(loggedInInfo,provider.getId());
 	
 	if(provider == null) {
 	    out.println("failed");
