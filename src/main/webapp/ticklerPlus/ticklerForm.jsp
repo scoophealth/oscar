@@ -28,7 +28,8 @@
     String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     boolean authed=true;
 %>
-<security:oscarSec roleName="<%=roleName2$%>" objectName="_tickler" rights="r" reverse="<%=true%>">
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_tickler"
+	rights="r" reverse="<%=true%>">
 	<%authed=false; %>
 	<%response.sendRedirect("../securityError.jsp?type=_tickler");%>
 </security:oscarSec>
@@ -41,12 +42,14 @@
 <%-- Updated by Eugene Petruhin on 18 dec 2008 while fixing #2422864 & #2317933 & #2379840 --%>
 <%-- Updated by Eugene Petruhin on 20 feb 2009 while fixing check_date() error --%>
 
-	<%@include file="/ticklerPlus/header.jsp"%>
-	
-	<%@page import="java.util.GregorianCalendar"%>
-	<%@page import="java.util.Calendar"%>
+<%@include file="/ticklerPlus/header.jsp"%>
 
-	<%
+<%@page import="java.util.GregorianCalendar"%>
+<%@page import="java.util.Calendar"%>
+<%@page import="java.util.List"%>
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
+
+<%
 		GregorianCalendar now = new GregorianCalendar();
 	
 		int curYear = now.get(Calendar.YEAR);
@@ -57,8 +60,10 @@
 		
 		boolean curAm = (now.get(Calendar.HOUR_OF_DAY) <= 12) ? true : false;
 	%>
-	<script type="text/javascript" src="../js/checkDate.js"></script>
-	<script type="text/javascript">
+<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+
+<script type="text/javascript" src="../js/checkDate.js"></script>
+<script type="text/javascript">
 		function check_tickler_service_date() {
 			return check_date('tickler.serviceDateWeb');
 		}
@@ -97,8 +102,44 @@
 				return false;
 			}
 			
+			if(taskAssignedToProviderProgramDomain != null) {
+				var pn = $("#program_no").val();
+			
+				var contains=false;
+				
+				for(var x=0;x<taskAssignedToProviderProgramDomain.length;x++) {
+					if(taskAssignedToProviderProgramDomain[x] == pn) {
+						contains=true;
+						break;
+					}
+				}
+				
+				if(!contains) {
+					alert('The provider you chose is not part of the program you choose. Please choose appropriate values');
+					return false;
+				}
+			}
+			
 			return check_tickler_service_date();
 		}
+		
+		var taskAssignedToProviderProgramDomain = null;
+		
+		function get_program_domain_for_assigned_to_provider() {
+			//readonly the save button
+			var assignedToProviderNo = $("#taskAssignedTo").val();
+			
+			$.ajax({url:'../Tickler.do?method=getProgramDomain&providerNo='+assignedToProviderNo,async:true,dataType:'json', success:function(data) {
+                  //data holds the array
+                  taskAssignedToProviderProgramDomain = data;
+            },error:function() {
+            	taskAssignedToProviderProgramDomain = null;
+            }});
+			
+
+		}
+	
+		
 	</script>
 
 	<tr>
@@ -126,7 +167,20 @@
 		</tr>
 		<tr>
 			<td class="fieldTitle">Program:</td>
-			<td class="fieldValue"><c:out value="${requestScope.program_name}"/></td>
+			<td class="fieldValue">
+				<select name="tickler.program_no" id="program_no">
+				<%
+					List<Program> programs = (List<Program>)request.getAttribute("programDomain");
+					String currentProgramId = (String)request.getAttribute("currentProgramId");
+					
+					for(Program p:programs) {
+						String selected = (p.getId().toString().equals(currentProgramId))?" selected=\"selected\" ":"";
+				%>
+					<option value="<%=p.getId()%>" <%=selected%>><%=p.getName() %></option>
+					
+				<% } %>
+				</select>
+			</td>
 		</tr>
 		<tr>
 			<td class="fieldTitle">Service Date:</td>
@@ -215,7 +269,7 @@
 			</td>
 			<td class="fieldValue">
 				<html:hidden property="tickler.taskAssignedToName" />
-	            <html:select property="tickler.taskAssignedTo" value="none">
+	            <html:select property="tickler.taskAssignedTo" styleId="taskAssignedTo" value="none" onchange="get_program_domain_for_assigned_to_provider()">
         		    <option value="none">- select -</option>
         		    <html:options collection="providers" property="providerNo" labelProperty="formattedName"/>
             	</html:select>
