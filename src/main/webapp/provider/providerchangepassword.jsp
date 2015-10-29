@@ -25,21 +25,20 @@
 --%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
-<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.managers.SecurityManager" %>
 <%
-  if(session.getValue("user") == null )
-    response.sendRedirect("../logout.jsp");
-    		
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
+	
   String errormsg = "";
   if (request.getParameter("errormsg") != null) {
 		   errormsg = request.getParameter("errormsg") ;
   }     
   
   String curUser_no = (String) session.getAttribute("user");
-  SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
-  List<Security> ss = securityDao.findByProviderNo(curUser_no);
+  Security s = securityManager.findByProviderNo(loggedInInfo, curUser_no);
   
-  Security s = ss.get(0);
   
   Integer BLocallockset = s.getBLocallockset();
   Integer BRemotelockset = 	s.getBRemotelockset();	  

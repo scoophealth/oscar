@@ -49,7 +49,6 @@ import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.OcanForm;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.ProviderPreferenceDao;
-import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.dao.ServiceRequestTokenDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Facility;
@@ -95,8 +94,9 @@ public final class LoginAction extends DispatchAction {
     private ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
     private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
     private UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
-	
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
+			
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	boolean ajaxResponse = request.getParameter("ajaxResponse") != null?Boolean.valueOf(request.getParameter("ajaxResponse")):false;
     	
     	if(!"POST".equals(request.getMethod())) {
@@ -118,6 +118,7 @@ public final class LoginAction extends DispatchAction {
         String where = "failure";
         
     	if (request.getParameter("forcedpasswordchange") != null && request.getParameter("forcedpasswordchange").equalsIgnoreCase("true")) {
+    		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
     		//Coming back from force password change.
     	    userName = (String) request.getSession().getAttribute("userName");
     	    password = (String) request.getSession().getAttribute("password");
@@ -139,7 +140,7 @@ public final class LoginAction extends DispatchAction {
     	            return(new ActionForward(newURL));  
         	    }
         	   
-        	    persistNewPassword(userName, newPassword);
+        	    persistNewPassword(loggedInInfo, userName, newPassword);
         	            	    
         	    password = newPassword;
         	            	    
@@ -247,9 +248,10 @@ public final class LoginAction extends DispatchAction {
             /* 
              * This section is added for forcing the initial password change.
              */
-            Security security = getSecurity(userName);
+           boolean isForcePasswordReset = securityManager.getPasswordResetFlag(userName);
+            
             if (!OscarProperties.getInstance().getBooleanProperty("mandatory_password_reset", "false") && 
-            	security.isForcePasswordReset() != null && security.isForcePasswordReset() && forcedpasswordchange	) {
+            	isForcePasswordReset && forcedpasswordchange	) {
             	
             	String newURL = mapping.findForward("forcepasswordreset").getPath();
             	
@@ -564,10 +566,9 @@ public final class LoginAction extends DispatchAction {
      * @param username
      * @return
      */
-    private Security getSecurity(String username) {
+    private Security getSecurity(LoggedInInfo loggedInInfo, String username) {
 
-		SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
-		List<Security> results = securityDao.findByUserName(username);
+		List<Security> results = securityManager.findByUserName(loggedInInfo, username);
 		Security security = null;
 		if (results.size() > 0) security = results.get(0);
 
@@ -587,13 +588,12 @@ public final class LoginAction extends DispatchAction {
      * @param newPassword
      * @return
      */
-    private void  persistNewPassword(String userName, String newPassword) throws Exception{
+    private void  persistNewPassword(LoggedInInfo loggedInInfo, String userName, String newPassword) throws Exception{
     
-	    Security security = getSecurity(userName);
+	    Security security = getSecurity(loggedInInfo, userName);
 	    security.setPassword(encodePassword(newPassword));
 	    security.setForcePasswordReset(Boolean.FALSE);
-	    SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");	    
-	    securityDao.saveEntity(security); 
+	    securityManager.updateSecurityRecord(loggedInInfo, security); 
 		
     }
          

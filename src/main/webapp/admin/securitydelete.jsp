@@ -32,7 +32,7 @@
     boolean authed=true;
 %>
 <security:oscarSec roleName="<%=roleName$%>"
-        objectName="_admin,_admin.userAdmin" rights="r"
+        objectName="_admin,_admin.userAdmin" rights="w"
         reverse="<%=true%>">
         <%authed=false; %>
         <%response.sendRedirect("../securityError.jsp?type=_admin&type=_admin.userAdmin");%>
@@ -47,9 +47,11 @@ if(!authed) {
 <%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
-<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.managers.SecurityManager" %>
 <%
-	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
 %>
 <html:html locale="true">
 <head>
@@ -65,9 +67,9 @@ if(!authed) {
 </table>
 <%
 	int rowsAffected=0;
-	Security s = securityDao.find(Integer.parseInt(request.getParameter("keyword")));
+	Security s = securityManager.find(loggedInInfo, Integer.parseInt(request.getParameter("keyword")));
 	if(s != null) {
-		securityDao.remove(s.getId());
+		securityManager.remove(loggedInInfo, s.getId());
 		rowsAffected=1;
 		LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_SECURITY,
         		request.getParameter("keyword"), request.getRemoteAddr());
