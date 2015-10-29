@@ -37,9 +37,10 @@
 %></caisi:isModuleLoad><%
 OscarProperties props = OscarProperties.getInstance();
 
-// clear old cookies
+// clear old cookies - this cookie has something to do with old OscarDocument setup
 Cookie prvCookie = new Cookie(CookieSecurity.providerCookie, "");
 prvCookie.setPath("/");
+prvCookie.setSecure(true);
 response.addCookie(prvCookie);
 
 
