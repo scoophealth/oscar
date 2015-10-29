@@ -156,12 +156,6 @@ if(!authed) {
 
 <c:set var="ctx" value="${ pageContext.request.contextPath }" />
 <%
-	if(session.getAttribute("user") == null)
-	{
-		response.sendRedirect("../logout.jsp");
-		return;
-	}
-
 	ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
 	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
     
@@ -1520,7 +1514,17 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 							for(DemographicContact dContact:dContacts) {
 								String sdm = (dContact.getSdm()!=null && dContact.getSdm().equals("true"))?"<span title=\"SDM\" >/SDM</span>":"";
 								String ec = (dContact.getEc()!=null && dContact.getEc().equals("true"))?"<span title=\"Emergency Contact\" >/EC</span>":"";
-								String masterLink1 = "<a href=\""+request.getContextPath()+"/demographic/demographiccontrol.jsp?demographic_no="+dContact.getContactId()+"&displaymode=edit&dboperation=search_detail\">M</a>";
+								
+								String masterLink1 = "";
+								if(dContact.getType() == DemographicContact.TYPE_DEMOGRAPHIC) {
+									masterLink1 = "<a href=\""+request.getContextPath()+"/demographic/demographiccontrol.jsp?demographic_no="+dContact.getContactId()+"&displaymode=edit&dboperation=search_detail\">M</a>";
+								} else if(dContact.getType() == DemographicContact.TYPE_CONTACT) {
+									if("professional".equals(dContact.getCategory())) {
+										masterLink1 = "<a onClick=\"popupPage(500,800,'"+request.getContextPath()+"/demographic/Contact.do?method=editProContact&pcontact.id="+dContact.getContactId()+"')\" href=\"javascript:void(0)\">C</a>";
+									} else {
+										masterLink1 = "<a onClick=\"popupPage(500,800,'"+request.getContextPath()+"/demographic/Contact.do?method=editContact&contact.id="+dContact.getContactId()+"')\" href=\"javascript:void(0)\">C</a>";
+									}
+								}
 						%>
 
 								<li><span class="label"><%=dContact.getRole()%>:</span>
