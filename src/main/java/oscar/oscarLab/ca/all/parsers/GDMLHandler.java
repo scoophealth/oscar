@@ -47,6 +47,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.model.Hl7TextMessageInfo;
+import org.oscarehr.common.model.Hl7TextMessageInfo2;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.UtilDateUtilities;
@@ -83,7 +84,7 @@ public class GDMLHandler implements MessageHandler {
         p.setValidationContext(new NoValidation());
         msg = (ORU_R01) p.parse(hl7Body.replaceAll( "\n", "\r\n" ));
 
-        ArrayList<String> labs = getMatchingGDMLLabs(hl7Body);
+        ArrayList<String> labs = getMatchingGDMLLabsByAccessionNo(hl7Body);
         headers = new ArrayList<String>();
         obrSegMap = new LinkedHashMap<OBR,ArrayList<OBX>>();
         obrSegKeySet = new ArrayList<OBR>();
@@ -704,6 +705,45 @@ public class GDMLHandler implements MessageHandler {
     }
 
     
+    private ArrayList<String> getMatchingGDMLLabsByAccessionNo(String hl7Body) {
+		Base64 base64 = new Base64(0);
+		ArrayList<String> ret = new ArrayList<String>();
+		int monthsBetween = 0;
+		Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
+
+		try {
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	        java.util.Date dateB = formatter.parse(getServiceDate());
+			List<Hl7TextMessageInfo2> matchingLabs = hl7TextInfoDao.getMatchingLabsByAccessionNo(getAccessionNum());
+			for ( Hl7TextMessageInfo2 l: matchingLabs ) {
+				Date dateA = UtilDateUtilities.StringToDate(l.labDate_A,"yyyy-MM-dd hh:mm:ss");
+				
+				if (dateA.before(dateB)) {
+					monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
+				} else {
+					monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
+				}
+				if (monthsBetween < 4) {
+					ret.add(new String(base64.decode(l.message.getBytes("ASCII")), "ASCII"));
+				}
+				
+				if(hl7Body.equals(new String(base64.decode(l.message.getBytes("ASCII")), "ASCII"))){
+					logger.error("same message ");
+					break;
+				}
+			}
+
+
+		} catch (Exception e) {
+			logger.error("Exception in HL7 getMatchingGDMLLabsByAccessionNo: ", e);
+		}
+
+		// if there have been no labs added to the database yet just return this
+		// lab
+		if (ret.size() == 0)
+			ret.add(hl7Body);
+		return ret;
+	}    
     
     private ArrayList<String> getMatchingGDMLLabs(String hl7Body) {
 		Base64 base64 = new Base64(0);
