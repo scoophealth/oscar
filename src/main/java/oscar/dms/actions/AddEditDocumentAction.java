@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -155,7 +156,7 @@ public class AddEditDocumentAction extends DispatchAction {
 
 	}
 
-	public int countNumOfPages(String fileName) {// count number of pages in a local pdf file
+	public static int countNumOfPages(String fileName) {// count number of pages in a local pdf file
 
 		int numOfPage = 0;
 		String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
@@ -518,10 +519,11 @@ public class AddEditDocumentAction extends DispatchAction {
 		return file;
 	}
 
-	public int storeDocumentInDatabase(File file, Integer documentNo){
+	public static int storeDocumentInDatabase(File file, Integer documentNo){
 		Integer ret = 0;
+		FileInputStream fin = null;
 		try{
-			FileInputStream fin = new FileInputStream(file);
+			fin=new FileInputStream(file);
 			byte fileContents[] = new byte[(int)file.length()];
 			fin.read(fileContents);
 			DocumentStorage docStor = new DocumentStorage();
@@ -533,6 +535,10 @@ public class AddEditDocumentAction extends DispatchAction {
 			ret = docStor.getId();
 		}catch(Exception e){
 			MiscUtils.getLogger().error("Error putting file in database",e);
+		}
+		finally
+		{
+			IOUtils.closeQuietly(fin);
 		}
 		return ret;
 	}
