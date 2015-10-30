@@ -24,6 +24,8 @@
 
 package org.oscarehr.phr.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -33,6 +35,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
@@ -227,5 +230,17 @@ public final class MyOscarUtils {
 	public static SecretKeySpec getDeterministicallyMangledPasswordSecretKeyFromSession(HttpSession session)
 	{
 		return (SecretKeySpec) (session.getAttribute(MANGLED_SECRET_KEY_SESSION_KEY));
+	}
+	
+	public static String encodeBase64EscapeUrl(byte[] id) throws UnsupportedEncodingException
+	{
+		String s=Base64.encodeBase64String(id);
+		s=URLEncoder.encode(s, MiscUtils.DEFAULT_UTF8_ENCODING);
+		return(s);
+	}
+	
+	public static byte[] decodeBase64Id(String s)
+	{
+		return(Base64.decodeBase64(s));
 	}
 }
