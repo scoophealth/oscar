@@ -23,7 +23,9 @@
 
 package org.caisi.tickler.web;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.cxf.common.util.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -58,6 +61,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
+import net.sf.json.JSONArray;
 import oscar.OscarProperties;
 
 public class TicklerAction extends DispatchAction {
@@ -311,6 +315,9 @@ public class TicklerAction extends DispatchAction {
 		request.setAttribute("providers", providerMgr.getActiveProviders(null, programId));
 		request.setAttribute("program_name", programMgr.getProgramName(programId));
 		request.setAttribute("from", getFrom(request));
+		
+		request.setAttribute("programDomain",programMgr.getProgramDomain(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo()));
+		request.setAttribute("currentProgramId", programId);
 		return mapping.findForward("edit");
 	}
 
@@ -328,9 +335,15 @@ public class TicklerAction extends DispatchAction {
 		String docId = request.getParameter("docId"); 
 		
 		// set the program which the tickler was written in if there is a program.
-		String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
-		if (programIdStr != null) tickler.setProgramId(Integer.valueOf(programIdStr));
+		//String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+		//if (programIdStr != null) tickler.setProgramId(Integer.valueOf(programIdStr));
 
+		String programNo = request.getParameter("tickler.program_no");
+		if(!StringUtils.isEmpty(programNo)) {
+			tickler.setProgramId(Integer.valueOf(programNo));
+		}
+			
+		
 		/* get service time */
 		String service_hour = request.getParameter("tickler.service_hour");
 		String service_minute = request.getParameter("tickler.service_minute");
@@ -508,4 +521,20 @@ public class TicklerAction extends DispatchAction {
 
 		return null;
 	}
+	
+	public ActionForward getProgramDomain(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String providerNo = request.getParameter("providerNo");
+		
+		List<Program> programs = programMgr.getProgramDomain(providerNo);
+		List<Integer> programIds = new ArrayList<Integer>();
+		for(Program p:programs) {
+			programIds.add(p.getId());
+		}
+		
+		JSONArray jsonArray = JSONArray.fromObject( programIds );
+		response.getWriter().print(jsonArray);
+		
+		return null;
+	}
+	
 }
