@@ -31,13 +31,16 @@ import javax.servlet.http.HttpSession;
 
 import org.oscarehr.myoscar.client.ws_manager.MessageManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
+import org.oscarehr.myoscar_server.ws.Message2DataTransfer;
 import org.oscarehr.myoscar_server.ws.Message2RecipientPersonAttributesTransfer;
 import org.oscarehr.myoscar_server.ws.MessageTransfer3;
 import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 
 public final class MyOscarMessagesHelper {
-	private static final int MESSAGE_DISPLAY_SIZE = 25;
+	public static final int MESSAGE_DISPLAY_SIZE = 25;
+
+	public static final String ATTACH_FILE_DATA_TYPE="FILE_ATTACHMENT";
 
 	public static int getNextPageStartIndex(int currentStartIndex) {
 		return (currentStartIndex + MESSAGE_DISPLAY_SIZE);
@@ -78,5 +81,23 @@ public final class MyOscarMessagesHelper {
 		}
 
 		return (messageTransfer);
+	}
+	
+	/**
+	 * convenience method to get a specific content data
+	 */
+	public static Message2DataTransfer getMessagePart(MessageTransfer3 messageTransfer, String dataType)
+	{
+		for (Message2DataTransfer messageDataTransfer : messageTransfer.getMessageDataList())
+		{
+			if (messageDataTransfer.getDataType().equals(dataType)) return (messageDataTransfer);
+		}
+
+		return (null);
+	}
+
+	public static Message2DataTransfer getFileAttachment(MessageTransfer3 messageTransfer)
+	{
+		return(getMessagePart(messageTransfer, ATTACH_FILE_DATA_TYPE));
 	}
 }
