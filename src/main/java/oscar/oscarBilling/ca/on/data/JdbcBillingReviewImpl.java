@@ -51,9 +51,11 @@ import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONExt;
 import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.common.model.BillingONPayment;
+import org.oscarehr.common.model.BillingOnItemPayment;
 import org.oscarehr.common.model.BillingService;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DateRange;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.ConversionUtils;
@@ -370,23 +372,22 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setNumItems(Integer.parseInt(bi.getServiceCount()));
 				
 				for(Integer paymentId:billingOnPaymentDao.find3rdPartyPayments(Integer.parseInt(ch1Obj.getId()))) {
-					//lets go through the exts, and pull out the ones.
-					String payment = null;
-					String payMethod=null;
-					for(BillingONExt ext: billingOnExtDao.findByBillingNoAndPaymentNo(Integer.parseInt(ch1Obj.getId()), paymentId)) {
-						if("payMethod".equals(ext.getKeyVal())) {
-							payMethod=ext.getValue();
-						}
-						if("payment".equals(ext.getKeyVal())) {
-							payment=ext.getValue();
-						}
+					//because private billing changed, we'll check via paymentTypeId in billing_on_payment
+					BillingONPayment paymentObj = billingOnPaymentDao.find(paymentId);
+					BillingOnItemPayment boip = billOnItemPaymentDao.findByPaymentIdAndItemId(paymentId, bi.getId());
+					
+					if(boip == null) {
+						MiscUtils.getLogger().warn("boip is null - " + paymentId + "," + bi.getId());
+						//probably means that no payment was applied to this item.
+						continue;
 					}
-					if(CASH_PAYMENT_ID.toString().equals(payMethod)) {
-						cashTotal += Double.valueOf(payment);
+					
+					if(paymentObj.getPaymentTypeId() == CASH_PAYMENT_ID) {
+						cashTotal += boip.getPaid().intValue();
+					} else if(paymentObj.getPaymentTypeId() == DEBIT_PAYMENT_ID) {
+						debitTotal += boip.getPaid().intValue();
 					}
-					if(DEBIT_PAYMENT_ID.toString().equals(payMethod)) {
-						debitTotal += Double.valueOf(payment);
-					}
+					
 				}
 				
 				
