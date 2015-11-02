@@ -23,7 +23,7 @@
     Ontario, Canada
 
 --%>
-
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@page import="org.oscarehr.util.MiscUtils"%><%@page import="org.apache.poi.hssf.usermodel.HSSFRow,org.apache.poi.hssf.usermodel.HSSFSheet,org.apache.poi.hssf.usermodel.HSSFWorkbook,com.Ostermiller.util.CSVParser"%><%
 
     String csv = (String) session.getAttribute("clinicalReportCSV");
