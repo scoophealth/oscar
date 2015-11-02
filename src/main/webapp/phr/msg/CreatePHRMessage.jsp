@@ -152,6 +152,7 @@ Create Message
           }
        }catch (e){
           alert ("ERROR: could not paste to EMR");
+          console.error("error", e);
        }
     }    
 </script>
@@ -383,7 +384,7 @@ Create Message
 		                                   						disabled="disabled"
 		                                   						title="<bean:message key="global.no.phr.account.registered"/>"
 		                                					<%}%> 
-                                            				class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnPasteToEchart"/>" onclick="paste2Echart();"/>
+                                            				class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnPasteToEchart"/>" onclick="paste2Echart();"/>                                            			
                                         			<%
                                         		}
                                         		else

@@ -88,6 +88,9 @@
 		byte[] tempBytes=Base64.decodeBase64(tempString);
 		fileSize=tempBytes.length;
 	}
+
+	String myOscarUserName=minimalPersonSender.getUserName();
+	Demographic demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
 %>
 
 <html:html locale="true">
@@ -237,7 +240,16 @@ function gotoEchart3(demoNo) {
 				                                    	&nbsp;
 				                                    	<a href="msg/attachment_retriever.jsp?messageId=<%=messageId%>&amp;download=false">open</a>
 				                                    	&nbsp;
-				                                    	<a href="msg/attachment_retriever.jsp?messageId=<%=messageId%>&amp;download=true" download="<%=StringEscapeUtils.escapeHtml(filename)%>">download</a> 
+				                                    	<a href="msg/attachment_retriever.jsp?messageId=<%=messageId%>&amp;download=true" download="<%=StringEscapeUtils.escapeHtml(filename)%>">download</a>
+				                                    	<%
+				                                    		if (demographic !=null)
+				                                    		{
+				                                    			%>
+							                                    	&nbsp;
+							                                    	<a href="msg/save_to_echart_documents_action.jsp?messageId=<%=messageId%>&demographicNo=<%=demographicNo%>">save to echart documents</a>
+				                                    			<%
+				                                    		}
+				                                    	%> 
 			                                        </div>
                                         		<%
                                         	}
@@ -246,12 +258,6 @@ function gotoEchart3(demoNo) {
                                         <input class="ControlPushButton" type="button" value="<bean:message key="oscarMessenger.ViewMessage.btnReply"/>" onclick="window.location.href='<%=request.getContextPath()%>/phr/msg/CreatePHRMessage.jsp?replyToMessageId=<%=messageId%>&amp;demographicNo=<%=demographicNo%>'"/>
                                         <input class="ControlPushButton" type="button" value="<bean:message key="oscarMessenger.ViewMessage.btnReplyAll"/>" onclick="window.location.href='<%=request.getContextPath()%>/phr/msg/CreatePHRMessage.jsp?replyAll=true&amp;replyToMessageId=<%=messageId%>&amp;demographicNo=<%=demographicNo%>'"/>
  
-                                        <%
-    		                                String myOscarUserName=minimalPersonSender.getUserName();
-		                                	Demographic demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
-		                                %>
-                                        
-                                        
                                     	<input 
                                     	<%if (demographic == null){%>
 		                                   disabled="disabled"
