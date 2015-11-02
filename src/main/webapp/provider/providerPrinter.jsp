@@ -29,7 +29,7 @@
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO"%>
 <%@ page import="org.oscarehr.common.model.UserProperty"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
-
+<%@ page import="oscar.OscarProperties"%>
 
 
 <%
@@ -38,6 +38,8 @@
     }
     String curUser_no = (String) session.getAttribute("user");
     UserPropertyDAO propertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
+    
+    OscarProperties oscarProps = OscarProperties.getInstance();
 %>
 <html:html locale="true">
     <head>
@@ -71,6 +73,27 @@
                      document.getElementById("defaultPrinterName"+$('input[name=labelTypeRadioName]:checked').val()).value=select.options[select.selectedIndex].text;
                  }
         </script>
+        
+<style>
+.alert-box{
+    color:#555;
+    border-radius:10px;
+    font-family:Tahoma,Geneva,Arial,sans-serif;font-size:11px;
+    padding:10px 10px 10px 36px;
+    margin:10px;
+}
+
+.alert-box span {
+    font-weight:bold;
+    text-transform:uppercase;
+}
+
+.warning {
+    background:#fff8c4;
+    border:1px solid #f2c779;
+}
+        
+</style>
     </head>
 
     <body class="BodyStyle" vlink="#0000FF" onLoad="createMessageHandler();">
@@ -83,6 +106,12 @@
             <tr>
                 <td class="MainTableLeftColumn">&nbsp;</td>
                 <td class="MainTableRightColumn">
+                    <%if(oscarProps.getProperty("new_label_print") == null || oscarProps.getProperty("new_label_print").equals("false")) { %>
+                    
+                    <div class="alert-box warning"><span>Warning: </span>This feature is currently disabled and requires the property "new_label_print" to be enabled. Please contact your support to enable this property.</div>
+
+				    <%}%>
+                
                     <%
                         String defaultPrinterNameAppointmentReceipt = "", defaultPrinterNamePDFEnvelope = "", defaultPrinterNamePDFLabel = "", defaultPrinterNamePDFAddressLabel = "";
                         String defaultPrinterNamePDFChartLabel = "", defaultPrinterNameClientLabLabel = "";
@@ -193,8 +222,10 @@
                             </tr>
                             <tr><td colspan="2"><select id="printerList" size="5" onclick="setPrinter();"></select></td></tr>
                             <tr><td colspan="2">
+                            		<%if(oscarProps.getProperty("new_label_print") != null && oscarProps.getProperty("new_label_print").equals("true")) { %>
                                     <input type="submit" onclick="return true;" value="<bean:message key="provider.setDefaultPrinter.btnSave" />" />
                                     <br><br>
+                                    <%}%>
                                     <bean:message key="provider.setDefaultPrinter.requirement" />       <br>                         
                                     <bean:message key="provider.setDefaultPrinter.requirementSilentPrint" />
                                     <div  style="visibility: hidden; display:inline;">
