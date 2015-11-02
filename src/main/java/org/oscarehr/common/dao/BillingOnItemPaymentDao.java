@@ -105,4 +105,11 @@ public class BillingOnItemPaymentDao extends AbstractDao<BillingOnItemPayment>{
         
         return refundTotal;
    }   
+	
+	public List<BillingOnItemPayment> findByBillingNo(int billingNo) {
+		Query query = entityManager.createQuery("select boip from BillingOnItemPayment boip where boip.ch1Id = ?1");
+		query.setParameter(1, billingNo);
+		return query.getResultList();
+	}
+	
 }

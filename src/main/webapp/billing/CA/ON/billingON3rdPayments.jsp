@@ -283,6 +283,8 @@ function validateDiscountNumberic(idx) {
 		
 		<table BORDER="3" CELLPADDING="0" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C0C0C0">
 		<%
+		BigDecimal totalTotal = BigDecimal.ZERO;
+		
 		for(int i=0;i<items.size();i++){ 
 			BillingItemData billItemData = items.get(i);
 			BigDecimal itemTotal = new BigDecimal(billItemData.getFee()).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -291,6 +293,8 @@ function validateDiscountNumberic(idx) {
 			BigDecimal itemCredit = new BigDecimal(billItemData.getCredit()).setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigDecimal itemBalance = itemTotal.subtract(itemPaid).subtract(itemDiscount).add(itemCredit);
 			BigDecimal realPaid = itemPaid.subtract(itemCredit);
+			totalTotal = new BigDecimal(totalTotal.intValue() + itemTotal.intValue());
+			
 			String realPaidSign = "";
 			if (realPaid.compareTo(BigDecimal.ZERO) == -1) {
 				realPaidSign = "-";

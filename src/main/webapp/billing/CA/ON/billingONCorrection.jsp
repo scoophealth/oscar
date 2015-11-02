@@ -18,6 +18,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.oscarehr.common.dao.BillingOnItemPaymentDao"%>
 <%@page import="org.oscarehr.managers.SecurityInfoManager"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.math.*,java.util.*,java.sql.*,oscar.*,java.net.*" %> <!-- errorPage="errorpage.jsp" -->
@@ -60,7 +61,9 @@
     ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
     BillingONExtDao bExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
     
+    BillingONPaymentDao billingOnPaymentDao = SpringUtils.getBean(BillingONPaymentDao.class);
     Provider userProvider = providerDao.getProvider(userProviderNo);
+
     
     if (userProvider == null)
         response.sendRedirect("../logout.jsp");
@@ -75,6 +78,7 @@
     
     SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
     LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    
     
 %>
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
@@ -560,6 +564,15 @@ function validateAmountNumberic(idx) {
 					BigDecimal discount = BigDecimal.ZERO;
 					BigDecimal credit = BigDecimal.ZERO;
 					
+					List<BillingONPayment> bops = billingOnPaymentDao.find3rdPartyPaymentsByBillingNo(Integer.parseInt(request.getParameter("billing_no").trim()));
+					for(BillingONPayment bop:bops) {
+						credit = credit.add(bop.getTotal_credit());
+						discount = discount.add(bop.getTotal_discount());
+						payment = payment.add(bop.getTotal_payment());
+						refund = refund.add(bop.getTotal_refund());				
+					}
+					/*
+					
 					BillingONExtDao billingOnExtDao = (BillingONExtDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("billingONExtDao");
 					BillingONExt paymentItem = billingOnExtDao.getClaimExtItem(Integer.parseInt(request.getParameter("billing_no").trim()), Integer.parseInt(DemoNo), BillingONExtDao.KEY_PAYMENT);
 					if (paymentItem != null) {
@@ -581,6 +594,8 @@ function validateAmountNumberic(idx) {
 					if (creditItem != null) {
 						credit = new BigDecimal(creditItem.getValue());
 					}
+					*/
+					total = bCh1.getTotal();
 					
 					balance = total.subtract(payment).subtract(discount).add(credit);
 					payment = payment.subtract(credit);
