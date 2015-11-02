@@ -287,14 +287,29 @@ public class PHRMessageAction extends DispatchAction {
 		String messageBody = request.getParameter("body");
 		Integer demographicId = Integer.parseInt(request.getParameter("demographicId"));
 
+		MultipartRequestHandler multipartRequestHandler=form.getMultipartRequestHandler();
+		@SuppressWarnings("unchecked")
+        Hashtable<String,FormFile> fileElements=multipartRequestHandler.getFileElements();
+		FormFile attachment=fileElements.get("fileAttachment");
+
 		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
 
 		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 		Long recipientMyOscarUserId = AccountManager.getUserId(myOscarLoggedInInfo, demographic.getMyOscarUserName());
 
+		MessageTransfer3 newMessage=MessageManager.makeBasicMessageTransfer(myOscarLoggedInInfo, null, null, subject, messageBody);
+		List<Long> recipientList=newMessage.getRecipientPeopleIds();
+		recipientList.add(recipientMyOscarUserId);
+
+		if (attachment!=null)
+		{
+			Message2DataTransfer attachmentPart=makeFileAttachmentMessagePart(attachment);
+			newMessage.getMessageDataList().add(attachmentPart);
+		}
+
 		try {
-			MessageManager.sendMessage(myOscarLoggedInInfo, recipientMyOscarUserId, subject, messageBody);
+			MessageManager.sendMessage(myOscarLoggedInInfo, newMessage);
 		} catch (NotAuthorisedException_Exception e) {
 			WebUtils.addErrorMessage(request.getSession(), "This patient has not given you permissions to send them a message.");
 			return mapping.findForward("create");
