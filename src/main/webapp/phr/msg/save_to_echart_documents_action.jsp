@@ -23,29 +23,22 @@
     Ontario, Canada
 
 --%>
-<%@page import="java.io.File"%>
 <%@page import="org.oscarehr.myoscar.client.ws_manager.MessageManager"%>
-<%@page import="oscar.log.LogConst"%>
-<%@page import="oscar.log.LogAction"%>
-<%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
-<%@page import="oscar.dms.EDocUtil"%>
-<%@page import="java.io.ByteArrayInputStream"%>
-<%@page import="oscar.dms.actions.AddEditDocumentAction"%>
-<%@page import="org.oscarehr.util.DateUtils"%>
-<%@page import="org.joda.time.format.ISODateTimeFormat"%>
-<%@page import="org.oscarehr.util.LoggedInInfo"%>
-<%@page import="oscar.dms.EDoc"%>
 <%@page import="org.apache.commons.codec.binary.Base64"%>
+<%@page import="java.util.Calendar"%>
 <%@page import="org.w3c.dom.Node"%>
-<%@page import="org.w3c.dom.Document"%>
 <%@page import="org.oscarehr.util.XmlUtils"%>
+<%@page import="org.w3c.dom.Document"%>
+<%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer3"%>
 <%@page import="org.oscarehr.myoscar_server.ws.Message2DataTransfer"%>
 <%@page import="org.oscarehr.phr.web.MyOscarMessagesHelper"%>
-<%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer3"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.phr.web.PHRMessageAction"%>
+
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(session);
    		 
-	Long demographicNo=new Long(request.getParameter("demographicNo"));
+	Integer demographicNo=new Integer(request.getParameter("demographicNo"));
 	Long messageId=new Long(request.getParameter("messageId"));
 
 	MessageTransfer3 messageTransfer=MyOscarMessagesHelper.readMessage(session, messageId);
@@ -68,34 +61,10 @@
 
 	//--------------------------
 	
-	String subject=MessageManager.getSubject(messageTransfer);
-	String description = "Attachment : "+subject;
-	
-	String date=DateUtils.getIsoDate(messageTransfer.getSentDate());
-	date=date.replaceAll("-", "/");
+	String subject=MessageManager.getSubject(messageTransfer);	
+	Calendar date=messageTransfer.getSentDate();
 
-	EDoc newDoc = new EDoc(description, "others", filename, "", loggedInInfo.getLoggedInProviderNo(), "", "", 'A', date, "", "", "demographic", demographicNo.toString());
-
-	// new file name with date attached
-	String fileName2 = newDoc.getFileName();
-	
-	// save local file
-	ByteArrayInputStream bais=new ByteArrayInputStream(dataBytes);
-	File file=AddEditDocumentAction.writeLocalFile(bais, fileName2);
-	
-
-	newDoc.setContentType(mimeType);
-    if ("application/pdf".equals(mimeType)) {
-        int numberOfPages = AddEditDocumentAction.countNumOfPages(fileName2);
-        newDoc.setNumberOfPages(numberOfPages);                        
-    }
-				 	
-			
-	String doc_no = EDocUtil.addDocumentSQL(newDoc);
-	if(ConformanceTestHelper.enableConformanceOnlyTestFeatures){
-		AddEditDocumentAction.storeDocumentInDatabase(file, Integer.parseInt(doc_no));
-	}
-	LogAction.addLog(loggedInInfo.getLoggedInProviderNo(), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
+	PHRMessageAction.saveAttachmentToEchartDocuments(loggedInInfo, demographicNo, subject, date, filename, mimeType, dataBytes);
 %>
 
 <html>
