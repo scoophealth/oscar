@@ -352,7 +352,12 @@ Create Message
                                                     <td>
                                                     	<input type="file" name="fileAttachment" />
                                                     </td>
-                                                        
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2">
+                                                    	<bean:message key="oscarMessenger.CreateMessage.SaveAttachmentToDocs"/>
+                                                    	<input type="checkbox" name="saveFileAttachmentToDocs" />
+                                                    </td>
                                                 </tr>
                                             </table>
                                            
@@ -379,12 +384,14 @@ Create Message
 		                                   						title="<bean:message key="global.no.phr.account.registered"/>"
 		                                					<%}%> 
                                             				class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnOpenEchart"/>" onclick="gotoEchart2('<%=request.getParameter("demographicNo")%>','<%=replyToMessageId%>');" />
+														<!-- commented out as this doesn't seem to work, constant js null reference error
                                             			<input type="button" 
                                             				<%if (demographic == null){%>
 		                                   						disabled="disabled"
 		                                   						title="<bean:message key="global.no.phr.account.registered"/>"
 		                                					<%}%> 
-                                            				class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnPasteToEchart"/>" onclick="paste2Echart();"/>                                            			
+                                            				class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnPasteToEchart"/>" onclick="paste2Echart();"/>
+                                            			-->                                            			
                                         			<%
                                         		}
                                         		else
