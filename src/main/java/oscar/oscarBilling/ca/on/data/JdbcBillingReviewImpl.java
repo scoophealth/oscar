@@ -555,20 +555,26 @@ public class JdbcBillingReviewImpl {
 	}
 
 	public List<String> mergeServiceCodes(String serviceCodes, String billingForm) {
-		List<String> serviceCodeList = new ArrayList<String>();
+		
+		List<String> serviceCodeList = null;		
+		if( (serviceCodes != null && serviceCodes.length() > 0) ||  (billingForm != null && billingForm.length() > 0)){
+			serviceCodeList = new ArrayList<String>();
+		}
+		
 		if (serviceCodes != null && serviceCodes.length() > 0) {
 			String[] serviceArray = serviceCodes.split(",");
 			for (int i = 0; i < serviceArray.length; i++) {
-				serviceCodeList.add("bi.service_code like '%" + serviceArray[i].trim() +"%'");
-			}
-		} 
-		if (billingForm != null && billingForm.length() > 0) {
-			CtlBillingServiceDao dao = SpringUtils.getBean(CtlBillingServiceDao.class);
-			
-			for(Object code : dao.findServiceCodesByType(billingForm)) {
-				serviceCodeList.add("bi.service_code='" + String.valueOf(code) + "'");
+				serviceCodeList.add(serviceArray[i].trim());
 			}
 		}
+		
+		if (billingForm != null && billingForm.length() > 0) {
+			CtlBillingServiceDao dao = SpringUtils.getBean(CtlBillingServiceDao.class);
+			for(Object code : dao.findServiceCodesByType(billingForm)) {
+					serviceCodeList.add(code.toString());
+			}		
+		}
+		
 		return serviceCodeList;
 	}
 
