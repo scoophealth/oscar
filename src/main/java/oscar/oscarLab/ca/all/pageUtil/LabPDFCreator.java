@@ -682,7 +682,12 @@ public class LabPDFCreator extends PdfPageEventHelper{
         if(handler.getMsgType().equals("PATHL7")){
         	cell.setPhrase(new Phrase((handler.getOrderStatus().equals("F") ? "Final" : (handler.getOrderStatus().equals("C") ? "Corrected" : "Preliminary")), font));
         	rInfoTable.addCell(cell);
-        }else{
+        }
+        else if(handler.getMsgType().equals("EPSILON")){
+        	cell.setPhrase(new Phrase((handler.getOrderStatus().equals("F") ? "Final" : ""), font));
+        	rInfoTable.addCell(cell);
+        }
+        else{
         cell.setPhrase(new Phrase((handler.getOrderStatus().equals("F") ? "Final" : (handler.getOrderStatus().equals("C") ? "Corrected" : "Partial")), font));
         rInfoTable.addCell(cell);}
         cell.setPhrase(new Phrase("Client Ref. #: ", boldFont));
