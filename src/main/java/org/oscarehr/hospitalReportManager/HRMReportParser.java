@@ -46,6 +46,8 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.xml.sax.SAXException;
 
+import oscar.OscarProperties;
+
 
 public class HRMReportParser {
 
@@ -67,7 +69,17 @@ public class HRMReportParser {
 				//it will not parse the same way because it will treat the text as a URL
 				//so we take the lab and store them temporarily in a random filename in /tmp/oscar-sftp/
 				File tmpXMLholder = new File(hrmReportFileLocation);
+				
+				//check the DOCUMENT_DIR
+				if(!tmpXMLholder.exists()) {
+					String place= OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+					tmpXMLholder = new File(place + File.separator + hrmReportFileLocation);
+				}
 
+				if(!tmpXMLholder.exists()) {
+					logger.warn("unable to find the HRM report. checked " + hrmReportFileLocation + ", and in the document_dir");
+					return null;
+				}
 				if (tmpXMLholder.exists()) fileData = FileUtils.getStringFromFile(tmpXMLholder);
 				// Parse an XML document into a DOM tree.
 				DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -122,7 +134,9 @@ public class HRMReportParser {
 		
 		HRMDocument document = new HRMDocument();
 
-		document.setReportFile(report.getFileLocation());
+		File fileLocation = new File(report.getFileLocation());
+
+		document.setReportFile(fileLocation.getName());
 		document.setReportStatus(report.getResultStatus());
 		document.setReportType(report.getFirstReportClass());
 		document.setTimeReceived(new Date());
