@@ -297,6 +297,20 @@ if(!authed) {
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/demographic/demographiceditdemographic.js"></script>
 
+<style>
+#pup {
+  position:absolute;
+  z-index:200; /* aaaalways on top*/
+  padding: 3px;
+  margin-left: 10px;
+  margin-top: 5px;
+  width: 350px;
+  border: 1px solid black;
+  background-color: #777;
+  color: white;
+  font-size: 0.95em;
+}
+</style>
 <script language="JavaScript" type="text/javascript">
 
 function checkTypeIn() {
@@ -707,11 +721,11 @@ var workPhoneHistory="";
 var cellPhoneHistory="";
 
 function generateMarkup(addresses,type,header) {
-	 var markup = '<table border="0" cellpadding="2" cellspacing="2" width="200px">';
-     markup += '<tr><th><b>Date Entered</b></th><th><b>'+header+'</b></th></tr>';
+	 var markup = '<table border="0" cellpadding="2" cellspacing="2" width="100%">';
+     markup += '<tr><th><b>Date/Provider</b></th><th><b>'+header+'</b></th></tr>';
      for(var x=0;x<addresses.length;x++) {
      	if(addresses[x].type == type) {
-     		markup += '<tr><td>'+addresses[x].dateSeen+'</td><td>'+addresses[x].name+'</td></tr>';
+     		markup += '<tr><td>'+addresses[x].dateSeen+'<br/>'+addresses[x].provider+'</td><td>'+addresses[x].name+'</td></tr>';
      	}
      }
      markup += "</table>";
@@ -1735,21 +1749,21 @@ if ( Dead.equals(PatStat) ) {%>
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgContactInfo"/></h3>
 						<ul>
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formPhoneH" />(<span class="popup"  onmouseover="nhpup.popup(homePhoneHistory);" title="Home phone History">History</span>):</span>
+                                                            key="demographic.demographiceditdemographic.formPhoneH" />(<span class="popup"  onmouseover="nhpup.popup(homePhoneHistory,{'width':350});" >History</span>):</span>
                                                         <span class="info"><%=StringUtils.trimToEmpty(demographic.getPhone())%> <%=StringUtils.trimToEmpty(demoExt.get("hPhoneExt"))%></span>
 							</li>
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formPhoneW" />(<span class="popup"  onmouseover="nhpup.popup(workPhoneHistory);" title="Work phone History">History</span>):</span>
+                                                            key="demographic.demographiceditdemographic.formPhoneW" />(<span class="popup"  onmouseover="nhpup.popup(workPhoneHistory,{'width':350});" >History</span>):</span>
                                                         <span class="info"><%=StringUtils.trimToEmpty(demographic.getPhone2())%> <%=StringUtils.trimToEmpty(demoExt.get("wPhoneExt"))%></span>
 							</li>
 	                        						<li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formPhoneC" />(<span class="popup"  onmouseover="nhpup.popup(cellPhoneHistory);" title="cell phone History">History</span>):</span>
+                                                            key="demographic.demographiceditdemographic.formPhoneC" />(<span class="popup"  onmouseover="nhpup.popup(cellPhoneHistory,{'width':350});" >History</span>):</span>
                                                         <span class="info"><%=StringUtils.trimToEmpty(demoExt.get("demo_cell"))%></span></li>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographicaddrecordhtm.formPhoneComment" />:</span>
                                                         <span class="info"><%=StringUtils.trimToEmpty(demoExt.get("phoneComment"))%></span></li>
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formAddr" />(<span class="popup"  onmouseover="nhpup.popup(addressHistory);" title="Address History">History</span>):</span>
+                                                            key="demographic.demographiceditdemographic.formAddr" />(<span class="popup"  onmouseover="nhpup.popup(addressHistory,{'width':350});" >History</span>):</span>
                                                         <span class="info"><%=StringUtils.trimToEmpty(demographic.getAddress())%></span>
 							</li>
                                                     <li><span class="label"><bean:message
