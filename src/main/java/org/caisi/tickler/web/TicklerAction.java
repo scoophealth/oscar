@@ -24,6 +24,7 @@
 package org.caisi.tickler.web;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,6 +47,7 @@ import org.caisi.service.DemographicManagerTickler;
 import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.PreparedTicklerManager;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.dao.EChartDao;
@@ -74,6 +76,8 @@ public class TicklerAction extends DispatchAction {
 	private ProgramManager programMgr = null;
 
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	private ProviderManager providerManager = SpringUtils.getBean(ProviderManager.class);
+	
 	
 	public void setDemographicManager(DemographicManagerTickler demographicManager) {
 		this.demographicMgr = demographicManager;
@@ -312,12 +316,25 @@ public class TicklerAction extends DispatchAction {
 		if (programId == null) {
 			programId = String.valueOf(programMgr.getProgramIdByProgramName("OSCAR"));
 		}
-		request.setAttribute("providers", providerMgr.getActiveProviders(null, programId));
+		//request.setAttribute("providers", providerMgr.getActiveProviders(null, programId));
 		request.setAttribute("program_name", programMgr.getProgramName(programId));
 		request.setAttribute("from", getFrom(request));
 		
 		request.setAttribute("programDomain",programMgr.getProgramDomain(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo()));
 		request.setAttribute("currentProgramId", programId);
+		
+		//using the current program (or the user selected one by priority) , filter the provider list by that providers
+		//that are staff of that program.
+		List<ProgramProvider> pps = programMgr.getProgramProviders(programId);
+		List<Provider> providers = new ArrayList<Provider>();
+		for(ProgramProvider pp:pps) {
+			Provider provider = providerManager.getProvider(pp.getProviderNo()); 
+			if("1".equals(provider.getStatus())) {
+				providers.add(provider);
+			}
+		}
+		request.setAttribute("providers", providers);
+		
 		return mapping.findForward("edit");
 	}
 
@@ -345,6 +362,15 @@ public class TicklerAction extends DispatchAction {
 			
 		
 		/* get service time */
+		String service_date = request.getParameter("tickler.serviceDateWeb");
+		Date serviceDateDt = null;
+		try {
+			serviceDateDt = new SimpleDateFormat("yyyy-MM-dd").parse(service_date);
+		}catch(ParseException e) {
+			serviceDateDt = new Date();
+		}
+		tickler.setServiceDate(serviceDateDt);
+		
 		String service_hour = request.getParameter("tickler.service_hour");
 		String service_minute = request.getParameter("tickler.service_minute");
 		String service_ampm = request.getParameter("tickler.service_ampm");
@@ -537,4 +563,51 @@ public class TicklerAction extends DispatchAction {
 		return null;
 	}
 	
+	public ActionForward getProvidersByProgram(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String programNo = request.getParameter("programNo");
+		
+		List<ProgramProvider> pps = programMgr.getProgramProviders(programNo);
+		List<LightProvider> providers = new ArrayList<LightProvider>();
+		for(ProgramProvider pp:pps) {
+			Provider provider = providerManager.getProvider(pp.getProviderNo()); 
+			if("1".equals(provider.getStatus())) {
+				providers.add(new LightProvider(provider.getProviderNo(),provider.getFormattedName()));
+				
+			}
+		}
+		
+		JSONArray jsonArray = JSONArray.fromObject( providers );
+		response.getWriter().print(jsonArray);
+		
+		return null;
+	}
+	
+	public class LightProvider {
+		private String providerNo;
+		private String name;
+		
+		public LightProvider(String providerNo, String name) {
+			this.providerNo = providerNo;
+			this.name = name;
+			
+		}
+
+	public String getProviderNo() {
+		return providerNo;
+	}
+
+	public void setProviderNo(String providerNo) {
+		this.providerNo = providerNo;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+		
+		
+	}
 }
