@@ -167,6 +167,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
         String docModuleId = demographicNo.toString();
 
         EDoc newEDoc = null; //get nullpointer if something goes wrong
+        String documentNo = null;
         try {
             if (labId != null) {
                 request.setAttribute("segmentID", labId);
@@ -228,15 +229,22 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
     			CaseManagementPrint cmp = new CaseManagementPrint();
     			cmp.doPrint(loggedInInfo,demographicNo, printAllNotes,noteIds,printCPP,printRx,printLabs,startDate,endDate,request, os);
             	
+            } else if (module != null && module.equals("document")) {
+            	documentNo =  request.getParameter("documentNo");
             } else {
                 response.getWriter().append("object ID is unrecognized or is not set");
                 return null;
             }
             request.setAttribute("providerNo", providerNo);
-
-            String documentNo = EDocUtil.addDocumentSQL(newEDoc);
-
+            
+            if(newEDoc != null){ // This should be null except for when it's a document
+            	documentNo = EDocUtil.addDocumentSQL(newEDoc);
+            }
             EDoc eDoc = EDocUtil.getDoc(documentNo);
+            
+            if (module != null && module.equals("document")) {
+            	eDoc.setDescription(subject);
+            }
 
             //--- send to myoscar ---
 			Document doc=XmlUtils.newDocument("BinaryDocument");
