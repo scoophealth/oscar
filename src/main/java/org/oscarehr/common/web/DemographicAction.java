@@ -30,13 +30,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
+import org.apache.cxf.common.util.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtArchiveDao;
@@ -46,6 +45,9 @@ import org.oscarehr.common.model.DemographicExtArchive;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /*
  * This class is to support the address/phone history popup in the master demographic screen.
@@ -59,6 +61,8 @@ public class DemographicAction extends DispatchAction  {
 	private DemographicArchiveDao demographicArchiveDao = SpringUtils.getBean(DemographicArchiveDao.class);
 	private DemographicExtArchiveDao demographicExtArchiveDao = SpringUtils.getBean(DemographicExtArchiveDao.class);
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	private ProviderManager providerManager = SpringUtils.getBean(ProviderManager.class);
+	
 	
 	public ActionForward getAddressAndPhoneHistoryAsJson(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) 
 			throws Exception{
@@ -102,10 +106,15 @@ public class DemographicAction extends DispatchAction  {
 					extMap.put(ext.getKey(),ext);
 				}
 					
+				String lastUpdateUser = "N/A";
+				if(!StringUtils.isEmpty(archive.getLastUpdateUser())) {
+					lastUpdateUser = providerManager.getProvider(archive.getLastUpdateUser()).getFormattedName();
+				}
+				
 				if(!address.equals(archive.getAddress()) || !city.equals(archive.getCity())
 					||!province.equals(archive.getProvince()) || !postal.equals(archive.getPostal())) {
 					
-					items.add(new DemographicHistoryItem(new String(archive.getAddress() +", " + archive.getCity() + "," + archive.getProvince() + "," + archive.getPostal()),"address",archive.getLastUpdateDate()));
+					items.add(new DemographicHistoryItem(new String(archive.getAddress() +", " + archive.getCity() + "," + archive.getProvince() + "," + archive.getPostal()),"address",archive.getLastUpdateDate(),lastUpdateUser));
 					address=archive.getAddress();
 					city = archive.getCity();
 					province = archive.getProvince();
@@ -114,21 +123,21 @@ public class DemographicAction extends DispatchAction  {
 				
 				if(!phone.equals(archive.getPhone()) || (extMap.get("hPhoneExt") != null && !extMap.get("hPhoneExt").getValue().equals(hPhoneExt))) {
 					//new home phone
-					items.add(new DemographicHistoryItem(archive.getPhone() + (extMap.get("hPhoneExt")!=null?"x"+extMap.get("hPhoneExt").getValue():""),"phone",archive.getLastUpdateDate()));
+					items.add(new DemographicHistoryItem(archive.getPhone() + (extMap.get("hPhoneExt")!=null?"x"+extMap.get("hPhoneExt").getValue():""),"phone",archive.getLastUpdateDate(),lastUpdateUser));
 					phone = archive.getPhone();
 					hPhoneExt = extMap.get("hPhoneExt")!=null?extMap.get("hPhoneExt").getValue():"";
 				}
 				
 				if(!phone2.equals(archive.getPhone2()) || (extMap.get("wPhoneExt") != null && !extMap.get("wPhoneExt").getValue().equals(wPhoneExt))) {
 					//new work phone
-					items.add(new DemographicHistoryItem(archive.getPhone2() + (extMap.get("wPhoneExt")!=null?"x"+extMap.get("wPhoneExt").getValue():""),"phone2",archive.getLastUpdateDate()));
+					items.add(new DemographicHistoryItem(archive.getPhone2() + (extMap.get("wPhoneExt")!=null?"x"+extMap.get("wPhoneExt").getValue():""),"phone2",archive.getLastUpdateDate(),lastUpdateUser));
 					phone2 = archive.getPhone2();
 					wPhoneExt = extMap.get("wPhoneExt")!=null?extMap.get("wPhoneExt").getValue():"";
 				}
 				
 				if((extMap.get("demo_cell") != null && !extMap.get("demo_cell").getValue().equals(cell))) {
 					//new cell phone
-					items.add(new DemographicHistoryItem(extMap.get("demo_cell").getValue(),"cell",archive.getLastUpdateDate()));
+					items.add(new DemographicHistoryItem(extMap.get("demo_cell").getValue(),"cell",archive.getLastUpdateDate(),lastUpdateUser));
 					cell = extMap.get("demo_cell").getValue();
 				}
 				
