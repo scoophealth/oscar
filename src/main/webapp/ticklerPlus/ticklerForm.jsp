@@ -102,43 +102,32 @@
 				return false;
 			}
 			
-			if(taskAssignedToProviderProgramDomain != null) {
-				var pn = $("#program_no").val();
 			
-				var contains=false;
-				
-				for(var x=0;x<taskAssignedToProviderProgramDomain.length;x++) {
-					if(taskAssignedToProviderProgramDomain[x] == pn) {
-						contains=true;
-						break;
-					}
-				}
-				
-				if(!contains) {
-					alert('The provider you chose is not part of the program you choose. Please choose appropriate values');
-					return false;
-				}
-			}
 			
 			return check_tickler_service_date();
 		}
 		
-		var taskAssignedToProviderProgramDomain = null;
 		
-		function get_program_domain_for_assigned_to_provider() {
-			//readonly the save button
-			var assignedToProviderNo = $("#taskAssignedTo").val();
-			
-			$.ajax({url:'../Tickler.do?method=getProgramDomain&providerNo='+assignedToProviderNo,async:true,dataType:'json', success:function(data) {
-                  //data holds the array
-                  taskAssignedToProviderProgramDomain = data;
-            },error:function() {
-            	taskAssignedToProviderProgramDomain = null;
-            }});
-			
-
-		}
 	
+		function changeProgram() {
+			//reset the assigned_to list
+			var programNo = $("#program_no").val();
+			
+			$.ajax({url:'../Tickler.do?method=getProvidersByProgram&programNo='+programNo,async:true,dataType:'json', success:function(data) {
+
+			$('#taskAssignedTo')
+				    .find('option')
+				    .remove()
+				    .end()
+				    .append(' <option value="none">- select -</option>');				
+
+            for(var x=0;x<data.length;x++) {
+            	$('#taskAssignedTo').find('option').end().append('<option value="'+data[x].providerNo+'">'+data[x].name+'</option>');
+	        }
+          },error:function() {
+          	alert('Failed to load providers for program ' + programNo);
+          }});
+		}
 		
 	</script>
 
@@ -168,7 +157,7 @@
 		<tr>
 			<td class="fieldTitle">Program:</td>
 			<td class="fieldValue">
-				<select name="tickler.program_no" id="program_no">
+				<select name="tickler.program_no" id="program_no" onChange="changeProgram()">
 				<%
 					List<Program> programs = (List<Program>)request.getAttribute("programDomain");
 					String currentProgramId = (String)request.getAttribute("currentProgramId");
@@ -269,7 +258,7 @@
 			</td>
 			<td class="fieldValue">
 				<html:hidden property="tickler.taskAssignedToName" />
-	            <html:select property="tickler.taskAssignedTo" styleId="taskAssignedTo" value="none" onchange="get_program_domain_for_assigned_to_provider()">
+	            <html:select property="tickler.taskAssignedTo" styleId="taskAssignedTo" value="none">
         		    <option value="none">- select -</option>
         		    <html:options collection="providers" property="providerNo" labelProperty="formattedName"/>
             	</html:select>
