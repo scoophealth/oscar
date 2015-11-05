@@ -2203,7 +2203,7 @@ function addDocToPatient(doclabid,patientId){//if doc is previously not assigned
                                                     $("lastP_"+docid).setStyle({display:'inline'});
                                                 }
 </script>
-        
+<script type="text/javascript" src="../dms/showDocument.js"></script>        
         
         <link rel="stylesheet" type="text/css" href="../share/yui/css/fonts-min.css"/>
         <link rel="stylesheet" type="text/css" href="../share/yui/css/autocomplete.css"/>
