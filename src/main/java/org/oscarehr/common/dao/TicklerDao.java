@@ -334,7 +334,7 @@ public class TicklerDao extends AbstractDao<Tickler>{
         	paramList.add(filter.getMessage());
         }
 		 
-		query = query + " order by t.serviceDate " + tickler_date_order;
+		query = query + " order by t.serviceDate " + tickler_date_order +", t.updateDate DESC";
 		 
 		return query;
 	}
