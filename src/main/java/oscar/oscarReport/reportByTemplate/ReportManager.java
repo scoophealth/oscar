@@ -39,9 +39,11 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.oscarehr.common.dao.ReportTemplatesDao;
 import org.oscarehr.common.model.ReportTemplates;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.log.LogAction;
 import oscar.util.ConversionUtils;
 import oscar.util.UtilXML;
 
@@ -280,7 +282,7 @@ public class ReportManager {
 	//returns any error messages
 	//templateId = null if adding a new template
 	@SuppressWarnings("unchecked")
-    public String addUpdateTemplate(String templateId, Document templateXML) {
+    public String addUpdateTemplate(String templateId, Document templateXML, LoggedInInfo loggedInInfo) {
 		try {
 			Element rootElement = templateXML.getRootElement();
 			List<Element> reports = rootElement.getChildren();
@@ -332,6 +334,7 @@ public class ReportManager {
 					r.setType(type);
 					r.setSequence(sequence);
 					dao.persist(r);
+					LogAction.addLogSynchronous(loggedInInfo, "ReportManager.addUpdateTemplate", "id=" + r.getId());
 				} else {
 					ReportTemplates r = dao.find(Integer.parseInt(templateId));
 					if (r != null) {
@@ -343,6 +346,7 @@ public class ReportManager {
 						r.setType(type);
 						r.setSequence(sequence);
 						dao.merge(r);
+						LogAction.addLogSynchronous(loggedInInfo, "ReportManager.addUpdateTemplate", "id=" + r.getId());
 					}
 
 				}
@@ -360,20 +364,20 @@ public class ReportManager {
 		return "";
 	}
 
-	public String addTemplate(String templateXML) {
+	public String addTemplate(String templateXML, LoggedInInfo loggedInInfo) {
 		try {
 			Document templateXMLdoc = readXml(templateXML);
-			return addUpdateTemplate(null, templateXMLdoc);
+			return addUpdateTemplate(null, templateXMLdoc, loggedInInfo);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
 			return "Error: Error parsing file, make sure the root element is set.";
 		}
 	}
 
-	public String updateTemplate(String templateId, String templateXML) {
+	public String updateTemplate(String templateId, String templateXML, LoggedInInfo loggedInInfo) {
 		try {
 			Document templateXMLdoc = readXml(templateXML);
-			return addUpdateTemplate(templateId, templateXMLdoc);
+			return addUpdateTemplate(templateId, templateXMLdoc, loggedInInfo);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
 			return "Error: Error parsing file";
