@@ -25,6 +25,7 @@ package org.oscarehr.common.model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
@@ -41,6 +42,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -50,7 +52,6 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.util.LocaleUtils;
-import java.util.Comparator;
 
 @Entity
 @Table(name="tickler")
@@ -123,10 +124,12 @@ public class Tickler extends AbstractModel<Integer> {
 	
 	@OneToMany(fetch=FetchType.EAGER)
     @JoinColumn(name="tickler_no", referencedColumnName="tickler_no")
+	@OrderBy("updateDate ASC")
 	private Set<TicklerUpdate> updates = new HashSet<TicklerUpdate>();
 	
 	@OneToMany( fetch=FetchType.EAGER)
     @JoinColumn(name="tickler_no", referencedColumnName="tickler_no")
+	@OrderBy("updateDate ASC")
 	private Set<TicklerComment> comments = new HashSet<TicklerComment>();
 	
 	
