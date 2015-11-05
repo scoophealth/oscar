@@ -79,7 +79,8 @@ if(!authed) {
 		<td class="MainTableLeftColumn" valign="top" width="160px;"><jsp:include
 			page="listTemplates.jsp">
 			<jsp:param name="templateviewid" value="" />
-		</jsp:include></td>
+		</jsp:include>
+		<a href="javascript:void(0)" onclick="newWindow('/oscar/oscarReport/reportByTemplate/k2aTemplates.jsp','templates')" title="<bean:message key='oscarReport.oscarReportByTemplate.msgK2ATemplate' />"><bean:message key="oscarReport.oscarReportByTemplate.msgDownloadFromK2A" /></a></td>
 		<td class="MainTableRightColumn" valign="top">
 		<%ArrayList templates = (new ReportManager()).getReportTemplatesNoParam();
             String templateViewId = request.getParameter("templateviewid");

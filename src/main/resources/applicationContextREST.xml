@@ -169,6 +169,7 @@
 			<bean class="org.oscarehr.ws.rest.AppService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.AllergyService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.PreventionService" autowire="byName" />
+			<bean class="org.oscarehr.ws.rest.ReportByTemplateService" autowire="byName" />
 		</jaxrs:serviceBeans>
 
 		<jaxrs:extensionMappings>
