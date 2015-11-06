@@ -317,9 +317,8 @@ public class MappingServlet extends Action {
 
         }
 
-        response.sendRedirect(request.getHeader("referer"));
         
-        return null;
+        return new ActionForward("/administration/index.jsp?show=sharingCenterMenu&load=scManageAffinityDomainLink");
 
     }
 

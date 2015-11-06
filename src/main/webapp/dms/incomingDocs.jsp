@@ -244,6 +244,8 @@
             
         <script type="text/javascript" src="../js/demographicProviderAutocomplete.js"></script>
             
+       <script type="text/javascript" src="../share/javascript/nifty.js"></script>
+             
         <link rel="stylesheet" type="text/css" href="../share/yui/css/fonts-min.css"/>
         <link rel="stylesheet" type="text/css" href="../share/yui/css/autocomplete.css"/>
         <link rel="stylesheet" type="text/css" media="all" href="../share/css/demographicProviderAutocomplete.css"  />
@@ -1014,7 +1016,7 @@
                 </td>
                 <td  class="topalign">
                     <div > 
-                        <%if (Integer.parseInt(pdfNo) > 0) {%>Page : <b id="pgnum"><%=pdfPageNumber%> <bean:message key="dms.incomingDocs.of" /><span class="<%= numOfPage > 1 ? "multiPage" : "singlePage" %>"> <%=numOfPage%> <%}%></span></b> 
+                        <%if (Integer.parseInt(pdfNo) > 0) {%>Page : <b id="pgnum"><%=pdfPageNumber%> <bean:message key="dms.incomingDocs.of" /><span class="<%= numOfPage > 1 ? "multiPage" : "singlePage" %>"> <%=numOfPage%> <%} else {%> <b id="pgnum" style="display:none"></b> <%} %></span></b> 
                         <bean:message key="dms.incomingDocs.viewAs" />: 
                         <select tabIndex="<%=tabIndex++%>" name ="imageTypeList" id="imageTypeList" onchange="setImageType();">
                             <option value="Pdf" <%=imageType.equals("Pdf") ? "selected" : ""%> ><bean:message key="dms.incomingDocs.PDF" /></option>

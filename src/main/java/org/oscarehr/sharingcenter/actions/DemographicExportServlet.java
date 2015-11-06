@@ -23,6 +23,8 @@
  */
 package org.oscarehr.sharingcenter.actions;
 
+import java.net.URLEncoder;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -57,7 +59,7 @@ public class DemographicExportServlet extends Action {
 
         HttpSession session = request.getSession();
 
-        String demographicNo = request.getParameter("demographic_no");
+        Integer demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
 
         if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
         	throw new SecurityException("missing required security object (_demographic)");
@@ -67,7 +69,7 @@ public class DemographicExportServlet extends Action {
 
         String affinityDomain = request.getParameter("affinityDomain");
 
-        PhrExtractDocument phrExtractDocument = CDADocumentUtil.createDoc(demographicNo, (String) session.getAttribute("user"));
+        PhrExtractDocument phrExtractDocument = CDADocumentUtil.createDoc(demographicNo+"", (String) session.getAttribute("user"));
 
         String documentExportString = null;
 
@@ -86,7 +88,7 @@ public class DemographicExportServlet extends Action {
 
         DemographicExport demographicExport = new DemographicExport();
 
-        demographicExport.setDemographic(demographicDao.getDemographic(demographicNo));
+        demographicExport.setDemographic(demographicDao.getDemographic(demographicNo+""));
 
         if (documentType.equals(DocumentType.XPHR.name())) {
             demographicExport.setDocumentType(DocumentType.XPHR.name());
@@ -98,7 +100,7 @@ public class DemographicExportServlet extends Action {
 
         DemographicExport export = demographicExportDao.saveEntity(demographicExport);
 
-        response.sendRedirect("export.jsp?domain=" + affinityDomain + "&type=" + documentType + "&demographic_no=" + demographicNo + "&documents=" + export.getId());
+        response.sendRedirect("export.jsp?domain=" + URLEncoder.encode(affinityDomain,"UTF-8") + "&type=" + URLEncoder.encode(documentType,"UTF-8") + "&demographic_no=" + demographicNo + "&documents=" + export.getId());
 
         return null;
     }
