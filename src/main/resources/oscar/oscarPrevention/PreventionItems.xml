@@ -178,6 +178,14 @@ Varicella Immunoglobulin	VarIg
 		healthCanadaType="Men-P-ACWY"
 		layout="injection" atc="J07AH"
 		showIfMinRecordNum="1" />
+	
+	<item
+		resultDesc=""
+		desc="Meningococcal - Polysaccharide"
+		name="Men-C-ACYW-135"
+		healthCanadaType="Men-C-ACYW-135"
+		layout="injection" atc="J07AH"
+		showIfMinRecordNum="1" />
 
 	<item 
 		resultDesc=""
@@ -198,7 +206,7 @@ Varicella Immunoglobulin	VarIg
 		atc="J07AH08" 
 		minAge="1" 
 		maxAge="17"
-		showIfMinRecordNum="1"  /> 
+		showIfMinRecordNum="1" /> 
 
 	<item 
 		resultDesc=""
