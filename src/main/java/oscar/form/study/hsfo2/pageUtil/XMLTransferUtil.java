@@ -192,8 +192,8 @@ public class XMLTransferUtil
 
   }
 
-  public static SimpleDateFormat dformat1     = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
-  public static SimpleDateFormat dformat2     = new SimpleDateFormat( "yyyy-MM-dd" );
+  SimpleDateFormat dformat1     = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+  SimpleDateFormat dformat2     = new SimpleDateFormat( "yyyy-MM-dd" );
 
   private String defaultweb = "https://www.clinforma.net/Hsf/HmpVaultWS/";
   //"https://www.clinforma.net/P-Prompt/DataReceiveWS/";

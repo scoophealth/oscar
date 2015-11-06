@@ -128,7 +128,7 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 				}
 			}
 
-			String monthCode = BillingDataHlp.propMonthCode.getProperty("" + curMonth);
+			String monthCode = BillingDataHlp.getPropMonthCode().getProperty("" + curMonth);
 			String ohipdownload = oscarVariables.getProperty("HOME_DIR");
 			session.setAttribute("ohipdownload", ohipdownload);
 
@@ -292,11 +292,11 @@ function setBillingCenter( providerNo ) {
 		<div class="span4">
 		Billing Center<br>
 		<select name="billcenter" id="billcenter">
-			<%for (Enumeration e = BillingDataHlp.propBillingCenter.propertyNames(); e.hasMoreElements();) {
+			<%for (Enumeration e = BillingDataHlp.getPropBillingCenter().propertyNames(); e.hasMoreElements();) {
 				String centerCode = (String) e.nextElement();
 %>
 			<option value="<%=centerCode%>"
-				<%=oscarVariables.getProperty("billcenter").compareTo(centerCode)==0?"selected":""%>><%=BillingDataHlp.propBillingCenter.getProperty(centerCode)%></option>
+				<%=oscarVariables.getProperty("billcenter").compareTo(centerCode)==0?"selected":""%>><%=BillingDataHlp.getPropBillingCenter().getProperty(centerCode)%></option>
 			<%}
 			%>
 		</select>

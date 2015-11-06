@@ -184,13 +184,13 @@ import oscar.oscarProvider.data.ProviderData;
 
 public class XMLTransferUtil
 {
-	protected static Logger logger = Logger
+	private static Logger logger = Logger
 	.getLogger(XMLTransferUtil.class);
 
-	public SimpleDateFormat dformat1 = new SimpleDateFormat(
+	SimpleDateFormat dformat1 = new SimpleDateFormat(
 	"yyyy-MM-dd'T'HH:mm:ss");
 
-	public SimpleDateFormat dformat2 = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat dformat2 = new SimpleDateFormat("yyyy-MM-dd");
 
 	String defaultweb = "https://www.clinforma.net/HsfoHbps/DataVaultWS/definition.asmx";
 

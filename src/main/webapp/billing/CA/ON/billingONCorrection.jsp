@@ -903,11 +903,11 @@ OHIP Claim No  <br>
 Pay Program:<br>
 <input type="hidden" name="xml_payProgram" value="<%=BillDate%>" />
 <select style="font-size: 80%;" id="payProgram" name="payProgram" onchange="checkPayProgram(this.options[this.selectedIndex].value)">
-<%for (int i = 0; i < BillingDataHlp.vecPaymentType.size(); i = i + 2) {
+<%for (int i = 0; i < BillingDataHlp.getVecPaymentType().size(); i = i + 2) {
 
 	%>
-<option value="<%=BillingDataHlp.vecPaymentType.get(i) %>"
-<%=payProgram.equals(BillingDataHlp.vecPaymentType.get(i))? "selected":"" %>><%=BillingDataHlp.vecPaymentType.get(i + 1)%></option>
+<option value="<%=BillingDataHlp.getVecPaymentType().get(i) %>"
+<%=payProgram.equals(BillingDataHlp.getVecPaymentType().get(i))? "selected":"" %>><%=BillingDataHlp.getVecPaymentType().get(i + 1)%></option>
 <%}
 
 %>

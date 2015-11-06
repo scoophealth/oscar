@@ -45,13 +45,13 @@ import oscar.util.ConversionUtils;
  */
 public class TicklerData {
    
-   public static String ACTIVE  = "A";
-   public static String COMPLETED = "C";
-   public static String DELETED = "D";
+   public static final String ACTIVE  = "A";
+   public static final String COMPLETED = "C";
+   public static final String DELETED = "D";
       
-   public static String HIGH = "High";
-   public static String NORMAL = "Normal";
-   public static String LOW = "Low";
+   public static final String HIGH = "High";
+   public static final String NORMAL = "Normal";
+   public static final String LOW = "Low";
    
    private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
    

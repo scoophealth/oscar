@@ -48,7 +48,7 @@ import org.apache.commons.lang.StringUtils;
 @Table(name = "queue")
 
 public class Queue extends AbstractModel<Integer> implements Serializable {
-	public static int DEFAULT_QUEUE_ID=1;
+	public static final int DEFAULT_QUEUE_ID=1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
