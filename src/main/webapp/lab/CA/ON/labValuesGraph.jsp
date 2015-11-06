@@ -264,7 +264,7 @@ if(!authed) {
 
 <%!
 String getChecked(Hashtable h,String reg){
-    if (h != null && h.containsKey(reg)){
+    if (h != null && reg != null && h.containsKey(reg)){
         return "checked";
     }
     return "";
