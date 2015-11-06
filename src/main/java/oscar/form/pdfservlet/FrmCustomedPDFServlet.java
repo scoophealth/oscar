@@ -48,7 +48,9 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.apache.tika.io.IOUtils;
 import org.oscarehr.common.dao.FaxConfigDao;
 import org.oscarehr.common.dao.FaxJobDao;
 import org.oscarehr.common.model.FaxConfig;
@@ -104,11 +106,16 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 					writer.println("<script>alert('Error: No fax number found!');window.close();</script>");
 				} else {
 		                	// write to file
-		                	String pdfFile = "prescription_"+req.getParameter("pdfId")+".pdf";
+		                	String pdfFile = "prescription_"+Integer.parseInt(req.getParameter("pdfId"))+".pdf";
 		                	String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "/";
-		                	FileOutputStream fos = new FileOutputStream(path+pdfFile);
-		                	baosPDF.writeTo(fos);
-		                	fos.close();
+		                	FileOutputStream fos = null;
+		                	try {
+		                		fos = new FileOutputStream(path+pdfFile);
+		                		baosPDF.writeTo(fos);
+		                	} finally {
+		                		IOUtils.closeQuietly(fos);
+		                	}
+		                	
 		                	
 			                String faxNumber = req.getParameter("clinicFax");
 			                String demo = req.getParameter("demographic_no");
@@ -146,7 +153,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			        if( validFaxNumber ) {
 			        	
 			        	LogAction.addLog(provider_no, LogConst.SENT, LogConst.CON_FAX, "PRESCRIPTION " + pdfFile );
-			        	writer.println("<script>alert('Fax sent to: " + req.getParameter("pharmaName") + " (" + req.getParameter("pharmaFax") + ")');window.close();</script>");
+			        	writer.println("<script>alert('Fax sent to: " + StringEscapeUtils.escapeJavaScript(req.getParameter("pharmaName")) + " (" + faxNo + ")');window.close();</script>");
 			        	
 			        }
 				}
@@ -180,7 +187,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 				sos = res.getOutputStream();
 
 				baosPDF.writeTo(sos);
-
+				
 				sos.flush();
 			}
 		} catch (DocumentException dex) {

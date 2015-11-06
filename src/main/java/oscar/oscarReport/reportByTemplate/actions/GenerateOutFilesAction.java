@@ -31,6 +31,7 @@ package oscar.oscarReport.reportByTemplate.actions;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -57,7 +58,7 @@ public class GenerateOutFilesAction extends Action {
     	
         String csv = (String) request.getSession().getAttribute("csv");
         if (csv ==null){
-            csv = request.getParameter("csv");
+            csv = StringEscapeUtils.escapeJavaScript(request.getParameter("csv"));
         }
         String action = request.getParameter("getCSV");
         if (action != null) {

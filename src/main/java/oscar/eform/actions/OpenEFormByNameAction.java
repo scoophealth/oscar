@@ -47,7 +47,7 @@ public class OpenEFormByNameAction extends Action {
 	
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String eform_name = request.getParameter("eform_name");
-		String demographic_no = request.getParameter("demographic_no");
+		Integer demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
 		Integer fid = null;
 		
 		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eform", "w", null)) {

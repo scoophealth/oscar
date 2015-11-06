@@ -26,6 +26,7 @@
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.File;
+import java.net.URLEncoder;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +60,7 @@ public class EctStreamStyleSheet extends DownloadAction{
         //if (fileName.indexOf('/') != -1) return null;  //prevents navigating away from the page.
         String home_dir = OscarProperties.getInstance().getProperty("oscarMeasurement_css_upload_path");
         
-        response.setHeader("Content-disposition","inline; filename=" + fileName);
+        response.setHeader("Content-disposition","inline; filename=" + URLEncoder.encode(fileName,"UTF-8"));
         
         File file = null;
         try{

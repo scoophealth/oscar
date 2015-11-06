@@ -26,6 +26,7 @@
 package oscar.eform.actions;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -61,7 +62,7 @@ public class DisplayImageAction extends DownloadAction{
         //if (fileName.indexOf('/') != -1) return null;  //prevents navigating away from the page.
         String home_dir = OscarProperties.getInstance().getProperty("eform_image");
 
-        response.setHeader("Content-disposition","inline; filename=" + fileName);
+        response.setHeader("Content-disposition","inline; filename=" + URLEncoder.encode(fileName,"UTF-8"));
 
         File file = null;
         try{

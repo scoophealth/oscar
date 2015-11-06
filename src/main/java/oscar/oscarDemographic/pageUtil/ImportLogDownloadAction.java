@@ -35,10 +35,16 @@ import java.io.OutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
+
+import oscar.OscarProperties;
 
 /**
  *
@@ -46,22 +52,42 @@ import org.apache.struts.action.ActionMapping;
  */
 public class ImportLogDownloadAction extends Action {
    
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException, IOException {
 
-	String importLog = request.getParameter("importlog");
-	File importLogFile = new File(importLog);
-	InputStream in = new FileInputStream(importLog);
-	OutputStream out = response.getOutputStream();
-
-	response.setContentType("application/octet-stream");
-	response.setHeader("Content-Disposition", "attachment; filename=\""+importLogFile.getName()+"\"" );
-
-	byte[] buf = new byte[1024];
-	int len;
-	while ((len=in.read(buf)) > 0) out.write(buf,0,len);
-	in.close();
-	out.close();
-
-	return null;
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
+			throw new SecurityException("missing required security object (_demographic)");
+		}
+    	
+		String importLog = request.getParameter("importlog");
+		String tmpDir = OscarProperties.getInstance().getProperty("TMP_DIR");
+	    tmpDir = Util.fixDirName(tmpDir);
+	    
+	    if(importLog.contains(File.separator)) {
+	    	throw new IllegalArgumentException("Cannot request file with absolute path!");
+	    }
+		File importLogFile = new File(tmpDir,importLog);
+		InputStream in = null;
+		OutputStream out = null;
+		try {
+			out = response.getOutputStream();
+			in = new FileInputStream(importLog);
+			
+		
+			response.setContentType("application/octet-stream");
+			response.setHeader("Content-Disposition", "attachment; filename=\""+importLogFile.getName()+"\"" );
+	
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len=in.read(buf)) > 0) {
+				out.write(buf,0,len);
+			}
+		} finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(out);
+		}
+		
+		return null;
     }
 }

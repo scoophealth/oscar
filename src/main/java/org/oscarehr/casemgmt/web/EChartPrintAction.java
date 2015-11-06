@@ -67,7 +67,7 @@ public class EChartPrintAction extends DispatchAction {
 
 	public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-		String demographicNo = request.getParameter("demographicNo");
+		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
 		DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 		
 		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", demographicNo)) {
@@ -75,7 +75,7 @@ public class EChartPrintAction extends DispatchAction {
         }
 
 		
-		Demographic demographic = demographicDao.getClientByDemographicNo(Integer.parseInt(demographicNo));
+		Demographic demographic = demographicDao.getClientByDemographicNo(demographicNo);
 
 		response.setContentType("application/pdf"); // octet-stream
 		response.setHeader("Content-Disposition", "attachment; filename=\""+demographicNo+".pdf\"");
@@ -122,7 +122,7 @@ public class EChartPrintAction extends DispatchAction {
 
 		printer.finish();
 
-		LogAction.addLogSynchronous(loggedInInfo, "print echart",demographicNo);
+		LogAction.addLogSynchronous(loggedInInfo, "print echart",demographicNo+"");
 		
 		return null;
 	}
