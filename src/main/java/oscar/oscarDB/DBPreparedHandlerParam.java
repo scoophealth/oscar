@@ -35,10 +35,10 @@ public final class DBPreparedHandlerParam {
    private String paramType;
    private Timestamp timestampValue;
 
-   public static String PARAM_STRING = "String";
-   public static String PARAM_DATE = "Date";
-   public static String PARAM_INT = "Int";
-   public static String PARAM_TIMESTAMP = "Timestamp";
+   public static final String PARAM_STRING = "String";
+   public static final String PARAM_DATE = "Date";
+   public static final String PARAM_INT = "Int";
+   public static final String PARAM_TIMESTAMP = "Timestamp";
    
    public DBPreparedHandlerParam(String stringValue){
 	   this.intValue = 0;

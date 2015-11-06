@@ -123,7 +123,7 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingClaimsErrorReportBeanHandler.java:public Vector getClaimsErrorReportBeanVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:public Vector&lt;BillingEDTOBECOutputSpecificationBean&gt; getEDTOBECOutputSecifiationBeanVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingClaimsErrorReportBeanHandlerSave.java:Vector claimsErrorReportBeanVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java:public static Vector vecPaymentType = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java:private static Vector vecPaymentType = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:List retval = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:Vector vecClaimrecord = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:Vector vecFilenameId = new Vector();</ViolationValue>
@@ -1373,7 +1373,8 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:public ArrayList&lt;Hashtable&lt;String, Object&gt;&gt; getBills(String statusType, String providerNo, String startDate, String endDate, String demoNo) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java:public static Vector vecPaymentType = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java:private static Vector vecPaymentType = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java:public static Vector getVecPaymentType() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDiskNameData.java:Vector htmlfilename;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDiskNameData.java:Vector providerno;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDiskNameData.java:Vector providerohipno;</ViolationValue>

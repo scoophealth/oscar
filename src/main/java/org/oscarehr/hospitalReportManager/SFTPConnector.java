@@ -57,8 +57,8 @@ public class SFTPConnector {
 	private static final int OMD_HRM_PORT = Integer.parseInt(OscarProperties.getInstance().getProperty("OMD_HRM_PORT"));
 
 	//this file needs chmod 444 permissions for the connection to go through
-	public static  String OMD_directory = OscarProperties.getInstance().getProperty("OMD_directory");
-	private static  String OMD_keyLocation = OMD_directory + OscarProperties.getInstance().getProperty("OMD_HRM_AUTH_KEY_FILENAME");
+	public static  final String OMD_directory = OscarProperties.getInstance().getProperty("OMD_directory");
+	private static String OMD_keyLocation = OMD_directory + OscarProperties.getInstance().getProperty("OMD_HRM_AUTH_KEY_FILENAME");
 	public static final String XSD_ontariomd = OMD_directory + "ontariomd_cds_dt.xsd";
 	public static final String XSD_reportmanager = OMD_directory + "report_manager_cds.xsd";
 

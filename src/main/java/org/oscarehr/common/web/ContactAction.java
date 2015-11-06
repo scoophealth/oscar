@@ -66,14 +66,14 @@ import oscar.OscarProperties;
 
 public class ContactAction extends DispatchAction {
 
-	static Logger logger = MiscUtils.getLogger();
-	static ContactDao contactDao = (ContactDao)SpringUtils.getBean("contactDao");
-	static ProfessionalContactDao proContactDao = (ProfessionalContactDao)SpringUtils.getBean("professionalContactDao");
-	static DemographicContactDao demographicContactDao = (DemographicContactDao)SpringUtils.getBean("demographicContactDao");
-	static DemographicDao demographicDao= (DemographicDao)SpringUtils.getBean("demographicDao");
-	static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-	static ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
-	static ContactSpecialtyDao contactSpecialtyDao = SpringUtils.getBean(ContactSpecialtyDao.class);
+	private static Logger logger = MiscUtils.getLogger();
+	private static ContactDao contactDao = (ContactDao)SpringUtils.getBean("contactDao");
+	private static ProfessionalContactDao proContactDao = (ProfessionalContactDao)SpringUtils.getBean("professionalContactDao");
+	private static DemographicContactDao demographicContactDao = (DemographicContactDao)SpringUtils.getBean("demographicContactDao");
+	private static DemographicDao demographicDao= (DemographicDao)SpringUtils.getBean("demographicDao");
+	private static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+	private static ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
+	private static ContactSpecialtyDao contactSpecialtyDao = SpringUtils.getBean(ContactSpecialtyDao.class);
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	 
 	@Override

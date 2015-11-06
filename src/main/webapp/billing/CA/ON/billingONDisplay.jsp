@@ -434,11 +434,11 @@ if(bFlag) {
 		<td width="46%"><b> Pay Program:</b> <input type="hidden"
 			name="xml_payProgram" value="<%=BillDate%>" /><select
 			style="font-size: 80%;" name="payProgram">
-			<%for (int i = 0; i < BillingDataHlp.vecPaymentType.size(); i = i + 2) {
+			<%for (int i = 0; i < BillingDataHlp.getVecPaymentType().size(); i = i + 2) {
 
 					%>
-			<option value="<%=BillingDataHlp.vecPaymentType.get(i) %>"
-				<%=payProgram.equals((String)BillingDataHlp.vecPaymentType.get(i))? "selected":"" %>><%=BillingDataHlp.vecPaymentType.get(i + 1)%></option>
+			<option value="<%=BillingDataHlp.getVecPaymentType().get(i) %>"
+				<%=payProgram.equals((String)BillingDataHlp.getVecPaymentType().get(i))? "selected":"" %>><%=BillingDataHlp.getVecPaymentType().get(i + 1)%></option>
 			<%}
 
 				%>

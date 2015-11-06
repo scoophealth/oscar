@@ -51,17 +51,17 @@ import oscar.OscarProperties;
 public class TeleplanAPI {
     static Logger log=MiscUtils.getLogger();
     	
-    public static String ExternalActionLogon      = "AsignOn";
-    public static String ExternalActionLogoff     = "AsignOff";
-    public static String ExternalActionChangePW   = "AchangePW";
-    public static String ExternalActionGetLog     = "AgetLog";
-    public static String ExternalActionGetLogList = "AgetLogList";
-    public static String ExternalActionGetRemit   = "AgetRemit";
-    public static String ExternalActionGetAscii   = "AgetAscii";
-    public static String ExternalActionGetAsciiMF = "AgetAsciiMF";
-    public static String ExternalActionPutAscii   = "AputAscii";
-    public static String ExternalActionPutRemit   = "AputRemit";
-    public static String ExternalActionCheckE45   = "AcheckE45";
+    public static final String ExternalActionLogon      = "AsignOn";
+    public static final String ExternalActionLogoff     = "AsignOff";
+    public static final String ExternalActionChangePW   = "AchangePW";
+    public static final String ExternalActionGetLog     = "AgetLog";
+    public static final String ExternalActionGetLogList = "AgetLogList";
+    public static final String ExternalActionGetRemit   = "AgetRemit";
+    public static final String ExternalActionGetAscii   = "AgetAscii";
+    public static final String ExternalActionGetAsciiMF = "AgetAsciiMF";
+    public static final String ExternalActionPutAscii   = "AputAscii";
+    public static final String ExternalActionPutRemit   = "AputRemit";
+    public static final String ExternalActionCheckE45   = "AcheckE45";
 
     
     //public String CONTACT_URL = "https://tlpt2.moh.hnet.bc.ca/TeleplanBroker";

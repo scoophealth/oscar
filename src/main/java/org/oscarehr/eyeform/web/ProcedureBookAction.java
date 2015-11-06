@@ -44,8 +44,8 @@ import org.oscarehr.util.SpringUtils;
 
 public class ProcedureBookAction extends DispatchAction {
 
-	static Logger logger = Logger.getLogger(ProcedureBookAction.class);
-	protected static EyeformProcedureBookDao procedureBookDao = SpringUtils.getBean(EyeformProcedureBookDao.class);
+	private static Logger logger = Logger.getLogger(ProcedureBookAction.class);
+	private static EyeformProcedureBookDao procedureBookDao = SpringUtils.getBean(EyeformProcedureBookDao.class);
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);

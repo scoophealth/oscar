@@ -99,7 +99,7 @@ public class DetailDataCustom{
 	}
 
 
-	public static Comparator<DetailDataCustom> ResourceIdComparator = new Comparator<DetailDataCustom> () {
+	public static final Comparator<DetailDataCustom> ResourceIdComparator = new Comparator<DetailDataCustom> () {
 		 public int compare(DetailDataCustom detailData1,DetailDataCustom detailData2) {
             String resourceID1 = detailData1.getResourceID().toString();
             String resourceID2 = detailData2.getResourceID().toString();

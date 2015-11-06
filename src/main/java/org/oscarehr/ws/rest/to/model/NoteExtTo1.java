@@ -34,18 +34,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class NoteExtTo1 implements Serializable{
 	
 	// Key Value constants ***All date value key must be in format "XXX Date"
-	public static String STARTDATE	    = "Start Date"	;
-	public static String RESOLUTIONDATE = "Resolution Date"	;
-	public static String PROCEDUREDATE  = "Procedure Date"	;
+	public static final String STARTDATE	    = "Start Date"	;
+	public static final String RESOLUTIONDATE = "Resolution Date"	;
+	public static final String PROCEDUREDATE  = "Procedure Date"	;
 	
-	public static String AGEATONSET	    = "Age at Onset"	;
-	public static String TREATMENT	    = "Treatment"	;
-	public static String PROBLEMSTATUS  = "Problem Status"	;
-	public static String EXPOSUREDETAIL = "Exposure Details";
-	public static String RELATIONSHIP   = "Relationship"	;
-	public static String LIFESTAGE	    = "Life Stage"	;
-	public static String HIDECPP	    = "Hide Cpp"	;
-	public static String PROBLEMDESC    = "Problem Description";
+	public static final String AGEATONSET	    = "Age at Onset"	;
+	public static final String TREATMENT	    = "Treatment"	;
+	public static final String PROBLEMSTATUS  = "Problem Status"	;
+	public static final String EXPOSUREDETAIL = "Exposure Details";
+	public static final String RELATIONSHIP   = "Relationship"	;
+	public static final String LIFESTAGE	    = "Life Stage"	;
+	public static final String HIDECPP	    = "Hide Cpp"	;
+	public static final String PROBLEMDESC    = "Problem Description";
         
 		
 	//Class fields

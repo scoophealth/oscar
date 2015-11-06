@@ -73,11 +73,11 @@ int curMonth = (now.get(Calendar.MONTH)+1);
 int curDay = now.get(Calendar.DAY_OF_MONTH);
 
 String nowDate = UtilDateUtilities.DateToString(new java.util.Date()); //"yyyy-MM-dd HH:mm"
-String monthCode = BillingDataHlp.propMonthCode.getProperty("" + curMonth);
+String monthCode = BillingDataHlp.getPropMonthCode().getProperty("" + curMonth);
 
 OscarProperties props = OscarProperties.getInstance();
 String billCenter = props.getProperty("billcenter", "").trim();
-String healthOffice = BillingDataHlp.propBillingCenter.getProperty(billCenter);
+String healthOffice = BillingDataHlp.getPropBillingCenter().getProperty(billCenter);
 
 boolean summaryView = "on".equals(request.getParameter("summaryView"));
 

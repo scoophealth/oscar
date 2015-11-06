@@ -133,11 +133,11 @@ for(int i=0; i<aL.size(); i=i+2) {
 	String strBillType = obj.getPay_program();
 	if(strBillType != null) {
 		if(strBillType.matches(BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) {
-			if(BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"").equals("Settled")) {
+			if(BillingDataHlp.getPropBillingType().getProperty(obj.getStatus(),"").equals("Settled")) {
 				strBillType += " Settled";
 			}
 		} else {
-			strBillType = BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"");
+			strBillType = BillingDataHlp.getPropBillingType().getProperty(obj.getStatus(),"");
 		}
 	} else {
 		strBillType = "";
