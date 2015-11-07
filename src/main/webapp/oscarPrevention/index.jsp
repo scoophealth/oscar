@@ -174,12 +174,10 @@ span.footnote {
 }
 </style>
 
-<link rel="stylesheet" type="text/css"
-	href="../share/css/niftyCorners.css" />
-<link rel="stylesheet" type="text/css"
-	href="../share/css/niftyPrint.css" media="print" />
-<link rel="stylesheet" type="text/css" href="preventPrint.css"
-	media="print" />
+<link rel="stylesheet" type="text/css" href="../share/css/niftyCorners.css" />
+<link rel="stylesheet" type="text/css" href="../share/css/niftyPrint.css" media="print" />
+<link rel="stylesheet" type="text/css" href="preventPrint.css" media="print" />
+
 <script type="text/javascript" src="../share/javascript/nifty.js"></script>
 <script type="text/javascript">
 window.onload=function(){
@@ -669,14 +667,16 @@ text-align:left;
 		</div>
 		<%              String result;
                         for (int k = 0; k < alist.size(); k++){
-                        	Map<String,Object> hdata = alist.get(k);
+                        Map<String,Object> hdata = alist.get(k);
                         Map<String,String> hExt = PreventionData.getPreventionKeyValues((String)hdata.get("id"));
                         result = hExt.get("result");
 
                         String onClickCode="javascript:popup(465,635,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
                         if (hdata.get("id")==null) onClickCode="popup(300,500,'display_remote_prevention.jsp?remoteFacilityId="+hdata.get("integratorFacilityId")+"&remotePreventionId="+hdata.get("integratorPreventionId")+"&amp;demographic_no="+demographic_no+"')";
                         %>
-		<div class="preventionProcedure" onclick="<%=onClickCode%>">
+             
+		<div class="preventionProcedure" onclick="<%=onClickCode%>" title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date_no_time")%>] body=[<%=hExt.get("comments")%>&lt;br/&gt;Entered By: <%=hdata.get("provider_name")%>]">
+		
 		<!--this is setting the style <%=r(hdata.get("refused"),result)%>  -->
 		<p <%=r(hdata.get("refused"),result)%> >Age: <%=hdata.get("age")%> <%if(result!=null && result.equals("abnormal")){out.print("result:"+result);}%> <br />
 		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date_no_time")%>
@@ -728,8 +728,7 @@ text-align:left;
                             Map<String,String> hExt = PreventionData.getPreventionKeyValues(hdata.get("id"));
                             result = hExt.get("result");
                             %>
-		<div class="preventionProcedure"
-			onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')">
+		<div class="preventionProcedure" onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date_no_time")%>] body=[<%=hExt.get("comments")%>&lt;br/&gt;Entered By: <%=hdata.get("provider_name")%>]">
 		<p <%=r(hdata.get("refused"), result)%>>Age: <%=hdata.get("age")%> <br />
 		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date_no_time")%>
 		<%if (hExt.get("comments") != null && (hExt.get("comments")).length()>0) {
@@ -855,6 +854,8 @@ text-align:left;
 		</form>
 	</tr>
 </table>
+
+<script type="text/javascript" src="../share/javascript/boxover.js"></script>
 </body>
 </html:html> 
 <%!
