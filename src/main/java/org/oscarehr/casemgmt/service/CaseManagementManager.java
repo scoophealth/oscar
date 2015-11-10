@@ -1336,7 +1336,7 @@ public class CaseManagementManager {
 	
 	public Integer searchIssuesCount(String providerNo, String programId, String search) {
 		// Get Role - if no ProgramProvider record found, show no issues.
-		List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
+		List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, (programId!=null)?new Long(programId):null);
 		if (ppList == null || ppList.isEmpty()) {
 			return 0;
 		}
