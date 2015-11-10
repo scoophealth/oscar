@@ -345,22 +345,42 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 	@SuppressWarnings("unchecked")
 	public List<Demographic> searchDemographicByNameString(String searchString, int startIndex, int itemsToReturn) {
 		String sqlCommand = "select x from Demographic x";
-		if (searchString != null) sqlCommand = sqlCommand + " where x.FirstName like :fn or x.LastName like :ln";
-
 		Session session = this.getSession();
-		try {
-			Query q = session.createQuery(sqlCommand);
-			if (searchString != null) {
-				q.setParameter("fn", "%" + searchString + "%");
-				// hibernate don't allow a single parameter as jpa does
-				q.setParameter("ln", "%" + searchString + "%");
-			}
-			q.setFirstResult(startIndex);
-			q.setMaxResults(itemsToReturn);
-			return (q.list());
-		} finally {
-			this.releaseSession(session);
-		}
+		String ln="";
+		String fn="";
+		String where = "";
+		try{
+		    if (searchString != null && searchString.length() > 0){
+		       String [] sh = searchString.split(",");
+		       if(sh.length > 1){
+			if(sh[0] != null && sh[0].trim().length()>0){
+		        		where = " x.LastName like :ln ";
+		                     ln=sh[0].trim();
+		           }
+		        	if(sh[1] != null && sh[1].trim().length()>0){
+		        		if(where.length() > 0) where = where + " and "; 
+		        		where = where + " x.FirstName like :fn ";
+		        		fn=sh[1].trim();
+		        	}
+		        }
+		        else{
+		        	   if(sh[0] != null && sh[0].trim().length()>0) {
+		        		where = " x.LastName like :ln ";
+		        		ln=sh[0].trim();
+		        	   }
+		        }
+		        if(where.length() > 0) sqlCommand = sqlCommand + " where " + where;
+		  }
+  	            Query q = session.createQuery(sqlCommand);
+	     	  if(ln.length()>0) q.setParameter("ln",  ln + "%");
+	     	  if(fn.length()>0) q.setParameter("fn",  fn + "%");
+		  q.setFirstResult(startIndex);
+		  q.setMaxResults(itemsToReturn);
+	        	  return (q.list());
+	       }	
+	       finally {
+		this.releaseSession(session);
+	       }
 	}
 	
 	private static final String PROGRAM_DOMAIN_RESTRICTION = "select distinct a.clientId from ProgramProvider pp,Admission a WHERE pp.ProgramId=a.programId AND pp.ProviderNo=:providerNo";
