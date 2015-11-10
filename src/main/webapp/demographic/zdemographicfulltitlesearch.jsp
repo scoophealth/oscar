@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="java.lang.*"%>
 <%@page import="oscar.OscarProperties"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
@@ -128,11 +129,18 @@ function searchOutOfDomain() {
 				<INPUT TYPE="button" onclick="searchAll();"
 					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"
 					VALUE="<bean:message key="demographic.search.All"/>">
-				<input type="checkbox" name="includeIntegratedResults" value="true"/>Include Integrator
+					
+				<%
+					LoggedInInfo loggedInInfo2 = LoggedInInfo.getLoggedInInfoFromSession(request);
+					if(loggedInInfo2.getCurrentFacility().isIntegratorEnabled()) {
+				%>
+						<input type="checkbox" name="includeIntegratedResults" value="true"/>Include Integrator
+				<%}%>
+				
 					<security:oscarSec roleName="<%=roleName%>" objectName="_search.outofdomain" rights="r">  
-				<INPUT TYPE="button" onclick="searchOutOfDomain();"
-					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchOutOfDomain"/>"
-					VALUE="<bean:message key="demographic.search.OutOfDomain"/>">
+						<INPUT TYPE="button" onclick="searchOutOfDomain();"
+							TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchOutOfDomain"/>"
+							VALUE="<bean:message key="demographic.search.OutOfDomain"/>">
 					</security:oscarSec>
 					
 				<caisi:isModuleLoad moduleName="caisi">
