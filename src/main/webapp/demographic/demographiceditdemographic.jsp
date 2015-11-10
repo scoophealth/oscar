@@ -3051,8 +3051,12 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 			
                                 </td>
 
+							<%-- TOGGLE SHOW IPHIS NUMBER --%>
+								<% if(showIPHIS) { %>
 								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.IPHIS" />:</b></td>
 								<td align="left"><input type="text" name="IPHISClientNumber" size="30" value="<%=IPHISClientNumber%>"></td>
+								<% } %>
+							<%-- END TOGGLE SHOW IPHIS NUMBER --%>
 							</tr>
 							<%-- 
 						THE "PATIENT JOINED DATE" ROW HAS NOT BEEN ADDED TWICE IN ERROR 
