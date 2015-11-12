@@ -25,21 +25,45 @@ package org.oscarehr.ws.rest.to.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="item")
+@XmlRootElement(name="post")
 public class RssItem implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
+	private Long id;
+	private Long postId;
 	private String title;
 	private String author;
+	private String type;
 	private String link;
 	private Date publishedDate;
-	private String description;
-	
-	
+	private String body;
+	private Long agreeCount;
+	private Long disagreeCount;
+	private Long commentCount;
+	private String significance;
+	private Boolean authenticatek2a;
+	private Boolean agree;
+	private Boolean disagree;
+	private Long agreeId;
+	private List<RssItem> comments;
+
+	public Long getId() {
+    	return id;
+    }
+	public void setId(Long id) {
+    	this.id = id;
+    }
+	public Long getPostId() {
+    	return postId;
+    }
+	public void setPostId(Long postId) {
+    	this.postId = postId;
+    }
 	public String getTitle() {
 		return title;
 	}
@@ -52,6 +76,12 @@ public class RssItem implements Serializable {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
+	public String getType() {
+    	return type;
+    }
+	public void setType(String type) {
+    	this.type = type;
+    }
 	public String getLink() {
 		return link;
 	}
@@ -64,12 +94,64 @@ public class RssItem implements Serializable {
 	public void setPublishedDate(Date publishedDate) {
 		this.publishedDate = publishedDate;
 	}
-	public String getDescription() {
-		return description;
+	public String getBody() {
+		return body;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setBody(String body) {
+		this.body = body;
 	}
-	
-	
+	public Long getAgreeCount() {
+    	return agreeCount;
+    }
+	public void setAgreeCount(Long agreeCount) {
+    	this.agreeCount = agreeCount;
+    }
+	public Long getDisagreeCount() {
+    	return disagreeCount;
+    }
+	public void setDisagreeCount(Long disagreeCount) {
+    	this.disagreeCount = disagreeCount;
+    }
+	public Long getCommentCount() {
+    	return commentCount;
+    }
+	public void setCommentCount(Long commentCount) {
+    	this.commentCount = commentCount;
+    }
+	public String getSignificance() {
+    	return significance;
+    }
+	public void setSignificance(String significance) {
+    	this.significance = significance;
+    }
+	public Boolean getAuthenticatek2a() {
+    	return authenticatek2a;
+    }
+	public void setAuthenticatek2a(Boolean authenticatek2a) {
+    	this.authenticatek2a = authenticatek2a;
+    }
+	public Boolean isAgree() {
+    	return agree;
+    }
+	public void setAgree(Boolean agree) {
+    	this.agree = agree;
+    }
+	public Boolean isDisagree() {
+    	return disagree;
+    }
+	public void setDisagree(Boolean disagree) {
+    	this.disagree = disagree;
+    }
+	public Long getAgreeId() {
+    	return agreeId;
+    }
+	public void setAgreeId(Long agreeId) {
+    	this.agreeId = agreeId;
+    }
+	public List<RssItem> getComments() {
+    	return comments;
+    }
+	public void setComments(List<RssItem> comments) {
+    	this.comments = comments;
+    }
 }

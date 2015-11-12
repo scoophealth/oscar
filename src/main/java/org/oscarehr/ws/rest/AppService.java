@@ -29,26 +29,38 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.app.OAuth1Utils;
+import org.oscarehr.common.dao.AppDefinitionDao;
+import org.oscarehr.common.dao.AppUserDao;
 import org.oscarehr.common.model.AppDefinition;
+import org.oscarehr.common.model.AppUser;
 import org.oscarehr.managers.AppManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
+import org.oscarehr.ws.rest.to.RSSResponse;
 import org.oscarehr.ws.rest.to.model.AppDefinitionTo1;
+import org.oscarehr.ws.rest.to.model.RssItem;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import oscar.OscarProperties;
@@ -153,4 +165,85 @@ public class AppService extends AbstractServiceImpl {
 		return  new GenericRESTResponse(false,"K2A active");
 	}
 	
+	@POST
+	@Path("/comment")
+	@Consumes("application/json")
+	@Produces("application/json")
+	public org.oscarehr.ws.rest.to.RSSResponse postK2AComment(RssItem comment) {
+		RSSResponse response = new RSSResponse();
+		response.setTimestamp(new Date());
+		try {
+			AppDefinitionDao appDefinitionDao = SpringUtils.getBean(AppDefinitionDao.class);
+	    	AppUserDao appUserDao = SpringUtils.getBean(AppUserDao.class);
+	    		
+	    	AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
+			
+	    	if(k2aApp != null) {
+		    	AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),getLoggedInInfo().getLoggedInProviderNo());
+		    		
+		    	if(k2aUser != null) {
+		    		String jsonString = OAuth1Utils.getOAuthPostResponse(k2aApp, k2aUser, "/ws/api/posts/comment", "/ws/api/posts/comment", OAuth1Utils.getProviderK2A(), comment);
+			    		
+			    	if(jsonString != null && !jsonString.isEmpty()) {
+			    		org.codehaus.jettison.json.JSONObject post = new org.codehaus.jettison.json.JSONObject(jsonString);
+	    	        	
+	    	        	RssItem commentItem = new RssItem();
+	    	        	commentItem.setId(Long.parseLong(post.getString("id")));
+	    	        	commentItem.setAuthor(post.getString("author"));
+	    				Date date = null;
+	    				if(post.has("createdAt")) {
+		    				try {
+			    				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+	    	        			date = formatter.parse(post.getString("createdAt"));
+		    				} catch(ParseException e) {
+		    					DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+	    	        			date = formatter.parse(post.getString("createdAt"));
+		    				}
+	    				}
+	    				commentItem.setPublishedDate(date);
+	    				commentItem.setBody(post.getString("body"));
+	    				if(post.has("agree")) {
+	    					commentItem.setAgree(post.getBoolean("agree"));
+	    				}
+	    				if(post.has("agreeId")) {
+	    					commentItem.setAgreeId(Long.parseLong(post.getString("agreeId")));
+	    				}
+	    				response.getContent().add(commentItem);
+			    	}
+			    	response.setTotal(response.getContent().size());
+		    	}
+	    	}
+		} catch(Exception e) {
+			logger.error("error",e);
+			return null;
+		}
+		return response;
+	}
+	
+	@DELETE
+	@Path("/comment/{commentId}")
+	@Consumes("application/json")
+	@Produces("application/json")
+	public org.oscarehr.ws.rest.to.RSSResponse removeK2AComment(@PathParam("commentId") String commentId) {
+		RSSResponse response = new RSSResponse();
+		response.setTimestamp(new Date());
+		try {
+			AppDefinitionDao appDefinitionDao = SpringUtils.getBean(AppDefinitionDao.class);
+	    	AppUserDao appUserDao = SpringUtils.getBean(AppUserDao.class);
+	    		
+	    	AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
+			
+	    	if(k2aApp != null) {
+		    	AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),getLoggedInInfo().getLoggedInProviderNo());
+		    		
+		    	if(k2aUser != null) {
+		    		OAuth1Utils.getOAuthDeleteResponse(k2aApp, k2aUser, "/ws/api/posts/comment/" + commentId, "/ws/api/posts/comment/" + commentId);
+		    	}
+	    	}
+		} catch(Exception e) {
+			logger.error("error",e);
+			return null;
+		}
+		return response;
+	}
 }
