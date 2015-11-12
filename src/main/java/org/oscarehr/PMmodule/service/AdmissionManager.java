@@ -25,7 +25,9 @@ package org.oscarehr.PMmodule.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.dao.ProgramClientStatusDAO;
@@ -47,10 +49,10 @@ import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.BedDemographic;
 import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.common.model.RoomDemographic;
-import org.oscarehr.managers.BedManager;
 import org.oscarehr.managers.BedDemographicManager;
-import org.oscarehr.managers.RoomManager;
+import org.oscarehr.managers.BedManager;
 import org.oscarehr.managers.RoomDemographicManager;
+import org.oscarehr.managers.RoomManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Required;
@@ -566,5 +568,26 @@ public class AdmissionManager {
     	Integer count=  dao.findAdmissionsByProgramAndDateAsCount(programNo,day);
     	
     	return count;
+    }
+    
+    
+    public List<Program> filterProgramListByCurrentPatientAdmissions(List<Program> programs, Integer demographicNo) {
+    	List<Program> results = new ArrayList<Program>();
+    	
+    	List<Admission> admissions = this.getCurrentAdmissions(demographicNo);
+    	Map<Integer,Admission> programIdAdmissionMap = new HashMap<Integer,Admission>();
+    	for(Admission admission:admissions) {
+    		if(admission.getProgramId() != null) {
+    			programIdAdmissionMap.put(admission.getProgramId(), admission);
+    		}
+    	}
+    	
+    	for(Program program:programs) {
+    		if(programIdAdmissionMap.get(program.getId()) != null) {
+    			results.add(program);
+    		}
+    	}
+    	
+    	return results;
     }
 }
