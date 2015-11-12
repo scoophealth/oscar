@@ -29,6 +29,8 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 	$scope.displayDate= function() {return new Date();}
 	
 	$scope.me = null;
+
+	$scope.busyLoadingData = false;
 	
 	personaService.getDashboardPreferences().then(function(data){
 		$scope.prefs = data.dashboardPreferences;
@@ -46,6 +48,79 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 		 if (window.focus) {
 			 newwindow.focus();
 		 }	
+	}
+
+	$scope.loadMoreK2aFeed = function() {
+		$scope.updateFeed($scope.k2afeed.length,10);
+	}
+
+	$scope.authenticateK2A = function(id){
+	    window.open('../apps/oauth1.jsp?id='+id,'appAuth','width=700,height=450');
+	}
+
+	$scope.agreeWithK2aPost = function(item) {
+		if(item.agree) {
+			k2aService.removeK2AComment(item.agreeId).then(function(response){
+				item.agree = false;
+				item.agreeCount--;
+				item.agreeId = '';			
+			},function(reason){
+				alert(reason);
+			});
+		} else if(!(item.agree || item.disagree)) {
+			if(typeof item.newComment === 'undefined') {
+				item.newComment = {};		
+			}
+			item.newComment.agree = true;
+			item.newComment.body = '';
+
+			$scope.commentOnK2aPost(item);
+		}
+	}
+
+	$scope.disagreeWithK2aPost = function(item) {
+		if(item.disagree) {
+			k2aService.removeK2AComment(item.agreeId).then(function(response){
+				item.disagree = false;
+				item.disagreeCount--;
+				item.agreeId = '';			
+			},function(reason){
+				alert(reason);
+			});
+		} if(!(item.agree || item.disagree)) {		
+			if(typeof item.newComment === 'undefined') {
+				item.newComment = {};		
+			}
+			item.newComment.agree = false;
+			item.newComment.body = '';
+
+			$scope.commentOnK2aPost(item);
+		}
+	}
+
+	$scope.commentOnK2aPost = function(item) {
+		item.newComment.postId = item.id;
+		k2aService.postK2AComment(item.newComment).then(function(response){
+			item.newComment.body = '';
+			item.newComment.agree = '';
+			item.agreeId = response.agreeId;
+			if(!(typeof response.post[0].agree === 'undefined')) {			
+				if(response.post[0].agree) {
+					item.agree = true;
+					item.agreeId = response.post[0].agreeId;
+					item.agreeCount++;
+				} else {
+					item.disagree = true;
+					item.agreeId = response.post[0].agreeId;
+					item.disagreeCount++;
+				}
+			} else {
+				item.commentCount++;
+				item.comments.unshift(response.post[0]);
+			}
+		},function(reason){
+			alert(reason);
+		});
 	}
 	
 	$scope.updateTicklers = function() {
@@ -106,21 +181,40 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 		});
 	}
 	
-	$scope.updateFeed = function() {
-		k2aService.getK2aFeed().then(function(response){
-			if(response.item == null) {
+	$scope.updateFeed = function(startPoint,numberOfRows) {
+		if ($scope.busyLoadingData) return;
+  		$scope.busyLoadingData = true;
+		k2aService.getK2aFeed(startPoint,numberOfRows).then(function(response){
+			if(response.post == null) {
 				return;
 			}
 			
-			if (response.item instanceof Array) {
-				$scope.k2afeed = response.item;
+			if (response.post instanceof Array) {
+				for(var i=0; i < response.post.length; i++) {
+					if(!Array.isArray(response.post[i].comments)) {
+						var arr = new Array();
+						arr[0] = response.post[i].comments;
+						response.post[i].comments = arr;						
+					}					
+				}
+				if(typeof $scope.k2afeed === 'undefined') {
+					$scope.k2afeed = response.post;
+				} else {
+					$scope.k2afeed = $scope.k2afeed.concat(response.post);
+				}
+				$scope.busyLoadingData = false;	
 			} else {
-				var arr = new Array();
-				arr[0] = response.item;
-				$scope.k2afeed = arr;
-			}			
+				if(response.post.authenticatek2a) {
+					$scope.authenticatek2a = response.post.description;
+				} else {
+					var arr = new Array();
+					arr[0] = response.post;
+					$scope.k2afeed = arr;
+				}
+			}	
 		},function(reason){
 			alert(reason);
+			$scope.busyLoadingData = false;	
 		});
 	}
 	
@@ -128,7 +222,7 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 		$scope.updateTicklers();
 		$scope.updateMessages();
 		$scope.updateReports();
-		$scope.updateFeed();
+		$scope.updateFeed(0,10);
 		
 	}
 	
