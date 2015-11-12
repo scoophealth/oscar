@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -333,6 +335,8 @@ public class TicklerAction extends DispatchAction {
 				providers.add(provider);
 			}
 		}
+		Collections.sort(providers,  new Provider().ComparatorName());
+		
 		request.setAttribute("providers", providers);
 		
 		return mapping.findForward("edit");
@@ -575,12 +579,20 @@ public class TicklerAction extends DispatchAction {
 				
 			}
 		}
+		//sort
+		Collections.sort(providers,  TicklerAction.NameComparator);
 		
 		JSONArray jsonArray = JSONArray.fromObject( providers );
 		response.getWriter().print(jsonArray);
 		
 		return null;
 	}
+	
+	public static final Comparator<LightProvider> NameComparator = new Comparator<LightProvider>() {
+        public int compare(LightProvider dm1, LightProvider dm2) {
+        	return dm1.getName().compareTo(dm2.getName());
+        }
+    }; 
 	
 	public class LightProvider {
 		private String providerNo;
@@ -592,22 +604,21 @@ public class TicklerAction extends DispatchAction {
 			
 		}
 
-	public String getProviderNo() {
-		return providerNo;
-	}
-
-	public void setProviderNo(String providerNo) {
-		this.providerNo = providerNo;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-		
+		public String getProviderNo() {
+			return providerNo;
+		}
+	
+		public void setProviderNo(String providerNo) {
+			this.providerNo = providerNo;
+		}
+	
+		public String getName() {
+			return name;
+		}
+	
+		public void setName(String name) {
+			this.name = name;
+		}
 		
 	}
 }
