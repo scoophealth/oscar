@@ -1572,7 +1572,11 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 					value="<bean:message key="demographic.demographicaddrecordhtm.btnCancel"/>"
 					onclick="self.close();">
 				</caisi:isModuleLoad>
-				
+				<caisi:isModuleLoad moduleName="caisi">
+				<input type="button" name="closeButton"
+					value="<bean:message key="demographic.demographicaddrecordhtm.btnReturnToSchedule"/>"
+					onclick="window.location.href='../provider/providercontrol.jsp';">
+				</caisi:isModuleLoad>
 				</td>
 			</tr>
 		</table>
