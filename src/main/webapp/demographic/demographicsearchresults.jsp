@@ -487,8 +487,14 @@
 <a href="demographicaddarecordhtm.jsp?search_mode=<%=searchMode%>&keyword=<%=StringEscapeUtils.escapeHtml(keyWord)%>" title="<bean:message key="demographic.search.btnCreateNewTitle" />">
 <bean:message key="demographic.search.btnCreateNew" />
 </a>
-
 </div>
+
+<div class="goBackToSchedule">
+<a href="../provider/providercontrol.jsp" title="<bean:message key="demographic.search.btnReturnToSchedule" />">
+<bean:message key="demographic.search.btnReturnToSchedule" />
+</a>
+</div>
+
 
 </div>
 
