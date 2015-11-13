@@ -349,7 +349,7 @@ public class Provider implements Serializable, Comparable<Provider>{
 
 
 
-	public class ComparatorName implements Comparator<Provider>, Serializable {
+	public static class ComparatorName implements Comparator<Provider>, Serializable {
 
 		public int compare(Provider o1, Provider o2) {
 			Provider bp1 = o1;
