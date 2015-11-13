@@ -426,7 +426,7 @@ Varicella Immunoglobulin	VarIg
 		
 	<item 
 		resultDesc=""
-		desc="Bone Mineral Density" name="BMD" link="" layout="PAPMAM"
+		desc="Bone Mineral Density" name="BMD" link="" layout="PAPMAM" minAge="65"
 		showIfMinRecordNum="1" />
 		
 		<!-- For eva.caisi.ca -->
@@ -513,14 +513,6 @@ Varicella Immunoglobulin	VarIg
 		name="Smoking"		
 		layout="history"
 		minAge="13"		
-		showIfMinRecordNum="1" />
-	
-	<item
-		resultDesc=""
-		desc= "Bone Mineral Density"
-		name="BMD"		
-		layout="PAPMAM"
-		minAge="65"		
 		showIfMinRecordNum="1" />
 
 	<item
