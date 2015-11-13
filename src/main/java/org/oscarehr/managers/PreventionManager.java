@@ -25,6 +25,7 @@
 package org.oscarehr.managers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,9 +33,12 @@ import java.util.List;
 
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
+import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
+import org.oscarehr.common.model.Property;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +52,10 @@ public class PreventionManager {
 	private PreventionDao preventionDao;
 	@Autowired
 	private PreventionExtDao preventionExtDao;
+	@Autowired
+	private PropertyDao propertyDao;
+		
+	private static final String HIDE_PREVENTION_ITEM = "hide_prevention_item";
 
 	private ArrayList<String> preventionTypeList = new ArrayList<String>();
 
@@ -89,6 +97,60 @@ public class PreventionManager {
 		}
 		return preventionTypeList;
 	}
+	
+	public ArrayList<HashMap<String,String>> getPreventionTypeDescList() {
+		PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
+		ArrayList<HashMap<String,String>> preventionTypeDescList = pdc.getPreventions();
+		
+		return preventionTypeDescList;
+	}
+	
+	public boolean isHidePrevItemExist() {
+		List<Property> props = propertyDao.findByName(HIDE_PREVENTION_ITEM);
+		if(props.size()>0){
+			return true;
+		}		
+		return false;
+	}
+	
+	public boolean hideItem(String item) {
+		String itemsToRemove = null;
+		Property p = propertyDao.checkByName(HIDE_PREVENTION_ITEM);
+		itemsToRemove = p.getValue();
+		
+		if(itemsToRemove!=null){
+			List<String> items = Arrays.asList(itemsToRemove.split("\\s*,\\s*"));
+			for(String i:items){
+				if(i.equals(item)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static String getCustomPreventionItems() {
+		String itemsToRemove = null;
+		PropertyDao propertyDao = (PropertyDao)SpringUtils.getBean("propertyDao");
+		Property p = propertyDao.checkByName(HIDE_PREVENTION_ITEM);
+		itemsToRemove = p.getValue();
+		
+		return itemsToRemove;
+	}
+	
+	public void addCustomPreventionItems(String items){
+		boolean propertyExists = isHidePrevItemExist();
+		if(propertyExists){
+			Property p = propertyDao.checkByName(HIDE_PREVENTION_ITEM);
+			p.setValue(items);
+			propertyDao.merge(p);
+		}else{
+			Property x = new Property();
+			x.setName("hide_prevention_item");
+			x.setValue(items);
+			propertyDao.persist(x);
+		}
+	}	
 
 	public void addPreventionWithExts(Prevention prevention, HashMap<String, String> exts) {
 		if (prevention == null) return;
