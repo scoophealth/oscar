@@ -81,7 +81,7 @@
     	<div id="noteInput" class="center-block well col-md-4 col-md-offset-3" ng-show="hideNote" ng-click="checkAction($event)" ng-keypress="checkAction($event)">
 			<div class="col-xs-4">
 			    
-			    <input type="text" ng-model="options.magicVal" placeholder="Type Command" 
+			    <input type="text" ng-model="options.magicVal" placeholder="Template" 
 				typeahead="t.encounterTemplateName as t.encounterTemplateName for t in searchTemplates($viewValue)" 
 				typeahead-on-select="insertTemplate($item, $model, $label)"
 				class="form-control">
@@ -97,7 +97,7 @@
 			</div>
     		
     		
-    		<textarea class="form-control input-lg col-lg-4" rows="6" ng-model="page.encounterNote.note" ng-disabled="page.cannotChange" id="noteEditor"></textarea>
+    		<textarea class="form-control input-lg col-lg-4" rows="6" ng-model="page.encounterNote.note" ng-disabled="page.cannotChange" id="noteEditor" ng-change="setEditingNoteFlag()"></textarea>
     		
     		<div style="font-size:8pt" ng-if="page.assignedCMIssues != null  && page.assignedCMIssues.length > 0">
 			    <label>Assigned Issues:</label>

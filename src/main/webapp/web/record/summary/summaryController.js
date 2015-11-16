@@ -23,7 +23,7 @@
     Ontario, Canada
 
 */
-oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$stateParams,$state,$filter,$modal,user,noteService,summaryService,securityService) {
+oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$stateParams,$state,$filter,$modal,$interval,user,noteService,summaryService,securityService) {
 	console.log("in summary Ctrl ",$stateParams);
 
 	$scope.page = {};
@@ -407,26 +407,36 @@ function fillItems(itemsToFill){
 editGroupedNotes = function(size,mod,action){
 
 	var modalInstance = $modal.open({
-	      templateUrl: 'record/summary/groupNotes.jsp',
-	      controller: GroupNotesCtrl,
-	      size: size,
-	      resolve: {
-	          mod: function () {
-	            return mod;
-	          },
-	          
-	          action: function (){
-	        	  return action;
-	          }
-	        }
-	    });
+		templateUrl: 'record/summary/groupNotes.jsp',
+		controller: GroupNotesCtrl,
+		size: size,
+		resolve: {
+			mod: function () {
+				return mod;
+			},
+			action: function (){
+				return action;
+			},
+			user: function (){
+				return user;
+			}
+		}
+	});
 	
 	modalInstance.result.then(function (selectedItem) {
-	      console.log(selectedItem);
-	      
-	    }, function () {
-	      console.log('Modal dismissed at: ' + new Date());
-	    });
+		console.log(selectedItem);
+	}, function () {
+		if (editingNoteId!=null) {
+			noteService.removeEditingNoteFlag(editingNoteId, user.providerNo);
+			$interval.cancel(itvSet);
+			itvSet = null;
+			$interval.cancel(itvCheck);
+			itvCheck = null;
+			editingNoteId = null;
+		}
+		
+		console.log('Modal dismissed at: ' + new Date());
+	});
 	
 	console.log($('#myModal'));
 }
@@ -491,7 +501,7 @@ $scope.gotoState = function(item,mod,itemId){
 });
 
 
-GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,$state,noteService,securityService){
+GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,user,$stateParams,$state,$interval,noteService,securityService){
 
 
 	$scope.page = {};
@@ -553,6 +563,7 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,
 				action = itemId;
 				$scope.setAvailablePositions();
 				
+				$scope.removeEditingNoteFlag();
 				
 				console.log(JSON.stringify($scope.groupNotesForm));
 				
@@ -616,6 +627,50 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,
 	    });
 	}
 	
+	/*
+	 * handle concurrent note edit - EditingNoteFlag
+	 */
+	$scope.doSetEditingNoteFlag = function(){
+		noteService.setEditingNoteFlag(editingNoteId, user.providerNo).then(function(resp){
+			if (!resp.success) {
+				if (resp.message=="Parameter error") alert("Parameter Error: noteUUID["+editingNoteId+"] userId["+user.providerNo+"]");
+				else alert("Warning! Another user is editing this note now.");
+			}
+		});
+	}
+ 
+	$scope.setEditingNoteFlag = function(){
+		if ($scope.groupNotesForm.encounterNote.uuid==null) return;
+		
+		$scope.removeEditingNoteFlag(); //remove any previous flag actions
+		editingNoteId = $scope.groupNotesForm.encounterNote.uuid;
+		
+		itvSet = $interval($scope.doSetEditingNoteFlag(), 30000); //set flag every 5 min
+		itvCheck = $interval(function(){
+			noteService.checkEditNoteNew(editingNoteId, user.providerNo).then(function(resp){
+				if (!resp.success) { //someone else wants to edit this note
+					alert("Warning! Another user tries to edit this note. Your update may be replaced by later revision(s).");
+					
+					//cancel 10sec check after 1st time warning when another user tries to edit this note
+					$interval.cancel(itvCheck);
+					itvCheck = null;
+				}
+			});
+		}, 10000); //check for new edit every 10 sec
+	}
+	
+	$scope.removeEditingNoteFlag = function(){
+		if (editingNoteId!=null) {
+			noteService.removeEditingNoteFlag(editingNoteId, user.providerNo);
+			$interval.cancel(itvSet);
+			$interval.cancel(itvCheck);
+			itvSet = null;
+			itvCheck = null;
+			editingNoteId = null;
+		}
+	}
+	
+	
 	$scope.removeIssue = function(i) {
 		i.unchecked=true;
 	}
@@ -674,7 +729,9 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,$stateParams,
     	}
     }
 };
-
+var itvSet = null;
+var itvCheck = null;
+var editingNoteId = null;
 
 RecordPrintCtrl = function($scope,$modal,$modalInstance,mod,action,$stateParams,summaryService,$filter){
 	

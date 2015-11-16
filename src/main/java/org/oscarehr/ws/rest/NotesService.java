@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
@@ -100,6 +101,8 @@ public class NotesService extends AbstractServiceImpl {
 	public static String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors","OcularMedication","TicklerNote"};
 	
 	private static Logger logger = MiscUtils.getLogger();
+	
+	private static ConcurrentHashMap<String, ConcurrentHashMap<String, Long>> editList = new ConcurrentHashMap<String, ConcurrentHashMap<String, Long>>();
 	
 	@Autowired
 	private NoteService noteService; 
@@ -515,11 +518,11 @@ public class NotesService extends AbstractServiceImpl {
 				}
 		 	*/
 		
+		
+		if (note.getAppointmentNo() != null) {
+			caseMangementNote.setAppointmentNo(note.getAppointmentNo());
+		}
 			
-		//if (note.getAppointmentNo() != null) {
-		caseMangementNote.setAppointmentNo(note.getAppointmentNo());
-		//}
-					
 		// Save annotation 
 
 		CaseManagementNote annotationNote = null;// (CaseManagementNote) session.getAttribute(attrib_name);
@@ -1737,5 +1740,87 @@ public class NotesService extends AbstractServiceImpl {
 				
 		
 		return response;
+	}
+	
+	
+	@POST
+	@Path("/setEditingNoteFlag")
+	@Produces("application/json")
+	public GenericRESTResponse setEditingNoteFlag(@QueryParam("noteUUID") String noteUUID, @QueryParam("userId") String providerNo) {
+		GenericRESTResponse resp = new GenericRESTResponse(false, "Parameter error");
+		if (noteUUID==null || noteUUID.trim().isEmpty() || providerNo==null || providerNo.trim().isEmpty()) return resp;
+		
+		ConcurrentHashMap<String, Long> noteList = editList.get(noteUUID);
+		if (noteList==null) {
+			noteList = new ConcurrentHashMap<String, Long>();
+			editList.put(noteUUID, noteList);
+		}
+		clearDanglingFlags();
+		
+		resp.setSuccess(true);
+		resp.setMessage(null);
+		
+		if (!noteList.containsKey(providerNo)) { // only check for other editing user when initializing flag
+			for (String key : noteList.keySet()) {
+				if (key!=providerNo) {
+					resp.setSuccess(false);
+					break;
+				}
+			}
+		}
+		noteList.put(providerNo, new Date().getTime());
+		editList.put(noteUUID, noteList);
+		return resp;
+	}
+	
+	private void clearDanglingFlags() {
+		long now = new Date().getTime();
+		String[] noteUUIDs = editList.keySet().toArray(new String[editList.keySet().size()]);
+		for (String uuid : noteUUIDs) {
+			ConcurrentHashMap<String, Long> noteList = editList.get(uuid);
+			String[] providerNos = noteList.keySet().toArray(new String[noteList.keySet().size()]);
+			for (String providerNo : providerNos) {
+				Long editTime = noteList.get(providerNo);
+				if (now-editTime>=360000) noteList.remove(providerNo); //remove flag due 6 min (should be renewed/removed within 5 min)
+			}
+			if (noteList.isEmpty()) editList.remove(uuid);
+			else editList.put(uuid, noteList);
+		}
+	}
+	
+
+	@POST
+	@Path("/checkEditNoteNew")
+	@Produces("application/json")
+	public GenericRESTResponse checkEditNoteNew(@QueryParam("noteUUID") String noteUUID, @QueryParam("userId") String providerNo) {
+		GenericRESTResponse resp = new GenericRESTResponse(true, null);
+		if (noteUUID==null || noteUUID.trim().isEmpty() || providerNo==null || providerNo.trim().isEmpty()) return resp;
+		
+		ConcurrentHashMap<String, Long> noteList = editList.get(noteUUID);
+		if (noteList==null) return resp;
+		if (noteList.size()==1 && noteList.containsKey(providerNo)) return resp;
+		
+		long myEditTime = 0;
+		if (noteList.containsKey(providerNo)) myEditTime = noteList.get(providerNo);
+		for (String key : noteList.keySet()) {
+			if (key!=providerNo) {
+				if (noteList.get(key)>myEditTime) {
+					resp.setSuccess(false);
+					break;
+				}
+			}
+		}
+		return resp;  //true = no new edit, false = warn about new edit
+	}
+
+	@POST
+	@Path("/removeEditingNoteFlag")
+	public void removeEditingNoteFlag(@QueryParam("noteUUID") String noteUUID, @QueryParam("userId") String providerNo) {
+		if (noteUUID==null || noteUUID.trim().isEmpty() || providerNo==null || providerNo.trim().isEmpty()) return;
+		
+		ConcurrentHashMap<String, Long> noteList = editList.get(noteUUID);
+		if (noteList!=null && noteList.containsKey(providerNo)) noteList.remove(providerNo);
+		if (noteList.isEmpty()) editList.remove(noteUUID);
+		else editList.put(noteUUID, noteList);
 	}
 }
