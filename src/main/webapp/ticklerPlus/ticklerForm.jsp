@@ -164,12 +164,7 @@
 					String demographicNo = request.getParameter("tickler.demographicNo");
 					
 					List<Program> programs = (List<Program>)request.getAttribute("programDomain");
-					//further filter by patient admissions.
-					AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);
-					if(demographicNo != null) {
-						programs = admissionManager.filterProgramListByCurrentPatientAdmissions(programs,Integer.parseInt(demographicNo));
-					}
-				
+					
 					String currentProgramId = (String)request.getAttribute("currentProgramId");
 					
 					for(Program p:programs) {
