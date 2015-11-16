@@ -173,6 +173,31 @@ angular.module("noteServices", [])
               	deferred.reject("An error occured while fetching issue");
               });
             return deferred.promise;
+       },
+       setEditingNoteFlag: function(noteUUID, userId){
+    	   var deferred = $q.defer();
+    	   $http.post(this.apiPath+'/setEditingNoteFlag?noteUUID='+noteUUID+"&userId="+userId).success(function(data){
+    		   console.log("returned from /setEditingNoteFlag",data);
+    		   deferred.resolve(data);
+		   }).error(function(){
+			   console.log("error setting EditingNoteFlag");
+			   deferred.reject("An error occured while setting EditingNoteFlag");
+		   });
+    	   return deferred.promise;
+       },
+       checkEditNoteNew: function(noteUUID, userId){
+    	   var deferred = $q.defer();
+    	   $http.post(this.apiPath+'/checkEditNoteNew?noteUUID='+noteUUID+"&userId="+userId).success(function(data){
+    		   console.log("returned from /checkEditNoteNew",data);
+    		   deferred.resolve(data);
+		   }).error(function(){
+			   console.log("error checking EditNoteNew");
+			   deferred.reject("An error occured while checking EditNoteNew");
+		   });
+    	   return deferred.promise;
+       },
+       removeEditingNoteFlag: function(noteUUID, userId){
+    	   $http.post(this.apiPath+'/removeEditingNoteFlag?noteUUID='+noteUUID+"&userId="+userId);
        }
     };
 });
