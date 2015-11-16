@@ -50,6 +50,7 @@ import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.PreparedTicklerManager;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.dao.EChartDao;
@@ -322,8 +323,6 @@ public class TicklerAction extends DispatchAction {
 		request.setAttribute("program_name", programMgr.getProgramName(programId));
 		request.setAttribute("from", getFrom(request));
 		
-		request.setAttribute("programDomain",programMgr.getProgramDomain(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo()));
-		request.setAttribute("currentProgramId", programId);
 		
 		//using the current program (or the user selected one by priority) , filter the provider list by that providers
 		//that are staff of that program.
@@ -335,8 +334,35 @@ public class TicklerAction extends DispatchAction {
 				providers.add(provider);
 			}
 		}
+
+		String demographicNo = request.getParameter("tickler.demographicNo");
+		
+		List<Program> programDomain = programMgr.getProgramDomain(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo());
+		//further filter by patient admissions.
+		AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);
+		if(demographicNo != null) {
+			programDomain = admissionManager.filterProgramListByCurrentPatientAdmissions(programDomain,Integer.parseInt(demographicNo));
+		}
+		
+		//is the set program in the available domain? if not, choose the first one
+		boolean found=false;
+		for(Program p:programDomain) {
+			if(p.getId().intValue() == Integer.parseInt(programId)) {
+				found=true;
+				break;
+			}
+		}
+		
+		if(!found) {
+			programId = programDomain.get(0).getId().toString();
+		}
+
 		Collections.sort(providers,  new Provider().ComparatorName());
 		
+		request.setAttribute("programDomain",programDomain);
+		request.setAttribute("currentProgramId", programId);
+		request.setAttribute("program_name", programMgr.getProgramName(programId));
+
 		request.setAttribute("providers", providers);
 		
 		return mapping.findForward("edit");
