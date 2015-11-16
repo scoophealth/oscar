@@ -24,7 +24,7 @@
 
 */
 
-oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,user,$state,noteService,$timeout,uxService,securityService,scheduleService,billingService) {
+oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,user,$state,noteService,$timeout,$interval,uxService,securityService,scheduleService,billingService) {
 	
 	
 	console.log("in patient Ctrl ",demo);
@@ -196,6 +196,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 				$scope.getCurrentNote(false);
 			}
 	    });
+		$scope.removeEditingNoteFlag();
 	};
 	
 	$scope.saveSignNote = function(){
@@ -278,16 +279,70 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	
 	 $scope.editNote = function(note){
 	    	$rootScope.$emit('',note);
-	    }
-	    
-	    
+	 }
+	 
 	 $rootScope.$on('loadNoteForEdit', function(event,data) {
 	    	console.log('loadNoteForEdit ',data);
 	    	$scope.page.encounterNote = data;
+	    	
 	    	//Need to check if note has been saved yet.
 	    	$scope.hideNote = true;
 	    	$rootScope.$emit('currentlyEditingNote',$scope.page.encounterNote);
+	    	
+	    	$scope.removeEditingNoteFlag();
 	 });
+	
+	 
+	 /*
+	  * handle concurrent note edit - EditingNoteFlag
+	  */
+	 var itvSet = null;
+	 var itvCheck = null;
+	 var editingNoteId = null;
+	 
+	 $rootScope.$on("$stateChangeStart", function(){
+		 $scope.removeEditingNoteFlag();
+	 });
+	 
+	 $scope.doSetEditingNoteFlag = function(){
+		 noteService.setEditingNoteFlag(editingNoteId, user.providerNo).then(function(resp){
+			 if (!resp.success) {
+				 if (resp.message=="Parameter error") alert("Parameter Error: noteUUID["+editingNoteId+"] userId["+user.providerNo+"]");
+				 else alert("Warning! Another user is editing this note now.");
+			 }
+		 });
+	 }
+	 
+	 $scope.setEditingNoteFlag = function(){
+		 if ($scope.page.encounterNote.uuid==null) return;
+		 
+		 editingNoteId = $scope.page.encounterNote.uuid;
+		 if (itvSet==null) {
+			 itvSet = $interval($scope.doSetEditingNoteFlag(), 30000); //set flag every 5 min until canceled
+		 }
+		 if (itvCheck==null) { //warn once only when the 1st time another user tries to edit this note
+			 itvCheck = $interval(function(){
+				 noteService.checkEditNoteNew(editingNoteId, user.providerNo).then(function(resp){
+					 if (!resp.success) { //someone else wants to edit this note
+						 alert("Warning! Another user tries to edit this note. Your update may be replaced by later revision(s).");
+						 $interval.cancel(itvCheck);
+						 itvCheck = null;
+					 }
+				 });
+			 }, 10000); //check for new edit every 10 seconds
+		 }
+	 }
+	 
+	 $scope.removeEditingNoteFlag = function(){
+		 if (editingNoteId!=null) {
+			 noteService.removeEditingNoteFlag(editingNoteId, user.providerNo);
+			 $interval.cancel(itvSet);
+			 $interval.cancel(itvCheck);
+			 itvSet = null;
+			 itvCheck = null;
+			 editingNoteId = null;
+		 }
+	 }
 
 	 
 	 $scope.searchTemplates  = function(term) {
