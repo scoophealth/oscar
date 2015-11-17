@@ -23,7 +23,9 @@
     Ontario, Canada
 
 --%>
-
+<%@page import="org.oscarehr.common.dao.SecurityDao" %>
+<%@page import="org.oscarehr.common.model.Security" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
 <%
   //Make sure user has logged in first and username is in the session
 
@@ -45,8 +47,16 @@
 	import="java.lang.*, java.util.*, java.text.*,java.sql.*, oscar.*"
 	errorPage="errorpage.jsp"%>
 
-<%!
+<%
 	OscarProperties op = OscarProperties.getInstance();
+	String userName = (String)request.getSession().getAttribute("userName");
+	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+	
+	Security security = securityDao.findByUserName(userName).get(0);
+
+	Integer BLocallockset = security.getBLocallockset();
+	Integer BRemotelockset = security.getBRemotelockset();	  
+	  
 %>
 
 <html:html locale="true">
@@ -70,6 +80,18 @@ function checkPwdPolicy() {
 	var pwd1=document.forms[0].newPassword.value;
 	var pwd2=document.forms[0].confirmPassword.value;
 		
+	var pin1 = null;
+	var pin2 = null;
+	
+	var jsLocallockset = '<%=BLocallockset%>'; 
+	var jsRemotelockset = '<%=BRemotelockset%>';
+	
+	if (jsLocallockset == '1' || jsRemotelockset == '1') {
+		 pin1=document.updatepassword.newpin.value;
+		 pin2=document.updatepassword.confirmpin.value;
+	}
+	
+	
 	if (!validatePassword(pwd1)) {
 		setfocus('newPassword');
 		return false;
@@ -79,6 +101,33 @@ function checkPwdPolicy() {
 		setfocus('confirmPassword');
 		return false;
 	}
+	
+	if (jsLocallockset == '0' && jsRemotelockset == '0') {
+		return true;
+	}
+
+	if (pin1 != "") {
+		if (document.updatepassword.pin.value == "") {
+			alert ('<bean:message key="provider.providerchangepassword.msgCurrPinError"/>');
+			setfocus('pin');
+			return false;
+		}
+		
+		var pin_min_length = <%=op.getProperty("password_pin_min_length")%>;
+		
+		if (pin1.length < pin_min_length) {
+			alert('<bean:message key="password.policy.violation.msgPinLengthError"/> ' +
+					pin_min_length + ' <bean:message key="password.policy.violation.msgDigits"/>');
+			return false;
+		}
+		
+		if (pin1 != pin2) {
+			alert ('<bean:message key="provider.providerchangepassword.msgPinConfirmError"/>');
+			setfocus('confirmpin');
+			return false;
+		}
+	}
+	
 	return true;
 }
 
@@ -191,6 +240,37 @@ function validatePassword(pwd) {
 			<%=op.getProperty("password_min_length")%> <bean:message
 			key="provider.providerchangepassword.msgSymbols" />)</font></td>
 	</tr>
+		<% if ( BLocallockset != null && BRemotelockset != null && (BLocallockset.intValue() == 1 || BRemotelockset.intValue() == 1)) { %>
+	
+		<tr>
+			<td align="right" width="50%"><font face="arial"><bean:message
+				key="provider.providerchangepassword.msgEnterOld" />&nbsp;<b><bean:message
+				key="provider.providerchangepassword.currentPIN" />:</b></font></td>
+			<td><input type=password name="oldPin" value="" size=20
+				maxlength=32></td>
+		</tr>
+			<tr>
+			<td width="50%" align="right"><font face="arial"><bean:message
+				key="provider.providerchangepassword.msgChooseNew" />&nbsp;<b><bean:message
+				key="provider.providerchangepassword.newPIN" />:</b></font></td>
+			<td><input type=password name="newPin" value="" size=20
+				maxlength=32> <font size="-2">(<bean:message
+				key="provider.providerchangepassword.msgAtLeast" />
+				<%=op.getProperty("password_pin_min_length")%> <bean:message
+				key="provider.providerchangepassword.msgSymbols" />)</font></td>
+		</tr>
+		<tr>
+			<td width="50%" align="right"><font face="arial"><bean:message
+				key="provider.providerchangepassword.msgConfirm" />&nbsp;<b><bean:message
+				key="provider.providerchangepassword.newPIN" />:</b></font></td>
+			<td><input type=password name="confirmPin" value="" size=20
+				maxlength=32> <font size="-2">(<bean:message
+				key="provider.providerchangepassword.msgAtLeast" />
+				<%=op.getProperty("password_pin_min_length")%> <bean:message
+				key="provider.providerchangepassword.msgSymbols" />)</font></td>
+		</tr>
+	<% } %>
+	
 </table>
 </center>
 <table width="100%" border="0" cellpadding="4" cellspacing="0"
