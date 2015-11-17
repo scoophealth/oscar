@@ -271,7 +271,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:name varchar(20) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:name varchar(255) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:password varchar(100) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:password varchar(80) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:payable varchar(30) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:payment_type varchar(25) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:paymentdate varchar(8) NOT NULL default '',</ViolationValue>
@@ -311,7 +310,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:totalamount varchar(10) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:url_name_password varchar(20) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:url_name_username varchar(20) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:user_name varchar(30) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:username varchar(30) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:ADD COLUMN `amount_received` VARCHAR(7) NOT NULL DEFAULT '' AFTER `amount`,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:ADD COLUMN `amount` VARCHAR(7) NOT NULL DEFAULT '' AFTER `seqNum`, ROW_FORMAT = DYNAMIC;</ViolationValue>
@@ -3716,10 +3714,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:allergies tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:allergiesUpdated tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:altPatientID char(15) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:alter table `security` add b_ExpireSet int(1) default 1 after pin;</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:alter table `security` add b_LocalLockSet int(1) default 1 after pin;</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:alter table `security` add b_RemoteLockSet int(1) default 1 after pin;</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:alter table `security` add date_ExpireDate date default '2100-01-01' after pin;</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:amountclaim varchar(8) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:amountpay varchar(8) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:anaesthesia char(2) default NULL,</ViolationValue>
@@ -3850,6 +3844,9 @@
         <ViolationValue>/database/mysql/oscarinit.sql:associatedOBX int(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:association tinyint(1) not null default 0,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:asstProvider_no varchar(6) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:b_ExpireSet int(1) default 1,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:b_LocalLockSet int(1) default 1,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:b_RemoteLockSet int(1) default 1,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:b_alkPhosphate tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:b_ast tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:b_bilirubin tinyint(1) default NULL,</ViolationValue>
@@ -4149,6 +4146,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:date8 date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:dateAdmin date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:dateDx date default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:date_ExpireDate date default '2100-01-01',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:date_joined date default '0001-01-01'</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:date_prescribed date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:date_printed date default NULL,</ViolationValue>
@@ -4728,7 +4726,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:parentID int(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:parentingClasses tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:password varchar(100) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:password varchar(80) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:patientAddress varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:patientCity varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:patientClass char(1) default NULL,</ViolationValue>
@@ -5474,7 +5471,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:phoneNumber varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:phrtNo tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:phrtYes tinyint(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:pin varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:placerGroupNo char(14) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:placerOrderNo char(75) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:pmhxPshxUpdated tinyint(1) default NULL,</ViolationValue>
@@ -5889,7 +5885,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:url_name_password varchar(20) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:url_name_username varchar(20) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:us_num varchar(10) default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:user_name varchar(30) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:username varchar(30) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:vNumber char(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:v_acuteHepatitis tinyint(1) default NULL,</ViolationValue>
@@ -11053,6 +11048,7 @@
         <ViolationValue>/database/mysql/updates/update-2014-11-28.sql:sent_to_born tinyint(1) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2014-11-28.sql:sv_num varchar(10) default '0',</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2014-11-28.sql:us_num varchar(10) default '0',</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2015-11-16.sql:provider_no varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:A1C double(2, 2) default null,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:ABPM bool NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:Ace_RxDecToday enum('Same', 'Increase', 'Decrease', 'Stop', 'Start', 'InClassSwitch', 'null') default null,</ViolationValue>

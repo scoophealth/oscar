@@ -38,12 +38,14 @@ import org.oscarehr.util.SpringUtils;
 import oscar.MyDateFormat;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
+import oscar.login.PasswordHash;
 
 
 /**
  * Helper class for securityaddsecurity.jsp page.
  */
 public class SecurityAddSecurityHelper {
+	
 
 	private org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
 
@@ -77,6 +79,17 @@ public class SecurityAddSecurityHelper {
 		for (int i = 0; i < btNewPasswd.length; i++)
 			sbTemp = sbTemp.append(btNewPasswd[i]);
 
+		String hashedPassword = null;
+		String hashedPin = null;
+		
+		try {
+			hashedPassword = PasswordHash.createHash(request.getParameter("password"));
+			hashedPin = PasswordHash.createHash(request.getParameter("pin"));
+		} catch(Exception e) {
+			MiscUtils.getLogger().error("Error with hashing passwords on this system!",e);
+			return "admin.securityaddsecurity.msgAdditionFailure";
+		}
+		
 		boolean isUserRecordAlreadyCreatedForProvider = securityManager.findByProviderNo(loggedInInfo, request.getParameter("provider_no"))!=null;
 		if (isUserRecordAlreadyCreatedForProvider) return "admin.securityaddsecurity.msgLoginAlreadyExistsForProvider";
 
@@ -85,19 +98,21 @@ public class SecurityAddSecurityHelper {
 
 		Security s = new Security();
 		s.setUserName(request.getParameter("user_name"));
-		s.setPassword(sbTemp.toString());
+		s.setPassword(hashedPassword);
 		s.setProviderNo(request.getParameter("provider_no"));
-		s.setPin(request.getParameter("pin"));
+		s.setPin(hashedPin);
 		s.setBExpireset(request.getParameter("b_ExpireSet") == null ? 0 : Integer.parseInt(request.getParameter("b_ExpireSet")));
 		s.setDateExpiredate(MyDateFormat.getSysDate(request.getParameter("date_ExpireDate")));
 		s.setBLocallockset(request.getParameter("b_LocalLockSet") == null ? 0 : Integer.parseInt(request.getParameter("b_LocalLockSet")));
 		s.setBRemotelockset(request.getParameter("b_RemoteLockSet") == null ? 0 : Integer.parseInt(request.getParameter("b_RemoteLockSet")));
-		
+		s.setStorageVersion(Security.STORAGE_VERSION_2);
     	if (request.getParameter("forcePasswordReset") != null && request.getParameter("forcePasswordReset").equals("1")) {
     	    s.setForcePasswordReset(Boolean.TRUE);
     	} else {
     		s.setForcePasswordReset(Boolean.FALSE);  
         }
+    	s.setPasswordUpdateDate(new java.util.Date());
+    	s.setPinUpdateDate(new java.util.Date());
 		
     	securityManager.saveNewSecurityRecord(loggedInInfo, s);
 
