@@ -25,6 +25,7 @@
 
 package oscar.oscarEncounter.oscarMeasurements.bean;
 
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
@@ -40,6 +41,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Validations;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.util.ConversionUtils;
 
 public class EctMeasurementTypesBeanHandler {
@@ -62,7 +64,11 @@ public class EctMeasurementTypesBeanHandler {
 		MeasurementTypeDao dao = SpringUtils.getBean(MeasurementTypeDao.class);
 		ValidationsDao valDao = SpringUtils.getBean(ValidationsDao.class);
 
-		for (MeasurementType mt : dao.findAll()) {
+		boolean orderById = "true".equals(OscarProperties.getInstance().getProperty("oscarMeasurements.orderGroupById","false"));
+    	
+		List<MeasurementType> types = (orderById)?dao.findAllOrderById():dao.findAllOrderByName();
+		
+		for (MeasurementType mt :types) {
 			String validation = mt.getValidation();
 			if (validation == null || validation.isEmpty()) {
 				continue;
