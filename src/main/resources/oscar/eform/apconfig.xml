@@ -50,6 +50,11 @@
         <ap-output>${last_name}, ${first_name}</ap-output>
     </databaseap>
     <databaseap>
+        <ap-name>current_user_fname_lname</ap-name>
+        <ap-sql>SELECT provider.first_name, provider.last_name FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
+        <ap-output>${first_name} ${last_name}</ap-output>
+    </databaseap>
+    <databaseap>
         <ap-name>current_user_ohip_no</ap-name>
         <ap-sql>SELECT provider.ohip_no FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
         <ap-output>${ohip_no}</ap-output>
