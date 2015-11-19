@@ -1538,6 +1538,11 @@ INSERT INTO `measurementType` (`type`, `typeDisplayName`, `typeDescription`, `me
 ( 'WKED', 'Work/Education', 'NULL', 'Review', '16', '2013-12-30 13:00:00'),
 ( 'WT', 'WT', 'Weight', 'in kg', '5', '2013-02-01 00:00:00');
 
+insert into measurementType VALUES(null, 'PRGT','PRGT','Pregnancy Test','Pregnancy Test','19',now());
+insert into measurementType VALUES(null, 'UDIP','UDIP','Urine Dip Test','Urine Dip Test','19',now());
+insert into measurementType VALUES(null, 'GLMT','GLMT','Glucose Monitor Test','Glucose Monitor Test','19',now());
+insert into measurementType VALUES(null, 'LECM','LECM','Left Eye Check Up Measurement','Left Eye Check Up Measurement','11',now());
+insert into measurementType VALUES(null, 'RECM','RECM','Right Eye Check Up Measurement','Right Eye Check Up Measurement','11',now()); 
 --
 -- Dumping data for table 'measurementCSSLocation'
 --
