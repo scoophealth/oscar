@@ -487,13 +487,19 @@ if (isMobileOptimized) {
 
 <%
 	if (!caseload) {
+        boolean caisiEnabled = (OscarProperties.getInstance().getProperty("ModuleNames", "").indexOf("Caisi") != -1);
+
+        if(caisiEnabled && notOscarView) {
+                //don't refresh for CM view when CAISI enabled
+        } else {
+
 %>
 <c:if test="${empty sessionScope.archiveView or sessionScope.archiveView != true}">
 <%!String refresh = oscar.OscarProperties.getInstance().getProperty("refresh.appointmentprovideradminday.jsp", "-1");%>
 <%="-1".equals(refresh)?"":"<meta http-equiv=\"refresh\" content=\""+refresh+";\">"%>
 </c:if>
 <%
-	}
+	} }
 %>
 
 <script type="text/javascript" src="../share/javascript/Oscar.js" ></script>
