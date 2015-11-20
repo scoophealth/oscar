@@ -22,8 +22,9 @@
 
 	<parameter name="billingreferral_no" isForPrompting="true"
 		class="java.lang.String" />
-	<queryString><![CDATA[select d.lName, d.referralNo, d.fName, d.address as address, d.phone, d.fax from professionalSpecialists d where specId =$P{billingreferral_no}]]></queryString>
+	<queryString><![CDATA[select d.salutation, d.lName, d.referralNo, d.fName, d.address as address, d.phone, d.fax from professionalSpecialists d where specId =$P{billingreferral_no}]]></queryString>
 
+	<field name="salutation" class="java.lang.String" />
 	<field name="lName" class="java.lang.String" />
 	<field name="referralNo" class="java.lang.String" />
 	<field name="fName" class="java.lang.String" />
@@ -51,7 +52,7 @@
 					<font fontName="Droid Sans" pdfFontName="Helvetica-Bold" size="12"
 						isBold="true" isUnderline="false" />
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{lName} + ", " + $F{fName} ]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{salutation}==null)?"":(($F{salutation}.length()>0)?$F{salutation} + " ":"") + $F{fName} + " " + $F{lName} ]]></textFieldExpression>
 			</textField>
 
 
