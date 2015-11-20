@@ -122,6 +122,13 @@ function printAllCheckedLabels() {
     <nested:submit style="border:1px solid #666666;" onclick="openAddSpecialist()">Add</nested:submit>
 </nested:form>
 
+<%
+	if(request.getAttribute("referrals") == null) {
+	%>
+		<h3 style="color:red">No results found</h3>
+	<%	
+	} else {
+%>
 <display:table name="referrals" id="referral" class="its" pagesize="15" style="border:1px solid #666666; width:99%;margin-top:2px;" requestURI="ManageBillingReferral.do?method=list">
 	<%
     	ProfessionalSpecialist	ps = (ProfessionalSpecialist)pageContext.getAttribute("referral");
@@ -156,5 +163,5 @@ function printAllCheckedLabels() {
 		<td class="MainTableBottomRowRightColumn">&nbsp;</td>
 	</tr>
 </table>
-
+<% } %>
 </html:html>
