@@ -72,7 +72,24 @@ function openEditSpecialist(specId) {
 	popupOscarRx(625,1024,'../oscarEncounter/EditSpecialists.do?specId='+specId);
 }
 
+function checkUncheck(referralId) {
+	var checked = $("input[name^='checked_"+referralId+"']").prop("checked");
+
+    $.getJSON("<%= request.getContextPath() %>/admin/ManageBillingReferral.do?method=modifyBatch&id=" + referralId + "&checked=" + checked,
+            function(data,textStatus){
+             updateCheckedList(data);
+   	});	
+}
+
+function clearCheckedLabels(referralId) {
+    $.getJSON("<%= request.getContextPath() %>/admin/ManageBillingReferral.do?method=modifyBatch&clear=true",
+            function(data,textStatus){
+              updateCheckedList(data);
+   	});
+}
+
 function printAllCheckedLabels() {
+	/*
 	var ids = "";
 	$("input[name^='checked_']:checked").each(function(){
 		if(ids.length>0) {
@@ -81,6 +98,21 @@ function printAllCheckedLabels() {
 		ids += $(this).attr("name").substring(8);
 	});
 	location.href='<%=request.getContextPath() %>/printReferralLabelAction.do?ids='+ids;
+	*/
+	$("#checked_items_tbl tbody tr").remove();
+	$("#checked_items_tbl tbody").append("<tr><td>Processing. Refresh to get updated list</td></tr>");
+	location.href='<%=request.getContextPath() %>/printReferralLabelAction.do?useCheckList=true';
+}
+
+function updateCheckedList(data) {
+	$("#checked_items_tbl tbody tr").remove();
+	
+	if(data == null || data.length == 0) {
+		$("#checked_items_tbl tbody").append("<tr><td>-None-</td></tr>");		
+	}
+	for(var x=0;x<data.length;x++) {
+		$("#checked_items_tbl tbody").append("<tr><td>"+data[x].formattedName+"</td></tr>");
+    }
 }
 </script>
 <link href="<html:rewrite page='/css/displaytag.css'/>" rel="stylesheet" ></link>
@@ -138,7 +170,7 @@ function printAllCheckedLabels() {
 		}
     %>
     	
-    <display:column><input type="checkbox" name="checked_${referral.id}"/></display:column>
+    <display:column><input type="checkbox" name="checked_${referral.id}" onChange="checkUncheck('${referral.id}')"/></display:column>
     <display:column><a href="javascript:void(0)" onclick="openEditSpecialist('${referral.id}')"><%=linkName %></a></display:column>
     <display:column property="firstName" title="First Name" />
     <display:column property="lastName" title="Last Name" />
@@ -155,7 +187,34 @@ function printAllCheckedLabels() {
 	</tr>
 	<tr>
 		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
-		<td class="MainTableBottomRowRightColumn"><input type="button" value="Generate Labels" onClick="printAllCheckedLabels()"/></td>
+		<td class="MainTableBottomRowRightColumn">
+			<div id="checked_items">
+				<br/>
+				<h3>Selected Specialists:</h3>
+				<br/>
+				<table id="checked_items_tbl">
+					<tbody>
+					<%
+						List<ProfessionalSpecialist> checkedSpecs = (List<ProfessionalSpecialist>)session.getAttribute("billingReferralAdminCheckList");
+					if(checkedSpecs != null && checkedSpecs.size()>0) {
+						for(ProfessionalSpecialist ps:checkedSpecs) {
+					%>
+						<tr>
+							<td><%=ps.getFormattedName() %></td>
+						</tr>
+					<%} } else { %>
+						<tr>
+							<td>-None-</td>
+						</tr>
+					<% } %>
+					</tbody>
+				</table>
+			</div>
+			<br/>
+			<input type="button" value="Generate Labels" onClick="printAllCheckedLabels()"/>
+			<input type="button" value="Clear List" onClick="clearCheckedLabels()"/>
+			
+		</td>
 	</tr>
 	<tr>
 		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
