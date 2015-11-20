@@ -1,0 +1,190 @@
+******************** BLOOD BANK *******************
+MSH|^~\&|OCF|GBHS-OS|XENOS|GBHS-OS|20120324133708||ORU^R01|Q68569163|T|2.3 
+PID|1||320850^^^GBHS-OS||TESTING^PATHNET||19500117|Male|||246 TESTING DRIVE^^CERNERVILLE^Ontario^H1H1H1^Canada^^^Grey, Owen Sound, C,|Grey, Owen Sound, C,|||English|Married||3347360^^^GBHS-OS^FIN NBR 
+PV1|1|Inpt.|6-1^6105^1^GBHS-OS^^Bed(s)^GBHS-OS|Elective|||00154^Harada^Glenn^K|||Medicine|6-1^^^^^Nurse Unit(s)|||Home|||00154^Harada^Glenn^K|Inpt.Ac.|2012090165970^^^^Visit Id|OHIP|||||||||||||||||||GBHS-OS||Active|||20120128120400||||||2012090165970 
+OBR|1|83204949^HNAM_ORDERID||Group and Rh^Group and Rh|||20120324111600|||||||20120324111600|Blood&Blood|00095^Rudrick^Brian^F||||000002012083000007^HNA_ACCN~2354879^HNA_ACCNID||20120324133707||Blood Bank|Auth (Verified)|Crossmatch Group and Screen&Crossmatch Group and Screen|1^^^20120324111600^^Routine~^^^20120324111600^^Routine||83204946&HNAM_ORDERID|||||||20120324111600 
+OBX|1|CE|A1R^A1R||3^3|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|2|CE|RhC^RhC||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|3|CE|Anti-A^Anti-A||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|4|CE|Anti-D2^Anti-D2||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|5|TXT|ABORh^ABORh||O NEG|||Unknown||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|6|CE|Anti-D1^Anti-D1||0-^0-|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|7|CE|BR^BR||3^3|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|8|CE|Anti-A,B^Anti-A,B||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|9|CE|Anti-B^Anti-B||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion
+
+
+
+
+
+MSH|^~\&|OCF|GBHS-OS|XENOS|GBHS-OS|20120324133709||ORU^R01|Q68569163|T|2.3 
+PID|1||320850^^^GBHS-OS||TESTING^PATHNET||19500117|Male|||246 TESTING DRIVE^^CERNERVILLE^Ontario^H1H1H1^Canada^^^Grey, Owen Sound, C,|Grey, Owen Sound, C,|||English|Married||3347360^^^GBHS-OS^FIN NBR 
+PV1|1|Inpt.|6-1^6105^1^GBHS-OS^^Bed(s)^GBHS-OS|Elective|||00154^Harada^Glenn^K|||Medicine|6-1^^^^^Nurse Unit(s)|||Home|||00154^Harada^Glenn^K|Inpt.Ac.|2012090165970^^^^Visit Id|OHIP|||||||||||||||||||GBHS-OS||Active|||20120128120400||||||2012090165970 
+OBR|1|83204949^HNAM_ORDERID||Group and Rh^Group and Rh|||20120324111600|||||||20120324111600|Blood&Blood|00095^Rudrick^Brian^F||||000002012083000007^HNA_ACCN~2354879^HNA_ACCNID||20120324133707||Blood Bank|Auth (Verified)|Crossmatch Group and Screen&Crossmatch Group and Screen|1^^^20120324111600^^Routine~^^^20120324111600^^Routine||83204946&HNAM_ORDERID|||||||20120324111600 
+OBX|1|CE|A1R^A1R||3^3|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|2|CE|RhC^RhC||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|3|CE|Anti-A^Anti-A||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|4|CE|Anti-D2^Anti-D2||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|5|ST|ABORh^ABORh||O NEG|||Unknown||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|6|CE|Anti-D1^Anti-D1||0-^0-|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|7|CE|BR^BR||3^3|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|8|CE|Anti-A,B^Anti-A,B||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|9|CE|Anti-B^Anti-B||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion
+
+
+******************** GEN LAB **********************
+MSH|^~\&|OCF|GBHS-OS|XENOS|GBHS-OS|20120324142545||ORU^R01|Q68569215|T|2.3 
+PID|1||320950^^^GBHS-OS||POKE^SLOW^TOBY||19890803|Male|||123 WALKING LEASH^^WALKERTOWN^Ontario^W8W8W8^Canada^^^Lambton, Brooke-Alvinston, TP.|Lambton, Brooke-Alvinston, TP.|(519)888-8888^Home||English|Married||3347592^^^GBHS-OS^FIN NBR 
+PV1|1|Inpt.|4-1^4106^1^GBHS-OS^^Bed(s)^GBHS-OS|Urgent|||00154^Harada^Glenn^K|^CNTest^GBHS Phys|00154^Harada^Glenn|Medicine|4-1^^^^^Nurse Unit(s)|||Other|||00154^Harada^Glenn^K|Inpt.Ac.|2012090166202^^^^Visit Id|OHIP|||||||||||||||||||GBHS-OS||Active|||20120316132401||||||2012090166202 
+OBR|1|83204616^HNAM_ORDERID||Glucose Random^Glu Random|||20120323153300|||||||20120323153600|Blood&Blood|00152^Kaal^Nuri||||000002012082000009^HNA_ACCN~2354867^HNA_ACCNID||20120324142544||General Lab|Auth (Verified)||1^^^20120323142300^^Urgent~^^^^^UR|||||||||20120323153300 
+OBX|1|NUM|Glucose Random^Glucose Random||50.0|mmol/L^mmol/L|3.9-7.0^3.9^7.0|CRIT|||Auth (Verified)|||20120324142543|||^^^OSC Fusion 
+NTE|1|Notes|checked 
+NTE|2|Interpretive Data|Glucose: \.br\According to CDA  guidelines,  a random glucose  of greater than 11.0 mmol/L is consistent with a diagnosis of diabetes mellitus.\.br\ 
+
+
+
+MSH|^~\&|OCF|GBHS-OS|XENOS|GBHS-OS|20120324142545||ORU^R01|Q68569216|T|2.3 
+PID|1||320950^^^GBHS-OS||POKE^SLOW^TOBY||19890803|Male|||123 WALKING LEASH^^WALKERTOWN^Ontario^W8W8W8^Canada^^^Lambton, Brooke-Alvinston, TP.|Lambton, Brooke-Alvinston, TP.|(519)888-8888^Home||English|Married||3347592^^^GBHS-OS^FIN NBR 
+PV1|1|Inpt.|4-1^4106^1^GBHS-OS^^Bed(s)^GBHS-OS|Urgent|||00154^Harada^Glenn^K|^CNTest^GBHS Phys|00154^Harada^Glenn|Medicine|4-1^^^^^Nurse Unit(s)|||Other|||00154^Harada^Glenn^K|Inpt.Ac.|2012090166202^^^^Visit Id|OHIP|||||||||||||||||||GBHS-OS||Active|||20120316132401||||||2012090166202 
+OBR|1|83204616^HNAM_ORDERID||Glucose Random^Glu Random|||20120323153300|||||||20120323153600|Blood&Blood|00152^Kaal^Nuri||||000002012082000009^HNA_ACCN~2354867^HNA_ACCNID||20120324142544||General Lab|Auth (Verified)||1^^^20120323142300^^Urgent~^^^^^UR|||||||||20120323153300 
+OBX|1|NM|Glucose Random^Glucose Random||50.0|mmol/L^mmol/L|3.9-7.0^3.9^7.0|CRIT|||Auth (Verified)|||20120324142543|||^^^OSC Fusion 
+NTE|1|Notes|checked 
+NTE|2|Interpretive Data|Glucose: \.br\According to CDA  guidelines,  a random glucose  of greater than 11.0 mmol/L is consistent with a diagnosis of diabetes mellitus.\.br\ 
+
+
+
+
+MSH|^~\&|OCF|GBHS-OS|XENOS|GBHS-OS|20120324142546||ORU^R01|Q68569220|T|2.3 
+PID|1||320950^^^GBHS-OS||POKE^SLOW^TOBY||19890803|Male|||123 WALKING LEASH^^WALKERTOWN^Ontario^W8W8W8^Canada^^^Lambton, Brooke-Alvinston, TP.|Lambton, Brooke-Alvinston, TP.|(519)888-8888^Home||English|Married||3347592^^^GBHS-OS^FIN NBR 
+PV1|1|Inpt.|4-1^4106^1^GBHS-OS^^Bed(s)^GBHS-OS|Urgent|||00154^Harada^Glenn^K|^CNTest^GBHS Phys|00154^Harada^Glenn|Medicine|4-1^^^^^Nurse Unit(s)|||Other|||00154^Harada^Glenn^K|Inpt.Ac.|2012090166202^^^^Visit Id|OHIP|||||||||||||||||||GBHS-OS||Active|||20120316132401||||||2012090166202 
+OBR|1|83204772^HNAM_ORDERID||INR^INR|||20120323153300|||||||20120323153600|Blood&Blood|00152^Kaal^Nuri||||000002012082000009^HNA_ACCN~2354867^HNA_ACCNID||20120324142545||General Lab|Auth (Verified)||1^^^20120323142300^^Urgent~^^^^^UR|||||||||20120323153300 
+OBX|1|NUM|.PT^.PT||12.5|sec^sec|10.3-12.9^10.3^12.9|||? Unknown|Auth (Verified)|||20120324142543|||^^^OSH Auto Coag 
+OBX|2|NUM|INR^INR||1.2||0.9-1.2^0.9^1.2|||? Unknown|Auth (Verified)|||20120324142543|||^^^OSH Auto Coag 
+NTE|1|Interpretive Data|INR\.br\Deep vein thrombosis / Pulmonary embolism           INR   2.0  - 3.0\.br\Post cardiac valve replacement                                 INR   2.5  3.5\.br\
+
+
+
+MSH|^~\&|OCF|GBHS-OS|XENOS|GBHS-OS|20120324142546||ORU^R01|Q68569221|T|2.3 
+PID|1||320950^^^GBHS-OS||POKE^SLOW^TOBY||19890803|Male|||123 WALKING LEASH^^WALKERTOWN^Ontario^W8W8W8^Canada^^^Lambton, Brooke-Alvinston, TP.|Lambton, Brooke-Alvinston, TP.|(519)888-8888^Home||English|Married||3347592^^^GBHS-OS^FIN NBR 
+PV1|1|Inpt.|4-1^4106^1^GBHS-OS^^Bed(s)^GBHS-OS|Urgent|||00154^Harada^Glenn^K|^CNTest^GBHS Phys|00154^Harada^Glenn|Medicine|4-1^^^^^Nurse Unit(s)|||Other|||00154^Harada^Glenn^K|Inpt.Ac.|2012090166202^^^^Visit Id|OHIP|||||||||||||||||||GBHS-OS||Active|||20120316132401||||||2012090166202 
+OBR|1|83204772^HNAM_ORDERID||INR^INR|||20120323153300|||||||20120323153600|Blood&Blood|00152^Kaal^Nuri||||000002012082000009^HNA_ACCN~2354867^HNA_ACCNID||20120324142545||General Lab|Auth (Verified)||1^^^20120323142300^^Urgent~^^^^^UR|||||||||20120323153300 
+OBX|1|NM|.PT^.PT||12.5|sec^sec|10.3-12.9^10.3^12.9|||? Unknown|Auth (Verified)|||20120324142543|||^^^OSH Auto Coag 
+OBX|2|NM|INR^INR||1.2||0.9-1.2^0.9^1.2|||? Unknown|Auth (Verified)|||20120324142543|||^^^OSH Auto Coag 
+NTE|1|Interpretive Data|INR\.br\Deep vein thrombosis / Pulmonary embolism           INR   2.0  - 3.0\.br\Post cardiac valve replacement 
+
+
+
+**************** MICRO **************************
+MSH|^~\&|OCF|HDH|XENOS|GBHS-OS|20120326104324||ORU^R01|Q68569595|T|2.3 
+PID|1||60648^^^HDH||DWARF^PAM||19610920|Female|||579 DISNEY DR^^CERNERVILLE^Ontario^H1H1H1^Canada^^^Grey, Hanover, T,|Grey, Hanover, T,|||English|Married||4232701^^^HDH^FIN NBR PV1|1|Inpt.|Unit One HDH^104^3^HDH^^Bed(s)^HDH|Elective|||00389^Dworkin^Rochelle^L|||Medicine|Unit One HDH^^^^^Nurse Unit(s)|||Home|||00389^Dworkin^Rochelle^L|Inpt.Ac.|2012090037798^^^HDH^Visit Id|OHIP|||||||||||||||||||HDH||Active|||20120128122057||||||2012090037798 
+OBR|1|83205170^HNAM_ORDERID||Culture-Blood^Culture-Blood|||20120325091900|||||||20120325092004|Blood&Blood^^^^^Venous Draw|00442^Stretch^Neal^C||||000002012084000004^HNA_ACCN~2354898^HNA_ACCNID||20120326104323||Micro|F||1^^^20120325091900^^Routine~^^^^^Routine|||||||||20120325091900 
+OBX|1|DOC|GS^GS||GRAM NEGATIVE BACILLI||||||Auth (Verified)|||20120325091900 
+OBX|2|DOC|Final^Final||ESCHERICHIA COLI\.br\*\.br\Testing Site: Stratford General Hospital, 46 General Hospital Drive, Stratford, Ontario N5A 2Y6||||||Auth (Verified)|||20120325091900 
+OBX|3|CE|ORGANISM|11|EC^EC|||||||||20120326104323 
+OBR|2|83205170^HNAM_ORDERID||MIC^MIC|||20120325091900||||||||Blood&Blood^^^^^Venous Draw|00442^Stretch^Neal^C||||000002012084000004^HNA_ACCN~2354898^HNA_ACCNID||20120326104323||Micro|Auth (Verified)|^11^EC&EC|1^^^^^Routine~^^^^^Routine 
+OBX|1|CE|ORGANISM|11|EC^EC|||||||||20120326104323 
+OBX|2|NM|Amp^Amp|11||||R|||Verified|||20120326104300 
+OBX|3|NM|Ceftri^Ceftri|11||||R|||Verified|||20120326104300 
+OBX|4|NM|Cefox^Cefox|11||||R|||Verified|||20120326104300 
+OBX|5|NM|Cefaz^Cefaz|11||||R|||Verified|||20120326104300 
+OBX|6|NM|Cipro^Cipro|11||||S|||Verified|||20120326104300 
+OBX|7|NM|Gent^Gent|11||||S|||Verified|||20120326104300 
+OBX|8|NM|Imi^Imi|11||||S|||Verified|||20120326104300 
+OBX|9|NM|SXT^SXT|11||||S|||Verified|||20120326104300 
+
+
+
+
+MSH|^~\&|OCF|HDH|XENOS|GBHS-OS|20120326104324||ORU^R01|Q68569596|T|2.3 
+PID|1||60648^^^HDH||DWARF^PAM||19610920|Female|||579 DISNEY DR^^CERNERVILLE^Ontario^H1H1H1^Canada^^^Grey, Hanover, T,|Grey, Hanover, T,|||English|Married||4232701^^^HDH^FIN NBR PV1|1|Inpt.|Unit One HDH^104^3^HDH^^Bed(s)^HDH|Elective|||00389^Dworkin^Rochelle^L|||Medicine|Unit One HDH^^^^^Nurse Unit(s)|||Home|||00389^Dworkin^Rochelle^L|Inpt.Ac.|2012090037798^^^HDH^Visit Id|OHIP|||||||||||||||||||HDH||Active|||20120128122057||||||2012090037798 
+OBR|1|83205170^HNAM_ORDERID||Culture-Blood^Culture-Blood|||20120325091900|||||||20120325092004|Blood&Blood^^^^^Venous Draw|00442^Stretch^Neal^C||||000002012084000004^HNA_ACCN~2354898^HNA_ACCNID||20120326104323||Micro|F||1^^^20120325091900^^Routine~^^^^^Routine|||||||||20120325091900 
+OBX|1|ST|GS^GS||GRAM NEGATIVE BACILLI||||||Auth (Verified)|||20120325091900 
+OBX|2|ST|Final^Final||ESCHERICHIA COLI\.br\*\.br\Testing Site: Stratford General Hospital, 46 General Hospital Drive, Stratford, Ontario N5A 2Y6||||||Auth (Verified)|||20120325091900 
+OBX|3|CE|ORGANISM|11|EC^EC|||||||||20120326104323 
+OBR|2|83205170^HNAM_ORDERID||MIC^MIC|||20120325091900||||||||Blood&Blood^^^^^Venous Draw|00442^Stretch^Neal^C||||000002012084000004^HNA_ACCN~2354898^HNA_ACCNID||20120326104323||Micro|Auth (Verified)|^11^EC&EC|1^^^^^Routine~^^^^^Routine 
+OBX|1|CE|ORGANISM|11|EC^EC|||||||||20120326104323 
+OBX|2|NM|Amp^Amp|11||||R|||Verified|||20120326104300 
+OBX|3|NM|Ceftri^Ceftri|11||||R|||Verified|||20120326104300 
+OBX|4|NM|Cefox^Cefox|11||||R|||Verified|||20120326104300 
+OBX|5|NM|Cefaz^Cefaz|11||||R|||Verified|||20120326104300 
+OBX|6|NM|Cipro^Cipro|11||||S|||Verified|||20120326104300 
+OBX|7|NM|Gent^Gent|11||||S|||Verified|||20120326104300 
+OBX|8|NM|Imi^Imi|11||||S|||Verified|||20120326104300 
+OBX|9|NM|SXT^SXT|11||||S|||Verified|||20120326104300 
+
+
+
+
+************** TRANSCRIBED NOTES ***********************
+MSH|^~\&|OCF|GBHS-OS|XENOS|GBHS-OS|20120324143847||MDM^R01|Q68569233|T|2.3 
+PID|1||320937^^^GBHS-OS||TESTING^ESMJORGE||19610324|Male|||456 LATINO LANE^^OWEN SOUND^Ontario^X9X9X9^Canada^^^Grey, Owen Sound, C,|Grey, Owen Sound, C,|(519)123-4567^Home||English|||3347602^^^GBHS-OS^FIN NBR 
+PV1|1|Outpt.|Nuclear Med-OS^^^GBHS-OS^^Ambulatory(s)^GBHS-OS||||00164^Ward^David^M|||||||||||Outpt.|2012090166212^^^^Visit Id|OHIP|||||||||||||||||||GBHS-OS||Active|||20120320122000||||||2012090166212 
+ORC|RE||147300677^HNAM_CEREF~147300677^HNAM_EVENTID||||||20120324143847 
+OBR|1||147300677^HNAM_CEREF~147300677^HNAM_EVENTID|Dis Sum/Transfer Note^Dis Sum/Transfer Note^^^Dis Sum/Transfer Note|||20120324143522|20120320143500||||||||||||||20120324143847||MDOC|Transcribed 
+ZDS|Perform|170^Gazzola^Steve^^^^^^GBHS-OS^^^^DOCNBR|20120324143522|Completed 
+ZDS|Transcribe|170^Gazzola^Steve^^^^^^GBHS-OS^^^^DOCNBR|20120324143847|Completed 
+ZDS|Sign|170^Gazzola^Steve^^^^^^GBHS-OS^^^^DOCNBR|20120324143847|Requested 
+OBX|1|FT|Dis Sum/Transfer Note^Dis Sum/Transfer Note||||||||Transcribed|||20120324143847 
+
+MSH|^~\&||GBHS-OS|||20120105143858||MDM^T02|20120105143858000|P|2.3|1|L
+PID|1||332416^^^GBHS-OS||CC_DOCS^TESTING||201010180000|F|||123 ANY HOSPITAL LANE^^YOURTOWN^ON^H0H0H0|||||||3602141^^^GBHS-OS
+PV1|1|I|4-5^4513^1||||10040^Manwell^ Stuart E|327^Eby^ Donald H|10049^Haider^ Esam M||||||||207^Lackner^ Colin|A||||||||||||||||||||||||||201111250945
+TXA|1|10^Progress Note|TX|201111250945||201201050000|201201051432|201201051438|346^Creighton^Robert|346^Creighton^Robert|99758^Streun^Jane|2801|||0||0|||||346^Creighton
+ZDS|R|10048^Burkhart^ Chadwick||C
+ZDS|R|112^McDougall^ Allan||C
+ZDS|R|130^Becks^ Gregory||C
+ZDS|R|6955^Urson^ Shoshana||C
+ZDS|R|6956^Tullio^ C Gerald||C
+ZDS|R|1052^Edington^ Bruce||C
+ZDS|R|6958^Albert^ A Maha||C
+ZDS|R|259^Thompson^ Ian||C
+ZDS|R|272^Sanborn^ Margaret||C
+OBX|1|ST|10^Progress Note||CC FamDr:McArthur, Anne-Louise ACC Others:   C. BURKHART, MD~A. MCDOUGALL, MD~G. BECKS, MD, FRCP~Urson, Shoshana    THORNHILL~Tullio, Gerald    BRAMPTON~B. EDINGTON, MD~Albert, Maha   MARKHAM~A.I. THOMPSON, MD, CCFP~M.D. SANBORN, MD, CCFP~JUAN CABRILLO, SS OREGON~M. ENRIGHT, MD~DIRK PITT, NUMA~J. OSTRANDER, MD~J. MCCALL, MB, CHB~JEFFREY BARRETT, MD~R. MOISE, MDDictator:Robert Creighton~PROGRESS NOTE~~01/05/2012~TEST INTERFACE NOTE FOR CHRYSTELLE~~R.J. CREIGHTON, MD~RC/js~DOD:  2012-Jan-05~DOT:  2012-Jan-05~AUTHENTICATED, TRANSCRIBED BUT NOT READ~~DOC ID:  2801/VOICE ID:  0~VOICE ID:  0||||||PR|||201201051438|346^Creighton^Robert
+
+
+
+**************** RADNET **************************
+MSH|^~\&|OCF|GBHS-OS|XENOS|GBHS-OS|20120325112627||ORU^R01|Q68569439|T|2.3 
+PID|1||320965^^^GBHS-OS||RADNET^EDS||19351010|Male|||567 SHOCK LANE^^TACHYVILLE^Ontario^X0X0X0^Canada^^^Grey, Blue Mountains, T,|Grey, Blue Mountains, T,|(000)000-0519^Home||English|||3347637^^^GBHS-OS^FIN NBR 
+PV1|1|Outpt.|E.C.G.-OS^^^GBHS-OS^^Ambulatory(s)^GBHS-OS||||00154^Harada^Glenn^K||00154^Harada^Glenn|||||||||Outpt.|2012090166247^^^^Visit Id|OHIP|||||||||||||||||||GBHS-OS||Active|||20120325082611||||||2012090166247 
+ORC|RE OBR|1|83205093^HNAM_ORDERID||ECG^ECG|||20120325090125|20120325090127|||||||Rad Type&Rad Type|00154^Harada^Glenn^K||||00000EG20120002432^HNA_ACCN~1177642^HNA_PACSID|ECG 1|20120325090129||EDS|Auth (Verified)||1^^^^^Routine|||Walk|^Reason not specified by Physician 
+OBX|1|FT|Read^Read||testing||||||Auth (Verified)|||20120325112626 
+NTE|1|Signature Line|    Dictated By:  Test, Radiologist Phase I\.br\ Transcribed By:  SMM   03/25/09 11:22:49\.br\  Signed Out By:  Mcneill, Sheila M\.br\    Signed Date:  03/25/09 11:26:26  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
