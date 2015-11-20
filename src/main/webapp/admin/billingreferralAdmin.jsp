@@ -45,8 +45,9 @@
 <title>Referral Doctor</title>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 
-<script type="text/javascript" language="JavaScript" src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" language="JavaScript" src="../share/javascript/Oscar.js"></script>
+
+<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js" type="text/javascript"></script>
 
 <script>
 
@@ -71,6 +72,16 @@ function openEditSpecialist(specId) {
 	popupOscarRx(625,1024,'../oscarEncounter/EditSpecialists.do?specId='+specId);
 }
 
+function printAllCheckedLabels() {
+	var ids = "";
+	$("input[name^='checked_']:checked").each(function(){
+		if(ids.length>0) {
+			ids+=",";
+		}
+		ids += $(this).attr("name").substring(8);
+	});
+	location.href='<%=request.getContextPath() %>/printReferralLabelAction.do?ids='+ids;
+}
 </script>
 <link href="<html:rewrite page='/css/displaytag.css'/>" rel="stylesheet" ></link>
 </head>
@@ -120,6 +131,7 @@ function openEditSpecialist(specId) {
 		}
     %>
     	
+    <display:column><input type="checkbox" name="checked_${referral.id}"/></display:column>
     <display:column><a href="javascript:void(0)" onclick="openEditSpecialist('${referral.id}')"><%=linkName %></a></display:column>
     <display:column property="firstName" title="First Name" />
     <display:column property="lastName" title="Last Name" />
@@ -133,6 +145,10 @@ function openEditSpecialist(specId) {
     <display:column title="Label" url="/printReferralLabelAction.do" paramId="billingreferralNo" paramProperty="id">label</display:column>
 </display:table>
 		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn"><input type="button" value="Generate Labels" onClick="printAllCheckedLabels()"/></td>
 	</tr>
 	<tr>
 		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
