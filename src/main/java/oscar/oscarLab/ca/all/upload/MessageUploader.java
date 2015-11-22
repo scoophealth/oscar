@@ -140,9 +140,9 @@ public final class MessageUploader {
 				}
             }
             //logger.debug("docNums:");
-            for (int i=0; i < docNums.size(); i++) {
+           // for (int i=0; i < docNums.size(); i++) {
 				//logger.debug(i + " " + docNums.get(i));
-			}
+			//}
 
 			try {
 				// reformat date
