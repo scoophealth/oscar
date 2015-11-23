@@ -49,6 +49,29 @@ public class MeasurementTypeDao extends AbstractDao<MeasurementType> {
 		return (results);
 	}
 	
+	public List<MeasurementType> findAllOrderByName() {
+		String sqlCommand = "select x from " + modelClass.getSimpleName() + " x order by x.typeDisplayName";
+
+		Query query = entityManager.createQuery(sqlCommand);
+
+		
+		List<MeasurementType> results = query.getResultList();
+
+		return (results);
+	}
+	
+	public List<MeasurementType> findAllOrderById() {
+		String sqlCommand = "select x from " + modelClass.getSimpleName() + " x order by x.id";
+
+		Query query = entityManager.createQuery(sqlCommand);
+
+		
+		List<MeasurementType> results = query.getResultList();
+
+		return (results);
+	}
+	
+	
 	public List<MeasurementType> findByType(String type) {
 		String sqlCommand = "select x from " + modelClass.getSimpleName()+" x where x.type=?1";
 
