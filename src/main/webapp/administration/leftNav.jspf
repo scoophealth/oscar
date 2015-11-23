@@ -627,12 +627,17 @@ String curProvider_no = (String)session.getAttribute("user");
 						key="oscarEncounter.Index.btnCustomize" /> <bean:message
 						key="oscar.admin.diseaseRegistryQuickList" /></a></li>
 					</security:oscarSec>
-					
+										
 					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.measurements" rights="r" reverse="<%=false%>">	
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/oscarEncounter/oscarMeasurements/Customization.jsp"><bean:message
 						key="oscarEncounter.Index.btnCustomize" /> <bean:message
 						key="admin.admin.oscarMeasurements" /></a></li>
+					</security:oscarSec>
+					
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">	
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/oscarPrevention/PreventionListManager.jsp">
+						<bean:message key="oscarprevention.preventionlistmanager.title" /></a></li>
 					</security:oscarSec>
 					
 					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">	
