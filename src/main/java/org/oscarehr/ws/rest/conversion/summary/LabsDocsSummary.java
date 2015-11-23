@@ -28,6 +28,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -69,9 +70,7 @@ public class LabsDocsSummary implements Summary {
 		
 		CommonLabResultData comLab = new CommonLabResultData();
         ArrayList<LabResultData> labs = comLab.populateLabResultsData(loggedInInfo, "",""+demographicNo, "", "","","U");
-        
-        Collections.sort(labs);
-        
+                
 		LinkedHashMap<String,LabResultData> accessionMap = new LinkedHashMap<String,LabResultData>();
 		for (int i = 0; i < labs.size(); i++) {
 			LabResultData result = labs.get(i);
@@ -189,6 +188,14 @@ public class LabsDocsSummary implements Summary {
 
 
 		}
+
+		
+		Collections.sort(list, Collections.reverseOrder(new Comparator<SummaryItemTo1>() {
+			  public int compare(SummaryItemTo1 o1, SummaryItemTo1 o2) {
+			      return o1.getDate().compareTo(o2.getDate());
+			  }
+		}));
+		
 		
 		
 		return summary;
