@@ -273,6 +273,20 @@ function signOffHrm(reportId) {
 function revokeSignOffHrm(reportId) {
 	doSignOff(reportId, false);
 }
+
+function setDescription(reportId) {
+	var comment = jQuery("#descriptionField_" + reportId + "_hrm").val();
+	jQuery.ajax({
+		type: "POST",
+		url: "<%=request.getContextPath() %>/hospitalReportManager/Modify.do",
+		data: "method=setDescription&reportId=" + reportId + "&description=" + comment,
+		success: function(data) {
+			if (data != null)
+				$("descriptionstatus" + reportId).innerHTML = data;
+		}
+	});
+}
+
 </script>
 </head>
 <body>
@@ -487,6 +501,16 @@ function revokeSignOffHrm(reportId) {
 		</tr>
 			
 	</table>
+</div>
+
+<div id="commentBox">
+Set description to this report:<br />
+<input type="text" id="descriptionField_<%=hrmReportId %>_hrm" size="100" value="<%=StringEscapeUtils.escapeHtml(hrmDocument.getDescription())%>"/><br />
+
+ <div class="boxButton">
+   <input type="button" onClick="setDescription('<%=hrmReportId %>')" value="Set Description" /><span id="descriptionstatus<%=hrmReportId %>"></span><br /><br />
+ </div>
+
 </div>
 
 <div id="commentBox">

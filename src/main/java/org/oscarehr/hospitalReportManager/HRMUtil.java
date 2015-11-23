@@ -91,6 +91,7 @@ public class HRMUtil {
 			curht.put("report_type", hrmDocument.getReportType());
 			curht.put("report_status", hrmDocument.getReportStatus());
 			curht.put("category", category);
+			curht.put("description", hrmDocument.getDescription());
 			
 			StringBuilder duplicateLabIdQueryString=new StringBuilder();
 			ArrayList<Integer> duplicateIdList=duplicateLabIds.get(duplicateKey);
