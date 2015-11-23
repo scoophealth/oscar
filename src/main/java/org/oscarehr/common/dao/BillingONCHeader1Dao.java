@@ -254,8 +254,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         GstControl gstControl = gstControlDao.find(new Integer(1));
         BigDecimal gst;
         BigDecimal gstTotal;
-        BigDecimal total = new BigDecimal(0.0);
-        BigDecimal percent = new BigDecimal(0.0);
+        BigDecimal total = new BigDecimal("0");
+        BigDecimal percent = new BigDecimal("0");
         BillingPercLimit billingPerc;
         ArrayList<BillingService> aPercentCodes = new ArrayList<BillingService>();
         BillingService billingservice = null;
@@ -270,8 +270,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
             else {
                 if( billingservice != null && billingservice.getGstFlag() ) {
                     gst = gstControl.getGstPercent();
-                    gst = gst.divide(new BigDecimal(100.0));
-                    gstTotal = gst.multiply(new BigDecimal(Double.parseDouble(billingservice.getValue())));
+                    gst = gst.divide(BigDecimal.valueOf(100.0));
+                    gstTotal = gst.multiply(new BigDecimal(billingservice.getValue()));
                     total = total.add(gstTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
                 }
 
@@ -283,12 +283,12 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         BigDecimal percBase = total;
         BigDecimal percentCalc;
         for( BillingService percentcode : aPercentCodes ) {
-            percent = new BigDecimal(Double.parseDouble(percentcode.getPercentage())).setScale(2, BigDecimal.ROUND_HALF_UP);
+            percent = new BigDecimal(percentcode.getPercentage()).setScale(2, BigDecimal.ROUND_HALF_UP);
             percentCalc = percBase.multiply(percent).setScale(2, BigDecimal.ROUND_HALF_UP);
             billingPerc = percentcode.getBillingPercLimit();
             if( billingPerc != null ) {
-                percentCalc = percentCalc.min(new BigDecimal(Double.parseDouble(billingPerc.getMax())));
-                percentCalc = percentCalc.max(new BigDecimal(Double.parseDouble(billingPerc.getMin())));
+                percentCalc = percentCalc.min(new BigDecimal(billingPerc.getMax()));
+                percentCalc = percentCalc.max(new BigDecimal(billingPerc.getMin()));
             }
 
             total = total.add(percentCalc);

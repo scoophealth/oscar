@@ -1744,7 +1744,7 @@ public class MSPReconcile {
 	 *oscar.oscarBilling.ca.bc.MSP.MSPReconcile.convCurValue(
 	 */
 	public static String convCurValue(String value) {
-		BigDecimal curValue = new BigDecimal(0.0);
+		BigDecimal curValue = new BigDecimal("0");
 		if (value == null || value.equals("")) {
 			return "0.0";
 		}
@@ -1765,7 +1765,7 @@ public class MSPReconcile {
 			}
 
 			double newDouble = dblValue * .01;
-			curValue = new BigDecimal(newDouble).setScale(2, BigDecimal.ROUND_HALF_UP);
+			curValue = BigDecimal.valueOf(newDouble).setScale(2, BigDecimal.ROUND_HALF_UP);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
 			return curValue.toString();

@@ -220,10 +220,9 @@ public class WcbSb {
 	public BigDecimal getBillingAmountForFee1BigDecimal() {
 		BigDecimal bdFee = null;
 		try {
-			double dFee = Double.parseDouble(billamountforfeeitem1);
-			bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+			bdFee = new BigDecimal(billamountforfeeitem1).setScale(2, BigDecimal.ROUND_HALF_UP);
 		} catch (Exception e) {
-			bdFee = new BigDecimal(0.00).setScale(2, BigDecimal.ROUND_HALF_UP);
+			bdFee = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
 		}
 		return bdFee;
 	}
