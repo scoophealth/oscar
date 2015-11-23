@@ -755,7 +755,7 @@ public class BillingCorrectionPrep {
 
 	private String sumFee(Vector vecFee) {
 		String ret = "";
-		BigDecimal fee = new BigDecimal(Double.parseDouble("0.00")).setScale(4,
+		BigDecimal fee = new BigDecimal("0.00").setScale(4,
 				BigDecimal.ROUND_HALF_UP);
 		for (int i = 0; i < vecFee.size(); i++) {
 			String temp = (String) vecFee.get(i);
@@ -765,7 +765,7 @@ public class BillingCorrectionPrep {
 			if (temp.indexOf(".") < 0) {
 				temp = temp + ".00";
 			}
-			BigDecimal tFee = new BigDecimal(Double.parseDouble(temp))
+			BigDecimal tFee = new BigDecimal(temp)
 					.setScale(4, BigDecimal.ROUND_HALF_UP);
 			fee = fee.add(tFee);
 		}

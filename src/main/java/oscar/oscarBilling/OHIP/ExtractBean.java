@@ -390,7 +390,7 @@ public class ExtractBean extends Object implements Serializable {
 					count = 6 - fee.length();
 					apptDate = UtilDateUtilities.DateToString(bd.getAppointmentDate(), "yyyyMMdd");
 					dFee = Double.parseDouble(fee);
-					bdFee = new BigDecimal(dFee).setScale(2,
+					bdFee = BigDecimal.valueOf(dFee).setScale(2,
 							BigDecimal.ROUND_HALF_UP);
 					BigTotal = BigTotal.add(bdFee);
 					
@@ -412,7 +412,7 @@ public class ExtractBean extends Object implements Serializable {
 			flagOrder = 4 - pCount.length();
 			secondFlag = 5 - rCount.length();
 			thirdFlag = 4 - hcCount.length();
-			percent = new BigDecimal(0.01)
+			percent = BigDecimal.valueOf(0.01)
 					.setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigTotal = BigTotal.multiply(percent);
 			value += buildTrailer();

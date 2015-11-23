@@ -2932,7 +2932,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 				BigDecimal btotal = new BigDecimal(0);
 				// must use 100.0 otherwise result will be an int
-				BigDecimal gstFactor = new BigDecimal(1 + gstControlDao.find(1).getGstPercent().intValue() / 100.0);
+				BigDecimal gstFactor = BigDecimal.valueOf(1 + gstControlDao.find(1).getGstPercent().intValue() / 100.0);
 				ArrayList<String[]> percentUnits = new ArrayList<String[]>();
 				for (int i = 0; i < bcodes.length; i++) {
 					if (StringUtils.isBlank(bcodes[i])) continue;

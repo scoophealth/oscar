@@ -45,12 +45,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Vector;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.rs.security.oauth.client.OAuthClientUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -59,8 +59,8 @@ import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcClientLite;
-import org.apache.cxf.jaxrs.client.WebClient;
-import org.apache.cxf.rs.security.oauth.client.OAuthClientUtils;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.oscarehr.PMmodule.caisi_integrator.RemoteDrugAllergyHelper;
 import org.oscarehr.app.AppOAuth1Config;
 import org.oscarehr.common.dao.AppDefinitionDao;
@@ -629,7 +629,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
     	            object = callback.waitForResponse();
     	        } catch (TimeoutException e) {
     	            log2.debug("No response from server."+server_url);
-    	        }catch(Throwable ethrow){
+    	        }catch(Exception ethrow){
     	            log2.debug("Throwing error."+ethrow.getMessage());
     	        }
     	        result = (Vector)object;

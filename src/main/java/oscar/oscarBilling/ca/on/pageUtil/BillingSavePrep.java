@@ -327,9 +327,9 @@ public class BillingSavePrep {
 		// _logger.info("No billing item for billing # " + itemNum);
 
 		for (int i = 0; i < vecServiceCode.size(); i++) { // recordCount
-			BigDecimal bdEachPrice = new BigDecimal(Double.parseDouble((String) vecServiceCodePrice.get(i))).setScale(
+			BigDecimal bdEachPrice = new BigDecimal((String) vecServiceCodePrice.get(i)).setScale(
 					2, BigDecimal.ROUND_HALF_UP);
-			BigDecimal bdEachUnit = new BigDecimal(Double.parseDouble((String) vecServiceCodeUnit.get(i))).setScale(2,
+			BigDecimal bdEachUnit = new BigDecimal((String) vecServiceCodeUnit.get(i)).setScale(2,
 					BigDecimal.ROUND_HALF_UP);
 			BigDecimal bdEachTotal = bdEachPrice.multiply(bdEachUnit).setScale(2, BigDecimal.ROUND_HALF_UP);
 

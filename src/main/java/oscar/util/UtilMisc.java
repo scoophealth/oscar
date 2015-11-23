@@ -426,7 +426,7 @@ public class UtilMisc {
    * @return double
    */
   public static double toCurrencyDouble(double value){
-    BigDecimal bd = new BigDecimal(value );
+    BigDecimal bd = BigDecimal.valueOf(value );
     bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
     return bd.doubleValue();
   }
