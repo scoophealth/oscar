@@ -167,15 +167,16 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 				String reportStatus = hrmDocument.getReportStatus();
 				String dispFilename = hrmDocument.getReportType();
 				String dispDocNo    = hrmDocument.getId().toString();
-
+				String description = hrmDocument.getDescription();
 				
-				title = StringUtils.maxLenString(dispFilename, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
-
+				String t = StringUtils.isNullOrEmpty(description)?dispFilename:description;
 				if (reportStatus != null && reportStatus.equalsIgnoreCase("C")) {
-					title = StringUtils.maxLenString("(Cancelled) " + dispFilename, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+					t = "(Cancelled) " + t;
 				}
 
-								DateFormat formatter = new SimpleDateFormat(dbFormat);
+				title = StringUtils.maxLenString(t, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+				
+				DateFormat formatter = new SimpleDateFormat(dbFormat);
 				String dateStr = hrmDocument.getTimeReceived().toString();
 				NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 				try {
