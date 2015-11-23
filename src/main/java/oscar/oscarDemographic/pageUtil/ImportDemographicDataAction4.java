@@ -288,7 +288,7 @@ import cdsDt.PersonNameStandard.OtherNames;
 
         //channel warnings and importlog to browser
         request.setAttribute("warnings",warnings);
-        if (importLog!=null) request.setAttribute("importlog",importLog.getPath());
+        if (importLog!=null) request.setAttribute("importlog",importLog.getName());
 
         return mapping.findForward("success");
     }

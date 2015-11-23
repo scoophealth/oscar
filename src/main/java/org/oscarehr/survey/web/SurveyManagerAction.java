@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -980,7 +981,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		try {
 			response.setContentType("APPLICATION/OCTET-STREAM");
 			String strProjectInfoPageHeader = "Attachment;Filename=" + id + ".csv";
-			response.setHeader("Content-Disposition", strProjectInfoPageHeader);
+			response.setHeader("Content-Disposition", URLEncoder.encode(strProjectInfoPageHeader,"UTF-8") );
 			this.oscarFormManager.generateCSV(Integer.valueOf(id), response.getOutputStream());
 		}catch(IOException e) {
 			MiscUtils.getLogger().error("Error", e);
@@ -994,7 +995,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		try {
 			response.setContentType("APPLICATION/OCTET-STREAM");
 			String strProjectInfoPageHeader = "Attachment;Filename=" + id + ".csv";
-			response.setHeader("Content-Disposition", strProjectInfoPageHeader);
+			response.setHeader("Content-Disposition", URLEncoder.encode(strProjectInfoPageHeader,"UTF-8"));
 			this.oscarFormManager.generateInverseCSV(Integer.valueOf(id), response.getOutputStream());
 		}catch(IOException e) {
 			MiscUtils.getLogger().error("Error", e);

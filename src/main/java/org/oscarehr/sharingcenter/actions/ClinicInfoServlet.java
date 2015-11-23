@@ -72,9 +72,8 @@ public class ClinicInfoServlet extends Action {
             clinicDao.persist(newInfo);
         }
 
-        response.sendRedirect(request.getHeader("referer"));
+        return new ActionForward("/administration/index.jsp?show=sharingCenterMenu&load=scManageClinicLink");
         
-        return null;
     }
 
 }

@@ -70,6 +70,10 @@ GregorianCalendar cal = new GregorianCalendar();
 int curYear = cal.get(Calendar.YEAR);
 int curMonth = (cal.get(Calendar.MONTH)+1);
 int curDay = cal.get(Calendar.DAY_OF_MONTH);
+
+String showMenu=request.getParameter("show");
+String loadPage=request.getParameter("load");
+
 %>
 
 <!doctype html>
@@ -263,6 +267,46 @@ i[class*='icon-']:hover {color:#0088cc;}
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.js"></script>
 
+<script>
+
+	$(document).ready(function() {
+		var menuToShow = '<%=showMenu%>';
+		var pageToLoad = '<%=loadPage%>';
+		
+		if( menuToShow.length > 0 && $("#" + menuToShow).length) {
+		
+			$("#" + menuToShow).collapse('show');
+			if(pageToLoad.length > 0 && $("#" + pageToLoad).length) {
+				//is it an xlink or content link?
+				var theRel = $('#' + pageToLoad).attr("rel");
+				if(theRel == undefined) {
+					//content link
+					$("#dynamic-content").load($('#' + pageToLoad).attr("href"), 
+							function(response, status, xhr) {
+						  		if (status == "error") {
+							    	var msg = "Sorry but there was an error: ";
+							    	$("#dynamic-content").html(msg + xhr.status + " " + xhr.statusText);
+								}
+			
+						  		$("html, body").animate({ scrollTop: 0 }, "slow");
+					});
+					
+				} else {
+					//xlink
+					$("#dynamic-content").html('<iframe id="myFrame" name="myFrame" frameborder="0" width="950" height="1000" src="'+theRel+'">');
+					$("html, body").animate({ scrollTop: 0 }, "slow");
+				}
+				//alert(theRel);
+				/*
+				
+				*/
+			}
+		} 
+	
+		
+	});
+	
+</script>
 <oscar:customInterface section="main"/> <!--needs to be in header-->
 </head>
 
@@ -304,9 +348,6 @@ i[class*='icon-']:hover {color:#0088cc;}
     
     <!-- ****DYNAMIC CONTENT**** -->
 <%
-String showMenu=request.getParameter("show");
-String loadPage=request.getParameter("load");
-
 if(showMenu==null && loadPage==null){
 %>
 <div class="row-fluid">

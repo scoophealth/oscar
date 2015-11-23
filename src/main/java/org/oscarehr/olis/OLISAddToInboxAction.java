@@ -55,7 +55,7 @@ public class OLISAddToInboxAction extends DispatchAction {
 		if (pAck != null && pAck.equals("true")) {
 			doAck = true;
 		}
-
+		
 		String fileLocation = System.getProperty("java.io.tmpdir") + "/olis_" + uuidToAdd + ".response";
 		File file = new File(fileLocation);
 		OLISHL7Handler msgHandler = (OLISHL7Handler) HandlerClassFactory.getHandler("OLIS_HL7");
