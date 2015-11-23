@@ -83,6 +83,7 @@
 
 	
 	SimpleDateFormat dateFormatter2 = new SimpleDateFormat("EEE, d MMM yyyy");
+	SimpleDateFormat timeFormatter2 = new SimpleDateFormat("h:mm aaa");
 	
 	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
 	Appointment appt = appointmentDao.find(Integer.parseInt(strAppointmentNo));
@@ -223,7 +224,7 @@
 	
 	<tr> <!-- appt date and time-->
 		<td colspan="2">
-			<b>Appointment Date</b>: <span style="text-decoration: underline;"><%=dateFormatter2.format(appt.getAppointmentDate()) %> at <%=timeFormatter.format(appt.getStartTime()) %><span>
+			<b>Appointment Date</b>: <span style="text-decoration: underline;"><%=dateFormatter2.format(appt.getAppointmentDate()) %> at <%=timeFormatter2.format(appt.getStartTime()) %><span>
 		</td>
 	</tr>
 	
