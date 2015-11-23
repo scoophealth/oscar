@@ -36,6 +36,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -70,7 +71,7 @@ public class EctAddShortMeasurementAction extends DispatchAction{
        String followUpType =  request.getParameter("followupType");//"FLUF";
        String followUpValue = request.getParameter("followupValue"); //"L1";
        String[] demos = request.getParameterValues("demos");
-       String id = request.getParameter("id");
+       Integer id = Integer.parseInt(request.getParameter("id"));
        String providerNo = (String) request.getSession().getAttribute("user");
   
        String comment = request.getParameter("message");
@@ -78,7 +79,7 @@ public class EctAddShortMeasurementAction extends DispatchAction{
            FollowupManagement fup = new FollowupManagement();
            MiscUtils.getLogger().debug("followUpType:"+followUpType+" followUpValue: "+followUpValue+" demos:"+demos+" providerNo:"+providerNo+" comment:"+comment);
            fup.markFollowupProcedure(followUpType,followUpValue,demos,providerNo,new Date(),comment);
-           response.getWriter().print("id="+id+"&followupValue="+followUpValue+"&Date="+UtilDateUtilities.DateToString(new Date()));        
+           response.getWriter().print("id="+id+"&followupValue="+StringEscapeUtils.escapeJavaScript(followUpValue)+"&Date="+UtilDateUtilities.DateToString(new Date()));        
        }
        return null;
     }

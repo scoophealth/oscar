@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Date;
@@ -54,6 +55,7 @@ import javax.servlet.http.HttpSession;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -1154,7 +1156,7 @@ public class ManageDocumentAction extends DispatchAction {
         Integer pn = Integer.parseInt(pageNum);
 
         response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "inline; filename=\"" + pdfName + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf\"");
+        response.setHeader("Content-Disposition", "inline; filename=\"" + URLEncoder.encode(pdfName,"UTF-8") + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf\"");
         
         com.itextpdf.text.pdf.PdfCopy extractCopy = null;
         com.itextpdf.text.Document document = null;
@@ -1171,7 +1173,7 @@ public class ManageDocumentAction extends DispatchAction {
 
         } catch (Exception ex) {
             response.setContentType("text/html");
-            response.getWriter().print(props.getString("dms.incomingDocs.errorInOpening") + pdfName);
+            response.getWriter().print(props.getString("dms.incomingDocs.errorInOpening") + StringEscapeUtils.escapeJavaScript(pdfName));
             response.getWriter().print("<br>"+props.getString("dms.incomingDocs.PDFCouldBeCorrupted"));
 
             MiscUtils.getLogger().error("Error", ex);
@@ -1231,7 +1233,7 @@ public class ManageDocumentAction extends DispatchAction {
 
         response.setContentType(contentType);
         response.setContentLength((int) file.length());
-        response.setHeader("Content-Disposition", "inline; filename=" + pdfName);
+        response.setHeader("Content-Disposition", "inline; filename=" + URLEncoder.encode(pdfName,"UTF-8"));
 
         BufferedInputStream bfis = null;
         ServletOutputStream outs = response.getOutputStream();
@@ -1283,7 +1285,7 @@ public class ManageDocumentAction extends DispatchAction {
 
 
                 response.setContentType("image/png");
-                response.setHeader("Content-Disposition", "inline;filename=" + pdfName);
+                response.setHeader("Content-Disposition", "inline;filename=" + URLEncoder.encode(pdfName,"UTF-8"));
                 org.apache.commons.io.IOUtils.copy(bfis,outs);
                 outs.flush();
                 
