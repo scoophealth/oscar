@@ -69,6 +69,8 @@ public class HRMModifyDocumentAction extends DispatchAction {
 				return addComment(mapping, form, request, response);
 			else if (method.equalsIgnoreCase("deleteComment"))
 				return deleteComment(mapping, form, request, response);
+			else if (method.equalsIgnoreCase("setDescription"))
+				return setDescription(mapping, form, request, response);
 		}
 
 		return mapping.findForward("ajax");
@@ -349,7 +351,33 @@ public class HRMModifyDocumentAction extends DispatchAction {
 		return mapping.findForward("ajax");
 	}
 
+	public ActionForward setDescription(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		String documentId = request.getParameter("reportId");
+		String descriptionString = request.getParameter("description");
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_hrm", "w", null)) {
+        	throw new SecurityException("missing required security object (_hrm)");
+        }
+		
+		try {
+			boolean updated=false;
+			HRMDocument document = hrmDocumentDao.find(Integer.parseInt(documentId));
+			if(document != null) {
+				document.setDescription(descriptionString);
+				hrmDocumentDao.merge(document);
+				updated=true;
+			}
+			request.setAttribute("success", updated);
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Couldn't set description for HRM document", e);
+			request.setAttribute("success", false);
+		}
+		
+		return mapping.findForward("ajax");
+	}
+	
 
 
 }
