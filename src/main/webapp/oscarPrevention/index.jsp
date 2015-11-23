@@ -34,6 +34,7 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
+<%@page import="org.oscarehr.managers.PreventionManager" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -63,7 +64,7 @@ if(!authed) {
   org.oscarehr.common.model.Demographic demo = demoData.getDemographic(loggedInInfo, demographic_no);
   String hin = demo.getHin()+demo.getVer();
   String mrp = demo.getProviderNo();
-
+  PreventionManager preventionManager = SpringUtils.getBean(PreventionManager.class);
 
   PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
   ArrayList<HashMap<String,String>> prevList = pdc.getPreventions();
@@ -460,12 +461,17 @@ text-align:left;
 		<ul>
 			<%for (int i = 0 ; i < prevList.size(); i++){
 				HashMap<String,String> h = prevList.get(i);
-                String prevName = h.get("name");%>
-			<li style="margin-top: 2px;"><a
-				href="javascript: function myFunction() {return false; }"
-				onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
-			<%=prevName%> </a></li>
-			<%}%>
+                String prevName = h.get("name");
+                           
+	            if(!preventionManager.hideItem(prevName)){%>
+					<li style="margin-top: 2px;"><a
+						href="javascript: function myFunction() {return false; }"
+						onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
+					<%=prevName%> </a></li>
+				<%
+				}
+			}
+			%>
 		</ul>
 		</div>
 		</div>
