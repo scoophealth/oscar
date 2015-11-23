@@ -320,9 +320,7 @@ function printIframe(){
 			}
 	}
 
-
 function printPaste2Parent(print){
-
     //console.log("in printPaste2Parent");
    try{
       text =""; // "****<%=oscar.oscarProvider.data.ProviderData.getProviderName(bean.getProviderNo())%>********************************************************************************";
@@ -346,11 +344,14 @@ function printPaste2Parent(print){
       else if( window.parent.opener.document.encForm != undefined ){
           //oscarLog("4");
         window.parent.opener.document.encForm.enTextarea.value = window.parent.opener.document.encForm.enTextarea.value + text;
+      }else if( window.parent.opener.document.getElementById("noteEditor") != undefined ){
+    	window.parent.opener.document.getElementById("noteEditor").value = window.parent.opener.document.getElementById("noteEditor").value + text; 
       }
    }catch (e){
       alert ("ERROR: could not paste to EMR");
    }
    if (print) { printIframe(); }
+   
 }
 
 
