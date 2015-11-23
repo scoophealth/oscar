@@ -85,7 +85,7 @@ public class TimingOutCallback implements AsyncCallback {
 
     private final long timeout;
     public Object result;
-    private Throwable error;
+    private Exception error;
     private boolean responseSeen;
 
     /** Waits the specified number of milliseconds for a response.
@@ -97,9 +97,9 @@ public class TimingOutCallback implements AsyncCallback {
     /** Called to wait for the response.
      * @throws InterruptedException The thread was interrupted.
      * @throws TimeoutException No response was received after waiting the specified time.
-     * @throws Throwable An error was returned by the server.
+     * @throws Exception An error was returned by the server.
      */
-    public synchronized Object waitForResponse() throws Throwable {
+    public synchronized Object waitForResponse() throws Exception {
         if (!responseSeen) {
             wait(timeout);
             if (!responseSeen) {
@@ -112,7 +112,7 @@ public class TimingOutCallback implements AsyncCallback {
         return result;
     }
 
-    public synchronized void handleError(XmlRpcRequest pRequest, Throwable pError) {
+    public synchronized void handleError(XmlRpcRequest pRequest, Exception pError) {
         responseSeen = true;
         error = pError;
         notify();

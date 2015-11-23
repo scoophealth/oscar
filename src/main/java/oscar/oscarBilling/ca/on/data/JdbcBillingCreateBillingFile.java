@@ -73,8 +73,8 @@ public class JdbcBillingCreateBillingFile {
 	private BillingONHeaderDao headerDao = SpringUtils.getBean(BillingONHeaderDao.class);
 	private BillingONFilenameDao filenameDao = SpringUtils.getBean(BillingONFilenameDao.class);
 	private String batchHeader;
-	private BigDecimal bdFee = new BigDecimal((double) 0).setScale(2, BigDecimal.ROUND_HALF_UP);
-	private BigDecimal BigTotal = new BigDecimal((double) 0).setScale(2, BigDecimal.ROUND_HALF_UP);
+	private BigDecimal bdFee = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
+	private BigDecimal BigTotal = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
 	private DateRange dateRange;
 	public String[] dbParam;
 	private double dFee;
@@ -422,7 +422,7 @@ public class JdbcBillingCreateBillingFile {
 			// start here
 			value = batchHeader;
 
-			BigDecimal proTotal = new BigDecimal(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
+			BigDecimal proTotal = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
 			int proItem = 0;
 			String ohipNo = "";
 
@@ -526,7 +526,7 @@ public class JdbcBillingCreateBillingFile {
 					}
 
 					dFee = Double.parseDouble(fee);
-					bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+					bdFee = new BigDecimal(fee).setScale(2, BigDecimal.ROUND_HALF_UP);
 					proTotal = proTotal.add(bdFee);
 					BigTotal = BigTotal.add(bdFee);
 					_logger.info("createBillingFileStr(BigTotal = " + BigTotal + ")");
@@ -683,7 +683,7 @@ public class JdbcBillingCreateBillingFile {
 					itemObj.setStatus(i.getStatus());
 					fee = i.getFee();
 					dFee = Double.parseDouble(fee);
-					bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+					bdFee = BigDecimal.valueOf(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 					BigTotal = BigTotal.add(bdFee);
 					_logger.info("createBillingFileStr(BigTotal = " + BigTotal + ")");
 					checkItem();

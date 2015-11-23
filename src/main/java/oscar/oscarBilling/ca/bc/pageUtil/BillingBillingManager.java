@@ -229,7 +229,7 @@ public class BillingBillingManager {
 			grandtotal += bi.getLineTotal();
 			MiscUtils.getLogger().debug("total:" + grandtotal);
 		}
-		BigDecimal bdFee = new BigDecimal(grandtotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal bdFee = BigDecimal.valueOf(grandtotal).setScale(2, BigDecimal.ROUND_HALF_UP);
 		return bdFee.toString();
 
 	}
@@ -283,7 +283,7 @@ public class BillingBillingManager {
 		}
 
 		public String getDispPrice() {
-			BigDecimal bdFee = new BigDecimal(price).setScale(2,
+			BigDecimal bdFee = BigDecimal.valueOf(price).setScale(2,
 			//BigDecimal.ROUND_HALF_UP);
 			        RoundingMode.HALF_UP);
 			MiscUtils.getLogger().debug("price" + price + " fee" + bdFee.toString());

@@ -273,7 +273,7 @@ public class ExtractBean extends Object implements Serializable {
                         logValue =  dataLine;
                         if (eFlag.equals("1")) setLog(logNo,logValue);
                         dFee = Double.parseDouble(rs2.getString("bill_amount"));
-                        bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+                        bdFee = BigDecimal.valueOf(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
                         BigTotal = BigTotal.add(bdFee);
                         
                         if (invCount == 0) {                            
