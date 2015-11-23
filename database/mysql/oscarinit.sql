@@ -9230,6 +9230,7 @@ CREATE TABLE `HRMDocument` (
   `reportLessDemographicInfoHash` varchar(64) ,
   `sourceFacility` varchar(120) ,
   `hrmCategoryId` int ,
+  `description` varchar(255),
   PRIMARY KEY (`id`)
 ) ;
 

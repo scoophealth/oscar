@@ -158,6 +158,8 @@ public class HRMReportParser {
 
 		document.setReportDate(HRMReportParser.getAppropriateDateFromReport(report));
 
+		document.setDescription("");
+		
 		// We're going to check to see if there's a match in the database already for either of these
 		// report hash matches = duplicate report for same recipient
 		// no transaction info hash matches = duplicate report, but different recipient
