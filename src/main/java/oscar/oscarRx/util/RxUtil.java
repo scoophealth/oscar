@@ -1038,6 +1038,12 @@ public class RxUtil {
 			regex5 = regex5.trim();
 			special = special.replace(regex5, "");
 		}
+
+		//remove dispensing units
+		special=special.replace("Units:", "");
+		if(rx.getDispensingUnits()!=null)
+			special=special.replace(rx.getDispensingUnits(), "");
+
 		MiscUtils.getLogger().debug("before trimming mitte=" + special);
 		String regex6 = "Mitte:\\s*[0-9]+\\s*\\w+";
 		p = Pattern.compile(regex6);

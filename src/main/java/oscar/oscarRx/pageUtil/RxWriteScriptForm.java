@@ -49,6 +49,7 @@ public final class RxWriteScriptForm extends ActionForm {
     String duration = null;
     String durationUnit = null;
     String quantity = null;
+    String dispensingUnits = null;
     int repeat = 0;
     String lastRefillDate = null;
     boolean nosubs = false;
@@ -217,7 +218,15 @@ public final class RxWriteScriptForm extends ActionForm {
     public void setQuantity(String RHS) {
         this.quantity = RHS;
     }
-    
+
+    public String getDispensingUnits() {
+        return (this.dispensingUnits);
+    }
+
+    public void setDispensingUnits(String RHS) {
+        this.dispensingUnits = RHS;
+    }
+
     public int getRepeat() {
         return this.repeat;
     }
@@ -335,6 +344,7 @@ public final class RxWriteScriptForm extends ActionForm {
         this.duration = null;
         this.durationUnit = null;
         this.quantity = null;
+        this.dispensingUnits = null;
         this.repeat = 0;
 	this.lastRefillDate = null;
         this.nosubs = false;
