@@ -176,7 +176,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 				</li>
 </security:oscarSec>
 				<oscar:oscarPropertiesCheck property="referral_menu" value="yes">
-					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.misc" rights="r">
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.misc,_ref" rights="r">
 						<li id="ref">
  							<a href="#" onclick="popupPage(550,800,'../admin/ManageBillingReferral.do');return false;"><bean:message key="global.manageReferrals"/></a>
 						</li>
