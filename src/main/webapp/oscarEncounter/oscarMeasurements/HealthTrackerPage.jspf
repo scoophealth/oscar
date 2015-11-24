@@ -1553,16 +1553,16 @@ function createAddAll(d,t){
                            
                </div>
 
- <%if(mFlowsheet.getTopHTMLStream().length()>1){ %>
- <!-- TopHTMLStream  start TODO: Do something better with this -->
+ <%if(!mFlowsheet.getTopHTMLStream().isEmpty()){ %>
+ <!-- TopHTMLStream  start -->
    <div class="tabbable DoNotPrint">
            <ul class="nav nav-tabs">
-              <li class="active"><a href="#TopHTMLStream" data-toggle="tab">Other</a></li>
+              <li class="active"><a href="#TopHTMLStream" data-toggle="tab">Decision Support</a></li>
            </ul>
                <div id="TopHTMLStream" class="tab-pane active well well-sm">
                
                <span class="label label-info" id="TopHTMLStream-resources">Resources</span><br>
-                  <%=mFlowsheet.getTopHTMLStream() %>            
+                  <%=mFlowsheet.getTopHTMLStream()%>
                </div>
    </div>   
  <!-- TopHTMLStream end -->       

@@ -122,6 +122,9 @@ function confirmDelete(target) {
 										value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.modifyMeasurementStyleBtn"/>"
 										onclick="set('style');submit();" /></td>
 									<td><input type="button" name="Button"
+										value="Modify Decision Support for Group"
+										onclick="set('dsHTML');submit();" /></td>
+									<td><input type="button" name="Button"
 										value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.deleteBtn"/>"
 										onclick="confirmDelete('delete');" /></td>
 								</tr>
