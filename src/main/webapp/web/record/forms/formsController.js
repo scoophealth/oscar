@@ -23,7 +23,7 @@
     Ontario, Canada
 
 */
-oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,demographicService,demo,$state,formService, user) {
+oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,demographicService,demo,$state,formService, user, securityService) {
 	console.log("form ctrl ",$stateParams,$state);
 	
 	$scope.demographicNo = $stateParams.demographicNo;
@@ -36,10 +36,21 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	
 	console.log("What is the state "+$state.params.type+" : "+angular.isUndefined($state.params.type)+" id "+$state.params.id,$state); // Use this to load the current form if the page is refreshed
 	
+	securityService.hasRights({items:[{objectName:'_admin',privilege:'w'},{objectName:'_admin.eform',privilege:'w'}]}).then(function(result){
+		$scope.adminAccess = result.content[0];
+		$scope.adminEformAccess = result.content[1];
+			if(result.content != null && result.content.length == 2) {
+				if($scope.adminAccess || $scope.adminEformAccess){
+					$scope.hasAdminAccess = true;
+				}
+			}else {
+		    	alert('failed to load rights');
+		    }
+		},function(reason){
+	    	alert(reason);
+	 });
 	
-	
-	
-	
+
 	$scope.page.formlists = [{id:0,label:'Completed'},{id:1,label:'Library'}];  //Need to get this from the server.
 	
 	$scope.page.formlists.forEach(function (item, index) {
