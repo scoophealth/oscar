@@ -40,6 +40,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.OrderedMapIterator;
 import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.drools.RuleBase;
 import org.drools.WorkingMemory;
@@ -284,6 +285,46 @@ public class MeasurementFlowSheet {
                 MiscUtils.getLogger().error("Error", e);
             }
         }
+        return sb.toString();
+    }
+    
+    public static String getDSHTMLStream(String dsHTML) {
+        StringBuilder sb = new StringBuilder();
+        InputStream is = null;
+        BufferedReader bReader = null;
+            try {
+                String measurementDirPath = OscarProperties.getInstance().getProperty("MEASUREMENT_DS_HTML_DIRECTORY");
+                
+                if (measurementDirPath != null) {
+                    File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_HTML_DIRECTORY") + dsHTML);
+                    if (file.isFile() || file.canRead()) {
+                        log.debug("Loading from file " + file.getName());
+                        is = new FileInputStream(file);
+                    }
+                }
+
+                if (is == null) {
+                   is = MeasurementFlowSheet.class.getResourceAsStream("/oscar/oscarEncounter/oscarMeasurements/flowsheets/html/" + dsHTML);
+                   log.debug("loading from stream " );
+                }
+
+                if (is != null){
+                    bReader = new BufferedReader(new InputStreamReader(is));
+                    String str;
+                    while ((str = bReader.readLine()) != null) {
+                        sb.append(str);
+                    }
+                    bReader.close();
+                }
+                
+            } catch (Exception e) {
+                MiscUtils.getLogger().error("Error", e);
+            }
+            finally {
+                IOUtils.closeQuietly(is);
+                IOUtils.closeQuietly(bReader);
+            }
+      
         return sb.toString();
     }
 

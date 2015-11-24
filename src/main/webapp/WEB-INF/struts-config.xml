@@ -1385,6 +1385,8 @@
 			<forward name="type" path="/oscarEncounter/oscarMeasurements/ProcessEditMeasurementGroupAction.jsp" />
 			<forward name="style" path="/oscarEncounter/oscarMeasurements/EditMeasurementGroupStyle.jsp" />
 			<forward name="delete" path="/oscarEncounter/oscarMeasurements/SetupGroupList.do" />
+			<forward name="addDSHTML" path="/oscarEncounter/oscarMeasurements/MeasurementGroupDSadd.jsp" />
+			<forward name="removeDSHTML" path="/oscarEncounter/oscarMeasurements/MeasurementGroupDSremove.jsp" />
 		</action>
 		<action input="/oscarEncounter/oscarMeasurements/ProcessEditMeasurementGroupAction.jsp" name="EctSetupEditMeasurementGroupForm" path="/oscarEncounter/oscarMeasurements/SetupEditMeasurementGroup" scope="request"
 			type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupEditMeasurementGroupAction"
@@ -1420,7 +1422,7 @@
 			type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteMeasurementStyleSheetAction"
 		>
 			<forward name="success" path="/oscarEncounter/oscarMeasurements/SetupDisplayMeasurementStyleSheet.do" />
-		</action>
+		</action>		
 		<action path="/oscarEncounter/oscarMeasurements/SetupDisplayMeasurementStyleSheet" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupDisplayMeasurementStyleSheetAction">
 			<forward name="continue" path="/oscarEncounter/oscarMeasurements/DisplayMeasurementStyleSheet.jsp" />
 		</action>

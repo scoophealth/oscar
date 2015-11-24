@@ -631,8 +631,10 @@ div.recommendations li{
         <% } %>
     </ul>
 </div>
-<% } %>
-<%=mFlowsheet.getTopHTMLStream() %>
+<% }
+
+	out.print(mFlowsheet.getTopHTMLStream());
+%>
 <%--
 <img src="../../oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type=INR&type2=COUM"/>
 <br/>
