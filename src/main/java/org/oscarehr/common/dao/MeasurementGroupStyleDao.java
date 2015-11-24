@@ -54,7 +54,7 @@ public class MeasurementGroupStyleDao extends AbstractDao<MeasurementGroupStyle>
 		List<MeasurementGroupStyle> results = query.getResultList();
 		return results;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<MeasurementGroupStyle> findByCssId(Integer cssId) {
 		Query query = createQuery("m", "m.cssId = :cssId");
