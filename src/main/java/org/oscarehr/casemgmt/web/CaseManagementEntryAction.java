@@ -2567,6 +2567,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 			// add medical history to CPP
 			CaseManagementCPP cpp = this.caseManagementMgr.getCPP(getDemographicNo(request));
+			if(cpp == null) {
+				cpp = new CaseManagementCPP();
+			}
 			setCPPMedicalHistory(cpp, providerNo, accessRight);
 			cpp.setUpdate_date(new Date());
 			caseManagementMgr.saveCPP(cpp, providerNo);
