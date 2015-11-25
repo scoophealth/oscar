@@ -23,16 +23,21 @@
  */
 package org.oscarehr.managers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.cxf.common.util.StringUtils;
+import org.oscarehr.common.dao.SecurityArchiveDao;
 import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.model.Security;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import oscar.OscarProperties;
 import oscar.log.LogAction;
+import oscar.login.PasswordHash;
 
 @Service
 public class SecurityManager {
@@ -42,10 +47,17 @@ public class SecurityManager {
 	@Autowired
 	private SecurityDao securityDao;
 	
+	@Autowired
+	private SecurityArchiveDao securityArchiveDao;
+	
+	
 	public void saveNewSecurityRecord(LoggedInInfo loggedInInfo, Security security) {
 		if(!isSecurityObjectValid(security)) {
 			throw new IllegalArgumentException("Invalid Security object built");
 		}
+		security.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
+		security.setLastUpdateDate(new Date());
+		
 		securityDao.persist(security);
 		
 		LogAction.addLogSynchronous(loggedInInfo, "SecurityManager.saveNewSecurityRecord", "id=" + security.getId());
@@ -55,9 +67,48 @@ public class SecurityManager {
 		if(!isSecurityObjectValid(security)) {
 			throw new IllegalArgumentException("Invalid Security object built");
 		}
+		
+		Security dbSecurity = securityDao.find(security.getId());
+		
+		securityArchiveDao.archiveRecord(dbSecurity);
+		
+		security.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
+		security.setLastUpdateDate(new Date());
+		
 		securityDao.merge(security);
 		
 		LogAction.addLogSynchronous(loggedInInfo, "SecurityManager.updateSecurityRecord", "id=" + security.getId());
+	}
+	
+	public boolean checkPasswordAgainstPrevious(String newPassword, String providerNo) {
+		//check previous passwords policy if the password is being changed
+		String previousPasswordPolicy = OscarProperties.getInstance().getProperty("password.pastPasswordsToNotUse", "0");
+		try {
+			Security dbSecurity = securityDao.getByProviderNo(providerNo);
+			
+			if(!"0".equals(previousPasswordPolicy) && !PasswordHash.validatePassword(newPassword, dbSecurity.getPassword())) {
+		
+				int numToGoBack = Integer.parseInt(previousPasswordPolicy);
+				List<String> archives = securityArchiveDao.findPreviousPasswordsByProviderNo(providerNo,numToGoBack);
+				
+				boolean foundItInPast=false;
+				
+				for(String a:archives) {
+					if(PasswordHash.validatePassword(newPassword, a)) {
+						foundItInPast = true;
+						break;
+					}
+				}
+				
+				if(foundItInPast) {
+					return true;
+				}
+			}
+		}catch(Exception e) {
+			MiscUtils.getLogger().error("Error",e);
+			throw new RuntimeException(e);
+		}
+		return false;
 	}
 	
 	
@@ -101,6 +152,17 @@ public class SecurityManager {
 		}
 		
 		return (results.get(0).isForcePasswordReset() != null && results.get(0).isForcePasswordReset().equals(Boolean.TRUE));
+	}
+	
+	public boolean isRequireUpgradeToStorage(String userName) {
+		
+		List<Security> results = securityDao.findByUserName(userName);
+		
+		if(results.isEmpty()) {
+			return false;
+		}
+		
+		return (results.get(0).getStorageVersion() != Security.STORAGE_VERSION_2);
 	}
 
 	public List<Security> findByProviderSite(LoggedInInfo loggedInInfo, String providerNo) {

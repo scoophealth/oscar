@@ -39,6 +39,7 @@ import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONObject;
 
+import org.apache.cxf.common.util.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -129,6 +130,11 @@ public final class LoginAction extends DispatchAction {
     	    String confirmPassword = ((LoginForm) form).getConfirmPassword();
     	    String oldPassword = ((LoginForm) form).getOldPassword();
     	   
+    	    String newPin = ((LoginForm) form).getNewPin();
+    	    String confirmPin = ((LoginForm) form).getConfirmPin();
+    	    String oldPin = ((LoginForm) form).getOldPin();
+    	   
+    	    
     	    
     	    try{
         	    String errorStr = errorHandling(password, newPassword, confirmPassword, encodePassword(oldPassword), oldPassword);
@@ -139,11 +145,23 @@ public final class LoginAction extends DispatchAction {
     	        	newURL = newURL + errorStr;  	        	
     	            return(new ActionForward(newURL));  
         	    }
+        	    
+        	    if(!StringUtils.isEmpty(pin)) {
+	        	    String errorStr2 = errorHandling2(pin, newPin, confirmPin, oldPin);
+	        	    //Error Handling
+	        	    if (errorStr2 != null && !errorStr2.isEmpty()) {
+	    	        	String newURL = mapping.findForward("forcepasswordreset").getPath();
+	    	        	newURL = newURL + errorStr2;  	        	
+	    	            return(new ActionForward(newURL));  
+	        	    }
+        	    }
         	   
-        	    persistNewPassword(loggedInInfo, userName, newPassword);
-        	            	    
+        	    persistNewPasswordAndPin(loggedInInfo, userName, newPassword, newPin);
+        	    
+        	    
         	    password = newPassword;
-        	            	    
+        	    pin = newPin;
+        	    
         	    //Remove the attributes from session
         	    removeAttributesFromSession(request);
          	}  
@@ -250,8 +268,12 @@ public final class LoginAction extends DispatchAction {
              */
            boolean isForcePasswordReset = securityManager.getPasswordResetFlag(userName);
             
-            if (!OscarProperties.getInstance().getBooleanProperty("mandatory_password_reset", "false") && 
-            	isForcePasswordReset && forcedpasswordchange	) {
+           boolean requiresUpgrade = "true".equals(OscarProperties.getInstance().getProperty("password.forcePasswordResetToUpdateStorage", "true")) 
+        		   && securityManager.isRequireUpgradeToStorage(userName);
+        
+           
+            if ((!OscarProperties.getInstance().getBooleanProperty("mandatory_password_reset", "false") && 
+            	isForcePasswordReset && forcedpasswordchange) || requiresUpgrade	) {
             	
             	String newURL = mapping.findForward("forcepasswordreset").getPath();
             	
@@ -532,10 +554,31 @@ public final class LoginAction extends DispatchAction {
 
 	    if (!encodedOldPassword.equals(password)) {
      	   newURL = newURL + "?errormsg=Your old password, does NOT match the password in the system. Please enter your old password.";  
-     	} else if (!newPassword.equals(confirmPassword)) {
-      	   newURL = newURL + "?errormsg=Your new password, does NOT match the confirmed password. Please try again.";  
+     	} else if(StringUtils.isEmpty(newPassword)) {
+ 	       newURL = newURL + "?errormsg=Your new password is empty.";  
+ 	    } else if (!newPassword.equals(confirmPassword)) {
+      	   newURL = newURL + "?errormsg=Your new password does NOT match the confirmed password. Please try again.";  
       	} else if (!Boolean.parseBoolean(OscarProperties.getInstance().getProperty("IGNORE_PASSWORD_REQUIREMENTS")) && newPassword.equals(oldPassword)) {
-       	   newURL = newURL + "?errormsg=Your new password, is the same as your old password. Please choose a new password.";  
+       	   newURL = newURL + "?errormsg=Your new password is the same as your old password. Please choose a new password.";  
+       	} 
+	    
+	    
+    	    
+	    return newURL;
+     }
+    
+    private String errorHandling2(String pin, String  newPin, String  confirmPin, String  oldPin){
+	    
+    	String newURL = "";
+
+	    if (!oldPin.equals(pin)) {
+     	   newURL = newURL + "?errormsg=Your old PIN, does NOT match the PIN in the system. Please enter your old PIN.";  
+     	} else if(StringUtils.isEmpty(newPin)) {
+  	       newURL = newURL + "?errormsg=Your new PIN is empty.";  
+  	    } else if (!newPin.equals(confirmPin)) {
+      	   newURL = newURL + "?errormsg=Your new PIN does NOT match the confirmed PIN. Please try again.";  
+      	} else if (!Boolean.parseBoolean(OscarProperties.getInstance().getProperty("IGNORE_PASSWORD_REQUIREMENTS")) && newPin.equals(oldPin)) {
+       	   newURL = newURL + "?errormsg=Your new PIN is the same as your old PIN. Please choose a new PIN.";  
        	} 
     	    
 	    return newURL;
@@ -588,11 +631,17 @@ public final class LoginAction extends DispatchAction {
      * @param newPassword
      * @return
      */
-    private void  persistNewPassword(LoggedInInfo loggedInInfo, String userName, String newPassword) throws Exception{
+    private void  persistNewPasswordAndPin(LoggedInInfo loggedInInfo, String userName, String newPassword, String newPin) throws Exception{
     
 	    Security security = getSecurity(loggedInInfo, userName);
-	    security.setPassword(encodePassword(newPassword));
+	    security.setPassword(PasswordHash.createHash(newPassword));
 	    security.setForcePasswordReset(Boolean.FALSE);
+	    security.setStorageVersion(Security.STORAGE_VERSION_2);
+	    
+	    if(!StringUtils.isEmpty(newPin)) {
+	    	security.setPin(PasswordHash.createHash(newPin));
+	    }
+	    
 	    securityManager.updateSecurityRecord(loggedInInfo, security); 
 		
     }
