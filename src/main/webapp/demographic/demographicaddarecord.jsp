@@ -379,9 +379,14 @@
 
 <a href="demographiccontrol.jsp?demographic_no=<%=dem%>&displaymode=edit&dboperation=search_detail"><bean:message key="demographic.demographicaddarecord.goToRecord"/></a>
 
+<caisi:isModuleLoad moduleName="caisi">
 <br/>
+<a href="../PMmodule/ClientManager.do?id=<%=dem%>"><bean:message key="demographic.demographicaddarecord.goToCaisiRecord"/> (<a href="#"  onclick="popup(700,1027,'demographiccontrol.jsp?demographic_no=<%=dem%>&displaymode=edit&dboperation=search_detail')">New Window</a>)</a>
+</caisi:isModuleLoad>
+
 
 <caisi:isModuleLoad moduleName="caisi">
+<br/>
 <a href="../PMmodule/ClientManager.do?id=<%=dem%>"><bean:message key="demographic.demographicaddarecord.goToCaisiRecord"/></a>
 </caisi:isModuleLoad>
 
