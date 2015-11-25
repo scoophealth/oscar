@@ -50,6 +50,8 @@
 <%@ page import="org.oscarehr.common.model.Security" %>
 <%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ page import="org.oscarehr.managers.SecurityManager" %>
+<%@ page import="oscar.login.PasswordHash" %>
+<%@ page import="org.oscarehr.util.MiscUtils" %>
 <%
 	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
@@ -78,10 +80,23 @@
     String sPin = request.getParameter("pin");
     if (OscarProperties.getInstance().isPINEncripted()) sPin = Misc.encryptPIN(request.getParameter("pin"));
 
+    String hashedPassword = null;
+	String hashedPin = null;
+	
+	boolean errorHashing=false;
+	
+	try {
+		hashedPassword = PasswordHash.createHash(request.getParameter("password"));
+		hashedPin = PasswordHash.createHash(request.getParameter("pin"));
+	} catch(Exception e) {
+		MiscUtils.getLogger().error("Error with hashing passwords on this system!",e);
+		errorHashing=true;
+	}
+	
     int rowsAffected =0;
 
     Security s = securityManager.find(loggedInInfo,Integer.parseInt(request.getParameter("security_no")));
-    if(s != null) {
+    if(!errorHashing && s != null) {
     	s.setUserName(request.getParameter("user_name"));
 	    s.setProviderNo(request.getParameter("provider_no"));
 	    s.setBExpireset(request.getParameter("b_ExpireSet")==null?0:Integer.parseInt(request.getParameter("b_ExpireSet")));
@@ -90,11 +105,13 @@
 	    s.setBRemotelockset(request.getParameter("b_RemoteLockSet")==null?0:Integer.parseInt(request.getParameter("b_RemoteLockSet")));
 
     	if(request.getParameter("password")==null || !"*********".equals(request.getParameter("password"))){
-    		s.setPassword(sbTemp.toString());
+    		s.setPassword(hashedPassword);
+    		s.setPasswordUpdateDate(new java.util.Date());
     	}
 
     	if(request.getParameter("pin")==null || !"****".equals(request.getParameter("pin"))) {
-    		s.setPin(sPin);
+    		s.setPin(hashedPin);
+    		s.setPinUpdateDate(new java.util.Date());
     	}
     	
     	if (request.getParameter("forcePasswordReset") != null && request.getParameter("forcePasswordReset").equals("1")) {
@@ -102,6 +119,7 @@
     	} else {
     		s.setForcePasswordReset(Boolean.FALSE);  
         }
+    	s.setStorageVersion(Security.STORAGE_VERSION_2);
     	
     	securityManager.updateSecurityRecord(loggedInInfo, s);
     	rowsAffected=1;

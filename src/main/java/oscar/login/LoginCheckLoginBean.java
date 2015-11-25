@@ -77,20 +77,59 @@ public final class LoginCheckLoginBean {
 		if (security == null) {
 			return cleanNullObj(LOG_PRE + "No Such User: " + username);
 		}
-		// check pin if needed
-
-		String sPin = pin;
-		if (oscar.OscarProperties.getInstance().isPINEncripted()) sPin = oscar.Misc.encryptPIN(sPin);
-
-		if (isWAN() && security.getBRemotelockset() != null && security.getBRemotelockset().intValue() == 1 && (!sPin.equals(security.getPin()) || pin.length() < 3)) {
-			return cleanNullObj(LOG_PRE + "Pin-remote needed: " + username);
-		} else if (!isWAN() && security.getBLocallockset() != null && security.getBLocallockset().intValue() == 1 && (!sPin.equals(security.getPin()) || pin.length() < 3)) {
-			return cleanNullObj(LOG_PRE + "Pin-local needed: " + username);
+		boolean auth = false;
+		
+		if(security.getStorageVersion() == Security.STORAGE_VERSION_1) {
+			// check pin if needed
+	
+			String sPin = pin;
+			if (oscar.OscarProperties.getInstance().isPINEncripted()) sPin = oscar.Misc.encryptPIN(sPin);
+	
+			if (isWAN() && security.getBRemotelockset() != null && security.getBRemotelockset().intValue() == 1 && (!sPin.equals(security.getPin()) || pin.length() < 3)) {
+				return cleanNullObj(LOG_PRE + "Pin-remote needed: " + username);
+			} else if (!isWAN() && security.getBLocallockset() != null && security.getBLocallockset().intValue() == 1 && (!sPin.equals(security.getPin()) || pin.length() < 3)) {
+				return cleanNullObj(LOG_PRE + "Pin-local needed: " + username);
+			}
+	
+			if (security.getBExpireset() != null && security.getBExpireset().intValue() == 1 && (security.getDateExpiredate() == null || security.getDateExpiredate().before(new Date()))) {
+				return cleanNullObjExpire(LOG_PRE + "Expired: " + username);
+			}
+			
+	
+			userpassword = security.getPassword();
+			if (userpassword.length() < 20) {
+				auth = password.equals(userpassword);
+			} else {
+				auth = security.checkPassword(password);
+			}
+		} else if(security.getStorageVersion() == Security.STORAGE_VERSION_2) {
+			
+			try {
+				//password check
+				if(!PasswordHash.validatePassword(this.password, security.getPassword())) {
+					return cleanNullObj(LOG_PRE + "Password failed: " + username);
+				}
+				
+				//remote pin check
+				if (isWAN() && security.getBRemotelockset() != null && security.getBRemotelockset().intValue() == 1 && (!PasswordHash.validatePassword(pin, security.getPin()))) {
+					return cleanNullObj(LOG_PRE + "Pin-remote needed: " + username);
+				}
+				
+				//local pin check
+				if (!isWAN() && security.getBLocallockset() != null && security.getBLocallockset().intValue() == 1 && (!PasswordHash.validatePassword(pin, security.getPin()))) {
+					return cleanNullObj(LOG_PRE + "Pin-local needed: " + username);
+				}
+				
+			}catch(Exception e) {
+				MiscUtils.getLogger().error("Unable to check the password",e);
+				return cleanNullObj(LOG_PRE + "Password failed: " + username);
+			}
+			
+			auth=true;
 		}
-
-		if (security.getBExpireset() != null && security.getBExpireset().intValue() == 1 && (security.getDateExpiredate() == null || security.getDateExpiredate().before(new Date()))) {
-			return cleanNullObjExpire(LOG_PRE + "Expired: " + username);
-		}
+		
+		
+		//expiry
 		String expired_days = "";
 		if (security.getBExpireset() != null && security.getBExpireset().intValue() == 1) {
 			// Give warning if the password will be expired in 10 days.
@@ -102,15 +141,6 @@ public final class LoginCheckLoginBean {
 			if (security.getBExpireset().intValue() == 1 && date_diff < 11) {
 				expired_days = String.valueOf(date_diff);
 			}
-		}
-
-		boolean auth = false;
-
-		userpassword = security.getPassword();
-		if (userpassword.length() < 20) {
-			auth = password.equals(userpassword);
-		} else {
-			auth = security.checkPassword(password);
 		}
 
 		if (auth) { // login successfully
