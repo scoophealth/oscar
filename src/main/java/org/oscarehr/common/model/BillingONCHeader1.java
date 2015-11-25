@@ -40,6 +40,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.apache.cxf.common.util.StringUtils;
+
 @Entity
 @Table(name = "billing_on_cheader1")
 public class BillingONCHeader1 extends AbstractModel<Integer> implements Serializable {
@@ -299,7 +301,7 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 	}
 
 	public Date getAdmissionDate() throws ParseException  {
-		if(this.admissionDate==null) return null;
+		if(StringUtils.isEmpty(this.admissionDate)) return null;
 		return (new SimpleDateFormat("yyyy-MM-dd")).parse(this.admissionDate);
 	}
 
