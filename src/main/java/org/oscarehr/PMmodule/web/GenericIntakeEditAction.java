@@ -81,8 +81,8 @@ import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Demographic.PatientStatus;
 import org.oscarehr.common.model.JointAdmission;
-import org.oscarehr.match.IMatchManager;
-import org.oscarehr.match.MatchManager;
+//import org.oscarehr.match.IMatchManager;
+//import org.oscarehr.match.MatchManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
@@ -102,7 +102,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 	
 	private ClientImageDAO clientImageDAO = null;
 	private SurveyManager surveyManager = new SurveyManager();
-	private IMatchManager matchManager = new MatchManager();
+	//private IMatchManager matchManager = new MatchManager();
 	
 	protected static final String PROGRAM_ID = "programId";
 	protected static final String TYPE = "type";
@@ -967,12 +967,15 @@ public class GenericIntakeEditAction extends DispatchAction {
 		}
 
 		clientManager.saveClient(client);
+		//this is slowing things down, and AFAIK waitlist isn't being used anywhere
+		/*
 		try {
 			log.info("Processing client creation event with MatchManager..." + 
 					matchManager.<Demographic>processEvent(client, IMatchManager.Event.CLIENT_CREATED));
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error while processing MatchManager.processEvent(Client)",e);
 		}
+		*/
 	}
 
 	private void admitExternalProgram(Integer clientId, String providerNo, Integer externalProgramId) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
