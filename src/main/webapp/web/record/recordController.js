@@ -143,6 +143,8 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 
 	var timeout = null;
 	var saveUpdates = function() {
+		if ($scope.page.encounterNote.note==$scope.page.initNote) return; //user did not input anything, don't save
+		
 	    console.log("save",$scope.page.encounterNote);
 	    noteService.tmpSave($stateParams.demographicNo,$scope.page.encounterNote); 
 	};
@@ -186,6 +188,14 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 		console.log("This is the note"+$scope.page.encounterNote);
 		$scope.page.encounterNote.observationDate = new Date(); 
 		$scope.page.encounterNote.assignedIssues = $scope.page.assignedCMIssues;
+		$scope.page.encounterNote.issueDescriptions = null;
+		for (var i=0; i<$scope.page.assignedCMIssues.length; i++) {
+			if ($scope.page.encounterNote.issueDescriptions==null) {
+				$scope.page.encounterNote.issueDescriptions = $scope.page.assignedCMIssues[i].issue.description;
+			} else {
+				$scope.page.encounterNote.issueDescriptions += ","+$scope.page.assignedCMIssues[i].issue.description;
+			}
+		}
 		noteService.saveNote($stateParams.demographicNo,$scope.page.encounterNote).then(function(data) {
 			$rootScope.$emit('noteSaved',data);
 			skipTmpSave = true;
@@ -194,6 +204,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 			if($scope.page.encounterNote.isSigned){
 				$scope.hideNote = false;
 				$scope.getCurrentNote(false);
+				$scope.page.assignedCMIssues = [];
 			}
 	    });
 		$scope.removeEditingNoteFlag();
@@ -225,36 +236,33 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	$scope.saveSignBillNote = function(){
 		$scope.page.encounterNote.isSigned = true;
 		$scope.saveNote() ;
-
-		noteService.getIssueNote($scope.page.encounterNote.noteId).then(function(data){
-			var issues = toArray(data.assignedCMIssues);
-			var dxCode = "";
-			for (var i=0; i<issues.length; i++){
-				dxCode += "&dxCode="+issues[i].issue.code.substring(0,3);
-			}
+		
+		var dxCode = "";
+		for (var i=0; i<$scope.page.assignedCMIssues.length; i++){
+			dxCode += "&dxCode="+$scope.page.assignedCMIssues[i].issue.code.substring(0,3);
+		}
+		
+		var apptNo = "", apptProvider = "", apptDate = "", apptStartTime = "";
+		if ($scope.page.appointment!=null){
+			apptNo = $scope.page.appointment.id;
+			apptProvider = $scope.page.appointment.providerNo;
 			
-			var apptNo = "", apptProvider = "", apptDate = "", apptStartTime = "";
-			if ($scope.page.appointment!=null){
-				apptNo = $scope.page.appointment.id;
-				apptProvider = $scope.page.appointment.providerNo;
-				
-				var dt = new Date($scope.page.appointment.appointmentDate);
-				apptDate = dt.getFullYear()+"-"+zero(dt.getMonth()+1)+"-"+zero(dt.getDate());
-				dt = new Date($scope.page.appointment.startTime);
-				apptStartTime = zero(dt.getHours())+":"+zero(dt.getMinutes())+":"+zero(dt.getSeconds());
-			}
-			
-			var url = "../billing.do?billRegion="+$scope.page.billregion;
-			url += "&billForm="+$scope.page.defaultView;
-			url += "&demographic_name="+demo.firstName+"+"+demo.lastName;
-			url += "&demographic_no="+demo.demographicNo;
-			url += "&providerview="+user.providerNo+"&user_no="+user.providerNo;
-			url += "&appointment_no="+apptNo+"&apptProvider_no="+apptProvider;
-			url += "&appointment_date="+apptDate+"&start_time="+apptStartTime;
-			url += "&hotclick=&status=t&bNewForm=1"+dxCode;
+			var dt = new Date($scope.page.appointment.appointmentDate);
+			apptDate = dt.getFullYear()+"-"+zero(dt.getMonth()+1)+"-"+zero(dt.getDate());
+			dt = new Date($scope.page.appointment.startTime);
+			apptStartTime = zero(dt.getHours())+":"+zero(dt.getMinutes())+":"+zero(dt.getSeconds());
+		}
+		
+		var url = "../billing.do?billRegion="+$scope.page.billregion;
+		url += "&billForm="+$scope.page.defaultView;
+		url += "&demographic_name="+demo.firstName+"+"+demo.lastName;
+		url += "&demographic_no="+demo.demographicNo;
+		url += "&providerview="+user.providerNo+"&user_no="+user.providerNo;
+		url += "&appointment_no="+apptNo+"&apptProvider_no="+apptProvider;
+		url += "&appointment_date="+apptDate+"&start_time="+apptStartTime;
+		url += "&hotclick=&status=t&bNewForm=1"+dxCode;
 
-			window.open(url,"billingWin","scrollbars=yes, location=no, width=1000, height=600","");
-		});
+		window.open(url,"billingWin","scrollbars=yes, location=no, width=1000, height=600","");
 	}
 	
 	
@@ -263,11 +271,20 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	$scope.page.currentNoteConfig = {};
 
 
+	$scope.getIssueNote = function() {
+    	if ($scope.page.encounterNote.issueDescriptions!=null) {
+    		noteService.getIssueNote($scope.page.encounterNote.noteId).then(function(data){
+    			if (data!=null) $scope.page.assignedCMIssues = toArray(data.assignedCMIssues);
+    		});
+    	}
+	}
+	
 	$scope.getCurrentNote = function(showNoteAfterLoadingFlag) {
 		noteService.getCurrentNote($stateParams.demographicNo,$location.search()).then(function(data) {
 			$scope.page.encounterNote = data;
-			console.log($scope.page.encounterNote );
-			//$scope.hideNote = true;
+			$scope.page.initNote = data.note; //compare this with current note content to determine tmpsave or not
+			$scope.getIssueNote();
+			console.log($scope.page.encounterNote);
 			$scope.hideNote = showNoteAfterLoadingFlag;
 			$rootScope.$emit('currentlyEditingNote',$scope.page.encounterNote);
 	    });
@@ -284,6 +301,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	 $rootScope.$on('loadNoteForEdit', function(event,data) {
 	    	console.log('loadNoteForEdit ',data);
 	    	$scope.page.encounterNote = data;
+	    	$scope.getIssueNote();
 	    	
 	    	//Need to check if note has been saved yet.
 	    	$scope.hideNote = true;
@@ -400,7 +418,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 			i.unchecked=true;
 			var newList = [];
 			for(var x=0;x<$scope.page.assignedCMIssues.length;x++) {
-				if(!$scope.page.assignedCMIssues[x].issue_id == i.issue_id) {
+				if($scope.page.assignedCMIssues[x].issue_id != i.issue_id) {
 					newList.push($scope.page.assignedCMIssues[x]);
 				}
 			}

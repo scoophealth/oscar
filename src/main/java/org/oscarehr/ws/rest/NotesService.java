@@ -522,7 +522,8 @@ public class NotesService extends AbstractServiceImpl {
 		if (note.getAppointmentNo() != null) {
 			caseMangementNote.setAppointmentNo(note.getAppointmentNo());
 		}
-			
+		
+		
 		// Save annotation 
 
 		CaseManagementNote annotationNote = null;// (CaseManagementNote) session.getAttribute(attrib_name);
@@ -596,7 +597,6 @@ public class NotesService extends AbstractServiceImpl {
 	@Consumes("application/json")
 	@Produces("application/json")
 	public NoteIssueTo1 saveIssueNote(@PathParam("demographicNo") Integer demographicNo ,NoteIssueTo1 noteIssue) throws Exception{
-		
 		NoteTo1 note = noteIssue.getEncounterNote();
 		NoteExtTo1 noteExt = noteIssue.getGroupNoteExt();
 		IssueTo1 issue = noteIssue.getIssue();
@@ -717,12 +717,8 @@ public class NotesService extends AbstractServiceImpl {
 		
 		for(CaseManagementIssueTo1 i:assignedCMIssues) {
 			if(!i.isUnchecked()) {
-				CaseManagementIssue cmi = null;
-				if(i.getId()!= null && i.getId().longValue()>0) {
-					//update
-					 cmi = caseManagementMgr.getIssueByIssueCode(demo, i.getIssue().getCode());
-					 
-				} else {
+				CaseManagementIssue cmi = caseManagementMgr.getIssueByIssueCode(demo, i.getIssue().getCode());
+				if (cmi==null) {
 					//new one
 					cmi = new CaseManagementIssue();
 					Issue is = issueDao.getIssue(i.getIssue_id());
@@ -732,12 +728,10 @@ public class NotesService extends AbstractServiceImpl {
 					cmi.setType(is.getRole());
 					cmi.setDemographic_no(demo);
 				}
-				
 				cmi.setAcute(i.isAcute());
 				cmi.setCertain(i.isCertain());
 				cmi.setMajor(i.isMajor());
 				cmi.setResolved(i.isResolved());
-				cmi.setUpdate_date(new Date());
 				
 				issuelist.add(cmi);
 				caseManagementMgr.saveCaseIssue(cmi);
@@ -1024,11 +1018,9 @@ public class NotesService extends AbstractServiceImpl {
 		
 		/* save extra fields */				
 		noteIssue.setEncounterNote(note);	
-		noteIssue.setGroupNoteExt(noteExt);	
-	
-		return noteIssue;
-			
+		noteIssue.setGroupNoteExt(noteExt);
 		
+		return noteIssue;
 	}
 	
 	
