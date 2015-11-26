@@ -861,7 +861,7 @@ public class EFormUtil {
 		
 		for(EFormData x:results1) {
 			HashMap<String, String> curht = new HashMap<String, String>();
-			curht.put("fdid", String.valueOf(x.getFormId()));
+			curht.put("fdid", String.valueOf(x.getId()));
 			curht.put("fid", x.getId().toString());
 			curht.put("formName",x.getFormName());
 			curht.put("formSubject", x.getSubject());
