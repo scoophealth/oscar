@@ -23,10 +23,14 @@
 
 package org.oscarehr.common.web;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONArray;
 
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.struts.action.ActionForm;
@@ -106,5 +110,47 @@ public class BillingreferralEditAction extends DispatchAction{
     }
 
     
+    public ActionForward modifyBatch(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	   String referralId = request.getParameter("id");
+    	   String checked = request.getParameter("checked");
+    	   String clear = request.getParameter("clear");
+    	   
+    	   List<ProfessionalSpecialist> checkedSpecs = (List<ProfessionalSpecialist>) request.getSession().getAttribute("billingReferralAdminCheckList");
+    	   if(checkedSpecs == null) {
+    		   checkedSpecs = new ArrayList<ProfessionalSpecialist>();
+    	   }
+    	   
+    	   if("true".equals(clear)) {
+    		//empty list   
+    		   checkedSpecs.clear();
+    	   }
+    	   
+    	   if("true".equals(checked)) {
+    		   //add to list
+    		   ProfessionalSpecialist ps = psDao.find(Integer.parseInt(referralId));
+    		   if(ps != null && !checkedSpecs.contains(ps)) {
+    			   checkedSpecs.add(ps);
+    		   }
+    	   } else {
+    		   //remove from list
+    		   ProfessionalSpecialist tmp = null;
+    		   for(ProfessionalSpecialist ps:checkedSpecs) {
+    			   if(ps.getId().intValue() == Integer.parseInt(referralId)) {
+    				   tmp = ps;
+    				   break;
+    			   }
+    		   }
+    		   if(tmp != null) {
+    			   checkedSpecs.remove(tmp);
+    		   }
+    	   }
+    	   
+    	   request.getSession().setAttribute("billingReferralAdminCheckList",checkedSpecs);
+    	   
+    	   JSONArray arr = JSONArray.fromObject(checkedSpecs);
+    	   response.getWriter().print(arr);
+           
+    	   return null;
+    }
   
 }
