@@ -65,6 +65,7 @@
 	<ap-sql>SELECT providerExt.signature FROM providerExt WHERE providerExt.provider_no='${provider}' </ap-sql>
 	<ap-output>${signature}</ap-output>
     </databaseap>
+    
 <!-- Patient demographic information -->
     <databaseap>
         <ap-name>patient_name</ap-name>
@@ -88,6 +89,13 @@
         <ap-sql>SELECT first_name FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${first_name}</ap-output>
         <ap-insql>UPDATE demographic SET first_name='${value}' WHERE demographic_no=${demographic}</ap-insql>
+        <archive>demographic</archive>
+    </databaseap>
+    <databaseap>
+        <ap-name>patient_alias</ap-name>
+        <ap-sql>SELECT alias FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${alias}</ap-output>
+        <ap-insql>UPDATE demographic SET alias='${value}' WHERE demographic_no=${demographic}</ap-insql>
         <archive>demographic</archive>
     </databaseap>
     <databaseap>
