@@ -67,7 +67,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000" />
 				</box>
 				<textElement textAlignment="Left">
-					<font fontName="Droid Sans" size="8" />
+					<font fontName="Droid Sans" size="10" />
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{address}]]></textFieldExpression>
 			</textField>
