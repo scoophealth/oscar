@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.model.ProviderExt;
 import org.oscarehr.common.dao.PropertyDao;
@@ -40,7 +41,6 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.common.model.ProviderPreference.QuickLink;
 import org.oscarehr.managers.model.ProviderSettings;
-
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +65,9 @@ public class ProviderManager2 {
 	@Autowired
 	private ProviderExtDao providerExtDao;
 		
+	@Autowired
+	private ProgramProviderDAO programProviderDao;
+	
 	public List<Provider> getProviders(LoggedInInfo loggedInInfo, Boolean active) {
 		List<Provider> results = null;
 
@@ -745,4 +748,12 @@ public class ProviderManager2 {
 		LogAction.addLogSynchronous(loggedInInfo, "ProviderManager.updateProvider, providerNo=" + provider.getProviderNo(), null);
 
 	}
+	
+	public List<Provider> getActiveProvidersInMyDomain(LoggedInInfo loggedInInfo, List<Integer> programDomain) {
+		
+		List<Provider> providers = programProviderDao.getProvidersByPrograms(programDomain);
+		
+		return providers;
+	}
+
 }
