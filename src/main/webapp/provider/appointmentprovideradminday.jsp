@@ -23,6 +23,9 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.managers.ProgramManager2"%>
+<%@page import="org.oscarehr.managers.ProviderManager2"%>
+<%@page import="org.oscarehr.managers.ScheduleManager"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@ page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@ page import="org.oscarehr.common.model.Appointment.BookingSource"%>
@@ -91,6 +94,9 @@
 	ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
 	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
 	DemographicCustDao demographicCustDao = SpringUtils.getBean(DemographicCustDao.class);
+	ScheduleManager scheduleManager = SpringUtils.getBean(ScheduleManager.class);
+	ProviderManager2 providerManager = SpringUtils.getBean(ProviderManager2.class);
+	ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
 	
 	LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
 	LookupList reasonCodes = lookupListManager.findLookupListByName(loggedInInfo1, "reasonCode");
@@ -1500,6 +1506,10 @@ if (curProvider_no[provIndex].equals(provNum)) {
   <option value=".<bean:message key="global.default"/>">.<bean:message key="global.default"/></option>
 
 
+<%
+if(!"true".equals(oscarVariables.getProperty("schedule.groupsFromPrograms","false"))) {
+%>
+
 <security:oscarSec roleName="<%=roleName$%>" objectName="_team_schedule_only" rights="r" reverse="false">
 <%
 	String provider_no = curUser_no;
@@ -1541,6 +1551,34 @@ if (curProvider_no[provIndex].equals(provNum)) {
 	}
 %>
 </security:oscarSec>
+
+<% } else { //schedule.groupsFromPrograms 
+	
+	List<ProgramProvider> ppList = programManager.getProgramDomain(loggedInInfo1,loggedInInfo1.getLoggedInProviderNo());
+	List<Integer> programDomain = new ArrayList<Integer>();
+	for(ProgramProvider pp:ppList) {
+		programDomain.add(pp.getProgramId().intValue());
+	}
+	List<String> mGroups = scheduleManager.getMyGroups(loggedInInfo1,programDomain);
+	List<Provider> mProviders = providerManager.getActiveProvidersInMyDomain(loggedInInfo1,programDomain);
+
+	for(String mGroup:mGroups) {
+		
+%>
+
+<option value="<%="_grp_"+mGroup%>"
+		<%=mygroupno.equals(mGroup)?"selected":""%>><%=mGroup%></option>
+		
+<% }
+	
+	for(Provider mProvider:mProviders) {
+		boolean skip = checkRestriction(restrictions,mProvider.getProviderNo());
+		if(!skip) {
+%>
+<option value="<%=mProvider.getProviderNo()%>" <%=mygroupno.equals(mProvider.getProviderNo())?"selected":""%>>
+		<%=mProvider.getFormattedName()%></option>
+		
+<% } } }%>
 </select>
 
 </logic:notEqual>
