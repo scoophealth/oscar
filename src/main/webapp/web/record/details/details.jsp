@@ -184,12 +184,12 @@
 			</select>
 		</div>
 		<div class="col-md-6">
+			<label><bean:message key="demographic.demographiceditdemographic.alias"/></label>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.alias"/>" title="<bean:message key="demographic.demographiceditdemographic.formPHRUserName"/>" ng-model="page.demo.alias"/>
+		</div>
+		<div class="col-md-11">
 			<label><bean:message key="demographic.demographiceditdemographic.formPHRUserName"/></label>
 			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formPHRUserName"/>" title="<bean:message key="demographic.demographiceditdemographic.formPHRUserName"/>" ng-model="page.demo.myOscarUserName"/>
-		</div>
-		<div class="col-md-6"/>
-		<div class="col-md-6">
-			<label/>
 			<button type="button" class="btn flat-btn" ng-click="macPHRDo('Register')" ng-show="page.demo.myOscarUserName==null || page.demo.myOscarUserName==''"><bean:message key="demographic.demographiceditdemographic.msgRegisterPHR"/></button>
 		</div>
 		<div class="col-md-11">
