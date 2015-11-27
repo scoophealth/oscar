@@ -397,6 +397,8 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
                else{//active and no match
                    display = drugName;
                }
+               
+               
                return  display;
            };
         </script>
@@ -1845,8 +1847,10 @@ YAHOO.example.FnMultipleFields = function(){
     oAC.resultTypeList = false;
     oAC.queryMatchSubset = true;
     oAC.minQueryLength = 3;
-    oAC.maxResultsDisplayed = 50;
+    oAC.maxResultsDisplayed = 40;
     oAC.formatResult = resultFormatter2;
+    
+    
 
     // Define an event handler to populate a hidden form field
     // when an item gets selected and populate the input field
@@ -1865,6 +1869,18 @@ YAHOO.example.FnMultipleFields = function(){
                     $('searchString').value = "";
 
    };
+   
+   oAC.doBeforeExpandContainer = function(sQuery, oResponse) {
+	   if (oAC._nDisplayedItems < oAC.maxResultsDisplayed) {
+	      oAC.setFooter("");
+	   } else {
+		   oAC.setFooter("<a href='javascript:void(0)' onClick='popupRxSearchWindow();oAC.collapseContainer();'>See more results...</a>");
+	   }
+
+	   return true;
+	}
+   
+   
     oAC.itemSelectEvent.subscribe(myHandler);
     var collapseFn=function(){
         $('autocomplete_choices').hide();
@@ -1878,6 +1894,8 @@ YAHOO.example.FnMultipleFields = function(){
         oDS: oDS,
         oAC: oAC
     };
+    
+    
 }();
 
 function addFav(randomId,brandName){
