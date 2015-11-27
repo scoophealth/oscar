@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 
 import org.apache.commons.beanutils.DynaBean;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -153,4 +154,52 @@ public class BillingreferralEditAction extends DispatchAction{
     	   return null;
     }
   
+    public ActionForward advancedSearch(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	List<ProfessionalSpecialist> referrals = new ArrayList<ProfessionalSpecialist>();
+    	
+    	String name = request.getParameter("nameQuery");
+    	String specialty = request.getParameter("specialtyQuery");
+    	String address = request.getParameter("addressQuery");
+
+    	Integer referralNo = null;
+    	
+    	//check if it's a referralNo
+    	if(!StringUtils.isEmpty(name)) {
+    		try {
+    			referralNo = Integer.parseInt(name);
+    		}catch(NumberFormatException e) {
+    			//MiscUtils.getLogger().error("Error",e);
+    		}
+    	}
+    	
+    	String last_name="",first_name="";
+    	
+    	if(referralNo != null) {
+    		//referral no search
+    		referrals = psDao.findByReferralNo(referralNo.toString());
+    	} else {
+    		//advanced search...can be name and/or specialty
+    		
+            if (name != null && !name.equals("")) {
+                if (name.indexOf(',') < 0) {
+                    last_name = name;
+                } else {
+                    last_name = name.substring(0, name.indexOf(','));
+                    first_name = name.substring(name.indexOf(',') + 1, name.length());
+                }
+            } 
+            referrals = psDao.findByFullNameAndSpecialtyAndAddress(last_name, first_name, specialty,address);    
+    	}
+    	
+    	if(referrals.isEmpty()) {
+    		referrals = null;
+    	}
+        
+        request.setAttribute("referrals", referrals);
+        request.setAttribute("name", name);
+        request.setAttribute("specialty",specialty);
+        request.setAttribute("address",address);
+        return mapping.findForward("list");
+    }
+    
 }
