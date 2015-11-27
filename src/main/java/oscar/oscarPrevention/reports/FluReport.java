@@ -254,7 +254,7 @@ public class FluReport implements PreventionReport {
           String percentStr = "0";
           double eligible = list.size() - inList;
           log.debug("eligible "+eligible+" done "+done);
-          if (eligible != 0){
+          if ((int)eligible != 0){
              double percentage = ( done / eligible ) * 100;
              log.debug("in percentage  "+percentage   +" "+( done / eligible));
              percentStr = ""+Math.round(percentage);

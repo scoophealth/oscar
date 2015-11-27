@@ -394,7 +394,7 @@ public class RxUtil {
 					double nPerDay = findNPerDay(rx.getFrequencyCode());
 					double nDays = findNDays(rx.getDurationUnit());
 					p("qtyD--takeMax--nPerDay--nDays--" + qtyD + " " + takeMax + " " + nPerDay + " " + nDays);
-					if (takeMax != 0d) {
+					if ((int)takeMax != 0) {
 						double durD = qtyD / (takeMax) * nPerDay * nDays;
 						int durInt = (int) durD;
 						p("durInt", Integer.toString(durInt));

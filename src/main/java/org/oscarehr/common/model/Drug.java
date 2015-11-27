@@ -292,7 +292,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 
 	public String getDosageDisplay() {
 		String ret = "";
-		if (this.getTakeMin() != this.getTakeMax()) {
+		if(!(Math.abs(this.getTakeMin() - this.getTakeMax()) <  0.00000001 )) {
 			ret += RxUtil.FloatToString(this.getTakeMin()) + "-" + RxUtil.FloatToString(this.getTakeMax());
 		} else {
 			ret += RxUtil.FloatToString(this.getTakeMin());

@@ -421,7 +421,7 @@ public class HSFODAO
     {
     	//save height;
         double height = visitData.getHeight();
-        if( height != 0 )
+        if( (int)height != 0 )
         {
           if( !"cm".equalsIgnoreCase( visitData.getHeight_unit() ) )
           {
@@ -432,7 +432,7 @@ public class HSFODAO
     	
       //WT: weight
       double weight = visitData.getWeight();
-      if( weight != 0 )
+      if( (int)weight != 0 )
       {
         if( !"kg".equalsIgnoreCase( visitData.getWeight_unit() ) )
         {
@@ -443,7 +443,7 @@ public class HSFODAO
       
       //WAIS  for waist
       double waist = visitData.getWaist();
-      if( waist != 0 )
+      if( (int)waist != 0 )
       {
         if( !"cm".equalsIgnoreCase( visitData.getWaist_unit()) )
         {

@@ -74,7 +74,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
                 fEndX = toFloat(str);
                 
                 float range = fEndX - fStartX;
-                if( range == 0 || range < 0 )
+                if( (int)range == 0 || range < 0 )
                     range = 1;
                 
                 deltaX = nMaxPixX / range;
@@ -87,7 +87,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
                 fEndY = toFloat(str);
                 
                 range = fEndY - fStartY;
-                if( range == 0 || range < 0 )
+                if( (int)range == 0 || range < 0 )
                     range = 1;
                 
                 deltaY = nMaxPixY / range;
