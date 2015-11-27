@@ -68,7 +68,7 @@ public class MyGroupDao extends AbstractDao<MyGroup> {
      }
 
      public List<String> getGroups(){
-    	 Query query = entityManager.createQuery("SELECT distinct g.id.myGroupNo FROM MyGroup g");
+    	 Query query = entityManager.createQuery("SELECT distinct g.id.myGroupNo FROM MyGroup g order by g.id.myGroupNo");
 
          @SuppressWarnings("unchecked")
          List<String> dList = query.getResultList();

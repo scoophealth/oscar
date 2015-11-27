@@ -76,6 +76,7 @@ import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.BedDemographicManager;
 import org.oscarehr.managers.BedManager;
 import org.oscarehr.managers.RoomDemographicManager;
+import org.oscarehr.managers.ScheduleManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -100,6 +101,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 	private ProgramQueueManager programQueueManager;	
 	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+	private ScheduleManager scheduleManager = SpringUtils.getBean(ScheduleManager.class);
 	
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
@@ -317,6 +319,10 @@ public class ProgramManagerViewAction extends DispatchAction {
             request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
         }
 
+        if (formBean.getTab().equals("Schedule")) {
+        	request.setAttribute("myGroups", scheduleManager.getMyGroupsByProgramNo(Integer.parseInt(programId)));
+        }
+        
         LogAction.log("view", "program", programId, request);
 
         request.setAttribute("id", programId);

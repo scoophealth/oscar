@@ -172,10 +172,17 @@
 				<td><a href="javascript:void(0)"
 					onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[i] %>');return false;"><%=ProgramManagerViewFormBean.tabs[i]%></a></td>
 			</security:oscarSec>
-			<%} else if(ProgramManagerViewFormBean.tabs[i].equalsIgnoreCase("Vacancies")) {
+				<%} else if(ProgramManagerViewFormBean.tabs[i].equalsIgnoreCase("Vacancies")) {
 						%>
 			<security:oscarSec roleName="<%=roleName$%>"
 				objectName="_pmm_editProgram.vacancies" rights="r">
+				<td><a href="javascript:void(0)"
+					onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[i] %>');return false;"><%=ProgramManagerViewFormBean.tabs[i]%></a></td>
+			</security:oscarSec>
+			<%} else if(ProgramManagerViewFormBean.tabs[i].equalsIgnoreCase("Schedule")) {
+						%>
+			<security:oscarSec roleName="<%=roleName$%>"
+				objectName="_pmm_editProgram.schedules" rights="r">
 				<td><a href="javascript:void(0)"
 					onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[i] %>');return false;"><%=ProgramManagerViewFormBean.tabs[i]%></a></td>
 			</security:oscarSec>

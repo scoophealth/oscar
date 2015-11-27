@@ -37,8 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.WebServiceException;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
@@ -89,6 +87,7 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.FunctionalCentre;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.BedCheckTimeManager;
+import org.oscarehr.managers.ScheduleManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.match.IMatchManager;
 import org.oscarehr.match.MatchManager;
@@ -99,9 +98,10 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
-import oscar.log.LogAction;
-
 import com.quatro.service.security.RolesManager;
+
+import net.sf.json.JSONObject;
+import oscar.log.LogAction;
 
 public class ProgramManagerAction extends DispatchAction {
 
@@ -128,6 +128,8 @@ public class ProgramManagerAction extends DispatchAction {
 	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 	
 	private IMatchManager matchManager = new MatchManager();
+	
+	private ScheduleManager scheduleManager = SpringUtils.getBean(ScheduleManager.class);
 	
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
@@ -193,7 +195,7 @@ public class ProgramManagerAction extends DispatchAction {
 			return list(mapping, form, request, response);
 		}
 
-		if (id != null && id!="") {
+		if (!StringUtils.isEmpty(id)) {
 			Program program = programManager.getProgram(id);
 			
 			if (program == null) {
@@ -1252,17 +1254,15 @@ public class ProgramManagerAction extends DispatchAction {
 	private void setEditAttributes(HttpServletRequest request, String programId) {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		
-		if (programId != null && programId!="") {
+		if (!StringUtils.isEmpty(programId)) {
 			request.setAttribute("id", programId);
 			request.setAttribute("programName", programManager.getProgram(programId).getName());
 			request.setAttribute("providers", programManager.getProgramProviders(programId));
 			request.setAttribute("functional_users", programManager.getFunctionalUsers(programId));
 
-			List teams = programManager.getProgramTeams(programId);
+			List<ProgramTeam> teams = programManager.getProgramTeams(programId);
 
-			for (Object team1 : teams) {
-				ProgramTeam team = (ProgramTeam) team1;
-
+			for (ProgramTeam team : teams) {
 				team.setProviders(programManager.getAllProvidersInTeam(Integer.valueOf(programId), team.getId()));
 				team.setAdmissions(programManager.getAllClientsInTeam(Integer.valueOf(programId), team.getId()));
 			}
@@ -1282,6 +1282,9 @@ public class ProgramManagerAction extends DispatchAction {
 			}
 
 			request.setAttribute("programFirstSignature", programManager.getProgramFirstSignature(Integer.valueOf(programId)));
+			
+			request.setAttribute("myGroups", scheduleManager.getMyGroupsByProgramNo(Integer.parseInt(programId)));
+			
 		}
 
 		request.setAttribute("roles", roleManager.getRoles());
@@ -1291,6 +1294,8 @@ public class ProgramManagerAction extends DispatchAction {
 		request.setAttribute("bed_programs", programManager.getBedPrograms());
 
 		request.setAttribute("facilities", facilityDao.findAll(true));
+		
+		request.setAttribute("allMyGroups", scheduleManager.getMyGroups());
 	}
 
 	public static class RemoteQueueEntry {
@@ -1565,6 +1570,28 @@ public class ProgramManagerAction extends DispatchAction {
 			MiscUtils.getLogger().warn("error writing json",e);
 		}
 		return null;
+	}
+	
+	
+	
+	public ActionForward saveScheduleGroups(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm programForm = (DynaActionForm) form;
+		Program program = (Program) programForm.get("program");
+
+		String[] vals = request.getParameterValues("checked_group");
+		scheduleManager.replaceMyGroupProgram(program.getId(),vals);
+		
+		
+		LogAction.log("write", "scheduleprogram", String.valueOf(program.getId()), request);
+
+		ActionMessages messages = new ActionMessages();
+		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
+		saveMessages(request, messages);
+		//programForm.set("access", new ProgramAccess());
+		setEditAttributes(request, String.valueOf(program.getId()));
+
+		
+		return mapping.findForward("edit");
 	}
 	
 	private boolean isChanged(Program program1, Program program2) {
