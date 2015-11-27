@@ -138,7 +138,7 @@ public class BillingSpecPrep {
 			runningTotal += Double.parseDouble(total);
 		}
 		
-		if( runningTotal == 0.0 ) {
+		if( (int)runningTotal == 0 ) {
 			total = "";
 		}
 		else {

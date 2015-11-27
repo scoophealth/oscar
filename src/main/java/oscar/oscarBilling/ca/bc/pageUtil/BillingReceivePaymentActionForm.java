@@ -66,7 +66,7 @@ public class BillingReceivePaymentActionForm
     }
     else {
       double dblAmount = new Double(amountReceived).doubleValue();
-      if (dblAmount == 0) {
+      if ((int)dblAmount == 0) {
         errors.add("",
                  new ActionMessage(
                      "oscar.billing.CA.BC.billingBC.error.zeroAmount",

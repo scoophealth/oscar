@@ -364,7 +364,7 @@ public class ERxPrescriptionTranslator {
          */
         out.setQuantity(Float.toString(in.getQuantity()));
         if ((in.getNarcoticTotalQuantity() >= 0)
-                && (in.getNarcoticTotalQuantity() != in.getQuantity())) {
+                && (!(Math.abs(in.getNarcoticTotalQuantity() -in.getQuantity()) < 0.00000001 ))) {
             commentBuilder.append("\n[import error]: Narcotic quantity "
                     + Float.toString(in.getNarcoticTotalQuantity())
                     + " doesn't match quantity "

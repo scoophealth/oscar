@@ -285,7 +285,7 @@ public class ManageHSFOAction extends Action
                 dbpSeries.addOrUpdate( visitDay, Hsfo2Visit.getDBP() );
               }
   
-              if ( Hsfo2Visit.getWeight() != 0 )
+              if ( (int)Hsfo2Visit.getWeight() != 0 )
               {
                 Double bmi = getBmi( Hsfo2Visit, hsfo2Patient );
                 if( bmi > 0 )
@@ -293,7 +293,7 @@ public class ManageHSFOAction extends Action
               }
               // modified by victor for waist_unit null bug,2007
               // if (Hsfo2Visit.getWaist() != 0{
-              if ( Hsfo2Visit.getWaist() != 0 && Hsfo2Visit.getWaist_unit() != null )
+              if ( (int)Hsfo2Visit.getWaist() != 0 && Hsfo2Visit.getWaist_unit() != null )
               {
                 double waistv = Hsfo2Visit.getWaist();
                 String waistunit = Hsfo2Visit.getWaist_unit();
@@ -325,12 +325,12 @@ public class ManageHSFOAction extends Action
             if ( labResultDate != null )
             {
               final Day labResultDay = new Day( labResultDate );
-              if ( Hsfo2Visit.getTC_HDL() != 0 )
+              if ( (int)Hsfo2Visit.getTC_HDL() != 0 )
               {
                 tcHdlSeries.addOrUpdate( labResultDay, Hsfo2Visit.getTC_HDL() );
               }
               
-              if ( Hsfo2Visit.getLDL() != 0 )
+              if ( (int)Hsfo2Visit.getLDL() != 0 )
               {
                 ldlSeries.addOrUpdate( labResultDay, Hsfo2Visit.getLDL() );
               }

@@ -223,7 +223,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
 							}
 							nbGeneral++;
 						}
-						if (nbGeneral != 0) {
+						if ((int)nbGeneral != 0) {
 							metGLPercentage = Math.round((nbMetGL / nbGeneral) * 100);
 						}
 						String[] param = { startDate, endDate, measurementType, mInstrc, "(" + nbMetGL + "/" + nbGeneral + ") " + Double.toString(metGLPercentage), aboveBelow, guideline };
@@ -244,7 +244,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
 							nbGeneral++;
 						}
 
-						if (nbGeneral != 0) {
+						if ((int)nbGeneral != 0) {
 							metGLPercentage = Math.round((nbMetGL / nbGeneral) * 100);
 						}
 						String[] param = { startDate, endDate, measurementType, mInstrc, "(" + nbMetGL + "/" + nbGeneral + ") " + Double.toString(metGLPercentage), aboveBelow, guideline };
@@ -265,7 +265,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
 							}
 							nbGeneral++;
 						}
-						if (nbGeneral != 0) {
+						if ((int)nbGeneral != 0) {
 							metGLPercentage = Math.round((nbMetGL / nbGeneral) * 100);
 						}
 						String[] param = { startDate, endDate, measurementType, mInstrc, guideline, "(" + nbMetGL + "/" + nbGeneral + ") " + Double.toString(metGLPercentage) };
@@ -297,7 +297,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
 					}
 					nbGeneral++;
 				}
-				if (nbGeneral != 0) {
+				if ((int)nbGeneral != 0) {
 					metGLPercentage = Math.round((nbMetGL / nbGeneral) * 100);
 				}
 				
@@ -319,7 +319,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
 					nbGeneral++;
 				}
 
-				if (nbGeneral != 0) {
+				if ((int)nbGeneral != 0) {
 					metGLPercentage = Math.round((nbMetGL / nbGeneral) * 100);
 				}
 				String[] param = { startDate, endDate, measurementType, "", "(" + nbMetGL + "/" + nbGeneral + ") " + Double.toString(metGLPercentage), aboveBelow, guideline };
@@ -339,7 +339,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
 					}
 					nbGeneral++;
 				}
-				if (nbGeneral != 0) {
+				if ((int)nbGeneral != 0) {
 					metGLPercentage = Math.round((nbMetGL / nbGeneral) * 100);
 				}
 				String[] param = { startDate, endDate, measurementType, "", guideline, "(" + nbMetGL + "/" + nbGeneral + ") " + Double.toString(metGLPercentage) };

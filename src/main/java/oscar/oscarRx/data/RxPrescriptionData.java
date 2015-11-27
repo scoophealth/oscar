@@ -1452,7 +1452,7 @@ public class RxPrescriptionData {
 
 		public String getDosageDisplay() {
 			String ret = "";
-			if (this.getTakeMin() != this.getTakeMax()) {
+			if(!(Math.abs(this.getTakeMin() - this.getTakeMax()) <  0.00000001 )) {
 				ret += this.getTakeMinString() + "-" + this.getTakeMaxString();
 			} else {
 				ret += this.getTakeMinString();
@@ -1487,7 +1487,7 @@ public class RxPrescriptionData {
 					// + gcn.getRoute() + " ";
 				}
 
-				if (this.getTakeMin() != this.getTakeMax()) {
+				if(!(Math.abs(this.getTakeMin() - this.getTakeMax()) <  0.00000001 )) {
 					ret += this.getTakeMinString() + "-" + this.getTakeMaxString();
 				} else {
 					ret += this.getTakeMinString();
@@ -1553,7 +1553,7 @@ public class RxPrescriptionData {
 
 		public String getFullFrequency() {
 			String ret = "";
-			if (this.getTakeMin() != this.getTakeMax()) {
+			if(!(Math.abs(this.getTakeMin() - this.getTakeMax()) <  0.00000001 )) {
 				ret += this.getTakeMinString() + "-" + this.getTakeMaxString();
 			} else {
 				ret += this.getTakeMinString();

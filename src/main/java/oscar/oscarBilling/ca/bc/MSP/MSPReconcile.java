@@ -1186,7 +1186,7 @@ public class MSPReconcile {
 				if (type.equals(MSPReconcile.REP_ACCOUNT_REC)) {
 					double dblAmtOwing = this.getAmountOwing(b.billMasterNo, b.amount, b.billingtype);
 					b.amtOwing = String.valueOf(dblAmtOwing);
-					skipBill = new Double(b.amtOwing).doubleValue() == 0.0;
+					skipBill = new Double(b.amtOwing).intValue() == 0;
 				}
 
 				if (!skipBill) {
@@ -1373,7 +1373,7 @@ public class MSPReconcile {
 				/**
 				 * Ignore bill If the amount is 0
 				 */
-				if (dblAmount != 0) {
+				if ((int)dblAmount != 0) {
 					billSearch.justBillingMaster.add(b.billMasterNo);
 					billSearch.list.add(b);
 					billSearch.count++;
@@ -1451,7 +1451,7 @@ public class MSPReconcile {
 				b.setPaymentMethodName(this.getPaymentMethodDesc(b.paymentMethod));
 				double dblAmount = UtilMisc.safeParseDouble(b.amount);
 				b.type = dblAmount > 0 ? "PMT" : "RFD";
-				if (dblAmount != 0) {
+				if ((int)dblAmount != 0) {
 					billSearch.list.add(b);
 				}
 			}
@@ -1849,7 +1849,7 @@ public class MSPReconcile {
 				double parseAmt = UtilMisc.safeParseDouble(s.getBillAmount()) * .01;//ensure correct decimal position
 				double amountOwing = this.getAmountOwing(strBmNo, String.valueOf(parseAmt), "");
 				//if the the amount owing is not zero
-				if (amountOwing != 0) {
+				if ((int)amountOwing != 0) {
 					//then apply an adjustment that is equal to the difference
 					dao.createBillingHistoryArchive(strBmNo, amountOwing, MSPReconcile.PAYTYPE_IA);
 					settleIfBalanced(strBmNo);
