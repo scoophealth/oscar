@@ -37,6 +37,15 @@
 	-ms-transform: translate(0, 0);
 	transform: translate(0, 0);
 }
+
+.state1 {}
+.state2 {background-color: #e6e6e6 !important;} /*#f5f5f5*/
+.state3 {background-color: #d9d9d9 !important;} /*#e6e6e6*/
+.state6 {background-color: #cccccc !important;} /*cccccc*/
+
+.table tbody tr:hover td, .table tbody tr:hover th {
+    background-color: #FFFFAA;
+}
 </style>
 
 <div ng-show="consultReadAccess" class="col-lg-12">
@@ -130,7 +139,7 @@
 		<tbody>
 
 			<tr ng-repeat="consult in $data" ng-mouseover="consult.$selected=true" ng-mouseout="consult.$selected=false"
-    	 ng-class="{'active': consult.$selected}">
+    	 ng-class="{'active': consult.$selected}" class="state{{consult.status}}">
     	 
 				<td>
 <!-- Ronnie: Temporarily hidden until batch operations is created
@@ -139,21 +148,21 @@
  				</td>
 				<td><a
 					ng-click="editConsult(consult)" class="hand-hover"><bean:message key="global.edit" bundle="ui"/></a></td>
-				<td data-title="'<bean:message key="consult.list.header.patient" bundle="ui"/>'" class="text-center" sortable="'Demographic'">
+				<td data-title="'<bean:message key="consult.list.header.patient" bundle="ui"/>'" sortable="'Demographic'">
 					{{consult.demographic.formattedName}}</td>
-				<td data-title="'<bean:message key="consult.list.header.referringDoctor" bundle="ui"/>'" class="text-center" sortable="'ReferringDoctor'">{{consult.referringDoctor.formattedName}}</td>
-				<td data-title="'<bean:message key="consult.list.header.team" bundle="ui"/>'" class="text-center" sortable="'Team'">{{consult.teamName}}</td>
-				<td data-title="'<bean:message key="consult.list.header.status" bundle="ui"/>'" class="text-center" sortable="'Status'">{{consult.statusDescription}}</td>
-				<td data-title="'<bean:message key="consult.list.header.priority" bundle="ui"/>'" class="text-center {{consult.urgencyColor}}" sortable="'Urgency'">{{consult.urgencyDescription}}</td>
-				<td data-title="'<bean:message key="consult.list.header.mrp" bundle="ui"/>'" class="text-center" sortable="'Provider'">{{consult.provider.formattedName}}</td>
+				<td data-title="'<bean:message key="consult.list.header.referringDoctor" bundle="ui"/>'" sortable="'ReferringDoctor'">{{consult.referringDoctor.formattedName}}</td>
+				<td data-title="'<bean:message key="consult.list.header.team" bundle="ui"/>'" sortable="'Team'">{{consult.teamName}}</td>
+				<td data-title="'<bean:message key="consult.list.header.status" bundle="ui"/>'" sortable="'Status'">{{consult.statusDescription}}</td>
+				<td data-title="'<bean:message key="consult.list.header.priority" bundle="ui"/>'" class="{{consult.urgencyColor}}" sortable="'Urgency'">{{consult.urgencyDescription}}</td>
+				<td data-title="'<bean:message key="consult.list.header.mrp" bundle="ui"/>'" sortable="'Provider'">{{consult.provider.formattedName}}</td>
 
-				<td data-title="'<bean:message key="consult.list.header.appointmentDate" bundle="ui"/>'" class="text-center" sortable="'AppointmentDate'">
+				<td data-title="'<bean:message key="consult.list.header.appointmentDate" bundle="ui"/>'" sortable="'AppointmentDate'">
 					{{consult.appointmentDate | date: 'yyyy-MM-dd HH:mm'}}</td>
-				<td data-title="'<bean:message key="consult.list.header.lastFollowUp" bundle="ui"/>'" class="text-center" sortable="'FollowUpDate'">
+				<td data-title="'<bean:message key="consult.list.header.lastFollowUp" bundle="ui"/>'" sortable="'FollowUpDate'">
 					{{consult.lastFollowUp | date: 'yyyy-MM-dd'}}</td>
-				<td data-title="'<bean:message key="consult.list.header.referralDate" bundle="ui"/>'" class="text-center" sortable="'ReferralDate'">
+				<td data-title="'<bean:message key="consult.list.header.referralDate" bundle="ui"/>'" sortable="'ReferralDate'">
 					{{consult.referralDate | date: 'yyyy-MM-dd'}}</td>
-				<td data-title="'<bean:message key="consult.list.header.responseDate" bundle="ui"/>'" class="text-center" sortable="'ResponseDate'">
+				<td data-title="'<bean:message key="consult.list.header.responseDate" bundle="ui"/>'" sortable="'ResponseDate'">
 					{{consult.responseDate | date: 'yyyy-MM-dd'}}</td>
 			</tr>
 		</tbody>
