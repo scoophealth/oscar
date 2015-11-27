@@ -29,7 +29,7 @@ import org.oscarehr.common.model.Bed;
 
 public class ProgramManagerViewFormBean extends ActionForm {
 
-	public static final String[] tabs = { "General", "Staff", "Teams", "Clients", "Queue", "Access", "Bed Check" , "Client Status", "Service Restrictions", "Vacancies"};
+	public static final String[] tabs = { "General", "Staff", "Teams", "Clients", "Queue", "Access", "Bed Check" , "Client Status", "Service Restrictions", "Vacancies","Schedule"};
 
 	private String tab;
 	private String subtab;
