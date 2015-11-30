@@ -86,54 +86,72 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 		}
 	}
 	
-	$scope.viewFormState = function(item){
+	$scope.viewFormState = function(item, view){
 		
 		while(document.getElementById('formInViewFrame').hasChildNodes()){
-			document.getElementById('formInViewFrame').removeChild( document.getElementById('formInViewFrame').firstChild ) 
+			document.getElementById('formInViewFrame').removeChild( document.getElementById('formInViewFrame').firstChild );
 		}
 		
 		var url = '';
-		console.log("item",item);
-		if(item.type == 'eform' && angular.isDefined(item.id)){
-			url = '../eform/efmshowform_data.jsp?fdid='+item.id;
-			$state.go('record.forms.existing',{demographicNo:$stateParams.demographicNo, type: 'eform' ,id:item.id});
-		}else if(item.type == 'eform'  && angular.isUndefined(item.id)){
-			url = '../eform/efmformadd_data.jsp?fid='+item.formId+'&demographic_no='+ $stateParams.demographicNo;
-			//$state.go('record.forms.new',{demographicNo:$stateParams.demographicNo, type: 'eform' ,id:item.formId});
+		var addOrShow = '';
+		var formId = 0;
+
+		if(item.type == 'eform'){
+			if(angular.isDefined(item.id)){
+				addOrShow = '../eform/efmshowform_data.jsp?fdid='+item.id;
+			}else{
+				addOrShow = '../eform/efmformadd_data.jsp?fid='+item.formId+'&demographic_no='+ $stateParams.demographicNo;
+			}
+			/*
+			 * 1=frame
+			 * 2=newwindow
+			 */
+			if(view==1){
+				url = addOrShow;
+				$state.go('record.forms.existing',{demographicNo:$stateParams.demographicNo, type: 'eform' ,id:item.id});
+				$("html, body").animate({ scrollTop: 0 }, "slow");
+			}else{
+				url = addOrShow;
+
+				var rnd = Math.round(Math.random() * 1000);
+				win = "win" + rnd;
+				
+				window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");  
+				return;	
+			}	
 			
-			var rnd = Math.round(Math.random() * 1000);
-			win = "win" + rnd;
-			
-			window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");  
-			return;
-		}else if(item.type == 'form'){
-			//force to popup for now
-			url = '../form/forwardshortcutname.jsp?formname='+item.name+'&demographic_no='+ $stateParams.demographicNo+'&formId='+item.formId;
+		}else{ //form
+			if(angular.isDefined(item.formId)){
+				addOrShow = '../form/forwardshortcutname.jsp?formname='+item.name+'&demographic_no='+ $stateParams.demographicNo+'&formId='+item.formId;
+			}else{
+				addOrShow = item.formValue + $stateParams.demographicNo + "&formId=0&provNo=" + user.providerNo + "&parentAjaxId=forms";
+			}
 						
-			var rnd = Math.round(Math.random() * 1000);
-			win = "win" + rnd;
+			if(view==1){
+				url = addOrShow;
+				$state.go('record.forms.existing',{demographicNo:$stateParams.demographicNo, type: 'form' ,id:item.id});
+				$("html, body").animate({ scrollTop: 0 }, "slow");
+				
+			}else{
+				url = addOrShow;
+				
+				var rnd = Math.round(Math.random() * 1000);
+				win = "win" + rnd;
+				
+				window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");  
+				return;
+			}
 			
-			window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");  
-			return;
+			
 		}
 
 		$scope.page.currentForm = item;
 		var pymParent = new pym.Parent('formInViewFrame',url, {});
 		$scope.pymParent = pymParent;  
 		
-		
-	}
-	
-	//using this temp until I sort it out in the above function
-	$scope.viewFormNewWin = function(url){
-		
-		url = url + $stateParams.demographicNo + "&formId=0&provNo=" + user.providerNo + "&parentAjaxId=forms";
-		
-		var rnd = Math.round(Math.random() * 1000);
-		win = "win" + rnd;
-		
-		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");  
-		return;
+		if(item.type != 'eform' && view==1){
+			document.getElementById('formInViewFrame').firstChild.style.height = "1600px"; //temp hack for the forms
+		}
 	}
 	
 	
