@@ -53,15 +53,15 @@
 	  	   <input type="search" class="form-control" placeholder="Filter" ng-model="filterFormsQ">
 	  	   <ul class="list-group" tabindex="0" ng-keypress="keypress($event)">
    				<li class="list-group-item" ng-repeat="item in page.currentFormList[page.currentlistId] | filter:filterFormsQ" ng-class="getActiveFormClass(item)">
-   					<a class="list-group-item-text hand-hover" title="{{item.subject}}" ng-click="viewFormState(item)" ><span  ng-show="item.date" class="pull-right">{{item.date | date : 'd-MMM-y'}}</span>{{item.name}}</a>
+   					<div class="form-name-date"><a class="list-group-item-text hand-hover" title="{{item.subject}}" ng-click="viewFormState(item,1)">{{item.name}}</a> <br><span ng-show="item.date" ><small>{{item.date | date : 'd-MMM-y'}}</small></span></div>  <a class="list-group-item-text hand-hover pull-right" ng-click="viewFormState(item,2)"><span class="glyphicon glyphicon-new-window"></span></a>
    				</li>
 
    				<li class="list-group-item" ng-repeat="formItem2 in page.encounterFormlist[page.currentlistId] | filter:filterFormsQ" ng-hide="page.currentlistId==1">
-   					<a class="list-group-item-text hand-hover" ng-click="viewFormState(formItem2)">{{formItem2.name}}</a>
+   					<div class="form-name-date"><a class="list-group-item-text hand-hover" ng-click="viewFormState(formItem2,1)">{{formItem2.name}}</a></div> <a class="list-group-item-text hand-hover pull-right" ng-click="viewFormState(formItem2,2)"><span class="glyphicon glyphicon-new-window"></span></a>
    				</li>
    				
    				<li class="list-group-item" ng-repeat="formItem in page.encounterFormlist[page.currentlistId] | filter:filterFormsQ" ng-hide="page.currentlistId==0">
-   					<a class="list-group-item-text hand-hover" ng-click="viewFormNewWin(formItem.formValue)">{{formItem.formName}} <span ng-show="formItem.date" class="pull-right">{{formItem.date | date : 'd-MMM-y'}}</span></a>
+   					<div class="form-name-date"><a class="list-group-item-text hand-hover" ng-click="viewFormState(formItem,1)">{{formItem.formName}}</a> <br><span ng-show="formItem.date"><small>{{formItem.date | date : 'd-MMM-y'}}</small></span></div>  <a class="list-group-item-text hand-hover pull-right" ng-click="viewFormState(formItem,2)"><span class="glyphicon glyphicon-new-window"></span></a>
    				</li>
    				
    			</ul>
