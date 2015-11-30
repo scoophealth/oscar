@@ -27,7 +27,7 @@
 
 <div class="page-header" style="margin-top: 0px; margin-bottom: 0px;">
 		<h1 class="patientHeaderName" style="margin-top: 0px;" ng-cloak>
-			<b>{{demographic.lastName}}, {{demographic.firstName}}</b>  <span ng-show="demographic.alias">({{demographic.alias}})</span> 
+			<b>{{demographic.lastName}}, {{demographic.firstName}}</b>  <span ng-show="demographic.title">({{demographic.title}})</span> 
 			
 			<small class="patientHeaderExt pull-right"> 
 				<i><bean:message key="demographic.patient.context.born"/>: </i>
@@ -43,11 +43,11 @@
 		style="padding-top: 0px;margin-bottom:3px;">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-				<span class="sr-only">Toggle navigation</span> 
-				<span class="icon-bar"></span> 
-				<span class="icon-bar"></span> 
-				<span class="icon-bar"></span>
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target=".navbar-ex1-collapse">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand navbar-toggle pull-left" href="#">Select Module</a>
 		</div>
@@ -81,7 +81,7 @@
     	<div id="noteInput" class="center-block well col-md-4 col-md-offset-3" ng-show="hideNote" ng-click="checkAction($event)" ng-keypress="checkAction($event)">
 			<div class="col-xs-4">
 			    
-			    <input type="text" ng-model="options.magicVal" placeholder="Template" 
+			    <input type="text" ng-model="options.magicVal" placeholder="Type Command" 
 				typeahead="t.encounterTemplateName as t.encounterTemplateName for t in searchTemplates($viewValue)" 
 				typeahead-on-select="insertTemplate($item, $model, $label)"
 				class="form-control">
@@ -97,7 +97,7 @@
 			</div>
     		
     		
-    		<textarea class="form-control input-lg col-lg-4" rows="6" ng-model="page.encounterNote.note" ng-disabled="page.cannotChange" id="noteEditor" ng-change="setEditingNoteFlag()"></textarea>
+    		<textarea class="form-control input-lg col-lg-4" rows="6" ng-model="page.encounterNote.note" ng-disabled="page.cannotChange"></textarea>
     		
     		<div style="font-size:8pt" ng-if="page.assignedCMIssues != null  && page.assignedCMIssues.length > 0">
 			    <label>Assigned Issues:</label>
@@ -122,13 +122,30 @@
 			</div>
 			
 			
+			<input type="hidden" id="startTag" value="<bean:message key="oscarEncounter.Index.startTime"/>">
+			<input type="hidden" id="endTag" value="<bean:message key="oscarEncounter.Index.endTime"/>">
+			
     		<div class="btn-group btn-group-sm pull-right">
-			  <button type="button" class="btn btn-default" ng-click="saveNote()" id="saveButton"  data-ng-disabled="page.encounterNote.isSigned" ><bean:message key="oscarEncounter.Index.btnSave"/></button>
-			  <button type="button" class="btn btn-default" ng-click="saveSignNote()"><bean:message key="oscarEncounter.Index.btnSignSave"/></button>
-			  <button type="button" class="btn btn-default" ng-click="saveSignVerifyNote()"><bean:message key="oscarEncounter.Index.btnSign"/></button>
-			  <button type="button" class="btn btn-default" ng-click="saveSignBillNote()"><bean:message key="oscarEncounter.Index.btnSignSaveBill"/></button>
+			  <button type="button" class="btn btn-default" ng-click="pasteTimer()" id="aTimer" title="<bean:message key="oscarEncounter.Index.pasteTimer"/>">00:00</button>
+			  <button type="button" class="btn btn-default" ng-click="toggleTimer()" title="<bean:message key="oscarEncounter.Index.toggleTimer"/>">
+				<span class="glyphicon glyphicon-pause"  id="aToggle"></span>
+			  </button>
+			  <button type="button" class="btn btn-default" ng-click="saveNote()" id="saveButton"  data-ng-disabled="page.encounterNote.isSigned" title="<bean:message key="oscarEncounter.Index.btnSave"/>">
+			  				<span class="glyphicon glyphicon-save"  id="theSave"></span>
+			  </button>
+			  <button type="button" class="btn btn-default" ng-click="saveSignNote()" title="<bean:message key="oscarEncounter.Index.btnSignSave"/>">
+			  				<span class="glyphicon glyphicon-pencil"  id="Sign"></span>
+			  </button>
+			  <button type="button" class="btn btn-default" ng-click="saveSignVerifyNote()" title="<bean:message key="oscarEncounter.Index.btnSign"/>">
+			  				<span class="glyphicon glyphicon-thumbs-up"  id="SaveSignVerify"></span>
+			  </button>
+			  <button type="button" class="btn btn-default" ng-click="saveSignBillNote()" title="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>">
+			  				<span class="glyphicon glyphicon-usd"  id="bill"></span>
+			  </button>
 			</div>
     		
     	</div>
     </div>
+    
+    
     
