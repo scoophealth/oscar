@@ -1843,6 +1843,7 @@ insert into `secObjectName` (`objectName`) values ('_appDefinition');
 
 insert into `secObjectName`  (`objectName`,`description`,`orgapplicable`) values('_demographicExport', 'Export Demographic', 0);
 insert into `secObjectName` (`objectName`) values ('_admin.document');
+insert into `secObjectName` (`objectName`) values ('_admin.consult');
 
 
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
