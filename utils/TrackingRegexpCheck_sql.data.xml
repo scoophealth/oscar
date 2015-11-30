@@ -241,7 +241,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:clinic_postal varchar(15) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:code char(1) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:comment varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:contenttype varchar(60) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:contenttype varchar(255) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:creator varchar(6) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:demo_name varchar(60) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:demographic_name varchar(60) NOT NULL default '',</ViolationValue>
@@ -4060,7 +4060,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:confirm char(3) NOT NULL default 'No',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:consultDoc char(60) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:consultant varchar(30) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:contenttype varchar(60) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:contenttype varchar(255) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:country varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:crackles varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:cracklesAbN tinyint(1) default NULL,</ViolationValue>
