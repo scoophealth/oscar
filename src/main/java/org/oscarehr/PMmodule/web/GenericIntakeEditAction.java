@@ -86,6 +86,7 @@ import org.oscarehr.common.model.JointAdmission;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
@@ -101,7 +102,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 	protected static final String CLIENT_EDIT_ID = "id";
 	
 	private ClientImageDAO clientImageDAO = null;
-	private SurveyManager surveyManager = new SurveyManager();
+	private SurveyManager surveyManager = (SurveyManager)SpringUtils.getBean("surveyManager2");
 	//private IMatchManager matchManager = new MatchManager();
 	
 	protected static final String PROGRAM_ID = "programId";
