@@ -1842,6 +1842,8 @@ insert into `secObjectName` (`objectName`) values ('_eyeform');
 insert into `secObjectName` (`objectName`) values ('_appDefinition');
 
 insert into `secObjectName`  (`objectName`,`description`,`orgapplicable`) values('_demographicExport', 'Export Demographic', 0);
+insert into `secObjectName` (`objectName`) values ('_admin.document');
+
 
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
@@ -1952,6 +1954,7 @@ insert into `secObjPrivilege` values('doctor','_prevention','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_dxresearch','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_allergy','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_eyeform','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_admin.document','x',0,'999998');
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);
@@ -2026,6 +2029,7 @@ insert into `secObjPrivilege` values('doctor','_admin.traceability','x',0,'99999
 insert into `secObjPrivilege` values('admin','_admin.traceability','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_appDefinition','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_demographicExport','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.document','x',0,'999998');
 
 
 

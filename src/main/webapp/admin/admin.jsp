@@ -691,6 +691,19 @@ div.logoutBox {
 	</security:oscarSec>
 <!-- #Schedule Management END-->
 
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.document" rights="r" reverse="<%=false%>">
+<div class="adminBox">
+		<h3>&nbsp;Document Management</h3>
+		<ul>
+<li><a href="#"
+				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/displayDocumentCategories.jsp"/>&quot;);return false;'><bean:message key="admin.admin.DocumentCategories"/></a></li>
+<li><a href="#"
+				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/displayDocumentDescriptionTemplate.jsp?setDefault=true"/>&quot;);return false;'><bean:message key="admin.admin.DocumentDescriptionTemplate"/></a></li>
+        </ul>
+</div>
+</security:oscarSec>
+                                      
+                        
 <!-- #SYSTEM Management-->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
 		<div class="adminBox">

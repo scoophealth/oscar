@@ -579,7 +579,7 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #CAISI END-->
 
 <!-- #SYSTEM Management-->
-	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.measurements" rights="r" reverse="<%=false%>">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.measurements,_admin.document" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
 				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseEight">
 				<bean:message key="admin.admin.SystemManagement" />
@@ -594,17 +594,22 @@ String curProvider_no = (String)session.getAttribute("user");
 						class="xlink" rel="${ctx}/admin/providerAddRole.jsp">
 					<bean:message key="admin.admin.addRole"/></a></li>
 				</security:oscarSec>
-				
-				<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">			
-				<li><a href='javascript:void(0);'
-					class="xlink" rel="${ctx}/admin/providerPrivilege.jsp">
-				<bean:message key="admin.admin.assignRightsObject"/></a></li>
-				
+
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.document" rights="r" reverse="<%=false%>">			
+								
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/displayDocumentCategories.jsp"><bean:message key="admin.admin.DocumentCategories"/></a></li>
                                                 
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/displayDocumentDescriptionTemplate.jsp?setDefault=true"><bean:message key="admin.admin.DocumentDescriptionTemplate"/></a></li>		
+				</security:oscarSec>		
+						
+						
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">			
+				<li><a href='javascript:void(0);'
+					class="xlink" rel="${ctx}/admin/providerPrivilege.jsp">
+				<bean:message key="admin.admin.assignRightsObject"/></a></li>
+				
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/ManageClinic.do"><bean:message key="admin.admin.clinicAdmin"/></a></li>
 					<%
