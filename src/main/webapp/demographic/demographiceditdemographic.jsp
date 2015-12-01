@@ -141,8 +141,7 @@ if(!authed) {
 	ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
 %>
 
-<jsp:useBean id="providerBean" class="java.util.Properties"
-	scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties"	scope="session" />
 <% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -853,7 +852,7 @@ jQuery(document).ready(function() {
 
 				<%
 				if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()){%>
-        		<jsp:include page="../admin/IntegratorStatus.jspf"></jsp:include>
+        		<jsp:include page="../admin/IntegratorStatus.jspf"/>
         		<%}%>
 				
 				</td>
@@ -1246,7 +1245,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 		<table border=0 width="100%">
 			<tr id="searchTable">
 				<td colspan="4"><%-- log:info category="Demographic">Demographic [<%=demographic_no%>] is viewed by User [<%=userfirstname%> <%=userlastname %>]  </log:info --%>
-				<%@ include file="zdemographicfulltitlesearch.jsp"%>
+				<jsp:include page="zdemographicfulltitlesearch.jsp"/>
 				</td>
 			</tr>
 			<tr>
