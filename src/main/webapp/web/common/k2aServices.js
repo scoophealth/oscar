@@ -90,6 +90,39 @@ angular.module("k2aServices", [])
 		  deferred.reject("An error occured while trying to remove a comment from k2a");
 		});
 	      return deferred.promise;
+	},
+	preventionRulesList: function() {
+		var deferred = $q.defer();
+		$http.get(this.apiPath+'/resources/preventionRulesList').success(function(data){
+		console.log("return from /preventionRulesList",data);
+		deferred.resolve(data);
+		}).error(function(){
+		  console.log("error getting preventionRulesList");
+		  deferred.reject("An error occured while trying to remove a comment from k2a");
+		});
+	      return deferred.promise;
+	},loadPreventionRuleById: function(id) {
+		var deferred = $q.defer();
+		
+		$http.post(this.apiPath+'/resources/loadPreventionRulesById/'+id.id,id,this.configHeaders).success(function(data){
+		console.log("return from /loadPreventionRulesById",data);
+		deferred.resolve(data);
+		}).error(function(){
+		  console.log("error loading loadPreventionRulesById from k2a");
+		  deferred.reject("An error occured while trying to loadPreventionRulesById");
+		});
+	      return deferred.promise;
+	},
+	getCurrentPreventionRulesVersion: function() {
+		var deferred = $q.defer();
+		$http.get(this.apiPath+'/resources/currentPreventionRulesVersion').success(function(data){
+		console.log("return from /getCurrentPreventionRulesVersion",data);
+		deferred.resolve(data);
+		}).error(function(){
+		  console.log("error getCurrentPreventionRulesVersion");
+		  deferred.reject("An error occured while trying to getCurrentPreventionRulesVersion");
+		});
+	      return deferred.promise;
 	}
     };
 });

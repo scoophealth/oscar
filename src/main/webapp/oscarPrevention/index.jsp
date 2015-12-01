@@ -34,6 +34,7 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
+<%@page import="org.oscarehr.util.MiscUtils" %>
 <%@page import="org.oscarehr.managers.PreventionManager" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -87,6 +88,7 @@ if(!authed) {
   try{
      pf.getMessages(p);
   }catch(Exception dsException){
+	  MiscUtils.getLogger().error("Error running prevention rules",dsException);
       dsProblems = true;
   }
 

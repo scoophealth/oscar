@@ -93,7 +93,7 @@ public class ReportByTemplateService extends AbstractServiceImpl {
 				AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),loggedInInfo.getLoggedInProvider().getProviderNo());
 				
 				if(k2aUser != null) {
-					return OAuth1Utils.getOAuthGetResponse(k2aApp, k2aUser, "/ws/api/reportByTemplate/getReports", "/ws/api/reportByTemplate/getReports");
+					return OAuth1Utils.getOAuthGetResponse(loggedInInfo,k2aApp, k2aUser, "/ws/api/reportByTemplate/getReports", "/ws/api/reportByTemplate/getReports");
 				} else {
 					return null;
 				}
@@ -122,7 +122,7 @@ public class ReportByTemplateService extends AbstractServiceImpl {
 				AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),loggedInInfo.getLoggedInProvider().getProviderNo());
 				
 				if(k2aUser != null) {
-					String xml = OAuth1Utils.getOAuthGetResponse(k2aApp, k2aUser, "/ws/api/reportByTemplate/getReportById/" + id, "/ws/api/reportByTemplate/getReportById/" + id);
+					String xml = OAuth1Utils.getOAuthGetResponse(loggedInInfo,k2aApp, k2aUser, "/ws/api/reportByTemplate/getReportById/" + id, "/ws/api/reportByTemplate/getReportById/" + id);
 					
 					return reportManager.addTemplate(StringEscapeUtils.unescapeXml(xml), loggedInInfo);
 				} else {
