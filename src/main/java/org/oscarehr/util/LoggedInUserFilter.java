@@ -70,6 +70,7 @@ public class LoggedInUserFilter implements javax.servlet.Filter {
 		loggedInInfo.setLoggedInSecurity((Security) session.getAttribute(SessionConstants.LOGGED_IN_SECURITY));
 		loggedInInfo.setInitiatingCode(request.getRequestURI());
 		loggedInInfo.setLocale(request.getLocale());
+		loggedInInfo.setIp(request.getRemoteAddr());
 
 		return (loggedInInfo);
 	}

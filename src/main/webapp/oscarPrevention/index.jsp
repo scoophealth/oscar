@@ -91,6 +91,7 @@ if(!authed) {
   try{
      pf.getMessages(p);
   }catch(Exception dsException){
+	  MiscUtils.getLogger().error("Error running prevention rules",dsException);
       dsProblems = true;
   }
 

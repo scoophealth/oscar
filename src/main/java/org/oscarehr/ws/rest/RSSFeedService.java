@@ -46,6 +46,7 @@ import org.oscarehr.common.dao.AppDefinitionDao;
 import org.oscarehr.common.dao.AppUserDao;
 import org.oscarehr.common.model.AppDefinition;
 import org.oscarehr.common.model.AppUser;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.to.RSSResponse;
@@ -81,7 +82,8 @@ public class RSSFeedService extends AbstractServiceImpl {
 		    		AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),getLoggedInInfo().getLoggedInProviderNo());
 		    		
 		    		if(k2aUser != null) {
-		    			String jsonString = OAuth1Utils.getOAuthGetResponse(k2aApp, k2aUser, "/ws/api/posts/userFriendsRecentPosts?startingPoint=" + startPoint + "&numberOfRows=" + numberOfRows, "/ws/api/posts/userFriendsRecentPosts");
+		    			LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		    			String jsonString = OAuth1Utils.getOAuthGetResponse(loggedInInfo,k2aApp, k2aUser, "/ws/api/posts/userFriendsRecentPosts?startingPoint=" + startPoint + "&numberOfRows=" + numberOfRows, "/ws/api/posts/userFriendsRecentPosts");
 			    		JSONArray jsonArray = new JSONArray();
 			    		
 			    		if(jsonString != null && !jsonString.isEmpty()) {
