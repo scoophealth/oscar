@@ -24,7 +24,7 @@
 
 */
 
-oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,user,$state,noteService,$timeout,$interval,uxService,securityService,scheduleService,billingService) {
+oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,user,$state,noteService,$timeout,uxService,securityService,scheduleService,billingService) {
 	
 	
 	console.log("in patient Ctrl ",demo);
@@ -111,6 +111,8 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 			window.open(temp.url,win,"scrollbars=yes, location=no, width=1000, height=600","");   
 		}
 		//console.log($scope.recordtabs2[temp].path);
+		
+		
 	}
 	
 	$scope.isTabActive = function(tab){
@@ -168,6 +170,55 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	
 	
 	
+	//////Timer
+        var d = new Date();  //the start
+
+        var totalSeconds = 0;
+        var myVar = setInterval(setTime, 1000);
+
+	$scope.getCurrentTimerToggle = function(){
+ 	     if(angular.isDefined(myVar)){
+ 	        return "glyphicon-pause"
+ 	     }
+      		return "glyphicon-play";
+    	}
+
+	$scope.toggleTimer = function(){
+ 	    if ($("#aToggle").hasClass("glyphicon-pause")) {
+			$("#aToggle").removeClass("glyphicon-pause");
+			$("#aToggle").addClass("glyphicon-play");
+			clearInterval(myVar);
+		} else {
+			$("#aToggle").removeClass("glyphicon-play");
+			$("#aToggle").addClass("glyphicon-pause");
+			myVar = setInterval(setTime, 1000);
+		}
+	}
+	
+	$scope.pasteTimer = function(){    
+ 	    var ed = new Date();
+ 	    $scope.page.encounterNote.note +="\n"+document.getElementById("startTag").value+": "+d.getHours()+":"+pad(d.getMinutes())+"\n"+document.getElementById("endTag").value+": "+ed.getHours()+":"+pad(ed.getMinutes())+"\n"+pad(parseInt(totalSeconds/3600))+":"+pad(parseInt((totalSeconds/60)%60))+":"+ pad(totalSeconds%60);
+	}
+
+        function setTime(){
+            ++totalSeconds;
+            document.getElementById("aTimer").innerHTML =pad(parseInt(totalSeconds/60))+":"+ pad(totalSeconds%60);
+            if (totalSeconds == 1200) {$("#aTimer").css("background-color", "#DFF0D8");} //1200 sec = 20 min light green
+            if (totalSeconds == 3000) {$("#aTimer").css("background-color", "#FDFEC7");} //3600 sec = 50 min light yellow
+        }
+
+        function pad(val){
+            var valString = val + "";
+            if(valString.length < 2)
+            {
+                return "0" + valString;
+            } else {
+                return valString;
+            }
+        }
+$scope.$on('$destroy', function () { clearInterval(myVar); });
+ 	//////	
+		
 	
 		
 	// Note Input Logic
@@ -194,7 +245,6 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 				$scope.getCurrentNote(false);
 			}
 	    });
-		$scope.removeEditingNoteFlag();
 	};
 	
 	$scope.saveSignNote = function(){
@@ -277,70 +327,16 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	
 	 $scope.editNote = function(note){
 	    	$rootScope.$emit('',note);
-	 }
-	 
+	    }
+	    
+	    
 	 $rootScope.$on('loadNoteForEdit', function(event,data) {
 	    	console.log('loadNoteForEdit ',data);
 	    	$scope.page.encounterNote = data;
-	    	
 	    	//Need to check if note has been saved yet.
 	    	$scope.hideNote = true;
 	    	$rootScope.$emit('currentlyEditingNote',$scope.page.encounterNote);
-	    	
-	    	$scope.removeEditingNoteFlag();
 	 });
-	
-	 
-	 /*
-	  * handle concurrent note edit - EditingNoteFlag
-	  */
-	 var itvSet = null;
-	 var itvCheck = null;
-	 var editingNoteId = null;
-	 
-	 $rootScope.$on("$stateChangeStart", function(){
-		 $scope.removeEditingNoteFlag();
-	 });
-	 
-	 $scope.doSetEditingNoteFlag = function(){
-		 noteService.setEditingNoteFlag(editingNoteId, user.providerNo).then(function(resp){
-			 if (!resp.success) {
-				 if (resp.message=="Parameter error") alert("Parameter Error: noteUUID["+editingNoteId+"] userId["+user.providerNo+"]");
-				 else alert("Warning! Another user is editing this note now.");
-			 }
-		 });
-	 }
-	 
-	 $scope.setEditingNoteFlag = function(){
-		 if ($scope.page.encounterNote.uuid==null) return;
-		 
-		 editingNoteId = $scope.page.encounterNote.uuid;
-		 if (itvSet==null) {
-			 itvSet = $interval($scope.doSetEditingNoteFlag(), 30000); //set flag every 5 min until canceled
-		 }
-		 if (itvCheck==null) { //warn once only when the 1st time another user tries to edit this note
-			 itvCheck = $interval(function(){
-				 noteService.checkEditNoteNew(editingNoteId, user.providerNo).then(function(resp){
-					 if (!resp.success) { //someone else wants to edit this note
-						 alert("Warning! Another user tries to edit this note. Your update may be replaced by later revision(s).");
-						 $interval.cancel(itvCheck);
-						 itvCheck = null;
-					 }
-				 });
-			 }, 10000); //check for new edit every 10 seconds
-		 }
-	 }
-	 
-	 $scope.removeEditingNoteFlag = function(){
-		 if (editingNoteId!=null) {
-			 noteService.removeEditingNoteFlag(editingNoteId, user.providerNo);
-			 $interval.cancel(itvSet);
-			 $interval.cancel(itvCheck);
-			 itvSet = null;
-			 itvCheck = null;
-			 editingNoteId = null;
-		 }
-	 }
 
 	 
 	 $scope.searchTemplates  = function(term) {
