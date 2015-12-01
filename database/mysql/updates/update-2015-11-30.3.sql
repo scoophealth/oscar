@@ -1,2 +1,2 @@
-update appointmentArchive modify notes varchar(255);
+alter table appointmentArchive modify notes varchar(255);
 
