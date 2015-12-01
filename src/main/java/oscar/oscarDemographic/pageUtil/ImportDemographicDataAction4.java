@@ -52,6 +52,7 @@ import java.util.zip.ZipInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
@@ -255,48 +256,59 @@ import cdsDt.PersonNameStandard.OtherNames;
         	}
         } else {
         
-        
-	try { 
-			
-            InputStream is = imp.getInputStream();
-            OutputStream os = new FileOutputStream(ifile);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len=is.read(buf)) > 0) os.write(buf,0,len);
-            is.close();
-            os.close();
+  
+	try {
+        int len;
+        byte[] buf = new byte[1024];
+        InputStream is = null;
+        OutputStream os = null;
+		try {
+            is = imp.getInputStream();
+            os = new FileOutputStream(ifile);
 
+            while ((len=is.read(buf)) > 0) os.write(buf,0,len);
+		}
+		finally {
+			IOUtils.closeQuietly(is);
+			IOUtils.closeQuietly(os);
+		}
+		
             if (matchFileExt(ifile, "zip")) {
                 ZipInputStream in = new ZipInputStream(new FileInputStream(ifile));
-                boolean noXML = true;
-                ZipEntry entry = in.getNextEntry();
-                String entryDir = "";
-
-                while (entry!=null) {
-                    String entryName = entry.getName();
-                    if (entry.isDirectory()) entryDir = entryName;
-                    if (entryName.startsWith(entryDir)) entryName = entryName.substring(entryDir.length());
-
-                    String ofile = tmpDir + entryName;
-                    if (matchFileExt(ofile, "xml")) {
-                        noXML = false;
-                        OutputStream out = new FileOutputStream(ofile);
-                        while ((len=in.read(buf)) > 0) out.write(buf,0,len);
-                        out.close();
-                        logs.add(importXML(LoggedInInfo.getLoggedInInfoFromSession(request) , ofile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
-                        importNo++;
-                        demographicNo=null;
-                    }
-                    entry = in.getNextEntry();
+                try
+                {
+	                boolean noXML = true;
+	                ZipEntry entry = in.getNextEntry();
+	                String entryDir = "";
+	
+	                while (entry!=null) {
+	                    String entryName = entry.getName();
+	                    if (entry.isDirectory()) entryDir = entryName;
+	                    if (entryName.startsWith(entryDir)) entryName = entryName.substring(entryDir.length());
+	
+	                    String ofile = tmpDir + entryName;
+	                    if (matchFileExt(ofile, "xml")) {
+	                        noXML = false;
+	                        OutputStream out = new FileOutputStream(ofile);
+	                        while ((len=in.read(buf)) > 0) out.write(buf,0,len);
+	                        out.close();
+	                        logs.add(importXML(LoggedInInfo.getLoggedInInfoFromSession(request) , ofile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
+	                        importNo++;
+	                        demographicNo=null;
+	                    }
+	                    entry = in.getNextEntry();
+	                }
+	                if (noXML) {
+	                    Util.cleanFile(ifile);
+	                        throw new Exception ("Error! No .xml file in zip");
+	                } else {
+	                    importLog = makeImportLog(logs, tmpDir);
+	                }
                 }
-                if (noXML) {
-                    Util.cleanFile(ifile);
-                        throw new Exception ("Error! No .xml file in zip");
-                } else {
-                    importLog = makeImportLog(logs, tmpDir);
+                finally {
+                	IOUtils.closeQuietly(in);
+                	Util.cleanFile(ifile);
                 }
-                in.close();
-                Util.cleanFile(ifile);
 
             } else if (matchFileExt(ifile, "xml")) {
                 logs.add(importXML(LoggedInInfo.getLoggedInInfoFromSession(request), ifile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
