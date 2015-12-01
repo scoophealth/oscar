@@ -30,7 +30,7 @@ ArrayList templates = (new ReportManager()).getReportTemplatesNoParam();
 String templateViewId = request.getParameter("templateviewid");
 if (templateViewId == null) templateViewId = "";
 %>
-
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
       String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -61,5 +61,8 @@ if(!authed) {
 	<% } %>
 </ul>
 <a href="addEditTemplate.jsp" style="color: #226d55; font-size: 10px;">Add
-Template</a></div>
+Template</a>
+<br/>
+<a href="javascript:void(0)" style="color: #226d55; font-size: 10px;" onclick="newWindow('/oscar/oscarReport/reportByTemplate/k2aTemplates.jsp','templates')" title="<bean:message key='oscarReport.oscarReportByTemplate.msgK2ATemplate' />"><bean:message key="oscarReport.oscarReportByTemplate.msgDownloadFromK2A" /></a>
+</div>
 </form>
