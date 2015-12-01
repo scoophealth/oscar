@@ -1,0 +1,226 @@
+/**
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
+ */
+package org.oscarehr.ws.rest;
+
+import java.util.Date;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+
+import org.apache.log4j.Logger;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.oscarehr.app.OAuth1Utils;
+import org.oscarehr.common.dao.AppDefinitionDao;
+import org.oscarehr.common.dao.AppUserDao;
+import org.oscarehr.common.dao.ResourceStorageDao;
+import org.oscarehr.common.model.AppDefinition;
+import org.oscarehr.common.model.AppUser;
+import org.oscarehr.common.model.ResourceStorage;
+import org.oscarehr.managers.AppManager;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.ws.rest.to.GenericRESTResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import oscar.OscarProperties;
+import oscar.log.LogAction;
+import oscar.oscarPrevention.PreventionDS;
+
+
+@Path("/resources")
+public class ResourceService extends AbstractServiceImpl {
+	private static final Logger logger = MiscUtils.getLogger();
+	
+	@Autowired
+	private SecurityInfoManager securityInfoManager;
+	
+	@Autowired
+	private AppDefinitionDao appDefinitionDao;
+	
+	@Autowired
+	AppManager appManager;
+	
+	@Autowired
+	private AppUserDao appUserDao;
+	
+	@Autowired
+	private ResourceStorageDao resourceStorageDao;
+	
+	@GET
+	@Path("/K2AActive/")
+	@Produces("application/json")
+	public GenericRESTResponse isK2AActive(@Context HttpServletRequest request){
+		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+    	if(!com.quatro.service.security.SecurityManager.hasPrivilege("_admin", roleName$)  && !com.quatro.service.security.SecurityManager.hasPrivilege("_report", roleName$)) {
+    		throw new SecurityException("Insufficient Privileges");
+    	}
+		
+		GenericRESTResponse response = null;
+		AppDefinition appDef = appDefinitionDao.findByName("K2A");
+		if(appDef == null){
+			response = new GenericRESTResponse(false,"K2A active");
+		}else{
+			response = new GenericRESTResponse(true,"K2A not active");
+		}
+		return response;
+	}
+	
+	private String getResource(LoggedInInfo loggedInInfo,String requestURI, String baseRequestURI) {
+		AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
+		if(k2aApp != null) {
+			AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),loggedInInfo.getLoggedInProvider().getProviderNo());
+			
+			if(k2aUser != null) {
+				return OAuth1Utils.getOAuthGetResponse(loggedInInfo,k2aApp, k2aUser, requestURI, baseRequestURI);
+			} else {
+				return null;
+			}
+		}
+		return null;
+	}
+	
+	@GET
+	@Path("/preventionRulesList")
+	@Produces("application/json")
+	public JSONArray getPreventionRulesListFromK2A(@Context HttpServletRequest request) {
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_admin", "r", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		JSONArray retArray = new JSONArray();
+		try {
+			LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+			String resource = getResource(loggedInInfo,"/ws/api/oscar/get/PREVENTION_RULES/list", "/ws/api/oscar/get/PREVENTION_RULES/list"); 
+			JSONArray rulesArray = JSONArray.fromObject(resource);
+			
+			//id  |  type  |       created_at       |       updated_at       | created_by | updated_by |       body        |      name      | private 
+			logger.info("rules json"+rulesArray);
+			for(int i = 0; i < rulesArray.size(); i++){
+				JSONObject jobject = new JSONObject();
+				JSONObject rule = (JSONObject) rulesArray.get(i);
+				jobject.put("id", rule.getString("id"));
+				jobject.put("name", rule.getString("name"));
+				jobject.put("rulesXML", rule.getString("body"));
+				jobject.put("created_at", rule.getString("created_at"));
+				jobject.put("author", rule.getString("author"));
+				
+				retArray.add(jobject);
+			}
+			
+		} catch(Exception e) {
+			logger.error("Error retrieving prevention list",e);
+			return null;
+		}
+		
+		
+		return retArray;
+	}
+	
+	@GET
+	@Path("/currentPreventionRulesVersion")
+	@Produces("application/json")
+	public String getCurrentPreventionRulesVersion(){
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_admin", "r", null) && !securityInfoManager.hasPrivilege(getLoggedInInfo(), "_report", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		ResourceBundle bundle = getResourceBundle();
+
+		String preventionPath = OscarProperties.getInstance().getProperty("PREVENTION_FILE");
+        if ( preventionPath != null){
+        	return bundle.getString("prevention.currentrules.propertyfile");
+        }else{
+        	ResourceStorage resourceStorage = resourceStorageDao.findActive(ResourceStorage.PREVENTION_RULES);
+        	if(resourceStorage != null){
+        		return bundle.getString("prevention.currentrules.resourceStorage")+" "+resourceStorage.getResourceName();
+        	}
+        }
+        return bundle.getString("prevention.currentrules.default");
+	}
+	
+	@POST
+	@Path("/loadPreventionRulesById/{id}")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public String addK2AReport(@PathParam("id") String id, @Context HttpServletRequest request,JSONObject jSONObject) {
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_admin", "r", null) && !securityInfoManager.hasPrivilege(getLoggedInInfo(), "_report", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+    	
+		try {
+			LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+			
+			//Log agreement
+			if(jSONObject.containsKey("agreement")){
+				String action = "oauth1_AGREEMENT";
+		    	String content = "PREVENTION_RULES_AGREEMENT";
+		    	String contentId = id;
+		    	String demographicNo = null;
+		    	String data = jSONObject.getString("agreement");
+		    	LogAction.addLog(loggedInInfo, action, content, contentId, demographicNo, data);
+			}
+			
+			
+			String resource = getResource(loggedInInfo,"/ws/api/oscar/get/PREVENTION_RULES/id/"+id, "/ws/api/oscar/get/PREVENTION_RULES/id/"+id); 
+			
+			if(resource !=null){
+				//JSONObject jSONObject = JSONObject.fromObject(resource);
+				ResourceStorage resourceStorage = new ResourceStorage();
+				resourceStorage.setActive(true);
+				resourceStorage.setResourceName(jSONObject.getString("name"));
+				resourceStorage.setResourceType(ResourceStorage.PREVENTION_RULES);
+				if(jSONObject.containsKey("uuid")){
+					resourceStorage.setUuid(jSONObject.getString("uuid"));
+				}
+				resourceStorage.setUploadDate(new Date());
+				resourceStorage.setFileContents(resource.getBytes());
+				resourceStorage.setUuid(null);
+				
+				List<ResourceStorage> currActive=  resourceStorageDao.findActiveAll(ResourceStorage.PREVENTION_RULES);
+				if(currActive != null){
+					for(ResourceStorage rs: currActive){
+						rs.setActive(false);
+						resourceStorageDao.merge(rs);
+					}
+				}
+				resourceStorageDao.persist(resourceStorage);
+				PreventionDS.reloadRuleBase();
+			}
+			
+		} catch(Exception e) {
+			logger.error("Error saving Resource to Storage",e);
+		}
+		return null;
+	}
+}

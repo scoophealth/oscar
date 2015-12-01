@@ -1,0 +1,167 @@
+<preventions>
+  <recommendations for="DTaP-IPV">   
+   <recommendation message="prevention.message.needs.first.X.vaccine" key="DTaP-IPV">
+        <condition type="age" value="2m-72m" />
+        <condition type="numberOfPreventions" value="0" />
+        <condition type="numberOfPreventions" param="DTaP-IPV-Hib" value="0" />
+        <condition type="!isPreventionNever" />
+   </recommendation>
+
+   <recommendation message="prevention.message.needs.second.X.vaccine" key="DTaP-IPV">
+        <condition type="age" value="4m-72m" />
+        <condition type="numberOfPreventions" value="1" />
+        <condition type="numberOfMonthsSinceLast" value="&gt;2" />
+        <condition type="!isPreventionNever"   />
+        <condition type="isNextDateSet"   />
+   </recommendation>
+
+   <recommendation message="prevention.message.needs.second.X.vaccine" key="DTaP-IPV">
+        <condition type="isPassedNextDate"  />
+        <condition type="numberOfPreventions" value="1" />
+        <condition type="numberOfMonthsSinceLast" value="&gt;2" />
+        <condition type="isPreventionNever"   />
+   </recommendation>
+
+   <recommendation message="prevention.message.needs.third.X.vaccine" key="DTaP-IPV">
+        <condition type="age" value="6m-72m" />
+        <condition type="numberOfPreventions" value="2" />
+        <condition type="numberOfMonthsSinceLast" value="&gt;2" />
+        <condition type="!isPreventionNever" />
+   </recommendation>
+
+	<recommendation message="prevention.message.needs.third.X.vaccine" key="DTaP-IPV">
+        <condition type="isPassedNextDate"  /> 
+        <condition type="numberOfPreventions" value="2" />
+        <condition type="numberOfMonthsSinceLast" value="&gt;2" />
+        <condition type="!isPreventionNever"   />   
+   </recommendation>
+   
+    <recommendation message="prevention.message.needs.fourth.X.vaccine" key="DTaP-IPV">
+        <condition type="age" value="18m-72m" />
+        <condition type="numberOfPreventions" value="3" />
+        <condition type="numberOfMonthsSinceLast" value="&gt;12" />
+        <condition type="!isPreventionNever"   />
+   </recommendation>
+
+   <recommendation message="prevention.message.needs.fourth.X.vaccine" key="DTaP-IPV">
+        <condition type="isPassedNextDate"  />
+        <condition type="numberOfPreventions" value="3" />
+        <condition type="numberOfMonthsSinceLast" value="&gt;12" />
+        <condition type="!isPreventionNever"   />
+   </recommendation>
+
+ </recommendations> 
+
+ <recommendations for="Rot">
+ 	<recommendation message="prevention.message.needs.first.X.vaccine">
+       <condition type="age" value="2m-5m" />
+       <condition type="numberOfPreventions" value="0" />
+       <condition type="!isPreventionNever"  />
+   </recommendation>
+
+   <recommendation message="prevention.message.needs.second.X.vaccine">
+      <condition type="age" value="4m-6m" />
+       <condition type="numberOfPreventions" value="1" />
+       <condition type="numberOfMonthsSinceLast" value="&gt;1" />
+       <condition type="!isPreventionNever"  />
+       <condition type="isNextDateSet"  />
+   </recommendation>    
+ </recommendations> 
+
+ <recommendations for="Flu">
+	<recommendation message="prevention.message.needs.X.vaccine">
+        <condition type="todayIsInDateRange" value="2005-10-01,2006-01-29" /> 
+        <condition type="!lastPreventionIsWithinRange" param="Flu" value="2005-10-01,2006-01-29" /> 
+    </recommendation>
+    
+    <recommendation message="prevention.message.needs.X.vaccine"> 
+        <condition type="age" value="&gt;65" /> 
+        <condition type="numberOfMonthsSinceLast" value="&gt;12"/> 
+       
+    </recommendation>
+    
+    <recommendation message="prevention.message.needs.X.vaccine">   
+        <condition type="age" value="&gt;65" />  
+        <condition type="numberOfMonthsSinceLast" value="-1"/>
+    </recommendation>
+
+    <recommendation message="prevention.message.needs.X.vaccine">
+        <condition type="isNextDateSet"    />     
+        <condition type="isPassedNextDate"   />                  
+    </recommendation>
+ </recommendations>
+
+
+ <recommendations for="VZ">
+	<recommendation message="prevention.message.needs.X.vaccine">
+		<condition type="age" value="15m-24m" />
+		<condition type="numberOfPreventions" value="0" />
+		<condition type="numberOfDaysSinceLast" param="MMR" value="&gt;28"/>
+    </recommendation>
+
+    <recommendation message="prevention.message.needs.X.vaccine">
+    	<condition type="age" value="15m-24m" />
+    	<condition type="numberOfPreventions" value="0" />
+    	<condition type="numberOfDaysSinceLast" param="MMR" value="&gt;0"/>
+    </recommendation>
+
+    <recommendation message="prevention.message.needs.X.vaccine">
+    	<condition type="age" value="4-6" />
+    	<condition type="numberOfPreventions" value="0" />
+    	<condition type="numberOfDaysSinceLast" param="MMR" value="&gt;28"/>
+    </recommendation>
+
+    <recommendation message="prevention.message.needs.X.vaccine">
+    	<condition type="age" value="4-6" />
+    	<condition type="numberOfPreventions" value="0" />
+    	<condition type="numberOfDaysSinceLast" param="MMR" value="0"/>
+    </recommendation>
+ </recommendations>
+
+ <recommendations for="PAP">
+    <recommendation reminder="prevention.message.coming.due">
+    	<condition type="age" value="21-70" />
+        <condition type="isFemale" />
+        <condition type="numberOfMonthsSinceLast" value="&gt;34"/>
+        <condition type="numberOfMonthsSinceLast" value="&lt;36"/>     
+        <condition type="!isPreventionNever"   />
+        <condition type="!isNextDateSet"   />
+        <condition type="!isInelligible"   />
+    </recommendation>
+
+    <recommendation message="prevention.message.overdue">
+    	<condition type="age" value="21-70" />
+    	<condition type="isFemale" />
+    	<condition type="numberOfMonthsSinceLast" value="&gt;36"/>       
+        <condition type="!isPreventionNever"/>
+        <condition type="!isNextDateSet"/>
+        <condition type="!isInelligible"/>
+    </recommendation>
+
+    <recommendation message="prevention.message.no.record.not.found">
+        <condition type="age" value="21-70" />
+        <condition type="isFemale" />
+        <condition type="numberOfMonthsSinceLast" value="-1"/>
+       <condition type="!isInelligible"/>
+       
+    </recommendation>
+
+
+    <recommendation message="prevention.message.overdue">
+             
+       <condition type="isFemale" />                
+        <condition type="isNextDateSet" />        
+        <condition type="isPassedNextDate" />
+        <condition type="!isInelligible" />
+    </recommendation>
+
+
+    <recommendation reminder="prevention.message.last.prevention.done"> 
+		<condition type="age" value="21-70" />
+        <condition type="isFemale" />           
+        <condition type="numberOfMonthsSinceLast" value="-1"/>
+        <condition type="!isInelligible"   />
+    </recommendation>
+
+</recommendations>
+</preventions>

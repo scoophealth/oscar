@@ -57,19 +57,21 @@ public class PreventionManager {
 
     private LRUMap demoPrevs;
     private Map<String,LRUMap>mShell;    
-    private PreventionDS pf;
+    private PreventionDS pf = null;
 
     public PreventionManager() {
         demoPrevs = new LRUMap(MAXITEMS);
         mShell = new HashMap<String,LRUMap>(1);
         mShell.put(PREVS, demoPrevs);
         mShell = Collections.synchronizedMap(mShell);        
-        pf = PreventionDS.getInstance();
+        //PreventionDS.getInstance(); was here but moved below to avoid a loading issue. The dao was null when this initialized 
     }
 
     public synchronized String getWarnings(LoggedInInfo loggedInInfo, String demo) {
         String ret = (String)mShell.get(PREVS).get(demo);
-       
+        if (pf == null){
+        	pf = PreventionDS.getInstance();
+        }
         if( ret == null ) {
                 try {
 

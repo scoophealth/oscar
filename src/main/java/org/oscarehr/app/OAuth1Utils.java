@@ -37,7 +37,10 @@ import org.apache.cxf.rs.security.oauth.client.OAuthClientUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.AppDefinition;
 import org.oscarehr.common.model.AppUser;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+
+import oscar.log.LogAction;
 
 public class OAuth1Utils {
 	private static final Logger logger = MiscUtils.getLogger();
@@ -50,8 +53,8 @@ public class OAuth1Utils {
 	    
 	    return providers;
 	}
-	
-	public static String getOAuthGetResponse(AppDefinition app, AppUser user,String requestURI, String baseRequestURI) {
+		
+	public static String getOAuthGetResponse(LoggedInInfo loggedInInfo,AppDefinition app, AppUser user,String requestURI, String baseRequestURI) {
 		StringBuilder sb = new StringBuilder();
 		InputStream in = null;
 		BufferedReader bufferedReader = null;
@@ -76,7 +79,16 @@ public class OAuth1Utils {
 			while ((line = bufferedReader.readLine()) != null) {
 				sb.append(line);
 			}
-			return sb.toString();
+			
+			String action = "oauth1.GET, AppId="+app.getId()+", AppUser="+user.getId();
+	    	String content = appAuthConfig.getBaseURL() + baseRequestURI;
+	    	String contentId = "AppUser="+user.getId();
+	    	String demographicNo = null;
+	    	String data = sb.toString();
+	    	LogAction.addLog(loggedInInfo, action, content, contentId, demographicNo, data);
+			logger.debug("logaction "+action);
+	    	
+			return data;
 		} catch(Exception e) {
 			logger.error("Error getting information from OAuth Service", e);
 			return null;
@@ -86,7 +98,7 @@ public class OAuth1Utils {
 		}
 	}
 	
-	public static String getOAuthPostResponse(AppDefinition app, AppUser user,String requestURI, String baseRequestURI, List<Object> providers, Object obj) {
+	public static String getOAuthPostResponse(LoggedInInfo loggedInInfo,AppDefinition app, AppUser user,String requestURI, String baseRequestURI, List<Object> providers, Object obj) {
 		StringBuilder sb = new StringBuilder();
 		InputStream in = null;
 		BufferedReader bufferedReader = null;
@@ -111,7 +123,15 @@ public class OAuth1Utils {
 	    	while ((line = bufferedReader.readLine()) != null) {
 	    		sb.append(line);
 	    	}
-	    	return sb.toString();
+	    	String action = "oauth1.POST, AppId="+app.getId()+", AppUser="+user.getId();
+	    	String content = appAuthConfig.getBaseURL() + baseRequestURI;
+	    	String contentId = "AppUser="+user.getId();
+	    	String demographicNo = null;
+	    	String data = sb.toString();
+	    	LogAction.addLog(loggedInInfo, action, content, contentId, demographicNo, data);
+	    	
+	    	
+	    	return data;
 		} catch(Exception e) {
 			logger.error("Error posting information to OAuth Service", e);
 			return null;
