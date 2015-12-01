@@ -116,9 +116,9 @@ public class PreventionManager {
 	public boolean hideItem(String item) {
 		String itemsToRemove = null;
 		Property p = propertyDao.checkByName(HIDE_PREVENTION_ITEM);
-		itemsToRemove = p.getValue();
 		
-		if(itemsToRemove!=null){
+		if(p!=null && p.getValue()!=null){
+			itemsToRemove = p.getValue();
 			List<String> items = Arrays.asList(itemsToRemove.split("\\s*,\\s*"));
 			for(String i:items){
 				if(i.equals(item)){
@@ -130,11 +130,12 @@ public class PreventionManager {
 	}
 	
 	public static String getCustomPreventionItems() {
-		String itemsToRemove = null;
+		String itemsToRemove = "";
 		PropertyDao propertyDao = (PropertyDao)SpringUtils.getBean("propertyDao");
 		Property p = propertyDao.checkByName(HIDE_PREVENTION_ITEM);
+		if(p!=null && p.getValue()!=null){
 		itemsToRemove = p.getValue();
-		
+		}
 		return itemsToRemove;
 	}
 	
