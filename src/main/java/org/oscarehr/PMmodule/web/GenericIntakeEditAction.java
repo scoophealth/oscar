@@ -1119,18 +1119,32 @@ public class GenericIntakeEditAction extends DispatchAction {
 
 		if (admissionText == null) admissionText = "intake admit";
 		
+		//only allow to discharge the programs for which you are staff of.
+		Set<Program> programsInDomain = getActiveProviderPrograms(providerNo);
+		List<Integer> programDomainIds = new ArrayList<Integer>();
+		for(Program p:programsInDomain) {
+			programDomainIds.add(p.getId());
+		}
+		
+		//discharge from all
 		if( serviceProgramIds.isEmpty()) {
 			for(Object programId : currentServicePrograms) {
-				admissionManager.processDischarge((Integer) programId, clientId, "intake discharge", "0", admissionDate);
+				if(programDomainIds.contains(programId)) {
+					admissionManager.processDischarge((Integer) programId, clientId, "intake discharge", "0", admissionDate);
+				} 
 			}
 			return;
 		}
 		
+		//remove the ones selected, and discharge the ones not selected
 		Collection<?> discharge = CollectionUtils.subtract(currentServicePrograms, serviceProgramIds);
 
 		for (Object programId : discharge) {
-			admissionManager.processDischarge((Integer) programId, clientId, "intake discharge", "0", admissionDate);
+			if(programDomainIds.contains(programId)) {
+				admissionManager.processDischarge((Integer) programId, clientId, "intake discharge", "0", admissionDate);
+			}
 		}
+		
 
 		Collection<?> admit = CollectionUtils.subtract(serviceProgramIds, currentServicePrograms);
 
