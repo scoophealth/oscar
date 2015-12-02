@@ -110,7 +110,7 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
     			+ "tm.type = ?2 AND "
     			+ "(ti.firstName = ?3 OR (ti.firstName IS NULL AND ?3 IS NULL)) AND "
     			+ "(ti.lastName = ?4 OR (ti.lastName IS NULL AND ?4 IS NULL)) AND "
-    			+ "ti.healthNumber =?5 "
+    			+ "(ti.healthNumber =?5 OR (ti.healthNumber IS NULL AND ?5 IS NULL))"
     			+ "ORDER BY ti.obrDate, ti.labNumber";   	
     	Query query = entityManager.createQuery(hql);
 	    query.setParameter(1, labQuery.getAccessionNumber());
@@ -183,7 +183,7 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 			this.accessionNumber = accessionNumber;
 			this.firstName = StringUtils.trimToNull(firstName);
 			this.lastName = StringUtils.trimToNull(lastName);
-			this.hin = hin;
+			this.hin = StringUtils.trimToNull(hin);
 		}
 
 		public String getType() {
@@ -223,7 +223,7 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 		}
 
 		public void setHin(String hin) {
-			this.hin = hin;
+			this.hin = StringUtils.trimToNull(hin);
 		}
 	}
 }
