@@ -25,6 +25,7 @@
 
 package oscar.oscarPrevention;
 
+//import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
@@ -34,7 +35,11 @@ import org.apache.log4j.Logger;
 import org.drools.RuleBase;
 import org.drools.WorkingMemory;
 import org.drools.io.RuleBaseLoader;
+import org.oscarehr.common.dao.ResourceStorageDao;
+import org.oscarehr.common.model.ResourceStorage;
+import org.oscarehr.decisionSupport.prevention.DSPreventionDrools;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
@@ -56,6 +61,10 @@ public class PreventionDS {
    }
 	   	                   
    private PreventionDS() {
+   }
+   
+   public static void reloadRuleBase(){
+	   loadRuleBase();
    }
    
    private static void loadRuleBase(){
@@ -87,6 +96,23 @@ public class PreventionDS {
                  ruleBase = RuleBaseLoader.loadFromUrl( url );
         	}
         }
+        
+        if(!fileFound){
+        	ResourceStorageDao resourceStorageDao = SpringUtils.getBean(ResourceStorageDao.class);
+        	ResourceStorage resourceStorage = resourceStorageDao.findActive(ResourceStorage.PREVENTION_RULES);
+        	if(resourceStorage != null){
+	        	try{
+	         	   ruleBase =  DSPreventionDrools.createRuleBase(resourceStorage.getFileContents());  
+	         	   log.info("Loading prevention rule base from "+resourceStorage.getResourceName());
+	         	   fileFound = true;
+	            }catch(Exception resourceError){
+	            	log.error("ERROR LOADING from resource Storage",resourceError);
+	            }        	}
+         	   
+            
+        	// check if table has new preventions DRL
+        }
+        
         
         if (!fileFound){                  
          URL url = PreventionDS.class.getResource( "/oscar/oscarPrevention/prevention.drl" );  //TODO: change this so it is configurable;

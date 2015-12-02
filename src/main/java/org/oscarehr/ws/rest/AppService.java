@@ -182,7 +182,7 @@ public class AppService extends AbstractServiceImpl {
 		    	AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),getLoggedInInfo().getLoggedInProviderNo());
 		    		
 		    	if(k2aUser != null) {
-		    		String jsonString = OAuth1Utils.getOAuthPostResponse(k2aApp, k2aUser, "/ws/api/posts/comment", "/ws/api/posts/comment", OAuth1Utils.getProviderK2A(), comment);
+		    		String jsonString = OAuth1Utils.getOAuthPostResponse(getLoggedInInfo(),k2aApp, k2aUser, "/ws/api/posts/comment", "/ws/api/posts/comment", OAuth1Utils.getProviderK2A(), comment);
 			    		
 			    	if(jsonString != null && !jsonString.isEmpty()) {
 			    		org.codehaus.jettison.json.JSONObject post = new org.codehaus.jettison.json.JSONObject(jsonString);

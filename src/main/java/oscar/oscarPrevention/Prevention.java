@@ -217,6 +217,10 @@ public class Prevention {
       }
       return isSet;
    }
+   
+   public boolean isNotNextDateSet(String preventionType){
+	   return !isNextDateSet(preventionType);
+   }
 
    public boolean isPassedNextDate(String preventionType){
       boolean isPassed = true;
@@ -229,6 +233,10 @@ public class Prevention {
          }
       }
       return isPassed;
+   }
+   
+   public boolean isNotPassedNextDate(String preventionType){
+	   return !isPassedNextDate(preventionType);
    }
 
    public Date getNextPreventionDate(String preventionType){
@@ -252,6 +260,10 @@ public class Prevention {
       }
       return ispreventionnever; //
    }
+   
+   public boolean isNotPreventionNever(String preventionType){
+	   return !isNotPreventionNever(preventionType);
+   }
 
 
    public boolean isInelligible(String preventionType) {
@@ -269,6 +281,9 @@ public class Prevention {
        return isInelligible;
    }
 
+   public boolean isNotInelligible(String preventionType){
+	   return !isInelligible(preventionType);
+   }
 
 
 
