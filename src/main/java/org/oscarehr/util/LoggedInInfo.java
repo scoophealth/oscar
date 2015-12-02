@@ -52,6 +52,7 @@ public final class LoggedInInfo implements Serializable {
 	private String initiatingCode = null;
 	private Security loggedInSecurity = null;
 	private Locale locale = null;
+	private String ip = null;
 
 	public LoggedInInfo()
 	{
@@ -191,5 +192,13 @@ public final class LoggedInInfo implements Serializable {
 		}
 		
 		return null;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 }

@@ -56,10 +56,27 @@
 <body vlink="#0000FF" class="BodyStyle">
 	<div ng-controller="k2aConfig">
 		<div class="page-header">
-			<h4><bean:message key="admin.admin.Know2ActConfig"/></h4>
+			<h4><bean:message key="admin.admin.Know2ActConfig"/> <small data-ng-show="k2aActive"><bean:message key="admin.k2a.active"/></small></h4>
 		</div>
 	 	<div data-ng-show="k2aActive">
-	  		<bean:message key="admin.k2a.active"/>
+	  		<h4><bean:message key="admin.k2a.preventionsListTitle"/> <small>{{currentPreventionRulesSet}}</small></h4>
+	  		<table class="table table-bordered table-condensed">
+	  			<tr>
+	  				<th><bean:message key="admin.k2a.table.filename"/></th>
+	  				<th><bean:message key="admin.k2a.table.dateCreated"/></th>
+	  				<th><bean:message key="admin.k2a.table.createdBy"/></th>
+	  				<th>&nbsp;</th>
+	  			</tr>
+	  			<tr data-ng-repeat="preventionRuleSet in availablePreventionRuleSets | limitTo:PrevListQuantity"> 
+	  				<td>{{preventionRuleSet.name}}</td>
+	  				<td>{{preventionRuleSet.created_at}}</td>
+	  				<td>{{preventionRuleSet.author}}</td>
+	  				<td><button class="btn btn-default btn-sm" ng-click="loadPreventionRuleById(preventionRuleSet)"><bean:message key="admin.k2a.load"/></button></td>
+	  			</tr>
+	  		</table>
+	  		<button  class="btn btn-default btn-sm pull-right" ng-click="increasePrevListQuantity()"><bean:message key="admin.k2a.loadMore"/></button>
+	  		
+	  		
 	 	</div>
 		<div data-ng-hide="k2aActive">
 			<form action="Know2actConfiguration.jsp"  method="POST">
@@ -75,6 +92,7 @@
 			</form>
 		</div>
 	</div>
+	
 	<script>
 		var app = angular.module("k2aConfig", ['k2aServices']);
 		
@@ -84,9 +102,54 @@
 			    	console.log("data coming back",data);
 			    	$scope.k2aActive = data.success;
 			    	console.log($scope.k2aActive );
+			    	if($scope.k2aActive){
+			    		getPreventionRulesList();
+			    		getCurrentPreventionRulesVersion();
+			    	}
 				});
 			}
 		    checkStatus();
+		    
+		    $scope.availablePreventionRuleSets = [];
+		    $scope.currentPreventionRulesSet = "";
+		    
+		    getPreventionRulesList = function(){
+		    	k2aService.preventionRulesList().then(function(data){
+			    	console.log("data coming back",data);
+			    	 $scope.availablePreventionRuleSets = data;
+			    	console.log("prev rules ",$scope.availablePreventionRuleSets );
+				});
+		    }; 
+		    
+		    getCurrentPreventionRulesVersion = function(){
+		    	k2aService.getCurrentPreventionRulesVersion().then(function(data){
+			    	console.log("data coming back",data);
+			    	 $scope.currentPreventionRulesSet = data;
+			    	console.log("prev rules ",$scope.availablePreventionRuleSets );
+				});
+		    }
+		    
+		    $scope.loadPreventionRuleById = function(prevSet){
+		    	
+		    	if(confirm("<bean:message key="admin.k2a.confirmation"/>")){
+		    		console.log("prev",prevSet);
+		    		prevSet.agreement = "<bean:message key="admin.k2a.confirmation"/>";
+			    	k2aService.loadPreventionRuleById(prevSet).then(function(data){
+				    	console.log("data coming back",data);
+				    	getCurrentPreventionRulesVersion();
+				    	console.log("prev rules ",$scope.availablePreventionRuleSets );
+					});
+		    	}
+		    }; 
+		    
+		    $scope.PrevListQuantity = 10;
+		    
+		    $scope.increasePrevListQuantity =function(){
+		    	$scope.PrevListQuantity = $scope.availablePreventionRuleSets.length;
+		    }
+		    
+		    //
+		    
 			
 		    $scope.initK2A = function(){
 		    	console.log($scope.clinicName);

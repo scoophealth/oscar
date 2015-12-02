@@ -76,6 +76,26 @@ public class LogAction {
 		addLog(provider_no, action, content, contentId, ip, demographicNo, null);
 	}
 
+	public static void addLog(LoggedInInfo loggedInInfo, String action, String content, String contentId, String demographicNo, String data)
+	{
+		OscarLog logEntry=new OscarLog();
+		if (loggedInInfo.getLoggedInSecurity()!=null) logEntry.setSecurityId(loggedInInfo.getLoggedInSecurity().getSecurityNo());
+		if (loggedInInfo.getLoggedInProvider()!=null) logEntry.setProviderNo(loggedInInfo.getLoggedInProviderNo());
+		logEntry.setAction(action);
+		logEntry.setContent(content);
+		logEntry.setContentId(contentId);
+		logEntry.setIp(loggedInInfo.getIp()); 
+
+		try {
+			demographicNo=StringUtils.trimToNull(demographicNo);
+			if (demographicNo != null) logEntry.setDemographicId(Integer.parseInt(demographicNo));
+		} catch (Exception e) {
+			logger.error("Unexpected error", e);
+		}
+		logEntry.setData(data);
+		executorService.execute(new AddLogExecutorTask(logEntry));
+	}
+	
 	/**
 	 * This method will add a log entry asynchronously in a separate thread.
 	 */
