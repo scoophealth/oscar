@@ -52,8 +52,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -83,8 +81,8 @@ import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
-import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.sharingcenter.SharingCenterUtil;
 import org.oscarehr.sharingcenter.model.DemographicExport;
 import org.oscarehr.util.LoggedInInfo;
@@ -93,6 +91,12 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.lowagie.text.pdf.PdfReader;
+import com.sun.pdfview.PDFFile;
+import com.sun.pdfview.PDFPage;
+
+import net.sf.json.JSONObject;
+import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.dms.IncomingDocUtil;
@@ -102,10 +106,6 @@ import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.UtilDateUtilities;
-
-import com.lowagie.text.pdf.PdfReader;
-import com.sun.pdfview.PDFFile;
-import com.sun.pdfview.PDFPage;
 
 /**
  * @author jaygallagher
@@ -248,6 +248,56 @@ public class ManageDocumentAction extends DispatchAction {
 		return null;
 	}
 
+	public ActionForward documentExistsInChartAjax(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		String demoId = request.getParameter("demo_no");
+		String documentId = request.getParameter("documentId");
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", demoId)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
+		//get the sha-1 of the document being processed and compare against the documents in patients echart
+		
+		List<Document> existingDocuments = documentDao.findByDemographicId(demoId);
+		
+		Document currentDoc = documentDao.find(Integer.parseInt(documentId));
+		String parentDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+		
+		String signature = null;
+		try {
+			signature = EDocUtil.calculateFileSignature(new File(parentDir,currentDoc.getDocfilename()));
+		}catch(Exception e) {
+			MiscUtils.getLogger().warn("unable to calculate file signature on " +  currentDoc.getDocfilename());
+		}
+		
+		
+		boolean duplicate=false;
+		for(Document d:existingDocuments) {
+			if(signature.equals(d.getFileSignature())) {
+				duplicate=true;
+				break;
+			}
+		}
+		
+		HashMap hm = new HashMap();
+		if(signature != null) {
+			hm.put("demographicNo", demoId);
+			hm.put("documentId", documentId);
+			hm.put("duplicate", duplicate);
+		} else {
+			hm.put("error", "Unable to calcular file signature");
+		}
+		JSONObject jsonObject = JSONObject.fromObject(hm);
+		try {
+			response.getOutputStream().write(jsonObject.toString().getBytes());
+		} catch (IOException e) {
+			MiscUtils.getLogger().error("Error", e);
+		}
+
+		return null;
+	}
+
+	
 	public ActionForward removeLinkFromDocument(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 		String docType = request.getParameter("docType");

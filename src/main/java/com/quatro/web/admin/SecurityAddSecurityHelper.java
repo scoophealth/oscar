@@ -113,6 +113,7 @@ public class SecurityAddSecurityHelper {
         }
     	s.setPasswordUpdateDate(new java.util.Date());
     	s.setPinUpdateDate(new java.util.Date());
+    	s.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
 		
     	securityManager.saveNewSecurityRecord(loggedInInfo, s);
 
