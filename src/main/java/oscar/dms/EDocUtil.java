@@ -33,12 +33,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -233,6 +235,14 @@ public final class EDocUtil {
 		doc.setNumberofpages(newDocument.getNumberOfPages());
 		doc.setAppointmentNo(newDocument.getAppointmentNo());
 		doc.setRestrictToProgram(newDocument.isRestrictToProgram());
+		
+		//calculate the File signature
+		try {
+			String parentDir = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+			doc.setFileSignature(EDocUtil.calculateFileSignature(new File(parentDir,doc.getDocfilename())));
+		}catch(Exception e) {
+			MiscUtils.getLogger().warn("File signature not set on Document " + doc.getDocfilename());
+		}
 		documentDao.persist(doc);
 
 		Integer document_no = doc.getId();
@@ -850,6 +860,13 @@ public final class EDocUtil {
 		doc.setSource(source);
 		doc.setSourceFacility(sourceFacility);
 		doc.setNumberofpages(1);
+		
+		try {
+			doc.setFileSignature(EDocUtil.calculateFileSignature(new File(doc.getDocfilename())));
+		}catch(Exception e) {
+			MiscUtils.getLogger().warn("File signature not set on Document " + doc.getDocfilename());
+		}
+		
 		documentDao.persist(doc);
 
 		int key = 0;
@@ -1190,4 +1207,27 @@ public final class EDocUtil {
     		}
         }
 
-	}
+        public static String calculateFileSignature(File file) throws Exception {
+        	String result = null;
+        	InputStream fis = null;
+        	
+        	MessageDigest digest = MessageDigest.getInstance("SHA-1");
+        	try {
+	            fis = new FileInputStream(file);
+	            int n = 0;
+	            byte[] buffer = new byte[8192];
+	            while (n != -1) {
+	                n = fis.read(buffer);
+	                if (n > 0) {
+	                    digest.update(buffer, 0, n);
+	                }
+	            }
+	            result =  Base64.encodeBase64String(digest.digest());
+        	}finally {
+        		IOUtils.closeQuietly(fis);
+        	}
+            
+            return result;
+        }
+
+}

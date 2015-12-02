@@ -431,8 +431,9 @@
                                                                                    
                                             <input type="checkbox" id="activeOnly<%=docId%>" name="activeOnly" checked="checked" value="true" onclick="setupDemoAutoCompletion()">Active Only<br>  
                                             <input type="text" style="width:400px;" id="autocompletedemo<%=docId%>" onchange="checkSave('<%=docId%>');" name="demographicKeyword" />
-                                            <div id="autocomplete_choices<%=docId%>" class="autocomplete"></div>
-                                            
+                                            <span id="autocomplete_choices<%=docId%>" class="autocomplete"></span>&nbsp;
+                                            <span id="duplicate<%=docId%>" style="color:red"></span>
+                                            <br>
                                             <%}%>
 											<input type="button" id="createNewDemo" value="Create New Demographic"  onclick="popup(700,960,'<%= request.getContextPath() %>/demographic/demographicaddarecordhtm.jsp','demographic')"/>
 
@@ -644,6 +645,24 @@
 	            	  if( ui.item.providerNo != undefined && ui.item.providerNo != null &&ui.item.providerNo != "" && ui.item.providerNo != "null" ) {
 	            		  addDocToList(ui.item.providerNo, ui.item.provider + " (MRP)", "<%=docId%>");
 	            	  }
+	            	  
+	            	  //trigger the duplicate check. Is this document already in the patient's chart
+						jQuery.ajax({
+			    			type: "GET",
+			    			url:  "<%= request.getContextPath()%>/dms/ManageDocument.do?method=documentExistsInChartAjax&demo_no="
+			    						+ ui.item.value + "&documentId=<%=docId%>",
+			    			dataType:'json',
+			    			success: function (data) {    				
+			    				//var obj = JSON.stringify(data);
+			    				if(data != null && data.duplicate === true) {
+			    					
+			    					jQuery("#duplicate<%=docId%>").html('Duplicate');
+			    				}
+			    			},
+			    			error: function(jqXHR, err, exception) {
+			    				alert("Error " + jqXHR.status + " " + err);
+			    			}
+    					});	            	  
 	            	  
 	            	  //enable Save button whenever a selection is made
 	                  jQuery('#save<%=docId%>').removeAttr('disabled');
