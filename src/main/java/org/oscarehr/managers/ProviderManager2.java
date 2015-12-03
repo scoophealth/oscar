@@ -447,6 +447,10 @@ public class ProviderManager2 {
 		}
 		*/
 		
+		if(map.get("tickler_email_provider") != null) {
+			settings.setEnableTicklerEmailProvider("Y".equals(map.get("tickler_email_provider").getValue()));
+		}
+		
 		settings.setNewTicklerWarningWindow(pp.getNewTicklerWarningWindow());
 		
 		settings.setStartHour(pp.getStartHour());
@@ -726,6 +730,11 @@ public class ProviderManager2 {
 		if(map.get("rxInteractionWarningLevel") != null) {
 			settings.setRxInteractionWarningLevel(map.get("rxInteractionWarningLevel").getValue());
 		}
+		
+		p = getMappedOrNewProperty(map, "tickler_email_provider", providerNo);
+		p.setValue(String.valueOf(settings.isEnableTicklerEmailProvider()));
+		
+		
 		
 		for(String key:map.keySet()) {
 			Property prop = map.get(key);

@@ -155,6 +155,8 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
 	// MCEDT Settings
 	public static final String MCEDT_ACCOUNT_PASSWORD = "mcedt_account_password";
 
+	public static final String TICKLER_EMAIL_PROVIDER = "tickler_email_provider";
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
