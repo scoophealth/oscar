@@ -23,26 +23,34 @@
  */
 package org.oscarehr.ws.rest;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
+import org.oscarehr.app.AppOAuth1Config;
+import org.oscarehr.app.OAuth1Utils;
+import org.oscarehr.common.dao.AppDefinitionDao;
+import org.oscarehr.common.dao.AppUserDao;
+import org.oscarehr.common.model.AppDefinition;
+import org.oscarehr.common.model.AppUser;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.to.RSSResponse;
 import org.oscarehr.ws.rest.to.model.RssItem;
 import org.springframework.stereotype.Component;
-
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.XmlReader;
 
 
 @Path("/rssproxy")
@@ -52,45 +60,114 @@ import com.sun.syndication.io.XmlReader;
  * @author marc
  *
  */
-public class RSSFeedService {
+public class RSSFeedService extends AbstractServiceImpl {
 
 	Logger logger = MiscUtils.getLogger();
 	
 	@GET
 	@Path("/rss")
 	@Produces("application/json")
-	public org.oscarehr.ws.rest.to.RSSResponse getRSS(@QueryParam("key") String key) {
+	public org.oscarehr.ws.rest.to.RSSResponse getRSS(@QueryParam("key") String key,@QueryParam("startPoint") String startPoint, @QueryParam("numberOfRows") String numberOfRows, @Context HttpServletRequest request) {
 		RSSResponse response = new RSSResponse();
 		response.setTimestamp(new Date());
-		
-		
 		try {
-			String urlStr = null;
-			
 			if(key.equals("k2a")) {
-				urlStr = "http://www.mydrugref.org/feed/rss";
-			}
+				AppDefinitionDao appDefinitionDao = SpringUtils.getBean(AppDefinitionDao.class);
+	    		AppUserDao appUserDao = SpringUtils.getBean(AppUserDao.class);
+	    		
+	    		AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
 			
-			if(urlStr == null) {
+	    		if(k2aApp != null) {
+		    		AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),getLoggedInInfo().getLoggedInProviderNo());
+		    		
+		    		if(k2aUser != null) {
+		    			String jsonString = OAuth1Utils.getOAuthGetResponse(k2aApp, k2aUser, "/ws/api/posts/userFriendsRecentPosts?startingPoint=" + startPoint + "&numberOfRows=" + numberOfRows, "/ws/api/posts/userFriendsRecentPosts");
+			    		JSONArray jsonArray = new JSONArray();
+			    		
+			    		if(jsonString != null && !jsonString.isEmpty()) {
+			    			jsonArray = new JSONArray(jsonString);
+			    			
+			    			for (int i = 0; i < jsonArray.length(); i++) {
+			    	        	JSONObject post = jsonArray.getJSONObject(i);
+			    	        	
+			    	        	RssItem item = new RssItem();
+			    	        	item.setId(Long.parseLong(post.getString("id")));
+			    				item.setTitle(post.getString("name"));
+			    				item.setAuthor(post.getString("author"));
+			    				item.setType(post.getString("type"));
+			    				
+			    				AppOAuth1Config appAuthConfig = AppOAuth1Config.fromDocument(k2aApp.getConfig());
+			    				item.setLink(appAuthConfig.getBaseURL() + "/#/ws/rs/posts/" + post.getString("id"));
+			    				
+			    				Date date = null;
+			    				try {
+				    				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+		    	        			date = formatter.parse(post.getString("updatedAt"));
+			    				} catch(ParseException e) {
+			    					DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+		    	        			date = formatter.parse(post.getString("updatedAt"));
+			    				}
+			    				item.setPublishedDate(date);
+			    				item.setBody(post.getString("body"));
+			    				item.setAgreeCount(Long.parseLong(post.getString("agreeCount")));
+			    				item.setDisagreeCount(Long.parseLong(post.getString("disagreeCount")));
+			    				item.setCommentCount(Long.parseLong(post.getString("commentCount")));
+			    				if(post.has("significance")) {
+			    					item.setSignificance(post.getString("significance"));
+			    				}
+			    				if(post.has("agree")) {
+			    					item.setAgree(post.getBoolean("agree"));
+			    				}
+			    				if(post.has("disagree")) {
+			    					item.setDisagree(post.getBoolean("disagree"));
+			    				}
+			    				if(post.has("agreeId")) {
+			    					item.setAgreeId(Long.parseLong(post.getString("agreeId")));
+			    				}
+			    				if(post.has("comments")) {
+			    					List<RssItem> commentItems = new ArrayList<RssItem>();
+			    					JSONArray comments =  post.getJSONArray("comments");
+			    					
+			    					for (int j = 0; j < comments.length(); j++) {
+					    	        	JSONObject comment = comments.getJSONObject(j);
+					    	        	
+					    	        	RssItem commentItem = new RssItem();
+					    	        	commentItem.setId(Long.parseLong(comment.getString("id")));
+					    	        	commentItem.setAuthor(comment.getString("author"));
+					    	        	commentItem.setType(comment.getString("type"));
+					    				Date commentDate = null;
+					    				if(comment.has("createdAt")) {
+						    				try {
+							    				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+					    	        			commentDate = formatter.parse(comment.getString("createdAt"));
+						    				} catch(ParseException e) {
+						    					DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+					    	        			commentDate = formatter.parse(comment.getString("createdAt"));
+						    				}
+					    				}
+					    				commentItem.setPublishedDate(commentDate);
+					    				commentItem.setBody(comment.getString("body"));
+					    				
+					    				commentItems.add(commentItem);
+			    					}
+			    					item.setComments(commentItems);
+			    				}
+			    					
+			    				response.getContent().add(item);
+			    			}
+			    			response.setTotal(response.getContent().size());
+			    		}
+		    		} else {
+			    		RssItem item = new RssItem();
+			    		item.setType("Utilize K2A Now!");
+			    		item.setBody("Receive the latest evidence and information from your trusted network! Sign into K2A now, by visiting User Settings > Integration > K2A Login.");
+			    		item.setId((long)k2aApp.getId());
+			    		response.getContent().add(item);
+			    	}
+	    		}
+			} else {
 				return response;
 			}
-			
-			URL url = new URL(urlStr);
-			HttpURLConnection httpcon = (HttpURLConnection)url.openConnection();
-			// Reading the feed
-			SyndFeedInput input = new SyndFeedInput();
-			SyndFeed feed = input.build(new XmlReader(httpcon));
-			List<SyndEntry> entries = feed.getEntries();
-			for(SyndEntry entry:entries){
-				RssItem item = new RssItem();
-				item.setTitle(entry.getTitle());
-				item.setAuthor(entry.getAuthor());
-				item.setLink(entry.getLink());
-				item.setPublishedDate(entry.getPublishedDate());
-				item.setDescription(entry.getDescription().getValue());
-				response.getContent().add(item);
-			} 
-			response.setTotal(response.getContent().size());
 		}catch(Exception e) {
 			logger.error("error",e);
 			return null;

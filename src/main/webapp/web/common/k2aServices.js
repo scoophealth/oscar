@@ -30,10 +30,10 @@ angular.module("k2aServices", [])
 		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
 	      
-        getK2aFeed: function () {
+        getK2aFeed: function (startPoint,numberOfRows) {
         	var deferred = $q.defer();
         	$http({
-                url: this.apiPath+'/rssproxy/rss?key=k2a',
+                url: this.apiPath+'/rssproxy/rss?key=k2a&startPoint=' + startPoint + '&numberOfRows=' + numberOfRows,
                 method: "GET",
                 headers: this.configHeaders,
               }).success(function (data) {
@@ -67,6 +67,29 @@ angular.module("k2aServices", [])
                });
         
              return deferred.promise;
-         }
+        },
+	postK2AComment: function(post) {
+		var deferred = $q.defer();
+		var commentItem = {post};
+		$http.post(this.apiPath+'/app/comment',commentItem).success(function(data){
+		console.log("return from /comment",data);
+		deferred.resolve(data);
+		}).error(function(){
+		  console.log("error posting comment to k2a");
+		  deferred.reject("An error occured while trying to post a comment to k2a");
+		});
+	      return deferred.promise;
+	},
+	removeK2AComment: function(commentId) {
+		var deferred = $q.defer();
+		$http.delete(this.apiPath+'/app/comment/' + commentId).success(function(data){
+		console.log("return from /comment/" + commentId,data);
+		deferred.resolve(data);
+		}).error(function(){
+		  console.log("error removing comment from k2a");
+		  deferred.reject("An error occured while trying to remove a comment from k2a");
+		});
+	      return deferred.promise;
+	}
     };
 });
