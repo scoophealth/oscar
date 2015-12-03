@@ -35,8 +35,13 @@
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.bean.EctMeasuringInstructionBeanHandler, oscar.oscarEncounter.oscarMeasurements.bean.EctMeasuringInstructionBean"%>
 <%@ page import="java.util.Vector"%>
+<%@ page import="org.oscarehr.managers.MeasurementManager"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
 <%
     String demo = (String) request.getAttribute("demographicNo"); //bean.getDemographicNo();
+    
+    MeasurementManager measurementManager = SpringUtils.getBean(MeasurementManager.class); 
+    String groupName = (String) request.getAttribute("groupName");
 %>
 
 <html:html locale="true">
@@ -86,8 +91,6 @@ function check() {
 }
 </script>
 <body class="BodyStyle" vlink="#0000FF" onload="window.focus();">
-<!--  -->
-
 <html:form action="/oscarEncounter/Measurements">
 	<logic:present name="css">
 		<link rel="stylesheet" type="text/css"
@@ -97,6 +100,7 @@ function check() {
 		<link rel="stylesheet" type="text/css"
 			href="styles/measurementStyle.css">
 	</logic:notPresent>
+		
 	<table class="MainTable" id="scrollNumber1" name="encounterTable">
 		<tr class="MainTableTopRow">
 			<td class="MainTableTopRowLeftColumn"><logic:present
@@ -124,6 +128,7 @@ function check() {
 			</table>
 			</td>
 			<td class="MainTableRightColumn">
+			<%=measurementManager.getDShtml(groupName)%>
 			<table border=0 cellspacing=0>
 				<tr>
 					<td>
