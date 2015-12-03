@@ -222,6 +222,8 @@ if(!authed) {
 	}
 
 	function populate(eftId) {
+		$("#loader_"+eftId).show();
+		
 		var e = {
 			id : eftId
 		};
@@ -235,12 +237,14 @@ if(!authed) {
 				listReports();
 			},
 			error : function(data) {
+				$("#loader_"+eftId).hide();
 				alert('error:' + data);
 			}
 		});
 	}
 
 	function markLatest(eftId) {
+		$("#loader_"+eftId).show();
 		var e = {
 			id : eftId
 		};
@@ -254,6 +258,7 @@ if(!authed) {
 				listReports();
 			},
 			error : function(data) {
+				$("#loader_"+eftId).hide();
 				alert('error:' + data);
 			}
 		});
@@ -264,6 +269,7 @@ if(!authed) {
 			var e = {
 				id : eftId
 			};
+			$("#loader_"+eftId).show();
 			$.ajax({
 				url : '../../ws/rs/reporting/eformReportTool/remove',
 				type : 'POST',
@@ -275,6 +281,7 @@ if(!authed) {
 
 				},
 				error : function(data) {
+					$("#loader_"+eftId).hide();
 					alert('error:' + data);
 				}
 			});
@@ -307,7 +314,7 @@ if(!authed) {
 								}
 								$("#listTable tbody")
 										.append(
-												"<tr> <td><a onClick=\"removeItem('"
+												"<tr> <td><span id='loader_" + e.id + "' style='display:none'><img src='../../images/DMSLoader.gif'></span></td><td><a onClick=\"removeItem('"
 														+ e.id
 														+ "')\">(Remove)</a>&nbsp;<a onClick=\"populate('"
 														+ e.id
@@ -357,6 +364,7 @@ if(!authed) {
 	<!--  display list of existing tables made, with ability to delete any one of them -->
 	<table id="listTable" class="table" width="100%">
 		<thead>
+			<th></th>
 			<th></th>
 			<th>Name</th>
 			<th>Table Name</th>
