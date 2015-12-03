@@ -52,13 +52,16 @@ import org.oscarehr.common.dao.TicklerCommentDao;
 import org.oscarehr.common.dao.TicklerDao;
 import org.oscarehr.common.dao.TicklerTextSuggestDao;
 import org.oscarehr.common.dao.TicklerUpdateDao;
+import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.CustomFilter;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerComment;
 import org.oscarehr.common.model.TicklerLink;
 import org.oscarehr.common.model.TicklerTextSuggest;
 import org.oscarehr.common.model.TicklerUpdate;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.EmailUtilsOld;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -85,6 +88,7 @@ public class TicklerManager {
         public static final String SORT_DESC = "desc";
         
 	private static final String TICKLER_EMAIL_TEMPLATE_FILE="/tickler_email_notification_template.txt";
+	private static final String TICKLER_EMAIL_PROVIDER_TEMPLATE_FILE="/tickler_email_provider_notification_template.txt";
 	private static final String PRIVILEGE_READ = "r";
 	private static final String PRIVILEGE_WRITE = "w";
 	private static final String PRIVILEGE_UPDATE = "u";
@@ -162,13 +166,76 @@ public class TicklerManager {
     	}
     	
     	ticklerDao.persist(tickler);
-	     
+    	
 	    //--- log action ---
 		LogAction.addLogSynchronous(loggedInInfo, "TicklerManager.addtickler", "ticklerId="+tickler.getId());
 		
+		sendNotificationToProvider(loggedInInfo, tickler);
+    	
+    	
 		return true;
     }
     
+    
+    public boolean sendNotificationToProvider(LoggedInInfo loggedInInfo, Tickler t) {
+    	checkPrivilege(loggedInInfo, PRIVILEGE_READ);
+    	
+    	String notify = OscarProperties.getInstance().getProperty("tickler_email_provider_enabled","false");
+    	if(!"true".equals(notify)) {
+    		return false;
+    	}
+    	
+    	//reload it so all the sub-objects objects are present - better for velocity template.
+    	Tickler tickler = ticklerDao.find(t.getId());
+    	
+    	//check if provider has consented to getting the emails (prefs)
+    	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+    	UserProperty prop = userPropertyDao.getProp(tickler.getTaskAssignedTo(), UserProperty.TICKLER_EMAIL_PROVIDER);
+    	if(prop == null || "false".equals(prop.getValue())) {
+    		return false;
+    	}
+    	
+    	
+    	Provider provider = tickler.getAssignee();
+    	
+    	String emailTo = provider.getEmail();
+        if (EmailUtilsOld.isValidEmailAddress(emailTo)) { 
+
+        	InputStream is = null;
+        	
+        	try {
+             is = TicklerManager.class.getResourceAsStream(TICKLER_EMAIL_PROVIDER_TEMPLATE_FILE);
+             String emailTemplate=IOUtils.toString(is);
+             String emailSubject=OscarProperties.getInstance().getProperty("tickler_email_provider_subject");
+             String emailFrom=OscarProperties.getInstance().getProperty("tickler_email_provider_from_address");
+
+             ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
+             Clinic c = clinicDao.getClinic();
+
+             VelocityContext velocityContext=VelocityUtils.createVelocityContextWithTools();            
+             velocityContext.put("tickler", tickler);
+             velocityContext.put("clinic", c);
+             velocityContext.put("provider", provider);
+
+             String mergedSubject=VelocityUtils.velocityEvaluate(velocityContext, emailSubject);
+             String mergedBody=VelocityUtils.velocityEvaluate(velocityContext, emailTemplate);
+
+             EmailUtilsOld.sendEmail(emailTo, null, emailFrom, null, mergedSubject, mergedBody, null);
+             
+             //--- log action ---
+         	 LogAction.addLogSynchronous(loggedInInfo, "TicklerManager.sendNotificationToProvider", "ticklerId="+tickler.getId());	
+
+         	 return true;
+        	} catch(Exception e) {
+        		MiscUtils.getLogger().warn("Unable to send tickler email to provider",e);
+        	} finally {
+        		IOUtils.closeQuietly(is);
+        	}
+         }
+        
+    	return false;
+    		
+    }
     
     
     public boolean updateTickler(LoggedInInfo loggedInInfo, Tickler tickler) {
@@ -466,26 +533,30 @@ public class TicklerManager {
 	        if (ticklerEditEnabled & ticklerEmailEnabled) {
 	            String emailTo = t.getDemographic().getEmail();
 	            if (EmailUtilsOld.isValidEmailAddress(emailTo)) { 
-
-	                InputStream is = TicklerManager.class.getResourceAsStream(TICKLER_EMAIL_TEMPLATE_FILE);
-	                String emailTemplate=IOUtils.toString(is);
-	                String emailSubject=OscarProperties.getInstance().getProperty("tickler_email_subject");
-	                String emailFrom=OscarProperties.getInstance().getProperty("tickler_email_from_address");
-
-	                ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
-	                Clinic c = clinicDao.getClinic();
-
-	                VelocityContext velocityContext=VelocityUtils.createVelocityContextWithTools();            
-	                velocityContext.put("tickler", t);
-	                velocityContext.put("clinic", c);
-
-	                String mergedSubject=VelocityUtils.velocityEvaluate(velocityContext, emailSubject);
-	                String mergedBody=VelocityUtils.velocityEvaluate(velocityContext, emailTemplate);
-
-	                EmailUtilsOld.sendEmail(emailTo, null, emailFrom, null, mergedSubject, mergedBody, null);
-	                
-	                //--- log action ---
-	    			LogAction.addLogSynchronous(loggedInInfo, "TicklerManager.sendNotification", "ticklerId="+t.getId());
+	            	InputStream is = null;
+	            	try {
+		                is = TicklerManager.class.getResourceAsStream(TICKLER_EMAIL_TEMPLATE_FILE);
+		                String emailTemplate=IOUtils.toString(is);
+		                String emailSubject=OscarProperties.getInstance().getProperty("tickler_email_subject");
+		                String emailFrom=OscarProperties.getInstance().getProperty("tickler_email_from_address");
+	
+		                ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
+		                Clinic c = clinicDao.getClinic();
+	
+		                VelocityContext velocityContext=VelocityUtils.createVelocityContextWithTools();            
+		                velocityContext.put("tickler", t);
+		                velocityContext.put("clinic", c);
+	
+		                String mergedSubject=VelocityUtils.velocityEvaluate(velocityContext, emailSubject);
+		                String mergedBody=VelocityUtils.velocityEvaluate(velocityContext, emailTemplate);
+	
+		                EmailUtilsOld.sendEmail(emailTo, null, emailFrom, null, mergedSubject, mergedBody, null);
+		                
+		                //--- log action ---
+		    			LogAction.addLogSynchronous(loggedInInfo, "TicklerManager.sendNotification", "ticklerId="+t.getId());
+	            	}finally {
+	            		IOUtils.closeQuietly(is);
+	            	}
 	            }else {
 	                throw new EmailException("Email Address is invalid");
 	            }

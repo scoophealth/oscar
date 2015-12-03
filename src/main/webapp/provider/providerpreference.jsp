@@ -817,7 +817,12 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
         </security:oscarSec>
   </oscar:oscarPropertiesCheck>
 
-
+<oscar:oscarPropertiesCheck property="tickler_email_provider_enabled" value="true">
+		<tr>
+        	<td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewTicklerProviderEmailPrefs');return false;"><bean:message key="provider.btnTicklerEmailProviderPrefs"/></a></td>
+        </tr>
+</oscar:oscarPropertiesCheck>
+      
 </table>
 </FORM>
 
