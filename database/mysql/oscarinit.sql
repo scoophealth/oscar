@@ -679,6 +679,7 @@ CREATE TABLE document (
   number_of_pages int(6),
   appointment_no int(11) default NULL,
   restrictToProgram tinyint(1),
+  fileSignature varchar(255),
   PRIMARY KEY  (document_no)
 ) ;
 

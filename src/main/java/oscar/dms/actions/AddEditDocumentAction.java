@@ -67,6 +67,8 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.lowagie.text.pdf.PdfReader;
+
 import oscar.MyDateFormat;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -75,8 +77,6 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.util.UtilDateUtilities;
-
-import com.lowagie.text.pdf.PdfReader;
 
 public class AddEditDocumentAction extends DispatchAction {
 	
@@ -328,7 +328,6 @@ public class AddEditDocumentAction extends DispatchAction {
 		 		EDocUtil.addDocTypeSQL(fm.getDocType(),fm.getFunction());
 		 	} 
 		 	
-			
 			// ---
 			String doc_no = EDocUtil.addDocumentSQL(newDoc);
 			if(ConformanceTestHelper.enableConformanceOnlyTestFeatures){

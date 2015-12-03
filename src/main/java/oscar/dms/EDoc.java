@@ -77,6 +77,7 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 	private int numberOfPages = 0;
 	private Integer appointmentNo = -1;
 	private boolean restrictToProgram=false;
+	private String fileSignature;
 	
 
 	/** Creates a new instance of EDoc */
@@ -520,8 +521,14 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 	public void setNumberOfPages(int n) {
 		this.numberOfPages = n;
 	}
-	
-	
+
+	public String getFileSignature() {
+		return fileSignature;
+	}
+
+	public void setFileSignature(String fileSignature) {
+		this.fileSignature = fileSignature;
+	}
 
 	public boolean isRestrictToProgram() {
 		return restrictToProgram;
