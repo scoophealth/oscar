@@ -45,6 +45,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarReport.reportByTemplate.ReportManager;
@@ -75,10 +76,10 @@ public class UploadTemplates extends Action {
          }
          ReportManager reportManager = new ReportManager();
          if (action.equals("add")) {
-             message = reportManager.addTemplate(xml);
+             message = reportManager.addTemplate(xml, LoggedInInfo.getLoggedInInfoFromSession(request));
          } else if (action.equals("edit")) {
              String templateId = request.getParameter("templateid");
-             message = reportManager.updateTemplate(templateId, xml);
+             message = reportManager.updateTemplate(templateId, xml, LoggedInInfo.getLoggedInInfoFromSession(request));
          }
          request.setAttribute("message", message);
          request.setAttribute("action", action);
