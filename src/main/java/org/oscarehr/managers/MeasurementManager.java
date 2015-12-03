@@ -24,19 +24,29 @@
 
 package org.oscarehr.managers;
 
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.MeasurementGroupStyleDao;
 import org.oscarehr.common.dao.MeasurementMapDao;
+import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.common.model.MeasurementGroupStyle;
 import org.oscarehr.common.model.MeasurementMap;
+import org.oscarehr.common.model.Property;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import oscar.OscarProperties;
 import oscar.log.LogAction;
+import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
 
 @Service
 public class MeasurementManager {
@@ -45,7 +55,7 @@ public class MeasurementManager {
 
 	@Autowired
 	private MeasurementMapDao measurementMapDao;
-
+	
 	public List<Measurement> getCreatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateExclusive, int itemsToReturn) {
 		List<Measurement> results = measurementDao.findByCreateDate(updatedAfterThisDateExclusive, itemsToReturn);
 
@@ -90,4 +100,112 @@ public class MeasurementManager {
 
 		return (results);
     }
+	
+	public static List<String> getFlowsheetDsHTML(){
+		List<String> dsHtml = new ArrayList<String>();
+		String path_set_by_property = OscarProperties.getInstance().getProperty("MEASUREMENT_DS_HTML_DIRECTORY");
+		
+		if( path_set_by_property != null ){
+			File[] files1 = new File(path_set_by_property).listFiles();
+			
+			for (File file1 : files1) {
+			    if (file1.isFile()) {
+			    	dsHtml.add(file1.getName());
+			    }
+			}
+		}
+		
+		URL path_of_resource = MeasurementFlowSheet.class.getClassLoader().getResource("/oscar/oscarEncounter/oscarMeasurements/flowsheets/html/");
+		File[] files2 = new File(path_of_resource.getPath()).listFiles();
+		
+		for (File file2 : files2) {
+		    if (file2.isFile()) {
+		    	dsHtml.add(file2.getName());
+		    }
+		}
+		
+		
+		return dsHtml;
+	}
+	
+	public String getDShtml(String groupName){
+		
+    	String groupId = null;
+    	String propKey = null;
+    	
+    	groupId = findGroupId(groupName);
+    	propKey = "mgroup.ds.html."+groupId;
+
+    	String dsHTML = null;
+    	
+    	PropertyDao propertyDao = (PropertyDao)SpringUtils.getBean("propertyDao");
+		Property p = propertyDao.checkByName(propKey);
+		
+		if(p!=null){
+		dsHTML = p.getValue();
+		return MeasurementFlowSheet.getDSHTMLStream(dsHTML);
+		}
+		
+		return "";
+	}
+	
+	public boolean isProperty(String prop) {
+		PropertyDao propertyDao = (PropertyDao)SpringUtils.getBean("propertyDao");
+		Property props = propertyDao.checkByName(prop);
+		if(props!=null){
+			return true;
+		}		
+		return false;
+	}
+	
+	public String findGroupId(String groupName){
+		String id = null;
+		MeasurementGroupStyleDao measurementGroupStyleDao = (MeasurementGroupStyleDao)SpringUtils.getBean("measurementGroupStyleDao");
+		List<MeasurementGroupStyle> results = measurementGroupStyleDao.findByGroupName(groupName);
+		
+		if(results.size()>0){			
+			for(MeasurementGroupStyle result:results){
+				id = result.getId().toString();
+			}
+		}
+		
+		return id;
+	}
+
+	public void addMeasurementGroupDS(String groupName, String dsHTML){
+		PropertyDao propertyDao = (PropertyDao)SpringUtils.getBean("propertyDao");
+		String id = findGroupId(groupName);
+		boolean propertyExists = isProperty("mgroup.ds.html."+id);
+		if(propertyExists){
+			Property p = propertyDao.checkByName("mgroup.ds.html."+id);
+			p.setValue(dsHTML);
+			propertyDao.merge(p);
+		}else{
+			Property x = new Property();
+			x.setName("mgroup.ds.html."+id);
+			x.setValue(dsHTML);
+			propertyDao.persist(x);
+		}
+	}
+	
+	public void removeMeasurementGroupDS(String propKey){
+		PropertyDao propertyDao = (PropertyDao)SpringUtils.getBean("propertyDao");
+		boolean propertyExists = isProperty(propKey);
+		if(propertyExists){
+			Property p = propertyDao.checkByName(propKey);
+			Integer value = p.getId();
+			
+			propertyDao.remove(value);
+		}
+	}
+	
+	
+	public static String getPropertyValue(String prop){
+		PropertyDao propertyDao = (PropertyDao)SpringUtils.getBean("propertyDao");
+		Property p = propertyDao.checkByName(prop);
+		String value = p.getValue();
+		
+		return value;
+	}
+	
 }
