@@ -23,6 +23,11 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.model.Program"%>
