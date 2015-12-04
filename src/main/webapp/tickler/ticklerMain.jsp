@@ -725,6 +725,8 @@ function changeSite(sel) {
                                                 <a href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=tl.getTableId()%>&providerNo=<%=user_no%>&searchProviderNo=<%=user_no%>&status=')">ATT</a>
                                                 <% }else if (LabResultData.isDocument(type)){ %>
                                                 <a href="javascript:reportWindow('../dms/ManageDocument.do?method=display&doc_no=<%=tl.getTableId()%>&providerNo=<%=user_no%>&searchProviderNo=<%=user_no%>&status=')">ATT</a>
+                                                <% }else if (LabResultData.isHRM(type)){ %>
+                                                    <a href="javascript:reportWindow('../hospitalReportManager/Display.do?id=<%=tl.getTableId()%>&segmentID=<%=tl.getTableId()%>&providerNo=<%=user_no%>&searchProviderNo=<%=user_no%>&status=&demoName=<%=demo.getDisplayName()%>')">ATT</a>
                                                 <% }else {%>
                                                 <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=tl.getTableId()%>&providerNo=<%=user_no%>&searchProviderNo=<%=user_no%>&status=')">ATT</a>
                                                 <% }%>

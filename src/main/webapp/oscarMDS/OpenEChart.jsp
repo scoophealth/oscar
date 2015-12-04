@@ -38,7 +38,15 @@ GregorianCalendar cal = new GregorianCalendar();
 int curYear = cal.get(Calendar.YEAR);
 int curMonth = (cal.get(Calendar.MONTH)+1);
 int curDay = cal.get(Calendar.DAY_OF_MONTH);
+String labType = request.getParameter("labType");
+String reason;
 
+if (labType.equals("HRM")){
+	reason = "HRM Report-Note";
+}
+else{
+	reason = "Lab Results-Note";
+}
 %>
 
 function popupPage(vheight,vwidth,varpage) { 
@@ -53,7 +61,7 @@ function popupPage(vheight,vwidth,varpage) {
   }
 }
 
-popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=request.getParameter("demographicNo")%>&reason=Lab+Results-Notes&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&encType=<%=URLEncoder.encode("Lab Results","UTF-8")%>&status=');
+popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=request.getParameter("demographicNo")%>&reason=<%= URLEncoder.encode(reason, "UTF-8") %>&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&encType=<%=URLEncoder.encode("Lab Results","UTF-8")%>&status=');
 //window.close();
 </script>
 
@@ -61,7 +69,7 @@ popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=req
 <body>
 
 <a
-	href="javascript:popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=request.getParameter("demographicNo")%>&reason=Lab+Results-Notes&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&encType=<%=URLEncoder.encode("Lab Results","UTF-8")%>&status=');window.close();">Please
+	href="javascript:popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=request.getParameter("demographicNo")%>&reason=<%= URLEncoder.encode(reason, "UTF-8") %>&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&encType=<%=URLEncoder.encode("Lab Results","UTF-8")%>&status=');window.close();">Please
 click here to go to the patient's E-Chart.</a>
 
 </body>

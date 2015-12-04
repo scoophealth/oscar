@@ -161,3 +161,14 @@ function signOffHrm(reportId) {
 function revokeSignOffHrm(reportId) {
 	doSignOff(reportId, false);
 }
+
+function popupStart(vheight,vwidth,varpage,windowname) {
+                //console.log("in popupstart 4 args");
+                //console.log(vheight+"--"+ vwidth+"--"+ varpage+"--"+ windowname);
+                if(!windowname)
+                    windowname="helpwindow";
+                //console.log(vheight+"--"+ vwidth+"--"+ varpage+"--"+ windowname);
+                var page = varpage;
+                windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+                var popup=window.open(varpage, windowname, windowprops);
+            }

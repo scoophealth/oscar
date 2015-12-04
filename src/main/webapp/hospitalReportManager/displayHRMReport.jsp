@@ -30,10 +30,17 @@ List<HRMDocumentToProvider> providerLinkList = (List<HRMDocumentToProvider>) req
 
 ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 
+//Demographic ID and Name variables to dynamically assign information of the demographic link or by other means 
+String demographicID;
+String demographicName = hrmReport.getLegalName();
 if(demographicLink != null){
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HRM, ""+hrmReportId, request.getRemoteAddr(),""+demographicLink.getDemographicNo());
+    //Uses the link to get the demographic number and the request parameter to get the demographic name
+    demographicID = demographicLink.getDemographicNo();
 }else{           
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HRM, ""+hrmReportId, request.getRemoteAddr());
+    //Assigns the demographicID to -1 which is used for not assigned, and get the demographicName value using the name in the xml report
+    demographicID = "-1";
 }
 
 %>
@@ -376,6 +383,8 @@ if(demographicLink != null){
 				<%
 				} 
 				%>
+				<input type="button" id="ticklerBtn_<%=hrmReportId%>" value="Tickler" onclick="popupStart(450,600,'<%= request.getContextPath() %>/tickler/ForwardDemographicTickler.do?docType=HRM&docId=<%= hrmReportId %>&demographic_no=<%=demographicID%>','tickler')"/>
+                <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '<%= request.getContextPath() %>/oscarMDS/SearchPatient.do?labType=HRM&segmentID=<%= hrmReportId %>&name=<%=java.net.URLEncoder.encode(demographicName)%>', 'searchPatientWindow')">
 			</td>
 		</tr>
 			
