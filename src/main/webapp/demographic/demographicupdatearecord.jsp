@@ -255,9 +255,17 @@
 	extensions.add(new DemographicExt(request.getParameter("privacyConsent_id"), proNo, demographicNo, "privacyConsent", request.getParameter("privacyConsent")));
 	extensions.add(new DemographicExt(request.getParameter("informedConsent_id"), proNo, demographicNo, "informedConsent", request.getParameter("informedConsent")));
 	extensions.add(new DemographicExt(request.getParameter("IPHISClientNumber_id"), proNo, demographicNo, "IPHISClientNumber", request.getParameter("IPHISClientNumber")));
-	extensions.add(new DemographicExt(request.getParameter("paper_chart_archived_id"), proNo, demographicNo, "paper_chart_archived", request.getParameter("paper_chart_archived")));
-	extensions.add(new DemographicExt(request.getParameter("paper_chart_archived_date_id"), proNo, demographicNo, "paper_chart_archived_date", request.getParameter("paper_chart_archived_date")));
-	extensions.add(new DemographicExt(request.getParameter("paper_chart_archived_program_id"), proNo, demographicNo, "paper_chart_archived_program", request.getParameter("paper_chart_archived_program")));
+	
+	ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
+	AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);
+	
+	List<Program> programDomain = pm.getProgramDomain(loggedInInfo.getLoggedInProviderNo());
+	List<Program> programList = admissionManager.filterProgramListByCurrentPatientAdmissions(programDomain,demographicNo);
+	for(Program p:programList) {	
+		extensions.add(new DemographicExt(request.getParameter("paperChartArchived_id" + p.getId()), proNo, demographicNo, "paperChartArchived" + p.getId(), request.getParameter("paperChartArchived" + p.getId())));
+		extensions.add(new DemographicExt(request.getParameter("paperChartArchivedDate_id" + p.getId()), proNo, demographicNo, "paperChartArchivedDate" + p.getId(), request.getParameter("paperChartArchivedDate" + p.getId())));
+		extensions.add(new DemographicExt(request.getParameter("paperChartArchivedProgram_id" + p.getId()), proNo, demographicNo, "paperChartArchivedProgram" + p.getId(), request.getParameter("paperChartArchivedProgram" + p.getId())));
+	}
 	
 	// customized key
 	if(oscarVariables.getProperty("demographicExt") != null) {
@@ -343,8 +351,7 @@
 
     //update admission information
     GenericIntakeEditAction gieat = new GenericIntakeEditAction();
-    ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
-	AdmissionManager am = SpringUtils.getBean(AdmissionManager.class);
+    AdmissionManager am = SpringUtils.getBean(AdmissionManager.class);
     gieat.setAdmissionManager(am);
     gieat.setProgramManager(pm);
     
