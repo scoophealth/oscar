@@ -339,6 +339,7 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setId("" + ch1.getId());
 				ch1Obj.setDemographic_no("" + ch1.getDemographicNo());
 				ch1Obj.setDemographic_name(ch1.getDemographicName());
+				ch1Obj.setSex(ch1.getSex());
 				ch1Obj.setBilling_date(ConversionUtils.toDateString(ch1.getBillingDate()));
 				ch1Obj.setBilling_time(ConversionUtils.toTimeString(ch1.getBillingTime()));
 				ch1Obj.setStatus(ch1.getStatus());

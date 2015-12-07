@@ -739,6 +739,7 @@ if(statusType.equals("_")) { %>
              <th><a href="javascript:void();" onClick="updateSort('ServiceDate');return false;">SERVICE DATE</a></th>
              <th> <a href="javascript:void();" onClick="updateSort('DemographicNo');return false;">PATIENT</a></th>
              <th class="<%=hideName?"hidden-print":""%>">PATIENT NAME</th>
+             <th>GENDER</th>
              <th> <a href="javascript:void();" onClick="updateSort('VisitLocation');return false;">LOCATION</a></th>
              <th title="Status">STAT</th>
              <th>SETTLED</th>
@@ -868,13 +869,21 @@ if(statusType.equals("_")) { %>
 			   totalCash += ch1Obj.getCashTotal();
 			   totalDebit += ch1Obj.getDebitTotal();
 			   
-			
+				String gender = "";
+				if(ch1Obj.getSex() != null && "1".equals(ch1Obj.getSex())) {
+					gender = "M";
+				}
+				if(ch1Obj.getSex() != null && "2".equals(ch1Obj.getSex())) {
+					gender = "F";
+				}
+				
 				
        %>       
           <tr <%=color %>> 
              <td align="center"><%= ch1Obj.getBilling_date()%>  <%--=ch1Obj.getBilling_time()--%></td>  <!--SERVICE DATE-->
              <td align="center"><%=ch1Obj.getDemographic_no()%></td> <!--PATIENT-->
              <td align="center" class="<%=hideName?"hidden-print":""%>"><a href=# onclick="popupPage(800,740,'../../../demographic/demographiccontrol.jsp?demographic_no=<%=ch1Obj.getDemographic_no()%>&displaymode=edit&dboperation=search_detail');return false;"><%= ch1Obj.getDemographic_name()%></a></td> 
+             <td align="center"><%= gender%></td> 
              <td align="center"><%=ch1Obj.getFacilty_num()!=null?ch1Obj.getFacilty_num():"" %></td>
              <td align="center"><%=ch1Obj.getStatus()%></td> <!--STAT-->
              <td align="center"><%=settleDate%></td> <!--SETTLE DATE-->
