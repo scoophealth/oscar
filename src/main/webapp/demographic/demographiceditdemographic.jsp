@@ -202,6 +202,13 @@ if(!authed) {
 	boolean isSharingCenterEnabled = SharingCenterUtil.isEnabled();
 
 	String programId = (String)session.getAttribute(org.oscarehr.util.SessionConstants.CURRENT_PROGRAM_ID);	
+	
+	//get all the programs that provider is part of , and patient is part of in order to show the right
+	//list of "paper archive" section
+	
+	AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);
+	List<Program> programDomain = pm.getProgramDomain(curProvider_no);
+	List<Program> programList = admissionManager.filterProgramListByCurrentPatientAdmissions(programDomain,Integer.parseInt(demographic_no));
 %>
 
 
@@ -269,6 +276,10 @@ if(!authed) {
    </script>
 <oscar:customInterface section="master"/>
 
+<script>
+var demographicNo='<%=demographic_no%>';
+</script>
+
 <script type="text/javascript" src="<%=request.getContextPath() %>/demographic/demographiceditdemographic.js.jsp"></script>
 
 <style>
@@ -294,8 +305,7 @@ if(!authed) {
        List<DemographicArchive> archives = demographicArchiveDao.findByDemographicNo(Integer.parseInt(demographic_no));
        List<DemographicExtArchive> extArchives = demographicExtArchiveDao.getDemographicExtArchiveByDemoAndKey(Integer.parseInt(demographic_no), "demo_cell");
        
-       AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);  
-     	Admission bedAdmission = admissionManager.getCurrentBedProgramAdmission(demographic.getDemographicNo());
+       Admission bedAdmission = admissionManager.getCurrentBedProgramAdmission(demographic.getDemographicNo());
      	Admission communityAdmission = admissionManager.getCurrentCommunityProgramAdmission(demographic.getDemographicNo());
      	List<Admission> serviceAdmissions = admissionManager.getCurrentServiceProgramAdmission(demographic.getDemographicNo());
      	if(serviceAdmissions == null) {
@@ -1190,10 +1200,14 @@ if ( Dead.equals(PatStat) ) {%>
 						</div>
 						
 						<div class="demographicSection" id="paperChartIndicator">
+						
+						<%
+							for(int x=0;x<programList.size();x++) {
+						%>
 						<h3>&nbsp;<bean:message
-							key="demographic.demographiceditdemographic.paperChartIndicator" /></h3>
+							key="demographic.demographiceditdemographic.paperChartIndicator" /> (<%=programList.get(x).getName() %>)</h3>
 							<%
-								String archived = demoExt.get("paper_chart_archived");
+								String archived = demoExt.get("paperChartArchived" + programList.get(x).getId());
 								String archivedStr = "", archivedDate = "", archivedProgram = "";
 								if("YES".equals(archived)) {
 									archivedStr="Yes";
@@ -1201,11 +1215,11 @@ if ( Dead.equals(PatStat) ) {%>
 								if("NO".equals(archived)) {
 									archivedStr="No";
 								}
-                      			if(demoExt.get("paper_chart_archived_date") != null) {
-                      				archivedDate = demoExt.get("paper_chart_archived_date");
+                      			if(demoExt.get("paperChartArchivedDate" +  programList.get(x).getId()) != null) {
+                      				archivedDate = demoExt.get("paperChartArchivedDate" +  programList.get(x).getId());
                       			}
-                      			if(demoExt.get("paper_chart_archived_program") != null) {
-                      				archivedProgram = demoExt.get("paper_chart_archived_program");
+                      			if(demoExt.get("paperChartArchivedProgram" +  programList.get(x).getId()) != null) {
+                      				archivedProgram = demoExt.get("paperChartArchivedProgram" +  programList.get(x).getId());
                       			}
 							%>
                            <ul>
@@ -1219,6 +1233,8 @@ if ( Dead.equals(PatStat) ) {%>
 	                              <span class="info"><%=archivedProgram %></span>
 	                          </li>
 	                       </ul>
+	                       
+	                       <% } %>
 						</div>
 						
 <%-- TOGGLE PRIVACY CONSENT --%>						
@@ -2542,14 +2558,18 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 							</tr>
 							
 							<tr>
-	                            <td align="right"><b><bean:message key="web.record.details.archivedPaperChart" />: </b></td>
+								<%
+									for(int x=0;x<programList.size();x++) {
+								%>
+						
+	                            <td align="right"><b><bean:message key="web.record.details.archivedPaperChart" /> (<%=programList.get(x).getName() %>): </b></td>
 	                            <td align="left">
 	                            	<%
-	                            		String paperChartIndicator = StringUtils.trimToEmpty(demoExt.get("paper_chart_archived"));
-	                            		String paperChartIndicatorDate = StringUtils.trimToEmpty(demoExt.get("paper_chart_archived_date"));
-	                            		String paperChartIndicatorProgram = StringUtils.trimToEmpty(demoExt.get("paper_chart_archived_program"));
+	                            		String paperChartIndicator = StringUtils.trimToEmpty(demoExt.get("paperChartArchived" + programList.get(x).getId()));
+	                            		String paperChartIndicatorDate = StringUtils.trimToEmpty(demoExt.get("paperChartArchivedDate" + programList.get(x).getId()));
+	                            		String paperChartIndicatorProgram = StringUtils.trimToEmpty(demoExt.get("paperChartArchivedProgram" + programList.get(x).getId()));
 	                            	%>
-	                            	<select name="paper_chart_archived" id="paper_chart_archived" <%=getDisabled("paper_chart_archived")%> onChange="updatePaperArchive()">
+	                            	<select name="paperChartArchived<%=programList.get(x).getId()%>" id="paperChartArchived<%=programList.get(x).getId() %>" <%=getDisabled("paper_chart_archived")%> onChange="updatePaperArchive('<%=programList.get(x).getId()%>')">
 		                            	<option value="" <%="".equals(paperChartIndicator)?" selected":""%>>
 		                            	</option>
 										<option value="NO" <%="NO".equals(paperChartIndicator)?" selected":""%>>
@@ -2560,12 +2580,12 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 										</option>
 									</select>
 									
-									<input type="text" name="paper_chart_archived_date" id="paper_chart_archived_date" size="11" value="<%=paperChartIndicatorDate%>" >
-										<img src="../images/cal.gif" id="archive_date_cal">
+									<input type="text" name="paperChartArchivedDate<%=programList.get(x).getId() %>" id="paperChartArchivedDate<%=programList.get(x).getId() %>" size="11" value="<%=paperChartIndicatorDate%>" >
+										<img src="../images/cal.gif" id="archive_date_cal<%=programList.get(x).getId()%>">
 											<bean:message key="schedule.scheduletemplateapplying.msgDateFormat"/>
 										
-									<input type="hidden" name="paper_chart_archived_program" id="paper_chart_archived_program" value="<%=paperChartIndicatorProgram%>"/>
-			
+									<input type="hidden" name="paperChartArchivedProgram<%=programList.get(x).getId() %>" id="paperChartArchivedProgram<%=programList.get(x).getId() %>" value="<%=paperChartIndicatorProgram%>"/>
+								<% } %>
                                 </td>
 
 							<%-- TOGGLE SHOW IPHIS NUMBER --%>
@@ -3088,8 +3108,13 @@ Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d
 <script type="text/javascript">
 
 
+<%
+	for(int x=0;x<programList.size();x++) {
+%>
 
-Calendar.setup({ inputField : "paper_chart_archived_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "archive_date_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "paperChartArchivedDate<%=programList.get(x).getId()%>", ifFormat : "%Y-%m-%d", showsTime :false, button : "archive_date_cal<%=programList.get(x).getId()%>", singleClick : true, step : 1 });
+
+<% } %>
 
 function callEligibilityWebService(url,id){
 

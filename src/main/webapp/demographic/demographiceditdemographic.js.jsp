@@ -620,7 +620,6 @@ function addToPatientSet(demoNo, patientSet) {
 }
 </security:oscarSec>
 
-var demographicNo='<%=demographic_no%>';
 
 
 function checkRosterStatus2(){
@@ -673,14 +672,14 @@ function generateMarkup(addresses,type,header) {
      return markup;
 }
 
-function updatePaperArchive(paperArchiveSel) {
-	var val = jQuery("#paper_chart_archived").val();
+function updatePaperArchive(programNo) {
+	var val = jQuery("#paperChartArchived"+programNo).val();
 	if(val == '' || val == 'NO') {
-		jQuery("#paper_chart_archived_date").val('');
-		jQuery("#paper_chart_archived_program").val('');
+		jQuery("#paperChartArchivedDate"+programNo).val('');
+		jQuery("#paperChartArchivedProgram"+programNo).val('');
 	}
 	if(val == 'YES') {
-		jQuery("#paper_chart_archived_program").val('<%=currentProgram%>');
+		jQuery("#paperChartArchivedProgram"+programNo).val('<%=currentProgram%>');
 	}
 }
 
