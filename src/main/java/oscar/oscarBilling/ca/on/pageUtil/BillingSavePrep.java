@@ -374,6 +374,10 @@ public class BillingSavePrep {
 		} else {
 			valsMap.put("payMethod", "1");
 		}
+		
+		if (val.getParameter("payment_date") != null) {
+			valsMap.put("payment_date", val.getParameter("payment_date"));
+		}
 		return valsMap;
 	}
 

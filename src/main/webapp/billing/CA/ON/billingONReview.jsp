@@ -17,6 +17,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
       String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -1134,6 +1135,11 @@ Properties prop = oscar.OscarProperties.getInstance();
 			</table>
 
 			<td class="myGreen">
+			Payment Date:<br/>
+			<input type="text" name="payment_date" id="payment_date" value="<%=DateFormatUtils.format(new java.util.Date(), "yyyy-MM-dd")%>" size="10"/>
+			<br/>
+			<br/>
+			
 			Payment Method:<br/>
 			<% for(int i=0; i<al.size(); i=i+2) { %>
 			<input type="radio" name="payMethod" value="<%=al.get(i) %>" id="payMethod_<%=i %>"/><%=al.get(i+1) %><br/>
