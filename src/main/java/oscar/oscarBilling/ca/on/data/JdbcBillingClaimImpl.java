@@ -205,10 +205,10 @@ public class JdbcBillingClaimImpl {
 		return retval;
 	}
 
-	public boolean addItemPaymentRecord(List lVal, int id, int paymentId, int paymentType) {
+	public boolean addItemPaymentRecord(List lVal, int id, int paymentId, int paymentType, Date paymentDate) {
 		int retval = 0;
 		BillingOnItemPayment billOnItemPayment = null;
-		Timestamp ts = new Timestamp(new Date().getTime());
+		Timestamp ts = new Timestamp(paymentDate.getTime());
 		BillingOnItemPaymentDao billOnItemPaymentDao = (BillingOnItemPaymentDao)SpringUtils.getBean(BillingOnItemPaymentDao.class);
 		for (int i = 0; i < lVal.size(); i++) {
 			BillingItemData val = (BillingItemData) lVal.get(i);
@@ -403,6 +403,18 @@ public class JdbcBillingClaimImpl {
 				_logger.error("add3rdBillExt wrong date format " + paymentDateParam);
 				return retval;
 	    	}
+			
+			//allow user to override with the text box added
+			String paymentDateOverride = mVal.get("payment_date");
+			if(paymentDateOverride != null && paymentDateOverride.length()>0) {
+				try {
+		    		paymentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(paymentDateOverride + " 00:00:00");
+		    	} catch(ParseException ex) {
+					_logger.error("add3rdBillExt wrong date format " + paymentDateOverride);
+					return retval;
+		    	}
+			}
+			
 	    	if(paymentTypeParam==null || paymentTypeParam.equals("")) {
 	    		paymentTypeParam="1";
 	    	}
@@ -422,7 +434,7 @@ public class JdbcBillingClaimImpl {
 		    	
 		    	//payment.setBillingPaymentType(type);
 		    	billingONPaymentDao.persist(payment);
-		    	addItemPaymentRecord((List) vecObj.get(1), id , payment.getId(), Integer.parseInt(paymentTypeParam));
+		    	addItemPaymentRecord((List) vecObj.get(1), id , payment.getId(), Integer.parseInt(paymentTypeParam), paymentDate);
 		    	addCreate3rdInvoiceTrans((BillingClaimHeader1Data) vecObj.get(0), (List<BillingItemData>)vecObj.get(1), payment);
 	    	}
         }
