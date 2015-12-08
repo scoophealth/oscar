@@ -25,6 +25,8 @@ package org.caisi.core.web;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -93,6 +95,14 @@ public class InfirmAction extends DispatchAction
         }
 
         List<LabelValueBean> programBeans = bpm.getProgramBeans(providerNo, facilityId);
+        Collections.sort(programBeans,
+                new Comparator<LabelValueBean>()
+                {
+                    public int compare(LabelValueBean f1, LabelValueBean f2)
+                    {
+                        return f1.getLabel().compareTo(f2.getLabel());
+                    }        
+                });
         
         //this one seems to be for the caisi case management page, and caseload screens
 		se.setAttribute("infirmaryView_programBeans",programBeans);
@@ -299,6 +309,15 @@ public class InfirmAction extends DispatchAction
 		} else {
 			programBeans = manager.getProgramBeans(providerNo, facility_id);
 		}
+		Collections.sort(programBeans,
+		        new Comparator<LabelValueBean>()
+		        {
+		            public int compare(LabelValueBean f1, LabelValueBean f2)
+		            {
+		                return f1.getLabel().compareTo(f2.getLabel());
+		            }        
+		        });
+		
 		for (LabelValueBean pb : programBeans) {
 			out.print(String.format("<option value='%s'>%s</option>", pb.getValue(), pb.getLabel()));
 		}

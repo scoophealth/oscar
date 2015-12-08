@@ -63,7 +63,14 @@ Facility facility = loggedInInfo.getCurrentFacility();
 //List<Program> programs = programManager.getActiveProgramByFacility(providerNo, facility.getId());
 InfirmBedProgramManager bpm = (InfirmBedProgramManager) SpringUtils.getBean("infirmBedProgramManager");
 List<LabelValueBean> programs = bpm.getProgramBeans(providerNo, facility.getId());
-
+Collections.sort(programs,
+        new Comparator<LabelValueBean>()
+        {
+            public int compare(LabelValueBean f1, LabelValueBean f2)
+            {
+                return f1.getLabel().compareTo(f2.getLabel());
+            }        
+        });
 int defaultprogramId = bpm.getDefaultProgramId(providerNo);
 
 %>
