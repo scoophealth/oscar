@@ -122,12 +122,26 @@
 			</div>
 			
 			
+			<input type="hidden" id="startTag" value="<bean:message key="oscarEncounter.Index.startTime"/>">
+			<input type="hidden" id="endTag" value="<bean:message key="oscarEncounter.Index.endTime"/>">
+			
     		<div class="btn-group btn-group-sm pull-right">
-    		
-			  <button type="button" class="btn btn-default" ng-click="saveNote()" id="saveButton"  data-ng-disabled="page.encounterNote.isSigned" ><bean:message key="oscarEncounter.Index.btnSave"/></button>
-			  <button type="button" class="btn btn-default" ng-click="saveSignNote()"><bean:message key="oscarEncounter.Index.btnSignSave"/></button>
-			  <button type="button" class="btn btn-default" ng-click="saveSignVerifyNote()"><bean:message key="oscarEncounter.Index.btnSign"/></button>
-			  <button type="button" class="btn btn-default" ng-click="saveSignBillNote()"><bean:message key="oscarEncounter.Index.btnSignSaveBill"/></button>
+			  <button type="button" class="btn btn-default" ng-click="pasteTimer()" id="aTimer" title="<bean:message key="oscarEncounter.Index.pasteTimer"/>">00:00</button>
+			  <button type="button" class="btn btn-default" ng-click="toggleTimer()" title="<bean:message key="oscarEncounter.Index.toggleTimer"/>">
+				<span class="glyphicon glyphicon-pause"  id="aToggle"></span>
+			  </button>
+			  <button type="button" class="btn btn-default" ng-click="saveNote()" id="saveButton"  data-ng-disabled="page.encounterNote.isSigned" title="<bean:message key="oscarEncounter.Index.btnSave"/>">
+			  				<span class="glyphicon glyphicon-save"  id="theSave"></span>
+			  </button>
+			  <button type="button" class="btn btn-default" ng-click="saveSignNote()" title="<bean:message key="oscarEncounter.Index.btnSignSave"/>">
+			  				<span class="glyphicon glyphicon-pencil"  id="Sign"></span>
+			  </button>
+			  <button type="button" class="btn btn-default" ng-click="saveSignVerifyNote()" title="<bean:message key="oscarEncounter.Index.btnSign"/>">
+			  				<span class="glyphicon glyphicon-thumbs-up"  id="SaveSignVerify"></span>
+			  </button>
+			  <button type="button" class="btn btn-default" ng-click="saveSignBillNote()" title="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>">
+			  				<span class="glyphicon glyphicon-usd"  id="bill"></span>
+			  </button>
 			</div>
     		
     	</div>
