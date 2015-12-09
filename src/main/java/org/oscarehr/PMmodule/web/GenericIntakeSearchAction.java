@@ -125,7 +125,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 		this.clientImageDAO = clientImageDAO;
 	}
 	
-	private SurveyManager surveyManager = new SurveyManager();
+	private SurveyManager surveyManager = (SurveyManager)SpringUtils.getBean("surveyManager2");
 	
 
 	@Override
