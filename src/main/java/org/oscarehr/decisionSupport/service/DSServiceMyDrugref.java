@@ -44,6 +44,7 @@ import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DSGuidelineFactory;
 import org.oscarehr.decisionSupport.model.DSGuidelineProviderMapping;
 import org.oscarehr.decisionSupport.model.DecisionSupportException;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -62,12 +63,12 @@ public class DSServiceMyDrugref extends DSService {
 
     }
 
-    public void fetchGuidelinesFromService(String providerNo) {
+    public void fetchGuidelinesFromService(LoggedInInfo loggedInInfo) {
         RxMyDrugrefInfoAction myDrugrefAction = new RxMyDrugrefInfoAction();
         try {
             logger.debug("CALLING MYDRUGREF");
             @SuppressWarnings("unchecked")
-            Vector<Hashtable<String,String>> providerGuidelines = myDrugrefAction.callOAuthService("guidelines/getGuidelineIds", null, providerNo, this.getMyDrugrefId(providerNo));
+            Vector<Hashtable<String,String>> providerGuidelines = myDrugrefAction.callOAuthService(loggedInInfo,"guidelines/getGuidelineIds", null, this.getMyDrugrefId(loggedInInfo.getLoggedInProviderNo()));
             if (providerGuidelines == null) {
                 logger.error("Could not get provider decision support guidelines from MyDrugref.");
                 return;
@@ -95,15 +96,15 @@ public class DSServiceMyDrugref extends DSService {
             }
             
             //fetch the new ones
-            List<DSGuideline> newGuidelines = this.fetchGuidelines(guidelinesToFetch, providerNo);
+            List<DSGuideline> newGuidelines = this.fetchGuidelines(loggedInInfo,guidelinesToFetch);
             for (DSGuideline newGuideline: newGuidelines) {
                 dSGuidelineDao.persist(newGuideline);
             }
             //Do mappings-guideline mappings;
-            List<DSGuidelineProviderMapping> uuidsMapped = dSGuidelineProviderMappingDao.getMappingsByProvider(providerNo);
+            List<DSGuidelineProviderMapping> uuidsMapped = dSGuidelineProviderMappingDao.getMappingsByProvider(loggedInInfo.getLoggedInProviderNo());
             for (Hashtable<String,String> newMapping: providerGuidelines) {
                 String newUuid = newMapping.get("uuid");
-                DSGuidelineProviderMapping newUuidObj = new DSGuidelineProviderMapping(newUuid, providerNo);
+                DSGuidelineProviderMapping newUuidObj = new DSGuidelineProviderMapping(newUuid, loggedInInfo.getLoggedInProviderNo());
                 if (uuidsMapped.contains(newUuidObj)) {
                     uuidsMapped.remove(newUuidObj);
                 } else {
@@ -120,7 +121,7 @@ public class DSServiceMyDrugref extends DSService {
 
     }
 
-    public List<DSGuideline> fetchGuidelines(List<String> uuids, String providerNo)  {
+    public List<DSGuideline> fetchGuidelines(LoggedInInfo loggedInInfo,List<String> uuids)  {
         RxMyDrugrefInfoAction myDrugrefAction = new RxMyDrugrefInfoAction();
         Vector params = new Vector();
         if(uuids.size() > 0) {
@@ -129,7 +130,7 @@ public class DSServiceMyDrugref extends DSService {
         	}
         }
 
-        Vector<Hashtable> fetchedGuidelines = myDrugrefAction.callOAuthService("guidelines/getGuidelines", params, providerNo, null);
+        Vector<Hashtable> fetchedGuidelines = myDrugrefAction.callOAuthService(loggedInInfo,"guidelines/getGuidelines", params, null);
         ArrayList<DSGuideline> newGuidelines = new ArrayList<DSGuideline>();
         for (Hashtable<String,Serializable> fetchedGuideline: fetchedGuidelines) {
             logger.debug("Title: " + (String) fetchedGuideline.get("name"));

@@ -77,11 +77,11 @@ public abstract class DSService {
         return allResultingConsequences;
     }
 
-    public void fetchGuidelinesFromServiceInBackground(String providerNo) {
-        DSServiceThread dsServiceThread = new DSServiceThread(this, providerNo);
+    public void fetchGuidelinesFromServiceInBackground(LoggedInInfo loggedInInfo) {
+        DSServiceThread dsServiceThread = new DSServiceThread(this, loggedInInfo);
         dsServiceThread.start();
     }
-    public abstract void fetchGuidelinesFromService(String providerNo);
+    public abstract void fetchGuidelinesFromService(LoggedInInfo loggedInInfo);
 
     public List<DSGuideline> getDsGuidelinesByProvider(String provider) {
         return dSGuidelineDao.getDSGuidelinesByProvider(provider);
