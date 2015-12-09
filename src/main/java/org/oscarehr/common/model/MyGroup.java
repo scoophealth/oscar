@@ -121,5 +121,20 @@ public class MyGroup  extends AbstractModel<MyGroupPrimaryKey> implements Serial
         	return o1.getLastName().compareTo(o2.getLastName());
         }
     }; 
+    
+    public static final Comparator<MyGroup> MyGroupNoViewOrderComparator = new Comparator<MyGroup>() {
+        public int compare(MyGroup o1, MyGroup o2) {
+        	if(o1.getViewOrder() !=null && o2.getViewOrder() != null) {
+        		int result =  o1.getViewOrder().compareTo(o2.getViewOrder());
+        		if(result == 0) {
+        			return o1.getId().getProviderNo().compareTo(o2.getId().getProviderNo());
+        		} else {
+        			return result;
+        		}
+        	} else {
+        		return o1.getId().getProviderNo().compareTo(o2.getId().getProviderNo());
+        	}
+        }
+    };
 
 }
