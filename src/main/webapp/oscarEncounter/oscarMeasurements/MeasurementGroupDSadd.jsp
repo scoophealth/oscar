@@ -45,7 +45,7 @@ if(!authed) {
 
 <%@ page import="java.util.*"%>
 <%@ page import="org.oscarehr.managers.MeasurementManager"%>
-<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
 
 <%
 String groupName = session.getAttribute( "groupName").toString();
@@ -84,8 +84,8 @@ for (String file : dsHtmlList) {%>
 <%}%>
 		 </select> 	
 		 
-		 <button type="submit" name="add" class="btn" style="margin-top:-10px">Add</button>		
-
+		 <button type="submit" name="add" class="btn btn-primary" style="margin-top:-10px">Add</button>	
+		 <a href="SetupGroupList.do" class="btn" style="margin-top:-10px">Cancel</a>	
 </form>
 
 </div><!-- container -->						
