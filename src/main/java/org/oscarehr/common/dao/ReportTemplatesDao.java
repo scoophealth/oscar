@@ -49,4 +49,15 @@ public class ReportTemplatesDao extends AbstractDao<ReportTemplates>{
 		Query q = createQuery("t", "t.active = 1");
 		return q.getResultList();
     }
+    
+    public ReportTemplates findByUuid(String uuid) {
+    	Query query = entityManager.createQuery("SELECT r from ReportTemplates r where r.uuid = ? and r.active = 1");
+    	query.setParameter(1, uuid);
+    	
+        @SuppressWarnings("unchecked")
+        List<ReportTemplates> results = query.getResultList();
+        if(!results.isEmpty())
+        	return results.get(0);
+        return null;
+    }
 }
