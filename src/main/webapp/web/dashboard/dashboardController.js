@@ -165,17 +165,20 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 	}
 	
 	$scope.updateReports = function() {
-		inboxService.getDashboardItems(20).then(function(response){
+//TODO: changed to return 5 since that is all we are using at the moment
+		inboxService.getDashboardItems(5).then(function(response){
 			if(response.inbox == null) {
 				return;
 			}
+						
 			if (response.inbox instanceof Array) {
 				$scope.inbox = response.inbox;
 			} else {
 				var arr = new Array();
 				arr[0] = response.inbox;
 				$scope.inbox = arr;
-			}			
+			}
+			$scope.totalInbox = response.total;
 		},function(reason){
 			alert(reason);
 		});
