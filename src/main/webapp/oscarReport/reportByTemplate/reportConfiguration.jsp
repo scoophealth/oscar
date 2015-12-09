@@ -51,6 +51,7 @@ if(!authed) {
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/library/angular.min.js"></script>
 <title>Report by Template</title>
 <link rel="stylesheet" type="text/css"
 	href="../../share/css/OscarStandardLayout.css">
@@ -79,7 +80,7 @@ if(!authed) {
 
 <body vlink="#0000FF" class="BodyStyle">
 
-<table class="MainTable">
+<table class="MainTable" ng-controller="reportConfiguration">
 	<tr class="MainTableTopRow">
 		<td class="MainTableTopRowLeftColumn"><bean:message
 			key="oscarReport.CDMReport.msgReport" /></td>
@@ -103,6 +104,7 @@ if(!authed) {
 		</jsp:include></td>
 		<td class="MainTableRightColumn" valign="top">
 		<%ReportObject curreport = (new ReportManager()).getReportTemplate(templateid);
+		  		 String xml = (new ReportManager()).getTemplateXml(templateid);
                  ArrayList parameters = curreport.getParameters();
                  int step = 0;
                  if (request.getAttribute("errormsg") != null) {
@@ -165,16 +167,21 @@ if(!authed) {
 					<td><input type="submit" name="submitButton" value="Run Query"></td>
 				</tr>
 			</table>
-			<a href="javascript: showHideItem('optionsDiv')" class="link">Show/Hide
-			Options</a>
-			<div id="optionsDiv" style="display: none;"><a
+			<div><a
 				href="viewTemplate.jsp?templateid=<%=curreport.getTemplateId()%>"
 				class="link">View Template XML</a> <a
 				href="addEditTemplate.jsp?templateid=<%=curreport.getTemplateId()%>&opentext=1"
 				class="link">Edit Template</a> <a
 				href="addEditTemplatesAction.do?templateid=<%=curreport.getTemplateId()%>&action=delete"
 				onclick="return confirm('Are you sure you want to delete this report template?')"
-				class="link">Delete Template</a></div>
+				class="link">Delete Template</a> <a
+				href="exportTemplateAction.do?templateid=<%=templateid%>&name=<%=curreport.getTitle()%>"
+				class="link">Export Template to K2A</a>
+			</div>
+			<%  if (request.getAttribute("message") != null) {
+				String message = (String) request.getAttribute("message"); %>
+			<%=message%>
+			<%}%>
 			</div>
 		</html:form></td>
 	</tr>

@@ -31,6 +31,7 @@ package oscar.oscarReport.reportByTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.Document;
@@ -282,7 +283,7 @@ public class ReportManager {
 	//returns any error messages
 	//templateId = null if adding a new template
 	@SuppressWarnings("unchecked")
-    public String addUpdateTemplate(String templateId, Document templateXML, LoggedInInfo loggedInInfo) {
+    public String addUpdateTemplate(String uuid, String templateId, Document templateXML, LoggedInInfo loggedInInfo) {
 		try {
 			Element rootElement = templateXML.getRootElement();
 			List<Element> reports = rootElement.getChildren();
@@ -324,8 +325,15 @@ public class ReportManager {
 				String templateXMLstr = templateout.outputString(report).trim();
 				templateXMLstr = UtilXML.unescapeXML(templateXMLstr);				
 
-				if (templateId == null) {
-					ReportTemplates r = new ReportTemplates();
+				ReportTemplates r = null;
+				if(uuid != null) {
+					r = dao.findByUuid(uuid);
+				} else if(templateId != null) {
+					r = dao.find(Integer.parseInt(templateId));
+				}
+				
+				if (r == null) {
+					r = new ReportTemplates();
 					r.setTemplateTitle(templateTitle);
 					r.setTemplateDescription(templateDescription);
 					r.setTemplateSql(querysql);
@@ -333,22 +341,23 @@ public class ReportManager {
 					r.setActive(activeint);
 					r.setType(type);
 					r.setSequence(sequence);
+					if(uuid != null) {
+						r.setUuid(uuid);
+					} else {
+						r.setUuid(UUID.randomUUID().toString());
+					}
 					dao.persist(r);
 					LogAction.addLogSynchronous(loggedInInfo, "ReportManager.addUpdateTemplate", "id=" + r.getId());
 				} else {
-					ReportTemplates r = dao.find(Integer.parseInt(templateId));
-					if (r != null) {
-						r.setTemplateTitle(templateTitle);
-						r.setTemplateDescription(templateDescription);
-						r.setTemplateSql(querysql);
-						r.setTemplateXml(templateXMLstr);
-						r.setActive(activeint);
-						r.setType(type);
-						r.setSequence(sequence);
-						dao.merge(r);
-						LogAction.addLogSynchronous(loggedInInfo, "ReportManager.addUpdateTemplate", "id=" + r.getId());
-					}
-
+					r.setTemplateTitle(templateTitle);
+					r.setTemplateDescription(templateDescription);
+					r.setTemplateSql(querysql);
+					r.setTemplateXml(templateXMLstr);
+					r.setActive(activeint);
+					r.setType(type);
+					r.setSequence(sequence);
+					dao.merge(r);
+					LogAction.addLogSynchronous(loggedInInfo, "ReportManager.addUpdateTemplate", "id=" + r.getId());
 				}
 
 			}
@@ -364,20 +373,20 @@ public class ReportManager {
 		return "";
 	}
 
-	public String addTemplate(String templateXML, LoggedInInfo loggedInInfo) {
+	public String addTemplate(String uuid, String templateXML, LoggedInInfo loggedInInfo) {
 		try {
 			Document templateXMLdoc = readXml(templateXML);
-			return addUpdateTemplate(null, templateXMLdoc, loggedInInfo);
+			return addUpdateTemplate(uuid, null, templateXMLdoc, loggedInInfo);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
 			return "Error: Error parsing file, make sure the root element is set.";
 		}
 	}
 
-	public String updateTemplate(String templateId, String templateXML, LoggedInInfo loggedInInfo) {
+	public String updateTemplate(String uuid, String templateId, String templateXML, LoggedInInfo loggedInInfo) {
 		try {
 			Document templateXMLdoc = readXml(templateXML);
-			return addUpdateTemplate(templateId, templateXMLdoc, loggedInInfo);
+			return addUpdateTemplate(uuid, templateId, templateXMLdoc, loggedInInfo);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
 			return "Error: Error parsing file";
