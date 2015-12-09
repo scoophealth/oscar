@@ -63,7 +63,25 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	
 
 	$scope.page.encounterFormlist = [];
+	$scope.page.formGroups = [];
 	
+	$scope.getFormGroups = function(){
+		formService.getFormGroups().then(function(data){
+			if(data instanceof Array){
+				$scope.page.formGroups = data;
+		    }else{
+		    	$scope.page.formGroups.push(data);
+		  	}
+			
+			for (var i = 0; i < $scope.page.formGroups.length; i++) {
+				if(!($scope.page.formGroups[i].summaryItem instanceof Array)){
+					$scope.page.formGroups[i].summaryItem = [$scope.page.formGroups[i].summaryItem];
+ 				}
+			}
+		});
+	};
+	
+	$scope.getFormGroups();
 	
 	formService.getFormOptions($scope.demographicNo).then(function(data){
 		console.log("data",data);
