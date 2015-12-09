@@ -66,7 +66,6 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.quatro.model.security.LdapSecurity;
@@ -337,17 +336,6 @@ public final class LoginAction extends DispatchAction {
             if (where.equals("provider") && OscarProperties.getInstance().getProperty("useProgramLocation", "false").equals("true") ) {
                 where = "programLocation";
             }
-            
-            if (where.equals("provider")) {
-                WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
-                UserProperty drugrefProperty = propDao.getProp(UserProperty.MYDRUGREF_ID);
-                if (drugrefProperty != null) {
-                   
-                    DSService service =  (DSService) ctx.getBean("dsService");
-                    service.fetchGuidelinesFromServiceInBackground(providerNo);
-                }
-            }
-
 
             String quatroShelter = OscarProperties.getInstance().getProperty("QUATRO_SHELTER");
             if(quatroShelter!= null && quatroShelter.equals("on")) {
@@ -374,6 +362,15 @@ public final class LoginAction extends DispatchAction {
             session.setAttribute(SessionConstants.LOGGED_IN_SECURITY, cl.getSecurity());
 
             LoggedInInfo loggedInInfo = LoggedInUserFilter.generateLoggedInInfoFromSession(request);
+            
+            if (where.equals("provider")) {
+                UserProperty drugrefProperty = propDao.getProp(UserProperty.MYDRUGREF_ID);
+                if (drugrefProperty != null) {
+                    DSService service =   SpringUtils.getBean(DSService.class);  
+                    service.fetchGuidelinesFromServiceInBackground(loggedInInfo);
+                }
+            }
+            
 		    MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(loggedInInfo, true);
             
             List<Integer> facilityIds = providerDao.getFacilityIds(provider.getProviderNo());

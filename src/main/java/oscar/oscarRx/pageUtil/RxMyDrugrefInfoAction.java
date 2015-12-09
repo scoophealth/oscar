@@ -25,13 +25,7 @@
 
 package oscar.oscarRx.pageUtil;
 
-//import java.io.BufferedReader;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-//import java.io.InputStream;
-//import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,7 +36,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import org.codehaus.jettison.json.JSONArray;
@@ -59,10 +52,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcClientLite;
-import org.apache.cxf.jaxrs.client.WebClient;
-import org.apache.cxf.rs.security.oauth.client.OAuthClientUtils;
 import org.oscarehr.PMmodule.caisi_integrator.RemoteDrugAllergyHelper;
-import org.oscarehr.app.AppOAuth1Config;
 import org.oscarehr.common.dao.AppDefinitionDao;
 import org.oscarehr.common.dao.AppUserDao;
 import org.oscarehr.common.dao.DemographicDao;
@@ -78,6 +68,7 @@ import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.app.OAuth1Utils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -190,7 +181,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         Vector all = new Vector();
         for (String command : str){
             try{
-                Vector v = getMyDrugrefInfo(command, codes, provider, myDrugrefId);
+                Vector v = getMyDrugrefInfo(loggedInInfo,command, codes, provider, myDrugrefId);
 
                 if (v !=null && v.size() > 0){
                     all.addAll(v);
@@ -461,13 +452,13 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
     }
 
 
-    public Vector getMyDrugrefInfo(String command, Vector drugs, String providerNo, String myDrugrefId) {
+    public Vector getMyDrugrefInfo(LoggedInInfo loggedInInfo,String command, Vector drugs, String providerNo, String myDrugrefId) {
 
         removeNullFromVector(drugs);
 
         Vector vec = new Vector();
         log2.debug("CALL : FETCH:"+drugs);
-        Object obj =  callOAuthService(command,drugs,providerNo, myDrugrefId);
+        Object obj =  callOAuthService(loggedInInfo,command,drugs, myDrugrefId);
         log2.debug("RETURNED "+obj);
         if (obj instanceof Vector){
 
@@ -492,7 +483,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
     }
 
 
-    public Vector callOAuthService(String procedureName, Vector params, String providerNo, String myDrugrefId){
+    public Vector callOAuthService(LoggedInInfo loggedInInfo,String procedureName, Vector params, String myDrugrefId){
     	try {
     		AppDefinitionDao appDefinitionDao = SpringUtils.getBean(AppDefinitionDao.class);
     		AppUserDao appUserDao = SpringUtils.getBean(AppUserDao.class);
@@ -503,16 +494,11 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
     		Vector result = new Vector();
     		
     		if(k2aApp != null) {
-	    		AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),providerNo);
+	    		AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),loggedInInfo.getLoggedInProviderNo());
 	    		
 	    		if(k2aUser != null) {
-		    		AppOAuth1Config appAuthConfig = AppOAuth1Config.fromDocument(k2aApp.getConfig());
-		    		Map<String,String> keySecret = AppOAuth1Config.getKeySecret(k2aUser.getAuthenticationData());
-		    		
-		    		OAuthClientUtils.Consumer consumer = new OAuthClientUtils.Consumer(appAuthConfig.getConsumerKey(),appAuthConfig.getConsumerSecret());
-		    		OAuthClientUtils.Token accessToken = new OAuthClientUtils.Token(keySecret.get("key"),keySecret.get("secret"));
-		    		String method = "GET";
-		    		String requestURI = appAuthConfig.getBaseURL() + "/ws/api/" + procedureName;
+	    			
+		    		String requestURI = "/ws/api/" + procedureName;
 		    		
 		    		String requestURIWithParams = null;
 		    		if(params != null && !params.isEmpty() && params.size() > 0) {
@@ -527,28 +513,13 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
 			    		requestURIWithParams = requestURIWithParams.substring(0,requestURIWithParams.length()-1);
 		    		}
 		    		
-		    		WebClient webclient = null;
-		    		if(requestURIWithParams != null) {
-		    			webclient = WebClient.create(requestURIWithParams);
-		    		} else {
-		    			webclient = WebClient.create(requestURI);
-		    		}
 		    		
-		    		webclient = webclient.replaceHeader("Authorization", OAuthClientUtils.createAuthorizationHeader(consumer, accessToken, method, requestURI));
+	    			if(requestURIWithParams == null) {
+		    			requestURIWithParams = requestURI;
+		    		} 
 		    		
-		    		javax.ws.rs.core.Response reps = webclient.get();
-		    		
-		    		InputStream in = (InputStream) reps.getEntity();
-		    		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		    		
-		    		String line;
-		    		StringBuilder sb = new StringBuilder();
-		    		while ((line = reader.readLine()) != null) {
-		    			sb.append(line);
-		    		}
-		    		
+		    		String jsonString = OAuth1Utils.getOAuthGetResponse( loggedInInfo,k2aApp, k2aUser, requestURIWithParams, requestURI);
 		    		//Convert JSON return to Vector/Hashtable
-		    		String jsonString = sb.toString();
 		    		JSONArray jsonArray = new JSONArray();
 		    		
 		    		if(jsonString != null && !jsonString.isEmpty()) {
