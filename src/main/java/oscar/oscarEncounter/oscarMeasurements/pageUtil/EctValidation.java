@@ -70,7 +70,9 @@ public class EctValidation{
         ValidationsDao vDao = SpringUtils.getBean(ValidationsDao.class); 
         for(MeasurementType type : types) {
         	Validations vs = vDao.find(ConversionUtils.fromIntString(type.getValidation()));
-        	result.add(vs);
+		if(vs != null) {
+	        	result.add(vs);
+		}
         }
         return result;
     }
