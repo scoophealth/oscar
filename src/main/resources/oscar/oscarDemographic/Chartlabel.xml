@@ -12,7 +12,7 @@
 			d.year_of_birth, d.month_of_birth, d.date_of_birth,
 			(DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth),'%Y')-(DATE_FORMAT(NOW(),'00-%m-%d')<DATE_FORMAT(CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth),'00-%m-%d'))) AS age,
 			CONCAT(IFNULL(d.hin,''),' ') AS hin, CONCAT(IFNULL(d.ver,''),' ') AS ver, d.sex,
-			CONCAT(p.last_name, CONCAT(', ',p.first_name)) AS doc_name
+			IFNULL(CONCAT(p.last_name, CONCAT(', ',p.first_name)),'') AS doc_name
 			from demographic d left outer join provider p on d.provider_no = p.provider_no
 			where demographic_no =$P{demo}]]>
 	</queryString>
