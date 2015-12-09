@@ -2252,6 +2252,10 @@
 			<forward name="success" path="/oscarReport/reportByTemplate/resultReport.jsp" />
 			<forward name="fail" path="/oscarReport/reportByTemplate/reportConfiguration.jsp" />
 		</action>
+		<action input="/oscarReport/reportByTemplate/reportConfiguration.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/exportTemplateAction" scope="request" type="oscar.oscarReport.reportByTemplate.actions.ExportTemplateAction">
+			<forward name="success" path="/oscarReport/reportByTemplate/reportConfiguration.jsp" />
+			<forward name="fail" path="/oscarReport/reportByTemplate/reportConfiguration.jsp" />
+		</action>
 		<action input="/oscarReport/reportByTemplate/addEditTemplate.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/addEditTemplatesAction" scope="request" type="oscar.oscarReport.reportByTemplate.actions.ManageTemplatesAction">
 			<forward name="success" path="/oscarReport/reportByTemplate/addEditTemplate.jsp"></forward>
 			<forward name="fail" path="/oscarReport/reportByTemplate/addEditTemplate.jsp"></forward>

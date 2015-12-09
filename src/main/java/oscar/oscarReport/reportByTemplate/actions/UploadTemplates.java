@@ -76,10 +76,10 @@ public class UploadTemplates extends Action {
          }
          ReportManager reportManager = new ReportManager();
          if (action.equals("add")) {
-             message = reportManager.addTemplate(xml, LoggedInInfo.getLoggedInInfoFromSession(request));
+             message = reportManager.addTemplate(null, xml, LoggedInInfo.getLoggedInInfoFromSession(request));
          } else if (action.equals("edit")) {
              String templateId = request.getParameter("templateid");
-             message = reportManager.updateTemplate(templateId, xml, LoggedInInfo.getLoggedInInfoFromSession(request));
+             message = reportManager.updateTemplate(null, templateId, xml, LoggedInInfo.getLoggedInInfoFromSession(request));
          }
          request.setAttribute("message", message);
          request.setAttribute("action", action);
