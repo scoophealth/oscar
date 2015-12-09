@@ -32,10 +32,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import org.oscarehr.common.dao.ProviderLabRoutingDao;
 import org.oscarehr.inbox.InboxManagerQuery;
 import org.oscarehr.inbox.InboxManagerResponse;
 import org.oscarehr.managers.InboxManager;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.to.InboxResponse;
 import org.oscarehr.ws.rest.to.model.InboxTo1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,8 +107,7 @@ public class InboxService extends AbstractServiceImpl {
 		resp.setLimit(limit);
 		resp.setOffset(0);
 		resp.setTimestamp(new Date());
-		resp.setTotal(responseItems.size());
-		
+		resp.setTotal(getMyUnacknowlegedReportsCount());
 
 		return resp;
 	}
@@ -114,26 +115,11 @@ public class InboxService extends AbstractServiceImpl {
 	@GET
 	@Path("/mine/count")
 	public int getMyUnacknowlegedReportsCount() {
-	
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		String providerNo=loggedInInfo.getLoggedInProviderNo();
-	
-		InboxManagerQuery query = new InboxManagerQuery();
-		query.setProviderNo(providerNo);
-		query.setSearchProviderNo(providerNo);
-		query.setStatus("N");
-		query.setScannedDocStatus("I");
-		query.setPage(0);
-		query.setPageSize(20);
-		query.setView("all");
-		query.setPatientFirstName("");
-		query.setPatientLastName("");
-		query.setPatientHIN("");
 		
-		InboxManagerResponse response = inboxManager.getInboxResults(loggedInInfo, query);
-		List<LabResultData> labDocs = response.getLabdocs();
-		
-		int count = labDocs.size();
+		ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+		int count = dao.findByProviderNo(providerNo, "N").size();
 		
 		return count;
 	}

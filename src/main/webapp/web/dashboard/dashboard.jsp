@@ -53,7 +53,7 @@
 
 
 <!-- il18n problem here -->
-<p class="lead">You have {{(inbox.length>0) && inbox.length || "no"}} report{{(inbox.length>1) && "s" || ""}}{{(inbox.length==0) && "s" || ""}}{{(inbox==null) && "s" || ""}} which are not yet acknowledged.</p>
+<p class="lead">You have {{(totalInbox>0) && totalInbox || "no"}} report{{(totalInbox>1) && "s" || ""}}{{(totalInbox==0) && "s" || ""}}{{(totalInbox==null) && "s" || ""}} which are not yet acknowledged.</p>
 
 
 <div ng-if="inbox.length > 0">
