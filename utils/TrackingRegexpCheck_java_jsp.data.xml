@@ -1149,8 +1149,8 @@
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSGuidelineFactory.java:paramHashtable.put(key, value);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/impl/drools/DSGuidelineDrools.java:paramClass.addContent("java.util.Hashtable");</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:Vector params = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:Vector&lt;Hashtable&lt;String,String&gt;&gt; providerGuidelines = myDrugrefAction.callOAuthService("guidelines/getGuidelineIds", null, providerNo, this.getMyDrugrefId(providerNo));</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:Vector&lt;Hashtable&gt; fetchedGuidelines = myDrugrefAction.callOAuthService("guidelines/getGuidelines", params, providerNo, null);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:Vector&lt;Hashtable&lt;String,String&gt;&gt; providerGuidelines = myDrugrefAction.callOAuthService(loggedInInfo,"guidelines/getGuidelineIds", null, this.getMyDrugrefId(loggedInInfo.getLoggedInProviderNo()));</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:Vector&lt;Hashtable&gt; fetchedGuidelines = myDrugrefAction.callOAuthService(loggedInInfo,"guidelines/getGuidelines", params, null);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:for (Hashtable&lt;String,Serializable&gt; fetchedGuideline: fetchedGuidelines) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:for (Hashtable&lt;String,String&gt; newMapping: providerGuidelines) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:for (Hashtable&lt;String,String&gt; providerGuideline: providerGuidelines) {</ViolationValue>
@@ -2284,7 +2284,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector codes = bean.getAtcCodes();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector newParams = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector result = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector v = getMyDrugrefInfo(command, codes, provider, myDrugrefId);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector v = getMyDrugrefInfo(loggedInInfo,command, codes, provider, myDrugrefId);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector vec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector&lt;Hashtable&gt; allRetVec=new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector&lt;String&gt; currentIdWarnings=new Vector();</ViolationValue>
@@ -2294,8 +2294,8 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:log2.debug(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public Vector callOAuthService(String procedureName, Vector params, String providerNo, String myDrugrefId){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public Vector getMyDrugrefInfo(String command, Vector drugs, String providerNo, String myDrugrefId) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public Vector callOAuthService(LoggedInInfo loggedInInfo,String procedureName, Vector params, String myDrugrefId){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public Vector getMyDrugrefInfo(LoggedInInfo loggedInInfo,String command, Vector drugs, String providerNo, String myDrugrefId) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public static void removeNullFromVector(Vector v){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:removeNullFromVector(drugs);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:result = (Vector)object;</ViolationValue>
@@ -3069,7 +3069,6 @@
         <ViolationValue>/src/main/webapp/provider/providernewgroup.jsp:StringBuffer strbuf=new StringBuffer(e.nextElement().toString());</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/providersavemygroup.jsp:StringBuffer strbuf=new StringBuffer(e.nextElement().toString());</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/providerupdatepassword.jsp:StringBuffer sbTemp = new StringBuffer();</ViolationValue>
-        <ViolationValue>/src/main/webapp/provider/providerupdatepassword.jsp:sbTemp = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:ArrayList&lt;Hashtable&gt; list = (ArrayList) request.getAttribute("list");</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable demoHash = deName.getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), "" + h.get("_demographic_no"));</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable forView = new Hashtable();</ViolationValue>
