@@ -153,7 +153,11 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 			document.getElementById('formInViewFrame').firstChild.style.height = "1600px"; //temp hack for the forms
 		}
 	}
-	
+
+	$scope.isEmpty = function (obj) {
+		for (var i in obj) if (obj.hasOwnProperty(i)) return false;
+		return true;
+	};
 	
 	/*
 	 * Used to make the left side list tab be active
