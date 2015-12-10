@@ -65,7 +65,7 @@
 </style>
 </head>
 <body background="../images/gray_bg.jpg"
-	bgproperties="fixed">
+	bgproperties="fixed" onload="window.print()">
 <center>
 <div class="DoNotPrint">
 <table border="0" cellspacing="0" cellpadding="0" width="90%">
@@ -234,6 +234,8 @@
 
 <div class="DoNotPrint">
 <input type="button" value="<bean:message key="global.btnClose"/>" onClick="window.close();">
+&nbsp;
+<input type="button" value="<bean:message key="global.btnPrint"/>" onClick="window.print();">
 </div>
 </form>
 </center>
