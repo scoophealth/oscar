@@ -99,11 +99,13 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex, effyear, effmonth,
    if (firstName == null) {
        firstName = hcMagneticStripe.getFirstName();
    }
+   if(firstName != null) {firstName = firstName.toUpperCase();}
    
    String lastName = validationResult.getLastName();
    if (lastName == null) {
        lastName = hcMagneticStripe.getLastName();
    }
+   if(lastName != null) {lastName = lastName.toUpperCase();}
            
    String birthDate = validationResult.getBirthDate();
    if (birthDate == null) {
@@ -180,7 +182,7 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex, effyear, effmonth,
                 <td align="left"><input type="text" name="hin" value="<%=hcMagneticStripe.getHealthNumber()%>"></td>
 		<td align="right"><b>Ver.</b></td>
 		<td align="left"><input type="text" name="ver"
-			value="<%=hcMagneticStripe.getCardVersion()%>"></td>
+			value="<%=hcMagneticStripe.getCardVersion().toUpperCase()%>"></td>
 	</tr>
         <tr valign="top">
                 <td align="right"><b>EFF Date:</b></td>
