@@ -31,7 +31,7 @@
 <%@ page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
 <%@ page import="org.oscarehr.common.dao.FlowSheetDrugDao,org.oscarehr.common.dao.FlowSheetDxDao,org.oscarehr.common.model.FlowSheetDrug,org.oscarehr.util.MiscUtils"%>
 <%@ page import="org.oscarehr.caisi_integrator.ws.CachedMeasurement,org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager,org.oscarehr.util.LoggedInInfo" %>
-<%@ page import="oscar.util.UtilDateUtilities,oscar.log.*" %>
+<%@ page import="oscar.util.UtilDateUtilities,oscar.util.UtilMisc,oscar.log.*" %>
 <%@ page import="oscar.OscarProperties"%>
 <%@ page import="org.oscarehr.common.model.Validations" %>
 
@@ -1225,11 +1225,11 @@ iDate++;
 	   <%if(mdb.getRemoteFacility() == null){ %>
 	   style="cursor: hand; cursor: pointer;"
 	   href="#deleteModal" role="button" data-toggle="modal"
-	   onclick="deleteMeasurement('<%=h2.get("display_name").toString()%>','Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>','<%=hdata.get("age")%>','<%=hdata.get("prevention_date")%>','<%=hdata.get("id")%>')" 
+	   onclick="deleteMeasurement('<%=h2.get("display_name").toString()%>','Entered by: <%=UtilMisc.htmlEscape(mdb.getProviderFirstName())%> <%=UtilMisc.htmlEscape(mdb.getProviderLastName())%>','<%=hdata.get("age")%>','<%=hdata.get("prevention_date")%>','<%=hdata.get("id")%>')" 
 	   <%}%> >
 	<input type="hidden" id="<%=hdata.get("id")%>-comment-html" value="<%=com%>">
 	
-		<span rel="popover" data-container="body" data-html="true" data-content='Entered by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%> <br> <small><%=getFromFacilityMsg(mdb) %></small>'  data-trigger="hover">     
+		<span rel="popover" data-container="body" data-html="true" data-content='Entered by: <%=UtilMisc.htmlEscape(mdb.getProviderFirstName())%> <%=UtilMisc.htmlEscape(mdb.getProviderLastName())%> <br> <small><%=getFromFacilityMsg(mdb) %></small>'  data-trigger="hover">     
 			<p style="line-height:90%;font-size:18px" class="plot-set-<%=measure%>" data-plot-date='<%=hdata.get("prevention_date")%>' data-plot='<%=hdata.get("age")%>'><%=hdata.get("age")%></p>
 			
 			<span style="line-height:60%;font-size:10px;"><%=hdata.get("prevention_date")%>&nbsp;
@@ -1238,7 +1238,7 @@ iDate++;
 		</span>
 	
 	           <%if (comb) {%>
-	            <a rel="tooltip" title="<b>Comment by: <%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%></b><br><%=com%>" data-placement="right" data-container="body" data-html="true" style="position:absolute;z-Index:4;padding-left:4px;"><span class="glyphicon glyphicon-comment" ></span></a>
+	            <a rel="tooltip" title="<b>Comment by: <%=UtilMisc.htmlEscape(mdb.getProviderFirstName())%> <%=UtilMisc.htmlEscape(mdb.getProviderLastName())%></b><br><%=com%>" data-placement="right" data-container="body" data-html="true" style="position:absolute;z-Index:4;padding-left:4px;"><span class="glyphicon glyphicon-comment" ></span></a>
 	           <%}%>
 	         
 	       <p width="16px" <%=indColour%> ></p>
