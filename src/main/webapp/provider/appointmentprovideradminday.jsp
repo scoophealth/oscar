@@ -921,6 +921,7 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
 	   else {
 		   numProvider = myGroupDao.getGroupByGroupNo(mygroupno).size();
 	   }
+	   
 	  
        String [] param3 = new String [2];
        param3[0] = mygroupno;
@@ -990,6 +991,8 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
      }
      else {
     	 List<MyGroup> results = myGroupDao.getGroupByGroupNo(mygroupno);
+    	 Collections.sort(results,MyGroup.MyGroupNoViewOrderComparator);
+  	   
     	 for(MyGroup result:results) {
     		 curProvider_no[iTemp] = String.valueOf(result.getId().getProviderNo());
     		 
