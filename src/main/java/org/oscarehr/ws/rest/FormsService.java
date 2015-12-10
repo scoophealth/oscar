@@ -23,9 +23,7 @@
  */
 package org.oscarehr.ws.rest;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -34,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+
 import java.util.ResourceBundle;
 
 import javax.ws.rs.Consumes;
@@ -50,9 +48,8 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.cxf.jaxrs.client.WebClient;
-import org.apache.cxf.rs.security.oauth.client.OAuthClientUtils;
 import org.oscarehr.app.AppOAuth1Config;
+import org.oscarehr.app.OAuth1Utils;
 import org.oscarehr.common.dao.AppDefinitionDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
@@ -63,6 +60,7 @@ import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.managers.FormsManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.conversion.EFormConverter;
@@ -322,31 +320,11 @@ public class FormsService extends AbstractServiceImpl {
 		return formMenu;
 	}
 	
-	public static String getK2AEFormsList(AppDefinition k2aApp, AppUser k2aUser) {
+	public static String getK2AEFormsList(LoggedInInfo loggedInInfo, AppDefinition k2aApp, AppUser k2aUser) {
 		try {
-			AppOAuth1Config appAuthConfig = AppOAuth1Config.fromDocument(k2aApp.getConfig());
-			Map<String,String> keySecret = AppOAuth1Config.getKeySecret(k2aUser.getAuthenticationData());
-			
-			OAuthClientUtils.Consumer consumer = new OAuthClientUtils.Consumer(appAuthConfig.getConsumerKey(),appAuthConfig.getConsumerSecret());
-			OAuthClientUtils.Token accessToken = new OAuthClientUtils.Token(keySecret.get("key"),keySecret.get("secret"));
-			String method = "GET";
-			String requestURI = appAuthConfig.getBaseURL() + "/ws/api/eforms/getEForms";
-			
-			WebClient webclient = WebClient.create(requestURI);
-			
-			webclient = webclient.replaceHeader("Authorization",OAuthClientUtils.createAuthorizationHeader(consumer, accessToken, method, requestURI));
-			
-			javax.ws.rs.core.Response reps = webclient.get();
-			
-			InputStream in = (InputStream) reps.getEntity();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-			
-			String line;
-			StringBuilder sb = new StringBuilder();
-			while ((line = reader.readLine()) != null) {
-				sb.append(line);
-			}
-			return sb.toString();
+			String requestURI = "/ws/api/eforms/getEForms";
+			String retval = OAuth1Utils.getOAuthGetResponse( loggedInInfo,k2aApp, k2aUser, requestURI, requestURI);
+			return retval;
 		} catch(Exception e) {
 			return null;
 		}

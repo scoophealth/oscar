@@ -59,7 +59,7 @@ body{background-color:#f5f5f5;}
 			if(k2aUser == null) { %>
 				<div>Please authenticate with K2A using your username and password <a href="" onclick="window.open('<%=request.getContextPath()%>/web/#/settings');">here</a> under the integration tab. Once completed please refresh the page.</div>
 			<% } else {
-				String jsonString = FormsService.getK2AEFormsList(k2aApp, k2aUser);
+				String jsonString = FormsService.getK2AEFormsList(loggedInInfo,k2aApp, k2aUser);
 				JSONArray jsonArray = new JSONArray();
 				if(jsonString == null || jsonString.isEmpty()) { %>
 					<p>An error occurred while retrieving data from K2A. Please contact an administrator for support.</p>
