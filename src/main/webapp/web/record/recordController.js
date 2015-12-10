@@ -170,8 +170,54 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	
 	//////
 	
+	//////Timer
+        var d = new Date();  //the start
+
+        var totalSeconds = 0;
+        var myVar = setInterval(setTime, 1000);
+
+	$scope.getCurrentTimerToggle = function(){
+ 	     if(angular.isDefined(myVar)){
+ 	        return "glyphicon-pause"
+ 	     }
+      		return "glyphicon-play";
+    	}
+
+	$scope.toggleTimer = function(){
+ 	    if ($("#aToggle").hasClass("glyphicon-pause")) {
+			$("#aToggle").removeClass("glyphicon-pause");
+			$("#aToggle").addClass("glyphicon-play");
+			clearInterval(myVar);
+		} else {
+			$("#aToggle").removeClass("glyphicon-play");
+			$("#aToggle").addClass("glyphicon-pause");
+			myVar = setInterval(setTime, 1000);
+		}
+	}
 	
-	
+	$scope.pasteTimer = function(){    
+ 	    var ed = new Date();
+ 	    $scope.page.encounterNote.note +="\n"+document.getElementById("startTag").value+": "+d.getHours()+":"+pad(d.getMinutes())+"\n"+document.getElementById("endTag").value+": "+ed.getHours()+":"+pad(ed.getMinutes())+"\n"+pad(parseInt(totalSeconds/3600))+":"+pad(parseInt((totalSeconds/60)%60))+":"+ pad(totalSeconds%60);
+	}
+
+        function setTime(){
+            ++totalSeconds;
+            document.getElementById("aTimer").innerHTML =pad(parseInt(totalSeconds/60))+":"+ pad(totalSeconds%60);
+            if (totalSeconds == 1200) {$("#aTimer").css("background-color", "#DFF0D8");} //1200 sec = 20 min light green
+            if (totalSeconds == 3000) {$("#aTimer").css("background-color", "#FDFEC7");} //3600 sec = 50 min light yellow
+        }
+
+        function pad(val){
+            var valString = val + "";
+            if(valString.length < 2)
+            {
+                return "0" + valString;
+            } else {
+                return valString;
+            }
+        }
+$scope.$on('$destroy', function () { clearInterval(myVar); });
+ 	//////		
 	
 		
 	// Note Input Logic
