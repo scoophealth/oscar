@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -74,7 +75,7 @@ WaitingListDao waitingListDao = SpringUtils.getBean(WaitingListDao.class);
 
 String createDateTime = UtilDateUtilities.DateToString(new java.util.Date(),"yyyy-MM-dd HH:mm:ss");
 
-String[] param = new String[20];
+String[] param = new String[21];
 param[0]=request.getParameter("provider_no");
 param[1]=request.getParameter("appointment_date");
 param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
@@ -108,6 +109,7 @@ param[15]=request.getParameter("remarks");
 param[17]=(String)request.getSession().getAttribute("programId_oscarView");
 param[18]=(request.getParameter("urgency")!=null)?request.getParameter("urgency"):"";
 param[19]=request.getParameter("reasonCode");
+param[20]=request.getParameter("program_id");
 
 	Appointment a = new Appointment();
 	a.setProviderNo(request.getParameter("provider_no"));
@@ -127,6 +129,9 @@ param[19]=request.getParameter("reasonCode");
 	a.setCreator(request.getParameter("creator"));
 	a.setRemarks(request.getParameter("remarks"));
 	a.setReasonCode(Integer.parseInt(request.getParameter("reasonCode")));
+	if(!StringUtils.isEmpty(request.getParameter("program_id"))) {
+		a.setProgramId(Integer.parseInt(request.getParameter("program_id")));
+	}
 	//the keyword(name) must match the demographic_no if it has been changed
     demo = null;
 if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
@@ -141,7 +146,7 @@ if (request.getParameter("demographic_no") != null && !(request.getParameter("de
 	a.setName(request.getParameter("keyword"));
 }
 	
-	a.setProgramId(Integer.parseInt((String)request.getSession().getAttribute("programId_oscarView")));
+	//a.setProgramId(Integer.parseInt((String)request.getSession().getAttribute("programId_oscarView")));
 	a.setUrgency((request.getParameter("urgency")!=null)?request.getParameter("urgency"):"");
 	
 	appointmentDao.persist(a);
