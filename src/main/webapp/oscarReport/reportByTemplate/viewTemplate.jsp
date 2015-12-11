@@ -108,6 +108,7 @@ if(!authed) {
 			<input type="button" value="Back" onclick="javascript: history.go(-1);return false;"> 
 			<input type="button" value="Print" onclick="javascript: window.print();">
 			<input type="button" value="Edit Template" onclick="document.location='addEditTemplate.jsp?templateid=<%=templateid%>&opentext=1'">
+			<a href="exportTemplateAction.do?templateid=<%=templateid%>&name=<%=curreport.getTitle()%>" class="link">Export Template to K2A</a>
 		</div>
 		</td>
 	</tr>
