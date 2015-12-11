@@ -68,6 +68,8 @@ import org.oscarehr.ws.rest.to.model.EFormTo1;
 import org.oscarehr.ws.rest.to.model.EncounterFormTo1;
 import org.oscarehr.ws.rest.to.model.FormListTo1;
 import org.oscarehr.ws.rest.to.model.FormTo1;
+import org.oscarehr.ws.rest.to.model.SummaryItemTo1;
+import org.oscarehr.ws.rest.to.model.SummaryTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -209,6 +211,29 @@ public class FormsService extends AbstractServiceImpl {
 		response.setTotal(response.getContent().size());
 		return response;
 		
+	}
+	@GET
+	@Path("/getFormGroups")
+	@Produces("application/json")
+	public List<SummaryTo1> getGroupsWithForms(){
+		int count = 0;
+		List<SummaryTo1> summaryList = new ArrayList<SummaryTo1>();
+		List<String> groupNames = formsManager.getGroupNames();
+		
+		if(groupNames != null){
+			Collections.sort(groupNames);
+			for(String groupName:groupNames){
+				SummaryTo1 formSummary = new SummaryTo1(groupName,count++,null); 
+				summaryList.add(formSummary);
+				List<EForm> eforms = formsManager.getEfromInGroupByGroupName(getLoggedInInfo(),  groupName);
+				List<SummaryItemTo1> summaryItems = formSummary.getSummaryItem();
+				for(EForm eform: eforms){
+					SummaryItemTo1 summaryItem = new SummaryItemTo1(eform.getId(), eform.getFormName(),"record.forms.new","eform");
+					summaryItems.add(summaryItem);
+				}
+			}
+		}
+		return summaryList;
 	}
 	
 	@POST
