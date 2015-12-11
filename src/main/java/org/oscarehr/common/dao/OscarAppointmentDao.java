@@ -601,11 +601,11 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return query.getResultList();
 	}
     
-    public List<Appointment> searchappointmentday(String providerNo, Date appointmentDate, Integer programId) {
-    	Query query = createQuery("appt", "appt.providerNo = :providerNo AND appt.appointmentDate = :appointmentDate AND appt.programId = :programId ORDER BY appt.startTime, appt.status DESC");
+    public List<Appointment> searchappointmentday(String providerNo, Date appointmentDate, List<Integer> programIds) {
+    	Query query = createQuery("appt", "appt.providerNo = :providerNo AND appt.appointmentDate = :appointmentDate AND appt.programId IN (:programIds) ORDER BY appt.startTime, appt.status DESC");
     	query.setParameter("providerNo", providerNo);
         query.setParameter("appointmentDate", appointmentDate);
-        query.setParameter("programId", programId);
+        query.setParameter("programIds", programIds);
         return query.getResultList();
     }
 

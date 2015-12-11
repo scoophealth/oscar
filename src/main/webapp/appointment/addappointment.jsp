@@ -978,27 +978,9 @@ function pasteAppt(multipleSameDayGroupAppt) {
 	        </select>
 		<% } else {
 			// multisites end ==================
-			if (locationEnabled) {
-		%>
-			<select name="location" >
-                <%
-                String sessionLocation = "";
-                ProgramProvider programProvider = programManager2.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
-                if(programProvider!=null && programProvider.getProgram() != null) {
-                	sessionLocation = programProvider.getProgram().getId().toString();
-                }
-                if (programs != null && !programs.isEmpty()) {
-			       	for (Program program : programs) {
-			       	    String description = StringUtils.isBlank(program.getLocation()) ? program.getName() : program.getLocation();
-			   	%>
-			        <option value="<%=program.getId()%>" <%=program.getId().toString().equals(sessionLocation) ? "selected='selected'" : ""%>><%=StringEscapeUtils.escapeHtml(description)%></option>
-			    <%	}
-                }
-			  	%>
-            </select>
-        	<% } else { %>
+%>
         	<input type="TEXT" name="location" tabindex="4" value="<%=loc%>" width="25" height="20" border="0" hspace="2">	
-        	<% } %>
+        	
 		<% } %>
             </div>
             <div class="space">&nbsp;</div>
@@ -1050,6 +1032,51 @@ function pasteAppt(multipleSameDayGroupAppt) {
             	<input type="checkbox" name="urgency" value="critical"/>
             </div>
         </li>
+        <li class="row weak">
+           
+            <div class="label"><bean:message key="global.program"/>:</div>
+            <div class="input">
+            	<select name="program_id">
+            	<%
+            		//our program domain
+	            	List<Program> programs1 = programManager.getActiveProgramByFacility(providerNo, facility.getId());
+
+            		//the user you are making an appt for
+            		List<Program> programs2 = programManager.getActiveProgramByFacility(curProvider_no, facility.getId());
+            	
+            		List<Program> programsToShow = new ArrayList<Program>();
+            				
+            		//find the intersection
+            		for(Program pr:programs1) {
+            			if(programs2.contains(pr)) {
+            				programsToShow.add(pr);
+            			}
+            		}
+            				
+	                String sessionLocation1 = "";
+	                ProgramProvider programProvider1 = programManager2.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+	                if(programProvider1!=null && programProvider1.getProgram() != null) {
+	                	sessionLocation1 = programProvider1.getProgram().getId().toString();
+	                }
+	                if (programsToShow != null && !programsToShow.isEmpty()) {
+				       	for (Program program1 : programsToShow) {
+				       	    String description = StringUtils.isBlank(program1.getLocation()) ? program1.getName() : program1.getLocation();
+				   	%>
+				        <option value="<%=program1.getId()%>" <%=program1.getId().toString().equals(sessionLocation1) ? "selected='selected'" : ""%>><%=StringEscapeUtils.escapeHtml(description)%></option>
+				    <%	}
+	                }
+			  	%>
+            	</select>
+            </div>
+
+            <div class="space">&nbsp;</div>
+            
+            <div class="label"></div>
+            <div class="input">
+            	
+            </div>
+        </li>
+        
     </ul>
 </div>
 <%String demoNo = request.getParameter("demographic_no");%>

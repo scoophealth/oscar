@@ -1825,6 +1825,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
         param0[0]=curProvider_no[nProvider];
         param0[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
 		param0[2]=programId_oscarView;
+		/*
 		if (locationEnabled) {
 			
 			
@@ -1835,9 +1836,15 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
             }
 		    param0[3]=request.getParameter("programIdForLocation");
 		    strsearchappointmentday = "searchappointmentdaywithlocation";
+		}*/
+		//load program domain for CAISI, or else just 0
+		List<Integer> programIds = new ArrayList<Integer>();
+		//programIds.add(0);
+		for(ProgramProvider pp: programManager.getProgramDomain(loggedInInfo1, loggedInInfo1.getLoggedInProviderNo())) {
+			programIds.add(pp.getProgramId().intValue());
 		}
 		
-		List<Appointment> appointments = appointmentDao.searchappointmentday(curProvider_no[nProvider], ConversionUtils.fromDateString(year+"-"+month+"-"+day),ConversionUtils.fromIntString(programId_oscarView));
+		List<Appointment> appointments = appointmentDao.searchappointmentday(curProvider_no[nProvider], ConversionUtils.fromDateString(year+"-"+month+"-"+day),programIds);
                	Iterator<Appointment> it = appointments.iterator();
 		
                 Appointment appointment = null;
