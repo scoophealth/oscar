@@ -94,6 +94,7 @@
 <%@page import="org.oscarehr.common.dao.BillingONExtDao" %>
 <%@page import="org.oscarehr.billing.CA.ON.dao.*" %>
 <%@page import="java.math.*" %>
+<%@page import="org.oscarehr.managers.ProgramManager2" %>
 <%
     String mrpName = "";
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
@@ -145,6 +146,8 @@
     String moduleNames = OscarProperties.getInstance().getProperty("ModuleNames");
     boolean caisiEnabled = moduleNames != null && org.apache.commons.lang.StringUtils.containsIgnoreCase(moduleNames, "Caisi");
     boolean locationEnabled = caisiEnabled && (useProgramLocation != null && useProgramLocation.equals("true"));
+    ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+    
 %>
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
@@ -790,23 +793,8 @@ if (bMultisites) { %>
 <% } else {
 	isSiteSelected = true;
 	// multisites end ==================
-	if (locationEnabled) {
-%>           					
-		<select name="location" >
-               <%
-               String location = bFirstDisp?(appt.getLocation()):request.getParameter("location");
-               if (programs != null && !programs.isEmpty()) {
-		       	for (Program program : programs) {
-		       	    String description = StringUtils.isBlank(program.getLocation()) ? program.getName() : program.getLocation();
-		   	%>
-		        <option value="<%=program.getId()%>" <%=(program.getId().toString().equals(location) ? "selected='selected'" : "") %>><%=StringEscapeUtils.escapeHtml(description)%></option>
-		    <%	}
-               }
-		  	%>
-           </select>
-	<% } else { %>
-		<INPUT TYPE="TEXT" NAME="location" tabindex="4" VALUE="<%=bFirstDisp?appt.getLocation():request.getParameter("location")%>" WIDTH="25">
-	<% } %>           
+%>
+		<INPUT TYPE="TEXT" NAME="location" tabindex="4" VALUE="<%=bFirstDisp?appt.getLocation():request.getParameter("location")%>" WIDTH="25">          
 <% } %>
             </div>
             <div class="space">&nbsp;</div>
@@ -904,6 +892,28 @@ if (bMultisites) { %>
             	<input type="checkbox" name="urgency" value="critical" <%=urgencyChecked%>/>
             </div>
         </li>
+        
+       <li class="row weak">
+            <div class="label"><bean:message key="global.program"/>:</div>
+            <div class="input">
+            	<%
+            	Program p = programManager.getProgram(appt.getProgramId());
+        		String programName = "N/A";
+        		if(p != null) {
+        			programName = p.getName();
+        		}
+            	%>
+            	<input type="text" name="program_id" disabled="disabled" readonly="readonly" value="<%=programName %>" />
+            </div>
+
+            <div class="space">&nbsp;</div>
+            
+            <div class="label"></div>
+            <div class="input">
+            	
+            </div>
+        </li>
+        
         <li class="row weak">
 			<div class="label"></div>
             <div class="input"></div>
