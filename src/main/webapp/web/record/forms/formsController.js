@@ -63,7 +63,7 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	
 
 	$scope.page.encounterFormlist = [];
-	
+	$scope.page.formGroups = [];
 	$scope.getFormGroups = function(){
 		formService.getFormGroups().then(function(data){
 			if(data instanceof Array){
