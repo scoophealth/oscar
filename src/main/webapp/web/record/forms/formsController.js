@@ -33,7 +33,7 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	$scope.page.currentFormList = [];
 	$scope.page.currentForm = {};
 	$scope.page.currentlistId = 0;
-	
+		
 	console.log("What is the state "+$state.params.type+" : "+angular.isUndefined($state.params.type)+" id "+$state.params.id,$state); // Use this to load the current form if the page is refreshed
 	
 	securityService.hasRights({items:[{objectName:'_admin',privilege:'w'},{objectName:'_admin.eform',privilege:'w'}]}).then(function(result){
@@ -183,6 +183,11 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 			document.getElementById('formInViewFrame').firstChild.style.height = "1600px"; //temp hack for the forms
 		}
 	}
+	
+	$scope.isEmpty = function (obj) {
+		for (var i in obj) if (obj.hasOwnProperty(i)) return false;
+		return true;
+	};
 	
 	$scope.formOption = function(opt){	
 		var atleastOneItemSelected = false;
