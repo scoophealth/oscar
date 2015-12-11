@@ -36,6 +36,7 @@ public class RssItem implements Serializable {
 	
 	private Long id;
 	private Long postId;
+	private String name;
 	private String title;
 	private String author;
 	private String type;
@@ -64,6 +65,12 @@ public class RssItem implements Serializable {
 	public void setPostId(Long postId) {
     	this.postId = postId;
     }
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public String getTitle() {
 		return title;
 	}

@@ -67,9 +67,9 @@ public class ManageTemplatesAction extends Action {
             if (message.equals("")) return mapping.findForward("deleted");
          }
          else if (action.equals("add"))
-            message = reportManager.addTemplate(xmltext, LoggedInInfo.getLoggedInInfoFromSession(request));
+            message = reportManager.addTemplate(null, xmltext, LoggedInInfo.getLoggedInInfoFromSession(request));
          else if (action.equals("edit"))
-            message = reportManager.updateTemplate(templateId, xmltext, LoggedInInfo.getLoggedInInfoFromSession(request));
+            message = reportManager.updateTemplate(null, templateId, xmltext, LoggedInInfo.getLoggedInInfoFromSession(request));
          request.setAttribute("message", message);
          request.setAttribute("action", action);
          request.setAttribute("templateid", request.getParameter("templateid"));

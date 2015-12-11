@@ -46,6 +46,9 @@ if(!authed) {
 }
 %>
 <div class="templatelist">
+<a href="addEditTemplate.jsp" style="color: #226d55; font-size: 10px;">Add Template</a>
+<br/>
+<a href="javascript:void(0)" style="color: #226d55; font-size: 10px;" onclick="newWindow('/oscar/oscarReport/reportByTemplate/k2aTemplates.jsp','templates')" title="<bean:message key='oscarReport.oscarReportByTemplate.msgK2ATemplate' />"><bean:message key="oscarReport.oscarReportByTemplate.msgDownloadFromK2A" /></a>
 <div class="templatelistHeader">Select a template:</div>
 <ul class="templatelist">
 	<li><a href="homePage.jsp"><b>Main Page</b></a> <%for (int i=0; i<templates.size(); i++) {
@@ -60,9 +63,5 @@ if(!authed) {
 		href="reportConfiguration.jsp?templateid=<%=templateId%>"><%=templateTitle%></a></li>
 	<% } %>
 </ul>
-<a href="addEditTemplate.jsp" style="color: #226d55; font-size: 10px;">Add
-Template</a>
-<br/>
-<a href="javascript:void(0)" style="color: #226d55; font-size: 10px;" onclick="newWindow('/oscar/oscarReport/reportByTemplate/k2aTemplates.jsp','templates')" title="<bean:message key='oscarReport.oscarReportByTemplate.msgK2ATemplate' />"><bean:message key="oscarReport.oscarReportByTemplate.msgDownloadFromK2A" /></a>
 </div>
 </form>
