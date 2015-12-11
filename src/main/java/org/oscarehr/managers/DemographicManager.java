@@ -112,12 +112,12 @@ public class DemographicManager {
 
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getDemographic", "demographicId=" + demographicId);
+			LogAction.addLog(loggedInInfo, "DemographicManager.getDemographic", null, null, "demographicId=" + demographicId, null);
 		}
 
 		return (result);
 	}
-	
+		
 	public Demographic getDemographic(LoggedInInfo loggedInInfo, String demographicNo) {
 		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
 		Integer demographicId = null;
