@@ -32,6 +32,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.codehaus.jettison.json.JSONObject;
 import org.oscarehr.app.OAuth1Utils;
 import org.oscarehr.common.dao.AppDefinitionDao;
 import org.oscarehr.common.dao.AppUserDao;
@@ -122,9 +123,18 @@ public class ReportByTemplateService extends AbstractServiceImpl {
 				AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),loggedInInfo.getLoggedInProvider().getProviderNo());
 				
 				if(k2aUser != null) {
-					String xml = OAuth1Utils.getOAuthGetResponse(loggedInInfo,k2aApp, k2aUser, "/ws/api/reportByTemplate/getReportById/" + id, "/ws/api/reportByTemplate/getReportById/" + id);
-					
-					return reportManager.addTemplate(StringEscapeUtils.unescapeXml(xml), loggedInInfo);
+					String uuid = null;
+					String xml = null;
+					String jsonString = OAuth1Utils.getOAuthGetResponse(loggedInInfo, k2aApp, k2aUser, "/ws/api/reportByTemplate/getReportById/" + id, "/ws/api/reportByTemplate/getReportById/" + id);
+		    		
+		    		if(jsonString != null && !jsonString.isEmpty()) {
+		    			JSONObject post = new JSONObject(jsonString);
+		    	        	
+		    	        uuid = post.getString("uuid");
+		    	        xml = post.getString("body");
+		    		}
+		    		
+					return reportManager.addTemplate(uuid, StringEscapeUtils.unescapeXml(xml), loggedInInfo);
 				} else {
 					return "Failed to download K2A Report By Templates, please contact an administrator";
 				}
