@@ -64,6 +64,37 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 
 	$scope.page.encounterFormlist = [];
 	
+	$scope.getFormGroups = function(){
+		formService.getFormGroups().then(function(data){
+			if(data instanceof Array){
+				$scope.page.formGroups = data;
+		    }else{
+		    	$scope.page.formGroups.push(data);
+		  	}
+			
+			for (var i = 0; i < $scope.page.formGroups.length; i++) {
+				if(!($scope.page.formGroups[i].summaryItem instanceof Array)){
+					$scope.page.formGroups[i].summaryItem = [$scope.page.formGroups[i].summaryItem];
+ 				}
+			}
+		});
+	};
+	
+	$scope.getFormGroups();
+	$scope.page.formOptions = [];
+	
+	formService.getFormOptions($scope.demographicNo).then(function(data){
+		console.log("data",data);
+		
+		if(data.items instanceof Array){
+			$scope.page.formOptions = data.items;
+	    }else{
+	    	$scope.page.formOptions.push(data.items);
+	  	}
+		
+		
+		console.log("form options",$scope.page.formOptions);
+	});
 	
 	formService.getCompletedEncounterForms($stateParams.demographicNo).then(function(data) {
 		$scope.page.encounterFormlist[0] = data.list;
@@ -96,6 +127,11 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 		var addOrShow = '';
 		var formId = 0;
 
+		if(view === undefined){
+			view = 1;
+		}
+		
+
 		if(item.type == 'eform'){
 			if(angular.isDefined(item.id)){
 				addOrShow = '../eform/efmshowform_data.jsp?fdid='+item.id;
@@ -110,7 +146,7 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 				url = addOrShow;
 				$state.go('record.forms.existing',{demographicNo:$stateParams.demographicNo, type: 'eform' ,id:item.id});
 				$("html, body").animate({ scrollTop: 0 }, "slow");
-			}else{
+			}else if(view==2){
 				url = addOrShow;
 
 				var rnd = Math.round(Math.random() * 1000);
@@ -132,7 +168,7 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 				$state.go('record.forms.existing',{demographicNo:$stateParams.demographicNo, type: 'form' ,id:item.id});
 				$("html, body").animate({ scrollTop: 0 }, "slow");
 				
-			}else{
+			}else if(view==2){
 				url = addOrShow;
 				
 				var rnd = Math.round(Math.random() * 1000);
@@ -158,6 +194,37 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 		for (var i in obj) if (obj.hasOwnProperty(i)) return false;
 		return true;
 	};
+	
+	$scope.openFormFromGroups = function(item){
+		console.log("group item",item);
+		item.formId = item.id;
+		delete item.id;
+		$scope.viewFormState(item,2);
+	}
+	
+	$scope.formOption = function(opt){	
+		var atleastOneItemSelected = false;
+		if(opt.extra == "send2PHR"){
+			var docIds = "";
+			for(var i = 0; i < $scope.page.currentFormList[$scope.page.currentlistId].length; i++){
+				if($scope.page.currentFormList[$scope.page.currentlistId][i].isChecked){
+				    docIds = docIds + '&sendToPhr='+$scope.page.currentFormList[$scope.page.currentlistId][i].id;
+				    atleastOneItemSelected = true;
+				}
+			}
+			if(atleastOneItemSelected){
+				var rnd = Math.round(Math.random() * 1000);
+				win = "win" + rnd;
+				var url = '../eform/efmpatientformlistSendPhrAction.jsp?clientId='+$scope.demographicNo+docIds;
+				window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");
+			}
+		}
+		
+		if(!atleastOneItemSelected){
+			alert("No Documents Selected");
+		}
+	}
+	
 	
 	/*
 	 * Used to make the left side list tab be active
@@ -204,7 +271,7 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	 * This still needs to be tested
 	 */
 	$scope.keypress = function(event){
-		if(event.altKey == true && event.key == "Up"){
+		if(event.altKey == true && event.keyCode == 38){ //up
 			console.log("up",event);
 			console.log($scope.page.currentFormList[$scope.page.currentlistId].indexOf($scope.page.currentForm));
 			var currIdx = $scope.page.currentFormList[$scope.page.currentlistId].indexOf($scope.page.currentForm);
@@ -212,7 +279,7 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 				$scope.page.currentForm = $scope.page.currentFormList[$scope.page.currentlistId][currIdx-1];
 				$scope.viewFormState($scope.page.currentForm);
 			}
-		}else if (event.altKey == true && event.key == "Down"){
+		}else if (event.altKey == true && event.keyCode == 40){  //Down
 			console.log("down",event);
 			var currIdx = $scope.page.currentFormList[$scope.page.currentlistId].indexOf($scope.page.currentForm);
 			console.log(currIdx,$scope.page.currentFormList[$scope.page.currentlistId].length);

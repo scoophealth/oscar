@@ -23,8 +23,8 @@
     Ontario, Canada
 
 --%>
-
-<div class="col-lg-3">		
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<div class="col-sm-3">		
 	<ul class="nav nav-tabs nav-justified">
 		<li ng-repeat="list in page.formlists" ng-class="getListClass(list.id)" class="hand-hover"><a ng-click="changeTo(list.id)">{{list.label}}</a></li>
 		
@@ -68,7 +68,22 @@
    			</ul>
 	</div>
 </div>
-<div class="col-lg-9">
-<a class="hand-hover pull-right" ng-show="!isEmpty(page.currentForm)" title="Open in new window" ng-click="viewFormState(page.currentForm,2)"><span class="glyphicon glyphicon-new-window"></span></a>
+<div class="col-sm-9">
+	<a class="hand-hover pull-right" ng-show="!isEmpty(page.currentForm)" title="Open in new window" ng-click="viewFormState(page.currentForm,2)"><span class="glyphicon glyphicon-new-window"></span></a>
+	<div ng-if="isEmpty(page.currentForm)">
+    	<h2><bean:message key="forms.title.form.group.library" bundle="ui"/></h2>
+    	<fieldset ng-repeat="mod in page.formGroups" class="col-sm-4">
+       		<legend style="margin-bottom:0px;"> 
+				{{mod.displayName}}  
+			</legend>
+        	<ul style="padding-left:12px;">
+        		<li ng-repeat="item in mod.summaryItem">
+        			<span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span>
+        			<a ng-click="openFormFromGroups(item)" href="javascript:void(0)" ng-class="item.indicatorClass" >{{item.displayName | limitTo: 34 }} {{item.displayName.length > 34 ? '...' : '' }}<small ng-show="item.classification">({{item.classification}})</small></a> 
+        		</li> 			
+			</ul>
+		
+       </fieldset>
+    </div>
 	<div id="formInViewFrame"></div>
 </div>
