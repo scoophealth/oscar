@@ -252,6 +252,13 @@
                     href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit%>"><bean:message
                     key="demographic.demographicsearchresults.btnDemoName"/></a>
                 </td>
+                
+        <oscar:oscarPropertiesCheck property="searchresults.showAddress" value="true" defaultVal="false">
+	        <td class="address">
+	        	<bean:message key="oscarEncounter.search.demographicSearch.formAddr"/>
+	        </td>
+        </oscar:oscarPropertiesCheck>
+                
 		<td class="chartNo"><a
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=chart_no&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnChart" /></a>
@@ -374,6 +381,9 @@
 				   	<a title="Import" href="#"  onclick="popup(700,1027,'../appointment/copyRemoteDemographic.jsp?remoteFacilityId=<%=demographicTransfer.getIntegratorFacilityId()%>&demographic_no=<%=String.valueOf(demographicTransfer.getCaisiDemographicId())%>&originalPage=../demographic/demographiceditdemographic.jsp&provider_no=<%=curProvider_no%>')" >Import</a></td>
 				   <td class="links">Remote</td>
 				   <td class="name"><%=Misc.toUpperLowerCase(demographicTransfer.getLastName())%>, <%=Misc.toUpperLowerCase(demographicTransfer.getFirstName())%></td>
+				   <oscar:oscarPropertiesCheck property="searchresults.showAddress" value="true" defaultVal="false">				   
+				   	<td class="address"></td>
+				   </oscar:oscarPropertiesCheck>
 				   <td class="chartNo"></td>
 				   <td class="sex"><%=demographicTransfer.getGender()%></td>
 				   <td class="dob"><%=demographicTransfer.getBirthDate() != null ?  DateFormatUtils.ISO_DATE_FORMAT.format(demographicTransfer.getBirthDate()) : ""%></td>
@@ -453,7 +463,9 @@
 			<a title="Eyeform" href="#" onclick="popup(800, 1280, '../eyeform/eyeform.jsp?demographic_no=<%=dem_no %>&reason=')">EF</a>
 		</security:oscarSec>
 	<% 
-		} 
+		}
+		
+		String address = demo.getAddress() + "<br/>" + demo.getCity() + "," + demo.getProvince() + "<br/>" + demo.getPostal();
 	%>
 		<caisi:isModuleLoad moduleName="caisi">
 		<td class="name"><a href="#" onclick="location.href='<%= request.getContextPath() %>/PMmodule/ClientManager.do?id=<%=dem_no%>'"><%=Misc.toUpperLowerCase(demo.getLastName())%>, <%=Misc.toUpperLowerCase(demo.getFirstName())%></a></td>
@@ -461,6 +473,9 @@
 		<caisi:isModuleLoad moduleName="caisi" reverse="true">
 		<td class="name"><%=Misc.toUpperLowerCase(demo.getLastName())%>, <%=Misc.toUpperLowerCase(demo.getFirstName())%></td>
 		</caisi:isModuleLoad>
+		<oscar:oscarPropertiesCheck property="searchresults.showAddress" value="true" defaultVal="false">
+			<td class="address"><%=address%></td>
+		</oscar:oscarPropertiesCheck>
 		<td class="chartNo"><%=demo.getChartNo()==null||demo.getChartNo().equals("")?"&nbsp;":demo.getChartNo()%></td>
 		<td class="sex"><%=demo.getSex()%></td>
 		<td class="dob"><%=demo.getFormattedDob()%></td>
