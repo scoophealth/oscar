@@ -209,9 +209,6 @@ color: #FF4D4D;
 color:red;
 }
 
-.form-name-date{display:inline-block;max-width:90%;}
-
-
 /*for patient header*/
 @media (max-width: 1320px) {
 .patientHeaderName{
