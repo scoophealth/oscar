@@ -78,7 +78,7 @@ if(!authed) {
 
   Integer demographicId=Integer.parseInt(demographic_no);
   PreventionData.addRemotePreventions(loggedInInfo, p, demographicId);
-  Date demographicDateOfBirth=PreventionData.getDemographicDateOfBirth(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.valueOf(demographic_no));
+  Date demographicDateOfBirth=PreventionData.getDemographicDateOfBirth(loggedInInfo, Integer.valueOf(demographic_no));
   String demographicDob = oscar.util.UtilDateUtilities.DateToString(demographicDateOfBirth);
 
   PreventionDS pf = PreventionDS.getInstance();
