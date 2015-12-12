@@ -29,7 +29,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.ContactSpecialtyDao;
@@ -110,8 +109,6 @@ public class DemographicManager {
 	private SecurityInfoManager securityInfoManager;
 	
 	@Autowired
-	private ProgramDao programDao;
-	@Autowired
 	private ContactSpecialtyDao contactSpecialtyDao;
 
 	public Demographic getDemographic(LoggedInInfo loggedInInfo, Integer demographicId) throws PatientDirectiveException {
@@ -121,7 +118,7 @@ public class DemographicManager {
 
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getDemographic", "demographicId=" + demographicId);
+			LogAction.addLog(loggedInInfo, "DemographicManager.getDemographic", null, null, "demographicId=" + demographicId, null);
 		}
 
 		return (result);
