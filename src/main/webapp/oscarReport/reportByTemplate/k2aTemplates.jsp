@@ -151,7 +151,7 @@ body{background-color:#f5f5f5;}
 			    
 			    window.onunload = refreshParent;
 				function refreshParent() {
-					window.opener.document.location.href = "/oscar/oscarReport/reportByTemplate/homePage.jsp";
+					window.opener.document.location.href = "<%=request.getContextPath()%>/oscarReport/reportByTemplate/homePage.jsp";
 				}
 			});
 		
