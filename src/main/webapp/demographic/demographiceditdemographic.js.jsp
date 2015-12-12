@@ -208,6 +208,7 @@ function checkTypeInEdit() {
   if ( !checkDob() ) return false;
   if ( !checkHin() ) return false;
   if ( !checkSex() ) return false;
+  if ( !isPostalCode() ) return false;
   if ( !checkRosterStatus() ) return false;
   if ( !checkPatientStatus() ) return false;
   return(true);
@@ -254,6 +255,34 @@ function removeAccents(s){
     r = r.replace(new RegExp("[ï¿½ï¿½]", 'g'),"y");
     r = r.replace(new RegExp("\\W", 'g'),"");
     return r;
+}
+
+function isPostalCode()
+{
+    if(isCanadian()){
+         e = document.updatedelete.postal;
+         postalcode = e.value;
+        	
+         rePC = new RegExp(/(^s*([a-z](\s)?\d(\s)?){3}$)s*/i);
+    
+         if (!rePC.test(postalcode)) {
+              e.focus();
+              alert("The entered Postal Code is not valid");
+              return false;
+         }
+    }//end cdn check
+
+return true;
+}
+
+function isCanadian(){
+	e = document.updatedelete.province;
+    var province = e.options[e.selectedIndex].value;
+    
+    if ( province.indexOf("US")>-1 || province=="OT"){ //if not canadian
+            return false;
+    }
+    return true;
 }
 
 function checkTypeIn() {

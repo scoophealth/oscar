@@ -1929,7 +1929,7 @@ if ( Dead.equals(PatStat) ) {%>
                               	 } %> : </b></td>
 								<td align="left"><input type="text" name="postal" size="30" <%=getDisabled("postal")%>
 									value="<%=StringUtils.trimToEmpty(demographic.getPostal())%>"
-									onBlur="upCaseCtrl(this)"></td>
+									onBlur="upCaseCtrl(this)" onChange="isPostalCode()"></td>
 							</tr>
 							<tr valign="top">
 								<td align="right"><b><bean:message
