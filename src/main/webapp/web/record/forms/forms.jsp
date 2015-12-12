@@ -36,6 +36,7 @@
 			  <li ng-show="hasAdminAccess"><a class="hand-hover" onclick="popup(600, 1200, '../administration/?show=Forms', 'manageeforms')" >Manage eForms</a></li>
 		      <li ng-show="hasAdminAccess"><a class="hand-hover" onclick="popup(600, 1200, '../administration/?show=Forms&load=Groups', 'editGroups')" >Edit Groups</a></li>
 		      <li ng-show="hasAdminAccess" class="divider"></li>
+		      <li ng-repeat="opt in page.formOptions"><a ng-click="formOption(opt)">{{opt.label}}</a></li>
 		    </ul>
 		</li>
 	</ul> 	
