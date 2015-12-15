@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="java.net.URLEncoder"%>
 <%@ page import="oscar.eform.data.*, oscar.OscarProperties, oscar.eform.*, java.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -76,7 +77,7 @@
 				</td>
 					
 				<td>
-					<a href="<%= request.getContextPath() %>/eform/deleteImage.do?filename=<%=curimage%>" class="contentLink"><bean:message key="eform.uploadimages.btnDelete" /></a>
+					<a href="<%= request.getContextPath() %>/eform/deleteImage.do?filename=<%=URLEncoder.encode(curimage, "UTF-8")%>" class="contentLink"><bean:message key="eform.uploadimages.btnDelete" /></a>
 				</td>
 			</tr>
 			<% } %>
