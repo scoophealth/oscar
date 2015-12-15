@@ -112,7 +112,7 @@ public class DemographicManager {
 
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLog(loggedInInfo, "DemographicManager.getDemographic", null, null, "demographicId=" + demographicId, null);
+			LogAction.addLog(loggedInInfo, "DemographicManager.getDemographic", null, null, ""+demographicId, null);
 		}
 
 		return (result);
