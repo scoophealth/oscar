@@ -13,6 +13,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,12 +25,10 @@ import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
-
-import oscar.OscarProperties;
-import oscar.oscarMessenger.data.MsgProviderData;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
@@ -37,6 +36,9 @@ import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
+
+import oscar.OscarProperties;
+import oscar.oscarMessenger.data.MsgProviderData;
 
 /**
  * SFTP Connector to interact with servers and return the server's reply/file data.
@@ -158,6 +160,10 @@ public class SFTPConnector {
 		jsch.addIdentity(keyLocation);
 		sess = jsch.getSession(user, host, port);
 
+		/* - Just for Testing. If you need to setup a "fake" sftp to test this
+		UserInfo ui=new MyUserInfo();  
+		sess.setUserInfo(ui);
+		*/
 		java.util.Properties confProp = new java.util.Properties();
 		confProp.put("StrictHostKeyChecking", "no");
 		sess.setConfig(confProp);
@@ -613,6 +619,7 @@ public class SFTPConnector {
 					paths = localFilePaths;
 				}
 		
+				paths = copyFilesToDocumentDir(paths);
 								
 				for (String filePath : paths) {
 					HRMReport report = HRMReportParser.parseReport(filePath);
@@ -634,6 +641,25 @@ public class SFTPConnector {
 		}
 	}
 	
+	protected static String[] copyFilesToDocumentDir(String[] paths) {
+		String destDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+		List<String> results = new ArrayList<String>();
+		
+		for(int x=0;x<paths.length;x++) {
+			String f = paths[x];
+			if(f != null) {
+				try {
+					FileUtils.copyFileToDirectory(new File(f), new File(destDir));
+					results.add(new File(destDir,new File(f).getName()).getAbsolutePath());
+				}catch(IOException e) {
+					logger.error("Error copying HRM file. Will not be viewable from Inbox!",e);
+					notifyHrmError( "Failed to copy HRM file to DOCUMENT_DIR. Please contact admin ("+ f +")");
+				}
+			}
+		}
+		
+		return results.toArray(new String[results.size()]);
+	}
 
 	protected static void notifyHrmError(String errorMsg) {
 	    HashSet<String> sendToProviderList = new HashSet<String>();
@@ -682,3 +708,43 @@ public class SFTPConnector {
 	    }
 	}
 }
+/*
+class MyUserInfo implements UserInfo {
+
+	@Override
+	public String getPassphrase() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getPassword() {
+		return "password";
+	}
+
+	@Override
+	public boolean promptPassword(String message) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean promptPassphrase(String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean promptYesNo(String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void showMessage(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+*/
