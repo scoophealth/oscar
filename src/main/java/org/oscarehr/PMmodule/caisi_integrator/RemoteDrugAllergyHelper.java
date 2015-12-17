@@ -26,7 +26,9 @@
 package org.oscarehr.PMmodule.caisi_integrator;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -57,9 +59,13 @@ public class RemoteDrugAllergyHelper {
 			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(loggedInInfo, localDemographicId);	
 			}
-			
+			Calendar now = new GregorianCalendar();
 			for (CachedDemographicDrug remoteDrug : remoteDrugs) {
-				if (remoteDrug.getAtc() != null) atcCodes.add(remoteDrug.getAtc());
+				if (remoteDrug.getAtc() != null){
+					if(remoteDrug.isLongTerm() ||  (remoteDrug.getEndDate() == null || now.before(remoteDrug.getEndDate()))){
+						atcCodes.add(remoteDrug.getAtc());
+					}
+				}
 			}
 
 		} catch (Exception e) {
@@ -86,9 +92,13 @@ public class RemoteDrugAllergyHelper {
 			if(CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
 			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(loggedInInfo, localDemographicId);	
 			}
-			
+			Calendar now = new GregorianCalendar();
 			for (CachedDemographicDrug remoteDrug : remoteDrugs) {
-				if (remoteDrug.getAtc() != null) regionalIdentifierCodes.add(remoteDrug.getRegionalIdentifier());
+				if (remoteDrug.getRegionalIdentifier() != null ){
+					if(remoteDrug.isLongTerm() ||  (remoteDrug.getEndDate() == null || now.before(remoteDrug.getEndDate()))){
+						regionalIdentifierCodes.add(remoteDrug.getRegionalIdentifier());
+					}
+				}
 			}
 
 		} catch (Exception e) {
