@@ -151,7 +151,23 @@ width:400px;
 		  </div>
 		</div>
 		
-
+		<div class="form-group">
+		  <label>Enable receiving Tickler Notification emails:</label>
+		  <div class="controls">
+		   <label class="radio inline" for="radios-t-1">
+		      <input name="radios-t-1" id="radios-t-1" ng-model="pref.enableTicklerEmailProvider" ng-value="true" type="radio">
+		      Enable
+		    </label> 
+		    
+		    <label class="radio inline" for="radios-t-0">
+		      <input name="radios-t-0" id="radios-t-0" ng-model="pref.enableTicklerEmailProvider" ng-value="false" type="radio">
+		      Disable
+		    </label>
+		    
+		  </div>
+		</div>	
+		
+		
 	
 	</div>
 </div> <!--  end row -->
@@ -817,7 +833,7 @@ width:400px;
 
 
 
-<!-- 
+<!--  
 <div style="height:20px"></div>
 <pre>{{pref}}</pre>
 -->
