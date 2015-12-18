@@ -70,6 +70,7 @@ import org.oscarehr.integration.hl7.generators.HL7A04Generator;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.to.model.DemographicSearchRequest;
 import org.oscarehr.ws.rest.to.model.DemographicSearchRequest.SEARCHMODE;
 import org.oscarehr.ws.rest.to.model.DemographicSearchRequest.SORTMODE;
@@ -383,7 +384,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 	       }
 	}
 	
-	private static final String PROGRAM_DOMAIN_RESTRICTION = "select distinct a.clientId from ProgramProvider pp,Admission a WHERE pp.ProgramId=a.programId AND pp.ProviderNo=:providerNo";
+	public static final String PROGRAM_DOMAIN_RESTRICTION = "select distinct a.clientId from ProgramProvider pp,Admission a WHERE pp.ProgramId=a.programId AND pp.ProviderNo=:providerNo";
 
 	public List<Demographic> searchDemographicByName(String searchStr, int limit, int offset, String providerNo, boolean outOfDomain) {
 		return searchDemographicByNameAndStatus(searchStr,null,limit,offset,providerNo,outOfDomain,false);
@@ -570,7 +571,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 	@SuppressWarnings("unchecked")
 	public List<Demographic> searchDemographicByPhoneAndStatus(String phoneStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain,boolean ignoreStatuses) {
 		List<Demographic> list = new ArrayList<Demographic>();
-		String queryString = "From Demographic d where d.Phone like :phone ";
+		String queryString = "From Demographic d where d.Phone like :phone or d.Phone2 like :phone ";
 
 		if(statuses != null) {
 			queryString += " and d.PatientStatus " + ((ignoreStatuses)?"not":"") + "  in (:statuses)";
@@ -601,9 +602,53 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		} finally {
 			this.releaseSession(session);
 		}
+		
+		//list.addAll(searchDemographicByCellPhoneAndStatus(phoneStr,statuses,limit,offset,providerNo,outOfDomain,ignoreStatuses));
+		
+		DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+		list.addAll(demographicExtDao.searchDemographicByPhoneAndStatus(phoneStr, statuses, limit, offset, providerNo, outOfDomain, ignoreStatuses));
+		
 		return list;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Demographic> searchDemographicByCellPhoneAndStatus(String phoneStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain,boolean ignoreStatuses) {
+		List<Demographic> list = new ArrayList<Demographic>();
+		String queryString = "SELECT d From Demographic d,DemographicExt e where d.DemographicNo = e.demographicNo AND  e.key = :key and e.value like :value";
 
+		if(statuses != null) {
+			queryString += " and d.PatientStatus " + ((ignoreStatuses)?"not":"") + "  in (:statuses)";
+		}
+		
+		if(providerNo != null && !outOfDomain) {
+			queryString += " AND d.id IN ("+ PROGRAM_DOMAIN_RESTRICTION+") ";
+		}
+		
+		Session session = this.getSession();
+		try {
+			Query q = session.createQuery(queryString);
+			q.setFirstResult(offset);
+			q.setMaxResults(limit);
+
+			q.setParameter("key", "demo_cell");
+			q.setParameter("value", phoneStr.trim() + "%");
+			
+			if(statuses != null) {
+				q.setParameterList("statuses", statuses);
+			}
+
+			if(providerNo != null && !outOfDomain) {
+				q.setParameter("providerNo", providerNo);
+			}
+			
+			list = q.list();
+		} finally {
+			this.releaseSession(session);
+		}
+		return list;
+		
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Demographic> searchMergedDemographicByPhone(String phoneStr, int limit, int offset, String providerNo, boolean outOfDomain) {
 		List<Demographic> list = new ArrayList<Demographic>();
