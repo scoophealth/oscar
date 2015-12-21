@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,8 +40,6 @@ import org.oscarehr.provider.model.PreventionManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.oscarPrevention.PreventionData;
 /**
@@ -153,9 +150,7 @@ public class AddPreventionAction  extends Action {
             PreventionData.updatetPreventionData(id,sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData);
          }
 
-         ServletContext servletCtx = request.getSession().getServletContext();
-         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(servletCtx);
-         PreventionManager prvMgr = (PreventionManager)ctx.getBean("preventionMgr");
+         PreventionManager prvMgr = (PreventionManager) SpringUtils.getBean("preventionMgr");
          prvMgr.removePrevention(demographic_no); 
          MiscUtils.getLogger().debug("Given "+given+" prevDate "+prevDate+" providerName "+providerName+" provider "+providerNo);
 

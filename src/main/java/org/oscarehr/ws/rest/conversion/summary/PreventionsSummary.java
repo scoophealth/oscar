@@ -32,6 +32,7 @@ import java.util.Map;
 import org.oscarehr.managers.PreventionManager;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.to.model.SummaryItemTo1;
 import org.oscarehr.ws.rest.to.model.SummaryTo1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,7 @@ public class PreventionsSummary implements Summary {
 				
 		oscar.oscarPrevention.Prevention p = PreventionData.getPrevention(loggedInInfo, demographicNo);
 
-        PreventionDS pf = PreventionDS.getInstance();
+        PreventionDS pf = SpringUtils.getBean(PreventionDS.class);
 
         try{
             pf.getMessages(p);

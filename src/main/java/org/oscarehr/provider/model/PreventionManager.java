@@ -26,8 +26,6 @@
 package org.oscarehr.provider.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -35,12 +33,16 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.collections.map.LRUMap;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.model.Property;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.QueueCache;
 import org.oscarehr.util.SpringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import oscar.oscarPrevention.Prevention;
 import oscar.oscarPrevention.PreventionDS;
@@ -51,27 +53,19 @@ import oscar.oscarPrevention.PreventionData;
  *
  * @author rjonasz
  */
+@Component
 public class PreventionManager {
-    private static final int MAXITEMS = 500;
-    private static final String PREVS = "dprv";
-
-    private LRUMap demoPrevs;
-    private Map<String,LRUMap>mShell;    
+	private static Logger logger = MiscUtils.getLogger();
+	private static final QueueCache<String, String> dataCache=new QueueCache<String, String>(4, 500, DateUtils.MILLIS_PER_HOUR, null);
+	
+    @Autowired
     private PreventionDS pf = null;
+    
+  
 
-    public PreventionManager() {
-        demoPrevs = new LRUMap(MAXITEMS);
-        mShell = new HashMap<String,LRUMap>(1);
-        mShell.put(PREVS, demoPrevs);
-        mShell = Collections.synchronizedMap(mShell);        
-        //PreventionDS.getInstance(); was here but moved below to avoid a loading issue. The dao was null when this initialized 
-    }
-
-    public synchronized String getWarnings(LoggedInInfo loggedInInfo, String demo) {
-        String ret = (String)mShell.get(PREVS).get(demo);
-        if (pf == null){
-        	pf = PreventionDS.getInstance();
-        }
+    public  String getWarnings(LoggedInInfo loggedInInfo, String demo) {
+        String ret = dataCache.get(demo);
+      
         if( ret == null ) {
                 try {
 
@@ -104,7 +98,7 @@ public class PreventionManager {
 
 	                 } 	
                                          
-                    mShell.get(PREVS).put(demo, ret);
+	                 dataCache.put(demo, ret);
 
                 } catch(Exception e) {
                     ret = "";
@@ -117,9 +111,8 @@ public class PreventionManager {
         
     }
 
-     public synchronized void removePrevention(String demo) {
-            mShell.get(PREVS).remove(demo);
-            
+     public void removePrevention(String demo) {
+    	 dataCache.remove(demo);
      }
 
    

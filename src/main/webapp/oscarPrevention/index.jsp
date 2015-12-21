@@ -81,7 +81,7 @@ if(!authed) {
   Date demographicDateOfBirth=PreventionData.getDemographicDateOfBirth(loggedInInfo, Integer.valueOf(demographic_no));
   String demographicDob = oscar.util.UtilDateUtilities.DateToString(demographicDateOfBirth);
 
-  PreventionDS pf = PreventionDS.getInstance();
+  PreventionDS pf = SpringUtils.getBean(PreventionDS.class);
 
 
   boolean dsProblems = false;
