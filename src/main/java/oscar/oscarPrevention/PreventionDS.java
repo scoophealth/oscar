@@ -30,6 +30,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.drools.RuleBase;
@@ -39,7 +41,8 @@ import org.oscarehr.common.dao.ResourceStorageDao;
 import org.oscarehr.common.model.ResourceStorage;
 import org.oscarehr.decisionSupport.prevention.DSPreventionDrools;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import oscar.OscarProperties;
 
@@ -47,27 +50,25 @@ import oscar.OscarProperties;
  *
  * @author Jay Gallagher
  */
+@Component
 public class PreventionDS {
    private static Logger log = MiscUtils.getLogger();
-   static PreventionDS preventionDS= new PreventionDS();
    static boolean loaded = false;
    static RuleBase ruleBase = null;
    
-   public static PreventionDS getInstance() {
-      if (!loaded){
-         loadRuleBase();
-      }
-      return preventionDS;
-   }
+   @Autowired
+   private ResourceStorageDao resourceStorageDao;// = SpringUtils.getBean(ResourceStorageDao.class);
+   
 	   	                   
-   private PreventionDS() {
+   public PreventionDS() {
    }
    
-   public static void reloadRuleBase(){
+   public void reloadRuleBase(){
 	   loadRuleBase();
    }
    
-   private static void loadRuleBase(){
+   @PostConstruct
+   private void loadRuleBase(){
       try{
         boolean fileFound = false;
         String preventionPath = OscarProperties.getInstance().getProperty("PREVENTION_FILE");
@@ -98,7 +99,6 @@ public class PreventionDS {
         }
         
         if(!fileFound){
-        	ResourceStorageDao resourceStorageDao = SpringUtils.getBean(ResourceStorageDao.class);
         	ResourceStorage resourceStorage = resourceStorageDao.findActive(ResourceStorage.PREVENTION_RULES);
         	if(resourceStorage != null){
 	        	try{

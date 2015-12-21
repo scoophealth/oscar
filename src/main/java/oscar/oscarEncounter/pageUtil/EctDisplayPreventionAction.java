@@ -30,10 +30,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarPrevention.Prevention;
 import oscar.oscarPrevention.PreventionDS;
@@ -68,7 +70,7 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
 
         //list warnings first as module items
         Prevention p = PreventionData.getPrevention(loggedInInfo, Integer.valueOf(bean.demographicNo));
-        PreventionDS pf = PreventionDS.getInstance();
+        PreventionDS pf = SpringUtils.getBean(PreventionDS.class);//PreventionDS.getInstance();
 
         try{
             pf.getMessages(p);
