@@ -79,6 +79,9 @@ public class ResourceService extends AbstractServiceImpl {
 	@Autowired
 	private ResourceStorageDao resourceStorageDao;
 	
+	@Autowired
+	private PreventionDS preventionDS;
+	
 	@GET
 	@Path("/K2AActive/")
 	@Produces("application/json")
@@ -215,7 +218,7 @@ public class ResourceService extends AbstractServiceImpl {
 					}
 				}
 				resourceStorageDao.persist(resourceStorage);
-				PreventionDS.reloadRuleBase();
+				preventionDS.reloadRuleBase();
 			}
 			
 		} catch(Exception e) {
