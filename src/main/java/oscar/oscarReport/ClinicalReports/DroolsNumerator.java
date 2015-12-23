@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarReport.ClinicalReports;
 
 import java.io.File;
@@ -30,9 +29,11 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.util.Hashtable;
 
+import org.apache.commons.io.IOUtils;
 import org.drools.RuleBase;
 import org.drools.WorkingMemory;
 import org.drools.io.RuleBaseLoader;
+import org.oscarehr.drools.RuleBaseFactory;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
@@ -44,159 +45,172 @@ import oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper;
  *
  * @author jay
  */
-public class DroolsNumerator implements Numerator{
-    String name = null;
-    String id = null;
-    String file = null;
-    String[] outputfields = null;
-    Hashtable outputValues = null;
-    
-    /** Creates a new instance of DroolsNumerator */
-    public DroolsNumerator() {
-    }
-    
-     public String getId() {
-        return id;
-    }
+public class DroolsNumerator implements Numerator {
+	String name = null;
+	String id = null;
+	String file = null;
+	String[] outputfields = null;
+	Hashtable outputValues = null;
 
-    public String getNumeratorName() {
-        return name;
-    }
-    
-    public void setNumeratorName(String name){
-        this.name= name;
-    }
-    
-    public void setId(String id){
-        this.id = id;
-    }
+	/** Creates a new instance of DroolsNumerator */
+	public DroolsNumerator() {
+	}
 
-    public boolean evaluate(LoggedInInfo loggedInInfo, String demographicNo) {
-        boolean evalTrue = false;
-        try{
-            MiscUtils.getLogger().debug("going to load "+file);
-            RuleBase ruleBase = loadMeasurementRuleBase(file);
-            
-//            EctMeasurementsDataBeanHandler ect = new EctMeasurementsDataBeanHandler(demographicNo, measurement);
-//           Collection v = ect.getMeasurementsDataVector();
-//           measurementList.add(new ArrayList(v));
+	public String getId() {
+		return id;
+	}
 
-            MeasurementDSHelper dshelper = new MeasurementDSHelper(loggedInInfo, demographicNo);
-            
-            MiscUtils.getLogger().debug("new working mem");
-            WorkingMemory workingMemory = ruleBase.newWorkingMemory();
-            
-            MiscUtils.getLogger().debug("assertObject");
-            
-            workingMemory.assertObject(dshelper);
-            
-          
-            MiscUtils.getLogger().debug("fireAllRules");
-            workingMemory.fireAllRules();
-            evalTrue = dshelper.isInRange();
-          
-            MiscUtils.getLogger().debug("right before catch");
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }
-        return evalTrue;
-    }
+	public String getNumeratorName() {
+		return name;
+	}
 
-    public void setFile(String file) {
-        this.file = file;
-    }
-    
-    public String getFile(){
-        return file;
-    }
-    
-    
-    public RuleBase loadMeasurementRuleBase(String string){
-        RuleBase measurementRuleBase = null;
-        try{
-            boolean fileFound = false;
-            String measurementDirPath = OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY");
+	public void setNumeratorName(String name) {
+		this.name = name;
+	}
 
-            if ( measurementDirPath != null){
-            //if (measurementDirPath.charAt(measurementDirPath.length()) != /)
-            File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY")+string);
-               if(file.isFile() || file.canRead()) {
-                   MiscUtils.getLogger().debug("Loading from file "+file.getName());
-                   FileInputStream fis = new FileInputStream(file);
-                   measurementRuleBase = RuleBaseLoader.loadFromInputStream(fis);
-                   fileFound = true;
-               }
-            }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-            if (!fileFound){                  
-             URL url = MeasurementFlowSheet.class.getResource( "/oscar/oscarEncounter/oscarMeasurements/flowsheets/decisionSupport/"+string );  //TODO: change this so it is configurable;
-             MiscUtils.getLogger().debug("loading from URL "+url.getFile());            
-             measurementRuleBase = RuleBaseLoader.loadFromUrl( url );
-            }
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);                
-        }
-        return measurementRuleBase;        
-    }
+	public boolean evaluate(LoggedInInfo loggedInInfo, String demographicNo) {
+		boolean evalTrue = false;
+		try {
+			MiscUtils.getLogger().debug("going to load " + file);
+			RuleBase ruleBase = loadMeasurementRuleBase(file);
 
-    public Hashtable getOutputValues() {
-        return outputValues;
-    }
-    
-    public void parseOutputFields(String str){
-        if (str != null){
-           try{
-              if (str.indexOf(",") != -1){
-                 outputfields = str.split(",");
-              }else{
-                 outputfields =  new String[1];
-                 outputfields[0] = str;
-              }
-           }catch(Exception e){
-              MiscUtils.getLogger().error("Error", e);
-           }
-        }
-    }
-    
-    public String[] getOutputFields(){
-        return outputfields;
-    }
-    
-    String[] replaceKeys = null;
-    Hashtable replaceableValues = null;
-    public String[] getReplaceableKeys(){
-        return replaceKeys;
-    }
-    
-    public void parseReplaceValues(String str){
-        if (str != null){
-            try{
-                MiscUtils.getLogger().debug("parsing string "+str);
-                if (str.indexOf(",") != -1){
-                replaceKeys = str.split(",");
-                }else{
-                    replaceKeys =  new String[1];
-                    replaceKeys[0] = str;
-                }
-            }catch(Exception e){
-                MiscUtils.getLogger().error("Error", e);
-            }
-        }
-    }
-    
-    public boolean hasReplaceableValues(){
-        boolean repVal = false;
-        if (replaceKeys != null){
-            repVal = true;
-        }
-        return repVal;
-    }
+			//            EctMeasurementsDataBeanHandler ect = new EctMeasurementsDataBeanHandler(demographicNo, measurement);
+			//           Collection v = ect.getMeasurementsDataVector();
+			//           measurementList.add(new ArrayList(v));
 
-    public void setReplaceableValues(Hashtable vals) {
-        replaceableValues = vals;
-    }
+			MeasurementDSHelper dshelper = new MeasurementDSHelper(loggedInInfo, demographicNo);
 
-    public Hashtable getReplaceableValues() {
-        return replaceableValues;
-    }
+			MiscUtils.getLogger().debug("new working mem");
+			WorkingMemory workingMemory = ruleBase.newWorkingMemory();
+
+			MiscUtils.getLogger().debug("assertObject");
+
+			workingMemory.assertObject(dshelper);
+
+			MiscUtils.getLogger().debug("fireAllRules");
+			workingMemory.fireAllRules();
+			evalTrue = dshelper.isInRange();
+
+			MiscUtils.getLogger().debug("right before catch");
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+		}
+		return evalTrue;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
+	}
+
+	public String getFile() {
+		return file;
+	}
+
+	public RuleBase loadMeasurementRuleBase(String string) {
+		
+		try {
+			String measurementDirPath = OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY");
+
+			if (measurementDirPath != null) {
+				//if (measurementDirPath.charAt(measurementDirPath.length()) != /)
+				File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY") + string);
+
+				RuleBase measurementRuleBase = RuleBaseFactory.getRuleBase(file.getCanonicalPath());
+				if (measurementRuleBase != null) return (measurementRuleBase);
+
+				if (file.isFile() || file.canRead()) {
+					MiscUtils.getLogger().debug("Loading from file " + file.getName());
+					FileInputStream fis = new FileInputStream(file);
+
+					try {
+						measurementRuleBase = RuleBaseLoader.loadFromInputStream(fis);
+					} finally {
+						IOUtils.closeQuietly(fis);
+					}
+
+					RuleBaseFactory.putRuleBase(file.getCanonicalPath(), measurementRuleBase);
+					return (measurementRuleBase);
+				}
+			}
+
+			String urlString = "/oscar/oscarEncounter/oscarMeasurements/flowsheets/decisionSupport/" + string;
+			RuleBase measurementRuleBase = RuleBaseFactory.getRuleBase(urlString);
+			if (measurementRuleBase != null) return (measurementRuleBase);
+
+			URL url = MeasurementFlowSheet.class.getResource(urlString); //TODO: change this so it is configurable;
+			MiscUtils.getLogger().debug("loading from URL " + url.getFile());
+			measurementRuleBase = RuleBaseLoader.loadFromUrl(url);
+			RuleBaseFactory.putRuleBase(urlString, measurementRuleBase);
+			return (measurementRuleBase);
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+		}
+		return null;
+	}
+
+	public Hashtable getOutputValues() {
+		return outputValues;
+	}
+
+	public void parseOutputFields(String str) {
+		if (str != null) {
+			try {
+				if (str.indexOf(",") != -1) {
+					outputfields = str.split(",");
+				} else {
+					outputfields = new String[1];
+					outputfields[0] = str;
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Error", e);
+			}
+		}
+	}
+
+	public String[] getOutputFields() {
+		return outputfields;
+	}
+
+	String[] replaceKeys = null;
+	Hashtable replaceableValues = null;
+
+	public String[] getReplaceableKeys() {
+		return replaceKeys;
+	}
+
+	public void parseReplaceValues(String str) {
+		if (str != null) {
+			try {
+				MiscUtils.getLogger().debug("parsing string " + str);
+				if (str.indexOf(",") != -1) {
+					replaceKeys = str.split(",");
+				} else {
+					replaceKeys = new String[1];
+					replaceKeys[0] = str;
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Error", e);
+			}
+		}
+	}
+
+	public boolean hasReplaceableValues() {
+		boolean repVal = false;
+		if (replaceKeys != null) {
+			repVal = true;
+		}
+		return repVal;
+	}
+
+	public void setReplaceableValues(Hashtable vals) {
+		replaceableValues = vals;
+	}
+
+	public Hashtable getReplaceableValues() {
+		return replaceableValues;
+	}
 }
