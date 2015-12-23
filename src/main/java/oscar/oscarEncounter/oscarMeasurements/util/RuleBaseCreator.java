@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.oscarMeasurements.util;
 
 import java.io.ByteArrayInputStream;
@@ -43,88 +42,90 @@ import org.oscarehr.util.MiscUtils;
  * @author jaygallagher
  */
 public class RuleBaseCreator {
-    private static final Logger log=MiscUtils.getLogger();
-    
-    Namespace namespace = Namespace.getNamespace("http://drools.org/rules");
-    Namespace javaNamespace = Namespace.getNamespace("java", "http://drools.org/semantics/java");
-    Namespace xsNs = Namespace.getNamespace("xs", "http://www.w3.org/2001/XMLSchema-instance");
-                
-    public RuleBase getRuleBase(String rulesetName, List<Element> elementRules) throws Exception{
+	private static final Logger log = MiscUtils.getLogger();
 
-        Element va = new Element("rule-set");
+	Namespace namespace = Namespace.getNamespace("http://drools.org/rules");
+	Namespace javaNamespace = Namespace.getNamespace("java", "http://drools.org/semantics/java");
+	Namespace xsNs = Namespace.getNamespace("xs", "http://www.w3.org/2001/XMLSchema-instance");
 
-        addAttributeifValueNotNull(va, "name", rulesetName);
+	public RuleBase getRuleBase(String rulesetName, List<Element> elementRules) throws Exception {
+		long timer = System.currentTimeMillis();
+		try {
+			Element va = new Element("rule-set");
 
-        va.setNamespace(namespace);
-        va.addNamespaceDeclaration(javaNamespace);
-        va.addNamespaceDeclaration(xsNs);
-        va.setAttribute("schemaLocation", "http://drools.org/rules rules.xsd http://drools.org/semantics/java java.xsd", xsNs);
+			addAttributeifValueNotNull(va, "name", rulesetName);
 
-        for (Element ele : elementRules) {
-            va.addContent(ele);
-        }
+			va.setNamespace(namespace);
+			va.addNamespaceDeclaration(javaNamespace);
+			va.addNamespaceDeclaration(xsNs);
+			va.setAttribute("schemaLocation", "http://drools.org/rules rules.xsd http://drools.org/semantics/java java.xsd", xsNs);
 
-        XMLOutputter outp = new XMLOutputter();
-        outp.setFormat(Format.getPrettyFormat());
-        String ooo = outp.outputString(va);
+			for (Element ele : elementRules) {
+				va.addContent(ele);
+			}
 
-        log.debug(ooo);
-        RuleBase ruleBase = RuleBaseLoader.loadFromInputStream(new ByteArrayInputStream(ooo.getBytes()));
-        return ruleBase;
-    }
+			XMLOutputter outp = new XMLOutputter();
+			outp.setFormat(Format.getPrettyFormat());
+			String ooo = outp.outputString(va);
 
-    public void test() {
-        
-        ArrayList elementList = new ArrayList();
-        ArrayList list = new ArrayList();
+			log.debug(ooo);
+			RuleBase ruleBase = RuleBaseLoader.loadFromInputStream(new ByteArrayInputStream(ooo.getBytes()));
+			return ruleBase;
+		} finally {
+			log.debug("generateRuleBase TimeMs : " + (System.currentTimeMillis() - timer));
+		}
+	}
 
-        list.add(new DSCondition("getLastDateRecordedInMonths", "REBG", ">=", "3"));
-        list.add(new DSCondition("getLastDateRecordedInMonths", "REBG", "<", "6"));
+	public void test() {
 
-        Element ruleElement = getRule("REBG1", "oscar.oscarEncounter.oscarMeasurements.MeasurementInfo", list, "MiscUtils.getLogger().debug(\"REBG 1 getting called\");");
-        elementList.add(ruleElement);
+		ArrayList elementList = new ArrayList();
+		ArrayList list = new ArrayList();
 
-        list = new ArrayList();
-        list.add(new DSCondition("getLastDateRecordedInMonths", "REBG", ">", "6"));
-        ruleElement = getRule("REBG2", "oscar.oscarEncounter.oscarMeasurements.MeasurementInfo", list, "MiscUtils.getLogger().debug(\"REBG 1 getting called\");");
-        elementList.add(ruleElement);
+		list.add(new DSCondition("getLastDateRecordedInMonths", "REBG", ">=", "3"));
+		list.add(new DSCondition("getLastDateRecordedInMonths", "REBG", "<", "6"));
 
+		Element ruleElement = getRule("REBG1", "oscar.oscarEncounter.oscarMeasurements.MeasurementInfo", list, "MiscUtils.getLogger().debug(\"REBG 1 getting called\");");
+		elementList.add(ruleElement);
 
-        list = new ArrayList();
-        list.add(new DSCondition("getLastDateRecordedInMonths", "REBG", "==", "-1"));
-        ruleElement = getRule("REBG3", "oscar.oscarEncounter.oscarMeasurements.MeasurementInfo", list, "MiscUtils.getLogger().debug(\"REBG 1 getting called\");");
-        elementList.add(ruleElement);
-    }
+		list = new ArrayList();
+		list.add(new DSCondition("getLastDateRecordedInMonths", "REBG", ">", "6"));
+		ruleElement = getRule("REBG2", "oscar.oscarEncounter.oscarMeasurements.MeasurementInfo", list, "MiscUtils.getLogger().debug(\"REBG 1 getting called\");");
+		elementList.add(ruleElement);
 
-    void addAttributeifValueNotNull(Element element, String attr, String value) {
-        if (value != null) {
-            element.setAttribute(attr, value);
-        }
-    }
+		list = new ArrayList();
+		list.add(new DSCondition("getLastDateRecordedInMonths", "REBG", "==", "-1"));
+		ruleElement = getRule("REBG3", "oscar.oscarEncounter.oscarMeasurements.MeasurementInfo", list, "MiscUtils.getLogger().debug(\"REBG 1 getting called\");");
+		elementList.add(ruleElement);
+	}
 
-    public Element getRule(String ruleName, String incomingClass, List<DSCondition> conditions, String consequence) {
-        Element rule = new Element("rule", namespace);
-        addAttributeifValueNotNull(rule, "name", ruleName);
-        Element param = new Element("parameter", namespace);
-        addAttributeifValueNotNull(param, "identifier", "m");
-        Element classEle = new Element("class", namespace);
-        classEle.setText(incomingClass);
+	void addAttributeifValueNotNull(Element element, String attr, String value) {
+		if (value != null) {
+			element.setAttribute(attr, value);
+		}
+	}
 
-        rule.addContent(param);
-        param.addContent(classEle);
+	public Element getRule(String ruleName, String incomingClass, List<DSCondition> conditions, String consequence) {
+		Element rule = new Element("rule", namespace);
+		addAttributeifValueNotNull(rule, "name", ruleName);
+		Element param = new Element("parameter", namespace);
+		addAttributeifValueNotNull(param, "identifier", "m");
+		Element classEle = new Element("class", namespace);
+		classEle.setText(incomingClass);
 
+		rule.addContent(param);
+		param.addContent(classEle);
 
-        for (DSCondition cond : conditions) {
-            Element condElement = new Element("condition", javaNamespace);
-            condElement.setText("m." + cond.getType() + " " + cond.getComparision() + " " + cond.getValue());  
-            rule.addContent(condElement);
-        }
+		for (DSCondition cond : conditions) {
+			Element condElement = new Element("condition", javaNamespace);
+			condElement.setText("m." + cond.getType() + " " + cond.getComparision() + " " + cond.getValue());
+			rule.addContent(condElement);
+		}
 
-        Element conseq = new Element("consequence", javaNamespace);
-        conseq.addContent(consequence);
+		Element conseq = new Element("consequence", javaNamespace);
+		conseq.addContent(consequence);
 
-        rule.addContent(conseq);
-        log.debug("Return Rule"+rule);
-        return rule;
-    }
+		rule.addContent(conseq);
+		log.debug("Return Rule" + rule);
+		return rule;
+	}
 }
