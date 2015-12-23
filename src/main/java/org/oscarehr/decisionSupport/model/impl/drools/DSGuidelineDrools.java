@@ -36,6 +36,7 @@ import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.PostUpdate;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang.StringUtils;
@@ -51,6 +52,7 @@ import org.oscarehr.decisionSupport.model.DSDemographicAccess;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DSParameter;
 import org.oscarehr.decisionSupport.model.DecisionSupportException;
+import org.oscarehr.drools.RuleBaseFactory;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
@@ -74,6 +76,11 @@ public class DSGuidelineDrools extends DSGuideline {
 	@Transient
 	private RuleBase _ruleBase = null;
 
+	public String getRuleBaseFactoryKey()
+	{
+		return("DSGuidelineDrools:"+getId());
+	}
+	
 	public List<DSConsequence> evaluate(LoggedInInfo loggedInInfo, String demographicNo) throws DecisionSupportException {
 		if (_ruleBase == null) generateRuleBase();
 		//at this point _ruleBase WILL be set or exception is thrown in generateRuleBase()
@@ -266,6 +273,14 @@ public class DSGuidelineDrools extends DSGuideline {
 	public void generateRuleBase() throws DecisionSupportException {
 		long timer = System.currentTimeMillis();
 		try {
+			String ruleBaseFactoryKey=getRuleBaseFactoryKey();
+			RuleBase result=RuleBaseFactory.getRuleBase(ruleBaseFactoryKey);
+			if (result!=null) 
+			{
+				_ruleBase=result;
+				return;
+			}
+			
 			ArrayList<Element> rules = new ArrayList<Element>();
 			ArrayList<Element> conditionElements = new ArrayList<Element>();
 			ArrayList<Element> lParameterElements = new ArrayList<Element>();
@@ -293,8 +308,8 @@ public class DSGuidelineDrools extends DSGuideline {
 
 			RuleBaseCreator ruleBaseCreator = new RuleBaseCreator();
 			try {
-
 				_ruleBase = ruleBaseCreator.getRuleBase(this.getTitle(), rules);
+				RuleBaseFactory.putRuleBase(ruleBaseFactoryKey, _ruleBase);
 			} catch (Exception e) {
 				throw new DecisionSupportException("Could not create a rule base for guideline '" + this.getTitle() + "'", e);
 			}
@@ -404,4 +419,8 @@ public class DSGuidelineDrools extends DSGuideline {
 		return javaElement;
 	}
 
+	@PostUpdate
+	public void afterSave() {
+		RuleBaseFactory.removeRuleBase(getRuleBaseFactoryKey());
+	}
 }
