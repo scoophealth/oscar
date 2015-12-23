@@ -35,7 +35,6 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.QueueCache;
 
 import oscar.OscarProperties;
-import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
 
 public final class RuleBaseFactory {
 
@@ -57,12 +56,22 @@ public final class RuleBaseFactory {
 		ruleBaseInstances = new QueueCache<String, RuleBase>(4, 2048, DateUtils.MILLIS_PER_DAY, null);
 	}
 
-	public static RuleBase getMeasurementFileAsRuleBase(String fileName) {
+	/**
+	 * This should be genericisable, this is NOT FINISHED YET.
+	 * The concept is that you check 
+	 * 1) oscar property path for the file as a "file"
+	 * 2) check some hard coded path as a url/classpath resource
+	 * 
+	 * This is here because I think I've seen this code copy/pasted quite a few times.
+	 * I haven't gotten around to finding them all and making this method geneic and refactoring those 
+	 * calls yet.
+	 */
+	public static RuleBase notFinishedGetRuleBase(String fileName, String oscarPropertyToCheck, String classPathToCheck) {
 		try {
-			String measurementDirPath = OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY");
+			String filePath = OscarProperties.getInstance().getProperty(oscarPropertyToCheck);
 
-			if (measurementDirPath != null) {
-				File file = new File(measurementDirPath + fileName);
+			if (filePath != null) {
+				File file = new File(filePath + fileName);
 
 				RuleBase ruleBase = getRuleBase(file.getCanonicalPath());
 				if (ruleBase!=null) return(ruleBase);
@@ -82,11 +91,11 @@ public final class RuleBaseFactory {
 				}
 			}
 
-			String urlString = "/oscar/oscarEncounter/oscarMeasurements/flowsheets/decisionSupport/" + fileName;
+			String urlString = classPathToCheck + fileName;
 			RuleBase ruleBase = RuleBaseFactory.getRuleBase(urlString);
 			if (ruleBase != null) return(ruleBase);
 			
-			URL url = MeasurementFlowSheet.class.getResource(urlString); //TODO: change this so it is configurable;
+			URL url = RuleBaseFactory.class.getResource(urlString);
 			MiscUtils.getLogger().debug("loading from URL " + url.getFile());
 			ruleBase = RuleBaseLoader.loadFromUrl(url);
 			RuleBaseFactory.putRuleBase(urlString, ruleBase);
