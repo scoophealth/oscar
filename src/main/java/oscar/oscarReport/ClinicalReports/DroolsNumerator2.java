@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarReport.ClinicalReports;
 
 import java.io.File;
@@ -33,10 +32,12 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import org.apache.commons.io.IOUtils;
 import org.drools.RuleBase;
 import org.drools.WorkingMemory;
 import org.drools.io.RuleBaseLoader;
 import org.jdom.Element;
+import org.oscarehr.drools.RuleBaseFactory;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
@@ -51,190 +52,196 @@ import oscar.oscarEncounter.oscarMeasurements.util.TargetCondition;
  *
  * @author jay
  */
-public class DroolsNumerator2 implements Numerator{
-    String name = null;
-    String id = null;
-    String file = null;
-    String[] outputfields = null;
-    Hashtable outputValues = null;
+public class DroolsNumerator2 implements Numerator {
+	String name = null;
+	String id = null;
+	String file = null;
+	String[] outputfields = null;
+	Hashtable outputValues = null;
 
-    /** Creates a new instance of DroolsNumerator */
-    public DroolsNumerator2() {
-    }
+	/** Creates a new instance of DroolsNumerator */
+	public DroolsNumerator2() {
+	}
 
-     public String getId() {
-        return id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public String getNumeratorName() {
-        return name;
-    }
+	public String getNumeratorName() {
+		return name;
+	}
 
-    public void setNumeratorName(String name){
-        this.name= name;
-    }
+	public void setNumeratorName(String name) {
+		this.name = name;
+	}
 
-    public void setId(String id){
-        this.id = id;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public boolean evaluate(LoggedInInfo loggedInInfo, String demographicNo) {
-        boolean evalTrue = false;
-        try{
+	public boolean evaluate(LoggedInInfo loggedInInfo, String demographicNo) {
+		boolean evalTrue = false;
+		try {
 
-            Iterator terator = replaceableValues.entrySet().iterator();
-            while(terator.hasNext()){
-                Entry en = (Entry) terator.next();
-                MiscUtils.getLogger().debug("IN DROOLS2 key "+en.getKey()+" val "+en.getValue());
-            }
+			Iterator terator = replaceableValues.entrySet().iterator();
+			while (terator.hasNext()) {
+				Entry en = (Entry) terator.next();
+				MiscUtils.getLogger().debug("IN DROOLS2 key " + en.getKey() + " val " + en.getValue());
+			}
 
-            String measurement = (String) replaceableValues.get("measurements");
-            String value =  (String) replaceableValues.get("value");
+			String measurement = (String) replaceableValues.get("measurements");
+			String value = (String) replaceableValues.get("value");
 
+			TargetCondition tc = new TargetCondition();
+			tc.setType("getDataAsDouble");
+			tc.setParam(measurement);
+			tc.setValue(value);
+			TargetColour tcolour = new TargetColour();
+			tcolour.setAdditionConsequence("m.setInRange(true);");
+			ArrayList<TargetCondition> list = new ArrayList<TargetCondition>();
+			list.add(tc);
+			tcolour.setTargetConditions(list);
+			ArrayList<Element> list2 = new ArrayList<Element>();
+			list2.add(tcolour.getRuleBaseElement("ClinicalRule"));
+			RuleBaseCreator rcb = new RuleBaseCreator();
 
-            TargetCondition tc = new TargetCondition();
-            tc.setType("getDataAsDouble");
-            tc.setParam(measurement);
-            tc.setValue(value);
-            TargetColour tcolour = new TargetColour();
-            tcolour.setAdditionConsequence("m.setInRange(true);");
-            ArrayList<TargetCondition> list = new ArrayList<TargetCondition>();
-            list.add(tc);
-            tcolour.setTargetConditions(list);
-            ArrayList<Element> list2 = new ArrayList<Element>();
-            list2.add(tcolour.getRuleBaseElement("ClinicalRule"));
-            RuleBaseCreator rcb = new RuleBaseCreator();
+			RuleBase ruleBase = rcb.getRuleBase("rulesetName", list2);
 
+			//            EctMeasurementsDataBeanHandler ect = new EctMeasurementsDataBeanHandler(demographicNo, measurement);
+			//           Collection v = ect.getMeasurementsDataVector();
+			//           measurementList.add(new ArrayList(v));
 
+			MeasurementDSHelper dshelper = new MeasurementDSHelper(loggedInInfo, demographicNo);
+			dshelper.setMeasurement(measurement);
 
-            RuleBase ruleBase = rcb.getRuleBase("rulesetName", list2);
+			MiscUtils.getLogger().debug("new working mem");
+			WorkingMemory workingMemory = ruleBase.newWorkingMemory();
 
-//            EctMeasurementsDataBeanHandler ect = new EctMeasurementsDataBeanHandler(demographicNo, measurement);
-//           Collection v = ect.getMeasurementsDataVector();
-//           measurementList.add(new ArrayList(v));
+			MiscUtils.getLogger().debug("assertObject");
 
-            MeasurementDSHelper dshelper = new MeasurementDSHelper(loggedInInfo, demographicNo);
-            dshelper.setMeasurement(measurement);
+			workingMemory.assertObject(dshelper);
 
+			MiscUtils.getLogger().debug("fireAllRules");
+			workingMemory.fireAllRules();
+			evalTrue = dshelper.isInRange();
 
-            MiscUtils.getLogger().debug("new working mem");
-            WorkingMemory workingMemory = ruleBase.newWorkingMemory();
+			MiscUtils.getLogger().debug("right before catch");
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+		}
+		return evalTrue;
+	}
 
-            MiscUtils.getLogger().debug("assertObject");
+	public void setFile(String file) {
+		this.file = file;
+	}
 
-            workingMemory.assertObject(dshelper);
+	public String getFile() {
+		return file;
+	}
 
+	public RuleBase loadMeasurementRuleBase(String string) {
+		try {
+			String measurementDirPath = OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY");
 
-            MiscUtils.getLogger().debug("fireAllRules");
-            workingMemory.fireAllRules();
-            evalTrue = dshelper.isInRange();
+			if (measurementDirPath != null) {
+				//if (measurementDirPath.charAt(measurementDirPath.length()) != /)
+				File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY") + string);
 
-            MiscUtils.getLogger().debug("right before catch");
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }
-        return evalTrue;
-    }
+				RuleBase measurementRuleBase = RuleBaseFactory.getRuleBase(file.getCanonicalPath());
+				if (measurementRuleBase != null) return (measurementRuleBase);
 
-    public void setFile(String file) {
-        this.file = file;
-    }
+				if (file.isFile() || file.canRead()) {
+					MiscUtils.getLogger().debug("Loading from file " + file.getName());
+					FileInputStream fis = new FileInputStream(file);
 
-    public String getFile(){
-        return file;
-    }
+					try {
+						measurementRuleBase = RuleBaseLoader.loadFromInputStream(fis);
+					} finally {
+						IOUtils.closeQuietly(fis);
+					}
 
+					RuleBaseFactory.putRuleBase(file.getCanonicalPath(), measurementRuleBase);
+					return (measurementRuleBase);
+				}
+			}
 
-    public RuleBase loadMeasurementRuleBase(String string){
-        RuleBase measurementRuleBase = null;
-        try{
-            boolean fileFound = false;
-            String measurementDirPath = OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY");
+			String urlString = "/oscar/oscarEncounter/oscarMeasurements/flowsheets/decisionSupport/" + string;
+			RuleBase measurementRuleBase = RuleBaseFactory.getRuleBase(urlString);
+			if (measurementRuleBase != null) return (measurementRuleBase);
 
-            if ( measurementDirPath != null){
-            //if (measurementDirPath.charAt(measurementDirPath.length()) != /)
-            File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY")+string);
-               if(file.isFile() || file.canRead()) {
-                   MiscUtils.getLogger().debug("Loading from file "+file.getName());
-                   FileInputStream fis = new FileInputStream(file);
-                   measurementRuleBase = RuleBaseLoader.loadFromInputStream(fis);
-                   fileFound = true;
-               }
-            }
+			URL url = MeasurementFlowSheet.class.getResource(urlString); //TODO: change this so it is configurable;
+			MiscUtils.getLogger().debug("loading from URL " + url.getFile());
+			measurementRuleBase = RuleBaseLoader.loadFromUrl(url);
+			RuleBaseFactory.putRuleBase(urlString, measurementRuleBase);
+			return (measurementRuleBase);
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+		}
+		return null;
+	}
 
-            if (!fileFound){
-             URL url = MeasurementFlowSheet.class.getResource( "/oscar/oscarEncounter/oscarMeasurements/flowsheets/decisionSupport/"+string );  //TODO: change this so it is configurable;
-             MiscUtils.getLogger().debug("loading from URL "+url.getFile());
-             measurementRuleBase = RuleBaseLoader.loadFromUrl( url );
-            }
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }
-        return measurementRuleBase;
-    }
+	public Hashtable getOutputValues() {
+		return outputValues;
+	}
 
-    public Hashtable getOutputValues() {
-        return outputValues;
-    }
+	public void parseOutputFields(String str) {
+		if (str != null) {
+			try {
+				if (str.indexOf(",") != -1) {
+					outputfields = str.split(",");
+				} else {
+					outputfields = new String[1];
+					outputfields[0] = str;
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Error", e);
+			}
+		}
+	}
 
-    public void parseOutputFields(String str){
-        if (str != null){
-           try{
-              if (str.indexOf(",") != -1){
-                 outputfields = str.split(",");
-              }else{
-                 outputfields =  new String[1];
-                 outputfields[0] = str;
-              }
-           }catch(Exception e){
-              MiscUtils.getLogger().error("Error", e);
-           }
-        }
-    }
+	public String[] getOutputFields() {
+		return outputfields;
+	}
 
-    public String[] getOutputFields(){
-        return outputfields;
-    }
+	/////NEW FIELDS
+	String[] replaceKeys = null;
+	Hashtable replaceableValues = null;
 
+	public String[] getReplaceableKeys() {
+		return replaceKeys;
+	}
 
-    /////NEW FIELDS
-    String[] replaceKeys = null;
-    Hashtable replaceableValues = null;
-    public String[] getReplaceableKeys(){
-        return replaceKeys;
-    }
+	public void parseReplaceValues(String str) {
+		if (str != null) {
+			try {
+				MiscUtils.getLogger().debug("parsing string " + str);
+				if (str.indexOf(",") != -1) {
+					replaceKeys = str.split(",");
+				} else {
+					replaceKeys = new String[1];
+					replaceKeys[0] = str;
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Error", e);
+			}
+		}
+	}
 
-    public void parseReplaceValues(String str){
-        if (str != null){
-            try{
-                MiscUtils.getLogger().debug("parsing string "+str);
-                if (str.indexOf(",") != -1){
-                replaceKeys = str.split(",");
-                }else{
-                    replaceKeys =  new String[1];
-                    replaceKeys[0] = str;
-                }
-            }catch(Exception e){
-                MiscUtils.getLogger().error("Error", e);
-            }
-        }
-    }
+	public boolean hasReplaceableValues() {
+		boolean repVal = false;
+		if (replaceKeys != null) {
+			repVal = true;
+		}
+		return repVal;
+	}
 
-    public boolean hasReplaceableValues(){
-        boolean repVal = false;
-        if (replaceKeys != null){
-            repVal = true;
-        }
-        return repVal;
-    }
+	public void setReplaceableValues(Hashtable vals) {
+		replaceableValues = vals;
+	}
 
-    public void setReplaceableValues(Hashtable vals) {
-        replaceableValues = vals;
-    }
-
-    public Hashtable getReplaceableValues() {
-        return replaceableValues;
-    }
-
+	public Hashtable getReplaceableValues() {
+		return replaceableValues;
+	}
 
 }
