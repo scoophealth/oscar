@@ -29,8 +29,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.drools.RuleBase;
@@ -52,29 +50,22 @@ import oscar.OscarProperties;
  */
 @Component
 public class PreventionDS {
+
 	private static Logger log = MiscUtils.getLogger();
-	static boolean loaded = false;
-	static RuleBase ruleBase = null;
 
 	@Autowired
 	private ResourceStorageDao resourceStorageDao;// = SpringUtils.getBean(ResourceStorageDao.class);
 
-	public PreventionDS() {
-	}
+	private RuleBase getRuleBase() {
+		long timer = System.currentTimeMillis();
 
-	public void reloadRuleBase() {
-		loadRuleBase();
-	}
-
-	@PostConstruct
-	private void loadRuleBase() {
 		try {
 			String preventionPath = OscarProperties.getInstance().getProperty("PREVENTION_FILE");
 
 			if (preventionPath != null) {
 				File file = new File(OscarProperties.getInstance().getProperty("PREVENTION_FILE"));
-				ruleBase = RuleBaseFactory.getRuleBase(file.getCanonicalPath());
-				if (ruleBase != null) return;
+				RuleBase ruleBase = RuleBaseFactory.getRuleBase(file.getCanonicalPath());
+				if (ruleBase != null) return (ruleBase);
 
 				if (file.isFile() || file.canRead()) {
 					log.debug("Loading from file " + file.getName());
@@ -82,61 +73,69 @@ public class PreventionDS {
 					FileInputStream fis = new FileInputStream(file);
 					try {
 						ruleBase = RuleBaseLoader.loadFromInputStream(fis);
+						RuleBaseFactory.putRuleBase(file.getCanonicalPath(), ruleBase);
+						return (ruleBase);
 					} finally {
 						IOUtils.closeQuietly(fis);
 					}
-
-					RuleBaseFactory.putRuleBase(file.getCanonicalPath(), ruleBase);
-					return;
 				}
 
 				if (preventionPath.startsWith("classpath:")) {
 					String urlString = preventionPath.substring(10);
 
 					ruleBase = RuleBaseFactory.getRuleBase(urlString);
-					if (ruleBase != null) return;
+					if (ruleBase != null) return (ruleBase);
 
 					URL url = PreventionDS.class.getResource(urlString);
 					log.debug("loading from URL " + url.getFile());
 					ruleBase = RuleBaseLoader.loadFromUrl(url);
 					RuleBaseFactory.putRuleBase(urlString, ruleBase);
-					return;
+					return (ruleBase);
 				}
 			}
 
-			ResourceStorage resourceStorage = resourceStorageDao.findActive(ResourceStorage.PREVENTION_RULES);
+			log.debug("getRuleBase part1 TimeMs : " + (System.currentTimeMillis() - timer));
+			timer = System.currentTimeMillis();
 
+			ResourceStorage resourceStorage = resourceStorageDao.findActive(ResourceStorage.PREVENTION_RULES);
 			if (resourceStorage != null) {
-				ruleBase = RuleBaseFactory.getRuleBase("ResourceStorage:" + resourceStorage.getId());
-				if (ruleBase != null) return;
+				RuleBase ruleBase = RuleBaseFactory.getRuleBase("ResourceStorage:" + resourceStorage.getId());
+				if (ruleBase != null) return (ruleBase);
 
 				try {
 					ruleBase = DSPreventionDrools.createRuleBase(resourceStorage.getFileContents());
 					log.info("Loading prevention rule base from " + resourceStorage.getResourceName());
 					RuleBaseFactory.putRuleBase("ResourceStorage:" + resourceStorage.getId(), ruleBase);
-					return;
+					return (ruleBase);
 				} catch (Exception resourceError) {
 					log.error("ERROR LOADING from resource Storage", resourceError);
 				}
 			}
 
-			// check if table has new preventions DRL
+			log.debug("getRuleBase part2 TimeMs : " + (System.currentTimeMillis() - timer));
+			timer = System.currentTimeMillis();
 
 			String urlString = "/oscar/oscarPrevention/prevention.drl";
-			ruleBase = RuleBaseFactory.getRuleBase(urlString);
-			if (ruleBase != null) return;
+			RuleBase ruleBase = RuleBaseFactory.getRuleBase(urlString);
+			if (ruleBase != null) return (ruleBase);
 
 			URL url = PreventionDS.class.getResource(urlString); //TODO: change this so it is configurable;
 			log.debug("loading from URL " + url.getFile());
 			ruleBase = RuleBaseLoader.loadFromUrl(url);
 			RuleBaseFactory.putRuleBase(urlString, ruleBase);
+			return (ruleBase);
+
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
+		} finally {
+			log.debug("getRuleBase part3 TimeMs : " + (System.currentTimeMillis() - timer));
 		}
+		return (null);
 	}
 
 	public Prevention getMessages(Prevention p) throws Exception {
 		try {
+			RuleBase ruleBase = getRuleBase();
 			WorkingMemory workingMemory = ruleBase.newWorkingMemory();
 			workingMemory.assertObject(p);
 			workingMemory.fireAllRules();
@@ -146,5 +145,4 @@ public class PreventionDS {
 		}
 		return p;
 	}
-
 }

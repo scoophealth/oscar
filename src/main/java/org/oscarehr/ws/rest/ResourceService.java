@@ -218,7 +218,6 @@ public class ResourceService extends AbstractServiceImpl {
 					}
 				}
 				resourceStorageDao.persist(resourceStorage);
-				preventionDS.reloadRuleBase();
 			}
 			
 		} catch(Exception e) {

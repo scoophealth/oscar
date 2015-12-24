@@ -71,6 +71,8 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
 
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
+	  long timer=System.currentTimeMillis();
+	  
 	  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 	  boolean a = true;
       Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.decisionSupportAlerts");
@@ -103,7 +105,9 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
         String key;
         
         String BGCOLOUR = request.getParameter("hC");
-        
+      
+        logger.debug("getInfo part1 TimeMs : "+(System.currentTimeMillis()-timer));
+        timer=System.currentTimeMillis();
         
         //ORN CKD Pilot Code
         if(OscarProperties.getInstance().getProperty("ORN_PILOT", "yes").equalsIgnoreCase("yes") && (OscarProperties.getInstance().getProperty("ckd_notification_scheme","dsa").equals("dsa")||OscarProperties.getInstance().getProperty("ckd_notification_scheme","dsa").equals("all"))) {
@@ -152,6 +156,8 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
 	        }
         }
         
+        logger.debug("getInfo part2 TimeMs : "+(System.currentTimeMillis()-timer));
+        timer=System.currentTimeMillis();
         
         for(DSGuideline dsGuideline: dsGuidelines) {
         	if(OscarProperties.getInstance().getProperty("dsa.skip."+dsGuideline.getTitle().replaceAll(" ", "_"),"false").equals("true")) {
@@ -192,6 +198,9 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
 
         javascript.append("</script>");
         Dao.setJavaScript(javascript.toString());
+
+        logger.debug("getInfo part3 TimeMs : "+(System.currentTimeMillis()-timer));
+
         return true;
       }
   }
