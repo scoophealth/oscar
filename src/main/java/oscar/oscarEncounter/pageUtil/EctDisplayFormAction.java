@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -58,6 +59,8 @@ public class EctDisplayFormAction extends EctDisplayAction {
 
 	@Override
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
+		long timer=System.currentTimeMillis();
+		
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		
 		String appointmentNo = bean.appointmentNo;
@@ -72,7 +75,10 @@ public class EctDisplayFormAction extends EctDisplayAction {
 		} else {
 			try {
 
-				String winName = "Forms" + bean.demographicNo;
+		        logger.debug("getInfo part1 TimeMs : "+(System.currentTimeMillis()-timer));
+		        timer=System.currentTimeMillis();
+
+		        String winName = "Forms" + bean.demographicNo;
 				StringBuilder url = new StringBuilder("popupPage(600, 700, '" + winName + "', '" + request.getContextPath() + "/oscarEncounter/formlist.jsp?demographic_no=" + bean.demographicNo + "')");
 
 				// set text for lefthand module title
@@ -97,6 +103,9 @@ public class EctDisplayFormAction extends EctDisplayAction {
 				List<EncounterForm> encounterForms = encounterFormDao.findAll();
 				Collections.sort(encounterForms, EncounterForm.BC_FIRST_COMPARATOR);
 				
+				logger.debug("getInfo part2 TimeMs : "+(System.currentTimeMillis()-timer));
+		        timer=System.currentTimeMillis();
+
 				String BGCOLOUR = request.getParameter("hC");
 				for (EncounterForm encounterForm : encounterForms) {
 					if (encounterForm.getFormName().equalsIgnoreCase("Discharge Summary")) {
@@ -212,6 +221,10 @@ public class EctDisplayFormAction extends EctDisplayAction {
 						javascript.append(js);
 					}
 				}
+				
+				logger.debug("getInfo part3 TimeMs : "+(System.currentTimeMillis()-timer));
+		        timer=System.currentTimeMillis();
+
 				url = new StringBuilder("return !showMenu('" + menuId + "', event);");
 				Dao.setRightURL(url.toString());
 
@@ -224,6 +237,8 @@ public class EctDisplayFormAction extends EctDisplayAction {
 				logger.error("EctDisplayFormAction SQL ERROR:", e);
 				return false;
 			}
+
+			logger.debug("getInfo part4 TimeMs : "+(System.currentTimeMillis()-timer));
 
 			return true;
 		}
