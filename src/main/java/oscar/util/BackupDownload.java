@@ -42,7 +42,7 @@ public class BackupDownload extends GenericDownload {
 
 	@SuppressWarnings("unchecked")
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		HttpSession session = req.getSession(true);
+		HttpSession session = req.getSession();
 
 		// check the rights
 		String filename = req.getParameter("filename") == null ? "null" : req.getParameter("filename");

@@ -40,12 +40,12 @@ public class ArchiveViewAction extends DispatchAction {
 	}
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.getSession(true).setAttribute("archiveView", "true");
+		request.getSession().setAttribute("archiveView", "true");
 		return mapping.findForward("view");
 	}
 
 	public ActionForward cmm(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		request.getSession(true).setAttribute("archiveView", "false");
+		request.getSession().setAttribute("archiveView", "false");
 		return mapping.findForward("view");
 	}
 }
