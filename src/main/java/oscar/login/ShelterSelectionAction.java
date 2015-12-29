@@ -60,7 +60,7 @@ public final class ShelterSelectionAction extends DispatchAction {
         	 return mapping.findForward("home");
          }
          
-    	String providerNo=(String)request.getSession(true).getAttribute(KeyConstants.SESSION_KEY_PROVIDERNO);
+    	String providerNo=(String)request.getSession().getAttribute(KeyConstants.SESSION_KEY_PROVIDERNO);
     	List shelters=providerManager.getShelterIds(providerNo);
     	
          if (shelters.size() > 1) {
@@ -81,19 +81,19 @@ public final class ShelterSelectionAction extends DispatchAction {
          else if (shelters.size() == 1) {
              Integer shelterId = (Integer) shelters.get(0);
              LookupCodeValue shelter=lookupManager.GetLookupCode("SHL",String.valueOf(shelterId));
-             request.getSession(true).setAttribute(KeyConstants.SESSION_KEY_SHELTERID , shelterId);
-             request.getSession(true).setAttribute(KeyConstants.SESSION_KEY_SHELTER, shelter);             
+             request.getSession().setAttribute(KeyConstants.SESSION_KEY_SHELTERID , shelterId);
+             request.getSession().setAttribute(KeyConstants.SESSION_KEY_SHELTER, shelter);             
             // LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "shelterId="+shelterId, ip);
          }
          else {
-             request.getSession(true).setAttribute(KeyConstants.SESSION_KEY_SHELTERID, new Integer(0));
-             request.getSession(true).setAttribute(KeyConstants.SESSION_KEY_SHELTER, new LookupCodeValue());
+             request.getSession().setAttribute(KeyConstants.SESSION_KEY_SHELTERID, new Integer(0));
+             request.getSession().setAttribute(KeyConstants.SESSION_KEY_SHELTER, new LookupCodeValue());
          }
          // initiate security manager
          UserAccessManager userAccessManager = (UserAccessManager) SpringUtils.getBean("userAccessManager");
          
          SecurityManager secManager = userAccessManager.getUserSecurityManager(providerNo,null,lookupManager);
-         request.getSession(true).setAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER, secManager);
+         request.getSession().setAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER, secManager);
         
          return mapping.findForward("home");
             	
@@ -103,15 +103,15 @@ public final class ShelterSelectionAction extends DispatchAction {
 		String shelter =request.getParameter("shelterId");
 		String providerNo = (String) request.getSession().getAttribute(KeyConstants.SESSION_KEY_PROVIDERNO);
 		Integer shelterId = new Integer(shelter);
-		request.getSession(true).setAttribute(KeyConstants.SESSION_KEY_SHELTERID,shelterId );
+		request.getSession().setAttribute(KeyConstants.SESSION_KEY_SHELTERID,shelterId );
 		LookupCodeValue shelterObj=lookupManager.GetLookupCode("SHL",shelter);
-        request.getSession(true).setAttribute(KeyConstants.SESSION_KEY_SHELTER, shelterObj);
+        request.getSession().setAttribute(KeyConstants.SESSION_KEY_SHELTER, shelterObj);
         
         // initiate security manager
         UserAccessManager userAccessManager = (UserAccessManager) SpringUtils.getBean("userAccessManager");
          
         SecurityManager secManager = userAccessManager.getUserSecurityManager(providerNo,shelterId,lookupManager);
-        request.getSession(true).setAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER, secManager);
+        request.getSession().setAttribute(KeyConstants.SESSION_KEY_SECURITY_MANAGER, secManager);
         String ip = request.getRemoteAddr();
         LogAction.addLog(providerNo, LogConst.CON_LOGIN, LogConst.SHELTER_SELECTION, shelterId.toString(), ip);
         

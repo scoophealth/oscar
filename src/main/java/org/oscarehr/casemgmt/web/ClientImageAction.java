@@ -57,7 +57,7 @@ public class ClientImageAction extends DispatchAction {
 				DynaActionForm imageForm = (DynaActionForm)form;
 				
 			ClientImageFormBean formBean = (ClientImageFormBean)imageForm.get("clientImage");		
-			HttpSession session = request.getSession(true);
+			HttpSession session = request.getSession();
 			String id=(String)(session.getAttribute("clientId"));    
 			
 			log.info("client image upload: id="  + id);

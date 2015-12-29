@@ -111,7 +111,7 @@ public class LookupCodeEditAction extends DispatchAction {
 		boolean isInActive = false;
 		
 		String  code = "";
-		String providerNo = (String) request.getSession(true).getAttribute(KeyConstants.SESSION_KEY_PROVIDERNO);
+		String providerNo = (String) request.getSession().getAttribute(KeyConstants.SESSION_KEY_PROVIDERNO);
 		Map map=request.getParameterMap();
 		for(int i=0; i<fieldDefList.size(); i++)
 		{
