@@ -35,6 +35,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.oscarehr.drools.RuleBaseFactory;
 import org.oscarehr.util.MiscUtils;
 
 /**
@@ -69,7 +70,12 @@ public class RuleBaseCreator {
 			String ooo = outp.outputString(va);
 
 			log.debug(ooo);
-			RuleBase ruleBase = RuleBaseLoader.loadFromInputStream(new ByteArrayInputStream(ooo.getBytes()));
+			
+			RuleBase ruleBase=RuleBaseFactory.getRuleBase("RuleBaseCreator:"+ooo);
+			if (ruleBase!=null) return(ruleBase);
+			
+			ruleBase = RuleBaseLoader.loadFromInputStream(new ByteArrayInputStream(ooo.getBytes()));
+			RuleBaseFactory.putRuleBase("RuleBaseCreator:"+ooo, ruleBase);
 			return ruleBase;
 		} finally {
 			log.debug("generateRuleBase TimeMs : " + (System.currentTimeMillis() - timer));

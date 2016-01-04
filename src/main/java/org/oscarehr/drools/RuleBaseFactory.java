@@ -23,26 +23,27 @@
  */
 package org.oscarehr.drools;
 
-import java.util.HashMap;
-
+import org.apache.commons.lang.time.DateUtils;
 import org.drools.RuleBase;
+import org.oscarehr.util.QueueCache;
 
 public final class RuleBaseFactory {
-	
-	private static HashMap<String,RuleBase> ruleBaseInstances=new HashMap<String,RuleBase>();
 
-	public static synchronized RuleBase getRuleBase(String sourceKey)
-	{
-		return(ruleBaseInstances.get(sourceKey));
+	private static QueueCache<String, RuleBase> ruleBaseInstances = new QueueCache<String, RuleBase>(4, 2048, DateUtils.MILLIS_PER_DAY, null);
+
+	public static synchronized RuleBase getRuleBase(String sourceKey) {
+		return (ruleBaseInstances.get(sourceKey));
 	}
-	
-	public static synchronized void putRuleBase(String sourceKey, RuleBase ruleBase)
-	{
-		ruleBaseInstances.put(sourceKey,ruleBase);
+
+	public static synchronized void putRuleBase(String sourceKey, RuleBase ruleBase) {
+		ruleBaseInstances.put(sourceKey, ruleBase);
 	}
-	
-	public static synchronized void removeRuleBase(String sourceKey)
-	{
+
+	public static synchronized void removeRuleBase(String sourceKey) {
 		ruleBaseInstances.remove(sourceKey);
+	}
+
+	public static synchronized void flushAllCached() {
+		ruleBaseInstances = new QueueCache<String, RuleBase>(4, 2048, DateUtils.MILLIS_PER_DAY, null);
 	}
 }
