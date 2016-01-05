@@ -67,15 +67,12 @@ if(!authed) {
 <%@page
 	import="oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines"%>
 <%@page import="org.oscarehr.decisionSupport.model.DSConsequence"%>
-<%@page
-	import="org.oscarehr.common.model.Demographic"%>
-<%@page
-	import="org.oscarehr.common.model.CtlBillingService, org.oscarehr.common.dao.CtlBillingServiceDao"%>
-<%@page
-	import="org.oscarehr.common.model.MyGroup, org.oscarehr.common.dao.MyGroupDao"%>
-	
-	<%@page import="org.oscarehr.managers.DemographicManager"%>
-	
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.model.CtlBillingService, org.oscarehr.common.dao.CtlBillingServiceDao"%>
+<%@page import="org.oscarehr.common.model.MyGroup, org.oscarehr.common.dao.MyGroupDao"%>
+
+<%@page import="org.oscarehr.managers.DemographicManager,org.oscarehr.billing.CA.filters.CodeFilterManager"%>
+
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
     LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
@@ -125,7 +122,13 @@ if(!authed) {
 			else {
      			provider_no = apptProvider_no;
  			}
-
+            CodeFilterManager codeFilterManager = SpringUtils.getBean(CodeFilterManager.class);
+            DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+			Demographic demo = demographicManager.getDemographic(loggedInInfo, demo_no); 
+			java.util.Date filterDate = ConversionUtils.fromDateString(billReferenceDate);
+			if(request.getParameter("start_time") != null){
+	   			filterDate =  ConversionUtils.fromTimestampString(billReferenceDate+" "+request.getParameter("start_time"));
+ 			}
 
             //check for management fee code eligibility
             StringBuilder billingRecomendations = new StringBuilder();
@@ -153,8 +156,6 @@ if(!authed) {
 			    ctlBillForm = curBillForm;
 			} else {                    
                             //check if patient's roster status determines which billing form to display (this superceeds provider preference)                    
-                            DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
-                            Demographic demo = demographicManager.getDemographic(loggedInInfo, demo_no); 
                             String rosterStatus = demo.getRosterStatus();
                             
                             CtlBillingServiceDao ctlBillingServiceDao = (CtlBillingServiceDao) SpringUtils.getBean("ctlBillingServiceDao");
@@ -402,6 +403,10 @@ if(!authed) {
 			for(Object[] o : bDao.findBillingServiceAndCtlBillingServiceByMagic(ctlcode, "Group1", ConversionUtils.fromDateString(billReferenceDate))) {
 				BillingService b = (BillingService) o[0];
 				CtlBillingService c = (CtlBillingService) o[1];
+								
+				if(!codeFilterManager.isCodeValid(b.getServiceCode(), null, false, filterDate, demo)){
+					continue;
+				}
 				
 				propT = new Properties();
 				propT.setProperty("serviceCode", b.getServiceCode() );
@@ -441,6 +446,10 @@ if(!authed) {
 			for(Object[] o : bDao.findBillingServiceAndCtlBillingServiceByMagic(ctlcode, "Group2", ConversionUtils.fromDateString(billReferenceDate))) {
 				BillingService b = (BillingService) o[0];
 				CtlBillingService c = (CtlBillingService) o[1];
+								
+				if(!codeFilterManager.isCodeValid(b.getServiceCode(), null, false, filterDate, demo)){
+					continue;
+				}
 				
 				propT = new Properties();
 				
@@ -485,6 +494,10 @@ if(!authed) {
 				BillingService b = (BillingService) o[0];
 				CtlBillingService c = (CtlBillingService) o[1];
 
+				if(!codeFilterManager.isCodeValid(b.getServiceCode(), null, false, filterDate, demo)){
+					continue;
+				}
+				
 				propT = new Properties();
 				
 				propT.setProperty("serviceCode", b.getServiceCode() );
@@ -1166,43 +1179,42 @@ function toggleDiv(selectedBillForm, selectedBillFormName,billType)
 			<%} %>
 		</div>
 		<%} %>
-		
+
 	</div>
 
-	<form method="post" id="titlesearch" name="titlesearch" action="billingONReview.jsp" onsubmit="return onNext();">
-<%
+	<form method="post" id="titlesearch" name="titlesearch"
+		action="billingONReview.jsp" onsubmit="return onNext();">
+		<%
 String checkFlag = request.getParameter("checkFlag");
 if(checkFlag == null) checkFlag = "0";
 %>
-		<input type="hidden" name="checkFlag" id="checkFlag" value="<%=checkFlag %>" />
-		
-		<table border="0" cellspacing="0" cellpadding="0" class="myDarkGreen" width="100%">
-				<tr>
-					<td><b><font color="#FFFFFF">Ontario Billing</font></b></td>
-					<td align="right" >
-						<oscar:help keywords="1.4 Billing"	key="app.top1" style="color: #FFFFFF" /> 
-						<font color="#FFFFFF"> | </font> 
-						<a href=# onclick="popupPage(460,680,'billingONfavourite.jsp'); return false;">
-								<font color="#FFFFFF">Edit</font>
-						</a> 
-						
-						<select name="cutlist" id="cutlist" onchange="changeCut(this)">
-								<option selected="selected" value="">- SUPER CODES -</option>
-								<% //
+		<input type="hidden" name="checkFlag" id="checkFlag"
+			value="<%=checkFlag %>" />
+
+		<table border="0" cellspacing="0" cellpadding="0" class="myDarkGreen"
+			width="100%">
+			<tr>
+				<td><b><font color="#FFFFFF">Ontario Billing</font></b></td>
+				<td align="right"><oscar:help keywords="1.4 Billing"
+						key="app.top1" style="color: #FFFFFF" /> <font color="#FFFFFF">
+					| </font> <a href=#
+					onclick="popupPage(460,680,'billingONfavourite.jsp'); return false;">
+						<font color="#FFFFFF">Edit</font>
+				</a> <select name="cutlist" id="cutlist" onchange="changeCut(this)">
+						<option selected="selected" value="">- SUPER CODES -</option>
+						<% //
 		    List sL = tdbObj.getBillingFavouriteList();
 		    for (int i = 0; i < sL.size(); i = i + 2) { %>
-								<option value="<%=(String) sL.get(i+1)%>"><%=(String) sL.get(i)%></option>
-								<% } %>
-						</select>
-					</td>
-					<td align="right" width="10%" nowrap>
-						<input type="submit" name="submit" value="Next" style="width: 120px;" /> 
-						<input type="button" name="button" value="Exit" style="width: 120px;" onclick="self.close();" />
-						&nbsp;
-					</td>
-				</tr>
+						<option value="<%=(String) sL.get(i+1)%>"><%=(String) sL.get(i)%></option>
+						<% } %>
+				</select></td>
+				<td align="right" width="10%" nowrap><input type="submit"
+					name="submit" value="Next" style="width: 120px;" /> <input
+					type="button" name="button" value="Exit" style="width: 120px;"
+					onclick="self.close();" /> &nbsp;</td>
+			</tr>
 		</table>
-					
+
 		<table border="0" cellpadding="0" cellspacing="2" width="100%">
 			<tr>
 				<td>
@@ -1217,13 +1229,14 @@ if(checkFlag == null) checkFlag = "0";
 								size="10" /> <%} else {%> <input type="text" name="service_date"
 								readonly value="<%=request.getParameter("appointment_date")%>"
 								size="10" maxlength="10" style="width: 80px;" /> <%}%></td>
-                                                        <%
+							<%
                                                               String warningStyle = "";
                                                               if (billingRecomendations.length() > 0) {
                                                                   warningStyle="border:solid 3px red;padding-left:10px;line-height:150%;font-family:Arial;";
                                                               }
                                                         %>
-							<td style="<%=warningStyle%> color: red; background-color: #FFFFFF; font-size: 18px; font-weight: bold;"><%=billingRecomendations.toString()%></td>
+							<td
+								style="<%=warningStyle%> color: red; background-color: #FFFFFF; font-size: 18px; font-weight: bold;"><%=billingRecomendations.toString()%></td>
 							<td align="center"><font color="black"><%=msg%></font></td>
 						</tr>
 					</table>
@@ -1358,8 +1371,8 @@ var _providers = [];
 	while (iter.hasNext()) {
 		Provider p=iter.next();
 		if ("1".equals(p.getStatus()) && StringUtils.isNotBlank(p.getOhipNo())) {
-	%><option value='<%= p.getProviderNo() %>|<%= p.getOhipNo() %>' ><%= p.getLastName() %>, <%= p.getFirstName() %></option><% }} %>";
-<% } %>
+	%><option value='<%= p.getProviderNo() %>|<%= p.getOhipNo() %>' ><%=p.getLastName()%>, <%=p.getFirstName()%></option><%}}%>";
+<%}%>
 function changeSite(sel) {
 	sel.form.xml_provider.innerHTML=sel.value=="none"?"":_providers[sel.value];
 	sel.style.backgroundColor=sel.options[sel.selectedIndex].style.backgroundColor;
@@ -1369,59 +1382,66 @@ function changeSite(sel) {
 												<option value="none" style="background-color: white">---select
 													clinic---</option>
 												<%
-      	String selectedSite = request.getParameter("site");
-      	String xmlp = null;
-      	if (selectedSite==null) {
-      		OscarAppointmentDao apptDao = SpringUtils.getBean(OscarAppointmentDao.class);
-      		for(Object[] obj : apptDao.findAppointmentAndProviderByAppointmentNo(ConversionUtils.fromIntString(appt_no))) {
-      			Appointment a = (Appointment) obj[0]; 
-      			Provider p = (Provider) obj[1];
-      			
-      			selectedSite = a.getLocation();
-      			xmlp = a.getProviderNo() + "|" + p.getOhipNo();
-      		}
-      	}
-      	for (int i=0; i<sites.size(); i++) {
-      	%>
-												<option value="<%= sites.get(i).getName() %>"
-													style="background-color:<%= sites.get(i).getBgColor() %>"
-													<%=sites.get(i).getName().toString().equals(selectedSite)?"selected":"" %>><%= sites.get(i).getName() %></option>
-												<% } %>
+													String selectedSite = request.getParameter("site");
+												      	String xmlp = null;
+												      	if (selectedSite==null) {
+												      		OscarAppointmentDao apptDao = SpringUtils.getBean(OscarAppointmentDao.class);
+												      		for(Object[] obj : apptDao.findAppointmentAndProviderByAppointmentNo(ConversionUtils.fromIntString(appt_no))) {
+												      			Appointment a = (Appointment) obj[0]; 
+												      			Provider p = (Provider) obj[1];
+												      			
+												      			selectedSite = a.getLocation();
+												      			xmlp = a.getProviderNo() + "|" + p.getOhipNo();
+												      		}
+												      	}
+												      	for (int i=0; i<sites.size(); i++) {
+												%>
+												<option value="<%=sites.get(i).getName()%>"
+													style="background-color:<%=sites.get(i).getBgColor()%>"
+													<%=sites.get(i).getName().toString().equals(selectedSite)?"selected":""%>><%=sites.get(i).getName()%></option>
+												<%
+													}
+												%>
 										</select> <select id="xml_provider" name="xml_provider"
 											style="width: 140px"></select> <script>
      	changeSite(document.getElementById("site"));
       	document.getElementById("xml_provider").value='<%=request.getParameter("xml_provider")==null?xmlp:request.getParameter("xml_provider")%>';
-      	</script> <% // multisite end ==========================================
-} else {
-%> <select name="xml_provider">
+      	</script> <%
+ 	// multisite end ==========================================
+ } else {
+ %> <select name="xml_provider">
 												<%
-            String[] tmp;
-            if (vecProvider.size() == 1) {
-		propT = (Properties) vecProvider.get(0);
-                tmp = propT.getProperty("proOHIP","").split("\\|");
-
-                %>
+													String[] tmp;
+												            if (vecProvider.size() == 1) {
+														propT = (Properties) vecProvider.get(0);
+												                tmp = propT.getProperty("proOHIP","").split("\\|");
+												%>
 												<option value="<%=propT.getProperty("proOHIP")%>"
 													<%=providerview.equals(tmp[0].trim())?"selected":""%>>
 													<b><%=propT.getProperty("last_name")%>, <%=propT.getProperty("first_name")%></b>
 												</option>
-												<%	    } else { %>
+												<%
+													} else {
+												%>
 												<option value="000000"
 													<%=providerview.equals("000000")?"selected":""%>>
 													<b>Select Provider</b>
 												</option>
-												<%	        for (int i = 0; i < vecProvider.size(); i++) {
-		    propT = (Properties) vecProvider.get(i);
-
-                    %>
+												<%
+													for (int i = 0; i < vecProvider.size(); i++) {
+														    propT = (Properties) vecProvider.get(i);
+												%>
 												<option value="<%=propT.getProperty("proOHIP")%>"
 													<%=providerview.equals(propT.getProperty("proOHIP","").substring(0,propT.getProperty("proOHIP","").indexOf("|")))?"selected":""%>>
 													<b><%=propT.getProperty("last_name")%>, <%=propT.getProperty("first_name")%></b>
 												</option>
-												<%		}
-	    }
-%>
-										</select> <% } %>
+												<%
+													}
+													    }
+												%>
+										</select> <%
+ 	}
+ %>
 
 										</td>
 										<td nowrap width="30%" align="center"><b>Assig. Phys.</b></td>
@@ -1430,27 +1450,38 @@ function changeSite(sel) {
 					    : providerBean.getProperty(assgProvider_no, "")%></td>
 									</tr>
 									<tr>
-										<td width="30%"><b>
-												<%if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
-												Clinic Nbr <% } else { %> <bean:message
-													key="billing.billingCorrection.formVisitType" /> <% } %>
+										<td width="30%"><b> <%
+ 	if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) {
+ %>
+												Clinic Nbr <%
+ 	} else {
+ %> <bean:message
+													key="billing.billingCorrection.formVisitType" /> <%
+ 	}
+ %>
 										</b></td>
 										<td width="20%"><select name="xml_visittype">
-												<% if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
 												<%
-						ClinicNbrDao cnDao = (ClinicNbrDao) SpringUtils.getBean("clinicNbrDao");
-						ArrayList<ClinicNbr> nbrs = cnDao.findAll();
-			            ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
-			            String providerSearch = apptProvider_no.equalsIgnoreCase("none") ? user_no : apptProvider_no;
-			            Provider p = providerDao.getProvider(providerSearch);
-			            String providerNbr = SxmlMisc.getXmlContent(p.getComments(),"xml_p_nbr");
-	                    for (ClinicNbr clinic : nbrs) {
-							String valueString = String.format("%s | %s", clinic.getNbrValue(), clinic.getNbrString());
-							%>
+													if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) {
+												%>
+												<%
+													ClinicNbrDao cnDao = (ClinicNbrDao) SpringUtils.getBean("clinicNbrDao");
+																ArrayList<ClinicNbr> nbrs = cnDao.findAll();
+													            ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+													            String providerSearch = apptProvider_no.equalsIgnoreCase("none") ? user_no : apptProvider_no;
+													            Provider p = providerDao.getProvider(providerSearch);
+													            String providerNbr = SxmlMisc.getXmlContent(p.getComments(),"xml_p_nbr");
+													                    for (ClinicNbr clinic : nbrs) {
+																	String valueString = String.format("%s | %s", clinic.getNbrValue(), clinic.getNbrString());
+												%>
 												<option value="<%=valueString%>"
 													<%=providerNbr.startsWith(clinic.getNbrValue())?"selected":""%>><%=valueString%></option>
-												<%}%>
-												<% } else { %>
+												<%
+													}
+												%>
+												<%
+													} else {
+												%>
 												<option value="00| Clinic Visit"
 													<%=visitType.startsWith("00")?"selected":""%>>00 |
 													Clinic Visit</option>
@@ -1469,13 +1500,15 @@ function changeSite(sel) {
 												<option value="05| Home Visit"
 													<%=visitType.startsWith("05")?"selected":""%>>05 |
 													Home Visit</option>
-												<% } %>
+												<%
+													}
+												%>
 										</select></td>
 										<td width="30%"><b>Billing Type</b></td>
 										<td width="20%">
 											<%
-	String srtBillType = request.getParameter("xml_billtype")!=null ? request.getParameter("xml_billtype") : defaultBillType;
-%> <select name="xml_billtype" onchange="onChangePrivate();">
+												String srtBillType = request.getParameter("xml_billtype")!=null ? request.getParameter("xml_billtype") : defaultBillType;
+											%> <select name="xml_billtype" onchange="onChangePrivate();">
 												<option value="ODP | Bill OHIP"
 													<%=srtBillType.startsWith("ODP")?"selected" : ""%>>Bill
 													OHIP</option>
@@ -1510,19 +1543,22 @@ function changeSite(sel) {
 									<tr>
 										<td><b>Visit Location</b></td>
 										<td colspan="3"><select name="xml_location">
-												<% //
-	    String billLocationNo="", billLocation="";
-	    List lLocation = tdbObj.getFacilty_num();
-	    for (int i = 0; i < lLocation.size(); i = i + 2) {
-		billLocationNo = (String) lLocation.get(i);
-		billLocation = (String) lLocation.get(i + 1);
-		String strLocation = request.getParameter("xml_location") != null ? request.getParameter("xml_location") : clinicview;
-%>
+												<%
+													//
+													    String billLocationNo="", billLocation="";
+													    List lLocation = tdbObj.getFacilty_num();
+													    for (int i = 0; i < lLocation.size(); i = i + 2) {
+														billLocationNo = (String) lLocation.get(i);
+														billLocation = (String) lLocation.get(i + 1);
+														String strLocation = request.getParameter("xml_location") != null ? request.getParameter("xml_location") : clinicview;
+												%>
 												<option value="<%=billLocationNo + "|" + billLocation%>"
 													<%=strLocation.startsWith(billLocationNo)?"selected":""%>>
 													<%=billLocation%>
 												</option>
-												<%	    } %>
+												<%
+													}
+												%>
 										</select> Manual: <input type="checkbox" name="m_review" value="Y"
 											<%=m_review.equals("Y")?"checked":""%>></td>
 									</tr>
@@ -1579,20 +1615,21 @@ function changeSite(sel) {
 									<tr>
 										<td><b>Admission Date</b></td>
 										<td>
-											<%String admDate = "";
-          String inPatient = oscarVariables.getProperty("inPatient");
-          try{
-             if(inPatient != null && inPatient.trim().equalsIgnoreCase("YES")){
-				oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
-				admDate = demoData.getDemographicDateJoined(loggedInInfo, demo_no);
-	     }
-          }catch(Exception inPatientEx){
-        	  MiscUtils.getLogger().error("Error", inPatientEx);
-	     admDate = "";
-          }
+											<%
+												String admDate = "";
+											          String inPatient = oscarVariables.getProperty("inPatient");
+											          try{
+											             if(inPatient != null && inPatient.trim().equalsIgnoreCase("YES")){
+													oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
+													admDate = demoData.getDemographicDateJoined(loggedInInfo, demo_no);
+												     }
+											          }catch(Exception inPatientEx){
+											        	  MiscUtils.getLogger().error("Error", inPatientEx);
+												     admDate = "";
+											          }
 
-	  if (visitType.startsWith("02")) admDate = visitdate;
-          %> <!--input type="text" name="xml_vdate" id="xml_vdate" value="<%--=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):visitdate--%>" size='10' maxlength='10' -->
+												  if (visitType.startsWith("02")) admDate = visitdate;
+											%> <!--input type="text" name="xml_vdate" id="xml_vdate" value="<%--=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):visitdate--%>" size='10' maxlength='10' -->
 											<input type="text" name="xml_vdate" id="xml_vdate"
 											value="<%=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):admDate%>"
 											size='10' maxlength='10' readonly> <img
@@ -1606,31 +1643,36 @@ function changeSite(sel) {
 											<input type="hidden" name="billForm" id="billForm" size="30"
 											maxlength="30" readonly value="<%=ctlBillForm%>" /></td>
 									</tr>
-									<% 
-if (!org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
-    OscarProperties props = OscarProperties.getInstance();
-    boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
-    if(bMoreAddr) {
-	BillingSiteIdPrep sitePrep = new BillingSiteIdPrep();
-	String [] siteList = sitePrep.getSiteList();
-	String strServDate = request.getParameter("appointment_date")!=null? request.getParameter("appointment_date"):strToday;
-	String thisSite = (new JdbcApptImpl()).getLocationFromSchedule(strServDate, apptProvider_no);
-	String suggestSite = sitePrep.getSuggestSite(siteList, thisSite, strServDate, apptProvider_no );
-%>
+									<%
+										if (!org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
+									    OscarProperties props = OscarProperties.getInstance();
+									    boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
+									    if(bMoreAddr) {
+										BillingSiteIdPrep sitePrep = new BillingSiteIdPrep();
+										String [] siteList = sitePrep.getSiteList();
+										String strServDate = request.getParameter("appointment_date")!=null? request.getParameter("appointment_date"):strToday;
+										String thisSite = (new JdbcApptImpl()).getLocationFromSchedule(strServDate, apptProvider_no);
+										String suggestSite = sitePrep.getSuggestSite(siteList, thisSite, strServDate, apptProvider_no );
+									%>
 									<tr>
 										<td align="right">Site</td>
 										<td colspan="3"><select name="siteId">
-												<%	for(int i=0; i<siteList.length; i++) { %>
+												<%
+													for(int i=0; i<siteList.length; i++) {
+												%>
 												<option value="<%=siteList[i]%>"
 													<%=suggestSite.equals(siteList[i])?"selected":""%>>
 													<b><%=siteList[i]%></b>
 												</option>
-												<%	} %>
+												<%
+													}
+												%>
 										</select></td>
-									</tr><%  
-	}
-}
-%>
+									</tr>
+									<%
+										}
+									}
+									%>
 
 								</table>
 							</td>
@@ -1644,13 +1686,13 @@ if (!org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 						height="137">
 						<tr>
 							<td valign="top" width="33%">
-								<%  
-for( int j=0; j< listServiceType.size(); j++) {
-        ArrayList<Properties> vecCodeCol1 = new ArrayList<Properties>();
-        vecCodeCol1 = billingServiceCodesMap.get("group1_".concat(listServiceType.get(j)));
-        headerTitle1 = titleMap.get("group1_".concat(listServiceType.get(j)));
-%>
-								<div id="group1_<%=listServiceType.get(j) %>"
+								<%
+									for( int j=0; j< listServiceType.size(); j++) {
+								        ArrayList<Properties> vecCodeCol1 = new ArrayList<Properties>();
+								        vecCodeCol1 = billingServiceCodesMap.get("group1_".concat(listServiceType.get(j)));
+								        headerTitle1 = titleMap.get("group1_".concat(listServiceType.get(j)));
+								%>
+								<div id="group1_<%=listServiceType.get(j)%>"
 									style="display: none;">
 									<table width="100%" border="1" cellspacing="0" cellpadding="1"
 										height="0" bordercolorlight="#99A005"
@@ -1662,23 +1704,23 @@ for( int j=0; j< listServiceType.size(); j++) {
 										</tr>
 
 
-										<%	    
-for (int i = 0; i < vecCodeCol1.size(); i++) {
-		propT = vecCodeCol1.get(i);
-		serviceCode = propT.getProperty("serviceCode");
-		serviceDesc = propT.getProperty("serviceDesc");
-		serviceDisp = propT.getProperty("serviceDisp");
-		servicePercentage = propT.getProperty("servicePercentage");
-		serviceType = propT.getProperty("serviceType");
-		displayStyle = propT.getProperty("displaystyle");
-		sliFlag = Boolean.parseBoolean(propT.getProperty("serviceSLI"));
+										<%
+											for (int i = 0; i < vecCodeCol1.size(); i++) {
+												propT = vecCodeCol1.get(i);
+												serviceCode = propT.getProperty("serviceCode");
+												serviceDesc = propT.getProperty("serviceDesc");
+												serviceDisp = propT.getProperty("serviceDisp");
+												servicePercentage = propT.getProperty("servicePercentage");
+												serviceType = propT.getProperty("serviceType");
+												displayStyle = propT.getProperty("displaystyle");
+												sliFlag = Boolean.parseBoolean(propT.getProperty("serviceSLI"));
 
-		if (propPremium.getProperty(serviceCode) != null) premiumFlag = "A";
-		else premiumFlag = "";
+												if (propPremium.getProperty(serviceCode) != null) premiumFlag = "A";
+												else premiumFlag = "";
 
-		String bgcolor = i % 2 == 0 ? "bgcolor='#FFFFFF'" : "class='myGreen'";
-		if (request.getParameter("xml_" + serviceCode) != null) bgcolor = "bgcolor='#66FF66'";
-%>
+												String bgcolor = i % 2 == 0 ? "bgcolor='#FFFFFF'" : "class='myGreen'";
+												if (request.getParameter("xml_" + serviceCode) != null) bgcolor = "bgcolor='#66FF66'";
+										%>
 										<tr <%=bgcolor%>>
 											<td align="left" style="<%=displayStyle%>" nowrap><input
 												type="checkbox" id="xml_<%=serviceCode%>"
@@ -1704,19 +1746,24 @@ for (int i = 0; i < vecCodeCol1.size(); i++) {
 				    <input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />-->
 											</td>
 										</tr>
-										<%	    } %>
+										<%
+											}
+										%>
 									</table>
-								</div> <%   }   %>
+								</div> <%
+ 	}
+ %>
 
 							</td>
 							<td width="33%" valign="top">
-								<%         for( int j=0; j< listServiceType.size(); j++) {
+								<%
+									for( int j=0; j< listServiceType.size(); j++) {
 
-                ArrayList<Properties> vecCodeCol2 = new ArrayList<Properties>();
-                vecCodeCol2 = billingServiceCodesMap.get("group2_".concat(listServiceType.get(j)));
-                headerTitle2 = titleMap.get("group2_".concat(listServiceType.get(j)));
-%>
-								<div id="group2_<%=listServiceType.get(j) %>"
+								                ArrayList<Properties> vecCodeCol2 = new ArrayList<Properties>();
+								                vecCodeCol2 = billingServiceCodesMap.get("group2_".concat(listServiceType.get(j)));
+								                headerTitle2 = titleMap.get("group2_".concat(listServiceType.get(j)));
+								%>
+								<div id="group2_<%=listServiceType.get(j)%>"
 									style="display: none;">
 
 
@@ -1731,22 +1778,23 @@ for (int i = 0; i < vecCodeCol1.size(); i++) {
 											<th><div class="smallFont">Fee</div></th>
 										</tr>
 
-										<%	    for (int i = 0; i < vecCodeCol2.size(); i++) {
-		propT = vecCodeCol2.get(i);
-		serviceCode = propT.getProperty("serviceCode");
-		serviceDesc = propT.getProperty("serviceDesc");
-		serviceDisp = propT.getProperty("serviceDisp");
-		servicePercentage = propT.getProperty("servicePercentage");
-		serviceType = propT.getProperty("serviceType");
-		displayStyle = propT.getProperty("displaystyle");
-		sliFlag = Boolean.parseBoolean(propT.getProperty("serviceSLI"));
+										<%
+											for (int i = 0; i < vecCodeCol2.size(); i++) {
+												propT = vecCodeCol2.get(i);
+												serviceCode = propT.getProperty("serviceCode");
+												serviceDesc = propT.getProperty("serviceDesc");
+												serviceDisp = propT.getProperty("serviceDisp");
+												servicePercentage = propT.getProperty("servicePercentage");
+												serviceType = propT.getProperty("serviceType");
+												displayStyle = propT.getProperty("displaystyle");
+												sliFlag = Boolean.parseBoolean(propT.getProperty("serviceSLI"));
 
-		if (propPremium.getProperty(serviceCode) != null) premiumFlag = "A";
-		else premiumFlag = "";
+												if (propPremium.getProperty(serviceCode) != null) premiumFlag = "A";
+												else premiumFlag = "";
 
-		String bgcolor = i % 2 == 0 ? "bgcolor='#FFFFFF'" : "class='myGreen'";
-		if (request.getParameter("xml_" + serviceCode) != null) bgcolor = "bgcolor='#66FF66'";
-%>
+												String bgcolor = i % 2 == 0 ? "bgcolor='#FFFFFF'" : "class='myGreen'";
+												if (request.getParameter("xml_" + serviceCode) != null) bgcolor = "bgcolor='#66FF66'";
+										%>
 										<tr <%=bgcolor%>>
 											<td align="left" style="<%=displayStyle%>" nowrap><input
 												type="checkbox" id="xml_<%=serviceCode%>"
@@ -1772,19 +1820,24 @@ for (int i = 0; i < vecCodeCol1.size(); i++) {
 					<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />-->
 											</td>
 										</tr>
-										<%	    } %>
+										<%
+											}
+										%>
 									</table>
-								</div> <%   }   %>
+								</div> <%
+ 	}
+ %>
 
 							</td>
 							<td width="33%" valign="top">
-								<%         for( int j=0; j< listServiceType.size(); j++) {
+								<%
+									for( int j=0; j< listServiceType.size(); j++) {
 
-                ArrayList<Properties> vecCodeCol3 = new ArrayList<Properties>();
-                vecCodeCol3 = billingServiceCodesMap.get("group3_".concat(listServiceType.get(j)));
-                headerTitle3 = titleMap.get("group3_".concat(listServiceType.get(j)));
-%>
-								<div id="group3_<%=listServiceType.get(j) %>"
+								                ArrayList<Properties> vecCodeCol3 = new ArrayList<Properties>();
+								                vecCodeCol3 = billingServiceCodesMap.get("group3_".concat(listServiceType.get(j)));
+								                headerTitle3 = titleMap.get("group3_".concat(listServiceType.get(j)));
+								%>
+								<div id="group3_<%=listServiceType.get(j)%>"
 									style="display: none;">
 
 
@@ -1798,22 +1851,23 @@ for (int i = 0; i < vecCodeCol1.size(); i++) {
 											<th><div class="smallFont">Fee</div></th>
 										</tr>
 
-										<%	    for (int i = 0; i < vecCodeCol3.size(); i++) {
-		propT = vecCodeCol3.get(i);
-		serviceCode = propT.getProperty("serviceCode");
-		serviceDesc = propT.getProperty("serviceDesc");
-		serviceDisp = propT.getProperty("serviceDisp");
-		servicePercentage = propT.getProperty("servicePercentage");
-		serviceType = propT.getProperty("serviceType");
-		displayStyle = propT.getProperty("displaystyle");
-		sliFlag = Boolean.parseBoolean(propT.getProperty("serviceSLI"));
+										<%
+											for (int i = 0; i < vecCodeCol3.size(); i++) {
+												propT = vecCodeCol3.get(i);
+												serviceCode = propT.getProperty("serviceCode");
+												serviceDesc = propT.getProperty("serviceDesc");
+												serviceDisp = propT.getProperty("serviceDisp");
+												servicePercentage = propT.getProperty("servicePercentage");
+												serviceType = propT.getProperty("serviceType");
+												displayStyle = propT.getProperty("displaystyle");
+												sliFlag = Boolean.parseBoolean(propT.getProperty("serviceSLI"));
 
-		if (propPremium.getProperty(serviceCode) != null) premiumFlag = "A";
-		else premiumFlag = "";
+												if (propPremium.getProperty(serviceCode) != null) premiumFlag = "A";
+												else premiumFlag = "";
 
-		String bgcolor = i % 2 == 0 ? "bgcolor='#FFFFFF'" : "class='myGreen'";
-		if (request.getParameter("xml_" + serviceCode) != null) bgcolor = "bgcolor='#66FF66'";
-%>
+												String bgcolor = i % 2 == 0 ? "bgcolor='#FFFFFF'" : "class='myGreen'";
+												if (request.getParameter("xml_" + serviceCode) != null) bgcolor = "bgcolor='#66FF66'";
+										%>
 										<tr <%=bgcolor%>>
 											<td align="left" style="<%=displayStyle%>" nowrap><input
 												type="checkbox" id="xml_<%=serviceCode%>"
@@ -1839,9 +1893,13 @@ for (int i = 0; i < vecCodeCol1.size(); i++) {
 					<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />-->
 											</td>
 										</tr>
-										<%		} %>
+										<%
+											}
+										%>
 									</table>
-								</div> <%  }  %>
+								</div> <%
+ 	}
+ %>
 
 							</td>
 						</tr>
@@ -1912,12 +1970,12 @@ for (int i = 0; i < vecCodeCol1.size(); i++) {
 						<th nowrap>Dx</th>
 						<th>Create Date</th>
 					</tr>
-					<%// new billing records
-			for (int i = 0; i < aL.size(); i = i + 2) {
-				BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
-				BillingItemData iobj = (BillingItemData) aL.get(i + 1);
-
-				%>
+					<%
+						// new billing records
+						for (int i = 0; i < aL.size(); i = i + 2) {
+							BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
+							BillingItemData iobj = (BillingItemData) aL.get(i + 1);
+					%>
 					<tr <%=i%4==0? "class=\"myGreen\"":""%> align="center">
 						<td class="smallFont"><%=obj.getId()%></td>
 						<td class="smallFont"><%=obj.getBilling_date()%></td>
@@ -1926,9 +1984,9 @@ for (int i = 0; i < vecCodeCol1.size(); i++) {
 						<td class="smallFont"><%=iobj.getDx()%></td>
 						<td class="smallFont"><%=obj.getUpdate_datetime().substring(0, 10)%></td>
 					</tr>
-					<%}
-
-		%>
+					<%
+						}
+					%>
 				</table>
 			</td>
 		</tr>
@@ -1936,9 +1994,9 @@ for (int i = 0; i < vecCodeCol1.size(); i++) {
 
 	<script type="text/javascript">
 Calendar.setup( { inputField : "xml_vdate", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_vdate_cal", singleClick : true, step : 1 } );
-<%if (appt_no.compareTo("0") == 0) { %>
+<%if (appt_no.compareTo("0") == 0) {%>
     Calendar.setup( { inputField : "service_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "service_date_cal", singleClick : true, step : 1 } );
-<%} %>
+<%}%>
 </script>
 
 	<%!String getDefaultValue(String paraName, Vector vec, String propName) {
@@ -1951,14 +2009,12 @@ Calendar.setup( { inputField : "xml_vdate", ifFormat : "%Y-%m-%d", showsTime :fa
 		return ret;
 	}
 
-
-        String noNull(String str){
-            if (str != null){
-               return str;
-            }
-            return "";
-        }
-	%>
+	String noNull(String str) {
+		if (str != null) {
+			return str;
+		}
+		return "";
+	}%>
 
 </body>
 </html>
