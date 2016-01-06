@@ -35,6 +35,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import net.sf.cookierevolver.CRFactory;
 
@@ -151,7 +152,8 @@ public class LoginFilter implements Filter {
 				}
 			}
 			
-			if (httpRequest.getSession().getAttribute("user") == null) {
+			HttpSession session = httpRequest.getSession(false);
+			if (session==null || session.getAttribute("user") == null) {
 				
 				
 
@@ -165,11 +167,11 @@ public class LoginFilter implements Filter {
 					httpResponse.sendRedirect(contextPath + "/logout.jsp");
 					return;
 				}
-			}else if(InActivityLimitInMins != null){ //Tracking for last request time
+			}else if(session!=null && InActivityLimitInMins != null){ //Tracking for last request time
 				try{
 					long minLimit = Long.parseLong(InActivityLimitInMins);
 				
-					Date lastRequestDate = (Date) httpRequest.getSession().getAttribute("last_request_time");
+					Date lastRequestDate = (Date) session.getAttribute("last_request_time");
 					Date thisRequestDate = new Date();	
 					long timeSinceLastRequest = -1;
 					if (lastRequestDate != null){ 
@@ -186,7 +188,7 @@ public class LoginFilter implements Filter {
 					
 				if(!inListOfExemptions(requestURI, contextPath,EXEMPT_URLS_FOR_REQUEST_TIMEOUT)) { 
 					logger.debug("reseting timer list uri "+httpRequest.getRequestURI());
-					httpRequest.getSession().setAttribute("last_request_time",thisRequestDate);
+					session.setAttribute("last_request_time",thisRequestDate);
 				}
 				}catch(Exception e){
 					logger.error("ERROR checking for last activity. Limit Activity :"+InActivityLimitInMins, e);
