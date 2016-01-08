@@ -130,7 +130,7 @@ public class PHRUserManagementAction extends DispatchAction {
 	protected Properties getCfgProp() {
 		Properties ret = new Properties();
 
-		int intialNameOffset = 150;
+		int intialNameOffset = 180;
 
 		PropertyDao propertyDao = (PropertyDao) SpringUtils.getBean("propertyDao");
 
@@ -154,7 +154,7 @@ public class PHRUserManagementAction extends DispatchAction {
 		intialNameOffset += 11;
 		ret.setProperty("postalCode", "left, 70, " + intialNameOffset + ", 0, BaseFont.HELVETICA, 11");
 
-		ret.setProperty("letterDate", "left, 70, 101, 0, BaseFont.HELVETICA, 11");
+		ret.setProperty("letterDate", "left, 480, 180, 0, BaseFont.HELVETICA, 11");//370 430
 		ret.setProperty("intro", "left, 70, 340, 0, BaseFont.HELVETICA, 11, _, 550, 250, 13");
 		ret.setProperty("credHeading", "left, 80, 350, 0, BaseFont.HELVETICA, 11");
 		ret.setProperty("username", "left, 80, 378, 0, BaseFont.HELVETICA, 11");
@@ -186,7 +186,7 @@ public class PHRUserManagementAction extends DispatchAction {
 			// writer = PdfWriter.getInstance(document, baosPDF);
 
 			String title = "TITLE";
-			String template = "McMasterPHRLetterHead.pdf";
+			String template = "KindredPHRLetterHead.pdf";
 
 			Properties printCfg = getCfgProp();
 
