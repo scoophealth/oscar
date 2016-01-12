@@ -53,6 +53,9 @@ public class ScratchPad extends AbstractModel<Integer>{
 
 	@Column(name="scratch_text")
 	private String text;
+	
+	@Column(name="status")
+	private boolean status = true;
 
 	public Integer getId() {
     	return id;
@@ -86,5 +89,12 @@ public class ScratchPad extends AbstractModel<Integer>{
     	this.text = text;
     }
 
+	public boolean isStatus() {
+    	return status;
+    }
+
+	public void setStatus(boolean status) {
+    	this.status = status;
+    }
 
 }
