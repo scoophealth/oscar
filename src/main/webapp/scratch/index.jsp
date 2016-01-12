@@ -23,24 +23,24 @@
     Ontario, Canada
 
 --%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
-<%@page
-	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*,oscar.scratch.*"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*,oscar.scratch.*"%>
+<%@ page import="oscar.oscarProvider.data.ProviderColourUpdater"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 
 <%
-   //<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-//    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-//
-   ////
-  
-  //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
   String demographic_no = request.getParameter("demographic_no");  
   String user_no = (String) request.getSession().getAttribute("user");
+  String userfirstname = (String) request.getSession().getAttribute("userfirstname");
+  String userlastname = (String) request.getSession().getAttribute("userlastname");
+  
+  String userColour = null;
+  
+  ProviderColourUpdater colourUpdater = new ProviderColourUpdater(user_no);
+  userColour = colourUpdater.getColour();
   
   ScratchData scratchData = new ScratchData();
   Map<String, String> hashtable = scratchData.getLatest(user_no);
@@ -56,22 +56,22 @@
   }
   
 
-  List<Object[]> dateIdList= scratchData.getAllDates(user_no);
-      
+  List<Object[]> dateIdList= scratchData.getAllDates(user_no); 
 %>
-
-
-
 
 <html:html locale="true">
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Scratch</title>
-<!--I18n-->
+<title><bean:message key="ScratchPad.title"/></title>
 
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css"	href="../share/css/OscarStandardLayout.css">
+
+<%if(userColour!=null){%>
+<style>
+.TopStatusBar{background-color:<%=userColour%>}
+</style>
+<%}%>
 
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
@@ -96,17 +96,30 @@
     window.onresize = fixHeightOfTheText;
 
     window.setInterval(autoSave,30000);
-
+    
     function autoSave(){
-        checkScratch()
+    	if(dirty==1){//check if ready to save before posting
+        	checkScratch();
+    	}
     }
 
     ///this function submits the data to the action using ajax. OnComplete the function followUp will be called 
     function checkScratch(){
 	var url = "../Scratch.do";
 	var data = Form.serialize('scratch'); 
-        new Ajax.Request(url, {method: 'post',postBody: data,asynchronous:true,onComplete: followUp}); 
+        new Ajax.Request(url, {
+        	method: 'post',
+        	postBody: data,
+        	asynchronous:true,
+        	onFailure: function() { 
+        		dirty = 0;
+        		document.getElementById("mainRight").innerHTML = "<h1 style='color:red'>An error occured and your data could not be saved!</h1> <h2>Please close the window and try again.</h2> <button onclick='window.close()'>Close</button>";
+        	},
+        	onSuccess: followUp
+        		
+        }); 
     }
+    
 
     function followUp(origRequest){
         //alert(origRequest.responseText);
@@ -195,17 +208,16 @@
 <body class="BodyStyle">
 <table class="MainTable" id="scrollNumber1">
 	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn">scratch</td>
+		<td class="MainTableTopRowLeftColumn"><bean:message key="ScratchPad.title"/></td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
+				<td><h1><%=userfirstname%> <%=userlastname%></h1></td>
 				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td style="text-align: right"><oscar:help keywords="pad" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
+				<td style="text-align: right">
+				<oscar:help keywords="pad" key="app.top1"/> |
+				<a href="javascript:void(0)" onclick="javascript:popup(600,700,'../oscarEncounter/About.jsp')"><bean:message key="global.about" /></a> 
+				</td>
 			</tr>
 		</table>
 		</td>
@@ -232,7 +244,7 @@
 			
 	    </td>
 
-		<td valign="top" class="MainTableRightColumn">
+		<td valign="top" class="MainTableRightColumn" id="mainRight">
 		<form id="scratch" action=""><input type="hidden"
 			name="providerNo" value="<%=user_no%>" /> <input type="hidden"
 			name="id" id="curr_id" value="<%=id%>" /> <input type="hidden"
