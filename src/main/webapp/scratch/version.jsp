@@ -27,41 +27,98 @@
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ page import="org.oscarehr.common.model.ScratchPad" %>
 <%@ page import="oscar.util.DateUtils" %>
+<%@ page import="oscar.oscarProvider.data.ProviderColourUpdater"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%
+String date = null;
+String id = null;
+String title = "";
+boolean deleted = false;
+ScratchPad scratchPad = null;
 
-ScratchPad scratchPad = (ScratchPad)request.getAttribute("ScratchPad");
-String date = DateUtils.formatDateTime(scratchPad.getDateTime(), request.getLocale());
+String user_no = (String) request.getSession().getAttribute("user");
+String userfirstname = (String) request.getSession().getAttribute("userfirstname");
+String userlastname = (String) request.getSession().getAttribute("userlastname");
+
+String userColour = null;
+
+ProviderColourUpdater colourUpdater = new ProviderColourUpdater(user_no);
+userColour = colourUpdater.getColour();
+
+if(request.getAttribute("actionDeleted")!=null){
+	deleted = true;	
+}else{
+	scratchPad = (ScratchPad)request.getAttribute("ScratchPad");    		
+	date = DateUtils.formatDateTime(scratchPad.getDateTime(), request.getLocale());
+	id = scratchPad.getId().toString();
+	title = "Version from " + date;
+}
 %>
 
 <head>
-<title>Scratch Pad Version from <%=date%></title>
+<title><bean:message key="ScratchPad.title"/> <%=title%></title>
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/OscarStandardLayout.css">
+<%if(userColour!=null){%>
+<style>
+.TopStatusBar{background-color:<%=userColour%>}
+</style>
+<%}%>
 </head>
 <body class="BodyStyle">
 <table class="MainTable" id="scrollNumber1">
 	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn">scratch</td>
+		<td class="MainTableTopRowLeftColumn"><bean:message key="ScratchPad.title"/></td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
-				<td style="text-align:center">Scratchpad version <%=date%></td>				
-				<td style="text-align: right"><oscar:help keywords="pad" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
+				<td><h1><%=userfirstname%> <%=userlastname%></h1></td>
+				<td style="text-align:center"><bean:message key="ScratchPad.title"/> <%=title%></td>				
+				<td style="text-align: right">
+				<oscar:help keywords="pad" key="app.top1"/> |
+				<a href="javascript:void(0)" onclick="javascript:popup(600,700,'../oscarEncounter/About.jsp')"><bean:message key="global.about" /></a> 
+				</td>
 			</tr>
 		</table>
 		</td>
 	</tr>
 	<tr>
-	<td>&nbsp;</td>
-	<td style="height:900px; width:655px; margin:10px 25px 10px 25px; border-style:groove; background-color:#CCCCCC; overflow:auto;">
+	<%if(!deleted){ %>
+	<td valign="top" class="MainTableLeftColumn"><button name="deleteVersion" onclick="deleteVersion('<%=id%>')">Delete</button></td>
+	<td class="MainTableRightColumn" style="height:900px; width:655px; margin:10px 25px 10px 25px; border-style:groove; background-color:#CCCCCC; overflow:auto;">
 		<%=scratchPad.getText().replaceAll("\n","<br>")%>	
 	</td>
+	<%}else{%>
+	<td class="MainTableLeftColumn"></td>
+	<td class="MainTableRightColumn">
+	<h2>Success! <bean:message key="ScratchPad.title"/> <%=request.getAttribute("actionDeleted")%></h2>
+	<button name="updateScratchBtn" onclick="updateScratch()">Close</button>
+	
+	</td>
+	<%}%>
+	</tr>
+	
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
 	</tr>
 </table>
+
+<script>
+function deleteVersion(id) {
+	var action = confirm("Are you sure you would like to delete this entry?");
+	
+	var url = "Scratch.do?method=delete&id="+id;
+	
+	if(action){
+		window.location = url;
+	}
+}
+
+function updateScratch(){
+	window.opener.location.reload();
+	window.close();
+}
+</script>
 </body>
 </html>
