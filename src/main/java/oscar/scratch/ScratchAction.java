@@ -56,9 +56,11 @@ public class ScratchAction extends DispatchAction {
     }
     
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        //String request.getParameter("");
 
         String providerNo =  (String) request.getSession().getAttribute("user");
+        String pNo = request.getParameter("providerNo");
+                
+        if(providerNo.equals(pNo)){
         String id = request.getParameter("id");
         String dirty = request.getParameter("dirty");
         String scratchPad = request.getParameter("scratchpad");
@@ -92,13 +94,31 @@ public class ScratchAction extends DispatchAction {
                if (dirty.equals("1")){               //if its the same, is the dirty field set
                  returnId = scratch.insert(providerNo,scratchPad);   //save new record and return new id.
                   returnText = scratchPad;
+                  MiscUtils.getLogger().debug("dirty field set");
                }
            }    
            
         }
         response.getWriter().print("id="+URLEncoder.encode(returnId,"utf-8")+"&text="+URLEncoder.encode(returnText,"utf-8")+"&windowId="+URLEncoder.encode(windowId,"utf-8"));
-        return null;
-               
+        
+        }else{
+        	MiscUtils.getLogger().error("Scratch pad trying to save data for user " + pNo + " but session user is " + providerNo);
+        	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        
+        return null;      
+    }
+    
+    public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	String id = request.getParameter("id");
+    	
+    	ScratchPadDao scratchDao = SpringUtils.getBean(ScratchPadDao.class);
+    	ScratchPad scratch = scratchDao.find(Integer.parseInt(id));
+    	scratch.setStatus(false);
+        scratchDao.merge(scratch);
+  	    	
+    	request.setAttribute("actionDeleted", "version " + id + " was deleted!");
+    	return mapping.findForward("scratchPadVersion");
     }
     
     
