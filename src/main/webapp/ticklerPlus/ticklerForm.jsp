@@ -66,6 +66,10 @@
 
 <script type="text/javascript" src="../js/checkDate.js"></script>
 <script type="text/javascript">
+		$(document).ready(function(){
+		  changeProgram();
+		});
+
 		function check_tickler_service_date() {
 			return check_date('tickler.serviceDateWeb');
 		}
