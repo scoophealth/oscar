@@ -56,7 +56,7 @@ public class PreventionDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("preventions", "demographic_merged");
+		SchemaUtils.restoreTable("demographic", "preventions", "demographic_merged");
 	}
 
 	@Test
