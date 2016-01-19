@@ -61,7 +61,7 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 
 <link href="../library/ng-table/ng-table.css" rel="stylesheet">
 
-<link href="../library/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet">
+<link href="../library/bootstrap2-datepicker/datepicker3.css" rel="stylesheet">
 
 <link href="../css/bootstrap-timepicker.min.css" rel="stylesheet">
 
