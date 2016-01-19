@@ -34,6 +34,7 @@ if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter(
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%
       String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	  boolean authed=true;
@@ -52,6 +53,14 @@ if(!authed) {
 	media="screen">
 <link rel="stylesheet" type="text/css" href="printable.css"
 	media="print">
+	
+<style>
+.TopStatusBar{
+width:100% !important;
+height:100% !important;
+}
+</style>
+	
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -191,11 +200,10 @@ function paste2Encounter(demoNo) {
 				<td><bean:message
 					key="oscarMessenger.ViewMessage.msgViewMessage" /></td>
 				<td></td>
-				<td style="text-align: right"><oscar:help keywords="message" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
+				<td style="text-align: right">
+				  <oscar:help keywords="message" key="app.top1"/> | 
+				  <a href="javascript:void(0)" onclick="javascript:popupPage(600,700,'../oscarEncounter/About.jsp')"><bean:message key="global.about" /></a>
+			    </td>
 			</tr>
 		</table>
 		</td>

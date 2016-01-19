@@ -116,6 +116,13 @@ bean.nullAttachment();%>
 </title>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
+<style>
+.TopStatusBar{
+width:100% !important;
+height:100% !important;
+}
+</style>
+
 <script type="text/javascript">
 function BackToOscar()
 {
@@ -147,11 +154,10 @@ function unlink(){
 				</div>
 				</td>
 				<td></td>
-				<td style="text-align: right"><oscar:help keywords="message" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
+				<td style="text-align: right">
+				  <oscar:help keywords="message" key="app.top1"/> | 
+				  <a href="javascript:void(0)" onclick="javascript:popupPage(600,700,'../oscarEncounter/About.jsp')"><bean:message key="global.about" /></a>
+			    </td>
 			</tr>
 		</table>
 		</td>
