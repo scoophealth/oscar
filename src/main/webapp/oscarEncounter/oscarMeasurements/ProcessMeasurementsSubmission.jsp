@@ -33,9 +33,7 @@
 
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message
-	key="oscarEncounter.Measurements.msgProcessMeasurementsSubmission" /></title>
+<title><bean:message key="oscarEncounter.Measurements.msgProcessMeasurementsSubmission" /></title>
 <html:base />
 </head>
 
@@ -46,14 +44,9 @@ function closeWin() {
 }
 </script>
 
-<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="closeWin();">
+<body onload="closeWin();">
 <html:errors />
-<table>
-	<tr>
-		<td>Processing...</td>
-	</tr>
-</table>
-
+Processing...
 
 <%
 //clear so values don't repeat after added to note
