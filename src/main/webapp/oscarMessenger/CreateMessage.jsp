@@ -32,6 +32,7 @@
 <%@ page import="oscar.oscarMessenger.util.Msgxml"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%
       String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	  boolean authed=true;
@@ -93,11 +94,6 @@ else if (messageText != null) {
 	bean.setMessage(messageText);
 }
 %>
-
-
-
-<link rel="stylesheet" type="text/css" href="encounterStyles.css">
-
 <%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
@@ -108,9 +104,15 @@ else if (messageText != null) {
 <title><bean:message key="oscarMessenger.CreateMessage.title" />
 </title>
 
+<link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<style>
+.TopStatusBar{
+width:100% !important;
+height:100% !important;
+}
+</style>
 
 <script language="javascript">
 
@@ -382,22 +384,21 @@ function popupAttachDemo(demographic){ // open a new popup window
 
 <body class="BodyStyle" vlink="#0000FF">
 
-<!--  -->
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn"><bean:message
-			key="oscarMessenger.CreateMessage.msgMessenger" /></td>
+		<td class="MainTableTopRowLeftColumn">
+		<bean:message key="oscarMessenger.CreateMessage.msgMessenger" />
+		</td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
 				<td><bean:message key="oscarMessenger.CreateMessage.msgCreate" />
 				</td>
 				<td>&nbsp;</td>
-				<td style="text-align: right"><oscar:help keywords="message" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
+				<td style="text-align: right">
+				<oscar:help keywords="message" key="app.top1"/> | 
+				<a href="javascript:void(0)" onclick="javascript:popupPage(600,700,'../oscarEncounter/About.jsp')"><bean:message key="global.about" /></a>
+			   </td>
 			</tr>
 		</table>
 		</td>

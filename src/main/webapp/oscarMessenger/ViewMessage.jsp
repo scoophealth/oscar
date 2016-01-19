@@ -63,6 +63,13 @@ if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter(
 <link rel="stylesheet" type="text/css" href="printable.css"
 	media="print">
 
+<style>
+.TopStatusBar{
+width:100% !important;
+height:100% !important;
+}
+</style>
+
 <%
 //oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)pageContext.findAttribute("bean");
 oscar.oscarMessenger.util.MsgDemoMap msgDemoMap = new oscar.oscarMessenger.util.MsgDemoMap();
@@ -212,11 +219,10 @@ function fmtOscarMsg() {
 					<td><bean:message
 						key="oscarMessenger.ViewMessage.msgViewMessage" /></td>
 					<td></td>
-					<td style="text-align: right"><oscar:help keywords="message" key="app.top1"/> | <a
-						href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-						key="global.about" /></a> | <a
-						href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-						key="global.license" /></a></td>
+					<td style="text-align: right">
+					  <oscar:help keywords="message" key="app.top1"/> | 
+					  <a href="javascript:void(0)" onclick="javascript:popupPage(600,700,'../oscarEncounter/About.jsp')"><bean:message key="global.about" /></a>
+				    </td>
 				</tr>
 			</table>
 			</td>
