@@ -107,6 +107,12 @@ oscarApp.controller('SettingsCtrl', function ($scope,$http,$state, providerList,
 	
 	$scope.pasteFormats = [{value:'single',label:'Single Line'},{value:'multi',label:'Multi Line'}];
 	
+	$scope.letterHeadNameDefaults = [{value:'1',label:'Provider (user)'},{value:'2',label:'MRP'},{value:'3',label:'Clinic'}];
+	
+	if($scope.pref.consultationLetterHeadNameDefault==null){
+		$scope.pref.consultationLetterHeadNameDefault = "1";
+	}
+
 	
 	$scope.currentTab = $scope.tabs[0];
 	
