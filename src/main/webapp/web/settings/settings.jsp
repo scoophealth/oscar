@@ -524,7 +524,13 @@ width:400px;
 		  <label>Paste Format:</label>
 		   <select ng-model="pref.consultationPasteFormat" class="form-control" ng-options="p.value as p.label for p in pasteFormats">
 		  </select>	 
-		</div>				
+		</div>		
+		
+		<div class="form-group">
+		  <label>Consult Letterhead Name Default:</label>
+		   <select ng-model="pref.consultationLetterHeadNameDefault" class="form-control" ng-options="l.value as l.label for l in letterHeadNameDefaults">
+		  </select>
+		</div>			
 	</div>
 </div>
 

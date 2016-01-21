@@ -230,7 +230,9 @@ public class ProviderManager2 {
 		if(map.get("consultation_req_paste_fmt") != null) {
 			settings.setConsultationPasteFormat(map.get("consultation_req_paste_fmt").getValue());
 		}
-		
+		if(map.get("consultation_letterheadname_default") != null) {
+			settings.setConsultationLetterHeadNameDefault(map.get("consultation_letterheadname_default").getValue());
+		}
 		if(map.get("edoc_browser_in_document_report") != null) {
 			settings.setDocumentBrowserInDocumentReport("yes".equals(map.get("edoc_browser_in_document_report").getValue())?true:false);
 		}
@@ -611,7 +613,11 @@ public class ProviderManager2 {
 		p = getMappedOrNewProperty(map, "consultation_team_warning", providerNo);
 		p.setValue(settings.getConsultationTeamWarning());
 		p = getMappedOrNewProperty(map, "consultation_req_paste_fmt", providerNo);
-		p.setValue(settings.getConsultationPasteFormat());	
+		p.setValue(settings.getConsultationPasteFormat());
+		
+		p = getMappedOrNewProperty(map, "consultation_letterheadname_default", providerNo);
+		p.setValue(settings.getConsultationLetterHeadNameDefault());	
+		
 		p = getMappedOrNewProperty(map, "edoc_browser_in_document_report", providerNo);
 		p.setValue(settings.isDocumentBrowserInDocumentReport()?"yes":"no");		
 		p = getMappedOrNewProperty(map, "edoc_browser_in_master_file", providerNo);
