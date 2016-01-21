@@ -117,6 +117,7 @@ if(!authed) {
 		String segmentId = request.getParameter("segmentId");
 		String team = request.getParameter("teamVar");
 		String providerNo = (String)session.getAttribute("user");
+		String providerNoFromChart = null;
 		DemographicData demoData = null;
 		org.oscarehr.common.model.Demographic demographic = null;
 
@@ -148,6 +149,8 @@ if(!authed) {
 		{
 			demoData = new oscar.oscarDemographic.data.DemographicData();
 			demographic = demoData.getDemographic(loggedInInfo, demo);
+			
+			providerNoFromChart = demographic.getProviderNo();
 		}
 		else if (requestId == null && segmentId == null)
 		{
@@ -1674,16 +1677,39 @@ function updateFaxButton() {
 					<td colspan=2>
 					<table border=0 width="100%">
 						<tr>
+						<%
+						String lhndType = "provider"; //set default as provider
+						String providerDefault = providerNo;
+
+						if(consultUtil.letterheadName == null ){
+						//nothing saved so find default	
+						UserProperty lhndProperty = userPropertyDAO.getProp(providerNo, UserProperty.CONSULTATION_LETTERHEADNAME_DEFAULT);
+						String lhnd = lhndProperty != null?lhndProperty.getValue():null;
+						//1 or null = provider, 2 = MRP and 3 = clinic
+						
+							if(lhnd!=null){	
+								if(lhnd.equals("2")){
+									//mrp
+									providerDefault = providerNoFromChart;
+								}else if(lhnd.equals("3")){
+									//clinic
+									lhndType="clinic";
+								}
+							}	
+
+						}
+						%>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.letterheadName" />:
 							</td>							
 							<td align="right" class="tite3">				
 								<select name="letterheadName" id="letterheadName" onchange="switchProvider(this.value)">
-									<option value="<%=StringEscapeUtils.escapeHtml(clinic.getClinicName())%>" <%=(consultUtil.letterheadName != null && consultUtil.letterheadName.equalsIgnoreCase(clinic.getClinicName()) ? "selected='selected'"  : "" )%>><%=clinic.getClinicName() %></option>
+									<option value="<%=StringEscapeUtils.escapeHtml(clinic.getClinicName())%>" <%=(consultUtil.letterheadName != null && consultUtil.letterheadName.equalsIgnoreCase(clinic.getClinicName()) ? "selected='selected'" : lhndType.equals("clinic") ? "selected='selected'" : "" )%>><%=clinic.getClinicName() %></option>
 								<%
 									for (Provider p : prList) {
 										if (p.getProviderNo().compareTo("-1") != 0 && (p.getFirstName() != null || p.getSurname() != null)) {
 								%>
-								<option value="<%=p.getProviderNo() %>" <%=(consultUtil.letterheadName != null && consultUtil.letterheadName.equalsIgnoreCase(p.getProviderNo()) ? "selected='selected'"  : consultUtil.letterheadName == null && p.getProviderNo().equalsIgnoreCase(providerNo) ? "selected='selected'"  : "") %>>
+								<option value="<%=p.getProviderNo() %>" 
+								<%=(consultUtil.letterheadName != null && consultUtil.letterheadName.equalsIgnoreCase(p.getProviderNo()) ? "selected='selected'"  : consultUtil.letterheadName == null && p.getProviderNo().equalsIgnoreCase(providerDefault) && lhndType.equals("provider") ? "selected='selected'"  : "") %>>
 									<%=p.getSurname() %>, <%=p.getFirstName().replace("Dr.", "") %>
 								</option>
 								<% }

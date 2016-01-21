@@ -80,6 +80,7 @@ public class ProviderSettings {
 	private String consultationTimePeriodWarning;
 	private String consultationTeamWarning = "";
 	private String consultationPasteFormat;
+	private String consultationLetterHeadNameDefault;
 	
 	private boolean documentBrowserInDocumentReport;
 	private boolean documentBrowserInMasterFile;
@@ -384,6 +385,12 @@ public class ProviderSettings {
 	public void setConsultationPasteFormat(String consultationPasteFormat) {
 		this.consultationPasteFormat = consultationPasteFormat;
 	}
+	public String getConsultationLetterHeadNameDefault() {
+		return consultationLetterHeadNameDefault;
+	}
+	public void setConsultationLetterHeadNameDefault(String consultationLetterHeadNameDefault) {
+		this.consultationLetterHeadNameDefault = consultationLetterHeadNameDefault;
+	}	
 	public boolean isDocumentBrowserInDocumentReport() {
 		return documentBrowserInDocumentReport;
 	}
