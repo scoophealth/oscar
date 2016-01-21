@@ -233,8 +233,8 @@ function validateNum(el){
       el.focus();
       return false;
    }
-   if ( val > 9999.99 ){
-     alert("Item value must be below $10000");
+   if ( val > 999999.99 ){
+     alert("Item value must be below $1000000");
      el.select();
      el.focus();
      return false;
