@@ -55,6 +55,7 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.dao.EChartDao;
 import org.oscarehr.common.model.CustomFilter;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.EChart;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
@@ -336,6 +337,12 @@ public class TicklerAction extends DispatchAction {
 		}
 
 		String demographicNo = request.getParameter("tickler.demographicNo");
+		if(!StringUtils.isEmpty(demographicNo)) {
+			Demographic demo = demographicMgr.getDemographic(demographicNo);
+			if(demo != null) {
+				request.setAttribute("demographicName", demo.getFormattedName());
+			}
+		}
 		
 		List<Program> programDomain = programMgr.getProgramDomain(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo());
 		//further filter by patient admissions.

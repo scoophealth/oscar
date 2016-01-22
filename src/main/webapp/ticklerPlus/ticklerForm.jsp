@@ -142,6 +142,12 @@
 	</tr>
 </table>
 
+<%
+	String demographicName = request.getParameter("tickler.demographic_webName");
+	if(demographicName  == null || "undefined".equals(demographicName)) {
+		demographicName = (String)request.getAttribute("demographicName");
+	}
+%>
 <%@ include file="/common/messages.jsp"%>
 
 <table width="60%" border="0" cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
@@ -157,7 +163,7 @@
 			</td>
 			<td class="fieldValue">
 				<html:hidden property="tickler.demographicNo" />
-				<%=request.getParameter("tickler.demographic_webName")%>
+				<%=demographicName%>
 			</td>
 		</tr>
 		<tr>
