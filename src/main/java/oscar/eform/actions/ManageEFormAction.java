@@ -105,7 +105,7 @@ public class ManageEFormAction extends DispatchAction {
 		}
     	
         String sURL = request.getParameter("url");
-        URL url = new URL("http://mydrugref.org/data/" + sURL);
+        URL url = new URL("http://know2act.org/data/" + sURL);
         url.openStream();
         request.setAttribute("input", "import");
         EFormExportZip eFormExportZip = new EFormExportZip();
@@ -132,7 +132,7 @@ public class ManageEFormAction extends DispatchAction {
         HttpClient client = new HttpClient();
         client.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
 
-        PostMethod method = new PostMethod("http://mydrugref.org/sessions");
+        PostMethod method = new PostMethod("http://know2act.org/sessions");
 
 
 
@@ -150,7 +150,7 @@ public class ManageEFormAction extends DispatchAction {
 
 
         MiscUtils.getLogger().debug("--------------------------------------------------------------------------------------");
-         MultipartPostMethod eformPost = new MultipartPostMethod("http://mydrugref.org/e_forms/");
+         MultipartPostMethod eformPost = new MultipartPostMethod("http://know2act.org/e_forms/");
 
         String documentDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
         File docDir = new File(documentDir);
