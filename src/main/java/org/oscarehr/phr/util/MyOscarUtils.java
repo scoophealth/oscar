@@ -36,7 +36,6 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.PropertyDao;
@@ -55,7 +54,6 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
-import oscar.OscarProperties;
 
 public final class MyOscarUtils {
 	private static final Logger logger = MiscUtils.getLogger();
@@ -64,27 +62,15 @@ public final class MyOscarUtils {
 
 	private static ExecutorService asyncAutoLoginThreadPool=Executors.newFixedThreadPool(4, new DeamonThreadFactory("asyncAutoLoginThreadPool", Thread.MIN_PRIORITY));
 	
-	private static boolean myOscarEnabled=initMyOscarEnabled();
-
 	public static Demographic getDemographicByMyOscarUserName(String myOscarUserName) {
 		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 		Demographic demographic = demographicDao.getDemographicByMyOscarUserName(myOscarUserName);
 		return (demographic);
 	}
 
-	private static boolean initMyOscarEnabled() {
-		OscarProperties properties = OscarProperties.getInstance();
-		String myOscarModule = properties.getProperty("MY_OSCAR");
-		if (myOscarModule != null) myOscarModule = myOscarModule.toLowerCase();
-		myOscarModule = StringUtils.trimToNull(myOscarModule);
-		boolean module = ("yes".equals(myOscarModule) || "true".equals(myOscarModule));
-
-		return (module);
-    }
-
-	public static boolean isMyOscarEnabled()
+	public static boolean isMyOscarEnabled(String providerNo)
 	{
-		return(myOscarEnabled);
+		return isMyOscarUserNameSet(providerNo);
 	}
 	
 	public static String getDisabledStringForMyOscarSendButton(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) {
@@ -111,7 +97,7 @@ public final class MyOscarUtils {
 	}
 
 	public static void attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(final LoggedInInfo loggedInInfo, final boolean forceReLogin) {
-		if (!isMyOscarEnabled()) return;
+		if (!isMyOscarEnabled(loggedInInfo.getLoggedInProviderNo())) return;
 
 		HttpSession session = loggedInInfo.getSession();
 		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(session);
@@ -138,6 +124,14 @@ public final class MyOscarUtils {
 		if (myOscarUserNameProperties.size()>0) return(myOscarUserNameProperties.get(0).getValue());
 		return(null);
 	}
+	
+	public static boolean isMyOscarUserNameSet(String providerNo){
+		if(getMyOscarUserNameFromOscar(providerNo) != null){
+			return true;
+		}
+		return false;
+	}
+	
 	
 	public static Long getMyOscarUserIdFromOscarProviderNo(MyOscarLoggedInInfo myOscarLoggedInInfo, String providerNo)
 	{

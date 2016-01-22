@@ -154,7 +154,7 @@ pageContext.setAttribute("forwardToOnSuccess",request.getAttribute("forwardToOnS
                 <center><font style="font-size: 10px;"><sup>(Use your personal health record provider password)</sup></font></center>
                <br/>
               		<%
-              			if (MyOscarUtils.isMyOscarEnabled())
+              			if (MyOscarUtils.isMyOscarEnabled((String) session.getAttribute("user")))
               			{
               				MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
               				%>

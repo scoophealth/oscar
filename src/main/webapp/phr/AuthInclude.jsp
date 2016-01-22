@@ -93,7 +93,7 @@ pageContext.setAttribute("phrTechLoginErrorMsg", request.getAttribute("phrTechLo
         }
    </style>
    <%
-		if (MyOscarUtils.isMyOscarEnabled())
+		if (MyOscarUtils.isMyOscarEnabled((String) session.getAttribute("user")))
 		{
 			%>
 				<div class="myoscarLoginElementAuth">

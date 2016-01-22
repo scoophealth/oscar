@@ -276,7 +276,7 @@ padding-right:6;
 				%>
 				</span>
 				<%
-                  	  if (MyOscarUtils.isMyOscarEnabled())
+                  	  if (MyOscarUtils.isMyOscarEnabled((String) session.getAttribute("user")))
                   	  {
                   		  MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
                   		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(myOscarLoggedInInfo, Integer.valueOf(demoNo));

@@ -373,7 +373,6 @@ label.error {
 			</li>
 			</security:oscarSec>
 			
-			 <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
 			    <myoscar:indivoRegistered provider="<%=curUser_no%>">
 					<%
 					MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(loggedInInfo, false);%>
@@ -393,7 +392,6 @@ label.error {
 						</script>
 				    </li>
 			    </myoscar:indivoRegistered>
-			</oscar:oscarPropertiesCheck>
 			
 			
 			
