@@ -124,7 +124,14 @@ public class HRMModifyDocumentAction extends DispatchAction {
 		try {
 			String signedOff = request.getParameter("signedOff");
 			HRMDocumentToProvider providerMapping = hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNo(reportId, providerNo);
-
+			if(providerMapping == null) {
+				//check for unclaimed record, if that exists..update that one
+				providerMapping = hrmDocumentToProviderDao.findByHrmDocumentIdAndProviderNo(reportId, "-1");
+				if(providerMapping != null) {
+					providerMapping.setProviderNo(providerNo);
+				}
+			}
+			
 			if (providerMapping != null) {
 				providerMapping.setSignedOff(Integer.parseInt(signedOff));
 				providerMapping.setSignedOffTimestamp(new Date());
