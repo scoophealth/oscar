@@ -936,8 +936,7 @@ window.onbeforeunload = onClosing;
 			<div style="margin-top: 5px; text-align: center">
 				<input type="submit" id="printOp" style="border: 1px solid #7682b1;"
 					value="Print" onclick="return printNotes();">
-				<oscarProperties:oscarPropertiesCheck property="MY_OSCAR"
-					value="yes">
+				
 					<indivo:indivoRegistered
 						demographic="<%=(String) request.getAttribute(\"demographicNo\")%>"
 						provider="<%=(String) request.getSession().getAttribute(\"user\")%>">
@@ -945,7 +944,6 @@ window.onbeforeunload = onClosing;
 							style="border: 1px solid #7682b1;" value="Send To Phr"
 							onclick="return sendToPhrr();">
 					</indivo:indivoRegistered>
-				</oscarProperties:oscarPropertiesCheck>
 				<input type="submit" id="cancelprintOp"
 					style="border: 1px solid #7682b1;" value="Cancel"
 					onclick="$('printOps').style.display='none';"> <input

@@ -116,16 +116,6 @@
 	        	</div>
 	        	
 		</div><!-- modal-body -->		
-		<%--
-		
-		<oscarProperties:oscarPropertiesCheck property="MY_OSCAR" value="yes">
-					<indivo:indivoRegistered 
-					    demographic="<%=(String) request.getAttribute(\"demographicNo\")%>"
-						provider="<%=(String) request.getSession().getAttribute(\"user\")%>">
-						
-					</indivo:indivoRegistered>
-				</oscarProperties:oscarPropertiesCheck>
-		 --%>
 		<div class="modal-footer">
 			<input type="button" class="btn" ng-click="print();" value="<bean:message key="global.btnPrint"/>" >		
 			<input type="button" class="btn" ng-click="sendToPhr();" value="<bean:message key="global.btnSendToPHR"/>">

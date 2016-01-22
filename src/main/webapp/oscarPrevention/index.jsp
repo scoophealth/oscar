@@ -520,7 +520,7 @@ text-align:left;
 		<a href="#" onclick="popup(600,800,'http://www.phac-aspc.gc.ca/im/is-cv/index-eng.php')">Immunization Schedules - Public Health Agency of Canada</a>
 
 		<%
-				if (MyOscarUtils.isMyOscarEnabled())
+				if (MyOscarUtils.isMyOscarEnabled((String) session.getAttribute("user")))
 				{
 					MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
            		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(myOscarLoggedInInfo, Integer.valueOf(demographic_no));

@@ -134,7 +134,7 @@ providerData.setProviderNo(providerNo);
                 <center><font style="font-size: 10px;"><sup>(It will be sent next time you log in)</sup></font></center>
                <br/>
                		<%
-               			if (MyOscarUtils.isMyOscarEnabled())
+               			if (MyOscarUtils.isMyOscarEnabled((String) session.getAttribute("user")))
                			{
                   			MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
                				%>
