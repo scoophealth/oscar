@@ -697,7 +697,6 @@ public final class EDocUtil {
 		DocumentDao dao = SpringUtils.getBean(DocumentDao.class);
 		IndivoDocsDao iDao = SpringUtils.getBean(IndivoDocsDao.class);
 
-		boolean myOscarEnabled = OscarProperties.getInstance().getProperty("MY_OSCAR", "").trim().equalsIgnoreCase("YES");
 		EDoc currentdoc = new EDoc();
 
 		for (Object[] o : dao.findCtlDocsAndDocsByDocNo(ConversionUtils.fromIntString(documentNo))) {
@@ -733,15 +732,14 @@ public final class EDocUtil {
             	currentdoc.setRestrictToProgram(d.isRestrictToProgram());
             }
             
-			if (myOscarEnabled) {
-				IndivoDocs id = iDao.findByOscarDocNo(d.getDocumentNo(), "document");
-				if (id != null) {
-					currentdoc.setIndivoIdx(id.getIndivoDocIdx());
-					if (currentdoc.getIndivoIdx().length() > 0) {
-						currentdoc.registerIndivo();
-					}
+			IndivoDocs id = iDao.findByOscarDocNo(d.getDocumentNo(), "document");
+			if (id != null) {
+				currentdoc.setIndivoIdx(id.getIndivoDocIdx());
+				if (currentdoc.getIndivoIdx().length() > 0) {
+					currentdoc.registerIndivo();
 				}
 			}
+			
 		}
 
 		return currentdoc;

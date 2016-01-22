@@ -165,17 +165,6 @@ public class PHRActionDAO extends HibernateDaoSupport {
 		return list;
 	}
 
-	public boolean ifActionsWithErrors(final String providerNo) {
-		Long num = (Long) getHibernateTemplate().execute(new HibernateCallback() {
-			public Object doInHibernate(Session session) throws HibernateException, SQLException {
-				Query q = session.createQuery("select count(*) from PHRAction a where a.senderOscar = '" + providerNo + "' AND a.status=" + PHRAction.STATUS_NOT_AUTHORIZED);
-				q.setCacheable(true);
-				return q.uniqueResult();
-			}
-		});
-		if (num > 0) return true;
-		return false;
-	}
 
 	public void save(PHRAction action) {
 		this.getHibernateTemplate().save(action);

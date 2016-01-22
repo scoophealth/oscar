@@ -176,7 +176,7 @@ request.setAttribute("forwardto", request.getRequestURI());
                                         </td></tr></table>
                                     </td>
                                     <%
-                                    	if (MyOscarUtils.isMyOscarEnabled())
+                                    	if (MyOscarUtils.isMyOscarEnabled((String) session.getAttribute("user")))
                                     	{
                                     		%>
 		                                        <td class="myoscarLoginElementAuth">
