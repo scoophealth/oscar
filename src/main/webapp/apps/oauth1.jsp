@@ -30,7 +30,16 @@ AppDefinitionDao appDefinitionDao = SpringUtils.getBean(AppDefinitionDao.class);
 
 Integer appId = null;
 if (request.getParameter("id") != null){
+	try{
 	appId = Integer.parseInt(request.getParameter("id"));
+	}catch(Exception e){
+		if("K2A".equals(request.getParameter("id"))){
+			AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
+			if(k2aApp != null){
+				appId = k2aApp.getId();
+			}
+		}
+	}
 }else if(session.getAttribute("appId") != null ){
 	appId = (Integer) session.getAttribute("appId");
 }

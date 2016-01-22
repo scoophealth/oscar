@@ -37,16 +37,19 @@ import javax.ws.rs.QueryParam;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.managers.AppManager;
 import org.oscarehr.managers.ConsultationManager;
 import org.oscarehr.managers.MessagingManager;
 import org.oscarehr.managers.PreferenceManager;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.conversion.ProgramProviderConverter;
 import org.oscarehr.ws.rest.conversion.SecobjprivilegeConverter;
@@ -69,6 +72,8 @@ import org.oscarehr.phr.util.MyOscarUtils;
 
 @Path("/persona")
 public class PersonaService extends AbstractServiceImpl {
+	protected Logger logger = MiscUtils.getLogger();
+	
 	
 	@Autowired
 	private ProgramManager2 programManager2;
@@ -84,6 +89,9 @@ public class PersonaService extends AbstractServiceImpl {
 	
 	@Autowired
 	private PreferenceManager preferenceManager;
+	
+	@Autowired
+	private AppManager appManager;
 	
 	
 	@GET
@@ -202,6 +210,11 @@ public class PersonaService extends AbstractServiceImpl {
 				}
 			}
 			messengerMenu.add(menuItemCounter++, bundle.getString("navbar.newMyOscarMessages"), phrMessageCount, "phr");
+		}
+		
+		if(appManager.isK2AEnabled()){
+			String k2aMessageCount = appManager.getK2ANotificationNumber(getLoggedInInfo());
+			messengerMenu.add(menuItemCounter++, bundle.getString("navbar.newK2ANotifications"), k2aMessageCount, "k2a");
 		}
 		
 		

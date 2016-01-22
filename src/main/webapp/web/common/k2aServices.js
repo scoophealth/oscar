@@ -123,6 +123,35 @@ angular.module("k2aServices", [])
 		  deferred.reject("An error occured while trying to getCurrentPreventionRulesVersion");
 		});
 	      return deferred.promise;
+	},
+	getNotifications: function() {
+		var deferred = $q.defer();
+		$http.get(this.apiPath+'/resources/notifications').success(function(data){
+		deferred.resolve(data);
+		}).error(function(){
+		  deferred.reject("An error occured while trying to getCurrentPreventionRulesVersion");
+		});
+	      return deferred.promise;
+	},
+	getMoreNotification: function(id) {
+		var deferred = $q.defer();
+		
+		$http.post(this.apiPath+'/resources/notifications/readmore',id,this.configHeaders).success(function(data){
+		deferred.resolve(data);
+		}).error(function(){
+		  deferred.reject("An error occured while trying to /resources/notifications/readmore");
+		});
+	      return deferred.promise;
+	},
+	ackNotification: function(id) {
+		var deferred = $q.defer();
+		$http.post(this.apiPath+'/resources/notifications/ack',id,this.configHeaders).success(function(data){
+		deferred.resolve(data);
+		}).error(function(){
+		  deferred.reject("An error occured while trying to /resources/notifications/ack");
+		});
+	      return deferred.promise;
 	}
+	
     };
 });

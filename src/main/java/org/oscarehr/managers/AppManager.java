@@ -27,11 +27,16 @@ package org.oscarehr.managers;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.json.JSONObject;
+
+import org.apache.log4j.Logger;
+import org.oscarehr.app.OAuth1Utils;
 import org.oscarehr.common.dao.AppDefinitionDao;
 import org.oscarehr.common.dao.AppUserDao;
 import org.oscarehr.common.model.AppDefinition;
 import org.oscarehr.common.model.AppUser;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.rest.to.model.AppDefinitionTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +45,8 @@ import oscar.log.LogAction;
 
 @Service
 public class AppManager {
+	protected Logger logger = MiscUtils.getLogger();
+	 
 	@Autowired
 	private AppDefinitionDao appDefinitionDao;
 
@@ -121,6 +128,34 @@ public class AppManager {
 			}
 		}
 		return false;
+	}
+	
+	public boolean isK2AEnabled(){
+		AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
+		if(k2aApp != null){
+			return true;
+		}
+		return false;
+	}
+	
+	public String getK2ANotificationNumber(LoggedInInfo loggedInInfo){
+		String retval = "-";
+		AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
+		if(k2aApp != null) {
+			AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),loggedInInfo.getLoggedInProviderNo());
+				
+			if(k2aUser != null) {
+				String notificationStr = null;
+				try{
+					notificationStr = OAuth1Utils.getOAuthGetResponse(loggedInInfo,k2aApp, k2aUser, "/ws/api/notification", "/ws/api/notification");
+					JSONObject notifyObject = JSONObject.fromObject(notificationStr);
+					retval = notifyObject.getString("numberOfNotifications");
+				}catch(Exception e){
+					logger.error("User is not logged in "+notificationStr);
+				}
+			}
+		}
+		return retval;
 	}
 	
 }
