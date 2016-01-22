@@ -28,7 +28,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -64,7 +63,6 @@ import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
-import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.service.PHRService;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.DateUtils;
@@ -119,28 +117,6 @@ public class PHRMessageAction extends DispatchAction {
 	public ActionForward viewMessages(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		clearSessionVariables(request);
-
-		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
-		String providerNo = loggedInInfo.getLoggedInProviderNo();
-
-		List docs = phrDocumentDAO.getDocumentsReceived("MESSAGE", providerNo);
-		ArrayList<PHRMessage> messages = null;
-		//		List<PHRAction> actionsPendingApproval = phrActionDAO.getActionsByStatus(PHRAction.STATUS_APPROVAL_PENDING, providerNo);
-		if (docs != null) {
-			messages = new ArrayList<PHRMessage>(docs.size());
-			for (int idx = 0; idx < docs.size(); ++idx) {
-				PHRDocument doc = (PHRDocument) docs.get(idx);
-				PHRMessage msg = new PHRMessage(doc);
-				messages.add(msg);
-			}
-		}
-
-		request.getSession().setAttribute("indivoMessages", docs);
-		request.getSession().setAttribute("indivoMessageBodies", messages);
-
-		//		if (actionsPendingApproval != null) {
-		//			request.getSession().setAttribute("actionsPendingApproval", actionsPendingApproval);
-		//		}
 
 		return mapping.findForward("view");
 	}

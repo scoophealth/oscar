@@ -938,7 +938,7 @@ THEME 2*/
                                                     <a href="javascript: void(0);" onclick="callReplacementWebService('GetmyDrugrefInfo.do?method=view','interactionsRxMyD');" >DS run</a>
                                                     &nbsp;&nbsp;
 													<%
-									                  	  if (MyOscarUtils.isMyOscarEnabled())
+									                  	  if (MyOscarUtils.isMyOscarEnabled((String) session.getAttribute("user")))
 									                  	  {
 																MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
 									                  		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(myOscarLoggedInInfo, Integer.valueOf(demoNo));

@@ -609,7 +609,7 @@ function popup1(height, width, url, windowName){
         <%
                     if( module.equals("demographic") ) {
 
-                      if (MyOscarUtils.isMyOscarEnabled())
+                      if (MyOscarUtils.isMyOscarEnabled(curUser))
                       {
                   String onclickString="alert('"+LocaleUtils.getMessage(request, "LoginToPHRFirst")+"')";
 

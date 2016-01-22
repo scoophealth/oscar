@@ -66,11 +66,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.oscarehr.myoscar.client.ws_manager.MessageManager;
 import org.oscarehr.phr.util.MyOscarUtils;
 
-import oscar.OscarProperties;
 
 @Path("/persona")
 public class PersonaService extends AbstractServiceImpl {
-
 	
 	@Autowired
 	private ProgramManager2 programManager2;
@@ -185,11 +183,12 @@ public class PersonaService extends AbstractServiceImpl {
 		int messageCount = messagingManager.getMyInboxMessageCount(getLoggedInInfo(),provider.getProviderNo(), false);
 		int ptMessageCount = messagingManager.getMyInboxMessageCount(getLoggedInInfo(),provider.getProviderNo(),true);
 		MenuTo1 messengerMenu = new MenuTo1();
-		messengerMenu.add(0, bundle.getString("navbar.newOscarDemoMessages"), ""+messageCount, "classic");
-		messengerMenu.add(1, bundle.getString("navbar.newOscarMessages"), ""+ptMessageCount, "classic");
+		int menuItemCounter = 0;
+		messengerMenu.add(menuItemCounter++, bundle.getString("navbar.newOscarDemoMessages"), ""+messageCount, "classic");
+		messengerMenu.add(menuItemCounter++, bundle.getString("navbar.newOscarMessages"), ""+ptMessageCount, "classic");
 		
 		
-		if(OscarProperties.getInstance().getBooleanProperty("MY_OSCAR", "yes")){
+		if(MyOscarUtils.isMyOscarEnabled(provider.getProviderNo())){
 			String phrMessageCount = "-";
 			MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(getLoggedInInfo().getSession());
 
@@ -202,7 +201,7 @@ public class PersonaService extends AbstractServiceImpl {
 					MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(getLoggedInInfo(), true);
 				}
 			}
-			messengerMenu.add(2, bundle.getString("navbar.newMyOscarMessages"), phrMessageCount, "phr");
+			messengerMenu.add(menuItemCounter++, bundle.getString("navbar.newMyOscarMessages"), phrMessageCount, "phr");
 		}
 		
 		

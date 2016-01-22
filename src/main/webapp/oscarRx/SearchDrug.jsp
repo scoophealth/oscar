@@ -286,7 +286,6 @@ function load() {
 						<td></td>
 						<td><b><bean:message key="SearchDrug.PreferedPharmacy"/> :</b> <a href="javascript: function myFunction() {return false; }" onClick="showpic('Layer1');" id="Calcs"><%=prefPharmacy%></a></td>
 					</tr>
-					<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
 						<indivo:indivoRegistered demographic="<%=String.valueOf(bean.getDemographicNo())%>" provider="<%=bean.getProviderNo()%>">
 							<tr>
 								<td colspan="3">
@@ -294,7 +293,7 @@ function load() {
 								</td>
 							</tr>
 						</indivo:indivoRegistered>
-					</oscar:oscarPropertiesCheck>
+					
 				</table>
 				</td>
 			</tr>

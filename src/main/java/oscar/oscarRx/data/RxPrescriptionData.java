@@ -46,7 +46,6 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.OscarProperties;
 import oscar.oscarProvider.data.ProSignatureData;
 import oscar.oscarRx.util.RxUtil;
 import oscar.util.ConversionUtils;
@@ -419,7 +418,6 @@ public class RxPrescriptionData {
 		List<Prescription> result = new ArrayList<Prescription>();
 		DrugDao dao = SpringUtils.getBean(DrugDao.class);
 
-		boolean myOscarEnabled = OscarProperties.getInstance().isPropertyActive("MY_OSCAR");
 		List<Drug> drugList = dao.findByDemographicId(demographicNo);
 
 		Collections.sort(drugList, new Drug.ComparatorIdDesc());
@@ -442,14 +440,13 @@ public class RxPrescriptionData {
 				logger.debug("ADDING PRESCRIPTION " + drug.getId());
 				Prescription p = toPrescription(drug, demographicNo);
 
-				if (myOscarEnabled) {
-					IndivoDocsDao iDao = SpringUtils.getBean(IndivoDocsDao.class);
-					IndivoDocs iDoc = iDao.findByOscarDocNo(drug.getId());
-					if (iDoc != null) {
-						p.setIndivoIdx(iDoc.getIndivoDocIdx());
-						if (p.getIndivoIdx() != null && p.getIndivoIdx().length() > 0) p.setRegisterIndivo();
-					}
+				IndivoDocsDao iDao = SpringUtils.getBean(IndivoDocsDao.class);
+				IndivoDocs iDoc = iDao.findByOscarDocNo(drug.getId());
+				if (iDoc != null) {
+					p.setIndivoIdx(iDoc.getIndivoDocIdx());
+					if (p.getIndivoIdx() != null && p.getIndivoIdx().length() > 0) p.setRegisterIndivo();
 				}
+				
 				p.setPosition(drug.getPosition());
 				result.add(p);
 			}

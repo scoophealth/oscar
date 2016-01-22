@@ -688,14 +688,13 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
       </tr>
       <%}%>
   </oscar:oscarPropertiesCheck>
-  <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
         <tr>
             <td align="center"><a href=# onClick ="popupPage(230,860,'providerIndivoIdSetter.jsp');return false;"><bean:message key="provider.btnSetIndivoId"/></a></td>
         </tr>
         <tr>
             <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewUseMyMeds');return false;"><bean:message key="provider.btnSetUseMyMeds"/></a></td>
         </tr>
-  </oscar:oscarPropertiesCheck>
+  
   		<tr>
           <td align="center"><a href=# onClick ="popupPage(400,860,'../provider/CppPreferences.do');return false;"><bean:message key="provider.cppPrefs" /></a></td>
       	</tr>

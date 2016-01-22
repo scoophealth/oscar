@@ -1100,7 +1100,6 @@ if(wLReadonly.equals("")){
                </td>
            </tr>
            <% } %>
-			<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
 				<phr:indivoRegistered provider="<%=curProvider_no%>"
 					demographic="<%=demographic_no%>">
                                 <tr class="Header">
@@ -1135,7 +1134,7 @@ if(wLReadonly.equals("")){
 						</td>
 					</tr>
 				</phr:indivoRegistered>
-			</oscar:oscarPropertiesCheck>
+			
 <% if (oscarProps.getProperty("clinic_no", "").startsWith("1022")) { // quick hack to make Dr. Hunter happy
 %>
 			<tr>
