@@ -59,6 +59,7 @@ import org.oscarehr.common.model.Security;
 import org.oscarehr.common.model.ServiceRequestToken;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.decisionSupport.service.DSService;
+import org.oscarehr.managers.AppManager;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.LoggedInUserFilter;
@@ -90,6 +91,7 @@ public final class LoginAction extends DispatchAction {
     
     
     private ProviderManager providerManager = (ProviderManager) SpringUtils.getBean("providerManager");
+    private AppManager appManager = SpringUtils.getBean(AppManager.class);
     private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
     private ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
     private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
@@ -365,7 +367,7 @@ public final class LoginAction extends DispatchAction {
             
             if (where.equals("provider")) {
                 UserProperty drugrefProperty = propDao.getProp(UserProperty.MYDRUGREF_ID);
-                if (drugrefProperty != null) {
+                if (drugrefProperty != null || appManager.isK2AUser(loggedInInfo)) {
                     DSService service =   SpringUtils.getBean(DSService.class);  
                     service.fetchGuidelinesFromServiceInBackground(loggedInInfo);
                 }
