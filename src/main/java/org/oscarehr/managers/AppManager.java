@@ -108,4 +108,19 @@ public class AppManager {
 	}
 
 	
+	public boolean isK2AUser(LoggedInInfo loggedInInfo){
+		return isK2AUser(loggedInInfo.getLoggedInProviderNo());
+	}
+	
+	public boolean isK2AUser(String providerNo){
+		AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
+		if(k2aApp != null) {
+			AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),providerNo);
+			if(k2aUser != null) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

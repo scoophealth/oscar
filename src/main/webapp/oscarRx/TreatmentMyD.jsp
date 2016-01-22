@@ -69,7 +69,7 @@ if ( bean == null ){
     </tr>
     <tr>
         <td align="right" style="font-size:10px">
-            <i>Reference: <a href="http://www.mydrugref.org" target="_blank"></i>MyDrugRef.org</a><br />
+            <i>Reference: <a href="http://know2act.org" target="_blank"></i>know2act.org</a><br />
             <em>From:<%=author%></em>
         </td>
     </tr>
@@ -212,9 +212,7 @@ String DrugLing(String s){
    
    private Object callWebserviceLite(String procedureName,Vector params) throws Exception{
         Object object = null;
-        //String server_url = "http://dev2.mydrugref.org/backend/api";
-        //String server_url = "http://130.113.106.88:3000/backend/api";
-        String server_url = "http://mydrugref.org/backend/api";
+        String server_url = "http://know2act.org/backend/api";
         try{
             if (!System.getProperty("http.proxyHost","").isEmpty()) {
                 //The Lite client won't recgonize JAVA_OPTS as it uses a customized http

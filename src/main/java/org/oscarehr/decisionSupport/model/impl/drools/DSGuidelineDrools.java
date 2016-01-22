@@ -75,6 +75,8 @@ public class DSGuidelineDrools extends DSGuideline {
 
 	@Transient
 	private RuleBase _ruleBase = null;
+	@Transient
+	int ruleCount = 0;
 
 	public String getRuleBaseFactoryKey()
 	{
@@ -304,11 +306,11 @@ public class DSGuidelineDrools extends DSGuideline {
 
 			Element consequencesElement = this.getDroolsConsequences(this.getConsequences());
 
-			rules.add(this.getRule(conditionElements, lParameterElements, consequencesElement));
+			rules.add(this.getRule(conditionElements, lParameterElements, consequencesElement,ruleCount++));
 
 			RuleBaseCreator ruleBaseCreator = new RuleBaseCreator();
 			try {
-				_ruleBase = ruleBaseCreator.getRuleBase(this.getTitle(), rules);
+				_ruleBase = ruleBaseCreator.getRuleBase(ruleBaseFactoryKey, rules);
 				RuleBaseFactory.putRuleBase(ruleBaseFactoryKey, _ruleBase);
 			} catch (Exception e) {
 				throw new DecisionSupportException("Could not create a rule base for guideline '" + this.getTitle() + "'", e);
@@ -318,9 +320,9 @@ public class DSGuidelineDrools extends DSGuideline {
 		}
 	}
 
-	private Element getRule(List<Element> conditionElements, List<Element> parameterElements, Element consequenceElement) {
+	private Element getRule(List<Element> conditionElements, List<Element> parameterElements, Element consequenceElement,int ruleCount) {
 		Element ruleElement = new Element("rule", DSGuidelineDrools.namespace);
-		ruleElement.setAttribute("name", this.getTitle());
+		ruleElement.setAttribute("name", getRuleBaseFactoryKey()+"."+ruleCount);
 
 		Element accessClassParameter = new Element("parameter", DSGuidelineDrools.namespace);
 		accessClassParameter.setAttribute("identifier", "a");
@@ -347,9 +349,9 @@ public class DSGuidelineDrools extends DSGuideline {
 		return ruleElement;
 	}
 
-	private Element getRule(List<Element> conditionElements, Element consequenceElement) {
+	private Element getRule(List<Element> conditionElements, Element consequenceElement,int ruleCount) {
 		Element ruleElement = new Element("rule", DSGuidelineDrools.namespace);
-		ruleElement.setAttribute("name", this.getTitle());
+		ruleElement.setAttribute("name", getRuleBaseFactoryKey()+"."+ruleCount);
 
 		Element accessClassParameter = new Element("parameter", DSGuidelineDrools.namespace);
 		accessClassParameter.setAttribute("identifier", "a");
@@ -374,10 +376,10 @@ public class DSGuidelineDrools extends DSGuideline {
 		return ruleElement;
 	}
 
-	protected Element getRule(Element conditionElement, Element consequenceElement) {
+	protected Element getRule(Element conditionElement, Element consequenceElement,int ruleCounter) {
 		List<Element> conditionElements = new ArrayList<Element>();
 		conditionElements.add(conditionElement);
-		return getRule(conditionElements, consequenceElement);
+		return getRule(conditionElements, consequenceElement,ruleCounter);
 	}
 
 	//multiple conditions because to handle OR statements, need to have multiple

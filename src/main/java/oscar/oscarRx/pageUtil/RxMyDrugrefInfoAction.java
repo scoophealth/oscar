@@ -584,7 +584,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
     			log2.debug("#CALLmyDRUGREF-"+procedureName);
     	        Object object = null;
 
-    	        String server_url = OscarProperties.getInstance().getProperty("MY_DRUGREF_URL","http://mydrugref.org/backend/api");
+    	        String server_url = OscarProperties.getInstance().getProperty("MY_DRUGREF_URL","http://know2act.org/backend/api");
 
     	        TimingOutCallback callback = new TimingOutCallback(10 * 1000);
     	        try{
