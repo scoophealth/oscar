@@ -34,6 +34,18 @@ public class HRMDocumentDao extends AbstractDao<HRMDocument> {
 		return documents;
 	}
 	
+	public List<HRMDocument> findAll(int offset, int limit) {
+		String sql = "select x from " + this.modelClass.getName() + " x order by x.id";
+		Query query = entityManager.createQuery(sql);
+		query.setFirstResult(offset);
+		query.setMaxResults(limit);
+		
+		@SuppressWarnings("unchecked")
+		List<HRMDocument> documents = query.getResultList();
+		return documents;
+	}
+	
+	
 	public List<Integer> findByHash(String hash) {
 		String sql = "select distinct id from " + this.modelClass.getName() + " x where x.reportHash=?";
 		Query query = entityManager.createQuery(sql);
