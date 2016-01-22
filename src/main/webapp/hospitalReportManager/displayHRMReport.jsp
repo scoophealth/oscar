@@ -166,10 +166,21 @@ function addDemoToHrm(reportId) {
 		url: "<%=request.getContextPath() %>/hospitalReportManager/Modify.do",
 		data: "method=assignDemographic&reportId=" + reportId + "&demographicNo=" + demographicNo,
 		success: function(data) {
-			if (data != null)
+			if (data != null) {
 				$("demostatus" + reportId).innerHTML = data;
+				toggleButtonBar(true,reportId);
+			}
 		}
 	});
+}
+
+function toggleButtonBar(show, reportId) {
+	jQuery("#msgBtn_"+reportId).prop('disabled',!show);
+	jQuery("#mainTickler_"+reportId).prop('disabled',!show);
+	jQuery("#mainEchart_"+reportId).prop('disabled',!show);
+	jQuery("#mainMaster_"+reportId).prop('disabled',!show);
+	jQuery("#mainApptHistory_"+reportId).prop('disabled',!show);
+	
 }
 
 function removeDemoFromHrm(reportId) {
@@ -178,8 +189,10 @@ function removeDemoFromHrm(reportId) {
 		url: "<%=request.getContextPath() %>/hospitalReportManager/Modify.do",
 		data: "method=removeDemographic&reportId=" + reportId,
 		success: function(data) {
-			if (data != null)
+			if (data != null) {
 				$("demostatus" + reportId).innerHTML = data;
+				toggleButtonBar(false,reportId);
+			}
 		}
 	});
 }
@@ -287,6 +300,16 @@ function setDescription(reportId) {
 	});
 }
 
+function popupPatient(height, width, url, windowName, docId, d) {
+	  urlNew = url + d;	
+	  return popup2(height, width, 0, 0, urlNew, windowName);
+}
+
+function popupPatientTickler(height, width, url, windowName,docId,d,n) {
+	urlNew = url + "method=edit&tickler.demographic_webName=" + n + "&tickler.demographicNo=" +  d + "&docType=DOC&docId="+docId;
+	return popup2(height, width, 0, 0, urlNew, windowName);
+}
+
 </script>
 </head>
 <body>
@@ -295,9 +318,29 @@ function setDescription(reportId) {
         <h1>HRM report not found! Please check the file location.</h1>
 <%  return;
    } %>
+   
+<%
+String btnDisabled = "disabled";
+String demographicNo = "";
+if(demographicLink != null) {
+	btnDisabled="";
+	demographicNo = demographicLink.getDemographicNo();
+}
+String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());	
+
+%>
+<div >
+<input type="button" id="msgBtn_<%=hrmReportId%>" value="Msg" onclick="popupPatient(700,960,'<%= request.getContextPath() %>/oscarMessenger/SendDemoMessage.do?demographic_no=','msg', '<%=hrmReportId%>','<%=demographicNo %>')" <%=btnDisabled %>/>
+<!--input type="button" id="ticklerBtn_<%=hrmReportId%>" value="Tickler" onclick="handleDocSave('<%=hrmReportId%>','addTickler')"/-->
+<input type="button" id="mainTickler_<%=hrmReportId%>" value="Tickler" onClick="popupPatientTickler(710, 1024,'<%= request.getContextPath() %>/Tickler.do?', 'Tickler','<%=hrmReportId%>','<%=demographicNo %>')" <%=btnDisabled %>>
+<input type="button" id="mainEchart_<%=hrmReportId%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupPatient(710, 1024,'<%= request.getContextPath() %>/oscarEncounter/IncomingEncounter.do?reason=<bean:message key="oscarMDS.segmentDisplay.labResults"/>&curDate=<%=currentDate%>>&appointmentNo=&appointmentDate=&startTime=&status=&demographicNo=', 'encounter', '<%=hrmReportId%>','<%=demographicNo %>')" <%=btnDisabled %>>
+<input type="button" id="mainMaster_<%=hrmReportId%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=','master','<%=hrmReportId%>','<%=demographicNo %>')" <%=btnDisabled %>>
+<input type="button" id="mainApptHistory_<%=hrmReportId%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25&demographic_no=','ApptHist','<%=hrmReportId%>','<%=demographicNo %>')" <%=btnDisabled %>>
+</div>
+                            
 <div id="hrmReportContent">
 	<div id="hrmHeader"><b>Demographic Info:</b><br />
-			<%=hrmReport.getLegalName() %> <br />	287
+			<%=hrmReport.getLegalName() %> <br />
 			<%=hrmReport.getHCN() %> &nbsp; <%=hrmReport.getHCNVersion() %> &nbsp; <%=hrmReport.getGender() %><br />
 	       <b>DOB:</b><%=hrmReport.getDateOfBirthAsString() %>
 	</div>

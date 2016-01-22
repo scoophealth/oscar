@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -47,6 +48,7 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.dao.EChartDao;
 import org.oscarehr.common.model.CustomFilter;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.EChart;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
@@ -310,6 +312,15 @@ public class TicklerAction extends DispatchAction {
 		request.setAttribute("providers", providerMgr.getActiveProviders(null, programId));
 		request.setAttribute("program_name", programMgr.getProgramName(programId));
 		request.setAttribute("from", getFrom(request));
+
+		String demographicNo = request.getParameter("tickler.demographicNo");
+		if(!StringUtils.isEmpty(demographicNo)) {
+			Demographic demo = demographicMgr.getDemographic(demographicNo);
+			if(demo != null) {
+				request.setAttribute("demographicName", demo.getFormattedName());
+			}
+		}
+		
 		return mapping.findForward("edit");
 	}
 
