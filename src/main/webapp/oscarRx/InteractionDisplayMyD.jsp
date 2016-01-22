@@ -153,7 +153,7 @@ if ( bean == null ){
    
    private Object callWebserviceLite(String procedureName,Vector params) throws Exception{
         Object object = null;
-        String server_url = "http://dev2.mydrugref.org/backend/api";
+        String server_url = "http://know2act.org/backend/api";
         try{
             if (!System.getProperty("http.proxyHost","").isEmpty()) {
                 //The Lite client won't recgonize JAVA_OPTS as it uses a customized http

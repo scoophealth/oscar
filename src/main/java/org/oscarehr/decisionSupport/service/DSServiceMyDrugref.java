@@ -31,11 +31,17 @@
 package org.oscarehr.decisionSupport.service;
 
 import java.io.Serializable;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.UserPropertyDAO;
@@ -133,6 +139,8 @@ public class DSServiceMyDrugref extends DSService {
         Vector<Hashtable> fetchedGuidelines = myDrugrefAction.callOAuthService(loggedInInfo,"guidelines/getGuidelines", params, null);
         ArrayList<DSGuideline> newGuidelines = new ArrayList<DSGuideline>();
         for (Hashtable<String,Serializable> fetchedGuideline: fetchedGuidelines) {
+        	if (!isValidGuidelineXml((String) fetchedGuideline.get("body"))) continue;
+        	
             logger.debug("Title: " + (String) fetchedGuideline.get("name"));
             logger.debug("Author: " + (String) fetchedGuideline.get("author"));
             logger.debug("UUID: " + (String) fetchedGuideline.get("uuid"));
@@ -182,4 +190,22 @@ public class DSServiceMyDrugref extends DSService {
         this.userPropertyDAO = userPropertyDAO;
     }
 
+    
+    private boolean isValidGuidelineXml(String guidelineXml) {
+    	StreamSource xsd = new StreamSource(this.getClass().getResourceAsStream("/k2a/dsGuideline.xsd"));
+		StreamSource xml = new StreamSource(new StringReader(guidelineXml));
+		
+    	SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		try {
+	    	Schema schema = schemaFactory.newSchema(xsd);
+	    	Validator validator = schema.newValidator();
+			validator.validate(xml);
+		} catch (Exception e) {
+            DecisionSupportException newException = new DecisionSupportException("Error parsing guideline: "+guidelineXml, e);
+            logger.error(newException.getMessage());
+            return false;
+		}
+	
+    	return true;
+    }
 }

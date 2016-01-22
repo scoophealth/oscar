@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="guideline">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="conditions">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="condition" minOccurs="1" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="type" use="required">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="age"/>
+												<xs:enumeration value="sex"/>
+												<xs:enumeration value="dxcodes"/>
+												<xs:enumeration value="drugs"/>
+												<xs:enumeration value="notes"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="all" type="xs:string"/>
+									<xs:attribute name="any" type="xs:string"/>
+									<xs:attribute name="not" type="xs:string"/>
+									<xs:attribute name="notany" type="xs:string"/>
+									<xs:attribute name="notall" type="xs:string"/>
+									<xs:attribute name="desc" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="consequence">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="warning" minOccurs="1" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="strength" use="required">
+												<xs:simpleType>
+													<xs:restriction base="xs:string">
+														<xs:enumeration value="recommendation"/>
+														<xs:enumeration value="warning"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:attribute>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		 	<xs:attribute name="title" use="required">
+		 		<xs:simpleType>
+		 			<xs:restriction base="xs:string">
+		 				<xs:minLength value="1"/>
+		 				<xs:pattern value=".*[^\s].*"/>
+		 			</xs:restriction>
+		 		</xs:simpleType>
+		 	</xs:attribute>
+			<xs:attribute name="evidence" type="xs:string"/>
+			<xs:attribute name="significance" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
+

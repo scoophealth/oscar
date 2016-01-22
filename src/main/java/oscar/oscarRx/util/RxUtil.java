@@ -1612,7 +1612,7 @@ public class RxUtil {
 		log2.debug("#CALLmyDRUGREF-" + procedureName);
 		Object object = null;
 
-		String server_url = OscarProperties.getInstance().getProperty("MY_DRUGREF_URL", "http://mydrugref.org/backend/api");
+		String server_url = OscarProperties.getInstance().getProperty("MY_DRUGREF_URL", "http://know2act.org/backend/api");
 		MiscUtils.getLogger().debug("server_url: " + server_url);
 		TimingOutCallback callback = new TimingOutCallback(30 * 1000);
 		try {
