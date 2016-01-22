@@ -31,11 +31,12 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.utility.ProgramAccessCache;
 import org.oscarehr.PMmodule.utility.RoleCache;
+import org.oscarehr.hospitalReportManager.HRMFixMissingReportHelper;
 import org.oscarehr.threads.WaitListEmailThread;
 
-import oscar.OscarProperties;
-
 import com.quatro.dao.security.SecroleDao;
+
+import oscar.OscarProperties;
 
 public class ContextStartupListener implements javax.servlet.ServletContextListener {
 	private static final Logger logger = MiscUtils.getLogger();
@@ -76,6 +77,15 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 			//Run some optimizations
 			loadCaches();
 			logger.info("Server processes starting completed. context=" + contextPath);
+			
+			//bug 4195 - only runs once so long as it finishes..if you want it to not run, add entry
+			//try your property table called "HRMFixMissingReportHelper.Run" with value = 1
+			HRMFixMissingReportHelper hrmFixer = new HRMFixMissingReportHelper();
+			try {
+				hrmFixer.fixIt();
+			}catch(Exception e) {
+				logger.error("Error running HRM fixer",e);
+			}
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
 			throw (new RuntimeException(e));
