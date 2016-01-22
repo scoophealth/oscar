@@ -23,6 +23,7 @@
  */
 package org.oscarehr.ws.rest;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -35,6 +36,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
@@ -53,6 +55,7 @@ import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
+import org.oscarehr.ws.rest.to.model.NotificationTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import oscar.OscarProperties;
@@ -226,4 +229,91 @@ public class ResourceService extends AbstractServiceImpl {
 		}
 		return null;
 	}
+	
+	@GET
+	@Path("/notifications")
+	@Produces("application/json")
+	public List<NotificationTo1> getNotifications(@Context HttpServletRequest request) {
+		List<NotificationTo1> list = new ArrayList<NotificationTo1>();
+		try{
+			LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+			String notificationStr = getResource(loggedInInfo,"/ws/api/notification","/ws/api/notification");
+			JSONObject notifyObject = JSONObject.fromObject(notificationStr);
+			try{
+				JSONObject notifyList = notifyObject.getJSONObject("notification");
+				list.add(NotificationTo1.fromJSON(notifyList));
+			}catch(Exception e){
+				JSONArray notifyArrList = notifyObject.getJSONArray("notification");
+				for(int i=0; i < notifyArrList.size();i++){
+					list.add(NotificationTo1.fromJSON(notifyArrList.getJSONObject(i)));
+				}
+			}
+		}catch(Exception e){
+			logger.error("Error geting notifcations",e);
+		}
+		return list;
+	}
+	
+	@GET
+	@Path("/notifications/number")
+	@Produces("application/json")
+	public Response getNotificationsNumber(@Context HttpServletRequest request) {
+		String k2aNoficationCount = "-";
+		try{
+			LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+			String notificationStr = getResource(loggedInInfo,"/ws/api/notification","/ws/api/notification");
+			JSONObject notifyObject = JSONObject.fromObject(notificationStr);
+			k2aNoficationCount = notifyObject.getString("numberOfNotifications");
+		}catch(Exception e){
+			logger.error("Error geting notifcations",e);
+		}
+		return Response.ok(k2aNoficationCount).build();
+	}
+	
+	@POST
+	@Path("/notifications/readmore")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public Response getMoreInfoNotificationURL(@Context HttpServletRequest request,JSONObject jSONObject) {
+		String retval= "";
+		try{
+			LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+			AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
+			if(k2aApp != null) {
+				AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),loggedInInfo.getLoggedInProvider().getProviderNo());
+				
+				if(k2aUser != null) {
+					retval = OAuth1Utils.getOAuthPostResponse(loggedInInfo,k2aApp, k2aUser, "/ws/api/notification/readmore", "/ws/api/notification/readmore",OAuth1Utils.getProviderK2A(),NotificationTo1.fromJSON(jSONObject));
+					logger.debug(retval);
+				}
+			}
+		}catch(Exception e){
+			logger.error("ERROR:",e);
+		}
+		return Response.ok(retval).build();
+	}
+	
+	@POST
+	@Path("/notifications/ack/")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public Response markNotificationAsAck(@PathParam("id") String id, @Context HttpServletRequest request,JSONObject jSONObject) {
+		String retval= "";
+		try{
+			LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+			AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
+			if(k2aApp != null) {
+				AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),loggedInInfo.getLoggedInProvider().getProviderNo());
+				
+				if(k2aUser != null) {
+					retval = OAuth1Utils.getOAuthPostResponse(loggedInInfo,k2aApp, k2aUser, "/ws/api/notification/ack", "/ws/api/notification/ack",OAuth1Utils.getProviderK2A(),NotificationTo1.fromJSON(jSONObject));
+					logger.debug(retval);
+				}
+			}
+		}catch(Exception e){
+			logger.error("ERROR:",e);
+		}
+		return Response.ok(retval).build();
+	}
+	
 }

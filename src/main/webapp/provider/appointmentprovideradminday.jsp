@@ -64,6 +64,7 @@
 <%@page import="org.oscarehr.common.model.LookupList" %>
 <%@page import="org.oscarehr.common.model.LookupListItem" %>
 <%@page import="org.oscarehr.managers.SecurityInfoManager" %>
+<%@page import="org.oscarehr.managers.AppManager" %>
 
 <!-- add by caisi -->
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
@@ -91,6 +92,8 @@
 	ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
 	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
 	DemographicCustDao demographicCustDao = SpringUtils.getBean(DemographicCustDao.class);
+	ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
+	AppManager appManager = SpringUtils.getBean(AppManager.class);
 	
 	LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
 	LookupList reasonCodes = lookupListManager.findLookupListByName(loggedInInfo1, "reasonCode");
@@ -1195,6 +1198,30 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 			</script>
 	    </li>
     </myoscar:indivoRegistered>
+<%if(appManager.isK2AEnabled()){ %>
+<li>
+	<a id="K2ALink">K2A<span><sup id="k2a_new_notifications"></sup></span></a>
+	<script type="text/javascript">
+		function getK2AStatus(){
+			jQuery.get( "../ws/rs/resources/notifications/number", function( data ) {
+				  if(data === "-"){ //If user is not logged in
+					  jQuery("#K2ALink").click(function() {
+						var win = window.open('../apps/oauth1.jsp?id=K2A','appAuth','width=700,height=450');
+						win.focus();
+					  });
+				   }else{
+					  jQuery("#k2a_new_notifications").text(data); 
+					  jQuery("#K2ALink").click(function() {
+						var win = window.open('../apps/notifications.jsp','appAuth','width=450,height=700');
+						win.focus();
+					  });
+				   }
+			});
+		}
+		getK2AStatus();
+	</script>
+</li>
+<%}%>
 
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc,_admin.fax" rights="r">
