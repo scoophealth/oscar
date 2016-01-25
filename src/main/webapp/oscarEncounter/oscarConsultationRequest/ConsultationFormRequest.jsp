@@ -236,6 +236,11 @@ input.btn{
 .lab {
     color: #CC0099;
 }
+
+.hrm {
+    color: green;
+}
+
 td.tite {
 
 background-color: #bbbbFF;
@@ -1336,7 +1341,9 @@ function updateFaxButton() {
 							<span class="doc"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendDocs" /></span><br />
 							<span class="lab"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs" /></span>
+								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs" /></span><br/>
+							<span class="hrm legend"><bean:message
+							key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendHrm" /></span>
 							</td>
 						</tr>
 					</table>
