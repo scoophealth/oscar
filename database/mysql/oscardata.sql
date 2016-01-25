@@ -2802,4 +2802,5 @@ INSERT INTO specialty VALUES ('BC','46',' MEDICAL GENETICS');
 INSERT INTO specialty VALUES ('BC','47',' VASCULAR SURGERY');
 INSERT INTO specialty VALUES ('BC','48',' THORACIC SURGERY');
 
+insert into ProductLocation (name) values ('Default');
 
