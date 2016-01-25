@@ -41,15 +41,19 @@ if(!authed) {
 
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page
-	import="java.util.ArrayList, oscar.dms.*, oscar.oscarLab.ca.on.*, oscar.util.StringUtils"%>
+	import="java.util.ArrayList, oscar.dms.*, oscar.oscarLab.ca.on.*, oscar.util.StringUtils, java.util.List"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
-
+<%@page import="org.oscarehr.managers.HRMManager" %>
+<%@page import="org.oscarehr.hospitalReportManager.model.HRMDocument" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
   String demo = request.getParameter("demo") ;
   String requestId = request.getParameter("requestId");
+  HRMManager hrmManager = SpringUtils.getBean(HRMManager.class);
+  
 %>
 <ul id="attachedList"
 	style="background-color: white; padding-left: 20px; list-style-position: outside; list-style-type: lower-roman;">
@@ -75,10 +79,30 @@ if(!authed) {
 	<li class="lab"><%=resData.getDiscipline()+" "+resData.getDateTime()%></li>
 	<%
                 }
+                Integer iRequestId = null;
+                if(requestId != null) {
+                	try {
+                		iRequestId = Integer.parseInt(requestId);
+                	}catch(NumberFormatException e) {
+                		iRequestId = null;
+                	}
+                }
+                List<HRMDocument> hrmDocuments = hrmManager.findAttached(loggedInInfo, Integer.parseInt(demo), iRequestId);
+                for(HRMDocument hrmDoc: hrmDocuments) {
+                	String reportStatus = hrmDoc.getReportStatus();
+					String t = StringUtils.isNullOrEmpty(hrmDoc.getDescription())?hrmDoc.getReportType():hrmDoc.getDescription();
+					if (reportStatus != null && reportStatus.equalsIgnoreCase("C")) {
+						t = "(Cancelled) " + t;
+					}
+     %>
+     <li class="hrm"><%=t%></li>
+     <%
+                }
+                
         %>
 </ul>
 <%
-           if( privatedocs.size() == 0 && labs.size() == 0 ) {
+           if( privatedocs.size() == 0 && labs.size() == 0  && hrmDocuments.size() == 0) {
         %>
 <p id="attachDefault"
 	style="background-color: white; text-align: center;"><bean:message

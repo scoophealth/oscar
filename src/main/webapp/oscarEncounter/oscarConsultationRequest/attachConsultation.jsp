@@ -48,6 +48,11 @@ if(!authed) {
 <%@ page import="oscar.oscarLab.ca.all.Hl7textResultsData"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.oscarehr.util.SessionConstants"%>
+<%@ page import="org.oscarehr.managers.HRMManager"%>
+<%@ page import="org.oscarehr.hospitalReportManager.model.HRMDocument"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
    		 
@@ -71,7 +76,9 @@ if(!authed) {
 	}
 
 	String patientName = EDocUtil.getDemographicName(loggedInInfo, demoNo);
-	String[] docType = {"D", "L"};
+	String[] docType = {"D", "L","H"};
+	
+	HRMManager hrmManager = SpringUtils.getBean(HRMManager.class);
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html:html locale="true">
@@ -88,6 +95,11 @@ if(!authed) {
 .lab {
     color: #CC0099;
 }
+
+.hrm {
+    color: green;
+}
+
 </style>
 <script type="text/javascript">
 	//<!--
@@ -298,6 +310,32 @@ if(!authed) {
 						<%
 								}
 							}
+		
+							Integer iRequestId = null;
+			                if(requestId != null) {
+			                	try {
+			                		iRequestId = Integer.parseInt(requestId);
+			                	}catch(NumberFormatException e) {
+			                		iRequestId = null;
+			                	}
+			                }
+			                
+							List<HRMDocument> hrmDocuments =  hrmManager.findUnattached(loggedInInfo, Integer.parseInt(demoNo), iRequestId);
+							
+							for(HRMDocument hrmDoc:hrmDocuments) {
+								String reportStatus = hrmDoc.getReportStatus();
+								String t = StringUtils.isNullOrEmpty(hrmDoc.getDescription())?hrmDoc.getReportType():hrmDoc.getDescription();
+								if (reportStatus != null && reportStatus.equalsIgnoreCase("C")) {
+									t = "(Cancelled) " + t;
+								}
+								%>
+								
+								<html:option styleClass="hrm"
+							value="<%=docType[2] + hrmDoc.getId().toString() %>"><%=t%></html:option>
+											
+								<%
+							}
+							
 						%>
 					</html:select></td>
 				<td style="width: 10%; text-align: center"><input type="button"
@@ -330,6 +368,28 @@ if(!authed) {
 										+ resData.getDateTime()%></html:option>
 						<%
 							}
+							
+							Integer iRequestId = null;
+			                if(requestId != null) {
+			                	try {
+			                		iRequestId = Integer.parseInt(requestId);
+			                	}catch(NumberFormatException e) {
+			                		iRequestId = null;
+			                	}
+			                }
+			                
+							List<HRMDocument> hrmDocuments = hrmManager.findAttached(loggedInInfo, Integer.parseInt(demoNo), iRequestId);
+							for(HRMDocument hrmDoc: hrmDocuments) {
+			                	String reportStatus = hrmDoc.getReportStatus();
+								String t = StringUtils.isNullOrEmpty(hrmDoc.getDescription())?hrmDoc.getReportType():hrmDoc.getDescription();
+								if (reportStatus != null && reportStatus.equalsIgnoreCase("C")) {
+									t = "(Cancelled) " + t;
+								}
+			     %>
+			   <html:option styleClass="hrm"
+							value="<%=docType[2] + hrmDoc.getId().toString() %>"><%=t%></html:option>
+			     <%
+			                }
 						%>
 					</html:select></td>
 			</tr>
@@ -347,7 +407,10 @@ if(!authed) {
 				<span class="doc legend"><bean:message
 							key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendDocs" /></span><br />
 				<span class="lab legend"><bean:message
-							key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs" /></span></td>
+							key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs" /></span><br/>
+				<span class="hrm legend"><bean:message
+							key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendHrm" /></span>
+							</td>
 			</tr>
 		</table>
 	</html:form>
