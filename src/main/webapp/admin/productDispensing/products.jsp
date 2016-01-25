@@ -279,9 +279,7 @@ if(!authed) {
 				
 				$("#productFilterMessage").append("<b>Showing Results:</b>&nbsp;" + (startIndex+1) + "-" + (startIndex+arr.length)  + " of " + total);
 				
-			} else {
-        		alert('error retrieving drug products');
-			}
+			} 
 			
 			
 				

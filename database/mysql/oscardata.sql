@@ -2827,3 +2827,6 @@ insert into documentDescriptionTemplate (doctype,description,descriptionShortcut
 insert into `secObjectName` (`objectName`) values('_rx.dispense');
 insert into `secObjPrivilege` values('doctor','_rx.dispense','x',0,'999998');
 
+
+insert into ProductLocation (name) values ('Default');
+
