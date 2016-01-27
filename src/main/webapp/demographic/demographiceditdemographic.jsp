@@ -2984,8 +2984,8 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 									<tr>
 										<td width="7%" align="right"><font color="#FF0000"><b><bean:message
 											key="demographic.demographiceditdemographic.formAlert" />: </b></font></td>
-										<td><textarea name="alert" style="width: 100%" cols="80"
-											rows="2"><%=alert%></textarea></td>
+										<td><textarea name="alert" style="width: 100%" cols="80" 
+											rows="2" maxlength="255"><%=alert%></textarea></td>
 									</tr>
 									<tr>
 										<td align="right"><b><bean:message
