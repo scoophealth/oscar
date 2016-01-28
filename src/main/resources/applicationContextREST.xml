@@ -16,10 +16,7 @@
 		http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
 	">
 	
-	<context:component-scan base-package="org.oscarehr.ws.rest"/>
-	<context:component-scan base-package="org.oscarehr.ws.rest.util"/>
-	<context:component-scan base-package="org.oscarehr.ws.rest.conversion"/>
-	<aop:aspectj-autoproxy/>
+	
 	
 	
 	    <bean id="oauthProvider" class="oscar.login.OscarOAuthDataProvider" autowire="byName"/>
@@ -113,87 +110,7 @@
     </jaxrs:server>
     
    
-    <bean id="jaxb" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider">
-      <property name="singleJaxbContext" value="true"/>
- 
-      <property name="extraClass">
-         <list>
-           <value>org.oscarehr.ws.transfer_objects.ProviderTransfer</value>
-         </list>
-      </property>
-
-	</bean>
-
-
-
-	<!-- RESTful web service  -->
-	<jaxrs:server address="/rs" id="jaxrServer">
-
-		<jaxrs:inInterceptors>
-			<bean name="authInInterceptor"
-				class="org.oscarehr.ws.rest.util.AuthenticationInInterceptor" />
-		</jaxrs:inInterceptors>
-		
-		<jaxrs:providers>
-		    <ref bean="jaxb"/>
-			<ref bean="jsonProvider"/>
-			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/> 
-		</jaxrs:providers>
-
-		<jaxrs:features>
-			<cxf:logging />
-		</jaxrs:features>
-
-		<jaxrs:serviceBeans>
-			<bean class="org.oscarehr.ws.rest.PharmacyService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.DemographicService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.ScheduleService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.DemographicMergeService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.MessagingService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.InboxService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.TicklerWebService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.ProviderService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.PatientDetailStatusService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.RSSFeedService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.PersonaService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.FormsService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.OscarJobService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.NotesService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.ProductDispensingService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.RecordUxService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.ReportingService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.BillingService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.StatusService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.ProgramService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.ConsultationWebService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.AppService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.AllergyService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.PreventionService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.ReportByTemplateService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.ResourceService" autowire="byName" />
-		</jaxrs:serviceBeans>
-
-		<jaxrs:extensionMappings>
-			<entry key="xml" value="application/xml" />
-			<entry key="json" value="application/json" />
-		</jaxrs:extensionMappings>
-	</jaxrs:server>
-	
-    <util:list id="jsonKeys">
-        <value>tickler</value>
-        <value>ticklerComments</value>
-        <value>ticklerUpdates</value>
-        <value>content</value>
-        <value>post</value>
-    </util:list>
-
-	 <bean id="jsonProvider" class="org.apache.cxf.jaxrs.provider.json.JSONProvider">
-		<property name="dropRootElement" value="true" />
-		<property name="serializeAsArray" value="true" />
-		<property name="arrayKeys" ref="jsonKeys"/>
-		<property name="dropCollectionWrapperElement" value="true" />
-    </bean>
-	
+    
 
 
 </beans>
