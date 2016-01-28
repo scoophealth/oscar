@@ -1218,6 +1218,7 @@ if ( Dead.equals(PatStat) ) {%>
 								String archived = demoExt.get("paperChartArchived" + programList.get(x).getId());
 								String archivedStr = "", archivedDate = "", archivedProgram = "";
 								String chartNoProgram = "";
+								String informedConsentProgram = "";
 								
 								if("YES".equals(archived)) {
 									archivedStr="Yes";
@@ -1236,6 +1237,11 @@ if ( Dead.equals(PatStat) ) {%>
                       				chartNoProgram = demoExt.get("chartNoProgram" +  programList.get(x).getId());
                       			}
                       			
+                      			if(demoExt.get("informedConsentProgram" +  programList.get(x).getId()) != null) {
+                      				informedConsentProgram = demoExt.get("informedConsentProgram" +  programList.get(x).getId());
+                      			}
+                      			
+                      			
 							%>
                            <ul>
 	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.paperChartIndicator.archived"/>:</span>
@@ -1249,6 +1255,9 @@ if ( Dead.equals(PatStat) ) {%>
 	                          </li>
 	                           <li><span class="label"><bean:message key="demographic.demographiceditdemographic.chartNoProgram"/>:</span>
 	                              <span class="info"><%=chartNoProgram %></span>
+	                          </li>
+	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.informedConsent"/>:</span>
+	                              <span class="info"><%=informedConsentProgram %></span>
 	                          </li>
 	                          
 	                       </ul>
@@ -2634,6 +2643,25 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									}
 								%>
 							</tr>
+							
+							<tr>
+								<%
+									for(int x=0;x<programList.size();x++) {
+										String informedConsentProgram = StringUtils.trimToEmpty(demoExt.get("informedConsentProgram" + programList.get(x).getId()));
+										String inputName = "informedConsentProgram" + programList.get(x).getId() + "Orig";
+											
+								%>
+									<input type="hidden" name="<%=inputName %>" value="<%=informedConsentProgram%>" />
+									
+								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.informedConsent"/> (<%=programList.get(x).getName() %>): </b></td>
+	                            <td align="left">
+	                            	<input type="checkbox" name="informedConsentProgram<%=programList.get(x).getId() %>" id="informedConsentProgram<%=programList.get(x).getId()%>" value="yes" <%=informedConsentProgram.equals("yes") ? "checked" : ""%>>
+	                            </td>
+								<%
+									}
+								%>
+							</tr>
+							
 							
 							<%-- 
 						THE "PATIENT JOINED DATE" ROW HAS NOT BEEN ADDED TWICE IN ERROR 

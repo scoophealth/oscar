@@ -265,7 +265,9 @@
 		extensions.add(new DemographicExt(request.getParameter("paperChartArchived"+p.getId()+"_id"), proNo, demographicNo, "paperChartArchived" + p.getId(), request.getParameter("paperChartArchived" + p.getId())));
 		extensions.add(new DemographicExt(request.getParameter("paperChartArchivedDate"+p.getId()+"_id"), proNo, demographicNo, "paperChartArchivedDate" + p.getId(), request.getParameter("paperChartArchivedDate" + p.getId())));
 		extensions.add(new DemographicExt(request.getParameter("paperChartArchivedProgram"+p.getId()+"_id"), proNo, demographicNo, "paperChartArchivedProgram" + p.getId(), request.getParameter("paperChartArchivedProgram" + p.getId())));
-		extensions.add(new DemographicExt(request.getParameter("chartNoProgram"+p.getId()+"_id"), proNo, demographicNo, "chartNoProgram" + p.getId(), request.getParameter("chartNoProgram" + p.getId())));		
+		extensions.add(new DemographicExt(request.getParameter("chartNoProgram"+p.getId()+"_id"), proNo, demographicNo, "chartNoProgram" + p.getId(), request.getParameter("chartNoProgram" + p.getId())));
+		extensions.add(new DemographicExt(request.getParameter("informedConsentProgram"+p.getId()+"_id"), proNo, demographicNo, "informedConsentProgram" + p.getId(), request.getParameter("informedConsentProgram" + p.getId())));		
+		
 	}
 	
 	// customized key
