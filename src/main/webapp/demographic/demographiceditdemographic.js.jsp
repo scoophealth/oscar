@@ -208,7 +208,10 @@ function checkTypeInEdit() {
   if ( !checkDob() ) return false;
   if ( !checkHin() ) return false;
   if ( !checkSex() ) return false;
+  
+  <% if("false".equals(OscarProperties.getInstance().getProperty("skip_postal_code_validation","false"))) { %>
   if ( !isPostalCode() ) return false;
+  <% } %>
   if ( !checkRosterStatus() ) return false;
   if ( !checkPatientStatus() ) return false;
   return(true);
