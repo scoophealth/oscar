@@ -209,6 +209,14 @@ if(!authed) {
 	AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);
 	List<Program> programDomain = pm.getProgramDomain(curProvider_no);
 	List<Program> programList = admissionManager.filterProgramListByCurrentPatientAdmissions(programDomain,Integer.parseInt(demographic_no));
+	
+	//make a map of programs which require consent
+	Map<Integer,Boolean> consentProgramMap = new HashMap<Integer,Boolean>();
+	String[] privateConsentPrograms = OscarProperties.getInstance().getProperty("privateConsentPrograms","").split(",");
+	for(int x=0;x<privateConsentPrograms.length;x++) {
+		consentProgramMap.put(Integer.parseInt(privateConsentPrograms[x]),true);
+	}
+
 %>
 
 
@@ -995,39 +1003,6 @@ if(oscarProps.getProperty("new_label_print") != null && oscarProps.getProperty("
 						</div>
 
 
-						
-<%-- TOGGLE PUBLIC HEALTH IDS --%>
-<%if(OscarProperties.getInstance().isPropertyActive("PublicHealthIDsEnabled")) {
-%>
-			<div class="demographicSection" id="PublicHealthIDs">
-				<h3><bean:message key="demographic.demographiceditdemographic.PublicHealthID"/></h3>
-<%
-	String[] iphisPrograms = OscarProperties.getInstance().getProperty("IPHISid","").split(",");
-	ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
-	
-	if(pp!=null){
-		for(int x=0;x<iphisPrograms.length;x++){
-			if(iphisPrograms[x].equals(pp.getProgramId().toString())) {
-				showIPHIS=true;
-			}
-		}
-	}
-
-	if(showIPHIS) {
-%>
-				<ul>
-			        	<li><span class="label">
-		                        <bean:message key="demographic.demographiceditdemographic.IPHIS"/>:</span>
-
-					<span class="info"><%=IPHISClientNumber%></span></li>
-				</ul>
-				
-	<%}else{%>
-		<span class="label">N/A</span>
-	<%}%>
-	</div>
-<%}%>
-<%-- END TOGGLE PUBLIC HEALTH IDS --%>
 
 <%-- TOGGLE NEW CONTACTS UI --%>
 <%if(!OscarProperties.getInstance().isPropertyActive("NEW_CONTACTS_UI")) { %>
@@ -1197,6 +1172,40 @@ if ( Dead.equals(PatStat) ) {%>
 						&nbsp;
 						
 						</div>
+
+
+<%-- TOGGLE PUBLIC HEALTH IDS --%>
+<%if(OscarProperties.getInstance().isPropertyActive("PublicHealthIDsEnabled")) {
+%>
+			<div class="demographicSection" id="PublicHealthIDs">
+				<h3><bean:message key="demographic.demographiceditdemographic.PublicHealthID"/></h3>
+<%
+	String[] iphisPrograms = OscarProperties.getInstance().getProperty("IPHISid","").split(",");
+	ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+	
+	if(pp!=null){
+		for(int x=0;x<iphisPrograms.length;x++){
+			if(iphisPrograms[x].equals(pp.getProgramId().toString())) {
+				showIPHIS=true;
+			}
+		}
+	}
+
+	if(showIPHIS) {
+%>
+				<ul>
+			        	<li><span class="label">
+		                        <bean:message key="demographic.demographiceditdemographic.IPHIS"/>:</span>
+
+					<span class="info"><%=IPHISClientNumber%></span></li>
+				</ul>
+				
+	<%}else{%>
+		<span class="label">N/A</span>
+	<%}%>
+	</div>
+<%}%>
+<%-- END TOGGLE PUBLIC HEALTH IDS --%>
 						
 						<div class="demographicSection" id="paperChartIndicator">
 						
@@ -1208,6 +1217,8 @@ if ( Dead.equals(PatStat) ) {%>
 							<%
 								String archived = demoExt.get("paperChartArchived" + programList.get(x).getId());
 								String archivedStr = "", archivedDate = "", archivedProgram = "";
+								String chartNoProgram = "";
+								
 								if("YES".equals(archived)) {
 									archivedStr="Yes";
 								}
@@ -1220,6 +1231,11 @@ if ( Dead.equals(PatStat) ) {%>
                       			if(demoExt.get("paperChartArchivedProgram" +  programList.get(x).getId()) != null) {
                       				archivedProgram = demoExt.get("paperChartArchivedProgram" +  programList.get(x).getId());
                       			}
+                      			
+                      			if(demoExt.get("chartNoProgram" +  programList.get(x).getId()) != null) {
+                      				chartNoProgram = demoExt.get("chartNoProgram" +  programList.get(x).getId());
+                      			}
+                      			
 							%>
                            <ul>
 	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.paperChartIndicator.archived"/>:</span>
@@ -1231,6 +1247,10 @@ if ( Dead.equals(PatStat) ) {%>
 	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.paperChartIndicator.programArchived"/>:</span>
 	                              <span class="info"><%=archivedProgram %></span>
 	                          </li>
+	                           <li><span class="label"><bean:message key="demographic.demographiceditdemographic.chartNoProgram"/>:</span>
+	                              <span class="info"><%=chartNoProgram %></span>
+	                          </li>
+	                          
 	                       </ul>
 	                       
 	                       <% } %>
@@ -1239,7 +1259,6 @@ if ( Dead.equals(PatStat) ) {%>
 <%-- TOGGLE PRIVACY CONSENT --%>						
 <oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">
 						<%
-							String[] privateConsentPrograms = OscarProperties.getInstance().getProperty("privateConsentPrograms","").split(",");
 							ProgramProvider pp2 = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
 		
 							if(pp2 != null) {
@@ -2567,6 +2586,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 	                            		String paperChartIndicator = StringUtils.trimToEmpty(demoExt.get("paperChartArchived" + programList.get(x).getId()));
 	                            		String paperChartIndicatorDate = StringUtils.trimToEmpty(demoExt.get("paperChartArchivedDate" + programList.get(x).getId()));
 	                            		String paperChartIndicatorProgram = StringUtils.trimToEmpty(demoExt.get("paperChartArchivedProgram" + programList.get(x).getId()));
+	                            		
 	                            	%>
 	                            	<select name="paperChartArchived<%=programList.get(x).getId()%>" id="paperChartArchived<%=programList.get(x).getId() %>" <%=getDisabled("paper_chart_archived")%> onChange="updatePaperArchive('<%=programList.get(x).getId()%>')">
 		                            	<option value="" <%="".equals(paperChartIndicator)?" selected":""%>>
@@ -2583,8 +2603,11 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 										<img src="../images/cal.gif" id="archive_date_cal<%=programList.get(x).getId()%>">
 											<bean:message key="schedule.scheduletemplateapplying.msgDateFormat"/>
 										
-									<input type="hidden" name="paperChartArchivedProgram<%=programList.get(x).getId() %>" id="paperChartArchivedProgram<%=programList.get(x).getId() %>" value="<%=paperChartIndicatorProgram%>"/>
+											<input type="hidden" name="paperChartArchivedProgram<%=programList.get(x).getId() %>" id="paperChartArchivedProgram<%=programList.get(x).getId() %>" value="<%=paperChartIndicatorProgram%>"/>	
+									
 								<% } %>
+								
+								
                                 </td>
 
 							<%-- TOGGLE SHOW IPHIS NUMBER --%>
@@ -2594,6 +2617,24 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								<% } %>
 							<%-- END TOGGLE SHOW IPHIS NUMBER --%>
 							</tr>
+							
+							<tr>
+								<%
+									for(int x=0;x<programList.size();x++) {
+										String chartNoProgram = StringUtils.trimToEmpty(demoExt.get("chartNoProgram" + programList.get(x).getId()));
+	                            		
+								%>
+									
+								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.formChartNo" /> (<%=programList.get(x).getName() %>): </b></td>
+	                            <td align="left">
+	                            	<input type="text" name="chartNoProgram<%=programList.get(x).getId() %>" id="chartNoProgram<%=programList.get(x).getId() %>" size="11" value="<%=chartNoProgram%>" >
+									
+	                            </td>
+								<%
+									}
+								%>
+							</tr>
+							
 							<%-- 
 						THE "PATIENT JOINED DATE" ROW HAS NOT BEEN ADDED TWICE IN ERROR 
 						IT IS PLACED HERE FOR REPOSITIONING WHEN THE WAITING LIST

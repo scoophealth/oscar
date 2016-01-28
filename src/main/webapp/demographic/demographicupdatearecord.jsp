@@ -262,9 +262,10 @@
 	List<Program> programDomain = pm.getProgramDomain(loggedInInfo.getLoggedInProviderNo());
 	List<Program> programList = admissionManager.filterProgramListByCurrentPatientAdmissions(programDomain,demographicNo);
 	for(Program p:programList) {	
-		extensions.add(new DemographicExt(request.getParameter("paperChartArchived_id" + p.getId()), proNo, demographicNo, "paperChartArchived" + p.getId(), request.getParameter("paperChartArchived" + p.getId())));
-		extensions.add(new DemographicExt(request.getParameter("paperChartArchivedDate_id" + p.getId()), proNo, demographicNo, "paperChartArchivedDate" + p.getId(), request.getParameter("paperChartArchivedDate" + p.getId())));
-		extensions.add(new DemographicExt(request.getParameter("paperChartArchivedProgram_id" + p.getId()), proNo, demographicNo, "paperChartArchivedProgram" + p.getId(), request.getParameter("paperChartArchivedProgram" + p.getId())));
+		extensions.add(new DemographicExt(request.getParameter("paperChartArchived"+p.getId()+"_id"), proNo, demographicNo, "paperChartArchived" + p.getId(), request.getParameter("paperChartArchived" + p.getId())));
+		extensions.add(new DemographicExt(request.getParameter("paperChartArchivedDate"+p.getId()+"_id"), proNo, demographicNo, "paperChartArchivedDate" + p.getId(), request.getParameter("paperChartArchivedDate" + p.getId())));
+		extensions.add(new DemographicExt(request.getParameter("paperChartArchivedProgram"+p.getId()+"_id"), proNo, demographicNo, "paperChartArchivedProgram" + p.getId(), request.getParameter("paperChartArchivedProgram" + p.getId())));
+		extensions.add(new DemographicExt(request.getParameter("chartNoProgram"+p.getId()+"_id"), proNo, demographicNo, "chartNoProgram" + p.getId(), request.getParameter("chartNoProgram" + p.getId())));		
 	}
 	
 	// customized key
