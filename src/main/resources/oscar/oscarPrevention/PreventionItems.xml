@@ -181,7 +181,7 @@ Varicella Immunoglobulin	VarIg
 	
 	<item
 		resultDesc=""
-		desc="Meningococcal - Polysaccharide"
+		desc="Meningococcal Conjugate ACYW-135"
 		name="Men-C-ACYW-135"
 		healthCanadaType="Men-C-ACYW-135"
 		layout="injection" atc="J07AH"
