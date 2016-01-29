@@ -447,7 +447,7 @@ $scope.gotoState = function(item,mod,itemId){
 	if(item=="add"){
 		editGroupedNotes('lg',mod,null);
 		
-	}else if(item.type == 'lab' || item.type == 'document'  || item.type == 'rx'|| item.type == 'allergy' || item.type == 'prevention' ){
+	}else if(item.type == 'lab' || item.type == 'document'  || item.type == 'rx'|| item.type == 'allergy' || item.type == 'prevention' || item.type == 'dsguideline'  ){
 
 		if(item.type == 'rx'){
 			win = "Rx" + $stateParams.demographicNo;
