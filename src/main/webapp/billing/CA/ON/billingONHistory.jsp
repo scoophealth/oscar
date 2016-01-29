@@ -169,7 +169,7 @@ for(int i=0; i<aL.size(); i=i+2) {
 %>
 
 	<tr bgcolor="<%=i%2==0?"#CCFF99":"white"%>">
-		<td width="5%" align="center" height="25"><a href=#
+		<td width="5%" align="center" height="25">
 		<a href="javascript:void(0)" onClick="popupPage(600,800, 'billingONDisplay.jsp?billing_no=<%=obj.getId()%>')" title="Billing Display"><%=obj.getId()%></a>
 		
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="w">
