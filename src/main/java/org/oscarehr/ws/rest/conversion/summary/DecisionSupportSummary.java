@@ -143,7 +143,7 @@ public class DecisionSupportSummary implements Summary{
                     
                     summaryItem.setDate(dsGuideline.getDateStart());
                     summaryItem.setAction(url);
-                 
+                    list.add(summaryItem);
                     //if (dsConsequence.getConsequenceStrength() == DSConsequence.ConsequenceStrength.warning) {
                      //   item.setColour("#ff5409;");
                     //}
