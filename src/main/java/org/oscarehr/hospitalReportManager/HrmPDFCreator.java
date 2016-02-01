@@ -49,16 +49,21 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import com.lowagie.text.BadElementException;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
+import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
+import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
 /**
@@ -93,6 +98,7 @@ public class HrmPDFCreator extends PdfPageEventHelper {
 	private OutputStream os;
 
 	private Document document;
+	private PdfWriter writer;
 
 	private BaseFont bf;
 	private Font font;
@@ -198,7 +204,7 @@ public class HrmPDFCreator extends PdfPageEventHelper {
          //Create the document we are going to write to
         document = new Document();
   
-        PdfWriter writer = PdfWriterFactory.newInstance(document, os, FontSettings.HELVETICA_10PT);
+        writer = PdfWriterFactory.newInstance(document, os, FontSettings.HELVETICA_10PT);
 
         //Set page event, function onEndPage will execute each time a page is finished being created
         writer.setPageEvent(this);
@@ -217,6 +223,8 @@ public class HrmPDFCreator extends PdfPageEventHelper {
         
         // add the header table containing the patient and lab info to the document
         createInfoTable();
+        
+        addBinaryData();
 
         // add end of report table
         PdfPTable table = new PdfPTable(1);
@@ -376,7 +384,9 @@ public class HrmPDFCreator extends PdfPageEventHelper {
             cell = new PdfPCell(new Phrase(report.getFirstReportTextContent(), font));
             pDataTable.addCell(cell);
             table = addTableToTable(table, pDataTable, 1);
-        } else {
+        }
+        
+        if(report.isBinary() && !checkIfBinaryIsSupported()) {
         	float[] pDataWidths = {1f};
             PdfPTable pDataTable = new PdfPTable(pDataWidths);
             pDataTable.addCell(cell);
@@ -389,6 +399,68 @@ public class HrmPDFCreator extends PdfPageEventHelper {
         document.add(table);
         
     }
+    
+    private boolean checkIfBinaryIsSupported() {
+    	String ext = report.getFileExtension();
+    	
+    	if(!report.isBinary()) {
+    		return true;
+    	}
+    	
+    	if(".pdf".equals(ext) || ".jpg".equals(ext) || ".gif".equals(ext) || ".png".equals(ext)) {
+    		return true;
+    	}
+    	
+    	return false;
+    }
+    
+    private void addBinaryData() throws IOException, BadElementException, DocumentException {
+    	if(!report.isBinary()) {
+    		return;
+    	}
+    	PdfContentByte cb = writer.getDirectContent();
+    	
+    	String reportFileData = report.getFileData();
+    	String ext = report.getFileExtension();
+    	byte[] data = report.getBinaryContent();
+    	
+    	
+    	if(".pdf".equals(ext)) {
+    		PdfReader reader = new PdfReader(data);
+    		reader.consolidateNamedDestinations();
+    		
+    		for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+                document.newPage();
+                //import the page from source pdf
+                PdfImportedPage page = writer.getImportedPage(reader, i);
+                //add the page to the destination pdf
+                cb.addTemplate(page, 0, 0);
+            }
+    		
+    	} else if(".jpg".equals(ext) || ".gif".equals(ext) || ".png".equals(ext)) {
+    		Image image1 = Image.getInstance(data);
+    		document.add(image1);
+    	} else if(".tiff".equals(ext)) {
+    		/*
+    		RandomAccessFileOrArray raf1 = new RandomAccessFileOrArray(data);
+    		int noOfPages = TiffImage.getNumberOfPages(raf1); 
+    		Image img = null;
+    		for(int i = 1; i <= noOfPages; i++){ 
+    			document.newPage();
+    			img = TiffImage.getTiffImage(raf1, i); 
+    			document.add(img); 
+    		}
+    		*/
+    	} else if(".rtf".equals(ext)) {
+    		//RtfWriter2 writer2 = RtfWriter2.getInstance(document,os);
+    		//writer.get
+    		//ByteArrayInputStream rtfStream = new ByteArrayInputStream(data);
+    		//writer2.importRtfDocument(rtfStream, null);
+    	} else if(".html".equals(ext)) {
+    	}
+    	
+    }
+    
     
     private PdfPTable addTableToTable(PdfPTable main, PdfPTable add, int colspan){
         PdfPCell cell = new PdfPCell(add);
