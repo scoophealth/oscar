@@ -37,7 +37,7 @@ public class BillingOnItemPaymentDao extends AbstractDao<BillingOnItemPayment>{
 	}
 	
 	public BillingOnItemPayment findByPaymentIdAndItemId(int paymentId, int itemId) {
-		Query query = entityManager.createQuery("select boip from BillingOnItemPayment boip where boip.billingOnPaymentId = ?1 amd boip.billingOnItemId = ?2");
+		Query query = entityManager.createQuery("select boip from BillingOnItemPayment boip where boip.billingOnPaymentId = ?1 and boip.billingOnItemId = ?2");
 		query.setParameter(1, paymentId);
 		query.setParameter(2, itemId);
 		return getSingleResultOrNull(query);
