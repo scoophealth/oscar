@@ -927,18 +927,22 @@ if(statusType.equals("_")) { %>
        <%} %>
 <% } %>
     </form>    
-                        
-    <script language='javascript'>
-	    var startDate = $("#xml_vdate").datepicker({format : "yyyy-mm-dd"});
-		var endDate = $("#xml_appointment_date").datepicker({format : "yyyy-mm-dd"});
-		
-		var paymentStartDate = $("#paymentStartDate").datepicker({format : "yyyy-mm-dd"});
-		var paymentEndDate = $("#paymentEndDate").datepicker({format : "yyyy-mm-dd"});
-   </script>
     </table>
     </form>
     </div>
 </div>
+
+<script language='javascript'>
+    var startDate = $("#xml_vdate").datepicker({format : "yyyy-mm-dd"});
+	var endDate = $("#xml_appointment_date").datepicker({format : "yyyy-mm-dd"});
+	
+	var paymentStartDate = $("#paymentStartDate").datepicker({format : "yyyy-mm-dd"});
+	var paymentEndDate = $("#paymentEndDate").datepicker({format : "yyyy-mm-dd"});
+	
+    $( document ).ready(function() {
+    	parent.parent.resizeIframe($('html').height());
+    });
+</script>
     </body>
     <%! String getStdCurr(String s) {
     		if(s != null) {
