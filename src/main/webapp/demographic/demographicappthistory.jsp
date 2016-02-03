@@ -115,6 +115,9 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
   String showDeleted = request.getParameter("deleted");
   String orderby="";
   if(request.getParameter("orderby")!=null) orderby=request.getParameter("orderby");
+  
+  Map<String,ProviderData> providerMap = new HashMap<String,ProviderData>();
+  
 %>
 
 
@@ -195,6 +198,18 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 		jQuery("#showDeleted").attr('checked',false);
 		<%} %>
 	});
+	
+	
+	function filterByProvider(s) {
+		var providerNo = s.options[s.selectedIndex].value;
+		jQuery("#apptHistoryTbl tbody tr").not(":first").each(function(){
+			if(!providerNo=='' && jQuery(this).attr('provider_no') != providerNo) {
+				jQuery(this).hide();
+			} else {
+				jQuery(this).show();
+			}
+		});
+	}
 </script>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
@@ -224,6 +239,7 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 			<bean:message key="global.btnBack" /></a> 
 			<br/>
 			<input type="checkbox" name="showDeleted" id="showDeleted" onChange="toggleShowDeleted(this.checked);"/><bean:message key="demographic.demographicappthistory.msgShowDeleted" />
+			<br/>
 	    </td>
 		<td class="MainTableRightColumn">
 		<table width="95%" border="0" bgcolor="#ffffff" id="apptHistoryTbl">
@@ -314,9 +330,13 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
      		  
     ProviderData provider = providerDao.findByProviderNo(appointment.getProviderNo());
     AppointmentStatus as = appointmentStatusDao.findByStatus(appointment.getStatus());
+    
+    if(provider != null) {
+    	providerMap.put(provider.getId(),provider);
+    }
        
 %> 
-<tr <%=(deleted)?"style='text-decoration: line-through' ":"" %> bgcolor="<%=bodd?weakColor:"white"%>" appt_no="<%=appointment.getId().toString()%>" demographic_no="<%=demographic_no%>">	  
+<tr <%=(deleted)?"style='text-decoration: line-through' ":"" %> bgcolor="<%=bodd?weakColor:"white"%>" appt_no="<%=appointment.getId().toString()%>" demographic_no="<%=demographic_no%>" provider_no="<%=provider!=null?provider.getId():""%>">	  
       <td align="center"><a href=# onClick ="popupPageNew(360,680,'../appointment/appointmentcontrol.jsp?demographic_no=<%=demographic_no%>&appointment_no=<%=appointment.getId().toString()%>&displaymode=edit&dboperation=search');return false;" ><%=appointment.getAppointmentDate()%></a></td>
       <td align="center"><%=appointment.getStartTime()%></td>
       <td align="center"><%=appointment.getEndTime()%></td>
@@ -440,7 +460,19 @@ if (cachedAppointments != null) {
 	</tr>
 	<tr>
 		<td class="MainTableBottomRowLeftColumn"></td>
-		<td class="MainTableBottomRowRightColumn"></td>
+		<td class="MainTableBottomRowRightColumn">
+		Filter results on this page by provider:
+		<select onChange="filterByProvider(this)">
+			<option value="">ALL</option>
+			<%
+				for(ProviderData prov:providerMap.values()) {
+			%>
+				<option value="<%=prov.getId()%>"><%=prov.getLastName() + ", " + prov.getFirstName() %></option>
+			<%
+				}
+			%>
+		</select>
+		</td>
 	</tr>
 </table>
 </body>
