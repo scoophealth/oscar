@@ -224,7 +224,7 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex, effyear, effmonth,
 <br>
 <form><input type="button" name="Button1" value="Confirm"
 	onclick="javascript:Attach('<%=lastName%>','<%=firstName%>','<%=hcMagneticStripe.getHealthNumber()%>','<%=dobyear%>'
-            ,'<%=dobmonth%>','<%=dobdate%>', '<%=hcMagneticStripe.getCardVersion()%>','<%=gender%>', '<%=effyear%>', '<%=effmonth%>', '<%=effdate%>'
+            ,'<%=dobmonth%>','<%=dobdate%>', '<%=hcMagneticStripe.getCardVersion().toUpperCase()%>','<%=gender%>', '<%=effyear%>', '<%=effmonth%>', '<%=effdate%>'
             , '<%=endyear%>', '<%=endmonth%>', '<%=enddate%>');"><input
 	type="button" name="Button" value="Cancel" onclick=self.close();>
 </form>
