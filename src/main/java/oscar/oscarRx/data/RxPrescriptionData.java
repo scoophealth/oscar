@@ -1399,13 +1399,13 @@ public class RxPrescriptionData {
 				}
 				ret += " " + this.getDuration() + " ";
 
-				if (this.getDurationUnit().equals("D")) {
+				if (getDurationUnit() != null && this.getDurationUnit().equals("D")) {
 					ret += "Day";
 				}
-				if (this.getDurationUnit().equals("W")) {
+				if (getDurationUnit() != null && this.getDurationUnit().equals("W")) {
 					ret += "Week";
 				}
-				if (this.getDurationUnit().equals("M")) {
+				if (getDurationUnit() != null && this.getDurationUnit().equals("M")) {
 					ret += "Month";
 				}
 
