@@ -302,7 +302,7 @@ public class RxSessionBean  implements java.io.Serializable {
          addToWorkingAllergyWarnings(atccode,worker);
          worker.start();
        }catch( Exception e ){
-      	 logger.error("Error", e);
+      	 logger.error("Error for demographic " + getDemographicNo(), e);
        }
     }
 
