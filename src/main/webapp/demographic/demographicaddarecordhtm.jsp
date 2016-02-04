@@ -1412,6 +1412,22 @@ document.forms[1].r_doctor_ohip.value = refNo;
 
 <%-- TOGGLE PRIVACY CONSENT MODULE --%>			
 <oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">			
+
+			<%
+				String[] privateConsentPrograms2 = OscarProperties.getInstance().getProperty("privateConsentPrograms","").split(",");
+				ProgramProvider pp3 = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+				boolean showConsents = false;
+				if(pp3 != null) {
+					for(int x=0;x<privateConsentPrograms2.length;x++) {
+						if(privateConsentPrograms2[x].equals(pp3.getProgramId().toString())) {
+							showConsents=true;
+						}
+					}
+				}
+						
+				if(showConsents) {
+			%>
+			<!-- consents -->
 			<tr valign="top">
 	
 				<td colspan="2">
@@ -1422,6 +1438,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
 				</td>
 
 		  	</tr>
+			<% } %>
 </oscar:oscarPropertiesCheck>
 
 			<tr valign="top">
