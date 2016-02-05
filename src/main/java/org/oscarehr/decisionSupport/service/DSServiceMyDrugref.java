@@ -106,14 +106,28 @@ public class DSServiceMyDrugref extends DSService {
             for (DSGuideline newGuideline: newGuidelines) {
                 dSGuidelineDao.persist(newGuideline);
             }
-            //Do mappings-guideline mappings;
+            
+            boolean hasInvalidXML = false;
+            if (guidelinesToFetch.size()>newGuidelines.size()) hasInvalidXML = true;
+            
+            //Do mappings-guideline mappings
             List<DSGuidelineProviderMapping> uuidsMapped = dSGuidelineProviderMappingDao.getMappingsByProvider(loggedInInfo.getLoggedInProviderNo());
             for (Hashtable<String,String> newMapping: providerGuidelines) {
                 String newUuid = newMapping.get("uuid");
-                DSGuidelineProviderMapping newUuidObj = new DSGuidelineProviderMapping(newUuid, loggedInInfo.getLoggedInProviderNo());
-                if (uuidsMapped.contains(newUuidObj)) {
-                    uuidsMapped.remove(newUuidObj);
-                } else {
+                if (hasInvalidXML) {
+                	DSGuideline checkingGuideline = dSGuidelineDao.findByUUID(newUuid);
+                	if (checkingGuideline==null || checkingGuideline.getStatus()!='A') continue; //do not write invalid guideline
+                }
+                
+                for (DSGuidelineProviderMapping uuidMapped : uuidsMapped) {
+                	if (uuidMapped.getGuidelineUUID().equals(newUuid)) {
+                		uuidsMapped.remove(uuidMapped);
+                		newUuid = null;
+                		break;
+                	}
+                }
+                if (newUuid!=null) {
+                	DSGuidelineProviderMapping newUuidObj = new DSGuidelineProviderMapping(newUuid, loggedInInfo.getLoggedInProviderNo());
                 	dSGuidelineProviderMappingDao.persist(newUuidObj);
                 }
             }
@@ -127,7 +141,25 @@ public class DSServiceMyDrugref extends DSService {
 
     }
 
-    public List<DSGuideline> fetchGuidelines(LoggedInInfo loggedInInfo,List<String> uuids)  {
+    public String getMyDrugrefId(String providerNo) {
+        UserProperty prop = userPropertyDAO.getProp(providerNo, UserProperty.MYDRUGREF_ID);
+        String myDrugrefId = null;
+        if (prop != null) {
+            myDrugrefId = prop.getValue();
+        }
+        return myDrugrefId;
+    }
+
+    /**
+     * @param userPropertyDAO the userPropertyDAO to set
+     */
+    public void setUserPropertyDAO(UserPropertyDAO userPropertyDAO) {
+        this.userPropertyDAO = userPropertyDAO;
+    }
+
+    
+
+    private List<DSGuideline> fetchGuidelines(LoggedInInfo loggedInInfo,List<String> uuids)  {
         RxMyDrugrefInfoAction myDrugrefAction = new RxMyDrugrefInfoAction();
         Vector params = new Vector();
         if(uuids.size() > 0) {
@@ -135,8 +167,8 @@ public class DSServiceMyDrugref extends DSService {
         		params.add(uuids.get(i));
         	}
         }
-
         Vector<Hashtable> fetchedGuidelines = myDrugrefAction.callOAuthService(loggedInInfo,"guidelines/getGuidelines", params, null);
+        
         ArrayList<DSGuideline> newGuidelines = new ArrayList<DSGuideline>();
         for (Hashtable<String,Serializable> fetchedGuideline: fetchedGuidelines) {
         	if (!isValidGuidelineXml((String) fetchedGuideline.get("body"))) continue;
@@ -173,23 +205,6 @@ public class DSServiceMyDrugref extends DSService {
         }
         return newGuidelines;
     }
-
-    public String getMyDrugrefId(String providerNo) {
-        UserProperty prop = userPropertyDAO.getProp(providerNo, UserProperty.MYDRUGREF_ID);
-        String myDrugrefId = null;
-        if (prop != null) {
-            myDrugrefId = prop.getValue();
-        }
-        return myDrugrefId;
-    }
-
-    /**
-     * @param userPropertyDAO the userPropertyDAO to set
-     */
-    public void setUserPropertyDAO(UserPropertyDAO userPropertyDAO) {
-        this.userPropertyDAO = userPropertyDAO;
-    }
-
     
     private boolean isValidGuidelineXml(String guidelineXml) {
     	StreamSource xsd = new StreamSource(this.getClass().getResourceAsStream("/k2a/dsGuideline.xsd"));
