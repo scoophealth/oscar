@@ -378,10 +378,10 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable hiddenR=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector all = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector newParams = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector result = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector vec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector&lt;Hashtable&gt; allRetVec=new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector&lt;String&gt; currentIdWarnings=new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:result = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSearchAllergyAction.java:Hashtable returnHash = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSearchAllergyAction.java:Vector classVec = new Vector() ;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSearchAllergyAction.java:java.util.Vector catVec = new java.util.Vector();</ViolationValue>
@@ -1149,11 +1149,11 @@
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSGuidelineFactory.java:paramHashtable.put(key, value);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/impl/drools/DSGuidelineDrools.java:paramClass.addContent("java.util.Hashtable");</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:Vector params = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:Vector&lt;Hashtable&lt;String,String&gt;&gt; providerGuidelines = myDrugrefAction.callOAuthService(loggedInInfo,"guidelines/getGuidelineIds", null, this.getMyDrugrefId(loggedInInfo.getLoggedInProviderNo()));</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:Vector&lt;Hashtable&lt;String,Object&gt;&gt; providerGuidelines = myDrugrefAction.callOAuthService(loggedInInfo,"guidelines/getGuidelineIds", null, this.getMyDrugrefId(loggedInInfo.getLoggedInProviderNo()));</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:Vector&lt;Hashtable&gt; fetchedGuidelines = myDrugrefAction.callOAuthService(loggedInInfo,"guidelines/getGuidelines", params, null);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:for (Hashtable&lt;String,Object&gt; newMapping: providerGuidelines) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:for (Hashtable&lt;String,Object&gt; providerGuideline: providerGuidelines) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:for (Hashtable&lt;String,Serializable&gt; fetchedGuideline: fetchedGuidelines) {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:for (Hashtable&lt;String,String&gt; newMapping: providerGuidelines) {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:for (Hashtable&lt;String,String&gt; providerGuideline: providerGuidelines) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:import java.util.Hashtable;</ViolationValue>
@@ -2282,7 +2282,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector all = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector codes = bean.getAtcCodes();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector newParams = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector result = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector result = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector v = getMyDrugrefInfo(loggedInInfo,command, codes, provider, myDrugrefId);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector vec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector&lt;Hashtable&gt; allRetVec=new Vector();</ViolationValue>
@@ -2298,6 +2298,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public static void removeNullFromVector(Vector v){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:removeNullFromVector(drugs);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:result = (Vector)object;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:result = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:vec = (Vector) holbrook;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:vec = (Vector) obj;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:}else if(obj instanceof Hashtable){</ViolationValue>
