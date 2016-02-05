@@ -457,7 +457,7 @@ function changeSite(sel) {
 <% } // multisite end ==========================================
 } else {
 %>	 
-    <select name="providerview" onchange="changeProvider(true);">
+    <select name="providerview" onchange="changeProvider(false);">
 			<%
 			if(pList.size() == 1) {
 				String temp[] = ( pList.get(0)).split("\\|");
