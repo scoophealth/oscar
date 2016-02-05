@@ -491,7 +491,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
     		AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
     		
     		boolean useXMLRPC = false;
-    		Vector result = new Vector();
+    		Vector result = null;
     		
     		if(k2aApp != null) {
 	    		AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),loggedInInfo.getLoggedInProviderNo());
@@ -524,6 +524,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
 		    		
 		    		if(jsonString != null && !jsonString.isEmpty()) {
 		    			jsonArray = new JSONArray(jsonString);
+		    			result = new Vector();
 		    			
 		    			for (int i = 0; i < jsonArray.length(); i++) {
 		    	        	JSONObject eform = jsonArray.getJSONObject(i);
@@ -534,7 +535,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
 		    	        		String key = (String) iterator.next();
 		    	        		if(key.equals("significance") || key.equals("version")) {
 		    	        			drugInfo.put(key, eform.get(key).toString());
-		    	        		} else if(key.equals("updated_at") || key.equals("created_at")){
+		    	        		} else if(key.equals("updated_at") || key.equals("updatedAt") || key.equals("created_at")){
 		    	        			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 		    	        			Date date = formatter.parse(eform.get(key).toString());
 		    	        			drugInfo.put(key, date);
