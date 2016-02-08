@@ -214,7 +214,9 @@ if(!authed) {
 	Map<Integer,Boolean> consentProgramMap = new HashMap<Integer,Boolean>();
 	String[] privateConsentPrograms = OscarProperties.getInstance().getProperty("privateConsentPrograms","").split(",");
 	for(int x=0;x<privateConsentPrograms.length;x++) {
-		consentProgramMap.put(Integer.parseInt(privateConsentPrograms[x]),true);
+		if(!StringUtils.isEmpty(privateConsentPrograms[x])) {
+			consentProgramMap.put(Integer.parseInt(privateConsentPrograms[x]),true);
+		}
 	}
 
 %>
