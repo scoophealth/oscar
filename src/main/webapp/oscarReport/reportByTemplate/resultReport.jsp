@@ -30,6 +30,7 @@
 
 <%@ page
 	import="java.util.*,oscar.oscarReport.reportByTemplate.*,java.sql.*, org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.apache.commons.lang.StringUtils" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -58,6 +59,22 @@ if(!authed) {
 	src="../../share/javascript/prototype.js"></script>
 <script type="text/javascript" language="JavaScript"
 	src="../../share/javascript/Oscar.js"></script>
+	<link rel="stylesheet" type="text/css" media="all"
+	href="../../share/calendar/calendar.css" title="win2k-cold-1" />
+<script type="text/javascript" src="../../share/calendar/calendar.js"></script>
+<script type="text/javascript"
+	src="../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<script type="text/javascript"
+	src="../../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript" language="JavaScript">
+    function checkform(formobj) {
+        if (!validDateFieldsByClass('datefield', formobj)) {
+            alert("Invalid Date: Must be in the format YYYY/MM/DD");
+            return false;
+        }
+        return true;
+    }
+</script>
 <script type="text/javascript" language="javascript">
 function clearSession(){
     new Ajax.Request('clearSession.jsp','{asynchronous:true}');
@@ -90,6 +107,7 @@ function clearSession(){
 		</table>
 		</td>
 	</tr>
+	
 	<tr>
 		<%
 		
@@ -121,6 +139,96 @@ function clearSession(){
 				value="<%=curreport.getTemplateId()%>" />
 		</jsp:include></td>
 		<td class="MainTableRightColumn" valign="top">
+		
+		<%
+		String templateid = request.getParameter("templateId");
+		ReportObject curreport1 = (new ReportManager()).getReportTemplate(templateid);
+		  		 String xml = (new ReportManager()).getTemplateXml(templateid);
+                 ArrayList parameters = curreport1.getParameters();
+                 int step = 0;
+                 if (request.getAttribute("errormsg") != null) {
+                    String errormsg = (String) request.getAttribute("errormsg");%>
+		<div class="warning"><%=errormsg%></div>
+		<%}%>
+		<div class="reportTitle"
+			<%if (curreport1.getTitle().indexOf("Error") != -1) {%>
+			style="color: red;" <%}%>><%=curreport1.getTitle()%></div>
+		<div class="reportDescription"><%=curreport1.getDescription()%></div>
+		<html:form action="/oscarReport/reportByTemplate/GenerateReportAction"
+			onsubmit="return checkform(this);">
+			<input type="hidden" name="templateId"
+				value="<%=curreport1.getTemplateId()%>">
+			<input type="hidden" name="type" value="<%=curreport1.getType()%>">
+			<div class="configDiv">
+			<table class="configTable">
+				<%for (int i=0; i<parameters.size(); i++) {
+                             step++;
+                             Parameter curparam = (Parameter) parameters.get(i);
+                     %>
+				<tr>
+					<th class="stepRC">Step <%=step%>:</th>
+					<td class="descriptionRC" style="max-width: 550px"><%=curparam.getParamDescription()%>
+					</td>
+					<td id="enclosingCol<%=i%>"><%-- If LIST field --%> 
+					<%if (curparam.getParamType().equals(curparam.LIST)) {%>
+					<select name="<%=curparam.getParamId()%>">
+						<%ArrayList paramChoices = curparam.getParamChoices();
+                          for (int i2=0; i2<paramChoices.size(); i2++) { 
+                          	Choice curchoice = (Choice) paramChoices.get(i2);%>
+							<option value="<%=curchoice.getChoiceId()%>" <%=(request.getParameter(curparam.getParamId()) != null && request.getParameter(curparam.getParamId()).equals(curchoice.getChoiceId()))?" selected=\"selected\" ":"" %>><%=curchoice.getChoiceText()%></option>
+						<%}%>
+					</select> 
+					<%--If TEXT field --%> <% } else if (curparam.getParamType().equals(curparam.TEXT)) {%>
+					<input type="text" size="20" name="<%=curparam.getParamId()%>" value="<%=StringUtils.trimToEmpty(request.getParameter(curparam.getParamId()))%>">
+					<%--If DATE field --%> <% } else if (curparam.getParamType().equals(curparam.DATE)) {%>
+					<input type="text" class="datefield" id="datefield<%=i%>" name="<%=curparam.getParamId()%>" value="<%=StringUtils.trimToEmpty(request.getParameter(curparam.getParamId()))%>">
+						<a id="obsdate<%=i%>"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a> 
+						<script type="text/javascript">
+                                    Calendar.setup( { inputField : "datefield<%=i%>", ifFormat : "%Y-%m-%d", showsTime :false, button : "obsdate<%=i%>", singleClick : true, step : 1 } );
+                                 </script>
+                    <%--If CHECK field --%> <% } else if (curparam.getParamType().equals(curparam.CHECK)) {%>
+					<input type="hidden" name="<%=curparam.getParamId()%>:check" value="<%=StringUtils.trimToEmpty(request.getParameter(curparam.getParamId()+":check"))%>"> 
+					<input type="checkbox" name="mastercheck" onclick="checkAll(this, 'enclosingCol<%=i%>', 'checkclass<%=i%>')">
+					<br />
+					<%ArrayList paramChoices = curparam.getParamChoices();
+                      for (int i2=0; i2<paramChoices.size(); i2++) {
+                      	Choice curchoice = (Choice) paramChoices.get(i2);%>
+						<input type="checkbox" name="<%=curparam.getParamId()%>" class="checkclass<%=i%>" value="<%=curchoice.getChoiceId()%>" <%=(request.getParameter(curparam.getParamId()) != null && request.getParameter(curparam.getParamId()).equals(curchoice.getChoiceId()))?" checked=\"checked\" ":"" %>>
+						<%=curchoice.getChoiceText()%>
+						<br />
+					  <%}%> 
+					<% } else if (curparam.getParamType().equals(curparam.TEXTLIST)) {%>
+					<input type="text" size="20" name="<%=curparam.getParamId()%>:list" value="<%=StringUtils.trimToEmpty(request.getParameter(curparam.getParamId()+":list"))%>">
+					<font style="font-size: 10px;">(Comma Separated)</font> <% }%>
+					</td>
+				</tr>
+				<%} %>
+				<tr>
+					<th>Step <%=step+1%>:</th>
+					<td>Generate Query</td>
+					<td><input type="submit" name="submitButton" value="Run Query"></td>
+				</tr>
+			</table>
+			<div><a
+				href="viewTemplate.jsp?templateid=<%=curreport1.getTemplateId()%>"
+				class="link">View Template XML</a> <a
+				href="addEditTemplate.jsp?templateid=<%=curreport1.getTemplateId()%>&opentext=1"
+				class="link">Edit Template</a> <a
+				href="addEditTemplatesAction.do?templateid=<%=curreport1.getTemplateId()%>&action=delete"
+				onclick="return confirm('Are you sure you want to delete this report template?')"
+				class="link">Delete Template</a> <a
+				href="exportTemplateAction.do?templateid=<%=templateid%>&name=<%=curreport1.getTitle()%>"
+				class="link">Export Template to K2A</a>
+			</div>
+			<%  if (request.getAttribute("message") != null) {
+				String message = (String) request.getAttribute("message"); %>
+			<%=message%>
+			<%}%>
+			</div>
+		</html:form>
+		
+		<br/>
+		
 		<div class="reportTitle"><%=curreport.getTitle()%></div>
 		<div class="reportDescription"><%=curreport.getDescription()%></div>
 		<a href="#" style="font-size: 10px; text-decoration: none;"
