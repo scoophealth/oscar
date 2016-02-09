@@ -1866,7 +1866,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 		}*/
 		//load program domain for CAISI, or else just 0
 		List<Integer> programIds = new ArrayList<Integer>();
-		//programIds.add(0);
+		programIds.add(0);
 		for(ProgramProvider pp: programManager.getProgramDomain(loggedInInfo1, loggedInInfo1.getLoggedInProviderNo())) {
 			programIds.add(pp.getProgramId().intValue());
 		}
