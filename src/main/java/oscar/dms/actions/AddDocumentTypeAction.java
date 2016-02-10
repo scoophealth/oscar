@@ -38,8 +38,8 @@ public class AddDocumentTypeAction extends DispatchAction {
 		AddDocumentTypeForm fm = (AddDocumentTypeForm) form;
 		HashMap<String,String> errors = new HashMap<String,String>();
         
-		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "r", null)) {
-			throw new SecurityException("missing required security object (_admin)");
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin,_admin.document", "r", null)) {
+			throw new SecurityException("missing required security object (_admin,_admin.document)");
 		}
 		
 		boolean doctypeadded =false;
