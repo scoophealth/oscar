@@ -1421,7 +1421,7 @@ if (curProvider_no[provIndex].equals(provNum)) {
 
 <form name="appointmentForm" style="display:inline;margin:0px;padding:0px;">
 <% if (isWeekView) { %>
-<bean:message key="provider.appointmentProviderAdminDay.doctor"/>:
+<bean:message key="provider.appointmentProviderAdminDay.provider"/>:
 <select name="provider_select" onChange="goWeekView(this.options[this.selectedIndex].value)">
 <%
 	for (nProvider=0;nProvider<numProvider;nProvider++) {
