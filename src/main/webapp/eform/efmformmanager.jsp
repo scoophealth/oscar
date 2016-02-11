@@ -113,7 +113,7 @@ $(function ()  {
 
     
 <ul class="nav nav-pills" id="eformOptions">
-<li ><a href="#upload" >Upload</a></li>
+<li><a href="#upload" >Upload</a></li>
 <li><a href="#import">Import</a></li>
 <li><a href="#download">Download</a></li>
 </ul>
@@ -122,7 +122,7 @@ $(function ()  {
 <div class="tab-pane" id="upload">
 <div class="well">
 
-<iframe id="uploadFrame" name="uploadFrame" frameborder="0" width="900" height="120" src="<%=request.getContextPath()%>/eform/partials/upload.jsp"></iframe>
+<iframe id="uploadFrame" name="uploadFrame" frameborder="0" width="100%" height="auto" scrolling="no" src="<%=request.getContextPath()%>/eform/partials/upload.jsp"></iframe>
 
 </div>
 </div>
@@ -130,7 +130,7 @@ $(function ()  {
 <div class="tab-pane" id="import">
 <div class="well">
                         
-<iframe id="importFrame" name="importFrame" frameborder="0" width="800" height="100" src="<%=request.getContextPath()%>/eform/partials/import.jsp"></iframe>
+<iframe id="importFrame" name="importFrame" frameborder="0" width="100%" height="auto" src="<%=request.getContextPath()%>/eform/partials/import.jsp"></iframe>
 
 </div>
 </div>
@@ -138,7 +138,7 @@ $(function ()  {
 <div class="tab-pane" id="download">
 <div class="well">
                         
-<iframe id="downloadFrame" name="downloadFrame" onload="downloadFrameLoaded()" frameborder="0" width="1200" height="auto" scrolling="no" src="<%=request.getContextPath()%>/eform/partials/download.jsp"></iframe>
+<iframe id="downloadFrame" name="downloadFrame" onload="downloadFrameLoaded()" frameborder="0" width="100%" height="auto" scrolling="no" src="<%=request.getContextPath()%>/eform/partials/download.jsp"></iframe>
 
 </div>
 </div>

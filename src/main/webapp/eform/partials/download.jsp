@@ -28,6 +28,7 @@
 <%@page import="org.codehaus.jettison.json.*"%>
 <%@page import="org.joda.time.*"%>
 <%@page import="org.oscarehr.ws.rest.FormsService"%>
+<%@page import="org.oscarehr.app.AppOAuth1Config"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
@@ -54,6 +55,8 @@ body{background-color:#f5f5f5;}
 		</div>
 	<% } else { 
 			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+			String k2aURL = AppOAuth1Config.fromDocument(k2aApp.getConfig()).getBaseURL();
 			AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),loggedInInfo.getLoggedInProvider().getProviderNo());
 			
 			if(k2aUser == null) { %>
@@ -109,17 +112,18 @@ body{background-color:#f5f5f5;}
 			</div>
 			<h4><bean:message key="eform.download.msgResources" /></h4>
 			<input type="button" id="download_all_k2a_eforms" value="<bean:message key="eform.download.msgDownloadEform" />" class="btn btn-primary upload" onclick="this.value = 'Downloading...'; this.disabled = true;downloadAllK2AEForms();" />
-			<input type="button" value="<bean:message key="eform.download.msgK2ABrowse" />" class="btn btn-primary upload" onclick="window.open('http://www.know2act.org/#/ws/rs/eform/explore');" />
+			<input type="button" value="<bean:message key="eform.download.msgK2ABrowse" />" class="btn btn-primary upload" onclick="window.open('<%=k2aURL%>/#/ws/rs/eform/explore');" />
 			<input type="button" value="<bean:message key="eform.download.msgRefresh" />" class="btn btn-primary upload" onclick="location.reload();" />
+			
 			<h4><bean:message key="eform.download.msgK2AFavourites" /></h4>
 			<table class="table table-condensed table-striped" id="k2aEFormTbl">
 				<thead>
-		            <tr >
-		                <th><bean:message key="eform.download.msgName" /></th>
-		                <th><bean:message key="eform.download.msgCreator" /></th>
+		            <tr>
+		                <th width="7%"><bean:message key="eform.download.btnLoadEform" /></th>
+		                <th width="40%"><bean:message key="eform.download.msgName" /></th>
+		                <th width="10%"><bean:message key="eform.download.msgCreator" /></th>
 		                <th><bean:message key="eform.download.msgCategory" /></th>
 		                <th><bean:message key="eform.download.msgCreated" /></th>
-		                <th><bean:message key="eform.download.btnLoadEform" /><th/>
 		            </tr>
 		        </thead>
 		
@@ -130,6 +134,14 @@ body{background-color:#f5f5f5;}
 		            %>
 		
 		            <tr>
+		                <td>
+		                	<a href="#" onclick="downloadK2AEForm(<%=eform.getString("id")%>);"><i class="icon-download-alt" title="<bean:message key="eform.download.btnLoadEform"/>"></i></a>
+		                    <!-- <form action="../manageEForm.do" method="POST" id="download_form_<%=stripDrugref(eform.getString("url"))%>" style="margin: 0">
+		                           <input type="hidden" name="method" value="importEFormFromRemote"/>   <%--Look at just sending the filename from mydrugref  --%>
+		                           <input type="hidden" name="url" value="<%=stripDrugref(eform.getString("url"))%>"/>
+		                           <a href="#" onclick="document.getElementById('download_form_<%=stripDrugref(eform.getString("url"))%>').submit();"><i class="icon-download-alt" title="<bean:message key="eform.download.btnLoadEform"/>"></i></a>
+		                    </form> -->
+		                </td>
 		                <td><%=eform.getString("name")%></td>
 		                <td><%=eform.getString("creator")%></td>
 		                <td><%=eform.getString("category")%></td>
@@ -138,14 +150,6 @@ body{background-color:#f5f5f5;}
 		                	   DateTime createdAt = new DateTime(createdAtString); %>
 		                	<%=createdAt.toString(pattern)%>
 		                </td>
-		                <td valign="middle">
-		                	<a href="#" onclick="downloadK2AEForm(<%=eform.getString("id")%>);"><i class="icon-download-alt" title="<bean:message key="eform.download.btnLoadEform"/>"></i></a>
-		                    <!-- <form action="../manageEForm.do" method="POST" id="download_form_<%=stripDrugref(eform.getString("url"))%>" style="margin: 0">
-		                           <input type="hidden" name="method" value="importEFormFromRemote"/>   <%--Look at just sending the filename from mydrugref  --%>
-		                           <input type="hidden" name="url" value="<%=stripDrugref(eform.getString("url"))%>"/>
-		                           <a href="#" onclick="document.getElementById('download_form_<%=stripDrugref(eform.getString("url"))%>').submit();"><i class="icon-download-alt" title="<bean:message key="eform.download.btnLoadEform"/>"></i></a>
-		                    </form> -->
-		                </td>
 		            </tr>
 		            <%}%>
 		       	</tbody>
@@ -153,6 +157,7 @@ body{background-color:#f5f5f5;}
 			<% } %>
 		<% } %>
 	<% } %>
+	<div style="font-size:0%; line-height:0%">&nbsp;</div>
 </body>
 </html:html>
 

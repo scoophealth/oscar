@@ -108,6 +108,8 @@ window.top.location.href = "<%=request.getContextPath()%>/administration/?show=F
                
 </html:form>
 <%}%>
+<div style="font-size:0%; line-height:0%">&nbsp;</div>
+
 <script src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>  
 
 <script>
