@@ -1220,19 +1220,19 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
     </myoscar:indivoRegistered>
 <%if(appManager.isK2AEnabled()){ %>
 <li>
-	<a id="K2ALink">K2A<span><sup id="k2a_new_notifications"></sup></span></a>
+	<a href="javascript:void(0);" id="K2ALink">K2A<span><sup id="k2a_new_notifications"></sup></span></a>
 	<script type="text/javascript">
 		function getK2AStatus(){
 			jQuery.get( "../ws/rs/resources/notifications/number", function( data ) {
 				  if(data === "-"){ //If user is not logged in
 					  jQuery("#K2ALink").click(function() {
-						var win = window.open('../apps/oauth1.jsp?id=K2A','appAuth','width=700,height=450');
+						var win = window.open('../apps/oauth1.jsp?id=K2A','appAuth','width=700,height=450,scrollbars=1');
 						win.focus();
 					  });
 				   }else{
 					  jQuery("#k2a_new_notifications").text(data); 
 					  jQuery("#K2ALink").click(function() {
-						var win = window.open('../apps/notifications.jsp','appAuth','width=450,height=700');
+						var win = window.open('../apps/notifications.jsp','appAuth','width=450,height=700,scrollbars=1');
 						win.focus();
 					  });
 				   }
