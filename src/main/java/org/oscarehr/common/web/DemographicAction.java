@@ -25,6 +25,7 @@ package org.oscarehr.common.web;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,8 +40,10 @@ import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtArchiveDao;
+import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicArchive;
+import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.DemographicExtArchive;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
@@ -60,6 +63,8 @@ public class DemographicAction extends DispatchAction  {
 	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	private DemographicArchiveDao demographicArchiveDao = SpringUtils.getBean(DemographicArchiveDao.class);
 	private DemographicExtArchiveDao demographicExtArchiveDao = SpringUtils.getBean(DemographicExtArchiveDao.class);
+	private DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+	
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	private ProviderManager providerManager = SpringUtils.getBean(ProviderManager.class);
 	
@@ -69,41 +74,40 @@ public class DemographicAction extends DispatchAction  {
 		
 		String demographicNo = request.getParameter("demographicNo");
 		
+		Demographic demographic = demographicDao.getDemographic(demographicNo);
+		List<DemographicExt> exts = demographicExtDao.getDemographicExtByDemographicNo(Integer.parseInt(demographicNo));
+		java.util.Map<String,DemographicExt> extMap = new java.util.HashMap<String,DemographicExt>();
+		for(DemographicExt ext:exts) {
+			extMap.put(ext.getKey(),ext);
+		}
+		
 		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
         	throw new SecurityException("missing required security object (_demographic)");
         }
 		
 		if(demographicNo != null) {
 			List<DemographicArchive> archives = demographicArchiveDao.findByDemographicNoChronologically(Integer.parseInt(demographicNo));
+			Collections.reverse(archives);
 			
-			String address;
-			String city;
-			String province;
-			String postal;
-			String phone;
-			String phone2;
-			String cell;
-			String hPhoneExt;
-			String wPhoneExt;
+			String address = demographic.getAddress();
+			String city = demographic.getCity();
+			String province = demographic.getProvince();
+			String postal = demographic.getPostal();
+			String phone = demographic.getPhone();
+			String phone2 = demographic.getPhone2();
+			String cell = extMap.get("demo_cell").getValue();
+			String hPhoneExt = extMap.get("hPhoneExt")!=null?extMap.get("hPhoneExt").getValue():"";
+			String wPhoneExt = extMap.get("wPhoneExt")!=null?extMap.get("wPhoneExt").getValue():"";
 						
 			List<DemographicHistoryItem> items = new ArrayList<DemographicHistoryItem>();
+
 			
 			for(DemographicArchive archive:archives) {
 				
-				address="";
-				city="";
-				province="";
-				postal="";
-				phone="";
-				phone2="";
-				cell="";
-				hPhoneExt="";
-				wPhoneExt="";
-				
-				List<DemographicExtArchive> exts = demographicExtArchiveDao.getDemographicExtArchiveByArchiveId(archive.getId());
-				java.util.Map<String,DemographicExtArchive> extMap = new java.util.HashMap<String,DemographicExtArchive>();
-				for(DemographicExtArchive ext:exts) {
-					extMap.put(ext.getKey(),ext);
+				List<DemographicExtArchive> exts2 = demographicExtArchiveDao.getDemographicExtArchiveByArchiveId(archive.getId());
+				java.util.Map<String,DemographicExtArchive> extMap2 = new java.util.HashMap<String,DemographicExtArchive>();
+				for(DemographicExtArchive ext2:exts2) {
+					extMap2.put(ext2.getKey(),ext2);
 				}
 					
 				String lastUpdateUser = "N/A";
@@ -121,24 +125,24 @@ public class DemographicAction extends DispatchAction  {
 					postal = archive.getPostal();
 				}
 				
-				if(!phone.equals(archive.getPhone()) || (extMap.get("hPhoneExt") != null && !extMap.get("hPhoneExt").getValue().equals(hPhoneExt))) {
+				if(!phone.equals(archive.getPhone()) || (extMap2.get("hPhoneExt") != null && !extMap2.get("hPhoneExt").getValue().equals(hPhoneExt))) {
 					//new home phone
-					items.add(new DemographicHistoryItem(archive.getPhone() + (extMap.get("hPhoneExt")!=null?"x"+extMap.get("hPhoneExt").getValue():""),"phone",archive.getLastUpdateDate(),lastUpdateUser));
+					items.add(new DemographicHistoryItem(archive.getPhone() + ((extMap2.get("hPhoneExt")!=null&&!extMap2.get("hPhoneExt").getValue().isEmpty())?"x"+extMap2.get("hPhoneExt").getValue():""),"phone",archive.getLastUpdateDate(),lastUpdateUser));
 					phone = archive.getPhone();
-					hPhoneExt = extMap.get("hPhoneExt")!=null?extMap.get("hPhoneExt").getValue():"";
+					hPhoneExt = extMap2.get("hPhoneExt")!=null?extMap2.get("hPhoneExt").getValue():"";
 				}
 				
-				if(!phone2.equals(archive.getPhone2()) || (extMap.get("wPhoneExt") != null && !extMap.get("wPhoneExt").getValue().equals(wPhoneExt))) {
+				if(!phone2.equals(archive.getPhone2()) || (extMap2.get("wPhoneExt") != null && !extMap2.get("wPhoneExt").getValue().equals(wPhoneExt))) {
 					//new work phone
-					items.add(new DemographicHistoryItem(archive.getPhone2() + (extMap.get("wPhoneExt")!=null?"x"+extMap.get("wPhoneExt").getValue():""),"phone2",archive.getLastUpdateDate(),lastUpdateUser));
+					items.add(new DemographicHistoryItem(archive.getPhone2() + ((extMap2.get("wPhoneExt")!=null&&!extMap2.get("wPhoneExt").getValue().isEmpty())?"x"+extMap2.get("wPhoneExt").getValue():""),"phone2",archive.getLastUpdateDate(),lastUpdateUser));
 					phone2 = archive.getPhone2();
-					wPhoneExt = extMap.get("wPhoneExt")!=null?extMap.get("wPhoneExt").getValue():"";
+					wPhoneExt = extMap2.get("wPhoneExt")!=null?extMap2.get("wPhoneExt").getValue():"";
 				}
 				
-				if((extMap.get("demo_cell") != null && !extMap.get("demo_cell").getValue().equals(cell))) {
+				if((extMap2.get("demo_cell") != null && !extMap2.get("demo_cell").getValue().equals(cell))) {
 					//new cell phone
-					items.add(new DemographicHistoryItem(extMap.get("demo_cell").getValue(),"cell",archive.getLastUpdateDate(),lastUpdateUser));
-					cell = extMap.get("demo_cell").getValue();
+					items.add(new DemographicHistoryItem(extMap2.get("demo_cell").getValue(),"cell",archive.getLastUpdateDate(),lastUpdateUser));
+					cell = extMap2.get("demo_cell").getValue();
 				}
 				
 			}
