@@ -113,6 +113,8 @@ public class PreventionDisplayConfig {
 			Document doc = parser.build(is);
 			Element root = doc.getRootElement();
 			List items = root.getChildren("item");
+			Map<String,Boolean> shown = new HashMap<String,Boolean>();
+			
 			for (int i = 0; i < items.size(); i++) {
 				Element e = (Element) items.get(i);
 				List attr = e.getAttributes();
@@ -122,7 +124,7 @@ public class PreventionDisplayConfig {
 					h.put(att.getName(), att.getValue());
 				}
 				
-			
+
 				if(!StringUtils.isEmpty(h.get("private"))) {
 					String key = h.get("private");
 					if(key != null) {
@@ -135,8 +137,11 @@ public class PreventionDisplayConfig {
 							for(ProgramProvider programProvider:programProviders) {
 								
 								if(contains(programNos,String.valueOf(programProvider.getProgramId()))) {
-									prevList.add(h);
-									prevHash.put(h.get("name"), h);
+									if(shown.get(h.get("name")) == null) {
+										prevList.add(h);
+										prevHash.put(h.get("name"), h);
+										shown.put(h.get("name"), true);
+									} 
 								}
 							}
 						} else {

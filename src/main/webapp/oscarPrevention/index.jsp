@@ -464,7 +464,11 @@ text-align:left;
 		<h3>&nbsp;Preventions</h3>
 		<div style="background-color: #EEEEFF;">
 		<ul>
-			<%for (int i = 0 ; i < prevList.size(); i++){
+			<%
+			Map<String,Boolean> shown = new HashMap<String,Boolean>();
+			List<ProgramProvider> programProviders = programManager2.getProgramDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+			
+			for (int i = 0 ; i < prevList.size(); i++){
 				HashMap<String,String> h = prevList.get(i);
                 String prevName = h.get("name");
                 
@@ -476,7 +480,6 @@ text-align:left;
 						if(programs != null) {
 							String[] programNos = programs.split(",");
 							
-							List<ProgramProvider> programProviders = programManager2.getProgramDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
 							for(ProgramProvider programProvider:programProviders) {
 								
 								if(contains(programNos,String.valueOf(programProvider.getProgramId()))) {
@@ -492,7 +495,7 @@ text-align:left;
             	}
             %>
             <%
-            if(!preventionManager.hideItem(prevName)){
+            if(!preventionManager.hideItem(prevName) && shown.get(prevName) == null){
             %>
 			<li style="margin-top: 2px;"><a
 				href="javascript: function myFunction() {return false; }"
@@ -500,6 +503,7 @@ text-align:left;
 			<%=prevName%> </a></li>
 			
 			<%
+			shown.put(prevName,true);
             }
             }
             %>
@@ -615,6 +619,7 @@ text-align:left;
                 <input type="hidden" name="module" value="prevention">
 		<%
                  if (!oscar.OscarProperties.getInstance().getBooleanProperty("PREVENTION_CLASSIC_VIEW","yes")){
+                	 shown.clear();
                    ArrayList<Map<String,Object>> hiddenlist = new ArrayList<Map<String,Object>>();
                   for (int i = 0 ; i < prevList.size(); i++){
                   		HashMap<String,String> h = prevList.get(i);
@@ -629,7 +634,6 @@ text-align:left;
         						if(programs != null) {
         							String[] programNos = programs.split(",");
         							
-        							List<ProgramProvider> programProviders = programManager2.getProgramDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
         							for(ProgramProvider programProvider:programProviders) {
         								
         								if(contains(programNos,String.valueOf(programProvider.getProgramId()))) {
@@ -653,7 +657,12 @@ text-align:left;
                             h2.put("prev",h);
                             h2.put("list",alist);
                             hiddenlist.add(h2);
+                            
                         }else{
+                        	if(shown.get(prevName) != null) {
+                        		continue;
+                        	}
+                        	shown.put(prevName, true);
                %>
 
 		<div class="preventionSection">
