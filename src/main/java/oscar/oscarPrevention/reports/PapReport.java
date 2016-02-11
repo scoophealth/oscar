@@ -125,7 +125,7 @@ public class PapReport implements PreventionReport {
 
 
 
-                    Calendar cal = Calendar.getInstance();
+                Calendar cal = Calendar.getInstance();
                 cal.add(Calendar.YEAR, -3);
                 Date dueDate = cal.getTime();
                 cal.add(Calendar.MONTH,-6);
@@ -150,7 +150,7 @@ public class PapReport implements PreventionReport {
                 // if prevDate is less than as of date and greater than 2 years prior
                 Calendar bonusEl = Calendar.getInstance();
                 bonusEl.setTime(asofDate);
-                bonusEl.add(Calendar.MONTH,-36);
+                bonusEl.add(Calendar.MONTH,-42);
                 //bonusEl.add(Calendar.YEAR,-2);
                 Date bonusStartDate = bonusEl.getTime();
 
