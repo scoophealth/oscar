@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -805,6 +806,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 				<table width="100%" class="demographicDetail">
 					<tr>
 						<td class="RowTop">
+						<div style="float:left;width:50%;">
 						<%
 						oscar.oscarDemographic.data.DemographicMerged dmDAO = new oscar.oscarDemographic.data.DemographicMerged();
                             String dboperation = "search_detail";
@@ -835,6 +837,10 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                                         <a id="closeBtn" href="javascript: showHideDetail();" style="display:none;">Close</a>
                                                    <% } %>
                               </security:oscarSec>
+                              </div>
+                              <div style="float:right;width:50%;text-align:right">
+                              <b>Last Edited by</b>: <%=(StringUtils.isNotBlank(demographic.getLastUpdateUser())?providerDao.getProviderName(demographic.getLastUpdateUser()):"N/A" ) %> on <%=(demographic.getLastUpdateDate()!=null)?DateFormatUtils.ISO_DATE_FORMAT.format(demographic.getLastUpdateDate()):"N/A" %>
+                              </div>
 						</td>
 					</tr>
 <%
