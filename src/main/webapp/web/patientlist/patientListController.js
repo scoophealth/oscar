@@ -287,7 +287,11 @@ $scope.changeTab = function(temp,filter){
 	}
 
 	personaService.getPatientLists().then(function(persona){
-		$scope.tabItems = persona.patientListTabItems;
+		if(persona.patientListTabItems.length == undefined) {
+			$scope.tabItems = [persona.patientListTabItems];
+		}else{
+			$scope.tabItems = persona.patientListTabItems;
+		}
 		$scope.moreTabItems = persona.patientListMoreTabItems;
 		$scope.changeTab(0);
 	},function(reason){
