@@ -136,6 +136,14 @@ Varicella Immunoglobulin	VarIg
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#PneuC"
 		layout="injection" atc="J07AL" minAge="0" maxAge="2"
 		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc="Measles"
+		name="M"
+		healthCanadaType="M"
+		layout="injection" atc=""
+		showIfMinRecordNum="1" />
 		
 	<item
 		resultDesc=""
@@ -173,7 +181,7 @@ Varicella Immunoglobulin	VarIg
 		
 	<item
 		resultDesc=""
-		desc="Meningococcal - Polysaccharide"
+		desc="Meningococcal - Polysaccharide eg Menomune"
 		name="Men-P-ACWY"
 		healthCanadaType="Men-P-ACWY"
 		layout="injection" atc="J07AH"
@@ -181,7 +189,7 @@ Varicella Immunoglobulin	VarIg
 	
 	<item
 		resultDesc=""
-		desc="Meningococcal Conjugate ACYW-135"
+		desc="Meningococcal Conjugate ACYW-135 eg Menactra"
 		name="Men-C-ACYW-135"
 		healthCanadaType="Men-C-ACYW-135"
 		layout="injection" atc="J07AH"
