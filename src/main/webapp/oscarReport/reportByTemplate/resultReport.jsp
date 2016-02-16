@@ -228,7 +228,7 @@ function clearSession(){
 		</html:form>
 		
 		<br/>
-		
+		<br/><br/><br/><br/><br/><br/><br/>
 		<div class="reportTitle"><%=curreport.getTitle()%></div>
 		<div class="reportDescription"><%=curreport.getDescription()%></div>
 		<a href="#" style="font-size: 10px; text-decoration: none;"
