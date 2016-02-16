@@ -1840,6 +1840,7 @@ insert into `secObjectName` (`objectName`) values ('_dxresearch');
 insert into `secObjectName` (`objectName`) values ('_allergy');
 insert into `secObjectName` (`objectName`) values ('_eyeform');
 insert into `secObjectName` (`objectName`) values ('_appDefinition');
+insert into `secObjectName` (`objectName`) values ('_phr');
 
 insert into `secObjectName`  (`objectName`,`description`,`orgapplicable`) values('_demographicExport', 'Export Demographic', 0);
 insert into `secObjectName` (`objectName`) values ('_admin.document');
@@ -1955,6 +1956,7 @@ insert into `secObjPrivilege` values('doctor','_prevention','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_dxresearch','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_allergy','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_eyeform','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_phr','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_admin.document','x',0,'999998');
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
@@ -2067,6 +2069,7 @@ insert into `secObjPrivilege` values('nurse','_pmm.clientSearch','x',0,'999998')
 insert into `secObjPrivilege` values('nurse','_pmm.mergeRecords','x',0,'999998');
 insert into `secObjPrivilege` values('nurse','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('nurse','_tasks','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_phr','x',0,'999998');
 
 
 
