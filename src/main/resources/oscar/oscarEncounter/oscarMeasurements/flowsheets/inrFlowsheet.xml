@@ -16,7 +16,7 @@
 		2006, 12:47 PM Author : Jay Gallagher Description: Define hypertension
 		flowsheet /*" */
 	-->
-<flowsheet name="inrFlow" display_name="INR Flowsheet"
+<flowsheet name="inrFlow" display_name="INR Flowsheet" top_HTML="inr.html"
 	ds_rules="inrFlowsheet.drl" dxcode_triggers="icd9:42731,icd9:V5861,icd9:V1251"
 	warning_colour="#E00000" recommendation_colour="yellow">
 
