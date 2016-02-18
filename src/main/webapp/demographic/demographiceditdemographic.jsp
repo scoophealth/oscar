@@ -1056,8 +1056,7 @@ if(oscarProps.getProperty("new_label_print") != null && oscarProps.getProperty("
 						<ul>
 						<%
 							ContactDao contactDao = (ContactDao)SpringUtils.getBean("contactDao");
-							DemographicContactDao dContactDao = (DemographicContactDao)SpringUtils.getBean("demographicContactDao");
-							List<DemographicContact> dContacts = dContactDao.findByDemographicNo(demographic.getDemographicNo());
+							List<DemographicContact> dContacts = demographicManager.getDemographicContacts(loggedInInfo, demographic.getDemographicNo());
 							dContacts = ContactAction.fillContactNames(dContacts);
 							for(DemographicContact dContact:dContacts) {
 								String sdm = (dContact.getSdm()!=null && dContact.getSdm().equals("true"))?"<span title=\"SDM\" >/SDM</span>":"";

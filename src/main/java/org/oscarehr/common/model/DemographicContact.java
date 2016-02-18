@@ -79,6 +79,8 @@ public class DemographicContact extends AbstractModel<Integer> {
 	private Boolean active = true;
 	private boolean mrp = Boolean.FALSE;
 	
+	private Integer programNo;
+	
 	@Transient
 	private String contactName;
 	@Transient
@@ -252,6 +254,14 @@ public class DemographicContact extends AbstractModel<Integer> {
 	public void setDetails(Contact details) {
 	    this.details = details;
     }
+
+	public Integer getProgramNo() {
+		return programNo;
+	}
+
+	public void setProgramNo(Integer programNo) {
+		this.programNo = programNo;
+	}
 
 	
 }

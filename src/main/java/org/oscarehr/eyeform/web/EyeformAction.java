@@ -110,6 +110,7 @@ import org.oscarehr.eyeform.model.EyeformProcedureBook;
 import org.oscarehr.eyeform.model.EyeformSpecsHistory;
 import org.oscarehr.eyeform.model.EyeformTestBook;
 import org.oscarehr.eyeform.model.SatelliteClinic;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.EncounterUtil;
 import org.oscarehr.util.LoggedInInfo;
@@ -1397,6 +1398,10 @@ public class EyeformAction extends DispatchAction {
 
 		request.setAttribute("providerName",
 				providerDao.getProvider(cp.getProviderNo()).getFormattedName());
+			DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+			contacts = ContactAction.fillContactNames(demographicManager.getDemographicContacts(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo, "professional"));
+			request.setAttribute("contacts", contacts);
+
 
 		if (IsPropertiesOn.isMultisitesEnable()) {
 			List<Site> sites = siteDao
