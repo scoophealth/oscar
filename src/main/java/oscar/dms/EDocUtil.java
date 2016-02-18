@@ -741,6 +741,7 @@ public final class EDocUtil {
             if(d.isRestrictToProgram() != null){
             	currentdoc.setRestrictToProgram(d.isRestrictToProgram());
             }
+            currentdoc.setProgramId(d.getProgramId());
             
 			IndivoDocs id = iDao.findByOscarDocNo(d.getDocumentNo(), "document");
 			if (id != null) {
