@@ -132,7 +132,10 @@ public class ManageDocumentAction extends DispatchAction {
 		String documentDescription = request.getParameter("documentDescription");// :test2<
 		String documentId = request.getParameter("documentId");// :29<
 		String docType = request.getParameter("docType");// :consult<
+		String programNo = request.getParameter("programNo");
+		String restrictToProgram = request.getParameter("restrictProgramNo");
 
+		
 		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "w", null)) {
         	throw new SecurityException("missing required security object (_edoc)");
         }
@@ -182,7 +185,23 @@ public class ManageDocumentAction extends DispatchAction {
 			if (obDate != null) {
 				d.setObservationdate(obDate);
 			}
+			
+			if(programNo != null && programNo.length()>0) {
+				try {
+					d.setProgramId(Integer.parseInt(programNo));
+				}catch(NumberFormatException e) {
+					d.setProgramId(null);
+				}
+			} else {
+				d.setProgramId(null);
+			}
 	
+			if(restrictToProgram != null && "on".equals(restrictToProgram) && d.getProgramId() != null) {
+				d.setRestrictToProgram(true);
+			} else {
+				d.setRestrictToProgram(false);
+			}
+			
 			documentDao.merge(d);
 		}
 

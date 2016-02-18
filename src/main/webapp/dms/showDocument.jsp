@@ -55,14 +55,24 @@
 <%@ page import="oscar.util.ConversionUtils" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
-<%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.util.SpringUtils"%><%
+<%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.managers.ProgramManager2" %>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+
+<%
 
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
             ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
             UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
             OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
             ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-               
+            
+        	ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+            LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+
+            List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+            
             String providerNo = request.getParameter("providerNo");
             UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_COMMENT);                        
             boolean skipComment = false;
@@ -422,6 +432,27 @@
                                         <td>
                                             <input   id="observationDate<%=docId%>" name="observationDate" type="text" value="<%=curdoc.getObservationDate()%>">
                                             <a id="obsdate<%=docId%>" onmouseover="renderCalendar(this.id,'observationDate<%=docId%>' );" href="javascript:void(0);" ><img title="Calendar" src="<%=request.getContextPath()%>/images/cal.gif" alt="Calendar"border="0" /></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><bean:message key="inboxmanager.document.RestrictProgramNo" /></td>
+                                        <td>
+                                            <input id="restrictProgramNo<%=docId%>" name="restrictProgramNo" type="checkbox" <%=curdoc.isRestrictToProgram()?"checked=\"checked\"":"" %> >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><bean:message key="inboxmanager.document.ProgramNo" /></td>
+                                        <td>
+                                        	<select id="programNo<%=docId%>" name="programNo">
+                                        			<option value=""></option>
+                                     			   	<%
+                                     			   	for(ProgramProvider pp:ppList) {
+                                     			   		String programName = programManager2.getProgram(loggedInInfo, pp.getProgramId().intValue()).getName();
+                                     			   	%>
+                                     			   		<option value="<%=pp.getProgramId()%>" <%=(curdoc.getProgramId() != null && pp.getProgramId().intValue() == curdoc.getProgramId().intValue())?" selected=\"selected\"  ":"" %> ><%=programName%></option>
+                                     			   	<%} %>
+                                        	</select>
+                                     
                                         </td>
                                     </tr>
                                     <tr>
