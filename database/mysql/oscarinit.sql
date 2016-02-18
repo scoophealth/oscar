@@ -9161,6 +9161,7 @@ create table DemographicContact (
 	consentToContact tinyint(1),
 	active tinyint(1),
 	mrp tinyint(1),
+	programNo int(10),
 	KEY (`demographicNo`)
 );
 

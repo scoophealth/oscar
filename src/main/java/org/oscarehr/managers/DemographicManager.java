@@ -24,11 +24,13 @@
 
 package org.oscarehr.managers;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.ContactSpecialtyDao;
@@ -111,6 +113,9 @@ public class DemographicManager {
 	@Autowired
 	private ContactSpecialtyDao contactSpecialtyDao;
 
+	@Autowired
+	private ProgramManager2 programManager2;
+	
 	public Demographic getDemographic(LoggedInInfo loggedInInfo, Integer demographicId) throws PatientDirectiveException {
 		checkPrivilege(loggedInInfo, SecurityInfoManager.READ, (demographicId!=null)?demographicId:null );
 		
@@ -248,10 +253,24 @@ public class DemographicManager {
 	}
 	
 	public List<DemographicContact> getDemographicContacts(LoggedInInfo loggedInInfo, Integer demographicNo, String category) {
-		List<DemographicContact> result = null;
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
+		List<Integer> programDomainIds = new ArrayList<Integer>();
+		for(ProgramProvider pp:programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo())) {
+			programDomainIds.add(pp.getProgramId().intValue());
+		}
 		
-		result = demographicContactDao.findByDemographicNoAndCategory( demographicNo, category );
-
+		List<DemographicContact> result = new ArrayList<DemographicContact>();
+		
+		for(DemographicContact dc:demographicContactDao.findByDemographicNoAndCategory( demographicNo, category )) {
+			if(dc.getProgramNo() != null && dc.getProgramNo().intValue() > 0) {
+				if(programDomainIds.contains(dc.getProgramNo())) {
+					result.add(dc);
+				}
+			} else {
+				result.add(dc);
+			}
+		}
+		
 		//--- log action ---
 		if (result != null) {
 			for (DemographicContact item : result) {
@@ -263,9 +282,21 @@ public class DemographicManager {
 
 	public List<DemographicContact> getDemographicContacts(LoggedInInfo loggedInInfo, Integer id) {
 		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
-		List<DemographicContact> result = null;
-		result = demographicContactDao.findActiveByDemographicNo(id);
-
+		List<Integer> programDomainIds = new ArrayList<Integer>();
+		for(ProgramProvider pp:programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo())) {
+			programDomainIds.add(pp.getProgramId().intValue());
+		}
+		List<DemographicContact> result = new ArrayList<DemographicContact>();
+		for(DemographicContact dc:demographicContactDao.findActiveByDemographicNo(id)) {
+			if(dc.getProgramNo() != null && dc.getProgramNo().intValue() > 0) {
+				if(programDomainIds.contains(dc.getProgramNo())) {
+					result.add(dc);
+				}
+			} else {
+				result.add(dc);
+			}
+		}
+		
 		//--- log action ---
 		if (result != null) {
 			for (DemographicContact item : result) {

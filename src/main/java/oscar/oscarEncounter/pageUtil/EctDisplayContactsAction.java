@@ -32,7 +32,6 @@ import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ContactDao;
 import org.oscarehr.common.dao.ContactSpecialtyDao;
-import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.ContactSpecialty;
@@ -40,6 +39,8 @@ import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.ProfessionalContact;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -51,13 +52,15 @@ public class EctDisplayContactsAction extends EctDisplayAction {
     private static final String cmd = "contacts";
     private static final Logger logger = Logger.getLogger(EctDisplayContactsAction.class);
 
-    DemographicContactDao demographicContactDao = SpringUtils.getBean(DemographicContactDao.class);
+    DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
     ContactDao contactDao = SpringUtils.getBean(ContactDao.class);
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 	ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
 	
     
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
+    	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    	
  		try {
  			
  			String healthCareTeamEnabled = OscarProperties.getInstance().getProperty("DEMOGRAPHIC_PATIENT_HEALTH_CARE_TEAM","true").toString();
@@ -103,7 +106,7 @@ public class EctDisplayContactsAction extends EctDisplayAction {
 		    Dao.setRightURL(url);
 		    Dao.setRightHeadingID(cmd);
 
-		    List<DemographicContact> contacts = demographicContactDao.findActiveByDemographicNo(Integer.parseInt(bean.demographicNo));
+		    List<DemographicContact> contacts = demographicManager.getDemographicContacts(loggedInInfo, Integer.parseInt(bean.demographicNo));
 		    ContactSpecialtyDao contactSpecialtyDao = SpringUtils.getBean(ContactSpecialtyDao.class);
 
 		    for(DemographicContact contact:contacts) {

@@ -85,13 +85,17 @@ public class ContactAction extends DispatchAction {
 
 	public ActionForward manage(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 		String demographicNo = request.getParameter("demographic_no");
 		
 		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", demographicNo)) {
         	throw new SecurityException("missing required security object (_demographic)");
         }
 		
-		List<DemographicContact> dcs = demographicContactDao.findByDemographicNoAndCategory(Integer.parseInt(demographicNo),DemographicContact.CATEGORY_PERSONAL);
+		//List<DemographicContact> dcs = demographicContactDao.findByDemographicNoAndCategory(Integer.parseInt(demographicNo),DemographicContact.CATEGORY_PERSONAL);
+		List<DemographicContact> dcs = demographicManager.getDemographicContacts(loggedInInfo, Integer.parseInt(demographicNo),DemographicContact.CATEGORY_PERSONAL);
+		
 		for(DemographicContact dc:dcs) {
 			if(dc.getType() == (DemographicContact.TYPE_DEMOGRAPHIC)) {
 				dc.setContactName(demographicDao.getClientByDemographicNo(Integer.parseInt(dc.getContactId())).getFormattedName());
@@ -104,7 +108,9 @@ public class ContactAction extends DispatchAction {
 		request.setAttribute("contacts", dcs);
 		request.setAttribute("contact_num", dcs.size());
 
-		List<DemographicContact> pdcs = demographicContactDao.findByDemographicNoAndCategory(Integer.parseInt(demographicNo),DemographicContact.CATEGORY_PROFESSIONAL);
+		//List<DemographicContact> pdcs = demographicContactDao.findByDemographicNoAndCategory(Integer.parseInt(demographicNo),DemographicContact.CATEGORY_PROFESSIONAL);
+		List<DemographicContact> pdcs = demographicManager.getDemographicContacts(loggedInInfo,Integer.parseInt(demographicNo),DemographicContact.CATEGORY_PROFESSIONAL);
+		
 		for(DemographicContact dc:pdcs) {
 			// workaround: UI allows to enter specialist with  a type that is not set, prevent NPE and display 'Unknown' as name
 			// user then can choose to delete this entry
@@ -191,6 +197,12 @@ public class ContactAction extends DispatchAction {
     				c.setConsentToContact(false);
     			}
     			
+    			if(request.getParameter("contact_"+x+".programId") != null && !request.getParameter("contact_"+x+".programId").equals("0")) {
+    				c.setProgramNo(Integer.parseInt(request.getParameter("contact_"+x+".programId")));
+    			} else {
+    				c.setProgramNo(null);
+    			}
+    			
     			if(request.getParameter("contact_"+x+".active").equals("1")) {
     				c.setActive(true);
     			} else {
@@ -265,6 +277,12 @@ public class ContactAction extends DispatchAction {
     				c.setConsentToContact(true);
     			} else {
     				c.setConsentToContact(false);
+    			}
+    			
+    			if(request.getParameter("procontact_"+x+".programId") != null && !request.getParameter("procontact_"+x+".programId").equals("0")) {
+    				c.setProgramNo(Integer.parseInt(request.getParameter("procontact_"+x+".programId")));
+    			} else {
+    				c.setProgramNo(null);
     			}
     			
     			if("1".equals( request.getParameter("procontact_"+x+".active") )) {
