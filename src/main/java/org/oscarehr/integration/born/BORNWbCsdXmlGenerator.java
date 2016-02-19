@@ -28,6 +28,7 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,9 @@ import org.apache.xmlbeans.XmlValidationError;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.ConsultationRequestDao;
+import org.oscarehr.common.dao.ConsultationServiceDao;
 //import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
@@ -46,20 +50,23 @@ import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
+import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.common.model.ConsultationServices;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
+import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.CodingSystemManager;
 import org.oscarehr.sharingcenter.dao.ClinicInfoDao;
 import org.oscarehr.sharingcenter.model.ClinicInfoDataObject;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.OscarProperties;
-import oscar.util.StringUtils;
+import ca.bornontario.wbcsd.AssociatedRourke;
 import ca.bornontario.wbcsd.BORNWBCSDBatch;
 import ca.bornontario.wbcsd.BORNWBCSDBatchDocument;
 import ca.bornontario.wbcsd.CountryProvince;
@@ -68,9 +75,16 @@ import ca.bornontario.wbcsd.HealthProblem;
 import ca.bornontario.wbcsd.ImmunizationData;
 import ca.bornontario.wbcsd.Medication;
 import ca.bornontario.wbcsd.PatientInfo;
+import ca.bornontario.wbcsd.PrimaryPhysicianType;
 import ca.bornontario.wbcsd.ProblemsDiagnosisCodeSystem;
+import ca.bornontario.wbcsd.Referral;
+import ca.bornontario.wbcsd.ReferralCategory;
+import ca.bornontario.wbcsd.ReferralCategoryName;
+import ca.bornontario.wbcsd.ReferringProviderType;
 import ca.bornontario.wbcsd.Vaccine;
 import ca.bornontario.wbcsd.VisitData;
+import oscar.OscarProperties;
+import oscar.util.StringUtils;
 
 public class BORNWbCsdXmlGenerator {
 
@@ -80,11 +94,14 @@ public class BORNWbCsdXmlGenerator {
 
 	private PreventionDao preventionDao = SpringUtils.getBean(PreventionDao.class);
 	private PreventionExtDao preventionExtDao = SpringUtils.getBean(PreventionExtDao.class);
-
+	private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	
 	
 	private DrugDao drugDao = SpringUtils.getBean(DrugDao.class);
 	private MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	private DxresearchDAO dxResearchDAO = SpringUtils.getBean(DxresearchDAO.class);
+	private ConsultationRequestDao consultationRequestDao = SpringUtils.getBean(ConsultationRequestDao.class);
+	private ConsultationServiceDao consultationServiceDao = SpringUtils.getBean(ConsultationServiceDao.class);
 	
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 	
@@ -100,6 +117,8 @@ public class BORNWbCsdXmlGenerator {
 
 		populateImmunizationData(patientInfo, demographicNo);
 
+		populateReferralData(patientInfo, demographicNo);
+		
 		////business validation
 		//business validation
 		if (!isAgeLessThan7y(patientInfo)) {
@@ -153,6 +172,7 @@ public class BORNWbCsdXmlGenerator {
 			addToDateMap(map,date,drug);
 		}
 		
+		
 		for(String date: map.keySet()) {
 			List<Object> items = map.get(date);
 			
@@ -172,8 +192,191 @@ public class BORNWbCsdXmlGenerator {
 				if(item instanceof Drug) {
 					populateDrug(visitData,(Drug)item);
 				}
+				
 			}
 		}
+	}
+	
+	private void populateReferralData(PatientInfo patientInfo, Integer demographicNo) {
+		List<String> services = Arrays.asList("Autism Intervention Services","Blind Low Vision Program","Child Care","Child Protection Services",
+				"Children's Mental Health Services","Children's Treatment Centre","Community Care Access Centre","Community Parks and Recreation Programs",
+				"Dental Services","Family Resource Programs","Healthy Babies Healthy Children","Infant Development Program","Infant Hearing Program",
+				"Ontario Early Years Centre","Paediatrician/Developmental Paediatrician","Preschool Speech and Language Program","Public Health",
+				"Schools","Services for Physical and Developmental Disabilities","Services for the Hearing Impaired","Services for the Visually Impaired",
+				"Specialized Child Care Programming","Specialized Medical Services");
+		
+		List<ConsultationRequest> consultRequests = consultationRequestDao.findByDemographicAndServices(demographicNo, services);
+		
+		if (consultRequests.isEmpty()) {
+			return;
+		}
+		
+		for(ConsultationRequest consult:consultRequests) {
+			
+			Referral referral = patientInfo.addNewReferral();
+			
+			Demographic demographic = demographicDao.getDemographic(demographicNo.toString());
+			Provider mrp = providerDao.getProvider(demographic.getProviderNo());
+			ConsultationServices service = consultationServiceDao.find(consult.getServiceId());
+			ProfessionalSpecialist professionalSpecialist = consult.getProfessionalSpecialist();
+			Provider provider = providerDao.getProvider(consult.getProviderNo());
+			
+			if(mrp != null) {
+				referral.setPrimaryPhysician(demographic.getProviderNo());
+				referral.setPrimaryPhysicianType(PrimaryPhysicianType.X_3);
+			}
+			
+			
+			setReferralCategory(referral.addNewReferralCategory(),service.getServiceDesc());
+		
+			if(referral.getReferralCategory().getReferralCategoryName().equals(ReferralCategory.UNKN)) {
+				referral.setReferralCategoryOther(service.getServiceDesc());
+			}
+			
+			referral.setReferralDate(new XmlCalendar(dateFormatter.format(consult.getReferralDate())));
+
+			referral.setReferralStatus(getStatusText(consult.getStatus()));
+			referral.setReferralUrgency(consult.getUrgency());
+			
+			referral.setReferredToPerson(professionalSpecialist.getLastName() + ", " + professionalSpecialist.getFirstName());
+			
+			referral.setReferringProvider(provider.getProviderNo());
+			referral.setReferringProviderType(ReferringProviderType.X_3);
+			
+			referral.setAssociatedRourke(getAssociatedRourke(consult.getSource()));
+			/*
+			referral.setReferredToSite(arg0);
+			*/
+			
+		}
+	}
+	
+	private AssociatedRourke.Enum getAssociatedRourke(String source) {
+		if(source == null || "".equals(source)) {
+			return null;
+		}
+		
+		switch(source) {
+		case "1w": 
+			return AssociatedRourke.RBRW_01;
+		case "2w": 
+			return AssociatedRourke.RBRW_02;
+		case "1m":
+			return AssociatedRourke.RBRM_01;
+		case "2m":
+			return AssociatedRourke.RBRM_02;
+		case "4m":
+			return AssociatedRourke.RBRM_04;
+		case "6m":
+			return AssociatedRourke.RBRM_06;
+		case "9m":
+			return AssociatedRourke.RBRM_09;
+		case "12m":
+			return AssociatedRourke.RBRM_12_13;
+		case "15m":
+			return AssociatedRourke.RBRM_15;
+		case "18m":
+			return AssociatedRourke.RBRM_18;
+		case "2y":
+			return AssociatedRourke.RBRY_2_3;
+		case "4y":
+			return AssociatedRourke.RBRY_4_5;
+			
+		}
+		
+		return null;
+	}
+	
+	private String getStatusText(String status) {
+		String val = "N/A";
+		
+		if("1".equals(status)) {
+			return "Nothing";
+		} else if("2".equals(status)) {
+			return "Pending Specialist Callback";
+		} if("3".equals(status)) {
+			return "Pending Patient Callback";
+		} if("4".equals(status)) {
+			return "Completed";
+		}
+		return val;
+	}
+	
+	public void setReferralCategory(ReferralCategoryName result,String serviceName) {
+		switch(serviceName) {
+		case "Autism Intervention Services":
+			result.setReferralCategoryName(ReferralCategory.AIS);
+			break;
+		case "Blind Low Vision Program":
+			result.setReferralCategoryName( ReferralCategory.BLVP);
+			break;
+		case "Child Care":
+			result.setReferralCategoryName( ReferralCategory.CC);
+			break;
+		case "Child Protection Services":
+			result.setReferralCategoryName( ReferralCategory.CPS);
+			break;
+		case "Children's Mental Health Services":
+			result.setReferralCategoryName( ReferralCategory.CMHS);
+			break;
+		case "Children's Treatment Centre":
+			result.setReferralCategoryName( ReferralCategory.CTC);
+			break;
+		case "Community Care Access Centre":
+			result.setReferralCategoryName( ReferralCategory.CCAC);
+			break;
+		case "Community Parks and Recreation Programs":
+			result.setReferralCategoryName( ReferralCategory.CPRP);
+			break;
+		case "Dental Services":
+			result.setReferralCategoryName( ReferralCategory.DS);
+			break;
+		case "Family Resource Programs":
+			result.setReferralCategoryName( ReferralCategory.FSP);
+			break;
+		case "Healthy Babies Healthy Children":
+			result.setReferralCategoryName( ReferralCategory.HBHC);
+			break;
+		case "Infant Development Program":
+			result.setReferralCategoryName( ReferralCategory.IDP);
+			break;
+		case "Infant Hearing Program":
+			result.setReferralCategoryName( ReferralCategory.IHP);
+			break;
+		case "Ontario Early Years Centre":
+			result.setReferralCategoryName( ReferralCategory.OEYC);
+			break;
+		case "Paediatrician/Developmental Paediatrician":
+			result.setReferralCategoryName( ReferralCategory.PAED);
+			break;
+		case "Preschool Speech and Language Program":
+			result.setReferralCategoryName( ReferralCategory.PSLP);
+			break;
+		case "Public Health":
+			result.setReferralCategoryName( ReferralCategory.PH);
+			break;
+		case "Schools":
+			result.setReferralCategoryName( ReferralCategory.SCHL);
+			break;
+		case "Services for Physical and Developmental Disabilities":
+			result.setReferralCategoryName( ReferralCategory.SPDD);
+			break;
+		case "Services for the Hearing Impaired":
+			result.setReferralCategoryName( ReferralCategory.SHI);
+			break;
+		case "Services for the Visually Impaired":
+			result.setReferralCategoryName( ReferralCategory.SVO);
+			break;
+		case "Specialized Child Care Programming":
+			result.setReferralCategoryName( ReferralCategory.SCCP);
+			break;
+		case "Specialized Medical Services":
+			result.setReferralCategoryName( ReferralCategory.SMS);
+			break;
+		default:
+			result.setReferralCategoryName(ReferralCategory.UNKN);
+		}
+
 	}
 	
 	private void populateMeasurement(VisitData visitData, Measurement measurement) {

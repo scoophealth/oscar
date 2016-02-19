@@ -657,7 +657,7 @@
 		<dependency>
 			<groupId>ca.bornontario</groupId>
 			<artifactId>BORNWBCSD</artifactId>
-			<version>1.5.3.1</version>
+			<version>2.2.1</version>
 		</dependency>
 
         <!-- FOR ORN Project - CKD config in XML format -->
@@ -1361,8 +1361,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
                                 <version>2.5.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 

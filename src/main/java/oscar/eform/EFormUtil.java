@@ -27,6 +27,8 @@ package oscar.eform;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,9 +46,6 @@ import java.util.regex.Pattern;
 
 import javax.persistence.PersistenceException;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -59,17 +58,21 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.EFormDao;
 import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
 import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EFormValueDao;
+import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.dao.TicklerDao;
+import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EFormGroup;
 import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.Prevention;
+import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.PreventionManager;
@@ -79,19 +82,22 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import com.quatro.model.security.Secobjprivilege;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.eform.actions.DisplayImageAction;
 import oscar.eform.data.EForm;
 import oscar.eform.data.EFormBase;
+import oscar.oscarClinic.ClinicData;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.data.MsgMessageData;
 import oscar.util.ConversionUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.UtilDateUtilities;
-
-import com.quatro.model.security.Secobjprivilege;
 
 public class EFormUtil {
 	private static final Logger logger = MiscUtils.getLogger();
@@ -115,7 +121,10 @@ public class EFormUtil {
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean(ProviderDao.class);
 	private static TicklerDao ticklerDao = SpringUtils.getBean(TicklerDao.class);
 	private static PreventionManager preventionManager = SpringUtils.getBean(PreventionManager.class);
-
+	private static ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+	private static ConsultationRequestDao consultationRequestDao = SpringUtils.getBean(ConsultationRequestDao.class);
+	private static ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
+	
 	private EFormUtil() {
 	}
 
@@ -1003,6 +1012,111 @@ public class EFormUtil {
 			
 			ticklerDao.persist(tickler);
 		}
+		
+		/* write to consult request
+		 * <consultRequest>
+		 * 		<referredToService></referredToService>
+		 * 		<referredToSpecialist></referredToSpecialist>
+		 * 		<urgency></urgency>
+		 * 		<referredBy></referredBy>
+		 * 		<referralDate></referralDate>
+		 * 		<reason>
+		 * 			reason
+		 * 		</reason>
+		 * 		<clinicalInfo>
+		 * 			clinicalInfo
+		 * 		</clinicalInfo>
+		 * 		<currentMeds>
+		 * 			currentMeds
+		 * 		</currentMeds>
+		 * 		<allergies>
+		 * 			allergies
+		 * 		</allergies>
+		 * 		<concurrentProblems>
+		 * 			concurrentProblems
+		 * 		</concurrentProblems>
+		 *		<patientWillBook></patientWillBook>
+		 *		<letterheadName></letterheadName>
+		 *		<letterheadAddresss></letterheadAddresss>
+		 *		<letterheadPhone></letterheadPhone>
+		 *		<letterheadFax></letterheadFax>
+		 *		<status></status>
+		 *		<source></source>
+		 * </consultRequest>
+		 */
+		templates = getWithin("consultRequest", text);
+		for (String template : templates) {
+			if (StringUtils.isBlank(template)) continue;
+			
+			String referredToService = getContent("referredToService", template, null);
+			String referredToSpecialist = getContent("referredToSpecialist", template, null);
+			String referredBy = getContent("referredBy", template, null);
+			
+			String urgency = getContent("urgency", template, null);
+			String referralDate = getContent("referralDate", template, null);
+			String reason = getContent("reason", template, "");
+			String clinicalInfo = getContent("clinicalInfo", template, "");
+			String currentMeds = getContent("currentMeds", template, "");
+			String allergies = getContent("allergies", template, "");
+			String concurrentProblems = getContent("concurrentProblems", template, "");
+			
+			String patientWillBook = getContent("patientWillBook", template, null);
+			String letterheadName = getContent("letterheadName", template, null);
+			String letterheadAddress = getContent("letterheadAddress", template, null);
+			String letterheadPhone = getContent("letterheadPhone", template, null);
+			String letterheadFax = getContent("letterheadFax", template, null);
+			String status = getContent("urgency", template, null);
+			String source = getContent("source",template,"");
+			
+			ConsultationRequest consult = new ConsultationRequest();
+			
+			ProfessionalSpecialist ps = professionalSpecialistDao.find(Integer.parseInt(referredToSpecialist));
+			if(ps == null) continue;
+			if(referredToService == null || referredBy == null) continue;
+			
+			consult.setServiceId(Integer.parseInt(referredToService));
+			consult.setDemographicId(Integer.parseInt(eForm.getDemographicNo()));
+			consult.setProviderNo(referredBy);
+			consult.setFdid(Integer.parseInt(fdid));
+			
+			if(referralDate != null) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				try {
+					consult.setReferralDate(sdf.parse(referralDate));
+				}catch(ParseException e) {}
+			} else {
+				consult.setReferralDate(new Date());
+			}
+			
+			consult.setReasonForReferral(reason);
+			consult.setClinicalInfo(clinicalInfo);
+			consult.setCurrentMeds(currentMeds);
+			consult.setAllergies(allergies);
+			consult.setConcurrentProblems(concurrentProblems);
+			
+			consult.setUrgency(urgency!=null?urgency:"2");
+			consult.setStatus(status != null?status:"1");
+			consult.setSendTo("-1");
+			consult.setPatientWillBook(patientWillBook!=null?Boolean.valueOf(patientWillBook):false);
+	
+			consult.setSource(source);
+			
+			ClinicData clinic = new ClinicData();
+			
+			consult.setLetterheadName(letterheadName!=null?letterheadName:clinic.getClinicName());
+			consult.setLetterheadAddress(letterheadAddress!=null?letterheadAddress:clinic.getClinicAddress() + " " + clinic.getClinicCity() + " " + clinic.getClinicProvince() + " " + clinic.getClinicPostal());
+			consult.setLetterheadPhone(letterheadPhone!=null?letterheadPhone:clinic.getClinicPhone());
+			consult.setLetterheadFax(letterheadFax!=null?letterheadFax:clinic.getClinicFax());
+			
+			
+			consultationRequestDao.persist(consult);
+			
+			consult.setProfessionalSpecialist(ps);
+			consultationRequestDao.merge(consult);
+			
+			
+		}
+		
 	}
 
 	public static int findIgnoreCase(String phrase, String text, int start) {

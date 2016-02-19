@@ -56,6 +56,8 @@ function hideDiv() {
   String appointment_no = request.getParameter("appointment");
   String fid = request.getParameter("fid");
   String eform_link = request.getParameter("eform_link");
+  String source = request.getParameter("source");
+  
 
   EForm thisEForm = null;
   if (fid == null || demographic_no == null) {
@@ -75,6 +77,7 @@ function hideDiv() {
   thisEForm.setDatabaseAPs();
   thisEForm.setOscarOPEN(request.getRequestURI());
   thisEForm.setAction();
+  thisEForm.setSource(source);
   out.print(thisEForm.getFormHtml());
 %>
 <%

@@ -322,6 +322,9 @@ CREATE TABLE consultationRequests (
   letterheadAddress TEXT,
   letterheadPhone VARCHAR(50),
   letterheadFax VARCHAR(50),
+  `lastUpdateDate` datetime not null,
+  fdid int(10),
+  source varchar(50),
   PRIMARY KEY  (requestId)
 ) ;
 
@@ -7135,7 +7138,8 @@ CREATE TABLE professionalSpecialists (
   cellPhoneNumber varchar(30),
   pagerNumber varchar(30),
   salutation varchar(10),
-  hideFromView tinyint(1)
+  hideFromView tinyint(1),
+  eformId int(10)
 );
 
 --

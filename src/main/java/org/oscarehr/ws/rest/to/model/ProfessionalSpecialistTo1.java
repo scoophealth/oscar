@@ -48,6 +48,7 @@ public class ProfessionalSpecialistTo1 implements Serializable {
     private String referralNo;
 	private Integer institutionId;
     private Integer departmentId;
+    private Integer eformId;
     
     public Integer getId() {
 		return id;
@@ -163,4 +164,11 @@ public class ProfessionalSpecialistTo1 implements Serializable {
 	public void setDepartmentId(Integer departmentId) {
 		this.departmentId = departmentId;
 	}
+	public Integer getEformId() {
+		return eformId;
+	}
+	public void setEformId(Integer eformId) {
+		this.eformId = eformId;
+	}
+	
 }

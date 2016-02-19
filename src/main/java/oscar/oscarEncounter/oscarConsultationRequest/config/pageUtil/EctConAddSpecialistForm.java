@@ -57,6 +57,7 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	String pagerNumber;
 	String salutation;
 	Boolean hideFromView;
+	Integer eformId;
 
 	private String referralNo;
 
@@ -327,6 +328,15 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	public void setHideFromView(Boolean hideFromView) {
 		this.hideFromView = hideFromView;
 	}
+
+	public Integer getEformId() {
+		return eformId;
+	}
+
+	public void setEformId(Integer eformId) {
+		this.eformId = eformId;
+	}
+	
 	
 	
 }

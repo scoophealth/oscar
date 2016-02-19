@@ -37,6 +37,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -98,6 +100,13 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
     private String letterheadAddress;
     private String letterheadPhone;
     private String letterheadFax;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastUpdateDate;
+    
+    private Integer fdid = null;
+    private String source;
+    
     
 	@Override
     public Integer getId() {
@@ -314,4 +323,29 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 	public void setLetterheadFax(String letterheadFax) {
 	    this.letterheadFax = letterheadFax;
     }
+	
+	
+	public Integer getFdid() {
+		return fdid;
+	}
+
+	public void setFdid(Integer fdid) {
+		this.fdid = fdid;
+	}
+	
+	
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	@PrePersist
+	@PreUpdate
+	protected void jpa_updateLastDateUpdated() {
+		lastUpdateDate = new Date();
+	}
 }

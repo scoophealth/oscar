@@ -1,0 +1,24 @@
+INSERT INTO consultationServices VALUES (\N,'Autism Intervention Services','1');
+INSERT INTO consultationServices VALUES (\N,'Blind Low Vision Program','1');
+INSERT INTO consultationServices VALUES (\N,'Child Care','1');
+INSERT INTO consultationServices VALUES (\N,'Child Protection Services','1');
+INSERT INTO consultationServices VALUES (\N,'Children\'s Mental Health Services','1');
+INSERT INTO consultationServices VALUES (\N,'Children\'s Treatment Centre','1');
+INSERT INTO consultationServices VALUES (\N,'Community Care Access Centre','1');
+INSERT INTO consultationServices VALUES (\N,'Community Parks and Recreation Programs','1');
+INSERT INTO consultationServices VALUES (\N,'Dental Services','1');
+INSERT INTO consultationServices VALUES (\N,'Family Resource Programs','1');
+INSERT INTO consultationServices VALUES (\N,'Healthy Babies Healthy Children','1');
+INSERT INTO consultationServices VALUES (\N,'Infant Development Program','1');
+INSERT INTO consultationServices VALUES (\N,'Infant Hearing Program','1');
+INSERT INTO consultationServices VALUES (\N,'Ontario Early Years Centre','1');
+INSERT INTO consultationServices VALUES (\N,'Paediatrician/Developmental Paediatrician','1');
+INSERT INTO consultationServices VALUES (\N,'Preschool Speech and Language Program','1');
+INSERT INTO consultationServices VALUES (\N,'Public Health','1');
+INSERT INTO consultationServices VALUES (\N,'Schools','1');
+INSERT INTO consultationServices VALUES (\N,'Services for Physical and Developmental Disabilities','1');
+INSERT INTO consultationServices VALUES (\N,'Services for the Hearing Impaired','1');
+INSERT INTO consultationServices VALUES (\N,'Services for the Visually Impaired','1');
+INSERT INTO consultationServices VALUES (\N,'Specialized Child Care Programming','1');
+INSERT INTO consultationServices VALUES (\N,'Specialized Medical Services','1');
+

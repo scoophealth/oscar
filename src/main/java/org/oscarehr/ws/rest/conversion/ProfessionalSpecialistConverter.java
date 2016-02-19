@@ -52,6 +52,7 @@ public class ProfessionalSpecialistConverter extends AbstractConverter<Professio
 		d.setReferralNo(t.getReferralNo());
 		d.setInstitutionId(t.getInstitutionId());
 		d.setDepartmentId(t.getDepartmentId());
+		d.setEformId(t.getEformId());
 		
 		return d;
 	}
@@ -79,7 +80,8 @@ public class ProfessionalSpecialistConverter extends AbstractConverter<Professio
 		t.setReferralNo(d.getReferralNo());
 		t.setInstitutionId(d.getInstitutionId());
 		t.setDepartmentId(d.getDepartmentId());
-
+		t.setEformId(d.getEformId());
+		
 		return t;
 	}
 

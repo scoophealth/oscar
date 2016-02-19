@@ -73,7 +73,8 @@ if(!authed) {
 <%@page import="org.oscarehr.PMmodule.dao.ProgramDao, org.oscarehr.PMmodule.model.Program" %>
 <%@page import="oscar.oscarDemographic.data.DemographicData, oscar.oscarRx.data.RxProviderData, oscar.oscarRx.data.RxProviderData.Provider, oscar.oscarClinic.ClinicData"%>
 <%@ page import="org.oscarehr.common.dao.FaxConfigDao, org.oscarehr.common.model.FaxConfig" %>
-
+<%@page import="org.oscarehr.common.dao.ConsultationServiceDao" %>
+<%@page import="org.oscarehr.common.model.ConsultationServices" %>
 <jsp:useBean id="displayServiceUtil" scope="request" class="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDisplayServiceUtil" />
 
 <html:html locale="true">
@@ -176,6 +177,7 @@ if(!authed) {
 		String formattedDate = year + "/" + mon + "/" + day;
 
 		OscarProperties props = OscarProperties.getInstance();
+		ConsultationServiceDao consultationServiceDao = SpringUtils.getBean(ConsultationServiceDao.class);
 %><head>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <script>
@@ -1211,6 +1213,8 @@ function updateFaxButton() {
 	<input type="hidden" name="requestId" value="<%=requestId%>">
 	<input type="hidden" name="documents" value="">
 	<input type="hidden" name="ext_appNo" value="<%=request.getParameter("appNo") %>">
+	<input type="hidden" name="source" value="<%=(requestId!=null)?thisForm.getSource():request.getParameter("source") %>">
+	
         <input type="hidden" id="saved" value="false">
 	<!--  -->
 	<table class="MainTable" id="scrollNumber1" name="encounterTable">
@@ -1441,7 +1445,7 @@ function updateFaxButton() {
 								{
 									%>
 									
-									<span id="consult-disclaimer" title="When consult was saved this was the saved consultant but is no longer on this specialist list." style="display:none;font-size:24px;">*</span> <html:select property="specialist" size="1" onchange="onSelectSpecialist(this)">
+									<span id="consult-disclaimer" title="When consult was saved this was the saved consultant but is no longer on this specialist list." style="display:none;font-size:24px;">*</span> <html:select styleId="specialist" property="specialist" size="1" onchange="onSelectSpecialist(this)">
 									
 									</html:select>
 									
@@ -1661,15 +1665,28 @@ function updateFaxButton() {
 							<td colspan="2" class="tite3"><html:textarea cols="50"
 								rows="3" property="appointmentNotes"></html:textarea></td>
 						</tr>
-                                                <tr>
-							<td colspan="2" class="tite4"><bean:message
+                       
+						
+						<tr>
+							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formLastFollowup" />:
 							</td>
+							<td colspan="2" class="tite3"><img alt="calendar" id="followUpDate_cal" src="../../images/cal.gif">&nbsp;<html:text styleId="followUpDate" property="followUpDate" readonly="true" ondblclick="this.value='';"/>
 						</tr>
+						
+						<%
+							if(thisForm.getFdid() != null) {
+						%>
 						<tr>
-                                                    <td colspan="2" class="tite3"><img alt="calendar" id="followUpDate_cal" src="../../images/cal.gif">&nbsp;<html:text styleId="followUpDate" property="followUpDate" readonly="true" ondblclick="this.value='';"/>
+							<td class="tite4">EForm:
+							</td>
+							<td class="tite2">
+								<a href="<%=request.getContextPath()%>/eform/efmshowform_data.jsp?fdid=<%=thisForm.getFdid() %>">Click to view</a>
+							</td>
 						</tr>
-
+						<%
+							}
+						%>
 					</table>
 					</td>
 				</tr>
@@ -2088,6 +2105,24 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
             <%}%>
 
             onSelectSpecialist(document.EctConsultationFormRequestForm.specialist);
+            
+            <%
+            	//new with BORN referrals. Allow form to be loaded with service and 
+            	//specialist pre-selected
+            	String reqService = request.getParameter("service");
+            	
+            	String reqSpecialist = request.getParameter("specialist");
+            	if(reqService != null && reqSpecialist != null) {
+            		ConsultationServices consultService = consultationServiceDao.findByDescription(reqService);
+            		if(consultService != null) {
+            		%>
+            		jQuery("#service").val('<%=consultService.getId()%>');
+            		fillSpecialistSelect(document.getElementById('service'));
+            		jQuery("#specialist").val('<%=reqSpecialist%>');
+            		onSelectSpecialist(document.getElementById('specialist'));
+            		<%
+            	} }
+            %>
         //-->
         </script>
 

@@ -37,8 +37,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -68,6 +66,7 @@ import org.oscarehr.ws.rest.conversion.DemographicConverter;
 import org.oscarehr.ws.rest.conversion.ProfessionalSpecialistConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
+import org.oscarehr.ws.rest.to.ReferralResponse;
 import org.oscarehr.ws.rest.to.model.ConsultationAttachmentTo1;
 import org.oscarehr.ws.rest.to.model.ConsultationRequestSearchResult;
 import org.oscarehr.ws.rest.to.model.ConsultationRequestTo1;
@@ -79,6 +78,7 @@ import org.oscarehr.ws.rest.to.model.ProfessionalSpecialistTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import net.sf.json.JSONObject;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.eform.EFormUtil;
@@ -325,6 +325,34 @@ public class ConsultationWebService extends AbstractServiceImpl {
 		saveResponseAttachments(data);
 		
 		return data;
+	}
+	
+	@GET
+	@Path("/getReferralPathwaysByService")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReferralResponse getReferralPathwaysByService(@QueryParam("serviceName") String serviceName) {
+		ReferralResponse response = new ReferralResponse();
+		
+		List<ProfessionalSpecialist> specs = consultationManager.findByService(getLoggedInInfo(), serviceName);
+		ProfessionalSpecialistConverter converter = new ProfessionalSpecialistConverter();
+		
+		response.setSpecialists(converter.getAllAsTransferObjects(getLoggedInInfo(), specs));
+		
+		return response;
+	}
+	
+	@GET
+	@Path("/getProfessionalSpecialist")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ProfessionalSpecialistTo1 getProfessionalSpecialist(@QueryParam("specId") Integer specId) {
+		
+		ProfessionalSpecialist ps = consultationManager.getProfessionalSpecialist(specId);
+		if(ps != null) {
+			ProfessionalSpecialistConverter converter = new ProfessionalSpecialistConverter();
+			return converter.getAsTransferObject(getLoggedInInfo(), ps);	
+		}
+		
+		return null;
 	}
 	
 	

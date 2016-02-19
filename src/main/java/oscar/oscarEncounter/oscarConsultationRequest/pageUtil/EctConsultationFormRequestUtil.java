@@ -100,6 +100,8 @@ public class EctConsultationFormRequestUtil {
 	public String letterheadPhone;
 	public String letterheadFax;
 	
+	public Integer fdid;
+	
 	private ConsultationServiceDao consultationServiceDao = (ConsultationServiceDao) SpringUtils.getBean("consultationServiceDao");
 	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 
@@ -203,6 +205,7 @@ public class EctConsultationFormRequestUtil {
 		ConsultationRequestExtDao daoExt = (ConsultationRequestExtDao) SpringUtils.getBean("consultationRequestExtDao");
 		
 		if (cr != null) {
+			fdid = cr.getFdid();
 			pwb = ConversionUtils.toBoolString(cr.isPatientWillBook());
 			urgency = cr.getUrgency();
 			providerNo = cr.getProviderNo();
