@@ -144,6 +144,19 @@ angular.module("consultServices", [])
             });
        
             return deferred.promise;
+        },
+        
+        getReferralPathwaysByService: function(serviceName){
+        	var deferred = $q.defer();
+        	$http.get(this.apiPath+'getReferralPathwaysByService?serviceName='+serviceName).success(function(data){
+            	console.log(data);
+                deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching items");
+              deferred.reject("An error occured while fetching referral pathways");
+            });
+       
+            return deferred.promise;
         }
     };
 });

@@ -113,6 +113,9 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	private String letterheadName, letterheadAddress, letterheadPhone, letterheadFax;
 	
+	private Integer fdid;
+	private String source;
+	
 	public String getProfessionalSpecialistName() {
 		return (StringUtils.trimToEmpty(professionalSpecialistName));
 	}
@@ -575,6 +578,22 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	public void setLetterheadFax(String letterheadFax) {
 	    this.letterheadFax = letterheadFax;
     }
+
+	public Integer getFdid() {
+		return fdid;
+	}
+
+	public void setFdid(Integer fdid) {
+		this.fdid = fdid;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
   
 
 }

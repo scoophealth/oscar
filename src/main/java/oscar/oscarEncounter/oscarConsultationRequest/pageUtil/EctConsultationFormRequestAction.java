@@ -192,6 +192,11 @@ public class EctConsultationFormRequestAction extends Action {
                                     consult.setFollowUpDate(date);
                                 }
 
+                                if(frm.getSource()!=null && !"null".equals(frm.getSource())) {
+                                	consult.setSource(frm.getSource());
+                                } else {
+                                	consult.setSource("");
+                                }
 
                                 consultationRequestDao.persist(consult);
 
@@ -299,6 +304,13 @@ public class EctConsultationFormRequestAction extends Action {
                     date = DateUtils.parseDate(frm.getFollowUpDate(), format);
                     consult.setFollowUpDate(date);
                 }
+                
+                if(frm.getSource()!=null && !"null".equals(frm.getSource())) {
+                	consult.setSource(frm.getSource());
+                } else {
+                	consult.setSource("");
+                }
+                
                 consultationRequestDao.merge(consult);
                 
                 consultationRequestExtDao.clear(Integer.parseInt(requestId));

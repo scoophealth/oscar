@@ -43,6 +43,7 @@ import org.marc.shic.cda.datatypes.CDAStandard;
 import org.marc.shic.cda.utils.CdaUtils;
 import org.marc.shic.core.CodeValue;
 import org.marc.shic.core.DocumentMetaData;
+import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DrugDao;
@@ -88,6 +89,7 @@ public class BORNWBCSDJob implements OscarRunnable {
 	private DxresearchDAO dxResearchDAO = SpringUtils.getBean(DxresearchDAO.class);
 	private DrugDao drugDao = SpringUtils.getBean(DrugDao.class);
 	private PreventionDao preventionDao = SpringUtils.getBean(PreventionDao.class);
+	private ConsultationRequestDao consultationRequestDao = SpringUtils.getBean(ConsultationRequestDao.class);
 	
 	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -136,6 +138,13 @@ public class BORNWBCSDJob implements OscarRunnable {
 					demoIds.add(i);
 				}
 			}
+			
+			for (Integer i : consultationRequestDao.findNewConsultationsSinceDemoKey("uploaded_to_BORN")) {
+				if (!demoIds.contains(i)) {
+					demoIds.add(i);
+				}
+			}
+			
 
 			for (Integer demographicNo : demoIds) {
 				logger.info("sending record " + demographicNo);
