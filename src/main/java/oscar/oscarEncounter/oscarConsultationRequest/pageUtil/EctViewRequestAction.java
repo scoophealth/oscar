@@ -173,6 +173,7 @@ public class EctViewRequestAction extends Action {
             thisForm.setProviderName(prov.getFormattedName());
 
             thisForm.seteReferral(false);
+            thisForm.setFdid(consult.getFdid());
         }
 
 	public static void fillFormValues(EctConsultationFormRequestForm thisForm, EctConsultationFormRequestUtil consultUtil)
@@ -216,6 +217,9 @@ public class EctViewRequestAction extends Action {
         thisForm.setProviderName(consultUtil.getProviderName(consultUtil.providerNo));
         
         thisForm.seteReferral(false);
+        
+        thisForm.setFdid(consultUtil.fdid);
+        
 	}
 	
 	public static void fillFormValues(EctConsultationFormRequestForm thisForm, String segmentId) throws HL7Exception, UnsupportedEncodingException, Base64DecodingException

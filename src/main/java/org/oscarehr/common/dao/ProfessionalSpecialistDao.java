@@ -198,4 +198,16 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
 
 		return cList;
 	}
+	
+	public List<ProfessionalSpecialist> findByService(String serviceName) {
+		Query query = entityManager.createQuery("select x from " + modelClass.getName() + " x, ConsultationServices cs, ServiceSpecialists ss WHERE x.id = ss.id.specId and ss.id.serviceId = cs.serviceId and cs.serviceDesc = ?");
+		query.setParameter(1, serviceName);
+
+		@SuppressWarnings("unchecked")
+		List<ProfessionalSpecialist> cList = query.getResultList();
+
+		
+		return cList;
+	}
+	
 }

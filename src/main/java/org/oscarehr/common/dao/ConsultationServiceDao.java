@@ -67,6 +67,15 @@ public class ConsultationServiceDao extends AbstractDao<ConsultationServices> {
         List<ConsultationServices> results = query.getResultList();
         return results;
     }
+    
+    public ConsultationServices findByDescription(String description) {
+    	String sql = "select x from ConsultationServices x where x.active=? and x.serviceDesc = ?";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1,"1");
+    	query.setParameter(2, description);
+    	
+        return this.getSingleResultOrNull(query);
+    }
 
     public ConsultationServices findReferringDoctorService(boolean activeOnly) {
     	String sql = "select x from ConsultationServices x where x.serviceDesc=?";

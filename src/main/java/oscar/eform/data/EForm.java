@@ -385,6 +385,13 @@ public class EForm extends EFormBase {
 		String oscarJS = contextPath + "/share/javascript/";
 		this.formHtml = this.formHtml.replace(jsMarker, oscarJS);
 	}
+	
+	public void setSource(String source) {
+		if (StringUtils.isBlank(source)) source="";
+
+		this.formHtml = this.formHtml.replace(sourceMarker, source);
+	}
+	
 
         public ArrayList<String> getOpenerNames() {
             ArrayList<String> openerNames = new ArrayList<String>();
