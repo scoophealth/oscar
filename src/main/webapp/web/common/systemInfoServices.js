@@ -1,4 +1,4 @@
-<%--
+/*
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
     This software is published under the GPL GNU General Public License.
@@ -22,30 +22,26 @@
     Hamilton
     Ontario, Canada
 
---%>
-<style>
-.experimental {
-  color: #ffffff;
-  background-color: #da4f49;
-  *background-color: #bd362f;
-}
-
-</style>
-<h2>OSCAR Support</h2>
-
-<!-- 
-<h4>Version: <small>{{buildInfo.versionDisplayName}}  ({{buildInfo.version}})</small></h4>
--->
-
-<p></p>
-
-<address>
-  <strong>{{ospInfo.ospName}}</strong><br>
-  <abbr title="Phone">P:</abbr> {{ospInfo.ospPhone}}
-</address>
-
-<address>
-  <strong>{{ospInfo.ospContactName}}</strong><br>
-  <a href="mailto:{{ospInfo.email}}">{{ospInfo.ospContactEmail}}</a><br/>
-   <a href={{ospInfo.url}}">{{ospInfo.ospUrl}}</a>
-</address>
+*/
+angular.module("systemInfoServices", [])
+	.service("systemInfoService", function ($http,$q,$log) {
+		return {
+		apiPath:'../ws/rs/systemInfo',
+		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
+		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
+	      
+        getOSPInfo: function () {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/osp',
+                method: "GET",
+                headers: this.configHeaders,
+              }).success(function (data) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers) {
+                	deferred.reject("An error occured while getting OSP info");
+                });
+           return deferred.promise;
+        }
+    };
+});

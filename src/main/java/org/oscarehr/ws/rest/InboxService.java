@@ -114,6 +114,7 @@ public class InboxService extends AbstractServiceImpl {
 	
 	@GET
 	@Path("/mine/count")
+	@Produces("application/json")
 	public int getMyUnacknowlegedReportsCount() {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		String providerNo=loggedInInfo.getLoggedInProviderNo();

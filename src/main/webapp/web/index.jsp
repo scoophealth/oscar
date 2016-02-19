@@ -446,6 +446,7 @@ font-size:20px
 	<script src="common/personaServices.js"></script>
 	<script src="common/consultServices.js"></script>
 	<script src="common/appServices.js"></script>
+	<script src="common/systemInfoServices.js"></script>
 	<script src="filters.js"></script>
 	<script src="app.js"></script>
 	
