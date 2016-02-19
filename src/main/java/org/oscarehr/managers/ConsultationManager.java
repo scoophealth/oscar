@@ -456,4 +456,15 @@ public class ConsultationManager {
 			throw new RuntimeException("Access Denied");
 		}
 	}
+	
+	public List<ProfessionalSpecialist> findByService(LoggedInInfo loggedInInfo, String serviceName) {
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
+		
+		List<ProfessionalSpecialist> results = professionalSpecialistDao.findByService(serviceName);
+		
+		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.findByService", "serviceName"+serviceName);
+		
+		
+		return results;
+	}
 }

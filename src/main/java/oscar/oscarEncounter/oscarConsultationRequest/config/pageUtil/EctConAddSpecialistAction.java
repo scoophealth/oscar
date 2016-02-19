@@ -167,5 +167,6 @@ public class EctConAddSpecialistAction extends Action {
 		professionalSpecialist.setPagerNumber(addSpecailistForm.getPagerNumber());
 		professionalSpecialist.setSalutation(addSpecailistForm.getSalutation());
 		professionalSpecialist.setHideFromView(addSpecailistForm.getHideFromView());
+		professionalSpecialist.setEformId(addSpecailistForm.getEformId());
 	}
 }

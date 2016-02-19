@@ -95,6 +95,8 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();
 
+	private Integer eformId;
+	
 	@PreUpdate
 	protected void jpaUpdateLastUpdateTime() {
 		lastUpdated = new Date();
@@ -354,6 +356,14 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 
 	public void setHideFromView(boolean hideFromView) {
 		this.hideFromView = hideFromView;
+	}
+
+	public Integer getEformId() {
+		return eformId;
+	}
+
+	public void setEformId(Integer eformId) {
+		this.eformId = eformId;
 	}
 
 	

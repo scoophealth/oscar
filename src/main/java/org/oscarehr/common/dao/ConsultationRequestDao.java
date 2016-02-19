@@ -30,6 +30,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.util.MiscUtils;
 
@@ -181,4 +182,33 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
 			query.setParameter("demoId", demoId);
 			return query.getResultList();
         }
+		
+		public List<ConsultationRequest> findByDemographicAndService(Integer demographicNo, String serviceName) {
+			String sql = "SELECT cr FROM ConsultationRequest cr, ConsultationServices cs WHERE cr.serviceId = cs.serviceId and cr.demographicId = :demo and cs.serviceDesc = :serviceName";
+			Query query = entityManager.createQuery(sql);
+			query.setParameter("demo", demographicNo);
+			query.setParameter("serviceName", serviceName);
+			
+			return query.getResultList();
+		}
+		
+		public List<ConsultationRequest> findByDemographicAndServices(Integer demographicNo, List<String> serviceNameList) {
+			String sql = "SELECT cr FROM ConsultationRequest cr, ConsultationServices cs WHERE cr.serviceId = cs.serviceId and cr.demographicId = :demo and cs.serviceDesc IN (:serviceName)";
+			Query query = entityManager.createQuery(sql);
+			query.setParameter("demo", demographicNo);
+			query.setParameter("serviceName", serviceNameList);
+			
+			return query.getResultList();
+		}
+		
+		@NativeSql("consultationRequests")
+		public List<Integer> findNewConsultationsSinceDemoKey(String keyName) {
+			
+			String sql = "select distinct dr.demographicNo from consultationRequests dr,demographic d,demographicExt e where dr.demographicNo = d.demographic_no and d.demographic_no = e.demographic_no and e.key_val=? and dr.lastUpdateDate > e.value";
+			Query query = entityManager.createNativeQuery(sql);
+			query.setParameter(1,keyName);
+			return query.getResultList();
+		}
+		
+		
 }

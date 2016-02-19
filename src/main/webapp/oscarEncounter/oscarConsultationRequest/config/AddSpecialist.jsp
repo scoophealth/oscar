@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.dao.EFormDao"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
       String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -56,11 +57,16 @@ if(!authed) {
 <%@page import="org.oscarehr.common.model.InstitutionDepartment" %>
 <%@page import="org.oscarehr.common.dao.DepartmentDao" %>
 <%@page import="org.oscarehr.common.model.Department" %>
+<%@page import="org.oscarehr.common.model.EForm" %>
 
 <%
 	InstitutionDao institutionDao = SpringUtils.getBean(InstitutionDao.class);
     InstitutitionDepartmentDao idDao = SpringUtils.getBean(InstitutitionDepartmentDao.class);
     DepartmentDao departmentDao = SpringUtils.getBean(DepartmentDao.class);
+    EFormDao eformDao = SpringUtils.getBean(EFormDao.class);
+    
+    List<EForm> eforms = eformDao.findAll(true);
+    pageContext.setAttribute("eforms", eforms);
 %>
 
 <html:html locale="true">
@@ -198,6 +204,7 @@ function BackToOscar() {
 				                           thisForm.setPagerNumber((String)request.getAttribute("pagerNumber"));
 				                           thisForm.setSalutation((String)request.getAttribute("salutation"));
 				                           thisForm.setHideFromView((Boolean) request.getAttribute("hideFromView"));
+				                           thisForm.setEformId((Integer)request.getAttribute("eformId"));
 
 						   %>
 						   	<script>
@@ -328,6 +335,15 @@ function BackToOscar() {
 								<html:select name="EctConAddSpecialistForm" property="hideFromView">
 									<html:option value="false"></html:option>
 									<html:option value="true"></html:option>
+								</html:select>
+							</td>
+						</tr>
+						<tr>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eform" /></td>
+							<td colspan="5">
+								<html:select name="EctConAddSpecialistForm" property="eformId">
+									<html:option value="0">--None--</html:option>
+									<html:options collection="eforms" property="id" labelProperty="formName" />
 								</html:select>
 							</td>
 						</tr>
