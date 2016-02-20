@@ -74,18 +74,19 @@ public class DSServiceMyDrugref extends DSService {
         try {
             logger.debug("CALLING MYDRUGREF");
             @SuppressWarnings("unchecked")
-            Vector<Hashtable<String,String>> providerGuidelines = myDrugrefAction.callOAuthService(loggedInInfo,"guidelines/getGuidelineIds", null, this.getMyDrugrefId(loggedInInfo.getLoggedInProviderNo()));
+            Vector<Hashtable<String,Object>> providerGuidelines = myDrugrefAction.callOAuthService(loggedInInfo,"guidelines/getGuidelineIds", null, this.getMyDrugrefId(loggedInInfo.getLoggedInProviderNo()));
             if (providerGuidelines == null) {
                 logger.error("Could not get provider decision support guidelines from MyDrugref.");
                 return;
             }
             logger.debug("MyDrugref call returned: " + providerGuidelines.size() + " guidelines");
             ArrayList<String> guidelinesToFetch = new ArrayList<String>();
-            for (Hashtable<String,String> providerGuideline: providerGuidelines) {
+            for (Hashtable<String,Object> providerGuideline: providerGuidelines) {
 
-                String uuid =  providerGuideline.get("uuid");
-                String versionNumberStr =  providerGuideline.get("version");
+                String uuid = (String) providerGuideline.get("uuid");
+                String versionNumberStr = (String) providerGuideline.get("version");
                 Integer versionNumber = Integer.parseInt(versionNumberStr);
+                Date updatedAt = (Date) providerGuideline.get("updatedAt");
 
                 logger.debug("uuid: " + uuid);
                 logger.debug("version: " + versionNumber);
@@ -93,7 +94,7 @@ public class DSServiceMyDrugref extends DSService {
                 DSGuideline matchedGuideline = dSGuidelineDao.findByUUID(uuid);
                 if (matchedGuideline == null) {
                     guidelinesToFetch.add(uuid);
-                } else if (matchedGuideline.getVersion() < versionNumber) {
+                } else if (matchedGuideline.getVersion()<versionNumber || matchedGuideline.getDateStart().before(updatedAt)) {
                     matchedGuideline.setStatus('I');
                     matchedGuideline.setDateDecomissioned(new Date());
                     dSGuidelineDao.merge(matchedGuideline);
@@ -112,8 +113,8 @@ public class DSServiceMyDrugref extends DSService {
             
             //Do mappings-guideline mappings
             List<DSGuidelineProviderMapping> uuidsMapped = dSGuidelineProviderMappingDao.getMappingsByProvider(loggedInInfo.getLoggedInProviderNo());
-            for (Hashtable<String,String> newMapping: providerGuidelines) {
-                String newUuid = newMapping.get("uuid");
+            for (Hashtable<String,Object> newMapping: providerGuidelines) {
+                String newUuid = (String) newMapping.get("uuid");
                 if (hasInvalidXML) {
                 	DSGuideline checkingGuideline = dSGuidelineDao.findByUUID(newUuid);
                 	if (checkingGuideline==null || checkingGuideline.getStatus()!='A') continue; //do not write invalid guideline
