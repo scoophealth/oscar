@@ -66,10 +66,10 @@ body{background-color:#f5f5f5;}
 		</div>
 		<div data-ng-show="k2aActive && k2aReports">
 			<div>
-				<h5>{{message}}</h5>
+				<h5>{{message}} {{K2A_URL}}</h5>
 			</div>
 			<h4><bean:message key="oscarReport.oscarReportByTemplate.msgDownloadFromK2A" /></h4>
-			<input type="button" value="<bean:message key="oscarReport.oscarReportByTemplate.msgK2ABrowse" />" class="btn btn-primary upload" onclick="window.open('https://www.know2act.org/#/ws/rs/posts/browse/Report');" />
+			<input type="button" value="<bean:message key="oscarReport.oscarReportByTemplate.msgK2ABrowse" />" class="btn btn-primary upload" ng-click="openK2AUrl()" />
 			<input type="button" value="<bean:message key="oscarReport.oscarReportByTemplate.msgRefresh" />" class="btn btn-primary upload" onclick="location.reload();" /><br />
 			<table class="table table-condensed table-striped" id="k2aReportTbl">
 				<thead>
@@ -147,7 +147,13 @@ body{background-color:#f5f5f5;}
 			    		console.log($scope.message);
 			    		refreshParent();
 			    	});
-			    }   
+			    }
+			    
+			    $scope.openK2AUrl = function(){
+			    	reportByTemplateService.getK2AUrl().then(function(data){
+			    		window.open(data+"/#/ws/rs/posts/browse/Report'");
+			    	});
+			    }
 			    
 			    window.onunload = refreshParent;
 				function refreshParent() {
