@@ -535,7 +535,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
 		    	        		String key = (String) iterator.next();
 		    	        		if(key.equals("significance") || key.equals("version")) {
 		    	        			drugInfo.put(key, eform.get(key).toString());
-		    	        		} else if(key.equals("updated_at") || key.equals("created_at")){
+		    	        		} else if(key.equals("updated_at") || key.equals("updatedAt") || key.equals("created_at")){
 		    	        			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 		    	        			Date date = formatter.parse(eform.get(key).toString());
 		    	        			drugInfo.put(key, date);
