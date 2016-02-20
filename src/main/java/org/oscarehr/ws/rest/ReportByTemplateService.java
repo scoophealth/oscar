@@ -23,16 +23,14 @@
  */
 package org.oscarehr.ws.rest;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.codehaus.jettison.json.JSONObject;
+import org.oscarehr.app.AppOAuth1Config;
 import org.oscarehr.app.OAuth1Utils;
 import org.oscarehr.common.dao.AppDefinitionDao;
 import org.oscarehr.common.dao.AppUserDao;
@@ -41,6 +39,7 @@ import org.oscarehr.common.model.AppUser;
 import org.oscarehr.managers.AppManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -63,11 +62,10 @@ public class ReportByTemplateService extends AbstractServiceImpl {
 	@GET
 	@Path("/K2AActive/")
 	@Produces("application/json")
-	public GenericRESTResponse isK2AActive(@Context HttpServletRequest request){
-		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-    	if(!com.quatro.service.security.SecurityManager.hasPrivilege("_admin", roleName$)  && !com.quatro.service.security.SecurityManager.hasPrivilege("_report", roleName$)) {
-    		throw new SecurityException("Insufficient Privileges");
-    	}
+	public GenericRESTResponse isK2AActive(){
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_admin", "r", null) && !securityInfoManager.hasPrivilege(getLoggedInInfo(), "_report", "r", null)) {
+			throw new RuntimeException("Access Denied");
+		}
 		
 		GenericRESTResponse response = null;
 		AppDefinition appDef = appDefinitionDao.findByName("K2A");
@@ -80,17 +78,37 @@ public class ReportByTemplateService extends AbstractServiceImpl {
 	}
 	
 	@GET
+	@Path("/K2AUrl/")
+	@Produces("application/json")
+	public String getK2AUrl(){
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_admin", "r", null) && !securityInfoManager.hasPrivilege(getLoggedInInfo(), "_report", "r", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+    	
+    	String k2aUrl = null;
+    	AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
+    	if (k2aApp!=null) {
+    		try {
+            	k2aUrl = AppOAuth1Config.fromDocument(k2aApp.getConfig()).getBaseURL();
+    		} catch(Exception e) {
+    			MiscUtils.getLogger().error("Error getting K2A URL", e);
+    		}
+    	}
+		return k2aUrl;
+	}
+	
+	@GET
 	@Path("/allReports")
 	@Produces("application/json")
-	public String getReportByTemplatesFromK2A(@Context HttpServletRequest request) {
-		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_admin", "r", null) && !securityInfoManager.hasPrivilege(getLoggedInInfo(), "_report", "r", null)) {
+	public String getReportByTemplatesFromK2A() {
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_admin", "r", null) && !securityInfoManager.hasPrivilege(getLoggedInInfo(), "_report", "r", null)) {
 			throw new RuntimeException("Access Denied");
 		}
     	
 		try {
 			AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
 			if(k2aApp != null) {
-				LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 				AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),loggedInInfo.getLoggedInProvider().getProviderNo());
 				
 				if(k2aUser != null) {
@@ -109,8 +127,9 @@ public class ReportByTemplateService extends AbstractServiceImpl {
 	@POST
 	@Path("/getReportById/{id}")
 	@Produces("application/json")
-	public String addK2AReport(@PathParam("id") String id, @Context HttpServletRequest request) {
-		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_admin", "r", null) && !securityInfoManager.hasPrivilege(getLoggedInInfo(), "_report", "w", null)) {
+	public String addK2AReport(@PathParam("id") String id) {
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_admin", "r", null) && !securityInfoManager.hasPrivilege(getLoggedInInfo(), "_report", "w", null)) {
 			throw new RuntimeException("Access Denied");
 		}
     	
@@ -119,7 +138,6 @@ public class ReportByTemplateService extends AbstractServiceImpl {
 		try {
 			AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
 			if(k2aApp != null) {
-				LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 				AppUser k2aUser = appUserDao.findForProvider(k2aApp.getId(),loggedInInfo.getLoggedInProvider().getProviderNo());
 				
 				if(k2aUser != null) {

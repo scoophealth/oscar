@@ -115,7 +115,7 @@ public class AppOAuth1Config implements AppAuthConfig{
 
 		Node rootNode = doc.getFirstChild();
 		config.type = XmlUtils.getChildNodeTextContents(rootNode, "type");
-		config.name = XmlUtils.getChildNodeTextContents(rootNode, "address");
+		config.name = XmlUtils.getChildNodeTextContents(rootNode, "name");
 		config.consumerKey = XmlUtils.getChildNodeTextContents(rootNode, "consumerKey");
 		config.consumerSecret = XmlUtils.getChildNodeTextContents(rootNode, "consumerSecret");
 		
