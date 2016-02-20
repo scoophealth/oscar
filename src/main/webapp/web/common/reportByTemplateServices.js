@@ -68,6 +68,19 @@ angular.module("reportByTemplateServices", [])
 			deferred.reject("An error occured while getting k2a content");
 		});
 	    return deferred.promise;
-	 }
+	 },
+	 getK2AUrl: function(id) {
+		var deferred = $q.defer();
+		$http({
+		url: this.apiPath+'/reportByTemplate/K2AUrl/',
+		method: "GET",
+		headers: this.configHeaders,
+	      }).success(function(data) {
+		  deferred.resolve(data);
+	        }).error(function(data, status, headers) {
+			deferred.reject("An error occured while getting k2a url");
+		});
+	    return deferred.promise;
+	 }	 
     };
 });

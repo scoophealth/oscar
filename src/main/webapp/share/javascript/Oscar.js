@@ -30,8 +30,9 @@ function newWindow(url,windowName){
     //this way the w&d works with older browsers as well
     var w = document.getElementsByTagName('body')[0].clientWidth;//window.innerWidth;
     var h = document.getElementsByTagName('body')[0].clientHeight;//window.innerHeight;
+    w = Math.max(w, window.innerWidth);
+    h = Math.max(h, window.innerHeight);
     
-    //alert("w:"+ w +" h:"+h);
     return popup2(h, w, 0, 0, url, windowName);
  }
 
