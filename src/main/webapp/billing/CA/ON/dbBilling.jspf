@@ -82,7 +82,7 @@
     {"search_rahd_content", "select * from raheader where raheader_no=? and status <>'D'"},
     {"search_rahd_short", "select filename from raheader where raheader_no=? and status <>'D'"},
     {"update_rahd", "update raheader set totalamount=?, records=?,claims=?, content=? where paymentdate=? and filename=?"},
-    {"search_raprovider", "select r.providerohip_no, p.last_name,p.first_name from radetail r, provider p where p.ohip_no=r.providerohip_no and r.raheader_no=? group by r.providerohip_no"},
+    {"search_raprovider", "select r.providerohip_no, p.last_name,p.first_name from radetail r, provider p where p.ohip_no=r.providerohip_no and r.raheader_no=? group by p.last_name,p.first_name"},
     {"search_raerror", "select * from radetail where raheader_no=? and error_code<>'' and error_code<>? and providerohip_no like ?"},
     {"search_ranoerror", "select distinct billing_no from radetail where raheader_no=? and (error_code='' or error_code=?) and providerohip_no like ?"},
     {"search_raerror35", "select * from radetail where raheader_no=? and error_code<>'' and error_code<>? and error_code<>? and error_code<>'EV' and error_code<>'55' and error_code<>'57' and error_code<>'HM' and (service_code<>'Q200A' or error_code<>'I9') and providerohip_no like ?"},

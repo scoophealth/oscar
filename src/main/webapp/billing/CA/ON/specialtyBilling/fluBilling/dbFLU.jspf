@@ -66,7 +66,7 @@
       {"search_all_rahd", "select raheader_no, totalamount, status, paymentdate, payable, records, claims, readdate from raheader where status <> ? order by readdate desc"},
       {"search_rahd", "select raheader_no, totalamount, status, paymentdate, payable, records, claims, readdate from raheader where filename=? and paymentdate=? and status <> 'D'"},
       {"update_rahd", "update raheader set records=?,claims=? where paymentdate=?"},
-      {"search_raprovider", "select r.providerohip_no, p.last_name,p.first_name from radetail r, provider p where p.ohip_no=r.providerohip_no and r.raheader_no=? group by r.providerohip_no"},
+      {"search_raprovider", "select r.providerohip_no, p.last_name,p.first_name from radetail r, provider p where p.ohip_no=r.providerohip_no and r.raheader_no=? group by p.last_name,p.first_name"},
       {"search_raerror", "select * from radetail where raheader_no=? and error_code<>'' and error_code<>? and providerohip_no like ?"},
       {"search_rabillno", "select * from radetail where raheader_no=? and billing_no=?"},
       {"search_rasummary", "select r.service_count, r.error_code, r.amountclaim, b.visittype, b.billing_no, r.service_code, r.service_date, r.providerohip_no, r.amountpay, p.last_name, p.first_name from radetail r, billing b, provider p where r.raheader_no=? and b.billing_no=r.billing_no and p.ohip_no=r.providerohip_no and r.providerohip_no like ?"},
