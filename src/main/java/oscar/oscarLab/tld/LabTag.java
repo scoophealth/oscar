@@ -45,6 +45,7 @@ public class LabTag extends TagSupport {
   
    public LabTag() {
 	numNewLabs = 0;
+	numNewHrmLabs = 0;
    }
    
    public int doStartTag() throws JspException    {
@@ -60,9 +61,23 @@ public class LabTag extends TagSupport {
         }      catch(SQLException e)        {
            MiscUtils.getLogger().error("Error", e);
         }
+        
+        try {
+            
+            String sql = new String("select count(*) from HRMDocumentToProvider where providerNo = '"+ providerNo +"' and viewed = 0");            
+            ResultSet rs = DBHandler.GetSQL(sql);
+            while (rs.next()) {
+            	numNewHrmLabs = (rs.getInt(1));
+            }
+
+            rs.close();
+        }      catch(SQLException e)        {
+           MiscUtils.getLogger().error("Error", e);
+        }
+
         try        {
             JspWriter out = super.pageContext.getOut();            
-            if(numNewLabs > 0)
+            if(numNewLabs > 0 || numNewHrmLabs > 0)
                 out.print("<span class='tabalert'>  ");
             else
                 out.print("<span>  ");
@@ -86,8 +101,8 @@ public class LabTag extends TagSupport {
        try{
           JspWriter out = super.pageContext.getOut();         
         //ronnie 2007-5-4
-          if (numNewLabs>0)
-              out.print("<sup>"+numNewLabs+"</sup></span>");
+          if (numNewLabs>0 || numNewHrmLabs > 0)
+              out.print("<sup>"+new Integer(numNewLabs+numNewHrmLabs)+"</sup></span>");
           else
               out.print("</span>");
        }catch(Exception p) {MiscUtils.getLogger().error("Error",p);
@@ -97,4 +112,5 @@ public class LabTag extends TagSupport {
 
     private String providerNo;
     private int numNewLabs;
+    private int numNewHrmLabs;
 }
