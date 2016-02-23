@@ -1897,6 +1897,7 @@ insert into `secObjectName` (`objectName`) values ('_appDefinition');
 insert into `secObjectName` (`objectName`) values ('_phr');
 insert into `secObjectName` (`objectName`) values ('_pmm');
 insert into `secObjectName` (`objectName`) values ('_pmm.editProgram.schedules');
+insert into `secObjectName` (`objectName`) values ('_admin.consult');
 
 insert into `secObjectName`  (`objectName`,`description`,`orgapplicable`) values('_demographicExport', 'Export Demographic', 0);
 
@@ -2087,6 +2088,7 @@ insert into `secObjPrivilege` values('admin','_admin.traceability','x',0,'999998
 insert into `secObjPrivilege` values('admin','_appDefinition','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_demographicExport','x',0,'999998');
 insert into `secObjPrivilege` values('admin', '_pmm.editProgram.schedules', 'x', 0, '999998');
+insert into `secObjPrivilege` values('admin', '_admin.consult', 'x', 0, '999998');
 
 
 
