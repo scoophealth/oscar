@@ -8915,7 +8915,7 @@ CREATE TABLE appointmentArchive (
   name varchar(50),
   demographic_no int(10),
   program_id int,
-  notes varchar(80),
+  notes varchar(255),
   reason varchar(80),
   location varchar(30),
   resources varchar(255),
