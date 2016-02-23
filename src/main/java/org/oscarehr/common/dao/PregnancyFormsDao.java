@@ -71,7 +71,7 @@ public class PregnancyFormsDao {
 		String sql = "SELECT id from formONAR WHERE demographic_no="+demographicNo+" ORDER BY formEdited DESC";                
         ResultSet rs = DBHelp.searchDBRecord(sql);
         try {
-	        if(rs.next()) {
+	        if(rs != null && rs.next()) {
 	        	Integer id = rs.getInt("id");
 	        	return id;
 	        }
