@@ -12,7 +12,6 @@
         <ViolationValue>/database/mysql/caisi/updates/patch-2007-12-01.sql:) ENGINE=MyISAM DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/caisi/updates/patch-2007-12-03(4).sql:) ENGINE=MyISAM DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/caisi/updates/patch-2008-02-04.sql:) ENGINE=MyISAM;</ViolationValue>
-        <ViolationValue>/database/mysql/measurementMapData.sql:) ENGINE=MyISAM AUTO_INCREMENT=1076 DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:) ENGINE=MyISAM ;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2007-07-17.sql:) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2007-07-25.sql:) ENGINE=MyISAM DEFAULT CHARSET=latin1;</ViolationValue>
@@ -241,7 +240,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:clinic_postal varchar(15) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:code char(1) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:comment varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:contenttype varchar(60) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:contenttype varchar(255) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:creator varchar(6) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:demo_name varchar(60) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:demographic_name varchar(60) NOT NULL default '',</ViolationValue>
@@ -1995,7 +1994,6 @@
         <ViolationValue>/database/mysql/icd10.sql:`icd10` varchar(7) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/icd9.sql:description varchar(200) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/icd9.sql:icd9 varchar(7) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/measurementMapData.sql:) ENGINE=MyISAM AUTO_INCREMENT=1076 DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/measurementMapData.sql:`loinc_code` varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:#  day date NOT NULL default '0001-01-01',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:#  diagnostic_code varchar(5) NOT NULL default '',</ViolationValue>
@@ -4057,7 +4055,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:confirm char(3) NOT NULL default 'No',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:consultDoc char(60) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:consultant varchar(30) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:contenttype varchar(60) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:contenttype varchar(255) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:country varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:crackles varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:cracklesAbN tinyint(1) default NULL,</ViolationValue>

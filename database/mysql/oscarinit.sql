@@ -670,7 +670,7 @@ CREATE TABLE document (
   program_id int,
   updatedatetime datetime default NULL,
   status char(1) NOT NULL default '',
-  contenttype varchar(60) NOT NULL default '',
+  contenttype varchar(255) NOT NULL default '',
   contentdatetime datetime,
   public1 int(1) NOT NULL default '0',
   observationdate date default NULL,
