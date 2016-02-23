@@ -25,9 +25,7 @@
 
 package org.oscarehr.phr.web;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,11 +42,9 @@ import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
-import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.service.PHRService;
 import org.oscarehr.phr.util.MyOscarMessageManager;
 import org.oscarehr.phr.util.MyOscarUtils;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
@@ -95,27 +91,6 @@ public class PHRMessageAction extends DispatchAction {
 		log.debug("AUTH " + auth);
 		clearSessionVariables(request);
 
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
-		List docs = phrDocumentDAO.getDocumentsReceived("MESSAGE", providerNo);
-		ArrayList<PHRMessage> messages = null;
-//		List<PHRAction> actionsPendingApproval = phrActionDAO.getActionsByStatus(PHRAction.STATUS_APPROVAL_PENDING, providerNo);
-		if (docs != null) {
-			messages = new ArrayList<PHRMessage>(docs.size());
-			for (int idx = 0; idx < docs.size(); ++idx) {
-				PHRDocument doc = (PHRDocument) docs.get(idx);
-				PHRMessage msg = new PHRMessage(doc);
-				messages.add(msg);
-			}
-		}
-
-
-		request.getSession().setAttribute("indivoMessages", docs);
-		request.getSession().setAttribute("indivoMessageBodies", messages);
-
-//		if (actionsPendingApproval != null) {
-//			request.getSession().setAttribute("actionsPendingApproval", actionsPendingApproval);
-//		}
 
 		return mapping.findForward("view");
 	}

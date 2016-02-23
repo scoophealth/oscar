@@ -222,14 +222,8 @@
 
 	<!-- Indivo -->
 
-	<bean name="/phr/PhrMessage" class="org.oscarehr.phr.web.PHRMessageAction" singleton="false">
-		<property name="phrService" ref="phrService" />
-		<property name="phrDocumentDAO" ref="phrDocumentDAO" />
-		<property name="phrActionDAO" ref="phrActionDAO" />
-	</bean>
-	<bean name="/oscarRx/SendToPhr" class="oscar.oscarRx.pageUtil.RxSendToPhrAction" singleton="false">
-		<property name="phrService" ref="phrService" />
-	</bean>
+	<bean name="/phr/PhrMessage" class="org.oscarehr.phr.web.PHRMessageAction" singleton="false" />
+	<bean name="/oscarRx/SendToPhr" class="oscar.oscarRx.pageUtil.RxSendToPhrAction" singleton="false"/>
 	<bean name="/oscarEncounter/oscarMeasurements/SendToPhr" class="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSendMeasurementToPhr" singleton="false">
 		<property name="phrService" ref="phrService" />
 	</bean>
@@ -237,19 +231,15 @@
 	<bean name="/phr/Login" class="org.oscarehr.phr.web.PHRLoginAction" singleton="false" />
 	<bean name="/phr/Logout" class="org.oscarehr.phr.web.PHRLogoutAction" singleton="false" />
 
-	<bean name="/phr/UserManagement" class="org.oscarehr.phr.web.PHRUserManagementAction" singleton="false">
-		<property name="phrService" ref="phrService" />
-		<property name="phrActionDAO" ref="phrActionDAO" />
-	</bean>
+	<bean name="/phr/UserManagement" class="org.oscarehr.phr.web.PHRUserManagementAction" singleton="false"/>
 	<bean name="/SendImmunizationToPhr" class="oscar.oscarPrevention.pageUtil.PHRSendImmunizationToPhrAction" singleton="false">
 		<property name="preventionDao" ref="preventionDao" />
 		<property name="preventionExtDao" ref="preventionExtDao" />
 		<property name="providerDao" ref="providerDao" />
 		<property name="demographicDao" ref="demographicDao" />
 	</bean>
-	<bean name="/SendToPhr" class="org.oscarehr.phr.web.PHRGenericSendToPhrAction" singleton="false">
-		<property name="phrService" ref="phrService" />
-	</bean>
+	<bean name="/SendToPhr" class="org.oscarehr.phr.web.PHRGenericSendToPhrAction" singleton="false" />
+
 	<bean name="/testAction" class="org.oscarehr.decisionSupport.web.TestActionW" singleton="false">
 		<property name="dsService" ref="dsService" />
 	</bean>

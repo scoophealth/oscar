@@ -35,7 +35,10 @@ import org.oscarehr.phr.service.PHRService;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
+import org.oscarehr.myoscar_server.ws.MessageTransfer;
+import org.oscarehr.phr.web.MyOscarMessagesHelper;
+import java.util.List;
+import javax.servlet.http.HttpSession;
 /**
  *
  * @author Paul
@@ -46,11 +49,8 @@ public class SetColor extends TagSupport {
     private String noNewMessagesHtml = "<font color=\"black\">";
     private String noAuthorizationHtml = "<font color=\"gray\">";
     private String closingHtml = "</font>";
-    //private PHRService phrService = null;
     
     public int doStartTag() {
-        PHRService phrService = (PHRService) getAppContext()
-				.getBean("phrService");
         PHRAuthentication phrAuth = (PHRAuthentication) pageContext.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
         String providerNo = (String) pageContext.getSession().getAttribute("user");
 
@@ -59,11 +59,26 @@ public class SetColor extends TagSupport {
         try {
             if (phrAuth == null || !PHRService.validAuthentication(phrAuth) || providerNo == null) {
                 pageContext.getOut().print(noAuthorizationHtml);
-            } else if (phrService.hasUnreadMessages(providerNo)) {
-                pageContext.getOut().print(newMessagesHtml);
-            } else {
-                pageContext.getOut().print(noNewMessagesHtml);
-            }
+            } else{
+		HttpSession session = pageContext.getSession();
+		List<MessageTransfer> messages = MyOscarMessagesHelper.getReceivedMessages(session, false,0);
+
+		boolean hasUnreadMsg = false;
+		int count = 0;
+		for(MessageTransfer mt: messages){
+		   if(mt.getFirstViewDate() ==null){
+			hasUnreadMsg = true;
+			count++;
+		   }
+		}
+		session.setAttribute("myoscar_message_new_count",new Integer(count));
+		
+		if (hasUnreadMsg) {
+                   pageContext.getOut().print(newMessagesHtml);
+            	} else {
+                   pageContext.getOut().print(noNewMessagesHtml);
+       		}
+	   }
         } catch (IOException ioe) {
             MiscUtils.getLogger().error("Error", ioe);
             return SKIP_BODY;
@@ -73,6 +88,11 @@ public class SetColor extends TagSupport {
     
     public int doAfterBody() throws JspTagException {
         try {
+	    HttpSession session = pageContext.getSession();
+            Integer count = (Integer) session.getAttribute("myoscar_message_new_count");
+	    if(count != null){
+            	pageContext.getOut().println("<sup>"+count.intValue()+"</sup>");
+  	    }
             pageContext.getOut().println(closingHtml);
         } catch (IOException ioe) {
             MiscUtils.getLogger().error("Error", ioe);

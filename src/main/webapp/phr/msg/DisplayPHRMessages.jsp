@@ -64,9 +64,6 @@ providerData.setProviderNo(providerNo);
 String providerPhrId = providerData.getMyOscarId();
 request.setAttribute("forwardto", request.getRequestURI());
 
-//set the "sent" tab to red if there are authorization errors on send
-PHRActionDAO phrActionDAO = (PHRActionDAO) WebApplicationContextUtils.getWebApplicationContext(
-        		pageContext.getServletContext()).getBean("phrActionDAO");
 
 //some phrAction static constants
 pageContext.setAttribute("STATUS_OTHER_ERROR", PHRAction.STATUS_OTHER_ERROR);
@@ -311,7 +308,7 @@ request.setAttribute("pageMethod",pageMethod);
                                         </td></tr></table>
                                     </td>
                                     <td >
-                                        <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA<%if (phrActionDAO.ifActionsWithErrors(providerNo)) {%>Warning<%} else if (pageMethod.equals("viewSentMessages")) {%>Current<%}%>">
+                                        <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA<%if (pageMethod.equals("viewSentMessages")) {%>Current<%}%>">
                                             <html:link page="/phr/PhrMessage.do?method=viewSentMessages" styleClass="messengerButtons">
                                                 <bean:message key="oscarMessenger.DisplayMessages.msgSentTitle"/>
                                             </html:link>
