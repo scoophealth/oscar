@@ -1458,7 +1458,7 @@ if ( Dead.equals(PatStat) ) {%>
 						List<Object> timecodeResult = dao.findTimeCodeByProviderNo2(thisProvNo, ConversionUtils.fromDateString(qCurDate));
 
 						// if theres a template on this day, continue
-                        if (!timecodeResult.isEmpty()) {
+                        if (timecodeResult != null && !timecodeResult.isEmpty()) {
 
                        	String timecode = StringUtils.trimToEmpty(String.valueOf(timecodeResult.get(0)));
                        	
