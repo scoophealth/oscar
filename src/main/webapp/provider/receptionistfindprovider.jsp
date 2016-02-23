@@ -46,9 +46,12 @@
 <%@page import="org.oscarehr.common.model.MyGroup" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.common.dao.MyGroupAccessRestrictionDao" %>
+<%@page import="org.oscarehr.common.model.MyGroupAccessRestriction" %>
 <%
 	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	MyGroupAccessRestrictionDao myGroupAccessRestrictionDao = SpringUtils.getBean(MyGroupAccessRestrictionDao.class);
 %>
 
 <%
@@ -87,6 +90,8 @@
 	  elementName = request.getParameter("elementName");
 	  elementId = request.getParameter("elementId");
   }
+  
+  List<MyGroupAccessRestriction> restrictions = myGroupAccessRestrictionDao.findByProviderNo(curUser_no);
  
 %>
 
@@ -188,14 +193,21 @@ function selectProviderCustom(p,pn) {
 	  if(bGrpSearch) {
 		  g = (MyGroup)o;
 		  sp = String.valueOf(g.getId().getMyGroupNo());
-		    spnl = String.valueOf(p.getLastName());
-		    spnf = String.valueOf(p.getFirstName());
+		  spnl = String.valueOf(p.getLastName());
+		  spnf = String.valueOf(p.getFirstName());
+		  if(checkRestriction(restrictions,g.getId().getMyGroupNo())) {
+			  continue;
+		  }
+  
 	  }
 	  else {
 		  p = (Provider)o;
 		  sp = String.valueOf(p.getProviderNo());
-		    spnl = String.valueOf(p.getLastName());
-		    spnf = String.valueOf(p.getFirstName());
+		  spnl = String.valueOf(p.getLastName());
+		  spnf = String.valueOf(p.getFirstName());
+		  if(checkRestriction(restrictions,p.getProviderNo())) {
+			  continue;
+		  }
 	  }
      bColor = bColor?false:true ;
    
@@ -226,6 +238,10 @@ function selectProviderCustom(p,pn) {
   if(providername.indexOf(',') == -1 ) {
 	for(MyGroup mg:myGroupDao.search_mygroup(providername+"%")) {
 	
+		if(checkRestriction(restrictions,mg.getId().getMyGroupNo())) {
+			  continue;
+		  }
+		
       sp = String.valueOf(mg.getId().getMyGroupNo());
 %>
 	<tr bgcolor="#CCCCFF">
@@ -270,3 +286,14 @@ function selectProviderCustom(p,pn) {
 </center>
 </body>
 </html>
+
+<%!public boolean checkRestriction(List<MyGroupAccessRestriction> restrictions, String name) {
+     for(MyGroupAccessRestriction restriction:restrictions) {
+             if(restriction.getMyGroupNo().equals(name))
+                     return true;
+     }
+     return false;
+  }
+%>
+
+        
