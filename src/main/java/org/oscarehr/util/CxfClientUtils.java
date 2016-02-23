@@ -184,7 +184,7 @@ public class CxfClientUtils
 		tslClientParameters.setDisableCNCheck(true);
 		TrustAllManager[] tam = {new TrustAllManager()};
 		tslClientParameters.setTrustManagers(tam);
-		tslClientParameters.setSecureSocketProtocol("SSLv3");
+		tslClientParameters.setSecureSocketProtocol(OscarProperties.getInstance().getProperty("ws_client_ssl_protocol","TLS"));
 		httpConduit.setTlsClientParameters(tslClientParameters);
 	}
 
