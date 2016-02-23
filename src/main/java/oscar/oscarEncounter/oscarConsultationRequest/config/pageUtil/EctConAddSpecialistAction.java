@@ -41,6 +41,8 @@ import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
+
 public class EctConAddSpecialistAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
@@ -66,7 +68,11 @@ public class EctConAddSpecialistAction extends Action {
                 		return mapping.findForward("success");
 					}
 				} else {
-					request.setAttribute("refnoinvalid", true);
+					if("BC".equals(OscarProperties.getInstance().getProperty("billregion", "ON"))) {
+						request.setAttribute("refnoinvalid_bc", true);
+					} else {
+						request.setAttribute("refnoinvalid", true);
+					}
                 	return mapping.findForward("success");
 				}
 			}
@@ -114,8 +120,13 @@ public class EctConAddSpecialistAction extends Action {
 	}
 
 	private boolean referralNoValid(String referralNo) {
+		int length = 6; //default ontario length
+		if("BC".equals(OscarProperties.getInstance().getProperty("billregion", "ON"))) {
+			length = 5;
+		}
+		
 		try {
-			if (referralNo.length() == 6 &&	referralNo.matches("\\d*"))
+			if (referralNo.length() == length &&	referralNo.matches("\\d*"))
 				return true;
 		} catch (Exception e) {
 			MiscUtils.getLogger().info("Specified referral number invalid (" + referralNo + ")", e);

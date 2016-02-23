@@ -164,6 +164,9 @@ function BackToOscar() {
 								<% } else if (request.getAttribute("refnoinvalid") != null) { %>
 									<span style="color: red;"><bean:message
 										key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.referralNoInvalid" /></span><br />
+								<% } else if (request.getAttribute("refnoinvalid_bc") != null) { %>
+									<span style="color: red;"><bean:message
+										key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.referralNoInvalidBC" /></span><br />
 								<% } %>
 								<html:text name="EctConAddSpecialistForm" property="referralNo" maxlength="6" />
 							</td>
