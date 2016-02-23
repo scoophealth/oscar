@@ -130,7 +130,11 @@
 
     ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
 
- List<BillingONCHeader1> cheader1s = cheader1Dao.getBillCheader1ByDemographicNo(Integer.parseInt(demographic_nox));
+ List<BillingONCHeader1> cheader1s = null;
+ if("ON".equals(OscarProperties.getInstance().getProperty("billregion", "ON"))) {
+ 	cheader1s = cheader1Dao.getBillCheader1ByDemographicNo(Integer.parseInt(demographic_nox));
+ }
+ 
  BillingONExtDao billingOnExtDao = (BillingONExtDao)SpringUtils.getBean(BillingONExtDao.class);
     oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
     String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
@@ -996,7 +1000,7 @@ if (bMultisites) { %>
 		<% } %>
 		</td>
 	</tr>
-	<%if(cheader1s.size()>0){%>
+	<%if(cheader1s != null && cheader1s.size()>0){%>
 		<tr>
 		<th width="40%"><font color="red">Outstanding 3rd Invoices</font></th>
 		<th width="20%"><font color="red">Invoice Date</font></th>
