@@ -171,7 +171,7 @@
     </databaseap>
     <databaseap>
       <ap-name>email</ap-name>
-      <ap-sql>SELECT email FROM demographic WHERE demographic_no=${demographic)</ap-sql>
+      <ap-sql>SELECT email FROM demographic WHERE demographic_no=${demographic}</ap-sql>
       <ap-output>${email}</ap-output>
     </databaseap>
     <databaseap>
