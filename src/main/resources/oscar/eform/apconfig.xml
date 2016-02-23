@@ -413,11 +413,11 @@
 	</databaseap>
 	<databaseap>
 		<ap-name>bc_referral_name</ap-name>
-		<ap-sql>SELECT professionalSpecialists.lName, professionalSpecialists.fName
+		<ap-sql>SELECT professionalSpecialists.lName as last_name, professionalSpecialists.fName as first_name
 				FROM professionalSpecialists, demographic
 				WHERE demographic.demographic_no=${demographic}
-				AND LENGTH(professionalSpecialists.referral_no) > 0
-				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referral_no)))=professionalSpecialists.referral_no</ap-sql>
+				AND LENGTH(professionalSpecialists.referralNo) > 0
+				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
 		<ap-output>${last_name}, ${first_name}</ap-output>
 	</databaseap>
 	<databaseap>
@@ -425,8 +425,8 @@
 		<ap-sql>SELECT b.address AS raddress
 				FROM professionalSpecialists b, demographic d
 				WHERE d.demographic_no=${demographic}
-				AND LENGTH(b.referral_no) > 0
-				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
+				AND LENGTH(b.referralNo) > 0
+				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referralNo)))=b.referralNo</ap-sql>
                 <ap-output>${raddress}</ap-output>
 	</databaseap>
 	<databaseap>
@@ -434,8 +434,8 @@
 		<ap-sql>SELECT b.phone
 				FROM professionalSpecialists b, demographic d
 				WHERE d.demographic_no=${demographic}
-				AND LENGTH(b.referral_no) > 0
-				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
+				AND LENGTH(b.referralNo) > 0
+				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referralNo)))=b.referralNo</ap-sql>
                 <ap-output>${phone}</ap-output>
 	</databaseap>
 	<databaseap>
@@ -443,18 +443,18 @@
 		<ap-sql>SELECT b.fax
 				FROM professionalSpecialists b, demographic d
 				WHERE d.demographic_no=${demographic}
-				AND LENGTH(b.referral_no) > 0
-				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
+				AND LENGTH(b.referralNo) > 0
+				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referralNo)))=b.referralNo</ap-sql>
                 <ap-output>${fax}</ap-output>
 	</databaseap>
 	<databaseap>
 		<ap-name>bc_referral_no</ap-name>
-		<ap-sql>SELECT b.referral_no
+		<ap-sql>SELECT b.referralNo
 				FROM professionalSpecialists b, demographic d
 				WHERE d.demographic_no=${demographic}
-				AND LENGTH(b.referral_no) > 0
-				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
-		<ap-output>${referral_no}</ap-output>
+				AND LENGTH(b.referralNo) > 0
+				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referralNo)))=b.referralNo</ap-sql>
+		<ap-output>${referralNo}</ap-output>
 	</databaseap>
 
 <!-- Clinic information -->
