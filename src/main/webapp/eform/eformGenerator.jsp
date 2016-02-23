@@ -667,11 +667,10 @@ function GetTextTop(){
 	// dependency on jquery and for pdf and faxing hack it helps that you are not referencing a local version
 	textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js&quot;&gt;&lt;/script&gt;\n";	
 	// if unavailable reference the one in OSCAR
-	textTop += "&lt;script&gt;if (typeof jQuery === 'undefined') {\n\tdocument.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));\n}\n"
-	textTop += "&lt;/script&gt;\n";
+	textTop += "&lt;script&gt; window.jQuery || document.write('&lt;script src=&quot;../js/jquery-1.7.1.min.js&quot;&gt;&lt; &#92;/script&gt;') &lt;/script&gt;\n";
+
 	// ole darn it, I knew I left a copy of jQuery lying around somewhere... perhaps under my nose?
-	textTop += "&lt;script&gt;if (typeof jQuery === 'undefined') {\n\tdocument.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));\n}\n"
-	textTop += "&lt;/script&gt;\n";
+	textTop += "&lt;script&gt; window.jQuery || document.write('&lt;script src=&quot;jquery-1.7.1.min.js&quot;&gt;&lt; &#92;/script&gt;') &lt;/script&gt;\n\n";
 
 	//reference built in functions as desired
 
@@ -3639,4 +3638,3 @@ RedrawAll();
 <!--  Cookie Monster says bye! -->
 </body>
 </html>
-
