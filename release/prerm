@@ -1,9 +1,9 @@
 #!/bin/sh
 # prerm
 # a script file for OSCAR that uninstalls and tweaks the necessary files
-#==============================================================
-# Copyright Peter Hutten-Czapski 2012 released under the GPL v2
-#==============================================================
+#=================================================================
+# Copyright Peter Hutten-Czapski 2012-15 released under the GPL v2
+#=================================================================
 
 set -e
 
@@ -11,14 +11,16 @@ set -e
 . /usr/share/debconf/confmodule
 
 # PROGRAM matches the war and properties name
-PROGRAM=Oscar12_1
-db_name=oscar_12_1
-VERSION=12_1
-PREVIOUS=12
+PROGRAM=oscar
+PACKAGE=oscar-emr
+db_name=oscar_15
+VERSION=15
+PREVIOUS=12_1
 REVISION=0.2
-C_HOME=/usr/share/tomcat6/
-C_BASE=/var/lib/tomcat6/
-SRC=/usr/share/OscarMcmaster/
+TOMCAT="tomcat7"
+C_HOME=/usr/share/${TOMCAT}/
+C_BASE=/var/lib/${TOMCAT}/
+SRC=/usr/share/${PACKAGE}/
 db_password=liyi
 DOCS=OscarDocument
 
@@ -43,13 +45,14 @@ case "$1" in
 		#first grep the password
 		echo "grep the password from the properties file" 1>> $LOG_FILE
 		db_password=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'db_password'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
+		db_username=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'db_username'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
 	else
 		echo "Oops can't find ${C_HOME}${PROGRAM}.properties" >> ${LOG_ERR} ; exit 1 ;
 	fi
-	if [ -f "${C_HOME}drugref.properties" ]; then
-		echo "Removing ${C_HOME}drugref.properties" 
-		rm -f ${C_HOME}drugref.properties 2>>$LOG_ERR
-		echo "Removed ${C_HOME}drugref.properties" >> ${LOG_FILE}
+	if [ -f "${C_HOME}drugref2.properties" ]; then
+		echo "Removing ${C_HOME}drugref2.properties" 
+		rm -f ${C_HOME}drugref2.properties 2>>$LOG_ERR
+		echo "Removed ${C_HOME}drugref2.properties" >> ${LOG_FILE}
 
 	fi
         
@@ -59,7 +62,7 @@ case "$1" in
 		echo "Removing ${PROGRAM}.war" >> ${LOG_FILE}
         #if [ "`(cat ${OSCAR} | md5sum -) 2>/dev/null | cut -d ' ' -f 1`" \
         #                    = "d41d8cd98f00b204e9800998ecf8427e" ] ; then
-		echo "Removing unaltered Oscar.war" 
+		echo "Removing the OSCAR war file" 
 		rm ${OSCAR} 2>>$LOG_ERR
 		echo Removed ${OSCAR} >> ${LOG_FILE}
 	fi
@@ -71,7 +74,7 @@ case "$1" in
 		echo "Removed drugref.war" >> ${LOG_FILE}
 		#and its database
 		echo "Dropping drugref database"
-		mysql -u root -p${db_password} --execute="drop database if exists drugref;" 2>>$LOG_ERR
+		mysql -u ${db_username} -p${db_password} --execute="drop database if exists drugref;" 2>>$LOG_ERR
 		echo "Removed drugref database" >> ${LOG_FILE}
 	fi
         
