@@ -856,6 +856,10 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		else if (func=="WaitingList") url="../oscarWaitingList/SetupDisplayPatientWaitingList.do?demographic_no="+demo.demographicNo;
 		window.open(url, "Appointment", "width=960, height=700");
 	}
+
+	$scope.isClinicaidBilling = function(){                                     
+		return page.billregion == "CLINICAID";                                  
+	}  
 	
 	//billing buttons
 	$scope.billingDo = function(func){
