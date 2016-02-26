@@ -864,7 +864,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			}
 
 			if (oscar.OscarProperties.getInstance().getProperty("billregion", "").equalsIgnoreCase("ON")) {
-				fetchInvoices(notesToDisplay, demoNo);
+				fetchInvoices(loggedInInfo, notesToDisplay, demoNo);
 			}
 		}
 
@@ -913,7 +913,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	}
 
-	private void fetchInvoices(ArrayList<NoteDisplay> notes, String demographicNo) {
+	private void fetchInvoices(LoggedInInfo loggedInInfo, ArrayList<NoteDisplay> notes, String demographicNo) {
 		List<BillingONCHeader1> bills = billingONCHeader1Dao.getInvoices(Integer.parseInt(demographicNo), MAX_INVOICES);
 
 		for (BillingONCHeader1 h1 : bills) {

@@ -381,7 +381,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     
     
     public List<Map<String,Object>> getInvoicesMeta(Integer demographicNo) {
-    	String sql = "select new map(h1.id as id, h1.billingDate as billingDate, h1.billingTime as billing_time, h1.providerNo as provider_no) from BillingONCHeader1 h1 where " +
+    	String sql = "select new map(h1.id as id, h1.billingDate as billingDate, h1.billingTime as billing_time, h1.providerNo as provider_no, h1.programNo as programNo) from BillingONCHeader1 h1 where " +
                 " h1.demographicNo = :demo and h1.status != 'D' order by h1.billingDate desc";
         Query q = entityManager.createQuery(sql);
         

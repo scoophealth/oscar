@@ -341,6 +341,24 @@ public class EFormUtil {
 				curht.put("formDateAsDate", eFormData.getFormDate());
 				curht.put("roleType", eFormData.getRoleType());
 				curht.put("providerNo", eFormData.getProviderNo());
+				
+				org.oscarehr.common.model.EForm eform = eFormDao.find(eFormData.getFormId());
+				
+				boolean addIt=true;
+				if(eform != null && eform.isRestrictToProgram() && eform.getProgramNo() != null && eform.getProgramNo().intValue()>0) {
+					addIt=false;
+					List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+					for(ProgramProvider pp:ppList) {
+						if(pp.getProgramId().intValue() == eform.getProgramNo().intValue()) {
+							addIt=true;
+							break;
+						}
+					}
+				}
+				if(addIt) {
+					results.add(curht);
+				}
+				
 				results.add(curht);
 			}
 		} catch (Exception sqe) {
@@ -387,6 +405,25 @@ public class EFormUtil {
 				curht.put("formDateAsDate", eFormData.getFormDate());
 				curht.put("roleType", eFormData.getRoleType());
 				curht.put("providerNo", eFormData.getProviderNo());
+				
+				org.oscarehr.common.model.EForm eform = eFormDao.find(eFormData.getFormId());
+				
+				boolean addIt=true;
+				if(eform != null && eform.isRestrictToProgram() && eform.getProgramNo() != null && eform.getProgramNo().intValue()>0) {
+					addIt=false;
+					List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+					for(ProgramProvider pp:ppList) {
+						if(pp.getProgramId().intValue() == eform.getProgramNo().intValue()) {
+							addIt=true;
+							break;
+						}
+					}
+				}
+				if(addIt) {
+					results.add(curht);
+				}
+				
+				
 				results.add(curht);
 			}
 		} catch (Exception sqe) {
@@ -422,6 +459,25 @@ public class EFormUtil {
 				curht.put("formDateAsDate", eFormData.getFormDate());
 				curht.put("roleType", eFormData.getRoleType());
 				curht.put("providerNo", eFormData.getProviderNo());
+				
+				org.oscarehr.common.model.EForm eform = eFormDao.find(eFormData.getFormId());
+				
+				boolean addIt=true;
+				if(eform != null && eform.isRestrictToProgram() && eform.getProgramNo() != null && eform.getProgramNo().intValue()>0) {
+					addIt=false;
+					List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+					for(ProgramProvider pp:ppList) {
+						if(pp.getProgramId().intValue() == eform.getProgramNo().intValue()) {
+							addIt=true;
+							break;
+						}
+					}
+				}
+				if(addIt) {
+					results.add(curht);
+				}
+				
+				
 				results.add(curht);
 			}
 		} catch (Exception sqe) {
@@ -430,7 +486,7 @@ public class EFormUtil {
 		return (results);
 	}
 
-	public static ArrayList<HashMap<String, ? extends Object>> listPatientEFormsNoData(String demographic_no, String userRoles) {
+	public static ArrayList<HashMap<String, ? extends Object>> listPatientEFormsNoData(LoggedInInfo loggedInInfo, String demographic_no, String userRoles) {
 
 		Boolean current = true;
 
@@ -460,7 +516,24 @@ public class EFormUtil {
 				curht.put("formDateAsDate", eFormData.get("formDate"));
 				curht.put("roleType", eFormData.get("roleType"));
 				curht.put("providerNo", eFormData.get("providerNo"));
-				results.add(curht);
+				
+				org.oscarehr.common.model.EForm eform = eFormDao.find(Integer.parseInt((String)curht.get("fid")));
+				
+				boolean addIt=true;
+				if(eform != null && eform.isRestrictToProgram() && eform.getProgramNo() != null && eform.getProgramNo().intValue()>0) {
+					addIt=false;
+					List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+					for(ProgramProvider pp:ppList) {
+						if(pp.getProgramId().intValue() == eform.getProgramNo().intValue()) {
+							addIt=true;
+							break;
+						}
+					}
+				}
+				if(addIt) {
+					results.add(curht);
+				}
+				
 			}
 		} catch (Exception sqe) {
 			logger.error("Error", sqe);
