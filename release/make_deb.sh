@@ -56,9 +56,10 @@
 # v 19 - bugfixes to the 12.1 to 15 conversion script and corrected WKHTMLTOPDF command property and removed its dependency as deb
 # v 20 - more sql tweaking and addition of legacyMyISAM.sql for upgrade purposes
 # v 21 - Fixed demo.sql to properly enroll both demo patients
-# v 22 - Changed output to rename as general release, fixed HL7 labs to view, vacancy table fix
+# v 22 - Changed output to rename as ~, fixed HL7 labs to view, vacancy table fix
+# v 23 - Switched to curl from hacked wget
 
-DEB_SUBVERSION=22
+DEB_SUBVERSION=23
 
 PROGRAM=oscar
 PACKAGE=oscar-emr
@@ -90,7 +91,9 @@ echo "grep the build from Jenkins"
 
 ##./wget --no-check-certificate --output-document=lastStableBuild https://demo.oscarmcmaster.org:11042/job/$WGET_VERSION/lastStableBuild/
 
-./wget --no-check-certificate --output-document=lastStableBuild https://demo.oscarmcmaster.org:11042/job/$WGET_VERSION/lastStableBuild/
+##./wget --no-check-certificate --output-document=lastStableBuild /$WGET_VERSION/lastStableBuild/
+curl --insecure -SSLv3 -o lastStableBuild https://demo.oscarmcmaster.org:11042/job/$WGET_VERSION/lastStableBuild/
+
 
 ## <title>may2014alphaMaster #13 [Jenkins]</title>
 # oct2014AlphaMaster #1 [Jenkins]
@@ -152,7 +155,9 @@ cp -R copyright ./${DEBNAME}/usr/share/doc/${PACKAGE}/
 mkdir -p ./${DEBNAME}/DEBIAN/
 
 echo "changelog"
-./wget --no-check-certificate -O changes https://demo.oscarmcmaster.org:11042/job/$WGET_VERSION/changes
+curl --insecure -SSLv3 -o changes https://demo.oscarmcmaster.org:11042/job/$WGET_VERSION/changes
+
+##./wget --no-check-certificate -O changes https://demo.oscarmcmaster.org:11042/job/$WGET_VERSION/changes
 ##./wget --no-check-certificate -O changes https://demo.oscarmcmaster.org:11042/job/$WGET_VERSION/changes
 
 sed \
@@ -175,7 +180,8 @@ tmp4 \
 tmp5 \
 > changelog.Debian
 
-./wget --no-check-certificate -O drugrefChanges https://demo.oscarmcmaster.org:11042/job/drugref2Master/changes
+curl --insecure -SSLv3 -o drugrefChanges https://demo.oscarmcmaster.org:11042/job/drugref2Master/changes
+##./wget --no-check-certificate -O drugrefChanges https://demo.oscarmcmaster.org:11042/job/drugref2Master/changes
 grep "^                [ a-zA-Z#]" drugrefChanges | sed 's/&#039\;//;s/&nbsp\;/ /;s/&quot\;/\"/;s/&quot\;/\"/;s/&quot\;/\"/;s/&quot\;/\"/;s/id:\;//;s/ID://;s/ID \#//;s/Bug \#//;s/Bug ID //;s/Oscar Host - //;s/\#//;s/^[[:space:]]*/  * /;s/[[:space:]]*$//' >drugrefChangesClean
 
 
@@ -385,8 +391,8 @@ else
 	#./wget http://drugref2.googlecode.com/files/drugref.war  ## this is ancient 
 	#cp ~/Downloads/drugref2-1.0-SNAPSHOT.war drugref.war
 	#./wget --no-check-certificate https://demo.oscarmcmaster.org:11042/job/drugref2Gerrit/lastStableBuild/org.drugref\$drugref2/artifact/org.drugref/drugref2/1.0-SNAPSHOT/drugref2-1.0-SNAPSHOT.war
-
-	./wget --no-check-certificate https://demo.oscarmcmaster.org:11042/job/drugref2Master/lastStableBuild/org.drugref\$drugref2/artifact/org.drugref/drugref2/1.0-SNAPSHOT/drugref2-1.0-SNAPSHOT.war
+curl --insecure -SSLv3 -o drugref2-1.0-SNAPSHOT.war https://demo.oscarmcmaster.org:11042/job/drugref2Master/lastStableBuild/org.drugref\$drugref2/artifact/org.drugref/drugref2/1.0-SNAPSHOT/drugref2-1.0-SNAPSHOT.war
+	#./wget --no-check-certificate https://demo.oscarmcmaster.org:11042/job/drugref2Master/lastStableBuild/org.drugref\$drugref2/artifact/org.drugref/drugref2/1.0-SNAPSHOT/drugref2-1.0-SNAPSHOT.war
 
 	#mv drugref.war ./${DEBNAME}${C_BASE}webapps/drugref.war
 	## https://demo.oscarmcmaster.org:11042/job/feb2014alphaMaster/lastStableBuild/org.oscarehr$oscar/artifact/org.oscarehr/oscar/1.0-SNAPSHOT/oscar-1.0-SNAPSHOT.war
@@ -399,7 +405,8 @@ else
 	##./wget --no-check-certificate https://demo.oscarmcmaster.org:11042/job/oscar15BetaGerrit/lastBuild/org.oscarehr$oscar/artifact/org.oscarehr/oscar/14.0.0-SNAPSHOT/oscar-14.0.0-SNAPSHOT.war
 
 # BETA
-	./wget --no-check-certificate https://demo.oscarmcmaster.org:11042/job/$WGET_VERSION/lastStableBuild/org.oscarehr\$oscar/artifact/org.oscarehr/oscar/14.0.0-SNAPSHOT/$TARGET
+curl --insecure -SSLv3 -o $TARGET https://demo.oscarmcmaster.org:11042/job/$WGET_VERSION/lastStableBuild/org.oscarehr\$oscar/artifact/org.oscarehr/oscar/14.0.0-SNAPSHOT/$TARGET
+	##./wget --no-check-certificate https://demo.oscarmcmaster.org:11042/job/$WGET_VERSION/lastStableBuild/org.oscarehr\$oscar/artifact/org.oscarehr/oscar/14.0.0-SNAPSHOT/$TARGET
 	##./wget --no-check-certificate https://demo.oscarmcmaster.org:11042/job/$WGET_VERSION/lastStableBuild/org.oscarehr\$oscar/artifact/org.oscarehr/oscar/14.0.0-SNAPSHOT/$TARGET
 
 fi
@@ -446,8 +453,9 @@ echo "remember to"
 echo scp ${DEBNAME}.deb peter_hc@frs.sourceforge.net:\"/home/frs/project/oscarmcmaster/Oscar\\ Debian\\+Ubuntu\\ deb\\ Package/\"
 echo ""
 echo "they you can"
-echo ./wget http://sourceforge.net/projects/oscarmcmaster/files/Oscar\\ Debian\\+Ubuntu\\ deb\\ Package/${DEBNAME}.deb 
-
+echo wget http://sourceforge.net/projects/oscarmcmaster/files/Oscar\\ Debian\\+Ubuntu\\ deb\\ Package/${DEBNAME}.deb
+echo "" 
+md5sum ${DEBNAME}.deb
 
 
 
