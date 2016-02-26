@@ -37,6 +37,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNoteCompositePk;
 import org.oscarehr.casemgmt.common.EChartNoteEntry;
@@ -89,6 +91,10 @@ public class DefaultNoteService implements NoteService {
 	@Autowired
 	private CaseManagementIssueNotesDao cmeIssueNotesDao;
 
+	@Autowired
+	private ProgramProviderDAO programProviderDAO;
+	
+	
 	@Override
 	public NoteSelectionResult findNotes(LoggedInInfo loggedInInfo, NoteSelectionCriteria criteria) {
 		logger.debug("LOOKING UP NOTES: " + criteria);
@@ -161,7 +167,7 @@ public class DefaultNoteService implements NoteService {
 		intTime = System.currentTimeMillis();
 
 		String roleName = criteria.getUserRole() + "," + criteria.getUserName();
-		ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listPatientEFormsNoData(demoNo, roleName);
+		ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listPatientEFormsNoData(loggedInInfo, demoNo, roleName);
 		for (HashMap<String, ? extends Object> eform : eForms) {
 			EChartNoteEntry e = new EChartNoteEntry();
 			e.setId(eform.get("fdid"));
@@ -201,6 +207,7 @@ public class DefaultNoteService implements NoteService {
 		List<Map<String, Object>> bills = null;
 		if (oscar.OscarProperties.getInstance().getProperty("billregion", "").equalsIgnoreCase("ON")) {
 			bills = billingONCHeader1Dao.getInvoicesMeta(Integer.parseInt(demoNo));
+			bills = filterInvoices(loggedInInfo,bills);
 			for (Map<String, Object> h1 : bills) {
 				EChartNoteEntry e = new EChartNoteEntry();
 				e.setId(h1.get("id"));
@@ -246,6 +253,12 @@ public class DefaultNoteService implements NoteService {
 		logger.debug("FILTER NOTES (CAISI) " + (System.currentTimeMillis() - intTime) + "ms entries size "+entries.size());
 		intTime = System.currentTimeMillis();
 
+		//some notes are linkes to private documents, filter those out 
+		entries = caseManagementManager.filterNotes2(loggedInInfo, entries);
+		logger.debug("FILTER NOTES (CAISI) " + (System.currentTimeMillis() - intTime) + "ms entries size "+entries.size());
+		intTime = System.currentTimeMillis();
+		
+		
 		//TODO: role based filter for eforms?
 
 		//apply provider filter
@@ -350,6 +363,31 @@ public class DefaultNoteService implements NoteService {
 		logger.debug("Total Time to load the notes=" + (System.currentTimeMillis() - startTime) + "ms.");
 		result.getNotes().addAll(notesToDisplay);
 		return result;
+	}
+	
+	private List<Map<String, Object>> filterInvoices(LoggedInInfo loggedInInfo, List<Map<String, Object>> bills) {
+		List<Map<String, Object>> filtered = new ArrayList<Map<String, Object>>();
+		
+		List<ProgramProvider> ppList = programProviderDAO.getProgramDomain(loggedInInfo.getLoggedInProviderNo());
+		List<Integer> programIdsUserCanAccess = new ArrayList<Integer>();
+		for(ProgramProvider pp:ppList) {
+			programIdsUserCanAccess.add(pp.getProgramId().intValue());
+		}
+		
+		for(Map<String, Object> h:bills) {
+			Integer programNo = (Integer)h.get("programNo");
+			if(programNo != null) {
+				if(programIdsUserCanAccess.contains(programNo)) {
+					filtered.add(h);
+				} else {
+					continue;
+				}
+			} else {
+				filtered.add(h);
+			}
+			
+		}
+		return filtered;
 	}
 	
 	private static List<EChartNoteEntry> sliceFromStartOfList(NoteSelectionCriteria criteria,List<EChartNoteEntry> entries,NoteSelectionResult result){
