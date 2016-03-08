@@ -26,6 +26,9 @@
 package oscar.form.pdfservlet;
 
 import java.io.ByteArrayOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -43,6 +46,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperRunManager;
@@ -109,6 +114,20 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		                	FileOutputStream fos = new FileOutputStream(path+pdfFile);
 		                	baosPDF.writeTo(fos);
 		                	fos.close();
+		                	
+		                	// write to file
+		                	String tempPdf = System.getProperty("java.io.tmpdir")+"/prescription_"+req.getParameter("pdfId")+".pdf";
+		                	// Copying the fax pdf.
+							FileUtils.copyFile(new File(path+pdfFile), new File(tempPdf));
+
+			                String txtFile = System.getProperty("java.io.tmpdir")+"/prescription_"+req.getParameter("pdfId")+".txt";
+		                	FileWriter fstream = new FileWriter(txtFile);
+		                	BufferedWriter out = new BufferedWriter(fstream);
+			                try {
+			                	out.write(faxNo);
+		                    } finally {
+		                    	if (out != null) out.close();
+		                	}
 		                	
 			                String faxNumber = req.getParameter("clinicFax");
 			                String demo = req.getParameter("demographic_no");
