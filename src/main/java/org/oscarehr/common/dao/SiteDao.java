@@ -90,7 +90,7 @@ public class SiteDao extends AbstractDao<Site> {
 		}
 		s.setProviders(providers);
 		
-		if(s.getSiteLogoId().intValue()==0)
+		if(s.getSiteLogoId() != null && s.getSiteLogoId().intValue()==0)
 			s.setSiteLogoId(null);
 		merge(s);
 
