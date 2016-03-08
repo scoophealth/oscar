@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -22,6 +23,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -204,6 +206,10 @@ public class EctConsultationFormFaxAction extends Action {
 				ConcatPDF.concat(alist, fos);				
 				fos.close();
 				
+				String tempPath = System.getProperty("java.io.tmpdir");
+                               
+				String faxClinicId = OscarProperties.getInstance().getProperty("fax_clinic_id","");
+				
 				PdfReader pdfReader = new PdfReader(faxPdf);
 				int numPages = pdfReader.getNumberOfPages();
 				pdfReader.close();
@@ -219,6 +225,29 @@ public class EctConsultationFormFaxAction extends Action {
 				    String faxNo = recipients.get(i).replaceAll("\\D", "");
 				    if (faxNo.length() < 7) { throw new DocumentException("Document target fax number '"+faxNo+"' is invalid."); }
 				
+				    String tempName = "CRF-" + faxClinicId + reqId + "." + System.currentTimeMillis();
+					
+					String tempPdf = String.format("%s%s%s.pdf", tempPath, File.separator, tempName);
+					String tempTxt = String.format("%s%s%s.txt", tempPath, File.separator, tempName);
+					
+					// Copying the fax pdf.
+					FileUtils.copyFile(new File(faxPdf), new File(tempPdf));
+					
+					// Creating text file with the specialists fax number.
+					fos = new FileOutputStream(tempTxt);				
+					PrintWriter pw = new PrintWriter(fos);
+					try {
+						pw.println(faxNo);
+					} finally {
+						if (pw != null) pw.close();
+						if (fos != null) fos.close();
+					}
+
+					// A little sanity check to ensure both files exist.
+					if (!new File(tempPdf).exists() || !new File(tempTxt).exists()) {
+						throw new DocumentException("Unable to create files for fax of consultation request " + reqId + ".");
+					}
+					
 				    validFaxNumber = false;
 				    
 				    faxJob = new FaxJob();
@@ -258,6 +287,7 @@ public class EctConsultationFormFaxAction extends Action {
 				LogAction.addLog(provider_no, LogConst.SENT, LogConst.CON_FAX, "CONSULT "+ reqId);
 				request.setAttribute("faxSuccessful", true);
 				return mapping.findForward("success");
+
 			}
 
 		} catch (DocumentException de) {
