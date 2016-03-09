@@ -169,7 +169,7 @@ function updateAjax() {
 %>
       <tr bgcolor="<%= ((i%2) == 1)?"#F2F2F2":"white"%>">
 	    <td width="30%" style="padding-left: 7px">
-	    <a HREF="#" ONCLICK ="javascript: popupPage('efmformadd_data.jsp?fid=<%=curForm.get("fid")%>&demographic_no=<%=demographic_no%>&appointment=<%=appointment%>','<%="FormA"+i%>'); return true;"  TITLE='Add This eForm' OnMouseOver="window.status='Add This eForm' ; return true">
+	    <a HREF="#" ONCLICK ="javascript: popupPage('efmformadd_data.jsp?fid=<%=curForm.get("fid")%>&demographic_no=<%=demographic_no%>&appointment=<%=appointment%>','<%=curForm.get("fid") + "_" + demographic_no %>'); return true;"  TITLE='Add This eForm' OnMouseOver="window.status='Add This eForm' ; return true">
             <%=curForm.get("formName")%>
         </a></td>
                 <td style="padding-left: 7px"><%=curForm.get("formSubject")%></td>
