@@ -82,6 +82,8 @@ public class PreventionDS {
                try
                {
             	   ruleBase = RuleBaseLoader.loadFromInputStream(fis);
+               } catch(Exception e) {
+            	   MiscUtils.getLogger().error("Error loading preventions",e);
                }
                finally 
                {
