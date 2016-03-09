@@ -971,7 +971,7 @@ public class JdbcBillingCreateBillingFile {
 			p1.close();
 			out1.close();
 		} catch (Exception e) {
-			_logger.error("Write HTML File Error!!!");
+			_logger.error("Write HTML File Error!!!",e);
 		}
 	}
 
