@@ -87,7 +87,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 	        	HashMap<String, ? extends Object> curform = eForms.get(i);
 	            winName = (String)curform.get("formName") + bean.demographicNo;            
 	            hash = Math.abs(winName.hashCode());
-	            url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmformadd_data.jsp?fid="+curform.get("fid")+"&demographic_no="+bean.demographicNo+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"','FormA"+i+"');";
+	            url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmformadd_data.jsp?fid="+curform.get("fid")+"&demographic_no="+bean.demographicNo+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"','"+ curform.get("fid") + "_" + bean.demographicNo  +"');";
 	            logger.debug("SETTING EFORM URL " + url);
 	            key = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
 	            key = StringEscapeUtils.escapeJavaScript(key);
