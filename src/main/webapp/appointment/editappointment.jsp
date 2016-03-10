@@ -25,6 +25,7 @@
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
+<%@page import="org.oscarehr.common.dao.BillingONPaymentDao"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -95,6 +96,7 @@
 <%@page import="org.oscarehr.billing.CA.ON.dao.*" %>
 <%@page import="java.math.*" %>
 <%@page import="org.oscarehr.managers.ProgramManager2" %>
+<%@page import="java.text.NumberFormat" %>
 <%
     String mrpName = "";
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
@@ -106,6 +108,8 @@
     SiteDao siteDao = SpringUtils.getBean(SiteDao.class);
 	ProviderDao pDao = SpringUtils.getBean(ProviderDao.class);
 	BillingONCHeader1Dao cheader1Dao = (BillingONCHeader1Dao)SpringUtils.getBean("billingONCHeader1Dao"); 
+	BillingONPaymentDao billingOnPaymentDao = SpringUtils.getBean(BillingONPaymentDao.class); 
+	NumberFormat currency = NumberFormat.getCurrencyInstance();
 	
     ProviderManager providerManager = SpringUtils.getBean(ProviderManager.class);
 	ProgramManager programManager = SpringUtils.getBean(ProgramManager.class);
@@ -1018,28 +1022,48 @@ if (bMultisites) { %>
 		<th><font color="red">Balance</font></th>
 		</tr>
 		<%
-		java.text.SimpleDateFormat fm = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		for(int i=0;i<cheader1s.size();i++) {
-			if(cheader1s.get(i).getPayProgram().matches(BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)){ 
-				BigDecimal payment = billingOnExtDao.getAccountVal(cheader1s.get(i).getId(), billingOnExtDao.KEY_PAYMENT);
-				BigDecimal discount = billingOnExtDao.getAccountVal(cheader1s.get(i).getId(), billingOnExtDao.KEY_DISCOUNT);
-				BigDecimal credit =  billingOnExtDao.getAccountVal(cheader1s.get(i).getId(), billingOnExtDao.KEY_CREDIT);
-				BigDecimal total = cheader1s.get(i).getTotal();
-				BigDecimal balance = total.subtract(payment).subtract(discount).add(credit);
-				
-            	if(balance.compareTo(BigDecimal.ZERO) != 0) { %>
-					<tr>
-						<td align="center"><a href="javascript:void(0)" onclick="popupPage(600,800, '<%=request.getContextPath() %>/billing/CA/ON/billingONCorrection.jsp?billing_no=<%=cheader1s.get(i).getId()%>')"><font color="red">Inv #<%=cheader1s.get(i).getId() %></font></a></td>
-						<td align="center"><font color="red"><%=fm.format(cheader1s.get(i).getTimestamp()) %></font></td>
-						<td align="center"><font color="red">$<%=cheader1s.get(i).getTotal() %></font></td>
-						<td align="center"><font color="red">$<%=balance %></font></td>
-					</tr>
-				<%}
-			}
-		}
-	 } %>
+        List<BillingONPayment> paymentLists = new ArrayList<BillingONPayment>();
+        java.text.SimpleDateFormat fm = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        BigDecimal total =  BigDecimal.ZERO;
+        BigDecimal balance = BigDecimal.ZERO;
+        BigDecimal sumOfPay = BigDecimal.ZERO;
+        BigDecimal sumOfDiscount = BigDecimal.ZERO;
+        BigDecimal sumOfRefund = BigDecimal.ZERO;
+        BigDecimal sumOfCredit = BigDecimal.ZERO;
+
+        List<BigDecimal> balances = new ArrayList<BigDecimal>();
+        for(int i=0;i<cheader1s.size();i++) {
+                if(cheader1s.get(i).getPayProgram().matches(BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)){
+
+                        paymentLists = billingOnPaymentDao.listPaymentsByBillingNo(cheader1s.get(i).getId());
+
+
+                        total = cheader1s.get(i).getTotal();
+
+                        if(paymentLists != null && paymentLists.size()>0) {
+                                balance = BigDecimal.ZERO;
+                                sumOfPay = billingOnPaymentDao.getPaymentsSumByBillingNo(cheader1s.get(i).getId());
+                                sumOfDiscount = billingOnPaymentDao.getPaymentsDiscountByBillingNo(cheader1s.get(i).getId());
+                                sumOfRefund = billingOnPaymentDao.getPaymentsRefundByBillingNo(cheader1s.get(i).getId());
+                                sumOfCredit = billingOnPaymentDao.getPaymentsCreditByBillingNo(cheader1s.get(i).getId());
+                                balance = total.subtract(sumOfPay).subtract(sumOfDiscount).add(sumOfCredit);
+
+                        }
+
+                        if(balance.compareTo(BigDecimal.ZERO) != 0) { %>
+                        <tr>
+								<td align="center"><a href="javascript:void(0)" onclick="popupPage(600,800,'<%=request.getContextPath() %>/billing/CA/ON/billingONCorrection.jsp?billing_no=<%=cheader1s.get(i).getId()%>')"><font color="red">Inv #<%=cheader1s.get(i).getId() %></font></a></td>
+                                <td align="center"><font color="red"><%=fm.format(cheader1s.get(i).getTimestamp()) %></font></td>
+                                <td align="center"><font color="red">$<%=cheader1s.get(i).getTotal() %></font></td>
+                                <td align="center"><font color="red"><%=currency.format(balance) %></font></td>
+                        </tr>
+                <%}
+        }
+}
+} %>
 </table>
 <% } %>
+
 
 
 </div>
