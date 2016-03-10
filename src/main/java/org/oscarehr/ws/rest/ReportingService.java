@@ -32,8 +32,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.dao.EFormReportToolDao;
 import org.oscarehr.common.model.DemographicSets;
@@ -49,6 +47,8 @@ import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.model.EFormReportToolTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import net.sf.json.JSONObject;
 
 @Path("/reporting/")
 @Component
@@ -149,7 +149,7 @@ public class ReportingService extends AbstractServiceImpl {
 		
 		EFormReportToolConverter converter = new EFormReportToolConverter();
 		
-		eformReportToolManager.addNew(getLoggedInInfo(),converter.getAsDomainObject(getLoggedInInfo(),json));
+		eformReportToolManager.addNew(getLoggedInInfo(),converter.getAsDomainObject(getLoggedInInfo(),json), json.isUseNameAsTableName());
 		
 		return (response);
 	}

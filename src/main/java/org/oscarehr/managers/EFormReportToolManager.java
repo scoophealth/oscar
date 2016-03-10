@@ -91,7 +91,7 @@ public class EFormReportToolManager {
 		eformReportToolDao.markLatest(eformReportToolId);
 	}
 	
-	public void addNew(LoggedInInfo loggedInInfo, EFormReportTool eformReportTool) {
+	public void addNew(LoggedInInfo loggedInInfo, EFormReportTool eformReportTool, boolean useNameAsTableName) {
 
 		if(!securityInfoManager.hasPrivilege(loggedInInfo, "_admin.eformreporttool", "w", null)) {
 			throw new RuntimeException("Access Denied [_admin.eformreporttool]");
@@ -101,13 +101,14 @@ public class EFormReportToolManager {
 		if (eform != null) {
 			//get list of possible var_name
 			List<String> fields = eformValueDao.findAllVarNamesForEForm(eform.getId());
-			eformReportToolDao.addNew(eformReportTool,eform, fields,loggedInInfo.getLoggedInProviderNo());
+			eformReportToolDao.addNew(eformReportTool,eform, fields,loggedInInfo.getLoggedInProviderNo(), useNameAsTableName);
 		} else {
 			logger.info("the eform id passed did not match an existing eform");
 		}	
 		
 	}
 
+	
 	public void populateReportTable(LoggedInInfo loggedInInfo, Integer eformReportToolId) {
 		
 		if(!securityInfoManager.hasPrivilege(loggedInInfo, "_admin.eformreporttool", "r", null)) {
@@ -136,6 +137,13 @@ public class EFormReportToolManager {
 					continue;
 				}
 
+				if(eft.getStartDate() != null && !dateFormCreated.after(eft.getStartDate())) {
+					continue;
+				}
+				
+				if(eft.getEndDate() != null && !dateFormCreated.before(eft.getEndDate())) {
+					continue;
+				}
 				eformReportToolDao.populateReportTableItem(eft,values, fdid, demographicNo, dateFormCreated, providerNo);
 
 				logger.debug("Added fdid " + fdid + " to table " + eft.getTableName());

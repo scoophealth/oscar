@@ -135,8 +135,8 @@ if(!authed) {
 								.dialog(
 										{
 											autoOpen : false,
-											height : 450,
-											width : 800,
+											height : 525,
+											width : 825,
 											modal : true,
 											buttons : {
 												"Add" : {
@@ -163,6 +163,18 @@ if(!authed) {
 																	"#eformExpiryDate")
 																	.val();
 														}
+														
+														if ($("#eformStartDate").val() != null	&& $("#eformStartDate").val().length > 0) {
+															e.startDateString = $("#eformStartDate").val();
+														}
+														if ($("#eformEndDate").val() != null	&& $("#eformEndDate").val().length > 0) {
+															e.endDateString = $("#eformEndDate").val();
+														}
+														
+														if ($("#eformReportToolUseAsTableName").attr('checked') == 'checked') {	
+															e.useNameAsTableName = true;
+														}
+														
 														//alert(JSON.stringify(e));
 
 														$
@@ -390,7 +402,7 @@ if(!authed) {
 
 			<div>
 				<div class="controls controls-row">
-					<div class="control-group span8" id="group1">
+					<div class="control-group span4" id="group1">
 						<label class="control-label" for="eformReportToolEformId">Choose
 							EForm:</label>
 						<div class="controls">
@@ -401,17 +413,18 @@ if(!authed) {
 						</div>
 					</div>
 				</div>
+				
 				<div class="controls controls-row">
-					<div class="control-group span8" id="group2">
+					<div class="control-group span4" id="group2">
 						<label class="control-label" for="eformReportToolName">Name:</label>
 						<div class="controls">
 							<input type="text" name="eformReportTool.name"
 								id="eformReportToolName" />
+								
+							<input type="checkbox" name="eformReportTool.useAsTableName" id="eformReportToolUseAsTableName"/>Use as table name
 
 						</div>
 					</div>
-
-
 				</div>
 				<div class="controls controls-row">
 
@@ -428,6 +441,25 @@ if(!authed) {
 				</div>
 
 			</div>
+			
+			<div class="controls controls-row">
+				<div class="control-group span8" id="group5">
+					<label class="control-label" for="eformReportToolStartDate">Start Date (opt):</label>
+						<div class="controls">
+							<input type="text" name="eformReportTool.startDate"
+								id="eformStartDate" value="" />
+						</div>
+						
+						<label class="control-label" for="eformReportToolStartDate">End Date (opt):</label>
+						<div class="controls">
+							<input type="text" name="eformReportTool.endDate"
+								id="eformEndDate" value="" />
+						</div>
+					
+						
+				</div>
+					
+			</div>
 
 		</form>
 	</div>
@@ -435,6 +467,18 @@ if(!authed) {
 
 	<script type="text/javascript">
 		$('#eformExpiryDate').datepicker({
+			format : "yyyy-mm-dd",
+			todayBtn : "linked",
+			autoclose : true,
+			todayHighlight : true
+		});
+		$('#eformStartDate').datepicker({
+			format : "yyyy-mm-dd",
+			todayBtn : "linked",
+			autoclose : true,
+			todayHighlight : true
+		});
+		$('#eformEndDate').datepicker({
 			format : "yyyy-mm-dd",
 			todayBtn : "linked",
 			autoclose : true,
