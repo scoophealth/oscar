@@ -53,6 +53,12 @@ public class EFormReportToolTo1 implements Serializable {
 	
 	private String expiryDateString;
 	
+	private String startDateString;
+	
+	private String endDateString;
+	
+	private Boolean useNameAsTableName = false;
+	
 
 	public Integer getId() {
 		return id;
@@ -148,6 +154,30 @@ public class EFormReportToolTo1 implements Serializable {
 
 	public void setExpiryDateString(String expiryDateString) {
 		this.expiryDateString = expiryDateString;
+	}
+
+	public String getStartDateString() {
+		return startDateString;
+	}
+
+	public void setStartDateString(String startDateString) {
+		this.startDateString = startDateString;
+	}
+
+	public String getEndDateString() {
+		return endDateString;
+	}
+
+	public void setEndDateString(String endDateString) {
+		this.endDateString = endDateString;
+	}
+
+	public boolean isUseNameAsTableName() {
+		return useNameAsTableName;
+	}
+
+	public void setUseNameAsTableName(boolean useNameAsTableName) {
+		this.useNameAsTableName = useNameAsTableName;
 	}
 	
 	

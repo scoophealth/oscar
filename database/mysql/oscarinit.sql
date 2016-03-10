@@ -11978,6 +11978,8 @@ create table EFormReportTool (
   `name` varchar(255),
   `dateLastPopulated` timestamp null,
   `latestMarked` tinyint(1) not null,
+  `startDate` datetime,
+  `endDate` datetime,
   PRIMARY KEY  (`id`)
 );
 
