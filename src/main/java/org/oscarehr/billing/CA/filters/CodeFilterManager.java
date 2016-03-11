@@ -168,18 +168,18 @@ public class CodeFilterManager {
 				boolean patientHasCodeInDxReg = false;
 				List<Dxresearch> codeList = dxresearchDao.getDxResearchItemsByPatient(demographic.getDemographicNo()); 
 				Arrays.sort(cf.Dx);
-				
-				for(Dxresearch dxresearch :codeList){
-					if(dxresearch.getCodingSystem().equals("ICD9")){
-						if(Arrays.binarySearch(cf.Dx,dxresearch.getDxresearchCode()) != -1){
-							patientHasCodeInDxReg = true;
+				if(codeList != null){
+					for(Dxresearch dxresearch :codeList){
+						if("ICD9".equals(dxresearch.getCodingSystem())){
+							if(Arrays.binarySearch(cf.Dx,dxresearch.getDxresearchCode()) != -1){
+								patientHasCodeInDxReg = true;
+							}
+						}
+						if(patientHasCodeInDxReg){ 
+							break; 
 						}
 					}
-					if(patientHasCodeInDxReg){ 
-						break; 
-					}
 				}
-				
 				if(!patientHasCodeInDxReg){
 					return false;
 				}
