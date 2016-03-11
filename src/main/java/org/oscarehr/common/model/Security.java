@@ -39,6 +39,8 @@ import org.apache.log4j.Logger;
 import org.oscarehr.util.EncryptionUtils;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.login.PasswordHash;
+
 
 @Entity
 @Table(name = "security")
@@ -222,19 +224,30 @@ public class Security extends AbstractModel<Integer> {
 	 */
 	public boolean checkPassword(String inputedPassword) {
 		if (password == null) return (false);
-
-		byte[] sha1Bytes = EncryptionUtils.getSha1(inputedPassword);
-		StringBuilder sb = new StringBuilder();
-		for (byte b : sha1Bytes) {
-			sb.append(b);
+		logger.debug("storage version "+storageVersion);
+		if(storageVersion == Security.STORAGE_VERSION_1) {
+				
+			byte[] sha1Bytes = EncryptionUtils.getSha1(inputedPassword);
+			StringBuilder sb = new StringBuilder();
+			for (byte b : sha1Bytes) {
+				sb.append(b);
+			}
+		
+			if (password.equals(sb.toString())) {
+				return (true);
+			}
+		}else if(storageVersion == Security.STORAGE_VERSION_2) {
+			
+			try{
+				if(PasswordHash.validatePassword(inputedPassword,this.password)) {
+					return true;
+				}
+			}catch(Exception e){
+				logger.error("error validating password",e);
+			}
 		}
-
-		if (password.equals(sb.toString())) {
-			return (true);
-		} else {
-			throttleOnFailedLogin();
-			return (false);
-		}
+		throttleOnFailedLogin();
+		return false;
 	}
 
 	protected void throttleOnFailedLogin() {
