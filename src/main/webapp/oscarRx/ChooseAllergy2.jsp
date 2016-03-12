@@ -218,6 +218,9 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 				</html:form></td>
 			</tr>
 			<tr>
+			<td id="searchResultsContainer" >
+			<table>
+			<tr>
 				<td>
 				<div class="DivContentSectionHead"><bean:message
 					key="ChooseAllergy.section2Title" /></div>
@@ -359,13 +362,14 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 					</logic:present>
 				</div>
 
-				<br>
-				<br>
 				<%
                         String sBack="ShowAllergies2.jsp";
                       %> <input type=button class="ControlPushButton"
 					onclick="javascript:window.location.href='<%=sBack%>';"
 					value="Back to View Allergies" /></td>
+			</tr>
+			</table>
+			</td>
 			</tr>
 			<!----End new rows here-->
 			<tr height="100%">

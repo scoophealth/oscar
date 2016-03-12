@@ -47,7 +47,7 @@
         String alle = "";
         if (allergies.length > 0 ){ alle = "Red"; }
         %>
-<td width="10%" height="100%" valign="top">
+
 <div class="PropSheetMenu">
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="_allergy" rights="r" reverse="<%=false%>">
@@ -142,4 +142,3 @@ for (Dxresearch dx:dxreasearchDao.getByDemographicNo(bean2.getDemographicNo())){
 <%}%>
 </p>
 </div>
-</td>
