@@ -70,6 +70,10 @@ public class OAuthInterceptor extends OAuthRequestFilter implements PhaseInterce
 
         // Obtain the OAuthContext and the login (which in OSCAR is the providerNo)
 		OAuthContext oc = message.getContent(OAuthContext.class);
+		if(oc == null) {
+			//not authorized yet
+			return;
+		}
         String providerNo = oc.getSubject().getLogin();
 
         // Create a new provider directly from the Dao with the providerNo.
