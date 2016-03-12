@@ -1,0 +1,818 @@
+ /*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+--> /* styles.css -- Style sheet for the UI prototype.
+
+	Colours used:
+		#A9A9A9 = darkgray
+		#DCDCDC = gainsboro
+		#F5F5F5 = whitesmoke
+		#000000 = black
+		#FF8C00 = darkorange
+*/
+BODY {
+	margin:0px !important;
+	padding: 0px !important;
+	background-color:white !important;
+	font-size: normal !important;;
+	font-family: Verdana, Tahoma, Arial, sans-serif !important;
+}
+
+table {
+	border-collapse: collapse !important;
+}
+
+table tr.lastRow td {
+	height:20px !important;
+	background-color:#F3F3F3;
+}
+
+tr#addAllergyInterface td table {
+	width: 100% !important;
+	margin-bottom: 2px !important;
+}
+
+table#AutoNumber1 {
+		position:relative !important;
+	margin:auto 10px !important;
+	margin-bottom: 3px !important;
+	margin-top: 3px !important;
+		border:none !important;
+	font-size: x-small !important;
+}
+
+table#AutoNumber1 table table td * {
+		font-size: x-small !important;
+}
+
+tr.DivCCBreadCrumbs, tr.DivContentSectionHead, 
+tr#patientDataRow  {
+	display:none !important;
+}
+
+td.DivContentSectionHead span { 
+	display:inline-block !important;
+	margin-right:5px !important;
+}
+
+
+table.allergy_table, table#allergyListTable, table#allergyProfileTable {
+	width: 100% ;
+}
+
+tr#addAllergyInterface td table,
+td.Step1Text {
+	vertical-align: top !important;
+	padding:3px !important;	
+	border: 1px solid #dcdcdc;
+	background-color: #f5f5f5
+}
+
+table.allergy_legend td {
+	padding-right:6;
+		font-size: x-small !important;
+}
+
+table.colour_codes {
+width:8px;
+height:10px;
+border:1px solid #999999;
+}
+
+td#allergiesColumnOneRowTwo p.PropSheetLevel1CurrentItemRed {
+	display:none !important;
+}
+
+td#allergiesColumnTwoRowTwo {
+	width: 100% !important;
+	margin:0px !important;
+	padding:0px !important;
+	padding-left:.5% !important;
+	vertical-align: top !important;
+} 
+
+td#allergiesColumnTwoRowTwo * {
+	font-size: x-small !important;
+}
+
+tr#addAllergyInterface td, tr#addAllergyInterface th {
+	text-align: left !important;
+}
+
+tr#addAllergyInterface td table {
+	margin-top: 5px !important;
+}
+
+tr#addAllergyInterface td table th {
+	background-color: #DCDCDC !important;
+}
+
+tr#addAllergyInterface td table tr td {
+	padding-top:5px !important;
+	padding-bottom:5px !important;
+}
+
+tr#allergySearchCriteraRow td {
+	border:#dcdcdc inset thin !important;
+}
+
+.allergy_table tr:first-of-type td {
+	vertical-align: bottom !important;
+	padding: 3px !important;
+	border-top: #111 thin solid !important;
+	border-bottom: #111 thin solid !important;
+}
+
+.allergy_table td {
+	padding:3px 5px !important;
+	border-right: dotted thin white !important;
+	border-left: dotted thin white !important;
+	border-bottom: dotted thin white !important;
+	text-align: left !important;
+	vertical-align: top !important;
+}
+
+.allergy_table tr:last-of-type {
+	border-bottom: #111111 thin solid !important;
+}
+
+
+table#topLink td#topLinkLeftColumn, td#allergiesColumnOneRowTwo div  {
+	width:175px !important;
+	margin:0px !important;
+	padding: 0px !important;
+		text-align: left !important;
+	vertical-align: top !important;
+}
+
+td#allergiesColumnOneRowTwo {
+	text-align: left !important;
+	vertical-align: top !important;
+	margin:0px !important;
+	padding:0px !important;
+	font-size: small !important;
+}
+
+td#allergiesColumnOneRowTwo div p {
+	padding:0px 7px !important;
+	margin:0px !important;
+	text-indent: 0px !important;
+	background-color: #F5F5F5 !important;
+	border-bottom: thin dotted white !important;
+}
+
+td#allergiesColumnOneRowTwo div p.PropSheetLevel1CurrentItem,
+td#allergiesColumnOneRowTwo div p.PropSheetLevel1CurrentItemRed {
+	font-variant: small-caps !important;
+	padding:3px 5px !important;
+	border-bottom:none !important;
+	background-color: #E0E0E0 !important;
+
+}
+
+td#allergiesColumnOneRowTwo div p a {
+	text-decoration: none !important; 
+	display:block !important;
+}
+
+td#allergiesColumnOneRowTwo div p.PropSheetLevel1CurrentItem a,
+td#allergiesColumnOneRowTwo div p.PropSheetLevel1CurrentItemRed a {
+	display:table !important;
+	float:right !important;
+	margin-left: 5px !important;
+	text-align: center !important;
+	width:10% !important;
+}
+
+td#allergiesColumnOneRowTwo div p.PropSheetLevel1CurrentItemRed a {
+	width:10% !important;
+	text-align: center !important;
+}
+
+td#addAllergyDialogue, td#addAllergyDialogue table {
+	margin:0px !important;
+	padding:0px !important;
+	background-color: white !important;
+	border-collapse: collapse !important;
+}
+
+td#addAllergyDialogue form table,
+td#addAllergyDialogue form table tr td, 
+td#addAllergyDialogue form {
+	border:none !important;
+	margin:0px !important;
+	padding: 0px !important;
+	font-size: x-small !important;
+	font-weight: bold !important;
+	text-align: left !important;
+}
+
+td#addAllergyDialogue form table tr td {
+	padding-left: 10px !important;
+	vertical-align: top !important;
+	padding-bottom:2px !important;
+}
+
+td#addAllergyDialogue table td textarea {
+	font-family: Verdana,Tahoma,Arial,sans-serif !important;
+	padding:3px !important;
+}
+
+td#addAllergyDialogue table tr#addReactionSubheading td {
+	padding-bottom: 5px !important;
+	color:blue !important;
+}
+
+td#addAllergyDialogue table tr td span.label {
+	float:left !important;
+	padding-left:3px !important;
+	display:inline-block !important;
+	width:20% !important;	
+}
+
+tr#allergyQuickButtonRow .highLightButton, 
+tr#allergySearchCriteraRow .highLightButton {
+	color: blue !important;
+		font-weight:bold !important;
+	border:blue thin solid !important;
+}
+
+tr#allergySearchCriteraRow td div#allergySearchSelectors {
+	border:darkgrey thin solid !important;
+	margin-left: 2px !important;
+	border-radius: 5px !important;
+	display:inline-block !important;
+	padding: 0px 5px !important;
+}
+
+
+td#searchResultsContainer table td input[type='button'] {
+	display:none !important;
+}
+
+td#searchResultsContainer table, 
+td#searchResultsContainer table td,
+td#searchResultsContainer table div {
+	margin:0px !important;
+	padding:0px !important;
+	border-collapse: collapse !important;
+
+}
+
+td#searchResultsContainer table, 
+td#searchResultsContainer table div {
+		width:100% !important;
+}
+
+td#searchResultsContainer table div { 
+ margin-top: 5px !important;	
+}
+
+td#searchResultsContainer table div a {
+	display:inline-block !important;
+	padding: 1px 5px !important;
+}
+
+td#searchResultsContainer table tr td .DivContentSectionHead {
+	font-variant: small-caps !important;
+	font-size: x-small !important;
+}
+
+
+/* Centres Styles
+       These styles draw elements that are used in My Watchfire, the Webspace Center,
+       and the Administration Center / Job Status Center */
+.DivCurrentUser {
+	font-size: 80%;
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-bottom: 10px;
+}
+
+.CurrentUser {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.NavBarGroupHead {
+	font-size: 80%;
+	font-weight: bold
+}
+
+.DivNavBarHead {
+	border-bottom: 2px;
+	border-top: 0px;
+	border-left: 0px;
+	border-right: 0px;
+	border-color: #A9A9A9;
+	border-style: solid;
+	width: 176px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-size: 80%;
+	font-weight: bold;
+	background: #DCDCDC;
+	color: #000000;
+}
+
+.NavBarHead {
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+.DivNavBarItem {
+	font-size: 80%;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.NavBarItemHead {
+	font-weight: bold;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.NavBarItem {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 20px;
+	text-indent: -20px;
+}
+
+.NavBarItemCurrent {
+	font-weight: bold
+}
+
+.TabText {
+	font-size: 90%;
+	font-weight: bold
+}
+
+.ViewSortControls {
+	font-size: 80%
+}
+
+.ViewSortCurrent {
+	font-weight: bold
+}
+
+/* Property Sheet Menu Styles
+      These styles build the property sheet navigation menus. */
+.PropSheetMenu {
+	font-size: 80%;
+	margin-left: 2px;
+	margin-top: 10px;
+}
+
+.PropSheetMenuItemLevel1 {
+	margin-left: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.PropSheetMenuItemLevel2Head {
+	margin-left: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-weight: bold
+}
+
+.PropSheetMenuItemLevel2 {
+	margin-left: 25px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.PropSheetLevel1CurrentItem {
+	margin-left: 10px;
+	text-indent: -10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+.PropSheetLevel1CurrentItemRed {
+	color: Red;
+	margin-left: 10px;
+	text-indent: -10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+.PropSheetLevel2CurrentItem {
+	margin-left: 25px;
+	text-indent: -10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+/* Property Sheet Content Area Styles
+      These are used for all of the elements in the content area of the property sheet. */
+.DivContentTitle {
+	font-size: 140%;
+}
+
+.DivContentMainInstructionalText {
+	margin-top: 7px;
+	margin-bottom: 7px;
+}
+
+.DivContentSectionHead {
+	margin-left: -3px;
+	text-indent: 3px;
+	background: #DCDCDC;
+	color: #000000;
+	margin-top: 14px;
+	margin-bottom: 10px;
+	font-weight: bold;
+	height: 17px;
+	padding-right:10px;
+}
+
+.DivContentGeneric {
+	width: 100%
+}
+
+.DivContentGenericIndented {
+	margin-left: 20px;
+}
+
+.ContentGeneric {
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
+.ContentGenericFirst {
+	margin-bottom: 4px;
+}
+
+.ContentGenericNewSection {
+	margin-top: 10px;
+	margin-bottom: 4px;
+}
+
+.DivAddRemoveButtons {
+	margin-top: 4px;
+	margin-bottom: 4px;
+	width: 100%;
+}
+
+.ControlLabelSpace {
+	margin-top: 7px;
+	margin-bottom: 0px;
+}
+
+.ControlLabelNoSpace {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.Control {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.DivEnableAll {
+	margin-bottom: 4px;
+	width: 100%;
+	font-size: 80%;
+}
+
+/* Button Bar Style */
+.DivButtonBar {
+	margin-top: 4px;
+	margin-bottom: 4px;
+	margin-left: 4px;
+	margin-right: 4px;
+	font-size: 80%;
+}
+
+/* String Data Table Styles
+	   Styles with NA are for rows that contain no data. */
+.StrDataTableHeader1 {
+	font-weight: bold;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 1px;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+	vertical-align: bottom;
+}
+
+.StrDataTableHeader2 {
+	font-weight: bold;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 0px;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+	vertical-align: bottom;
+}
+
+.StrDataTableHeader3 {
+	font-weight: bold;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 0px;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-right-width: 1px;
+	vertical-align: bottom;
+}
+
+.StrDataTableItem1Odd {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 1px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+}
+
+.StrDataTableItem1Even {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 1px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+	background: #F5F5F5;
+	color: #000000;
+}
+
+.StrDataTableItem2Odd {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+}
+
+.StrDataTableItem2Even {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+	background: #F5F5F5;
+	color: #000000;
+}
+
+.StrDataTableItem1OddEnd {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 1px;
+	border-top-width: 0px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+}
+
+.StrDataTableItem1EvenEnd {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 1px;
+	border-top-width: 0px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+	background: #F5F5F5;
+	color: #000000;
+}
+
+.StrDataTableItem2OddEnd {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+}
+
+.StrDataTableItem2EvenEnd {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+	background: #F5F5F5;
+	color: #000000;
+}
+
+.DataTableScrollBarCell {
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-right-width: 1px;
+	border-bottom-width: 3px;
+	height: 100%;
+}
+
+.StrDataTableItem1OddNA {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 1px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+}
+
+.StrDataTableItem1EvenNA {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 1px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+}
+
+.StrDataTableItem2OddNA {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+}
+
+.StrDataTableItem2EvenNA {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+}
+
+.StrDataTableItem1OddEndNA {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 1px;
+	border-top-width: 0px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+}
+
+.StrDataTableItem1EvenEndNA {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 1px;
+	border-top-width: 0px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+}
+
+.StrDataTableItem2OddEndNA {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+}
+
+.StrDataTableItem2EvenEndNA {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-style: solid;
+	border-color: #A9A9A9;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+}
+
+
+table.mhTable {
+    width: 360px;
+    border-width: 1px ;
+    border-spacing: 2px;
+    border-style: outset;
+    border-color: gray;
+    border-collapse: collapse;
+}
+table.mhTable th {
+    border-width: 1px;
+    padding: 1px;
+    border-style: inset;
+    border-color: gray;
+    font-size:10pt;
+}
+table.mhTable td{
+    border-width: 1px;
+    border-style: inset;
+    border-color: gray;
+    font-style:normal;
+    margin:0;
+    font-family:sans-serif;
+    font-size:10pt;
+}
+
+@media print { 
+.noPrint {
+	display:none; 
+	} 
+} 
+
