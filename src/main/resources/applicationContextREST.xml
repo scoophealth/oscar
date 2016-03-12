@@ -70,6 +70,7 @@
       <jaxrs:providers>
            <ref bean="oAuthFilter"/>
            <ref bean="jaxb"/>
+            <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
         </jaxrs:providers>
       
       
