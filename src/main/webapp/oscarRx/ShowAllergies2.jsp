@@ -82,91 +82,193 @@ com.quatro.service.security.SecurityManager securityManager = new com.quatro.ser
 %>
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="EditAllergies.title" /></title>
-<link rel="stylesheet" type="text/css" href="styles.css">
 
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/allergies.css">
 <style type="text/css">
-.view_menu{
-font-style:normal;
-font-size:12;
-font-weight:normal;
-padding-right:12px;
-}
-
-.view_selected{
-font-style:normal;
-font-size:12;
-font-weight:normal;
-padding-right:12px;
-
-}
-
-table.allergy_legend{
-border:0;
-padding-left:20px;
-}
-
-table.allergy_legend td{
-font-size:8;
-padding-right:6;
-}
-
-.at_border{
-border-top: 1px solid black;
-border-bottom: 1px solid black;
-}
-
-table.colour_codes{
-width:8px;
-height:10px;
-border:1px solid #999999;
-}
-
-
-table.allergy_table td{
-	border-collapse: collapse;
-	border-bottom: 1px #8F8F8F solid thin;
-	border-top: none;
-	border-left: none;
-	border-right: none;
-
-	empty-cells: show;
-}
-
-
+	.ajax-loader {
+	     background: url(../images/ui-anim_basic_16x16.gif) center right no-repeat;
+	}
 </style>
-
-<!--[if IE]>
-<style type="text/css">
-
-table.allergy_legend td{
-font-size:10;
-padding-right:6;
-}
-
-</style>
-<![endif]-->
-
-
 <script type="text/javascript">
+
+$(document).ready( function() {
+
+	$.fn.bindActionEvents = function() {
+
+		//--> unbind first to avoid multiple binds.
+		$(".deleteAllergyLink").unbind("click");
+		$("#searchResultsContainer a").unbind("click");
+		$(".DivContentSectionHead a img").unbind("click");
+
+		//--> action for selecting from search results.
+		$("#searchResultsContainer div[id $= '_content'] a").bind("click", function(event){
+			event.preventDefault();
+			// override the old addReaction.do with the new addReaction2.do
+			var path = "${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do"
+			var param = this.href.split("?")[1];
+			sendSearchRequest(path, param, "#addAllergyDialogue");
+			$("#searchResultsContainer").html("");
+		});
+		
+		//--> delete allergy.
+		$(".deleteAllergyLink").bind("click", function(event){
+			var id = this.id;
+			var param = id.split("_")[1].trim();
+			var allergyId = param.split("&")[0];
+			allergyId = allergyId.split("=")[1].trim()
+			$("#allergy_" + allergyId).addClass("highLightRow");
+
+			var path = "${ pageContext.servletContext.contextPath }/oscarRx/deleteAllergy2.do";
+
+			if( confirm(" Inactivate this Allergy? ") ) {
+				sendSearchRequest(path, param, ".Step1Text");
+			}
+		});
+
+		//--> Toggle search results listing.
+	    $.fn.toggleSection = function(typecode) {
+	    	var imgsrc = document.getElementById(typecode+"_img").src;
+	    	if(imgsrc.indexOf('expander')!=-1) {
+	    		document.getElementById(typecode+"_img").src='../images/collapser.png';
+	    		Effect.BlindDown(document.getElementById(typecode+"_content"), {duration: 0.1 });
+	    	} else {
+	    		document.getElementById(typecode+"_img").src='../images/expander.png';
+	    		Effect.BlindUp(document.getElementById(typecode+"_content"), {duration: 0.1 });
+	    	}
+
+	    }
+
+		//--> Toggle search results listing.
+		$(".DivContentSectionHead a img").bind("click", function(event){
+			event.preventDefault();
+			var typecode = this.id.split("_")[0];
+			var imgsrc = document.getElementById(typecode+"_img").src;
+	    	if(imgsrc.indexOf('expander')!=-1) {
+	    		document.getElementById(typecode+"_img").src='../images/collapser.png';
+	    		$("#"+typecode+"_content").show();
+	    	} else {
+	    		document.getElementById(typecode+"_img").src='../images/expander.png';
+	    		$("#"+typecode+"_content").hide();
+	    	}
+		})
+	    
+	} //--> end bind events function.
+
+	//--> set default checkboxes on load
+	$.fn.setDefaults = function() {
+		// default set Drug Classes checked.
+		document.forms.searchAllergy2.type4.checked = true;
+	}
+	
+	//--> Send allergy search to server
+	$("#searchStringButton").click( function(){
+
+		if( isEmpty() ) {
+			$(".highLightButton").removeClass("highLightButton");
+			var form = $("#searchAllergy2");
+			var url = "${ pageContext.servletContext.contextPath }" + form.attr('action');
+			var params = form.serializeArray();
+		    var json = {};		    
+		    $.each(params, function() {
+		        json[this.name] = this.value || '';
+		    });
+			json.submit = 'Search';
+			// servlet looks for "jsonData" request parameter		
+			param = "jsonData=" + JSON.stringify(json);
+
+			// thinking action
+			$('#searchString').addClass('ajax-loader');
+			
+			sendSearchRequest(url, param, "#searchResultsContainer");  
+		}
+	});
+
+
+	//--> Toggle checkboxes all or none
+	$("#typeSelectAll").change( function(){
+			if(this.checked) {
+				typeSelect();
+				//$("label[for='" + this.id + "']").text("None");
+			} else {
+				typeClear();
+				//$("label[for='" + this.id + "']").text("All");
+			}
+	});
+
+	//--> Cancel add allergy dialogue 
+	$("#cancelAddReactionButton").click(function(event){
+		event.preventDefault();
+		document.forms.RxAddAllergyForm.reactionDescription.value='';
+		document.forms.RxAddAllergyForm.startDate.value='';
+		document.forms.RxAddAllergyForm.ageOfOnset.value='';
+		location.reload();
+	})
+
+	//--> Actions after allergy has been added.
+	$("input[value='Add Allergy'], .ControlPushButton").click(function() {
+		$(".ControlPushButton").removeClass("highLightButton");
+	})
+
+	//--> delete allergy.
+	$(".deleteAllergyLink").click(function(){
+		var id = this.id;
+		var param = id.split("_")[1].trim();
+		var allergyId = param.split("&")[0];
+		allergyId = allergyId.split("=")[1].trim()
+		$("#allergy_" + allergyId).addClass("highLightRow");
+
+		var path = "${ pageContext.servletContext.contextPath }/oscarRx/deleteAllergy.do";
+
+		if( confirm(" Inactivate this Allergy? ") ) {
+			sendSearchRequest(path, param, "")
+		}
+	})
+
+	$().bindActionEvents();
+	$().setDefaults();
+
+}); //--> end document ready
+
+	//--> AJAX the data to the server.
+	function sendSearchRequest(path, param, target) { 	
+		$.ajax({
+		    url: path,
+		    type: 'POST',
+		    data: param,
+		  	dataType: 'html',
+		    success: function(data) {    		
+		    	renderSearchResults(data, target);  	
+		    }
+		});
+	}
+
+	//--> Render response html 
+	function renderSearchResults(html, id) {
+		
+		if( id instanceof Array ) {
+			$.each(id, function(i, val){
+				$(val).replaceWith( jQuery(val, html) );
+			});			
+		} else {			
+			$(id).replaceWith( jQuery(id, html) );
+		}
+		
+		$('.ajax-loader').removeClass('ajax-loader');		
+		$().bindActionEvents();
+	}
+
+	//--> Check if search field is empty. 
     function isEmpty(){
-        if (document.RxSearchAllergyForm.searchString.value.length == 0){
+        if (document.forms.searchAllergy2.searchString.value.length == 0){
             alert("Search Field is Empty");
-            document.RxSearchAllergyForm.searchString.focus();
+            document.forms.searchAllergy2.searchString.focus();
             return false;
         }
         return true;
     }
-
-    function addCustomAllergy(){
-        var name = document.getElementById('searchString').value;
-        if(isEmpty() == true){
-            name = name.toUpperCase();
-            window.location="addReaction2.do?ID=0&type=0&name="+name;
-        }
-    }
-
 
     function show_Search_Criteria(){
     	var tbl_as = document.getElementById("advancedSearch");
@@ -176,47 +278,122 @@ padding-right:6;
     	}else{
     		tbl_as.style.display = '';
     	}
+    }
+
+    //--> Checkboxes for search allergy criteria
+    function typeSelect()
+    {
+        var frm = document.forms.searchAllergy2;
+
+        frm.type1.checked = true;
+        frm.type2.checked = true;
+        frm.type3.checked = true;
+        frm.type4.checked = true;
 
     }
+    
+    function typeClear()
+    {
+        var frm = document.forms.searchAllergy2;
+
+        frm.type1.checked = false;
+        frm.type2.checked = false;
+        frm.type3.checked = false;
+        frm.type4.checked = false;
+
+    }
+
+
+    function addCustomAllergy(){
+    	$(".highLightButton").removeClass("highLightButton");
+        var name = document.getElementById('searchString').value;
+        if(isEmpty() == true){
+            name = name.toUpperCase();
+            confirm("Adding custom allergy: " + name);
+            /*          window.location="addReaction2.do?ID=0&type=0&name="+name; */
+            sendSearchRequest("${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do",
+            		"ID=0&type=0&name="+name,"#addAllergyDialogue");
+            $("input[value='Custom Allergy']").addClass("highLightButton");
+        }
+
+    }
+    
+    function addPenicillinAllergy(){
+    	$(".highLightButton").removeClass("highLightButton");
+    	sendSearchRequest("${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do", 
+    	    	"ID=44452&name=PENICILLINS&type=10", "#addAllergyDialogue");
+    	$("input[value='Penicillin']").addClass("highLightButton");
+    	/* window.location="addReaction2.do?ID=44452&name=PENICILLINS&type=10"; */
+    }
+    
+    function addSulfonamideAllergy(){
+    	$(".highLightButton").removeClass("highLightButton");
+    	sendSearchRequest("${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do",
+    	    	"ID=44159&name=SULFONAMIDES&type=10","#addAllergyDialogue");
+    	$("input[value='Sulfa']").addClass("highLightButton");
+/*             window.location="addReaction2.do?ID=44159&name=SULFONAMIDES&type=10"; */
+    }
+    
+    function addCustomNKDA(){
+    	$(".highLightButton").removeClass("highLightButton");
+    	sendSearchRequest("${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do",
+    	    	"ID=0&type=0&name=No Known Drug Allergies","#addAllergyDialogue");
+    	$("input[value='NKDA']").addClass("highLightButton");
+/*             window.location="addReaction2.do?ID=0&type=0&name=NKDA"; */
+    }
+
+  
 </script>
 
 </head>
-<bean:define id="patient"
-	type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
+<bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 
-<body topmargin="0" leftmargin="0" vlink="#0000FF">
+<body>
 <%=WebUtilsOld.popErrorAndInfoMessagesAsHtml(session)%>
-<table border="0" cellpadding="0" cellspacing="0"
-	style="border-collapse: collapse" bordercolor="#111111" width="100%"
-	id="AutoNumber1" height="100%">
-	<%@ include file="TopLinks.jsp"%><!-- Row One included here-->
+<table id="AutoNumber1">
+	<%-- include file="TopLinks.jsp"--%><!-- Row One included here-->
+	<tr id="allergiesRowOne" >
+		<td colspan="2">
+			<jsp:include page="TopLinks.jsp">
+				<jsp:param value="Allergies" name="title" />
+				<jsp:param value="${ patient.surname }, ${ patient.firstName }" name="patientName" />
+				<jsp:param value="${ patient.sex }" name="sex" />
+				<jsp:param value="${ patient.age }" name="age" />
+				<jsp:param value="<%= roleName2$ %>" name="security" /> 
+				<jsp:param value='<%= (String)session.getAttribute("demographicNo") %>' name="demographicNo" />
+			</jsp:include>
+		</td>
+	</tr>
 	<tr>
-		<%@ include file="SideLinksEditFavorites2.jsp"%><!-- <td></td>Side Bar File --->
-		<td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%"
-			valign="top"><!--Column Two Row Two-->
-		<table cellpadding="0" cellspacing="2"
-			style="border-collapse: collapse" bordercolor="#111111" width="100%"
-			height="100%">
-			<tr>
-				<td width="0%" valign="top">
-				<div class="DivCCBreadCrumbs"><a href="SearchDrug3.jsp"> <bean:message
-					key="SearchDrug.title" /></a>&nbsp;&gt;&nbsp; <b><bean:message
-					key="EditAllergies.title" /></b></div>
+	<td id="allergiesColumnOneRowTwo" >
+		<%@ include file="SideLinksEditFavorites2.jsp" %><!-- <td></td>Side Bar File --->
+	</td>	
+		<td id="allergiesColumnTwoRowTwo" ><!--Column Two Row Two-->
+		<table>
+			<tr class="DivCCBreadCrumbs" >
+				<td>
+					<a href="SearchDrug3.jsp" > 
+						<bean:message key="SearchDrug.title" />
+					</a>
+					&nbsp;&gt;&nbsp; 
+					<b><bean:message key="EditAllergies.title" /></b>
 				</td>
 			</tr>
 			<!----Start new rows here-->
 
-			<tr>
+			<tr class="DivContentSectionHead" >
 				<td>
-				<div class="DivContentSectionHead"><bean:message
-					key="EditAllergies.section1Title" /></div>
+				<bean:message key="EditAllergies.section1Title" />
 				</td>
 			</tr>
-			<tr>
+			<tr id="patientDataRow">
 				<td>
 				<table>
 					<tr>
-						<td><b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient" property="surname" />, <jsp:getProperty name="patient" property="firstName" /> </td>
+						<td><b><bean:message key="SearchDrug.nameText" /></b> 
+						<jsp:getProperty name="patient" property="surname" />, 
+						<jsp:getProperty name="patient" property="firstName" /> 
+						</td>
 						<td>&nbsp;</td>
 						<td><b>Age:</b> <jsp:getProperty name="patient" property="age" /></td>
 					</tr>
@@ -225,11 +402,11 @@ padding-right:6;
 			</tr>
 
 			<tr>
-				<td>
-				<div class="DivContentSectionHead">
-				<bean:message key="EditAllergies.section2Title" />
+				<td class="DivContentSectionHead" >
 
-				| <span class="view_menu">View:
+					<bean:message key="EditAllergies.section2Title" />
+
+				<span class="view_menu">View:
 
 				<%
 
@@ -259,7 +436,7 @@ padding-right:6;
 
 
 						}else{
-							out.print("<span class='view_menu'><a href='showAllergy.do?demographicNo="+demoNo+"&view="+navArray[i]+"'>");
+							out.print("<span class='view_menu'><a href='ShowAllergies2.do?demographicNo="+demoNo+"&view="+navArray[i]+"'>");
 								out.print(navArray[i]);
 							out.print("</a></span>");
 						}
@@ -298,24 +475,16 @@ padding-right:6;
 							}
                   	  }
              	%>
-				</div>
-
-
 				</td>
 			</tr>
 			<tr>
 				<td>
 				<table border="0">
 					<tr>
-						<td width="100%">
+						<td class="Step1Text">
 						<%=allergy_colour_codes%>
-						<div class="Step1Text" style="width: 830px;">
 
-						                                                                          <!-- frame="below" and rules="all"
-						                                                                          are here so the browser displays
-						                                                                          cells that are empty so the bottom
-						                                                                          border appears -->
-						<table width="100%" cellpadding="3" cellspacing="0" class="allergy_table" frame="below" rules="all">
+						<table class="allergy_table" >
 							<tr>
 								<td><b>Status</b></td>
 								<td><b>Entry Date</b></td>
@@ -397,14 +566,14 @@ padding-right:6;
 										String startDate = partialDateDao.getDatePartial(allergy.getStartDate(), PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_STARTDATE);
 								%>
 
-								<tr bgcolor="<%=trColour%>">
+								<tr bgcolor="<%=trColour%>" id="allergy_<%= allergy.getAllergyId() %>" >
 									<td><%=labelStatus%></td>
 									<td><%=entryDate==null ? "" : entryDate %></td>
 									<td <%=title%> ><%=allergy.getDescription() %></td>
 									<td><%=allergy.getTypeDesc() %></td>
 									<td bgcolor="<%=sevColour%>"><%=allergy.getSeverityOfReactionDesc() %></td>
 									<td><%=allergy.getOnSetOfReactionDesc() %></td>
-									<td><%=allergy.getReaction() %></td>
+									<td><%=allergy.getReaction()!=null?allergy.getReaction():"" %></td>
 									<td><%=startDate==null ? "" : startDate %></td>
 									<td><%=allergy.getLifeStageDesc() %></td>
 									<%
@@ -432,23 +601,82 @@ padding-right:6;
 									<%
 										if(!allergy.isIntegratorResult() && securityManager.hasDeleteAccess("_allergies",roleName$)) {
 									%>
-									<a href="deleteAllergy.do?ID=<%= String.valueOf(allergy.getAllergyId()) %>&demographicNo=<%=demoNo %>&action=<%=actionPath %>" onClick="return confirm('Are you sure you want to set the allergy <%=allergy.getDescription() %> to <%=labelConfirmAction%>?');"><%=labelAction%></a>
+									<a href="#" class="deleteAllergyLink" 
+										id="deleteAllergy_ID=<%= allergy.getAllergyId() %>&demographicNo=<%=demoNo %>&action=<%=actionPath %>" >
+										<%=labelAction%>
+									</a>
+									
 									<% } %>
 									</td>
 								</tr>
 								<% } %>
 								<% } //end of iterate %>
+
 						</table>
-						</div>
+	
 						<%=allergy_colour_codes%>
 						</td>
 					</tr>
 				</table>
 				</td>
 			</tr>
-
-			<%if(securityManager.hasWriteAccess("_allergies",roleName$)) {%>
+			
+			<tr id="addAllergyInterface" >
+			
+				<td>
+					<form action="/oscarRx/searchAllergy2.do" focus="searchString" id="searchAllergy2"  >
+					<table>
+					<tr><th>Add an Allergy</th></tr>
+						<tr id="allergyQuickButtonRow" >
+                            <td>                           	
+                        		<input type=button class="ControlPushButton" onclick="javascript:addCustomNKDA();" value="NKDA" />                              
+                               <input type=button class="ControlPushButton" onclick="javascript:addPenicillinAllergy();" value="Penicillin" />
+                               <input type=button class="ControlPushButton" onclick="javascript:addSulfonamideAllergy();" value="Sulfa" />                                                           
+                            </td>
+						</tr>
+						
+						<tr>
+							<td id="addAllergyDialogue"></td>
+						</tr>
+						
+						<tr id="allergySearchCriteraRow">
+							<td>
+							<div id="allergySearchSelectors">
+								<input type="checkbox" name="type4"  id="type4" ${ type4 ? 'checked' : '' } /> 
+								<label for="type4" >Drug Classes</label>
+								<input type="checkbox" name="type3" id="type3"  ${ type3 ? 'checked' : '' }  /> 
+								<label for="type3" >Ingredients</label>
+								<input type="checkbox" name="type2" id="type2"  ${ type2 ? 'checked' : '' }  /> 
+								<label for="type2" >Generic Names</label>
+								<input type="checkbox"  name="type1" id="type1"  ${ type1 ? 'checked' : '' }  /> 
+								<label for="type1" >Brand Names</label>
+								<input type="checkbox" name="typeSelectAll" id="typeSelectAll"  /> 
+								<label for="typeSelectAll" >All</label>
+							</div>
+								 <input type="text" name="searchString" value="${ searchString }" size="16" id="searchString" maxlength="16" />                           	
+                            	<input type="button" value="Search" id="searchStringButton" class="ControlPushButton" />
+                            	OR
+                            	<input type=button class="ControlPushButton" onclick="javascript:addCustomAllergy();" value="Custom Allergy" />
+                
+							</td>
+						</tr>
+					</table>
+					</form>
+				</td>				
+			</tr>
+			
 			<tr>
+				<td id="searchResultsContainer" ></td>
+			</tr>
+
+			<%-- this block has no purpose 
+			if(securityManager.hasWriteAccess("_allergies",roleName$)) {--%>
+			
+			
+			
+	<%-- It's becoming difficult to maintain this and the identical ChooseAllergy2.jsp page.
+	Modifications are made by combining ChooseAllergy2.jsp with this page.		
+	<tr>
 				<td>
 				<div class="DivContentSectionHead"><bean:message
 					key="EditAllergies.section3Title" /></div>
@@ -491,12 +719,6 @@ padding-right:6;
                             </td>
 						</tr>
 					</table>
-                      &nbsp;
-
-                      <%
-
-
-                      %>
 
                       <table bgcolor="#F5F5F5" cellpadding="3" id="advancedSearch" style="<%=shPref%>">
 						<tr>
@@ -552,38 +774,24 @@ padding-right:6;
 						</tr>
 					</table>
 
-				</html:form> <br>
-				<br>
+				</html:form> 
 				<%
                         String sBack="SearchDrug3.jsp";
                       %> <input type=button class="ControlPushButton"
 					onclick="javascript:window.location.href='<%=sBack%>';"
 					value="Back to Search Drug" /></td>
-			</tr>
+			</tr> --%>
 			<!----End new rows here-->
-			<tr height="100%">
-				<td></td>
-			</tr>
+			
 		</table>
 		</td>
 	</tr>
-
-	<tr>
-		<td height="0%"
-			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
-		<td height="0%"
-			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+	
+	<tr class="lastRow">
+		<td colspan="2"></td>
 	</tr>
 
-	<tr>
-		<td width="100%" height="0%" colspan="2">&nbsp;</td>
-	</tr>
-
-	<tr>
-		<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
-			colspan="2"></td>
-	</tr>
-	<% } %>
+	<%-- } --%>
 </table>
 </body>
 </html:html>

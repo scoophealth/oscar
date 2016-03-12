@@ -98,12 +98,19 @@ String allergyId = (String) request.getAttribute("allergyId");
 				</td>
 			</tr>
 			<tr>
-				<td><html:form action="/oscarRx/addAllergy2"
+				<td id="addAllergyDialogue"><html:form action="/oscarRx/addAllergy2"
 					focus="reactionDescription">
 					<table>
+						<tr id="addReactionSubheading">
+							<td>
+								Adding Allergy: <%=name%>
+							</td>
+						</tr>
 						<tr valign="center">
 
-							<td colspan="2"><html:textarea
+							<td>
+							<span class="label">Comment: </span>
+							<html:textarea
 								property="reactionDescription" cols="40" rows="3" /> <html:hidden
 								property="ID" value="<%=allergyId%>" /> <html:hidden
 								property="name" value="<%=name%>" /> <html:hidden
@@ -111,21 +118,21 @@ String allergyId = (String) request.getAttribute("allergyId");
 						</tr>
 
 						<tr valign="center">
-							<td colspan="2">Start Date: <html:text
+							<td ><span class="label">Start Date:</span> <html:text
 								property="startDate" size="10" maxlength="10"/>
 							    (yyyy-mm-dd OR yyyy-mm OR yyyy)</td>
 
 						</tr>
 
 						<tr valign="center">
-							<td colspan="2">Age Of Onset: <html:text
+							<td><span class="label">Age Of Onset:</span> <html:text
 								property="ageOfOnset" size="4" maxlength="4" /></td>
 
 						</tr>
 						
 						
 						<tr valign="center">
-							<td><bean:message key="oscarEncounter.lifestage.title"/>: 
+							<td> <span class="label"><bean:message key="oscarEncounter.lifestage.title"/>:</span> 
 	                                <html:select property="lifeStage">
 	                                        <html:option value=""><bean:message key="oscarEncounter.lifestage.opt.notset"/></html:option>
 	                                        <html:option value="N"><bean:message key="oscarEncounter.lifestage.opt.newborn"/></html:option>
@@ -138,7 +145,7 @@ String allergyId = (String) request.getAttribute("allergyId");
 						</tr>
 						<tr valign="center">
 
-							<td colspan="2">Severity Of Reaction : <html:select
+							<td ><span class="label">Severity Of Reaction:</span> <html:select
 								property="severityOfReaction">
 								<html:option value="1">Mild</html:option>
 								<html:option value="2">Moderate</html:option>
@@ -150,7 +157,7 @@ String allergyId = (String) request.getAttribute("allergyId");
 
 						<tr valign="center">
 
-							<td colspan="2">Onset Of Reaction: <html:select
+							<td ><span class="label">Onset Of Reaction:</span> <html:select
 								property="onSetOfReaction">
 								<html:option value="1">Immediate</html:option>
 								<html:option value="2">Gradual</html:option>
@@ -162,15 +169,14 @@ String allergyId = (String) request.getAttribute("allergyId");
 
 
 						<tr>
-							<td colspan="2"><html:submit property="submit"
+							<td ><html:submit property="submit"
 								value="Add Allergy" styleClass="ControlPushButton" /> <input
-								type=button class="ControlPushButton"
-								onclick="javascript:document.forms.RxAddAllergyForm.reactionDescription.value='';document.forms.RxAddAllergyForm.startDate.value='';document.forms.RxAddAllergyForm.ageOfOnset.value='';document.forms.RxAddAllergyForm.reactionDescription.focus();"
-								value="Reset" /></td>
+								type=button class="ControlPushButton" id="cancelAddReactionButton"
+								onclick="window.location='ShowAllergies2.jsp?demographicNo=<%=bean.getDemographicNo() %>'"
+								value="Cancel" /></td>
 						</tr>
 					</table>
-                      &nbsp;
-
+        
                       </html:form></td>
 			</tr>
 

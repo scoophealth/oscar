@@ -30,19 +30,17 @@
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 
-
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%
         oscar.oscarRx.pageUtil.RxSessionBean bean2 = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
 
-        org.oscarehr.common.model.Allergy[] allergies = RxPatientData.getPatient(LoggedInInfo.getLoggedInInfoFromSession(request),bean2.getDemographicNo()).getActiveAllergies();
+        org.oscarehr.common.model.Allergy[] allergies = RxPatientData.getPatient(LoggedInInfo.getLoggedInInfoFromSession(request), bean2.getDemographicNo()).getActiveAllergies();
         String alle = "";
         if (allergies.length > 0 ){ alle = "Red"; }
 
         %>
 
 
-<td width="10%" height="100%" valign="top">
 <div class="PropSheetMenu">
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="_allergy" rights="r" reverse="<%=false%>">
@@ -65,12 +63,21 @@
         oscar.oscarRx.data.RxPrescriptionData.Favorite[] favorites = new oscar.oscarRx.data.RxPrescriptionData().getFavorites(bean2.getProviderNo());
         for (int j=0; j<favorites.length; j++){ %>
 
-<p class="PropSheetMenuItemLevel1"><a
-	href="useFavorite.do?favoriteId=<%= favorites[j].getFavoriteId() %>"
+<p class="PropSheetMenuItemLevel1"><a href="javascript:void(0);"
+	onclick="goSD3('<%= favorites[j].getFavoriteId() %>');"
 	title="<%= favorites[j].getFavoriteName() %>"> <%if(favorites[j].getFavoriteName().length()>13){ %>
 <%= favorites[j].getFavoriteName().substring(0, 10) + "..." %> <%} else {%>
 <%= favorites[j].getFavoriteName() %> <%}%> </a></p>
 <%}%>
 </p>
 </div>
-</td>
+
+<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js"/>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript">
+
+    function goSD3(favoriteId){
+        location.href="SearchDrug3.jsp?usefav=true&favid="+favoriteId;
+    }
+
+</script>
