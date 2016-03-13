@@ -223,7 +223,9 @@ public class DemographicService extends AbstractServiceImpl {
 		List<ProfessionalSpecialist> referralDocs = specialistDao.findAll();
 		if (referralDocs!=null) {
 			for (ProfessionalSpecialist referralDoc : referralDocs) {
-				result.getReferralDoctors().add(specialistConverter.getAsTransferObject(getLoggedInInfo(),referralDoc));
+				if(referralDoc != null) {
+					result.getReferralDoctors().add(specialistConverter.getAsTransferObject(getLoggedInInfo(),referralDoc));
+				}
 			}
 		}
 		
@@ -231,7 +233,9 @@ public class DemographicService extends AbstractServiceImpl {
 		if (doctorRoles!=null) {
 			for (SecUserRole doctor : doctorRoles) {
 				Provider provider = providerDao.getProvider(doctor.getProviderNo());
-				result.getDoctors().add(providerConverter.getAsTransferObject(getLoggedInInfo(),provider));
+				if(provider != null) {
+					result.getDoctors().add(providerConverter.getAsTransferObject(getLoggedInInfo(),provider));
+				}
 			}
 		}
 		
@@ -239,7 +243,9 @@ public class DemographicService extends AbstractServiceImpl {
 		if (nurseRoles!=null) {
 			for (SecUserRole nurse : nurseRoles) {
 				Provider provider = providerDao.getProvider(nurse.getProviderNo());
-				result.getNurses().add(providerConverter.getAsTransferObject(getLoggedInInfo(),provider));
+				if(provider != null) {
+					result.getNurses().add(providerConverter.getAsTransferObject(getLoggedInInfo(),provider));
+				}
 			}
 		}
 		
@@ -247,7 +253,9 @@ public class DemographicService extends AbstractServiceImpl {
 		if (midwifeRoles!=null) {
 			for (SecUserRole midwife : midwifeRoles) {
 				Provider provider = providerDao.getProvider(midwife.getProviderNo());
-				result.getMidwives().add(providerConverter.getAsTransferObject(getLoggedInInfo(),provider));
+				if(provider != null) {
+					result.getMidwives().add(providerConverter.getAsTransferObject(getLoggedInInfo(),provider));
+				}
 			}
 		}
 		
