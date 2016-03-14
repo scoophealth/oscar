@@ -91,7 +91,14 @@ if(!authed) {
 		Select a template:
 		<div class="templatelistdivHP">
 		<ul class="templatelistHP">
-			<%for (int i=0; i<templates.size(); i++) {
+			<%
+				class CustomComparator implements Comparator<ReportObject>{
+                	public int compare(ReportObject r1, ReportObject r2){
+                    	return r1.getTitle().compareTo(r2.getTitle());
+            		}
+    			}
+				Collections.sort(templates,new CustomComparator());
+			for (int i=0; i<templates.size(); i++) {
                     ReportObject curReport = (ReportObject) templates.get(i);%>
 			<li><%=String.valueOf(i+1)%>. <a
 				href="reportConfiguration.jsp?templateid=<%=curReport.getTemplateId()%>"><%=curReport.getTitle()%></a></li>
