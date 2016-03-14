@@ -100,16 +100,16 @@ public class UploadAction extends DispatchAction {
 	}
 
 	public ActionForward addNew(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response)  {
 		return mapping.findForward("addNew");
 	}
 	
 	public ActionForward removeSelected(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response)  {
 		return mapping.findForward("success");
 	}
 
-	public ActionForward uploadToMcedt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward uploadToMcedt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		UploadForm uploadForm = (UploadForm) form;
 		//uploadForm.setResourceType("HE");
 
@@ -158,7 +158,7 @@ public class UploadAction extends DispatchAction {
 		return mapping.findForward("success");
 	}
 	
-	public ActionForward submitToMcedt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward submitToMcedt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		UploadForm submitForm = (UploadForm) form;
 		//submitForm.setResourceId(new BigInteger("-1"));
 		// if resourceId is -2, it indicates upload was not successful, submission will not be attempted
@@ -194,7 +194,7 @@ public class UploadAction extends DispatchAction {
 		}
 	}
 	
-	public ActionForward uploadSubmitToMcedt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward uploadSubmitToMcedt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		try {
 			List<String> successUploads= new ArrayList<String>();
 			List<String> failUploads= new ArrayList<String>();
@@ -257,7 +257,7 @@ public class UploadAction extends DispatchAction {
 		return mapping.findForward("success");
 	}
 	
-	public ActionForward deleteUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward deleteUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		try {
 			UploadForm uploadForm=(UploadForm) form;
 			List<String> fileNames = Arrays.asList(uploadForm.getFileName().trim().split(","));
@@ -273,7 +273,7 @@ public class UploadAction extends DispatchAction {
 		return mapping.findForward("success");
 	}
 	
-	public ActionForward addUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward addUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		try {
 			FormFile formFile = ((UploadForm) form).getAddUploadFile();
 			if (!ActionUtils.isOBECFile(formFile.getFileName()) && !ActionUtils.isOHIPFile(formFile.getFileName())) {

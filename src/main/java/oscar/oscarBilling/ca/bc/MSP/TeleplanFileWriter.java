@@ -133,7 +133,7 @@ public class TeleplanFileWriter {
         mspHtmlStr.append(str);
     }
     
-    public TeleplanSubmission getSubmission(LoggedInInfo loggedInInfo, boolean testRun,ProviderData[] providers,String dataCenterId ) throws Exception{
+    public TeleplanSubmission getSubmission(LoggedInInfo loggedInInfo, boolean testRun,ProviderData[] providers,String dataCenterId ) {
         log.debug("Start getSubmission");
         
         String logNo =  getNextSequenceNumber() ;
@@ -427,7 +427,7 @@ public class TeleplanFileWriter {
     
     //Date Range not implemented
     //This should be moved out of this class
-    private List<Map<String, String>> getBilling(String providerInsNo,Date startDate, Date endDate) throws Exception{
+    private List<Map<String, String>> getBilling(String providerInsNo,Date startDate, Date endDate) {
         ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();              
         BillingDao dao = SpringUtils.getBean(BillingDao.class);
         for(Billing b : dao.findByProviderStatusForTeleplanFileWriter(providerInsNo)) {

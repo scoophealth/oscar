@@ -65,11 +65,11 @@ public abstract class FrmRecord {
 	public abstract String createActionURL(String where, String action, String demoId, String formId) throws SQLException;
 
 
-	public Properties getGraph(int demographicNo, int existingID) throws SQLException {
+	public Properties getGraph(int demographicNo, int existingID)  {
 		return new Properties();
 	}
 
-	public Properties getCaisiFormRecord(int demographicNo, int existingID, int providerNo, int programNo) throws SQLException {
+	public Properties getCaisiFormRecord(int demographicNo, int existingID, int providerNo, int programNo)  {
 		return new Properties();
 	}
 

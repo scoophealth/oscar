@@ -41,7 +41,7 @@ public class ONAREnhancedBornConnectorTest extends DaoTestFixtures {
 
 	@Test
 	@Ignore
-	public void testConnector() throws Exception {
+	public void testConnector()  {
 		ONAREnhancedBornConnector c = new ONAREnhancedBornConnector();
 		//not sure it's worth fixing right now
 		//c.updateBorn();

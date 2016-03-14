@@ -56,7 +56,7 @@ public class UserAction extends DispatchAction{
 	}		
 	
 	public ActionForward changePassword(ActionMapping mapping, ActionForm form, HttpServletRequest request, 
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response)  {
 		LoginForm resourceForm = (LoginForm) form;
 		try {
 		
@@ -76,7 +76,7 @@ public class UserAction extends DispatchAction{
 	}
 	
 	public ActionForward cancel(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		if(request.getSession().getAttribute("isPassChange")!=null){
 			request.getSession().removeAttribute("isPassChange");
 		}		

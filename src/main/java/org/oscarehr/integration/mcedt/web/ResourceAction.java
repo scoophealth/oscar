@@ -83,7 +83,7 @@ public class ResourceAction extends DispatchAction {
 	
 	//----------------------------------
 	public ActionForward loadDownloadList(ActionMapping mapping, ActionForm form, HttpServletRequest request, 
-	HttpServletResponse response) throws Exception {		
+	HttpServletResponse response)  {		
 
 		List<DetailDataCustom> resourceList;
 		try{			
@@ -116,7 +116,7 @@ public class ResourceAction extends DispatchAction {
 	}
 	
 	public ActionForward loadSentList(ActionMapping mapping, ActionForm form, HttpServletRequest request, 
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response)  {
 		ResourceForm resourceForm = (ResourceForm) form;
 		//resourceForm.setStatus("");
 		resetPage(form);
@@ -154,7 +154,7 @@ public class ResourceAction extends DispatchAction {
 	}
 			
 	public List<DetailDataCustom> loadList( ActionForm form, HttpServletRequest request, 
-		HttpServletResponse response, ResourceStatus resourceStatus) throws Exception {
+		HttpServletResponse response, ResourceStatus resourceStatus)  {
 			
 			ResourceForm resourceForm = (ResourceForm) form;						
 			

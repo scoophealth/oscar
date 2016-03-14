@@ -114,7 +114,7 @@ public class PHRMessageAction extends DispatchAction {
 		return viewMessages(mapping, form, request, response);
 	}
 
-	public ActionForward viewMessages(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward viewMessages(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 
 		clearSessionVariables(request);
 
