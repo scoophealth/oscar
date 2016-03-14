@@ -29,7 +29,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -118,21 +117,21 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.BeanUtils;
 
-import oscar.OscarProperties;
-import oscar.SxmlMisc;
-
-import oscar.oscarFax.client.OSCARFAXClient;
-import oscar.oscarFax.client.OSCARFAXSOAPMessage;
-import oscar.util.UtilDateUtilities;
-
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfCopyFields;
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
+
+import oscar.OscarProperties;
+import oscar.SxmlMisc;
+import oscar.oscarFax.client.OSCARFAXClient;
+import oscar.oscarFax.client.OSCARFAXSOAPMessage;
+import oscar.util.UtilDateUtilities;
 
 public class EyeformAction extends DispatchAction {
 

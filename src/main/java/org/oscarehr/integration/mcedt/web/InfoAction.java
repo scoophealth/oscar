@@ -115,7 +115,7 @@ public class InfoAction extends DispatchAction {
 	}*/		
 	
 	public ActionForward deleteFiles(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {		
+			HttpServletRequest request, HttpServletResponse response)  {		
 		List<BigInteger> ids = getResourceIds(request);
 		String serviceId= getServiceId(request);
 		if (serviceId==null || serviceId.trim().equals("")) serviceId= getDefaultServiceId();
@@ -209,7 +209,7 @@ public class InfoAction extends DispatchAction {
     }		
 	
 	public ActionForward changeDisplay(ActionMapping mapping, ActionForm form, HttpServletRequest request, 
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response)  {
 		
 		ResourceForm resourceForm = (ResourceForm)form;
 		String prvStatus = (String)request.getSession().getAttribute("resourceStatus");
