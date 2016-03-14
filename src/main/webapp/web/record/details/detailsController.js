@@ -857,10 +857,6 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		window.open(url, "Appointment", "width=960, height=700");
 	}
 
-	$scope.isClinicaidBilling = function(){                                     
-		return page.billregion == "CLINICAID";                                  
-	}  
-	
 	//billing buttons
 	$scope.billingDo = function(func){
 		var url = null;

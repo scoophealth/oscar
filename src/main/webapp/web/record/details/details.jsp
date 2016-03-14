@@ -102,11 +102,11 @@
 			<ul class="dropdown-menu">
 				<li><a class="hand-hover" ng-click="billingDo('BillingHistory')">{{page.billingHistoryLabel}}</a></li>
 				<li><a class="hand-hover" ng-click="billingDo('CreateInvoice')"><bean:message key="demographic.demographiceditdemographic.msgCreateInvoice"/></a></li>
-				<li ng-hide="isClinicaidBilling()"><a class="hand-hover" ng-click="billingDo('FluBilling')"><bean:message key="demographic.demographiceditdemographic.msgFluBilling"/></a></li>
-				<li ng-hide="isClinicaidBilling()"><a class="hand-hover" ng-click="billingDo('HospitalBilling')"><bean:message key="demographic.demographiceditdemographic.msgHospitalBilling"/></a></li>
-				<li ng-hide="isClinicaidBilling()"><a class="hand-hover" ng-click="billingDo('AddBatchBilling')"><bean:message key="demographic.demographiceditdemographic.msgAddBatchBilling"/></a></li>
-				<li ng-hide="isClinicaidBilling()"><a class="hand-hover" ng-click="billingDo('AddINR')"><bean:message key="demographic.demographiceditdemographic.msgAddINR"/></a></li>
-				<li ng-hide="isClinicaidBilling()"><a class="hand-hover" ng-click="billingDo('BillINR')"><bean:message key="demographic.demographiceditdemographic.msgINRBill"/></a></li>
+				<li><a class="hand-hover" ng-click="billingDo('FluBilling')"><bean:message key="demographic.demographiceditdemographic.msgFluBilling"/></a></li>
+				<li><a class="hand-hover" ng-click="billingDo('HospitalBilling')"><bean:message key="demographic.demographiceditdemographic.msgHospitalBilling"/></a></li>
+				<li><a class="hand-hover" ng-click="billingDo('AddBatchBilling')"><bean:message key="demographic.demographiceditdemographic.msgAddBatchBilling"/></a></li>
+				<li><a class="hand-hover" ng-click="billingDo('AddINR')"><bean:message key="demographic.demographiceditdemographic.msgAddINR"/></a></li>
+				<li><a class="hand-hover" ng-click="billingDo('BillINR')"><bean:message key="demographic.demographiceditdemographic.msgINRBill"/></a></li>
 			</ul>
 		</div>
 		<div class="btn-group" ng-show="page.macPHRIdsSet">
