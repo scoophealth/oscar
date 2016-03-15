@@ -25,7 +25,7 @@ if(!authed) {
 <%@page import="org.oscarehr.common.model.Provider" %>
 
 <%
-	ReportProviderDao reportProviderDao = SpringUtils.getBean(ReportProvider.class);
+	ReportProviderDao reportProviderDao = SpringUtils.getBean(ReportProviderDao.class);
 %>
 
 <%
