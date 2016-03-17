@@ -68,6 +68,10 @@ public class PreventionData {
 	}
 
 	public static Integer insertPreventionData(LoggedInInfo loggedInInfo, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
+		return insertPreventionData(loggedInInfo,creator,demoNo,date,providerNo,providerName,preventionType,refused,nextDate,neverWarn,list,null);
+	}
+	
+	public static Integer insertPreventionData(LoggedInInfo loggedInInfo, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list, Integer programNo) {
 		Integer insertId = -1;
 		try {
 			Prevention prevention = new Prevention();
@@ -81,9 +85,13 @@ public class PreventionData {
 			if (refused.trim().equals("1")) prevention.setRefused(true);
 			else if (refused.trim().equals("2")) prevention.setIneligible(true);
 
-			ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
-			if(pp != null && pp.getProgramId() != null) {
-				prevention.setProgramNo(pp.getProgramId().intValue());
+			if(programNo == null) {
+				ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+				if(pp != null && pp.getProgramId() != null) {
+					prevention.setProgramNo(pp.getProgramId().intValue());
+				}
+			} else {
+				prevention.setProgramNo(programNo);
 			}
 			
 			preventionDao.persist(prevention);
@@ -167,8 +175,16 @@ public class PreventionData {
 	}
 
 	public static void updatetPreventionData(LoggedInInfo loggedInInfo, String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
+		Map<String,Object> pd = getPreventionById(id);
+		String programNo = (String)pd.get("programNo");
+		Integer pNo = null;
+		try {
+			pNo = Integer.parseInt(programNo);
+		} catch(NumberFormatException e) {
+			//empty
+		}
 		deletePreventionData(id);
-		insertPreventionData(loggedInInfo, creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list);
+		insertPreventionData(loggedInInfo, creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list, pNo);
 	}
 
 	public static ArrayList<Map<String, Object>> getPreventionDataFromExt(String extKey, String extVal) {
@@ -494,6 +510,7 @@ public class PreventionData {
 				addToHashIfNotNull(h, "next_date", UtilDateUtilities.DateToString(prevention.getNextDate(), "yyyy-MM-dd"));
 				addToHashIfNotNull(h, "never", prevention.isNever() ? "1" : "0");
 				addToHashIfNotNull(h, "creator", prevention.getCreatorProviderNo());
+				addToHashIfNotNull(h, "programNo", prevention.getProgramNo().toString());
 
 				String summary = "Prevention " + prevention.getPreventionType() + " provided by " + providerName + " on " + preventionDate;
 				summary = summary + " entered by " + creatorName + " on " + lastUpdateDate;
