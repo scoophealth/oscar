@@ -402,6 +402,14 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		List<Demographic> list = new ArrayList<Demographic>();
 		String queryString = "From Demographic d where d.LastName like :lastName ";
 
+		
+		boolean leadingWildcard=false;
+        if("true".equals(OscarProperties.getInstance().getProperty("search.searchName.addLeadingWildcard", "false"))) {
+        	leadingWildcard=true;
+	  	}
+	  	
+        
+		
 		String[] name = searchStr.split(",");
 		if (name.length == 2) {
 			queryString += " and first_name like :firstName ";
@@ -422,9 +430,9 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 			q.setFirstResult(offset);
 			q.setMaxResults(limit);
 
-			q.setParameter("lastName", name[0].trim() + "%");
+			q.setParameter("lastName", (leadingWildcard?"%":"") + name[0].trim() + "%");
 			if (name.length == 2) {
-				q.setParameter("firstName", name[1].trim() + "%");
+				q.setParameter("firstName", (leadingWildcard?"%":"") + name[1].trim() + "%");
 			}
 
 			if(statuses != null) {
