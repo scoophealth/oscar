@@ -106,10 +106,15 @@
         }else{
             matchingDemographicParameters.setLastName(lastfirst[0].trim());
         }
+        
 
-    	if(keyword.indexOf(",")==-1)  fieldname="lower(last_name)";
-      else if(keyword.trim().indexOf(",")==(keyword.trim().length()-1)) fieldname="lower(last_name)";
-      else fieldname="lower(last_name) "+regularexp+" ?"+" and lower(first_name) ";
+    	if(keyword.indexOf(",")==-1) {  
+    		fieldname="lower(last_name)";
+    	} else if(keyword.trim().indexOf(",")==(keyword.trim().length()-1)) {
+    		fieldname="lower(last_name)";
+    	} else {
+    		fieldname="lower(last_name) "+regularexp+" ?"+" and lower(first_name) ";
+    	}
     }
   }
 
