@@ -661,7 +661,10 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		if(paymentStartDate != null || paymentEndDate != null) {
 			app.and("ch1.id = bp.billingNo");
 		}
-		app.and("bi.status != 'D'");
+		
+		if(!"D".equals(statusType)) {
+			app.and("bi.status != 'D'");
+		}
 		
 		app.and("ch1.payProgram in (:payPrograms)", "payPrograms", payPrograms);
 		app.and("ch1.status = :status", "status", statusType);
