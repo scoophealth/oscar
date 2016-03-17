@@ -202,7 +202,7 @@ $(document).ready(function() {
 	<em>Note:</em> Disabling or enabling certain data sets will affect a push to the Integrator if there is one currently underway.
 </div>
 --%>
-<form action="/setProviderStaleDate.do" class="well">
+<form action="${ctx}/setProviderStaleDate.do" class="well">
 	<% UserProperty[] properties = (UserProperty[]) request.getAttribute("integratorProperties"); %>
 	<p>During the next Integrator push, send the following patients:</p>
 	<input type="hidden" name="method" value="saveIntegratorProperties" />
