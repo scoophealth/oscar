@@ -326,7 +326,8 @@ CREATE TABLE consultationRequests (
   `lastUpdateDate` datetime not null,
   fdid int(10),
   source varchar(50),
-  PRIMARY KEY  (requestId)
+  PRIMARY KEY  (`requestId`),
+  KEY demographicNoIndex (`demographicNo`)
 ) ;
 
 --
@@ -536,9 +537,10 @@ CREATE TABLE demographic (
   lastUpdateUser varchar(6),
   lastUpdateDate datetime not null,
   PRIMARY KEY  (demographic_no),
-  KEY hin (hin),
-  KEY name (last_name,first_name),
-  KEY `country_of_origin` (`country_of_origin`)
+  KEY `hin` (`hin`),
+  KEY `name` (last_name,first_name),
+  KEY `country_of_origin` (`country_of_origin`),
+  KEY `demo_last_first_hin_sex_Index` (demographic_no, last_name, first_name, hin, sex)
 );
 
 --
@@ -765,7 +767,8 @@ CREATE TABLE drugs (
   lastUpdateDate datetime not null,
   dispenseInternal tinyint(1) not null,
   PRIMARY KEY  (drugid),
-  KEY `drugs_demographic_no` (demographic_no)
+  KEY `special_instructionIndex` (special_instruction(5)),
+  KEY `demo_script_pos_rxdate_Index` (demographic_no, script_no, position, rx_date, drugid)
 ) ;
 
 
@@ -783,7 +786,8 @@ CREATE TABLE dxresearch (
   coding_system varchar(20),
   association tinyint(1) not null default 0,
   providerNo varchar(6),
-  PRIMARY KEY  (dxresearch_no)
+  PRIMARY KEY  (dxresearch_no),
+  KEY `demographic_noIndex` (demographic_no)
 ) ;
 
 CREATE TABLE `dx_associations` (
@@ -812,7 +816,7 @@ CREATE TABLE eChart (
   reminders text,
   encounter text,
   PRIMARY KEY  (eChartId),
-  KEY demographicno (demographicNo)
+  KEY `demographicNoIdIndex` (demographicNo,eChartId)
 )  MAX_ROWS=200000000 AVG_ROW_LENGTH=9000;
 
 --
@@ -858,12 +862,13 @@ CREATE TABLE eform_data (
   roleType varchar(50) default NULL,
   PRIMARY KEY  (fdid),
   UNIQUE KEY id (fdid),
-  KEY `idx_eform_data_demographic_no` (`demographic_no`),
+  KEY `dem_inde_stat_date_time_Index` (`demographic_no`, `patient_independent`, `status`, `form_date`, `form_time`),
   KEY `idx_eform_data_status` (`status`),
   KEY `idx_eform_data_from_date` (`form_date`),
   KEY `idx_eform_data_form_name` (`form_name`),
   KEY `idx_eform_data_subject` (`subject`),
   KEY `idx_eform_data_fid` (`fid`),
+  KEY `patient_independentIndex` (`patient_independent`),
   KEY `idx_eform_data_form_provider` (`form_provider`)
 ) ;
 
@@ -880,7 +885,8 @@ CREATE TABLE `eform_values` (
   `var_name` varchar(30) NOT NULL default '',
   `var_value` text,
   PRIMARY KEY  (`id`),
-  KEY `eform_values_varname_varvalue` (`var_name`,`var_value`(30))
+  KEY `eform_values_varname_varvalue` (`var_name`,`var_value`(30)),
+  KEY `fdidIndex` (`fdid`)
 );
 
 --
@@ -6999,7 +7005,8 @@ CREATE TABLE messagetbl (
   attachment text,
   pdfattachment blob,
   actionstatus char(2) default NULL,
-  PRIMARY KEY  (messageid)
+  PRIMARY KEY  (`messageid`),
+  KEY `id_by_subject_Index` (messageid, sentby, thesubject)
 ) ;
 
 
@@ -7158,7 +7165,9 @@ CREATE TABLE professionalSpecialists (
   value varchar(255) default NULL,
   id int(10) NOT NULL auto_increment,
   provider_no varchar(6) default '',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `provider_noIndex` (`provider_no`),
+  KEY `nameIndex` (name(20))
 )  ;
 
 --
@@ -7595,7 +7604,9 @@ CREATE TABLE tickler (
   creator varchar(6) default NULL,
   priority varchar(6) default 'Normal',
   task_assigned_to varchar(255),
-  PRIMARY KEY  (tickler_no)
+  PRIMARY KEY  (tickler_no),
+  KEY `statusIndex` (`status`),
+  KEY `demo_status_date_Index` (demographic_no,status,service_date)
 ) ;
 
 --
@@ -8675,7 +8686,8 @@ CREATE TABLE `casemgmt_note_link` (
   `table_id` int(10) NOT NULL,
   `note_id` int(10) NOT NULL,
   `other_id` varchar(25),
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY note_idIndex (`note_id`)
 );
 
 
@@ -8685,7 +8697,8 @@ CREATE TABLE `casemgmt_note_ext` (
   `key_val` varchar(64) NOT NULL,
   `value` text,
   `date_value` date,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY  (`id`),
+  KEY note_idIndex (`note_id`)
 );
 
 
@@ -11082,7 +11095,8 @@ CREATE TABLE formONAREnhancedRecord (
   c_planManage19 varchar(100) default NULL,
   c_riskFactors20 varchar(50) default NULL,
   c_planManage20 varchar(100) default NULL,
-  PRIMARY KEY (ID)
+  PRIMARY KEY (`ID`),
+  KEY `demographic_noIndex` (`demographic_no`)
 );
 
 
@@ -11492,7 +11506,8 @@ CREATE TABLE formONAREnhancedRecordExt1 (
   `pg2_urinePr40` char(3),
   `pg2_urineGl40` char(3),
   `pg2_BP40` varchar(8),
-  `pg2_comments40` varchar(80)
+  `pg2_comments40` varchar(80),
+  KEY `idIndex` (`ID`)
 );
 
 CREATE TABLE formONAREnhancedRecordExt2 (
@@ -11881,7 +11896,8 @@ CREATE TABLE formONAREnhancedRecordExt2 (
   pg1_geneticA_riskLevel varchar(25),
   pg1_geneticB_riskLevel varchar(25),
   pg1_geneticC_riskLevel varchar(25),
-  pg1_labCustom3Result_riskLevel varchar(25)
+  pg1_labCustom3Result_riskLevel varchar(25),
+  KEY `idIndex` (`ID`)
 );
 
 

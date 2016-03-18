@@ -1245,7 +1245,8 @@ CREATE TABLE `facility_message` (
   `facility_id` int,
   `facility_name` varchar(32),
   `programId` int,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `facility_idIndex` (`facility_id`)
 );
 
 
