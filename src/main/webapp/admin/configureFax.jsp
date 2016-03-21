@@ -146,7 +146,7 @@ if(!authed) {
 			});
 		}
 				
-		if( $("#faxServicePasswd").val() == "Fax Service Passwd" ) {
+		if( $("#faxServicePasswd").val() == "**********" ) {
 			$("#faxServicePasswd").keypress(function() {
 				$(this).val("");
 				$(this).off();
@@ -172,7 +172,7 @@ if(!authed) {
 		}
 		
 		
-		if( $("#faxPasswd").val() == "login passwd" ) {
+		if( $("#faxPasswd").val() == "**********" ) {
 			$("#faxPasswd").keypress(function() {
 				$(this).val("");
 				$(this).off();
@@ -209,7 +209,7 @@ if(!authed) {
 			});
 		});
 			
-		$("input[type='text']").filter(function() {
+		$("input[type='password']").filter(function() {
 			return this.id.match("^faxPasswd\\d+")
 		}).each(function() {			
 			$(this).dblclick(function() {
@@ -266,6 +266,7 @@ if(!authed) {
 		$(div).attr("id",userDivId);
 		$(div).find("#faxUser").attr("id","faxUser" + userCount);
 		$(div).find("#faxPasswd").attr("id","faxPasswd" + userCount);
+		$(div).find("#faxPasswd"+userCount).val("");
 		
 		$(div).find("#remove").attr("id","r"+userCount);
 		$(div).find("#r"+userCount).attr("onclick","removeUser("+userCount+");return false;");
@@ -367,7 +368,17 @@ if(!authed) {
 				Fax Service Password
 			</div>
 			<div class="span3">
-				<input class="span3" id="faxServicePasswd" type="text" name="sitePasswd" value="<%=faxConfigList.isEmpty() || faxConfigList.get(0).getPasswd() == null ? "Fax Service Passwd" : faxConfigList.get(0).getPasswd() %>" />
+				<%
+					String faxServicePassword = "";
+					
+					if(faxConfigList != null && faxConfigList.get(count) != null && faxConfigList.get(count).getPasswd() != null
+							&& faxConfigList.get(count).getPasswd().length() > 0) {
+						faxServicePassword="**********";
+					}
+					
+				%>
+						
+				<input class="span3" id="faxServicePasswd" type="password" name="sitePasswd" value="<%=faxServicePassword%>" />
 			</div>
 		</div>
 			<div id="content">
@@ -384,7 +395,16 @@ if(!authed) {
 						Password
 					</div>
 					<div class="span2">
-						<input class="span2" type="text" id="faxPasswd<%=count == 0 ? "" : count%>" name="faxPassword" value="<%=faxConfigList.isEmpty() ? "login passwd" : faxConfigList.get(count).getFaxPasswd()%>"/>
+						<%
+						String faxPassword = "";
+						
+						if(faxConfigList != null && faxConfigList.get(count) != null && faxConfigList.get(count).getFaxPasswd() != null
+								&& faxConfigList.get(count).getFaxPasswd().length() > 0) {
+							faxPassword="**********";
+						}
+						
+						%>
+						<input class="span2" type="password" id="faxPasswd<%=count == 0 ? "" : count%>" name="faxPassword" value="<%=faxPassword%>"/>
 					</div>
 					<div class="span5">
 						<select class="span3" id="inBoxQueue<%=count == 0 ? "" : count%>" name="inboxQueue">
