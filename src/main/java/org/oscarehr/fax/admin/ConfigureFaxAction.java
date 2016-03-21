@@ -100,9 +100,13 @@ public class ConfigureFaxAction extends DispatchAction {
 						savedFaxConfig = savedFaxConfigList.get(savedidx);
 						savedFaxConfig.setUrl(faxUrl);
 						savedFaxConfig.setSiteUser(siteUser);
-						savedFaxConfig.setPasswd(sitePasswd);
+						if(!"**********".equals(sitePasswd)) {
+							savedFaxConfig.setPasswd(sitePasswd);
+						}
 						savedFaxConfig.setFaxUser(faxUsers[idx]);
-						savedFaxConfig.setFaxPasswd(faxPasswds[idx]);
+						if(!"**********".equals(faxPasswds[idx])) {
+							savedFaxConfig.setFaxPasswd(faxPasswds[idx]);
+						}
 						savedFaxConfig.setFaxNumber(faxNumbers[idx]);
 						savedFaxConfig.setQueue(Integer.parseInt(inboxQueues[idx]));
 						savedFaxConfig.setActive(Boolean.parseBoolean(activeState[idx]));
