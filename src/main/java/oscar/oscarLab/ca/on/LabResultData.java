@@ -50,15 +50,15 @@ public class LabResultData implements Comparable<LabResultData> {
 
 	Logger logger = MiscUtils.getLogger();
 
-	public static String CML = "CML";
-	public static String EPSILON = "Epsilon";
-	public static String MDS = "MDS";
-	public static String EXCELLERIS = "BCP"; //EXCELLERIS
-	public static String DOCUMENT = "DOC"; //INTERNAL DOCUMENT
-	public static String HRM = "HRM";
-	public static String Spire = "Spire";
-	public static String ALPHAHL7 = "AlphaHL7";
-	public static String TRUENORTH = "TRUENORTH";
+	public static final String CML = "CML";
+	public static final String EPSILON = "Epsilon";
+	public static final String MDS = "MDS";
+	public static final String EXCELLERIS = "BCP"; //EXCELLERIS
+	public static final String DOCUMENT = "DOC"; //INTERNAL DOCUMENT
+	public static final String HRM = "HRM";
+	public static final String Spire = "Spire";
+	public static final String ALPHAHL7 = "ALPHA";
+	public static final String TRUENORTH = "TRUENORTH";
 	
 	//HL7TEXT handles all messages types recieved as a hl7 formatted string
 	public static String HL7TEXT = "HL7";
