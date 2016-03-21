@@ -2122,6 +2122,14 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
             		onSelectSpecialist(document.getElementById('specialist'));
             		<%
             	} }
+            	
+            	String serviceId = request.getParameter("serviceId");
+            	if(serviceId != null) {
+            		%>
+            		jQuery("#service").val('<%=serviceId%>');
+            		fillSpecialistSelect(document.getElementById('service'));
+            		<%
+            	}
             %>
         //-->
         </script>

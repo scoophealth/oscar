@@ -867,6 +867,7 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/updateDrugref.jsp" ><bean:message key="admin.admin.UpdateDrugref"/></a></li>	
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/Know2actConfiguration.jsp" ><bean:message key="admin.admin.Know2ActConfig"/></a></li>		
 					<li><a  href='javascript:void(0);' class="xlink" rel="${ctx}/admin/integratorPushStatus.jsp"><bean:message key="admin.admin.integratorPush" /></a></li>
+					<li><a  href='javascript:void(0);' class="xlink" rel="${ctx}/admin/born.jsp"><bean:message key="admin.admin.born" /></a></li>
 
 				</ul>
 				</div>

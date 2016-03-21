@@ -21,38 +21,36 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.ws.rest.to;
+package org.oscarehr.common.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Query;
 
-import org.oscarehr.ws.rest.to.model.ConsultationServiceTo1;
-import org.oscarehr.ws.rest.to.model.ProfessionalSpecialistTo1;
+import org.oscarehr.common.model.BORNPathwayMapping;
+import org.springframework.stereotype.Repository;
 
-@XmlRootElement
-public class ReferralResponse {
-	private List<ProfessionalSpecialistTo1> specialists = new ArrayList<ProfessionalSpecialistTo1>();
+@Repository
+public class BORNPathwayMappingDao extends AbstractDao<BORNPathwayMapping> {
 
-	private List<ConsultationServiceTo1> services = new ArrayList<ConsultationServiceTo1>();
+	public BORNPathwayMappingDao() {
+		super(BORNPathwayMapping.class);
+	}
 	
-	public List<ProfessionalSpecialistTo1> getSpecialists() {
-		return specialists;
+	public BORNPathwayMapping findRecord(String bornPathway, int serviceId) {
+		Query query = entityManager.createQuery("SELECT x FROM " + modelClass.getSimpleName() + " x WHERE x.bornPathway = ? and x.serviceId = ?");
+		query.setParameter(1, bornPathway);
+		query.setParameter(2, serviceId);
+		
+		return this.getSingleResultOrNull(query);
 	}
-
-	public void setSpecialists(List<ProfessionalSpecialistTo1> specialists) {
-		this.specialists = specialists;
-	}
-
-	public List<ConsultationServiceTo1> getServices() {
-		return services;
-	}
-
-	public void setServices(List<ConsultationServiceTo1> services) {
-		this.services = services;
-	}
-
 	
-	
+	public List<BORNPathwayMapping> findByBornPathway(String bornPathway) {
+		Query query = entityManager.createQuery("SELECT x FROM " + modelClass.getSimpleName() + " x WHERE x.bornPathway = ?");
+		query.setParameter(1, bornPathway);
+		
+		List<BORNPathwayMapping> results = query.getResultList();
+		
+		return results;
+	}
 }

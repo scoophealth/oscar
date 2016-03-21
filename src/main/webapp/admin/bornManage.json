@@ -1,0 +1,97 @@
+<%@page import="net.sf.json.JSONObject"%>
+<%@page import="net.sf.json.JSONArray"%>
+<%@page import="net.sf.json.JSONSerializer"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.dao.BORNPathwayMappingDao"%>
+<%@page import="org.oscarehr.common.model.BORNPathwayMapping"%>
+<%@page import="org.oscarehr.common.dao.ConsultationServiceDao"%>
+<%@page import="org.oscarehr.common.model.ConsultationServices"%>
+
+<%@page import="java.util.List"%>
+
+<%
+
+	BORNPathwayMappingDao bornPathwayMappingDao = SpringUtils.getBean(BORNPathwayMappingDao.class);
+	ConsultationServiceDao consultationServiceDao = SpringUtils.getBean(ConsultationServiceDao.class);
+%>
+<%
+	boolean success = false;
+    String error = "";
+	String method = request.getParameter("method");	
+	
+	JSONObject json = new JSONObject();
+	json.put("method", method);
+
+	if ("add".equals(method)) {
+		String bm = request.getParameter("bornPathway");
+		String os = request.getParameter("oscarService");
+		
+		if ("".equals(bm) || "".equals(os)) {
+			success = false;
+			error = "Add Failure: Cannot add Client with empty value.";
+		} else {
+			BORNPathwayMapping bpm = bornPathwayMappingDao.findRecord(bm,Integer.parseInt(os));
+			if(bpm != null) {
+				success = false;
+				error = "Add Failure: Could not add entry to database.Mapping already present.";
+			} else {
+				bpm = new BORNPathwayMapping();
+				bpm.setBornPathway(bm);
+				bpm.setServiceId(Integer.parseInt(os));
+				bornPathwayMappingDao.persist(bpm);
+				
+				int j = bpm.getId();
+				if (j==0) {		
+					success = false;
+					error = "Add Failure: Could not add entry to database.";
+				} else {
+					success = true;		
+				}
+			}
+		} 
+	}
+	else if ("delete".equals(method)) {
+		String id = request.getParameter("id");
+		
+		json.put("id", id);
+		
+		if (id.equals("")) {
+			success = false;
+			error = "Add Failure: Cannot remove Mapping with empty id.";
+		} else {
+			bornPathwayMappingDao.remove(Integer.parseInt(id));
+			success=true;
+		}
+	}
+	else if("list".equals(method)) {
+		List<BORNPathwayMapping> mappings = bornPathwayMappingDao.findAll(0,100);
+		for(BORNPathwayMapping i:mappings) {
+			ConsultationServices cs = consultationServiceDao.find(i.getServiceId());
+			if(cs != null) {
+			}
+				i.setServiceName(cs.getServiceDesc());
+		}
+		
+		JSONArray x = JSONArray.fromObject(mappings);
+		response.setContentType("text/x-json");    
+        response.getWriter().print(x.toString());
+	}
+	else if("listServices".equals(method)) {
+		List<ConsultationServices> services = consultationServiceDao.findActive();
+		JSONArray x = JSONArray.fromObject(services);
+		response.setContentType("text/x-json");    
+        response.getWriter().print(x.toString());
+	}
+	else {
+		success = false;
+		error = "Invalid method supplied.";
+	}
+	if(!"list".equals(method) && !"listServices".equals(method)) {
+	    response.setContentType("text/x-json");    
+		
+		json.put("success", success);
+		json.put("error", error);
+		
+	    json.write(out);    	
+	}
+%>

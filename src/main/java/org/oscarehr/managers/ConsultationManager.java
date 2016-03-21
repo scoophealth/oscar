@@ -467,4 +467,16 @@ public class ConsultationManager {
 		
 		return results;
 	}
+	
+	public List<ProfessionalSpecialist> findByServiceId(LoggedInInfo loggedInInfo, Integer serviceId) {
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
+		
+		List<ProfessionalSpecialist> results = professionalSpecialistDao.findByServiceId(serviceId);
+		
+		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.findByServiceId", "serviceId"+serviceId);
+		
+		
+		return results;
+	}
+	
 }
