@@ -1,8 +1,8 @@
 <%@page import="oscar.OscarProperties" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
-<oscar:oscarPropertiesCheck property="lab.handler.AlphaHL7.enabled" value="true">
-	<option value="AlphaHL7">ALPHA</option>
+<oscar:oscarPropertiesCheck property="lab.handler.ALPHA.enabled" value="true">
+	<option value="ALPHA">ALPHA</option>
 </oscar:oscarPropertiesCheck>
 
 <oscar:oscarPropertiesCheck property="lab.handler.BIOTEST.enabled" value="true">
