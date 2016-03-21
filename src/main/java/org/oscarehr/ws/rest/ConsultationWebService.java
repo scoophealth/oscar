@@ -40,14 +40,18 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.BORNPathwayMappingDao;
 import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.dao.ConsultationServiceDao;
 import org.oscarehr.common.dao.FaxConfigDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.BORNPathwayMapping;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.ConsultResponseDoc;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ConsultationResponse;
+import org.oscarehr.common.model.ConsultationServices;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.FaxConfig;
@@ -59,6 +63,7 @@ import org.oscarehr.consultations.ConsultationResponseSearchFilter;
 import org.oscarehr.managers.ConsultationManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.conversion.ConsultationRequestConverter;
 import org.oscarehr.ws.rest.conversion.ConsultationResponseConverter;
 import org.oscarehr.ws.rest.conversion.ConsultationServiceConverter;
@@ -113,6 +118,9 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	
 	@Autowired
 	UserPropertyDAO userPropertyDAO;
+	
+	@Autowired
+	ConsultationServiceDao consultationServiceDao;
 	
 	private ConsultationRequestConverter requestConverter = new ConsultationRequestConverter();
 	private ConsultationResponseConverter responseConverter = new ConsultationResponseConverter();
@@ -333,9 +341,28 @@ public class ConsultationWebService extends AbstractServiceImpl {
 	public ReferralResponse getReferralPathwaysByService(@QueryParam("serviceName") String serviceName) {
 		ReferralResponse response = new ReferralResponse();
 		
-		List<ProfessionalSpecialist> specs = consultationManager.findByService(getLoggedInInfo(), serviceName);
-		ProfessionalSpecialistConverter converter = new ProfessionalSpecialistConverter();
+		//check for a mapping, or else just use the BORN service name.
+		BORNPathwayMappingDao bornPathwayMappingDao = SpringUtils.getBean(BORNPathwayMappingDao.class);
+		List<BORNPathwayMapping> mappings = bornPathwayMappingDao.findByBornPathway(serviceName);
+		List<ProfessionalSpecialist> specs = new ArrayList<ProfessionalSpecialist>();
 		
+		if(mappings.isEmpty()) {
+			specs = consultationManager.findByService(getLoggedInInfo(), serviceName);
+			ConsultationServices cs = consultationServiceDao.findByDescription(serviceName);
+			if(cs != null) {
+				response.getServices().add(serviceConverter.getAsTransferObject(getLoggedInInfo(), cs));
+			}
+		} else {
+			for(BORNPathwayMapping mapping:mappings) {
+				specs.addAll(consultationManager.findByServiceId(getLoggedInInfo(), mapping.getServiceId()));
+				ConsultationServices cs = consultationServiceDao.find(mapping.getServiceId());
+				if(cs != null) {
+					response.getServices().add(serviceConverter.getAsTransferObject(getLoggedInInfo(), cs));
+				}
+			}
+		}
+		
+		ProfessionalSpecialistConverter converter = new ProfessionalSpecialistConverter();
 		response.setSpecialists(converter.getAllAsTransferObjects(getLoggedInInfo(), specs));
 		
 		return response;
