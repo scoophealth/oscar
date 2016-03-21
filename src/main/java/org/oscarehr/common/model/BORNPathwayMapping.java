@@ -21,38 +21,62 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.ws.rest.to;
+package org.oscarehr.common.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 
-import org.oscarehr.ws.rest.to.model.ConsultationServiceTo1;
-import org.oscarehr.ws.rest.to.model.ProfessionalSpecialistTo1;
+@Entity
+public class BORNPathwayMapping extends AbstractModel<Integer> implements Serializable {
 
-@XmlRootElement
-public class ReferralResponse {
-	private List<ProfessionalSpecialistTo1> specialists = new ArrayList<ProfessionalSpecialistTo1>();
-
-	private List<ConsultationServiceTo1> services = new ArrayList<ConsultationServiceTo1>();
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 	
-	public List<ProfessionalSpecialistTo1> getSpecialists() {
-		return specialists;
+	private String bornPathway;
+	
+	private int serviceId;
+
+	@Transient
+	private String serviceName;
+	
+	public Integer getId() {
+		return id;
 	}
 
-	public void setSpecialists(List<ProfessionalSpecialistTo1> specialists) {
-		this.specialists = specialists;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public List<ConsultationServiceTo1> getServices() {
-		return services;
+	public String getBornPathway() {
+		return bornPathway;
 	}
 
-	public void setServices(List<ConsultationServiceTo1> services) {
-		this.services = services;
+	public void setBornPathway(String bornPathway) {
+		this.bornPathway = bornPathway;
 	}
 
+	public int getServiceId() {
+		return serviceId;
+	}
+
+	public void setServiceId(int serviceId) {
+		this.serviceId = serviceId;
+	}
+
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+	
 	
 	
 }

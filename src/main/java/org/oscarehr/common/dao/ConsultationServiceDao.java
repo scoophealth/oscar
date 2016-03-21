@@ -68,6 +68,17 @@ public class ConsultationServiceDao extends AbstractDao<ConsultationServices> {
         return results;
     }
     
+    public List<ConsultationServices> findActiveNames() {
+    	String sql = "select x.serviceId,x.serviceDesc from ConsultationServices x where x.active=? order by x.serviceDesc";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1,"1");
+
+        @SuppressWarnings("unchecked")
+        List<ConsultationServices> results = query.getResultList();
+        return results;
+    }
+    
+    
     public ConsultationServices findByDescription(String description) {
     	String sql = "select x from ConsultationServices x where x.active=? and x.serviceDesc = ?";
     	Query query = entityManager.createQuery(sql);
