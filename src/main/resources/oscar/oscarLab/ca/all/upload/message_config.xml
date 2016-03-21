@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <message-configuration id="HL7_upload" version="1.0">
-	<handler name="AlphaHL7" className="AlphaHL7Handler"/>
+	<handler name="ALPHA" className="AlphaHandler"/>
 	<handler name="BIOTEST" className="BioTestHandler"/>
     <handler name="CLS"		className="CLSHandler"/>
     <handler name="CML" className="CMLHandler" />
