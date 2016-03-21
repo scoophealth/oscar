@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <message-configuration id="HL7_upload" version="1.0">
-        <handler name="PDFDOC" className="PDFHandler" />
-	<handler name="CML" className="CMLHandler" />
-	<handler name="GDML" className="GDMLHandler" />
+	<handler name="ALPHA" className="AlphaHandler"/>
+	<handler name="BIOTEST" className="BioTestHandler"/>
+        <handler name="CLS"		className="CLSHandler"/>
+ 	<handler name="eaaps"   className="org.oscarehr.research.eaaps.EaapsHandler"/>
+	<handler name="EPSILON" className="EpsilonHandler" />
+	<handler name="HHSEMR" className="HHSEmrDownloadHandler"/>
 	<handler name="ICL" className="ICLHandler" />
+	<handler name="IHA" className="IHAHandler"/>
 	<handler name="MDS" className="MDSHandler" />
 	<handler name="OLIS_HL7" className="OLISHL7Handler" />   
+	<handler name="OSCAR_TO_OSCAR_HL7_V2" className="OscarToOscarHl7V2Handler"/>
 	<handler name="PATHL7" className="PATHL7Handler" />
-    <handler name="HHSEMR" className="HHSEmrDownloadHandler"/>
-    <handler name="IHA" className="IHAHandler"/>
-    <handler name="OSCAR_TO_OSCAR_HL7_V2" className="OscarToOscarHl7V2Handler"/>
-    <handler name="PHS" className="org.oscarehr.integration.hl7.handlers.upload.PhsStarHandler"/>        
-	<handler name="EPSILON" className="EpsilonHandler" />
+        <handler name="PDFDOC" className="PDFHandler" />
+	<handler name="PHS" className="org.oscarehr.integration.hl7.handlers.upload.PhsStarHandler"/>        
 	<handler name="TDIS"    className="TDISHandler" />
 	<handler name="MEDVUE"  className="MEDVUEHandler" />
-    <handler name="PFHT"	className="PFHTHandler"/>
-    <handler name="Spire"	className="SpireHandler"/>
-    <handler name="BIOTEST" className="BioTestHandler"/>
-    <handler name="eaaps"   className="org.oscarehr.research.eaaps.EaapsHandler"/>
-    <handler name="CLS"		className="CLSHandler"/>
-    <handler name="AlphaHL7" className="AlphaHL7Handler"/>
-    <handler name="TRUENORTH"	className="TRUENORTHHandler"/>
+	<handler name="PFHT"	className="PFHTHandler"/>
+	<handler name="Spire"	className="SpireHandler"/>
+	<handler name="TRUENORTH"	className="TRUENORTHHandler"/>
 </message-configuration>

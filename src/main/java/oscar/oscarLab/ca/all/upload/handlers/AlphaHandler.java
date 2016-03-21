@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,38 +21,17 @@
  * Hamilton
  * Ontario, Canada
  */
-
 package oscar.oscarLab.ca.all.upload.handlers;
 
-import java.util.ArrayList;
 import org.apache.log4j.Logger;
-import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 
-import oscar.oscarLab.ca.all.upload.MessageUploader;
-import oscar.oscarLab.ca.all.util.Utilities;
-import oscar.oscarLab.ca.on.LabResultData;
-
-
-public class AlphaHL7Handler implements MessageHandler {
-
-//	@SuppressWarnings("unused")
-	private static final Logger logger = Logger.getLogger(AlphaHL7Handler.class);
-	
-	@Override
-	//public String parse(String serviceName, String fileName, int fileId) {
-	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
-
-		try {
-			ArrayList<String> messages = Utilities.separateMessages(fileName);
-			for(String msg:messages) {
-				 MessageUploader.routeReport(loggedInInfo, serviceName, LabResultData.ALPHAHL7, msg, fileId);
-			}
-		} catch (Exception e) {
-			MessageUploader.clean(fileId);
-			logger.error("Could not upload message: ", e);
-			return null;
-		}
-		return ("success");
-	}	
-
+public class AlphaHandler extends DefaultHandler implements MessageHandler {
+    Logger logger = Logger.getLogger(AlphaHandler.class);
+    
+    @Override
+    String getHl7Type(){
+        MiscUtils.getLogger().debug("AlphaHandler getting called");
+        return "ALPHA";
+    }
 }
