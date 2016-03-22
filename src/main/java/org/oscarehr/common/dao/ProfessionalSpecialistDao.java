@@ -79,6 +79,29 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
 		return null;
 	}
 
+	public List<ProfessionalSpecialist> findByFullName(String lastCommaFirstName) {
+		String nameElements[] = lastCommaFirstName.split(",[ ]*",2);
+		Query query = entityManager.createQuery("select x from " + modelClass.getName() + " x WHERE x.lastName like ? and x.firstName like ? order by x.lastName, x.firstName");
+		if (nameElements.length < 2) {
+          String lastName= nameElements[0];
+		  return findByFullName(lastName, "");
+		}else{
+		  String lastName= nameElements[0];
+		  String firstName= nameElements[1];
+		  query.setParameter(1, "%"+lastName+"%");
+		  query.setParameter(2, "%"+firstName+"%");
+		}
+
+		@SuppressWarnings("unchecked")
+		List<ProfessionalSpecialist> cList = query.getResultList();
+
+		if (cList != null && cList.size() > 0) {
+			return cList;
+		}
+
+		return null;
+	}
+	
 	public List<ProfessionalSpecialist> findByLastName(String lastName) {
 		return findByFullName(lastName, "");
 	}

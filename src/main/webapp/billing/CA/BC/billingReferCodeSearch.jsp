@@ -191,7 +191,7 @@ function CodeAttach(File0) {
 
 	String Dcode="", DcodeDesc="", DcodeAddr="", DcodeSpecialty="", DcodePhone="";
 
-	List<ProfessionalSpecialist> professionalSpecialists = professionalSpecialistDao.findByLastName(param[0]);
+	List<ProfessionalSpecialist> professionalSpecialists = professionalSpecialistDao.findByFullName(param[0]);
 	if(professionalSpecialists != null) {
 		for(ProfessionalSpecialist professionalSpecialist:professionalSpecialists) {	
 			intCount = intCount + 1;
