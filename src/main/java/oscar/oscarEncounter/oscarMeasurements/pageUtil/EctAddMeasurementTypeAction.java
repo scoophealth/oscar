@@ -119,7 +119,7 @@ public class EctAddMeasurementTypeAction extends Action {
             saveErrors(request, errors);
             isValid = false;
         }
-        if(!validate.maxLength(4, type)){
+        if(!validate.maxLength(50, type)){
             errors.add(type,
             new ActionMessage("errors.maxlength", errorField, "4"));
             saveErrors(request, errors);
