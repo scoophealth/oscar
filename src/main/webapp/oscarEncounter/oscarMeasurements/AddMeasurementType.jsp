@@ -99,8 +99,7 @@ if(!authed) {
 						<tr>
 							<th align="left" class="td.tite" width="5"><bean:message
 								key="oscarEncounter.oscarMeasurements.Measurements.headingType" />
-							(<bean:message
-								key="oscarEncounter.oscarMeasurements.Measurements.headingMax4Characters" />)
+							
 							</th>
 							<td><html:text property="type" /></td>
 						</tr>
