@@ -422,7 +422,7 @@ Flowsheet: <span style="font-weight:normal"><%=flowsheet.toUpperCase()%></span>
             <%}%>
           
 	
-		<h4>Select a Measurment</h4>
+		<h4>Select a Measurement</h4>
 		<select name="measurement" class="measurement-select">
                 	<option value="0">choose:</option>
                     <% for (EctMeasurementTypesBean measurementTypes : vec){ %>
@@ -430,7 +430,7 @@ Flowsheet: <span style="font-weight:normal"><%=flowsheet.toUpperCase()%></span>
                     <% } %>
         </select>
 		
-	    <h4>Customize Measurment</h4>
+	    <h4>Customize Measurement</h4>
 		<table>
 		<tr><td>Display Name:</td><td><input type="text" name="display_name" id="display_name" required/></td></tr>
                 <tr><td>Guideline:    </td><td><input type="text" name="guideline" /></td></tr>
