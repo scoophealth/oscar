@@ -35,11 +35,14 @@
 
 <%@ page session="true" %>
 <head>
-<link href="<%=request.getContextPath()%>/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath()%>/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="<%=request.getContextPath()%>/css/DT_bootstrap.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.dataTables.js"></script>
 </head>
 
 <style>
-body{background-color:#f5f5f5;}
+	body { background-color:#f5f5f5; }
 </style>
 
 <body>
@@ -105,42 +108,39 @@ body{background-color:#f5f5f5;}
 					xhr.setRequestHeader('Content-Type', 'application/json');
 					xhr.send(id);
 				}
+				
+				$(document).ready(function(){
+					$('#k2aEFormTbl').dataTable({ "bPaginate":false });
+				});
+
 			</script>
 			<div>
 				<h5 id="total_downloaded"></h5>
 				<p id="errors"></p>
 			</div>
-			<h4><bean:message key="eform.download.msgResources" /></h4>
+			<h4><bean:message key="eform.download.msgK2AResources" /></h4>
 			<input type="button" id="download_all_k2a_eforms" value="<bean:message key="eform.download.msgDownloadEform" />" class="btn btn-primary upload" onclick="this.value = 'Downloading...'; this.disabled = true;downloadAllK2AEForms();" />
-			<input type="button" value="<bean:message key="eform.download.msgK2ABrowse" />" class="btn btn-primary upload" onclick="window.open('<%=k2aURL%>/#/ws/rs/eform/explore');" />
+			<input type="button" value="<bean:message key="eform.download.msgK2ABrowse" />" class="btn btn-primary upload" onclick="window.open('<%=k2aURL%>/#/ws/rs/posts/browse/EForm');" />
 			<input type="button" value="<bean:message key="eform.download.msgRefresh" />" class="btn btn-primary upload" onclick="location.reload();" />
 			
-			<h4><bean:message key="eform.download.msgK2AFavourites" /></h4>
 			<table class="table table-condensed table-striped" id="k2aEFormTbl">
 				<thead>
 		            <tr>
-		                <th width="7%"><bean:message key="eform.download.btnLoadEform" /></th>
-		                <th width="40%"><bean:message key="eform.download.msgName" /></th>
-		                <th width="10%"><bean:message key="eform.download.msgCreator" /></th>
+		                <th>&nbsp;</th>
+		                <th><bean:message key="eform.download.msgName" /></th>
+		                <th><bean:message key="eform.download.msgCreator" /></th>
 		                <th><bean:message key="eform.download.msgCategory" /></th>
 		                <th><bean:message key="eform.download.msgCreated" /></th>
 		            </tr>
 		        </thead>
-		
 		        <tbody>
 		            <%
 		            for (int i = 0; i < jsonArray.length(); i++) {
 			        	JSONObject eform = jsonArray.getJSONObject(i);
 		            %>
-		
 		            <tr>
 		                <td>
 		                	<a href="#" onclick="downloadK2AEForm(<%=eform.getString("id")%>);"><i class="icon-download-alt" title="<bean:message key="eform.download.btnLoadEform"/>"></i></a>
-		                    <!-- <form action="../manageEForm.do" method="POST" id="download_form_<%=stripDrugref(eform.getString("url"))%>" style="margin: 0">
-		                           <input type="hidden" name="method" value="importEFormFromRemote"/>   <%--Look at just sending the filename from mydrugref  --%>
-		                           <input type="hidden" name="url" value="<%=stripDrugref(eform.getString("url"))%>"/>
-		                           <a href="#" onclick="document.getElementById('download_form_<%=stripDrugref(eform.getString("url"))%>').submit();"><i class="icon-download-alt" title="<bean:message key="eform.download.btnLoadEform"/>"></i></a>
-		                    </form> -->
 		                </td>
 		                <td><%=eform.getString("name")%></td>
 		                <td><%=eform.getString("creator")%></td>
@@ -157,7 +157,7 @@ body{background-color:#f5f5f5;}
 			<% } %>
 		<% } %>
 	<% } %>
-	<div style="font-size:0%; line-height:0%">&nbsp;</div>
+	<div>&nbsp;</div>
 </body>
 </html:html>
 
