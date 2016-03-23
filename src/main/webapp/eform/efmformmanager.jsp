@@ -236,6 +236,7 @@ $(function ()  {
   
 registerFormSubmit('eformImportForm', 'dynamic-content');
 
+$('#eformTbl').dataTable({ "bPaginate": false });
 </script>
 </body>
 </html:html>
