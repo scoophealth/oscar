@@ -53,7 +53,10 @@
 </head>
 
 <style>
-body{background-color:#f5f5f5;}
+	body{
+		background-color:#f5f5f5;
+		margin: 25px;
+	}
 </style>
 
 <body>
@@ -70,25 +73,26 @@ body{background-color:#f5f5f5;}
 			</div>
 			<h4><bean:message key="oscarReport.oscarReportByTemplate.msgDownloadFromK2A" /></h4>
 			<input type="button" value="<bean:message key="oscarReport.oscarReportByTemplate.msgK2ABrowse" />" class="btn btn-primary upload" ng-click="openK2AUrl()" />
-			<input type="button" value="<bean:message key="oscarReport.oscarReportByTemplate.msgRefresh" />" class="btn btn-primary upload" onclick="location.reload();" /><br />
+			<input type="button" value="<bean:message key="oscarReport.oscarReportByTemplate.msgRefresh" />" class="btn btn-primary upload" onclick="location.reload();" />
+			<br/><br/>
 			<table class="table table-condensed table-striped" id="k2aReportTbl">
 				<thead>
 			    	<tr >
+			            <th>&nbsp;</th>
 			        	<th><bean:message key="oscarReport.oscarReportByTemplate.msgName" /></th>
 			            <th><bean:message key="oscarReport.oscarReportByTemplate.msgAuthor" /></th>
 			            <th><bean:message key="oscarReport.oscarReportByTemplate.msgCreated" /></th>
-			            <th><bean:message key="oscarReport.oscarReportByTemplate.msgDownload" /><th/>
 			        </tr>
 			   	</thead>
 			
 			    <tbody>
 			    	<tr ng-repeat-start="k2aReport in k2aReports">
+			            <td valign="middle">
+			            	<button ng-if="!k2aReport.postVersions" ng-click="saveK2AReport(k2aReport.id)" title="<bean:message key="oscarReport.oscarReportByTemplate.msgDownload"/>"><i class="icon-download-alt"></i></button>
+			            </td>
 			        	<td>{{k2aReport.name}} <a ng-if="k2aReport.postVersions" data-toggle="collapse" data-target="#k2aReport{{k2aReport.id}}" class="accordion-toggle">+</a></td>
 			            <td>{{k2aReport.author}}</td>
 			            <td>{{k2aReport.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-			            <td valign="middle">
-			            	<button ng-if="!k2aReport.postVersions" ng-click="saveK2AReport(k2aReport.id)"><i class="icon-download-alt" title="<bean:message key="oscarReport.oscarReportByTemplate.msgDownload"/>"></i></button>
-			            </td>
 			        </tr>
 			        <tr ng-repeat-end ng-if="k2aReport.postVersions">
 			        	<td colspan="12" style="padding:0px">
@@ -96,19 +100,19 @@ body{background-color:#f5f5f5;}
 			        			<table class="table table-condensed table-striped">
 			        				<thead>
 								    	<tr >
+								            <th>&nbsp;</th>
 								        	<th><bean:message key="oscarReport.oscarReportByTemplate.msgName" /></th>
 								            <th><bean:message key="oscarReport.oscarReportByTemplate.msgAuthor" /></th>
 								            <th><bean:message key="oscarReport.oscarReportByTemplate.msgUpdated" /></th>
-								            <th><bean:message key="oscarReport.oscarReportByTemplate.msgDownload" /><th/>
 								        </tr>
 								   	</thead>
 			        				<tr ng-repeat="k2aReportVersion in k2aReport.postVersions">
+							            <td valign="middle">
+							            	<button ng-click="saveK2AReport(k2aReportVersion.id)" title="<bean:message key="oscarReport.oscarReportByTemplate.msgDownload"/>"><i class="icon-download-alt"></i></button>
+							            </td>
 					        			<td>{{k2aReportVersion.name}}</td>
 							            <td>{{k2aReportVersion.author}}</td>
 							            <td>{{k2aReportVersion.updatedAt | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-							            <td valign="middle">
-							            	<button ng-click="saveK2AReport(k2aReportVersion.id)"><i class="icon-download-alt" title="<bean:message key="oscarReport.oscarReportByTemplate.msgDownload"/>"></i></button>
-							            </td>
 							        </tr>
 							    </table>
 			        		</div>
@@ -151,7 +155,7 @@ body{background-color:#f5f5f5;}
 			    
 			    $scope.openK2AUrl = function(){
 			    	reportByTemplateService.getK2AUrl().then(function(data){
-			    		window.open(data+"/#/ws/rs/posts/browse/Report'");
+			    		window.open(data+"/#/ws/rs/posts/browse/Report");
 			    	});
 			    }
 			    
