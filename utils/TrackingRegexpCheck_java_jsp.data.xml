@@ -1892,12 +1892,12 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private Vector&lt;String&gt; status;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:private Vector&lt;String&gt; subject;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estDeletedInbox() {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estDeletedInbox(String orderby) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estDeletedInbox(String orderby, int page) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estDemographicInbox() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estDemographicInbox(String orderby, String demographic_no) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estInbox(String orderby, String moreMessages, int initialDisplay) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estInbox(String orderby, int page) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estSentItemsInbox() {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estSentItemsInbox(String orderby) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;MsgDisplayMessage&gt; estSentItemsInbox(String orderby, int page) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;String&gt; getAttach() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;String&gt; getDate() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayMessagesBean.java:public Vector&lt;String&gt; getDelMessageid() {</ViolationValue>
@@ -2853,7 +2853,6 @@
         <ViolationValue>/src/main/webapp/oscarMessenger/CreateMessage.jsp:locationVect = (java.util.Vector) request.getAttribute("Relocation");</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/DisplayDemographicMessages.jsp:&lt;% //java.util.Vector theMessages = new java.util.Vector() ;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/DisplayDemographicMessages.jsp:java.util.Vector theMessages2 = new java.util.Vector() ;</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarMessenger/DisplayMessages.jsp:&lt;% //java.util.Vector theMessages = new java.util.Vector() ;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/DisplayMessages.jsp:java.util.Vector theMessages2 = new java.util.Vector() ;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/ViewMessage.jsp:java.util.Hashtable demoMap = msgDemoMap.getDemoMap((String) request.getAttribute("viewMessageId"));</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/ViewMessageFromEncounter.jsp:java.util.Hashtable demoMap = msgDemoMap.getDemoMap((String) request.getAttribute("viewMessageId"));</ViolationValue>

@@ -297,17 +297,20 @@ public class MsgDisplayMessagesBean implements java.io.Serializable {
 		return orderBy;
 	}
 
-	public Vector<MsgDisplayMessage> estInbox(String orderby, String moreMessages, int initialDisplay) {
+	public Vector<MsgDisplayMessage> estInbox(String orderby, int page) {
 		String providerNo = this.getProviderNo();
 		Vector<MsgDisplayMessage> msg = new Vector<MsgDisplayMessage>();
 
 		String[] searchCols = { "m.thesubject", "m.themessage", "m.sentby", "m.sentto" };
-
+		
+		int recordsToDisplay = 25;
+		int fromRecordNum = (recordsToDisplay * page) - recordsToDisplay;
+		String limitSql = " limit " + fromRecordNum + ", " + recordsToDisplay;
+				
 		try {
 			String sql = ("select map.messageID is null as isnull, map.demographic_no, ml.message, ml.status," + " m.thesubject, m.thedate, m.theime, m.attachment, m.pdfattachment, m.sentby  " + "from messagelisttbl ml, messagetbl m " + " left outer " + "join msgDemoMap map on map.messageID = m.messageid " + " " + "where ml.provider_no = '" + providerNo + "' " + "and status not like \'del\' and remoteLocation = '" + getCurrentLocationId() + "' " + " and ml.message = m.messageid "
-			        + getSQLSearchFilter(searchCols) + " order by " + getOrderBy(orderby));
+			        + getSQLSearchFilter(searchCols) + " order by " + getOrderBy(orderby) + limitSql);
 
-			int idx = 0;
 			FormsDao dao = SpringUtils.getBean(FormsDao.class);
 			for (Object[] o : dao.runNativeQuery(sql)) {
 				String demographic_no = String.valueOf(o[1]);
@@ -320,10 +323,6 @@ public class MsgDisplayMessagesBean implements java.io.Serializable {
 				String pdfattachment = String.valueOf(o[8]);
 				String sentby = String.valueOf(o[9]);
 
-				idx++;
-				if (moreMessages.equals("false") && idx > initialDisplay) {
-					break;
-				}
 				oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
 				dm.status = status;
 				dm.messageId = message;
@@ -365,7 +364,7 @@ public class MsgDisplayMessagesBean implements java.io.Serializable {
 		int index = 0;
 
 		String[] searchCols = { "m.thesubject", "m.themessage", "m.sentby", "m.sentto" };
-
+		
 		try {
 			String sql = "select map.messageID is null as isnull, map.demographic_no, m.messageid, m.thesubject, m.thedate, m.theime, m.attachment, m.pdfattachment, m.sentby  " + "from  messagetbl m, msgDemoMap map where map.demographic_no = '" + demographic_no + "'  " + "and m.messageid = map.messageID " + getSQLSearchFilter(searchCols) + " order by " + getOrderBy(orderby);
 			FormsDao dao = SpringUtils.getBean(FormsDao.class);
@@ -421,18 +420,31 @@ public class MsgDisplayMessagesBean implements java.io.Serializable {
 	}
 
 	public Vector<MsgDisplayMessage> estDeletedInbox() {
-		return estDeletedInbox(null);
+		return estDeletedInbox(null, 1);
+	}
+	
+	public int getTotalMessages(int type){
+		String providerNo = this.getProviderNo();
+		MessageListDao messageListDao = SpringUtils.getBean(MessageListDao.class);
+		
+		int total = messageListDao.messagesTotal(type, providerNo, Integer.parseInt(getCurrentLocationId()), filter);
+		
+		return total;
 	}
 
-	public Vector<MsgDisplayMessage> estDeletedInbox(String orderby) {
-
+	public Vector<MsgDisplayMessage> estDeletedInbox(String orderby, int page) {
+		
 		String providerNo = this.getProviderNo();
 		Vector<MsgDisplayMessage> msg = new Vector<MsgDisplayMessage>();
 		String[] searchCols = { "m.thesubject", "m.themessage", "m.sentby", "m.sentto" };
-
+		
+		int recordsToDisplay = 25;
+		int fromRecordNum = (recordsToDisplay * page) - recordsToDisplay;
+		String limitSql = " limit " + fromRecordNum + ", " + recordsToDisplay;
+		
 		try {
 			String sql = "select map.messageID is null as isnull, map.demographic_no, ml.message, ml.status, m.thesubject, m.thedate, m.theime, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m " + " left outer join msgDemoMap map on map.messageID = m.messageid " + " where provider_no = '" + providerNo + "' and status like \'del\' and remoteLocation = '" + getCurrentLocationId() + "' " + " and ml.message = m.messageid " + getSQLSearchFilter(searchCols) + " order by "
-			        + getOrderBy(orderby);
+			        + getOrderBy(orderby) + limitSql;
 
 			FormsDao dao = SpringUtils.getBean(FormsDao.class);
 			for (Object[] o : dao.runNativeQuery(sql)) {
@@ -467,7 +479,7 @@ public class MsgDisplayMessagesBean implements java.io.Serializable {
 					dm.pdfAttach = "1";
 				}
 				msg.add(dm);
-
+				
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
@@ -522,17 +534,21 @@ public class MsgDisplayMessagesBean implements java.io.Serializable {
 	}
 
 	public Vector<MsgDisplayMessage> estSentItemsInbox() {
-		return estSentItemsInbox(null);
+		return estSentItemsInbox(null, 1);
 	}
 
-	public Vector<MsgDisplayMessage> estSentItemsInbox(String orderby) {
+	public Vector<MsgDisplayMessage> estSentItemsInbox(String orderby, int page) {
 
 		String providerNo = this.getProviderNo();
 		Vector<MsgDisplayMessage> msg = new Vector<MsgDisplayMessage>();
 		String[] searchCols = { "m.thesubject", "m.themessage", "m.sentby", "m.sentto" };
-
+		
+		int recordsToDisplay = 25;
+		int fromRecordNum = (recordsToDisplay * page) - recordsToDisplay;
+		String limitSql = " limit " + fromRecordNum + ", " + recordsToDisplay;
+				
 		try {
-			String sql = "select map.messageID is null as isnull, map.demographic_no, m.messageid as status, m.messageid as message , thedate, theime, thesubject, sentby, sentto, attachment, pdfattachment from messagetbl m left outer join msgDemoMap map on map.messageID = m.messageid where sentbyNo = '" + providerNo + "' and sentByLocation = '" + getCurrentLocationId() + "'  " + getSQLSearchFilter(searchCols) + " order by " + getOrderBy(orderby);
+			String sql = "select map.messageID is null as isnull, map.demographic_no, m.messageid as status, m.messageid, thedate, theime, thesubject, sentby, sentto, attachment, pdfattachment from messagetbl m left outer join msgDemoMap map on map.messageID = m.messageid where sentbyNo = '" + providerNo + "' and sentByLocation = '" + getCurrentLocationId() + "'  " + getSQLSearchFilter(searchCols) + " order by " + getOrderBy(orderby) + limitSql;
 
 			FormsDao dao = SpringUtils.getBean(FormsDao.class);
 			for (Object[] o : dao.runNativeQuery(sql)) {
