@@ -193,39 +193,41 @@ function CodeAttach(File0) {
 
 	List<ProfessionalSpecialist> professionalSpecialists = professionalSpecialistDao.findByFullName(param[0]);
 	if(professionalSpecialists != null) {
-		for(ProfessionalSpecialist professionalSpecialist:professionalSpecialists) {	
-			intCount = intCount + 1;
-			Dcode = professionalSpecialist.getReferralNo();
-			DcodeDesc = professionalSpecialist.getLastName()+","+professionalSpecialist.getFirstName();
-			DcodeAddr = professionalSpecialist.getStreetAddress();
-			DcodeSpecialty = professionalSpecialist.getSpecialtyType();
-			DcodePhone =professionalSpecialist.getPhoneNumber();
-			if (Count == 0){
-			 Count = 1;
-			 color = "#FFFFFF";
-			} else {
-			 Count = 0;
-			 color="#EEEEFF";
-			}
-	%>
-
-	<tr bgcolor="<%=color%>">
-		<td width="12%"><font face="Arial, Helvetica, sans-serif"
-			size="2">
-		<% if (Dcode.compareTo(xcodeName)==0 || Dcode.compareTo(xcodeName1)==0 || Dcode.compareTo(xcodeName2)==0){ %><input
-			type="checkbox" name="code_<%=Dcode%>" checked>
-		<%}else{%><input type="checkbox" name="code_<%=Dcode%>">
-		<%}%><%=Dcode%></font></td>
-		<td width="22%"><font face="Arial, Helvetica, sans-serif"
-			size="2"><%=DcodeDesc%></font></td>
-		<td width="22%"><font face="Arial, Helvetica, sans-serif"
-			size="2"><%=DcodeSpecialty%></font></td>
-		<td width="22%"><font face="Arial, Helvetica, sans-serif"
-			size="2"><%=DcodeAddr%></font></td>
-		<td width="22%"><font face="Arial, Helvetica, sans-serif"
-			size="2"><%=DcodePhone%></font></td>
-	</tr>
-	<%
+		for(ProfessionalSpecialist professionalSpecialist:professionalSpecialists) {
+		  if( professionalSpecialist.getReferralNo() != null && professionalSpecialist.getReferralNo().compareTo("") !=0 ) {	
+  			intCount = intCount + 1;
+  			Dcode = professionalSpecialist.getReferralNo();
+  			DcodeDesc = professionalSpecialist.getLastName()+","+professionalSpecialist.getFirstName();
+  			DcodeAddr = professionalSpecialist.getStreetAddress();
+  			DcodeSpecialty = professionalSpecialist.getSpecialtyType();
+  			DcodePhone =professionalSpecialist.getPhoneNumber();
+  			if (Count == 0){
+  			 Count = 1;
+  			 color = "#FFFFFF";
+  			} else {
+  			 Count = 0;
+  			 color="#EEEEFF";
+  			}
+  	%>
+  
+  	<tr bgcolor="<%=color%>">
+  		<td width="12%"><font face="Arial, Helvetica, sans-serif"
+  			size="2">
+  		<% if (Dcode.compareTo(xcodeName)==0 || Dcode.compareTo(xcodeName1)==0 || Dcode.compareTo(xcodeName2)==0){ %><input
+  			type="checkbox" name="code_<%=Dcode%>" checked>
+  		<%}else{%><input type="checkbox" name="code_<%=Dcode%>">
+  		<%}%><%=Dcode%></font></td>
+  		<td width="22%"><font face="Arial, Helvetica, sans-serif"
+  			size="2"><%=DcodeDesc%></font></td>
+  		<td width="22%"><font face="Arial, Helvetica, sans-serif"
+  			size="2"><%=DcodeSpecialty%></font></td>
+  		<td width="22%"><font face="Arial, Helvetica, sans-serif"
+  			size="2"><%=DcodeAddr%></font></td>
+  		<td width="22%"><font face="Arial, Helvetica, sans-serif"
+  			size="2"><%=DcodePhone%></font></td>
+  	</tr>
+  	<%
+  	    }
 	  }
 	}
   %>
