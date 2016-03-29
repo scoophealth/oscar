@@ -208,9 +208,17 @@
 	<div infinite-scroll="updateFeed(k2afeed.length,10)" infinite-scroll-parent="true">
 		<blockquote class="pull-right" ng-repeat="item in k2afeed" ng-class="{'significance-high': item.significance === 'High', 'significance-medium': item.significance === 'Medium', 'significance-low': item.significance === 'Low'}">
 			<h4>{{item.type}}: <a target="_blank" href="{{item.link}}">{{item.title}}</a></h4>
-			<p>
 				<a href="" style="font-size:14px" data-toggle="modal" data-target="#expandFeed{{item.id}}" ng-if="item.link">{{item.body | cut:true:140 }}</a>
 				<a href="" ng-click="authenticateK2A(item.id)" style="font-size:14px" ng-if="!item.link">{{item.body}}</a>
+				<small ng-hide="!item.agree">You agree with this post</small>
+				<small ng-hide="!item.disagree">You disagree with this post</small>
+				<small>{{item.author}} posted {{item.publishedDate | date:'yyyy-MM-dd'}}</small>
+				<small>
+					<a class="glyphicon glyphicon-thumbs-up" ng-click="agreeWithK2aPost(item)"></a>&nbsp;{{item.agreeCount}}&nbsp;&nbsp;
+					<a class="glyphicon glyphicon-thumbs-down" ng-click="disagreeWithK2aPost(item)"></a>&nbsp;{{item.disagreeCount}}&nbsp;&nbsp;
+					<a class="glyphicon glyphicon-comment" data-toggle="modal" data-target="#expandFeed{{item.id}}"></a>&nbsp;{{item.commentCount}}
+				</small>
+				
 				<div class="modal fade" id="expandFeed{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="expandFeed{{item.id}}" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">	
@@ -252,10 +260,6 @@
 						</div>
 					</div>
 				</div>
-			</p>
-			<small ng-hide="!item.agree">You agree with this post</small>
-			<small ng-hide="!item.disagree">You disagree with this post</small>
-			<small ng-hide="!item.agreeCount && !item.disagreeCount && !item.commentCount">{{item.author}} posted {{item.publishedDate | date:'yyyy-MM-dd'}}&nbsp;&nbsp;<a class="glyphicon glyphicon-thumbs-up" ng-click="agreeWithK2aPost(item)"></a>&nbsp;{{item.agreeCount}}&nbsp;&nbsp;<a class="glyphicon glyphicon-thumbs-down" ng-click="disagreeWithK2aPost(item)"></a>&nbsp;{{item.disagreeCount}}&nbsp;&nbsp;<a class="glyphicon glyphicon-comment" data-toggle="modal" data-target="#expandFeed{{item.id}}"></a>&nbsp;{{item.commentCount}}</small>
 		</blockquote>
 		<div style="clear: both;"></div>
 	</div>
