@@ -93,12 +93,10 @@
 			<bean class="org.oscarehr.ws.rest.AppService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.AllergyService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.PreventionService" autowire="byName" />
-<<<<<<< HEAD
 			<bean class="org.oscarehr.ws.rest.ReportByTemplateService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.ResourceService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.DiseaseRegistryService" autowire="byName" />
-=======
->>>>>>> eaf4164...  #4152 WS methods through OAUTH need to be exposed
+			<bean class="org.oscarehr.ws.rest.LabService" autowire="byName" />
         </jaxrs:serviceBeans>
              
         <jaxrs:providers>
