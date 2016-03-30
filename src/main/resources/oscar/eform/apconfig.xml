@@ -7,6 +7,12 @@
         <ap-output>${curdate()}</ap-output>
     </databaseap>
     <databaseap>
+        <ap-name>time</ap-name>
+        <ap-sql>SELECT curtime()</ap-sql>
+        <ap-output>${curtime()}</ap-output>
+    </databaseap>
+    
+    <databaseap>
         <ap-name>appt_date</ap-name>
         <ap-sql>SELECT appointment_date from appointment WHERE appointment_no=${appt_no}</ap-sql>
         <ap-output>${appointment_date}</ap-output>
