@@ -182,6 +182,7 @@
 			<bean class="org.oscarehr.ws.rest.SystemInfoService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.DiseaseRegistryService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.E2ECDAService" autowire="byName" />
+			<bean class="org.oscarehr.ws.rest.LabService" autowire="byName" />
 		</jaxrs:serviceBeans>
 
 		<jaxrs:extensionMappings>

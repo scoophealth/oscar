@@ -72,4 +72,18 @@ public class Hl7TextMessageDao extends AbstractDao<Hl7TextMessage> {
 		
 		return result;
 	}
+	
+	public List<Hl7TextMessage> findByDemographicNo(Integer demographicNo, int offset, int limit) {
+		String query = "select m from Hl7TextMessage m, PatientLabRouting p WHERE m.id = p.labNo and p.demographicNo = ?1 order by m.created";
+		Query q = entityManager.createQuery(query);
+		
+		q.setParameter(1, demographicNo);
+		q.setFirstResult(offset);
+		q.setMaxResults(limit);
+		
+		@SuppressWarnings("unchecked")
+		List<Hl7TextMessage> results = q.getResultList();
+		
+		return results;
+	}
 }
