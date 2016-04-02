@@ -12110,4 +12110,26 @@ CREATE TABLE `BORNPathwayMapping` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `Consent` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `demographic_no` int(10),
+  `consent_type_id` int(10),
+  `explicit` tinyint(1),
+  `optout` tinyint(1),
+  `last_entered_by` varchar(10),
+  `consent_date` datetime,
+  `optout_date` datetime,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `consent_type` (
+  `id` int(15) NOT NULL AUTO_INCREMENT,
+  `type` varchar(50),
+  `name` varchar(50),
+  `description` varchar(500),
+  `active` tinyint(1),
+  PRIMARY KEY (`id`)
+);
+
+
 
