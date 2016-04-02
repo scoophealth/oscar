@@ -128,6 +128,7 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONItem;
+import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.Drug;
@@ -149,6 +150,7 @@ import org.oscarehr.common.model.Security;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.labs.LabIdAndType;
 import org.oscarehr.managers.IntegratorPushManager;
+import org.oscarehr.managers.PatientConsentManager;
 import org.oscarehr.util.BenchmarkTimer;
 import org.oscarehr.util.CxfClientUtilsOld;
 import org.oscarehr.util.DbConnectionFilter;
@@ -182,6 +184,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private static final long SLEEP_ON_ERROR = 300000;
 	private static final double SLEEP_ON_ERROR_STEP = 1.5;
 
+	private static boolean ISACTIVE_PATIENT_CONSENT_MODULE = Boolean.FALSE; 
+
+	
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
 
 	private int numberOfTimesRun = 0;
@@ -217,6 +222,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private IntegratorPushManager integratorPushManager = SpringUtils.getBean(IntegratorPushManager.class);
 
 	private UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
+	private PatientConsentManager patientConsentManager = (PatientConsentManager) SpringUtils.getBean(PatientConsentManager.class);
 
 	private static TimerTask timerTask = null;
 
@@ -269,6 +275,14 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		
 		loggedInInfo.setLoggedInProvider(p);
 		loggedInInfo.setLoggedInSecurity(security);
+		
+		// if the clinic has set "push all patients that have consented" in the Integrator properties
+		// this will active the Patient Consent module and only consenting patients will be pushed.
+		// The consent module must be activated in the properties file and the Integrator Patient Consent program
+		// must be set in Provider Properties.
+		if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
+			CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE = "1".equals( userPropertyDao.getProp( UserProperty.INTEGRATOR_PATIENT_CONSENT ).getValue() );
+		}
 		
 		if(p == null) {
 			logger.warn("INTEGRATOR_USER doesn't exist..please check properties file");
@@ -503,17 +517,51 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 		return false;
 	}
+	
+	/**
+	 * If the patient has not consented to participating in Integrator, remove it from the list of 
+	 * demographics to be pushed.
+	 * A check for if this action is desired by the user should be done first.
+	 */
+	private List<Integer> checkPatientConsent( List<Integer> demographicNoList ) {
+		
+		Set<Integer> consentedSet = new HashSet<Integer>();
+		
+		for( int demographicNo : demographicNoList ) {
+			if( checkPatientConsent( demographicNo ) ) {
+				logger.info( "Adding consented Demographic " + demographicNo + " to the Integrator push list" );
+				consentedSet.add( demographicNo );
+			}
+		}
+		
+		demographicNoList.clear();
+		demographicNoList.addAll(consentedSet);
+		
+		return demographicNoList;
+	}
+	
+	private boolean checkPatientConsent( int demographicNo ) {
+		// consent type for this module is "integrator".
+		ConsentType consentType = patientConsentManager.getConsentType( UserProperty.INTEGRATOR_PATIENT_CONSENT );
+		return patientConsentManager.hasPatientConsented( demographicNo, consentType );
+	}
 
 	private List<Integer> getDemographicIdsToPush(Facility facility, Date lastDataUpdated, List<Program> programs) {
 		
 		List<Integer> fullFacilitydemographicIds  = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
 		
 		
-		if (isFullPush(facility)) {
+		if ( isFullPush(facility) ) {
 			logger.info("Integrator pushing ALL demographics");
 			
-			
-			return fullFacilitydemographicIds;
+			// check if patient consent module is active.
+			if( CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
+				logger.info("Integrator patient consent is active. Checking demographic list.");				
+				return checkPatientConsent( fullFacilitydemographicIds );
+			} else {
+				return fullFacilitydemographicIds;
+			}
+						
 		} else {
 			logger.info("Integrator pushing only changed demographics");
 			
@@ -552,14 +600,20 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			uniqueDemographicIdsWithSomethingNew.addAll(DemographicDao.getDemographicIdsAlteredSinceTime(lastDataUpdated));
 
 			Iterator<Integer> demoIterator = uniqueDemographicIdsWithSomethingNew.iterator();
+			
 	        while(demoIterator.hasNext()){ //Verify that the demographic is in the Facility
-	                Integer i = demoIterator.next();
-	                if( !fullFacilitydemographicIds.contains(i)){
+	                Integer demo = demoIterator.next();
+	                if( ! fullFacilitydemographicIds.contains(demo) ){
 	                	demoIterator.remove();
-	                }
+	                } 
+	                
+	                else if( CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE && ! checkPatientConsent( demo ) ) {
+	    				logger.info("Integrator patient consent is active. Checking demographic list of changed demographics");				
+	    				demoIterator.remove();
+	    			}
 	        }
 			
-	        if(isFullPush(facility)){
+	        if( isFullPush(facility) ){
 				   userPropertyDao.saveProp(UserProperty.INTEGRATOR_FULL_PUSH+facility.getId(), "0");
 			}
 			

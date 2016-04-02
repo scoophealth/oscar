@@ -65,6 +65,9 @@
 <%@page import="org.oscarehr.PMmodule.model.Program" %>
 <%@page import="org.oscarehr.PMmodule.web.GenericIntakeEditAction" %>
 <%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+<%@page import="org.oscarehr.managers.PatientConsentManager" %>
+<%@page import="org.oscarehr.common.model.Consent" %>
+<%@page import="org.oscarehr.common.model.ConsentType" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
@@ -86,6 +89,7 @@
     WaitingListNameDao waitingListNameDao = SpringUtils.getBean(WaitingListNameDao.class);
     String privateConsentEnabledProperty = OscarProperties.getInstance().getProperty("privateConsentEnabled");
     boolean privateConsentEnabled = (privateConsentEnabledProperty != null && privateConsentEnabledProperty.equals("true"));
+
 %>
 
 <security:oscarSec roleName="<%=roleName$%>"
@@ -140,6 +144,7 @@ if(!authed) {
 	
 	DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 	ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+    
 %>
 
 <jsp:useBean id="providerBean" class="java.util.Properties"	scope="session" />
@@ -219,7 +224,13 @@ if(!authed) {
 			consentProgramMap.put(Integer.parseInt(privateConsentPrograms[x]),true);
 		}
 	}
-
+	
+	// get a list of programs the patient has consented to. 
+	if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
+	    PatientConsentManager patientConsentManager = SpringUtils.getBean( PatientConsentManager.class );
+		pageContext.setAttribute( "consentTypes", patientConsentManager.getConsentTypes() );
+		pageContext.setAttribute( "patientConsents", patientConsentManager.getAllConsentsByDemographic( loggedInInfo, Integer.parseInt(demographic_no) ) );
+	}
 %>
 
 
@@ -1302,6 +1313,29 @@ if ( Dead.equals(PatStat) ) {%>
 	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.usConsent"/>:</span>
 	                              <span class="info"><%=usSigned %></span>
 	                          </li>
+	                          <%-- ENABLE THE NEW PATIENT CONSENT MODULE --%>
+	                          <oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
+		                          	
+                          		<c:forEach items="${ patientConsents }" var="patientConsent" >
+                          		<li>
+                          			<span class="popup label" onmouseover="nhpup.popup(${ patientConsent.consentType.description },{'width':350} );" >
+										<c:out value="${ patientConsent.consentType.name }" />
+									</span>
+                          			
+                          			<c:choose>
+										<c:when test="${ patientConsent.optout }">
+											<span class="info" style="color:red;"> Opted Out:<c:out value="${ patientConsent.optoutDate }" /></span>
+										</c:when>
+															
+										<c:otherwise>
+											<span class="info" style="color:green;">Consented:<c:out value="${ patientConsent.consentDate }" /></span>
+										</c:otherwise>				
+									</c:choose>		
+                          				
+                          		</li>	
+                          		</c:forEach>	                              	
+		                          
+	                          </oscar:oscarPropertiesCheck>
 	                       </ul>
 						
 						</div>
@@ -2738,45 +2772,93 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 					
 <tr valign="top"><td colspan="4">
 	<table id="privacyConsentTable" >	
-						<tr id="privacyConsentHeading" style="display:none;">
-							<th class="alignLeft" colspan="2" >Privacy Consent</th>
-						</tr>
-							<tr valign="top">
-								<%
-								if(showConsentsThisTime) {
-								%>
-								<tr>
-									<td>
-									<input type="hidden" name="usSignedOrig" value="<%=StringUtils.defaultString(apptMainBean.getString(demoExt.get("usSigned")))%>" />	
-	 								<input type="hidden" name="privacyConsentOrig" value="<%=privacyConsent%>" />
-	 								<input type="hidden" name="informedConsentOrig" value="<%=informedConsent%>" />
+			<tr id="privacyConsentHeading" style="display:none;">
+				<th class="alignLeft" colspan="4" >Privacy Consent</th>
+			</tr>
+			
+			<% if(showConsentsThisTime) { %>
+			<tr>
+				<td width="30%">
+				<input type="hidden" name="usSignedOrig" value="<%=StringUtils.defaultString(apptMainBean.getString(demoExt.get("usSigned")))%>" />	
+					<input type="hidden" name="privacyConsentOrig" value="<%=privacyConsent%>" />
+					<input type="hidden" name="informedConsentOrig" value="<%=informedConsent%>" />
+				
+				<input type="checkbox" name="privacyConsent" id="privacyConsent" value="yes" <%=privacyConsent.equals("yes") ? "checked" : ""%>>
+				<label style="font-weight:bold;" for="privacyConsent">Privacy Consent (verbal) Obtained</label> 
+				</td>
+				<td>
+					&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<input type="checkbox" name="informedConsent" id="informedConsent" value="yes" <%=informedConsent.equals("yes") ? "checked" : ""%>>
+				<label style="font-weight:bold;" for="informedConsent">Informed Consent (verbal) Obtained</label>
+				</td>
+			</tr>
+			<tr>
+			<td >
+				<div id="usSigned">
+					<input type="radio" name="usSigned" id="usSigned" value="signed" <%=usSigned.equals("signed") ? "checked" : ""%>>
+						<label style="font-weight:bold;" for="usSigned">U.S. Resident Consent Form Signed </label>
+			
+				    <input type="radio" name="usSigned" id="usSigned" value="unsigned" <%=usSigned.equals("unsigned") ? "checked" : ""%>>
+				    	<label style="font-weight:bold;" for="usSigned">U.S. Resident Consent Form NOT Signed</label>
+			    </div>
+			</td>
+			
+			<%-- This block of code was designed to eventually manage all of the patient consents. --%>
+			<oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
+			
+				<c:forEach items="${ consentTypes }" var="consentType" varStatus="count">
+					<c:set var="patientConsent" value="" />
+					<c:forEach items="${ patientConsents }" var="consent" >
+						<c:if test="${ consent.consentType.id eq consentType.id }">
+							<c:set var="patientConsent" value="${ consent }" />
+						</c:if>													
+					</c:forEach>
+					<tr class="privacyConsentRow" id="${ count.index }" valign="top">
+						<td class="alignLeft" width="30%" >
+							<label style="font-weight:bold;" valign="center" for="${ consentType.type }" >
+							
+								<input type="checkbox" 
+									name="${ consentType.type }" 
+									id="${ consentType.type }" 
+									value="${ consentType.id }" 
+									${ not empty patientConsent and patientConsent.patientConsented ? 'checked' : '' } />
+								
+								<input type="hidden" name="${ consentType.type }_id" 
+									value="${ not empty patientConsent and patientConsent.id gt 0 ? patientConsent.id : 0 }" />
 									
-									<input type="checkbox" name="privacyConsent" id="privacyConsent" value="yes" <%=privacyConsent.equals("yes") ? "checked" : ""%>>
-									<label style="font-weight:bold;" for="privacyConsent">Privacy Consent (verbal) Obtained</label> 
-									</td>
-									<td>
-										&nbsp;
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-									<input type="checkbox" name="informedConsent" id="informedConsent" value="yes" <%=informedConsent.equals("yes") ? "checked" : ""%>>
-									<label style="font-weight:bold;" for="informedConsent">Informed Consent (verbal) Obtained</label>
-									</td>
-								</tr>
-								<tr>
-								<td colspan="2">
-									<div id="usSigned">
-										<input type="radio" name="usSigned" id="usSigned" value="signed" <%=usSigned.equals("signed") ? "checked" : ""%>>
-											<label style="font-weight:bold;" for="usSigned">U.S. Resident Consent Form Signed </label>
+								<c:out value="${ consentType.name }" />
 								
-									    <input type="radio" name="usSigned" id="usSigned" value="unsigned" <%=usSigned.equals("unsigned") ? "checked" : ""%>>
-									    	<label style="font-weight:bold;" for="usSigned">U.S. Resident Consent Form NOT Signed</label>
-								    </div>
-								</td>
-								
-								<% } %>
-						  	</tr>
+							</label>
+						</td>
+						
+						<td class="alignLeft" colspan="2" width="40%" >
+							<c:out value="${ consentType.description }" />
+						</td>
+						
+						<td class="alignLeft" id="consentStatusDate" width="25%" >	
+							<c:if test="${ not empty patientConsent }" >
+								<c:choose>
+									<c:when test="${ patientConsent.optout }">
+										<span class="info" style="color:red;">Opted Out:<c:out value="${ patientConsent.optoutDate }" /></span>
+									</c:when>					
+									<c:otherwise>
+										<span class="info" style="color:green;">Consented:<c:out value="${ patientConsent.consentDate }" /></span>
+									</c:otherwise>				
+								</c:choose>															
+							</c:if>																														
+						</td>
+						
+					</tr>
+				</c:forEach>
+				
+			</oscar:oscarPropertiesCheck>
+			
+			<% } %>
+			  
 </table></td></tr>
 </oscar:oscarPropertiesCheck> 
                                                        

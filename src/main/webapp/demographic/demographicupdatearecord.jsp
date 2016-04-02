@@ -68,8 +68,11 @@
 <%@page import="org.oscarehr.PMmodule.web.GenericIntakeEditAction" %>
 <%@page import="org.oscarehr.PMmodule.service.ProgramManager" %>
 <%@page import="org.oscarehr.PMmodule.service.AdmissionManager" %>
-
+<%@page import="org.oscarehr.managers.PatientConsentManager" %>
 <%@page import="org.oscarehr.util.LoggedInInfo" %>
+<%@page import="org.oscarehr.common.model.Consent" %>
+<%@page import="org.oscarehr.common.model.ConsentType" %>
+<%@page import="oscar.OscarProperties" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -86,8 +89,11 @@
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 	WaitingListDao waitingListDao = (WaitingListDao)SpringUtils.getBean("waitingListDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+
 	
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	
+	
 %>
 
 <html:html locale="true">
@@ -231,7 +237,29 @@
 		demographic.setPatientStatusDate(null);
 	}
 	
+	if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
+		// Retrieve and set patient consents.
+		PatientConsentManager patientConsentManager = SpringUtils.getBean( PatientConsentManager.class );
+		List<ConsentType> consentTypes = patientConsentManager.getConsentTypes();
+		String consentTypeId = null;
+		int patientConsentIdInt = 0; 
 
+		for( ConsentType consentType : consentTypes ) {
+			consentTypeId = request.getParameter( consentType.getType() );
+			String patientConsentId = request.getParameter( consentType.getType() + "_id" );
+			patientConsentIdInt = Integer.parseInt( patientConsentId );
+			
+			// checked box means add or edit consent. 
+			if( consentTypeId != null ) {		
+				patientConsentManager.addConsent(loggedInInfo, demographic.getDemographicNo(), Integer.parseInt( consentTypeId ) );
+			
+			// unchecked and patientConsentId > 0 could mean the patient opted out. 
+			} else if( patientConsentIdInt > 0 ) {
+				patientConsentManager.optoutConsent( loggedInInfo, patientConsentIdInt );		
+			}		
+		}
+	}
+	
 	//DemographicExt
 	String proNo = (String) session.getValue("user");
 	String demoNo = request.getParameter("demographic_no");

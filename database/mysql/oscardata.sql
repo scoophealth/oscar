@@ -2856,3 +2856,4 @@ insert into `secObjPrivilege` values('doctor','_rx.dispense','x',0,'999998');
 
 insert into ProductLocation (name) values ('Default');
 
+INSERT INTO `consent_type` VALUES ('1', 'integrator_patient_consent', 'Sunshiner frailty network', 'Patient Permissions for Integrator enabled sharing of: Chart notes, RXes, eforms, allergies, documents (e.g.photos) Discussed with patient (and/or their representative) and they have consented to integrator enabled sharing of their information with Sunshiners Frailty Network', '1');

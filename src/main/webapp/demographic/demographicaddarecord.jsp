@@ -70,6 +70,10 @@
 
 <%@page import="org.oscarehr.common.dao.DemographicContactDao"%>
 <%@page import="org.oscarehr.common.model.DemographicContact"%>
+<%@page import="org.oscarehr.managers.PatientConsentManager" %>
+<%@page import="org.oscarehr.common.model.Consent" %>
+<%@page import="org.oscarehr.common.model.ConsentType" %>
+<%@page import="oscar.OscarProperties" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -278,6 +282,23 @@
         int rowsAffected=1;
 
        dem = demographic.getDemographicNo().toString();
+       
+       // Save the patient consent values.
+	   if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
+	
+			PatientConsentManager patientConsentManager = SpringUtils.getBean( PatientConsentManager.class );
+			List<ConsentType> consentTypes = patientConsentManager.getConsentTypes();
+			String consentTypeId = null;
+			int patientConsentIdInt = 0; 
+			
+			for( ConsentType consentType : consentTypes ) {
+				consentTypeId = request.getParameter( consentType.getType() );
+				// checked box means add or edit consent. 
+				if( consentTypeId != null ) {		
+					patientConsentManager.addConsent(loggedInInfo, demographic.getDemographicNo(), Integer.parseInt( consentTypeId ) );
+				} 	
+			}
+		}
 
        String proNo = (String) session.getValue("user");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "hPhoneExt", request.getParameter("hPhoneExt"), "");
