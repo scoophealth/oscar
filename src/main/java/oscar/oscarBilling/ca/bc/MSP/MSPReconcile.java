@@ -762,7 +762,7 @@ public class MSPReconcile {
 	 * @return double
 	 */
 	private double getTotalPaidFromHistory(String billingmaster_no, boolean ignoreIA) {
-		BillingHistoryDao dao = SpringUtils.getBean(BillingmasterDAO.class);
+		BillingHistoryDao dao = SpringUtils.getBean(BillingHistoryDao.class);
 		return dao.getTotalPaidFromHistory(ConversionUtils.fromIntString(billingmaster_no), ignoreIA);
 	}
 
