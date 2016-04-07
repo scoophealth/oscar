@@ -236,7 +236,10 @@ $(function ()  {
   
 registerFormSubmit('eformImportForm', 'dynamic-content');
 
-$('#eformTbl').dataTable({ "bPaginate": false });
+$('#eformTbl').dataTable({
+	"bPaginate": false,
+	"aoColumnDefs": [{"bSortable":false, "aTargets":[0]}]
+});
 </script>
 </body>
 </html:html>
