@@ -46,10 +46,15 @@
 
 <head>
 <link href="<%=request.getContextPath()%>/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath()%>/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath()%>/css/angular-datatables.min.css" rel="stylesheet" type="text/css">
+
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/library/bootstrap/3.0.0/js//bootstrap.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.dataTables.1.10.11.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/library/angular.min.js"></script>
-<script src="<%=request.getContextPath()%>/web/common/reportByTemplateServices.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/library/angular-datatables.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/library/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/web/common/reportByTemplateServices.js"></script>
 </head>
 
 <style>
@@ -74,8 +79,8 @@
 			<h4><bean:message key="oscarReport.oscarReportByTemplate.msgDownloadFromK2A" /></h4>
 			<input type="button" value="<bean:message key="oscarReport.oscarReportByTemplate.msgK2ABrowse" />" class="btn btn-primary upload" ng-click="openK2AUrl()" />
 			<input type="button" value="<bean:message key="oscarReport.oscarReportByTemplate.msgRefresh" />" class="btn btn-primary upload" onclick="location.reload();" />
-			<br/><br/>
-			<table class="table table-condensed table-striped" id="k2aReportTbl">
+			<br/>
+			<table class="table table-condensed table-striped" id="k2aReportTbl" datatable="ng" dt-options="dtOptions">
 				<thead>
 			    	<tr >
 			            <th>&nbsp;</th>
@@ -122,9 +127,9 @@
 			</table>
 		</div>
 		<script>
-			var app = angular.module("k2aReportByTemplate", ['reportByTemplateServices']);
+			var app = angular.module("k2aReportByTemplate", ['reportByTemplateServices', 'datatables']);
 			
-			app.controller("k2aReportByTemplate", function($scope,reportByTemplateService) {
+			app.controller("k2aReportByTemplate", function($scope,reportByTemplateService,DTOptionsBuilder) {
 				message = "";
 				
 				checkStatus = function(){
@@ -163,6 +168,8 @@
 				function refreshParent() {
 					window.opener.document.location.href = "<%=request.getContextPath()%>/oscarReport/reportByTemplate/homePage.jsp";
 				}
+				
+				$scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [1, 'asc']);				
 			});
 		
 		</script>
