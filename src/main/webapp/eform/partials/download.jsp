@@ -110,7 +110,10 @@
 				}
 				
 				$(document).ready(function(){
-					$('#k2aEFormTbl').dataTable({ "bPaginate":false });
+					$('#k2aEFormTbl').dataTable({
+						"bPaginate": false,
+					    "aoColumnDefs": [{"bSortable":false, "aTargets":[0]}]
+					});
 				});
 
 			</script>
