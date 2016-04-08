@@ -155,12 +155,12 @@ $(document).ready(function(){
 </head>
 
 <body vlink="#0000FF" class="BodyStyle">
-<h4>BORN/OSCAR Service Mapping</h4>
+<h4>BORN/OSCAR Consultation Service Mapping</h4>
 <table id="mappingTable" name="mappingTable" class="table table-bordered table-striped table-hover table-condensed">
 	<thead>
 		<tr>
 			<th>BORN Pathway</th>
-			<th>OSCAR Service</th>
+			<th>OSCAR Consultation Service</th>
 		</tr>
 	</thead>
 	<tbody></tbody>
@@ -203,7 +203,7 @@ $(document).ready(function(){
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="oscarService">OSCAR Service:</label>
+				<label class="control-label" for="oscarService">OSCAR Consultation Service:</label>
 				<div class="controls">
 					<select name="oscarService" id="oscarService">
 						
