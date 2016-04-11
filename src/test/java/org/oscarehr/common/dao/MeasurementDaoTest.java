@@ -46,7 +46,7 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("measurements", "measurementType", "measurementsExt", "measurementMap", "provider");
+		SchemaUtils.restoreTable("demographic", "program", "demographicExt", "measurements", "measurementType", "measurementsExt", "measurementMap", "provider");
 	}
 
 	@Test
