@@ -86,7 +86,7 @@
 						<div class="controls">
 							<input class="form-control" name="clinicName" ng-model="clinicName" type="text" maxlength="255"/>  <br/>
 						</div>
-						<input type="button" class="btn btn-primary" value="<bean:message key="admin.k2a.initbtn"/>"  ng-click="initK2A()"/>
+						<input type="button" class="btn btn-primary" ng-disabled="clinicName==null || clinicName==''" value="<bean:message key="admin.k2a.initbtn"/>"  ng-click="initK2A()"/>
 					</div>
 				</fieldset>
 			</form>
