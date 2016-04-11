@@ -109,6 +109,11 @@ public class AppService extends AbstractServiceImpl {
 			throw new RuntimeException("K2A Already Initialized");
 		}
 		
+		String name = (String) clinicName.get("name");
+		if (name==null || name.trim().isEmpty()){
+			throw new RuntimeException("Invalid clinic name ["+name+"]");
+		}
+		
 		URL url;
 	    HttpURLConnection connection = null;  
 	    
