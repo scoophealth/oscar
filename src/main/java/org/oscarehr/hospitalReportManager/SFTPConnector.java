@@ -578,7 +578,7 @@ public class SFTPConnector {
 		return decrypt;
 	}
 
-	public static synchronized void startAutoFetch(LoggedInInfo loggedInInfo) {
+	public synchronized void startAutoFetch(LoggedInInfo loggedInInfo) {
 
 		if (!isAutoFetchRunning) {
 			SFTPConnector.isAutoFetchRunning = true;
@@ -597,6 +597,8 @@ public class SFTPConnector {
 				SFTPConnector sftp = new SFTPConnector();
 				logger.debug("new SFTP connection established");
 
+				String[] files = ls(remoteDir);
+				
 				String[] localFilePaths =null;
 				
 				try {
@@ -612,6 +614,10 @@ public class SFTPConnector {
 					paths = localFilePaths;
 				}
 		
+				//delete all files from remote dir
+				deleteDirectoryContents(remoteDir, files);
+
+				
 				paths = copyFilesToDocumentDir(loggedInInfo, paths);
 								
 				for (String filePath : paths) {
