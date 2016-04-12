@@ -50,7 +50,7 @@
 <%@page import="org.oscarehr.myoscar_server.ws.MinimalPersonTransfer2"%>
 <%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer3"%>
 <%@page import="oscar.util.DateUtils"%>
-<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils,java.net.URLEncoder"%>
 <%@page import="org.oscarehr.phr.web.MyOscarMessagesHelper"%>
 <%@page import="oscar.oscarDemographic.data.*, java.util.Enumeration" %>
 <%@page import="oscar.util.UtilDateUtilities,java.util.*" %>
@@ -113,6 +113,12 @@ function gotoEchart3(demoNo) {
     var url = '<%=request.getContextPath()%>/oscarEncounter/IncomingEncounter.do?demographicNo='+ demoNo+'&reason=&appointmentDate=<%=UtilDateUtilities.DateToString(new Date())%>';
     openedWindow = popup(755,1048,url,'apptProvider');
 }
+
+function gotoMSG(demoNo){
+	var url = '<%=request.getContextPath()%>/oscarMessenger/SendDemoMessage.do?demographic_no='+demoNo+'&subject=<%=URLEncoder.encode("PHR:"+subject,"UTF-8")%>&message=<%=URLEncoder.encode("\n\n\n---Message From PHR----\n"+messageBody,"UTF-8")%>';   
+	openedWindow = popup(755,1048,url,'msg');
+}
+
 
 </script>
 
@@ -264,6 +270,15 @@ function gotoEchart3(demoNo) {
 		                                   title="<bean:message key="global.no.phr.account.registered"/>"
 		                                <%}%> 
                                     	class="ControlPushButton" type="button" onclick="gotoEchart3('<%=demographicNo%>');" value="<bean:message key="oscarMessenger.CreateMessage.btnOpenEchart"/>" >
+                                    	
+                                    	<input 
+                                    	<%if (demographic == null){%>
+		                                   disabled="disabled"
+		                                   title="<bean:message key="global.no.phr.account.registered"/>"
+		                                <%}%> 
+                                    	class="ControlPushButton" type="button" onclick="gotoMSG('<%=demographicNo%>');" value="<bean:message key="oscarMessenger.CreateMessage.btnOpenInOscarMsg"/>" >
+                                    	
+                                    	
                                     </td>
                                 </tr>
                                 <tr>

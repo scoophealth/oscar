@@ -26,6 +26,7 @@
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
+	  String providerNo = (String) request.getAttribute("providerNo");
       String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	  boolean authed=true;
 %>
@@ -38,7 +39,7 @@ if(!authed) {
 	return;
 }
 %>
-
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%    
 String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
@@ -52,6 +53,7 @@ if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter(
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr"%>
 
 
 <html:html locale="true">
@@ -460,8 +462,21 @@ function fmtOscarMsg() {
 								onclick="popupViewAttach(700,960,'../oscarEncounter/IncomingEncounter.do?demographicNo=<%=demoID%>&curProviderNo=<%=request.getAttribute("providerNo")%>');return false;">E</a>
 							<a
 								href="javascript:popupViewAttach(700,960,'../oscarRx/choosePatient.do?providerNo=<%=request.getAttribute("providerNo")%>&demographicNo=<%=demoID%>')">Rx</a>
-
-
+								
+							<phr:indivoRegistered provider="<%=providerNo%>" demographic="<%=demoID%>">
+								<%
+									String onclickString="alert('Please login to MyOscar first.')";
+	
+									MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+									if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn()) onclickString="popupViewAttach(600,900,'../phr/PhrMessage.do?method=createMessage&providerNo="+request.getAttribute("providerNo")+"&demographicNo="+demoID+"')";
+								%>
+								<a href="javascript: function myFunction() {return false; }" ONCLICK="<%=onclickString%>"	title="myOscar">
+									<bean:message key="demographic.demographiceditdemographic.msgSendMsgPHR"/>
+								</a>
+							</phr:indivoRegistered>	
+							
+								
+								
 							<input type="button" class="ControlPushButton"
 								name="writeEncounter" value="Write to encounter"
 								onclick="popup( '<%=demoID%>','<%=request.getAttribute("viewMessageId")%>','<%=request.getAttribute("providerNo")%>','writeToEncounter')" />
