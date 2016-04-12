@@ -55,14 +55,14 @@ public class SchedulerJob extends TimerTask {
 				if ((tmp/1000) <= ((now/1000)+1)) {
 					logger.info("Starting HRM fetch");
 					// Run now
-					SFTPConnector.startAutoFetch(null);
+					new SFTPConnector().startAutoFetch(null);
 					//I want the last run to be when the job started, not the random point it ended.
 					//so that I can have consistent polling required for conformance.
 					lastRun = startTime;
 				}
 			} else {
 				logger.info("first run");
-				SFTPConnector.startAutoFetch(null);
+				new SFTPConnector().startAutoFetch(null);
 				SchedulerJob.firstRun = false;
 				lastRun = startTime;
 			}
