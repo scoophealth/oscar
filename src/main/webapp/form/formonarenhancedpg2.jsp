@@ -498,8 +498,17 @@ function addUltraSound() {
 		  jQuery("#us_container tbody").append(data);
 	}});
 	
-	Calendar.setup({ inputField : "ar2_uDate"+total, ifFormat : "%Y/%m/%d", showsTime :false, button : "ar2_uDate"+total+"_cal", singleClick : true, step : 1 });	
+	Calendar.setup({ inputField : "ar2_uDate"+total, ifFormat : "%Y/%m/%d", showsTime :false, button : "ar2_uDate"+total+"_cal", singleClick : true, step : 1 });
 }
+
+
+function createCalendarSetupOnLoad(){
+	var numItems = $('.ar2uDate').length;
+	for(var x=1;x<=numItems;x++) {	
+		Calendar.setup({ inputField : "ar2_uDate"+x, ifFormat : "%Y/%m/%d", showsTime :false, button : "ar2_uDate"+x+"_cal", singleClick : true, step : 1 });
+	}
+}
+
 
 function deleteUltraSound(id) {
 	var followUpId = jQuery("input[name='us_"+id+"']").val();
@@ -509,6 +518,7 @@ function deleteUltraSound(id) {
 }
 
 jQuery(document).ready(function() {
+
 	<%
 		String rf = props.getProperty("rf_num", "0");
 		if(rf.length() == 0)
@@ -606,6 +616,9 @@ if(bView) {
 	<%
 }
 %>
+
+createCalendarSetupOnLoad();
+
 });
 
 
