@@ -32,7 +32,7 @@
 	</td>
 
 	<td nowrap><input type="text" name="ar2_uDate<%=n %>"
-		id="ar2_uDate<%=n %>" class="spe" onDblClick="calToday(this)" size="10"
+		id="ar2_uDate<%=n %>" class="spe ar2uDate" onDblClick="calToday(this)" size="10"
 		maxlength="10">
 	<img src="../images/cal.gif" id="ar2_uDate<%=n %>_cal"></td>
 	<td><input type="text" id="ar2_uGA<%=n %>" name="ar2_uGA<%=n %>" class="spe"
