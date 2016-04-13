@@ -44,6 +44,7 @@ if(!authed) {
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Provider" %>
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.util.MiscUtils" %>
 
 <%//
 			ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
@@ -76,8 +77,7 @@ if(!authed) {
 					}
 				}
 			}
-			
-        	
+			        	
             String useProviderMOH = request.getParameter("useProviderMOH");
 			if (provider.compareTo("all") == 0 || groupReport) {
 				// if all, find who is solo, who is in group
@@ -85,21 +85,23 @@ if(!authed) {
 				//this returns ones who don't have a group billing
 				List lProvider = obj.getCurSoloProvider();
 				
+
 				if(!groupReport) {
 					for (int i = 0; i < lProvider.size(); i++) {
 						JdbcBillingCreateBillingFile objFile = new JdbcBillingCreateBillingFile();
 						objFile.setDateRange(dateRange);
 						BillingProviderData dataProvider = (BillingProviderData) lProvider.get(i);
+						MiscUtils.getLogger().info("creating solo disk for ="+lProvider.get(i));
 						diskId = obj.createNewSoloDiskName(dataProvider.getProviderNo(), (String) session.getAttribute("user"));
 						String ohipFilename = obj.getOhipfilename(diskId);
 						String htmlFilename = obj.getHtmlfilename(diskId, dataProvider.getProviderNo());
 	                    boolean existBillCenter = oriBillCenter.hasBillCenter(dataProvider.getProviderNo());
-	                    // create the billing file with provider's own bill center
+              		    // create the billing file with provider's own bill center
 	                    if (existBillCenter && oriBillCenter.getBillCenter(dataProvider.getProviderNo()).compareTo(mohOffice)!=0)
-	                        headerId = obj.createBatchHeader(dataProvider, "" + diskId, oriBillCenter.getBillCenter(dataProvider.getProviderNo()), "1", (String) session.getAttribute("user"));
+              		        headerId = obj.createBatchHeader(dataProvider, "" + diskId, oriBillCenter.getBillCenter(dataProvider.getProviderNo()), "1", (String) session.getAttribute("user"));
 	                    else
 							// create the billing file 
-	                        headerId = obj.createBatchHeader(dataProvider, "" + diskId, mohOffice, "1", (String) session.getAttribute("user"));
+              		        headerId = obj.createBatchHeader(dataProvider, "" + diskId, mohOffice, "1", (String) session.getAttribute("user"));
 						objFile.setProviderNo(dataProvider.getProviderNo());
 						objFile.setOhipFilename(ohipFilename);
 						objFile.setHtmlFilename(htmlFilename);
@@ -133,16 +135,20 @@ if(!authed) {
 	                   Object StrGroupNo = igroup.next();
 	                   List providerNoCopy = new Vector();
 	                   List ohipNoCopy = new Vector();
-	                   for (int copyi=0; copyi<providerNo.size();copyi++){
-	                       if (((BillingProviderData)lProvider2.get(copyi)).getBillingGroupNo().compareTo(StrGroupNo.toString())==0){
+
+						for (int copyi=0; copyi<providerNo.size();copyi++){
+							BillingProviderData bpd = getBillingProviderData(lProvider2,(String)providerNo.get(copyi));
+	                       	if (bpd.getBillingGroupNo().compareTo(StrGroupNo.toString())==0){
 	                           providerNoCopy.add(providerNo.get(copyi));
-	                           ohipNoCopy.add(((BillingProviderData)lProvider2.get(copyi)).getOhipNo());
+	                           ohipNoCopy.add(bpd.getOhipNo());
 	                       }
 	                   }
-	                   
+					   MiscUtils.getLogger().info("creating group disk for ="+StrGroupNo.toString());
 	                   diskId = obj.createNewGrpDiskName(providerNoCopy, ohipNoCopy, StrGroupNo.toString(), (String) session.getAttribute("user"));
-						JdbcBillingCreateBillingFile objFile = null;
-                        value = "";
+
+			  		   JdbcBillingCreateBillingFile objFile = null;
+                       value = "";
+
                         for (int i = 0; i < lProvider2.size(); i++) {
                             if (((BillingProviderData) lProvider2.get(i)).getBillingGroupNo().compareTo(StrGroupNo.toString())!=0)
                                 continue;
@@ -150,7 +156,8 @@ if(!authed) {
                             objFile.setDateRange(dateRange);
 							BillingProviderData dataProvider = (BillingProviderData) lProvider2.get(i);
                             String ohipFilename = obj.getOhipfilename(diskId);
-							String htmlFilename = obj.getHtmlfilename(diskId, dataProvider.getProviderNo());
+   						    String htmlFilename = obj.getHtmlfilename(diskId, dataProvider.getProviderNo());
+
                             boolean existBillCenter = oriBillCenter.hasBillCenter(dataProvider.getProviderNo());
                             // create the billing file with provider's own bill center
                             if (existBillCenter && oriBillCenter.getBillCenter(dataProvider.getProviderNo()).compareTo(mohOffice)!=0)
@@ -208,3 +215,15 @@ if(!authed) {
 <jsp:forward page='billingONMRI.jsp'>
 	<jsp:param name="year" value='' />
 </jsp:forward>
+
+<%!
+	BillingProviderData getBillingProviderData(List providers,String providerNo) {
+		for(Object o: providers) {
+			BillingProviderData bpd = (BillingProviderData)o;
+			if(bpd.getProviderNo().equals(providerNo)) {
+				return bpd;
+			}
+		}
+		return null;
+	}
+%>
