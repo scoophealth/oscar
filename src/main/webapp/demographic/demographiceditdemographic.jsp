@@ -298,7 +298,7 @@ if(!authed) {
    </script>
 <oscar:customInterface section="master"/>
 
-<script type="text/javascript" src="<%=request.getContextPath() %>/demographic/demographiceditdemographic.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/demographic/demographiceditdemographic.js.jsp"></script>
 
 <script language="JavaScript" type="text/javascript">
 
