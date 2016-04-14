@@ -284,6 +284,10 @@ public class ProgramManagerViewAction extends DispatchAction {
         if (formBean.getTab().equals("Access")) {
             request.setAttribute("accesses", programManager.getProgramAccesses(programId));
         }
+        
+        if (formBean.getTab().equals("Encounter Types")) {
+        	request.setAttribute("encounterTypes", programManager.getCustomEncounterTypes(loggedInInfo, Integer.parseInt(programId)));
+        }
 
         if (formBean.getTab().equals("Bed Check")) {
         	

@@ -31,6 +31,9 @@
 <%@page import="org.oscarehr.PMmodule.model.Program"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProgramDao"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.EncounterType"%>
+<%@page import="org.oscarehr.common.dao.EncounterTypeDao"%>
+
 <%@ include file="/casemgmt/taglibs.jsp"%>
 
 <%
@@ -61,7 +64,10 @@
 	{
 		frm = (CaseManagementEntryFormBean)session.getAttribute(caseMgmtEntryFrm);
 		request.setAttribute("caseManagementEntryForm", frm);
-	} 
+	}
+	
+	EncounterTypeDao encounterTypeDao = SpringUtils.getBean(EncounterTypeDao.class);
+	
 %>
 <nested:empty name="caseManagementEntryForm" property="caseNote.id">
 	<nested:notEmpty name="newNoteIdx">
@@ -207,23 +213,11 @@ if(currentFacility.isEnableEncounterTransportationTime() || (currentProgram != n
 	<html:select styleId="<%=encSelect%>" styleClass="encTypeCombo"
 		name="caseManagementEntryForm" property="caseNote.encounter_type">
 		<html:option value=""></html:option>
-		<html:option value="face to face encounter with client"><bean:message key="oscarEncounter.faceToFaceEnc.title"/></html:option>
-		<html:option value="telephone encounter with client"><bean:message key="oscarEncounter.telephoneEnc.title"/></html:option>
-		<html:option value="email encounter with client"><bean:message key="oscarEncounter.emailEnc.title"/></html:option>
-		<html:option value="encounter without client"><bean:message key="oscarEncounter.noClientEnc.title"/></html:option>
-		
 		<%
-			if(loggedInInfo73557.getCurrentFacility().isEnableGroupNotes()) {
+			for(EncounterType encType : encounterTypeDao.findAll()) {
 		%>
-		
-		<html:option value="group face to face encounter"><bean:message key="oscarEncounter.groupFaceEnc.title"/></html:option>
-		<html:option value="group telephone encounter"><bean:message key="oscarEncounter.groupTelephoneEnc.title"/></html:option>
-		<html:option value="group encounter with client"><bean:message key="oscarEncounter.emailEnc.title"/></html:option>
-		<html:option value="group encounter without group"><bean:message key="oscarEncounter.groupNoClientEnc.title"/></html:option>
-		
-		<%
-			}
-		%>
+				<html:option value="<%=encType.getValue() %>"><%=encType.getValue() %></html:option>
+		<% } %>
 	</html:select>
 	</nested:empty> <nested:notEmpty name="ajaxsave">
             &quot;<nested:write name="caseManagementEntryForm"

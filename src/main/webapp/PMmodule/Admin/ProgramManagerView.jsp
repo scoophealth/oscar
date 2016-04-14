@@ -186,7 +186,14 @@
 				<td><a href="javascript:void(0)"
 					onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[i] %>');return false;"><%=ProgramManagerViewFormBean.tabs[i]%></a></td>
 			</security:oscarSec>
-			<%} 
+			<%} else if(ProgramManagerViewFormBean.tabs[i].equalsIgnoreCase("Encounter Types")) {
+				%>
+	<security:oscarSec roleName="<%=roleName$%>"
+		objectName="_pmm_editProgram.encounterTypes" rights="r">
+		<td><a href="javascript:void(0)"
+			onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[i] %>');return false;"><%=ProgramManagerViewFormBean.tabs[i]%></a></td>
+	</security:oscarSec>
+	<%}
 						%>
 			<%
 						}

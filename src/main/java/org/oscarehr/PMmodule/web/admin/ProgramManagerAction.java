@@ -85,6 +85,7 @@ import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.BedCheckTime;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.FunctionalCentre;
+import org.oscarehr.common.model.ProgramEncounterType;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.BedCheckTimeManager;
 import org.oscarehr.managers.ScheduleManager;
@@ -1285,6 +1286,9 @@ public class ProgramManagerAction extends DispatchAction {
 			
 			request.setAttribute("myGroups", scheduleManager.getMyGroupsByProgramNo(Integer.parseInt(programId)));
 			
+			request.setAttribute("encounterTypes", programManager.getCustomEncounterTypes(loggedInInfo, Integer.parseInt(programId)));
+			request.setAttribute("encTypes", programManager.getNonGlobalEncounterTypes(loggedInInfo));
+			
 		}
 
 		request.setAttribute("roles", roleManager.getRoles());
@@ -1701,4 +1705,60 @@ public class ProgramManagerAction extends DispatchAction {
 	protected Boolean getParameterAsBoolean(HttpServletRequest request, String name) {
 		return getParameterAsBoolean(request,name,false);
 	}
+	
+	
+	public ActionForward delete_encounterType(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm programForm = (DynaActionForm) form;
+		Program program = (Program) programForm.get("program");
+		ProgramEncounterType encounterType = (ProgramEncounterType) programForm.get("encounterType");
+
+		
+		programManager.deleteCustomEncounterType(encounterType.getId());
+
+		ActionMessages messages = new ActionMessages();
+		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
+		saveMessages(request, messages);
+
+		LogAction.log("write", "edit program - delete encounter type", String.valueOf(program.getId()), request);
+
+		this.setEditAttributes(request, String.valueOf(program.getId()));
+		programForm.set("encounterType", new ProgramEncounterType());
+
+		return edit(mapping, form, request, response);
+	}
+
+	public ActionForward save_encounterType(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm programForm = (DynaActionForm) form;
+		Program program = (Program) programForm.get("program");
+		ProgramEncounterType programEncounterType = (ProgramEncounterType) programForm.get("encounterType");
+
+		if (this.isCancelled(request)) {
+			return list(mapping, form, request, response);
+		}
+		programEncounterType.getId().setProgramId(program.getId().intValue());
+
+		if (programManager.findCustomEncounterType(programEncounterType.getId()) != null) {
+			ActionMessages messages = new ActionMessages();
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.duplicate_encounterType", program.getName()));
+			saveMessages(request, messages);
+			programForm.set("encounterType", new ProgramEncounterType());
+			setEditAttributes(request, String.valueOf(program.getId()));
+			return mapping.findForward("edit");
+		}
+
+		programManager.saveCustomEncounterType(programEncounterType);
+
+		LogAction.log("write", "encounter_type", String.valueOf(program.getId()), request);
+
+		ActionMessages messages = new ActionMessages();
+		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
+		saveMessages(request, messages);
+		programForm.set("encounterType", new ProgramEncounterType());
+		setEditAttributes(request, String.valueOf(program.getId()));
+
+		
+		return mapping.findForward("edit");
+	}
+
+	
 }
