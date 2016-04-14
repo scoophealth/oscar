@@ -338,7 +338,9 @@
 			<form-property name="searchStatus" type="java.lang.String"></form-property>
 			<form-property name="searchType" type="java.lang.String"></form-property>
 			<form-property name="searchFacilityId" type="java.lang.String"></form-property>	
-			<form-property name="vacancyOrTemplateId" type="java.lang.String"></form-property>				
+			<form-property name="vacancyOrTemplateId" type="java.lang.String"></form-property>			
+			<form-property name="encounterType" type="org.oscarehr.common.model.ProgramEncounterType" />
+				
 		</form-bean>
 		<form-bean name="vacancyClientMatchForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="clientList" type="java.util.List" />

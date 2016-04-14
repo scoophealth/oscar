@@ -68,6 +68,8 @@
 <%@page import="org.oscarehr.managers.PatientConsentManager" %>
 <%@page import="org.oscarehr.common.model.Consent" %>
 <%@page import="org.oscarehr.common.model.ConsentType" %>
+<%@page import="org.oscarehr.common.model.EncounterType" %>
+<%@page import="org.oscarehr.common.dao.EncounterTypeDao" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
@@ -89,7 +91,7 @@
     WaitingListNameDao waitingListNameDao = SpringUtils.getBean(WaitingListNameDao.class);
     String privateConsentEnabledProperty = OscarProperties.getInstance().getProperty("privateConsentEnabled");
     boolean privateConsentEnabled = (privateConsentEnabledProperty != null && privateConsentEnabledProperty.equals("true"));
-
+	EncounterTypeDao encounterTypeDao = SpringUtils.getBean(EncounterTypeDao.class);
 %>
 
 <security:oscarSec roleName="<%=roleName$%>"
@@ -571,17 +573,19 @@ if(wLReadonly.equals("")){
 					<h3 style='text-align: center'><bean:message key="demographic.demographiceditdemographic.msgEncType"/></h3>
 					<br>
 					<ul>
-						<li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return add2url('<bean:message key="oscarEncounter.faceToFaceEnc.title"/>');"><bean:message key="oscarEncounter.faceToFaceEnc.title"/>
-						</a><br>
-						</li>
-						<li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return add2url('<bean:message key="oscarEncounter.telephoneEnc.title"/>');"><bean:message key="oscarEncounter.telephoneEnc.title"/>
-						</a><br>
-						</li>
-						<li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return add2url('<bean:message key="oscarEncounter.noClientEnc.title"/>');"><bean:message key="oscarEncounter.noClientEnc.title"/>
-						</a><br>
-						</li>
+						<% for(EncounterType encounterType: encounterTypeDao.findAll()) { %>
+							<li><a href="#" 
+								onmouseover='this.style.color="black"' 
+								onmouseout='this.style.color="white"' 
+								onclick="return add2url('<%=encounterType.getValue()%>');">
+									<%=encounterType.getValue() %>
+							</a><br>
+							</li>
+						<% } %>
+						
 						<li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return customReason();"><bean:message key="demographic.demographiceditdemographic.msgCustom"/></a></li>
 						<li id="listCustom" style="display: none;"><input id="txtCustom" type="text" size="16" maxlength="32" onkeypress="return grabEnterCustomReason(event);"></li>
+						
 					</ul>
 					</div>
                     </td></tr>

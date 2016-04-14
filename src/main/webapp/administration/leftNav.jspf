@@ -446,7 +446,11 @@ String pageToShow=request.getParameter("load");
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/providertemplate.jsp"><bean:message
 						key="admin.admin.btnInsertTemplate" /></a></li>
+						
+					<li><a  href='javascript:void(0);' class="xlink" rel="${ctx}/admin/encounterType.jsp"><bean:message key="admin.admin.encounterType" /></a></li>
+					
 				</ul>
+				
 				</div>
 				</div>
 	</security:oscarSec>

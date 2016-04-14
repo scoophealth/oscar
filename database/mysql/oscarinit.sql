@@ -12143,3 +12143,17 @@ CREATE TABLE billingperclimit (
   PRIMARY KEY  (id)
 ) ;
 
+CREATE TABLE `EncounterType` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `value` varchar(255),
+  `global` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+
+CREATE TABLE `ProgramEncounterType` (
+  `programId` int(10) NOT NULL,
+  `encounterTypeId` int(10) NOT NULL,
+  PRIMARY KEY (`programId`,`encounterTypeId`)
+);
+
