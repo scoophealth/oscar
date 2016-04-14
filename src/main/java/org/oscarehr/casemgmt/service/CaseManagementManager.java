@@ -1288,7 +1288,7 @@ public class CaseManagementManager {
 				if(CaseManagementNoteLink.DOCUMENT == link.getTableName().intValue()) {
 					Document d = documentDao.find(link.getTableId().intValue());
 					if(d != null) {
-						if(d.isRestrictToProgram() && d.getProgramId().intValue()>0) {
+						if(d.isRestrictToProgram() != null && d.isRestrictToProgram() && d.getProgramId().intValue()>0) {
 							addIt=false;
 							for(ProgramProvider pp:ppList) {
 								if(pp.getProgramId().intValue() == d.getProgramId().intValue()) {
