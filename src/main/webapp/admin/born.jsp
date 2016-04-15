@@ -159,7 +159,7 @@ $(document).ready(function(){
 <table id="mappingTable" name="mappingTable" class="table table-bordered table-striped table-hover table-condensed">
 	<thead>
 		<tr>
-			<th>BORN Pathway</th>
+			<th>Early Child Development and Parenting Resource System - Ontario</th>
 			<th>OSCAR Consultation Service</th>
 		</tr>
 	</thead>

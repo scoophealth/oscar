@@ -41,6 +41,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.BORNPathwayMappingDao;
 import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.ConsultationServiceDao;
 //import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -50,6 +51,7 @@ import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
+import org.oscarehr.common.model.BORNPathwayMapping;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ConsultationServices;
 import org.oscarehr.common.model.Demographic;
@@ -198,6 +200,8 @@ public class BORNWbCsdXmlGenerator {
 	}
 	
 	private void populateReferralData(PatientInfo patientInfo, Integer demographicNo) {
+		List<Integer> requestIds = new ArrayList<Integer>();
+		
 		List<String> services = Arrays.asList("Autism Intervention Services","Blind Low Vision Program","Child Care","Child Protection Services",
 				"Children's Mental Health Services","Children's Treatment Centre","Community Care Access Centre","Community Parks and Recreation Programs",
 				"Dental Services","Family Resource Programs","Healthy Babies Healthy Children","Infant Development Program","Infant Hearing Program",
@@ -206,49 +210,70 @@ public class BORNWbCsdXmlGenerator {
 				"Specialized Child Care Programming","Specialized Medical Services");
 		
 		List<ConsultationRequest> consultRequests = consultationRequestDao.findByDemographicAndServices(demographicNo, services);
-		
-		if (consultRequests.isEmpty()) {
-			return;
-		}
-		
 		for(ConsultationRequest consult:consultRequests) {
-			
-			Referral referral = patientInfo.addNewReferral();
-			
-			Demographic demographic = demographicDao.getDemographic(demographicNo.toString());
-			Provider mrp = providerDao.getProvider(demographic.getProviderNo());
-			ConsultationServices service = consultationServiceDao.find(consult.getServiceId());
-			ProfessionalSpecialist professionalSpecialist = consult.getProfessionalSpecialist();
-			Provider provider = providerDao.getProvider(consult.getProviderNo());
-			
-			if(mrp != null) {
-				referral.setPrimaryPhysician(demographic.getProviderNo());
-				referral.setPrimaryPhysicianType(PrimaryPhysicianType.X_3);
+			if(!requestIds.contains(consult.getId())) { //only add if it hasn't been added before
+				requestIds.add(consult.getId());
+				addReferral(patientInfo, demographicNo, consult, null);
 			}
-			
-			
-			setReferralCategory(referral.addNewReferralCategory(),service.getServiceDesc());
-		
-			if(referral.getReferralCategory().getReferralCategoryName().equals(ReferralCategory.UNKN)) {
-				referral.setReferralCategoryOther(service.getServiceDesc());
-			}
-			
-			referral.setReferralDate(new XmlCalendar(dateFormatter.format(consult.getReferralDate())));
-
-			referral.setReferralStatus(getStatusText(consult.getStatus()));
-			referral.setReferralUrgency(consult.getUrgency());
-			
-			referral.setReferredToPerson(professionalSpecialist.getLastName() + ", " + professionalSpecialist.getFirstName());
-			
-			referral.setReferringProvider(provider.getProviderNo());
-			referral.setReferringProviderType(ReferringProviderType.X_3);
-			
-			referral.setAssociatedRourke(getAssociatedRourke(consult.getSource()));
-			/*
-			referral.setReferredToSite(arg0);
-			*/
-			
 		}
+		
+		//get the ones that reverse map to a BORN pathway as well
+		BORNPathwayMappingDao bornPathwayMappingDao = SpringUtils.getBean(BORNPathwayMappingDao.class);
+	
+		for(BORNPathwayMapping mapping:bornPathwayMappingDao.findAll()) {
+			ConsultationServices service = consultationServiceDao.find(mapping.getServiceId());
+			if(service != null) {
+				consultRequests = consultationRequestDao.findByDemographicAndService(demographicNo, service.getServiceDesc());
+				for(ConsultationRequest consult:consultRequests) {
+					if(!requestIds.contains(consult.getId())) { //only add if it hasn't been added before
+						requestIds.add(consult.getId());
+						addReferral(patientInfo, demographicNo, consult, mapping.getBornPathway());
+					}
+				}
+			}
+		}
+		
+	}
+	
+	private void addReferral(PatientInfo patientInfo, Integer demographicNo, ConsultationRequest consult, String mappedCategory ) {
+		Referral referral = patientInfo.addNewReferral();
+		
+		Demographic demographic = demographicDao.getDemographic(demographicNo.toString());
+		Provider mrp = providerDao.getProvider(demographic.getProviderNo());
+		ConsultationServices service = consultationServiceDao.find(consult.getServiceId());
+		ProfessionalSpecialist professionalSpecialist = consult.getProfessionalSpecialist();
+		Provider provider = providerDao.getProvider(consult.getProviderNo());
+		
+		if(mrp != null) {
+			referral.setPrimaryPhysician(demographic.getProviderNo());
+			referral.setPrimaryPhysicianType(PrimaryPhysicianType.X_3);
+		}
+		
+		
+		setReferralCategory(referral.addNewReferralCategory(),(mappedCategory==null)?service.getServiceDesc():mappedCategory);
+	
+		if(referral.getReferralCategory().getReferralCategoryName().equals(ReferralCategory.UNKN)) {
+			referral.setReferralCategoryOther(service.getServiceDesc());
+		}
+		
+		referral.setReferralDate(new XmlCalendar(dateFormatter.format(consult.getReferralDate())));
+
+		referral.setReferralStatus(getStatusText(consult.getStatus()));
+		referral.setReferralUrgency(consult.getUrgency());
+		
+		if(professionalSpecialist != null) {
+			referral.setReferredToPerson(professionalSpecialist.getLastName() + ", " + professionalSpecialist.getFirstName());
+		}
+		
+		referral.setReferringProvider(provider.getProviderNo());
+		referral.setReferringProviderType(ReferringProviderType.X_3);
+		
+		if(consult.getSource() != null) {
+			referral.setAssociatedRourke(getAssociatedRourke(consult.getSource()));
+		}
+		/*
+		referral.setReferredToSite(arg0);
+		*/
 	}
 	
 	private AssociatedRourke.Enum getAssociatedRourke(String source) {
