@@ -35,12 +35,14 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
-
-import oscar.OscarProperties;
-import oscar.oscarClinic.ClinicData;
+import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
@@ -56,6 +58,9 @@ import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
+
+import oscar.OscarProperties;
+import oscar.oscarClinic.ClinicData;
 
 /**
  *
@@ -138,7 +143,12 @@ public class CaseManagementPrintPdf {
         String dob = propResource.getString("oscarEncounter.pdfPrint.dob") + " " + (String)request.getAttribute("demoDOB") + "\n";
         String age = propResource.getString("oscarEncounter.pdfPrint.age") + " " + (String)request.getAttribute("demoAge") + "\n";
         String mrp = propResource.getString("oscarEncounter.pdfPrint.mrp") + " " + (String)request.getAttribute("mrp") + "\n";
-        String[] info = new String[] { title, gender, dob, age, mrp };
+        String[] info = null;
+        if("true".equals(OscarProperties.getInstance().getProperty("print.includeMRP", "true"))) {
+        	info = new String[] { title, gender, dob, age, mrp };
+        } else {
+        	info = new String[] { title, gender, dob, age};
+        }
 
         ClinicData clinicData = new ClinicData();
         clinicData.refreshClinicData();
@@ -146,6 +156,19 @@ public class CaseManagementPrintPdf {
         clinicData.getClinicCity() + ", " + clinicData.getClinicProvince(),
         clinicData.getClinicPostal(), clinicData.getClinicPhone()};
 
+        if("true".equals(OscarProperties.getInstance().getProperty("print.useCurrentProgramInfoInHeader", "false"))) {
+        	ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+        	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+        	ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+    		if(pp != null) {
+    			Program program = pp.getProgram();
+    			clinic = new String[] {
+    			program.getDescription(),
+    			program.getAddress(),
+    			program.getPhone()
+    			};
+    		}
+        }
         //Header will be printed at top of every page beginning with p2
         Phrase headerPhrase = new Phrase(LEADING, title, font);
         HeaderFooter header = new HeaderFooter(headerPhrase,false);
