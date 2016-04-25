@@ -378,7 +378,7 @@ public class BillingCreateBillingAction extends Action {
     for (Iterator<BillingItem> iter = billItem.iterator(); iter.hasNext(); ) {
       BillingItem item =  iter.next();
       String[] cnlsCodes = OscarProperties.getInstance().getProperty(
-          "COUNSELING_CODES").split(",");
+          "COUNSELING_CODES","").split(",");
       Vector vCodes = new Vector(Arrays.asList(cnlsCodes));
       if (vCodes.contains(item.getServiceCode())) {
         if (!vldt.hasMore00120Codes(demo.getDemographicNo().toString(),
