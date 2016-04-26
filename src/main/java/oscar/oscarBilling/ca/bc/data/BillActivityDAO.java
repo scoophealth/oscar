@@ -135,7 +135,7 @@ public class BillActivityDAO {
        String startDate = year+"-01-01";
        String endDate = year+"-12-31 23:59:59"; 
        
-       List<BillActivity> bs = dao.findCurrentByDateRange(ConversionUtils.fromTimestampString(startDate), ConversionUtils.fromTimestampString(endDate));
+       List<BillActivity> bs = dao.findCurrentByDateRange(ConversionUtils.fromDateString(startDate), ConversionUtils.fromTimestampString(endDate));
        List<Billactivity> results = new ArrayList<Billactivity>();
        for(BillActivity b:bs) {
     	   Billactivity r = new Billactivity();
