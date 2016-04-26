@@ -108,8 +108,8 @@ if(!authed) {
            				bm.setBillingCode(feeItem);
            				bm.setServiceLocation(sLocation);
            				bm.setBirthDate(dob);
-           				bm.setPayee_no(w_payeeno);
-           				bm.setPractitioner_no(w_pracno);
+           				bm.setPayeeNo(w_payeeno);
+           				bm.setPractitionerNo(w_pracno);
            				
            				billingmasterDao.update(bm);
            				inResult++;

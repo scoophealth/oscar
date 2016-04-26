@@ -18,6 +18,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -76,7 +77,10 @@ public class BillingDao extends AbstractDao<Billing> {
 	}
 
 	public List<Billing> findSet(List<String> list) { 
-		Query query = entityManager.createQuery("SELECT b FROM  Billing b  where b.billingmasterNo in (:billingNumbers)");
+		if(list.size() == 0) {
+			return new ArrayList<Billing>();
+		}
+		Query query = entityManager.createQuery("SELECT b FROM  Billing b  where b.id in (:billingNumbers)");
 		query.setParameter("billingNumbers", ConversionUtils.toIntList(list));
 		
 		

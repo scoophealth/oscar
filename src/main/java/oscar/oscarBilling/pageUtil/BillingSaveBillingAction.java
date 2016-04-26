@@ -126,8 +126,8 @@ public class BillingSaveBillingAction extends Action {
         	bm.setAppointmentNo(Integer.parseInt(bean.getApptNo()));
         	bm.setClaimcode("C02");
         	bm.setDatacenter(dataCenterId);
-        	bm.setPayee_no(bean.getBillingGroupNo());
-        	bm.setPractitioner_no(bean.getBillingPracNo());
+        	bm.setPayeeNo(bean.getBillingGroupNo());
+        	bm.setPractitionerNo(bean.getBillingPracNo());
         	bm.setPhn(bean.getPatientPHN());
         	bm.setNameVerify(bean.getPatientFirstName().substring(0, 1) + " " + bean.getPatientLastName().substring(0, 2));
         	bm.setDependentNum("00");
@@ -177,8 +177,8 @@ public class BillingSaveBillingAction extends Action {
         	bm.setAppointmentNo(Integer.parseInt(bean.getApptNo()));
         	bm.setClaimcode("C02");
         	bm.setDatacenter(dataCenterId);
-        	bm.setPayee_no(bean.getBillingGroupNo());
-        	bm.setPractitioner_no(bean.getBillingPracNo());
+        	bm.setPayeeNo(bean.getBillingGroupNo());
+        	bm.setPractitionerNo(bean.getBillingPracNo());
         	bm.setPhn("0000000000");
         	bm.setNameVerify("0000");
         	bm.setDependentNum("00");
