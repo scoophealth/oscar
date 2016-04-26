@@ -122,7 +122,7 @@ if(!authed) {
 
   String codes[] = {"W","O","P","N","X","T","D"};
   request.setAttribute("codes",codes);
-  String serviceLocation = allFields.getProperty("service_location");
+  String serviceLocation = allFields.getProperty("serviceLocation");
 
 
   BillingmasterDAO billingmasterDAO = (BillingmasterDAO) SpringUtils.getBean("BillingmasterDAO");
@@ -460,7 +460,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
   <br><html:form  action="/billing/CA/BC/reprocessBill" onsubmit="return checkSubmitType()">
 <input type="hidden" name="update_date" value="<%=UpdateDate%>"/>
 <input type="hidden" name="demoNo" value="<%=DemoNo%>"/>
-<input type="hidden" name="billNumber" value="<%=allFields.getProperty("billing_no")%>"/>
+<input type="hidden" name="billNumber" value="<%=allFields.getProperty("billingNo")%>"/>
 <table width="100%" border="0">
   <tr bgcolor="#CCCCFF">
      <td height="21" colspan="2" class="bCellData">Patient Information<input type="hidden" name ="billingmasterNo" value="<%=billNo%>" />
@@ -483,7 +483,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
       <% if (HCTYPE != null && HCTYPE.equals("BC")){ %>
       <%=allFields.getProperty("phn")%>
       <%}else{%>
-      <%=allFields.getProperty("oin_registration_no")%>
+      <%=allFields.getProperty("oinRegistrationNo")%>
       <%}%>
       Type
       <%=HCTYPE%>
@@ -526,7 +526,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 <table width="100%" border="0">
   <tr bgcolor="#CCCCFF">
     <td colspan="2"  class="bCellData">
-       Billing Information  Data Center <%=allFields.getProperty("datacenter")%> Payee Number: <%=allFields.getProperty("payee_no")%> Practitioner Number: <%=allFields.getProperty("practitioner_no")%>
+       Billing Information  Data Center <%=allFields.getProperty("datacenter")%> Payee Number: <%=allFields.getProperty("payeeNo")%> Practitioner Number: <%=allFields.getProperty("practitionerNo")%>
        Bill Type: <%=bill.getBillingtype()%>
      </td>
   </tr>
@@ -553,10 +553,10 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
             </tr>
             <tr>
                 <td>
-                <input type="text" style="font-size:80%;" id="serviceDate" name="serviceDate" value="<%=allFields.getProperty("service_date")%>"><!--<%=allFields.getProperty("service_date")%>"/><%=BillDate%>-->
+                <input type="text" style="font-size:80%;" id="serviceDate" name="serviceDate" value="<%=allFields.getProperty("serviceDate")%>"><!--<%=allFields.getProperty("serviceDate")%>"/><%=BillDate%>-->
                 </td>
                 <td>
-                <input type="text" name="serviceToDay" value="<%=allFields.getProperty("service_to_day")%>" size="2" maxlength="2"/>
+                <input type="text" name="serviceToDay" value="<%=allFields.getProperty("serviceToDay")%>" size="2" maxlength="2"/>
                 </td>
             </tr>
         </table>
@@ -565,7 +565,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
   <tr bgcolor="#EEEEFF">
     <td width="54%"  class="bCellData">
         Clarification Code:
-          <input type="text" name="locationVisit" value="<%=allFields.getProperty("clarification_code")%>" maxlength="2" size="2"/>
+          <input type="text" name="locationVisit" value="<%=allFields.getProperty("clarificationCode")%>" maxlength="2" size="2"/>
     </td>
     <td width="46%"  class="bCellData">
         Billing Physician#:
@@ -588,7 +588,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
     </td>
   </tr>
   <tr>
-   <%visittype = allFields.getProperty("service_location");%>
+   <%visittype = allFields.getProperty("serviceLocation");%>
     <td width="54%"  class="bCellData">
         Visit Type:
         <input type="hidden" name="xml_visittype" value="<%=visittype%>">
@@ -617,62 +617,62 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
   <tr>
     <td class="bCellData">Dependent Number:
         <select name="dependentNo" >
-            <option value="00" <%=allFields.getProperty("dependent_num").equals("00")?"selected":""%>>00</option>
-            <option value="66" <%=allFields.getProperty("dependent_num").equals("66")?"selected":""%>>66</option>
+            <option value="00" <%=allFields.getProperty("dependentNum").equals("00")?"selected":""%>>00</option>
+            <option value="66" <%=allFields.getProperty("dependentNum").equals("66")?"selected":""%>>66</option>
         </select>
     </td>
     <td class="bCellData">New Program Ind:
-        <input type="text" name="newProgram" value="<%=allFields.getProperty("new_program")%>" size="2" maxlength="2" />
+        <input type="text" name="newProgram" value="<%=allFields.getProperty("newProgram")%>" size="2" maxlength="2" />
     </td>
   </tr>
   <tr>
    <td class="bCellData">After Hours:
         <select name="afterHours" >
-            <option value="0" <%=allFields.getProperty("after_hour").equals("0")?"selected":""%>>NO</option>
-            <option value="E" <%=allFields.getProperty("after_hour").equals("E")?"selected":""%>>Evening Call</option>
-            <option value="N" <%=allFields.getProperty("after_hour").equals("N")?"selected":""%>>Night Call</option>
-            <option value="W" <%=allFields.getProperty("after_hour").equals("W")?"selected":""%>>Weekend Call</option>
+            <option value="0" <%=allFields.getProperty("afterHour").equals("0")?"selected":""%>>NO</option>
+            <option value="E" <%=allFields.getProperty("afterHour").equals("E")?"selected":""%>>Evening Call</option>
+            <option value="N" <%=allFields.getProperty("afterHour").equals("N")?"selected":""%>>Night Call</option>
+            <option value="W" <%=allFields.getProperty("afterHour").equals("W")?"selected":""%>>Weekend Call</option>
         </select>
     </td>
     <td class="bCellData">Time Call Recieved<!--TIME-CALL-RECVD-SRV-->
-       <input type="text" name="timeCallRec" value="<%=allFields.getProperty("time_call")%>" size="4" maxlength="4"/>
-       <input type="hidden" name="anatomicalArea" value="<%=allFields.getProperty("anatomical_area")%>" />
+       <input type="text" name="timeCallRec" value="<%=allFields.getProperty("timeCall")%>" size="4" maxlength="4"/>
+       <input type="hidden" name="anatomicalArea" value="<%=allFields.getProperty("anatomicalArea")%>" />
     </td>
   </tr>
 
        <tr>
 
             <td class="bCellData">Service Time Start<%! /*SERVICE-TIME-START*/ %>
-            <input type="text" name="startTime" value="<%=allFields.getProperty("service_start_time")%>" size="4" maxlength="4"/></td>
+            <input type="text" name="startTime" value="<%=allFields.getProperty("serviceStartTime")%>" size="4" maxlength="4"/></td>
 
             <td class="bCellData">Service Time Finish <%! /*SERVICE-TIME-FINISH*/ %>
-            <input type="text" name="finishTime" value="<%=allFields.getProperty("service_end_time")%>" size="4" maxlength="4"/></td>
+            <input type="text" name="finishTime" value="<%=allFields.getProperty("serviceEndTime")%>" size="4" maxlength="4"/></td>
 
        </tr>
        <tr>
            <td class="bCellData">MVA
                 <select name="mvaClaim" >
-                    <option value="N" <%=allFields.getProperty("mva_claim_code").equals("N")?"selected":""%>>No</option>
-                    <option value="Y" <%=allFields.getProperty("mva_claim_code").equals("Y")?"selected":""%>>Yes</option>
+                    <option value="N" <%=allFields.getProperty("mvaClaimCode").equals("N")?"selected":""%>>No</option>
+                    <option value="Y" <%=allFields.getProperty("mvaClaimCode").equals("Y")?"selected":""%>>Yes</option>
                 </select>
-              <!--<input type="text" name="mvaClaim" value="<%=allFields.getProperty("mva_claim_code")%>" size="1"/>-->
+              <!--<input type="text" name="mvaClaim" value="<%=allFields.getProperty("mvaClaimCode")%>" size="1"/>-->
             </td>
             <td class="bCellData">ICBC Claim Num:
-            <input type="text" name="icbcClaim" value="<%=allFields.getProperty("icbc_claim_no")%>"size="8" maxlength="8"/></td>
+            <input type="text" name="icbcClaim" value="<%=allFields.getProperty("icbcClaimNo")%>"size="8" maxlength="8"/></td>
        </tr>
        <tr>
 
 
 
             <td class="bCellData">Facility Number
-            <input type="text" name="facilityNum" value="<%=allFields.getProperty("facility_no")%>" size="5" maxlength="5"/></td>
+            <input type="text" name="facilityNum" value="<%=allFields.getProperty("facilityNo")%>" size="5" maxlength="5"/></td>
 
             <td class="bCellData">Facility Sub Number
-            <input type="text" name="facilitySubNum" value="<%=allFields.getProperty("facility_sub_no")%>" size="5" maxlength="5"/></td>
+            <input type="text" name="facilitySubNum" value="<%=allFields.getProperty("facilitySubNo")%>" size="5" maxlength="5"/></td>
        </tr>
 </table>
 <%
-BillingService billService = bcd.getBillingCodeByCode(allFields.getProperty("billing_code"),billingmaster.getServiceDateAsDate());
+BillingService billService = bcd.getBillingCodeByCode(allFields.getProperty("billingCode"),billingmaster.getServiceDateAsDate());
 String billValue= "0.00";
 if(billService != null){
     billValue = billService.getValue();
@@ -692,22 +692,22 @@ if(billService != null){
     <tr>
       <td  class="bCellData">
 
-        <input type="text" style="font-size:80%;" name="service_code" value="<%=allFields.getProperty("billing_code")%>" size="10" >
+        <input type="text" style="font-size:80%;" name="service_code" value="<%=allFields.getProperty("billingCode")%>" size="10" >
         <input type="button" onClick="javascript:popFeeItemList('ReProcessBilling','service_code');return false;" value="Search/Update"/>
       </td>
       <td width="50%"  class="bCellData">
-        <%=billform.getServiceDesc(allFields.getProperty("billing_code"),billRegion)%>   ($<span id="valueDisplay"><%=billValue%></span>)
+        <%=billform.getServiceDesc(allFields.getProperty("billingCode"),billRegion)%>   ($<span id="valueDisplay"><%=billValue%></span>)
         <input type="hidden" value="<%=billValue%>" id="billValue"/>
         <input type="button" value="Recalculate" onclick="calculateFee()"/>
       </td>
       <td  class="bCellData">
-        <input type="hidden" name="billing_unit" value="<%=allFields.getProperty("billing_unit")%>">
-        <input type="text" style="font-size:80%;" name="billingUnit" value="<%=allFields.getProperty("billing_unit")%>" size="6" maxlength="6" id="billingUnit">
+        <input type="hidden" name="billing_unit" value="<%=allFields.getProperty("billingUnit")%>">
+        <input type="text" style="font-size:80%;" name="billingUnit" value="<%=allFields.getProperty("billingUnit")%>" size="6" maxlength="6" id="billingUnit">
       </td>
       <td   class="bCellData" nowrap>
         <div align="right">
-           <input type="hidden" name="billing_amount" value="<%=allFields.getProperty("bill_amount")%>">
-           <input type="text" style="font-size:80%;" size="8" maxlength="8" name="billingAmount" value="<%=allFields.getProperty("bill_amount")%>" onChange="javascript:validateNum(this)" id="billingAmount">
+           <input type="hidden" name="billing_amount" value="<%=allFields.getProperty("bilAmount")%>">
+           <input type="text" style="font-size:80%;" size="8" maxlength="8" name="billingAmount" value="<%=allFields.getProperty("billAmount")%>" onChange="javascript:validateNum(this)" id="billingAmount">
         </div>
       </td>
 	  <td>
@@ -738,21 +738,21 @@ if(billService != null){
                 </tr>
                 <tr>
                   <td class="bCellData">
-                    <a href="javascript:ScriptAttach('dx1')">DX 1</a><input type="text" name="dx1" onClick="checkSubmitType()" value="<%=allFields.getProperty("dx_code1")%>" size="10">
+                    <a href="javascript:ScriptAttach('dx1')">DX 1</a><input type="text" name="dx1" onClick="checkSubmitType()" value="<%=allFields.getProperty("dxCode1")%>" size="10">
                   </td>
-                  <td><%=billform.getDiagDesc(allFields.getProperty("dx_code1"),billRegion)%></td>
+                  <td><%=billform.getDiagDesc(allFields.getProperty("dxCode1"),billRegion)%></td>
                 </tr>
                 <tr>
                   <td   class="bCellData">
-                    <a href="javascript:ScriptAttach('dx2')">DX 2</a><input type="text" name="dx2" onClick="checkSubmitType()" value="<%=allFields.getProperty("dx_code2")%>" size="10">
+                    <a href="javascript:ScriptAttach('dx2')">DX 2</a><input type="text" name="dx2" onClick="checkSubmitType()" value="<%=allFields.getProperty("dxCode2")%>" size="10">
                   </td>
-                  <td><%=billform.getDiagDesc(allFields.getProperty("dx_code2"),billRegion)%></td>
+                  <td><%=billform.getDiagDesc(allFields.getProperty("dxCode2"),billRegion)%></td>
                 </tr>
                 <tr>
                   <td class="bCellData">
-                    <a href="javascript:ScriptAttach('dx3')">DX 3</a><input type="text" name="dx3" onClick="checkSubmitType()" value="<%=allFields.getProperty("dx_code3")%>" size="10">
+                    <a href="javascript:ScriptAttach('dx3')">DX 3</a><input type="text" name="dx3" onClick="checkSubmitType()" value="<%=allFields.getProperty("dxCode3")%>" size="10">
                   </td>
-                  <td><%=billform.getDiagDesc(allFields.getProperty("dx_code3"),billRegion)%></td>
+                  <td><%=billform.getDiagDesc(allFields.getProperty("dxCode3"),billRegion)%></td>
                 </tr>
               </table>
        </td>
@@ -761,8 +761,8 @@ if(billService != null){
                 <tr bgcolor="#CCCCFF">
                   <td colspan=2 class="bCellData">
                     Referrals
-                  <% String  refCD1 = allFields.getProperty("referral_flag1");
-                     String  refCD2 = allFields.getProperty("referral_flag2");
+                  <% String  refCD1 = allFields.getProperty("referralFlag1");
+                     String  refCD2 = allFields.getProperty("referralFlag2");
                      if (refCD1 == null || refCD1.equals("null")){ refCD1 = "0"; }
                      if (refCD2 == null || refCD2.equals("null")){ refCD2 = "0"; }
                   %>
@@ -780,7 +780,7 @@ if(billService != null){
                     </td>
                     <td class="bCellData">
                         <input type="button" onClick="javascript:ReferralScriptAttach('referalPrac1')" value="Search"/>
-                        <input type="text" name="referalPrac1" value="<%=allFields.getProperty("referral_no1")%>" size="5" maxlength="5"/>
+                        <input type="text" name="referalPrac1" value="<%=allFields.getProperty("referralNo1")%>" size="5" maxlength="5"/>
                     </td>
                 </tr>
                 <tr>
@@ -793,7 +793,7 @@ if(billService != null){
                     </td>
                     <td class="bCellData">
                         <input type="button" onClick="javascript:ReferralScriptAttach('referalPrac2')" value="Search"/>
-                        <input type="text" name="referalPrac2" value="<%=allFields.getProperty("referral_no2")%>" size="5" maxlength="5"/>
+                        <input type="text" name="referalPrac2" value="<%=allFields.getProperty("referralNo2")%>" size="5" maxlength="5"/>
                     </td>
                 </tr>
               </table>
@@ -803,45 +803,45 @@ if(billService != null){
             <td class="bCellData">Payment Mode</td><!--PAYMENT MODE-->
             <td class="bCellData">
                 <select name="paymentMode" >
-                    <option value="0" <%=allFields.getProperty("payment_mode").equals("0")?"selected":""%>>Fee For Service</option>
-                    <option value="E" <%=allFields.getProperty("payment_mode").equals("E")?"selected":""%>>Alternate Funding</option>
+                    <option value="0" <%=allFields.getProperty("paymentMode").equals("0")?"selected":""%>>Fee For Service</option>
+                    <option value="E" <%=allFields.getProperty("paymentMode").equals("E")?"selected":""%>>Alternate Funding</option>
                 </select>
             </td>
             <td class="bCellData">Submission Code</td><!--SUBMISSION-CODE-->
             <td class="bCellData">
                 <select name="submissionCode" onChange="checkDebitRequest();" >
-                    <option value="0" <%=allFields.getProperty("submission_code").equals("0")?"selected":""%>>0|Normal Submission</option>
-                    <option value="D" <%=allFields.getProperty("submission_code").equals("D")?"selected":""%>>D|Duplicate</option>
-                    <option value="E" <%=allFields.getProperty("submission_code").equals("E")?"selected":""%>>E|Debit Request</option>
-                    <option value="I" <%=allFields.getProperty("submission_code").equals("I")?"selected":""%>>I|ICBC Claim</option>
-                    <option value="W" <%=allFields.getProperty("submission_code").equals("W")?"selected":""%>>W|Claim not accepted by WCB</option>
-                    <option value="C" <%=allFields.getProperty("submission_code").equals("C")?"selected":""%>>C|Subscriber Coverage Problem</option>
-                    <option value="R" <%=allFields.getProperty("submission_code").equals("R")?"selected":""%>>R|Resubmit Claim</option>
-                    <option value="A" <%=allFields.getProperty("submission_code").equals("A")?"selected":""%>>A|Pre-approved claim</option>
-                    <option value="X" <%=allFields.getProperty("submission_code").equals("X")?"selected":""%>>X|Resubmitting refused or part paid</option>
+                    <option value="0" <%=allFields.getProperty("submissionCode").equals("0")?"selected":""%>>0|Normal Submission</option>
+                    <option value="D" <%=allFields.getProperty("submissionCode").equals("D")?"selected":""%>>D|Duplicate</option>
+                    <option value="E" <%=allFields.getProperty("submissionCode").equals("E")?"selected":""%>>E|Debit Request</option>
+                    <option value="I" <%=allFields.getProperty("submissionCode").equals("I")?"selected":""%>>I|ICBC Claim</option>
+                    <option value="W" <%=allFields.getProperty("submissionCode").equals("W")?"selected":""%>>W|Claim not accepted by WCB</option>
+                    <option value="C" <%=allFields.getProperty("submissionCode").equals("C")?"selected":""%>>C|Subscriber Coverage Problem</option>
+                    <option value="R" <%=allFields.getProperty("submissionCode").equals("R")?"selected":""%>>R|Resubmit Claim</option>
+                    <option value="A" <%=allFields.getProperty("submissionCode").equals("A")?"selected":""%>>A|Pre-approved claim</option>
+                    <option value="X" <%=allFields.getProperty("submissionCode").equals("X")?"selected":""%>>X|Resubmitting refused or part paid</option>
                 </select>
             </td>
        </tr>
        <!--<tr>
             <td>Service Date</td><%/*SERVICE-DATE*/%>
-            <td><input type="text" name="serviceDate" value="<%=allFields.getProperty("service_date")%>"/></td>
+            <td><input type="text" name="serviceDate" value="<%=allFields.getProperty("serviceDate")%>"/></td>
             <td>Service to Day</td><%/*SERVICE-TO-DAY*/%>
-            <td<input type="text" name="serviceToDay" value="<%=allFields.getProperty("service_to_day")%>"/></td>
+            <td<input type="text" name="serviceToDay" value="<%=allFields.getProperty("serviceToDay")%>"/></td>
        </tr>-->
        <!--
        <tr>
             <td>Time Call Recieved</td><%!/*TIME-CALL-RECVD-SRV*/%>
-            <td><input type="text" name="timeCallRec" value="<%=allFields.getProperty("time_call")%>" size="4"/></td>
+            <td><input type="text" name="timeCallRec" value="<%=allFields.getProperty("timeCall")%>" size="4"/></td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
        </tr>
        <tr>
 
             <td>Service Time Start</td><%! /*SERVICE-TIME-START*/ %>
-            <td><input type="text" name="startTime" value="<%=allFields.getProperty("service_start_time")%>" size="4"/></td>
+            <td><input type="text" name="startTime" value="<%=allFields.getProperty("serviceStartTime")%>" size="4"/></td>
 
             <td>Service Time Finish</td><%! /*SERVICE-TIME-FINISH*/ %>
-            <td><input type="text" name="finishTime" value="<%=allFields.getProperty("service_end_time")%>" size="4"</td>
+            <td><input type="text" name="finishTime" value="<%=allFields.getProperty("serviceEndTime")%>" size="4"</td>
 
        </tr>
        -->
@@ -849,8 +849,8 @@ if(billService != null){
        <tr>
             <td class="bCellData" colspan="4">
             <div id="DEBITREQUEST">
-                Select sequence number you would like to debit <input name="debitRequestSeqNum" type="text" maxlength="7" size="7" value="<%=getDebitRequestSeqNum(allFields.getProperty("original_claim"))%>"/>
-                </br>Select date MSP received claim (if not known, fill with zeros) (YYYYMMDD): <input id="debitRequestDate" name="debitRequestDate" type="text" maxlength="8" size="8" value="<%=getDebitRequestDate(allFields.getProperty("original_claim"))%>"/>
+                Select sequence number you would like to debit <input name="debitRequestSeqNum" type="text" maxlength="7" size="7" value="<%=getDebitRequestSeqNum(allFields.getProperty("originalClaim"))%>"/>
+                </br>Select date MSP received claim (if not known, fill with zeros) (YYYYMMDD): <input id="debitRequestDate" name="debitRequestDate" type="text" maxlength="8" size="8" value="<%=getDebitRequestDate(allFields.getProperty("originalClaim"))%>"/>
                 <a id="hlADate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>
                 <!--Date Received MSP <input type="text" />-->
             </div>
@@ -863,26 +863,26 @@ if(billService != null){
             <td class="bCellData">Correspondence Code</td><!--CORRESPONDENCE-CODE-->
             <td class="bCellData">
                 <select name="correspondenceCode" onChange="correspondenceNote();" >
-                    <option value="0" <%=allFields.getProperty("correspondence_code").equals("0")?"selected":""%>>None</option>
-                    <option value="C" <%=allFields.getProperty("correspondence_code").equals("C")?"selected":""%>>Paper Note</option>
-                    <option value="N" <%=allFields.getProperty("correspondence_code").equals("N")?"selected":""%>>Elec Note</option>
-                    <option value="B" <%=allFields.getProperty("correspondence_code").equals("B")?"selected":""%>>Both</option>
+                    <option value="0" <%=allFields.getProperty("correspondenceCode").equals("0")?"selected":""%>>None</option>
+                    <option value="C" <%=allFields.getProperty("correspondenceCode").equals("C")?"selected":""%>>Paper Note</option>
+                    <option value="N" <%=allFields.getProperty("correspondenceCode").equals("N")?"selected":""%>>Elec Note</option>
+                    <option value="B" <%=allFields.getProperty("correspondenceCode").equals("B")?"selected":""%>>Both</option>
                 </select>
-                <!--<input type="text" name="correspondenceCode" value="<%=allFields.getProperty("correspondence_code")%>" size="1"/>-->
+                <!--<input type="text" name="correspondenceCode" value="<%=allFields.getProperty("correspondenceCode")%>" size="1"/>-->
             </td>
             <td class="bCellData">Insurer Code</td><!--OIN-INSURER-C0DE-->
             <td class="bCellData">
                 <select name="insurerCode" >
-                    <option value="" <%=allFields.getProperty("oin_insurer_code").equals("0")?"selected":""%>>None</option>
-                    <option value="IN" <%=allFields.getProperty("oin_insurer_code").equals("IN")?"selected":""%>>Institutional Claim</option>
-                    <option value="PP" <%=allFields.getProperty("oin_insurer_code").equals("PP")?"selected":""%>>Pay Patient</option>
-                    <option value="WC" <%=allFields.getProperty("oin_insurer_code").equals("WC")?"selected":""%>>WCB</option>
+                    <option value="" <%=allFields.getProperty("oinInsurerCode").equals("0")?"selected":""%>>None</option>
+                    <option value="IN" <%=allFields.getProperty("oinInsurerCode").equals("IN")?"selected":""%>>Institutional Claim</option>
+                    <option value="PP" <%=allFields.getProperty("oinInsurerCode").equals("PP")?"selected":""%>>Pay Patient</option>
+                    <option value="WC" <%=allFields.getProperty("oinInsurerCode").equals("WC")?"selected":""%>>WCB</option>
                 </select>
             </td>
        </tr>
        <tr>
             <td class="bCellData">Claim Short Comment</td><!--CLAIM-SHORT-COMMENT-->
-            <td><input type="text" name="shortComment" value="<%=allFields.getProperty("claim_comment")%>"size="20" maxlength="20"/></td>
+            <td><input type="text" name="shortComment" value="<%=allFields.getProperty("claimComment")%>"size="20" maxlength="20"/></td>
             <td class="bCellData">Note</td>
             <td>
                <div id="CORRESPONDENCENOTE">
@@ -917,7 +917,7 @@ if(billService != null){
   <script type="text/javascript">
   function callReplacementWebService(url,id){
            var ran_number=Math.round(Math.random()*1000000);
-           var params = "demographicNo=<%=bill.getDemographicNo()%>&wcb=&billingcode=<%=allFields.getProperty("billing_code")%>&rand="+ran_number;  //hack to get around ie caching the page
+           var params = "demographicNo=<%=bill.getDemographicNo()%>&wcb=&billingcode=<%=allFields.getProperty("billingCode")%>&rand="+ran_number;  //hack to get around ie caching the page
            new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true});
   }
 
@@ -956,51 +956,51 @@ if(billService != null){
 
        <!--<tr>
             <td>Facility Num</td><%! /*FACILITY-NUM*/ %>
-            <td><input type="text" name="facilityNum" value="<%=allFields.getProperty("facility_no")%>" size="5"/></td>
+            <td><input type="text" name="facilityNum" value="<%=allFields.getProperty("facilityNo")%>" size="5"/></td>
             <td>Facility Sub Num</td><%! /*FACILITY-SUB-NUM*/%>
-            <td><input type="text" name="facilitySubNum" value="<%=allFields.getProperty("facility_sub_no")%>" size="5"/></td>
+            <td><input type="text" name="facilitySubNum" value="<%=allFields.getProperty("facilitySubNo")%>" size="5"/></td>
        </tr>-->
 
        <!--<tr>
 
 
             <td>Registration Num</td><%!/*OIN-REGISTRATION-NUM*/%>
-            <td><input type="text" name="registrationNum" value="<%=allFields.getProperty("oin_registration_no")%>" size="12"/></td>
+            <td><input type="text" name="registrationNum" value="<%=allFields.getProperty("oinRegistrationNo")%>" size="12"/></td>
        </tr>-->
        <!--
        <tr>
             <td>First Name</td><%/*OIN-FIRST-NAME*/%>
-            <td><input type="text" name="firstName" value="<%=allFields.getProperty("oin_first_name")%>" size="12"/></td>
+            <td><input type="text" name="firstName" value="<%=allFields.getProperty("oinFirstName")%>" size="12"/></td>
 
             <td>Surname</td><%/*OIN-SURNAME*/%>
-            <td><input type="text" name="surname" value="<%=allFields.getProperty("oin_surname")%>" size="18"/></td>
+            <td><input type="text" name="surname" value="<%=allFields.getProperty("oinSurname")%>" size="18"/></td>
        </tr>
        <tr>
             <td>SEX</td>
-            <td><input type="text" name="sex" value="<%=allFields.getProperty("oin_sex_code")%>" size="1"/></td>
+            <td><input type="text" name="sex" value="<%=allFields.getProperty("oinSexCode")%>" size="1"/></td>
             <td>Birth date</td><%/*OIN-BIRTHDATE*/%>
-            <td><input type="text" name="birthdate" value="<%=allFields.getProperty("oin_birthdate")%>" size="8"/></td>
+            <td><input type="text" name="birthdate" value="<%=allFields.getProperty("oinBirthdate")%>" size="8"/></td>
        </tr>
        <tr>
 
             <td>Address 1 WCB Date Of Injury</td><%/*OIN-ADDRESS-1		WCB DATE OF INJURY*/%>
-            <td colspan="3"><input type="text" name="address1" value="<%=allFields.getProperty("oin_address")%>" size="25"/></td>
+            <td colspan="3"><input type="text" name="address1" value="<%=allFields.getProperty("oinAddress")%>" size="25"/></td>
        </tr>
        <tr>
             <td>Address 2 WCB AREA OF INJURY</td><%/*OIN-ADDRESS-2 WCB AREA OF INJURY ANATOMICAL-POSITION*/%>
-            <td colspan="3"><input type="text" name="address2" value="<%=allFields.getProperty("oin_address2")%>" size="25"/></td>
+            <td colspan="3"><input type="text" name="address2" value="<%=allFields.getProperty("oinAddress2")%>" size="25"/></td>
        </tr>
        <tr>
             <Td>Address 3 WCB NATURE OF INJURY</td><%/*OIN-ADDRESS-3 WCB NATURE OF INJURY*/%>
-            <td colspan="3"><input type="text" name="address3" value="<%=allFields.getProperty("oin_address3")%>" size="25" /></td>
+            <td colspan="3"><input type="text" name="address3" value="<%=allFields.getProperty("oinAddress3")%>" size="25" /></td>
        </tr>
        <tr>
             <td>Address 4 WCB Claim Number</td><%/*OIN-ADDRESS-4 WCB CLAIM NUMBER*/%>
-            <td colspan="3"><input type="text" name="address4" value="<%=allFields.getProperty("oin_address4")%>" size="25" /></td>
+            <td colspan="3"><input type="text" name="address4" value="<%=allFields.getProperty("oinAddress4")%>" size="25" /></td>
        </tr>
        <tr>
             <td>Postal Code</td><%/*OIN-POSTAL-CODE*/%>
-            <td colspan="3"><input type="text" name="postalCode" value="<%=allFields.getProperty("oin_postalcode")%>" size="6"/></td>
+            <td colspan="3"><input type="text" name="postalCode" value="<%=allFields.getProperty("oinPostalcode")%>" size="6"/></td>
         </tr>
 -->
 
@@ -1052,13 +1052,13 @@ if(billService != null){
 
             <!--DATA-CENTER-SEQNUM-->
             <td>PAYEE-NUM</td><!--PAYEE-NUM-->
-            <td><%=allFields.getProperty("payee_no")%></td>
+            <td><%=allFields.getProperty("payeeNo")%></td>
             <td>5</td>
             <td>Y</td>
        </tr>
        <tr>
             <td>Practitioner Number</td><!--PRACTITIONER-NUM-->
-            <td><%=allFields.getProperty("practitioner_no")%></td><!--MSP PHN-->
+            <td><%=allFields.getProperty("practitionerNo")%></td><!--MSP PHN-->
             <td>5</td>
             <td> </td>
        </tr>
@@ -1071,316 +1071,316 @@ if(billService != null){
        <tr>
 
             <td>Name Verify</td><!--NAME-VERIFY-->
-            <td><%=allFields.getProperty("name_verify")%></td>
+            <td><%=allFields.getProperty("nameVerify")%></td>
             <td>4</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Dependent Number</td><!--DEPENDENT-NUM-->
-            <td><%=allFields.getProperty("dependent_num")%></td>
+            <td><%=allFields.getProperty("dependentNum")%></td>
             <td>2</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Billed Units</td><!--BILLED-SRV-UNITS-->
-            <td><%=allFields.getProperty("billing_unit")%></td>
+            <td><%=allFields.getProperty("billingUnit")%></td>
             <td>3</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Service Clarification code</td><!--SERVICE CLARIFICATION CODE-->
-            <Td><%=allFields.getProperty("clarification_code")%></td>
+            <Td><%=allFields.getProperty("clarificationCode")%></td>
             <td>2</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Anatomical Area</td><!--MSP SERVICE ANATOMICAL AREA-->
-            <td><%=allFields.getProperty("anatomical_area")%></td>
+            <td><%=allFields.getProperty("anatomicalArea")%></td>
             <td>2</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>After Hours</td><!--AFTER HOURS SERVICE IND-->
-            <td><%=allFields.getProperty("after_hour")%></td>
+            <td><%=allFields.getProperty("afterHour")%></td>
             <td>1</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>New Program Ind</td><!--NEW PROGRAM IND-->
-            <td><%=allFields.getProperty("new_program")%></td>
+            <td><%=allFields.getProperty("newProgram")%></td>
             <td>2</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Billed Fee Item</td><!--BILLED-FEE-ITEM-->
-            <td><%=allFields.getProperty("billing_code")%></td>
+            <td><%=allFields.getProperty("billingCode")%></td>
             <td>5</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Billed Amount</td><!--BILLED-AMOUNT-->
-            <td><%=allFields.getProperty("bill_amount")%></td>
+            <td><%=allFields.getProperty("billAmount")%></td>
             <td>5</td>
             <td>Y</td>
        </tr>
        <tr>
             <td>Payment Mode</td><!--PAYMENT MODE-->
-            <td><%=allFields.getProperty("payment_mode")%></td>
+            <td><%=allFields.getProperty("paymentMode")%></td>
             <td>1</td>
             <td>Y</td>
        </tr>
        <tr>
             <td>Service Date</td><!--SERVICE-DATE-->
-            <td><%=allFields.getProperty("service_date")%></td>
+            <td><%=allFields.getProperty("serviceDate")%></td>
             <td>8</td>
             <td>Y</td>
        </tr>
        <tr>
             <td>Service to Day</td><!--SERVICE-TO-DAY-->
-            <td><%=allFields.getProperty("service_to_day")%></td>
+            <td><%=allFields.getProperty("serviceToDay")%></td>
             <td>2</td>
             <td>Y</td>
        </tr>
        <tr>
             <td>Submission Code</td><!--SUBMISSION-CODE-->
-            <td><%=allFields.getProperty("submission_code")%></td>
+            <td><%=allFields.getProperty("submissionCode")%></td>
             <td>1</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Ex Submission Code</td><!--EXTENDED SUBMISSION CODE-->
-            <td><%=allFields.getProperty("extended_submission_code")%></td>
+            <td><%=allFields.getProperty("extendedSubmissionCode")%></td>
             <td>1</td>
             <td> </td>
        </tr>
        <tr>
 
             <td>Diag Code 1</td><!--DIAGNOSTIC-CODE-1-->
-            <td><%=allFields.getProperty("dx_code1")%></td>
+            <td><%=allFields.getProperty("dxCode1")%></td>
             <td>5</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Diag Code 2</td><!--DIAGNOSTIC-CODE-2-->
-            <td><%=allFields.getProperty("dx_code2")%></td>
+            <td><%=allFields.getProperty("dxCode2")%></td>
             <td>5</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Diag Code 3</td><!--DIAGNOSTIC-CODE-3-->
-            <td><%=allFields.getProperty("dx_code3")%></td>
+            <td><%=allFields.getProperty("dxCode3")%></td>
             <td>5</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Diag Expansion</td><!--DIAGNOSTIC EXPANSION-->
-            <td><%=allFields.getProperty("dx_expansion")%></td>
+            <td><%=allFields.getProperty("dxExpansion")%></td>
             <td>15</td>
             <td> </td>
        </tr>
        <tr>
 
             <td>Service Location</td><!--SERVICE-LOCATION-CD-->
-            <td><%=allFields.getProperty("service_location")%></td>
+            <td><%=allFields.getProperty("serviceLocation")%></td>
             <td>1</td>
             <td> </td>
        </tr>
        <tr>
 
             <td>Referal Practitioner CD</td><!--REF-PRACT-1-CD-->
-            <Td><%=allFields.getProperty("referral_flag1")%></td>
+            <Td><%=allFields.getProperty("referralFlag1")%></td>
             <td>1</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Referal Practitioner</td><!--REF-PRACT-1-->
-            <td><%=allFields.getProperty("referral_no1")%></td>
+            <td><%=allFields.getProperty("referralNo1")%></td>
             <td>5</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Referal Practitioner CD</td><!--REF-PRACT-2-CD-->
-            <Td><%=allFields.getProperty("referral_flag2")%></td>
+            <Td><%=allFields.getProperty("referralFlag2")%></td>
             <td>1</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Referal Practitioner</td><!--REF-PRACT-2-->
-            <td><%=allFields.getProperty("referral_no2")%></td>
+            <td><%=allFields.getProperty("referralNo2")%></td>
             <td>5</td>
             <td>Y</td>
        </tr>
        <tr>
             <td>Time Call Recieved</td><!--TIME-CALL-RECVD-SRV-->
-            <td><%=allFields.getProperty("time_call")%></td>
+            <td><%=allFields.getProperty("timeCall")%></td>
             <td>4</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Service Time Start</td><!--SERVICE-TIME-START-->
-            <td><%=allFields.getProperty("service_start_time")%></td>
+            <td><%=allFields.getProperty("serviceStartTime")%></td>
             <td>4</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Service Time Finish</td><!--SERVICE-TIME-FINISH-->
-            <td><%=allFields.getProperty("service_end_time")%></td>
+            <td><%=allFields.getProperty("serviceEndTime")%></td>
             <td>4</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Birth Date</td><!--BIRTH-DATE-->
-            <td><%=allFields.getProperty("birth_date")%></td>
+            <td><%=allFields.getProperty("birthDate")%></td>
             <td>8</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Office Number</td><!--OFFICE-FOLIO-NUMBER-->
-            <td><%=allFields.getProperty("office_number")%></td>
+            <td><%=allFields.getProperty("officeNumber")%></td>
             <td>7</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Correspondence Code</td><!--CORRESPONDENCE-CODE-->
-            <td><%=allFields.getProperty("correspondence_code")%></td>
+            <td><%=allFields.getProperty("correspondenceCode")%></td>
             <td>1</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Claim Short Comment</td><!--CLAIM-SHORT-COMMENT-->
-            <td><%=allFields.getProperty("claim_comment")%></td>
+            <td><%=allFields.getProperty("claimComment")%></td>
             <td>20</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>MVA Claim Code</td><!--MVA-CLAIM-CODE-->
-            <td><%=allFields.getProperty("mva_claim_code")%></td>
+            <td><%=allFields.getProperty("mvaClaimCode")%></td>
             <td>1</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>ICBC Claim Num</td><!--ICBC-CLAIM-NUM-->
-            <td><%=allFields.getProperty("icbc_claim_no")%></td>
+            <td><%=allFields.getProperty("icbcClaimNo")%></td>
             <td>8</td>
             <td>Y</td>
        </tr>
        <tr>
             <td>MSP File Num</td><!--ORG-MSP-FILE-NUM-->
-            <td><%=allFields.getProperty("original_claim")%></td>
+            <td><%=allFields.getProperty("originalClaim")%></td>
             <td>20</td>
             <td> </td>
        </tr>
        <tr>
             <td>Facility Num</td><!--FACILITY-NUM-->facility_no
-            <td><%=allFields.getProperty("facility_no")%></td>
+            <td><%=allFields.getProperty("facilityNo")%></td>
             <td>5</td>
             <td>Y</td>
        </tr>
        <tr>
             <td>Facility Sub Num</td><!--FACILITY-SUB-NUM-->
-            <td><%=allFields.getProperty("facility_sub_no")%></td>
+            <td><%=allFields.getProperty("facilitySubNo")%></td>
             <td>5</td>
             <td>Y</td>
        </tr>
        <tr>
             <td>Insurer Code</td><!--OIN-INSURER-C0DE-->
-            <td><%=allFields.getProperty("oin_insurer_code")%></td>
+            <td><%=allFields.getProperty("oinInsurerCode")%></td>
             <td>2</td>
             <td>Y</td>
        </tr>
        <tr>
             <td>Registration Num</td><!--OIN-REGISTRATION-NUM-->
-            <td><%=allFields.getProperty("oin_registration_no")%></td>
+            <td><%=allFields.getProperty("oinRegistrationNo")%></td>
             <td>12</td>
             <td>Y</td>
        </tr>
        <tr>
             <td>Birth date</td><!--OIN-BIRTHDATE-->
-            <td><%=allFields.getProperty("oin_birthdate")%></td>
+            <td><%=allFields.getProperty("oinBirthdate")%></td>
             <td>8</td>
             <td>Y</td>
        </tr>
        <tr>
             <td>First Name</td><!--OIN-FIRST-NAME-->
-            <td><%=allFields.getProperty("oin_first_name")%></td>
+            <td><%=allFields.getProperty("oinFirstName")%></td>
             <td>12</td>
             <td>Y</td>
        </tr>
        <tr>
             <td>Second Name</td><!--OIN-SECOND-NAME-INITIAL-->
-            <td><%=allFields.getProperty("oin_second_name")%></td>
+            <td><%=allFields.getProperty("oinSecondName")%></td>
             <td>1</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Surname</td><!--OIN-SURNAME-->
-            <td><%=allFields.getProperty("oin_surname")%></td>
+            <td><%=allFields.getProperty("oinSurname")%></td>
             <td>18</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>SEX</td>
-            <td><%=allFields.getProperty("oin_sex_code")%></td>
+            <td><%=allFields.getProperty("oinSexCode")%></td>
             <td>1</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Address 1 WCB Date Of Injury</td><!--OIN-ADDRESS-1		WCB DATE OF INJURY-->
-            <td><%=allFields.getProperty("oin_address")%></td>
+            <td><%=allFields.getProperty("oinAddress")%></td>
             <td>25</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Address 2 WCB AREA OF INJURY</td><!--OIN-ADDRESS-2 WCB AREA OF INJURY ANATOMICAL-POSITION-->
-            <td><%=allFields.getProperty("oin_address2")%></td>
+            <td><%=allFields.getProperty("oinAddress2")%></td>
             <td>25</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <Td>Address 3 WCB NATURE OF INJURY</td><!--OIN-ADDRESS-3 WCB NATURE OF INJURY-->
-            <td><%=allFields.getProperty("oin_address3")%></td>
+            <td><%=allFields.getProperty("oinAddress3")%></td>
             <td>25</td>
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Address 4 WCB Claim Number</td><!--OIN-ADDRESS-4 WCB CLAIM NUMBER-->
-            <td><%=allFields.getProperty("oin_address4")%></td>
+            <td><%=allFields.getProperty("oinAddress4")%></td>
             <td>25</td>a
             <td>Y</td>
        </tr>
        <tr>
 
             <td>Postal Code</td><!--OIN-POSTAL-CODE-->
-            <td><%=allFields.getProperty("oin_postalcode")%></td>
+            <td><%=allFields.getProperty("oinPostalcode")%></td>
             <td>6</td>
             <td>Y</td>
         </tr>
