@@ -151,6 +151,9 @@ public class BillingmasterDAO {
 	}
 
 	public int markListAsBilled(List<String> list) { //TODO: Should be set form CONST var
+		if(list.size()==0) {
+			return 0;
+		}
 		Query query = entityManager.createQuery("UPDATE Billingmaster b set b.billingstatus = 'B' where b.billingmasterNo in (:billingNumbers)");
 		query.setParameter("billingNumbers", ConversionUtils.toIntList(list));
 		return query.executeUpdate();
