@@ -60,6 +60,9 @@ public class ReportTemplates extends AbstractModel<Integer> {
 	private Boolean sequence;
 	
 	private String uuid;
+	
+	private String category;
+	
 
 	public Integer getId() {
     	return id;
@@ -132,5 +135,15 @@ public class ReportTemplates extends AbstractModel<Integer> {
 	public void setUuid(String uuid) {
     	this.uuid = uuid;
     }
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	
+	
 
 }
