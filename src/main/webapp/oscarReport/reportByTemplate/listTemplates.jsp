@@ -26,9 +26,31 @@
 
 <%@ page import="java.util.*, oscar.oscarReport.reportByTemplate.*"%>
 <%
-ArrayList templates = (new ReportManager()).getReportTemplatesNoParam();
+ArrayList rawTemplates = (new ReportManager()).getReportTemplatesNoParam();
 String templateViewId = request.getParameter("templateviewid");
 if (templateViewId == null) templateViewId = "";
+
+//go through the templates, and figure out all the categories
+SortedSet<String> categories = new TreeSet<String>();
+for(ReportObjectGeneric template:(ArrayList<ReportObjectGeneric>)rawTemplates) {
+	if(template.getCategory() != null) {
+		categories.add(template.getCategory());
+	}
+}
+List<ReportObjectGeneric> templates = new ArrayList<ReportObjectGeneric>();
+
+String selectedCategory = request.getParameter("category");
+if(selectedCategory != null && selectedCategory.length()>0) {
+	//filter the templates
+	for(ReportObjectGeneric template:(ArrayList<ReportObjectGeneric>)rawTemplates) {
+		if(template.getCategory() != null && template.getCategory().equals(selectedCategory)) {
+			templates.add(template);
+		}
+	}
+} else {
+	templates = rawTemplates;
+}
+
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -49,6 +71,23 @@ if(!authed) {
 <a href="addEditTemplate.jsp" style="color: #226d55; font-size: 10px;">Add Template</a>
 <br/>
 <a href="javascript:void(0)" style="color: #226d55; font-size: 10px;" onclick="newWindow('<%=request.getContextPath()%>/oscarReport/reportByTemplate/k2aTemplates.jsp','templates')" title="<bean:message key='oscarReport.oscarReportByTemplate.msgK2ATemplate' />"><bean:message key="oscarReport.oscarReportByTemplate.msgDownloadFromK2A" /></a>
+<div class="templatelistHeader">Filter by Category:</div>
+<ul class="templatelist">
+	<li>
+		<form>
+			<select name="category" onChange="this.form.submit()">
+				<option value="" <%=(selectedCategory == null || selectedCategory.length() == 0)?" selected=\"selected\" ":"" %>>All</option>
+				<%
+				for(Iterator<String> i = categories.iterator(); i.hasNext();) {
+					String x = i.next();
+					%><option value="<%=x%>" <%=(selectedCategory != null && selectedCategory.equals(x))?" selected=\"selected\" ":"" %>><%=x %></option><%
+				}
+				%>
+			</select>
+		</form>
+	</li>
+</ul>
+
 <div class="templatelistHeader">Select a template:</div>
 <ul class="templatelist">
 	<li><a href="homePage.jsp"><b>Main Page</b></a> <%

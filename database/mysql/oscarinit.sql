@@ -701,6 +701,7 @@ CREATE TABLE reportTemplates (
   `type` varchar(32) default null,
   uuid varchar(60),
   sequence tinyint(1),
+  category varchar(255),
   PRIMARY KEY (templateid)
 );
 
