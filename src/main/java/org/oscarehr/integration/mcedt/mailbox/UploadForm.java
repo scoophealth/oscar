@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
+ *    
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
@@ -27,17 +27,19 @@ import java.math.BigInteger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.MiscUtils;
 
 public class UploadForm extends ActionForm {
 
 	private static final long serialVersionUID = 1L;
     
-    //private static final Logger logger = MiscUtils.getLogger();
+    private static final Logger logger = MiscUtils.getLogger();
     
 	private String description;
 	private String resourceType;

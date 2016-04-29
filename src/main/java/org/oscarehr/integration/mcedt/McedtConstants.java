@@ -26,6 +26,7 @@ package org.oscarehr.integration.mcedt;
 public class McedtConstants {
 	
 	public static final String REQUEST_ATTR_KEY_RESOURCE_ID = "resourceId";
+	public static final String REQUEST_ATTR_KEY_SERVICE_ID = "serviceId";
 	
 	public static final String SESSION_KEY_MCEDT_MESSAGES = "messages";
 	
@@ -35,6 +36,7 @@ public class McedtConstants {
 
 	public static final String SESSION_KEY_TYPE_LIST = "mcedtTypeList";
 	public static final String SESSION_KEY_RESOURCE_LIST = "mcedtResourceList";
+	public static final String SESSION_KEY_CUSTOM_RESOURCE_LIST = "resourceList";
 	
 	public static final String SESSION_KEY_UPLOAD_RESOURCE_ID = "uploadResourceId";
 	public static final String SESSION_KEY_UPLOAD_FILENAME = "uploadFileName";

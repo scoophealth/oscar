@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
+ *    
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
@@ -58,6 +58,8 @@ import ca.ontario.health.edt.TypeListResult;
 
 public class DownloadAction extends DispatchAction{
 	private static Logger logger = Logger.getLogger(DownloadAction.class);
+	private boolean isFileToDownload=false;
+
 
 	@Override
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -66,18 +68,36 @@ public class DownloadAction extends DispatchAction{
 		DownloadForm resourceForm = (DownloadForm) form; 
 		
 		try{
-			EDTDelegate delegate = DelegateFactory.newDelegate();			
-			
-			
 			if(request.getSession().getAttribute("resourceTypeList")==null){
+				EDTDelegate delegate = DelegateFactory.newDelegate();
 				resourceForm.setTypeListResult(getTypeList(request, delegate));
 				request.getSession().setAttribute("resourceTypeList",resourceForm.getTypeListResult());
 			}
 			else{
 				resourceForm.setTypeListResult((TypeListResult)request.getSession().getAttribute("resourceTypeList"));
 			}
+			Detail result = ActionUtils.getDetails(request);
+		    if (result == null) {
+		    	for (String serviceId: ActionUtils.getServiceIds()) {
+		    		EDTDelegate delegate = DelegateFactory.newDelegate(serviceId);
+		    		result= getResourceList(request, resourceForm, delegate, serviceId, result);		    		
+		    	}
+		    	List<DetailDataCustom> resourceList= resourceForm.getData();
+		    	if(resourceList.size()>0){
+					//ActionUtils.setDetails(request, result);
+					//Collections.sort(resourceList, DetailDataCustom.ResourceIdComparator);
+					//setting the first element to downloading to view on the jsp
+					resourceList.get(0).setDownloadStatus("Downloading");
+					resourceForm.setData(resourceList);
+				
+					request.getSession().setAttribute("resourceList",resourceList);
+					request.getSession().setAttribute("resourceID",resourceList.get(0).getResourceID());
+				} else{
+					request.getSession().setAttribute("resourceID",BigInteger.ZERO);
+				}
+		    	resourceForm.setDetail(result);
+			}
 			
-			resourceForm.setDetail(getResourceList(request, resourceForm, delegate));
 		}
 		catch(Exception e) {
 			logger.error("Unable to load resource list ", e);
@@ -88,9 +108,7 @@ public class DownloadAction extends DispatchAction{
 		return mapping.findForward("success");
 	}		
 	
-	private Detail getResourceList(HttpServletRequest request, DownloadForm form, EDTDelegate delegate) {
-	    Detail result = ActionUtils.getDetails(request);
-	    if (result == null) {
+	private Detail getResourceList(HttpServletRequest request, DownloadForm form, EDTDelegate delegate, String serviceId, Detail result) {
 		    try {
 		    	String resourceType = form.getResourceType();
 		    	if (resourceType != null && resourceType.trim().isEmpty()) {
@@ -103,19 +121,19 @@ public class DownloadAction extends DispatchAction{
 		    	form.getStatusAsResourceStatus();				
 				result = delegate.list(resourceType, ResourceStatus.DOWNLOADABLE, form.getPageNoAsBigInt());					
 				
-				boolean isFileToDownload=false;
-				List<DetailDataKai> resourceList= new ArrayList<DetailDataKai>(); 
+				List<DetailDataCustom> resourceList= form.getData();
+				if (resourceList==null||resourceList.size()<1) resourceList = new ArrayList<DetailDataCustom>(); 
 				
-				if(result.getData()!=null){ 
+				if(result!=null && result.getData()!=null && result.getResultSize() != null){ 
 					/*filtering the list to contain only the files that have not been downloaded*/
 					//get last downloaded resourceid				
 					BigInteger lastDownLoadedID = new BigInteger(getLastDownloadedID());
 					
 					//creating list with only new downloadable files				
-					DetailDataKai detailDataK;
+					DetailDataCustom detailDataK;
 					for(DetailData detailData : result.getData()){
 						if(detailData.getResourceID().compareTo(lastDownLoadedID) > 0){
-							detailDataK = new DetailDataKai();
+							detailDataK = new DetailDataCustom();
 							detailDataK.setCreateTimestamp(detailData.getCreateTimestamp());
 							detailDataK.setDescription(detailData.getDescription());
 							detailDataK.setModifyTimestamp(detailData.getModifyTimestamp());
@@ -127,37 +145,25 @@ public class DownloadAction extends DispatchAction{
 							detailDataK.setResult(detailData.getResult());
 							detailDataK.setStatus(detailData.getStatus());
 							detailDataK.setDownloadStatus("Waiting");
+							detailDataK.setServiceId(serviceId);
 							
 							resourceList.add(detailDataK);
-							isFileToDownload=true;
 						}
-					}								
-					
+					}
 					if(resourceList.size()>0){
 						//ActionUtils.setDetails(request, result);
-						Collections.sort(resourceList, DetailDataKai.ResourceIdComparator);
-						//setting the first element to downloading to view on the jsp
-						resourceList.get(0).setDownloadStatus("Downloading");
-						form.setData(resourceList);
-					
+						Collections.sort(resourceList, DetailDataCustom.ResourceIdComparator);
+						form.setData(resourceList);				
 						request.getSession().setAttribute("resourceList",resourceList);
 					}
-				}
-				
-				if(isFileToDownload){
-					request.getSession().setAttribute("resourceID",resourceList.get(0).getResourceID());
-				}
-				else{
-					request.getSession().setAttribute("resourceID",BigInteger.ZERO);
-				}
-					
+				}			
 				
 			} catch (Exception e) {
 				logger.error("Unable to load resource list ", e);
 				saveErrors(request, ActionUtils.addMessage("resourceAction.getResourceList.fault", McedtMessageCreator.exceptionToString(e)));
 			
 			}
-	    }
+	    
 	    return result;
     }
 	
@@ -188,13 +194,23 @@ public class DownloadAction extends DispatchAction{
 	}
 	
 	public ActionForward download(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) {		
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		List<BigInteger> ids = getResourceIds(request);
-		Collections.sort(ids);//-
+		Collections.sort(ids);
+		
+		List<DetailDataCustom> resourceList=ActionUtils.getResourceList(request);
+		String serviceId=new String();
+		for (DetailDataCustom resource :resourceList) {
+			if (resource.getResourceID().equals(ids.get(0))) {
+				serviceId=resource.getServiceId();
+				break;
+			}
+		}
+		//-
 		DownloadResult downloadResult = null;		
 		
 		try {
-			EDTDelegate delegate = DelegateFactory.newDelegate();			
+			EDTDelegate delegate = DelegateFactory.newDelegate(serviceId);			
 
 				downloadResult = delegate.download(ids);		
 				
@@ -211,10 +227,8 @@ public class DownloadAction extends DispatchAction{
 				}									
 				//----------end of saving file
 				
-				List<DetailDataKai> detailDatakList = (ArrayList<DetailDataKai>)request.getSession().getAttribute("resourceList");
-				
 				//updating the downloading file status to Downloaded
-				for(DetailDataKai detailDatak:detailDatakList){
+				for(DetailDataCustom detailDatak:resourceList){
 					if(detailDatak.getResourceID().equals(ids.get(0))){
 						detailDatak.setDownloadStatus("Download Completed");
 					}
@@ -222,7 +236,7 @@ public class DownloadAction extends DispatchAction{
 				
 				//updating the next waiting file status to Downloading to display to user
 				boolean isFileToWating=false;
-				for(DetailDataKai detailDatak:detailDatakList){
+				for(DetailDataCustom detailDatak:resourceList){
 					if(detailDatak.getDownloadStatus().equals("Waiting")){
 						detailDatak.setDownloadStatus("Downloading");
 						request.getSession().setAttribute("resourceID",detailDatak.getResourceID());
@@ -233,14 +247,15 @@ public class DownloadAction extends DispatchAction{
 				
 				if(!isFileToWating){
 					request.getSession().setAttribute("resourceID",BigInteger.ZERO);
+					ActionUtils.removeResourceList(request);
 				}
 				
 				
 			//}		
 
 		} catch (Exception e) {
-			if(request.getSession().getAttribute("resourceList")!=null){
-				request.getSession().removeAttribute("resourceList");
+			if(ActionUtils.getResourceList(request)!=null){
+				ActionUtils.removeResourceList(request);
 			}		
 			if(request.getSession().getAttribute("resourceID")!=null){
 				request.getSession().removeAttribute("resourceID");
@@ -308,7 +323,7 @@ public class DownloadAction extends DispatchAction{
 	}
 	
 	public ActionForward cancel(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if(request.getSession().getAttribute("resourceList")!=null){
 			request.getSession().removeAttribute("resourceList");
 		}		
@@ -319,13 +334,13 @@ public class DownloadAction extends DispatchAction{
 	}	
 	
 	public ActionForward userDownload(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) {		
+			HttpServletRequest request, HttpServletResponse response) throws Exception {		
 		List<BigInteger> ids = getResourceIds(request);
 		Collections.sort(ids);
 		DownloadResult downloadResult = null;	
-		
+		DownloadForm downloadForm= (DownloadForm) form;
 		try {
-			EDTDelegate delegate = DelegateFactory.newDelegate();			
+			EDTDelegate delegate = DelegateFactory.newDelegate(downloadForm.getServiceId()==null? ActionUtils.getDefaultServiceId():downloadForm.getServiceId());			
 
 			downloadResult = delegate.download(ids);			
 
@@ -353,17 +368,17 @@ public class DownloadAction extends DispatchAction{
 	}		
 	
 	public ActionForward changeDisplay(ActionMapping mapping, ActionForm form, HttpServletRequest request, 
-			HttpServletResponse response) {
-		List<DetailDataKai> resourceList = getResourceList(request,form);		
+			HttpServletResponse response) throws Exception {
+		List<DetailDataCustom> resourceList = getResourceList(request,form);		
 		
 		request.getSession().setAttribute("resourceListSent",resourceList );
 
 		return mapping.findForward("success");
 	}
 	
-	private List<DetailDataKai> getResourceList(HttpServletRequest request, ActionForm form) {
+	private List<DetailDataCustom> getResourceList(HttpServletRequest request, ActionForm form) {
 	    Detail result = ActionUtils.getDetails(request);
-	    List<DetailDataKai> resourceList =new ArrayList<DetailDataKai>();
+	    List<DetailDataCustom> resourceList =new ArrayList<DetailDataCustom>();
 	    DownloadForm resourceForm = (DownloadForm)form;    	    	    
 	    	    
 	    if (result == null) {
@@ -373,7 +388,7 @@ public class DownloadAction extends DispatchAction{
 		    		resourceType = null;
 		    	}
 	    	
-		    	EDTDelegate delegate = DelegateFactory.newDelegate();		    	
+		    	EDTDelegate delegate = DelegateFactory.newDelegate(resourceForm.getServiceId());		    	
 		    	result = delegate.list(resourceType, ResourceStatus.DOWNLOADABLE, resourceForm.getPageNoAsBigInt());								
 				
 		    	if(request.getSession().getAttribute("resourceTypeList")==null){
@@ -384,25 +399,28 @@ public class DownloadAction extends DispatchAction{
 					resourceForm.setTypeListResult((TypeListResult)request.getSession().getAttribute("resourceTypeList"));
 				}
 		    	
-				if(result.getData()!=null){ 
+				if(result!=null && result.getData()!=null && result.getResultSize() != null){ 
 									
-					DetailDataKai detailDataK;
+					DetailDataCustom detailDataK;
 					for(DetailData detailData : result.getData()){
-							detailDataK = new DetailDataKai();														
+							detailDataK = new DetailDataCustom();														
 							ResourceForm resourceForm2 = new ResourceForm();
-							resourceForm2.setTypeListResult(resourceForm.getTypeListResult() ); 
+							resourceForm2.setTypeListResult(resourceForm.getTypeListResult() );
+							resourceForm2.setServiceIdSent(resourceForm.getServiceId());
 							detailDataK = ActionUtils.mapDetailData(resourceForm2, detailDataK, detailData);							
 							resourceList.add(detailDataK);
 						
 					}												
 
 					if(resourceList.size()>0){						
-						//Collections.sort(resourceList, DetailDataKai.ResourceIdComparator);										
+						//Collections.sort(resourceList, DetailDataCustom.ResourceIdComparator);										
 						request.getSession().setAttribute("resourceListDL",resourceList);
 					}
-				}							
-					
-				
+				} else if (result.getResultSize() == null)	{
+					request.getSession().removeAttribute("resourceListDL");
+					// if a result is returned with no size, meaning you are accessing a list that is not permitted, one response will be returned holding the error message
+					saveErrors(request,ActionUtils.addMessage("resourceAction.getResourceList.fault", result.getData().get(0).getResult().getMsg()));		
+				}	
 			} catch (Exception e) {
 				logger.error("Unable to load resource list ", e);
 				saveErrors(request, ActionUtils.addMessage("resourceAction.getResourceList.fault", McedtMessageCreator.exceptionToString(e)));

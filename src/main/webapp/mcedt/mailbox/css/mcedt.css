@@ -403,15 +403,19 @@ th {
 .alert-danger {
 	background-color: rgb(250, 161, 161);
 	padding: 0 10px;
-	display: inline-block;
 	margin-bottom: 10px;
+}
+.alert.alert-danger > p {
+    display: inline-block;
 }
 
 .alert-info {
 	background-color: rgb(163, 206, 211);
 	padding: 0 10px;
-	display: inline-block;
 	margin-bottom: 10px;
+}
+.alert.alert-info > p {
+    display: inline-block;
 }
 
 /* --------- NAV BAR ---------*/

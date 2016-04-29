@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
+ *    
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
@@ -26,6 +26,7 @@ package org.oscarehr.integration.mcedt.mailbox;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -38,16 +39,8 @@ import oscar.OscarProperties;
 import oscar.login.LoginForm;
 
 public class UserAction extends DispatchAction{
-	//private static Logger logger = Logger.getLogger(UserAction.class);
+	private static Logger logger = Logger.getLogger(UserAction.class);
 	private UserPropertyDAO userPropertyDAO = SpringUtils.getBean(UserPropertyDAO.class);
-
-	public UserPropertyDAO getUserPropertyDAO() {
-		return userPropertyDAO;
-	}
-
-	public void setUserPropertyDAO(UserPropertyDAO userPropertyDAO) {
-		this.userPropertyDAO = userPropertyDAO;
-	}
 
 	@Override
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, 
@@ -63,27 +56,27 @@ public class UserAction extends DispatchAction{
 	}		
 	
 	public ActionForward changePassword(ActionMapping mapping, ActionForm form, HttpServletRequest request, 
-			HttpServletResponse response) {
-		LoginForm resourceForm = (LoginForm) form;						
+			HttpServletResponse response) throws Exception {
+		LoginForm resourceForm = (LoginForm) form;
 		try {
-			//if(PropertyHandler.updateProperty("mcedt.service.pass", resourceForm.getPassword()))
+		
 			UserProperty prop = userPropertyDAO.getProp(UserProperty.MCEDT_ACCOUNT_PASSWORD);
 			if (prop == null) {
 				prop = new UserProperty();
 				prop.setName(UserProperty.MCEDT_ACCOUNT_PASSWORD);
-			}
+				}
 			prop.setValue(resourceForm.getPassword());
 			userPropertyDAO.saveProp(prop);
 			request.getSession().setAttribute("isPassChange", "true");
-		} catch (Exception e) {
-			request.getSession().setAttribute("isPassChange", "false");
-		}
-
+			} catch (Exception e) {
+				request.getSession().setAttribute("isPassChange", "false");
+			}
+		
 		return mapping.findForward("success");
 	}
 	
 	public ActionForward cancel(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if(request.getSession().getAttribute("isPassChange")!=null){
 			request.getSession().removeAttribute("isPassChange");
 		}		
@@ -91,5 +84,13 @@ public class UserAction extends DispatchAction{
 			request.getSession().removeAttribute("mcedtUsername");
 		}
 		return mapping.findForward("cancel");
+	}
+	
+	public UserPropertyDAO getUserPropertyDAO() {
+		return userPropertyDAO;
+	}
+	
+	public void setUserPropertyDAO(UserPropertyDAO userPropertyDAO) {
+		this.userPropertyDAO = userPropertyDAO;	
 	}
 }
