@@ -2720,9 +2720,9 @@
 			<forward name="done" path="/mcedt/mcedt.do" redirect="true" />
 		</action>
 		
-		<action path="/mcedt/addUpload" input="/mcedt/addUpload.jsp" type="org.oscarehr.integration.mcedt.UploadAddAction" name="mcedtUploadAddForm">
+		<!--  <action path="/mcedt/addUpload" input="/mcedt/addUpload.jsp" type="org.oscarehr.integration.mcedt.UploadAddAction" name="mcedtUploadAddForm">
 			<forward name="success" path="/mcedt/uploads.do" redirect="true" />
-		</action>
+		</action> -->
 		
 		<action path="/mcedt/update" type="org.oscarehr.integration.mcedt.UpdateAction" name="mcedtUpdateForm" parameter="method">
 			<forward name="cancel" path="/mcedt/mcedt.do" redirect="true" />

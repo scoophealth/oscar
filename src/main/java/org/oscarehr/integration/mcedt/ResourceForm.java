@@ -45,6 +45,7 @@ public class ResourceForm extends ActionForm {
 
 	private TypeListResult typeListResult;
 	private Detail detail;
+	private String serviceIdSent;
 
 	public TypeListResult getTypeListResult() {
 		return typeListResult;
@@ -131,5 +132,13 @@ public class ResourceForm extends ActionForm {
 		}
 		return BigInteger.valueOf(getPageNo().longValue());
 	}
+
+	public String getServiceIdSent() {
+	    return serviceIdSent;
+    }
+
+	public void setServiceIdSent(String serviceId) {
+	    this.serviceIdSent = serviceId;
+    }
 
 }

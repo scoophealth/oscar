@@ -23,10 +23,7 @@
     Ontario, Canada
     
 --%>
-<%--
-    KAI Innovations Inc.
-    KAIInnovations.com
---%>
+
 <%@ page errorPage="../error.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
   
@@ -37,11 +34,11 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ page import="java.math.BigInteger,java.util.*,org.oscarehr.integration.mcedt.mailbox.DetailDataKai" %>
+<%@ page import="java.math.BigInteger,java.util.*,org.oscarehr.integration.mcedt.mailbox.DetailDataCustom,org.oscarehr.integration.mcedt.mailbox.ActionUtils" %>
 
 <%    
 
-	List<DetailDataKai> resourceListDL = (ArrayList<DetailDataKai>)session.getAttribute("resourceListDL");
+	List<DetailDataCustom> resourceListDL = (ArrayList<DetailDataCustom>)session.getAttribute("resourceListDL");
 	BigInteger resultSize = (BigInteger)session.getAttribute("resultSize");
 %>
 
@@ -113,6 +110,15 @@ $(window).load(function(){
 		<input id="methodDownload" name="method" type="hidden" value="" />	
 	<div>
 	<div>
+			Billing Number:
+		<html:select property="serviceId" styleId="serviceId"
+			styleClass="serviceId">
+			<c:forEach var="r" items="${serviceIds}">
+            	<html:option value="${r}" >
+					<c:out value="${r}" />
+				</html:option>
+							</c:forEach>
+		</html:select>
 		Page #:
 		<html:select property="pageNo" styleId="pageNo">
 			<c:forEach var="i" begin="1"
@@ -138,7 +144,8 @@ $(window).load(function(){
 						<th>Type</th>
 						<!-- <th>Result</th>
 						<th>Status</th> -->
-						<th>File Name</th>												
+						<th>File Name</th>
+						<th>Status</th>												
 					</tr>
 				</thead>
 				<c:forEach var="r" items="${resourceListDL}" varStatus="loopStatus">						
@@ -150,6 +157,7 @@ $(window).load(function(){
 						</td>
 						<td><c:out value="${r.resourceType}" /></td>						
 						<td><c:out value="${r.description}" /></td>													
+						<td><c:out value="${r.status}" /></td>													
 					</tr>						
 				</c:forEach>
 			</table>

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
+ *    
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
@@ -31,7 +31,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import ca.ontario.health.edt.CommonResult;
 import ca.ontario.health.edt.ResourceStatus;
 
-public class DetailDataKai{
+public class DetailDataCustom{
 	protected XMLGregorianCalendar createTimestamp;
 	protected String description;
 	protected String resourceType;
@@ -40,6 +40,7 @@ public class DetailDataKai{
 	protected CommonResult result;
 	protected ResourceStatus status;
 	protected String downloadStatus;	
+	protected String serviceId;	
 	
 	public XMLGregorianCalendar getCreateTimestamp() {
 		return createTimestamp;
@@ -90,10 +91,16 @@ public class DetailDataKai{
 	public void setDownloadStatus(String downloadStatus) {
 		this.downloadStatus = downloadStatus;
 	}
+	public String getServiceId() {
+		return serviceId;
+	}
+	public void setServiceId(String serviceId) {
+		this.serviceId = serviceId;
+	}
 
 
-	public static Comparator<DetailDataKai> ResourceIdComparator = new Comparator<DetailDataKai> () {
-		 public int compare(DetailDataKai detailData1,DetailDataKai detailData2) {
+	public static Comparator<DetailDataCustom> ResourceIdComparator = new Comparator<DetailDataCustom> () {
+		 public int compare(DetailDataCustom detailData1,DetailDataCustom detailData2) {
             String resourceID1 = detailData1.getResourceID().toString();
             String resourceID2 = detailData2.getResourceID().toString();
             

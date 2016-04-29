@@ -37,11 +37,12 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ page import="java.math.BigInteger,java.util.*,org.oscarehr.integration.mcedt.mailbox.DetailDataKai,ca.ontario.health.edt.TypeListData" %>
+<%@ page import="java.math.BigInteger,java.util.*,org.oscarehr.integration.mcedt.mailbox.DetailDataCustom,ca.ontario.health.edt.TypeListData, org.oscarehr.integration.mcedt.mailbox.ActionUtils" %>
+
 
 <%    
 
-	List<DetailDataKai> resourceListSent = (ArrayList<DetailDataKai>)session.getAttribute("resourceListSent");
+	List<DetailDataCustom> resourceListSent = (ArrayList<DetailDataCustom>)session.getAttribute("resourceListSent");
 	//List<TypeListData> typeListData = (ArrayList<TypeListData>)session.getAttribute("typeListData");
 	BigInteger resultSize = (BigInteger)session.getAttribute("resultSize");
 	
@@ -120,13 +121,9 @@
 	   	
 	   	 if (numOfFiles>0) {
 	  	  	$("#unSelSent").prop('disabled', false);
-	    	} else {
-	   	 	$("#unSelSent").prop('disabled', true);
-	  	  }
-	   	
-	   	 if (numOfFiles>0) {
 	  	  	$("#deleteBtn").prop('disabled', false);
 	    	} else {
+	   	 	$("#unSelSent").prop('disabled', true);
 	   	 	$("#deleteBtn").prop('disabled', true);
 	  	  }
 		})
@@ -135,6 +132,7 @@
 			$('input[type="checkbox"]').filter(':checked').prop('checked', false);
 			$('input[type="checkbox"]').filter(':disabled').prop('disabled', false);
 			$("#unSelSent").prop('disabled', true);
+			$("#deleteBtn").prop('disabled', true);
 		})
 	});
 
@@ -156,7 +154,8 @@
 		if (control) {
 			control.disabled = true;
 		}
-		window.location.href = "resourceInfo.do?resourceId=" + resourceId;		
+		var temp =jQuery("#serviceId").val();
+		window.location.href = "resourceInfo.do?resourceId=" + resourceId +"&serviceId="+jQuery("#serviceId").val();		
 		return false;
 		
 	}	
@@ -166,7 +165,7 @@
 			control.disabled = true;
 		}
 		
-		window.location.href = "reSubmit.do?resourceId=" + resourceId;
+		window.location.href = "reSubmit.do?resourceId=" + resourceId +"&serviceId="+jQuery("#serviceId").val();
 		return false;		
 		
 	}
@@ -282,6 +281,15 @@ $(document).ready(function ()
 	
 	<div>
 	
+		Billing Number:
+		<html:select property="serviceIdSent" styleId="serviceIdSent"
+			styleClass="serviceIdSent">
+			<c:forEach var="r" items="${serviceIds}">
+            	<html:option value="${r}" >
+					<c:out value="${r}" />
+				</html:option>
+							</c:forEach>
+		</html:select>
 		Resource Type:
 		<html:select property="resourceType" styleId="resourceType"
 			styleClass="input-xxlarge">
@@ -314,8 +322,9 @@ $(document).ready(function ()
 			</c:forEach>
 		</html:select>
 		<button class="noBorder blackBox flatLink font12 small" onclick="ShowSpin(true); return changeDisplay();">Load Page</button>
-	</div>	
-	* Only files with upload status can be deleted or submitted from/to MC-EDT.
+	</div>
+	* You may select a maximum of 5 files at a time to delete from MC-EDT
+	<br />** Only files with upload status can be deleted or submitted from/to MC-EDT.
 	<%
 		if(resourceListSent!=null){									
 	%>
@@ -329,6 +338,7 @@ $(document).ready(function ()
 						<!-- <th>Result</th>
 						<th>Status</th> -->
 						<th>File Name</th>
+						<th>Status</th>
 						<th>Re Submit</th>
 						<th>File Info</th>												
 					</tr>
@@ -346,6 +356,7 @@ $(document).ready(function ()
 						</td>
 						<td><c:out value="${r.resourceType}" /></td>						
 						<td><c:out value="${r.description}" /></td>
+						<td><c:out value="${r.status}" /></td>
 						<td>
 							<c:if test="${r.status == 'UPLOADED'}">														
 								<button class="noBorder blackBox flatLink font12 small" onclick="ShowSpin(true);return reSubmit(${r.resourceID},this);">Submit</button>
