@@ -55,6 +55,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.EFormDao;
 import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.dao.SecRoleDao;
@@ -109,6 +110,24 @@ public class EFormUtil {
 		return saveEForm(formName, formSubject, fileName, htmlStr, null, patientIndependent, roleType);
 	}
 
+	public static String saveEForm2(EForm eForm) {
+		EFormDao dao = (EFormDao)SpringUtils.getBean("EFormDao");
+		org.oscarehr.common.model.EForm e = new org.oscarehr.common.model.EForm();
+		e.setCreator(eForm.getFormCreator());
+		e.setCurrent(true);
+		e.setFileName(eForm.getFormFileName());
+		e.setFormDate(new Date());
+		e.setFormHtml(eForm.getFormHtml());
+		e.setFormName(eForm.getFormName());
+		e.setFormTime(new Date());
+		e.setPatientIndependent(eForm.getPatientIndependent());
+		e.setRoleType(eForm.getRoleType());
+		e.setSubject(eForm.getFormSubject());
+		dao.persist(e);
+		return e.getId().toString();
+	}
+	
+	
 	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, String creator, boolean patientIndependent, String roleType) {
 		// called by the upload action, puts the uploaded form into DB
 		String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");

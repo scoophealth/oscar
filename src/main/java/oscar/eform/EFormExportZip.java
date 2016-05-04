@@ -254,7 +254,7 @@ public class EFormExportZip {
         //write constructed eforms
         for (EForm eform: eformTable.values()) {
             _log.info("New eform: " + eform.getFormName());
-            EFormUtil.saveEForm(eform);
+            EFormUtil.saveEForm2(eform);
         }
         deleteDirectory(imageTempFolderDir);
         return errors;
