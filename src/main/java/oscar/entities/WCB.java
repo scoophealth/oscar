@@ -57,10 +57,10 @@ public class WCB {
             int demographic_no;
     private //    | int(10) unsigned ||
             String provider_no;
-    @Temporal(value = javax.persistence.TemporalType.DATE)
+    @Temporal(value = javax.persistence.TemporalType.TIMESTAMP)
     private //    | int(10) unsigned ||
             Date formCreated;
-    @Temporal(value = javax.persistence.TemporalType.DATE)
+    @Temporal(value = javax.persistence.TemporalType.TIMESTAMP)
     private //   | datetime         ||
             Date formEdited;
     private //  | datetime         ||
