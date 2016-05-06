@@ -218,7 +218,7 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 	}
 	
 	$scope.isActive = function (item) {
-		if(angular.isDefined(item) && angular.isDefined(item.state)){
+		if(angular.isDefined(item) && angular.isDefined(item.state) && item.state != null){
 			return $state.is(item.state);
 		}
 		return false;
