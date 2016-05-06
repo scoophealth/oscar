@@ -109,6 +109,18 @@ angular.module("formServices", [])
      
           return deferred.promise;
         },
+        getFavouriteFormGroup: function(){
+        	var deferred = $q.defer();
+        	 $http.get(this.apiPath+'/getFavouriteFormGroup',this.configHeaders).success(function(data){
+        		 console.log(data);
+            	deferred.resolve(data);
+            }).error(function(){
+            	console.log("error fetching eforms");
+            	deferred.reject("An error occured while fetching group names");
+            });
+     
+          return deferred.promise;
+        },
         getFormOptions: function(demographicNo){
         	var deferred = $q.defer();
         	 $http.get(this.apiPath+'/'+demographicNo+'/formOptions',this.configHeaders).success(function(data){

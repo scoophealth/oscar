@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
 import java.util.ResourceBundle;
 
 import javax.ws.rs.Consumes;
@@ -48,10 +47,12 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.oscarehr.app.AppOAuth1Config;
 import org.oscarehr.app.OAuth1Utils;
 import org.oscarehr.common.dao.AppDefinitionDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
 import org.oscarehr.common.model.AppDefinition;
 import org.oscarehr.common.model.AppUser;
@@ -87,11 +88,14 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
 @Path("/forms")
 @Component("formsService")
 public class FormsService extends AbstractServiceImpl {
+	Logger logger = MiscUtils.getLogger();
+	
 	@Autowired
 	private FormsManager formsManager;
 	
 	@Autowired
 	private AppDefinitionDao appDefinitionDao;
+	
 	
 	@GET
 	@Path("/{demographicNo}/all")
@@ -216,6 +220,26 @@ public class FormsService extends AbstractServiceImpl {
 		return response;
 		
 	}
+	
+	@GET
+	@Path("/getFavouriteFormGroup")
+	@Produces("application/json")
+	public SummaryTo1 getFavouriteFormGroups(){
+		UserPropertyDAO userPropertyDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+		String groupName = userPropertyDao.getStringValue(getLoggedInInfo().getLoggedInProviderNo(),"favourite_eform_group");
+		logger.debug("favourite eform group name "+groupName);
+		if(groupName == null) return null;
+		List<EForm> eforms = formsManager.getEfromInGroupByGroupName(getLoggedInInfo(),  groupName);
+		SummaryTo1 formSummary = new SummaryTo1(groupName,0,null); 
+		List<SummaryItemTo1> summaryItems = formSummary.getSummaryItem();
+		for(EForm eform: eforms){
+			SummaryItemTo1 summaryItem = new SummaryItemTo1(eform.getId(), eform.getFormName(),"record.forms.new","eform");
+			summaryItems.add(summaryItem);
+		}
+		return formSummary;
+	}
+	
+	
 	@GET
 	@Path("/getFormGroups")
 	@Produces("application/json")
