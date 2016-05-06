@@ -72,19 +72,46 @@
 <div class="col-sm-9">
 	<a class="hand-hover pull-right" ng-show="!isEmpty(page.currentForm)" title="Open in new window" ng-click="viewFormState(page.currentForm,2)"><span class="glyphicon glyphicon-new-window"></span></a>
 	<div ng-if="isEmpty(page.currentForm)">
-    	<h2><bean:message key="forms.title.form.group.library" bundle="ui"/></h2>
-    	<fieldset ng-repeat="mod in page.formGroups" class="col-sm-4">
-       		<legend style="margin-bottom:0px;"> 
-				{{mod.displayName}}  
-			</legend>
-        	<ul style="padding-left:12px;">
-        		<li ng-repeat="item in mod.summaryItem">
-        			<span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span>
-        			<a ng-click="openFormFromGroups(item)" href="javascript:void(0)" ng-class="item.indicatorClass" >{{item.displayName | limitTo: 34 }} {{item.displayName.length > 34 ? '...' : '' }}<small ng-show="item.classification">({{item.classification}})</small></a> 
-        		</li> 			
-			</ul>
-		
-       </fieldset>
+		<h2><bean:message key="forms.title.form.library" bundle="ui"/></h2>
+		<div>
+			
+			<div  class="col-sm-4">
+				<legend style="margin-bottom:0px;"> 
+					<bean:message key="forms.title.form.groups" bundle="ui"/>
+				</legend>
+				<ul class="list-group" >
+	        		<li ng-repeat="mod in page.formGroups" class="list-group-item" ng-class="getGroupListClass(mod)">
+	        			 <span class="badge">{{mod.summaryItem.length}}</span>
+	        			<a class="list-group-item-text" ng-click="setCurrentEFormGroup(mod)" href="javascript:void(0)"> {{mod.displayName}} </a> 
+	        		</li> 			
+				</ul>
+			</div>
+
+			<div  class="col-sm-4">
+				<legend style="margin-bottom:0px;"> 
+					&nbsp;{{currentEformGroup.displayName}}  
+				</legend>
+	        	<ul style="padding-left:12px;">
+	        		<li ng-repeat="item in currentEformGroup.summaryItem">
+	        			<span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span>
+	        			<a ng-click="openFormFromGroups(item)" href="javascript:void(0)" ng-class="item.indicatorClass" >{{item.displayName | limitTo: 34 }} {{item.displayName.length > 34 ? '...' : '' }}<small ng-show="item.classification">({{item.classification}})</small></a> 
+	        		</li> 			
+				</ul>
+			</div>
+
+			<div ng-if="favouriteGroup"  class="col-sm-4">
+				<legend style="margin-bottom:0px;"> 
+					<bean:message key="forms.title.form.favourite" bundle="ui"/>: {{favouriteGroup.displayName}}
+				</legend>
+				
+				<ul style="padding-left:12px;">
+	        		<li ng-repeat="item in favouriteGroup.summaryItem">
+	        			<span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span>
+	        			<a ng-click="openFormFromGroups(item)" href="javascript:void(0)" ng-class="item.indicatorClass" >{{item.displayName | limitTo: 34 }} {{item.displayName.length > 34 ? '...' : '' }}<small ng-show="item.classification">({{item.classification}})</small></a> 
+	        		</li> 			
+				</ul>
+			</div>
+		</div>
     </div>
 	<div id="formInViewFrame"></div>
 </div>
