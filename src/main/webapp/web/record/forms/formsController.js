@@ -82,6 +82,20 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	
 	$scope.getFormGroups();
 	$scope.page.formOptions = [];
+	$scope.favouriteGroup = null;
+	
+	getFavouriteFormGroup = function(){
+		formService.getFavouriteFormGroup().then(function(data){
+			$scope.favouriteGroup = data;
+			
+			if(!($scope.favouriteGroup.summaryItem instanceof Array)){
+				$scope.favouriteGroup.summaryItem = [$scope.favouriteGroup.summaryItem];
+			}
+			
+		});
+	};
+	
+	getFavouriteFormGroup();
 	
 	formService.getFormOptions($scope.demographicNo).then(function(data){
 		console.log("data",data);
@@ -202,6 +216,12 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 		return true;
 	};
 	
+	$scope.currentEformGroup = {}; 
+	
+	$scope.setCurrentEFormGroup = function(mod){
+		$scope.currentEformGroup = mod;
+	} 
+	
 	$scope.openFormFromGroups = function(item){
 		console.log("group item",item);
 		item.formId = item.id;
@@ -238,6 +258,15 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	 */
 	$scope.getListClass = function(listId){
 		if(listId === $scope.page.currentlistId ){
+			return "active";
+		}
+	}
+	
+	/*
+	 * Used to make group setting active 
+	 */
+	$scope.getGroupListClass = function(grp){
+		if(grp === $scope.currentEformGroup ){
 			return "active";
 		}
 	}
