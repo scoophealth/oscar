@@ -269,9 +269,16 @@ public class RecordUxService extends AbstractServiceImpl {
 			}
 		}else if("left".equals(summaryName )){
 			summaryList = new ArrayList<SummaryTo1>();
-			
 			if (securityInfoManager.hasPrivilege(loggedInInfo, "_prevention", "r", null)&& preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.PREVENTION_POS)) {
 				summaryList.add(new SummaryTo1("Preventions",count++,SummaryTo1.PREVENTIONS));
+			}
+			
+			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.prescriptions", "r", null) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.MEDS_POS)) {
+				summaryList.add(new SummaryTo1("Medications",count++,SummaryTo1.MEDICATIONS_CODE));  
+			}
+			
+			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.otherMeds", "r", null) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.OTHER_MEDS_POS)) {
+				summaryList.add(new SummaryTo1("Other Meds",count++,SummaryTo1.OTHERMEDS_CODE));
 			}
 			
 			if(preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.ONGOING_POS)){
@@ -303,14 +310,6 @@ public class RecordUxService extends AbstractServiceImpl {
 			summaryList.add(new SummaryTo1("Allergies",count++,SummaryTo1.ALLERGIES));  
 			}
 			
-			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.prescriptions", "r", null) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.MEDS_POS)) {
-				summaryList.add(new SummaryTo1("Medications",count++,SummaryTo1.MEDICATIONS_CODE));  
-			}
-			
-			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.otherMeds", "r", null) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.OTHER_MEDS_POS)) {
-				summaryList.add(new SummaryTo1("Other Meds",count++,SummaryTo1.OTHERMEDS_CODE));
-			}
-			
 			if( (securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.forms", "r", null) || securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.eforms", "r", null)) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.ASSESSMENTS_POS)  ){
 				summaryList.add(new SummaryTo1("Assessments",count++,SummaryTo1.ASSESSMENTS_CODE));
 			}
@@ -324,13 +323,14 @@ public class RecordUxService extends AbstractServiceImpl {
 
     private static Map<String, String> createMap() {
         Map<String, String> result = new HashMap<String, String>();
+
         result.put("preventions","preventionsSummary");
+    	result.put("meds","rxSummary");
+    	result.put("othermeds","issueNoteSummary");
         result.put("ongoingconcerns","issueNoteSummary"); 
         result.put("medhx","issueNoteSummary"); 
 		result.put("socfamhx","issueNoteSummary"); 		
-		result.put("reminders","issueNoteSummary"); 
-		result.put("meds","rxSummary");
-		result.put("othermeds","issueNoteSummary"); 	
+		result.put("reminders","issueNoteSummary");
 		result.put("assessments","formsSummary");
 		result.put("outgoing","formsSummary");	
 		result.put("sochx","issueNoteSummary"); 
