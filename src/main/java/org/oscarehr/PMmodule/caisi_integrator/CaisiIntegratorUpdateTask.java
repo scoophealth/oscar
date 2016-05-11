@@ -569,7 +569,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushAllDemographics(LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, CachedFacility cachedFacility, List<Program> programs) throws MalformedURLException, ShutdownException, IntegratorPausedException {
+	private void pushAllDemographics(LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, 
+			CachedFacility cachedFacility, List<Program> programs) 
+			throws MalformedURLException, ShutdownException, IntegratorPausedException {
+		
 		List<Integer> demographicIds = getDemographicIdsToPush(facility,lastDataUpdated, programs);
 
 		//populate the DB with the information about this run. Update as we go along.
@@ -632,8 +635,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				benchTimer.tag("pushMeasurements");
 				pushDxresearchs(lastDataUpdated, facility, demographicService, demographicId);
 				benchTimer.tag("pushDxresearchs");
-				pushBillingItems(lastDataUpdated, facility, demographicService, demographicId);
-				benchTimer.tag("pushBillingItems");
+				
+				// TODO Need additional methods for other billing regions here.
+				if( OscarProperties.getInstance().isOntarioBillingRegion() ) {
+					pushBillingItems(lastDataUpdated, facility, demographicService, demographicId);
+					benchTimer.tag("pushBillingItems");
+				}
+				
 				pushEforms(lastDataUpdated, facility, demographicService, demographicId);
 				benchTimer.tag("pushEforms");
 				pushAllergies(lastDataUpdated, facility, demographicService, demographicId);
@@ -747,6 +755,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private void pushDemographicConsent(Date lastUpdatedData, Facility facility, DemographicWs demographicService, Integer demographicId) {
 
+		// TODO add the new patient consent table here.
+		
 		// find the latest relevant consent that needs to be pushed.
 		List<IntegratorConsent> tempConsents = integratorConsentDao.findByFacilityAndDemographicSince(facility.getId(), demographicId,lastUpdatedData);
 
@@ -1066,7 +1076,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushForms(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException, SQLException, IOException, ParseException {
 		logger.debug("pushing demographic forms facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		pushLabReq2007(lastDataUpdated, facility, demographicWs, demographicId);
+		// TODO add additional methods for other forms here
+		
+		if( OscarProperties.getInstance().isOntarioBillingRegion() ) {
+			// LabReq2007 and up is only used in Ontario
+			pushLabReq2007(lastDataUpdated, facility, demographicWs, demographicId);	
+		}
 	}
 
 	private void pushLabReq2007(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws SQLException, ShutdownException, IOException, ParseException {
