@@ -182,6 +182,18 @@ public class OscarProperties extends Properties {
 	public boolean isAccountLockingEnabled() {
 		return isPropertyActive("ENABLE_ACCOUNT_LOCKING");
 	}
+	
+	public boolean isOntarioBillingRegion() {
+		return ( "ON".equals( getProperty("billregion") ) );
+	}
+	
+	public boolean isBritishColumbiaBillingRegion() {
+		return ( "BC".equals( getProperty("billregion") ) );
+	}
+	
+	public boolean isAlbertaBillingRegion() {
+		return ( "AB".equals( getProperty("billregion") ) );
+	}
 
 	public boolean isCaisiLoaded() {
 		return isPropertyActive("caisi");
