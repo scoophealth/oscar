@@ -58,14 +58,39 @@ public class PatientConsentManager {
 	}
 	
 	/**
+	 * Set a patient consent based on the demographic, consent type and boolean consent.
+	 * The "consented" parameter will not accept NULL.
+	 * 
+	 * True = patient fully consents
+	 * False = patient has opted out (revoked)
+	 * 
+	 * This method first assumes that a Consent entry already exists for the given patient.
+	 * If a Consent exists: then the Consent will be set according to the given boolean parameter.
+	 * If a Consent does not exist: and the consented parameter is true - a new "consented" Consent will be added - a new 
+	 * consent object will not be added if consented parameter is false.
+	 * 
+	 * This method sets the boolean "explicit" ( patient gave direct consent = true; patient consent was implied or assumed = false) 
+	 * to a default TRUE.
+	 */
+	public void setConsent( LoggedInInfo loggedinInfo, int demographic_no, int consentTypeId, boolean consented ) {
+		if( consented ) {
+			addConsent(loggedinInfo, demographic_no, consentTypeId, consented);
+		} else {
+			optoutConsent( loggedinInfo, demographic_no, consentTypeId );
+		}
+	}
+
+	/**
 	 * Add a new Consent from a consenting patient by consentType id. 
 	 * The given consent type id is cross checked in the available consentTypes.
-	 * The default state for Consent is FALSE. This means that a patient is assume non-consenting until
-	 * a Consent is set. 
+	 * This method first assumes that a Consent entry already exists for the given patient and 
+	 * then updates it as required.
 	 * 
-	 * @param loggedinInfo
-	 * @param int demographic_no
-	 * @param int consentTypeId
+	 * The default state for Consent is FALSE. This means that a patient is assume non-consenting until
+	 * a Consent is set. Therefore there is no need to set this if a patient has not expressed consent.
+	 * 
+	 * This method sets the boolean "explicit" ( patient gave direct consent = true; patient consent was implied or assumed = false) 
+	 * to a default TRUE.
 	 */
 	public void addConsent( LoggedInInfo loggedinInfo, int demographic_no, int consentTypeId ) {
 		addConsent( loggedinInfo, demographic_no, consentTypeId, Boolean.TRUE );
@@ -81,13 +106,9 @@ public class PatientConsentManager {
 	 * or if the consent was explicit (explicit=true).  In most cases the patient will always be required to give 
 	 * a verbal or written explicit consent.  
 	 * 
-	 * The default for explicit is TRUE. Explicit will not accept a null value in this method use 
-	 * addConsent( LoggedInInfo loggedinInfo, int demographic_no, int consentTypeId ) to set with the default value
-	 * 
-	 * @param loggedinInfo
-	 * @param int demographic_no
-	 * @param int consentTypeId
-	 * @param boolean explicit (default TRUE)
+	 * The Explicit parameter will not accept a null value.
+	 * EXPLICIT CONSENT: patient gave direct consent. explicit = true; 
+	 * IMPLIED CONSENT: patient consent was implied or assumed. explicit = false 
 	 */
 	public void addConsent( LoggedInInfo loggedinInfo, int demographic_no, int consentTypeId, boolean explicit ) {
 		
@@ -114,6 +135,10 @@ public class PatientConsentManager {
 			consent.setOptoutDate( null );			
 		}
 		
+		if( consent != null ) {
+			consent.setEditDate( new Date( System.currentTimeMillis() ) );
+		}
+		
 		if( consent.getId() == null ) {
 			consentDao.persist(consent);
 		} else if( consent.getId() > 0 ) {
@@ -126,10 +151,6 @@ public class PatientConsentManager {
 	 * Used for removing consent from a patient Consent that was previously consented.
 	 * Ignored if the patient has never consented. 
 	 * The normal state for consent is FALSE
-	 * 
-	 * @param loggedinInfo
-	 * @param int demographic_no
-	 * @param int consentTypeId
 	 */
 	public void optoutConsent( LoggedInInfo loggedinInfo, int demographic_no, int consentTypeId ) {
 			
@@ -150,8 +171,6 @@ public class PatientConsentManager {
 	
 	/**
 	 * Used for removing consent from a patient that previously consented.
-	 * @param LoggedinInfo
-	 * @param Consent
 	 */
 	public void optoutConsent( LoggedInInfo loggedinInfo, Consent consent ) {
 		
@@ -165,8 +184,6 @@ public class PatientConsentManager {
 
 	/**
 	 * Used for removing consent from a patient that previously consented. For a Consent object.
-	 * @param LoggedinInfo
-	 * @param int consentId
 	 */
 	public void optoutConsent( LoggedInInfo loggedinInfo, int consentId ) {
 		
@@ -177,11 +194,12 @@ public class PatientConsentManager {
 		LogAction.addLogSynchronous(loggedinInfo, "PatientConsentManager.optoutConsent[consentID]", " ConsentId: " + consentId);
 		
 		Consent consent = consentDao.find( consentId );
-		
+	
 		if( consent != null ) {
+			Date date = new Date( System.currentTimeMillis() );
 			consent.setOptout(Boolean.TRUE);
-			consent.setOptoutDate( new Date() );
-			
+			consent.setOptoutDate( date );
+			consent.setEditDate( date );
 			consentDao.merge(consent);
 		}
 		
@@ -204,7 +222,6 @@ public class PatientConsentManager {
 	/**
 	 * Returns a consent type by the consent type id. 
 	 * This can be used to determine the consent program for a consent type id.
-	 * @param int consentTypeId
 	 */
 	public ConsentType getConsentTypeByConsentTypeId( int consentTypeId ) {		
 		return consentTypeDao.find( consentTypeId );
@@ -222,9 +239,6 @@ public class PatientConsentManager {
 	/**
 	 * Returns a list of patient consents given by a specified patient for a specific ConsentType program.
 	 * Find the ConsentType object first with getConsentType( String type )
-	 * @param loggedinInfo
-	 * @param int demographic_no
-	 * @param ConsentType consentType
 	 */
 	public Consent getConsentByDemographicAndConsentType( LoggedInInfo loggedinInfo, int demographic_no, ConsentType consentType ) {
 		if ( ! securityInfoManager.hasPrivilege(loggedinInfo, "_demographic", SecurityInfoManager.READ, demographic_no) ) {
@@ -243,9 +257,6 @@ public class PatientConsentManager {
 	
 	/**
 	 * Returns a list of all the consentTypes/programs this patient has consented.
-	 *  
-	 * @param loggedinInfo
-	 * @param in demographic_no
 	 */
 	public List<Consent> getAllConsentsByDemographic( LoggedInInfo loggedinInfo, int demographic_no ) {
 		
@@ -264,9 +275,6 @@ public class PatientConsentManager {
 	/**
 	 * A boolean determination for if the patient has consented to the given ConsentType/program. 
 	 * Find the ConsentType object first with getConsentType( String type )
-	 * 
-	 * @param int demographic_no
-	 * @param ConsentType consentType
 	 */
 	public Boolean hasPatientConsented( int demographic_no, ConsentType consentType ) {
 		
@@ -281,6 +289,25 @@ public class PatientConsentManager {
 		}
 		
 		return consent.getPatientConsented();
+	}
+	
+	/**
+	 * Get all consents by the type indicated that were edited after the date given.
+	 */
+	public List<Consent> getConsentsByTypeAndEditDate( LoggedInInfo loggedinInfo, ConsentType consentType, Date editedAfter ) {
+
+		// TODO Integrator uses this method. Not sure how to handle situations when Integrator is using the -1 system id.
+		// At current none of these entries reveal any private patient information.
+//		if ( ! securityInfoManager.hasPrivilege(loggedinInfo, "_demographic", SecurityInfoManager.READ, null) ) {
+//			return null;
+//		}
+		
+		List<Consent> consentList = consentDao.findLastEditedByConsentTypeId( consentType.getId(), editedAfter );
+		
+		LogAction.addLogSynchronous( loggedinInfo, "PatientConsentManager.getConsentsByTypeAndEditDate",
+				" Demographic: " + consentType );
+		
+		return consentList;
 	}
 	
 }

@@ -68,6 +68,10 @@ public class Consent extends AbstractModel<Integer> {
 	@Column(name = "optout_date")
 	private Date optoutDate;
 	
+	@Temporal( TemporalType.TIMESTAMP )
+	@Column(name = "edit_date")
+	private Date editDate;
+	
 	@OneToOne(optional=true)
     @JoinColumn(name = "consent_type_id", referencedColumnName="id", insertable=false, updatable=false) 
     private ConsentType consentType;
@@ -137,8 +141,7 @@ public class Consent extends AbstractModel<Integer> {
 		this.optoutDate = optoutDate;
 	}
 
-	public ConsentType getConsentType() {
-		
+	public ConsentType getConsentType() {		
 		return consentType;
 	}
 
@@ -146,7 +149,15 @@ public class Consent extends AbstractModel<Integer> {
 		setConsentTypeId( consentType.getId() );
 		this.consentType = consentType;
 	}
-	
+
+	public Date getEditDate() {
+		return editDate;
+	}
+
+	public void setEditDate(Date editDate) {
+		this.editDate = editDate;
+	}
+
 	@Transient
 	public boolean getPatientConsented() {
 		return ( getConsentTypeId() > 0 && ! isOptout() );

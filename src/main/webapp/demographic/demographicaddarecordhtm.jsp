@@ -1437,8 +1437,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
 					}
 				}
 						
-				if(showConsents) {
-			%>
+			if(showConsents) { %>
 			<!-- consents -->
 			<tr valign="top">
 	
@@ -1450,6 +1449,8 @@ document.forms[1].r_doctor_ohip.value = refNo;
 				</td>
 
 		  	</tr>
+		  			  	
+			<% } %>
 		  	
 		  	<%-- This block of code was designed to eventually manage all of the patient consents. --%>
 			<oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
@@ -1476,7 +1477,6 @@ document.forms[1].r_doctor_ohip.value = refNo;
 				
 			</oscar:oscarPropertiesCheck>
 
-			<% } %>
 </oscar:oscarPropertiesCheck>
 
 			<tr valign="top">

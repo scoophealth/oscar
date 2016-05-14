@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -67,10 +68,12 @@ import org.oscarehr.caisi_integrator.ws.ProviderWsService;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.caisi_integrator.ws.ReferralWsService;
 import org.oscarehr.caisi_integrator.ws.SetConsentTransfer;
+import org.oscarehr.common.model.Consent;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
+import org.oscarehr.common.model.IntegratorConsent.SignatureStatus;
 import org.oscarehr.hnr.ws.MatchingClientParameters;
 import org.oscarehr.hnr.ws.MatchingClientScore;
 import org.oscarehr.util.CxfClientUtilsOld;
@@ -396,6 +399,38 @@ public class CaisiIntegratorManager {
 			SetConsentTransfer consentTransfer=makeSetConsentTransfer(consent);				
 			getDemographicWs(loggedInInfo, facility).setCachedDemographicConsent(consentTransfer);
 		}
+	}
+
+	public static IntegratorConsent makeIntegratorConsent( Consent consent ) {
+		
+		IntegratorConsent integratorConsent = new IntegratorConsent();
+		HashMap<Integer, Boolean> shareData = new HashMap<Integer, Boolean>();
+		shareData.put(1, Boolean.TRUE);
+		
+		ConsentStatus consentStatus = null;
+		if( consent.getPatientConsented() ) {
+			consentStatus = IntegratorConsent.ConsentStatus.GIVEN;
+		} else if( consent.isOptout() ) {
+			consentStatus = IntegratorConsent.ConsentStatus.REVOKED;
+		}
+		
+		SignatureStatus signatureStatus = null;			
+		if( consent.isExplicit() ) {
+			signatureStatus = IntegratorConsent.SignatureStatus.PAPER;
+		} else {
+			signatureStatus = IntegratorConsent.SignatureStatus.ELECTRONIC;
+		}
+					
+		integratorConsent.setClientConsentStatus( consentStatus );
+		integratorConsent.setCreatedDate( new Date(System.currentTimeMillis() ) );//consent.getConsentDate() );
+		integratorConsent.setExpiry( consent.getOptoutDate() );			
+		integratorConsent.setDemographicId( consent.getDemographicNo() );
+		integratorConsent.setProviderNo( consent.getLastEnteredBy() );
+		integratorConsent.setSignatureStatus( signatureStatus );
+		
+		integratorConsent.setConsentToShareData( shareData );
+		
+		return integratorConsent;
 	}
 
 	protected static SetConsentTransfer makeSetConsentTransfer(IntegratorConsent consent) {

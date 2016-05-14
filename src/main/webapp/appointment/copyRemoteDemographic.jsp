@@ -55,6 +55,11 @@
 <%@ page import="org.oscarehr.common.dao.AdmissionDao" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProgramDao" %>
 <%@page import="org.oscarehr.PMmodule.model.Program" %>
+<%@page import="org.oscarehr.managers.PatientConsentManager" %>
+<%@page import="org.oscarehr.common.model.ConsentType" %>
+<%@page import="org.oscarehr.common.model.Facility" %>
+<%@page import="org.oscarehr.caisi_integrator.ws.GetConsentTransfer"%>
+<%@page import="org.oscarehr.common.model.UserProperty"%>
 <%
 	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
 	ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
@@ -69,7 +74,21 @@
 	DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
 	demographicDao.saveClient(demographic);
 	Integer demoNoRightNow = demographic.getDemographicNo(); // temp use for debugging
-
+	
+	//--- set the local patient consent based on the Integrator consent state for this demographic. ---
+	GetConsentTransfer consentTransfer = CaisiIntegratorManager.getConsentState( loggedInInfo, loggedInInfo.getCurrentFacility(), remoteFacilityId, remoteDemographicId );
+	Boolean consented = null;
+			
+	if( consentTransfer != null ) {
+		consented = ( "ALL".equals( consentTransfer.getConsentState().value() ) );
+	}
+	
+	if( consented != null ) {
+		PatientConsentManager patientConsentManager = SpringUtils.getBean( PatientConsentManager.class );
+		ConsentType consentType = patientConsentManager.getConsentType( UserProperty.INTEGRATOR_PATIENT_CONSENT );
+		patientConsentManager.setConsent( loggedInInfo, demographic.getDemographicNo(), consentType.getId(), consented );
+	}
+	
 	//--- link the demographic on the integrator so associated data shows up ---
 	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
 	
@@ -77,7 +96,7 @@
 	demographicWs.linkDemographics(providerNo, demographic.getDemographicNo(), remoteFacilityId, remoteDemographicId);
 
 
-	MiscUtils.getLogger().error("LINK DEMOGRAPHIC #### ProviderNo :"+providerNo+" ,demo No :"+ demographic.getDemographicNo()+" , remoteFacilityId :"+ remoteFacilityId+" ,remoteDemographicId "+ remoteDemographicId+" orig demo "+demoNoRightNow);
+	MiscUtils.getLogger().info("LINK DEMOGRAPHIC #### ProviderNo :"+providerNo+" ,demo No :"+ demographic.getDemographicNo()+" , remoteFacilityId :"+ remoteFacilityId+" ,remoteDemographicId "+ remoteDemographicId+" orig demo "+demoNoRightNow);
 
 
 	//--- add to program so the caisi program access filtering doesn't cause a security problem ---

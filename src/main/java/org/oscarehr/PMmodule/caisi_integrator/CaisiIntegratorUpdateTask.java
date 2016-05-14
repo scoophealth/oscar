@@ -128,6 +128,7 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONItem;
+import org.oscarehr.common.model.Consent;
 import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
@@ -139,6 +140,7 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
+
 import org.oscarehr.common.model.IntegratorProgress;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementMap;
@@ -223,7 +225,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
 	private PatientConsentManager patientConsentManager = (PatientConsentManager) SpringUtils.getBean(PatientConsentManager.class);
-
+	private ConsentType consentType;
+	
 	private static TimerTask timerTask = null;
 
 	private HashSet<Integer> programIds;
@@ -276,12 +279,14 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		loggedInInfo.setLoggedInProvider(p);
 		loggedInInfo.setLoggedInSecurity(security);
 		
-		// if the clinic has set "push all patients that have consented" in the Integrator properties
-		// this will active the Patient Consent module and only consenting patients will be pushed.
-		// The consent module must be activated in the properties file and the Integrator Patient Consent program
-		// must be set in Provider Properties.
+		// If "push all patients that have consented" is set in the Integrator properties
+		// this will ensure that only consenting patients will be pushed.
+		// Note: the consent module must be activated in the Oscar properties file; and the Integrator Patient Consent program
+		// must be set in Provider Properties database table.
 		if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
 			CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE = "1".equals( userPropertyDao.getProp( UserProperty.INTEGRATOR_PATIENT_CONSENT ).getValue() );
+			// consenttype is the consent type from the patient consent manager used for this module .
+			consentType = patientConsentManager.getConsentType( UserProperty.INTEGRATOR_PATIENT_CONSENT );
 		}
 		
 		if(p == null) {
@@ -369,6 +374,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		pushFacility(facility, lastDataUpdated);
 		pushProviders(lastDataUpdated, facility);
 		pushPrograms(lastDataUpdated, facility);
+		
+		// sync the Patient Consent tables. See method signature for details.
+		if( CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
+			this.pushPatientConsentTable(loggedInInfo, lastDataUpdated, facility);
+		}
+		
 		pushAllDemographics(loggedInInfo, facility, lastDataUpdated,cachedFacility,programs);
 		
 		// all things updated successfully
@@ -526,6 +537,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private List<Integer> checkPatientConsent( List<Integer> demographicNoList ) {
 		
 		Set<Integer> consentedSet = new HashSet<Integer>();
+		List<Integer> consentedDemographicNoList = new ArrayList<Integer>();
 		
 		for( int demographicNo : demographicNoList ) {
 			if( checkPatientConsent( demographicNo ) ) {
@@ -533,17 +545,14 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				consentedSet.add( demographicNo );
 			}
 		}
+
+		consentedDemographicNoList.addAll(consentedSet);
 		
-		demographicNoList.clear();
-		demographicNoList.addAll(consentedSet);
-		
-		return demographicNoList;
+		return consentedDemographicNoList;
 	}
 	
 	private boolean checkPatientConsent( int demographicNo ) {
-		// consent type for this module is "integrator".
-		ConsentType consentType = patientConsentManager.getConsentType( UserProperty.INTEGRATOR_PATIENT_CONSENT );
-		return patientConsentManager.hasPatientConsented( demographicNo, consentType );
+		return patientConsentManager.hasPatientConsented( demographicNo, this.consentType );
 	}
 
 	private List<Integer> getDemographicIdsToPush(Facility facility, Date lastDataUpdated, List<Program> programs) {
@@ -554,7 +563,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		if ( isFullPush(facility) ) {
 			logger.info("Integrator pushing ALL demographics");
 			
-			// check if patient consent module is active.
+			// check if patient consent module is active and then sort out all patients that 
+			// have given consent
 			if( CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
 				logger.info("Integrator patient consent is active. Checking demographic list.");				
 				return checkPatientConsent( fullFacilitydemographicIds );
@@ -670,8 +680,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushDemographic(lastDataUpdated, facility, demographicService, demographicId, facility.getId());
 				// it's safe to set the consent later so long as we default it to none when we send the original demographic data in the line above.
 				benchTimer.tag("pushDemographic");
-				pushDemographicConsent(lastDataUpdated, facility, demographicService, demographicId);
-				benchTimer.tag("pushDemographicConsent");
+				
+				// see new method pushPatientConsentTable() for reason.
+				if( ! CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
+					pushDemographicConsent(lastDataUpdated, facility, demographicService, demographicId);
+					benchTimer.tag("pushDemographicConsent");
+				}
+				
 				pushDemographicIssues(lastDataUpdated, facility, programsInFacility, demographicService, demographicId, cachedFacility);
 				benchTimer.tag("pushDemographicIssues");
 				pushDemographicPreventions(lastDataUpdated, facility, providerIdsInFacility, demographicService, demographicId);
@@ -688,13 +703,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				benchTimer.tag("pushMeasurements");
 				pushDxresearchs(lastDataUpdated, facility, demographicService, demographicId);
 				benchTimer.tag("pushDxresearchs");
-				
-				// TODO Need additional methods for other billing regions here.
-				if( OscarProperties.getInstance().isOntarioBillingRegion() ) {
-					pushBillingItems(lastDataUpdated, facility, demographicService, demographicId);
-					benchTimer.tag("pushBillingItems");
-				}
-				
+				pushBillingItems(lastDataUpdated, facility, demographicService, demographicId);
+				benchTimer.tag("pushBillingItems");
 				pushEforms(lastDataUpdated, facility, demographicService, demographicId);
 				benchTimer.tag("pushEforms");
 				pushAllergies(lastDataUpdated, facility, demographicService, demographicId);
@@ -804,20 +814,60 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		conformanceTestLog(facility, "Demographic", String.valueOf(demographicId));
 	}
+	
+	/**
+	 * This is an override to the pushDemographicConsent method.
+	 *  
+	 * Demographic information will not be pushed if a patient has revoked or modified their 
+	 * consent through the Patient Consent Module for participation in the Integrator program,
+	 * therefore the attached consents from the pushDemographicConsent table will not get pushed. 
+	 * 
+	 * This method ensures that the all current consents from the Patient Consent Module ()  
+	 */
+	private void pushPatientConsentTable(LoggedInInfo loggedinInfo, Date lastDataUpdated, Facility facility ) {
+		
+		DemographicWs demographicService = null;
+		List<Consent> consents = null;
+		List<IntegratorConsent> tempConsents = null;
+			
+		try {
+			demographicService = CaisiIntegratorManager.getDemographicWs(null, facility);
+			consents = patientConsentManager.getConsentsByTypeAndEditDate( loggedinInfo, this.consentType, lastDataUpdated );
+			tempConsents = new ArrayList<IntegratorConsent>();
+		} catch (MalformedURLException e) {
+			logger.error("Connection error while updating patient consents", e);
+		}
+		
+		logger.info("Updating last edited consent list after " +  lastDataUpdated);
+		
+		// Convert a Consent object into an IntegratorConsent object so that it 
+		// the IntegratorConsent object can be converted to a transfer object to 
+		// be consumed by the webservice.
+		for( Consent consent : consents ) {
+			
+			logger.debug("Updating consent id: " +  consent.getId() );
+			IntegratorConsent integratorConsent = CaisiIntegratorManager.makeIntegratorConsent(consent);
+			integratorConsent.setFacilityId( facility.getId() );
+			tempConsents.add( integratorConsent );
+		}
+		
+		if( tempConsents != null && tempConsents.size() > 0 ) {
+			pushDemographicConsent( tempConsents, demographicService );
+		}
+	}
 
 	private void pushDemographicConsent(Date lastUpdatedData, Facility facility, DemographicWs demographicService, Integer demographicId) {
-
-		// TODO add the new patient consent table here.
-		
 		// find the latest relevant consent that needs to be pushed.
-		List<IntegratorConsent> tempConsents = integratorConsentDao.findByFacilityAndDemographicSince(facility.getId(), demographicId,lastUpdatedData);
-
+		pushDemographicConsent( integratorConsentDao.findByFacilityAndDemographicSince(facility.getId(), demographicId,lastUpdatedData), demographicService );		
+	}
+	
+	private void pushDemographicConsent( List<IntegratorConsent> tempConsents, DemographicWs demographicService ) {
 		for (IntegratorConsent tempConsent : tempConsents) {
 			if (tempConsent.getClientConsentStatus() == ConsentStatus.GIVEN || tempConsent.getClientConsentStatus() == ConsentStatus.REVOKED) {
 				SetConsentTransfer consentTransfer = CaisiIntegratorManager.makeSetConsentTransfer(tempConsent);
 				demographicService.setCachedDemographicConsent(consentTransfer);
 				logger.debug("pushDemographicConsent:" + tempConsent.getId() + "," + tempConsent.getFacilityId() + "," + tempConsent.getDemographicId());
-				return;
+				// return;
 			}
 		}
 	}
@@ -1128,12 +1178,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushForms(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException, SQLException, IOException, ParseException {
 		logger.debug("pushing demographic forms facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		// TODO add additional methods for other forms here
-		
-		if( OscarProperties.getInstance().isOntarioBillingRegion() ) {
-			// LabReq2007 and up is only used in Ontario
-			pushLabReq2007(lastDataUpdated, facility, demographicWs, demographicId);	
-		}
+		pushLabReq2007(lastDataUpdated, facility, demographicWs, demographicId);
 	}
 
 	private void pushLabReq2007(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws SQLException, ShutdownException, IOException, ParseException {
@@ -1759,8 +1804,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			return;
 		}
 		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs(loggedInInfo, facility);
-		
-		
+			
 		Calendar nextTime = Calendar.getInstance();
 		
 		Date lastPushDate = new Date(0);

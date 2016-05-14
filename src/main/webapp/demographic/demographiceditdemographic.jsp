@@ -1300,8 +1300,14 @@ if ( Dead.equals(PatStat) ) {%>
 	                       <% } %>
 						</div>
 						
-<%-- TOGGLE PRIVACY CONSENT --%>						
+<%-- TOGGLE PRIVACY CONSENTS --%>						
 <oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">
+
+		<div class="demographicSection" id="consent">
+				<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.consent" /></h3>
+                             
+					<ul>
+					
 						<%
 							ProgramProvider pp2 = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
 		
@@ -1313,14 +1319,8 @@ if ( Dead.equals(PatStat) ) {%>
 								}
 							}
 						
-							if(showConsentsThisTime) {
-						%>
-						<!--  consents -->
-						<div class="demographicSection" id="consent">
-						<h3>&nbsp;<bean:message
-							key="demographic.demographiceditdemographic.consent" /></h3>
-                             
-						 <ul>
+						if(showConsentsThisTime) { %>
+
 	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.privacyConsent"/>:</span>
 	                              <span class="info"><%=privacyConsent %></span>
 	                          </li>
@@ -1330,8 +1330,12 @@ if ( Dead.equals(PatStat) ) {%>
 	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.usConsent"/>:</span>
 	                              <span class="info"><%=usSigned %></span>
 	                          </li>
-	                          <%-- ENABLE THE NEW PATIENT CONSENT MODULE --%>
-	                          <oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
+	                          
+						
+						<% } %>
+    
+<%-- ENABLE THE NEW PATIENT CONSENT MODULE --%>
+<oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
 		                          	
                           		<c:forEach items="${ patientConsents }" var="patientConsent" >
                           		<li>
@@ -1351,15 +1355,14 @@ if ( Dead.equals(PatStat) ) {%>
                           				
                           		</li>	
                           		</c:forEach>	                              	
-		                          
-	                          </oscar:oscarPropertiesCheck>
-	                       </ul>
-						
+</oscar:oscarPropertiesCheck>
+<%-- END ENABLE NEW PATIENT CONSENT MODULE --%>
+
+	                       </ul>						
 						</div>
 						
-						<% } %>
-</oscar:oscarPropertiesCheck>
-<%-- END TOGGLE PRIVACY CONSENT --%>
+</oscar:oscarPropertiesCheck>	                      
+<%-- END TOGGLE ALL PRIVACY CONSENTS --%>
 
 						</div>
 						<div class="rightSection">
@@ -2820,7 +2823,9 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 				    	<label style="font-weight:bold;" for="usSigned">U.S. Resident Consent Form NOT Signed</label>
 			    </div>
 			</td>
-			
+			</tr>
+			<% } %>
+			  			
 			<%-- This block of code was designed to eventually manage all of the patient consents. --%>
 			<oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
 			
@@ -2870,9 +2875,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 				</c:forEach>
 				
 			</oscar:oscarPropertiesCheck>
-			
-			<% } %>
-			  
+
 </table></td></tr>
 </oscar:oscarPropertiesCheck> 
                                                        

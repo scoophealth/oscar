@@ -34,7 +34,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="consent_type")
+@Table(name="consentType")
 public class ConsentType extends AbstractModel<Integer> {
 	
 	@Id
