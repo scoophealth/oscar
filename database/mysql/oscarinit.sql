@@ -12121,10 +12121,11 @@ CREATE TABLE `Consent` (
   `last_entered_by` varchar(10),
   `consent_date` datetime,
   `optout_date` datetime,
+  `edit_date` datetime,
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `consent_type` (
+CREATE TABLE `consentType` (
   `id` int(15) NOT NULL AUTO_INCREMENT,
   `type` varchar(50),
   `name` varchar(50),

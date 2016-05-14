@@ -23,9 +23,12 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
+
 import org.oscarehr.common.model.Consent;
 import org.springframework.stereotype.Repository;
 
@@ -59,6 +62,21 @@ public class ConsentDao extends AbstractDao<Consent> {
         @SuppressWarnings("unchecked")
 		List<Consent> consent = query.getResultList();
         return consent;
+	}
+	
+	public  List<Consent> findLastEditedByConsentTypeId( int consentTypeId, Date lastEditDate ) {
+		String sql = "SELECT x FROM " 
+					+ modelClass.getSimpleName() 
+					+ " x WHERE x.consentTypeId = ?1"
+					+ " AND x.editDate  > ?2 ";
+		
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter( 1, consentTypeId );
+    	query.setParameter( 2, lastEditDate, TemporalType.TIMESTAMP );
+
+    	@SuppressWarnings("unchecked")
+		List<Consent> consents = query.getResultList();
+        return consents;
 	}
 	
 
