@@ -57,32 +57,38 @@ public class SetColor extends TagSupport {
 
 
         try {
-            if (phrAuth == null || !PHRService.validAuthentication(phrAuth) || providerNo == null) {
-                pageContext.getOut().print(noAuthorizationHtml);
-            } else{
-		HttpSession session = pageContext.getSession();
-		List<MessageTransfer> messages = MyOscarMessagesHelper.getReceivedMessages(session, false,0);
+	    try{
+               if (phrAuth == null || !PHRService.validAuthentication(phrAuth) || providerNo == null) {
+                  pageContext.getOut().print(noAuthorizationHtml);
+               } else{
+		  HttpSession session = pageContext.getSession();
+		  List<MessageTransfer> messages = MyOscarMessagesHelper.getReceivedMessages(session, false,0);
 
-		boolean hasUnreadMsg = false;
-		int count = 0;
-		for(MessageTransfer mt: messages){
-		   if(mt.getFirstViewDate() ==null){
+		  boolean hasUnreadMsg = false;
+		  int count = 0;
+		  for(MessageTransfer mt: messages){
+		    if(mt.getFirstViewDate() ==null){
 			hasUnreadMsg = true;
 			count++;
-		   }
-		}
-		session.setAttribute("myoscar_message_new_count",new Integer(count));
+		    }
+		  }
+		  session.setAttribute("myoscar_message_new_count",new Integer(count));
 		
-		if (hasUnreadMsg) {
-                   pageContext.getOut().print(newMessagesHtml);
-            	} else {
-                   pageContext.getOut().print(noNewMessagesHtml);
-       		}
-	   }
+		  if (hasUnreadMsg) {
+                     pageContext.getOut().print(newMessagesHtml);
+            	  } else {
+                     pageContext.getOut().print(noNewMessagesHtml);
+       		  }
+	      }
+	   } catch (Exception e){
+              MiscUtils.getLogger().debug("Error", e);
+              pageContext.getOut().print(noAuthorizationHtml);
+           }
+		
         } catch (IOException ioe) {
-            MiscUtils.getLogger().error("Error", ioe);
-            return SKIP_BODY;
-        }
+            MiscUtils.getLogger().debug("Error", ioe);
+	    return SKIP_BODY;
+	}
         return EVAL_BODY_INCLUDE;
     }
     
