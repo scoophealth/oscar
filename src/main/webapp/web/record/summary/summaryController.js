@@ -273,51 +273,20 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
       $scope.trackerUrl = '../oscarEncounter/oscarMeasurements/HealthTrackerPage.jspf?template=tracker&demographic_no=' + demographicNo + '&numEle=4&tracker=slim';    
     };
     
-  
+var initialDisplayLimit = 5;  
 $scope.toggleList = function(mod){
-	i = 5; 
+	i = initialDisplayLimit; 
 	
-	if(mod.displaySize>5){
-		mod.displaySize = i;
-	}else{
-		mod.displaySize = mod.summaryItem.length;
+	if(mod.summaryItem.length>i){
+		if(mod.displaySize>i){
+			mod.displaySize = i;
+		}else{
+			mod.displaySize = mod.summaryItem.length;
+		}
 	}
 }
 
-$scope.showMoreDocuments = function(mod){
-	////console.log('showMoreDocuments',mod);
-	if(!angular.isDefined(mod.summaryItem)){
-		return false;
-	}
-	
-	if(mod.summaryItem.length == 0){
-		return false;
-	}
-	
-	
-	//if ( mod.displaySize < mod.summaryItem.length) {
-	//	return true;
-	//}
-	return true;
-	
-}
-
-
-$scope.showMoreDocumentsSymbol = function(mod){
-	if(!angular.isDefined(mod.summaryItem)){
-		return "";
-	}
-	////console.log("mod symbol output ",mod.displaySize, mod.summaryItem.length,mod);
-	if ( mod.displaySize < mod.summaryItem.length) {
-		return "glyphicon glyphicon-chevron-down pull-right";
-	}else{
-		return "glyphicon glyphicon-chevron-up pull-right";	
-	}
-
-}
-
-
-$scope.showMorePreventions = function(mod){
+$scope.showMoreItems = function(mod){
 
 	if(!angular.isDefined(mod.summaryItem)){
 		return false;
@@ -330,19 +299,19 @@ $scope.showMorePreventions = function(mod){
 	return true;
 }
 
-$scope.showMorePreventionsSymbol = function(mod){
+$scope.showMoreItemsSymbol = function(mod){	
 	if(!angular.isDefined(mod.summaryItem)){
 		return "";
 	}
 	
-	if(mod.summaryCode!="preventions"){
-		return "";
-	}
-	////console.log("mod symbol output ",mod.displaySize, mod.summaryItem.length,mod);
-	if ( mod.displaySize < mod.summaryItem.length) {
-		return "glyphicon glyphicon-chevron-down pull-right";
+	if ( (mod.displaySize < mod.summaryItem.length) && mod.displaySize == initialDisplayLimit ) {
+		return "glyphicon glyphicon-chevron-down hand-hover pull-right";
+	}else if ( (mod.displaySize == mod.summaryItem.length) && mod.displaySize != initialDisplayLimit ){
+		return "glyphicon glyphicon-chevron-up hand-hover pull-right";	
+	}else if ( mod.summaryItem.length <= initialDisplayLimit ) {
+		return "glyphicon glyphicon-chevron-down glyphicon-chevron-down-disabled pull-right";	
 	}else{
-		return "glyphicon glyphicon-chevron-up pull-right";	
+		return "";
 	}
 
 }
