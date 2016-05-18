@@ -219,6 +219,10 @@ color: #FF4D4D;
 color:red;
 }
 
+.glyphicon-chevron-down-disabled{
+color: #999999 !important;
+}
+
 /*for patient header*/
 @media (max-width: 1320px) {
 .patientHeaderName{
