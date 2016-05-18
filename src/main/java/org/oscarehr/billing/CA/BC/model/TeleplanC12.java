@@ -89,7 +89,7 @@ public class TeleplanC12 extends AbstractModel<Integer> {
 	private String filler;
 
 	@Column(name="status")
-	private Character status;
+	private Character status = 'O';
 
 	public Integer getId() {
     	return id;
