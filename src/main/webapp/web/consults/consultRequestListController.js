@@ -55,27 +55,23 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope,$timeout,$state,$
 	}
 
 	$scope.updateMrpNo = function(model) {
-		if (model instanceof Object) {
+		if (model instanceof Object) { //mrp set in search box
 			$scope.search.mrpNo = Number(model.mrpNo);
 			$scope.consult.mrpName = model.name;
-		} else {
+		} else { //mrp specified in url (come back from another consults) 
 			providerService.getProvider(model).then(function(data){
-				$scope.search.mrpNo = Number(model);
 				$scope.consult.mrpName = data.lastName+", "+data.firstName;
-				$scope.doSearch(true);
 			});
 		}
 	}
 	
-	$scope.updateDemographicNo = function(item, model, label) {
-		if (item!=null) {
+	$scope.updateDemographicNo = function(item, model) {
+		if (item!=null) { //demo set in search box
 			$scope.search.demographicNo = item.demographicNo;
 			$scope.consult.demographicName = item.name;
-		} else {
+		} else { //demo specified in url (come back from another consults)
 			demographicService.getDemographic(model).then(function(data){
-				$scope.search.demographicNo = data.demographicNo;
 				$scope.consult.demographicName = data.lastName+", "+data.firstName;
-				$scope.doSearch(true);
 			});
 		}
 	}
@@ -118,24 +114,21 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope,$timeout,$state,$
 		$scope.consult.mrpName = null;
 	}
 	
+	$scope.doSearch = function() {
+		$scope.tableParams.$params.page = 1;
+		$scope.tableParams.reload();
+	}
+	
 	$scope.clear = function() {
 		$scope.removeDemographicAssignment();
 		$scope.removeMrpAssignment();
-		$scope.search = {team:allTeams, startIndex:0, numToReturn:10, demographicNo:parseInt($state.params.demographicNo)};
+		
+		var searchDemoNo = $state.params.demographicNo==null ? null : Number($state.params.demographicNo);
+		$scope.search = {team:allTeams, startIndex:0, numToReturn:10, demographicNo:searchDemoNo};
 		$scope.doSearch();
 	}
 	
-	$scope.doSearch = function(init) {
-		if (init) {
-			$scope.tableParams.reload();
-		} else {
-			$scope.toPage = 1;
-			$scope.tableParams.reload();
-			$scope.toPage = null;
-		}
-	}
-	
-	//retain search & filters for users to go back
+	//retain search & filters for users to come back
 	$scope.setSearchParams = function() {
 		$scope.searchParams = {};
 		if ($state.$current=="record.consultRequests") $scope.searchParams.list = "patient";
@@ -157,6 +150,8 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope,$timeout,$state,$
 		}
 	}
 	
+	$scope.justOpen = true;
+	
 	$scope.tableParams = new ngTableParams({
 		page: 1,	// show first page
 		count: 10,	// initial count per page
@@ -166,9 +161,42 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope,$timeout,$state,$
 	}, {
 		total: 0,	// length of data
 		getData: function($defer, params) {
-			if ($scope.toPage!=null) $scope.tableParams.$params.page = $scope.toPage;
-			if ($scope.countPerPage!=null) $scope.tableParams.$params.count = $scope.countPerPage;
-			if ($scope.sortMode!=null) $scope.tableParams.$params.sorting = $scope.sortMode;
+			if ($scope.justOpen) {
+				//process demographicNo in url, run only once
+				if ($state.params.demographicNo!=null) {
+					//called from patient record
+					$scope.hideSearchPatient = true;
+					$scope.search.demographicNo = Number($state.params.demographicNo);
+				}
+				else if ($location.search().srhDemoNo!=null) {
+					//come back from another consults
+					$scope.search.demographicNo = Number($location.search().srhDemoNo);
+					$scope.updateDemographicNo(null, $location.search().srhDemoNo);
+				}
+				
+				//process other search parameters in url
+				if ($location.search().srhMrpNo!=null) {
+					$scope.search.mrpNo = Number($location.search().srhMrpNo);
+					$scope.updateMrpNo($location.search().srhMrpNo);
+				}
+				if ($location.search().srhRefStartDate!=null) $scope.search.referralStartDate = new Date(Number($location.search().srhRefStartDate));
+				if ($location.search().srhRefEndDate!=null) $scope.search.referralEndDate = new Date(Number($location.search().srhRefEndDate));
+				if ($location.search().srhApptStartDate!=null) $scope.search.appointmentStartDate = new Date(Number($location.search().srhApptStartDate));
+				if ($location.search().srhApptEndDate!=null) $scope.search.appointmentEndDate = new Date(Number($location.search().srhApptEndDate));
+				if ($location.search().srhStatus!=null) $scope.search.status = Number($location.search().srhStatus);
+				if ($location.search().srhTeam!=null) $scope.search.team = $location.search().srhTeam;
+				
+				if ($location.search().srhCountPerPage!=null) $scope.tableParams.$params.count = $location.search().srhCountPerPage;
+				if ($location.search().srhToPage!=null) $scope.tableParams.$params.page = $location.search().srhToPage;
+				
+				if ($location.search().srhSortMode!=null && $location.search().srhSortDir!=null) {
+					$scope.sortMode = {};
+					$scope.sortMode[$location.search().srhSortMode] = $location.search().srhSortDir;
+					$scope.tableParams.$params.sorting = $scope.sortMode;
+				}
+				$scope.justOpen = false;
+			}
+			
 			$scope.setSearchParams();
 			
 			var count = params.url().count;
@@ -227,32 +255,6 @@ oscarApp.controller('ConsultRequestListCtrl', function ($scope,$timeout,$state,$
 			});
 		 }
 	});
-
-	//process search parameters
-	if ($state.params.demographicNo!=null) {
-		$scope.hideSearchPatient = true;
-		$scope.updateDemographicNo(null, $state.params.demographicNo);
-	}
-	else if ($location.search().srhDemoNo!=null) {
-		$scope.updateDemographicNo(null, $location.search().srhDemoNo);
-	}
-	if ($location.search().srhMrpNo!=null) $scope.updateMrpNo($location.search().srhMrpNo);
-	if ($location.search().srhRefStartDate!=null) $scope.search.referralStartDate = new Date(Number($location.search().srhRefStartDate));
-	if ($location.search().srhRefEndDate!=null) $scope.search.referralEndDate = new Date(Number($location.search().srhRefEndDate));
-	if ($location.search().srhApptStartDate!=null) $scope.search.appointmentStartDate = new Date(Number($location.search().srhApptStartDate));
-	if ($location.search().srhApptEndDate!=null) $scope.search.appointmentEndDate = new Date(Number($location.search().srhApptEndDate));
-	if ($location.search().srhStatus!=null) $scope.search.status = Number($location.search().srhStatus);
-	if ($location.search().srhTeam!=null) $scope.search.team = $location.search().srhTeam;
-	if ($location.search().srhCountPerPage!=null) $scope.countPerPage = $location.search().srhCountPerPage;
-	if ($location.search().srhToPage!=null) $scope.toPage = $location.search().srhToPage;
-	if ($location.search().srhSortMode!=null && $location.search().srhSortDir!=null) {
-		$scope.sortMode = {};
-		$scope.sortMode[$location.search().srhSortMode] = $location.search().srhSortDir;
-	}
-	$scope.doSearch(true);
-	$scope.countPerPage = null;
-	$scope.toPage = null;
-	$scope.sortMode = null;
 	
 	$scope.popup = function (vheight,vwidth,varpage, winname) {
 		  var page = varpage;
