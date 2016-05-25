@@ -314,6 +314,10 @@ public class RecordUxService extends AbstractServiceImpl {
 				summaryList.add(new SummaryTo1("Assessments",count++,SummaryTo1.ASSESSMENTS_CODE));
 			}
 			//summaryList[9] = new SummaryTo1("Outgoing",7,"outgoing");
+
+			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.DxRegistry", "r", null) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.DISEASES_POS)) {
+				summaryList.add(new SummaryTo1("Disease Registry", count++, SummaryTo1.DISEASES));
+			}
 		}
 		return summaryList;
 	}
@@ -338,8 +342,9 @@ public class RecordUxService extends AbstractServiceImpl {
 		result.put("incoming","labsDocsSummary");
 		result.put("dssupport","decisionSupportSummary");
 		result.put("allergies","allergiesSummary");
-		result.put("riskfactors","issueNoteSummary"); 
-		
+		result.put("riskfactors","issueNoteSummary");
+		result.put("diseases","dxSummary");
+
         return Collections.unmodifiableMap(result);
     }
 	
