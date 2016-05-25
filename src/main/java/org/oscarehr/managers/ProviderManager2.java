@@ -375,7 +375,11 @@ public class ProviderManager2 {
 			}else{
 				settings.setSummaryItemDisplayAssessments(true);
 			}
-						
+			if(map.get(PreferenceManager.DISEASES_POS) != null) {
+				settings.setSummaryItemDisplayMeds("on".equals(map.get(PreferenceManager.DISEASES_POS).getValue())?true:false);
+			}else {
+				settings.setSummaryItemDisplayMeds(true);
+			}
 			if(map.get(PreferenceManager.INCOMING_POS) != null) {
 				settings.setSummaryItemDisplayIncoming("on".equals(map.get(PreferenceManager.INCOMING_POS).getValue())?true:false);
 			}else{
