@@ -1087,6 +1087,20 @@
     </ViolationSet>
     <ViolationSet>
         <ViolationKey>.*StringBuffer.*|.*Hashtable.*|.*Vector.*</ViolationKey>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:protected void extractAndPopulateDetails(DrugSearchTo1 t, Hashtable h, String id) throws Exception {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&gt; v = (Vector&lt;Hashtable&gt;) dr.list_drug_element3(s, false);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:for (Hashtable h : v) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable drug = dr.getDrug2(id, true);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&lt;String, Object&gt;&gt; components = (Vector&lt;Hashtable&lt;String, Object&gt;&gt;) drug.get("components");</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:for (Hashtable&lt;String, Object&gt; h : components) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable generic = dr.getGenericName(id);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:protected void extractAndPopulateDetails(DrugSearchTo1 t, Hashtable h) throws Exception {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&lt;String, Object&gt;&gt; components = (Vector&lt;Hashtable&lt;String, Object&gt;&gt;) h.get("components");</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable generic = dr.getGenericName("1234");</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:for (Hashtable&lt;String, Object&gt; o : components) {</ViolationValue>
+
         <ViolationValue>/src/main/java/com/quatro/common/DatePickerTag.java:StringBuffer results = new StringBuffer("&lt;table");</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/common/DatePickerTag.java:StringBuffer results = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/common/DatePickerTag.java:protected void prepareValue(StringBuffer results) throws JspException {</ViolationValue>
