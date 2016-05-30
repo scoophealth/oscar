@@ -32,13 +32,15 @@ oscarApp.controller('PatientListCtrl', function ($scope,$http,$state,Navigation,
 
 	
 	 $scope.goToRecord = function(patient){
-		 var params = {demographicNo:patient.demographicNo};
-		 if(angular.isDefined(patient.appointmentNo)){
-			 params.appointmentNo = patient.appointmentNo;
-			 params.encType = "face to face encounter with client";
+		 if(patient.demographicNo != 0){
+			 var params = {demographicNo:patient.demographicNo};
+			 if(angular.isDefined(patient.appointmentNo)){
+				 params.appointmentNo = patient.appointmentNo;
+				 params.encType = "face to face encounter with client";
+			 }
+			 console.log("params",params);
+			 $state.go('record.summary',params);
 		 }
-		 console.log("params",params);
-		 $state.go('record.summary',params);
 	 }
 
 //for filter box
@@ -322,9 +324,19 @@ oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigatio
 	},function(reason){
 		alert(reason);
 	});
+	
+	$scope.getAppointmentTextStyle  = function(patient){
+		if(patient.demographicNo == 0){
+			 return {'color':'white'};
+		 }
+	}
 
 	//TODO:this gets called alot..should switch to a dictionary.
 	 $scope.getAppointmentStyle = function(patient){ 
+		 if(patient.demographicNo == 0){
+			 return {'background-color':'black'};
+		 }
+		 
 		 if($scope.statuses != null) {
 			for(var i=0;i<$scope.statuses.length;i++) {
 				 if($scope.statuses[i].status == patient.status) {
