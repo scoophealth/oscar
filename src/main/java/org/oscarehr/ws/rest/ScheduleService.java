@@ -120,7 +120,11 @@ public class ScheduleService extends AbstractServiceImpl {
 			for (Appointment appt : appts) {
 				PatientListApptItemBean item = new PatientListApptItemBean();
 				item.setDemographicNo(appt.getDemographicNo());
-				item.setName(demographicManager.getDemographicFormattedName(loggedInInfo, appt.getDemographicNo()));
+				if(appt.getDemographicNo() == 0){
+					item.setName(appt.getName());
+				}else{
+					item.setName(demographicManager.getDemographicFormattedName(loggedInInfo, appt.getDemographicNo()));
+				}
 				item.setStartTime(timeFormatter.format(appt.getStartTime()));
 				item.setReason(appt.getReason());
 				item.setStatus(appt.getStatus());
