@@ -59,9 +59,10 @@
 	<!-- 
 	<span ng-if="patient.status.length>0 && patient.status != 't'" class="badge">{{patient.status}}</span>
 	-->
-	<h5 class="list-group-item-heading">{{patient.name}}</h5>
-	<h5 class="list-group-item-heading pull-right">{{patient.startTime}}</h5>
-	<p class="list-group-item-text"><bean:message key="provider.appointmentProviderAdminDay.Reason"/>: {{patient.reason}}  </p>
+	<h5 class="list-group-item-heading pull-right" ng-style="getAppointmentTextStyle(patient)">{{patient.startTime}}</h5>
+	<h5 class="list-group-item-heading" ng-style="getAppointmentTextStyle(patient)">{{patient.name}}</h5>
+	
+	<p class="list-group-item-text" ng-if="patient.demographicNo != 0" ng-style="getAppointmentTextStyle(patient)"><bean:message key="provider.appointmentProviderAdminDay.Reason"/>: {{patient.reason}}  </p>
 </a>
 
 </div>
