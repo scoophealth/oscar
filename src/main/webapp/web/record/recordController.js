@@ -333,6 +333,7 @@ $scope.$on('$destroy', function () { clearInterval(myVar); });
 			console.log($scope.page.encounterNote);
 			$scope.hideNote = showNoteAfterLoadingFlag;
 			$rootScope.$emit('currentlyEditingNote',$scope.page.encounterNote);
+			initAppendNoteEditor();
 	    });
 	};
 	
@@ -355,7 +356,13 @@ $scope.$on('$destroy', function () { clearInterval(myVar); });
 	    	
 	    	$scope.removeEditingNoteFlag();
 	 });
-	
+
+		
+	var initAppendNoteEditor = function() {
+		if($location.search().noteEditorText!=null){
+			$scope.page.encounterNote.note = $scope.page.encounterNote.note + $location.search().noteEditorText;
+		}
+	} 
 	 
 	 /*
 	  * handle concurrent note edit - EditingNoteFlag
