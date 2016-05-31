@@ -337,19 +337,22 @@ function printPaste2Parent(print){
       //oscarLog(text);
 
       //we support pasting into orig encounter and new casemanagement
+      demographicNo = <%=bean.getDemographicNo()%>;
+      noteEditor = "noteEditor"+demographicNo;
       if( window.parent.opener.document.forms["caseManagementEntryForm"] != undefined ) {
           //oscarLog("3");
         window.parent.opener.pasteToEncounterNote(text);
-      }
-      else if( window.parent.opener.document.encForm != undefined ){
+      }else if( window.parent.opener.document.encForm != undefined ){
           //oscarLog("4");
         window.parent.opener.document.encForm.enTextarea.value = window.parent.opener.document.encForm.enTextarea.value + text;
-      }else if( window.parent.opener.document.getElementById("noteEditor") != undefined ){
-    	window.parent.opener.document.getElementById("noteEditor").value = window.parent.opener.document.getElementById("noteEditor").value + text; 
+      }else if( window.parent.opener.document.getElementById(noteEditor) != undefined ){
+    	window.parent.opener.document.getElementById(noteEditor).value = window.parent.opener.document.getElementById(noteEditor).value + text; 
       }
+      
    }catch (e){
       alert ("ERROR: could not paste to EMR");
    }
+   
    if (print) { printIframe(); }
    
 }

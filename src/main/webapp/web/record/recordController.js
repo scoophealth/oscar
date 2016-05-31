@@ -36,7 +36,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	$scope.page.assignedCMIssues = [];
 	
 	$scope.hideNote = false;
-	
+		
 	//this doesn't actually work, hideNote is note showing up in the $stateParams
 	if($stateParams.hideNote != null) {
 		$scope.hideNote = $stateParams.hideNote;
@@ -335,6 +335,7 @@ $scope.$on('$destroy', function () { clearInterval(myVar); });
 			console.log($scope.page.encounterNote);
 			$scope.hideNote = showNoteAfterLoadingFlag;
 			$rootScope.$emit('currentlyEditingNote',$scope.page.encounterNote);
+			initAppendNoteEditor();
 	    });
 	};
 	
@@ -357,6 +358,13 @@ $scope.$on('$destroy', function () { clearInterval(myVar); });
 	    	$rootScope.$emit('currentlyEditingNote',$scope.page.encounterNote);
 	 });
 
+		
+	var initAppendNoteEditor = function() {
+		if($location.search().noteEditorText!=null){
+			$scope.page.encounterNote.note = $scope.page.encounterNote.note + $location.search().noteEditorText;
+		}
+	} 
+	 
 	 
 	 $scope.searchTemplates  = function(term) {
 	    	var search = {name:term};
@@ -418,9 +426,9 @@ $scope.$on('$destroy', function () { clearInterval(myVar); });
 				}
 			}
 			$scope.page.assignedCMIssues = newList;
-		}
+		}	
 		
-
+		
 });
 
 function toArray(obj){ //convert single object to array
