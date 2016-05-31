@@ -125,6 +125,7 @@ public class ScheduleService extends AbstractServiceImpl {
 				item.setReason(appt.getReason());
 				item.setStatus(appt.getStatus());
 				item.setAppointmentNo(appt.getId());
+				item.setDate(appt.getStartTimeAsFullDate());
 				response.getPatients().add(item);
 			}
 		} catch (ParseException e) {
