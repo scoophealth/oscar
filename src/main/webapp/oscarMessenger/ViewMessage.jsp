@@ -129,14 +129,28 @@ function popup(demographicNo, msgId, providerNo, action) { //open a new popup wi
       var encType = "oscarMessenger";
       var txt;
       
+      //note editor in new ui
+      var noteEditorId = "noteEditor"+demographicNo;
+      var noteEditor = window.parent.opener.document.getElementById(noteEditorId);
+      var ngApp = window.parent.opener.document.body.parentElement.getAttribute("ng-app");
+      
       if ( action == "writeToEncounter") {
           win = window.open("","<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>");
-          if( win.pasteToEncounterNote && win.demographicNo == demographicNo ) {
+          if ( win.pasteToEncounterNote && win.demographicNo == demographicNo ) {  
             txt = fmtOscarMsg();
             win.pasteToEncounterNote(txt);
-          }
-          else {
-            win.close();                          
+          } else if ( noteEditor != undefined ){
+        	win.close(); 
+        	txt = "\n" + fmtOscarMsg();
+        	noteEditor.value = noteEditor.value + txt; 
+          } else if ( noteEditor == undefined && ngApp != undefined ){
+        	  win.close();
+        	  txt = "\n" + fmtOscarMsg();
+        	  getAngJsPath = window.opener.location.href;
+        	  newAngJsPath = getAngJsPath.substring(0, getAngJsPath.indexOf('#')+2) + "record/" + demographicNo + "/summary?noteEditorText=" + encodeURI(txt);
+        	  window.opener.location.href = newAngJsPath;	  
+          } else { 
+              win.close();                          
               page = 'WriteToEncounter.do?demographic_no='+demographicNo+'&msgId='+msgId+'&providerNo='+providerNo+'&encType=oscarMessenger';         
               var popUp=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
               if (popUp != null) {

@@ -97,7 +97,7 @@
 			</div>
     		
     		
-    		<textarea class="form-control input-lg col-lg-4" rows="6" ng-model="page.encounterNote.note" ng-disabled="page.cannotChange" id="noteEditor" ng-change="setEditingNoteFlag()"></textarea>
+    		<textarea class="form-control input-lg col-lg-4" rows="6" ng-model="page.encounterNote.note" ng-disabled="page.cannotChange" id="noteEditor{{demographicNo}}" ng-change="setEditingNoteFlag()"></textarea>
     		
     		<div style="font-size:8pt" ng-if="page.assignedCMIssues != null  && page.assignedCMIssues.length > 0">
 			    <label>Assigned Issues:</label>
