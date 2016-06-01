@@ -299,9 +299,9 @@ $scope.$on('$destroy', function () { clearInterval(myVar); });
 			apptStartTime = zero(dt.getHours())+":"+zero(dt.getMinutes())+":"+zero(dt.getSeconds());
 		}
 		
-		var url = "../billing.do?billRegion="+$scope.page.billregion;
-		url += "&billForm="+$scope.page.defaultView;
-		url += "&demographic_name="+demo.firstName+"+"+demo.lastName;
+		var url = "../billing.do?billRegion="+encodeURIComponent($scope.page.billregion);
+		url += "&billForm="+encodeURIComponent($scope.page.defaultView);
+		url += "&demographic_name="+encodeURIComponent(demo.lastName+","+demo.firstName);
 		url += "&demographic_no="+demo.demographicNo;
 		url += "&providerview="+user.providerNo+"&user_no="+user.providerNo;
 		url += "&appointment_no="+apptNo+"&apptProvider_no="+apptProvider;
