@@ -27,7 +27,9 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
 	  String providerNo = (String) request.getAttribute("providerNo");
-      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      String curUser_no = (String) session.getAttribute("user");
+      String roleName$ = (String)session.getAttribute("userrole") + "," + curUser_no;
+		
 	  boolean authed=true;
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_msg" rights="r" reverse="<%=true%>">
@@ -41,7 +43,12 @@ if(!authed) {
 %>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
-<%    
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO"%>
+<%@page import="org.oscarehr.common.model.UserProperty"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+
+
+<%
 String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 boolean bFirstDisp=true; //this is the first time to display the window
 if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
@@ -472,10 +479,20 @@ function fmtOscarMsg() {
 								style="background: #EEEEFF; border: none"
 								value="<%=(String)demoMap.get(demoID)%>" /> <a
 								href="javascript:popupViewAttach(700,960,'../demographic/demographiccontrol.jsp?demographic_no=<%=demoID%>&displaymode=edit&dboperation=search_detail')">M</a>
-							<a href="#"
-								onclick="popupViewAttach(700,960,'../oscarEncounter/IncomingEncounter.do?demographicNo=<%=demoID%>&curProviderNo=<%=request.getAttribute("providerNo")%>');return false;">E</a>
-							<a
-								href="javascript:popupViewAttach(700,960,'../oscarRx/choosePatient.do?providerNo=<%=request.getAttribute("providerNo")%>&demographicNo=<%=demoID%>')">Rx</a>
+								
+							<a href="javascript:void(0)" onclick="window.opener.location.href='../web/#/record/<%=demoID%>/summary'">E2</a>
+							<%
+								//Hide old echart link
+								boolean showOldEchartLink = true;
+							    UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+								UserProperty oldEchartLink = propDao.getProp(curUser_no, UserProperty.HIDE_OLD_ECHART_LINK_IN_APPT);
+								if (oldEchartLink!=null && "Y".equals(oldEchartLink.getValue())) showOldEchartLink = false;
+								
+							 if (showOldEchartLink) { %>
+							<a href="javascript:void(0)" onclick="popupViewAttach(700,960,'../oscarEncounter/IncomingEncounter.do?demographicNo=<%=demoID%>&curProviderNo=<%=request.getAttribute("providerNo")%>');return false;">E</a>
+							<%} %>
+								
+							<a href="javascript:popupViewAttach(700,960,'../oscarRx/choosePatient.do?providerNo=<%=request.getAttribute("providerNo")%>&demographicNo=<%=demoID%>')">Rx</a>
 								
 							<phr:indivoRegistered provider="<%=providerNo%>" demographic="<%=demoID%>">
 								<%
