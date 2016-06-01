@@ -562,10 +562,12 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,user,$statePa
 				
 				action = itemId;
 				$scope.setAvailablePositions();
-				
+								
 				$scope.removeEditingNoteFlag();
-				
-				console.log(JSON.stringify($scope.groupNotesForm));
+								
+				if($scope.groupNotesForm.encounterNote.position<1){
+					$scope.groupNotesForm.encounterNote.position=1;
+				}
 				
 			},function(reason){
 				alert(reason);
