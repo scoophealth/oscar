@@ -421,7 +421,7 @@ public class PHRUserManagementAction extends DispatchAction {
         }
         ht.put("registeringProviderNo", request.getSession().getAttribute("user"));
         try {
-            PersonTransfer newAccount=phrService.sendUserRegistration(phrAuth, ht);
+            PersonTransfer newAccount=PHRService.sendUserRegistration(phrAuth, ht);
             //if all is well, add the "pin" in the demographic screen
             String demographicNo = request.getParameter("demographicNo");
 

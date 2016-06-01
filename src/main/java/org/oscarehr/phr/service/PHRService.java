@@ -752,7 +752,7 @@ public class PHRService {
 	 * @return the myOscarUserId of the created user.
 	 * @throws Exception
 	 */
-	public PersonTransfer sendUserRegistration(PHRAuthentication auth, HashMap<String, Object> phrRegistrationForm) throws Exception {
+	public static PersonTransfer sendUserRegistration(PHRAuthentication auth, HashMap<String, Object> phrRegistrationForm) throws Exception {
 
 		AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
 		PersonTransfer newAccount = new PersonTransfer();
