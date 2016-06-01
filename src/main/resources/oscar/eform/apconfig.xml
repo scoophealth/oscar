@@ -159,6 +159,11 @@
         <ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${year_of_birth}/${month_of_birth}/${date_of_birth}</ap-output>
     </databaseap>
+    <databaseap>
+        <ap-name>dobc3</ap-name>
+        <ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${month_of_birth}/${date_of_birth}/${year_of_birth}</ap-output>
+    </databaseap>
      <databaseap>
         <ap-name>dob_year</ap-name>
         <ap-sql>SELECT year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
