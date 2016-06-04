@@ -61,127 +61,26 @@ $scope.isMoreActive = function(temp){
 	return temp === $scope.currentmoretab.id;
 }
 
+$scope.hidePatientList = function() {
+	$scope.$emit('configureShowPatientList', false);
+}
 
 $scope.changeMoreTab = function(temp,filter){
 	var beforeChangeTab = $scope.currentmoretab;
 	$scope.currentmoretab = $scope.moreTabItems[temp];
+	
 	$scope.showFilter=true;
-	
-	
-	if($scope.currentmoretab.url != null) {
-		var d = undefined;
-		if($scope.currentmoretab.httpType == 'POST') {
-			d = filter!=null?JSON.stringify(filter):{}
-		}
-		
-		$http({
-		    url: $scope.currentmoretab.url,
-		    dataType: 'json',
-		    data: d,
-		    method: $scope.currentmoretab.httpType,
-		    headers: {
-		        "Content-Type": "application/json"
-		    }
-		}).success(function(response){
-			$scope.currentPage = 0;
-			
-			$scope.template = $scope.moreTabItems[temp].template;
-			
-			if (response.patients instanceof Array) {
-				$scope.patients = response.patients;
-			} else if(response.patients == undefined) { 
-				$scope.patients = [];
-			} else {
-				var arr = new Array();
-				arr[0] = response.patients;
-				$scope.patients = arr;
-			}
-			
-			$scope.currenttab=null;
-		  	
-			
-			$scope.nPages = 1;
-			if($scope.patients != null && $scope.patients.length>0) {
-				$scope.nPages=Math.ceil($scope.patients.length/$scope.pageSize);
-			} 
-		
-			 Navigation.load($scope.template);
-			 
-		}).error(function(error){
-		   alert('error loading tab '+ error);
-		});	
-	} else {
-		$scope.template = $scope.moreTabItems[temp].template;
-		$scope.currentPage = 0;
-		$scope.currenttab=null;
-		$scope.nPages = 1;
-		Navigation.load($scope.template);
-		 
-	}
-}
-
-
-
-$scope.hidePatientList = function() {
-	$scope.$emit('configureShowPatientList', false);
+	$scope.currenttab=null;
+	$scope.refresh(filter);		
 }
 
 $scope.changeTab = function(temp,filter){
 	console.log('change tab - ' + temp);
 	$scope.currenttab = $scope.tabItems[temp];
 	$scope.showFilter=true;
+	$scope.currentmoretab=null;
+    $scope.refresh(filter);
 	
-	if($scope.currenttab.url != null) {
-	
-		var d = undefined;
-		if($scope.currenttab.httpType == 'POST') {
-			d = filter!=null?JSON.stringify(filter):{}
-		}
-		$http({
-			url: $scope.currenttab.url,	
-			data: d,
-			dataType: 'json',		
-			method: $scope.currenttab.httpType,		
-			headers: {		
-				"Content-Type": "application/json"		
-			}		
-		}).success(function(response){
-			$scope.currentPage = 0;
-			
-			$scope.template = $scope.tabItems[temp].template;
-		  	
-			if (response.patients instanceof Array) {
-				$scope.patients = response.patients;
-			} else if(response.patients == undefined) { 
-				$scope.patients = [];
-			} else {
-				var arr = new Array();
-				arr[0] = response.patients;
-				$scope.patients = arr;
-			}
-			
-			$scope.currentmoretab=null;
-		  	
-			$scope.nPages = 1;
-			if($scope.patients != null && $scope.patients.length>0) {
-				$scope.nPages=Math.ceil($scope.patients.length/$scope.pageSize);
-			} 
-			
-			Navigation.load($scope.template);
-				
-		  	
-		}).error(function(error){
-		    alert('error loading tab '+error);
-		});	
-		
-	} else {
-		$scope.template = $scope.tabItems[temp].template;
-		$scope.currentPage = 0;
-		$scope.currentmoretab=null;
-		$scope.nPages = 1;
-		Navigation.load($scope.template);
-		 
-	}
 }	 
 
 	$scope.getMoreTabClass = function(id){ 
@@ -230,7 +129,7 @@ $scope.changeTab = function(temp,filter){
 	});
 
 
-	$scope.process = function(tab) {
+	$scope.process = function(tab,filter) {
 		if(tab.url != null) {
 			
 			var d = undefined;
@@ -274,16 +173,20 @@ $scope.changeTab = function(temp,filter){
 			});	
 		} else {
 			$scope.changePage($scope.currentPage);
+			$scope.currentPage = 0;
+			$scope.nPages = 1;
+			$scope.template = tab.template;
+			Navigation.load($scope.template);
 		}
 	}
 	
-	$scope.refresh = function() {
+	$scope.refresh = function(filter) {
 	
 		if($scope.currenttab != null) {
-			$scope.process($scope.currenttab);
+			$scope.process($scope.currenttab,filter);
 		}
 		if($scope.currentmoretab != null) {
-			$scope.process($scope.currentmoretab);
+			$scope.process($scope.currentmoretab,filter);
 		}
 		
 	}
@@ -396,49 +299,11 @@ oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigatio
 		temp = 0;
 		
 		$scope.currenttab = $scope.tabItems[temp];
+		var lastIndx = $scope.currenttab.url.lastIndexOf("/");
+		$scope.currenttab.url =  $scope.currenttab.url.slice(0,lastIndx+1)+day;
 		$scope.showFilter=true;
+		$scope.refresh();
 		
-		if($scope.currenttab.url != null) {
-						
-		    $scope.appointments = null;
-		    scheduleService.getAppointments(day).then(function(response){
-		    	$scope.appointments = response.patients;
-
-		    	$scope.currentPage = 0;
-				
-				$scope.template = $scope.tabItems[temp].template;
-			  	
-				if (response.patients instanceof Array) {
-					$scope.patients = response.patients;
-				} else if(response.patients == undefined) { 
-					$scope.patients = [];
-				} else {
-					var arr = new Array();
-					arr[0] = response.patients;
-					$scope.patients = arr;
-				}
-				
-				$scope.currentmoretab=null;
-			  	
-				$scope.nPages = 1;
-				if($scope.patients != null && $scope.patients.length>0) {
-					$scope.nPages=Math.ceil($scope.patients.length/$scope.pageSize);
-				} 
-				
-				Navigation.load($scope.template);
-
-		    },function(reason){
-		    	alert(reason);
-		    });
-			
-		} else {
-			$scope.template = $scope.tabItems[temp].template;
-			$scope.currentPage = 0;
-			$scope.currentmoretab=null;
-			$scope.nPages = 1;
-			Navigation.load($scope.template);
-			 
-		}
 	}
 	
 	$scope.addNewAppointment = function() {
