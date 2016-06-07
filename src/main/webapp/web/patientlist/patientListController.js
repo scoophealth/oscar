@@ -24,11 +24,12 @@
 
 */
 
-oscarApp.controller('PatientListCtrl', function ($scope,$http,$state,Navigation,personaService) {
+oscarApp.controller('PatientListCtrl', function ($scope,$http,$state,Navigation,personaService,$modal) {
 	
 	$scope.sidebar = Navigation;
 	
     $scope.showFilter=true;
+    $scope.patientListConfig = {};
 
 	
 	 $scope.goToRecord = function(patient){
@@ -203,7 +204,40 @@ $scope.changeTab = function(temp,filter){
 		alert(reason);
 	});
 	
+	personaService.getPatientListConfig().then(function(patientListConfig){
+		$scope.patientListConfig = patientListConfig;
+		$scope.pageSize = $scope.patientListConfig.numberOfApptstoShow;
+	},function(reason){
+		alert(reason);
+	});
+	
+	
+	
 
+
+	$scope.manageConfiguration = function() {
+		var modalInstance = $modal.open({
+        	templateUrl: 'patientlist/patientListConfiguration.jsp',
+            controller: 'PatientListConfigController',
+            backdrop: false,
+            size: 'lg',
+            resolve: {config: function() {return $scope.patientListConfig;}}
+        });
+        
+        modalInstance.result.then(function(patientListConfig){
+        	personaService.setPatientListConfig(patientListConfig).then(function(patientListConfig){
+        		$scope.patientListConfig = patientListConfig;
+        		$scope.pageSize = $scope.patientListConfig.numberOfApptstoShow;
+        		$scope.$emit('updatePatientListPagination',$scope.patients.length);
+        	},function(reason){
+        		alert(reason);
+        	});
+        	
+        },function(reason){
+        	console.log(reason);
+        });
+	};
+	
 });
 
 
@@ -376,7 +410,21 @@ oscarApp.controller('PatientListProgramCtrl', function($scope,$http) {
 	 }
 	
 	 //initialize..
-	 $scope.updateData(0,8);
+	 $scope.updateData(0,$scope.pageSize);
 	 $scope.$emit('togglePatientListFilter', false);
 	 
+});
+
+oscarApp.controller('PatientListConfigController',function($scope, $modalInstance, config) {
+	
+	$scope.patientListConfig= config; 
+	
+	$scope.cancel = function(){
+		$modalInstance.dismiss();
+	};
+	
+	$scope.saveConfiguration =function(){
+    	$modalInstance.close($scope.patientListConfig);
+    };
+
 });

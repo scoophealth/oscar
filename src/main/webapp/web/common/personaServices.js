@@ -56,6 +56,33 @@ angular.module("personaServices", [])
                 });
            return deferred.promise;
         },
+        getPatientListConfig: function () {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/patientList/config',
+                method: "GET",
+                headers: this.configHeaders,
+              }).success(function (data) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers) {
+                	deferred.reject("An error occured while getting getPatientListConfig from persona");
+                });
+           return deferred.promise;
+        },
+        setPatientListConfig: function (patientListConfig) {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/patientList/config',
+                method: "POST",
+                data: patientListConfig,
+                headers: this.configHeaders,
+              }).success(function (data) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers) {
+                	deferred.reject("An error occured while setting setPatientListConfig from persona");
+                });
+           return deferred.promise;
+        },
         setCurrentProgram: function (programId) {
         	var deferred = $q.defer();
         	$http({

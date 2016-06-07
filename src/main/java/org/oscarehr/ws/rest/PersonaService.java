@@ -65,6 +65,7 @@ import org.oscarehr.ws.rest.to.PersonaRightsResponse;
 import org.oscarehr.ws.rest.to.model.MenuItemTo1;
 import org.oscarehr.ws.rest.to.model.MenuTo1;
 import org.oscarehr.ws.rest.to.model.NavBarMenuTo1;
+import org.oscarehr.ws.rest.to.model.PatientListConfigTo1;
 import org.oscarehr.ws.rest.to.model.ProgramProviderTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.oscarehr.myoscar.client.ws_manager.MessageManager;
@@ -311,6 +312,73 @@ public class PersonaService extends AbstractServiceImpl {
 		response.getPatientListMoreTabItems().add(new PatientList(1,bundle.getString("patientList.tab.caseload"),null,"patientlist/program.jsp",null));
 		
 		return response;
+	}
+
+	@GET
+	@Path("/patientList/config")
+	@Produces("application/json")
+	public PatientListConfigTo1 getMyPatientListConfig(){
+		Provider provider = getCurrentProvider();
+		PatientListConfigTo1 patientListConfigTo1 = new PatientListConfigTo1();
+		UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+		String numberOfApptsToShow = propDao.getStringValue(provider.getProviderNo(), "patientListConfig.numberOfApptsToShow");
+		if(numberOfApptsToShow != null){
+			try{
+				patientListConfigTo1.setNumberOfApptstoShow(Integer.parseInt(numberOfApptsToShow));
+			}catch(Exception e){
+				logger.error("numberOfAppts is not a number"+numberOfApptsToShow,e);
+			}
+		}
+		
+		String showReason = propDao.getStringValue(provider.getProviderNo(), "patientListConfig.showReason");
+		if(showReason != null){
+			try{
+				patientListConfigTo1.setShowReason(Boolean.parseBoolean(showReason)); 
+			}catch(Exception e){
+				logger.error("showReason is not a boolean"+showReason,e);
+			}
+		}
+		
+		return patientListConfigTo1;
+	}
+	
+	@POST
+	@Path("/patientList/config")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public PatientListConfigTo1 saveMyPatientListConfig(PatientListConfigTo1 patientListConfigTo1){
+		Provider provider = getCurrentProvider();
+		
+		UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+		Integer numberOfApptsToShow =  patientListConfigTo1.getNumberOfApptstoShow();
+		
+		if(numberOfApptsToShow != null && numberOfApptsToShow > 0){
+			UserProperty prop = propDao.getProp(provider.getProviderNo(), "patientListConfig.numberOfApptsToShow");
+			if(prop != null) {
+				prop.setValue(String.valueOf(numberOfApptsToShow));
+			} else {
+				prop = new UserProperty();
+				prop.setName("patientListConfig.numberOfApptsToShow");
+				prop.setProviderNo(provider.getProviderNo());
+				prop.setValue(String.valueOf(numberOfApptsToShow));
+			}
+			propDao.saveProp(prop);
+		}
+		
+		boolean showReason =  patientListConfigTo1.isShowReason();
+		UserProperty prop = propDao.getProp(provider.getProviderNo(), "patientListConfig.showReason");
+		if(prop != null) {
+			prop.setValue(Boolean.toString(showReason));
+		} else {
+			prop = new UserProperty();
+			prop.setName("patientListConfig.showReason");
+			prop.setProviderNo(provider.getProviderNo());
+			prop.setValue(Boolean.toString(showReason));
+		}
+		propDao.saveProp(prop);
+		
+		
+		return patientListConfigTo1;
 	}
 	
 	/**
