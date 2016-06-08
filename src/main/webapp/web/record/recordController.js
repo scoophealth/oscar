@@ -229,6 +229,26 @@ $scope.$on('$destroy', function () { clearInterval(myVar); });
 		}
 	};
 
+	$scope.moveNote = function(p) {
+		noteEditor = $("[id^=noteInput]");
+		
+		if (p == "l") {
+			$(noteEditor).removeClass('col-md-offset-3');
+			$(noteEditor).removeClass('absolute-right');
+			
+			$(noteEditor).addClass('absolute-left');
+		} else if(p == "r") {
+			$(noteEditor).removeClass('col-md-offset-3');
+			$(noteEditor).removeClass('absolute-left');
+			
+			$(noteEditor).addClass('absolute-right');
+		}else{
+			$(noteEditor).removeClass('absolute-left');
+			$(noteEditor).removeClass('absolute-right');
+			
+			$(noteEditor).addClass('col-md-offset-3');
+		}
+	};
 		
 	$scope.saveNote = function(){
 		console.log("This is the note"+$scope.page.encounterNote);
