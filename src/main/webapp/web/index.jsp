@@ -117,6 +117,13 @@ left:0px;
 right:0px;
 } 
 
+#noteInput ul.dropdown-menu{
+max-height:220px;
+overflow-y:auto;
+overflow-x:none;
+}
+
+
 pre.noteInEdit {
 	border-color: rgba(126, 239, 104, 0.8);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
