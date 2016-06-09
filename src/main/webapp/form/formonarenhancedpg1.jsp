@@ -3592,6 +3592,19 @@ $(document).ready(function(){
 </html:form>
 </div>
 </div>
+
+<script>
+window.onload = function () { 
+	if ( self !== top ) {
+		var body = document.body,
+		html = document.documentElement;
+		//var height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight ) + 60;
+		var height = 2000;
+		parent.parent.document.getElementById('formInViewFrame').firstChild.style.height = height+"px";
+	}
+};
+</script>
+
 </body>
 
 <script type="text/javascript">
