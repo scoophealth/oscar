@@ -185,9 +185,16 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 		var pymParent = new pym.Parent('formInViewFrame',url, {});
 		$scope.pymParent = pymParent;  
 		
-		if(item.type != 'eform' && view==1){
+		/*if(item.type != 'eform' && view==1){
 			document.getElementById('formInViewFrame').firstChild.style.height = "1600px"; //temp hack for the forms
-		}
+		}*/
+		
+		//resize iframe for both form and eforms
+		$('iframe').load(function() {			
+			var maxheight = Math.max( document.getElementById('formInViewFrame').firstChild.contentWindow.document.body.scrollHeight, document.getElementById('formInViewFrame').firstChild.contentWindow.document.body.offsetHeight ) + 30 + 'px';
+			document.getElementById('formInViewFrame').firstChild.style.height = maxheight;
+		});
+
 	}
 
 	$scope.isEmpty = function (obj) {
