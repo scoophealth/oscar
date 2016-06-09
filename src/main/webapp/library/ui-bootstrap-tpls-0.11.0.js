@@ -3783,10 +3783,24 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
         var tplUrl = $parse(attrs.templateUrl)(scope.$parent) || 'template/typeahead/typeahead-match.html';
         $http.get(tplUrl, {cache: $templateCache}).success(function(tplContent){
            element.replaceWith($compile(tplContent.trim())(scope));
+           element[0].focus();
         });
       }
     };
   }])
+  
+ .directive('shouldFocus', function(){
+  return {
+   restrict: 'A',
+   link: function(scope,element,attrs){
+     scope.$watch(attrs.shouldFocus,function(newVal,oldVal){
+    	 if (newVal) { 
+    		    element[0].scrollIntoView(false);
+    	 }
+     });
+   }
+  };
+ })
 
   .filter('typeaheadHighlight', function() {
 
@@ -4109,7 +4123,7 @@ angular.module("template/typeahead/typeahead-match.html", []).run(["$templateCac
 angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/typeahead/typeahead-popup.html",
     "<ul class=\"dropdown-menu\" ng-if=\"isOpen()\" ng-style=\"{top: position.top+'px', left: position.left+'px'}\" style=\"display: block;\" role=\"listbox\" aria-hidden=\"{{!isOpen()}}\">\n" +
-    "    <li ng-repeat=\"match in matches track by $index\" ng-class=\"{active: isActive($index) }\" ng-mouseenter=\"selectActive($index)\" ng-click=\"selectMatch($index)\" role=\"option\" id=\"{{match.id}}\">\n" +
+    "    <li ng-repeat=\"match in matches track by $index\" should-focus=\"isActive($index)\" ng-class=\"{active: isActive($index) }\" ng-mouseenter=\"selectActive($index)\" ng-click=\"selectMatch($index)\" role=\"option\" id=\"{{match.id}}\">\n" +
     "        <div typeahead-match index=\"$index\" match=\"match\" query=\"query\" template-url=\"templateUrl\"></div>\n" +
     "    </li>\n" +
     "</ul>");
