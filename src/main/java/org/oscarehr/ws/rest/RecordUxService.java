@@ -327,7 +327,7 @@ public class RecordUxService extends AbstractServiceImpl {
         result.put("preventions","preventionsSummary");
     	result.put("meds","rxSummary");
     	result.put("othermeds","issueNoteSummary");
-        result.put("ongoingconcerns","issueNoteSummary"); 
+        result.put("ongoingconcerns","ongoingConcernDxRegSummary"); 
         result.put("medhx","issueNoteSummary"); 
 		result.put("socfamhx","issueNoteSummary"); 		
 		result.put("reminders","issueNoteSummary");

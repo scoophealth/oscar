@@ -63,6 +63,7 @@ public class SummaryItemTo1 {
 	boolean abnormalFlag;
 	String indicatorClass;
 	String warning;
+	private Object extra;
 
 	
 	public SummaryItemTo1(){}
@@ -162,6 +163,14 @@ public class SummaryItemTo1 {
 	public void setEditor(String editor) {
 		this.editor = editor;
 	}
+
+	public Object getExtra() {
+	    return extra;
+    }
+
+	public void setExtra(Object extra) {
+	    this.extra = extra;
+    }
 	
 	
 }
