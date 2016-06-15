@@ -30,10 +30,13 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.common.NativeSql;
+import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DxRegistedPTInfo;
 import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -47,7 +50,7 @@ import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListItemsHandler;
 @Repository
 @SuppressWarnings("unchecked")
 public class DxresearchDAO extends AbstractDao<Dxresearch>{
-
+	private static final Logger logger = MiscUtils.getLogger();
 
 	public DxresearchDAO() {
 		super(Dxresearch.class);
@@ -464,5 +467,22 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 		query.setParameter(1, keyName);
 		
 		return query.getResultList();
+	}
+	
+	public String getDescription(String codingSystem, String code){
+		String description = null;
+        try{ 
+	        String daoName = AbstractCodeSystemDao.getDaoName(AbstractCodeSystemDao.codingSystem.valueOf(codingSystem));
+	        @SuppressWarnings("unchecked")
+	        AbstractCodeSystemDao<AbstractCodeSystemModel<?>> csDao = (AbstractCodeSystemDao<AbstractCodeSystemModel<?>>) SpringUtils.getBean(daoName);
+	        
+	        if (code != null && !code.isEmpty()) {
+	            AbstractCodeSystemModel<?> codingSystemEntity = csDao.findByCode(code);
+	            description = codingSystemEntity.getDescription();
+	        }
+        }catch(Exception e){
+        	logger.error("error getting description",e);
+        }
+        return description;
 	}
 }

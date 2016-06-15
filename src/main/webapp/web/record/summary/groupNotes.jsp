@@ -57,7 +57,7 @@
 		       <span class="glyphicon glyphicon-calendar"></span> {{item.date | date : 'dd-MMM-yyyy'}}
 		    </small>
 		    <br>
-		    {{item.displayName}}
+		    {{item.displayName}} <small ng-show="item.classification">({{item.classification}})</small>
 		    </li>
 			<span class="text-muted" ng-if="page.items==null">No entries</span>
 		</ul>
@@ -92,7 +92,7 @@
 									<input type="button" value="restore" ng-click="restoreIssue(i)" ng-if="i.unchecked!=null && i.unchecked"/>
 									<input type="button" value="remove" ng-click="removeIssue(i)" ng-if="i.unchecked==null || i.unchecked==false"/>
 								</td>
-								<td>{{i.issue.description}} ({{i.issue.code}})</td>
+								<td>{{i.issue.description}} ({{i.issue.code}})  <a ng-click="addToDxRegistry(i.issue)">( add to dx registry )</a></td>
 							</tr>
 							
 						</table>
@@ -255,6 +255,20 @@
 				
 				</div> <!-- row -->
 
+				<div class="row">
+					<div class="col-sm-12">
+						<label><bean:message key="oscarEncounter.addFromDxReg.title" /></label>
+						<br/>
+						<div class="btn-group dropup" ng-repeat="qlist in page.quickLists">
+						  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						    {{qlist.label}} <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu">
+						    <li><a ng-repeat="item in qlist.dxList" ng-click="addDxItem(item)" >{{item.description}}</a></li>
+						  </ul>
+						</div>
+					</div>
+				</div>
 <!-- 
 				<div class="row">
 				  <div class="col-lg-12" style="margin-top:6px;">

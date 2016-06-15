@@ -178,6 +178,7 @@
 			<bean class="org.oscarehr.ws.rest.ReportByTemplateService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.ResourceService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.SystemInfoService" autowire="byName" />
+			<bean class="org.oscarehr.ws.rest.DiseaseRegistryService" autowire="byName" />
 		</jaxrs:serviceBeans>
 
 		<jaxrs:extensionMappings>
