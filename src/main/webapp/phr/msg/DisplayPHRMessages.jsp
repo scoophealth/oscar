@@ -371,7 +371,7 @@ request.setAttribute("pageMethod",pageMethod);
                             	if (MyOscarUtils.isMyOscarEnabled((String) session.getAttribute("user")) && myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn())
                             	{
                             		%>
-                           				<button style="float:right" onclick="window.open('<%=request.getContextPath()%>/myoscar/myoscar_page_link_action.jsp?redirectPage=/messages/messaging_preferences.jsf');">PHR Message Settings</button>
+                           				<button style="float:right" onclick="window.open('<%=request.getContextPath()%>/myoscar/myoscar_page_link_action.jsp?redirectPage=/v2/external_message_settings.jsp');">PHR Message Settings</button>
                            			<%
                            		}
                            	%>
