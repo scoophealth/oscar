@@ -89,11 +89,18 @@ public class PHRLoginAction extends DispatchAction
 			}
 			else
 			{
-				MyOscarLoggedInInfo myOscarLoggedInInfo=new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), request.getSession().getId(), request.getLocale());
-				MyOscarLoggedInInfo.setLoggedInInfo(request.getSession(), myOscarLoggedInInfo);
 				
-				boolean saveMyOscarPassword=WebUtils.isChecked(request, "saveMyOscarPassword");
-				if (saveMyOscarPassword) saveMyOscarPassword(session, providerNo, myoscarPassword);
+				if(loginResultTransfer.getPerson().getRole() != null && !loginResultTransfer.getPerson().getRole().equals("PATIENT")){
+				
+					MyOscarLoggedInInfo myOscarLoggedInInfo=new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), request.getSession().getId(), request.getLocale());
+					MyOscarLoggedInInfo.setLoggedInInfo(request.getSession(), myOscarLoggedInInfo);
+				
+					boolean saveMyOscarPassword=WebUtils.isChecked(request, "saveMyOscarPassword");
+					if (saveMyOscarPassword) saveMyOscarPassword(session, providerNo, myoscarPassword);
+				}else{
+					logger.error("ERROR :"+loginResultTransfer.getPerson().getUserName()+" can not login with role "+loginResultTransfer.getPerson().getRole());
+					request.setAttribute("phrUserLoginErrorMsg", "Invalid Role: Patient Account can not be used");
+				}
 			}
 		}
 		catch (NotAuthorisedException_Exception e)
