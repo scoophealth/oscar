@@ -168,9 +168,13 @@ public final class MyOscarUtils {
 			String decryptedMyOscarPasswordString = new String(decryptedMyOscarPasswordBytes, "UTF-8");
 
 			LoginResultTransfer3 loginResultTransfer = AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, decryptedMyOscarPasswordString);
-
-			myOscarLoggedInInfo = new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), session.getId(), loggedInInfo.getLocale());
-			MyOscarLoggedInInfo.setLoggedInInfo(session, myOscarLoggedInInfo);
+			
+			if(loginResultTransfer.getPerson().getRole() != null && !loginResultTransfer.getPerson().getRole().equals("PATIENT")){
+				myOscarLoggedInInfo = new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), session.getId(), loggedInInfo.getLocale());
+				MyOscarLoggedInInfo.setLoggedInInfo(session, myOscarLoggedInInfo);
+			}else{
+				logger.error("ERROR :"+loginResultTransfer.getPerson().getUserName()+" can not login with role "+loginResultTransfer.getPerson().getRole());
+			}
 		} catch (NotAuthorisedException_Exception e) {
 			logger.warn("Could not login to MyOscar, invalid credentials. chances are myoscar pw changed, myOscarUserName=" + myOscarUserName);
 
