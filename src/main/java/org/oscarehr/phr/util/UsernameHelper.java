@@ -39,7 +39,8 @@ public class UsernameHelper
 	{
 		List<String> list = new ArrayList<String>();
 		
-		if (email != null && !"".equals(email)){
+		if (email != null && !"".equals(email) && email.indexOf("@") != -1){
+			
 			String emailPredicate = email.substring(0, email.indexOf("@"));
 			
 			if(UsernameHelper.isUserNameValid(credentials, emailPredicate))
