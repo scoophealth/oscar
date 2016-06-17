@@ -94,7 +94,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	$scope.changeTab = function(temp) {
 		$scope.currenttab2 = $scope.recordtabs2[temp.id];
 		
-		if(angular.isDefined(temp.state)){
+		if(angular.isDefined(temp.state) && temp.state != null){
 			if (/^record.consultRequests.[0-9]+$/.test(temp.state) || /^record.consultResponses.[0-9]+$/.test(temp.state)) {
 				var recIdPos = temp.state.lastIndexOf(".");
 				$state.go(temp.state.substring(0, recIdPos), {demographicNo:temp.state.substring(recIdPos+1)});
