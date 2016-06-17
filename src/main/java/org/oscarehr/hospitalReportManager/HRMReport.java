@@ -130,30 +130,52 @@ public class HRMReport {
 	}
 
 	public String getAddressLine1() {
+		if(demographics.getAddress() == null || demographics.getAddress().isEmpty()){
+			return "";
+		}
 		return demographics.getAddress().get(0).getStructured().getLine1();
 	}
 
 	public String getAddressLine2() {
+		if(demographics.getAddress() == null || demographics.getAddress().isEmpty()){
+			return "";
+		}
 		return demographics.getAddress().get(0).getStructured().getLine2();
 	}
 
 	public String getAddressCity() {
+		if(demographics.getAddress() == null || demographics.getAddress().isEmpty()){
+			return "";
+		}
 		return demographics.getAddress().get(0).getStructured().getCity();
 	}
 
 	public String getCountrySubDivisionCode() {
+		if(demographics.getAddress() == null || demographics.getAddress().isEmpty()){
+			return "";
+		}
 		return demographics.getAddress().get(0).getStructured().getCountrySubdivisionCode();
 	}
 
 	public String getPostalCode() {
+		if(demographics.getAddress() == null || demographics.getAddress().isEmpty()){
+			return "";
+		}
 		return demographics.getAddress().get(0).getStructured().getPostalZipCode().getPostalCode();
+		
 	}
 
 	public String getZipCode() {
+		if(demographics.getAddress() == null || demographics.getAddress().isEmpty()){
+			return "";
+		}
 		return demographics.getAddress().get(0).getStructured().getPostalZipCode().getZipCode();
 	}
 
 	public String getPhoneNumber() {
+		if(demographics.getPhoneNumber() == null || demographics.getPhoneNumber().isEmpty() ){
+			return "";
+		}
 		return demographics.getPhoneNumber().get(0).getContent().get(0).getValue();
 	}
 
@@ -166,25 +188,33 @@ public class HRMReport {
 	}
 
 	public boolean isBinary() {
-		if(hrmReport.getPatientRecord().getReportsReceived().get(0).getFormat() == ReportFormat.BINARY) {
-			return true;
+		if(hrmReport.getPatientRecord().getReportsReceived() != null  || hrmReport.getPatientRecord().getReportsReceived().isEmpty()){
+			if(hrmReport.getPatientRecord().getReportsReceived().get(0).getFormat() == ReportFormat.BINARY) {
+				return true;
+			}
 		}
 		return false;
 	}
 	
 	public String getFileExtension() {
+		if(hrmReport.getPatientRecord().getReportsReceived() == null || hrmReport.getPatientRecord().getReportsReceived().isEmpty()){
+			return "";
+		}
 		return hrmReport.getPatientRecord().getReportsReceived().get(0).getFileExtensionAndVersion();
 	}
 	
 	public String getFirstReportTextContent() {
-		if(hrmReport.getPatientRecord().getReportsReceived().get(0).getFormat() == ReportFormat.BINARY) {
-			return new Base64().encodeToString(getBinaryContent());
-		}
 		String result = null;
-		try {
-			result = hrmReport.getPatientRecord().getReportsReceived().get(0).getContent().getTextContent();
-		}catch(Exception e) {
-			MiscUtils.getLogger().error("error",e);
+		if(hrmReport.getPatientRecord().getReportsReceived() != null  || hrmReport.getPatientRecord().getReportsReceived().isEmpty()){
+			if(hrmReport.getPatientRecord().getReportsReceived().get(0).getFormat() == ReportFormat.BINARY) {
+				return new Base64().encodeToString(getBinaryContent());
+			}
+		
+			try {
+				result = hrmReport.getPatientRecord().getReportsReceived().get(0).getContent().getTextContent();
+			}catch(Exception e) {
+				MiscUtils.getLogger().error("error",e);
+			}
 		}
 		return result;
 	}
@@ -202,17 +232,25 @@ public class HRMReport {
 	}
 	
 	public String getFirstReportClass() {
+		if(hrmReport.getPatientRecord().getReportsReceived() == null  || hrmReport.getPatientRecord().getReportsReceived().isEmpty()){
+			return "";
+		}
 		return hrmReport.getPatientRecord().getReportsReceived().get(0).getClazz().value();
 	}
 
 	public String getFirstReportSubClass() {
+		if(hrmReport.getPatientRecord().getReportsReceived() == null || hrmReport.getPatientRecord().getReportsReceived().isEmpty() ){
+			return "";
+		}
 		return hrmReport.getPatientRecord().getReportsReceived().get(0).getSubClass();
 	}
 
 	public Calendar getFirstReportEventTime() {
-		if (hrmReport.getPatientRecord().getReportsReceived().get(0).getEventDateTime() != null)
-                        return dateFP(hrmReport.getPatientRecord().getReportsReceived().get(0).getEventDateTime()).toGregorianCalendar();
 		
+		if (hrmReport.getPatientRecord().getReportsReceived() != null &&
+			!hrmReport.getPatientRecord().getReportsReceived().isEmpty() &&
+			hrmReport.getPatientRecord().getReportsReceived().get(0).getEventDateTime() != null)
+			return dateFP(hrmReport.getPatientRecord().getReportsReceived().get(0).getEventDateTime()).toGregorianCalendar();
 		return null;
 	}
 
@@ -230,40 +268,52 @@ public class HRMReport {
 	}
 
 	public String getSendingFacilityId() {
+		if (hrmReport.getPatientRecord().getReportsReceived() == null || hrmReport.getPatientRecord().getReportsReceived().isEmpty() ){
+			return "";
+		}
 		return hrmReport.getPatientRecord().getReportsReceived().get(0).getSendingFacility();
 	}
 	
 	public String getSendingFacilityReportNo() {
+		if (hrmReport.getPatientRecord().getReportsReceived() == null || hrmReport.getPatientRecord().getReportsReceived().isEmpty() ){
+			return "";
+		}
 		return hrmReport.getPatientRecord().getReportsReceived().get(0).getSendingFacilityReportNumber();
 	}
 	
 	public String getResultStatus() {
+		if (hrmReport.getPatientRecord().getReportsReceived() == null || hrmReport.getPatientRecord().getReportsReceived().isEmpty() ){
+			return "";
+		}
 		return hrmReport.getPatientRecord().getReportsReceived().get(0).getResultStatus();
 	}
 	
 	public List<List<Object>> getAccompanyingSubclassList() {
 		LinkedList<List<Object>> subclassList = new LinkedList<List<Object>>();
 		
-		for (OBRContent o : hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent()) {
-			LinkedList<Object> obrContentList = new LinkedList<Object>();
-			
-			obrContentList.add(o.getAccompanyingSubClass());
-			obrContentList.add(o.getAccompanyingMnemonic());
-			obrContentList.add(o.getAccompanyingDescription());
+		if(hrmReport.getPatientRecord().getReportsReceived() != null || !hrmReport.getPatientRecord().getReportsReceived().isEmpty()){
+			for (OBRContent o : hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent()) {
+				LinkedList<Object> obrContentList = new LinkedList<Object>();
+				
+				obrContentList.add(o.getAccompanyingSubClass());
+				obrContentList.add(o.getAccompanyingMnemonic());
+				obrContentList.add(o.getAccompanyingDescription());
 
-                        if (o.getObservationDateTime()!=null) {
-                            Date date = dateFP(o.getObservationDateTime()).toGregorianCalendar().getTime();
-                            obrContentList.add(date);
-                        }
-			
-			subclassList.add(obrContentList);
+							if (o.getObservationDateTime()!=null) {
+								Date date = dateFP(o.getObservationDateTime()).toGregorianCalendar().getTime();
+								obrContentList.add(date);
+							}
+				
+				subclassList.add(obrContentList);
+			}
 		}
-		
 		return subclassList;
 	}
 	
 	public Calendar getFirstAccompanyingSubClassDateTime() {
-		if (hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent() != null && 
+		if (hrmReport.getPatientRecord().getReportsReceived() != null &&
+				!hrmReport.getPatientRecord().getReportsReceived().isEmpty() &&
+				hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent() != null && 
 				hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent().get(0) != null &&
 				hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent().get(0).getObservationDateTime() != null) {
 			return dateFP(hrmReport.getPatientRecord().getReportsReceived().get(0).getOBRContent().get(0).getObservationDateTime()).toGregorianCalendar();
@@ -273,20 +323,32 @@ public class HRMReport {
 	}
 	
 	public String getMessageUniqueId() {
+		if(hrmReport.getPatientRecord().getTransactionInformation() == null || hrmReport.getPatientRecord().getTransactionInformation().isEmpty()){
+			return "";
+		}
 		return hrmReport.getPatientRecord().getTransactionInformation().get(0).getMessageUniqueID();
 	}
 	
 	public String getDeliverToUserId() {
+		if(hrmReport.getPatientRecord().getTransactionInformation() == null || hrmReport.getPatientRecord().getTransactionInformation().isEmpty()){
+			return "";
+		}
 		return hrmReport.getPatientRecord().getTransactionInformation().get(0).getDeliverToUserID();
 	}
 	
 	public String getDeliverToUserIdFirstName() {
+		if(hrmReport.getPatientRecord().getTransactionInformation() == null || hrmReport.getPatientRecord().getTransactionInformation().isEmpty()){
+			return "";
+		}
 		if(hrmReport.getPatientRecord().getTransactionInformation().get(0).getProvider() == null)
 			return null;
 		return hrmReport.getPatientRecord().getTransactionInformation().get(0).getProvider().getFirstName();
 	}
 	
 	public String getDeliverToUserIdLastName() {
+		if(hrmReport.getPatientRecord().getTransactionInformation() == null || hrmReport.getPatientRecord().getTransactionInformation().isEmpty()){
+			return "";
+		}
 		if(hrmReport.getPatientRecord().getTransactionInformation().get(0).getProvider() == null)
 			return null;
 		return hrmReport.getPatientRecord().getTransactionInformation().get(0).getProvider().getLastName();
