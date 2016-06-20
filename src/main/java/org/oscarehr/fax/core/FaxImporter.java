@@ -24,6 +24,7 @@
 package org.oscarehr.fax.core;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import org.apache.commons.httpclient.HttpStatus;
@@ -58,13 +59,15 @@ public class FaxImporter {
 	
 	private static String PATH = "/fax";	
 	private static String DOCUMENT_DIR = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
-	
+	private static String DEFAULT_USER = "-1";
 	private FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);
 	private FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);
 	private QueueDocumentLinkDao queueDocumentLinkDao = SpringUtils.getBean(QueueDocumentLinkDao.class);
 	private Logger log = MiscUtils.getLogger();
 	
 	public void poll() {
+		
+		log.info( "CHECKING REMOTE FOR INCOMING FAXES" );
 		
 		List<FaxConfig> faxConfigList = faxConfigDao.findAll(null,null);
 		DefaultHttpClient client = new DefaultHttpClient();
@@ -74,68 +77,81 @@ public class FaxImporter {
 								
 				client.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(faxConfig.getSiteUser(), faxConfig.getPasswd()));
 	
-				HttpGet mGet = new HttpGet(faxConfig.getUrl() + PATH + "/" + faxConfig.getFaxUser());
-				mGet.setHeader("accept", "application/json");
-				mGet.setHeader("user", faxConfig.getFaxUser());
-				mGet.setHeader("passwd", faxConfig.getFaxPasswd());
+				HttpGet mGet = null;
+				HttpResponse response = null;
+				int status = HttpStatus.SC_OK;
 				
 				try {
-	                HttpResponse response = client.execute(mGet);
-	                log.info("RESPONSE: " + response.getStatusLine().getStatusCode());
-	                
-	                if( response.getStatusLine().getStatusCode() == HttpStatus.SC_OK ) {
-	                	
-	                	HttpEntity httpEntity = response.getEntity();
+					mGet = new HttpGet(faxConfig.getUrl() + PATH + "/" + URLEncoder.encode(faxConfig.getFaxUser(),"UTF-8") );
+					mGet.setHeader("accept", "application/json");
+					mGet.setHeader("user", faxConfig.getFaxUser());
+					mGet.setHeader("passwd", faxConfig.getFaxPasswd());
+
+					response = client.execute(mGet);
+					mGet.releaseConnection();
+					
+					if( response != null ) {
+						status = response.getStatusLine().getStatusCode();
+					}
+					
+					if( status == HttpStatus.SC_OK) {
+		
+						HttpEntity httpEntity = response.getEntity();
 	                	String content = EntityUtils.toString(httpEntity);
-	                
+	
+	                	log.debug("CONTENT: " + content);
 	                	
-	                	log.info("CONTENT: " + content);
 	                	ObjectMapper mapper = new ObjectMapper();
 	                	
 	                	List<FaxJob> faxList =  mapper.readValue(content, new TypeReference<List<FaxJob>>(){});
-	                	
-	                	FaxJob faxFile;
-	                	for( FaxJob receivedFax : faxList ) {
-	                		if( (faxFile = downloadFax( client, faxConfig, receivedFax )) != null ) {
-	                			if( saveAndInsertIntoQueue( faxConfig, receivedFax, faxFile ) ) {
-	                				deleteFax( client, faxConfig, receivedFax );
-	                			}
+
+	                	for( FaxJob receivedFax : faxList ) {	
+	                		
+	                		String fileName = null;
+	                		FaxJob faxFile = downloadFax( client, faxConfig, receivedFax );
+	                		
+	                		// save to file system and inbox Queue.
+	                		if( faxFile != null ) {	 	                			
+	                			fileName = saveAndInsertIntoQueue( faxConfig, receivedFax, faxFile );
 	                		}
+	                		
+	                		if( fileName != null ) {
+	                			receivedFax.setFile_name(fileName);
+	                			deleteFax( client, faxConfig, receivedFax );
+	                		}
+	                		
+	                		// this received fax may contain status errors that the 
+	                		// end user needs to see. 
+	                		saveFaxJob( receivedFax );
 	                	}
 	                	
-	                }
-	                
-	                mGet.releaseConnection();
-	            } catch (ClientProtocolException e) {
-	            	log.error("HTTP WS CLIENT ERROR", e);
-	            
-	            } catch (IOException e) {
-	            	log.error("IO ERROR", e);
-	            	
-	            } catch( Exception e ) {
-	            	log.error("UNKNOWN ERROR ",e);
-	            }				
-				finally {
-					mGet.releaseConnection();
+					} else {
+						log.error( "HTTP Status error with HTTP code: " + status );					
+					}
+					
+				} catch (IOException e) {
+					log.error("HTTP WS CLIENT ERROR", e);
 				}
-				
-			
 			}
-		}
+		} // end for
 		
 	}
 		
 	private FaxJob downloadFax( DefaultHttpClient client, FaxConfig faxConfig, FaxJob fax ) {
-		
-		HttpGet mGet = new HttpGet(faxConfig.getUrl() + PATH + "/" + faxConfig.getFaxUser() + "/" + fax.getFile_name());
-		mGet.setHeader("accept", "application/json");
-		mGet.setHeader("user", faxConfig.getFaxUser());
-		mGet.setHeader("passwd", faxConfig.getFaxPasswd());
+
+		FaxJob downloadedFax = null;
+		HttpGet mGet = null;
 		
 		try {
+			mGet = new HttpGet(faxConfig.getUrl() + PATH + "/" 
+					+ URLEncoder.encode(faxConfig.getFaxUser(),"UTF-8") + "/" 
+					+ URLEncoder.encode(fax.getFile_name(),"UTF-8") );
+			mGet.setHeader("accept", "application/json");
+			mGet.setHeader("user", faxConfig.getFaxUser());
+			mGet.setHeader("passwd", faxConfig.getFaxPasswd());
 		
 			HttpResponse response = client.execute(mGet);
-        
+			mGet.releaseConnection();
 			if( response.getStatusLine().getStatusCode() == HttpStatus.SC_OK ) {
         	
 				HttpEntity httpEntity = response.getEntity();
@@ -143,9 +159,7 @@ public class FaxImporter {
 				
 				ObjectMapper mapper = new ObjectMapper();
 				
-				FaxJob downloadedFax = mapper.readValue(content, FaxJob.class); 
-        		
-				return downloadedFax;
+				downloadedFax = mapper.readValue(content, FaxJob.class);        						
 			}
 			
 	      } catch (ClientProtocolException e) {
@@ -154,16 +168,15 @@ public class FaxImporter {
           } catch (IOException e) {
           	log.error("IO ERROR", e);
           }
-		  finally {
-			  mGet.releaseConnection();
-		  }
-		
 
-		  return null;
+		return downloadedFax;
 	}
 	
 	private void deleteFax( DefaultHttpClient client, FaxConfig faxConfig, FaxJob fax ) throws ClientProtocolException, IOException {
-		HttpDelete mDelete = new HttpDelete(faxConfig.getUrl() + PATH + "/" + faxConfig.getFaxUser() + "/" + fax.getFile_name());
+		HttpDelete mDelete = new HttpDelete(faxConfig.getUrl() + PATH + "/" 
+				+ URLEncoder.encode(faxConfig.getFaxUser(),"UTF-8") + "/" 
+				+ URLEncoder.encode(fax.getFile_name(),"UTF-8") );
+		
 		mDelete.setHeader("accept", "application/json");
 		mDelete.setHeader("user", faxConfig.getFaxUser());
 		mDelete.setHeader("passwd", faxConfig.getFaxPasswd());
@@ -174,22 +187,36 @@ public class FaxImporter {
 		if( !(response.getStatusLine().getStatusCode() == HttpStatus.SC_NO_CONTENT) ) {
 			throw new ClientProtocolException("CANNOT DELETE " + fax.getFile_name());
 		}
-		
-		
+
 	}
 	
-	private boolean saveAndInsertIntoQueue( FaxConfig faxConfig, FaxJob receivedFax, FaxJob faxFile ) {		 		
+	private String saveAndInsertIntoQueue( FaxConfig faxConfig, FaxJob receivedFax, FaxJob faxFile ) {		 		
+
+		String filename = receivedFax.getFile_name();
+		filename = filename.replace("|", "-");
 		
-		boolean retval = false;	
+		if( filename.isEmpty() ) {
+			filename = System.currentTimeMillis() + ".pdf";
+		}
+			
+		filename = filename.replace(".tif", ".pdf");
+
+		if( ! filename.endsWith(".pdf") || ! filename.endsWith(".PDF") ) {
+			filename = filename + ".pdf";
+		}
 		
-		String filename = receivedFax.getFile_name().replace("tif", "pdf");		
-		String user = "-1";
+		filename = filename.trim();
+
+		EDoc newDoc = new EDoc("Recieved Fax", "Recieved Fax", filename, "", 
+				DEFAULT_USER, DEFAULT_USER, "", 'A', 
+				DateFormatUtils.format(receivedFax.getStamp(), "yyyy-MM-dd"), 
+				"", "", "demographic", DEFAULT_USER, receivedFax.getNumPages());
 		
-		EDoc newDoc = new EDoc("", "", filename, "", user, user, "", 'A', DateFormatUtils.format(receivedFax.getStamp(), "yyyy-MM-dd"), "", "", "demographic", "-1", 0);
 		newDoc.setDocPublic("0");
 		
 		filename = newDoc.getFileName();
-		if( Base64.decodeToFile(faxFile.getDocument(), DOCUMENT_DIR + "/" + filename) ) {
+		
+		if( Base64.decodeToFile( faxFile.getDocument(), DOCUMENT_DIR + "/" + filename) ) {
 		
 			newDoc.setContentType("application/pdf");
 			newDoc.setNumberOfPages(receivedFax.getNumPages());
@@ -199,14 +226,19 @@ public class FaxImporter {
 			Integer docNum = Integer.parseInt(doc_no);
 			
 			queueDocumentLinkDao.addActiveQueueDocumentLink(queueId, docNum);
-			FaxJob saveFax = new FaxJob(receivedFax);
-			saveFax.setFile_name(filename);
-			faxJobDao.persist(saveFax);
-			retval = true;
+			
+			return filename;
 		}
 		
-		return retval;
+		return null;
 		
+	}
+	
+	private Integer saveFaxJob( FaxJob receivedFax) {		
+		FaxJob saveFax = new FaxJob(receivedFax);		
+		saveFax.setUser(DEFAULT_USER);
+		faxJobDao.persist(saveFax);
+		return saveFax.getId();
 	}
 
 }

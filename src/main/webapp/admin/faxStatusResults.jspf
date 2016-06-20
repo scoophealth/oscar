@@ -17,7 +17,7 @@ if(!authed) {
 	return;
 }
 %>
-<table class="table-condensed table-bordered small" id="content">
+<table class="table-condensed table-bordered small span8" style="margin:0px;margin-bottom:50px;" id="content">
 	<thead>
 		<tr>
 			<th class="small">Type</th>
