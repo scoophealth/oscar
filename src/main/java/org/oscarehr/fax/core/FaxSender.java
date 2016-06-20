@@ -86,6 +86,8 @@ public class FaxSender {
 						client.header("user", faxJob.getUser());
 						client.header("passwd", faxConfig.getFaxPasswd());
 						
+						faxJob.setSenderEmail( faxConfig.getSenderEmail() );
+						
 						ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
 						
 						if( (separator = faxJob.getFile_name().lastIndexOf("/")) > -1 ) {
