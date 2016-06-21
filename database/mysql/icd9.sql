@@ -15382,5 +15382,4 @@ INSERT INTO icd9 (id, icd9, description) VALUES (15360,'V8301','ASYMPT HEMOPH A 
 INSERT INTO icd9 (id, icd9, description) VALUES (15361,'V8302','SYMPT HEMOPHIL A CARRIER');
 INSERT INTO icd9 (id, icd9, description) VALUES (15362,'338','PAIN NOT ELSEWHERE CLASSIFIED');
 INSERT INTO icd9 (id, icd9, description) VALUES (15363,'338.2','CHRONIC PAIN');
-
-
+INSERT INTO icd9 (id, icd9, description) VALUES (15364,'780.93','MEMORY LOSS');
