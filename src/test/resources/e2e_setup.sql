@@ -5,7 +5,7 @@ TRUNCATE TABLE `demographic`;
 INSERT INTO `demographic` VALUES (1,'MR','CLEESE','JOHN','1234 Street','city','BC','A1B 2C3','250-000-0001','250-000-0002','test@test.com',NULL,'1940','09','25','448000001','','',NULL,NULL,'','AC','2013-09-25','2013-09-25','','English','','999998','M',NULL,NULL,NULL,'BC',NULL,'<rdohip></rdohip><rd></rd>',NULL,NULL,NULL,NULL,NULL,'','-1','Unknown',NULL,'999998','2013-09-26');
 INSERT INTO `demographic` VALUES (2,'MR','SUBJECT','MISSING',NULL,NULL,NULL,NULL,NULL,'',NULL,NULL,'1970','09','25','448000002','','',NULL,NULL,'','AC','2013-09-25','2013-09-25','','English','','999998','M',NULL,NULL,NULL,'BC',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'','-1','Unknown',NULL,'999998','2013-09-26');
 TRUNCATE TABLE `provider`;
-INSERT INTO `provider` VALUES ('999998','oscardoc','doctor','doctor','','','','0001-01-01','','250-999-9998','250-999-9999','ohip','','billing','','1','','','cpsid','','','test2@test2.com','','','0001-01-01 00:00:00','0001-01-01 00:00:00');
+INSERT INTO `provider` VALUES ('999998','oscardoc','doctor','doctor',null,'','','','0001-01-01','','250-999-9998','250-999-9999','ohip','','billing','','1','','','cpsid','','','test2@test2.com','','','0001-01-01 00:00:00','0001-01-01 00:00:00');
 
 -- Allergies
 TRUNCATE TABLE `allergies`;

@@ -214,7 +214,7 @@ java.util.Map<Integer,java.util.concurrent.ScheduledFuture<Object>> futures = or
 					html += '<td><a onclick="cancelJob('+job.id+');">Cancel</a></td>';
 					html += '<td>'+((job.enabled==true)?"Enabled (<a onclick='updateJobStatus("+job.id+",false)'>Disable</a>)":"<span color='red'>Disabled</span> (<a onclick='updateJobStatus("+job.id+",true)'>Enable</a>)") +'</td>';
 					html += '<td>N/A</td>';
-					html += '<td>'+((job.nextPlannedExecutionDate==null)?'N/A':job.nextPlannedExecutionDate) +'</td>';		
+					html += '<td>'+((job.nextPlannedExecutionDate==null)?'N/A':new Date(job.nextPlannedExecutionDate)) +'</td>';		
 					html += '</tr>';
 				
 					jQuery('#jobTable tbody').append(html);

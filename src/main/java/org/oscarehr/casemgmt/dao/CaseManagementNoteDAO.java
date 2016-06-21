@@ -135,7 +135,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	}
 
 	public List<CaseManagementNote> getNotesByUUID(String uuid) {
-		String hql = "select cmn from CaseManagementNote cmn where cmn.uuid = ?";
+		String hql = "select cmn from CaseManagementNote cmn where cmn.uuid = ? order by cmn.id";
 		@SuppressWarnings("unchecked")
 		List<CaseManagementNote> ret = this.getHibernateTemplate().find(hql, uuid);
 		return ret;

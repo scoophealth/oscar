@@ -175,6 +175,14 @@ public class ProviderDataDao extends AbstractDao<ProviderData> {
     	
     	return proList;
     }
+    
+    public List<ProviderData> findAllBilling(String active) {
+        Query query = createQuery("p", "p.ohipNo is not null and p.ohipNo != '' and p.status = :active order by p.lastName");
+        query.setParameter("active", active);
+        return query.getResultList();
+    }
+    
+    
 
 	/**
 	 * Finds all providers for the specified type and insurance no, ordered by last name.

@@ -173,7 +173,7 @@ function showHideBillPref() {
 }
 
 function showHideERxPref() {
-    $("eRxPref").toggle();
+    //$("eRxPref").toggle();
 }
 </script>
 <style type="text/css">
@@ -549,7 +549,47 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
 </script>
 			</tr>
 
+ <tr>
+     <%
+         Integer h = 0;
+         Integer mins = 0;
+         prop = propertyDao.getProp(providerNo,UserProperty.OSCAR_MSG_RECVD);
+         if( prop != null ) {
+            String[] tmp = prop.getValue().split(":");
+            h = Integer.valueOf(tmp[0]);
+            mins = Integer.valueOf(tmp[1]);
+         }
+     %>
+        <td class="preferenceLabel">
+            Select when you want to receive Review Messages
+            
+         </td>
+         <td preferenceValue>
+             <select id="reviewMsg" name="reviewMsg">                 
+                 <%
+                     for( int hr = 0; hr < 24; ++hr ) {
+                         for( int min = 0; min < 60; min+=30 ) {
+                 %>
+                 <option value="<%=String.valueOf(hr)+":"+String.valueOf(min) %>" <%= hr == h && min == mins ? "selected" : ""%> ><%=String.valueOf(hr) + " : " + String.valueOf(min) + (min == 0 ? "0" :"") %></option>
+                 <%
+                        }
+                    }
+                 %>
+             </select>                          
+         </td>
+        </tr>
+        <script>
+        Event.observe('reviewMsg', 'change', function(event) {
+	var value = $('reviewMsg').getValue();
 
+	new Ajax.Request('<c:out value="${ctx}"/>/setProviderStaleDate.do?method=OscarMsgRecvd&value='+value+'&provider_no=<%=providerNo%>', {
+		  method: 'get',
+		  onSuccess: function(transport) {
+		  }
+		});
+
+});
+        </script>
 		</table>
 
 		<div style="background-color:<%=deepcolor%>;text-align:center;font-weight:bold">
@@ -809,6 +849,7 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
                           	<td><bean:message key="provider.eRx.labelURL"/>:</td>
                           	<td><input name="erx_sso_url" type="text" value="<%=eRx_SSO_URL%>" title="The URL to access the Web Interface from OSCAR Rx" /></td>
                         </tr>
+                        
                      </table>
                   </div>
               </td>
