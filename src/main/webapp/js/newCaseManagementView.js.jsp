@@ -2545,9 +2545,90 @@ function saveNoteAjax(method, chain) {
                       );
     return false;
 }
+function cancelResident() {
+    jQuery('#resident').trigger("reset");
+    jQuery("#residentChain").val("");
+    jQuery("#residentMethod").val("");
+    if( jQuery(".supervisor").is(":visible") ) {
+        jQuery(".supervisor").slideUp(300);                    
+    }
+
+    if( jQuery(".reviewer").is(":visible") ) {
+        jQuery(".reviewer").slideUp(300);
+    }
+    
+    jQuery('#showResident').fadeOut(2000);
+    jQuery('#showResident').css('z-index',300);
+    
+    return false;
+
+}
+
+function subResident() {
+    if( !jQuery("input[name='reviewed']:checked").length ) {
+        alert("Please select if the note has been reviewed");
+        return false;
+    }
+
+    if( (jQuery("input[name='reviewed']:checked").val() == "true" && jQuery("#reviewer").val() == "") ) {
+        alert("Please select who you reviewed the note with");
+        return false;
+    }
+    
+    else if( (jQuery("input[name='reviewed']:checked").val() == "false" && jQuery("#supervisor").val() == "") ) {
+        alert("Please Choose Your Supervisor");
+        return false;
+    }
+
+    jQuery('<input>').attr({
+    type: 'hidden',
+    id: 'isAResident',
+    name: 'isAResident',
+    value: 'true'
+}).appendTo('#resident');
+
+    jQuery('<input>').attr({
+    type: 'hidden',
+    id: 'supervisor',
+    name: 'supervisor',
+    value: jQuery("#supervisor").val()
+}).appendTo("form[name='caseManagementEntryForm']");
+
+    jQuery('<input>').attr({
+    type: 'hidden',
+    id: 'reviewer',
+    name: 'reviewer',
+    value: jQuery("#reviewer").val()
+}).appendTo("form[name='caseManagementEntryForm']");
+
+    jQuery('<input>').attr({
+    type: 'hidden',
+    id: 'resident',
+    name: 'resident',
+    value: 'true'
+}).appendTo("form[name='caseManagementEntryForm']");
+
+  jQuery('#showResident').fadeOut(2000);
+  jQuery('#showResident').css('z-index',300);  
+  savePage(jQuery("#residentMethod").val(), jQuery("#residentChain").val());
+  return false;
+}
 
 
 function savePage(method, chain) {
+       
+        if( typeof jQuery("form[name='resident'] input[name='residentMethod']").val() != "undefined" && 
+            jQuery("form[name='resident'] input[name='residentMethod']").val().trim().length == 0 &&
+            method.match(/.*[Ee]xit$/g) != null  ) { 
+            jQuery("#residentChain").val(chain);
+            jQuery("#residentMethod").val(method);
+            jQuery("#showResident").css('z-index',1);
+            jQuery("#showResident").fadeIn(2000);
+            jQuery("#reviewed").focus();
+            return false;
+        }
+
+
 	if ((typeof jQuery("form[name='caseManagementEntryForm'] input[name='_note_program_no']").val() != "undefined") &&
 			(typeof jQuery("form[name='caseManagementEntryForm'] input[name='_note_role_id']").val() != "undefined")) {
 		if (jQuery("form[name='caseManagementEntryForm'] input[name='_note_program_no']").val().trim().length == 0 ||
@@ -2614,6 +2695,8 @@ function savePage(method, chain) {
 
 
     }
+
+    
     document.forms["caseManagementEntryForm"].method.value = method;
     document.forms["caseManagementEntryForm"].ajax.value = false;
     document.forms["caseManagementEntryForm"].chain.value = chain;

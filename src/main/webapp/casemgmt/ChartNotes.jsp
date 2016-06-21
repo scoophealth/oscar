@@ -203,7 +203,7 @@ try
 	<input type="hidden" id="serverDate" value="<%=strToday%>">
 	<input type="hidden" id="resetFilter" name="resetFilter" value="false">
 	<div id="topContent" style="float: left; width: 100%; margin-right: -2px; padding-bottom: 1px; background-color: #CCCCFF; font-size: 10px;">
-		<nested:notEmpty name="caseManagementViewForm" property="filter_providers">
+    		<nested:notEmpty name="caseManagementViewForm" property="filter_providers">
 			<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.providers.title" />:</u><br>
 				<nested:iterate type="String" id="filter_provider" property="filter_providers">
 					<c:choose>
@@ -449,10 +449,15 @@ try
 		</div>
 	</div>
 </html:form>
-
+        <%
+            String oscarMsgType = (String)request.getParameter("msgType");   
+            String OscarMsgTypeLink = (String)request.getParameter("OscarMsgTypeLink");
+         %>
 <nested:form action="/CaseManagementEntry" style="display:inline; margin-top:0; margin-bottom:0; position: relative;">
 	<html:hidden property="demographicNo" value="<%=demographicNo%>" />
 	<html:hidden property="includeIssue" value="off" />
+        <input type="hidden" name="OscarMsgType" value="<%=oscarMsgType%>"/>        
+        <input type="hidden" name="OscarMsgTypeLink" value="<%=OscarMsgTypeLink%>"/>
 	<%
 		String apptNo = request.getParameter("appointmentNo");
 		if (apptNo == null || apptNo.equals("") || apptNo.equals("null"))
@@ -484,6 +489,7 @@ try
 			provView = provNo;
 		}
 	%>
+        
 	<html:hidden property="appointmentNo" value="<%=apptNo%>" />
 	<html:hidden property="appointmentDate" value="<%=apptDate%>" />
 	<html:hidden property="start_time" value="<%=startTime%>" />

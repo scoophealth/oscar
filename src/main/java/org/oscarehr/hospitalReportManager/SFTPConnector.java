@@ -36,6 +36,7 @@ import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
+import org.oscarehr.common.model.OscarMsgType;
 
 import oscar.OscarProperties;
 import oscar.oscarMessenger.data.MsgProviderData;
@@ -691,7 +692,7 @@ public class SFTPConnector {
 	    }
 
     	String sentToString = messageData.createSentToString(sendToProviderListData);
-    	messageData.sendMessage2(message, "HRM Retrieval Error", "System", sentToString, "-1", sendToProviderListData, null, null);
+    	messageData.sendMessage2(message, "HRM Retrieval Error", "System", sentToString, "-1", sendToProviderListData, null, null, OscarMsgType.GENERAL_TYPE);
     }
 
 	/**

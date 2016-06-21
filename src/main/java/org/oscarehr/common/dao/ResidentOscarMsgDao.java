@@ -23,45 +23,31 @@
  */
 package org.oscarehr.common.dao;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Query;
-
-import org.oscarehr.common.model.MessageTbl;
-import org.oscarehr.common.model.MsgDemoMap;
+import org.oscarehr.common.model.ResidentOscarMsg;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@SuppressWarnings("unchecked")
-public class MessageTblDao extends AbstractDao<MessageTbl>{
+public class ResidentOscarMsgDao extends AbstractDao<ResidentOscarMsg>{
 
-	public MessageTblDao() {
-		super(MessageTbl.class);
-	}
-	
-	public List<MessageTbl> findByMaps(List<MsgDemoMap> m) {
-		String sql = "select x from MessageTbl x where x.id in (:m)";
-    	Query query = entityManager.createQuery(sql);
-    	List<Integer> ids = new ArrayList<Integer>();
-    	for(MsgDemoMap temp:m) {
-    		ids.add(temp.getMessageID());
-    	}
-    	query.setParameter("m", ids);
-        List<MessageTbl> results = query.getResultList();
-        return results;
-	}
-	
-	public List<MessageTbl> findByProviderAndSendBy(String providerNo, Integer sendBy) {
-		Query query = createQuery("m", "m.sentByNo = :providerNo and m.sentByLocation = :sendBy");
-		query.setParameter("providerNo", providerNo);
-		query.setParameter("sendBy", sendBy);
-		return query.getResultList();
-	}
-
-	public List<MessageTbl> findByIds(List<Integer> ids) {
-		Query query = createQuery("m", "m.id in (:ids) order by m.date");
-		query.setParameter("ids", ids);
-		return query.getResultList();
+    public ResidentOscarMsgDao() {
+        super(ResidentOscarMsg.class);
     }
+    
+    
+    public List<ResidentOscarMsg> findBySupervisor(String supervisor) {
+        Query query = entityManager.createQuery("select p from ResidentOscarMsg p where p.supervisor_no = :supervisor and p.complete = 0");
+        query.setParameter("supervisor", supervisor);
+        
+        return query.getResultList();
+    }
+    
+    public ResidentOscarMsg findByNoteId(Long noteId) {
+        Query query = entityManager.createQuery("select p from ResidentOscarMsg p where p.note_id = :note_id");
+        query.setParameter("note_id", noteId);
+        
+        return this.getSingleResultOrNull(query);
+    }
+    
 }

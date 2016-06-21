@@ -6992,6 +6992,8 @@ CREATE TABLE messagetbl (
   attachment text,
   pdfattachment blob,
   actionstatus char(2) default NULL,
+  `type` int(10),
+  type_link varchar(2048),
   PRIMARY KEY  (messageid)
 ) ;
 
@@ -7001,9 +7003,11 @@ CREATE TABLE messagetbl (
 --
 
 CREATE TABLE msgDemoMap (
+  id int(11) auto_increment,
   messageID mediumint(9),
   demographic_no int(10),
-  PRIMARY KEY  (messageID, demographic_no)
+  PRIMARY KEY (id),
+  KEY  (messageID, demographic_no)
 ) ;
 
 
@@ -7163,6 +7167,7 @@ CREATE TABLE provider (
   last_name varchar(30) NOT NULL default '',
   first_name varchar(30) NOT NULL default '',
   provider_type varchar(15) NOT NULL default '',
+  supervisor varchar(6),
   specialty varchar(40) NOT NULL default '',
   team varchar(20) default '',
   sex char(1) NOT NULL default '',
@@ -12047,4 +12052,24 @@ CREATE TABLE billingperclimit (
   id int auto_increment,
   PRIMARY KEY  (id)
 ) ;
+
+CREATE TABLE resident_oscarMsg (
+    id int(11) auto_increment,
+    supervisor_no varchar(6),
+    resident_no varchar(6),
+    demographic_no int(11),
+    appointment_no int(11),    
+    note_id int(10),
+    complete int(1),
+    create_time timestamp,
+    complete_time timestamp,
+    PRIMARY KEY(id),
+    index note_id_idx (note_id)
+);
+
+CREATE TABLE oscar_msg_type (
+    type int(10),
+    description varchar(255),
+    PRIMARY KEY(type)
+);
 

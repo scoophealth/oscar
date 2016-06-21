@@ -72,6 +72,17 @@ public class ProviderPropertyAction extends DispatchAction {
         return view(actionmapping, actionform, request, response);
     }
 
+    public ActionForward OscarMsgRecvd(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+        
+        
+        userPropertyDAO.saveProp(request.getParameter("provider_no"), UserProperty.OSCAR_MSG_RECVD, request.getParameter("value"));
+        
+        return null;
+    }
+            
     public ActionForward remove(ActionMapping actionmapping,
                                ActionForm actionform,
                                HttpServletRequest request,

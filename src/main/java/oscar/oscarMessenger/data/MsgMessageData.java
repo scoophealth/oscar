@@ -260,8 +260,59 @@ public class MsgMessageData {
       return messageid;
     }//=------------------------------------------------------------------------
 
+    
+    public String sendMessageReview(String message, String subject,String userName,String sentToWho,String userNo,ArrayList<MsgProviderData> providers,String attach, String pdfAttach, Integer type, String typeLink ){
+        oscar.oscarMessenger.util.MsgStringQuote str = new oscar.oscarMessenger.util.MsgStringQuote();
+      
+     
+        if (attach != null){
+            attach = str.q(attach);
+        }
+
+        if (pdfAttach != null){
+            pdfAttach = str.q(pdfAttach);
+        }
+
+     sentToWho = org.apache.commons.lang.StringEscapeUtils.escapeSql(sentToWho);
+     userName = org.apache.commons.lang.StringEscapeUtils.escapeSql(userName);
+     
+     MessageTbl mt = new MessageTbl();
+     mt.setDate(new Date());
+     mt.setTime(new Date());
+     mt.setMessage(message);
+     mt.setSubject(subject);
+     mt.setSentBy(userName);
+     mt.setSentTo(sentToWho);
+     mt.setSentByNo(userNo);
+     mt.setSentByLocation(Integer.parseInt(getCurrentLocationId()));
+     mt.setAttachment(attach);
+     mt.setType(type);
+     mt.setType_link(typeLink);
+     if(pdfAttach !=null){
+    	 mt.setPdfAttachment(pdfAttach.getBytes());
+     }
+     messageTblDao.persist(mt);
+     
+     
+     String messageid = String.valueOf(mt.getId());
+
+   
+
+     for (MsgProviderData providerData : providers){
+    	 MessageList ml = new MessageList();
+    	 ml.setMessage(Integer.parseInt(messageid));
+    	 ml.setProviderNo(providerData.providerNo);
+    	 ml.setStatus("new");
+    	 ml.setRemoteLocation(Integer.parseInt(providerData.locationId));
+    	 messageListDao.persist(ml);
+     }
+
+      
+      return messageid;
+    
+    }
     ////////////////////////////////////////////////////////////////////////////
-    public String sendMessage2(String message, String subject,String userName,String sentToWho,String userNo,ArrayList<MsgProviderData> providers,String attach, String pdfAttach ){
+    public String sendMessage2(String message, String subject,String userName,String sentToWho,String userNo,ArrayList<MsgProviderData> providers,String attach, String pdfAttach, Integer type ){
 
       oscar.oscarMessenger.util.MsgStringQuote str = new oscar.oscarMessenger.util.MsgStringQuote();
       
@@ -287,6 +338,7 @@ public class MsgMessageData {
      mt.setSentByNo(userNo);
      mt.setSentByLocation(Integer.parseInt(getCurrentLocationId()));
      mt.setAttachment(attach);
+     mt.setType(type);
      if(pdfAttach !=null){
     	 mt.setPdfAttachment(pdfAttach.getBytes());
      }

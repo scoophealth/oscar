@@ -133,7 +133,7 @@
 					html += '<td>'+job.className+'</td>';
 					html += '<td>'+job.currentlyValid + '</td>';
 					html += '<td>'+job.enabled+'</td>';
-					html += '<td>'+job.updated+'</td>';
+					html += '<td>'+new Date(job.updated)+'</td>';
 					html += '</tr>';
 				
 					jQuery('#jobTypeTable tbody').append(html);

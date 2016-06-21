@@ -86,6 +86,7 @@ import com.quatro.model.security.Secobjprivilege;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.oscarehr.common.model.OscarMsgType;
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -977,7 +978,7 @@ public class EFormUtil {
 			message = putTemplateEformHtml(eForm.getFormHtml(), message);
 
 			MsgMessageData msg = new MsgMessageData();
-			msg.sendMessage2(message, subject, userName, sentWho, userNo, msg.getProviderStructure(sentList), null, null);
+			msg.sendMessage2(message, subject, userName, sentWho, userNo, msg.getProviderStructure(sentList), null, null, OscarMsgType.GENERAL_TYPE);
 		}
 		
 		/* write to ticklers

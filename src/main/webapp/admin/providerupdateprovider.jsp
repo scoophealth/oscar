@@ -76,6 +76,7 @@
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
 <title><bean:message key="admin.providerupdateprovider.title" /></title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
@@ -84,6 +85,29 @@ function setfocus() {
   document.updatearecord.last_name.focus();
   document.updatearecord.last_name.select();
 }
+
+jQuery(document).ready( function() {
+        jQuery("#provider_type").change(function() {
+            
+            if( jQuery("#provider_type").val() == "resident") {                
+                jQuery(".supervisor").slideDown(600);
+                jQuery("#supervisor").focus();
+               
+            }
+            else {
+                if( jQuery(".supervisor").is(":visible") ) {
+                    jQuery(".supervisor").slideUp(600);
+                    jQuery("#supervisor").val("");
+                }
+            }
+        }
+        )
+        
+    }
+        
+        
+ ); 
+
 //-->
 </script>
 </head>
@@ -192,7 +216,7 @@ for (int i=0; i<sites.size(); i++) {
 		<td align="right"><bean:message key="admin.provider.formType" />:
 		</td>
 		<td>
-			<select name="provider_type">
+			<select id="provider_type" name="provider_type">
 			<option value="receptionist"
 				<% if (provider.getProviderType().equals("receptionist")) { %>
 				SELECTED <%}%>><bean:message
@@ -226,6 +250,28 @@ for (int i=0; i<sites.size(); i++) {
 		</select> <!--input type="text" name="provider_type" value="<%= provider.getProviderType() %>" maxlength="15" -->
 		</td>
 	</tr>
+        <%
+            
+            List<ProviderData>providerL = providerDao.findAllBilling("1");
+        %>
+        <tr class="supervisor" <%if( !provider.getProviderType().equals("resident") ) {%> style="display:none" <%}else{}%>">
+            <td align="right">
+                Assigned Supervisor
+            </td>
+            <td>
+                <select id="supervisor" name="supervisor">
+                    <option value="">Please Assign Supervisor</option>
+                    <%
+                    for( ProviderData p : providerL ) {
+                        
+                    %>
+                    <option value="<%=p.getId()%>" <%if( provider.getSupervisor() != null &&  provider.getSupervisor().equals(p.getId())){%>SELECTED<%}%>><%=p.getLastName() + ", " + p.getFirstName()%></option>
+                        
+                    <%
+                    }
+                    %>
+            </td>
+        </tr>
 	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 		<tr>
 			<td align="right"><bean:message
