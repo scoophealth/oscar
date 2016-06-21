@@ -1418,9 +1418,13 @@ function changeSite(sel) {
 												<%
 													for (int i = 0; i < vecProvider.size(); i++) {
 														    propT = (Properties) vecProvider.get(i);
+                                                                                                                    String info = propT.getProperty("proOHIP");
+                                                                                                                    String prov = info.substring(0, info.indexOf("|"));
+                                                                                                                    
 												%>
+                                                                                                
 												<option value="<%=propT.getProperty("proOHIP")%>"
-													<%=providerview.equals(propT.getProperty("proOHIP","").substring(0,propT.getProperty("proOHIP","").indexOf("|")))?"selected":""%>>
+													<%=providerview.equalsIgnoreCase(prov)?"selected":""%>>
 													<b><%=propT.getProperty("last_name")%>, <%=propT.getProperty("first_name")%></b>
 												</option>
 												<%
@@ -1981,6 +1985,7 @@ function changeSite(sel) {
 	</table>
 
 	<script type="text/javascript">
+           
 Calendar.setup( { inputField : "xml_vdate", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_vdate_cal", singleClick : true, step : 1 } );
 <%if (appt_no.compareTo("0") == 0) {%>
     Calendar.setup( { inputField : "service_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "service_date_cal", singleClick : true, step : 1 } );

@@ -35,6 +35,9 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@page import="org.oscarehr.casemgmt.common.Colour" %>
+<%@page import="org.oscarehr.common.dao.ProviderDataDao" %>
+<%@page import="org.oscarehr.common.model.ProviderData"%>
+<%@page import="java.util.List"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -143,9 +146,43 @@ var Colour = {
 <% if (OscarProperties.getInstance().getBooleanProperty("note_program_ui_enabled", "true")) { %>
 	<link rel="stylesheet" href="<c:out value="${ctx}/casemgmt/noteProgram.css" />" />
 	<script type="text/javascript" src="<c:out value="${ctx}/casemgmt/noteProgram.js" />"></script>
-<% } %>
+<% } 
+
+LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+%>
 
 <script type="text/javascript">
+
+    jQuery(document).ready(function() {
+           <%
+  if( loggedInInfo.getLoggedInProvider().getProviderType().equals("resident"))  {
+%>    
+
+
+    jQuery("input[name='reviewed']").change(function() {
+            
+            if( jQuery("input[name='reviewed']:checked").val() == "true") {                
+                if( jQuery(".supervisor").is(":visible") ) {
+                    jQuery(".supervisor").slideUp(300);                    
+                }
+                jQuery(".reviewer").slideDown(600);
+                jQuery("#reviewer").focus();
+               
+            }
+            else {
+                if( jQuery(".reviewer").is(":visible") ) {
+                    jQuery(".reviewer").slideUp(300);
+                }
+                jQuery(".supervisor").slideDown(600);
+                jQuery("#supervisor").focus();
+            }
+        }
+    
+        );
+<%}%> 
+    });
+
+
 
    function assembleMainChartParams(displayFullChart) {
 
@@ -308,7 +345,7 @@ var Colour = {
 <!-- set size of window if customized in preferences -->
 <%
 	UserPropertyDAO uPropDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
-	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+	
 	String providerNo=loggedInInfo.getLoggedInProviderNo();
 	UserProperty widthP = uPropDao.getProp(providerNo, "encounterWindowWidth");
 	UserProperty heightP = uPropDao.getProp(providerNo, "encounterWindowHeight");
@@ -321,7 +358,17 @@ var Colour = {
 		String width = widthP.getValue();
 		String height = heightP.getValue();
 		%>
-<script> jQuery(document).ready(function(){window.resizeTo(<%=width%>,<%=height%>);});</script>
+<script> jQuery(document).ready(function(){
+    
+    window.resizeTo(<%=width%>,<%=height%>);
+
+        
+   }   
+);
+
+    		
+
+</script>
 <%
 	}
 %>
@@ -564,6 +611,52 @@ div.autocomplete ul li {
 	bottom: 200px;
 	text-align: center;
 }
+
+.showResident {
+    left: 0;
+    top: 0;
+    /*transform: translate(100%, 100%);*/
+    min-width: 100%;
+    min-height: 100%;
+    background: rgba(239,250,250,0.6);
+    
+    position: absolute;
+    display: none;
+    z-index: 300;    
+    text-align: center;
+    border-style: ridge;
+}
+
+.showResidentBorder {
+    background: rgba(239,250,250,1);
+    border-style: ridge;
+    text-align: center;
+    width: 45%;
+    height:auto;
+    margin: 40% auto;
+    position:relative;
+}
+
+.showResidentContent {
+    background: rgba(13,117,173,1);
+    text-align: center;
+    width:auto;
+    height: auto;
+    margin: 2% auto;
+    border-style: inset;   
+    position: relative;
+}
+
+.residentText {
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+}
+
+.supervisor {
+}
+
+.reviewer {
+}
 </style>
 
 <html:base />
@@ -675,7 +768,7 @@ function doscroll(){
 }
 	
 window.onbeforeunload = onClosing;
-    		
+
 
 </script>
 </head>
@@ -998,6 +1091,75 @@ if (OscarProperties.getInstance().getBooleanProperty("note_program_ui_enabled", 
 %>
 		</form>
 	</div>
-
+<%
+    String apptNo = request.getParameter("appointmentNo");
+    if( OscarProperties.getInstance().getProperty("resident_review", "false").equalsIgnoreCase("true") && 
+            loggedInInfo.getLoggedInProvider().getProviderType().equals("resident") && !"null".equalsIgnoreCase(apptNo) && !"".equalsIgnoreCase(apptNo)) {
+        ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
+        List<ProviderData> providerList = providerDao.findAllBilling("1");
+%>
+                <div id="showResident" class="showResident">
+                    
+                        <div class="showResidentBorder residentText">
+                            Resident Check List
+                        
+                        <form action="" id="resident" name="resident" onsubmit="return false;">
+                            <input type="hidden" name="residentMethod" id="residentMethod" value="">
+                            <input type="hidden" name="residentChain" id="residentChain" value="">
+                            <table class="showResidentContent">
+                            <tr>
+                                <td>
+                                    Was this encounter reviewed?
+                                </td>
+                                <td>
+                                    Yes <input type="radio" value="true" name="reviewed">&nbsp;No <input type="radio" value="false" name="reviewed">
+                                </td>
+                            </tr>
+                            <tr class="reviewer" style="display:none">
+                                <td class="residentText">
+                                    Who did you review the encounter with?
+                                </td>
+                                <td>
+                                    <select id="reviewer" name="reviewer">
+                                        <option value="">Choose Reviewer</option>
+                                        <%
+                                            for( ProviderData p : providerList ) {
+                                        %>
+                                        <option value="<%=p.getId()%>"><%=p.getLastName() + ", " + p.getFirstName()%></option>
+                                        <%
+                                            }
+                                        %>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="supervisor" style="display:none">
+                                <td class="residentText">
+                                    Who is your Supervisor/Monitor for this encounter?
+                                </td>
+                                <td>
+                                    <select id="supervisor" name="supervisor">
+                                        <option value="">Choose Supervisor</option>
+                                        <%
+                                            for( ProviderData p : providerList ) {
+                                        %>
+                                        <option value="<%=p.getId()%>"><%=p.getLastName() + ", " + p.getFirstName()%></option>
+                                        <%
+                                            }
+                                        %>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <input id="submitResident" value="Continue" name="submitResident" type="submit" onclick="return subResident();"/>
+                                    <input id="submitResident" value="Return to Chart" name="submitResident" type="submit" onclick="return cancelResident();"/>                                
+                                </td>                                
+                            </tr>
+                        </table>
+                        </form>
+                        </div>
+                    
+                </div>
+ <%}%>
 </body>
 </html:html>

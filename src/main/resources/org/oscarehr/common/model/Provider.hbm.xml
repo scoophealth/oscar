@@ -37,5 +37,6 @@
 		<property name="title" />
 		<property name="lastUpdateUser" type="string"/>
 		<property name="lastUpdateDate" type="timestamp" />
+                <property name="supervisor" type="string" />
 	</class>
 </hibernate-mapping>

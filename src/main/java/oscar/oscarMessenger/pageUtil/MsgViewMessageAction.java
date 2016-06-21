@@ -25,6 +25,9 @@
 
 package oscar.oscarMessenger.pageUtil;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
@@ -37,6 +40,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.MessageListDao;
 import org.oscarehr.common.model.MessageList;
+import org.oscarehr.common.model.OscarMsgType;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -106,6 +110,8 @@ public class MsgViewMessageAction extends Action {
                  String thedate = (oscar.Misc.getString(rs, "thedate"));
                  String att     = rs.getString("attachment");
                  String pdfAtt  = rs.getString("pdfattachment");
+                 String msgType = (oscar.Misc.getString(rs, "type"));
+                 String msgType_link = (oscar.Misc.getString(rs, "type_link"));
 
                  if (att == null || att.equalsIgnoreCase("null") ){
                     attach ="0";
@@ -135,6 +141,32 @@ public class MsgViewMessageAction extends Action {
                  request.setAttribute("providerNo",providerNo); 
                  if(orderBy!=null){
                      request.setAttribute("orderBy", orderBy);
+                 }
+                                  
+                 if( msgType != null && !"".equalsIgnoreCase(msgType) ) {
+                     request.setAttribute("msgType", msgType);
+                     
+                     if( Integer.valueOf(msgType).equals(OscarMsgType.OSCAR_REVIEW_TYPE) ) {
+                         if( msgType_link != null ) {
+                            HashMap<String,List<String>>hashMap = new HashMap<String,List<String>>();
+                            String[] keyValues = msgType_link.split(",");
+
+                            for( String s : keyValues ) {
+                                String[] keyValue = s.split(":");
+                                if( keyValue.length == 4 ) {
+                                    if( hashMap.containsKey(keyValue[0]) ) {
+                                        hashMap.get(keyValue[0]).add(keyValue[1]+":"+keyValue[2]+":"+keyValue[3]);
+                                    }
+                                    else {
+                                        List<String> list = new ArrayList<String>();
+                                        list.add(keyValue[1]+":"+keyValue[2]+":"+keyValue[3]);
+                                        hashMap.put(keyValue[0], list);
+                                    }
+                                }
+                            }
+                            request.setAttribute("msgTypeLink", hashMap);
+                         }
+                     }
                  }
                                   
                  MiscUtils.getLogger().debug("viewMessagePosition: " + messagePosition + "IsLastMsg: " + request.getAttribute("viewMessageIsLastMsg"));

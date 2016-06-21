@@ -264,11 +264,12 @@ public class EctIncomingEncounterAction extends Action {
 
 		ArrayList newDocArr = (ArrayList) request.getSession().getServletContext().getAttribute("newDocArr");
 		Boolean useNewEchart = (Boolean) request.getSession().getServletContext().getAttribute("useNewEchart");
-
+                
 		String proNo = (String) request.getSession().getAttribute("user");
 		if (proNo != null && newDocArr != null && Collections.binarySearch(newDocArr, proNo) >= 0) {
 			return (mapping.findForward("success2"));
 		} else if (useNewEchart != null && useNewEchart.equals(Boolean.TRUE)) {
+                    
 			return (mapping.findForward("success2"));
 		} else {
 			return (mapping.findForward("success"));

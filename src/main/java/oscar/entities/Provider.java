@@ -47,6 +47,7 @@ public class Provider {
   private String status= "";
   private String comments= "";
   private String providerActivity= "";
+  private String supervisor = "";
 
 
   /**
@@ -246,6 +247,10 @@ public class Provider {
   public String getProviderActivity() {
     return (providerActivity != null ? providerActivity : "");
   }
+  
+  public String getSupervisor() {
+      return (supervisor != null ? supervisor : "");
+  }
 
   /**
    * Sets the providerNo
@@ -389,6 +394,11 @@ public class Provider {
    */
   public void setProviderActivity(String providerActivity) {
     this.providerActivity = providerActivity;
+  }
+  
+  
+  public void setSupervisor(String supervisor ) {
+      this.supervisor = supervisor;
   }
 
   /**

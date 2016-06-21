@@ -1453,7 +1453,7 @@
 					<consoleOutput>true</consoleOutput>
 					<sourceDirectory>.</sourceDirectory>
 					<includes>src/main/**/*,database/**/*.sql</includes>
-					<excludes>**/*.jar, **/*.txt, **/*.rpt, **/*.fla, **/*.xml, **/*.dtd, **/*.xslt, **/*.doc, **/*.bak, **/*.tld, **/*.jpg, **/*.png, **/*.gif, **/*.pdf, **/*.swf, **/*.js, **/*.css, src/main/webapp/share/calendar/**, **/*svg.jsp</excludes>
+					<excludes>**/*.jar, **/*.txt, **/*.rpt, **/*.fla, **/*.xml, **/*.dtd, **/*.xslt, **/*.doc, **/*.bak, **/*.tld, **/*.jpg, **/*.png, **/*.gif, **/*.pdf, **/*.swf, **/*.js, **/*.css, src/main/webapp/share/calendar/**, **/*svg.jsp, src/main/webapp/casemgmt/Index2.jsp, database/mysql/updates/update-2016-06-06.sql, src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java, src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMsgAction.java, database/mysql/oscarinit.sql, src/main/webapp/oscarEncounter/Index.jsp, database/mysql/oscarinit_on.sql, database/mysql/oscardata.sql, database/mysql/oscarinit_bc.sql</excludes>
 				</configuration>
 				<executions>
 					<execution>

@@ -65,6 +65,7 @@ import oscar.util.ConversionUtils;
 import ca.uhn.hl7v2.HL7Exception;
 
 import com.lowagie.text.pdf.PdfReader;
+import org.oscarehr.common.model.OscarMsgType;
 
 /**
  * Handler class for uploading eAAPs PDF documents.
@@ -278,7 +279,7 @@ public class EaapsHandler extends DefaultGenericHandler implements oscar.oscarLa
 		String userNo = SYSTEM_USER_ID;
 		String attachment = null;
 		String pdfAttachment = null;
-		String messageId = messageData.sendMessage2(mrpNote, subject, userName, sentToWho, userNo, providerListing, attachment, pdfAttachment);
+		String messageId = messageData.sendMessage2(mrpNote, subject, userName, sentToWho, userNo, providerListing, attachment, pdfAttachment, OscarMsgType.GENERAL_TYPE);
 
 		MsgDemoMap msgDemoMap = new MsgDemoMap();
 		msgDemoMap.linkMsg2Demo(messageId, demo.getDemographicNo().toString());

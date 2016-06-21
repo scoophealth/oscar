@@ -77,6 +77,12 @@ public class MessageTbl extends AbstractModel<Integer>{
 	
 	@Column(name="actionstatus")
 	private String actionStatus;
+        
+        @Column(name="type")
+        private Integer type;
+        
+        @Column(name="type_link")
+        private String type_link;
 
 	public Integer getId() {
 		return id;
@@ -175,6 +181,34 @@ public class MessageTbl extends AbstractModel<Integer>{
 	public void setActionStatus(String actionStatus) {
 		this.actionStatus = actionStatus;
 	}
+
+    /**
+     * @return the type
+     */
+    public Integer getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    /**
+     * @return the type_link
+     */
+    public String getType_link() {
+        return type_link;
+    }
+
+    /**
+     * @param type_link the type_link to set
+     */
+    public void setType_link(String type_link) {
+        this.type_link = type_link;
+    }
 	
 	
 }
