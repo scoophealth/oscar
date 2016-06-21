@@ -152,7 +152,7 @@ if (request.getParameter("casetoEncounter")==null)
   Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes(provNo);
 
   MsgDemoMap msgDemoMap = new MsgDemoMap();
-  Vector msgVector = msgDemoMap.getMsgVector(demoNo);
+  List<String> msgVector = msgDemoMap.getMsgVector(demoNo);
   MsgMessageData msgData;
 
   EctSplitChart ectSplitChart = new EctSplitChart();
@@ -1000,7 +1000,7 @@ function removeSaveFeedback()  {
                             String msgSubject;
                             String msgDate;
                             for(int j=0; j<10 && j<msgVector.size(); j++) {
-                                msgId = (String) msgVector.elementAt(j);
+                                msgId = (String) msgVector.get(j);
                                 msgData = new MsgMessageData(msgId);
                                 msgSubject = msgData.getSubject();
                                 msgDate = msgData.getDate();

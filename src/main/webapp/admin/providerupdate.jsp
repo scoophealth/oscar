@@ -179,6 +179,14 @@ if(!authed) {
 		  p.setPractitionerNo(request.getParameter("practitionerNo"));
 		  p.setLastUpdateUser((String)session.getAttribute("user"));
 		  p.setLastUpdateDate(new java.util.Date());
+                  String supervisor = request.getParameter("supervisor");
+                  
+                  if( supervisor == null || supervisor.equalsIgnoreCase("null") || supervisor.equals("")) {
+                      p.setSupervisor(null);
+                  }
+                  else {
+                    p.setSupervisor(supervisor);
+                  }
 		  
 		  providerDao.updateProvider(p);
 		  

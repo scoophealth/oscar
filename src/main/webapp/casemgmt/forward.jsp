@@ -53,8 +53,9 @@ SuperSiteUtil.getInstance().checkSuperSiteAccess(request, response, "demographic
 			<jsp:param name="method" value="setUpMainEncounter" />
 			<jsp:param name="from" value="casemgmt" />
 			<jsp:param name="chain" value="list" />
-			<jsp:param name="demographicNo"
-				value='<%=request.getParameter("demographicNo")%>' />
+			<jsp:param name="demographicNo" value='<%=request.getParameter("demographicNo")%>' />
+                        <jsp:param name="OscarMsgTypeLink" value='<%=request.getParameter("OscarMsgTypeLink")%>'/>
+                        <jsp:param name="msgType" value='<%=request.getParameter("msgType")%>'/>
 		</jsp:forward>
 	<%
     }

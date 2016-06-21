@@ -36,6 +36,10 @@
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.oscarehr.common.dao.SiteDao"%>
 <%@ page import="org.oscarehr.common.model.Site"%>
+<%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
+<%@page  import="org.oscarehr.common.model.ProviderData"%>
+
+
 <%@page import="org.oscarehr.common.Gender" %>
 <%
 
@@ -47,14 +51,15 @@
   //includeing the provider name and a month calendar
 
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
-
-  List<Map<String,String>> list = ProviderData.getProviderListOfAllTypes(true);
+  
+  ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
+  List<ProviderData> list = providerDataDao.findAll();
   List<Integer> providerList = new ArrayList<Integer>();
-  for (Map<String,String> h : list) {
+  for (ProviderData h : list) {
 	  try{
-      String pn = h.get("providerNo");
+      String pn = h.getId();
       providerList.add(Integer.valueOf(pn));
-	  }catch(Exception alphaProviderNumber){/*empty*/} /*No need to do anything. Just want to avoid a NumberFormatException from provider numbers with alphanumeric Characters*/
+	  }catch(Exception e){/*empty*/} /*No need to do anything. Just want to avoid a NumberFormatException from provider numbers with alphanumeric Characters*/
   }
 
   String suggestProviderNo = "";
@@ -92,6 +97,7 @@
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.js"></script>
 <title><bean:message key="admin.provideraddrecordhtm.title" /></title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
@@ -121,6 +127,30 @@ function onsub() {
 function upCaseCtrl(ctrl) {
   ctrl.value = ctrl.value.toUpperCase();
 }
+
+jQuery(document).ready( function() {
+        jQuery("#provider_type").change(function() {
+            
+            if( jQuery("#provider_type").val() == "resident") {                
+                jQuery(".supervisor").slideDown(600);
+                jQuery("#supervisor").focus();
+               
+            }
+            else {
+                if( jQuery(".supervisor").is(":visible") ) {
+                    jQuery(".supervisor").slideUp(600);
+                }
+            }
+        }
+        )
+        
+    }
+        
+        
+ ); 
+        
+        
+    
 //-->
 </script>
 </head>
@@ -194,7 +224,7 @@ for (int i=0; i<sites.size(); i++) {
 			color="red">:</font></td>
 		<td><!--input type="text" name="provider_type" --> <%
  
- %> <select name="provider_type">
+ %> <select id="provider_type" name="provider_type">
 			<option value="receptionist"><bean:message
 				key="admin.provider.formType.optionReceptionist" /></option>
 			<option value="doctor" selected="selected"><bean:message
@@ -214,6 +244,27 @@ for (int i=0; i<sites.size(); i++) {
 		</select> 
 		</td>
 	</tr>
+        <%
+            
+            List<ProviderData>providerL = providerDataDao.findAllBilling("1");
+        %>
+        <tr class="supervisor" style="display:none">
+            <td align="right">
+                Assigned Supervisor
+            </td>
+            <td>
+                <select id="supervisor" name="supervisor">
+                    <option value="">Please Assign Supervisor</option>
+                    <%
+                    for( ProviderData p : providerL ) {
+                    %>
+                    <option value="<%=p.getId()%>"><%=p.getLastName() + ", " + p.getFirstName()%></option>
+                        
+                    <%
+                    }
+                    %>
+            </td>
+        </tr>
 	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 		<tr>
 			<td align="right"><bean:message

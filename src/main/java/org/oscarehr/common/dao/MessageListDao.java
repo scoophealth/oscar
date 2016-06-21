@@ -73,7 +73,7 @@ public class MessageListDao extends AbstractDao<MessageList> {
 	}
 	
 	public int findUnreadByProviderAndAttachedCount(String providerNo) {
-		Query query = entityManager.createQuery("select count(l) from MessageList l, MsgDemoMap m where l.providerNo= :providerNo and l.status='new' and l.message=m.id.messageId");
+		Query query = entityManager.createQuery("select count(l) from MessageList l, MsgDemoMap m where l.providerNo= :providerNo and l.status='new' and l.message=m.messageID");
 		
 		query.setParameter("providerNo", providerNo);
 		return getCountResult(query).intValue();

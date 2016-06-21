@@ -201,7 +201,7 @@ if (request.getParameter("casetoEncounter")==null)
   Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes(provNo);
 
   MsgDemoMap msgDemoMap = new MsgDemoMap();
-  Vector msgVector = msgDemoMap.getMsgVector(demoNo);
+
   MsgMessageData msgData;
 
   EctSplitChart ectSplitChart = new EctSplitChart();

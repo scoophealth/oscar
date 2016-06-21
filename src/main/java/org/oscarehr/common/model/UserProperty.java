@@ -67,6 +67,7 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     public static final String OFFICIAL_SECOND_NAME="official_second_name";
     public static final String OFFICIAL_LAST_NAME="official_last_name";
     public static final String OFFICIAL_OLIS_IDTYPE="official_olis_idtype";
+    public static final String OSCAR_MSG_RECVD="oscarMsgRecvd";
     
     
     //added to user properties with new interface
