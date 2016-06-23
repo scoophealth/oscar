@@ -268,12 +268,12 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 	
 	$scope.openClassicMessenger = function() {
 		if($scope.me != null) {
-			window.open('../oscarMessenger/DisplayMessages.do?providerNo='+$scope.me.providerNo,'msgs','height=700,width=1024');
+			window.open('../oscarMessenger/DisplayMessages.do?providerNo='+$scope.me.providerNo,'msgs','height=700,width=1024,scrollbars=1');
 		}
 	}	
 	
 	$scope.viewMessage = function(message) {
-		window.open('../oscarMessenger/ViewMessage.do?messageID='+message.id+'&boxType=0','msg'+message.id,'height=700,width=1024');
+		window.open('../oscarMessenger/ViewMessage.do?messageID='+message.id+'&boxType=0','msg'+message.id,'height=700,width=1024,scrollbars=1');
 	}
 
 	$scope.viewTickler = function(tickler) {
