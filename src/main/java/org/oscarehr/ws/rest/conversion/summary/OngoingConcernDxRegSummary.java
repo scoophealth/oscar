@@ -134,6 +134,10 @@ public class OngoingConcernDxRegSummary extends IssueNoteSummary implements Summ
 			  }
 		}));
 		
+		for(int i = 0; i < list.size(); i++){
+			list.get(i).setId(i);
+		}
+		
 	}
 	
 	
