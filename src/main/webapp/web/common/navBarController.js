@@ -180,17 +180,17 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 	$scope.openMessenger = function(item){
 		if($scope.me != null) {
 			if(angular.isDefined(item) && angular.isDefined(item.url) && item.url == 'phr'){
-				window.open('../phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER'+$scope.me.providerNo,'height=700,width=1024');
+				window.open('../phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER'+$scope.me.providerNo,'height=700,width=1024,scrollbars=1');
 			}else if(angular.isDefined(item) && angular.isDefined(item.url) && item.url == 'k2a'){
 				if(item.extra === "-"){ //If user is not logged in
-					var win = window.open('../apps/oauth1.jsp?id=K2A','appAuth','width=700,height=450');
+					var win = window.open('../apps/oauth1.jsp?id=K2A','appAuth','width=700,height=450,scrollbars=1');
 					win.focus();
 				}else{
-					var win = window.open('../apps/notifications.jsp','appAuth','width=450,height=700');
+					var win = window.open('../apps/notifications.jsp','appAuth','width=450,height=700,scrollbars=1');
 					win.focus();
 				}
 			}else{ // by default open classic messenger
-				window.open('../oscarMessenger/DisplayMessages.do?providerNo='+$scope.me.providerNo,'msgs','height=700,width=1024');
+				window.open('../oscarMessenger/DisplayMessages.do?providerNo='+$scope.me.providerNo,'msgs','height=700,width=1024,scrollbars=1');
 			}
 		}
 	}
