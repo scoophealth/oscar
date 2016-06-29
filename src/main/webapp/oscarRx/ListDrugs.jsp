@@ -97,9 +97,74 @@ if (heading != null){
 <%}%>
 <div class="drugProfileText" style="">
     <table width="100%" cellpadding="3" border="0" class="sortable" id="Drug_table<%=heading%>">
+    <%
+        // check custom name and brand name
+        String rxName = request.getParameter("rxName");
+        if (OscarProperties.getInstance().isPropertyActive("enable_rx_custom_methodone_suboxone") && rxName != null && (rxName.toLowerCase().contains("methadone") 
+        		|| rxName.toLowerCase().contains("suboxone")
+        		|| rxName.toLowerCase().contains("buprenorphine"))) {
+        %>
+        <tr>
+        	<th align="left"><b>Start Date</b></th>
+            <th align="left"><b><bean:message key="WriteScript.endDate"/></b></th>
+            <th align="left"><b><bean:message key="WriteScript.carryGiving"/></b></th>
+            <th align="left"><b><bean:message key="WriteScript.carryLevel"/></b></th>
+            <th align="left"><b>Rx</b></th>
+            
+        </tr>
+        <%
+        CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
+        List<Drug> prescriptDrugs = caseManagementManager.getCustomPrescriptions(patient.getDemographicNo(), rxName);
+       	Collections.sort(prescriptDrugs, new oscar.oscarRx.util.ShowAllSorter());
+		for (int x=0;x<prescriptDrugs.size();x++) {
+			Drug prescriptDrug = prescriptDrugs.get(x);
+			String rx = prescriptDrug.getCustomName();
+			if (rx == null || rx.isEmpty()) {
+				//rx = prescriptDrug.getBrandName();
+				rx = prescriptDrug.getSpecial();
+			}
+			String dosage = prescriptDrug.getDosage();
+			if (dosage == null) {
+				dosage = "";
+			}
+						
+			int carryGaving = 0;
+			String carryLevel = "";
+			if(prescriptDrug.getComment() !=null ) {
+				String arr[] = prescriptDrug.getComment().split(";");
+				if (arr.length > 1 && !"NONE".equalsIgnoreCase(arr[1])) {
+					for (String c:arr[1].split(",")) {
+						if (!c.trim().isEmpty() && !"CARRY".equalsIgnoreCase(c)) {
+							carryGaving++;
+						}
+					}
+				}
+				
+				if (arr.length > 2 && arr[2] != null && !arr[2].isEmpty()) {
+					carryLevel = arr[2];
+				}
+			}
+        %>
+        <tr>
+        	<td valign="top"><%=oscar.util.UtilDateUtilities.DateToString(prescriptDrug.getRxDate())%></td>
+        	<td valign="top"><%=oscar.util.UtilDateUtilities.DateToString(prescriptDrug.getEndDate())%></td>
+        	<td><%=carryGaving %></td>
+        	<td><%=carryLevel %></td>
+        	<td><%=rx %></td>
+        	
+        </tr>
+        <%} %>
+        
+       <% } else { %>
+       
         <tr>
         	<th align="left"><b>Entered Date</b></th>
             <th align="left"><b><bean:message key="SearchDrug.msgRxDate"/></b></th>
+            <%if (OscarProperties.getInstance().isPropertyActive("enable_rx_custom_methodone_suboxone")) {%>
+            <th align="left"><b><bean:message key="WriteScript.endDate"/></b></th>
+            <th align="left"><b><bean:message key="WriteScript.carryGiving"/></b></th>
+            <th align="left"><b><bean:message key="WriteScript.carryLevel"/></b></th>
+            <%} %>
             <th align="left"><b>Days to Exp</b></th>
             <th align="left"><b>LT Med</b></th>
             <th align="left"><b><bean:message key="SearchDrug.msgPrescription"/></b></th>
@@ -165,9 +230,11 @@ if (heading != null){
 
                 if (request.getParameter("status") != null) { //TODO: Redo this in a better way
                     String stat = request.getParameter("status");
-                    if (stat.equals("active") && !prescriptDrug.isLongTerm() && !prescriptDrug.isCurrent()) {
+                    if (stat!=null && stat.equals("active") && !prescriptDrug.isLongTerm() && !prescriptDrug.isCurrent()  ) {
                         continue;
-                    } else if (stat.equals("inactive") && prescriptDrug.isCurrent()) {
+                    } else if( stat!=null && stat.equals("active") && prescriptDrug.isLongTerm() && prescriptDrug.getPastMed() ) {
+                    	continue;
+                    } else if (stat!=null && stat.equals("inactive") && prescriptDrug.isCurrent()) {
                         continue;
                     }
                 }
@@ -194,6 +261,31 @@ if (heading != null){
                 String bn=prescriptDrug.getBrandName();
                 
                 boolean startDateUnknown = prescriptDrug.getStartDateUnknown();
+                
+                String rx = prescriptDrug.getCustomName();
+    			if (rx == null || rx.isEmpty()) {
+    				rx = prescriptDrug.getBrandName();
+    			}
+                String carryLevel = "", carryGaving = "N/A";
+                if (OscarProperties.getInstance().isPropertyActive("enable_rx_custom_methodone_suboxone") && rx != null && (rx.toLowerCase().contains("methadone") 
+                		|| rx.toLowerCase().contains("suboxone")
+                		|| rx.toLowerCase().contains("buprenorphine"))) {
+                	if(prescriptDrug.getComment()!=null) {
+                		int carryCount = 0;
+                		String arr[] = prescriptDrug.getComment().split(";");
+            			if (arr.length > 1 && !"NONE".equalsIgnoreCase(arr[1])) {
+            				for (String c:arr[1].split(",")) {
+            					if (!c.trim().isEmpty() && !"CARRY".equalsIgnoreCase(c)) {
+            						carryCount++;
+            					}
+            				}
+            			}
+            			carryGaving = Integer.toString(carryCount);
+            			if (arr.length > 2 && arr[2] != null && !arr[2].isEmpty()) {
+            				carryLevel = arr[2];
+            			}
+                	}
+                }
         %>
         <tr>
         <td valign="top"><a id="createDate_<%=prescriptIdInt%>"   <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>&amp;bn=<%=response.encodeURL(bn)%>&amp;atc=<%=prescriptDrug.getAtc()%>"><%=oscar.util.UtilDateUtilities.DateToString(prescriptDrug.getCreateDate())%></a></td>
@@ -204,7 +296,12 @@ if (heading != null){
             		<a id="rxDate_<%=prescriptIdInt%>"   <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>&amp;bn=<%=response.encodeURL(bn)%>"><%=oscar.util.UtilDateUtilities.DateToString(prescriptDrug.getRxDate())%></a>
             	<% } %>
             </td>
-            <td valign="top">
+            <%if (OscarProperties.getInstance().isPropertyActive("enable_rx_custom_methodone_suboxone")) { %>
+            <td valign="top"><%=oscar.util.UtilDateUtilities.DateToString(prescriptDrug.getEndDate())%></td>
+            <td valign="top"><%=carryGaving %></td>
+        	<td valign="top"><%=carryLevel %></td>
+        	<%} %>
+        	<td valign="top">
             	<% if(startDateUnknown) { %>
             		
             	<% } else { %>
@@ -273,7 +370,16 @@ if (heading != null){
 			<%if(!OscarProperties.getInstance().getProperty("rx.delete_drug.hide","false").equals("true")) { %>
             <td width="20px" align="center" valign="top">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
+                <security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="w">
                    <a id="del_<%=prescriptIdInt%>" name="delete" <%=styleColor%> href="javascript:void(0);" onclick="Delete2(this);">Del</a>
+                </security:oscarSec>
+                <%}%>
+            </td>
+            <td width="20px" align="center" valign="top">
+                <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
+                	<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="w">
+                   <a id="delA_<%=prescriptIdInt%>" name="deleteAll" <%=styleColor%> href="javascript:void(0);" onclick="Delete2(this);">DelAll</a>
+                   </security:oscarSec>
                 <%}%>
             </td>
 
@@ -402,7 +508,7 @@ Event.observe('hidecpp_<%=prescriptIdInt%>', 'change', function(event) {
 </script>
         <%}%>
     </table>
-
+<%} %>
 </div>
         <br>
 

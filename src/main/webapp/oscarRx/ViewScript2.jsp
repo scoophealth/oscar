@@ -39,7 +39,9 @@
 <%@ page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="org.oscarehr.ui.servlet.ImageRenderingServlet"%>
 <%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
-
+<%@ page import="java.util.*"%>
+<%@ page import="org.oscarehr.common.model.Document"%>
+<%@ page import="org.oscarehr.common.dao.DocumentDao"%>
 
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
@@ -211,6 +213,14 @@ if (userAgent != null) {
 		browserType = "ALL";
 	}
 }
+
+DocumentDao docdao = (DocumentDao) WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext()).getBean("documentDao");
+List<Document> doc_list = docdao.findByDoctypeAndProviderNo("signature", bean.getProviderNo(), 0);
+boolean showwritesignature = true;
+if(doc_list.size() > 0){
+	showwritesignature = false;
+}
+
 %>
 <link rel="stylesheet" type="text/css" href="styles.css" />
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
@@ -571,7 +581,7 @@ function toggleView(form) {
                                 function expandPreview(text){
                                     parent.document.getElementById('lightwindow_container').style.width="1140px";
                                     parent.document.getElementById('lightwindow_contents').style.width="1120px";
-                                    document.getElementById('preview').style.width="580px";
+                                    //document.getElementById('preview').style.width="580px";
                                     frames['preview'].document.getElementById('pharmInfo').innerHTML=text;
                                     //frames['preview'].document.getElementById('removePharm').show();
                                     $("selectedPharmacy").innerHTML='<bean:message key="oscarRx.printPharmacyInfo.paperSizeWarning"/>';
@@ -656,7 +666,7 @@ function toggleView(form) {
 					<tr>                            
                             <td><span><input type=button value="Fax & Paste into EMR"
                                     class="ControlPushButton" id="faxButton" style="width: 150px"
-                                    onClick="printPaste2Parent(false);sendFax();" disabled/></span>
+                                    onClick="printPaste2Parent(false);sendFax();" <%=(pharmacy != null && pharmacy.getFax().trim().length() > 0 && !showwritesignature) ? "": "disabled" %>/></span>
                                     
                                  <span>
                                  	<select id="faxNumber" name="faxNumber">
@@ -713,18 +723,20 @@ function toggleView(form) {
                                         </tr>
 
                                         <%}%>
-					<% if (OscarProperties.getInstance().isRxSignatureEnabled() && !OscarProperties.getInstance().getBooleanProperty("signature_tablet", "yes")) { %>
-                                        
+					<% if (OscarProperties.getInstance().isRxSignatureEnabled() && !OscarProperties.getInstance().getBooleanProperty("signature_tablet", "yes")) { 
+						if(showwritesignature){
+					%>               
                     <tr>
 						<td colspan=2 style="font-weight: bold"><span>Signature</span></td>
 					</tr>               
 					<tr>
                         <td>
                             <input type="hidden" name="<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>" value="<%=signatureRequestId%>" />
-                            <iframe style="width:500px; height:132px;"id="signatureFrame" src="<%= request.getContextPath() %>/signature_pad/tabletSignature.jsp?inWindow=true&<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>" ></iframe>
+                            <iframe style="width:350px; height:132px;"id="signatureFrame" src="<%= request.getContextPath() %>/signature_pad/tabletSignature.jsp?inWindow=true&<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>" ></iframe>
                         </td>
 					</tr>
-		            <%}%>
+		            <%}
+		            }%>
                     <tr>
 						<td colspan=2 style="font-weight: bold"><span><bean:message key="ViewScript.msgDrugInfo"/></span></td>
 					</tr>

@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -582,6 +583,61 @@ public final class EDocUtil {
         }
 	    return currentdoc;
     }
+	
+	public static String getDocumentFileName(String prefixedFileName) {
+		if(hasSubdir(prefixedFileName))
+			return prefixedFileName.substring(prefixedFileName.indexOf(".")+1, prefixedFileName.length());
+		else return prefixedFileName;
+	}
+
+	public static String getDocumentPrefix(String prefixedFileName) {
+		if(hasSubdir(prefixedFileName))
+			return prefixedFileName.substring(0,prefixedFileName.indexOf("."));
+		else return prefixedFileName;
+	}
+
+	public static String getDocumentPath(String filename) {
+		return EDocUtil.getDocumentDir(filename) + EDocUtil.getDocumentFileName(filename);
+	}
+
+	public static String getDocumentDir(String prefixedFileName) {
+        String rootPath = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+        rootPath = (rootPath.endsWith("\\") || rootPath.endsWith("/") ? rootPath : rootPath + "/");
+
+        if(hasSubdir(prefixedFileName)) {
+        	String prefix = prefixedFileName.substring(0, prefixedFileName.indexOf("."));
+        	return rootPath + prefix.substring(0,4) + "/" + prefix.substring(4,6) + "/";
+        } else return rootPath;
+	}
+
+	public static String getCacheDirectory() {
+//        String filenameWithPrefix = d.getDocfilename();
+
+        String rootPath = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+        rootPath = (rootPath.endsWith("\\") || rootPath.endsWith("/") ? rootPath : rootPath + "/");
+		File rootDir = new File(rootPath);
+        String documentDirName = rootDir.getName();
+		File parentDir = rootDir.getParentFile();
+		File cacheDir = new File(parentDir,documentDirName+"_cache");
+
+        return cacheDir.getAbsolutePath();
+	}
+
+	private static boolean hasSubdir(String fileName) {
+		boolean res = false;
+
+		try {
+        	String prefix = fileName.substring(0, fileName.indexOf("."));
+        	if(prefix.length() == 6) {
+        		SimpleDateFormat format = new SimpleDateFormat("yyyyMM");
+        		format.setLenient(false);
+        		Date test = format.parse(prefix);        		
+        		res = true;
+        	}
+		} catch(Exception ex) {}
+
+		return res;
+	}
 
 	public ArrayList<EDoc> getUnmatchedDocuments(String creator, String responsible, Date startDate, Date endDate, boolean unmatchedDemographics) {
 		ArrayList<EDoc> list = new ArrayList<EDoc>();

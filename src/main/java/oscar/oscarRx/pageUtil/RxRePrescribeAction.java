@@ -266,6 +266,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 			response.sendRedirect("error.html");
 			return null;
 		}
+		request.setAttribute("action", "represcribe");
 		StringBuilder auditStr = new StringBuilder();
 
 		RxPrescriptionData rxData = new RxPrescriptionData();
@@ -329,6 +330,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 			response.sendRedirect("error.html");
 			return null;
 		}
+		request.setAttribute("action", "represcribe");
 		StringBuilder auditStr = new StringBuilder();
 		// String idList = request.getParameter("drugIdList");
 
@@ -420,6 +422,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 			return null;
 		}
 		List<String> reRxDrugList = new ArrayList<String>();
+		request.setAttribute("action", "represcribe");
 		reRxDrugList = bean.getReRxDrugIdList();
 		MiscUtils.getLogger().debug(reRxDrugList);
 		List<RxPrescriptionData.Prescription> listReRxDrug = new ArrayList<Prescription>();

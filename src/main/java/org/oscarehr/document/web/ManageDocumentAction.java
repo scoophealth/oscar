@@ -743,60 +743,68 @@ public class ManageDocumentAction extends DispatchAction {
         }
 		
 		log.debug("in viewDocPage");
+		ServletOutputStream outs = null;
+		BufferedInputStream bfis = null;
 		try {
 			String doc_no = request.getParameter("doc_no");
 			String pageNum = request.getParameter("curPage");
 			if (pageNum == null) {
 				pageNum = "0";
 			}
-			Integer pn = Integer.parseInt(pageNum);
 			log.debug("Document No :" + doc_no);
 			LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
 
 			Document d = documentDao.getDocument(doc_no);
 			log.debug("Document Name :" + d.getDocfilename());
-			String name = d.getDocfilename() + "_" + pn + ".png";
-			log.debug("name " + name);
 
 			File outfile = null;
+			outs = response.getOutputStream();
 
-			outfile = hasCacheVersion2(d, pn);
-			if (outfile != null) {
-				log.debug("got doc from local cache   ");
-			} else {
-				outfile = createCacheVersion2(d, pn);
+			if(d.getContenttype().contains("pdf")) {
+				Integer pn = Integer.parseInt(pageNum);
+				String name = d.getDocfilename() + "_" + pn + ".png";
+				log.debug("name " + name);
+				outfile = hasCacheVersion2(d, pn);
 				if (outfile != null) {
-					log.debug("create new doc  ");
+					log.debug("got cached doc "+d.getDocfilename()+" from local cache");
+				} else {
+					outfile = createCacheVersion2(d, pn);
+					if (outfile != null) {
+						log.debug("cache doc "+d.getDocfilename());
+					}
 				}
+				response.setContentType("image/png");				
+				bfis = new BufferedInputStream(new FileInputStream(outfile));
+				int count = -1;
+				byte[] buf = new byte[1024];
+				while ((count = bfis.read(buf)) != -1) {
+					outs.write(buf, 0, count);
+					// outs.flush();
+				}
+			} else if (d.getContenttype().contains("image")) {
+				outfile = new File(EDocUtil.getDocumentPath(d.getDocfilename()));
+				response.setContentType(d.getContenttype());
+			    response.setContentLength((int)outfile.length());
+			    response.setHeader("Content-Disposition", "inline; filename=" + d.getDocfilename());
+
+			    bfis = new BufferedInputStream(new FileInputStream(outfile));
+
+			    byte[] buffer = new byte[1024];
+			    int bytesRead = 0;
+			    while ((bytesRead = bfis.read(buffer)) != -1) {
+			        outs.write(buffer, 0, bytesRead);
+			    }					
 			}
-			response.setContentType("image/png");
-			ServletOutputStream outs = response.getOutputStream();
 			response.setHeader("Content-Disposition", "attachment;filename=" + d.getDocfilename());
 
-			BufferedInputStream bfis = null;
-			try {
-				if (outfile != null) {
-					bfis = new BufferedInputStream(new FileInputStream(outfile));
-					int data;
-					while ((data = bfis.read()) != -1) {
-						outs.write(data);
-						// outs.flush();
-					}
-				} else {
-					log.info("Unable to retrieve content for " + d + ". This may indicate previous upload or save errors...");
-				}
-			} finally {
-				if (bfis!=null) {
-					bfis.close();
-				}
-			}
-
 			outs.flush();
-			outs.close();
 		} catch (java.net.SocketException se) {
 			MiscUtils.getLogger().error("Error", se);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
+		} finally {
+			if(bfis != null) try { bfis.close(); } catch(IOException e) {}
+			if(outs != null) try { outs.close(); } catch(IOException e) {}		
 		}
 		return null;
 	}
