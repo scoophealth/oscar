@@ -542,6 +542,38 @@ public class CaseManagementManager {
 
 		return (results);
 	}
+	
+	/**
+	 * Only be used to get methadone or suboxone for custom rx modules 
+	 * @param demographciId
+	 * @param rxName
+	 * @return
+	 */
+	public List<Drug> getCustomPrescriptions(int demographciId, String rxName) {
+		if (rxName == null || (!rxName.toLowerCase().contains("methadone") && !rxName.toLowerCase().contains("suboxone") 
+				&& !rxName.toLowerCase().contains("buprenorphine"))) {
+			return null;
+		}
+		DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+		return drugDao.findCustomByDemographicIdOrderByPosition(demographciId, rxName);
+	}
+	
+	public Drug getLastRxForCustomRx(int demoNo, String rxName) {
+		if (rxName == null) {
+			return null;
+		}
+		DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+		return drugDao.getLastRxForCustomRx(demoNo, rxName);
+	}
+	
+	public Date getLastEndDateForCustomRx(int demoNo, String rxName) {
+		if (rxName == null) {
+			return null;
+		}
+		DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+		Drug drug = drugDao.getLastRxForCustomRx(demoNo, rxName);
+		return (drug != null)?drug.getEndDate():null;
+	}
 
 	private void addIntegratorDrugs(LoggedInInfo loggedInInfo,List<Drug> prescriptions, boolean viewAll, int demographicId) {
 

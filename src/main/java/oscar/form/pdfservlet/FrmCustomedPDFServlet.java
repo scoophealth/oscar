@@ -655,6 +655,22 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			BaseFont bf; // = normFont;
 
 			cb.setRGBColorStroke(0, 0, 255);
+			// add water mark
+			if (OscarProperties.getInstance().getBooleanProperty("enable_rx_watermark", "true")) {
+				Image image = null;
+				if (!"oscarRxFax".equals(req.getParameter("__method"))) {
+					if(OscarProperties.getInstance().getProperty("rx_watermark_file_name") !=null ) {
+						image = Image.getInstance(req.getSession().getServletContext().getRealPath("/") + "images/" + OscarProperties.getInstance().getProperty("rx_watermark_file_name"));
+					} else {
+						image = Image.getInstance(req.getSession().getServletContext().getRealPath("/") + "images/watermark.png");
+					}
+					image.setAbsolutePosition(0, 0);
+					image.setAlignment(Image.MIDDLE | Image.UNDERLYING);
+					image.scaleToFit(pageSize.getWidth(), pageSize.getHeight());
+					cb.addImage(image);
+				}
+			}
+			
 			// render prescriptions
 			for (String rxStr : listRx) {
 				bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);

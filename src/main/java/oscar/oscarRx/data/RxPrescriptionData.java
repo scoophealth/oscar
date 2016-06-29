@@ -24,6 +24,7 @@
 
 package oscar.oscarRx.data;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -46,6 +47,7 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarProvider.data.ProSignatureData;
 import oscar.oscarRx.util.RxUtil;
 import oscar.util.ConversionUtils;
@@ -982,8 +984,33 @@ public class RxPrescriptionData {
 
 			return b;
 		}
-
+		
+		private boolean isMethadoneOrSuboxone() {
+        	if (customName != null && (customName.toLowerCase().contains("methadone")
+        			||customName.toLowerCase().contains("suboxone")
+        			||customName.toLowerCase().contains("buprenorphine"))) {
+        		return true;
+        	}
+        	
+        	if (BN != null && (BN.toLowerCase().contains("methadone")
+        			|| BN.toLowerCase().contains("suboxone")
+        			|| BN.toLowerCase().contains("buprenorphine"))) {
+        		return true;
+        	}
+        	
+        	return false;
+        }
+		
 		public void calcEndDate() {
+			
+			if (OscarProperties.getInstance().isPropertyActive("enable_rx_custom_methodone_suboxone")
+        			&& (isMethadoneOrSuboxone())) {
+        		if (this.endDate == null) {
+        			this.endDate = this.rxDate;
+        		}
+        		return;
+        	}
+			
 			try {
 				GregorianCalendar cal = new GregorianCalendar(Locale.CANADA);
 				int days = 0;
@@ -1362,7 +1389,65 @@ public class RxPrescriptionData {
 		}
 
 		public String getFullOutLine() {
-			return (RxPrescriptionData.getFullOutLine(getSpecial()));
+			String fullOutLine = (RxPrescriptionData.getFullOutLine(getSpecial()));
+        	if (OscarProperties.getInstance().isPropertyActive("enable_rx_custom_methodone_suboxone")) {
+        		// parse out comment
+        		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        		String custName = getCustomName();
+        		String brandName = getBrandName();
+        		StringBuilder sb = new StringBuilder();
+        		int flag = 1;
+        		if ((custName != null && custName.toLowerCase().contains("methadone")) ||
+       				 (brandName != null && brandName.toLowerCase().contains("methadone"))) {
+        			flag = 2;
+        		} else if ((custName != null && (custName.toLowerCase().contains("suboxone") || custName.toLowerCase().contains("buprenorphine"))) ||
+	       				 (brandName != null && (brandName.toLowerCase().contains("suboxone")  || brandName.toLowerCase().contains("buprenorphine")))){
+        			flag = 3;
+        		}
+        		
+        		if (flag != 1) {
+        			sb.append(";;Start Date:" + sdf.format(getRxDate()));
+        			sb.append("    ");
+        			sb.append("End Date:" + sdf.format(getEndDate()==null?RxUtil.Today():getEndDate()));
+        			sb.append(";");
+        			
+        			String cmt = getComment();
+        			if (cmt == null) {
+        				cmt = "";
+        			}
+        			String cmtArr[] = cmt.split(";");
+        			if (flag == 2) {
+        				sb.append("Drink observed in the pharmacy on days:;");
+        			} else {
+        				sb.append("Dose observed in the pharmacy on days:;");
+        			}
+        			if (cmtArr.length > 0 && cmtArr[0] != null) {
+        				sb.append(cmtArr[0]);
+        			}
+        			sb.append(";");
+        			sb.append("The following days are to be dispensed as take home doses:;");
+        			if (cmtArr.length > 1 && cmtArr[1] != null) {
+        				sb.append(cmtArr[1]);
+        			}
+        			sb.append(";");
+        			sb.append("Hold prescription if 3 consecutive doses missed or ");
+        			/*
+        			String dose = getDosage();
+        			if (dose == null) {
+        				dose = "";
+        			}
+        			sb.append("if dosage change exceeds " + dose + " from previous prescription.;");
+        			*/
+        			if(flag == 2) {
+        				sb.append("if dosage change exceeds 15mg from previous prescription.;");
+        			} else {
+        				sb.append("if dosage change exceeds 4mg from previous prescription.;");
+        			}
+        			sb.append("Notify physician if dose is missed.");
+        			fullOutLine += sb.toString();
+        		}
+        	}
+       		return fullOutLine;
 		}
 
 		public String getDosageDisplay() {

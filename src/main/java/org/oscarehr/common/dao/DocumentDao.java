@@ -384,6 +384,15 @@ public class DocumentDao extends AbstractDao<Document> {
 		return resultDocs;
 	}
 	
+	public Document findByDocumentNo(int docNo) {
+		Query query = entityManager.createNamedQuery("Document.findByDocumentNo");
+		query.setParameter("documentNo", docNo);
+		try {
+			return getSingleResultOrNull(query);
+		} catch (Exception e) {}
+		return null;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Document> findByDoctype(String docType) {
 		Query query = entityManager.createQuery("SELECT d FROM Document d WHERE d.doctype = :doctype AND d.status = 'A'");

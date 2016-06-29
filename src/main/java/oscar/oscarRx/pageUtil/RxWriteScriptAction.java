@@ -71,6 +71,7 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarRx.data.RxDrugData;
@@ -869,6 +870,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		request.getSession().setAttribute("rePrint", null);// set to print.
+		String onlyPrint = request.getParameter("onlyPrint");
 		List<String> paramList = new ArrayList();
 		Enumeration em = request.getParameterNames();
 		List<String> randNum = new ArrayList();
@@ -980,7 +982,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 							rx.setLastRefillDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
 						} else if (elem.equals("rxDate_" + num)) {
 							if ((val == null) || (val.equals(""))) {
-								rx.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
+								rx.setRxDate(RxUtil.StringToDate("1900-01-01", "yyyy-MM-dd"));
 							} else {
 								rx.setRxDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
 							}
@@ -997,7 +999,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 							}
 						} else if (elem.equals("writtenDate_" + num)) {
 							if (val == null || (val.equals(""))) {
-								rx.setWrittenDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
+								rx.setWrittenDate(RxUtil.StringToDate("1900-01-01", "yyyy-MM-dd"));
 							} else {
 								rx.setWrittenDateFormat(partialDateDao.getFormat(val));
 								rx.setWrittenDate(partialDateDao.StringToDate(val));
@@ -1067,6 +1069,234 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 					}
 
+					// get Methadone or Suboxone information
+					int rxMod = 1;
+					if (OscarProperties.getInstance().isPropertyActive("enable_rx_custom_methodone_suboxone")) {
+						String rxModules = request.getParameter("rxModules_" + num);
+						if (rxModules != null) {
+							try {
+								rxMod = Integer.parseInt(rxModules);
+							} catch (Exception e) {}
+						}
+						if (rxMod == 2) { // Methadone
+							// start date and end date
+							String val = request.getParameter("methadoneStartDate_"+num);
+							if ((val == null) || (val.equals(""))) {
+								rx.setRxDate(RxUtil.StringToDate("1900-01-01", "yyyy-MM-dd"));
+							} else {
+								rx.setRxDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
+							}
+							val = request.getParameter("methdoneEndDate_"+num);
+							if (val == null || val.isEmpty()) {
+								rx.setEndDate(RxUtil.StringToDate("1900-01-01", "yyyy-MM-dd"));
+							} else {
+								rx.setEndDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
+							}
+							
+							// days circled
+							StringBuilder sb = new StringBuilder(); 
+							val = request.getParameter("drkMon_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("MON,");
+							}
+							val = request.getParameter("drkTues_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("TUES,");
+							}
+							val = request.getParameter("drkWed_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("WED,");
+							}
+							val = request.getParameter("drkThurs_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("THURS,");
+							}
+							val = request.getParameter("drkFri_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("FRI,");
+							}
+							val = request.getParameter("drkSat_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("SAT,");
+							}
+							val = request.getParameter("drkSun_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("SUN,");
+							}
+							if (sb.length() > 0) {
+								sb.deleteCharAt(sb.length() - 1);
+							}
+							sb.append(";");
+							int len = sb.length();
+							
+							// take home doses
+							boolean bTakeHome = false;
+							val = request.getParameter("homedoseMonMeth_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("MON,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseTuesMeth_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("TUES,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseWedMeth_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("WED,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseThursMeth_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("THURS,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseFriMeth_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("FRI,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseSatMeth_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("SAT,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseSunMeth_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("SUN,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseNoMeth_"+num);
+							if (val != null && val.equals("on") && bTakeHome) {
+								sb.append("CARRY,");
+							}
+							if (sb.length() > len) {
+								sb.deleteCharAt(sb.length() - 1);
+							} else {
+								sb.append("NONE");
+							}
+							sb.append(";" + request.getParameter("carryLevelMeth_"+num));
+							rx.setComment(sb.toString());
+							
+							// exceed dosage from methadone
+							/*
+							val = request.getParameter("excQtyMeth_"+num);
+							if (val == null) {
+								val = "";
+							}
+							rx.setDosage(val);
+							*/
+						} else if (rxMod == 3) { // Suboxone
+							String val = request.getParameter("suboxoneStartDate_"+num);
+							if ((val == null) || (val.equals(""))) {
+								rx.setRxDate(RxUtil.StringToDate("1900-01-01", "yyyy-MM-dd"));
+							} else {
+								rx.setRxDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
+							}
+							val = request.getParameter("suboxoneEndDate_"+num);
+							if (val == null || val.isEmpty()) {
+								rx.setEndDate(RxUtil.StringToDate("1900-01-01", "yyyy-MM-dd"));
+							} else {
+								rx.setEndDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
+							}
+							
+							// days circled
+							StringBuilder sb = new StringBuilder(); 
+							val = request.getParameter("doseMonSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("MON,");
+							}
+							val = request.getParameter("doseTuesSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("TUES,");
+							}
+							val = request.getParameter("doseWedSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("WED,");
+							}
+							val = request.getParameter("doseThursSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("THURS,");
+							}
+							val = request.getParameter("doseFriSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("FRI,");
+							}
+							val = request.getParameter("doseSatSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("SAT,");
+							}
+							val = request.getParameter("doseSunSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("SUN,");
+							}
+							if (sb.length() > 0) {
+								sb.deleteCharAt(sb.length() - 1);
+							}
+							sb.append(";");
+							int len = sb.length();
+							
+							// take home doses
+							boolean bTakeHome = false;
+							val = request.getParameter("homedoseMonSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("MON,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseTuesSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("TUES,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseWedSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("WED,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseThursSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("THURS,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseFriSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("FRI,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseSatSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("SAT,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseSunSub_"+num);
+							if (val != null && val.equals("on")) {
+								sb.append("SUN,");
+								bTakeHome = true;
+							}
+							val = request.getParameter("homedoseNoSub_"+num);
+							if (val != null && val.equals("on") && bTakeHome) {
+								sb.append("CARRY,");
+							}
+							
+							if (sb.length() > len) {
+								sb.deleteCharAt(sb.length() - 1);
+							} else {
+								sb.append("NONE");
+							}
+							sb.append(";" + request.getParameter("carryLevelSub_"+num));
+							rx.setComment(sb.toString());
+							
+							// exceed dosage from subonxone
+							/* do not save and overwrite dosage
+							val = request.getParameter("excQtySub_"+num);
+							if (val == null) {
+								val = "";
+							}
+							rx.setDosage(val);
+							*/
+						}
+					}
+					
 					if (!isOutsideProvider) {
 						rx.setOutsideProviderName("");
 						rx.setOutsideProviderOhip("");
@@ -1087,24 +1317,31 @@ public final class RxWriteScriptAction extends DispatchAction {
 						if (rx.getSpecialInstruction() != null && !rx.getSpecialInstruction().equalsIgnoreCase("null") && rx.getSpecialInstruction().trim().length() > 0) special += newline + rx.getSpecialInstruction();
 					} else if (rx.isCustom()) {// custom drug
 						if (rx.getUnitName() == null) {
-							special = rx.getCustomName() + newline + rx.getSpecial();
+							special = rx.getCustomName() + newline + (rx.getSpecial()==null?"":rx.getSpecial());
 							if (rx.getSpecialInstruction() != null && !rx.getSpecialInstruction().equalsIgnoreCase("null") && rx.getSpecialInstruction().trim().length() > 0) special += newline + rx.getSpecialInstruction();
-							special += newline + "Qty:" + rx.getQuantity() + " " + rx.getDispensingUnits() + " Repeats:" + "" + rx.getRepeat();
+							if (rxMod == 1) {
+								special += newline + "Qty:" + rx.getQuantity() + " " + rx.getDispensingUnits() + " Repeats:" + "" + rx.getRepeat();
+							}
 						} else {
-							special = rx.getCustomName() + newline + rx.getSpecial();
+							special = rx.getCustomName() + newline + (rx.getSpecial()==null?"":rx.getSpecial());
 							if (rx.getSpecialInstruction() != null && !rx.getSpecialInstruction().equalsIgnoreCase("null") && rx.getSpecialInstruction().trim().length() > 0) special += newline + rx.getSpecialInstruction();
-							special += newline + "Qty:" + rx.getQuantity() + " " + rx.getDispensingUnits() + " " + rx.getUnitName() + " Repeats:" + "" + rx.getRepeat();
+							if (rxMod == 1) {
+								special += newline + "Qty:" + rx.getQuantity() + " " + rx.getUnitName() + " Repeats:" + "" + rx.getRepeat();
+							}
 						}
 					} else {// non-custom drug
 						if (rx.getUnitName() == null) {
-							special = rx.getBrandName() + newline + rx.getSpecial();
+							special = rx.getBrandName() + newline + (rx.getSpecial()==null?"":rx.getSpecial());
 							if (rx.getSpecialInstruction() != null && !rx.getSpecialInstruction().equalsIgnoreCase("null") && rx.getSpecialInstruction().trim().length() > 0) special += newline + rx.getSpecialInstruction();
-
-							special += newline + "Qty:" + rx.getQuantity() + " " + rx.getDispensingUnits() + " Repeats:" + "" + rx.getRepeat();
+							if (rxMod == 1) {
+								special += newline + "Qty:" + rx.getQuantity() + " Repeats:" + "" + rx.getRepeat();
+							}
 						} else {
-							special = rx.getBrandName() + newline + rx.getSpecial();
+							special = rx.getBrandName() + newline + (rx.getSpecial()==null?"":rx.getSpecial());
 							if (rx.getSpecialInstruction() != null && !rx.getSpecialInstruction().equalsIgnoreCase("null") && rx.getSpecialInstruction().trim().length() > 0) special += newline + rx.getSpecialInstruction();
-							special += newline + "Qty:" + rx.getQuantity() + " " + rx.getDispensingUnits() + " " + rx.getUnitName() + " Repeats:" + "" + rx.getRepeat();
+							if (rxMod == 1) {
+								special += newline + "Qty:" + rx.getQuantity() + " " + rx.getUnitName() + " Repeats:" + "" + rx.getRepeat();
+							}
 						}
 					}
 
@@ -1136,7 +1373,9 @@ public final class RxWriteScriptAction extends DispatchAction {
 			}
 		}
 
-		saveDrug(request);
+		if (!"true".equals(onlyPrint)) { // #331 feature 
+			saveDrug(request);
+		}
 		return null;
 	}
 
