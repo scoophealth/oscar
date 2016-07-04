@@ -47,6 +47,7 @@ public class ApptUtil {
 		obj.setName(request.getParameter("keyword"));
 		obj.setDemographic_no(request.getParameter("demographic_no"));
 		obj.setNotes(request.getParameter("notes"));
+		obj.setReasonCode(request.getParameter("reasonCode"));
 		obj.setReason(request.getParameter("reason"));
 		obj.setLocation(request.getParameter("location"));
 		obj.setResources(request.getParameter("resources"));
@@ -58,6 +59,7 @@ public class ApptUtil {
 		obj.setDuration(request.getParameter("duration"));
 		obj.setChart_no(request.getParameter("chart_no"));
 		obj.setUrgency(request.getParameter("urgency"));
+		obj.setProgram(request.getParameter("program"));
 		// set up session bean
 		request.getSession().setAttribute(SESSION_APPT_BEAN, obj);
 	}

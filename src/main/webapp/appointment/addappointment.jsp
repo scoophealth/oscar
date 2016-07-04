@@ -362,9 +362,11 @@ function pasteAppt(multipleSameDayGroupAppt) {
         //document.forms[0].chart_no.value = "<%=apptObj.getChart_no()%>";
         document.forms[0].keyword.value = "<%=apptObj.getName()%>";
         document.forms[0].demographic_no.value = "<%=apptObj.getDemographic_no()%>";
+        document.forms[0].reasonCode.value = "<%=apptObj.getReasonCode()%>";
         document.forms[0].reason.value = "<%= StringEscapeUtils.escapeJavaScript(apptObj.getReason()) %>";
         document.forms[0].notes.value = "<%= StringEscapeUtils.escapeJavaScript(apptObj.getNotes()) %>";
-        //document.forms[0].location.value = "<%=apptObj.getLocation()%>";
+        document.forms[0].location.value = "<%=apptObj.getLocation()%>";
+        document.forms[0].program_id.value = "<%=apptObj.getProgram()%>";
         document.forms[0].resources.value = "<%=apptObj.getResources()%>";
         document.forms[0].type.value = "<%=apptObj.getType()%>";
         if('<%=apptObj.getUrgency()%>' == 'critical') {
@@ -863,7 +865,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 					<div class="input" style="text-align: right;"> <INPUT TYPE="button" NAME="typeButton" VALUE="<bean:message key="Appointment.formType"/>" onClick="openTypePopup()"> </div>
 
             <div class="input">
-                <INPUT TYPE="TEXT" NAME="type"
+                <INPUT TYPE="TEXT" name="type"
                     VALUE='<%=bFirstDisp?"":request.getParameter("type").equals("")?"":request.getParameter("type")%>'
                     WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </div>
