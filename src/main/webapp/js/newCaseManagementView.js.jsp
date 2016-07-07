@@ -3928,3 +3928,15 @@ function assignNoteAjax(method, chain,programId,demographicNo) {
 			}
 		}
 	}
+
+	
+	function clearTempNotes(demographicNo) {
+		jQuery.getJSON(ctx+"/CaseManagementEntry.do?method=clearTempNotes&demographicNo="+demographicNo,
+              function(data,textStatus){
+              if(data != null && data.success == true) {
+              	location.reload();
+              }  else {
+              	alert(data.error);
+              }
+ 		});
+	}

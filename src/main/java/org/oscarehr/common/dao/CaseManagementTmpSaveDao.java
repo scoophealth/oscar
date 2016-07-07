@@ -61,6 +61,18 @@ public class CaseManagementTmpSaveDao extends AbstractDao<CaseManagementTmpSave>
 		return this.getSingleResultOrNull(query);
     }
     
+    public List<CaseManagementTmpSave> find(String providerNo, Integer demographicNo) {
+    	Query query = entityManager.createQuery("SELECT x FROM CaseManagementTmpSave x WHERE x.providerNo = ? and x.demographicNo=? order by x.updateDate DESC");
+		query.setParameter(1,providerNo);
+		query.setParameter(2,demographicNo);
+		
+		@SuppressWarnings("unchecked")
+		List<CaseManagementTmpSave> results =  query.getResultList();
+		
+		return results;
+    }
+    
+    
     public CaseManagementTmpSave find(String providerNo, Integer demographicNo, Integer programId, Date date) {
     	Query query = entityManager.createQuery("SELECT x FROM CaseManagementTmpSave x WHERE x.providerNo = ? and x.demographicNo=? and x.programId = ? and x.updateDate >= ? order by x.updateDate DESC");
 		query.setParameter(1,providerNo);
