@@ -79,6 +79,7 @@ import org.oscarehr.casemgmt.service.CaseManagementPrint;
 import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
 import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.dao.CaseManagementTmpSaveDao;
 import org.oscarehr.common.dao.CasemgmtNoteLockDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
@@ -102,6 +103,7 @@ import org.oscarehr.eyeform.model.Macro;
 import org.oscarehr.eyeform.web.FollowUpAction;
 import org.oscarehr.eyeform.web.ProcedureBookAction;
 import org.oscarehr.eyeform.web.TestBookAction;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.EncounterUtil;
 import org.oscarehr.util.LoggedInInfo;
@@ -3433,4 +3435,37 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 		return programSet;
 	}
+	
+	public ActionForward clearTempNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
+
+		String demoNo = getDemographicNo(request);
+		SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+		JSONObject obj = new JSONObject();
+		
+		
+		if(securityInfoManager.hasPrivilege(loggedInInfo, "_casemgmt.notes", "w", null)) {
+			logger.debug("clearTempNotes CALLED");
+			
+			CaseManagementTmpSaveDao dao = SpringUtils.getBean(CaseManagementTmpSaveDao.class);
+			
+			for(CaseManagementTmpSave item: dao.find(providerNo, Integer.parseInt(demoNo))) {
+				dao.remove(item.getId());
+			}
+			
+			obj.put("success", true);
+			
+			
+		} else {
+			obj.put("success", false);
+			obj.put("error", "Access Denied");
+		}
+		
+		obj.write(response.getWriter());
+		
+		
+		return null;
+	}
+	
 }

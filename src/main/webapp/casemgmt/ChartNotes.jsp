@@ -438,6 +438,10 @@ try
 					</select>
 				</security:oscarSec>
 				
+				<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.clearTempNotes" rights="r" reverse="false">
+					<input type="button" value="Clear Temp Notes" onClick="clearTempNotes('<%=demographicNo%>')"/>
+				</security:oscarSec>
+				
 				<script>
 				function updateMYOSCAR(){
 					jQuery.getScript('phrLinks.jsp?demographicNo=<%=demographicNo%>');

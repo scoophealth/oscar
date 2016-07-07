@@ -2869,3 +2869,10 @@ insert into EncounterType (value,global) VALUES ('face to face encounter with cl
 
 INSERT INTO `tickler_category` VALUES ('1', 'To Call In', 'Call this patient in for a follow-up visit', b'1'), ('2', 'Reminder Note', 'Send a reminder note to this patient', b'1'), ('3', 'Follow-up Billing', 'Follow-up Additional Billing', b'1');
 
+INSERT INTO `OscarJobType` VALUES (null,'OSCAR MSG REVIEW','Sends OSCAR Messages to Residents Supervisors when charts need to be reviewed','org.oscarehr.jobs.OscarMsgReviewSender',0,now());
+INSERT INTO `OscarJob` VALUES (null,'OSCAR Message Review','',(select id from OscarJobType where name = 'OSCAR MSG REVIEW') ,'0 0/30 * * * *','999998',0,now());
+
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.clearTempNotes');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.clearTempNotes','x',0,'999998');
+
+
