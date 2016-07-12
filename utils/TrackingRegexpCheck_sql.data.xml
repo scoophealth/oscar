@@ -3613,6 +3613,7 @@
         <ViolationValue>/database/mysql/updates/update-2014-11-28.sql:sent_to_born tinyint(1) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2014-11-28.sql:sv_num varchar(10) default '0',</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2014-11-28.sql:us_num varchar(10) default '0',</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2016-07-11.sql:provider_no varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:A1C double(2, 2) default null,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:ABPM bool NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:Ace_RxDecToday enum('Same', 'Increase', 'Decrease', 'Stop', 'Start', 'InClassSwitch', 'null') default null,</ViolationValue>

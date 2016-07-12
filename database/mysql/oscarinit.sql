@@ -7489,10 +7489,14 @@ CREATE TABLE scheduletemplatecode (
 CREATE TABLE security (
   security_no int(6) NOT NULL auto_increment,
   user_name varchar(30) NOT NULL default '',
-  password varchar(80) NOT NULL default '',
+  password varchar(255) NOT NULL default '',
   provider_no varchar(6) default NULL,
-  pin varchar(6) default NULL,
+  pin varchar(255) default NULL,
   forcePasswordReset tinyint(1),
+  passwordUpdateDate datetime,
+  pinUpdateDate datetime,
+  lastUpdateUser varchar(20),
+  lastUpdateDate timestamp,
   PRIMARY KEY  (security_no),
   UNIQUE user_name (user_name)
 ) ;
@@ -7501,6 +7505,25 @@ alter table `security` add b_RemoteLockSet int(1) default 1 after pin;
 alter table `security` add b_LocalLockSet int(1) default 1 after pin;
 alter table `security` add date_ExpireDate date default '2100-01-01' after pin;
 alter table `security` add b_ExpireSet int(1) default 1 after pin;
+
+CREATE TABLE `SecurityArchive` (
+ `id` int(11) NOT NULL auto_increment,
+  security_no int(6) NOT NULL,
+  user_name varchar(30) NOT NULL,
+  password varchar(255) NOT NULL,
+  provider_no varchar(6) default NULL,
+  pin varchar(255),
+  b_ExpireSet int(1),
+  date_ExpireDate date,
+  b_LocalLockSet int(1),
+  b_RemoteLockSet int(1),
+  forcePasswordReset tinyint(1),
+  passwordUpdateDate datetime,
+  pinUpdateDate datetime,
+  lastUpdateUser varchar(20),
+  lastUpdateDate timestamp,
+ PRIMARY KEY  (`id`)
+);
 
 
 --

@@ -37,6 +37,13 @@
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
 <%@ page import="org.oscarehr.common.dao.SecurityDao" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.managers.SecurityManager" %>
+<%
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
+
+%>
 <%@ page import="oscar.log.LogAction" %>
 <%@ page import="oscar.log.LogConst" %>
 
@@ -65,6 +72,7 @@
 	    	 } else { 	    	 
 		    	 pinUpdateRequired = true;
 		    	 s.setPin(newPin);
+		    	 s.setPinUpdateDate(new java.util.Date());
 	    	 }
 	     }
 		
@@ -97,6 +105,7 @@
 		    	   errorMsg = errorMsg + " Password Update Error: New Password must be different from the existing Password. ";   
 		       } else {
 		         s.setPassword(sbTemp.toString());
+		         s.setPasswordUpdateDate(new java.util.Date());
 		         passwordUpdateRequired = true;
 		       }  
 		     } else {
@@ -106,11 +115,16 @@
 	     
 	     //Persist it if one of them has gone thru.
          if (passwordUpdateRequired || pinUpdateRequired) {
-        	 securityDao.saveEntity(s);
         	 
-        	 //Log the action
-        	 String ip = request.getRemoteAddr();
-        	 LogAction.addLog(curUser_no, LogConst.UPDATE, "Password/PIN update.", "", ip);
+           	 if(securityManager.checkPasswordAgainstPrevious(request.getParameter("mypassword"), s.getProviderNo())) {
+        		 errorMsg = errorMsg + " Password Update Error: Password cannot be one of your previous records"; 
+        	 } else {
+	        	 securityManager.updateSecurityRecord(loggedInInfo, s);
+	        	 
+	        	 //Log the action
+	        	 String ip = request.getRemoteAddr();
+	        	 LogAction.addLog(curUser_no, LogConst.UPDATE, "Password/PIN update.", "", ip);
+        	 }
          }
 	     
 	     //In case of the error for any reason go back.
@@ -128,3 +142,18 @@
 	     
 	}
 %>
+
+<html>
+<head>
+	<title>Password/PIN Changed</title>
+	<script language='javascript'>self.close();</script>
+</head>
+	<body>
+		<h3>Changes saved.</h3>
+		<br/>
+		<input type="button" value="Close Window" onClick="self.close();"/>
+	</body>
+<body>
+
+</body>
+</html>

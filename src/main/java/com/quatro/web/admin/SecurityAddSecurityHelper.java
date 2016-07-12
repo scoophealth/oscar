@@ -25,6 +25,7 @@ package com.quatro.web.admin;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
@@ -97,6 +98,9 @@ public class SecurityAddSecurityHelper {
     		s.setForcePasswordReset(Boolean.FALSE);  
         }
 		
+    	s.setPasswordUpdateDate(new Date());
+    	s.setPinUpdateDate(new Date());
+    	
 		securityDao.persist(s);
 
 		LogAction.addLog((String) pageContext.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_SECURITY, request.getParameter("user_name"), request.getRemoteAddr());
