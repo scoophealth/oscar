@@ -1905,7 +1905,7 @@ public class ClientManagerAction extends DispatchAction {
 			request.setAttribute("current_bed_program", admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(demographicNo)));
 			request.setAttribute("current_community_program", admissionManager.getCurrentCommunityProgramAdmission(Integer.valueOf(demographicNo)));
 			request.setAttribute("dischargeReasons", lookupManager.LoadCodeList("DRN", true, null, null));
-			request.setAttribute("dischargeReasons2", lookupManager.LoadCodeList("DR2", true, null, null));
+			request.setAttribute("dischargeReasons2", ""/*lookupManager.LoadCodeList("DR2", true, null, null)*/);
 		}
 
 		/* Relations */
