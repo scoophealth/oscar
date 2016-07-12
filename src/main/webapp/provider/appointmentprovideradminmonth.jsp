@@ -766,6 +766,10 @@ function refreshTabAlerts(id) {
 						<td width="14.2%"><font SIZE="2" color="green"><bean:message
 							key="provider.appointmentprovideradminmonth.msgSat" /></font></td>
 					</tr>
+                                        <% String caisi = "";%>
+                                        <caisi:isModuleLoad moduleName="caisi"> 
+                                            <% caisi = "infirmaryView_isOscar=true&GoToCaisiViewFromOscarView=fals&viewall=1&";%>
+                                        </caisi:isModuleLoad>
 					<%
     String[] param = new String[2];
     boolean bFistEntry = true;
@@ -825,7 +829,7 @@ function refreshTabAlerts(id) {
                  
             %>
 					<td nowrap bgcolor="<%=bgcolor.toString()%>" valign="top"><a
-						href='providercontrol.jsp?year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=MyDateFormat.getDigitalXX(dateGrid[i][j])%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName"))%>&displaymode=day&dboperation=searchappointmentday'>
+						href='providercontrol.jsp?<%=caisi%>year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=MyDateFormat.getDigitalXX(dateGrid[i][j])%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName"))%>&displaymode=day&dboperation=searchappointmentday'>
 					<span class='date'>&nbsp;<%=dateGrid[i][j] %> </span> <font
 						size="-2" color="blue"><%=strHolidayName.toString()%></font> <%
   while (bFistEntry?it.hasNext():true) { 
@@ -936,7 +940,7 @@ function refreshTabAlerts(id) {
             %>
 							<td align='center' bgcolor='#FOFOFO'><font
 								FACE='VERDANA,ARIAL,HELVETICA' SIZE='2'> <a
-								href='providercontrol.jsp?year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=dateGrid[i][j+1]==0?1:dateGrid[i][j+1]%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=week&dboperation=searchapptweek'>
+								href='providercontrol.jsp?<%=caisi%>year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=dateGrid[i][j+1]==0?1:dateGrid[i][j+1]%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=week&dboperation=searchapptweek'>
 							<%=(i+1)%></font></td>
 							<%
                     continue;
@@ -946,7 +950,7 @@ function refreshTabAlerts(id) {
                     if(dateGrid[i][j]==day) {
             %>
 							<td align='center'><a
-								href='providercontrol.jsp?year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=MyDateFormat.getDigitalXX(day)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday'>
+								href='providercontrol.jsp?<%=caisi%>year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=MyDateFormat.getDigitalXX(day)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday'>
 							<font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red">
 							<div class='specialtxt'><%= dateGrid[i][j] %></div>
 							</font></a></td>
@@ -954,7 +958,7 @@ function refreshTabAlerts(id) {
             %>
 							<td align='center'><font FACE='VERDANA,ARIAL,HELVETICA'
 								SIZE='2' color='white'><a
-								href='providercontrol.jsp?year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=MyDateFormat.getDigitalXX(dateGrid[i][j])%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName"))%>&displaymode=day&dboperation=searchappointmentday'>
+								href='providercontrol.jsp?<%=caisi%>year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=MyDateFormat.getDigitalXX(dateGrid[i][j])%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName"))%>&displaymode=day&dboperation=searchappointmentday'>
 							<%=dateGrid[i][j] %></a></font></td>
 							<%
                     }
@@ -1036,7 +1040,7 @@ function refreshTabAlerts(id) {
             %>
 							<td align='center' bgcolor='#FOFOFO'><font
 								FACE='VERDANA,ARIAL,HELVETICA' SIZE='2'> <a
-								href='providercontrol.jsp?year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=dateGrid[i][j+1]==0?1:dateGrid[i][j+1]%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=week&dboperation=searchapptweek'>
+								href='providercontrol.jsp?<%=caisi%>year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=dateGrid[i][j+1]==0?1:dateGrid[i][j+1]%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=week&dboperation=searchapptweek'>
 							<%=(i+1)%></font></td>
 							<%
                     continue;
@@ -1046,7 +1050,7 @@ function refreshTabAlerts(id) {
                     if(dateGrid[i][j]==day) {
             %>
 							<td align='center'><a
-								href='providercontrol.jsp?year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=MyDateFormat.getDigitalXX(day)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday'>
+								href='providercontrol.jsp?<%=caisi%>year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=MyDateFormat.getDigitalXX(day)%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday'>
 							<font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red">
 							<div class='specialtxt'><%= dateGrid[i][j] %></div>
 							</font></a></td>
@@ -1054,7 +1058,7 @@ function refreshTabAlerts(id) {
             %>
 							<td align='center'><font FACE='VERDANA,ARIAL,HELVETICA'
 								SIZE='2' color='white'><a
-								href='providercontrol.jsp?year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=MyDateFormat.getDigitalXX(dateGrid[i][j])%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName"))%>&displaymode=day&dboperation=searchappointmentday'>
+								href='providercontrol.jsp?<%=caisi%>year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=MyDateFormat.getDigitalXX(dateGrid[i][j])%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName"))%>&displaymode=day&dboperation=searchappointmentday'>
 							<%=dateGrid[i][j] %></a></font></td>
 							<%
                     }
