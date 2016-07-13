@@ -24,7 +24,7 @@
 
 */
 
-oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,user,$state,noteService,$timeout,uxService,securityService,scheduleService,billingService) {
+oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,user,$state,noteService,$timeout,uxService,securityService,scheduleService,billingService,rxService) {
 	
 	
 	console.log("in patient Ctrl ",demo);

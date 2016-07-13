@@ -58,6 +58,7 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 <link href="css/navbar-fixed-top.css" rel="stylesheet">
 <link href="css/navbar-demo-search.css" rel="stylesheet">
 <link href="css/patient-list.css" rel="stylesheet">
+<link href="css/rx.css" rel="stylesheet">
 
 <link href="../library/ng-table/ng-table.css" rel="stylesheet">
 
@@ -453,6 +454,7 @@ font-size:20px
 	<script src="common/providerServices.js"></script>
 	<script src="common/patientDetailStatusServices.js"></script>
 	<script src="common/uxServices.js"></script>
+	<script src="common/rxServices.js"></script>
 	<script src="common/messageServices.js"></script>
 	<script src="common/inboxServices.js"></script>
 	<script src="common/k2aServices.js"></script>
@@ -474,6 +476,7 @@ font-size:20px
 	<script src="record/details/detailsController.js"></script>
 	<script src="record/details/detailsHistoryListController.js"></script>
 	<script src="record/phr/phrController.js"></script>
+	<script src="record/rx/rxController.js"></script>
 	<script src="record/tracker/trackerController.js"></script>
 	
 	<script src="tickler/ticklerController.js"></script>
