@@ -176,7 +176,7 @@ public class ProgramManagerViewAction extends DispatchAction {
                 {
                     genderConflict.add(programQueue.getClientId());
                 }
-                if ("Transgendered".equals(program.getManOrWoman()) && !"T".equals(demographic.getSex()))
+                if ("Transgender".equals(program.getManOrWoman()) && !"T".equals(demographic.getSex()))
                 {
                     genderConflict.add(programQueue.getClientId());
                 }
