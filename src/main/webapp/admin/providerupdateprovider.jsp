@@ -427,10 +427,18 @@ for (int i=0; i<sites.size(); i++) {
 			<td align="right"><bean:message key="admin.provider.formOfficialOlisIdentifierType" />:</td>
 			<td><select name="officialOlisIdtype">
 					<option value=""><bean:message key="admin.provider.formOfficialOlisIdentifierType.option.notset" /></option>
-					<option value="MDL"><bean:message key="admin.provider.formOfficialOlisIdentifierType.option.mdl" /></option> 
-					<option value="DDSL"><bean:message key="admin.provider.formOfficialOlisIdentifierType.option.ddsl" /></option>
-					<option value="NPL"><bean:message key="admin.provider.formOfficialOlisIdentifierType.option.npl" /></option>
-					<option value="ML"><bean:message key="admin.provider.formOfficialOlisIdentifierType.option.ml" /></option>
+					<option value="MDL" <%="MDL".equals(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_OLIS_IDTYPE))?"SELECTED":""%>>
+						<bean:message key="admin.provider.formOfficialOlisIdentifierType.option.mdl" />
+					</option> 
+					<option value="DDSL" <%="DDSL".equals(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_OLIS_IDTYPE))?"SELECTED":""%>>
+						<bean:message key="admin.provider.formOfficialOlisIdentifierType.option.ddsl" />
+					</option>
+					<option value="NPL" <%="NPL".equals(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_OLIS_IDTYPE))?"SELECTED":""%>>
+						<bean:message key="admin.provider.formOfficialOlisIdentifierType.option.npl" />
+					</option>
+					<option value="ML" <%="ML".equals(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_OLIS_IDTYPE))?"SELECTED":""%>>
+						<bean:message key="admin.provider.formOfficialOlisIdentifierType.option.ml" />
+					</option>
 				</select> 
 			</td>
 		</tr>
