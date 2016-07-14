@@ -202,7 +202,7 @@ $(function ()  {
 <script>
     $('#eformOptions a').click(function (e) {
     e.preventDefault();
-    if(this.href.contains('download')) {
+    if(this.href.indexOf('download') != -1) {
     	document.getElementById("downloadFrame").src = document.getElementById("downloadFrame").src;
     }
     $(this).tab('show');
