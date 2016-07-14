@@ -552,7 +552,7 @@ function addChildRecord() {
         "<option value=\"\"></option>" +
         "<option value=\"M\">Male</option>" +
         "<option value=\"F\">Female</option>" +
-        "<option value=\"T\">Transgendered</option>" +
+        "<option value=\"T\">Transgender</option>" +
         "<option value=\"O\">Other</option>" +
         "<option value=\"U\">Undefined</option>" +
         "</select>" +

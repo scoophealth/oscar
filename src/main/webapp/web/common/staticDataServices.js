@@ -30,7 +30,7 @@ angular.module("staticDataServices", [])
 				var genders = [];
 				genders.push({"value":"M", "label":"Male"});
 				genders.push({"value":"F", "label":"Female"});
-				genders.push({"value":"T", "label":"Transgendered"});
+				genders.push({"value":"T", "label":"Transgender"});
 				genders.push({"value":"O", "label":"Other"});
 				genders.push({"value":"U", "label":"Undefined"});
 				return genders;
