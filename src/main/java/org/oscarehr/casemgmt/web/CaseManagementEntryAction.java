@@ -1460,8 +1460,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		logger.debug("UPDATING NOTE ID in LOCK");
 		casemgmtNoteLockDao.merge(casemgmtNoteLockSession);
 		session.setAttribute("casemgmtNoteLock" + demo, casemgmtNoteLockSession);
-
-		session.removeAttribute(attrib_name);
+                session.removeAttribute(attrib_name);		
+                
+                try {
+			this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
+		} catch (Exception e) {
+			logger.warn("Warning", e);
+		}
 
 		return note.getId();
 	}
