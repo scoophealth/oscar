@@ -154,68 +154,7 @@
                          measurementWindows[idx].parentChanged = true;
                  }
             
-            //check to see if we need to save
-            var noteNotNull = false;
-            var notesChanged = false;
-            var datesChanged = false;
-            
-            if($(caseNote) != null) {
-            	noteNotNull = true;
-            }
-            
-            if (origCaseNote != $(caseNote).value) {
-            	notesChanged = true;
-            }
-            if (origObservationDate != $("observationDate").value) {
-            	datesChanged = true;
-            }
-            	
-            var nId = document.forms['caseManagementEntryForm'].noteId.value;
-				
-            clearAutoSaveTimer();
-            
-            if ((noteNotNull && notesChanged) || (parseInt(nId) !=0 && datesChanged)) {
-                
-                //HPH - if there's no issue assigned, don't save.
-                if(caisiEnabled && requireIssue && !issueIsAssigned()) {
-                	//don't do anything
-                } else {
-                
-	                //autoSave(false);
-	                document.forms['caseManagementEntryForm'].sign.value='persist';
-	                document.forms["caseManagementEntryForm"].method.value = "saveAndExit";
-	                document.forms["caseManagementEntryForm"].ajax.value = false;
-	                document.forms["caseManagementEntryForm"].chain.value = "";
-	                document.forms["caseManagementEntryForm"].includeIssue.value = "off";
-	
-	                var frm = document.forms["caseManagementEntryForm"];
-	                var url = ctx + "/CaseManagementEntry.do";
-	                var objAjax = new Ajax.Request (
-	                    url,
-	                    {
-	                        method: 'post',
-	                        postBody: Form.serialize(frm),
-	                        asynchronous: false,
-	                        onComplete: function(request) {                            
-	                            okToClose = true;
-	                        },
-	                        onFailure: function(request) {
-	                            if( request.status == 403 )
-	                                alert(sessionExpiredError);
-	                            else
-	                                alert(request.status + " " + savingNoteError);
-	                        }
-	                     }
-	                   );
-	
-	                   while(1) {
-	                        if( okToClose == true ) {
-	                            break;
-	                        }
-	                   }
-	             }
-            } //end if save needed
-			else if( needToReleaseLock ) {								
+                if( needToReleaseLock ) {								
 				//release lock on note
 				var url = ctx + "/CaseManagementEntry.do";
 				var nId = document.forms['caseManagementEntryForm'].noteId.value;
@@ -228,8 +167,8 @@
 						asynchronous: false						
 					}
 				);				
-			}
-        }
+                }
+            }
 
         var numMenus = 3;
         function showMenu(menuNumber, eventObj) {
@@ -3199,9 +3138,9 @@ function autoSave(async) {
 
 function backup() {
 	
-    //if(origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) {
+    if(origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) {
         autoSave(true);        
-    //}
+    }
 
 	if( !lostNoteLock ) {
     	setTimer();
