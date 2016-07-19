@@ -31,12 +31,19 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.dao.SiteDao;
+import org.oscarehr.common.dao.SiteRoleMpgDao;
 import org.oscarehr.common.model.Site;
+import org.oscarehr.util.SpringUtils;
+
+import oscar.util.SuperSiteUtil;
 
 public class SitesManageAction extends DispatchAction {
 
     private SiteDao siteDao;
+    
+    private static DocumentDao docDao = (DocumentDao)SpringUtils.getBean(DocumentDao.class);
 
     @Override
     protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -45,7 +52,11 @@ public class SitesManageAction extends DispatchAction {
 
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         List<Site> sites = siteDao.getAllSites();
-
+        for(Site s : sites) {
+        	if(s.getSiteLogoId()!=null) {
+        		s.setSiteLogoDesc(docDao.getDocument(String.valueOf(s.getSiteLogoId())).getDocdesc());
+        	}
+        }
         request.setAttribute("sites", sites);
         return mapping.findForward("list");
     }
@@ -85,12 +96,64 @@ public class SitesManageAction extends DispatchAction {
         return view(mapping, form, request, response);
     }
 
+    public ActionForward addRole(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	DynaBean lazyForm = (DynaBean) form;
+
+    	Site site = (Site) lazyForm.get("site");
+
+        String roleId = request.getParameter("roleId");
+        String roleType = request.getParameter("roleType");
+        
+        SuperSiteUtil superSiteUtil = (SuperSiteUtil) SpringUtils.getBean("superSiteUtil");
+        SiteRoleMpgDao siteRoleMpgDao = SpringUtils.getBean(SiteRoleMpgDao.class);
+        
+        if(roleType!=null)
+        {
+        	if(roleType.equalsIgnoreCase("access"))
+        		siteRoleMpgDao.addAccessRoleToSite(site.getId(), Integer.parseInt(roleId));
+        	else if(roleType.equalsIgnoreCase("admit_discharge"))
+        		siteRoleMpgDao.addAdmitDischargeRoleToSite(site.getId(), Integer.parseInt(roleId));
+        }
+        
+        request.setAttribute("siteId", site.getId()+"");
+        lazyForm.set("site", site);
+        return mapping.findForward("details");
+    }
+    
+    public ActionForward deleteRole(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	DynaBean lazyForm = (DynaBean) form;
+
+    	Site site = (Site) lazyForm.get("site");
+
+        String roleId = request.getParameter("roleId");
+        String roleType = request.getParameter("roleType");
+        
+        SuperSiteUtil superSiteUtil = (SuperSiteUtil) SpringUtils.getBean("superSiteUtil");
+        SiteRoleMpgDao siteRoleMpgDao = SpringUtils.getBean(SiteRoleMpgDao.class);
+        
+        if(roleType!=null)
+        {
+        	if(roleType.equalsIgnoreCase("access"))
+        		siteRoleMpgDao.deleteAccessRoleFromSite(site.getId(), Integer.parseInt(roleId));
+        	else if(roleType.equalsIgnoreCase("admit_discharge"))
+        		siteRoleMpgDao.deleteAdmitDischargeRoleToSite(site.getId(), Integer.parseInt(roleId));
+        }
+        
+        request.setAttribute("siteId", site.getId()+"");
+        lazyForm.set("site", site);
+        return mapping.findForward("details");
+    }
+    
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
     	DynaBean lazyForm = (DynaBean) form;
 
     	String siteId = request.getParameter("siteId");
         Site s = siteDao.getById(new Integer(siteId));
 
+        if(s.getSiteLogoId()!=null) {
+    		s.setSiteLogoDesc(docDao.getDocument(String.valueOf(s.getSiteLogoId())).getDocdesc());
+    	}
+        
         lazyForm.set("site", s);
         return mapping.findForward("details");
     }

@@ -73,6 +73,8 @@
 <%@page import="org.oscarehr.common.model.Consent" %>
 <%@page import="org.oscarehr.common.model.ConsentType" %>
 <%@page import="oscar.OscarProperties" %>
+<%@page import="org.oscarehr.common.dao.DemographicSiteDao" %>
+<%@page import="org.oscarehr.common.model.DemographicSite" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -247,6 +249,9 @@
 		for( ConsentType consentType : consentTypes ) {
 			consentTypeId = request.getParameter( consentType.getType() );
 			String patientConsentId = request.getParameter( consentType.getType() + "_id" );
+			if (consentTypeId == null && !StringUtils.isNumeric(patientConsentId)) {
+				continue;
+			}
 			patientConsentIdInt = Integer.parseInt( patientConsentId );
 			
 			// checked box means add or edit consent. 
@@ -254,7 +259,7 @@
 				patientConsentManager.addConsent(loggedInInfo, demographic.getDemographicNo(), Integer.parseInt( consentTypeId ) );
 			
 			// unchecked and patientConsentId > 0 could mean the patient opted out. 
-			} else if( patientConsentIdInt > 0 ) {
+			} else if ( patientConsentIdInt > 0 ) {
 				patientConsentManager.optoutConsent( loggedInInfo, patientConsentIdInt );		
 			}		
 		}
@@ -353,6 +358,23 @@
 	}	
 	
     demographicDao.save(demographic);
+    
+  	//multiple site, update site
+	if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { 
+		DemographicSiteDao demographicSiteDao = (DemographicSiteDao)SpringUtils.getBean("demographicSiteDao");
+		DemographicSite ds = new DemographicSite();
+		String[] sites = request.getParameterValues("sites");
+		demographicSiteDao.removeSitesByDemographicId(Integer.valueOf(demoNo));
+	
+		if(sites!=null) {
+			for (int i = 0; i < sites.length; i++) {				
+				DemographicSite demographicSite = new DemographicSite();
+				demographicSite.setDemographicId(Integer.valueOf(demoNo));
+				demographicSite.setSiteId(Integer.valueOf(sites[i]));
+				demographicSiteDao.persist(demographicSite);				
+			}
+		 }
+	}
     
     try{
     	oscar.oscarDemographic.data.DemographicNameAgeString.resetDemographic(request.getParameter("demographic_no"));

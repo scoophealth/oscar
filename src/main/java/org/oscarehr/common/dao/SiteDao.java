@@ -276,4 +276,18 @@ public class SiteDao extends AbstractDao<Site> {
 		} catch (Exception e) {}
 		return null;
 	}
+	
+	public List<Site> findBySiteIds(List<Integer> siteIds, boolean exclude) {
+		if (siteIds == null || siteIds.size() == 0) {
+			return new ArrayList<Site>();
+		}
+		String sql = "select site from Site site where site.siteId in (:siteIds)";
+		if (exclude) {
+			sql = "select site from Site site where site.siteId not in (:siteIds)";
+		}
+		Query q = entityManager.createQuery(sql);
+		q.setParameter("siteIds", siteIds);
+		
+		return q.getResultList();
+	}
 }

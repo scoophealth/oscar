@@ -29,15 +29,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.hibernate.HibernateException;
+import org.oscarehr.common.model.Site;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.service.SiteRoleManager;
 import oscar.util.SqlUtils;
 
 public class MsgNewMessageTag extends TagSupport {
@@ -64,6 +67,28 @@ public class MsgNewMessageTag extends TagSupport {
                 c = DbConnectionFilter.getThreadLocalDbConnection();
                 						//String sql = new String("select count(*) from messagelisttbl where provider_no ='"+ providerNo +"' and status = 'new' ");
                 String sql = "select count(*) from messagelisttbl m LEFT JOIN oscarcommlocations o ON m.remoteLocation = o.locationId where m.provider_no = ? and m.status = 'new' and o.current1=1" ;
+                String siteStr = "";
+                if(org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()){
+                	SiteRoleManager siteRoleMgr = new SiteRoleManager();
+                	List<Site> sites = siteRoleMgr.getSitesWhichUserCanOnlyAccess(providerNo);
+                    if(sites!=null && sites.size()>0)
+                    {
+                    	for (Site site : sites)
+    					{
+    						if(siteStr.length()==0)
+    							siteStr = "'"+site.getId()+"'";
+    						else
+    							siteStr = siteStr+",'"+site.getId()+"'";
+    					}
+                    	sql = "select count(1) "
+                    		+" from messagelisttbl m LEFT JOIN oscarcommlocations o "
+                    		+" ON m.remoteLocation = o.locationId "
+                    		+" left join msgDemoMap dm on m.message = dm.messageID "
+                    		+" left join demographicSite ds on dm.demographic_no=ds.demographicId "
+                    		+" where m.provider_no = ? and m.status = 'new' and o.current1=1 "
+                    		+" and (dm.demographic_no is null or dm.demographic_no = '' or ds.siteId in ("+siteStr+")) ";
+                    }
+                } 
                 ps = c.prepareStatement(sql);
                 ps.setString(1,providerNo);
                 rs = ps.executeQuery();                

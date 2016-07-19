@@ -9,6 +9,7 @@
 
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ResourceBundle;
@@ -19,19 +20,17 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DigitalSignatureDao;
+import org.oscarehr.common.dao.DocumentDao;
+import org.oscarehr.common.dao.SiteDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DigitalSignature;
+import org.oscarehr.common.model.Site;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.OscarProperties;
-import oscar.oscarClinic.ClinicData;
-import oscar.oscarRx.data.RxProviderData;
-import oscar.oscarRx.data.RxProviderData.Provider;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -45,6 +44,11 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 
+import oscar.OscarProperties;
+import oscar.oscarClinic.ClinicData;
+import oscar.oscarRx.data.RxProviderData;
+import oscar.oscarRx.data.RxProviderData.Provider;
+
 public class ConsultationPDFCreator extends PdfPageEventHelper {
 
 	private static Logger logger = MiscUtils.getLogger();
@@ -55,6 +59,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 	private BaseFont bf;
 	private Font font;
 	private Font boldFont;
+	private Font bigBoldFont;
 	private Font headerFont;
 	private Font infoFont;
 
@@ -101,6 +106,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		infoFont = new Font(bf, 12, Font.NORMAL);
 		font = new Font(bf, 9, Font.NORMAL);
 		boldFont = new Font(bf, 10, Font.BOLD);
+		bigBoldFont = new Font(bf, 12, Font.BOLD);
 
 		createConsultationRequest(loggedInInfo);
 
@@ -116,15 +122,34 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		float[] tableWidths = { 1f, 1f };
 		PdfPTable table = new PdfPTable(1);
 //		PdfPCell cell;
-		PdfPTable border, border2;
+		PdfPTable border, border2, border1;
 		table.setWidthPercentage(95);
 
 		// Creating a border for the entire request.
 		border = new PdfPTable(1);
 		addToTable(table, border, true);
 
-		// Adding clinic information to the border.
-		PdfPTable infoTable = createClinicInfoHeader();
+		if(props.getProperty("faxLogoInConsultation")!=null) {
+			// Creating container for logo and clinic information table.
+			border1 = new PdfPTable(tableWidths);
+			addTable(border, border1);
+			
+			// Adding fax logo
+			PdfPTable infoTable = createLogoHeader();
+			addToTable(border1, infoTable, false);
+			
+			// Adding clinic information to the border.
+			infoTable = createClinicInfoHeader();			
+			addToTable(border1, infoTable, false);
+			
+		} else {
+			// Adding clinic information to the border.
+			PdfPTable infoTable = createClinicInfoHeader();			
+			addTable(border, infoTable);
+		}
+		
+		// Add reply info 
+		PdfPTable infoTable = createReplyHeader();
 		addTable(border, infoTable);
 
 		// Creating container for specialist and patient table.
@@ -184,6 +209,102 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		cell.setColspan(1);
 		main.addCell(cell);
 		return cell;
+	}
+	
+	private PdfPTable createLogoHeader() {
+		float[] tableWidths;
+		PdfPCell cell = new PdfPCell();
+		//tableWidths = new float[]{ 1.5f, 2.5f };
+		//PdfPTable infoTable = new PdfPTable(tableWidths);
+		PdfPTable infoTable = new PdfPTable(1);
+		try{
+			String filename = "";
+			if(props.getProperty("multisites")!=null && "on".equalsIgnoreCase(props.getProperty("multisites"))) {
+				DocumentDao documentDao = (DocumentDao) SpringUtils.getBean("documentDao");
+				SiteDao siteDao = (SiteDao) SpringUtils.getBean("siteDao");
+				Site site = siteDao.getById(Integer.valueOf(reqFrm.siteName));
+				if(site!=null) {
+					if(site.getSiteLogoId()!=null) {
+						org.oscarehr.common.model.Document d = documentDao.getDocument(String.valueOf(site.getSiteLogoId()));
+						String dir = props.getProperty("DOCUMENT_DIR");
+						filename = dir.concat(d.getDocfilename());
+					} else {
+						//If no logo file uploaded for this site, use the default one defined in oscar properties file.
+						filename = props.getProperty("faxLogoInConsultation");	
+					}
+				}			
+			} else {
+				filename = props.getProperty("faxLogoInConsultation");	
+			}
+		
+			FileInputStream fileInputStream = new FileInputStream(filename);
+			byte[] faxLogImage = new byte[1024 * 256];		
+			fileInputStream.read(faxLogImage);
+			Image image = Image.getInstance(faxLogImage);
+			//image.scalePercent(80f);
+			
+			// only half table width
+			image.scaleToFit(PageSize.LETTER.getWidth() * 0.95f * 0.5f - 10, 50f);
+			image.setBorder(0);
+			cell = new PdfPCell(image);
+			cell.setBorder(0);
+			infoTable.addCell(cell);
+		} catch (Exception e) {
+					logger.error("Unexpected error.", e);
+		}		
+		
+		// The last cell in the table is extended to the maximum available height;
+				// inserting a blank cell here prevents the last border used to underline text from
+				// being displaced to the bottom of this table.
+				cell.setPhrase(new Phrase(" ", font));
+				cell.setBorder(0);
+				cell.setColspan(2);
+				infoTable.addCell(cell);
+		return infoTable;		
+				
+	}
+	
+	private PdfPTable createReplyHeader() {
+		
+		PdfPCell cell;
+		PdfPTable infoTable = new PdfPTable(1);
+
+		cell = new PdfPCell(new Phrase("", headerFont));
+		cell.setBorder(0);
+		cell.setPaddingLeft(25);
+		infoTable.addCell(cell);
+		
+		cell.setPhrase(new Phrase(getResource("msgConsReq"), bigBoldFont));
+		cell.setPadding(0);
+		cell.setBorder(0);
+		cell.setColspan(2);
+		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		infoTable.addCell(cell);
+
+		if (reqFrm.pwb.equals("1")){
+			cell.setPhrase(new Phrase(getResource("msgPleaseReplyPatient"), boldFont));
+		}
+
+		else if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
+			cell.setPhrase(new Phrase("", boldFont));
+		}
+		else {
+			cell.setPhrase(new Phrase(
+					String.format("%s %s %s", getResource("msgPleaseReplyPart1"),
+											  clinic.getClinicName(),
+											  getResource("msgPleaseReplyPart2")), boldFont));
+		}
+		infoTable.addCell(cell);
+		
+		// The last cell in the table is extended to the maximum available height;
+				// inserting a blank cell here prevents the last border used to underline text from
+				// being displaced to the bottom of this table.
+				cell.setPhrase(new Phrase(" ", font));
+				cell.setBorder(0);
+				cell.setColspan(2);
+				infoTable.addCell(cell);
+				
+		return infoTable;
 	}
 
 	/**

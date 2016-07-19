@@ -59,6 +59,8 @@ String curUser_no = (String) session.getAttribute("user");
 String demographic_no = ""+Integer.parseInt(request.getParameter("demographic_no"));
 boolean selfSubmit = (request.getParameter("selfsubmit") != null) ? request.getParameter("selfsubmit").equals("1") : false;
 
+SuperSiteUtil.getInstance().checkSuperSiteAccess(request, response, "demographic_no");
+
 // on submit
 if (selfSubmit) {
 	

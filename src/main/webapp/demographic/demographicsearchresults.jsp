@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.IsPropertiesOn"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -312,15 +313,13 @@
 	
 	
 	List<Demographic> demoList = null;
-	
-        if(request.getParameter("keyword")!=null && request.getParameter("keyword").length()==0) {
+      if(request.getParameter("keyword")!=null && request.getParameter("keyword").length()==0) {
             int mostRecentPatientListSize=Integer.parseInt(OscarProperties.getInstance().getProperty("MOST_RECENT_PATIENT_LIST_SIZE","3"));
             List<Integer> results = oscarLogDao.getRecentDemographicsAccessedByProvider(providerNo,  0, mostRecentPatientListSize);
             demoList = new ArrayList<Demographic>();
-            for(Integer r:results) {
+            for(Integer r : results) {
                 demoList.add(demographicDao.getDemographicById(r));
             }
-            
         } else {
             demoList = doSearch(demographicDao,searchMode,ptstatus,keyword,limit,offset,orderBy,providerNo,outOfDomain);	
         }	

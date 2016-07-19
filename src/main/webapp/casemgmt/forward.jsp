@@ -27,9 +27,12 @@
 
 <%@ include file="/casemgmt/taglibs.jsp"%>
 <%@ page import="java.util.ArrayList"%>
+<%@page import="oscar.util.SuperSiteUtil" %>
 
 <!--  logic:redirect forward="/admissionListAction.admit"  / -->
-
+<%
+SuperSiteUtil.getInstance().checkSuperSiteAccess(request, response, "demographicNo");
+%>
 <%
     String useNewCaseMgmt;
     if((useNewCaseMgmt = request.getParameter("newCaseManagement")) != null ) {        

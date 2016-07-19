@@ -34,11 +34,20 @@
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicParameters"%>
-
-
 <%@ page errorPage="errorpage.jsp" import="oscar.OscarProperties"%>
+<%@page import="oscar.service.SiteRoleManager" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
+<%@page import="oscar.util.SuperSiteUtil" %>
+<%@page import="org.oscarehr.common.model.Site" %>
+
+<%
+String displayMode_ = request.getParameter("displaymode");
+if(displayMode_!=null && (displayMode_.equalsIgnoreCase("Update Record") || displayMode_.equalsIgnoreCase("edit")))
+{
+	SuperSiteUtil.getInstance().checkSuperSiteAccess(request, response, "demographic_no");	
+}
+%>
 
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
@@ -131,21 +140,39 @@
       ptstatusexp=" and patient_status not in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
 
   String domainRestriction="";
+  String curProvider_no = (String) session.getAttribute("user");
   if(request.getParameter("outofdomain")!=null && !request.getParameter("outofdomain").equals("true")) {
-  	String curProvider_no = (String) session.getAttribute("user");
   	domainRestriction = "and demographic_no in (select client_id from admission where admission_status='current' and program_id in (select program_id from program_provider where provider_no='"+curProvider_no+"')) ";
+  }
+  
+//multiple site starts
+  String multipleSitesAccessExp = "";
+  if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
+	  SiteRoleManager siteRoleMgr = new SiteRoleManager();
+	  List<Site> accessSitesList = siteRoleMgr.getSitesWhichUserCanOnlyAccess(curProvider_no);
+	  if(accessSitesList!=null && accessSitesList.size()>0) {
+		  multipleSitesAccessExp = " and demographic_no in (select demographicId from demographicSite where siteId in (";
+		  int count = 0;
+		  for(Site s : accessSitesList) {
+			  count ++;		  
+			  multipleSitesAccessExp = multipleSitesAccessExp.concat(String.valueOf(s.getSiteId()));
+			  if(count != accessSitesList.size())
+				  multipleSitesAccessExp = multipleSitesAccessExp.concat(",");
+		  }
+		  multipleSitesAccessExp = multipleSitesAccessExp.concat("))");
+	  }
   }
 
   String [][] dbQueries=new String[][] {
-    {"search_titlename", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+domainRestriction+orderby},
-    {"search_titlename_mysql", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+domainRestriction+orderby + " " + limit},
-    {"search_demorecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+domainRestriction+orderby},
+    {"search_titlename", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+domainRestriction+multipleSitesAccessExp+orderby},
+    {"search_titlename_mysql", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+domainRestriction+multipleSitesAccessExp+orderby + " " + limit},
+    {"search_demorecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+domainRestriction+multipleSitesAccessExp+orderby},
     {"search_detail", "select * from demographic where demographic_no=?"},
     {"search_detail_ptbr", "select * from demographic d left outer join demographic_ptbr dptbr on dptbr.demographic_no = d.demographic_no where d.demographic_no=?"},
 
     {"search_provider", "select * from provider status='1' order by last_name"},
     {"search_provider_doc", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
-    {"search*", "select * from demographic "+ ptstatusexp+domainRestriction+orderby + " "+limit },
+    {"search*", "select * from demographic "+ ptstatusexp+domainRestriction+multipleSitesAccessExp+orderby + " "+limit },
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
     {"appt_history", "select appointment_no, appointment_date, start_time, appointment.type, remarks, CONCAT(appointment_date,start_time) AS appttime, end_time, reason, appointment.status, provider.last_name, provider.first_name, appointment.location from appointment LEFT JOIN provider ON appointment.provider_no=provider.provider_no where appointment.demographic_no=? "+ orderby + " desc "},
     {"appt_history_w_deleted","select appointment_no, appointment_date, start_time, appointment.type, remarks, CONCAT(appointment_date,start_time) AS appttime, end_time, reason, appointment.status, provider.last_name, provider.first_name, appointment.location,'' as archive from appointment LEFT JOIN provider ON appointment.provider_no=provider.provider_no where appointment.demographic_no=? union select appointment_no, appointment_date, start_time, appointment.type, remarks, CONCAT(appointment_date,start_time) AS appttime, end_time, reason, appointment.status, provider.last_name, provider.first_name, appointment.location, 'archive' as archive from appointmentArchive appointment LEFT JOIN provider ON appointment.provider_no=provider.provider_no where appointment.demographic_no=? and appointment_no not in (select appointment_no from appointment) order by appttime desc, appointment_no desc"},

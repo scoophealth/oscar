@@ -266,7 +266,7 @@ public class TicklerManager {
     public List<Tickler> getTicklers(LoggedInInfo loggedInInfo,CustomFilter filter,String providerNo,String programId) {
     	checkPrivilege(loggedInInfo, PRIVILEGE_READ);
     	
-        List<Tickler> results = ticklerDao.getTicklers(filter);     
+        List<Tickler> results = ticklerDao.getTicklers(filter, providerNo);     
            
           
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {        	

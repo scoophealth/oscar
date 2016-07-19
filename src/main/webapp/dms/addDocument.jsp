@@ -49,12 +49,15 @@ String appointment = request.getParameter("appointmentNo");
 
 String module = "";
 String moduleid = "";
+String siteId = "";
 if (request.getParameter("function") != null) {
     module = request.getParameter("function");
     moduleid = request.getParameter("functionid");
+    siteId = request.getParameter("siteId");
 } else if (request.getAttribute("function") != null) {
     module = (String) request.getAttribute("function");
     moduleid = (String) request.getAttribute("functionid");
+    siteId = (String) request.getAttribute("siteId");
 }
 
 String curUser = "";
@@ -310,6 +313,7 @@ var docSubClassList = [
 		key="<%=(String) docerrors.get(errorkeys.nextElement())%>" /></font>
 	<br />
 	<% } %>
+	<input type="hidden" name="siteId" value='<%=siteId %>' >
 	<input type="hidden" name="function"
 		value="<%=formdata.getFunction()%>" size="20">
 	<input type="hidden" name="functionId"
