@@ -277,6 +277,7 @@
                   <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"/>
               </property>  
 		</bean>
+		<bean id="superSiteUtil" class="oscar.util.SuperSiteUtil" autowire="byName" scope="prototype"/>
 		
 <!-- 		
 		<task:executor id="taskExecutor" />

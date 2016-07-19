@@ -74,6 +74,8 @@
 <%@page import="org.oscarehr.common.model.Consent" %>
 <%@page import="org.oscarehr.common.model.ConsentType" %>
 <%@page import="oscar.OscarProperties" %>
+<%@page import="org.oscarehr.common.dao.DemographicSiteDao" %>
+<%@page import="org.oscarehr.common.model.DemographicSite" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -251,6 +253,23 @@
     bufDoctorNo = new StringBuilder( StringUtils.trimToEmpty("provider_no") );
 
     demographicDao.save(demographic);
+  	//multiple site, update site
+	if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { 
+		 DemographicSiteDao demographicSiteDao = (DemographicSiteDao)SpringUtils.getBean("demographicSiteDao");
+		 DemographicSite ds = new DemographicSite();
+		 String[] sites = request.getParameterValues("sites");
+		 //demographicSiteDao.removeSitesByDemographicId(Integer.valueOf(demographic.getDemographicNo()));
+			
+		 if(sites!=null) {
+			int demoNo = demographic.getDemographicNo();
+			for (int i = 0; i < sites.length; i++) {				
+				DemographicSite demographicSite = new DemographicSite();
+				demographicSite.setDemographicId(Integer.valueOf(demoNo));
+				demographicSite.setSiteId(Integer.valueOf(sites[i]));
+				demographicSiteDao.persist(demographicSite);				
+			}
+		}
+	}
 
 
           GenericIntakeEditAction gieat = new GenericIntakeEditAction();

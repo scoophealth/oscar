@@ -78,6 +78,8 @@
 <%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
 <%@page import="org.oscarehr.managers.ProgramManager2" %>
 <%@page import="org.oscarehr.managers.PatientConsentManager" %>
+<%@page import="oscar.util.SuperSiteUtil"%>
+<%@ page import="org.oscarehr.common.dao.*,org.oscarehr.common.model.*" %>
 
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -1584,6 +1586,68 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 				</table>
 				</td>
 			</tr>
+			
+			<%-- Site MODULE --%>
+<tr>
+
+			<td colspan="4">
+				<table style="width: 100%;">
+				<tr><td style="width: 10%;">
+				<bean:message key="admin.provider.sitesAssigned" /><font color="red">:</font>
+				</td>
+				<div class="sites">
+				<td>
+<% 
+
+if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { 
+	List<Integer> siteIDs = new ArrayList<Integer>();
+	boolean isSiteAccessPrivacy=false;	
+	isSiteAccessPrivacy=true; 	
+	ProviderSiteDao psDao = (ProviderSiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("providerSiteDao");
+	String curProvider_no = (String) session.getAttribute("user");
+	List<ProviderSite> psList = psDao.findByProviderNo(curProvider_no);
+	SuperSiteUtil superSiteUtil = SuperSiteUtil.getInstance(curProvider_no);
+	
+	for(ProviderSite ps : psList) {
+		/*if(!superSiteUtil.isUserAllowedToAdmitDischargeForSite(ps.getId().getSiteId()))
+			continue;*/
+		siteIDs.add(ps.getId().getSiteId());
+	}	
+
+	ProviderDao pDao = (ProviderDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("providerDao");
+		
+	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");	
+	
+	String visibilityStr = "";
+	for (int i=0; i<siteIDs.size(); i++) {
+		boolean inSite = false;
+		
+		visibilityStr = "";
+		if(!superSiteUtil.isUserAllowedToAdmitDischargeForSite(siteIDs.get(i))) {
+			visibilityStr = "visibility: hidden;";
+		}
+ 		
+		String s = siteDao.getById(siteIDs.get(i)).getName();
+
+%>	<span style="<%=visibilityStr%>">	
+	<input type="checkbox" name="sites" value="<%= siteIDs.get(i) %>" >
+	<%= s %>
+	</span>
+
+<%
+	}
+	
+}
+%>
+		</td>
+		</div>
+		</tr>
+		</table>
+		
+		</td>
+		</tr>	
+<%-- END Site MODULE --%>
+			
 			<tr>
 			    <td colspan="4">
 			        <div>

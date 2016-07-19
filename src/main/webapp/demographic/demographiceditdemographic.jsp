@@ -70,6 +70,7 @@
 <%@page import="org.oscarehr.common.model.ConsentType" %>
 <%@page import="org.oscarehr.common.model.EncounterType" %>
 <%@page import="org.oscarehr.common.dao.EncounterTypeDao" %>
+<%@page import="oscar.util.SuperSiteUtil"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
@@ -3164,6 +3165,94 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 						</td>
 					</tr>
 <%-- END PATIENT NOTES MODULE --%>	
+
+<%-- Site MODULE --%>
+<tr>
+
+			<td>
+				<table>
+				<tr><td>
+				<bean:message key="admin.provider.sitesAssigned" /><font color="red">:</font>
+				</td>
+				<div class="sites">
+				<td>
+<% 
+
+if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { 
+	List<Integer> siteIDs = new ArrayList<Integer>();
+	boolean isSiteAccessPrivacy=false;	
+	isSiteAccessPrivacy=true; 	
+	ProviderSiteDao psDao = (ProviderSiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("providerSiteDao");
+	List<ProviderSite> psList = psDao.findByProviderNo(curProvider_no);
+	
+	SuperSiteUtil superSiteUtil = SuperSiteUtil.getInstance(curProvider_no);
+	
+	for(ProviderSite ps : psList) {
+		/*if(!superSiteUtil.isUserAllowedToAdmitDischargeForSite(ps.getId().getSiteId()))
+			continue;*/
+		siteIDs.add(ps.getId().getSiteId());
+	}	
+
+	ProviderDao pDao = (ProviderDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("providerDao");
+		
+	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");	
+	DemographicSiteDao dsiteDao = (DemographicSiteDao)SpringUtils.getBean("demographicSiteDao");
+	List<DemographicSite> dsites = dsiteDao.findSitesByDemographicId(Integer.valueOf(demographic_no));
+	
+	String visibilityStr = "";
+	for (int i=0; i<siteIDs.size(); i++) {
+		boolean inSite = false;
+		
+		visibilityStr = "";
+		if(!superSiteUtil.isUserAllowedToAdmitDischargeForSite(siteIDs.get(i)))
+			visibilityStr = "visibility: hidden;";
+			
+		for(DemographicSite ds : dsites) {
+			if(ds.getSiteId().equals(siteIDs.get(i))) {
+				inSite = true;
+				break;
+			}
+		}
+		String s = "";
+		s = siteDao.getById(siteIDs.get(i)).getName();
+
+%>	<span style="<%=visibilityStr%>">	
+	<input type="checkbox" name="sites" value="<%= siteIDs.get(i) %>" <%=  inSite?"checked='checked'":"" %>>
+	<%= s %>
+	</span>
+
+<%
+	}
+	
+	//find demographicsite in which provider is not mapped .. and add checkboxes for that too.
+	//so that it gets updated properly.
+	for(DemographicSite ds : dsites) {
+		
+		//if demographic is mapped with site.. but provided is not mapped.
+		//then show the checkbox only
+
+		//hide this.. as provider will not have access to this site.
+		visibilityStr = "visibility: hidden;";
+		if(!siteIDs.contains(ds.getSiteId()))
+		{
+			%>
+			<span style="<%=visibilityStr%>">	
+			<input type="checkbox" name="sites" value="<%= ds.getSiteId() %>" checked="checked">			
+			</span>
+			<%
+		}
+	}
+}
+%>
+		</td>
+		</div>
+		</tr>
+		</table>
+		
+		</td>
+		</tr>	
+<%-- END Site MODULE --%>
+
 <%-- BOTTOM TOOLBAR  --%>				
 					<tr class="darkPurple">
 						<td colspan="4">

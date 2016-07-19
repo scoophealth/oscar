@@ -31,6 +31,7 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.OscarLog;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -111,18 +112,43 @@ public class OscarLogDao extends AbstractDao<OscarLog> {
 		return(results);
 	}
 
-        public List<Integer> getRecentDemographicsAccessedByProvider(String providerNo, int startPosition, int itemsToReturn) {
-		String sqlCommand="select distinct demographicId from "+modelClass.getSimpleName()+" l where l.providerNo = ?1 and l.demographicId is not null and l.demographicId != '-1' order by dateTime desc";
-
-		Query query = entityManager.createQuery(sqlCommand);
-		query.setParameter(1, providerNo);
+	public List<Integer> getRecentDemographicsAccessedByProvider(String providerNo, int startPosition, int itemsToReturn) {
+		String sqlCommand = null; 
+		Query query = null;
+		if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
+			SiteRoleMpgDao siteRoleMpgDao = SpringUtils.getBean(SiteRoleMpgDao.class);
+			SecRoleDao secRoleDao = SpringUtils.getBean(SecRoleDao.class);
+			DemographicSiteDao demoSiteDao = SpringUtils.getBean(DemographicSiteDao.class);
+			do {
+				List<Integer> roleNos = secRoleDao.findRoleNosByProviderNo(providerNo);
+				if (roleNos.isEmpty()) {
+					break;
+				}
+				List<Integer> siteIds = siteRoleMpgDao.getSiteIdByAccRoleId(roleNos);
+				if (siteIds.isEmpty()) {
+					break;
+				}
+				List<Integer> demoNos = demoSiteDao.findDemoNosBySiteIds(siteIds);
+				if (demoNos.isEmpty()) {
+					break;
+				}
+				sqlCommand = "select distinct demographicId from " + modelClass.getSimpleName() + " l where l.providerNo = :providerNo and l.demographicId in (:demoNos) order by dateTime desc";
+				query = entityManager.createQuery(sqlCommand);
+				query.setParameter("demoNos", demoNos);
+			} while (false);
+		} 
+		if (sqlCommand == null) { // if there's no site can be accessed by current user or no demographic in accessed site or multisites is off
+			sqlCommand = "select distinct demographicId from " + modelClass.getSimpleName() + " l where l.providerNo = :providerNo and l.demographicId is not null and l.demographicId != '-1' order by dateTime desc";
+			query = entityManager.createQuery(sqlCommand);
+		}
+		query.setParameter("providerNo", providerNo);
 		query.setFirstResult(startPosition);
-		setLimit(query,itemsToReturn);
+		setLimit(query, itemsToReturn);
 
 		@SuppressWarnings("unchecked")
-		List<Integer> results=query.getResultList();
+		List<Integer> results = query.getResultList();
 
-		return(results);
+		return (results);
 	}
 	/**
 	 * 

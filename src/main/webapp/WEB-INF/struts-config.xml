@@ -1962,6 +1962,8 @@
 			<forward name="failEdit" path="/dms/editDocument.jsp"></forward>
 			<forward name="successEdit" path="/dms/closeWindow.html"></forward>
 			<forward name="fastUploadSuccess" path="/dms/uploadMultiDocument.jsp"></forward>
+			<forward name="successAddLogo" path="/admin/ManageSites.do" redirect="true" />	
+			<forward name="failAddLogo" path="/admin/ManageSites.do" redirect="true" />
 		</action>
 		<action input="/dms/documentReport.jsp" name="FrmForm" path="/dms/combinePDFs" type="oscar.dms.actions.CombinePDFAction" scope="request" validate="false">
 			<forward name="success" path="/dms/documentReport.jsp"></forward>
@@ -2449,7 +2451,7 @@
 		<action path="/dms/ManageDocument" name="FrmForm" type="org.oscarehr.document.web.ManageDocumentAction" parameter="method" scope="request">
 			<forward name="success" path="/dms/undocument.jsp" />
 			<forward name="displaySingleDoc" path="/dms/MultiPageDocDisplay.jsp" />
-                        <forward name="nextIncomingDoc" path="/dms/incomingDocs.jsp" />
+            <forward name="nextIncomingDoc" path="/dms/incomingDocs.jsp" />
 		</action>
 		
                 <action path="/DocumentDescriptionTemplate" name="FrmForm" type="org.oscarehr.provider.web.DocumentDescriptionTemplateAction" parameter="method" scope="request">

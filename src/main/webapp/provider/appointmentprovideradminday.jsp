@@ -764,7 +764,7 @@ function goZoomView(s, n) {
 self.location.href = "providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider="+s+"&curProviderName="+encodeURIComponent(n)+"&displaymode=day&dboperation=searchappointmentday" ;
 }
 function findProvider(p,m,d) {
-popupPage(300,400, "receptionistfindprovider.jsp?pyear=" +p+ "&pmonth=" +m+ "&pday=" +d+ "&providername="+ document.findprovider.providername.value );
+popupPage(300,400, "receptionistfindprovider.jsp?pyear=" +p+ "&pmonth=" +m+ "&pday=" +d+ "&providername="+ encodeURIComponent(document.findprovider.providername.value));
 }
 function goSearchView(s) {
 	popupPage(600,650,"../appointment/appointmentsearch.jsp?provider_no="+s);
@@ -2245,11 +2245,11 @@ start_time += iSm + ":00";
 	+"&curProviderNo="
 	+curProvider_no[nProvider]
 	+"&reason="
-	+URLEncoder.encode(reason)
+	+URLEncoder.encode(reason, "UTF-8")
 	+"&encType="
 	+URLEncoder.encode("face to face encounter with client","UTF-8")
 	+"&userName="
-	+URLEncoder.encode( userfirstname+" "+userlastname)
+	+URLEncoder.encode( userfirstname+" "+userlastname, "UTF-8")
 	+"&curDate="+curYear+"-"+curMonth+"-"
 	+curDay+"&appointmentDate="+year+"-"
 	+month+"-"+day+"&startTime=" 
