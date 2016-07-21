@@ -70,8 +70,34 @@ if(!authed) {
 	String today = DateFormatUtils.ISO_DATE_FORMAT.format(cal);
 	cal.add(Calendar.MONTH,-1);
 	String lastMonth = DateFormatUtils.ISO_DATE_FORMAT.format(cal);
+
+	List<Program> programs=programManager.getPrograms(loggedInInfo.getCurrentFacility().getId());
 	
 %>
+
+<script>
+function chooseProgramProviderFilter() {
+	var pId = jQuery("#pIds").val();
+    jQuery.getJSON("../PMmodule/ProviderSearch.do?method=search",
+            {
+    			programNo: pId
+            },
+            function(response){
+        		$("#providerIds").find('option').remove();
+        		
+        		for(var x=0;x<response.length;x++) {
+        			$('#providerIds').append($('<option>', {
+        			    value: response[x].id,
+        			    text: response[x].name
+        			}));
+
+        		}
+        		
+      });
+
+}
+
+</script>
 
 <div class="page-header">
 	<h4>CDS Reports</h4>
@@ -138,6 +164,7 @@ if(!authed) {
 						{
 							jQuery('#providerText').show();
 							jQuery('#providerOptions').show();
+							jQuery('#providerFilterOptions').show();
 							jQuery('#programText').hide();
 							jQuery('#programOptions').hide();
 						}
@@ -145,6 +172,7 @@ if(!authed) {
 						{
 							jQuery('#providerText').hide();
 							jQuery('#providerOptions').hide();
+							jQuery('#providerFilterOptions').hide();
 							jQuery('#programText').show();
 							jQuery('#programOptions').show();							
 						}
@@ -152,6 +180,7 @@ if(!authed) {
 						{
 							jQuery('#providerText').hide();
 							jQuery('#providerOptions').hide();
+							jQuery('#providerFilterOptions').hide();
 							jQuery('#programText').hide();
 							jQuery('#programOptions').hide();
 						}
@@ -163,14 +192,37 @@ if(!authed) {
 				</script>
 			</div>
 		</div>
+			
+			
+		<div id="providerFilterOptions" class="control-group">
+		
+			<label class="control-label">Filter provider list by program <small>(optional)</small>
+			</label>
+			<div class="controls">
+				<select id="pIds" name="pIds" class="input-medium" style="width:225px" onClick="chooseProgramProviderFilter()">
+					<option value=""></option>
+					<%
+						
+						for (Program program : programs)
+						{
+							%>
+								<option value="<%=program.getId()%>"><%=StringEscapeUtils.escapeHtml(program.getName()+" ("+program.getType()+")")%></option>
+							<%
+						}
+					%>
+				</select>
+			</div>
+		</div>
+		
 		<div id="providerOptions" class="control-group">
+		
 			<label class="control-label">Providers to include
 				<small>
 					(multi select is allowed)
 				</small>
 			</label>
 			<div class="controls">
-				<select name="providerIds" class="input-medium" multiple="multiple"  style="width:225px" size="10">
+				<select name="providerIds" id="providerIds" class="input-medium" multiple="multiple"  style="width:225px" size="10">
 					<%
 						// null for both active and inactive because the report might be for a provider who's just left in the current reporting period.
 						List<Provider> providers=providerManager.getProviders(loggedInInfo, null);
@@ -189,6 +241,7 @@ if(!authed) {
 			</div>
 		</div>
 
+
 		<div id="programOptions" class="control-group">
 			<label class="control-label">Programs to include
 				<small>
@@ -198,8 +251,7 @@ if(!authed) {
 			<div class="controls">
 				<select name="programIds" class="input-medium" multiple="multiple" style="width:225px" size="10">
 					<%
-						List<Program> programs=programManager.getPrograms(loggedInInfo.getCurrentFacility().getId());
-					
+						
 						for (Program program : programs)
 						{
 							%>
