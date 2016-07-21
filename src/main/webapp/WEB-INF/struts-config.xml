@@ -2116,7 +2116,7 @@
 			<forward name="list" path="/admin/facility/ListFacilities.jsp" />
 			<forward name="edit" path="/admin/facility/EditFacility.jsp" />
 		</action>
-		<action path="/PMmodule/ProviderSearch" type="org.springframework.web.struts.DelegatingActionProxy">
+		<action path="/PMmodule/ProviderSearch" type="org.springframework.web.struts.DelegatingActionProxy"  parameter="method">
 			<forward name="results" path="/PMmodule/ProviderSearch.jsp" />
 		</action>
 		<action path="/PMmodule/ClientSearch2" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="clientSearchForm2" scope="request">
