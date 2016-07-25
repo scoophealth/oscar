@@ -186,6 +186,31 @@ p {
     border-top: 1px solid #c0c0c0;
 }
 
+.dropdown {
+	display: inline-block !important;
+	position: relative;
+}
+
+.dashboardDropdown {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dashboardDropdown a {
+    color: black;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+	  padding:2px 5px;
+}
+
+.dropdown:hover .dashboardDropdown {
+    display: block;
+}
+
 @media print {
  .noprint {display:none !important;}
 }

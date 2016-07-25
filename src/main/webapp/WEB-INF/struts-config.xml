@@ -608,6 +608,20 @@
 			<forward name="error" path="/failure.jsp" />
 			<forward name="ajax" path="/web/dashboard/admin/DashboardManager.do" />
 		</action>
+		
+		<action name="FrmForm" path="/web/dashboard/display/DashboardDisplay" 
+			parameter="method" type="org.oscarehr.dashboard.display.DisplayDashboardAction" scope="request" >
+			<forward name="success" path="/web/dashboard/display/DashboardDisplay.jsp" />
+			<forward name="unauthorized" path="/securityError.jsp" />
+			<forward name="error" path="/failure.jsp" />
+		</action>
+		
+		<action name="FrmForm" path="/web/dashboard/display/DrilldownDisplay" 
+			parameter="method" type="org.oscarehr.dashboard.display.DisplayDrilldownAction" scope="request" >
+			<forward name="success" path="/web/dashboard/display/DrilldownDisplay.jsp" />
+			<forward name="unauthorized" path="/securityError.jsp" />
+			<forward name="error" path="/failure.jsp" />
+		</action>
 	
 		<!-- Pharma Best Possible Medication Health form -->
 	 	<action path="/formBPMH" parameter="method" name="bpmh" type="oscar.form.pharmaForms.formBPMH.web.BpmhFormRetrieve"	

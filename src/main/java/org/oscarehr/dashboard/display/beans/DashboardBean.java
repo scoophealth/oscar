@@ -21,45 +21,32 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.common.model;
+package org.oscarehr.dashboard.display.beans;
 
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
-@Entity
-@Table(name="dashboard")
-public class Dashboard extends AbstractModel<Integer> {
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+public class DashboardBean {
 	
+	private Integer id;
 	private String name;
 	private String description;
 	private String creator;
-	
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date edited;
 	private boolean active;
 	private boolean locked;
 	
-	@Transient
-	private List<IndicatorTemplate> indicators;
+	private Date lastChecked;
 	
-	@Override
+	// by Indicator Category
+	private List<PanelBean> panelBeans;
+
 	public Integer getId() {
-		return this.id;
+		return id;
 	}
-	
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -112,12 +99,24 @@ public class Dashboard extends AbstractModel<Integer> {
 		this.locked = locked;
 	}
 
-	public List<IndicatorTemplate> getIndicators() {
-		return indicators;
+	public List<PanelBean> getPanelBeans() {
+		return panelBeans;
 	}
 
-	public void setIndicators(List<IndicatorTemplate> indicators) {
-		this.indicators = indicators;
+	public void setPanelBeans(List<PanelBean> panelBeans) {
+		this.panelBeans = panelBeans;
 	}
 
+	public Date getLastChecked() {
+		return lastChecked;
+	}
+
+	public void setLastChecked(Date lastChecked) {
+		this.lastChecked = lastChecked;
+	}
+
+	@Override
+	public String toString() {
+	   return ReflectionToStringBuilder.toString(this);
+	}
 }

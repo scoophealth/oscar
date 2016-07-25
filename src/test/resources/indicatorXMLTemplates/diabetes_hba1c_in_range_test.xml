@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>Colcamex Resources Inc. Copyright 2016</author>
+	<uid>dd40f1c9-f091-4aad-b65e-1c4cf10927e5</uid>
+	<heading>
+		<category>CDM</category>
+		<subCategory>Diabetes</subCategory>
+		<name>Diabetes with HbA1C in Range</name>
+		<definition>% of patients with diabetes whose most recent glycemic control in the last 12 months was in the following ranges: 
+HbA1C &lt;= 7%
+7% &lt; HbA1C &lt;= 8.5%
+HbA1C &gt; 8.5%</definition>
+		<framework>Based on and adapted from AFHTO D2D 3.0 Indicators: Data Dictionary version 4 (Nov 2015)</framework>
+		<frameworkVersion>11-01-2015</frameworkVersion>
+		<notes>This is a test template for the Diabetes HbA1c in range query</notes>
+	</heading>
+	<indicatorQuery>
+		<version>07-15-2016</version>
+		<params>
+			<parameter id="dxcodelist" name="Dx Codes" value="250" />
+			<parameter id="provider_no" name="Provider Number" value="%" />
+		</params>
+		<range>
+			<upperLimit id="from" label="From Date" name="Date" value="12-12-2012" />
+			<lowerLimit id="to" label="Date Today" name="Date" value="now()" />
+			
+			<upperLimit id="a1c" label="Max number A1C Labs" name="A1c Tests" value="2" />
+			<lowerLimit id="a1c" label="Min number A1C Labs" name="A1c Tests" value="0" />
+			
+			<upperLimit id="age" label="Max Patient Age" name="Age" value="75" />
+			<lowerLimit id="age" label="Min Patient Age" name="Age" value="30" />
+		</range>
+		<query>
+			SELECT 
+				-- TOTAL NUMBER OF DM PATIENTS
+				COUNT(fin.patient) AS "DM Patients",
+			
+				-- % WITH A1C MEASUREMENTS
+				IF ( COUNT(fin.patient) > 0, ROUND( SUM( CASE WHEN fin.a1c > ${ upperLimit.a1c } THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient) , 1 ), 0) AS "HbA1c (%)",
+			
+				-- % WITH 2 A1C MEASUREMENTS
+				IF ( COUNT(fin.patient) > 0, ROUND( SUM( CASE WHEN fin.a1c > ${ lowerLimit.a1c } THEN 1 ELSE 0 END )  * 100 / COUNT(fin.patient) , 1 ), 0) AS "HbA1c 2x (%)"
+				
+			FROM (
+			
+					SELECT 
+						d.demographic_no AS patient,
+						A1C.a1cnumber AS a1c,
+						A1C9.a1c9number AS a1c9
+						
+					FROM demographic d
+			
+					-- ROOT CONTROLS THE IDENTIFICATION OF ALL DIABETIC PATIENTS.
+
+					INNER JOIN dxresearch dxr
+						ON ( d.demographic_no = dxr.demographic_no)
+			
+					-- COUNT ALL A1C MEASUREMENTS. COUNTS ALL TESTS PER PATIENT.
+					LEFT JOIN ( SELECT COUNT(*) AS a1cnumber, demographicNo 
+								FROM measurements 
+								WHERE type LIKE "A1C"
+								AND ( DATE(dateObserved) BETWEEN DATE('${ upperLimit.from }') AND ${ lowerLimit.to } )
+								AND demographicNo > 0
+								AND providerNo LIKE '${ provider_no }'
+								GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C
+					ON (d.demographic_no = A1C.demographicNo)
+			
+					-- PATIENTS FROM THE FIRST 9 MONTHS WITH A1C MEASUREMENTS
+					LEFT JOIN ( SELECT COUNT(*) AS 'a1c9number', demographicNo 
+								FROM measurements 
+								WHERE type LIKE "A1C"
+								AND demographicNo > 0 
+								GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C9
+					ON (d.demographic_no = A1C9.demographicNo)
+			
+					WHERE d.patient_status LIKE "%AC%" 
+					AND dxr.coding_system LIKE "icd9" 
+					AND dxr.dxresearch_code LIKE "${ dxcodelist }"
+					AND dxr.status NOT LIKE "%D%"
+					AND d.demographic_no > 0
+					AND d.last_name LIKE 'test'
+					AND ( ${ lowerLimit.age } &lt;= ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), DATE( ${ lowerLimit.to } ) ) / 365.25 ) ) 
+					AND ${ upperLimit.age } &gt;= ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), DATE( ${ lowerLimit.to } ) ) / 365.25 ) ) )
+			) fin;
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>07-20-2016</version>
+		<params>
+			<parameter id="active" name="Active Patients" value="%AC%" />
+			<parameter id="dxcodelist" name="Dx Codes" value="250,430" />
+			<parameter id="provider_no" name="Provider Number" value="%" />
+		</params>
+		
+		<range>
+			<upperLimit id="from" label="From Date" name="Date" value="12-12-2012" />
+			<lowerLimit id="to" label="Date Today" name="Date" value="now()" />
+
+			<upperLimit id="age" label="Max Patient Age" name="Age" value="75" />
+			<lowerLimit id="age" label="Min Patient Age" name="Age" value="30" />
+		</range>
+		
+		<displayColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
+			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
+			<column id="dob" name="CONCAT( month_of_birth, '-', date_of_birth, '-', year_of_birth )" title="Date of Birth" primary="false" />
+			<column id="a1c" name="a1c9number" title="A1C 9 Months" primary="false" />
+		</displayColumns>
+		
+		<exportColumns>
+			<column id="demographic" name="demographic_no" title="Patient Id" primary="true" />
+			<column id="firstName" name="first_name" title="First Name" primary="false" />
+			<column id="lastName" name="last_name" title="Last Name" primary="false" />
+			<column id="dob" name="date_of_birth" title="Date of Birth" primary="false" />
+		</exportColumns>
+		<query>
+					SELECT *
+						
+					FROM demographic d
+			
+					-- ROOT CONTROLS THE IDENTIFICATION OF ALL DIABETIC PATIENTS.
+
+					INNER JOIN dxresearch dxr
+						ON ( d.demographic_no = dxr.demographic_no)
+			
+					-- COUNT ALL A1C MEASUREMENTS. COUNTS ALL TESTS PER PATIENT.
+					LEFT JOIN ( SELECT COUNT(*) AS a1cnumber, demographicNo 
+								FROM measurements 
+								WHERE type LIKE "A1C"
+								AND ( DATE(dateObserved) BETWEEN DATE('${ upperLimit.from }') AND ${ lowerLimit.to } )
+								AND demographicNo > 0
+								AND providerNo LIKE '${ provider_no }'
+								GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C
+					ON (d.demographic_no = A1C.demographicNo)
+			
+					-- PATIENTS FROM THE FIRST 9 MONTHS WITH A1C MEASUREMENTS
+					LEFT JOIN ( SELECT COUNT(*) AS 'a1c9number', demographicNo 
+								FROM measurements 
+								WHERE type LIKE "A1C"
+								AND demographicNo > 0 
+								GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C9
+					ON (d.demographic_no = A1C9.demographicNo)
+			
+					WHERE d.patient_status LIKE "${ active }" 
+					AND dxr.coding_system LIKE "icd9" 
+					AND dxr.dxresearch_code IN ${ dxcodelist }
+					AND dxr.status NOT LIKE "%D%"
+					AND d.demographic_no > 0
+					AND d.last_name LIKE 'test'
+					AND ( ${ lowerLimit.age } &lt;= ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), DATE( ${ lowerLimit.to } ) ) / 365.25 ) ) 
+					AND ${ upperLimit.age } &gt;= ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), DATE( ${ lowerLimit.to } ) ) / 365.25 ) ) )
+		</query>
+	</drillDownQuery>
+</indicatorTemplateXML>
