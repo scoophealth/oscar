@@ -13,6 +13,11 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 	  //
 	  // Now set up the states
 	  $stateProvider
+	  	.state('dashboardManager', {
+		  url: '/dashboard/admin',
+		  templateUrl: 'dashboard/admin/DashboardManager.jsp',
+		  controller: 'dashboardManagerController'
+		})
 		.state('dashboard', {
 		  url: '/dashboard',
 		  templateUrl: 'dashboard/dashboard.jsp',

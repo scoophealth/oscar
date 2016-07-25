@@ -49,7 +49,6 @@ public class ConfigureFaxAction extends DispatchAction {
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-
 		return configure(mapping, form, request, response);
 	}
 	
