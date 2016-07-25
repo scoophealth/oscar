@@ -24,8 +24,6 @@
 
 */
 
-
-
 $(document).ready( function() {
 	
 	// table sorting
@@ -94,6 +92,7 @@ $(document).ready( function() {
     	sendData(url, data, null);
     });
     
+    // Export Template button
     $(".exportTemplate").on('click', function(event) {
     	event.preventDefault();
     	var url = "/web/dashboard/admin/DashboardManager.do";
@@ -104,6 +103,16 @@ $(document).ready( function() {
     	sendData(url, data, null);
     });
     
+    // Back to dashboard button
+    $(".backtoDashboardBtn").on('click', function(event) {
+    	event.preventDefault();
+    	var url = "/web/dashboard/display/DashboardDisplay.do";
+    	var data = new Object();
+    	data.dashboardId = (this.id).split("_")[1];
+    	data.method = (this.id).split("_")[0];  
+
+    	sendData(url, data, "reload");
+    });
 
 });
 
@@ -119,6 +128,10 @@ function sendData(path, param, target) {
 	    		$.each(target, function(i, val){
 	    			$(val).replaceWith( $(val, data) );
 	    		});			
+	    	} else if( target == "reload") { 
+	    		document.open();
+		    	document.write(data);
+		    	document.close();
 	    	} else {			
 	    		$(data).replaceWith( $(target, data) );
 	    	}

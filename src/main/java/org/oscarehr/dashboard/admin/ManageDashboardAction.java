@@ -92,6 +92,13 @@ public class ManageDashboardAction extends DispatchAction {
 			}
 		}
 		
+		// TODO add a checksum: Uploaded templates will be checksum hashed, the hash will be stored in an 
+		// indicatorTemplate column.  Every IndicatorTemplate checksum will be compared to the upload for duplicates.
+		// The DashboarManager will contain a method. This class will return an error to the user.
+		
+		// TODO run the contained MySQL queries to check for syntax errors and whatever else may be broken. 
+		// The DashboarManager will contain a method. This class will return an error to the user.
+		
 		if( filebytes != null && dashboardManager.importIndicatorTemplate(loggedInInfo, filebytes) ) {
 			setRequest(loggedInInfo, request);
 			action = mapping.findForward("success");
@@ -226,6 +233,10 @@ public class ManageDashboardAction extends DispatchAction {
 		if( dashboardActive != null && ! dashboardActive.isEmpty()) {
 			active = Boolean.TRUE;
 		}
+		
+		// TODO check the current dashboard table for duplicates. 
+		// strip out all punctuation and spaces, all names to lower case.
+		// Method in DashboardManager, return message to user from this class. 
 		
 		Dashboard dashboard = new Dashboard();
 		dashboard.setId( id );

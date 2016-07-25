@@ -65,6 +65,8 @@
 <%@page import="org.oscarehr.common.model.LookupListItem" %>
 <%@page import="org.oscarehr.managers.SecurityInfoManager" %>
 <%@page import="org.oscarehr.managers.AppManager" %>
+<%@page import="org.oscarehr.managers.DashboardManager" %>
+<%@ page import="org.oscarehr.common.model.Dashboard" %>
 
 <!-- add by caisi -->
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
@@ -101,17 +103,25 @@
 	for(LookupListItem lli:reasonCodes.getItems()) {
 		reasonCodesMap.put(lli.getId(),lli);	
 	}
-    
-%>
 
-<%
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false;
 
     MyGroupAccessRestrictionDao myGroupAccessRestrictionDao = SpringUtils.getBean(MyGroupAccessRestrictionDao.class);
+    boolean authed=true;
 %>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment,_day" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_appointment");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
 	<%
 		isSiteAccessPrivacy=true;
@@ -1229,7 +1239,29 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 <li id="admin2">
  <a href="javascript:void(0)" id="admin-panel" TITLE='Administration Panel' onclick="newWindow('<%=request.getContextPath()%>/administration/','admin')">Administration</a>
 </li>
-  
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_dashboardDisplay" rights="r">
+	<% 
+		DashboardManager dashboardManager = SpringUtils.getBean(DashboardManager.class);
+		List<Dashboard> dashboards = dashboardManager.getActiveDashboards(loggedInInfo1);
+		pageContext.setAttribute("dashboards", dashboards);
+	%>
+
+	<li id="dashboardList">
+		 <div class="dropdown">
+			<a href="#" class="dashboardBtn">Dashboard</a>
+			<div class="dashboardDropdown">
+				<c:forEach items="${ dashboards }" var="dashboard" >			
+					<a href="javascript:void(0)" onclick="newWindow('<%=request.getContextPath()%>/web/dashboard/display/DashboardDisplay.do?method=getDashboard&dashboardId=${ dashboard.id }','admin')"> 
+						<c:out value="${ dashboard.name }" />
+					</a>
+				</c:forEach>
+			</div>
+		</div>
+	</li>		
+
+</security:oscarSec> 
+ 
   <!-- Added logout link for mobile version -->
   <li id="logoutMobile">
       <a href="../logout.jsp"><bean:message key="global.btnLogout"/></a>
