@@ -465,6 +465,7 @@ font-size:20px
 	<script src="app.js"></script>
 	
 	<script src="oscarController.js"></script>
+	<script src="dashboard/admin/dashboardManagerController.js"></script>
 	<script src="dashboard/dashboardController.js"></script>
 	<script src="common/navBarController.js"></script>
 	<script src="patientlist/patientListController.js"></script>

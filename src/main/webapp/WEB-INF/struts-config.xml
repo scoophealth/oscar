@@ -597,6 +597,15 @@
 	</global-forwards>
 
 	<action-mappings>
+		<!-- OMD Dashboard Proof of Concept -->
+		<action input="/web/dashboard/admin/DashboardManager.jsp" name="FrmForm" path="/web/dashboard/admin/DashboardManager" 
+			parameter="method" type="org.oscarehr.dashboard.admin.ManageDashboardAction" scope="request" >
+			<forward name="success" path="/web/dashboard/admin/DashboardManager.jsp" />
+			<forward name="unauthorized" path="/securityError.jsp" />
+			<forward name="error" path="/failure.jsp" />
+			<forward name="ajax" path="/web/dashboard/admin/DashboardManager.do" />
+		</action>
+	
 		<!-- Pharma Best Possible Medication Health form -->
 	 	<action path="/formBPMH" parameter="method" name="bpmh" type="oscar.form.pharmaForms.formBPMH.web.BpmhFormRetrieve"	
 	 		scope="request" validate="false" > 
