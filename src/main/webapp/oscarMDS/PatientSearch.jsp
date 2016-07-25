@@ -239,7 +239,10 @@ function checkTypeIn() {
     		String[] param =new String[3];
 	  		param[0]=""+MyDateFormat.getYearFromStandardDate(keyword)+"%";//(",");
 	  		param[1]=""+MyDateFormat.getMonthFromStandardDate(keyword)+"%";
-	  		param[2]=""+MyDateFormat.getDayFromStandardDate(keyword)+"%";  
+	  		param[2]=""+MyDateFormat.getDayFromStandardDate(keyword)+"%"; 
+			if(param[1].length() == 2) {
+				param[1] = "0" + param[1];
+			} 
     		rs = db.queryResults(sql, param);
   } else {      
     keyword=keyword+"%";
