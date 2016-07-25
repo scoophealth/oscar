@@ -28,7 +28,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -36,11 +35,18 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.model.IndicatorTemplate;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-public class IndicatorTemplateHandler {
+/**
+ * 
+ * Converts a XML IndicatorTemplate string into several formats: 
+ * Document
+ * IndicatorTemplate Entity Bean
+ * IndicatorTemplateXML Bean - for XML to POJO parsing.
+ * IndicatorBean - for display layer
+ *
+ */
+public class IndicatorTemplateHandler{
 	
 	private static Logger logger = MiscUtils.getLogger();
 	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
@@ -56,6 +62,14 @@ public class IndicatorTemplateHandler {
 	public IndicatorTemplateHandler( byte[] bytearray ) {		
 		read( bytearray );
 	}
+
+	// TODO validate XML template against schema. 
+	// Validate method will be called from the Action class.
+	// user will be informed of mal-formed XML
+	
+	// TODO add additional error check / filter class that will
+	// handle all validations and error messages. 
+	
 	
 //	public boolean validate() {
 //		Schema schema = null;
@@ -75,8 +89,8 @@ public class IndicatorTemplateHandler {
 		this.bytearray = bytearray;
 		// validate();
 		setIndicatorTemplateDocument( this.bytearray );		
-		setIndicatorTemplateXML( getIndicatorTemplateDocument() );
-		setIndicatorTemplateEntity( getIndicatorTemplateXML() );
+		setIndicatorTemplateXML( new IndicatorTemplateXML( getIndicatorTemplateDocument() ) );
+		setIndicatorTemplateEntity( indicatorTemplateEntityFromXML( getIndicatorTemplateXML() ) );
 	}
 	
 	public Document getIndicatorTemplateDocument() {
@@ -103,76 +117,20 @@ public class IndicatorTemplateHandler {
 		return indicatorTemplateEntity;
 	}
 	
-	private void setIndicatorTemplateEntity( IndicatorTemplateXML indicatorTemplateXML ) {
-		this.indicatorTemplateEntity = indicatorTemplateEntityFactory( indicatorTemplateXML );
+	private void setIndicatorTemplateEntity( IndicatorTemplate indicatorTemplateEntity ) {
+		this.indicatorTemplateEntity = indicatorTemplateEntity;
 	}
 
 	public IndicatorTemplateXML getIndicatorTemplateXML() {
 		return this.indicatorTemplateXML;
 	}
 
-	private void setIndicatorTemplateXML( Document xmlDocument ) {
-		this.indicatorTemplateXML = indicatorTemplateXMLFactory( xmlDocument );
-		this.indicatorTemplateXML.setTemplate( new String( this.bytearray ) );
-	}
-
-	// helpers
-	public static final IndicatorTemplateXML indicatorTemplateXMLFactory( final Document xmlDocument ) {
-		
-		IndicatorTemplateXML indicatorTemplateXML = new IndicatorTemplateXML();
-		String category = "";
-		String subCategory = "";
-		String name = "";
-		String definition = "";
-		String framework = "";
-		Date frameworkDate = null;
-		String notes = "";
-		
-		xmlDocument.getDocumentElement().normalize();
-		Node heading = xmlDocument.getElementsByTagName("heading").item(0);
-		
-		if( heading.getNodeType() == Node.ELEMENT_NODE ) {
-			Element element = (Element) heading;
-			category = element.getElementsByTagName("category").item(0).getTextContent();
-			subCategory = element.getElementsByTagName("subCategory").item(0).getTextContent();
-			name = element.getElementsByTagName("name").item(0).getTextContent();
-			definition = element.getElementsByTagName("definition").item(0).getTextContent();
-			framework = element.getElementsByTagName("framework").item(0).getTextContent();
-			notes = element.getElementsByTagName("notes").item(0).getTextContent();
-			String frameworkVersion = element.getElementsByTagName("frameworkVersion").item(0).getTextContent();
-			if( frameworkVersion != null && ! frameworkVersion.isEmpty() ) {
-				try {
-					frameworkDate = simpleDateFormat.parse(frameworkVersion);
-				} catch (ParseException e) {
-					logger.error("Date parsing error",e);
-				}
-			}
-		}
-		
-		indicatorTemplateXML.setCategory(category);
-		indicatorTemplateXML.setSubCategory(subCategory);
-		indicatorTemplateXML.setName(name);
-		indicatorTemplateXML.setDefinition(definition);
-		indicatorTemplateXML.setFramework(framework);
-		indicatorTemplateXML.setFrameworkVersion(frameworkDate);
-		indicatorTemplateXML.setNotes(notes);
-		
-		return indicatorTemplateXML;
-		
-//		IndicatorTemplateXML indicatorTemplate = null;
-//		try {
-//			JAXBContext jaxbContext = JAXBContext.newInstance(IndicatorTemplateXML.class);
-//			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-//			InputStream inputStream = new ByteArrayInputStream( bytearray );
-//			indicatorTemplate = (IndicatorTemplateXML) jaxbUnmarshaller.unmarshal( inputStream );
-//			indicatorTemplate.setTemplate( new String(bytearray) );
-//		} catch (JAXBException e) {
-//			logger.error("error",e);
-//		}
-//		return indicatorTemplate;
+	private void setIndicatorTemplateXML( IndicatorTemplateXML indicatorTemplateXML ) {
+		indicatorTemplateXML.setTemplate( new String( this.bytearray ) );
+		this.indicatorTemplateXML = indicatorTemplateXML;				
 	}
 	
-	public static final IndicatorTemplate indicatorTemplateEntityFactory( IndicatorTemplateXML indicatorTemplateXML ) {
+	private static final IndicatorTemplate indicatorTemplateEntityFromXML( IndicatorTemplateXML indicatorTemplateXML ) {
 		
 		IndicatorTemplate indicatorTemplate = null;
 		
@@ -187,7 +145,13 @@ public class IndicatorTemplateHandler {
 			indicatorTemplate.setName(indicatorTemplateXML.getName());
 			indicatorTemplate.setDefinition(indicatorTemplateXML.getDefinition());
 			indicatorTemplate.setFramework(indicatorTemplateXML.getFramework());
-			indicatorTemplate.setFrameworkVersion(indicatorTemplateXML.getFrameworkVersion());
+			
+			try {
+				indicatorTemplate.setFrameworkVersion(simpleDateFormat.parse( indicatorTemplateXML.getFrameworkVersion() ));
+			} catch (ParseException e) {
+				logger.error("Date parsing error",e);
+			}
+			
 			indicatorTemplate.setNotes(indicatorTemplateXML.getNotes());
 			
 		}

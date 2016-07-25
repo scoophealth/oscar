@@ -57,5 +57,59 @@ public class IndicatorTemplateDao extends AbstractDao<IndicatorTemplate> {
 		List<IndicatorTemplate> result = query.getResultList();
 		return result;
 	}
+	
+	/**
+	 * Gets all ACTIVE Indicators by the specified Dashboard Id.
+	 */
+	@SuppressWarnings("unchecked")
+	public List<IndicatorTemplate> getIndicatorTemplatesByDashboardId(int id) {
+		Query query = entityManager.createQuery("SELECT x FROM IndicatorTemplate x WHERE x.dashboardId = :id AND x.active = :status");
+		query.setParameter("id", id);
+		query.setParameter("status", Boolean.TRUE);
+		List<IndicatorTemplate> result = query.getResultList();
+		return result;
+	}
+	
+	/**
+	 * Get a list of all the Indicator categories
+	 */
+	@SuppressWarnings("unchecked")
+	public List<String> getIndicatorCategories() {
+		Query query = entityManager.createQuery("SELECT x.category FROM IndicatorTemplate x "
+				+ "WHERE x.active IS TRUE "
+				+ "GROUP BY x.category HAVING COUNT(x.category) > -1" );
+		List<String> result = query.getResultList();
+		return result;
+	}
+	
+	/**
+	 * Get a list of all the Indicator sub-categories
+	 */
+	@SuppressWarnings("unchecked")
+	public List<String> getIndicatorSubCategories() {
+		Query query = entityManager.createQuery("SELECT x.subCategory FROM IndicatorTemplate x "
+				+ "WHERE x.active IS TRUE "
+				+ "GROUP BY x.subCategory HAVING COUNT(x.subCategory) > -1" );
+		List<String> result = query.getResultList();
+		return result;
+	}
 
+	@SuppressWarnings("unchecked")
+	public List<IndicatorTemplate> getIndicatorTemplatesByCategory(String category) {
+		Query query = entityManager.createQuery("SELECT x FROM IndicatorTemplate x WHERE x.category = :category AND x.active = :status");
+		query.setParameter("category", category);
+		query.setParameter("status", Boolean.TRUE);
+		List<IndicatorTemplate> result = query.getResultList();
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<IndicatorTemplate> getIndicatorTemplatesBySubcategory(String subCategory) {
+		Query query = entityManager.createQuery("SELECT x FROM IndicatorTemplate x WHERE x.subCategory = :subCategory AND x.active = :status");
+		query.setParameter("subCategory", subCategory);
+		query.setParameter("status", Boolean.TRUE);
+		List<IndicatorTemplate> result = query.getResultList();
+		return result;
+	}
+	
 }

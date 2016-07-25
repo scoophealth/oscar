@@ -24,110 +24,458 @@
 package org.oscarehr.dashboard.handler;
 
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.log4j.Logger;
+import org.oscarehr.dashboard.query.Column;
+import org.oscarehr.dashboard.query.Parameter;
+import org.oscarehr.dashboard.query.RangeInterface;
+import org.oscarehr.dashboard.query.RangeLowerLimit;
+import org.oscarehr.dashboard.query.RangeUpperLimit;
+import org.oscarehr.util.MiscUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-/**
- * This is a JAXB generated POJO.
- * Requires a valid Indicator Template XML
- *
- */
-@XmlRootElement
+
 public class IndicatorTemplateXML {
 
-	private String template;
+	private static Logger logger = MiscUtils.getLogger();
+	
+	private enum Root {heading, author, indicatorQuery, drillDownQuery}
+	private enum Heading {category, subCategory, framework, frameworkVersion, name, definition, notes}
+	private enum Indicator {version, params, parameter, range, query}
+	private enum Drilldown {version, params, parameter, range, displayColumns, column, exportColumns, query}
+	private enum ParameterAttribute {id, name, value}
+	private enum ColumnAttribute {id, name, title, primary}
+	private enum RangeAttribute {id, label, name, value}
+	public static enum RangeType {upperLimit, lowerLimit}
+		
+	private Integer id;
+	private Document xmlDocument;
+	private Node headingNode;
+	private Node indicatorQueryNode;
+	private Node drillDownQueryNode;	
+	private String template;	
 	private String author;
-	private String category;
-	private String subCategory;
-	private String framework;
-	private Date frameworkVersion;
-	private String name;
-	private String definition;
-	private String notes;
-	private String indicatorQuery;
-	private String drillDownQuery;
+
+	public IndicatorTemplateXML( Document xmlDocument ) {		
+		xmlDocument.getDocumentElement().normalize();
+		setXmlDocument(xmlDocument);
+		setRootChildren();
+	}
+
+	/**
+	 * This is set when this XML parser is created from a existing IndicatorTemplate entity
+	 * for tracking. It is set with the IndicatorTemplate.id field.
+	 * Otherwise if this parser is being used to create a new IndicatorTemplate
+	 * this property will be null.  
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	private void setRootChildren() {
+		// Author element is optional
+		NodeList authorNode = getXmlDocument().getElementsByTagName( Root.author.name() );
+		String author = "";
+		if( authorNode != null && authorNode.getLength() > 0 ) {
+			author = authorNode.item(0).getTextContent();
+		}
+		setAuthor( author );
+		
+		// Required nodes - instantiation will fail if these nodes are missing.
+		setHeadingNode( getXmlDocument().getElementsByTagName( Root.heading.name() ).item(0) );
+		setIndicatorQueryNode( getXmlDocument().getElementsByTagName( Root.indicatorQuery.name() ).item(0) );
+		setDrillDownQueryNode( getXmlDocument().getElementsByTagName( Root.drillDownQuery.name() ).item(0) );
+	}
+
+	private Element getHeadingNode() {		
+		if( headingNode.getNodeType() == Node.ELEMENT_NODE ) {
+			return (Element) headingNode; 
+		}
+		return null;
+	}
+
+	private void setHeadingNode(Node headingNode) {
+		this.headingNode = headingNode;
+	}
+
+	private Element getIndicatorQueryNode() {
+		if( indicatorQueryNode.getNodeType() == Node.ELEMENT_NODE ) {
+			return (Element) indicatorQueryNode; 
+		}
+		return null;
+	}
+
+	private void setIndicatorQueryNode(Node indicatorQueryNode) {
+		this.indicatorQueryNode = indicatorQueryNode;
+	}
+
+	private Element getDrillDownQueryNode() {
+		if( drillDownQueryNode.getNodeType() == Node.ELEMENT_NODE ) {
+			return (Element) drillDownQueryNode; 
+		}
+		return null;
+	}
+
+	private void setDrillDownQueryNode(Node drillDownQueryNode) {
+		this.drillDownQueryNode = drillDownQueryNode;
+	}
+
+	public Document getXmlDocument() {
+		return xmlDocument;
+	}
+
+	public void setXmlDocument(Document xmlDocument) {
+		this.xmlDocument = xmlDocument;
+	}
 
 	public String getTemplate() {
 		return template;
 	}
+	
 	public void setTemplate(String template) {
 		this.template = template;
 	}
+	
 	public String getAuthor() {
 		return author;
 	}
-	@XmlElement
+
 	public void setAuthor(String author) {
 		this.author = author;
 	}
 	
+	// Heading elements
+	
+	/**
+	 * Required Element - runtime error will be thrown if the node or element is missing
+	 */
 	public String getCategory() {
-		return category;
-	}
-	@XmlElement
-	public void setCategory(String category) {
-		this.category = category;
-	}
-	
-	public String getSubCategory() {
-		return subCategory;
-	}
-	@XmlElement
-	public void setSubCategory(String subCategory) {
-		this.subCategory = subCategory;
-	}
-	
-	public String getFramework() {
-		return framework;
-	}
-	@XmlElement
-	public void setFramework(String framework) {
-		this.framework = framework;
+		return getHeadingNode().getElementsByTagName( Heading.category.name() ).item(0).getTextContent();
 	}
 
-	public Date getFrameworkVersion() {
-		return frameworkVersion;
+	/**
+	 * Required Element - runtime error will be thrown if the node or element is missing
+	 */
+	public String getSubCategory() {
+		return getHeadingNode().getElementsByTagName( Heading.subCategory.name() ).item(0).getTextContent();
 	}
-	@XmlElement
-	public void setFrameworkVersion(Date frameworkVersion) {
-		this.frameworkVersion = frameworkVersion;
+
+	/**
+	 * Required Element - runtime error will be thrown if the node or element is missing
+	 */
+	public String getFramework() {
+		return getHeadingNode().getElementsByTagName( Heading.framework.name() ).item(0).getTextContent();
 	}
+
+	/**
+	 * Required Element - runtime error will be thrown if the node or element is missing
+	 */
+	public String getFrameworkVersion() {
+		return getHeadingNode().getElementsByTagName( Heading.frameworkVersion.name() ).item(0).getTextContent();
+	}
+
+	/**
+	 * Required Element - runtime error will be thrown if the node or element is missing
+	 */
 	public String getName() {
-		return name;
+		return getHeadingNode().getElementsByTagName( Heading.name.name() ).item(0).getTextContent();
 	}
-	@XmlElement
-	public void setName(String name) {
-		this.name = name;
-	}
+
+	/**
+	 * Required Element - runtime error will be thrown if the node or element is missing
+	 */
 	public String getDefinition() {
-		return definition;
+		return getHeadingNode().getElementsByTagName( Heading.definition.name() ).item(0).getTextContent();
 	}
-	@XmlElement
-	public void setDefinition(String definition) {
-		this.definition = definition;
-	}
+
+	/**
+	 * Required Element - runtime error will be thrown if the node or element is missing
+	 */
 	public String getNotes() {
-		return notes;
+		return getHeadingNode().getElementsByTagName( Heading.notes.name() ).item(0).getTextContent();
 	}
-	@XmlElement
-	public void setNotes(String notes) {
-		this.notes = notes;
+	
+	// Query elements.
+
+	/**
+	 * Required Element - runtime error will be thrown if the node or element is missing
+	 */
+	public String getIndicatorQueryVersion() {
+		return getIndicatorQueryNode().getElementsByTagName( Indicator.version.name() ).item(0).getTextContent();
 	}
+
+	/**
+	 * Required Element - runtime error will be thrown if the node or element is missing
+	 */
+	public String getDrilldownQueryVersion() {
+		return getDrillDownQueryNode().getElementsByTagName( Drilldown.version.name() ).item(0).getTextContent();
+	}
+
+	/**
+	 * Optional Element - returns null if the node or element is missing.
+	 */
 	public String getIndicatorQuery() {
-		return indicatorQuery;
+		NodeList nodeList = getIndicatorQueryNode().getElementsByTagName( Indicator.query.name() );
+		if( nodeList == null || nodeList.getLength() < 1 ) {
+			return "";
+		}
+		return nodeList.item(0).getTextContent();
 	}
-	@XmlElement
-	public void setIndicatorQuery(String indicatorQuery) {
-		this.indicatorQuery = indicatorQuery;
+	
+	/**
+	 * Optional Element - returns null if the node or element is missing.
+	 */
+	public String getDrilldownQuery() {
+		NodeList nodeList = getDrillDownQueryNode().getElementsByTagName( Drilldown.query.name() );
+		if( nodeList == null ) {
+			return "";
+		}
+		return nodeList.item(0).getTextContent();
 	}
-	public String getDrillDownQuery() {
-		return drillDownQuery;
+
+	/**
+	 * Optional Element - returns null if the node or element is missing.
+	 */
+	public List<Parameter> getIndicatorParameters() { 
+		NodeList paramsNodeList = getIndicatorQueryNode().getElementsByTagName( Indicator.params.name() );
+		Element paramsElement = null;
+		NodeList parameters = null;
+		
+		if( paramsNodeList != null ) {		
+			paramsElement = (Element) paramsNodeList.item(0);
+		}
+		
+		if( paramsElement != null ) {
+			parameters = paramsElement.getElementsByTagName( Indicator.parameter.name() ); 
+		}
+
+		return createParameterList( parameters );
 	}
-	@XmlElement
-	public void setDrillDownQuery(String drillDownQuery) {
-		this.drillDownQuery = drillDownQuery;
+	
+	/**
+	 * Optional Element - returns null if the node or element is missing.
+	 */
+	public List<Parameter> getDrilldownParameters() {
+		NodeList paramsNodeList = getDrillDownQueryNode().getElementsByTagName( Drilldown.params.name() );
+		Element paramsElement = null;
+		NodeList parameters = null;
+		
+		if( paramsNodeList != null ) {		
+			paramsElement = (Element) paramsNodeList.item(0);
+		}
+		
+		if( paramsElement != null ) {
+			parameters = paramsElement.getElementsByTagName( Drilldown.parameter.name() ); 
+		}
+
+		return createParameterList( parameters );
+	}
+
+	/**
+	 * Optional Element - returns null if the node or element is missing.
+	 */
+	public List<Column> getDrilldownDisplayColumns() {
+		NodeList columnNodeList = getDrillDownQueryNode().getElementsByTagName( Drilldown.displayColumns.name() );
+		return createColumnList( columnNodeList );
+	}
+	
+	/**
+	 * Optional Element - returns null if the node or element is missing.
+	 */
+	public List<Column> getDrilldownExportColumns() {		
+		NodeList columnNodeList = getDrillDownQueryNode().getElementsByTagName( Drilldown.exportColumns.name() );
+		return createColumnList( columnNodeList );
+	}
+	
+	/**
+	 * Optional Element - returns null if the node or element is missing.
+	 */
+	public List<RangeInterface> getIndicatorRanges() {
+		NodeList rangeNodeList = getIndicatorQueryNode().getElementsByTagName( Indicator.range.name() );
+		return getRanges( rangeNodeList );
+	}
+	
+	/**
+	 * Optional Element - returns null if the node or element is missing.
+	 */
+	public List<RangeInterface> getDrilldownRanges() {	
+		NodeList rangeNodeList = getDrillDownQueryNode().getElementsByTagName( Drilldown.range.name() );
+		return getRanges( rangeNodeList );
+	}
+	
+	private List<RangeInterface> getRanges(NodeList rangeNodeList) {
+		
+		List<RangeInterface> rangeList = null;
+		Element rangesNode = null;
+		NodeList upperLimits = null;
+		NodeList lowerLimits = null;
+		
+		if( rangeNodeList != null && rangeNodeList.getLength() > 0 ) {
+			rangesNode = (Element) rangeNodeList.item(0);
+		}
+
+		if( rangesNode != null ) {
+			upperLimits = rangesNode.getElementsByTagName( RangeType.upperLimit.name() );
+			lowerLimits = rangesNode.getElementsByTagName( RangeType.lowerLimit.name() );
+		}
+		
+		if( upperLimits != null ) {
+			rangeList = createRangeList( upperLimits, RangeUpperLimit.class );
+		}
+		
+		if( lowerLimits != null ) {
+			
+			if( rangeList != null ) {
+				rangeList.addAll( createRangeList( lowerLimits, RangeLowerLimit.class ) );
+			} else {
+				rangeList = createRangeList( lowerLimits, RangeLowerLimit.class );
+			}
+		}
+		
+		return rangeList;
+	}
+	
+	// helpers
+	private static List<RangeInterface> createRangeList( NodeList ranges, Class<?> clazz ) {
+		
+		List<RangeInterface> rangeList = null;
+		
+		for(int i = 0; i < ranges.getLength(); i++) {
+			
+			if( rangeList == null ) {
+				rangeList = new ArrayList<RangeInterface>();
+			}
+			
+			Node rangeNode = ranges.item(i);
+			NamedNodeMap rangeAttributes = rangeNode.getAttributes();
+			String id = rangeAttributes.getNamedItem( RangeAttribute.id.name() ).getTextContent();
+			String name = rangeAttributes.getNamedItem( RangeAttribute.name.name() ).getTextContent();
+			String value = rangeAttributes.getNamedItem( RangeAttribute.value.name() ).getTextContent();
+			String label = rangeAttributes.getNamedItem( RangeAttribute.label.name() ).getTextContent();
+			RangeInterface range = null;
+			
+			try {
+				range = (RangeInterface) clazz.newInstance();
+			} catch (Exception e) {
+				logger.error("Failed to instantiate class " + clazz.getName(), e);
+			} 
+			
+			if( range != null ) {
+				
+				range.setId( id );
+				range.setName( name );
+				range.setValue( value );
+				range.setLabel( label );
+				rangeList.add(range);
+				
+			}
+		}
+		
+		return rangeList;
+	}
+	
+	private static List<Column> createColumnList( NodeList columnNodeList ) {
+		
+		List<Column> columnList = null;	
+		
+		if( columnNodeList == null ) {
+			return columnList;
+		}
+		
+		Element columnsNode = (Element) columnNodeList.item(0);
+		NodeList columns = columnsNode.getElementsByTagName( Drilldown.column.name() );
+		
+		if( columns == null ) {
+			return columnList;
+		}
+		
+		for(int i = 0; i < columns.getLength(); i++) {
+			
+			if( columnList == null ) {
+				columnList = new ArrayList<Column>();
+			}
+
+			Node columnNode = columns.item(i);
+			NamedNodeMap columnAttributes = columnNode.getAttributes();
+			Column column = new Column();
+	
+			String id = columnAttributes.getNamedItem( ColumnAttribute.id.name() ).getTextContent();
+			String name = columnAttributes.getNamedItem( ColumnAttribute.name.name() ).getTextContent();
+			String title = columnAttributes.getNamedItem( ColumnAttribute.title.name() ).getTextContent();
+			Node primaryNode = columnAttributes.getNamedItem( ColumnAttribute.primary.name() );
+			String primary = "";
+			
+			if( primaryNode != null ) {
+				primary = primaryNode.getTextContent();
+			}
+			
+			if( primary != null ) {				
+				column.setPrimary( Boolean.parseBoolean( primary ) );
+			}
+			
+			column.setId( id );
+			column.setName( name );
+			column.setTitle( title );
+			
+			columnList.add(column);
+		}
+		
+		return columnList;
+	}
+
+	private static List<Parameter> createParameterList( NodeList parameters ) {
+		
+		List<Parameter> parameterList = null;
+		
+		if( parameters == null ) {
+			return parameterList;
+		}
+		
+		for(int i = 0; i < parameters.getLength(); i++) {
+			
+			if( parameterList == null ) {
+				parameterList = new ArrayList<Parameter>();
+			}
+
+			Node parameterNode = parameters.item(i);
+			NamedNodeMap parameterAttributes = parameterNode.getAttributes();
+			Parameter parameter = new Parameter();
+			String[] values;
+			
+			String id = parameterAttributes.getNamedItem( ParameterAttribute.id.name() ).getTextContent();
+			String name = parameterAttributes.getNamedItem( ParameterAttribute.name.name() ).getTextContent();
+			String value = parameterAttributes.getNamedItem( ParameterAttribute.value.name() ).getTextContent();
+			
+			if( value.contains(",") ) {
+				values = value.split(",");
+			} else {
+				values = new String[]{ value };
+			}
+
+			parameter.setId(id);
+			parameter.setName(name);
+			parameter.setValue(values);
+			
+			parameterList.add(parameter);
+		}
+		
+		return parameterList;
+	}
+	
+	@Override
+	public String toString() {
+	   return ReflectionToStringBuilder.toString(this);
 	}
 
 }

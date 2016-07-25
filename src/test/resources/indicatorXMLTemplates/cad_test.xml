@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>Colcamex Resources Inc. Copyright 2016</author>
+	<uid>dd40f1c9-f091-4aad-b65e-1c4cf10927e5</uid>
+	<heading>
+		<version></version>
+		<category>CDM</category>
+		<subCategory>Coronary Artery Disease</subCategory>
+		<name>Coronary Artery Disease</name>
+		<definition>% of patients age 18 and older, with coronary artery disease (CAD) who received testing for all of the following:
+- Lipid profile screening; 
+- Blood pressure measurement; and
+- Obesity/overweight screening.</definition>
+		<framework>Based on and adapted from CIHI’s 2012 Indicator Technical Specifications (Nov 2012)</framework>
+		<frameworkVersion>12-01-2012</frameworkVersion>
+		<notes>This is a test template for the Coronary Artery Disease query</notes>
+	</heading>
+	<indicatorQuery>
+		<version>08-07-2016</version>
+		<params>
+			<parameter id="dxcodelist" name="dxcodelist" value="250,430" />
+			<parameter id="provider_no" name="provider_no" value="300" />
+		</params>
+		<range>
+			<upperLimit id="months" label="Number Months" name="months" value="12" />
+			<lowerLimit id="today" label="Today" name="date" value="now()" />
+			
+			<upperLimit id="a1c" label="Max number A1C Labs" name="a1ccount" value="2" />
+			<lowerLimit id="a1c" label="Min number A1C Labs" name="a1ccount" value="0" />
+			
+			<upperLimit id="age" label="Max Patient Age" name="ptage" value="75" />
+			<lowerLimit id="age" label="Min Patient Age" name="ptage" value="30" />
+		</range>
+		<query>
+				SELECT COUNT(*) AS "Total Patients" FROM demographic WHERE last_name LIKE 'test' LIMIT 100;
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>08-07-2016</version>
+		<params>
+			<parameter id="active" name="active" value="%AC%" />
+			<parameter id="dxcodelist" name="dxcodelist" value="250,430" />
+		</params>
+		<displayColumns>
+			<column id="demographic" name="demographic_no" title="Patient Id" primary="true" />
+			<column id="firstName" name="first_name" title="First Name" primary="false" />
+			<column id="lastName" name="last_name" title="Last Name" primary="false" />
+			<column id="dob" name="date_of_birth" title="Date of Birth" primary="false" />
+		</displayColumns>
+		<exportColumns>
+			<column id="demographic" name="demographic_no" title="Patient Id" primary="true" />
+			<column id="firstName" name="first_name" title="First Name" primary="false" />
+			<column id="lastName" name="last_name" title="Last Name" primary="false" />
+			<column id="dob" name="date_of_birth" title="Date of Birth" primary="false" />
+		</exportColumns>
+		<query>
+			SELECT * FROM demographic WHERE last_name LIKE 'test' LIMIT 100;
+		</query>
+	</drillDownQuery>
+</indicatorTemplateXML>
