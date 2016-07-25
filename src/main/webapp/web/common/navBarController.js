@@ -53,6 +53,12 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
     		 $scope.messageRights = result.content[2];
     	}
     });
+    
+    personaService.getDashboardMenu().then(function(response){
+    	$scope.dashboardMenu = response.menus.menu;  	
+    }),function(reason){
+    	alert(reason);
+    };
   
     personaService.getNavBar().then(function(response){
     	$scope.currentProgram = response.currentProgram.program;

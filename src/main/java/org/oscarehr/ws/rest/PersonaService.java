@@ -41,10 +41,12 @@ import oscar.OscarProperties;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.Dashboard;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.managers.AppManager;
 import org.oscarehr.managers.ConsultationManager;
+import org.oscarehr.managers.DashboardManager;
 import org.oscarehr.managers.MessagingManager;
 import org.oscarehr.managers.PreferenceManager;
 import org.oscarehr.managers.ProgramManager2;
@@ -94,6 +96,9 @@ public class PersonaService extends AbstractServiceImpl {
 	
 	@Autowired
 	private AppManager appManager;
+	
+	@Autowired
+	private DashboardManager dashboardManager;
 	
 	
 	@GET
@@ -275,7 +280,7 @@ public class PersonaService extends AbstractServiceImpl {
 		.addWithState(1,bundle.getString("navbar.menu.support"),null,"support")
 		.addWithState(2,bundle.getString("navbar.menu.help"),null,"help");
 		navBarMenu.setUserMenu(userMenu);
-		
+
 		result.setMenus(navBarMenu);
 		
 		return result;
@@ -456,6 +461,50 @@ public class PersonaService extends AbstractServiceImpl {
 		
 		return response;
 	
+	}
+	
+	
+	@GET
+	@Path("/dashboardMenu")
+	@Produces("application/json")
+	public NavbarResponse getDashboardMenu() {
+		
+		List<Dashboard> dashboards = dashboardManager.getDashboards( getLoggedInInfo() );
+		
+		ResourceBundle bundle = getResourceBundle();
+		
+		NavbarResponse result = new NavbarResponse();
+		
+		if( dashboards != null ) {
+			NavBarMenuTo1 navBarMenu = new NavBarMenuTo1();
+			
+			MenuTo1 dashboardMenu = new MenuTo1();
+			dashboardMenu.add(null, bundle.getString( "navbar.menu.dashboard" ), null, "dashboard");
+			
+			if( ! dashboards.isEmpty() ) {
+				
+				MenuItemTo1 dashboardDropdownMenu = new MenuItemTo1( null, bundle.getString("navbar.menu.dashboard"), null );			
+				MenuTo1 dashboardDropdownList = new MenuTo1();
+				
+				for( Dashboard dashboard : dashboards ) {
+					dashboardDropdownList.addWithState( dashboard.getId(), 
+							dashboard.getName(), dashboard.getName(), "DashboardDisplay/"+dashboard.getId());
+				}
+				
+				dashboardDropdownMenu.setDropdown( Boolean.TRUE );
+				dashboardDropdownMenu.setDropdownItems( dashboardDropdownList.getItems() );
+				
+				dashboardMenu.getItems().add( dashboardDropdownMenu );
+				
+			}
+			
+			navBarMenu.setMenu( dashboardMenu );
+			
+			result.setMenus( navBarMenu );
+		}
+		
+		return result;
+		
 	}
 }
 

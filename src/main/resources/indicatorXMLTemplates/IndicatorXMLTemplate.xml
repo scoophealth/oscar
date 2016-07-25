@@ -15,9 +15,10 @@
 		<version>07-15-2016</version>
 		<params>
 			<parameter id="dxcodelist" name="dxcodelist" value="250,430" />
+			<parameter id="provider_no" name="provider_no" value="300" />
 		</params>
 		<range>
-			<upper-limit label="Number Months" name="months" value="12" />
+			<upper-limit id="" label="Number Months" name="months" value="12" />
 			<lower-limit label="Today" name="date" value="now()" />
 			
 			<upper-limit label="Max number A1C Labs" name="a1ccount" value="2" />
@@ -33,7 +34,7 @@
 				COUNT(fin.patient) AS "DM Patients",
 			
 				-- % WITH A1C MEASUREMENTS
-				IF ( COUNT(fin.patient) > 0, ROUND( SUM( CASE WHEN fin.a1c > {lower-limit.a1ccount} THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient) , 1 ), 0) AS "HbA1c (%)",
+				IF ( COUNT(fin.patient) > 0, ROUND( SUM( CASE WHEN fin.a1c > ${lower-limit.a1ccount} THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient) , 1 ), 0) AS "HbA1c (%)",
 			
 				-- % WITH 2 A1C MEASUREMENTS
 				IF ( COUNT(fin.patient) > 0, ROUND( SUM( CASE WHEN fin.a1c > 1 THEN 1 ELSE 0 END )  * 100 / COUNT(fin.patient) , 1 ), 0) AS "HbA1c 2x (%)",
@@ -58,7 +59,7 @@
 					LEFT JOIN ( SELECT COUNT(*) AS a1cnumber, demographicNo 
 								FROM measurements 
 								WHERE type LIKE "A1C"
-								AND ( DATE(dateObserved) BETWEEN DATE({lowerlimit.date}) AND DATE_ADD( DATE({upperlimit.date}) ) 
+								AND ( DATE(dateObserved) BETWEEN DATE(${lowerlimit.date}) AND DATE_ADD( DATE(${upperlimit.date}) ) 
 								AND demographicNo > 0
 								GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C
 					ON (d.demographic_no = A1C.demographicNo)
@@ -67,16 +68,17 @@
 					LEFT JOIN ( SELECT COUNT(*) AS a1c9number, demographicNo 
 								FROM measurements 
 								WHERE type LIKE "A1C"
-								AND ( DATE(dateObserved) BETWEEN DATE({lower-limit.date}) AND DATE_ADD( DATE({upper-limit.date}), INTERVAL 9 MONTH ) )
+								AND ( DATE(dateObserved) BETWEEN DATE(${lower-limit.date}) AND DATE_ADD( DATE(${upper-limit.date}), INTERVAL 9 MONTH ) )
 								AND demographicNo > 0 
 								GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C9
 					ON (d.demographic_no = A1C9.demographicNo)
 			
 					WHERE d.patient_status LIKE "%AC%" 
 					AND dxr.coding_system LIKE "icd9" 
-					AND dxr.dxresearch_code IN "{ dxcodelist }"
+					AND dxr.dxresearch_code IN "${ dxcodelist }"
 					AND dxr.status NOT LIKE "%D%"
 					AND d.demographic_no > 0
+					AND d.provider_no LIKE "${provider_no}"
 			) fin;		
 		</query>
 	</indicatorQuery>
@@ -87,7 +89,7 @@
 			<parameter id="dxcodelist" name="dxcodelist" value="250,430" />
 		</params>
 		<displayColumns>
-			<column name="demographic_no" title="Patient Id" />
+			<column id="" name="demographic_no" title="Patient Id" />
 			<column name="firstName" title="First Name" />
 			<column name="lastName" title="Last Name" />
 			<column name="dob" title="Date of Birth" />

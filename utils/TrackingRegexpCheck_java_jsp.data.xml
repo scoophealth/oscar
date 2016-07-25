@@ -600,7 +600,6 @@
         <ViolationValue>/src/main/webapp/oscarMessenger/CreateMessage.jsp:listy = new java.util.ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/DisplayDemographicMessages.jsp:&lt;% //java.util.Vector theMessages = new java.util.Vector() ;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/DisplayDemographicMessages.jsp:java.util.Vector theMessages2 = new java.util.Vector() ;</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarMessenger/DisplayMessages.jsp:&lt;% //java.util.Vector theMessages = new java.util.Vector() ;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/DisplayMessages.jsp:java.util.Vector theMessages2 = new java.util.Vector() ;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/Transfer/PostItems.jsp:java.util.ArrayList aList = new java.util.ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarPrevention/PreventionReporting.jsp:&lt;%ArrayList overDueList = new ArrayList();</ViolationValue>
@@ -808,6 +807,8 @@
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/PregnancyFormsDao.java:* using OSCAR Forms...so DBHelp it is.</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/PregnancyFormsDao.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/PregnancyFormsDao.java:import oscar.login.DBHelp;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/dashboard/handler/AbstractQueryHandler.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/dashboard/handler/AbstractQueryHandler.java:public abstract class AbstractQueryHandler extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/learning/StudentImporter.java:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/learning/StudentImporter.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/dao/PHRActionDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
@@ -1175,6 +1176,15 @@
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setPatientIdNames(Hashtable patientIdNames) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setPatientNumDoc(Hashtable patientNumDoc) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setTypeDocLab(Hashtable&lt;String, List&lt;String&gt;&gt; typeDocLab) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable drug = dr.getDrug2(id, true);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable generic = dr.getGenericName(id);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&lt;String, Object&gt;&gt; components = (Vector&lt;Hashtable&lt;String, Object&gt;&gt;) h.get("components");</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&gt; v = (Vector&lt;Hashtable&gt;) dr.list_drug_element3(s, false);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:for (Hashtable h : v) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:for (Hashtable&lt;String, Object&gt; o : components) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:protected void extractAndPopulateDetails(DrugSearchTo1 t, Hashtable h, String id) throws Exception {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable docStatus = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable docType = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable patientDocs = new Hashtable();</ViolationValue>

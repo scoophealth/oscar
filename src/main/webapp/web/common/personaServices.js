@@ -29,7 +29,20 @@ angular.module("personaServices", [])
 		apiPath:'../ws/rs/persona',
 		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
-	      
+	    
+		getDashboardMenu: function() {
+			var deferred = $q.defer();
+			$http({
+                url: this.apiPath+'/dashboardMenu',
+                method: "GET",
+                headers: this.configHeaders,
+              }).success(function (data) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers) {
+                	deferred.reject("An error occured while getting the dashboard menu from persona");
+                });
+           return deferred.promise;
+		},
         getNavBar: function () {
         	var deferred = $q.defer();
         	$http({

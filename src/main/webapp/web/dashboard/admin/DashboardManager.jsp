@@ -43,35 +43,31 @@
 </title>
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/bootstrap/3.0.0/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/css/dataTables.bootstrap.min.css" /> 
-
+	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/web/css/Dashboard.css" />
 	<script>var ctx = "${pageContext.request.contextPath}"</script>
-	<script type="text/javascript" src="${ pageContext.request.contextPath }/js/jquery-3.1.0.min.js"></script>	
+	<script type="text/javascript" src="${ pageContext.request.contextPath }/js/jquery-1.9.1.min.js"></script>	
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/bootstrap/3.0.0/js/bootstrap.min.js" ></script>	
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/js/dataTables.bootstrap.min.js" ></script>
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/js/jquery.dataTables.min.js" ></script>
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/web/dashboard/admin/dashboardManagerController.js"></script>
 	
-<style type="text/css">
-	#libraryTable_length{
-		float:left;
-	}
-
-	@-moz-document url-prefix() {
-	  fieldset { display: table-cell; }
-	}
-</style>	
 </head>
 <body>
-<div class="container-fluid" >
+<div class="container" >
 <div class="col-sm-12">
- 	<div class="row" id="headingrow"> 	
-		<h3><bean:message key="dashboard.dashboardmanager.title" /></h3>
-	</div> <!-- end heading row -->
 	
-	<div class="navbar navbar-default">	
+	<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
 	<html:form styleClass="navbar-form navbar-left" styleId="importForm" 
 		method="POST" action="/web/dashboard/admin/DashboardManager.do" enctype="multipart/form-data" >
 			
+		<c:if test="${ not empty param.dashboardId }">
+			<button class="btn btn-default backtoDashboardBtn" id="getDashboard_${ param.dashboardId }" type="button">
+				<span class="glyphicon glyphicon-circle-arrow-left text-center" aria-hidden="true"></span>
+				Dashboard
+			</button>
+		</c:if>	
+		
 		<!-- Upload Indicator Buttons -->
 		<div class="btn-group">
 			<div class="input-group" id="import">
@@ -120,11 +116,15 @@
 		</div>		
 	</html:form>	
 	</div>  <!-- end top nav row -->
+	</nav>
 	
 	<div class="table-responsive" id="libraryTableContainer">
-	<h4>Indicator Library</h4>
+	<h3> 
+		Indicator Library
+	</h3>
+	<hr />
 	<div class="col-sm-12">
-		<table class="table table-striped table-bordered table-condensed" id="libraryTable" >
+		<table class="table table-striped table-condensed" id="libraryTable" >
 			<thead>
 			<tr>
 				<th>Export</th>
@@ -137,7 +137,19 @@
 				<th>Framework Version</th>
 			</tr>
 			</thead>
-
+		
+			<tfoot>
+			<tr>
+				<th>Export</th>
+				<th>Active</th>
+				<th>Dashboard</th>
+				<th>Name</th>
+				<th>Category</th>
+				<th>Sub Category</th>
+				<th>Framework</th>
+				<th>Framework Version</th>
+			</tr>
+			</tfoot>
 			<tbody>
 			<c:forEach items="${ indicatorTemplates }" var="indicator" >
 				<tr>
@@ -179,10 +191,6 @@
 		</table>
 	</div>
 	</div>
-	<div class="row" id="lastrow">
-		<span class="help-block"></span>
-	</div>
-
 
 <div id="newDashboard" class="modal fade" role="dialog">
 	<div class="modal-dialog">
