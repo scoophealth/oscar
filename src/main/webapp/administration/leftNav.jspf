@@ -318,6 +318,14 @@ String curProvider_no = (String)session.getAttribute("user");
 				<div class="accordion-inner">
 			
 				<ul>
+				
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_dashboardManager" rights="w" reverse="<%=false%>" >
+					<li>
+						<a href="javascript:void(0);" class="xlink" rel="${ctx}/web/dashboard/admin/DashboardManager.do" >
+							<bean:message key="dashboard.dashboardmanager.title" />
+						</a>
+					</li>
+				</security:oscarSec>
 				 
 					<li>
 					<a href="javascript:void(0);" class="xlink" rel="${ctx}/oscarReport/RptByExample.do"><bean:message key="admin.admin.btnQueryByExample" /></a>
