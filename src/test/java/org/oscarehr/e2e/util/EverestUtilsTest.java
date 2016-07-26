@@ -74,7 +74,7 @@ public class EverestUtilsTest extends DaoTestFixtures {
 	public void getPreventionTypeTest() {
 		assertNull(EverestUtils.getPreventionType(null));
 		assertNotNull(EverestUtils.preventionTypeCodes);
-		assertEquals(39, EverestUtils.preventionTypeCodes.size());
+		assertEquals(40, EverestUtils.preventionTypeCodes.size());
 		assertEquals("J07CA02", EverestUtils.getPreventionType("DTaP-HBV-IPV-Hib"));
 	}
 

@@ -17,44 +17,42 @@ Rabies Immunoglobulin	RabIg
 Respiratory Syncytial Virus Immunoglobulin	RSVIg
 Tetanus Immunoglobulin	TIg
 Varicella Immunoglobulin	VarIg
-
-
 -->
+
 <preventions>
-   		
+
 	<item 
 		resultDesc=""
-  		desc="DTaP=Diphtheria, Tetanus, acellular Pertussis - pediatric"
+  		desc="DTaP=Diphtheria, Tetanus, Acellular Pertussis - pediatric"
   		name="DTaP"
   		healthCanadaType="DTaP"
   		layout="injection" atc="" 
   		showIfMinRecordNum="1"/>
-  		
+
 	<item 
 		resultDesc=""
-  		desc="DTaP-IPV-Hib-HB=Diphtheria, Tetanus, acellular Pertussis, Inactivated Polio, Haemophilus influenzae type b, Hepatitis B - pediatric eg Infanrix Hexa"
+  		desc="DTaP-IPV-Hib-HB=Diphtheria, Tetanus, Acellular Pertussis, Inactivated Polio, Haemophilus Influenzae type b, Hepatitis B - pediatric eg Infanrix Hexa"
   		name="DTaP-IPV-Hib-HB"
   		healthCanadaType="DTaP-IPV-Hib-HB"
   		layout="injection" atc="" 
   		showIfMinRecordNum="1"/>
 
-<!-- the following is not currently in regular use in Canada --> 		
 	<item 
 		resultDesc=""
-  		desc="DTaP-IPV-HB=Diphtheria, Tetanus, acellular Pertussis, Inactivated Polio, Hepatitis B - pediatric"
+  		desc="DTaP-IPV-HB=Diphtheria, Tetanus, Acellular Pertussis, Inactivated Polio, Hepatitis B - pediatric"
   		name="DTaP-IPV-HB"
   		healthCanadaType="DTaP-IPV-HB"
   		layout="injection" atc="" 
   		showIfMinRecordNum="1"/>
-  		
+
 	<item 
 		resultDesc=""
-  		desc="DTaP-Hib=Diphtheria, Tetanus, acellular Pertussis, Haemophilus influenzae type b - pediatric"
+  		desc="DTaP-Hib=Diphtheria, Tetanus, Acellular Pertussis, Haemophilus Influenzae type b - pediatric"
   		name="DTaP-Hib"
   		healthCanadaType="DTaP-IPV-HB"
   		layout="injection" atc="" 
   		showIfMinRecordNum="1"/>
-  		
+
 	<item 
 		resultDesc=""
   		desc="DT-IPV=Diphtheria, Tetanus, Polio - pediatric"
@@ -65,14 +63,14 @@ Varicella Immunoglobulin	VarIg
 
 	<item
 		resultDesc=""
-		desc="Tdap-IPV=diphtheria, tetanus and acellular Pertussis for children 4 - 6 years of age; IPV=inactivated poliovirus; eg Adacel-IPV"
+		desc="Tdap-IPV=Diphtheria, Tetanus and Acellular Pertussis for children 4 - 6 years of age; IPV=Inactivated Poliovirus; eg Adacel-IPV"
 		name="Tdap-IPV"		
 		layout="injection" atc="J07AJ52" minAge="4" maxAge="6"
 		showIfMinRecordNum="1" />
-  		
+
 	<item
 		resultDesc=""
-		desc="TdP-IPV-Hib=diphtheria, tetanus and acellular Pertussis for children under 18 years of age; IPV=inactivated poliovirus; haemophilus influenzae type B for children under 5 years of age: combination given at 2, 4, 18 months and 4-6 years"
+		desc="TdP-IPV-Hib=Diphtheria, Tetanus and Acellular Pertussis for children under 18 years of age; IPV=Inactivated Poliovirus; Haemophilus Influenzae type b for children under 5 years of age: combination given at 2, 4, 18 months and 4-6 years"
 		name="TdP-IPV-Hib"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html"
 		layout="injection" atc="J07CA06" minAge="0" maxAge="6"
@@ -80,7 +78,7 @@ Varicella Immunoglobulin	VarIg
 
 	<item
 		resultDesc=""
-		desc="DTaP-IPV-Hib=diphtheria, tetanus and acellular Pertussis for children under 7 years of age; IPV=inactivated poliovirus; Hib=haemophilus influenzae type B for children under 5 years of age: combination given at 2, 4, 18 months eg Pediacel"
+		desc="DTaP-IPV-Hib=Diphtheria, Tetanus, Acellular Pertussis, Inactivated Polio, Haemophilus Influenzae type b for children 6weeks to 4 years of age. Given at 2mth,4mth,6mth and 18mths, eg Pediacel"
 		name="DTaP-IPV-Hib"
 		healthCanadaType="DTaP-IPV-Hib"
 		link="http://www.phac-aspc.gc.ca/"
@@ -89,7 +87,7 @@ Varicella Immunoglobulin	VarIg
 
 	<item
 		resultDesc=""
-		desc="Diptheria-acellular Pertussis-Poliomylitis-Tetanus (6 wks - 2 yrs)"
+		desc="Diphtheria, Tetanus, Pertussis, HepB, Polio, Haemophilus Influenzae type b (6wks-2yrs)"
 		name="DTaP-HBV-IPV-Hib"
 		link="http://www.phac-aspc.gc.ca/"
 		layout="injection" atc="J07CA02" minAge="0" maxAge="6"
@@ -97,7 +95,7 @@ Varicella Immunoglobulin	VarIg
 
 	<item
 		resultDesc=""
-		desc="DTaP=diphtheria, tetanus and acellular pertussis for children under 18 years of age; IPV=inactivated poliovirus"
+		desc="DTaP=Diphtheria, Tetanus and Acellular Pertussis for children under 18 years of age; IPV=Inactivated Poliovirus"
 		name="DTaP-IPV"
 		healthCanadaType="DTaP-IPV"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#DTaPIPV"
@@ -114,7 +112,7 @@ Varicella Immunoglobulin	VarIg
 
 	<item
 		resultDesc=""
-		desc="Hib=haemophilus influenzae type B for children under 5 years of age"
+		desc="Hib=Haemophilus Influenzae type b for children under 5 years of age"
 		name="Hib"
 		healthCanadaType="Hib"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Hib"
@@ -130,7 +128,7 @@ Varicella Immunoglobulin	VarIg
 
 	<item 
 		resultDesc=""
-		desc="Pneu-C=pneumococcal multi valent conjugate eg prevenar 13"
+		desc="Pneu-C=Pneumococcal Multi Valent Conjugate eg Prevenar 13"
 		name="Pneu-C" 
 		healthCanadaType="Pneu-C-7"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#PneuC"
@@ -144,7 +142,7 @@ Varicella Immunoglobulin	VarIg
 		healthCanadaType="M"
 		layout="injection" atc=""
 		showIfMinRecordNum="1" />
-		
+
 	<item
 		resultDesc=""
 		desc="MR=Measles, Rubella"
@@ -155,16 +153,16 @@ Varicella Immunoglobulin	VarIg
 
 	<item 
 		resultDesc=""
-		desc="MMR=measles, mumps and rubella eg Priorix" 
+		desc="MMR=Measles, Mumps and Rubella eg Priorix" 
 		name="MMR" 
 		healthCanadaType="MMR"
 		link="http://www.phac-aspc.gc.ca/publicat/cig-gci/p04-meas-roug-eng.php"
 		layout="injection" atc="J07BD52" minAge="0" maxAge="9"
 		showIfMinRecordNum="1" />
-		
+
 	<item 
 		resultDesc=""
-		desc="MMRV=measles, mumps, rubella, varicella eg Priorix-Tetra" 
+		desc="MMRV=Measles, Mumps, Rubella, Varicella eg Priorix-Tetra" 
 		name="MMRV" 
 		healthCanadaType="MMRV"
 		link="http://www.phac-aspc.gc.ca/publicat/ccdr-rmtc/10vol36/acs-9/index-eng.php"
@@ -178,7 +176,7 @@ Varicella Immunoglobulin	VarIg
 		healthCanadaType="Men-P-AC"
 		layout="injection" atc="J07AH"
 		showIfMinRecordNum="1" />
-		
+
 	<item
 		resultDesc=""
 		desc="Meningococcal - Polysaccharide eg Menomune"
@@ -186,7 +184,7 @@ Varicella Immunoglobulin	VarIg
 		healthCanadaType="Men-P-ACWY"
 		layout="injection" atc="J07AH"
 		showIfMinRecordNum="1" />
-	
+
 	<item
 		resultDesc=""
 		desc="Meningococcal Conjugate ACYW-135 eg Menactra"
@@ -197,7 +195,7 @@ Varicella Immunoglobulin	VarIg
 
 	<item 
 		resultDesc=""
-		desc="MenC-C=meningocococcal C conjugate eg Menjugate" 
+		desc="MenC-C=Meningocococcal C Conjugate eg Menjugate" 
 		name="MenC-C" 
 		healthCanadaType="Men-C"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#MenC"
@@ -206,7 +204,7 @@ Varicella Immunoglobulin	VarIg
 
      <item
 		resultDesc=""
-		desc="rMenB=meningocococcal B recombinant multicomponent eg Bexsero"
+		desc="rMenB=Meningocococcal B Recombinant Multicomponent eg Bexsero"
 		name="rMenB" 
 		healthCanadaType="rMenB"
 		link="http://www.hc-sc.gc.ca/dhp-mps/prodpharma/sbd-smd/drug-med/sbd_smd_2014_bexsero_147275-eng.php"
@@ -218,7 +216,7 @@ Varicella Immunoglobulin	VarIg
 
 	<item 
 		resultDesc=""
-		desc="VZ=varicella zoster eg Varivax III" 
+		desc="VZ=Varicella Zoster eg Varivax III" 
 		name="VZ" 
 		healthCanadaType="Var"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Var"
@@ -227,10 +225,10 @@ Varicella Immunoglobulin	VarIg
 		minAge="0" 
 		maxAge="2"
 		showIfMinRecordNum="1" />
-        
+
 	<item 
         resultDesc=""
-		desc="HZV=herpes zoster vaccine eg Zostavax" 
+		desc="HZV=Herpes Zoster Vaccine eg Zostavax" 
 		name="HZV"
 		healthCanadaType="HZV"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/hzv-vcz-eng.php"
@@ -238,14 +236,14 @@ Varicella Immunoglobulin	VarIg
         atc="J07BK02"
         minAge="50" 
 		showIfMinRecordNum="1" />
-        
+
 	<item 
 		resultDesc=""
 		desc="Hep B=Hepatitis B" name="HepB" healthCanadaType="HB"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#HepB"
 		layout="injection" atc="J07BC01" minAge="0" maxAge="1"
 		showIfMinRecordNum="1" />
-		
+
 	<item
 		resultDesc=""
 		desc="Tetanus"
@@ -253,7 +251,7 @@ Varicella Immunoglobulin	VarIg
 		healthCanadaType="T"
 		layout="injection" atc="J07AM"
 		showIfMinRecordNum="1" />
-		
+
 	<item
 		resultDesc=""
 		desc="Tetanus, Diphtheria, Inactivated Polio - adult"
@@ -264,7 +262,7 @@ Varicella Immunoglobulin	VarIg
 
 	<item
 		resultDesc=""
-		desc="dTap=diphtheria, tatanus and acellular pertussis adult/adolescent formulation"
+		desc="dTap=Diphtheria, Tetanus and Acellular Pertussis adult/adolescent formulation"
 		name="dTap" healthCanadaType="Tdap"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap"
 		layout="injection" atc="J07AJ52" minAge="0" maxAge="6"
@@ -272,15 +270,14 @@ Varicella Immunoglobulin	VarIg
 
 	<item 
 		resultDesc=""
-		desc="Td=tetanus and diphtheria adult type formulation"
+		desc="Td=Tetanus and Diphtheria adult type formulation"
 		name="Td" healthCanadaType="Td"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap"
 		layout="injection" atc="J07CA01" minAge="0" showIfMinRecordNum="1" />
 
-
 	<item 
 		resultDesc=""
-		desc="Flu=influenza vaccine" name="Flu" healthCanadaType="Inf"
+		desc="Flu=Influenza vaccine" name="Flu" healthCanadaType="Inf"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Flu"
 		layout="injection" atc="J07BB01" minAge="0" />
 
@@ -291,7 +288,7 @@ Varicella Immunoglobulin	VarIg
 		healthCanadaType="HA-Typh-I"
 		layout="injection" atc=""
 		showIfMinRecordNum="1" />
-		
+
 	<item
 		resultDesc=""
 		desc="Hepatitis B - Thimerosal free"
@@ -322,7 +319,6 @@ Varicella Immunoglobulin	VarIg
 		resultDesc=""
 		desc="Dukoral" name="CHOLERA" link="" layout="injection" healthCanadaType="Chol-O"
 		atc="J07AE01" showIfMinRecordNum="1" />
-        
 
 	<item 	
 		resultDesc=""
@@ -333,8 +329,7 @@ Varicella Immunoglobulin	VarIg
 		resultDesc=""
 		desc="Typhoid=Typhoid" name="Typhoid" link="" layout="injection" healthCanadaType="Typh-I"
 		atc="J07AP01" showIfMinRecordNum="1" />
-		
-		  		
+  		
   	<item 
 		resultDesc=""
   		desc="Typhoid - Oral"
@@ -342,11 +337,10 @@ Varicella Immunoglobulin	VarIg
   		healthCanadaType="Typh-O"
   		layout="injection" atc="J07AP" 
   		showIfMinRecordNum="1"/>	
-  		
 
 	<item 
 		resultDesc=""
-		desc="Women ages of 9 and 26 years are recommended to receive human papillomavirus vaccine eg Gardasil, Cervarix" 
+		desc="Women ages of 9 and 26 years are recommended to receive Human Papillomavirus Vaccine eg Gardasil, Cervarix" 
 		name="HPV Vaccine"
 		healthCanadaType="HPV"
 		link="http://www.cdc.gov/std/treatment/" 
@@ -356,13 +350,10 @@ Varicella Immunoglobulin	VarIg
 		maxAge="26" sex = "F"
    		showIfMinRecordNum="1" />
 
-
 	<item 
 		resultDesc=""
 		desc="TB=Tuberculosis Mantoux " name="Tuberculosis" link="" layout="injection"
 		atc="J07AN01" showIfMinRecordNum="1" />
-
-	
 
 	<item 
 		resultDesc=""
@@ -373,7 +364,7 @@ Varicella Immunoglobulin	VarIg
 		resultDesc=""
 		desc="IPV" name="IPV" link="" layout="injection" atc="J07BF03"
 		showIfMinRecordNum="1" />
-		
+
 	<item 
 		resultDesc=""
   		desc="BCG=Bacillus Calmette-Guérin"
@@ -381,7 +372,7 @@ Varicella Immunoglobulin	VarIg
   		healthCanadaType="BCG"
   		layout="injection" atc="J07AN" 
   		showIfMinRecordNum="1"/>
-  		
+
   	<item 
 		resultDesc=""
   		desc="Yellow Fever eg YF-VAX"
@@ -389,7 +380,7 @@ Varicella Immunoglobulin	VarIg
   		healthCanadaType="YF"
   		layout="injection" atc="J07BL" 
   		showIfMinRecordNum="1"/>		
-  		
+
   	<item 
 		resultDesc=""
   		desc="Tickborne Encephalitis"
@@ -397,7 +388,7 @@ Varicella Immunoglobulin	VarIg
   		healthCanadaType="TBE"
   		layout="injection" atc="J07BA" 
   		showIfMinRecordNum="1"/>		
-  			
+	
 	<item
 		resultDesc=""
 		desc="Japanese Encephalitis"
@@ -405,12 +396,11 @@ Varicella Immunoglobulin	VarIg
 		healthCanadaType="JE"
 		layout="injection" atc="J07BA"
 		showIfMinRecordNum="1" />
-		
 
 	<item 
 		resultDesc=""
-		desc="PAP" name="PAP" link="" layout="PAPMAM" minAge="20"
-		maxAge="65" sex="F" showIfMinRecordNum="1" />
+		desc="Women from ages 21 to 70 are recommended to receive a PAP" name="PAP" link="" layout="PAPMAM" minAge="21"
+		maxAge="70" sex="F" showIfMinRecordNum="1" />
 
 	<item 
 		resultDesc=""
@@ -431,12 +421,12 @@ Varicella Immunoglobulin	VarIg
 		resultDesc=""
 		desc="Colonoscopy" name="COLONOSCOPY" link="" layout="PAPMAM"
 		showIfMinRecordNum="1" />
-		
+
 	<item 
 		resultDesc=""
 		desc="Bone Mineral Density" name="BMD" link="" layout="PAPMAM" minAge="65"
 		showIfMinRecordNum="1" />
-		
+
 		<!-- For eva.caisi.ca -->
 	<item
 		resultDesc=""
@@ -448,7 +438,6 @@ Varicella Immunoglobulin	VarIg
 	    maxAge="75"
 	    showIfMinRecordNum="1" />
 
- 
 	<item
 		resultDesc=""
 		desc="HepB screen= Hepatitis B serology (hep B sAg + anti-HBc or anti-HBs) in those with multiple sex partners, MSM, and injection drug users"
@@ -458,7 +447,7 @@ Varicella Immunoglobulin	VarIg
 		minAge="15"
 		maxAge="24"
 		showIfMinRecordNum="1" />
-		
+
 	<item
 		resultDesc=""
 		desc="HepC screen = Hep C Ab serology in contacts of multiple sex partners, traumatic anal intercourse with infected person, IVDU"
@@ -468,7 +457,7 @@ Varicella Immunoglobulin	VarIg
 		minAge="15"
 		maxAge="24"
 		showIfMinRecordNum="1" />
-		
+
 	<item		
 		resultDesc=""
 		desc="VDRL = VDRL screening for syphillis; pregnant women at the first prenatal visit (and 3rd trimester and delivery high-risk groups), all sex workers, in correctional facilities, diagnosed with another STD, MSM with high-risk behaviors"
@@ -478,7 +467,7 @@ Varicella Immunoglobulin	VarIg
 		minAge="15"
 		maxAge="25"
 		showIfMinRecordNum="1" />
-		
+
 	<item
 		resultDesc=""
 		desc="Chlamydia = chlamydia urine PCR; sexually active women age 25 years or younger (including pregnant women), women older than 25 years with: new sex partner in prior 60 days, more than one sex partner, inconsistent condom use, unmarried, or history of STD; men: asymptomatic screening may or may not benefit "
@@ -488,7 +477,7 @@ Varicella Immunoglobulin	VarIg
 		minAge="12"
 		maxAge="25"
 		showIfMinRecordNum="1" />
-		
+
 	<item
 		resultDesc=""
 		desc= "ghonorrhea = ghonorrhea urine PCR in men with symptoms or asymptomatic women: Sexually active younger than 25 years, pregnancy, inconsistent condom use, multiple partners, partner with multiple contacts, sexual contact with partner with culture-proven STD, repeated episodes of STD, Sex work or drug use"
@@ -502,8 +491,18 @@ Varicella Immunoglobulin	VarIg
 
     <item 
 		resultDesc=""
-		desc="H1N1 Vaccination" name="H1N1" layout="h1n1"
-            minAge="0" atc="J07BB02" />
+		desc="H1N1 Vaccination" 
+		name="H1N1" layout="h1n1"
+        minAge="0" 
+        atc="J07BB02" />
+
+	<item
+		resultDesc=""
+		desc="Zostavax"
+		name="Zostavax"		
+		link="http://webprod5.hc-sc.gc.ca/dpd-bdpp/item-iteme.do?pm-mp=00015056"
+		layout="injection" atc="J07BK"
+		showIfMinRecordNum="1" />
 
 	<item 
 		resultDesc=""
@@ -514,7 +513,7 @@ Varicella Immunoglobulin	VarIg
 		resultDesc=""
 		desc="Other Layout B" name="OtherB" link="" layout="PAPMAM"
 		showIfMinRecordNum="1" />
-		
+
 	<item
 		resultDesc=""
 		desc= "Smoking history"
@@ -529,6 +528,5 @@ Varicella Immunoglobulin	VarIg
 		name="PHV"		
 		layout="history"	
 		showIfMinRecordNum="1" />
-		
-</preventions>
 
+</preventions>
