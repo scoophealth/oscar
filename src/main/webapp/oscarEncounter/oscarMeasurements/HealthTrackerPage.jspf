@@ -1107,22 +1107,22 @@ iDate++;
 	<div class="form-group" style="width:160px;text-align:right;display:inline-block !important; margin:0px;padding:0px;">
 	<%if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA") ||  mtypeBean.getValidationName().equals("Yes/No/X") )){%> 
 	     <div id="options-<%=name%>" class="yes-no-options">                        
-							<input type="radio" name="<%=name%>"  id="<%=name%>-YES" value="Yes" onfocus="toggle_visibility('add-box-<%=measure%>')">
-							Yes
-							<input type="radio" name="<%=name%>" id="<%=name%>-NO" value="No" onfocus="toggle_visibility('add-box-<%=measure%>')">
-							No		
+		<input type="radio" name="<%=name%>"  id="<%=name%>-YES" value="Yes" onClick="toggle_visibility('add-box-<%=measure%>')">
+		Yes
+		<input type="radio" name="<%=name%>" id="<%=name%>-NO" value="No" onClick="toggle_visibility('add-box-<%=measure%>')">
+		No
 	    <%if( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No/NA")){%>                     
-							<input type="radio" name="<%=name%>" id="<%=name%>-NA" value="NA" onfocus="toggle_visibility('add-box-<%=measure%>')">
-							NA
-	<%}%>					 		  
+		<input type="radio" name="<%=name%>" id="<%=name%>-NA" value="NA" onClick="toggle_visibility('add-box-<%=measure%>')">
+		NA
+	<%}%>				 		  
 	    </div> <!-- yes-no-options -->                      
 	 <%}else if( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Review")){ %>
-							<label class="checkbox checkbox-inline">
-							<input type="checkbox" name="<%=name%>" id="<%=name%>-REVIEWED" value="Reviewed" onfocus="toggle_visibility('add-box-<%=measure%>')">
-							Reviewed
-							</label>
+		<label class="checkbox checkbox-inline">
+		<input type="checkbox" name="<%=name%>" id="<%=name%>-REVIEWED" value="Reviewed" onClick="toggle_visibility('add-box-<%=measure%>')">
+		Reviewed
+		</label>
 	 <%}else{ %>
-	 <input type="text" class="form-control" id="<%=name%>" name="<%=name%>"  onfocus="toggle_visibility('add-box-<%=measure%>')" title="<% if (name.equals("WarfarinWeeklyDose") || name.equals("Weightkg") || name.equals("Heightcm")){ %> Double click to convert<%}else if (name.equals("BP")) {%>00/00 or 000/00 <%}else{ %> <%=mtypeBean.getValidationName()%> <%}%>"
+	 <input type="text" class="form-control" id="<%=name%>" name="<%=name%>" onClick="toggle_visibility('add-box-<%=measure%>')" title="<% if (name.equals("WarfarinWeeklyDose") || name.equals("Weightkg") || name.equals("Heightcm")){ %> Double click to convert<%}else if (name.equals("BP")) {%>00/00 or 000/00 <%}else{ %> <%=mtypeBean.getValidationName()%> <%}%>"
 	                       	<% if ((name.equals("Weightkg") || name.equals("Heightcm")) ){ %> onchange="calcBMI();" onkeyup="calcBMI();"<%}%>
 	                       	<% if (name.equals("Weightkg")){ %> onDblClick="wtEnglish2Metric(this); calcBMI();"<%}%>
 	                       	<% if (name.equals("Heightcm")){ %> onDblClick="htEnglish2Metric(this); calcBMI();"<%}%>
