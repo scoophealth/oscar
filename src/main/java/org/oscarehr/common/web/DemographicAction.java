@@ -95,7 +95,7 @@ public class DemographicAction extends DispatchAction  {
 			String postal = demographic.getPostal();
 			String phone = demographic.getPhone();
 			String phone2 = demographic.getPhone2();
-			String cell = extMap.get("demo_cell").getValue();
+			String cell = extMap.get("demo_cell")!=null?extMap.get("demo_cell").getValue():"";
 			String hPhoneExt = extMap.get("hPhoneExt")!=null?extMap.get("hPhoneExt").getValue():"";
 			String wPhoneExt = extMap.get("wPhoneExt")!=null?extMap.get("wPhoneExt").getValue():"";
 						

@@ -63,18 +63,18 @@ public class DemographicNameAgeString {
 
       String retval = "";      
       if (demoNo != null){                     
-         if (!hashtable.containsKey(demoNo)){        
+      //  if (!hashtable.containsKey(demoNo)){        
 
             DemographicData dData = new DemographicData();
             String[] dArray = dData.getNameAgeSexArray(loggedInInfo, demoNo);
             if (dArray != null){
-               hashtable.put(demoNo,dArray);
+            	if (dArray != null){
+                    retval = nameAgeSexString(dArray);
+                 } 
             }        
-         }//else{MiscUtils.getLogger().debug("name age in buffer "+demoNo);}
-         String[] nameage =  (String[]) hashtable.get(demoNo);      
-         if (nameage != null){
-            retval = nameAgeSexString(nameage);
-         }            
+        // }//else{MiscUtils.getLogger().debug("name age in buffer "+demoNo);}
+       //  String[] nameage =  (String[]) hashtable.get(demoNo);      
+                    
       }
       return  retval;
    }
