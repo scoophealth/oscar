@@ -23,8 +23,16 @@
  */
 package org.oscarehr.ws.rest.to.model;
 
-public class DiagnosisTo1 {
+import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class DiagnosisTo1 implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	
 	private String codingSystem;
 	private String code;
 	private String description;
