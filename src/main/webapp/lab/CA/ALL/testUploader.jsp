@@ -63,14 +63,14 @@ if(outcome != null){
                     document.getElementById('OTHER').style.visibility = "hidden";                
             }
             function checkInput(){
-                if (document.UPLOAD.lab.value ==""){
+                if (document.UPLOAD.importFile.value ==""){
                     alert("Please select a lab for upload");
                     return false;
                 }else if (document.UPLOAD.type.value == "OTHER" && document.UPLOAD.otherType.value == ""){
                     alert("Please specify the other message type");
                     return false;
                 }else{
-                    var lab = document.UPLOAD.lab.value;
+                    var lab = document.UPLOAD.importFile.value;
                     var ext = lab.substring((lab.length - 3), lab.length);
                     if (ext != 'hl7' && ext != 'xml'){
                         alert("Error: The lab must be either a .xml or .hl7 file");
