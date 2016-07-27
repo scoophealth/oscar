@@ -111,7 +111,15 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	});
 	
 	formService.getCompletedEncounterForms($stateParams.demographicNo).then(function(data) {
-		$scope.page.encounterFormlist[0] = data.list;
+		if (data.list instanceof Array) {
+			$scope.page.encounterFormlist[0] = data.list;
+		} else {
+			var arr = new Array();
+			arr[0] = data.list;
+			$scope.page.encounterFormlist[0] = arr;
+		}	
+		
+		//$scope.page.encounterFormlist[0] = data.list;
 		//console.log("completed list as is:" + JSON.stringify($scope.page.encounterFormlist[0]) );
 	});
 	
