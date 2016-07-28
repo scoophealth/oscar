@@ -798,7 +798,6 @@ window.onbeforeunload = onClosing;
 	</div>
 
 	<div id="leftNavBar" style="display: inline; float: left; width: 20%;">
-	
 		<tiles:insert attribute="leftNavigation" />
 	</div>
 
@@ -806,6 +805,23 @@ window.onbeforeunload = onClosing;
 		style="display: inline; float: left; width: 60%; background-color: #CCCCFF;">
 		<tiles:insert attribute="body" />
 	</div>
+	
+	<!-- Display Integrated Data -->
+	<div id="showIntegratedNote" class="showEdContent" style="height:325px;">
+		<div id="integratedNoteWrapper" style="position:relative;width:99.5%;height:320px">
+		<div id="integratedNoteTitle"></div>
+		<textarea style="margin: 10px;" cols="50" rows="15" id="integratedNoteTxt" name="integratedNoteTxt" readonly></textarea>
+		<div id="integratedNoteDetails" style="text-align:left;padding-left:4px;font-size:10px;"></div> 
+		
+		<span style="position:absolute;right:10px;"> 
+					<input type="image"
+					src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>"
+					title='<bean:message key="global.btnExit"/>'
+					onclick="this.focus();$('channel').style.visibility ='visible';$('showIntegratedNote').style.display='none';return false;">
+		</span>
+		
+		</div><!-- integratedNoteWrapper -->
+	</div><!-- showIntegratedNote -->
 
 	<!-- hovering divs -->
 	<div id="showEditNote" class="showEdContent">

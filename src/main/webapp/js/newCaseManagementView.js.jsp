@@ -709,6 +709,33 @@ function navBarLoader() {
 
 }
 
+function showIntegratedNote(title, note, location, providerName, obsDate){
+	$("integratedNoteTitle").innerHTML = title;
+	$("integratedNoteDetails").innerHTML = "Integrated Facility:" + location + " by " + providerName + " on " + obsDate;
+	
+	$("integratedNoteTxt").value = note;
+	
+	var coords = null;
+    if(document.getElementById("measurements_div") == null) {
+    	coords = Position.page($("topContent"));
+    } else {
+   		coords = Position.positionedOffset($("cppBoxes"));
+    }
+
+    var top = Math.max(coords[1], 0);
+    var right = Math.round(coords[0]/0.66);
+
+	$("showIntegratedNote").style.right = right + "px";
+    $("showIntegratedNote").style.top = top + "px";
+    
+    $("channel").style.visibility = "hidden";
+    $("showEditNote").style.display = "none";
+    
+	$("showIntegratedNote").style.display = "block";
+	
+	$("integratedNoteTxt").focus();
+}
+
 //display in place editor
 function showEdit(e,title, noteId, editors, date, revision, note, url, containerDiv, reloadUrl, noteIssues, noteExts, demoNo) {
     //Event.extend(e);
@@ -784,6 +811,7 @@ function showEdit(e,title, noteId, editors, date, revision, note, url, container
 
     $(editElem).style.right = right + "px";
     $(editElem).style.top = top + "px";
+    $("showIntegratedNote").style.display = "none";
     if( Prototype.Browser.IE ) {
         //IE6 bug of showing select box
         $("channel").style.visibility = "hidden";
