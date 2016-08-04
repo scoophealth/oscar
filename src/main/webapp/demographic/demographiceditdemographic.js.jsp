@@ -704,14 +704,14 @@ function generateMarkup(addresses,type,header) {
      return markup;
 }
 
-function updatePaperArchive(programNo) {
-	var val = jQuery("#paperChartArchived"+programNo).val();
+function updatePaperArchive() {
+	var val = jQuery("#paper_chart_archived").val();
 	if(val == '' || val == 'NO') {
-		jQuery("#paperChartArchivedDate"+programNo).val('');
-		jQuery("#paperChartArchivedProgram"+programNo).val('');
+		jQuery("#paper_chart_archived_date").val('');
+		jQuery("#paper_chart_archived_program").val('');
 	}
 	if(val == 'YES') {
-		jQuery("#paperChartArchivedProgram"+programNo).val('<%=currentProgram%>');
+		jQuery("#paper_chart_archived_program").val('<%=currentProgram%>');
 	}
 }
 
