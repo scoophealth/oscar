@@ -874,7 +874,7 @@ public class MSPReconcile {
 			this.updateBillTypeHlp(billingNo, BILLTYPE_MSP);
 		}
 
-		updatePaymentMethodHlp(billingNo, paymentMethod);
+		updatePaymentMethodHlp(billingMasterNo, paymentMethod);
 	}
 
 	//Only updates only the billingmaster status
@@ -915,8 +915,8 @@ public class MSPReconcile {
 		}
 	}
 
-	private void updatePaymentMethodHlp(String billingNo, String paymentMethod) {
-		Billingmaster b = billingmasterDao.getBillingmaster(Integer.parseInt(billingNo));
+	private void updatePaymentMethodHlp(String billingMasterNo, String paymentMethod) {
+		Billingmaster b = billingmasterDao.getBillingmaster(Integer.parseInt(billingMasterNo));
 		if (b != null) {
 			b.setPaymentMethod(Integer.parseInt(paymentMethod));
 			billingmasterDao.update(b);
