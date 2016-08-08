@@ -1815,7 +1815,7 @@ public class MSPReconcile {
 			Billingmaster b = (Billingmaster) o[0];
 			Billing b1 = (Billing) o[1];
 			
-			double dblAmtOwing = this.getAmountOwing(billingmasterNo, b1.getBillingtype(), b.getBillAmount());
+			double dblAmtOwing = this.getAmountOwing(billingmasterNo, b.getBillAmount(), b1.getBillingtype());
 			String strOwing = String.valueOf(dblAmtOwing);
 			double amountOwing = Double.parseDouble(strOwing);
 			if (amountOwing <= 0) {
