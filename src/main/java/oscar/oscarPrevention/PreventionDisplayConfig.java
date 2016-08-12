@@ -40,6 +40,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.managers.PreventionManager;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -322,10 +323,19 @@ public class PreventionDisplayConfig {
 
     public boolean display(LoggedInInfo loggedInInfo, Map<String,String> setHash, String Demographic_no,int numberOfPrevs) {
         boolean display = false;
+        PreventionManager preventionManager = SpringUtils.getBean(PreventionManager.class);
+        
         DemographicData dData = new DemographicData();
-        log.debug("demoage " + Demographic_no);
+        log.debug("demoage " + Demographic_no);       
+        
         org.oscarehr.common.model.Demographic demograph = dData.getDemographic(loggedInInfo, Demographic_no);
         try {
+        	
+        	if(preventionManager.hideItem(setHash.get("name")) && numberOfPrevs ==0 ){
+        		//move to hidden list
+        		display=false;
+        	}else{
+        	
             String minAgeStr = setHash.get("minAge");
             String maxAgeStr = setHash.get("maxAge");
             String sex = setHash.get("sex");
@@ -382,6 +392,7 @@ public class PreventionDisplayConfig {
                    }
                }
             }
+        	}//end check if prevention has been hidden
         } catch (Exception e) {
             MiscUtils.getLogger().error("Error", e);
         }
