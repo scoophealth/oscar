@@ -326,17 +326,28 @@ public class LabResultData implements Comparable<LabResultData> {
 	}
 
 	public int compareTo(LabResultData object) {
-		//int ret = 1;
 		int ret = 0;
-		if (this.getDateObj() != null && object.getDateObj() != null && this.dateTimeObr != null){
-			if (this.dateTimeObr.after( object.getDateObj() )){
-				ret = -1;
-			}else if(this.dateTimeObr.before( object.getDateObj() )){
-				ret = 1;
-			}else if(this.finalResultsCount > object.finalResultsCount){
-				ret = -1;
-			}else if(this.finalResultsCount < object.finalResultsCount){
-				ret = 1;
+		if (this.getDateObj()!=null && object.getDateObj()!=null && this.segmentID!=null && object.segmentID!=null){
+			try {
+				if (this.dateTimeObr.after( object.getDateObj() )){
+					ret = -1;
+				}else if(this.dateTimeObr.before( object.getDateObj() )){
+					ret = 1;
+				}else if(this.finalResultsCount > object.finalResultsCount){
+					ret = -1;
+				}else if(this.finalResultsCount < object.finalResultsCount){
+					ret = 1;
+				}else if(Integer.parseInt(this.segmentID)>Integer.parseInt(object.segmentID)){
+					ret = -1;
+				}else{
+					ret = 1;
+				}
+			} catch (NumberFormatException ex) {
+				if (this.segmentID.compareTo(object.segmentID)>0){
+					ret = -1;
+				}else{
+					ret = 1;
+				}
 			}
 		}
 		return ret;
