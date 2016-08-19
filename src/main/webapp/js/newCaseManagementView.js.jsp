@@ -3102,7 +3102,7 @@ function backup() {
 
 var autoSaveTimer;
 function setTimer() {
-    autoSaveTimer = setTimeout("backup()", 30000);
+    autoSaveTimer = setTimeout("backup()", 5000);
 }
 
 function clearAutoSaveTimer() {
