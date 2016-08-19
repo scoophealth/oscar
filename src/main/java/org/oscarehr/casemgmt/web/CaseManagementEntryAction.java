@@ -1879,14 +1879,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			//nothing to do. lock was not found 
 		}
 
-		//We are exiting note so we have to make sure we clean up tmpSave
-		try {
-			CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
-			caseManagementMgr.deleteTmpSave(providerNo, demoNo, cform.getCaseNote().getProgram_no());
-		} catch (Exception e) {
-			logger.error("Could not remove tmpSave", e);
-		}
-
+		
 		return null;
 	}
 
