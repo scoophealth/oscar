@@ -220,6 +220,16 @@ $(document).ready(function() {
 			</label>
 		</div>
 	</div>
+	<oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
+		<hr />
+		<div class="control-group">
+			<div class="controls">
+				<label class="checkbox">
+					<input type="checkbox" name="integrator_patient_consent" value="1" <%=getChecked(properties[20], true) %> /> Push Patient Files With Patient Consent Only. 
+				</label>
+			</div>
+		</div>
+	</oscar:oscarPropertiesCheck>
 	<hr />
 	<input class="btn btn-primary" type="submit" onclick="$('input[type=radio]').removeAttr('disabled');" value="<bean:message key="provider.integratorPreferences.save" />" />
 	<%--

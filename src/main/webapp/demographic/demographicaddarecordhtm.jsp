@@ -49,6 +49,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page
 	import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarDemographic.pageUtil.Util, oscar.oscarWaitingList.WaitingList"
 	errorPage="errorpage.jsp"%>
@@ -76,6 +77,8 @@
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.managers.ProgramManager2" %>
 <%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+
+<%@page import="org.oscarehr.managers.PatientConsentManager" %>
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
@@ -140,6 +143,13 @@
   }
   // Use this value as the default value for province, as well
   String defaultProvince = HCType;
+		  
+		  
+	//get a list of programs the patient has consented to. 
+	if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
+	    PatientConsentManager patientConsentManager = SpringUtils.getBean( PatientConsentManager.class );
+		pageContext.setAttribute( "consentTypes", patientConsentManager.getConsentTypes() );
+	}
 %>
 <html:html locale="true">
 <head>
@@ -1080,6 +1090,8 @@ function ignoreDuplicates() {
 		<% } %>
 		</oscar:oscarPropertiesCheck>
     </tr>
+    
+    
     <tr valign="top">
 	<td  id="sinNoLbl" align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgSIN"/>:</b> </td>
 	<td id="sinNoCell" align="left"  >
@@ -1328,9 +1340,24 @@ document.forms[1].r_doctor_ohip.value = refNo;
 
 <%-- TOGGLE PRIVACY CONSENT MODULE --%>			
 <oscar:oscarPropertiesCheck property="privateConsentEnabled" value="true">			
+
+			<%
+				String[] privateConsentPrograms2 = OscarProperties.getInstance().getProperty("privateConsentPrograms","").split(",");
+				ProgramProvider pp3 = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+				boolean showConsents = false;
+				if(pp3 != null) {
+					for(int x=0;x<privateConsentPrograms2.length;x++) {
+						if(privateConsentPrograms2[x].equals(pp3.getProgramId().toString())) {
+							showConsents=true;
+						}
+					}
+				}
+						
+			if(showConsents) { %>
+			<!-- consents -->
 			<tr valign="top">
 	
-				<td colspan="2">
+				<td colspan="4">
 					<input type="checkbox" name="privacyConsent" value="yes"><b>Privacy Consent (verbal) Obtained</b> 
 					<br/>
 					<input type="checkbox" name="informedConsent" value="yes"><b>Informed Consent (verbal) Obtained</b>
@@ -1338,6 +1365,34 @@ document.forms[1].r_doctor_ohip.value = refNo;
 				</td>
 
 		  	</tr>
+		  			  	
+			<% } %>
+
+		  	<%-- This block of code was designed to eventually manage all of the patient consents. --%>
+			<oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
+			
+				<c:forEach items="${ consentTypes }" var="consentType" varStatus="count">
+				
+					<tr class="privacyConsentRow" id="${ count.index }" valign="top">
+						<td class="alignLeft" colspan="2" width="20%" >
+							<label style="font-weight:bold;" valign="center" for="${ consentType.type }" >
+							
+								<input type="checkbox" name="${ consentType.type }" id="${ consentType.type }" value="${ consentType.id }"  />
+		
+								<c:out value="${ consentType.name }" />
+								
+							</label>
+						</td>
+						
+						<td class="alignLeft"  colspan="2"  width="80%" >
+							<c:out value="${ consentType.description }" />
+						</td>
+		
+					</tr>
+				</c:forEach>
+				
+			</oscar:oscarPropertiesCheck>
+
 </oscar:oscarPropertiesCheck>
 
 			<tr valign="top">

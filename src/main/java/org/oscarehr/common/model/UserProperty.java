@@ -142,19 +142,17 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     public static final String INTEGRATOR_DEMOGRAPHIC_DOCUMENTS = "integrator_demographic_documents";
     public static final String INTEGRATOR_DEMOGRAPHIC_ALLERGIES = "integrator_demographic_allergies";
     public static final String INTEGRATOR_DEMOGRAPHIC_LABREQ = "integrator_demographic_labreq";
-
     public static final String INTEGRATOR_PROGRAMS = "integrator_programs_sync";
     public static final String INTEGRATOR_PROVIDERS = "integrator_providers_sync";
     public static final String INTEGRATOR_FACILITY = "integrator_facility_sync";
-
     public static final String INTEGRATOR_FULL_PUSH = "integrator_full_push";
     public static final String INTEGRATOR_LAST_PUSH = "integrator_last_push";
     public static final String INTEGRATOR_LAST_UPDATED = "integrator_last_updated";
 	public static final String INTEGRATOR_LAST_PULL_PRIMARY_EMR = "integrator_last_pull";
-	
+	public static final String INTEGRATOR_PATIENT_CONSENT = "integrator_patient_consent";	
+	public static final String STUDENT_PARTICIPATION_CONSENT = "student_participation_consent";	
 	public static final String PROVIDER_FOR_TICKLER_WARNING = "provider_for_tickler_warning";
-	
-	// MCEDT Settings
+
 	public static final String MCEDT_ACCOUNT_PASSWORD = "mcedt_account_password";
 
 
