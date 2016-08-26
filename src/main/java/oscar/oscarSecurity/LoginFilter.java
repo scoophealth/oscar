@@ -59,6 +59,8 @@ public class LoginFilter implements Filter {
 		"/lab/CA/ON/uploadComplete.jsp",
 		"/PopulationReport.do",
 		"/login.do",
+		"/ssoLogin.do",
+		"/econsultSSOLogin.do",
 		"/logout.jsp",
 		"/index.jsp",
 		"/forcepasswordreset.jsp",
@@ -82,6 +84,8 @@ public class LoginFilter implements Filter {
 	private static final String[] EXEMPT_URLS_FOR_REQUEST_TIMEOUT = {
 		"/images/",  
 		"/login.do",
+		"/ssoLogin.do",
+		"/econsultSSOLogin.do",
 		"/logout.jsp",
 		"/index.jsp",
 		"/loginfailed.jsp",
