@@ -1264,40 +1264,7 @@ if ( Dead.equals(PatStat) ) {%>
 	                       </ul>
 	                       
 	                       						
-						<%
-							for(int x=0;x<programList.size();x++) {
-						%>
-						<h3>&nbsp;<%=programList.get(x).getName() %></h3>
-							<%
-								
-								String chartNoProgram = "";
-								String informedConsentProgram = "";
-								
-	
-                      			
-                      			if(demoExt.get("chartNoProgram" +  programList.get(x).getId()) != null) {
-                      				chartNoProgram = demoExt.get("chartNoProgram" +  programList.get(x).getId());
-                      			}
-                      			
-                      			if(demoExt.get("informedConsentProgram" +  programList.get(x).getId()) != null) {
-                      				informedConsentProgram = demoExt.get("informedConsentProgram" +  programList.get(x).getId());
-                      			}
-                      			
-                      			
-							%>
-                           <ul>
-	                         
-	                          </li>
-	                           <li><span class="label"><bean:message key="demographic.demographiceditdemographic.chartNoProgram"/>:</span>
-	                              <span class="info"><%=chartNoProgram %></span>
-	                          </li>
-	                          <li><span class="label"><bean:message key="demographic.demographiceditdemographic.informedConsent"/>:</span>
-	                              <span class="info"><%=informedConsentProgram %></span>
-	                          </li>
-	                          
-	                       </ul>
-	                       
-	                       <% } %>
+						
 						</div>
 						
 <%-- TOGGLE PRIVACY CONSENTS --%>						
@@ -2685,42 +2652,9 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 							<%-- END TOGGLE SHOW IPHIS NUMBER --%>
 							</tr>
 							
-							<tr>
-								<%
-									for(int x=0;x<programList.size();x++) {
-										String chartNoProgram = StringUtils.trimToEmpty(demoExt.get("chartNoProgram" + programList.get(x).getId()));
-	                            		
-								%>
-									
-								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.formChartNo" /> (<%=programList.get(x).getName() %>): </b></td>
-	                            <td align="left">
-	                            	<input type="text" name="chartNoProgram<%=programList.get(x).getId() %>" id="chartNoProgram<%=programList.get(x).getId() %>" size="11" value="<%=chartNoProgram%>" >
-									
-	                            </td>
-								<%
-									}
-								%>
-							</tr>
-							
-							<tr>
-								<%
-									for(int x=0;x<programList.size();x++) {
-										String informedConsentProgram = StringUtils.trimToEmpty(demoExt.get("informedConsentProgram" + programList.get(x).getId()));
-										String inputName = "informedConsentProgram" + programList.get(x).getId() + "Orig";
-											
-								%>
-									<input type="hidden" name="<%=inputName %>" value="<%=informedConsentProgram%>" />
-									
-								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.informedConsent"/> (<%=programList.get(x).getName() %>): </b></td>
-	                            <td align="left">
-	                            	<input type="checkbox" name="informedConsentProgram<%=programList.get(x).getId() %>" id="informedConsentProgram<%=programList.get(x).getId()%>" value="yes" <%=informedConsentProgram.equals("yes") ? "checked" : ""%>>
-	                            </td>
-								<%
-									}
-								%>
-							</tr>
 							
 							
+				
 							<%-- 
 						THE "PATIENT JOINED DATE" ROW HAS NOT BEEN ADDED TWICE IN ERROR 
 						IT IS PLACED HERE FOR REPOSITIONING WHEN THE WAITING LIST
