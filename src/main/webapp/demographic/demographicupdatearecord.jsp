@@ -292,16 +292,7 @@
 	ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
 	AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);
 	
-	List<Program> programDomain = pm.getProgramDomain(loggedInInfo.getLoggedInProviderNo());
-	List<Program> programList = admissionManager.filterProgramListByCurrentPatientAdmissions(programDomain,demographicNo);
-	for(Program p:programList) {	
-		//extensions.add(new DemographicExt(request.getParameter("paperChartArchived"+p.getId()+"_id"), proNo, demographicNo, "paperChartArchived" + p.getId(), request.getParameter("paperChartArchived" + p.getId())));
-		//extensions.add(new DemographicExt(request.getParameter("paperChartArchivedDate"+p.getId()+"_id"), proNo, demographicNo, "paperChartArchivedDate" + p.getId(), request.getParameter("paperChartArchivedDate" + p.getId())));
-		//extensions.add(new DemographicExt(request.getParameter("paperChartArchivedProgram"+p.getId()+"_id"), proNo, demographicNo, "paperChartArchivedProgram" + p.getId(), request.getParameter("paperChartArchivedProgram" + p.getId())));
-		extensions.add(new DemographicExt(request.getParameter("chartNoProgram"+p.getId()+"_id"), proNo, demographicNo, "chartNoProgram" + p.getId(), request.getParameter("chartNoProgram" + p.getId())));
-		extensions.add(new DemographicExt(request.getParameter("informedConsentProgram"+p.getId()+"_id"), proNo, demographicNo, "informedConsentProgram" + p.getId(), request.getParameter("informedConsentProgram" + p.getId())));		
-		
-	}
+	
 	extensions.add(new DemographicExt(request.getParameter("paper_chart_archived_id"), proNo, demographicNo, "paper_chart_archived", request.getParameter("paper_chart_archived")));
 	extensions.add(new DemographicExt(request.getParameter("paper_chart_archived_date_id"), proNo, demographicNo, "paper_chart_archived_date", request.getParameter("paper_chart_archived_date")));
 	extensions.add(new DemographicExt(request.getParameter("paper_chart_archived_program_id"), proNo, demographicNo, "paper_chart_archived_program", request.getParameter("paper_chart_archived_program")));
