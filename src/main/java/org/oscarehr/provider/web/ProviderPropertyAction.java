@@ -1943,7 +1943,8 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
     public ActionForward viewIntegratorProperties(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
     	Facility facility = loggedInInfo.getCurrentFacility();
-        UserProperty[] integratorProperties = new UserProperty[20];
+        UserProperty[] integratorProperties = new UserProperty[21];
+
         integratorProperties[0] = this.userPropertyDAO.getProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_SYNC);
         integratorProperties[1] = this.userPropertyDAO.getProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_ADMISSIONS);
         integratorProperties[2] = this.userPropertyDAO.getProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_ALLERGIES);
@@ -1964,7 +1965,8 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
         integratorProperties[17] = this.userPropertyDAO.getProp(UserProperty.INTEGRATOR_PROVIDERS);
         integratorProperties[18] = this.userPropertyDAO.getProp(UserProperty.INTEGRATOR_FULL_PUSH+facility.getId());
         integratorProperties[19] = this.userPropertyDAO.getProp(UserProperty.INTEGRATOR_LAST_PUSH);
-
+        integratorProperties[20] = this.userPropertyDAO.getProp(UserProperty.INTEGRATOR_PATIENT_CONSENT);
+        
         request.setAttribute("integratorProperties", integratorProperties);
         return mapping.findForward("genIntegrator");
     }
@@ -1986,11 +1988,13 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_MEASUREMENTS, request.getParameter("integrator_demographic_measurements"));
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_NOTES, request.getParameter("integrator_demographic_notes"));
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_PREVENTIONS, request.getParameter("integrator_demographic_preventions"));
-        this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_SYNC, request.getParameter("integrator_demographic_sync"));
-
+        this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_DEMOGRAPHIC_SYNC, request.getParameter("integrator_demographic_sync"));               
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_FACILITY, request.getParameter("integrator_facility"));
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_PROGRAMS, request.getParameter("integrator_programs"));
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_PROVIDERS, request.getParameter("integrator_providers"));
+        
+        this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_PATIENT_CONSENT, 
+        		( request.getParameter(UserProperty.INTEGRATOR_PATIENT_CONSENT) != null ) ? request.getParameter(UserProperty.INTEGRATOR_PATIENT_CONSENT) : "0" );
 
         this.userPropertyDAO.saveProp(UserProperty.INTEGRATOR_FULL_PUSH+facility.getId(), request.getParameter("integrator_full_push"));
 

@@ -2845,3 +2845,4 @@ insert into ProductLocation (name) values ('Default');
 
 INSERT INTO `OscarJobType` VALUES (null,'OSCAR MSG REVIEW','Sends OSCAR Messages to Residents Supervisors when charts need to be reviewed','org.oscarehr.jobs.OscarMsgReviewSender',0,now());
 INSERT INTO `OscarJob` VALUES (null,'OSCAR Message Review','',(select id from OscarJobType where name = 'OSCAR MSG REVIEW') ,'0 0/30 * * * *','999998',0,now());
+INSERT INTO `consentType` VALUES ('1', 'integrator_patient_consent', 'Sunshiner frailty network', 'Patient Permissions for Integrator enabled sharing of: Chart notes, RXes, eforms, allergies, documents (e.g.photos) Discussed with patient (and/or their representative) and they have consented to integrator enabled sharing of their information with Sunshiners Frailty Network', '1');
