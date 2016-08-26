@@ -171,10 +171,8 @@ public class TicklerDao extends AbstractDao<Tickler>{
 	
 	@SuppressWarnings("unchecked")
 	public List<Tickler> getTicklers(CustomFilter filter, String providerNo) {
-        String tickler_date_order = filter.getSort_order();
-        String sql = "from Tickler t where t.service_date >= ?1 and t.service_date < ?2 order by t.service_date " + tickler_date_order;
         ArrayList<Object> paramList = new ArrayList<Object>();
-        sql = getTicklerQueryString(sql,  paramList,  filter);
+        String sql = getTicklerQueryString("",  paramList,  filter);
         
         Query query = entityManager.createQuery(sql);
 		for(int x=0;x<paramList.size();x++) {
