@@ -175,10 +175,10 @@ window.onload = stripe;
 	<tr>
 		<td valign="top">
 
-		<table >
+		<table>
 			<tr>
                                 <th valign="bottom" class="Header">MEAS</th>
-				<th valign="bottom" class="Header">Loinc Code</th>
+								<th valign="bottom" class="Header">Loinc Code</th>
                                 <th valign="bottom" class="Header">Desc</th>
                                 <th valign="bottom" class="Header">--</th>
                                 <%
@@ -233,16 +233,20 @@ window.onload = stripe;
                         <%
                         odd = !odd;
                         }%>
-
+					</tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="<%=4+types.size()%>" style="background-color:black;color:white"align="center"> Unmapped Codes</td>
+                                <td colspan="<%=4+types.size()%>" style="background-color:black;color:white" align="center"> Unmapped Codes</td>
                             </tr>
                             <tr>
                                 <td colspan="4">&nbsp;</td>
                                 <%for(String type:types){%>
-                                <td class="Cell" >
+                                
+                                <td valign="top" style="border: 1px solid black;">
+                                
+                                <h4 class="Header" style="text-align:center"><%=type%></h4>
                                     <ul>
+                                    <li>test</li>
                                     <%
                                     ArrayList<Hashtable<String,Object>> unList = map.getUnmappedMeasurements(type);
                                     for (Hashtable<String,Object> h:unList){
@@ -254,9 +258,6 @@ window.onload = stripe;
                                 <%}%>
                             </tr>
                         </tfoot>
-
-                        </tbody>
-
 		</table>
 
 		</td>
