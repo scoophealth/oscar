@@ -176,38 +176,44 @@
             
             if ((noteNotNull && notesChanged) || (parseInt(nId) !=0 && datesChanged)) {
                 
-                //autoSave(false);
-                document.forms['caseManagementEntryForm'].sign.value='persist';
-                document.forms["caseManagementEntryForm"].method.value = "saveAndExit";
-                document.forms["caseManagementEntryForm"].ajax.value = false;
-                document.forms["caseManagementEntryForm"].chain.value = "";
-                document.forms["caseManagementEntryForm"].includeIssue.value = "off";
-
-                var frm = document.forms["caseManagementEntryForm"];
-                var url = ctx + "/CaseManagementEntry.do";
-                var objAjax = new Ajax.Request (
-                    url,
-                    {
-                        method: 'post',
-                        postBody: Form.serialize(frm),
-                        asynchronous: false,
-                        onComplete: function(request) {                            
-                            okToClose = true;
-                        },
-                        onFailure: function(request) {
-                            if( request.status == 403 )
-                                alert(sessionExpiredError);
-                            else
-                                alert(request.status + " " + savingNoteError);
-                        }
-                     }
-                   );
-
-                   while(1) {
-                        if( okToClose == true ) {
-                            break;
-                        }
-                   }
+                //HPH - if there's no issue assigned, don't save.
+                if(caisiEnabled && requireIssue && !issueIsAssigned()) {
+                	//don't do anything
+                } else {
+                
+	                //autoSave(false);
+	                document.forms['caseManagementEntryForm'].sign.value='persist';
+	                document.forms["caseManagementEntryForm"].method.value = "saveAndExit";
+	                document.forms["caseManagementEntryForm"].ajax.value = false;
+	                document.forms["caseManagementEntryForm"].chain.value = "";
+	                document.forms["caseManagementEntryForm"].includeIssue.value = "off";
+	
+	                var frm = document.forms["caseManagementEntryForm"];
+	                var url = ctx + "/CaseManagementEntry.do";
+	                var objAjax = new Ajax.Request (
+	                    url,
+	                    {
+	                        method: 'post',
+	                        postBody: Form.serialize(frm),
+	                        asynchronous: false,
+	                        onComplete: function(request) {                            
+	                            okToClose = true;
+	                        },
+	                        onFailure: function(request) {
+	                            if( request.status == 403 )
+	                                alert(sessionExpiredError);
+	                            else
+	                                alert(request.status + " " + savingNoteError);
+	                        }
+	                     }
+	                   );
+	
+	                   while(1) {
+	                        if( okToClose == true ) {
+	                            break;
+	                        }
+	                   }
+	             }
             } //end if save needed
 			else if( needToReleaseLock ) {								
 				//release lock on note
