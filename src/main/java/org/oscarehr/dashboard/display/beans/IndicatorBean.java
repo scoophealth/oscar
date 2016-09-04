@@ -33,6 +33,10 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 public class IndicatorBean extends AbstractDataDisplayBean {
 
 	private List<GraphPlot[]> graphPlots;
+	private String jsonPlots;
+	private String jsonTooltips;
+	private String stringArrayPlots;
+	private String stringArrayTooltips;
 
 	public List<GraphPlot[]> getGraphPlots() {
 		return graphPlots;
@@ -40,6 +44,38 @@ public class IndicatorBean extends AbstractDataDisplayBean {
 
 	public void setGraphPlots(List<GraphPlot[]> graphPlots) {
 		this.graphPlots = graphPlots;
+	}
+
+	public String getJsonPlots() {
+		return jsonPlots;
+	}
+
+	public void setJsonPlots(String jsonPlots) {
+		this.jsonPlots = jsonPlots;
+	}
+
+	public String getJsonTooltips() {
+		return jsonTooltips;
+	}
+
+	public void setJsonTooltips(String jsonTooltips) {
+		this.jsonTooltips = jsonTooltips;
+	}
+
+	public String getStringArrayPlots() {
+		return stringArrayPlots;
+	}
+
+	public void setStringArrayPlots(String stringArrayPlots) {
+		this.stringArrayPlots = stringArrayPlots;
+	}
+
+	public String getStringArrayTooltips() {
+		return stringArrayTooltips;
+	}
+
+	public void setStringArrayTooltips(String stringArrayTooltips) {
+		this.stringArrayTooltips = stringArrayTooltips;
 	}
 
 	@Override

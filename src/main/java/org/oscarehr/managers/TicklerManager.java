@@ -47,6 +47,7 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.CustomFilterDao;
+import org.oscarehr.common.dao.TicklerCategoryDao;
 import org.oscarehr.common.dao.TicklerCommentDao;
 import org.oscarehr.common.dao.TicklerDao;
 import org.oscarehr.common.dao.TicklerTextSuggestDao;
@@ -54,6 +55,7 @@ import org.oscarehr.common.dao.TicklerUpdateDao;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Tickler;
+import org.oscarehr.common.model.TicklerCategory;
 import org.oscarehr.common.model.TicklerComment;
 import org.oscarehr.common.model.TicklerTextSuggest;
 import org.oscarehr.common.model.TicklerUpdate;
@@ -122,6 +124,16 @@ public class TicklerManager {
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
 	
+	@Autowired
+	private TicklerCategoryDao ticklerCategoryDao;
+	
+	public List<TicklerCategory> getActiveTicklerCategories( LoggedInInfo loggedInInfo ) {
+		checkPrivilege(loggedInInfo, PRIVILEGE_READ);
+		
+		LogAction.addLogSynchronous(loggedInInfo, "TicklerManager.getActiveTicklerCategories", "All active categories");
+		
+		return ticklerCategoryDao.getActiveCategories();
+	}
 	
 	
 	public boolean validateTicklerIsValid(Tickler tickler) {

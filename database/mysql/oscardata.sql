@@ -1847,6 +1847,13 @@ insert into `secObjectName` (`objectName`) values ('_admin.document');
 insert into `secObjectName` (`objectName`) values ('_admin.consult');
 
 
+insert into `secObjectName` (`objectName`) values ('_dashboardManager');
+insert into `secObjectName` (`objectName`) values ('_dashboardDisplay');
+insert into `secObjectName` (`objectName`) values ('_dashboardDrilldown');
+
+insert into `secObjPrivilege` values('admin', '_dashboardManager', 'x', 0, '999998');
+insert into `secObjPrivilege` values('admin', '_dashboardDisplay', 'x', 0, '999998');
+insert into `secObjPrivilege` values('admin', '_dashboardDrilldown', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_billing', 'x', 0, '999998');
@@ -2846,3 +2853,5 @@ insert into ProductLocation (name) values ('Default');
 INSERT INTO `OscarJobType` VALUES (null,'OSCAR MSG REVIEW','Sends OSCAR Messages to Residents Supervisors when charts need to be reviewed','org.oscarehr.jobs.OscarMsgReviewSender',0,now());
 INSERT INTO `OscarJob` VALUES (null,'OSCAR Message Review','',(select id from OscarJobType where name = 'OSCAR MSG REVIEW') ,'0 0/30 * * * *','999998',0,now());
 INSERT INTO `consentType` VALUES ('1', 'integrator_patient_consent', 'Sunshiner frailty network', 'Patient Permissions for Integrator enabled sharing of: Chart notes, RXes, eforms, allergies, documents (e.g.photos) Discussed with patient (and/or their representative) and they have consented to integrator enabled sharing of their information with Sunshiners Frailty Network', '1');
+
+INSERT INTO `tickler_category` VALUES ('1', 'To Call In', 'Call this patient in for a follow-up visit', b'1'), ('2', 'Reminder Note', 'Send a reminder note to this patient', b'1'), ('3', 'Follow-up Billing', 'Follow-up Additional Billing', b'1');

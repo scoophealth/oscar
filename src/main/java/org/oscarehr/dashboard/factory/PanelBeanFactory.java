@@ -33,6 +33,7 @@ import org.oscarehr.dashboard.display.beans.IndicatorPanelBean;
 import org.oscarehr.dashboard.display.beans.PanelBean;
 import org.oscarehr.dashboard.handler.IndicatorTemplateHandler;
 import org.oscarehr.dashboard.handler.IndicatorTemplateXML;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 public class PanelBeanFactory {
@@ -44,14 +45,14 @@ public class PanelBeanFactory {
 	private List<PanelBean> panelBeans;
 	private HashSet<String> categories;
 	
-	public PanelBeanFactory( List<IndicatorTemplate> indicatorTemplates ) {
+	public PanelBeanFactory( LoggedInInfo loggedInInfo, List<IndicatorTemplate> indicatorTemplates ) {
 		
 		logger.info("Building Dashboard Panels");
 		
 		setIndicatorTemplates( indicatorTemplates );
 		setIndicatorTemplateHandler( new IndicatorTemplateHandler() );
 		setIndicatorTemplateXMLList( new ArrayList<IndicatorTemplateXML>() );
-		setPanelBeans( new ArrayList<PanelBean>() );
+		setIndicatorPanelBeans( loggedInInfo, new ArrayList<PanelBean>() );
 	}
 	
 	public List<IndicatorTemplateXML> getIndicatorTemplateXMLList() {
@@ -117,17 +118,17 @@ public class PanelBeanFactory {
 	 * Each panel holds a List of Indicator sub-categories.
 	 * @param indicatorPanelBeans
 	 */
-	private void setPanelBeans( List<PanelBean> panelBeans ) {
+	private void setIndicatorPanelBeans( LoggedInInfo loggedInInfo, List<PanelBean> panelBeans ) {
+		
 		if( getCategories() != null ) {
 			
-			IndicatorPanelBeanFactory indicatorPanelBeanFactory = null;
 			Iterator<String> it = getCategories().iterator();
-			while( it.hasNext() ) {
-				
+			
+			while( it.hasNext() ) {				
 				String category = it.next();
 				PanelBean panelBean = new PanelBean();
 				panelBean.setCategory(category);				
-				indicatorPanelBeanFactory = new IndicatorPanelBeanFactory( category, getIndicatorTemplateXMLList() );				
+				IndicatorPanelBeanFactory indicatorPanelBeanFactory = new IndicatorPanelBeanFactory( loggedInInfo, category, getIndicatorTemplateXMLList() );				
 				List<IndicatorPanelBean> indicatorPanelBeans = indicatorPanelBeanFactory.getIndicatorPanelBeans();
 				panelBean.setIndicatorPanelBeans( indicatorPanelBeans );
 				panelBeans.add( panelBean );

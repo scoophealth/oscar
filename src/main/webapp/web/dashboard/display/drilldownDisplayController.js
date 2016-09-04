@@ -22,11 +22,29 @@
     Ontario, Canada
 */
 
+function checkFields() {
+	var verified = true;
+	
+	$("#ticklerAddForm .required").each(function(){
+		if( $(this).val().length == 0 ) {
+			verified = false;
+			paintErrorField($(this));	
+		}
+	})
+
+	return verified;
+}
+
+function paintErrorField( fieldobject ) {
+	fieldobject.css( "border", "medium solid red" );
+}
+
 $(document).ready( function() {
 	
-	// table sorting
+	//--> table sorting
 	$('#drilldownTable').DataTable();
 
+	//--> Re-draws the dashboard.
 	$(".backtoDashboardBtn").on('click', function(event) {
     	event.preventDefault();
     	var url = "/web/dashboard/display/DashboardDisplay.do";
@@ -37,49 +55,69 @@ $(document).ready( function() {
     	sendData(url, data);
     });
 	
-	// Check all for ticklers
+	//--> Check all for ticklers
 	$("#selectAllDrilldown").on('click', function(event) {
 		event.preventDefault();
 	    $('.ticklerChecked').prop('checked', 'checked');
 	});
 	
-	// uncheck all for ticklers
+	//--> Uncheck all for ticklers
 	$("#selectNoneDrilldown").on('click', function(event) {
 		event.preventDefault();
 	    $('.ticklerChecked').prop('checked', '');
 	});
-	
 
-	
-	// Assign Tickler to all checked items.
+	//--> Assign Tickler to all checked items - returns the tickler dialog.
 	$("#assignTicklerChecked").on('click', function(event) {
 		event.preventDefault();
+		var demographics = [];		
+		$("input:checkbox.ticklerChecked").each(function(){
+			if( this.checked ) {
+				demographics.push(this.id);
+			}
+		});
+		
+		var param = "demographics=" + demographics;
+    	sendData( "/web/dashboard/display/AssignTickler.do" , param, "modal");
+	})
+	
+	//--> Execute the tickler assignment - save
+	$("#saveTicklerBtn").on('click', function(event) {
+		event.preventDefault();
+		if( checkFields() ) {
+			sendData("/web/dashboard/display/AssignTickler.do", $("#ticklerAddForm").serialize(), "close")
+		}
+	})
+	
+	//--> Export the drilldown query results to csv
+	$(".exportResults").on('click', function(){
 
-//		var patientList = new Array();
-//		
-//		$(".ticklerChecked").each(function(){
-//			patientList.push( this.id );
-//		});
-//		
-    	$.get( 'AssignTickler.jsp', function(html) {
-    		$(html).appendTo('body').modal();   		
-    	});
-
+    	var url = "/web/dashboard/display/ExportResults.do";
+    	var data = new Object();
+    	data.indicatorId = (this.id).split("_")[1];
+     
+    	sendData(url, data, null)
 	})
     
 })
 
 //--> AJAX the data to the server.
-function sendData(path, param) {
+function sendData(path, param, target) {
 	$.ajax({
 		url: ctx + path,
 	    type: 'POST',
 	    data: param,
 	  	dataType: 'html',
 	    success: function(data) {
-	    	document.open();
-	    	document.write(data);
-	    	document.close();
+	    	if( target == "close") {
+	    		$('#assignTickler').modal('toggle');
+	    	} else if( target == "modal") {
+	    		$("#assignTickler").html(data).modal();
+	    	} else {
+		    	document.open();
+		    	document.write(data);
+		    	document.close();
+	    	}
 	    }
 	});
 }

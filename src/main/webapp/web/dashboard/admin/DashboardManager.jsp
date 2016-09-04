@@ -53,11 +53,11 @@
 	
 </head>
 <body>
-<div class="container" >
+<div>
 <div class="col-sm-12">
 	
 	<nav class="navbar navbar-default navbar-fixed-top">
-	<div class="container">
+	<div>
 	<html:form styleClass="navbar-form navbar-left" styleId="importForm" 
 		method="POST" action="/web/dashboard/admin/DashboardManager.do" enctype="multipart/form-data" >
 			
@@ -73,7 +73,8 @@
 			<div class="input-group" id="import">
 					
 				<input type="hidden" value="importTemplate" name="method" />							
-				<span class="input-group-addon btn btn-info btn-md" id="importbutton" >
+				<span class="input-group-addon btn btn-default btn-md" id="importbutton" >
+					<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
 					<bean:message key="dashboard.dashboardmanager.import.button" />
 				</span>			
 				<label class="input-group-btn btn btn-default btn-file btn-md" id="browsebutton">
@@ -90,6 +91,7 @@
 		<div class="btn-group" >
 	    	<button type="button" class="btn btn-default btn-md" data-toggle="modal" 
 	    		data-target="#newDashboard" id="createDashboard" >
+	    		<span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>	    		
 	    		<bean:message key="dashboard.dashboardmanager.dashboard.create" />
 	    	</button>
 		</div>
@@ -98,6 +100,7 @@
 		<div class="dropdown btn-group" id="editDashboardButtonContainer">
 			<button class="btn btn-default dropdown-toggle btn-md" type="button"
 				id="editDashboardMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 				<bean:message key="dashboard.dashboardmanager.dashboard.edit" /> 
 				<span class="caret"></span>
 			</button>
@@ -127,8 +130,8 @@
 		<table class="table table-striped table-condensed" id="libraryTable" >
 			<thead>
 			<tr>
-				<th>Export</th>
-				<th>Active</th>
+				<th></th>
+				<th></th>
 				<th>Dashboard</th>
 				<th>Name</th>
 				<th>Category</th>
@@ -140,8 +143,8 @@
 		
 			<tfoot>
 			<tr>
-				<th>Export</th>
-				<th>Active</th>
+				<th></th>
+				<th></th>
 				<th>Dashboard</th>
 				<th>Name</th>
 				<th>Category</th>
@@ -153,15 +156,21 @@
 			<tbody>
 			<c:forEach items="${ indicatorTemplates }" var="indicator" >
 				<tr>
-					<td>
-						<a href="#" class="exportTemplate" id="exportTemplate_${ indicator.id }" >
-							<span class="glyphicon glyphicon-share-alt "></span>
-						</a>
+					<td>					
+						<label class="switch">
+						  <input class="form-control toggleActive" type="checkbox" name="IndicatorTemplate_${ indicator.id }" 
+								id="toggleActive_${ indicator.id }" ${ indicator.active ? 'checked="checked"' : '' } />
+						  	<div class="slider round"></div>
+						</label>
 					</td>
 					<td>
-						<input class="form-control toggleActive" type="checkbox" name="IndicatorTemplate_${ indicator.id }" 
-							id="toggleActive_${ indicator.id }" ${ indicator.active ? 'checked="checked"' : '' } />
+						<button class="btn btn-default exportTemplate text-center" id="exportTemplate_${ indicator.id }" type="button">
+							<span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+							Export
+						</button>
+
 					</td>
+
 					<td>
 						<select class="form-control assignDashboard" name="assignDashboard_${ indicator.id }" 
 							id="assignDashboard_${ indicator.id }" >
