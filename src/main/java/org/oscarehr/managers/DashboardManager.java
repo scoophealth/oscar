@@ -32,9 +32,12 @@ import org.oscarehr.dashboard.display.beans.DashboardBean;
 import org.oscarehr.dashboard.display.beans.DrilldownBean;
 import org.oscarehr.dashboard.factory.DashboardBeanFactory;
 import org.oscarehr.dashboard.factory.DrilldownBeanFactory;
+import org.oscarehr.dashboard.handler.ExportQueryHandler;
 import org.oscarehr.dashboard.handler.IndicatorTemplateHandler;
+import org.oscarehr.dashboard.handler.IndicatorTemplateXML;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import oscar.log.LogAction;
@@ -206,7 +209,7 @@ public class DashboardManager {
 		IndicatorTemplate indicatorTemplate = null;
 		
 		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardManager", SecurityInfoManager.WRITE, null ) ) {	
-			LogAction.addLog(loggedInInfo, "DashboardManager.importIndicatorTemplat", null, null, null, "User missing _dashboardManager role with write access");
+			LogAction.addLog(loggedInInfo, "DashboardManager.importIndicatorTemplate", null, null, null, "User missing _dashboardManager role with write access");
 			return success;
         }
 
@@ -349,7 +352,7 @@ public class DashboardManager {
 		
 		if( dashboardEntity != null ) {
 			// Add the indicators and panels.
-			dashboardBeanFactory = new DashboardBeanFactory( dashboardEntity );
+			dashboardBeanFactory = new DashboardBeanFactory( loggedInInfo, dashboardEntity );
 		}
 
 		if( dashboardBeanFactory != null ) {
@@ -404,7 +407,7 @@ public class DashboardManager {
 		IndicatorTemplate indicatorTemplate = getIndicatorTemplate( loggedInInfo, indicatorTemplateId );
 		
 		if( indicatorTemplate != null ) {
-			drilldownBeanFactory = new DrilldownBeanFactory( indicatorTemplate ); 
+			drilldownBeanFactory = new DrilldownBeanFactory( loggedInInfo, indicatorTemplate ); 
 		}
 		
 		if( drilldownBeanFactory != null ) {
@@ -418,6 +421,29 @@ public class DashboardManager {
 		}
 		
 		return drilldownBean;
+
+	}
+	
+	public String exportDrilldownQueryResultsToCSV( LoggedInInfo loggedInInfo, int indicatorId ) {
+		
+		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDrilldown", SecurityInfoManager.READ, null ) ) {	
+			LogAction.addLog(loggedInInfo, "DashboardManager.exportDrilldownQueryResultsToCSV", null, null, null,"User missing _dashboardDrilldown role with read access");
+			return null;
+        }
+				
+		IndicatorTemplate indicatorTemplate = getIndicatorTemplate( loggedInInfo, indicatorId );
+		IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler( indicatorTemplate.getTemplate().getBytes() );
+		IndicatorTemplateXML templateXML = templateHandler.getIndicatorTemplateXML();
+		
+		ExportQueryHandler exportQueryHandler = SpringUtils.getBean( ExportQueryHandler.class );
+		exportQueryHandler.setLoggedInInfo( loggedInInfo );
+		exportQueryHandler.setParameters( templateXML.getDrilldownParameters() );
+		exportQueryHandler.setColumns( templateXML.getDrilldownExportColumns() );
+		exportQueryHandler.setRanges( templateXML.getDrilldownRanges() );
+		exportQueryHandler.execute( templateXML.getDrilldownQuery() );
+		
+		return exportQueryHandler.getCsvFile();
+
 	}
 	
 	// TODO add additional error check / filter class to carry out the following methods.

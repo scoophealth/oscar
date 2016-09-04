@@ -75,6 +75,9 @@ public class Tickler extends AbstractModel<Integer> {
 	public static enum PRIORITY {
         High, Normal, Low
 	}
+	
+	public static final String DATE_FORMAT = "MM-dd-yyyy";
+	public static final String TIME_FORMAT = "hh:mm a";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -111,6 +114,13 @@ public class Tickler extends AbstractModel<Integer> {
 	@Column(name="task_assigned_to")
 	private String taskAssignedTo;
 
+	@Column(name="category_id")
+	private int categoryId;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="category_id", referencedColumnName="id", insertable=false, updatable=false)
+	@NotFound(action=NotFoundAction.IGNORE)
+	private TicklerCategory ticklerCategory;
 	
 	@OneToMany(fetch=FetchType.EAGER)
     @JoinColumn(name="tickler_no", referencedColumnName="tickler_no")
@@ -143,6 +153,7 @@ public class Tickler extends AbstractModel<Integer> {
 	@JoinColumn(name="program_id", referencedColumnName="id", insertable=false, updatable=false)
 	@NotFound(action=NotFoundAction.IGNORE)
 	private Program program;
+
 	
 	@Transient
 	private String demographic_webName;
@@ -556,7 +567,23 @@ public class Tickler extends AbstractModel<Integer> {
             }
             return compareVal;
 	}
-    };	
-	
+    };
+
+	public int getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public TicklerCategory getTicklerCategory() {
+		return ticklerCategory;
+	}
+
+	public void setTicklerCategory(TicklerCategory ticklerCategory) {
+		this.ticklerCategory = ticklerCategory;
+	}
+
 }
 

@@ -237,6 +237,7 @@
 
 	<bean id="drilldownQueryHandler" class="org.oscarehr.dashboard.handler.DrilldownQueryHandler" autowire="byName" />
 	<bean id="indicatorQueryHandler" class="org.oscarehr.dashboard.handler.IndicatorQueryHandler" autowire="byName" />
+	<bean id="exportQueryHandler" class="org.oscarehr.dashboard.handler.ExportQueryHandler" autowire="byName" />
 		
 	<bean id="extPrintMeasurements" class="org.oscarehr.casemgmt.service.MeasurementPrint" autowire="byName"/>
 	<bean id="extPrintOcularProcedures" class="org.oscarehr.eyeform.web.OcularProcPrint" autowire="byName"/>

@@ -1,4 +1,151 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://www.oscarehr.org/IndicatorXMLTemplateSchema" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.oscarehr.org/IndicatorXMLTemplateSchema">
-
-</schema>
+   <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+         <xs:element name="indicatorTemplateXML">
+               <xs:complexType>
+                     <xs:sequence>
+                           <xs:element name="author" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+                           <xs:element name="uid" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+                           <xs:element name="heading" maxOccurs="1" minOccurs="1">
+                                 <xs:complexType>
+                                       <xs:sequence>
+                                             <xs:element name="category" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+                                             <xs:element name="subCategory" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+                                             <xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+                                             <xs:element name="definition" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+                                             <xs:element name="framework" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+                                             <xs:element name="frameworkVersion" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+                                             <xs:element name="notes" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+                                       </xs:sequence>
+                                 </xs:complexType>
+                           </xs:element>
+                           <xs:element name="indicatorQuery" maxOccurs="1" minOccurs="1">
+                                 <xs:complexType>
+                                       <xs:sequence>
+                                             <xs:element name="version" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+                                             <xs:element name="params"
+                                             	maxOccurs="1"
+                                             	minOccurs="1">
+                                             	<xs:complexType>
+                                             		<xs:sequence>
+                                             			<xs:element
+                                             				name="parameter"
+                                             				 maxOccurs="unbounded" minOccurs="1" >
+                                             				<xs:complexType>
+                                             					<xs:attribute
+                                             						name="id"
+                                             						type="xs:string" use="required">
+                                             					</xs:attribute>
+                                             					<xs:attribute
+                                             						name="name"
+                                             						type="xs:string" use="required">
+                                             					</xs:attribute>
+                                             					<xs:attribute
+                                             						name="value"
+                                             						type="xs:string" use="required">
+                                             					</xs:attribute>
+                                             				</xs:complexType>
+                                             			</xs:element>
+                                             		</xs:sequence>
+                                             	</xs:complexType>
+                                             </xs:element>
+                                             <xs:element name="range" maxOccurs="1" minOccurs="0">
+                                                   <xs:complexType>
+                                                         <xs:choice maxOccurs="unbounded">
+                                                               <xs:element name="upperLimit" maxOccurs="unbounded" minOccurs="0">
+                                                                     <xs:complexType>
+                                                                           <xs:attribute name="id" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="label" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="name" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="value" type="xs:string"></xs:attribute>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                               <xs:element name="lowerLimit" maxOccurs="unbounded" minOccurs="0">
+                                                                     <xs:complexType>
+                                                                           <xs:attribute name="id" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="label" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="name" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="value" type="xs:string"></xs:attribute>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                         </xs:choice>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                             <xs:element name="query" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+                                       </xs:sequence>
+                                 </xs:complexType>
+                           </xs:element>
+                           <xs:element name="drillDownQuery" maxOccurs="1" minOccurs="1">
+                                 <xs:complexType>
+                                       <xs:sequence>
+                                             <xs:element name="version" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+                                             <xs:element name="params" maxOccurs="1" minOccurs="1">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                               <xs:element name="parameter" maxOccurs="unbounded" minOccurs="1">
+                                                                     <xs:complexType>
+                                                                           <xs:attribute name="id" type="xs:string" use="required"></xs:attribute>
+                                                                           <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                                                                           <xs:attribute name="value" type="xs:string" use="required"></xs:attribute>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                         </xs:sequence>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                             <xs:element name="range" maxOccurs="1" minOccurs="0">
+                                                   <xs:complexType>
+                                                         <xs:choice maxOccurs="unbounded">
+                                                               <xs:element name="upperLimit" maxOccurs="unbounded" minOccurs="0">
+                                                                     <xs:complexType>
+                                                                           <xs:attribute name="id" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="label" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="name" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="value" type="xs:string"></xs:attribute>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                               <xs:element name="lowerLimit" maxOccurs="unbounded" minOccurs="0">
+                                                                     <xs:complexType>
+                                                                           <xs:attribute name="id" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="label" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="name" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="value" type="xs:string"></xs:attribute>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                         </xs:choice>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                             <xs:element name="displayColumns" maxOccurs="1" minOccurs="0">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                               <xs:element name="column" maxOccurs="unbounded" minOccurs="0">
+                                                                     <xs:complexType>
+                                                                           <xs:attribute name="id" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="name" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="title" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="primary" type="xs:string"></xs:attribute>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                         </xs:sequence>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                             <xs:element name="exportColumns" maxOccurs="1" minOccurs="0">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                               <xs:element name="column" maxOccurs="unbounded" minOccurs="0">
+                                                                     <xs:complexType>
+                                                                           <xs:attribute name="id" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="name" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="title" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="primary" type="xs:string"></xs:attribute>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                         </xs:sequence>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                             <xs:element name="query" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
+                                       </xs:sequence>
+                                 </xs:complexType>
+                           </xs:element>
+                     </xs:sequence>
+               </xs:complexType>
+         </xs:element>
+</xs:schema>

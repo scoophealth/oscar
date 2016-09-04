@@ -1902,6 +1902,13 @@ insert into `secObjectName` (`objectName`) values ('_admin.document');
 
 insert into `secObjectName`  (`objectName`,`description`,`orgapplicable`) values('_demographicExport', 'Export Demographic', 0);
 
+insert into `secObjectName` (`objectName`) values ('_dashboardManager');
+insert into `secObjectName` (`objectName`) values ('_dashboardDisplay');
+insert into `secObjectName` (`objectName`) values ('_dashboardDrilldown');
+
+insert into `secObjPrivilege` values('admin', '_dashboardManager', 'x', 0, '999998');
+insert into `secObjPrivilege` values('admin', '_dashboardDisplay', 'x', 0, '999998');
+insert into `secObjPrivilege` values('admin', '_dashboardDrilldown', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_billing', 'x', 0, '999998');
@@ -2859,3 +2866,6 @@ insert into ProductLocation (name) values ('Default');
 INSERT INTO `consentType` VALUES ('1', 'integrator_patient_consent', 'Sunshiner frailty network', 'Patient Permissions for Integrator enabled sharing of: Chart notes, RXes, eforms, allergies, documents (e.g.photos) Discussed with patient (and/or their representative) and they have consented to integrator enabled sharing of their information with Sunshiners Frailty Network', '1');
 
 insert into EncounterType (value,global) VALUES ('face to face encounter with client',1),('telephone encounter with client',1),('email encounter with client',1),('encounter without client',1),('group face to face encounter',0),('group telephone encounter',0),('group encounter with client',0),('group encounter without group',0);
+
+INSERT INTO `tickler_category` VALUES ('1', 'To Call In', 'Call this patient in for a follow-up visit', b'1'), ('2', 'Reminder Note', 'Send a reminder note to this patient', b'1'), ('3', 'Follow-up Billing', 'Follow-up Additional Billing', b'1');
+

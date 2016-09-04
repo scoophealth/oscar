@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.dashboard.display.beans.IndicatorBean;
 import org.oscarehr.dashboard.display.beans.IndicatorPanelBean;
 import org.oscarehr.dashboard.handler.IndicatorTemplateXML;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 /** 
@@ -46,14 +47,14 @@ public class IndicatorPanelBeanFactory {
 	private List<IndicatorPanelBean> indicatorPanelBeans;
 	private HashSet<String> subcategories;
 
-	public IndicatorPanelBeanFactory( String category, List<IndicatorTemplateXML> indicatorTemplateXMLList ) {
+	public IndicatorPanelBeanFactory( LoggedInInfo loggedInInfo, String category, List<IndicatorTemplateXML> indicatorTemplateXMLList ) {
 		
 		logger.info( "Building Indicator Panels for category " + category );
 		
 		setCategory(category);
 		setIndicatorTemplateXMLList( indicatorTemplateXMLList );
 		setSubcategories( new HashSet<String>() );
-		setIndicatorPanelBeans( new ArrayList<IndicatorPanelBean>() );
+		setIndicatorPanelBeans( loggedInInfo, new ArrayList<IndicatorPanelBean>() );
 	}
 
 	public String getCategory() {
@@ -79,7 +80,7 @@ public class IndicatorPanelBeanFactory {
 		return indicatorPanelBeans;
 	}
 
-	private void setIndicatorPanelBeans(List<IndicatorPanelBean> indicatorPanelBeans) {
+	private void setIndicatorPanelBeans( LoggedInInfo loggedInInfo, List<IndicatorPanelBean> indicatorPanelBeans) {
 		
 		if( getSubcategories() == null ) {
 			
@@ -99,7 +100,7 @@ public class IndicatorPanelBeanFactory {
 					subcategory = "";
 				}
 
-				IndicatorPanelBean indicatorPanelBean = createIndicatorPanelBean( subcategory );
+				IndicatorPanelBean indicatorPanelBean = createIndicatorPanelBean( loggedInInfo, subcategory );
 				if( indicatorPanelBean != null ) {
 					indicatorPanelBeans.add( indicatorPanelBean );
 				}
@@ -138,7 +139,7 @@ public class IndicatorPanelBeanFactory {
 	 * indicator based on the data from the match.
 	 * Many Indicators can be assigned to each sub-category parameter
 	 */
-	private IndicatorPanelBean createIndicatorPanelBean( String subcategory ) {
+	private IndicatorPanelBean createIndicatorPanelBean( LoggedInInfo loggedInInfo, String subcategory ) {
 		
 		IndicatorPanelBean indicatorPanelBean = null;
 		List<IndicatorBean> indicatorBeans = null;
@@ -154,7 +155,7 @@ public class IndicatorPanelBeanFactory {
 					indicatorBeans = new ArrayList<IndicatorBean>();
 				}
 				
-				IndicatorBeanFactory indicatorBeanFactory = new IndicatorBeanFactory( indicatorTemplateXML );
+				IndicatorBeanFactory indicatorBeanFactory = new IndicatorBeanFactory( loggedInInfo, indicatorTemplateXML );
 				indicatorBeans.add( indicatorBeanFactory.getIndicatorBean() );
 				
 				if( indicatorPanelBean == null ) {

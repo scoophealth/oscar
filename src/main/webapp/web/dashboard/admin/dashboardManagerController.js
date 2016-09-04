@@ -31,7 +31,6 @@ $(document).ready( function() {
 	
     $(':file').on('fileselect', function(event, numFiles, label) {
         $("#importxmltemplate").val(label);
-        // $("#importbutton").attr("class","input-group-addon btn btn-primary");
     });
     
     $("#importbutton").on('click', function(){
@@ -94,13 +93,13 @@ $(document).ready( function() {
     
     // Export Template button
     $(".exportTemplate").on('click', function(event) {
-    	event.preventDefault();
+    	// event.preventDefault();
     	var url = "/web/dashboard/admin/DashboardManager.do";
     	var data = new Object();
     	data.indicatorId = (this.id).split("_")[1];
     	data.method = (this.id).split("_")[0];  
 
-    	sendData(url, data, null);
+    	sendData(url, data, "reload");
     });
     
     // Back to dashboard button
