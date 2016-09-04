@@ -24,8 +24,6 @@
 
 package org.oscarehr.dashboard.admin;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,6 +32,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -52,6 +52,7 @@ import net.sf.json.JSONObject;
 
 public class ManageDashboardAction extends DispatchAction {
 	
+	private static Logger logger = MiscUtils.getLogger();
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	private static DashboardManager dashboardManager = SpringUtils.getBean(DashboardManager.class);
 		
@@ -124,43 +125,38 @@ public class ManageDashboardAction extends DispatchAction {
 
 		String indicator = request.getParameter("indicatorId");
 		String indicatorName = request.getParameter("indicatorName");
+		
 		int indicatorId = 0;
 		String xmlTemplate = null;
-		File tempXmlFile = null;
-		OutputStream out = null;
-		FileInputStream in = null;
+		OutputStream outputStream = null;
 		
 		if( indicatorName == null || indicatorName.isEmpty() ) {
 			indicatorName = "indicator_template-" + System.currentTimeMillis() + ".xml";
 		} else {
 			indicatorName = indicatorName + ".xml";
 		}
-		
-		if( indicator != null && ! indicator.isEmpty() ) {
-			indicatorId = Integer.parseInt( indicator );
-		}
 
-		if( indicatorId > 0 ) {
-			xmlTemplate = dashboardManager.exportIndicatorTemplate(loggedInInfo, indicatorId);
-		}
-		
+		xmlTemplate = dashboardManager.exportIndicatorTemplate( loggedInInfo, Integer.parseInt( indicator ) );
+
 		if( xmlTemplate != null ) {
+			
+			response.setContentType("text/xml");
 	        response.setHeader("Content-disposition", "attachment; filename=" + indicatorName );
+	        
 	        try {
-				tempXmlFile = File.createTempFile("indicatorName", ".tmp");
-				out = response.getOutputStream();
-				in = new FileInputStream( tempXmlFile );
-				byte[] buffer = new byte[4096];
-				int length;
-				while ( (length = in.read(buffer) ) > 0){
-				    out.write(buffer, 0, length);
-				}
-				in.close();
-				out.flush();
-			} catch (FileNotFoundException e) {
+	        	outputStream = response.getOutputStream();
+				outputStream.write( xmlTemplate.getBytes() );			
+			} catch (Exception e) {
 				MiscUtils.getLogger().error("File not found", e);
-			} catch (IOException e) {
-				MiscUtils.getLogger().error("Error", e);
+			} finally {
+				if( outputStream != null ) {
+					try {
+						outputStream.flush();
+						outputStream.close();
+					} catch (IOException e) {
+						logger.error("Failed to close output stream", e );
+					}
+				}
 			}
 		}
 		

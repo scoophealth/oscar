@@ -30,22 +30,35 @@ import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.oscarehr.dashboard.handler.IndicatorTemplateXML.RangeType;
+import org.oscarehr.dashboard.query.Column;
 import org.oscarehr.dashboard.query.Parameter;
 import org.oscarehr.dashboard.query.RangeInterface;
 import org.oscarehr.dashboard.query.RangeInterface.Limit;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Service;
 
+@Service
 public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 	
 	private static Logger logger = MiscUtils.getLogger();
 
 	private static final String PLACE_HOLDER_PATTERN = "(\\$){1}(\\{){1}( )*##( )*(\\}){1}";
 	private static final String COMMENT_BLOCK_PATTERN = "/\\*(?:.|[\\n\\r])*?\\*/";
+	
+	
+	private static enum requiredParameters { provider }
+		private static enum provider { all, loggedinprovider }
+	
+	// private SecurityInfoManager securityInfoManager = SpringUtils.getBean( SecurityInfoManager.class );
+	
 	private List<Parameter> parameters;
 	private List<RangeInterface> ranges;
 	private String query;
 	private List<?> resultList;
+	private List<Column> columns;
+	private LoggedInInfo loggedInInfo;
 	
 	public AbstractQueryHandler() {
 		// default
@@ -57,18 +70,22 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 			logger.error("Failed to execute query.");
 			return null;
 		} 
+		
 		Session session = getSession();
 		SQLQuery query = session.createSQLQuery( getQuery() );
-		List<?> results = query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP).list();		
+		List<?> results = query.setResultTransformer( Criteria.ALIAS_TO_ENTITY_MAP ).list();		
 
 		logger.info("Query results " + results);
 
+		//TODO work on method to detect and exclude demographic files that are 
+		// defined in the securityInfoManager object.
+		
 		setResultList( results );			
 		releaseSession(session);
 
 		return getResultList();
 	}
-	
+
 	public List<Parameter> getParameters() {
 		return parameters;
 	}
@@ -101,6 +118,56 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 		this.resultList = resultList;
 	}
 
+	public List<Column> getColumns() {
+		return columns;
+	}
+
+	public void setColumns(List<Column> columns) {
+		this.columns = columns;
+	}
+
+	protected LoggedInInfo getLoggedInInfo() {
+		return loggedInInfo;
+	}
+
+	public void setLoggedInInfo(LoggedInInfo loggedInInfo) {
+		this.loggedInInfo = loggedInInfo;
+	}
+	
+	protected String getLoggedInProvider() {
+		String providerNo = "";
+		
+		if( getLoggedInInfo() != null ) {
+			providerNo = getLoggedInInfo().getLoggedInProviderNo(); 
+		}
+		
+		return providerNo;
+	}
+
+	/**
+	 * Build a final query string with all the place-holders filled in.
+	 */
+	protected final String buildQuery( final String query ) {
+
+		String queryString = new String( query );
+		
+		queryString = filterQueryString( queryString );
+		
+		if( getParameters() != null ) {
+			queryString = addParameters( queryString );		
+		}
+		
+		if( getRanges() != null ) {
+			queryString = addRanges( queryString );	
+		}
+		
+		if( getColumns() != null ) {
+			queryString = addColumns( queryString ); 
+		}
+		
+		return queryString;
+	}
+
 	/**
 	 * Set the parameter values into the given query string.
 	 * Searches the query string for a specific string pattern.
@@ -108,13 +175,38 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 	 */
 	protected String addParameters( String query ) {
 
-		for( Parameter parameter : getParameters()) {			
-			String pattern = getPattern( parameter.getId() );
+		for( Parameter parameter : getParameters() ) {			
+			String parameterId = parameter.getId();					
 			String parameterValue = parseParameterValue( parameter.getValue() );
-			query = patternReplace( pattern, query, parameterValue );
+			
+			// set default and predetermined parameter values here.
+			parameterValue = getRequiredParameterValue( parameterId, parameterValue );
+			parameterId = getPattern( parameterId );			
+			query = patternReplace( parameterId, query, parameterValue );
 		}
 		
 		return query;
+	}
+	
+	private String getRequiredParameterValue( String parameterId, String parameterValue ) {
+
+		//TODO for now only captures one required parameter value
+		// A switch will be required here to handle more values.
+		if( ! ( requiredParameters.provider.name() ).equalsIgnoreCase( parameterId ) ) {			
+			return parameterValue;
+		}
+		
+		parameterValue = parameterValue.toLowerCase();
+		
+		switch( provider.valueOf( parameterValue ) ) {
+		case loggedinprovider : parameterValue = getLoggedInProvider().trim();
+				break;
+		case all : parameterValue = "%";
+				break;
+		}
+		
+		return parameterValue;
+
 	}
 	
 	/**
@@ -140,6 +232,51 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 		
 		return query;
 	}
+	
+	/**
+	 * The entire select syntax will be rewritten if the column list is set. 
+	 */
+	protected String addColumns( String queryString ) {
+		
+		StringBuilder select = new StringBuilder("SELECT ");
+		int from = 0;
+		
+		for( Column column : getColumns() ) {
+
+			select.append( column.getName() );
+			select.append(" AS ");
+			select.append("'").append( column.getTitle() ).append("',");
+		}
+		
+		select.deleteCharAt( select.length() - 1 );		
+		select.append( " " );
+		
+		logger.debug( "Replacing current select statement with " + select.toString() );
+
+		from = queryString.indexOf("FROM");
+		
+		if( from < 0 ) {
+			from = queryString.indexOf("from");
+		} 
+		
+		if( from < 0 ) {
+			from = queryString.indexOf("From");
+		}
+		
+		if( from < 0 ) {
+			logger.warn( "Syntax error with the MySQL FROM statement. Syntax permitted is FROM, from or From " );
+		}
+		
+		// remove the current select statement 
+		queryString = queryString.substring( from, queryString.length() );		
+		queryString = select.toString() + queryString;
+		
+		logger.debug( "Final query with columns " + queryString );
+		
+		return queryString;
+		
+	}
+	
 	
 	/**
 	 * Injects a variable pattern value into the predetermine string replacement pattern.

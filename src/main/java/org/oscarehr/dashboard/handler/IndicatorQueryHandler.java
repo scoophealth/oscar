@@ -40,11 +40,11 @@ import org.oscarehr.util.MiscUtils;
  * ie: ${ parameter_id }
  *
  */
-
 public class IndicatorQueryHandler extends AbstractQueryHandler {
 
 	private static Logger logger = MiscUtils.getLogger();
 	private List< GraphPlot[] > graphPlots;
+	private static final Double DEFAULT_DENOMINATOR = 100.0;
 
 	public IndicatorQueryHandler() {	
 		// default
@@ -61,25 +61,8 @@ public class IndicatorQueryHandler extends AbstractQueryHandler {
 	}
 
 	public void setQuery( String query ) {
-		String finalQuery = buildQuery( query );
+		String finalQuery = super.buildQuery( query );
 		super.setQuery( finalQuery );
-	}
-
-	private final String buildQuery( final String query ) {
-
-		String queryString = new String( query ); 
-
-		queryString = filterQueryString( queryString );
-
-		if( getParameters() != null ) {
-			queryString = addParameters( queryString );		
-		}
-
-		if( getRanges() != null ) {
-			queryString = addRanges( queryString );
-		}
-
-		return queryString;
 	}
 
 	public List<GraphPlot[]> getGraphPlots() {
@@ -138,12 +121,16 @@ public class IndicatorQueryHandler extends AbstractQueryHandler {
 			} else {
 				logger.warn( "Null or Empty Key found for the label parameter of this graph plot." );
 			}
+			
+			// Only pie charts for now - so the demon is out of 100 percent.
+			graphPlot.setDenominator( DEFAULT_DENOMINATOR );
 
 			if( value instanceof Number ) {
 				Number plot = (Number) value;
 				graphPlot.setNumerator( plot.doubleValue() );
 			}
 
+			graphPlot.setKey( key );
 			graphPlot.setLabel( key );			
 			graphPlots.add( graphPlot );
 		}

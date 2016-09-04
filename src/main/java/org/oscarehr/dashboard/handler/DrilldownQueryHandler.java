@@ -35,11 +35,10 @@ import org.oscarehr.util.MiscUtils;
 public class DrilldownQueryHandler extends AbstractQueryHandler {
 	
 	private static Logger logger = MiscUtils.getLogger();
-	private List<Column> columns;
 	private List<String[]> table;
 	
 	public DrilldownQueryHandler() {
-		//default.
+		// default
 	} 
 
 	public List<?> execute( String query ) {
@@ -53,83 +52,10 @@ public class DrilldownQueryHandler extends AbstractQueryHandler {
 	}
 	
 	public void setQuery( String query ) {
-		String finalQuery = buildQuery( query );
+		String finalQuery = super.buildQuery( query );
 		super.setQuery( finalQuery );
 	}
 
-	public List<Column> getColumns() {
-		return columns;
-	}
-
-	public void setColumns(List<Column> columns) {
-		this.columns = columns;
-	}
-
-	private final String buildQuery( final String query ) {
-
-		String queryString = new String( query );
-		
-		queryString = filterQueryString( queryString );
-		
-		if( getParameters() != null ) {
-			queryString = super.addParameters( queryString );		
-		}
-		
-		if( getRanges() != null ) {
-			queryString = super.addRanges( queryString );	
-		}
-		
-		if( getColumns() != null ) {
-			queryString = this.addColumns( queryString ); 
-		}
-		
-		return queryString;
-	}
-	
-	/**
-	 * The entire select syntax will be rewritten if the column list is set. 
-	 */
-	private String addColumns( String queryString ) {
-		
-		StringBuilder select = new StringBuilder("SELECT ");
-		int from = 0;
-		
-		for( Column column : getColumns() ) {
-
-			select.append( column.getName() );
-			select.append(" AS ");
-			select.append("'").append( column.getTitle() ).append("',");
-		}
-		
-		select.deleteCharAt( select.length() - 1 );		
-		select.append( " " );
-		
-		logger.debug( "Replacing current select statement with " + select.toString() );
-
-		from = queryString.indexOf("FROM");
-		
-		if( from < 0 ) {
-			from = queryString.indexOf("from");
-		} 
-		
-		if( from < 0 ) {
-			from = queryString.indexOf("From");
-		}
-		
-		if( from < 0 ) {
-			logger.warn( "Syntax error with the MySQL FROM statement. Syntax permitted is FROM, from or From " );
-		}
-		
-		// remove the current select statement 
-		queryString = queryString.substring( from, queryString.length() );		
-		queryString = select.toString() + queryString;
-		
-		logger.debug( "Final query with columns " + queryString );
-		
-		return queryString;
-		
-	}
-	
 	public List<String[]> getTable() {
 		return table;
 	}
@@ -211,6 +137,5 @@ public class DrilldownQueryHandler extends AbstractQueryHandler {
 		
 		return headingArray;
 	}
-
 	
 }

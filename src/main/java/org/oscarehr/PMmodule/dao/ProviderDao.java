@@ -264,7 +264,7 @@ public class ProviderDao extends HibernateDaoSupport {
 	public List<Provider> getProviders(boolean active) {
 		
 		List<Provider> rs = getHibernateTemplate().find(
-				"FROM  Provider p where p.Status='"+(active?1:0)+'\'');
+				"FROM  Provider p where p.Status='" + (active?1:0) + "' order by p.LastName" );
 		return rs;
 	}
 

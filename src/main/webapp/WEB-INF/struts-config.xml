@@ -619,6 +619,19 @@
 			<forward name="unauthorized" path="/securityError.jsp" />
 			<forward name="error" path="/failure.jsp" />
 		</action>
+		
+		<action name="FrmForm" path="/web/dashboard/display/AssignTickler" 
+			parameter="method" type="org.oscarehr.dashboard.admin.AssignTicklerAction" scope="request" >
+			<forward name="success" path="/web/dashboard/display/AssignTickler.jsp" />
+			<forward name="unauthorized" path="/securityError.jsp" />
+			<forward name="error" path="/failure.jsp" />
+		</action>
+		
+		<action name="FrmForm" path="/web/dashboard/display/ExportResults" 
+			parameter="method" type="org.oscarehr.dashboard.admin.ExportResultsAction" scope="request" >
+			<forward name="unauthorized" path="/securityError.jsp" />
+			<forward name="error" path="/failure.jsp" />
+		</action>
 	
 		<!-- Pharma Best Possible Medication Health form -->
 	 	<action path="/formBPMH" parameter="method" name="bpmh" type="oscar.form.pharmaForms.formBPMH.web.BpmhFormRetrieve"	

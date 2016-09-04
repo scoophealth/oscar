@@ -124,12 +124,12 @@ public class IndicatorTemplateXMLTest {
 
 	@Test
 	public void testGetIndicatorParameters() {
-		assertEquals( "dxcodelist", indicatorTemplateXML.getIndicatorParameters().get(0).getId() );
+		assertEquals( "provider", indicatorTemplateXML.getIndicatorParameters().get(0).getId() );
 	}
 	
 	@Test
 	public void testGetIndicatorParametersSize() {
-		assertEquals(2, indicatorTemplateXML.getIndicatorParameters().size() );
+		assertEquals(3, indicatorTemplateXML.getIndicatorParameters().size() );
 	}
 
 	@Test
@@ -144,7 +144,7 @@ public class IndicatorTemplateXMLTest {
 	
 	@Test
 	public void testGetDrilldownParameters() {
-		assertEquals( "active", indicatorTemplateXML.getDrilldownParameters().get(0).getId() );
+		assertEquals( "provider", indicatorTemplateXML.getDrilldownParameters().get(0).getId() );
 	}
 	
 	@Test
@@ -169,7 +169,7 @@ public class IndicatorTemplateXMLTest {
 	
 	@Test
 	public void testGetDrilldownExportColumnsSize() {
-		assertEquals( 4, indicatorTemplateXML.getDrilldownExportColumns().size() );
+		assertEquals( 5, indicatorTemplateXML.getDrilldownExportColumns().size() );
 	}
 	
 	@Test
@@ -185,7 +185,7 @@ public class IndicatorTemplateXMLTest {
 	
 	@Test
 	public void testGetIndicatorRangesSize() {
-		assertEquals(  6, indicatorTemplateXML.getIndicatorRanges().size() );
+		assertEquals(  5, indicatorTemplateXML.getIndicatorRanges().size() );
 	}
 	
 	@Test
