@@ -31,6 +31,7 @@ import org.oscarehr.dashboard.display.beans.DrilldownBean;
 import org.oscarehr.dashboard.handler.DrilldownQueryHandler;
 import org.oscarehr.dashboard.handler.IndicatorTemplateHandler;
 import org.oscarehr.dashboard.handler.IndicatorTemplateXML;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -43,7 +44,7 @@ public class DrilldownBeanFactory {
 	private DrilldownBean drilldownBean;
 	private DrilldownQueryHandler drilldownQueryHandler = SpringUtils.getBean( DrilldownQueryHandler.class );
 	
-	public DrilldownBeanFactory( IndicatorTemplate indicatorTemplate ) {
+	public DrilldownBeanFactory( LoggedInInfo loggedInInfo, IndicatorTemplate indicatorTemplate ) {
 		
 		logger.info("Building Drilldown Bean for Indicator ID: " + indicatorTemplate.getId() );
 		
@@ -53,6 +54,7 @@ public class DrilldownBeanFactory {
 		setIndicatorTemplateXML( getIndicatorTemplateHandler().getIndicatorTemplateXML() );
 		
 		if( drilldownQueryHandler != null ) {
+			drilldownQueryHandler.setLoggedInInfo( loggedInInfo );
 			drilldownQueryHandler.setParameters( getIndicatorTemplateXML().getDrilldownParameters() );
 			drilldownQueryHandler.setColumns( getIndicatorTemplateXML().getDrilldownDisplayColumns() );
 			drilldownQueryHandler.setRanges( getIndicatorTemplateXML().getDrilldownRanges() );

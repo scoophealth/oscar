@@ -43,10 +43,14 @@
 </title>
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/bootstrap/3.0.0/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/web/css/Dashboard.css" />
+	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/js/jqplot/jquery.jqplot2.min.css" />
 	<script>var ctx = "${pageContext.request.contextPath}"</script>
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/js/jquery-1.9.1.min.js"></script>		
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/bootstrap/3.0.0/js/bootstrap.min.js" ></script>	
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/web/dashboard/display/dashboardDisplayController.js" ></script>
+	<script type="text/javascript" src="${ pageContext.request.contextPath }/js/jqplot/jquery.jqplot2.min.js" ></script>
+	<script type="text/javascript" src="${ pageContext.request.contextPath }/js/jqplot/plugins/jqplot.pieRenderer.js" ></script>
+	<script type="text/javascript" src="${ pageContext.request.contextPath }/js/jqplot/plugins/jqplot.json2.js" ></script>
 </head>
 
 <body>
@@ -109,26 +113,13 @@
 								</div>
 	
 								<!-- indicator panel results body - the graph and numbers -->
-								<div class="row indicatorData" >
-									
-									<div class="col-md-6 text-left indicatorDefinition">
-									
-										<%-- This list can contain multiple rows of objects --%>										
-										<c:forEach items="${ indicator.graphPlots }" var="graphPlots">
-											<%-- each row will contain a list of results --%>
-											<c:forEach items="${ graphPlots }" var="graph">
-												<c:out value="${ graph.label }" />	
-												<c:out value="${ graph.numerator }" />
-												<c:out value="${ graph.denominator }" />
-												<c:out value="${ graph.key }" />
-											</c:forEach>	
-										</c:forEach>							
-									</div>
-									
-									<div class="col-md-6 indicatorGraph" >									
-										<!-- pie chart graph -->
-										<img class="img-responsive" src="${ pageContext.request.contextPath }/web/dashboard/display/pie-chart.png" />									
-									</div>
+								<div class="row indicatorData" >						
+									<div class="col-sm-12">
+								
+										<input type="hidden" id="graphPlots_${ indicator.id }" value="${ indicator.stringArrayPlots }" />
+										<input type="hidden" id="graphLabels_${ indicator.id }" value="${ indicator.stringArrayTooltips }" />
+										<div class="indicatorGraph" id="graphContainer_${ indicator.id }" ></div>
+									</div>									
 								</div>
 								
 								<div class="row indicatorFooter" >
@@ -188,6 +179,11 @@
 												</c:if>
 												<h4>Query</h4>
 												<p><c:out value="${ indicator.queryString }" /></p>
+												
+												<h4>Ranges</h4>
+												<c:forEach items="${ indicator.ranges }" var="range" >
+													<p><c:out value="${ range.label }" /> : <c:out value="${ range.value }" /></p>
+												</c:forEach>
 											
 											</div>
 											
@@ -216,8 +212,11 @@
 		<!--  end dashboardPanels -->	
 	</c:forEach> 
 	<!-- end Dashboard Panel loop -->
+	
 </div> 
 <!-- end container -->
+
+
 
 </body>
 </html>

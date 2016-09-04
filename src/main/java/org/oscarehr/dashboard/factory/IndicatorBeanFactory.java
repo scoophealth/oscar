@@ -25,9 +25,11 @@ package org.oscarehr.dashboard.factory;
 
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.oscarehr.dashboard.display.beans.GraphPlot;
 import org.oscarehr.dashboard.display.beans.IndicatorBean;
 import org.oscarehr.dashboard.handler.IndicatorQueryHandler;
 import org.oscarehr.dashboard.handler.IndicatorTemplateXML;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -45,15 +47,18 @@ public class IndicatorBeanFactory {
 	private IndicatorBean indicatorBean;
 	private IndicatorQueryHandler indicatorQueryHandler = SpringUtils.getBean( IndicatorQueryHandler.class );
 	
-	public IndicatorBeanFactory( IndicatorTemplateXML indicatorTemplateXML ) {
+	public IndicatorBeanFactory( LoggedInInfo loggedInInfo, IndicatorTemplateXML indicatorTemplateXML ) {
 		
 		logger.info("Building Indicator ID: " + indicatorTemplateXML.getName() );
 		
 		setIndicatorTemplateXML( indicatorTemplateXML );
+		
 		if( this.indicatorQueryHandler != null ) {
+			this.indicatorQueryHandler.setLoggedInInfo( loggedInInfo );
 			this.indicatorQueryHandler.setParameters( getIndicatorTemplateXML().getIndicatorParameters() );
 			this.indicatorQueryHandler.setRanges( getIndicatorTemplateXML().getIndicatorRanges() );
 		}
+		
 		setIndicatorBean( new IndicatorBean() );
 	}
 
@@ -88,6 +93,10 @@ public class IndicatorBeanFactory {
 			indicatorBean.setParameters( getIndicatorQueryHandler().getParameters() );
 			indicatorBean.setRanges( getIndicatorQueryHandler().getRanges() );
 			indicatorBean.setGraphPlots(  getIndicatorQueryHandler().getGraphPlots() );
+			indicatorBean.setJsonPlots( plotsToJson( getIndicatorQueryHandler().getGraphPlots() ) );
+			indicatorBean.setJsonTooltips( plotsToJsonTooltips( getIndicatorQueryHandler().getGraphPlots() ));
+			indicatorBean.setStringArrayPlots( plotsToStringArray( getIndicatorQueryHandler().getGraphPlots() ) );
+			indicatorBean.setStringArrayTooltips( plotsToTooltipsStringArray( getIndicatorQueryHandler().getGraphPlots() ) );
 			
 			logger.debug("New Indicator Bean: " + indicatorBean.toString() );
 			
@@ -97,6 +106,86 @@ public class IndicatorBeanFactory {
 		}
 
 		this.indicatorBean = indicatorBean;
+	}
+	
+	private static String plotsToStringArray( List<GraphPlot[]> graphPlots ) {
+		StringBuilder json = new StringBuilder("");
+		for(GraphPlot[] graphPlotArray : graphPlots) {
+			json.append("[");
+			for(GraphPlot graphPlot : graphPlotArray ) {
+				json.append("['");
+				json.append( graphPlot.getLabel() );
+				json.append("',");
+				json.append( graphPlot.getNumerator() );
+				json.append("],");
+			}
+			json.deleteCharAt( json.length() - 1 );
+			
+			json.append("],");
+		}
+		json.deleteCharAt( json.length() - 1 );
+		
+		return json.toString();
+	}
+	
+	private static String plotsToJson( List<GraphPlot[]> graphPlots ) {
+		StringBuilder json = new StringBuilder("");
+		int index = 0;
+		for(GraphPlot[] graphPlotArray : graphPlots) {
+			json.append("{ 'results_" + index + "':[");
+			for(GraphPlot graphPlot : graphPlotArray ) {
+				json.append("{'");
+				json.append( graphPlot.getLabel() );
+				json.append("':");
+				json.append( graphPlot.getNumerator() );
+				json.append("},");
+			}
+			json.deleteCharAt( json.length() - 1 );
+			
+			json.append("]},");
+			index++;
+		}
+		json.deleteCharAt( json.length() - 1 );
+		
+		return json.toString();
+	}
+	
+	private static String plotsToTooltipsStringArray( List<GraphPlot[]> graphPlots ) {
+		StringBuilder json = new StringBuilder("");
+		for(GraphPlot[] graphPlotArray : graphPlots) {
+			json.append("[");
+			for(GraphPlot graphPlot : graphPlotArray ) {
+				json.append( "'" );
+				json.append( graphPlot.getKey() );
+				json.append( "'" );
+				json.append(",");
+			}
+			json.deleteCharAt( json.length() - 1 );
+			
+			json.append("],");
+		}
+		json.deleteCharAt( json.length() - 1 );		
+		return json.toString();
+	}
+	
+	private static String plotsToJsonTooltips( List<GraphPlot[]> graphPlots ) {
+		StringBuilder json = new StringBuilder("");
+		int index = 0;
+		for(GraphPlot[] graphPlotArray : graphPlots) {
+			json.append("{ 'toolTips_" + index + "':[");
+			for(GraphPlot graphPlot : graphPlotArray ) {
+				json.append( "'" );
+				json.append( graphPlot.getKey() );
+				json.append( "'" );
+				json.append(",");
+			}
+			json.deleteCharAt( json.length() - 1 );
+			
+			json.append("]},");
+			index++;
+		}
+		json.deleteCharAt( json.length() - 1 );		
+		return json.toString();
 	}
 	
 	private static void copyToBean( IndicatorBean indicatorBean, IndicatorTemplateXML indicatorTemplateXML ) {

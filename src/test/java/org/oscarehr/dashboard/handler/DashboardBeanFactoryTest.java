@@ -92,7 +92,7 @@ public class DashboardBeanFactoryTest {
 	    
 	    // The DashboardBeanFactory should construct a full DashboardBean with complete queries etc... for final display.
 	    // Dashboard entities in production will already contain a complete list of related IndicatorTemplates
-	    dashboardBeanFactory = new DashboardBeanFactory(dashboard, indicatorTemplateList);
+	    // dashboardBeanFactory = new DashboardBeanFactory(dashboard, indicatorTemplateList);
 	    dashboardBean = dashboardBeanFactory.getDashboardBean();
 	}
 

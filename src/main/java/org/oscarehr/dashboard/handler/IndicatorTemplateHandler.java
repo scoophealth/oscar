@@ -24,13 +24,21 @@
 package org.oscarehr.dashboard.handler;
 
 import java.io.ByteArrayInputStream;
-
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.IndicatorTemplate;
 import org.oscarehr.util.MiscUtils;
@@ -50,9 +58,11 @@ public class IndicatorTemplateHandler{
 	
 	private static Logger logger = MiscUtils.getLogger();
 	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
+	private static final String schemaFile = "indicatorXMLTemplates/IndicatorXMLTemplateSchema.xsd";
 	private Document indicatorTemplateDocument;
 	private IndicatorTemplate indicatorTemplateEntity;
 	private IndicatorTemplateXML indicatorTemplateXML; 
+
 	private byte[] bytearray;
 	
 	public IndicatorTemplateHandler() {
@@ -63,33 +73,38 @@ public class IndicatorTemplateHandler{
 		read( bytearray );
 	}
 
-	// TODO validate XML template against schema. 
-	// Validate method will be called from the Action class.
-	// user will be informed of mal-formed XML
+	public boolean validate( StringBuilder message ) {
+		return validateXML( message );
+	}
 	
-	// TODO add additional error check / filter class that will
-	// handle all validations and error messages. 
+	private boolean validateXML( StringBuilder message ) {
+		boolean valid = Boolean.TRUE;
+		try {
+			
+		  SchemaFactory factory = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
+		  URL schemaSource = Thread.currentThread().getContextClassLoader().getResource( schemaFile );
+
+		  File schemaFile = new File( schemaSource.toURI() );
+		  Schema schema = factory.newSchema( schemaFile );
+		  Validator validator = schema.newValidator();
+		  validator.validate( new DOMSource( getIndicatorTemplateDocument() ) );
+		
+		} catch (Exception e) {
+			logger.error( "Failed XML Validation ", e );
+			message.append( "Failed XML Validation " );
+			message.append( e.getMessage() );
+			valid = Boolean.FALSE;
+		}
+		
+		return valid;
+	}
 	
-	
-//	public boolean validate() {
-//		Schema schema = null;
-//		try {
-//		  String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
-//		  SchemaFactory factory = SchemaFactory.newInstance(language);
-//		  schema = factory.newSchema(new File(name));
-//		} catch (Exception e) {
-//		    e.printStackStrace();
-//		}
-//		Validator validator = schema.newValidator();
-//		validator.validate(new DOMSource(document));
-//		return Boolean.TRUE;
-//	}
-	
+
 	public void read( byte[] bytearray ) {
 		this.bytearray = bytearray;
-		// validate();
-		setIndicatorTemplateDocument( this.bytearray );		
-		setIndicatorTemplateXML( new IndicatorTemplateXML( getIndicatorTemplateDocument() ) );
+		setIndicatorTemplateDocument( this.bytearray );	
+		IndicatorTemplateXML indicatorTemplateXML =  new IndicatorTemplateXML( getIndicatorTemplateDocument() );
+		setIndicatorTemplateXML( indicatorTemplateXML );
 		setIndicatorTemplateEntity( indicatorTemplateEntityFromXML( getIndicatorTemplateXML() ) );
 	}
 	

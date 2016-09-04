@@ -7605,6 +7605,7 @@ CREATE TABLE tickler (
   creator varchar(6) default NULL,
   priority varchar(6) default 'Normal',
   task_assigned_to varchar(255),
+  category_id int(11),
   PRIMARY KEY  (tickler_no),
   KEY `statusIndex` (`status`),
   KEY `demo_status_date_Index` (demographic_no,status,service_date)
@@ -12200,4 +12201,12 @@ CREATE TABLE  `site_role_mpg` (
   `crt_dt` timestamp NOT NULL ,
   `admit_discharge_role_id` int(10) unsigned,
   primary key (`id`)
+);
+
+CREATE TABLE `tickler_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category` varchar(55),
+  `description` varchar(255),
+  `active` bit(1),
+  PRIMARY KEY (`id`)
 );

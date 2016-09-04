@@ -276,13 +276,14 @@ font-size:20px
 					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-chevron-right hand-hover" 
 						ng-show="showPtList === false" ng-click="showPatientList()" 
 						title="<bean:message key="navbar.showPatientList" bundle="ui"/>"></span></li>
-				
+
 					<%--New Dashboard Menu --%>
 					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard" title="<bean:message key="navbar.dashboard" bundle="ui"/>"></span></li>
-					
+
 					<li style="margin-right:5px">
 						<a href="javascript:void(0)" ng-if="!dashboardMenu.dropdown" ng-click="transition(dashboardMenu)" >
 							<bean:message key="navbar.menu.dashboard" bundle="ui" />
+
 						</a>
 						<a href="javascript:void(0)" ng-if="dashboardMenu.dropdown"  class="dropdown-toggle" data-toggle="dropdown">
 							<bean:message key="navbar.menu.dashboard" bundle="ui" />

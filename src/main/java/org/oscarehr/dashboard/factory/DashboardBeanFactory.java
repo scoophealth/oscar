@@ -32,6 +32,7 @@ import org.oscarehr.common.model.Dashboard;
 import org.oscarehr.common.model.IndicatorTemplate;
 import org.oscarehr.dashboard.display.beans.DashboardBean;
 import org.oscarehr.dashboard.display.beans.PanelBean;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 /**
@@ -49,19 +50,20 @@ public class DashboardBeanFactory {
 	private DashboardBean dashboardBean;
 	private List<IndicatorTemplate> indicatorTemplates;
 	private Dashboard dashboardEntity;
-
+	private LoggedInInfo loggedInInfo;
+	
 	/**
 	 * Parameters cannot be null or empty. This will work if the Indicator Templates are pre-set into the
 	 * DashboardEntity Object.
 	 */
-	public DashboardBeanFactory( Dashboard dashboardEntity ) {
-		this(dashboardEntity, null);
+	public DashboardBeanFactory( LoggedInInfo loggedInInfo, Dashboard dashboardEntity ) {
+		this( loggedInInfo, dashboardEntity, null);
 	}
 	
 	/**
 	 * Additional IndicatorTemplates parameter incase they are not preset in the Dashboard Entity.
 	 */
-	public DashboardBeanFactory( Dashboard dashboardEntity, List<IndicatorTemplate> indicatorTemplates ) {
+	public DashboardBeanFactory( LoggedInInfo loggedInInfo, Dashboard dashboardEntity, List<IndicatorTemplate> indicatorTemplates ) {
 		
 		logger.info("Building Dashboard: " + dashboardEntity.getName() );
 		
@@ -73,7 +75,7 @@ public class DashboardBeanFactory {
 		
 		setIndicatorTemplates( indicatorTemplates );	
 		setDashboardBean( new DashboardBean() );	
-		setIndicatorPanelBeans( getDashboardBean(), getIndicatorTemplates() );
+		setPanelBeans( loggedInInfo, getDashboardBean(), getIndicatorTemplates() );
 		getDashboardBean().setLastChecked( new Date( System.currentTimeMillis() ) );
 	}
 	
@@ -111,10 +113,10 @@ public class DashboardBeanFactory {
 	 * The IndicatorPanelBeanFactory returns a sorted list of IndicatorPanelBeans that are set into
 	 * the DashboardBean. 
 	 */
-	private void setIndicatorPanelBeans( DashboardBean dashboardBean, List<IndicatorTemplate> indicatorTemplates ) {
+	private void setPanelBeans( LoggedInInfo loggedInInfo, DashboardBean dashboardBean, List<IndicatorTemplate> indicatorTemplates ) {
 		if( indicatorTemplates != null && ! indicatorTemplates.isEmpty()) {
-			PanelBeanFactory indicatorPanelBeanFactory = new PanelBeanFactory( indicatorTemplates );
-			List<PanelBean> panelBeans = indicatorPanelBeanFactory.getPanelBeans();
+			PanelBeanFactory panelBeanFactory = new PanelBeanFactory( loggedInInfo, indicatorTemplates );
+			List<PanelBean> panelBeans = panelBeanFactory.getPanelBeans();
 			dashboardBean.setPanelBeans(panelBeans);
 		} else {
 			logger.warn("There are no Indicator Templates for this Dashboard. Dashboard id [" + dashboardBean.getId() + "]");

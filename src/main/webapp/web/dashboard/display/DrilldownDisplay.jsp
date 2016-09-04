@@ -39,14 +39,17 @@
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/bootstrap/3.0.0/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/web/css/Dashboard.css" />
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/css/dataTables.bootstrap.min.css" /> 
+	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/bootstrap2-datepicker/datepicker3.css" />
+	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/css/bootstrap-timepicker.min.css" />
 	<script>var ctx = "${pageContext.request.contextPath}"</script>
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/js/jquery-1.9.1.min.js"></script>	
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/bootstrap/3.0.0/js/bootstrap.min.js" ></script>
-		<script type="text/javascript" src="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/js/dataTables.bootstrap.min.js" ></script>
-	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/js/jquery.dataTables.js" ></script>
+	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/js/dataTables.bootstrap.min.js" ></script>
+	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/js/jquery.dataTables.min.js" ></script>
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/js/jquery-ui-1.10.2.custom.min.js"></script>
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/web/dashboard/display/drilldownDisplayController.js" ></script>
-
+	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/bootstrap2-datepicker/bootstrap-datepicker.js" ></script>
+	<script type="text/javascript" src="${ pageContext.request.contextPath }/js/bootstrap-timepicker.min.js" ></script>
 </head>
 <body>
 
@@ -60,12 +63,12 @@
 			Dashboard
 		</button>
 		
-		 <button class="btn btn-default" type="button">
+		 <button class="btn btn-default" type="button" onclick="window.print();" >
 		 	<span class="glyphicon glyphicon-print text-center" aria-hidden="true"></span>
 		 	Print
 		 </button>	
 		 
-		  <button class="btn btn-default" type="button">
+		  <button class="btn btn-default exportResults" type="button" id="exportResults_${ drilldown.id }" >
 		  	<span class="glyphicon glyphicon-download-alt text-center" aria-hidden="true"></span>
 		 	Export
 		 </button> 
@@ -84,13 +87,21 @@
 		<c:out value="${ drilldown.name }" />
 	</h3>
 	<hr />
+	
+	<c:set scope="page" value="" var="primaryDataType" />
+	<c:forEach items="${ drilldown.displayColumns }" var="column" >
+		<c:if test="${ column.primary }">
+			<c:set scope="page" value="${ column.name }" var="primaryDataType" />
+		</c:if>
+	</c:forEach>
+	
 	<table class="table table-striped table-condensed" id="drilldownTable" >		
 		<c:forEach items="${ drilldown.table }" var="row" varStatus="rowCount">
 			<c:choose>
 				<c:when test="${ rowCount.index eq 0 }">
 					<thead>
 						<tr>
-							<th>
+							<th class="donotprint">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" 
 						        	aria-haspopup="true" aria-expanded="false">
 						        	<span class="glyphicon glyphicon-check"></span>
@@ -132,7 +143,7 @@
 						
 							<c:choose>
 							<c:when test="${ columnCount.index eq 0 }">								
-								<td>
+								<td class="donotprint">
 									<c:choose>
 									<c:when test="${ column eq 'error' }">
 										<c:out value="${ column }" />									
@@ -143,7 +154,25 @@
 									</c:choose>
 								</td>
 								<td>
-									<c:out value="${ column }" />	
+									
+									<c:choose>
+										<c:when test="${ fn:containsIgnoreCase(primaryDataType,'demographic_no') }" >
+											
+											<a class="donotprint" href="${ pageContext.request.contextPath }/demographic/demographiccontrol.jsp?demographic_no=${ column }&amp;displaymode=edit&amp;dboperation=search_detail" 
+											 target="_blank" title="Open Patient File" >
+									        	<span class="glyphicon glyphicon-folder-open" style="margin-right:10px;" ></span>
+									        	<c:out value="${ column }" />
+									   		</a>
+									   		
+									   		<span class="printonly">
+									   			<c:out value="${ column }" />
+									   		</span>
+									   	</c:when>
+									   	<c:otherwise>
+								   			<c:out value="${ column }" />
+								   		</c:otherwise>
+							   		</c:choose>
+							
 								</td>
 							</c:when>
 							<c:otherwise>
@@ -160,8 +189,10 @@
 		</c:forEach>
 		</tbody>
 	</table>
-
 </div>
+
+<!-- place holder for tickler assignment modal window -->
+<div id="assignTickler" class="modal fade" role="dialog"></div>
 
 <!-- modal panel for displaying this indicators details -->	
 <div id="indicatorInfo" class="modal fade" role="dialog">
