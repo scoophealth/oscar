@@ -516,338 +516,60 @@ if (isMobileOptimized) {
 
 <oscar:customInterface section="main"/>
 
-
-<script type="text/javascript">
-function storeApptNo(apptNo) {
-	var url = "storeApptInSession.jsp?appointment_no="+apptNo;
-	new Ajax.Request(url, {method:'get'});
-}
-
-function getElementsByClass(searchClass,node,tag) {
-        var classElements = new Array();
-        if ( node == null )
-                node = document;
-        if ( tag == null )
-                tag = '*';
-        var els = document.getElementsByTagName(tag);
-        var elsLen = els.length;
-        var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
-        for (i = 0, j = 0; i < elsLen; i++) {
-                if ( pattern.test(els[i].className) ) {
-                        classElements[j] = els[i];
-                        j++;
-                }
-        }
-        return classElements;
-}
-
-jQuery("document").ready(function(){
-	jQuery(".hideReason").hide();
-	for( var i = 0; i < localStorage.length; i++ ) {
-		var key = localStorage.key(i);
-		if( localStorage.getItem(key) == "true" ) {
-			jQuery(key).show();
-		}
-	}
-})
-function toggleReason( providerNo ) { 
-	var id = ".reason_" + providerNo;
-    jQuery( id ).toggle();
-    localStorage.setItem( id, jQuery( id ).is( ":visible" ) );
-}
-    
-
-function confirmPopupPage(height, width, queryString, doConfirm, allowDay, allowWeek){
-        if (doConfirm == "Yes") {
-                if (confirm("<bean:message key="provider.appointmentProviderAdminDay.confirmBooking"/>")){
-                 popupPage(height, width, queryString);
-                }
-        }
-        else if (doConfirm == "Day"){
-                if (allowDay == "No") {
-                        alert("<bean:message key="provider.appointmentProviderAdminDay.sameDay"/>");
-                }
-                else {
-                        popupPage(height, width, queryString);
-                }
-        }
-        else if (doConfirm == "Wk"){
-                if (allowWeek == "No") {
-                        alert("<bean:message key="provider.appointmentProviderAdminDay.sameWeek"/>");
-                }
-                else {
-                        popupPage2(queryString, 'appointment', height, width);
-                }
-        }
-        else {
-                popupPage2(queryString, 'appointment', height, width);
-        }
-}
-
-function setfocus() {
-this.focus();
-}
-
-function popupPage(vheight,vwidth,varpage) {
-var page = "" + varpage;
-windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
-var popup=window.open(page, "<bean:message key="provider.appointmentProviderAdminDay.apptProvider"/>", windowprops);
-if (popup != null) {
-if (popup.opener == null) {
-popup.opener = self;
-}
-popup.focus();
-}
-}
-
-function popUpEncounter(vheight,vwidth,varpage) {
-   var page = "" + varpage;
-    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
-    var popup=window.open(page, "Encounter", windowprops);
-
-    if (popup != null) {
-    if (popup.opener == null) {
-        popup.opener = self;
-    }
-        popup.focus();
-    }
-}
-
-function popupPageOfChangePassword(){
-<%Integer ed;
-	String expired_days="";
-	if(session.getAttribute("expired_days")!=null){
-		expired_days = (String)session.getAttribute("expired_days");
-	}
-	if(!(expired_days.equals(" ")||expired_days.equals("")||expired_days==null)) {
-		//javascript%>
-
-window.open("changePassword.jsp","changePassword","resizable=yes,scrollbars=yes,width=400,height=300");
-changePassword.moveTo(0,0);
-<%}%>
-}
-function popupInboxManager(varpage){
-    var page = "" + varpage;
-    var windowname="apptProviderInbox";
-    windowprops = "height=700,width=1215,location=no,"
-    + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=0";
-    var popup = window.open(page, windowname, windowprops);
-    if (popup != null) {
-        if (popup.opener == null) {
-            popup.opener = self;
-        }
-        popup.focus();
-    }
-}
-
-function popupPage2(varpage) {
-popupPage2(varpage, "apptProviderSearch");
-}
-
-function popupPage2(varpage, windowname) {
-popupPage2(varpage, windowname, 700, 1024);
-}
-
-function popupPage2(varpage, windowname, vheight, vwidth) {
-// Provide default values for windowname, vheight, and vwidth incase popupPage2
-// is called with only 1 or 2 arguments (must always specify varpage)
-windowname  = typeof(windowname)!= 'undefined' ? windowname : 'apptProviderSearch';
-vheight     = typeof(vheight)   != 'undefined' ? vheight : '700px';
-vwidth      = typeof(vwidth)    != 'undefined' ? vwidth : '1024px';
-var page = "" + varpage;
-windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
-var popup = window.open(page, windowname, windowprops);
-if (popup != null) {
-	if (popup.opener == null) {
-  		popup.opener = self;
-	}
-	popup.focus();
-	}
-}
-
-<!--oscarMessenger code block-->
-function popupOscarRx(vheight,vwidth,varpage) {
-var page = varpage;
-windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-var popup=window.open(varpage, "<bean:message key="global.oscarRx"/>_appt", windowprops);
-if (popup != null) {
-if (popup.opener == null) {
-popup.opener = self;
-}
-popup.focus();
-}
-}
-
-function popupWithApptNo(vheight,vwidth,varpage,name,apptNo) {
-	if (apptNo) storeApptNo(apptNo);
-	if (name=='master')
-		popup(vheight,vwidth,varpage,name);
-	else if (name=='encounter')
-		popup(vheight, vwidth, varpage, name);
-	else
-		popupOscarRx(vheight,vwidth,varpage);
-}
-
-function review(key) {
-  if(self.location.href.lastIndexOf("?") > 0) {
-    if(self.location.href.lastIndexOf("&viewall=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&viewall="));
-    else a = self.location.href;
-  } else {
-    a="providercontrol.jsp?year="+document.jumptodate.year.value+"&month="+document.jumptodate.month.value+"&day="+document.jumptodate.day.value+"&view=0&displaymode=day&dboperation=searchappointmentday&site=" + "<%=(selectedSite==null? "none" : selectedSite)%>";
-  }
-  self.location.href = a + "&viewall="+key ;
-}
-
-function refresh() {
-document.location.reload();
-}
-
-function refresh1() {
-var u = self.location.href;
-if(u.lastIndexOf("view=1") > 0) {
-self.location.href = u.substring(0,u.lastIndexOf("view=1")) + "view=0" + u.substring(eval(u.lastIndexOf("view=1")+6));
-} else {
-document.location.reload();
-}
-}
-
-function onUnbilled(url) {
-if(confirm("<bean:message key="provider.appointmentProviderAdminDay.onUnbilled"/>")) {
-popupPage(700,720, url);
-}
-}
-
-function onUpdatebill(url) {
-    popupPage(700,720, url);
-}
-
-
+<script type="text/javascript" src="schedulePage.js.jsp"></script>
+<script>
 function changeGroup(s) {
-var newGroupNo = s.options[s.selectedIndex].value;
-if(newGroupNo.indexOf("_grp_") != -1) {
-  newGroupNo = s.options[s.selectedIndex].value.substring(5);
-}else{
-  newGroupNo = s.options[s.selectedIndex].value;
-}
-<%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){%>
-	//Disable schedule view associated with the program
-	//Made the default program id "0";
-	//var programId = document.getElementById("bedprogram_no").value;
-	var programId = 0;
-	var programId_forCME = document.getElementById("bedprogram_no").value;
-
-	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&caisiBillingPreferenceNotDelete=<%=caisiBillingPreferenceNotDelete%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&prescriptionQrCodes=<%=prescriptionQrCodes%>&erx_enable=<%=erx_enable%>&erx_training_mode=<%=erx_training_mode%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId+"&case_program_id="+programId_forCME + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
-<%}else {%>
-  var programId=0;
-  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&prescriptionQrCodes=<%=prescriptionQrCodes%>&erx_enable=<%=erx_enable%>&erx_training_mode=<%=erx_training_mode%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
-<%}%>
-}
-
-function ts1(s) {
-popupPage(360,780,('../appointment/addappointment.jsp?'+s));
-}
-function tsr(s) {
-popupPage(360,780,('../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&'+s));
-}
-function goFilpView(s) {
-self.location.href = "../schedule/scheduleflipview.jsp?originalpage=../provider/providercontrol.jsp&startDate=<%=year+"-"+month+"-"+day%>" + "&provider_no="+s ;
-}
-function goWeekView(s) {
-self.location.href = "providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1&provider_no="+s;
-}
-function goZoomView(s, n) {
-self.location.href = "providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider="+s+"&curProviderName="+encodeURIComponent(n)+"&displaymode=day&dboperation=searchappointmentday" ;
-}
-function findProvider(p,m,d) {
-popupPage(300,400, "receptionistfindprovider.jsp?pyear=" +p+ "&pmonth=" +m+ "&pday=" +d+ "&providername="+ encodeURIComponent(document.findprovider.providername.value));
-}
-function goSearchView(s) {
-	popupPage(600,650,"../appointment/appointmentsearch.jsp?provider_no="+s);
-}
-
-//popup a new tickler warning window
-function load() {
-	var ocan = "<%=ocanWarningWindow%>";
-	if(ocan!="null" && cbi!="") {
-		alert(ocan);
+	var newGroupNo = s.options[s.selectedIndex].value;
+	if(newGroupNo.indexOf("_grp_") != -1) {
+	  newGroupNo = s.options[s.selectedIndex].value.substring(5);
+	}else{
+	  newGroupNo = s.options[s.selectedIndex].value;
 	}
-	var cbi = "<%=cbiReminderWindow%>";
-	if(cbi!="null" && cbi!="") {
-		alert(cbi);
-		<%request.getSession().setAttribute("cbiReminderWindow", "null");%>
-	}
-	
-	if ("<%=newticklerwarningwindow%>"=="enabled") {
-		if (IsPopupBlocker()) {
-		    alert("You have a popup blocker, so you can not see the new tickler warning window. Please disable the pop blocker in your google bar, yahoo bar or IE ...");
-		} else{
-				var pu=window.open("../UnreadTickler.do",'viewUnreadTickler',"height=120,width=250,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=500,left=700");
-				if(window.focus)
-					pu.focus();
-			}
+	<%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){%>
+		//Disable schedule view associated with the program
+		//Made the default program id "0";
+		//var programId = document.getElementById("bedprogram_no").value;
+		var programId = 0;
+		var programId_forCME = document.getElementById("bedprogram_no").value;
+
+		popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&caisiBillingPreferenceNotDelete=<%=caisiBillingPreferenceNotDelete%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&prescriptionQrCodes=<%=prescriptionQrCodes%>&erx_enable=<%=erx_enable%>&erx_training_mode=<%=erx_training_mode%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId+"&case_program_id="+programId_forCME + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
+	<%}else {%>
+	  var programId=0;
+	  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&prescriptionQrCodes=<%=prescriptionQrCodes%>&erx_enable=<%=erx_enable%>&erx_training_mode=<%=erx_training_mode%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
+	<%}%>
 	}
 
-	popupPageOfChangePassword();
-	refreshAllTabAlerts();
-}
+	function ts1(s) {
+	popupPage(360,780,('../appointment/addappointment.jsp?'+s));
+	}
+	function tsr(s) {
+	popupPage(360,780,('../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&'+s));
+	}
+	function goFilpView(s) {
+	self.location.href = "../schedule/scheduleflipview.jsp?originalpage=../provider/providercontrol.jsp&startDate=<%=year+"-"+month+"-"+day%>" + "&provider_no="+s ;
+	}
+	function goWeekView(s) {
+	self.location.href = "providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1&provider_no="+s;
+	}
+	function goZoomView(s, n) {
+	self.location.href = "providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider="+s+"&curProviderName="+encodeURIComponent(n)+"&displaymode=day&dboperation=searchappointmentday" ;
+	}
+	function findProvider(p,m,d) {
+	popupPage(300,400, "receptionistfindprovider.jsp?pyear=" +p+ "&pmonth=" +m+ "&pday=" +d+ "&providername="+ encodeURIComponent(document.findprovider.providername.value));
+	}
+	function goSearchView(s) {
+		popupPage(600,650,"../appointment/appointmentsearch.jsp?provider_no="+s);
+	}
+	function review(key) {
+		  if(self.location.href.lastIndexOf("?") > 0) {
+		    if(self.location.href.lastIndexOf("&viewall=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&viewall="));
+		    else a = self.location.href;
+		  } else {
+		    a="providercontrol.jsp?year="+document.jumptodate.year.value+"&month="+document.jumptodate.month.value+"&day="+document.jumptodate.day.value+"&view=0&displaymode=day&dboperation=searchappointmentday&site=" + "<%=(selectedSite==null? "none" : selectedSite)%>";
+		  }
+		  self.location.href = a + "&viewall="+key ;
+		}
 
-function IsPopupBlocker() {
-var oWin = window.open("","testpopupblocker","width=100,height=50,top=5000,left=5000");
-if (oWin==null || typeof(oWin)=="undefined") {
-	return true;
-} else {
-	oWin.close();
-	return false;
-}
-}
-
-<%-- Refresh tab alerts --%>
-function refreshAllTabAlerts() {
-refreshTabAlerts("oscar_new_lab");
-refreshTabAlerts("oscar_new_msg");
-refreshTabAlerts("oscar_new_tickler");
-refreshTabAlerts("oscar_aged_consults");
-refreshTabAlerts("oscar_scratch");
-}
-
-function callRefreshTabAlerts(id) {
-setTimeout("refreshTabAlerts('"+id+"')", 10);
-}
-
-function refreshTabAlerts(id) {
-var url = "../provider/tabAlertsRefresh.jsp";
-var pars = "id=" + id;
-
-var myAjax = new Ajax.Updater(id, url, {method: 'get', parameters: pars});
-}
-
-function refreshSameLoc(mypage) {
- var X =  (window.pageXOffset?window.pageXOffset:window.document.body.scrollLeft);
- var Y =  (window.pageYOffset?window.pageYOffset:window.document.body.scrollTop);
- window.location.href = mypage+"&x="+X+"&y="+Y;
-}
-
-function scrollOnLoad() {
-  var X = getParameter("x");
-  var Y = getParameter("y");
-  if(X!=null && Y!=null) {
-    window.scrollTo(parseInt(X),parseInt(Y));
-  }
-}
-
-function getParameter(paramName) {
-  var searchString = window.location.search.substring(1);
-  var i,val;
-  var params = searchString.split("&");
-
-  for (i=0;i<params.length;i++) {
-    val = params[i].split("=");
-    if (val[0] == paramName) {
-      return val[1];
-    }
-  }
-  return null;
-}
 </script>
 
 
