@@ -733,10 +733,11 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 					Integer apptReasonCode = bFirstDisp ? (appt.getReasonCode() == null ? 0 : appt.getReasonCode()) : Integer.parseInt(request.getParameter("reasonCode"));
 					if(reasonCodes != null) {
 						for(LookupListItem reasonCode : reasonCodes.getItems()) {
+							if(reasonCode.isActive() || (apptReasonCode.equals(reasonCode.getId()) && !reasonCode.isActive())) {
 					%>
 						<option value="<%=reasonCode.getId()%>" <%=apptReasonCode.equals(reasonCode.getId()) ? "selected=\"selected\"" : "" %>><%=StringEscapeUtils.escapeHtml(reasonCode.getValue())%></option>
 					<%
-					 	}
+							} } //end of for loop
 					} else {
 					%>
 						<option value="-1">Other</option>
