@@ -29,7 +29,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -386,6 +388,150 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 	
 	public static final String PROGRAM_DOMAIN_RESTRICTION = "select distinct a.clientId from ProgramProvider pp,Admission a WHERE pp.ProgramId=a.programId AND pp.ProviderNo=:providerNo";
 
+	
+	public List<Demographic> doMultiSearch(List<String> searchTypes, List<String> searchStrs, int limit, int offset, String providerNo, boolean outOfDomain, boolean active, boolean inactive) {
+		List<Demographic> results = new ArrayList<Demographic>();
+		
+		//add program?
+		boolean leadingWildcard=false;
+        if("true".equals(OscarProperties.getInstance().getProperty("search.searchName.addLeadingWildcard", "false"))) {
+        	leadingWildcard=true;
+	  	}
+        
+        String pstatus = OscarProperties.getInstance().getProperty("inactive_statuses", "IN, DE, IC, ID, MO, FI");
+    	pstatus = pstatus.replaceAll("'","").replaceAll("\\s", "");
+    	List<String> inactiveStati = Arrays.asList(pstatus.split(","));
+    	
+        
+		
+		Map<String,Object> paramMap = new HashMap<String,Object>();
+		Map<String,Collection> paramListMap = new HashMap<String,Collection>();
+		
+		String sql = "SELECT d FROM Demographic d WHERE ";
+		
+		
+		for(int x=0;x<searchTypes.size();x++) {
+			
+			String searchType = searchTypes.get(x);
+			String searchStr = searchStrs.get(x);
+	
+			if(x != 0) {
+				sql += " AND ";
+			}
+			
+			switch(searchType) {
+			
+			case "search_phone":
+				sql += " (d.Phone like :phone"+x+" or d.Phone2 like :phone"+x+") ";
+				paramMap.put("phone"+x, searchStr.trim() + "%");
+				break;
+			case "search_dob":
+				sql += " (d.YearOfBirth like :yearOfBirth"+x+" AND d.MonthOfBirth like :monthOfBirth"+x+" AND d.DateOfBirth like :dateOfBirth"+x+") ";
+				String[] params = searchStr.split("-");
+				if (params.length != 3) {
+					//make some kind of warning message
+					return null;
+				}
+				paramMap.put("yearOfBirth"+x, params[0].trim() + "%");
+				paramMap.put("monthOfBirth"+x, params[1].trim() + "%");
+				paramMap.put("dateOfBirth"+x, params[2].trim() + "%");
+				break;
+			case "search_address":
+				sql += " (d.Address like :address"+x+") ";
+				paramMap.put("address"+x, searchStr.trim() + "%");
+				break;
+			case "search_hin":
+				sql += " (d.Hin like :hin"+x+") ";
+				paramMap.put("hin"+x, searchStr.trim() + "%");
+				break;
+			case "search_chart_no":
+				sql += " (d.ChartNo like :chartNo"+x+") ";
+				paramMap.put("chartNo"+x, searchStr.trim() + "%");
+				break;
+			case "search_demographic_no":
+				sql += " (d.DemographicNo like :demographicNo"+x+") ";
+				Integer demoNo = null;
+				try {
+					demoNo = Integer.parseInt(searchStr.trim());
+				} catch(NumberFormatException e) {
+					//warning
+					return null;
+				}
+				paramMap.put("demographicNo"+x, demoNo);
+				break;
+			case "search_program_no":
+				sql += "(d.DemographicNo IN (select a.clientId from Admission a WHERE a.program.id = :programId and a.admissionStatus = :aStatus))";
+				Integer programNo = null;
+				try {
+					programNo = Integer.parseInt(searchStr.trim());
+				} catch(NumberFormatException e) {
+					//warning
+					return null;
+				}
+				paramMap.put("programId", programNo);
+				paramMap.put("aStatus", Admission.STATUS_CURRENT);
+				break;
+			case "search_name":
+			default:	
+				sql += " (";
+				sql += " d.LastName like :lastName"+x+" ";
+				paramMap.put("lastName"+x, (leadingWildcard?"%":"") + searchStr.split(",")[0].trim() + "%");
+				if(searchStr.split(",").length == 2) {
+					sql += " AND d.FirstName like :firstName"+x+" ";
+					paramMap.put("firstName"+x, (leadingWildcard?"%":"") + searchStr.split(",")[1].trim() + "%");
+				}
+				sql += ") ";
+			}
+		
+		}
+			
+		if(active && !inactive) {
+			sql += " and d.PatientStatus " + "not in (:statuses)";
+			paramListMap.put("statuses", inactiveStati);
+		} else if(!active && inactive) {
+			sql += " and d.PatientStatus " + "in (:statuses)";
+			paramListMap.put("statuses", inactiveStati);
+		}
+		
+		 
+		
+		if(providerNo != null && !outOfDomain) {
+			sql += " AND d.id IN ("+ PROGRAM_DOMAIN_RESTRICTION+") ";
+			paramMap.put("providerNo", providerNo);
+		}
+		
+		
+		Session session = this.getSession();
+		try {
+			Query q = session.createQuery(sql);
+			q.setFirstResult(offset);
+			q.setMaxResults(limit);
+
+			for(String key:paramMap.keySet()) {
+				Object val = paramMap.get(key);
+				q.setParameter(key, val);
+			}
+			for(String key:paramListMap.keySet()) {
+				Collection val = paramListMap.get(key);
+				q.setParameterList(key, val);
+			}
+			
+			
+			results.addAll(q.list());
+		} 
+		catch(Exception e) {
+			logger.error("error",e);
+			throw e;
+		}
+		finally {
+			this.releaseSession(session);
+		}
+			
+		
+		
+		return results;
+	}
+	
 	public List<Demographic> searchDemographicByName(String searchStr, int limit, int offset, String providerNo, boolean outOfDomain) {
 		return searchDemographicByNameAndStatus(searchStr,null,limit,offset,providerNo,outOfDomain,false);
 	}

@@ -25,19 +25,29 @@
 --%>
 
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 <%@ page import="java.lang.*"%>
 <%@page import="oscar.OscarProperties"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 
+<%@page import="org.oscarehr.managers.ProgramManager2" %>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+<%@page import="org.oscarehr.PMmodule.model.Program" %>
+<%@page import="java.util.List"%>
+
+
 <%
         boolean fromMessenger = request.getParameter("fromMessenger") == null ? false : (request.getParameter("fromMessenger")).equalsIgnoreCase("true")?true:false;
 		String roleName = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");		
+		LoggedInInfo loggedInInfo2 = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
+<script src="../js/jquery-1.9.1.min.js"></script>
 <script language="JavaScript">
 function searchInactive() {
     document.titlesearch.ptstatus.value="inactive";
@@ -53,6 +63,147 @@ function searchOutOfDomain() {
     document.titlesearch.outofdomain.value="true";
     if (checkTypeIn()) document.titlesearch.submit();
 }
+
+
+function getNextExtraClauseId() {
+	for(var x=2;x<=12;x++) {
+		var el = document.getElementById("search_"+x);
+		if(el == null) {
+			return x;
+		}
+	}
+	return null;
+}
+
+function getExtraClauseData(x) {
+	var data = 
+		"<ul id=\"extraSearchClause"+x+"\" >" + 
+	    "<li>" +
+	    "    <div class=\"label\">" +
+	    "</div>" +
+	    " 	<input type=\"hidden\" name=\"search_"+x+"\" id=\"search_"+x+"\" value=\"true\"/>" +
+	    "" 	+
+	    " 	<img src=\"../images/icons/101.png\" border=\"0\" onClick=\"removeThisSearchClause("+x+")\"/>" +
+	    "     <select class=\"wideInput\" name=\"search_mode_"+x+"\" id=\"search_mode_"+x+"\" onChange=\"updateKeywordField("+x+")\">"+
+	    "        <option value=\"search_name\">"+
+	    "            Name"+
+	    "        </option>"+
+	    "        <option value=\"search_phone\">"+
+	    "            Phone"+
+	    "        </option>"+
+	    "        <option value=\"search_dob\">"+
+	    "            DOB yyyy-mm-dd"+
+	    "        </option>"+
+	    "        <option value=\"search_address\" >"+
+	    "            Address"+
+	    "        </option>"+
+	    "        <option value=\"search_hin\">"+
+	    "            Health Ins #"+
+	    "        </option>"+
+	    "        <option value=\"search_chart_no\">"+
+	    "            Chart No"+
+	    "        </option>"+
+	    "        <option value=\"search_demographic_no\">"+
+	    "            Demographic No"+
+	    "       </option>"+
+	    "		<option value=\"search_program_no\">"+
+	    "            Program"+
+	    "       </option>"+
+	    "     </select>"+
+	    "</li>"+
+	    "<li>"+
+	    "    <div class=\"label\">"+
+	    "    </div>"+
+	    "    <span id=\"keyword_span_"+x+"\"><input class=\"wideInput\" type=\"text\" NAME=\"keyword_"+x+"\" id=\"keyword_"+x+"\" VALUE=\"\" SIZE=\"17\" MAXLENGTH=\"100\"></span>"+
+	    "	<span id=\"program_select_span_"+x+"\" style=\"display:none\">" +
+	    "	<select name=\"programKeyword_"+x+"\" id=\"programKeyword_"+x+"\"></select>" +
+	    "	</span>" +
+	    "</li>"+
+	"</ul>";
+	
+	return data;
+}
+
+function updateKeywordField(idx) {
+	//get the search_type for the {idx}
+	//if it's search_program_no, then change to the select, otherwise change to textbox
+	
+	var blah = $("#search_mode_" + idx).val();
+	
+	if("search_program_no" == blah) {
+		$("#program_select_span_" + idx).show();
+		$("#keyword_span_" + idx).hide();
+	} else {
+		$("#program_select_span_" + idx).hide();
+		$("#keyword_span_" + idx).show();
+	}
+}
+
+function addExtraSearchClause() {
+	
+	var iterID = getNextExtraClauseId();
+	if(iterID != null) {
+		var data = getExtraClauseData(iterID);
+		//console.log(data);
+		$("#extraSearchClauses").append(data);
+		
+		//copy the options for the program list
+		var $options = $("#programKeyword_0 > option").clone();
+		$('#programKeyword_' + iterID).append($options);
+		
+		var max = parseInt($("#max_search_clause").val());
+		if(parseInt(iterID) > max) {
+			$("#max_search_clause").val(iterID);
+		}
+	}
+	
+	return iterID;
+}
+
+function removeThisSearchClause(v) {
+	$("#extraSearchClause" + v).remove();
+}
+
+
+
+$(document).ready(function(){
+	updateKeywordField(0);
+	
+	<%
+	String strMax1 = request.getParameter("max_search_clause");
+	int max1 = 1;
+	try {
+		max1 = Integer.parseInt(strMax1);
+	}catch(NumberFormatException e) {
+		
+	}
+	
+	
+	for(int x=2;x<=max1;x++) {
+		String isActive = request.getParameter("search_" + x);
+		if(isActive != null && "true".equals(isActive)) {
+			String searchModeX = request.getParameter("search_mode_" + x);
+			String keywordX = request.getParameter("keyword_"+x);
+			String programKeywordX = request.getParameter("programKeyword_" + x);
+			
+			if((keywordX != null && !keywordX.equals("")) || ("search_program_no".equals(searchModeX) && programKeywordX != null && !programKeywordX.equals(""))) {
+				%>
+					//console.log('adding search clause ' + x);
+					var iterID = addExtraSearchClause();
+					$("#search_mode_" + iterID).val('<%=searchModeX%>');
+					$("#keyword_" + iterID).val('<%=keywordX%>');
+					$("#programKeyword_" + iterID).val('<%=programKeywordX%>');
+					updateKeywordField(iterID);
+					//console.log('done adding search clause ' + x);
+					
+				<%
+			}
+		}
+	}
+%>
+	
+
+});
 
 </script>
 
@@ -76,6 +227,7 @@ function searchOutOfDomain() {
         </div>
 	<% String searchMode = request.getParameter("search_mode");
          String keyWord = request.getParameter("keyword");
+        
          if (searchMode == null || searchMode.equals("")) {
              searchMode = OscarProperties.getInstance().getProperty("default_search_mode","search_name");             
          }  
@@ -83,7 +235,11 @@ function searchOutOfDomain() {
              keyWord = "";
          }
      %>
-         <select class="wideInput" name="search_mode">
+     
+     	<input type="hidden" name="max_search_clause" id="max_search_clause" value="1"/>
+     	
+     	<img id="addBtn" src="../images/icons/103.png" border="0" onClick="addExtraSearchClause()"/>
+         <select class="wideInput" name="search_mode" id="search_mode_0" onChange="updateKeywordField(0)">
             <option value="search_name" <%=searchMode.equals("search_name")?"selected":""%>>
                 <bean:message key="demographic.zdemographicfulltitlesearch.formName" />
             </option>
@@ -105,12 +261,38 @@ function searchOutOfDomain() {
             <option value="search_demographic_no" <%=searchMode.equals("search_demographic_no")?"selected":""%>>
                 <bean:message key="demographic.zdemographicfulltitlesearch.formDemographicNo" />
             </option>
+            <option value="search_program_no" <%=searchMode.equals("search_program_no")?"selected":""%>>
+                <bean:message key="demographic.zdemographicfulltitlesearch.formProgram" />
+            </option>
          </select>
     </li>
     <li>
         <div class="label">
         </div>
+        <span id="keyword_span_0">
         <input class="wideInput" type="text" NAME="keyword" VALUE="<%=StringEscapeUtils.escapeHtml(keyWord)%>" SIZE="17" MAXLENGTH="100">
+        </span>
+        <span id="program_select_span_0" style="display:none">
+        <select name="programKeyword_0" id="programKeyword_0">
+        	<%
+        		//get list of programs
+        		ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
+        		List<ProgramProvider> ppList = programManager.getProgramDomain(loggedInInfo2, loggedInInfo2.getLoggedInProviderNo());
+        		for(ProgramProvider pp:ppList) {
+        			Program p = programManager.getProgram(loggedInInfo2, pp.getProgramId().intValue());
+        			//do we have one set?
+        			String strProgKeyword = request.getParameter("programKeyword_0" );
+        			int var = -1;
+        			if(strProgKeyword != null) {
+        				var = Integer.parseInt(strProgKeyword);
+        			}
+        			String selected = (var >= 0 && var == p.getId().intValue())?" selected=\"selected\" ":"";
+        	%> <option value="<%=p.getId()%>" <%=selected%>><%=p.getName() %></option>  <%
+        		}
+        	%>
+        </select>
+        </span>
+        
     </li>
     <li>
 				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
@@ -131,7 +313,6 @@ function searchOutOfDomain() {
 					VALUE="<bean:message key="demographic.search.All"/>">
 					
 				<%
-					LoggedInInfo loggedInInfo2 = LoggedInInfo.getLoggedInInfoFromSession(request);
 					if(loggedInInfo2.getCurrentFacility().isIntegratorEnabled()) {
 				%>
 						<input type="checkbox" name="includeIntegratedResults" value="true"/>Include Integrator
@@ -148,5 +329,12 @@ function searchOutOfDomain() {
 				</caisi:isModuleLoad>			
     </li>
 </ul>
+
+<div id="extraSearchClauses">
+
+
+
+</div>
+
 </div>
 </form>
