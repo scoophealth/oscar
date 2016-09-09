@@ -279,7 +279,11 @@ boolean isMulitSites = oscarProp.getBooleanProperty("multisites", "on");
 			</td>
 			<td align="right" valign="top"><font size="+2"><b>Invoice
 			- <%=invoiceNoStr %></b></font><br />
-			Date:<%=DateUtils.sumDate("yyyy-MM-dd HH:mm","0") %></td>
+			Print Date:<%=DateUtils.sumDate("yyyy-MM-dd HH:mm","0") %><br/>
+                        <% if (props.hasProperty("invoice_due_date")) { %>
+                          <b><bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.dueDate"/>:</b><%=dueDateStr%>
+                        <% }%>
+                        </td>
 		</tr>
 	</table>
 
