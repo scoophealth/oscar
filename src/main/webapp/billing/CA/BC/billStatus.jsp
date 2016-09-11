@@ -568,20 +568,19 @@ billTypes = "%";
     String dateEnd = request.getParameter("xml_appointment_date");
     String demoNo = request.getParameter("demographicNo");
 
-    ArrayList list;
     MSPReconcile.BillSearch bSearch = msp.getBills(billTypes, providerview, dateBegin ,dateEnd,demoNo,!showWCB,!showMSP,!showPRIV,!showICBC);
-    list = bSearch.list;
+
     Properties p2 = bSearch.getCurrentErrorMessages();
     Properties p = msp.currentC12Records();
     boolean bodd = true;
     boolean incorrectVal = false;
     boolean paidinCorrectval = false;
 	String currentBillingNo = "";
-    for (int i = 0; i < list.size(); i++){
+    for (int i = 0; i < bSearch.list.size(); i++){
 
       incorrectVal = false;
       paidinCorrectval = false;
-      MSPReconcile.Bill b = (MSPReconcile.Bill) list.get(i);
+      MSPReconcile.Bill b = (MSPReconcile.Bill) bSearch.list.get(i);
 
       bodd=currentBillingNo.equals(b.billing_no) ? !bodd : bodd; //for the color of rows
       nItems++; //to calculate if it is the end of records
@@ -674,7 +673,7 @@ billTypes = "%";
     <td align="center">&nbsp;</td>
     <td align="center">&nbsp;</td>
     <td align="center">Count:</td>
-    <td align="center"><%=list.size()%></td>
+    <td align="center"><%=bSearch.list.size()%></td>
     <td align="center">&nbsp;</td>
     <td align="center">Total:</td>
     <td align="center"><%=nf.format(total.doubleValue())%></td>

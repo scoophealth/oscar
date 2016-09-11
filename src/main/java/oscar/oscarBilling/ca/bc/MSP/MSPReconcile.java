@@ -26,9 +26,6 @@ package oscar.oscarBilling.ca.bc.MSP;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -153,30 +150,32 @@ public class MSPReconcile {
 	String key = "patched";
 	String value = "true";
 
-	private void setPatched() {
-		Properties patchInd = new Properties();
-		patchInd.setProperty(key, value);
-		try {
-			patchInd.store(new FileOutputStream(propFile), null);
-		} catch (IOException e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-	}
-
-	private boolean patchApplied() {
-		boolean ret = false;
-		Properties patchInd = new Properties();
-		try {
-			patchInd.load(new FileInputStream(propFile));
-			String prop = patchInd.getProperty(key);
-			if (prop != null && value.equals(prop)) {
-				ret = true;
-			}
-		} catch (IOException e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-		return ret;
-	}
+//	@Deprecated
+//	private void setPatched() {
+//		Properties patchInd = new Properties();
+//		patchInd.setProperty(key, value);
+//		try {
+//			patchInd.store(new FileOutputStream(propFile), null);
+//		} catch (IOException e) {
+//			MiscUtils.getLogger().error("Error", e);
+//		}
+//	}
+//
+//	@Deprecated
+//	private boolean patchApplied() {
+//		boolean ret = false;
+//		Properties patchInd = new Properties();
+//		try {
+//			patchInd.load(new FileInputStream(propFile));
+//			String prop = patchInd.getProperty(key);
+//			if (prop != null && value.equals(prop)) {
+//				ret = true;
+//			}
+//		} catch (IOException e) {
+//			MiscUtils.getLogger().error("Error", e);
+//		}
+//		return ret;
+//	}
 
 	/**
 	 * Initializes the Teleplan Payment suffixes.</P?
@@ -254,24 +253,45 @@ public class MSPReconcile {
 	}
 
 	private HashMap<String, Vector<String>> getRejectionDetails() {
-		HashMap<String, Vector<String>> map = new HashMap<String, Vector<String>>();
-
+		
 		TeleplanC12Dao dao = SpringUtils.getBean(TeleplanC12Dao.class);
-		for (Object[] o : dao.findRejected()) {
-			TeleplanC12 tc = (TeleplanC12) o[1];
-			TeleplanS21 ts = (TeleplanS21) o[2];
+		HashMap<String, Vector<String>> map = new HashMap<String, Vector<String>>();
+		List<Object[]> rejectedList = dao.findRejected();
+		
+		for ( Object[] rejectedArray : rejectedList ) {
+			
+			TeleplanC12 tc = null;
+			TeleplanS21 ts = null;
+			String officeFolioClaimNo = "";
 
-			try {
-				int i = Integer.parseInt(tc.getOfficeFolioClaimNo()); // this kludge rids leading zeros
-				Vector<String> exp = new Vector<String>();
-				exp.addAll(Arrays.asList(tc.getExps()));
-				exp.add(ts.getPayment());
-				String s = Integer.toString(i);
-				map.put(s, exp);
-			} catch (NumberFormatException intEx) {
-				MiscUtils.getLogger().debug("Had trouble Parsing int from " + tc.getOfficeFolioClaimNo());
+			if( rejectedArray == null ) {
+				continue;
 			}
+			
+			Vector<String> exp = new Vector<String>();
+			
+			if( rejectedArray.length > 0 ) {
+				tc = (TeleplanC12) rejectedArray[1];
+			}
+			
+			if( rejectedArray.length > 1 ) {
+				ts = (TeleplanS21) rejectedArray[2];
+			}
+
+			if( tc != null ) {				
+				exp.addAll(Arrays.asList(tc.getExps()));
+				officeFolioClaimNo = tc.getOfficeFolioClaimNo();
+				officeFolioClaimNo = officeFolioClaimNo.replaceFirst("^0+(?!$)", "").trim();
+			}
+			
+			if( ts != null ) {
+				exp.add( ts.getPayment() );
+			}
+			
+			map.put( officeFolioClaimNo, exp );
+			
 		}
+		
 		return map;
 	}
 
@@ -295,7 +315,6 @@ public class MSPReconcile {
 		return p;
 	}
 
-	//
 	public String getS00String(String billingMasterNo) {
 		String s = "";
 		TeleplanS00Dao dao = SpringUtils.getBean(TeleplanS00Dao.class);
@@ -316,9 +335,12 @@ public class MSPReconcile {
 		return retval;
 	}
 
+	/**
+	 * MSPReconcile Nested Class BillSearch.
+	 */
 	public class BillSearch {
 		Properties p;
-		public ArrayList list;
+		public List<Object> list;
 		int count = 0;
 		ArrayList<String> justBillingMaster;
 
@@ -402,7 +424,7 @@ public class MSPReconcile {
 	public BillSearch getBills(String statusType, String providerNo, String startDate, String endDate, String demoNo, boolean excludeWCB, boolean excludeMSP, boolean excludePrivate, boolean exludeICBC) {
 
 		BillSearch billSearch = new BillSearch();
-		billSearch.list = new ArrayList();
+		billSearch.list = new ArrayList<Object>();
 		billSearch.count = 0;
 		billSearch.justBillingMaster = new ArrayList<String>();
 
@@ -848,9 +870,19 @@ public class MSPReconcile {
 
 	}
 
-	//Updates the status of a bill but doesn't change it's type.  Created because a WCB bill can not be
-	//a WCB type Bill and a PRIVATE bill at the same time.
-	public void updateBillingStatusWCB(String billingNo, String stat, String billingMasterNo) {
+	/**
+	 * @Deprecated use method signature updateBillingStatusWCB(String stat, String billingMasterNo
+	 */
+	@Deprecated
+	public void updateBillingStatusWCB(@SuppressWarnings("unused") String billingNo, String stat, String billingMasterNo) {
+		updateBillingStatusHlp2(billingMasterNo, stat);
+	}
+	
+	/**
+	 * Updates the status of a bill but doesn't change it's type.Created because a WCB bill can not be
+	 * a WCB type Bill and a PRIVATE bill at the same time.
+	 */
+	public void updateBillingStatusWCB(String stat, String billingMasterNo) {
 		updateBillingStatusHlp2(billingMasterNo, stat);
 	}
 
@@ -901,20 +933,21 @@ public class MSPReconcile {
 
 	}
 
+
+//	@Deprecated
+//	private void updatePaymentMethod(String billingNo, String paymentMethod) {
+//		updatePaymentMethodHlp(billingNo, paymentMethod);
+//		//if this is a private bill, update the status to bill patient
+//		if (!MSPReconcile.PAYTYPE_ELECTRONIC.equals(paymentMethod)) {
+//			this.updateBillingStatusHlp(billingNo, MSPReconcile.BILLPATIENT);
+//		}
+//	}
+
 	/**
 	 * Updates the paymentMethod of the specified bill with the supplied paymentMethod code
 	 * @param billingNo String - The uid of the bill to be updated
 	 * @param paymentMethod String - The paymentMethod code
-	 * @todo Move to BillingViewBean
 	 */
-	private void updatePaymentMethod(String billingNo, String paymentMethod) {
-		updatePaymentMethodHlp(billingNo, paymentMethod);
-		//if this is a private bill, update the status to bill patient
-		if (!MSPReconcile.PAYTYPE_ELECTRONIC.equals(paymentMethod)) {
-			this.updateBillingStatusHlp(billingNo, MSPReconcile.BILLPATIENT);
-		}
-	}
-
 	private void updatePaymentMethodHlp(String billingMasterNo, String paymentMethod) {
 		Billingmaster b = billingmasterDao.getBillingmaster(Integer.parseInt(billingMasterNo));
 		if (b != null) {
@@ -1057,7 +1090,7 @@ public class MSPReconcile {
 	public MSPReconcile.BillSearch getBillsByType(String account, String payeeNo, String providerNo, String startDate, String endDate, boolean excludeWCB, 
 			boolean excludeMSP, boolean excludePrivate, boolean exludeICBC, String type) {
 		BillSearch billSearch = new BillSearch();
-		HashMap rejDetails = null;
+		HashMap<String, Vector<String>> rejDetails = null;
 		boolean skipBill = false;
 		String criteriaQry = createCriteriaString(account, payeeNo, providerNo, startDate, endDate, excludeWCB, excludeMSP, excludePrivate, exludeICBC, type, "");
 		Properties c12 = new Properties();
@@ -1076,7 +1109,7 @@ public class MSPReconcile {
 			rejDetails = this.getRejectionDetails();
 		}
 
-		billSearch.list = new ArrayList();
+		billSearch.list = new ArrayList<Object>();
 		billSearch.count = 0;
 		billSearch.justBillingMaster = new ArrayList<String>();
 
@@ -1103,12 +1136,9 @@ public class MSPReconcile {
 				String expStr = getS00String(b.billMasterNo);
 				b.expString = "".equals(expStr) ? expStr : "(" + expStr + ")";
 				b.reason = this.getStatusDesc(b.reason);
-
 				b.amount = rs.getString("bill_amount");
-
 				b.code = rs.getString("billing_code");
-				b.dx1 = rs.getString("dx_code1");
-				;
+				b.dx1 = rs.getString("dx_code1");	
 				b.serviceDate = rs.getString("service_date").equals("") ? "00000000" : rs.getString("service_date");
 				b.mvaCode = rs.getString("mva_claim_code");
 				b.hin = rs.getString("phn");
@@ -1118,12 +1148,11 @@ public class MSPReconcile {
 				b.apptDoctorNo = rs.getString("apptProvider_no");
 				b.accountNo = rs.getString("b.provider_no");
 				b.updateDate = rs.getString("update_date");
-
 				oscar.entities.Provider accountProvider = this.getProvider(b.accountNo, 0);
 				b.accountName = accountProvider.getFullName();
-				b.payeeName = accountProvider.getInitials();
+				b.payeeName = accountProvider.getInitials();			
 				b.providerFirstName = rs.getString("first_name");
-				b.providerLastName = rs.getString("last_name");
+				b.providerLastName = rs.getString("last_name");			
 				b.provName = this.getProvider(b.apptDoctorNo, 1).getInitials();
 
 				// WCB SECTION ---------------------------------------------------------
@@ -1139,20 +1168,20 @@ public class MSPReconcile {
 				// REJECTED SECTION ---------------------------------------------------------
 				if (type.equals(REP_REJ)) {
 					if (rejDetails.containsKey(b.billMasterNo)) {
-						Vector dets = (Vector) rejDetails.get(b.billMasterNo);
+						Vector<String> dets = rejDetails.get(b.billMasterNo);
 						String[] exps = new String[7];
 						for (int i = 0; i < exps.length; i++) {
-							exps[i] = (String) dets.get(i);
+							exps[i] = dets.get(i);
 						}
 						b.expString = this.createCorrectionsString(exps);
-						Hashtable explCodes = new Hashtable();
+						Hashtable<String, String> explCodes = new Hashtable<String, String>();
 						for (int i = 0; i < exps.length; i++) {
 							String code = exps[i];
 							String desc = this.getC12Description(code);
 							explCodes.put(code, desc);
 						}
 						b.explanations = explCodes;
-						b.rejectionDate = (String) dets.get(7);
+						b.rejectionDate = dets.get(7);
 						if (b.rejectionDate == null || b.rejectionDate.equals("")) {
 							b.rejectionDate = "00000000";
 						}
@@ -1215,13 +1244,12 @@ public class MSPReconcile {
 	 * Returns the dollar amount owing on a specific bill number
 	 * If the specified bill has an explanation code of 'HS'(Already paid) the amount is set to zero
 	 * If the bill is not private,"Internal Adjustments" are deducted from the total amount owing.
-	 * @todo Refactor to return a double
 	 * @param billingMasterNo String - The UID of the bill in question
 	 * @param amountBilled String - The total amount of the bill
 	 * @return String
 	 */
 	public double getAmountOwing(String billingMasterNo, String amountBilled, String billingType) {
-		ResultSet rs = null;
+
 		amountBilled = (amountBilled != null && !amountBilled.equals("")) ? amountBilled : "0.0";
 		double dbltBilled = new Double(amountBilled).doubleValue();
 		//Gets the total 'paid' or adjusted for any type of bill from billinghistory
@@ -1251,8 +1279,11 @@ public class MSPReconcile {
 		return dblAmountOwing;
 	}
 
-	public String getAdjustmentCodeByBillNo(String billNo) {
-		String qry = "SELECT teleplanS00.t_exp1 FROM teleplanS00, billingmaster " + "where t_officeno = billingmaster_no " + "and billingmaster_no  = " + billNo;
+	/**
+	 * String qry = "SELECT teleplanS00.t_exp1 FROM teleplanS00, billingmaster " + 
+	 * "where t_officeno = billingmaster_no " + "and billingmaster_no  = " + billNo;
+	 */
+	public String getAdjustmentCodeByBillNo(String billNo) {		
 		TeleplanS00Dao dao = SpringUtils.getBean(TeleplanS00Dao.class);
 		for(TeleplanS00 s : dao.findByOfficeNumber(billNo)) {
 			return s.getExp1();
@@ -1295,7 +1326,7 @@ public class MSPReconcile {
 		String p = "SELECT teleplanS00.t_payment,b.billingtype,b.demographic_name,apptProvider_no,provider_no,payee_no,b.demographic_no,teleplanS00.t_paidamt,t_exp1,t_exp2,t_dataseq,bm.service_date,bm.paymentMethod,teleplanS00.t_ajc1," + " teleplanS00.t_aja1,teleplanS00.t_aja2,teleplanS00.t_aja3,teleplanS00.t_aja4,teleplanS00.t_aja5,teleplanS00.t_aja6,teleplanS00.t_aja7,bm.billingmaster_no,teleplanS00.t_practitionerno"
 		        + " FROM teleplanS00 left join billingmaster as bm on teleplanS00.t_officeno = bm.billingmaster_no,billing as b" + " where b.billing_no = bm.billing_no" + criteriaQry + " and bm.billingstatus != 'D'" + " order by t_payment";
 
-		billSearch.list = new ArrayList();
+		billSearch.list = new ArrayList<Object>();
 		billSearch.count = 0;
 		billSearch.justBillingMaster = new ArrayList<String>();
 
@@ -1392,9 +1423,10 @@ public class MSPReconcile {
 
 		//Now we need to get the Private Payments
 		if (!excludePrivate) {
-			List privatePayments = this.getPrivatePayments(account, payeeNo, providerNo, startDate, endDate, true).list;
-			if (privatePayments != null && !privatePayments.isEmpty()) {
-				billSearch.list.addAll(privatePayments);
+			MSPReconcile.BillSearch privatePayments = getPrivatePayments(account, payeeNo, providerNo, startDate, endDate, true);
+			List<Object> privatePaymentsList = privatePayments.list;
+			if (privatePaymentsList != null && !privatePaymentsList.isEmpty()) {
+				billSearch.list.addAll(privatePaymentsList);
 			}
 		}
 		return billSearch;
@@ -1411,7 +1443,7 @@ public class MSPReconcile {
 	 * @param excludePrivate
 	 * @return BillSearch
 	 */
-	public MSPReconcile.BillSearch getPrivatePayments(String account, String payeeNo, String providerNo, String startDate, String endDate, boolean excludePrivate) {
+	public MSPReconcile.BillSearch getPrivatePayments(String account, String payeeNo, String providerNo, String startDate, String endDate) {
 
 		startDate = UtilMisc.replace(startDate, "-", "");
 
@@ -1420,7 +1452,69 @@ public class MSPReconcile {
 		String criteriaQry = createCriteriaString(account, payeeNo, providerNo, startDate, endDate, true, true, false, true, "", "creation_date");
 		String p = "SELECT b.billingtype,bm.billingmaster_no,b.demographic_no,b.demographic_name,bm.service_date,b.apptProvider_no ,b.provider_no,bm.payee_no," + " bh.creation_date,bh.amount_received,payment_type_id" + " FROM billing_history bh left join billingmaster bm on bh.billingmaster_no = bm.billingmaster_no ,billing b" + " where bm.billing_no = b.billing_no " + " and bh.payment_type_id != " + MSPReconcile.PAYTYPE_IA + " " + criteriaQry + " and bm.billingstatus != '" + MSPReconcile.DELETED + "'";
 		MiscUtils.getLogger().debug(p);
-		billSearch.list = new ArrayList();
+		billSearch.list = new ArrayList<Object>();
+
+		ResultSet rs = null;
+		try {
+
+			rs = DBHandler.GetSQL(p);
+			while (rs.next()) {
+				MSPBill b = new MSPBill();
+				b.billMasterNo = rs.getString("bm.billingmaster_no");
+				b.billingtype = rs.getString("b.billingtype");
+				b.demoNo = rs.getString("demographic_no");
+				b.demoName = rs.getString("demographic_name");
+				b.status = b.reason;
+				b.serviceDate = rs.getString("service_date");
+				b.apptDoctorNo = rs.getString("apptProvider_no");
+				b.userno = rs.getString("provider_no");
+				b.payeeNo = rs.getString("payee_no");
+
+				Provider actProv = this.getProvider(b.userno, 0);
+				b.accountName = actProv.getFullName();
+				b.acctInit = actProv.getInitials();
+
+				b.payeeName = this.getProvider(b.payeeNo, 1).getInitials();
+				b.provName = this.getProvider(b.apptDoctorNo, 0).getInitials();
+
+				b.amount = rs.getString("amount_received");
+				b.paymentDate = this.fmt.format(rs.getDate("creation_date"));
+				b.paymentMethod = rs.getString("payment_type_id");
+				b.setPaymentMethodName(this.getPaymentMethodDesc(b.paymentMethod));
+				double dblAmount = UtilMisc.safeParseDouble(b.amount);
+				b.type = dblAmount > 0 ? "PMT" : "RFD";
+				if (dblAmount != 0) {
+					billSearch.list.add(b);
+				}
+			}
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+		} finally {
+			try {
+				rs.close();
+			} catch (SQLException ex) {
+				MiscUtils.getLogger().error("Error", ex);
+			}
+
+		}
+		return billSearch;
+	}
+	
+	/**
+	 * @Deprecated use method signature getPrivatePayments(String account, String payeeNo, String providerNo, String startDate, String endDate)
+	 */
+	@Deprecated
+	public MSPReconcile.BillSearch getPrivatePayments(String account, String payeeNo, String providerNo, 
+			String startDate, String endDate, @SuppressWarnings("unused") boolean excludePrivate) {
+
+		startDate = UtilMisc.replace(startDate, "-", "");
+
+		endDate = UtilMisc.replace(endDate, "-", "");
+		BillSearch billSearch = new BillSearch();
+		String criteriaQry = createCriteriaString(account, payeeNo, providerNo, startDate, endDate, true, true, false, true, "", "creation_date");
+		String p = "SELECT b.billingtype,bm.billingmaster_no,b.demographic_no,b.demographic_name,bm.service_date,b.apptProvider_no ,b.provider_no,bm.payee_no," + " bh.creation_date,bh.amount_received,payment_type_id" + " FROM billing_history bh left join billingmaster bm on bh.billingmaster_no = bm.billingmaster_no ,billing b" + " where bm.billing_no = b.billing_no " + " and bh.payment_type_id != " + MSPReconcile.PAYTYPE_IA + " " + criteriaQry + " and bm.billingstatus != '" + MSPReconcile.DELETED + "'";
+		MiscUtils.getLogger().debug(p);
+		billSearch.list = new ArrayList<Object>();
 
 		ResultSet rs = null;
 		try {
@@ -1573,11 +1667,11 @@ public class MSPReconcile {
 	 * @param fieldName String
 	 * @return int
 	 */
-	public int getDistinctFieldCount(List<MSPBill> bills, String fieldName) {
+	public int getDistinctFieldCount(List<Object> bills, String fieldName) {
 		ArrayList<String> fieldValueList = new ArrayList<String>(); //a lookup list containing all values that have been counted
 		int colSize = bills.size();
 		for (int i = 0; i < colSize; i++) {
-			MSPBill bill = bills.get(i);
+			MSPBill bill = (MSPBill) bills.get(i);
 			String propValue = beanut.getPropertyValue(bill, fieldName);
 			//disgregard previously counted field value
 			if (!fieldValueList.contains(propValue)) {
@@ -1593,7 +1687,7 @@ public class MSPReconcile {
 	 * @param status String
 	 * @return Double
 	 */
-	public Double getTotalPaidByStatus(List bills, String status) {
+	public Double getTotalPaidByStatus(List<Object> bills, String status) {
 		int colSize = bills.size();
 		double amt = 0.0;
 		for (int i = 0; i < colSize; i++) {
@@ -1615,11 +1709,11 @@ public class MSPReconcile {
 	 * @param status String
 	 * @return int
 	 */
-	public Integer getCountByStatus(List bills, String status) {
+	public Integer getCountByStatus(List<MSPBill> bills, String status) {
 		int colSize = bills.size();
 		int cnt = 0;
 		for (int i = 0; i < colSize; i++) {
-			MSPBill bill = (MSPBill) bills.get(i);
+			MSPBill bill = bills.get(i);
 			String beanStatus = beanut.getPropertyValue(bill, "status");
 			if (beanStatus.equals(status)) {
 				cnt++;
@@ -1658,7 +1752,9 @@ public class MSPReconcile {
 	 */
 	public oscar.entities.Provider getProvider(String providerNo, int criteria) {
 		oscar.entities.Provider prov = new oscar.entities.Provider();
-		if (!oscar.util.StringUtils.isNumeric(providerNo)) {
+		
+		// provider numbers are varchars (strings) 
+		if( providerNo == null || providerNo.isEmpty() ) {
 			prov.setFirstName("");
 			prov.setLastName("");
 			return prov;
@@ -1667,11 +1763,14 @@ public class MSPReconcile {
 		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
 		org.oscarehr.common.model.Provider provider = null;
 		boolean isSearchingProvidersByOhipNumber = criteria == 1;
-		if (isSearchingProvidersByOhipNumber) {
-			for(org.oscarehr.common.model.Provider p : dao.getBillableProvidersByOHIPNo(providerNo)) {
-				provider = p;
-				break;
+		
+		if (isSearchingProvidersByOhipNumber) {			
+			List<org.oscarehr.common.model.Provider> providersByOhip = dao.getBillableProvidersByOHIPNo( providerNo );
+			
+			if( providersByOhip != null ) {
+				provider = providersByOhip.get(0); // get the first entry only. 
 			}
+			
 		} else {
 			provider = dao.getProvider(providerNo);
 		}

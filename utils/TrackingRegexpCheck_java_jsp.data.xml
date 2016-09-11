@@ -98,8 +98,6 @@
         <ViolationValue>/src/main/java/oscar/login/LoginCheckLogin.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/tld/SecurityTag.java://private Vector roleInObj = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/CreateBillingReportAction.java:HashMap reportParams = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Hashtable explCodes = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:billSearch.list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java:List&lt;String&gt; providerBillingNumbers = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java:billingmasterToBeMarkedAsBilled = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java:logList = new ArrayList();</ViolationValue>
@@ -254,8 +252,6 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:public Vector&lt;String&gt; getProviderNoVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgDocListForm.java:setUpVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgHandleMessagesAction.java:java.util.Vector vector = new java.util.Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:Hashtable demoMap = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:Vector msgVector= new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:Hashtable preventionTypes = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:Vector v = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:a = new Vector();</ViolationValue>
@@ -1176,15 +1172,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setPatientIdNames(Hashtable patientIdNames) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setPatientNumDoc(Hashtable patientNumDoc) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setTypeDocLab(Hashtable&lt;String, List&lt;String&gt;&gt; typeDocLab) {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable drug = dr.getDrug2(id, true);</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable generic = dr.getGenericName(id);</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&lt;String, Object&gt;&gt; components = (Vector&lt;Hashtable&lt;String, Object&gt;&gt;) h.get("components");</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&gt; v = (Vector&lt;Hashtable&gt;) dr.list_drug_element3(s, false);</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:for (Hashtable h : v) {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:for (Hashtable&lt;String, Object&gt; o : components) {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:protected void extractAndPopulateDetails(DrugSearchTo1 t, Hashtable h, String id) throws Exception {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable docStatus = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable docType = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable patientDocs = new Hashtable();</ViolationValue>
@@ -1327,8 +1314,9 @@
         <ViolationValue>/src/main/java/oscar/login/tld/SecurityTag.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/tld/SecurityTag.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:HashMap&lt;String, Vector&lt;String&gt;&gt; map = new HashMap&lt;String, Vector&lt;String&gt;&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Hashtable explCodes = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Vector dets = (Vector) rejDetails.get(b.billMasterNo);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:HashMap&lt;String, Vector&lt;String&gt;&gt; rejDetails = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Hashtable&lt;String, String&gt; explCodes = new Hashtable&lt;String, String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Vector&lt;String&gt; dets = rejDetails.get(b.billMasterNo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Vector&lt;String&gt; exp = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:import java.util.Vector;</ViolationValue>
@@ -1798,10 +1786,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMeasurementsAction.java:Vector measureTypes = (Vector) hd.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMeasurementsAction.java:Vector measures = (Vector) hd.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMeasurementsAction.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMsgAction.java:Vector msgVector = msgDemoMap.getMsgVector(bean.demographicNo);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMsgAction.java:for( int i=0; i&lt;msgVector.size(); i++) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMsgAction.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMsgAction.java:msgId = (String) msgVector.elementAt(i);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPregnancyAction.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.pregnancy");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPregnancyAction.java:a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPregnancyAction.java:import java.util.Vector;</ViolationValue>
@@ -1957,14 +1941,6 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewPDFAction.java:String pdfFile = ( String) attVector.elementAt(fileID);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewPDFAction.java:Vector attVector = Doc2PDF.getXMLTagValue(pdfAttachment, "CONTENT" );</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewPDFAction.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:Hashtable demoMap = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:Vector msgVector= new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:msgVector.add("" + map.getId().getMessageId());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:public Hashtable getDemoMap (String msgId){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:public Vector getMsgVector(String demographic_no){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:return msgVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:Hashtable preventionTypes = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:Vector a =  (Vector) preventionTypes.get(preventionType);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:Vector v = (Vector) preventionTypes.get(pItem.name);</ViolationValue>
@@ -2755,12 +2731,6 @@
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:Vector&lt;String&gt; req_id      = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:java.util.Hashtable,</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:java.util.Vector,</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/Index.jsp:Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/Index.jsp:Vector msgVector = msgDemoMap.getMsgVector(demoNo);</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/Index.jsp:Vector splitChart = ectSplitChart.getSplitCharts(demoNo);</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/Index.jsp:for(int j=0; j&lt;10 &amp;&amp; j&lt;msgVector.size(); j++) {</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/Index.jsp:msgId = (String) msgVector.elementAt(j);</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/Index2.jsp:Vector msgVector = msgDemoMap.getMsgVector(demoNo);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/Index2.jsp:Vector splitChart = ectSplitChart.getSplitCharts(demoNo);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/immunization/ScheduleConfig.jsp:Vector cfgId = new EctImmConfigData().getImmunizationConfigId();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/immunization/ScheduleConfig.jsp:Vector cfgSet = new EctImmConfigData().getImmunizationConfigName();</ViolationValue>
@@ -2864,7 +2834,6 @@
         <ViolationValue>/src/main/webapp/oscarMessenger/DisplayDemographicMessages.jsp:&lt;% //java.util.Vector theMessages = new java.util.Vector() ;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/DisplayDemographicMessages.jsp:java.util.Vector theMessages2 = new java.util.Vector() ;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/DisplayMessages.jsp:java.util.Vector theMessages2 = new java.util.Vector() ;</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarMessenger/ViewMessage.jsp:java.util.Hashtable demoMap = msgDemoMap.getDemoMap((String) request.getAttribute("viewMessageId"));</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/ViewMessageFromEncounter.jsp:java.util.Hashtable demoMap = msgDemoMap.getDemoMap((String) request.getAttribute("viewMessageId"));</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/ViewPDFAttachment.jsp:&lt;% Vector attVector = Doc2PDF.getXMLTagValue(pdfAttch, "TITLE" ); %&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/ViewPDFAttachment.jsp:&lt;% for ( int i = 0 ; i &lt; attVector.size(); i++) { %&gt;</ViolationValue>

@@ -40,12 +40,14 @@ public class OscarDocumentCreator {
     return reportInstream;
   }
 
+  @SuppressWarnings("rawtypes")
   public void fillDocumentStream(HashMap parameters, OutputStream sos,
                                  String docType, InputStream xmlDesign,
                                  Object dataSrc) {
      fillDocumentStream(parameters, sos, docType, xmlDesign, dataSrc,null); 
   }
   
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public void fillDocumentStream(HashMap parameters, OutputStream sos,
                                  String docType, InputStream xmlDesign,
                                  Object dataSrc, String exportPdfJavascript) {
@@ -60,7 +62,7 @@ public class OscarDocumentCreator {
         print = JasperFillManager.fillReport(jasperReport, parameters,new JREmptyDataSource());  
       }
       else if (dataSrc instanceof List) {
-        JRDataSource ds = new JRBeanCollectionDataSource( (List) dataSrc);
+        JRDataSource ds = new JRBeanCollectionDataSource( (List<?>) dataSrc);
         print = JasperFillManager.fillReport(jasperReport, parameters,
                                              ds);
       }
