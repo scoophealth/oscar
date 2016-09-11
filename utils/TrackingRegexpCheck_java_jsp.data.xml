@@ -98,8 +98,6 @@
         <ViolationValue>/src/main/java/oscar/login/LoginCheckLogin.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/tld/SecurityTag.java://private Vector roleInObj = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/CreateBillingReportAction.java:HashMap reportParams = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Hashtable explCodes = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:billSearch.list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java:List&lt;String&gt; providerBillingNumbers = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java:billingmasterToBeMarkedAsBilled = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java:logList = new ArrayList();</ViolationValue>
@@ -1327,8 +1325,9 @@
         <ViolationValue>/src/main/java/oscar/login/tld/SecurityTag.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/tld/SecurityTag.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:HashMap&lt;String, Vector&lt;String&gt;&gt; map = new HashMap&lt;String, Vector&lt;String&gt;&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Hashtable explCodes = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Vector dets = (Vector) rejDetails.get(b.billMasterNo);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:HashMap&lt;String, Vector&lt;String&gt;&gt; rejDetails = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Hashtable&lt;String, String&gt; explCodes = new Hashtable&lt;String, String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Vector&lt;String&gt; dets = rejDetails.get(b.billMasterNo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Vector&lt;String&gt; exp = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:import java.util.Vector;</ViolationValue>

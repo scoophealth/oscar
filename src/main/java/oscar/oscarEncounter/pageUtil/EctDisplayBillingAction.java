@@ -29,7 +29,6 @@ package oscar.oscarEncounter.pageUtil;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +46,7 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile.Bill;
 import oscar.oscarBilling.ca.on.data.BillingClaimHeader1Data;
 import oscar.oscarBilling.ca.on.data.BillingItemData;
 import oscar.oscarBilling.ca.on.data.JdbcBillingReviewImpl;
@@ -156,9 +156,9 @@ public class EctDisplayBillingAction extends EctDisplayAction {
                 ////
                 MSPReconcile msp = new MSPReconcile();              //"ALL", "1999-01-01" ,"9999-99-99"
                 MSPReconcile.BillSearch bSearch = msp.getBills("%", null, null ,null,bean.demographicNo);//,true,true,true,true);
-                ArrayList<MSPReconcile.Bill> list = bSearch.list;
+               // ArrayList<MSPReconcile.Bill> list = bSearch.list;
 
-                MiscUtils.getLogger().debug("list size for bills is "+list.size());
+                MiscUtils.getLogger().debug( "list size for bills is "+ bSearch.list.size() );
 
 //                JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 //                List aL = null;
@@ -169,11 +169,11 @@ public class EctDisplayBillingAction extends EctDisplayAction {
 //                    MiscUtils.getLogger().error("Error", e);
 //                }
 
-                for(int i=0; i<list.size(); i++) {
+                for(int i=0; i < bSearch.list.size(); i++) {
 
                         Date date = null;
 
-                        MSPReconcile.Bill b = list.get(i);
+                        MSPReconcile.Bill b = (Bill) bSearch.list.get(i);
 
 
                         if (b != null && !b.reason.equals("D")){
