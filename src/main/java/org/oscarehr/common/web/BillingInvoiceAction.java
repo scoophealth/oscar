@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.service.PdfRecordPrinter;
 import org.oscarehr.managers.BillingONManager;
@@ -106,7 +107,7 @@ public class BillingInvoiceAction extends DispatchAction {
             response.setContentType("application/pdf"); // octet-stream
             response.setHeader("Content-Disposition", "attachment; filename=\"BillingInvoices" + "_" + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf\"");
             ConcatPDF.concat(fileList, response.getOutputStream());
-            actionResult = "success";
+            actionResult = "listSuccess";
         }
         
        return mapping.findForward(actionResult);
@@ -129,7 +130,10 @@ public class BillingInvoiceAction extends DispatchAction {
             billingManager.addEmailedBillingComment(invoiceNo, locale); 
             actionResult = "success";
         }
-        return mapping.findForward(actionResult);
+
+        ActionRedirect redirect = new ActionRedirect(mapping.findForward(actionResult));
+        redirect.addParameter("billing_no", invoiceNo);
+        return redirect;
     }
     
     public ActionForward sendListEmail(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
@@ -149,7 +153,7 @@ public class BillingInvoiceAction extends DispatchAction {
                 billingManager.sendInvoiceEmailNotification(invoiceNo, locale);
                 billingManager.addEmailedBillingComment(invoiceNo, locale);               
             }
-            actionResult = "success";
+            actionResult = "listSuccess";
         }
 
         return mapping.findForward(actionResult);

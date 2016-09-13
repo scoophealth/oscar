@@ -2662,7 +2662,8 @@
 			scope="request" validate="false" parameter="method" />
                         
                 <action path="/BillingInvoice" scope="request" type="org.oscarehr.common.web.BillingInvoiceAction" parameter="method">
-			<forward name="success" path="/close.html" />		
+			<forward name="success" path="/billing/CA/ON/billingONCorrection.jsp" />
+                       <forward name="listSuccess" path="/billing/CA/ON/billingONStatus.jsp" />
 		</action>        
 
             <action path="/BillingONReview" scope="request" type="org.oscarehr.common.web.BillingONReviewAction" parameter="method" />
