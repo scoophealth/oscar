@@ -115,7 +115,7 @@ public class Tickler extends AbstractModel<Integer> {
 	private String taskAssignedTo;
 
 	@Column(name="category_id")
-	private int categoryId;
+	private Integer categoryId;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="category_id", referencedColumnName="id", insertable=false, updatable=false)
@@ -569,11 +569,11 @@ public class Tickler extends AbstractModel<Integer> {
 	}
     };
 
-	public int getCategoryId() {
+	public Integer getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(int categoryId) {
+	public void setCategoryId(Integer categoryId) {
 		this.categoryId = categoryId;
 	}
 

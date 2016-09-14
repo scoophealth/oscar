@@ -50,7 +50,6 @@ public class DashboardBeanFactory {
 	private DashboardBean dashboardBean;
 	private List<IndicatorTemplate> indicatorTemplates;
 	private Dashboard dashboardEntity;
-	private LoggedInInfo loggedInInfo;
 	
 	/**
 	 * Parameters cannot be null or empty. This will work if the Indicator Templates are pre-set into the
