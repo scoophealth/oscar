@@ -57,6 +57,7 @@ import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerCategory;
 import org.oscarehr.common.model.TicklerComment;
+import org.oscarehr.common.model.TicklerLink;
 import org.oscarehr.common.model.TicklerTextSuggest;
 import org.oscarehr.common.model.TicklerUpdate;
 import org.oscarehr.util.EmailUtilsOld;
@@ -134,7 +135,7 @@ public class TicklerManager {
 		
 		return ticklerCategoryDao.getActiveCategories();
 	}
-	
+        
 	
 	public boolean validateTicklerIsValid(Tickler tickler) {
 		if(tickler == null)
@@ -148,6 +149,17 @@ public class TicklerManager {
 		return true;
 	}
 	
+	public boolean addTicklerLink(LoggedInInfo loggedInInfo, TicklerLink ticklerLink )
+        {
+            checkPrivilege(loggedInInfo, PRIVILEGE_WRITE);    	    	
+            ticklerDao.persist(ticklerLink);
+	     
+	    //--- log action ---
+            LogAction.addLogSynchronous(loggedInInfo, "TicklerManager.addTicklerLink", "ticklerLinkId="+ticklerLink.getId());
+		
+            return true;			
+	}
+        
     public boolean addTickler(LoggedInInfo loggedInInfo, Tickler tickler) {
     	checkPrivilege(loggedInInfo, PRIVILEGE_WRITE);
     	
@@ -162,7 +174,7 @@ public class TicklerManager {
 		
 		return true;
     }
-    
+        
     public boolean updateTickler(LoggedInInfo loggedInInfo, Tickler tickler) {
     	checkPrivilege(loggedInInfo, PRIVILEGE_UPDATE);
     	

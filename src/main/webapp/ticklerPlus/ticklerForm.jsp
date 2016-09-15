@@ -227,7 +227,7 @@
             	</html:select>
 				<%--html:hidden property="tickler.taskAssignedTo" />
 				<html:text property="tickler.taskAssignedToName" />
-				<input type="button" value="Search" onclick="search_provider();" /--%>
+				<input type="button" value="Search" onclick="search_provider();" /--%> 
 			</td>
 		</tr>
 		<tr>
@@ -262,6 +262,8 @@
 		-->
 		<tr>
 			<td class="fieldValue" colspan="3" align="left">
+			    	<input type="hidden" name="docType" value="<%=request.getParameter("docType")%>"/>
+           			<input type="hidden" name="docId" value="<%=request.getParameter("docId")%>"/>
 				<html:submit styleClass="button">Save</html:submit>
 				<input type="button" value="Cancel" onclick="window.close()"/>
 			</td>

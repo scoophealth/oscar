@@ -52,6 +52,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.EChart;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
+import org.oscarehr.common.model.TicklerLink;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
@@ -333,6 +334,10 @@ public class TicklerAction extends DispatchAction {
 		DynaActionForm ticklerForm = (DynaActionForm) form;
 		Tickler tickler = (Tickler) ticklerForm.get("tickler");
 
+		//Set the document if it's coming from the inbox
+		String docType = request.getParameter("docType");
+		String docId = request.getParameter("docId"); 
+		
 		// set the program which the tickler was written in if there is a program.
 		String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
 		if (programIdStr != null) tickler.setProgramId(Integer.valueOf(programIdStr));
@@ -347,6 +352,26 @@ public class TicklerAction extends DispatchAction {
 		tickler.setId(null);
 		
 		ticklerManager.addTickler(loggedInInfo, tickler);
+		
+
+	   if (docType != null && docId != null && !docType.trim().equals("") && !docId.trim().equals("") && !docId.equalsIgnoreCase("null") ){
+
+		   		 int ticklerNo = tickler.getId();
+		   		 if (ticklerNo >0){
+		   			 try{
+			             TicklerLink tLink = new TicklerLink();
+			             tLink.setTableId(Long.parseLong(docId));
+			             tLink.setTableName(docType);
+			             tLink.setTicklerNo(new Long(ticklerNo).intValue());
+			      
+			             ticklerManager.addTicklerLink(loggedInInfo,tLink);
+		   			 }catch(Exception e){	
+			   			 MiscUtils.getLogger().error("No link with this tickler",e);
+		   			 }
+		   		 }
+	             	
+	   }		
+		
 
 		String echart = request.getParameter("echart");
 		if (echart != null && echart.equals("true")) {
