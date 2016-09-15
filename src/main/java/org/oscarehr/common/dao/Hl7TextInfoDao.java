@@ -68,10 +68,10 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 
     public List<Hl7TextInfo> searchByAccessionNumber(String acc) {
 
-    	String sqlCommand="select x from Hl7TextInfo x where x.accessionNumber like ?1";
+    	String sqlCommand="select x from Hl7TextInfo x where x.accessionNumber = ?1";
 
     	Query query = entityManager.createQuery(sqlCommand);
-		query.setParameter(1, "%"+acc+"%");
+		query.setParameter(1,acc);
 
 		@SuppressWarnings("unchecked")
 		List<Hl7TextInfo> results = query.getResultList();
