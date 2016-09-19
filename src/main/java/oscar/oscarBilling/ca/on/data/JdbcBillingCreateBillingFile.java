@@ -170,19 +170,19 @@ public class JdbcBillingCreateBillingFile {
 		String header1 = null;
 		String header2 = "";
 		updateDemoData(loggedInInfo, ch1Obj);
-		boolean bRMB = ch1Obj.getPay_program().equals("RMB") ? true : false;
-		String str1Hin = bRMB ? space(10) : leftJustify(" ", 10, ch1Obj.getHin());
-		String ver = bRMB ? space(2) : leftJustify(" ", 2, ch1Obj.getVer());
+		String str1Hin = isRMB() ? space(10) : leftJustify(" ", 10, ch1Obj.getHin());
+		String ver = isRMB() ? space(2) : leftJustify(" ", 2, ch1Obj.getVer());
 		String dob = leftJustify(" ", 8, ch1Obj.getDob().replaceAll("-", ""));
 		referral = ch1Obj.getRef_num().length() > 1 ? "R" : "";
-		hcFlag = bRMB ? "H" : "";
+		hcFlag = isRMB() ? "H" : "";
 		m_Flag = ch1Obj.getMan_review().equals("Y") ? "M" : "";
 		_logger.info("buildHeader1(ver = " + ver + ")");
 
 		header1 = ch1Obj.getTransc_id() + ch1Obj.getRec_id() + str1Hin + ver + dob + rightJustify("0", 8, ch1Obj.getId()) + ch1Obj.getPay_program() + ch1Obj.getPayee() + rightJustify(" ", 6, ch1Obj.getRef_num()) + rightJustify(" ", 4, ch1Obj.getFacilty_num().equals("0000") ? "" : ch1Obj.getFacilty_num()) + rightJustify(" ", 8, getCompactDateStr(ch1Obj.getAdmission_date() == null ? "" : ch1Obj.getAdmission_date())) + rightJustify(" ", 4, ch1Obj.getRef_lab_num())
 		        + rightJustify(" ", 1, ch1Obj.getMan_review()) + leftJustify(" ", 4, ch1Obj.getLocation().equals("0000") ? "" : ch1Obj.getLocation()) + space(11) + space(6);
 		checkHeader1();
-		if (bRMB) {
+		if (isRMB())
+                {
 			header2 = buildHeader2();
 		}
 
@@ -346,6 +346,18 @@ public class JdbcBillingCreateBillingFile {
 		return ret;
 	}
 
+        /**
+         * isRMB
+         *
+         * Identifies if this is a reciprocal medical billing invoice or not
+         *
+         * @return true if RMB, false otherwise
+         */
+        private boolean isRMB()
+        {
+            return "RMB".equals(ch1Obj.getPay_program());
+        }
+
 	private void checkHeader1() {
 		if (!ch1Obj.getRef_num().equals("") && ch1Obj.getRef_num().length() != 6) errorPartMsg = "Header1: Referral Doc. No. wrong!<br>";
 		if (ch1Obj.getVisittype() != null && ch1Obj.getVisittype().compareTo("00") != 0) {
@@ -356,10 +368,9 @@ public class JdbcBillingCreateBillingFile {
 		if (ch1Obj.getVer() != null && (ch1Obj.getVer().length() > 2 || "##".equals(ch1Obj.getVer())))
 			errorPartMsg += "Header1: Ver. code wrong!<br>";
 
-		if(ch1Obj.getHin() != null && ch1Obj.getHin().length() == 10 && ch1Obj.getHin().matches("[0-9]+")) {
-			//hin is valid
-		}
-		else {
+                //If HIN is not out of province and is not 10 digits, mark as invalid
+		if(ch1Obj.getHin() == null || !(isRMB() || ch1Obj.getHin().matches("[0-9]{10}")))
+                {
 			errorPartMsg += "Header1: HIN is invalid!<br>";
 		}
 
