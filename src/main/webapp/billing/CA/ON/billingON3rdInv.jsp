@@ -148,13 +148,25 @@ boolean isMulitSites = oscarProp.getBooleanProperty("multisites", "on");
         }
                    
         BillingONExt billToBillExt = billExtDao.getBillTo(bCh1);
-        //BillingONExt useBillToExt = billExtDao.getUseBillTo(bCh1);
-        
+
         String useDemoClinicInfoOnInvoice = props.getProperty("useDemoClinicInfoOnInvoice","");
         if (!useDemoClinicInfoOnInvoice.isEmpty() && useDemoClinicInfoOnInvoice.equals("true")) { 
-            if (billToBillExt != null) {  
+
+            BillingONExt useBillToExt = billExtDao.getUseBillTo(bCh1);
+
+            //If we have stored 3rd Party "Bill To:" Information, then use it
+            if (billToBillExt != null && billToBillExt.getValue() != null && !billToBillExt.getValue().isEmpty())
+            {
                 billTo = billToBillExt.getValue();                                    
-            } else {
+            }
+            //If someone actually wants to print the bill with the "Bill To:" section left blank, this allows them to do that.
+            else if (billToBillExt.getValue().isEmpty() && useBillToExt != null && useBillToExt.getValue().equals("on"))
+            {
+                billTo = "";
+            }
+            //The purpose of property "useDemoClinicInfoOnInvoice" is so that if we don't have any 3rd Party info for this invoice, we'll default to using the demographic's contact information as the "Bill To:" content
+            else 
+            {
                 StringBuilder buildBillTo = new StringBuilder();
                 buildBillTo.append(demo.getFirstName()).append(" ").append(demo.getLastName()).append("\n")
                         .append(demo.getAddress()).append("\n")
@@ -305,10 +317,10 @@ boolean isMulitSites = oscarProp.getBooleanProperty("multisites", "on");
 <table width="100%" border="0">
 	<tr>
 		<td width="50%" valign="top">Bill To<br />
-		<pre><%=prop3rdPart.getProperty("billTo","") %>
+		<pre><%=billTo%>
 </pre></td>
 		<td valign="top">Remit To<br />
-		<pre><%=prop3rdPart.getProperty("remitTo","") %>
+		<pre><%=remitTo%>
 </pre></td>
 	</tr>
 </table>
