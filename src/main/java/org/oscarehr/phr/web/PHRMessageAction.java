@@ -215,7 +215,9 @@ public class PHRMessageAction extends DispatchAction {
 
 		MessageTransfer3 newMessage = MessageManager.makeBasicMessageTransfer(myOscarLoggedInInfo, replyToMessageId, null, replySubject, message);
 		List<Long> recipientList = newMessage.getRecipientPeopleIds();
-		recipientList.add(previousMessage.getSenderPersonId());
+		
+		if (previousMessage.getReplyToPersonId()!=null) recipientList.add(previousMessage.getReplyToPersonId());
+		else recipientList.add(previousMessage.getSenderPersonId());
 
 		if (replyAll) {
 			for (Long recipientId : previousMessage.getRecipientPeopleIds()) {
