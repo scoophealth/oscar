@@ -18,10 +18,8 @@ import java.io.StringReader;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Security;
-import java.security.cert.CertStore;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
-import java.security.cert.CollectionCertStoreParameters;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,11 +45,18 @@ import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSSignedDataGenerator;
-import org.bouncycastle.cms.DefaultSignedAttributeTableGenerator;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
+import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
+import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.bouncycastle.util.encoders.Base64;
+import org.bouncycastle.util.Store;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.model.OscarLog;
 import org.oscarehr.olis.OLISProtocolSocketFactory;
@@ -216,19 +221,19 @@ public class Driver {
 		try {
 
 			CMSSignedData s = new CMSSignedData(dataBytes);
-			CertStore certs = s.getCertificatesAndCRLs("Collection", "BC");
+			Store certs = s.getCertificates();
 			SignerInformationStore signers = s.getSignerInfos();
 			@SuppressWarnings("unchecked")
 			Collection<SignerInformation> c = signers.getSigners();
 			Iterator<SignerInformation> it = c.iterator();
 			while (it.hasNext()) {
-				X509Certificate cert = null;
+				X509CertificateHolder cert = null;
 				SignerInformation signer = it.next();
-				Collection certCollection = certs.getCertificates(signer.getSID());
+				Collection certCollection = certs.getMatches(signer.getSID());
 				@SuppressWarnings("unchecked")
-				Iterator<X509Certificate> certIt = certCollection.iterator();
+				Iterator<X509CertificateHolder> certIt = certCollection.iterator();
 				cert = certIt.next();
-				if (!signer.verify(cert.getPublicKey(), "BC")) throw new Exception("Doesn't verify");
+				if (!signer.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(cert))) throw new Exception("Doesn't verify");
 			}
 
 			CMSProcessableByteArray cpb = (CMSProcessableByteArray) s.getSignedContent();
@@ -271,22 +276,22 @@ public class Driver {
 
 			ArrayList<Certificate> certList = new ArrayList<Certificate>();
 			certList.add(cert);
-			CertStore certs = null;
+			Store certs = new JcaCertStore(certList); 
 
-			certs = CertStore.getInstance("Collection", new CollectionCertStoreParameters(certList), "BC");
 
 			// Encrypt data
 			CMSSignedDataGenerator sgen = new CMSSignedDataGenerator();
 
 			// What digest algorithm i must use? SHA1? MD5? RSA?...
-			DefaultSignedAttributeTableGenerator attributeGenerator = new DefaultSignedAttributeTableGenerator();
-			sgen.addSigner(priv, cert, CMSSignedDataGenerator.DIGEST_SHA1, attributeGenerator, null);
+			ContentSigner sha1Signer = new JcaContentSignerBuilder("SHA1withRSA").setProvider("BC").build(priv);
+			sgen.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().setProvider("BC").build())
+	                     .build(sha1Signer, cert));
 
 			// I'm not sure this is necessary
-			sgen.addCertificatesAndCRLs(certs);
+			sgen.addCertificates(certs);
 
 			// I think that the 2nd parameter need to be false (detached form)
-			CMSSignedData csd = sgen.generate(new CMSProcessableByteArray(data.getBytes()), true, "BC");
+			CMSSignedData csd = sgen.generate(new CMSProcessableByteArray(data.getBytes()), true);
 
 			byte[] signedData = csd.getEncoded();
 			byte[] signedDataB64 = Base64.encode(signedData);
@@ -332,22 +337,21 @@ public class Driver {
 
 			ArrayList<Certificate> certList = new ArrayList<Certificate>();
 			certList.add(cert);
-			CertStore certs = null;
+			Store certs = new JcaCertStore(certList);
 
-			certs = CertStore.getInstance("Collection", new CollectionCertStoreParameters(certList), "BC");
 
 			// Encrypt data
 			CMSSignedDataGenerator sgen = new CMSSignedDataGenerator();
 
 			// What digest algorithm i must use? SHA1? MD5? RSA?...
-			DefaultSignedAttributeTableGenerator attributeGenerator = new DefaultSignedAttributeTableGenerator();
-			sgen.addSigner(priv, cert, CMSSignedDataGenerator.DIGEST_SHA1, attributeGenerator, null);
-
+			ContentSigner sha1Signer = new JcaContentSignerBuilder("SHA1withRSA").setProvider("BC").build(priv);
+			sgen.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().setProvider("BC").build())
+	                     .build(sha1Signer, cert));
 			// I'm not sure this is necessary
-			sgen.addCertificatesAndCRLs(certs);
+			sgen.addCertificates(certs);
 
 			// I think that the 2nd parameter need to be false (detached form)
-			CMSSignedData csd = sgen.generate(new CMSProcessableByteArray(data.getBytes()), true, "BC");
+			CMSSignedData csd = sgen.generate(new CMSProcessableByteArray(data.getBytes()), true);
 
 			byte[] signedData = csd.getEncoded();
 			byte[] signedDataB64 = Base64.encode(signedData);
