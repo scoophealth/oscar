@@ -58,6 +58,8 @@ public class FrmRourke2009Record extends FrmRecord {
         
         Demographic demo = demographicManager.getDemographic(loggedInInfo, demographicNo);
         String updated = "false";
+        java.util.Date dob = null;
+
         if(existingID <= 0) {
 
             if(demo != null) {
@@ -66,7 +68,7 @@ public class FrmRourke2009Record extends FrmRecord {
                 //props.setProperty("formDate", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(new Date(), "dd/MM/yyyy"));
                 //props.setProperty("formEdited", UtilDateUtilities.DateToString(new Date(), "yyyy/MM/dd"));
-                java.util.Date dob = UtilDateUtilities.calcDate(demo.getYearOfBirth(), demo.getMonthOfBirth(), demo.getDateOfBirth());
+                dob = UtilDateUtilities.calcDate(demo.getYearOfBirth(), demo.getMonthOfBirth(), demo.getDateOfBirth());
                 props.setProperty("c_birthDate", UtilDateUtilities.DateToString(dob, "dd/MM/yyyy"));
                 //props.setProperty("age", String.valueOf(UtilDateUtilities.calcAge(dob)));
                 String postal = demo.getPostal();
@@ -102,7 +104,7 @@ public class FrmRourke2009Record extends FrmRecord {
                 }
 
                 rourkeVal = props.getProperty("c_birthDate","");
-                java.util.Date dob = UtilDateUtilities.calcDate(demo.getYearOfBirth(), demo.getMonthOfBirth(), demo.getDateOfBirth());
+                dob = UtilDateUtilities.calcDate(demo.getYearOfBirth(), demo.getMonthOfBirth(), demo.getDateOfBirth());
                 demoVal = UtilDateUtilities.DateToString(dob, "dd/MM/yyyy");
 
                 if( !rourkeVal.equals(demoVal) ) {
@@ -123,6 +125,20 @@ public class FrmRourke2009Record extends FrmRecord {
             }
         }
         props.setProperty("updated", updated);
+
+        if (dob != null)
+        {
+            //set startdate for second page as defined in config file
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dob);
+            cal.add(Calendar.YEAR, 2);
+            props.setProperty("__startDate",  UtilDateUtilities.DateToString(cal.getTime(), "dd/MM/yyyy"));
+        }
+
+        //don't forget to set the xAxis scale for the 2 pages
+        props.setProperty("__xDateScale_1", String.valueOf(Calendar.MONTH));
+        props.setProperty("__xDateScale_2", String.valueOf(Calendar.YEAR));
+
         return props;
     }
 
