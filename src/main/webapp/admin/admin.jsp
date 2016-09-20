@@ -382,6 +382,12 @@ div.logoutBox {
 				<li>
 					<a href='#'	onclick='popupPage(300,750,&quot;<html:rewrite page="/billing/CA/ON/managePaymentType.do"/>&quot;);return false;'><bean:message key="admin.admin.managePaymentType"/></a>
 				</li>
+				<% if (org.oscarehr.common.IsPropertiesOn.propertiesOn("ENABLE_PREVENTION_BILLING")) {%>
+				<li>
+						<a href='#'	onclick='popupPage(300,750,&quot;<html:rewrite page="/billing/CA/ON/preventionBillingSetting.jsp"/>&quot;);return false;'>
+						<bean:message key="admin.admin.preventionBilling"/></a>
+				</li>
+				<%} %>
 
 			<%
 				}

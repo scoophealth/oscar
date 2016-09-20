@@ -80,6 +80,10 @@ if(!authed) {
 			String color = "";
 			String premiumFlag = "";
 			String service_form = "";
+			String prevId = "";
+            if (request.getParameter("prevId") != null) {
+            	prevId = request.getParameter("prevId");
+            }
 %>
 
 <%
@@ -573,6 +577,7 @@ window.onload=function(){
 	<input type="hidden" name="billStatus_old" id="billStatus_old" value="<%=request.getParameter("billStatus_old")%>" />
 	<input type="hidden" name="billForm" id="billForm" value="<%=request.getParameter("billForm")%>" />
     <input type="hidden" name="payeename" id="payeename" value="" />
+    <input type="hidden" name="prevId" id="prevId" value="<%=prevId %>"/>
 <table border="0" cellpadding="0" cellspacing="2" width="100%" class="myIvory">
 	<tr>
 		<td>
