@@ -44,6 +44,7 @@ if(!authed) {
 <%@ page import="oscar.oscarBilling.ca.on.data.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="oscar.oscarPrevention.PreventionData" %>
 
 <%
 	WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
@@ -102,6 +103,23 @@ if(!authed) {
         	extDao.persist(ext);
         	
         }
+        
+     	// for prevention billing (after adding prevention, it will pop-up a billing page automatically if ENABLE_PREVENTION_BILLING was set to true)
+  		if (org.oscarehr.common.IsPropertiesOn.propertiesOn("ENABLE_PREVENTION_BILLING")) {
+  			int prevId = 0;
+  			try {
+  				prevId = Integer.valueOf(request.getParameter("prevId"));
+  			} catch (Exception e) {}
+  			if (prevId != 0) {
+  				// add billed property to prevetions table
+  				String billed = PreventionData.getExtValue(Integer.toString(prevId), "billed");
+  				if (billed != null && !billed.isEmpty()) {
+  					PreventionData.updatetExtValue(prevId, "billed", "1");
+  				} else {
+  					PreventionData.addPreventionKeyValue(Integer.toString(prevId), "billed", "1");
+  				}
+  			}
+  		}
         
 		// update appt and close the page
 		if (ret) {

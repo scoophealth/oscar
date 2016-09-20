@@ -12210,3 +12210,16 @@ CREATE TABLE `tickler_category` (
   `active` bit(1),
   PRIMARY KEY (`id`)
 );
+
+CREATE TABLE `preventionsBilling` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `preventionType` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `billingServiceCodeAndUnit` varchar(50) NOT NULL,
+  `billingType` varchar(50) NOT NULL,
+  `visitType` varchar(50) NOT NULL,
+  `billingDxCode` varchar(50) NOT NULL,
+  `visitLocation` varchar(50) NOT NULL,
+  `sliCode` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `pbtype` (`preventionType`)
+);

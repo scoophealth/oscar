@@ -176,6 +176,73 @@ public class JdbcBillingClaimImpl {
 		
 		return b.getId();
 	}
+	
+	public int addOneClaimHeaderRecord(BillingClaimHeader1Data val) {
+		BillingONCHeader1 b = new BillingONCHeader1();
+		b.setHeaderId(0);
+		b.setTranscId(val.transc_id);
+		b.setRecId(val.rec_id);
+		b.setHin(val.hin);
+		b.setVer(val.ver);
+		b.setDob(val.dob);
+		b.setPayProgram(val.pay_program);
+		b.setPayee(val.payee);
+		b.setRefNum(val.ref_num);
+		b.setFaciltyNum(val.facilty_num);
+		if(val.admission_date.length()>0)
+			try{
+				b.setAdmissionDate(dateformatter.parse(val.admission_date));
+			}catch(ParseException e){/*empty*/}
+		
+		b.setRefLabNum(val.ref_lab_num);
+		b.setManReview(val.man_review);
+		b.setLocation(val.location);
+		b.setDemographicNo(Integer.parseInt(val.demographic_no));
+		b.setProviderNo(val.provider_no);
+		String apptNo = StringUtils.trimToNull(val.appointment_no);
+		
+		if( apptNo != null ) {
+			b.setAppointmentNo(Integer.parseInt(val.appointment_no));
+		}
+		else {
+			b.setAppointmentNo(null);
+		}
+		
+		b.setDemographicName(val.demographic_name);
+		b.setSex(val.sex);
+		b.setProvince(val.province);
+		if(val.billing_date.length()>0)
+			try {
+				b.setBillingDate(dateformatter.parse(val.billing_date));
+			}catch(ParseException e){/*empty*/}
+		if(val.billing_time.length()>0)
+			try {
+				b.setBillingTime(timeFormatter.parse(val.billing_time));
+			}catch(ParseException e){MiscUtils.getLogger().error("Invalid time", e);}
+
+		
+		b.setTotal(new BigDecimal(val.total==null?"0.00":val.total));
+				
+		if(val.paid == null || val.paid.isEmpty()){
+			b.setPaid(new BigDecimal("0.00"));
+		}else{
+			b.setPaid(new BigDecimal(val.paid));
+		}
+		
+		b.setStatus(val.status);
+		b.setComment(val.comment);
+		b.setVisitType(val.visittype);
+		b.setProviderOhipNo(val.provider_ohip_no);
+		b.setProviderRmaNo(val.provider_rma_no);
+		b.setApptProviderNo(val.apptProvider_no);
+		b.setAsstProviderNo(val.asstProvider_no);
+		b.setCreator(val.creator);
+		b.setClinic(val.clinic);
+		
+		cheaderDao.persist(b);
+		
+		return b.getId();
+	}
 
 	public boolean addItemRecord(List lVal, int id) {
 	

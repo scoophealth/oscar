@@ -84,7 +84,7 @@ public class PreventionData {
 			prevention.setNever(neverWarn.trim().equals("1"));
 			if (refused.trim().equals("1")) prevention.setRefused(true);
 			else if (refused.trim().equals("2")) prevention.setIneligible(true);
-
+			
 			if(programNo == null) {
 				ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
 				if(pp != null && pp.getProgramId() != null) {
@@ -123,6 +123,10 @@ public class PreventionData {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
+	}
+	
+	public static int updatetExtValue(int preventionId, String keyval, String val) {
+		return preventionExtDao.updateKeyValue(preventionId, keyval, val);
 	}
 
 	public static Map<String, String> getPreventionKeyValues(String preventionId) {
@@ -174,7 +178,7 @@ public class PreventionData {
 		return name;
 	}
 
-	public static void updatetPreventionData(LoggedInInfo loggedInInfo, String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
+	public static Integer updatetPreventionData(LoggedInInfo loggedInInfo, String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
 		Map<String,Object> pd = getPreventionById(id);
 		String programNo = (String)pd.get("programNo");
 		Integer pNo = null;
@@ -184,9 +188,9 @@ public class PreventionData {
 			//empty
 		}
 		deletePreventionData(id);
-		insertPreventionData(loggedInInfo, creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list, pNo);
+		return insertPreventionData(loggedInInfo, creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list, pNo);
 	}
-
+	
 	public static ArrayList<Map<String, Object>> getPreventionDataFromExt(String extKey, String extVal) {
 		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 

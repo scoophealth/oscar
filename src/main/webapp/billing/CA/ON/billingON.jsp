@@ -81,7 +81,10 @@ if(!authed) {
 	scope="session" />
 <%
             oscar.OscarProperties oscarVariables = oscar.OscarProperties.getInstance();
-
+			String prevId = "";
+            if (request.getParameter("prevId") != null) {
+            	prevId = request.getParameter("prevId");
+            }
 			String user_no = (String) session.getAttribute("user");
 			String providerview = request.getParameter("providerview") == null ? "" : request.getParameter("providerview");
 			String asstProvider_no = "", color = "", premiumFlag = "", service_form = "";
@@ -1190,6 +1193,7 @@ if(checkFlag == null) checkFlag = "0";
 %>
 		<input type="hidden" name="checkFlag" id="checkFlag"
 			value="<%=checkFlag %>" />
+		<input type="hidden" name="prevId" id="prevId" value="<%=prevId %>" />
 
 		<table border="0" cellspacing="0" cellpadding="0" class="myDarkGreen"
 			width="100%">
