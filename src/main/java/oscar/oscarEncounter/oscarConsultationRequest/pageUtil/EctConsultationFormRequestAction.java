@@ -274,10 +274,22 @@ public class EctConsultationFormRequestAction extends Action {
         		consult.setLetterheadAddress(frm.getLetterheadAddress());
         		consult.setLetterheadPhone(frm.getLetterheadPhone());
         		consult.setLetterheadFax(frm.getLetterheadFax());
-                
-                Integer specId = new Integer(frm.getSpecialist());
-                ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(specId);
+
+                /*
+                 * If Consultant: was changed to "blank/No Consultant Saved" we
+                 * don't want to try and create an Integer out of the specId as
+                 * it will throw a NumberForamtException
+                */
+                String specIdStr = frm.getSpecialist();
+                ProfessionalSpecialist professionalSpecialist=null;
+
+                if (specIdStr != null && !specIdStr.isEmpty())
+                {
+                    Integer specId = new Integer(frm.getSpecialist());
+                    professionalSpecialist=professionalSpecialistDao.find(specId);
+                }
                 consult.setProfessionalSpecialist(professionalSpecialist);
+
                 if( frm.getAppointmentDate() != null && !frm.getAppointmentDate().equals("") ) {
                 	date = DateUtils.parseDate(frm.getAppointmentDate(), format);
                 	consult.setAppointmentDate(date);
