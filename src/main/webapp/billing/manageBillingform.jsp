@@ -153,7 +153,7 @@ function onUnbilled(url) {
             int Count = 0;  
         ResultSet rslocal;
 
-        List<CtlBillingService> cbss = ctlBillingServiceDao.findByServiceType("%");
+        List<CtlBillingService> cbss = ctlBillingServiceDao.getServiceTypeList();
 
         for(CtlBillingService cbs:cbss){
         	formDesc = cbs.getServiceTypeName();
