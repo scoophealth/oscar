@@ -89,8 +89,8 @@ public class BillingmasterDAO {
 	/**
 	 * Same as {@link #getBillingmaster(int)} 
 	 */
-	public Billingmaster getBillingmaster(String billingNo) {
-		return getBillingmaster(Integer.parseInt(billingNo));
+	public Billingmaster getBillingmaster(String billingmasterNo) {
+		return getBillingmaster(Integer.parseInt(billingmasterNo));
 	}
 
 	public Billingmaster getBillingmaster(int billingmasterNo) {
