@@ -31,6 +31,7 @@
 package oscar.oscarBilling.ca.bc.data;
 
 import java.util.Date;
+import java.util.List;
 
 import org.oscarehr.billing.CA.BC.dao.BillingNoteDao;
 import org.oscarehr.billing.CA.BC.model.BillingNotes;
@@ -82,8 +83,12 @@ public class BillingNote {
 
 	public void addNoteFromBillingNo(String billingNo, String provider, String note) {
 		BillingmasterDAO dao = SpringUtils.getBean(BillingmasterDAO.class);
-		Billingmaster bm = dao.getBillingmaster(billingNo);
-		if (bm != null) addNote(String.valueOf(bm.getBillingmasterNo()), provider, oscar.Misc.removeNewLine(note));
+		List<Billingmaster> bmdao = dao.getBillingmasterByBillingNo( Integer.parseInt( billingNo ) );
+		for( Billingmaster bm : bmdao ) {
+			if (bm != null) { 
+				addNote(String.valueOf(bm.getBillingmasterNo()), provider, oscar.Misc.removeNewLine(note));
+			}
+		}
 	}
 
 	/**

@@ -149,7 +149,7 @@ public class BillingViewBean {
 	 * @param payeeNo String - The payee number
 	 */
 	public void updateBill(String billingNo, String payeeNo) {
-		BillingmasterDAO dao = SpringUtils.getBean(Billingmaster.class);
+		BillingmasterDAO dao = SpringUtils.getBean(BillingmasterDAO.class);
 		for (Billingmaster bm : dao.getBillingMasterByBillingNo(billingNo)) {
 			bm.setPayeeNo(payeeNo);
 			dao.update(bm);
@@ -163,7 +163,7 @@ public class BillingViewBean {
 	public String getMessageNotesByBillingNo(String billingNo) {
 		StringBuilder res = new StringBuilder();
 		ArrayList<String> billingMasterNos = new ArrayList<String>();
-		BillingmasterDAO dao = SpringUtils.getBean(Billingmaster.class);
+		BillingmasterDAO dao = SpringUtils.getBean(BillingmasterDAO.class);
 		for (Billingmaster bm : dao.getBillingMasterByBillingNo(billingNo)) {
 			billingMasterNos.add(ConversionUtils.toIntString(bm.getBillingmasterNo()));
 			res.append(new BillingNote().getNote(this.getBillingMasterNo()));

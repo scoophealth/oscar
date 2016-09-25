@@ -851,7 +851,10 @@ public class MSPReconcile {
 				b.setAddress(recip.getAddress());
 				b.setCity(recip.getCity());
 				b.setProvince(recip.getProvince());
-				b.setPostal(recip.getPostal());
+				// remove spaces from postal
+				String postal = removeSpaces( recip.getPostal() );
+				postal = postal.toUpperCase();
+				b.setPostal( postal );
 				b.setUpdateTime(new Date());
 				billRecipientDao.merge(b);
 			}
@@ -861,13 +864,24 @@ public class MSPReconcile {
 			b.setAddress(recip.getAddress());
 			b.setCity(recip.getCity());
 			b.setProvince(recip.getProvince());
-			b.setPostal(recip.getPostal());
+			// remove spaces from postal
+			String postal = removeSpaces( recip.getPostal() );
+			postal = postal.toUpperCase();
+			b.setPostal( postal );
 			b.setCreationTime(new Date());
 			b.setUpdateTime(new Date());
 			b.setBillingNo(Integer.parseInt(recip.getBillingNo()));
 			billRecipientDao.persist(b);
 		}
 
+	}
+	
+	private static String removeSpaces(String str) {
+		String newstr = "";
+		if( str != null && ! str.isEmpty() ) {
+			newstr = str.replaceAll("\\s","");			
+		}
+		return newstr;
 	}
 
 	/**
