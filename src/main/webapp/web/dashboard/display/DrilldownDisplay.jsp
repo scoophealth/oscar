@@ -38,7 +38,7 @@
 
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/bootstrap/3.0.0/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/web/css/Dashboard.css" />
-	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/css/dataTables.bootstrap.min.css" /> 
+ 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/css/jquery.dataTables.min.css" /> 
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/bootstrap2-datepicker/datepicker3.css" />
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/css/bootstrap-timepicker.min.css" />
 	<script>var ctx = "${pageContext.request.contextPath}"</script>
@@ -89,52 +89,67 @@
 	<hr />
 	
 	<c:set scope="page" value="" var="primaryDataType" />
+		
 	<c:forEach items="${ drilldown.displayColumns }" var="column" >
 		<c:if test="${ column.primary }">
 			<c:set scope="page" value="${ column.name }" var="primaryDataType" />
-		</c:if>
+		</c:if>	
 	</c:forEach>
-	
+
 	<table class="table table-striped table-condensed" id="drilldownTable" >		
 		<c:forEach items="${ drilldown.table }" var="row" varStatus="rowCount">
 			<c:choose>
 				<c:when test="${ rowCount.index eq 0 }">
 					<thead>
 						<tr>
-							<th class="donotprint">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" 
-						        	aria-haspopup="true" aria-expanded="false">
-						        	<span class="glyphicon glyphicon-check"></span>
-						        	Tickler 
-						        	<span class="caret"></span>
-						        </a>
-						        
-								<ul class="dropdown-menu">
-									<li>
-										<a href="#" role="button" id="selectAllDrilldown" >
-											Select All
-										</a>
-								    </li>
-								    <li>
-										<a href="#" role="button" id="selectNoneDrilldown" >
-											Select None
-										</a>
-								    </li>
-								    <li role="separator" class="divider"></li>
-								    <li>
-								    	<a href="#" role="button" title="Assign Tickler to Checked Rows" id="assignTicklerChecked" >
-											New Tickler
-										</a>
-								    </li>
-						        </ul>
+							<th class="donotprint" id="0" >
+								<div class="dropdown" id="ticklerMenu">
+									<a href="#" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" role="button" 
+							        	aria-haspopup="true" aria-expanded="false" id="ticklerMenuLink">
+							        	<span class="glyphicon glyphicon-check"></span>
+							        	Tickler 
+							        	<span class="caret"></span>
+							        </a>
+							        
+									
+									<ul class="dropdown-menu" aria-labelledby="ticklerMenuLink">
+										<li>									
+											<a href="#" class="dropdown-item" id="selectAllDrilldown" title="Select all rows in the current view." >
+												Select All in View
+											</a>
+									    </li>
+									    <li>
+											<a href="#" class="dropdown-item" id="selectNoneDrilldown" title="Deselect all checked rows.">
+												Select None
+											</a>
+										</li>
+										<li role="separator" class="divider"></li>
+										<li> 
+									    	<a href="#" class="dropdown-item" title="Assign Tickler to Checked Rows." id="assignTicklerChecked" >
+												Assign Tickler
+											</a>
+										</li>
+									</ul>						 
+							    </div>
 							</th>
-							<c:forEach items="${ row }" var="heading">
-								<th>
+							<th  class="placeholder" id="1" >&nbsp;</th>
+							<c:forEach items="${ row }" var="heading" varStatus="columnCount">
+								<!-- Column count ID is this list plus the first 2 static columns -->
+								<th id="${ columnCount.index + 2 }" >
 									<c:out value="${ heading }" />
 								</th>
 							</c:forEach>
 						</tr>
-					</thead>		
+					</thead>
+					<tfoot>
+						<tr>
+							<th id="0"></th>
+							<th class="placeholder" id="1"></th>
+							<c:forEach items="${ row }" var="heading" varStatus="columnCount">
+								<th class="filter" id="${ columnCount.index + 2 }" ></th>
+							</c:forEach>
+						</tr>
+					</tfoot>		
 					<tbody>
 				</c:when>
 				<c:otherwise>
@@ -142,7 +157,8 @@
 						<c:forEach items="${ row }" var="column" varStatus="columnCount" >
 						
 							<c:choose>
-							<c:when test="${ columnCount.index eq 0 }">								
+							<c:when test="${ columnCount.index eq 0 }">	
+								<td style="text-align:center;" >&nbsp;</td>								
 								<td class="donotprint">
 									<c:choose>
 									<c:when test="${ column eq 'error' }">
@@ -156,7 +172,7 @@
 								<td>
 									
 									<c:choose>
-										<c:when test="${ fn:containsIgnoreCase(primaryDataType,'demographic_no') }" >
+										<c:when test="${ fn:containsIgnoreCase( primaryDataType,'demographic_no' ) }" >
 											
 											<a class="donotprint" href="${ pageContext.request.contextPath }/demographic/demographiccontrol.jsp?demographic_no=${ column }&amp;displaymode=edit&amp;dboperation=search_detail" 
 											 target="_blank" title="Open Patient File" >
@@ -189,6 +205,11 @@
 		</c:forEach>
 		</tbody>
 	</table>
+	<hr />
+	<h3> 
+		&nbsp;
+	</h3>
+
 </div>
 
 <!-- place holder for tickler assignment modal window -->
