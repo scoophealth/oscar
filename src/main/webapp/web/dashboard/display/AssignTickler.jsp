@@ -27,16 +27,62 @@
 
 <script type="text/javascript">
 
-	//--> Date time picker
+	// --> check that all fields tagged "required" contain data.
+	function checkFields() {
+		var verified = true;
+		
+		$("#ticklerAddForm .required").each(function(){
+			if( $(this).val().length == 0 ) {
+				verified = false;
+				paintErrorField($(this));	
+			}
+		})
+	
+		return verified;
+	}
+	
+	// paint a red border around missing fields
+	function paintErrorField( fieldobject ) {
+		fieldobject.css( "border", "medium solid red" );
+	}
+
+	//--> Date picker
 	$(function(){
 	   $('.date-picker').datepicker({
 	      format: 'mm-dd-yyyy'
 	    });
 	});
 	
+	// --> Time picker
 	$(function(){
 	   $('.time-picker').timepicker();
+	}); 
+	
+	//--> Execute the tickler assignment - save
+	$("#saveTicklerBtn").on('click', function(event) {
+		event.preventDefault();
+		if( checkFields() ) {
+			sendData("/web/dashboard/display/AssignTickler.do", $("#ticklerAddForm").serialize(), "close")
+		}
 	});
+	
+	//--> AJAX the data to the server.
+	function sendData(path, param, target) {
+		$.ajax({
+			url: ctx + path,
+		    type: 'POST',
+		    data: param,
+		  	dataType: 'json',
+		    success: function(data) {
+		    	if( data.success ) {
+		    		$('#assignTickler').modal('close');
+		    	} else {
+		    		$(".message").hide();
+		    		$(".message").show();
+		    	}
+		    }
+		});
+	}
 	
 </script>
 
@@ -56,8 +102,13 @@
 					<div class="col-xs-12">
 						<div class="form-group">
 							<div class="well" id="patientTicklerList">
-								Assign this Tickler action for each of the
-								selected patients.
+								<span class="message" >
+									Assign this Tickler action for each of the
+									selected patients.
+								</span>
+								<span class="error" style="color:red;display:none;">
+									There was an error while assigning this tickler. Maybe no patients were checked?
+								</span>
 								<input type="hidden" name="demographics" value="${ demographics }" />
 							</div>
 						</div>
@@ -140,7 +191,7 @@
 					<div class="col-xs-12">
 					<div class="form-group">
 							<label>Message:</label> 
-							<select class="form-control required" name="message" >
+							<select class="form-control" name="message" >
 							<option value=""></option>
 								<c:forEach items="${ textSuggestions }" var="textSuggestion" >
 									<option>

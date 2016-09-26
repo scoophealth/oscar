@@ -155,4 +155,14 @@
 		border-radius: 50%;
 	}
 	
+	table.dataTable tfoot th, table.dataTable tfoot td {
+		padding:5px 0px !important;
+	}
+	
+	#ticklerMenu, #ticklerMenu .btn {
+		padding:0px !important;
+		margin:0px !important;
+	}
+	
+	
 }

@@ -21,30 +21,71 @@
     Hamilton
     Ontario, Canada
 */
-
-function checkFields() {
-	var verified = true;
+var drilldownTable; 
 	
-	$("#ticklerAddForm .required").each(function(){
-		if( $(this).val().length == 0 ) {
-			verified = false;
-			paintErrorField($(this));	
-		}
-	})
-
-	return verified;
-}
-
-function paintErrorField( fieldobject ) {
-	fieldobject.css( "border", "medium solid red" );
-}
-
 $(document).ready( function() {
 	
-	//--> table sorting
-	$('#drilldownTable').DataTable();
+	//--> sort the checkboxes
+	$.fn.dataTable.ext.order['dom-checkbox'] = function  ( settings, col )
+	{
+	    return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
+	        return $('.ticklerChecked', td).prop('checked') ? '1' : '0';
+	    } );
+	};
+	
+	//--> table init
+	drilldownTable = $('#drilldownTable').DataTable({
+		
+		// change the title of the main search box.
+		"oLanguage": {
+			"sSearch": "Search all columns:"
+		},
 
-	//--> Re-draws the dashboard.
+        // 1. disable sorting and searching on the first column
+		// 2. make the tickler checkboxes sortable.
+	    "columnDefs": [ 
+	        {
+		        "searchable": false,
+		        "orderable": false,
+		        "targets": 0
+	    	},
+	    	{ 
+	    		"orderDataType": "dom-checkbox",
+	    		"targets": 1
+	    	}
+	    ],
+	    
+	    // turns the first column of the table into an ordered list.
+	    "order": [[ 1, 'asc' ]]
+	});
+	
+	// --> Number the Drilldown rows with static numbers.
+	drilldownTable.on( 'order.dt search.dt', function () {
+		drilldownTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+	
+	// --> add the filters to the bottom footer.
+	$("#drilldownTable tfoot th.filter").each( function ( i ) {
+		var columnId = this.id;
+		
+		// exclude the first column. 
+		if( i > 0 ) {
+	        var select = $('<select class="form-control" ><option value="">All</option></select>')
+	            .appendTo( $(this).empty() )
+	            .on( 'change', function () {
+	            	drilldownTable.column( columnId ).search( $(this).val() ).draw();
+	            } );
+	 
+	        drilldownTable.column( columnId ).data().unique().sort().each( function ( d, j ) {
+	            select.append( '<option value="'+d+'">'+d+'</option>' )
+	        } );
+		}
+		
+    } );
+	
+	//--> Re-draw the dashboard.
 	$(".backtoDashboardBtn").on('click', function(event) {
     	event.preventDefault();
     	var url = "/web/dashboard/display/DashboardDisplay.do";
@@ -69,7 +110,7 @@ $(document).ready( function() {
 
 	//--> Assign Tickler to all checked items - returns the tickler dialog.
 	$("#assignTicklerChecked").on('click', function(event) {
-		event.preventDefault();
+
 		var demographics = [];		
 		$("input:checkbox.ticklerChecked").each(function(){
 			if( this.checked ) {
@@ -79,14 +120,6 @@ $(document).ready( function() {
 		
 		var param = "demographics=" + demographics;
     	sendData( "/web/dashboard/display/AssignTickler.do" , param, "modal");
-	})
-	
-	//--> Execute the tickler assignment - save
-	$("#saveTicklerBtn").on('click', function(event) {
-		event.preventDefault();
-		if( checkFields() ) {
-			sendData("/web/dashboard/display/AssignTickler.do", $("#ticklerAddForm").serialize(), "close")
-		}
 	})
 	
 	//--> Export the drilldown query results to csv

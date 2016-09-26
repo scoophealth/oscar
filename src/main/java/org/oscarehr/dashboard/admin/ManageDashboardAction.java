@@ -24,7 +24,6 @@
 
 package org.oscarehr.dashboard.admin;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Date;
@@ -74,8 +73,9 @@ public class ManageDashboardAction extends DispatchAction {
 			HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) {
 		
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
-		ActionForward action = null;
-		
+		ActionForward action = mapping.findForward("success");
+		StringBuilder message = new StringBuilder("");
+	
 		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardManager", SecurityInfoManager.WRITE, null ) ) {	
 			return mapping.findForward("unauthorized");
         }
@@ -86,11 +86,10 @@ public class ManageDashboardAction extends DispatchAction {
 		if( formFile != null ) {		
 			try {
 				filebytes = formFile.getFileData();
-			} catch (FileNotFoundException e) {
+			} catch (Exception e) {
 				MiscUtils.getLogger().error("Failed to transfer file.", e);
-			} catch (IOException e) {
-				MiscUtils.getLogger().error("Failed to transfer file.", e);
-			}
+				action = mapping.findForward("success");
+			} 
 		}
 		
 		// TODO add a checksum: Uploaded templates will be checksum hashed, the hash will be stored in an 
@@ -100,12 +99,12 @@ public class ManageDashboardAction extends DispatchAction {
 		// TODO run the contained MySQL queries to check for syntax errors and whatever else may be broken. 
 		// The DashboarManager will contain a method. This class will return an error to the user.
 		
-		if( filebytes != null && dashboardManager.importIndicatorTemplate(loggedInInfo, filebytes) ) {
+		if( filebytes != null && dashboardManager.importIndicatorTemplate(loggedInInfo, filebytes, message ) ) {
 			setRequest(loggedInInfo, request);
-			action = mapping.findForward("success");
-		} else {
-			action = mapping.findForward("error");
+			message.append("File imported successfully.");
 		}
+		
+		request.setAttribute("message", message.toString() );
 
 		return action;
 	}
