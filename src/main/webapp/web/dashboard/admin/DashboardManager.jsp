@@ -42,7 +42,7 @@
 <bean:message key="dashboard.dashboardmanager.title" />
 </title>
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/bootstrap/3.0.0/css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/css/dataTables.bootstrap.min.css" /> 
+ 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/css/jquery.dataTables.min.css" /> 
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/web/css/Dashboard.css" />
 	<script>var ctx = "${pageContext.request.contextPath}"</script>
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/js/jquery-1.9.1.min.js"></script>	
@@ -116,7 +116,8 @@
 					</li>
 				</c:forEach>
 			</ul>
-		</div>		
+		</div>
+		<span><c:out value="${ message }" /></span>		
 	</html:form>	
 	</div>  <!-- end top nav row -->
 	</nav>
@@ -130,7 +131,7 @@
 		<table class="table table-striped table-condensed" id="libraryTable" >
 			<thead>
 			<tr>
-				<th></th>
+				<th>Disable/Enable</th>
 				<th></th>
 				<th>Dashboard</th>
 				<th>Name</th>
@@ -198,6 +199,10 @@
 			</c:forEach>
 			</tbody>
 		</table>
+		<hr />
+		<h3> 
+			&nbsp;
+		</h3>
 	</div>
 	</div>
 

@@ -204,7 +204,7 @@ public class DashboardManager {
 	 * Retrieves an XML file from a servlet request object and then saves it to
 	 * the local file directory and finally writes an entry in the Indicator Template db table.
 	 */
-	public boolean importIndicatorTemplate(LoggedInInfo loggedInInfo, byte[] bytearray ) {
+	public boolean importIndicatorTemplate( LoggedInInfo loggedInInfo, byte[] bytearray, StringBuilder errors ) {
 		boolean success = Boolean.FALSE;
 		IndicatorTemplate indicatorTemplate = null;
 		
@@ -215,10 +215,15 @@ public class DashboardManager {
 
 		if( bytearray != null && bytearray.length > 0) {
 			
-			MiscUtils.getLogger().debug("Indicator XML Template: " + new String(bytearray) );
+			MiscUtils.getLogger().debug("Indicator XML Template: " + new String( bytearray ) );
 			
-			IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler(bytearray);
-			indicatorTemplate = templateHandler.getIndicatorTemplateEntity();
+			IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler( bytearray );
+			
+			//TODO: validate the XML
+			//TODO: need to validate the SQL
+			// if( templateHandler.validate( errors ) ) {
+				indicatorTemplate = templateHandler.getIndicatorTemplateEntity();
+			// }
 		}
 		
 		if( indicatorTemplate != null ) {

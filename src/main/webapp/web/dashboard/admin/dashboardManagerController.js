@@ -26,9 +26,45 @@
 
 $(document).ready( function() {
 	
-	// table sorting
-	$('#libraryTable').DataTable();
+	//--> sort the checkboxes
+	$.fn.dataTable.ext.order['dom-checkbox'] = function  ( settings, col )
+	{
+	    return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
+	        return $('.ticklerChecked', td).prop('checked') ? '1' : '0';
+	    } );
+	};
 	
+	//--> sort the dashboard selectors.
+	$.fn.dataTable.ext.order['dom-select'] = function  ( settings, col )
+	{
+	    return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
+	        return $('select', td).val();
+	    } );
+	}
+	
+	// table sorting
+	$('#libraryTable').DataTable({
+
+		"columnDefs": [ 
+		    {
+		    	"orderDataType": "dom-checkbox",
+		    	"targets": 0
+		    },
+		    
+		    {
+		        "searchable": false,
+		        "orderable": false,
+		        "targets": 1
+		    },
+		    
+		    {
+		    	"orderDataType": "dom-select",
+		    	"targets": 2
+		    }
+		]
+	});
+	
+	//--> Indicator template importing functions.
     $(':file').on('fileselect', function(event, numFiles, label) {
         $("#importxmltemplate").val(label);
     });
