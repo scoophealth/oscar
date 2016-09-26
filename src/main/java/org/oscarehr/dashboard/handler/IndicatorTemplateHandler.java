@@ -62,7 +62,6 @@ public class IndicatorTemplateHandler{
 	private Document indicatorTemplateDocument;
 	private IndicatorTemplate indicatorTemplateEntity;
 	private IndicatorTemplateXML indicatorTemplateXML; 
-
 	private byte[] bytearray;
 	
 	public IndicatorTemplateHandler() {
@@ -81,19 +80,23 @@ public class IndicatorTemplateHandler{
 		boolean valid = Boolean.TRUE;
 		try {
 			
-		  SchemaFactory factory = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
-		  URL schemaSource = Thread.currentThread().getContextClassLoader().getResource( schemaFile );
+			SchemaFactory factory = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
+			URL schemaSource = Thread.currentThread().getContextClassLoader().getResource( schemaFile );
 
-		  File schemaFile = new File( schemaSource.toURI() );
-		  Schema schema = factory.newSchema( schemaFile );
-		  Validator validator = schema.newValidator();
-		  validator.validate( new DOMSource( getIndicatorTemplateDocument() ) );
-		
+			File schemaFile = new File( schemaSource.toURI() );
+			Schema schema = factory.newSchema( schemaFile );
+			Validator validator = schema.newValidator();
+			validator.validate( new DOMSource( getIndicatorTemplateDocument() ) );
+			
 		} catch (Exception e) {
+			
 			logger.error( "Failed XML Validation ", e );
-			message.append( "Failed XML Validation " );
-			message.append( e.getMessage() );
-			valid = Boolean.FALSE;
+			if( message != null ) {
+				message.append( "Failed XML Validation " );
+				message.append( e.getMessage() );
+				valid = Boolean.FALSE;
+			}
+			
 		}
 		
 		return valid;
@@ -103,6 +106,7 @@ public class IndicatorTemplateHandler{
 	public void read( byte[] bytearray ) {
 		this.bytearray = bytearray;
 		setIndicatorTemplateDocument( this.bytearray );	
+
 		IndicatorTemplateXML indicatorTemplateXML =  new IndicatorTemplateXML( getIndicatorTemplateDocument() );
 		setIndicatorTemplateXML( indicatorTemplateXML );
 		setIndicatorTemplateEntity( indicatorTemplateEntityFromXML( getIndicatorTemplateXML() ) );
@@ -113,15 +117,7 @@ public class IndicatorTemplateHandler{
 	}
 
 	private void setIndicatorTemplateDocument( byte[] bytearray ) {
-		try {
-			this.indicatorTemplateDocument = byteToDocument( bytearray );
-		} catch (SAXException e) {
-			logger.error("error",e);
-		} catch (IOException e) {
-			logger.error("error",e);
-		} catch (ParserConfigurationException e) {
-			logger.error("error",e);
-		}
+		this.indicatorTemplateDocument = byteToDocument( bytearray );
 	}
 
 	/**
@@ -175,14 +171,24 @@ public class IndicatorTemplateHandler{
 	}
 
 
-	public static final Document byteToDocument( final byte[] bytearray ) 
-			throws SAXException, IOException, ParserConfigurationException {
+	public static final Document byteToDocument( final byte[] bytearray ) {
 		
+		Document document = null;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    factory.setNamespaceAware(true);
 	    // factory.setValidating(true);
-	    DocumentBuilder builder = factory.newDocumentBuilder();
-	    return builder.parse( new ByteArrayInputStream( bytearray ) );
+	    try {
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			document = builder.parse( new ByteArrayInputStream( bytearray ) );
+		} catch (ParserConfigurationException e) {
+			logger.error("",e);
+		} catch (SAXException e) {
+			logger.error("",e);
+		} catch (IOException e) {
+			logger.error("",e);
+		}
+	    
+	    return document;
 	}
 
 }
