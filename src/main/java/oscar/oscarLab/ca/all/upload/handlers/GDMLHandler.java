@@ -136,28 +136,15 @@ public class GDMLHandler implements MessageHandler {
 		//OLIS requirements - need to see if this is a duplicate
 		oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler("GDML", msg);
 		//if final		
-		if(h.getOrderStatus().equals("F")) {
-			String fullAcc = h.getAccessionNum();
+		if(h.getOrderStatus().equals("F")) {			
 			String acc = h.getAccessionNum();
-			if(acc.indexOf("-")!=-1) {
-				acc = acc.substring(acc.indexOf("-")+1);
-			}
+			
 			//do we have this?
 			List<Hl7TextInfo> dupResults = hl7TextInfoDao.searchByAccessionNumber(acc);
-			for(Hl7TextInfo dupResult:dupResults) {
-				if(dupResult.equals(fullAcc)) {
-					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
-					OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
-					return true;
-					//}
-				}
-				if(dupResult.getAccessionNumber().length()>4 && dupResult.getAccessionNumber().substring(4).equals(acc)) {
-					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
-					OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
-					return true;
-					//}
-				}
-			}		
+			if( !dupResults.isEmpty() ) {
+                            OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
+                            return true;
+                        }
 		}
 		return false;	
 	}
