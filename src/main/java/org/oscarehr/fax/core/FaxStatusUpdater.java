@@ -30,6 +30,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
@@ -64,11 +65,13 @@ public class FaxStatusUpdater {
 			
 			if( faxConfig == null ) {
 				log.error("Could not find faxConfig.  Has the fax number changed?");
-			}			
+			}	
+
 			else if( faxConfig.isActive() ) {
-								
-				client.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(faxConfig.getSiteUser(), faxConfig.getPasswd()));
 				
+				Credentials credentials = new UsernamePasswordCredentials( faxConfig.getSiteUser(), faxConfig.getPasswd() );
+				client.getCredentialsProvider().setCredentials( new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT), credentials );
+		
 				HttpGet mGet = new HttpGet(faxConfig.getUrl() + "/" + faxJob.getJobId());
 				mGet.setHeader("accept", "application/json");
 				mGet.setHeader("user", faxConfig.getFaxUser());
@@ -77,8 +80,7 @@ public class FaxStatusUpdater {
 				try {
 					HttpResponse response = client.execute(mGet);
 	                log.info("RESPONSE: " + response.getStatusLine().getStatusCode());
-	                mGet.releaseConnection();
-	                
+
 	                if( response.getStatusLine().getStatusCode() == HttpStatus.SC_OK ) {
 	                		                	
 	                	HttpEntity httpEntity = response.getEntity();
@@ -106,7 +108,11 @@ public class FaxStatusUpdater {
 	            } 
 				catch (IOException e) {
 	            	log.error("IO ERROR", e);
-	            }								
+	            } finally {
+					if(mGet != null) {
+						mGet.reset();
+					}
+				}								
 				
 			}
 			
