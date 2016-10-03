@@ -23,6 +23,7 @@
  */
 package org.oscarehr.fax.core;
 
+
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
@@ -32,6 +33,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
@@ -74,27 +76,31 @@ public class FaxImporter {
 		
 		for( FaxConfig faxConfig : faxConfigList ) {
 			if( faxConfig.isActive() ) {
-								
-				client.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(faxConfig.getSiteUser(), faxConfig.getPasswd()));
-	
+
+				Credentials credentials = new UsernamePasswordCredentials( faxConfig.getSiteUser(), faxConfig.getPasswd() );
+				client.getCredentialsProvider().setCredentials( new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT), credentials );
+
 				HttpGet mGet = null;
 				HttpResponse response = null;
 				int status = HttpStatus.SC_OK;
 				
 				try {
-					mGet = new HttpGet(faxConfig.getUrl() + PATH + "/" + URLEncoder.encode(faxConfig.getFaxUser(),"UTF-8") );
+
+					log.debug( "Auth: " + faxConfig.getSiteUser() + ":" + faxConfig.getPasswd() );					
+					log.debug( "Service Path: " + faxConfig.getUrl() + PATH + "/" + URLEncoder.encode( faxConfig.getFaxUser(), "UTF-8" ) );
+					
+					mGet = new HttpGet( faxConfig.getUrl() + PATH + "/" + URLEncoder.encode( faxConfig.getFaxUser(), "UTF-8" ) );
 					mGet.setHeader("accept", "application/json");
 					mGet.setHeader("user", faxConfig.getFaxUser());
 					mGet.setHeader("passwd", faxConfig.getFaxPasswd());
 
 					response = client.execute(mGet);
-					mGet.releaseConnection();
-					
+			
 					if( response != null ) {
 						status = response.getStatusLine().getStatusCode();
-					}
-					
-					if( status == HttpStatus.SC_OK) {
+					}				
+			
+					if( status == HttpStatus.SC_OK ) {
 		
 						HttpEntity httpEntity = response.getEntity();
 	                	String content = EntityUtils.toString(httpEntity);
@@ -110,18 +116,21 @@ public class FaxImporter {
 	                		String fileName = null;
 	                		FaxJob faxFile = downloadFax( client, faxConfig, receivedFax );
 	                		
-	                		// save to file system and inbox Queue.
+	                		// save to file system and assigned inbox Queue.
 	                		if( faxFile != null ) {	 	                			
 	                			fileName = saveAndInsertIntoQueue( faxConfig, receivedFax, faxFile );
 	                		}
 	                		
+	                		// The fileName variable will be NULL if the saveAndInsertIntoQueue methods fails
+	                		// to fully complete. If NULL, the file will not be deleted from the Host server.
+	                		// This method will attempt to download the file again. 
 	                		if( fileName != null ) {
-	                			receivedFax.setFile_name(fileName);
 	                			deleteFax( client, faxConfig, receivedFax );
 	                		}
 	                		
 	                		// this received fax may contain status errors that the 
-	                		// end user needs to see. 
+	                		// end user needs to see. So the job should be saved to the database anyway.
+                			receivedFax.setFile_name( fileName );
 	                		saveFaxJob( receivedFax );
 	                	}
 	                	
@@ -131,9 +140,14 @@ public class FaxImporter {
 					
 				} catch (IOException e) {
 					log.error("HTTP WS CLIENT ERROR", e);
+
+				} finally {
+					if(mGet != null) {
+						mGet.reset();
+					}
 				}
 			}
-		} // end for
+		} 
 		
 	}
 		
@@ -151,7 +165,7 @@ public class FaxImporter {
 			mGet.setHeader("passwd", faxConfig.getFaxPasswd());
 		
 			HttpResponse response = client.execute(mGet);
-			mGet.releaseConnection();
+
 			if( response.getStatusLine().getStatusCode() == HttpStatus.SC_OK ) {
         	
 				HttpEntity httpEntity = response.getEntity();
@@ -163,16 +177,20 @@ public class FaxImporter {
 			}
 			
 	      } catch (ClientProtocolException e) {
-          	log.error("HTTP WS CLIENT ERROR", e);
-          
+          	log.error("HTTP WS CLIENT ERROR", e);         
           } catch (IOException e) {
           	log.error("IO ERROR", e);
+          } finally {
+			if(mGet != null) {
+				mGet.reset();
+			}
           }
 
 		return downloadedFax;
 	}
 	
-	private void deleteFax( DefaultHttpClient client, FaxConfig faxConfig, FaxJob fax ) throws ClientProtocolException, IOException {
+	private void deleteFax( DefaultHttpClient client, FaxConfig faxConfig, FaxJob fax ) 
+			throws ClientProtocolException, IOException {
 		HttpDelete mDelete = new HttpDelete(faxConfig.getUrl() + PATH + "/" 
 				+ URLEncoder.encode(faxConfig.getFaxUser(),"UTF-8") + "/" 
 				+ URLEncoder.encode(fax.getFile_name(),"UTF-8") );
@@ -181,13 +199,17 @@ public class FaxImporter {
 		mDelete.setHeader("user", faxConfig.getFaxUser());
 		mDelete.setHeader("passwd", faxConfig.getFaxPasswd());
 		
+		log.info("Deleting Fax file " + fax.getFile_name() + " from the host server.");
+		
 		HttpResponse response = client.execute(mDelete);
-		mDelete.releaseConnection();
+		mDelete.reset();
 	       
 		if( !(response.getStatusLine().getStatusCode() == HttpStatus.SC_NO_CONTENT) ) {
+			log.debug("Failed to delete Fax file " + fax.getFile_name() + " from the host server.");
 			throw new ClientProtocolException("CANNOT DELETE " + fax.getFile_name());
+		} else {
+			log.info("Fax file " + fax.getFile_name() + " has been deleted from the host server.");
 		}
-
 	}
 	
 	private String saveAndInsertIntoQueue( FaxConfig faxConfig, FaxJob receivedFax, FaxJob faxFile ) {		 		
@@ -206,6 +228,8 @@ public class FaxImporter {
 		}
 		
 		filename = filename.trim();
+		
+		log.info("Saving the Fax file " + filename + " meta data to Oscar's eDoc system.");
 
 		EDoc newDoc = new EDoc("Recieved Fax", "Recieved Fax", filename, "", 
 				DEFAULT_USER, DEFAULT_USER, "", 'A', 
@@ -215,6 +239,8 @@ public class FaxImporter {
 		newDoc.setDocPublic("0");
 		
 		filename = newDoc.getFileName();
+		
+		log.info("Saving the Fax file " + filename + " to the local file system at " + DOCUMENT_DIR );
 		
 		if( Base64.decodeToFile( faxFile.getDocument(), DOCUMENT_DIR + "/" + filename) ) {
 		
@@ -227,8 +253,12 @@ public class FaxImporter {
 			
 			queueDocumentLinkDao.addActiveQueueDocumentLink(queueId, docNum);
 			
+			log.debug( "Saved file " + filename + " to filesystem at " + DOCUMENT_DIR );
+			
 			return filename;
 		}
+		
+		log.debug( "Failed to save file " + filename + " to filesystem at " + DOCUMENT_DIR );
 		
 		return null;
 		
