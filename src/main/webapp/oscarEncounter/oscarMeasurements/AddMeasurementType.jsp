@@ -50,9 +50,7 @@
 <body class="BodyStyle" vlink="#0000FF">
 <!--  -->
 <html:errors />
-<html:form
-	action="/oscarEncounter/oscarMeasurements/AddMeasurementType.do"
-	onsubmit="return validateLogonForm(this);">
+<html:form 	action="/oscarEncounter/oscarMeasurements/AddMeasurementType.do" onsubmit="return validateForm()">
 	<table class="MainTable" id="scrollNumber1" name="encounterTable">
 		<tr class="MainTableTopRow">
 			<td class="MainTableTopRowLeftColumn"><bean:message
@@ -124,9 +122,8 @@
 									<td><input type="button" name="Button"
 										value="<bean:message key="global.btnClose"/>"
 										onClick="window.close()"></td>
-									<td><input type="button" name="Button"
-										value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.addBtn"/>"
-										onclick="submit();" /></td>
+									<td><input type="submit" name="submit"
+										value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.addBtn"/>"/></td>
 								</tr>
 							</table>
 							</td>
@@ -149,5 +146,25 @@
 		</tr>
 	</table>
 </html:form>
+
+<script type="text/javascript">
+function validateForm()
+{
+  var a=document.forms[0]["type"].value;
+  var b=document.forms[0]["typeDesc"].value;
+  var c=document.forms[0]["typeDisplayName"].value;
+  
+  if (a==null || a==""){	
+  	alert("Please enter a type");
+  	return false;
+  }else if(b==null || b==""){
+  	alert("Please enter a type description");
+  	return false;	  
+  }else if(c==null || c==""){
+  	alert("Please enter a display name");
+  	return false;	  
+  }
+}
+</script>
 </body>
 </html:html>
