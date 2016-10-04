@@ -48,16 +48,12 @@ if(!authed) {
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message
-	key="oscarEncounter.Measurements.msgDefineNewMeasurementGroup" /></title>
-
+<title><bean:message key="oscarEncounter.Measurements.msgDefineNewMeasurementGroup" /></title>
 </head>
 
 <body class="BodyStyle" vlink="#0000FF">
-<!--  -->
 <html:errors />
-<html:form
-	action="/oscarEncounter/oscarMeasurements/DefineNewMeasurementGroup.do">
+<html:form action="/oscarEncounter/oscarMeasurements/DefineNewMeasurementGroup.do" onsubmit="return validateForm()">
 	<table class="MainTable" id="scrollNumber1" name="encounterTable">
 		<tr class="MainTableTopRow">
 			<td class="MainTableTopRowLeftColumn"><bean:message
@@ -86,7 +82,7 @@ if(!authed) {
 							</td>
 						</tr>
 						<tr>
-							<td><html:text property="groupName" size="35" /></td>
+							<td><html:text property="groupName" size="35"/></td>
 						</tr>
 						<tr>
 							<td align="left"><bean:message
@@ -95,6 +91,7 @@ if(!authed) {
 						</tr>
 						<tr>
 							<td><html:select property="styleSheet" style="width:250">
+							<html:option value=""></html:option>
 								<html:options collection="allStyleSheets" property="cssId"
 									labelProperty="styleSheetName" />
 							</html:select></td>
@@ -106,14 +103,11 @@ if(!authed) {
 									<td><input type="button" name="Button"
 										value="<bean:message key="global.btnClose"/>"
 										onClick="window.close()"></td>
-									<td><input type="button" name="Button"
-										value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.continueBtn"/>"
-										onclick="submit();" /></td>
+									<td><input type="submit" name="submit"
+										value="<bean:message key="oscarEncounter.oscarMeasurements.MeasurementsAction.continueBtn"/>"/></td>
 								</tr>
 							</table>
 							</td>
-						</tr>
-						</td>
 						</tr>
 					</table>
 					</td>
@@ -127,5 +121,16 @@ if(!authed) {
 		</tr>
 	</table>
 </html:form>
+
+<script type="text/javascript">
+function validateForm()
+{
+  var a=document.forms[0]["groupName"].value;
+  if (a==null || a==""){	
+  	alert("Please enter a group name");
+  	return false;
+  }
+}
+</script>
 </body>
 </html:html>
