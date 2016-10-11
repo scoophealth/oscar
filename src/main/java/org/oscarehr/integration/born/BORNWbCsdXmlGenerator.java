@@ -407,8 +407,8 @@ public class BORNWbCsdXmlGenerator {
 	private void populateMeasurement(VisitData visitData, Measurement measurement) {
 		if("WT".equals(measurement.getType())) {
 			try {
-				int wt = Integer.parseInt(measurement.getDataField()) * 1000;
-				visitData.setWeight( wt); //convert from kg to grams
+				double wt = Double.parseDouble(measurement.getDataField()) * 1000;
+				visitData.setWeight( (int)wt); //convert from kg to grams
 			}catch(NumberFormatException e) {
 				MiscUtils.getLogger().warn("can't parse weight measurement (id="+measurement.getId()+")");
 			}
