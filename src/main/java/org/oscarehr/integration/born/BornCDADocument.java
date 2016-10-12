@@ -241,6 +241,41 @@ public class BornCDADocument extends Level1Document{
 			authorList.add(author);
 			
 		}
+		
+		if(authorList.isEmpty()) {
+			AssignedAuthor aa = new AssignedAuthor();
+			
+			SET<II> authorIdSet = new SET<II>();
+			String provId = props.getOrganization();
+			
+			II authorId = new II("2.16.840.1.113883.3.239.36.1.1.3",provId);
+			authorIdSet.add(authorId);
+			aa.setId(authorIdSet);
+			
+			
+			Person person = new Person();
+			SET<PN> nameSet2 = new SET<PN>();
+			PN pn2 = PN.fromEN(PN.createEN(EntityNameUse.Legal, new ENXP(props.getOrganizationName(), EntityNamePartType.Family)));
+			
+			nameSet2.add(pn2);
+			person.setName(nameSet2);
+			aa.setAssignedAuthorChoice(person);
+			
+			Organization org =new Organization();
+			II orgId = new II(props.getOrganization(),props.getOrganizationName());
+			SET<II> orgIds = new SET<II>();
+			orgIds.add(orgId);
+			org.setId(orgIds);
+			SET<ON> onSet = new SET<ON>();
+			onSet.add(ON.createON(EntityNameUse.Legal,new ENXP(props.getOrganizationName())));
+			org.setName(onSet);
+			
+			aa.setRepresentedOrganization(org);
+			
+			author.setAssignedAuthor(aa);
+			authorList.add(author);
+			
+		}
 		getRoot().setAuthor(authorList);
 	
 		
