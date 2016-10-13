@@ -374,7 +374,7 @@ public class ContactAction extends DispatchAction {
 				arrayListIds.addAll(Arrays.asList( contactIds ) );
 			}
 			
-			ids = (String[]) arrayListIds.toArray();
+			ids = arrayListIds.toArray(new String[arrayListIds.size()]);
 		}
 		
     	if( ids != null ) {
