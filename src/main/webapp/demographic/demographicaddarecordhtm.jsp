@@ -153,6 +153,17 @@
 	    PatientConsentManager patientConsentManager = SpringUtils.getBean( PatientConsentManager.class );
 		pageContext.setAttribute( "consentTypes", patientConsentManager.getConsentTypes() );
 	}
+	
+	boolean showIPHIS = false, showPanorama=false,showIscis=false,showOhiss=false,showEpiInfo=false,showHedgehog=false;
+	ProgramProvider pp3 = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+	
+	showIPHIS = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("IPHISid","").split(","),pp3);
+	showPanorama = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Panorama_id","").split(","),pp3);
+	showIscis = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Iscis_id","").split(","),pp3);
+	showOhiss = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Ohiss_id","").split(","),pp3);
+	showEpiInfo = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("EpiInfo_id","").split(","),pp3);
+	showHedgehog = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Hedgehog_id","").split(","),pp3);
+	
 %>
 <html:html locale="true">
 <head>
@@ -1196,7 +1207,8 @@ function removeChildRecord(index) {
 				<td id="residentLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formResident" />: </b></td>
 				<td id="residentCell" align="left"><select name="cust2">
-					<option value=""></option>
+					<option value=""></option>boolean showIPHIS = false, showPanorama=false,showIscis=false,showOhiss=false,showEpiInfo=false,showHedgehog=false;
+	
 					<%
 					for(Provider p: providerDao.getActiveProvidersByRole("doctor")) {
 %>
@@ -1313,6 +1325,59 @@ document.forms[1].r_doctor_ohip.value = refNo;
 				<td id="chartNo" align="left"><input type="text" id="chart_no" name="chart_no" value="<%=StringEscapeUtils.escapeHtml(chartNoVal)%>">
 				</td>
 			</tr>
+			
+			<%if(OscarProperties.getInstance().isPropertyActive("PublicHealthIDsEnabled")) {%>
+						<%if(showIPHIS) {%>
+							<tr valign="top">
+							<td align="right"><b><span class="label"><bean:message key="demographic.demographiceditdemographic.IPHIS"/>:</span></b></td>
+							<td align="left"><input type="text" name="IPHISClientNumber" size="30"></td>
+							<td></td>
+							<td></td>
+							</tr>
+						<%} %>
+						<%if(showPanorama) {%>
+							<tr valign="top">
+							<td align="right"><b><span class="label"><bean:message key="demographic.demographiceditdemographic.Panorama"/>:</span></b></td>
+							<td align="left"><input type="text" name="PanoramaClientNumber" size="30"></td>
+							<td></td>
+							<td></td>
+							</tr>
+						<%} %>
+						<%if(showIscis) {%>
+							<tr valign="top">						
+							<td align="right"><b><span class="label"><bean:message key="demographic.demographiceditdemographic.ISCIS"/>:</span></b></td>
+							<td align="left"><input type="text" name="IscisClientNumber" size="30"></td>
+							<td></td>
+							<td></td>
+							</tr>
+						<%} %>
+						<%if(showOhiss) {%>
+							<tr valign="top">						
+							<td align="right"><b><span class="label"><bean:message key="demographic.demographiceditdemographic.OHISS"/>:</span></b></td>
+							<td align="left"><input type="text" name="OhissClientNumber" size="30"></td>
+							<td></td>
+							<td></td>
+							</tr>
+						<%} %>
+						<%if(showEpiInfo) {%>
+							<tr valign="top">
+							<td align="right"><b><span class="label"><bean:message key="demographic.demographiceditdemographic.EpiInfo"/>:</span></b></td>
+							<td align="left"><input type="text" name="EpiInfoClientNumber" size="30"></td>
+							<td></td>
+							<td></td>
+							</tr>
+						<%} %>
+						<%if(showHedgehog) {%>
+							<tr valign="top">
+							<td align="right"><b><span class="label"><bean:message key="demographic.demographiceditdemographic.Hedgehog"/>:</span></b></td>
+							<td align="left"><input type="text" name="HedgehogClientNumber" size="30"></td>
+							<td></td>
+							<td></td>
+							</tr>
+						<%} %>
+			<%}%>
+			
+			
 
 			<%if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
       String fieldJSP = oscarProps.getProperty("EXTRA_DEMO_FIELDS");
@@ -1392,11 +1457,9 @@ document.forms[1].r_doctor_ohip.value = refNo;
 		if(!StringUtils.isEmpty(tmp) && enableChildRecordPrograms.length >0 ) {
 			showChildRecordSection=false;
 			 
-			ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
-		
-			if(pp != null) {
+			if(pp3 != null) {
 				for(int x=0;x<enableChildRecordPrograms.length;x++) {
-					if(enableChildRecordPrograms[x].equals(pp.getProgramId().toString())) {
+					if(enableChildRecordPrograms[x].equals(pp3.getProgramId().toString())) {
 						showChildRecordSection=true;
 					}
 				}
@@ -1427,7 +1490,6 @@ document.forms[1].r_doctor_ohip.value = refNo;
 
 			<%
 				String[] privateConsentPrograms2 = OscarProperties.getInstance().getProperty("privateConsentPrograms","").split(",");
-				ProgramProvider pp3 = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
 				boolean showConsents = false;
 				if(pp3 != null) {
 					for(int x=0;x<privateConsentPrograms2.length;x++) {
@@ -1742,3 +1804,15 @@ jQuery(document).ready(function(){
 <%//}%>
 </body>
 </html:html>
+<%!
+public boolean shouldShowForThisProvider(String[] programs, ProgramProvider pp) {
+		if(pp!=null){
+			for(int x=0;x<programs.length;x++){
+				if(programs[x].equals(pp.getProgramId().toString())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+%>

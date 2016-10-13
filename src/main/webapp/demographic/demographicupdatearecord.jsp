@@ -288,6 +288,11 @@
 	extensions.add(new DemographicExt(request.getParameter("privacyConsent_id"), proNo, demographicNo, "privacyConsent", request.getParameter("privacyConsent")));
 	extensions.add(new DemographicExt(request.getParameter("informedConsent_id"), proNo, demographicNo, "informedConsent", request.getParameter("informedConsent")));
 	extensions.add(new DemographicExt(request.getParameter("IPHISClientNumber_id"), proNo, demographicNo, "IPHISClientNumber", request.getParameter("IPHISClientNumber")));
+	extensions.add(new DemographicExt(request.getParameter("PanoramaClientNumber_id"), proNo, demographicNo, "PanoramaClientNumber", request.getParameter("PanoramaClientNumber")));
+	extensions.add(new DemographicExt(request.getParameter("IscisClientNumber_id"), proNo, demographicNo, "IscisClientNumber", request.getParameter("IscisClientNumber")));
+	extensions.add(new DemographicExt(request.getParameter("OhissClientNumber_id"), proNo, demographicNo, "OhissClientNumber", request.getParameter("OhissClientNumber")));
+	extensions.add(new DemographicExt(request.getParameter("EpiInfoClientNumber_id"), proNo, demographicNo, "EpiInfoClientNumber", request.getParameter("EpiInfoClientNumber")));
+	extensions.add(new DemographicExt(request.getParameter("HedgehogClientNumber_id"), proNo, demographicNo, "HedgehogClientNumber", request.getParameter("HedgehogClientNumber")));
 	
 	ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
 	AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);

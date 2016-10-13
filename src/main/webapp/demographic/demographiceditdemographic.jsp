@@ -198,9 +198,16 @@ if(!authed) {
     String privacyConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("privacyConsent")), "");
 	String informedConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("informedConsent")), "");
 	String IPHISClientNumber = StringUtils.defaultString(apptMainBean.getString(demoExt.get("IPHISClientNumber")),"");	
+	String PanoramaClientNumber = StringUtils.defaultString(apptMainBean.getString(demoExt.get("PanoramaClientNumber")),"");	
+	String IscisClientNumber = StringUtils.defaultString(apptMainBean.getString(demoExt.get("IscisClientNumber")),"");	
+	String OhissClientNumber = StringUtils.defaultString(apptMainBean.getString(demoExt.get("OhissClientNumber")),"");	
+	String EpiInfoClientNumber = StringUtils.defaultString(apptMainBean.getString(demoExt.get("EpiInfoClientNumber")),"");	
+	String HedgehogClientNumber = StringUtils.defaultString(apptMainBean.getString(demoExt.get("HedgehogClientNumber")),"");	
 
+	
+	
 	boolean showConsentsThisTime = false;
-	boolean showIPHIS = false;
+	boolean showIPHIS = false, showPanorama=false,showIscis=false,showOhiss=false,showEpiInfo=false,showHedgehog=false;
 	
     GregorianCalendar now=new GregorianCalendar();
     int curYear = now.get(Calendar.YEAR);
@@ -1203,29 +1210,56 @@ if ( Dead.equals(PatStat) ) {%>
 			<div class="demographicSection" id="PublicHealthIDs">
 				<h3><bean:message key="demographic.demographiceditdemographic.PublicHealthID"/></h3>
 <%
-	String[] iphisPrograms = OscarProperties.getInstance().getProperty("IPHISid","").split(",");
 	ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
 	
-	if(pp!=null){
-		for(int x=0;x<iphisPrograms.length;x++){
-			if(iphisPrograms[x].equals(pp.getProgramId().toString())) {
-				showIPHIS=true;
-			}
-		}
-	}
-
+	showIPHIS = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("IPHISid","").split(","),pp);
+	showPanorama = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Panorama_id","").split(","),pp);
+	showIscis = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Iscis_id","").split(","),pp);
+	showOhiss = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Ohiss_id","").split(","),pp);
+	showEpiInfo = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("EpiInfo_id","").split(","),pp);
+	showHedgehog = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Hedgehog_id","").split(","),pp);
+	
+	boolean showedAnId = false;
+	
 	if(showIPHIS) {
-%>
-				<ul>
-			        	<li><span class="label">
-		                        <bean:message key="demographic.demographiceditdemographic.IPHIS"/>:</span>
-
-					<span class="info"><%=IPHISClientNumber%></span></li>
-				</ul>
-				
-	<%}else{%>
-		<span class="label">N/A</span>
-	<%}%>
+		showedAnId=true;
+		%><ul><li><span class="label"><bean:message key="demographic.demographiceditdemographic.IPHIS"/>:</span>
+		<span class="info"><%=IPHISClientNumber%></span></li></ul><%	
+	}
+	
+	if(showPanorama) {
+		showedAnId=true;
+		%><ul><li><span class="label"><bean:message key="demographic.demographiceditdemographic.Panorama"/>:</span>
+		<span class="info"><%=PanoramaClientNumber%></span></li></ul><%	
+	}
+	
+	if(showIscis) {
+		showedAnId=true;
+		%><ul><li><span class="label"><bean:message key="demographic.demographiceditdemographic.ISCIS"/>:</span>
+		<span class="info"><%=IscisClientNumber%></span></li></ul><%	
+	}
+	
+	if(showOhiss) {
+		showedAnId=true;
+		%><ul><li><span class="label"><bean:message key="demographic.demographiceditdemographic.OHISS"/>:</span>
+		<span class="info"><%=OhissClientNumber%></span></li></ul><%	
+	}
+	
+	if(showEpiInfo) {
+		showedAnId=true;
+		%><ul><li><span class="label"><bean:message key="demographic.demographiceditdemographic.EpiInfo"/>:</span>
+		<span class="info"><%=EpiInfoClientNumber%></span></li></ul><%	
+	}
+	
+	if(showHedgehog) {
+		showedAnId=true;
+		%><ul><li><span class="label"><bean:message key="demographic.demographiceditdemographic.Hedgehog"/>:</span>
+		<span class="info"><%=HedgehogClientNumber%></span></li></ul><%	
+	}
+	
+	
+	if(!showedAnId){%><span class="label">N/A</span><%}%>
+	
 	</div>
 <%}%>
 <%-- END TOGGLE PUBLIC HEALTH IDS --%>
@@ -2644,11 +2678,61 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								
                                 </td>
 
+
 							<%-- TOGGLE SHOW IPHIS NUMBER --%>
+								<%
+									if(showIPHIS || showPanorama || showIscis || showOhiss || showEpiInfo || showHedgehog) {
+										%><td colspan="2">
+											<table border="0">
+										<%
+									}		
+								%>
+							
 								<% if(showIPHIS) { %>
-								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.IPHIS" />:</b></td>
-								<td align="left"><input type="text" name="IPHISClientNumber" size="30" value="<%=IPHISClientNumber%>"></td>
+									<tr>
+									<td align="right"><b><bean:message key="demographic.demographiceditdemographic.IPHIS" />:</b></td>
+									<td align="left"><input type="text" name="IPHISClientNumber" size="30" value="<%=IPHISClientNumber%>"></td>
+									</tr>
 								<% } %>
+								<% if(showPanorama) { %>
+									<tr>
+									<td align="right"><b><bean:message key="demographic.demographiceditdemographic.Panorama" />:</b></td>
+									<td align="left"><input type="text" name="PanoramaClientNumber" size="30" value="<%=PanoramaClientNumber%>"></td>
+									</tr>
+								<% } %>
+								<% if(showIscis) { %>
+									<tr>
+									<td align="right"><b><bean:message key="demographic.demographiceditdemographic.ISCIS" />:</b></td>
+									<td align="left"><input type="text" name="IscisClientNumber" size="30" value="<%=IscisClientNumber%>"></td>
+									</tr>
+								<% } %>
+								<% if(showOhiss) { %>
+								<tr>
+									<td align="right"><b><bean:message key="demographic.demographiceditdemographic.OHISS" />:</b></td>
+									<td align="left"><input type="text" name="OhissClientNumber" size="30" value="<%=OhissClientNumber%>"></td>
+								</tr>
+								<% } %>
+								<% if(showEpiInfo) { %>
+								<tr>
+									<td align="right"><b><bean:message key="demographic.demographiceditdemographic.EpiInfo" />:</b></td>
+									<td align="left"><input type="text" name="EpiInfoClientNumber" size="30" value="<%=EpiInfoClientNumber%>"></td>
+								</tr>
+								<% } %>
+								<% if(showHedgehog) { %>
+								<tr>
+									<td align="right"><b><bean:message key="demographic.demographiceditdemographic.Hedgehog" />:</b></td>
+									<td align="left"><input type="text" name="HedgehogClientNumber" size="30" value="<%=HedgehogClientNumber%>"></td>
+								</tr>
+								<% } %>
+	
+	
+								<%
+									if(showIPHIS || showPanorama || showIscis || showOhiss || showEpiInfo || showHedgehog) {
+										%></table></td><%
+									}		
+								%>
+															
+							
 							<%-- END TOGGLE SHOW IPHIS NUMBER --%>
 							</tr>
 							
@@ -3381,4 +3465,14 @@ public String isProgramSelected(Admission admission, Integer programId) {
 		return "";
 	}
 
+	public boolean shouldShowForThisProvider(String[] programs, ProgramProvider pp) {
+		if(pp!=null){
+			for(int x=0;x<programs.length;x++){
+				if(programs[x].equals(pp.getProgramId().toString())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 %>

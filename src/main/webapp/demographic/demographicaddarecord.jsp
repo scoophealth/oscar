@@ -337,6 +337,11 @@
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "privacyConsent", request.getParameter("privacyConsent"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "informedConsent", request.getParameter("informedConsent"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "IPHISClientNumber", request.getParameter("IPHISClientNumber"),"");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "PanoramaClientNumber", request.getParameter("PanoramaClientNumber"),"");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "IscisClientNumber", request.getParameter("IscisClientNumber"),"");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "OhissClientNumber", request.getParameter("OhissClientNumber"),"");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "EpiInfoClientNumber", request.getParameter("EpiInfoClientNumber"),"");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "HedgehogClientNumber", request.getParameter("HedgehogClientNumber"),"");
        //for the IBD clinic
 		OtherIdManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
 
