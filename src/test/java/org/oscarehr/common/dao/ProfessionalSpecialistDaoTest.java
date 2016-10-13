@@ -49,7 +49,8 @@ public class ProfessionalSpecialistDaoTest extends DaoTestFixtures {
 	
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable(false, "professionalSpecialists");
+		//serviceSpecialists
+		SchemaUtils.restoreTable(false, new String[]{"consultationServices", "professionalSpecialists", "serviceSpecialists"});
 	}
 
 	@Test
