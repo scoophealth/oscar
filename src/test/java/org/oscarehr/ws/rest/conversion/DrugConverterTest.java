@@ -22,21 +22,18 @@
  * Victoria, Canada
  */
 
-package org.oscarehr.ws.conversion;
+package org.oscarehr.ws.rest.conversion;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.model.Drug;
-import org.oscarehr.managers.DrugLookUpManager;
+import org.oscarehr.managers.MockDrugLookUpManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.conversion.DrugConverter;
-import org.oscarehr.ws.rest.to.model.DrugSearchTo1;
 import org.oscarehr.ws.rest.to.model.DrugTo1;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -393,6 +390,7 @@ public class DrugConverterTest extends DrugConverter {
 
     }
 
+    /*
 
     private class MockDrugLookUpManager extends DrugLookUpManager{
 
@@ -436,4 +434,5 @@ public class DrugConverterTest extends DrugConverter {
 
     }
 
+*/
 }

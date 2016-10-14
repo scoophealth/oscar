@@ -23,7 +23,7 @@
     Ontario, Canada
 
 --%>
-
+<% String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user"); %>
 <style>
 	label {
 		width: 125px;
@@ -45,6 +45,8 @@
 </style>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <div class="col-lg-12" ng-hide="page.canRead">
 	<bean:message key="demographic.demographiceditdemographic.accessDenied"/>
@@ -119,9 +121,18 @@
 			</ul>
 		</div>
 		<div class="btn-group">
-			<button type="button" class="btn btn-default" ng-click="exportDemographic()"><bean:message key="export"/></button>
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				<bean:message key="export"/><span class="caret">
+			</button>
+			<ul class="dropdown-menu">
+				<li><a class="hand-hover" ng-click="exportDemographic()"><bean:message key="export"/></a></li>
+				<oscar:oscarPropertiesCheck property="E2EViewerEnabled" value="true">
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_demographicExport" rights="r" reverse="<%=false%>">
+						<li><a class="hand-hover" ng-click="viewAsCDA()"><bean:message key="demographic.demographiceditdemographic.msgViewAsE2ECDA"/></a></li>
+					</security:oscarSec>
+				</oscar:oscarPropertiesCheck>
+			</ul>
 		</div>
-		
 		<button type="button" class="btn btn-default" ng-click="loadHistoryList()" ><bean:message key="web.record.details.history"/></button>
 	</div>
 

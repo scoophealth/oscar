@@ -83,7 +83,7 @@ import org.oscarehr.e2e.extension.ObservationWithConfidentialityCode;
 import org.oscarehr.util.SpringUtils;
 
 public class EverestUtils {
-	private static Logger log = Logger.getLogger(EverestUtils.class.getName());
+	private static Logger logger = Logger.getLogger(EverestUtils.class.getName());
 	private static final String OSCAR_PREVENTIONITEMS_FILE = "/oscar/oscarPrevention/PreventionItems.xml";
 	protected static Map<String, String> preventionTypeCodes = null;
 
@@ -96,7 +96,18 @@ public class EverestUtils {
 		measurementTypeCache.put("SYST", "Systolic Blood Pressure");
 	}
 
-	EverestUtils() {
+	private static String output;
+	private static IFormatterGraphResult details;
+	
+	public static String getOuput() {
+		return output;
+	}
+	
+	public static IFormatterGraphResult getDetails() {
+		return details;
+	}
+	
+	public EverestUtils() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -108,58 +119,93 @@ public class EverestUtils {
 		return obj == null || obj.isEmpty() || obj.trim().isEmpty();
 	}
 
-	// Generate Document Function
-	public static String generateDocumentToString(ClinicalDocument clinicalDocument, Boolean validation) {
-		if(clinicalDocument == null) {
-			return null;
-		}
-
-		StringWriter sw = new StringWriter();
+	public static XmlIts1Formatter getFormatter(Boolean validation) {
+		
 		XmlIts1Formatter fmtr = new XmlIts1Formatter();
 		fmtr.setValidateConformance(validation);
 		fmtr.getGraphAides().add(new DatatypeFormatter(R1FormatterCompatibilityMode.ClinicalDocumentArchitecture));
 		fmtr.addCachedClass(ClinicalDocument.class);
 		fmtr.registerXSITypeName("POCD_MT000040UV.Observation", ObservationWithConfidentialityCode.class);
+		
+		return fmtr;
+	}
+	
+	public static XMLStateStreamWriter getXMLStateStreamWriter(StringWriter sw) throws XMLStreamException
+	{
+		XMLOutputFactory fact = XMLOutputFactory.newInstance();
+		
+		XMLStateStreamWriter xssw;
 
+		xssw = new XMLStateStreamWriter(fact.createXMLStreamWriter(sw));
+		xssw.writeStartDocument(Constants.XML.ENCODING, Constants.XML.VERSION);
+		xssw.writeStartElement("hl7", "ClinicalDocument", "urn:hl7-org:v3");
+		xssw.writeNamespace("xs", "http://www.w3.org/2001/XMLSchema");
+		xssw.writeNamespace("hl7", "urn:hl7-org:v3");
+		xssw.writeNamespace("e2e", "http://standards.pito.bc.ca/E2E-DTC/cda");
+		xssw.writeAttribute("xmlns", "xsi", "xsi", "http://www.w3.org/2001/XMLSchema-instance");
+		xssw.writeAttribute("xsi", "schemaLocation", "schemaLocation", "urn:hl7-org:v3 Schemas/CDA-PITO-E2E.xsd");
+		xssw.writeDefaultNamespace("urn:hl7-org:v3"); // Default hl7 namespace
+
+		return xssw;
+	}
+	
+	public static ProcessingResult setOutputandDetails(ClinicalDocument clinicalDocument, Boolean validation)
+	{
 		try {
-			XMLOutputFactory fact = XMLOutputFactory.newInstance();
-			XMLStateStreamWriter xssw = new XMLStateStreamWriter(fact.createXMLStreamWriter(sw));
-
-			xssw.writeStartDocument(Constants.XML.ENCODING, Constants.XML.VERSION);
-			xssw.writeStartElement("hl7", "ClinicalDocument", "urn:hl7-org:v3");
-			xssw.writeNamespace("xs", "http://www.w3.org/2001/XMLSchema");
-			xssw.writeNamespace("hl7", "urn:hl7-org:v3");
-			xssw.writeNamespace("e2e", "http://standards.pito.bc.ca/E2E-DTC/cda");
-			xssw.writeAttribute("xmlns", "xsi", "xsi", "http://www.w3.org/2001/XMLSchema-instance");
-			xssw.writeAttribute("xsi", "schemaLocation", "schemaLocation", "urn:hl7-org:v3 Schemas/CDA-PITO-E2E.xsd");
-			xssw.writeDefaultNamespace("urn:hl7-org:v3"); // Default hl7 namespace
-
+			StringWriter sw = new StringWriter();
+			
+			XMLStateStreamWriter xssw = getXMLStateStreamWriter(sw);
+			
+			XmlIts1Formatter fmtr = getFormatter(validation);
 			IFormatterGraphResult details = fmtr.graph(xssw, clinicalDocument);
-
+	
 			xssw.writeEndElement();
 			xssw.writeEndDocument();
 			xssw.close();
-
+			
 			String output = prettyFormatXML(sw.toString(), Constants.XML.INDENT);
-
-			// Temporary Everest Bugfixes
-			output = everestBugFixes(output);
-
-			if(validation) {
-				E2EEverestValidator.isValidCDA(details);
-				E2EXSDValidator.isValidXML(output);
-			}
-
-			return output;
+			
+			ProcessingResult processingResult = new ProcessingResult();
+			processingResult.output = output;
+			processingResult.details = details;
+			
+			return processingResult;
+			
 		} catch (XMLStreamException e) {
-			log.error(e.toString());
+			logger.error(e.toString());
+		}
+		
+		return null;
+	}
+	
+	private static class ProcessingResult {
+		public String output;
+		public IFormatterGraphResult details;
+	}
+	
+	// Generate Document Function
+	public static String generateDocumentToString(ClinicalDocument clinicalDocument, Boolean validation) {
+		if(clinicalDocument == null) {
+			return null;
+		}
+			
+		ProcessingResult processingResult = setOutputandDetails(clinicalDocument, validation);
+		output = processingResult.output;
+		details = processingResult.details;
+		
+		// Temporary Everest Bugfixes
+		output = everestBugFixes(output);
+
+		if(validation) {
+			E2EEverestValidator.isValidCDA(details);
+			E2EXSDValidator.isValidXML(output);
 		}
 
-		return null;
+		return output;
 	}
 
 	// Temporary Everest Bugfixes
-	private static String everestBugFixes(String output) {
+	public static String everestBugFixes(String output) {
 		String result = output.replaceAll("xsi:nil=\"true\" ", "");
 		result = result.replaceAll("xsi:type=\"_TS\" ", "");
 		return result.replaceAll("delimeter", "delimiter");
@@ -180,7 +226,7 @@ public class EverestUtils {
 
 				return xmlOutput.getWriter().toString().replaceFirst("<Clin", "\n<Clin");
 			} catch (TransformerException e) {
-				log.error(e.toString());
+				logger.error(e.toString());
 			}
 		}
 
@@ -310,7 +356,7 @@ public class EverestUtils {
 				providerNo = demographic.getProviderNo();
 			}
 		} catch (Exception e) {
-			log.warn("Demographic " + demographicNo + " not found");
+			logger.warn("Demographic " + demographicNo + " not found");
 		}
 
 		return providerNo;
@@ -326,7 +372,7 @@ public class EverestUtils {
 			try {
 				provider = providerDao.findByProviderNo(providerNo);
 			} catch (Exception e) {
-				log.warn("Provider " + providerNo + " not found");
+				logger.warn("Provider " + providerNo + " not found");
 			}
 			providerCache.put(providerNo, provider);
 		}
@@ -344,7 +390,7 @@ public class EverestUtils {
 			try {
 				description = icd9Dao.findByCode(code).getDescription();
 			} catch (Exception e) {
-				log.warn("ICD9 Code '" + code + "' missing description");
+				logger.warn("ICD9 Code '" + code + "' missing description");
 			}
 			icd9DescriptionCache.put(code, description);
 		}
@@ -363,7 +409,7 @@ public class EverestUtils {
 				List<MeasurementType> measurementType = measurementTypeDao.findByType(type);
 				description = measurementType.get(0).getTypeDescription();
 			} catch (Exception e) {
-				log.warn("Measurement type description '" + type + "' not found");
+				logger.warn("Measurement type description '" + type + "' not found");
 			}
 			measurementTypeCache.put(type, description);
 		}
@@ -390,7 +436,7 @@ public class EverestUtils {
 				}
 				is.close();
 			} catch (Exception e) {
-				log.error(e.getMessage(), e);
+				logger.error(e.getMessage(), e);
 			}
 		}
 
@@ -408,7 +454,7 @@ public class EverestUtils {
 		try {
 			answer = issueDao.findIssueByCode(issue).getId();
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 		}
 		return answer;
 	}

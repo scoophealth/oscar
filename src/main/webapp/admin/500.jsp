@@ -27,7 +27,9 @@
 
 <%@page isErrorPage="true" %>
 <%@include file="/layouts/caisi_html_top.jspf"%>
-
+<%
+	response.setStatus(500);
+%>
 An unexpected system error occurred.<br />
 Please contact support with the date and time of this error.<br />
 

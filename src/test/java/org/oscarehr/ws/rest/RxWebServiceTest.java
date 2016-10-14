@@ -22,22 +22,15 @@
  * Victoria, Canada
  */
 
-package org.oscarehr.ws;
+package org.oscarehr.ws.rest;
 
-import com.sun.istack.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.exception.AccessDeniedException;
-import org.oscarehr.common.model.Drug;
-import org.oscarehr.common.model.Prescription;
 import org.oscarehr.managers.MockSecurityInfoManager;
 import org.oscarehr.managers.RxManager;
-import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.ws.rest.RxWebService;
-import org.oscarehr.ws.rest.conversion.ConversionException;
-import org.oscarehr.ws.rest.conversion.DrugConverter;
-import org.oscarehr.ws.rest.conversion.PrescriptionConverter;
+import org.oscarehr.ws.MockRxWebService;
 import org.oscarehr.ws.rest.to.DrugResponse;
 import org.oscarehr.ws.rest.to.DrugSearchResponse;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
@@ -53,12 +46,12 @@ import static junit.framework.Assert.*;
 
 public class RxWebServiceTest {
 
-    private RxWebService service;
+    private MockRxWebService service;
 
     @Before
     public void before() {
 
-        this.service = new TestableRxWebService();
+        this.service = new MockRxWebService();
 
     }
 
@@ -74,6 +67,10 @@ public class RxWebServiceTest {
 
         DrugSearchResponse resp = null;
         try {
+        	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+        	mockSecurityInfoManager.setAccessPatientRecord(true);
+        	mockSecurityInfoManager.setPrivilege(true);
+        	service.setSecurityInfoManager(mockSecurityInfoManager);
             resp = this.service.drugs(1, null);
         } catch (OperationNotSupportedException e) {
             fail();
@@ -96,6 +93,10 @@ public class RxWebServiceTest {
 
         DrugSearchResponse resp = null;
         try {
+        	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+        	mockSecurityInfoManager.setAccessPatientRecord(true);
+        	mockSecurityInfoManager.setPrivilege(true);
+        	service.setSecurityInfoManager(mockSecurityInfoManager);
             resp = this.service.drugs(1, RxManager.CURRENT);
         } catch (OperationNotSupportedException e) {
             fail();
@@ -114,6 +115,10 @@ public class RxWebServiceTest {
 
         DrugSearchResponse resp = null;
         try {
+        	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+        	mockSecurityInfoManager.setAccessPatientRecord(true);
+        	mockSecurityInfoManager.setPrivilege(true);
+        	service.setSecurityInfoManager(mockSecurityInfoManager);
             resp = this.service.drugs(1, RxManager.ARCHIVED);
         } catch (OperationNotSupportedException e) {
             fail();
@@ -130,6 +135,10 @@ public class RxWebServiceTest {
     @Test(expected = OperationNotSupportedException.class)
     public void testInvalidStatus() throws OperationNotSupportedException {
 
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
         this.service.drugs(1, "foobar"); // an unknown status
 
     }
@@ -138,6 +147,10 @@ public class RxWebServiceTest {
     public void testFailedPrivilege() {
 
         try {
+        	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+        	mockSecurityInfoManager.setAccessPatientRecord(true);
+        	mockSecurityInfoManager.setPrivilege(false);
+        	service.setSecurityInfoManager(mockSecurityInfoManager);
             this.service.drugs(6, null);
         } catch (OperationNotSupportedException e) {
             fail();
@@ -147,7 +160,11 @@ public class RxWebServiceTest {
 
     @Test
     public void testAddDrugWithValidInput() {
-
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         DrugTo1 t = this.getTestTransferObject();
         GenericRESTResponse resp = this.service.addDrug(t, 1);
         assertTrue(resp.isSuccess());
@@ -169,6 +186,11 @@ public class RxWebServiceTest {
     @Test
     public void testFailedAddNewDrug() {
 
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         DrugTo1 t = this.getTestTransferObject();
 
         // The MockRxManager.addDrug() will return false if
@@ -184,6 +206,11 @@ public class RxWebServiceTest {
     @Test
     public void testInvalidTransferObject() {
 
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         DrugTo1 t = this.getTestTransferObject();
 
         // MockDrugConverter will throw ConversionException
@@ -201,6 +228,11 @@ public class RxWebServiceTest {
     @Test
     public void testValidUpdateDrugCall() {
 
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         DrugTo1 t = this.getTestTransferObject();
 
         // MockRxManager.updateDrug() will return a Drug
@@ -233,6 +265,11 @@ public class RxWebServiceTest {
     @Test
     public void testShouldReturnFalseForUnsuccessfulUpdate() {
 
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         DrugTo1 t = this.getTestTransferObject();
 
         t.setDrugId(2); // MockRxManager will return null for drugid != 1
@@ -248,6 +285,11 @@ public class RxWebServiceTest {
     @Test
     public void testShouldHandlePoorlyFormedTransferObject() {
 
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         // Should catch any ConversionExceptions...
 
         DrugTo1 t = this.getTestTransferObject();
@@ -265,6 +307,11 @@ public class RxWebServiceTest {
     @Test
     public void testValidDiscontinueReason() {
 
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         GenericRESTResponse r = this.service.discontinueDrug(1, "deleted", 1);
         assertNotNull(r);
         assertTrue(r.isSuccess());
@@ -274,6 +321,11 @@ public class RxWebServiceTest {
     @Test
     public void testFailedToDiscontinue() {
 
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         GenericRESTResponse r = this.service.discontinueDrug(2, "delete", 1);
         assertNotNull(r);
         assertFalse(r.isSuccess());
@@ -290,6 +342,11 @@ public class RxWebServiceTest {
     @Test
     public void testPrescribeBasic() {
 
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         List<DrugTo1> toPrescribe = new ArrayList<DrugTo1>();
         toPrescribe.add(this.getTestTransferObject());
         PrescriptionResponse resp = this.service.prescribe(toPrescribe, 1);
@@ -298,7 +355,7 @@ public class RxWebServiceTest {
         assertNotNull(resp.getDrugs());
         assertEquals(resp.getDrugs().size(), 1);
         assertEquals((int) resp.getDrugs().get(0).getDemographicNo(), 1);
-        assertEquals((String) resp.getDrugs().get(0).getBrandName(), "foobar");
+        assertEquals(resp.getDrugs().get(0).getBrandName(), "foobar");
 
         assertNotNull(resp.getPrescription());
         assertEquals((int)resp.getPrescription().getProviderNo(), 1);
@@ -309,6 +366,11 @@ public class RxWebServiceTest {
     @Test
     public void testPrescribeMultiple() {
 
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         List<DrugTo1> toPrescribe = new ArrayList<DrugTo1>();
         toPrescribe.add(this.getTestTransferObject());
         toPrescribe.add(this.getTestTransferObject());
@@ -327,6 +389,11 @@ public class RxWebServiceTest {
     @Test
     public void testItShouldFailToPrescribeEmptyDrugList() {
 
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         List<DrugTo1> toPrescribe = new ArrayList<DrugTo1>();
         PrescriptionResponse resp = this.service.prescribe(toPrescribe, 1);
 
@@ -337,6 +404,11 @@ public class RxWebServiceTest {
     @Test
     public void testItShouldHandleAFailedConversion() {
 
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         List<DrugTo1> toPrescribe = new ArrayList<DrugTo1>();
         toPrescribe.add(this.getTestTransferObject());
         toPrescribe.get(0).setDrugId(5); //will cause exception in mock test converter.
@@ -358,7 +430,11 @@ public class RxWebServiceTest {
 
     @Test
     public void testItShouldHandleNullDrugListParameter(){
-
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         PrescriptionResponse resp = this.service.prescribe(null, 1);
 
         assertFalse(resp.isSuccess());
@@ -367,7 +443,11 @@ public class RxWebServiceTest {
 
     @Test
     public void testItShouldHandleInvalidDemographicParametert(){
-
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         List<DrugTo1> toPrescribe = new ArrayList<DrugTo1>();
         toPrescribe.add(this.getTestTransferObject());
 
@@ -379,7 +459,11 @@ public class RxWebServiceTest {
 
     @Test
     public void testItShouldHandeFailureToCreatePrescription(){
-
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         List<DrugTo1> toPrescribe = new ArrayList<DrugTo1>();
         toPrescribe.add(this.getTestTransferObject());
         toPrescribe.get(0).setDrugId(2); // will trigger failure in test code.
@@ -393,7 +477,11 @@ public class RxWebServiceTest {
 
     @Test
     public void testBasicHistory(){
-
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         DrugSearchResponse resp = this.service.history(1, 1);
         assertNotNull(resp);
         assertEquals(resp.getContent().size(), 1);
@@ -402,7 +490,12 @@ public class RxWebServiceTest {
 
     @Test
     public void testEmptyHistory(){
-
+    	
+    	MockSecurityInfoManager mockSecurityInfoManager = new MockSecurityInfoManager();
+    	mockSecurityInfoManager.setAccessPatientRecord(true);
+    	mockSecurityInfoManager.setPrivilege(true);
+    	service.setSecurityInfoManager(mockSecurityInfoManager);
+    	
         DrugSearchResponse resp = this.service.history(6, 1); //id > 5 will trigger empty list.
 
         assertNotNull(resp);
@@ -420,43 +513,6 @@ public class RxWebServiceTest {
 
 
     // ============ HELPER TEST METHODS ==============
-
-
-    public Drug getTestDrug() {
-
-        Date startDate = new Date();
-        Date endDate = new Date();
-        Date archivedDate = new Date();
-
-        Drug d = new Drug();
-
-        d.setId(1);
-        d.setDemographicId(1);
-        d.setProviderNo("1");
-        d.setBrandName("Foobar");
-        d.setGenericName("Barbang");
-        d.setRegionalIdentifier("12345");
-        d.setAtc("abcde");
-        d.setTakeMax(2);
-        d.setTakeMin(1);
-        d.setRxDate((Date) startDate.clone());
-        d.setEndDate((Date) endDate.clone());
-        d.setFreqCode("BID");
-        d.setDuration("28");
-        d.setDurUnit("D");
-        d.setRoute("PO");
-        d.setDrugForm("TAB");
-        d.setPrn(true);
-        d.setMethod("Take");
-        d.setRepeat(5);
-        d.setSpecial("some string");
-        d.setArchived(false);
-        d.setArchivedDate((Date) archivedDate.clone());
-        d.setArchivedReason("reason");
-
-        return d;
-
-    }
 
     public DrugTo1 getTestTransferObject() {
 
@@ -495,193 +551,4 @@ public class RxWebServiceTest {
 
         return t;
     }
-
-    // ============ MOCK Testing Sub Classes =========
-    // We use these classes mock the objects that are actually
-    // injected into the RxWebService class at runtime.
-    //
-    // This allows us to test the behaviour of the web service
-    // without worrying about other details like the database...
-    //
-
-
-    public class MockRxManager extends RxManager {
-
-        protected List<Drug> drugs;
-
-        Drug d;
-
-        public MockRxManager() {
-
-            drugs = new ArrayList<Drug>();
-
-            d = new Drug();
-            d.setId(1);
-            d.setGenericName("ASA");
-            d.setBrandName("Aspirin");
-            d.setProviderNo("1");
-            d.setDuration("28");
-            d.setArchived(true);
-            d.setArchivedDate(new Date());
-            d.setArchivedReason("allergy");
-            drugs.add(d);
-
-            d = new Drug();
-            d.setId(2);
-            d.setGenericName("Acetaminophen");
-            d.setBrandName("Tylenol");
-            d.setProviderNo("1");
-            d.setDuration("28");
-            d.setArchived(false);
-            drugs.add(d);
-
-        }
-
-        public List<Drug> getDrugs(@NotNull LoggedInInfo info, @NotNull int demographicNo, @NotNull String status)
-                throws UnsupportedOperationException {
-            if (status.equals(RxManager.ALL)) return this.getAllDrugs(info, demographicNo);
-            else if (status.equals(RxManager.CURRENT)) return this.getCurrentDrugs(info, demographicNo);
-            else if (status.equals(RxManager.ARCHIVED)) return this.getArchivedDrugs(info, demographicNo);
-            else return null;
-
-        }
-
-        private List<Drug> getAllDrugs(LoggedInInfo info, int id) {
-
-            return this.drugs;
-
-        }
-
-        private List<Drug> getCurrentDrugs(LoggedInInfo info, int id) {
-
-            List<Drug> toReturn = new ArrayList<Drug>();
-
-            for (Drug d : this.drugs) {
-
-                if (!d.isArchived()) toReturn.add(d);
-
-            }
-
-            return toReturn;
-        }
-
-        private List<Drug> getArchivedDrugs(LoggedInInfo info, int id) {
-
-            List<Drug> toReturn = new ArrayList<Drug>();
-
-            for (Drug d : this.drugs) {
-
-                if (d.isArchived()) toReturn.add(d);
-
-            }
-
-            return toReturn;
-        }
-
-        public Drug addDrug(LoggedInInfo info, Drug d) {
-
-            // only return a drug if the ID is 1
-            // others we return null. This is useful for testing.
-
-            if (d.getId() == 1) {
-                return d;
-            }
-
-            return null;
-
-        }
-
-        public Drug updateDrug(LoggedInInfo info, Drug d) {
-
-            if (d.getId() == 1) return d;
-
-            return null;
-
-        }
-
-        public boolean discontinue(LoggedInInfo i,
-                                   int drugId,
-                                   int demo,
-                                   String reason
-        ) {
-
-            // mock discontinue method
-
-            return drugId == 1 && demo == 1;
-        }
-
-        public PrescriptionDrugs prescribe(LoggedInInfo info, List<Drug> drugs, Integer demoNo){
-
-            if(drugs.get(0).getId() > 1) return null;
-
-            Prescription p = new Prescription();
-
-            p.setProviderNo("1");
-            p.setDemographicId(1);
-            p.setTextView("SOME TEXT");
-
-            PrescriptionDrugs pd = new PrescriptionDrugs(p, drugs);
-            return pd;
-
-        }
-
-        public List<Drug> getHistory(Integer id, LoggedInInfo info, Integer demographicNo){
-
-            // case for supporting tests, only return an empty list if demo > 5.
-
-            if(id > 5) {
-
-                return new ArrayList<Drug>();
-
-            } else{
-
-                List<Drug> toReturn = new ArrayList<Drug>();
-
-                Drug d = getTestDrug();
-                toReturn.add(d);
-                return toReturn;
-
-            }
-
-
-        }
-
-    }
-
-    public class MockDrugConverter extends DrugConverter {
-
-        public MockDrugConverter() {
-            super();
-        }
-
-        public Drug getAsDomainObject(LoggedInInfo info, DrugTo1 t) {
-
-            if (t.getDrugId() > 2) {
-                throw new ConversionException("Test conversion exception");
-            } else {
-                return super.getAsDomainObject(info, t);
-            }
-
-
-        }
-
-    }
-
-    public class TestableRxWebService extends RxWebService {
-
-        public TestableRxWebService() {
-            super();
-            this.rxManager = new MockRxManager();
-            this.drugConverter = new MockDrugConverter();
-            this.securityInfoManager = new MockSecurityInfoManager();
-            this.prescriptionConverter = new PrescriptionConverter();
-        }
-
-        protected LoggedInInfo getLoggedInInfo() {
-
-            return null;
-
-        }
-    }
-
 }

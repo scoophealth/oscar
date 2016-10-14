@@ -28,12 +28,28 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page isErrorPage="true"%><!-- only true can access exception object -->
 
-<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
-<body>
-<h1><bean:message key="error.description" /></h1>
-<hr>
-<h2><bean:message key="error.msgException" />:<br>
-<font color=red> <%= exception.toString() %><br>
-<% MiscUtils.getLogger().error("Error", exception); %> </font></h2>
-</body>
+<%@ page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
+<%@ page import="org.apache.cxf.interceptor.Fault"%>
+<%@ page import="java.lang.RuntimeException"%>
+<%@ page import="org.oscarehr.common.exception.NotFoundException"%>
+<%@ page import="org.oscarehr.common.exception.ValidationException"%>
+<%@ page import="java.util.HashMap"%>
+<%@ page import="java.lang.Integer"%>
+
+	<body>
+		<h1><bean:message key="error.description" /></h1>
+		<hr>
+		<p>
+		<center>Something is wrong with your input. <br>
+		<a href="${pageContext.request.contextPath}/index.jsp">Back to Home</a> &amp; Try it again</center>
+		<p>
+		<h2>
+			<bean:message key="error.msgException" />:<br>
+			<font color=red>
+				<% out.println("Exception:" + exception);%><br>
+				<% out.println("Exception Message:" + exception.getMessage());%><br>
+			</font>
+		</h2>
+	</body>
 </html:html>
+<%MiscUtils.getLogger().error("Error", exception);%>

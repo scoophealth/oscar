@@ -40,6 +40,8 @@ import org.oscarehr.common.model.Security;
  * The initiatingCode field can be used for both internal threads as well as user requests.
  * It should signify where the code started for the most part, i.e. the thread class name,
  * or the jsp name, or web service name and method.
+ * 
+ * NOTE: this class is not intended to be extended
  */
 public final class LoggedInInfo implements Serializable {
 	

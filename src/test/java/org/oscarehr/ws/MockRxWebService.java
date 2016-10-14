@@ -21,37 +21,35 @@
  * University of Victoria
  * Victoria, Canada
  */
-package org.oscarehr.e2e.util;
 
-import org.apache.log4j.Logger;
-import org.marc.everest.formatters.interfaces.IFormatterGraphResult;
-import org.marc.everest.interfaces.IResultDetail;
-import org.marc.everest.interfaces.ResultDetailType;
 
-public class E2EEverestValidator {
-	private static Logger log = Logger.getLogger(E2EEverestValidator.class.getName());
+package org.oscarehr.ws;
 
-	E2EEverestValidator() {
-		throw new UnsupportedOperationException();
-	}
+import org.oscarehr.managers.MockRxManager;
+import org.oscarehr.managers.MockSecurityInfoManager;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.ws.rest.RxWebService;
+import org.oscarehr.ws.rest.conversion.MockDrugConverter;
+import org.oscarehr.ws.rest.conversion.PrescriptionConverter;
 
-	public static Boolean isValidCDA(IFormatterGraphResult details) {
-		Boolean result = true;
+public class MockRxWebService extends RxWebService {
 
-		for(IResultDetail dtl : details.getDetails()) {
-			if(!EverestUtils.isNullorEmptyorWhitespace(dtl.getMessage())) {
-				if(dtl.getType() == ResultDetailType.INFORMATION) {
-					log.info(dtl.getMessage());
-				} else if (dtl.getType() == ResultDetailType.WARNING) {
-					log.warn(dtl.getMessage());
-				} else {
-					log.error(dtl.getMessage(), dtl.getException());
-				}
-			}
+    public MockRxWebService() {
+        super();
+        this.rxManager = new MockRxManager();
+        this.drugConverter = new MockDrugConverter();
+        this.securityInfoManager = new MockSecurityInfoManager();
+        this.prescriptionConverter = new PrescriptionConverter();
+    }
+    
+    public void setSecurityInfoManager(SecurityInfoManager securityInfoManager) {
+    	this.securityInfoManager = securityInfoManager;
+    }
+    
+    protected LoggedInInfo getLoggedInInfo() {
 
-			result = false;
-		}
+        return null;
 
-		return result;
-	}
+    }
 }

@@ -21,37 +21,40 @@
  * University of Victoria
  * Victoria, Canada
  */
-package org.oscarehr.e2e.util;
 
-import org.apache.log4j.Logger;
-import org.marc.everest.formatters.interfaces.IFormatterGraphResult;
-import org.marc.everest.interfaces.IResultDetail;
-import org.marc.everest.interfaces.ResultDetailType;
+package org.oscarehr.managers;
 
-public class E2EEverestValidator {
-	private static Logger log = Logger.getLogger(E2EEverestValidator.class.getName());
+import java.util.Date;
+import java.util.List;
 
-	E2EEverestValidator() {
-		throw new UnsupportedOperationException();
-	}
+import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.Prescription;
+import org.oscarehr.util.LoggedInInfo;
 
-	public static Boolean isValidCDA(IFormatterGraphResult details) {
-		Boolean result = true;
+public class MockPrescriptionManager extends PrescriptionManager{
 
-		for(IResultDetail dtl : details.getDetails()) {
-			if(!EverestUtils.isNullorEmptyorWhitespace(dtl.getMessage())) {
-				if(dtl.getType() == ResultDetailType.INFORMATION) {
-					log.info(dtl.getMessage());
-				} else if (dtl.getType() == ResultDetailType.WARNING) {
-					log.warn(dtl.getMessage());
-				} else {
-					log.error(dtl.getMessage(), dtl.getException());
-				}
-			}
+    public MockPrescriptionManager(){
+        super();
+    }
 
-			result = false;
-		}
+    public Prescription createNewPrescription(LoggedInInfo info, List<Drug> drugs, Integer demographicNo) {
 
-		return result;
-	}
+        if(demographicNo > 10) return null;
+        else return getTestPrescription();
+
+    }
+    
+    public Prescription getTestPrescription(){
+
+        Prescription p = new Prescription();
+
+        p.setDemographicId(1);
+        p.setProviderNo("1");
+        p.setTextView("PRESCRIPTION TEXT");
+        p.setDatePrescribed( new Date());
+        p.setComments("COMMENT TEXT");
+
+        return p;
+
+    }
 }

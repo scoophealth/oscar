@@ -33,17 +33,38 @@ import org.oscarehr.util.LoggedInInfo;
  */
 public class MockSecurityInfoManager extends SecurityInfoManager {
 
-    public MockSecurityInfoManager() {
+	private boolean privilege = false;
+	private boolean accessPatientRecord = false;
+	
+	public MockSecurityInfoManager() {
 
-    }
+    }	
+	
+    public boolean isAccessPatientRecord() {
+		return accessPatientRecord;
+	}
+
+	public void setAccessPatientRecord(boolean accessPatientRecord) {
+		this.accessPatientRecord = accessPatientRecord;
+	}
+
+	public boolean isPrivilege() {
+		return privilege;
+	}
+
+	public void setPrivilege(boolean privilege) {
+		this.privilege = privilege;
+	}
 
     @Override
     public boolean hasPrivilege(LoggedInInfo loggedInInfo, String objectName, String privilege, int demographicNo) {
 
-        // only return true if the demographicNo is 1, otherwise we fail.
-        // this is used in the test conditions.
-        return (demographicNo < 5);
-
+        return this.privilege;
+    }
+    
+    @Override
+    public boolean isAllowedAccessToPatientRecord(LoggedInInfo loggedInInfo, Integer demographicNo) {
+    	return accessPatientRecord;
     }
 
 }

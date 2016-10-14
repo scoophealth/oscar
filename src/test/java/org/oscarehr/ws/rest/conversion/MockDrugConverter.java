@@ -21,37 +21,26 @@
  * University of Victoria
  * Victoria, Canada
  */
-package org.oscarehr.e2e.util;
 
-import org.apache.log4j.Logger;
-import org.marc.everest.formatters.interfaces.IFormatterGraphResult;
-import org.marc.everest.interfaces.IResultDetail;
-import org.marc.everest.interfaces.ResultDetailType;
+package org.oscarehr.ws.rest.conversion;
 
-public class E2EEverestValidator {
-	private static Logger log = Logger.getLogger(E2EEverestValidator.class.getName());
+import org.oscarehr.common.model.Drug;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.ws.rest.to.model.DrugTo1;
 
-	E2EEverestValidator() {
-		throw new UnsupportedOperationException();
-	}
+public class MockDrugConverter extends DrugConverter {
 
-	public static Boolean isValidCDA(IFormatterGraphResult details) {
-		Boolean result = true;
+    public MockDrugConverter() {
+        super();
+    }
 
-		for(IResultDetail dtl : details.getDetails()) {
-			if(!EverestUtils.isNullorEmptyorWhitespace(dtl.getMessage())) {
-				if(dtl.getType() == ResultDetailType.INFORMATION) {
-					log.info(dtl.getMessage());
-				} else if (dtl.getType() == ResultDetailType.WARNING) {
-					log.warn(dtl.getMessage());
-				} else {
-					log.error(dtl.getMessage(), dtl.getException());
-				}
-			}
+    public Drug getAsDomainObject(LoggedInInfo info, DrugTo1 t) {
 
-			result = false;
-		}
+        if (t.getDrugId() > 2) {
+            throw new ConversionException("Test conversion exception");
+        } else {
+            return super.getAsDomainObject(info, t);
+        }
+    }
 
-		return result;
-	}
 }
