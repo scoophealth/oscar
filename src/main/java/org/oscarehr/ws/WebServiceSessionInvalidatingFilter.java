@@ -34,6 +34,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.cxf.interceptor.Fault;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 /**
  * Our web services are inherently stateless so we want to prevent excessive session object build up. This is caused because
  * the oscar permissions system sets credentials into the session space upon authentication. 
@@ -41,6 +45,8 @@ import javax.servlet.http.HttpSession;
 // @WebFilter(urlPatterns={"/ws/*"})
 public class WebServiceSessionInvalidatingFilter implements javax.servlet.Filter
 {
+	private static final Logger logger = MiscUtils.getLogger();
+	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
@@ -55,6 +61,21 @@ public class WebServiceSessionInvalidatingFilter implements javax.servlet.Filter
 		try
 		{
 			chain.doFilter(tmpRequest, tmpResponse);
+		}
+		catch(RuntimeException runtimeException)
+		{
+			//unwrap exceptions to leverage web.xml
+			Throwable cause = runtimeException.getCause();
+			
+			if(cause instanceof Fault) {
+				Throwable rootCause = cause.getCause();
+				if(rootCause instanceof RuntimeException) {
+					throw (RuntimeException) rootCause;
+				}
+			}
+			
+			logger.error(runtimeException.getMessage());
+			throw runtimeException;//this exception wasn't a standard wrapped exception - so rethrow
 		}
 		finally
 		{

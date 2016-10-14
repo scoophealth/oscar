@@ -898,6 +898,13 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		window.open(url, "DemographicExport", "width=960, height=700");
 	}
 
+	//view as cda
+	$scope.viewAsCDA = function(){
+		var url = "../ws/rs/e2eCDA/"+demo.demographicNo;
+		var title = demo.firstName + " " + demo.lastName + ": E2E CDA Chart";
+		window.open(url, title, "width=960, height=700");
+	}
+	
 	//HCValidation on open & save
 	$scope.validateHCSave = function(doSave){
 		if (demo.hin==null || demo.hin=="") {

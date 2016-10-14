@@ -3290,15 +3290,19 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 							<tr>
 								<td width="30%" valign="top">
 								<input type="hidden" name="dboperation" value="update_record"> 
-
-								 <security:oscarSec roleName="<%=roleName$%>" objectName="_demographicExport" rights="r" reverse="<%=false%>">
+								<oscar:oscarPropertiesCheck property="E2EViewerEnabled" value="true"> 
+									<security:oscarSec roleName="<%=roleName$%>" objectName="_demographicExport" rights="r" reverse="<%=false%>">
+										<input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgViewAsE2ECDA"/>" onclick="window.open('${pageContext.request.contextPath}/ws/rs/e2eCDA/<%=demographic.getDemographicNo()%>');">
+									</security:oscarSec>
+								</oscar:oscarPropertiesCheck>
+								
+								<security:oscarSec roleName="<%=roleName$%>" objectName="_demographicExport" rights="r" reverse="<%=false%>">
 								<input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgExport"/>"
 									onclick="window.open('demographicExport.jsp?demographicNo=<%=demographic.getDemographicNo()%>');">
 								</security:oscarSec>
-									<br>
-								<input
-									type="button" name="Button" id="cancelButton" class="leftButton top"
-									value="Exit Master Record"	onclick="self.close();">
+								
+								<br>
+								<input type="button" name="Button" id="cancelButton" class="leftButton top" value="Exit Master Record"	onclick="self.close();">
 								</td>
 								<td width="30%" align='center' valign="top"><input
 									type="hidden" name="displaymode" value="Update Record">

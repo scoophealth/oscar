@@ -76,7 +76,8 @@ public class AuthenticationInWSS4JInterceptor extends WSS4JInInterceptor impleme
 
 			// if it gets here that means it succeeded
 			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromRequest(request);
-			
+
+
 			OscarLog oscarLog=new OscarLog();
 			oscarLog.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 			oscarLog.setAction("WS_LOGIN_SUCCESS");
@@ -86,7 +87,6 @@ public class AuthenticationInWSS4JInterceptor extends WSS4JInInterceptor impleme
 		catch (SoapFault e)
 		{
 			logger.debug("exception thrown", e);
-			
 			// this means wrong user/password
 			OscarLog oscarLog=new OscarLog();
 			oscarLog.setAction("WS_LOGIN_FAILURE");

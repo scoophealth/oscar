@@ -21,7 +21,7 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.ws.conversion;
+package org.oscarehr.ws.rest.conversion;
 
 import static org.junit.Assert.assertEquals;
 

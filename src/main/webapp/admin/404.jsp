@@ -28,6 +28,12 @@
 <%@page isErrorPage="true" %>
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
+<%
+response.setStatus(404);
+%>
+
+<c:import url="${pageContext.request.contextPath }/util/ErrorReportingTemplate.jsp"/>
+
 Sorry but the resource you requested is not found.<br />
 Please contact support with the date and time of this error.<br />
 
