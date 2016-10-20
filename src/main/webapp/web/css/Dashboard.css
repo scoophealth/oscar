@@ -27,19 +27,60 @@
 @CHARSET "UTF-8";
 
 @MEDIA print {
-	body {margin:0; padding:0; line-height: 1.4em; word-spacing:1px; letter-spacing:0.2px; font: 13px Arial, Helvetica,"Lucida Grande", serif; color: #000;}
-	#logo, #catnavi, .topnavi, .more-link, .navigation, #sidebartop, #related, #social, #sponsors, .tabs, #allpost, .toolbar, .splitbox, #commentform, #commentabs .idTabs, .postmeta-content .comments, #respond h3, .tag, .footerlinks {display:none;}
+	body {margin:0; padding:0; line-height: 1em; word-spacing:1px; letter-spacing:0.2px; 
+		font: 11px Arial, Helvetica,"Lucida Grande", serif; color: #000; background-image:none; }
+	#logo, tfoot, #catnavi, .topnavi, .more-link, .navigation, #sidebartop, #related, 
+	#social, #sponsors, .tabs, #allpost, .toolbar, .splitbox, 
+	#commentform, #commentabs .idTabs, .postmeta-content .comments, 
+	#respond h3, .tag, .footerlinks {display:none;}
 	
-	.donotprint, .dataTables_length, .dataTables_filter, .sorting_desc, .sorting_asc, .dataTables_info, .dataTables_paginate {
+	.donotprint, .dataTables_length, .dataTables_filter, .dataTables_info, .dataTables_paginate {
 		display:none;
 	}
 	
+	table {
+	  border-collapse: collapse;
+	}
+	
+	table th {
+		font: 13px Arial, Helvetica,"Lucida Grande", serif;
+	}
+	
+	table td, table th {
+		padding:0px;
+		margin:0px;
+	}
+	
 	.printonly {
-	 display:block;
-  }
+	 	display:block;
+  	}
 }
 
 @MEDIA screen {
+	
+	.indicatorHeading div {
+		min-height: 40px !important;
+		text-align: left !important;	
+	}
+
+	.glyphicon-refresh-animate {
+	    -animation: spin .7s infinite linear;
+	    -webkit-animation: spin2 .7s infinite linear;
+	    margin:0px !important;
+		padding:0px !important;
+    	height:17px !important;
+	}
+	
+	@-webkit-keyframes spin2 {
+	    from { -webkit-transform: rotate(0deg);}
+	    to { -webkit-transform: rotate(360deg);}
+	}
+	
+	@keyframes spin {
+	    from { transform: scale(1) rotate(0deg);}
+	    to { transform: scale(1) rotate(360deg);}
+	}
+	
 	.printonly {
 		display: none;
 	}
@@ -164,5 +205,8 @@
 		margin:0px !important;
 	}
 	
+	.dataTables_wrapper .dataTables_filter input {
+	    margin-left: 0 !important;
+	  }
 	
 }

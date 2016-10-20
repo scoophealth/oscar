@@ -47,12 +47,6 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 	private static final String PLACE_HOLDER_PATTERN = "(\\$){1}(\\{){1}( )*##( )*(\\}){1}";
 	private static final String COMMENT_BLOCK_PATTERN = "/\\*(?:.|[\\n\\r])*?\\*/";
 	
-	
-	private static enum requiredParameters { provider }
-		private static enum provider { all, loggedinprovider }
-	
-	// private SecurityInfoManager securityInfoManager = SpringUtils.getBean( SecurityInfoManager.class );
-	
 	private List<Parameter> parameters;
 	private List<RangeInterface> ranges;
 	private String query;
@@ -64,27 +58,34 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 		// default
 	}
 
-	public List<?> execute() {
-
+	protected List<?> execute() {
 		if( getQuery().isEmpty() ) { 
 			logger.error("Failed to execute query.");
 			return null;
-		} 
+		}
+		return execute( getQuery() );
+	}
+	
+	protected List<?> execute( String query ) {
+		
+		setResultList( null );
 		
 		Session session = getSession();
-		SQLQuery query = session.createSQLQuery( getQuery() );
-		List<?> results = query.setResultTransformer( Criteria.ALIAS_TO_ENTITY_MAP ).list();		
+		SQLQuery sqlQuery = session.createSQLQuery( query );
+		List<?> results = sqlQuery.setResultTransformer( Criteria.ALIAS_TO_ENTITY_MAP ).list();		
 
-		logger.debug("Query results " + results);
+		logger.info( "Thread " + Thread.currentThread().getName() +  "[" + Thread.currentThread().getId() 
+				+ "] Query results " + results );
 
 		//TODO work on method to detect and exclude demographic files that are 
 		// defined in the securityInfoManager object.
 		
 		setResultList( results );			
-		releaseSession(session);
+		releaseSession( session );
 
-		return getResultList();
+		return results;
 	}
+	
 
 	public List<Parameter> getParameters() {
 		return parameters;
@@ -103,6 +104,9 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 	} 
 	
 	public String getQuery() {
+		if( query == null ) {
+			return "";
+		}
 		return query;
 	}
 	
@@ -130,22 +134,14 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 		return loggedInInfo;
 	}
 
-	public void setLoggedInInfo(LoggedInInfo loggedInInfo) {
+	public void setLoggedInInfo( LoggedInInfo loggedInInfo ) {
 		this.loggedInInfo = loggedInInfo;
-	}
-	
-	protected String getLoggedInProvider() {
-		String providerNo = "";
-		
-		if( getLoggedInInfo() != null ) {
-			providerNo = getLoggedInInfo().getLoggedInProviderNo(); 
-		}
-		
-		return providerNo;
 	}
 
 	/**
 	 * Build a final query string with all the place-holders filled in.
+	 * 
+	 * Not Thread Safe 
 	 */
 	protected final String buildQuery( final String query ) {
 
@@ -153,18 +149,20 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 		
 		queryString = filterQueryString( queryString );
 		
-		if( getParameters() != null ) {
-			queryString = addParameters( queryString );		
-		}
-		
-		if( getRanges() != null ) {
-			queryString = addRanges( queryString );	
-		}
-		
+		// columns should always be first. Columns can contain parameters 
+		// and ranges. 
 		if( getColumns() != null ) {
 			queryString = addColumns( queryString ); 
 		}
 		
+		if( getParameters() != null ) {
+			queryString = addParameters( getParameters(), queryString );		
+		}
+		
+		if( getRanges() != null ) {
+			queryString = addRanges( getRanges(), queryString );	
+		}
+
 		return queryString;
 	}
 
@@ -173,64 +171,52 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 	 * Searches the query string for a specific string pattern.
 	 * ie: "(\\$){1}(\\{){1}( )* [firstName] ( )*(\\}){1}"
 	 */
-	protected String addParameters( String query ) {
+	public final String addParameters(List<Parameter> parameters, String query) {
 
-		for( Parameter parameter : getParameters() ) {			
-			String parameterId = parameter.getId();					
-			String parameterValue = parseParameterValue( parameter.getValue() );
-			
-			// set default and predetermined parameter values here.
-			parameterValue = getRequiredParameterValue( parameterId, parameterValue );
-			parameterId = getPattern( parameterId );			
-			query = patternReplace( parameterId, query, parameterValue );
+		for( Parameter parameter : parameters ) {						
+			query = addParameter( parameter, query );
 		}
 		
 		return query;
 	}
 	
-	private String getRequiredParameterValue( String parameterId, String parameterValue ) {
-
-		//TODO for now only captures one required parameter value
-		// A switch will be required here to handle more values.
-		if( ! ( requiredParameters.provider.name() ).equalsIgnoreCase( parameterId ) ) {			
-			return parameterValue;
-		}
+	protected String addParameter( Parameter parameter, String query ) {
+			
+		String parameterId = parameter.getId();					
+		String parameterValue = parseParameterValue( parameter.getValue() );
 		
-		parameterValue = parameterValue.toLowerCase();
-		
-		switch( provider.valueOf( parameterValue ) ) {
-		case loggedinprovider : parameterValue = getLoggedInProvider().trim();
-				break;
-		case all : parameterValue = "%";
-				break;
-		}
-		
-		return parameterValue;
-
+		// set default and predetermined parameter values here.
+		parameterId = getPattern( parameterId );			
+		return patternReplace( parameterId, query, parameterValue );
 	}
-	
+
 	/**
 	 * Set the Range values into the given query string.
 	 * Searches the query string for a specific string pattern.
 	 * ie: "(\\$){1}(\\{){1}( )* [firstName] ( )*(\\}){1}"
 	 */
-	protected String addRanges( String query ) {
 
-		for( RangeInterface range : getRanges() ) {	
-			
-			String addPattern = range.getId().trim();
-			
-			if( Limit.RangeLowerLimit.name().equals( range.getClass().getSimpleName() ) ) {
-				addPattern = RangeType.lowerLimit.name() + "\\." + addPattern;
-			} else {
-				addPattern = RangeType.upperLimit.name() + "\\." + addPattern;
-			}
-			
-			String pattern = getPattern( addPattern );
-			query = patternReplace( pattern, query, range.getValue() );
+	public final String addRanges( List<RangeInterface> ranges, String query ) {
+
+		for( RangeInterface range : ranges ) {	
+			query = addRange( range, query );
 		}
 		
 		return query;
+	}
+	
+	protected String addRange( RangeInterface range, String query ) {
+
+		String addPattern = range.getId().trim();
+		
+		if( Limit.RangeLowerLimit.name().equals( range.getClass().getSimpleName() ) ) {
+			addPattern = RangeType.lowerLimit.name() + "\\." + addPattern;
+		} else {
+			addPattern = RangeType.upperLimit.name() + "\\." + addPattern;
+		}
+		
+		String pattern = getPattern( addPattern );
+		return patternReplace( pattern, query, range.getValue() );
 	}
 	
 	/**
@@ -321,7 +307,7 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 	 * Removes pesky colons, question marks, and comments from the 
 	 * query string. 
 	 */
-	protected static final String filterQueryString( String queryString ) {
+	protected String filterQueryString( String queryString ) {
 				
 		// Remove comment blocks
 		String query = queryString.replaceAll( COMMENT_BLOCK_PATTERN, "" );		
@@ -347,4 +333,5 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 		
 		return stringBuilder.toString();
 	}
+
 }

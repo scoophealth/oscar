@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>Colcamex Resources Inc. for Oscar EMR</author>
+	<uid></uid>
+	<heading>
+		<category>Preventive Health Care</category>
+		<subCategory>Cancer</subCategory>
+		<name>Patient Care: Colorectal Cancer Screening</name>
+		<definition>Patient Care: Colorectal Cancer Screening:
+% of patients aged 50 to 74 years old, inclusive, with an FOBT  within the past two years, 
+sigmoidoscopy within 5 years or a colonoscopy within the past 10 years. - patients with a null or “pending” prevention result are overdue.</definition>
+		<framework>Based on and adapted from CIHI’s 2012 Indicator Technical Specifications (Nov 2012)</framework>
+		<frameworkVersion>10-01-2012</frameworkVersion>
+		<notes></notes>
+	</heading>
+	<indicatorQuery>
+		<version>10-04-2016</version>
+		<params>
+			<!-- 
+				Required parameter provider. Value options are: 
+					[ an individual providerNo, or provider range ] ie: value="370, 1001" 
+					"all" ie: value="all" including null.
+					"loggedInProvider" ie:
+				Default is "loggedInProvider"
+				Use this parameter in the query as ${provider}
+				This parameter should be used for fetching patient's assigned to a MRP.
+				ie: WHERE demographic.provider_no = ${provider}
+			-->
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="loincfobt" name="FOBT LOINC" value="58453-2,14563-1,14564-9,14565-6" />
+			<parameter id="colonoscopy" name="Colonoscopy" value="'COLONOSCOPY'" />
+			<parameter id="dxexclusions" name="Exclude Dx Codes" value="556%,555%,V1005" />
+			<parameter id="preventionfobt" name="FOBT Prevention" value="'FOBT'" />
+		
+		</params>
+		<range>
+			<upperLimit id="age" label="Max Age" name="Age" value="75" />
+			<lowerLimit id="age" label="Min Age" name="Age" value="50" />
+			
+			<upperLimit id="date" label="Current Date" name="currentDate" value="NOW()" />
+			
+			<lowerLimit id="date24" label="24 Months" name="Date24" value="DATE_SUB( NOW(), INTERVAL 24 MONTH )" />
+			<lowerLimit id="date120" label="120 Months" name="Date120" value="DATE_SUB( NOW(), INTERVAL 120 MONTH )" />
+		</range>
+		<query>
+			<!-- Indicator SQL Query here -->
+			SELECT 
+				IF ( COUNT(fin.patient) > 0,
+					ROUND( SUM( IF( fin.colo > 0 OR fin.fobt > 0 OR fin.fobtm  > 0, 1, 0 ) ) * 100 / COUNT(fin.patient), 1 )
+				,0 ) AS '% With One Test',
+			
+				IF ( COUNT(fin.patient) > 0,
+					ROUND( 100 - SUM( IF( fin.colo > 0 OR fin.fobt > 0 OR fin.fobtm  > 0, 1, 0 ) ) * 100 / COUNT(fin.patient), 1 )
+				,0 ) AS '% With No Tests'
+				
+			FROM (
+			
+				SELECT 
+				d.demographic_no AS patient,
+				COLO.id AS colo,
+				FOBT.id AS fobt,
+				FOBTM.dataField AS fobtm
+			
+				FROM demographic d
+				LEFT JOIN dxresearch dxr 
+				ON ( d.demographic_no = dxr.demographic_no) 
+			
+				-- Look for colonoscopy results from the last 120 months
+				LEFT JOIN ( 
+					SELECT p.demographic_no, p.id, pe.val
+					FROM preventions p	
+					INNER JOIN preventionsExt pe
+					ON (pe.prevention_id = p.id AND pe.keyval LIKE "result")
+					WHERE p.prevention_type = ${colonoscopy}
+					AND p.deleted = 0
+					AND DATE(p.prevention_date) > ${lowerLimit.date120}
+					GROUP BY p.demographic_no HAVING COUNT(p.demographic_no) > -1
+				) COLO
+				ON (d.demographic_no = COLO.demographic_no )
+			
+				-- Look for FOBT req from the last 24 months
+				LEFT JOIN ( 
+					SELECT p.demographic_no, p.id, pe.val
+					FROM preventions p	
+					INNER JOIN preventionsExt pe
+					ON (pe.prevention_id = p.id AND pe.keyval LIKE "result")
+					WHERE p.prevention_type = ${preventionfobt}
+					AND p.deleted = 0
+					AND DATE(p.prevention_date) > ${lowerLimit.date24}
+					GROUP BY p.demographic_no HAVING COUNT(p.demographic_no) > -1
+				) FOBT
+				ON (d.demographic_no = FOBT.demographic_no )
+			
+				-- Look for possible FOBT results in measurements.
+				LEFT JOIN (
+					SELECT m.dataField, m.demographicNo 
+					FROM measurements m
+			
+					JOIN (
+						SELECT MAX(`name`) AS 'name' 
+						FROM measurementMap
+						WHERE loinc_code IN ${loincfobt}
+						GROUP BY `name`
+					) mm
+					ON (mm.`name` = m.type)
+			
+					WHERE  DATE(m.dateObserved) > ${lowerLimit.date24} 
+					AND m.demographicNo > 0 
+					GROUP BY m.demographicNo HAVING COUNT(m.demographicNo) > -1
+				) FOBTM
+				ON (d.demographic_no = FOBTM.demographicNo)
+			
+				-- WHERE THE PATIENT'S AGE AT THE TIME OF THE COLONOSCOPY ...
+				-- Excluding patients previously diagnosed.
+				WHERE d.patient_status LIKE ${pstatus} 
+				AND dxr.dxresearch_code NOT IN ${dxexclusions}
+				AND d.provider_no LIKE ${provider}
+				AND d.demographic_no > 0
+				AND FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) / 365.25 ) ) 
+					BETWEEN ${lowerLimit.age} AND ${upperLimit.age}
+				GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
+			) fin
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>10-04-2016</version>
+		<params>
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="loincfobt" name="FOBT LOINC" value="58453-2,14563-1,14564-9,14565-6" />
+			<parameter id="colonoscopy" name="Colonoscopy" value="'COLONOSCOPY'" />
+			<parameter id="dxexclusions" name="Exclude Dx Codes" value="556%,555%,V1005" />
+			<parameter id="preventionfobt" name="FOBT Prevention" value="'FOBT'" />		
+		</params>
+		<range>
+			<upperLimit id="age" label="Max Age" name="Age" value="75" />
+			<lowerLimit id="age" label="Min Age" name="Age" value="50" />
+			
+			<upperLimit id="date" label="Current Date" name="currentDate" value="NOW()" />
+			
+			<lowerLimit id="date24" label="24 Months" name="Date24" value="DATE_SUB( NOW(), INTERVAL 24 MONTH )" />
+			<lowerLimit id="date120" label="120 Months" name="Date120" value="DATE_SUB( NOW(), INTERVAL 120 MONTH )" />
+		</range>
+		<displayColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="coloscopy" name="IFNULL(COLO.val, 'none')" title="Coloscopy Status" primary="false" />
+			<column id="coloscopydate" name="IFNULL( DATE_FORMAT( COLO.prevention_date, '%m-%d-%Y' ), '-')" title="Coloscopy Date" primary="false" />
+			<column id="fobtprevention" name="IFNULL(FOBT.val, 'none')" title="FOBT Prevention Status" primary="false" />
+			<column id="fobtpreventiondate" name="IFNULL( DATE_FORMAT( FOBT.prevention_date, '%m-%d-%Y' ), 'none')" title="FOBT Prevention Date" primary="false" />
+			<column id="fobtlab" name="IFNULL(FOBTM.dataField, '0')" title="FOBT Lab Result" primary="false" />
+			<column id="fobtlabdate" name="IFNULL( DATE_FORMAT( FOBTM.dateObserved, '%m-%d-%Y' ), '0')" title="FOBT Lab Date" primary="false" />
+		</displayColumns>
+		<exportColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
+			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="coloscopy" name="IFNULL(COLO.val, 'none')" title="Coloscopy Status" primary="false" />
+			<column id="coloscopydate" name="IFNULL( DATE_FORMAT( COLO.prevention_date, '%m-%d-%Y' ), '-')" title="Coloscopy Date" primary="false" />
+			<column id="fobtprevention" name="IFNULL(FOBT.val, 'none')" title="FOBT Prevention Status" primary="false" />
+			<column id="fobtpreventiondate" name="IFNULL( DATE_FORMAT( FOBT.prevention_date, '%m-%d-%Y' ), 'none')" title="FOBT Prevention Date" primary="false" />
+			<column id="fobtlab" name="IFNULL(FOBTM.dataField, '0')" title="FOBT Lab Result" primary="false" />
+			<column id="fobtlabdate" name="IFNULL( DATE_FORMAT( FOBTM.dateObserved, '%m-%d-%Y' ), '0')" title="FOBT Lab Date" primary="false" />
+		</exportColumns>
+		<query>
+			<!-- Drilldown SQL Query here -->
+			SELECT
+			*
+			FROM demographic d
+			LEFT JOIN dxresearch dxr 
+			ON ( d.demographic_no = dxr.demographic_no)
+		
+			-- Look for colonoscopy results from the last 120 months
+			LEFT JOIN ( 
+				SELECT p.demographic_no, p.id, pe.val, p.prevention_date
+				FROM preventions p	
+				INNER JOIN (
+					SELECT MAX(id) AS id
+					FROM preventions
+					WHERE prevention_type = ${colonoscopy}
+					AND deleted = 0
+					AND DATE(prevention_date) > ${lowerLimit.date120}
+					GROUP BY demographic_no
+				)p2
+				ON(p2.id = p.id)
+				LEFT JOIN preventionsExt pe
+				ON (pe.prevention_id = p.id AND pe.keyval LIKE "result")
+			) COLO
+			ON (d.demographic_no = COLO.demographic_no )
+		
+			-- Look for FOBT req from the last 24 months
+			LEFT JOIN ( 
+				SELECT p.demographic_no, p.id, pe.val, p.prevention_date
+				FROM preventions p	
+				INNER JOIN (
+					SELECT MAX(id) AS id
+					FROM preventions
+					WHERE prevention_type = ${preventionfobt}
+					AND deleted = 0
+					AND DATE(prevention_date) > ${lowerLimit.date24}
+					GROUP BY demographic_no
+				)p2
+				ON(p2.id = p.id)
+				LEFT JOIN preventionsExt pe
+				ON (pe.prevention_id = p.id AND pe.keyval LIKE "result")
+			) FOBT
+			ON (d.demographic_no = FOBT.demographic_no )
+		
+			-- Look for possible FOBT results in measurements.
+			LEFT JOIN (
+				SELECT m1.dataField, m1.demographicNo, m1.dateObserved
+				FROM measurements m1
+				INNER JOIN (
+					SELECT MAX(id) AS id
+					FROM measurements m
+						JOIN (
+							SELECT MAX(`name`) AS 'name' 
+							FROM measurementMap
+							WHERE loinc_code IN ${loincfobt}
+							GROUP BY `name`
+						) mm
+					ON (mm.`name` = m.type)
+					WHERE DATE(m.dateObserved) > ${lowerLimit.date24} 
+					AND m.demographicNo > 0 
+					GROUP BY m.demographicNo
+				) m2
+				ON (m1.id = m2.id)
+			) FOBTM
+			ON (d.demographic_no = FOBTM.demographicNo)
+		
+			-- WHERE THE PATIENT'S AGE AT THE TIME OF THE COLONOSCOPY
+			-- Exclude Cancer diagnosis.
+			WHERE d.patient_status LIKE ${pstatus}
+			AND dxr.dxresearch_code NOT IN ${dxexclusions}
+			AND d.provider_no LIKE ${provider}
+			AND d.demographic_no > 0
+			AND FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) / 365.25 ) ) 
+				BETWEEN ${lowerLimit.age} AND ${upperLimit.age}
+			GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
+		</query>
+	</drillDownQuery>
+</indicatorTemplateXML>

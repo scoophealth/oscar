@@ -27,7 +27,9 @@ package org.oscarehr.dashboard.admin;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -73,8 +75,7 @@ public class ManageDashboardAction extends DispatchAction {
 			HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) {
 		
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
-		ActionForward action = mapping.findForward("success");
-		StringBuilder message = new StringBuilder("");
+		String message = "";
 	
 		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardManager", SecurityInfoManager.WRITE, null ) ) {	
 			return mapping.findForward("unauthorized");
@@ -82,14 +83,17 @@ public class ManageDashboardAction extends DispatchAction {
 
 		FormFile formFile = (FormFile) form.getMultipartRequestHandler().getFileElements().get("indicatorTemplateFile");
 		byte[] filebytes = null;
+		JSONObject json = null;
 		
 		if( formFile != null ) {		
 			try {
 				filebytes = formFile.getFileData();
 			} catch (Exception e) {
-				MiscUtils.getLogger().error("Failed to transfer file.", e);
-				action = mapping.findForward("success");
-			} 
+				json = new JSONObject();
+				json.put("status", "error");
+				json.put("message", e.getMessage() );
+				MiscUtils.getLogger().error("Failed to transfer file. ", e);
+			}
 		}
 		
 		// TODO add a checksum: Uploaded templates will be checksum hashed, the hash will be stored in an 
@@ -99,14 +103,18 @@ public class ManageDashboardAction extends DispatchAction {
 		// TODO run the contained MySQL queries to check for syntax errors and whatever else may be broken. 
 		// The DashboarManager will contain a method. This class will return an error to the user.
 		
-		if( filebytes != null && dashboardManager.importIndicatorTemplate(loggedInInfo, filebytes, message ) ) {
-			setRequest(loggedInInfo, request);
-			message.append("File imported successfully.");
+		if( filebytes != null ) {
+			message = dashboardManager.importIndicatorTemplate( loggedInInfo, filebytes );
+			json = JSONObject.fromObject(message);
 		}
-		
-		request.setAttribute("message", message.toString() );
 
-		return action;
+		Map<String, String> messageMap = new HashMap<String, String>();
+		messageMap.put("status", json.getString("status") );
+		messageMap.put("message", json.getString("message") );
+		
+		setRequest(loggedInInfo, request, messageMap);		
+
+		return mapping.findForward("success");
 	}
 	
 	
@@ -283,10 +291,14 @@ public class ManageDashboardAction extends DispatchAction {
 		return null;
 	}
 	
+	private void setRequest(LoggedInInfo loggedInInfo, HttpServletRequest request) {
+		setRequest(loggedInInfo, request, null);
+	}
+	
 	/**
 	 * Helper method to set a response object into the request.
 	 */
-	private void setRequest(LoggedInInfo loggedInInfo, HttpServletRequest request) {
+	private void setRequest(LoggedInInfo loggedInInfo, HttpServletRequest request, Object message) {
 		
 		List<Dashboard> dashboards = dashboardManager.getDashboards(loggedInInfo);
 		List<IndicatorTemplate> indicatorTemplates = dashboardManager.getIndicatorLibrary(loggedInInfo);
@@ -297,6 +309,10 @@ public class ManageDashboardAction extends DispatchAction {
 		
 		if( indicatorTemplates != null ) {
 			request.setAttribute("indicatorTemplates", indicatorTemplates);
+		}
+		
+		if( message != null ) {
+			request.setAttribute( "message", message );
 		}
 	}
 

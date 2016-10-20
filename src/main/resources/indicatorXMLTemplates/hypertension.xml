@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>Colcamex Resources Inc. for Oscar EMR</author>
+	<uid></uid>
+	<heading>
+		<category>CDM</category>
+		<subCategory>Hypertension</subCategory>
+		<name>Hypertension</name>
+		<definition>% of patient population, age 18 and older, with hypertension who received testing within the past 12 months, for any of the following: Blood glucose or HbA1C, BP measurement, Obesity/overweight screening.</definition>
+		<framework>Based on and adapted from CIHI’s 2012 Indicator Technical Specifications (Nov 2012)</framework>
+		<frameworkVersion>11-01-2012</frameworkVersion>
+		<notes></notes>
+	</heading>
+	<indicatorQuery>
+		<version>10-03-2016</version>
+		<params>
+			<!-- 
+				Required parameter provider. Value options are: 
+					[ an individual providerNo, or provider range ] ie: value="370, 1001" 
+					"all" ie: value="all" including null.
+					"loggedInProvider" ie:
+				Default is "loggedInProvider"
+				Use this parameter in the query as ${provider}
+				This parameter should be used for fetching patient's assigned to a MRP.
+				ie: WHERE demographic.provider_no = ${provider}
+			-->
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="hba1c" name="HbA1C LOINC" value="'4548-4'" />
+			<parameter id="bloodGlucose" name="Blood Glucose" value="'BG'" />
+			<parameter id="bloodPressure" name="Blood Pressure" value="'BP'" />
+			<parameter id="bmi" name="Body Mass Index" value="'BMI'" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="dxcodes" name="Dx Research Codes" value="401,402,403,404,405,I10,D3-02120,D3-02010,D3-02100,D3-02000" />		
+		</params>
+		<range>
+			<upperLimit id="date" label="Date Today" name="Date" value="NOW()" />
+			<lowerLimit id="date" label="12 Months History" name="Date" value="DATE_SUB( NOW(), INTERVAL 12 MONTH )" />
+			
+			<lowerLimit id="age" label="Minimum Age" name="Age" value="18" />
+		</range>
+		<query>
+			<!-- Indicator SQL Query here -->
+			SELECT 
+
+				IF ( COUNT(fin.patient) > 0,
+				ROUND( SUM( IF( fin.A1C > 0 OR fin.bg > 0 OR fin.bp > 0 OR fin.bmi > 0, 1, 0 ) ) * 100 / COUNT(fin.patient), 1)
+				,0 ) AS '% Patients with LIPID, BP or BMI',
+			
+				IF ( COUNT(fin.patient) > 0,
+				ROUND( (100) - SUM( IF(  fin.A1C > 0 OR fin.bg > 0 OR fin.bp > 0 OR fin.bmi > 0, 1, 0 ) ) * 100 / COUNT(fin.patient), 1)
+				,0 ) AS '% Patients with no test'
+			
+			FROM (
+			
+				SELECT 
+					d.demographic_no AS patient,
+					BP.dataField AS bp,
+					BG.dataField AS bg,
+					BMI.dataField AS bmi,
+					A1C.dataField AS A1C
+				FROM demographic d 
+				INNER JOIN dxresearch dxr 
+				ON ( d.demographic_no = dxr.demographic_no) 
+			
+				-- HbA1C 
+				LEFT JOIN ( 
+					SELECT m.dataField, m.demographicNo
+					FROM measurements m
+					JOIN (
+						SELECT MAX(`name`) AS 'name' 
+						FROM measurementMap
+						WHERE loinc_code LIKE ${hba1c}
+						GROUP BY `name`
+					) mm
+					ON (mm.`name` = m.type)
+					WHERE DATE(m.dateObserved) > ${lowerLimit.date}
+					AND m.demographicNo > 0
+					GROUP BY m.demographicNo HAVING COUNT(m.demographicNo) > -1
+				) A1C 
+				ON (d.demographic_no = A1C.demographicNo)
+			
+				-- or Blood Glucose
+				LEFT JOIN (
+					SELECT dataField, demographicNo 
+					FROM measurements 
+					WHERE type LIKE ${bloodGlucose}
+					AND DATE(dateObserved) > ${lowerLimit.date} 
+					AND demographicNo > 0 
+					GROUP BY demographicNo HAVING COUNT(demographicNo) > -1
+				) BG
+				ON (d.demographic_no = BG.demographicNo)
+			
+			
+				-- Blood Pressure
+				LEFT JOIN (
+					SELECT dataField, demographicNo 
+					FROM measurements 
+					WHERE type LIKE ${bloodPressure}
+					AND DATE(dateObserved) > ${lowerLimit.date} 
+					AND demographicNo > 0 
+					GROUP BY demographicNo HAVING COUNT(demographicNo) > -1
+				) BP
+				ON (d.demographic_no = BP.demographicNo)
+			
+				-- BMI Screening
+				-- Look for BMI index or if the height and weight was measured.
+				LEFT JOIN ( 
+					SELECT dataField, demographicNo 
+					FROM measurements 
+					WHERE type LIKE ${bmi} 
+					AND DATE(dateObserved) > ${lowerLimit.date} 
+					AND demographicNo > 0 
+					GROUP BY demographicNo HAVING COUNT(demographicNo) > -1
+				) BMI 
+				ON (d.demographic_no = BMI.demographicNo)
+			
+				WHERE d.patient_status LIKE ${pstatus} 
+				AND dxr.dxresearch_code IN ${dxcodes}
+				AND dxr.`status` NOT LIKE "%D%" 
+				AND d.demographic_no > 0 
+				AND provider_no LIKE ${provider}
+				AND ( ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+					${lowerLimit.date} ) ) / 365.25 ) >=  ${lowerLimit.age} )
+				GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
+			) fin
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>10-03-2016</version>
+		<params>
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="hba1c" name="HbA1C LOINC" value="'4548-4'" />
+			<parameter id="bloodGlucose" name="Blood Glucose" value="'BG'" />
+			<parameter id="bloodPressure" name="Blood Pressure" value="'BP'" />
+			<parameter id="bmi" name="Body Mass Index" value="'BMI'" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />	
+			<parameter id="dxcodes" name="Dx Research Codes" value="401,402,403,404,405,I10,D3-02120,D3-02010,D3-02100,D3-02000" />					
+		</params>
+		<range>
+			<upperLimit id="date" label="Date Today" name="Date" value="NOW()" />
+			<lowerLimit id="date" label="12 Months History" name="Date" value="DATE_SUB( NOW(), INTERVAL 12 MONTH )" />
+			
+			<lowerLimit id="age" label="Minimum Age" name="Age" value="18" />
+		</range>
+		<displayColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="hba1c" name="IFNULL( A1C.dataField, '0')" title="HbA1C" primary="false" />
+			<column id="hba1cdate" title="Last HbA1c (mm-dd-yyyy)" name="IFNULL( DATE_FORMAT( A1C.dateObserved, '%m-%d-%Y' ), '0')" primary="false" />
+			<column id="bg" title="Blood Glucose" name="IFNULL( BG.dataField, '0')" primary="false"/>
+			<column id="bgdate" title="Last BG (mm-dd-yyyy)" name="IFNULL( DATE_FORMAT( BG.dateObserved, '%m-%d-%Y' ), '0')" primary="false" />
+			<column id="bp" title="BP" name="IFNULL( BP.dataField, '0')" primary="false" />
+			<column id="bpdate" title="Last BP (mm-dd-yyyy)" name="IFNULL( DATE_FORMAT( BP.dateObserved, '%m-%d-%Y' ), '0')" primary="false" />
+			<column id="bmi" title="BMI" name="IFNULL( BMI.dataField, '0')" primary="false" />
+			<column id="bmidate" title="Last BMI (mm-dd-yyyy)" name="IFNULL( DATE_FORMAT( BMI.dateObserved, '%m-%d-%Y' ), '0')" primary="false" />
+			<column id="dxcode" title="Dx System/Code" name="CONCAT(MIN(dxr.coding_system),'/',MIN(dxr.dxresearch_code),IF( MIN(dxr.dxresearch_code) != MAX(dxr.dxresearch_code),CONCAT( ' &amp; ', MAX(dxr.coding_system), '/', MAX(dxr.dxresearch_code) ),'') )" primary="false" />
+		</displayColumns>
+		<exportColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
+			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="hba1c" name="IFNULL( A1C.dataField, '0')" title="HbA1C" primary="false" />
+			<column id="hba1cdate" title="Last HbA1c (mm-dd-yyyy)" name="IFNULL( DATE_FORMAT( A1C.dateObserved, '%m-%d-%Y' ), '0')" primary="false" />
+			<column id="bg" title="Blood Glucose" name="IFNULL( BG.dataField, '0')" primary="false"/>
+			<column id="bgdate" title="Last BG (mm-dd-yyyy)" name="IFNULL( DATE_FORMAT( BG.dateObserved, '%m-%d-%Y' ), '0')" primary="false" />
+			<column id="bp" title="BP" name="IFNULL( BP.dataField, '0')" primary="false" />
+			<column id="bpdate" title="Last BP (mm-dd-yyyy)" name="IFNULL( DATE_FORMAT( BP.dateObserved, '%m-%d-%Y' ), '0')" primary="false" />
+			<column id="bmi" title="BMI" name="IFNULL( BMI.dataField, '0')" primary="false" />
+			<column id="bmidate" title="Last BMI (mm-dd-yyyy)" name="IFNULL( DATE_FORMAT( BMI.dateObserved, '%m-%d-%Y' ), '0')" primary="false" />
+			<column id="dxcode" title="Dx System/Code" name="CONCAT(MIN(dxr.coding_system),'/',MIN(dxr.dxresearch_code),IF( MIN(dxr.dxresearch_code) != MAX(dxr.dxresearch_code),CONCAT( ' &amp; ', MAX(dxr.coding_system), '/', MAX(dxr.dxresearch_code) ),'') )" primary="false" />
+		</exportColumns>
+		<query>
+			<!-- Drilldown SQL Query here -->	
+			SELECT 
+			*
+			FROM demographic d 
+			INNER JOIN dxresearch dxr 
+			ON ( d.demographic_no = dxr.demographic_no) 
+		
+			LEFT JOIN ( 
+		
+				SELECT m1.dataField, m1.demographicNo, m1.dateObserved
+				FROM measurements m1
+				INNER JOIN (
+					SELECT MAX(id) AS id
+					FROM measurements m
+						JOIN (
+							SELECT MAX(`name`) AS 'name' 
+							FROM measurementMap
+							WHERE loinc_code LIKE ${hba1c} 
+							GROUP BY `name`
+						) mm
+					ON (mm.`name` = m.type)
+					WHERE DATE(m.dateObserved) > ${lowerLimit.date}
+					AND m.demographicNo > 0 
+					GROUP BY m.demographicNo
+				) m2
+				ON (m1.id = m2.id)
+		
+			) A1C 
+			ON (d.demographic_no = A1C.demographicNo)
+		
+			-- or Blood Glucose
+			LEFT JOIN (
+		
+				SELECT m1.id, m1.dataField, m1.demographicNo, m1.dateObserved
+				FROM measurements m1
+				INNER JOIN (
+					SELECT MAX(id) AS id
+					FROM measurements
+					WHERE type LIKE ${bloodGlucose}
+					AND demographicNo > 0 
+					AND DATE(dateObserved) > ${lowerLimit.date}
+					GROUP BY demographicNo
+				) m2
+				ON (m1.id = m2.id)
+		
+			) BG
+			ON (d.demographic_no = BG.demographicNo)
+		
+			-- Blood Pressure
+			LEFT JOIN (
+		
+				SELECT m1.id, m1.dataField, m1.demographicNo, m1.dateObserved
+				FROM measurements m1
+				INNER JOIN (
+					SELECT MAX(id) AS id
+					FROM measurements
+					WHERE type LIKE ${bloodPressure}
+					AND demographicNo > 0 
+					AND DATE(dateObserved) > ${lowerLimit.date}
+					GROUP BY demographicNo
+				) m2
+				ON (m1.id = m2.id)
+		
+			) BP
+			ON (d.demographic_no = BP.demographicNo)
+		
+			-- BMI Screening
+			-- Look for BMI index or if the height and weight was measured.
+			LEFT JOIN (
+		 
+				SELECT m1.id, m1.dataField, m1.demographicNo, m1.dateObserved
+				FROM measurements m1
+				INNER JOIN (
+					SELECT MAX(id) AS id
+					FROM measurements
+					WHERE type LIKE ${bmi}
+					AND demographicNo > 0 
+					AND DATE(dateObserved) > ${lowerLimit.date}
+					GROUP BY demographicNo
+				) m2
+				ON (m1.id = m2.id)
+		
+			) BMI 
+			ON (d.demographic_no = BMI.demographicNo)
+		
+			WHERE d.patient_status LIKE ${pstatus} 
+			AND dxr.dxresearch_code IN ${dxcodes}
+			AND dxr.`status` NOT LIKE "%D%" 
+			AND d.demographic_no > 0 
+			AND provider_no LIKE ${provider}
+			AND ( ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+				${lowerLimit.date} ) ) / 365.25 ) >=  ${lowerLimit.age} )
+			GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
+		</query>
+	</drillDownQuery>
+</indicatorTemplateXML>

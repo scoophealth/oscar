@@ -42,16 +42,17 @@ public class ExportQueryHandler extends AbstractQueryHandler {
 		// default
 	}
 
-	public List<?> execute( String query ) {
+	@Override
+	public List<?> execute() {
 		
 		logger.info("Executing Export Query");
-		
-		this.setQuery( query );	
+	
 		List<?> results = super.execute();		
 		setCsvFile( results );	
 		return results;
 	}
 	
+	@Override
 	public void setQuery( String query ) {
 		String finalQuery = super.buildQuery( query );
 		super.setQuery( finalQuery );

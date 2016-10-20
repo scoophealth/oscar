@@ -55,7 +55,7 @@ public class IndicatorQueryHandlerTest {
 			+ "A1C.a1cnumber AS a1c, A1C9.a1c9number AS a1c9 FROM demographic d INNER JOIN dxresearch dxr "
 			+ "ON ( d.demographic_no = dxr.demographic_no) LEFT JOIN ( SELECT COUNT(*) AS a1cnumber, demographicNo "
 			+ "FROM measurements WHERE type LIKE \"A1C\" AND ( DATE(dateObserved) BETWEEN DATE('12-12-2012') AND now() ) "
-			+ "AND demographicNo > 0 AND providerNo LIKE '%' GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) "
+			+ "AND demographicNo > 0 AND providerNo LIKE '' GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) "
 			+ "A1C ON (d.demographic_no = A1C.demographicNo) LEFT JOIN ( SELECT COUNT(*) AS 'a1c9number', demographicNo "
 			+ "FROM measurements WHERE type LIKE \"A1C\" AND demographicNo > 0 GROUP BY demographicNo "
 			+ "HAVING COUNT(demographicNo) > -1 ) A1C9 ON (d.demographic_no = A1C9.demographicNo) "
@@ -68,6 +68,8 @@ public class IndicatorQueryHandlerTest {
 	private static List<Parameter> parameters;
 	private static List<RangeInterface> ranges;
 	private static IndicatorQueryHandler indicatorQueryHandler;
+	private static String altQueryString;
+	private static List< GraphPlot[] > graphPlotList;
 	
 	@BeforeClass
 	public static void setUpBeforeClass(){
@@ -97,10 +99,15 @@ public class IndicatorQueryHandlerTest {
 		ranges = indicatorTemplateXML.getIndicatorRanges();
 		
 		indicatorQueryHandler = new IndicatorQueryHandler();
+		
+		altQueryString = indicatorQueryHandler.filterQueryString( queryString );
+		altQueryString = indicatorQueryHandler.addParameters( parameters, altQueryString );
+		altQueryString = indicatorQueryHandler.addRanges( ranges, altQueryString );
+		
 		indicatorQueryHandler.setParameters( parameters );
 		indicatorQueryHandler.setRanges( ranges );
 		indicatorQueryHandler.setQuery( queryString );
-		
+
 		List<Object> results = new ArrayList<Object>();
 		HashMap<Object, Object> resultmap = new HashMap<Object, Object>();
 		resultmap.put( "", 1.2 );
@@ -119,11 +126,11 @@ public class IndicatorQueryHandlerTest {
 		results.add(resultmap);
 		results.add(resultmap1);
 		
-		indicatorQueryHandler.setGraphPlots(results);
+		graphPlotList = IndicatorQueryHandler.createGraphPlots( results );
 	}
 
 	@Test
-	public void testGetParameters() {
+	public void testGetParameters() {		
 		assertEquals(parameters, indicatorQueryHandler.getParameters());
 	}
 
@@ -138,9 +145,14 @@ public class IndicatorQueryHandlerTest {
 	}
 	
 	@Test
+	public void testAltQueryString() {
+		assertEquals( query, altQueryString );
+	}
+	
+	@Test
 	public void testGetGraphPlots() {
 		Double total = 0.0;		
-		for( GraphPlot[] plot : indicatorQueryHandler.getGraphPlots() ) {
+		for( GraphPlot[] plot : graphPlotList ) {
 			Double subtotal = 0.0;
 			for( GraphPlot graphPlot : plot ) {
 				subtotal = ( subtotal + graphPlot.getNumerator() );

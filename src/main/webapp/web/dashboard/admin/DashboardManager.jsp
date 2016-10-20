@@ -57,70 +57,86 @@
 <div class="col-sm-12">
 	
 	<nav class="navbar navbar-default navbar-fixed-top">
-	<div>
-	<html:form styleClass="navbar-form navbar-left" styleId="importForm" 
+	<div class="container">
+
+	<html:form styleClass="form-inline" styleId="importForm" 
 		method="POST" action="/web/dashboard/admin/DashboardManager.do" enctype="multipart/form-data" >
 			
 		<c:if test="${ not empty param.dashboardId }">
+		<div class="form-group">
 			<button class="btn btn-default backtoDashboardBtn" id="getDashboard_${ param.dashboardId }" type="button">
 				<span class="glyphicon glyphicon-circle-arrow-left text-center" aria-hidden="true"></span>
 				Dashboard
 			</button>
+		</div>
 		</c:if>	
 		
 		<!-- Upload Indicator Buttons -->
-		<div class="btn-group">
+		<div class="form-group">
 			<div class="input-group" id="import">
 					
-				<input type="hidden" value="importTemplate" name="method" />							
-				<span class="input-group-addon btn btn-default btn-md" id="importbutton" >
-					<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
-					<bean:message key="dashboard.dashboardmanager.import.button" />
-				</span>			
-				<label class="input-group-btn btn btn-default btn-file btn-md" id="browsebutton">
-					<bean:message key="dashboard.dashboardmanager.import.browse" />
-					<input style="display:none;" type="file" name="indicatorTemplateFile" />
-				</label>	
-				<input type="text" class="form-control" 
-					placeholder="<bean:message key='dashboard.dashboardmanager.import.title' />" id="importxmltemplate" />				
+				<input type="hidden" value="importTemplate" name="method" />
+											
+				<div class="input-group-btn">
+					<button class="btn btn-default" type="button" id="importbutton">
+						<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+						<bean:message key="dashboard.dashboardmanager.import.button" />
+					</button>
+				</div>
+				
+				<input type="text" class="form-control" id="importxmltemplate"
+					placeholder="<bean:message key='dashboard.dashboardmanager.import.title' />"  />
+				
+				<div class="input-group-btn">
+					<label class="btn btn-default btn-file" id="browsebutton" >
+						<bean:message key="dashboard.dashboardmanager.import.browse" />
+						<input style="display:none;" type="file" name="indicatorTemplateFile" />
+					</label>					
+				</div>					
 			    	
 			</div>		    
 		</div>
 		
 		<!-- Create Dashboard Buttons -->
-		<div class="btn-group" >
-	    	<button type="button" class="btn btn-default btn-md" data-toggle="modal" 
-	    		data-target="#newDashboard" id="createDashboard" >
-	    		<span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>	    		
-	    		<bean:message key="dashboard.dashboardmanager.dashboard.create" />
-	    	</button>
+		<div class="form-group">
+			<div class="btn-group" >
+		    	<button type="button" class="btn btn-default btn-md" data-toggle="modal" 
+		    		data-target="#newDashboard" id="createDashboard" >
+		    		<span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>	    		
+		    		<bean:message key="dashboard.dashboardmanager.dashboard.create" />
+		    	</button>
+			</div>
 		</div>
 		
 		<!-- Edit Dashboard Buttons -->
-		<div class="dropdown btn-group" id="editDashboardButtonContainer">
-			<button class="btn btn-default dropdown-toggle btn-md" type="button"
-				id="editDashboardMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-				<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-				<bean:message key="dashboard.dashboardmanager.dashboard.edit" /> 
-				<span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu" aria-labelledby="editDashboardMenu">			
-				<c:forEach items="${ dashboards }" var="dashboard" varStatus="loop">
-					<li>
-						<a href="#" id="dashboard_${ dashboard.id }" class="editDashboardSelect" >
-							<c:out value="${ dashboard.name }" />
-							<input type="hidden" name="selectName" id="selectName" value="${ dashboard.name }" />
-							<input type="hidden" name="selectDescription" id="selectDescription" value="${ dashboard.description }" />
-							<input type="hidden" name="selectActive" id="selectActive" value="${ dashboard.active }" />
-						</a>
-					</li>
-				</c:forEach>
-			</ul>
-		</div>
-		<span><c:out value="${ message }" /></span>		
+		<div class="form-group">
+			<div class="dropdown btn-group" id="editDashboardButtonContainer">
+				<button class="btn btn-default dropdown-toggle btn-md" type="button"
+					id="editDashboardMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+					<bean:message key="dashboard.dashboardmanager.dashboard.edit" /> 
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" aria-labelledby="editDashboardMenu">			
+					<c:forEach items="${ dashboards }" var="dashboard" varStatus="loop">
+						<li>
+							<a href="#" id="dashboard_${ dashboard.id }" class="editDashboardSelect" >
+								<c:out value="${ dashboard.name }" />
+								<input type="hidden" name="selectName" id="selectName" value="${ dashboard.name }" />
+								<input type="hidden" name="selectDescription" id="selectDescription" value="${ dashboard.description }" />
+								<input type="hidden" name="selectActive" id="selectActive" value="${ dashboard.active }" />
+							</a>
+						</li>
+					</c:forEach>
+				</ul>
+			</div>
+		</div>		
 	</html:form>	
-	</div>  <!-- end top nav row -->
-	</nav>
+		<span ${ message['status'] eq 'success' ? 'style="color: green;"' : 'style="color: red;"' } >			
+			<c:out value="${ message['message'] }" />
+		</span>
+	</div>  
+	</nav><!-- end top nav row -->
 	
 	<div class="table-responsive" id="libraryTableContainer">
 	<h3> 

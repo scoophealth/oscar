@@ -74,7 +74,7 @@ public class DashboardBeanFactory {
 		
 		setIndicatorTemplates( indicatorTemplates );	
 		setDashboardBean( new DashboardBean() );	
-		setPanelBeans( loggedInInfo, getDashboardBean(), getIndicatorTemplates() );
+		setPanelBeans( getDashboardBean(), getIndicatorTemplates() );
 		getDashboardBean().setLastChecked( new Date( System.currentTimeMillis() ) );
 	}
 	
@@ -112,9 +112,9 @@ public class DashboardBeanFactory {
 	 * The IndicatorPanelBeanFactory returns a sorted list of IndicatorPanelBeans that are set into
 	 * the DashboardBean. 
 	 */
-	private void setPanelBeans( LoggedInInfo loggedInInfo, DashboardBean dashboardBean, List<IndicatorTemplate> indicatorTemplates ) {
+	private void setPanelBeans( DashboardBean dashboardBean, List<IndicatorTemplate> indicatorTemplates ) {
 		if( indicatorTemplates != null && ! indicatorTemplates.isEmpty()) {
-			PanelBeanFactory panelBeanFactory = new PanelBeanFactory( loggedInInfo, indicatorTemplates );
+			PanelBeanFactory panelBeanFactory = new PanelBeanFactory( indicatorTemplates );
 			List<PanelBean> panelBeans = panelBeanFactory.getPanelBeans();
 			dashboardBean.setPanelBeans(panelBeans);
 		} else {
