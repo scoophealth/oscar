@@ -29,7 +29,8 @@ import org.oscarehr.dashboard.display.beans.GraphPlot;
 import org.oscarehr.dashboard.display.beans.IndicatorBean;
 import org.oscarehr.dashboard.handler.IndicatorQueryHandler;
 import org.oscarehr.dashboard.handler.IndicatorTemplateXML;
-import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.dashboard.query.Parameter;
+import org.oscarehr.dashboard.query.RangeInterface;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -43,22 +44,25 @@ import org.oscarehr.util.SpringUtils;
 public class IndicatorBeanFactory {
 	
 	private static Logger logger = MiscUtils.getLogger();
-	private IndicatorTemplateXML indicatorTemplateXML;
-	private IndicatorBean indicatorBean;
 	private IndicatorQueryHandler indicatorQueryHandler = SpringUtils.getBean( IndicatorQueryHandler.class );
 	
-	public IndicatorBeanFactory( LoggedInInfo loggedInInfo, IndicatorTemplateXML indicatorTemplateXML ) {
-		
-		logger.info("Building Indicator ID: " + indicatorTemplateXML.getName() );
+	private IndicatorTemplateXML indicatorTemplateXML;
+	private IndicatorBean indicatorBean;	
+	private List<Parameter> parameters;
+	private List<RangeInterface> ranges;
+	private String indicatorQuery;
+
+	public IndicatorBeanFactory( IndicatorTemplateXML indicatorTemplateXML ) {
+
+		logger.info("Thread " + Thread.currentThread().getName() +  "[" + Thread.currentThread().getId() 
+				+ "] Building Indicator ID: " + indicatorTemplateXML.getId()  + " - " + indicatorTemplateXML.getName() );
 		
 		setIndicatorTemplateXML( indicatorTemplateXML );
+
+		this.parameters =  getIndicatorTemplateXML().getIndicatorParameters();
+		this.ranges = getIndicatorTemplateXML().getIndicatorRanges();
 		
-		if( this.indicatorQueryHandler != null ) {
-			this.indicatorQueryHandler.setLoggedInInfo( loggedInInfo );
-			this.indicatorQueryHandler.setParameters( getIndicatorTemplateXML().getIndicatorParameters() );
-			this.indicatorQueryHandler.setRanges( getIndicatorTemplateXML().getIndicatorRanges() );
-		}
-		
+		setIndicatorQuery( getIndicatorTemplateXML().getIndicatorQuery() );
 		setIndicatorBean( new IndicatorBean() );
 	}
 
@@ -78,27 +82,49 @@ public class IndicatorBeanFactory {
 		return indicatorQueryHandler;
 	}
 
+	public String getIndicatorQuery() {
+		return indicatorQuery;
+	}
+
+	private void setIndicatorQuery( final String indicatorQuery ) {
+		
+		String queryString = new String( indicatorQuery );
+		
+		queryString = getIndicatorQueryHandler().filterQueryString( queryString );
+
+		if( parameters != null ) {
+			queryString = getIndicatorQueryHandler().addParameters( parameters, queryString );		
+		}
+		
+		if( ranges != null ) {
+			queryString = getIndicatorQueryHandler().addRanges( ranges, queryString );	
+		}
+
+		this.indicatorQuery = queryString;
+	}
+
 	private void setIndicatorBean(IndicatorBean indicatorBean) {
 		
 		copyToBean( indicatorBean, getIndicatorTemplateXML() );
-		List<?> queryResultList = null;
-		
-		if( getIndicatorQueryHandler() != null ) {
-			queryResultList = getIndicatorQueryHandler().execute( getIndicatorTemplateXML().getIndicatorQuery() );
-		}
-		
+
+		List<?> queryResultList = getIndicatorQueryHandler().execute( this.indicatorQuery );  
+	
 		if( queryResultList != null ) {
-			indicatorBean.setQueryResult( queryResultList );
-			indicatorBean.setQueryString( getIndicatorQueryHandler().getQuery() );
-			indicatorBean.setParameters( getIndicatorQueryHandler().getParameters() );
-			indicatorBean.setRanges( getIndicatorQueryHandler().getRanges() );
-			indicatorBean.setGraphPlots(  getIndicatorQueryHandler().getGraphPlots() );
-			indicatorBean.setJsonPlots( plotsToJson( getIndicatorQueryHandler().getGraphPlots() ) );
-			indicatorBean.setJsonTooltips( plotsToJsonTooltips( getIndicatorQueryHandler().getGraphPlots() ));
-			indicatorBean.setStringArrayPlots( plotsToStringArray( getIndicatorQueryHandler().getGraphPlots() ) );
-			indicatorBean.setStringArrayTooltips( plotsToTooltipsStringArray( getIndicatorQueryHandler().getGraphPlots() ) );
 			
-			logger.debug("New Indicator Bean: " + indicatorBean.toString() );
+			logger.info("Setting Indicator query results for Indicator bean " + indicatorBean.getId() );
+
+			List<GraphPlot[]> graphPlots = IndicatorQueryHandler.createGraphPlots( queryResultList );
+			indicatorBean.setQueryResult( queryResultList );
+			indicatorBean.setQueryString( this.indicatorQuery );
+			indicatorBean.setParameters( this.parameters );
+			indicatorBean.setRanges( this.ranges );
+			indicatorBean.setGraphPlots( graphPlots );
+			indicatorBean.setJsonPlots( IndicatorQueryHandler.plotsToJson( graphPlots ) );
+			indicatorBean.setJsonTooltips( IndicatorQueryHandler.plotsToJsonTooltips( graphPlots ) );
+			indicatorBean.setStringArrayPlots( IndicatorQueryHandler.plotsToStringArray( graphPlots ) );
+			indicatorBean.setStringArrayTooltips( IndicatorQueryHandler.plotsToTooltipsStringArray( graphPlots ) );
+			
+			logger.debug("Indicator Bean: " + indicatorBean.toString() );
 			
 		} else {
 			logger.warn(" The query results and-or the Indicator Query handler were null for Indicator ID: " 
@@ -107,90 +133,15 @@ public class IndicatorBeanFactory {
 
 		this.indicatorBean = indicatorBean;
 	}
-	
-	private static String plotsToStringArray( List<GraphPlot[]> graphPlots ) {
-		StringBuilder json = new StringBuilder("");
-		for(GraphPlot[] graphPlotArray : graphPlots) {
-			json.append("[");
-			for(GraphPlot graphPlot : graphPlotArray ) {
-				json.append("['");
-				json.append( graphPlot.getLabel() );
-				json.append("',");
-				json.append( graphPlot.getNumerator() );
-				json.append("],");
-			}
-			json.deleteCharAt( json.length() - 1 );
-			
-			json.append("],");
-		}
-		json.deleteCharAt( json.length() - 1 );
-		
-		return json.toString();
-	}
-	
-	private static String plotsToJson( List<GraphPlot[]> graphPlots ) {
-		StringBuilder json = new StringBuilder("");
-		int index = 0;
-		for(GraphPlot[] graphPlotArray : graphPlots) {
-			json.append("{ 'results_" + index + "':[");
-			for(GraphPlot graphPlot : graphPlotArray ) {
-				json.append("{'");
-				json.append( graphPlot.getLabel() );
-				json.append("':");
-				json.append( graphPlot.getNumerator() );
-				json.append("},");
-			}
-			json.deleteCharAt( json.length() - 1 );
-			
-			json.append("]},");
-			index++;
-		}
-		json.deleteCharAt( json.length() - 1 );
-		
-		return json.toString();
-	}
-	
-	private static String plotsToTooltipsStringArray( List<GraphPlot[]> graphPlots ) {
-		StringBuilder json = new StringBuilder("");
-		for(GraphPlot[] graphPlotArray : graphPlots) {
-			json.append("[");
-			for(GraphPlot graphPlot : graphPlotArray ) {
-				json.append( "'" );
-				json.append( graphPlot.getKey() );
-				json.append( "'" );
-				json.append(",");
-			}
-			json.deleteCharAt( json.length() - 1 );
-			
-			json.append("],");
-		}
-		json.deleteCharAt( json.length() - 1 );		
-		return json.toString();
-	}
-	
-	private static String plotsToJsonTooltips( List<GraphPlot[]> graphPlots ) {
-		StringBuilder json = new StringBuilder("");
-		int index = 0;
-		for(GraphPlot[] graphPlotArray : graphPlots) {
-			json.append("{ 'toolTips_" + index + "':[");
-			for(GraphPlot graphPlot : graphPlotArray ) {
-				json.append( "'" );
-				json.append( graphPlot.getKey() );
-				json.append( "'" );
-				json.append(",");
-			}
-			json.deleteCharAt( json.length() - 1 );
-			
-			json.append("]},");
-			index++;
-		}
-		json.deleteCharAt( json.length() - 1 );		
-		return json.toString();
-	}
-	
+
 	private static void copyToBean( IndicatorBean indicatorBean, IndicatorTemplateXML indicatorTemplateXML ) {
 
-		indicatorBean.setId( indicatorTemplateXML.getId() );
+		Integer indicatorId = indicatorTemplateXML.getId();
+		
+		logger.info("Thread " + Thread.currentThread().getName() +  "[" + Thread.currentThread().getId() 
+				+ "] Setting Indicator Bean heading info for ID " + indicatorId );
+		
+		indicatorBean.setId( indicatorId );
 		indicatorBean.setCategory( indicatorTemplateXML.getCategory() );
 		indicatorBean.setDefinition( indicatorTemplateXML.getDefinition() );
 		indicatorBean.setFramework( indicatorTemplateXML.getFramework());
@@ -199,6 +150,7 @@ public class IndicatorBeanFactory {
 		indicatorBean.setNotes( indicatorTemplateXML.getNotes() );
 		indicatorBean.setSubCategory( indicatorTemplateXML.getSubCategory() );
 		indicatorBean.setXmlTemplate( indicatorTemplateXML.getTemplate() );
+
 	}
 
 }

@@ -35,11 +35,11 @@
 <!DOCTYPE html > 
 <html lang="" >
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>
-<c:out value="${ dashboard.name }" />
+	<c:out value="${ dashboard.name }" />
 </title>
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/library/bootstrap/3.0.0/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="${ pageContext.request.contextPath }/web/css/Dashboard.css" />
@@ -56,6 +56,8 @@
 <body>
 
 <div class="container">
+<div class="row" id="dashboardPanel" >
+<div class="col-md-12" >
 
 	<!-- Dashboard Heading -->
 	<div class="row dashboardHeading" >
@@ -64,7 +66,7 @@
 		</h2>
 		<hr />
 	</div>
-	<div class="row dashboardHeading" >
+	<div class="row dashboardSubHeading" >
 		<div class="col-md-6">
 			Last loaded: 
 			<c:out value="${ dashboard.lastChecked }" />
@@ -80,143 +82,59 @@
 	</div>
 	<!-- end Dashboard Heading -->
 	
-	<!-- dashboardPanels - by category.  -->
-	<c:forEach items="${ dashboard.panelBeans }" var="panelBean" >
+	<div class="row dashboardBody">	
 	
-		<div class="panel panel-primary dashboardPanel" >
-
-			<div class="panel-heading dashboardPanel">				
-				<strong><c:out value="${ panelBean.category }" /></strong>				
-			</div>
-			
-			<div class="panel-body dashboardPanel" >
-			
-			<c:forEach items="${ panelBean.indicatorPanelBeans }" var="indicatorPanel" >
-				
-				<div class="panel panel-default indicatorPanel" >
-	
-					<!-- Indicator panel heading - by sub category -->
-					<div class="panel-heading indicatorPanel">									
-						<c:out value="${ indicatorPanel.category }" />						
-					</div>
-
-					<div class="panel-body indicatorPanel" >
-					
-						<c:forEach items="${ indicatorPanel.indicatorBeans }" var="indicator" >
+		<!-- dashboardPanels - by category.  -->
+		<c:forEach items="${ dashboard.panelBeans }" var="panelBean" >
 		
-							<div class="col-md-3 indicatorWrapper" >
-							
-								<div class="row indicatorHeading" >
-									<div class="col-md-12">
-										<c:out value="${ indicator.name }" />
-									</div>					
-								</div>
+			<div class="panel panel-primary categoryPanel" >
 	
-								<!-- indicator panel results body - the graph and numbers -->
-								<div class="row indicatorData" >						
-									<div class="col-sm-12">
-								
-										<input type="hidden" id="graphPlots_${ indicator.id }" value="${ indicator.stringArrayPlots }" />
-										<input type="hidden" id="graphLabels_${ indicator.id }" value="${ indicator.stringArrayTooltips }" />
-										<div class="indicatorGraph" id="graphContainer_${ indicator.id }" ></div>
-									</div>									
-								</div>
-								
-								<div class="row indicatorFooter" >
-									<div class="col-md-12 text-right">	
-																
-								        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" 
-								        	aria-haspopup="true" aria-expanded="false">
-								        	options <span class="caret"></span>
-								        </a>
-								        
-										<ul class="dropdown-menu pull-right text-left">
-											<li>
-												<a href="#" data-toggle="modal" data-target="#indicatorInfo_${ indicator.id }" >
-													Indicator Info
-												</a>
-										    </li>
-										    <li>
-												<a href="#" class="indicatorDrilldownBtn" id="getDrilldown_${ indicator.id }" >
-													Drill Down
-												</a>
-										    </li>
-								        </ul>
-								        					        
-									</div>
-								</div>
-								
+				<div class="panel-heading">				
+					<strong><c:out value="${ panelBean.category }" /></strong>				
+				</div>
+				
+				<div class="panel-body" >
+				
+				<c:forEach items="${ panelBean.indicatorPanelBeans }" var="indicatorPanel" >
 					
-								<!-- modal panel for displaying this indicators details -->	
-								<div id="indicatorInfo_${ indicator.id }" class="modal fade" role="dialog">
-									<div class="modal-dialog">
-						
-										<div class="modal-content">
-											<div class="modal-header">	
-												<button type="button" class="close" data-dismiss="modal">&times;</button>
-												<h4 class="modal-title">
-													<c:out value="${ indicator.name }" />
-												</h4>
-											</div>
-											
-											<div class="modal-body">
-											
-												<h4>Category</h4>
-												<p><c:out value="${ indicator.category }" /></p>
-												<h4>Sub Category</h4>
-												<p><c:out value="${ indicator.subCategory }" /></p>
-												<h4>Definition</h4>
-												<p><c:out value="${ indicator.definition }" /></p>
-												<h4>Framework</h4>
-												<p><c:out value="${ indicator.framework }" /></p>
-												<h4>Framework Version</h4>
-												<p><c:out value="${ indicator.frameworkVersion }" /></p>
-												<h4>Notes</h4>
-												<p><c:out value="${ indicator.notes }" /></p>
-												<c:if test="${ not empty indicator.rangeString }">
-													<h4>Range Values</h4>
-													<p><c:out value="${ indicator.rangeString }" /></p>
-												</c:if>
-												<h4>Query</h4>
-												<p><c:out value="${ indicator.queryString }" /></p>
-												
-												<h4>Ranges</h4>
-												<c:forEach items="${ indicator.ranges }" var="range" >
-													<p><c:out value="${ range.label }" /> : <c:out value="${ range.value }" /></p>
-												</c:forEach>
-											
-											</div>
-											
-											<div class="modal-footer">
-												<button type="button" class="btn btn-default" data-dismiss="modal">
-													<bean:message key="dashboard.dashboardmanager.dashboard.close" />
-												</button>
-											</div>						
-										</div> 
-										<!-- end modal content -->								
-									</div>
-								</div> 
-								<!--  end indicator modal  -->							
-							</div> 
-							<!-- end indicator column -->							
-						</c:forEach> 
-						<!-- end indicator loop -->
-					</div> 
-					<!-- end indicatorPanel body -->
-				</div>	
-				<!-- end indicatorPanel -->
-			</c:forEach> 
-			<!-- end indicatorPanel loop -->
-			</div>			
-		</div> 	
-		<!--  end dashboardPanels -->	
-	</c:forEach> 
-	<!-- end Dashboard Panel loop -->
+					<!-- Begin display of Indicator Panel -->
+					<div class="panel panel-default indicatorPanel" >
+		
+						<!-- Indicator panel heading - by sub category -->
+						<div class="panel-heading">									
+							<c:out value="${ indicatorPanel.category }" />						
+						</div>
 	
+						<div class="panel-body" >							
+							<c:forEach items="${ indicatorPanel.indicatorIdList }" var="indicatorId" >																
+								<div class="col-md-3 indicatorWrapper" id="indicatorId_${ indicatorId }">				
+									<div>
+										<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> 
+										Loading...
+									</div>
+								</div>
+							</c:forEach>
+							<!-- end indicator loop -->
+						</div> 
+						<!-- end indicatorPanel body -->
+					</div>	
+					<!-- end indicatorPanel -->
+					
+				</c:forEach> 
+				<!-- end indicatorPanel loop -->
+				</div>			
+			</div> 	
+			<!--  end dashboardPanels -->	
+		</c:forEach> 
+		<!-- end Dashboard Panel loop -->
+		
+	</div>
+	<!-- End dashboard body -->
+
+</div>	
+</div> 	
 </div> 
 <!-- end container -->
-
-
 
 </body>
 </html>

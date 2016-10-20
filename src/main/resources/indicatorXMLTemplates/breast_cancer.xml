@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>Colcamex Resources Inc. for Oscar EMR</author>
+	<uid></uid>
+	<heading>
+		<category>Preventive Health Care</category>
+		<subCategory>Cancer</subCategory>
+		<name>Patient Care: Breast Cancer Screening</name>
+		<definition>% of female patients aged 50 to 74 who had a mammogram within the past two years:
+		- Number of individuals in the denominator who had a mammogram within the past 24 months.
+		- excluding patients with a diagnostic code V4571 for Mastectomy
+		- patients with a null or “pending” prevention result are overdue.
+		</definition>
+		<framework>Based on and adapted from CIHI’s 2012 Indicator Technical Specifications (Nov 2012)</framework>
+		<frameworkVersion>11-01-2012</frameworkVersion>
+		<notes></notes>
+	</heading>
+	<indicatorQuery>
+		<version>10-04-2016</version>
+		<params>
+			<!-- 
+				Required parameter provider. Value options are: 
+					[ an individual providerNo, or provider range ] ie: value="370, 1001" 
+					"all" ie: value="all" including null.
+					"loggedInProvider" ie:
+				Default is "loggedInProvider"
+				Use this parameter in the query as ${provider}
+				This parameter should be used for fetching patient's assigned to a MRP.
+				ie: WHERE demographic.provider_no = ${provider}
+			-->
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="prevention" name="MAM" value="'MAM'" />
+			<parameter id="gender" name="GenderFemale" value="'%F%'" />
+			<parameter id="dxexclude" name="Exclude Dx" value="'V4571'" />		
+		</params>
+		<range>
+			<upperLimit id="age" label="Max Age" name="Age" value="74" />
+			<lowerLimit id="age" label="Min Age" name="Age" value="50" />
+			
+			<upperLimit id="date" label="Current Date" name="CurrentDate" value="NOW()" />			
+			<lowerLimit id="date" label="24 Months" name="Date24" value="DATE_SUB( NOW(), INTERVAL 24 MONTH )" />
+		</range>
+		<query>
+			<!-- Indicator SQL Query here -->
+			SELECT 
+
+				IF ( COUNT(fin.patient) > 0,
+					ROUND( SUM( IF( fin.mam > 0 AND fin.`status` IS NOT NULL AND fin.`status` NOT LIKE 'pending', 1, 0 ) ) * 100 / COUNT(fin.patient), 1) 
+				,0 ) AS "% Mammogram Done",
+			
+				IF ( COUNT(fin.patient) > 0,
+					100 - ROUND( SUM( IF( fin.mam > 0 AND fin.`status` IS NOT NULL AND fin.`status` NOT LIKE 'pending', 1, 0 ) ) * 100 / COUNT(fin.patient), 1)  
+				,0 ) AS "% Not Done"
+			
+			FROM (
+				SELECT 
+					d.demographic_no AS 'patient', 
+					MAM.id AS 'mam',
+					MAM.val AS 'status'
+				FROM demographic d
+				LEFT JOIN dxresearch dxr 
+				ON ( d.demographic_no = dxr.demographic_no) 
+			
+				-- GET ALL MAMOGRAM ENTRIES FROM PREVENTIONS
+				LEFT JOIN ( 
+					SELECT p.demographic_no, p.id, pe.val
+					FROM preventions p		
+					LEFT JOIN preventionsExt pe
+					ON (pe.prevention_id = p.id AND pe.keyval LIKE "result") 
+					WHERE p.prevention_type LIKE ${prevention}
+					AND p.deleted = 0
+					AND DATE(p.prevention_date) > ${lowerLimit.date}
+					GROUP BY p.demographic_no HAVING COUNT(p.demographic_no) > -1 
+				) MAM
+				ON (d.demographic_no = MAM.demographic_no)
+
+				WHERE d.patient_status LIKE ${pstatus}
+				AND dxr.dxresearch_code NOT LIKE ${dxexclude}
+				AND d.sex LIKE ${gender}
+				AND d.demographic_no > 0 
+				AND d.provider_no LIKE ${provider}
+				AND FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), ${lowerLimit.date} ) / 365.25 ) ) 
+					BETWEEN ${lowerLimit.age} AND ${upperLimit.age}
+				GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
+			) fin
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>10-04-2016</version>
+		<params>
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="prevention" name="MAM" value="'MAM'" />
+			<parameter id="gender" name="GenderFemale" value="'%F%'" />
+			<parameter id="dxexclude" name="Exclude Dx" value="'V4571'" />			
+		</params>
+		<range>
+			<upperLimit id="age" label="Max Age" name="Age" value="74" />
+			<lowerLimit id="age" label="Min Age" name="Age" value="50" />
+			
+			<upperLimit id="date" label="Current Date" name="CurrentDate" value="NOW()" />			
+			<lowerLimit id="date" label="24 Months" name="Date24" value="DATE_SUB( NOW(), INTERVAL 24 MONTH )" />
+		</range>
+		<displayColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />	
+			<column id="mamstatus" name="IFNULL(MAM.val, 'none')" title="MAM Status" primary="false" />
+			<column id="mamdate" name="IFNULL(MAM.prevention_date, '0')" title="Test Date" primary="false" />
+		</displayColumns>
+		<exportColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
+			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />	
+			<column id="mamstatus" name="IFNULL(MAM.val, 'none')" title="MAM Status" primary="false" />
+			<column id="mamdate" name="IFNULL(MAM.prevention_date, '0')" title="Test Date" primary="false" />
+		</exportColumns>
+		<query>
+			<!-- Drilldown SQL Query here -->
+			SELECT 
+			*
+			FROM demographic d
+			LEFT JOIN dxresearch dxr 
+			ON ( d.demographic_no = dxr.demographic_no) 
+		
+			-- GET ALL MAMOGRAM ENTRIES FROM PREVENTIONS
+			LEFT JOIN ( 
+		
+				SELECT p.demographic_no, p.id, pe.val, p.prevention_date
+				FROM preventions p	
+				INNER JOIN (
+					SELECT MAX(id) AS id
+					FROM preventions
+					WHERE prevention_type = ${prevention}
+					AND deleted = 0
+					AND DATE(prevention_date) > ${lowerLimit.date} 
+					GROUP BY demographic_no
+				)p2
+				ON(p2.id = p.id)
+				LEFT JOIN preventionsExt pe
+				ON (pe.prevention_id = p.id AND pe.keyval LIKE "result")
+		
+			) MAM
+			ON (d.demographic_no = MAM.demographic_no)
+
+			WHERE d.patient_status LIKE ${pstatus}
+			AND dxr.dxresearch_code NOT LIKE ${dxexclude}
+			AND d.sex LIKE ${gender}
+			AND d.demographic_no > 0 
+			AND d.provider_no LIKE ${provider}
+			AND FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), ${lowerLimit.date} ) / 365.25 ) ) 
+				BETWEEN ${lowerLimit.age} AND ${upperLimit.age}
+			GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
+		</query>
+	</drillDownQuery>
+</indicatorTemplateXML>

@@ -47,9 +47,11 @@
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/js/dataTables.bootstrap.min.js" ></script>
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/DataTables-1.10.12/media/js/jquery.dataTables.min.js" ></script>
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/js/jquery-ui-1.10.2.custom.min.js"></script>
-	<script type="text/javascript" src="${ pageContext.request.contextPath }/web/dashboard/display/drilldownDisplayController.js" ></script>
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/bootstrap2-datepicker/bootstrap-datepicker.js" ></script>
 	<script type="text/javascript" src="${ pageContext.request.contextPath }/js/bootstrap-timepicker.min.js" ></script>
+	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/moment.js" ></script>	
+	<script type="text/javascript" src="${ pageContext.request.contextPath }/library/datetime-moment.js" ></script>
+	<script type="text/javascript" src="${ pageContext.request.contextPath }/web/dashboard/display/drilldownDisplayController.js" ></script>
 </head>
 <body>
 
@@ -95,6 +97,48 @@
 			<c:set scope="page" value="${ column.name }" var="primaryDataType" />
 		</c:if>	
 	</c:forEach>
+	
+	<!-- Filter customization. Javascript will integrate this into the DataTable. -->
+	<form id="datatableFilterGroup" class="form-inline" style="display:none;">
+	<div id="datatableFilterGroupBody" >
+	<div class="form-group">		
+		<select class="form-control" id="datatableFilterColumnSelector" >
+			<option value="0">All</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<select id="datatableFilterConditionSelector" class="form-control" >
+			<option value="all">All</option>
+			<option value="equal">equals</option>
+			<option value="gt">greater than</option>
+			<option value="lt">less than</option>
+			<option value="between">between</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<input type="text" class="form-control" placeholder="Parameter" id="datatableFilterConditionGreaterThan" />
+	</div>
+	<div class="form-group andcondition lessthancondition" style="display:none;">
+		<div class="input-group">
+	  		<span class="input-group-addon andcondition" >and</span>
+			<input type="text" class="form-control andcondition lessthancondition" 
+				placeholder="Parameter" id="datatableFilterConditionLessThan" />
+		</div>
+	</div>
+	<div class="form-group">	
+		<button class="btn btn-default" type="button" id="datatableFilterExecuteButton" >
+			<span class="glyphicon glyphicon-filter text-center" aria-hidden="true"></span>
+			Filter
+		</button>
+	</div>
+	<div class="form-group">	
+		<button class="btn btn-default" type="button" id="datatableFilterResetButton" >
+			<span class="glyphicon glyphicon-refresh text-center" aria-hidden="true"></span>
+			Reset
+		</button>
+	</div>
+	</div>
+	</form>
 
 	<table class="table table-striped table-condensed" id="drilldownTable" >		
 		<c:forEach items="${ drilldown.table }" var="row" varStatus="rowCount">
@@ -125,7 +169,8 @@
 										</li>
 										<li role="separator" class="divider"></li>
 										<li> 
-									    	<a href="#" class="dropdown-item" title="Assign Tickler to Checked Rows." id="assignTicklerChecked" >
+									    	<a href="/web/dashboard/display/AssignTickler.do" class="dropdown-item"  
+									    		title="Assign Tickler to Checked Rows." id="assignTicklerChecked" >
 												Assign Tickler
 											</a>
 										</li>
@@ -209,11 +254,7 @@
 	<h3> 
 		&nbsp;
 	</h3>
-
-</div>
-
-<!-- place holder for tickler assignment modal window -->
-<div id="assignTickler" class="modal fade" role="dialog"></div>
+</div> <!--  end main content row -->
 
 <!-- modal panel for displaying this indicators details -->	
 <div id="indicatorInfo" class="modal fade" role="dialog">
@@ -221,9 +262,10 @@
 		<div class="modal-content">
 		
 			<div class="modal-header">	
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
 				<h4 class="modal-title">
-					<c:out value="${ indicator.name }" />
+					<c:out value="${ drilldown.name }" />
 				</h4>
 			</div>
 			
@@ -241,11 +283,11 @@
 				<p>
 					<c:out value="${ drilldown.definition }" />
 				</p>
-				<h4>Framework</h4>
+				<h4>Indicator Framework</h4>
 				<p>
 					<c:out value="${ drilldown.framework }" />
 				</p>
-				<h4>Framework Version</h4>
+				<h4>Indicator Framework Version</h4>
 				<p>
 					<c:out value="${ drilldown.frameworkVersion }" />
 				</p>
@@ -253,12 +295,7 @@
 				<p>
 					<c:out value="${ drilldown.notes }" />
 				</p>
-				<c:if test="${ not empty drilldown.rangeString }">
-					<h4>Range Values</h4>
-					<p>
-						<c:out value="${ drilldown.rangeString }" />
-					</p>
-				</c:if>
+				
 				<c:if test="${ not empty drilldown.queryString }">
 					<h4>Query</h4>
 					<p>
@@ -269,14 +306,33 @@
 			
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">
-					<bean:message key="dashboard.dashboardmanager.dashboard.close" />
+					Close
 				</button>
 			</div>						
 		</div> 
 		<!-- end modal content -->								
 	</div>
 </div> 
-<!--  end indicator modal  -->		
+<!--  end indicator modal  -->	
+
+<!-- modal panel for tickler assignment -->
+<div id="assignTickler" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4>Assign Tickler</h4>
+			</div>
+			<div class="modal-body"></div>
+			<div class="modal-footer">
+				<button id="saveTicklerBtn" type="submit" class="btn btn-primary">Save</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End Tickler assignment modal panel -->	
 
 </div>	<!-- end container -->
 </body>

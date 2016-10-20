@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.dashboard.display.beans.IndicatorBean;
 import org.oscarehr.dashboard.display.beans.IndicatorPanelBean;
 import org.oscarehr.dashboard.handler.IndicatorTemplateXML;
-import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.managers.DashboardManager;
 import org.oscarehr.util.MiscUtils;
 
 /** 
@@ -47,14 +47,14 @@ public class IndicatorPanelBeanFactory {
 	private List<IndicatorPanelBean> indicatorPanelBeans;
 	private HashSet<String> subcategories;
 
-	public IndicatorPanelBeanFactory( LoggedInInfo loggedInInfo, String category, List<IndicatorTemplateXML> indicatorTemplateXMLList ) {
+	public IndicatorPanelBeanFactory( String category, List<IndicatorTemplateXML> indicatorTemplateXMLList ) {
 		
 		logger.info( "Building Indicator Panels for category " + category );
 		
 		setCategory(category);
 		setIndicatorTemplateXMLList( indicatorTemplateXMLList );
 		setSubcategories( new HashSet<String>() );
-		setIndicatorPanelBeans( loggedInInfo, new ArrayList<IndicatorPanelBean>() );
+		setIndicatorPanelBeans( new ArrayList<IndicatorPanelBean>() );
 	}
 
 	public String getCategory() {
@@ -80,7 +80,7 @@ public class IndicatorPanelBeanFactory {
 		return indicatorPanelBeans;
 	}
 
-	private void setIndicatorPanelBeans( LoggedInInfo loggedInInfo, List<IndicatorPanelBean> indicatorPanelBeans) {
+	private void setIndicatorPanelBeans( List<IndicatorPanelBean> indicatorPanelBeans ) {
 		
 		if( getSubcategories() == null ) {
 			
@@ -93,14 +93,21 @@ public class IndicatorPanelBeanFactory {
 			Iterator<String> it = getSubcategories().iterator();
 			while( it.hasNext() ) {
 
-
+				IndicatorPanelBean indicatorPanelBean = null;
 				String subcategory = it.next();
 				
 				if( subcategory == null ) {
 					subcategory = "";
 				}
+				
+				if( DashboardManager.MULTI_THREAD_ON ) {
+					// Multi-threaded method
+					indicatorPanelBean = createIndicatorPanelsWithIndicatorIds( subcategory );
+				} else {
+					// Single-threaded method
+					indicatorPanelBean = createIndicatorPanelWithIndicatorBeans( subcategory );
+				}
 
-				IndicatorPanelBean indicatorPanelBean = createIndicatorPanelBean( loggedInInfo, subcategory );
 				if( indicatorPanelBean != null ) {
 					indicatorPanelBeans.add( indicatorPanelBean );
 				}
@@ -135,11 +142,58 @@ public class IndicatorPanelBeanFactory {
 	// helpers
 	
 	/**
+	 * Method with a multi-threaded approach. Rather than getting all the Indicator Beans 
+	 * and queries in a single batch, this method will only return the Indicator ids available
+	 * to this panel.  Then it will be up to the loading servlet to request the Indicator Bean
+	 * as the Indicator id is processed. 
+	 * 
+	 * If a template matches both the category and sub-category then create an
+	 * indicator based on the data from the match.
+	 *  Many Indicators can be assigned to each sub-category parameter
+	 */
+	private IndicatorPanelBean createIndicatorPanelsWithIndicatorIds( String subcategory ) {
+		
+		IndicatorPanelBean indicatorPanelBean = null;
+		List<Integer> indicatorIdList = null;
+		
+		// add the indicator beans to the indicator panel bean based on sub-category 
+		// matches within the previously provided category.
+		for( IndicatorTemplateXML indicatorTemplateXML : getIndicatorTemplateXMLList() ) {
+			
+			if( getCategory().equals( indicatorTemplateXML.getCategory() ) && 
+					subcategory.equals( indicatorTemplateXML.getSubCategory() ) ) {
+
+				if( indicatorIdList == null ) {
+					indicatorIdList = new ArrayList<Integer>();
+				}
+
+				indicatorIdList.add( indicatorTemplateXML.getId() );
+				
+				if( indicatorPanelBean == null ) {
+					indicatorPanelBean = new IndicatorPanelBean();
+					indicatorPanelBean.setCategory( subcategory );
+				}
+			}
+			
+		}
+		
+		if( indicatorPanelBean != null ) {
+			indicatorPanelBean.setIndicatorIdList( indicatorIdList );
+		}
+		
+		return indicatorPanelBean;
+	}
+	
+	/**
+	 * Method with a single-threaded approach.  This method will get all the Indicators and run all 
+	 * the queries in a single batch.  This method will cause the Dashboard to appear blank 
+	 * until all the queries are completed. 
+	 * 
 	 * If a template matches both the category and sub-category then create an
 	 * indicator based on the data from the match.
 	 * Many Indicators can be assigned to each sub-category parameter
 	 */
-	private IndicatorPanelBean createIndicatorPanelBean( LoggedInInfo loggedInInfo, String subcategory ) {
+	private IndicatorPanelBean createIndicatorPanelWithIndicatorBeans( String subcategory ) {
 		
 		IndicatorPanelBean indicatorPanelBean = null;
 		List<IndicatorBean> indicatorBeans = null;
@@ -154,10 +208,10 @@ public class IndicatorPanelBeanFactory {
 				if( indicatorBeans == null ) {
 					indicatorBeans = new ArrayList<IndicatorBean>();
 				}
-				
-				IndicatorBeanFactory indicatorBeanFactory = new IndicatorBeanFactory( loggedInInfo, indicatorTemplateXML );
+
+				IndicatorBeanFactory indicatorBeanFactory = new IndicatorBeanFactory( indicatorTemplateXML );				
 				indicatorBeans.add( indicatorBeanFactory.getIndicatorBean() );
-				
+
 				if( indicatorPanelBean == null ) {
 					indicatorPanelBean = new IndicatorPanelBean();
 					indicatorPanelBean.setCategory( subcategory );
@@ -167,7 +221,7 @@ public class IndicatorPanelBeanFactory {
 		}
 		
 		if( indicatorPanelBean != null ) {
-			indicatorPanelBean.setIndicatorBeans( indicatorBeans );
+			 indicatorPanelBean.setIndicatorBeans( indicatorBeans );
 		}
 		
 		return indicatorPanelBean;

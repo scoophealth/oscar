@@ -24,194 +24,128 @@
 
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 <script type="text/javascript">
 
-	// --> check that all fields tagged "required" contain data.
-	function checkFields() {
-		var verified = true;
-		
-		$("#ticklerAddForm .required").each(function(){
-			if( $(this).val().length == 0 ) {
-				verified = false;
-				paintErrorField($(this));	
-			}
-		})
-	
-		return verified;
-	}
-	
-	// paint a red border around missing fields
-	function paintErrorField( fieldobject ) {
-		fieldobject.css( "border", "medium solid red" );
-	}
+//--> Date picker
+$(function(){
+   $('.date-picker').datepicker({
+      format: 'mm-dd-yyyy'
+    });
+});
 
-	//--> Date picker
-	$(function(){
-	   $('.date-picker').datepicker({
-	      format: 'mm-dd-yyyy'
-	    });
-	});
-	
-	// --> Time picker
-	$(function(){
-	   $('.time-picker').timepicker();
-	}); 
-	
-	//--> Execute the tickler assignment - save
-	$("#saveTicklerBtn").on('click', function(event) {
-		event.preventDefault();
-		if( checkFields() ) {
-			sendData("/web/dashboard/display/AssignTickler.do", $("#ticklerAddForm").serialize(), "close")
-		}
-	});
-	
-	//--> AJAX the data to the server.
-	function sendData(path, param, target) {
-		$.ajax({
-			url: ctx + path,
-		    type: 'POST',
-		    data: param,
-		  	dataType: 'json',
-		    success: function(data) {
-		    	if( data.success ) {
-		    		$('#assignTickler').modal('close');
-		    	} else {
-		    		$(".message").hide();
-		    		$(".message").show();
-		    	}
-		    }
-		});
-	}
-	
+// --> Time picker
+$(function(){
+   $('.time-picker').timepicker();
+});
+
 </script>
-
-<div class="container">
-<div class="modal-dialog">
-	<div class="modal-content">
-		<form name="ticklerAddForm" id="ticklerAddForm" action="${ pageContext.request.contextPath }/web/dashboard/display/AssignTickler.do" method="POST" novalidate >
-			<input type="hidden" value="saveTickler" name="method" />
-			
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4>Assign Tickler</h4>
+<form name="ticklerAddForm" id="ticklerAddForm" action="${ pageContext.request.contextPath }/web/dashboard/display/AssignTickler.do" method="POST" novalidate >
+	<input type="hidden" value="saveTickler" name="method" />
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="form-group">
+					<div class="well" id="patientTicklerList">
+						<span class="message" >
+							Assign this Tickler action for each of the
+							selected patients.
+						</span>
+						<span class="error" style="color:red;display:none;">
+							There was an error while assigning this tickler. Maybe no patients were checked?
+						</span>
+						<input type="hidden" name="demographics" value="${ demographics }" />
+					</div>
+				</div>
 			</div>
-			<div class="modal-body">
-			
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="form-group">
-							<div class="well" id="patientTicklerList">
-								<span class="message" >
-									Assign this Tickler action for each of the
-									selected patients.
-								</span>
-								<span class="error" style="color:red;display:none;">
-									There was an error while assigning this tickler. Maybe no patients were checked?
-								</span>
-								<input type="hidden" name="demographics" value="${ demographics }" />
-							</div>
-						</div>
-					</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="form-group">
+					<label>Action:</label> 
+					<select class="form-control required" name="ticklerCategoryId" >
+						<c:forEach items="${ ticklerCategories }" var="ticklerCategory" >
+							<option title="${ ticklerCategory.description }" value="${ ticklerCategory.id }" >
+								<c:out value="${ ticklerCategory.category }" />
+							</option>
+						</c:forEach>
+					</select>
 				</div>
-				
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="form-group">
-							<label>Action:</label> 
-							<select class="form-control required" name="ticklerCategoryId" >
-								<c:forEach items="${ ticklerCategories }" var="ticklerCategory" >
-									<option title="${ ticklerCategory.description }" value="${ ticklerCategory.id }" >
-										<c:out value="${ ticklerCategory.category }" />
-									</option>
-								</c:forEach>
-							</select>
-						</div>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label>Assign to:</label> 
-							<select class="form-control required" name="taskAssignedTo" >
-							<option value=""></option>
-								<c:forEach items="${ providers }" var="provider">
-									<option value="${ provider.providerNo }">
-										<c:out value="${ provider.formattedName }" />
-									</option>
-								</c:forEach>
-							</select>
-						</div>
-					</div>
-
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label>Priority:</label>
-							
-							<select class="form-control required" name="priority" >
-							<option value=""></option> 
-								<option value="Low" >Low</option>
-								<option value="Normal" >Normal</option>
-								<option value="High" >High</option>
-							</select>
-						</div>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-xs-6">
-
-						<label for="datePickerServiceDate" class="control-label">Service
-							Date:</label>
-						<div class="controls">
-							<div class="input-group">
-								<input name="serviceDate" id="datePickerServiceDate" type="text" class="date-picker form-control required" /> 
-									<label for="datePickerServiceDate" class="input-group-addon btn">
-									<span class="glyphicon glyphicon-calendar"></span>
-								</label>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-xs-6">
-						<label for="ticklerTime" class="control-label" > Time:</label>
-						<div class="controls">
-							<div class="input-group">
-								<input type="time" name="serviceTime" id="ticklerTime" class="time-picker form-control required" />
-								<label for="ticklerTime" class="input-group-addon btn">
-									<span class="glyphicon glyphicon-time"></span>
-								</label>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-xs-12">
-					<div class="form-group">
-							<label>Message:</label> 
-							<select class="form-control" name="message" >
-							<option value=""></option>
-								<c:forEach items="${ textSuggestions }" var="textSuggestion" >
-									<option>
-										<c:out value="${ textSuggestion.suggestedText }" />
-									</option>
-								</c:forEach>
-							</select>
-						</div>
-						<textarea name="messageAppend" class="form-control" rows="6" placeholder="Additional message." ></textarea>
-					</div>
-				</div>
-
 			</div>
-			<div class="modal-footer">
-				<button id="saveTicklerBtn" class="btn btn-default" >
-					Save</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">
-					Close</button>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-6">
+				<div class="form-group">
+					<label>Assign to:</label> 
+					<select class="form-control required" name="taskAssignedTo" >
+					<option value=""></option>
+						<c:forEach items="${ providers }" var="provider">
+							<option value="${ provider.providerNo }">
+								<c:out value="${ provider.formattedName }" />
+							</option>
+						</c:forEach>
+					</select>
+				</div>
 			</div>
-		</form>
-	</div>
-</div>
-</div>
+
+			<div class="col-xs-6">
+				<div class="form-group">
+					<label>Priority:</label>
+					
+					<select class="form-control required" name="priority" >
+					<option value=""></option> 
+						<option value="Low" >Low</option>
+						<option value="Normal" >Normal</option>
+						<option value="High" >High</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-6">
+
+				<label for="datePickerServiceDate" class="control-label">Service
+					Date:</label>
+				<div class="controls">
+					<div class="input-group">
+						<input name="serviceDate" id="datePickerServiceDate" type="text" class="date-picker form-control required" /> 
+							<label for="datePickerServiceDate" class="input-group-addon btn">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-xs-6">
+				<label for="ticklerTime" class="control-label" > Time:</label>
+				<div class="controls">
+					<div class="input-group">
+						<input type="time" name="serviceTime" id="ticklerTime" class="time-picker form-control required" />
+						<label for="ticklerTime" class="input-group-addon btn">
+							<span class="glyphicon glyphicon-time"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+			<div class="form-group">
+					<label>Message:</label> 
+					<select class="form-control" name="message" >
+					<option value=""></option>
+						<c:forEach items="${ textSuggestions }" var="textSuggestion" >
+							<option>
+								<c:out value="${ textSuggestion.suggestedText }" />
+							</option>
+						</c:forEach>
+					</select>
+				</div>
+				<textarea name="messageAppend" class="form-control" rows="6" placeholder="Additional message." ></textarea>
+			</div>
+		</div>
+
+</form>
+

@@ -1906,9 +1906,6 @@ insert into `secObjectName` (`objectName`) values ('_dashboardManager');
 insert into `secObjectName` (`objectName`) values ('_dashboardDisplay');
 insert into `secObjectName` (`objectName`) values ('_dashboardDrilldown');
 
-insert into `secObjPrivilege` values('admin', '_dashboardManager', 'x', 0, '999998');
-insert into `secObjPrivilege` values('admin', '_dashboardDisplay', 'x', 0, '999998');
-insert into `secObjPrivilege` values('admin', '_dashboardDrilldown', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_billing', 'x', 0, '999998');

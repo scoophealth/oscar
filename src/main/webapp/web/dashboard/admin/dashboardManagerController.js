@@ -30,7 +30,7 @@ $(document).ready( function() {
 	$.fn.dataTable.ext.order['dom-checkbox'] = function  ( settings, col )
 	{
 	    return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
-	        return $('.ticklerChecked', td).prop('checked') ? '1' : '0';
+	        return $('.toggleActive', td).prop('checked') ? '1' : '0';
 	    } );
 	};
 	
@@ -95,7 +95,7 @@ $(document).ready( function() {
     	$("#newDashboard").modal();
     })
     
-    // --> reset the modal
+    // --> reset the dashboard create/edit modal
     $("#newDashboard").on('hidden.bs.modal', function () {
         $( ".editDashboard" ).each(function(){
         	$(this).val("");
@@ -104,7 +104,7 @@ $(document).ready( function() {
     });
     
     // --> set the indicator dashboard
-    $(".assignDashboard").on('change', function() {   	
+    $("#libraryTable  tbody").on('change', '.assignDashboard', function() {   	
     	var url = "/web/dashboard/admin/DashboardManager.do";
     	var data = new Object();
     	data.indicatorId = (this.id).split("_")[1];
@@ -114,7 +114,7 @@ $(document).ready( function() {
     });
     
     // --> set the indicator active status
-    $(".toggleActive").on('change', function() {   	
+    $("#libraryTable tbody").on('change', ".toggleActive", function() {   	
     	var url = "/web/dashboard/admin/DashboardManager.do";
     	var data = new Object();
     	data.objectId = (this.id).split("_")[1];
@@ -128,7 +128,7 @@ $(document).ready( function() {
     });
     
     // Export Template button
-    $(".exportTemplate").on('click', function(event) {
+    $("#libraryTable tbody").on('click', ".exportTemplate", function(event) {
     	// event.preventDefault();
     	var url = "/web/dashboard/admin/DashboardManager.do";
     	var data = new Object();
@@ -147,6 +147,14 @@ $(document).ready( function() {
     	data.method = (this.id).split("_")[0];  
 
     	sendData(url, data, "reload");
+    });
+    
+    // --> File upload triggers.
+    $(document).on('change', ':file', function() {
+        var input = $(this),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+        input.trigger('fileselect', [numFiles, label]);
     });
 
 });
@@ -170,18 +178,11 @@ function sendData(path, param, target) {
 	    	} else {			
 	    		$(data).replaceWith( $(target, data) );
 	    	}
-
 	    }
 	});
 }
 
-// --> File upload triggers.
-$(document).on('change', ':file', function() {
-    var input = $(this),
-    numFiles = input.get(0).files ? input.get(0).files.length : 1,
-    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-    input.trigger('fileselect', [numFiles, label]);
-});
+
 
 	
 

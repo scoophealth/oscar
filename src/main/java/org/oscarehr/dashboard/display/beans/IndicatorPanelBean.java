@@ -41,7 +41,11 @@ public class IndicatorPanelBean {
 	
 	// each panel contains one or more Indicators by 
 	// by Indicator sub-category
+	// list of beans returned in a single thread method
 	private List<IndicatorBean> indicatorBeans;
+	
+	// indicator ids returned in a multi thread method.
+	private List<Integer> indicatorIdList;
 
 	public String getName() {
 		return name;
@@ -74,7 +78,15 @@ public class IndicatorPanelBean {
 	public void setIndicatorBeans(List<IndicatorBean> indicatorBeans) {
 		this.indicatorBeans = indicatorBeans;
 	}
-	
+
+	public List<Integer> getIndicatorIdList() {
+		return indicatorIdList;
+	}
+
+	public void setIndicatorIdList(List<Integer> indicatorIdList) {
+		this.indicatorIdList = indicatorIdList;
+	}
+
 	@Override
 	public String toString() {
 	   return ReflectionToStringBuilder.toString(this);
