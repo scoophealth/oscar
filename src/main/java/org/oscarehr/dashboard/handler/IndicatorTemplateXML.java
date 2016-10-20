@@ -34,6 +34,7 @@ import org.oscarehr.dashboard.query.Parameter;
 import org.oscarehr.dashboard.query.RangeInterface;
 import org.oscarehr.dashboard.query.RangeLowerLimit;
 import org.oscarehr.dashboard.query.RangeUpperLimit;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -53,6 +54,9 @@ public class IndicatorTemplateXML {
 	private enum ParameterAttribute {id, name, value}
 	private enum ColumnAttribute {id, name, title, primary}
 	private enum RangeAttribute {id, label, name, value}
+	
+	private static enum ManditoryParameter { provider }
+	private static enum ProviderValueAlias { all, loggedinprovider }
 	public static enum RangeType {upperLimit, lowerLimit}
 		
 	private Integer id;
@@ -62,8 +66,14 @@ public class IndicatorTemplateXML {
 	private Node drillDownQueryNode;	
 	private String template;	
 	private String author;
+	private LoggedInInfo loggedInInfo;
 
-	public IndicatorTemplateXML( Document xmlDocument ) {		
+	public IndicatorTemplateXML( LoggedInInfo loggedInInfo, Document xmlDocument ) {
+		this( xmlDocument );
+		this.loggedInInfo = loggedInInfo;
+	}
+	
+	public IndicatorTemplateXML( Document xmlDocument ) {
 		xmlDocument.getDocumentElement().normalize();
 		setXmlDocument(xmlDocument);
 		setRootChildren();
@@ -388,13 +398,20 @@ public class IndicatorTemplateXML {
 	private static List<Column> createColumnList( NodeList columnNodeList ) {
 		
 		List<Column> columnList = null;	
+		Element columnsNode = null;
+		NodeList columns = null;
 		
 		if( columnNodeList == null ) {
 			return columnList;
 		}
 		
-		Element columnsNode = (Element) columnNodeList.item(0);
-		NodeList columns = columnsNode.getElementsByTagName( Drilldown.column.name() );
+		columnsNode = (Element) columnNodeList.item(0);
+		
+		if( columnsNode == null ) {
+			return columnList;
+		}
+		
+		columns = columnsNode.getElementsByTagName( Drilldown.column.name() );
 		
 		if( columns == null ) {
 			return columnList;
@@ -434,7 +451,7 @@ public class IndicatorTemplateXML {
 		return columnList;
 	}
 
-	private static List<Parameter> createParameterList( NodeList parameters ) {
+	private List<Parameter> createParameterList( NodeList parameters ) {
 		
 		List<Parameter> parameterList = null;
 		
@@ -462,6 +479,8 @@ public class IndicatorTemplateXML {
 			} else {
 				values = new String[]{ value };
 			}
+			
+			values = setParameterAliasWithValue( id, values );
 
 			parameter.setId(id);
 			parameter.setName(name);
@@ -471,6 +490,62 @@ public class IndicatorTemplateXML {
 		}
 		
 		return parameterList;
+	}
+	
+	private String[] setParameterAliasWithValue( String parameterId, String[] parameterValues ) {
+		
+		String[] newParameterValues = new String[ parameterValues.length ];
+		
+		for( int i = 0; i < parameterValues.length; i++ ) {
+			newParameterValues[i] = setParameterAliasWithValue( parameterId, parameterValues[i] );
+		}
+		
+		return newParameterValues;
+	}
+	
+	/**
+	 * This is set to replace a Provider Number alias with the logged in Provider Number.
+	 * Others can be added as needed by editing the Enum values and Switch in this method.
+	 */
+	private String setParameterAliasWithValue( String parameterId, String parameterValue ) {
+
+		parameterValue = parameterValue.trim();
+		
+		//TODO for now only captures one required parameter value
+		// A switch will be required here to handle more values.
+		if( ! ( ManditoryParameter.provider.name() ).equalsIgnoreCase( parameterId ) ) {			
+			return parameterValue;
+		}
+		
+		if( parameterValue.equals("%")) {
+			return parameterValue;
+		}
+		
+		// alias values should not have punctuation.
+		parameterValue = parameterValue.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+		
+		if( parameterValue.isEmpty() ) {
+			return parameterValue;
+		}
+		
+		switch( ProviderValueAlias.valueOf( parameterValue ) ) {
+		case loggedinprovider : parameterValue = getLoggedInProvider().trim();
+				break;
+		case all : parameterValue = "%";
+				break;
+		}
+		
+		return parameterValue;
+	}
+	
+	public String getLoggedInProvider() {
+		String providerNo = "";
+		
+		if( this.loggedInInfo != null ) {
+			providerNo = this.loggedInInfo.getLoggedInProviderNo(); 
+		}
+		
+		return providerNo;
 	}
 	
 	@Override

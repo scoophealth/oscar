@@ -18,7 +18,7 @@ HbA1C &gt; 8.5%</definition>
 		<version>07-15-2016</version>
 		<params>
 			<parameter id="dxcodelist" name="Dx Codes" value="250" />
-			<parameter id="provider_no" name="Provider Number" value="%" />
+			<parameter id="provider" name="Provider Number" value="loggedInProvider" />
 		</params>
 		<range>
 			<upperLimit id="from" label="From Date" name="Date" value="12-12-2012" />
@@ -61,7 +61,7 @@ HbA1C &gt; 8.5%</definition>
 								WHERE type LIKE "A1C"
 								AND ( DATE(dateObserved) BETWEEN DATE('${ upperLimit.from }') AND ${ lowerLimit.to } )
 								AND demographicNo > 0
-								AND providerNo LIKE '${ provider_no }'
+								AND providerNo LIKE '${ provider }'
 								GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C
 					ON (d.demographic_no = A1C.demographicNo)
 			
@@ -89,7 +89,7 @@ HbA1C &gt; 8.5%</definition>
 		<params>
 			<parameter id="active" name="Active Patients" value="%AC%" />
 			<parameter id="dxcodelist" name="Dx Codes" value="250,430" />
-			<parameter id="provider_no" name="Provider Number" value="%" />
+			<parameter id="provider" name="Provider Number" value="loggedInProvider" />
 		</params>
 		
 		<range>
@@ -130,7 +130,7 @@ HbA1C &gt; 8.5%</definition>
 								WHERE type LIKE "A1C"
 								AND ( DATE(dateObserved) BETWEEN DATE('${ upperLimit.from }') AND ${ lowerLimit.to } )
 								AND demographicNo > 0
-								AND providerNo LIKE '${ provider_no }'
+								AND providerNo LIKE '${ provider }'
 								GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C
 					ON (d.demographic_no = A1C.demographicNo)
 			

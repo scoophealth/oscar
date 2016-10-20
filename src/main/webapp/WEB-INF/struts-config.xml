@@ -632,6 +632,13 @@
 			<forward name="unauthorized" path="/securityError.jsp" />
 			<forward name="error" path="/failure.jsp" />
 		</action>
+		
+		<action name="FrmForm" path="/web/dashboard/display/DisplayIndicator" 
+			parameter="method" type="org.oscarehr.dashboard.display.DisplayIndicatorAction" scope="request" >
+			<forward name="success" path="/web/dashboard/display/IndicatorPanel.jsp" />
+			<forward name="unauthorized" path="/securityError.jsp" />
+			<forward name="error" path="/failure.jsp" />
+		</action>
 	
 		<!-- Pharma Best Possible Medication Health form -->
 	 	<action path="/formBPMH" parameter="method" name="bpmh" type="oscar.form.pharmaForms.formBPMH.web.BpmhFormRetrieve"	

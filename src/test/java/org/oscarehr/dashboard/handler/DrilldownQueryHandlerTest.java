@@ -50,7 +50,7 @@ public class DrilldownQueryHandlerTest {
 			+ "ON ( d.demographic_no = dxr.demographic_no) LEFT JOIN ( SELECT COUNT(*) "
 			+ "AS a1cnumber, demographicNo FROM measurements WHERE type LIKE \"A1C\" "
 			+ "AND ( DATE(dateObserved) BETWEEN DATE('12-12-2012') AND now() ) AND demographicNo > 0 "
-			+ "AND providerNo LIKE '%' GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C "
+			+ "AND providerNo LIKE '' GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C "
 			+ "ON (d.demographic_no = A1C.demographicNo) LEFT JOIN ( SELECT COUNT(*) AS 'a1c9number', demographicNo "
 			+ "FROM measurements WHERE type LIKE \"A1C\" AND demographicNo > 0 GROUP BY demographicNo "
 			+ "HAVING COUNT(demographicNo) > -1 ) A1C9 ON (d.demographic_no = A1C9.demographicNo) "
