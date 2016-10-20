@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>Colcamex Resources Inc. for Oscar EMR</author>
+	<uid></uid>
+	<heading>
+		<category>Preventive Health Care</category>
+		<subCategory>Smoking</subCategory>
+		<name>Smoking Status properly recorded</name>
+		<definition>% of patients >= 12 years old for whom smoking status is recorded</definition>
+		<framework>Based on and adapted from AFHTO D2D 3.0 Indicators: Data Dictionary version 4 (Nov 2015)</framework>
+		<frameworkVersion>11-01-2016</frameworkVersion>
+		<notes></notes>
+	</heading>
+	<indicatorQuery>
+		<version>10-07-2016</version>
+		<params>
+			<!-- 
+				Required parameter provider. Value options are: 
+					[ an individual providerNo, or provider range ] ie: value="370, 1001" 
+					"all" ie: value="all" including null.
+					"loggedInProvider" ie:
+				Default is "loggedInProvider"
+				Use this parameter in the query as ${provider}
+				This parameter should be used for fetching patient's assigned to a MRP.
+				ie: WHERE demographic.provider_no = ${provider}
+			-->
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="smokerprevention" name="Smoker in Prevention" value="'%Smoking%'" />
+			<parameter id="smokermeasurement" name="Smoker in Measurement" value="'SKST%'" />		
+		</params>
+
+		<range>
+			<lowerLimit id="age" label="Lowest Age" name="Age" value="12" />
+		</range>
+		<query>
+			<!-- Indicator SQL Query here -->
+			SELECT
+
+				-- PERCENT OF TOTAL PATIENTS NOTED AS SMOKERS
+				IF( COUNT(fin.patient) > 0, 
+					ROUND( SUM( IF( fin.smkp IS NOT NULL OR fin.smkm IS NOT NULL, 1, 0) ) * 100 / COUNT(fin.patient), 1 )
+				, 0 ) AS "% Status Recorded",
+			
+				-- PERCENT OF TOTAL PATIENTS WITH NON-SMOKING NOTATIONS.
+				IF( COUNT(fin.patient) > 0, 
+					ROUND( SUM( IF( fin.smkp IS NULL AND fin.smkm IS NULL, 1, 0) ) * 100 / COUNT(fin.patient), 1 )
+				, 0 ) AS "% Not Recorded"
+			
+			FROM (
+				SELECT
+					d.demographic_no AS patient,
+					SMKP.refused AS smkp,
+					SMKM.dataField AS smkm
+				FROM demographic d
+			
+				-- Notations for Smokers in Preventions
+				LEFT JOIN( 
+					SELECT p.demographic_no, MAX(p.refused) AS refused
+					FROM preventions p	
+					WHERE p.prevention_type LIKE ${smokerprevention}
+					AND p.deleted = 0
+					AND p.demographic_no > 0
+					GROUP BY p.demographic_no HAVING COUNT(p.demographic_no) > -1
+				) SMKP
+				ON (SMKP.demographic_no = d.demographic_no)
+			
+				-- Notations for Smokers in Measurements
+				LEFT JOIN ( 
+					SELECT m1.id, m1.dataField, m1.demographicNo
+					FROM measurements m1
+					INNER JOIN (
+						SELECT MAX(id) AS id
+						FROM measurements
+						WHERE type LIKE ${smokermeasurement}
+						AND demographicNo > 0 
+						GROUP BY demographicNo
+					) m2
+					ON (m1.id = m2.id)
+				) SMKM 
+				ON (d.demographic_no = SMKM.demographicNo)
+			
+				WHERE d.patient_status LIKE ${pstatus}
+				AND d.provider_no LIKE ${provider}
+				AND ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) / 365.25 ) ) >= ${lowerLimit.age} 
+			) fin
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>10-07-2016</version>
+		<params>
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="smokerprevention" name="Smoker in Prevention" value="'%Smoking%'" />
+			<parameter id="smokermeasurement" name="Smoker in Measurement" value="'SKST%'" />
+			<parameter id="pcurrent" name="Current Smoker Prevention" value="0" />
+			<parameter id="pformer" name="Former Smoker Prevention" value="2" />
+			<parameter id="pnon" name="Non Smoker Prevention" value="1" />
+			<parameter id="mcurrent" name="Current Smoker Measurement" value="'%yes%'" />
+			<parameter id="mformer" name="Former Smoker Measurement" value="'%x%'" />
+			<parameter id="mnon"  name="Non Smoker Measurement" value="'%no%'" />		
+		</params>
+		<range>
+			<lowerLimit id="age" label="Lowest Age" name="Age" value="12" />
+		</range>
+		<displayColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />	
+			<column id="smokingStatus" name="CASE
+					WHEN
+						SMKP.refused = 0 OR SMKM.dataField LIKE '%yes%'
+					THEN
+						'current'
+					WHEN
+						SMKP.refused = 2 OR SMKM.dataField LIKE '%x%' 
+					THEN
+						'former'
+					WHEN
+						SMKP.refused = 1 OR SMKM.dataField LIKE '%no%'
+					THEN
+						'non'
+					ELSE 
+						0
+				END" title="Smoking Status" primary="false" />
+			
+			<column id="smokingStatusDate" name="CASE 
+					WHEN
+						SMKM.dateObserved IS NOT NULL
+					THEN
+						SMKM.dateObserved
+					WHEN 
+						SMKP.prevention_date IS NOT NULL
+					THEN
+						SMKP.prevention_date
+					ELSE
+						0
+				END" title="Last Recorded" primary="false" />
+			
+		</displayColumns>
+		<exportColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />	
+			<column id="smokingStatus" name="CASE
+					WHEN
+						SMKP.refused = 0 OR SMKM.dataField LIKE '%yes%'
+					THEN
+						'current'
+					WHEN
+						SMKP.refused = 2 OR SMKM.dataField LIKE '%x%' 
+					THEN
+						'former'
+					WHEN
+						SMKP.refused = 1 OR SMKM.dataField LIKE '%no%'
+					THEN
+						'non'
+					ELSE 
+						0
+				END" title="Smoking Status" primary="false" />
+			
+			<column id="smokingStatusDate" name="CASE 
+					WHEN
+						SMKM.dateObserved IS NOT NULL
+					THEN
+						SMKM.dateObserved
+					WHEN 
+						SMKP.prevention_date IS NOT NULL
+					THEN
+						SMKP.prevention_date
+					ELSE
+						0
+				END" title="Last Recorded" primary="false" />
+				
+		</exportColumns>
+		<query>
+			<!-- Drilldown SQL Query here -->
+			SELECT
+			*
+			FROM demographic d
+		
+			-- Notations for Smokers in Preventions
+			LEFT JOIN( 
+				SELECT p.demographic_no, p.refused, p.prevention_date
+				FROM preventions p	
+				WHERE p.prevention_type LIKE ${smokerprevention}
+				AND p.deleted = 0
+				GROUP BY p.demographic_no HAVING COUNT(p.demographic_no) > -1
+			) SMKP
+			ON (SMKP.demographic_no = d.demographic_no)
+		
+			-- Notations for Smokers in Measurements
+			LEFT JOIN ( 
+				SELECT m1.id, m1.dataField, m1.demographicNo, m1.dateObserved
+				FROM measurements m1
+				INNER JOIN (
+					SELECT MAX(id) AS id
+					FROM measurements
+					WHERE type LIKE ${smokermeasurement}
+					AND demographicNo > 0 
+					GROUP BY demographicNo
+				) m2
+				ON (m1.id = m2.id)
+			) SMKM 
+			ON (d.demographic_no = SMKM.demographicNo)
+		
+			WHERE d.patient_status LIKE ${pstatus}
+			AND d.provider_no LIKE ${provider}
+			AND ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) / 365.25 ) ) >= ${lowerLimit.age}	
+		</query>
+	</drillDownQuery>
+</indicatorTemplateXML>

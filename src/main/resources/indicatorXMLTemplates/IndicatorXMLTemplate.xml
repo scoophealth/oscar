@@ -1,142 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <indicatorTemplateXML>
-	<author>Colcamex Resources Inc. Copyright 2016</author>
-	<uid>dd40f1c9-f091-4aad-b65e-1c4cf10927e5</uid>
+	<author>Colcamex Resources Inc. for Oscar EMR</author>
+	<uid></uid>
 	<heading>
-		<category>CDM</category>
-		<subCategory>Diabetes</subCategory>
-		<name>Diabetes with HbA1C Testing</name>
-		<definition>% of patients with diabetes aged 40 years and older who have had two or more HbA1C tests within the past 12 months</definition>
-		<framework>Based on and adapted from HQO's PCPM: Priority Measures for System and Practice Levels (Oct 2015)</framework>
-		<frameworkVersion>10-01-2015</frameworkVersion>
-		<notes>This is a test template for the Diabetes with HbA1C Testing Indicator query</notes>
+		<category></category>
+		<subCategory></subCategory>
+		<name></name>
+		<definition></definition>
+		<framework></framework>
+		<frameworkVersion></frameworkVersion>
+		<notes></notes>
 	</heading>
 	<indicatorQuery>
-		<version>07-15-2016</version>
+		<version></version>
 		<params>
-			<parameter id="dxcodelist" name="dxcodelist" value="250,430" />
-			<parameter id="provider_no" name="provider_no" value="300" />
+			<!-- 
+				Required parameter provider. Value options are: 
+					[ an individual providerNo, or provider range ] ie: value="370, 1001" 
+					"all" ie: value="all" including null.
+					"loggedInProvider" ie:
+				Default is "loggedInProvider"
+				Use this parameter in the query as ${provider}
+				This parameter should be used for fetching patient's assigned to a MRP.
+				ie: WHERE demographic.provider_no = ${provider}
+			-->
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="" name="" value="" />		
 		</params>
 		<range>
-			<upper-limit id="" label="Number Months" name="months" value="12" />
-			<lower-limit label="Today" name="date" value="now()" />
-			
-			<upper-limit label="Max number A1C Labs" name="a1ccount" value="2" />
-			<lower-limit label="Min number A1C Labs" name="a1ccount" value="0" />
-			
-			<upper-limit label="Max Patient Age" name="ptage" value="75" />
-			<lower-limit label="Min Patient Age" name="ptage" value="30" />
+			<upperLimit id="" label="" name="" value="" />
+			<lowerLimit id="" label="" name="" value="" />
 		</range>
 		<query>
-			SELECT "Note: min value is 0.1%" AS "",
-
-				-- TOTAL NUMBER OF DM PATIENTS
-				COUNT(fin.patient) AS "DM Patients",
-			
-				-- % WITH A1C MEASUREMENTS
-				IF ( COUNT(fin.patient) > 0, ROUND( SUM( CASE WHEN fin.a1c > ${lower-limit.a1ccount} THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient) , 1 ), 0) AS "HbA1c (%)",
-			
-				-- % WITH 2 A1C MEASUREMENTS
-				IF ( COUNT(fin.patient) > 0, ROUND( SUM( CASE WHEN fin.a1c > 1 THEN 1 ELSE 0 END )  * 100 / COUNT(fin.patient) , 1 ), 0) AS "HbA1c 2x (%)",
-			
-				-- % WITH A1C LAB REQS IN THE FIRST 9 MONTHS OF DX
-				IF ( COUNT(fin.patient) > 0, ROUND( SUM( CASE WHEN fin.req9 > 0 THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient), 1 ), 0) AS "HbA1c Lab Req. 9 months (%)",
-			
-			FROM (
-			
-					SELECT 
-						d.demographic_no AS patient,
-						A1C.a1cnumber AS a1c,
-						A1C9.a1c9number AS a1c9,
-						
-					FROM demographic d
-			
-					-- ROOT CONTROLS THE IDENTIFICATION OF ALL DIABETIC PATIENTS.
-					INNER JOIN dxresearch dxr
-						ON ( d.demographic_no = dxr.demographic_no)
-			
-					-- COUNT ALL A1C MEASUREMENTS. COUNTS ALL TESTS PER PATIENT.
-					LEFT JOIN ( SELECT COUNT(*) AS a1cnumber, demographicNo 
-								FROM measurements 
-								WHERE type LIKE "A1C"
-								AND ( DATE(dateObserved) BETWEEN DATE(${lowerlimit.date}) AND DATE_ADD( DATE(${upperlimit.date}) ) 
-								AND demographicNo > 0
-								GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C
-					ON (d.demographic_no = A1C.demographicNo)
-			
-					-- PATIENTS FROM THE FIRST 9 MONTHS WITH A1C MEASUREMENTS
-					LEFT JOIN ( SELECT COUNT(*) AS a1c9number, demographicNo 
-								FROM measurements 
-								WHERE type LIKE "A1C"
-								AND ( DATE(dateObserved) BETWEEN DATE(${lower-limit.date}) AND DATE_ADD( DATE(${upper-limit.date}), INTERVAL 9 MONTH ) )
-								AND demographicNo > 0 
-								GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C9
-					ON (d.demographic_no = A1C9.demographicNo)
-			
-					WHERE d.patient_status LIKE "%AC%" 
-					AND dxr.coding_system LIKE "icd9" 
-					AND dxr.dxresearch_code IN "${ dxcodelist }"
-					AND dxr.status NOT LIKE "%D%"
-					AND d.demographic_no > 0
-					AND d.provider_no LIKE "${provider_no}"
-			) fin;		
+			<!-- Indicator SQL Query here -->
 		</query>
 	</indicatorQuery>
 	<drillDownQuery>
-		<version>07-20-2016</version>
+		<version></version>
 		<params>
-			<parameter id="active" name="active" value="%AC%" />
-			<parameter id="dxcodelist" name="dxcodelist" value="250,430" />
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="" name="" value="" />
 		</params>
+		<range>
+			<upperLimit id="" label="" name="" value="" />
+			<lowerLimit id="" label="" name="" value="" />
+		</range>
 		<displayColumns>
-			<column id="" name="demographic_no" title="Patient Id" />
-			<column name="firstName" title="First Name" />
-			<column name="lastName" title="Last Name" />
-			<column name="dob" title="Date of Birth" />
-			<column name="age" title="Age" />
-			<column name="dx.a1c" title="Date of last A1C" />
+			<column id="" name="" title="" primary="" />
 		</displayColumns>
 		<exportColumns>
-			<column name="demographic_no" title="Patient Id" />
-			<column name="firstName" title="First Name" />
-			<column name="lastName" title="Last Name" />
-			<column name="dob" title="Date of Birth" />
-			<column name="age" title="Age" />
-			<column name="address" title="Address" />
-			<column name="phone" title="Phone" />
-			<column name="phn" title="Medical Insurance" />
-			<column name="dx.a1c" title="Date of last A1C" />
+			<column id="" name="" title="" primary="" />
 		</exportColumns>
 		<query>
-			SELECT * FROM demographic d
-	
-			-- ROOT CONTROLS THE IDENTIFICATION OF ALL DIABETIC PATIENTS.
-			INNER JOIN dxresearch dxr
-				ON ( d.demographic_no = dxr.demographic_no)
-	
-			-- COUNT ALL A1C MEASUREMENTS. COUNTS ALL TESTS PER PATIENT.
-			LEFT JOIN ( SELECT COUNT(*) AS a1cnumber, demographicNo 
-						FROM measurements 
-						WHERE type LIKE "A1C"
-						AND ( DATE(dateObserved) BETWEEN DATE({lowerlimit.date}) AND DATE_ADD( DATE({upperlimit.date}) ) 
-						AND demographicNo > 0
-						GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C
-			ON (d.demographic_no = A1C.demographicNo)
-	
-			-- PATIENTS FROM THE FIRST 9 MONTHS WITH A1C MEASUREMENTS
-			LEFT JOIN ( SELECT COUNT(*) AS a1c9number, demographicNo 
-						FROM measurements 
-						WHERE type LIKE "A1C"
-						AND ( DATE(dateObserved) BETWEEN DATE({lower-limit.date}) AND DATE_ADD( DATE({upper-limit.date}), INTERVAL 9 MONTH ) )
-						AND demographicNo > 0 
-						GROUP BY demographicNo HAVING COUNT(demographicNo) > -1 ) A1C9
-			ON (d.demographic_no = A1C9.demographicNo)
-	
-			WHERE d.patient_status LIKE "{ active }" 
-			AND dxr.coding_system LIKE "icd9" 
-			AND dxr.dxresearch_code IN "{ dxcodelist }"
-			AND dxr.status NOT LIKE "%D%"
-			AND d.demographic_no > 0		
+			<!-- Drilldown SQL Query here -->	
 		</query>
 	</drillDownQuery>
 </indicatorTemplateXML>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>Colcamex Resources Inc.</author>
+	<uid></uid>
+	<heading>
+		<category>CDM</category>
+		<subCategory>Diabetes</subCategory>
+		<name>Diabetes with HbA1C in Range</name>
+		<definition>
+			% of patients with diabetes whose most recent glycemic control in the last 12 months was in the following ranges: 
+			HbA1C &lt;= 7%
+			7% &lt; HbA1C &lt;= 8.5%
+			HbA1C &gt; 8.5%
+		</definition>
+		<framework>Based on and adapted from AFHTO D2D 3.0 Indicators: Data Dictionary version 4 (Nov 2015)</framework>
+		<frameworkVersion>11-01-2015</frameworkVersion>
+		<notes>Diabetes HbA1c in range query created for Ontario Medical Doctors</notes>
+	</heading>
+	<indicatorQuery>
+		<version>09-11-2016</version>
+		<params>
+			<parameter id="loinc" name="LOINC Code" value="'4548-4'" />
+			<parameter id="provider" name="Provider Number" value="loggedInProvider" />
+			<parameter id="active" name="Active Patients" value="'%AC%'" />
+			<parameter id="dxCodes" name="Dx Codes" value="250,E10,E11,DB-610" />
+		</params>
+		<range>
+			<lowerLimit id="date" label="From Date" name="Date" value="DATE_SUB( NOW(), INTERVAL 12 MONTH )" />
+			<upperLimit id="date" label="Date Today" name="Date" value="NOW()" />
+			
+			<upperLimit id="a1c" label="Max HbA1C Result" name="A1c Tests" value="8.5" />
+			<lowerLimit id="a1c" label="Min HbA1C Result" name="A1c Tests" value="7.0" />
+		</range>
+		<query>
+			SELECT
+
+				IF ( COUNT(fin.patient) &gt; 0,
+				ROUND( SUM( CASE WHEN fin.hba1c &lt;= ${lowerLimit.a1c} THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient), 1)
+				, 0) AS "HbA1C &lt;= 7%",
+				
+				IF ( COUNT(fin.patient) &gt; 0,
+				ROUND( SUM( CASE WHEN fin.hba1c BETWEEN ${lowerLimit.a1c} AND ${upperLimit.a1c} THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient), 1)
+				, 0) AS "7% &lt; HbA1C &lt;= 8.5%",
+				
+				IF ( COUNT(fin.patient) &gt; 0,
+				ROUND( SUM( CASE WHEN fin.hba1c &gt; ${upperLimit.a1c} THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient), 1)
+				, 0) AS "HbA1C > 8.5%"
+				
+			FROM ( 
+				SELECT 
+					d.demographic_no AS patient, 
+					A1C.dataField AS hba1c
+				FROM demographic d 
+				INNER JOIN dxresearch dxr 
+				ON ( d.demographic_no = dxr.demographic_no) 
+			
+				-- HbA1C measurement
+				LEFT JOIN ( 
+					SELECT m.dataField, m.demographicNo 
+					FROM measurements m
+					JOIN (
+						SELECT MAX(`name`) AS 'name' 
+						FROM measurementMap
+						WHERE loinc_code LIKE ${loinc}
+						GROUP BY `name`
+					) mm
+					ON (mm.`name` = m.type)
+					WHERE DATE(m.dateObserved) > ${lowerLimit.date}
+					AND m.demographicNo > 0
+					GROUP BY m.demographicNo HAVING COUNT(m.demographicNo) > -1
+				) A1C 
+				ON (d.demographic_no = A1C.demographicNo) 
+			
+				WHERE d.patient_status LIKE ${active} 
+				AND dxr.dxresearch_code IN ${dxCodes}
+				AND dxr.`status` NOT LIKE "%D%" 
+				AND d.demographic_no > 0
+				AND d.provider_no LIKE ${provider} 
+			) fin;
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>09-11-2016</version>
+		<params>
+			<parameter id="loinc" name="LOINC Code" value="'4548-4'" />
+			<parameter id="provider" name="Provider Number" value="loggedInProvider" />
+			<parameter id="active" name="Active Patients" value="'%AC%'" />
+			<parameter id="dxCodes" name="Dx Codes" value="250,E10,E11,DB-610" />
+		</params>
+		
+		<range>
+			<lowerLimit id="date" label="From Date" name="Date" value="DATE_SUB( NOW(), INTERVAL 12 MONTH )" />
+			<upperLimit id="date" label="Date Today" name="Date" value="NOW()" />
+		</range>
+		
+		<displayColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="a1c" name="IFNULL( A1C.dataField, 0)" title="HbA1C" primary="false" />
+			<column id="a1cDate" name="IFNULL( DATE_FORMAT( A1C.dateObserved, '%m-%d-%Y' ), 0)" title="Test Date (mm-dd-yyyy)" primary="false" />
+			<column id="codeSystem" name="CONCAT( dxr.coding_system, ' ', dxr.dxresearch_code )" title="Dx System/Code" primary="false" />
+		</displayColumns>
+		
+		<exportColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="a1c" name="IFNULL( A1C.dataField, 0)" title="HbA1C" primary="false" />
+			<column id="a1cDate" name="IFNULL( DATE_FORMAT( A1C.dateObserved, '%m-%d-%Y' ), 0)" title="Test Date (mm-dd-yyyy)" primary="false" />
+			<column id="codeSystem" name="CONCAT( dxr.coding_system, '/', dxr.dxresearch_code )" title="Dx System/Code" primary="false" />
+		</exportColumns>
+		<query>	
+			SELECT *	
+			FROM demographic d 
+			INNER JOIN dxresearch dxr 
+			ON ( d.demographic_no = dxr.demographic_no) 
+			
+			LEFT JOIN ( 
+
+				SELECT m1.dataField, m1.demographicNo, m1.dateObserved
+				FROM measurements m1
+				INNER JOIN (
+					SELECT MAX(id) AS id
+					FROM measurements m
+						JOIN (
+							SELECT MAX(`name`) AS 'name' 
+							FROM measurementMap
+							WHERE loinc_code LIKE ${loinc}
+							GROUP BY `name`
+						) mm
+					ON (mm.`name` = m.type)
+					WHERE DATE(m.dateObserved) > ${lowerLimit.date}
+					AND m.demographicNo > 0 
+					GROUP BY m.demographicNo
+				) m2
+				ON (m1.id = m2.id)
+				
+			) A1C 
+			ON (d.demographic_no = A1C.demographicNo) 
+			
+			WHERE d.patient_status LIKE ${active} 
+			AND dxr.dxresearch_code IN ${dxCodes}
+			AND dxr.`status` NOT LIKE "%D%" 
+			AND d.demographic_no > 0 
+			AND d.provider_no LIKE ${provider}
+		</query>
+	</drillDownQuery>
+</indicatorTemplateXML>

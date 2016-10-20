@@ -41,16 +41,17 @@ public class DrilldownQueryHandler extends AbstractQueryHandler {
 		// default
 	} 
 
-	public List<?> execute( String query ) {
+	@Override
+	public List<?> execute() {
 		
 		logger.info("Executing Drilldown Query");
-		
-		this.setQuery( query );	
+	
 		List<?> results = super.execute();
 		this.setTable( results );		
 		return results;
 	}
 	
+	@Override
 	public void setQuery( String query ) {
 		String finalQuery = super.buildQuery( query );
 		super.setQuery( finalQuery );

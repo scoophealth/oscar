@@ -30,6 +30,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.dashboard.display.beans.GraphPlot;
+import org.oscarehr.managers.DashboardManager;
 import org.oscarehr.util.MiscUtils;
 
 
@@ -50,16 +51,26 @@ public class IndicatorQueryHandler extends AbstractQueryHandler {
 		// default
 	}
 
+	@Override
 	public List<?> execute( String query ) {
 
-		logger.info("Executing Indicator Query");
-
-		this.setQuery( query );	
-		List<?> results = super.execute();
-		setGraphPlots( results );
+		logger.info("Executing Indicator Query Thread " + Thread.currentThread().getName() 
+				+  "[" + Thread.currentThread().getId() + "]" );
+		
+		List<?> results = null;
+		
+		if( DashboardManager.MULTI_THREAD_ON ) {
+			results = super.execute( query );
+		} else {
+			this.setQuery( query );	
+			results = super.execute();
+			graphPlots( results );
+		}
+		
 		return results;
 	}
 
+	@Override
 	public void setQuery( String query ) {
 		String finalQuery = super.buildQuery( query );
 		super.setQuery( finalQuery );
@@ -68,15 +79,30 @@ public class IndicatorQueryHandler extends AbstractQueryHandler {
 	public List<GraphPlot[]> getGraphPlots() {
 		return graphPlots;
 	}
-
+	
+	@Override
+	public final String filterQueryString( String queryString ) {
+		return super.filterQueryString( queryString );
+	}
+	
 	/**
 	 * Build graph data with GraphPlot objects and set them into the Indicator Bean for display.
 	 * Each row of graph plots is a new graph
-	 * Each GraphPlot column is a plot on the graph. 
+	 * Each GraphPlot column is a plot on the graph.
+	 * 
+	 * Not Thread Safe 
 	 */
+	private void graphPlots( List<?> results ) {
+		setGraphPlots( createGraphPlots( results ) );
+	}
+	
+	public void setGraphPlots( List< GraphPlot[] > graphPlots ) {
+		this.graphPlots = graphPlots;
+	}
+	
 	@SuppressWarnings("unchecked")
-	protected void setGraphPlots( List<?> results ) {
-
+	public static List< GraphPlot[] > createGraphPlots( List<?> results ) {
+		
 		List< GraphPlot[] > graphPlotList = null;
 
 		for(Object row : results) {
@@ -84,12 +110,12 @@ public class IndicatorQueryHandler extends AbstractQueryHandler {
 				graphPlotList = new ArrayList< GraphPlot[] >();
 			}
 
-			GraphPlot[] graphPlots = createGraphPlots( (Map<String, ?>) row ); 
+			GraphPlot[] graphPlots = createGraphPlots( ( Map<String, ?> ) row ); 
 
 			graphPlotList.add( graphPlots );
 		}
-
-		this.graphPlots = graphPlotList;
+		
+		return graphPlotList;
 	}
 
 	/**
@@ -122,7 +148,7 @@ public class IndicatorQueryHandler extends AbstractQueryHandler {
 				logger.warn( "Null or Empty Key found for the label parameter of this graph plot." );
 			}
 			
-			// Only pie charts for now - so the demon is out of 100 percent.
+			// Only pie charts for now - so the denom is out of 100 percent.
 			graphPlot.setDenominator( DEFAULT_DENOMINATOR );
 
 			if( value instanceof Number ) {
@@ -139,6 +165,88 @@ public class IndicatorQueryHandler extends AbstractQueryHandler {
 		graphPlots.toArray( graphPlotArray );
 		
 		return graphPlotArray;
+	}
+	
+	// helper utilities.
+	
+	public static String plotsToStringArray( List<GraphPlot[]> graphPlots ) {
+		StringBuilder json = new StringBuilder("");
+		for(GraphPlot[] graphPlotArray : graphPlots) {
+			json.append("[");
+			for(GraphPlot graphPlot : graphPlotArray ) {
+				json.append("['");
+				json.append( graphPlot.getLabel() );
+				json.append("',");
+				json.append( graphPlot.getNumerator() );
+				json.append("],");
+			}
+			json.deleteCharAt( json.length() - 1 );
+			
+			json.append("],");
+		}
+		json.deleteCharAt( json.length() - 1 );
+		
+		return json.toString();
+	}
+	
+	public static String plotsToJson( List<GraphPlot[]> graphPlots ) {
+		StringBuilder json = new StringBuilder("");
+		int index = 0;
+		for(GraphPlot[] graphPlotArray : graphPlots) {
+			json.append("{ 'results_" + index + "':[");
+			for(GraphPlot graphPlot : graphPlotArray ) {
+				json.append("{'");
+				json.append( graphPlot.getLabel() );
+				json.append("':");
+				json.append( graphPlot.getNumerator() );
+				json.append("},");
+			}
+			json.deleteCharAt( json.length() - 1 );
+			
+			json.append("]},");
+			index++;
+		}
+		json.deleteCharAt( json.length() - 1 );
+		
+		return json.toString();
+	}
+	
+	public static String plotsToTooltipsStringArray( List<GraphPlot[]> graphPlots ) {
+		StringBuilder json = new StringBuilder("");
+		for(GraphPlot[] graphPlotArray : graphPlots) {
+			json.append("[");
+			for(GraphPlot graphPlot : graphPlotArray ) {
+				json.append( "'" );
+				json.append( graphPlot.getKey() );
+				json.append( "'" );
+				json.append(",");
+			}
+			json.deleteCharAt( json.length() - 1 );
+			
+			json.append("],");
+		}
+		json.deleteCharAt( json.length() - 1 );		
+		return json.toString();
+	}
+	
+	public static String plotsToJsonTooltips( List<GraphPlot[]> graphPlots ) {
+		StringBuilder json = new StringBuilder("");
+		int index = 0;
+		for(GraphPlot[] graphPlotArray : graphPlots) {
+			json.append("{ 'toolTips_" + index + "':[");
+			for(GraphPlot graphPlot : graphPlotArray ) {
+				json.append( "'" );
+				json.append( graphPlot.getKey() );
+				json.append( "'" );
+				json.append(",");
+			}
+			json.deleteCharAt( json.length() - 1 );
+			
+			json.append("]},");
+			index++;
+		}
+		json.deleteCharAt( json.length() - 1 );		
+		return json.toString();
 	}
 
 }

@@ -30,8 +30,10 @@ import org.oscarehr.common.model.Dashboard;
 import org.oscarehr.common.model.IndicatorTemplate;
 import org.oscarehr.dashboard.display.beans.DashboardBean;
 import org.oscarehr.dashboard.display.beans.DrilldownBean;
+import org.oscarehr.dashboard.display.beans.IndicatorBean;
 import org.oscarehr.dashboard.factory.DashboardBeanFactory;
 import org.oscarehr.dashboard.factory.DrilldownBeanFactory;
+import org.oscarehr.dashboard.factory.IndicatorBeanFactory;
 import org.oscarehr.dashboard.handler.ExportQueryHandler;
 import org.oscarehr.dashboard.handler.IndicatorTemplateHandler;
 import org.oscarehr.dashboard.handler.IndicatorTemplateXML;
@@ -40,11 +42,15 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import net.sf.json.JSONObject;
 import oscar.log.LogAction;
 
 @Service
 public class DashboardManager {
 
+	public static final boolean MULTI_THREAD_ON = Boolean.TRUE;
+	
 	public static enum ObjectName { IndicatorTemplate, Dashboard }
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
@@ -203,37 +209,56 @@ public class DashboardManager {
 	/**
 	 * Retrieves an XML file from a servlet request object and then saves it to
 	 * the local file directory and finally writes an entry in the Indicator Template db table.
+	 * 
+	 * Returns a JSON string: status=success, or status=error, message=[message]
+	 * 
 	 */
-	public boolean importIndicatorTemplate( LoggedInInfo loggedInInfo, byte[] bytearray, StringBuilder errors ) {
-		boolean success = Boolean.FALSE;
+	public String importIndicatorTemplate( LoggedInInfo loggedInInfo, byte[] bytearray ) {
+		JSONObject message = new JSONObject();
 		IndicatorTemplate indicatorTemplate = null;
+		// Boolean isValid = Boolean.FALSE;
 		
 		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardManager", SecurityInfoManager.WRITE, null ) ) {	
-			LogAction.addLog(loggedInInfo, "DashboardManager.importIndicatorTemplate", null, null, null, "User missing _dashboardManager role with write access");
-			return success;
+			LogAction.addLog(loggedInInfo, "DashboardManager.importIndicatorTemplate", null, null, null, "User missing _dashboardManager role with write access");			
+			message.put("status", "error");
+			message.put("message", "User missing _dashboardManager role with write access");
+
+			return message.toString();
         }
 
 		if( bytearray != null && bytearray.length > 0) {
 			
 			MiscUtils.getLogger().debug("Indicator XML Template: " + new String( bytearray ) );
 			
-			IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler( bytearray );
+			IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler();
+			templateHandler.read( bytearray );
 			
-			//TODO: validate the XML
 			//TODO: need to validate the SQL
-			// if( templateHandler.validate( errors ) ) {
+			
+			// check Indicator query
+			
+			// check Drilldown query
+
+			if( templateHandler.isValidXML() ) {
 				indicatorTemplate = templateHandler.getIndicatorTemplateEntity();
-			// }
+			} else {
+				message.put("status", "error");
+				message.put("message", templateHandler.getValidationMessage() );
+			}
 		}
 		
 		if( indicatorTemplate != null ) {
 			this.indicatorTemplateDao.persist( indicatorTemplate );
 			if( indicatorTemplate.getId() > 0) {
-				success = Boolean.TRUE;
+				message.put("status", "success");
+				message.put("message", "Template imported successfully");
+			} else {
+				message.put("status", "error");
+				message.put("message", "Failed to persist the Indicator Template" );
 			}
 		}
 
-		return success;
+		return message.toString();
 	}
 	
 	/**
@@ -397,6 +422,31 @@ public class DashboardManager {
 	}
 	
 	/**
+	 * Get the XML template that contains all the data and meta data for an Indicator display. 
+	 */
+	public IndicatorTemplateXML getIndicatorTemplateXML( LoggedInInfo loggedInInfo, int indicatorTemplateId ) {
+		
+		IndicatorTemplateXML indicatorTemplateXML = null;
+		
+		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDrilldown", SecurityInfoManager.READ, null ) ) {	
+			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorTemplateXML", null, null, null,"User missing _dashboardDrilldown role with read access");
+			return indicatorTemplateXML;
+        }
+		
+		IndicatorTemplate indicatorTemplate = getIndicatorTemplate( loggedInInfo, indicatorTemplateId );
+		IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler( loggedInInfo, indicatorTemplate.getTemplate().getBytes() );
+		indicatorTemplateXML = templateHandler.getIndicatorTemplateXML();
+		
+		if( indicatorTemplateXML != null ) {
+			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorTemplateXML", null, null, null,"Returning IndicatorTemplateXML Id " + indicatorTemplateId );			
+		} else {
+			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorTemplateXML", null, null, null,"IndicatorTemplateXML Id " + indicatorTemplateId + " not found." );			
+		}
+		
+		return indicatorTemplateXML;
+	}
+	
+	/**
 	 * Create a DrilldownBean that contains the query results requested from a specific Indicator by ID.
 	 */
 	public DrilldownBean getDrilldownData( LoggedInInfo loggedInInfo, int indicatorTemplateId ) {
@@ -435,21 +485,55 @@ public class DashboardManager {
 			LogAction.addLog(loggedInInfo, "DashboardManager.exportDrilldownQueryResultsToCSV", null, null, null,"User missing _dashboardDrilldown role with read access");
 			return null;
         }
-				
-		IndicatorTemplate indicatorTemplate = getIndicatorTemplate( loggedInInfo, indicatorId );
-		IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler( indicatorTemplate.getTemplate().getBytes() );
-		IndicatorTemplateXML templateXML = templateHandler.getIndicatorTemplateXML();
 		
+		IndicatorTemplateXML templateXML = getIndicatorTemplateXML( loggedInInfo, indicatorId );
+
 		ExportQueryHandler exportQueryHandler = SpringUtils.getBean( ExportQueryHandler.class );
 		exportQueryHandler.setLoggedInInfo( loggedInInfo );
 		exportQueryHandler.setParameters( templateXML.getDrilldownParameters() );
 		exportQueryHandler.setColumns( templateXML.getDrilldownExportColumns() );
 		exportQueryHandler.setRanges( templateXML.getDrilldownRanges() );
-		exportQueryHandler.execute( templateXML.getDrilldownQuery() );
+		exportQueryHandler.setQuery( templateXML.getDrilldownQuery() );
+		exportQueryHandler.execute();
 		
 		return exportQueryHandler.getCsvFile();
 
 	}
+	
+	/**
+	 * Get an Indicator Panel Bean with a fully executed query. 
+	 */
+	public IndicatorBean getIndicatorPanel( LoggedInInfo loggedInInfo, int indicatorId ) {
+		
+		IndicatorBean indicatorBean = null;
+		IndicatorBeanFactory indicatorBeanFactory = null;
+		
+		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDrilldown", SecurityInfoManager.READ, null ) ) {	
+			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorPanel", null, null, null,"User missing _dashboardDrilldown role with read access");
+			return indicatorBean;
+        }
+		
+		IndicatorTemplateXML indicatorTemplateXML = getIndicatorTemplateXML( loggedInInfo, indicatorId );
+		
+		// The id needs to be force set.
+		if( indicatorTemplateXML != null ) {
+			indicatorTemplateXML.setId( indicatorId );
+			indicatorBeanFactory = new IndicatorBeanFactory( indicatorTemplateXML );
+		}
+
+		if( indicatorBeanFactory != null ) {
+			indicatorBean = indicatorBeanFactory.getIndicatorBean();
+		}
+		
+		if( indicatorBean != null ) {
+			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorPanel", null, null, null,"Returning IndicatorBean ID " + indicatorId );	
+		} else {
+			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorPanel", null, null, null,"Failed to return IndicatorBean ID " + indicatorId );			
+		}
+		
+		return indicatorBean;
+	}
+	
 	
 	// TODO add additional error check / filter class to carry out the following methods.
 	

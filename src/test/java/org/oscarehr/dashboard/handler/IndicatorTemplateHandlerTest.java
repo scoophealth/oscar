@@ -42,7 +42,7 @@ public class IndicatorTemplateHandlerTest {
 			InputStream is = url.openStream();
 			templateHandler = new IndicatorTemplateHandler( IOUtils.toByteArray(is) );
 			StringBuilder message = new StringBuilder();
-			templateHandler.validate( message );
+			//templateHandler.validate( message );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

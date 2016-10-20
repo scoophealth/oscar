@@ -25,15 +25,14 @@ package org.oscarehr.dashboard.handler;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -41,9 +40,9 @@ import javax.xml.validation.Validator;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.IndicatorTemplate;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  * 
@@ -52,64 +51,87 @@ import org.xml.sax.SAXException;
  * IndicatorTemplate Entity Bean
  * IndicatorTemplateXML Bean - for XML to POJO parsing.
  * IndicatorBean - for display layer
+ * 
+ * Requires the proper IndicatorXMLTemplateSchema.xsd schema file to be set 
+ * into classpath: indicatorXMLTemplates/IndicatorXMLTemplateSchema.xsd
+ * This class will not instantiate without the Schema file
  *
  */
 public class IndicatorTemplateHandler{
 	
 	private static Logger logger = MiscUtils.getLogger();
-	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
-	private static final String schemaFile = "indicatorXMLTemplates/IndicatorXMLTemplateSchema.xsd";
+	private static final String DEFAULT_VALIDATION_MESSAGE = "Failed XML Validation ";
+	private static final String DATE_FORMAT = "MM-dd-yyyy";
+	private static final String schemaFile = "indicatorXMLTemplates/IndicatorXMLTemplateSchema.xsd";	
 	private Document indicatorTemplateDocument;
 	private IndicatorTemplate indicatorTemplateEntity;
 	private IndicatorTemplateXML indicatorTemplateXML; 
 	private byte[] bytearray;
+	private Schema schema;
+	private String validationMessage;
+	private boolean validXML;
+	private LoggedInInfo loggedInInfo;
 	
-	public IndicatorTemplateHandler() {
+	/**
+	 * Requires the proper IndicatorXMLTemplateSchema.xsd schema file to be set 
+	 */
+	public IndicatorTemplateHandler() {	
 		// default
+		setSchema();
 	}
 	
-	public IndicatorTemplateHandler( byte[] bytearray ) {		
+	public IndicatorTemplateHandler( LoggedInInfo loggedInInfo, byte[] bytearray ) {
+		this.loggedInInfo = loggedInInfo;
+		setSchema();
+		read( bytearray );
+	}
+	
+	/**
+	 * Requires the proper IndicatorXMLTemplateSchema.xsd schema file to be set 
+	 */
+	public IndicatorTemplateHandler( byte[] bytearray ) {
+		setSchema();
 		read( bytearray );
 	}
 
-	public boolean validate( StringBuilder message ) {
-		return validateXML( message );
+	/**
+	 * This will validate only if the XML Document is already set in 
+	 * properties. Should be no need to use it as the Document is validated
+	 * as it is being parsed.
+	 * 
+	 * If validation fails - call the getValidationMessage method for the reason.
+	 */
+	public boolean validate() {
+		return validateXML();
 	}
 	
-	private boolean validateXML( StringBuilder message ) {
-		boolean valid = Boolean.TRUE;
-		try {
-			
-			SchemaFactory factory = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
-			URL schemaSource = Thread.currentThread().getContextClassLoader().getResource( schemaFile );
+	private boolean validateXML() {
 
-			File schemaFile = new File( schemaSource.toURI() );
-			Schema schema = factory.newSchema( schemaFile );
-			Validator validator = schema.newValidator();
+		try {
+
+			Validator validator = getSchema().newValidator();
 			validator.validate( new DOMSource( getIndicatorTemplateDocument() ) );
-			
-		} catch (Exception e) {
-			
+			setValidXML( Boolean.TRUE );
+		} catch (Exception e) {			
 			logger.error( "Failed XML Validation ", e );
-			if( message != null ) {
-				message.append( "Failed XML Validation " );
-				message.append( e.getMessage() );
-				valid = Boolean.FALSE;
-			}
-			
 		}
 		
-		return valid;
+		return isValidXML();
 	}
 	
-
 	public void read( byte[] bytearray ) {
 		this.bytearray = bytearray;
-		setIndicatorTemplateDocument( this.bytearray );	
-
-		IndicatorTemplateXML indicatorTemplateXML =  new IndicatorTemplateXML( getIndicatorTemplateDocument() );
-		setIndicatorTemplateXML( indicatorTemplateXML );
-		setIndicatorTemplateEntity( indicatorTemplateEntityFromXML( getIndicatorTemplateXML() ) );
+		
+		// SetIndicatorTemplateDocument() will validate and parse the incoming byte array into an XML Document Object
+		// If the parsing fails, the ValidXML switch will be set to False.
+		// The remainder of this method cannot be completed with an invalid XML Document.
+		setIndicatorTemplateDocument( bytearray );
+		
+		if( isValidXML() ) {
+			IndicatorTemplateXML indicatorTemplateXML =  new IndicatorTemplateXML( loggedInInfo, getIndicatorTemplateDocument() );			
+			setIndicatorTemplateXML( indicatorTemplateXML );			
+			setIndicatorTemplateEntity( indicatorTemplateEntityFromXML( getIndicatorTemplateXML() ) );
+		}
 	}
 	
 	public Document getIndicatorTemplateDocument() {
@@ -140,7 +162,57 @@ public class IndicatorTemplateHandler{
 		indicatorTemplateXML.setTemplate( new String( this.bytearray ) );
 		this.indicatorTemplateXML = indicatorTemplateXML;				
 	}
+
+	public Schema getSchema() {
+		return schema;
+	}
+
+	/**
+	 * This is a dependency for instantiation of this class.
+	 * The schema file is used during the parse to XML method and any time the 
+	 * ValidateXML method is called. 
+	 */
+	private void setSchema() {
+		
+		SchemaFactory factory = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
+		URL schemaSource = Thread.currentThread().getContextClassLoader().getResource( IndicatorTemplateHandler.schemaFile );
+
+		File schemaFile = null;
+		try {
+			schemaFile = new File( schemaSource.toURI() );
+			this.schema = factory.newSchema( schemaFile );
+		} catch (Exception e) {
+			setValidationMessage("Failed to Fetch Schema file ", e);			
+			logger.error( validationMessage.toString(), e );
+		}
+	}
 	
+	public String getValidationMessage() {
+		return validationMessage;
+	}
+	
+	private void setValidationMessage(String message, Exception e){
+		StringBuilder validationMessage = new StringBuilder("");
+
+		if( message == null ) {
+			validationMessage.append( DEFAULT_VALIDATION_MESSAGE );
+		} else {
+			validationMessage.append( message );
+		}
+		validationMessage.append(e.getCause());
+		validationMessage.append( e.getMessage() );		
+		this.validationMessage = validationMessage.toString();
+
+	}
+
+	public boolean isValidXML() {
+		return validXML;
+	}
+
+	public void setValidXML( boolean validXML ) {
+		this.validXML = validXML;
+	}
+
 	private static final IndicatorTemplate indicatorTemplateEntityFromXML( IndicatorTemplateXML indicatorTemplateXML ) {
 		
 		IndicatorTemplate indicatorTemplate = null;
@@ -158,7 +230,10 @@ public class IndicatorTemplateHandler{
 			indicatorTemplate.setFramework(indicatorTemplateXML.getFramework());
 			
 			try {
-				indicatorTemplate.setFrameworkVersion(simpleDateFormat.parse( indicatorTemplateXML.getFrameworkVersion() ));
+				String frameworkDate = indicatorTemplateXML.getFrameworkVersion().trim();
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat( DATE_FORMAT );
+				Date parsedFrameworkDate = simpleDateFormat.parse( frameworkDate );
+				indicatorTemplate.setFrameworkVersion( parsedFrameworkDate );
 			} catch (ParseException e) {
 				logger.error("Date parsing error",e);
 			}
@@ -171,21 +246,23 @@ public class IndicatorTemplateHandler{
 	}
 
 
-	public static final Document byteToDocument( final byte[] bytearray ) {
+	private final Document byteToDocument( final byte[] bytearray ) {
 		
 		Document document = null;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    factory.setNamespaceAware(true);
-	    // factory.setValidating(true);
+	    factory.setSchema( getSchema() );
+	    
 	    try {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			document = builder.parse( new ByteArrayInputStream( bytearray ) );
-		} catch (ParserConfigurationException e) {
-			logger.error("",e);
-		} catch (SAXException e) {
-			logger.error("",e);
-		} catch (IOException e) {
-			logger.error("",e);
+			if( document != null ) {
+				setValidXML( Boolean.TRUE );
+			}
+		} catch (Exception e) {			
+			//TODO try to recover from simple validations.  ie: change any offending > or < to &gt; or &lt;
+			setValidationMessage("Failed to parse XML file (could be a validation error): ", e);			
+			logger.error( validationMessage.toString(), e );
 		}
 	    
 	    return document;

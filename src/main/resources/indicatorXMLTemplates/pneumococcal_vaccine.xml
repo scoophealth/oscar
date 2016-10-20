@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>Colcamex Resources Inc. for Oscar EMR</author>
+	<uid></uid>
+	<heading>
+		<category>Preventive Health Care</category>
+		<subCategory>Immunization</subCategory>
+		<name>Pneumococcal Immunization</name>
+		<definition>% of patients aged 65 and older who have a record of receiving a pneumococcal vaccine</definition>
+		<framework>Based on and adapted from HQO's PCPM: Priority Measures for System and Practice Levels (Oct 2015</framework>
+		<frameworkVersion>10-01-2015</frameworkVersion>
+		<notes></notes>
+	</heading>
+	<indicatorQuery>
+		<version>10-03-2016</version>
+		<params>
+			<!-- 
+				Required parameter provider. Value options are: 
+					[ an individual providerNo, or provider range ] ie: value="370, 1001" 
+					"all" ie: value="all" including null.
+					"loggedInProvider" ie:
+				Default is "loggedInProvider"
+				Use this parameter in the query as ${provider}
+				This parameter should be used for fetching patient's assigned to a MRP.
+				ie: WHERE demographic.provider_no = ${provider}
+			-->
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="prevention" name="Immunization" value="'Pneumovax'" />	
+			<parameter id="pstatus" name="PatientStatus" value="'%AC%'" />	
+		</params>
+		<range>
+			<lowerLimit id="age" label="Min Patient Age" name="Age" value="65" />
+		</range>
+		<query>
+			<!-- Indicator SQL Query here -->
+			SELECT
+				IF ( COUNT(fin.patient) > 0,
+					ROUND( COUNT(fin.pneu) / COUNT(fin.patient) * 100, 1) 
+				,0 ) AS "% Has Pneumococcal Vaccine",
+			
+				IF ( COUNT(fin.patient) > 0,
+					100 - ( ROUND( COUNT(fin.pneu) / COUNT(fin.patient) * 100, 1) ) 
+				,0 ) AS "% No Pneumococcal Vaccine"
+			
+			FROM (
+			
+				SELECT 
+					d.demographic_no AS patient,
+					PNEU.id as pneu
+				FROM demographic d
+			
+				-- LOOK FOR pneumococcal VACCINES
+				LEFT JOIN ( 
+					SELECT p.demographic_no, p.id
+					FROM preventions p	
+					WHERE p.prevention_type LIKE ${prevention}
+					AND p.deleted = 0
+					AND p.refused = 0
+					AND p.demographic_no > 0
+					GROUP BY p.demographic_no HAVING COUNT(p.demographic_no) > -1
+				) PNEU 
+				ON (d.demographic_no = PNEU.demographic_no )
+			
+				WHERE d.patient_status LIKE ${pstatus} 
+				AND d.provider_no LIKE ${provider}
+				AND d.demographic_no > 0 
+				AND ( FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+					NOW() ) ) / 365.25 ) >= ${lowerLimit.age} )
+			) fin
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>10-03-2016</version>
+		<params>
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="prevention" name="Immunization" value="'Pneumovax'" />
+			<parameter id="pstatus" name="PatientStatus" value="'%AC%'" />
+		</params>
+		<range>
+			<lowerLimit id="age" label="Min Patient Age" name="Age" value="65" />
+		</range>
+		<displayColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			
+			<column id="preventionDate" name="IFNULL( DATE_FORMAT( DATE(PNEU.prevention_date), '%m-%d-%Y' ) , '0')" title="Vaccine Date" primary="false" />
+			<column id="refused" name="IF(PNEU.refused > 0, 'yes', 'no')" title="Vaccine Refused" primary="false" />
+		</displayColumns>
+		<exportColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
+			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			
+			<column id="preventionDate" name="IFNULL( DATE_FORMAT( DATE(PNEU.prevention_date), '%m-%d-%Y' ) , '0')" title="Last Vaccine Date" primary="false" />
+			<column id="refused" name="IF(PNEU.refused > 0, 'yes', 'no')" title="Vaccine Refused" primary="false" />
+		</exportColumns>
+		<query>
+			<!-- Drilldown SQL Query here -->
+			SELECT 
+			*	
+			FROM demographic d
+			
+			-- LOOK FOR pneumococcal VACCINES
+			LEFT JOIN ( 
+				SELECT p.demographic_no, p.id, MAX(p.prevention_date) AS prevention_date, p.refused
+				FROM preventions p	
+				WHERE p.prevention_type LIKE ${prevention}
+				AND p.deleted = 0
+				AND p.demographic_no > 0
+				GROUP BY p.demographic_no HAVING COUNT(p.demographic_no) > -1
+			) PNEU 
+			ON (d.demographic_no = PNEU.demographic_no )
+			
+			WHERE d.patient_status LIKE ${pstatus} 
+			AND d.provider_no LIKE ${provider}
+			AND d.demographic_no > 0 
+			AND ( FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+				NOW() ) ) / 365.25 ) >= ${lowerLimit.age} )
+		</query>
+	</drillDownQuery>
+</indicatorTemplateXML>
