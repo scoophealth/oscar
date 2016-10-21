@@ -156,6 +156,7 @@ public class Measurement extends AbstractModel<Integer> implements Serializable 
 		return (createDate);
 	}
 	
+	
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
