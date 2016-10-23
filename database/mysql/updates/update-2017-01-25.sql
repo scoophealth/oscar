@@ -1,0 +1,1 @@
+ALTER TABLE hl7TextInfo MODIFY report_status VARCHAR(10);

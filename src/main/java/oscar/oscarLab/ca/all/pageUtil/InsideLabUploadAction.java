@@ -82,8 +82,9 @@ public class InsideLabUploadAction extends Action {
             
             
             String type = request.getParameter("type");
-            if (type.equals("OTHER"))
+            if (type.equals("OTHER")) {
                 type = request.getParameter("otherType");
+            }
             
             String filePath = Utilities.saveFile(formFileIs, filename);
             File file = new File(filePath);
@@ -98,9 +99,10 @@ public class InsideLabUploadAction extends Action {
                 if(msgHandler != null){
                    logger.debug("MESSAGE HANDLER "+msgHandler.getClass().getName());
                 }
-                if((msgHandler.parse(loggedInInfo, getClass().getSimpleName(), filePath,checkFileUploadedSuccessfully, request.getRemoteAddr())) != null)
+                if((msgHandler.parse(loggedInInfo, getClass().getSimpleName(), 
+                		filePath,checkFileUploadedSuccessfully, request.getRemoteAddr())) != null) {
                     outcome = "success";
-                
+                }
             }else{
                 outcome = "uploaded previously";
             }

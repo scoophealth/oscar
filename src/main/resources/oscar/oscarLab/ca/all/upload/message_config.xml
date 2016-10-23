@@ -23,4 +23,5 @@
 	<handler name="PFHT"	className="PFHTHandler"/>
 	<handler name="Spire"	className="SpireHandler"/>
 	<handler name="TRUENORTH"	className="TRUENORTHHandler"/>
+    <handler name="MEDITECH"   className="MEDITECHHandler" /> 
 </message-configuration>

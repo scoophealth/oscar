@@ -85,7 +85,7 @@ public class Hl7textResultsData {
 		String hour = Integer.toString(calender.get(java.util.Calendar.HOUR));
 		String min = Integer.toString(calender.get(java.util.Calendar.MINUTE));
 		String second = Integer.toString(calender.get(java.util.Calendar.SECOND));
-		String dateEntered = year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + second + ":";
+		String dateEntered = year+"-"+month+"-"+day+" " + hour + ":" + min + ":" + second;
 
 		//Check for other versions of this lab
 		String[] matchingLabs = getMatchingLabs(lab_no).split(",");

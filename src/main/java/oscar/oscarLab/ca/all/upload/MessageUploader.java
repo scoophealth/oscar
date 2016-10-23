@@ -78,6 +78,7 @@ import oscar.oscarDemographic.data.DemographicMerged;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.HHSEmrDownloadHandler;
+import oscar.oscarLab.ca.all.parsers.MEDITECHHandler;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.all.parsers.SpireHandler;
 import oscar.util.UtilDateUtilities;
@@ -184,12 +185,16 @@ public final class MessageUploader {
 
 			ArrayList<String> disciplineArray = h.getHeaders();
 			String next = "";
-			if (disciplineArray != null && disciplineArray.size() > 0) next = disciplineArray.get(0);
-
+			
+			if (disciplineArray != null && disciplineArray.size() > 0) { 
+				next = disciplineArray.get(0);
+			}
+			
 			int sepMark;
 			if ((sepMark = next.indexOf("<br />")) < 0) {
 				if ((sepMark = next.indexOf(" ")) < 0) sepMark = next.length();
 			}
+			
 			String discipline = next.substring(0, sepMark).trim();
 
 			for (i = 1; i < disciplineArray.size(); i++) {
@@ -199,7 +204,9 @@ public final class MessageUploader {
 					if ((sepMark = next.indexOf(" ")) < 0) sepMark = next.length();
 				}
 
-				if (!next.trim().equals("")) discipline = discipline + "/" + next.substring(0, sepMark);
+				if (!next.trim().equals("")) { 
+					discipline = discipline + "/" + next.substring(0, sepMark);
+				}
 			}
 
 			boolean isTDIS = type.equals("TDIS");
@@ -207,6 +214,10 @@ public final class MessageUploader {
 			Hl7TextMessage hl7TextMessage = new Hl7TextMessage();
 			Hl7TextInfo hl7TextInfo = new Hl7TextInfo();
 
+			
+			if( h instanceof MEDITECHHandler ) {				
+				discipline = ( (MEDITECHHandler) h ).getDiscipline();
+			}
 
 			if (isTDIS) {
 				List<Hl7TextInfo> matchingTdisLab =  hl7TextInfoDao.searchByFillerOrderNumber(fillerOrderNum, sendingFacility);
@@ -263,6 +274,11 @@ public final class MessageUploader {
 					orderByLength = true;
 					search = "provider_no";
 				}
+				
+				if( "MEDITECH".equals(type) ) {
+					search = "practitionerNo";
+				}
+				
 				providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type, search, limit, orderByLength);
 			}
 			retVal = h.audit();
