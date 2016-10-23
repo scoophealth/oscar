@@ -75,14 +75,14 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.rtf.RtfWriter2;
+
+
 /**
  *
  * @author wrighd
  */
 public class LabPDFCreator extends PdfPageEventHelper{
     private OutputStream os;
-
-   // private boolean ackFlag = false;
     private boolean isUnstructuredDoc = false;
     private MessageHandler handler;
     List<MessageHandler>handlers = new ArrayList<MessageHandler>();
@@ -95,7 +95,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
     private BaseFont bf;
     private Font font;
     private Font boldFont;
-   // private Font redFont;
     private String dateLabReceived;
 
 	public static byte[] getPdfBytes(String segmentId, String providerNo) throws IOException, DocumentException
@@ -208,6 +207,8 @@ public class LabPDFCreator extends PdfPageEventHelper{
             for (int i=0; i < extraHeaders.size(); i++)
                 addLabCategory( extraHeaders.get(i) , extraHandler);
         }
+
+        	       
         // add end of report table
         PdfPTable table = new PdfPTable(1);
         table.setWidthPercentage(100);
@@ -233,7 +234,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 
         os.flush();
     }
-
+	 		
 
     /*
 	 * Given the name of a lab category this method will add the category
@@ -933,6 +934,15 @@ public class LabPDFCreator extends PdfPageEventHelper{
         // throw any exceptions
         } catch (Exception e) {
             throw new ExceptionConverter(e);
-        }
+        }        
     }
+
+	public boolean isUnstructuredDoc() {
+		return isUnstructuredDoc;
+	}
+
+	public void setUnstructuredDoc(boolean isUnstructuredDoc) {
+		this.isUnstructuredDoc = isUnstructuredDoc;
+	}
+
 }
