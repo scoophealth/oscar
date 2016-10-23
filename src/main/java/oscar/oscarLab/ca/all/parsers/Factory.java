@@ -110,25 +110,31 @@ public final class Factory {
 				MessageHandler handler = new DefaultGenericHandler();
 				handler.init(hl7Body);
 				return (handler);
-			}
-
+			} else {
+				type = type.trim();
+ 			}
+			
 			InputStream is = Factory.class.getClassLoader().getResourceAsStream("oscar/oscarLab/ca/all/upload/message_config.xml");
 
 			if (OscarProperties.getInstance().getProperty("LAB_TYPES") != null) {
 				String filename = OscarProperties.getInstance().getProperty("LAB_TYPES");
 				is = new FileInputStream(filename);
 			}
+			
 			SAXBuilder parser = new SAXBuilder();
 			doc = parser.build(is);
 
 			Element root = doc.getRootElement();
 			List<?> items = root.getChildren();
+			
+			// e is commonly used in exception handlers.
+			// changed 'e' to 'element'
 			for (int i = 0; i < items.size(); i++) {
-				Element e = (Element) items.get(i);
-				msgType = e.getAttributeValue("name");
+				Element element = (Element) items.get(i);
+				msgType = element.getAttributeValue("name");
 				
-				if (msgType.equals(type)) {
-					String className = e.getAttributeValue("className");
+				if ( msgType.equalsIgnoreCase( type ) ) {
+					String className = element.getAttributeValue("className");
 					
 					// in case we have dots in the handler class name (i.e. package 
 					// is specified), don't assume default package

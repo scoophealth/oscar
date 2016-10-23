@@ -98,6 +98,10 @@
 <option value="TRUENORTH">TRUENORTH</option>
 </oscar:oscarPropertiesCheck>
 
+<oscar:oscarPropertiesCheck property="lab.handler.MEDITECH.enabled" value="true">
+<option value="MEDITECH" >MEDITECH</option>
+</oscar:oscarPropertiesCheck>
+
 <oscar:oscarPropertiesCheck property="lab.handler.OTHER.enabled" value="true">
 <option value="OTHER">Other</option>
 </oscar:oscarPropertiesCheck>

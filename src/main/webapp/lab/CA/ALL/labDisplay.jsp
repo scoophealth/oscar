@@ -198,7 +198,6 @@ else // remote lab
 	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, "segmentId="+segmentID+", remoteFacilityId="+remoteFacilityIdString+", remoteDemographicId="+demographicID);
 
 	Document cachedDemographicLabResultXmlData=LabDisplayHelper.getXmlDocument(remoteLabResult);
-
 	ackList=LabDisplayHelper.getReportStatus(cachedDemographicLabResultXmlData);
 	multiLabId=LabDisplayHelper.getMultiLabId(cachedDemographicLabResultXmlData);
 	handler=LabDisplayHelper.getMessageHandler(cachedDemographicLabResultXmlData);
@@ -371,6 +370,14 @@ div.Title3   { font-weight: bolder; font-size: 12pt; color: black; font-family:
 .title1      { font-size: 9pt; color: black; font-family: Verdana, Arial }
 div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                Verdana, Arial, Helvetica }
+pre {
+	display: block;
+    font-family:  Verdana, Arial, Helvetica;
+    white-space: -moz-pre-space;
+    margin:0px;
+    font-size: x-small;
+    font-weight:600;
+} 
             -->
         </style>
 
@@ -825,16 +832,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                             <%=handler.getAge()%>
                                                                         </div>
                                                                     </td>
-                                                                    <td nowrap>
-                                                                        <div class="FieldData">
-                                                                            <strong><bean:message key="oscarMDS.segmentDisplay.formSex"/>: </strong>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td align="left" nowrap>
-                                                                        <div class="FieldData">
-                                                                            <%=handler.getSex()%>
-                                                                        </div>
-                                                                    </td>
+                                                                    
                                                                 </tr>
                                                                 <tr>
                                                                     <td nowrap>
@@ -880,12 +878,14 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td nowrap>
-                                                                        <div align="left" class="FieldData" nowrap="nowrap">
+                                                                   <td nowrap>
+                                                                        <div class="FieldData">
+                                                                            <strong><bean:message key="oscarMDS.segmentDisplay.formSex"/>: </strong>
                                                                         </div>
                                                                     </td>
-                                                                    <td nowrap>
-                                                                        <div align="left" class="FieldData" nowrap="nowrap">
+                                                                    <td align="left" nowrap>
+                                                                        <div class="FieldData">
+                                                                            <%=handler.getSex()%>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
@@ -1099,6 +1099,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             <%//}
                                         }
                                     }%>
+
                                 </td>
                             </tr>
                         </table>
@@ -1113,8 +1114,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
                         ArrayList<String> headers = handler.getHeaders();
                         int OBRCount = handler.getOBRCount();
-
+                        
                         if (handler.getMsgType().equals("MEDVUE")) { %>
+<%-- MEDVUE Redirect. --%>
                         <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
                            <tr>
                                <td colspan="4" height="7">&nbsp;</td>
@@ -1156,6 +1158,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                 </td>
 	                      	 </tr>
                      	 </table>
+ <%-- ALL OTHERS Redirect. --%>                    	 
                      <% } else {
 
                       for(i=0;i<headers.size();i++){
@@ -1172,10 +1175,15 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 							if(handler.getPatientLocation().equals("SG") || handler.getPatientLocation().equals("CDC")){
 								isSGorCDC = true;
 							}
+
 						} else if(handler.getMsgType().equals("CLS")){
                             isUnstructuredDoc = ((CLSHandler) handler).isUnstructured();
                         }
-						%>
+						
+						if( handler.getMsgType().equals("MEDITECH") ) {
+							isUnstructuredDoc = ((MEDITECHHandler) handler).isUnstructured();
+						} %>
+						
 		                       <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
 	                           <tr>
 	                               <td colspan="4" height="7">&nbsp;</td>
@@ -1192,9 +1200,16 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	                               <td width="*">&nbsp;</td>
 	                           </tr>
 	                       </table>
-                       	<%if(isUnstructuredDoc){%>
+	                   <% if ( ( handler.getMsgType().equals("MEDITECH") && isUnstructuredDoc) || 
+	                		   ( handler.getMsgType().equals("MEDITECH") && ((MEDITECHHandler) handler).isReportData() ) ) { %>
+	                       	<table style="width:100%;border-collapse:collapse;" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs" >	                  
+	                       	<tr><td colspan="4" style="padding-left:10px;">
+
+                       	<%} else if( isUnstructuredDoc){%>
 	                       <table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs">
+
 	                           <tr class="Field2">
+
 	                               <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestName"/></td>
 	                               <td width="60%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formResult"/></td>
 								   <% if ("CLS".equals(handler.getMsgType())) { %>
@@ -1202,9 +1217,28 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 								   <% } else { %>
 									   <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
 								   <% } %>
+
 	                           </tr><%
 						} else {%>
                        <table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs">
+                           
+                           <% if( "MIC".equals( ((MEDITECHHandler) handler).getSendingApplication() ) ) { %>
+	                          		<tr>
+			                   			<td colspan="8" ></td>
+		                   			</tr>
+		                   			<tr>
+			                   			<td valign="top" align="left" style="padding-left:20px;font-weight:bold;" >SPECIMEN SOURCE: </td>
+			                   			<td valign="top" align="left" style="font-weight:bold;" colspan="7"><%= ((MEDITECHHandler) handler).getSpecimenSource(i) %></td>
+		                   			</tr>
+		                   			<tr>
+			                   			<td valign="top" align="left" style="padding-left:20px;font-weight:bold;">SPECIMEN DESCRIPTION: </td>
+			                   			<td valign="top" align="left" style="font-weight:bold;" colspan="7"><%= ((MEDITECHHandler) handler).getSpecimenDescription(i) %></td>
+		                   			</tr>
+		                   			<tr>
+			                   			<td colspan="8" ></td>
+		                   			</tr>
+		                   		<% }%>
+                           
                            <tr class="Field2">
                                <td width="25%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestName"/></td>
                                <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formResult"/></td>
@@ -1221,14 +1255,15 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                            </tr>
                            
  							<%
-						}
+						} // end else / if isUnstructured
                            
-                           for ( j=0; j < OBRCount; j++){
+                        for ( j=0; j < OBRCount; j++) {
 
                         	   String lastObxSetId = "0";
                                boolean obrFlag = false;
                                int obxCount = handler.getOBXCount(j);
-                               for (k=0; k < obxCount; k++){
+                               
+                               for (k=0; k < obxCount; k++) {
 
                                	String obxName = handler.getOBXName(j, k);
 
@@ -1331,7 +1366,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
 	                                                </tr>
 	                                       	<% }
-                                       } else if (handler.getMsgType().equals("IHA")) {
+                                       } else if (handler.getMsgType().equals("IHA") ) {
                                            if(handler.getOBXValueType(j,k) != null &&  handler.getOBXValueType(j,k).equalsIgnoreCase("NAR")) {
                                                %>                                         
                                                <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%="NarrativeRes"%>" >
@@ -1487,16 +1522,26 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                            		<td align="left"><%= handler.getOBXResult( j, k) %></td><%} %>
                                            	<%if(handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k-1)) && (obxCount>1)){
                                         			%><td align="center"></td><%}
-                                        		else{%> <td align="center"><%= handler.getTimeStamp(j, k) %></td><%}
-                                   			}//end of isUnstructuredDoc
+	                                       		else{%> <td align="center"><%= handler.getTimeStamp(j, k) %></td><%}%>
+	                                          	
+                                           	<td align="center" valign="top">
+	                                          		<a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=demographicID%>&amp;other_id=<%=String.valueOf(j) + "-" + String.valueOf(k) %>','anwin','width=400,height=500');">
+			                                        	<%if(!isPrevAnnotation){ %><img src="../../../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"/><%}else{ %><img src="../../../images/filledNotes.gif" alt="rxAnnotation" height="16" width="13" border="0"/> <%} %>
+			                                        </a>
+			                                    </td>
+			                                           	
+	                                          	
+	                                  			<% }//end of isUnstructuredDoc
                                    			
                                    			else{//if it isn't a PATHL7 doc%>
+
                                		<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
                                		
                                		
                                		
                                		<%
                                			if(handler.getMsgType().equals("PATHL7") && !isAllowedDuplicate && (obxCount>1) && handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){%>
+
                                    				<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k).replaceAll("&","%26"),"UTF-8") %>')"></a><%
                                    				}
                                				else{
@@ -1520,17 +1565,32 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                            		<td colspan="4"><%= handler.getOBXResult( j, k) %></td>
                                            <%
                                        			lastObxSetId = ((AlphaHandler)handler).getObxSetId(j,k);
-                                    	  
-                                           } else { %>	
-                                           
+												
+                                           } else if(handler.getMsgType().equals("MEDITECH")  && isUnstructuredDoc ) { %>
+                                           	
+                                           	
+				                                        <pre>
+					                             		<%= handler.getOBXResult(j,k) %>
+					                             		</pre>  
+					                             		                                                 
+											<% } else if(handler.getMsgType().equals("MEDITECH")  && ((MEDITECHHandler) handler).isReportData() ) { %>
+				                                    	<tr>
+				                                    		<td>
+					                             				<%= handler.getOBXResult(j,k) %>
+					                             			</td>
+					                             		</tr>
+				                                 
+                                           	<%		
+                                           		} else {
+                                           	%>
+                                           	
                                            	<%
                                            	String align = "right";
                                           	//for pathl7, if it is an SG/CDC result greater than 100 characters, left justify it
                                            	if((handler.getOBXResult(j, k).length() > 100) && (isSGorCDC)){
                                            		align="left";
                                            	}%>
-                                           
-                                           
+
                                            <td align="<%=align%>"><%= handler.getOBXResult( j, k) %></td>
                                           
                                            <td align="center">
@@ -1555,7 +1615,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                            <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
                                         </tr>
-                                   <%}
+                                   		<%}
 
 
                                     } else { %>
@@ -1575,17 +1635,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                        	
                                        
                                        	%>
+								 <%  }
 
+                                  }
+                                    
+                           } // end for (k=0; k < obxCount; k++){
 
-                                 <%  }
-
-                                    }
-
-                               }
-                           //}
-
-
-                           //for ( j=0; j< OBRCount; j++){
                            if (!handler.getMsgType().equals("PFHT")) {
                                if (headers.get(i).equals(handler.getObservationHeader(j, 0))) {
                                	 %>
@@ -1611,15 +1666,15 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	                                         </tr>
 	                              		<%}
                                	}
-                                }//end for k=0
-
-
-                             }//end if handler.getObservation..
-                          } // end for if (PFHT)
-                        	  
-                              } //end for j=0; j<obrCount;
-                          } // // end for headersfor i=0... (headers) line 625
-
+                                } // end for (k=0; k < handler.getOBRCommentCount(j); k++)
+                             }//end if (headers.get(i).equals(handler.getObservationHeader(j, 0))) {
+                          } // end (!handler.getMsgType().equals("PFHT"))
+                        	
+                               
+                       } //end for ( j=0; j < OBRCount; j++)
+                            		  
+                    } // end for(i=0;i<headers.size();i++)
+                         
 							if (handler.getMsgType().equals("Spire")) {
 
 								int numZDS = ((SpireHandler)handler).getNumZDSSegments();
@@ -1650,16 +1705,16 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 									<%
 									lineNumber++;
 								}
-							}
+							} // end (handler.getMsgType().equals("Spire")
 
-                           %>
-                       </table>
-                       <%
+                           %> 
+                           </table> 
+                           <%
 
-                       } // end for handler.getMsgType().equals("MEDVUE")
+                } // end for handler.getMsgType().equals("MEDVUE")
 
                        %>
-
+<%-- FOOTER --%>
                         <table width="100%" border="0" cellspacing="0" cellpadding="3" class="MainTableBottomRowRightColumn" bgcolor="#003399">
                             <tr>
                                 <td align="left" width="50%">
