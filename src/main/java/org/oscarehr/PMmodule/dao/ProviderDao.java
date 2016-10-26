@@ -53,6 +53,7 @@ import com.quatro.model.security.SecProvider;
 public class ProviderDao extends HibernateDaoSupport {
 	
 	public static final String PR_TYPE_DOCTOR = "doctor";
+        public static final String PR_TYPE_RESIDENT = "resident";
 	
 	private static Logger log = MiscUtils.getLogger();
 
