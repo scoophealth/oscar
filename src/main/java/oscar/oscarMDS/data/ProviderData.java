@@ -77,14 +77,21 @@ public class ProviderData {
 			ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 			ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
 			List<Provider> providers = dao.getProvidersByType(ProviderDao.PR_TYPE_DOCTOR);
+                        List<Provider> residents = dao.getProvidersByType(ProviderDao.PR_TYPE_RESIDENT);
+                        
+                        providers.addAll(residents);
 			Collections.sort(providers, new BeanComparator("formattedName"));
 			for (Provider p : providers) {
 				ArrayList<String> provider = new ArrayList<String>();
 				provider.add(p.getProviderNo());
 				provider.add(p.getFirstName());
 				provider.add(p.getLastName());
-				result.add(provider);
+                                result.add(provider);
 			}
+                        
+                        
+                        
+                        
 			return result;
 		} catch (Exception e) {
 			MiscUtils.getLogger().debug("exception in ProviderData:" + e);

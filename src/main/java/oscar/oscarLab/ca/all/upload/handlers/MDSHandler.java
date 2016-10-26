@@ -64,9 +64,9 @@ public class MDSHandler implements MessageHandler {
 			ArrayList<String> messages = Utilities.separateMessages(fileName);
 			for (i = 0; i < messages.size(); i++) {
 				String msg = messages.get(i);
-				if(isDuplicate(loggedInInfo,msg)) {
+				/*if(isDuplicate(loggedInInfo,msg)) {
 					continue;
-				}
+				}*/
 				routeResults = new RouteReportResults();
 				String auditLine = MessageUploader.routeReport(loggedInInfo, serviceName, "MDS", msg, fileId, routeResults) + "\n";
 				
@@ -82,6 +82,9 @@ public class MDSHandler implements MessageHandler {
 			}
 			logger.info("Parsed OK");
 
+                        if( audit.length() == 0 ) {
+                            return ("success");
+                        }
 			return (audit.toString());
 
 		} catch (Exception e) {
@@ -101,15 +104,15 @@ public class MDSHandler implements MessageHandler {
 			
 			//do we have this?
 			List<Hl7TextInfo> dupResults = hl7TextInfoDao.searchByAccessionNumber(fullAcc);
-			for(Hl7TextInfo dupResult:dupResults) {				
-				if(dupResult.getAccessionNumber().substring(5).equals(fullAcc)) {
-					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
-					OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
-						return true;
-					//}
-				}
+			
+                        if(!dupResults.isEmpty()) {
+                                //if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
+                                OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate lab skipped - accession " + fullAcc + "\n" + msg);
+                                        return true;
+                                //}
+                        }
 				
-			}		
+			
 		}
 		return false;	
 	}
