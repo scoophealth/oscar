@@ -62,9 +62,9 @@ public class CMLHandler implements MessageHandler {
 			ArrayList<String> messages = Utilities.separateMessages(fileName);
 			for (i = 0; i < messages.size(); i++) {
 				String msg = messages.get(i);
-				if(isDuplicate(loggedInInfo, msg)) {
-					return ("success");
-				}
+				/*if(isDuplicate(loggedInInfo, msg)) {
+					continue;
+				}*/
 				
 				routeResults = new RouteReportResults();
 				MessageUploader.routeReport(loggedInInfo, serviceName, "CML", msg, fileId, routeResults);
@@ -92,27 +92,19 @@ public class CMLHandler implements MessageHandler {
 		oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler("CML", msg);
 		//if final
 		if(h.getOrderStatus().equals("CM")) {
-			String acc = h.getAccessionNum().substring(3);
+			String acc = h.getAccessionNum();
 			//do we have this?
 			List<Hl7TextInfo> dupResults = hl7TextInfoDao.searchByAccessionNumber(acc);
-			for(Hl7TextInfo dupResult:dupResults) {
-				if(("CML"+dupResult.getAccessionNumber()).equals(acc)) {
-					//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
-						OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
-						return true;
-					//}					
+			
+			if( !dupResults.isEmpty()) {
+                                //if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
+                                        OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
+                                        return true;
+                                //}					
+
+                        }
+			
 					
-				}
-				if(dupResult.getAccessionNumber().indexOf("-")!= -1) {
-					if(dupResult.getAccessionNumber().substring(0,dupResult.getAccessionNumber().indexOf("-")).equals(acc) ) {
-						//olis match								
-						//if(h.getHealthNum().equals(dupResult.getHealthNumber())) {
-						OscarAuditLogger.getInstance().log(loggedInInfo, "Lab", "Skip", "Duplicate lab skipped - accession " + acc + "\n" + msg);
-						return true;
-						//}
-					}
-				}
-			}		
 		}
 		return false;	
 	}

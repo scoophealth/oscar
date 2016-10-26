@@ -63,9 +63,9 @@ public class GDMLHandler implements MessageHandler {
 			for (i = 0; i < messages.size(); i++) {
 
 				String msg = messages.get(i);
-				if(isDuplicate(loggedInInfo, msg)) {
-					return ("success");
-				}
+				/*if(isDuplicate(loggedInInfo, msg)) {
+					continue;
+				}*/
 				
 				routeResults = new RouteReportResults();
 				MessageUploader.routeReport(loggedInInfo, serviceName, "GDML", msg, fileId, routeResults);
