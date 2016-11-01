@@ -25,43 +25,42 @@
 */
 
 
-oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, securityService, personaService, billingService, inboxService, $rootScope) {
+oscarApp.controller('NavBarCtrl', function ($scope, $location, $modal, $state, $rootScope, appService, securityService, personaService, billingService, inboxService) {
 	
 	$scope.unAckLabDocTotal = 0;
-	 
+	
 	$scope.$watch(function() {
-		  return securityService.getUser();
-		}, function(newVal) {
-		  $scope.me = newVal;
-		}, true);
+		return securityService.getUser();
+	}, function(newVal) {
+		$scope.me = newVal;
+	}, true);
 	
-   billingService.getBillingRegion().then(function(response){
-    $scope.billRegion = response.message;
-   },function(reason){
-    alert(reason);
-   });	
+	billingService.getBillingRegion().then(function(response){
+		$scope.billRegion = response.message;
+	},function(reason){
+		alert(reason);
+	});	
 	
 	
-    securityService.hasRights({items:[{objectName:'_search',privilege:'r'},
-                                      {objectName:'_demographic',privilege:'w'},
-                                      {objectName:'_msg',privilege:'r'}]
-    }).then(function(result){
-    	//console.log(result.toSource());
-    	if(result.content != null) {
-    		 $scope.searchRights = result.content[0];
-    		 $scope.newDemographicRights = result.content[1];
-    		 $scope.messageRights = result.content[2];
-    	}
-    });
-    
-    personaService.getDashboardMenu().then(function(response){
-    	$scope.dashboardMenu = response.menus.menu;  	
-    }),function(reason){
-    	alert(reason);
-    };
-  
-    personaService.getNavBar().then(function(response){
-    	$scope.currentProgram = response.currentProgram.program;
+	securityService.hasRights({items:[{objectName:'_search',privilege:'r'},
+	                                  {objectName:'_demographic',privilege:'w'},
+	                                  {objectName:'_msg',privilege:'r'}]
+	}).then(function(result){
+		if(result.content != null) {
+			$scope.searchRights = result.content[0];
+			$scope.newDemographicRights = result.content[1];
+			$scope.messageRights = result.content[2];
+		}
+	});
+	
+	personaService.getDashboardMenu().then(function(response){
+		$scope.dashboardMenu = response.menus.menu;
+	}),function(reason){
+		alert(reason);
+	};
+	
+	personaService.getNavBar().then(function(response){
+		$scope.currentProgram = response.currentProgram.program;
 		if (response.programDomain.program instanceof Array) {
 			$scope.programDomain = response.programDomain.program;
 		} else {
@@ -71,29 +70,28 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 		}
 		$scope.unreadMessagesCount = response.unreadMessagesCount;
 		$scope.unreadPatientMessagesCount = response.unreadPatientMessagesCount;
-		getUnAckLabDocCount();	
+		getUnAckLabDocCount();
 		$scope.demographicSearchDropDownItems = response.menus.patientSearchMenu.items;
 		$scope.menuItems = response.menus.menu.items;
-		//$scope.moreMenuItems = response.menus.moreMenu.items;
 		$scope.userMenuItems = response.menus.userMenu.items;
 		$scope.messengerMenu = response.menus.messengerMenu.items;
-    },function(reason){
-    	alert(reason);
-    });
+	},function(reason){
+		alert(reason);
+	});
 	
-  
-	getUnAckLabDocCount = function(){  
+	
+	getUnAckLabDocCount = function(){
 		inboxService.getUnAckLabDocCount().then(function(response){
-		   $scope.unAckLabDocTotal = response;
-	    },function(reason){
-	    	alert(reason);
-	    });
+			$scope.unAckLabDocTotal = response;
+		},function(reason){
+			alert(reason);
+		});
 	}
-    
+	
 	//reload the navbar at any time..not sure why i can't call this form the controller.
 	getNavBar = function() {
-	    personaService.getNavBar().then(function(response){
-	    	$scope.currentProgram = response.currentProgram.program;
+		personaService.getNavBar().then(function(response){
+			$scope.currentProgram = response.currentProgram.program;
 			if (response.programDomain.program instanceof Array) {
 				$scope.programDomain = response.programDomain.program;
 			} else {
@@ -107,52 +105,62 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 			
 			$scope.demographicSearchDropDownItems = response.menus.patientSearchMenu.items;
 			$scope.menuItems = response.menus.menu.items;
-		//	$scope.moreMenuItems = response.menus.moreMenu.items;
 			$scope.userMenuItems = response.menus.userMenu.items;
 			$scope.messengerMenu = response.menus.messengerMenu.items;
-	    },function(reason){
-	    	alert(reason);
-	    });
+		},function(reason){
+			alert(reason);
+		});
 	}
 	
 	$scope.loadRecord = function(demographicNo) {
 		$state.go('record.details', {demographicNo:demographicNo, hideNote:true});
 	}
 	
+	//pre-load clinical connect url
+	appService.getClinicalConnectURL().then(function(data){
+		$scope.clinicalConnectUrl = data;
+	});
+	
 	//to help ng-clicks on buttons
 	$scope.transition = function (item) {
-				
+		
 		if(angular.isDefined(item) && angular.isDefined(item.state)){
-			url = "";
-			wname="";
-			if(item.label=="Inbox"){
+			var url = "";
+			var wname = "";
+			if(item.state=="inbox"){
 				url = "../dms/inboxManage.do?method=prepareForIndexPage";
 				wname="inbox";
-			}else if(item.label=="Billing"){
+			}else if(item.state=="billing"){
 				url = "../billing/CA/" + $scope.billRegion + "/billingReportCenter.jsp?displaymode=billreport";
 				wname="billing";
-			}else if(item.label=="Admin"){
+			}else if(item.state=="admin"){
 				url = "../administration/";
 				wname="admin";
-			}else if(item.label=="Documents"){
+			}else if(item.state=="documents"){
 				url = "../dms/documentReport.jsp?function=provider&functionid="+$scope.me.providerNo;
 				wname="edocView";
+			}else if(item.state=="clinicalconnect"){
+				url = $scope.clinicalConnectUrl;
+				if (url=="") {
+					alert("Incorrect login credentials to ClinicalConnect. Please contact the adminstrator.");
+					return;
+				}
+				wname="clinicalconnect";
 			}else{
-				
 				$state.go(item.state);
 			}
 			
 			if(url!="" && wname!=""){
-				 newwindow=window.open(url,wname,'scrollbars=1,height=700,width=1000');
-				 if (window.focus) {
-					 newwindow.focus();
-				 }
+				var newwindow = window.open(url, wname, 'scrollbars=1,height=700,width=1000');
+				if (window.focus) {
+					newwindow.focus();
+				}
 			}
-		
-		
+			
+			
 		}else if(angular.isDefined(item) && angular.isDefined(item.url)){
 			
-			if(item.label=="Schedule"){				
+			if(item.label=="Schedule"){
 				qs = "";
 				path = $location.path();
 				path = path.substring(1); //remove leading /
@@ -163,17 +171,16 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 				}else if(param.length==3){
 					qs = "?record=" + param[1] + "&module=" + param[2];
 				}
-					
+				
 				window.location = item.url + qs;
 				return false;
 			}else{
 				window.location = item.url;
 			}
 		}
-	
 	};
 	
-
+	
 	
 	$scope.goHome = function() {
 		$state.go('dashboard');
@@ -205,20 +212,20 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 		console.log("modal?");
 		
 		var modalInstance = $modal.open({
-		      templateUrl: 'newPatient.jsp',
-		      controller: NewPatientCtrl,
-		      size: size
-		    });
+			templateUrl: 'newPatient.jsp',
+			controller: NewPatientCtrl,
+			size: size
+		});
 		
 		modalInstance.result.then(function (selectedItem) {
-		      console.log(selectedItem);
-		      console.log('patient #: '+selectedItem.demographicNo);
-		      console.log($location.path());
-		      $location.path('/record/'+selectedItem.demographicNo+'/details');
-		      console.log($location.path());
-		    }, function () {
-		      console.log('Modal dismissed at: ' + new Date());
-		    });
+			console.log(selectedItem);
+			console.log('patient #: '+selectedItem.demographicNo);
+			console.log($location.path());
+			$location.path('/record/'+selectedItem.demographicNo+'/details');
+			console.log($location.path());
+		}, function () {
+			console.log('Modal dismissed at: ' + new Date());
+		});
 		
 		console.log($('#myModal'));
 	}
@@ -230,40 +237,36 @@ oscarApp.controller('NavBarCtrl', function ($scope,$location,$modal, $state, sec
 		return false;
 	};
 	
-    $scope.changeProgram = function(programId){
-    	personaService.setCurrentProgram(programId).then(function(response){
-    		this.getNavBar();
-    	},function(reason){
-    		alert(reason);
-    	});
-    }
-
-    $scope.switchToAdvancedView = function() {
-    	$rootScope.$apply(function() {
-
-            $location.path("/search");
-            $location.search('term',$scope.quickSearchTerm);
-         
-          });
-    	
-    }
-		
-    $scope.setQuickSearchTerm = function(term) {
-    	$scope.quickSearchTerm = term;
-    }
-    
-    $scope.showPatientList = function() {
-    	$scope.$emit('configureShowPatientList', true);
-    }
-    
-    
+	$scope.changeProgram = function(programId){
+		personaService.setCurrentProgram(programId).then(function(response){
+			this.getNavBar();
+		},function(reason){
+			alert(reason);
+		});
+	}
+	
+	$scope.switchToAdvancedView = function() {
+		$rootScope.$apply(function() {
+			$location.path("/search");
+			$location.search('term',$scope.quickSearchTerm);
+		});
+	}
+	
+	$scope.setQuickSearchTerm = function(term) {
+		$scope.quickSearchTerm = term;
+	}
+	
+	$scope.showPatientList = function() {
+		$scope.$emit('configureShowPatientList', true);
+	}
+	
 });
 
 
-function NewPatientCtrl($scope,$modal,$modalInstance,demographicService,securityService,programService,staticDataService){
+function NewPatientCtrl($scope, $modal, $modalInstance, demographicService, securityService, programService, staticDataService){
 	console.log("newpatient called");
 	$scope.demographic = {};
-  	
+	
 	//get access right for creating new patient
 	securityService.hasRight("_demographic", "w").then(function(data){
 		$scope.hasRight = data;
@@ -278,15 +281,15 @@ function NewPatientCtrl($scope,$modal,$modalInstance,demographicService,security
 	//get genders to be selected
 	$scope.genders = staticDataService.getGenders();
 	
-  	$scope.saver = function(ngModelContoller){
-  		console.log($scope.demographic.lastName);
-  		console.log($scope.demographic.firstName);
-  		console.log($scope.demographic.dobYear);
-  		console.log($scope.demographic.dobMonth);
-  		console.log($scope.demographic.dobDay);
-  		console.log($scope.demographic.sex);
-  		
+	$scope.saver = function(ngModelContoller){
+		console.log($scope.demographic.lastName);
+		console.log($scope.demographic.firstName);
+		console.log($scope.demographic.dobYear);
+		console.log($scope.demographic.dobMonth);
+		console.log($scope.demographic.dobDay);
+		console.log($scope.demographic.sex);
 		console.log($scope.demographic);
+		
 		//demographicService
 		console.log(ngModelContoller.$valid);
 		console.log($scope);
@@ -304,42 +307,39 @@ function NewPatientCtrl($scope,$modal,$modalInstance,demographicService,security
 			$scope.demoRetVal = {};
 			
 			demographicService.saveDemographic($scope.demographic).then(function(data){
-					console.log(data);
-					$scope.demoRetVal = data;
-					$modalInstance.close(data);
-			    },
-			    function(errorMessage){
-			    	console.log("saveDemo "+errorMessage);   
-			    }
-			);
+				console.log(data);
+				$scope.demoRetVal = data;
+				$modalInstance.close(data);
+			},
+			function(errorMessage){
+				console.log("saveDemo "+errorMessage);
+			});
 			
 		}else{
 			console.log("ERR!!");
 		}
 		
-		
-		
 	}
-  	
-  	$scope.ok = function () {
-  		$modalInstance.close($scope.selected.item);
-  	};
-
-  	$scope.cancel = function () {
-  		$modalInstance.dismiss('cancel');
-  	};
-  	
-  	$scope.capName = function () {
-  		if ($scope.demographic.lastName!=null) {
-  			$scope.demographic.lastName = $scope.demographic.lastName.toUpperCase();
-  		}
-  		if ($scope.demographic.firstName!=null) {
-  			$scope.demographic.firstName = $scope.demographic.firstName.toUpperCase();
-  		}
-  	}
+	
+	$scope.ok = function () {
+		$modalInstance.close($scope.selected.item);
+	};
+	
+	$scope.cancel = function () {
+		$modalInstance.dismiss('cancel');
+	};
+	
+	$scope.capName = function () {
+		if ($scope.demographic.lastName!=null) {
+			$scope.demographic.lastName = $scope.demographic.lastName.toUpperCase();
+		}
+		if ($scope.demographic.firstName!=null) {
+			$scope.demographic.firstName = $scope.demographic.firstName.toUpperCase();
+		}
+	}
 }
 
-	
+
 function isCorrectDate(year, month, day) {
 	var d = new Date(year, month-1, day);
 	

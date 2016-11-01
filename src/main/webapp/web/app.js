@@ -26,7 +26,6 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 		.state('inbox', {
 		  url: '/inbox',
 		  templateUrl: 'inbox/inbox_popup.jsp',
-		 // templateUrl: 'inbox/inbox.jsp',
 		  controller: 'InboxCtrl'
 		})
   		.state('consultRequests', {
@@ -77,6 +76,11 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
   		  url: '/documents',
   		  templateUrl: 'document/documents_classic.jsp',
 			controller: 'DocumentsCtrl'
+  		})
+  		.state('clinicalconnect', {
+  		  url: '/clinicalconnect',
+  		  templateUrl: 'clinicalconnect/clinicalconnect.jsp',
+			controller: 'ClinicalConnectCtrl'
   		})
   		.state('settings', {
   		  url: '/settings',
