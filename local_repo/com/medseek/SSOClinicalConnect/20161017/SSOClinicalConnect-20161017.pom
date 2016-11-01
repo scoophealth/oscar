@@ -4,6 +4,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.medseek</groupId>
   <artifactId>SSOClinicalConnect</artifactId>
-  <version>20141022</version>
+  <version>20161017</version>
   <description>Single Sign on to clinical connect</description>
 </project>

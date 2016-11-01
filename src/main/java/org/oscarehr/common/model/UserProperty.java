@@ -153,8 +153,13 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
 	public static final String PROVIDER_FOR_TICKLER_WARNING = "provider_for_tickler_warning";
 
 	public static final String MCEDT_ACCOUNT_PASSWORD = "mcedt_account_password";
-
 	public static final String TICKLER_EMAIL_PROVIDER = "tickler_email_provider";
+
+	public static final String CLINICALCONNECT_ID = "clinicalconnect_username";
+	public static final String CLINICALCONNECT_TYPE = "clinicalconnect_authentication_type";
+	public static final String CLINICALCONNECT_SERVICE_USERNAME = "clinicalconnect_service_username";
+	public static final String CLINICALCONNECT_SERVICE_PASSWORD = "clinicalconnect_service_password";
+	public static final String CLINICALCONNECT_SERVICE_LOCATION = "clinicalconnect_service_location";
 
 
     @Id

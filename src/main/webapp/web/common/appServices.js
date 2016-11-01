@@ -26,20 +26,33 @@
 angular.module("appServices", [])
 	.service("appService", function ($http,$q,$log) {
 		return {
-		apiPath:'../ws/rs/app',
+		apiPath:'../ws/rs',
 		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
 	      
         getApps: function () {
         	var deferred = $q.defer();
         	$http({
-                url: this.apiPath+'/getApps',
+                url: this.apiPath+'/app/getApps',
                 method: "GET",
                 headers: this.configHeaders,
               }).success(function (data) {
             	  deferred.resolve(data);
                 }).error(function (data, status, headers) {
                 	deferred.reject("An error occured while getting app content");
+                });
+           return deferred.promise;
+        },
+        getClinicalConnectURL: function () {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/resources/clinicalconnect',
+                method: "GET",
+                headers: this.configHeaders,
+              }).success(function (data) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers) {
+                	deferred.reject("An error occured while getting clinicalconnect url");
                 });
            return deferred.promise;
         }

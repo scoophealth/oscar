@@ -366,6 +366,22 @@ for (int i=0; i<sites.size(); i++) {
 		UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 		%>
 		<tr>
+			<td align="right"><bean:message key="admin.provider.formClinicalConnectId" />:</td>
+			<td><input type="text" name="clinicalConnectId" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.CLINICALCONNECT_ID))%>" maxlength="255"></td>
+		</tr>
+		<%
+		String ccType = StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.CLINICALCONNECT_TYPE));
+		%>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formClinicalConnectType" />:</td>
+			<td><select name="clinicalConnectType">
+					<option value="hhsc" <%="hhsc".equals(ccType)?"selected":""%>>HHSC</option>
+					<option value="partners" <%="partners".equals(ccType)?"selected":""%>>PARTNERS</option>
+					<option value="hrcc" <%="hrcc".equals(ccType)?"selected":""%>>HRCC</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
 			<td align="right"><bean:message key="admin.provider.formOfficialFirstName" />:</td>
 			<td><input type="text" name="officialFirstName" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_FIRST_NAME))%>" maxlength="255"></td>
 		</tr>
