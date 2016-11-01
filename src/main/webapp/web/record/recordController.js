@@ -108,11 +108,12 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 				var rnd = Math.round(Math.random() * 1000);
 				win = "win" + rnd;
 			}
-			window.open(temp.url,win,"scrollbars=yes, location=no, width=1000, height=600","");   
+			window.open(temp.url,win,"scrollbars=yes, location=no, width=1000, height=600","");
+			
+		}else if (temp.label=="Launch ClinicalConnect") { //url not defined
+			alert("Incorrect login credentials to ClinicalConnect. Please contact the adminstrator.");
+			return;
 		}
-		//console.log($scope.recordtabs2[temp].path);
-		
-		
 	}
 	
 	$scope.isTabActive = function(tab){
