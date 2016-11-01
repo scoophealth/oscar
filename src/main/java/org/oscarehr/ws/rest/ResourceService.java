@@ -56,6 +56,7 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.model.NotificationTo1;
+import org.oscarehr.ws.rest.util.ClinicalConnectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import oscar.OscarProperties;
@@ -316,4 +317,15 @@ public class ResourceService extends AbstractServiceImpl {
 		return Response.ok(retval).build();
 	}
 	
+	@GET
+	@Path("/clinicalconnect")
+	@Produces("text/plain")
+	public String launchClinicalConnect(@Context HttpServletRequest request) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		if (ClinicalConnectUtil.isReady(loggedInInfo.getLoggedInProviderNo()))
+			return ClinicalConnectUtil.getLaunchURL(loggedInInfo, null);
+		else
+			return null;
+	}
 }

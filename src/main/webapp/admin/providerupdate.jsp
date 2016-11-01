@@ -193,6 +193,12 @@ if(!authed) {
 		  
 		  UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 		 
+		  String clinicalConnectId = request.getParameter("clinicalConnectId");
+		  String clinicalConnectType = request.getParameter("clinicalConnectType");
+		  
+		  userPropertyDAO.saveProp(provider.getProviderNo(), UserProperty.CLINICALCONNECT_ID, clinicalConnectId);
+		  userPropertyDAO.saveProp(provider.getProviderNo(), UserProperty.CLINICALCONNECT_TYPE, clinicalConnectType);
+		  
 		  String officialFirstName = request.getParameter("officialFirstName");
 		  String officialSecondName = request.getParameter("officialSecondName");
 		  String officialLastName = request.getParameter("officialLastName");

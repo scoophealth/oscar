@@ -539,6 +539,7 @@ font-size:20px
 	<script src="settings/settingsController.js"></script>
 	<script src="help/supportController.js"></script>
 	<script src="help/helpController.js"></script>
+	<script src="clinicalconnect/ccController.js"></script>
 	
 	<script src="schedule/appointmentAddController.js"></script>
 	<script src="schedule/appointmentViewController.js"></script>

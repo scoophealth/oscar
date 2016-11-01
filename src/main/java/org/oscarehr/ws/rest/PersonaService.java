@@ -69,6 +69,7 @@ import org.oscarehr.ws.rest.to.model.MenuTo1;
 import org.oscarehr.ws.rest.to.model.NavBarMenuTo1;
 import org.oscarehr.ws.rest.to.model.PatientListConfigTo1;
 import org.oscarehr.ws.rest.to.model.ProgramProviderTo1;
+import org.oscarehr.ws.rest.util.ClinicalConnectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.oscarehr.myoscar.client.ws_manager.MessageManager;
 import org.oscarehr.phr.util.MyOscarUtils;
@@ -271,6 +272,10 @@ public class PersonaService extends AbstractServiceImpl {
 		MenuTo1 moreMenuList = new MenuTo1()
 		.addWithState(idCounter++,bundle.getString("navbar.menu.reports"),null,"reports")
 		.addWithState(idCounter++,bundle.getString("navbar.menu.documents"),null,"documents");
+		
+		if (ClinicalConnectUtil.isReady(provider.getProviderNo())) {
+			moreMenuList.addWithState(idCounter++,bundle.getString("navbar.menu.clinicalconnect"),null,"clinicalconnect");
+		}
 		moreMenu.setDropdownItems(moreMenuList.getItems());
 		menu.getItems().add(moreMenu);
 		navBarMenu.setMenu(menu);

@@ -64,6 +64,7 @@ import org.oscarehr.ws.rest.to.EncounterTemplateResponse;
 import org.oscarehr.ws.rest.to.model.EncounterTemplateTo1;
 import org.oscarehr.ws.rest.to.model.MenuItemTo1;
 import org.oscarehr.ws.rest.to.model.SummaryTo1;
+import org.oscarehr.ws.rest.util.ClinicalConnectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -225,6 +226,14 @@ public class RecordUxService extends AbstractServiceImpl {
 		
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.decisionSupportAlerts", "r", null)) {
 			morelist.add(new MenuItemTo1(idCounter++, "DS Guidelines", "../oscarEncounter/decisionSupport/guidelineAction.do?method=list&provider_no=" + loggedInInfo.getLoggedInProviderNo() + "&demographic_no="+demographicNo));
+		}
+		
+		if(securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", "r", null)) {
+			if (ClinicalConnectUtil.isReady(loggedInInfo.getLoggedInProviderNo())) {
+				//Launch ClinicalConnect and open patient record
+				String url = ClinicalConnectUtil.getLaunchURL(loggedInInfo, demographicNo.toString());
+				morelist.add(new MenuItemTo1(idCounter++, "Launch ClinicalConnect", url));
+			}
 		}
 		
 		/*measurements,<a onclick="popupPage(600,1000,'measurements69','/oscar/oscarEncounter/oscarMeasurements/SetupHistoryIndex.do'); return false;" href="#">Measurements</a>
