@@ -256,7 +256,7 @@ public class FieldNoteManager {
 			String value = getValue(valuesOf1FieldNote, varName);
 			if (StringUtils.empty(value)) continue;
 			
-			if (StringUtils.filled(values)) values += "\n" + value;
+			if (StringUtils.filled(values)) values += ", " + value;
 			else values = value;
 		}
 		return values;

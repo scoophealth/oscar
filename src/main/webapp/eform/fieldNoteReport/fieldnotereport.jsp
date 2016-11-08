@@ -31,12 +31,18 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
+    Calendar c = Calendar.getInstance();
+    int year = c.get(Calendar.YEAR);
+    if (c.get(Calendar.MONTH)<7) year--;
+	String dateStartDefault = year+"-07-01";
+	
 	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
+	String dateEndDefault = df.format(new Date());
+	
+	boolean showData = true;
 	String dateStart = request.getParameter("date_start");
 	String dateEnd = request.getParameter("date_end");
-	String dateStartDefault = "2011-07-01";
-	String dateEndDefault = df.format(new Date());
+	if (dateStart==null && dateEnd==null) showData = false;
 	
 	if (StringUtils.empty(dateStart)) dateStart = dateStartDefault;
 	if (StringUtils.empty(dateEnd)) dateEnd = dateEndDefault;
@@ -61,19 +67,40 @@
 		invalidDate = true;
 	}
 	
-	//get resident names
 	TreeSet<Integer> fieldNoteEforms = FieldNoteManager.getFieldNoteEforms();
-	TreeMap<String, String> residentNameList = FieldNoteManager.getResidentNameList(fieldNoteEforms, startDate, endDate);
-	TreeMap<String, TreeMap<String, Integer>> supervisorResidentCountList = FieldNoteManager.getSupervisorResidentCountList();
+	TreeMap<String, String> residentNameList = new TreeMap<String, String>();
+	TreeMap<String, TreeMap<String, Integer>> supervisorResidentCountList = new TreeMap<String, TreeMap<String, Integer>>();
+	TreeMap<String, Integer> supervisorCountList = new TreeMap<String, Integer>();
+	int totalCount = 0;
+	
+	if (showData) {
+		residentNameList = FieldNoteManager.getResidentNameList(fieldNoteEforms, startDate, endDate);
+		supervisorResidentCountList = FieldNoteManager.getSupervisorResidentCountList();
+		for (String supervisor : supervisorResidentCountList.keySet()) {
+			int noteCount = 0;
+			for (Integer count : supervisorResidentCountList.get(supervisor).values()) {
+				noteCount += count;
+			}
+			supervisorCountList.put(supervisor, noteCount);
+			totalCount += noteCount;
+		}
+	}
 %>
 <html:html locale="true">
 <head>
+
 <title><bean:message key="admin.fieldNote.report"/></title>
 <link rel="stylesheet" href="../../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" href="../../share/css/eformStyle.css">
 <link rel="stylesheet" type="text/css" media="all" href="../../share/calendar/calendar.css" title="win2k-cold-1"/> 
 <style>
-	td { font-size: small; }
+	td { font-size: small }
+	.bordered {
+		border: 1px solid #B0B0B0;
+		border-collapse: collapse;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
 </style>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -92,7 +119,7 @@
 		document.fieldNoteReportForm.target = "_self";
 	}
 	
-	function changeReportDates() {
+	function getFieldNotes() {
 		document.fieldNoteReportForm.action = "";
 		document.fieldNoteReportForm.submit();
 	}
@@ -104,23 +131,25 @@
 		document.fieldNoteReportForm.submit();
 	}
 	
-	function showSupervisorReport() {
-		document.getElementById("supervisorReport").style.display = "table";
-		document.getElementById("supervisorReportButton").style.display = "none";
+	function showSupervisorReport(show) {
+		if (show) {
+			document.getElementById("supervisorReport").style.display = "table";
+			document.getElementById("supervisorReportButton").style.display = "none";
+		} else {
+			document.getElementById("supervisorReport").style.display = "none";
+			document.getElementById("supervisorReportButton").style.display = "inline";
+		}
 	}
 	
-	function checkDates() {
-<%
-		if (invalidDate) {
-%>
+	function start() {
+<%		if (invalidDate) {%>
 			alert("Invalid Start/End dates");
-<%
-		}
-%>
-	}
+<%		}
+%>	}
 </script>
+
 </head>
-<body onload="checkDates();">
+<body onload="start();">
 
 <form name="fieldNoteReportForm" action="fieldnotereport.jsp">
 <input type="hidden" name="residentId"/>
@@ -134,13 +163,10 @@
     <tr style="background-color: <%=fieldNoteEforms.isEmpty()?"#FFFF00":"#FFFFFF"%>;">
     	<td align="<%=fieldNoteEforms.isEmpty()?"left":"right"%>">
 <%
-	if (fieldNoteEforms.isEmpty()) {
-%>
-    	<bean:message key="admin.fieldNote.noEformAssigned"/>
-<%
-	}
-%>
-    		<input type="button" value="<bean:message key="admin.fieldNote.selectEformsButton"/>" title="<bean:message key="admin.fieldNote.selectEforms"/>" onclick="window.location.href='fieldnoteselect.jsp'"/>
+		if (fieldNoteEforms.isEmpty()) {
+%>  	  	<bean:message key="admin.fieldNote.noEformAssigned"/>
+<%		}
+%>    		<input type="button" value="<bean:message key="admin.fieldNote.selectEformsButton"/>" title="<bean:message key="admin.fieldNote.selectEforms"/>" onclick="window.location.href='fieldnoteselect.jsp'"/>
     	</td>
     </tr>
     <tr style="background-color: #F2F2F2;">
@@ -149,7 +175,7 @@
 			&nbsp;
 			<bean:message key="admin.fieldNote.endDate"/>:<input type="text" name="date_end" size="8" value="<%=dateEnd%>" id="endDate"><a id="ECal"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0"/></a>
 			&nbsp;
-    		<input type="submit" title="<bean:message key="admin.fieldNote.changeDates"/>" value="<bean:message key="admin.fieldNote.change"/>" onclick="changeReportDates();"/>
+   			<input type="submit" value="<bean:message key="admin.fieldNote.getFieldNotes"/>" style="font-weight:bold; font-size:large" onclick="getFieldNotes();"/>
     		<input type="button" value="<bean:message key="admin.fieldNote.reset"/>" title="<bean:message key="admin.fieldNote.resetDates"/>" onclick="setDefaultDates();"/>
 			<script language='javascript'>
 				Calendar.setup({inputField:"startDate",ifFormat:"%Y-%m-%d",showsTime:false,button:"SCal",singleClick:true,step:1});
@@ -159,55 +185,66 @@
     </tr>
 </table>
 <br/>
-<input type="button" id="supervisorReportButton" value="<bean:message key="admin.fieldNote.viewSupervisors"/>" title="<bean:message key="admin.fieldNote.notesSupervisors"/>" onclick="showSupervisorReport();"/>
-<table id="supervisorReport" border="1" style="display:none">
-	<tr>
-		<th>Supervisor</th>
-		<th>Resident</th>
-		<th>Number of Field Notes</th>
-	</tr>
 <%
-	for (String supervisor : supervisorResidentCountList.keySet()) {
+	if (!showData) return;
 %>
+<input type="button" id="supervisorReportButton" value="<bean:message key="admin.fieldNote.observerNoteCount"/> (<%=totalCount%>)" onclick="showSupervisorReport(true);"/>
+<table id="supervisorReport" style="display:none">
 	<tr>
-		<td rowspan="<%=supervisorResidentCountList.get(supervisor).size()%>" valign="top">
-			<%=supervisor%>
+		<td valign="top">
+			<input type="button" value="X" onclick="showSupervisorReport(false);" style="font-size:x-small; padding:0"/>
 		</td>
+		<td>
+			<table class="bordered">
+				<tr>
+					<th class="bordered"><bean:message key="admin.fieldNote.observerSupervisor"/></th>
+					<th class="bordered"><bean:message key="admin.fieldNote.count"/></th>
+					<th class="bordered"><bean:message key="admin.fieldNote.resident"/></th>
+					<th class="bordered"><bean:message key="admin.fieldNote.count"/></th>
+				</tr>
 <%
-		boolean first = true;
-		for (String resident : supervisorResidentCountList.get(supervisor).keySet()) {
-			if (first) {
-				first = false;
-			} else {
-%>
-			<tr>
-<%
-			}
-%>
-			<td><%=resident%></td>
-			<td align="center"><%=supervisorResidentCountList.get(supervisor).get(resident)%></td>
-		</tr>
-<%
-		}
-	}
-%>
+				for (String supervisor : supervisorResidentCountList.keySet()) {
+					TreeMap<String, Integer> residentCountList = supervisorResidentCountList.get(supervisor);
+%>					<tr>
+					<td class="bordered" rowspan="<%=residentCountList.size()%>" valign="top">
+						<%=supervisor%>
+					</td>
+<%					boolean first = true;
+					for (String resident : residentCountList.keySet()) {
+						if (first) {
+							first = false;
+%>							<td class="bordered" rowspan="<%=residentCountList.size()%>" valign="top" align="center">
+								<%=supervisorCountList.get(supervisor)%>
+							</td>
+<%						} else {
+%>							<tr>
+<%						}
+%>						<td class="bordered"><%=resident%></td>
+						<td class="bordered" align="center"><%=residentCountList.get(resident)%></td>
+						</tr>
+<%					}
+				}
+%>				<tr><td colspan="3" align="right"><bean:message key="admin.fieldNote.total"/>:</td><td align="center"><%=totalCount%></td></tr>
+			</table>
+		</td>
+	</tr>
 </table>
 <br/><br/>
+<div style="text-decoration:underline; font-size:large"><bean:message key="admin.fieldNote.residentReports"/></div>
 <table>
 <%
 	for (String residentName : residentNameList.keySet()) {
 		String residentId = residentNameList.get(residentName);
 		String resNameSend = residentName.replace("'", "\\'");
 %>
-    <tr>
-    	<td><%=residentName%></td>
-    	<td>
-    		<input type="button" value="<bean:message key="admin.fieldNote.view"/>" title="<bean:message key="admin.fieldNote.viewReport"/>" onclick="send('<%=residentId%>','<%=resNameSend%>','view');"/>
-    		<input type="button" value="<bean:message key="admin.fieldNote.download"/>" title="<bean:message key="admin.fieldNote.downloadReport"/>" onclick="send('<%=residentId%>','<%=resNameSend%>','download');"/>
-    	</td>
-    </tr>
-<%
-	}
+		<tr>
+		   	<td><%=residentName%></td>
+		   	<td>
+		   		<input type="button" value="<bean:message key="admin.fieldNote.view"/>" title="<bean:message key="admin.fieldNote.viewReport"/>" onclick="send('<%=residentId%>','<%=resNameSend%>','view');"/>
+				<input type="button" value="<bean:message key="admin.fieldNote.download"/>" title="<bean:message key="admin.fieldNote.downloadReport"/>" onclick="send('<%=residentId%>','<%=resNameSend%>','download');"/>
+			</td>
+		</tr>
+<%	}
 %>
 </table>
 
@@ -220,5 +257,6 @@ parent.parent.resizeIframe($('html').height());
 
 });
 </script>
+
 </body>
 </html:html>

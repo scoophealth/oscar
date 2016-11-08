@@ -54,26 +54,29 @@
 	purposes.put("case.discussion", "Case Discussion");
 	purposes.put("direct.observation", "Direct Observation");
 	purposes.put("chart.review", "Chart Review");
+	purposes.put("tape.review", "Tape Review");
 	
-	roleSkills.put("fm.expert", "FM Expert");
-	roleSkills.put("knowledge", "Knowledge");
-	roleSkills.put("comprehensiveness", "Comprehensiveness");
-	roleSkills.put("communicator", "Ccommunicator");
-	roleSkills.put("collaborator", "Collaborator");
-	roleSkills.put("professional", "Professional");
+	roleSkills.put("knowledge.base", "Knowledge base");
+	roleSkills.put("clinical.reasoning", "Clinical reasoning");
+	roleSkills.put("comprehensive.care", "Comprehensive care");
+	roleSkills.put("selectivity", "Selectivity");
+	roleSkills.put("communication.patient.centered", "Patient centered approach");
+	roleSkills.put("communicator", "Communicator");
+	roleSkills.put("collaborator", "Professional behaviour");
 	roleSkills.put("advocate", "Advocate");
-	roleSkills.put("scholar", "Scholar");
+	roleSkills.put("manual.procedural.skill", "Manual and Procedural Skill");
 	roleSkills.put("manager", "Manager");
+	roleSkills.put("scholar", "Scholar (use of EBM)");
 	
 	//added numbering to keys for sorting purpose
-	impressions.put("can.teach", "Can Teach");
-	impressions.put("performs.with.independence", "Performs with Independence");
-	impressions.put("minimal.supervision", "Minimal Supervision");
-	impressions.put("close.supervision", "Close Supervision");
-	impressions.put("supervisor.takeover", "Supervisor Required to Take Over");
+	impressions.put("1.got.it", "5- Got it");
+	impressions.put("2.impression.scale.4", "4-");
+	impressions.put("3.getting.there", "3- Getting there");
+	impressions.put("4.impression.scale.2", "2-");
+	impressions.put("5.attention.required", "1- Attention required");
 	
 	//added numbering to key "n/a" to put it at first
-	clinicalDomains.put("n/a", "N/A");
+	clinicalDomains.put("1.n/a", "N/A");
 	clinicalDomains.put("adults", "Adults");
 	clinicalDomains.put("care of the elderly", "Care of the Elderly");
 	clinicalDomains.put("children and adolescents", "Children and Adolescents");
@@ -113,7 +116,7 @@
 <table width="100%">
 	<tr>
 		<td valign="top">
-			<input type="button" value="<bean:message key="admin.fieldNote.close" />" onclick="window.close();" />
+			<input type="button" value="<bean:message key="admin.fieldNote.back" />" onclick="window.close();" />
 		</td>
 		<td>
 <%
@@ -139,7 +142,8 @@
 			<p>&nbsp;</p>
 			<table>
 <%
-	for (String purpose : purposes.keySet()) {
+	TreeSet<String> keys = new TreeSet<String>(purposes.keySet());
+	for (String purpose : keys) {
 %>
 				<tr>
 					<td><%= purposes.get(purpose) %></td>
@@ -169,7 +173,8 @@
 %>
 			<table>
 <%
-	for (String roleSkill : roleSkills.keySet()) {
+	keys = new TreeSet<String>(roleSkills.keySet());
+	for (String roleSkill : keys) {
 %>
 				<tr>
 					<td><%= roleSkills.get(roleSkill) %></td>
@@ -190,11 +195,12 @@
 	}
 %>
 <p>&nbsp;</p>
-<table width="100%">
+<table>
 <%
-	for (String impression : impressions.keySet())
+	keys = new TreeSet<String>(impressions.keySet());
+	for (String impression : keys)
 	{
-		HashMap<Integer, List<EFormValue>> fieldNoteValues_impression = FieldNoteManager.filterResidentFieldNoteValues(residentFieldNoteValues, impression);
+		HashMap<Integer, List<EFormValue>> fieldNoteValues_impression = FieldNoteManager.filterResidentFieldNoteValues(residentFieldNoteValues, impression.substring(2));
 %>
 	<tr>
 		<td class="eformInputHeadingActive" colspan="2">
@@ -202,7 +208,7 @@
 			(<%= fieldNoteValues_impression.size() %>)
 		</td>
 	</tr>
-	<tr><td width="10%">&nbsp;</td></tr>
+	<tr><td>&nbsp;</td></tr>
 <%
 		if (fieldNoteValues_impression.isEmpty()) {
 %>
@@ -216,8 +222,10 @@
 			continue;
 		}
 
-		for (String clinicalDomain : clinicalDomains.keySet())
+		TreeSet<String> clinicalDomainKeys = new TreeSet<String>(clinicalDomains.keySet());
+		for (String clinicalDomain : clinicalDomainKeys)
 		{
+			if (clinicalDomain.startsWith("1.")) clinicalDomain = clinicalDomain.substring(2); //This is for key "1.n/a"
 			HashMap<Integer, List<EFormValue>> fieldNoteValues_clinicalDomain = FieldNoteManager.filterResidentFieldNoteValues(fieldNoteValues_impression, "clinical_domain", clinicalDomain);
 			if (fieldNoteValues_clinicalDomain.isEmpty()) continue;
 %>
@@ -227,6 +235,7 @@
 			(<%= fieldNoteValues_clinicalDomain.size() %>)
 		</td>
 	</tr>
+	<tr><td>&nbsp;</td></tr>
 <%			
 			for (Integer fdid : fieldNoteValues_clinicalDomain.keySet())
 			{
@@ -236,13 +245,13 @@
 				String followUp = FieldNoteManager.getValue(fieldNoteValues_clinicalDomain.get(fdid), "follow-up");
 				String apptDate = FieldNoteManager.getValue(fieldNoteValues_clinicalDomain.get(fdid), "dateField");
 				
-				String residentRoleSkill = new String();
+				String residentRoleSkill = null;
 				for (EFormValue eformValue : fieldNoteValues_clinicalDomain.get(fdid))
 				{
 					if (roleSkills.containsKey(eformValue.getVarName()))
 					{
 						if (StringUtils.empty(residentRoleSkill)) residentRoleSkill = roleSkills.get(eformValue.getVarName());
-						else residentRoleSkill += ", " + roleSkills.get(eformValue.getVarName());
+						else residentRoleSkill += "\n" + roleSkills.get(eformValue.getVarName());
 					}
 				}
 %>
@@ -302,7 +311,7 @@
     if (!"download".equals(method)) {
 %>
         <p>&nbsp;</p>
-        <input type="button" value="<bean:message key="admin.fieldNote.close" />" onclick="window.close();" />
+        <input type="button" value="<bean:message key="admin.fieldNote.back" />" onclick="window.close();" />
 <%
     }
 %>
