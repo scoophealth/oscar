@@ -41,9 +41,9 @@
 	if (StringUtils.empty(residentName)) residentName = "no name";
 	
 	if ("download".equals(method)) {
-	    response.setContentType("application/msword");
-	    String filename = residentName.replace(", ","").replace(" ","") + ".doc";
-	    response.setHeader("Content-Disposition", "attachment; filename="+filename);
+		response.setContentType("application/msword");
+		String filename = residentName.replace(", ","").replace(" ","") + ".doc";
+		response.setHeader("Content-Disposition", "attachment; filename="+filename);
 	}
 	
 	HashMap<String, String> purposes = new HashMap<String, String>();
@@ -83,8 +83,8 @@
 	clinicalDomains.put("palliative care", "Palliative Care");
 	clinicalDomains.put("vulnerable population", "Vulnerable Population");
 	clinicalDomains.put("women's health", "Women's Health");
-    
-    HashMap<Integer, List<EFormValue>> residentFieldNoteValues = FieldNoteManager.getResidentFieldNoteValues(residentId);
+	
+	HashMap<Integer, List<EFormValue>> residentFieldNoteValues = FieldNoteManager.getResidentFieldNoteValues(residentId);
 %>
 <html:html locale="true">
 <head>
@@ -96,19 +96,108 @@
 </style>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<script type="text/javascript">
-
-
-</script>
 </head>
+
 <body>
+<div class="eformInputHeading" align="center"><bean:message key="admin.fieldNote.report"/></div>
 
-<div class="eformInputHeading" align="center">
-	<bean:message key="admin.fieldNote.report"/>
-</div>
+<%	if ("download".equals(method)) { //if-start
+%>
+<table width="100%">
+	<tr>
+		<td>
+			Resident : <%= residentName %><br/>
+			Report dates : <%= dateStart %> ~ <%= dateEnd %><br/>
+			Total field notes : <%= FieldNoteManager.getTotalNumberOfFieldNotes(residentId) %><br/>
+			<br/>
+<%	for (String purpose : purposes.keySet()) {
+%>			<%= purposes.get(purpose) %> : <%= FieldNoteManager.countItem(residentFieldNoteValues, purpose) %><br/>
+<%	}
+%>			MHBS tutorial : <%= FieldNoteManager.countItem(residentFieldNoteValues, "location", "BS tutorial") %>
+		</td>
+		<td>
+<%	for (String roleSkill : roleSkills.keySet()) {
+%>		<%= roleSkills.get(roleSkill) %> : <%= FieldNoteManager.countItem(residentFieldNoteValues, roleSkill) %><br/>
+<%	}
+%>		</td>
+	</tr>
+</table>
 
-<%
-	if (!"download".equals(method)) {
+<%	for (String impression : impressions.keySet()) {
+		HashMap<Integer, List<EFormValue>> fieldNoteValues_impression = FieldNoteManager.filterResidentFieldNoteValues(residentFieldNoteValues, impression);
+%>
+		<hr/>
+		<%= impressions.get(impression) %> (<%= fieldNoteValues_impression.size() %>)<br/>
+		<br/>
+<%		if (fieldNoteValues_impression.isEmpty()) {
+%>			<div style="color: #707070;">No field note</div>
+<%			continue;
+		}
+		for (String clinicalDomain : clinicalDomains.keySet()) {
+			HashMap<Integer, List<EFormValue>> fieldNoteValues_clinicalDomain = FieldNoteManager.filterResidentFieldNoteValues(fieldNoteValues_impression, "clinical_domain", clinicalDomain);
+			if (fieldNoteValues_clinicalDomain.isEmpty()) continue;
+%>
+			<div style="font-weight: bold;" colspan="2">
+				Clinical Domain : <%= clinicalDomains.get(clinicalDomain) %> (<%= fieldNoteValues_clinicalDomain.size() %>)
+			</div>
+
+<%			for (Integer fdid : fieldNoteValues_clinicalDomain.keySet()) {
+				String topic = FieldNoteManager.getValues(fieldNoteValues_clinicalDomain.get(fdid), "clinical.topic", "clinical.topic2", "clinical.topic3", "clinical.topic4");
+				String doneWell = FieldNoteManager.getValue(fieldNoteValues_clinicalDomain.get(fdid), "done.well");
+				String workOn = FieldNoteManager.getValue(fieldNoteValues_clinicalDomain.get(fdid), "work.on");
+				String followUp = FieldNoteManager.getValue(fieldNoteValues_clinicalDomain.get(fdid), "follow-up");
+				String apptDate = FieldNoteManager.getValue(fieldNoteValues_clinicalDomain.get(fdid), "dateField");
+				
+				String residentRoleSkill = new String();
+				for (EFormValue eformValue : fieldNoteValues_clinicalDomain.get(fdid))
+				{
+					if (roleSkills.containsKey(eformValue.getVarName()))
+					{
+						if (StringUtils.empty(residentRoleSkill)) residentRoleSkill = roleSkills.get(eformValue.getVarName());
+						else residentRoleSkill += ", " + roleSkills.get(eformValue.getVarName());
+					}
+				}
+
+%>				<table width="100%" style="background-color: #F2F2F2;">
+					<tr>
+						<td width="15%">Topic(s):</td>
+						<td><%= topic %>
+					</tr>
+<%				if (StringUtils.filled(residentRoleSkill)) {
+%>					<tr>
+						<td>Role/Skill(s):</td>
+						<td><%= residentRoleSkill %>
+					</tr>
+<%				}
+				if (StringUtils.filled(doneWell)) {
+%>					<tr>
+						<td>Done well:</td>
+						<td><%= doneWell %>
+					</tr>
+<%				}
+				if (StringUtils.filled(workOn)) {
+%>					<tr>
+						<td>Work on:</td>
+						<td><%= workOn %>
+					</tr>
+<%				}
+				if (StringUtils.filled(followUp)) {
+%>					<tr>
+						<td>Follow-up:</td>
+						<td><%= followUp %>
+					</tr>
+<%				}
+%>				<tr>
+					<td>Date:</td>
+					<td><%= apptDate %>
+				</tr>
+				</table><br/>
+<%			}
+		}
+	}
+%>
+
+<%	} else {
 %>
 <table width="100%">
 	<tr>
@@ -116,9 +205,6 @@
 			<input type="button" value="<bean:message key="admin.fieldNote.close" />" onclick="window.close();" />
 		</td>
 		<td>
-<%
-	}
-%>
 			<table>
 				<tr>
 					<td>Resident</td>
@@ -136,99 +222,72 @@
 					<td><%= FieldNoteManager.getTotalNumberOfFieldNotes(residentId) %></td>
 				</tr>
 			</table>
-			<p>&nbsp;</p>
+			<br/>
 			<table>
-<%
-	for (String purpose : purposes.keySet()) {
-%>
-				<tr>
+			
+<%	for (String purpose : purposes.keySet()) {
+%>				<tr>
 					<td><%= purposes.get(purpose) %></td>
 					<td>:</td>
 					<td><%= FieldNoteManager.countItem(residentFieldNoteValues, purpose) %></td>
 				</tr>
-<%
-	}
-%>
-            <tr>
-                    <td>MHBS tutorial</td>
-                    <td>:</td>
-                    <td><%= FieldNoteManager.countItem(residentFieldNoteValues, "location", "BS tutorial") %></td>
-            </tr>
+<%	}
+%>				<tr>
+					<td>MHBS tutorial</td>
+					<td>:</td>
+					<td><%= FieldNoteManager.countItem(residentFieldNoteValues, "location", "BS tutorial") %></td>
+				</tr>
 			</table>
-<%
-	if ("download".equals(method)) {
-%>
-			<p>&nbsp;</p>
-<%
-	} else {
-%>
 		</td>
 		<td valign="top">
-<%
-	}
-%>
 			<table>
-<%
-	for (String roleSkill : roleSkills.keySet()) {
-%>
-				<tr>
+
+<%	for (String roleSkill : roleSkills.keySet()) {
+%>				<tr>
 					<td><%= roleSkills.get(roleSkill) %></td>
 					<td>:</td>
 					<td><%= FieldNoteManager.countItem(residentFieldNoteValues, roleSkill) %></td>
 				</tr>
-<%
-	}
-%>
-			</table>
-<%
-	if (!"download".equals(method)) {
-%>
+<%	}
+%>			</table>
 		</td>
 	</tr>
 </table>
-<%
-	}
-%>
-<p>&nbsp;</p>
+<br/>
+
 <table width="100%">
-<%
-	for (String impression : impressions.keySet())
+<%	for (String impression : impressions.keySet())
 	{
 		HashMap<Integer, List<EFormValue>> fieldNoteValues_impression = FieldNoteManager.filterResidentFieldNoteValues(residentFieldNoteValues, impression);
-%>
-	<tr>
+%>	<tr>
 		<td class="eformInputHeadingActive" colspan="2">
 			<%= impressions.get(impression) %>
 			(<%= fieldNoteValues_impression.size() %>)
 		</td>
 	</tr>
 	<tr><td width="10%">&nbsp;</td></tr>
-<%
-		if (fieldNoteValues_impression.isEmpty()) {
-%>
-	<tr>
+	
+<%		if (fieldNoteValues_impression.isEmpty()) {
+%>	<tr>
 		<td colspan="2">
 			<div style="color: #707070;">No field note</div>
 		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
-<%
-			continue;
+<%			continue;
 		}
 
 		for (String clinicalDomain : clinicalDomains.keySet())
 		{
 			HashMap<Integer, List<EFormValue>> fieldNoteValues_clinicalDomain = FieldNoteManager.filterResidentFieldNoteValues(fieldNoteValues_impression, "clinical_domain", clinicalDomain);
 			if (fieldNoteValues_clinicalDomain.isEmpty()) continue;
-%>
-	<tr>
+%>	<tr>
 		<td style="font-weight: bold;" colspan="2">
 			Clinical Domain : <%= clinicalDomains.get(clinicalDomain) %>
 			(<%= fieldNoteValues_clinicalDomain.size() %>)
 		</td>
 	</tr>
-<%			
-			for (Integer fdid : fieldNoteValues_clinicalDomain.keySet())
+<%			for (Integer fdid : fieldNoteValues_clinicalDomain.keySet())
 			{
 				String topic = FieldNoteManager.getValues(fieldNoteValues_clinicalDomain.get(fdid), "clinical.topic", "clinical.topic2", "clinical.topic3", "clinical.topic4");
 				String doneWell = FieldNoteManager.getValue(fieldNoteValues_clinicalDomain.get(fdid), "done.well");
@@ -245,74 +304,55 @@
 						else residentRoleSkill += ", " + roleSkills.get(eformValue.getVarName());
 					}
 				}
-%>
-	<tr style="background-color: #F2F2F2;">
+%>	<tr style="background-color: #F2F2F2;">
 		<td>Topic(s):</td>
 		<td><%= topic %>
 	</tr>
-<%
-				if (StringUtils.filled(residentRoleSkill)) {
-%>
-	<tr style="background-color: #F2F2F2;">
+<%				if (StringUtils.filled(residentRoleSkill)) {
+%>	<tr style="background-color: #F2F2F2;">
 		<td>Role/Skill(s):</td>
 		<td><%= residentRoleSkill %>
 	</tr>
-<%
-				}
-
+<%				}
 				if (StringUtils.filled(doneWell)) {
-%>
-	<tr style="background-color: #F2F2F2;">
+%>	<tr style="background-color: #F2F2F2;">
 		<td>Done well:</td>
 		<td><%= doneWell %>
 	</tr>
-<%
-				}
-
+<%				}
 				if (StringUtils.filled(workOn)) {
-%>
-	<tr style="background-color: #F2F2F2;">
+%>	<tr style="background-color: #F2F2F2;">
 		<td>Work on:</td>
 		<td><%= workOn %>
 	</tr>
-<%
-				}
-
+<%				}
 				if (StringUtils.filled(followUp)) {
-%>
-	<tr style="background-color: #F2F2F2;">
+%>	<tr style="background-color: #F2F2F2;">
 		<td>Follow-up:</td>
 		<td><%= followUp %>
 	</tr>
-<%
-				}
-%>
-	<tr style="background-color: #F2F2F2;">
+<%				}
+%>	<tr style="background-color: #F2F2F2;">
 		<td>Date:</td>
 		<td><%= apptDate %>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
-<%
-			}
+<%			}
 		}
 	}
 %>
 </table>
-<%
-    if (!"download".equals(method)) {
-%>
-        <p>&nbsp;</p>
-        <input type="button" value="<bean:message key="admin.fieldNote.close" />" onclick="window.close();" />
-<%
-    }
+<br/>
+
+<input type="button" value="<bean:message key="admin.fieldNote.close" />" onclick="window.close();" />
+<%	} //if-end
 %>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
 <script>
-$( document ).ready(function() {
-parent.parent.resizeIframe($('html').height());      
-
-});
+	$( document ).ready(function() {
+		parent.parent.resizeIframe($('html').height());
+	});
 </script>
 </body>
 </html:html>
