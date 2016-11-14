@@ -30,7 +30,9 @@
 
 package oscar.oscarProvider.data;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -718,6 +720,9 @@ public class ProviderData {
 		this.status = "1";
 		this.specialty = "";
 		this.sex = "";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		this.lastUpdateDate = sdf.format(new Date());
 		
 		dao.persist(toProvider());
 	}
