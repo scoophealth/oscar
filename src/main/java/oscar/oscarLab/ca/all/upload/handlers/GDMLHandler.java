@@ -53,6 +53,11 @@ public class GDMLHandler implements MessageHandler {
 	Logger logger = Logger.getLogger(GDMLHandler.class);	
 	Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao)SpringUtils.getBean("hl7TextInfoDao");
 	
+	private Integer labNo = null;
+	
+	public Integer getLastLabNo() {
+		return labNo;
+	}
 
 	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
 
@@ -77,6 +82,8 @@ public class GDMLHandler implements MessageHandler {
 					logger.error("Saved lab but could not parse base64 value");
 					return null;
 				}
+				
+				labNo = routeResults.segmentId;
 								
 			}
 
@@ -84,6 +91,7 @@ public class GDMLHandler implements MessageHandler {
 			// by accession number their abnormal status must be updated to reflect the
 			// other labs that they are grouped with aswell
 			updateLabStatus(messages.size());
+			
 			logger.debug("Parsed OK");
 		} catch (Exception e) {
 			MessageUploader.clean(fileId);
