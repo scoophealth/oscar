@@ -61,7 +61,7 @@ public class FaxStatusUpdater {
 		log.info("CHECKING STATUS OF " + faxJobList.size() + " FAXES");
 		
 		for( FaxJob faxJob : faxJobList ) {
-			faxConfig = faxConfigDao.getConfigByNumber(faxJob.getFax_line());
+			faxConfig = faxConfigDao.getConfigByNumber( faxJob.getFax_line() );
 			
 			if( faxConfig == null ) {
 				log.error("Could not find faxConfig.  Has the fax number changed?");
@@ -88,8 +88,7 @@ public class FaxStatusUpdater {
 	                		                	
 	                	ObjectMapper mapper = new ObjectMapper();
 	                	faxJobUpdated = mapper.readValue(content, FaxJob.class);
-	                	//faxJobUpdated = (FaxJob) JSONObject.toBean(jsonObject, FaxJob.class);
-	                	
+
 	                	faxJob.setStatus(faxJobUpdated.getStatus());
 	                	faxJob.setStatusString(faxJobUpdated.getStatusString());
 	                	

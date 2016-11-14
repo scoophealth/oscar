@@ -114,24 +114,33 @@ public class FaxImporter {
 	                	for( FaxJob receivedFax : faxList ) {	
 	                		
 	                		String fileName = null;
-	                		FaxJob faxFile = downloadFax( client, faxConfig, receivedFax );
+	                		FaxJob faxFile = null;
 	                		
-	                		// save to file system and assigned inbox Queue.
+	                		// if this recievedFax Object contains an error 
+	                		// skip the download step there is no file to download.
+	                		if( ! FaxJob.STATUS.ERROR.equals( receivedFax.getStatus() ) ) {
+	                			faxFile = downloadFax( client, faxConfig, receivedFax );
+	                		}
+	                		
+	                		// save the received fax to the file system and assign to an inbox Queue 
 	                		if( faxFile != null ) {	 	                			
 	                			fileName = saveAndInsertIntoQueue( faxConfig, receivedFax, faxFile );
 	                		}
-	                		
+
 	                		// The fileName variable will be NULL if the saveAndInsertIntoQueue methods fails
-	                		// to fully complete. If NULL, the file will not be deleted from the Host server.
-	                		// This method will attempt to download the file again. 
+	                		// to fully complete. If NULL, the file will not be deleted from the Host server. 
 	                		if( fileName != null ) {
 	                			deleteFax( client, faxConfig, receivedFax );
+	                		} else {
+	                			fileName = FaxJob.STATUS.ERROR.name();
 	                		}
 	                		
 	                		// this received fax may contain status errors that the 
 	                		// end user needs to see. So the job should be saved to the database anyway.
                 			receivedFax.setFile_name( fileName );
-	                		saveFaxJob( receivedFax );
+
+                			// save the receivedFax Object regardless of status or fileName.
+	                		saveFaxJob( new FaxJob( receivedFax ) );
 	                	}
 	                	
 					} else {
@@ -173,7 +182,16 @@ public class FaxImporter {
 				
 				ObjectMapper mapper = new ObjectMapper();
 				
-				downloadedFax = mapper.readValue(content, FaxJob.class);        						
+				downloadedFax = mapper.readValue( content, FaxJob.class );   
+				
+				fax.setStatus( downloadedFax.getStatus() );
+				fax.setStatusString( downloadedFax.getStatusString() );
+				
+				// the fileName will be null if there is an error
+				// will need to modify the receivedFax header appropriately. 
+    			if( FaxJob.STATUS.ERROR.equals( downloadedFax.getStatus() ) ) {   				
+    				downloadedFax = null;   				    				
+    			}
 			}
 			
 	      } catch (ClientProtocolException e) {
@@ -213,28 +231,30 @@ public class FaxImporter {
 	}
 	
 	private String saveAndInsertIntoQueue( FaxConfig faxConfig, FaxJob receivedFax, FaxJob faxFile ) {		 		
-
+	
 		String filename = receivedFax.getFile_name();
+		
 		filename = filename.replace("|", "-");
 		
 		if( filename.isEmpty() ) {
 			filename = System.currentTimeMillis() + ".pdf";
 		}
-			
+		
 		filename = filename.replace(".tif", ".pdf");
 
 		if( ! filename.endsWith(".pdf") || ! filename.endsWith(".PDF") ) {
 			filename = filename + ".pdf";
 		}
 		
-		filename = filename.trim();
+		filename = filename.trim();	
 		
 		log.info("Saving the Fax file " + filename + " meta data to Oscar's eDoc system.");
+
 
 		EDoc newDoc = new EDoc("Recieved Fax", "Recieved Fax", filename, "", 
 				DEFAULT_USER, DEFAULT_USER, "", 'A', 
 				DateFormatUtils.format(receivedFax.getStamp(), "yyyy-MM-dd"), 
-				"", "", "demographic", DEFAULT_USER, receivedFax.getNumPages());
+				"", "", "demographic", DEFAULT_USER, receivedFax.getNumPages() );
 		
 		newDoc.setDocPublic("0");
 		
@@ -263,9 +283,8 @@ public class FaxImporter {
 		return null;
 		
 	}
-	
-	private Integer saveFaxJob( FaxJob receivedFax) {		
-		FaxJob saveFax = new FaxJob(receivedFax);		
+
+	private Integer saveFaxJob( FaxJob saveFax ) {				
 		saveFax.setUser(DEFAULT_USER);
 		faxJobDao.persist(saveFax);
 		return saveFax.getId();
