@@ -133,7 +133,10 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 			for (int j = 0; j < labs.size(); j++) {
 				result = labs.get(j);
                 Date date = getServiceDate(loggedInInfo,result);
-                String formattedDate = DateUtils.getDate(date, "dd-MMM-yyyy", request.getLocale());
+                String formattedDate = "";
+                if(date != null) {
+                	DateUtils.getDate(date, "dd-MMM-yyyy", request.getLocale());
+                }
 				// String formattedDate = DateUtils.getDate(date);
 				func = new StringBuilder("popupPage(700,960,'");
 				label = result.getLabel();
