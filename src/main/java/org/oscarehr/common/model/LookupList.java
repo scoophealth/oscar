@@ -47,6 +47,8 @@ public class LookupList extends AbstractModel<Integer> {
 	
 	private String name;
 	
+	private String listTitle;
+	
 	private String description;
 	
 	private Integer categoryId;
@@ -77,6 +79,14 @@ public class LookupList extends AbstractModel<Integer> {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getListTitle() {
+		return listTitle;
+	}
+
+	public void setListTitle(String listTitle) {
+		this.listTitle = listTitle;
 	}
 
 	public String getDescription() {

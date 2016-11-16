@@ -315,6 +315,7 @@ CREATE TABLE consultationRequests (
   requestId int(10) NOT NULL auto_increment,
   concurrentProblems text,
   urgency char(2) default NULL,
+  appointmentInstructions VARCHAR(256),
   patientWillBook tinyint(1),
   followUpDate date default NULL,
   site_name varchar(255),
@@ -10267,6 +10268,7 @@ create table labPatientPhysicianInfo(
 create table LookupList (
         id int(11) NOT NULL AUTO_INCREMENT,
         name varchar(50) NOT NULL,
+        `listTitle` varchar(50),
         description varchar(255),
         categoryId int,
         `active` tinyint(1) not null,
@@ -12223,3 +12225,4 @@ CREATE TABLE `preventionsBilling` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `pbtype` (`preventionType`)
 );
+

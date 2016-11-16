@@ -127,6 +127,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 
 		// Creating a border for the entire request.
 		border = new PdfPTable(1);
+		border.setSplitLate(false);
 		addToTable(table, border, true);
 
 		if(props.getProperty("faxLogoInConsultation")!=null) {
@@ -281,9 +282,14 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 		infoTable.addCell(cell);
 
-		if (reqFrm.pwb.equals("1")){
+		if ( "1".equals(reqFrm.pwb) ){
 			cell.setPhrase(new Phrase(getResource("msgPleaseReplyPatient"), boldFont));
 		}
+		
+		// If not set to Patient Will Book then maybe a Custom Appointment Instruction is used.
+		else if( OscarProperties.getInstance().getBooleanProperty("CONSULTATION_APPOINTMENT_INSTRUCTIONS_LOOKUP", "true") ) {
+			cell.setPhrase( new Phrase( reqFrm.getAppointmentInstructionsLabel(), boldFont ));
+ 		}
 
 		else if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 			cell.setPhrase(new Phrase("", boldFont));

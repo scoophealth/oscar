@@ -110,9 +110,11 @@ import org.oscarehr.common.model.MsgDemoMap;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.quatro.model.security.Secrole;
@@ -156,8 +158,9 @@ public class CaseManagementManager {
 	private AppointmentArchiveDao appointmentArchiveDao;
 	private DxDao dxDao;
 	private ProgramManager2 programManager2;
-	
-	
+	@Autowired
+	private SecurityInfoManager securityInfoManager;
+
 	private boolean enabled;
 
 	private static final Logger logger = MiscUtils.getLogger();
@@ -310,11 +313,25 @@ public class CaseManagementManager {
 
 	}
 
-	/*
-	 * fetch notes for demographic linked with specified issuesif date is set, fetch notes after specified date
+	/**
+	 * @deprecated
+	 * Use authenticated method getNotes( LoggedInInfo loggedInInfo, String demographic_no, String[] issues, UserProperty prop)
 	 */
+	@Deprecated
 	public List<CaseManagementNote> getNotes(String demographic_no, String[] issues, UserProperty prop) {
 		if (prop == null) return getNotes(demographic_no, issues);
+
+		String staleDate = prop.getValue();
+		return caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues, staleDate);
+	}
+	
+	/*
+	 * fetch notes for demographic linked with specified issues if date is set, fetch notes after specified date
+	 */
+	public List<CaseManagementNote> getNotes( LoggedInInfo loggedInInfo, String demographic_no, String[] issues, UserProperty prop) {
+		if (prop == null) {
+			return getNotes( loggedInInfo, demographic_no, issues);
+		}
 
 		String staleDate = prop.getValue();
 		return caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues, staleDate);
@@ -328,8 +345,25 @@ public class CaseManagementManager {
 		return caseManagementNoteDAO.getNotesByDemographic(demographic_no, maxNotes);
 	}
 
+	/**
+	 * @deprecated
+	 * Use the authenticated method: getNotes(LoggedInInfo loggedInInfo, String demographic_no, String[] issues)
+	 */
+	@Deprecated
 	public List<CaseManagementNote> getNotes(String demographic_no, String[] issues) {
 		List<CaseManagementNote> notes = caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues);
+		return notes;
+	}
+	
+	public List<CaseManagementNote> getNotes( LoggedInInfo loggedInInfo, String demographic_no, String[] issues ) {
+
+		if( ! securityInfoManager.isAllowedAccessToPatientRecord( loggedInInfo, Integer.parseInt( demographic_no ) ) ) {
+			throw new RuntimeException("Access Denied");
+		}
+		
+		//TODO: not sure how the CAISI programs should be wired through the security info manager.
+		
+		List<CaseManagementNote> notes = caseManagementNoteDAO.getNotesByDemographic( demographic_no, issues );
 		return notes;
 	}
 

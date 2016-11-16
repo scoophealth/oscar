@@ -142,6 +142,8 @@ public class EctViewRequestAction extends Action {
             thisForm.setConcurrentProblems(consult.getConcurrentProblems());
             thisForm.setAppointmentNotes(consult.getStatusText());
             thisForm.setUrgency(consult.getUrgency());
+            thisForm.setAppointmentInstructions(consult.getAppointmentInstructions());
+
             thisForm.setPatientWillBook(String.valueOf(consult.isPatientWillBook()));
             
             date = consult.getFollowUpDate();
@@ -193,6 +195,8 @@ public class EctViewRequestAction extends Action {
         thisForm.setConcurrentProblems(consultUtil.concurrentProblems);
         thisForm.setAppointmentNotes(consultUtil.appointmentNotes);
         thisForm.setUrgency(consultUtil.urgency);
+        thisForm.setAppointmentInstructions(consultUtil.getAppointmentInstructions());
+        thisForm.setAppointmentInstructionsLabel( consultUtil.getAppointmentInstructionsLabel() );
         thisForm.setPatientWillBook(consultUtil.pwb);
 
         if( consultUtil.sendTo != null && !consultUtil.teamVec.contains(consultUtil.sendTo) ) {
