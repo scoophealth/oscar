@@ -462,19 +462,14 @@ if(!authed) {
             <tr>
                 <td align="center">
                     <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgConsReq"/>
-                    <br>
-                    <font size="-1">
-                        <b>
-                    <% if (bMultisites) {
-							out.print("Please reply");
-                    } else { %>
-                        <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPleaseReplyPart1"/>
-               			<%=reqFrm.getClinicName()%>
-               		<% } %>
-                        <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPleaseReplyPart2"/>
-                        </b>
-                    </font>
-                </td>
+               	</td>
+            </tr>
+            <tr>
+            	<td align="center"> 
+            		<strong>        	
+            		<%= reqFrm.getAppointmentInstructionsLabel() %>
+            		</strong>
+            	</td>
             </tr>
             <tr>
                 <td>

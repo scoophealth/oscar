@@ -102,6 +102,9 @@ public class EctConsultationFormRequestUtil {
 	
 	public Integer fdid;
 	
+	private String appointmentInstructions;
+	private String appointmentInstructionsLabel;
+	
 	private ConsultationServiceDao consultationServiceDao = (ConsultationServiceDao) SpringUtils.getBean("consultationServiceDao");
 	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 
@@ -220,7 +223,8 @@ public class EctConsultationFormRequestUtil {
 			allergies = cr.getAllergies();
 			sendTo = cr.getSendTo();
 			status = cr.getStatus();
-
+			setAppointmentInstructions( cr.getAppointmentInstructions() );
+			setAppointmentInstructionsLabel( cr.getAppointmentInstructionsLabel() );
 			letterheadName = cr.getLetterheadName();
 			letterheadTitle = daoExt.getConsultationRequestExtsByKey(ConversionUtils.fromIntString(id),"letterheadTitle");
 			letterheadAddress = cr.getLetterheadAddress();
@@ -382,5 +386,27 @@ public class EctConsultationFormRequestUtil {
 		}
 
 		return retval;
+	}
+
+	public String getAppointmentInstructions() {
+		return appointmentInstructions;
+	}
+
+	private void setAppointmentInstructions(String appointmentInstructions) {
+		if( appointmentInstructions == null ) {
+			appointmentInstructions = "";
+		}
+		this.appointmentInstructions = appointmentInstructions;
+	}
+
+	public String getAppointmentInstructionsLabel() {
+		return appointmentInstructionsLabel;
+	}
+
+	private void setAppointmentInstructionsLabel(String appointmentInstructionsLabel) {
+		if( appointmentInstructionsLabel == null ) {
+			appointmentInstructionsLabel = "";
+		}
+		this.appointmentInstructionsLabel = appointmentInstructionsLabel;
 	}
 }

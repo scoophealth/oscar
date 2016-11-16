@@ -600,6 +600,12 @@
 	</global-forwards>
 
 	<action-mappings>
+	
+		<action path="/lookupListManagerAction" type="org.oscarehr.admin.lookUpLists.LookupListManagerAction" 
+			scope="request" validate="false" parameter="method">
+			<forward name="success" path="/admin/lookUpLists/" />
+		</action>
+	
 		<!-- OMD Dashboard Proof of Concept -->
 		<action input="/web/dashboard/admin/DashboardManager.jsp" name="FrmForm" path="/web/dashboard/admin/DashboardManager" 
 			parameter="method" type="org.oscarehr.dashboard.admin.ManageDashboardAction" scope="request" >
@@ -1169,6 +1175,13 @@
 			<forward name="close" path="/oscarEncounter/close.jsp" />
 			<forward name="concurrencyError" path="/oscarEncounter/concurrencyError.jsp" />
 		</action>
+		
+		<!-- Import Clinical Data into the Consultation form -->
+		<action path="/oscarConsultationRequest/consultationClinicalData" scope="request" validate="false" parameter="method"
+			type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationClinicalDataAction" >
+			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp" />
+		</action>
+		
 		<action input=" " name="EctIncomingConsultationForm" path="/oscarEncounter/IncomingConsultation" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctIncomingConsultationAction">
 			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp" />
 		</action>
