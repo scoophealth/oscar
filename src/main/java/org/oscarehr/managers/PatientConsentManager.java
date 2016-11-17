@@ -23,6 +23,7 @@
  */
 package org.oscarehr.managers;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -210,7 +211,7 @@ public class PatientConsentManager {
 	 */
 	public List<ConsentType> getConsentTypes() {
 			
-		List<ConsentType> consentTypeList = null;
+		List<ConsentType> consentTypeList = new ArrayList<ConsentType>();
 		int count = consentTypeDao.getCountAll();
 		if ( count > 0 ) {
 			consentTypeList = consentTypeDao.findAll(0, count);
