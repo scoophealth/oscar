@@ -64,6 +64,7 @@ public class UploadTemplates extends Action {
     	}
 		
          String action = request.getParameter("action");
+         String xmltext = request.getParameter("xmltext");
          String message = "Error: Improper request - Action param missing";
          FormFile file = (FormFile) form.getMultipartRequestHandler().getFileElements().get("templateFile");
          String xml = "";
@@ -73,6 +74,9 @@ public class UploadTemplates extends Action {
          } catch (IOException ioe) {
              message = "Exception: File Not Found";
              MiscUtils.getLogger().error("Error", ioe);
+         }
+         if("edit".equals(action) && xml.length()==0) {
+        	 xml = xmltext;
          }
          ReportManager reportManager = new ReportManager();
          if (action.equals("add")) {
@@ -85,6 +89,7 @@ public class UploadTemplates extends Action {
          request.setAttribute("action", action);
          request.setAttribute("templateid", request.getParameter("templateid"));
          request.setAttribute("opentext", request.getParameter("opentext"));
+         request.setAttribute("xmltext", request.getParameter("xmltext"));
          return mapping.findForward("success");
     }
 }
