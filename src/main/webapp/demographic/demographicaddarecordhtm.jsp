@@ -180,9 +180,9 @@
             if(!checkFormTypeIn()) return false;
 
             //inside this method, it will post the form when the user says OK, or no dups found.
-           	ignoreDuplicates();
+           	return ignoreDuplicates();
            
-            return false;
+            //return false;
         }        
         
    </script>
@@ -519,6 +519,7 @@ function ignoreDuplicates() {
 		var monthOfBirth = jQuery("#month_of_birth").val();
 		var dayOfBirth = jQuery("#date_of_birth").val();
 	
+		var goForIt = false;
 	jQuery.ajax({
 			url:"../demographicSupport.do?method=checkForDuplicates&lastName="+lastName+"&firstName="+firstName+"&yearOfBirth="+yearOfBirth+"&monthOfBirth="+monthOfBirth+"&dayOfBirth="+dayOfBirth,
 			success:function(data){
@@ -527,23 +528,24 @@ function ignoreDuplicates() {
 						
 						if(confirm('There are other patients in this system with the same name and date of birth. Are you sure you want to create this new patient record?')) {
 							//submit the form
-							$("#adddemographic").submit();
+							goForIt = true;
 						}
 					} else {
 						
 						//submit the form
-						$("#adddemographic").submit();
+						goForIt = true;
 					}
 				} else {
 					
 					//submit the form
-					$("#adddemographic").submit();
+					goForIt = true;
 				}
 			},
 			dataType:'json',
 			async: false
 	});
 		
+	return goForIt;
 }
 
 var child_record_index=0;
