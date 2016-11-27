@@ -50,15 +50,19 @@ if(!authed) {
 <%@page import="java.text.DateFormatSymbols"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProgramDao"%>
 <%@page import="org.oscarehr.PMmodule.model.Program"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@page import="org.oscarehr.common.model.Provider" %>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");
 	ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
+	ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 	
 	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.getCurrentFacility().getId());
 	List<Program> programs=programDao.getProgramsByFacilityId(loggedInInfo.getCurrentFacility().getId());
+	List<Provider> providers = providerDao.getActiveProviders();
 %>
 
 <%@ include file="/taglibs.jsp"%>
@@ -85,9 +89,14 @@ if(!authed) {
 				Functional Centre
 			</label> 
 			<label class="radio inline"> 
-				<input type="radio" id="reportByPr" name="reportBy"
+				<input type="radio" id="reportByPr" name="reportByPr"
 				value="programs" onclick="toggleDivs()">
 				Programs
+			</label>
+			<label class="radio inline"> 
+				<input type="radio" id="reportByProvider" name="reportByProvider"
+				value="provider" onclick="toggleDivs()">
+				Provider
 			</label>
 			</div>
 		</div>
@@ -134,6 +143,18 @@ if(!authed) {
 					</label>
 
 				</div>
+				<div class="toggleDiv" style="display: none;">
+					<select name="providerId">
+						<%
+							for (Provider provider : providers)
+							{
+								%>
+									<option value="<%=provider.getProviderNo()%>"><%=StringEscapeUtils.escapeHtml(provider.getFormattedName())%></option>
+								<%
+							}
+						%>
+					</select>
+				</div>		
 		</div>
 	</div>
 	<hr style="border-bottom:1px solid #e5e5e5; width:100%;">

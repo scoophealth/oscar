@@ -46,10 +46,14 @@
 	Integer clientId=Integer.parseInt(request.getParameter("clientId"));
 	String admissionString=StringUtils.trimToNull(request.getParameter("hospitalAdmission"));
 	String dischargeString=StringUtils.trimToNull(request.getParameter("hospitalDischarge"));
+	if(admissionString == null && dischargeString==null) {
+		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+	}
+	else {
+		Calendar admissionDate=DateUtils.toGregorianCalendarDate(admissionString);
+		Calendar dischargeDate=DateUtils.toGregorianCalendarDate(dischargeString);
+		CdsForm4.addHospitalisationDay(clientId, admissionDate, dischargeDate);
 	
-	Calendar admissionDate=DateUtils.toGregorianCalendarDate(admissionString);
-	Calendar dischargeDate=DateUtils.toGregorianCalendarDate(dischargeString);
-	CdsForm4.addHospitalisationDay(clientId, admissionDate, dischargeDate);
-	
-	response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+	}
 %>

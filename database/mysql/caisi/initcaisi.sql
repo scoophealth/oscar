@@ -1934,7 +1934,8 @@ create table CdsClientForm
 	admissionId int,
 	index(admissionId),
 	initialContactDate date,
-	assessmentDate date
+	assessmentDate date,
+	serviceInitiationDate date
 );
 
 create table CdsClientFormData
@@ -2050,7 +2051,8 @@ create table CdsHospitalisationDays
 create table FunctionalCentre
 (
 	accountId varchar(64) primary key,
-	description varchar(255) not null
+	description varchar(255) not null,
+	enableCbiForm tinyint(1)
 );
 
 #create table group_note_link (
@@ -2109,3 +2111,21 @@ submissionType varchar(30),
 KEY `submitDateIndex` (`submitDateTime`),
 KEY `submissionTypeIndex` (`submissionType`)
 );
+
+
+create table functionalCentreAdmission
+(
+        id int(11) NOT NULL auto_increment,
+        demographicNo int(11) NOT NULL,
+        functionalCentreId varchar(64) NOT NULL,
+        referralDate date,
+        admissionDate date,
+        serviceInitiationDate date,
+        dischargeDate date,
+        discharged tinyint(1) NOT NULL,
+        providerNo varchar(6) NOT NULL,
+        updateDate datetime NOT NULL,
+	dischargeReason varchar(200),
+        PRIMARY KEY  (id)
+);
+

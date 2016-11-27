@@ -293,7 +293,14 @@
 	extensions.add(new DemographicExt(request.getParameter("OhissClientNumber_id"), proNo, demographicNo, "OhissClientNumber", request.getParameter("OhissClientNumber")));
 	extensions.add(new DemographicExt(request.getParameter("EpiInfoClientNumber_id"), proNo, demographicNo, "EpiInfoClientNumber", request.getParameter("EpiInfoClientNumber")));
 	extensions.add(new DemographicExt(request.getParameter("HedgehogClientNumber_id"), proNo, demographicNo, "HedgehogClientNumber", request.getParameter("HedgehogClientNumber")));
-	
+	extensions.add(new DemographicExt(request.getParameter("recipientLocation_id"), proNo, demographicNo, "recipientLocation", request.getParameter("recipientLocation")));
+	extensions.add(new DemographicExt(request.getParameter("lhinConsumerResides_id"), proNo, demographicNo, "lhinConsumerResides", request.getParameter("lhinConsumerResides")));
+	extensions.add(new DemographicExt(request.getParameter("address2_id"), proNo, demographicNo, "address2", request.getParameter("address2")));
+	extensions.add(new DemographicExt(request.getParameter("middleName_id"), proNo, demographicNo, "middleName", request.getParameter("middleName")));
+	extensions.add(new DemographicExt(request.getParameter("lastNameAtBirth_id"), proNo, demographicNo, "lastNameAtBirth", request.getParameter("lastNameAtBirth")));
+	extensions.add(new DemographicExt(request.getParameter("preferredName_id"), proNo, demographicNo, "preferredName", request.getParameter("preferredName")));
+	extensions.add(new DemographicExt(request.getParameter("maritalStatus_id"), proNo, demographicNo, "maritalStatus", request.getParameter("maritalStatus")));
+
 	ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
 	AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);
 	
@@ -413,7 +420,7 @@
 	String bedP = request.getParameter("rps");
     if(bedP != null && bedP.length()>0) {
 	    try {
-	   	 gieat.admitBedCommunityProgram(demographic.getDemographicNo(), (String)session.getAttribute("user"), Integer.parseInt(bedP), "", "(Master record change)", new java.util.Date());
+	   	 gieat.admitBedCommunityProgram(loggedInInfo, demographic.getDemographicNo(), (String)session.getAttribute("user"), Integer.parseInt(bedP), "", "(Master record change)", new java.util.Date());
 	    }catch(Exception e) {
 	    	
 	    }
@@ -424,7 +431,7 @@
     	Set<Integer> s = new HashSet<Integer>();
         for(String _s:servP) s.add(Integer.parseInt(_s));
    		try {
-   	   	 gieat.admitServicePrograms(demographic.getDemographicNo(), (String)session.getAttribute("user"), s, "(Master record change)", new java.util.Date());
+   	   	 gieat.admitServicePrograms(loggedInInfo, demographic.getDemographicNo(), (String)session.getAttribute("user"), s, "(Master record change)", new java.util.Date(), loggedInInfo.getCurrentFacility().getId());
    	    }catch(Exception e) {
    	 }
     }
@@ -435,7 +442,7 @@
     for(Program p:allServiceProgramsShown) {
     	if(!isFound(servP,p.getId().toString())) {
     		try {
-    			am.processDischarge(p.getId(), demographic.getDemographicNo(), "(Master record change)", "0");
+    			am.processDischarge(loggedInInfo, p.getId(), demographic.getDemographicNo(), "(Master record change)", "0");
     		}catch(org.oscarehr.PMmodule.exception.AdmissionException e) {}
     	}
     }

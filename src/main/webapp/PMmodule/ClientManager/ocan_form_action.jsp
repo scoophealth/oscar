@@ -51,6 +51,9 @@
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.apache.commons.lang.ArrayUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.common.model.FunctionalCentreAdmission" %>
+<%@page import="org.oscarehr.common.dao.FunctionalCentreAdmissionDao" %>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
@@ -192,6 +195,14 @@
 	
 	OcanFormAction.saveOcanStaffForm(ocanStaffForm);	
 	
+	// update service initiation date in functionalCentreAdmission table as this is the only place to change it.
+	if(ocanStaffForm.getAdmissionId()!=null) {
+		FunctionalCentreAdmissionDao functionalCentreAdmissionDao = (FunctionalCentreAdmissionDao) SpringUtils.getBean("functionalCentreAdmissionDao");
+		FunctionalCentreAdmission fca = functionalCentreAdmissionDao.find(Integer.valueOf(ocanStaffForm.getAdmissionId()));
+		fca.setServiceInitiationDate(ocanStaffForm.getServiceInitDate());
+		functionalCentreAdmissionDao.merge(fca);
+	}
+	
 	parameters.remove("lastName");
 	parameters.remove("firstName");
 	parameters.remove("addressLine1");
@@ -230,7 +241,7 @@
 			{
 				for (String value : entry.getValue())
 				{
-					OcanFormAction.addOcanStaffFormData(ocanStaffForm.getId(), entry.getKey(), value);				
+					OcanFormAction.addOcanStaffFormDataMultipleAnswers(ocanStaffForm.getId(), entry.getKey(), value);				
 				}
 			}
 		}

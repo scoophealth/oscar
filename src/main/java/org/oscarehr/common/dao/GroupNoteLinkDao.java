@@ -25,6 +25,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.GroupNoteLink;
 import org.springframework.stereotype.Repository;
 
@@ -33,5 +37,16 @@ public class GroupNoteLinkDao extends AbstractDao<GroupNoteLink>{
 
 	public GroupNoteLinkDao() {
 		super(GroupNoteLink.class);
+	}
+	
+	public List<GroupNoteLink> getGroupNotesByNoteId (Integer noteId) {
+		String sql = "SELECT a FROM GroupNoteLink a WHERE a.noteId=?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, noteId);
+		
+		@SuppressWarnings("unchecked")
+		List<GroupNoteLink> rs= query.getResultList();
+
+		return rs;
 	}
 }

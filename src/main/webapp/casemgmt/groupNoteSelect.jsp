@@ -42,6 +42,8 @@
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="java.util.List"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Collections"%>
 <%@page import="org.oscarehr.PMmodule.service.ProgramManager"%>
 <%@page import="org.oscarehr.PMmodule.service.AdmissionManager"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
@@ -55,6 +57,7 @@
 	GroupNoteDao groupNoteLinkDao = (GroupNoteDao)SpringUtils.getBean("groupNoteDao"); 
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	List<Admission> admissions = admissionManager.getCurrentAdmissionsByProgramId(request.getParameter("programId"));
+	List<Demographic> demographics = demographicDao.getActiveDemographicByProgramId(Integer.parseInt((String)request.getParameter("programId")));
 	
 	String demographicNo = request.getParameter("demographicNo");
 	
@@ -109,12 +112,9 @@
 		<input type="hidden" name="demographicNo" value="<%=demographicNo%>"/>
 	<table>
 	
-<%
-	for(Admission admission:admissions) {
-		Demographic demographic = admission.getClient();
-		if(demographic.getDemographicNo().intValue() == Integer.parseInt(demographicNo)) {
-			continue;
-		}
+<%  
+	for(Demographic demographic : demographics ) {		
+	
 %>
 	<tr>
 		<td><input type="checkbox" name="group_client_id" value="<%=demographic.getDemographicNo()%>"/></td>

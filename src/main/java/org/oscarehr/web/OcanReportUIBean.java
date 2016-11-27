@@ -278,7 +278,7 @@ public class OcanReportUIBean implements CallbackHandler {
 	public static OCANv2SubmissionFileDocument generateOCANSubmission(Integer facilityId, String ocanType,String assessmentid) {
 		int increment = 1;
 
-	 	List<OcanStaffForm> ocanStaffForms = ocanStaffFormDao.findUnsubmittedOcanFormsByOcanType(facilityId, ocanType,assessmentid);
+	 	List<OcanStaffForm> ocanStaffForms = ocanStaffFormDao.findUnsubmittedOcanFormsByOcanType(facilityId, ocanType);
 		logger.info("# of staff forms found for submission = " + ocanStaffForms.size());
 
 		OCANv2SubmissionFileDocument submissionFileDoc = OCANv2SubmissionFileDocument.Factory.newInstance();

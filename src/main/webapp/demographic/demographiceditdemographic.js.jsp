@@ -79,7 +79,6 @@
    int curYear = now.get(Calendar.YEAR);
    int curMonth = (now.get(Calendar.MONTH)+1);
    int curDay = now.get(Calendar.DAY_OF_MONTH);
-
 %>
 
 function rs(n,u,w,h,x) {
@@ -202,19 +201,47 @@ function checkSex() {
 	return(true);
 }
 
-
+function checkCaisiRecipientLocation(){
+	    var rs = document.updatedelete.recipientLocation.value;
+	    if(rs.length == 0) {	    	
+	        alert("you must choose a Recipient Location");
+	     	return(false);
+	    }
+	    return(true);
+}
+	
+function checkCaisiLHIN(){
+	    var rs = document.updatedelete.lhinConsumerResides.value;
+	    if(rs.length == 0) {	    
+	        alert("you must choose a LHIN Consumer Resides");
+	     	return(false);
+	    }
+	    return(true);
+}
+	
 function checkTypeInEdit() {
   if ( !checkName() ) return false;
   if ( !checkDob() ) return false;
   if ( !checkHin() ) return false;
   if ( !checkSex() ) return false;
   
+  <% if("on".equals(OscarProperties.getInstance().getProperty("caisi","off"))) { %>
+  
+	if( !checkCaisiRecipientLocation() ) 
+		return false;	
+		
+	if( !checkCaisiLHIN() ) 
+		return false;
+  	
+  <%} %>
+  
   <% if("false".equals(OscarProperties.getInstance().getProperty("skip_postal_code_validation","false"))) { %>
   if ( !isPostalCode() ) return false;
   <% } %>
   if ( !checkRosterStatus() ) return false;
   if ( !checkPatientStatus() ) return false;
-  return(true);
+     
+  return true;
 }
 
 function formatPhoneNum() {

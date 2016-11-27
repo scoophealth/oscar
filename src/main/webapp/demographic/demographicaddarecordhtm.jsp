@@ -80,6 +80,7 @@
 <%@page import="org.oscarehr.managers.PatientConsentManager" %>
 <%@page import="oscar.util.SuperSiteUtil"%>
 <%@ page import="org.oscarehr.common.dao.*,org.oscarehr.common.model.*" %>
+<%@page import="org.oscarehr.PMmodule.web.OcanForm"%>
 
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -163,7 +164,7 @@
 	showOhiss = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Ohiss_id","").split(","),pp3);
 	showEpiInfo = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("EpiInfo_id","").split(","),pp3);
 	showHedgehog = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Hedgehog_id","").split(","),pp3);
-	
+		
 %>
 <html:html locale="true">
 <head>
@@ -454,6 +455,24 @@ function checkAllDate() {
 		return false;
 	}
 
+	function checkCaisiRecipientLocation(){
+	    var rs = document.adddemographic.recipientLocation.value;
+	    if(rs.length == 0) {    
+	        alert("you must choose a Recipient Location");
+	     	return false;
+	    }
+		return true;
+	}
+	
+	function checkCaisiLHIN(){
+	    var rs = document.adddemographic.lhinConsumerResides.value;
+	    if(rs.length == 0) {   	
+	        alert("you must choose a LHIN Consumer Resides");
+	     	return false;
+	    }
+		return true;
+	}
+	
 function checkFormTypeIn() {
 	if(document.getElementById("eform_iframe")!=null)document.getElementById("eform_iframe").contentWindow.document.forms[0].submit();
 	if ( !checkName() ) return false;
@@ -462,6 +481,17 @@ function checkFormTypeIn() {
 	if ( !checkSex() ) return false;
 	if ( !checkResidentStatus() ) return false;
 	if ( !checkAllDate() ) return false;
+	
+	<% if("on".equals(OscarProperties.getInstance().getProperty("caisi","off"))) { %>
+	alert("caisiEnabled="+caisiEnabled);
+	
+	if( !checkCaisiRecipientLocation() ) 
+		return false;	
+		
+	if( !checkCaisiLHIN() ) 
+		return false;
+	
+	<% } %>
 	return true;
 }
 
@@ -692,6 +722,41 @@ function removeChildRecord(index) {
         <input type="text" name="first_name" id="first_name" onBlur="upCaseCtrl(this)"  value="<%=firstNameVal%>" size=30>
       </td>
     </tr>
+    
+    <tr>
+      <td align="right"> <b><bean:message key="demographic.demographiceditdemographic.middleName"/>: </b></td>
+      <td id="middleName" align="left">
+        <input type="text" name="middleName" id="middleName" onBlur="upCaseCtrl(this)" size=30 >
+
+      </td>
+      <td align="right"><b><bean:message key="demographic.demographiceditdemographic.lastNameAtBirth"/>: </b> </td>
+      <td id="lastNameAtBirth" align="left">
+        <input type="text" name="lastNameAtBirth" id="lastNameAtBirth" onBlur="upCaseCtrl(this)" size=30>
+      </td>
+    </tr>
+    
+    <tr>
+      <td align="right"> <b><bean:message key="demographic.demographiceditdemographic.preferredName"/>: </b></td>
+      <td id="preferredName" align="left">
+        <input type="text" name="preferredName" id="preferredName" onBlur="upCaseCtrl(this)" size=30 >
+
+      </td>
+      <td align="right" id="maritalStatus"><b><bean:message key="demographic.demographiceditdemographic.maritalStatus"/>: </b> </td>
+      <td id="maritalStatus" align="left">
+      	<select id="maritalStatus" name="maritalStatus">
+      	<option value=""></option>
+      	<%                                   
+        List<OcanFormOption> ocanFormOptions = OcanForm.getOcanFormOptions("Marital Status");
+        for(OcanFormOption ocanFormOption : ocanFormOptions){
+        %>
+        	<option value="<%=ocanFormOption.getOcanDataCategoryValue() %>" ><%=ocanFormOption.getOcanDataCategoryName()  %></option>
+        <%
+         }
+        %>
+      	</select>        
+      </td>
+    </tr>
+    
     <tr>
 	<td id="languageLbl" align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgDemoLanguage"/><font color="red">:</font></b></td>
 	<td id="languageCell" align="left">
@@ -1565,11 +1630,11 @@ document.forms[1].r_doctor_ohip.value = refNo;
 			    <td colspan="4">
 			        <table border="1" width="100%">
 			            <tr bgcolor="#CCCCFF">
-			                <td colspan="2" >Program Admissions</td>
+			                <td colspan="3" >Program Admissions</td>
 			            </tr>
 			            <tr>
-			                <td>Residential Status<font color="red">:</font></td>
-			                <td>Service Programs</td>
+			                <td>Residential Status<font color="red">:</font></td>			                
+			                <td colspan="2">Service Programs</td>
 			            </tr>
 			            <tr>
 			                <td>
@@ -1590,8 +1655,8 @@ document.forms[1].r_doctor_ohip.value = refNo;
                                         }
                                      %>
                                 </select>
-			                </td>
-			                <td>
+			                </td>			               
+			                <td colspan="2">
 			                    <%
 			                        List<Program> servP = gieat.getServicePrograms(pset,_pvid);
 			                        for(Program _p:servP){
@@ -1600,6 +1665,48 @@ document.forms[1].r_doctor_ohip.value = refNo;
 			                    <%}%>
 			                </td>
 			            </tr>
+			            			            
+			            <caisi:isModuleLoad moduleName="caisi">
+			            <tr><td colspan="3">&nbsp;</td></tr>
+			            <tr><td colspan="3">&nbsp;</td></tr>
+			            
+			            <tr>
+			            	<td>Recipient Location</font></td>
+			                <td>LHIN Consumer Resides</td>
+			                <td>Address 2</td>
+			            </tr>
+			            <tr>
+			            	<td>
+                                <select id="recipientLocation" name="recipientLocation">
+                                		<option value=""></option>
+                                    <%                                   
+                                        ocanFormOptions = OcanForm.getOcanFormOptions("Recipient Location");
+                                        for(OcanFormOption ocanFormOption : ocanFormOptions){
+                                    %>
+                                        <option value="<%=ocanFormOption.getOcanDataCategoryValue() %>" ><%=ocanFormOption.getOcanDataCategoryName()  %></option>
+                                    <%
+                                        }
+                                     %>
+                                </select>
+			                </td>
+			                <td>
+			                	<select id="lhinConsumerResides" name="lhinConsumerResides">
+			                			<option value=""></option>
+			                			<%                                   
+                                        ocanFormOptions = OcanForm.getOcanFormOptions("LHIN code");
+                                        for(OcanFormOption ocanFormOption : ocanFormOptions){
+                                    %>
+                                        <option value="<%=ocanFormOption.getOcanDataCategoryValue() %>" ><%=ocanFormOption.getOcanDataCategoryName()  %></option>
+                                    <%
+                                        }
+                                     %>
+			                	</select>
+			                </td>
+			                <td>
+			                	<input type="text" id="address2" name="address2" value="">
+			                </td>			                
+			            </tr>
+			            </caisi:isModuleLoad>
 			        </table>
 			    </td>
 			</tr>

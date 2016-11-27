@@ -28,6 +28,7 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.exception.AdmissionException;
+import org.oscarehr.PMmodule.exception.FunctionalCentreDischargeException;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
@@ -102,10 +103,12 @@ public class BedProgramDischargeTask extends TimerTask {
                         
                         if (bedDemographic != null && bedDemographic.getId() != null && bedDemographic.isExpired()) {
                             try {
-                                admissionManager.processDischargeToCommunity(Program.DEFAULT_COMMUNITY_PROGRAM_ID, bedDemographic.getId().getDemographicNo(), Provider.SYSTEM_PROVIDER_NO, "bed reservation ended - automatically discharged", "0", null);
+                                admissionManager.processDischargeToCommunity(null, Program.DEFAULT_COMMUNITY_PROGRAM_ID, bedDemographic.getId().getDemographicNo(), Provider.SYSTEM_PROVIDER_NO, "bed reservation ended - automatically discharged", "0" , null, false);
                             }
                             catch (AdmissionException e) {
                                 log.error("Error discharging to community", e);
+                            } catch (FunctionalCentreDischargeException e) {
+                            	log.error("Error discharging from functional centre:" , e);
                             }
                         }
                     }

@@ -33,11 +33,10 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.oscarehr.PMmodule.dao.ClientReferralDAO;
-import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.common.dao.FunctionalCentreAdmissionDao;
 import org.oscarehr.common.dao.OcanClientFormDao;
 import org.oscarehr.common.dao.OcanConnexOptionDao;
 import org.oscarehr.common.dao.OcanFormOptionDao;
@@ -66,6 +65,7 @@ public class OcanForm {
 	private static OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");	
 	private static OcanClientFormDao ocanClientFormDao = (OcanClientFormDao) SpringUtils.getBean("ocanClientFormDao");
 	private static OcanConnexOptionDao ocanConnexOptionDao = (OcanConnexOptionDao) SpringUtils.getBean("ocanConnexOptionDao");
+    private static FunctionalCentreAdmissionDao functionalCentreAdmissionDao = (FunctionalCentreAdmissionDao) SpringUtils.getBean("functionalCentreAdmissionDao");
 		
 	public static Demographic getDemographic(String demographicId)
 	{
@@ -167,7 +167,7 @@ public class OcanForm {
 		ocanStaffForm.setAddressLine2("");
 		ocanStaffForm.setOcanType(ocanType);
 		ocanStaffForm.setAssessmentId(ocanStaffForm.getId());
-		
+		/*
 		//get admission info
 		List<Admission> admissions = admissionDao.getAdmissionsByProgramAndClient(clientId, programId);
 		if(admissions.size()>0) {
@@ -191,6 +191,7 @@ public class OcanForm {
 			}
 			
 		}
+		*/
 		
 		if(prepopulationLevel == OcanForm.PRE_POPULATION_LEVEL_DEMOGRAPHIC) {				
 				Demographic demographic=demographicDao.getDemographicById(clientId);		
@@ -1094,16 +1095,18 @@ public class OcanForm {
 
 	 
 	public static String getOcanWarningMessage(Integer facilityId) {
-				
+		boolean appendFailureMessage = true;	
 		StringBuilder messages = new StringBuilder();
-		messages.append("You need to do OCAN reassessment for the clients whose IDs are: ");
-		
 		int doReassessment = 0;
 		
 	
 		List<Integer> demographicList = ocanStaffFormDao.findClientsWithOcan(facilityId);
 		for(Integer clientId: demographicList) {
 			if(isItTimeToDoReassessment(facilityId, clientId)){
+				if(appendFailureMessage) {
+					messages.append("You need to do OCAN reassessment for the clients whose IDs are: ");
+					appendFailureMessage = false;
+				}
 				messages.append(clientId+" , ");
 				doReassessment ++;
 			}		
@@ -1120,14 +1123,35 @@ public class OcanForm {
 		
 		boolean result = false;
 		
+		Object[] ocanStaffForm = ocanStaffFormDao.findLatestCompletedReassessment_startDates(facilityId,clientId);
 		Object[] ocanStaffForm1 = ocanStaffFormDao.findLatestCompletedInitialOcan_startDates(facilityId,clientId);	
+		Object[] ocanStaffForm2 = ocanStaffFormDao.findLatestCompletedFormStartDates(facilityId, clientId);
 		
-		Object[] ocanStaffForm = ocanStaffFormDao.findLatestCompletedReassessment_startDates(facilityId,clientId);	
-				
+		OcanStaffFormData formData;	
+		
+		if(ocanStaffForm2!=null){
+			//If exit date exists, it means the client was discharged from the functional centre. Don't have to do OCAN again.
+			formData = ocanStaffFormDataDao.findLatestByQuestion((Integer)ocanStaffForm2[2], "serviceUseRecord_exitDate1");
+			if(formData!=null) {
+				if(formData.getAnswer()!=null)
+					return false;
+			}	
+		}		
+		
 		Date startDate = null;
 		if(ocanStaffForm!=null) {
+			formData = ocanStaffFormDataDao.findLatestByQuestion((Integer)ocanStaffForm[2], "serviceUseRecord_exitDate1");
+			if(formData!=null) {
+				if(formData.getAnswer()!=null)
+					return false;
+			}
 			startDate = OcanForm.getAssessmentStartDate((Date)ocanStaffForm[0],(Date)ocanStaffForm[1]);
-		} else if(ocanStaffForm1!=null) {			
+		} else if(ocanStaffForm1!=null) {	
+			formData = ocanStaffFormDataDao.findLatestByQuestion((Integer)ocanStaffForm1[2], "serviceUseRecord_exitDate1");
+			if(formData!=null) {
+				if(formData.getAnswer()!=null)
+					return false;
+			}
 			startDate = OcanForm.getAssessmentStartDate((Date)ocanStaffForm1[0],(Date)ocanStaffForm1[1]);			
 		} else {
 			return result;

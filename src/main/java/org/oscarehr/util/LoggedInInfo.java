@@ -47,6 +47,7 @@ public final class LoggedInInfo implements Serializable {
 	
 	
 	public final String LOGGED_IN_INFO_KEY = LoggedInInfo.class.getName() + ".LOGGED_IN_INFO_KEY";
+	//public static final ThreadLocal<LoggedInInfo> loggedInInfo = new ThreadLocal<LoggedInInfo>();
 	
 	private HttpSession session = null;
 	private Facility currentFacility = null;
