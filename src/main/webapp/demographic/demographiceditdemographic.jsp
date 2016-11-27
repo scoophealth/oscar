@@ -71,6 +71,7 @@
 <%@page import="org.oscarehr.common.model.EncounterType" %>
 <%@page import="org.oscarehr.common.dao.EncounterTypeDao" %>
 <%@page import="oscar.util.SuperSiteUtil"%>
+<%@page import="org.oscarehr.PMmodule.web.OcanForm"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
@@ -1885,6 +1886,43 @@ if ( Dead.equals(PatStat) ) {%>
 									size="30" value="<%=StringEscapeUtils.escapeHtml(demographic.getFirstName())%>"
 									onBlur="upCaseCtrl(this)"></td>
 							</tr>
+							
+							<tr>
+								<td align="right">									
+								<b><bean:message key="demographic.demographiceditdemographic.middleName" />: </b></td>
+								<td align="left"><input type="text" name="middleName" <%=getDisabled("middleName")%>
+									size="30" value="<%=StringEscapeUtils.escapeHtml(StringUtils.trimToEmpty(demoExt.get("middleName")))%>"
+									onBlur="upCaseCtrl(this)"></td>
+								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.lastNameAtBirth" />:
+								</b></td>
+								<td align="left"><input type="text" name="lastNameAtBirth" <%=getDisabled("lastNameAtBirth")%>
+									size="30" value="<%=StringEscapeUtils.escapeHtml(StringUtils.trimToEmpty(demoExt.get("lastNameAtBirth")))%>"
+									onBlur="upCaseCtrl(this)"></td>
+							</tr>
+							
+							<tr>
+								<td align="right">									
+								<b><bean:message key="demographic.demographiceditdemographic.preferredName" />: </b></td>
+								<td align="left"><input type="text" name="preferredName" <%=getDisabled("preferredName")%>
+									size="30" value="<%=StringEscapeUtils.escapeHtml(StringUtils.trimToEmpty(demoExt.get("preferredName")))%>"
+									onBlur="upCaseCtrl(this)"></td>
+								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.maritalStatus" />:
+								</b></td>
+								
+								<td align="left">
+                                <select id="maritalStatus" name="maritalStatus">
+                                		<option value=""></option>
+                                    <%                                   
+                                        List<OcanFormOption> ocanFormOptions = OcanForm.getOcanFormOptions("Marital Status");
+                                        for(OcanFormOption ocanFormOption : ocanFormOptions){
+                                    %>
+                                        <option value="<%=ocanFormOption.getOcanDataCategoryValue() %>" <%=ocanFormOption.getOcanDataCategoryValue().equals(StringUtils.trimToEmpty(demoExt.get("maritalStatus")))?" selected":""%> ><%=ocanFormOption.getOcanDataCategoryName()  %></option>
+                                    <%
+                                        }
+                                     %>
+                                </select></td>								
+							</tr>
+							
 							<tr>
 							  <td align="right"><b><bean:message key="demographic.demographiceditdemographic.msgDemoLanguage"/>: </b> </td>
 							    <td align="left">
@@ -2595,9 +2633,9 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.DateJoined" />: </b></td>
 								<td align="left">
-									<input  type="text" name="roster_date_year" size="4" maxlength="4" value="<%=rosterDateYear%>">
-									<input  type="text" name="roster_date_month" size="2" maxlength="2" value="<%=rosterDateMonth%>">
-									<input  type="text" name="roster_date_day" size="2" maxlength="2" value="<%=rosterDateDay%>">
+									<input  type="text" id="roster_date_year" name="roster_date_year" size="4" maxlength="4" value="<%=rosterDateYear%>">
+									<input  type="text" id="roster_date_month" name="roster_date_month" size="2" maxlength="2" value="<%=rosterDateMonth%>">
+									<input  type="text" id="roster_date_day" name="roster_date_day" size="2" maxlength="2" value="<%=rosterDateDay%>">
 								</td>
 							</tr>
 							
@@ -3055,11 +3093,11 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 			    <td colspan="4">
 			        <table border="1" width="100%">
 			            <tr bgcolor="#CCCCFF">
-			                <td colspan="2" >Program Admissions</td>
+			                <td colspan="3" >Program Admissions</td>
 			            </tr>
 			            <tr>
-			                <td>Residential Status<font color="red">:</font></td>
-			                <td>Service Programs</td>
+			                <td>Residential Status<font color="red">:</font></td>			                
+			                <td colspan="2" >Service Programs</td>
 			            </tr>
 			            <tr>
 			                <td>
@@ -3087,7 +3125,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                 </select>
                                 
 			                </td>
-			                <td>
+			                <td colspan="2" >
 			                    <%
 			                    	ProgramManager programManager = SpringUtils.getBean(ProgramManager.class);
 			                    	List<Program> servP = programManager.getServicePrograms();
@@ -3110,6 +3148,47 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 			                    <%}%>
 			                </td>
 			            </tr>
+			            
+			            <caisi:isModuleLoad moduleName="caisi">		
+			           	<tr>
+			            	<td>Recipient Location</font></td>
+			                <td>LHIN Consumer Resides</td>
+			                <td>Address 2</td>
+			            </tr>
+			            <tr>
+			            	<td>
+                                <select id="recipientLocation" name="recipientLocation">
+                                		<option value=""></option>
+                                    <%                                   
+                                        ocanFormOptions = OcanForm.getOcanFormOptions("Recipient Location");
+                                        for(OcanFormOption ocanFormOption : ocanFormOptions){
+                                    %>
+                                        <option value="<%=ocanFormOption.getOcanDataCategoryValue() %>" <%=ocanFormOption.getOcanDataCategoryValue().equals(StringUtils.trimToEmpty(demoExt.get("recipientLocation")))?" selected":""%> ><%=ocanFormOption.getOcanDataCategoryName()  %></option>
+                                    <%
+                                        }
+                                     %>
+                                </select>
+			                </td>
+			                <td>
+			                	<select id="lhinConsumerResides" name="lhinConsumerResides">
+			                			<option value=""></option>
+			                			<%                                   
+                                        ocanFormOptions = OcanForm.getOcanFormOptions("LHIN code");
+                                        for(OcanFormOption ocanFormOption : ocanFormOptions){
+                                    %>
+                                        <option value="<%=ocanFormOption.getOcanDataCategoryValue() %>" <%=ocanFormOption.getOcanDataCategoryValue().equals(StringUtils.trimToEmpty(demoExt.get("lhinConsumerResides")))?" selected":""%>  ><%=ocanFormOption.getOcanDataCategoryName()  %></option>
+                                    <%
+                                        }
+                                     %>
+			                	</select>
+			                </td>
+			                <td>
+			                	<input type="text" id="address2" name="address2" value="<%=StringUtils.trimToEmpty(StringUtils.trimToEmpty(demoExt.get("address2")))%>" />			                	
+			                </td>
+			                <td>
+			                </td>
+			            </tr>
+			            </caisi:isModuleLoad>
 			        </table>
 			    </td>
 			</tr>

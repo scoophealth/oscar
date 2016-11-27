@@ -108,6 +108,10 @@ if(!authed) {
 	}
 %>
 
+<%@include file="/layouts/caisi_html_top.jspf"%>
+
+
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <h3>CDS Report</h3>
 <span style="font-weight:bold">Functional Centre : </span><%=cds4ReportUIBean.getFunctionalCentreDescription()%>
 <br />
@@ -132,32 +136,37 @@ if(!authed) {
 	}
 %>
 
-<table class="table table-bordered table-striped table-hover">
-	<thead>
-		<tr>
-		<th>CDS Category ID</th>
-		<th>CDS Category Description</th>
-		<th>Multi<br />Admn</th>
+
+
+<table class="genericTable borderedTableAndCells" style="font-size:12px">
+	<tr class="genericTableHeader">
+		<td style="width:5em">CDS Category ID</td>
+		<td style="width:15em">CDS Category Description</td>
+		<td>Multi<br />Admn</td>
 		<%
 			for (int i=0; i<Cds4ReportUIBean.NUMBER_OF_COHORT_BUCKETS; i++)
 			{
 				%>
-					<th>Coh<br /><%=i%></th>
+					<td>Coh<br /><%=i%></td>
 				<%
 			}
 		%>
-		<th>Coh<br />Total</th>
+		<td>Coh<br />Total</td>
 	</tr>
-	</thead>
-	<tbody>
 	<%
+		int rowCounter=0;
 		for (CdsFormOption cdsFormOption : cdsFormOptions)
 		{
+			rowCounter++;
+			String backgroundColour;
+			if (rowCounter%2==0) backgroundColour="#eeeeee";
+			else backgroundColour="#dddddd";
+				
 			int[] dataRow=cds4ReportUIBean.getDataRow(cdsFormOption);
 			%>
-				<tr>
-					<td><%=StringEscapeUtils.escapeHtml(cdsFormOption.getCdsDataCategory())%></td>
-					<td><%=StringEscapeUtils.escapeHtml(cdsFormOption.getCdsDataCategoryName())%></td>
+				<tr class="genericTableRow" style="background-color:<%=backgroundColour%>">
+					<td style="font-weight:bold"><%=StringEscapeUtils.escapeHtml(cdsFormOption.getCdsDataCategory())%></td>
+					<td style="font-weight:bold"><%=StringEscapeUtils.escapeHtml(cdsFormOption.getCdsDataCategoryName())%></td>
 					<%
 						for (int dataElement : dataRow)
 						{
@@ -171,5 +180,6 @@ if(!authed) {
 			<%
 		}
 	%>
-	</tbody>
 </table>
+
+<%@include file="/layouts/caisi_html_bottom.jspf"%>

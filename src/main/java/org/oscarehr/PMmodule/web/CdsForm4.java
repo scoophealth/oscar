@@ -47,6 +47,7 @@ import org.oscarehr.common.model.CdsFormOption;
 import org.oscarehr.common.model.CdsHospitalisationDays;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.OcanStaffForm;
+import org.oscarehr.common.dao.FunctionalCentreAdmissionDao;
 import org.oscarehr.util.SpringUtils;
 import oscar.util.CBIUtil;
 
@@ -59,6 +60,7 @@ public class CdsForm4 {
 	private static CdsClientFormDataDao cdsClientFormDataDao = (CdsClientFormDataDao) SpringUtils.getBean("cdsClientFormDataDao");
 	private static CdsHospitalisationDaysDao cdsHospitalisationDaysDao = (CdsHospitalisationDaysDao) SpringUtils.getBean("cdsHospitalisationDaysDao");
 	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
+	private static FunctionalCentreAdmissionDao fcAdmissionDao = (FunctionalCentreAdmissionDao)SpringUtils.getBean("functionalCentreAdmissionDao");;
 
 	private static final int MAX_DISPLAY_NAME_LENGTH = 60;
 
@@ -194,17 +196,21 @@ public class CdsForm4 {
 		return (results);
 	}
 
-	public static String renderSelectQuestion(boolean multiple, boolean dropDown, boolean forPrint, Integer cdsClientFormId, String question, List<CdsFormOption> options) {
-		if (!forPrint) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("<select " + (multiple ? "multiple=\"multiple\" " : "") + "name=\"" + question + "\" " + (!dropDown ? "style=\"height:8em\"" : "") + ">");
+	public static String renderSelectQuestion(boolean disabled, boolean multiple, boolean dropDown, boolean forPrint, Integer cdsClientFormId, String question, List<CdsFormOption> options, String classStyle) {
+		StringBuilder sb = new StringBuilder();
+		if (!forPrint && !disabled) {			
+			sb.append("<select " + (multiple ? "multiple=\"multiple\" " : "") + "id=\"" + question + "\" " + "name=\"" + question + "\" " + (!dropDown ? "style=\"height:8em\" " : "") + classStyle + "  >");
 			sb.append(renderAsSelectOptions(cdsClientFormId, question, options));
 			sb.append("</select>");
-
 			return (sb.toString());
-		} else {
-			StringBuilder sb = new StringBuilder();
-
+			
+		} else if(disabled){			
+			sb.append("<select " + (multiple ? "multiple=\"multiple\" " : "") + "id=\"" + question + "\" " + "name=\"" + question + "\" " + (!dropDown ? "style=\"height:8em\" " : "") + classStyle + "  >");
+			sb.append(renderAsSelectOptions(cdsClientFormId, question, options));
+			sb.append("</select>");
+			return (sb.toString());
+			
+		} else {			
 			List<CdsClientFormData> existingAnswers = getAnswers(cdsClientFormId, question);
 			for (CdsClientFormData answer : existingAnswers) {
 				CdsFormOption option = getOptionFromAnswerId(options, answer.getAnswer());
@@ -343,10 +349,21 @@ public class CdsForm4 {
 
 	public static void addHospitalisationDay(Integer clientId, Calendar admissionDate, Calendar dischargeDate) {
 		CdsHospitalisationDays cdsHospitalisationDays = new CdsHospitalisationDays();
-		cdsHospitalisationDays.setClientId(clientId);
-		cdsHospitalisationDays.setAdmitted(admissionDate);
-		cdsHospitalisationDays.setDischarged(dischargeDate);
-		cdsHospitalisationDaysDao.persist(cdsHospitalisationDays);
+		
+		CdsHospitalisationDays cdsh = cdsHospitalisationDaysDao.findByClientIdAdmissionDateNullDischargeDate(clientId);
+		if(cdsh == null) {
+			if(admissionDate == null && dischargeDate != null ) {
+				//admissionDate can not be null.
+				return;
+			}
+			cdsHospitalisationDays.setClientId(clientId);
+			cdsHospitalisationDays.setAdmitted(admissionDate);
+			cdsHospitalisationDays.setDischarged(dischargeDate);
+			cdsHospitalisationDaysDao.persist(cdsHospitalisationDays);
+		} else {			
+			cdsh.setDischarged(dischargeDate);
+			cdsHospitalisationDaysDao.merge(cdsh);
+		}
 	}
 
 	public static void deleteHospitalisationDay(Integer hospitalisationDayId) {

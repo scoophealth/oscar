@@ -75,6 +75,8 @@ if(!authed) {
 	
 %>
 
+<%@include file="/layouts/html_top.jspf"%>
+
 <script>
 function chooseProgramProviderFilter() {
 	var pId = jQuery("#pIds").val();
@@ -99,8 +101,21 @@ function chooseProgramProviderFilter() {
 
 </script>
 
+<script type="text/javascript">
+	function validate(form)
+	{
+		var fields = form.elements;
+
+		if (fields.functionalCentreId.value==null||fields.functionalCentreId.value=="")
+		{
+			alert('Please select a functional centre.');
+			return(false);
+		}
+	}
+</script>
+
 <div class="page-header">
-	<h4>CDS Reports</h4>
+	<h1>CDS Reports</h1>
 </div>
 
 <form class="well form-horizontal" action="${ctx}/oscarReport/cds_4_report_results.jsp"
@@ -130,9 +145,22 @@ function chooseProgramProviderFilter() {
 			<div class="controls">
 				<input type="text" name="startDate" id="startDate" />
 				<script type="text/javascript">
-					$('#startDate').datepicker({ format: 'yyyy-mm-dd' });
-					$('#startDate').val('<%=lastMonth%>');
-					$('#startDate').attr("readonly", true);
+					jQuery('#startDate').datepicker({ dateFormat: 'yy-mm-dd' });
+					
+					var d=new Date();
+					var month=d.getMonth();
+					if (month>0)
+					{
+						d.setMonth(month-1);
+					}
+					else
+					{
+						d.setMonth(11);
+						d.setYear(d.getYear()-1);
+					}
+					
+					jQuery('#startDate').datepicker("setDate", d);
+					jQuery('#startDate').attr("readonly", true);
 				</script>
 			</div>
 		</div>
@@ -141,9 +169,9 @@ function chooseProgramProviderFilter() {
 			<div class="controls">
 				<input type="text" name="endDate" id="endDate" />
 				<script type="text/javascript">
-					$('#endDate').datepicker({ format: 'yyyy-mm-dd' });					
-					$('#endDate').val('<%=today%>');
-					$('#endDate').attr("readonly", true);
+					jQuery('#endDate').datepicker({ dateFormat: 'yy-mm-dd' });					
+					jQuery('#endDate').datepicker("setDate", new Date());
+					jQuery('#endDate').attr("readonly", true);
 				</script>
 			</div>
 		</div>
@@ -271,6 +299,7 @@ function chooseProgramProviderFilter() {
 
 	</fieldset>
 </form>
+<%@include file="/layouts/caisi_html_bottom.jspf"%>
 
 <div id="cds-results"></div>
 <script type="text/javascript">

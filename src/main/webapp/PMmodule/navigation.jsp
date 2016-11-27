@@ -253,7 +253,12 @@
 		onclick="window.open('<%=request.getContextPath()%>/PMmodule/GenericIntake/EditIntake.jsp?pub=<c:out value="${sessionScope.provider.formattedName}" />');">Intake
 	Form Editor</a></span></div>
 </security:oscarSec></div>
-
+<div>
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm.functionalCentre" rights="r">
+	<span>Functional Centre</span>
+	<div><html:link action="PMmodule/FunctionalCentreManager.do?method=list">Functional Centre</html:link></div>
+	</security:oscarSec>
+</div>
 <div>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm.staffList" rights="r">
 	<span>Staff</span>

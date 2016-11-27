@@ -235,7 +235,8 @@ public class FacilityManagerAction extends DispatchAction {
 			facility.setEnableOcanForms(WebUtils.isChecked(request, "facility.enableOcanForms"));
 			facility.setEnableEncounterTime(WebUtils.isChecked(request, "facility.enableEncounterTime"));
 			facility.setEnableEncounterTransportationTime(WebUtils.isChecked(request, "facility.enableEncounterTransportationTime"));
-            if(facility.getRegistrationIntake()!=null&&facility.getRegistrationIntake()<0)facility.setRegistrationIntake(null);
+			facility.setEnableCbiForm(WebUtils.isChecked(request, "facility.enableCbiForm"));
+			if(facility.getRegistrationIntake()!=null&&facility.getRegistrationIntake()<0)facility.setRegistrationIntake(null);
 			
 			if (facility.getId() == null || facility.getId() == 0) facilityDao.persist(facility);
 			else facilityDao.merge(facility);

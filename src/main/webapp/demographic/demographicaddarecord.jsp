@@ -276,13 +276,13 @@
           gieat.setAdmissionManager(am);
           gieat.setProgramManager(pm);
           String bedP = request.getParameter("rps");
-          gieat.admitBedCommunityProgram(demographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),Integer.parseInt(bedP),"","",null);
+          gieat.admitBedCommunityProgram(loggedInInfo, demographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),Integer.parseInt(bedP),"","",new java.util.Date());
 
           String[] servP = request.getParameterValues("sp");
           if(servP!=null&&servP.length>0){
 	  Set<Integer> s = new HashSet<Integer>();
             for(String _s:servP) s.add(Integer.parseInt(_s));
-            gieat.admitServicePrograms(demographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),s,"",null);
+            gieat.admitServicePrograms(loggedInInfo, demographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),s,"", new java.util.Date(), null);
           }
         
 
@@ -344,6 +344,16 @@
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "HedgehogClientNumber", request.getParameter("HedgehogClientNumber"),"");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "HasPrimaryCarePhysician", request.getParameter("HasPrimaryCarePhysician"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "EmploymentStatus", request.getParameter("EmploymentStatus"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "recipientLocation", request.getParameter("recipientLocation"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "lhinConsumerResides", request.getParameter("lhinConsumerResides"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "address2", request.getParameter("address2"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "middleName", request.getParameter("middleName"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "lastNameAtBirth", request.getParameter("lastNameAtBirth"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "preferredName", request.getParameter("preferredName"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "maritalStatus", request.getParameter("maritalStatus"), "");
+
+       
+       
        //for the IBD clinic
 		OtherIdManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
 
@@ -522,13 +532,13 @@
 	            gieat = new GenericIntakeEditAction();
 	            gieat.setAdmissionManager(am);
 	            gieat.setProgramManager(pm);
-	            gieat.admitBedCommunityProgram(childDemographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),Integer.parseInt(bedP),"","",null);
+	            gieat.admitBedCommunityProgram(loggedInInfo, childDemographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),Integer.parseInt(bedP),"","",new java.util.Date());
 	
 	    
 	            if(servP!=null&&servP.length>0){
 	  	  		  Set<Integer> s = new HashSet<Integer>();
 	              for(String _s:servP) s.add(Integer.parseInt(_s));
-	              gieat.admitServicePrograms(childDemographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),s,"",null);
+	              gieat.admitServicePrograms(loggedInInfo, childDemographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),s,"",new java.util.Date(), loggedInInfo.getCurrentFacility().getId());
 	            }
 	          
 	            LogAction.addLog(curUser_no, "add", "demographic", childDemographic.getDemographicNo().toString(), ip, childDemographic.getDemographicNo().toString());

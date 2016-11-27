@@ -1879,6 +1879,7 @@ insert into `secObjectName` (`objectName`) values ('_pref');
 insert into `secObjectName` (`objectName`) values ('_edoc');
 insert into `secObjectName` (`objectName`) values ('_tickler');
 insert into `secObjectName` (`objectName`) values ('_pmm_client.BedRoomReservation');
+insert into `secObjectName` (`objectName`) values('_pmm.functionalCentre');
 insert into `secObjectName` (`objectName`) values ('_pmm_editProgram.vacancies');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.pregnancy');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.episode');
@@ -1954,7 +1955,7 @@ insert into `secObjPrivilege` values('doctor','_pmm.programList','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.addProgram','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.globalRoleAccess','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm.caisiRoles','x',0,999998);
-
+insert into `secObjPrivilege` values('doctor','_pmm.functionalCentre','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm_editProgram.general','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm_editProgram.staff','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm_editProgram.functionUser','x',0,999998);
@@ -2057,6 +2058,7 @@ insert into `secObjPrivilege` values('admin','_pmm_editProgram.serviceRestrictio
 insert into `secObjPrivilege` values('admin','_pmm_editProgram.staff','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_pmm_editProgram.teams','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_pmm.editor','x',0,999998);
+insert into `secObjPrivilege` values('admin','_pmm.functionalCentre','x',0,999998);
 insert into `secObjPrivilege` values('admin','_newCasemgmt.preventions','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.viewTickler','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.DxRegistry','x',0,'999998');

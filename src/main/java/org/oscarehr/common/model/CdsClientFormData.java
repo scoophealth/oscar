@@ -31,7 +31,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PreRemove;
-import javax.persistence.PreUpdate;
 
 /**
  * This entity represents key value pairs associated with the CdsClientForm object.
@@ -82,12 +81,12 @@ public class CdsClientFormData extends AbstractModel<Integer> implements Seriali
 	protected void jpaPreventDelete() {
 		throw (new UnsupportedOperationException("Remove is not allowed for this type of item."));
 	}
-
+/*allow to update answer of question "exitDisposition" when discharge from functional centre, so comment out
 	@PreUpdate
 	protected void jpaPreventUpdate() {
 		throw (new UnsupportedOperationException("Update is not allowed for this type of item."));
 	}
-
+*/
 	/**
 	 * @return true if the list of cdsClientFormData contains the answer specified. 
 	 */

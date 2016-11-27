@@ -48,4 +48,15 @@ public class CdsHospitalisationDaysDao extends AbstractDao<CdsHospitalisationDay
 		
 		return (results);		
 	}
+	
+	public CdsHospitalisationDays findByClientIdAdmissionDateNullDischargeDate(Integer clientId)
+	{
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.clientId=?1 and x.admitted is not NULL and x.discharged is NULL ";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, clientId);
+			
+		return getSingleResultOrNull(query);
+		
+	}
 }

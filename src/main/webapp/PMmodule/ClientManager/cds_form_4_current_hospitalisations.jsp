@@ -43,8 +43,8 @@
 		{
 			%>
 				<tr>
-					<td style="border:solid black 1px"><%=DateFormatUtils.ISO_DATE_FORMAT.format(entry.getAdmitted())%></td>
-					<td style="border:solid black 1px"><%=entry.getDischarged()!=null?DateFormatUtils.ISO_DATE_FORMAT.format(entry.getDischarged()):"-"%></td>
+					<td id="admissionDate<%=entry.getId() %>" style="border:solid black 1px"><%=DateFormatUtils.ISO_DATE_FORMAT.format(entry.getAdmitted())%></td>
+					<td id="dischargeDate<%=entry.getId() %>" style="border:solid black 1px"><%=entry.getDischarged()!=null?DateFormatUtils.ISO_DATE_FORMAT.format(entry.getDischarged()):"-"%></td>
 					<td style="border:solid black 1px"><image src="<%=request.getContextPath()%>/images/delete.png" onclick="deleteHospitalisationDay(<%=entry.getId()%>)" /></td>
 				</tr>
 			<%

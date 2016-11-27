@@ -35,12 +35,15 @@ import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
+import org.oscarehr.PMmodule.web.formbean.DemographicExtra;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.common.dao.FunctionalCentreAdmissionDao;
 import org.oscarehr.common.dao.JointAdmissionDao;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.common.model.FunctionalCentreAdmission;
 import org.oscarehr.common.model.JointAdmission;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,13 +58,74 @@ public class ClientManager {
     private ProgramQueueManager queueManager;
     private AdmissionManager admissionManager;
     private ClientRestrictionManager clientRestrictionManager;
+    private FunctionalCentreAdmissionDao fcAdmissionDao;
 
     private boolean outsideOfDomainEnabled;
 
     public boolean isOutsideOfDomainEnabled() {
         return outsideOfDomainEnabled;
     }
-
+    
+    public DemographicExtra getClientExtraByDemographicNo(String demographicNo) {
+        if (demographicNo == null || demographicNo.length() == 0) {
+            return null;
+        }
+    	
+        String middleName = "";
+        String preferredName = "";
+        String lastNameAtBirth="";
+    	String maritalStatus="";
+    	String recipientLocation="";
+    	String lhinConsumerResides="";
+    	String address2="";
+    	
+        DemographicExt mn = demographicExtDao.getLatestDemographicExt(Integer.valueOf(demographicNo), "middleName");
+    	if(mn != null) {
+    		middleName = mn.getValue();
+    	}    	
+    	
+    	DemographicExt pn = demographicExtDao.getLatestDemographicExt(Integer.valueOf(demographicNo), "preferredName");
+    	if(pn != null) {
+    		preferredName = pn.getValue();
+    	}
+    	
+    	DemographicExt lnab = demographicExtDao.getLatestDemographicExt(Integer.valueOf(demographicNo), "lastNameAtBirth");
+    	if(lnab != null) {
+    		lastNameAtBirth = lnab.getValue();
+    	}
+    	
+    	DemographicExt ms = demographicExtDao.getLatestDemographicExt(Integer.valueOf(demographicNo), "maritalStatus");
+        if(ms != null) {
+        	maritalStatus = ms.getValue();
+        }
+        
+        DemographicExt rl = demographicExtDao.getLatestDemographicExt(Integer.valueOf(demographicNo), "recipientLocation");
+        if(rl != null) {
+        	recipientLocation = rl.getValue();
+        }
+        
+        DemographicExt lcr = demographicExtDao.getLatestDemographicExt(Integer.valueOf(demographicNo), "lhinConsumerResides");
+        if(lcr != null) {
+        	lhinConsumerResides = lcr.getValue();
+        }
+        
+        DemographicExt addr2 = demographicExtDao.getLatestDemographicExt(Integer.valueOf(demographicNo), "address2");
+        if(addr2 != null) {
+        	address2 = addr2.getValue();
+        }
+        
+        DemographicExtra demoExtra = new DemographicExtra();
+        demoExtra.setMiddleName(middleName);
+        demoExtra.setPreferredName(preferredName);
+        demoExtra.setLastNameAtBirth(lastNameAtBirth);
+        demoExtra.setMaritalStatus(maritalStatus);
+        demoExtra.setRecipientLocation(recipientLocation);
+        demoExtra.setLhinConsumerResides(lhinConsumerResides);
+        demoExtra.setAddress2(address2);
+        
+        return demoExtra;
+    }
+    
     public Demographic getClientByDemographicNo(String demographicNo) {
         if (demographicNo == null || demographicNo.length() == 0) {
             return null;
@@ -101,7 +165,10 @@ public class ClientManager {
     public ClientReferral getClientReferral(String id) {
         return referralDAO.getClientReferral(Long.valueOf(id));
     }
-
+    
+    public List<FunctionalCentreAdmission> getFcAdmissionsByClientId(Integer clientId) {
+        return fcAdmissionDao.getAllAdmissionsByDemographicNo(clientId);
+    }
     /*
      * This should always be a new one. add the queue to the program.
      */
@@ -282,6 +349,11 @@ public class ClientManager {
         this.referralDAO = dao;
     }
 
+    @Required
+    public void setFcAdmissionDao(FunctionalCentreAdmissionDao dao) {
+        this.fcAdmissionDao = dao;
+    }
+    
     @Required
     public void setProgramQueueManager(ProgramQueueManager mgr) {
         this.queueManager = mgr;

@@ -52,7 +52,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 	
 	public Object[] findLatestCompletedInitialOcan_startDates(Integer facilityId, Integer clientId) {
 
-		String sqlCommand = "select startDate,clientStartDate from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 and reasonForAssessment=?4 order by created desc";
+		String sqlCommand = "select startDate,clientStartDate, id from OcanStaffForm where ocanType!='CBI' and facilityId=?1 and clientId=?2 and assessmentStatus=?3 and reasonForAssessment=?4 order by created desc";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, facilityId);
@@ -85,7 +85,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 	
 	public Object[] findLatestCompletedReassessment_startDates(Integer facilityId, Integer clientId) {
 
-		String sqlCommand = "select startDate,clientStartDate from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 and reasonForAssessment=?4 order by created desc";
+		String sqlCommand = "select startDate,clientStartDate, id from OcanStaffForm where ocanType!='CBI' and facilityId=?1 and clientId=?2 and assessmentStatus=?3 and reasonForAssessment=?4 order by created desc";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, facilityId);
@@ -99,6 +99,22 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 		return null;
 	}
 	
+	public Object[] findLatestCompletedFormStartDates(Integer facilityId, Integer clientId) {
+
+		String sqlCommand = "select startDate,clientStartDate, id from OcanStaffForm where ocanType!='CBI' and facilityId=?1 and clientId=?2 and assessmentStatus=?3 order by created desc";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, facilityId);
+		query.setParameter(2, clientId);
+		query.setParameter(3, "Completed");		
+				
+		List<Object[]> results = query.getResultList();
+		if(results.size()>0)
+			return results.get(0);
+		return null;
+	}
+	
+
 	
 	public OcanStaffForm findLatestCompletedDischargedAssessment(Integer facilityId, Integer clientId) {
 
@@ -170,7 +186,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 	
 	public List<Integer> findClientsWithOcan(Integer facilityId) {
 
-		String sqlCommand = "select distinct o.clientId from OcanStaffForm o where o.facilityId=?1";
+		String sqlCommand = "select distinct o.clientId from OcanStaffForm o where o.ocanType!='CBI' and o.facilityId=?1";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, facilityId);
@@ -290,12 +306,10 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 
     }
 
-public List<OcanStaffForm> findUnsubmittedOcanFormsByOcanType(Integer facilityId, String ocanType,String assessmentid) {
-	
-		String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.ocanType=?3 and x.submissionId=0 order by x.clientId ASC, x.created DESC, x.id DESC";
-		String splitStr =assessmentid;
-	    String [] newsplitstr = splitStr.split(",");
-	    
+public List<OcanStaffForm> findUnsubmittedOcanFormsByOcanType(Integer facilityId, String ocanType) {
+		
+		String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.ocanType=?3 and x.submissionId=0 order by x.clientId ASC, x.assessmentId DESC, x.created DESC, x.id DESC";
+
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, facilityId);
 		query.setParameter(2, "Completed");
@@ -309,16 +323,13 @@ public List<OcanStaffForm> findUnsubmittedOcanFormsByOcanType(Integer facilityId
 		List<OcanStaffForm> list = new ArrayList<OcanStaffForm>();
 		
 		int assessmentId_0=0;
-		for(OcanStaffForm res:results) {		
-			for(int ii=0; ii<newsplitstr.length; ii++) {		
-				assessmentId_0=Integer.valueOf(newsplitstr[ii]);			
+		for(OcanStaffForm res:results) {
 			int assessmentId_1 = res.getAssessmentId().intValue();
-			if(assessmentId_0==assessmentId_1) {
+			if(assessmentId_0!=assessmentId_1) {
 				assessmentId_0 = assessmentId_1;
 				list.add(res);
 			}
 		}
-			}
 		
 		// Multiple ocan forms with same assessmentId, only the latest updated one can be submitted. 
 		// Don't need to display other assessments with same assessment ID as submitted one's, 
@@ -492,4 +503,18 @@ public List<OcanStaffForm> findUnsubmittedOcanFormsByOcanType(Integer facilityId
 		return list;
 
     }
+    
+    public OcanStaffForm findCbiFormByAdmissionId(Integer clientId, Integer admissionId, String ocanType) {
+
+		String sqlCommand = "select x from OcanStaffForm x where  x.admissionId=?1 and x.ocanType=?2 and x.clientId=?3 order by x.id desc";
+
+		Query query = entityManager.createQuery(sqlCommand);
+	
+		query.setParameter(1, admissionId);	
+		query.setParameter(2, ocanType);
+		query.setParameter(3, clientId);		
+		
+		return getSingleResultOrNull(query);
+	}	
+    
 }

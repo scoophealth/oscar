@@ -41,6 +41,15 @@ public class FunctionalCentre extends AbstractModel<String> {
 	@Id
 	private String accountId;
     private String description;
+	private boolean enableCbiForm = false;
+	
+	public FunctionalCentre () {
+	}
+
+	public FunctionalCentre(String id, String description) {
+		this.accountId = id;
+		this.description = description;
+	}
 	
 	@Override
     public String getId() {
@@ -51,17 +60,25 @@ public class FunctionalCentre extends AbstractModel<String> {
 		return accountId;
 	}
 	
+	public void setAccountId(String accountId) {
+    	this.accountId = accountId;
+    }
+
 	public String getDescription() {
 		return description;
 	}
 
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
-	}
-
 	public void setDescription(String description) {
-		this.description = description;
-	}
+    	this.description = description;
+    }
+
+	public boolean isEnableCbiForm() {
+    	return enableCbiForm;
+    }
+
+	public void setEnableCbiForm(boolean enableCbiForm) {
+    	this.enableCbiForm = enableCbiForm;
+    }
 	
 	
 }

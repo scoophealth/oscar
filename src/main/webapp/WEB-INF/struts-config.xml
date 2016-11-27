@@ -361,6 +361,7 @@
 		</form-bean>
 		<form-bean name="bedManagerForm" type="org.oscarehr.PMmodule.web.admin.BedManagerForm" />
 		<form-bean name="facilityManagerForm" type="org.oscarehr.PMmodule.web.admin.FacilityManagerForm" />
+		<form-bean name="functionalCentreManagerForm" type="org.oscarehr.PMmodule.web.admin.FunctionalCentreManagerForm" />
 		<form-bean name="oscarFacilityManagerForm" type="oscar.facility.FacilityManagerForm" />
 		<form-bean name="clientSearchForm2" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="criteria" type="org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean" />
@@ -381,6 +382,7 @@
 			<form-property name="programWithIntakeId" type="java.lang.String" />
 			<form-property name="serviceRestriction" type="org.oscarehr.PMmodule.model.ProgramClientRestriction" />
 			<form-property name="serviceRestrictionLength" type="java.lang.Integer" />
+			<form-property name="fcAdmission" type="org.oscarehr.PMmodule.web.FunctionalCentreAdmissionDisplay" />			
 		</form-bean>
 		<form-bean name="staffManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="provider" type="org.oscarehr.common.model.Provider" />
@@ -2136,6 +2138,10 @@
 			<forward name="list" path="/admin/facility/ListFacilities.jsp" />
 			<forward name="edit" path="/admin/facility/EditFacility.jsp" />
 		</action>
+		<action path="/PMmodule/FunctionalCentreManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="functionalCentreManagerForm" scope="session">
+			<forward name="list" path="page.pmm.admin.functionalCentre.list" />
+			<forward name="edit" path="page.pmm.admin.functionalCentre.edit"/>			
+		</action>
 		<action path="/PMmodule/ProviderSearch" type="org.springframework.web.struts.DelegatingActionProxy"  parameter="method">
 			<forward name="results" path="/PMmodule/ProviderSearch.jsp" />
 		</action>
@@ -2157,6 +2163,7 @@
 			<forward name="links" path="/PMmodule/ClientManager/links.jsp" />
 			<forward name="view_referral" path="/PMmodule/ClientManager/view_referral.jsp" />
 			<forward name="view_admission" path="/PMmodule/ClientManager/view_admission.jsp" />
+			<forward name="view_fcAdmission" path="/PMmodule/ClientManager/view_fcAdmission.jsp" />
 			<forward name="service_restriction_error" path="page.pmm.client.service_restriction_error" />
 			<forward name="generalFormsReport" path="/PMmodule/GeneralFormsReport.jsp" />
 			<forward name="intake-search" path="/PMmodule/GenericIntake/Search" redirect="true" />

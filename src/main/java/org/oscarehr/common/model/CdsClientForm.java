@@ -31,7 +31,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PreRemove;
-import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -68,6 +67,9 @@ public class CdsClientForm extends AbstractModel<Integer> implements Serializabl
 	@Temporal(TemporalType.DATE)
 	private Date assessmentDate;
 
+	@Temporal(TemporalType.DATE)
+	private Date serviceInitiationDate;
+	
 	@Override
     public Integer getId() {
 		return id;
@@ -140,7 +142,15 @@ public class CdsClientForm extends AbstractModel<Integer> implements Serializabl
 	public void setAssessmentDate(Date assessmentDate) {
     	this.assessmentDate = assessmentDate;
     }
+	
+	
+	public Date getServiceInitiationDate() {
+    	return serviceInitiationDate;
+    }
 
+	public void setServiceInitiationDate(Date serviceInitiationDate) {
+    	this.serviceInitiationDate = serviceInitiationDate;
+    }
 
 	@Override
 	public int hashCode() {
@@ -168,10 +178,11 @@ public class CdsClientForm extends AbstractModel<Integer> implements Serializabl
 		throw(new UnsupportedOperationException("Remove is not allowed for this type of item."));
 	}
 
+	/* allow update cds form with correct admission date, referral date, service initialization date.
 	@PreUpdate
 	protected void jpaPreventUpdate()
 	{
 		throw(new UnsupportedOperationException("Update is not allowed for this type of item."));
 	}
-
+	*/
 }

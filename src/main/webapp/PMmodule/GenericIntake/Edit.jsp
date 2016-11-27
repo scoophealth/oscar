@@ -143,7 +143,24 @@
 				fail=true;
 			}
 		});
-
+		
+		
+		$("[name='clientExtra.recipientLocation']").each(function(){
+			var v = $(this).val();			
+			if(v.length == 0) {	
+				$("#recipientLocationReq").css("display","inline");
+				fail=true;
+			}
+		});
+		
+		$("[name='clientExtra.lhinConsumerResides']").each(function(){
+			var v = $(this).val();			
+			if(v.length == 0) {	
+				$("#lhinConsumerResidesReq").css("display","inline");
+				fail=true;
+			}
+		});
+		
 		if(fail) return false;
 		
 	    if (check_mandatory()) {
@@ -387,10 +404,23 @@
      labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 <table class="intakeTable">
 <tr>
-    <td><label>First Name<br><html:text property="client.firstName" size="20"
-                                                                              maxlength="30"/></label></td>
-    <td><label>Last Name<br><html:text property="client.lastName" size="20"
-                                                                             maxlength="30"/></label></td>
+    <td><label>First Name<br><html:text property="client.firstName" size="20" maxlength="30"/></label>
+    <span id="firstNameReq" style="display:none;color:red">* Value is required.</span>
+    </td>
+    <td><label>Middle Name<br><html:text property="clientExtra.middleName" size="20" maxlength="20"/></label></td>
+    <td><label>Last Name<br><html:text property="client.lastName" size="20" maxlength="30"/></label>
+    <span id="lastNameReq" style="display:none;color:red">* Value is required.</span>
+    </td>        
+    <td><label>last Name at Birth<br><html:text property="clientExtra.lastNameAtBirth" size="20" maxlength="20"/></label></td>
+</tr>
+<tr>
+    <td><label>Preferred Name<br><html:text property="clientExtra.preferredName" size="20" maxlength="20"/></label></td>
+    <td>
+    	<label>Marital Status<br>
+    		<html:select property="clientExtra.maritalStatus">
+            	<html:optionsCollection property="maritalStatus" value="value" label="label"/>
+    		</html:select>
+    </label>
     <td>
         <label>Gender<br>
             <html:select property="client.sex">
@@ -532,17 +562,38 @@
 			</html:select>    			
     		</label>
     	</td>
-	<td><label>Doctor<br/><html:select property="client.providerNo">
-		<html:option value=""></html:option>
-             	<% ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-		List<Provider> doctors = providerDao.getBillableProviders();
-		for(Provider doctor : doctors) { 
-		%>
-		<html:option value="<%=doctor.getProviderNo() %>"><%=doctor.getFormattedName() %></html:option>
-		<% }%>
-		</html:select></label></td>
+    	<td><label>Doctor<br/><html:select property="client.providerNo"> 
+    			<html:option value=""></html:option>
+    			<% ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+    			List<Provider> doctors = providerDao.getBillableProviders();
+    			for(Provider doctor : doctors) {    				
+    			%>
+    				<html:option value="<%=doctor.getProviderNo() %>"><%=doctor.getFormattedName() %></html:option>
+    			<% }%>
+    		</html:select></label></td>
     	<td></td>
     </tr>        
+    
+    <tr>
+    	<td>
+    		<label>Recipient Location<br>
+            	<html:select property="clientExtra.recipientLocation">
+            		<html:optionsCollection property="recipientLocation" value="value" label="label"/>
+            	</html:select>
+        	</label>
+        	<span id="recipientLocationReq" style="display:none;color:red">* Value is required.</span>
+        </td>
+        <td>
+    		<label>LHIN Consumer Resides<br>
+            	<html:select property="clientExtra.lhinConsumerResides">
+            		<html:optionsCollection property="lhinConsumerResides" value="value" label="label"/>
+            	</html:select>
+        	</label>
+        	<span id="lhinConsumerResidesReq" style="display:none;color:red">* Value is required.</span>
+        </td>
+        
+       <td><label>Address 2<br><html:text property="clientExtra.address2" size="30" maxlength="30"/></label></td>
+    </tr>
 <oscar:oscarPropertiesCheck property="ENABLE_CME_ON_REG_INTAKE" value="true">
 <c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
     <tr>

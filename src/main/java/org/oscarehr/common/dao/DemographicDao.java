@@ -226,6 +226,40 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		return clients;
 	}
 
+    /*
+     * get demographics according to their program, ordered by lastname and first name
+     */
+    public List getActiveDemographicByProgramId(int programId) {
+        // get duplicated clients from this sql
+        String q = "Select d From Demographic d, Admission a " + "Where (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.clientId and a.programId=? and "
+                + "( a.dischargeDate is null)" + " order by d.LastName,d.FirstName";
+
+        String status = "AC"; // only show active clients
+        List clients = new ArrayList<Demographic>();
+	try{
+        List rs = getHibernateTemplate().find(q, new Object[] { status, new Integer(programId) });
+
+	if(rs!=null) {
+        Integer clientNo = 0;
+        Iterator it = rs.iterator();
+        while (it.hasNext()) {
+            Demographic demographic = (Demographic) it.next();
+
+            // no dumplicated clients.
+            if (demographic==null || demographic.getDemographicNo() == clientNo) continue;
+
+            clientNo = demographic.getDemographicNo();
+
+            clients.add(demographic);
+        }
+	}
+	} catch(Exception e) {
+                        logger.error("error",e);
+                        throw e;
+        }
+
+        return clients;
+    }
 	public List<Demographic> getActiveDemosByHealthCardNo(String hcn, String hcnType) {
 
 		Session s = getSession();

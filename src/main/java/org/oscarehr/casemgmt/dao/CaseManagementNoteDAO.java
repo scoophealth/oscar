@@ -727,7 +727,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	}
 
     public List<CaseManagementNote> getCaseManagementNoteByProgramIdAndObservationDate(Integer programId, Date minObservationDate, Date maxObservationDate) {
-        String queryStr = "FROM CaseManagementNote x WHERE x.program_no=? and x.observation_date>=? and x.observation_date<=?";
+        String queryStr = "FROM CaseManagementNote x WHERE x.program_no=? and x.observation_date>=? and x.observation_date<=? order by x.demographic_no, x.observation_date asc";
 
         @SuppressWarnings("unchecked")
         List<CaseManagementNote> rs = getHibernateTemplate().find(queryStr, new Object[] {programId.toString(), minObservationDate, maxObservationDate});
@@ -755,6 +755,27 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			mostRecents.add(this.getMostRecentNote(uuid));
 		}
 		return mostRecents;
+	}
+
+	
+	public List<CaseManagementNote> getCaseManagementNotesByProviderNoAndObservationDate(String providerNo, Date minObservationDate, Date maxObservationDate) {
+		String queryStr = "FROM CaseManagementNote x WHERE x.providerNo=? and x.observation_date>=? and x.observation_date<=?";
+		
+		@SuppressWarnings("unchecked")
+        List<CaseManagementNote> rs = getHibernateTemplate().find(queryStr, new Object[] {providerNo, minObservationDate, maxObservationDate});
+		
+		return rs;
+		
+	}
+	
+	public List<String> getProgramIdsByProviderNoAndObservationDate(String providerNo, Date minObservationDate, Date maxObservationDate) {
+		String queryStr = "select distinct program_no FROM CaseManagementNote x WHERE x.providerNo=? and x.observation_date>=? and x.observation_date<=?";
+		
+		@SuppressWarnings("unchecked")
+        List<String> rs = getHibernateTemplate().find(queryStr, new Object[] {providerNo, minObservationDate, maxObservationDate});
+		
+		return rs;
+		
 	}
 
 	public Long findMaxNoteId() {

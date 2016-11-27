@@ -744,7 +744,7 @@ import cdsDt.PersonNameStandard.OtherNames;
             if(admitTo == null) {
                 insertIntoAdmission(demographicNo);
             } else {
-                admissionManager.processAdmission(Integer.valueOf(demographicNo), student.getProviderNo(), admitTo, "", "batch import");
+                admissionManager.processAdmission(loggedInInfo, Integer.valueOf(demographicNo), student.getProviderNo(), admitTo, "", "batch import");
             }
 
             //Put enrolment history into demographicArchive

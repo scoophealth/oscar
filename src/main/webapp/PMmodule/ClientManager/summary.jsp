@@ -148,6 +148,12 @@ function openSurvey() {
 	location.href = '<html:rewrite action="/PMmodule/Forms/SurveyExecute.do"/>' + "?method=survey&formId=" + formId + "&formInstanceId=" + id + "&clientId=" + '<c:out value="${client.demographicNo}"/>';
 }
 
+function updateCdsForm(message, cdsFormId) {
+	if(confirm("You are about to change a CDS form for "+message)) {
+		document.location="ClientManager/cds_form_4.jsp?cdsFormId="+cdsFormId ;
+	}
+	return false;
+}
 </script>
 
 <div style="text-align:left;color:red;">
@@ -582,7 +588,9 @@ function openSurvey() {
 						<td><%=ClientManagerAction.getEscapedProviderDisplay(cdsClientForm.getProviderNo())%></td>
 						<td><%=cdsClientForm.isSigned()?"signed":"unsigned"%></td>
 						<td>
-							<input type="button" value="Update" onclick="document.location='ClientManager/cds_form_4.jsp?cdsFormId=<%=cdsClientForm.getId()%>'" />
+							
+							<input type="button" value="Update" onclick="updateCdsForm('<%=ClientManagerAction.getCdsProgramDisplayString(cdsClientForm) %>','<%=cdsClientForm.getId()%>')" />
+														
 							<input type="button" value="Print Preview" onclick="document.location='ClientManager/cds_form_4.jsp?cdsFormId=<%=cdsClientForm.getId()%>&print=true'" />
 						</td>
 					</tr>

@@ -81,10 +81,21 @@
 	}
 	parameters.remove("assessmentDate");
 
+	Date serviceInitiationDate=null;
+	try
+	{
+		serviceInitiationDate=DateUtils.toDate(parameters.get("serviceInitiationDate")[0]);
+	}
+	catch(Exception e)
+	{
+		// do nothing, no date specified
+	}
+	parameters.remove("serviceInitiationDate");
+	
 	boolean signed=WebUtils.isChecked(request, "signed");	
 	parameters.remove("signed");
 
-	CdsClientForm cdsClientForm=CdsForm4Action.createCdsClientForm(loggedInInfo, admissionId, clientId, initialContactDate, assessmentDate, signed);
+	CdsClientForm cdsClientForm=CdsForm4Action.createCdsClientForm(loggedInInfo, admissionId, clientId, initialContactDate, assessmentDate, serviceInitiationDate, signed);
 	
 	for (Map.Entry<String, String[]> entry : parameters.entrySet())
 	{
