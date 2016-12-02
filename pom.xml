@@ -1116,6 +1116,11 @@
 		<artifactId>PatientService</artifactId>
 		<version>20161213</version>
 	</dependency>
+	<dependency>
+	    <groupId>org.jasypt</groupId>
+	    <artifactId>jasypt</artifactId>
+	    <version>1.8</version>
+	</dependency>
 
 	</dependencies>
 

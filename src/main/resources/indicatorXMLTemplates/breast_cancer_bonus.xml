@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>Colcamex Resources Inc. for Oscar EMR</author>
+	<uid></uid>
+	<heading>
+		<category>Preventive Health Care</category>
+		<subCategory>Cancer</subCategory>
+		<name>Preventive Care Bonus: Breast Cancer Screening</name>
+		<definition>Target population: consists of enrolled female patients who are between 50 and 74 years of age, inclusive, as of March 31st of the fiscal year for which the bonus is being claimed. Service Period: by 30 months prior to March 31st of the fiscal year for which the bonus is being claimed. Service Codes reported: X178A, X178B, X178C, X185A, X185B, X185C, tracking code Q131A and exclusion code Q141A </definition>
+		<framework>Based on and adapted from CIHI’s 2012 Indicator Technical Specifications (Nov 2012)</framework>
+		<frameworkVersion>11-01-2016</frameworkVersion>
+		<notes></notes>
+	</heading>
+	<indicatorQuery>
+		<version>10-27-2016</version>
+		<params>
+			<!-- 
+				Required parameter provider. Value options are: 
+					[ an individual providerNo, or provider range ] ie: value="370, 1001" 
+					"all" ie: value="all" including null.
+					"loggedInProvider" ie:
+				Default is "loggedInProvider"
+				Use this parameter in the query as ${provider}
+				This parameter should be used for fetching patient's assigned to a MRP.
+				ie: WHERE demographic.provider_no = ${provider}
+			-->
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="exclusionCode" name="billing_exclusion_code" value="'Q141A'" />
+			<parameter id="dxexclusion" name="exclusion_dx_code" value="'V4571'" />
+			<parameter id="prevention" name="prevention_code" value="'MAM'" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="rosterstatus" name="Patient Roster Status" value="'%RO%'" />	
+			<parameter id="gender" name="Patient Gender" value="'%F%'" />	
+		</params>
+		<range>
+			<upperLimit id="date" label="March 31" name="Date Upper" value="STR_TO_DATE( CONCAT( '31,', '03,', YEAR(NOW()) ),'%d,%m,%Y')" />
+			<lowerLimit id="date" label="Months History" name="Date Lower" value="30" />	
+			
+			<upperLimit id="age" label="Patient Age Upper" name="Age Upper" value="74" />
+			<lowerLimit id="age" label="Patient Age Lower" name="Age Lower" value="50" />
+		</range>
+		<query>
+			<!-- Indicator SQL Query here -->
+			SELECT 
+
+				IF ( COUNT(fin.patient) > 0,
+					 ( SUM( IF( fin.mam > 0, 1, 0) ) - 
+						SUM( IF( fin.dxexclusion > 0 OR fin.bexclusion LIKE ${exclusionCode}, 1, 0) ) ) 
+				,0 ) AS "% Eligible",
+			
+				IF ( COUNT(fin.patient) > 0,
+					 ( SUM( IF( fin.mam = 0, 1, 0) ) + 
+						SUM( IF( fin.dxexclusion > 0 OR fin.bexclusion LIKE ${exclusionCode}, 1, 0) ) ) 
+				,0 ) AS "% Ineligible"
+			
+			FROM (
+				SELECT 
+			
+					d.demographic_no AS patient,
+					IFNULL(MAM.id, 0) AS mam, 
+					IFNULL(TRACK.service_code,-1) AS bexclusion,
+					IFNULL(dxr.dxresearch_code, -1) AS dxexclusion
+			
+				FROM demographic d
+				LEFT JOIN dxresearch dxr 
+				ON ( d.demographic_no = dxr.demographic_no AND dxr.dxresearch_code LIKE ${dxexclusion} ) 
+			
+				-- GET ALL CURRENT MAMOGRAM ENTRIES FROM PREVENTIONS
+				LEFT JOIN ( 
+					SELECT p.demographic_no, p.id, p.prevention_date, p.refused
+					FROM preventions p	
+					JOIN (
+						SELECT MAX(id) AS id2
+						FROM preventions
+						WHERE prevention_type = ${prevention}
+						AND demographic_no > 0
+						AND deleted = 0
+						AND refused = 0
+						AND DATE(prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date}
+						GROUP BY demographic_no
+					)p2
+					ON(p2.id2 = p.id)
+				) MAM
+				ON ( d.demographic_no = MAM.demographic_no 
+				AND FLOOR( ABS( DATEDIFF( STR_TO_DATE( CONCAT(d.year_of_birth,",",d.month_of_birth,",",d.date_of_birth), '%Y,%m,%d' ), MAM.prevention_date ) / 365.25 ) ) >= ${lowerLimit.age} )
+			
+				-- TRACKING/EXCLUSION CODE USED.
+				LEFT JOIN ( 
+					SELECT boc.demographic_no, MAX(boi.service_code) AS service_code, MAX(boi.service_date) AS service_date
+					FROM billing_on_cheader1 boc 
+					INNER JOIN billing_on_item boi
+					ON (boi.ch1_id = boc.id) 
+					WHERE boi.service_code LIKE ${exclusionCode}
+					GROUP BY boc.demographic_no
+				) TRACK
+				ON (d.demographic_no = TRACK.demographic_no 
+					AND DATE(TRACK.service_date) >= DATE(MAM.prevention_date) )
+			
+			
+				WHERE d.patient_status LIKE ${pstatus}
+				-- the patient must have been rostered
+				AND d.roster_status LIKE ${rosterstatus}
+				AND d.sex LIKE ${gender}
+				AND d.demographic_no > 0 
+				AND d.provider_no LIKE ${provider}
+				AND FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) / 365.25 ) ) 
+					BETWEEN ${lowerLimit.age} AND ${upperLimit.age}
+				GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
+			) fin
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>10-27-2016</version>
+		<params>
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="serviceCode" name="billing_service_codes" value="X178A,X178B,X178C,X185A,X185B,X185C" />
+			<parameter id="trackingCode" name="billing_tracking_codes" value="Q131A,Q141A" />
+			<parameter id="exclusionCode" name="billing_exclusion_code" value="'Q141A'" />
+			<parameter id="dxexclusion" name="exclusion_dx_code" value="'V4571'" />
+			<parameter id="graceperiod" name="Grace Period Months" value="6" />	
+			<parameter id="prevention" name="prevention_code" value="'MAM'" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="rosterstatus" name="Patient Roster Status" value="'%RO%'" />	
+			<parameter id="gender" name="Patient Gender" value="'%F%'" />	
+		</params>
+		<range>
+			<upperLimit id="date" label="March 31" name="Date Upper" value="STR_TO_DATE( CONCAT( '31,', '03,', YEAR(NOW()) ),'%d,%m,%Y')" />
+			<lowerLimit id="date" label="Months History" name="Date Lower" value="30" />	
+			
+			<upperLimit id="age" label="Patient Age Upper" name="Age Upper" value="74" />
+			<lowerLimit id="age" label="Patient Age Lower" name="Age Lower" value="50" />
+		</range>
+		<displayColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="lastdate" name="IFNULL( DATE_FORMAT(MAM.prevention_date, '%m-%d-%Y' ), 0)" title="Last MAM Date" primary="false" />
+			<column id="march31" name="IFNULL(ROUND( DATEDIFF( ${upperLimit.date}, DATE(MAM.prevention_date)) / 365.25 * 12, 1 ), 0)" title="March 31" primary="false" />
+			<column id="sept30" name="IFNULL(ROUND( DATEDIFF( DATE_ADD( ${upperLimit.date}, INTERVAL ${graceperiod} MONTH ), DATE(MAM.prevention_date)) / 365.25 * 12, 1 ), 0)" title="Sept 30" primary="false" />
+			<column id="current" name="IFNULL(ROUND( DATEDIFF( NOW(), DATE(MAM.prevention_date)) / 365.25 * 12, 1 ), 0)" title="Current" primary="false" />
+			<column id="status" name="CASE 
+					WHEN IFNULL(MAM.refused, -1) = -1
+					THEN 'No Test'			
+					WHEN IFNULL(MAM.refused, -1) = 0 
+						AND ( DATE(MAM.prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date} )
+					THEN 'Eligible'			
+					WHEN IFNULL(MAM.refused, -1) = 0 
+						AND ( DATE(MAM.prevention_date) > ${upperLimit.date} )
+					THEN 'Done'			
+					WHEN IFNULL(MAM.refused, -1) = 1
+					THEN 'Refused'			
+					WHEN IFNULL(MAM.refused, -1) = 2 
+						OR IFNULL(dxr.dxresearch_code, -1) > 0 
+						OR IFNULL(TRACK.service_code, -1) LIKE ${exclusionCode}
+					THEN 'Ineligible'			
+					ELSE 'Overdue'
+				END" title="Status" primary="false" />
+			<column id="trackingcode" name="IFNULL(TRACK.service_code,0)" title="Tracking / Exclusion Code" primary="false" />
+			<column id="servicecode" name="IFNULL(BILL.service_code,0)" title="Service Code" primary="false" />
+		</displayColumns>
+		<query>
+			<!-- Drilldown SQL Query here -->	
+			SELECT 
+			
+				d.demographic_no AS 'ID', 
+				CONCAT( d.last_name, ", ",d.first_name ) AS 'Name',
+				DATE_FORMAT( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth), '%m-%d-%Y' ) AS 'Birth Date (mm-dd-yyyy)',
+				FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) ) / 365.25 ) AS 'Age',
+				
+				IFNULL( DATE_FORMAT(MAM.prevention_date, '%m-%d-%Y' ), 0) AS 'Last MAM Date',
+				IFNULL(ROUND( DATEDIFF( ${upperLimit.date}, DATE(MAM.prevention_date)) / 365.25 * 12, 1 ), 0) AS 'March 31',
+				IFNULL(ROUND( DATEDIFF( DATE_ADD( ${upperLimit.date}, INTERVAL ${graceperiod} MONTH ), DATE(MAM.prevention_date)) / 365.25 * 12, 1 ), 0) AS 'Sept 30',
+				IFNULL(ROUND( DATEDIFF( NOW(), DATE(MAM.prevention_date)) / 365.25 * 12, 1 ), 0) AS 'Current', 
+			
+				CASE 
+					WHEN IFNULL(MAM.refused, -1) = -1
+					THEN 'No Test'
+			
+					WHEN IFNULL(MAM.refused, -1) = 0 
+						AND ( DATE(MAM.prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date} )
+					THEN 'Eligible'
+			
+					WHEN IFNULL(MAM.refused, -1) = 0 
+						AND ( DATE(MAM.prevention_date) > ${upperLimit.date} )
+					THEN 'Done'
+			
+					WHEN IFNULL(MAM.refused, -1) = 1
+					THEN 'Refused'
+			
+					WHEN IFNULL(MAM.refused, -1) = 2 
+						OR IFNULL(dxr.dxresearch_code, -1) > 0 
+						OR IFNULL(TRACK.service_code, -1) LIKE ${exclusionCode}
+					THEN 'Ineligible'
+			
+					ELSE 'Overdue'
+				END AS 'Status',
+			
+				IFNULL(TRACK.service_code,0) AS 'Tracking / Exclusion Code',
+				IFNULL(BILL.service_code,0) AS 'Service Code'
+			
+			FROM demographic d
+			LEFT JOIN dxresearch dxr 
+			ON ( d.demographic_no = dxr.demographic_no AND dxr.dxresearch_code LIKE ${dxexclusion} ) 
+			
+			-- GET ALL CURRENT MAMOGRAM ENTRIES FROM PREVENTIONS
+			LEFT JOIN ( 
+				SELECT p.demographic_no, p.id, p.prevention_date, p.refused
+				FROM preventions p	
+				JOIN (
+					SELECT MAX(id) AS id2
+					FROM preventions
+					WHERE prevention_type = ${prevention}
+					AND demographic_no > 0
+					AND deleted = 0
+					AND DATE(prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date}
+					GROUP BY demographic_no
+				)p2
+				ON(p2.id2 = p.id)
+			) MAM
+			ON ( d.demographic_no = MAM.demographic_no 
+			AND FLOOR( ABS( DATEDIFF( STR_TO_DATE( CONCAT(d.year_of_birth,",",d.month_of_birth,",",d.date_of_birth), '%Y,%m,%d' ), MAM.prevention_date ) / 365.25 ) ) >= ${lowerLimit.age} )
+			
+			-- TRACKING/EXCLUSION CODE USED.
+			LEFT JOIN ( 
+				SELECT boc.demographic_no, MAX(boi.service_code) AS service_code, MAX(boi.service_date) AS service_date
+				FROM billing_on_cheader1 boc 
+				INNER JOIN billing_on_item boi
+				ON (boi.ch1_id = boc.id) 
+				WHERE boi.service_code IN ${trackingCode}
+				GROUP BY boc.demographic_no
+			) TRACK
+			ON (d.demographic_no = TRACK.demographic_no 
+				AND DATE(TRACK.service_date) >= DATE(MAM.prevention_date) )
+			
+			-- SERVICE CODE USED
+			LEFT JOIN ( 
+				SELECT boc.demographic_no, MAX(boi.service_code) AS service_code, MAX(boi.service_date) AS service_date
+				FROM billing_on_cheader1 boc 
+				INNER JOIN billing_on_item boi
+				ON (boi.ch1_id = boc.id) 
+				WHERE boi.service_code IN ${serviceCode} 
+				GROUP BY boc.demographic_no
+			) BILL
+			ON (d.demographic_no = BILL.demographic_no 
+				AND DATE(BILL.service_date) >= DATE(MAM.prevention_date) )
+			
+			WHERE d.patient_status LIKE ${pstatus}
+			-- the patient must have been rostered
+			AND d.roster_status LIKE ${rosterstatus}
+			AND d.sex LIKE ${gender}
+			AND d.demographic_no > 0 
+			AND d.provider_no LIKE ${provider}
+			AND FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) / 365.25 ) ) 
+				BETWEEN ${lowerLimit.age} AND ${upperLimit.age}
+			GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
+		</query>
+	</drillDownQuery>
+	<shared>true</shared>
+	<sharedMetricSetName>OntarioMD Care Bonus Breast Cancer Screening</sharedMetricSetName>
+	<sharedMetricDataId>Status</sharedMetricDataId>
+	<sharedMappings>
+		<sharedMapping fromLabel="% Eligible" toLabel="Screening up to date"/>
+		<sharedMapping fromLabel="% Ineligible" toLabel="Screening overdue"/>
+	</sharedMappings>
+</indicatorTemplateXML>

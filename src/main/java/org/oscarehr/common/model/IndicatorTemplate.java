@@ -64,6 +64,8 @@ public class IndicatorTemplate extends AbstractModel<Integer> {
 	private boolean active;
 	private boolean locked;
 	
+	private boolean shared;
+	
 	@Override
 	public Integer getId() {
 		return this.id;
@@ -167,6 +169,14 @@ public class IndicatorTemplate extends AbstractModel<Integer> {
 
 	public void setDashboard(Dashboard dashboard) {
 		this.dashboard = dashboard;
+	}
+
+	public boolean isShared() {
+		return shared;
+	}
+
+	public void setShared(boolean shared) {
+		this.shared = shared;
 	}
 
 }

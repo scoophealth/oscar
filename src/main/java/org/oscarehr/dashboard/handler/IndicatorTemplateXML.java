@@ -47,7 +47,7 @@ public class IndicatorTemplateXML {
 
 	private static Logger logger = MiscUtils.getLogger();
 	
-	private enum Root {heading, author, indicatorQuery, drillDownQuery}
+	private enum Root {heading, author, indicatorQuery, drillDownQuery, shared}
 	private enum Heading {category, subCategory, framework, frameworkVersion, name, definition, notes}
 	private enum Indicator {version, params, parameter, range, query}
 	private enum Drilldown {version, params, parameter, range, displayColumns, column, exportColumns, query}
@@ -66,7 +66,11 @@ public class IndicatorTemplateXML {
 	private Node drillDownQueryNode;	
 	private String template;	
 	private String author;
+	private String shared;
 	private LoggedInInfo loggedInInfo;
+	
+	private String providerNo = null;
+	
 
 	public IndicatorTemplateXML( LoggedInInfo loggedInInfo, Document xmlDocument ) {
 		this( xmlDocument );
@@ -101,6 +105,14 @@ public class IndicatorTemplateXML {
 			author = authorNode.item(0).getTextContent();
 		}
 		setAuthor( author );
+		
+		//Shared element is optional
+		NodeList sharedNode = getXmlDocument().getElementsByTagName( Root.shared.name() );
+		String shared = "";
+		if( sharedNode != null && sharedNode.getLength() > 0 ) {
+			shared = sharedNode.item(0).getTextContent();
+		}
+		setShared( shared );
 		
 		// Required nodes - instantiation will fail if these nodes are missing.
 		setHeadingNode( getXmlDocument().getElementsByTagName( Root.heading.name() ).item(0) );
@@ -165,7 +177,17 @@ public class IndicatorTemplateXML {
 		this.author = author;
 	}
 	
+	
+	public String getShared() {
+		return shared;
+	}
+	
+	public void setShared(String shared) {
+		this.shared = shared;
+	}
+	
 	// Heading elements
+	
 	
 	/**
 	 * Required Element - runtime error will be thrown if the node or element is missing
@@ -517,6 +539,10 @@ public class IndicatorTemplateXML {
 			return parameterValue;
 		}
 		
+		if(providerNo != null) {
+			return providerNo;
+		}
+		
 		if( parameterValue.equals("%")) {
 			return parameterValue;
 		}
@@ -533,6 +559,7 @@ public class IndicatorTemplateXML {
 				break;
 		case all : parameterValue = "%";
 				break;
+		
 		}
 		
 		return parameterValue;
@@ -546,6 +573,10 @@ public class IndicatorTemplateXML {
 		}
 		
 		return providerNo;
+	}
+	
+	public void setProviderNo(String providerNo) {
+		this.providerNo = providerNo;
 	}
 	
 	@Override

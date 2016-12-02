@@ -23,11 +23,10 @@
  */
 package org.oscarehr.dashboard.handler;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,21 +109,21 @@ public class IndicatorQueryHandlerTest {
 
 		List<Object> results = new ArrayList<Object>();
 		HashMap<Object, Object> resultmap = new HashMap<Object, Object>();
-		resultmap.put( "", 1.2 );
-		resultmap.put( "dennis", "warren" );
-		resultmap.put( "key", "" );
-		resultmap.put( "Unit", 20.01 );
-		resultmap.put( "DOUBLE", 10.10 );
-		
+		resultmap.put( "", 1);
+		resultmap.put( "dennis", 2 );
+		resultmap.put( "key", 3 );
+		resultmap.put( "Unit", 4 );
+		resultmap.put( "DOUBLE", 5 );
+		/*
 		HashMap<Object, Object> resultmap1 = new HashMap<Object, Object>();
 		resultmap1.put("count", null );
 		resultmap1.put( null, "resources" );
 		resultmap1.put( "Date", 2 );
 		resultmap1.put( "zero", 0.00 );
 		resultmap1.put( "big number", new BigInteger("9") );
-		
+		*/
 		results.add(resultmap);
-		results.add(resultmap1);
+		//results.add(resultmap1);
 		
 		graphPlotList = IndicatorQueryHandler.createGraphPlots( results );
 	}
@@ -160,7 +159,7 @@ public class IndicatorQueryHandlerTest {
 			total = ( total + subtotal );
 		}
 
-		assertEquals( new Double(41.11), total );
+		assertEquals( new Double(14), total );
 	}
 
 }

@@ -141,7 +141,7 @@ public class ProviderSettings {
 	private boolean useMyMeds;
 	private boolean disableBornPrompts;
 	private boolean enableTicklerEmailProvider;
-	
+	private boolean dashboardShare;
 	
 
 	public String getRecentPatients() {
@@ -664,6 +664,15 @@ public class ProviderSettings {
 	public void setEnableTicklerEmailProvider(boolean enableTicklerEmailProvider) {
 		this.enableTicklerEmailProvider = enableTicklerEmailProvider;
 	}
+	public boolean isDashboardShare() {
+		return dashboardShare;
+	}
+	public void setDashboardShare(boolean dashboardShare) {
+		this.dashboardShare = dashboardShare;
+	}
+	
+	
+	
 
 	
 }

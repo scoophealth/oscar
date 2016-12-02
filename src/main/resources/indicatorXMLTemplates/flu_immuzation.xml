@@ -39,11 +39,11 @@
 			SELECT 
 
 				IF ( COUNT(fin.patient) > 0,
-					ROUND( COUNT(fin.flu) / COUNT(fin.patient) * 100, 1) 
+					COUNT(fin.flu)
 				,0 ) AS "% With Influenza Immunization",
 			
 				IF ( COUNT(fin.patient) > 0,
-					100 - ROUND( COUNT(fin.flu) / COUNT(fin.patient) * 100, 1 )
+					COUNT(fin.patient) -  COUNT(fin.flu) 
 				,0 ) AS "% No Influenza Immunization"
 			
 			FROM(
@@ -92,8 +92,8 @@
 		<displayColumns>
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			<column id="preventionDate" name="IFNULL( DATE_FORMAT( DATE(FLU.prevention_date), '%m-%d-%Y' ) , '0')" title="Immunization Date" primary="false" />
 			<column id="refused" name="IF(FLU.refused > 0, 'yes', 'no')" title="Immunization Refused" primary="false" />
 		</displayColumns>
@@ -101,8 +101,8 @@
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
 			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			<column id="preventionDate" name="IFNULL( DATE_FORMAT( DATE(FLU.prevention_date), '%m-%d-%Y' ) , '0')" title="Immunization Date" primary="false" />
 			<column id="refused" name="IF(FLU.refused > 0, 'yes', 'no')" title="Immunization Refused" primary="false" />
 		</exportColumns>
@@ -132,4 +132,11 @@
 				${lowerLimit.date} ) ) / 365.25 ) >= ${lowerLimit.age} )
 		</query>
 	</drillDownQuery>
+	<shared>true</shared>
+	<sharedMetricSetName>OntarioMD Influenza Immunization</sharedMetricSetName>
+	<sharedMetricDataId>Status</sharedMetricDataId>
+	<sharedMappings>
+		<sharedMapping fromLabel="% No Influenza Immunization" toLabel="Influenza overdue"/>
+		<sharedMapping fromLabel="% With Influenza Immunization" toLabel="Influenza up to date"/>
+	</sharedMappings>
 </indicatorTemplateXML>

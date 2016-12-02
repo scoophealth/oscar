@@ -55,23 +55,23 @@
 			SELECT 
 	
 				IF( COUNT(fin.patient) > 0, 
-						ROUND( SUM( IF( fin.bmi &lt;= ${lowerLimit.bmi} AND fin.bmi > 0, 1, 0 ) ) / COUNT(fin.patient) * 100, 1)
+						 SUM( IF( fin.bmi &lt;= ${lowerLimit.bmi} AND fin.bmi > 0, 1, 0 ) ) 
 				,0 ) AS '% Under Weight',
 			
 				IF( COUNT(fin.patient) > 0, 
-						ROUND( SUM( IF( fin.bmi BETWEEN ${lowerLimit.ideal} AND ${upperLimit.ideal}, 1, 0 ) ) / COUNT(fin.patient) * 100, 1)
+						SUM( IF( fin.bmi BETWEEN ${lowerLimit.ideal} AND ${upperLimit.ideal}, 1, 0 ) )
 				,0 ) AS '% Ideal Weight',
 			
 				IF( COUNT(fin.patient) > 0, 
-						ROUND( SUM( IF( fin.bmi BETWEEN ${lowerLimit.overweight} AND ${upperLimit.overweight}, 1, 0 ) ) / COUNT(fin.patient) * 100, 1)
+						SUM( IF( fin.bmi BETWEEN ${lowerLimit.overweight} AND ${upperLimit.overweight}, 1, 0 ) )
 				,0 ) AS '% Over Weight',
 			
 				IF( COUNT(fin.patient) > 0, 
-						ROUND( SUM( IF( fin.bmi >= ${upperLimit.bmi}, 1, 0 ) ) / COUNT(fin.patient) * 100, 1)
+						SUM( IF( fin.bmi >= ${upperLimit.bmi}, 1, 0 ) ) 
 				,0 ) AS '% Obese',
 			
 				IF( COUNT(fin.patient) > 0, 
-						ROUND( SUM( IF( fin.bmi = 0, 1, 0 ) ) / COUNT(fin.patient) * 100, 1)
+						SUM( IF( fin.bmi = 0, 1, 0 ) ) 
 				,0 ) AS 'BMI Not Recorded'
 			
 			FROM (
@@ -122,11 +122,10 @@
 				WHERE d.patient_status LIKE ${pstatus} 
 				AND d.demographic_no > 0 
 				AND provider_no LIKE ${provider}
-				AND ( PREG.`status` NOT LIKE 'Current' 
-					OR PREG.`status` IS NULL )
-				AND ( HT.dataField IS NULL 
-					OR HT.dataField = "" 
-					OR ( HT.dataField BETWEEN ${lowerLimit.height} AND ${upperLimit.height} ) )
+				
+				AND IFNULL( PREG.`status`, -1) NOT LIKE 'Current' 
+				AND IFNULL( HT.dataField, ${lowerLimit.height}) BETWEEN ${lowerLimit.height} AND ${upperLimit.height}
+	
 				AND ( FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
 					NOW() ) ) / 365.25 ) >= ${lowerLimit.age} )
 				GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
@@ -155,20 +154,19 @@
 		<displayColumns>
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			
 			<column id="bmi" name="IFNULL( BMI.dataField, 0)" title="BMI" primary="false" />
 			<column id="bmiDate" name="IFNULL( DATE_FORMAT( BMI.dateObserved, '%m-%d-%Y' ), 0)" title="Last BMI (mm-dd-yyyy)" primary="false" />
-			<column id="height" name="IFNULL(HT.dataField, 0)" title="Height" primary="false" />
-			
+			<column id="height" name="IFNULL(HT.dataField, 0)" title="Height" primary="false" />			
 		</displayColumns>
 		<exportColumns>
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
 			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			
 			<column id="bmi" name="IFNULL( BMI.dataField, 0)" title="BMI" primary="false" />
 			<column id="bmiDate" name="IFNULL( DATE_FORMAT( BMI.dateObserved, '%m-%d-%Y' ), 0)" title="Last BMI (mm-dd-yyyy)" primary="false" />
@@ -219,11 +217,20 @@
 			WHERE d.patient_status LIKE ${pstatus} 
 			AND d.demographic_no > 0 
 			AND provider_no LIKE ${provider}
-			AND ( PREG.`status` NOT LIKE 'Current' 
-				OR PREG.`status` IS NULL )
+			AND IFNULL( PREG.`status`, -1) NOT LIKE 'Current'
 			AND ( FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
 				NOW() ) ) / 365.25 ) >= ${lowerLimit.age} )
 			GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1	
 		</query>
 	</drillDownQuery>
+	<shared>true</shared>
+	<sharedMetricSetName>OntarioMD Obesity Screening</sharedMetricSetName>
+	<sharedMetricDataId>Status</sharedMetricDataId>
+	<sharedMappings>
+		<sharedMapping fromLabel="% Under Weight" toLabel="Underweight"/>
+		<sharedMapping fromLabel="% Ideal Weight" toLabel="Ideal weight"/>
+		<sharedMapping fromLabel="% Over Weight" toLabel="Overweight"/>
+		<sharedMapping fromLabel="% Obese" toLabel="Obese"/>
+		<sharedMapping fromLabel="BMI Not Recorded" toLabel="BMI not recorded"/>
+	</sharedMappings>
 </indicatorTemplateXML>

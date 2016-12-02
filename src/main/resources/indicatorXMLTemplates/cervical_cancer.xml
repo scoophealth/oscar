@@ -46,11 +46,11 @@
 			SELECT 
 
 				IF ( COUNT(fin.patient) > 0,
-					ROUND( SUM( IF( fin.pap > 0 AND fin.`status` IS NOT NULL AND fin.`status` NOT LIKE 'pending', 1, 0 ) ) * 100 / COUNT(fin.patient), 1) 
+					 SUM( IF( fin.pap > 0 AND fin.`status` IS NOT NULL AND fin.`status` NOT LIKE 'pending', 1, 0 ) ) 
 				,0 ) AS "% PAP Done",
 			
 				IF ( COUNT(fin.patient) > 0,
-					100 - ( ROUND( SUM( IF( fin.pap > 0 AND fin.`status` IS NOT NULL AND fin.`status` NOT LIKE 'pending', 1, 0 ) ) * 100 / COUNT(fin.patient), 1) ) 
+					COUNT(fin.patient) - SUM( IF( fin.pap > 0 AND fin.`status` IS NOT NULL AND fin.`status` NOT LIKE 'pending', 1, 0 ) )  
 				,0 ) AS "% Not Done"
 			
 			FROM (
@@ -63,6 +63,7 @@
 				ON ( d.demographic_no = dxr.demographic_no) 
 			
 				-- GET ALL PAP ENTRIES FROM PREVENTIONS
+				-- do not include refused or ineligible patients.
 				LEFT JOIN ( 
 					SELECT p.demographic_no, p.id, pe.val
 					FROM preventions p		
@@ -70,13 +71,14 @@
 					ON (pe.prevention_id = p.id AND pe.keyval LIKE "result") 
 					WHERE p.prevention_type LIKE ${prevention}
 					AND p.deleted = 0
+					AND p.refused = 0
 					AND DATE(p.prevention_date) > ${lowerLimit.date} 
 					GROUP BY p.demographic_no HAVING COUNT(p.demographic_no) > -1
 				) PAP
 				ON (d.demographic_no = PAP.demographic_no)
 
 				WHERE d.patient_status LIKE ${pstatus}
-				AND dxr.dxresearch_code NOT LIKE ${dxexclude}
+				AND IFNULL(dxr.dxresearch_code,-1) NOT LIKE ${dxexclude}
 				AND d.sex LIKE ${gender}
 				AND d.demographic_no > 0 
 				AND d.provider_no LIKE ${provider}
@@ -105,8 +107,8 @@
 		<displayColumns>
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			<column id="papstatus" name="IFNULL(PAP.val, 'none')" title="PAP Status" primary="false" />
 			<column id="papdate" name="IFNULL(PAP.prevention_date, '0')" title="Test Date" primary="false" />
 		</displayColumns>
@@ -114,8 +116,8 @@
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
 			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			<column id="papstatus" name="IFNULL(PAP.val, 'none')" title="PAP Status" primary="false" />
 			<column id="papdate" name="IFNULL( DATE_FORMAT( PAP.prevention_date, '%m-%d-%Y' ), '0')" title="Test Date" primary="false" />
 		</exportColumns>
@@ -148,7 +150,7 @@
 			ON (d.demographic_no = PAP.demographic_no)
 	
 			WHERE d.patient_status LIKE ${pstatus}
-			AND dxr.dxresearch_code NOT LIKE ${dxexclude}
+			AND IFNULL(dxr.dxresearch_code,-1) NOT LIKE ${dxexclude}
 			AND d.sex LIKE ${gender}
 			AND d.demographic_no > 0 
 			AND d.provider_no LIKE ${provider}
@@ -157,4 +159,11 @@
 			GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
 		</query>
 	</drillDownQuery>
+	<shared>true</shared>
+	<sharedMetricSetName>OntarioMD Cervical Cancer Screening</sharedMetricSetName>
+	<sharedMetricDataId>Status</sharedMetricDataId>
+	<sharedMappings>
+		<sharedMapping fromLabel="% PAP Done" toLabel="Screening up to date"/>
+		<sharedMapping fromLabel="% Not Done" toLabel="Screening overdue"/>
+	</sharedMappings>	
 </indicatorTemplateXML>

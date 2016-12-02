@@ -35,7 +35,7 @@ sigmoidoscopy within 5 years or a colonoscopy within the past 10 years. - patien
 		
 		</params>
 		<range>
-			<upperLimit id="age" label="Max Age" name="Age" value="75" />
+			<upperLimit id="age" label="Max Age" name="Age" value="74" />
 			<lowerLimit id="age" label="Min Age" name="Age" value="50" />
 			
 			<upperLimit id="date" label="Current Date" name="currentDate" value="NOW()" />
@@ -47,11 +47,11 @@ sigmoidoscopy within 5 years or a colonoscopy within the past 10 years. - patien
 			<!-- Indicator SQL Query here -->
 			SELECT 
 				IF ( COUNT(fin.patient) > 0,
-					ROUND( SUM( IF( fin.colo > 0 OR fin.fobt > 0 OR fin.fobtm  > 0, 1, 0 ) ) * 100 / COUNT(fin.patient), 1 )
+					 SUM( IF( fin.colo > 0 OR fin.fobt > 0 OR fin.fobtm  > 0, 1, 0 ) ) 
 				,0 ) AS '% With One Test',
 			
 				IF ( COUNT(fin.patient) > 0,
-					ROUND( 100 - SUM( IF( fin.colo > 0 OR fin.fobt > 0 OR fin.fobtm  > 0, 1, 0 ) ) * 100 / COUNT(fin.patient), 1 )
+					 COUNT(fin.patient) - SUM( IF( fin.colo > 0 OR fin.fobt > 0 OR fin.fobtm  > 0, 1, 0 ) )
 				,0 ) AS '% With No Tests'
 				
 			FROM (
@@ -74,6 +74,7 @@ sigmoidoscopy within 5 years or a colonoscopy within the past 10 years. - patien
 					ON (pe.prevention_id = p.id AND pe.keyval LIKE "result")
 					WHERE p.prevention_type = ${colonoscopy}
 					AND p.deleted = 0
+					AND p.refused = 0
 					AND DATE(p.prevention_date) > ${lowerLimit.date120}
 					GROUP BY p.demographic_no HAVING COUNT(p.demographic_no) > -1
 				) COLO
@@ -87,6 +88,7 @@ sigmoidoscopy within 5 years or a colonoscopy within the past 10 years. - patien
 					ON (pe.prevention_id = p.id AND pe.keyval LIKE "result")
 					WHERE p.prevention_type = ${preventionfobt}
 					AND p.deleted = 0
+					AND p.refused = 0
 					AND DATE(p.prevention_date) > ${lowerLimit.date24}
 					GROUP BY p.demographic_no HAVING COUNT(p.demographic_no) > -1
 				) FOBT
@@ -114,7 +116,7 @@ sigmoidoscopy within 5 years or a colonoscopy within the past 10 years. - patien
 				-- WHERE THE PATIENT'S AGE AT THE TIME OF THE COLONOSCOPY ...
 				-- Excluding patients previously diagnosed.
 				WHERE d.patient_status LIKE ${pstatus} 
-				AND dxr.dxresearch_code NOT IN ${dxexclusions}
+				AND IFNULL(dxr.dxresearch_code,-1) NOT IN ${dxexclusions}
 				AND d.provider_no LIKE ${provider}
 				AND d.demographic_no > 0
 				AND FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) / 365.25 ) ) 
@@ -134,7 +136,7 @@ sigmoidoscopy within 5 years or a colonoscopy within the past 10 years. - patien
 			<parameter id="preventionfobt" name="FOBT Prevention" value="'FOBT'" />		
 		</params>
 		<range>
-			<upperLimit id="age" label="Max Age" name="Age" value="75" />
+			<upperLimit id="age" label="Max Age" name="Age" value="74" />
 			<lowerLimit id="age" label="Min Age" name="Age" value="50" />
 			
 			<upperLimit id="date" label="Current Date" name="currentDate" value="NOW()" />
@@ -145,8 +147,8 @@ sigmoidoscopy within 5 years or a colonoscopy within the past 10 years. - patien
 		<displayColumns>
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			<column id="coloscopy" name="IFNULL(COLO.val, 'none')" title="Coloscopy Status" primary="false" />
 			<column id="coloscopydate" name="IFNULL( DATE_FORMAT( COLO.prevention_date, '%m-%d-%Y' ), '-')" title="Coloscopy Date" primary="false" />
 			<column id="fobtprevention" name="IFNULL(FOBT.val, 'none')" title="FOBT Prevention Status" primary="false" />
@@ -158,8 +160,8 @@ sigmoidoscopy within 5 years or a colonoscopy within the past 10 years. - patien
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
 			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			<column id="coloscopy" name="IFNULL(COLO.val, 'none')" title="Coloscopy Status" primary="false" />
 			<column id="coloscopydate" name="IFNULL( DATE_FORMAT( COLO.prevention_date, '%m-%d-%Y' ), '-')" title="Coloscopy Date" primary="false" />
 			<column id="fobtprevention" name="IFNULL(FOBT.val, 'none')" title="FOBT Prevention Status" primary="false" />
@@ -236,7 +238,7 @@ sigmoidoscopy within 5 years or a colonoscopy within the past 10 years. - patien
 			-- WHERE THE PATIENT'S AGE AT THE TIME OF THE COLONOSCOPY
 			-- Exclude Cancer diagnosis.
 			WHERE d.patient_status LIKE ${pstatus}
-			AND dxr.dxresearch_code NOT IN ${dxexclusions}
+			AND IFNULL(dxr.dxresearch_code,-1) NOT IN ${dxexclusions}
 			AND d.provider_no LIKE ${provider}
 			AND d.demographic_no > 0
 			AND FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) / 365.25 ) ) 
@@ -244,4 +246,11 @@ sigmoidoscopy within 5 years or a colonoscopy within the past 10 years. - patien
 			GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
 		</query>
 	</drillDownQuery>
+	<shared>true</shared>
+	<sharedMetricSetName>OntarioMD Colorectal Cancer Screen</sharedMetricSetName>
+	<sharedMetricDataId>Status</sharedMetricDataId>
+	<sharedMappings>
+		<sharedMapping fromLabel="% With One Test" toLabel="Screening up to date"/>
+		<sharedMapping fromLabel="% With No Tests" toLabel="Screening overdue"/>
+	</sharedMappings>
 </indicatorTemplateXML>

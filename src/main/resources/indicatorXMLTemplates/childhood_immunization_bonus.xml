@@ -5,8 +5,8 @@
 	<heading>
 		<category>Preventive Health Care</category>
 		<subCategory>Immunization</subCategory>
-		<name>Patient Care: Childhood Immunization</name>
-		<definition>% of patients aged 30 to 42 months who have received all of the ministry-supplied immunizations as recommended by the National Advisory Committee on immunizations.</definition>
+		<name>Preventive Care Bonus: Childhood Immunization</name>
+		<definition>Target population: consists of enrolled patients who are aged 30 to 42 months of age, inclusive as of March 31st of the fiscal year for which the bonus is being claimed. Service Period: by their 30th month of age. Service Codes reported: G538A, G539A, G688A, G689A, G840A, G841A, G844A, G845A, G846A, and G848A and tracking code Q132A </definition>
 		<framework>Based on and adapted from AFHTO D2D 3.0 Indicators: Data Dictionary version 4 (Nov 2015)</framework>
 		<frameworkVersion>11-01-2015</frameworkVersion>
 		<notes></notes>
@@ -25,17 +25,20 @@
 				ie: WHERE demographic.provider_no = ${provider}
 			-->
 			<parameter id="provider" name="provider_no" value="loggedInProvider" />
-			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />	
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="rosterstatus" name="Patient Roster Status" value="'%RO%'" />	
 			<parameter id="dTaPIPVHib" name="DTaPIPVHib" value="'DTaP-IPV-Hib'" />
 			<parameter id="pneumococcal" name="Pneumococcal" value="'Pneu-C%'" />
 			<parameter id="rotavirus" name="Rotavirus" value="'Rot'" />
 			<parameter id="meningococcal" name="Meningococcal" value="'MenC-C'" />
 			<parameter id="measlesMumpsRubella" name="MeaslesMumpsRubella" value="'MMR'" />
-			<parameter id="varicella" name="Varicella" value="'VZ'" />
+			<parameter id="varicella" name="Varicella" value="'VZ'" />		
 		</params>
 		<range>
-			<upperLimit id="age" label="Max Age Months" name="Age" value="4.5" />
-			<lowerLimit id="age" label="Min Age Months" name="Age" value="2.5" />
+			<upperLimit id="age" label="Max Age In Months" name="Age Upper" value="4.5" />
+			<lowerLimit id="age" label="Min Age In Months" name="Age Lower" value="2.5" />
+			
+			<upperLimit id="date" label="Cutoff Date" name="Date Upper" value="STR_TO_DATE( CONCAT( '31,', '03,', YEAR(NOW()) ),'%d,%m,%Y')" />		
 		</range>
 		<query>
 			<!-- Indicator SQL Query here -->
@@ -51,11 +54,10 @@
 							AND fin.vz > 0
 						, 1, 0 )
 					) 
-				, 0 )AS '% With Complete Immunizations',
+				, 0 ) AS '% Eligible',
 			
-				-- the remainder missed one of the 6 requirements.
 				IF( COUNT(fin.patient) > 0,
-					COUNT(fin.patient) -
+					 COUNT(fin.patient) -
 					SUM(
 						IF( fin.dtap > 0 
 							AND fin.pneu > 0 
@@ -65,7 +67,7 @@
 							AND fin.vz > 0
 						, 1, 0 )
 					) 
-				, 0 ) AS '% Imunizations Not Complete'
+				, 0 ) AS '% Ineligible'
 			
 			FROM (
 				SELECT  
@@ -83,6 +85,7 @@
 					SELECT p.demographic_no, MAX(p.id) AS id
 					FROM preventions p		 
 					WHERE p.prevention_type LIKE ${dTaPIPVHib}
+					AND p.prevention_date &lt;= ${upperLimit.date}
 					AND p.deleted = 0
 					AND p.refused = 0
 					GROUP BY p.demographic_no HAVING COUNT(p.id) >= 4
@@ -94,6 +97,7 @@
 					SELECT p.demographic_no, MAX(p.id) AS id
 					FROM preventions p		 
 					WHERE p.prevention_type LIKE ${pneumococcal}
+					AND p.prevention_date &lt;= ${upperLimit.date}
 					AND p.deleted = 0
 					AND p.refused = 0
 					GROUP BY p.demographic_no HAVING COUNT(p.id) >= 3
@@ -105,6 +109,7 @@
 					SELECT p.demographic_no, MAX(p.id) AS id
 					FROM preventions p		 
 					WHERE p.prevention_type LIKE ${rotavirus}
+					AND p.prevention_date &lt;= ${upperLimit.date}
 					AND p.deleted = 0
 					AND p.refused = 0
 					GROUP BY p.demographic_no HAVING COUNT(p.id) >= 2
@@ -116,6 +121,7 @@
 					SELECT p.demographic_no, COUNT(p.id) AS id
 					FROM preventions p		 
 					WHERE p.prevention_type LIKE ${meningococcal}
+					AND p.prevention_date &lt;= ${upperLimit.date}
 					AND p.deleted = 0
 					AND p.refused = 0
 					GROUP BY p.demographic_no
@@ -127,6 +133,7 @@
 					SELECT p.demographic_no, COUNT(p.id) AS id
 					FROM preventions p		 
 					WHERE p.prevention_type LIKE ${measlesMumpsRubella}
+					AND p.prevention_date &lt;= ${upperLimit.date}
 					AND p.deleted = 0
 					AND p.refused = 0
 					GROUP BY p.demographic_no
@@ -138,6 +145,7 @@
 					SELECT p.demographic_no, COUNT(p.id) AS id
 					FROM preventions p		 
 					WHERE p.prevention_type LIKE ${varicella}
+					AND p.prevention_date &lt;= ${upperLimit.date}
 					AND p.deleted = 0
 					AND p.refused = 0
 					GROUP BY p.demographic_no
@@ -146,34 +154,42 @@
 			
 				-- PATIENTS BETWEEN 30 TO 42 MONTHS OLD
 				WHERE d.patient_status LIKE ${pstatus}
+				-- the patient must have been rostered
+				AND d.roster_status LIKE ${rosterstatus}
 				AND d.demographic_no > 0 
 				AND d.provider_no LIKE ${provider}
-				AND ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) / 365.25 ) 
+				AND ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), ${upperLimit.date} ) / 365.25 ) 
 					BETWEEN ${lowerLimit.age} AND ${upperLimit.age}
-			) fin;
+			) fin;			
 		</query>
 	</indicatorQuery>
 	<drillDownQuery>
-		<version>11-24-2016</version>
+		<version>11-28-2016</version>
 		<params>
 			<parameter id="provider" name="provider_no" value="loggedInProvider" />
-			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />	
+			<parameter id="serviceCode" name="billing_service_codes" value="G538A,G539A,G688A,G689A,G840A,G841A,G844A,G845A,G846A,G848A" />
+			<parameter id="trackingCode" name="billing_tracking_codes" value="'Q132A'" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="rosterstatus" name="Patient Roster Status" value="'%RO%'" />
 			<parameter id="dTaPIPVHib" name="DTaPIPVHib" value="'DTaP-IPV-Hib'" />
 			<parameter id="pneumococcal" name="Pneumococcal" value="'Pneu-C%'" />
 			<parameter id="rotavirus" name="Rotavirus" value="'Rot'" />
 			<parameter id="meningococcal" name="Meningococcal" value="'MenC-C'" />
 			<parameter id="measlesMumpsRubella" name="MeaslesMumpsRubella" value="'MMR'" />
-			<parameter id="varicella" name="Varicella" value="'VZ'" />
+			<parameter id="varicella" name="Varicella" value="'VZ'" />	
 		</params>
 		<range>
-			<upperLimit id="age" label="Max Age Months" name="Age" value="4.5" />
-			<lowerLimit id="age" label="Min Age Months" name="Age" value="2.5" />
+			<upperLimit id="age" label="Max Age In Months" name="Age Upper" value="4.5" />
+			<lowerLimit id="age" label="Min Age In Months" name="Age Lower" value="2.5" />
+			
+			<upperLimit id="date" label="Cutoff Date" name="Date Upper" value="STR_TO_DATE( CONCAT( '31,', '03,', YEAR(NOW()) ),'%d,%m,%Y')" />			
 		</range>
 		<displayColumns>
+
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
 			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS(DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) / 365.25), 1)" title="Age Now (years)" primary="false" />
+			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), ${upperLimit.date} ) / 365.25 ), 1)" title="Age March 31 (years)" primary="false" />
 			
 			<column id="dtap" name="CASE
 					WHEN IFNULL(DTaP.refused, 0) > 0
@@ -210,53 +226,16 @@
 					THEN 'refused'
 					ELSE IFNULL( VZ.id, 0 )
 				END" title="VZ (1)" primary="false" />
+				
+			<column id="trackingcode" name="IFNULL(TRACK.service_code,0)" title="Last Tracking Code" primary="false" />
+			<column id="servicecode" name="IFNULL(BILL.service_code,0)" title="Service Code" primary="false" />
+			
 		</displayColumns>
-		<exportColumns>
-			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
-			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS(DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) / 365.25), 1)" title="Age Now (years)" primary="false" />
-			
-			<column id="dtap" name="CASE
-					WHEN IFNULL(DTaP.refused, 0) > 0
-					THEN 'refused'
-					ELSE IFNULL( DTaP.id, 0 )
-				END" title="DTaP (4)" primary="false" />
-
-			<column id="pneu" name="CASE
-					WHEN IFNULL( PNEU.refused, 0) > 0
-					THEN 'refused'
-					ELSE IFNULL( PNEU.id, 0 )
-				END" title="Pneu-C (3)" primary="false" />
-		
-			<column id="rot" name="CASE
-					WHEN IFNULL( ROT.refused, 0) > 0
-					THEN 'refused'
-					ELSE IFNULL( ROT.id, 0 )
-				END" title="Rot (2)" primary="false" />
-			
-			<column id="men" name="CASE
-					WHEN IFNULL( MC.refused, 0) > 0
-					THEN 'refused'
-					ELSE IFNULL( MC.id, 0 )
-				END" title="MenC-C (1)" primary="false" />
-			
-			<column id="mmr" name="CASE
-					WHEN IFNULL( MM.refused, 0) > 0
-					THEN 'refused'
-					ELSE IFNULL( MM.id, 0 )
-				END" title="MMR (1)" primary="false" />
-			
-			<column id="vz" name="CASE
-					WHEN IFNULL( VZ.refused, 0)
-					THEN 'refused'
-					ELSE IFNULL( VZ.id, 0 )
-				END" title="VZ (1)" primary="false" />
-		</exportColumns>
 		<query>
-			<!-- Drilldown SQL Query here -->				
+			<!-- Drilldown SQL Query here -->
+			
 			SELECT  
-			*
+			*		
 			FROM demographic d
 		
 			-- 4 instances of - DTaP-IPV-Hib - Diphtheria, Tetanus, Pertussis, Polio, Haemophilus influenzae type B
@@ -264,6 +243,7 @@
 				SELECT p.demographic_no, COUNT(p.id) AS id, MAX(p.refused) AS refused
 				FROM preventions p		 
 				WHERE p.prevention_type LIKE ${dTaPIPVHib}
+				AND p.prevention_date &lt;= ${upperLimit.date}
 				AND p.deleted = 0
 				GROUP BY p.demographic_no
 			) DTaP
@@ -274,6 +254,7 @@
 				SELECT p.demographic_no, COUNT(p.id) AS id, MAX(p.refused) AS refused
 				FROM preventions p		 
 				WHERE p.prevention_type LIKE ${pneumococcal}
+				AND p.prevention_date &lt;= ${upperLimit.date}
 				AND p.deleted = 0
 				GROUP BY p.demographic_no
 			) PNEU
@@ -284,6 +265,7 @@
 				SELECT p.demographic_no, COUNT(p.id) AS id, MAX(p.refused) AS refused
 				FROM preventions p		 
 				WHERE p.prevention_type LIKE ${rotavirus}
+				AND p.prevention_date &lt;= ${upperLimit.date}
 				AND p.deleted = 0
 				GROUP BY p.demographic_no
 			) ROT
@@ -294,6 +276,7 @@
 				SELECT p.demographic_no, COUNT(p.id) AS id, MAX(p.refused) AS refused
 				FROM preventions p		 
 				WHERE p.prevention_type LIKE ${meningococcal}
+				AND p.prevention_date &lt;= ${upperLimit.date}
 				AND p.deleted = 0
 				GROUP BY p.demographic_no 
 			) MC
@@ -304,6 +287,7 @@
 				SELECT p.demographic_no, COUNT(p.id) AS id, MAX(p.refused) AS refused
 				FROM preventions p		 
 				WHERE p.prevention_type LIKE ${measlesMumpsRubella}
+				AND p.prevention_date &lt;= ${upperLimit.date}
 				AND p.deleted = 0
 				GROUP BY p.demographic_no
 			) MM
@@ -314,24 +298,56 @@
 				SELECT p.demographic_no, COUNT(p.id) AS id,  MAX(p.refused) AS refused
 				FROM preventions p		 
 				WHERE p.prevention_type LIKE ${varicella}
+				AND p.prevention_date &lt;= ${upperLimit.date}
 				AND p.deleted = 0
 				GROUP BY p.demographic_no
 			) VZ
 			ON (d.demographic_no = VZ.demographic_no)
 		
+				-- TRACKING/EXCLUSION CODE USED.
+			LEFT JOIN ( 
+				SELECT boc.demographic_no, MAX(boi.service_code) AS service_code, MAX(boi.service_date) AS service_date
+				FROM billing_on_cheader1 boc 
+				INNER JOIN billing_on_item boi
+				ON (boi.ch1_id = boc.id) 
+				WHERE boi.service_code LIKE ${trackingCode}
+				AND boi.service_date &lt;= ${upperLimit.date}
+				GROUP BY boc.demographic_no 
+			) TRACK
+			ON (d.demographic_no = TRACK.demographic_no )
+		
+			-- SERVICE CODE USED
+			LEFT JOIN ( 
+				SELECT boc2.demographic_no, MAX(boi.service_code) AS service_code, MAX(boi.service_date) AS service_date
+				FROM billing_on_item boi
+				JOIN (
+					SELECT MAX(boi.ch1_id) AS id, boc.demographic_no
+					FROM billing_on_item boi 
+					JOIN billing_on_cheader1 boc
+					ON (boi.ch1_id = boc.id) 
+					WHERE boi.service_code IN ${serviceCode} 
+					AND boi.service_date &lt;= ${upperLimit.date}
+					GROUP BY boc.demographic_no
+				) boc2
+				ON( boc2.id = boi.id) 
+			) BILL
+			ON (d.demographic_no = BILL.demographic_no)
+		
 			-- PATIENTS BETWEEN 30 TO 42 MONTHS OLD
 			WHERE d.patient_status LIKE ${pstatus}
+			-- the patient must have been rostered
+			AND d.roster_status LIKE ${rosterstatus}
 			AND d.demographic_no > 0 
 			AND d.provider_no LIKE ${provider}
-			AND ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) / 365.25 ) 
-				BETWEEN ${lowerLimit.age} AND ${upperLimit.age};
+			AND ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), ${upperLimit.date} ) / 365.25 ) 
+				BETWEEN ${lowerLimit.age} AND ${upperLimit.age}	
 		</query>
 	</drillDownQuery>
-<shared>true</shared>
-	<sharedMetricSetName>OntarioMD Childhood Immunizations</sharedMetricSetName>
+	<shared>true</shared>
+	<sharedMetricSetName>OntarioMD Care Bonus Childhood Immunizations</sharedMetricSetName>
 	<sharedMetricDataId>Status</sharedMetricDataId>
 	<sharedMappings>
-		<sharedMapping fromLabel="% With Complete Immunizations" toLabel="Complete"/>
-		<sharedMapping fromLabel="% Imunizations Not Complete" toLabel="Incomplete"/>
+		<sharedMapping fromLabel="% Eligible" toLabel="Complete"/>
+		<sharedMapping fromLabel="% Ineligible" toLabel="Incomplete"/>
 	</sharedMappings>
 </indicatorTemplateXML>

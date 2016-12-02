@@ -822,6 +822,10 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
         </tr>
 </oscar:oscarPropertiesCheck>
       
+ <tr>
+    	<td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewDashboardPrefs');return false;"><bean:message key="provider.btnViewDashboardPrefs"/></a></td>
+    </tr>
+
 </table>
 </FORM>
 

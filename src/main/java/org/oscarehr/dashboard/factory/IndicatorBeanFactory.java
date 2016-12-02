@@ -113,6 +113,7 @@ public class IndicatorBeanFactory {
 			
 			logger.info("Setting Indicator query results for Indicator bean " + indicatorBean.getId() );
 
+			indicatorBean.setOriginalJsonPlots(IndicatorQueryHandler.createOriginalGraphPlots(queryResultList));
 			List<GraphPlot[]> graphPlots = IndicatorQueryHandler.createGraphPlots( queryResultList );
 			indicatorBean.setQueryResult( queryResultList );
 			indicatorBean.setQueryString( this.indicatorQuery );

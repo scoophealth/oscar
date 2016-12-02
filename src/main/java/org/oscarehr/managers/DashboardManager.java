@@ -22,12 +22,19 @@
  * Ontario, Canada
  */
 package org.oscarehr.managers;
+import java.security.Security;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Base64;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.DashboardDao;
 import org.oscarehr.common.dao.IndicatorTemplateDao;
 import org.oscarehr.common.model.Dashboard;
 import org.oscarehr.common.model.IndicatorTemplate;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.dashboard.display.beans.DashboardBean;
 import org.oscarehr.dashboard.display.beans.DrilldownBean;
 import org.oscarehr.dashboard.display.beans.IndicatorBean;
@@ -37,6 +44,9 @@ import org.oscarehr.dashboard.factory.IndicatorBeanFactory;
 import org.oscarehr.dashboard.handler.ExportQueryHandler;
 import org.oscarehr.dashboard.handler.IndicatorTemplateHandler;
 import org.oscarehr.dashboard.handler.IndicatorTemplateXML;
+import org.oscarehr.integration.dashboard.model.Clinic;
+import org.oscarehr.integration.dashboard.model.User;
+import org.oscarehr.integration.dashboard.model.User.Province;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -44,6 +54,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import net.sf.json.JSONObject;
+import oscar.OscarProperties;
 import oscar.log.LogAction;
 
 @Service
@@ -59,6 +70,11 @@ public class DashboardManager {
 	@Autowired
 	private DashboardDao dashboardDao;
 	
+	@Autowired
+	ClinicDAO clinicDAO;
+	
+	
+	private Logger logger = MiscUtils.getLogger();
 	/**
 	 * Toggles the active status of a given class name.
 	 * Options are: 
@@ -79,13 +95,19 @@ public class DashboardManager {
 	 * Retrieves all the information for each Indicator Template query
 	 * that is stored in the indicatorTemplate db table.
 	 */
-	public List<IndicatorTemplate> getIndicatorLibrary( LoggedInInfo loggedInInfo ) {
+	public List<IndicatorTemplate> getIndicatorLibrary( LoggedInInfo loggedInInfo, boolean sharedOnly ) {
 		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardManager", SecurityInfoManager.WRITE, null ) ) {	
 			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorLibrary", null, null, null, "User missing _dashboardManager role with write access");
 			return null;
         }
 		
-		List<IndicatorTemplate> indicatorTemplates = indicatorTemplateDao.getIndicatorTemplates();
+		List<IndicatorTemplate> indicatorTemplates = null;
+		
+		if(!sharedOnly) {
+			indicatorTemplates = indicatorTemplateDao.getIndicatorTemplates();
+		} else {
+			indicatorTemplates = indicatorTemplateDao.getSharedIndicatorTemplates();
+		}
 		
 		if( indicatorTemplates != null) {
 			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorLibrary", null, null, null, "returning Indicator Template entries");
@@ -94,6 +116,10 @@ public class DashboardManager {
 		}
 		
 		return indicatorTemplates;
+	}
+	
+	public List<IndicatorTemplate> getIndicatorLibrary( LoggedInInfo loggedInInfo ) {
+		return getIndicatorLibrary(loggedInInfo,false);
 	}
 	
 	/**
@@ -445,11 +471,15 @@ public class DashboardManager {
 		
 		return indicatorTemplateXML;
 	}
+
+	public DrilldownBean getDrilldownData( LoggedInInfo loggedInInfo, int indicatorTemplateId ) {
+		return getDrilldownData(loggedInInfo,indicatorTemplateId,null);
+	}
 	
 	/**
 	 * Create a DrilldownBean that contains the query results requested from a specific Indicator by ID.
 	 */
-	public DrilldownBean getDrilldownData( LoggedInInfo loggedInInfo, int indicatorTemplateId ) {
+	public DrilldownBean getDrilldownData( LoggedInInfo loggedInInfo, int indicatorTemplateId, String providerNo ) {
 
 		DrilldownBean drilldownBean = null; 
 		DrilldownBeanFactory drilldownBeanFactory = null;
@@ -460,9 +490,11 @@ public class DashboardManager {
         }
 		
 		IndicatorTemplate indicatorTemplate = getIndicatorTemplate( loggedInInfo, indicatorTemplateId );
+		IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler( loggedInInfo, indicatorTemplate.getTemplate().getBytes() );
+		IndicatorTemplateXML indicatorTemplateXML = templateHandler.getIndicatorTemplateXML();
 		
 		if( indicatorTemplate != null ) {
-			drilldownBeanFactory = new DrilldownBeanFactory( loggedInInfo, indicatorTemplate ); 
+			drilldownBeanFactory = new DrilldownBeanFactory( loggedInInfo, indicatorTemplate, providerNo ); 
 		}
 		
 		if( drilldownBeanFactory != null ) {
@@ -534,6 +566,42 @@ public class DashboardManager {
 		return indicatorBean;
 	}
 	
+	/**
+	 * Get an Indicator Panel Bean with a fully executed query. 
+	 */
+	public IndicatorBean getIndicatorPanelForProvider( LoggedInInfo loggedInInfo, String providerNo, int indicatorId ) {
+		
+		IndicatorBean indicatorBean = null;
+		IndicatorBeanFactory indicatorBeanFactory = null;
+		
+		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDrilldown", SecurityInfoManager.READ, null ) ) {	
+			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorPanelForProvider", null, null, null,"User missing _dashboardDrilldown role with read access");
+			return indicatorBean;
+        }
+		
+		IndicatorTemplateXML indicatorTemplateXML = getIndicatorTemplateXML( loggedInInfo, indicatorId );
+		
+		indicatorTemplateXML.setProviderNo(providerNo);
+		
+		// The id needs to be force set.
+		if( indicatorTemplateXML != null ) {
+			indicatorTemplateXML.setId( indicatorId );
+			indicatorBeanFactory = new IndicatorBeanFactory( indicatorTemplateXML );
+		}
+
+		if( indicatorBeanFactory != null ) {
+			indicatorBean = indicatorBeanFactory.getIndicatorBean();
+		}
+		
+		if( indicatorBean != null ) {
+			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorPanelForProvider", null, null, null,"Returning IndicatorBean ID " + indicatorId );	
+		} else {
+			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorPanelForProvider", null, null, null,"Failed to return IndicatorBean ID " + indicatorId );			
+		}
+		
+		return indicatorBean;
+	}
+	
 	
 	// TODO add additional error check / filter class to carry out the following methods.
 	
@@ -543,4 +611,61 @@ public class DashboardManager {
 	
 	// TODO add duplicate Dashboard name check.
 	
+	
+	public String getSharedOutcomesDashboardLaunchURL(LoggedInInfo loggedInInfo) {
+		
+		String url = OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_url");
+		if(url == null) {
+			return null;
+		}
+		
+		org.oscarehr.common.model.Clinic oClinic = clinicDAO.getClinic();
+    	Clinic clinic = new Clinic();
+    	clinic.setApplication("oscar");
+    	clinic.setIdentifier(oClinic.getClinicName());
+    	clinic.setName(oClinic.getClinicName());
+    	
+    	
+    	Provider provider = loggedInInfo.getLoggedInProvider();
+    	
+    	User user = new User();
+    	user.setCity("");
+    	user.setFirstName(provider.getFirstName());
+    	//TODO: not sure yet how we want to implement this
+    	//user.setAuthorizedUsernameList(null);
+    	user.setLastName(provider.getLastName());
+    	user.setPostalCode("");
+    	user.setProvince(Province.ON);
+    	//user.setUniqueIdentifier(uniqueIdentifier);
+    	user.setUsername(provider.getProviderNo());
+    	user.setRole("provider");
+    	
+    	
+		JSONObject response = new JSONObject();
+		response.put("clinic", clinic);
+		response.put("user", user);
+		
+		String json = response.toString();
+		
+		logger.debug(json);
+		
+		String encrypted = null;
+		String b64 = null;
+		
+		//system must have the UnlimitedJCEPolicyJDK7.zip installed for this to work
+		try {
+			Security.addProvider(new BouncyCastleProvider());
+			
+			StandardPBEStringEncryptor encrypter = new StandardPBEStringEncryptor();
+			encrypter.setAlgorithm("PBEWITHSHA256AND256BITAES-CBC-BC");
+			encrypter.setProviderName("BC");
+			encrypter.setPassword(OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_key"));			
+			encrypted = encrypter.encrypt(json);
+			b64 = Base64.toBase64String(encrypted.getBytes());
+	       } catch(Exception e) {
+	    	  logger.error("error",e);
+	       }
+
+		return url + "?" + "encodedParams=" + b64 + "&version=1.1";
+	}
 }

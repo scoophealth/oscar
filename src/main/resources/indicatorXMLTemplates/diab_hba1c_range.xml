@@ -35,15 +35,15 @@
 			SELECT
 
 				IF ( COUNT(fin.patient) &gt; 0,
-				ROUND( SUM( CASE WHEN fin.hba1c &lt;= ${lowerLimit.a1c} THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient), 1)
+				SUM( CASE WHEN fin.hba1c &lt;= ${lowerLimit.a1c} THEN 1 ELSE 0 END ) 
 				, 0) AS "HbA1C &lt;= 7%",
 				
 				IF ( COUNT(fin.patient) &gt; 0,
-				ROUND( SUM( CASE WHEN fin.hba1c BETWEEN ${lowerLimit.a1c} AND ${upperLimit.a1c} THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient), 1)
+				SUM( CASE WHEN fin.hba1c BETWEEN ${lowerLimit.a1c} AND ${upperLimit.a1c} THEN 1 ELSE 0 END ) 
 				, 0) AS "7% &lt; HbA1C &lt;= 8.5%",
 				
 				IF ( COUNT(fin.patient) &gt; 0,
-				ROUND( SUM( CASE WHEN fin.hba1c &gt; ${upperLimit.a1c} THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient), 1)
+				SUM( CASE WHEN fin.hba1c &gt; ${upperLimit.a1c} THEN 1 ELSE 0 END )
 				, 0) AS "HbA1C > 8.5%"
 				
 			FROM ( 
@@ -96,8 +96,8 @@
 		<displayColumns>
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			<column id="a1c" name="IFNULL( A1C.dataField, 0)" title="HbA1C" primary="false" />
 			<column id="a1cDate" name="IFNULL( DATE_FORMAT( A1C.dateObserved, '%m-%d-%Y' ), 0)" title="Test Date (mm-dd-yyyy)" primary="false" />
 			<column id="codeSystem" name="CONCAT( dxr.coding_system, ' ', dxr.dxresearch_code )" title="Dx System/Code" primary="false" />
@@ -106,8 +106,8 @@
 		<exportColumns>
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			<column id="a1c" name="IFNULL( A1C.dataField, 0)" title="HbA1C" primary="false" />
 			<column id="a1cDate" name="IFNULL( DATE_FORMAT( A1C.dateObserved, '%m-%d-%Y' ), 0)" title="Test Date (mm-dd-yyyy)" primary="false" />
 			<column id="codeSystem" name="CONCAT( dxr.coding_system, '/', dxr.dxresearch_code )" title="Dx System/Code" primary="false" />
@@ -148,4 +148,12 @@
 			AND d.provider_no LIKE ${provider}
 		</query>
 	</drillDownQuery>
+	<shared>true</shared>
+	<sharedMetricSetName>OntarioMD DM A1C in Range</sharedMetricSetName>
+	<sharedMetricDataId>Status</sharedMetricDataId>
+	<sharedMappings>
+		<sharedMapping fromLabel="HbA1C &lt;= 7%" toLabel="HbA1C &lt;= 7%"/>
+		<sharedMapping fromLabel="7% &lt; HbA1C &lt;= 8.5%" toLabel="7% &lt; HbA1C &lt;= 8.5%"/>
+		<sharedMapping fromLabel="HbA1C &gt; 8.5%" toLabel="HbA1C &gt; 8.5%"/>
+	</sharedMappings>
 </indicatorTemplateXML>

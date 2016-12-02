@@ -35,11 +35,11 @@
 			<!-- Indicator SQL Query here -->
 			SELECT
 				IF ( COUNT(fin.patient) > 0,
-					ROUND( COUNT(fin.pneu) / COUNT(fin.patient) * 100, 1) 
+					COUNT(fin.pneu) 
 				,0 ) AS "% Has Pneumococcal Vaccine",
 			
 				IF ( COUNT(fin.patient) > 0,
-					100 - ( ROUND( COUNT(fin.pneu) / COUNT(fin.patient) * 100, 1) ) 
+					COUNT(fin.patient) - COUNT(fin.pneu) 
 				,0 ) AS "% No Pneumococcal Vaccine"
 			
 			FROM (
@@ -82,8 +82,8 @@
 		<displayColumns>
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			
 			<column id="preventionDate" name="IFNULL( DATE_FORMAT( DATE(PNEU.prevention_date), '%m-%d-%Y' ) , '0')" title="Vaccine Date" primary="false" />
 			<column id="refused" name="IF(PNEU.refused > 0, 'yes', 'no')" title="Vaccine Refused" primary="false" />
@@ -92,8 +92,8 @@
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
 			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			
 			<column id="preventionDate" name="IFNULL( DATE_FORMAT( DATE(PNEU.prevention_date), '%m-%d-%Y' ) , '0')" title="Last Vaccine Date" primary="false" />
 			<column id="refused" name="IF(PNEU.refused > 0, 'yes', 'no')" title="Vaccine Refused" primary="false" />
@@ -122,4 +122,11 @@
 				NOW() ) ) / 365.25 ) >= ${lowerLimit.age} )
 		</query>
 	</drillDownQuery>
+	<shared>true</shared>
+	<sharedMetricSetName>OntarioMD Pneumococcal Immunization</sharedMetricSetName>
+	<sharedMetricDataId>Status</sharedMetricDataId>
+	<sharedMappings>
+		<sharedMapping fromLabel="% Has Pneumococcal Vaccine" toLabel="Pneumococcal received"/>
+		<sharedMapping fromLabel="% No Pneumococcal Vaccine" toLabel="Pneumococcal overdue"/>
+	</sharedMappings>
 </indicatorTemplateXML>
