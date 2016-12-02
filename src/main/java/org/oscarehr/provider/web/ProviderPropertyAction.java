@@ -2264,6 +2264,73 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
     }
 
     
+    public ActionForward viewDashboardPrefs(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
+    	DynaActionForm frm = (DynaActionForm)actionform;
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+		UserProperty prop = this.userPropertyDAO.getProp(providerNo, UserProperty.DASHBOARD_SHARE);
+
+		String propValue="";
+		if (prop == null){
+			prop = new UserProperty();
+		}else{
+			propValue=prop.getValue();
+		}
+
+		boolean checked;
+		if(propValue.equals("true"))
+			checked=true;
+		else
+			checked=false;
+
+		prop.setChecked(checked);
+		request.setAttribute("dashboardShareProperty", prop);
+		request.setAttribute("providertitle","provider.dashboardPrefs.title"); 
+		request.setAttribute("providermsgPrefs","provider.dashboardPrefs.msgPrefs"); //=Preferences
+		request.setAttribute("providerbtnSubmit","provider.dashboardPrefs.btnSubmit"); //=Save
+		request.setAttribute("providerbtnCancel","provider.dashboardPrefs.btnCancel"); //=Cancel
+		request.setAttribute("method","saveDashboardPrefs");
+
+		frm.set("dashboardShareProperty", prop);
+
+		return actionmapping.findForward("genDashboardPrefs");
+    }
+
+    public ActionForward saveDashboardPrefs(ActionMapping actionmapping,ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+    	DynaActionForm frm=(DynaActionForm)actionform;
+    	UserProperty Uprop=(UserProperty)frm.get("dashboardShareProperty");
+
+		boolean checked=false;
+		if(Uprop!=null)
+			checked = Uprop.isChecked();
+		UserProperty prop=this.userPropertyDAO.getProp(providerNo, UserProperty.DASHBOARD_SHARE);
+		if(prop==null){
+			prop=new UserProperty();
+			prop.setName(UserProperty.DASHBOARD_SHARE);
+			prop.setProviderNo(providerNo);
+		}
+		String propValue="false";
+		if(checked) propValue="true";
+
+		prop.setValue(propValue);
+		this.userPropertyDAO.saveProp(prop);
+
+		request.setAttribute("status", "success");
+		request.setAttribute("dashboardShareProperty",prop);
+		request.setAttribute("providertitle","provider.dashboardPrefs.title"); 
+		request.setAttribute("providermsgPrefs","provider.dashboardPrefs.msgPrefs"); //=Preferences
+		request.setAttribute("providerbtnClose","provider.dashboardPrefs.btnClose"); //=Close
+		if(checked)
+			request.setAttribute("providermsgSuccess","provider.dashboardPrefs.msgSuccess_selected"); 
+		else
+			request.setAttribute("providermsgSuccess","provider.dashboardPrefs.msgSuccess_unselected"); 
+		request.setAttribute("method","saveDashboardPrefs");
+
+		return actionmapping.findForward("genDashboardPrefs");
+	}
+
     public ActionForward viewAppointmentCardPrefs(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
 
 		DynaActionForm frm = (DynaActionForm)actionform;

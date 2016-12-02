@@ -145,6 +145,21 @@
                                        </xs:sequence>
                                  </xs:complexType>
                            </xs:element>
+                           <xs:element name="shared" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+                           <xs:element name="sharedMetricSetName" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+                           <xs:element name="sharedMetricDataId" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+                            <xs:element name="sharedMappings" maxOccurs="1" minOccurs="0">
+                                  <xs:complexType>
+                                        <xs:sequence>
+                                              <xs:element name="sharedMapping" maxOccurs="unbounded" minOccurs="0">
+                                                    <xs:complexType>
+                                                          <xs:attribute name="fromLabel" type="xs:string"></xs:attribute>
+                                                          <xs:attribute name="toLabel" type="xs:string"></xs:attribute>
+                                                    </xs:complexType>
+                                              </xs:element>
+                                        </xs:sequence>
+                                  </xs:complexType>
+                            </xs:element>
                      </xs:sequence>
                </xs:complexType>
          </xs:element>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>Colcamex Resources Inc. Copyright 2016</author>
+	<uid>dd40f1c9-f091-4aad-b65e-1c4cf10927e5</uid>
+	<heading>
+		<category>CDM</category>
+		<subCategory>Diabetes</subCategory>
+		<name>Diabetes with HbA1C Testing - Shared</name>
+		<definition>% of patients with diabetes aged 40 years and older who have had two or more HbA1C tests within the past 12 months</definition>
+		<framework>Based on and adapted from HQO's PCPM: Priority Measures for System and Practice Levels (Oct 2015)</framework>
+		<frameworkVersion>10-01-2015</frameworkVersion>
+		<notes>This is a test template for the Diabetes with HbA1C Testing Indicator query</notes>
+	</heading>
+	<indicatorQuery>
+		<version>12-14-2016</version>
+		<params>
+			<!-- 
+				Required parameter provider. Value options are: 
+					[ an individual providerNo, or provider range ] ie: value="370, 1001" 
+					"all" ie: value="all" including null.
+					"loggedInProvider" ie:
+				Default is "loggedInProvider"
+				Use this parameter in the query as ${provider}
+				This parameter should be used for fetching patient's assigned to a MRP.
+				ie: WHERE demographic.provider_no = ${provider}
+			-->
+			<parameter id="provider" name="Provider Number" value="loggedInProvider" />
+			<parameter id="active" name="Active Patients" value="'%AC%'" />
+			<parameter id="dxcodes" name="Dx Codes" value="250,E10,E11,DB-610" />
+			<parameter id="loinc" name="LOINC Code" value="'4548-4'" />
+		</params>
+		<range>
+			<upperLimit id="date" label="To Today" name="Date Range" value="now()" />
+			<lowerLimit id="date" label="From Date" name="Date" value="DATE_SUB( NOW(), INTERVAL 12 MONTH )" />
+			
+			<upperLimit id="a1c" label="Max number A1C Labs" name="A1c Tests" value="2" />
+			<lowerLimit id="a1c" label="Min number A1C Labs" name="A1c Tests" value="0" />
+
+			<lowerLimit id="age" label="Patients older than" name="Age" value="40" />
+		</range>
+		<query>
+			SELECT 
+				IF ( COUNT(fin.patient) > 0, 
+					 SUM( CASE WHEN fin.a1c >= ${upperLimit.a1c} THEN 1 ELSE 0 END ), 
+				0) AS "% 2 or More HbA1c", 
+			
+				IF ( COUNT(fin.patient) > 0, 
+				SUM( CASE WHEN fin.a1c >= ${lowerLimit.a1c} AND fin.a1c &lt; ${upperLimit.a1c} THEN 1 ELSE 0 END ), 
+				0) AS "% Less than 2 HbA1c"
+				
+			FROM (
+
+				SELECT 
+					d.demographic_no AS patient, 
+					IFNULL(A1C.a1cnumber,0) AS a1c
+				FROM demographic d 
+				INNER JOIN dxresearch dxr 
+				ON ( d.demographic_no = dxr.demographic_no) 
+			
+				LEFT JOIN ( 
+					SELECT COUNT(m.id) AS a1cnumber, m.demographicNo 
+					FROM measurements m
+					JOIN (
+						SELECT MAX(`name`) AS 'name' 
+						FROM measurementMap
+						WHERE loinc_code LIKE ${loinc}
+						GROUP BY `name`
+					) mm
+					ON (mm.`name` = m.type)
+					WHERE DATE(m.dateObserved) > ${lowerLimit.date}
+					AND m.demographicNo > 0
+					GROUP BY m.demographicNo
+				) A1C 
+				ON (d.demographic_no = A1C.demographicNo) 
+			
+				WHERE d.patient_status LIKE ${active} 
+				AND dxr.dxresearch_code IN ${dxcodes}
+				AND dxr.`status` NOT LIKE "%D%" 
+				AND d.demographic_no > 0 
+				AND provider_no LIKE ${provider}
+				AND ( FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+					${lowerLimit.date} ) ) / 365.25 ) >= ${lowerLimit.age} ) 
+			) fin;
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>07-20-2016</version>
+		<params>
+			<!-- 
+				Required parameter provider. Value options are: 
+					[ an individual providerNo, or provider range ] ie: value="370, 1001" 
+					"clinic (all providers)" ie: value="all"
+					"loggedInProvider" ie:
+				Default is "loggedInProvider"
+				Use this parameter in the query as ${provider}
+				This parameter should be used for fetching patient's assigned to a MRP.
+				ie: WHERE demographic.provider_no = ${provider}
+			-->
+			<parameter id="provider" name="Provider Number" value="loggedInProvider" />
+			<parameter id="active" name="Active Patients" value="'%AC%'" />
+			<parameter id="dxcodes" name="Dx Codes" value="250,E10,E11,DB-610" />
+			<parameter id="loinc" name="LOINC Code" value="'4548-4'" />
+		</params>
+		
+		<range>
+			<upperLimit id="date" label="To Today" name="Date Range" value="now()" />
+			<lowerLimit id="date" label="From Date" name="Date" value="DATE_SUB( NOW(), INTERVAL 12 MONTH )" />
+
+			<lowerLimit id="age" label="Patients older than" name="Age" value="40" />
+		</range>
+		
+		<displayColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="a1c" name="IFNULL(A1C.a1cnumber,0)" title="A1C 12 Months" primary="false" />
+		</displayColumns>
+		
+		<exportColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
+			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />			
+			<column id="a1c" name="IFNULL(A1C.a1cnumber,0)" title="A1C 12 Months" primary="false" />
+		</exportColumns>
+		<query>
+			SELECT
+			*
+			FROM demographic d 
+			INNER JOIN dxresearch dxr 
+			ON ( d.demographic_no = dxr.demographic_no) 
+		
+			LEFT JOIN ( 
+				SELECT COUNT(m.id) AS a1cnumber, m.demographicNo, MAX(m.dateObserved) AS dateObserved
+				FROM measurements m
+				JOIN (
+					SELECT MAX(`name`) AS 'name' 
+					FROM measurementMap
+					WHERE loinc_code LIKE ${loinc}
+					GROUP BY `name`
+				) mm
+				ON (mm.`name` = m.type)
+				WHERE DATE(m.dateObserved) > ${lowerLimit.date}
+				AND m.demographicNo > 0
+				GROUP BY m.demographicNo HAVING COUNT(m.demographicNo) > -1
+			) A1C 
+			ON (d.demographic_no = A1C.demographicNo) 
+		
+			WHERE d.patient_status LIKE ${active} 
+			AND dxr.dxresearch_code IN ${dxcodes}
+			AND dxr.`status` NOT LIKE "%D%" 
+			AND d.demographic_no > 0 
+			AND provider_no LIKE ${provider}
+			AND ( FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+				${lowerLimit.date} ) ) / 365.25 ) >= ${lowerLimit.age} )	
+		</query>
+	</drillDownQuery>
+	<shared>true</shared>
+	<sharedMetricSetName>OntarioMD DM A1C Testing Frequency</sharedMetricSetName>
+	<sharedMetricDataId>Status</sharedMetricDataId>
+	<sharedMappings>
+		<sharedMapping fromLabel="% 2 or More HbA1c" toLabel="2+ HbA1C in past yr"/>
+		<sharedMapping fromLabel="% Less than 2 HbA1c" toLabel="&lt;2 HbA1C in past yr"/>
+	</sharedMappings>
+</indicatorTemplateXML>

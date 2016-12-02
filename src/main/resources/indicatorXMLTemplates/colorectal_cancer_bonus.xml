@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>Colcamex Resources Inc. for Oscar EMR</author>
+	<uid></uid>
+	<heading>
+		<category>Preventive Health Care</category>
+		<subCategory>Cancer</subCategory>
+		<name>Preventive Care Bonus: Colorectal Cancer Screening</name>
+		<definition>Target population: consists of enrolled patients who are between 50 and 74 years of age, inclusive; on March 31st of the fiscal year for which the bonus is being claimed. Service Period: is 30 months prior to March 31st of the fiscal year for which the bonus is being claimed. Service Codes reported: G004A, L179A, L181A, Q700A, tracking codes Q133A and exclusion codes Q142A</definition>
+		<framework>Based on and adapted from CIHI’s 2012 Indicator Technical Specifications (Nov 2012)</framework>
+		<frameworkVersion>11-01-2012</frameworkVersion>
+		<notes></notes>
+	</heading>
+	<indicatorQuery>
+		<version>10-27-2016</version>
+		<params>
+			<!-- 
+				Required parameter provider. Value options are: 
+					[ an individual providerNo, or provider range ] ie: value="370, 1001" 
+					"all" ie: value="all" including null.
+					"loggedInProvider" ie:
+				Default is "loggedInProvider"
+				Use this parameter in the query as ${provider}
+				This parameter should be used for fetching patient's assigned to a MRP.
+				ie: WHERE demographic.provider_no = ${provider}
+			-->
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="rosterstatus" name="Patient Roster Status" value="'%RO%'" />
+			<parameter id="loincfobt" name="FOBT LOINC" value="58453-2,14563-1,14564-9,14565-6" />
+			<parameter id="colonoscopy" name="Colonoscopy" value="'COLONOSCOPY'" />
+			<parameter id="dxexclusions" name="Exclude Dx Codes" value="556%,555%,V1005" />
+			<parameter id="preventionfobt" name="FOBT Prevention" value="'FOBT'" />	
+			
+			<parameter id="exclusionCode" name="billing_exclusion_code" value="'Q142A'" />
+		</params>
+		<range>
+			<upperLimit id="age" label="Max Age" name="Age" value="74" />
+			<lowerLimit id="age" label="Min Age" name="Age" value="50" />
+			
+			<upperLimit id="date" label="March 31" name="Date Upper" value="STR_TO_DATE( CONCAT( '31,', '03,', YEAR(NOW()) ),'%d,%m,%Y')" />
+			<lowerLimit id="date" label="Months History" name="Date Lower" value="30" />	
+
+		</range>
+		<query>
+			<!-- Indicator SQL Query here -->
+			SELECT 
+
+				IF ( COUNT(fin.patient) > 0,
+					 ( SUM( IF( fin.colo > 0 OR fin.fobt > 0 OR fin.fobtm > 0, 1, 0) ) - 
+						SUM( IF( fin.refused = 2 OR fin.dxexclusion > 0 OR fin.bexclusion LIKE ${exclusionCode}, 1, 0) ) ) 
+				,0 ) AS "% Eligible",
+			
+				IF ( COUNT(fin.patient) > 0,
+					 ( SUM( IF( fin.colo = 0 AND fin.fobt = 0 AND fin.fobtm = 0, 1, 0) ) + 
+						SUM( IF( fin.refused = 2 OR fin.dxexclusion > 0 OR fin.bexclusion LIKE ${exclusionCode}, 1, 0) ) ) 
+				,0 ) AS "% Ineligible"
+				
+			FROM (
+				SELECT
+			
+					d.demographic_no AS patient,
+					IFNULL(COLO.refused, -1) AS refused,
+					IFNULL(TRACK.service_code,-1) AS bexclusion,
+					IFNULL(dxr.dxresearch_code,-1) AS dxexclusion,
+					IFNULL(COLO.id,0) AS colo,
+					IFNULL(FOBT.id,0) AS fobt,
+					IFNULL(FOBTM.dataField,0) AS fobtm
+			
+				FROM demographic d
+				LEFT JOIN dxresearch dxr 
+				ON ( d.demographic_no = dxr.demographic_no 
+					AND dxr.dxresearch_code IN ${dxexclusions} )
+			
+				-- LOOK FOR CURRENT COLONOSCOPY
+				LEFT JOIN ( 
+					SELECT p.demographic_no, p.id, p.prevention_date, p.refused
+					FROM preventions p	
+					JOIN (
+						SELECT MAX(id) AS id2
+						FROM preventions
+						WHERE prevention_type = ${colonoscopy}
+						AND demographic_no > 0
+						AND deleted = 0
+						AND DATE(prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date}
+						GROUP BY demographic_no
+					)p2
+					ON(p2.id2 = p.id)
+				) COLO
+				ON (d.demographic_no = COLO.demographic_no 
+					AND FLOOR( ABS( DATEDIFF( STR_TO_DATE( CONCAT(d.year_of_birth,",",d.month_of_birth,",",d.date_of_birth), '%Y,%m,%d' ), COLO.prevention_date ) / 365.25 ) ) >= ${lowerLimit.age} )
+			
+			
+				-- LOOK FOR FOBT RESULTS
+				LEFT JOIN ( 
+					SELECT p.demographic_no, p.id, p.prevention_date, p.refused
+					FROM preventions p	
+					JOIN (
+						SELECT MAX(id) AS id2
+						FROM preventions
+						WHERE prevention_type = ${preventionfobt}
+						AND demographic_no > 0
+						AND deleted = 0
+						AND DATE(prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date}
+						GROUP BY demographic_no
+					)p2
+					ON(p2.id2 = p.id)
+				) FOBT
+				ON (d.demographic_no = FOBT.demographic_no 
+					AND FLOOR( ABS( DATEDIFF( STR_TO_DATE( CONCAT(d.year_of_birth,",",d.month_of_birth,",",d.date_of_birth), '%Y,%m,%d' ), FOBT.prevention_date ) / 365.25 ) ) >= ${lowerLimit.age} )
+			
+			
+				-- LOOK FOR FOBT IN MEASUREMENTS.
+				LEFT JOIN (
+					SELECT m1.dataField, m1.demographicNo, m1.dateObserved
+					FROM measurements m1
+					INNER JOIN (
+						SELECT MAX(id) AS id
+						FROM measurements m
+							JOIN (
+								SELECT MAX(`name`) AS 'name' 
+								FROM measurementMap
+								WHERE loinc_code IN ${loincfobt}
+								GROUP BY `name`
+							) mm
+						ON (mm.`name` = m.type)
+						WHERE DATE(m.dateObserved) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date}
+						AND m.demographicNo > 0 
+						GROUP BY m.demographicNo
+					) m2
+					ON (m1.id = m2.id)
+				) FOBTM
+				ON (d.demographic_no = FOBTM.demographicNo
+					AND FLOOR( ABS( DATEDIFF( STR_TO_DATE( CONCAT(d.year_of_birth,",",d.month_of_birth,",",d.date_of_birth), '%Y,%m,%d' ), DATE(FOBTM.dateObserved) ) / 365.25 ) ) >= ${lowerLimit.age} )
+			
+			
+				-- TRACKING/EXCLUSION CODE USED.
+				LEFT JOIN ( 
+					SELECT boc.demographic_no, MAX(boi.service_code) AS service_code, MAX(boi.service_date) AS service_date
+					FROM billing_on_cheader1 boc 
+					INNER JOIN billing_on_item boi
+					ON (boi.ch1_id = boc.id) 
+					WHERE boi.service_code LIKE 'Q142A'
+					GROUP BY boc.demographic_no
+				) TRACK
+				ON (d.demographic_no = TRACK.demographic_no)
+			
+				WHERE d.patient_status LIKE ${pstatus}
+				-- the patient must have been rostered
+				AND d.roster_status LIKE ${rosterstatus}
+				AND d.provider_no LIKE ${provider}
+				AND d.demographic_no > 0
+				AND FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) / 365.25 ) ) 
+					BETWEEN ${lowerLimit.age} AND ${upperLimit.age}
+				GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
+			
+			) fin
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>10-27-2016</version>
+		<params>
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="rosterstatus" name="Patient Roster Status" value="'%RO%'" />
+			<parameter id="loincfobt" name="FOBT LOINC" value="58453-2,14563-1,14564-9,14565-6" />
+			<parameter id="colonoscopy" name="Colonoscopy" value="'COLONOSCOPY'" />
+			<parameter id="dxexclusions" name="Exclude Dx Codes" value="556%,555%,V1005" />
+			<parameter id="preventionfobt" name="FOBT Prevention" value="'FOBT'" />	
+			
+			<parameter id="exclusionCode" name="billing_exclusion_code" value="'Q142A'" />
+			<parameter id="serviceCode" name="billing_service_codes" value="G004A,L179A,L181A,Q700A" />
+			<parameter id="trackingCode" name="billing_tracking_codes" value="Q142A,Q133A" />
+			<parameter id="graceperiod" name="Grace Period Months" value="6" />
+		</params>
+		<range>
+			<upperLimit id="age" label="Max Age" name="Age" value="74" />
+			<lowerLimit id="age" label="Min Age" name="Age" value="50" />
+			
+			<upperLimit id="date" label="March 31" name="Date Upper" value="STR_TO_DATE( CONCAT( '31,', '03,', YEAR(NOW()) ),'%d,%m,%Y')" />
+			<lowerLimit id="date" label="Months History" name="Date Lower" value="30" />	
+		</range>
+		<displayColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="prevention" name="CASE 
+					WHEN COLO.id IS NOT NULL
+					THEN 'Colonoscopy'
+					WHEN FOBT.id IS NOT NULL OR FOBTM.id IS NOT NULL
+					THEN 'FOBT'
+					ELSE 'None'
+				END" title="Prevention" primary="false" />
+			<column id="preventiondate" name="CASE 
+					WHEN COLO.id IS NOT NULL
+					THEN IFNULL( DATE_FORMAT(COLO.prevention_date, '%m-%d-%Y' ), 0)
+					WHEN FOBT.id IS NOT NULL 
+					THEN IFNULL( DATE_FORMAT(FOBT.prevention_date, '%m-%d-%Y' ), 0)
+					WHEN FOBTM.id IS NOT NULL
+					THEN IFNULL( DATE_FORMAT(FOBTM.dateObserved, '%m-%d-%Y' ), 0)
+					ELSE 0
+				END" title="Prevention Date" primary="false" />
+			<column id="march31" name="CASE 
+					WHEN COLO.id IS NOT NULL
+					THEN IFNULL(ROUND( DATEDIFF( ${upperLimit.date}, DATE(COLO.prevention_date)) / 365.25 * 12, 1 ), 0)
+					WHEN FOBT.id IS NOT NULL 
+					THEN IFNULL(ROUND( DATEDIFF( ${upperLimit.date}, DATE(FOBT.prevention_date)) / 365.25 * 12, 1 ), 0)
+					WHEN FOBTM.id IS NOT NULL
+					THEN IFNULL(ROUND( DATEDIFF( ${upperLimit.date}, DATE(FOBTM.dateObserved)) / 365.25 * 12, 1 ), 0)
+					ELSE 0
+				END" title="March 31" primary="false" />
+			<column id="sept30" name="CASE 
+					WHEN COLO.id IS NOT NULL
+					THEN IFNULL(ROUND( DATEDIFF( DATE_ADD( ${upperLimit.date}, INTERVAL DATE_ADD( ${upperLimit.date}, INTERVAL ${graceperiod} MONTH ) MONTH ), DATE(COLO.prevention_date)) / 365.25 * 12, 1 ), 0)
+					WHEN FOBT.id IS NOT NULL 
+					THEN IFNULL(ROUND( DATEDIFF( DATE_ADD( ${upperLimit.date}, INTERVAL ${graceperiod} MONTH ), DATE(FOBT.prevention_date)) / 365.25 * 12, 1 ), 0)
+					WHEN FOBTM.id IS NOT NULL
+					THEN IFNULL(ROUND( DATEDIFF( DATE_ADD( ${upperLimit.date}, INTERVAL ${graceperiod} MONTH ), DATE(FOBTM.dateObserved)) / 365.25 * 12, 1 ), 0)
+					ELSE 0
+				END" title="Sept 30" primary="false" />
+			<column id="current" name="CASE 
+					WHEN COLO.id IS NOT NULL
+					THEN IFNULL(ROUND( DATEDIFF( NOW(), DATE(COLO.prevention_date)) / 365.25 * 12, 1 ), 0)
+					WHEN FOBT.id IS NOT NULL 
+					THEN IFNULL(ROUND( DATEDIFF( NOW(), DATE(FOBT.prevention_date)) / 365.25 * 12, 1 ), 0)
+					WHEN FOBTM.id IS NOT NULL
+					THEN IFNULL(ROUND( DATEDIFF( NOW(), DATE(FOBTM.dateObserved)) / 365.25 * 12, 1 ), 0)
+					ELSE 0
+				END" title="Current" primary="false" />
+			<column id="status" name="CASE 
+					WHEN COLO.refused IS NULL AND FOBT.refused IS NULL AND FOBTM.id IS NULL
+					THEN 'No Test'		
+					WHEN ( IFNULL(COLO.refused, -1) = 0 OR IFNULL(FOBT.refused, -1) = 0 OR IFNULL(FOBTM.id, -1) > 0 )
+						AND ( DATE(COLO.prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date} 
+								OR DATE(FOBT.prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date} 
+								OR DATE(FOBTM.dateObserved) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date} )
+					THEN 'Eligible'		
+					WHEN ( IFNULL(COLO.refused, -1) = 0 OR IFNULL(FOBT.refused, -1) = 0 OR IFNULL(FOBTM.id, -1) > 0 )
+						AND ( DATE(COLO.prevention_date) > ${upperLimit.date} 
+								OR DATE(FOBT.prevention_date) > ${upperLimit.date} 
+								OR DATE(FOBTM.dateObserved) > ${upperLimit.date} )
+					THEN 'Done'		
+					WHEN IFNULL( COLO.refused, -1) = 1 OR IFNULL(FOBT.refused, -1) = 1
+					THEN 'Refused'		
+					WHEN IFNULL(COLO.refused, -1) = 2 OR IFNULL(FOBT.refused, -1) = 2 
+						OR IFNULL(dxr.dxresearch_code, -1) > 0 
+						OR IFNULL(TRACK.service_code, -1) LIKE ${exclusionCode}
+					THEN 'Ineligible'		
+					ELSE 'Overdue'
+				END" title="Status" primary="false" />
+			<column id="trackingcode" name="IFNULL(TRACK.service_code,0)" title="Tracking / Exclusion Code" primary="false" />
+			<column id="servicecode" name="IFNULL(BILL.service_code,0)" title="Service Code" primary="false" />
+		</displayColumns>
+		<query>
+			<!-- Drilldown SQL Query here -->
+			SELECT
+				-- id
+				d.demographic_no AS 'Id',
+				-- name
+				CONCAT( d.last_name, ", ",d.first_name ) AS 'Name',
+				-- dob
+				DATE_FORMAT( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), '%m-%d-%Y' ) AS 'Birth Date (mm-dd-yyyy)',
+				-- age
+				FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) ) / 365.25 ) AS 'Age',
+		
+				CASE 
+					WHEN COLO.id IS NOT NULL
+					THEN "Colonoscopy"
+					WHEN FOBT.id IS NOT NULL OR FOBTM.id IS NOT NULL
+					THEN "FOBT"
+					ELSE "None"
+				END AS 'Prevention',
+		
+				CASE 
+					WHEN COLO.id IS NOT NULL
+					THEN IFNULL( DATE_FORMAT(COLO.prevention_date, '%m-%d-%Y' ), 0)
+					WHEN FOBT.id IS NOT NULL 
+					THEN IFNULL( DATE_FORMAT(FOBT.prevention_date, '%m-%d-%Y' ), 0)
+					WHEN FOBTM.id IS NOT NULL
+					THEN IFNULL( DATE_FORMAT(FOBTM.dateObserved, '%m-%d-%Y' ), 0)
+					ELSE 0
+				END AS 'Prevention Date',
+		
+				CASE 
+					WHEN COLO.id IS NOT NULL
+					THEN IFNULL(ROUND( DATEDIFF( ${upperLimit.date}, DATE(COLO.prevention_date)) / 365.25 * 12, 1 ), 0)
+					WHEN FOBT.id IS NOT NULL 
+					THEN IFNULL(ROUND( DATEDIFF( ${upperLimit.date}, DATE(FOBT.prevention_date)) / 365.25 * 12, 1 ), 0)
+					WHEN FOBTM.id IS NOT NULL
+					THEN IFNULL(ROUND( DATEDIFF( ${upperLimit.date}, DATE(FOBTM.dateObserved)) / 365.25 * 12, 1 ), 0)
+					ELSE 0
+				END AS 'March 31',
+		
+				CASE 
+					WHEN COLO.id IS NOT NULL
+					THEN IFNULL(ROUND( DATEDIFF( DATE_ADD( ${upperLimit.date}, INTERVAL DATE_ADD( ${upperLimit.date}, INTERVAL ${graceperiod} MONTH ) MONTH ), DATE(COLO.prevention_date)) / 365.25 * 12, 1 ), 0)
+					WHEN FOBT.id IS NOT NULL 
+					THEN IFNULL(ROUND( DATEDIFF( DATE_ADD( ${upperLimit.date}, INTERVAL ${graceperiod} MONTH ), DATE(FOBT.prevention_date)) / 365.25 * 12, 1 ), 0)
+					WHEN FOBTM.id IS NOT NULL
+					THEN IFNULL(ROUND( DATEDIFF( DATE_ADD( ${upperLimit.date}, INTERVAL ${graceperiod} MONTH ), DATE(FOBTM.dateObserved)) / 365.25 * 12, 1 ), 0)
+					ELSE 0
+				END AS 'Sept 30',
+		
+				CASE 
+					WHEN COLO.id IS NOT NULL
+					THEN IFNULL(ROUND( DATEDIFF( NOW(), DATE(COLO.prevention_date)) / 365.25 * 12, 1 ), 0)
+					WHEN FOBT.id IS NOT NULL 
+					THEN IFNULL(ROUND( DATEDIFF( NOW(), DATE(FOBT.prevention_date)) / 365.25 * 12, 1 ), 0)
+					WHEN FOBTM.id IS NOT NULL
+					THEN IFNULL(ROUND( DATEDIFF( NOW(), DATE(FOBTM.dateObserved)) / 365.25 * 12, 1 ), 0)
+					ELSE 0
+				END AS 'Current',
+		
+				CASE 
+					WHEN COLO.refused IS NULL AND FOBT.refused IS NULL AND FOBTM.id IS NULL
+					THEN 'No Test'
+		
+					WHEN ( IFNULL(COLO.refused, -1) = 0 OR IFNULL(FOBT.refused, -1) = 0 OR IFNULL(FOBTM.id, -1) > 0 )
+						AND ( DATE(COLO.prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date} 
+								OR DATE(FOBT.prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date} 
+								OR DATE(FOBTM.dateObserved) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date} )
+					THEN 'Eligible'
+		
+					WHEN ( IFNULL(COLO.refused, -1) = 0 OR IFNULL(FOBT.refused, -1) = 0 OR IFNULL(FOBTM.id, -1) > 0 )
+						AND ( DATE(COLO.prevention_date) > ${upperLimit.date} 
+								OR DATE(FOBT.prevention_date) > ${upperLimit.date} 
+								OR DATE(FOBTM.dateObserved) > ${upperLimit.date} )
+					THEN 'Done'
+		
+					WHEN IFNULL( COLO.refused, -1) = 1 OR IFNULL(FOBT.refused, -1) = 1
+					THEN 'Refused'
+		
+					WHEN IFNULL(COLO.refused, -1) = 2 OR IFNULL(FOBT.refused, -1) = 2 
+						OR IFNULL(dxr.dxresearch_code, -1) > 0 
+						OR IFNULL(TRACK.service_code, -1) LIKE ${exclusionCode}
+					THEN 'Ineligible'
+		
+					ELSE 'Overdue'
+				END AS 'Status',
+		
+				IFNULL(TRACK.service_code,0) AS 'Tracking / Exclusion Code',
+				IFNULL(BILL.service_code,0) AS 'Service Code'
+		
+			FROM demographic d
+			LEFT JOIN dxresearch dxr 
+			ON ( d.demographic_no = dxr.demographic_no 
+				AND dxr.dxresearch_code IN ${dxexclusions} )
+		
+			-- LOOK FOR CURRENT COLONOSCOPY
+			LEFT JOIN ( 
+				SELECT p.demographic_no, p.id, p.prevention_date, p.refused
+				FROM preventions p	
+				JOIN (
+					SELECT MAX(id) AS id2
+					FROM preventions
+					WHERE prevention_type = ${colonoscopy}
+					AND demographic_no > 0
+					AND deleted = 0
+					AND DATE(prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date}
+					GROUP BY demographic_no
+				)p2
+				ON(p2.id2 = p.id)
+			) COLO
+			ON (d.demographic_no = COLO.demographic_no 
+				AND FLOOR( ABS( DATEDIFF( STR_TO_DATE( CONCAT(d.year_of_birth,",",d.month_of_birth,",",d.date_of_birth), '%Y,%m,%d' ), COLO.prevention_date ) / 365.25 ) ) >= ${lowerLimit.age} )
+		
+		
+			-- LOOK FOR FOBT RESULTS
+			LEFT JOIN ( 
+				SELECT p.demographic_no, p.id, p.prevention_date, p.refused
+				FROM preventions p	
+				JOIN (
+					SELECT MAX(id) AS id2
+					FROM preventions
+					WHERE prevention_type = ${preventionfobt}
+					AND demographic_no > 0
+					AND deleted = 0
+					AND DATE(prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date}
+					GROUP BY demographic_no
+				)p2
+				ON(p2.id2 = p.id)
+			) FOBT
+			ON (d.demographic_no = FOBT.demographic_no 
+				AND FLOOR( ABS( DATEDIFF( STR_TO_DATE( CONCAT(d.year_of_birth,",",d.month_of_birth,",",d.date_of_birth), '%Y,%m,%d' ), FOBT.prevention_date ) / 365.25 ) ) >= ${lowerLimit.age} )
+		
+		
+			-- LOOK FOR FOBT IN MEASUREMENTS.
+			LEFT JOIN (
+				SELECT m1.id, m1.demographicNo, m1.dateObserved
+				FROM measurements m1
+				INNER JOIN (
+					SELECT MAX(id) AS id
+					FROM measurements m
+						JOIN (
+							SELECT MAX(`name`) AS 'name' 
+							FROM measurementMap
+							WHERE loinc_code IN ${loincfobt}
+							GROUP BY `name`
+						) mm
+					ON (mm.`name` = m.type)
+					WHERE DATE(m.dateObserved) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date}
+					AND m.demographicNo > 0 
+					GROUP BY m.demographicNo
+				) m2
+				ON (m1.id = m2.id)
+			) FOBTM
+			ON (d.demographic_no = FOBTM.demographicNo
+				AND FLOOR( ABS( DATEDIFF( STR_TO_DATE( CONCAT(d.year_of_birth,",",d.month_of_birth,",",d.date_of_birth), '%Y,%m,%d' ), DATE(FOBTM.dateObserved) ) / 365.25 ) ) >= ${lowerLimit.age} )
+		
+		
+			-- TRACKING/EXCLUSION CODE USED.
+			LEFT JOIN ( 
+				SELECT boc.demographic_no, MAX(boi.service_code) AS service_code, MAX(boi.service_date) AS service_date
+				FROM billing_on_cheader1 boc 
+				INNER JOIN billing_on_item boi
+				ON (boi.ch1_id = boc.id) 
+				WHERE boi.service_code IN ${trackingCode}
+				GROUP BY boc.demographic_no
+			) TRACK
+			ON (d.demographic_no = TRACK.demographic_no)
+		
+			-- SERVICE CODE USED
+			LEFT JOIN ( 
+				SELECT boc.demographic_no, MAX(boi.service_code) AS service_code, MAX(boi.service_date) AS service_date
+				FROM billing_on_cheader1 boc 
+				INNER JOIN billing_on_item boi
+				ON (boi.ch1_id = boc.id) 
+				WHERE boi.service_code IN ${serviceCode} 
+				GROUP BY boc.demographic_no
+			) BILL
+			ON (d.demographic_no = BILL.demographic_no)
+		
+			WHERE d.patient_status LIKE ${pstatus}
+			-- the patient must have been rostered
+			AND d.roster_status LIKE ${rosterstatus}
+			AND d.provider_no LIKE ${provider}
+			AND d.demographic_no > 0
+			AND FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) / 365.25 ) ) 
+				BETWEEN ${lowerLimit.age} AND ${upperLimit.age}
+			GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1	
+		</query>
+	</drillDownQuery>
+	<shared>true</shared>
+	<sharedMetricSetName>OntarioMD Care Bonus Colorectal Cancer Screen</sharedMetricSetName>
+	<sharedMetricDataId>Status</sharedMetricDataId>
+	<sharedMappings>
+		<sharedMapping fromLabel="% Eligible" toLabel="Screening up to date"/>
+		<sharedMapping fromLabel="% Ineligible" toLabel="Screening overdue"/>
+	</sharedMappings>
+</indicatorTemplateXML>

@@ -161,6 +161,8 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
 	public static final String CLINICALCONNECT_SERVICE_PASSWORD = "clinicalconnect_service_password";
 	public static final String CLINICALCONNECT_SERVICE_LOCATION = "clinicalconnect_service_location";
 
+	public static final String DASHBOARD_SHARE = "dashboard_share";
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
