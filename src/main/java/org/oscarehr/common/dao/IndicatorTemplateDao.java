@@ -58,6 +58,19 @@ public class IndicatorTemplateDao extends AbstractDao<IndicatorTemplate> {
 		return result;
 	}
 	
+	
+	/**
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	public List<IndicatorTemplate> getSharedIndicatorTemplates() {
+		Query query = entityManager.createQuery("SELECT x FROM IndicatorTemplate x where x.shared = ?");
+		query.setParameter(1, true);
+		List<IndicatorTemplate> result = query.getResultList();
+		return result;
+	}
+	
+	
 	/**
 	 * Gets all ACTIVE Indicators by the specified Dashboard Id.
 	 */

@@ -23,6 +23,7 @@
  */
 package org.oscarehr.dashboard.handler;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -105,6 +106,46 @@ public class IndicatorQueryHandler extends AbstractQueryHandler {
 		
 		List< GraphPlot[] > graphPlotList = null;
 
+		//[{% Not Recorded=33.3, % Status Recorded=66.7}] ArrayList with a HashMap
+		
+		//figure out the denominator
+		int denominator = 0;
+		
+		for(Object row : results) {
+			Map<String, ?> theRow = (Map<String, ?>)row;
+			for(String key:theRow.keySet()) {
+				Integer numerator = 0;
+				
+				if(theRow.get(key) instanceof String) {
+					numerator = Integer.parseInt((String)theRow.get(key));
+				}
+				if(theRow.get(key) instanceof BigDecimal) {
+					numerator = ((BigDecimal)theRow.get(key)).intValue();
+				}
+				if(theRow.get(key) instanceof Double) {
+					numerator = ((Double)theRow.get(key)).intValue();
+					
+				}
+			//	BigDecimal numerator = (BigDecimal)theRow.get(key);
+				denominator += numerator.intValue();
+			}
+		}
+		
+		if(denominator > 0) {
+		
+			//now update the numerators to be percentages
+			for(Object row : results) {
+				Map<String, BigDecimal> theRow = (Map<String, BigDecimal>)row;
+				for(String key:theRow.keySet()) {
+					BigDecimal numerator = theRow.get(key);
+					BigDecimal bd = BigDecimal.valueOf((numerator.doubleValue() * 100 )/ denominator);
+					bd.setScale(2, BigDecimal.ROUND_CEILING);
+					theRow.put(key,bd);
+				}
+			}
+		}
+ 
+		 
 		for(Object row : results) {
 			if( graphPlotList == null ) {
 				graphPlotList = new ArrayList< GraphPlot[] >();
@@ -187,6 +228,35 @@ public class IndicatorQueryHandler extends AbstractQueryHandler {
 		json.deleteCharAt( json.length() - 1 );
 		
 		return json.toString();
+	}
+	
+	public static String createOriginalGraphPlots(List<?> queryResultList) {
+		
+		
+		
+		StringBuilder json = new StringBuilder("");
+		json.append("{ 'results':[");
+		
+		for(Object row : queryResultList) {
+			Map<String, ?> theRow = (Map<String, ?>)row;
+			for(String key:theRow.keySet()) {
+				//BigDecimal numerator = (BigDecimal)theRow.get(key);
+				json.append("{'");
+				json.append( key );
+				json.append("':");
+				json.append( theRow.get(key) );
+				json.append("},");
+				
+			}
+			json.deleteCharAt( json.length() - 1 );
+		}
+		
+		json.append("]}");
+		
+		
+		return json.toString();
+		
+		
 	}
 	
 	public static String plotsToJson( List<GraphPlot[]> graphPlots ) {

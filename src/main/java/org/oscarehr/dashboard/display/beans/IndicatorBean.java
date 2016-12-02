@@ -37,6 +37,7 @@ public class IndicatorBean extends AbstractDataDisplayBean {
 	private String jsonTooltips;
 	private String stringArrayPlots;
 	private String stringArrayTooltips;
+	private String originalJsonPlots;
 
 	public List<GraphPlot[]> getGraphPlots() {
 		return graphPlots;
@@ -76,6 +77,14 @@ public class IndicatorBean extends AbstractDataDisplayBean {
 
 	public void setStringArrayTooltips(String stringArrayTooltips) {
 		this.stringArrayTooltips = stringArrayTooltips;
+	}
+	
+	public String getOriginalJsonPlots() {
+		return originalJsonPlots;
+	}
+
+	public void setOriginalJsonPlots(String originalJsonPlots) {
+		this.originalJsonPlots = originalJsonPlots;
 	}
 
 	@Override

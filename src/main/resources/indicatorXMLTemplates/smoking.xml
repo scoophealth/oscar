@@ -39,12 +39,12 @@
 
 				-- PERCENT OF TOTAL PATIENTS NOTED AS SMOKERS
 				IF( COUNT(fin.patient) > 0, 
-					ROUND( SUM( IF( fin.smkp IS NOT NULL OR fin.smkm IS NOT NULL, 1, 0) ) * 100 / COUNT(fin.patient), 1 )
+					 SUM( IF( fin.smkp IS NOT NULL OR fin.smkm IS NOT NULL, 1, 0) )
 				, 0 ) AS "% Status Recorded",
 			
 				-- PERCENT OF TOTAL PATIENTS WITH NON-SMOKING NOTATIONS.
 				IF( COUNT(fin.patient) > 0, 
-					ROUND( SUM( IF( fin.smkp IS NULL AND fin.smkm IS NULL, 1, 0) ) * 100 / COUNT(fin.patient), 1 )
+					SUM( IF( fin.smkp IS NULL AND fin.smkm IS NULL, 1, 0) ) 
 				, 0 ) AS "% Not Recorded"
 			
 			FROM (
@@ -61,7 +61,7 @@
 					WHERE p.prevention_type LIKE ${smokerprevention}
 					AND p.deleted = 0
 					AND p.demographic_no > 0
-					GROUP BY p.demographic_no HAVING COUNT(p.demographic_no) > -1
+					GROUP BY p.demographic_no
 				) SMKP
 				ON (SMKP.demographic_no = d.demographic_no)
 			
@@ -106,8 +106,8 @@
 		<displayColumns>
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />	
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />	
 			<column id="smokingStatus" name="CASE
 					WHEN
 						SMKP.refused = 0 OR SMKM.dataField LIKE '%yes%'
@@ -142,8 +142,8 @@
 		<exportColumns>
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />	
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />	
 			<column id="smokingStatus" name="CASE
 					WHEN
 						SMKP.refused = 0 OR SMKM.dataField LIKE '%yes%'

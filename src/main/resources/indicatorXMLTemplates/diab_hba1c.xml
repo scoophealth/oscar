@@ -41,15 +41,15 @@
 		<query>
 			SELECT 
 				IF ( COUNT(fin.patient) > 0, 
-					ROUND( SUM( CASE WHEN fin.a1c >= ${upperLimit.a1c} THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient) , 1 ), 
+					 SUM( CASE WHEN fin.a1c >= ${upperLimit.a1c} THEN 1 ELSE 0 END ), 
 				0) AS "% 2 or More HbA1c", 
 			
 				IF ( COUNT(fin.patient) > 0, 
-				ROUND( SUM( CASE WHEN fin.a1c > ${lowerLimit.a1c} AND fin.a1c &lt; ${upperLimit.a1c} THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient) , 1 ), 
+				SUM( CASE WHEN fin.a1c > ${lowerLimit.a1c} AND fin.a1c &lt; ${upperLimit.a1c} THEN 1 ELSE 0 END ), 
 				0) AS "% Less than 2 HbA1c",
 			
 				IF ( COUNT(fin.patient) > 0, 
-				ROUND( SUM( CASE WHEN fin.a1c = ${lowerLimit.a1c} THEN 1 ELSE 0 END ) * 100 / COUNT(fin.patient) , 1 )
+				SUM( CASE WHEN fin.a1c = ${lowerLimit.a1c} THEN 1 ELSE 0 END )
 				,0) AS "No HbA1c"
 				
 			FROM (
@@ -116,8 +116,8 @@
 		<displayColumns>
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			<column id="a1c" name="IFNULL(A1C.a1cnumber,0)" title="A1C 12 Months" primary="false" />
 		</displayColumns>
 		
@@ -125,8 +125,8 @@
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
 			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
-			<column id="age" name="ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />			
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />			
 			<column id="a1c" name="IFNULL(A1C.a1cnumber,0)" title="A1C 12 Months" primary="false" />
 		</exportColumns>
 		<query>

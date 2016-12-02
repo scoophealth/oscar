@@ -55,4 +55,10 @@
 			<!-- Drilldown SQL Query here -->	
 		</query>
 	</drillDownQuery>
+	<shared>false</shared>
+	<sharedMetricSetName></sharedMetricSetName>
+	<sharedMetricDataId></sharedMetricDataId>
+	<sharedMappings>
+		<sharedMapping fromLabel="" toLabel=""/>
+	</sharedMappings>
 </indicatorTemplateXML>

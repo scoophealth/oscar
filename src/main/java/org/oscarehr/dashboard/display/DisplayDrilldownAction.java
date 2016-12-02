@@ -23,6 +23,8 @@
  */
 package org.oscarehr.dashboard.display;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,11 +32,14 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.model.IndicatorTemplate;
 import org.oscarehr.dashboard.display.beans.DrilldownBean;
+import org.oscarehr.dashboard.handler.IndicatorTemplateHandler;
 import org.oscarehr.managers.DashboardManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
+import org.w3c.dom.NodeList;
 
 public class DisplayDrilldownAction extends DispatchAction  {
 	
@@ -71,6 +76,61 @@ public class DisplayDrilldownAction extends DispatchAction  {
 
 		request.setAttribute( "drilldown", drilldown );		
 		return mapping.findForward("success");
+	}
+	
+	
+	public ActionForward getDrilldownBySharedMetricSetName(ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDrilldown", SecurityInfoManager.READ, null ) ) {	
+			return mapping.findForward("unauthorized");
+        }
+		
+		String metricSetName = request.getParameter("sharedMetricSetName");
+		
+		String providerNo = request.getParameter("providerNo");
+		
+		
+
+		List<IndicatorTemplate> sharedIndicatorTemplates = dashboardManager.getIndicatorLibrary(LoggedInInfo.getLoggedInInfoFromSession(request));
+
+		IndicatorTemplate indicatorTemplate = findIndicatorTemplateBySharedMetricSetName(loggedInInfo,sharedIndicatorTemplates, metricSetName);
+		
+		if(indicatorTemplate == null) {
+			return mapping.findForward("error");
+		}
+		
+		
+		DrilldownBean drilldown = dashboardManager.getDrilldownData(loggedInInfo, indicatorTemplate.getId(),providerNo!=null?providerNo:null);
+		
+		// something must be returned. If not then something is very wrong.
+		if ( drilldown == null ) {
+			return mapping.findForward("error");
+		}
+
+		request.setAttribute( "drilldown", drilldown );		
+		return mapping.findForward("success");
+	}
+	
+
+	protected IndicatorTemplate findIndicatorTemplateBySharedMetricSetName(LoggedInInfo x, List<IndicatorTemplate> templates, String sharedMetricSetName) {
+		
+		for(IndicatorTemplate template:templates) {
+			IndicatorTemplateHandler ith = new IndicatorTemplateHandler(x, template.getTemplate().getBytes());
+
+			String metricSetName = null;
+			NodeList nl = ith.getIndicatorTemplateDocument().getElementsByTagName("sharedMetricSetName");
+			if (nl != null && nl.getLength() > 0) {
+				metricSetName = nl.item(0).getTextContent();
+			}
+			
+			if(sharedMetricSetName.equals(metricSetName)) {
+				return template;
+			}
+		}
+		return null;
 	}
 	
 }

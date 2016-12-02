@@ -228,6 +228,7 @@ public class IndicatorTemplateHandler{
 			indicatorTemplate.setName(indicatorTemplateXML.getName());
 			indicatorTemplate.setDefinition(indicatorTemplateXML.getDefinition());
 			indicatorTemplate.setFramework(indicatorTemplateXML.getFramework());
+			indicatorTemplate.setShared(Boolean.valueOf(indicatorTemplateXML.getShared()));
 			
 			try {
 				String frameworkDate = indicatorTemplateXML.getFrameworkVersion().trim();
