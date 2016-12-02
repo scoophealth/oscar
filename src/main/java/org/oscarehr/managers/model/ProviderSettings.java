@@ -140,7 +140,7 @@ public class ProviderSettings {
 	private String myDrugRefId;
 	private boolean useMyMeds;
 	private boolean disableBornPrompts;
-	
+	private boolean dashboardShare;
 	
 
 	public String getRecentPatients() {
@@ -656,6 +656,12 @@ public class ProviderSettings {
 	}
 	public void setDisableBornPrompts(boolean disableBornPrompts) {
 		this.disableBornPrompts = disableBornPrompts;
+	}
+	public boolean isDashboardShare() {
+		return dashboardShare;
+	}
+	public void setDashboardShare(boolean dashboardShare) {
+		this.dashboardShare = dashboardShare;
 	}
 	
 	

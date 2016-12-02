@@ -43,11 +43,11 @@
 			SELECT 
 
 				IF ( COUNT(fin.patient) > 0,
-				ROUND( SUM( IF( fin.A1C > 0 OR fin.bg > 0 OR fin.bp > 0 OR fin.bmi > 0, 1, 0 ) ) * 100 / COUNT(fin.patient), 1)
+				SUM( IF( fin.A1C > 0 OR fin.bg > 0 OR fin.bp > 0 OR fin.bmi > 0, 1, 0 ) )
 				,0 ) AS '% Patients with LIPID, BP or BMI',
 			
 				IF ( COUNT(fin.patient) > 0,
-				ROUND( (100) - SUM( IF(  fin.A1C > 0 OR fin.bg > 0 OR fin.bp > 0 OR fin.bmi > 0, 1, 0 ) ) * 100 / COUNT(fin.patient), 1)
+				COUNT(fin.patient) - SUM( IF(  fin.A1C > 0 OR fin.bg > 0 OR fin.bp > 0 OR fin.bmi > 0, 1, 0 ) )
 				,0 ) AS '% Patients with no test'
 			
 			FROM (
@@ -145,7 +145,8 @@
 		<displayColumns>
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			<column id="hba1c" name="IFNULL( A1C.dataField, '0')" title="HbA1C" primary="false" />
 			<column id="hba1cdate" title="Last HbA1c (mm-dd-yyyy)" name="IFNULL( DATE_FORMAT( A1C.dateObserved, '%m-%d-%Y' ), '0')" primary="false" />
 			<column id="bg" title="Blood Glucose" name="IFNULL( BG.dataField, '0')" primary="false"/>
@@ -160,7 +161,8 @@
 			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
 			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
 			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
-			<column id="dob" name="DATE_FORMAT( CONCAT( d.month_of_birth, '-', d.date_of_birth, '-', d.year_of_birth ), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
 			<column id="hba1c" name="IFNULL( A1C.dataField, '0')" title="HbA1C" primary="false" />
 			<column id="hba1cdate" title="Last HbA1c (mm-dd-yyyy)" name="IFNULL( DATE_FORMAT( A1C.dateObserved, '%m-%d-%Y' ), '0')" primary="false" />
 			<column id="bg" title="Blood Glucose" name="IFNULL( BG.dataField, '0')" primary="false"/>
@@ -267,4 +269,11 @@
 			GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
 		</query>
 	</drillDownQuery>
+	<shared>true</shared>
+	<sharedMetricSetName>OntarioMD HTN Testing Status</sharedMetricSetName>
+	<sharedMetricDataId>Status</sharedMetricDataId>
+	<sharedMappings>
+		<sharedMapping fromLabel="% Patients with LIPID, BP or BMI" toLabel="1+ test up to date"/>
+		<sharedMapping fromLabel="% Patients with no test" toLabel="All tests overdue"/>
+	</sharedMappings>
 </indicatorTemplateXML>

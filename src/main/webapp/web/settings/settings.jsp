@@ -813,6 +813,21 @@ width:400px;
 		  </div>
 		</div>	
 		
+		<div class="form-group">
+		  <label>Send your metrics to Common Provider Dashboard:</label>
+		  <div class="controls">
+		    <label class="radio inline" for="radios-int-0">
+		      <input name="radios-int-0" id="radios-int-0" ng-model="pref.dashboardShare" ng-value="true" type="radio">
+		      Enable
+		    </label>
+		    <label class="radio inline" for="radios-int-1">
+		      <input name="radios-int-1" id="radios-int-1" ng-model="pref.dashboardShare" ng-value="false" type="radio">
+		      Disable
+		    </label>  
+		  </div>
+		</div>	
+		
+		
 	</div>
 </div>
  	</form>

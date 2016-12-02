@@ -45,13 +45,19 @@ public class DrilldownBeanFactory {
 	private DrilldownQueryHandler drilldownQueryHandler = SpringUtils.getBean( DrilldownQueryHandler.class );
 	
 	public DrilldownBeanFactory( LoggedInInfo loggedInInfo, IndicatorTemplate indicatorTemplate ) {
+		this(loggedInInfo, indicatorTemplate, null);
+	}
+	
+	public DrilldownBeanFactory( LoggedInInfo loggedInInfo, IndicatorTemplate indicatorTemplate, String providerNo ) {
 		
 		logger.info("Building Drilldown Bean for Indicator ID: " + indicatorTemplate.getId() );
 		
 		setIndicatorTemplate( indicatorTemplate );
 		String indicatorTemplateXML = getIndicatorTemplate().getTemplate();
 		setIndicatorTemplateHandler( new IndicatorTemplateHandler( loggedInInfo, indicatorTemplateXML.getBytes() ) );
-		setIndicatorTemplateXML( getIndicatorTemplateHandler().getIndicatorTemplateXML() );
+		IndicatorTemplateXML indicatorTemplateXmlObj = getIndicatorTemplateHandler().getIndicatorTemplateXML();
+		indicatorTemplateXmlObj.setProviderNo(providerNo);
+		setIndicatorTemplateXML( indicatorTemplateXmlObj );
 
 		drilldownQueryHandler.setLoggedInInfo( loggedInInfo );
 		drilldownQueryHandler.setParameters( getIndicatorTemplateXML().getDrilldownParameters() );

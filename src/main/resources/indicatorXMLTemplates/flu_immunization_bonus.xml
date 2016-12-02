@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>Colcamex Resources Inc. for Oscar EMR</author>
+	<uid></uid>
+	<heading>
+		<category>Preventive Health Care</category>
+		<subCategory>Immunization</subCategory>
+		<name>Preventive Care Bonus: Influenza Immunization</name>
+		<definition>Target population: consists of enrolled patients who are 65 years or older as of December 31st of the fiscal year for which the bonus is being claimed. Service Period: is the current flu season up to January 31st of the year for which the bonus in being claimed. Service Codes reported: G590A, G591A, Q690A, Q691A, and tracking code Q130A</definition>
+		<framework>Based on and adapted from CIHI’s 2012 Indicator Technical Specifications (Nov 2012)</framework>
+		<frameworkVersion>11-01-2012</frameworkVersion>
+		<notes></notes>
+	</heading>
+	<indicatorQuery>
+		<version>10-27-2016</version>
+		<params>
+			<!-- 
+				Required parameter provider. Value options are: 
+					[ an individual providerNo, or provider range ] ie: value="370, 1001" 
+					"all" ie: value="all" including null.
+					"loggedInProvider" ie:
+				Default is "loggedInProvider"
+				Use this parameter in the query as ${provider}
+				This parameter should be used for fetching patient's assigned to a MRP.
+				ie: WHERE demographic.provider_no = ${provider}
+			-->
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="prevention" name="prevention_code" value="'flu'" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="rosterstatus" name="Patient Roster Status" value="'%RO%'" />	
+			<parameter id="ageasof" name="Patient Age As Of Date" value="STR_TO_DATE( CONCAT( '31,', '12,', ( YEAR( NOW() ) - 1 )  ),'%d,%m,%Y')" />	
+			<parameter id="graceperiod" name="Grace Period Months" value="6" />
+		</params>
+		<range>
+			<upperLimit id="date" label="January 31" name="Date Upper" value="STR_TO_DATE( CONCAT( '31,', '01,', YEAR( NOW() ) ),'%d,%m,%Y')" />
+			<lowerLimit id="date" label="Months History" name="Date Lower" value="6" />	
+			
+			<lowerLimit id="age" label="Patient Age" name="Age Lower" value="65" />
+		</range>
+		<query>
+			<!-- Indicator SQL Query here -->
+			SELECT 
+
+				IF ( COUNT(fin.patient) > 0,
+					SUM( IF( fin.flu > 0, 1, 0) )
+				,0 ) AS "% Eligible",
+			
+				IF ( COUNT(fin.patient) > 0,
+					SUM( IF( fin.flu &lt;= 0, 1, 0) )
+				,0 ) AS "% Ineligible"
+			
+			FROM(
+				SELECT 
+			
+					d.demographic_no AS patient,
+					IFNULL( FLU.id, -1 ) AS flu
+			
+				FROM demographic d
+			
+				-- LOOK FOR MOST RECENT FLU IMMUNIZATIONS
+				LEFT JOIN ( 
+					SELECT p.demographic_no, p.id, p.prevention_date, p.refused
+					FROM preventions p	
+					JOIN (
+						SELECT MAX(id) AS id2
+						FROM preventions
+						WHERE prevention_type = ${prevention}
+						AND demographic_no > 0
+						AND deleted = 0
+						AND refused = 0
+						AND DATE(prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND STR_TO_DATE( CONCAT( '31,', '12,', ( YEAR( NOW() ) - 1 )  ),'%d,%m,%Y')
+						GROUP BY demographic_no
+					)p2
+					ON(p2.id2 = p.id)
+				) FLU 
+				-- ensure the patient was 65 at the time.
+				ON (d.demographic_no = FLU.demographic_no 
+				AND FLOOR( ABS( DATEDIFF( STR_TO_DATE( CONCAT(d.year_of_birth,",",d.month_of_birth,",",d.date_of_birth), '%Y,%m,%d' ), FLU.prevention_date ) / 365.25 ) ) >= ${lowerLimit.age} )
+			
+				WHERE d.patient_status LIKE ${pstatus}
+				-- the patient must have been rostered
+				AND d.roster_status LIKE ${rosterstatus}
+				AND d.provider_no LIKE ${provider}
+				AND d.demographic_no > 0 
+				AND ( FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+					NOW() ) ) / 365.25 ) >= ${lowerLimit.age} )
+			
+			)fin
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>10-27-2016</version>
+		<params>
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="serviceCode" name="billing_service_codes" value="G590A,G591A,Q690A,Q691A" />
+			<parameter id="trackingCode" name="billing_tracking_codes" value="'Q130A'" />
+			<parameter id="prevention" name="prevention_code" value="'flu'" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+			<parameter id="rosterstatus" name="Patient Roster Status" value="'%RO%'" />	
+			<parameter id="ageasof" name="Patient Age As Of Date" value="STR_TO_DATE( CONCAT( '31,', '12,', YEAR( NOW() ) - 1   ),'%d,%m,%Y')" />	
+			<parameter id="graceperiod" name="Grace Period Months" value="6" />
+		</params>
+		<range>
+			<upperLimit id="date" label="January 31" name="Date Upper" value="STR_TO_DATE( CONCAT( '31,', '01,', YEAR( NOW() ) ),'%d,%m,%Y')" />
+			<lowerLimit id="date" label="Months History" name="Date Lower" value="6" />	
+			
+			<lowerLimit id="age" label="Patient Age" name="Age Lower" value="65" />
+		</range>
+		<displayColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="lastdate" name="IFNULL( DATE_FORMAT(FLU.prevention_date, '%m-%d-%Y' ), 0)" title="Last FLU Date" primary="false" />
+			<column id="jan31" name="IFNULL(ROUND( DATEDIFF( ${upperLimit.date}, DATE(FLU.prevention_date)) / 365.25 * 12, 1 ), 0)" title="Jan 31" primary="false" />
+			<column id="graceperiod" name="IFNULL(ROUND( DATEDIFF( DATE_ADD( ${upperLimit.date}, INTERVAL ${graceperiod} MONTH  ), DATE(FLU.prevention_date)) / 365.25 * 12, 1 ), 0)" title="Grace Period" primary="false" />
+			<column id="current" name="IFNULL(ROUND( DATEDIFF( NOW(), DATE(FLU.prevention_date)) / 365.25 * 12, 1 ), 0)" title="Current" primary="false" />
+			<column id="status" name="CASE 
+					WHEN IFNULL(FLU.refused, -1) = -1
+					THEN 'Not Done'		
+					WHEN IFNULL(FLU.refused, -1) = 0 
+						AND ( DATE(FLU.prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date} )
+					THEN 'Eligible'			
+					WHEN IFNULL(FLU.refused, -1) = 0 
+						AND ( DATE(FLU.prevention_date) > ${upperLimit.date} )
+					THEN 'Done'			
+					WHEN IFNULL(FLU.refused, -1) = 1
+					THEN 'Refused'			
+					WHEN IFNULL(FLU.refused, -1) = 2 
+					THEN 'Ineligible'			
+					ELSE 'Overdue'
+				END" title="Status" primary="false" />
+			<column id="trackingcode" name="IFNULL(TRACK.service_code,0)" title="Tracking Code" primary="false" />
+			<column id="servicecode" name="IFNULL(BILL.service_code,0)" title="Service Code" primary="false" />
+		</displayColumns>
+		<query>
+			<!-- Drilldown SQL Query here -->
+			SELECT 
+				-- id
+				d.demographic_no AS 'Id',
+				-- name
+				CONCAT( d.last_name, ", ",d.first_name ) AS 'Name',
+				-- dob
+				DATE_FORMAT( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), '%m-%d-%Y' ) AS 'Birth Date (mm-dd-yyyy)',
+				-- age
+				ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), NOW() ) ) / 365.25 ) AS 'Age',
+				-- date
+				
+				IFNULL( DATE_FORMAT(FLU.prevention_date, '%m-%d-%Y' ), 0) AS 'Last FLU Date',
+				IFNULL(ROUND( DATEDIFF( ${upperLimit.date}, DATE(FLU.prevention_date)) / 365.25 * 12, 1 ), 0) AS 'Jan 31',
+				IFNULL(ROUND( DATEDIFF( DATE_ADD( ${upperLimit.date}, INTERVAL ${graceperiod} MONTH  ), DATE(FLU.prevention_date)) / 365.25 * 12, 1 ), 0) AS 'Grace Period',
+				IFNULL(ROUND( DATEDIFF( NOW(), DATE(FLU.prevention_date)) / 365.25 * 12, 1 ), 0) AS 'Current', 
+			
+				CASE 
+					WHEN IFNULL(FLU.refused, -1) = -1
+					THEN 'Not Done'
+			
+					WHEN IFNULL(FLU.refused, -1) = 0 
+						AND ( DATE(FLU.prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND ${upperLimit.date} )
+					THEN 'Eligible'
+			
+					WHEN IFNULL(FLU.refused, -1) = 0 
+						AND ( DATE(FLU.prevention_date) > ${upperLimit.date} )
+					THEN 'Done'
+			
+					WHEN IFNULL(FLU.refused, -1) = 1
+					THEN 'Refused'
+			
+					WHEN IFNULL(FLU.refused, -1) = 2 
+					THEN 'Ineligible'
+			
+					ELSE 'Overdue'
+				END AS 'Status',
+			
+				IFNULL(TRACK.service_code,0) AS 'Tracking Code',
+				IFNULL(BILL.service_code,0) AS 'Service Code'
+			
+			FROM demographic d
+			
+				-- LOOK FOR MOST RECENT FLU IMMUNIZATIONS
+				LEFT JOIN ( 
+					SELECT p.demographic_no, p.id, p.prevention_date, p.refused
+					FROM preventions p	
+					JOIN (
+						SELECT MAX(id) AS id2
+						FROM preventions
+						WHERE prevention_type = ${prevention}
+						AND demographic_no > 0
+						AND deleted = 0
+						AND DATE(prevention_date) BETWEEN DATE_SUB( ${upperLimit.date}, INTERVAL ${lowerLimit.date} MONTH ) AND STR_TO_DATE( CONCAT( '31,', '12,', ( YEAR( NOW() ) - 1 )  ),'%d,%m,%Y')
+						GROUP BY demographic_no
+					)p2
+					ON(p2.id2 = p.id)
+				) FLU 
+				-- ensure the patient was 65 at the time.
+				ON (d.demographic_no = FLU.demographic_no 
+				AND FLOOR( ABS( DATEDIFF( STR_TO_DATE( CONCAT(d.year_of_birth,",",d.month_of_birth,",",d.date_of_birth), '%Y,%m,%d' ), FLU.prevention_date ) / 365.25 ) ) >= ${lowerLimit.age} )
+			
+			
+				-- TRACKING/EXCLUSION CODE USED.
+				LEFT JOIN ( 
+					SELECT boc.demographic_no, MAX(boi.service_code) AS service_code, MAX(boi.service_date) AS service_date
+					FROM billing_on_cheader1 boc 
+					INNER JOIN billing_on_item boi
+					ON (boi.ch1_id = boc.id) 
+					WHERE boi.service_code LIKE ${trackingCode}
+					GROUP BY boc.demographic_no 
+				) TRACK
+				ON (d.demographic_no = TRACK.demographic_no 
+					AND DATE(TRACK.service_date) >= DATE(FLU.prevention_date) )
+			
+				-- SERVICE CODE USED
+				LEFT JOIN ( 
+					SELECT boc.demographic_no, MAX(boi.service_code) AS service_code, MAX(boi.service_date) AS service_date
+					FROM billing_on_cheader1 boc 
+					INNER JOIN billing_on_item boi
+					ON (boi.ch1_id = boc.id) 
+					WHERE boi.service_code IN ${serviceCode} 
+					GROUP BY boc.demographic_no 
+				) BILL
+				ON (d.demographic_no = BILL.demographic_no 
+					AND DATE(BILL.service_date) >= DATE(FLU.prevention_date) )
+			
+				WHERE d.patient_status LIKE ${pstatus}
+				-- the patient must have been rostered
+				AND d.roster_status LIKE ${rosterstatus}
+				AND d.provider_no LIKE ${provider}
+				AND d.demographic_no > 0 
+				AND ( FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+					NOW() ) ) / 365.25 ) >= ${lowerLimit.age} )				
+		</query>
+	</drillDownQuery>
+	<shared>true</shared>
+	<sharedMetricSetName>OntarioMD Care Bonus Influenza Immunization</sharedMetricSetName>
+	<sharedMetricDataId>Status</sharedMetricDataId>
+	<sharedMappings>
+		<sharedMapping fromLabel="% Eligible" toLabel="Influenza up to date"/>
+		<sharedMapping fromLabel="% Ineligible" toLabel="Influenza overdue"/>
+	</sharedMappings>
+</indicatorTemplateXML>
