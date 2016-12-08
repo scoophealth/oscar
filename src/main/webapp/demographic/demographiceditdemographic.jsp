@@ -1804,7 +1804,7 @@ if ( Dead.equals(PatStat) ) {%>
 <%-- TOGGLED OFF PROGRAM ADMISSIONS --%>
 <oscar:oscarPropertiesCheck property="DEMOGRAPHIC_PROGRAM_ADMISSIONS" value="true">						
 						<div class="demographicSection" id="programs">
-						<h3>&nbsp;Programs</h3>
+						<h3>&nbsp;Programs (<a href="javascript:void(0)" onClick="window.open('programhistory.jsp?demographic_no=<%=demographic_no%>')">History</a>)</h3>
 						<ul>
                          <li><span class="label">Bed:</span><span class="info"><%=bedAdmission != null?bedAdmission.getProgramName():"N/A" %></span></li>
                          <%
