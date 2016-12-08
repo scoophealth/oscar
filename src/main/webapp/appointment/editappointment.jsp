@@ -470,17 +470,18 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 	String demono="", chartno="", phone="", rosterstatus="", alert="", doctorNo="";
 	String strApptDate = bFirstDisp?"":request.getParameter("appointment_date") ;
 
+	appt = appointmentDao.find(Integer.parseInt(appointment_no));
+	
 
-	if (bFirstDisp) {
-		appt = appointmentDao.find(Integer.parseInt(appointment_no));
-		
-
-		if (appt == null) {
+	if (appt == null) {
 %>
 <bean:message key="appointment.editappointment.msgNoSuchAppointment" />
 <%
-			return;
-		}
+		return;
+	}
+
+	if (bFirstDisp) {
+		
 	}
 
 
