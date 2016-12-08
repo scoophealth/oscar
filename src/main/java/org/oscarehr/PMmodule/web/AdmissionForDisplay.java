@@ -67,6 +67,8 @@ public class AdmissionForDisplay {
 	private int daysInProgram;
 	private String temporaryAdmission;
 	private Integer programId;
+	private String dischargeNotes;
+	
 	
 	public AdmissionForDisplay(Admission admission) {
 		admissionId = admission.getId().intValue();
@@ -88,6 +90,7 @@ public class AdmissionForDisplay {
 
 		facilityDischarge = String.valueOf(!admission.isDischargeFromTransfer());
 		temporaryAdmission = String.valueOf(admission.isTemporaryAdmission());
+		this.dischargeNotes = admission.getDischargeNotes();
 	}
 
 	public AdmissionForDisplay(LoggedInInfo loggedInInfo, CachedAdmission cachedAdmission) {
@@ -125,6 +128,7 @@ public class AdmissionForDisplay {
 
 		facilityDischarge = "n/a";
 		temporaryAdmission = "n/a";
+		this.dischargeNotes = cachedAdmission.getDischargeNotes();
 	}
 
 	public Integer getAdmissionId() {
@@ -176,4 +180,13 @@ public class AdmissionForDisplay {
 	public Integer getClientId() {
 		return admissionId;
 	}
+
+	public String getDischargeNotes() {
+		return dischargeNotes;
+	}
+
+	public void setDischargeNotes(String dischargeNotes) {
+		this.dischargeNotes = dischargeNotes;
+	}
+	
 }
