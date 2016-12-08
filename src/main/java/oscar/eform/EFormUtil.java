@@ -359,7 +359,6 @@ public class EFormUtil {
 					results.add(curht);
 				}
 				
-				results.add(curht);
 			}
 		} catch (Exception sqe) {
 			logger.error("Error", sqe);
