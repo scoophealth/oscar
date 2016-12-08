@@ -920,6 +920,7 @@ if(statusType.equals("_")) { %>
              <td>&nbsp;</td> <!--LOCATION-->
              <td>&nbsp;</td> <!--STAT-->
              <td>&nbsp;</td>
+             <td>&nbsp;</td>
              <td>Total:</td><!--CODE-->
              <td align="right"><%=total.toString()%></td><!--BILLED-->
              <td align="right"><%=paidTotal.toString()%></td><!--PAID-->
