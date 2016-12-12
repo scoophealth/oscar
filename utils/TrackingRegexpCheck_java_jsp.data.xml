@@ -343,7 +343,6 @@
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:Vector dxQuickListBeanVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:public Collection getDxQuickListBeanVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:Vector dxQuickListItemsVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:Vector v = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection&lt;dxCodeSearchBean&gt; getDxQuickListItemsVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:public Vector&lt;dxResearchBean&gt; getDxResearchBeanVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/pageUtil/dxResearchForm.java:/*    private final Map values = new HashMap();</ViolationValue>
@@ -606,7 +605,9 @@
         <ViolationValue>/src/main/webapp/oscarPrevention/PreventionReporting.jsp:ArrayList refusedLetter = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarPrevention/PreventionReporting.jsp:ArrayList secondLetter = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/currentCodeList.jsp:Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/quickCodeList.jsp:Collection quickLists = dxQlBeanHandler.getDxQuickListBeanVector();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/quickCodeList.jsp:Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/quickCodeList.jsp:if (dxList.getDxQuickListItemsVector().isEmpty()) continue;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/BulletinDisplayMyD.jsp:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/BulletinDisplayMyD.jsp:Vector params = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/BulletinDisplayMyD.jsp:Vector vec = new Vector();</ViolationValue>
@@ -2198,14 +2199,14 @@
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:public Collection getDxQuickListBeanVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:return dxQuickListBeanVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:Vector dxQuickListItemsVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:Vector v = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:Vector&lt;String&gt; dxList = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:Vector&lt;dxCodeSearchBean&gt; v = new Vector&lt;dxCodeSearchBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:dxCodeSearchBean dxCod = (dxCodeSearchBean) dxQuickListItemsVector.get(j);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:dxQuickListItemsVector.add(bean);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:for (int j = 0; j &lt; dxQuickListItemsVector.size(); j++) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection getDxQuickListItemsVectorInPatientsList(Vector dxList) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection getDxQuickListItemsVectorNotInPatientsList(Vector dxList) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection&lt;dxCodeSearchBean&gt; getDxQuickListItemsVector() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection&lt;dxCodeSearchBean&gt; getDxQuickListItemsVectorNotInPatientsList(Vector&lt;dxResearchBean&gt; patientsList) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:return dxQuickListItemsVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:Vector&lt;String&gt; v = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:Vector&lt;dxResearchBean&gt; dxResearchBeanVector = new Vector&lt;dxResearchBean&gt;();</ViolationValue>
@@ -2891,7 +2892,9 @@
         <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/dxResearchEditQuickList.jsp:property="dxQuickListItemsVector"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/dxResearchSelectQuickList.jsp:property="dxQuickListBeanVector"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/quickCodeList.jsp:Collection list = dxList.getDxQuickListItemsVectorNotInPatientsList(patientDx);</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/quickCodeList.jsp:Collection quickLists = dxQlBeanHandler.getDxQuickListBeanVector();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/quickCodeList.jsp:Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/quickCodeList.jsp:if (dxList.getDxQuickListItemsVector().isEmpty()) continue;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/BulletinDisplayMyD.jsp://Vector vec = (Vector) callWebserviceLite("get",params);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/BulletinDisplayMyD.jsp:Enumeration e = ((Hashtable) obj).keys();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/BulletinDisplayMyD.jsp:Hashtable h = new Hashtable();</ViolationValue>
