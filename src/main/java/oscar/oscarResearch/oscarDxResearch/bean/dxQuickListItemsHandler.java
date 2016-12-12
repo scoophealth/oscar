@@ -121,23 +121,16 @@ public class dxQuickListItemsHandler {
 		return dxQuickListItemsVector;
 	}
 
-	public Collection getDxQuickListItemsVectorNotInPatientsList(Vector dxList) {
-		Vector v = new Vector();
-
-		for (int j = 0; j < dxQuickListItemsVector.size(); j++) {
-			dxCodeSearchBean dxCod = (dxCodeSearchBean) dxQuickListItemsVector.get(j);
-			if (!dxList.contains(dxCod)) {
-				v.add(dxCod);
-			}
+	public Collection<dxCodeSearchBean> getDxQuickListItemsVectorNotInPatientsList(Vector<dxResearchBean> patientsList) {
+		Vector<String> dxList = new Vector<String>();
+		Vector<dxCodeSearchBean> v = new Vector<dxCodeSearchBean>();
+		
+		for (dxResearchBean p : patientsList) {
+			dxList.add(p.getDxSearchCode());
 		}
-		return v;
-	}
-
-	public Collection getDxQuickListItemsVectorInPatientsList(Vector dxList) {
-		Vector v = new Vector();
 		for (int j = 0; j < dxQuickListItemsVector.size(); j++) {
 			dxCodeSearchBean dxCod = (dxCodeSearchBean) dxQuickListItemsVector.get(j);
-			if (dxList.contains(dxCod.getDxSearchCode())) {
+			if (!dxList.contains(dxCod.getDxSearchCode())) {
 				v.add(dxCod);
 			}
 		}
