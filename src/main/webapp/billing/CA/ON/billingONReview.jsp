@@ -1233,29 +1233,27 @@ function onTotalChanged() {
 }
 
 function addToDiseaseRegistry(){
-    if ( validateItems() ) {
-	var url = "../../../oscarResearch/oscarDxResearch/dxResearch.do";
-	var data = Form.serialize(dxForm);
-	//alert ( data);
-	new Ajax.Updater('dxListing',url, {method: 'post',postBody: data,asynchronous:true,onComplete: getNewCurrentDxCodeList});
-    }else{
-       alert("Error: Nothing was selected");
-    }
+	if ( validateItems() ) {
+		var url = "../../../oscarResearch/oscarDxResearch/dxResearch.do";
+		var data = Form.serialize(dxForm);
+		
+		new Ajax.Updater('dxListing',url, {method: 'post',postBody: data,asynchronous:true,onComplete: getNewCurrentDxCodeList});
+	}
 }
 
-function validateItems(form){
-    var dxChecks;
-    var ret = false;
-
-    dxChecks = document.getElementsByName("xml_research");
-
-     for( idx = 0; idx < dxChecks.length; ++idx ) {
-        if( dxChecks[idx].checked ) {
-            ret = true;
-            break;
-        }
-     }
-    return ret;
+function validateItems(){
+	var ret = false;
+	
+	dxChecks = document.getElementsByName("xml_research");
+	for( idx = 0; idx < dxChecks.length; ++idx ) {
+		if( dxChecks[idx].checked ) {
+			ret = true;
+			break;
+		}
+	}
+	if (!ret) alert("Error: Nothing was selected");
+	else ret = confirm("Are you sure to add to the patient's disease registry?");
+	return ret;
 }
 
 
@@ -1275,6 +1273,15 @@ function getNewCurrentDxCodeList(origRequest){
 <oscar:oscarPropertiesCheck property="DX_QUICK_LIST_BILLING_REVIEW" value="yes">
 
 <div class="dxBox">
+    <h3>&nbsp;Current Patient Dx List &nbsp;<a href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:small;" >show/hide</a></h3>
+       <div class="wrapper" id="dxFullListing">
+       <jsp:include page="../../../oscarResearch/oscarDxResearch/currentCodeList.jsp">
+          <jsp:param name="demographicNo" value="<%=demo_no%>"/>
+       </jsp:include>
+       </div>
+</div>
+
+<div class="dxBox">
     <h3>&nbsp;Dx Quick Pick Add List</h3>
        <form id="dxForm">
        <input type="hidden" name="demographicNo" value="<%=demo_no%>" />
@@ -1287,20 +1294,9 @@ function getNewCurrentDxCodeList(origRequest){
        </jsp:include>
        </div>
        <input type="button" value="Add To Disease Registry" onclick="addToDiseaseRegistry()"/>
-       <!--input type="button" value="check" onclick="getNewCurrentDxCodeList()"/>
-<input type="button" value="check" onclick="validateItems()"/-->
        </form>
 </div>
 
-
-<div class="dxBox">
-    <h3>&nbsp;Current Patient Dx List  <a href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:small;" >show/hide</a></h3>
-       <div class="wrapper" id="dxFullListing"  style="display:none;">
-       <jsp:include page="../../../oscarResearch/oscarDxResearch/currentCodeList.jsp">
-          <jsp:param name="demographicNo" value="<%=demo_no%>"/>
-       </jsp:include>
-       </div>
-</div>
 </oscar:oscarPropertiesCheck>
 
 </body>

@@ -54,12 +54,20 @@ if(!authed) {
    dxResearchBeanHandler dxResearchBeanHand = new dxResearchBeanHandler(demoNO);
    Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();
    
-   //dxQuickListItemsHandler dxList = new dxQuickListItemsHandler("List1");
-   //Collection list = dxList.getDxQuickListItemsVectorNotInPatientsList(patientDx);
-   //Iterator iter = list.iterator();
-   for ( int i = 0; i < patientDx.size(); i++){
-      dxResearchBean code = (dxResearchBean)patientDx.get(i);  // code.getEnd_date() code.getStart_date()
-      String desc = code.getDescription();
+   ArrayList<dxResearchBean> patientDxA = new ArrayList<dxResearchBean>();
+   for (int i=0; i<patientDx.size(); i++) {
+      dxResearchBean code = (dxResearchBean)patientDx.get(i);
+      //sort the list by descriptions
+   	  int j=0;
+   	  for (j=0; j<patientDxA.size(); j++) {
+   		  if (patientDxA.get(j).getDescription().compareToIgnoreCase(code.getDescription())>=0) {
+   			  patientDxA.add(j, code); break;
+   		  }
+   	  }
+   	  if (j==patientDxA.size()) patientDxA.add(code);
+   }
+   for (int i=0; i<patientDxA.size(); i++) {
+      String desc = patientDxA.get(i).getDescription();
       if (len != -1){
          desc = org.apache.commons.lang.StringUtils.abbreviate(desc,len) ;
       }
