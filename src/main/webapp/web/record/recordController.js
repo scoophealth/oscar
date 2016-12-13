@@ -111,7 +111,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 			window.open(temp.url,win,"scrollbars=yes, location=no, width=1000, height=600","");
 			
 		}else if (temp.label=="Launch ClinicalConnect") { //url not defined
-			alert("Incorrect login credentials to ClinicalConnect. Please contact the adminstrator.");
+			alert("Cannot access ClinicalConnect. Please contact the adminstrator.");
 			return;
 		}
 	}
