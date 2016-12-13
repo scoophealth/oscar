@@ -1111,6 +1111,12 @@
 		<version>20161017</version>
 	</dependency>
 
+	<dependency>
+		<groupId>com.medseek</groupId>
+		<artifactId>PatientService</artifactId>
+		<version>20161213</version>
+	</dependency>
+
 	</dependencies>
 
 	<build>
