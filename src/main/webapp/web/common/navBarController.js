@@ -142,7 +142,7 @@ oscarApp.controller('NavBarCtrl', function ($scope, $location, $modal, $state, $
 			}else if(item.state=="clinicalconnect"){
 				url = $scope.clinicalConnectUrl;
 				if (url=="") {
-					alert("Incorrect login credentials to ClinicalConnect. Please contact the adminstrator.");
+					alert("Cannot access ClinicalConnect. Please contact the adminstrator.");
 					return;
 				}
 				wname="clinicalconnect";
