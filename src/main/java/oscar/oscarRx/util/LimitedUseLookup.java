@@ -95,7 +95,7 @@ public class LimitedUseLookup {
 					is = new BufferedInputStream(new FileInputStream(fileName));
 
 				} else {
-					String dosing = "oscar/oscarRx/data_extract_20151222.xml";
+					String dosing = "oscar/oscarRx/data_extract_20161124.xml";
 					is = rdf.getClass().getClassLoader().getResourceAsStream(dosing);
 				}
 
