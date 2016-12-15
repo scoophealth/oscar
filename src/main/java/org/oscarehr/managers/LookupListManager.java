@@ -47,10 +47,6 @@ public class LookupListManager {
 	
 	public List<LookupList> findAllActiveLookupLists(LoggedInInfo loggedInInfo) {
 		
-		if( ! securityInfoManager.hasPrivilege( loggedInInfo, "_admin", SecurityInfoManager.READ, null ) ) {
-			throw new RuntimeException("Access Denied");
-		}
-
 		List<LookupList> results = lookupListDao.findAllActive();
 		
 		//--- log action ---
@@ -64,9 +60,6 @@ public class LookupListManager {
 	
 	public LookupList findLookupListById(LoggedInInfo loggedInInfo, int id) {
 		
-		if( ! securityInfoManager.hasPrivilege( loggedInInfo, "_admin", SecurityInfoManager.READ, null ) ) {
-			throw new RuntimeException("Access Denied");
-		}
 		
 		LookupList result = lookupListDao.find(id);
 		
@@ -81,9 +74,7 @@ public class LookupListManager {
 	
 	public LookupList findLookupListByName(LoggedInInfo loggedInInfo, String name) {
 		
-		if( ! securityInfoManager.hasPrivilege( loggedInInfo, "_admin", SecurityInfoManager.READ, null ) ) {
-			throw new RuntimeException("Access Denied");
-		}
+		
 		
 		LookupList result = lookupListDao.findByName(name);
 		
@@ -129,9 +120,6 @@ public class LookupListManager {
 	 */
 	public List<LookupListItem> findLookupListItemsByLookupListId(LoggedInInfo loggedInInfo, int lookupListId ) {
 
-		if( ! securityInfoManager.hasPrivilege( loggedInInfo, "_admin", SecurityInfoManager.READ, null ) ) {
-			throw new RuntimeException("Access Denied");
-		}
 		
 		List<LookupListItem> lookupListItems = lookupListItemDao.findActiveByLookupListId( lookupListId );
 
@@ -147,9 +135,7 @@ public class LookupListManager {
 	 */
 	public List<LookupListItem> findLookupListItemsByLookupListName(LoggedInInfo loggedInInfo, String lookupListName ) {
 
-		if( ! securityInfoManager.hasPrivilege( loggedInInfo, "_admin", SecurityInfoManager.READ, null ) ) {
-			throw new RuntimeException("Access Denied");
-		}
+		
 		
 		LookupList lookupList = findLookupListByName(loggedInInfo,lookupListName);
 		List<LookupListItem> lookupListItems = null;
@@ -168,9 +154,7 @@ public class LookupListManager {
 	 */
 	public LookupListItem findLookupListItemById(LoggedInInfo loggedInInfo, int lookupListItemId ) {
 		
-		if( ! securityInfoManager.hasPrivilege( loggedInInfo, "_admin", SecurityInfoManager.READ, null ) ) {
-			throw new RuntimeException("Access Denied");
-		}
+		
 		
 		LookupListItem lookupListItem = null;
 		if( lookupListItemId > 0 ) {		
