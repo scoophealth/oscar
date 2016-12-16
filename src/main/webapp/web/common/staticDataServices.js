@@ -955,12 +955,31 @@ angular.module("staticDataServices", [])
 			
 			getRxInteractionLevels: function() {
 				var levels = [];
-				levels.push({value:0,name:"Not Specified"});
-				levels.push({value:1,name:"Low"});
-				levels.push({value:2,name:"Medium"});
-				levels.push({value:3,name:"High"});
-				levels.push({value:4,name:"None"});
+				levels.push({value:0, name:"Not Specified"});
+				levels.push({value:1, name:"Low"});
+				levels.push({value:2, name:"Medium"});
+				levels.push({value:3, name:"High"});
+				levels.push({value:4, name:"None"});
 				return levels;
+			},
+			
+			getEmploymentStatuses: function() {
+				var statuses = [];
+				statuses.push({value:"N/A", name:"N/A"});
+				statuses.push({value:"FULL TIME", name:"FULL TIME"});
+				statuses.push({value:"ODSP", name:"ODSP"});
+				statuses.push({value:"OW", name:"OW"});
+				statuses.push({value:"PART TIME", name:"PART TIME"});
+				statuses.push({value:"UNEMPLOYED", name:"UNEMPLOYED"});
+				return statuses;
+			},
+			
+			getYesNoNA: function() {
+				var ans = [];
+				ans.push({value:"N/A", name:"N/A"});
+				ans.push({value:"Yes", name:"Yes"});
+				ans.push({value:"No", name:"No"});
+				return ans;
 			}
 		};
 });
