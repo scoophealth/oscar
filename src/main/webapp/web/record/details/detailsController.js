@@ -57,6 +57,8 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	page.rosterTermReasons = staticDataService.getRosterTerminationReasons();
 	page.securityQuestions = staticDataService.getSecurityQuestions();
 	page.rxInteractionLevels = staticDataService.getRxInteractionLevels();
+	page.hasPrimaryCarePhysician = staticDataService.getYesNoNA();
+	page.employmentStatus = staticDataService.getEmploymentStatuses();
 	
 	//get patient detail status
 	patientDetailStatusService.getStatus(demo.demographicNo).then(function(data){
@@ -73,6 +75,8 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		page.billregion = data.billregion;
 		page.defaultView = data.defaultView;
 		page.hospitalView = data.hospitalView;
+		page.showPrimaryCarePhysicianCheck = data.showPrimaryCarePhysicianCheck;
+		page.showEmploymentStatus = data.showEmploymentStatus;
 		
 		if (page.integratorEnabled) {
 			if (page.integratorOffline) {
@@ -110,6 +114,9 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	}
 	
 	//show extras
+	demo.hasPrimaryCarePhysician = "N/A";
+	demo.employmentStatus = "N/A";
+	
 	var posExtras = {};
 	if (demo.extras!=null) {
 		demo.extras = toArray(demo.extras);
@@ -128,7 +135,8 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			else if (demo.extras[i].key=="securityQuestion1") demo.scrSecurityQuestion1 = demo.extras[i].value;
 			else if (demo.extras[i].key=="securityAnswer1") demo.scrSecurityAnswer1 = demo.extras[i].value;
 			else if (demo.extras[i].key=="rxInteractionWarningLevel") demo.scrRxInteractionLevel = demo.extras[i].value;
-
+			else if (demo.extras[i].key=="HasPrimaryCarePhysician") demo.hasPrimaryCarePhysician = demo.extras[i].value;
+			else if (demo.extras[i].key=="EmploymentStatus") demo.employmentStatus = demo.extras[i].value;
 			
 			//record array position of extras by keys - to be used on saving
 			posExtras[demo.extras[i].key] = i;
@@ -998,6 +1006,8 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		newDemoExtras = updateDemoExtras("securityQuestion1", demo.scrSecurityQuestion1, posExtras, demo.extras, newDemoExtras);
 		newDemoExtras = updateDemoExtras("securityAnswer1", demo.scrSecurityAnswer1, posExtras, demo.extras, newDemoExtras);
 		newDemoExtras = updateDemoExtras("rxInteractionWarningLevel", demo.scrRxInteractionLevel, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("HasPrimaryCarePhysician", demo.hasPrimaryCarePhysician, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("EmploymentStatus", demo.employmentStatus, posExtras, demo.extras, newDemoExtras);
 		demo.extras = newDemoExtras;
 		
 		//save to database
