@@ -1603,7 +1603,44 @@ document.forms[1].r_doctor_ohip.value = refNo;
 			</tr>
 
 
-			<% if(oscarVariables.getProperty("demographicExt") != null) {
+<% //"Has Primary Care Physician" & "Employment Status" fields
+	final String hasPrimary = "Has Primary Care Physician";
+	final String empStatus = "Employment Status";
+	boolean hasHasPrimary = oscarProps.isPropertyActive("showPrimaryCarePhysicianCheck");
+	boolean hasEmpStatus = oscarProps.isPropertyActive("showEmploymentStatus");
+	String hasPrimaryCarePhysician = "N/A";
+	String employmentStatus = "N/A";
+	
+	if (hasHasPrimary || hasEmpStatus) {
+%>							<tr valign="top" bgcolor="#CCCCFF">
+<%		if (hasHasPrimary) {
+%>								<td><b><%=hasPrimary.replace(" ", "&nbsp;")%>:</b></td>
+								<td>
+									<select name="<%=hasPrimary.replace(" ", "")%>">
+										<option value="N/A" <%="N/A".equals(hasPrimaryCarePhysician)?"selected":""%>>N/A</option>
+										<option value="Yes" <%="Yes".equals(hasPrimaryCarePhysician)?"selected":""%>>Yes</option>
+										<option value="No" <%="No".equals(hasPrimaryCarePhysician)?"selected":""%>>No</option>
+									</select> 
+								</td>
+<%		}
+		if (hasEmpStatus) {
+%>								<td><b><%=empStatus.replace(" ", "&nbsp;")%>:</b></td>
+								<td>
+									<select name="<%=empStatus.replace(" ", "")%>">
+										<option value="N/A" <%="N/A".equals(employmentStatus)?"selected":""%>>N/A</option>
+										<option value="FULL TIME" <%="FULL TIME".equals(employmentStatus)?"selected":""%>>FULL TIME</option>
+										<option value="ODSP" <%="ODSP".equals(employmentStatus)?"selected":""%>>ODSP</option>
+										<option value="OW" <%="OW".equals(employmentStatus)?"selected":""%>>OW</option>
+										<option value="PART TIME" <%="PART TIME".equals(employmentStatus)?"selected":""%>>PART TIME</option>
+										<option value="UNEMPLOYED" <%="UNEMPLOYED".equals(employmentStatus)?"selected":""%>>UNEMPLOYED</option>
+									</select> 
+								</td>
+							</tr>
+<%		}
+	}
+
+//customized key
+  if(oscarVariables.getProperty("demographicExt") != null) {
     boolean bExtForm = oscarVariables.getProperty("demographicExtForm") != null ? true : false;
     String [] propDemoExtForm = bExtForm ? (oscarVariables.getProperty("demographicExtForm","").split("\\|") ) : null;
 	String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
