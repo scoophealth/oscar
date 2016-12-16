@@ -43,6 +43,8 @@ public class PatientDetailStatusTo1 implements Serializable {
 	//from oscar.properties
 	private boolean conformanceFeaturesEnabled = false;
 	private boolean workflowEnhance = false;
+	private boolean showPrimaryCarePhysicianCheck = false;
+	private boolean showEmploymentStatus = false;
 	private String billregion;
 	private String defaultView;
 	private String hospitalView;
@@ -98,6 +100,18 @@ public class PatientDetailStatusTo1 implements Serializable {
 	}
 	public void setWorkflowEnhance(boolean workflowEnhance) {
 		this.workflowEnhance = workflowEnhance;
+	}
+	public boolean isShowPrimaryCarePhysicianCheck() {
+		return showPrimaryCarePhysicianCheck;
+	}
+	public void setShowPrimaryCarePhysicianCheck(boolean showPrimaryCarePhysicianCheck) {
+		this.showPrimaryCarePhysicianCheck = showPrimaryCarePhysicianCheck;
+	}
+	public boolean isShowEmploymentStatus() {
+		return showEmploymentStatus;
+	}
+	public void setShowEmploymentStatus(boolean showEmploymentStatus) {
+		this.showEmploymentStatus = showEmploymentStatus;
 	}
 	public String getBillregion() {
 		return billregion;

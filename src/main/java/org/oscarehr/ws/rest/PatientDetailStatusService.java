@@ -117,6 +117,8 @@ public class PatientDetailStatusService extends AbstractServiceImpl {
 		status.setBillregion(oscarProperties.getProperty("billregion", ""));
 		status.setDefaultView(oscarProperties.getProperty("default_view", ""));
 		status.setHospitalView(oscarProperties.getProperty("hospital_view", status.getDefaultView()));
+		status.setShowPrimaryCarePhysicianCheck(oscarProperties.isPropertyActive("showPrimaryCarePhysicianCheck"));
+		status.setShowEmploymentStatus(oscarProperties.isPropertyActive("showEmploymentStatus"));
 		
 		return status;
 	}
