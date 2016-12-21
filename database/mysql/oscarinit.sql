@@ -6611,9 +6611,10 @@ CREATE TABLE groups_tbl (
 --
 
 CREATE TABLE ichppccode (
-  ichppccode varchar(10) default NULL,
+  ichppccode varchar(10),
   diagnostic_code varchar(10) default NULL,
-  description varchar(255) default NULL
+  description varchar(255) default NULL,
+  primary key(ichppccode)
 ) ;
 
 --
