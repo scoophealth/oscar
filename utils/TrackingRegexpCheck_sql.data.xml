@@ -4169,7 +4169,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:desaprisk_date date NOT NULL default '0001-01-01',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:desaprisk_time time NOT NULL default '00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:description varchar(255) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:description varchar(255) default NULL</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:description varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:description varchar(50) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:description varchar(80) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:diagnosis varchar(60) default NULL,</ViolationValue>
@@ -4427,7 +4427,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:i_repeatPrenatal tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:i_rubella tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:i_vdrl tinyint(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:ichppccode varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:immunizationFlu tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:immunizationMenjugate tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:immunizationPneumovax tinyint(1) default NULL,</ViolationValue>
