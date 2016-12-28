@@ -136,18 +136,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
             i++;
         }
         this.versionNum = i+1;
-        
-        
-        if("CLS".equals(handler.getMsgType())) {
-        	for( int x = 0; x < multiID.length; ++x) {
-				MessageHandler handler2 = Factory.getHandler(multiID[x]);
-				if(!handler.getFillerOrderNumber().equals(handler2.getFillerOrderNumber())) {
-					handlers.add(handler2);
-					//segmentIdList.add(segmentIDs[x]);
-				}
-			}
-        }
- 
     } 
     //Creates an rtf file for viha rtf labs
     public void printRtf()throws IOException, DocumentException{
@@ -229,7 +217,13 @@ public class LabPDFCreator extends PdfPageEventHelper{
         table.addCell(cell);
         cell.setBorder(15);
         cell.setBackgroundColor(new Color(210, 212, 255));
-        cell.setPhrase(new Phrase("END OF REPORT", boldFont));
+		if(handler.getMsgType().equals("CLS")){
+			cell.setPhrase(new Phrase("Legend:  A=Abnormal  L=Low  H=High  C=Critical", boldFont));
+		}
+		else
+		{
+        	cell.setPhrase(new Phrase("END OF REPORT", boldFont));
+		}
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         table.addCell(cell);
@@ -249,14 +243,20 @@ public class LabPDFCreator extends PdfPageEventHelper{
 		MessageHandler handler = (extraHandler!=null)?extraHandler:this.handler;
 		if(handler.getMsgType().equals("PATHL7")){
 			this.isUnstructuredDoc = ((PATHL7Handler) handler).unstructuredDocCheck(header);
+		} else if(handler.getMsgType().equals("CLS"))
+		{
+			this.isUnstructuredDoc = ((CLSHandler) handler).isUnstructured();
 		}
 		
-		if(handler.getMsgType().equals("CLS")) {
-			this.isUnstructuredDoc  = ((CLSHandler) handler).isUnstructured();
-		}
 		float[] mainTableWidths;
 		if(isUnstructuredDoc){
-			mainTableWidths = new float[] { 5f, 12f, 3f};
+			if(handler.getMsgType().equals("CLS"))
+			{
+				mainTableWidths = new float[] { 5f, 10f, 3f, 2f};
+			} else
+			{
+				mainTableWidths = new float[] { 5f, 12f, 3f};
+			}
 		}else{
 			mainTableWidths = new float[] {5f, 3f, 1f, 3f, 2f, 4f, 2f };
 		}
@@ -297,8 +297,17 @@ public class LabPDFCreator extends PdfPageEventHelper{
 			table.addCell(cell);
 			cell.setPhrase(new Phrase("Result", boldFont));
 			table.addCell(cell);
-			cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
-			table.addCell(cell);
+			if(handler.getMsgType().equals("CLS"))
+			{
+				cell.setPhrase(new Phrase("Date/Time Collected", boldFont));
+				table.addCell(cell);
+				cell.setPhrase(new Phrase("Status", boldFont));
+				table.addCell(cell); 
+			} else 
+			{
+				cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
+				table.addCell(cell);
+			}
 		} else{
 		cell.setColspan(1);
 		cell.setBorder(15);
@@ -314,7 +323,13 @@ public class LabPDFCreator extends PdfPageEventHelper{
 		table.addCell(cell);
 		cell.setPhrase(new Phrase("Units", boldFont));
 		table.addCell(cell);
-		cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
+		if(handler.getMsgType().equals("CLS")){
+			cell.setPhrase(new Phrase("Date/Time Collected", boldFont));
+		}
+		else
+		{
+			cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
+		}
 		table.addCell(cell);
 		cell.setPhrase(new Phrase("Status", boldFont));
 		table.addCell(cell); }
@@ -408,6 +423,12 @@ public class LabPDFCreator extends PdfPageEventHelper{
 									cell.setPhrase(new Phrase(handler.getTimeStamp(j, k), lineFont));		
 									table.addCell(cell);
 								}
+								if(handler.getMsgType().equals("CLS"))
+								{
+									cell.setPhrase(new Phrase(handler
+											.getOBXResultStatus(j, k), lineFont));
+									table.addCell(cell);
+								}
 							} else{
 							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 							if(!isAllowedDuplicate && (obxCount>1) && k > 0 && handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){
@@ -455,12 +476,22 @@ public class LabPDFCreator extends PdfPageEventHelper{
 							if(!isLongText){//if the Abn, RR and Unit columns have not been occupied above
 								if(handler.getMsgType().equals("PATHL7")){
 									cell.setPhrase(new Phrase(abnFlag, lineFont));
-								}else{
-								if (abnFlag == null || abnFlag.trim().equals(""))
-									abnFlag = "N";
-								cell.setPhrase(new Phrase(
-										abnFlag,
-										lineFont));}
+								} 
+								else if("CLS".equals(handler.getMsgType())) 
+								{
+									cell.setPhrase(new Phrase(
+										(handler.isOBXAbnormal(j, k) ?
+											handler.getOBXAbnormalFlag(j, k) :
+											""),
+										lineFont));
+								}
+								else
+								{
+									if (abnFlag == null || abnFlag.trim().equals(""))
+										abnFlag = "N";
+									cell.setPhrase(new Phrase(
+										abnFlag, lineFont));
+								}
 								table.addCell(cell);
 								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 								cell.setPhrase(new Phrase(handler
@@ -635,10 +666,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
             ret = Color.BLUE;
         }
         
-        if("CLS".equals(handler.getMsgType()) && abn.equals("C"))  {
-        	//critical
-        	ret = Color.RED;
-        }
         return ret;
     }
 

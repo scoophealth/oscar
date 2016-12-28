@@ -178,18 +178,6 @@ if (remoteFacilityIdString==null) // local lab
 		segmentIdList.add(segmentID);
 		
 		//this is where it gets weird. We want to show all messages with different filler order num but same accession in a single report
-		if("CLS".equals(handler.getMsgType())) {
-			for( int i = 0; i < segmentIDs.length; ++i) {
-				MessageHandler handler2 = Factory.getHandler(segmentIDs[i]);
-				if(!handler.getFillerOrderNumber().equals(handler2.getFillerOrderNumber())) {
-					handlers.add(handler2);
-					segmentIdList.add(segmentIDs[i]);
-				}
-			}
-			if(handlers.size()>1) {
-				multiLabId = segmentID;
-			}
-		}
 		segmentIDs = segmentIdList.toArray(new String[segmentIdList.size()]);
 		
 		hl7 = Factory.getHL7Body(segmentID);
@@ -926,7 +914,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         <tr>
                                             <td>
                                                 <div class="FieldData">
+                                                <% if ("CLS".equals(handler.getMsgType())) { %>
+                                                    <strong><bean:message key="oscarMDS.segmentDisplay.formDateServiceCLS"/>:</strong>
+												<% } else { %>
                                                     <strong><bean:message key="oscarMDS.segmentDisplay.formDateService"/>:</strong>
+												<% } %>
                                                 </div>
                                             </td>
                                             <td>
@@ -938,7 +930,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         <tr>
                                         	<td>
                                         		<div class="FieldData">
+                                                <% if ("CLS".equals(handler.getMsgType())) { %>
+                                                    <strong><bean:message key="oscarMDS.segmentDisplay.formDateReceivedCLS"/>:</strong>
+												<% } else { %>
                                                     <strong><bean:message key="oscarMDS.segmentDisplay.formDateReceived"/>:</strong>
+												<% } %>
                                                 </div>
                                             </td>
                                             <td>
@@ -1176,7 +1172,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 							if(handler.getPatientLocation().equals("SG") || handler.getPatientLocation().equals("CDC")){
 								isSGorCDC = true;
 							}
-						}%>
+						} else if(handler.getMsgType().equals("CLS")){
+                            isUnstructuredDoc = ((CLSHandler) handler).isUnstructured();
+                        }
+						%>
 		                       <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
 	                           <tr>
 	                               <td colspan="4" height="7">&nbsp;</td>
@@ -1198,7 +1197,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	                           <tr class="Field2">
 	                               <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestName"/></td>
 	                               <td width="60%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formResult"/></td>
-	                               <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
+								   <% if ("CLS".equals(handler.getMsgType())) { %>
+									   <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompletedCLS"/></td>
+								   <% } else { %>
+									   <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
+								   <% } %>
 	                           </tr><%
 						} else {%>
                        <table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs">
@@ -1208,21 +1211,17 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                <td width="5%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formAbn"/></td>
                                <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formReferenceRange"/></td>
                                <td width="10%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formUnits"/></td>
-                               <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
+                               <% if ("CLS".equals(handler.getMsgType())) { %>
+                                   <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompletedCLS"/></td>
+							   <% } else { %>
+                                   <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
+							   <% } %>
                                <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
                           	   <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formAnnotate"/></td>
                            </tr>
                            
- 							<%if("CLS".equals(handler.getMsgType())) { %>
- 							<%for (k=0; k < handler.getOBRCommentCount(j); k++){
-                                   %>
-                               <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
-                                   <td valign="top" align="left" colspan="8"><pre><%=handler.getOBRComment(j, k)%></pre></td>
-                               </tr>
-                              <%
-                                }//end for k=0
- 							}//end of CLS check
-                           }
+ 							<%
+						}
                            
                            for ( j=0; j < OBRCount; j++){
 
@@ -1507,14 +1506,6 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                            		align="left";
                                            	}%>
                                            	
-                                           	<%
-                                           		//CLS textual results - use 4 columns.
-                                           		if(handler instanceof CLSHandler && ((oscar.oscarLab.ca.all.parsers.CLSHandler)handler).isUnstructured()) {
-                                           	%>
-                                           		<td align="left" colspan="4"><%= handler.getOBXResult( j, k) %></td>
-                                           	<%		
-                                           		} else {
-                                           	%>
                                            	
                                            <td align="<%=align%>"><%= handler.getOBXResult( j, k) %></td>
                                           
@@ -1524,7 +1515,6 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                            <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
                                            <td align="left"><%=handler.getOBXUnits( j, k) %></td>
                                            
-                                           <% } %>
                                            <td align="center"><%= handler.getTimeStamp(j, k) %></td>
                                            <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
                                       		<td align="center" valign="top">                                           <a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=demographicID%>&amp;other_id=<%=String.valueOf(j) + "-" + String.valueOf(k) %>','anwin','width=400,height=500');">
@@ -1567,7 +1557,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
 
                            //for ( j=0; j< OBRCount; j++){
-                           if (!handler.getMsgType().equals("PFHT") && !handler.getMsgType().equals("CLS")) {
+                           if (!handler.getMsgType().equals("PFHT")) {
                                if (headers.get(i).equals(handler.getObservationHeader(j, 0))) {
                                	 %>
                                <%for (k=0; k < handler.getOBRCommentCount(j); k++){
@@ -1660,7 +1650,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <% } %>
                                 </td>
                                 <td width="50%" valign="center" align="left">
-                                    <span class="Field2"><i><bean:message key="oscarMDS.segmentDisplay.msgReportEnd"/></i></span>
+                                <% if ("CLS".equals(handler.getMsgType())) { %>
+									<span class="Field2"><i><bean:message key="oscarMDS.segmentDisplay.msgReportEndCLS"/></i></span>
+								<% } else { %>
+									<span class="Field2"><i><bean:message key="oscarMDS.segmentDisplay.msgReportEnd"/></i></span>
+								<% } %>
                                 </td>
                             </tr>
                         </table>

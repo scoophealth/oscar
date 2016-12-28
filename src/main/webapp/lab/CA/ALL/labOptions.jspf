@@ -13,6 +13,10 @@
 	<option value="CLS">Calgary Lab Services (CLS)</option>
 </oscar:oscarPropertiesCheck>
 
+<oscar:oscarPropertiesCheck property="lab.handler.CDL.enabled" value="true">
+	<option value="CDL">CDL</option>
+</oscar:oscarPropertiesCheck>
+
 <oscar:oscarPropertiesCheck property="lab.handler.CML.enabled" value="true">
 <option value="CML">CML</option>
 </oscar:oscarPropertiesCheck>
