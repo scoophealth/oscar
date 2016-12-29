@@ -142,6 +142,7 @@ $(function() {
 					<option value="ORU_R01">ORU_R01</option>
 					<option value="BIOTEST">BioTest</option>
 					<option value="CLS">Calgary Lab Services (CLS)</option>
+					<option value="CDL">CDL</option>
 					<option value="TRUENORTH">TRUENORTH</option>
 					<option value="OTHER">Other</option>
 				</select>

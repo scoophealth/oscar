@@ -43,7 +43,6 @@ import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.ConsultResponseDoc;
 import org.oscarehr.common.model.Hl7TextInfo;
-import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementMap;
 import org.oscarehr.common.model.MeasurementType;
@@ -276,61 +275,10 @@ public class Hl7textResultsData {
 
 	}
 
-	public static String getMatchingLabs_CLS(String lab_no) {
-		String ret = "";
-		Hl7TextInfo self = null;
-		List<Integer> idList = new ArrayList<Integer>();
-		
-		for (Object[] o : hl7TxtInfoDao.findByLabIdViaMagic(ConversionUtils.fromIntString(lab_no))) {
-			Hl7TextInfo a = (Hl7TextInfo) o[0];
-			//Hl7TextInfo b = (Hl7TextInfo) o[1];
-
-			int labNo = a.getLabNumber();
-			if(lab_no.equals(String.valueOf(labNo))) {
-				self = a;
-			}
-			ret = ret + "," + labNo;
-			idList.add(labNo);
-		}
-		
-		//nothing but itself was found, but we have a special case for glucose tolerance tests
-		//they come in with different accessions but same filler order no.
-		if(self != null && ret.length()>0 && ret.substring(1).indexOf(",") == -1) {
-			ret = "";
-			for(Hl7TextInfo info : hl7TxtInfoDao.findByFillerOrderNumber(self.getFillerOrderNum())) {
-				ret = ret + "," + info.getLabNumber();
-				idList.add(info.getLabNumber());
-			}
-		}
-		
-		if(idList.isEmpty()) {
-			idList.add(Integer.parseInt(lab_no));
-		}
-		
-		Collections.sort(idList);
-		
-		StringBuilder sb = new StringBuilder();
-		for(Integer id:idList) {
-			if(sb.length() > 0) {
-				sb.append(",");
-			}
-			sb.append(String.valueOf(id));
-		}
-		
-		return sb.toString();
-	//	if (ret.equals("")) return (lab_no);
-	//	else return (ret.substring(1));
-	}
-	
 	public static String getMatchingLabs(String lab_no) {
 		String ret = "";
 		int monthsBetween = 0;
 		
-		Hl7TextMessage hl7Msg = hl7TxtMsgDao.find(Integer.parseInt(lab_no));
-		if(hl7Msg != null && "CLS".equals(hl7Msg.getType())) {
-			return getMatchingLabs_CLS(lab_no);
-		}
-
 		for (Object[] o : hl7TxtInfoDao.findByLabIdViaMagic(ConversionUtils.fromIntString(lab_no))) {
 			Hl7TextInfo a = (Hl7TextInfo) o[0];
 			Hl7TextInfo b = (Hl7TextInfo) o[1];

@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,28 +23,25 @@
  */
 package oscar.oscarLab.ca.all.parsers;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.oscarehr.util.LoggedInInfo;
 
-import oscar.oscarLab.ca.all.upload.MessageUploader;
 import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Segment;
 import ca.uhn.hl7v2.model.v23.datatype.FT;
 import ca.uhn.hl7v2.model.v23.datatype.XCN;
+import ca.uhn.hl7v2.model.v23.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v23.message.ORU_R01;
+import ca.uhn.hl7v2.model.v23.segment.NTE;
+import ca.uhn.hl7v2.model.v23.segment.OBX;
+import ca.uhn.hl7v2.model.v23.segment.ORC;
 import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Terser;
@@ -54,7 +51,7 @@ import ca.uhn.hl7v2.validation.impl.NoValidation;
  * Dual message handler for both the manual and automated lab uploads in the Calgary Lab Service HL7 format.
  *
  */
-public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.handlers.MessageHandler {
+public class CLSHandler implements MessageHandler {
 
 	private enum NameType {
 		FIRST, MIDDLE, LAST;
@@ -65,7 +62,7 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 	private ORU_R01 msg;
 
 	private Terser terser;
-	
+
 
 	public void init(String hl7Body) throws HL7Exception {
 		Parser p = new PipeParser();
@@ -90,12 +87,51 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 		}
 	}
 
+	public Date getMsgDateTime() {
+		try {
+			String dateFormat = "yyyyMMddHHmmss";
+			Date dateTime = UtilDateUtilities.StringToDate(get("/.MSH-7"), dateFormat);
+			return dateTime;
+		} catch (Exception e) {
+			logger.error("Could not retrieve message date", e);
+			return null;
+		}
+	}
+
 	public String getMsgPriority() {
 		return ("");
 	}
 
 	public int getOBRCount() {
 		return (msg.getRESPONSE().getORDER_OBSERVATIONReps());
+	}
+
+	public ORU_R01_ORDER_OBSERVATION getOBR(int i) throws HL7Exception {
+		return msg.getRESPONSE().getORDER_OBSERVATION(i);
+	}
+
+	public ORC getORC(int i) throws HL7Exception {
+        return msg.getRESPONSE().getORDER_OBSERVATION(i).getORC();
+	}
+
+	public OBX getOBX(int i, int ii) throws HL7Exception {
+		return msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(ii).getOBX();
+	}
+
+	public NTE getNTE(int i, int j, int k) throws HL7Exception {
+        return msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTE(k);
+	}
+
+	public NTE getOBRNTE(int i, int j) throws HL7Exception {
+        return msg.getRESPONSE().getORDER_OBSERVATION(i).getNTE(j);
+	}
+
+	public void insertOBR(ORU_R01_ORDER_OBSERVATION newOBR) {
+		try {
+        	msg.getRESPONSE().insertORDER_OBSERVATION(newOBR, getOBRCount());
+        } catch (HL7Exception e) {
+			logger.error("Error Adding OBR segment.", e);
+        }
 	}
 
 	public int getOBXCount(int i) {
@@ -124,7 +160,7 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 
 	public boolean isOBXAbnormal(int i, int j) {
 		try {
-			return getOBXAbnormalFlag(i, j).equals("C") || getOBXAbnormalFlag(i, j).equals("H") || getOBXAbnormalFlag(i, j).equals("L");
+			return getOBXAbnormalFlag(i, j).equals("C") || getOBXAbnormalFlag(i, j).equals("H") || getOBXAbnormalFlag(i, j).equals("L") || getOBXAbnormalFlag(i, j).equals("A");
 		} catch (Exception e) {
 			return false;
 		}
@@ -221,7 +257,11 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 		for (int i = 0; i < obrCount; i++) {
 			obxCount = getOBXCount(i);
 			for (int j = 0; j < obxCount; j++) {
-				if (getOBXResultStatus(i, j).equals("Final")) count++;
+				if (getOBXResultStatus(i, j).equals("Final") ||
+						getOBXResultStatus(i, j).equals("Corrected"))
+				{
+					count++;
+				}
 			}
 		}
 		return count;
@@ -252,7 +292,7 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 		} catch(Exception e) {
 			return 0;
 		}
-				
+
 		return count;
 	}
 
@@ -570,7 +610,7 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 
 	public String getFillerOrderNumber() {
 		// this is different from the filler order number in ORC
-		return get("/.OBR-3");
+		return get("/.OBR-3-1");
 	}
 
 	public String getEncounterId() {
@@ -604,7 +644,7 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 
 	/**
 	 * Gets the ordering provider name.
-	 * 
+	 *
 	 * @return
 	 * 		Returns the provider name or an empty string if it's not specified
 	 */
@@ -613,8 +653,8 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 	}
 
 	/**
-	 * Gets the ordering provider ID for matching provider with the correct inbox routing. 
-	 * 
+	 * Gets the ordering provider ID for matching provider with the correct inbox routing.
+	 *
 	 * @return
 	 * 		Returns the provider id or an empty string if it's not specified
 	 */
@@ -624,7 +664,7 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 
 	/**
 	 * Gets the date and time the specimen was collected
-	 * 
+	 *
 	 * @param i
 	 * 		Segment count
 	 * @return
@@ -655,31 +695,6 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 		return get("/.OBR-20");
 	}
 
-	@Override
-	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
-		String hl7content = null;
-		InputStream is = null;
-		try {
-			is = new BufferedInputStream(new FileInputStream(new File(fileName)));
-			hl7content = IOUtils.toString(is);
-		} catch (Exception e) {
-			logger.error("Unable to process " + fileName + " for " + serviceName, e);
-
-			return null;
-		} finally {
-			IOUtils.closeQuietly(is);
-		}
-
-		// do crazy redirection to itself via message uploader
-		try {
-			MessageUploader.routeReport(loggedInInfo, serviceName, getMsgType(), hl7content, fileId);
-		} catch (Exception e) {
-			MessageUploader.clean(fileId);
-			return null;
-		}
-		return "success";
-	}
-
 	////this.isUnstructuredDoc = "TX".equals(handler.getOBXValueType(0,0));
 	public boolean isUnstructured() {
 		boolean result=true;
@@ -692,7 +707,8 @@ public class CLSHandler implements MessageHandler, oscar.oscarLab.ca.all.upload.
 		}
 		return result;
 	}
-	public String getNteForPID() {
-    	return "";
+
+    public String getNteForPID() {
+	    return "";
     }
 }
