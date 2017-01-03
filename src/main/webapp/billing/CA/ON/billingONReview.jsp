@@ -36,6 +36,8 @@ if(!authed) {
 
 <%@page import="org.oscarehr.common.dao.BillingServiceDao"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
+<%@page import="org.oscarehr.common.dao.DxresearchDAO" %>
+<%@page import="org.oscarehr.common.model.Dxresearch" %>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
@@ -165,7 +167,8 @@ boolean dupServiceCode = false;
 
 
         Properties propCodeDesc = (new JdbcBillingCodeImpl()).getCodeDescByNames(vecServiceParam[0]);
-			String dxDesc = prepObj.getDxDescription(request.getParameter("dxCode"));
+			String dxCode = request.getParameter("dxCode");
+			String dxDesc = prepObj.getDxDescription(dxCode);
 			String clinicview = oscarVariables.getProperty("clinic_view", "");
 			String clinicNo = oscarVariables.getProperty("clinic_no", "");
 			String visitType = oscarVariables.getProperty("visit_type", "");
@@ -176,7 +179,6 @@ boolean dupServiceCode = false;
 			String ctlBillForm = request.getParameter("billForm");
 			String assgProvider_no = request.getParameter("assgProvider_no");
 			String billType = request.getParameter("xml_billtype").substring(0,((String)request.getParameter("xml_billtype")).indexOf("|")).trim();
-			//String            dob               = request.getParameter("dob");
 			String demoSex = request.getParameter("DemoSex");
 			GregorianCalendar now = new GregorianCalendar();
 			int curYear = now.get(Calendar.YEAR);
@@ -185,6 +187,14 @@ boolean dupServiceCode = false;
 			int dob_year = 0, dob_month = 0, dob_date = 0, age = 0;
 			String content = "";
 			String total = "";
+			
+			//add to patientDx (or not)
+			if ("yes".equals(request.getParameter("addToPatientDx"))) {
+				DxresearchDAO dxresearchDao = SpringUtils.getBean(DxresearchDAO.class);
+				java.util.Date d = new java.util.Date();
+				Dxresearch dx = new Dxresearch(Integer.valueOf(demo_no), d, d, 'A', dxCode, "icd9", (byte)0, user_no);
+				dxresearchDao.save(dx);
+			}
 
 			String msg = "<tr><td colspan='2'>Calculation</td></tr>";
 			String action = "edit";
@@ -612,7 +622,7 @@ window.onload=function(){
 						<td nowrap width="30%" align="center" ><b>Service Date</b><br>
 						<%=request.getParameter("service_date").replaceAll("\\n", "<br>")%></td>
 						<td align="center" width="33%"><b>Diagnostic Code</b><br>
-						<%=request.getParameter("dxCode")%></br>
+						<%=dxCode%></br>
 						<%=dxDesc%>
 						</td>
 						<td valign="top"><b>Refer. Doctor</b><br>
@@ -748,7 +758,7 @@ window.onload=function(){
     //validation of diagnostic code (dxcode)
     String dxCodeValue = null;
     for (int i = 0; i < 3; i++) {
-	if (i==0) dxCodeValue=request.getParameter("dxCode");
+	if (i==0) dxCodeValue=dxCode;
 	else dxCodeValue=request.getParameter("dxCode" + i);
 	if (!dxCodeValue.equals("")) {
 		List<DiagnosticCode> dcodes = diagnosticCodeDao.findByDiagnosticCode(dxCodeValue.trim());
