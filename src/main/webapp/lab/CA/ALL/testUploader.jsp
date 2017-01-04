@@ -119,7 +119,7 @@ $(function() {
 				<bean:message key="lab.ca.all.testUploader.labType" /><br />
 				<select name="type" id="type" onchange="selectOther()">
 					<option value="0">Select Lab Type:</option>
-					<option value="AlphaHL7">ALPHA</option>
+					<option value="ALPHA">ALPHA</option>
 					<option value="CML">CML</option>
 					<option value="EPSILON">EPSILON/MHL</option>
 					<option value="PATHL7"
