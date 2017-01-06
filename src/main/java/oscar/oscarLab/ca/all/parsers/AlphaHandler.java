@@ -121,6 +121,20 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
         debugMSHAndPid();
     }
     
+    public String getObxSetId(int i, int j) {
+    	try{
+        	if (version.equals("2.2")) {
+                return(getString(Terser.get(msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),1,0,1,1)));
+
+        	} else {
+                return(getString(Terser.get(msg23.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),1,0,1,1)));
+
+        	}
+        }catch(Exception e){
+            logger.error("Error retrieving obx set id", e);
+            return("");
+        }
+    }
     
     public String getAlphaReqNum(){
         try{
