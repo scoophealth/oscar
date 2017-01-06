@@ -1225,6 +1225,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                            
                            for ( j=0; j < OBRCount; j++){
 
+                        	   String lastObxSetId = "0";
                                boolean obrFlag = false;
                                int obxCount = handler.getOBXCount(j);
                                for (k=0; k < obxCount; k++){
@@ -1490,23 +1491,46 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                    			}//end of isUnstructuredDoc
                                    			
                                    			else{//if it isn't a PATHL7 doc%>
-                               		<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>"><%
-                               				if(handler.getMsgType().equals("PATHL7") && !isAllowedDuplicate && (obxCount>1) && handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){%>
+                               		<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+                               		
+                               		
+                               		
+                               		<%
+                               			if(handler.getMsgType().equals("PATHL7") && !isAllowedDuplicate && (obxCount>1) && handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){%>
                                    				<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k).replaceAll("&","%26"),"UTF-8") %>')"></a><%
                                    				}
-                               				else{%>
+                               				else{
+                               				
+                               					String newObxSetId = ((AlphaHandler)handler).getObxSetId(j, k);
+                               					
+                               				 
+                               					if(handler instanceof AlphaHandler && lastObxSetId.equals(newObxSetId)) {
+                               						%><td></td><%
+                               					} else {
+                               				
+                               				%>
                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k).replaceAll("&","%26"),"UTF-8") %>')"><%=obxName %></a>
                                            &nbsp;<%if(loincCode != null){ %>
                                                 	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
-                                                	<%} %> </td><%}%>
+                                                	<%} %> </td>
+                                           <%} }%>
+                                           
+                                           
+                                           <% if(handler instanceof AlphaHandler && "FT".equals(handler.getOBXValueType(j, k))) { %>
+                                           		<td colspan="4"><%= handler.getOBXResult( j, k) %></td>
+                                           <%
+                                       			lastObxSetId = ((AlphaHandler)handler).getObxSetId(j,k);
+                                    	  
+                                           } else { %>	
+                                           
                                            	<%
                                            	String align = "right";
                                           	//for pathl7, if it is an SG/CDC result greater than 100 characters, left justify it
                                            	if((handler.getOBXResult(j, k).length() > 100) && (isSGorCDC)){
                                            		align="left";
                                            	}%>
-                                           	
-                                           	
+                                           
+                                           
                                            <td align="<%=align%>"><%= handler.getOBXResult( j, k) %></td>
                                           
                                            <td align="center">
@@ -1514,6 +1538,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                            </td>
                                            <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
                                            <td align="left"><%=handler.getOBXUnits( j, k) %></td>
+                                           
+                                           <%}%>
                                            
                                            <td align="center"><%= handler.getTimeStamp(j, k) %></td>
                                            <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
@@ -1545,7 +1571,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                              </td>
                                             </tr>
                                        			<%}
-                                       	} %>
+                                       	} 
+                                       	
+                                       
+                                       	%>
 
 
                                  <%  }
@@ -1587,7 +1616,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
                              }//end if handler.getObservation..
                           } // end for if (PFHT)
-
+                        	  
                               } //end for j=0; j<obrCount;
                           } // // end for headersfor i=0... (headers) line 625
 
