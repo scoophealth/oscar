@@ -212,7 +212,8 @@ public class EctConsultationFormFaxAction extends Action {
 					IOUtils.closeQuietly(fos);
 				}
 				
-				String tempPath = System.getProperty("java.io.tmpdir");
+				String tempPath = OscarProperties.getInstance().getProperty(
+					"fax_file_location", System.getProperty("java.io.tmpdir"));
                 String faxClinicId = OscarProperties.getInstance().getProperty("fax_clinic_id","");
 				
 				PdfReader pdfReader = new PdfReader(faxPdf);

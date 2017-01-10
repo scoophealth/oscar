@@ -115,8 +115,9 @@ public final class FaxAction {
 			
 			// Removing duplicate phone numbers.
 			recipients = new ArrayList<String>(new HashSet<String>(recipients));
-			String tempPath = System.getProperty("java.io.tmpdir");
 			String faxClinicId = OscarProperties.getInstance().getProperty("fax_clinic_id","");
+			String tempPath = OscarProperties.getInstance().getProperty(
+				"fax_file_location", System.getProperty("java.io.tmpdir"));
 			FileOutputStream fos;
 			
 			FaxConfigDao faxConfDao = SpringUtils.getBean(FaxConfigDao.class);
