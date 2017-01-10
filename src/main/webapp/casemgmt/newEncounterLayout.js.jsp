@@ -120,3 +120,45 @@ function displayEaapsWindow(url, notificationId, message) {
 		}, 500
 	);
 }
+	//////Timer for classic encounter
+	
+        var d = new Date();  //the start
+        var totalSeconds = 0;
+        var myVar = setInterval(setTime, 1000);
+        var toggle = true;
+
+	function toggleATimer(){
+ 	    if (toggle) {
+			document.getElementById("toggleTimer").innerHTML="&gt;"; // >
+			clearInterval(myVar);
+			toggle=false;
+		} else {
+			document.getElementById("toggleTimer").innerHTML="&#8741;";  // ||
+			myVar = setInterval(setTime, 1000);
+			toggle=true;
+		}
+	}
+	
+	function pasteTimer(){
+            var ed = new Date();
+            $(caseNote).value +="\n"+document.getElementById("startTag").value+": "+d.getHours()+":"+pad(d.getMinutes())+"\n"+document.getElementById("endTag").value+": "+ed.getHours()+":"+pad(ed.getMinutes())+"\n"+pad(parseInt(totalSeconds/3600))+":"+pad(parseInt((totalSeconds/60)%60))+":"+ pad(totalSeconds%60);
+            adjustCaseNote();
+	}
+
+        function setTime(){
+            ++totalSeconds;
+            if (totalSeconds > 5) {document.getElementById("aTimer").innerHTML =pad(parseInt(totalSeconds/60))+":"+ pad(totalSeconds%60);}
+            if (totalSeconds == 1200) {document.getElementById("aTimer").style.backgroundColor= "#DFF0D8";} //1200 sec = 20 min light green
+            if (totalSeconds == 3000) {document.getElementById("aTimer").style.backgroundColor= "#FDFEC7";} //3600 sec = 50 min light yellow
+        }
+
+        function pad(val){
+            var valString = val + "";
+            if(valString.length < 2)
+            {
+                return "0" + valString;
+            } else {
+                return valString;
+            }
+        }
+	
