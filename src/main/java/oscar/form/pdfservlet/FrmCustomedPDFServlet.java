@@ -112,6 +112,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		                	// write to file
 		                	String pdfFile = "prescription_"+Integer.parseInt(req.getParameter("pdfId"))+".pdf";
 		                	String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "/";
+
 		                	FileOutputStream fos = null;
 		                	try {
 		                		fos = new FileOutputStream(path+pdfFile);
@@ -119,12 +120,15 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		                	} finally {
 		                		IOUtils.closeQuietly(fos);
 		                	}
+
+					String tempPath = OscarProperties.getInstance().getProperty(
+								"fax_file_location", System.getProperty("java.io.tmpdir"));
 		                	// write to file
-		                	String tempPdf = System.getProperty("java.io.tmpdir")+"/prescription_"+req.getParameter("pdfId")+".pdf";
+		                	String tempPdf = tempPath + "/prescription_" + req.getParameter("pdfId") + ".pdf";
 		                	// Copying the fax pdf.
 							FileUtils.copyFile(new File(path+pdfFile), new File(tempPdf));
 
-			                String txtFile = System.getProperty("java.io.tmpdir")+"/prescription_"+req.getParameter("pdfId")+".txt";
+			                String txtFile = tempPath + "/prescription_" + req.getParameter("pdfId") + ".txt";
 		                	FileWriter fstream = new FileWriter(txtFile);
 		                	BufferedWriter out = new BufferedWriter(fstream);
 			                try {
