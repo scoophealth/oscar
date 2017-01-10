@@ -835,6 +835,8 @@ window.onbeforeunload = onClosing;
 					</select></td>
 				</tr>
 			</table>
+			<input type="hidden" id="startTag" value='<bean:message key="oscarEncounter.Index.startTime"/>'>
+			<input type="hidden" id="endTag" value='<bean:message key="oscarEncounter.Index.endTime"/>'>
 			<br> <span style="float: right; margin-right: 10px;"> <input
 				type="image"
 				src="<c:out value="${ctx}/oscarEncounter/graphics/copy.png"/>"
