@@ -47,12 +47,13 @@ var outcomesWindow;
 
 window.onbeforeunload = function() {
 	//outcomesWindow.close();
-    return "You sure?";
+    //return "You sure?";
+	outcomesWindow.postMessage({'response' : 'CLOSE'}, 'https://metricsdev.med-access.net');
 };
 
 
 window.unload = function() {
-	//outcomesWindow.close();
+	outcomesWindow.postMessage({'response' : 'CLOSE'}, 'https://metricsdev.med-access.net');
 };
 
 function launchOutcomesDashboard1(outcomesHostName) {
@@ -126,6 +127,7 @@ html, body { height: 100% }
 </head>
 <body>
 <h5>OSCAR EMR - Keep window open to interact with Common Provider Dashboard window.</h5>
+<input type="button" value="close" onClick="window.close()"/>
 <iframe id="drillDownFrame" style="width:100%;height:100%"></iframe>
 
 </body>

@@ -982,11 +982,11 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 			<a href="#" class="dashboardBtn">Dashboard</a>
 			<div class="dashboardDropdown">
 				<c:forEach items="${ dashboards }" var="dashboard" >			
-					<a href="javascript:void(0)" onclick="newWindow('<%=request.getContextPath()%>/web/dashboard/display/DashboardDisplay.do?method=getDashboard&dashboardId=${ dashboard.id }','admin')"> 
+					<a href="javascript:void(0)" onclick="newWindow('<%=request.getContextPath()%>/web/dashboard/display/DashboardDisplay.do?method=getDashboard&dashboardId=${ dashboard.id }','dashboard')"> 
 						<c:out value="${ dashboard.name }" />
 					</a>
 				</c:forEach>
-				<a href="javascript:void(0)" onclick="newWindow('<%=request.getContextPath()%>/web/dashboard/display/sharedOutcomesDashboard.jsp','admin')"> 
+				<a href="javascript:void(0)" onclick="newWindow('<%=request.getContextPath()%>/web/dashboard/display/sharedOutcomesDashboard.jsp','shared_dashboard')"> 
 						Common Provider Dashboard
 					</a>
 			</div>
