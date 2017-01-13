@@ -68,6 +68,8 @@ import org.marc.shic.cda.utils.CdaUtils;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 
+import oscar.OscarProperties;
+
 public class BornCDADocument extends Level1Document{
 
 	public static final String TITLE_A1A2 = "Antenatal Record";
@@ -212,7 +214,8 @@ public class BornCDADocument extends Level1Document{
 			if(StringUtils.isEmpty(provId)) {
 				provId = provider.getProviderNo();
 			}
-			II authorId = new II("2.16.840.1.113883.3.239.36.1.1.3",provId);
+			//II authorId = new II("2.16.840.1.113883.3.239.36.1.1.3",provId);
+			II authorId = new II(OscarProperties.getInstance().getProperty("born_author_oid","2.16.840.1.113883.3.239.36.1.4.3"),provId);
 			authorIdSet.add(authorId);
 			aa.setId(authorIdSet);
 			
