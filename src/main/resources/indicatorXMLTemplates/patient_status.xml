@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>OSCAR EMR</author>
+	<uid></uid>
+	<heading>
+		<category>HomePage</category>
+		<subCategory>Patient Population</subCategory>
+		<name>Patient Status</name>
+		<definition>% of patients (Rostered and non-Rostered) in the practice based on their status, including last visit.</definition>
+		<framework>OSCAR EMR</framework>
+		<frameworkVersion>01-01-2017</frameworkVersion>
+		<notes></notes>
+	</heading>
+	<indicatorQuery>
+		<version>11-01-2017</version>
+		<params>
+			<!-- 
+				Use this parameter in the query as ${provider}
+				This parameter should be used for fetching patient's assigned to a MRP.
+				ie: WHERE demographic.provider_no = ${provider}
+			-->
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="pstatus" name="Patient Status" value="'%AC%'" />
+		</params>
+		<query>
+			<!-- Indicator SQL Query here -->
+			SELECT
+
+				-- PERCENT OF TOTAL PATIENTS NOTED AS ACTIVE SEEN WITHIN 12 MONTHS (latest visit &lt;= 12 months)
+				IF( COUNT(fin.patient) > 0, 
+					SUM( IF( fin.pt_status = 'AC' and DATEDIFF(CURDATE(),fin.last_visit) &lt;= 365  , 1, 0) )
+				, 0 ) AS "% Active, Seen within 12 months",
+			
+				-- PERCENT OF TOTAL PATIENTS NOTED AS ACTIVE SEEN 12-24 MONTHS AGO (latest visit &gt; 12 months and &lt; 24 months)
+				IF( COUNT(fin.patient) > 0, 
+					 SUM( IF( fin.pt_status = 'AC' and DATEDIFF(CURDATE(),fin.last_visit) > 365 and DATEDIFF(CURDATE(),fin.last_visit) &lt; 720  , 1, 0) )
+				, 0 ) AS "% Active, Seen 12-24 months ago",
+				
+				-- PERCENT OF TOTAL PATIENTS NOTED AS ACTIVE NOT SEEN WITHIN 24 MONTHS (latest visit &gt;= 24 months)
+				IF( COUNT(fin.patient) > 0, 
+					SUM( IF( fin.pt_status = 'AC' and (DATEDIFF(CURDATE(),fin.last_visit) >= 720 OR fin.last_visit IS NULL)  , 1, 0) )
+				, 0 ) AS "% Active, not seen in 24 months",
+				
+				-- PERCENT OF TOTAL PATIENTS NOTED AS INACTIVE
+				IF( COUNT(fin.patient) > 0, 
+					 SUM( IF( fin.pt_status = 'IN' , 1, 0) )
+				, 0 ) AS "% Inactive",
+				
+				-- PERCENT OF TOTAL PATIENTS NOTED AS DECEASED
+				IF( COUNT(fin.patient) > 0, 
+					  SUM( IF( fin.pt_status = 'DE' , 1, 0) )
+				, 0 ) AS "% Deceased",
+				
+				-- PERCENT OF TOTAL PATIENTS NOTED AS OTHER (not active, not inactive, not deceased, not deleted?)
+			IF( COUNT(fin.patient) > 0, 
+					  SUM( IF( fin.pt_status NOT IN ('AC','DE','IN') , 1, 0) )
+				, 0 ) AS "% Other Patient Status"
+				
+
+FROM (
+SELECT
+					d.demographic_no AS patient,
+					d.patient_status AS pt_status,
+					LV.appt_date as last_visit
+				FROM demographic d
+			
+				
+				-- Notations for last visit in appointments
+				LEFT JOIN ( 
+					select demographic_no,max(appointment_date) as appt_date from appointment group by demographic_no
+					
+				) LV 
+				ON (d.demographic_no = LV.demographic_no)
+) fin
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>10-07-2016</version>
+		<params>
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />	
+		</params>
+		<displayColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />	
+			<column id="lastVisit" name="IF(LV.appt_date IS NOT NULL,LV.appt_date,'')" title="Last Visit" primary="false" />
+			<column id="patientStatus" name="d.patient_status" title="Patient Status" primary="false" />
+		</displayColumns>
+		<exportColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Date of Birth (mm-dd-yy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Age" primary="false" />
+			<column id="lastVisit" name="IF(LV.appt_date IS NOT NULL,LV.appt_date,'')" title="Last Visit" primary="false" />
+			<column id="patientStatus" name="d.patient_status" title="Patient Status" primary="false" />
+		</exportColumns>
+		<query>
+			<!-- Drilldown SQL Query here -->
+			
+SELECT
+					d.*,
+					d.patient_status AS pt_status,
+					LV.appt_date as last_visit
+				FROM demographic d
+			
+				
+				-- Notations for last visit in appointments
+				LEFT JOIN ( 
+					select demographic_no,max(appointment_date) as appt_date from appointment group by demographic_no
+					
+				) LV 
+				ON (d.demographic_no = LV.demographic_no)
+
+		</query>
+	</drillDownQuery>
+</indicatorTemplateXML>
