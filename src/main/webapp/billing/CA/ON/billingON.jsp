@@ -34,50 +34,40 @@ if(!authed) {
 %>
 
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
-<%@page import="org.oscarehr.common.model.Appointment"%>
-<%@page import="org.oscarehr.common.dao.OscarAppointmentDao"%>
-<%@page import="org.oscarehr.common.model.CtlDiagCode"%>
-<%@page import="org.oscarehr.common.model.DiagnosticCode"%>
-<%@page import="org.oscarehr.common.dao.DiagnosticCodeDao"%>
-<%@page import="org.oscarehr.common.model.CtlBillingType"%>
-<%@page import="org.oscarehr.common.dao.CtlBillingTypeDao"%>
-<%@page import="org.oscarehr.common.model.CtlBillingServicePremium"%>
-<%@page import="org.oscarehr.common.dao.CtlBillingServicePremiumDao"%>
-<%@page import="org.oscarehr.common.model.BillingService"%>
-<%@page import="org.oscarehr.common.dao.BillingServiceDao"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ page errorPage="errorpage.jsp"%>
-<%@ page
-	import="java.util.*,java.net.*,java.sql.*,oscar.*,oscar.util.*,oscar.appt.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
-<%@page
-	import="org.oscarehr.common.model.ProviderPreference, org.oscarehr.common.model.CssStyle, org.oscarehr.common.dao.CSSStylesDAO"%>
-<%@page import="org.oscarehr.common.model.ProviderPreference"%>
+
+<%@page import="java.util.*,java.net.*,java.sql.*,oscar.*,oscar.util.*,oscar.appt.*"%>
+<%@page import="oscar.oscarBilling.ca.on.data.*"%>
+<%@page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
+<%@page import="oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines"%>
+<%@page import="org.oscarehr.common.dao.CSSStylesDAO, org.oscarehr.common.model.ProviderPreference, org.oscarehr.common.model.CssStyle"%>
+<%@page import="org.oscarehr.common.dao.BillingServiceDao, org.oscarehr.common.model.BillingService"%>
+<%@page import="org.oscarehr.common.dao.ClinicNbrDao, org.oscarehr.common.model.ClinicNbr"%>
+<%@page import="org.oscarehr.common.dao.CtlBillingTypeDao, org.oscarehr.common.model.CtlBillingType"%>
+<%@page import="org.oscarehr.common.dao.CtlBillingServiceDao, org.oscarehr.common.model.CtlBillingService"%>
+<%@page import="org.oscarehr.common.dao.CtlBillingServicePremiumDao, org.oscarehr.common.model.CtlBillingServicePremium"%>
+<%@page import="org.oscarehr.common.dao.DiagnosticCodeDao, org.oscarehr.common.model.CtlDiagCode, org.oscarehr.common.model.DiagnosticCode"%>
+<%@page import="org.oscarehr.common.dao.DxresearchDAO, org.oscarehr.common.model.Dxresearch"%>
+<%@page import="org.oscarehr.common.dao.MyGroupDao, org.oscarehr.common.model.MyGroup"%>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao, org.oscarehr.common.model.Appointment"%>
+<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao, org.oscarehr.common.model.ProfessionalSpecialist"%>
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao, org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.decisionSupport.model.DSConsequence"%>
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.common.model.ClinicNbr"%>
-<%@page import="org.oscarehr.common.dao.ClinicNbrDao"%>
-<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
-<%@page import="org.oscarehr.common.model.ProfessionalSpecialist"%>
-<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao"%>
-<%@page import="org.oscarehr.common.dao.DxresearchDAO"%>
-<%@page import="org.oscarehr.common.model.Dxresearch"%>
-<%@page
-	import="oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines"%>
-<%@page import="org.oscarehr.decisionSupport.model.DSConsequence"%>
-<%@page import="org.oscarehr.common.model.Demographic"%>
-<%@page import="org.oscarehr.common.model.CtlBillingService, org.oscarehr.common.dao.CtlBillingServiceDao"%>
-<%@page import="org.oscarehr.common.model.MyGroup, org.oscarehr.common.dao.MyGroupDao"%>
 
 <%@page import="org.oscarehr.managers.DemographicManager,org.oscarehr.billing.CA.filters.CodeFilterManager"%>
 
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	DxresearchDAO dxresearchDao = SpringUtils.getBean(DxresearchDAO.class);
+	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
     LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 <jsp:useBean id="providerBean" class="java.util.Properties"
@@ -140,6 +130,22 @@ if(!authed) {
 			List<String> patientDx = new ArrayList<String>();
 			for (Dxresearch dx : dxList) {
 				if ("icd9".equals(dx.getCodingSystem())) patientDx.add(dx.getDxresearchCode());
+			}
+			
+			//load codelist to add to patientDx
+			UserProperty codeToAddPatientDx = userPropertyDao.getProp(UserProperty.CODE_TO_ADD_PATIENTDX);
+			UserProperty codeToMatchPatientDx = userPropertyDao.getProp(UserProperty.CODE_TO_MATCH_PATIENTDX);
+			if (codeToAddPatientDx==null || codeToAddPatientDx.getValue().trim().isEmpty()) {
+				codeToAddPatientDx = new UserProperty();
+				codeToAddPatientDx.setName(UserProperty.CODE_TO_ADD_PATIENTDX);
+				codeToAddPatientDx.setValue("153,162,174,185,232,244,250,272,274,290,295,301,311,332,345,346,401,412,428,437,493,496,531,535,555,556,571,585,715,724,042");
+				userPropertyDao.persist(codeToAddPatientDx);
+			}
+			if (codeToMatchPatientDx==null || codeToMatchPatientDx.getValue().trim().isEmpty()) {
+				codeToMatchPatientDx = new UserProperty();
+				codeToMatchPatientDx.setName(UserProperty.CODE_TO_MATCH_PATIENTDX);
+				codeToMatchPatientDx.setValue("300:30000,331:3310,202:2028,278:2780,296:29689,305:3051,314:3140,394:396,427:4273,443:4438,530:53011,714:7140,726:7291,795:78071");
+				userPropertyDao.persist(codeToMatchPatientDx);
 			}
 
             //check for management fee code eligibility
@@ -648,12 +654,26 @@ function showHideLayers() { //v3.0
 }
 
 function onNext() {
+	var codeToAddStr = "<%=codeToAddPatientDx.getValue()%>";
+	var codeToMatchStr = "<%=codeToMatchPatientDx.getValue()%>";
+	
+	var codeToAdd = codeToAddStr.split(",");
+	var codeToMatch = {};
+	var codeToMatchArr = codeToMatchStr.split(",");
+	for (var i=0; i<codeToMatchArr.length; i++) {
+		var codeMatch = codeToMatchArr[i].split(":");
+		codeToMatch[codeMatch[0]] = codeMatch[1];
+	}
+	
 	var dxCode = document.titlesearch.dxCode.value;
-	var doNotAdd = [460,461,463,464,466];
-	if (doNotAdd.indexOf(dxCode)<0) {
+	if (codeToAdd.indexOf(dxCode)>=0 || codeToMatch[dxCode]!=null) {
 <%for (String pcode : patientDx) {%>
 		if (dxCode==<%=pcode%>) dxCode = -1;
 <%}%>
+		if (dxCode!=-1) {
+			var codeMatch = codeToMatch[dxCode];
+			if (codeMatch!=null) document.titlesearch.codeMatchToPatientDx.value = codeMatch;
+		}
 	} else {
 		dxCode = -1;
 	}
@@ -1219,6 +1239,7 @@ if(checkFlag == null) checkFlag = "0";
 			value="<%=checkFlag %>" />
 		<input type="hidden" name="prevId" id="prevId" value="<%=prevId %>" />
 		<input type="hidden" name="addToPatientDx" />
+		<input type="hidden" name="codeMatchToPatientDx" />
 
 		<table border="0" cellspacing="0" cellpadding="0" class="myDarkGreen"
 			width="100%">
