@@ -95,6 +95,8 @@ import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 
+import org.oscarehr.util.SpringUtils;
+
 public class GenericIntakeEditAction extends DispatchAction {
 
 	private static Logger LOG = MiscUtils.getLogger();
@@ -107,7 +109,7 @@ public class GenericIntakeEditAction extends DispatchAction {
 	protected static final String CLIENT_EDIT_ID = "id";
 	
 	private ClientImageDAO clientImageDAO = null;
-	private SurveyManager surveyManager = new SurveyManager();
+	private SurveyManager surveyManager = (SurveyManager)SpringUtils.getBean("surveyManager2");
 	private OcanStaffFormDao ocanStaffFormDao;
 	
 	protected static final String PROGRAM_ID = "programId";
