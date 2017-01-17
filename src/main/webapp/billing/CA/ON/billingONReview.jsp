@@ -190,9 +190,12 @@ boolean dupServiceCode = false;
 			
 			//add to patientDx (or not)
 			if ("yes".equals(request.getParameter("addToPatientDx"))) {
+				String dxCodeMatch = request.getParameter("codeMatchToPatientDx");
+				String dxCodeAdd = dxCodeMatch.isEmpty() ? dxCode : dxCodeMatch;
+				
 				DxresearchDAO dxresearchDao = SpringUtils.getBean(DxresearchDAO.class);
 				java.util.Date d = new java.util.Date();
-				Dxresearch dx = new Dxresearch(Integer.valueOf(demo_no), d, d, 'A', dxCode, "icd9", (byte)0, user_no);
+				Dxresearch dx = new Dxresearch(Integer.valueOf(demo_no), d, d, 'A', dxCodeAdd, "icd9", (byte)0, user_no);
 				dxresearchDao.save(dx);
 			}
 
