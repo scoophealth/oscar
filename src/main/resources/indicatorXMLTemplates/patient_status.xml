@@ -114,4 +114,15 @@ SELECT
 
 		</query>
 	</drillDownQuery>
+	<shared>true</shared>
+	<sharedMetricSetName>Home - Patient status</sharedMetricSetName>
+	<sharedMetricDataId>Status</sharedMetricDataId>
+	<sharedMappings>
+		<sharedMapping fromLabel="% Active, Seen within 12 months" toLabel="Active, seen this year"/>
+		<sharedMapping fromLabel="% Active, Seen 12-24 months ago" toLabel="Active, seen within 1-2 yrs"/>
+		<sharedMapping fromLabel="% Active, not seen in 24 months" toLabel="Active, not seen in 2+ yrs"/>
+		<sharedMapping fromLabel="Inactive" toLabel="Inactive"/>
+		<sharedMapping fromLabel="Deceased" toLabel="Deceased"/>
+		<sharedMapping fromLabel="% Other Patient Status" toLabel="Other"/>
+	</sharedMappings>	
 </indicatorTemplateXML>
