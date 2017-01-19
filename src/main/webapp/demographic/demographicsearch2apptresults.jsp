@@ -67,6 +67,14 @@
 <%@ page import="oscar.oscarDemographic.data.DemographicMerged" %>
 <%@page import="org.oscarehr.common.dao.OscarLogDao"%>
 
+
+<%@page import="org.oscarehr.managers.ProgramManager2" %>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+<%@page import="org.oscarehr.PMmodule.model.Program" %>
+
+
+
+
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
 <% 
@@ -124,6 +132,7 @@
 <% 
 	} 
 %>
+<script src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <script language="JavaScript">
 function setfocus() {
@@ -171,11 +180,150 @@ function searchAll() {
 }
 
 
+
+function getNextExtraClauseId() {
+	for(var x=2;x<=12;x++) {
+		var el = document.getElementById("search_"+x);
+		if(el == null) {
+			return x;
+		}
+	}
+	return null;
+}
+
+function getExtraClauseData(x) {
+	var data = 
+		"<ul id=\"extraSearchClause"+x+"\" >" + 
+	    "<li>" +
+	    "    <div class=\"label\">" +
+	    "</div>" +
+	    " 	<input type=\"hidden\" name=\"search_"+x+"\" id=\"search_"+x+"\" value=\"true\"/>" +
+	    "" 	+
+	    " 	<img src=\"../images/icons/101.png\" border=\"0\" onClick=\"removeThisSearchClause("+x+")\"/>" +
+	    "     <select class=\"wideInput\" name=\"search_mode_"+x+"\" id=\"search_mode_"+x+"\" onChange=\"updateKeywordField("+x+")\">"+
+	    "        <option value=\"search_name\">"+
+	    "            Name"+
+	    "        </option>"+
+	    "        <option value=\"search_phone\">"+
+	    "            Phone"+
+	    "        </option>"+
+	    "        <option value=\"search_dob\">"+
+	    "            DOB yyyy-mm-dd"+
+	    "        </option>"+
+	    "        <option value=\"search_address\" >"+
+	    "            Address"+
+	    "        </option>"+
+	    "        <option value=\"search_hin\">"+
+	    "            Health Ins #"+
+	    "        </option>"+
+	    "        <option value=\"search_chart_no\">"+
+	    "            Chart No"+
+	    "        </option>"+
+	    "        <option value=\"search_demographic_no\">"+
+	    "            Demographic No"+
+	    "       </option>"+
+	    "		<option value=\"search_program_no\">"+
+	    "            Program"+
+	    "       </option>"+
+	    "     </select>"+
+	    "</li>"+
+	    "<li>"+
+	    "    <div class=\"label\">"+
+	    "    </div>"+
+	    "    <span id=\"keyword_span_"+x+"\"><input class=\"wideInput\" type=\"text\" NAME=\"keyword_"+x+"\" id=\"keyword_"+x+"\" VALUE=\"\" SIZE=\"17\" MAXLENGTH=\"100\"></span>"+
+	    "	<span id=\"program_select_span_"+x+"\" style=\"display:none\">" +
+	    "	<select name=\"programKeyword_"+x+"\" id=\"programKeyword_"+x+"\"></select>" +
+	    "	</span>" +
+	    "</li>"+
+	"</ul>";
+	
+	return data;
+}
+function updateKeywordField(idx) {
+	//get the search_type for the {idx}
+	//if it's search_program_no, then change to the select, otherwise change to textbox
+	
+	var blah = $("#search_mode_" + idx).val();
+	
+	if("search_program_no" == blah) {
+		$("#program_select_span_" + idx).show();
+		$("#keyword_span_" + idx).hide();
+	} else {
+		$("#program_select_span_" + idx).hide();
+		$("#keyword_span_" + idx).show();
+	}
+}
+
+function addExtraSearchClause() {
+	
+	var iterID = getNextExtraClauseId();
+	
+	if(iterID != null) {
+		var data = getExtraClauseData(iterID);
+		//console.log(data);
+		$("#extraSearchClauses").append(data);
+		
+		//copy the options for the program list
+		var $options = $("#programKeyword_0 > option").clone();
+		$('#programKeyword_' + iterID).append($options);
+		
+		var max = parseInt($("#max_search_clause").val());
+		if(parseInt(iterID) > max) {
+			$("#max_search_clause").val(iterID);
+		}
+	}
+	
+	return iterID;
+}
+
+function removeThisSearchClause(v) {
+	$("#extraSearchClause" + v).remove();
+	console.log($("#f").serialize());
+}
+
+$(document).ready(function(){
+	updateKeywordField(0);
+	
+	<%
+	String strMax1 = request.getParameter("max_search_clause");
+	int max1 = 1;
+	try {
+		max1 = Integer.parseInt(strMax1);
+	}catch(NumberFormatException e) {
+		
+	}
+	
+	
+	for(int x=2;x<=max1;x++) {
+		String isActive = request.getParameter("search_" + x);
+		if(isActive != null && "true".equals(isActive)) {
+			String searchModeX = request.getParameter("search_mode_" + x);
+			String keywordX = request.getParameter("keyword_"+x);
+			String programKeywordX = request.getParameter("programKeyword_" + x);
+			
+			if((keywordX != null && !keywordX.equals("")) || ("search_program_no".equals(searchModeX) && programKeywordX != null && !programKeywordX.equals(""))) {
+				%>
+					//console.log('adding search clause ' + x);
+					var iterID = addExtraSearchClause();
+					$("#search_mode_" + iterID).val('<%=searchModeX%>');
+					$("#keyword_" + iterID).val('<%=keywordX%>');
+					$("#programKeyword_" + iterID).val('<%=programKeywordX%>');
+					updateKeywordField(iterID);
+					//console.log('done adding search clause ' + x);
+					
+				<%
+			}
+		}
+	}
+%>
+	
+
+});
 </script>
 </head>
 <body bgcolor="white" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0">
 <div id="demographicSearch" class="searchBox">
-	<form method="post" name="titlesearch" action="../demographic/demographiccontrol.jsp" onSubmit="return checkTypeIn()">
+	<form id="f" method="post" name="titlesearch" action="../demographic/demographiccontrol.jsp" onSubmit="return checkTypeIn()">
 	<%--@ include file="zdemographictitlesearch.htm"--%>
     <div class="header deep">
         <div class="title"></div>  
@@ -184,7 +332,10 @@ function searchAll() {
         <li>
             <div class="label">
             </div>
-            <select class="wideInput" name="search_mode">
+            <input type="hidden" name="max_search_clause" id="max_search_clause" value="1"/>
+     	
+     		<img id="addBtn" src="../images/icons/103.png" border="0" onClick="addExtraSearchClause()"/>
+            <select class="wideInput" name="search_mode" id="search_mode_0" onChange="updateKeywordField(0)">
                 <option value="search_name" <%=request.getParameter("search_mode").equals("search_name")?"selected":""%>>
 					<bean:message key="demographic.demographicsearch2apptresults.optName" />
 				</option>
@@ -203,11 +354,36 @@ function searchAll() {
                 <option value="search_chart_no" <%=request.getParameter("search_mode").equals("search_chart_no")?"selected":""%>>
                     <bean:message key="demographic.demographicsearch2apptresults.optChart"/>
                 </option>
+                <option value="search_program_no" <%=searchMode.equals("search_program_no")?"selected":""%>>
+                	<bean:message key="demographic.zdemographicfulltitlesearch.formProgram" />
+            	</option>
             </select>
         </li>
         <li>
             <div class="label"> </div>
+            <span id="keyword_span_0">
             <input type="text" class="wideInput" NAME="keyword" VALUE="<%=request.getParameter("keyword")%>" SIZE="17" MAXLENGTH="100"/>
+            </span>
+			<span id="program_select_span_0" style="display:none">
+        <select name="programKeyword_0" id="programKeyword_0">
+        	<%
+        		//get list of programs
+        		ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
+        		List<ProgramProvider> ppList = programManager.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+        		for(ProgramProvider pp:ppList) {
+        			Program p = programManager.getProgram(loggedInInfo, pp.getProgramId().intValue());
+        			//do we have one set?
+        			String strProgKeyword = request.getParameter("programKeyword_0" );
+        			int var = -1;
+        			if(strProgKeyword != null) {
+        				var = Integer.parseInt(strProgKeyword);
+        			}
+        			String selected = (var >= 0 && var == p.getId().intValue())?" selected=\"selected\" ":"";
+        	%> <option value="<%=p.getId()%>" <%=selected%>><%=p.getName() %></option>  <%
+        		}
+        	%>
+        </select>
+        </span>            
         </li>
         <li>
 	<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
@@ -238,12 +414,14 @@ function searchAll() {
 		<input type="hidden" name="createdatetime" value="<%=request.getParameter("createdatetime")%>">
 		<input type="hidden" name="creator" value="<%=request.getParameter("creator")%>">
 		<input type="hidden" name="remarks" value="<%=request.getParameter("remarks")%>">
+		    
 		        
 <%
 	String temp=null;
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
 		if(temp.equals("keyword") || temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("search_mode") ||temp.equals("chart_no")  ||temp.equals("ptstatus") ||temp.equals("submit") || temp.equals("includeIntegratedResults")) continue;
+		if(temp.matches("search_[1-9]+") || temp.matches("search_mode_[1-9]+") ||  temp.matches("keyword_[1-9]+") ||temp.matches("programKeyword_[1-9]+") ) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
   }
 %>
@@ -271,6 +449,11 @@ function searchAll() {
         </li>
 <%	} %>
     </ul>
+    <div id="extraSearchClauses">
+
+
+
+</div>
 	</form>
 </div>
 
@@ -383,67 +566,42 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
                 demoList.add(demographicDao.getDemographicById(r));
             }
         } else {
-            
-	if( "".equals(ptstatus) ) {
-		if(searchMode.equals("search_name")) {
-			demoList = demographicDao.searchDemographicByName(keyword, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_phone")) {
-			demoList = demographicDao.searchDemographicByPhone(keyword, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_dob")) {
-			demoList = demographicDao.searchDemographicByDOB(keyword, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_address")) {
-			demoList = demographicDao.searchDemographicByAddress(keyword, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_hin")) {
-			demoList = demographicDao.searchDemographicByHIN(keyword, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_chart_no")) {
-			demoList = demographicDao.findDemographicByChartNo(keyword, limit, offset,providerNo,outOfDomain);
-		}
-	}
-	else if( "active".equals(ptstatus) ) {
-	    if(searchMode.equals("search_name")) {
-			demoList = demographicDao.searchDemographicByNameAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-	    else if(searchMode.equals("search_phone")) {
-			demoList = demographicDao.searchDemographicByPhoneAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_dob")) {
-			demoList = demographicDao.searchDemographicByDOBAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_address")) {
-			demoList = demographicDao.searchDemographicByAddressAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_hin")) {
-			demoList = demographicDao.searchDemographicByHINAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_chart_no")) {
-			demoList = demographicDao.findDemographicByChartNoAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-	}
-	else if( "inactive".equals(ptstatus) ) {
-	    if(searchMode.equals("search_name")) {
-			demoList = demographicDao.searchDemographicByNameAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-	    else if(searchMode.equals("search_phone")) {
-			demoList = demographicDao.searchDemographicByPhoneAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_dob")) {
-			demoList = demographicDao.searchDemographicByDOBAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_address")) {
-			demoList = demographicDao.searchDemographicByAddressAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_hin")) {
-			demoList = demographicDao.searchDemographicByHINAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_chart_no")) {
-			demoList = demographicDao.findDemographicByChartNoAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-	}
+        	//there's a list of searchMode/keyword doubles
+        	List<String> searchModes = new ArrayList<String>();
+        	List<String> keywords = new ArrayList<String>();
+        	searchModes.add(searchMode);
+			keywords.add(keyword);
+			
+			String strMax = request.getParameter("max_search_clause");
+			int max = 1;
+			try {
+				max = Integer.parseInt(strMax);
+			}catch(NumberFormatException e) {
+				
+			}
+			
+			for(int x=2;x<=max;x++) {
+        		String isActive = request.getParameter("search_" + x);
+            	if(isActive != null && "true".equals(isActive)) {
+            		String searchModeX = request.getParameter("search_mode_" + x);
+    				String keywordX = request.getParameter("keyword_"+x);
+    				String programKeywordX = request.getParameter("programKeyword_"+x);
+    				
+    				if("search_program_no".equals(searchModeX)) {
+    					if(programKeywordX != null && !programKeywordX.equals("")) {
+        					searchModes.add(searchModeX);
+        					keywords.add(programKeywordX);
+        				}
+    				} else {
+	    				if(keywordX != null && !keywordX.equals("")) {
+	    					searchModes.add(searchModeX);
+	    					keywords.add(keywordX);
+	    				}
+    				}
+            	}
+        	}
+			String orderBy = "last_name";
+            demoList = doSearch(demographicDao,searchModes,ptstatus,keywords,limit,offset,orderBy,providerNo,outOfDomain);	
         }
 	
 	if(demoList == null) {
@@ -584,7 +742,10 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
   		
   		pageContext.setAttribute("apptParamsName", params);
   		%><bean:message key="demographic.search.noResultsWereFound" /><%
-	}		
+	} else {
+		java.util.HashMap<String, String> params = new java.util.HashMap<String, String>();
+		pageContext.setAttribute("apptParamsName", params);
+	}
   		if(OscarProperties.getInstance().getProperty("ModuleNames","").indexOf("Caisi") != -1) {
                 if(OscarProperties.getInstance().getProperty("caisi.search.workflow","false").equals("true")) {
 
@@ -663,6 +824,19 @@ Boolean isLocal(MatchingDemographicTransferScore matchingDemographicTransferScor
     
     return false;
     
+}
+
+List<Demographic> doSearch(DemographicDao demographicDao,List<String> searchModes, String ptstatus, List<String> keywords, int limit, int offset, String orderBy, String providerNo, boolean outOfDomain) {
+	List<Demographic> demoList = null;  
+
+	boolean active = ("".equals(ptstatus)) || ( "active".equals(ptstatus) );
+	boolean inactive = ("".equals(ptstatus)) || ( "inactive".equals(ptstatus) );
+	
+
+	demoList = demographicDao.doMultiSearch(searchModes, keywords, limit, offset, providerNo, outOfDomain, active, inactive);
+
+	
+	return demoList;
 }
 
 %>
