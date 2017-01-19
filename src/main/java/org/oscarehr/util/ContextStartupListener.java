@@ -23,6 +23,8 @@
 
 package org.oscarehr.util;
 
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorUpdateTask;
 import org.oscarehr.PMmodule.dao.ProgramDao;
@@ -120,6 +122,8 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 		pp.setProviderNo("999998");
 		pp.setProgramId(p.getId().longValue());
 		pp.setRoleId(secRoleDao.getRoleByName("doctor").getId());
+		pp.setLastUpdateDate(new Date());
+		pp.setLastUpdateUser("system");
 		programProviderDao.saveProgramProvider(pp);
 		
 	}
