@@ -131,7 +131,7 @@ public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 		sb.append("0,");
 		sb.append("now(),");
 		for (EFormValue v : values) {
-			sb.append("\'" + StringEscapeUtils.escapeSql(v.getVarValue()) + "\'");
+			sb.append("\'" + StringEscapeUtils.escapeSql(v.getVarValue()) + " \'");
 			sb.append(",");
 		}
 		sb.deleteCharAt(sb.length() - 1);
@@ -139,7 +139,7 @@ public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 		sb.append(")");
 
 		logger.debug("sql=" + sb.toString());
-
+		
 		Query q = entityManager.createNativeQuery(sb.toString());
 		q.executeUpdate();
 	}
