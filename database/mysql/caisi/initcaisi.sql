@@ -1032,6 +1032,8 @@ CREATE TABLE `program_provider` (
   `provider_no` varchar(6) NOT NULL,
   `role_id` bigint(20) default NULL,
   `team_id` bigint(20) default NULL,
+  `lastUpdateUser` varchar(255),
+  `lastUpdateDate` timestamp,
   PRIMARY KEY  (`id`),
   KEY `FK3EFA2D4C60605436` (`role_id`),
   KEY `FK3EFA2D4CE6DF0AD3` (`provider_no`),

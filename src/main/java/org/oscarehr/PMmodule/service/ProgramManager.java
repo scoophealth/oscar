@@ -25,6 +25,7 @@ package org.oscarehr.PMmodule.service;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -254,7 +255,9 @@ public class ProgramManager {
         return programProviderDAO.getProgramProvider(providerNo, Long.valueOf(programId));
     }
 
-    public void saveProgramProvider(ProgramProvider pp) {
+    public void saveProgramProvider(LoggedInInfo loggedInInfo, ProgramProvider pp) {
+    	pp.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
+    	pp.setLastUpdateDate(new Date());
         programProviderDAO.saveProgramProvider(pp);
     }
 

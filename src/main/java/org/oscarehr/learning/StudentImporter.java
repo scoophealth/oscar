@@ -42,6 +42,7 @@ import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.common.model.Security;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -173,7 +174,11 @@ public class StudentImporter {
 				pp.setProgramId(new Long(p.getId()));
 				pp.setProviderNo(providerNo);
 				pp.setRoleId(new Long(studentRole.getId()));
-				programManager.saveProgramProvider(pp);
+				LoggedInInfo l = new LoggedInInfo();
+				Provider prov = new Provider();
+				l.setLoggedInProvider(prov);
+				
+				programManager.saveProgramProvider(l,pp);
 				
 				total ++ ;
 			}catch(Exception e) {

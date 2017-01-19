@@ -276,7 +276,7 @@ public class ProgramManagerAction extends DispatchAction {
 
 		pp.setRoleId(provider.getRoleId());
 
-		programManager.saveProgramProvider(pp);
+		programManager.saveProgramProvider(LoggedInInfo.getLoggedInInfoFromSession(request),pp);
 
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
@@ -303,7 +303,7 @@ public class ProgramManagerAction extends DispatchAction {
 			pp.getTeams().add(team);
 		}
 
-		programManager.saveProgramProvider(pp);
+		programManager.saveProgramProvider(LoggedInInfo.getLoggedInInfoFromSession(request),pp);
 
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
@@ -625,7 +625,7 @@ public class ProgramManagerAction extends DispatchAction {
 				}
 			}
 
-			programManager.saveProgramProvider(pp);
+			programManager.saveProgramProvider(LoggedInInfo.getLoggedInInfoFromSession(request),pp);
 		}
 
 		ActionMessages messages = new ActionMessages();
@@ -1211,7 +1211,7 @@ public class ProgramManagerAction extends DispatchAction {
 			return mapping.findForward("edit");
 		}
 
-		programManager.saveProgramProvider(provider);
+		programManager.saveProgramProvider(LoggedInInfo.getLoggedInInfoFromSession(request),provider);
 
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
