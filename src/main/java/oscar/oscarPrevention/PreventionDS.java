@@ -75,6 +75,8 @@ public class PreventionDS {
 						ruleBase = RuleBaseLoader.loadFromInputStream(fis);
 						RuleBaseFactory.putRuleBase(file.getCanonicalPath(), ruleBase);
 						return (ruleBase);
+					} catch(Exception e) {
+			            	   MiscUtils.getLogger().error("Error loading preventions",e);
 					} finally {
 						IOUtils.closeQuietly(fis);
 					}
