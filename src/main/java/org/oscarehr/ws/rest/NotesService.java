@@ -758,38 +758,33 @@ public class NotesService extends AbstractServiceImpl {
 		}else if("riskfactors".equals(issueCode)){
 			issueCode = "RiskFactors";
 		}
+
+		Issue cppIssue = caseManagementMgr.getIssueInfoByCode(issueCode);				
 		
-		//cIssue2 will be loaded with existing CaseManagementIssue if there is one for this patient
-		Issue cppIssue = caseManagementMgr.getIssueInfoByCode(issueCode);		
-		CaseManagementIssue cIssue2;
-		String issueAlphaCode = cppIssue.getId().toString();
-		if (issueAlphaCode != null && issueAlphaCode.length() > 0){
-			//load by demo,issue code
-			cIssue2 = this.caseManagementMgr.getIssueByIssueCode(demo, issueAlphaCode);
-		}else{
-			cIssue2 = this.caseManagementMgr.getIssueById(demo,issueCode);
-		}
+		CaseManagementIssue cIssue;
+		cIssue = caseManagementMgr.getIssueByIssueCode(demo, issueCode);	
 		
 		//no issue existing for this type of CPP note..create and save it
-		if( cIssue2 == null ) {
+		if( cIssue == null ) {
 			Date creationDate = new Date();
 
-			cIssue2 = new CaseManagementIssue();
-			cIssue2.setAcute(false);
-			cIssue2.setCertain(false);
-			cIssue2.setDemographic_no(demo);
-			cIssue2.setIssue_id(cppIssue.getId());
-			cIssue2.setMajor(false);
-			cIssue2.setProgram_id(Integer.parseInt(programId));
-			cIssue2.setResolved(false);
-			cIssue2.setType(cppIssue.getRole()); 
-			cIssue2.setUpdate_date(creationDate);
+			cIssue = new CaseManagementIssue();
+			cIssue.setAcute(false);
+			cIssue.setCertain(false);
+			cIssue.setDemographic_no(demo);
+			cIssue.setIssue_id(cppIssue.getId());
+			cIssue.setMajor(false);
+			cIssue.setProgram_id(Integer.parseInt(programId));
+			cIssue.setResolved(false);
+			cIssue.setType(cppIssue.getRole()); 
+			cIssue.setUpdate_date(creationDate);
 			
-			caseManagementMgr.saveCaseIssue(cIssue2);
+			caseManagementMgr.saveCaseIssue(cIssue);
 		}
 
 		//save the associations
-		issuelist.add(cIssue2);	
+		issuelist.add(cIssue);	
+		
 		note.setIssues(new HashSet<CaseManagementIssue>(issuelist));
 		caseMangementNote.setIssues(new HashSet<CaseManagementIssue>(issuelist));
 		
