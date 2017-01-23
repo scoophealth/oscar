@@ -498,4 +498,16 @@ public class DrugDao extends AbstractDao<Drug> {
 		return query.getResultList();
 	}
 	
+	public List<Drug> findLongTermDrugsByDemographic( Integer demographicId ) {
+		String sqlCommand = "select x from Drug x where x.demographicId=?1 and x.archived = 0 and x.longTerm = 1";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+
+		@SuppressWarnings("unchecked")
+		List<Drug> results = query.getResultList();
+		return (results);
+
+	}
+	
 }

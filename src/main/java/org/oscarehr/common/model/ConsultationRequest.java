@@ -42,6 +42,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -55,16 +56,16 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "requestId")
 	private Integer id;
-	
+
 	@Column(name = "referalDate")
-        @Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.DATE)
 	private Date referralDate;
-	
+
 	private Integer serviceId;
 
-        @ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-        @JoinColumn(name="specId")
-        private ProfessionalSpecialist professionalSpecialist;
+	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@JoinColumn(name="specId")
+	private ProfessionalSpecialist professionalSpecialist;
 
 	@Temporal(TemporalType.DATE)
 	private Date appointmentDate;	
@@ -73,7 +74,7 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 
 	@Column(name = "reason")
 	private String reasonForReferral;
-	
+
 	private String clinicalInfo;
 	private String currentMeds;
 	private String allergies;
@@ -87,6 +88,7 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 	private String sendTo;
 	private String concurrentProblems;
 	private String urgency;
+	private String appointmentInstructions;
 	private boolean patientWillBook;	
 	
 	@Column(name = "site_name")
@@ -107,6 +109,9 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
     private Integer fdid = null;
     private String source;
     
+    @ManyToOne(fetch=FetchType.EAGER, targetEntity=LookupListItem.class)
+    @JoinColumn(name="appointmentInstructions", referencedColumnName="value", insertable = false, updatable = false)
+    private LookupListItem lookupListItem;
     
 	@Override
     public Integer getId() {
@@ -348,4 +353,47 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 	protected void jpa_updateLastDateUpdated() {
 		lastUpdateDate = new Date();
 	}
+	
+	/**
+	 * returns the appointment instructions value. 
+	 * This can be a display value or select list value 
+	 * if the Lookup List interface is used. 
+	 * If the table contains a hash key it most likely is a 
+	 * primary key association in the LookupListItem table.
+	 */
+	public String getAppointmentInstructions() {
+		return appointmentInstructions;
+	}
+
+	public void setAppointmentInstructions(String appointmentInstructions) {
+		this.appointmentInstructions = appointmentInstructions;
+	}
+
+	/**
+	 * Returns the display label of the Appointment Instruction if
+	 * the Lookup List interface is being used.
+	 * Empty string otherwise.
+	 */
+	@Transient
+	public String getAppointmentInstructionsLabel() {
+		if( lookupListItem != null ) {
+			return lookupListItem.getLabel();
+		}
+		return "";
+	}
+
+	/**
+	 * This will be bound if the Appointment Instructions
+	 * value is found as a unique match in the LookupListItem
+	 * table. 
+	 */
+	public LookupListItem getLookupListItem() {
+		return lookupListItem;
+	}
+
+	public void setLookupListItem(LookupListItem lookupListItem) {
+		this.lookupListItem = lookupListItem;
+	}
+
+
 }
