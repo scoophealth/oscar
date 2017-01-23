@@ -121,6 +121,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 
 		// Creating a border for the entire request.
 		border = new PdfPTable(1);
+		border.setSplitLate(false);
 		addToTable(table, border, true);
 
 		// Adding clinic information to the border.
@@ -241,8 +242,13 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		cell.setPhrase(new Phrase(getResource("msgConsReq"), font));
 		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 		infoTable.addCell(cell);
-
-		if (reqFrm.pwb.equals("1")){
+	
+		// Use a Custom Appointment Instruction - if it is set up.
+		if( OscarProperties.getInstance().getBooleanProperty("CONSULTATION_APPOINTMENT_INSTRUCTIONS_LOOKUP", "true") ) {
+			cell.setPhrase( new Phrase( reqFrm.getAppointmentInstructionsLabel(), boldFont ));	
+		} 
+		
+		else if ( "1".equals(reqFrm.pwb) ){
 			//cell.setPhrase(new Phrase(getResource("msgPleaseReplyPatient"), boldFont));
 			// msgPleaseReplyPatient does not exist. Using Part1 and Part2 method instead
 			cell.setPhrase(new Phrase(
@@ -254,12 +260,15 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		else if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 			cell.setPhrase(new Phrase("Please reply", boldFont));
 		}
-		else {
-			cell.setPhrase(new Phrase(
-					String.format("%s %s %s", getResource("msgPleaseReplyPart1"),
-											  clinic.getClinicName(),
-											  getResource("msgPleaseReplyPart2")), boldFont));
-		}
+		
+		// REDUNDANT CODE commented out.
+//		else {
+//			cell.setPhrase(new Phrase(
+//					String.format("%s %s %s", getResource("msgPleaseReplyPart1"),
+//											  clinic.getClinicName(),
+//											  getResource("msgPleaseReplyPart2")), boldFont));
+//		}
+		
 		infoTable.addCell(cell);
 
 		return infoTable;

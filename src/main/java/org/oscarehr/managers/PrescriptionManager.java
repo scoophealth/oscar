@@ -173,4 +173,65 @@ public class PrescriptionManager {
 		return (results);
 	}
 
+	public List<Drug> getMedicationsByDemographicNo(LoggedInInfo loggedInInfo, Integer demographicNo, Boolean archived) {
+		
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", "r", demographicNo)) {
+			LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getMedicationsByDemographicNo", "No Read Access");
+			return null;
+		}
+		
+		List<Drug> drugList = drugDao.findByDemographicId(demographicNo, archived);
+		LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getMedicationsByDemographicNo Archived=" + archived, drugList.toString());
+		return drugList;
+	}
+
+	public List<Drug> getActiveMedications(LoggedInInfo loggedInInfo, String demographicNo) {
+		
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", "r", demographicNo)) {
+			LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getActiveMedications", "No Read Access");
+			return null;
+		}
+		
+		Integer id = Integer.parseInt(demographicNo.trim());
+		LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getActiveMedications", demographicNo);
+		return getActiveMedications(loggedInInfo, id);
+	}
+
+	public List<Drug> getActiveMedications(LoggedInInfo loggedInInfo, Integer demographicNo) {
+		if (demographicNo == null) {
+			return null;
+		}
+		
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", "r", demographicNo)) {
+			LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getActiveMedications", "No Read Access");
+			return null;
+		}
+		
+		LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getActiveMedications", demographicNo+"");
+		
+		return getMedicationsByDemographicNo(loggedInInfo, demographicNo, false);
+	}
+
+	public Drug findDrugById(LoggedInInfo loggedInInfo, Integer drugId) {
+		
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", "r", null)) {
+			LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.findDrugById", "No Read Access");
+			return null;
+		}
+		
+		LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.findDrugById", "searching for drug id: " + drugId);
+		return drugDao.find(drugId);
+	}
+	
+	public List<Drug> getLongTermDrugs(LoggedInInfo loggedInInfo, Integer demographicId ) {
+		
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", "r", null)) {
+			LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getLongTermDrugs", "No Read Access");
+			return null;
+		}
+		
+		LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getLongtermDrugs", "Demographic: " + demographicId);
+		return drugDao.findLongTermDrugsByDemographic(demographicId);
+	}
+
 }

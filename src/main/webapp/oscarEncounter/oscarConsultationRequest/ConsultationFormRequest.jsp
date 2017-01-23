@@ -178,6 +178,10 @@ if(!authed) {
 
 		OscarProperties props = OscarProperties.getInstance();
 		ConsultationServiceDao consultationServiceDao = SpringUtils.getBean(ConsultationServiceDao.class);
+		
+		// Look up list
+		org.oscarehr.managers.LookupListManager lookupListManager = SpringUtils.getBean(org.oscarehr.managers.LookupListManager.class);
+		pageContext.setAttribute("appointmentInstructionList", lookupListManager.findLookupListByName( loggedInInfo, "consultApptInst") ); 
 %><head>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <script>
@@ -282,9 +286,30 @@ td.stat{
 font-size: 10pt;
 }
 
-input.righty{
-text-align: right;
+.consultDemographicData input, .consultDemographicData select, .consultDemographicData textarea {
+    width: 100% !important;
 }
+
+input#referalDate, input#appointmentDate, input#followUpDate {
+   background-image: url( ../../images/cal.gif);
+   background-position-x: right;
+   background-position-y: center;
+   background-repeat: no-repeat;
+}
+
+#referalDate_cal, #appointmentDate_cal, #followUpDate_cal  {
+    display: none !important;
+}
+
+* table tr td {
+    vertical-align:top !important;
+}
+
+
+textarea {
+    width: 100%;
+}
+
 </style>
 </head>
 
@@ -318,17 +343,61 @@ function K( serviceNumber, service ){
 	services[serviceNumber] = new Service( );
 }
 //-------------------------------------------------------------------
+	
+	//-----------------disableDateFields() disables date fields if "Patient Will Book" selected
+	var disableFields=false;
+</script>
 
-//-----------------disableDateFields() disables date fields if "Patient Will Book" selected
-var disableFields=false;
+<oscar:oscarPropertiesCheck defaultVal="false" value="true" property="CONSULTATION_PATIENT_WILL_BOOK">
+	<script type="text/javascript" >
 
-function disableDateFields(){
-	if(document.forms[0].patientWillBook.checked){
-		setDisabledDateFields(document.forms[0], true);
+	
+	function disableDateFields(){
+		if(document.forms[0].patientWillBook.checked){
+			setDisabledDateFields(document.forms[0], true);
+		}
+		else{
+			setDisabledDateFields(document.forms[0], false);
+		}
 	}
-	else{
+	</script>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck defaultVal="false" value="false" property="CONSULTATION_PATIENT_WILL_BOOK">
+	<script type="text/javascript" >
+	
+	function disableDateFields(){
+
 		setDisabledDateFields(document.forms[0], false);
+
 	}
+	</script>
+</oscar:oscarPropertiesCheck>
+
+
+<script type="text/javascript" >
+// btnReminders
+jQuery(document).ready(function(){
+	jQuery(".clinicalData").click(function(){
+		var data = new Object();
+		var target = "#" + this.id.split("_")[1];		
+		data.method = this.id.split("_")[0];
+		data.demographicNo = <%= demo %>;
+		getClinicalData( data, target )
+	});
+})
+
+function getClinicalData( data, target ) {
+	jQuery.ajax({
+		method : "POST",
+		url : "${ pageContext.request.contextPath }/oscarConsultationRequest/consultationClinicalData.do",
+		data : data,
+		dataType : 'JSON',
+		success: function(data) {
+			var json = JSON.parse(data);
+			jQuery(target).val( jQuery(target).val() + "\n" + json.note );			
+		}
+	});
 }
 
 function setDisabledDateFields(form, disabled)
@@ -1170,18 +1239,24 @@ function updateFaxButton() {
 			{
 				oscar.oscarDemographic.data.RxInformation RxInfo = new oscar.oscarDemographic.data.RxInformation();
                 EctViewRequestAction.fillFormValues(thisForm,consultUtil);
-				thisForm.setAllergies(RxInfo.getAllergies(loggedInInfo, demo));
-
-				if (props.getProperty("currentMedications", "").equalsIgnoreCase("otherMedications"))
-				{
-					oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request),demo);
-					thisForm.setCurrentMedications(EctInfo.getFamilyHistory());
-				}
-				else
-				{
-					thisForm.setCurrentMedications(RxInfo.getCurrentMedication(demo));
-				}
-
+				
+                if( "true".equalsIgnoreCase( props.getProperty("CONSULTATION_AUTO_INCLUDE_ALLERGIES", "true") ) ) { 
+                	String allergies = RxInfo.getAllergies( loggedInInfo, demo );
+					thisForm.setAllergies( allergies );
+                }
+                
+                if( "true".equalsIgnoreCase( props.getProperty( "CONSULTATION_AUTO_INCLUDE_MEDICATIONS", "true" ) ) ) {
+					if (props.getProperty("currentMedications", "").equalsIgnoreCase("otherMedications"))
+					{
+						oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation( loggedInInfo, demo );
+						thisForm.setCurrentMedications(EctInfo.getFamilyHistory());
+					}
+					else
+					{
+						thisForm.setCurrentMedications(RxInfo.getCurrentMedication(demo));
+					}
+                }
+                
 				team = consultUtil.getProviderTeam(consultUtil.mrp);
 			}
 
@@ -1225,7 +1300,11 @@ function updateFaxButton() {
 				<tr>
 					<td class="Header"
 						style="padding-left: 2px; padding-right: 2px; border-right: 2px solid #003399; text-align: left; font-size: 80%; font-weight: bold; width: 100%;"
-						NOWRAP><%=thisForm.getPatientName()%> <%=thisForm.getPatientSex()%>	<%=thisForm.getPatientAge()%></td>
+						NOWRAP>
+						<h2>
+						<%=thisForm.getPatientName()%> <%=thisForm.getPatientSex()%>	<%=thisForm.getPatientAge()%>
+						</h2>
+						</td>
 				</tr>
 			</table>
 			</td>
@@ -1240,7 +1319,7 @@ function updateFaxButton() {
 							<td class="stat" colspan="2"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCreated" />:</td>
 						</tr>
 						<tr>
-							<td class="stat" colspan="2" align="right" nowrap><%=thisForm.getProviderName()%>
+							<td class="stat" colspan="2"  nowrap><%=thisForm.getProviderName()%>
 							</td>
 						</tr>
 					</table>
@@ -1361,31 +1440,47 @@ function updateFaxButton() {
 						<input name="update" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
 						<input name="updateAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
 						<input name="printPreview" type="button" value="Print Preview" onclick="return checkForm('And Print Preview','EctConsultationFormRequestForm');" />
-						<input name="updateAndSendElectronicallyTop" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
-						<% if (faxEnabled) { %>
-						<input id="fax_button" name="updateAndFax" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>" onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
-						<% } %>
+												
+						<logic:equal value="true" name="EctConsultationFormRequestForm" property="eReferral">
+							<input name="updateAndSendElectronicallyTop" type="button" 
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" 
+								onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
+						</logic:equal>
+			
+						<oscar:oscarPropertiesCheck value="yes" property="faxEnable">
+							<input id="fax_button" name="updateAndFax" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>" onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
+						</oscar:oscarPropertiesCheck>
+
 					<% } else { %>
 						<input name="submitSaveOnly" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
 						<input name="submitAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>" onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); " />
-						<input name="submitAndSendElectronicallyTop" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndSendElectronicReferral"/>" onclick="return checkForm('Submit_esend','EctConsultationFormRequestForm');" />
-						<% if (faxEnabled) { %>
-						<input id="fax_button" name="submitAndFax" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>" onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
-					<% 	   } 
-					   }
-					   if (thisForm.iseReferral()) { %>
+
+						<logic:equal value="true" name="EctConsultationFormRequestForm" property="eReferral">
+							<input name="submitAndSendElectronicallyTop" type="button" 
+							value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndSendElectronicReferral"/>" 
+							onclick="return checkForm('Submit_esend','EctConsultationFormRequestForm');" />
+						</logic:equal>
+				
+						<oscar:oscarPropertiesCheck value="yes" property="faxEnable">
+							<input id="fax_button" name="submitAndFax" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>" onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
+						</oscar:oscarPropertiesCheck>
+
 						<input type="button" value="Send eResponse" onclick="$('saved').value='true';document.location='<%=thisForm.getOruR01UrlString(request)%>'" />
 					<% } %>
+					<logic:equal value="true" name="EctConsultationFormRequestForm" property="eReferral">
+						<input type="button" value="Send eResponse" onclick="$('saved').value='true';document.location='<%=thisForm.getOruR01UrlString(request)%>'" />
+					</logic:equal>
+					
 					</td>
-                                </tr>
-                    <tr>
+                    </tr>
+                    <tr class="consultDemographicData" >
 					<td>
 
-					<table border=0 width="100%">
+					<table height="100%" width="100%">
 						<% if (props.isConsultationFaxEnabled() && OscarProperties.getInstance().isPropertyActive("consultation_dynamic_labelling_enabled")) { %>
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAssociated2" />:</td>
-							<td align="right" class="tite1">
+							<td  class="tite1">
 								<html:select property="providerNo" onchange="switchProvider(this.value)">
 									<%
 										for (Provider p : prList) {
@@ -1403,37 +1498,48 @@ function updateFaxButton() {
 						</tr>
 						<% } %>
 						<tr>						
-							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formRefDate" />:
-							</td>
-							<td align="right" class="tite1">
-							<%
-								if (request.getAttribute("id") != null)
-										{
-							%> <html:text styleClass="righty" property="referalDate" /> <%
- 	}
- 			else
- 			{
- %> <html:text styleClass="righty" property="referalDate" value="<%=formattedDate%>" /> <%
- 	}
- %>
-							</td>
+						<td class="tite4">
+							<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formRefDate" />:
+						</td>
+								
+						<oscar:oscarPropertiesCheck value="false" property="CONSULTATION_LOCK_REFERRAL_DATE">	
+	                            <td class="tite3">
+	                            <img alt="calendar" id="referalDate_cal" src="../../images/cal.gif" /> 
+								<%
+								if (request.getAttribute("id") != null)	{
+								%> 
+								<html:text styleId="referalDate" property="referalDate" ondblclick="this.value='';"/>
+								 <%
+	 							} else {
+	 							%> 
+	 							<html:text styleId="referalDate" property="referalDate" ondblclick="this.value='';" value="<%=formattedDate%>"/>
+	 							<%
+	 							}
+		 						%>
+								</td>							
+						</oscar:oscarPropertiesCheck>
+						
+						<oscar:oscarPropertiesCheck value="true" property="CONSULTATION_LOCK_REFERRAL_DATE">
+						
+								<td  class="tite3" >
+									<html:text styleId="referalDate" property="referalDate" 
+										readonly="true" disabled="true" value="<%=formattedDate%>" />
+								</td>
+													
+						</oscar:oscarPropertiesCheck>
+
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formService" />:
 							</td>
-							<td align="right" class="tite1">
+							<td  class="tite1">
 								<html:select styleId="service" property="service" onchange="fillSpecialistSelect(this);">
-								<!-- <option value="-1">------ <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formServSelect"/> ------</option>
-					<option/>
-				    	<option/>
-			    		<option/>
-		    			<option/> -->
 							</html:select></td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCons" />:
 							</td>
-							<td align="right" class="tite2">
+							<td  class="tite2">
 							<%
 								if (thisForm.iseReferral())
 								{
@@ -1459,13 +1565,13 @@ function updateFaxButton() {
                                                     <td class="tite4">
                                                         <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formInstructions" />
                                                     </td>
-                                                    <td align="right" class="tite2">
+                                                    <td  class="tite2">
                                                         <textarea id="annotation" style="color: blue;" readonly></textarea>
                                                     </td>
                                                 </tr>
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formUrgency" /></td>
-							<td align="right" class="tite2">
+							<td  class="tite2">
 								<html:select property="urgency">
 									<html:option value="2">
 										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNUrgent" />
@@ -1482,42 +1588,67 @@ function updateFaxButton() {
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formPhone" />:
 							</td>
-							<td align="right" class="tite2"><input type="text" name="phone" class="righty" value="<%=thisForm.getProfessionalSpecialistPhone()%>" /></td>
+							<td  class="tite2"><input type="text" name="phone" class="righty" value="<%=thisForm.getProfessionalSpecialistPhone()%>" /></td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formFax" />:
 							</td>
-							<td align="right" class="tite3"><input type="text" name="fax" class="righty" /></td>
+							<td  class="tite3"><input type="text" name="fax" class="righty" /></td>
 						</tr>
 
 						<tr>
 							<td class="tite4">
 								<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAddr" />:
 							</td>
-							<td align="right" class="tite3">
+							<td  class="tite3">
 								<textarea name="address" cols=20 ><%=thisForm.getProfessionalSpecialistAddress()%></textarea>
 							</td>
 						</tr>
-						<tr>
-							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formPatientBook" />:</td>
-							<td align="right" class="tite3"><html:checkbox property="patientWillBook" value="1" onclick="disableDateFields()">
-							</html:checkbox></td>
-						</tr>
+	
+						<oscar:oscarPropertiesCheck defaultVal="false" value="true" property="CONSULTATION_APPOINTMENT_INSTRUCTIONS_LOOKUP">
+							<tr>
+								<td class="tite4">
+									<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.appointmentInstr" />
+								</td>
+								<td  class="tite3">														
+									<html:select property="appointmentInstructions" styleId="appointmentInstructions" >
+										<html:option value="" ></html:option>
+										<c:forEach items="${ appointmentInstructionList.items }" var="appointmentInstruction">
+											<%-- Ensure that only active items are shown --%>
+											<c:if test="${ appointmentInstruction.active }" >
+												<html:option value="${ appointmentInstruction.value }" >
+													<c:out value="${ appointmentInstruction.label }" />
+												</html:option>
+											</c:if>
+										</c:forEach>								
+									</html:select>
+								</td>
+							</tr>
+						</oscar:oscarPropertiesCheck>	
+						<oscar:oscarPropertiesCheck defaultVal="false" value="true" property="CONSULTATION_PATIENT_WILL_BOOK">
+							<tr>
+								<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formPatientBook" />:</td>
+								<td  class="tite3"><html:checkbox property="patientWillBook" value="1" onclick="disableDateFields()">
+								</html:checkbox></td>
+							</tr>
+						</oscar:oscarPropertiesCheck>
+	
+	
 						<tr>						
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" />:
 							</td>
-                            <td align="right" class="tite3"><img alt="calendar" id="appointmentDate_cal" src="../../images/cal.gif"> 
+                            <td  class="tite3"><img alt="calendar" id="appointmentDate_cal" src="../../images/cal.gif"> 
  							<html:text styleId="appointmentDate" property="appointmentDate" readonly="true" ondblclick="this.value='';" />
 							</td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message	key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentTime" />:
 							</td>
-							<td align="right" class="tite3">
+							<td  class="tite3">
 							<table>
 								<tr>
 									<td><html:select property="appointmentHour">
-										<html:option value=""></html:option>
+										<html:option value="-1">&nbsp;</html:option>
 										<%
 											for (int i = 1; i < 13; i = i + 1)
 														{
@@ -1529,7 +1660,7 @@ function updateFaxButton() {
 										%>
 									</html:select></td>
 									<td><html:select property="appointmentMinute">
-										<html:option value=""></html:option>
+										<html:option value="-1">&nbsp;</html:option>
 										<%
 											for (int i = 0; i < 60; i = i + 1)
 														{
@@ -1574,7 +1705,7 @@ function updateFaxButton() {
 					</table>
 					</td>
 					<td valign="top" cellspacing="1" class="tite4">
-					<table border=0 width="100%" bgcolor="white">
+					<table height="100%" width="100%" bgcolor="white">
 						<tr>
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPatient" />:
@@ -1671,7 +1802,11 @@ function updateFaxButton() {
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formLastFollowup" />:
 							</td>
-							<td colspan="2" class="tite3"><img alt="calendar" id="followUpDate_cal" src="../../images/cal.gif">&nbsp;<html:text styleId="followUpDate" property="followUpDate" readonly="true" ondblclick="this.value='';"/>
+							<td class="tite3">
+	                             <img alt="calendar" id="followUpDate_cal" src="../../images/cal.gif" />
+	                             <html:text styleId="followUpDate" property="followUpDate" ondblclick="this.value='';" />
+                             </td>
+						
 						</tr>
 						
 						<%
@@ -1692,7 +1827,7 @@ function updateFaxButton() {
 				</tr>
 				<tr>
 					<td colspan=2>
-					<table border=0 width="100%">
+					<table  width="100%">
 						<tr>
 						<%
 						String lhndType = "provider"; //set default as provider
@@ -1718,7 +1853,7 @@ function updateFaxButton() {
 						%>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.letterheadName" />:
 							</td>							
-							<td align="right" class="tite3">				
+							<td  class="tite3">				
 								<select name="letterheadName" id="letterheadName" onchange="switchProvider(this.value)">
 									<option value="<%=StringEscapeUtils.escapeHtml(clinic.getClinicName())%>" <%=(consultUtil.letterheadName != null && consultUtil.letterheadName.equalsIgnoreCase(clinic.getClinicName()) ? "selected='selected'" : lhndType.equals("clinic") ? "selected='selected'" : "" )%>><%=clinic.getClinicName() %></option>
 								<%
@@ -1749,7 +1884,7 @@ function updateFaxButton() {
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.letterheadAddress" />:
 							</td>
-							<td align="right" class="tite3">
+							<td  class="tite3">
 								<% if (consultUtil.letterheadAddress != null) { %>
 									<input type="hidden" name="letterheadAddress" id="letterheadAddress" value="<%=StringEscapeUtils.escapeHtml(consultUtil.letterheadAddress) %>" />
 									<span id="letterheadAddressSpan">
@@ -1766,7 +1901,7 @@ function updateFaxButton() {
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.letterheadPhone" />:
 							</td>
-							<td align="right" class="tite3">
+							<td  class="tite3">
 								<% if (consultUtil.letterheadPhone != null) {
 								%>
 									<input type="hidden" name="letterheadPhone" id="letterheadPhone" value="<%=StringEscapeUtils.escapeHtml(consultUtil.letterheadPhone) %>" />
@@ -1784,7 +1919,7 @@ function updateFaxButton() {
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.letterheadFax" />:
 							</td>
-							<td align="right" class="tite3">
+							<td  class="tite3">
 							   <%								
 									FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);
 									List<FaxConfig> faxConfigs = faxConfigDao.findAll(null, null);
@@ -1817,35 +1952,45 @@ function updateFaxButton() {
 				</tr>
 				<tr>
 					<td colspan=2><html:textarea property="reasonForConsultation"
-						cols="90" rows="3"></html:textarea></td>
+						cols="90" rows="6"></html:textarea></td>
 				</tr>
 				<tr>
 					<td colspan=2 class="tite4">
 					<table width="100%">
 						<tr>
-							<td width="30%" class="tite4"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formClinInf" />:
+							<td width="30%" rowspan="2" class="tite4">
+								<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formClinInf" />:						
 							</td>
 							<td id="clinicalInfoButtonBar">
 								<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].clinicalInformation);" />&nbsp;
 								<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].clinicalInformation);" />&nbsp;
 								<input id="btnOngoingConcerns" type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].clinicalInformation);" />&nbsp;
 								<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].clinicalInformation);" />&nbsp;
-								<input id="btnReminders" type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].clinicalInformation);" />&nbsp;
+
 								<span id="clinicalInfoButtons"></span>
+							</td>
+						</tr>
+						<tr>
+														<td>
+								<input id="btnReminders" type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].clinicalInformation);" />&nbsp;								
+								<input id="fetchRiskFactors_clinicalInformation" type="button" class="btn clinicalData" value="Risk Factors" />&nbsp;
+								<input id="fetchMedications_clinicalInformation" type="button" class="btn clinicalData" value="Medications" />&nbsp;
+								<input id="fetchLongTermMedications_clinicalInformation" type="button" class="btn clinicalData" value="Long Term Medications" />&nbsp;
+								
+								
 							</td>
 						</tr>
 					</table>
 				</tr>
 				<tr>
-					<td colspan=2><html:textarea cols="90" rows="10"
-						styleId="clinicalInformation" property="clinicalInformation"></html:textarea></td>
+					<td colspan=2>
+					<html:textarea cols="90" rows="10" styleId="clinicalInformation" property="clinicalInformation"></html:textarea></td>
 				</tr>
 				<tr>
 					<td colspan=2 class="tite4">
 					<table width="100%">
 						<tr>
-							<td width="30%" class="tite4">
+							<td width="30%" rowspan="2" class="tite4">
 							<%
 								if (props.getProperty("significantConcurrentProblemsTitle", "").length() > 1)
 										{
@@ -1864,7 +2009,17 @@ function updateFaxButton() {
 								<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].concurrentProblems);" />&nbsp;
 								<input id="btnOngoingConcerns2" type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].concurrentProblems);" />&nbsp;
 								<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].concurrentProblems);" />&nbsp;
+
+							</td>
+						</tr>
+						<tr>
+							
+							<td>
 								<input id="btnReminders2" type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].concurrentProblems);" />&nbsp;
+								<input id="fetchRiskFactors_concurrentProblems" type="button" class="btn clinicalData" value="Risk Factors" />&nbsp;
+								<input id="fetchMedications_concurrentProblems" type="button" class="btn clinicalData" value="Medications" />&nbsp;
+								<input id="fetchLongTermMedications_concurrentProblems" type="button" class="btn clinicalData" value="Long Term Medications" />&nbsp;
+								
 							</td>
 						</tr>
 					</table>
@@ -1872,8 +2027,9 @@ function updateFaxButton() {
 					</td>
 				</tr>
 				<tr id="trConcurrentProblems">
-					<td colspan=2><html:textarea cols="90" rows="3" styleId="concurrentProblems"
-						property="concurrentProblems">
+					<td colspan=2>
+					
+					<html:textarea cols="90" rows="6" styleId="concurrentProblems" property="concurrentProblems">
 
 					</html:textarea></td>
 				</tr>
@@ -1894,21 +2050,19 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 					<table width="100%">
 						<tr>
 							<td width="30%" class="tite4">
-							<%
-								if (props.getProperty("currentMedicationsTitle", "").length() > 1)
-										{
-											out.print(props.getProperty("currentMedicationsTitle", ""));
-										}
-										else
-										{
-							%> <bean:message
-								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications" />:
-							<%
- 	}
- %>
+								<% if (props.getProperty("currentMedicationsTitle", "").length() > 1) {
+									out.print( props.getProperty("currentMedicationsTitle", "") );
+								}else { %> 										
+									<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications" />:
+								<% }  %>
 							</td>
 							<td id="medsButtonBar">
-								<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].currentMedications);" />
+								<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" 
+								onclick="importFromEnct('OtherMeds',document.forms[0].currentMedications);" />
+								
+								<input id="fetchMedications_currentMedications" type="button" class="btn clinicalData" value="Medications" />&nbsp;
+								<input id="fetchLongTermMedications_currentMedications" type="button" class="btn clinicalData" value="Long Term Medications" />&nbsp;
+								
 								<span id="medsButtons"></span>
 							</td>
 						</tr>
@@ -1916,17 +2070,28 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 					</td>
 				</tr>
 				<tr>
-					<td colspan=2><html:textarea cols="90" rows="3" styleId="currentMedications"
-						property="currentMedications"></html:textarea></td>
-				</tr>
-				<tr>
-					<td colspan=2 class="tite4"><bean:message
-						key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAllergies" />:
+					<td colspan=2>
+						<html:textarea cols="90" rows="6" styleId="currentMedications" property="currentMedications"></html:textarea>
 					</td>
 				</tr>
 				<tr>
-					<td colspan=2><html:textarea cols="90" rows="3"
-						property="allergies"></html:textarea></td>
+					<td colspan=2  class="tite4" >
+						<table width="100%">
+						<tr>
+							<td width="30%" class="tite4">
+							<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAllergies" />:
+							</td>
+							<td>
+								<input id="fetchAllergies_allergies" type="button" class="btn clinicalData" value="Allergies" />
+							</td>
+						</tr>
+						
+						</table>
+					</td>
+					</tr>
+				<tr>
+					<td colspan=2>
+						<html:textarea cols="90" rows="6" styleId="allergies" property="allergies"></html:textarea></td>
 				</tr>
 
 <%
@@ -2011,7 +2176,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 							<td class="tite3" width="32%">
 								<input type="text" id="otherFaxInput"></input>
 
-							<font size="1">(xxx-xxx-xxxx)  </font></td>
+							<font size="1"> <bean:message key="global.phoneformat1" />  </font></td>
 							<td class="tite3">
 								<button onclick="AddOtherFax(); return false;">Add Other Fax Recipient</button>
 							</td>
@@ -2040,48 +2205,56 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 
 
 				<tr>
-					<td colspan=2><input type="hidden" name="submission" value="">
-					<%
-						if (request.getAttribute("id") != null)
-								{
-					%>
-						<input name="update" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
-						<input name="updateAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
-						<input name="updateAndSendElectronically" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
-						<%
-							if (props.getBooleanProperty("faxEnable", "yes"))
-										{
-						%>
-						<input id="fax_button2" name="updateAndFax" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>" onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
-						<%
-							}
-						%>
-					<%
-						}
-								else
-								{
-					%>
-						<input name="submitSaveOnly" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
-						<input name="submitAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>" onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); " />
-						<input name="submitAndSendElectronically" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndSendElectronicReferral"/>" onclick="return checkForm('Submit_esend','EctConsultationFormRequestForm');" />
-						<%
-							if (props.getBooleanProperty("faxEnable", "yes"))
-										{
-						%>
-						<input id="fax_button2" name="submitAndFax" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>" onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
-						<%
-							}
-						%>
-					<%
-						}
 
-						if (thisForm.iseReferral())
-						{
-							%>
+<td colspan=2>
+						<input type="hidden" name="submission" value="" />
+						
+						<%if (request.getAttribute("id") != null) {%>
+						
+							<input name="update" type="button" 
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" 
+								onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
+							<input name="updateAndPrint" type="button" 
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" 
+								onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
+							
+							<logic:equal value="true" name="EctConsultationFormRequestForm" property="eReferral">
+								<input name="updateAndSendElectronically" type="button" 
+									value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" 
+									onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
+							</logic:equal>
+							
+							<oscar:oscarPropertiesCheck value="yes" property="faxEnable">
+								<input id="fax_button2" name="updateAndFax" type="button" 
+									value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>" 
+									onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
+							</oscar:oscarPropertiesCheck>
+							
+						<%} else {%>
+						
+							<input name="submitSaveOnly" type="button" 
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" 
+								onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
+							<input name="submitAndPrint" type="button" 
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>" 
+								onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); " />
+								
+							<logic:equal value="true" property="eReferral" name="EctConsultationFormRequestForm" >
+								<input name="submitAndSendElectronically" type="button" 
+									value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndSendElectronicReferral"/>" 
+									onclick="return checkForm('Submit_esend','EctConsultationFormRequestForm');" />
+							</logic:equal>
+							<oscar:oscarPropertiesCheck value="yes" property="faxEnable">
+								<input id="fax_button2" name="submitAndFax" type="button" 
+									value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>" 
+									onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
+							</oscar:oscarPropertiesCheck>
+							
+						<% }%>
+						
+						<logic:equal value="true" name="EctConsultationFormRequestForm" property="eReferral">
 								<input type="button" value="Send eResponse" onclick="$('saved').value='true';document.location='<%=thisForm.getOruR01UrlString(request)%>'" />
-							<%
-						}
-						%>
+						</logic:equal>
 					</td>
 				</tr>
 
@@ -2155,8 +2328,10 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 
 <script type="text/javascript" language="javascript">
 
-Calendar.setup( { inputField : "followUpDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "followUpDate_cal", singleClick : true, step : 1 } );
-Calendar.setup( { inputField : "appointmentDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "appointmentDate_cal", singleClick : true, step : 1 } );
+Calendar.setup( { inputField : "followUpDate", ifFormat : "%Y/%m/%d", showsTime :false, trigger : "followUpDate", singleClick : true, step : 1 } );
+Calendar.setup( { inputField : "appointmentDate", ifFormat : "%Y/%m/%d", showsTime :false, trigger : "appointmentDate", singleClick : true, step : 1 } );
+Calendar.setup( { inputField : "referalDate", ifFormat : "%Y/%m/%d", showsTime :false, trigger : "referalDate", singleClick : true, step : 1 } );
+
 </script>
 </html:html>
 

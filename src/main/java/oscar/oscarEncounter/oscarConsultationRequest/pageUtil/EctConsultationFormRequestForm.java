@@ -116,6 +116,9 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	private Integer fdid;
 	private String source;
 	
+	private String appointmentInstructions;
+	private String appointmentInstructionsLabel;
+	
 	public String getProfessionalSpecialistName() {
 		return (StringUtils.trimToEmpty(professionalSpecialistName));
 	}
@@ -594,6 +597,22 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	public void setSource(String source) {
 		this.source = source;
 	}
-  
+	
+	public String getAppointmentInstructions() {
+		return appointmentInstructions;
+	}
+
+	public void setAppointmentInstructions(String appointmentInstructions) {
+		this.appointmentInstructions = appointmentInstructions;
+	}
+
+	public String getAppointmentInstructionsLabel() {
+		return appointmentInstructionsLabel;
+	}
+
+	public void setAppointmentInstructionsLabel(String appointmentInstructionsLabel) {
+		this.appointmentInstructionsLabel = appointmentInstructionsLabel;
+	}
+
 
 }

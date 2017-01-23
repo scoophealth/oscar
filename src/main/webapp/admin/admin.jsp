@@ -709,6 +709,13 @@ div.logoutBox {
 		<div class="adminBox">
 		<h3>&nbsp;<bean:message key="admin.admin.SystemManagement" /></h3>
 		<ul>
+		
+		<li><a href="javascript:void(0);" onclick="popupPage(550,800,&quot;<html:rewrite page="/lookupListManagerAction.do?method=manageSingle&listName=consultApptInst"/>&quot;);return false;" >
+			<bean:message key="admin.admin.oscarEncounter.consult.appointmentIntructions"/></a>
+		</li>
+		
+		<li><a href="javascript:void(0);" onclick="popupPage(550,800,&quot;<html:rewrite page="/lookupListManagerAction.do?method=manage"/>&quot;);return false;" ><bean:message key="admin.admin.lookUpLists"/></a></li>
+ 
 		<security:oscarSec roleName="<%=roleName$%>"
 			objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=false%>">
 			<li><a href="#"
