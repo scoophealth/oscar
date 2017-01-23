@@ -28,17 +28,19 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.NonUniqueResultException;
-
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.caisi_integrator.ws.CodeType;
 import org.oscarehr.caisi_integrator.ws.FacilityIdDemographicIssueCompositePk;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class CaseManagementIssueDAO extends HibernateDaoSupport {
 
+	private static Logger log = MiscUtils.getLogger();
+	
     @SuppressWarnings("unchecked")
     public List<CaseManagementIssue> getIssuesByDemographic(String demographic_no) {
         return this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ?", new Object[] {demographic_no});
@@ -72,14 +74,16 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
     }
 
     public CaseManagementIssue getIssuebyIssueCode(String demo, String issueCode) {
-        @SuppressWarnings("unchecked")
+    	@SuppressWarnings("unchecked")
         List<CaseManagementIssue> list = this.getHibernateTemplate().find("select cmi from CaseManagementIssue cmi, Issue issue where cmi.issue_id=issue.id and issue.code = ? and cmi.demographic_no = ?",new Object[]{issueCode,demo});
         
-        if(list == null || list.size()<1) return(null);
-        	
-        if (list.size() == 1 ) return list.get(0);
+        if(list.size()>1){ 
+        log.error("Expected 1 result got more : "+list.size() + "(" + demo + "," + issueCode + ")");
+        }
         
-        throw(new NonUniqueResultException("Expected 1 result got more : "+list.size() + "(" + demo + "," + issueCode + ")"));          
+        if (list.size() == 1 || list.size()>1) return list.get(0);
+
+        return null;
     }
 
     public void deleteIssueById(CaseManagementIssue issue) {
