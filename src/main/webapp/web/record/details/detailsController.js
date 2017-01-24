@@ -137,7 +137,12 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			else if (demo.extras[i].key=="rxInteractionWarningLevel") demo.scrRxInteractionLevel = demo.extras[i].value;
 			else if (demo.extras[i].key=="HasPrimaryCarePhysician") demo.hasPrimaryCarePhysician = demo.extras[i].value;
 			else if (demo.extras[i].key=="EmploymentStatus") demo.employmentStatus = demo.extras[i].value;
-			
+			else if (demo.extras[i].key=="statusNum") demo.scrStatusNum = demo.extras[i].value;
+			else if (demo.extras[i].key=="fNationCom") demo.scrFNationCom = demo.extras[i].value; 
+			else if (demo.extras[i].key=="fNationFamilyNumber") demo.scrFNationFamilyNumber = demo.extras[i].value;
+			else if (demo.extras[i].key=="fNationFamilyPosition") demo.scrFNationFamilyPosition = demo.extras[i].value;
+			else if (demo.extras[i].key=="ethnicity") demo.scrEthnicity = demo.extras[i].value;
+
 			//record array position of extras by keys - to be used on saving
 			posExtras[demo.extras[i].key] = i;
 		}
@@ -943,7 +948,6 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	}
 	$scope.validateHCSave();
 	
-	
 	//-----------------//
 	// save operations //
 	//-----------------//
@@ -1015,6 +1019,12 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		newDemoExtras = updateDemoExtras("rxInteractionWarningLevel", demo.scrRxInteractionLevel, posExtras, demo.extras, newDemoExtras);
 		newDemoExtras = updateDemoExtras("HasPrimaryCarePhysician", demo.hasPrimaryCarePhysician, posExtras, demo.extras, newDemoExtras);
 		newDemoExtras = updateDemoExtras("EmploymentStatus", demo.employmentStatus, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("statusNum", demo.scrStatusNum, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("fNationCom", demo.scrFNationCom, posExtras, demo.extras, newDemoExtras); 
+		newDemoExtras = updateDemoExtras("fNationFamilyNumber", demo.scrFNationFamilyNumber, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("fNationFamilyPosition", demo.scrFNationFamilyPosition, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("ethnicity", demo.scrEthnicity, posExtras, demo.extras, newDemoExtras);
+
 		demo.extras = newDemoExtras;
 		
 		//save to database

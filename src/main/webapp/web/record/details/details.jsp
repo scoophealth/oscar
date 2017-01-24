@@ -310,12 +310,68 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formEFFDate"/></label>
-			<input id="effDate" ng-model="page.demo.effDate" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.effDatePicker" ng-click="page.effDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.formEFFDate"/>" style="background-color:{{page.effDateColor}}" ng-change="preventManualEffDate()"/>
+			<input id="effDate" ng-model="page.demo.effDate" type="text" class="form-control form-control-details" 
+				datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.effDatePicker" 
+				ng-click="page.effDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.formEFFDate"/>" 
+				style="background-color:{{page.effDateColor}}" ng-change="preventManualEffDate()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formHCRenewDate"/></label>
-			<input id="hcRenewDate" ng-model="page.demo.hcRenewDate" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.hcRenewDatePicker" ng-click="page.hcRenewDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.formHCRenewDate"/>" style="background-color:{{page.hcRenewDateColor}}" ng-change="preventManualHcRenewDate()"/>
+			<input id="hcRenewDate" ng-model="page.demo.hcRenewDate" type="text" class="form-control form-control-details" 
+				datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.hcRenewDatePicker" 
+				ng-click="page.hcRenewDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.formHCRenewDate"/>" 
+				style="background-color:{{page.hcRenewDateColor}}" ng-change="preventManualHcRenewDate()"/>
 		</div>
+
+		<oscar:oscarPropertiesCheck value="true" defaultVal="false" property="FIRST_NATIONS_MODULE">  
+			<div class="col-md-6">
+				<label><bean:message key="demographic.firstnations.bandNumber" /></label>
+				<input type="text" id="statusNum" class="form-control form-control-details" ng-model="page.demo.scrStatusNum" />
+			</div>
+			
+			<oscar:oscarPropertiesCheck value="false" defaultVal="true" property="showBandNumberOnly">
+				
+				<div class="col-md-6">
+					<label><bean:message key="demographic.firstnations.bandName" /></label>
+					<input type="text" id="fNationCom" class="form-control form-control-details" ng-model="page.demo.scrFNationCom" />
+				</div>
+				
+				<div class="col-md-6">
+					<label><bean:message key="demographic.firstnations.familyNumber" /></label>
+					<input type="text" id="fNationFamilyNumber" class="form-control form-control-details" ng-model="page.demo.scrFNationFamilyNumber">	
+				</div>
+				
+				<div class="col-md-6">
+					<label><bean:message key="demographic.firstnations.familyPosition" /></label>
+					<input type="text" id="fNationFamilyPosition" class="form-control form-control-details" ng-model="page.demo.scrFNationFamilyPosition">
+				</div>
+				
+			</oscar:oscarPropertiesCheck>
+			
+			<oscar:oscarPropertiesCheck value="true" defaultVal="false" property="showBandNumberOnly">
+				<input type="hidden" id="fNationCom" ng-model="page.demo.scrFNationCom" />
+				<input type="hidden" id="fNationFamilyNumber" ng-model="page.demo.scrFNationFamilyNumber" />	
+				<input type="hidden" id="fNationFamilyPosition" ng-model="page.demo.scrFNationFamilyPosition" />			
+			</oscar:oscarPropertiesCheck>
+			
+			<div class="col-md-6">
+				<label><bean:message key="demographic.firstnations.status" /></label>
+				<select class="form-control form-control-details" ng-model="page.demo.scrEthnicity" >
+					<option value="-1" ${ page.demo.scrEthnicity eq -1 ? 'selected' : '' } >Not Set</option>
+					<option value="1" ${ page.demo.scrEthnicity eq 1 ? 'selected' : '' } >On-reserve</option>
+					<option value="2" ${ page.demo.scrEthnicity eq 2 ? 'selected' : '' } >Off-reserve</option>
+					<option value="3" ${ page.demo.scrEthnicity eq 3 ? 'selected' : '' } >Non-status On-reserve</option>
+					<option value="4" ${ page.demo.scrEthnicity eq 4 ? 'selected' : '' } >Non-status Off-reserve</option>
+					<option value="5" ${ page.demo.scrEthnicity eq 5 ? 'selected' : '' } >Metis</option>
+					<option value="6" ${ page.demo.scrEthnicity eq 6 ? 'selected' : '' } >Inuit</option>
+					<option value="11" ${ page.demo.scrEthnicity eq 11 ? 'selected' : '' } >Homeless</option>
+					<option value="12" ${ page.demo.scrEthnicity eq 12 ? 'selected' : '' } >Out of Country Residents</option>
+					<option value="13" ${ page.demo.scrEthnicity eq 13 ? 'selected' : '' } >Other</option>
+				</select> 
+			</div>
+			
+		</oscar:oscarPropertiesCheck>
+		
 	</div>
 	
 	<div class="form-group row">

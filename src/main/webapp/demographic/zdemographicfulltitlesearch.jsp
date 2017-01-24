@@ -48,7 +48,28 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 <script src="../js/jquery-1.9.1.min.js"></script>
-<script language="JavaScript">
+
+<script type="text/javascript">
+
+function checkdbstatus() {
+	if( document.titlesearch.search_mode.value == 'search_band_number' ) { 
+		document.titlesearch.dboperation.value = 'search_status_id_mysql'; 
+	} else {
+		 document.titlesearch.dboperation.value = 'search_titlename';
+	}
+}
+
+function encodeInput() {
+	checkdbstatus();
+	document.titlesearch.keyword.value = document.titlesearch.keyword.value.replace(/\"/g, "");
+	document.titlesearch.keyword.value = encodeURI(document.titlesearch.keyword.value);
+}
+
+function search() {
+	encodeInput();
+	if (checkTypeIn()) document.titlesearch.submit();
+}
+
 function searchInactive() {
     document.titlesearch.ptstatus.value="inactive";
     if (checkTypeIn()) document.titlesearch.submit();
@@ -108,6 +129,9 @@ function getExtraClauseData(x) {
 	    "       </option>"+
 	    "		<option value=\"search_program_no\">"+
 	    "            Program"+
+	    "       </option>"+
+	    "		<option value=\"search_band_number\">"+
+	    "            Band #"+
 	    "       </option>"+
 	    "     </select>"+
 	    "</li>"+
@@ -235,11 +259,12 @@ $(document).ready(function(){
              keyWord = "";
          }
      %>
-     
+
      	<input type="hidden" name="max_search_clause" id="max_search_clause" value="1"/>
      	
      	<img id="addBtn" src="../images/icons/103.png" border="0" onClick="addExtraSearchClause()"/>
          <select class="wideInput" name="search_mode" id="search_mode_0" onChange="updateKeywordField(0)">
+
             <option value="search_name" <%=searchMode.equals("search_name")?"selected":""%>>
                 <bean:message key="demographic.zdemographicfulltitlesearch.formName" />
             </option>
@@ -258,12 +283,21 @@ $(document).ready(function(){
             <option value="search_chart_no" <%=searchMode.equals("search_chart_no")?"selected":""%>>
                 <bean:message key="demographic.zdemographicfulltitlesearch.formChart" />
             </option>
+       
             <option value="search_demographic_no" <%=searchMode.equals("search_demographic_no")?"selected":""%>>
                 <bean:message key="demographic.zdemographicfulltitlesearch.formDemographicNo" />
             </option>
+
             <option value="search_program_no" <%=searchMode.equals("search_program_no")?"selected":""%>>
                 <bean:message key="demographic.zdemographicfulltitlesearch.formProgram" />
             </option>
+
+			 <oscar:oscarPropertiesCheck value="true" defaultVal="false" property="FIRST_NATIONS_MODULE">          
+		            <option value="search_band_number" <%=searchMode.equals("search_band_number")?"selected":""%> >
+		                <bean:message key="demographic.zdemographicfulltitlesearch.formBandNumber" />
+		            </option>
+			 </oscar:oscarPropertiesCheck>
+
          </select>
     </li>
     <li>
@@ -295,8 +329,8 @@ $(document).ready(function(){
         
     </li>
     <li>
-				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
-				<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename">
+	<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
+	<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename">
     <INPUT TYPE="hidden" NAME="limit1" VALUE="0">
     <INPUT TYPE="hidden" NAME="limit2" VALUE="10">
     <INPUT TYPE="hidden" NAME="displaymode" VALUE="Search">
@@ -304,7 +338,8 @@ $(document).ready(function(){
     <INPUT TYPE="hidden" NAME="fromMessenger" VALUE="<%=fromMessenger%>">
 					<INPUT TYPE="hidden" NAME="outofdomain" VALUE="">
     <INPUT TYPE="SUBMIT" class="rightButton blueButton top" VALUE="<bean:message key="demographic.zdemographicfulltitlesearch.msgSearch" />" SIZE="17"
-					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>">
+					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>" 
+					onclick="checkdbstatus();" >
 				&nbsp;&nbsp;&nbsp; <INPUT TYPE="button" onclick="searchInactive();"
 					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>"
 					VALUE="<bean:message key="demographic.search.Inactive"/>">
@@ -330,11 +365,7 @@ $(document).ready(function(){
     </li>
 </ul>
 
-<div id="extraSearchClauses">
-
-
-
-</div>
+<div id="extraSearchClauses"></div>
 
 </div>
 </form>

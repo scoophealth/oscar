@@ -84,7 +84,7 @@ public class WLWaitingListUtil {
 	 */
 	static public synchronized void updateWaitingListRecord(String waitingListID, String waitingListNote, String demographicNo, String onListSince) {
 		MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingListRecord(): waitingListID: " + waitingListID + " for patient " + demographicNo);
-		boolean isWatingIdSet = !waitingListID.equalsIgnoreCase("0") && !demographicNo.equalsIgnoreCase("0");
+		boolean isWatingIdSet = ! "0".equals(waitingListID) && ! "0".equals(demographicNo);
 		if (!isWatingIdSet) return;
 
 		WaitingListDao dao = SpringUtils.getBean(WaitingListDao.class);

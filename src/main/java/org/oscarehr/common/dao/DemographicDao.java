@@ -91,11 +91,14 @@ import oscar.util.SqlUtils;
 public class DemographicDao extends HibernateDaoSupport implements ApplicationEventPublisherAware {
 
 	private static final int MAX_SELECT_SIZE = 500;
-	
+
 	static Logger log = MiscUtils.getLogger();
 	
 	private ApplicationEventPublisher publisher;
-    
+	
+	public static enum SearchType { SEARCH_PHONE, SEARCH_DOB, 
+		SEARCH_ADDRESS, SEARCH_HIN, SEARCH_CHART_NO, SEARCH_DEMOGRAPHIC_NO, 
+		SEARCH_PROGRAM_NO, SEARCH_NAME, SEARCH_BAND_NUMBER}
 
 	/**
 	 * Finds merged demographic IDs for the specified demographic.
@@ -425,7 +428,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 	
 	public List<Demographic> doMultiSearch(List<String> searchTypes, List<String> searchStrs, int limit, int offset, String providerNo, boolean outOfDomain, boolean active, boolean inactive) {
 		List<Demographic> results = new ArrayList<Demographic>();
-		
+
 		//add program?
 		boolean leadingWildcard=false;
         if("true".equals(OscarProperties.getInstance().getProperty("search.searchName.addLeadingWildcard", "false"))) {
@@ -435,9 +438,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
         String pstatus = OscarProperties.getInstance().getProperty("inactive_statuses", "IN, DE, IC, ID, MO, FI");
     	pstatus = pstatus.replaceAll("'","").replaceAll("\\s", "");
     	List<String> inactiveStati = Arrays.asList(pstatus.split(","));
-    	
-        
-		
+
 		Map<String,Object> paramMap = new HashMap<String,Object>();
 		Map<String,Collection> paramListMap = new HashMap<String,Collection>();
 		
@@ -447,19 +448,20 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		for(int x=0;x<searchTypes.size();x++) {
 			
 			String searchType = searchTypes.get(x);
+			searchType = searchType.trim().toUpperCase();
 			String searchStr = searchStrs.get(x);
 	
 			if(x != 0) {
 				sql += " AND ";
 			}
 			
-			switch(searchType) {
+			switch( SearchType.valueOf( searchType ) ) {
 			
-			case "search_phone":
+			case SEARCH_PHONE :
 				sql += " (d.Phone like :phone"+x+" or d.Phone2 like :phone"+x+") ";
 				paramMap.put("phone"+x, searchStr.trim() + "%");
 				break;
-			case "search_dob":
+			case SEARCH_DOB:
 				sql += " (d.YearOfBirth like :yearOfBirth"+x+" AND d.MonthOfBirth like :monthOfBirth"+x+" AND d.DateOfBirth like :dateOfBirth"+x+") ";
 				String[] params = searchStr.split("-");
 				if (params.length != 3) {
@@ -470,19 +472,19 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 				paramMap.put("monthOfBirth"+x, params[1].trim() + "%");
 				paramMap.put("dateOfBirth"+x, params[2].trim() + "%");
 				break;
-			case "search_address":
+			case SEARCH_ADDRESS:
 				sql += " (d.Address like :address"+x+") ";
 				paramMap.put("address"+x, searchStr.trim() + "%");
 				break;
-			case "search_hin":
+			case SEARCH_HIN:
 				sql += " (d.Hin like :hin"+x+") ";
 				paramMap.put("hin"+x, searchStr.trim() + "%");
 				break;
-			case "search_chart_no":
+			case SEARCH_CHART_NO:
 				sql += " (d.ChartNo like :chartNo"+x+") ";
 				paramMap.put("chartNo"+x, searchStr.trim() + "%");
 				break;
-			case "search_demographic_no":
+			case SEARCH_DEMOGRAPHIC_NO:
 				sql += " (d.DemographicNo like :demographicNo"+x+") ";
 				Integer demoNo = null;
 				try {
@@ -493,7 +495,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 				}
 				paramMap.put("demographicNo"+x, demoNo);
 				break;
-			case "search_program_no":
+			case SEARCH_PROGRAM_NO:
 				sql += "(d.DemographicNo IN (select a.clientId from Admission a WHERE a.program.id = :programId and a.admissionStatus = :aStatus))";
 				Integer programNo = null;
 				try {
@@ -505,7 +507,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 				paramMap.put("programId", programNo);
 				paramMap.put("aStatus", Admission.STATUS_CURRENT);
 				break;
-			case "search_name":
+			case SEARCH_NAME:
 			default:	
 				sql += " (";
 				sql += " d.LastName like :lastName"+x+" ";

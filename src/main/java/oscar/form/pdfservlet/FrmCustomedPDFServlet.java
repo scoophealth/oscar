@@ -266,6 +266,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         private String patientDOB;
         private String patientHIN;
         private String patientChartNo;
+        private String bandNumber;
         private String pracNo;
 		private String sigDoctorName;
 		private String rxDate;
@@ -278,14 +279,17 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		public EndPage() {
 		}
 
-        public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress,
-                String patientName,String patientDOB, String sigDoctorName, String rxDate,String origPrintDate,String numPrint, String imgPath, String patientHIN, String patientChartNo,String pracNo, Locale locale) {
+
+		public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress,
+                String patientName,String patientDOB, String sigDoctorName, String rxDate,String origPrintDate,String numPrint, String imgPath, 
+                String patientHIN, String patientChartNo, String bandNumber, String pracNo, Locale locale) {
+
 			this.clinicName = clinicName==null ? "" : clinicName;
 			this.clinicTel = clinicTel==null ? "" : clinicTel;
 			this.clinicFax = clinicFax==null ? "" : clinicFax;
 			this.patientPhone = patientPhone==null ? "" : patientPhone;
 			this.patientCityPostal = patientCityPostal==null ? "" : patientCityPostal;
-			this.patientAddress = patientAddress==null ? "" : patientAddress;
+			this.patientAddress = patientAddress==null ? "" : patientAddress;	
 			this.patientName = patientName;
             this.patientDOB=patientDOB;
 			this.sigDoctorName = sigDoctorName==null ? "" : sigDoctorName;
@@ -301,6 +305,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			this.patientChartNo = patientChartNo==null ? "" : patientChartNo;
 			this.pracNo = pracNo==null ? "" : pracNo;
 			this.locale = locale;
+            this.bandNumber = bandNumber;            
+
 		}
 
 		@Override
@@ -348,6 +354,11 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                                 if (patientChartNo != null && !patientChartNo.isEmpty()) {
                                     String chartNoTitle = geti18nTagValue(locale, "oscar.oscarRx.chartNo") ;
                                     hStr.append(newline).append(chartNoTitle).append(patientChartNo);
+                                }
+                                
+                                if( bandNumber != null && ! bandNumber.isEmpty() ) {
+                                	String bandNumberTitle = org.oscarehr.util.LocaleUtils.getMessage(locale, "oscar.oscarRx.bandNumber");
+                                	 hStr.append(newline).append(bandNumberTitle).append(bandNumber);
                                 }
                                 
 				BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
@@ -540,6 +551,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         String imgFile=req.getParameter("imgFile");
         String patientHIN=req.getParameter("patientHIN");
         String patientChartNo = req.getParameter("patientChartNo");
+        String patientBandNumber = req.getParameter("bandNumber");
         String pracNo=req.getParameter("pracNo");
         Locale locale = req.getLocale();
         
@@ -644,7 +656,11 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
 			// writer = PdfWriter.getInstance(document, baosPDF);
 			writer = PdfWriterFactory.newInstance(document, baosPDF, FontSettings.HELVETICA_10PT);
-			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName,patientDOB, sigDoctorName, rxDate, origPrintDate, numPrint, imgFile, patientHIN, patientChartNo, pracNo, locale));
+			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, 
+					patientAddress, patientName,patientDOB, sigDoctorName, rxDate, origPrintDate, numPrint, 
+					imgFile, patientHIN, patientChartNo, patientBandNumber, pracNo, 
+					locale));
+
 			document.addTitle(title);
 			document.addSubject("");
 			document.addKeywords("pdf, itext");
