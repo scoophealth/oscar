@@ -50,8 +50,10 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
+
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="org.oscarehr.common.dao.OscarLogDao"%>
+<%@page import="org.oscarehr.managers.DemographicManager"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicTransfer"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
 <%@page import="org.oscarehr.casemgmt.service.CaseManagementManager"%>
@@ -321,6 +323,7 @@
                 demoList.add(demographicDao.getDemographicById(r));
             }
         } else {
+
         	//there's a list of searchMode/keyword doubles
         	List<String> searchModes = new ArrayList<String>();
         	List<String> keywords = new ArrayList<String>();
@@ -356,7 +359,7 @@
     				}
             	}
         	}
-            demoList = doSearch(demographicDao,searchModes,ptstatus,keywords,limit,offset,orderBy,providerNo,outOfDomain);	
+            demoList = doSearch(loggedInInfo, demographicDao,searchModes,ptstatus,keywords,limit,offset,orderBy,providerNo,outOfDomain);	
         }	
 	
         
@@ -365,6 +368,7 @@
         
 	boolean toggleLine = false;
 	boolean firstPageShowIntegratedResults = request.getParameter("firstPageShowIntegratedResults") != null && "true".equals(request.getParameter("firstPageShowIntegratedResults"));
+
 	int nItems=0;
 
 	if(demoList==null) {
@@ -399,8 +403,7 @@
 		else if(orderBy.equals("phone")) {
 			Collections.sort(demoList, Demographic.PhoneComparator);
 		}
-		
-		
+
 		@SuppressWarnings("unchecked")
 		  List<MatchingDemographicTransferScore> integratorSearchResults=(List<MatchingDemographicTransferScore>)request.getAttribute("integratorSearchResults");
 		  
@@ -582,16 +585,17 @@ Boolean isLocal(MatchingDemographicTransferScore matchingDemographicTransferScor
     
 }
 
-List<Demographic> doSearch(DemographicDao demographicDao,List<String> searchModes, String ptstatus, List<String> keywords, int limit, int offset, String orderBy, String providerNo, boolean outOfDomain) {
+List<Demographic> doSearch(LoggedInInfo loggedInInfo, DemographicDao demographicDao,List<String> searchModes, String ptstatus, List<String> keywords, int limit, int offset, String orderBy, String providerNo, boolean outOfDomain) {
+	
+	DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+	
 	List<Demographic> demoList = null;  
 
 	boolean active = ("".equals(ptstatus)) || ( "active".equals(ptstatus) );
 	boolean inactive = ("".equals(ptstatus)) || ( "inactive".equals(ptstatus) );
-	
 
-	demoList = demographicDao.doMultiSearch(searchModes, keywords, limit, offset, providerNo, outOfDomain, active, inactive);
+	demoList = demographicManager.doMultiSearch(loggedInInfo, searchModes, keywords, limit, offset, providerNo, outOfDomain, active, inactive);
 
-	
 	return demoList;
 }
 %>

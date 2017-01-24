@@ -43,6 +43,10 @@ import javax.persistence.Transient;
 @Table(name="demographicExt")
 public class DemographicExt extends AbstractModel<Integer> implements Serializable {
 
+	public static enum FIRST_NATION_KEY {
+		statusNum, ethnicity, aboriginal, fNationCom, fNationFamilyNumber, fNationFamilyPosition
+	}
+	
 	@Transient
     private int hashCode = Integer.MIN_VALUE;// primary key
 	@Id

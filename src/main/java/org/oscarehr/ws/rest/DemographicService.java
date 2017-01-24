@@ -476,10 +476,23 @@ public class DemographicService extends AbstractServiceImpl {
 		
 		if(json.getString("term").length() >= 1) {
 				
-			int count = demographicManager.searchPatientsCount(getLoggedInInfo(), req);
-
+			int count = 0;
+			
+			// this version of JPA cannot build join queries. This pre-query will not work with Demographic Extended data.
+			if( DemographicSearchRequest.SEARCHMODE.BandNumber.equals( req.getMode() ) ) {
+				count = 1;
+			} else {
+				count = demographicManager.searchPatientsCount(getLoggedInInfo(), req);
+			}
+			
 			if(count>0) {
+				
 				results = demographicManager.searchPatients(getLoggedInInfo(), req, startIndex, itemsToReturn);
+				
+				if( DemographicSearchRequest.SEARCHMODE.BandNumber.equals( req.getMode() ) ) {
+					count = results.size();
+				}
+				
 				response.setContent(results);
 				response.setTotal(count);
 			}

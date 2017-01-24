@@ -46,6 +46,7 @@
 <%@page import="org.oscarehr.common.dao.*"%>
 <%@page import="org.oscarehr.common.model.*"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.managers.DemographicManager"%>
 <%@page import="org.oscarehr.util.DigitalSignatureUtils"%>
 <%@page import="org.oscarehr.ui.servlet.ImageRenderingServlet"%>
 <!-- end -->
@@ -168,6 +169,7 @@ String patientPostal = patient.getPostal()==null ? "" : patient.getPostal();
 String patientPhone = patient.getPhone()==null ? "" : patient.getPhone();
 String patientHin = patient.getHin()==null ? "" : patient.getHin();
 
+DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 
 oscar.oscarRx.data.RxPrescriptionData.Prescription rx = null;
 int i;
@@ -182,6 +184,76 @@ if (hasSig){
 
 //doctorName = doctorName.replaceAll("\\d{6}","");
 //doctorName = doctorName.replaceAll("\\-","");
+
+if ( "true".equalsIgnoreCase(OscarProperties.getInstance().getProperty("FIRST_NATIONS_MODULE") ) ) {
+	// Addition of First Nations Band Number to prescriptions
+	DemographicExt demographicExtStatusNum = demographicManager.getDemographicExt(loggedInInfo, bean.getDemographicNo() , "statusNum" );
+	DemographicExt demographicExtBandName = null;
+	DemographicExt demographicExtBandFamily = null;	
+	DemographicExt demographicExtBandFamilyPosition = null;
+	String bandNumber = "";
+	String bandName = "";
+	String bandFamily = "";
+	String bandFamilyPosition = "";
+	
+	if( demographicExtStatusNum != null ) {
+		bandNumber = demographicExtStatusNum.getValue();
+	}
+	
+	if(bandNumber == null) {
+		bandNumber = "";
+	}
+	
+	// if band number is empty try the alternate composite.
+	if( bandNumber.isEmpty() ) {
+		
+		demographicExtBandName = demographicManager.getDemographicExt(loggedInInfo, bean.getDemographicNo(), "fNationCom");
+		demographicExtBandFamily = demographicManager.getDemographicExt(loggedInInfo, bean.getDemographicNo(), "fNationFamilyNumber");	
+		demographicExtBandFamilyPosition = demographicManager.getDemographicExt(loggedInInfo, bean.getDemographicNo(), "fNationFamilyPosition");
+		
+		if(demographicExtBandName != null ) {
+			bandName = demographicExtBandName.getValue();
+		}
+		
+		if(demographicExtBandFamily != null  ) {
+			bandFamily = demographicExtBandFamily.getValue();
+		}
+		
+		if(demographicExtBandFamilyPosition != null ) {
+			bandFamilyPosition = demographicExtBandFamilyPosition.getValue();
+		}
+		
+		if(bandName == null) {
+			bandName = "";
+		}
+		
+		if(bandFamily == null) {
+			bandFamily = "";
+		}
+		
+		if(bandFamilyPosition == null) {
+			bandFamilyPosition = "";
+		}
+		
+		StringBuilder bandNumberString = new StringBuilder(); 
+		
+		if( ! bandName.isEmpty() ) {
+			bandNumberString.append(bandName);
+		}
+		
+		if( ! bandFamily.isEmpty() ) {
+			bandNumberString.append("-" + bandFamily);
+		}
+		
+		if( ! bandFamilyPosition.isEmpty() ) {
+			bandNumberString.append("-" + bandFamilyPosition);
+		}
+		
+		bandNumber = bandNumberString.toString();
+	}
+	
+	pageContext.setAttribute("bandNumber", bandNumber);
+}
 
 OscarProperties props = OscarProperties.getInstance();
 
@@ -367,6 +439,7 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                             <input type="hidden" name="patientCityPostal" value="<%= StringEscapeUtils.escapeHtml(patientCityPostal)%>" />
                                             <input type="hidden" name="patientHIN" value="<%= StringEscapeUtils.escapeHtml(patientHin) %>" />
                                             <input type="hidden" name="patientChartNo" value="<%=StringEscapeUtils.escapeHtml(ptChartNo)%>" />
+                                            <input type="hidden" name="bandNumber" value="${ bandNumber }" />
                                             <input type="hidden" name="patientPhone"
                                                     value="<bean:message key="RxPreview.msgTel"/><%=StringEscapeUtils.escapeHtml(patientPhone) %>" />
 
@@ -446,14 +519,28 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                                     <tr>
                                                             <td align=left valign=top><br>
                                                                 <%= patient.getFirstName() %> <%= patient.getSurname() %> <%if(showPatientDOB){%>&nbsp;&nbsp; DOB:<%= StringEscapeUtils.escapeHtml(patientDOBStr) %> <%}%><br>
-                                                            <%= patientAddress %><br>
-                                                            <%= patientCityPostal %><br>
-                                                            <%= patientPhone %><br>
-                                                            <b> <% if(!props.getProperty("showRxHin", "").equals("false")) { %>
-                                                            <bean:message key="oscar.oscarRx.hin" /><%= patientHin %> <% } %>                                                            
-                                                            </b><br>
+
+                                                            <%= patient.getAddress() %><br>
+                                                            <%= patientPostal %><br>
+                                                            <%= patient.getPhone() %>
+                                                           <oscar:oscarPropertiesCheck value="true" property="showRxBandNumber">	
+                                                            	<c:if test="${ not empty bandNumber }">
+                                                            	<br />
+	                                                            <b><bean:message key="oscar.oscarRx.bandNumber" /></b>	  
+	                                                            	<c:out value="${ bandNumber }" />
+                                                            	</c:if>
+                                                            </oscar:oscarPropertiesCheck>
+                                                            <% if(!props.getProperty("showRxHin", "").equals("false")) { %>
+                                                            <br />
+                      										<b><bean:message key="oscar.oscarRx.hin" /></b>                                                           
+                                                            <%= patient.getHin() %>                                                             
+                                                            <% } %>                                                                                                                        
+
                                                                 <% if(props.getProperty("showRxChartNo", "").equalsIgnoreCase("true")) { %>
-                                                            <bean:message key="oscar.oscarRx.chartNo" /><%=ptChartNo%><% } %></td>
+                                                            <bean:message key="oscar.oscarRx.chartNo" /><%=ptChartNo%>
+                                                            <% } %>
+                                                            
+                                                            </td>
                                                             <td align=right valign=top><b> <%= oscar.oscarRx.util.RxUtil.DateToString(rxDate, "MMMM d, yyyy",request.getLocale()) %>
                                                             </b></td>
                                                     </tr>

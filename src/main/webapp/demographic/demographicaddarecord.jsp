@@ -320,6 +320,7 @@
 		}
 
        String proNo = (String) session.getValue("user");
+
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "hPhoneExt", request.getParameter("hPhoneExt"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "wPhoneExt", request.getParameter("wPhoneExt"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "demo_cell", request.getParameter("demo_cell"), "");
@@ -337,11 +338,13 @@
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "privacyConsent", request.getParameter("privacyConsent"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "informedConsent", request.getParameter("informedConsent"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "IPHISClientNumber", request.getParameter("IPHISClientNumber"),"");
+
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "PanoramaClientNumber", request.getParameter("PanoramaClientNumber"),"");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "IscisClientNumber", request.getParameter("IscisClientNumber"),"");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "OhissClientNumber", request.getParameter("OhissClientNumber"),"");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "EpiInfoClientNumber", request.getParameter("EpiInfoClientNumber"),"");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "HedgehogClientNumber", request.getParameter("HedgehogClientNumber"),"");
+
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "HasPrimaryCarePhysician", request.getParameter("HasPrimaryCarePhysician"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "EmploymentStatus", request.getParameter("EmploymentStatus"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "recipientLocation", request.getParameter("recipientLocation"), "");
@@ -351,9 +354,10 @@
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "lastNameAtBirth", request.getParameter("lastNameAtBirth"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "preferredName", request.getParameter("preferredName"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "maritalStatus", request.getParameter("maritalStatus"), "");
+      
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "fNationFamilyNumber",    request.getParameter("fNationFamilyNumber"),    "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "fNationFamilyPosition",    request.getParameter("fNationFamilyPosition"),    "");
 
-       
-       
        //for the IBD clinic
 		OtherIdManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
 

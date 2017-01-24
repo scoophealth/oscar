@@ -191,9 +191,8 @@ if(!authed) {
 
 	Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 	ProvinceNames pNames = ProvinceNames.getInstance();
-	Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(Integer.parseInt(demographic_no));
 
-	
+	Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(Integer.parseInt(demographic_no));	
 	String usSigned = StringUtils.defaultString(apptMainBean.getString(demoExt.get("usSigned")));
     String privacyConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("privacyConsent")), "");
 	String informedConsent = StringUtils.defaultString(apptMainBean.getString(demoExt.get("informedConsent")), "");
@@ -203,6 +202,8 @@ if(!authed) {
 	String OhissClientNumber = StringUtils.defaultString(apptMainBean.getString(demoExt.get("OhissClientNumber")),"");	
 	String EpiInfoClientNumber = StringUtils.defaultString(apptMainBean.getString(demoExt.get("EpiInfoClientNumber")),"");	
 	String HedgehogClientNumber = StringUtils.defaultString(apptMainBean.getString(demoExt.get("HedgehogClientNumber")),"");	
+
+	pageContext.setAttribute("demoExtended", demoExt);
 
 	
 	
@@ -374,6 +375,18 @@ var demographicNo='<%=demographic_no%>';
                                 	alert = alert==null?"":alert;	
                                 	midwife = midwife==null?"":midwife;
                                 	notes = notes==null?"":notes;                               	
+                                }
+                                
+                                if( resident == null ) {
+                                	resident = "";
+                                }
+                                
+                                if( nurse == null ) {
+                                	nurse = "";
+                                }
+                                
+                                if( midwife == null ) {
+                                	midwife = "";
                                 }
 
                                 // Demographic demographic=demographicDao.getDemographic(demographic_no);
@@ -1014,14 +1027,17 @@ if(oscarProps.getProperty("new_label_print") != null && oscarProps.getProperty("
                                                    <span class="info"><%=sp_lang%></span>
 							</li>
 						<% } %>
-						
-						<% String aboriginal = StringUtils.trimToEmpty(demoExt.get("aboriginal"));
-						   if (aboriginal!=null && aboriginal.length()>0) { %>
-                                               <li><span class="label"><bean:message key="demographic.demographiceditdemographic.aboriginal"/>:</span>
-                                                   <span class="info"><%=aboriginal%></span>
-							</li>
-						<% }
-						  if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
+ 
+						 <oscar:oscarPropertiesCheck value="true" defaultVal="false" property="FIRST_NATIONS_MODULE">  
+	                           <li><span class="label">
+	                           	First Nations:</span>
+	                            <span class="info">
+	                            	<c:out value='${ pageScope.demoExtended["aboriginal"] }' />
+	                            </span>
+								</li>
+						  </oscar:oscarPropertiesCheck> 
+
+						 <% if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
                                               String fieldJSP = oscarProps.getProperty("EXTRA_DEMO_FIELDS");
                                               fieldJSP+= "View.jsp";
                                             %>
@@ -1439,6 +1455,19 @@ if ( Dead.equals(PatStat) ) {%>
                                                         <span class="info"><%=MyDateFormat.getMyStandardDate(demographic.getHcRenewDate())%></span>
                                                     </li>
 						</ul>
+						
+						<%-- TOGGLE FIRST NATIONS MODULE --%>
+
+						<oscar:oscarPropertiesCheck value="true" defaultVal="false" property="FIRST_NATIONS_MODULE">
+						                  
+											<jsp:include page="./displayFirstNationsModule.jsp" flush="false">
+												<jsp:param name="demo" value="<%= demographic_no %>" />
+											</jsp:include>
+						
+						</oscar:oscarPropertiesCheck>						
+						
+						<%-- END TOGGLE FIRST NATIONS MODULE --%>
+						
 						</div>
 
 <%-- TOGGLE WORKFLOW_ENHANCE - SHOWS PATIENTS INTERNAL PROVIDERS AND RELATED SCHEDULE AVAIL --%>
@@ -1961,6 +1990,7 @@ if ( Dead.equals(PatStat) ) {%>
 							    </td>
 							</tr>
 							<tr>
+
                                 <td align="right">
 							    <b><bean:message key="demographic.demographiceditdemographic.msgSpoken"/>: </b>
 							    </td>
@@ -1972,7 +2002,28 @@ if ( Dead.equals(PatStat) ) {%>
 <%} %>
 									</select>
 							    </td>
-							    <td colspan="2">&nbsp;</td>
+
+							 <oscar:oscarPropertiesCheck value="true" defaultVal="false" property="FIRST_NATIONS_MODULE">   
+							    <td align="right"><b>First Nations: </b></td>
+								<td align="left">
+								
+								<select name="aboriginal" <%=getDisabled("aboriginal")%>>
+									<option value="" ${ pageScope.demoExtended["aboriginal"] eq '' ? 'selected' : '' } >
+										Unknown
+									</option>
+									<option value="No" ${ pageScope.demoExtended["aboriginal"] eq 'No' ? 'selected' : '' } >
+										No
+									</option>
+									<option value="Yes" ${ pageScope.demoExtended["aboriginal"] eq 'Yes' ? 'selected' : '' } >
+										Yes
+									</option>
+						
+								</select>
+								<input type="hidden" name="aboriginalOrig"
+									value="${ pageScope.demoExtended["aboriginal"] }" />
+								</td>
+							 </oscar:oscarPropertiesCheck> 
+
 							</tr>
 
 							<tr valign="top">
@@ -2154,22 +2205,7 @@ if ( Dead.equals(PatStat) ) {%>
 								        <%if(newsletter.equals("Electronic")){%> selected <%}%>><bean:message
 								        key="demographic.demographicaddrecordhtm.formNewsLetter.optElectronic" /></option>
 								</select></td>
-								<td align="right"><b><bean:message
-									key="demographic.demographiceditdemographic.aboriginal" />: </b></td>
-								<td align="left">
-								
-								<select name="aboriginal" <%=getDisabled("aboriginal")%>>
-									<option value="" <%if(aboriginal.equals("")){%>
-										selected <%}%>>Unknown</option>
-									<option value="No" <%if(aboriginal.equals("No")){%> selected
-										<%}%>>No</option>
-									<option value="Yes" <%if(aboriginal.equals("Yes")){%>
-										selected <%}%>>Yes</option>
-						
-								</select>
-								<input type="hidden" name="aboriginalOrig"
-									value="<%=StringUtils.trimToEmpty(demoExt.get("aboriginal"))%>" />
-								</td>
+			
 							</tr>
 							<tr valign="top">
 								<td align="right"><b><bean:message
@@ -2418,10 +2454,25 @@ if ( Dead.equals(PatStat) ) {%>
 									value="<%=StringUtils.trimToEmpty(demoExt.get("cytolNum"))%>" />
 								</td>
 							</tr>
+				
+							<tr>
+							<td colspan="8">
+							
+							<%-- TOGGLE FIRST NATIONS MODULE --%>							    
+							<oscar:oscarPropertiesCheck value="true" defaultVal="false" property="FIRST_NATIONS_MODULE">
+							
+									<jsp:include page="manageFirstNationsModule.jsp" flush="false">
+										<jsp:param name="demo" value="<%= demographic_no %>" />
+									</jsp:include>
+															
+							</oscar:oscarPropertiesCheck>
+							<%-- END TOGGLE FIRST NATIONS MODULE --%>
+							
+							</td>								
+							</tr>
 
-<%-- TOGGLE OFF PATIENT CLINIC STATUS --%>
-<oscar:oscarPropertiesCheck property="DEMOGRAPHIC_PATIENT_CLINIC_STATUS" value="true">
-
+				<%-- TOGGLE OFF PATIENT CLINIC STATUS --%>
+				<oscar:oscarPropertiesCheck property="DEMOGRAPHIC_PATIENT_CLINIC_STATUS" value="true">
 							<tr valign="top">
 								<td align="right" nowrap><b>
 								<% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
@@ -3073,7 +3124,6 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 							</tr>
 </oscar:oscarPropertiesCheck>
 <%-- END WAITING LIST MODULE --%>
-
 
 
 <%-- AUTHOR DENNIS WARREN O/A COLCAMEX RESOURCES --%>

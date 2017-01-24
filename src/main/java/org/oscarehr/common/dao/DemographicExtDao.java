@@ -87,6 +87,25 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
  		return result;
  	}
 
+ 	@SuppressWarnings("unchecked")
+	public List<DemographicExt> searchDemographicExtByKeyAndValue( String key, String value ) { 
+
+ 		List<DemographicExt> results = null;		
+ 		Query query;
+ 		
+ 		if( key != null && ! key.isEmpty() ) {
+ 			
+ 			key = key.trim();
+ 			value = value.trim() + "%"; 
+ 			query = entityManager.createQuery("SELECT d from DemographicExt d where d.key = ? and d.value LIKE ?");
+ 	 		query.setParameter(1, key);
+ 	 		query.setParameter(2, value);
+
+ 	 		results = query.getResultList();
+ 		}
+
+ 	    return results;
+ 	}
  	
  	public List<DemographicExt> getDemographicExtByKeyAndValue(String key,String value) {
 

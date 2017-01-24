@@ -280,6 +280,8 @@
 	extensions.add(new DemographicExt(request.getParameter("area_id"), proNo, demographicNo, "area", request.getParameter("area")));
 	extensions.add(new DemographicExt(request.getParameter("statusNum_id"), proNo, demographicNo, "statusNum",  request.getParameter("statusNum")));
 	extensions.add(new DemographicExt(request.getParameter("fNationCom_id"), proNo, demographicNo, "fNationCom", request.getParameter("fNationCom")));
+	extensions.add(new DemographicExt( request.getParameter("fNationFamilyPositionOrig"), proNo, demographicNo,"fNationFamilyPosition", request.getParameter("fNationFamilyPosition") ));
+	extensions.add(new DemographicExt(request.getParameter("fNationFamilyNumberOrig"), proNo, demographicNo,"fNationFamilyNumber", request.getParameter("fNationFamilyNumber")));
 	extensions.add(new DemographicExt(request.getParameter("given_consent_id"), proNo, demographicNo, "given_consent", request.getParameter("given_consent")));
 	extensions.add(new DemographicExt(request.getParameter("rxInteractionWarningLevel_id"), proNo, demographicNo, "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel")));
 	extensions.add(new DemographicExt(request.getParameter("primaryEMR_id"), proNo, demographicNo, "primaryEMR", request.getParameter("primaryEMR")));
@@ -467,7 +469,7 @@
 		<input type="hidden" name="dboperation" value="search_detail" /> 
 
 <%
-	if(!request.getParameter("list_id").equalsIgnoreCase("0")){
+	if(!  "0".equals( request.getParameter("list_id") )){
 		String wlDemoId = request.getParameter("demographic_no");
 		String wlId = request.getParameter("list_id");
 	
