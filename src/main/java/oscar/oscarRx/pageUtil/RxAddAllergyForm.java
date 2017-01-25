@@ -44,6 +44,7 @@ public final class RxAddAllergyForm extends ActionForm {
     String lifeStage = null;
     String severityOfReaction = null;
     String onSetOfReaction = null;
+    String allergyToInactivate = null;
     
     public String getLifeStage() {
     	return lifeStage;
@@ -161,5 +162,13 @@ public final class RxAddAllergyForm extends ActionForm {
      */
     public void setOnSetOfReaction(java.lang.String onSetOfReaction) {
        this.onSetOfReaction = onSetOfReaction;
+    }
+    
+    public String getAllergyToInactivate() {
+    	return allergyToInactivate;
+    }
+    
+    public void setAllergyToInactivate(String allergyToInactivate) {
+    	this.allergyToInactivate = allergyToInactivate;
     }
 }
