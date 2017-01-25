@@ -879,7 +879,7 @@ disabledSuboxoneDays = function(rand) {
 		<%-- option value="limitUse">Limited Use</option --%>
 	</select>
 	<input type="hidden" name="reasonCode_<%=rand%>" id="codeTxt_<%=rand%>" />
-	<input type="text" class="codeTxt" name="jsonDxSearch_<%=rand%>" id="jsonDxSearch_<%=rand%>" />
+	<input type="text" class="codeTxt" name="jsonDxSearch_<%=rand%>" id="jsonDxSearch_<%=rand%>" placeholder="Search Dx" />
 <br />
      <%-- Splice in the Indication field --%>
      
@@ -1239,16 +1239,15 @@ carrySuboxone = function(which) {
                } else {
                        jQuery('#rx_save_updates_<%=rand%>').hide();
                }
-               
-               	var sourceid = "";
+
 				var idindex = "";
                jQuery( "input[id*='jsonDxSearch']" ).autocomplete({	
        			source: function(request, response) {
        				
-       				sourceid = this.element[0].id;
-       				if( sourceid.contains("_") ) {
-       					idindex = "_" + sourceid.split("_")[1];
-       				}
+       				var elementid = this.element[0].id;
+	   				if( elementid.indexOf("_") > 0 ) {
+	   					idindex = "_" + elementid.split("_")[1];
+	   				}
        				       				
        				jQuery.ajax({
        				    url: ctx + "/dxCodeSearchJSON.do",
@@ -1287,21 +1286,7 @@ carrySuboxone = function(which) {
        			}
        		})
 
-       		jQuery( "input[id*='jsonDxSearch']" )
-       		.val("Search")
-       		.css('color','grey')
-       		.focus(function(){
-       			if(this.value == "Search"){
-       		         this.value = "";
-       		         jQuery( "#" + this.id ).css('color','black');
-       		    } 			
-       		}).blur(function(){
-       		    if(this.value==""){
-       		         this.value = "Search";	
-       		         jQuery( "#" + this.id  ).css('color','grey');
-       		    } 
-       		});
-               <%if (OscarProperties.getInstance().isPropertyActive("enable_rx_custom_methodone_suboxone")){%>
+            <%if (OscarProperties.getInstance().isPropertyActive("enable_rx_custom_methodone_suboxone")){%>
                jQuery("input[name^='rxModules']").change(function() {
                   	// get rand value
                   	var name = jQuery(this).attr("name").split("_");
@@ -1553,6 +1538,7 @@ carrySuboxone = function(which) {
                   	}
                   });
 		  <%}%>
+
        });
 </script>
 

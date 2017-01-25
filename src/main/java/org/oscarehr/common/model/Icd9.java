@@ -71,6 +71,8 @@ public class Icd9 extends AbstractCodeSystemModel<Integer> {
         this.description = description;
     }
 
+
+    @Transient
     public String getSynonym() {
     	String synonym = "";
     	if( getSynonymData() != null ) {
@@ -82,12 +84,12 @@ public class Icd9 extends AbstractCodeSystemModel<Integer> {
     	return synonym;
     }
 
-	@Transient
+    @Transient
 	public Icd9Synonym getSynonymData() {
 		return synonym;
 	}
 
-	@Transient
+    @Transient
 	public void setSynonymData(Icd9Synonym synonym) {
 		this.synonym = synonym;
 	}
