@@ -109,21 +109,24 @@ $(document).ready( function() {
 			// override the old addReaction.do with the new addReaction2.do
 			var path = "${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do"
 			var param = this.href.split("?")[1];
+			var iNKDA = document.forms.searchAllergy2.iNKDA.value;
+			param += "&allergyToInactivate="+iNKDA;
 			sendSearchRequest(path, param, "#addAllergyDialogue");
 			$("#searchResultsContainer").html("");
 		});
 		
 		//--> delete allergy.
 		$(".deleteAllergyLink").bind("click", function(event){
-			var id = this.id;
-			var param = id.split("_")[1].trim();
+			var ids = this.id.split("_");
+			var action = ids[0].split(":")[1];
+			var param = ids[1].trim();
 			var allergyId = param.split("&")[0];
 			allergyId = allergyId.split("=")[1].trim()
 			$("#allergy_" + allergyId).addClass("highLightRow");
 
 			var path = "${ pageContext.servletContext.contextPath }/oscarRx/deleteAllergy2.do";
 
-			if( confirm(" Inactivate this Allergy? ") ) {
+			if( confirm(action+" this Allergy?") ) {
 				sendSearchRequest(path, param, ".Step1Text");
 			}
 		});
@@ -212,28 +215,13 @@ $(document).ready( function() {
 		$(".ControlPushButton").removeClass("highLightButton");
 	})
 
-	//--> delete allergy.
-	$(".deleteAllergyLink").click(function(){
-		var id = this.id;
-		var param = id.split("_")[1].trim();
-		var allergyId = param.split("&")[0];
-		allergyId = allergyId.split("=")[1].trim()
-		$("#allergy_" + allergyId).addClass("highLightRow");
-
-		var path = "${ pageContext.servletContext.contextPath }/oscarRx/deleteAllergy.do";
-
-		if( confirm(" Inactivate this Allergy? ") ) {
-			sendSearchRequest(path, param, "")
-		}
-	})
-
 	$().bindActionEvents();
 	$().setDefaults();
 
 }); //--> end document ready
 
 	//--> AJAX the data to the server.
-	function sendSearchRequest(path, param, target) { 	
+	function sendSearchRequest(path, param, target) {
 		$.ajax({
 		    url: path,
 		    type: 'POST',
@@ -243,6 +231,7 @@ $(document).ready( function() {
 		    	renderSearchResults(data, target);  	
 		    }
 		});
+		if (path.indexOf("deleteAllergy")>=0) location.reload();
 	}
 
 	//--> Render response html 
@@ -310,7 +299,6 @@ $(document).ready( function() {
         if(isEmpty() == true){
             name = name.toUpperCase();
             confirm("Adding custom allergy: " + name);
-            /*          window.location="addReaction2.do?ID=0&type=0&name="+name; */
             sendSearchRequest("${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do",
             		"ID=0&type=0&name="+name,"#addAllergyDialogue");
             $("input[value='Custom Allergy']").addClass("highLightButton");
@@ -320,26 +308,35 @@ $(document).ready( function() {
     
     function addPenicillinAllergy(){
     	$(".highLightButton").removeClass("highLightButton");
+    	var iNKDA = document.forms.searchAllergy2.iNKDA.value;
     	sendSearchRequest("${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do", 
-    	    	"ID=44452&name=PENICILLINS&type=10", "#addAllergyDialogue");
+    	    	"ID=44452&name=PENICILLINS&type=10&allergyToInactivate="+iNKDA, "#addAllergyDialogue");
     	$("input[value='Penicillin']").addClass("highLightButton");
-    	/* window.location="addReaction2.do?ID=44452&name=PENICILLINS&type=10"; */
     }
     
     function addSulfonamideAllergy(){
     	$(".highLightButton").removeClass("highLightButton");
+    	var iNKDA = document.forms.searchAllergy2.iNKDA.value;
     	sendSearchRequest("${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do",
-    	    	"ID=44159&name=SULFONAMIDES&type=10","#addAllergyDialogue");
+    	    	"ID=44159&name=SULFONAMIDES&type=10&allergyToInactivate="+iNKDA,"#addAllergyDialogue");
     	$("input[value='Sulfa']").addClass("highLightButton");
-/*             window.location="addReaction2.do?ID=44159&name=SULFONAMIDES&type=10"; */
     }
     
     function addCustomNKDA(){
+    	var hasDrugAllergy = document.forms.searchAllergy2.hasDrugAllergy.value;
+    	if (hasDrugAllergy=="true") {
+    		alert("Active drug allergy exists!");
+    		return;
+    	}
+    	var iNKDA = document.forms.searchAllergy2.iNKDA.value;
+    	if (iNKDA>0) {
+    		alert("\"No Known Drug Allergies\" already exists!");
+    		return;
+    	}
     	$(".highLightButton").removeClass("highLightButton");
     	sendSearchRequest("${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do",
     	    	"ID=0&type=0&name=No Known Drug Allergies","#addAllergyDialogue");
     	$("input[value='NKDA']").addClass("highLightButton");
-/*             window.location="addReaction2.do?ID=0&type=0&name=NKDA"; */
     }
 
   
@@ -423,6 +420,7 @@ $(document).ready( function() {
 					 }
 
 					 String strView=request.getParameter("view");
+					 if (strView==null) strView = "Active";
 
 					 String[] navArray={"Active","All","Inactive"};
 
@@ -430,13 +428,13 @@ $(document).ready( function() {
 					 for(i=0;i<navArray.length;i++)
 					 {
 
-						if( (strView!=null && strView.equals(navArray[i]) || ( strView==null && i==0 ) )){
+						if( strView.equals(navArray[i]) ){
 
 							out.print(" <span class='view_selected'>"+navArray[i]+"</span>");
 
 
 						}else{
-							out.print("<span class='view_menu'><a href='ShowAllergies2.do?demographicNo="+demoNo+"&view="+navArray[i]+"'>");
+							out.print("<span class='view_menu'><a href='ShowAllergies2.jsp?demographicNo="+demoNo+"&view="+navArray[i]+"'>");
 								out.print(navArray[i]);
 							out.print("</a></span>");
 						}
@@ -508,10 +506,16 @@ $(document).ready( function() {
 							String labelConfirmAction;
 							String strSOR;
 							int intSOR;
+							boolean hasDrugAllergy=false;
+							int iNKDA = 0;
 							
 							for(org.oscarehr.common.model.Allergy allergy : patient.getAllergies(LoggedInInfo.getLoggedInInfoFromSession(request))) {
-						
-
+								
+								if (!allergy.getArchived()) {
+									if (allergy.getTypeCode()>1) hasDrugAllergy = true;
+									if (allergy.getDescription().equals("No Known Drug Allergies")) iNKDA = allergy.getId();
+								}
+								
 								String title = "";
 								if(allergy.getRegionalIdentifier() != null && !allergy.getRegionalIdentifier().trim().equalsIgnoreCase("null") && !allergy.getRegionalIdentifier().trim().equals("")){
 									 title=  " title=\"Din: "+allergy.getRegionalIdentifier()+"\" ";
@@ -524,11 +528,11 @@ $(document).ready( function() {
 								{
 									intArchived = Integer.parseInt(strArchived);
 
-									if(bean.getView().equals("Active") && intArchived == 1) {
+									if(strView.equals("Active") && intArchived == 1) {
 										filterOut=true;
 									}
 
-									if(bean.getView().equals("Inactive") && intArchived == 0) {
+									if(strView.equals("Inactive") && intArchived == 0) {
 										filterOut=true;
 									}
 								}
@@ -602,7 +606,7 @@ $(document).ready( function() {
 										if(!allergy.isIntegratorResult() && securityManager.hasDeleteAccess("_allergies",roleName$)) {
 									%>
 									<a href="#" class="deleteAllergyLink" 
-										id="deleteAllergy_ID=<%= allergy.getAllergyId() %>&demographicNo=<%=demoNo %>&action=<%=actionPath %>" >
+										id="deleteAllergy:<%= labelAction %>_ID=<%= allergy.getAllergyId() %>&demographicNo=<%=demoNo %>&action=<%=actionPath %>" >
 										<%=labelAction%>
 									</a>
 									
@@ -610,8 +614,9 @@ $(document).ready( function() {
 									</td>
 								</tr>
 								<% } %>
-								<% } //end of iterate %>
-
+							<% } //end of iterate
+								if (hasDrugAllergy) iNKDA = 0;
+							%>
 						</table>
 	
 						<%=allergy_colour_codes%>
@@ -625,6 +630,10 @@ $(document).ready( function() {
 			
 				<td>
 					<form action="/oscarRx/searchAllergy2.do" focus="searchString" id="searchAllergy2"  >
+					
+					<input type="hidden" name="iNKDA" value="<%=iNKDA%>"/>
+					<input type="hidden" name="hasDrugAllergy" value="<%=hasDrugAllergy%>"/>
+					
 					<table>
 					<tr><th>Add an Allergy</th></tr>
 						<tr id="allergyQuickButtonRow" >
@@ -668,120 +677,6 @@ $(document).ready( function() {
 			<tr>
 				<td id="searchResultsContainer" ></td>
 			</tr>
-
-			<%-- this block has no purpose 
-			if(securityManager.hasWriteAccess("_allergies",roleName$)) {--%>
-			
-			
-			
-	<%-- It's becoming difficult to maintain this and the identical ChooseAllergy2.jsp page.
-	Modifications are made by combining ChooseAllergy2.jsp with this page.		
-	<tr>
-				<td>
-				<div class="DivContentSectionHead"><bean:message
-					key="EditAllergies.section3Title" /></div>
-				</td>
-			</tr>
-			<tr>
-				<td><html:form action="/oscarRx/searchAllergy2"
-					focus="searchString" onsubmit="return isEmpty()">
-					<table>
-						<tr>
-							<td>Search:</td>
-                        </tr>
-                        <tr>
-                            <td><html:text property="searchString" size="50" styleId="searchString" maxlength="50" /></td>
-						</tr>
-						<tr>
-							<td><html:submit property="submit" value="Search"
-								styleClass="ControlPushButton" />
-
-								<input type=button class="ControlPushButton"
-								onclick="javascript:document.forms.RxSearchAllergyForm.searchString.value='';document.forms.RxSearchAllergyForm.searchString.focus();"
-								value="Reset" />
-
-                               <input type=button class="ControlPushButton" onclick="javascript:addCustomAllergy();" value="Custom Allergy" />
-                           <%
-                           String shPref;
-                           String showClose;
-                           if (props.getProperty("ALLERGIES_SIMPLE_SEARCH", "").equals("1")) { %>
-                           		<a href="#" onclick="show_Search_Criteria();">Advanced Search</a>
-                           <%
-
-                            shPref="display:none";
-                            showClose="<a href='#' onclick='show_Search_Criteria();'>Close [x]</a>";
-                            }else{
-
-                            shPref="";
-                            showClose="";
-                            }
-                           %>
-                            </td>
-						</tr>
-					</table>
-
-                      <table bgcolor="#F5F5F5" cellpadding="3" id="advancedSearch" style="<%=shPref%>">
-						<tr>
-							<td colspan="3">Search the following categories: <i>(Listed
-							general to specific)</i></td>
-							<td align="right"><%=showClose%></td>
-						</tr>
-
-						<tr>
-							<td><html:checkbox property="type4" /> Drug Classes</td>
-							<td><html:checkbox property="type3" /> Ingredients</td>
-							<td><html:checkbox property="type2" /> Generic Names</td>
-							<td><html:checkbox property="type1" /> Brand Names</td>
-						</tr>
-						<tr>
-							<td colspan=4><script language=javascript>
-                                    function typeSelect(){
-                                        var frm = document.forms.RxSearchAllergyForm;
-
-                                        frm.type1.checked = true;
-                                        frm.type2.checked = true;
-                                        frm.type3.checked = true;
-                                        frm.type4.checked = true;
-                                        //frm.type5.checked = true;
-                                    }
-
-                                    function initialTypeSelect(){
-                                        var frm = document.forms.RxSearchAllergyForm;
-
-                                        frm.type1.checked = true;
-                                        frm.type2.checked = true;
-                                        frm.type3.checked = false;
-                                        frm.type4.checked = true;
-                                        //frm.type5.checked = true;
-                                    }
-
-                                    function typeClear(){
-                                        var frm = document.forms.RxSearchAllergyForm;
-
-                                        frm.type1.checked = false;
-                                        frm.type2.checked = false;
-                                        frm.type3.checked = false;
-                                        frm.type4.checked = false;
-                                        frm.type5.checked = false;
-                                    }
-
-                                    initialTypeSelect();
-                                </script> <input type=button
-								class="ControlPushButton" onclick="javascript:typeSelect();"
-								value="Select All" /> <input type=button
-								class="ControlPushButton" onclick="javascript:typeClear();"
-								value="Clear All" /></td>
-						</tr>
-					</table>
-
-				</html:form> 
-				<%
-                        String sBack="SearchDrug3.jsp";
-                      %> <input type=button class="ControlPushButton"
-					onclick="javascript:window.location.href='<%=sBack%>';"
-					value="Back to Search Drug" /></td>
-			</tr> --%>
-			<!----End new rows here-->
 			
 		</table>
 		</td>

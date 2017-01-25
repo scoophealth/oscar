@@ -67,7 +67,8 @@ public final class RxAddAllergyAction extends Action {
             String severityOfReaction = request.getParameter("severityOfReaction");
             String onSetOfReaction = request.getParameter("onSetOfReaction");
             String lifeStage = request.getParameter("lifeStage");
-
+            String allergyToInactivate = request.getParameter("allergyToInactivate");
+            
             RxPatientData.Patient patient = (RxPatientData.Patient)request.getSession().getAttribute("Patient");
             
             Allergy allergy = new Allergy();
@@ -107,7 +108,12 @@ public final class RxAddAllergyAction extends Action {
 
             String ip = request.getRemoteAddr();
             LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_ALLERGY, ""+allerg.getAllergyId() , ip,""+patient.getDemographicNo(), allergy.getAuditString());
-
+            
+            if (allergyToInactivate!=null && !allergyToInactivate.isEmpty() && !allergyToInactivate.equals("0")) {
+            	patient.deleteAllergy(Integer.parseInt(allergyToInactivate));
+            	LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ARCHIVE, LogConst.CON_ALLERGY, ""+allergyToInactivate , ip,""+patient.getDemographicNo(), null);
+            }
+            
             return (mapping.findForward("success"));
     }
 
