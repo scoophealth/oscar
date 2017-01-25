@@ -64,6 +64,9 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 String name = (String) request.getAttribute("name");
 String type = (String) request.getAttribute("type");
 String allergyId = (String) request.getAttribute("allergyId");
+String allergyToInactivate = (String) request.getAttribute("allergyToInactivate");
+
+boolean isNKDA = "No Known Drug Allergies".equals(name);
 %>
 
 <link rel="stylesheet" type="text/css" href="styles.css">
@@ -100,6 +103,41 @@ String allergyId = (String) request.getAttribute("allergyId");
 			<tr>
 				<td id="addAllergyDialogue"><html:form action="/oscarRx/addAllergy2"
 					focus="reactionDescription">
+					
+					<script type="text/javascript">
+						function checkStartDate() {
+							var field = document.forms.RxAddAllergyForm.startDate;
+							if (field.value.trim()!="") {
+								var t = /^\d{4}(-[0-1]*\d{1}(-[0-3]*\d{1})*)*$/;
+								var startDate = new Date(field.value);
+								
+								if (!t.test(field.value) || startDate=="Invalid Date") {
+									alert("Invalid Start Date");
+									setTimeout(function(){ field.focus(); }, 100);
+								}
+							}
+						}
+						
+						function checkAgeOfOnset() {
+							var field = document.forms.RxAddAllergyForm.ageOfOnset;
+							if (field.value.trim()!="") {
+								var t = /^\d{1,3}$/;
+								if (!t.test(field.value)) {
+									alert("Invalid Age of Onset (3-digit integer only)");
+									setTimeout(function(){ field.focus(); }, 100);
+								}
+							}
+						}
+						
+						function confirmRemoveNKDA() {
+							var field = document.forms.RxAddAllergyForm.allergyToInactivate;
+							if (field.value>0) {
+								var yes = confirm("Remove \"No Known Drug Allergies\" from list?");
+								if (!yes) field.value = 0;
+							}
+						}
+					</script>
+					
 					<table>
 						<tr id="addReactionSubheading">
 							<td>
@@ -107,26 +145,35 @@ String allergyId = (String) request.getAttribute("allergyId");
 							</td>
 						</tr>
 						<tr valign="center">
-
 							<td>
-							<span class="label">Comment: </span>
-							<html:textarea
-								property="reactionDescription" cols="40" rows="3" /> <html:hidden
-								property="ID" value="<%=allergyId%>" /> <html:hidden
-								property="name" value="<%=name%>" /> <html:hidden
-								property="type" value="<%=type%>" /></td>
+								<span class="label">Comment: </span>
+								<html:textarea property="reactionDescription" cols="40" rows="3" />
+								<html:hidden property="ID" value="<%=allergyId%>" />
+								<html:hidden property="name" value="<%=name%>" />
+								<html:hidden property="type" value="<%=type%>" />
+								<html:hidden property="allergyToInactivate" value="<%=allergyToInactivate%>" />
+							</td>
 						</tr>
-
+<% if (type.equals("0") && !isNKDA) { %>
+						<tr valign="center">
+							<td> <span class="label">Custom Allergy Type:</span> 
+	                                <html:select property="type">
+	                                	<html:option value="0">Allergy</html:option>
+	                                	<html:option value="-1">Intolerance</html:option>
+	                                </html:select>
+	                        </td>
+						</tr>
+<% } %>
 						<tr valign="center">
 							<td ><span class="label">Start Date:</span> <html:text
-								property="startDate" size="10" maxlength="10"/>
+								property="startDate" size="10" maxlength="10" onblur="checkStartDate();"/>
 							    (yyyy-mm-dd OR yyyy-mm OR yyyy)</td>
 
 						</tr>
 
 						<tr valign="center">
 							<td><span class="label">Age Of Onset:</span> <html:text
-								property="ageOfOnset" size="4" maxlength="4" /></td>
+								property="ageOfOnset" size="4" maxlength="4" onblur="checkAgeOfOnset();"/></td>
 
 						</tr>
 						
@@ -143,8 +190,12 @@ String allergyId = (String) request.getAttribute("allergyId");
 	                                </html:select>
 	                        </td>
 						</tr>
+						
+<% if (isNKDA) { %>
+						<html:hidden property="severityOfReaction" value="1" />
+						<html:hidden property="onSetOfReaction" value="1" />
+<% } else { %>
 						<tr valign="center">
-
 							<td ><span class="label">Severity Of Reaction:</span> <html:select
 								property="severityOfReaction">
 								<html:option value="1">Mild</html:option>
@@ -152,11 +203,9 @@ String allergyId = (String) request.getAttribute("allergyId");
 								<html:option value="3">Severe</html:option>
 								<html:option value="4">Unknown</html:option>
 							</html:select></td>
-
 						</tr>
 
 						<tr valign="center">
-
 							<td ><span class="label">Onset Of Reaction:</span> <html:select
 								property="onSetOfReaction">
 								<html:option value="1">Immediate</html:option>
@@ -164,16 +213,17 @@ String allergyId = (String) request.getAttribute("allergyId");
 								<html:option value="3">Slow</html:option>
 								<html:option value="4">Unknown</html:option>
 							</html:select></td>
-
 						</tr>
-
+<% } %>
 
 						<tr>
-							<td ><html:submit property="submit"
-								value="Add Allergy" styleClass="ControlPushButton" /> <input
-								type=button class="ControlPushButton" id="cancelAddReactionButton"
-								onclick="window.location='ShowAllergies2.jsp?demographicNo=<%=bean.getDemographicNo() %>'"
-								value="Cancel" /></td>
+							<td>
+								<html:submit property="submit" value="Add Allergy" styleClass="ControlPushButton"
+									onclick="confirmRemoveNKDA()" />
+								<input type=button class="ControlPushButton" id="cancelAddReactionButton"
+									onclick="window.location='ShowAllergies2.jsp?demographicNo=<%=bean.getDemographicNo() %>'"
+									value="Cancel" />
+							</td>
 						</tr>
 					</table>
         
