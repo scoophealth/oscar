@@ -387,6 +387,12 @@ public class Allergy extends AbstractModel<Integer> {
             case 14:
                 s = "Ingredient";
                 break;
+            case 0:
+            	s = "Custom Allergy";
+            	break;
+            case 1:
+            	s = "Intolerance";
+            	break;
             default:
                 s = "";
         }
