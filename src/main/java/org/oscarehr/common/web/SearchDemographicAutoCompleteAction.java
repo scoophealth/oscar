@@ -95,7 +95,7 @@ public class SearchDemographicAutoCompleteAction extends Action {
         List<Demographic> list = null;
 
         if (searchStr.length() == 8 && searchStr.matches("([0-9]*)")) {
-            list = demographicDao.searchDemographicByDOB(searchStr.substring(0,4)+"-"+searchStr.substring(4,6)+"-"+searchStr.substring(6,8), 100, 0,providerNo,outOfDomain);
+            list = demographicDao.searchMergedDemographicByDOB(searchStr.substring(0,4)+"-"+searchStr.substring(4,6)+"-"+searchStr.substring(6,8), 100, 0,providerNo,outOfDomain);
         } 
         else if( activeOnly ) {
         	OscarProperties props = OscarProperties.getInstance();
@@ -103,13 +103,13 @@ public class SearchDemographicAutoCompleteAction extends Action {
             pstatus = pstatus.replaceAll("'","").replaceAll("\\s", "");
             List<String>stati = Arrays.asList(pstatus.split(","));
 
-        	list = demographicDao.searchDemographicByNameAndNotStatus(searchStr, stati, 100, 0, providerNo, outOfDomain);
+        	list = demographicDao.searchDemographicByNameAndNotStatus(searchStr, stati, 100, 0, providerNo, outOfDomain,true);
         	if(list.size() == 100) {
         		MiscUtils.getLogger().warn("More results exists than returned");
         	}
         }
         else {
-        	list = demographicDao.searchDemographicByName(searchStr, 100, 0, providerNo, outOfDomain);
+        	list = demographicDao.searchMergedDemographicByName(searchStr, 100, 0, providerNo, outOfDomain);
         	if(list.size() == 100) {
         		MiscUtils.getLogger().warn("More results exists than returned");
         	}
