@@ -13,14 +13,11 @@ DB_DEST=oscar_tmp
 # Tranfer data for only one provider each time
 PROVIDER_NO='999998'
 
-# The provider no. in the destination database  (Not Complete
-PROVIDER_NO_FINIAL=$PROVIDER_NO;
-
 DOCUMENT_DIR=/var/lib/OscarDocument/oscar_mcmaster/document
 
 
 echo "## Get Demographic list"
-DEMO_LIST=$(mysql  -uroot -p$MYSQL_PASS $DB_SOURCE --skip-column-names --vertical -e "select demographic_no from demographic where  provider_no = $PROVIDER_NO " | grep -v row |  tr "\\n" "," | sed -e 's/,$//' )
+DEMO_LIST=$(mysql  -uroot -p$MYSQL_PASS $DB_SOURCE --skip-column-names --vertical -e "select demographic_no from demographic where  provider_no in ($PROVIDER_NO) " | grep -v row |  tr "\\n" "," | sed -e 's/,$//' )
 echo "DEMO_LIST $DEMO_LIST"
 
 echo "#################### demographic info #################" $(date)
@@ -46,12 +43,6 @@ mysql -uroot -p$MYSQL_PASS -e "create index demoExt_provider_no on $DB_DEST.demo
 echo "create index demoExt_provider_no= $?" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index relationships_provider_no on $DB_DEST.relationships(creator);"
 echo "create index relationships_provider_no= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.demographic set $DB_DEST.demographic.provider_no=$PROVIDER_NO_FINIAL where $DB_DEST.demographic.provider_no=$PROVIDER_NO ; "
-echo "update $DB_DEST.demographic set $DB_DEST.demographic.provider_no= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.demographicExt set $DB_DEST.demographicExt.provider_no=$PROVIDER_NO_FINIAL where $DB_DEST.demographicExt.provider_no=$PROVIDER_NO ; "
-echo "update $DB_DEST.demographicExt set $DB_DEST.demographicExt= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.relationships set $DB_DEST.relationships.creator=$PROVIDER_NO_FINIAL where $DB_DEST.relationships.creator=$PROVIDER_NO ; "
-echo "update $DB_DEST.relationships set $DB_DEST.relationships= $?" $(date)
 
 echo "#################### billing info ##################" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index billing1_demo_no on $DB_SOURCE.billing_on_cheader1(demographic_no);"
@@ -80,8 +71,6 @@ mysql -uroot -p$MYSQL_PASS -e "create table $DB_DEST.billing_on_ext select * fro
 echo "create table $DB_DEST.billing_on_ext= $?" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index billing_on_cheader1_provider_no on $DB_DEST.billing_on_cheader1(provider_no);"
 echo "create index billing_on_cheader1_provider_no= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.billing_on_cheader1 set $DB_DEST.billing_on_cheader1.provider_no=$PROVIDER_NO_FINIAL where $DB_DEST.billing_on_cheader1.provider_no=$PROVIDER_NO ; "
-echo "update $DB_DEST.billing_on_cheader1 = $?" $(date)
 
 
 echo "################### document info ##################" $(date)
@@ -101,8 +90,6 @@ mysql -uroot -p$MYSQL_PASS < documentCopy.sql
 echo "create table $DB_DEST.document select= $?" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index document_provider_id on $DB_DEST.document(doccreator);"
 echo "create index document_provider_id = $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.document set $DB_DEST.document.doccreator=$PROVIDER_NO_FINIAL where $DB_DEST.document.doccreator=$PROVIDER_NO ; "
-echo "update $DB_DEST.document set $DB_DEST.document.doccreator= $?" $(date)
 
 echo "################### note info ###################" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index note_demo_no on $DB_SOURCE.casemgmt_note(demographic_no);"
@@ -147,12 +134,6 @@ mysql -uroot -p$MYSQL_PASS -e "create index casemgmt_cpp_provider_id on $DB_DEST
 echo "create index casemgmt_cpp_provider_id= $?" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index admission_provider_id on $DB_DEST.admission(provider_no);"
 echo "create index admission_provider_id= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.casemgmt_note set $DB_DEST.casemgmt_note.provider_no=$PROVIDER_NO_FINIAL where $DB_DEST.casemgmt_note.provider_no=$PROVIDER_NO ; "
-echo "update $DB_DEST.casemgmt_note= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.casemgmt_cpp set $DB_DEST.casemgmt_cpp.provider_no=$PROVIDER_NO_FINIAL where $DB_DEST.casemgmt_cpp.provider_no=$PROVIDER_NO ; "
-echo "update $DB_DEST.casemgmt_cpp= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.admission set $DB_DEST.admission.provider_no=$PROVIDER_NO_FINIAL where $DB_DEST.admission.provider_no=$PROVIDER_NO ; "
-echo "update $DB_DEST.admission set $DB_DEST.admission.provider_no= $?" $(date)
 
 echo "################## eform info ##################" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index eform_demo_no on $DB_SOURCE.eform_data(demographic_no);"
@@ -167,8 +148,6 @@ mysql -uroot -p$MYSQL_PASS -e "create table $DB_DEST.eform_values select * from 
 echo "create table $DB_DEST.eform_values= $?" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index eform_provider_no on $DB_DEST.eform_data(form_provider);"
 echo "create index eform_provider_no= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.eform_data set $DB_DEST.eform_data.form_provider=$PROVIDER_NO_FINIAL where $DB_DEST.eform_data.form_provider=$PROVIDER_NO ; "
-echo "update $DB_DEST.eform_data set= $?" $(date)
 
 echo "################## form info ###################" $(date)
 
@@ -206,10 +185,6 @@ mysql -uroot -p$MYSQL_PASS -e "create index allergeis_provider_no on $DB_DEST.al
 echo "create index allergeis_provider_no= $?" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index drugs_provider_no on $DB_DEST.drugs(provider_no);"
 echo "create index drugs_provider_no = $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.allergies set $DB_DEST.allergies.providerNo=$PROVIDER_NO_FINIAL where $DB_DEST.allergies.providerNo=$PROVIDER_NO ; "
-echo "update $DB_DEST.allergies= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.drugs set $DB_DEST.drugs.provider_no=$PROVIDER_NO_FINIAL where $DB_DEST.drugs.provider_no=$PROVIDER_NO ; "
-echo "update $DB_DEST.drugs= $?" $(date)
 
 echo "################## disease reg info ################" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index dx_demo_no on $DB_SOURCE.dxresearch(demographic_no);"
@@ -230,8 +205,6 @@ mysql -uroot -p$MYSQL_PASS   <  preventionExtCopy.sql
 echo "create table $DB_DEST.preventionsExt= $?" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index preventions_provider_no on $DB_DEST.preventions(provider_no);"
 echo "create index preventions_provider_no= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.preventions set $DB_DEST.preventions.provider_no=$PROVIDER_NO_FINIAL where $DB_DEST.preventions.provider_no=$PROVIDER_NO ; "
-echo "update $DB_DEST.preventions set= $?" $(date)
 
 echo "################## consultation info ################" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index con_demo_no on $DB_SOURCE.consultationRequests(demographicNo);"
@@ -246,8 +219,6 @@ mysql -uroot -p$MYSQL_PASS -e "create table $DB_DEST.consultationServices select
 echo "create table $DB_DEST.consultationServices= $?" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index con_provider_no on $DB_DEST.consultationRequests(providerNo);"
 echo "create index con_provider_no= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.consultationRequests set $DB_DEST.consultationRequests.providerNo=$PROVIDER_NO_FINIAL ; "
-echo "update $DB_DEST.consultationRequests= $?" $(date)
 
 echo "################## measurement info #################" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index meas_demo_no on $DB_SOURCE.measurements(demographicNo);"
@@ -256,8 +227,6 @@ mysql -uroot -p$MYSQL_PASS -e "create table $DB_DEST.measurements select * from 
 echo "create table $DB_DEST.measurements= $?" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index measurement_provider_no on $DB_DEST.measurements(providerNo);"
 echo "create index measurement_provider_no= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.measurements set $DB_DEST.measurements.providerNo=$PROVIDER_NO_FINIAL where $DB_DEST.measurements.providerNo=$PROVIDER_NO ; "
-echo "update $DB_DEST.measurements= $?" $(date)
 
 IDS_measurements=$(mysql  -uroot -p$MYSQL_PASS $DB_SOURCE --skip-column-names --vertical -e "select id from $DB_DEST.measurements" | grep -v row |  tr "\\n" "," | sed -e 's/,$//' )
 echo "IDS_measurements= $?" $(date)
@@ -296,8 +265,6 @@ mysql -uroot -p$MYSQL_PASS -e "create table $DB_DEST.appointment select * from $
 echo "create table $DB_DEST.appointment= $?" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index appointment_provider_no on $DB_DEST.appointment(provider_no);"
 echo "create index appointment_provider_no= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "update $DB_DEST.appointment set $DB_DEST.appointment.provider_no=$PROVIDER_NO_FINIAL where $DB_DEST.appointment.provider_no=$PROVIDER_NO ; "
-echo "update $DB_DEST.appointment= $?" $(date)
 
 echo "#################### msg info ##################" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create index msg_demo_no on $DB_SOURCE.msgDemoMap(demographic_no);"
@@ -319,7 +286,7 @@ echo "create table $DB_DEST.messagetbl = $?" $(date)
 
 mysql -uroot -p$MYSQL_PASS -e "create table $DB_DEST.immunizations select * from $DB_SOURCE.immunizations where $DB_SOURCE.immunizations.demographic_no in ($DEMO_LIST) ;"
 echo "create table $DB_DEST.immunizations= $?" $(date)
-mysql -uroot -p$MYSQL_PASS -e "create table $DB_DEST.providerLabRouting select * from $DB_SOURCE.providerLabRouting where $DB_SOURCE.providerLabRouting.provider_no = $PROVIDER_NO ;"
+mysql -uroot -p$MYSQL_PASS -e "create table $DB_DEST.providerLabRouting select * from $DB_SOURCE.providerLabRouting where $DB_SOURCE.providerLabRouting.provider_no in ($PROVIDER_NO) ;"
 echo "create table $DB_DEST.providerLabRouting= $?" $(date)
 mysql -uroot -p$MYSQL_PASS -e "create table $DB_DEST.labReportInformation select * from $DB_SOURCE.labReportInformation where $DB_SOURCE.labReportInformation.id in (select $DB_SOURCE.patientLabRouting.lab_no from $DB_SOURCE.patientLabRouting where $DB_SOURCE.patientLabRouting.lab_type = 'CML' and $DB_SOURCE.patientLabRouting.demographic_no in ($DEMO_LIST));"
 echo "create table $DB_DEST.labReportInformation = $?" $(date)
