@@ -567,18 +567,22 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 	}
 	
 	public List<Demographic> searchDemographicByName(String searchStr, int limit, int offset, String providerNo, boolean outOfDomain) {
-		return searchDemographicByNameAndStatus(searchStr,null,limit,offset,providerNo,outOfDomain,false);
+		return searchDemographicByNameAndStatus(searchStr,null,limit,offset,providerNo,outOfDomain,false,false);
 	}
 
 	public List<Demographic> searchDemographicByNameAndNotStatus(String searchStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain) {
-		return searchDemographicByNameAndStatus(searchStr,statuses,limit,offset,providerNo,outOfDomain,true);
+		return searchDemographicByNameAndStatus(searchStr,statuses,limit,offset,providerNo,outOfDomain,true,false);
 	}
+	public List<Demographic> searchDemographicByNameAndNotStatus(String searchStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain, boolean merged) {
+		return searchDemographicByNameAndStatus(searchStr,statuses,limit,offset,providerNo,outOfDomain,true,merged);
+	}
+	
 	public List<Demographic> searchDemographicByNameAndStatus(String searchStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain) {
-		return searchDemographicByNameAndStatus(searchStr,statuses,limit,offset,providerNo,outOfDomain,false);
+		return searchDemographicByNameAndStatus(searchStr,statuses,limit,offset,providerNo,outOfDomain,false,false);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Demographic> searchDemographicByNameAndStatus(String searchStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain,boolean ignoreStatuses) {
+	public List<Demographic> searchDemographicByNameAndStatus(String searchStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain,boolean ignoreStatuses, boolean merged) {
 		List<Demographic> list = new ArrayList<Demographic>();
 		String queryString = "From Demographic d where d.LastName like :lastName ";
 
@@ -603,7 +607,10 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		if(providerNo != null && !outOfDomain) {
 			queryString += " AND d.id IN ("+ PROGRAM_DOMAIN_RESTRICTION+") ";
 		}
-		
+
+		if(merged) {
+			queryString += " AND d.HeadRecord is not null";
+		}
 		Session session = this.getSession();
 		try {
 			Query q = session.createQuery(queryString);
