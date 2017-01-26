@@ -1681,9 +1681,11 @@ document.forms[1].r_doctor_ohip.value = refNo;
                                 		<option value=""></option>
                                     <%                                   
                                         ocanFormOptions = OcanForm.getOcanFormOptions("Recipient Location");
+                                    	String defaultVal = OscarProperties.getInstance().getProperty("ocan_default_recipientLocation","");
                                         for(OcanFormOption ocanFormOption : ocanFormOptions){
+                                        	String selected = ocanFormOption.getOcanDataCategoryValue().equals(defaultVal)?" selected = \"selected\" ":"";
                                     %>
-                                        <option value="<%=ocanFormOption.getOcanDataCategoryValue() %>" ><%=ocanFormOption.getOcanDataCategoryName()  %></option>
+                                        <option value="<%=ocanFormOption.getOcanDataCategoryValue() %>"  <%=selected%>><%=ocanFormOption.getOcanDataCategoryName()  %></option>
                                     <%
                                         }
                                      %>
@@ -1694,9 +1696,11 @@ document.forms[1].r_doctor_ohip.value = refNo;
 			                			<option value=""></option>
 			                			<%                                   
                                         ocanFormOptions = OcanForm.getOcanFormOptions("LHIN code");
+			                			defaultVal = OscarProperties.getInstance().getProperty("ocan_default_consumerResides","");
                                         for(OcanFormOption ocanFormOption : ocanFormOptions){
+                                        	String selected = ocanFormOption.getOcanDataCategoryValue().equals(defaultVal)?" selected = \"selected\" ":"";
                                     %>
-                                        <option value="<%=ocanFormOption.getOcanDataCategoryValue() %>" ><%=ocanFormOption.getOcanDataCategoryName()  %></option>
+                                        <option value="<%=ocanFormOption.getOcanDataCategoryValue() %>" <%=selected %>><%=ocanFormOption.getOcanDataCategoryName()  %></option>
                                     <%
                                         }
                                      %>
