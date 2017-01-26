@@ -358,7 +358,7 @@ Varicella Immunoglobulin	VarIg
 	    layout="PAPMAM"
 	    minAge="13"
 	    maxAge="75"
-	    showIfMinRecordNum="1" />
+	    showIfMinRecordNum="1" /-->
 
  
 	<item
@@ -371,7 +371,7 @@ Varicella Immunoglobulin	VarIg
 		maxAge="24"
 		showIfMinRecordNum="1" />
 		
-	<item		
+	<!-- item		
 		resultDesc=""
 		desc="VDRL = VDRL screening for syphillis; pregnant women at the first prenatal visit (and 3rd trimester and delivery high-risk groups), all sex workers, in correctional facilities, diagnosed with another STD, MSM with high-risk behaviors"
 		name="VDRL"
@@ -405,7 +405,7 @@ Varicella Immunoglobulin	VarIg
     <!--item 
 		resultDesc=""
 		desc="H1N1 Vaccination" name="H1N1" layout="h1n1"
-            minAge="0" atc="J07BB02" />
+            minAge="0" atc="J07BB02" /-->
 
 	<item 
 		resultDesc=""
@@ -417,7 +417,7 @@ Varicella Immunoglobulin	VarIg
 		desc="Other Layout B" name="OtherB" link="" layout="PAPMAM"
 		showIfMinRecordNum="1" />
 		
-	<item
+	<!-- item
 		resultDesc=""
 		desc= "Smoking history"
 		name="Smoking"		
