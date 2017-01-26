@@ -1501,10 +1501,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                    				}
                                				else{
                                				
-                               					String newObxSetId = ((AlphaHandler)handler).getObxSetId(j, k);
-                               					
                                				 
-                               					if(handler instanceof AlphaHandler && lastObxSetId.equals(newObxSetId)) {
+                               					if(handler instanceof AlphaHandler && lastObxSetId.equals(((AlphaHandler)handler).getObxSetId(j, k))) {
                                						%><td></td><%
                                					} else {
                                				
