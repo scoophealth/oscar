@@ -813,7 +813,9 @@ public class NotesService extends AbstractServiceImpl {
 		}
 		
 		caseMangementNote.setUpdate_date(now);
-		caseMangementNote.setAppointmentNo(note.getAppointmentNo());
+		if(note.getAppointmentNo() != null) {
+			caseMangementNote.setAppointmentNo(note.getAppointmentNo());
+		}
 		
 		
 		//update positions
