@@ -158,6 +158,7 @@
 	boolean showIPHIS = false, showPanorama=false,showIscis=false,showOhiss=false,showEpiInfo=false,showHedgehog=false;
 	ProgramProvider pp3 = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
 	
+	
 	showIPHIS = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("IPHISid","").split(","),pp3);
 	showPanorama = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Panorama_id","").split(","),pp3);
 	showIscis = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Iscis_id","").split(","),pp3);
@@ -1685,7 +1686,25 @@ document.forms[1].r_doctor_ohip.value = refNo;
 			                    <%}%>
 			                </td>
 			            </tr>
-			            			            
+			            
+			            
+			            <tr>
+			            	<td colspan="3">
+			            	<%
+			            		boolean show_LHIN_info = false;
+			            		for(Program _p:pset){
+			            			if(_p.isEnableOCAN()){
+			            				show_LHIN_info=true;
+			            			}			    
+			            		}
+			            	%>
+			            	
+			            	</td>
+			            </tr>
+	
+	
+
+			           	<%if(show_LHIN_info){ %>            
 			            <caisi:isModuleLoad moduleName="caisi">
 			            <tr><td colspan="3">&nbsp;</td></tr>
 			            <tr><td colspan="3">&nbsp;</td></tr>
@@ -1731,6 +1750,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
 			                </td>			                
 			            </tr>
 			            </caisi:isModuleLoad>
+			            <%} %>
 			        </table>
 			    </td>
 			</tr>
