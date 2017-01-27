@@ -43,9 +43,8 @@ angular.module("noteServices", [])
        },
        saveNote: function(demographicNo,notea){
        	var deferred = $q.defer();
-       	var noteToSave = { encounterNote: notea };
-       	console.log("sending to server ",noteToSave);
-       	 $http.post(this.apiPath+'/'+demographicNo+'/save',noteToSave).success(function(data){
+       	console.log("sending to server ",notea);
+       	$http.post(this.apiPath+'/'+demographicNo+'/save',JSON.stringify(notea)).success(function(data){
            	console.log("returned from /save",data);
            	deferred.resolve(data);
            }).error(function(){
@@ -57,9 +56,8 @@ angular.module("noteServices", [])
        },
        saveIssueNote: function(demographicNo,notea){
        	var deferred = $q.defer();
-	var note = { noteIssue: notea };
-	 console.log("sending to server -------------------note" + note);
-       	 $http.post(this.apiPath+'/'+demographicNo+'/saveIssueNote',note).success(function(data){
+	 console.log("sending to server -------------------note" + notea);
+       	 $http.post(this.apiPath+'/'+demographicNo+'/saveIssueNote',JSON.stringify(notea)).success(function(data){
            	console.log("returned from /save",data);
            	deferred.resolve(data);
            }).error(function(){
