@@ -1793,4 +1793,26 @@ public class EFormUtil {
 		}
 		return null;
 	}
+	
+	/** 
+	 * Local EFormData Factory
+	 */
+	public static EFormData toEFormData( EForm eForm ) {
+		EFormData eFormData=new EFormData();
+		eFormData.setFormId(Integer.parseInt(eForm.getFid()));
+		eFormData.setFormName(eForm.getFormName());
+		eFormData.setSubject(eForm.getFormSubject());
+		eFormData.setDemographicId(Integer.parseInt(eForm.getDemographicNo()));
+		eFormData.setCurrent(true);
+		eFormData.setFormDate(new Date());
+		eFormData.setFormTime(eFormData.getFormDate());
+		eFormData.setProviderNo(eForm.getProviderNo());
+		eFormData.setFormData(eForm.getFormHtml());
+		eFormData.setShowLatestFormOnly(eForm.isShowLatestFormOnly());
+		eFormData.setPatientIndependent(eForm.isPatientIndependent());
+		eFormData.setRoleType(eForm.getRoleType());
+
+		return(eFormData);
+	}
+	
 }

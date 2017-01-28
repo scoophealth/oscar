@@ -1,0 +1,162 @@
+
+* {
+    margin: 0px;
+    border: none;
+    padding: 0px;
+}
+
+body, body table {
+    font-size: 11px;
+    font-family: Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif;
+}
+
+section .add_row_button {
+    padding:3px;
+}
+
+section div#container {
+    position:absolute;
+    margin:0px;
+    padding:0px;
+    top:0px;
+    left:0px;
+    margin:10px;
+    width: 611px;
+}
+
+section .contentbox {
+    border:lightblue thin dotted;
+    overflow: auto;
+    width: 100%;
+    height:15px;
+    display: block;
+    font-weight: initial !important;
+}
+
+section header {
+    position:relative;
+    margin:0px;
+    padding:0px;
+    top:0px;
+    left:0px;
+    width: inherit;
+    color: #002145;
+}
+
+section header img {
+    padding:0px;
+    margin:0px;
+    top:0px;
+    left:0px;
+    width: 49%;
+    float:left;
+}
+
+section header div#returnaddress {
+    position:relative;
+    border:none;
+    margin:0px;
+    top: 0;
+    width: 49%;
+    float:left;
+    padding-top:15px;
+}
+
+section header div#returnaddress span {
+    float: left;
+    clear: left;
+    width:100%;
+    padding-left:40%;
+}
+
+section div#content, header, footer {
+    float:left;
+    width:100%;
+}
+
+section div#metadata_block,
+section div#metadata_block div#salutationline,
+section div#metadata_block div#copytoline,
+section div#metadata_block table {
+    width: 100%;
+    float:left;
+    text-align: left;
+}
+
+section div#metadata_block table, section div#metadata_block div#dateline {
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+section div#metadata_block table tr:first-of-type td:nth-child(1) {
+    font-weight:bold;
+    width:25px;
+}
+
+section div#metadata_block table tr:first-of-type td:nth-child(3) {
+    font-weight:bold;
+    width:40px;
+}
+
+section div#metadata_block table tr:first-of-type td:nth-child(5) {
+    font-weight:bold;
+    width:120px;
+}
+
+section div#metadata_block div#dateline label {
+    float: right;
+    width: 50%;
+}
+
+section  div#metadata_block div#dateline label,
+section  div#metadata_block div#salutationline label {
+    font-weight: bold;
+}
+
+section div#content_body table {
+    width:100%;
+    margin:0px;
+    padding:0px;
+    border-collapse: collapse;
+    font: inherit;
+}
+
+section div#content_body table td {
+    border:thin darkgray solid;
+}
+
+section div#content_body table th {
+    border:thin darkgray solid;
+    padding:3px;
+    background-color: lightgray;
+}
+
+footer {
+    float:left;
+    margin-top: 20px;
+}
+
+footer div#signature_block, div#printed_signature {
+    height: 60px;
+}
+
+@Media print {
+	.contentbox{	
+		border:none !important;	
+		display:inline !important;	
+		height:0px;	
+		width:0px;	
+		padding:0px;	
+		margin:0px;	
+	}
+	
+	.donotprint{ display:none; }
+	
+	.yesprint{ display:none; }
+}
+
+@page{	
+	size:8.5in11in;	
+	margin:2cm; 
+	@bottom-right { content: \"Page \" counter(page) \" of \" counter(pages); }	
+}
