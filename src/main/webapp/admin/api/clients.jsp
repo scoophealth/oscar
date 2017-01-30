@@ -86,6 +86,31 @@ if(!authed) {
         });
 	}
 	
+	function listTokens() {
+		 $("#tokenTable tbody").find("tr").remove();
+		 
+		jQuery.getJSON("clientManage.json",{method: "listTokens"},
+               function(data,textStatus){
+					
+						
+					for(var x=0;x<data.length;x++) {
+						console.log(JSON.stringify(data[x]));
+						var clientId = data[x].clientId;
+						var dateCreated = data[x].dateCreated;
+						var id = data[x].id;
+						var issued = data[x].issued;
+						var lifetime = data[x].lifetime;
+						var persistent = data[x].persistent;
+						var providerNo = data[x].providerNo;
+						var tokenId = data[x].tokenId;
+						var tokenSecret = data[x].tokenSecret;
+						
+						$('#tokenTable > tbody:last').append('<tr><td>'+tokenId+'</td><td>'+lifetime+'</td><td>'+issued+'</td><td>'+providerNo+'</td><td></td></tr>');
+					}
+       });
+	}
+	
+	
 	function deleteClient(id) {
         jQuery.getJSON("clientManage.json", {
 	        method: "delete",
@@ -101,6 +126,7 @@ if(!authed) {
 	
 	$(document).ready(function(){
 		listClients();
+		listTokens();
 		
 		$( "#new-form" ).dialog({
 			autoOpen: false,
@@ -160,18 +186,33 @@ if(!authed) {
 	String here = thisUrl.substring(0,thisUrl.indexOf(contextPath) + contextPath.length());
 %>
 <hr />
+<h4>Tokens</h4>
+<table id="tokenTable" name="tokenTable" class="table table-bordered table-striped table-hover table-condensed">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>TTL (seconds)</th>
+			<th>Issued</th>
+			<th>Provider</td>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody></tbody>
+</table>
+
+<hr/>
 <table class="table table-bordered table-striped table-hover table-condensed">
 	<tr>
 		<td>Temporary Credential Request:</td>
-		<td><%=here%>/ws/test/initiate</td>
+		<td><%=here%>/ws/oauth/initiate</td>
 	</tr>
 	<tr>
 		<td>Resource Owner Authorization URI:</td>
-		<td><%=here%>/ws/authorize</td>
+		<td><%=here%>/ws/oauth/authorize</td>
 	</tr>
 	<tr>
 		<td>Token Request URI:</td>
-		<td><%=here%>/ws/token</td>
+		<td><%=here%>/ws/oauth/token</td>
 	</tr>
 </table>
 

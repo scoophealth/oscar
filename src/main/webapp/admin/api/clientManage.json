@@ -4,10 +4,13 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.dao.ServiceClientDao"%>
 <%@page import="org.oscarehr.common.model.ServiceClient"%>
+<%@page import="org.oscarehr.common.dao.ServiceAccessTokenDao"%>
+<%@page import="org.oscarehr.common.model.ServiceAccessToken"%>
 <%@page import="java.util.List"%>
 
 <%
 	ServiceClientDao serviceClientDao = SpringUtils.getBean(ServiceClientDao.class);
+	ServiceAccessTokenDao serviceAccessTokenDao = SpringUtils.getBean(ServiceAccessTokenDao.class);
 %>
 <%
 	boolean success = false;
@@ -69,11 +72,17 @@
 		response.setContentType("text/x-json");    
         response.getWriter().print(x.toString());
 	}
+	else if("listTokens".equals(method)) {
+		List<ServiceAccessToken> tokens = serviceAccessTokenDao.findAll();
+		JSONArray x = JSONArray.fromObject(tokens);
+		response.setContentType("text/x-json");    
+        response.getWriter().print(x.toString());
+	}
 	else {
 		success = false;
 		error = "Invalid method supplied.";
 	}
-	if(!"list".equals(method)) {
+	if(!"list".equals(method) && !"listTokens".equals(method)) {
 	    response.setContentType("text/x-json");    
 		
 		json.put("success", success);
