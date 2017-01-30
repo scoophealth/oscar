@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.apache.cxf.rs.security.oauth.services.OOBAuthorizationResponse"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.apache.cxf.rs.security.oauth.data.OAuthAuthorizationData" %>
 <%@page import="org.apache.cxf.rs.security.oauth.data.OAuthPermission" %>
@@ -42,8 +43,11 @@
 	}
 	
 	OAuthAuthorizationData oauthData = (OAuthAuthorizationData)request.getAttribute("oauthauthorizationdata");
+	OOBAuthorizationResponse oauthOobResponse = (OOBAuthorizationResponse)request.getAttribute("oobauthorizationresponse");
+	
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
+
 
 <!DOCTYPE html>
 <html>
@@ -128,6 +132,10 @@
             			$('#scope_div').hide();
             			$('#loggedin_div').hide();
             		}
+            		
+            		if('<%=(oauthOobResponse!=null)%>' == 'true') {
+            			$('#login_div').hide();
+            		} 
             	});
             </script>
     </head>
@@ -165,7 +173,20 @@
 				        <button class="btn btn-large btn-primary" type="button" onclick="submitCredentials()">Sign in</button>
 				      </form>    	
 			      </div>
+			      
+			      <div id="oob_div">
+			      
+			      	<%
+			      		if(oauthOobResponse != null) {
+			    
+			      	%>
+			     	 <h5>The Request token <%=oauthOobResponse.getRequestToken()%> has verifier <%=oauthOobResponse.getVerifier() %></h5>
+			      
+			      	<% } %>
+			      </div>
 			      <div id="loggedin_div">
+			      <%if(oauthData != null) {
+			      %>
 			      		<br/><br/>
 				       <form class="form-signin">
 				        <h2 class="form-signin-heading">Welcome</h2>
@@ -198,7 +219,7 @@
                             <input type="submit" value="Authorize <%= oauthData.getApplicationName() %>" class="btn btn-primary"/>
 				           	<input type="button" value="Cancel" onClick="deny();" class="btn btn-danger" />
 				        </form>
-	        
+	        		<% } %>
        	
 			      </div>			
     			</div>
