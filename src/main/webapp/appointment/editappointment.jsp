@@ -952,12 +952,24 @@ if (bMultisites) { %>
 		<input type="submit" class="redButton button" id="deleteButton"
 			onclick="document.forms['EDITAPPT'].displaymode.value='Delete Appt'; onButDelete();"
 			value="<bean:message key="appointment.editappointment.btnDeleteAppointment"/>">
+		
 		<input type="button" name="buttoncancel" id="cancelButton"
 			value="<bean:message key="appointment.editappointment.btnCancelAppointment"/>"
-			onClick="onButCancel();"> <input type="button"
+			onClick="onButCancel();"> 
+			
+		<input type="button"
 			name="buttoncancel" id="noShowButton"
 			value="<bean:message key="appointment.editappointment.btnNoShow"/>"
 			onClick="window.location='appointmentcontrol.jsp?buttoncancel=No Show&displaymode=Update Appt&appointment_no=<%=appointment_no%>'">
+			
+		<input type="button"
+			name="buttoncancel" id="hereButton"
+			value="<bean:message key="appointment.editappointment.btnHere"/>"
+			onClick="window.location='appointmentcontrol.jsp?buttoncancel=Here&displaymode=Update Appt&appointment_no=<%=appointment_no%>'">
+			
+
+			
+				
 			<input type="button"
 			name="buttonprintcard" id="printCardButton"
 			value="Print Card"
