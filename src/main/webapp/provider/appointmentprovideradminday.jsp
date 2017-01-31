@@ -67,6 +67,10 @@
 <%@page import="org.oscarehr.managers.AppManager" %>
 <%@page import="org.oscarehr.managers.DashboardManager" %>
 <%@ page import="org.oscarehr.common.model.Dashboard" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.util.MiscUtils" %>
+<%@ page import="org.oscarehr.util.SessionConstants" %>
 
 <!-- add by caisi -->
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
@@ -1090,7 +1094,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 <%
 	if (caseload) {
 %>
-<%@ include file="caseload.jspf" %>
+<jsp:include page="caseload.jspf"/>
 <%
 	} else {
 %>
@@ -1335,7 +1339,7 @@ if (curProvider_no[provIndex].equals(provNum)) {
 <!-- caisi infirmary view extension add fffffffffffff-->
 <caisi:isModuleLoad moduleName="caisi">
 
-	<%@ include file="infirmaryviewprogramlist.jspf" %>
+	<jsp:include page="infirmaryviewprogramlist.jspf"/>
 
 </caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end fffffffffffff-->
@@ -1542,7 +1546,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <!-- caisi infirmary view exteion add -->
 <!--  fffffffffffffffffffffffffffffffffffffffffff-->
 <caisi:isModuleLoad moduleName="caisi">
-<%@ include file="infirmarydemographiclist.jspf" %>
+<jsp:include page="infirmarydemographiclist.jspf"/>
 </caisi:isModuleLoad>
 <logic:notEqual name="infirmaryView_isOscar" value="false">
 <!-- caisi infirmary view exteion add end ffffffffffffffffff-->
@@ -1760,13 +1764,14 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 			 <%} %>
 
             <%
-			    if (as.getNextStatus() != null && !as.getNextStatus().equals("")) {
+                String nextStatus = as.getNextStatus();
+			    if (nextStatus != null && !nextStatus.equals("")) {
             %>
 			<!-- Short letters -->
-            <a class="apptStatus" href=# onclick="refreshSameLoc('providercontrol.jsp?appointment_no=<%=appointment.getId()%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=as.getNextStatus()%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+URLEncoder.encode(request.getParameter("curProviderName"),"UTF-8") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%><%=isWeekView?"&viewWeek=1":""%>');" title="<%=as.getTitleString(request.getLocale())%> " >
+            <a class="apptStatus" href=# onclick="refreshSameLoc('providercontrol.jsp?appointment_no=<%=appointment.getId()%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=nextStatus%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+URLEncoder.encode(request.getParameter("curProviderName"),"UTF-8") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%><%=isWeekView?"&viewWeek=1":""%>');" title="<%=as.getTitleString(request.getLocale())%> " >
             <%
 						}
-						if (as.getNextStatus() != null) {
+						if (nextStatus != null) {
 							if(OscarProperties.getInstance().getProperty("APPT_SHOW_SHORT_LETTERS", "false") != null 
 								&& OscarProperties.getInstance().getProperty("APPT_SHOW_SHORT_LETTERS", "false").equals("true")){
 						
@@ -2062,8 +2067,16 @@ start_time += iSm + ":00";
        	&#124; <img src="../images/cake.gif" height="20" alt="Happy Birthday"/>
       <%}%>
 
-      <%String appointment_no=appointment.getId().toString();%>
-	  <%@include file="appointmentFormsLinks.jspf" %>
+      <%String appointment_no=appointment.getId().toString();
+      	request.setAttribute("providerPreference", providerPreference);
+      %>
+      <c:set var="demographic_no" value="<%=demographic_no %>" />
+      <c:set var="appointment_no" value="<%=appointment_no %>" />
+      
+	  <jsp:include page="appointmentFormsLinks.jspf">	  	
+	  	<jsp:param value="${demographic_no}" name="demographic_no"/>
+	  	<jsp:param value="${appointment_no}" name="appointment_no"/>
+	  </jsp:include>
 
 	<oscar:oscarPropertiesCheck property="appt_pregnancy" value="true" defaultVal="false">
 
@@ -2245,7 +2258,7 @@ document.onkeydown=function(e){
 </script>
 <!-- end of keycode block -->
 <% if (OscarProperties.getInstance().getBooleanProperty("indivica_hc_read_enabled", "true")) { %>
-<%@include file="/hcHandler/hcHandler.html" %>
+<jsp:include page="/hcHandler/hcHandler.html"/>
 <% } %>
 </html:html>
 

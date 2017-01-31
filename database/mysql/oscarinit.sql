@@ -12160,3 +12160,14 @@ CREATE TABLE `tickler_category` (
   `active` bit(1),
   PRIMARY KEY (`id`)
 );
+
+CREATE TABLE `onCallClinicDates` (
+   `id` int(10) NOT NULL,
+   `startDate` date,
+   `endDate` date,
+   `name` varchar(256),
+   `location` varchar(256),
+   `color` varchar(7),
+  PRIMARY KEY (`id`)
+);
+

@@ -2856,3 +2856,11 @@ INSERT INTO `tickler_category` VALUES ('1', 'To Call In', 'Call this patient in 
 INSERT INTO `LookupList` (`listTitle`,`name`, description, categoryId, active, createdBy, dateCreated) VALUES('Consultation Request Appointment Instructions List', 'consultApptInst', 'Select list for the consultation appointment instruction select list', NULL, '1', 'oscar', NOW() );
 INSERT INTO `LookupListItem` (lookupListId, value, label, displayOrder, active, createdBy, dateCreated)( 
 SELECT id, UUID(), 'Please reply to sending facility by fax or phone with appointment','1', '1','oscar', NOW() FROM `LookupList` WHERE `name` = "consultApptInst" );
+
+insert into scheduletemplate Values('Public','P:OnCallClinic','Weekends/Holidays','________________________________________CCCCCCCCCCCCCCCC________________________________________');
+
+insert into scheduletemplatecode Values(null,'C','On Call Clinic','15','green','Onc',1);
+
+insert into OscarJobType Values(null,'OSCAR ON CALL CLINIC', 'Notifies MRP if patient seen during on-call clinic','org.oscarehr.jobs.OscarOnCallClinic',false,now());
+
+insert into OscarJob Values(null,'OSCAR On-Call Clinic',null,(select id from OscarJobType where name = 'OSCAR ON CALL CLINIC'),'0 0 4 * * *','999998',false,now());
