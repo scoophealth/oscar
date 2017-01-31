@@ -221,7 +221,9 @@ function checkInput() {
 				<input type="radio" name="confirm" value="Day"
 					<%=(bEdit? (dataBean.getProperty("confirm").equals("Day")? "checked" : "") : "checked")%>>Same Day
 				<input type="radio" name="confirm" value="Wk"
-					<%=(bEdit? (dataBean.getProperty("confirm").equals("Wk")? "checked" : "") : "checked")%>>Same Week
+					<%=(bEdit? (dataBean.getProperty("confirm").equals("Wk")? "checked" : "") : "checked")%>>Same Week					
+			   <input type="radio" name="confirm" value="Onc"
+					<%=(bEdit? (dataBean.getProperty("confirm").equals("Onc")? "checked" : "") : "checked")%>>On-Call Urgent
 
 				</td>
 			</tr>
