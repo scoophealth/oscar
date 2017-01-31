@@ -357,6 +357,10 @@ String pageToShow=request.getParameter("load");
 					</li>
 					<li><a href="${ctx}/oscarReport/oscarReportCatchment.jsp"
 						class="contentLink">PCN</a></li>
+					<oscar:oscarPropertiesCheck property="OnCallClinic" value="yes">
+					<li><a href="${ctx}/oscarReport/oscarOnCallClinic.jsp"
+						class="contentLink">OSCAR On Call Clinic</a></li>
+					</oscar:oscarPropertiesCheck>
 					<li><a href="${ctx}/oscarReport/FluBilling.do?orderby="
 						class="contentLink"><bean:message
 								key="admin.admin.btnFluBillingReport" /></a></li>

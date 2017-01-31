@@ -12247,3 +12247,13 @@ CREATE TABLE `ProgramContactType` (
  PRIMARY KEY  (`programId`,`contactTypeId`,`category`)
 );
 
+CREATE TABLE `onCallClinicDates` (
+   `id` int(10) NOT NULL,
+   `startDate` date,
+   `endDate` date,
+   `name` varchar(256),
+   `location` varchar(256),
+   `color` varchar(7),
+  PRIMARY KEY (`id`)
+);
+

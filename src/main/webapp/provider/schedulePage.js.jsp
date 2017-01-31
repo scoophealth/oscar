@@ -92,6 +92,16 @@ function confirmPopupPage(height, width, queryString, doConfirm, allowDay, allow
                         popupPage2(queryString, 'appointment', height, width);
                 }
         }
+        else if( doConfirm == "Onc" ) {
+        	if( allowDay == "No" ) {
+        		if( confirm("This is an On Call Urgent appointment.  Are you sure you want to book?") ) {
+        			popupPage(height, width, queryString);
+        		}
+        	}
+        	else {
+        		popupPage2(queryString, 'appointment', height, width);
+        	}
+        }
         else {
                 popupPage2(queryString, 'appointment', height, width);
         }

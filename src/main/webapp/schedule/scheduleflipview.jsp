@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="oscar.appt.ApptData"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
@@ -113,13 +114,49 @@ function selectprovider(s) {
   
 
 
-function t(s1,s2,s3,s4,s5,s6) {
-  popupPage(360,680,('../appointment/addappointment.jsp?demographic_no=<%=curDemoNo%>&name=<%=curDemoName%>&provider_no=<%=curProvider_no%>&bFirstDisp=<%=true%>&year='+s1+'&month='+s2+'&day='+s3+'&start_time='+s4+'&end_time='+s5+'&duration='+s6 ) );
+function t(s1,s2,s3,s4,s5,s6, doConfirm, allowDay, allowWeek) {
+	if (doConfirm == "Yes") {
+        if (confirm("<bean:message key="provider.appointmentProviderAdminDay.confirmBooking"/>")){
+        	popupPage(360,680,('../appointment/addappointment.jsp?demographic_no=<%=curDemoNo%>&name=<%=curDemoName%>&provider_no=<%=curProvider_no%>&bFirstDisp=<%=true%>&year='+s1+'&month='+s2+'&day='+s3+'&start_time='+s4+'&end_time='+s5+'&duration='+s6 ) );
+        }
+	}
+	else if (doConfirm == "Day"){
+	        if (allowDay == "No") {
+	                alert("<bean:message key="provider.appointmentProviderAdminDay.sameDay"/>");
+	        }
+	        else {
+	        	popupPage(360,680,('../appointment/addappointment.jsp?demographic_no=<%=curDemoNo%>&name=<%=curDemoName%>&provider_no=<%=curProvider_no%>&bFirstDisp=<%=true%>&year='+s1+'&month='+s2+'&day='+s3+'&start_time='+s4+'&end_time='+s5+'&duration='+s6 ) );
+	        }
+	}
+	else if (doConfirm == "Wk"){
+	        if (allowWeek == "No") {
+	                alert("<bean:message key="provider.appointmentProviderAdminDay.sameWeek"/>");
+	        }
+	        else {
+	        	popupPage(360,680,('../appointment/addappointment.jsp?demographic_no=<%=curDemoNo%>&name=<%=curDemoName%>&provider_no=<%=curProvider_no%>&bFirstDisp=<%=true%>&year='+s1+'&month='+s2+'&day='+s3+'&start_time='+s4+'&end_time='+s5+'&duration='+s6 ) );
+	        }
+	}
+	else if( doConfirm == "Onc" ) {
+		if( allowDay == "No" ) {
+			if( confirm("This is an On Call Urgent appointment.  Are you sure you want to book?") ) {
+				popupPage(360,680,('../appointment/addappointment.jsp?demographic_no=<%=curDemoNo%>&name=<%=curDemoName%>&provider_no=<%=curProvider_no%>&bFirstDisp=<%=true%>&year='+s1+'&month='+s2+'&day='+s3+'&start_time='+s4+'&end_time='+s5+'&duration='+s6 ) );
+			}
+		}
+		else {
+			popupPage(360,680,('../appointment/addappointment.jsp?demographic_no=<%=curDemoNo%>&name=<%=curDemoName%>&provider_no=<%=curProvider_no%>&bFirstDisp=<%=true%>&year='+s1+'&month='+s2+'&day='+s3+'&start_time='+s4+'&end_time='+s5+'&duration='+s6 ) );
+		}
+	}
+	else {
+		popupPage(360,680,('../appointment/addappointment.jsp?demographic_no=<%=curDemoNo%>&name=<%=curDemoName%>&provider_no=<%=curProvider_no%>&bFirstDisp=<%=true%>&year='+s1+'&month='+s2+'&day='+s3+'&start_time='+s4+'&end_time='+s5+'&duration='+s6 ) );
+	}
+  
 }
 </SCRIPT>
 
 </head>
 <%
+
+	
   //int nStartTime=9, nEndTime=17, nStep = 15;
   int colscode = (nEndTime-nStartTime)*60/nStep;
   String rColor1 = "#FFFFE0", rColor2 = "#FFFFE0", bgcolor = "gold";
@@ -242,6 +279,7 @@ function t(s1,s2,s3,s4,s5,s6) {
     DateTimeCodeBean.put("duration"+stc.getCode(), stc.getDuration());
     DateTimeCodeBean.put("color"+stc.getCode(), (stc.getColor()==null || stc.getColor().equals(""))?bgcolordef:stc.getColor() );
     DateTimeCodeBean.put("bookinglimit" + stc.getCode(), String.valueOf(stc.getBookinglimit()));
+    DateTimeCodeBean.put("confirm"+stc.getCode(), stc.getConfirm());
   } 
 
   DateTimeCodeBean.put("color-", "silver");
@@ -316,12 +354,31 @@ function t(s1,s2,s3,s4,s5,s6) {
   	
 	}
         
+	Calendar minDate = Calendar.getInstance();
+	minDate.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
+	minDate.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
+	minDate.set(Calendar.SECOND, cal.get(Calendar.SECOND));
+	minDate.set(Calendar.MILLISECOND, cal.get(Calendar.MILLISECOND));
+	
+	String allowDay = "";
+	if (cal.equals(minDate)) {
+	    allowDay = "Yes";
+	    } else {
+	    allowDay = "No";
+	}
+	minDate.add(Calendar.DATE, 7);
+	String allowWeek = "";
+	if (cal.before(minDate)) {
+	    allowWeek = "Yes";
+	    } else {
+	    allowWeek = "No";
+	}
 
 %>
 		<td
 			<%=DateTimeCodeBean.get("color"+temp.toString())!=null?("bgcolor="+DateTimeCodeBean.get("color"+temp.toString()) ):""%>
                             title="<%=hour+":"+(min<10?"0":"")+min%>"><table style="display:inline; font-size:x-small;"><tr><td rowspan="2" style="vertical-align:middle;"><a href=#
-			onClick="t(<%=cal.get(Calendar.YEAR)%>,<%=cal.get(Calendar.MONTH)+1%>,<%=cal.get(Calendar.DATE)%>,'<%=(hour<10?"0":"")+hour+":"+(min<10?"0":"")+min %>','<%=appointmentTime.get(Calendar.HOUR_OF_DAY)%>:<%=appointmentTime.get(Calendar.MINUTE)%>','<%=DateTimeCodeBean.get("duration"+temp.toString())%>');return false;">
+			onClick="t(<%=cal.get(Calendar.YEAR)%>,<%=cal.get(Calendar.MONTH)+1%>,<%=cal.get(Calendar.DATE)%>,'<%=(hour<10?"0":"")+hour+":"+(min<10?"0":"")+min %>','<%=appointmentTime.get(Calendar.HOUR_OF_DAY)%>:<%=appointmentTime.get(Calendar.MINUTE)%>','<%=DateTimeCodeBean.get("duration"+temp.toString())%>','<%=DateTimeCodeBean.get("confirm"+scheduleCode)%>','<%=allowDay%>','<%=allowWeek%>');return false;">
                     <%=temp.toString()%></a></td><td title="<bean:message key="schedule.scheduleflipview.msgbookings"/>" style="vertical-align:top; font-size: x-small;"><%=strNumOfAppts%></td></tr><tr><td style="vertical-align:bottom; font-size: x-small;" title="<bean:message key="schedule.scheduleflipview.msgbookinglimit"/>"><%=bookinglimit%></td></tr></table></td>
 		<%
   }
