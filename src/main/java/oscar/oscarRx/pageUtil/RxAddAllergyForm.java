@@ -35,7 +35,6 @@ import org.apache.struts.action.ActionMapping;
 
 public final class RxAddAllergyForm extends ActionForm {
 
-
     String reactionDescription = null;
     String name =null;
     String type = null;
@@ -44,7 +43,8 @@ public final class RxAddAllergyForm extends ActionForm {
     String lifeStage = null;
     String severityOfReaction = null;
     String onSetOfReaction = null;
-    String allergyToInactivate = null;
+    String allergyToArchive = null;
+	String ID = null; //drugref_id
     
     public String getLifeStage() {
     	return lifeStage;
@@ -164,11 +164,19 @@ public final class RxAddAllergyForm extends ActionForm {
        this.onSetOfReaction = onSetOfReaction;
     }
     
-    public String getAllergyToInactivate() {
-    	return allergyToInactivate;
+    public String getAllergyToArchive() {
+    	return allergyToArchive;
     }
     
-    public void setAllergyToInactivate(String allergyToInactivate) {
-    	this.allergyToInactivate = allergyToInactivate;
+    public void setAllergyToArchive(String allergyToArchive) {
+    	this.allergyToArchive = allergyToArchive;
+    }
+    
+    public String getID() {
+    	return ID;
+    }
+    
+    public void setID(String ID) {
+    	this.ID = ID;
     }
 }

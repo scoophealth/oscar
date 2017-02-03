@@ -67,10 +67,9 @@ public final class RxAddAllergyAction extends Action {
             String severityOfReaction = request.getParameter("severityOfReaction");
             String onSetOfReaction = request.getParameter("onSetOfReaction");
             String lifeStage = request.getParameter("lifeStage");
-            String allergyToInactivate = request.getParameter("allergyToInactivate");
+            String allergyToArchive = request.getParameter("allergyToArchive");
             
             RxPatientData.Patient patient = (RxPatientData.Patient)request.getSession().getAttribute("Patient");
-            
             Allergy allergy = new Allergy();
             allergy.setDrugrefId(String.valueOf(id));
             allergy.setDescription(name);
@@ -103,15 +102,15 @@ public final class RxAddAllergyAction extends Action {
 
             allergy.setDemographicNo(patient.getDemographicNo());
             allergy.setArchived(false);
-
-            Allergy allerg = patient.addAllergy(oscar.oscarRx.util.RxUtil.Today(), allergy);
-
-            String ip = request.getRemoteAddr();
-            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_ALLERGY, ""+allerg.getAllergyId() , ip,""+patient.getDemographicNo(), allergy.getAuditString());
             
-            if (allergyToInactivate!=null && !allergyToInactivate.isEmpty() && !allergyToInactivate.equals("0")) {
-            	patient.deleteAllergy(Integer.parseInt(allergyToInactivate));
-            	LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ARCHIVE, LogConst.CON_ALLERGY, ""+allergyToInactivate , ip,""+patient.getDemographicNo(), null);
+            patient.addAllergy(oscar.oscarRx.util.RxUtil.Today(), allergy);
+            
+            String ip = request.getRemoteAddr();
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_ALLERGY, ""+allergy.getAllergyId() , ip,""+patient.getDemographicNo(), allergy.getAuditString());
+            
+            if (allergyToArchive!=null && !allergyToArchive.isEmpty()) {
+            	patient.deleteAllergy(Integer.parseInt(allergyToArchive));
+            	LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ARCHIVE, LogConst.CON_ALLERGY, ""+allergyToArchive , ip,""+patient.getDemographicNo(), null);
             }
             
             return (mapping.findForward("success"));

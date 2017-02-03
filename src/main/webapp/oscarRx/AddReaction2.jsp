@@ -26,7 +26,6 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
 	String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -61,10 +60,34 @@
 
 <%
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+RxPatientData.Patient patient = (RxPatientData.Patient)request.getSession().getAttribute("Patient");
 String name = (String) request.getAttribute("name");
 String type = (String) request.getAttribute("type");
-String allergyId = (String) request.getAttribute("allergyId");
-String allergyToInactivate = (String) request.getAttribute("allergyToInactivate");
+String drugrefId = (String) request.getAttribute("drugrefId");
+String allergyToArchive = (String) request.getAttribute("allergyToArchive");
+String nkdaId = (String) request.getAttribute("nkdaId");
+
+String reaction = new String();
+String startDate = new String();
+String ageOfOnset = new String();
+String lifeStage = new String();
+String severity = new String();
+String onsetOfReaction = new String();
+
+if (allergyToArchive!=null && !allergyToArchive.isEmpty()) {
+	org.oscarehr.common.model.Allergy a = patient.getAllergy(Integer.parseInt(allergyToArchive));
+	if (a!=null) {
+		reaction = a.getReaction();
+ 		startDate = a.getStartDateFormatted();
+		ageOfOnset = a.getAgeOfOnset();
+		lifeStage = a.getLifeStage();
+		severity = a.getSeverityOfReaction();
+		onsetOfReaction = a.getOnsetOfReaction();
+	}
+	if (a.getArchived() && nkdaId!=null) allergyToArchive = nkdaId;
+} else {
+	if (nkdaId!=null) allergyToArchive = nkdaId;
+}
 
 boolean isNKDA = "No Known Drug Allergies".equals(name);
 %>
@@ -130,11 +153,12 @@ boolean isNKDA = "No Known Drug Allergies".equals(name);
 						}
 						
 						function confirmRemoveNKDA() {
-							var field = document.forms.RxAddAllergyForm.allergyToInactivate;
-							if (field.value>0) {
+<% if (nkdaId!=null && !nkdaId.isEmpty()) { %>
+							if (<%=nkdaId%>>0) {
 								var yes = confirm("Remove \"No Known Drug Allergies\" from list?");
-								if (!yes) field.value = 0;
+								if (!yes) document.forms.RxAddAllergyForm.allergyToArchive.value = "";
 							}
+<% } %>
 						}
 					</script>
 					
@@ -147,40 +171,41 @@ boolean isNKDA = "No Known Drug Allergies".equals(name);
 						<tr valign="center">
 							<td>
 								<span class="label">Comment: </span>
-								<html:textarea property="reactionDescription" cols="40" rows="3" />
-								<html:hidden property="ID" value="<%=allergyId%>" />
+								<html:textarea property="reactionDescription" cols="40" rows="3" value="<%=reaction%>" />
+								<html:hidden property="ID" value="<%=drugrefId%>" />
 								<html:hidden property="name" value="<%=name%>" />
-								<html:hidden property="type" value="<%=type%>" />
-								<html:hidden property="allergyToInactivate" value="<%=allergyToInactivate%>" />
+								<html:hidden property="allergyToArchive" value="<%=allergyToArchive%>" />
 							</td>
 						</tr>
-<% if (type.equals("0") && !isNKDA) { %>
+<% if ((type.equals("0") || type.equals("-1")) && !isNKDA) { %>
 						<tr valign="center">
 							<td> <span class="label">Custom Allergy Type:</span> 
-	                                <html:select property="type">
+	                                <html:select property="type" value="<%=type%>">
 	                                	<html:option value="0">Allergy</html:option>
 	                                	<html:option value="-1">Intolerance</html:option>
 	                                </html:select>
 	                        </td>
 						</tr>
+<% } else { %>
+						<html:hidden property="type" value="<%=type%>" />
 <% } %>
 						<tr valign="center">
 							<td ><span class="label">Start Date:</span> <html:text
-								property="startDate" size="10" maxlength="10" onblur="checkStartDate();"/>
+								property="startDate" size="10" maxlength="10" value="<%=startDate%>" onblur="checkStartDate();"/>
 							    (yyyy-mm-dd OR yyyy-mm OR yyyy)</td>
 
 						</tr>
 
 						<tr valign="center">
 							<td><span class="label">Age Of Onset:</span> <html:text
-								property="ageOfOnset" size="4" maxlength="4" onblur="checkAgeOfOnset();"/></td>
+								property="ageOfOnset" size="4" maxlength="4" value="<%=ageOfOnset%>" onblur="checkAgeOfOnset();"/></td>
 
 						</tr>
 						
 						
 						<tr valign="center">
 							<td> <span class="label"><bean:message key="oscarEncounter.lifestage.title"/>:</span> 
-	                                <html:select property="lifeStage">
+	                                <html:select property="lifeStage" value="<%=lifeStage%>">
 	                                        <html:option value=""><bean:message key="oscarEncounter.lifestage.opt.notset"/></html:option>
 	                                        <html:option value="N"><bean:message key="oscarEncounter.lifestage.opt.newborn"/></html:option>
 	                                        <html:option value="I"><bean:message key="oscarEncounter.lifestage.opt.infant"/></html:option>
@@ -192,26 +217,26 @@ boolean isNKDA = "No Known Drug Allergies".equals(name);
 						</tr>
 						
 <% if (isNKDA) { %>
-						<html:hidden property="severityOfReaction" value="1" />
-						<html:hidden property="onSetOfReaction" value="1" />
+						<html:hidden property="severityOfReaction" value="4" />
+						<html:hidden property="onSetOfReaction" value="4" />
 <% } else { %>
 						<tr valign="center">
 							<td ><span class="label">Severity Of Reaction:</span> <html:select
-								property="severityOfReaction">
+								property="severityOfReaction" value="<%=severity%>">
+								<html:option value="4">Unknown</html:option>
 								<html:option value="1">Mild</html:option>
 								<html:option value="2">Moderate</html:option>
 								<html:option value="3">Severe</html:option>
-								<html:option value="4">Unknown</html:option>
 							</html:select></td>
 						</tr>
 
 						<tr valign="center">
 							<td ><span class="label">Onset Of Reaction:</span> <html:select
-								property="onSetOfReaction">
+								property="onSetOfReaction" value="<%=onsetOfReaction%>">
+								<html:option value="4">Unknown</html:option>
 								<html:option value="1">Immediate</html:option>
 								<html:option value="2">Gradual</html:option>
 								<html:option value="3">Slow</html:option>
-								<html:option value="4">Unknown</html:option>
 							</html:select></td>
 						</tr>
 <% } %>

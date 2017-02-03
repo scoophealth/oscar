@@ -100,6 +100,7 @@ $(document).ready( function() {
 
 		//--> unbind first to avoid multiple binds.
 		$(".deleteAllergyLink").unbind("click");
+		$(".modifyAllergyLink").unbind("click");
 		$("#searchResultsContainer a").unbind("click");
 		$(".DivContentSectionHead a img").unbind("click");
 
@@ -109,8 +110,7 @@ $(document).ready( function() {
 			// override the old addReaction.do with the new addReaction2.do
 			var path = "${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do"
 			var param = this.href.split("?")[1];
-			var iNKDA = document.forms.searchAllergy2.iNKDA.value;
-			param += "&allergyToInactivate="+iNKDA;
+			
 			sendSearchRequest(path, param, "#addAllergyDialogue");
 			$("#searchResultsContainer").html("");
 		});
@@ -129,6 +129,14 @@ $(document).ready( function() {
 			if( confirm(action+" this Allergy?") ) {
 				sendSearchRequest(path, param, ".Step1Text");
 			}
+		});
+		
+		//--> modify allergy.
+		$(".modifyAllergyLink").bind("click", function(event){
+			var ids = this.id.split("_");
+			var param = ids[1].trim();
+	    	sendSearchRequest("${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do", 
+	    	    	param, "#addAllergyDialogue");
 		});
 
 		//--> Toggle search results listing.
@@ -222,13 +230,31 @@ $(document).ready( function() {
 
 	//--> AJAX the data to the server.
 	function sendSearchRequest(path, param, target) {
+    	var iNKDA = document.forms.searchAllergy2.iNKDA.value;
+		if (param.indexOf(paramNKDA)>=0) {
+	    	var hasDrugAllergy = document.forms.searchAllergy2.hasDrugAllergy.value;
+	    	if (hasDrugAllergy=="true") {
+	    		alert("Active drug allergy exists!");
+	    		return;
+	    	}
+	    	if (iNKDA>0) {
+	    		var iAtoA = param.indexOf("allergyToArchive=");
+	    		if (iAtoA>0) iAtoA = param.substring(iAtoA+"allergyToArchive=".length);
+	    		if (iAtoA<0 || iNKDA>iAtoA) {
+		    		alert("\"No Known Drug Allergies\" already exists!");
+		    		return;
+	    		}
+	    	}
+		} else if (param.indexOf("ID=0")<0 && iNKDA>0) {
+			param += "&nkdaId="+iNKDA;
+		}
 		$.ajax({
 		    url: path,
 		    type: 'POST',
 		    data: param,
 		  	dataType: 'html',
 		    success: function(data) {    		
-		    	renderSearchResults(data, target);  	
+		    	renderSearchResults(data, target);
 		    }
 		});
 		if (path.indexOf("deleteAllergy")>=0) location.reload();
@@ -308,34 +334,28 @@ $(document).ready( function() {
     
     function addPenicillinAllergy(){
     	$(".highLightButton").removeClass("highLightButton");
-    	var iNKDA = document.forms.searchAllergy2.iNKDA.value;
+    	var param = "ID=44452&name=PENICILLINS&type=10";
+    	
     	sendSearchRequest("${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do", 
-    	    	"ID=44452&name=PENICILLINS&type=10&allergyToInactivate="+iNKDA, "#addAllergyDialogue");
+    	    	param, "#addAllergyDialogue");
     	$("input[value='Penicillin']").addClass("highLightButton");
     }
     
     function addSulfonamideAllergy(){
     	$(".highLightButton").removeClass("highLightButton");
-    	var iNKDA = document.forms.searchAllergy2.iNKDA.value;
+    	var param = "ID=44159&name=SULFONAMIDES&type=10";
+    	
     	sendSearchRequest("${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do",
-    	    	"ID=44159&name=SULFONAMIDES&type=10&allergyToInactivate="+iNKDA,"#addAllergyDialogue");
+    	    	param, "#addAllergyDialogue");
     	$("input[value='Sulfa']").addClass("highLightButton");
     }
     
+    var paramNKDA = "name=No Known Drug Allergies";
+    
     function addCustomNKDA(){
-    	var hasDrugAllergy = document.forms.searchAllergy2.hasDrugAllergy.value;
-    	if (hasDrugAllergy=="true") {
-    		alert("Active drug allergy exists!");
-    		return;
-    	}
-    	var iNKDA = document.forms.searchAllergy2.iNKDA.value;
-    	if (iNKDA>0) {
-    		alert("\"No Known Drug Allergies\" already exists!");
-    		return;
-    	}
     	$(".highLightButton").removeClass("highLightButton");
     	sendSearchRequest("${ pageContext.servletContext.contextPath }/oscarRx/addReaction2.do",
-    	    	"ID=0&type=0&name=No Known Drug Allergies","#addAllergyDialogue");
+    			"ID=0&type=0&"+paramNKDA, "#addAllergyDialogue");
     	$("input[value='NKDA']").addClass("highLightButton");
     }
 
@@ -503,7 +523,6 @@ $(document).ready( function() {
 							String labelAction;
 							String actionPath;
 							String trColour;
-							String labelConfirmAction;
 							String strSOR;
 							int intSOR;
 							boolean hasDrugAllergy=false;
@@ -512,7 +531,7 @@ $(document).ready( function() {
 							for(org.oscarehr.common.model.Allergy allergy : patient.getAllergies(LoggedInInfo.getLoggedInInfoFromSession(request))) {
 								
 								if (!allergy.getArchived()) {
-									if (allergy.getTypeCode()>1) hasDrugAllergy = true;
+									if (allergy.getTypeCode()>0) hasDrugAllergy = true;
 									if (allergy.getDescription().equals("No Known Drug Allergies")) iNKDA = allergy.getId();
 								}
 								
@@ -548,8 +567,7 @@ $(document).ready( function() {
 									if(intArchived==1){
 										//if allergy is set as archived
 										labelStatus="Inactive";
-										labelAction="Activate";
-										labelConfirmAction="Active";
+										labelAction="Reactivate";
 										actionPath="activate";
 										trColour="#C0C0C0";
 
@@ -557,7 +575,6 @@ $(document).ready( function() {
 									}else{
 										labelStatus="Active";
 										labelAction="Inactivate";
-										labelConfirmAction="Inactive";
 										actionPath="delete";
 
 										trColour="#E0E0E0";
@@ -605,12 +622,21 @@ $(document).ready( function() {
 									<%
 										if(!allergy.isIntegratorResult() && securityManager.hasDeleteAccess("_allergies",roleName$)) {
 									%>
+									<%
+											if(intArchived==0){
+									%>
 									<a href="#" class="deleteAllergyLink" 
-										id="deleteAllergy:<%= labelAction %>_ID=<%= allergy.getAllergyId() %>&demographicNo=<%=demoNo %>&action=<%=actionPath %>" >
-										<%=labelAction%>
-									</a>
-									
-									<% } %>
+										id="deleteAllergy:<%= labelAction %>_ID=<%=allergy.getAllergyId() %>&demographicNo=<%=demoNo %>&action=<%=actionPath %>" >
+										<%=labelAction%></a> |
+									<%
+											}
+									%>
+									<a href="#" class="modifyAllergyLink" 
+										id="modifyAllergy:<%= labelAction %>_ID=<%=allergy.getDrugrefId() %>&name=<%=allergy.getDescription() %>&type=<%=allergy.getTypeCode() %>&allergyToArchive=<%=allergy.getId() %>" >
+										<%=intArchived==0?"Modify":labelAction%></a>
+									<%
+										}
+									%>
 									</td>
 								</tr>
 								<% } %>
