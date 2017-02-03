@@ -189,9 +189,9 @@ public class RxPatientData {
 		}
 
 		public org.oscarehr.common.model.Allergy getAllergy(int id) {
-
-			// I know none of this method makes sense, but I'm only converting this to JPA right now, too much work to fix it all to make sense.
 			org.oscarehr.common.model.Allergy allergy = allergyDao.find(id);
+			PartialDate pd = partialDateDao.getPartialDate(PartialDate.ALLERGIES, allergy.getId(), PartialDate.ALLERGIES_STARTDATE);
+			if (pd!=null) allergy.setStartDateFormat(pd.getFormat());
 
 			return allergy;
 		}
@@ -260,12 +260,10 @@ public class RxPatientData {
 			return allergies.toArray(new org.oscarehr.common.model.Allergy[allergies.size()]);
 		}
 
-		public org.oscarehr.common.model.Allergy addAllergy(java.util.Date entryDate, org.oscarehr.common.model.Allergy allergy) {
-
+		public void addAllergy(java.util.Date entryDate, org.oscarehr.common.model.Allergy allergy) {
 			allergy.setEntryDate(entryDate);
 			allergyDao.persist(allergy);
 			partialDateDao.setPartialDate(PartialDate.ALLERGIES, allergy.getId(), PartialDate.ALLERGIES_STARTDATE, allergy.getStartDateFormat());
-			return allergy;
 		}
 
 		private static boolean setAllergyArchive(int allergyId, boolean archive) {
