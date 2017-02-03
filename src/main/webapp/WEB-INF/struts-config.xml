@@ -2603,7 +2603,13 @@
 		
 		<action path="/admin/oscarStatus" scope="request" parameter="method" validate="false" type="oscar.util.OscarStatusAction">
 			<forward name="success" path="/admin/oscarStatus.jsp" />
-		</action>
+        </action>
+
+        <action path="/admin/oscarAudit" scope="request" parameter="method" validate="false" type="oscar.util.AuditAction">
+            <forward name="success" path="/admin/oscarAudit.jsp" />
+            <forward name="failure" path="/failure.jsp" />
+            <forward name="unauthorized" path="/securityError.jsp" />
+        </action>
 
 		<action path="/OcanIarSubmit" type="org.oscarehr.web.OcanIarSubmitAction" parameter="method" scope="request">
         </action>

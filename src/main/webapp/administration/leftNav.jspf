@@ -804,10 +804,9 @@ String pageToShow=request.getParameter("load");
 					<% if (OscarProperties.getInstance().isFaxEnabled()) { %>
 		            <li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/faxStatus.do"><bean:message key="admin.faxStatus.faxStatus" /></a></li>
 		            <% } %>
-					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscarStatus.do"><bean:message key="admin.oscarStatus.oscarStatus" /></a></li>
+                    <li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscarStatus.do"><bean:message key="admin.oscarStatus.oscarStatus" /></a></li>
 				</security:oscarSec>
-	
-							
+                    <li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscarAudit.do">OSCAR Audit</a></li>
 				</ul>	
 				</div>
 				</div>
