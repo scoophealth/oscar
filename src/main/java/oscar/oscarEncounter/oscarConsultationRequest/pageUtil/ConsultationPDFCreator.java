@@ -198,7 +198,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 			ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 			Integer programNo = Integer.parseInt(reqFrm.letterheadName.substring(5));
 			letterheadName = programDao.getProgramName(programNo);
-		} else if (!reqFrm.letterheadName.equals("-1") && !reqFrm.letterheadName.equals(clinic.getClinicName())) {
+		} else if (reqFrm.letterheadName != null && !reqFrm.letterheadName.equals("-1") && clinic != null && !reqFrm.letterheadName.equals(clinic.getClinicName())) {
 			Provider letterheadNameProvider = (reqFrm.letterheadName != null ? new RxProviderData().getProvider(reqFrm.letterheadName) : null);
 			if (letterheadNameProvider != null && letterheadNameProvider.getSurname() != null){			
 				String firstName = "";
