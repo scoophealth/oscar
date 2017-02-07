@@ -75,6 +75,14 @@ public class MeasurementManager {
 		return (result);
 	}
 
+	public List<Measurement> getMeasurementByType(LoggedInInfo loggedInInfo, Integer id, List<String> types) {
+		List<Measurement> results = measurementDao.findByType(id, types);
+		if (results.size() > 0) {
+			LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.getMeasurementByType", "id=" + id);
+		}
+		return results;
+	}
+
 	public List<MeasurementMap> getMeasurementMaps() {
 		// should be safe to get all as they're a defined set of loinic codes or human entered entries
 		List<MeasurementMap> results = measurementMapDao.getAllMaps();
