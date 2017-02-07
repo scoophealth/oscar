@@ -315,7 +315,7 @@ function popupPatient(height, width, url, windowName, docId, d) {
 }
 
 function popupPatientTickler(height, width, url, windowName,docId,d,n) {
-	urlNew = url + "method=edit&tickler.demographic_webName=" + n + "&tickler.demographicNo=" +  d + "&docType=DOC&docId="+docId;
+	urlNew = url + "method=edit&tickler.demographic_webName=" + n + "&tickler.demographicNo=" +  d + "&docType=HRM&docId="+docId;
 	return popup2(height, width, 0, 0, urlNew, windowName);
 }
 
