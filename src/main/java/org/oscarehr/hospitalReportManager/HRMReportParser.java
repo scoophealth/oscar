@@ -60,7 +60,7 @@ public class HRMReportParser {
 	public static HRMReport parseReport(LoggedInInfo loggedInInfo, String hrmReportFileLocation) {
 		OmdCds root = null;
 		
-		logger.info("Parsing the Report in the location:"+hrmReportFileLocation);
+		logger.debug("Parsing the Report in the location:"+hrmReportFileLocation);
 		
 		String fileData = null;
 		if (hrmReportFileLocation != null) {
@@ -131,7 +131,7 @@ public class HRMReportParser {
 			return;
 		}
 
-		logger.info("Adding Report to Inbox, for file:"+report.getFileLocation());
+		logger.debug("Adding Report to Inbox, for file:"+report.getFileLocation());
 		
 		HRMDocument document = new HRMDocument();
 
@@ -198,7 +198,7 @@ public class HRMReportParser {
 		} else if (exactMatchList != null && exactMatchList.size() > 0) {
 			// We've seen this one before.  Increment the counter on how many times we've seen it before
 			
-			logger.info("We've seen this report before. Increment the counter on how many times we've seen it before, for file:"+report.getFileLocation());
+			logger.debug("We've seen this report before. Increment the counter on how many times we've seen it before, for file:"+report.getFileLocation());
 			
 			HRMDocument existingDocument = hrmDocumentDao.findById(exactMatchList.get(0)).get(0);
 			existingDocument.setNumDuplicatesReceived((existingDocument.getNumDuplicatesReceived() != null ? existingDocument.getNumDuplicatesReceived() : 0) + 1);
@@ -215,7 +215,7 @@ public class HRMReportParser {
 		}
 		
 
-		logger.info("Routing Report To Demographic, for file:"+report.getFileLocation());
+		logger.debug("Routing Report To Demographic, for file:"+report.getFileLocation());
 		
 		// Search the demographics on the system for a likely match and route it to them automatically
 		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
@@ -253,7 +253,7 @@ public class HRMReportParser {
 			logger.info("doSimilarReportCheck cannot continue, report parameter is null");
 			return;
 		}
-		logger.info("Identifying if this is a report that we received before, but was sent to the wrong demographic, for file:"+report.getFileLocation());
+		logger.debug("Identifying if this is a report that we received before, but was sent to the wrong demographic, for file:"+report.getFileLocation());
 		
 		HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
 
@@ -350,7 +350,7 @@ public class HRMReportParser {
 			return;
 		}
 		
-		logger.info("Routing Report To SubClass, for file:"+report.getFileLocation());
+		logger.debug("Routing Report To SubClass, for file:"+report.getFileLocation());
 		
 		HRMDocumentSubClassDao hrmDocumentSubClassDao = (HRMDocumentSubClassDao) SpringUtils.getBean("HRMDocumentSubClassDao");
 
@@ -395,7 +395,7 @@ public class HRMReportParser {
 			return false;
 		}
 		
-		logger.info("Routing Report to Provider, for file:"+report.getFileLocation());
+		logger.debug("Routing Report to Provider, for file:"+report.getFileLocation());
 		
 		HRMDocumentToProviderDao hrmDocumentToProviderDao = (HRMDocumentToProviderDao) SpringUtils.getBean("HRMDocumentToProviderDao");
 		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao"); 

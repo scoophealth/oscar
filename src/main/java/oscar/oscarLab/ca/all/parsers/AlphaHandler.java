@@ -658,6 +658,6 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
 		sb.append("Alpha client ref#:"+getClientRef()+"\n");
 		sb.append("OBR Count=" + getOBRCount());
 		sb.append("obxCount="+getOBXCount(0));
-    	logger.info(sb.toString());
+    	logger.debug(sb.toString());
     }
 }

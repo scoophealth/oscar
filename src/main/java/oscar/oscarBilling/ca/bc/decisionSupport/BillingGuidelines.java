@@ -181,6 +181,9 @@ public class BillingGuidelines  {
 
 
     public List<DSConsequence> evaluateAndGetConsequences(LoggedInInfo loggedInInfo, String demographicNo, String providerNo) {
+    	if(demographicNo == null) {
+    		return new ArrayList<DSConsequence>();
+    	}
         log.debug("passed in provider: " + providerNo + " demographicNo" + demographicNo);
         log.debug("Decision Support 'evaluateAndGetConsequences' has been called, reading " + billingGuideLines.size() + " for this provider");
         ArrayList<DSConsequence> allResultingConsequences = new ArrayList<DSConsequence>();
