@@ -140,7 +140,6 @@
 <%
 	String ptstatus = request.getParameter("ptstatus") == null ? "active" : request.getParameter("ptstatus");
 
-	org.oscarehr.util.MiscUtils.getLogger().info("PSTATUS " + ptstatus);
 	OscarProperties props = OscarProperties.getInstance();
 %>
 
