@@ -297,6 +297,13 @@ input#referalDate, input#appointmentDate, input#followUpDate {
    background-repeat: no-repeat;
 }
 
+input#referalDate {
+   background-image: url( ../../images/cal.gif);
+   background-position-x: right;
+   background-position-y: center;
+   background-repeat: no-repeat;
+}
+
 #referalDate_cal, #appointmentDate_cal, #followUpDate_cal  {
     display: none !important;
 }
@@ -1523,7 +1530,7 @@ function updateFaxButton() {
 						
 								<td  class="tite3" >
 									<html:text styleId="referalDate" property="referalDate" 
-										readonly="true" disabled="true" value="<%=formattedDate%>" />
+										readonly="true"  value="<%=formattedDate%>" />
 								</td>
 													
 						</oscar:oscarPropertiesCheck>
@@ -2330,8 +2337,9 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 
 Calendar.setup( { inputField : "followUpDate", ifFormat : "%Y/%m/%d", showsTime :false, trigger : "followUpDate", singleClick : true, step : 1 } );
 Calendar.setup( { inputField : "appointmentDate", ifFormat : "%Y/%m/%d", showsTime :false, trigger : "appointmentDate", singleClick : true, step : 1 } );
+<%if("false".equals(OscarProperties.getInstance().getProperty("CONSULTATION_LOCK_REFERRAL_DATE", "true"))) {%>
 Calendar.setup( { inputField : "referalDate", ifFormat : "%Y/%m/%d", showsTime :false, trigger : "referalDate", singleClick : true, step : 1 } );
-
+<%}%>
 </script>
 </html:html>
 
