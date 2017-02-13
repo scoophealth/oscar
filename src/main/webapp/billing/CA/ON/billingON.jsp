@@ -666,13 +666,14 @@ function onNext() {
 	}
 	
 	var dxCode = document.titlesearch.dxCode.value;
-	if (codeToAdd.indexOf(dxCode)>=0 || codeToMatch[dxCode]!=null) {
+	var codeMatch = codeToMatch[dxCode];
+	if (codeToAdd.indexOf(dxCode)>=0 || codeMatch!=null) {
+		var dxCodeMatch = codeMatch==null ? dxCode : codeMatch;
 <%for (String pcode : patientDx) {%>
-		if (dxCode==<%=pcode%>) dxCode = -1;
+		if (dxCodeMatch==<%=pcode%>) dxCode = -1;
 <%}%>
-		if (dxCode!=-1) {
-			var codeMatch = codeToMatch[dxCode];
-			if (codeMatch!=null) document.titlesearch.codeMatchToPatientDx.value = codeMatch;
+		if (dxCode!=-1 && codeMatch!=null) {
+			document.titlesearch.codeMatchToPatientDx.value = codeMatch;
 		}
 	} else {
 		dxCode = -1;
