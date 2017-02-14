@@ -138,13 +138,13 @@ if(!authed) {
 			if (codeToAddPatientDx==null || codeToAddPatientDx.getValue().trim().isEmpty()) {
 				codeToAddPatientDx = new UserProperty();
 				codeToAddPatientDx.setName(UserProperty.CODE_TO_ADD_PATIENTDX);
-				codeToAddPatientDx.setValue("153,162,174,185,232,244,250,272,274,290,295,301,311,332,345,346,401,412,428,437,493,496,531,535,555,556,571,585,715,724,042");
+				codeToAddPatientDx.setValue("042,153,162,174,185,232,244,250,272,274,290,295,301,311,332,345,346,401,412,437,493,531,535,555,556,571,585,715,724");
 				userPropertyDao.persist(codeToAddPatientDx);
 			}
 			if (codeToMatchPatientDx==null || codeToMatchPatientDx.getValue().trim().isEmpty()) {
 				codeToMatchPatientDx = new UserProperty();
 				codeToMatchPatientDx.setName(UserProperty.CODE_TO_MATCH_PATIENTDX);
-				codeToMatchPatientDx.setValue("300:30000,331:3310,202:2028,278:2780,296:29689,305:3051,314:3140,394:396,427:4273,443:4438,530:53011,714:7140,726:7291,795:78071");
+				codeToMatchPatientDx.setValue("202:2028,278:2780,296:29689,300:30000,305:3051,314:3140,331:3310,394:4249,427:4273,428:4281,443:4439,496:49680,530:53011,714:7140,726:7291,795:78071");
 				userPropertyDao.persist(codeToMatchPatientDx);
 			}
 
@@ -699,7 +699,7 @@ function onNext() {
 	}
 	else if (dxCode!=-1) {
     	var codeDesc = document.getElementById("code_desc").innerHTML.trim();
-    	var yes = confirm("Add \""+codeDesc+"\"("+dxCode+") to patient's disease registry?");
+    	var yes = confirm("Add \""+codeDesc+"\"("+dxCode+") to patient's disease registry?\n(OK=Yes, Cancel=No)");
     	if (yes) document.titlesearch.addToPatientDx.value = "yes";
     }
     return ret;
