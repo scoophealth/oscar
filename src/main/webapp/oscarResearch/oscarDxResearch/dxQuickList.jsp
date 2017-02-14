@@ -37,9 +37,6 @@ Required Parameters to plug-in:
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 
-	<!-- html:form action="oscarResearch/oscarDxResearch/dxResearchLoadQuickListItems.do" > -->
-
-
 <table id="dxCodeQuicklist" style="width:100%;border-collapse:collapse;">
 	<tr >
 		<td class="heading">
@@ -48,22 +45,24 @@ Required Parameters to plug-in:
 	</tr>
 	<tr>
 		<td>
-		<html:select property="quickList"
-			onchange="javascript:changeList(this,'${ demographicNo }','${ providerNo }');"  >			
-			<logic:iterate id="quickLists" name="allQuickLists" property="dxQuickListBeanVector" >				
-				<option value="${ quickLists.quickListName }" ${ quickLists.quickListName eq param.quickList ? 'selected' : '' } >			
-					<bean:write	name="quickLists" property="quickListName" />
-				</option>
-			</logic:iterate>
-		</html:select>
-		
+			<table>
+			<tr>
+				<td>
+					<html:select size="5" style="overflow:auto" property="quickList"
+						onchange="javascript:changeList(this,'${ demographicNo }','${ providerNo }');"  >			
+						<logic:iterate id="quickLists" name="allQuickLists" property="dxQuickListBeanVector" >				
+							<option value="${ quickLists.quickListName }" ${ quickLists.quickListName eq param.quickList || quickLists.lastUsed eq 'Selected' ? 'selected' : '' } >			
+								<bean:write	name="quickLists" property="quickListName" />
+							</option>
+						</logic:iterate>
+					</html:select>
+				</td>
+				<td>
+					<i>(Click the titles to switch lists)</i>
+				</td>
+			</tr>
+			</table>
 		</td>
-<%-- 		<td>
-			<html:button property="" onclick="javascript:changeList('${ param.quickList }','${ demographicNo }','${ providerNo }');" 
-				disabled="${ param.disable }">
-				<bean:message key="oscarResearch.oscarDxResearch.btnGO"/>
-			</html:button>
-		</td>	 --%>	
 	</tr>
 
 	<logic:iterate id="item" name="allQuickListItems" property="dxQuickListItemsVector">	
@@ -89,5 +88,3 @@ Required Parameters to plug-in:
 	    		+providerNo;
 	}
 </script>
-
-	<!--  /html:form>-->

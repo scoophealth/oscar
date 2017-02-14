@@ -1295,7 +1295,7 @@ function getNewCurrentDxCodeList(origRequest){
 </div>
 
 <div class="dxBox">
-    <h3>&nbsp;Dx Quick Pick Add List</h3>
+    <h3>&nbsp;Dx Quick Pick Add Lists</h3>
        <form id="dxForm">
        <input type="hidden" name="demographicNo" value="<%=demo_no%>" />
        <input type="hidden" name="providerNo" value="<%=session.getAttribute("user")%>" />

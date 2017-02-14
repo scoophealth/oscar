@@ -36,7 +36,7 @@ import oscar.OscarProperties;
 public class dxQuickListBeanHandler {
 
 	Vector dxQuickListBeanVector = new Vector();
-	String lastUsedQuickList = "default";
+	String lastUsedQuickList = null;
 
 	public dxQuickListBeanHandler(String providerNo) {
 		init(providerNo);
@@ -55,26 +55,18 @@ public class dxQuickListBeanHandler {
 	}
 
 	public boolean init(String providerNo, String codingSystem) {
-		String quickListName;
-		String lastUsed = "";
-
+		String qlDefault = OscarProperties.getInstance().getProperty("DX_QUICK_LIST_DEFAULT");
 		QuickListDao dao = SpringUtils.getBean(QuickListDao.class);
-		lastUsed = OscarProperties.getInstance().getProperty("DX_QUICK_LIST_DEFAULT");
-		if (lastUsed == null) {
-			QuickList ql = dao.findLast();
-			if (ql != null) {
-				lastUsed = ql.getQuickListName();
-			}
-		}
-
+		
 		for (QuickList ql : dao.findByCodingSystem(codingSystem)) {
 			dxQuickListBean bean = new dxQuickListBean(ql.getQuickListName(), ql.getCreatedByProvider());
-			quickListName = ql.getQuickListName();
-
-			if (lastUsed.equals(quickListName)) {
+			String quickListName = ql.getQuickListName();
+			
+			if (quickListName.equals(qlDefault) || lastUsedQuickList==null) { //select default or 1st quickList
 				bean.setLastUsed("Selected");
 				lastUsedQuickList = ql.getQuickListName();
 			}
+			
 			dxQuickListBeanVector.add(bean);
 		}
 		return true;
