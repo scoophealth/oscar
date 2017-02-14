@@ -62,12 +62,6 @@ public class QuickListDao extends AbstractDao<QuickList>{
 	    return query.getResultList();
     }
 
-	public QuickList findLast() {
-		Query query = createQuery("ql", "ORDER BY ql.quickListName");
-		query.setMaxResults(1);
-		return getSingleResultOrNull(query);
-    }
-
 	@SuppressWarnings("unchecked")
 	public List<QuickList> findByCodingSystem(String codingSystem) {
 		String csQuery = "";
