@@ -18,6 +18,22 @@
 			<param name="ConversionPattern" value="%d %-5p [%c{1}:%L] %m%n" />
 		</layout>
 	</appender>
+	
+	<appender name="INTEGRATOR_FILE" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/integrator.log" />
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p [%c{1}:%L] %m%n" />
+		</layout>
+	</appender>
+	
+	<category name="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorUpdateTask" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="INTEGRATOR_FILE" />
+	</category>
+
+
 
 	<!-- Example gmail appender (can be used for any smtp ssl) -->
 	<!-- 
