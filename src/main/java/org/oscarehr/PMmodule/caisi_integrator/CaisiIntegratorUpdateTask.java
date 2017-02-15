@@ -283,7 +283,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// this will ensure that only consenting patients will be pushed.
 		// Note: the consent module must be activated in the Oscar properties file; and the Integrator Patient Consent program
 		// must be set in Provider Properties database table.
-		if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
+		if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") &&  userPropertyDao.getProp( UserProperty.INTEGRATOR_PATIENT_CONSENT ) != null ) {
 			CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE = "1".equals( userPropertyDao.getProp( UserProperty.INTEGRATOR_PATIENT_CONSENT ).getValue() );
 			// consenttype is the consent type from the patient consent manager used for this module .
 			consentType = patientConsentManager.getConsentType( UserProperty.INTEGRATOR_PATIENT_CONSENT );
