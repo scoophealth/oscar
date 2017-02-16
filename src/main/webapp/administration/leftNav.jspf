@@ -697,6 +697,9 @@ String pageToShow=request.getParameter("load");
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/jobs.jsp"><bean:message key="admin.jobs.title"/></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/jobTypes.jsp"><bean:message key="admin.jobtypes.title"/></a></li>
 					
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/contactTypeManager.jsp"><bean:message key="admin.contactTypeManager.title"/></a></li>
+					
+
 					<li>
 						<a href="javascript:void(0);" class="xlink" rel="${ctx}/lookupListManagerAction.do?method=manage" >
 							<bean:message key="admin.admin.lookUpLists"/>

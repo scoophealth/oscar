@@ -24,6 +24,7 @@
 package org.oscarehr.PMmodule.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -846,4 +847,9 @@ public class Program implements Serializable {
 	}
 
 	
+	public static final Comparator<Program> NameComparator = new Comparator<Program>() {
+        public int compare(Program p1, Program p2) {
+        	return p1.getName().compareTo(p2.getName());
+        }
+    }; 
 }

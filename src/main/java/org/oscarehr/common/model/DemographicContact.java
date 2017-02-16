@@ -52,6 +52,7 @@ public class DemographicContact extends AbstractModel<Integer> {
 
 	public static final String CATEGORY_PERSONAL = "personal";
 	public static final String CATEGORY_PROFESSIONAL = "professional";
+	public static final String CATEGORY_OTHER = "other";
 
 
 	private static final long serialVersionUID = 1L;

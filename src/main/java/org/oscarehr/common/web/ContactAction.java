@@ -25,14 +25,19 @@
 
 package org.oscarehr.common.web;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
@@ -49,19 +54,24 @@ import org.oscarehr.common.dao.ProfessionalContactDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.ContactSpecialty;
+import org.oscarehr.common.model.ContactType;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.ProfessionalContact;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.common.model.ProgramContactType;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.ContactManager;
 import org.oscarehr.managers.DemographicManager;
-import org.oscarehr.util.HealthCareTeamCreator;
 import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.HealthCareTeamCreator;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.BeanUtils;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import oscar.OscarProperties;
 
 public class ContactAction extends DispatchAction {
@@ -76,7 +86,8 @@ public class ContactAction extends DispatchAction {
 	private static ContactSpecialtyDao contactSpecialtyDao = SpringUtils.getBean(ContactSpecialtyDao.class);
 	private static DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
-	 
+	private static ContactManager contactManager = SpringUtils.getBean(ContactManager.class);
+	
 	@Override
 	protected ActionForward unspecified(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
@@ -892,4 +903,150 @@ public class ContactAction extends DispatchAction {
 		}
 	};
 	
+	
+	//get list of contact types
+	public ActionForward listContactTypes( ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, HttpServletResponse response ) throws IOException {
+
+		List<ContactType> contactTypes = contactManager.getContactTypes(LoggedInInfo.getLoggedInInfoFromSession(request));
+
+		JSONArray arr = JSONArray.fromObject(contactTypes);
+		
+		arr.write(response.getWriter());
+		
+		return null;
+	}
+	
+	//save (new/existing)contact type
+	public ActionForward saveContactType( ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, HttpServletResponse response ) throws IOException {
+
+		String id = request.getParameter("contactTypeId");
+		String name = request.getParameter("contactTypeName");
+		String male = request.getParameter("contactTypeMale");
+		String female = request.getParameter("contactTypeFemale");
+	//	String inverseId = request.getParameter("inverseId");
+		String active = request.getParameter("contactTypeActive");
+		
+		ContactType contactType = new ContactType();
+		if(!StringUtils.isEmpty(id) && !"0".equals(id)) {
+			contactType.setId(Integer.parseInt(id));
+		}
+		contactType.setName(name);
+		contactType.setMale((male != null &&  "on".equals(male))?true:false);
+		contactType.setFemale((female != null &&  "on".equals(female))?true:false);
+		contactType.setActive((active != null &&  "on".equals(active))?true:false);
+		/*
+		if(!StringUtils.isEmpty(inverseId) && !"0".equals(inverseId)) {
+			contactType.setInverseRelationship(Integer.parseInt(inverseId));
+		}*/
+		
+		contactManager.saveContactType(LoggedInInfo.getLoggedInInfoFromSession(request),contactType);
+		
+		JSONObject json = JSONObject.fromObject(contactType);
+		
+		json.write(response.getWriter());
+		
+		return null;
+	}
+	
+	
+	//inactivate contact type
+	public ActionForward archiveContactType( ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, HttpServletResponse response ) {
+
+		String id = request.getParameter("id");
+		
+		contactManager.archiveContactType(LoggedInInfo.getLoggedInInfoFromSession(request),Integer.parseInt(id));
+		
+		return null;
+	}
+	
+	
+	//restore contact type
+	public ActionForward restoreContactType( ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, HttpServletResponse response ) {
+
+		String id = request.getParameter("id");
+		
+		contactManager.restoreContactType(LoggedInInfo.getLoggedInInfoFromSession(request),Integer.parseInt(id));
+		
+		
+		return null;
+	}
+	
+
+	public ActionForward getContactTypeDataForProgram( ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, HttpServletResponse response )throws IOException {
+
+		String programId = request.getParameter("programId");
+		
+		List<ProgramContactType> results = contactManager.getContactTypesForProgram(LoggedInInfo.getLoggedInInfoFromSession(request),Integer.parseInt(programId));
+		
+		JSONArray arr = JSONArray.fromObject(results);
+		
+		arr.write(response.getWriter());
+		
+		return null;
+	}
+	
+	
+	private String convertCategoryToName(Integer id) {
+		if(id == 0) {
+			return "Personal";
+		}
+		if(id == 1) {
+			return "Health Care Provider";
+		}
+		if(id == 2) {
+			return "Other";
+		}
+		
+		return "Other";
+	}
+	//save (new/existing)contact type
+		public ActionForward saveProgramContactTypes( ActionMapping mapping, ActionForm form, 
+				HttpServletRequest request, HttpServletResponse response ) throws IOException {
+
+			String programId = request.getParameter("programId");
+			
+			LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+			
+			contactManager.removeProgramContactTypes(loggedInInfo,Integer.parseInt(programId));
+			
+			Enumeration<String> params = request.getParameterNames();
+			while(params.hasMoreElements()) {
+				String parameterName = params.nextElement();
+				if(parameterName.startsWith("pct_")) {
+					String category = parameterName.substring(4, 5);
+					String contactTypeId = parameterName.substring(6);
+					
+					contactManager.addProgramContactType(loggedInInfo,Integer.parseInt(programId),Integer.parseInt(contactTypeId),convertCategoryToName(Integer.parseInt(category)));
+					logger.info("adding contactTypeId " + contactTypeId + " for program " + programId +" using category " + convertCategoryToName(Integer.parseInt(category)));
+				}
+			}
+			
+			JSONObject json = new JSONObject();
+			json.put("success", true);
+			
+			json.write(response.getWriter());
+			
+			return null;
+		}
+		
+		
+		//get list of contact types
+		public ActionForward listProgramContactTypes( ActionMapping mapping, ActionForm form, 
+				HttpServletRequest request, HttpServletResponse response ) throws IOException {
+
+			Map<String,List<ProgramContactType>> contactTypesByProgram = contactManager.getProgramContactTypes(LoggedInInfo.getLoggedInInfoFromSession(request));
+
+			JSONObject jsonObject = JSONObject.fromObject( contactTypesByProgram );  
+			
+			
+			jsonObject.write(response.getWriter());
+			
+			return null;
+		}
+		
 }
