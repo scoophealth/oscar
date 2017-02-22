@@ -118,8 +118,7 @@ public class Driver {
 				logItem.setContent("query");
 				logItem.setData(olisHL7String);
 
-				LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-				if (loggedInInfo.getLoggedInProvider() != null) logItem.setProviderNo(loggedInInfo.getLoggedInProviderNo());
+				logItem.setProviderNo("-1");
 
 				logDao.persist(logItem);
 
