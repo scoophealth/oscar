@@ -48,7 +48,7 @@ public class CaseManagementIssue extends BaseObject {
 	private RoleProgramAccessDAO roleProgramAccessDAO=(RoleProgramAccessDAO)SpringUtils.getBean("RoleProgramAccessDAO");
 	
 	protected Long id;
-	protected String demographic_no;
+	protected Integer demographic_no;
 	protected long issue_id;
 	protected boolean acute;
 	// protected boolean medical_diagnosis;
@@ -127,11 +127,11 @@ public class CaseManagementIssue extends BaseObject {
 		this.certain = certain;
 	}
 
-	public String getDemographic_no() {
+	public Integer getDemographic_no() {
 		return demographic_no;
 	}
 
-	public void setDemographic_no(String demographic_no) {
+	public void setDemographic_no(Integer demographic_no) {
 		this.demographic_no = demographic_no;
 	}
 

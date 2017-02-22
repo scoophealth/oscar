@@ -249,7 +249,7 @@ public class EctIncomingEncounterAction extends Action {
 					cmi = new CaseManagementIssue();
 					cmi.setAcute(false);
 					cmi.setCertain(false);
-					cmi.setDemographic_no(bean.getDemographicNo());
+					cmi.setDemographic_no(Integer.valueOf(bean.getDemographicNo()));
 					cmi.setIssue_id(Long.valueOf(id));
 					cmi.setMajor(false);
 					cmi.setProgram_id(Integer.valueOf(wlProgramId));

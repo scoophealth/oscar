@@ -898,7 +898,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			CachedDemographicIssue cachedDemographicIssue = new CachedDemographicIssue();
 
 			FacilityIdDemographicIssueCompositePk facilityDemographicIssuePrimaryKey = new FacilityIdDemographicIssueCompositePk();
-			facilityDemographicIssuePrimaryKey.setCaisiDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
+			facilityDemographicIssuePrimaryKey.setCaisiDemographicId(caseManagementIssue.getDemographic_no());
 			if( Issue.CUSTOM_ISSUE.equalsIgnoreCase(issue.getType()) ) {
 				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.CUSTOM_ISSUE); 
 			}

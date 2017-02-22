@@ -43,12 +43,12 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
 	
     @SuppressWarnings("unchecked")
     public List<CaseManagementIssue> getIssuesByDemographic(String demographic_no) {
-        return this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ?", new Object[] {demographic_no});
+        return this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ?", new Object[] {Integer.valueOf(demographic_no)});
     }
 
     @SuppressWarnings("unchecked")
     public List<CaseManagementIssue> getIssuesByDemographicOrderActive(Integer demographic_no, Boolean resolved) {
-        return getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ? "+(resolved!=null?" and cmi.resolved="+resolved:"")+" order by cmi.resolved", new Object[] {demographic_no.toString()});
+        return getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ? "+(resolved!=null?" and cmi.resolved="+resolved:"")+" order by cmi.resolved", new Object[] {demographic_no});
     }
     
     @SuppressWarnings("unchecked")
@@ -66,7 +66,7 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
 
     public CaseManagementIssue getIssuebyId(String demo, String id) {
         @SuppressWarnings("unchecked")
-        List<CaseManagementIssue> list = this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.issue_id = ? and demographic_no = ?",new Object[]{Long.parseLong(id),demo});
+        List<CaseManagementIssue> list = this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.issue_id = ? and demographic_no = ?",new Object[]{Long.parseLong(id),Integer.valueOf(demo)});
         if( list != null && list.size() == 1 )
             return list.get(0);
         
@@ -75,7 +75,7 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
 
     public CaseManagementIssue getIssuebyIssueCode(String demo, String issueCode) {
     	@SuppressWarnings("unchecked")
-        List<CaseManagementIssue> list = this.getHibernateTemplate().find("select cmi from CaseManagementIssue cmi, Issue issue where cmi.issue_id=issue.id and issue.code = ? and cmi.demographic_no = ?",new Object[]{issueCode,demo});
+        List<CaseManagementIssue> list = this.getHibernateTemplate().find("select cmi from CaseManagementIssue cmi, Issue issue where cmi.issue_id=issue.id and issue.code = ? and cmi.demographic_no = ?",new Object[]{issueCode,Integer.valueOf(demo)});
         
         if(list.size()>1){ 
         log.error("Expected 1 result got more : "+list.size() + "(" + demo + "," + issueCode + ")");
@@ -131,12 +131,12 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
 
     @SuppressWarnings("unchecked")
     public List<CaseManagementIssue> getIssuesByDemographicSince(String demographic_no,Date date) {
-        return this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ? and cmi.update_date > ?", new Object[] {demographic_no,date});
+        return this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ? and cmi.update_date > ?", new Object[] {Integer.valueOf(demographic_no),date});
     }
     
     @SuppressWarnings("unchecked")
     public List<FacilityIdDemographicIssueCompositePk> getIssueIdsForIntegrator(Integer facilityId, Integer demographicNo) {
-        List<Object[]> rs =  this.getHibernateTemplate().find("select i.code,i.type from CaseManagementIssue cmi, Issue i where cmi.issue_id = i.id and cmi.demographic_no = ?", new Object[] {demographicNo.toString()});
+        List<Object[]> rs =  this.getHibernateTemplate().find("select i.code,i.type from CaseManagementIssue cmi, Issue i where cmi.issue_id = i.id and cmi.demographic_no = ?", new Object[] {demographicNo});
         List<FacilityIdDemographicIssueCompositePk> results = new ArrayList<FacilityIdDemographicIssueCompositePk>();
         for(Object[] item:rs) {
         	FacilityIdDemographicIssueCompositePk key = new FacilityIdDemographicIssueCompositePk();

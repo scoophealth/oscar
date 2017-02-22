@@ -413,7 +413,7 @@ public class NotesService extends AbstractServiceImpl {
 					cmi.setIssue(is);
 					cmi.setProgram_id(programManager2.getCurrentProgramInDomain(getLoggedInInfo(), getLoggedInInfo().getLoggedInProviderNo()).getProgramId().intValue());
 					cmi.setType(is.getRole());
-					cmi.setDemographic_no(demo);
+					cmi.setDemographic_no(Integer.valueOf(demo));
 				}
 				
 				cmi.setAcute(i.isAcute());
@@ -726,7 +726,7 @@ public class NotesService extends AbstractServiceImpl {
 					cmi.setIssue(is);
 					cmi.setProgram_id(programManager2.getCurrentProgramInDomain(getLoggedInInfo(), getLoggedInInfo().getLoggedInProviderNo()).getProgramId().intValue());
 					cmi.setType(is.getRole());
-					cmi.setDemographic_no(demo);
+					cmi.setDemographic_no(Integer.valueOf(demo));
 				}
 				cmi.setAcute(i.isAcute());
 				cmi.setCertain(i.isCertain());
@@ -771,7 +771,7 @@ public class NotesService extends AbstractServiceImpl {
 			cIssue = new CaseManagementIssue();
 			cIssue.setAcute(false);
 			cIssue.setCertain(false);
-			cIssue.setDemographic_no(demo);
+			cIssue.setDemographic_no(Integer.valueOf(demo));
 			cIssue.setIssue_id(cppIssue.getId());
 			cIssue.setMajor(false);
 			cIssue.setProgram_id(Integer.parseInt(programId));
@@ -1676,7 +1676,7 @@ public class NotesService extends AbstractServiceImpl {
 			cmi = new CaseManagementIssue();
 			cmi.setAcute(false);
 			cmi.setCertain(false);
-			cmi.setDemographic_no(String.valueOf(demographicNo));
+			cmi.setDemographic_no(demographicNo);
 			cmi.setIssue_id(issue.getId());
 			cmi.setMajor(false);
 			cmi.setProgram_id(Integer.parseInt(cmn.getProgram_no()));

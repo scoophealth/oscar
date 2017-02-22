@@ -1433,7 +1433,7 @@ public class EFormUtil {
 		CaseManagementIssue cmIssu = cmm.getIssueById(demographicNo, isu.getId().toString());
 		if (cmIssu == null) {
 			cmIssu = new CaseManagementIssue();
-			cmIssu.setDemographic_no(demographicNo);
+			cmIssu.setDemographic_no(Integer.valueOf(demographicNo));
 			cmIssu.setIssue_id(isu.getId());
 			cmIssu.setType(isu.getType());
 			cmm.saveCaseIssue(cmIssu);

@@ -38,6 +38,6 @@ public class MsgDisplayMessage {
     public String attach     = null;
     public String pdfAttach     = null;
     public String demographic_no = null;
-
+    public String nameage = null;
 
 }

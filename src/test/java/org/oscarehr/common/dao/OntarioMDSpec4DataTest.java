@@ -264,7 +264,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 	CaseManagementIssue getCaseMangementIssue(Demographic demographic,Issue issue,Integer oscarProgramID,String type){
 
 		CaseManagementIssue caseManagementIssue = new CaseManagementIssue();
-		caseManagementIssue.setDemographic_no(""+demographic.getDemographicNo());
+		caseManagementIssue.setDemographic_no(demographic.getDemographicNo());
 		caseManagementIssue.setIssue_id(issue.getId());
 		caseManagementIssue.setProgram_id(oscarProgramID);
 		caseManagementIssue.setType(type);

@@ -262,7 +262,7 @@ CREATE TABLE `casemgmt_cpp` (
 
 CREATE TABLE `casemgmt_issue` (
   `id` int(10) NOT NULL auto_increment,
-  `demographic_no` varchar(20) NOT NULL default '',
+  `demographic_no` int(11) NOT NULL,
   `issue_id` int(10) NOT NULL default '0',
   `acute` tinyint(1) NOT NULL default '0',
   `certain` tinyint(1) NOT NULL default '0',
