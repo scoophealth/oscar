@@ -2447,7 +2447,7 @@ import oscar.util.UtilDateUtilities;
 
 	Set<CaseManagementIssue> getCMIssue(String code) {
 		CaseManagementIssue cmIssu = new CaseManagementIssue();
-		cmIssu.setDemographic_no(demographicNo);
+		cmIssu.setDemographic_no(Integer.valueOf(demographicNo));
 		Issue isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(code));
 		cmIssu.setIssue_id(isu.getId());
 		cmIssu.setType(isu.getType());
@@ -2463,7 +2463,7 @@ import oscar.util.UtilDateUtilities;
 		Issue isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(issueCode));
 		if (isu!=null) {
 			CaseManagementIssue cmIssu = new CaseManagementIssue();
-			cmIssu.setDemographic_no(demographicNo);
+			cmIssu.setDemographic_no(Integer.valueOf(demographicNo));
 			cmIssu.setIssue_id(isu.getId());
 			cmIssu.setType(isu.getType());
 			caseManagementManager.saveCaseIssue(cmIssu);
@@ -2473,7 +2473,7 @@ import oscar.util.UtilDateUtilities;
 			isu = caseManagementManager.getIssueInfoByCode(noDot(diagCode.getStandardCode()));
 			if (isu!=null) {
 				CaseManagementIssue cmIssu = new CaseManagementIssue();
-				cmIssu.setDemographic_no(demographicNo);
+				cmIssu.setDemographic_no(Integer.valueOf(demographicNo));
 				cmIssu.setIssue_id(isu.getId());
 				cmIssu.setType(isu.getType());
 				caseManagementManager.saveCaseIssue(cmIssu);
@@ -2488,7 +2488,7 @@ import oscar.util.UtilDateUtilities;
 		Issue isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(cppName));
 		if (isu!=null) {
 			CaseManagementIssue cmIssu = new CaseManagementIssue();
-			cmIssu.setDemographic_no(demographicNo);
+			cmIssu.setDemographic_no(Integer.valueOf(demographicNo));
 			cmIssu.setIssue_id(isu.getId());
 			cmIssu.setType(isu.getType());
 			caseManagementManager.saveCaseIssue(cmIssu);
@@ -2498,7 +2498,7 @@ import oscar.util.UtilDateUtilities;
 			isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(diagCode.getValue()));
 			if (isu!=null) {
 				CaseManagementIssue cmIssu = new CaseManagementIssue();
-				cmIssu.setDemographic_no(demographicNo);
+				cmIssu.setDemographic_no(Integer.valueOf(demographicNo));
 				cmIssu.setIssue_id(isu.getId());
 				cmIssu.setType(isu.getType());
 				caseManagementManager.saveCaseIssue(cmIssu);

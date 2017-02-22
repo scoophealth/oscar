@@ -1491,7 +1491,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				Issue issue = issueDao.findIssueByCode(issueDisplay.code);
 				if (issue != null) {
 					caseManagementIssue = new CaseManagementIssue();
-					caseManagementIssue.setDemographic_no(demo);
+					caseManagementIssue.setDemographic_no(demographicNo);
 					caseManagementIssue.setIssue_id(issue.getId());
 					caseManagementIssue.setType(issue.getRole());
 					caseManagementIssue.setUpdate_date(new Date());
@@ -1585,7 +1585,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				Issue issue = issueDao.findIssueByCode(issueDisplay.code);
 				if (issue != null) {
 					caseManagementIssue = new CaseManagementIssue();
-					caseManagementIssue.setDemographic_no(demo);
+					caseManagementIssue.setDemographic_no(demographicNo);
 					caseManagementIssue.setIssue_id(issue.getId());
 					caseManagementIssue.setType(issue.getRole());
 					caseManagementIssue.setUpdate_date(new Date());
@@ -3455,7 +3455,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			cmi = new CaseManagementIssue();
 			cmi.setAcute(false);
 			cmi.setCertain(false);
-			cmi.setDemographic_no(demographicNo);
+			cmi.setDemographic_no(Integer.valueOf(demographicNo));
 			cmi.setIssue_id(issue.getId());
 			cmi.setMajor(false);
 			cmi.setProgram_id(Integer.parseInt(cmn.getProgram_no()));

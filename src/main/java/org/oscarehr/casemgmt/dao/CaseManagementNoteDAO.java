@@ -483,7 +483,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			note.setUuid(uuid.toString());
 		}
 		note.setUpdate_date(new Date());
-		this.getHibernateTemplate().save(note);
+		this.getHibernateTemplate().saveOrUpdate(note);
 	}
 
 	public Object saveAndReturn(CaseManagementNote note) {
@@ -575,8 +575,8 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			// log.info("haveIssue - DAO - # of results = " + results.size());
 			if (results.size() > 0) return true;
 			return false;
-		} finally {
-			session.close();
+		} finally {			
+			this.releaseSession(session);
 		}
 	}
 

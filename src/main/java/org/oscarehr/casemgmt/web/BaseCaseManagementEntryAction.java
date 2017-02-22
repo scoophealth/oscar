@@ -213,7 +213,7 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		// cIssue.setActive(true);
 		cIssue.setAcute(false);
 		cIssue.setCertain(false);
-		cIssue.setDemographic_no(demoNo);
+		cIssue.setDemographic_no(Integer.valueOf(demoNo));
 
 		cIssue.setIssue_id(iss.getId().longValue());
 
