@@ -255,9 +255,9 @@ $(document).ready( function() {
 		  	dataType: 'html',
 		    success: function(data) {    		
 		    	renderSearchResults(data, target);
+				if (path.indexOf("deleteAllergy")>=0) location.reload();
 		    }
 		});
-		if (path.indexOf("deleteAllergy")>=0) location.reload();
 	}
 
 	//--> Render response html 
