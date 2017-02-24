@@ -24,7 +24,7 @@
 
 */
 
-oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,user,$state,noteService,$timeout,uxService,securityService,scheduleService,billingService,rxService) {
+oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,user,$state,noteService,$timeout,uxService,securityService,scheduleService,billingService,rxService,ticklerService) {
 	
 	
 	console.log("in patient Ctrl ",demo);
@@ -35,8 +35,20 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	$scope.page = {};
 	$scope.page.assignedCMIssues = [];
 	
+	$scope.overdueTicklersCount = 0;
+	
+	$scope.getOverdueTicklerCount = function(){
+		ticklerService.getTicklerOverdueCount($scope.demographicNo).then(function(response){
+			$scope.overdueTicklersCount = response;
+		},function(reason){
+			alert(reason);
+		});
+	}
+	
+	$scope.getOverdueTicklerCount();
+	
 	$scope.hideNote = false;
-		
+			
 	//this doesn't actually work, hideNote is note showing up in the $stateParams
 	if($stateParams.hideNote != null) {
 		$scope.hideNote = $stateParams.hideNote;

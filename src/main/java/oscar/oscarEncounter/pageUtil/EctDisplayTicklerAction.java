@@ -85,19 +85,30 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     Date serviceDate;
     Date today = new Date(System.currentTimeMillis());
     String itemHeader;
+    String priority;
+    String flag;
     int hash;
     long days;
     for(Tickler t : ticklers) {
         NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
         serviceDate = t.getServiceDate();
+        priority = t.getPriorityWeb().toUpperCase( );
+
         item.setDate(serviceDate);
         days = (today.getTime() - serviceDate.getTime())/(1000*60*60*24);
         if( days > 0 )
             item.setColour("#FF0000");
 
         itemHeader = StringUtils.maxLenString(t.getMessage(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
-        item.setLinkTitle(itemHeader+ " " + DateUtils.formatDate(serviceDate,request.getLocale()));
-        item.setTitle(itemHeader);
+        item.setLinkTitle(priority + ": " + itemHeader + " " + DateUtils.formatDate(serviceDate,request.getLocale()));
+        
+        if(priority.equals("HIGH")){
+        	flag = "<span style='color:red'>&#9873;</span> ";
+        	itemHeader = "<b>"+itemHeader+"</b>";
+        }else{
+        	flag = "";
+        }
+        item.setTitle(flag + itemHeader);
         // item.setValue(String.valueOf(t.getTickler_no()));
         winName = StringUtils.maxLenString(t.getMessage(), MAX_LEN_TITLE, MAX_LEN_TITLE, "");
         hash = Math.abs(winName.hashCode());
