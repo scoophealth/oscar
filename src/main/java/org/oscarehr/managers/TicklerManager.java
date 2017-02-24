@@ -358,6 +358,14 @@ public class TicklerManager {
 		return result;
     }
     
+    public int getActiveTicklerByDemoCount(LoggedInInfo loggedInInfo, Integer demographicNo) {
+        int result =  ticklerDao.getActiveTicklerByDemoCount(demographicNo);
+        
+        //--- log action ---
+		LogAction.addLogSynchronous(loggedInInfo, "TicklerManager.getActiveTicklerByDemoCount","");
+		
+		return result;
+    }
     
 
     public int getNumTicklers(LoggedInInfo loggedInInfo, CustomFilter filter) {

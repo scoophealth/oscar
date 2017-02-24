@@ -150,6 +150,16 @@ public class TicklerDao extends AbstractDao<Tickler>{
 		return result.intValue();
 	}
 	
+	public int getActiveTicklerByDemoCount(Integer demographicNo) {
+		Query query = entityManager.createQuery("select count(t) FROM Tickler t where t.status = 'A' and t.serviceDate <= ?1 and t.demographicNo  = ?2 ");
+		query.setParameter(1, new Date());
+		query.setParameter(2, demographicNo);
+		
+		Long result = (Long)query.getSingleResult();
+		
+		return result.intValue();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Tickler> getTicklers(CustomFilter filter, int offset, int limit) {
 		String sql = "select t";
