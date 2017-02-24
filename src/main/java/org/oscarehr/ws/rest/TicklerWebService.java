@@ -31,6 +31,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
@@ -398,5 +399,17 @@ public class TicklerWebService extends AbstractServiceImpl {
 		response.setSuccess(ticklerManager.addTickler(getLoggedInInfo(), tickler));
 
 		return response;
+	}
+	
+	@GET
+	@Path("/{demographicNo}/count/overdue")
+	@Produces("application/json")
+	public int getTicklerOverdueCount(@PathParam("demographicNo") Integer demographicNo) {
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_tickler", "r", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+
+		int count = ticklerManager.getActiveTicklerByDemoCount(getLoggedInInfo(), demographicNo);
+		return count;
 	}
 }

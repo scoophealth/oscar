@@ -24,7 +24,7 @@
 
 */
 
-oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,user,$state,noteService,$timeout,$interval,uxService,securityService,scheduleService,billingService) {
+oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,user,$state,noteService,$timeout,$interval,uxService,securityService,scheduleService,billingService,ticklerService) {
 	
 	
 	console.log("in patient Ctrl ",demo);
@@ -34,6 +34,18 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	$scope.demographic= demo;
 	$scope.page = {};
 	$scope.page.assignedCMIssues = [];
+	
+	$scope.overdueTicklersCount = 0;
+	
+	$scope.getOverdueTicklerCount = function(){
+		ticklerService.getTicklerOverdueCount($scope.demographicNo).then(function(response){
+			$scope.overdueTicklersCount = response;
+		},function(reason){
+			alert(reason);
+		});
+	}
+	
+	$scope.getOverdueTicklerCount();
 	
 	$scope.hideNote = false;
 	
