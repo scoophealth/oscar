@@ -110,6 +110,19 @@ angular.module("ticklerServices", [])
                 	deferred.reject("An error occured while saving tickler");
                 });
            return deferred.promise;
+        },
+        getTicklerOverdueCount: function (demographicNo) {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/'+demographicNo+'/count/overdue',
+                method: "GET",
+                headers: this.configHeaders,
+              }).success(function (data) {
+            	  deferred.resolve(data);
+                }).error(function (data, status, headers) {
+                	deferred.reject("An error occured while getting tickler overdue count");
+                });
+           return deferred.promise;
         }
     };
 });

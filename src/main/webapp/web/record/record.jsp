@@ -57,7 +57,11 @@
 			style="padding-left: 0px;">
 			<ul class="nav navbar-nav" id="myTabs">
 				<li ng-repeat="tab in recordtabs2" ng-class="isTabActive(tab)">
-					<a href="javascript:void(0)" ng-if="!tab.dropdown" ng-click="changeTab(tab)" >{{tab.label}} <strong class="text-danger" ng-show="tab.extra=='outstanding'" title="<bean:message key="oscarEncounter.Index.ConsultOutstanding"/>">!</strong></a>
+					<a href="javascript:void(0)" ng-if="!tab.dropdown" ng-click="changeTab(tab)" >{{tab.label}} 
+					<strong class="text-danger" ng-show="tab.extra=='outstanding'" title="<bean:message key="oscarEncounter.Index.ConsultOutstanding"/>">!</strong>
+					
+					<span ng-if="tab.label=='Tickler' && overdueTicklersCount>0" class="badge badge-danger" title="{{overdueTicklersCount+' overdue ticklers'}}">{{overdueTicklersCount}}</span>
+					</a>
 					<a href="javascript:void(0)" ng-if="tab.dropdown"  class="dropdown-toggle" data-toggle="dropdown">{{tab.label}} <strong class="text-danger" ng-show="tab.extra=='outstanding'" title="<bean:message key="oscarEncounter.Index.ConsultOutstanding"/>">!</strong><span class="caret"></span></a>
 						<ul ng-if="tab.dropdown" class="dropdown-menu" role="menu">
 							<li ng-repeat="dropdownItem in tab.dropdownItems" >
