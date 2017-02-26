@@ -1539,6 +1539,15 @@ carrySuboxone = function(which) {
                   });
 		  <%}%>
 
+		
+          jQuery("input[id^='repeats_']").keyup(function(){
+            	var rand = <%=rand%>;
+            	var repeatsVal = this.value;
+            	if(repeatsVal>0){
+            		jQuery("#longTerm_"+rand).attr("checked","checked");
+            	}
+            });
+		  
        });
 </script>
 
