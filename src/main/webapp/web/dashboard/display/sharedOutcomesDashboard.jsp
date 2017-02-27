@@ -24,6 +24,7 @@
 
 --%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="oscar.OscarProperties" %>
 <%@page import="org.oscarehr.managers.DashboardManager" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%
@@ -48,12 +49,12 @@ var outcomesWindow;
 window.onbeforeunload = function() {
 	//outcomesWindow.close();
     //return "You sure?";
-	outcomesWindow.postMessage({'response' : 'CLOSE'}, 'https://metricsdev.med-access.net');
+	outcomesWindow.postMessage({'response' : 'CLOSE'}, '<%=OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_host") %>');
 };
 
 
 window.unload = function() {
-	outcomesWindow.postMessage({'response' : 'CLOSE'}, 'https://metricsdev.med-access.net');
+	outcomesWindow.postMessage({'response' : 'CLOSE'}, '<%=OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_host") %>');
 };
 
 function launchOutcomesDashboard1(outcomesHostName) {
@@ -64,7 +65,7 @@ function launchOutcomesDashboard1(outcomesHostName) {
 	
 	var oTimer = function() {
 		outcomesTimeout = setTimeout(function(){
-			outcomesWindow.postMessage({'response' : 'CONNECT'}, 'https://metricsdev.med-access.net');
+			outcomesWindow.postMessage({'response' : 'CONNECT'}, '<%=OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_host") %>');
 			console.log('sending CONNECT');
 			oTimer();
 		}, 500);
