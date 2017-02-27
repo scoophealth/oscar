@@ -38,10 +38,9 @@
 		return;
 	}
 %>
-
 <%@ page import="oscar.eform.actions.DisplayImageAction,java.lang.*,java.io.File,oscar.OscarProperties,java.io.*,oscar.eform.*,oscar.eform.data.*,java.util.*,org.apache.log4j.Logger"%>
 <!--
-/*  eForm Generator v5.4h Peter Hutten-Czapski 2015 based on earlier work by the community
+/*  eForm Generator v5.5e reimagined by Peter Hutten-Czapski 2017
  *
  *  eformGenerator.jsp
  *
@@ -163,6 +162,7 @@ var SignatureHolderP = 0;
 var SignatureColor="Black";
 var SignatureLineColor="#FFFFFF";
 var SignatureBorder="2px dotted blue";
+var parentcounter = 0;
 
 function getCheckedValue(radioObj) {
 	if(!radioObj)
@@ -679,19 +679,37 @@ function GetTextTop(){
 	textTop += "&lt;/style&gt;\n\n";
 
 	textTop += "&lt;!-- jQuery for greater functionality --&gt;\n"
-	// dependency on jquery and for pdf and faxing hack it helps that you are not referencing a local version
+	// dependency on jquery up to version 2.2.1 for pdf and faxing hack. (3.1.1 does NOT work.)  Lets reference something off the OSCAR server
 	textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js&quot;&gt;&lt;/script&gt;\n";	
 	// if unavailable reference the one in OSCAR
 	textTop += "&lt;script&gt; window.jQuery || document.write('&lt;script src=&quot;../js/jquery-1.7.1.min.js&quot;&gt;&lt; &#92;/script&gt;') &lt;/script&gt;\n";
 
 	// ole darn it, I knew I left a copy of jQuery lying around somewhere... perhaps under my nose?
 	textTop += "&lt;script&gt; window.jQuery || document.write('&lt;script src=&quot;jquery-1.7.1.min.js&quot;&gt;&lt; &#92;/script&gt;') &lt;/script&gt;\n\n";
+	
+	// Adding jquery code for parent-child-fields (Bell Eapen, nuchange.ca)
+	textTop += "<!-- jQuery for parent-child-fields -->\n"
+    textTop += "&lt;script&gt;\n";
+	textTop += "$(document).ready(function() {\n            $('[class^=\"child-\"]').hide();\n            $('.parent-field').click(function() {\n                $('[class^=\"child-\"]').hide();\n                $('.parent-field').each(function() {\n                    if ( $(this).is('input:checkbox') ){\n                         if(this.checked){\n                            $('.child-' +  $(this).prop('id')).show();\n                        }\n                    }else{\n                        $('.child-' + $(this).val()).show();\n                    }\n                });\n            }).trigger('change');\n\n            $('[class^=\"only-one-\"]').click(function() {\n                $('.'+$(this).attr('class')).prop('checked', false);\n                $(this).prop('checked', true);\n                $(this).closest('div').find('.parent-field').change();\n            });\n});";
+    textTop += "&lt;/script&gt;\n"
+	textTop += "<!-- jQuery for parent-child-fields -->\n"
+    textTop += "&lt;/script&gt;\n"
 
 	//reference built in functions as desired
 
 <% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_print_enabled")) { %>
 	if (document.getElementById('includePdfPrintControl').checked) {
 		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Deforms/printControl.js&quot;&gt;&lt;/script&gt;\n";
+	}
+	//fax number script
+	if ((document.getElementById('faxno').value.length > 0)){
+		textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
+		textTop += "function setFaxNo(){\n"
+		textTop += "\tsetTimeout('document.getElementById(&quot;otherFaxInput&quot;).value=&quot;"
+		textTop += document.getElementById('faxno').value
+		textTop += "&quot;',1000);\n"
+		textTop += "} \n"
+		textTop += "&lt;/script&gt;\n\n"	
 	}
 <% }%>
 
@@ -926,7 +944,7 @@ function GetTextTop(){
 		textTop += "\t\tvar ListItemArr =  ImgArray[i].split(&quot;|&quot;);\n"
 		textTop += "\t\tvar UserName = ListItemArr[0];\n"
 		textTop += "\t\tvar FileName = ListItemArr[1];\n"
-		textTop += "\t\tif (document.getElementById(&quot;CurrentUserName&quot;).value.indexOf(UserName)>0){\n"
+		textTop += "\t\tif (document.getElementById(&quot;CurrentUserName&quot;).value.indexOf(UserName)>=0){\n"
 		textTop += "\t\t\tdocument.getElementById(&quot;Stamp&quot;).src = &quot;../eform/displayImage.do?imagefile=&quot;+FileName;\n"
 		textTop += "\t\t}\n"
 		textTop += "\t}\n"
@@ -980,26 +998,27 @@ function GetTextTop(){
 	if (document.getElementById('AddSignature').checked){
 		textTop += "loadSig();"
 	}
-
+	if ((document.getElementById('faxno').value.length >0)){
+		textTop += "setFaxNo();"
+	}
 	textTop += "&quot;&gt;\n"
 
 	//<form>
 	textTop +="&lt;form method=&quot;post&quot; action=&quot;&quot; name=&quot;FormName&quot; id=&quot;FormName&quot; &gt;\n";
-	// empty <div> to alow simpler pagation
-	textTop +="&lt;div&gt;\n";
 
 }
 
 function GetTextMiddle(P){
 
 var InputType = P[0];
-
+    console.log(P);
 	if (InputType == "Page"){
 
 		var pg = parseInt(P[1]);
 		var im = P[2];
 		var width = parseInt(P[3]);
-		m = "&lt;/div&gt;\n\n\n"
+		m = "";
+		if (pg > 1){m = "&lt;/div&gt;\n\n\n";}
 		m += "&lt;div id=&quot;page"
 		m += pg
 		m += "&quot; style=&quot;page-break-after:always;position:relative;&quot; &gt;\n\n"
@@ -1027,11 +1046,14 @@ var InputType = P[0];
 		var bgColor = P[11];
 		var oscarDB = P[12];
 		var inputValue = P[13];
+		var inputClassValue = P[14]+P[15];
 		m = "&lt;input name=&quot;" 
 		m += inputName
 		m += "&quot; id=&quot;"
 		m += inputName
-		m += "&quot; type=&quot;text&quot; class=&quot;noborder&quot; style=&quot;position:absolute; left:"
+		m += "&quot; type=&quot;text&quot; class=&quot;"
+		m += inputClassValue
+		m += " noborder&quot; style=&quot;position:absolute; left:"
 		m += x0
 		m += "px; top:"
 		m += y0
@@ -1076,11 +1098,14 @@ var InputType = P[0];
 		var bgColor = P[11];
 		var oscarDB = P[12];
 		var inputValue = P[13];
+		var inputClassValue = P[14]+P[15];
 		m = "&lt;textarea name=&quot;"
 		m += inputName
 		m += "&quot; id=&quot;"
 		m += inputName
-		m += "&quot; class=&quot;noborder&quot; style=&quot;position:absolute; left:"
+		m += "&quot; type=&quot;text&quot; class=&quot;"
+		m += inputClassValue
+		m += " noborder&quot; style=&quot;position:absolute; left:"
 		m += x0
 		m += "px; top:"
 		m += y0
@@ -1116,10 +1141,13 @@ var InputType = P[0];
 		var y = parseInt(P[2]);
 		var inputName = P[3];
 		var preCheck = P[4];
+		var inputClassValue = P[5]+P[6];
 		m = "&lt;input name=&quot;" 
 		m += inputName
 		m += "&quot; id=&quot;"
 		m += inputName
+		m += "&quot; class=&quot;"
+        m += inputClassValue
 		m += "&quot; type=&quot;checkbox&quot;"
 		if (document.getElementById('ScaleCheckmark').checked){
 			m += " class=&quot;largerCheckbox&quot;"
@@ -1230,9 +1258,6 @@ function GetTextBottom(){
 		textBottom += "&lt;input name=&quot;PatientGender&quot; id=&quot;PatientGender&quot; type=&quot;hidden&quot; oscarDB=sex&gt;\n"
 	}
 
-	//close pagation
-	textBottom += "&lt;/div&gt;\n"
-
 	//auto load signature images
 	if (document.getElementById('AddStamp').checked){
 		textBottom +="&lt;input type=&quot;hidden&quot; name=&quot;DoctorName&quot; id=&quot;DoctorName&quot; oscarDB=doctor&gt;\n"
@@ -1275,6 +1300,8 @@ function GetTextBottom(){
 
 	textBottom += "\t &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;\n"
 	textBottom += " &lt;/div&gt;\n"
+	//close the last page here
+	textBottom += "&lt;/div&gt;\n"
 	textBottom += " &lt;/form&gt;\n\n"
 
 	if (document.getElementById('AddDate').checked){
@@ -2568,7 +2595,7 @@ show('classic');
     <input type="hidden" name="formHtmlG" id="formHtmlG" />
 </form>
 
-<form method="post" action="" name="FormName" id="FormName">
+<form method="post" action="" name="generator" id="generator">
 
 <div name="Wizard" id="Wizard" class="DoNotPrint" style="position: absolute; left:750px; top: 0px; width: 500px; padding:5px; height: 1010; overflow-y: scroll;" >
 
@@ -2639,6 +2666,28 @@ show('classic');
 					<tr>
 						<td><span><b><bean:message key="eFormGenerator.genderFemale"/></b>:</span></td>
 						<td><input name="Female" id="Female" type="button" value='<bean:message key="eFormGenerator.genderFemaleButton"/>' onclick="SetSwitchOn(this.id);"></td>
+					</tr>
+				</table>
+			</div>
+			<p><bean:message key="eFormGenerator.radio"/><br> <input name="radio" id="radio" type="checkbox" onclick="toggleView(this.checked,'Section3b');"><bean:message key="eFormGenerator.radioCheckbox"/></p>
+			<div id="Section3b" style="display:none">
+				<span><b><bean:message key="eFormGenerator.radioLabel"/></b>: </span>
+				<input name="RadioButton" id="RadioButton" type="button" value='<bean:message key="eFormGenerator.radioButton"/>' onclick="SetSwitchOn(this.id);"></td>
+					<br>
+				<span><bean:message key="eFormGenerator.radioHint"/><span><input type="text" name="RadioName" id="RadioName" style="width:200px;" value="radio">
+			</div>
+			<p><bean:message key="eFormGenerator.parent"/><br> <input name="parentchild" id="parentchild" type="checkbox" onclick="toggleView(this.checked,'Section3c');"><bean:message key="eFormGenerator.parentCheckbox"/></p>
+			<div id="Section3c" style="display:none">
+								<table>
+					<tr>
+						<td><span><b><bean:message key="eFormGenerator.parentLabel"/></b>: </span></td>
+						<td><input name="Parent" id="Parent" type="button" value='<bean:message key="eFormGenerator.parentButton"/>' onclick="parentcounter += 1; document.getElementById('Checkbox').click(); document.getElementById('inputClass').value = 'parent-field'; document.generator.InputNameType[1].checked=true; document.getElementById('inputName').value ='parent' + parentcounter; document.getElementById('inputParentclass').value ='';" ></td>
+						
+					</tr>
+					<tr>
+						<td><span><b><bean:message key="eFormGenerator.childLabel"/></b>: </span></td>
+						<td><input name="Child" id="Child" type="button" value='<bean:message key="eFormGenerator.childButton"/>' onclick=" document.getElementById('inputClass').value = 'child-'; document.getElementById('inputParentclass').value ='parent' + parentcounter; document.getElementById('InputNameAuto').click();"></td>
+						
 					</tr>
 				</table>
 			</div>
@@ -2721,7 +2770,11 @@ onclick="SetSwitchOn('Stamp');document.getElementById('AddStamp').disabled=true;
 						</li><li name="UserSignatureListItem">
 						      urie|LNC.png
 						</li><li name="UserSignatureListItem">
-						      ibb|EJ.png
+						      esilet|SAD.png
+						</li><li name="UserSignatureListItem">
+						      lgadi|KME.png
+						</li><li name="UserSignatureListItem">
+						      ears|STS.png
 						</li><li name="UserSignatureListItem">
 						      ayes|LH.png
 						</li>
@@ -2751,10 +2804,10 @@ onclick="SetSwitchOn('Stamp');document.getElementById('AddStamp').disabled=true;
 <div id="Section5">
 	<span class='h3'><bean:message key="eFormGenerator.inputType"/></span>
 		<p>
-		<input type="radio" name="inputType" id="Text" value="text" onclick="hide('SectionPrecheck');show('SectionCustomText');show('SectionDatabase');show('SectionImportMeasurements');show('wtalign');show('SectionCustomText');show('iiimeasures');show('c_formating');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeText"/>
+		<input type="radio" name="inputType" id="Text" value="text" onclick="hide('SectionPrecheck');show('SectionCustomText');show('SectionDatabase');show('SectionImportMeasurements');show('wtalign');show('SectionCustomText');show('iiimeasures');show('c_formating');SetSwitchOn(this.id);document.getElementById('bgColor').value='transparent';"><bean:message key="eFormGenerator.inputTypeText"/>
 		<input type="radio" name="inputType" id="Textbox" value="textarea" onclick="hide('SectionPrecheck');show('SectionCustomText');show('SectionDatabase');show('wtalign');show('SectionCustomText');show('c_formating');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeTextArea"/>
 		<input type="radio" name="inputType" id="Checkbox" value="checkbox" onclick="show('SectionPrecheck');hide('SectionCustomText');hide('SectionDatabase');hide('SectionImportMeasurements');hide('iiimeasures');hide('c_formating');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeCheckbox"/>
-		<input type="radio" name="inputType" id="Xbox" value="Xbox" onclick="show('SectionPrecheck');show('SectionCustomText');hide('SectionDatabase');hide('SectionImportMeasurements');hide('wtalign');show('c_formating');hide('iiimeasures');SetSwitchOn(this.id);"><bean:message key="eFormGenerator.inputTypeXbox"/>
+		<input type="radio" name="inputType" id="Xbox" value="Xbox" onclick="show('SectionPrecheck');show('SectionCustomText');hide('SectionDatabase');hide('SectionImportMeasurements');hide('wtalign');show('c_formating');hide('iiimeasures');SetSwitchOn(this.id);document.getElementById('bgColor').value='white';"><bean:message key="eFormGenerator.inputTypeXbox"/>
 		</p>
 
 	<span class='h3'><bean:message key="eFormGenerator.inputAuto"/></span>
@@ -2866,6 +2919,16 @@ onclick="SetSwitchOn('Stamp');document.getElementById('AddStamp').disabled=true;
 
 
 	<span class='h3'><bean:message key="eFormGenerator.inputName"/></span>
+	    <p>
+	    			<bean:message key="eFormGenerator.inputClass"/>
+        				<select id="inputClass">
+        					 <option value="" selected><bean:message key="eFormGenerator.inputClassNone"/></option>
+        					 <option value="parent-field"><bean:message key="eFormGenerator.inputClassParent"/></option>
+        					 <option value="child-"><bean:message key="eFormGenerator.inputClassChild"/></option>
+        				</select>
+        		    <bean:message key="eFormGenerator.inputParentclass"/><input type="text" name="inputParentclass" id="inputParentclass"  style="width:100px" value="">
+
+        </p>
 		<p><input type="radio" name="InputNameType" id="InputNameAuto" value="Auto" checked><bean:message key="eFormGenerator.inputNameSeq"/><br>
 				- <bean:message key="eFormGenerator.inputNameSeqPrefix"/><input type="text" name="AutoNamePrefix" id="AutoNamePrefix" style="width:100px" value="AutoName"><br>
 			<input type="radio" name="InputNameType" id="InputNameCustom" value="Custom"><bean:message key="eFormGenerator.inputNameSeqCustom"/>
@@ -2976,8 +3039,8 @@ onclick="SetSwitchOn('Stamp');document.getElementById('AddStamp').disabled=true;
 	<tr>
 		<td style="background-color:#dddddd;">
 			<span><bean:message key="eFormGenerator.tuningWidth"/></span><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningIncreaseButton"/> ⇑+→' style="width:120px;" onclick="changeInput('width',1);"><br>
-			<input type="button" value='<bean:message key="eFormGenerator.tuningDecreaseButton"/> ⇑+←' style="width:120px;" onclick="changeInput('width',-1);">
+			<input type="button" value='<bean:message key="eFormGenerator.tuningIncreaseButton"/>  ⇑+→' style="width:120px;" onclick="changeInput('width',1);"><br>
+			<input type="button" value='<bean:message key="eFormGenerator.tuningDecreaseButton"/>  ⇑+←"' style="width:120px;" onclick="changeInput('width',-1);">
 		</td>
 		<td>
 
@@ -3014,7 +3077,9 @@ onclick="SetSwitchOn('Stamp');document.getElementById('AddStamp').disabled=true;
 </p>
 <% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_fax_enabled")) { %>
 <p><span class='h2'><bean:message key="eFormGenerator.fax"/></span><br>
-	<input name="includeFaxControl" id="includeFaxControl" type="checkBox"><bean:message key="eFormGenerator.faxDescription"/>
+	<input name="includeFaxControl" id="includeFaxControl" type="checkBox"><bean:message key="eFormGenerator.faxDescription"/><br>
+	<bean:message key="eFormGenerator.faxnumber"/>:
+						<input type="text" name="faxno" id="faxno" style="width:200px;">
 </p>
 <% } %>
 
@@ -3104,6 +3169,7 @@ var FemaleSwitch = false;
 var SignatureBoxSwitch = false;
 var StampSwitch = false;
 var ClassicSignatureSwitch = false;
+var RadioButtonSwitch = false;
 
 function SetSwitchesOff(){
 	TextSwitch = false;
@@ -3115,6 +3181,7 @@ function SetSwitchesOff(){
 	SignatureBoxSwitch = false;
 	StampSwitch = false;
 	ClassicSignatureSwitch = false;
+    RadioButtonSwitch = false;
 }
 
 var DrawTool = "Text";
@@ -3141,6 +3208,8 @@ function SetSwitchOn(n){
 		StampSwitch = true;
 	}else if (n=="ClassicSignature") {
 		ClassicSignatureSwitch = true;
+	}else if (n=="RadioButton") {
+		RadioButtonSwitch = true;
 	}
 }
 function SetStart(){
@@ -3148,7 +3217,7 @@ function SetStart(){
 	y0 = parseInt(mousey);	//assign y coordinate at mousedown to y0
 }
 
-function DrawText(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue){
+function DrawText(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue,inputClass,inputParentclass){
 	// draw Rectangle
 //alert(PageIterate+"|"+PageNum+"|"+( PageIterate == PageNum )+(canvas == jg));
 	if ( PageIterate == PageNum ) {
@@ -3172,12 +3241,12 @@ function DrawText(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fontW
 	}
 	//store parameters in an array (using separator "|")
 	if (canvas == jg){ 
-		var Parameter = "Text" + "|" + x0 + "|" + y0 + "|" + width + "|" + height + "|" + inputName + "|" + fontFamily + "|" + fontStyle + "|" + fontWeight + "|" + fontSize + "|" + textAlign + "|" + bgColor + "|" + oscarDB + "|" + inputValue;
+		var Parameter = "Text" + "|" + x0 + "|" + y0 + "|" + width + "|" + height + "|" + inputName + "|" + fontFamily + "|" + fontStyle + "|" + fontWeight + "|" + fontSize + "|" + textAlign + "|" + bgColor + "|" + oscarDB + "|" + inputValue+ "|" + inputClass + "|" + inputParentclass;
 		DrawData.push(Parameter);
 	}
 }
 
-function DrawTextbox(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue){
+function DrawTextbox(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue,inputClass,inputParentclass){
 	// draws Rectangle
 	if ( PageIterate == PageNum ) {
 		var x0 = parseInt(x0);
@@ -3200,12 +3269,12 @@ function DrawTextbox(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fo
 	}
 	//store parameters in an array (using separator "|")
 	if (canvas == jg){ 
-		var Parameter = "Textbox" + "|" + x0 + "|" + y0 + "|" + width + "|" + height + "|" + inputName + "|" + fontFamily + "|" + fontStyle + "|" + fontWeight + "|" + fontSize + "|" + textAlign + "|" + bgColor + "|" + oscarDB + "|" + inputValue;
+		var Parameter = "Textbox" + "|" + x0 + "|" + y0 + "|" + width + "|" + height + "|" + inputName + "|" + fontFamily + "|" + fontStyle + "|" + fontWeight + "|" + fontSize + "|" + textAlign + "|" + bgColor + "|" + oscarDB + "|" + inputValue+ "|" + inputClass + "|" + inputParentclass;
 		DrawData.push(Parameter);
 	}
 }
 
-function DrawCheckbox(canvas,x0,y0,inputName,preCheck){
+function DrawCheckbox(canvas,x0,y0,inputName,preCheck,inputClass,inputParentclass){
 	// draws Checkbox
 	if ( PageIterate == PageNum ) {
 		var x = parseInt(x);
@@ -3228,7 +3297,7 @@ function DrawCheckbox(canvas,x0,y0,inputName,preCheck){
 	}
 	//store parameters in an array (using separator "|")
 	if (canvas == jg){ 
-		var Parameter = "Checkbox" + "|" + x0 + "|" + y0 + "|" + inputName + "|" + preCheck;
+		var Parameter = "Checkbox" + "|" + x0 + "|" + y0 + "|" + inputName + "|" + preCheck + "|" + inputClass + "|" + inputParentclass;
 		DrawData.push(Parameter);
 	}
 	if ((inputName == "Male")||(inputName == "Female")){ 
@@ -3260,7 +3329,7 @@ function DrawXbox(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fontW
 	}
 	//store parameters in an array (using separator "|")
 	if (canvas == jg){ 
-		var Parameter = "Xbox" + "|" + x0 + "|" + y0 + "|" + width + "|" + height + "|" + inputName + "|" + fontFamily + "|" + fontStyle + "|" + fontWeight + "|" + fontSize + "|" + textAlign + "|" + bgColor + "|" + oscarDB + "|" + inputValue;
+		var Parameter = "Xbox" + "|" + x0 + "|" + y0 + "|" + width + "|" + height + "|" + inputName + "|" + fontFamily + "|" + fontStyle + "|" + fontWeight + "|" + fontSize + "|" + textAlign + "|" + bgColor + "|" + oscarDB + "|" + inputValue+ "|" + inputClass + "|" + inputParentclass;
 		DrawData.push(Parameter);
 	}
 	if ((inputName == "Male")||(inputName == "Female")){ 
@@ -3371,6 +3440,8 @@ function DrawMarker(){
 	var fontStyle = document.getElementById('fontStyle').value;
 	var fontWeight = document.getElementById('fontWeight').value;
 	var fontSize = document.getElementById('fontSize').value;
+	var inputClass = document.getElementById('inputClass').value;
+	var inputParentclass = document.getElementById('inputParentclass').value;
 	var textAlign = document.getElementById('textAlign').value;
 	var bgColor = document.getElementById('bgColor').value;
 
@@ -3437,25 +3508,25 @@ function DrawMarker(){
 	
 	if(DrawSwitch){
 		if (TextSwitch){
-			DrawText(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue);
+			DrawText(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue,inputClass,inputParentclass);
 		}else if (TextboxSwitch){
-			DrawTextbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue);
+			DrawTextbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue,inputClass,inputParentclass);
 		}else if (CheckboxSwitch){
-			DrawCheckbox(jg,x0,y0,inputName,preCheck);
+			DrawCheckbox(jg,x0,y0,inputName,preCheck,inputClass,inputParentclass);
 		}else if (XboxSwitch){
 			if (preCheck){ inputValue='X'; } else {inputValue='';}
-			DrawXbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue);
+			DrawXbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue,inputClass,inputParentclass);
 		}else if(MaleSwitch){
 			if (document.getElementById('XboxType').checked) {
-				DrawXbox(jg,x0,y0,width,height,"Male",fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,"");
+				DrawXbox(jg,x0,y0,width,height,"Male",fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,"","","");
 			} else {
-				DrawCheckbox(jg,x0,y0,"Male",false);
+				DrawCheckbox(jg,x0,y0,"Male",false,"only-one-","gender");
 			}
 		}else if(FemaleSwitch){
 			if (document.getElementById('XboxType').checked) {
-				DrawXbox(jg,x0,y0,width,height,"Female",fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,"");
+				DrawXbox(jg,x0,y0,width,height,"Female",fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,"","","");
 			} else {
-				DrawCheckbox(jg,x0,y0,"Female",false);
+				DrawCheckbox(jg,x0,y0,"Female",false,"only-one-","gender");
 			}
 		}else if (SignatureBoxSwitch){
 			var sigtext ="Signature";
@@ -3468,20 +3539,25 @@ function DrawMarker(){
 		}else if (ClassicSignatureSwitch){
 			var sigtext ="ClassicSignature";
 			DrawSignatureBox(jg,x0,y0,width,height,sigtext);
-		}
+		}else if (RadioButtonSwitch){
+			DrawCheckbox(jg,x0,y0,inputName,false,"only-one-",document.getElementById('RadioName').value);
+		} else {
+            alert("nothing selected!");
+        }	
 	}
 	
 	//reset input data
 	document.getElementById('inputValue').value = "";
 	document.getElementById('inputName').value = "";
-	document.getElementById('bgColor')[0].selected = true;
+	//document.getElementById('bgColor')[0].selected = true;
 	document.getElementById('preCheck').checked = false;
 	document.getElementById('oscarDB')[0].selected = true;
 	document.getElementById('MeasurementList')[0].selected = true;
 	document.getElementById('ExportMeasurementList')[0].selected = true;
 	document.getElementById('MeasurementCustom').value = "";
 	document.getElementById('ExportMeasurementCustom').value = "";
-	
+	document.getElementById('inputClass')[0].selected = true;
+	document.getElementById('inputParentclass').value = "";	
 }
 
 function ToggleInputName(){
@@ -3547,7 +3623,9 @@ function RedrawImage(RedrawParameter){
 		var bgColor = RedrawParameter[11];
 		var oscarDB = RedrawParameter[12];
 		var inputValue = RedrawParameter[13];
-		DrawText(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue);
+		var inputClass = RedrawParameter[14];
+		var inputParentclass = RedrawParameter[15];
+		DrawText(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue,inputClass,inputParentclass);
 	}else if (InputType == "Textbox"){
 		var x0 = parseInt(RedrawParameter[1]);
 		var y0 = parseInt(RedrawParameter[2]);
@@ -3562,13 +3640,17 @@ function RedrawImage(RedrawParameter){
 		var bgColor = RedrawParameter[11];
 		var oscarDB = RedrawParameter[12];
 		var inputValue = RedrawParameter[13];
-		DrawTextbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue);
+		var inputClass = RedrawParameter[14];
+		var inputParentclass = RedrawParameter[15];
+		DrawTextbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue,inputClass,inputParentclass);
 	}else if (InputType == "Checkbox"){
 		var x0 = parseInt(RedrawParameter[1]);
 		var y0 = parseInt(RedrawParameter[2]);
 		var inputName = RedrawParameter[3];
 		var preCheck = RedrawParameter[4];
-		DrawCheckbox(jg,x0,y0,inputName,preCheck);
+		var inputClass = RedrawParameter[5];
+		var inputParentclass = RedrawParameter[6];
+		DrawCheckbox(jg,x0,y0,inputName,preCheck,inputClass,inputParentclass);
 	}else if (InputType == "Xbox"){
 		var x0 = parseInt(RedrawParameter[1]);
 		var y0 = parseInt(RedrawParameter[2]);
@@ -3583,7 +3665,9 @@ function RedrawImage(RedrawParameter){
 		var bgColor = RedrawParameter[11];
 		var oscarDB = RedrawParameter[12];
 		var inputValue = RedrawParameter[13];
-		DrawXbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue);
+		var inputClass = RedrawParameter[14];
+		var inputParentclass = RedrawParameter[15];
+		DrawXbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue,inputClass,inputParentclass);
 	}else if (InputType == "Page"){
 		var pnum = parseInt(RedrawParameter[1]);
 		PageIterate = pnum;
@@ -3653,4 +3737,3 @@ RedrawAll();
 <!--  Cookie Monster says bye! -->
 </body>
 </html>
-
