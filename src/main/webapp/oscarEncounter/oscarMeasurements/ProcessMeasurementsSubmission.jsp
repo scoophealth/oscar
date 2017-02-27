@@ -39,7 +39,7 @@
 
 <script language="javascript"> 
 function closeWin() {
-     self.opener.location.reload(); 
+   //  self.opener.location.reload(); 
      self.close();     
 }
 </script>
