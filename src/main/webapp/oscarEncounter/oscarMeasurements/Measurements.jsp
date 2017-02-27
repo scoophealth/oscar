@@ -66,6 +66,9 @@ if(!authed) {
 
 <html:base />
 
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
+
 </head>
 
 <script type="text/javascript">
@@ -90,7 +93,7 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
 parentChanged = false;
 
 function check() {
-    var ret = true;
+	var ret = true;
     
     if( parentChanged ) {
         document.forms[0].elements["value(parentChanged)"].value = "true";
@@ -99,11 +102,18 @@ function check() {
             ret = false;        
     }
     
-    return ret;
+    if(ret) {
+
+      	 $.post('<%=request.getContextPath()%>/oscarEncounter/Measurements.do?ajax=true&skipCreateNote=true',$('#theForm').serialize(),function(data){
+			opener.postMessage(data,"*");
+      		window.close();
+      	 });
+
+    }
 }
 </script>
 <body class="BodyStyle" vlink="#0000FF" onload="window.focus();">
-<html:form action="/oscarEncounter/Measurements">
+<html:form action="/oscarEncounter/Measurements" styleId="theForm">
 	<logic:present name="css">
 		<link rel="stylesheet" type="text/css"
 			href="<bean:write name="css" />">
@@ -266,9 +276,9 @@ function check() {
 									<td><input type="button" name="Button"
 										value="<bean:message key="global.btnCancel"/>"
 										onClick="window.close()"></td>
-									<td><input type="submit" name="Button"
+									<td><input type="button" name="Button"
 										value="<bean:message key="global.btnSubmit"/>"
-										onclick="return check();" /></td>
+										onclick="check();" /></td>
 								</tr>
 							</table>
 							</td>
