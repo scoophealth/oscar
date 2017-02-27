@@ -116,6 +116,26 @@ if(!authed) {
   ////////
 </style>
 
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
+<script>
+	jQuery.noConflict();
+</script>
+
+<script>
+	function doSubmit() {
+		
+		 jQuery.post(jQuery("#measurementForm").attr('action') + '?ajax=true&skipCreateNote=true',jQuery('#measurementForm').serialize(),function(data){
+				opener.opener.postMessage(data,"*");
+				opener.location.reload();
+	      		window.close();
+	      	 });
+		 
+		 return false;
+		 
+	}
+</script>
+
 <SCRIPT LANGUAGE="JavaScript">
 
 function showHideItem(id){
@@ -430,9 +450,9 @@ clear: left;
                <br/>
 
                <% if ( id != null ) { %>
-               <input type="submit" name="delete" value="Delete" id="deleteButton" disabled="false"/>
+               <input type="submit" name="delete" value="Delete" id="deleteButton" disabled="false" />
                <% }else{ %>
-               <input type="submit" value="Save">
+               <input type="button" value="Save" onClick="doSubmit();">
                <%}%>
                </html:form>
             </td>
