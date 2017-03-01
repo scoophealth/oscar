@@ -133,20 +133,13 @@ if(!authed) {
 			}
 			
 			//load codelist to add to patientDx
-			UserProperty codeToAddPatientDx = userPropertyDao.getProp(UserProperty.CODE_TO_ADD_PATIENTDX);
-			UserProperty codeToMatchPatientDx = userPropertyDao.getProp(UserProperty.CODE_TO_MATCH_PATIENTDX);
-			if (codeToAddPatientDx==null || codeToAddPatientDx.getValue().trim().isEmpty()) {
-				codeToAddPatientDx = new UserProperty();
-				codeToAddPatientDx.setName(UserProperty.CODE_TO_ADD_PATIENTDX);
-				codeToAddPatientDx.setValue("042,153,162,174,185,232,244,250,272,274,290,295,301,311,332,345,346,401,412,437,493,531,535,555,556,571,585,715,724");
-				userPropertyDao.persist(codeToAddPatientDx);
-			}
-			if (codeToMatchPatientDx==null || codeToMatchPatientDx.getValue().trim().isEmpty()) {
-				codeToMatchPatientDx = new UserProperty();
-				codeToMatchPatientDx.setName(UserProperty.CODE_TO_MATCH_PATIENTDX);
-				codeToMatchPatientDx.setValue("202:2028,278:2780,296:29689,300:30000,305:3051,314:3140,331:3310,394:4249,427:4273,428:4281,443:4439,496:49680,530:53011,714:7140,726:7291,795:78071");
-				userPropertyDao.persist(codeToMatchPatientDx);
-			}
+			UserProperty codeList = userPropertyDao.getProp(UserProperty.CODE_TO_ADD_PATIENTDX);
+			String codeToAddPatientDx = codeList!=null ? codeList.getValue() : "";
+			codeToAddPatientDx = codeToAddPatientDx!=null ? codeToAddPatientDx.trim() : "";
+			
+			codeList = userPropertyDao.getProp(UserProperty.CODE_TO_MATCH_PATIENTDX);
+			String codeToMatchPatientDx = codeList!=null ? codeList.getValue() : "";
+			codeToMatchPatientDx = codeToMatchPatientDx!=null ? codeToMatchPatientDx.trim() : "";
 
             //check for management fee code eligibility
             StringBuilder billingRecomendations = new StringBuilder();
@@ -654,15 +647,17 @@ function showHideLayers() { //v3.0
 }
 
 function onNext() {
-	var codeToAddStr = "<%=codeToAddPatientDx.getValue()%>";
-	var codeToMatchStr = "<%=codeToMatchPatientDx.getValue()%>";
+	var codeToAddStr = "<%=codeToAddPatientDx%>";
+	var codeToMatchStr = "<%=codeToMatchPatientDx%>";
 	
 	var codeToAdd = codeToAddStr.split(",");
 	var codeToMatch = {};
-	var codeToMatchArr = codeToMatchStr.split(",");
-	for (var i=0; i<codeToMatchArr.length; i++) {
-		var codeMatch = codeToMatchArr[i].split(":");
-		codeToMatch[codeMatch[0]] = codeMatch[1];
+	if (codeToMatchStr!="") {
+		var codeToMatchArr = codeToMatchStr.split(",");
+		for (var i=0; i<codeToMatchArr.length; i++) {
+			var codeMatch = codeToMatchArr[i].split(":");
+			codeToMatch[codeMatch[0]] = codeMatch[1];
+		}
 	}
 	
 	var dxCode = document.titlesearch.dxCode.value;
