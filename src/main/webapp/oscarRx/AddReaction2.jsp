@@ -190,10 +190,19 @@ boolean isNKDA = "No Known Drug Allergies".equals(name);
 						<html:hidden property="type" value="<%=type%>" />
 <% } %>
 						<tr valign="center">
-							<td ><span class="label">Start Date:</span> <html:text
-								property="startDate" size="10" maxlength="10" value="<%=startDate%>" onblur="checkStartDate();"/>
-							    (yyyy-mm-dd OR yyyy-mm OR yyyy)</td>
-
+							<td>
+								<link rel="stylesheet" type="text/css" media="all" href="<%= request.getContextPath() %>/share/calendar/calendar.css" title="win2k-cold-1" />
+								<script type="text/javascript" src="<%= request.getContextPath() %>/share/calendar/calendar.js"></script>
+								<script type="text/javascript" src="<%= request.getContextPath() %>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+								<script type="text/javascript" src="<%= request.getContextPath() %>/share/calendar/calendar-setup.js"></script>
+								<script type="text/javascript">
+									Calendar.setup({ inputField : "startDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "startDateCal", singleClick : true, step : 1 });
+								</script>
+						
+								<span class="label">Start Date:</span>
+								<input type="text" name="startDate" id="startDate" size="10" maxlength="10" value="<%=startDate%>" onblur="checkStartDate();"/>
+								<img src="../images/cal.gif" id="startDateCal">(yyyy-mm-dd OR yyyy-mm OR yyyy)
+						    </td>
 						</tr>
 
 						<tr valign="center">
