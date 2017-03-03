@@ -107,7 +107,15 @@ public class OutcomesDashboardUtils {
 		org.oscarehr.common.model.Clinic oClinic = clinicDao.getClinic();
 		Clinic clinic = new Clinic();
 		clinic.setApplication("oscar");
-		clinic.setIdentifier(oClinic.getClinicName());
+		
+		String clinicIdentifier = OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_clinic_id");
+		
+		if(clinicIdentifier == null || clinicIdentifier.length() == 0 || clinicIdentifier.length() > 42 ) {
+			clinicIdentifier = oClinic.getClinicName();
+		}
+		
+		clinic.setIdentifier(clinicIdentifier);
+		
 		clinic.setName(oClinic.getClinicName());
 
 		MetricOwner metricOwner = new MetricOwner();
