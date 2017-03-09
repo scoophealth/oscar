@@ -152,6 +152,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 			rx.setOutsideProviderName(frm.getOutsideProviderName());
 			rx.setOutsideProviderOhip(frm.getOutsideProviderOhip());
 			rx.setLongTerm(frm.getLongTerm());
+			rx.setShortTerm(frm.getShortTerm());
 			rx.setPastMed(frm.getPastMed());
 			rx.setPatientCompliance(frm.getPatientComplianceY(), frm.getPatientComplianceN());
 
@@ -901,6 +902,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 					boolean patientComplianceN = false;
 					boolean isOutsideProvider = false;
 					boolean isLongTerm = false;
+					boolean isShortTerm = false;
 					boolean isPastMed = false;
 					boolean isDispenseInternal=false;
 					boolean isStartDateUnknown = false;
@@ -961,7 +963,13 @@ public final class RxWriteScriptAction extends DispatchAction {
 							} else {
 								isLongTerm = false;
 							}
-                                                } else if (elem.equals("nonAuthoritativeN_" + num)) {
+						} else if (elem.equals("shortTerm_" + num)) {
+							if (val.equals("on")) {
+								isShortTerm = true;
+							} else {
+								isShortTerm = false;
+							}	
+                        } else if (elem.equals("nonAuthoritativeN_" + num)) {
 							if (val.equals("on")) {
 								isNonAuthoritative = true;
 							} else {
@@ -1072,6 +1080,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 					rx.setDispenseInternal(isDispenseInternal);
 					rx.setStartDateUnknown(isStartDateUnknown);
 					rx.setLongTerm(isLongTerm);
+					rx.setShortTerm(isShortTerm);
                                         rx.setNonAuthoritative(isNonAuthoritative);
 					String newline = System.getProperty("line.separator");
 					rx.setPatientCompliance(patientComplianceY, patientComplianceN);
@@ -1173,6 +1182,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 			RxPrescriptionData rxData = new RxPrescriptionData();
 			RxPrescriptionData.Prescription oldRx = rxData.getPrescription(drugId);
 			oldRx.setLongTerm(true);
+			oldRx.setShortTerm(false);
 			boolean b = oldRx.Save(oldRx.getScript_no());
 			HashMap hm = new HashMap();
 			if (b) hm.put("success", true);
