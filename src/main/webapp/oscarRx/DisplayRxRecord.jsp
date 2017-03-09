@@ -134,6 +134,7 @@ Drug drug = drugDao.find(drugId);
 									<%}%>
 									<br>
 									Long Term: <%= drug.getLongTerm()%><br>
+									Short Term: <%= drug.getShortTerm()%><br>
 									Past Med: <%= drug.getPastMed()%><br>
 									Patient Compliance: <%= drug.getPatientCompliance()%><br>
 									Last Refill: <%= drug.getLastRefillDate()%><br>

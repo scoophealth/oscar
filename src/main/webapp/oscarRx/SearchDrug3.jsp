@@ -2299,6 +2299,12 @@ function updateQty(element){
 		if(!validateRxDate()) {
     		return false;
     	}
+
+		<%if (OscarProperties.getInstance().isPropertyActive("rx_strict_med_term")) {%>
+		if(!checkMedTerm()){
+			return false;
+		}
+		<%}%>
 		
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs&rand="+ Math.floor(Math.random()*10001);
@@ -2321,6 +2327,11 @@ function updateQty(element){
     		return false;
     	}
 		
+		<%if (OscarProperties.getInstance().isPropertyActive("rx_strict_med_term")) {%>
+		if(!checkMedTerm()){
+			return false;
+		}
+		<%}%>		
 		
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs&rand="+ Math.floor(Math.random()*10001);
@@ -2340,11 +2351,71 @@ function checkEnterSendRx(){
 }
 
 
+<%if (OscarProperties.getInstance().isPropertyActive("rx_strict_med_term")) {%>
+function checkMedTerm(){
+	
+	var randId = 0;
+	var isAnyTermChecked = false;
+	jQuery("fieldset[id^='set_']").each(function() {
+	    randId = jQuery( this ).attr("id").replace('set_','');
+	    isAnyTermChecked = isMedTermChecked(randId);	
+	});
+	
+	if(!isAnyTermChecked){
+		alert("Please review drug(s) and specify medication term!");
+	}else{
+		return true;
+	}
+	
+	return false;
+}// end checkMedTerm
 
-$("searchString").focus();
+function isMedTermChecked(rnd){
+	var termChecked = false;
+	var longTerm = jQuery("#longTerm_" + rnd);
+	var shortTerm = jQuery("#shortTerm_" + rnd);
+	var medTermWrap = jQuery("#medTerm_" + rnd);
+		
+	if(longTerm.prop( "checked" ) || shortTerm.prop( "checked" )){
+		termChecked = true;
+		medTermWrap.css('color', 'black');		
+	}else{
+		termChecked = false; 
+		medTermWrap.css('color', 'red');
+	}
+	
+	return termChecked;
+}
+
+<%} //end rx_strict_med_term check %>
 
 
+function medTermCheckOne(rnd, el){
+	var longTerm = jQuery("#longTerm_" + rnd);
+	var shortTerm = jQuery("#shortTerm_" + rnd);
 
+	if(el.prop( "checked" )){
+		if(el.attr("id")=="longTerm_" + rnd){
+			shortTerm.attr("checked",false);
+		}else{
+			longTerm.attr("checked",false);
+		}
+	}	
+}
+
+
+jQuery( document ).ready(function() {
+	jQuery( document ).on( 'change', '.med-term', function() {
+	    var randId = jQuery( this ).attr("id").split("_").pop();
+ 	   
+	    <%if (OscarProperties.getInstance().isPropertyActive("rx_strict_med_term")) {%>   
+	    isMedTermChecked(randId);
+	    <%}%> 
+	    
+	    var el = jQuery( this );
+	    medTermCheckOne(randId, el);
+    });
+});
 </script>
 
 <script language="javascript" src="../commons/scripts/sort_table/css.js"></script>
