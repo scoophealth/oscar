@@ -749,6 +749,7 @@ CREATE TABLE drugs (
   unitName varchar(10) default NULL,
   custom_note boolean,
   long_term boolean,
+  short_term boolean,
   non_authoritative boolean,
   past_med boolean,
   patient_compliance tinyint(1),
