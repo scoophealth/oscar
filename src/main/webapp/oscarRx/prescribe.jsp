@@ -90,6 +90,7 @@ if(listRxDrugs!=null){
          String takeMin         = rx.getTakeMinString();
          String takeMax         = rx.getTakeMaxString();
          boolean longTerm       = rx.getLongTerm();
+         boolean shortTerm		= rx.getShortTerm();
       //   boolean isCustomNote   =rx.isCustomNote();
          String outsideProvOhip = rx.getOutsideProviderOhip();
          String brandName       = rx.getBrandName();
@@ -530,7 +531,7 @@ disabledSuboxoneDays = function(rand) {
 
 </script>
 <%}%>
-<fieldset style="margin-top:2px;width:630px;padding-right: 30px;" id="set_<%=rand%>">
+<fieldset style="margin-top:2px;width:640px;padding-right: 30px;" id="set_<%=rand%>">
     <a tabindex="-1" href="javascript:void(0);"  style="float:right;margin-left:5px;margin-top:0px;padding-top:0px;" onclick="$('set_<%=rand%>').remove();deletePrescribe('<%=rand%>');removeReRxDrugId('<%=DrugReferenceId%>')">X</a>
     <a tabindex="-1" href="javascript:void(0);"  style="float:right;;margin-left:5px;margin-top:0px;padding-top:0px;" title="Add to Favorites" onclick="addFav('<%=rand%>','<%=drugName%>');return false;">F</a>
     <a tabindex="-1" href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">  <span id="moreLessWord_<%=rand%>" onclick="updateMoreLess(id)" >more</span> </a>
@@ -628,15 +629,19 @@ disabledSuboxoneDays = function(rand) {
         </div>
 
 		<%if (flag == 1) {%>
-        <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte:</label><input <%if(rx.isCustomNote()){%> disabled <%}%> type="text" id="quantity_<%=rand%>"    size="10" name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
+        <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte:</label><input size="8"<%if(rx.isCustomNote()){%> disabled <%}%> type="text" id="quantity_<%=rand%>"    size="10" name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
         <label style="">Units:</label><input type="text" id="dispensingUnits_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="dispensingUnits_<%=rand%>"   value="<%=repeats%>" />
-        <label style="">Repeats:</label><input type="text" id="repeats_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="repeats_<%=rand%>"   value="<%=repeats%>" />
+        <label style="">Repeats:</label><input type="text" id="repeats_<%=rand%>" size="5"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="repeats_<%=rand%>"   value="<%=repeats%>" />
         <%} else {%>
         <input type="hidden" id="repeats_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="repeats_<%=rand%>"   value="0" />
         <input <%if(rx.isCustomNote()){%> disabled <%}%> type="hidden" id="quantity_<%=rand%>" name="quantity_<%=rand%>" value="<%=quantityText%>" onblur="updateQty(this);" value="0"/>
         <%} %>
 
-        <input  type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" <%if(longTerm) {%> checked="true" <%}%> >Long Term Med </input>
+        <span id="medTerm_<%=rand%>">
+        <input type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" class="med-term" <%if(longTerm) {%> checked="true" <%}%> />Long Term Med
+        <input type="checkbox" id="shortTerm_<%=rand%>"  name="shortTerm_<%=rand%>" class="med-term" <%if(shortTerm) {%> checked="true" <%}%> />Short Term Med
+		</span>
+        
         <%if(genericName!=null&&!genericName.equalsIgnoreCase("null")){%>
         <div><a>Ingredient:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=genericName%></a><a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Strength:&nbsp;&nbsp;<%=dosage%></a></div><%}%>
        <div class="rxStr" title="not what you mean?" >
@@ -847,7 +852,7 @@ disabledSuboxoneDays = function(rand) {
     	<%}%>
 </fieldset>
 <%}else{%>
-<fieldset style="margin-top:2px;width:620px;" id="set_<%=rand%>">
+<fieldset style="margin-top:2px;width:640px;" id="set_<%=rand%>">
     <a tabindex="-1" href="javascript:void(0);"  style="float:right;margin-left:5px;margin-top:0px;padding-top:0px;" onclick="$('set_<%=rand%>').remove();deletePrescribe('<%=rand%>');removeReRxDrugId('<%=DrugReferenceId%>')"><img src='<c:out value="${ctx}/images/close.png"/>' border="0"></a>
     <a tabindex="-1" href="javascript:void(0);"  style="float:right;;margin-left:5px;margin-top:0px;padding-top:0px;" title="Add to Favorites" onclick="addFav('<%=rand%>','<%=drugName%>')">F</a>
     <a tabindex="-1" href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">  <span id="moreLessWord_<%=rand%>" onclick="updateMoreLess(id)" >more</span> </a>
@@ -898,7 +903,11 @@ disabledSuboxoneDays = function(rand) {
         <label style="">Units:</label><input type="text" size="5" id="dispensingUnits_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="dispensingUnits_<%=rand%>"   value="<%=repeats%>" />
         <label style="">Repeats:</label><input type="text" size="5" id="repeats_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="repeats_<%=rand%>"   value="<%=repeats%>" />
 
-        <input  type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" <%if(longTerm) {%> checked="true" <%}%> />Long Term Med
+		<span id="medTerm_<%=rand%>">
+        <input  type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" class="med-term" <%if(longTerm) {%> checked="true" <%}%> />Long Term Med
+        <input  type="checkbox" id="shortTerm_<%=rand%>"  name="shortTerm_<%=rand%>" class="med-term" <%if(shortTerm) {%> checked="true" <%}%> />Short Term Med
+		</span>
+        
         <%if(genericName!=null&&!genericName.equalsIgnoreCase("null")){%>
         <div><a>Ingredient:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=genericName%></a></div><%}%>
        <div class="rxStr" title="not what you mean?" >
@@ -1538,16 +1547,16 @@ carrySuboxone = function(which) {
                   	}
                   });
 		  <%}%>
-
 		
           jQuery("input[id^='repeats_']").keyup(function(){
             	var rand = <%=rand%>;
             	var repeatsVal = this.value;
             	if(repeatsVal>0){
             		jQuery("#longTerm_"+rand).attr("checked","checked");
+            		jQuery(".med-term").trigger('change');
             	}
             });
-		  
+          
        });
 </script>
 

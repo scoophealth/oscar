@@ -116,6 +116,7 @@ public class RxPrescriptionData {
 		prescription.setCustomInstr(drug.isCustomInstructions());
 		prescription.setDosage(drug.getDosage());
 		prescription.setLongTerm(drug.isLongTerm());
+		prescription.setShortTerm(drug.getShortTerm());
 		prescription.setCustomNote(drug.isCustomNote());
 		prescription.setPastMed(drug.getPastMed());
 		prescription.setDispenseInternal(drug.getDispenseInternal());
@@ -216,6 +217,7 @@ public class RxPrescriptionData {
 		prescription.setCustomInstr(rePrescribe.getCustomInstr());
 		prescription.setDosage(rePrescribe.getDosage());
 		prescription.setLongTerm(rePrescribe.getLongTerm());
+		prescription.setShortTerm(rePrescribe.getShortTerm());
 		prescription.setCustomNote(rePrescribe.isCustomNote());
 		prescription.setPastMed(rePrescribe.getPastMed());
 		prescription.setDispenseInternal(rePrescribe.isDispenseInternal());
@@ -282,6 +284,7 @@ public class RxPrescriptionData {
 		p.setCustomInstr(drug.isCustomInstructions());
 		p.setDosage(drug.getDosage());
 		p.setLongTerm(drug.getLongTerm());
+		p.setShortTerm(drug.getShortTerm());
 		p.setCustomNote(drug.isCustomNote());
 		p.setPastMed(drug.getPastMed());
 		p.setStartDateUnknown(drug.getStartDateUnknown());
@@ -608,6 +611,7 @@ public class RxPrescriptionData {
 		boolean nosubs = false;
 		boolean prn = false;
 		boolean longTerm = false;
+		boolean shortTerm = false;
 		boolean pastMed = false;
 		boolean startDateUnknown = false;
 		Boolean patientCompliance = null;
@@ -1250,6 +1254,14 @@ public class RxPrescriptionData {
 		public void setLongTerm(boolean lt) {
 			this.longTerm = lt;
 		}
+		
+		public boolean getShortTerm() {
+			return this.shortTerm;
+		}
+
+		public void setShortTerm(boolean st) {
+			this.shortTerm = st;
+		}
 
 		public void setNonAuthoritative(boolean nonAuthoritative) {
 			this.nonAuthoritative = nonAuthoritative;
@@ -1716,6 +1728,7 @@ public class RxPrescriptionData {
 			drug.setDosage(getDosage());
 			drug.setUnitName(getUnitName());
 			drug.setLongTerm(getLongTerm());
+			drug.setShortTerm(getShortTerm());
 			drug.setCustomNote(isCustomNote());
 			drug.setPastMed(getPastMed());
 			drug.setDispenseInternal(getDispenseInternal());
