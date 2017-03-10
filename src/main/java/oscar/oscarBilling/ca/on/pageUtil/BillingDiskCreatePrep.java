@@ -91,7 +91,7 @@ public class BillingDiskCreatePrep {
 		String ohipNo = propProOHIP.getProperty(providerNo);
 		// set up obj
 		String groupNo = "";
-		String temp[] = getCurSoloMonthCodeBatchNum(providerNo);
+		String temp[] = getCurSoloMonthCodeBatchNum(ohipNo);
 		BillingDiskNameData diskName = new BillingDiskNameData();
 		diskName.setMonthCode(temp[0]);
 		diskName.setBatchcount(temp[1]);
@@ -238,7 +238,7 @@ public class BillingDiskCreatePrep {
 		int retval = ret ? Integer.parseInt(obj.getId()) : 0;
 		return retval;
 	}
-
+	
 	private Vector getSoloHtmlfilename(String ohipNo, String monthCode, String batchNum) {
 		Vector ret = new Vector();
 		String diskName = "H" + monthCode + ohipNo + "_" + getDefaultRightJust("0", 3, batchNum) + ".html";
