@@ -507,10 +507,10 @@ public class JdbcBillingClaimImpl {
 		return retval;
 	}
 
-	public String[] getLatestSoloMonthCodeBatchNum(String providerNo) {
+	public String[] getLatestSoloMonthCodeBatchNum(String providerOhipNo) {
 		String[] retval = null;
 		
-		BillingONDiskName b = diskNameDao.getLatestSoloMonthCodeBatchNum(providerNo);
+		BillingONDiskName b = diskNameDao.getLatestSoloMonthCodeBatchNum(providerOhipNo);
 		if(b != null) {
 			retval = new String[2];
 			retval[0] = b.getMonthCode();
