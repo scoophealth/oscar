@@ -58,7 +58,12 @@
 	ArrayList fileList = surveyInfo.getFileNames(surveyId);
 	int total = 0;
 %>
-
+<head>
+<link href="/oscar/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="/oscar/css/datepicker.css" rel="stylesheet" type="text/css">
+<link href="/oscar/css/DT_bootstrap.css" rel="stylesheet" type="text/css">
+<link href="/oscar/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+</head>
 <div class="page-header">
 	<h4>
 		<bean:message key="oscarSurveillance.Surveillance.msgSurveillance" />
