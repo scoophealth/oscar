@@ -148,6 +148,7 @@ public class TicklerDaoTest extends DaoTestFixtures {
 		providerDao.saveProvider(p);
 		
 		Program prog = new Program();
+		prog.setFacilityId(1);
 		prog.setName("test");
 		prog.setMaxAllowed(100);
 		programDao.saveProgram(prog);
