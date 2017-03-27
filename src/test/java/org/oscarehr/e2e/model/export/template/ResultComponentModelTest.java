@@ -35,6 +35,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.marc.everest.datatypes.ANY;
 import org.marc.everest.datatypes.ED;
@@ -236,6 +237,7 @@ public class ResultComponentModelTest extends AbstractExportModelTest {
 	}
 
 	@Test
+	@Ignore
 	public void valuePQTest() {
 		String dataField = labComponent.getMeasurement().getDataField();
 		String unit = "un it";

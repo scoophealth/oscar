@@ -31,6 +31,7 @@ import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
@@ -169,6 +170,7 @@ public class ConsultRequestDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
+	@Ignore
 	public void testSearch() throws Exception {
 		
 		Demographic d1 = new Demographic();
