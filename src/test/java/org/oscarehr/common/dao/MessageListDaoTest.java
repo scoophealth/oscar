@@ -45,7 +45,7 @@ public class MessageListDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("messagelisttbl","msgDemoMap");
+		SchemaUtils.restoreTable("messagetbl","messagelisttbl","msgDemoMap");
 	}
 
 	@Test
