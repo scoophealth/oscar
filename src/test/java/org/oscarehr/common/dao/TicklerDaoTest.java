@@ -55,7 +55,7 @@ public class TicklerDaoTest extends DaoTestFixtures {
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("tickler", "tickler_update","tickler_comments","custom_filter","provider","demographic","program","lst_gender", "admission", "demographic_merged",  
-				"health_safety", "providersite", "site", "program_team","log", "Facility","program_queue");
+				"health_safety", "providersite", "site", "program_team","log", "Facility","program_queue","tickler_category");
 	}
 	
 	protected Tickler createTickler(int demographicNo, String message, Integer programId,Date serviceDate, Tickler.STATUS status, String taskAssignedTo) {
