@@ -392,6 +392,11 @@ public class SchemaUtils
 			}
 		}
 				
+		try {
+			restoreTable(false,"ResourceStorage");
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error:",e);
+		}
 		inited=true;
 	}
 

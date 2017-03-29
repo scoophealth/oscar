@@ -34,6 +34,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.oscarehr.common.dao.MeasurementDao.SearchCriteria;
 import org.oscarehr.common.dao.utils.SchemaUtils;
@@ -50,6 +51,7 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
+	@Ignore
 	public void testFind() {
 		Measurement m = populate();
 

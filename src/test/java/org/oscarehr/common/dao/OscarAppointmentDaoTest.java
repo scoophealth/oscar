@@ -131,6 +131,7 @@ public class OscarAppointmentDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
+	@Ignore
 	public void testFind() throws Exception {
 		Appointment appt = new Appointment();
 		EntityDataGenerator.generateTestDataForModelClass(appt);
